@@ -29,18 +29,6 @@ feature -- Properties
 
 feature -- Status setting
 
-	enable_breakpoints is
-			-- `Current' must display breakpoints from now on, if possible.
-		do
-			has_breakpoints := True
-		end
-
-	disable_breakpoints is
-			-- `Current' must not display breakpoints from now on.
-		do
-			has_breakpoints := False
-		end
-
 	set_stone (new_stone: CLASSI_STONE) is
 			-- Associate current formatter with class contained in `a_stone'.
 		local
@@ -200,9 +188,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Properties
-
-	has_breakpoints: BOOLEAN
-			-- Should `Current' display breakpoints?
 
 	class_cmd: E_CLASS_CMD
 			-- Class command that is used to generate text output (especially in files).

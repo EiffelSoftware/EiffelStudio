@@ -18,8 +18,6 @@ inherit
 
 	EV_STOCK_PIXMAPS
 
-	EB_FORMATTER_DATA
-
 feature -- Properties
 
 	manager: EB_STONABLE
@@ -265,5 +263,11 @@ feature {NONE} -- Implementation
 	Tabulation: STRING is "%T"
 	Opening_parenthesis: STRING is " ("
 	Closing_parenthesis: STRING is ")"
+
+	has_breakpoints: BOOLEAN is deferred end
+		-- Should `Current' display breakpoints?
+			
+	line_numbers_allowed: BOOLEAN is deferred end
+		-- Does it make sense to show line numbers in Current?
 
 end -- class EB_FORMATTER

@@ -74,7 +74,7 @@ feature -- Formatting
 				create class_file.make (classi.file_name)
 				if class_file.exists then
 					if not equal (classi.file_name, editor.file_name) then
-						editor.load_eiffel_file (classi.file_name)
+						editor.load_file (classi.file_name)
 					end
 					if editor.load_file_error then
 						f_name := editor.file_name
@@ -96,6 +96,11 @@ feature -- Formatting
 					editor.enable_editable
 				else
 					editor.disable_editable
+				end
+				if has_breakpoints then
+					editor.enable_has_breakable_slots
+				else
+					editor.disable_has_breakable_slots
 				end
 				must_format := False
 				display_header
@@ -193,4 +198,10 @@ feature {NONE} -- Implementation
 			create class_cmd.do_nothing
 		end
 
+	has_breakpoints: BOOLEAN is False
+		-- Should `Current' display breakpoints?
+
+	line_numbers_allowed: BOOLEAN is True
+		-- Does it make sense to show line numbers in Current?
+			
 end -- class EB_BASIC_TEXT_FORMATTER

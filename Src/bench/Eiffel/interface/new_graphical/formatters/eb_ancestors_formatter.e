@@ -62,4 +62,10 @@ feature {NONE} -- Implementation
 			create class_cmd.make (associated_class)
 		end
 
+	has_breakpoints: BOOLEAN is False
+		-- Should `Current' display breakpoints?
+
+	line_numbers_allowed: BOOLEAN is False
+		-- Does it make sense to show line numbers in Current?
+
 end -- class EB_ANCESTORS_FORMATTER

@@ -14,6 +14,8 @@ inherit
 			generate_text,
 			is_dotnet_formatter
 		end
+		
+	EB_SHARED_PREFERENCES
 
 create
 	make
@@ -62,7 +64,7 @@ feature {NONE} -- Implementation
 			cf: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			confirmed := False
-			create cf.make_initialized (2, "generate_homonyms", Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again)
+			create cf.make_initialized (2, preferences.dialog_data.generate_homonyms_string, Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again)
 			cf.set_ok_action (agent confirm_generate)
 			cf.show_modal_to_window (Window_manager.last_focused_development_window.window)
 			if confirmed then
@@ -89,6 +91,9 @@ feature {NONE} -- Implementation
 		do
 			create feature_cmd.make (associated_feature)
 		end
+
+	has_breakpoints: BOOLEAN is False
+			-- Should breakpoints be shown in Current?
 
 end -- class EB_HOMONYMS_FORMATTER
 

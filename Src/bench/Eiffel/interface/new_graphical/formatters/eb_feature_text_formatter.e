@@ -48,7 +48,7 @@ feature -- Status setting
 		require
 			an_editor_non_void: an_editor /= Void
 		do
-			editor := an_editor
+			editor := an_editor			
 			internal_widget := an_editor.widget
 		end
 
@@ -77,7 +77,11 @@ feature -- Formatting
 				end
 				if not last_was_error then
 					if editor.current_text /= formatted_text then
-						editor.show_breakpoints
+						if has_breakpoints then				
+							editor.enable_has_breakable_slots	
+						else
+							editor.disable_has_breakable_slots
+						end						
 						editor.process_text (formatted_text)
 					end
 					if editable then

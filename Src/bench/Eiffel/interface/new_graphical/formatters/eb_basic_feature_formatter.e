@@ -70,10 +70,15 @@ feature -- Formatting
 					generate_text
 				end
 				if formatted_text /= Void then
-					editor.load_eiffel_text (formatted_text.image)
+					editor.load_text (formatted_text.image)
 				else
 					editor.clear_window
 					editor.display_message (Warning_messages.W_formatter_failed)
+				end
+				if has_breakpoints then
+					editor.enable_has_breakable_slots
+				else
+					editor.disable_has_breakable_slots
 				end
 				if editable then
 					editor.enable_editable
@@ -134,5 +139,8 @@ feature {NONE} -- Implementation
 		do
 			create feature_cmd.do_nothing
 		end
+
+	has_breakpoints: BOOLEAN is False
+			-- Should breakpoints be shown in Current?
 
 end -- class EB_BASIC_FEATURE_FORMATTER

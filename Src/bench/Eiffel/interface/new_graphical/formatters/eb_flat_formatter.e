@@ -26,8 +26,7 @@ feature {NONE} -- Initialization
 	make (a_manager: like manager) is
 			-- Initialize `Current'.
 		do
-			Precursor (a_manager)	
-			has_breakpoints := True	
+			Precursor (a_manager)
 		end
 
 feature -- Properties
@@ -105,4 +104,9 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+	has_breakpoints: BOOLEAN is True
+		-- Should `Current' display breakpoints?	
+			
+	line_numbers_allowed: BOOLEAN is False		
+			
 end -- class EB_FLAT_FORMATTER

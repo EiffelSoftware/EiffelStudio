@@ -8,8 +8,8 @@ class
 
 inherit
 	EB_CONSTANTS
-
-	EB_FORMATTER_DATA
+	
+	EB_SHARED_PREFERENCES
 
 feature -- Properties
 
@@ -35,7 +35,7 @@ feature -- Properties
 			else
 				create ctxt
 				ctxt.set_clickable
-				ctxt.set_feature_clause_order (feature_clause_order)
+				ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
 				ctxt.set_is_with_breakable
 				ctxt.format (a_class)
 				if not ctxt.error then
@@ -67,7 +67,7 @@ feature -- Properties
 			else
 				create ctxt
 				ctxt.set_clickable
-				ctxt.set_feature_clause_order (feature_clause_order)
+				ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
 				ctxt.set_is_short
 				ctxt.set_is_without_breakable
 				ctxt.format (a_class)
@@ -103,7 +103,7 @@ feature -- Properties
 				ctxt.set_is_short
 				ctxt.set_is_without_breakable
 				ctxt.set_one_class_only
-				ctxt.set_feature_clause_order (feature_clause_order)
+				ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
 				ctxt.format (a_class)
 				if not ctxt.error then
 					Result := ctxt.text
@@ -300,7 +300,7 @@ feature {NONE} -- Attributes
 
 	History_size: INTEGER is
 		once
-			Result := editor_history_size
+			Result := preferences.formatter_data.editor_history_size
 			if Result < 1 then
 				Result := 5
 			elseif Result > 200 then

@@ -10,7 +10,7 @@ deferred class
 inherit
 	EB_CLASS_INFO_FORMATTER
 		redefine
-			new_button
+			new_button		
 		end
 		
 	SHARED_EIFFEL_PROJECT
@@ -58,19 +58,19 @@ feature -- Formatting
 	format is
 			-- Refresh `widget'.
 		do
-			if
-				selected and then
-				displayed--and then
---				class_cmd /= Void
-			then
+			if selected and then displayed then
 				if must_format then
 					display_temp_header
 					generate_text
 				end
 				if not last_was_error then
-					if editor.current_text /= formatted_text then
-						editor.show_breakpoints
+					if editor.current_text /= formatted_text then						
 						editor.process_text (formatted_text)
+					end					
+					if has_breakpoints then
+						editor.enable_has_breakable_slots
+					else
+						editor.disable_has_breakable_slots
 					end
 					if editable then
 						editor.enable_editable

@@ -76,9 +76,6 @@ feature {NONE} -- Initialization
 			internal_idle_actions.empty_actions.extend (
 				agent disconnect_internal_idle_actions
 			)
-			if not internal_idle_actions.is_empty then
-				connect_internal_idle_actions
-			end
 			interface.idle_actions.not_empty_actions.extend (
 				agent internal_idle_actions.extend (idle_actions_agent)
 			)
@@ -95,7 +92,7 @@ feature {NONE} -- Initialization
 			is_in_gtk_main := True
 			
 			a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			a_timeout_imp.interface.actions.extend (agent (interface.post_launch_actions).call (empty_tuple))
+			a_timeout_imp.interface.actions.extend (agent call_post_launch_actions)
 			a_timeout_imp.set_interval_kamikaze (75)
 				-- 75 allows gtk to calculate its initial sizing before post_launch_actions are called.
 			feature {EV_GTK_EXTERNALS}.gtk_main
@@ -104,6 +101,15 @@ feature {NONE} -- Initialization
 			-- Unhook marshal object.
 			gtk_marshal.destroy
 			is_destroyed := True
+		end
+
+	call_post_launch_actions is
+			-- Actions to initiate after main loop has been called.
+		do
+			interface.post_launch_actions.call (empty_tuple)
+			if not internal_idle_actions.is_empty then
+				connect_internal_idle_actions
+			end
 		end
 		
 feature {EV_ANY_IMP} -- Access

@@ -6,7 +6,7 @@ inherit
 
 	ARGUMENT_B
 		redefine
-			analyze, generate, free_register,
+			analyze, generate, print_register, free_register,
 			used, parent, set_parent, propagate
 		end;
 
@@ -61,6 +61,16 @@ feature
 	free_register is
 			-- Do nothing
 		do
+		end;
+
+	print_register is
+			-- Print argument
+		do
+			if c_type.is_pointer then
+				print_register_by_name;
+			else
+				buffer.putstring (register_name);
+			end;
 		end;
 
 end

@@ -102,14 +102,14 @@ feature
 							loc_idx := -1;
 						end;
 						if loc_idx /= -1 then
-							buf.put_protected_local_set (context.ref_var_used + loc_idx);
+							buf.put_protected_local (context.ref_var_used + loc_idx);
 							buf.putstring (" = ");
 							if not real_type(expression.type).is_separate then
 								buf.putstring (" CURLTS(");
-								expression.stored_register.print_register;
+								expression.stored_register.print_register_by_name;
 								buf.putstring ("); ");
 							else
-								expression.stored_register.print_register;
+								expression.stored_register.print_register_by_name;
 								buf.putstring (";");
 							end;
 							buf.new_line;

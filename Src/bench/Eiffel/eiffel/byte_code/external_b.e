@@ -424,7 +424,7 @@ feature -- Concurrent Eiffel
 								loc_idx := -1;
 							end;
 							if loc_idx /= -1 then
-								buf.put_protected_local_set (context.ref_var_used + loc_idx);
+								buf.put_protected_local (context.ref_var_used + loc_idx);
 								buf.putstring (" = (EIF_REFERENCE) 0;");
 								buf.new_line;
 							end

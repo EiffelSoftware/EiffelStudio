@@ -10,7 +10,7 @@ inherit
 		rename
 			context as unused_context
 		redefine
-			is_temporary, print_register
+			is_temporary
 		end;
 
 feature

@@ -8,7 +8,7 @@ inherit
 		redefine
 			enlarged, type, is_argument, is_local, is_creatable,
 			make_byte_code, register_name, array_descriptor,
-			pre_inlined_code, print_register
+			pre_inlined_code
 		end;
 	
 feature 
@@ -65,12 +65,6 @@ feature
 			Result.append ("arg");
 			Result.append (position.out);
 		end;
-
-	print_register is
-			-- Print argument
-		do
-			buffer.putstring (register_name)
-		end
 
 feature -- Byte code generation
 

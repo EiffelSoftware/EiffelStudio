@@ -109,7 +109,7 @@ feature
 						buffer.putstring ("_gen_type-");
 						buffer.putint (table.min_type_id - 1);
 						buffer.putstring ("), ");
-						context.Current_register.print_register
+						context.Current_register.print_register_by_name
 						buffer.putchar (')')
 
 							-- Side effect. This is not nice but
@@ -150,7 +150,7 @@ feature
 				end;
 
 				buffer.putstring (gc_comma);
-				context.Current_register.print_register
+				context.Current_register.print_register_by_name
 				buffer.putchar (')');
 			end
 		end
@@ -238,7 +238,7 @@ feature -- Genericity
 						buffer.putstring ("-")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putstring ("), ")
-						context.Current_register.print_register
+						context.Current_register.print_register_by_name
 						buffer.putstring ("), ")
 
 							-- Side effect. This is not nice but
@@ -279,7 +279,7 @@ feature -- Genericity
 				end
 
 				buffer.putstring (gc_comma)
-				context.Current_register.print_register
+				context.Current_register.print_register_by_name
 				buffer.putstring ("), ")
 			end
 		end
@@ -405,7 +405,7 @@ feature -- Genericity
 						buffer.putstring ("-")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putstring ("), ")
-						context.Current_register.print_register
+						context.Current_register.print_register_by_name
 						buffer.putstring (");")
 						buffer.new_line
 						dummy := idx_cnt.next
@@ -435,7 +435,7 @@ feature -- Genericity
 				end
 
 				buffer.putstring (gc_comma)
-				context.Current_register.print_register
+				context.Current_register.print_register_by_name
 				buffer.putstring (");")
 				buffer.new_line
 				dummy := idx_cnt.next
@@ -516,7 +516,7 @@ feature -- Genericity
 						buffer.putstring ("-")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putstring ("), ")
-						context.Current_register.print_register
+						context.Current_register.print_register_by_name
 						buffer.putstring (")")
 
 							-- Side effect. This is not nice but
@@ -557,7 +557,7 @@ feature -- Genericity
 				end
 
 				buffer.putstring (gc_comma)
-				context.Current_register.print_register
+				context.Current_register.print_register_by_name
 				buffer.putstring (")")
 			end
 		end

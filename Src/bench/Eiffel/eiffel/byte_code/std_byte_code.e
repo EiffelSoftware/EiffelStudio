@@ -377,7 +377,12 @@ feature
 					-- If Result was used, generate it. Otherwise, its value
 					-- is simply the initial one (i.e. generic 0).
 				if context.result_used then
-					buf.putstring ("Result;")
+					if real_type (result_type).c_type.is_pointer then
+						context.Result_register.print_register_by_name
+					else
+						buf.putstring ("Result")
+					end
+					buf.putchar (';')
 				else
 					type_i.c_type.generate_cast (buf)
 					buf.putstring ("0;")
@@ -428,7 +433,7 @@ feature
 								generate_gen_type_conversion (gen_type)
 							end
 							context.local_var.set_position (i)
-							context.local_var.print_register
+							context.local_var.print_register_by_name
 							exp_type_id := cl_type_i.expanded_type_id - 1
 							if context.workbench_mode then
 									-- RTLX is a macro used to create
@@ -460,7 +465,7 @@ feature
 									buf.putstring (");%N%T")
 									buf.putstring (clone (c_name))
 									buf.putchar ('(')
-									context.local_var.print_register
+									context.local_var.print_register_by_name
 								end
 							end
 							buf.putstring (gc_rparan_comma)
@@ -472,7 +477,7 @@ feature
 						elseif type_i.is_bit then
 							bit_i ?= type_i; -- Cannot fail
 							context.local_var.set_position (i)
-							context.local_var.print_register
+							context.local_var.print_register_by_name
 							buf.putstring (" = RTLB(")
 							buf.putint (bit_i.size)
 							buf.putstring (gc_rparan_comma)
@@ -494,7 +499,7 @@ feature
 						generate_block_open
 						generate_gen_type_conversion (gen_type)
 					end
-					context.result_register.print_register
+					context.result_register.print_register_by_name
 					if context.workbench_mode then
 							-- RTLX is a macro used to create
 							-- expanded types
@@ -525,7 +530,7 @@ feature
 							buf.putstring (");%N%T")
 							buf.putstring (clone (c_name))
 							buf.putchar ('(')
-							context.local_var.print_register
+							context.local_var.print_register_by_name
 						end
 					end
 					buf.putstring (gc_rparan_comma)
@@ -536,7 +541,7 @@ feature
 					buf.new_line
 				elseif type_i.is_bit then
 					bit_i ?= type_i; -- Cannot fail
-					context.result_register.print_register
+					context.result_register.print_register_by_name
 					buf.putstring (" = RTLB(")
 					buf.putint (bit_i.size)
 					buf.putstring (gc_rparan_comma)
@@ -564,7 +569,7 @@ feature
 					if arg.is_expanded then
 						context.arg_var.set_position (i)
 						buf.putstring ("if ((EIF_REFERENCE) 0 == ")
-						context.arg_var.print_register
+						context.arg_var.print_register_by_name
 						buf.putchar (')')
 						buf.new_line
 						buf.indent
@@ -602,10 +607,10 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-			context.arg_var.print_register
+			context.arg_var.print_register_by_name
 			buf := buffer
 			buf.putstring (" = RTCL(")
-			context.arg_var.print_register
+			context.arg_var.print_register_by_name
 				-- If `idx' is not -1, then the reference was the one for the
 				-- enclosing object and it needs adjusting by the expanded
 				-- object's offset whithin that bigger object.
@@ -639,13 +644,16 @@ feature
 					if context.local_vars.item(i) then
 							-- Local reference variable are declared via
 							-- the local variable array "l[]".
-						type_i.c_type.generate (buf)
-						buf.putstring ("loc")
-						buf.putint (i)
-						buf.putstring (" = ")
-						type_i.c_type.generate_cast (buf)
-						buf.putstring ("0;")
-						buf.new_line
+						if not context.need_gc_hooks or else
+							not type_i.c_type.is_pointer then
+							type_i.c_type.generate (buf)
+							buf.putstring ("loc")
+							buf.putint (i)
+							buf.putstring (" = ")
+							type_i.c_type.generate_cast (buf)
+							buf.putstring ("0;")
+							buf.new_line
+						end
 					end
 					i := i + 1
 				end
@@ -742,12 +750,17 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			ctype := real_type (result_type).c_type
-			buf := buffer
-			ctype.generate (buf)
-			buf.putstring ("Result = ")
-			ctype.generate_cast (buf)
-			buf.putstring ("0;")
-			buf.new_line
+			if ctype.is_pointer then
+					-- The generation is included in the declaration of local
+					-- variable array, hehe.
+			else
+				buf := buffer
+				ctype.generate (buf)
+				buf.putstring ("Result = ")
+				ctype.generate_cast (buf)
+				buf.putstring ("0;")
+				buf.new_line
+			end
 		end
 
 	init_dtype is
@@ -944,13 +957,13 @@ feature
 			if context.workbench_mode then
 				buf.putstring (tag)
 				buf.putchar ('(')
-				context.current_register.print_register
+				context.current_register.print_register_by_name
 				buf.putstring (", RTAL);")
 				buf.new_line
 			elseif context.assertion_level.check_invariant then
 				buf.putstring (tag)
 				buf.putchar ('(')
-				context.current_register.print_register
+				context.current_register.print_register_by_name
 				buf.putstring (gc_rparan_comma)
 				buf.new_line
 			end
@@ -1126,7 +1139,7 @@ feature
 			buf.putstring ("%", ")
 			feature_origin (buf)
 			buf.putstring (gc_comma)
-			context.Current_register.print_register
+			context.Current_register.print_register_by_name
 			buf.putstring (gc_rparan_comma)
 			buf.new_line
 		end
@@ -1488,7 +1501,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("if (CURRSO(")
 						if reg /= Void then
-							reg.print_register
+							reg.print_register_by_name
 						else
 							buf.putstring (var_name)
 						end
@@ -1539,7 +1552,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("CURFSO(")
 						if reg /= Void then
-							reg.print_register
+							reg.print_register_by_name
 						else
 							buf.putstring (var_name)
 						end
@@ -1580,7 +1593,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("CURFSO(")
 						if reg /= Void then
-							reg.print_register
+							reg.print_register_by_name
 						else
 							buf.putstring (var_name)
 						end

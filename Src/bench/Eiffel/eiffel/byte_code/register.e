@@ -84,6 +84,19 @@ feature
 			Result.append(regnum.out);
 		end;
 
+	print_register is
+			-- Print register.
+		local
+			str: STRING;
+			index: INTEGER;
+		do
+			if c_type.is_pointer then
+				print_register_by_name;
+			else
+				context.buffer.putstring (register_name);
+			end;
+		end;
+
 	is_temporary: BOOLEAN is true;
 			-- Register is a temporary one.
 

@@ -359,6 +359,7 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_QUEUE", "Queue")
 			Result.put ("SYSTEM_CONSOLE", "Console")
 			Result.put ("SYSTEM_STREAM", "Stream")
+			Result.put ("SYSTEM_MEMORY_STREAM", "MemoryStream")
 			Result.put ("SYSTEM_STACK", "Stack")
 			Result.put ("SYSTEM_DIRECTORY", "Directory")
 			Result.put ("SYSTEM_FILE", "File")

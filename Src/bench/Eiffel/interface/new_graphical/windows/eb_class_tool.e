@@ -11,33 +11,27 @@ inherit
 --			class_type as stone_type
 		redefine
 
---			build_format_bar, hole,
+--			hole,
 			init_commands,
 			empty_tool_name,
-			save_text,
---			editable,
-reset, build_interface,
+			save_text, update_save_symbol,
+			reset,
 			close_windows,
---resize_action,
 			synchronize, set_stone,
 --process_class_syntax,
+--process_feature_error,
 --			process_feature, process_class, process_classi,
 --			compatible,
-set_mode_for_editing,
+			set_mode_for_editing,
 			has_editable_text,
---process_feature_error,
 			able_to_edit,
---			help_index,
-icon_id,
 			parse_file, history_window_title,
 			format_list, set_default_format,
-			build_file_menu
+			build_file_menu,
+			build_special_menu
 		end
 
 	EB_CLASS_TOOL_DATA
-		rename
-			Class_resources as resources
-		end			
 
 	SHARED_COMPILATION_MODES
 
@@ -90,17 +84,10 @@ feature {NONE} -- Initialization
 
 feature {EB_TOOL_MANAGER} -- Initialization
 
-	build_interface is
-		do
-			precursor
-
-			if resources.command_bar.actual_value = False then
-				edit_bar.hide
-			end
-			if resources.format_bar.actual_value = False then
-				format_bar.hide
-			end
-		end
+--	build_interface is
+--		do
+--			precursor
+--		end
 
 feature -- Access
 
@@ -108,11 +95,11 @@ feature -- Access
 
 --	help_index: INTEGER is 6
 
-	icon_id: INTEGER is
-			-- Icon id of Current window (only for windows)
-		do
-			Result := Interface_names.i_Class_id
-		end
+--	icon_id: INTEGER is
+--			-- Icon id of Current window (only for windows)
+--		do
+--			Result := Interface_names.i_Class_id
+--		end
 
 	format_bar_is_used: BOOLEAN is True
 
@@ -222,21 +209,19 @@ feature -- Status setting
 			else
 				class_i := ci.class_i	
 			end
---			if class_i.hide_implementation then
---				showtext_frmt_holder.set_sensitive (False)
---				showflat_frmt_holder.set_sensitive (False)
---				showclick_frmt_holder.set_sensitive (False)
+			if class_i.hide_implementation then
+				format_list.set_implementation_formats_insensitive (True)
 --				if 
---					last_format = showtext_frmt_holder or else
---					last_format = showflat_frmt_holder or else
---					last_format = showclick_frmt_holder 
+--					last_format = showtext or else
+--					last_format = showflat or else
+--					last_format = showclick 
 --				then
 --					last_format.set_selected (False)
---					last_format := showshort_frmt_holder
+--					last_format := showshort_frmt
 --				end
---			else
---				reset_format_buttons
---			end
+			else
+				format_list.set_implementation_formats_insensitive (False)
+			end
 			create arg.make (s)
 			last_format.launch_cmd.execute (arg, Void)
 			add_to_history (s)
@@ -359,11 +344,43 @@ feature -- Stone process
 
 feature -- Update
 
+	register is
+		do
+			register_to ("class_tool_command_bar")
+			register_to ("class_tool_format_bar")
+		end
+
+	update is
+		do
+			if class_tool_command_bar then
+				edit_bar.show
+			else
+				edit_bar.hide
+			end
+			if edit_bar_menu_item /= Void then
+				edit_bar_menu_item.set_selected (class_tool_command_bar)
+			end
+			if class_tool_format_bar then
+				format_bar.show
+			else
+				format_bar.hide
+			end	
+			if format_bar_menu_item /= Void then
+				format_bar_menu_item.set_selected (class_tool_format_bar)
+			end
+		end
+
+	unregister is
+		do
+			unregister_to ("class_tool_command_bar")
+			unregister_to ("class_tool_format_bar")
+		end
+
 	reset is
 			-- Reset the window contents
 		do
 			Precursor
-			reset_format_buttons
+			format_list.set_implementation_formats_insensitive (False)
 			class_text_field.set_text("")
 		end
 
@@ -460,21 +477,6 @@ feature -- Formats
 
 	format_list: EB_CLASS_FORMATTER_LIST
 
---	showflat_frmt_holder: FORMAT_HOLDER
---	showflatshort_frmt_holder: FORMAT_HOLDER
---	showancestors_frmt_holder: FORMAT_HOLDER
---	showdescendants_frmt_holder: FORMAT_HOLDER
---	showclients_frmt_holder: FORMAT_HOLDER
---	showsuppliers_frmt_holder: FORMAT_HOLDER
---	showattributes_frmt_holder: FORMAT_HOLDER
---	showroutines_frmt_holder: FORMAT_HOLDER
---	showshort_frmt_holder: FORMAT_HOLDER
---	showclick_frmt_holder: FORMAT_HOLDER
---	showdeferreds_frmt_holder: FORMAT_HOLDER
---	showexternals_frmt_holder: FORMAT_HOLDER
---	showonces_frmt_holder: FORMAT_HOLDER
---	showexported_frmt_holder: FORMAT_HOLDER
-
 feature -- Graphical Interface
 
 	raise_shell_popup is
@@ -552,11 +554,16 @@ feature -- Implementation
 			save_cmd.execute (Void, Void)
 		end
 
+	update_save_symbol is
+			-- Update the save symbol in tool.
+		do
+			save_cmd.set_insensitive (not text_window.changed)
+		end	
+
 feature {NONE} -- Implementation Graphical Interface
 
 	create_edit_buttons (a_toolbar: EV_BOX) is
 		local
---			quit_cmd: QUIT_FILE
 			b: EV_BUTTON
 		do
 			create b.make (a_toolbar)
@@ -564,12 +571,14 @@ feature {NONE} -- Implementation Graphical Interface
 			b.add_click_command (open_cmd, Void)
 
 			create b.make (a_toolbar)
-			b.set_pixmap (Pixmaps.bm_Save)
-			b.add_click_command (save_cmd, Void)
+			b.set_pixmap (Pixmaps.bm_Modified)
+			save_cmd.set_button (b)
 
---			if Tool_resources.close_button.actual_value then
---				!! b.make (close_cmd)
---			end
+			if close_button_in_every_tool then
+				create b.make (a_toolbar)
+				b.set_pixmap (Pixmaps.bm_Quit)
+				b.add_click_command (close_cmd, Void)
+			end
 		end
 
 	build_edit_bar (a_toolbar: EV_BOX) is
@@ -596,7 +605,8 @@ feature {NONE} -- Implementation Graphical Interface
 
 			create b.make (a_toolbar)
 			b.set_pixmap (Pixmaps.bm_Class)
---			b.add_click_command (new_class_cmd, Void)
+			create new_class_cmd.make (Current)
+			b.add_click_command (new_class_cmd, Void)
 
 			create sep.make (a_toolbar)
 
@@ -627,7 +637,7 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 			i.add_select_command (open_cmd, Void)
 
 			create i.make_with_text (a_menu, Interface_names.m_Save)
-			i.add_select_command (save_cmd, Void)
+			save_cmd.set_menu_item (i)
 
 			Precursor (a_menu)
 		end	
@@ -653,6 +663,8 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 			create i.make_with_text (a_menu, Interface_names.m_Previous_target)
 			i.add_select_command (previous_target_cmd, Void)
+
+			Precursor (a_menu)
 		end
 
 end -- class EB_CLASS_TOOL

@@ -85,11 +85,6 @@ rt_public EIF_INTEGER eif_system (char *s)
 {
 	EIF_INTEGER result;
 
-#ifdef SIGCLD
-	Signal_t (*old_signal_hdlr)();
-	old_signal_hdlr = signal (SIGCLD, SIG_IGN);
-#endif
-
 #ifdef EIF_VMS	/* if s contains any VMS filespec delimiters, prepend 'RUN ' command */
 	{ /* if it contains a '[' before a space (ie. no verb), prepend "run " */
 		/* ***VMS FIXME*** revisit this for long filenames - may contain space in filename */
@@ -108,10 +103,6 @@ rt_public EIF_INTEGER eif_system (char *s)
 #else /* (not) EIF_VMS */
 	result = (EIF_INTEGER) system (s);
 #endif /* EIF_VMS */
-
-#ifdef SIGCLD
-	(void)signal (SIGCLD, old_signal_hdlr);
-#endif
 
 	return result;
 }
@@ -211,11 +202,6 @@ rt_public void eif_system_asynchronous (char *cmd)
 		return;
 	sprintf (envstring, "MELT_PATH=%s", meltpath);
 	putenv (envstring);
-#ifdef SIGCHLD
-	signal (SIGCHLD, SIG_DFL);
-#elif defined SIGCLD
-	signal (SIGCLD, SIG_DFL);
-#endif
 
 #ifndef EIF_VMS
 	status = system(cmd);				/* Run command via /bin/sh */

@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 			item_imp.set_parent_imp (Void)
 			C.gtk_clist_remove (list_widget, a_position - 1)
 			-- remove the row from the `ev_children'
-			ev_children.move (a_position)
+			ev_children.go_i_th (a_position)
 			ev_children.remove
 		end
 
@@ -570,6 +570,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/03 23:56:03  king
+--| Corrected remove_item_from_position to use go_i_th instead of move
+--|
 --| Revision 1.35  2000/03/03 20:10:27  king
 --| Corrected create_list to deal with resetting col wid and titles to prev values
 --|

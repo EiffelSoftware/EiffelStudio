@@ -58,7 +58,7 @@ feature -- Access
 		end
 		
 	first: like ev_type is
-			-- First entry in `obejcts'. This corresponds to
+			-- First entry in `objects'. This corresponds to
 			-- the display component.
 		require
 			objects_not_empty: not objects.is_empty

@@ -35,7 +35,7 @@ feature -- Command Execution
 			txt: STRING
 			operator: SUBQUERY_OPERATOR
 			string_arg: STRING
-			error_dialog: EB_MESSAGE_WINDOW
+			error_dialog: EV_WARNING_DIALOG
 		do
 			txt := query_window.subquery
 			if txt /= Void and then not txt.empty then 

@@ -32,7 +32,7 @@ feature {NONE}
 			create c_name.make ("Dial")
 			
 			item := cwin_dialog_box_indirect (
-					main_args.current_instance.item,
+					main_args.resource_instance.item,
 					dlg_template.item, cwel_integer_to_pointer (Handle),
 					cwel_dialog_procedure_address)
 		end
@@ -72,13 +72,13 @@ feature {NONE} -- Implementation
 				-- Load by name
 				create c_name.make (a_name)
 				item := cwin_create_dialog (
-					main_args.current_instance.item,
+					main_args.resource_instance.item,
 					c_name.item, parent_item,
 					cwel_dialog_procedure_address)
 			else
 				-- Load by id
 				item := cwin_create_dialog (
-					main_args.current_instance.item,
+					main_args.resource_instance.item,
 					cwin_make_int_resource (an_id),
 					parent_item,
 					cwel_dialog_procedure_address)

@@ -1458,8 +1458,10 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 			/* Update unsolved references on `newadd' */
 		rt_update1 (oldadd, new_hector);
 
-			/* Read the object's body */
-		buffer_read(newadd, nb_byte);
+		if (nb_byte > 0) {		
+				/* Read the object's body */
+			buffer_read(newadd, nb_byte);
+		}
 
 			/* Update fileds: the garbage collector should not be called
 			 * during `rt_update2' because the object is in a very unstable

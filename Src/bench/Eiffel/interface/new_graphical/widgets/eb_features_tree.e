@@ -1,5 +1,6 @@
 indexing
 	description: "Tree representing the features of the class currently opened"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -135,16 +136,6 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					raise ("No feature table")
 				end
 				if class_text /= Void then
-						--| Ancestors
-					tree_item := build_ancestors_tree_folder ("Ancestors", features_tool.current_compiled_class)
-					extend (tree_item)
---| Uncomment to auto expand first node for ancestors
---					if
---						expand_tree and then
---						tree_item.is_expandable
---					then
---						tree_item.expand
---					end	
 						--| Features
 					from 
 						fcl.start
@@ -366,60 +357,6 @@ feature {NONE} -- Implementation
 	features_tool: EB_FEATURES_TOOL
 			-- Associated features tool.
 
-	build_ancestors_tree_folder (n: STRING; a_compiled_class: CLASS_C): EV_TREE_ITEM is
-			-- Build the tree node corresponding to ancestors of `a_compiled_class'
-		do
-			create Result.make_with_text (n)
-			Result.set_pixmap (Pixmaps.Icon_format_ancestors)
-			Result.extend (create {EV_TREE_ITEM}.make_with_text ("click to refresh"))
-			Result.expand_actions.extend (agent fill_ancestors_item (Result, a_compiled_class))
-		end
-		
-	fill_ancestors_item (a_tree_item: EV_TREE_ITEM; a_class_c: CLASS_C) is
-			-- Build sub ancestors item.
-		local
-			tree_item: EV_TREE_ITEM
-			l_parents: LIST [CL_TYPE_A]
-			anc_name: STRING
-			l_classc: CLASS_C
-			st: CLASSC_STONE			
-		do
-			a_tree_item.wipe_out
-			from
-				l_parents := a_class_c.parents
-				l_parents.start
-			until
-				l_parents.after
-			loop
-				l_classc := l_parents.item.associated_class
-				anc_name := l_classc.name_in_upper
-				create tree_item.make_with_text (anc_name)
-				if l_classc.is_deferred then
-					tree_item.set_pixmap (Pixmaps.icon_deferred_class_symbol_color)
-				elseif l_classc.is_expanded then
-					tree_item.set_pixmap (Pixmaps.icon_expanded_object)
-				elseif l_classc.is_external then
-					tree_item.set_pixmap (Pixmaps.icon_external_symbol)					
-				else
-					tree_item.set_pixmap (Pixmaps.icon_class_symbol_color)
-				end
-				
-				create st.make (l_classc)
-				tree_item.set_pebble (st)
-				tree_item.set_accept_cursor (st.stone_cursor)
-				tree_item.set_deny_cursor (st.X_stone_cursor)
-
-				tree_item.set_data (l_classc)
-				tree_item.expand_actions.extend (agent fill_ancestors_item (tree_item, l_classc))
-				if not l_classc.parents.is_empty then
-					tree_item.extend (create {EV_TREE_ITEM}.make_with_text ("exploring ..."))			
-				end
-
-				a_tree_item.extend (tree_item)
-				l_parents.forth
-			end					
-		end
-			
 	build_tree_folder (n: STRING; fl: EIFFEL_LIST [FEATURE_AS]): EV_TREE_ITEM is
 			-- Build the tree node corresponding to feature clause named `n'.
 		local
@@ -572,5 +509,4 @@ feature {NONE} -- Implementation
 		end
 
 end -- class EB_FEATURES_TREE
-
 

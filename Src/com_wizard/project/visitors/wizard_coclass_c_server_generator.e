@@ -11,33 +11,47 @@ inherit
 	WIZARD_COCLASS_C_GENERATOR
 
 	WIZARD_COMPONENT_C_SERVER_GENERATOR
+		redefine
+			generate
+		end
 
 	ECOM_VAR_TYPE
 		export
 			{NONE} all
 		end
-	
+
+feature -- Access
+
+	default_dispinterface (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
+			-- Default dispinterface.
+		do
+			from
+				a_coclass.interface_descriptors.start
+			until
+				a_coclass.interface_descriptors.after
+			loop
+				if a_coclass.interface_descriptors.item.c_type_name.is_equal (default_dispinterface_name (a_coclass)) then
+					Result := a_coclass.interface_descriptors.item
+				end
+				a_coclass.interface_descriptors.forth
+			end
+		end
+
 feature -- Basic operations
 
-	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate c server for coclass.
 		local
 			member_writer: WIZARD_WRITER_C_MEMBER
 			a_class_object: WIZARD_CLASS_OBJECT_GENERATOR
 			tmp_string: STRING
 		do
-			create cpp_class_writer.make
+			Precursor {WIZARD_COMPONENT_C_SERVER_GENERATOR} (a_coclass)
 			create interface_names.make
 
-			cpp_class_writer.set_name (a_descriptor.c_type_name)
-			cpp_class_writer.set_header (a_descriptor.description)
-			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
-
-			-- Import header file
-			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
-
 			if shared_wizard_environment.out_of_process_server then
-				tmp_string := clone (a_descriptor.c_type_name)
+				create tmp_string.make (500)
+				tmp_string.append (a_coclass.c_type_name)
 				tmp_string.append (Underscore)
 				tmp_string.append (Factory)
 				tmp_string.append (Header_file_extension)
@@ -45,66 +59,18 @@ feature -- Basic operations
 			end
 
 			-- Add clsid of the coclass
-			-- const CLSID CLSID_'coclass_name'
-			cpp_class_writer.add_other (clsid_declaration (a_descriptor.c_type_name))
-			cpp_class_writer.add_other_source (clsid_definition (a_descriptor.c_type_name, a_descriptor.guid))
+			cpp_class_writer.add_other (clsid_declaration (a_coclass.c_type_name))
+			cpp_class_writer.add_other_source (clsid_definition (a_coclass.c_type_name, a_coclass.guid))
 
-			-- Add jmp_buf variable and integer value
-			cpp_class_writer.add_other_source ("int return_hr_value;")
-			cpp_class_writer.add_other_source ("jmp_buf exenv;")
-
-			-- member (LONG Ref_count)
-			create member_writer.make
-			member_writer.set_name (Ref_count)
-			member_writer.set_result_type (Long_macro)
-			member_writer.set_comment ("Reference counter")
-			cpp_class_writer.add_member (member_writer, Private)
-
-			-- member (EIF_OBJECT eiffel_object)
-			create member_writer.make
-			member_writer.set_name (Eiffel_object)
-			member_writer.set_result_type (Eif_object)
-			member_writer.set_comment ("Corresponding Eiffel object")
-			cpp_class_writer.add_member (member_writer, Private)
-
-			-- member (EIF_TYPE_ID type_id)
-			create member_writer.make
-			member_writer.set_name (Type_id)
-			member_writer.set_result_type (Eif_type_id)
-			member_writer.set_comment ("Eiffel type id")
-			cpp_class_writer.add_member (member_writer, Private)
 
 			-- Process functions
-			process_interfaces	(a_descriptor)			
+			process_interfaces	(a_coclass)			
 
 			if dispatch_interface then
-				-- Add type library id
-				cpp_class_writer.add_other (libid_declaration (a_descriptor.type_library_descriptor.name))
-				cpp_class_writer.add_other_source (libid_definition (a_descriptor.type_library_descriptor.name, a_descriptor.type_library_descriptor.guid))
-
-
-				-- member (ITypeInfo * pTypeInfo)
-				create member_writer.make
-				member_writer.set_name (Type_info_variable_name)
-				member_writer.set_result_type (Type_info)
-				member_writer.set_comment ("Type information")
-				cpp_class_writer.add_member (member_writer, Private)
-
-				add_get_type_info_function (a_descriptor)
-				add_get_type_info_count_function (a_descriptor)
-				add_get_ids_of_names_function (a_descriptor)
-				dispatch_invoke_function (a_descriptor)
+				dispatch_interface_features (a_coclass)
 			end
 
-			add_constructor
-			add_destructor
-
-
-			-- Implement IUnknown interface
-			add_release_function
-			add_addref_function
-			add_query_interface (a_descriptor)
-
+			standard_functions (a_coclass)
 			check
 				valid_cpp_class_writer: cpp_class_writer.can_generate
 			end
@@ -118,7 +84,7 @@ feature -- Basic operations
 
 			-- Generate code for class object factory.
 			create a_class_object
-			a_class_object.generate (a_descriptor)
+			a_class_object.generate (a_coclass)
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
@@ -157,6 +123,43 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	add_constructor (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+			-- Add constructor.
+		local
+			constructor_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
+			a_signature, a_body: STRING
+		do
+			create constructor_writer.make
+
+			create a_signature.make (100)
+			a_signature.append (Eif_type_id)
+			a_signature.append (Space)
+			a_signature.append (Type_id_variable_name)
+
+			constructor_writer.set_signature (a_signature)
+
+			create a_body.make (1000)
+			a_body.append (Tab)
+			a_body.append (Type_id)
+			a_body.append (Space_equal_space)
+			a_body.append (Type_id_variable_name)
+			a_body.append (Semicolon)
+
+			a_body.append (constructor_body)
+
+			constructor_writer.set_body (a_body)
+		
+			check
+				valid_constructor_writer: constructor_writer.can_generate
+			end
+
+			cpp_class_writer.add_constructor (constructor_writer)
+
+			check
+				writer_added: cpp_class_writer.constructors.has (constructor_writer)
+			end
+		end
+
 	add_query_interface (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add function 'QueryInterface'
 		local
@@ -170,7 +173,8 @@ feature {NONE} -- Implementation
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature (Query_interface_signature)
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (10000)
+			tmp_body.append (Tab)
 
 			tmp_body.append (If_keyword)
 			tmp_body.append (Space_open_parenthesis)

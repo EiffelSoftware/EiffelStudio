@@ -39,7 +39,6 @@ feature -- Execute
 			-- Execute current command but don't change the cursor into
 			-- watch shape.
 		do
-			focus_label.popdown;
 			if last_warner /= Void and then
 					not last_warner.destroyed then
 				last_warner.popdown

@@ -50,7 +50,6 @@ feature -- Execution
 		local
 			mp: MOUSE_PTR
 		do
-			focus_label.popdown
 			if last_warner /= Void then
 				last_warner.popdown
 			end;

@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 				e_item.disable_needed_on_diagram
 				
 				tool.history.do_named_undoable (
-					interface_names.t_diagram_delete_inheritance_link_cmd,
+					interface_names.t_diagram_delete_inheritance_link_cmd (ancestor.name, descendant.name),
 					agent remove_ancestor (ctm, ancestor.name, e_item),
 					agent add_ancestor (ctm, ancestor.name, e_item))
 			end
@@ -320,55 +320,38 @@ feature {NONE} -- Implementation
 			undo_list: LIST [TUPLE [STRING, INTEGER]]
 			l_model: ES_CLIENT_SUPPLIER_LINK
 			l_client: ES_CLASS
+			fne: FEATURE_NAME_EXTRACTOR
 		do
 			if not a_features.is_empty then
 				ctm := a_link.model.client.code_generator
 				ctm.remove_features (a_features)
 				if not ctm.class_modified_outside_diagram then
 					undo_list := ctm.last_removed_code.twin
-					
+					create fne
 					l_model := a_link.model
 					if a_link.model.features.count = a_features.count then
 						l_model.disable_needed_on_diagram
 						
 						history.register_named_undoable (
-							interface_names.t_diagram_delete_client_link_cmd,
+							interface_names.t_diagram_delete_client_link_cmd (fne.feature_name (a_features.first)),
 							agent remove_features_and_link (ctm, a_features, l_model),
---							[<<
---								agent ctm.remove_features (a_features), 
---								agent l_model.disable_needed_on_diagram
---							>>],
 							agent reinclude_code_and_link (ctm, undo_list, l_model))
---							[<<
---								agent ctm.undelete_code (undo_list),
---								agent l_model.enable_needed_on_diagram
---							>>])
 					else
 						l_client := l_model.client
 						l_client.remove_queries (a_features)
 						l_model.synchronize
 						
 						history.register_named_undoable (
-							interface_names.t_diagram_delete_client_link_cmd,
+							interface_names.t_diagram_delete_client_link_cmd (fne.feature_name (a_features.first)),
 							agent remove_features (ctm, a_features, l_model, l_client),
---							[<<
---								agent ctm.remove_features(a_features), 
---								agent l_client.remove_queries (a_features),
---								agent l_model.synchronize
---							>>],
 							agent reinclude_features (ctm, a_features, undo_list, l_model, l_client))
---							[<< 
---								agent ctm.undelete_code (undo_list),
---								agent l_client.add_queries (a_features),
---								agent l_model.synchronize
---							>>])
 					end
 				end
 			end
 		end
 		
 	remove_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS) is
-			-- 
+			-- Remove `a_features' from `a_ctm' and remove `a_features' from `a_client'.
 		do
 			a_ctm.remove_features (a_features)
 			if not a_ctm.class_modified_outside_diagram then
@@ -378,7 +361,7 @@ feature {NONE} -- Implementation
 		end 
 		
 	reinclude_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS) is
-			-- 
+			-- Reinclude `code' to `a_ctm' and add `a_features' to `a_link'.
 		do
 			a_ctm.undelete_code (code)
 			if not a_ctm.class_modified_outside_diagram then
@@ -388,7 +371,7 @@ feature {NONE} -- Implementation
 		end 
 	
 	remove_features_and_link (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK) is
-			-- 
+			-- Remove `a_features' from `a_ctm' and disable `a_link' in diagram.
 		do
 			a_ctm.remove_features (a_features)
 			if not a_ctm.class_modified_outside_diagram then
@@ -397,15 +380,13 @@ feature {NONE} -- Implementation
 		end
 		
 	reinclude_code_and_link (a_ctm: CLASS_TEXT_MODIFIER; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK) is
-			-- 
+			-- Reinclude `code' to `a_ctm' and enable `a_link' on diagram.
 		do
 			a_ctm.undelete_code (code)
 			if not a_ctm.class_modified_outside_diagram then
 				a_link.enable_needed_on_diagram
 			end
 		end
-		
-		
 
 	delete_client_link_dialog: EB_DELETE_CLIENT_LINK_DIALOG is
 			-- Associated widget.

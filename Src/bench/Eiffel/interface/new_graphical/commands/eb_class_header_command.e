@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 											invalid_name_dialog.show_modal_to_window (tool.development_window.window)
 										else
 											history.do_named_undoable (
-												Interface_names.t_Diagram_rename_class_locally_cmd,
+												Interface_names.t_Diagram_rename_class_locally_cmd (old_name, s),
 												agent change_name_locally (src, s, g),
 												agent change_name_locally (src, old_name, old_generics))
 											invalid_name := False
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 										else
 											if change_name_dialog.global_replace_universe then
 												history.do_named_undoable (
-													Interface_names.t_Diagram_rename_class_globally_cmd,
+													Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
 													[<<agent tool_disable_sensitive, 
 														agent change_name_universe_classes (src, cnr, old_name, s, g),
 														agent tool_enable_sensitive>>],
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 												invalid_name := False
 											else
 												history.do_named_undoable (
-													Interface_names.t_Diagram_rename_class_globally_cmd,
+													Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
 													[<<agent tool_disable_sensitive,
 														agent change_name_compiled_classes (src, cnr, old_name, s, g),
 														agent tool_enable_sensitive>>],

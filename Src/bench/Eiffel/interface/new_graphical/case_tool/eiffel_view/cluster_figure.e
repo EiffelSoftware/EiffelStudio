@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 		do
 			ce := world.context_editor
 			world.context_editor.history.do_named_undoable (
-					interface_names.t_Diagram_move_cluster_cmd,
+					interface_names.t_Diagram_move_cluster_cmd (model.name),
 					[<<agent set_port_position (port_x, port_y), agent ce.restart_force_directed>>],
 					[<<agent set_port_position (saved_x, saved_y), agent ce.restart_force_directed>>])
 			if world.context_editor.is_force_directed_used then

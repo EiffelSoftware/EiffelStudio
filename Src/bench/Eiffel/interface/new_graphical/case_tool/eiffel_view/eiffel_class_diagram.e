@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 					remove_links := cm.needed_links
 					update_cluster_legend
 					context_editor.history.register_named_undoable (
-						Interface_names.t_Diagram_include_class_cmd,
+						Interface_names.t_Diagram_include_class_cmd (cm.name),
 						[<<agent reinclude_class (cf, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
 						[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
 				else
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 					old_y := cf.port_y
 					cf.set_port_position (drop_x, drop_y)
 					context_editor.history.register_named_undoable (
-						interface_names.t_diagram_move_class_cmd,
+						interface_names.t_diagram_move_class_cmd (cm.name),
 						agent cf.set_port_position (drop_x, drop_y),
 						agent cf.set_port_position (old_x, old_y))
 				end
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 					remove_links := es_class.needed_links
 					update_cluster_legend
 					context_editor.history.register_named_undoable (
-						interface_names.t_diagram_include_class_cmd,
+						interface_names.t_diagram_include_class_cmd (es_class.name),
 						[<<agent reinclude_class (cf, remove_links, a_x, a_y), agent update_cluster_legend>>],
 						[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
 				end

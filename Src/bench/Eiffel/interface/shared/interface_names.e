@@ -686,22 +686,99 @@ feature -- Title part
 	t_Diagram_link_tool: STRING is				"Link tool"
 	t_Diagram_delete_client_link: STRING is 	"Choose feature(s) to delete"
 	t_Diagram_history_tool: STRING is			"History tool"
-	t_Diagram_move_class_cmd: STRING is			"Move class"
-	t_Diagram_move_cluster_cmd: STRING is		"Move cluster"
+	
+	t_Diagram_move_class_cmd (a_name: STRING): STRING is
+		require
+			exists: a_name /= Void
+		do
+			Result := "Move class " + a_name
+		end
+	
+	t_Diagram_move_cluster_cmd (a_name: STRING): STRING is	
+		require
+			exists: a_name /= Void	
+		do
+			Result := "Move cluster " + a_name
+		end
+		
 	t_Diagram_move_midpoint_cmd: STRING is		"Move midpoint"
-	t_Diagram_add_cs_link_cmd: STRING is		"Add client-supplier relation"
-	t_Diagram_add_inh_link_cmd: STRING is		"Add inheritance relation"
-	t_Diagram_include_class_cmd: STRING is		"Include class on diagram"
-	t_Diagram_include_cluster_cmd: STRING is	"Include cluster on diagram"
+	
+	t_Diagram_add_cs_link_cmd (client_name, supplier_name: STRING): STRING is	
+		require
+			exists: client_name /= Void	and supplier_name /= Void
+		do
+			Result := "Add client-supplier relation between " + client_name + " and " + supplier_name
+		end
+	
+	t_Diagram_add_inh_link_cmd (ancestor_name, descendant_name: STRING): STRING is
+		require
+			exists: ancestor_name /= Void and descendant_name /= Void
+		do
+			Result := "Add inheritance relation between " + ancestor_name + " and " + descendant_name
+		end
+		
+	t_Diagram_include_class_cmd (a_name: STRING): STRING is		
+		require
+			exists: a_name /= Void
+		do
+			Result := "Include class " + a_name
+		end
+		
+	t_Diagram_include_cluster_cmd (a_name: STRING): STRING is	
+		require
+			exists: a_name /= Void
+		do
+			Result := "Include cluster " + a_name
+		end
+		
 	t_Diagram_insert_midpoint_cmd: STRING is	"Insert midpoint"
 	t_Diagram_change_color_cmd: STRING is		"Change class color"
-	t_Diagram_rename_class_locally_cmd: STRING is 	"Rename class locally"
-	t_Diagram_rename_class_globally_cmd: STRING is 	"Rename class globally"
-	t_Diagram_delete_client_link_cmd: STRING is 	"Delete client link"
-	t_Diagram_delete_inheritance_link_cmd: STRING is 	"Delete inheritance link"
-	t_Diagram_delete_class_cmd: STRING is		"Delete class"
-	t_Diagram_delete_cluster_cmd: STRING is		"Delete cluster"
-	t_Diagram_delete_midpoint_cmd: STRING is	"Delete midpoint"
+	
+	t_Diagram_rename_class_locally_cmd (old_name, new_name: STRING): STRING is 	
+		require
+			exists: old_name /= Void and new_name /= Void
+		do
+			Result := "Rename class " + old_name + " locally to " + new_name
+		end
+		
+	t_Diagram_rename_class_globally_cmd (old_name, new_name: STRING): STRING is 
+		require
+			exists: old_name /= Void and new_name /= Void	
+		do
+			Result := "Rename class " + old_name + " globally to " + new_name
+		end
+		
+	t_Diagram_delete_client_link_cmd (a_name: STRING): STRING is 	
+		require
+			exists: a_name /= Void	
+		do
+			Result := "Delete client link " + a_name
+		end
+		
+	t_Diagram_delete_inheritance_link_cmd (an_ancestor, a_descendant: STRING): STRING is
+		require
+			exists: an_ancestor /= Void and a_descendant /= Void
+		do
+			Result := "Delete inheritance link between " + an_ancestor + " and " + a_descendant
+		end
+		
+	t_Diagram_erase_cluster_cmd (a_name: STRING): STRING is
+		require
+			exists: a_name /= Void
+		do
+			Result := "Erase cluster " + a_name
+		end
+		
+	t_Diagram_delete_midpoint_cmd: STRING is	"Erase midpoint"
+	
+	t_Diagram_erase_class_cmd (a_name: STRING): STRING is
+		require
+			exists: a_name /= Void
+		do
+			Result := "Erase class " + a_name
+		end
+		
+	t_Diagram_erase_classes_cmd: STRING is		"Erase classes"
 	t_Diagram_put_right_angles_cmd: STRING is	"Put right angles"
 	t_Diagram_remove_right_angles_cmd: STRING is	"Remove right angles"
 	t_Diagram_put_one_handle_left_cmd: STRING is	"Put handle left"
@@ -712,8 +789,21 @@ feature -- Title part
 	t_Diagram_zoom_in_cmd: STRING is			"Zoom in"
 	t_Diagram_zoom_out_cmd: STRING is			"Zoom out"
 	t_Diagram_zoom_cmd: STRING is				"Zoom"
-	t_Diagram_cluster_expand: STRING is			"Expand cluster"
-	t_Diagram_cluster_collapse: STRING is		"Collapse cluster"
+	
+	t_Diagram_cluster_expand (a_name: STRING): STRING is
+		require
+			exists: a_name /= Void
+		do
+			Result := "Expand cluster " + a_name
+		end
+	
+	t_Diagram_cluster_collapse (a_name: STRING): STRING is
+		require
+			exists: a_name /= Void
+		do
+			Result := "Collapse cluster " + a_name
+		end
+		
 	t_Diagram_disable_high_quality: STRING is	"Disable high quality"
 	t_Diagram_enable_high_quality: STRING is	"Enable high quality"
 

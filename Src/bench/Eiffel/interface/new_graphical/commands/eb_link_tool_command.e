@@ -85,9 +85,6 @@ feature -- Basic operations
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
---			Result := Precursor (display_text, use_gray_icons)
---			Result.drop_actions.extend (agent execute_with_link_stone)
-
 			create Result.make (Current)
 			current_button := Result
 			initialize_toolbar_item (Result, display_text, use_gray_icons)

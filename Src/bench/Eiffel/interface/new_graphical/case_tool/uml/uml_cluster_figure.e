@@ -517,7 +517,7 @@ feature {NONE} -- Implementation
 				expand
 				if ew /= Void then
 					ew.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_cluster_expand,
+						interface_names.t_diagram_cluster_expand (model.name),
 						[<<agent expand, agent toggle_is_iconified, agent request_update>>],
 						[<<agent collapse, agent toggle_is_iconified, agent request_update>>])
 				end
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 				collapse
 				if ew /= Void then
 					ew.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_cluster_collapse,
+						interface_names.t_diagram_cluster_collapse (model.name),
 						[<<agent collapse, agent toggle_is_iconified, agent request_update>>],
 						[<<agent expand, agent toggle_is_iconified, agent request_update>>])
 				end

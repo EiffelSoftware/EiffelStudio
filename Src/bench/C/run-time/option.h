@@ -76,7 +76,7 @@ extern int is_debug();		/* Debug level query */
 #define prof_enabled 	EIF_TEST(eif_profiler_level & IN_ACE_FILE)	/* Has the profiler been enabled in the ACE file? */
 #define prof_recording	EIF_TEST(eif_profiler_level & PROF_RECORDING)	/* Is the profile currently recording? */
 
-extern EIF_BOOLEAN eif_profiler_level;		/* Is the Eiffel profiler on */
+extern EIF_INTEGER eif_profiler_level;		/* Is the Eiffel profiler on */
 
 extern int trace_call_level;			/* Call level to report at E-TRACE output */
 

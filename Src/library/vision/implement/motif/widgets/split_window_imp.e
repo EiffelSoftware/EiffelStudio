@@ -104,7 +104,7 @@ feature -- Element change
 			proportion := p
 		end
 
-	update, realize is
+	update_split, realize is
 			-- Create the actual Windows window.
 		local
 			mc: MEL_COMPOSITE

@@ -51,7 +51,6 @@ feature -- Initialization
 			create ht.make (name_table_size)
 			implementation := handle.database.db_selection
 			implementation.set_ht (ht)
-	--		error_c := error_code
 		end
 
 feature -- Access
@@ -102,13 +101,21 @@ feature -- Status report
 			Result := container.after
 		end
 
-		-- Please access status report from class DB_CONTROL.
---	error_m: STRING is 
---		do
---			Result := error_message
---		end
---
---	error_c: INTEGER
+	error_m: STRING is 
+			-- Error message.
+		Obsolete
+			"Please use `{DB_CONTROL}.error_message'."
+		do
+			Result := error_message
+		end
+
+	error_c: INTEGER is
+			-- Error code.
+		Obsolete
+			"Please use `{DB_CONTROL}.error_code'."
+		do
+			Result := error_code
+		end
 
 feature -- Status setting
 
@@ -163,7 +170,7 @@ feature -- Status setting
 			cursor_exists: cursor /= Void
 			object_exists: object /= Void
 		do
-			if update_map_table then
+			if cursor.map_table_to_create or else update_map_table then
 				cursor.update_map_table (object)
 				update_map_table := False
 			end
@@ -190,10 +197,12 @@ feature -- Status setting
 			container_exists: container /= Void
 		do
 			container.forth
-			cursor := container.item
+			if not container.after then
+				cursor := container.item
+			end
 		ensure then
 			container_index_moved: container.index = old container.index + 1
-			cursor_updated: cursor = container.item
+			cursor_updated: not after implies cursor = container.item
 		end
 
 	reset_cursor (c: DB_RESULT) is
@@ -240,8 +249,9 @@ feature -- Basic operations
 				if cursor = Void then
 					create cursor.make
 					cursor.set_descriptor (active_selection_number)
+				else
+					cursor.update_metadata
 				end
-				cursor.update_metadata
 				if handle.status.found then
 					cursor.fill_in
 				end
@@ -253,9 +263,11 @@ feature -- Basic operations
 			loop
 				if container /= Void then
 					container.extend (cursor)
-							-- I think that metadata is taken for each row in this case... (Cedric)
-					create cursor.make
-					cursor.set_descriptor (active_selection_number)
+							-- Metadata is taken for each row in this case. (Cedric)
+				--	create cursor.make
+				--	cursor.set_descriptor (active_selection_number)
+							--
+					cursor := deep_clone (cursor)
 				end
 				if stop_condition /= Void then
 					stop_condition.execute

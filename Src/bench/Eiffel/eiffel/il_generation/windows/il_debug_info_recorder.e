@@ -53,24 +53,15 @@ feature {NONE} -- Initialization
 			create feature_breakable_il_line_by_id.make (100)
 		end
 
---| Unused |--
-
---	reset is
---			-- Reset data.
---		do
---			class_type_impl_id_by_token_and_module.wipe_out
---			feature_id_by_token.wipe_out
---			feature_token_by_id.wipe_out
---			once_feature_tokens_by_id.wipe_out
---			feature_breakable_il_line_by_id.wipe_out
---			entry_point_token := 0
---		end
-		
 feature -- Access
+
+	is_debug_info_enabled: BOOLEAN
+			-- Are we generating debug information?
 
 	init_recording_session is
 			-- 
 		do
+			is_debug_info_enabled := True
 			last_class_type_recorded := Void
 			last_module_key := Void
 			last_table_cls_type_impl_id_by_token := Void
@@ -271,6 +262,22 @@ feature -- To compiler world
 			class_name_ok: Result /= Void and then not Result.is_empty
 		end
 
+feature -- entry point token
+
+	entry_point_token: INTEGER
+			-- Token of the system entry point feature
+			-- Usefull for stepping at the beginning of the execution
+	
+	entry_point_feature_i: FEATURE_I is
+			-- System entry point feature
+		local
+			l_class: CLASS_C
+		do
+			--| Update the root class info
+			l_class := System.root_class.compiled_class
+			Result := l_class.feature_table.item (System.creation_name)	
+		end	
+
 feature {NONE} -- Table key
 
 	feature_id_by_token_key (a_module_name: STRING; a_class_token, a_feature_token: INTEGER): HASHABLE is
@@ -339,31 +346,17 @@ feature {NONE} -- Table key
 			Result := once_feature_tokens_by_id_specialized_key (l_static_type_id, a_once_name)
 		end
 
-feature -- entry point token
-
-	entry_point_token: INTEGER
-			-- Token of the system entry point feature
-			-- Usefull for stepping at the beginning of the execution
-	
-	entry_point_feature_i: FEATURE_I is
-			-- System entry point feature
-		local
-			l_class: CLASS_C
-		do
-			--| Update the root class info
-			l_class := System.root_class.compiled_class
-			Result := l_class.feature_table.item (System.creation_name)	
-		end	
-
 feature {NONE} -- entry point token
 
 	record_entry_point_token (a_module: STRING; a_class_token, a_feature_token: INTEGER) is
 			-- Record the entry_point_token of the system.
 		do
-			debug ("debugger_il_info_trace")
-				print ("ENTRYPOINTTOKEN_RECORDED " + a_feature_token.to_hex_string + "%N")
+			if is_debug_info_enabled then
+				debug ("debugger_il_info_trace")
+					print ("ENTRYPOINTTOKEN_RECORDED " + a_feature_token.to_hex_string + "%N")
+				end
+				entry_point_token := a_feature_token
 			end
-			entry_point_token := a_feature_token
 		end
 
 	is_entry_point (a_feat: FEATURE_I): BOOLEAN is
@@ -380,12 +373,6 @@ feature -- line debug recording
 		do
 			ignoring_next_debug_info := True
 		end
-		
-	ignoring_next_debug_info: BOOLEAN
-			-- Do we ignore recording of debug info (nop) for next recording ?
-
-	last_key_for_recording_line_info: HASHABLE
-			-- cache of last key for recording line info
 
 	record_line_info (a_feat: FEATURE_I; a_il_line: INTEGER; a_eiffel_line: INTEGER;) is
 			-- Record IL information regarding breakable line
@@ -393,55 +380,65 @@ feature -- line debug recording
 			l_key: HASHABLE
 			l_lines_table: ARRAYED_LIST [INTEGER]
 		do
-			if ignoring_next_debug_info then
-				ignoring_next_debug_info := False
-				debug ("debugger_il_info_trace")
-					print ("Ignoring line_info for " + a_feat.feature_name + " @ [IL:" + a_il_line.to_hex_string + "] [EIFFEL:" + a_eiffel_line.out + "]%N")
-				end
-			else
-				if a_feat /= Void then
+			if is_debug_info_enabled then
+				if ignoring_next_debug_info then
+					ignoring_next_debug_info := False
 					debug ("debugger_il_info_trace")
-						print (" - " + a_feat.written_class.name_in_upper + " :: NOP :: ")
-						print (	a_feat.feature_name 						
-								+ " Il_Line=" + a_il_line.to_hex_string
-								+ " Eiffel_Line=" + a_eiffel_line.out
-								+ "%N"
-							)	
+						print ("Ignoring line_info for " + a_feat.feature_name + " @ [IL:" + a_il_line.to_hex_string + "] [EIFFEL:" + a_eiffel_line.out + "]%N")
 					end
-					l_key := feature_breakable_il_line_by_id_key (a_feat)
-					if 
-						last_key_for_recording_line_info /= Void 
-						and l_key.is_equal (last_key_for_recording_line_info) 
-					then
-							--| we assumes we are generating all the line info regarding a feature
-							--| in the same atomic time (no other feature are processed during this time)
-						check
-							feature_breakable_il_line_by_id.has (l_key)
+				else
+					if a_feat /= Void then
+						debug ("debugger_il_info_trace")
+							print (" - " + a_feat.written_class.name_in_upper + " :: NOP :: ")
+							print (	a_feat.feature_name 						
+									+ " Il_Line=" + a_il_line.to_hex_string
+									+ " Eiffel_Line=" + a_eiffel_line.out
+									+ "%N"
+								)	
 						end
-					else
-						last_key_for_recording_line_info := l_key
-						if feature_breakable_il_line_by_id.has (l_key) then
-								--| this means we are overwriting existing data...
-								--| recompilation ...
-							debug ("debugger_il_info_trace")
-								print ("?! Clean line_info for " + a_feat.feature_name + " %N")
+						l_key := feature_breakable_il_line_by_id_key (a_feat)
+						if 
+							last_key_for_recording_line_info /= Void 
+							and l_key.is_equal (last_key_for_recording_line_info) 
+						then
+								--| we assumes we are generating all the line info regarding a feature
+								--| in the same atomic time (no other feature are processed during this time)
+							check
+								feature_breakable_il_line_by_id.has (l_key)
 							end
-							feature_breakable_il_line_by_id.remove (l_key)
+						else
+							last_key_for_recording_line_info := l_key
+							if feature_breakable_il_line_by_id.has (l_key) then
+									--| this means we are overwriting existing data...
+									--| recompilation ...
+								debug ("debugger_il_info_trace")
+									print ("?! Clean line_info for " + a_feat.feature_name + " %N")
+								end
+								feature_breakable_il_line_by_id.remove (l_key)
+							end
+							create l_lines_table.make (a_feat.number_of_breakpoint_slots)
+							feature_breakable_il_line_by_id.force (l_lines_table, l_key)
 						end
-						create l_lines_table.make (a_feat.number_of_breakpoint_slots)
-						feature_breakable_il_line_by_id.force (l_lines_table, l_key)							
+						
+--						if feature_breakable_il_line_by_id.has (l_key) then
+							l_lines_table := feature_breakable_il_line_by_id.item (l_key)
+--						else
+--							create l_lines_table.make (a_feat.number_of_breakpoint_slots)
+--							feature_breakable_il_line_by_id.force (l_lines_table, l_key)
+--						end
+						l_lines_table.extend (a_il_line)
 					end
-					
---					if feature_breakable_il_line_by_id.has (l_key) then
-						l_lines_table := feature_breakable_il_line_by_id.item (l_key)
---					else
---						create l_lines_table.make (a_feat.number_of_breakpoint_slots)
---						feature_breakable_il_line_by_id.force (l_lines_table, l_key)
---					end
-					l_lines_table.extend (a_il_line)
 				end
 			end
 		end
+
+feature {NONE} -- line debug recording Implementation
+		
+	ignoring_next_debug_info: BOOLEAN
+			-- Do we ignore recording of debug info (nop) for next recording ?
+
+	last_key_for_recording_line_info: HASHABLE
+			-- cache of last key for recording line info
 
 feature -- line debug exploitation
 
@@ -553,7 +550,6 @@ feature -- line debug exploitation
 			end
 		end
 		
-
 feature -- Recorder Once
 
 	once_feature_tokens_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): TUPLE [INTEGER, INTEGER] is
@@ -582,45 +578,39 @@ feature -- Recorder Once
 			l_info_done_result: TUPLE [INTEGER, INTEGER]
 			l_key: HASHABLE
 		do
-			l_key := once_feature_tokens_by_id_key (a_class_type, a_once_name)
-			l_info_done_result := once_feature_tokens_by_id.item (l_key)
-			if l_info_done_result = Void then
-				l_info_done_result := [a_once_done_token, a_once_result_token]
-				once_feature_tokens_by_id.put (l_info_done_result, l_key)
-				if not once_feature_tokens_by_id.inserted then
-					print ("CONFLICT -> "+a_class_type.associated_class.name_in_upper
-							+"["+a_class_type.static_type_id.out
-							+"]."+a_once_name
-							+"%N"
-						)
-					once_feature_tokens_by_id.force (l_info_done_result, l_key)
-				end
-			else
-				if a_once_done_token /= 0 then
-					l_info_done_result.put_integer (a_once_done_token, 1)
-				end
-				if a_once_result_token /= 0 then
-					l_info_done_result.put_integer (a_once_result_token, 2)
-				end
-			end
-			debug ("debugger_il_info_trace")
-				print ("ONCE::Record -> "
-								+a_class_type.associated_class.name_in_upper
+			if is_debug_info_enabled then
+				l_key := once_feature_tokens_by_id_key (a_class_type, a_once_name)
+				l_info_done_result := once_feature_tokens_by_id.item (l_key)
+				if l_info_done_result = Void then
+					l_info_done_result := [a_once_done_token, a_once_result_token]
+					once_feature_tokens_by_id.put (l_info_done_result, l_key)
+					if not once_feature_tokens_by_id.inserted then
+						print ("CONFLICT -> "+a_class_type.associated_class.name_in_upper
 								+"["+a_class_type.static_type_id.out
 								+"]."+a_once_name
-								+ "%N")
+								+"%N"
+							)
+						once_feature_tokens_by_id.force (l_info_done_result, l_key)
+					end
+				else
+					if a_once_done_token /= 0 then
+						l_info_done_result.put_integer (a_once_done_token, 1)
+					end
+					if a_once_result_token /= 0 then
+						l_info_done_result.put_integer (a_once_result_token, 2)
+					end
+				end
+				debug ("debugger_il_info_trace")
+					print ("ONCE::Record -> "
+									+a_class_type.associated_class.name_in_upper
+									+"["+a_class_type.static_type_id.out
+									+"]."+a_once_name
+									+ "%N")
+				end
 			end
 		end
 
-feature -- Recorder feature and attribute
-
-	set_record_context (a_is_attr, a_is_static, a_in_interface: BOOLEAN) is
-			-- Save generation context in order to determine what to record.
-		do
-			is_attribute := a_is_attr
-			is_static := a_is_static
-			in_interface := a_in_interface
-		end
+feature {NONE} -- Record context
 
 	is_attribute : BOOLEAN
 			-- is current generated feature is attribute ?
@@ -631,21 +621,33 @@ feature -- Recorder feature and attribute
 	in_interface : BOOLEAN
 			-- is current generated feature is in_interface ?
 
+feature -- Recorder feature and attribute
+
+	set_record_context (a_is_attr, a_is_static, a_in_interface: BOOLEAN) is
+			-- Save generation context in order to determine what to record.
+		do
+			is_attribute := a_is_attr
+			is_static := a_is_static
+			in_interface := a_in_interface
+		end
+		
 	record_il_feature_info (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_class_token, a_feature_token: INTEGER) is
 			-- Record feature information : class, feature token, and module name throught the other data.
 		do
-			if not in_interface then		
-				if is_attribute and then is_static then
-					process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
-				elseif not is_attribute then
-					if is_static then
+			if is_debug_info_enabled then
+				if not in_interface then		
+					if is_attribute and then is_static then
 						process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
-						if is_entry_point (a_feat) then
-							record_entry_point_token (
-									module_key (a_module.module_file_name)
-									, a_class_token
-									, a_feature_token
-								)
+					elseif not is_attribute then
+						if is_static then
+							process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
+							if is_entry_point (a_feat) then
+								record_entry_point_token (
+										module_key (a_module.module_file_name)
+										, a_class_token
+										, a_feature_token
+									)
+							end
 						end
 					end
 				end
@@ -656,6 +658,13 @@ feature {NONE} -- Record processing
 
 	last_class_type_recorded: CLASS_TYPE
 
+	ignore_feature (a_feat: FEATURE_I): BOOLEAN is
+			-- Ignore non Eiffel feature name 
+			-- for now, ignore all '^_.*' feature_name
+		do
+			Result := a_feat.feature_name.item(1).is_equal ('_')
+		end
+		
 	process_il_feature_info_recording (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_class_token, a_feature_token: INTEGER) is
 			-- Record feature information regarding token
 		require
@@ -777,15 +786,6 @@ feature {NONE} -- Record processing
 			end
 		end
 
-feature -- Ignore feature 
-
-	ignore_feature (a_feat: FEATURE_I): BOOLEAN is
-			-- Ignore non Eiffel feature name 
-			-- for now, ignore all '^_.*' feature_name
-		do
-			Result := a_feat.feature_name.item(1).is_equal ('_')
-		end
-
 feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 
 	save is
@@ -794,22 +794,24 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			l_il_info_file: RAW_FILE	
 			l_data_to_save: TUPLE[ANY,ANY,ANY,ANY,ANY, INTEGER]
 		do
-			debug ("debugger_il_info_trace")
-				print ("Saving IL Tokens %N")
+			if is_debug_info_enabled then
+				debug ("debugger_il_info_trace")
+					print ("Saving IL Tokens %N")
+				end
+				
+					--| class_token : feature_token -- classname : feature_name
+				create l_il_info_file.make_create_read_write (Il_info_file_name)
+				l_data_to_save := [
+									class_type_impl_id_by_token_and_module, 
+									feature_id_by_token, 
+									feature_token_by_id,
+									once_feature_tokens_by_id,
+									feature_breakable_il_line_by_id,
+									entry_point_token
+								]
+				l_il_info_file.independent_store (l_data_to_save)
+				l_il_info_file.close
 			end
-			
-				--| class_token : feature_token -- classname : feature_name
-			create l_il_info_file.make_create_read_write (Il_info_file_name)
-			l_data_to_save := [
-								class_type_impl_id_by_token_and_module, 
-								feature_id_by_token, 
-								feature_token_by_id,
-								once_feature_tokens_by_id,
-								feature_breakable_il_line_by_id,
-								entry_point_token
-							]
-			l_il_info_file.independent_store (l_data_to_save)
-			l_il_info_file.close
 		end
 
 	load is
@@ -819,30 +821,32 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			l_data_to_save: TUPLE[ANY,ANY,ANY,ANY,ANY, INTEGER]
 			retried: BOOLEAN
 		do
-			debug ("debugger_il_info_trace")
-				print ("Loading IL Tokens (retry:" + retried.out + ") %N")
-			end
-			if not retried then
-				create l_il_info_file.make (Il_info_file_name)
-				if not l_il_info_file.exists then
-						-- Create new arguments file.
-					l_il_info_file.create_read_write
-					l_il_info_file.close					
-				else
-					l_il_info_file.open_read
-					l_data_to_save ?= l_il_info_file.retrieved
-					l_il_info_file.close					
-					
-					class_type_impl_id_by_token_and_module ?= l_data_to_save.item (1)
-					feature_id_by_token ?= l_data_to_save.item (2)
-					feature_token_by_id ?= l_data_to_save.item (3)			
-					once_feature_tokens_by_id ?= l_data_to_save.item (4)			
-					feature_breakable_il_line_by_id ?= l_data_to_save.item (5)			
-					entry_point_token := l_data_to_save.integer_item (6)			
+			if is_debug_info_enabled then
+				debug ("debugger_il_info_trace")
+					print ("Loading IL Tokens (retry:" + retried.out + ") %N")
 				end
-				
-			else
-				io.put_string ("ERROR: Unable to load IL INFO data from file [" + Il_info_file_name + "]%N")
+				if not retried then
+					create l_il_info_file.make (Il_info_file_name)
+					if not l_il_info_file.exists then
+							-- Create new arguments file.
+						l_il_info_file.create_read_write
+						l_il_info_file.close					
+					else
+						l_il_info_file.open_read
+						l_data_to_save ?= l_il_info_file.retrieved
+						l_il_info_file.close					
+						
+						class_type_impl_id_by_token_and_module ?= l_data_to_save.item (1)
+						feature_id_by_token ?= l_data_to_save.item (2)
+						feature_token_by_id ?= l_data_to_save.item (3)			
+						once_feature_tokens_by_id ?= l_data_to_save.item (4)			
+						feature_breakable_il_line_by_id ?= l_data_to_save.item (5)			
+						entry_point_token := l_data_to_save.integer_item (6)			
+					end
+					
+				else
+					io.put_string ("ERROR: Unable to load IL INFO data from file [" + Il_info_file_name + "]%N")
+				end
 			end
 		rescue
 			retried := True

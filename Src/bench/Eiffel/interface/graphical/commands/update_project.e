@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 					perform_compilation (argument)
 
 					if Eiffel_project.successful then
-							-- If a freezing already occured (due to a new external
+							-- If a freezing already occurred (due to a new external
 							-- or new derivation of SPECIAL), no need to freeze again.
 						title := clone (Interface_names.t_Project)
 						title.append (" : ")

@@ -207,7 +207,7 @@ feature -- Update
 		end
 
 	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
-			-- Highlight and show next occurence of text `s'.
+			-- Highlight and show next occurrence of text `s'.
 		require
 			valid_s: s /= Void
 			s_not_empty: not s.is_empty
@@ -215,7 +215,7 @@ feature -- Update
 		end
 
 	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
-			-- Replace next occurence of `s' with `r'.
+			-- Replace next occurrence of `s' with `r'.
 		require
 			valid_s: s /= Void
 			valid_r: r /= Void

@@ -946,11 +946,11 @@ feature -- Project creation, retrieval, ...
 
 	w_Unable_to_retrieve_project: STRING is "Unable to retrieve the project, it may be corrupted."
 	
-	w_Fill_in_location_field: STRING is "Please fill the 'Location' field in."
+	w_Fill_in_location_field: STRING is "Please fill in the 'Location' field."
 	
-	w_Fill_in_project_name_field: STRING is "Please fill the 'Project Name' field in."
+	w_Fill_in_project_name_field: STRING is "Please fill in the 'Project Name' field."
 	
-	w_Fill_in_ace_field: STRING is "Please fill the 'Ace file' field in."
+	w_Fill_in_ace_field: STRING is "Please fill in the 'Ace file' field."
 	
 	w_Unable_to_load_ace_file (an_ace_name: STRING): STRING is 
 		do
@@ -1005,7 +1005,7 @@ feature -- Warning messages
 	
 	w_cannot_generate_png: STRING is "Could not generate PNG file.%NInsufficient video memory."
 	
-	w_Environment_not_initialized: STRING is "$EIFFEL5 is not initialized. Execution impossible%N"
+	w_Environment_not_initialized: STRING is "$ISE_EIFFEL is not initialized. Execution impossible%N"
 
 	w_Feature_not_compiled: STRING is "Feature is not compiled."
 

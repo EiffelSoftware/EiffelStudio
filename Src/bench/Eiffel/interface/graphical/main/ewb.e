@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			msg_d: ERROR_D
 		do
 			create msg_d.make ("Internal Error", Project_tool)
-			msg_d.set_message ("An internal error occured.%N%N%
+			msg_d.set_message ("An internal error occurred.%N%N%
 						%1 - Check that you have enough space to compile.%N%
 						%2 - Check that you are not using specific Eiffel%N%
 						%     construct not supported by EiffelSharp%N%

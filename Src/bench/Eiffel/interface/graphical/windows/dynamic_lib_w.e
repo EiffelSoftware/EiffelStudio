@@ -176,9 +176,9 @@ feature -- Stone process
 			 d_routine:E_FEATURE; d_index:INTEGER; d_alias, d_call_type: STRING) is
 		do
 			if d_routine.is_attribute then
-				warner (eb_shell).gotcha_call ("An attribute can not be exported.")
+				warner (eb_shell).gotcha_call ("An attribute cannot be exported.")
 			elseif d_routine.is_deferred then
-				warner (eb_shell).gotcha_call ("A deferred feature can not be exported.%N")
+				warner (eb_shell).gotcha_call ("A deferred feature cannot be exported.%N")
 			else
 				Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index, d_alias, d_call_type)
 			end

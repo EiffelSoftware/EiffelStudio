@@ -6,13 +6,14 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class COMPOSITE_M 
+class 		
+	COMPOSITE_M 
 
 inherit
 
 	WIDGET_M
 		undefine
-			mel_destroy, clean_up
+			mel_destroy, clean_up, object_clean_up
 		end;
 
 	MEL_COMPOSITE

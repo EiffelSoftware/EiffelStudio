@@ -12,11 +12,10 @@ inherit
 
 feature {EV_MENU} -- Implementation
 	
-	add_menu (menu: EV_MENU) is
+	add_menu (menu: EV_MENU_IMP) is
 			-- Add `a_menu' into container.
 		require
 			exists: not destroyed
-			valid_menu: is_valid (menu)
 		deferred
 		end
 

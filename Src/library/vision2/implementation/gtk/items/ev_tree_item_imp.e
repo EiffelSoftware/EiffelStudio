@@ -248,6 +248,16 @@ feature {EV_ITEM_LIST_IMP} -- Implementation
 			end
 		end
 
+feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
+
+	gtk_tree_root_tree (a_tree: POINTER): POINTER is
+			-- Root tree of the item.
+		external
+			" C [macro <gtk/gtktree.h>]"
+		alias
+			"GTK_TREE_ROOT_TREE"
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM
@@ -275,6 +285,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/02/28 23:59:31  king
+--| Added root_tree macro
+--|
 --| Revision 1.38  2000/02/26 01:27:46  king
 --| Implemented to contain children even if item has no parent
 --|

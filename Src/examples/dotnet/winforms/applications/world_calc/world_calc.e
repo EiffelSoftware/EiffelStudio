@@ -58,19 +58,9 @@ feature -- Implementation
 			i: INTEGER
 			l_button: WINFORMS_BUTTON
 		do
-			-- Create an instance of the resource manager.  The second parameter identifies
-			-- the "main" assembly.  All searching for satellites is done based on the location, etc ..
-			-- of the main assembly.
-			--
---			rm = new ResourceManager( ("MyStrings").to_cil, this.GetType().Assembly) 
---			create rm.make (("MyStrings").to_cil, my_window.type.assembly) 
-
-			--
-			-- ResourceSet loads all resources at one time. No "Fallback" provided.
-			-- To test using ResourceSet, change "rm.string ()" to "rs.string ()"
-			-- and uncomment the following line.
-			--
-			--rs = rm.GetResourceSet(Thread.CurrentThread.CurrentUICulture, true, true) 
+				-- Create an instance of the resource manager.  The second parameter identifies
+				-- the "main" assembly.  All searching for satellites is done based on the location, etc ..
+				-- of the main assembly.
 
 			create components.make
 			create txt_formula.make
@@ -80,7 +70,6 @@ feature -- Implementation
 			create btn_numbers.make (10)
 			create btn_ops.make (4)
 
---			my_window.set_text (rm.string (("Math_Greeting").to_cil))
 			my_window.set_text (("Math_Greeting").to_cil)
 			l_size.make_from_width_and_height (5, 13)
 			my_window.set_auto_scale_base_size (l_size)
@@ -89,7 +78,6 @@ feature -- Implementation
 
 			l_point.make_from_x_and_y (8, 10)
 			lbl_formula.set_location (l_point)
---			lbl_formula.set_text (rm.string (("Math_Formula_Label").to_cil))
 			lbl_formula.set_text (("Math_Formula_Label").to_cil)
 			l_size.make_from_width_and_height (155, 20)
 			lbl_formula.set_size (l_size)
@@ -106,8 +94,7 @@ feature -- Implementation
 			btn_clear.set_location (l_point)
 			l_size.make_from_width_and_height (80, 25)
 			btn_clear.set_size (l_size)
---			btn_clear.set_text (rm.string (("Math_Clear_Button").to_cil))
-			btn_clear.set_text (("Math_Clear_Button").to_cil)
+			btn_clear.set_text (("Clear").to_cil)
 			btn_clear.add_click (create {EVENT_HANDLER}.make (Current, $btn_clearClicked))
 
 
@@ -161,7 +148,6 @@ feature -- Implementation
 			btn_numbers.item (9).set_location (l_point)
 			btn_numbers.item (9).set_text (("9").to_cil)
 
-			--for (int i = 0 i < 10 i++) {
 			from
 				i := 0
 			until
@@ -193,7 +179,6 @@ feature -- Implementation
 			btn_ops.item (3).set_location (l_point)
 			btn_ops.item (3).set_text (("/").to_cil)
 
-			--for (int i = 0 i < 4 i++) {
 			from
 				i := 0
 			until
@@ -211,8 +196,7 @@ feature -- Implementation
 			l_size.make_from_width_and_height (70, 30)
 			btn_equals.set_size (l_size)
 			btn_equals.set_tab_index (1)
---			btn_equals.set_text (rm.string (("Math_Calc_Button").to_cil))
-			btn_equals.set_text (("Math_Calc_Button").to_cil)
+			btn_equals.set_text (("Calculate").to_cil)
 			btn_equals.add_click (create {EVENT_HANDLER}.make (Current, $btn_equalsClicked))
 
 			my_window.controls.add (txt_formula)
@@ -220,7 +204,6 @@ feature -- Implementation
 			my_window.controls.add (btn_equals)
 			my_window.controls.add (btn_clear)
 
-			--for (int i = 0 i < 10 i++) {
 			from
 				i := 0
 			until
@@ -230,7 +213,6 @@ feature -- Implementation
 				i := i + 1
 			end
 
-			--for (int i = 0 i < 4 i++) {
 			from
 				i := 0
 			until
@@ -239,12 +221,9 @@ feature -- Implementation
 				my_window.controls.add (btn_ops.item (i))
 				i := i + 1
 			end
-
 		end
 
-
 feature -- Implementation
-
 
 	btn_clearClicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			--
@@ -253,7 +232,7 @@ feature -- Implementation
 		end
 
 	btn_numbersClicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
-			-- 
+			--
 		local
 			btn: WINFORMS_BUTTON
 		do
@@ -273,33 +252,31 @@ feature -- Implementation
 
 
 	btn_equalsClicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
-			--
---		local
---			my_parse: PARSER
+		local
+			my_parse: PARSER_PARSER
+			retried: BOOLEAN
+			res: WINFORMS_DIALOG_RESULT
+			l_args: PARSER_ARGUMENTS
+			l_int_math: INTEGER_MATH
 		do
-
--- ***********************************************************************************************************************			
-						-- Should load Parser.dll in ace file...
--- ***********************************************************************************************************************			
-			
-			
-			-- parse the formula and get the arguments
-			if txt_formula.text.equals (("").to_cil) then
---				try
---				{
---					Parser p = new Parser()
---					Arguments a = p.Parse(txt_formula.Text)
---				-- do the calc and display the results
---					IntegerMath m = new IntegerMath()
---					txt_formula.set_text (m.GetResult(Convert.ToInt32(a.Arg1), a.Op, Convert.ToInt32(a.Arg2))
---				}
---				catch
---				{
---					MessageBox.Show(rm.string ("Math_Calc_Error"), rm.string ("Math_Greeting"))
---				}
+			if not retried then
+				if not txt_formula.text.equals (("").to_cil) then
+						-- parse the formula and get the arguments
+					create my_parse.make
+					l_args := my_parse.parse (txt_formula.text)
+					create l_int_math.make
+					txt_formula.set_text (l_int_math.get_result 
+						(feature {CONVERT}.to_int_32_string (l_args.arg_1),
+						l_args.op, 
+						feature {CONVERT}.to_int_32_string (l_args.arg_2)))
+				end
+			else
+				res := feature {WINFORMS_MESSAGE_BOX}.show (("Invalid calculation entered.%N%N  Enter 'num1' 'op' 'num2'%N%N").to_cil)
 			end
+		rescue
+			retried := True
+			retry
 		end
-
 
 end -- Class WORLD_CALC
 

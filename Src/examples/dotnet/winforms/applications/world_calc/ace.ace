@@ -2,27 +2,31 @@ system
 	"world_calc"
 
 root
-	WORLD_CALC: make
+	world_calc: make
 
 default
+	arguments (" ")
 	assertion (no)
 	msil_generation (yes)
-	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
 	line_generation (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
-	msil_culture ("n/a")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
-	console_application (yes)
+	console_application (no)
 
+
+--	my_parser:	"parser"
 
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc"
+
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
@@ -31,35 +35,39 @@ cluster
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
 
-
 assembly
-	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
+	math:	"D:\Eiffel52\examples\dotnet\winforms\applications\world_calc\math.dll"
 
-	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"
-				prefix
-							"SYSTEM_DLL_"
-				end
+	parser_util:	"D:\Eiffel52\examples\dotnet\winforms\applications\world_calc\parserutils.dll"
+		prefix
+			"parser_"
+		end
 
-	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
-				prefix
-						   "XML_"
-				end
+	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
 
-	system_drawing: "System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
-				prefix
-							"DRAWING_"
-				end
+	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			system_dll_
+		end
 
-	accessibility:     "Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			xml_
+		end
 
-	system_runtime_serialization_formatters_soap:            "System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	system_drawing:	"System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			drawing_
+		end
 
-	system_windows_forms: "System.Windows.Forms", "1.0.3300.0", "neutral", "b77a5c561934e089"
-				prefix
-							"WINFORMS_"
-				end
+	accessibility:	"Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
 
---	my_parser:	"parser"
+	system_runtime_serialization_formatters_soap:	"System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	system_windows_forms:	"System.Windows.Forms","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			winforms_
+		end
 
 
 end

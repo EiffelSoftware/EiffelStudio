@@ -1,0 +1,23 @@
+VNCP, chapter 14 (Conformance and convertibility), page xxx
+
+     Conversion procedure rule
+
+     It is valid for a creation procedure cp of a class C, with current
+     type CT, to be a conversion procedure if and only if it satisfies the
+     following four conditions for every type SOURCE listed in its
+     Conversion_types:
+ 
+        1 If CT is not generic, SOURCE does not conform to CT.
+
+        2 If CT is generic, SOURCE does not conform to the type obtained from
+          CT by replacing every formal generic parameter by its generic
+          constraint.
+
+        3 cp has exactly one formal argument, of a type ARG.
+
+        4 SOURCE conforms or converts to ARG.
+
+        5 SOURCE’s base type is different from the base type of any other 
+          conversion type listed in the Creation_clause of C.
+
+        6 SOURCE is a valid type for conversion

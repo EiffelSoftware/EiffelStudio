@@ -12,7 +12,6 @@ EIF_REFERENCE c_get_argv (w)
 EIF_POINTER w;
 {
 	String *temp;
-	EIF_REFERENCE an_object;
 
 	XtVaGetValues ((Widget) w, XtNargv, &temp, NULL);
 
@@ -518,7 +517,7 @@ EIF_INTEGER event_pointer;
 	int length;
    
 	length = XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
-	if (!length) return NULL;
+	if (!length) return 0;
 	result [length] = '\0';
 	return (EIF_INTEGER) keysym;
 }

@@ -83,37 +83,40 @@ feature {CACHE_READER} -- Access
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
-	relative_type_path (a_assembly: CONSUMED_ASSEMBLY; a_type: TYPE): STRING is
+	relative_type_path (a_assembly: CONSUMED_ASSEMBLY; a_type_index: INTEGER): STRING is
 			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
 			-- Always return a value even if `a_type' in not in EAC
 		require
-			non_void_type: a_type /= Void
+			a_assembly_not_void: a_assembly /= Void
+			a_type_index_positive: a_type_index > 0
 		local
-			path, type: STRING
+			l_path: STRING
+			l_type: STRING
 		do
-			path := relative_assembly_path_from_consumed_assembly (a_assembly)
-			type := create {STRING}.make_from_cil (a_type.full_name)
-			create Result.make (path.count + classes_path.count + type.count + 4)
-			Result.append (path)
+			l_path := relative_assembly_path_from_consumed_assembly (a_assembly)
+			l_type := a_type_index.out
+			create Result.make (l_path.count + classes_path.count + l_type.count + 4)
+			Result.append (l_path)
 			Result.append (classes_path)
-			Result.append (type)
+			Result.append (l_type)
 			Result.append (".xml")
 		ensure
 			non_void_path: Result /= Void
 			ends_with_xml_extension: Result.substring_index (".xml", Result.count - 4) = Result.count - 3
 		end
 
-	absolute_type_path (a_assembly: CONSUMED_ASSEMBLY; a_type: TYPE): STRING is
+	absolute_type_path (a_assembly: CONSUMED_ASSEMBLY; a_type_index: INTEGER): STRING is
 			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
 			-- Always return a value even if `a_type' in not in EAC
 		require
-			non_void_assembly: a_assembly /= Void
-			non_void_type: a_type /= Void
-			non_void_clr_version: clr_version /= Void
+			a_assembly_not_void: a_assembly /= Void
+			a_type_index_positive: a_type_index > 0
+			clr_version_not_void: clr_version /= Void
+			not_clr_version_empty: not clr_version.is_empty
 		local
 			relative_path: STRING
 		do
-			relative_path := relative_type_path (a_assembly, a_type)
+			relative_path := relative_type_path (a_assembly, a_type_index)
 			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
 			Result.append (eiffel_assembly_cache_path)
 			Result.append (relative_path)
@@ -221,7 +224,7 @@ feature {EMITTER} -- Access
 		once
 			l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 			
-			if concervative_mode then
+			if conservative_mode then
 				l_name := short_cache_name
 			else
 				l_name := cache_name

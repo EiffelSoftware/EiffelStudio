@@ -953,51 +953,14 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 			window: GB_WINDOW_SELECTOR_ITEM
 		do
 			object := Object_handler.root_window_object
-			from
-				start
-			until
-				off or found
-			loop
-				directory ?= item
-				if directory = Void then
-					window ?= item
-					if window.object = object then
-						window.enable_select
-						found_object ?= window.object
-						check
-							main_window_was_window: found_object /= Void
-						end
-							-- This ensures that the root icon is displayed.
-						found_object.set_as_root_window
-						found := True
-					end
-				else
-					from
-						directory.start
-					until
-						directory.off or found
-					loop
-						window ?= directory.item
-						if window.object = object then
-							window.enable_select
-							found_object ?= window.object
-							check
-								main_window_was_window: found_object /= Void
-							end
-								-- This ensures that the root icon is displayed.
-							found_object.set_as_root_window
-							found := True
-						end	
-						directory.forth
-					end
-				end
-				forth
+			check
+				object_is_top_level: object.is_top_level_object
 			end
+			object.set_as_root_window
+			object.window_selector_item.enable_select
+
 			Layout_constructor.set_root_window (object)
 			update_display_and_builder_windows (object)
-			check
-				found: found
-			end
 		end
 
 feature {GB_COMMAND_ADD_WINDOW, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation

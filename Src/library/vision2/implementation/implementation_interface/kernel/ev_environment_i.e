@@ -85,6 +85,8 @@ feature {NONE} -- Implementation
 	Application_cell: CELL [EV_APPLICATION] is
 			-- A global cell where `item' is the single application object for
 			-- the system.
+		indexing
+			once_status: global
 		require
 			not_destroyed: not is_destroyed
 		once

@@ -1,5 +1,5 @@
 3.0.0.507
-1050
+1061
 1033,release_notes.html,0,Release Notes,0,942281138,1
 vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
@@ -16,7 +16,7 @@ vti_globalpage:BW|true
 1026,papers/eiffelbuild.html,0,EiffelBuild,1018,942202015,0
 1025,papers/eiffel2java.html,0,Eiffel to Java Interface,1018,942203218,0
 1049,papers/eiffel.html,0,Eiffel in ISE EiffelBench,1018,942293007,0
-1048,papers/wel.html,0,WEL,1018,942291547,0
+1048,papers/wel.html,0,Windows Eiffel Library,1018,942301541,0
 1024,papers/dll.html,0,Shared library generation,1018,942203184,0
 1023,papers/debugger.html,0,Debugging Facilities,1018,942203152,0
 1022,papers/command_line_tools.html,0,Command-line Tools,1018,942203116,0
@@ -24,6 +24,7 @@ vti_globalpage:BW|true
 1020,papers/c++.html,0,Legacy++ and the C++ interface,1018,942202015,0
 1019,papers/c_compilers.html,0,C Compilers,1018,942202973,0
 1032,platforms.html,0,Platform Requirements,1005,942280409,0
+1050,Eiffel/language/precursor_construct.html,0,Precursor,1031,942296391,0
 1034,Eiffel/language/assertions.maker.html,0,Assertions,1031,942285323,0
 1035,Eiffel/language/BOOK.maker.html,0,Table of Contents,1031,942285323,0
 1036,Eiffel/language/classes.maker.html,0,Classes,1031,942285323,0
@@ -31,6 +32,7 @@ vti_globalpage:BW|true
 1042,Eiffel/language/inheritance.maker.html,0,Inheritance,1031,942285323,0
 1044,Eiffel/language/principles.maker.html,0,Principles,1031,942285323,0
 1045,Eiffel/language/types.maker.html,0,Types,1031,942285323,0
+1051,Eiffel/language/generic_creation.html,0,Generic Creation,1031,942296835,0
 1046,Eiffel/language/system.maker.html,0,An Invitation to Eiffel: Putting everything together,1031,942285323,0
 1043,Eiffel/language/polymorphism.maker.html,0,Polymorphism,1031,942285323,0
 1040,Eiffel/language/genericity.maker.html,0,Genericity,1031,942285323,0
@@ -38,3 +40,12 @@ vti_globalpage:BW|true
 1039,Eiffel/language/exceptions.maker.html,0,Exceptions,1031,942285323,0
 1047,Eiffel/books.html,0,Object-Oriented Books,1031,942288331,0
 1038,Eiffel/language/design.maker.html,0,Object-Oriented Design,1031,942285323,0
+1052,papers/wel/index.html,0,Windows Eiffel Library,1048,942301521,0
+1053,papers/wel/step1.html,0,Windows Eiffel Library,1048,942301521,0
+1055,papers/wel/step3.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301426,0
+1056,papers/wel/step4.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301426,0
+1057,papers/wel/step5.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301521,0
+1058,papers/wel/step6.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301521,0
+1059,papers/wel/step7.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301521,0
+1060,papers/wel/step8.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301521,0
+1054,papers/wel/step2.html,0,Windows Eiffel Library (WEL) Tutorial,1048,942301426,0

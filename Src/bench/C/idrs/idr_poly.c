@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_poly(IDR *idrs, int type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (/* ??? */))
+rt_public bool_t idr_poly(IDR *idrs, int type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (IDR *, void *))
           					/* The serializing stream */
          					/* Union discriminent, externally provided */
           					/* Pointer to the start of the union */
@@ -36,7 +36,7 @@ rt_public bool_t idr_poly(IDR *idrs, int type, char *unp, struct idr_discrim *ar
 	 * value is a NULL pointer, then an error occurs.
 	 */
 
-	bool_t (*idr_fn)();		/* Pointer to basic IDR routine from arms array */
+	bool_t (*idr_fn)(IDR *, void *);		/* Pointer to basic IDR routine from arms array */
 	int value;				/* Value of currently inspected arm */
 
 	for (/* empty */; (value = arms->id_value) != __dontcare__; arms++) {

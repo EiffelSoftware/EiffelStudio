@@ -49,7 +49,7 @@ feature -- Basic Operation
 			io.put_string ("WorkItem thread: Performing asynchronous operation.")
 			io.put_new_line
 			-- ...
-			feature {THREAD}.sleep_integer_32 (5000)	-- Sleep for 5 seconds to simulate doing work
+			feature {THREAD}.sleep_integer (5000)	-- Sleep for 5 seconds to simulate doing work
 
 			-- Signal that the async operation is now complete.
 			l_state ?= a_state

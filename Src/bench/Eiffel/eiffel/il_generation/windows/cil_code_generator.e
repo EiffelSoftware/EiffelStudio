@@ -1474,6 +1474,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 			l_sig: like method_sig
 			l_class_token: INTEGER
 			l_meth_attr: INTEGER
+			l_label, l_end_label: IL_LABEL
 		do
 			l_class_token := actual_class_type_token (class_type.implementation_id)
 			l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.public |
@@ -1494,7 +1495,22 @@ feature {NONE} -- SYSTEM_OBJECT features
 			start_new_body (l_meth_token)
 			generate_current
 			generate_argument (1)
+			generate_is_instance_of (class_type.type)
+			duplicate_top
+			l_label := create_label
+			l_end_label := create_label
+
+			branch_on_false (l_label)
 			internal_generate_feature_access (any_type_id, is_equal_feat_id, 1, True, True)
+			branch_to (l_end_label)
+
+			mark_label (l_label)
+				-- We need to pop both Current and argument
+			pop
+			pop
+			put_boolean_constant (False)
+
+			mark_label (l_end_label)
 			generate_return (True)
 			method_writer.write_current_body
 		end

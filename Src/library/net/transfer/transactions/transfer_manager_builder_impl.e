@@ -8,11 +8,13 @@ indexing
 
 class TRANSFER_MANAGER_BUILDER_IMPL inherit
 	
-		DATA_RESOURCE_FACTORY
+	DATA_RESOURCE_FACTORY
 		export
 			{NONE} all
 		end
 		
+	HOST_VALIDITY_CHECKER
+
 create
 
 	make
@@ -30,11 +32,6 @@ feature {NONE} -- Initialization
 			create resource_hash.make (0)
 		end
 
-feature -- Constants
-
-	Readable, Writable: INTEGER is unique
-			-- Mode constants
-			
 feature -- Access
 
 	manager: TRANSFER_MANAGER is
@@ -53,7 +50,7 @@ feature -- Access
 		do
 			Result := transactions.i_th (n)
 		ensure
-			non_void: Result /= Void
+			result_exists: Result /= Void
 		end
 		
 feature -- Measurement
@@ -79,12 +76,18 @@ feature -- Status report
 				not transfer_manager.is_empty
 		end
 
+	is_mode_valid (mode: INTEGER): BOOLEAN is
+			-- Is `mode' valid?
+		do
+			Result := (Readable <= mode and mode <= Writable)
+		end
+		
 	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN is
 			-- Is address `addr' correct considering `mode'?
 			-- (`mode' is `Readable' or `Writable')
 		require
 			non_empty_address: addr /= Void and then not addr.is_empty
-			mode_in_range: Readable <= mode and mode <= writable
+			mode_valid: is_mode_valid (mode)
 		local
 			res: DATA_RESOURCE
 			u: URL
@@ -102,9 +105,11 @@ feature -- Status report
 				inspect
 					mode
 				when Readable then
+					res.set_proxy_information (source_proxy)
 					Result := add_reference 
 						(readable_set, res, res~is_readable)
 				when Writable then
+					res.set_proxy_information (target_proxy)
 					Result := add_reference 
 						(writable_set, res, res~is_writable)
 				end
@@ -164,6 +169,74 @@ feature -- Status setting
 			timeout_set: timeout = s
 		end
 			
+	set_source_proxy (host: STRING; port: INTEGER) is
+			-- Set source proxy host to `host' and port to `port'.
+		require
+			host_not_empty: host /= Void and then not host.is_empty
+			port_non_negative: port >= 0
+		do
+			create source_proxy.make (host, port)
+		ensure
+			source_proxy_exists: source_proxy /= Void
+			host_set: source_proxy.host = host
+			port_set: source_proxy.port = port
+		end
+
+	set_target_proxy (host: STRING; port: INTEGER) is
+			-- Set target proxy host to `host' and port to `port'.
+		require
+			host_not_empty: host /= Void and then not host.is_empty
+			port_non_negative: port >= 0
+		do
+			create target_proxy.make (host, port)
+		ensure
+			target_proxy_exists: target_proxy /= Void
+			host_set: target_proxy.host = host
+			port_set: target_proxy.port = port
+		end
+
+	set_proxies (host: STRING; port: INTEGER) is
+			-- Set source and target proxy host to `host' and 
+			-- port to `port'.
+		require
+			host_not_empty: host /= Void and then not host.is_empty
+			port_non_negative: port >= 0
+		do
+			create source_proxy.make (host, port)
+			target_proxy := source_proxy
+		ensure
+			source_proxy_exists: source_proxy /= Void
+			host_set: source_proxy.host = host
+			port_set: source_proxy.port = port
+			proxies_equal: source_proxy = target_proxy
+		end
+
+	reset_source_proxy is
+			-- Reset source proxy.
+		do
+			source_proxy := Void
+		ensure
+			no_source_proxy_set: source_proxy = Void
+		end
+
+	reset_target_proxy is
+			-- Reset target proxy.
+		do
+			target_proxy := Void
+		ensure
+			no_target_proxy_set: target_proxy = Void
+		end
+
+	reset_proxies is
+			-- Reset source and target proxy.
+		do
+			source_proxy := Void
+			target_proxy := Void
+		ensure
+			no_source_proxy_set: source_proxy = Void
+			no_target_proxy_set: target_proxy = Void
+		end
+
 feature -- Element change
 
 	add_transaction (s, t: STRING) is
@@ -294,6 +367,11 @@ feature -- Basic operations
 			transfer_finished: transfer_finished
 		end
 
+feature {NONE} -- Constants
+
+	Readable, Writable: INTEGER is unique
+			-- Mode constants
+			
 feature {NONE} -- Implementation
 
 	transactions: ARRAYED_LIST [TRANSACTION]
@@ -303,7 +381,7 @@ feature {NONE} -- Implementation
 			-- Optimized transactions
 
 	transfer_manager: TRANSFER_MANAGER
-			-- The manager
+			-- Transfer manager
 
 	readable_set: BINARY_SEARCH_TREE_SET [STRING]
 			-- Set storing readable adresses
@@ -318,6 +396,12 @@ feature {NONE} -- Implementation
 			-- Duration of timeout in seconds
 			-- (If `Void' the default value is used.)
 			
+	source_proxy: PROXY_INFORMATION
+			-- Information about proxy for the source resource
+
+	target_proxy: PROXY_INFORMATION
+			-- Information about proxy for the target resource
+
 	optimized_count: INTEGER is
 			-- Number of optimized transactions
 		do

@@ -16,7 +16,7 @@ mtsharedlibs='-lm -lpthread'
 
 warning_level='-Wall'
 optimize='-O3'
-wkoptimize='-O'
+wkoptimize='-O0'
 
 start_test='if [ ! -f finished ] ; then'
 end_test='; fi'

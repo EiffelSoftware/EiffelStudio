@@ -2,17 +2,15 @@
 -- of the extendible system when compiling a Dynamic Class Set
 
 class 
-
 	DLE_EIFFEL_HISTORY
 
 inherit
-
 	EIFFEL_HISTORY
 		rename
 			is_used as was_used,
-			make as eh_make
+			make as eiffel_history_make
 		export
-			{NONE} eh_make
+			{NONE} eiffel_history_make
 		redefine
 			wipe_out, was_used
 		end

@@ -83,19 +83,12 @@ extern "C" {
 /* Macro used to protect concurrent running of GC. */
 #ifdef EIF_THREADS
 	/* For GC collection locking */
-#define EIF_GC_MUTEX_LOCK \
-	EIF_LW_MUTEX_LOCK(eif_gc_mutex, "Could not lock GC mutex")
-#define EIF_GC_MUTEX_UNLOCK \
-	EIF_LW_MUTEX_UNLOCK(eif_gc_mutex, "Could not unlock GC mutex")
+#define EIF_GC_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_gc_mutex, "Could not lock GC mutex")
+#define EIF_GC_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_gc_mutex, "Could not unlock GC mutex")
 
 	/* For insertion in various global set such as `rem_set', `moved_set' */
-#define EIF_GC_SET_MUTEX_LOCK \
-	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_GC_SET); \
-	EIF_LW_MUTEX_LOCK(eif_gc_set_mutex, "Could not lock GC rem_set mutex"); \
-	RTGC; \
-	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
-#define EIF_GC_SET_MUTEX_UNLOCK \
-	EIF_LW_MUTEX_UNLOCK(eif_gc_set_mutex, "Could not unlock GC rem_set mutex")
+#define EIF_GC_SET_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_gc_set_mutex, "Could not lock GC rem_set mutex");
+#define EIF_GC_SET_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_gc_set_mutex, "Could not unlock GC rem_set mutex")
 
 	/* Values used to set the running status of a thread. */
 #define EIF_THREAD_RUNNING		0
@@ -109,6 +102,17 @@ extern "C" {
 #define GC_THREAD_PROTECT(x)	x
 #else
 #define GC_THREAD_PROTECT(x)
+#endif
+
+/* Macro for enabling/disabling debugger */
+#ifdef WORKBENCH
+rt_public void discard_breakpoints(void);	/* Avoid debugger to stop while in GC cycles */
+rt_public void undiscard_breakpoints(void); /* re-authorize the debugger to stop */
+#define DISCARD_BREAKPOINTS	discard_breakpoints();
+#define UNDISCARD_BREAKPOINTS	undiscard_breakpoints();
+#else
+#define DISCARD_BREAKPOINTS
+#define UNDISCARD_BREAKPOINTS
 #endif
 
 #ifdef __cplusplus

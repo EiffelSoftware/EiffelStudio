@@ -123,6 +123,8 @@ feature -- Properties
 
 feature -- Access
 
+	format_bar_is_used: BOOLEAN is False
+
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
 		do
@@ -499,7 +501,7 @@ feature {NONE} -- Properties Window Properties
 			Result := "Dynamic Lib tool"
 		end
 
-	hole: DYNAMIC_LIB_HOLE
+--	hole: DYNAMIC_LIB_HOLE
 			-- Hole caraterizing current
  
 	format_label: EV_LABEL
@@ -534,7 +536,7 @@ feature
 
 feature {NONE, QUIT_DYNAMIC_LIB, OPEN_DYNAMIC_LIB} -- Commands
 
-	open_cmd: COMMAND_HOLDER
+--	open_cmd: COMMAND_HOLDER
 
 	save_cmd: EB_SAVE_FILE_CMD
 
@@ -587,7 +589,7 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 feature {NONE} -- Implementation Graphical Interface
 
-	build_edit_bar is
+	build_edit_bar (a_toolbar: EV_BOX) is
 		local
 --			quit_cmd: QUIT_DYNAMIC_LIB
 --			quit_button: EB_BUTTON
@@ -621,11 +623,13 @@ feature {NONE} -- Implementation Graphical Interface
 --			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 --			exit_cmd_holder.set_menu_entry (exit_menu_entry)
 --			build_edit_menu (dynamic_lib_toolbar)
+
+			create format_bar.make (a_toolbar)
 		end
 
-	build_format_bar is
-			-- Build formatting buttons in `dynamic_lib_toolbar'.
-		local
+--	build_format_bar is
+--			-- Build formatting buttons in `dynamic_lib_toolbar'.
+--		local
 --			version_menu_entry: EB_MENU_ENTRY
 --			shell_cmd: SHELL_COMMAND
 --			shell_button: EB_BUTTON_HOLE
@@ -638,7 +642,7 @@ feature {NONE} -- Implementation Graphical Interface
 --			click_menu_entry: EB_TICKABLE_MENU_ENTRY
 --			sep: SEPARATOR
 --			sep1, sep2, sep3: THREE_D_SEPARATOR
-		do
+--		do
 --			!! shell_cmd.make (Current)
 --			!! shell_button.make (shell_cmd, dynamic_lib_toolbar)
 --			shell_button.add_third_button_action
@@ -666,6 +670,6 @@ feature {NONE} -- Implementation Graphical Interface
 --			hole_holder.set_button (hole_button)
 --
 --			create_edit_buttons
-		end
+--		end
 
 end -- class EB_DYNAMIC_LIB_TOOL

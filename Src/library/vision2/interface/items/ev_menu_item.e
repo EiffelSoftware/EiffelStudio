@@ -1,6 +1,6 @@
 indexing	
 	description:
-		"Eiffel Vision menu item."
+		"Item for use in EV_MENU."
 	status: "See notice at end of class"
 	keywords: "menu, item, dropdown, popup"
 	date: "$Date$"
@@ -21,11 +21,6 @@ create
 	default_create,
 	make_with_text
 
-feature -- Events
-
-	press_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when user clicked on menu item.
-
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
@@ -37,7 +32,7 @@ feature -- Status report
 feature -- Status setting
 
 	enable_sensitive is
-   			-- Set current item sensitive.
+   			-- Set `is_sensitive' `True'.
    		do
  			implementation.enable_sensitive
  		ensure
@@ -45,32 +40,38 @@ feature -- Status setting
    		end
 
 	disable_sensitive is
-   			-- Set current item insensitive.
+   			-- Set `is_sensitive' `False'.
    		do
  			implementation.disable_sensitive
  		ensure
    			not_is_sensitive: not is_sensitive
    		end
 
+feature -- Event handling
+
+	press_actions: EV_NOTIFY_ACTION_SEQUENCE
+		--| FIXME change to select_actions
+			-- Actions to be performed when selected.
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_MENU_ITEM_I	
+			-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of menu.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MENU_ITEM_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			Precursor
 			create press_actions
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_MENU_ITEM_I	
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
 
 end -- class EV_MENU_ITEM
 
@@ -95,6 +96,9 @@ end -- class EV_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/23 01:40:33  oconnor
+--| comments, formatting
+--|
 --| Revision 1.33  2000/03/01 20:28:52  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -134,7 +138,6 @@ end -- class EV_MENU_ITEM
 --|
 --| Revision 1.29.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

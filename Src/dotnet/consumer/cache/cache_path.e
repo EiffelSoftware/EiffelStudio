@@ -80,7 +80,6 @@ feature {CACHE_READER} -- Access
 			Result.append (assembly_mapping_file_name)
 		ensure
 			non_void_path: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
 	relative_type_path (a_assembly: CONSUMED_ASSEMBLY; a_type_index: INTEGER): STRING is

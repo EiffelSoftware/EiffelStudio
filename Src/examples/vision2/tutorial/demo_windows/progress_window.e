@@ -35,22 +35,17 @@ feature {NONE} -- Initialization
 
 			make_with_range (par, 0, 100)
 			-- Set the tabs for the action window
-			set_gauge_tabs
-			create progress_tab.make(Void)
-			tab_list.extend(progress_tab)
-			create action_window.make(Current,tab_list)
-
 			set_parent (par)
 		end
 
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+			set_gauge_tabs
+			tab_list.extend(progress_tab)
+			create action_window.make(Current, tab_list)
 		end
 
-feature -- Access
-
-	progress_tab: PROGRESS_TAB
 
 end -- class PROGRESS_WINDOW
 

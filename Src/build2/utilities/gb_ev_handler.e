@@ -32,7 +32,7 @@ feature -- Access
 				if not entries.item.is_equal (".") and not entries.item.is_equal ("..") then
 					if entries.item.has ('.') then
 						Result.extend (entries.item.substring (1, entries.item.index_of ('.', 1) - 1))
-					else
+					elseif not (entries.item.is_equal ("CVS")) then
 						get_files_in_sub_directories (directory.name + directory_separator.out + entries.item, Result)		
 					end	
 				end
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 				if not entries.item.is_equal (".") and not entries.item.is_equal ("..") then
 					if entries.item.has ('.') then
 						files.extend (entries.item.substring (1, entries.item.index_of ('.', 1) - 1))
-					else
+					elseif not (entries.item.is_equal ("CVS")) then
 						get_files_in_sub_directories (directory.name + directory_separator.out +  entries.item, files)		
 					end	
 				end

@@ -238,16 +238,10 @@ feature -- Access
 			-- Color used for the background of the widget.
 			-- This feature might change if we give the
 			-- possibility to set colors on the rows.
-		--| FIXME IEK BG color not applicable to rows at present.
-		--local
-		--	one_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+		--| FIXME IEK Redefine to return list widget color.
+
 		do
-		--	if (rows > 0) then
-		--		one_row := (ev_children @ (1))
-		--		Result := one_row.background_color
-		--	else	
-				Result := {EV_PRIMITIVE_IMP} Precursor
-		--	end
+			Result := {EV_PRIMITIVE_IMP} Precursor
 		end
 
 	foreground_color: EV_COLOR is
@@ -255,17 +249,9 @@ feature -- Access
 			-- usually the text.
 			-- This feature might change if we give the
 			-- possibility to set colors on the rows.
-
-		--| FIXME IEK FG color not applicable to rows at present.
-		--local
-		--	one_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+		--| FIXME IEK FG Redefine to return list widget color.
 		do
-		--	if (rows > 0) then
-		--		one_row := (ev_children @ (1))
-		--		Result := one_row.foreground_color
-		--	else	
 				Result := {EV_PRIMITIVE_IMP} Precursor
-		--	end
 		end
 
 feature -- Status report
@@ -440,20 +426,8 @@ feature -- Element change
 			row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			--| FIXME IEK BG color not applicable for rows at present.
-			--if (rows > 0) then
-			--	from
-			--		children_array := ev_children
-			--		children_array.start
-			--	until
-			--		children_array.after
-			--	loop
-			--		row := children_array.item
-			--		row.set_background_color (a_color)
-			--		children_array.forth
-			--	end
-			--else
-				 {EV_PRIMITIVE_IMP} Precursor (a_color)
-			--end
+			{EV_PRIMITIVE_IMP} Precursor (a_color)
+			
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -463,20 +437,7 @@ feature -- Element change
 			row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			--| FIXME FG color not applicable for rows at present.
-			--if (rows > 0) then
-			--	from
-			--		children_array := ev_children
-			--		children_array.start
-			--	until
-			--		children_array.after
-			--	loop
-			--		row := children_array.item
-			--		row.set_foreground_color (a_color)
-			--		children_array.forth
-			--	end
-			--else
-				{EV_PRIMITIVE_IMP} Precursor (a_color)
-			--end
+			{EV_PRIMITIVE_IMP} Precursor (a_color)
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation
@@ -506,6 +467,7 @@ feature {NONE} -- Implementation
 			an_index: INTEGER
 			column_i: INTEGER
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			a_curs: CURSOR
 		do
 			if list_widget = Default_pointer then
 				create_list (v.count)
@@ -522,17 +484,53 @@ feature {NONE} -- Implementation
 			an_index := C.c_gtk_clist_append_row (list_widget)
 
 			-- add text in the gtk column list row:
-			from
-				--item_imp.internal_text.start
-				--column_i := 1
-			until
-				column_i > columns
-			loop
-				--item_imp.set_cell_text (column_i, item_imp.internal_text.item)
-				--item_imp.internal_text.forth
-				--column_i := column_i + 1
+			row_update (v)
+		end
+
+	row_update (a_row: EV_MULTI_COLUMN_LIST_ROW) is
+		local
+			a_curs: CURSOR
+			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			a_counter: INTEGER
+		do
+			a_row_imp ?= a_row.implementation
+			if a_row.count > columns then
+				create_list (a_row.count)
+				full_list_update
+			else
+				a_curs := a_row.cursor
+				from
+					a_row.start
+				until
+					a_counter > columns
+				loop
+					if not a_row.after then
+						if a_row.item /= Void then
+							a_row_imp.set_cell_text (a_row.index, a_row.item)
+						else
+							a_row_imp.set_cell_text (a_row.index, "")
+						end
+						a_row.forth
+					end
+			
+					a_counter := a_counter + 1
+				end
+				a_row.go_to (a_curs)
 			end
 		end
+
+	full_list_update is
+			-- Update new list with previous items.
+		do
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				row_update (ev_children.item.interface)
+				ev_children.forth
+			end
+		end		
 
 	remove_item_from_position (a_position: INTEGER) is
 			-- Remove item from list at `a_position'.
@@ -632,8 +630,8 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.45  2000/03/23 19:19:38  king
---| Made compilable due to new row structure
+--| Revision 1.46  2000/03/24 01:28:30  king
+--| Implemented updating features, needs testing
 --|
 --| Revision 1.44  2000/03/22 22:02:52  king
 --| Implemented pebble_over_widget to deal with mclist and title windows

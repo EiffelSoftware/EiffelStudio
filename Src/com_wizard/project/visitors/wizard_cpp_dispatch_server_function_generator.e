@@ -17,14 +17,14 @@ inherit
 
 feature -- Basic operation
 
-	generate (a_coclass_name: STRING; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			--Generate C server feature
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			tmp_signature, tmp_string: STRING
 		do
 			func_desc := a_descriptor
-			coclass_name := a_coclass_name
+			coclass_name := a_component.name
 
 			create ccom_feature_writer.make
 			create c_header_files.make

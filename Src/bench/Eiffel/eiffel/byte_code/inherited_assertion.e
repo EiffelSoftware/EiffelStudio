@@ -23,9 +23,13 @@ feature -- Creation
 		do
 			create precondition_list.make
 			create precondition_types.make
+			create precondition_body_indices.make
+			create precondition_oms_counts.make
 			create prec_arg_list.make
 			create postcondition_list.make
 			create postcondition_types.make
+			create postcondition_body_indices.make
+			create postcondition_oms_counts.make
 			create post_result_list.make
 			create post_arg_list.make
 			create old_expression_list.make
@@ -35,6 +39,9 @@ feature -- Assertion
 
 	saved_class_type: CLASS_TYPE
 			-- Saved class type
+
+	saved_body_index: INTEGER
+			-- Saved original body index from `context'
 
 	saved_arguments: ARRAY [TYPE_I]
 			-- Saved byte_code arguments
@@ -49,9 +56,12 @@ feature -- Assertion
 			-- Restore details of current context.
 		do
 			Context.set_class_type (saved_class_type)
+			Context.set_original_body_index (saved_body_index)
 			Context.byte_code.set_arguments (saved_arguments)
 			Context.byte_code.set_result_type (saved_result_type)
 			Context.byte_code.set_old_expressions (saved_old_expressions)
+		ensure
+			restored: restored
 		end
 
 	init is
@@ -62,6 +72,7 @@ feature -- Assertion
 							saved_result_type = Void
 		do
 			saved_class_type := Context.class_type
+			saved_body_index := Context.original_body_index
 			saved_arguments := Context.byte_code.arguments
 			saved_result_type := Context.byte_code.result_type
 			saved_old_expressions := Context.byte_code.old_expressions
@@ -79,9 +90,13 @@ feature -- Assertion
 			debug ("ASSERTIONS") trace; end
 			precondition_list.wipe_out
 			precondition_types.wipe_out
+			precondition_body_indices.wipe_out
+			precondition_oms_counts.wipe_out
 			prec_arg_list.wipe_out
 			postcondition_list.wipe_out
 			postcondition_types.wipe_out
+			postcondition_body_indices.wipe_out
+			postcondition_oms_counts.wipe_out
 			post_result_list.wipe_out
 			post_arg_list.wipe_out
 			old_expression_list.wipe_out
@@ -154,6 +169,7 @@ feature -- Assertion
 			-- Was Byte Context restored?
 		do
 			Result := (Context.class_type = saved_class_type) 
+						and then (Context.original_body_index = saved_body_index)
 						and then (Context.byte_code.arguments = saved_arguments)
 						and then (Context.byte_code.result_type = saved_result_type)
 		end
@@ -168,6 +184,12 @@ feature -- Inherited precondition
 
 	precondition_types: LINKED_LIST [CLASS_TYPE]
 			-- List of class types associated with precondition
+
+	precondition_body_indices: LINKED_LIST [INTEGER]
+			-- Indicies of routine bodies declaring preconditions
+
+	precondition_oms_counts: LINKED_LIST [INTEGER]
+			-- Number of once manifest strings declared in routine body identified by `precondition_body_indices'
 
 	has_precondition: BOOLEAN is
 			-- Does Current have inherited preconditions?
@@ -186,6 +208,8 @@ feature -- Inherited precondition
 		do
 			precondition_types.extend (ct)
 			precondition_list.extend (bc.precondition)
+			precondition_body_indices.extend (bc.body_index)
+			precondition_oms_counts.extend (bc.once_manifest_string_count)
 			prec_arg_list.extend (bc.arguments)
 		end
 
@@ -212,6 +236,7 @@ feature -- Inherited precondition
 				precondition_after
 			loop
 				precondition_context_init
+				il_generator.generate_once_string_allocation (precondition_oms_counts.item)
 
 				from
 					failure_block := il_label_factory.new_label
@@ -253,7 +278,8 @@ feature -- Inherited precondition
 			until
 				precondition_after
 			loop
-				precondition_context_init;	
+				precondition_context_init
+				context.make_once_string_allocation_byte_code (ba, precondition_oms_counts.item)
 				precondition_list.item.make_byte_code (ba)
 				precondition_forth
 			end
@@ -288,19 +314,19 @@ feature -- Inherited precondition
 			until
 				precondition_after	
 			loop
-				precondition_context_init;
-				precondition_list.item.analyze;
-				precondition_forth;
+				precondition_context_init
+				precondition_list.item.analyze
+				precondition_forth
 			end;
-			restore_current_context;
+			restore_current_context
 		ensure
 			context_restored: restored
 		end;
 
 	generate_precondition is
-			-- Generate inherited postcondition .
+			-- Generate inherited precondition.
 		require
-			types_and_assert_count_same: valid_prec_count;
+			types_and_assert_count_same: valid_prec_count
 			has_prec: has_precondition
 		do
 			from
@@ -309,6 +335,7 @@ feature -- Inherited precondition
 				precondition_after	
 			loop
 				precondition_context_init
+				context.generate_once_manifest_string_allocation (precondition_oms_counts.item)
 				precondition_list.item.generate
 				precondition_forth
 			end
@@ -323,6 +350,8 @@ feature -- Inherited precondition
 			precondition_list.start
 			prec_arg_list.start
 			precondition_types.start
+			precondition_body_indices.start
+			precondition_oms_counts.start
 		end
 
 	precondition_after: BOOLEAN is
@@ -338,6 +367,8 @@ feature -- Inherited precondition
 			precondition_list.forth
 			prec_arg_list.forth
 			precondition_types.forth
+			precondition_body_indices.forth
+			precondition_oms_counts.forth
 		end
 
 	precondition_context_init is
@@ -347,6 +378,7 @@ feature -- Inherited precondition
 			Context.set_class_type (precondition_types.item)
 			Context.byte_code.set_arguments (prec_arg_list.item)
 			Context.set_new_precondition_block (True)
+			Context.set_original_body_index (precondition_body_indices.item)
 		end
 
 feature -- inherited postcondition
@@ -366,6 +398,12 @@ feature -- inherited postcondition
 	postcondition_types: LINKED_LIST [CLASS_TYPE]
 			-- List of class types associated with postcondition
 
+	postcondition_body_indices: LINKED_LIST [INTEGER]
+			-- Indicies of routine bodies declaring postconditions
+
+	postcondition_oms_counts: LINKED_LIST [INTEGER]
+			-- Number of once manifest strings declared in routine body identified by `postcondition_body_indices'
+
 	add_postcondition_type (ct: CLASS_TYPE; bc: BYTE_CODE) is
 			-- Add class type `ct' and byte code `bc' to
 			-- postcondition details.
@@ -377,6 +415,8 @@ feature -- inherited postcondition
 		do
 			postcondition_types.extend (ct)
 			postcondition_list.extend (bc.postcondition)
+			postcondition_body_indices.extend (bc.body_index)
+			postcondition_oms_counts.extend (bc.once_manifest_string_count)
 			post_arg_list.extend (bc.arguments)
 			post_result_list.extend (bc.result_type)
 			old_expression_list.extend (bc.old_expressions)
@@ -472,6 +512,7 @@ feature -- inherited postcondition
 				postcondition_after	
 			loop
 				postcondition_context_init
+				context.generate_once_manifest_string_allocation (postcondition_oms_counts.item)
 				postcondition_list.item.generate
 				postcondition_forth
 			end
@@ -491,6 +532,7 @@ feature -- inherited postcondition
 				postcondition_after
 			loop
 				postcondition_context_init
+				il_generator.generate_once_string_allocation (postcondition_oms_counts.item)
 				postcondition_list.item.generate_il
 				Il_generator.flush_sequence_points (context.class_type)
 				postcondition_forth
@@ -514,6 +556,7 @@ feature -- inherited postcondition
 				if old_expressions /= Void then
 						--! Old expressions can be void
 					postcondition_context_init
+					il_generator.generate_once_string_allocation (postcondition_oms_counts.item)
 					from
 						old_expressions.start
 					until
@@ -541,6 +584,7 @@ feature -- inherited postcondition
 				postcondition_after
 			loop
 				postcondition_context_init
+				context.make_once_string_allocation_byte_code (ba, postcondition_oms_counts.item)
 				postcondition_list.item.make_byte_code (ba)
 				postcondition_forth
 			end
@@ -601,6 +645,7 @@ feature -- inherited postcondition
 				if old_expressions /= Void then
 					--! Old expressions can be void
 					postcondition_context_init
+					context.make_once_string_allocation_byte_code (ba, postcondition_oms_counts.item)
 					from
 						old_expressions.start
 					until
@@ -634,6 +679,7 @@ feature -- inherited postcondition
 				if old_expressions /= Void then
 					--! Old expressions can be void
 					postcondition_context_init
+					context.generate_once_manifest_string_allocation (postcondition_oms_counts.item)
 					from
 						old_expressions.start
 					until
@@ -657,6 +703,8 @@ feature -- inherited postcondition
 			postcondition_list.start
 			post_arg_list.start
 			postcondition_types.start
+			postcondition_body_indices.start
+			postcondition_oms_counts.start
 			old_expression_list.start	
 			post_result_list.start
 		end
@@ -674,6 +722,8 @@ feature -- inherited postcondition
 			postcondition_list.forth
 			post_arg_list.forth
 			postcondition_types.forth
+			postcondition_body_indices.forth
+			postcondition_oms_counts.forth
 			old_expression_list.forth
 			post_result_list.forth
 		end
@@ -683,6 +733,7 @@ feature -- inherited postcondition
 			-- to current assertion class type.
 		do
 			Context.set_class_type (postcondition_types.item)
+			Context.set_original_body_index (postcondition_body_indices.item)
 			Context.byte_code.set_arguments (post_arg_list.item)
 			Context.byte_code.set_result_type (post_result_list.item)
 			Context.byte_code.set_old_expressions (old_expression_list.item)

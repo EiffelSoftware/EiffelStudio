@@ -91,9 +91,9 @@ feature -- Basic Operations
 			i: INTEGER
 			privious_upper: BOOLEAN
 		do
+			create Result.make (100)
 			from
 				i := 1
-				create Result.make (100)
 				privious_upper := True
 			variant 
 				a_name.count - i + 1
@@ -107,13 +107,9 @@ feature -- Basic Operations
 				privious_upper := (a_name.item (i).is_upper or (a_name.item (i) = '_'))
 				i := i + 1
 			end
-			from
-			until
-				Result.item (1) /= '_'
-			loop
-				Result.tail (Result.count - 1)
+			if (Result.item (1) = '_') then
+				Result.prepend ("x_")
 			end
-
 			if Result.item (1).is_digit then
 				Result.prepend ("x_")
 			end
@@ -131,8 +127,8 @@ feature -- Basic Operations
 			valid_type: is_valid_type_kind (a_type)
 		do
 			Result := to_eiffel_name (a_name)
-
 			Result.to_upper
+
 			if (a_type = Tkind_enum) then
 				Result.append ("_ENUM")
 			elseif (a_type = Tkind_record) then
@@ -167,9 +163,6 @@ feature -- Basic Operations
 			valid_name: not a_name.empty
 		do
 			Result := to_eiffel_name (a_name)
-			if a_name.item (1).is_equal ('_') then
-				Result.prepend ("x_")
-			end
 			Result.to_lower
 		ensure
 			non_void_feature_name: Result /= Void

@@ -1,7 +1,6 @@
 indexing 
 	description:
-		"EiffelVision horizontal progress bar. %N%
-		%Mswindows implementation."
+		"EiffelVision vertical progress bar. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +26,7 @@ create
 feature -- Status settings
 
 	set_default_minimum_size is
-			-- Initialize the size of the widget.
+			-- Initialize the size of `Current'.
 		do
 			internal_set_minimum_width (20)
 			internal_set_minimum_height (10)
@@ -36,7 +35,7 @@ feature -- Status settings
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
-			-- Default style used to create the control
+			-- Default style used to create `Current'.
 		do
 			Result := Ws_visible + Ws_child + Pbs_vertical
 	end
@@ -47,7 +46,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_VERTICAL_PROGRESS_BAR_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -61,13 +60,16 @@ end -- class EV_VERTICAL_PROGRESS_BAR_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/26 17:32:09  rogers
+--| Formatting and comments.
+--|
 --| Revision 1.5  2000/02/15 03:20:32  brendel
 --| Changed order of initialization. All gauges are now initialized in
 --| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
@@ -88,7 +90,8 @@ end -- class EV_VERTICAL_PROGRESS_BAR_IMP
 --| Added a minimum_width on creation.
 --|
 --| Revision 1.3.10.2  2000/01/10 18:38:33  rogers
---| Changed to fit in with the major Vision2 changes. See diff for redefinitions. Added interface.
+--| Changed to fit in with the major Vision2 changes. See diff for
+--| redefinitions. Added interface.
 --|
 --| Revision 1.3.10.1  1999/11/24 17:30:35  oconnor
 --| merged with DEVEL branch

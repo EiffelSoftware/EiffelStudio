@@ -16,8 +16,8 @@ inherit
 			make as text_create,
 			cursor as widget_cursor,
 			lower as lower_window,
-			set_cursor_position as st_set_cursor_position,
 			set_background_color as old_set_background_color,
+			set_cursor_position as st_set_cursor_position,
 			set_font as old_set_font
 		export
 			{NONE} st_set_cursor_position
@@ -29,8 +29,8 @@ inherit
 			set_text as st_set_text,
 			make as text_create,
 			cursor as widget_cursor,
-			lower as lower_window,
-			set_cursor_position as st_set_cursor_position
+			set_cursor_position as st_set_cursor_position,
+			lower as lower_window
 		export
 			{NONE} st_set_cursor_position
 		undefine
@@ -111,7 +111,6 @@ feature -- Access
 		do
 			!! Result.make (cursor_position, top_character_position)
 		end;
-
 
 	current_line: INTEGER is
 			-- Current line in text
@@ -235,7 +234,7 @@ feature -- Cursor movement
 			if last_top_position > c then
 				last_top_position := c
 			end;
-			set_cursor_position (last_cursor_position);
+			st_set_cursor_position (last_cursor_position);
 			set_top_character_position (last_top_position)
 		end
 

@@ -19,7 +19,8 @@ inherit
 			on_paint,
 			default_style,
 			on_wm_control_id_command,
-			class_name
+			class_name,
+			default_ex_style
 		redefine
 			set_x,
 			set_y,

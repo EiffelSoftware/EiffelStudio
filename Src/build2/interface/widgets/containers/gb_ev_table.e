@@ -223,55 +223,89 @@ feature {GB_CODE_GENERATOR} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			temp_x_position_string, temp_y_position_string,
-			temp_width_string, temp_height_string: STRING
+			temp_column_positions_string, temp_row_positions_string,
+			temp_column_spans_string, temp_row_spans_string: STRING
 			counter: INTEGER
 			lower, upper: INTEGER
 			current_child_name: STRING
+			rows, columns: STRING
 		do
---			Result := ""
---			full_information := get_unique_full_info (element)
---			element_info := full_information @ (x_position_string)
---			if element_info /= Void then
---				temp_x_position_string := element_info.data
---			end
---			element_info := full_information @ (y_position_string)
---			if element_info /= Void then
---				temp_y_position_string := element_info.data
---			end
---			element_info := full_information @ (width_string)
---			if element_info /= Void then
---				temp_width_string := element_info.data
---			end
---			element_info := full_information @ (height_string)
---			if element_info /= Void then
---				temp_height_string := element_info.data
---			end
---			check
---				strings_equal_in_length: temp_x_position_string.count = temp_y_position_string.count and
---					temp_x_position_string.count = temp_width_string.count and
---					temp_x_position_string.count = temp_height_string.count
---				strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
---					-- Cannot check this, as `Current' will have been built especially
---					-- for code generation purposes, and `objects' will be empty,
---					-- hence `first' will be Void.
---				--strings_correct_length: temp_x_position_string.count // 4 = first.count			
---			end
---			Result := Result + indent + "%T-- Size and position all children of `" + a_name + "'."
---			from
---				counter := 1
---			until
---				counter = temp_x_position_string.count // 4 + 1
---			loop
---				lower := (counter - 1) * 4 + 1
---				upper := (counter - 1) * 4 + 4
---				current_child_name := children_names @ counter
---				Result := Result + indent + a_name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")"
---				Result := Result + indent + a_name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")"
---				Result := Result + indent + a_name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")"
---				Result := Result + indent + a_name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")"
---				counter := counter + 1
---			end			
+
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (columns_string)
+			if element_info /= Void then
+				columns := element_info.data
+			else
+				columns := "1"
+			end
+			element_info := full_information @ (rows_string)
+			if element_info /= Void then
+				rows := element_info.data
+			else
+				rows := "1"
+			end
+			
+			Result := a_name + ".resize (" + columns + ", " + rows + ")"
+			
+			element_info := full_information @ (row_spacing_string)
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_row_spacing (" + element_info.data + ")"
+			end
+			
+			element_info := full_information @ (column_spacing_string)
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_column_spacing (" + element_info.data + ")"
+			end
+			
+			element_info := full_information @ (border_width_string)
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_border_width (" + element_info.data + ")"
+			end
+
+			element_info := full_information @ (column_positions_string)
+			if element_info /= Void then
+				temp_column_positions_string := element_info.data
+			end
+			element_info := full_information @ (row_positions_string)
+			if element_info /= Void then
+				temp_row_positions_string := element_info.data
+			end
+			element_info := full_information @ (column_spans_string)
+			if element_info /= Void then
+				temp_column_spans_string := element_info.data
+			end
+			element_info := full_information @ (row_spans_string)
+			if element_info /= Void then
+				temp_row_spans_string := element_info.data
+			end
+			check
+				strings_equal_in_length: temp_column_positions_string.count = temp_row_positions_string.count and
+					temp_column_positions_string.count = temp_row_spans_string.count and
+					temp_column_positions_string.count = temp_column_spans_string.count
+				strings_divisible_by_4: temp_column_positions_string.count \\ 4 = 0
+					-- Cannot check this, as `Current' will have been built especially
+					-- for code generation purposes, and `objects' will be empty,
+					-- hence `first' will be Void.
+				--strings_correct_length: temp_x_position_string.count // 4 = first.count			
+			end
+			Result := Result + indent + "%T-- Insert and position all children of `" + a_name + "'."
+			from
+				counter := 1
+			until
+				counter = temp_column_positions_string.count // 4 + 1
+			loop
+				lower := (counter - 1) * 4 + 1
+				upper := (counter - 1) * 4 + 4
+				current_child_name := children_names @ counter
+				Result := Result + indent + a_name + ".put (" + current_child_name + ", " + temp_column_positions_string.substring (lower, upper) + ", " +
+				temp_row_positions_string.substring (lower, upper) + ", " + temp_column_spans_string.substring (lower, upper) + ", " +
+				temp_row_spans_string.substring (lower, upper) + ")"			
+				counter := counter + 1
+			end			
+
+
+			Result := strip_leading_indent (Result)
 		end
 		
 feature {GB_DEFERRED_BUILDER} -- Status setting
@@ -607,7 +641,6 @@ feature {NONE} -- Implementation
 			end
 			
 			if resizing_widget then
-				io.putstring ("New_x " + new_x.out + "%N")
 				
 				if x_scale /= 0 then
 					if x_offset = 0 then
@@ -648,7 +681,7 @@ feature {NONE} -- Implementation
 						new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)
 						new_row := (new_y // grid_size).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
 						if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row) then --.max (1).min (first.rows - first.item_row_position (selected_item) + 1)) then
-							set_item_span (selected_item, first.item_column_span (selected_item), new_row)	
+							set_item_span (selected_item, first.item_column_span (selected_item), new_row)
 						end
 					end
 				end				

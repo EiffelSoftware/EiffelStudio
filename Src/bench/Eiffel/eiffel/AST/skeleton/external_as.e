@@ -124,7 +124,7 @@ feature -- Byte code
 			Result.external_name /= Void
 		end
 
-feature {AST_EIFFEL} -- Output
+feature {AST_EIFFEL, FEATURE_I} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text

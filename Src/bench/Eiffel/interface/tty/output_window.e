@@ -95,7 +95,7 @@ feature {TEXT_ITEM} -- Text processing
 	process_new_line (text: NEW_LINE_ITEM) is
 			-- Process new line text `t'.
 		do
-			new_line
+			put_new_line
 		end
 
 	process_indentation (text: INDENT_TEXT) is
@@ -188,7 +188,7 @@ feature -- Output
 		do 
 		end
 
-	new_line is 
+	put_new_line is 
 			-- Put a new line at current position.
 		deferred 
 		end
@@ -198,17 +198,6 @@ feature -- Output
 		require
 			valid_s: s /= Void
 		deferred 
-		end
-
-	put_char (c: CHARACTER) is 
-			-- Put a character `c' at current position.
-		deferred 
-		end
-
-	put_int (i: INTEGER) is
-			-- Put a integer `i' at current position.
-		do
-			put_string (i.out)
 		end
 
 	put_one_indent is

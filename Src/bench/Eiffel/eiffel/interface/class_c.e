@@ -1787,6 +1787,21 @@ feature -- Skeleton processing
 				then
 					class_type.set_is_changed (True)
 					class_type.set_skeleton (new_skeleton)
+					if class_type.is_expanded and old_skeleton /= Void then
+							-- Force recompilation of all clients, as the layout of expanded
+							-- have changed possibly making some of our generated code incorrect
+							-- if the skeleton size have change. Note that we cannot query the size
+							-- here in case of VLEC errors that will be find later in the
+							-- compilation.
+						from
+							clients.start
+						until
+							clients.after
+						loop
+							clients.item.melt_all
+							clients.forth
+						end
+					end
 					Degree_1.insert_class (Current)
 				end
 				types.forth

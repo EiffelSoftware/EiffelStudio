@@ -24,7 +24,8 @@ inherit
 			make,
 			interface,
 			call_close_request_actions,
-			initialize
+			initialize,
+			client_area
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -123,6 +124,12 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	client_area: POINTER is
+			-- Pointer to the widget that is treated as the main holder of the client area within the window. 
+		do
+			Result := client_area_from_c_object (c_object)
+		end
 
 	dialog_key_press_action (a_key: EV_KEY) is
 		local

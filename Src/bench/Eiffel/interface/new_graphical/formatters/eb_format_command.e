@@ -43,6 +43,7 @@ feature -- Execution
 		local
 --			mp: MOUSE_PTR
 			s: STONE
+			csd: EB_CONFIRM_SAVE_DIALOG
 		do
 			if argument = Void then
 				s ?= f.tool.stone
@@ -53,8 +54,7 @@ feature -- Execution
 --				execute_licensed (s)
 				f.format (s)
 			else
---				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
---					Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
+				create csd.make_and_launch (f.tool, Current, argument)
 			end
 		end
 		

@@ -3,7 +3,7 @@
 <HTML>
 	<HEAD>
 		<TITLE>EiffelVision2 Overview</TITLE>
-		<LINK REL=StyleSheet HREF="../../../default.css">
+		<LINK REL=StyleSheet HREF="/default.css">
 	</HEAD>
 
 	<BODY>
@@ -13,11 +13,13 @@
 
 		<P>The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called <B>widgets</B> (buttons, windows, listviews) as well as truly graphical elements such as points, lines, arcs, polygons and the like -- to develop a modern, functional and good-looking graphical interactive application.</P>
 
-		<P>EiffelVision has played a major role in ISE Eiffel and provided numerous Eiffel projects with a powerful, portable graphics development platform. To reflect the advances in graphical development toolkits, a new EiffelVision library development was undertaken in 1998 and the first version made available with ISE Eiffel 4.3 in March of 1999. Since then, the library has been thoroughly redesigned to fix some vital memory management bugs and improve consistency in naming of classes and features.
+        <P>EiffelVision has played a maj or role in ISE Eiffel and provided numerous Eiffel projects with a powerful, portable graphics development platform.&nbsp;
+        EiffelStudio is totally reliant on EiffelVision for its graphical
+        elements and overall interaction with the user.
 
 		<H3>Scope</H3>
 
-		<P>The EiffelVision library addresses all the major needs of developers of systems supporting modern graphical interfaces. EiffelVision runs on Microsoft Windows, all major Unix platforms (including Linux) and VMS. All versions are fully source-compatible; with only a recompile, applications will run on every supported platform with the native look-and-feel.</P>
+		<P>The EiffelVision library addresses all the major needs of developers of systems supporting modern graphical interfaces. EiffelVision runs on Microsoft Windows, all major Unix platforms (including Linux). All versions are fully source-compatible; with only a recompile, applications will run on every supported platform with the native look-and-feel.</P>
 
 		<P>EiffelVision provides an effective way of building advanced graphical applications using user interface standards and toolkits (such as Microsoft Windows and GTK) without having to learn the details of the toolkits. Instead, you can use EiffelVision to work entirely in terms of high level abstractions representing windows, buttons, labels, graphical figures, menus, buttons etc., and apply clearly understandable operations to the corresponding objects.</P>
 
@@ -55,7 +57,8 @@
 
 		<P>The abstract design has been derived from an analysis of user interfaces. Therefore we have classes with names like MENU, WINDOW, BUTTON, LINE or POLYGON. The features of these classes are simple, clearly defined properties or commands, like the feature `minimize' (a command) on WINDOW or `text' (a property of type STRING) on BUTTON.</P>
 
-		<P CLASS="note"><B>Note</B>: all class names in EiffelVision are prepended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes EV_BUTTON, etc.</P>
+		<P CLASS="note"><B>Note</B>: all class names in EiffelVision are
+        pre-pended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes EV_BUTTON, etc.</P>
 
 		<H3>Properties</H3>
 

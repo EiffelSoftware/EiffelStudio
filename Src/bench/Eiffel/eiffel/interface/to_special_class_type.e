@@ -5,17 +5,13 @@ class TO_SPECIAL_CLASS_TYPE
 inherit
 
 	CLASS_TYPE
-		rename
-			generate_feature as basic_generate_feature
-		end;
-	CLASS_TYPE
 		redefine
 			generate_feature
-		select
-			generate_feature
-		end;
-	SHARED_TABLE;
-	SHARED_BODY_ID;
+		end
+
+	SHARED_TABLE
+
+	SHARED_BODY_ID
 
 creation
 
@@ -28,13 +24,14 @@ feature
 		local
 			feature_name: STRING;
 		do
-			feature_name := feat.feature_name;
+			feature_name := feat.feature_name
+
 			if feature_name.is_equal ("make_area") then
 					-- Generate built-in feature `put' of class SPECIAL
 				generate_make_area (feat, file);
 			else
 					-- Basic generation
-				basic_generate_feature (feat, file);
+				{CLASS_TYPE} precursor (feat, file);
 			end;
 		end;
 

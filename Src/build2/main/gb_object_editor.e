@@ -444,6 +444,7 @@ feature {NONE} -- Implementation
 			horizontal_box: EV_HORIZONTAL_BOX
 			flatten_button, shallow_flatten_button: EV_BUTTON
 			tool_bar: EV_TOOL_BAR
+			command_flatten: GB_COMMAND_FLATTEN_OBJECT
 		do
 			current_window_parent := parent_window (Current)
 			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
@@ -572,10 +573,10 @@ feature {NONE} -- Implementation
 				flatten_button.select_actions.extend (agent rebuild_associated_editors (object.object))
 				horizontal_box.extend (flatten_button)
 				horizontal_box.disable_item_expand (flatten_button)
-				
+
 				create shallow_flatten_button.make_with_text ("Shallow")
-				shallow_flatten_button.select_actions.extend (agent object.shallow_flatten)
-				shallow_flatten_button.select_actions.extend (agent rebuild_associated_editors (object.object))
+				create command_flatten.make (object, False)
+				shallow_flatten_button.select_actions.extend (agent command_flatten.execute)
 				horizontal_box.extend (shallow_flatten_button)
 				horizontal_box.disable_item_expand (shallow_flatten_button)
 			end

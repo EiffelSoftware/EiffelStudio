@@ -25,6 +25,9 @@ create
 	make_type,
 	make_expression,
 	make_statement,
+	make_argument,
+	make_variable,
+	make_primitive,
 	make_error
 
 feature {NONE} -- Initialization
@@ -71,6 +74,27 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			make_from_index (Statement_icon)
+		end
+
+	make_variable is
+			-- Initialize icon for variable
+		do
+			default_create
+			make_from_index (Variable_icon)
+		end
+
+	make_argument is
+			-- Initialize icon for argument
+		do
+			default_create
+			make_from_index (Argument_icon)
+		end
+
+	make_primitive is
+			-- Initialize icon for primitive
+		do
+			default_create
+			make_from_index (Primitive_icon)
 		end
 
 	make_error is

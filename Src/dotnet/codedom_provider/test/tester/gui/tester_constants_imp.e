@@ -39,10 +39,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	compile_compile_unit_label: STRING is
-			-- `Result' is STRING constant named `compile_compile_unit_label'.
+	generator_tab_title: STRING is
+			-- `Result' is STRING constant named `generator_tab_title'.
 		once
-			Result := "Compile assembly from compile unit"
+			Result := "Generator"
 		end
 
 	icons_directory: STRING is
@@ -61,10 +61,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	generator_tab_title: STRING is
-			-- `Result' is STRING constant named `generator_tab_title'.
+	generate_namespace_label: STRING is
+			-- `Result' is STRING constant named `generate_namespace_label'.
 		once
-			Result := "Generator"
+			Result := "Generate from namespace"
 		end
 
 	generate_type_label: STRING is
@@ -83,10 +83,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	generate_namespace_label: STRING is
-			-- `Result' is STRING constant named `generate_namespace_label'.
+	compile_compile_unit_label: STRING is
+			-- `Result' is STRING constant named `compile_compile_unit_label'.
 		once
-			Result := "Generate from namespace"
+			Result := "Compile assembly from compile unit"
 		end
 
 	generate_expression_label: STRING is

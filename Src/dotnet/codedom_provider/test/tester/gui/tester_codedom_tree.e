@@ -243,7 +243,7 @@ feature -- Access
 			Result.set_data (a_statement)
 		end
 
-	expression_node (a_path: STRING; a_expression: SYSTEM_DLL_CODE_EXPRESSION): EV_TREE_ITEM is
+	expression_node (a_path: STRING; a_expression: SYSTEM_DLL_CODE_EXPRESSION): EV_DYNAMIC_TREE_ITEM is
 			-- Expression node
 		require
 			non_void_expression: a_expression /= Void
@@ -253,6 +253,7 @@ feature -- Access
 		do
 			l_text := a_expression.to_string
 			create Result.make_with_text (l_text.substring (l_text.last_index_of ('.') + 1))
+			Result.set_subtree_function (agent expression_nodes (a_path, a_expression))
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 			Result.set_tooltip (a_path)
 			Result.set_data (a_expression)
@@ -272,6 +273,24 @@ feature -- Access
 				i = l_count
 			loop
 				Result.extend (statement_node (a_path, a_statements.item (i)))
+				i := i + 1
+			end
+		end
+	
+	expressions_nodes (a_path: STRING; a_expressions: SYSTEM_DLL_CODE_EXPRESSION_COLLECTION): LIST [EV_TREE_NODE] is
+			-- Statements nodes for method `a_method'.
+		require
+			non_void_expressions: a_expressions /= Void
+		local
+			i, l_count: INTEGER
+		do
+			l_count := a_expressions.count
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (l_count)
+			from
+			until
+				i = l_count
+			loop
+				Result.extend (expression_node (a_path, a_expressions.item (i)))
 				i := i + 1
 			end
 		end
@@ -406,7 +425,7 @@ feature -- Access
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_assign_statement)
 			if a_assign_statement.left /= Void then
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 				l_node.extend (expression_node (a_path, a_assign_statement.left))
 			else
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
@@ -416,7 +435,7 @@ feature -- Access
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_assign_statement)
 			if a_assign_statement.right /= Void then
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 				l_node.extend (expression_node (a_path, a_assign_statement.right))
 			else
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
@@ -438,7 +457,7 @@ feature -- Access
 			l_node.set_data (a_attach_event_statement)
 			if a_attach_event_statement.event /= Void then
 				l_node.extend (expression_node (a_path, a_attach_event_statement.event))
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 			else
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
 			end
@@ -447,7 +466,7 @@ feature -- Access
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_attach_event_statement)
 			if a_attach_event_statement.listener /= Void then
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 				l_node.extend (expression_node (a_path, a_attach_event_statement.listener))
 			else
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
@@ -593,7 +612,7 @@ feature -- Access
 			l_node.set_data (a_iteration_statement)
 			if a_iteration_statement.test_expression /= Void then
 				l_node.extend (expression_node (a_path, a_iteration_statement.test_expression))
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 			else
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
 			end
@@ -660,10 +679,11 @@ feature -- Access
 			non_void_statement: a_method_return_statement /= Void
 		local
 			l_node: EV_TREE_ITEM
+			l_text: SYSTEM_STRING
 		do
 			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
 			if a_method_return_statement.expression /= Void then
-				Result := expression_node (a_path, a_method_return_statement.expression)
+				Result.extend (expression_node (a_path, a_method_return_statement.expression))
 			else
 				create l_node.make_with_text ("Missing Expression")
 				l_node.set_tooltip (a_path)
@@ -696,7 +716,7 @@ feature -- Access
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_remove_event_statement)
 			if a_remove_event_statement.listener /= Void then
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 				l_node.extend (expression_node (a_path, a_remove_event_statement.listener))
 			else
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
@@ -718,8 +738,10 @@ feature -- Access
 				l_text := a_snippet_statement.value
 			end
 			if l_text /= Void then
-				l_text.keep_head (20)
-				l_text.append ("...")
+				if l_text.count > 20 then
+					l_text.keep_head (20)
+					l_text.append ("...")
+				end
 				l_pixmap := create {TESTER_TREE_ICON}.make_statement
 			else
 				l_text := "Missing Snippet"
@@ -805,7 +827,7 @@ feature -- Access
 				create l_node.make_with_text (l_text + a_variable_declaration_statement.name)
 				l_node.set_tooltip (a_path)
 				l_node.set_data (a_variable_declaration_statement)
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_variable)
 			else
 				create l_node.make_with_text ("Missing Name")
 				l_node.set_tooltip (a_path)
@@ -831,7 +853,7 @@ feature -- Access
 				l_node.set_tooltip (a_path)
 				l_node.set_data (a_variable_declaration_statement)
 				l_node.append (expression_node (a_path, a_variable_declaration_statement.init_expression))
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 				Result.extend (l_node)
 			end
 		end
@@ -858,7 +880,6 @@ feature -- Access
 			-- Catch clause node
 		local
 			l_node: EV_TREE_ITEM
-			l_text: STRING
 		do
 			create Result.make_with_text ("Catch Clause")
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
@@ -881,7 +902,7 @@ feature -- Access
 			if a_catch_clause.local_name /= Void then
 				create l_node.make_with_text ("Name: " + a_catch_clause.local_name)
 				l_node.set_data (a_catch_clause)
-				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_statement)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_variable)
 				l_node.set_tooltip (a_path)
 				Result.extend (l_node)
 			end
@@ -893,6 +914,1004 @@ feature -- Access
 				l_node.append (statements_nodes (a_path, a_catch_clause.statements))
 				Result.extend (l_node)
 			end
+		end
+
+	expression_nodes (a_path: STRING; a_expression: SYSTEM_DLL_CODE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Statement title
+		require
+			non_void_expression: a_expression /= Void
+		local
+			l_argument_expression: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION
+			l_array_create_expression: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION
+			l_array_indexer_expression: SYSTEM_DLL_CODE_ARRAY_INDEXER_EXPRESSION
+			l_base_expression: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION
+			l_binary_operator_expression: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION
+			l_cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION
+			l_delegate_create_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION
+			l_delegate_invoke_expression: SYSTEM_DLL_CODE_DELEGATE_INVOKE_EXPRESSION
+			l_direction_expression: SYSTEM_DLL_CODE_DIRECTION_EXPRESSION
+			l_event_expression: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION
+			l_field_expression: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION
+			l_indexer_expression: SYSTEM_DLL_CODE_INDEXER_EXPRESSION
+			l_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
+			l_method_reference_expression: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION
+			l_object_create_expression: SYSTEM_DLL_CODE_OBJECT_CREATE_EXPRESSION
+			l_parameter_declaration_expression: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION
+			l_primitive_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION
+			l_property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION
+			l_property_set_value_reference_expression: SYSTEM_DLL_CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION
+			l_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION
+			l_this_expression: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION
+			l_type_of_expression: SYSTEM_DLL_CODE_TYPE_OF_EXPRESSION
+			l_type_reference_expression: SYSTEM_DLL_CODE_TYPE_REFERENCE_EXPRESSION
+			l_variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION
+		do
+			l_argument_expression ?= a_expression
+			if l_argument_expression /= Void then
+				Result := argument_expression_nodes (a_path, l_argument_expression)
+			else
+				l_array_create_expression ?= a_expression
+				if l_array_create_expression /= Void then
+					Result := array_create_expression_nodes (a_path, l_array_create_expression)
+				else
+					l_array_indexer_expression ?= a_expression
+					if l_array_indexer_expression /= Void then
+						Result := array_indexer_expression_nodes (a_path, l_array_indexer_expression)
+					else
+						l_base_expression ?= a_expression
+						if l_base_expression /= Void then
+							Result := base_expression_nodes (a_path, l_base_expression)
+						else
+							l_binary_operator_expression ?= a_expression
+							if l_binary_operator_expression /= Void then
+								Result := binary_operator_expression_nodes (a_path, l_binary_operator_expression)
+							else
+								l_cast_expression ?= a_expression
+								if l_cast_expression /= Void then
+									Result := cast_expression_nodes (a_path, l_cast_expression)
+								else
+									l_delegate_create_expression ?= a_expression
+									if l_delegate_create_expression /= Void then
+										Result := delegate_create_expression_nodes (a_path, l_delegate_create_expression)
+									else
+										l_delegate_invoke_expression ?= a_expression
+										if l_delegate_invoke_expression /= Void then
+											Result := delegate_invoke_expression_nodes (a_path, l_delegate_invoke_expression)
+										else
+											l_direction_expression ?= a_expression
+											if l_direction_expression /= Void then
+												Result := direction_expression_nodes (a_path, l_direction_expression)
+											else
+												l_event_expression ?= a_expression
+												if l_event_expression /= Void then
+													Result := event_expression_nodes (a_path, l_event_expression)
+												else
+													l_field_expression ?= a_expression
+													if l_field_expression /= Void then
+														Result := field_expression_nodes (a_path, l_field_expression)
+													else
+														l_indexer_expression ?= a_expression
+														if l_indexer_expression /= Void then
+															Result := indexer_expression_nodes (a_path, l_indexer_expression)
+														else
+															l_method_invoke_expression ?= a_expression
+															if l_method_invoke_expression /= Void then
+																Result := method_invoke_expression_nodes (a_path, l_method_invoke_expression)
+															else
+																l_method_reference_expression ?= a_expression
+																if l_method_reference_expression /= Void then
+																	Result := method_reference_expression_nodes (a_path, l_method_reference_expression)
+																else
+																	l_object_create_expression ?= a_expression
+																	if l_object_create_expression /= Void then
+																		Result := object_create_expression_nodes (a_path, l_object_create_expression)
+																	else
+																		l_parameter_declaration_expression ?= a_expression
+																		if l_parameter_declaration_expression /= Void then
+																			Result := parameter_declaration_expression_nodes (a_path, l_parameter_declaration_expression)
+																		else
+																			l_primitive_expression ?= a_expression
+																			if l_primitive_expression /= Void then
+																				Result := primitive_expression_nodes (a_path, l_primitive_expression)
+																			else
+																				l_property_reference_expression ?= a_expression
+																				if l_property_reference_expression /= Void then
+																					Result := property_reference_expression (a_path, l_property_reference_expression)
+																				else
+																					l_property_set_value_reference_expression ?= a_expression
+																					if l_property_set_value_reference_expression /= Void then
+																						Result := property_set_value_reference_expression_nodes (a_path, l_property_set_value_reference_expression)
+																					else
+																						l_snippet_expression ?= a_expression
+																						if l_snippet_expression /= Void then
+																							Result := snippet_expression_nodes (a_path, l_snippet_expression)
+																						else
+																							l_this_expression ?= a_expression
+																							if l_this_expression /= Void then
+																								Result := this_expression_nodes (a_path, l_this_expression)
+																							else
+																								l_type_of_expression ?= a_expression
+																								if l_type_of_expression /= Void then
+																									Result := type_of_expression_nodes (a_path, l_type_of_expression)
+																								else
+																									l_type_reference_expression ?= a_expression
+																									if l_type_reference_expression /= Void then
+																										Result := type_reference_expression_nodes (a_path, l_type_reference_expression)
+																									else
+																										l_variable_reference_expression ?= a_expression
+																										if l_variable_reference_expression /= Void then
+																											Result := variable_reference_expression_nodes (a_path, l_variable_reference_expression)
+																										end
+																									end
+																								end
+																							end
+																						end
+																					end
+																				end
+																			end
+																		end
+																	end
+																end
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+
+	argument_expression_nodes (a_path: STRING; a_argument_expression: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_argument_expression'
+		require
+			non_void_argument_expression: a_argument_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			if a_argument_expression.parameter_name /= Void then
+				create l_node.make_with_text (a_argument_expression.parameter_name)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_argument)
+			else
+				create l_node.make_with_text ("Missing parameter name")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end			
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_argument_expression)
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	array_create_expression_nodes (a_path: STRING; a_array_create_expression: SYSTEM_DLL_CODE_ARRAY_CREATE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_array_create_expression'
+		require
+			non_void_array_create_expression: a_array_create_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+			l_type: STRING
+			l_pixmap: EV_PIXMAP
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (4)
+
+			if a_array_create_expression.create_type /= Void and then a_array_create_expression.create_type.array_element_type /= Void and then a_array_create_expression.create_type.array_element_type.base_type /= Void then
+				l_type := "Array Type: "
+				l_type.append (a_array_create_expression.create_type.array_element_type.base_type)
+				create {TESTER_TREE_ICON} l_pixmap.make_type
+			else
+				l_type := "Missing Array Type"
+				create {TESTER_TREE_ICON} l_pixmap.make_error
+			end
+			create l_node.make_with_text (l_type)
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_array_create_expression)
+			l_node.set_pixmap (l_pixmap)
+			Result.extend (l_node)
+
+			if a_array_create_expression.initializers /= Void then
+				create l_node.make_with_text ("Initializers")
+				l_node.set_tooltip (a_path)
+				l_node.append (expressions_nodes (a_path, a_array_create_expression.initializers))
+				l_node.set_data (a_array_create_expression)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+				Result.extend (l_node)
+			end
+			
+			create l_node.make_with_text ("Size: " + a_array_create_expression.size.out)
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_array_create_expression)
+			l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			Result.extend (l_node)
+			
+			if a_array_create_expression.size_expression /= Void then
+				create l_node.make_with_text ("Size Expression")
+				l_node.set_tooltip (a_path)
+				l_node.set_data (a_array_create_expression)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+				l_node.extend (expression_node (a_path, a_array_create_expression.size_expression))
+				Result.extend (l_node)
+			end
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	array_indexer_expression_nodes (a_path: STRING; a_array_indexer_expression: SYSTEM_DLL_CODE_ARRAY_INDEXER_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_array_indexer_expression'
+		require
+			non_void_array_indexer_expression: a_array_indexer_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("Indices")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_array_indexer_expression)
+			if a_array_indexer_expression.indices /= Void then
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+				l_node.append (expressions_nodes (a_path, a_array_indexer_expression.indices))
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Target Object")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_array_indexer_expression)
+			if a_array_indexer_expression.target_object /= Void then
+				l_node.extend (expression_node (a_path, a_array_indexer_expression.target_object))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	base_expression_nodes (a_path: STRING; a_base_expression: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_base_expression'
+		require
+			non_void_base_expression: a_base_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			create l_node.make_with_text ("Base Reference Expression")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_base_expression)
+			l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	binary_operator_expression_nodes (a_path: STRING; a_binary_operator_expression: SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_binary_operator_expression'
+		require
+			non_void_binary_operator_expression: a_binary_operator_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+			l_operator: STRING
+			l_pixmap: EV_PIXMAP
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (3)
+
+			create l_node.make_with_text ("Left Operand")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_binary_operator_expression)
+			if a_binary_operator_expression.left /= Void then
+				l_node.extend (expression_node (a_path, a_binary_operator_expression.left))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			if a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Add then
+				l_operator := "+"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Assign_ then
+				l_operator := ":="
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Bitwise_and then
+				l_operator := "&"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Bitwise_or then
+				l_operator := "|"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Boolean_and then
+				l_operator := "and"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Boolean_or then
+				l_operator := "or"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Divide then
+				l_operator := "/"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Greater_than then
+				l_operator := ">"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Greater_than_or_equal then
+				l_operator := ">="
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Identity_equality then
+				l_operator := "="
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Identity_inequality then
+				l_operator := "/="
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Less_than then
+				l_operator := "<"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Less_than_or_equal then
+				l_operator := "<="
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Modulus then
+				l_operator := "\\"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Multiply then
+				l_operator := "*"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Subtract then
+				l_operator := "-"
+			elseif a_binary_operator_expression.operator = feature {SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE}.Value_equality then
+				l_operator := "is_equal"
+			else
+				l_operator := "Unknown Operator"
+				create {TESTER_TREE_ICON} l_pixmap.make_error
+			end
+			create l_node.make_with_text (l_operator)
+			if l_pixmap = Void then
+				create {TESTER_TREE_ICON} l_pixmap.make_primitive
+			end
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_binary_operator_expression)
+			l_node.set_pixmap (l_pixmap)
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Right Operand")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_binary_operator_expression)
+			if a_binary_operator_expression.right /= Void then
+				l_node.extend (expression_node (a_path, a_binary_operator_expression.right))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	cast_expression_nodes (a_path: STRING; a_cast_expression: SYSTEM_DLL_CODE_CAST_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_cast_expression'
+		require
+			non_void_cast_expression: a_cast_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("Expression")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_cast_expression)
+			if a_cast_expression.expression /= Void then
+				l_node.extend (expression_node (a_path, a_cast_expression.expression))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_cast_expression)
+			if a_cast_expression.target_type /= Void and then a_cast_expression.target_type.base_type /= Void then
+				l_node.set_text ("Target Type: " + a_cast_expression.target_type.base_type)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_type)
+			else
+				l_node.set_text ("Missing Target Type")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	delegate_create_expression_nodes (a_path: STRING; a_delegate_create_expression: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_delegate_create_expression'
+		require
+			non_void_delegate_create_expression: a_delegate_create_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (3)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_delegate_create_expression)
+			if a_delegate_create_expression.delegate_type /= Void and then a_delegate_create_expression.delegate_type.base_type /= Void then
+				l_node.set_text ("Delegate Type: " + a_delegate_create_expression.delegate_type.base_type)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_type)
+			else
+				l_node.set_text ("Missing Target Type")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_delegate_create_expression)
+			if a_delegate_create_expression.method_name /= Void then
+				l_node.set_text ("Method Name: " + a_delegate_create_expression.method_name)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			else
+				l_node.set_text ("Missing Method Name")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Target Object")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_delegate_create_expression)
+			if a_delegate_create_expression.target_object /= Void then
+				l_node.extend (expression_node (a_path, a_delegate_create_expression.target_object))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	delegate_invoke_expression_nodes (a_path: STRING; a_delegate_invoke_expression: SYSTEM_DLL_CODE_DELEGATE_INVOKE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_delegate_invoke_expression'
+		require
+			non_void_delegate_invoke_expression: a_delegate_invoke_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("Parameters")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_delegate_invoke_expression)
+			if a_delegate_invoke_expression.parameters /= Void then
+				l_node.append (expressions_nodes (a_path, a_delegate_invoke_expression.parameters))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Target Object")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_delegate_invoke_expression)
+			if a_delegate_invoke_expression.target_object /= Void then
+				l_node.extend (expression_node (a_path, a_delegate_invoke_expression.target_object))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	direction_expression_nodes (a_path: STRING; a_direction_expression: SYSTEM_DLL_CODE_DIRECTION_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_direction_expression'
+		require
+			non_void_direction_expression: a_direction_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("Unknown Direction")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_direction_expression)
+			if a_direction_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.In then
+				l_node.set_text ("Direction: In")
+			elseif a_direction_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Out then
+				l_node.set_text ("Direction: Out")
+			elseif a_direction_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Ref then
+				l_node.set_text ("Direction: Ref")
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			if l_node.pixmap = Void then
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Expression")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_direction_expression)
+			if a_direction_expression.expression /= Void then
+				l_node.extend (expression_node (a_path, a_direction_expression.expression))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	event_expression_nodes (a_path: STRING; a_event_expression: SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_event_expression'
+		require
+			non_void_event_expression: a_event_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_event_expression)
+			if a_event_expression.event_name /= Void then
+				l_node.set_text ("Event Name: " + a_event_expression.event_name)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			else
+				l_node.set_text ("Missing Event Name")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Target Object")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_event_expression)
+			if a_event_expression.target_object /= Void then
+				l_node.extend (expression_node (a_path, a_event_expression.target_object))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	field_expression_nodes (a_path: STRING; a_field_expression: SYSTEM_DLL_CODE_FIELD_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_field_expression'
+		require
+			non_void_field_expression: a_field_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_field_expression)
+			if a_field_expression.field_name /= Void then
+				l_node.set_text ("Field Name: " + a_field_expression.field_name)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			else
+				l_node.set_text ("Missing Event Name")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Target Object")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_field_expression)
+			if a_field_expression.target_object /= Void then
+				l_node.extend (expression_node (a_path, a_field_expression.target_object))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	indexer_expression_nodes (a_path: STRING; a_indexer_expression: SYSTEM_DLL_CODE_INDEXER_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_indexer_expression'
+		require
+			non_void_indexer_expression: a_indexer_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("Indices")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_indexer_expression)
+			if a_indexer_expression.indices /= Void then
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+				l_node.append (expressions_nodes (a_path, a_indexer_expression.indices))
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Target Object")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_indexer_expression)
+			if a_indexer_expression.target_object /= Void then
+				l_node.extend (expression_node (a_path, a_indexer_expression.target_object))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	method_invoke_expression_nodes (a_path: STRING; a_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_method_invoke_expression'
+		require
+			non_void_method_invoke_expression: a_method_invoke_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("Method")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_method_invoke_expression)
+			if a_method_invoke_expression.method /= Void then
+				l_node.extend (expression_node (a_path, a_method_invoke_expression.method))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Parameters")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_method_invoke_expression)
+			if a_method_invoke_expression.parameters /= Void then
+				l_node.append (expressions_nodes (a_path, a_method_invoke_expression.parameters))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	method_reference_expression_nodes (a_path: STRING; a_method_reference_expression: SYSTEM_DLL_CODE_METHOD_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_method_reference_expression'
+		require
+			non_void_method_reference_expression: a_method_reference_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_method_reference_expression)
+			if a_method_reference_expression.method_name /= Void then
+				l_node.set_text ("Method Name: " + a_method_reference_expression.method_name)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			else
+				l_node.set_text ("Missing Method Name")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Target Object")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_method_reference_expression)
+			if a_method_reference_expression.target_object /= Void then
+				l_node.extend (expression_node (a_path, a_method_reference_expression.target_object))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	object_create_expression_nodes (a_path: STRING; a_object_create_expression: SYSTEM_DLL_CODE_OBJECT_CREATE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_object_create_expression'
+		require
+			non_void_object_create_expression: a_object_create_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_object_create_expression)
+			if a_object_create_expression.create_type /= Void and then a_object_create_expression.create_type.base_type /= Void then
+				l_node.set_text ("Create Type: " + a_object_create_expression.create_type.base_type)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_type)
+			else
+				l_node.set_text ("Missing Create Type")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Parameters")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_object_create_expression)
+			if a_object_create_expression.parameters /= Void then
+				l_node.append (expressions_nodes (a_path, a_object_create_expression.parameters))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	parameter_declaration_expression_nodes (a_path: STRING; a_parameter_declaration_expression: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_parameter_declaration_expression'
+		require
+			non_void_parameter_declaration_expression: a_parameter_declaration_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (4)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_parameter_declaration_expression)
+			if a_parameter_declaration_expression.name /= Void then
+				l_node.set_text ("Parameter Name: " + a_parameter_declaration_expression.name)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			else
+				l_node.set_text ("Missing Parameter Name")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_parameter_declaration_expression)
+			if a_parameter_declaration_expression.type /= Void and then a_parameter_declaration_expression.type.base_type /= Void then
+				l_node.set_text ("Parameter Type: " + a_parameter_declaration_expression.type.base_type)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_type)
+			else
+				l_node.set_text ("Missing Parameter Type")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Unknown Direction")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_parameter_declaration_expression)
+			if a_parameter_declaration_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.In then
+				l_node.set_text ("Direction: In")
+			elseif a_parameter_declaration_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Out then
+				l_node.set_text ("Direction: Out")
+			elseif a_parameter_declaration_expression.direction = feature {SYSTEM_DLL_FIELD_DIRECTION}.Ref then
+				l_node.set_text ("Direction: Ref")
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			if l_node.pixmap = Void then
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			end
+			Result.extend (l_node)
+
+			if a_parameter_declaration_expression.custom_attributes /= Void then
+				create l_node.make_with_text ("Custom Attributes")
+				l_node.set_tooltip (a_path)
+				l_node.set_data (a_parameter_declaration_expression)
+--				l_node.append (custom_attributes_nodes (a_path, a_parameter_declaration_expression.custom_attributes))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+				Result.extend (l_node)
+			end
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	primitive_expression_nodes (a_path: STRING; a_primitive_expression: SYSTEM_DLL_CODE_PRIMITIVE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_primitive_expression'
+		require
+			non_void_primitive_expression: a_primitive_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_primitive_expression)
+			if a_primitive_expression.value /= Void then
+				l_node.set_text ("Primitive Value: " + a_primitive_expression.value.to_string)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			else
+				l_node.set_text ("Missing Primitive Value")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	property_reference_expression (a_path: STRING; a_property_reference_expression: SYSTEM_DLL_CODE_PROPERTY_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_property_reference_expression'
+		require
+			non_void_property_reference_expression: a_property_reference_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_property_reference_expression)
+			if a_property_reference_expression.property_name /= Void then
+				l_node.set_text ("Property Name: " + a_property_reference_expression.property_name)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			else
+				l_node.set_text ("Missing Property Name")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+
+			create l_node.make_with_text ("Target Object")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_property_reference_expression)
+			if a_property_reference_expression.target_object /= Void then
+				l_node.extend (expression_node (a_path, a_property_reference_expression.target_object))
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
+			else
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	property_set_value_reference_expression_nodes (a_path: STRING; a_property_set_value_reference_expression: SYSTEM_DLL_CODE_PROPERTY_SET_VALUE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_property_set_value_reference_expression'
+		require
+			non_void_property_set_value_reference_expression: a_property_set_value_reference_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_property_set_value_reference_expression)
+			l_node.set_text ("Property Setter Argument")
+			l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	snippet_expression_nodes (a_path: STRING; a_snippet_expression: SYSTEM_DLL_CODE_SNIPPET_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_snippet_expression'
+		require
+			non_void_snippet_expression: a_snippet_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_snippet_expression)
+			if a_snippet_expression.value /= Void then
+				l_node.set_text ("Snippet Expression: " + a_snippet_expression.value)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			else
+				l_node.set_text ("Missing Snippet Expression")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	this_expression_nodes (a_path: STRING; a_this_expression: SYSTEM_DLL_CODE_THIS_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_this_expression'
+		require
+			non_void_this_expression: a_this_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_this_expression)
+			l_node.set_text ("This")
+			l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	type_of_expression_nodes (a_path: STRING; a_type_of_expression: SYSTEM_DLL_CODE_TYPE_OF_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_type_of_expression'
+		require
+			non_void_type_of_expression: a_type_of_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_type_of_expression)
+			if a_type_of_expression.type /= Void and then a_type_of_expression.type.base_type /= Void then
+				l_node.set_text ("TypeOf Type: " + a_type_of_expression.type.base_type)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_type)
+			else
+				l_node.set_text ("Missing TypeOf Type")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	type_reference_expression_nodes (a_path: STRING; a_type_reference_expression: SYSTEM_DLL_CODE_TYPE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_type_reference_expression'
+		require
+			non_void_type_reference_expression: a_type_reference_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			create l_node.make_with_text ("")
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_type_reference_expression)
+			if a_type_reference_expression.type /= Void and then a_type_reference_expression.type.base_type /= Void then
+				l_node.set_text ("Type: " + a_type_reference_expression.type.base_type)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_type)
+			else
+				l_node.set_text ("Missing Type Reference")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
+		end
+
+	variable_reference_expression_nodes (a_path: STRING; a_variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION): LIST [EV_TREE_NODE] is
+			-- Nodes for expression `a_variable_reference_expression'
+		require
+			non_void_variable_reference_expression: a_variable_reference_expression /= Void
+			non_void_path: a_path /= Void
+		local
+			l_node: EV_TREE_ITEM
+		do
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+			if a_variable_reference_expression.variable_name /= Void then
+				create l_node.make_with_text (a_variable_reference_expression.variable_name)
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_variable)
+			else
+				create l_node.make_with_text ("Missing Variable Name")
+				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
+			end			
+			l_node.set_tooltip (a_path)
+			l_node.set_data (a_variable_reference_expression)
+			Result.extend (l_node)
+		ensure
+			non_void_nodes: Result /= Void
 		end
 
 feature -- Basic Operations

@@ -74,6 +74,15 @@ feature -- Access
 	Statement_icon: INTEGER is 147
 			-- Index to statement icon
 		
+	Variable_icon: INTEGER is 2
+			-- Index to variable icon		
+		
+	Argument_icon: INTEGER is 1
+			-- Index to argument icon		
+		
+	Primitive_icon: INTEGER is 36
+			-- Index to primitive icon		
+		
 	Error_icon: INTEGER is 138
 			-- Index to statement icon		
 		

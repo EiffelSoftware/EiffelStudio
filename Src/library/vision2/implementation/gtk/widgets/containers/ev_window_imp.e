@@ -197,6 +197,7 @@ feature -- Status setting
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
+			C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
 			C.gtk_widget_set_uposition (c_object, a_x, a_y)
 		end
 
@@ -246,10 +247,10 @@ feature -- Status setting
 
 	hide is
 		do
-			set_position (x_position, y_position)
+			C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
+			C.gtk_widget_set_uposition (c_object, x_position, y_position)
 			Precursor
 		end
-		
 
 feature -- Element change
 

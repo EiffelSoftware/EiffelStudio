@@ -12,12 +12,29 @@ inherit
 	SHARED_IL_CONSTANTS
 
 	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
 
 	COMPILER_EXPORTER
+		export
+			{NONE} all
+		end
 
 	SHARED_INST_CONTEXT
+		export
+			{NONE} all
+		end
 
 	ASSERT_TYPE
+		export
+			{NONE} all
+		end
+
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 
 create
 	default_create
@@ -543,13 +560,31 @@ feature -- Local variable info generation
 			implementation.put_result_info (static_id_of (type_i))
 		end
 
-	put_local_info (type_i: TYPE_I; name:STRING) is
+	put_local_info (type_i: TYPE_I; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
 		require
 			il_generation_started: il_generation_started
 			type_i_not_void: type_i /= Void
 		do
-			implementation.put_local_info (static_id_of (type_i), name)
+			implementation.put_local_info (static_id_of (type_i), Names_heap.item (name_id))
+		end
+
+	put_nameless_local_info (type_i: TYPE_I; name_id: INTEGER) is
+			-- Specifies `type_i' of type of local.
+		require
+			il_generation_started: il_generation_started
+			type_i_not_void: type_i /= Void
+		do
+			implementation.put_local_info (static_id_of (type_i), "V_" + name_id.out)
+		end
+
+	put_dummy_local_info (type_i: TYPE_I; name_id: INTEGER) is
+			-- Specifies `type_i' of type of local.
+		require
+			il_generation_started: il_generation_started
+			type_i_not_void: type_i /= Void
+		do
+			implementation.put_local_info (static_id_of (type_i), "dummy_" + name_id.out)
 		end
 
 feature -- Object creation

@@ -10,23 +10,36 @@ inherit
 	EV_DIALOG
 
 	EV_LAYOUT_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 	
 	GB_SHARED_STATUS_BAR
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end

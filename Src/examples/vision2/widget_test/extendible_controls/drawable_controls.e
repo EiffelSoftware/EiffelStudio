@@ -409,16 +409,20 @@ feature {NONE} -- Implementation
 	filled_check_button: EV_CHECK_BUTTON is
 			-- Once access to a check button control filled status.
 		once
-			create Result.make_with_text ("filled?")
+			create Result.make_with_text ("Height adjustment")
+			Result.set_minimum_height (Result.minimum_height)
 			Result.select_actions.extend (agent update_tiled_button)
+			Result.remove_text
 		end
 		
 	tiled_check_button: EV_CHECK_BUTTON is
 			-- Once access to a check button control filled status
 			-- for drawing operations.
 		once
-			create Result.make_with_text ("tiled?")
+			create Result.make_with_text ("Height adjustment")
+			Result.set_minimum_height (Result.minimum_height)
 			Result.select_actions.extend (agent update_tiled_status)
+			Result.remove_text
 		end
 		
 	fields_valid: BOOLEAN is
@@ -586,6 +590,7 @@ feature {NONE} -- Implementation
 			end
 			create horizontal_box
 			create label.make_with_text (a_text)
+			label.align_text_left
 			horizontal_box.extend (label)
 			horizontal_box.disable_item_expand (label)
 			horizontal_box.extend (field)
@@ -614,6 +619,7 @@ feature {NONE} -- Implementation
 			end
 			create horizontal_box
 			create label.make_with_text (a_text)
+			label.align_text_left
 			horizontal_box.extend (label)
 			horizontal_box.disable_item_expand (label)
 			horizontal_box.extend (field)
@@ -628,6 +634,7 @@ feature {NONE} -- Implementation
 			-- at first position.
 		local
 			horizontal_box: EV_HORIZONTAL_BOX
+			label: EV_LABEL
 		do
 			if filled_check_button.parent /= Void then
 				filled_check_button.parent.prune (filled_check_button)
@@ -635,7 +642,9 @@ feature {NONE} -- Implementation
 			filled_check_button.disable_select
 			argument_holder.go_i_th (1)
 			create horizontal_box
-			horizontal_box.extend (create {EV_LABEL})
+			create label.make_with_text ("filled?")
+			label.align_text_left
+			horizontal_box.extend (label)
 			horizontal_box.disable_item_expand (horizontal_box.first)
 			horizontal_box.extend (filled_check_button)
 			argument_holder.put_left (horizontal_box)
@@ -646,7 +655,9 @@ feature {NONE} -- Implementation
 			tiled_check_button.disable_select
 			argument_holder.go_i_th (1)
 			create horizontal_box
-			horizontal_box.extend (create {EV_LABEL})
+			create label.make_with_text ("tiled?")
+			label.align_text_left
+			horizontal_box.extend (label)
 			horizontal_box.disable_item_expand (horizontal_box.first)
 			horizontal_box.extend (tiled_check_button)
 			argument_holder.put_right (horizontal_box)

@@ -37,7 +37,8 @@ feature -- Callbacks
 			-- Save a file with a chosen name.
 		local
 			fn: STRING;
-			new_file: PLAIN_TEXT_FILE;
+			--new_file: PLAIN_TEXT_FILE;
+			new_file: RAW_FILE; -- Because of windows
 			to_write: STRING;
 			aok: BOOLEAN;
 			char: CHARACTER;

@@ -2,7 +2,7 @@
 
 class EWB_REQUEST 
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -42,37 +42,47 @@ all:: libnet.a libwnet.a
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
-SMODE = socket.c socket_r.c
+SMODE = local.c network.c network_r.c
 
 LSRCS = $(SMODE)
 
 OBJS = \
-	socket.o \
-	socket_r.o
+	local.o \
+	network.o \
+	network_r.o
 
 WOBJS = \
-	wsocket.o \
-	wsocket_r.o
+	wlocal.o \
+	wnetwork.o \
+	wnetwork_r.o
 
-wsocket.c: socket.c
-	$(RM) wsocket.c
-	$(LN) socket.c wsocket.c
+wlocal.c: local.c
+	$(RM) wlocal.c
+	$(LN) local.c wlocal.c
 remove::
-	$(RM) wsocket.c
+	$(RM) wlocal.c
 
-
-wsocket.o: wsocket.c bitmask.h
+wlocal.o: wlocal.c bitmask.h
 	$(CC) -c $(CFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
-
-wsocket_r.c: socket_r.c
-	$(RM) wsocket_r.c
-	$(LN) socket_r.c wsocket_r.c
+wnetwork.c: network.c
+	$(RM) wnetwork.c
+	$(LN) network.c wnetwork.c
 remove::
-	$(RM) wsocket_r.c
+	$(RM) wnetwork.c
 
-wsocket_r.o: wsocket_r.c
+wnetwork.o: wnetwork.c bitmask.h
+	$(CC) -c $(CFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+wnetwork_r.c: network_r.c
+	$(RM) wnetwork_r.c
+	$(LN) network_r.c wnetwork_r.c
+remove::
+	$(RM) wnetwork_r.c
+
+wnetwork_r.o: wnetwork_r.c
 	$(CC) -c $(CFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 

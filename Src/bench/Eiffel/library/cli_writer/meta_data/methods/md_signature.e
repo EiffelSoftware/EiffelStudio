@@ -28,6 +28,18 @@ feature -- Access
 
 feature -- Settings
 
+	set_byref_type (element_type: INTEGER_8; a_token: INTEGER) is
+			-- Set type as a byref type in current signature.
+		require
+			token_valid: (element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_class or
+				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
+				a_token /= 0
+		do
+			internal_put (feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, current_position)
+			current_position := current_position + 1
+			set_type (element_type, a_token)
+		end
+
 	set_type (element_type: INTEGER_8; token: INTEGER) is
 			-- Set type in current signature.
 		require

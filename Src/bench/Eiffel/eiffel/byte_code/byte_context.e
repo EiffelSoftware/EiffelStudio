@@ -343,15 +343,12 @@ feature -- Access
 		end
 
 	instantiation_of (type: TYPE_I): TYPE_I is
-			-- Instantiation of `type' in `curent_type'.
+			-- Instantiation of `type' in `class_type'.
 		require
-			current_type_exists: current_type /= Void
-		local
-			gen_type: GEN_TYPE_I
+			class_type_exists: class_type /= Void
 		do
 			if type.has_formal then
-				gen_type ?= current_type
-				Result := type.instantiation_in (gen_type)
+				Result := type.instantiation_in (class_type)
 			else
 				Result := type
 			end
@@ -401,12 +398,9 @@ feature -- Access
 		require
 			good_argument: type /= Void
 			valid_class_type: class_type /= Void
-		local
-			gen_type: GEN_TYPE_I
 		do
 			if type.has_true_formal then
-				gen_type ?= current_type
-				Result := type.complete_instantiation_in (gen_type)
+				Result := type.complete_instantiation_in (class_type)
 			else
 				Result := type
 			end
@@ -453,14 +447,6 @@ feature -- Access
 			current_feature := f
 		ensure
 			current_feature_set: current_feature = f
-		end
-
-	set_current_type (t: CL_TYPE_I) is
-			-- Assign `t' to `current_type'
-		require
-			good_argument: t /= Void
-		do
-			current_type := t
 		end
 
 	add_non_gc_vars is
@@ -1221,5 +1207,6 @@ feature -- Inlining
 
 invariant
 	global_onces_not_void: global_onces /= Void
+	class_type_valid_with_current_type: class_type /= Void implies class_type.type = current_type
 
 end

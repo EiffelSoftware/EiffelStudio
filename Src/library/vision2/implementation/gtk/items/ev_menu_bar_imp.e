@@ -28,6 +28,8 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_menu_bar_new)
+			C.gtk_menu_bar_set_shadow_type (c_object, C.GTK_SHADOW_NONE_ENUM)
+			C.gtk_widget_set_usize (c_object, 0, 8 + default_font_height)
 			C.gtk_widget_show (c_object)
 		end
 		
@@ -62,6 +64,7 @@ feature {NONE} -- Implementation
 		local
 			menu_imp: EV_MENU_IMP
 		do
+
 			if parent_imp /= Void then
 				menu_imp ?= an_item_imp
 				if menu_imp /= Void and then menu_imp.key /= 0 then
@@ -71,8 +74,9 @@ feature {NONE} -- Implementation
 						menu_imp.key,
 						C.gdk_mod1_mask_enum,
 						0)
-				end				
+				end			
 			end
+
 			an_item_imp.set_item_parent_imp (Current)
 			C.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
 			child_array.go_i_th (pos)

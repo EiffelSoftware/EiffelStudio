@@ -108,7 +108,7 @@ feature -- Output
 			st.add_string (dump)
 		end;
 
-feature {COMPILER_EXPORTER} 
+feature
 
 	is_solved: BOOLEAN is
 			-- Is the type solved ? (i.e: is the type a result to a call
@@ -116,6 +116,8 @@ feature {COMPILER_EXPORTER}
 		do
 			-- Do nothing
 		end;
+
+feature {COMPILER_EXPORTER} 
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

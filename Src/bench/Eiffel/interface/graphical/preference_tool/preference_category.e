@@ -129,7 +129,7 @@ feature {NONE} -- Properties
 	holder: CATEGORY_HOLDER
 			-- Holder for the visual aspects
 
-feature {NONE} -- Execution
+feature {PREFERENCE_COMMAND} -- Execution
 
 	execute (argument: ANY) is
 			-- Execute Current

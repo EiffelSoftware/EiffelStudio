@@ -9,6 +9,9 @@ deferred class PREFERENCE_COMMAND
 
 inherit
 	COMMAND
+		export
+			{PREFERENCE_COMMAND} execute
+		end
 
 feature {NONE} -- Initialization
 

@@ -93,16 +93,7 @@ feature {NONE} -- Initialization
 			tests_button.select_actions.extend (agent update_tool_bar_radio_buttons (tests_button))			
 			documentation_button.select_actions.extend (agent update_tool_bar_radio_buttons (documentation_button))
 			main_notebook.selection_actions.extend (agent update_buttons)
-			
-				-- Connect flatshort text size buttons to agents.
-			increase_text_button.select_actions.extend (agent modify_flatshort_text (1))
-			increase_text_button.pointer_button_press_actions.force_extend (agent button_pressed (increase_text_button))
-			increase_text_button.pointer_double_press_actions.force_extend (agent button_pressed (increase_text_button))
-			increase_text_button.pointer_button_release_actions.force_extend (agent button_released (increase_text_button))
-			decrease_text_button.select_actions.extend (agent modify_flatshort_text (-1))
-			decrease_text_button.pointer_button_press_actions.force_extend (agent button_pressed (decrease_text_button))
-			decrease_text_button.pointer_button_release_actions.force_extend (agent button_released (decrease_text_button))
-			
+
 				-- Initialize button pixmaps.
 			initialize_pixmaps
 			
@@ -112,6 +103,7 @@ feature {NONE} -- Initialization
 				-- Now select font for `flat_short_display'
 			temp_font := flat_short_display.font
 			temp_font.set_family (feature {EV_FONT_CONSTANTS}.Family_typewriter)
+			modify_text_size.set_value (temp_font.height)
 			flat_short_display.set_font (temp_font)
 			
 				-- Connect missing pixmaps to show_actions.
@@ -137,49 +129,14 @@ feature {NONE} -- Implementation
 			actions_empty: application.idle_actions.is_empty
 		end
 
-	modify_flatshort_text (value: INTEGER) is
+	update_text_size (value: INTEGER) is
 			-- adjust font size of `flat_short_display' by `value'.
 		local
 			font: EV_FONT
 		do
 			font := flat_short_display.font
-			if font.height + value > 4 then
-				font.set_height (font.height + value)
-				flat_short_display.set_font (font)
-			end
-		end
-	
-	initial_timer, second_timer: EV_TIMEOUT
-			-- Timers for adjusting the flatshort text.
-		
-	button_pressed (a_button: EV_BUTTON) is
-			-- The mouse pointer has been pressed on `a_button', so start
-			-- timers for adjusting the flatshort text.
-		require
-			button_valid: a_button = increase_text_button or a_button = decrease_text_button
-		do
-			if second_timer /= Void then
-				second_timer.destroy	
-			end
-			if not a_button.has_capture then
-				a_button.enable_capture
-			end
-			create initial_timer.make_with_interval (250)
-			initial_timer.actions.extend (agent (a_button.select_actions).call ([]))			
-		end
-		
-	button_released (a_button: EV_BUTTON) is
-			-- The mouse pointer has been release on `a_button', so start
-			-- timers for adjusting the flatshort text.
-		require
-			button_valid: a_button = increase_text_button or a_button = decrease_text_button
-		do
-			initial_timer.destroy
-			create second_timer.make_with_interval (250)
-			if a_button.has_capture then
-				second_timer.actions.extend (agent a_button.disable_capture)
-			end
-			second_timer.actions.extend (agent second_timer.destroy)
+			font.set_height (value)
+			flat_short_display.set_font (font)
 		end
 
 	display_about_dialog is
@@ -361,8 +318,6 @@ feature {NONE} -- Implementation
 			tests_button.set_pixmap (pixmap_by_name ("testing"))
 			documentation_button.set_pixmap (pixmap_by_name ("documentation"))
 			generate_button.set_pixmap (pixmap_by_name ("icon_code_generation_color"))
-			increase_text_button.set_pixmap (pixmap_by_name ("size_up"))
-			decrease_text_button.set_pixmap (pixmap_by_name ("size_down"))
 		end
 		
 	pixmap_by_name (a_name: STRING): EV_PIXMAP is

@@ -228,13 +228,13 @@ feature -- Drawing operations
 			draw_arc (pt, r1, r2, 0, 360, orientation, -1)
 		end
 
-	copy_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
+	draw_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
 			-- Copy `pix' into the drawable at the point `pt'.
 		require
 			valid_point: pt /= Void
 			valid_pixmap: is_valid (pix)
 		do
-			implementation.copy_pixmap (pt, pix)
+			implementation.draw_pixmap (pt, pix)
 		end
 
 feature -- filling operations

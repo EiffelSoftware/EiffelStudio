@@ -191,7 +191,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	copy_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
+	draw_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
 			-- Copy `pix' into the drawable at the point `pt'.
 			-- If there is not enough space to create auxiliery bitmap (DDB) 
 			-- exception will be raised

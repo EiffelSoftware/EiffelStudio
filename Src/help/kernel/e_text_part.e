@@ -51,16 +51,16 @@ feature -- Display
 		--	-- Underline is not supported by EV_RICH_TEXT.
 		--	cf.set_underline(underline)
 
-			if font_name /= Void or else font_size > 0 then
-				font := cf.font
-				if font_name /= Void then
-					font.set_name(font_name)
-				end
-				if font_size > 0 then
-					font.set_height(font_size)
-				end
-				cf.set_font(font)
-			end
+		--	if font_name /= Void or else font_size > 0 then
+		--		font := cf.font
+		--		if font_name /= Void then
+		--			font.set_name(font_name)
+		--		end
+		--		if font_size > 0 then
+		--			font.set_height(font_size)
+		--		end
+		--		cf.set_font(font)
+		--	end
 			if font_color /= Void then
 				cf.set_color(font_color)
 			end
@@ -138,7 +138,7 @@ feature -- Element change
 			elseif s.is_equal("white") then
 				create font_color.make_rgb(255,255,255)
 			elseif s.is_equal("link") then
-				create font_color.make_rgb(255,80,80)
+				create font_color.make_rgb(0,255,0)
 			else
 				create font_color.make_rgb(0,0,0)
 			end

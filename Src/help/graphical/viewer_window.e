@@ -27,8 +27,6 @@ feature -- Initialization
 				set_size(800,500)
 				create doc.make
 				set_main_structure(doc)
-				create pic_win.make_empty(Current)
-				pic_win.set_picture("c:\eiffel45\library\gobo\doc\image\download.gif","jojo")
 				build
 			else
 				io.put_string("Not able to launch the graphical application.%N")
@@ -106,7 +104,8 @@ feature {NONE} -- Initialization
 		do
 			!! menu.make(Current)			
 			!! itt.make_with_text(menu, "File")
-			add_menu_item(itt, "Update")
+			add_menu_item(itt, "Open")
+			add_menu_item(itt, "Update Database")
 			add_menu_item(itt, "Exit")
 			!! itt.make_with_text(menu,"Edit")
 			add_menu_item(itt, "Copy")
@@ -146,8 +145,10 @@ feature -- Actions
 			arg: EV_ARGUMENT1[STRING]
 		do
 			arg ?= args
-			if arg.first.is_equal("Update") then
+			if arg.first.is_equal("Open") then
 				open_help_file
+			elseif arg.first.is_equal("Update Database") then
+				update_inspector
 			elseif arg.first.is_equal("Exit") then
 				viewer.exit
 			elseif arg.first.is_equal("Copy") then
@@ -179,6 +180,25 @@ feature -- Actions
 
 feature -- Status setting
 
+	update_inspector is
+			-- Update the search database.
+		do
+			create inspector.make
+			inspector.create_from_topic(structure.topic)
+			inspector.store_by_name("search.dat")
+		end
+
+	load_inspector is
+			-- Load the inspector if possible, or recreate it.
+		do
+			create inspector.make
+			inspector ?= inspector.retrieve_by_name("search.dat")
+			if inspector = Void then
+				warning("Inspector","Search database not found. Creating new...",Current)
+				update_inspector
+			end
+		end
+
 	update is
 			-- Call when the root-file changed.
 		local
@@ -190,16 +210,17 @@ feature -- Status setting
 				set_title(viewer.help_file)
 				doc.make_from_file_name(viewer.help_file)
 				set_main_structure(doc)
+				check
+					structure.topic /= Void
+				end
 
 				tree_component.tree.clear_items
 				list_component.list.clear_items
 				search_component.search_list.clear_items
 
-				create inspector.make
-				inspector.create_from_topic(structure.topic)
-
 				structure.create_tree(tree_component.tree)
 				structure.create_sorted_indexes(list_component.list)
+				load_inspector
 
 				-- View topic if specified.
 				if viewer.topic_id /= Void then

@@ -10,7 +10,7 @@
 
 #include "file.h"
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 extern void eif_console_putint (long);
 extern void eif_console_putreal (double);
 extern void eif_console_putdouble (double);
@@ -59,7 +59,7 @@ int file;
 public EIF_POINTER console_def(file)
 int file;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return (EIF_POINTER) NULL;
 #else
 	return file_def (file);
@@ -69,7 +69,7 @@ int file;
 public EIF_BOOLEAN console_eof(fp)
 FILE *fp;      
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return eif_console_eof();
 #else
 	return file_feof(fp);
@@ -84,7 +84,7 @@ public void console_pi(f, number)
 FILE *f;
 EIF_INTEGER	number;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 		/* `f' will be Void for all the instances of CONSOLE.
 		 * If `default_output' is of type PLAIN_TEXT_FILE (set
 		 * with `set_file_default'), we want to call the standard
@@ -104,7 +104,7 @@ public void console_pr(f, number)
 FILE *f;
 EIF_REAL number;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	if (f)
 		file_pr (f, number);
 	else
@@ -119,7 +119,7 @@ FILE *f;
 char *str;
 EIF_INTEGER len;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	if (f)
 		file_ps (f, str, len);
 	else
@@ -133,7 +133,7 @@ public void console_pc(f, c)
 FILE *f;
 EIF_CHARACTER c;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	if (f)
 		file_pc (f, c);
 	else
@@ -147,7 +147,7 @@ public void console_pd(f, val)
 FILE *f;
 EIF_DOUBLE val;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	if (f)
 		file_pd (f, val);
 	else
@@ -170,7 +170,9 @@ FILE *f;
 public void console_next_line(f)
 FILE *f;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
+#elif defined EIF_WIN32
+	eif_console_next_line();
 #else
 	file_tnil (f);
 #endif
@@ -179,7 +181,7 @@ FILE *f;
 public EIF_INTEGER console_readint(f) 
 FILE *f;     
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return eif_console_readint();
 #else
 	return file_gi (f);
@@ -189,7 +191,7 @@ FILE *f;
 public EIF_REAL console_readreal(f) 
 FILE *f;     
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return eif_console_readreal();
 #else
 	return file_gr (f);
@@ -199,7 +201,7 @@ FILE *f;
 public EIF_DOUBLE console_readdouble(f) 
 FILE *f;     
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return eif_console_readdouble();
 #else
 	return file_gd(f);
@@ -208,7 +210,7 @@ FILE *f;
 public EIF_CHARACTER console_readchar(f)
 FILE *f;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return eif_console_readchar();
 #else
 	return file_gc (f);
@@ -221,7 +223,7 @@ char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
 EIF_INTEGER start;		/* Amount of characters already held in buffer */
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return eif_console_readline (s, bound, start);
 #else
 	return file_gs (f, s, bound, start);
@@ -233,7 +235,7 @@ FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return eif_console_readstream (s, bound);
 #else
 	return file_gss (f, s, bound);
@@ -246,7 +248,7 @@ char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
 EIF_INTEGER start;		/* Amount of characters already held in buffer */
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return eif_console_readword (s, bound, start);
 #else
 	return file_gw (f, s, bound, start);
@@ -256,7 +258,7 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 public EIF_CHARACTER console_separator(f)
 FILE *f;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return (EIF_CHARACTER) ' ';
 #else
 	return file_lh (f);
@@ -266,8 +268,7 @@ FILE *f;
 public void console_file_close (f)
 FILE *f;
 {
-#ifdef __WINDOWS_386__
-	if (f) file_close (f);
+#ifdef EIF_WINDOWS
 #else
 	file_close (f);
 #endif

@@ -80,12 +80,14 @@ feature -- Basic operations
 		local
 			xml_load: GB_XML_LOAD
 		do
+			system_status.set_object_structure_changing
 			main_window.disable_menus
 				-- During loading, menus must be disabled, as otherwise selections can be
 				-- made during the load.
 			create xml_load
 			xml_load.load
 			main_window.enable_menus
+			system_status.set_object_structure_changed
 		end
 		
 	import (file_name: STRING) is

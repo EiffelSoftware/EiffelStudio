@@ -353,7 +353,6 @@ EIF_POINTER net_host(EIF_POINTER addr)
 	/*x internet address string in dotted notation from address struct */
 {
 	char *res;
-	EIF_POINTER address;
 
 	res =  (char *) inet_ntoa(*((struct in_addr *) addr));
 	return (EIF_POINTER) res;
@@ -744,7 +743,7 @@ void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_OBJ a
 void c_send_stream_to(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of string s of size size trought socket fd */
 {
-	CSENDXTO(fd,stream_pointer,length,flags,(struct sockaddr *) addr_pointer,sizeofaddr)
+	CSENDXTO(fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
 
@@ -802,7 +801,7 @@ void c_put_double(EIF_INTEGER fd, EIF_DOUBLE d)
 void c_put_stream(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length)
 	/*x transmission of string s of size size trought socket fd */
 {
-	CPUTX(fd,stream_pointer,length)
+	CPUTX(fd, (char *) stream_pointer,length)
 }
 
 

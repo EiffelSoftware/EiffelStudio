@@ -17,7 +17,9 @@ inherit
 			set_widgets,
 			set_values
 		end
-	
+
+	EV_COMMAND
+
 creation
 	make
 
@@ -34,6 +36,7 @@ feature -- Access
 	menu: EV_MENU
 	menu2: EV_MENU_ITEM
 	menu_item: EV_MENU_ITEM
+	menu_item5: EV_MENU_ITEM
 	check_menu_item: EV_CHECK_MENU_ITEM
 	menu_item2: EV_RADIO_MENU_ITEM
 	menu_item3: EV_RADIO_MENU_ITEM
@@ -43,19 +46,12 @@ feature -- Status setting
 
 	set_widgets is
 			-- Set the widgets in the demo windows.
-		local
-			cmd: DESTROY_COMMAND
-			arg: EV_ARGUMENT1 [EV_WIDGET]
-			pixmap: EV_PIXMAP
 		do
 			!! menu.make_with_text (main_widget, "Menu")
 			!! menu_item.make_with_text (menu, "Item 1")
---			!! pixmap.make_from_file (menu_item, the_parent.pixname("save.xpm"))
 			!! menu_item.make_with_text (menu, "Item 2")
---			!! pixmap.make_from_file (menu_item, the_parent.pixname("save.xpm"))
 			menu_item.set_insensitive (True)
 			!! menu_item.make_with_text (menu, "Item 3")
---			!! pixmap.make_from_file (menu_item, the_parent.pixname("menu.xpm"))
 			!! menu2.make_with_text (menu, "Menu 2")
 			!! menu_item.make_with_text (menu2, "Item 1")
 			!! menu_item.make_with_text (menu2, "Item 2")
@@ -68,10 +64,8 @@ feature -- Status setting
 			!! menu_item.make_with_text (menu, "Save")
 			menu_item.set_insensitive (True)
 			!! check_menu_item.make_with_text (menu, "Auto save")
-			!! menu_item.make_with_text (menu, "Quit")
-			!! cmd
-			!! arg.make (Current)
-			menu_item.add_activate_command (cmd, arg)
+			!! menu_item5.make_with_text (menu, "Quit")
+			menu_item5.add_activate_command (Current, Void)
 						
 			!! menu.make_with_text (static, "Edit")
 			!! check_menu_item.make_with_text (menu, "Cut")
@@ -94,6 +88,15 @@ feature -- Status setting
 			-- Set the values on the widgets of the window.
 		do
 			set_title ("Menu demo")
+		end
+
+feature -- Command execution
+
+	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Execute command called when the event occurs.
+		do
+			destroy
+			effective_button.toggle
 		end
 
 end -- class MENU_DEMO_WINDOW

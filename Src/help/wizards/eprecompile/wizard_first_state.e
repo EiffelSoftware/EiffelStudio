@@ -264,19 +264,22 @@ feature -- Tools
 					sys_name.replace_substring_all ("%N", "")
 					sys_name.replace_substring_all ("%T", "")
 
-					create it			
-					create info_lib.make
-					info_lib.put (path_name, 1)
-					if list_of_file.has ("EIFGEN") then
-						info_lib.put (True, 2)
-						it.extend (sys_name)
-						it.extend (Interface_names.l_Yes)
-					else
-						info_lib.put (False, 2)
-						it.extend (sys_name)
-						it.extend (Interface_names.l_No)
+					if not sys_name.is_empty then
+						create it			
+						create info_lib.make
+						info_lib.put (path_name, 1)
+
+						if list_of_file.has ("EIFGEN") then
+							info_lib.put (True, 2)
+							it.extend (sys_name)
+							it.extend (Interface_names.l_Yes)
+						else
+							info_lib.put (False, 2)
+							it.extend (sys_name)
+							it.extend (Interface_names.l_No)
+						end
+						it.set_data (info_lib)
 					end
-					it.set_data (info_lib)	
 				else
 					error_no_ace:= TRUE
 				end
@@ -412,31 +415,33 @@ feature -- Tools
 	browse is
 			-- Launch a computer file Browser.
 		local
-			file_selector: EV_FILE_OPEN_DIALOG  
-		do
-			create file_selector
-			file_selector.set_filter ("*.ace")
-			file_selector.ok_actions.extend(~file_selected(file_selector))
-			file_selector.show_modal_to_window (first_window)
-		end
-
-	file_selected (file_selector: EV_FILE_OPEN_DIALOG) is
-			-- The user selected a directory from the browser. 
-			-- It updates the to_precompile_libraries list accordingly.
-		require
-			selector_exists: file_selector /= Void
-		local
+			file_open_dialog: EV_FILE_OPEN_DIALOG  
 			it: EV_MULTI_COLUMN_LIST_ROW
+			file_path: STRING
+			file_title: STRING
+			error_dialog: EV_WARNING_DIALOG
 		do
-			it:= fill_ev_list_items (file_selector.file_path.substring (1, file_selector.file_path.count - 1), file_selector.file_title)
-
-				to_precompile_libraries.extend (it)
-				it.enable_select
-				it.disable_select
-					 -- enable and disable select such that the set_updatable_entries will react
-					-- and update_state_information will be call
+			create file_open_dialog
+			file_open_dialog.set_filter ("*.ace")
+			file_open_dialog.show_modal_to_window (first_window)
+			
+			file_path := file_open_dialog.file_path
+			file_title := file_open_dialog.file_title
+			if file_path /= Void and then file_title /= Void then
+					-- User has selected "OK"
+				it := fill_ev_list_items (file_path, file_title)
+				if it /= Void then
+					to_precompile_libraries.extend (it)
+						 -- enable and disable select such that the set_updatable_entries will react
+						-- and update_state_information will be call
+					it.enable_select
+					it.disable_select
+				else
+					create error_dialog.make_with_text ("The ace file you have selected is not valid.")
+					error_dialog.show_modal_to_window (first_window)
+				end
+			end
 		end
-
 
 feature -- Implementation
 

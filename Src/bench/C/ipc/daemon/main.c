@@ -36,8 +36,8 @@
 #include <stdlib.h>
 
 #ifdef EIF_WIN32
-
 #include <windows.h>
+#include "shword.h"
 #define EWB		"\\bin\\es4.exe -bench"	/* Ewb process within Eiffel dir */
 #elif defined EIF_VMS
 #include "ipcvms.h"	/* for ipcvms_get_progname() */
@@ -83,11 +83,7 @@ rt_public char *progname;	/* Otherwise defined in logfile.c */
 #endif
 #endif
 
-#ifdef EIF_WIN32
-rt_public void init_bench(void)
-#else
 rt_public void init_bench(int argc, char **argv)
-#endif
 {
 	STREAM *sp;			/* Stream used to talk to the child */
 #ifdef EIF_WIN32
@@ -216,6 +212,13 @@ rt_public void init_bench(int argc, char **argv)
 
 	strcat(ewb_path, platform);
 	process_name (ewb_path);
+
+	if (argc == 2) {
+			/* It means that we give as an extra parameter the project file to open
+			 * with EiffelBench */
+		strcat (ewb_path, " -project ");
+		strcat (ewb_path, argv [1]);
+	}
 
 /* FIXME: check that es4 exists */
 
@@ -578,16 +581,30 @@ int WINAPI WinMain (HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdLine, i
 {
 /* Initialize Ebench, launch es4 and establish communications */
 
+	int argc;
+	char **argv;
+	char *tmp = strdup (GetCommandLine());	/* Cannot use lpszCmdLine since we need the
+											   application name */
+
 	display_splash ();
-	init_bench ();
+
+	argv = shword (tmp);	/* Create from the string returned by GetCommandLine,
+							   an array of string */
+
+		/* Count the number of elements in argv */
+	for (argc = 0; argv[argc] != (char *) 0; (argc)++)
+		;
+
+	init_bench (argc, argv);
 	return 0L;
 }
 
 #else  /* (not) EIF_WIN32 */
 
-rt_public void main (int argc, char **argv)
+rt_public int main (int argc, char **argv)
 {
 	/* This is the main entry point for the ISE daemon */
 	init_bench (argc, argv);
+	return 0L;
 }
 #endif

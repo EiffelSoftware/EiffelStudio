@@ -15,6 +15,11 @@ inherit
 		end
 
 	EV_PRIMITIVE_IMP
+		undefine
+			on_right_button_down,
+			on_middle_button_down,
+			on_left_button_down,
+			pnd_press
 		redefine
 			parent_imp,
 			set_parent,
@@ -202,6 +207,15 @@ feature -- Basic operation
 		end
 
 feature -- Implementation
+
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
 
 	update_edges is
 			-- Update the status after addition or remove of a child.
@@ -434,6 +448,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/11 16:51:57  rogers
+--| Added internal_propagate_pointer_press.
+--|
 --| Revision 1.26  2000/04/10 18:33:44  brendel
 --| Corrected call to set_text_part that cannot take empty text.
 --|

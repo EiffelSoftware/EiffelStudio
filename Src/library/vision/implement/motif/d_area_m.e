@@ -24,18 +24,18 @@ inherit
 		end;
 
 	MEL_DRAWING_AREA
-        rename
-            make as mel_draw_make,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
-            is_shown as shown
+		rename
+			make as mel_draw_make,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			is_shown as shown
 		select
 			shown
-        end
+		end
 
 creation
 
@@ -47,9 +47,9 @@ feature {NONE} -- Initialization
 			-- Create a motif drawing area.
 		do
 			widget_index := widget_manager.last_inserted_position;
-            mel_draw_make (a_drawing_area.identifier,
-                    mel_parent (a_drawing_area, widget_index),
-                    man);
+			mel_draw_make (a_drawing_area.identifier,
+					mel_parent (a_drawing_area, widget_index),
+					man);
 			display_pointer := xt_display (screen_object);
 			create_gc
 		end;
@@ -60,21 +60,21 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when
 			-- current area is exposed.
 		do
-            add_expose_callback (mel_vision_callback (a_command), argument)
+			add_expose_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_input_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		do
-            add_input_callback (mel_vision_callback (a_command), argument)
+			add_input_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_resize_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- current area is resized.
 		do
-            add_resize_callback (mel_vision_callback (a_command), argument)
+			add_resize_callback (mel_vision_callback (a_command), argument)
 		end;
 
 feature -- Removal
@@ -83,21 +83,21 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is exposed.
 		do
-            remove_expose_callback (mel_vision_callback (a_command), argument)
+			remove_expose_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_input_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		do
-            remove_input_callback (mel_vision_callback (a_command), argument)
+			remove_input_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_resize_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is resized.
 		do
-            remove_resize_callback (mel_vision_callback (a_command), argument)
+			remove_resize_callback (mel_vision_callback (a_command), argument)
 		end;
 
 feature {NONE} -- Implementation

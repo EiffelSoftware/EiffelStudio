@@ -12,11 +12,8 @@ inherit
 	PRIMITIVE_I;
 
 	FONTABLE_I
-
-
-
 	
-feature 
+feature -- Status setting
 
 	allow_recompute_size is
 			-- Allow current button to recompute its  size according to
@@ -28,7 +25,7 @@ feature
 			-- Forbid current button to recompute its size according to
 			-- some changes on its text.
 		deferred
-		end; -- forbid_recompute_size
+		end;
 
 	set_center_alignment is
 			-- Set text alignment of current label to center
@@ -43,7 +40,7 @@ feature
 	text: STRING is
 			-- Text of current button
 		deferred
-		end; -- text
+		end;
 
 	set_text (a_text: STRING) is
 			-- Set current button text to `a_text'.
@@ -54,13 +51,15 @@ feature
 			text.is_equal (a_text)
 		end;
 
+feature -- Element change
+
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when current
 			-- push button is activated.
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_activate_action
+		end;
 
 	add_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when current
@@ -68,7 +67,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_arm_action
+		end;
 
 	add_release_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when current
@@ -76,7 +75,9 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_release_action
+		end;
+
+feature -- Removal
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -84,7 +85,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_activate_action
+		end;
 
 	remove_arm_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -92,7 +93,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_arm_action
+		end;
 
 	remove_release_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -100,10 +101,9 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end -- remove_release_action
+		end;
 
 end -- class BUTTON_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

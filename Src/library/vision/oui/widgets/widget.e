@@ -686,7 +686,7 @@ feature -- Event handling
 			widget_realized: realized
 		do
 			implementation.propagate_event
-		end; -- propagate_event
+		end;
 
 	grab (a_cursor: SCREEN_CURSOR) is
 			-- Grab the mouse and the keyboard , i.e.

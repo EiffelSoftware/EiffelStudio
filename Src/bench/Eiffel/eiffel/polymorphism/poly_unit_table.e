@@ -39,7 +39,7 @@ feature
 				after or else stop
 			loop
 				item_id := item.id;
-				if equal (item_id, i) then
+				if item_id.is_equal (i) then
 					remove;
 					stop := True;
 				elseif item_id > i then
@@ -59,7 +59,7 @@ feature
 			if not_empty then
 				search_after (v)
 			end;
-			if off or else not equal (item.id, v.id) then
+			if off or else not item.id.is_equal (v.id) then
 				put_left (v);
 				if not_empty then
 					back

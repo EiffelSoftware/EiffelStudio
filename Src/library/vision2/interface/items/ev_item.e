@@ -56,6 +56,8 @@ feature {EV_ITEM, EV_ANY_I, EV_RADIO} -- Implementation
 			create pointer_motion_actions
 		end
 
+feature {EV_ANY_I}
+
 	implementation: EV_ITEM_I
 			-- Responsible for interaction with the underlying native graphics
 			-- toolkit.
@@ -83,6 +85,9 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/09 21:38:30  king
+--| Corrected export clause for implementation
+--|
 --| Revision 1.9  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

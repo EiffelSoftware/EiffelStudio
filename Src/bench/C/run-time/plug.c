@@ -35,16 +35,16 @@ rt_private char *rcsid =
  * variable upon entrance in the feature, so this is merely an added optional
  * parameter.
  */
-rt_public int nstcall = 0;					/* Is current call a nested one? */
+rt_public int nstcall = 0;	/* Is current call a nested one? */ /* %%ss mt */
 
-rt_private void recursive_chkinv(int dtype, char *obj, int where);		/* Internal invariant control loop */
+rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where);		/* Internal invariant control loop */
 
 /*
  * ARRAY [STRING] creation for initialization of argument of root's
  * class creation routine
  */
 
-rt_public char *argarr(int argc, char **argv)
+rt_public char *argarr(EIF_CONTEXT int argc, char **argv)
 {
 	/* Create an Eiffel ARRAY [STRING] with the values contained in
 	 * `argv'
@@ -79,7 +79,7 @@ rt_public char *argarr(int argc, char **argv)
  * Manifest array creation for strip
  */
 
-rt_public char *striparr(register char *curr, register int dtype, register char **items, register long int nbr)
+rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, register char **items, register long int nbr)
 {
 	/* Create an Eiffel ARRAY[ANY] using current object curr. 
 	 * This routine creates the object and returns a pointer to the newly
@@ -191,7 +191,7 @@ rt_public char *striparr(register char *curr, register int dtype, register char 
 	return array;
 }
 
-rt_public char *makestr(register char *s, register int len)
+rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
 {
 	/* Makes an Eiffel STRING object from a C string.
 	 * This routine creates the object and returns a pointer to the newly
@@ -287,11 +287,11 @@ rt_public long sp_count(char *spobject)
  * Invariant checking
  */
 
-rt_private char *inv_mark_table;		/* Marking table to avoid checking the same 
+rt_private char *inv_mark_tablep;	/* Marking table to avoid checking the same 
 									 * invariant several times
-									 */
+									 */ /* %%ss mt renamed conflicting with interp.c */
 
-rt_public void chkinv (char *obj, int where)
+rt_public void chkinv (EIF_CONTEXT char *obj, int where)
           
           		/* Invariant is beeing checked before or after compound? */
 {
@@ -301,26 +301,26 @@ rt_public void chkinv (char *obj, int where)
 	int dtype = Dtype(obj);
 	/* int i; */ /* %%ss removed */
 
-	if (inv_mark_table == (char *) 0)
-		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
+	if (inv_mark_tablep == (char *) 0)
+		if ((inv_mark_tablep = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
 			enomem(MTC_NOARG);
 
-	bzero (inv_mark_table, scount);
+	bzero (inv_mark_tablep, scount);
 
-	recursive_chkinv(dtype, obj, where);	/* Recurive invariant check */
+	recursive_chkinv(MTC dtype, obj, where);	/* Recurive invariant check */
 }
 
 #ifdef WORKBENCH
-rt_public void chkcinv(char *obj)
+rt_public void chkcinv(EIF_CONTEXT char *obj)
 {
 	/* Check invariant of `obj' after creation. */
 
 	if (~in_assertion & (WASC(Dtype(obj))) & CK_INVARIANT) {
-		chkinv(obj,1);}
+		chkinv(MTC obj,1);}
 }
 #endif
 
-rt_private void recursive_chkinv(int dtype, char *obj, int where)
+rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
           
           
           		/* Invariant is being checked before or after compound? */
@@ -336,10 +336,10 @@ rt_private void recursive_chkinv(int dtype, char *obj, int where)
 
 	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
 
-	if ((char) 0 != inv_mark_table[dtype])	/* Already checked */
+	if ((char) 0 != inv_mark_tablep[dtype])	/* Already checked */
 		return;
 	else
-		inv_mark_table[dtype] = (char) 1;	/* Mark as checked */
+		inv_mark_tablep[dtype] = (char) 1;	/* Mark as checked */
 
 	epush(&loc_stack, (char *) &obj);	/* Automatic protection of `obj' */
 	cn_parents = node->cn_parents;	/* Recursion on parents first. */
@@ -349,7 +349,7 @@ rt_private void recursive_chkinv(int dtype, char *obj, int where)
 	 */
 	while ((p_type = *cn_parents++) != -1)
 		/* Call to potential parent invariant */
-		recursive_chkinv(p_type, obj, where);
+		recursive_chkinv(MTC p_type, obj, where);
 
 	/* Invariant check */
 #ifndef WORKBENCH
@@ -387,7 +387,7 @@ rt_private void recursive_chkinv(int dtype, char *obj, int where)
 				last->type = SK_REF;
 				last->it_ref = obj;
 				IC = melt[body_id];
-				xiinv(IC, where);
+				xiinv(MTC IC, where);
 			} else if (body_id < dle_zeroc) {
 					/* Dynamic frozen invariant */
 				((void (*)()) dle_frozen[body_id])(obj, where);
@@ -397,7 +397,7 @@ rt_private void recursive_chkinv(int dtype, char *obj, int where)
 				last->type = SK_REF;
 				last->it_ref = obj;
 				IC = dle_melt[body_id];
-				xiinv(IC, where);
+				xiinv(MTC IC, where);
 			}
 #endif
 		}

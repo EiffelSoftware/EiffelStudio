@@ -1,11 +1,13 @@
 indexing
 	description:
-		"Eiffel Vision color.%N%
-		%Modeled as red, green and blue intensities, each with range [0,1]."
+		"Color modeled as red, green, blue and alpha intensities%
+		%each with range [0,1]."
 	keywords: "color, pixel, rgb, 8, 16, 24"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
+
+--|FIXME propogate alpha features into _I.
 
 class 
 	EV_COLOR
@@ -67,6 +69,16 @@ feature -- Access
 			bridge_ok: Result = implementation.blue
 		end
 
+	alpha: REAL is
+			-- Intensity of alpha component. Range [0,1]
+			-- 0 is opauqe, 1 is transparent.
+		do
+--|FIXME Not yet implemented.	
+--|			Result := implementation.alpha
+--|		ensure
+--|			bridge_ok: Result = implementation.alpha
+		end
+
 	name: STRING is
 			-- A textual description.
 		do
@@ -124,6 +136,20 @@ feature -- Element change
 			blue_assigned: blue = a_blue
 		end
 
+	set_alpha (an_alpha: REAL) is
+			-- Assign `an_alpha' to `alpha'.
+--|FIXME not yet implemented
+--|		require
+--|			alpha_within_range: an_alpha >= 0 and then an_alpha <= 1
+		do
+--|			implementation.set_alpha (an_alpha)
+--|		ensure
+--|			blue_assigned: alpha = an_alpha
+			check
+				not_implemented: false
+			end
+		end
+
 	set_name (a_name: STRING) is
 			-- Assign `a_name' to `name'.
 		require
@@ -145,6 +171,19 @@ feature -- Conversion
 			bridge_ok: Result = implementation.rgb_24_bit
 		end
 
+	rgba_32_bit: INTEGER is
+			-- `red', `green', `blue' and `alpha' intensities packed into 32
+			-- bits with 8 bits per colour and alpha in the least significant
+			-- 8 bits.
+--| FIXME not implemented.
+		do
+			check
+				not_implemented: false
+			end
+--|		ensure
+--|			bridge_ok: Result = implementation.rgba_32_bit
+		end
+
 	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER) is
 			-- Set intensities from `a_24_bit_rgb' value
 			-- with blue in the least significant 8 bits.
@@ -154,6 +193,21 @@ feature -- Conversion
 			implementation.set_rgb_with_24_bit (a_24_bit_rgb)
 		ensure
 			rgb_assigned: rgb_24_bit = a_24_bit_rgb
+		end
+
+	set_rgba_with_32_bit (a_32_bit_rgba: INTEGER) is
+			-- Set intensities from `a_32_bit_rgba' value
+			-- with alpha in the least significant 8 bits.
+--| FIXME Not implemented
+--|		require
+--|			within_range: a_32_bit_rgba >= 0 and a_32_bit_rgba <= Max_32_bit
+		do
+			check
+				not_implemented: false
+			end
+--|			implementation.set_rgb_with_24_bit (a_24_bit_rgb)
+--|		ensure
+--|			rgba_assigned: rgba_32_bit = a_32_bit_rgba
 		end
 
 	set_rgb_with_8_bit (an_8_bit_red, an_8_bit_green, an_8_bit_blue: INTEGER) is
@@ -172,6 +226,30 @@ feature -- Conversion
 			red_assigned: red_8_bit = an_8_bit_red
 			green_assigned: green_8_bit = an_8_bit_green
 			blue_assigned: blue_8_bit = an_8_bit_blue
+		end
+
+	set_rgba_with_8_bit (an_8_bit_red, an_8_bit_green, an_8_bit_blue,
+		an_8_bit_alpha: INTEGER) is
+			-- Set intensities  from `an_8_bit_red', `an_8_bit_green',
+			-- `an_8_bit_blue' and `an_8_bit_alpha' intensity.
+			-- (8 bits per channel.)
+		require
+			red_within_range: an_8_bit_red >= 0 and an_8_bit_red <= Max_8_bit
+			green_within_range: an_8_bit_green >= 0 and
+				an_8_bit_green <= Max_8_bit
+			blue_within_range: an_8_bit_blue >= 0 and an_8_bit_blue <= Max_8_bit
+			alpha_within_range: an_8_bit_alpha >= 0 and
+				an_8_bit_alpha <= Max_8_bit
+		do
+			set_red_with_8_bit (an_8_bit_red)
+			set_green_with_8_bit (an_8_bit_green)
+			set_blue_with_8_bit (an_8_bit_green)
+			set_alpha_with_8_bit (an_8_bit_alpha)
+		ensure
+			red_assigned: red_8_bit = an_8_bit_red
+			green_assigned: green_8_bit = an_8_bit_green
+			blue_assigned: blue_8_bit = an_8_bit_blue
+			alpha_assigned: alpha_8_bit = an_8_bit_alpha
 		end
 
 	red_8_bit: INTEGER is
@@ -199,6 +277,19 @@ feature -- Conversion
 			Result := implementation.blue_8_bit
 		ensure
 			bridge_ok: Result = implementation.blue_8_bit
+		end
+
+	alpha_8_bit: INTEGER is
+			-- Intensity of `alpha' component as an 8 bit unsigned integer.
+			-- Range [0,255]
+		do
+			check
+				not_implemented: false
+			end
+--| FIXME not implemented
+--|			Result := implementation.alpha_8_bit
+--|		ensure
+--|			bridge_ok: Result = implementation.alpha_8_bit
 		end
 	
 	set_red_with_8_bit (an_8_bit_red: INTEGER) is
@@ -233,6 +324,21 @@ feature -- Conversion
 		ensure
 			blue_assigned: blue_8_bit = an_8_bit_blue
 		end
+	
+	set_alpha_with_8_bit (an_8_bit_alpha: INTEGER) is
+			-- Set `alpha' from `an_8_bit_alpha' intinsity.
+		require
+			within_range:
+				an_8_bit_alpha >= 0 and then an_8_bit_alpha <= Max_8_bit
+		do
+			check
+				not_implemented: false
+			end
+--| FIXME not implemented
+--|			implementation.set_alpha_with_8_bit (an_8_bit_alpha)
+--|		ensure
+--|			blue_assigned: alpha_8_bit = an_8_bit_alpha
+		end
 
 	set_rgb_with_16_bit (a_16_bit_red, a_16_bit_green, a_16_bit_blue: INTEGER)
 		is
@@ -252,6 +358,31 @@ feature -- Conversion
 			red_assigned: red_16_bit = a_16_bit_red
 			green_assigned: green_16_bit = a_16_bit_green
 			blue_assigned: blue_16_bit = a_16_bit_blue
+		end
+
+	set_rgba_with_16_bit (a_16_bit_red, a_16_bit_green, a_16_bit_blue,
+		a_16_bit_alpha: INTEGER) is
+			-- Set intensities  from `a_16_bit_red', `a_16_bit_green',
+			-- `a_16_bit_blue' and `a_16_bit_alpha' intensity.
+			-- (16 bits per channel.)
+		require
+			red_within_range: a_16_bit_red >= 0 and a_16_bit_red <= Max_16_bit
+			green_within_range: a_16_bit_green >= 0 and
+				a_16_bit_green <= Max_16_bit
+			blue_within_range: a_16_bit_blue >= 0 and
+				a_16_bit_blue <= Max_16_bit
+			alpha_within_range: a_16_bit_alpha >= 0 and
+				a_16_bit_alpha <= Max_16_bit
+		do
+			set_red_with_16_bit (a_16_bit_red)
+			set_green_with_16_bit (a_16_bit_green)
+			set_blue_with_16_bit (a_16_bit_green)
+			set_alpha_with_16_bit (a_16_bit_alpha)
+		ensure
+			red_assigned: red_16_bit = a_16_bit_red
+			green_assigned: green_16_bit = a_16_bit_green
+			blue_assigned: blue_16_bit = a_16_bit_blue
+			alpha_assigned: alpha_16_bit = a_16_bit_alpha
 		end
 
 	red_16_bit: INTEGER is
@@ -279,6 +410,19 @@ feature -- Conversion
 			Result := implementation.blue_16_bit
 		ensure
 			bridge_ok: Result = implementation.blue_16_bit
+		end
+
+	alpha_16_bit: INTEGER is
+			-- Intensity of `alpha' component as an 16 bit unsigned integer.
+			-- Range [0,65535]
+		do
+			check
+				not_implemented: false
+			end
+--| FIXME not implemented
+--|			Result := implementation.alpha_16_bit
+--|		ensure
+--|			bridge_ok: Result = implementation.alpha_16_bit
 		end
 
 	set_red_with_16_bit (a_16_bit_red: INTEGER) is
@@ -313,6 +457,21 @@ feature -- Conversion
 		ensure
 			blue_assigned: blue_16_bit = a_16_bit_blue
 		end
+	
+	set_alpha_with_16_bit (a_16_bit_alpha: INTEGER) is
+			-- Set `alpha' from `a_16_bit_alpha' intinsity.
+		require
+			within_range:
+				a_16_bit_alpha >= 0 and then a_16_bit_alpha <= Max_16_bit
+		do
+			check
+				not_implemented: false
+			end
+--| FIXME not implemented
+--|			implementation.set_alpha_with_16_bit (a_16_bit_alpha)
+--|		ensure
+--|			blue_assigned: alpha_16_bit = a_16_bit_alpha
+		end
 
 feature -- Comparison
 
@@ -321,7 +480,8 @@ feature -- Comparison
 		do
 			Result := (other.red - red).abs < delta and then
 				(other.green - green).abs < delta and then
-				(other.blue - blue).abs < delta
+				(other.blue - blue).abs < delta and then
+				(other.alpha - alpha).abs < delta
 		end
 
 	copy (other: like Current) is
@@ -330,6 +490,7 @@ feature -- Comparison
 			set_red (other.red)
 			set_green (other.green)
 			set_blue (other.blue)
+			set_alpha (other.alpha)
 		end
 
 feature -- Constants
@@ -340,41 +501,51 @@ feature -- Constants
 	Max_16_bit: INTEGER is 65535
 			-- Maximum value for 16 bit unsigned integers.
 
-	Max_24_bit: INTEGER is 16777216
+	Max_24_bit: INTEGER is 16777215
 			-- Maximum value for 24 bit unsigned integers.
+
+	Max_32_bit: INTEGER is 4294967295
+			-- Maximum value for 32 bit unsigned integers.
 
 feature {EV_ANY_I, EV_DEFAULT_COLORS_IMP} -- Implementation
 
 	implementation: EV_COLOR_I
-			-- Implementation of color.
+			-- Responsible for interaction with the native graphics toolkit.
 
 	create_implementation is
-			-- Create implementation of color.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_COLOR_IMP} implementation.make (Current)
 		end
 
 	delta: REAL is 0.05
-			-- Amount by which two intensities can differ but
-			-- still be considered equal by `is_equal'.
+			-- Amount by which two intensities can differ but still be
+			-- considered equal by `is_equal'.
 
 invariant
+--|FIXME uncomment alpha invariants
 	red_within_range: red >= 0 and red <= 1
 	green_within_range: green >= 0 and green <= 1
 	blue_within_range: blue >= 0 and blue <= 1
+	alpha_within_range: alpha >= 0 and alpha <= 1
 	red_8_bit_within_range: red_8_bit >= 0 and red_8_bit <= Max_8_bit
 	green_8_bit_within_range: green_8_bit >= 0 and green_8_bit <= Max_8_bit
 	blue_8_bit_within_range: blue_8_bit >= 0 and blue_8_bit <= Max_8_bit
+--| alpha_8_bit_within_range: alpha_8_bit >= 0 and alpha_8_bit <= Max_8_bit
 	red_16_bit_within_range: red_16_bit >= 0 and red_16_bit <= Max_16_bit
 	green_16_bit_within_range: green_16_bit >= 0 and green_16_bit <= Max_16_bit
 	blue_16_bit_within_range: blue_16_bit >= 0 and blue_16_bit <= Max_16_bit
+--|	alpha_16_bit_within_range: alpha_16_bit >= 0 and alpha_16_bit <= Max_16_bit
 	rgb_24_bit_within_range: rgb_24_bit >= 0 and rgb_24_bit <= Max_24_bit
-	red_16_bit_conversion_consistent: (red * 65535).rounded = red_16_bit
-	red_8_bit_conversion_consistent: (red * 255).rounded = red_8_bit
-	green_16_bit_conversions_consistent: (green * 65535).rounded = green_16_bit
-	green_8_bit_conversions_consistent: (green * 255).rounded = green_8_bit
-	blue_16_bit_conversions_consistent: (blue * 65535).rounded = blue_16_bit
-	blue_8_bit_conversions_consistent: (blue * 255).rounded = blue_8_bit
+	rgba_32_bit_within_range: rgba_32_bit >= 0 and rgba_32_bit <= Max_32_bit
+	red_16_bit_conversion: (red * Max_16_bit).rounded = red_16_bit
+	red_8_bit_conversion: (red * Max_8_bit).rounded = red_8_bit
+	green_16_bit_conversion: (green * Max_16_bit).rounded = green_16_bit
+	green_8_bit_conversion: (green * Max_8_bit).rounded = green_8_bit
+	blue_16_bit_conversion: (blue * Max_16_bit).rounded = blue_16_bit
+	blue_8_bit_conversion: (blue * Max_8_bit).rounded = blue_8_bit
+--|	alpha_16_bit_conversions_consistent: (alpha * 65535).rounded = alpha_16_bit
+--|	alpha_8_bit_conversions_consistent: (alpha * 255).rounded = alpha_8_bit
 	name_not_void: name /= Void
 
 end -- class EV_COLOR
@@ -400,6 +571,9 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/16 01:12:10  oconnor
+--| Added alpha chanel features.
+--|
 --| Revision 1.11  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|
@@ -461,7 +635,6 @@ end -- class EV_COLOR
 --|
 --| Revision 1.8.2.3  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

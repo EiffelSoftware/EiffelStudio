@@ -151,9 +151,14 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					if l_head.is_equal ("local ") or l_head.is_equal ("local%T") or l_head.is_equal ("local%R") or l_head.is_equal ("local%N") then
 							-- find all variables declared in statement...
 						initialize_local_variables (l_value)
+							-- Do not generate statement inline
+						set_last_statement (Void)
+					else
+						set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
 					end
+				else
+					set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
 				end
-				set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
 			else
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_snippet_value, [current_context])
 			end

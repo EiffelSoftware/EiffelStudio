@@ -9,10 +9,13 @@ feature -- Initialization
 		do
 			!!options.make (25)
 			!!dependent_directories.make
+
 			eiffel4 := env.get ("EIFFEL4")
+			eobj_count := 1
+			uses_precompiled := False
 
 			if eiffel4 = Void or else eiffel4.empty then
-				io.error.putstring ("EIFFEL4 environment variable not set.%N")
+				io.error.putstring ("ERROR: Key 'Eiffel4' was not found in registry!%N")
 			end
 		end
 
@@ -27,7 +30,7 @@ feature -- Access
 	options: RESOURCE_TABLE		
 			-- Options read from config.eif
 
-	dependent_directories: LINKED_LIST[STRING] 
+	dependent_directories: LINKED_LIST[STRING]
 			-- Subdirs for this compilation
 
 	delete_next: BOOLEAN		
@@ -46,7 +49,12 @@ feature -- Access
 			-- Application name
 
 	eiffel4: STRING			
-			-- EIFFEL4 environment variable
+			-- Eiffel4 environment variable
+			
+	eobj_count: INTEGER
+			-- The number of EOBJ# parts
+
+	uses_precompiled: BOOLEAN
 
 feature -- Execution
 
@@ -76,14 +84,6 @@ feature -- Execution
 			command := options.get_string ("make", Void)
 
 			env.system (command)
-
-			if env.return_code /= 0 then
-				io.error.putstring ("Error executing ")
-				io.error.putstring (options.get_string ("make", Void))
-				io.error.putstring (".%N%TReturn code: ")
-				io.error.putint (env.return_code)
-				io.error.new_line
-			end
 		end
 
 feature {NONE} -- Translation
@@ -122,7 +122,7 @@ feature {NONE} -- Translation
 					translate_spit (false, Void)
 				end
 			else
-				io.error.putstring ("Makefile.SH is empty.%N")
+				io.error.putstring ("WARNING: Makefile.SH is empty.%N")
 			end
 
 			close_files
@@ -132,6 +132,7 @@ feature {NONE} -- Translation
 			-- Translate makefiles in subdirs from master makefile.
 		local
 			dir: STRING -- the directory we're working on
+			old_dir: STRING -- the previous directory
 		do
 			debug ("progress")
 				io.putstring ("Translate sub makefiles%N")
@@ -139,22 +140,27 @@ feature {NONE} -- Translation
 
 			from
 				dependent_directories.start
+				old_dir := ""
 			until
 				dependent_directories.after
 			loop
 				dir := dependent_directories.item
 
-				debug ("progress")
-					io.putstring ("%TTranslating Makefile.SH in directory ")
-					io.putstring (dir)
-					io.putstring (".%N")
-				end
+				if not dir.is_equal(old_dir) then
+					debug ("progress")
+						io.putstring ("%TTranslating Makefile.SH in directory ")
+						io.putstring (dir)
+						io.putstring (".%N")
+					end
 
-				env.change_working_directory (dir)
+					env.change_working_directory (dir)
 				
-				translate_makefile (false)
+					translate_makefile (false)
 
-				env.change_working_directory (options.get_string ("updir", ".."))
+					env.change_working_directory (options.get_string ("updir", ".."))
+
+					old_dir := clone (dir)
+				end
 
 				dependent_directories.forth
 			end
@@ -484,17 +490,10 @@ feature {NONE} -- Translation
 					end
 				end
 
-				-- get directory name and filetype
+				-- get directory name and filename
 				dir_sep_pos := lastline.index_of (operating_environment.directory_separator, 1)
 				if dir_sep_pos = 0 then
 					dir_sep_pos := lastline.index_of ('/', 1)
-				end
-
-				debug ("translate_dependencies")
-					io.error.putstring(lastline)
-					io.error.putstring("%NIs this it: ")
-					io.error.putint(dir_sep_pos)
-					io.error.new_line
 				end
 
 				dir := lastline.substring (1, dir_sep_pos-1)
@@ -557,7 +556,7 @@ feature {NONE} -- Translation
 				makefile.putstring ("%N%T")
 			until
 				dir.item (1) = 'E' or else dependent_directories.after
-			loop
+			loop		
 				makefile.putstring (dir)
 				makefile.putchar (operating_environment.directory_separator)
 				makefile.putchar (dir.item (1))
@@ -657,7 +656,7 @@ feature {NONE} -- Translation
 			debug ("progress")
 				io.putstring ("%Tchange%N")
 			end
-
+			
 			lastline := clone (makefile_sh.laststring)
 
 			debug ("translate_line_change")
@@ -704,13 +703,15 @@ feature {NONE} -- Translation
 				dir := dependent_directories.item
 
 				if dir.item (1) = 'E' then
-					selected_object := options.get_string ("eobj_text", Void)
-					selected_object.extend (dir.item (dir.count))
-					selected_object.extend (')')
-				else
-					selected_object := options.get_string ("objects__text", Void)
-				end
+					selected_object := clone (options.get_string ("eobj_text", Void))
+					selected_object.append_integer (eobj_count)
+					selected_object.append_character (')')
 
+					eobj_count := eobj_count+1
+				else
+					selected_object := clone (options.get_string ("objects__text", Void))
+				end
+				
 				lastline.replace_substring_all ("$obj", selected_object)
 
 				if precompile then
@@ -755,10 +756,8 @@ feature {NONE} -- Translation
 			-- Translate application generation code.
 		local
 			lastline: STRING
-			strpos, plp: INTEGER
-			uses_precompiled: BOOLEAN -- does the application use precompiled libraries?
-			precompiled_lib: STRING -- the name of the precompiled library to use
-			precomp_lib_replaced: BOOLEAN -- was the line with $precomplib encountered?
+			strpos: INTEGER
+			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
 				io.putstring ("%Tappl%N")
@@ -774,51 +773,8 @@ feature {NONE} -- Translation
 				end
 			end
 
-			-- preobj
-			from
-				if not lastline.empty then
-					plp := lastline.substring_index ("preobj", 1)
-				end
-
-				if plp > 0 and not precompile then
-					uses_precompiled := true
-					precompiled_lib := lastline.substring (1, lastline.substring_index ("preobj", 1)-2)
-				end
-			until
-				makefile_sh.end_of_file or else lastline.empty
-			loop
-				read_next
-				lastline := clone (makefile_sh.laststring)
-
-				debug ("translate_appl")
-					debug ("input")
-						io.putstring ("IN: ")
-						io.putstring (lastline)
-						io.new_line
-					end
-				end
-
-				if not lastline.empty then
-					plp := lastline.substring_index ("preobj", 1)
-				else
-					plp := 0
-				end
-
-				if plp > 0 and not uses_precompiled and not precompile then
-					uses_precompiled := true
-					precompiled_lib := lastline.substring (1, lastline.substring_index ("preobj", 1)-2)
-				end
-			end
-
-			if uses_precompiled then
-				from
-				until
-					precompiled_lib.item (1) > ' '
-				loop
-					precompiled_lib.remove (1)
-				end
-			end
-
+			precompile_libs := get_precomp_libs (lastline)
+			
 			-- precompile or make application?
 			if precompile then
 				if options.has ("precompile") then
@@ -845,51 +801,46 @@ feature {NONE} -- Translation
 			lastline.replace_substring_all ("$appl", appl)
 
 			subst_eiffel (lastline)
-
-			-- precompiled library
-			if uses_precompiled then
-				if not precomp_lib_replaced then
-					subst_dir_sep (precompiled_lib)
-					lastline.replace_substring_all ("$precompilelib", precompiled_lib)
-					precomp_lib_replaced := true
-				end
-			else
-				if not precomp_lib_replaced and then lastline.substring_index("$precompilelib", 1) > 0 then
-					lastline.replace_substring_all("@echo $precompilelib\precomp.lib >> $@", "")
-					precomp_lib_replaced := true
-				end
+			subst_precomp_libs (lastline, precompile_libs)
+			if lastline.substring_index ("$precompile_libs_command", 1) > 0 then
+				subst_precomp_libs_command (lastline, precompile_libs)
 			end
-
 			subst_library (lastline)
 
 			if not externals then
 				lastline.replace_substring_all ("$ (EXTERNALS)", "")
 			end
 
-			if not uses_precompiled then
-
-				debug ("translate_appl")
-					debug ("output")
-						io.putstring ("OUT: ")
-						io.putstring (lastline)
-						io.new_line
-					end
-				end
-
-				makefile.putstring (lastline)
-				makefile.new_line
+			if options.has ("lib_path") then
+				lastline.replace_substring_all ("$(LIB_PATH)", options.get_string ("lib_path", Void))
 			end
+			
+			debug ("translate_appl")
+				debug ("output")
+					io.putstring ("OUT: ")
+					io.putstring (lastline)
+					io.new_line
+				end
+			end
+
+			makefile.putstring (lastline)
+			makefile.new_line
 		end
 
 	translate_cecil is
 			-- Translate cecil.
 		local
 			lastline: STRING
-			library_name:STRING -- the name of the library file
+			library_name: STRING -- the name of the library file
+			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
 				io.putstring ("%Tcecil%N")
 			end
+
+			lastline := clone (makefile_sh.laststring)
+			
+			precompile_libs := get_precomp_libs (lastline)
 
 			if options.has ("cecil_make") then
 				lastline := clone (options.get_string ("cecil_make", Void))
@@ -907,6 +858,7 @@ feature {NONE} -- Translation
 
 			lastline.replace_substring_all ("$appl", appl)
 			subst_library (lastline)
+			subst_precomp_libs (lastline, precompile_libs)
 
 			debug ("translate_cecil")
 				debug ("output")
@@ -919,18 +871,13 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 
-			from
-			until
-				makefile_sh.end_of_file or else makefile_sh.laststring.empty
-			loop
-				read_next
-			end
+			read_next
 		end
 
 feature {NONE}	-- substitutions
 
 	subst_eiffel  (line: STRING) is
-			-- Replace all occurrences of EIFFEL4 environment variable in `line'
+			-- Replace all occurrences of Eiffel4 environment variable in `line'
 		do
 			debug ("subst")
 				io.putstring("%Tsubst_eiffel%N")
@@ -1045,7 +992,62 @@ feature {NONE}	-- substitutions
 				line.replace_substring (options.get_string ("obj_file_ext", Void), start, start+2)
 			end
 		end
+
+	subst_precomp_libs (line: STRING; precompiled_libs: STRING) is
+			-- replace all occurrences of $precompilelibs with the neccessary precompiled libraries
+		do
+			debug ("subst")
+				io.putstring ("%Tsubst_precomp_libs%N")
+			end
+			
+			if uses_precompiled then
+				line.replace_substring_all ("$precompilelibs", precompiled_libs)
+			else
+				line.replace_substring_all ("$precompilelibs", "")
+			end
+		end
+		
+	subst_precomp_libs_command (line: STRING; precompiled_libs: STRING) is
+			-- replace all occurrences of $precompile_libs_command with the neccessary commands for a precompiled library
+		local
+			libs: STRING
+			lib_start_pos: INTEGER
+			command: STRING
+			lib: STRING
+		do
+			debug ("subst")
+				io.putstring ("%Tsubst_precomp_libs_command%N")
+			end
+
+			libs := clone (precompiled_libs)
+
+			if uses_precompiled then
+				command := "%T"
+
+				from
+					lib_start_pos := libs.substring_index (" ", 1)
+				until
+					lib_start_pos < 1
+				loop
+					lib := clone (libs.substring (1, lib_start_pos))
+					command.append (options.get_string ("precomp_lib_command_text", Void))
+					command.replace_substring_all ("$precompiled_library", lib)
+					command.append ("%N%T")
+					
+					libs.tail (libs.count - lib_start_pos)
+					lib_start_pos := libs.substring_index (" ", 1)
+				end
+
+				command.append (options.get_string ("precomp_lib_command_text", Void))
+				command.replace_substring_all ("$precompiled_library", libs)
+				command.append ("%N")
 				
+				line.replace_substring_all ("$precompile_libs_command", command)
+			else
+				line.replace_substring_all ("$precompile_libs_command", "")
+			end
+		end
+
 
 feature {NONE} -- Implementation
 
@@ -1077,13 +1079,12 @@ feature {NONE} -- Implementation
 				replacement := Void
 				
 				word := get_word_to_replace (line, wordstart)
-
-				wordlength := word.count				
+				wordlength := word.count
 
 				strip_parenthesis (word)
 				word.to_lower
 				replacement := get_replacement (word)
-
+				
 				if replacement /= Void then
 					if wordstart > 2 and then line.item (wordstart-1) = '\' and then (line.item (wordstart-2) = '/' or line.item(wordstart-2) = '\' or line.item(wordstart-2) = ' ' or (line.item (wordstart-2) = 'I' and then line.item (wordstart-3) = '-')) then
 						line.replace_substring (replacement, wordstart-1, wordstart+wordlength)
@@ -1091,13 +1092,15 @@ feature {NONE} -- Implementation
 						line.replace_substring (replacement, wordstart, wordstart+wordlength)
 					end
 
-					wordstart := wordstart + replacement.count -1
+					wordstart := wordstart + replacement.count - 2
 				else
-					io.error.putstring ("Missing option: ")
+					io.error.putstring ("WARNING: Option '")
 					io.error.putstring (word)
+					io.error.putstring ("' was found in neither CONFIG.EIF nor registry.")
 					io.error.new_line
-					wordstart := wordstart + 1
 				end
+
+				wordstart := wordstart + 1
 
 				-- check for more words to replace
 				if wordstart < line.count then
@@ -1121,15 +1124,18 @@ feature {NONE} -- Implementation
 				wordend := wordstart + 1
 				!!Result.make (10)
 			until
-				wordend > line.count or else line.item (wordend) = ' ' or line.item (wordend) = '/' or line.item (wordend) = '\'
+				wordend > line.count or else line.item (wordend) = ' ' or line.item (wordend) = '/' or line.item (wordend) = '\' or else line.item (wordend) = '%N' or else line.item (wordend) = '%T'
 			loop
 				Result.extend (line.item (wordend))
 				wordend := wordend + 1
 			end
 		end
 
+
 	get_replacement (word: STRING): STRING is
 			-- find a replacement for `word' in options or environment
+		local
+			replacement: STRING
 		do
 			debug ("implementation")
 				io.putstring("%Tget_replacement%N")
@@ -1139,7 +1145,11 @@ feature {NONE} -- Implementation
 				if word.is_equal ("eiffel4") then
 					Result := clone (eiffel4)
 				else
-					Result := clone (options.get_string (word, Void))
+					replacement := clone (options.get_string (word, Void))
+					if not replacement.is_equal("$(INCLUDE_PATH)") then
+						search_and_replace (replacement)
+					end
+					Result := replacement
 				end
 			else
 				Result := clone (env.get (word))
@@ -1156,6 +1166,82 @@ feature {NONE} -- Implementation
 			if not makefile_sh.end_of_file then
 				makefile_sh.read_line
 			end
+		end
+
+	get_precomp_libs (line_to_search: STRING): STRING is
+			-- look for precompiled libraries
+		local
+			line: STRING
+			next_precomp_lib: STRING
+			precomp_lib_start: INTEGER
+		do
+			Result := ""
+			
+			debug ("implementation")
+				io.putstring ("%Tget_precomp_libs%N")
+			end
+			
+			line := clone (line_to_search)
+
+			from
+				if not line.empty then
+					precomp_lib_start :=  (line.substring_index ("preobj.obj", 1))
+				end
+
+				if precomp_lib_start > 0 then
+					uses_precompiled := true
+					Result.append (line.substring (1, line.substring_index ("preobj.obj", 1)-2))
+					from
+					until
+						Result.item (1) > ' '
+					loop
+						Result.remove (1)
+					end
+					Result.append_character (operating_environment.directory_separator)
+					Result.append ("precomp.lib")
+				else
+					uses_precompiled := false
+				end
+			until
+				makefile_sh.end_of_file or else line.empty
+			loop
+				read_next
+				line := clone (makefile_sh.laststring)
+
+				debug ("implementation")
+					debug ("input")
+						io.putstring ("IN: ")
+						io.putstring (line)
+						io.new_line
+					end
+				end
+
+				if not line.empty then
+					precomp_lib_start := line.substring_index ("preobj.obj", 1)
+				else
+					precomp_lib_start := 0
+				end
+
+				if precomp_lib_start > 0 then
+					uses_precompiled := true
+					next_precomp_lib := line.substring (1, line.substring_index ("preobj.obj", 1)-2)
+					from
+					until
+						next_precomp_lib.item (1) > ' '
+					loop
+						next_precomp_lib.remove (1)
+					end
+					next_precomp_lib.append_character (operating_environment.directory_separator)
+					next_precomp_lib.append ("precomp.lib")
+
+					if not Result.empty then
+						Result.append_character (' ')
+					end
+					Result.append (next_precomp_lib)
+				end
+			end
+			
+			search_and_replace (Result)
 		end
 
 	open_files is
@@ -1177,9 +1263,9 @@ feature {NONE} -- Implementation
 
 		rescue
 			if not out_file then
-				io.error.putstring ("Unable to open Makefile.SH for input%N")
+				io.error.putstring ("ERROR: Unable to open Makefile.SH for input%N")
 			else
-				io.error.putstring ("Unable to open Makefile for output%N")
+				io.error.putstring ("ERROR: Unable to open Makefile for output%N")
 			end
 
 			error := true
@@ -1220,7 +1306,7 @@ feature {NONE} -- Implementation
 
 	config_eif_fn: FILE_NAME is
 			-- the full filename for the CONFIG.EIF file
-			-- currently: $EIFFEL4|bench|spec|$PLATFORM|es3sh|config.eif
+			-- currently: $EIFFEL4|bench|spec|$PLATFORM|config|config.eif
 		local
 			platform: STRING
 			temp_result: STRING
@@ -1231,7 +1317,7 @@ feature {NONE} -- Implementation
 
 			platform := env.get ("PLATFORM")
 			if platform = Void or else platform.empty then
-				io.error.putstring ("PLATFORM environment variable not set%N")
+				io.error.putstring ("ERROR: Key 'PLATFORM' was not found in registry!%N")
 			end
 
 			temp_result := clone (eiffel4)
@@ -1242,7 +1328,7 @@ feature {NONE} -- Implementation
 			temp_result.append_character (operating_environment.directory_separator)
 			temp_result.append (platform)
         		temp_result.append_character (operating_environment.directory_separator)
-			temp_result.append ("es4sh")
+			temp_result.append ("config")
 			temp_result.append_character (operating_environment.directory_separator)
 			temp_result.append ("config.eif")
 

@@ -20,30 +20,6 @@ feature -- Access
 		do
 			create Result.make_from_string (string)
 		end
-		
-		--| FIXME These constants may need to be moved into a constants file.
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature {NONE} -- Basic operations
 
@@ -235,6 +211,52 @@ feature {NONE} -- Basic operations
 				element.forth
 			end
 		end
+		
+	all_child_element_names (element: XML_ELEMENT): ARRAYED_LIST [STRING] is
+			-- `Result' is a list of all names of the child elements of `element'
+		require
+			element_not_void: element /= Void
+		local
+			current_element: XML_ELEMENT
+		do
+			create Result.make (0)
+			from
+				element.start
+			until
+				element.off
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					Result.extend (current_element.name.to_utf8)
+				end
+				element.forth
+			end
+		end
+		
+	child_element_by_name (element: XML_ELEMENT; a_name: STRING): XML_ELEMENT is
+			-- `Result' is child element of `element' with name equal to `a_name'.
+		require
+			element_not_void: element /= Void
+			name_not_void_or_empty: a_name /= Void and then a_name.count > 0 
+		local
+			current_element: XML_ELEMENT
+			found: BOOLEAN
+		do
+			from
+				element.start
+			until
+				element.off or found
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void and then current_element.name.to_utf8.is_equal (a_name) then
+					found := True
+					Result := current_element
+				end
+				element.forth
+			end
+		end
+		
+		
 
 	data_valid (current_data: STRING):BOOLEAN is
 			-- Is `current_data' not empty and valid?
@@ -243,14 +265,5 @@ feature {NONE} -- Basic operations
 				Result := True
 			end
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class XML_UTILITIES

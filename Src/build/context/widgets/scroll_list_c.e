@@ -42,20 +42,20 @@ feature
 			text: STRING;
 		do
 			!! widget.make_fixed_size (entity_name, a_parent);
+			from
+				i := 1;
+			until
+				i > 3
+			loop
+				!!text.make (0);
+				text.append ("i");
+				text.append (i.out);
+				widget.put_right (text);
+				i := i + 1;
+				widget.forth;
+			end;
 			if retrieved_node = Void then
 					-- Not creating widget from retrieval
-				from
-					i := 1;
-				until
-					i > 3
-				loop
-					!!text.make (0);
-					text.append ("i");
-					text.append (to_string (i));
-					widget.put_right (text);
-					i := i + 1;
-					widget.forth;
-				end;
 				set_size (110, 100);
 			end
 		end;

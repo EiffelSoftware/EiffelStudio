@@ -68,8 +68,7 @@ feature -- Basic operation
 			test_list.extend (["merge_left", ~test_merge_left])
 		--	test_list.extend (["merge_right", ~test_merge_right])
 
-			description.append ("Initial state... ")
-			append_result
+			append_result ("-", "initial")
 
 			from
 				test_list.start
@@ -78,6 +77,7 @@ feature -- Basic operation
 			loop
 				s ?= test_list.item.entry (1)
 				p ?= test_list.item.entry (2)
+				description.append ("`" + s + "', ")
 				empty_and_test (p, s)
 				fill_start_and_test (p, s)
 				fill_go_middle_and_test (p, s)
@@ -85,6 +85,9 @@ feature -- Basic operation
 				fill_go_before_and_test (p, s)
 				fill_go_after_and_test (p, s)
 				test_list.forth
+			end
+			if test_successful then
+				description.append ("working correctly.")
 			end
 		rescue
 			test_successful := False
@@ -695,6 +698,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/03 20:03:29  brendel
+--| Better output to description.
+--|
 --| Revision 1.17  2000/03/03 18:54:11  brendel
 --| Formatted for 80 columns.
 --| Does not display anything for succeeded tests to avoid huge description.

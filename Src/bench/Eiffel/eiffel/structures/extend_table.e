@@ -10,12 +10,6 @@ creation
 
 feature -- Iterartion
 
-	after: BOOLEAN is
-			-- Is the cursor at the end ?
-		do
-			Result := pos_for_iter > keys.upper
-		end;
-
 	offright: BOOLEAN is obsolete "Use `after'"
 		do
 			Result := after

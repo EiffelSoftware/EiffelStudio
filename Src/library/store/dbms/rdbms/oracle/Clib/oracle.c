@@ -810,7 +810,7 @@ char date[19];
 char d[2];
 char y[4];
 
-static char *default_date = "01/01/0001 00:00:00";
+static char *default_date = "11/11/1111 11:11:11";
 
 int ora_get_date_data (int no_des, int i)
 {

@@ -99,7 +99,7 @@ feature -- Element change
 				create_text_label (txt)	
 			else
 				a ?= txt.to_c
-				gtk_label_set (label_widget, $a)
+				gtk_label_set_text (label_widget, $a)
 			end
 		end
 	

@@ -603,8 +603,8 @@
 								<File Id="application.e" Name="APPLIC~1.E" LongName="application.e" />
 								<File Id="ovaldemo_win.e" Name="OVALDE~2.E" LongName="ovaldemo_win.e" />
 								<File Id="ovaldemo_cmd.e" Name="OVALDE~1.E" LongName="ovaldemo_cmd.e" />
-								<File Id="ace.dotnet.ace" Name="ACEDOT~4.ACE" LongName="ace.dotnet.ace" />
-								<File Id="ace.mswin.ace" Name="ACEMSW~A.ACE" LongName="ace.mswin.ace" />
+								<File Id="ace.dotnet.ace2" Name="ACEDOT~4.ACE" LongName="ace.dotnet.ace" />
+								<File Id="ace.mswin.ace2" Name="ACEMSW~A.ACE" LongName="ace.mswin.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="race" Name="race">
@@ -624,7 +624,7 @@
 								<File Id="Ace.ace220" Name="Ace.ace" />
 								<File Id="consumer.e" Name="consumer.e" />
 								<File Id="pc_buffer.e" Name="PC_BUF~1.E" LongName="pc_buffer.e" />
-								<File Id="Ace.dotnet.ace2" Name="ACEDOT~3.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="Ace.dotnet.ace3" Name="ACEDOT~3.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -633,7 +633,7 @@
 							<Component Id="calculator33" Guid="778E8B87-BB21-4061-BD56-2A8BD88F737F">
 								<File Id="Ace.mswin.ace221" Name="ACEMSW~F.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
 								<File Id="Ace.dotnet.ace12" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
-								<File Id="readme" Name="readme" />
+								<File Id="readme2" Name="readme" />
 								<File Id="set_date.e" Name="set_date.e" />
 								<File Id="command_date.e" Name="COMMAN~1.E" LongName="command_date.e" />
 								<File Id="add_year.e" Name="add_year.e" />
@@ -1448,11 +1448,11 @@
 								<File Id="bitmask.h" Name="bitmask.h" />
 								<File Id="make_msc.bat3" Name="make_msc.bat" />
 								<File Id="network.c" Name="network.c" />
-								<File Id="makefile.m" Name="makefile.m" />
+								<File Id="makefile.m2" Name="makefile.m" />
 								<File Id="makefile.bmt" Name="makefile.bmt" />
 								<File Id="storable.c" Name="storable.c" />
 								<File Id="make_bcb.bat7" Name="make_bcb.bat" />
-								<File Id="makefile.b" Name="makefile.b" />
+								<File Id="makefile.b2" Name="makefile.b" />
 								<File Id="network_r.c" Name="NETWOR~1.C" LongName="network_r.c" />
 								<File Id="syncpoll.c" Name="syncpoll.c" />
 								<File Id="Makefile.SH9" Name="Makefile.SH" />

@@ -23,6 +23,8 @@ inherit
 	GB_SHARED_TOOLS
 	
 	GB_CONSTANTS
+	
+	GB_FILE_CONSTANTS
 
 create
 	make

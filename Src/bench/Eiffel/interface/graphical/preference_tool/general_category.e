@@ -43,9 +43,9 @@ feature {TTY_RESOURCES} -- Initialization
 				create tab_step.make ("tab_step", rt, 4);
 			end
 			create editor.make ("editor", rt, "vi");
-			create filter_path.make ("filter_directory", rt, clone (env_filter_path));
-			create profile_path.make ("profile_directory", rt, clone (env_profile_path));
-			create tmp_path.make ("temporary_directory", rt, clone (env_tmp_directory));
+			create filter_path.make ("filter_directory", rt, env_filter_path.twin);
+			create profile_path.make ("profile_directory", rt, env_profile_path.twin);
+			create tmp_path.make ("temporary_directory", rt, env_tmp_directory.twin);
 			create shell_command.make ("shell_command", rt, "xterm -geometry 80x40 -e vi +$line $target");
 			create filter_name.make ("filter_name", rt, "PostScript");
 			create filter_command.make ("filter_command", rt, "");

@@ -926,6 +926,11 @@ feature -- Warning messages
 
 	w_End_of_history: STRING is "End of history"
 	
+	w_Export_to_png_failed (a_file_name: STRING): STRING is 
+		do
+			Result := "Could not save diagram to " + a_file_name
+		end
+	
 	w_Environment_not_initialized: STRING is "$EIFFEL5 is not initialized. Execution impossible%N"
 
 	w_Feature_not_compiled: STRING is "Feature is not compiled."

@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			-- window
 		do
 			widget := gtk_option_menu_new ()
+			show
 		end	
 
 feature {EV_MENU_ITEM_CONTAINER} -- Element change	
@@ -44,7 +45,6 @@ feature {EV_MENU_ITEM_CONTAINER} -- Element change
 				correct_imp: menu_imp /= void
 			end
 			gtk_option_menu_set_menu (widget, menu_imp.widget)
-			gtk_widget_show (menu_imp.widget)
 		end
 	
 end -- class EV_OPTION_BUTTON_IMP

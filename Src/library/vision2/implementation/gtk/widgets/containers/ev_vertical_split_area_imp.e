@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
                         -- Create a fixed widget. 
 		do
 			widget := gtk_vpaned_new 
+			show
 		end	
 	
 end

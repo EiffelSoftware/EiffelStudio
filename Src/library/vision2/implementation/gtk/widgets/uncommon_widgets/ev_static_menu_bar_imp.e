@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			par_imp: EV_WINDOW_IMP
 		do
 			widget := gtk_menu_bar_new ()
+			show
 			parent_imp ?= par.implementation
 			check
 				good_implementation: parent_imp /= Void

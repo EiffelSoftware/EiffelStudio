@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			a ?= txt.to_c
 			widget := gtk_frame_new ($a)
+			show
 		end
 
 end -- class EV_FRAME_IMP

@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			end
                         widget := gtk_radio_button_new_with_label (par_imp.radio_button_group,
 								   $a)
+			show
 			par_imp.set_rbg_pointer (gtk_radio_button_group (Current.widget))
                 end
 	

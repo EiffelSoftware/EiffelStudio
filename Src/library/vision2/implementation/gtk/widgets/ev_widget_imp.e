@@ -9,7 +9,7 @@ indexing
 	
 deferred class
 	
-        EV_WIDGET_IMP
+        EV_WIDGET_IMP 
         
 inherit
         EV_WIDGET_I
@@ -19,6 +19,7 @@ inherit
 	EV_GTK_TYPES_EXTERNALS
 	EV_GTK_WIDGETS_EXTERNALS
 	EV_GTK_GENERAL_EXTERNALS
+	EV_GTK_CONTAINERS_EXTERNALS
 
         EV_GTK_CONSTANTS
 
@@ -40,8 +41,10 @@ feature {NONE} -- Initialization
 				parent_not_void: par_imp /= Void
 			end
 			plateform_build (par_imp)
+			--gtk_widget_show (widget)
 			par_imp.add_child (Current)
 			build
+
 			-- connect gtk widget destroy signal to EV_WIDGET_IMP.destroy_signal_callback
 			!!s.make (0)
 			s := "destroy"
@@ -129,7 +132,6 @@ feature -- Status setting
 			-- Make widget visible on the screen. (default)
 		do
 			gtk_widget_show (widget)
-			c_gtk_widget_show_children (widget)
 		end
 
 	set_insensitive (flag: BOOLEAN) is

@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
                         -- Create a fixed widget. 
 		do
 			widget := gtk_notebook_new ()
+			show
 		end	
 
 feature -- Status report
@@ -66,7 +67,7 @@ feature -- Element change
 		do
 			a ?= label.to_c
 			p := gtk_label_new ($a)
-			c.show
+			--c.show
 			gtk_notebook_append_page (widget, 
 						  c.widget, 
 						  p)

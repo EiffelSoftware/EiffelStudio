@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
                 do
                         a ?= txt.to_c
                         widget := gtk_label_new ($a)
+			show
                 end
 	
 feature {NONE} -- Implementation

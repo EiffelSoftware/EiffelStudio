@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
                         -- Create a gtk entry.
                 do
                         widget := gtk_entry_new
+			show
                 end
 
 feature -- Access

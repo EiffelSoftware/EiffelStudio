@@ -270,6 +270,7 @@ feature {NONE} -- Implementation
 --			--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
 --
 			vbox := gtk_vbox_new (False, 0)
+			gtk_widget_show (vbox)
 			gtk_container_add (GTK_CONTAINER (widget), vbox)
 		end
 

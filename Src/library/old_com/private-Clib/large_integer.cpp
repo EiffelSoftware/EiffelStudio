@@ -4,6 +4,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
+#include "eifole.h"
 #include "eif_cecil.h"
 #ifndef _WINDOWS_
 #include <windows.h>
@@ -44,7 +45,11 @@ extern "C" EIF_POINTER eole2_large_integer_allocate (void) {
 //
 
 extern "C" void eole2_large_integer_set_low_part (EIF_POINTER _this, EIF_INTEGER low_part) {
+#ifdef EIF_BORLAND
+   ((ULARGE_INTEGER FAR *)_this)->u.LowPart = (ULONG)low_part;
+#else
    ((ULARGE_INTEGER FAR *)_this)->LowPart = (ULONG)low_part;
+#endif /* EIF_BORLAND */
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -63,7 +68,11 @@ extern "C" void eole2_large_integer_set_low_part (EIF_POINTER _this, EIF_INTEGER
 //
 
 extern "C" void eole2_large_integer_set_high_part (EIF_POINTER _this, EIF_INTEGER high_part) {
+#ifdef EIF_BORLAND
+   ((ULARGE_INTEGER FAR *)_this)->u.HighPart = (LONG)high_part;
+#else
    ((ULARGE_INTEGER FAR *)_this)->HighPart = (LONG)high_part;
+#endif /* EIF_BORLAND */
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -81,7 +90,11 @@ extern "C" void eole2_large_integer_set_high_part (EIF_POINTER _this, EIF_INTEGE
 //
 
 extern "C" EIF_INTEGER eole2_large_integer_get_low_part (EIF_POINTER _this) {
+#ifdef EIF_BORLAND
+   return (EIF_INTEGER)(((ULARGE_INTEGER FAR *)_this)->u.LowPart);
+#else
    return (EIF_INTEGER)(((ULARGE_INTEGER FAR *)_this)->LowPart);
+#endif /* EIF_BORLAND */
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -99,5 +112,9 @@ extern "C" EIF_INTEGER eole2_large_integer_get_low_part (EIF_POINTER _this) {
 //
 
 extern "C" EIF_INTEGER eole2_large_integer_get_high_part (EIF_POINTER _this) {
+#ifdef EIF_BORLAND
+   return (EIF_INTEGER)(((ULARGE_INTEGER FAR *)_this)->u.HighPart);
+#else
    return (EIF_INTEGER)(((ULARGE_INTEGER FAR *)_this)->HighPart);
+#endif /* EIF_BORLAND */
 }

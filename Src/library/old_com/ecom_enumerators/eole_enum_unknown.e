@@ -28,7 +28,7 @@ feature -- Element change
 			!! wel_string.make (Iid_enum_unknown)
 			ole_interface_ptr := ole2_create_interface_pointer ($Current, wel_string.item)
 		end
-
+		
 feature -- Message Transmission
 
 
@@ -57,6 +57,15 @@ feature -- Message Transmission
 			ole2_enum_unknown_reset (ole_interface_ptr)
 		end
 
+	ole_clone: like Current is
+			-- Create a clone of Current.
+		require
+			valid_interface: ole_interface_ptr /= default_pointer
+		do
+			!! Result.make
+			Result.attach_ole_interface_ptr (ole2_enum_unknown_clone (ole_interface_ptr))
+		end
+		
 feature {EOLE_CALL_DISPATCHER} -- Callback
 
 	on_query_interface (iid: STRING): POINTER is
@@ -96,6 +105,24 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			set_last_hresult (E_notimpl)
 		end
 
+	on_clone: POINTER is
+			-- Create a clone of Current.
+		do
+			Result := create_new_ole_interface_ptr
+		end
+		
+feature {NONE} -- Implementation
+
+	create_new_ole_interface_ptr: POINTER is
+			-- Create a new OLE interface associated
+			-- to Current.
+		local
+			wel_string: WEL_STRING
+		do
+			!! wel_string.make (Iid_enum_unknown)
+			Result := ole2_create_interface_pointer ($Current, wel_string.item)
+		end
+		
 feature {NONE} -- Externals
 
 	ole2_enum_unknown_next (ptr: POINTER; count: INTEGER): ARRAY [EOLE_UNKNOWN] is
@@ -119,6 +146,13 @@ feature {NONE} -- Externals
 			"eole2_enum_unknown_reset"
 		end
 
+	ole2_enum_unknown_clone (ptr: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_enum_unknown_clone"
+		end
+		
 end -- class EOLE_ENUM_UNKNOWN
 
 --|-------------------------------------------------------------------------

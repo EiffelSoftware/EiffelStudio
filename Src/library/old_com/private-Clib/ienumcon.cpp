@@ -8,6 +8,10 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
+//-- Revision 1.4  1998/01/27 00:25:12  raphaels
+//-- Added `clone' method on enumerators.
+//-- More corrections to support Borland Compiler.
+//--
 //-- Revision 1.3  1998/01/20 23:47:59  raphaels
 //-- Removed obsolete files.
 //--
@@ -142,7 +146,7 @@ extern "C" HRESULT E_IEnumConnections_Clone
         *ppecn = (LPENUMCONNECTIONS FAR)Ocxdisp_EnumConnectionsClone(eif_access (eoleOcxDisp), eif_access (ptr));
         return (HRESULT)Ocxdisp_UnknownGetStatusCode (eif_access (eoleOcxDisp), eif_access (ptr));
        }
-     return ((E_IEnumConnections*) ptr)->Reset();
+     return ((E_IEnumConnections*) ptr)->Clone(ppecn);
 }
 
 //---------------------------------------------------------------------------
@@ -200,6 +204,7 @@ extern "C" void eole2_enum_connections_reset (EIF_POINTER ptr) {
 extern "C" EIF_POINTER eole2_enum_connections_clone (EIF_POINTER ptr) {
 	LPENUMCONNECTIONS FAR* ppecn;
 
+	ppecn = (LPENUMCONNECTIONS FAR*)malloc (sizeof (IEnumConnections __RPC_FAR *));
 	g_hrStatusCode = E_IEnumConnections_Clone ((void *)ptr, FALSE, ppecn);
 	return (EIF_POINTER)*ppecn;
 	}

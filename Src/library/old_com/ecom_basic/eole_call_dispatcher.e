@@ -548,6 +548,11 @@ feature -- Element change
 			enum_unknown.on_reset
 		end
 	
+	on_enum_unknown_clone (enum_unknown: EOLE_ENUM_UNKNOWN): POINTER is
+		do
+			Result := enum_unknown.on_clone
+		end
+		
 	on_enum_connections_next (enum_connections: EOLE_ENUM_CONNECTIONS; count: INTEGER): ARRAY [EOLE_CONNECTDATA] is
 		do
 			Result := enum_connections.on_next (count)
@@ -563,6 +568,11 @@ feature -- Element change
 			enum_connections.on_reset
 		end
 
+	on_enum_connections_clone (enum_connections: EOLE_ENUM_CONNECTIONS): POINTER is
+		do
+			Result := enum_connections.on_clone
+		end
+		
 	on_enum_connection_points_next (enum_connections_pts: EOLE_ENUM_CONNECTION_POINTS; celt: INTEGER): ARRAY [EOLE_UNKNOWN] is
 		do
 			Result := enum_connections_pts.on_next (celt)
@@ -576,6 +586,11 @@ feature -- Element change
 	on_enum_connection_points_reset (enum_connections_pts: EOLE_ENUM_CONNECTION_POINTS) is
 		do
 			enum_connections_pts.on_reset
+		end
+
+	on_enum_connection_points_clone (enum_connection_pts: EOLE_ENUM_CONNECTION_POINTS): POINTER is
+		do
+			Result := enum_connection_pts.on_clone
 		end
 
 	on_persist_get_class_id (persist: EOLE_PERSIST): STRING is

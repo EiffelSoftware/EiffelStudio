@@ -1,5 +1,6 @@
 // EOLE_SAFEARRAY structure
 
+#include "eifole.h"
 #include "eif_cecil.h"
 #include <objbase.h>
 #include <oleauto.h>

@@ -8,7 +8,7 @@ CFLAGS = -c -O2 -X -DEIF_BORLAND -I$(EIFFEL4)\library\com\spec\windows\include -
 	$(CFLAGS) $<
 |
 
-OBJ = Eautostr.obj Eoccstr.obj Eoleauto.obj Eolemisc.obj iclsfact.obj iconpnt.obj iconptc.obj ieconpnt.obj ienumcon.obj ienumukn.obj Ifont.obj ipersist.obj ipict.obj iprclinf.obj istorage.obj Iunknown.obj Ocxcecil.obj ocxmain.obj selectpicture.obj interfacedata.obj methoddata.obj
+OBJ = Eautostr.obj Eoccstr.obj Eoleauto.obj Eolemisc.obj iclsfact.obj iconpnt.obj iconptc.obj ieconpnt.obj ienumcon.obj ienumukn.obj Ifont.obj ipersist.obj ipict.obj iprclinf.obj istorage.obj Iunknown.obj Ocxcecil.obj ocxmain.obj selectpicture.obj large_integer.obj safearray.obj safearraybound.obj
 
 eifole.lib: $(OBJ)
 	if exist $@ del $@
@@ -31,8 +31,9 @@ eifole.lib: $(OBJ)
 	tlib $@ +Ocxcecil.obj
 	tlib $@ +ocxmain.obj
 	tlib $@ +selectpicture.obj
-	tlib $@ +interfacedata.obj
-	tlib $@ +methoddata.obj
+	tlib $@ +large_integer.obj
+	tlib $@ +safearray.obj
+	tlib $@ +safearraybound.obj
 	
 	if not exist $(EIFFEL4)\library\com\spec\bcc mkdir $(EIFFEL4)\library\com\spec\bcc
 	if not exist $(EIFFEL4)\library\com\spec\bcc\lib mkdir $(EIFFEL4)\library\com\spec\bcc\lib

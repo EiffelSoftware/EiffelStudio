@@ -16,9 +16,9 @@ feature
 		local
 			edit_command: STRING
 		once
-			edit_command := env_variable ("EIF_COMMAND");
+			edit_command := Execution_environment.get ("EIF_COMMAND");
 			!!Result.make (0);
-			if edit_command.empty then
+			if (edit_command = Void) or else (edit_command.empty) then
 					-- EIF_COMMAND was not set then use 
 					-- use default command (vi editor)
 				Result.append ("xterm -geometry 80x40 -e vi +$line $target")

@@ -32,8 +32,7 @@ feature -- Access
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
 		require
-			exists: exists
-			is_open_read: is_open_read
+			is_readable: readable
 			support_storable: support_storable
 		deferred
 		ensure
@@ -48,8 +47,7 @@ feature -- Element change
 			-- Retrievable within current system only.
 		require
 			object_not_void: object /= Void
-			exists: exists
-			is_open_write: is_open_write
+			extendible: extendible
 			support_storable: support_storable
 		deferred
 		end
@@ -64,8 +62,7 @@ feature -- Element change
 			--| possible to overcome class name clashes.
 		require
 			object_not_void: object /= Void
-			exists: exists
-			is_open_write: is_open_write
+			extendible: extendible
 			support_storable: support_storable
 		deferred
 		end
@@ -77,8 +74,7 @@ feature -- Element change
 			-- platform (machine architecture).
 		require
 			object_not_void: object /= Void
-			exists: exists
-			is_open_write: is_open_write
+			extendible: extendible
 			support_storable: support_storable
 		deferred
 		end

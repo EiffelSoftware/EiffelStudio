@@ -941,6 +941,7 @@ feature -- Status setting
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			screen_dc: WEL_SCREEN_DC
 			character_format_i: EV_CHARACTER_FORMAT_I
+			current_character: CHARACTER
 		do
 				-- Store original caret position.
 			original_position := caret_position
@@ -1010,7 +1011,7 @@ feature -- Status setting
 						format_index := formats_index.item (counter)
 						temp_string := ""
 						add_rtf_keyword (temp_string, rtf_highlight_string)
-						
+
 						temp_string.append (back_color_offset.i_th (format_index).out)
 						add_rtf_keyword (temp_string, rtf_color_string)
 						temp_string.append (color_offset.i_th (format_index).out)
@@ -1065,10 +1066,17 @@ feature -- Status setting
 					if end_formats.item (counter) /= Void and start_formats.item (counter) = Void then
 						internal_text.append_string (default_font_format)
 					end
-					if buffered_text.item (counter).is_equal ('%N') then
+					current_character := buffered_text.item (counter)
+					if current_character = '%N' then
 						add_rtf_keyword (internal_text, rtf_newline + "%N")
+					elseif current_character = '\' then
+						internal_text.append (rtf_backslash)
+					elseif current_character = '{' then
+						internal_text.append (rtf_open_brace)	
+					elseif current_character = '}' then
+						internal_text.append (rtf_close_brace)
 					else
-						internal_text.append_character (buffered_text.item (counter))
+						internal_text.append_character (current_character)
 					end
 					counter := counter + 1
 				end

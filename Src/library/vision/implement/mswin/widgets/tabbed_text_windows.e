@@ -61,7 +61,7 @@ feature -- Status setting
 		do
 			tab_length := new_length
 			if exists then
-				set_tab_stops (tab_length * 4)
+				set_tab_stops (tab_length*4)
 				invalidate
 			end
 		end

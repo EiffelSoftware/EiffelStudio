@@ -69,6 +69,14 @@ feature -- Element Change
 
 feature -- Status setting		
 
+	set_with_previous_text is
+			-- Set field at row index 'widget_row' and column index 'widget_column' with
+			-- value of `saved text' after an edit has been unsuccessful
+		do
+			go_i_th (widget_row)
+			item.put_i_th (saved_text, widget_column)
+		end
+
 	set_unique_column_values (a_flag: BOOLEAN) is
 			-- Set column value uniqueness to 'a_flag'.
 		require
@@ -310,7 +318,6 @@ feature {NONE} -- Actions
 			-- appropriate agent.
 		local
 			con: EV_CONTAINER
-			wid: EV_WIDGET
 			a_container: LINEAR [EV_WIDGET]
 			button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do

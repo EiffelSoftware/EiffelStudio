@@ -15,6 +15,7 @@
 #include "portable.h"
 #include <sys/types.h>
 #include <unistd.h>
+#include "file.h"
 #include "dir.h"
 #include "plug.h"
 
@@ -134,7 +135,7 @@ public EIF_OBJ dir_current()
 	char *cwd;
 	char *cwd_string;
 
-	cwd = getcwd(NULL, 0);
+	cwd = getcwd(NULL, PATH_MAX);
 	cwd_string = makestr(cwd, strlen (cwd));
 	free (cwd);
 	return ((EIF_OBJ)cwd_string);

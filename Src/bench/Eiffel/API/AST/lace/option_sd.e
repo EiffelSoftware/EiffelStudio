@@ -88,7 +88,9 @@ feature -- Adapt
 		do
 			!!vd15;
 			vd15.set_option_name (option_name);
-			vd15.set_option_value (option_value.value);
+			if option_value /= Void then
+				vd15.set_option_value (option_value.value);
+			end;
 			Error_handler.insert_error (vd15);
 		end;
 

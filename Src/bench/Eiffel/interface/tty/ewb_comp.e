@@ -92,7 +92,7 @@ feature -- Compilation
 			until
 				exit
 			loop
-				io.putstring ("Specifiy the Ace file (`Ace' is the default): %N%
+				io.putstring ("Specify the Ace file (`Ace' is the default): %N%
 								%C: Cancel%N%
 								%S: Specify file name%N%
 								%T: Copy template%N%N");
@@ -130,8 +130,7 @@ feature -- Compilation
 						!!cmd.make (0);
 						cmd.append (Copy_cmd);
 						cmd.append_character (' ');
-						cmd.append (Eiffel3_dir_name);
-						cmd.append ("/bench/help/defaults/Ace.default");
+						cmd.append (Default_ace_file);
 						cmd.append_character (' ');
 						cmd.append (file_name);
 						env_system (cmd);
@@ -209,7 +208,7 @@ feature -- Compilation
 			cmd_string: STRING;
 			uf: UNIX_FILE
 		do
-			if System.uses_precompiled then
+			if not melt_only and then System.uses_precompiled then
 					-- Target
 				arg2 := build_path (Workbench_generation_path, System.system_name);
 				!!uf.make (arg2);

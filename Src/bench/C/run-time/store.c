@@ -494,7 +494,7 @@ char * object;
 							printf (" %lx", *((char *)(object + z)));
 						}
 #endif
-						buffer_write(object, sizeof(char) * count);
+						buffer_write(object, (int)(sizeof(char) * count));
 
 						break;
 					case SK_FLOAT:

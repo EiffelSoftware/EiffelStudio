@@ -50,9 +50,9 @@ feature
 debug ("SERVER")
 	io.putstring ("Putting element of id: ");
 	io.putint (t.id);
-	io.putstring ("/");
+	io.putstring ("(");
 	io.putint (updated_id (t.id));
-	io.putstring (" into");
+	io.putstring (") into");
 	io.putstring (generator);
 	io.new_line;
 end;

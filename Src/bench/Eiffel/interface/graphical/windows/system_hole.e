@@ -91,8 +91,7 @@ feature {NONE}
 			file_name: STRING;
 		do
 				!!file_name.make (50);	
-				file_name.append (Eiffel3_dir_name);
-				file_name.append ("/bench/help/defaults/Ace.default");
+				file_name.append (Default_ace_file);
 				system_tool.text_window.show_file_content (file_name);
 				system_tool.text_window.set_changed (True)
 		end;

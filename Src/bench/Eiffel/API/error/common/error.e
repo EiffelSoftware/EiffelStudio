@@ -66,7 +66,9 @@ feature -- Debug pupose
 			file: UNIX_FILE;
 		do
 			file_name := help_path.duplicate;
-			file_name.append ("/short/");
+			file_name.append_character (Directory_separator);
+			file_name.append ("short");
+			file_name.append_character (Directory_separator);
 			file_name.append (help_file_name);
 			if subcode /= 0 then
 				file_name.append_integer (subcode)
@@ -85,6 +87,9 @@ feature -- Debug pupose
 				file.close;
 			else
 				put_string ("%NNo help available for this error%N%
+							%(cannot read file: ");
+				put_string (file_name);
+				put_string (")%N%
 							%%NAn error message should always be available.%N%
 							%Please contact ISE.%N%N");
 			end;

@@ -29,9 +29,13 @@ feature
 		do
 			put_string ("Option: ");
 			put_string (option_name);
-			put_string ("%NInvalid option value: ");
-			put_string (option_value);
-			new_line
+			if option_value /= Void then
+				put_string ("%NInvalid option value: ");
+				put_string (option_value);
+				new_line
+			else
+				put_string ("%NNo option value%N");
+			end;
 		end;
 
 end

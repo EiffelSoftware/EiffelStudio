@@ -2492,7 +2492,8 @@ end;
 			if final_mode then
 					-- Extern declarations for previous file
 				f_name := Final_generation_path.twin;
-				f_name.append ("/Ececil.h");
+				f_name.append_character (Directory_separator);
+				f_name.append ("Ececil.h");
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
 				Cecil_file.putstring ("%Nstruct ctable ce_rname[] = {%N");

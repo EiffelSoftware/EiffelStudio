@@ -322,24 +322,41 @@ feature -- Basic operation
 	add_new_window (window_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Perform necessary initialization for new window,
 			-- `window_object'.
+		require
+			window_object_not_void: window_object /= Void
 		local
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			titled_window: EV_TITLED_WINDOW
 			display_win: GB_DISPLAY_WINDOW
+			object_built: BOOLEAN
+			widget: EV_WIDGET
 		do
-			create layout_item.make (window_object)
+			object_built := window_object.layout_item /= Void
+			if not object_built then
+				create layout_item.make (window_object)
+			end
 				-- We must only add the layout item if there is
 				-- no window currently displayed.
 			if layout_constructor.is_empty then
 				layout_constructor.add_root_item (layout_item)	
 			end
-			window_object.set_layout_item (layout_item)
-			window_object.build_drop_actions_for_layout_item (window_object.layout_item)
+			if not object_built then
+				window_object.set_layout_item (layout_item)
+				window_object.build_drop_actions_for_layout_item (window_object.layout_item)
+			end
 			create display_win
 			titled_window ?= display_win
 			titled_window.set_size (Default_window_dimension, Default_window_dimension)
+			if window_object.object /= Void then
+				widget := window_object.object.item
+				widget.parent.prune (widget)
+				titled_window.extend (widget)
+			end
 			window_object.set_object (titled_window)
-			window_object.build_display_object
+			
+			if window_object.display_object = Void then
+				window_object.build_display_object
+			end
 		end
 		
 	add_new_object (an_object: GB_OBJECT) is
@@ -359,7 +376,7 @@ feature -- Basic operation
 				-- We must only add the layout item if there is
 				-- no window currently displayed.
 			if layout_constructor.is_empty then
-				layout_constructor.add_root_item (layout_item)	
+				layout_constructor.add_root_item (an_object.layout_item)	
 			end
 			
 			create display_win

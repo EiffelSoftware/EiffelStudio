@@ -45,7 +45,7 @@ feature -- Type check and byte code
 			-- Interface value
 		do
 			!! Result
-			Result.set_real_val (value)
+			Result.set_double_as_string_value (value)
 		end
 
 	type_check is

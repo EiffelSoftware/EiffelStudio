@@ -40,16 +40,12 @@ feature {NONE}
 	
 feature 
 
-	add_right (elt: like item) is
+	put_right (elt: like item) is
 			-- Add `elt' to right of current position.
 			-- if offright do nothing. Do not move cursor.
 		do
-			if
-				not after
-			then
-				if
-					count = icons.count
-				then
+			if not after then
+				if count = icons.count then
 					update_number_of_icons
 				end;
 				list_put_right (elt);
@@ -57,7 +53,7 @@ feature
 				icons.go_i_th (index);
 				update_display
 			end	
-		end; -- add_right
+		end; -- put_right
 
 	extend (elt: like item) is
 			-- Add `elt' at end of icon box. Move cursor position

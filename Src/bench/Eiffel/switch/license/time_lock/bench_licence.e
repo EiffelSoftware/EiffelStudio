@@ -50,6 +50,7 @@ feature -- Registration
 			shareware_prompt: SHAREWARE_PROMPT
 			environment: EXECUTION_ENVIRONMENT
 			duration: INTEGER
+			encoder: DES_ASCII_ENCODER
 		do
 			create environment
 			username := clone (environment.get ("BENCH_USERNAME"))
@@ -81,11 +82,20 @@ feature -- Registration
 					create shareware_prompt.make (Current, Is_beta, duration, time_left, Max_days)
 					shareware_prompt.activate
 				else
-					if username = Void or else password = Void then
+					if Is_beta then
 						username := "Beta user"
-						password := "Beta user"
+					else
+						if username /= Void and then password /= Void then
+							create encoder.make_with_key (non_commercial_key)
+							if not encoder.encrypt (username).is_equal (password) then
+								username := "Non-registered user"
+							end
+							encoder.terminate
+						else
+							username := "Non-registered user"
+						end
 					end
-					licensed := True
+					password := username
 				end
 				if licensed then
 						-- The user seems to have enter the correct information
@@ -119,7 +129,7 @@ feature -- Info
 			create encoder.make_with_key (non_commercial_key)
 
 				-- Get the stored expiration date
-			date_name := clone (environment.get ("BENCH_TRIAL_52"))
+			date_name := clone (environment.get ("STUDIO_TRIAL_52"))
 
 			if date_name /= Void and then date_name.count > 0 then
 				check
@@ -172,21 +182,26 @@ feature -- Init
 		local
 			encoder: DES_ASCII_ENCODER
 		do
-			licensed := False
-			non_commercial_mode := False
-			if
-				username /= Void and then
-				username.count > 5 and then
-				password /= Void
-			 then
-				create encoder.make_with_key (key)
-				licensed := encoder.encrypt (username).is_equal (password)
-				encoder.terminate
-				if not licensed then
-					create encoder.make_with_key (non_commercial_key)
+			if is_free_version then
+				licensed := True
+				non_commercial_mode := True
+			else
+				licensed := False
+				non_commercial_mode := False
+				if
+					username /= Void and then
+					username.count > 5 and then
+					password /= Void
+				 then
+					create encoder.make_with_key (key)
 					licensed := encoder.encrypt (username).is_equal (password)
 					encoder.terminate
-					non_commercial_mode := True
+					if not licensed then
+						create encoder.make_with_key (non_commercial_key)
+						licensed := encoder.encrypt (username).is_equal (password)
+						encoder.terminate
+						non_commercial_mode := True
+					end
 				end
 			end
 		end
@@ -243,9 +258,12 @@ feature {NONE} -- Constants
 
 	Is_beta: BOOLEAN is True
 			-- Is it a beta evaluation?
+			
+	Is_free_version: BOOLEAN is False
+			-- Is this a free version?
 
-	Beta_limit: INTEGER is 1018922706
-			-- Hard coded time which corresponds to April 15th 2002.
+	Beta_limit: INTEGER is 1028297106
+			-- Hard coded time which corresponds to August 1st 2002.
 
 feature {NONE} -- Externals
 

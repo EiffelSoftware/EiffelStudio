@@ -1,10 +1,11 @@
 indexing
-	description: "Change the maximum length of the text."
+	description: "Change the displayed character for the password field."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TEXT_MAX_CMD
+class
+	PASSWD_FIELD_CMD
 
 inherit
 	CONTEXT_CMD
@@ -24,24 +25,24 @@ feature {NONE} -- Implementation
 			Result := Command_names.cont_text_max_cmd_name
 		end
 
-	context: TEXT_FIELD_C
+	context: PASSWORD_FIELD_C
 
-	old_maximum_size: INTEGER
+	old_character: CHARACTER
 
 	work is
 		do
---			old_maximum_size := context.maximum_text_length
+			old_character := context.character
 		end
 
 	undo is
 		local
-			new_maximum_size: INTEGER
+			new_character: CHARACTER
 		do
---			new_maximum_size := context.maximum_text_length
---			context.set_maximum_text_length (old_maximum_size)
-			old_maximum_size := new_maximum_size
+			new_character := context.character
+			context.set_character (old_character)
+			old_character := new_character
 			{CONTEXT_CMD} Precursor
 		end
 
-end -- class TEXT_MAX_CMD
+end -- class PASSWD_FIELD_CMD
 

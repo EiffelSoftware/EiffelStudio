@@ -1,103 +1,93 @@
+indexing
+	description: "Creation of a context."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class CONTEXT_CREATE_CMD 
 
 inherit
-
-	WINDOWS;
-	SHARED_CONTEXT;
 	CONTEXT_CMD
 		redefine
-			work, redo, undo
-		end;
+			redo, undo
+		end
 
-feature {NONE}
+	WINDOWS
+
+	SHARED_CONTEXT
+
+create
+	make
+
+feature {NONE} -- History element
 
 	associated_form: INTEGER is
 		do
 			Result := Context_const.geometry_form_nbr
-		end;
-	
-	c_name: STRING is
+		end
+
+	name: STRING is
 		do
 			Result := Command_names.cont_create_cmd_name
-		end;
+		end
 
-feature 
+feature -- Command
 
 	destroy_widgets is
 		do
-			context.widget.destroy
-		end;
+			if not context.gui_object.destroyed then
+				context.gui_object.destroy
+			end
+		end
 
-	work (argument: CONTEXT) is
+	work is
+			-- Do not record into history.
 		do
-			context := argument;
 			context.select_tree_element_if_parent_selected
-		end;
-
-	
-feature {NONE}
-
-	command: CONTEXT_CUT_CMD;
-
-	
-feature 
+		end
 
 	undo is
-		do
-			context_undo
-		end;
-
-	
-feature {NONE}
-
-	context_undo is
 		local
-			group: LINKED_LIST [CONTEXT];
-			a_parent: CONTEXT;
+			group: LINKED_LIST [CONTEXT]
+			a_parent: CONTEXT
 		do
 			if (command = Void) then
 					-- First call
 				if context.grouped then
 						-- Cut only on context even if it is
 						-- grouped with other contexts
-					context.set_grouped (False);
-					group := context.group;
-					group.start;
-					group.search (context);
-					group.remove;
-				end;
-				a_parent := context.parent;
-				!!command;
+					context.set_grouped (False)
+					group := context.group
+					group.start
+					group.search (context)
+					group.remove
+				end
+				a_parent := context.parent
+				create command.make (context)
 					-- work does not put the command in the history list
-				command.work (context);
-				if (a_parent = Void) then
-					if not Shared_window_list.empty then
-						tree.display (Shared_window_list.first)
-					else
-						tree.display (context)
-					end;
-				else
-					tree.display (a_parent);
-				end;
+				command.work
+-- 				if (a_parent = Void) then
+-- 					if not Shared_window_list.empty then
+-- 						tree.display (Shared_window_list.first)
+-- 					else
+-- 						tree.display (context)
+-- 					end
+-- 				else
+-- 					tree.display (a_parent)
+-- 				end
 			else
 				command.redo
-			end;
-		end;
-
-	
-feature 
+			end
+		end
 
 	redo is
 		do
 			command.undo
-		end;
+		end
 
-	
-feature {NONE}
+feature {NONE} -- Implementation
 
-	context_work is
-		do
-		end;
+	command: CONTEXT_CUT_CMD
 
-end
+end -- class CONTEXT_CREATE_CMD
+

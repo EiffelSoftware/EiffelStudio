@@ -1017,7 +1017,7 @@ feature -- Basic feature
 		
 feature -- Line info
 
-	put_line_info (n: INTEGER) is
+	put_line_info (line_number, start_column, end_column: INTEGER) is
 			-- Generate `file_name' and `n' to enable to find corresponding
 			-- Eiffel class file in IL code.
 		deferred

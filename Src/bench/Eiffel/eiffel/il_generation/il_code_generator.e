@@ -2190,12 +2190,27 @@ feature -- Basic feature
 feature -- Line info
 
 	put_line_info (n: INTEGER) is
-			-- Generate `n' to enable to find corresponding
-			-- Eiffel class file in IL code.
+			-- Generate debug information at line `n'.
 		require
 			il_generation_started: il_generation_started
+			valid_n: n > 0
 		do
-			implementation.put_line_info (n)
+			if System.line_generation then
+				implementation.put_line_info (n, 0, 1000)
+			end
+		end
+
+	put_debug_info (location: TOKEN_LOCATION) is
+			-- Generate debug information for `location' to enable to
+			-- find corresponding Eiffel class file in IL code.
+		require
+			il_generation_started: il_generation_started
+			location_not_void: location /= Void
+		do
+			if System.line_generation then
+				implementation.put_line_info (location.line_number,
+					location.start_column_position, location.end_column_position)		
+			end
 		end
 
 feature -- Compilation error handling

@@ -882,6 +882,18 @@ feature -- Basic operation
 				some_objects.forth
 			end
 		end
+		
+feature {GB_TITLED_WINDOW_OBJECT} -- Basic operations
+
+	set_root_window (a_window: GB_TITLED_WINDOW_OBJECT) is
+			-- Assign `a_window' to `root_window'.
+		require
+			a_window_not_void: a_window /= Void
+		do
+			root_window_object := a_window
+		ensure
+			window_set: root_window_object = a_window
+		end
 
 feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 
@@ -1135,6 +1147,9 @@ feature -- Access
 		
 	deleted_objects: ARRAYED_LIST [GB_OBJECT]
 		-- All objects that have been deleted in
-		-- this session of the application.		
+		-- this session of the application.
+		
+	root_window_object: GB_TITLED_WINDOW_OBJECT
+		-- The object representing the window that will be launched by the application.
 
 end -- class GB_OBJECT_HANDLER

@@ -48,13 +48,12 @@ extern "C" {
 #define eif_fn_bool			eifbool
 #define eif_fn_bit			eifbit
 #define eif_fn_pointer		eifptr
-#define	eif_routine			eifrout	/*  Get the pointer to the Eiffel routine */
 #define eif_type			eiftype			/* Dynamic type ID */
 #define eif_name			eifname			/* Reverts class ID to name */
 #define eif_bit_clone		eifbcln			/* Clones a bit structure */
 #define eif_enable_visible_exception   eifvisex /* When a class is not visible, raise an exception */
 #define eif_disable_visible_exception eifuvisex /* Disable the visible exception */
-#define eif_return_type    eifreturntype           /* Get the return type of feature, 0 if procedure */
+#define eif_attribute_type    eifattrtype           /* Get the type of an attribute, returns EIF_NO_TYPE if fails */
 
 /* Types defined for easier reference when dealing with function pointers.
  * Their use is not compulsory it's only a matter of "convenience"--RAM.
@@ -145,8 +144,8 @@ extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 
 RT_LNK  void eifvisex (void);          /* Enable the visible exception (in current thread) */
 RT_LNK void eifuvisex (void);          /* Disable visible exception (in current thread) */
-RT_LNK int eifreturntype (char *class_name, EIF_TYPE_ID cid);
-										/* Return type of `cid' from `class_name' */
+RT_LNK int eifattrtype (char *attr_name, EIF_TYPE_ID cid);
+										/* Type of `attr_name' from class id `cid' */
 RT_LNK EIF_TYPE_ID eifcid(char *class_name);		     /* Get a class ID */
 RT_LNK EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
 
@@ -160,10 +159,6 @@ RT_LNK EIF_FN_DOUBLE eifdouble(char *routine, EIF_TYPE_ID cid);		/* Eiffel funct
 RT_LNK EIF_FN_BIT eifbit(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning BIT */
 RT_LNK EIF_FN_BOOL eifbool(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning BOOLEAN */
 RT_LNK EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning POINTER */
-RT_LNK  EIF_POINTER eifrout (EIF_OBJ rout_name, EIF_OBJ class_name);
-    /* Get the pointer to the Eiffel routine described by its 
-     * name `rout_name' and its class `class_name'
-     */
 RT_LNK EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
 
 RT_LNK int eiftype(EIF_OBJ object);					/* Give dynamic type of EIF_OBJ */

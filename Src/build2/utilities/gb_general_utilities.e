@@ -155,5 +155,12 @@ feature -- Basic operations
 		ensure
 			count_changed_accordingly: old class_text.count = class_text.count + old_name.count - new_name.count
 		end
+		
+	integer_truncated (original, truncation: INTEGER): INTEGER is
+			-- Truncate `original' to `truncation'.
+			-- For example, if `original' is 453 and `truncation' is 100, return 400.
+		do
+			Result := (original // truncation) * truncation
+		end
 
 end -- class GB_GENERAL_UTILITIES

@@ -328,26 +328,28 @@ feature {NONE} -- Implementation for automatic size compute
 			cur: CURSOR
 			value: INTEGER
 		do
-			if is_homogeneous then
-				lchild := ev_children
-				from
-					cur := lchild.cursor
-					child := lchild.first
-					value := lchild.first.minimum_width
-					lchild.go_i_th (2)
-				until
-					lchild.after
-				loop
-					if lchild.item.minimum_width > value then
-						value := lchild.item.minimum_width
-						child := lchild.item
+			if not ev_children.empty then
+				if is_homogeneous then
+					lchild := ev_children
+					from
+						cur := lchild.cursor
+						child := lchild.first
+						value := lchild.first.minimum_width
+						lchild.go_i_th (2)
+					until
+						lchild.after
+					loop
+						if lchild.item.minimum_width > value then
+							value := lchild.item.minimum_width
+							child := lchild.item
+						end
+						lchild.forth
 					end
-					lchild.forth
+					lchild.go_to (cur)
+					internal_set_minimum_width (value * ev_children.count + total_spacing + 2 * border_width)
+				else
+					internal_set_minimum_width (add_children_minimum_width + total_spacing + 2 * border_width)
 				end
-				lchild.go_to (cur)
-				internal_set_minimum_width (value * ev_children.count + total_spacing + 2 * border_width)
-			else
-				internal_set_minimum_width (add_children_minimum_width + total_spacing + 2 * border_width)
 			end
 		end
 
@@ -358,21 +360,23 @@ feature {NONE} -- Implementation for automatic size compute
 			cur: CURSOR
 			value: INTEGER
 		do
-			lchild := ev_children
-			from
-				cur := lchild.cursor
-				value := lchild.first.minimum_height
-				lchild.go_i_th (2)
-			until
-				lchild.after
-			loop
-				if (lchild.item).minimum_height > value then
-					value := lchild.item.minimum_height
+			if not ev_children.empty then
+				lchild := ev_children
+				from
+					cur := lchild.cursor
+					value := lchild.first.minimum_height
+					lchild.go_i_th (2)
+				until
+					lchild.after
+				loop
+					if (lchild.item).minimum_height > value then
+						value := lchild.item.minimum_height
+					end
+					lchild.forth
 				end
-				lchild.forth
+				lchild.go_to (cur)
+				internal_set_minimum_height (value + 2 * border_width)
 			end
-			lchild.go_to (cur)
-			internal_set_minimum_height (value)
 		end
 
 	resize_from_minimum (a_x, a_y, a_width, a_height: INTEGER) is

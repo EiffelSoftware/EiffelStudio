@@ -91,7 +91,12 @@ feature -- Interface
 		do
 			pos1 := 1
 			pos2 := 1
-			Result := True
+
+			if s.count = 0 then
+				Result := False
+			else
+				Result := True
+			end
 			from
 				i := 1
 			until

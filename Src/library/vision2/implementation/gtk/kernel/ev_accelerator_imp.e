@@ -52,10 +52,10 @@ feature {NONE} -- Implementation
 				Result := C.GDK_CONTROL_MASK_ENUM
 			end
 			if alt_required then
-				Result := Result + C.GDK_MOD1_MASK_ENUM
+				Result := Result.bit_or (C.GDK_MOD1_MASK_ENUM)
 			end
 			if shift_required then
-				Result := Result + C.GDK_SHIFT_MASK_ENUM
+				Result := Result.bit_or (C.GDK_SHIFT_MASK_ENUM)
 			end
 		end
 

@@ -4,7 +4,8 @@ inherit
 
 	BINARY_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, operator_is_keyword,
+			operator_is_special, operator_name
 		end
 
 feature
@@ -64,5 +65,19 @@ feature -- Type check, byte code and dead code removal
 		do
 			!BIN_EQ_B! Result;
 		end;
+
+	operator_name: STRING is
+		do
+			Result := constant_name;
+		end;
+	
+	operator_is_keyword: BOOLEAN is false;
+	
+	operator_is_special: BOOLEAN is true;
+	
+feature {}
+	
+	constant_name: STRING is "_infix_=";
+
 
 end

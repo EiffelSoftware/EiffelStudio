@@ -4,7 +4,7 @@ inherit
 
 	BIN_EQ_AS
 		redefine
-			byte_anchor
+			byte_anchor, operator_name 
 		end
 
 feature
@@ -14,5 +14,8 @@ feature
         do
             !BIN_NE_B! Result
         end;
+
+	operator_name: STRING is "_infix_/=";
+
 
 end

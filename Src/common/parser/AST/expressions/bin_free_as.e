@@ -6,7 +6,7 @@ inherit
 
 	BINARY_AS
 		redefine
-			set
+			set, operator_is_keyword
 		end
 
 feature -- Attributes
@@ -46,4 +46,6 @@ feature
 			!!Result
 		end;
 
+
+	operator_is_keyword: BOOLEAN is false;
 end

@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 	close is
 			-- Respond to a user selecting the close icon.
 		do
-			
+			parent_area.close_actions.call ([tool])
 		end
 		
 	calculate_restore_height (tool_height: INTEGER): INTEGER is

@@ -99,15 +99,19 @@ feature -- Access
 		-- Is `Current' maximized?
 		
 	disable_minimized is
-			-- Assign `False' to `minimized'.
+			-- Assign `False' to `is_minimized'.
 		do
 			minimized := False
+		ensure
+			not_minimized: not minimized
 		end
 		
 	disable_maximized is
-			-- Assign `False' to `maximized'.
+			-- Assign `False' to `is_maximized'.
 		do
 			maximized := False
+		ensure
+			not_maximized: not maximized
 		end
 		
 	reset_minimize_button is

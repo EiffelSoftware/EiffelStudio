@@ -8,6 +8,12 @@ class
  
 inherit 
 	FONT_LIST_I	
+		rename
+			position as index,
+			go as go_i_th,
+			offleft as before,
+			offright as before
+		end
 
 	LINKED_LIST [FONT]
 		rename

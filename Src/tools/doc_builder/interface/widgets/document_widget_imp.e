@@ -32,6 +32,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		local
 			internal_pixmap: EV_PIXMAP
+			l_file_name: FILE_NAME
 		do
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
@@ -71,15 +72,21 @@ feature {NONE}-- Initialization
 			button_box.disable_item_expand (html_button)
 			edit_button.set_text ("Edit")
 			edit_button.align_text_left
-			internal_pixmap.set_with_named_file ("D:\My Documents\Documentation Project\systems\DocBuilder\resources\icons\icon_format_text_color.ico")
+			create l_file_name.make_from_string (Pixmap_directory)
+			l_file_name.extend ("icon_format_text_color.ico")
+			internal_pixmap.set_with_named_file (l_file_name)
 			edit_button.set_pixmap (internal_pixmap)
 			xml_button.set_text ("XML")
 			xml_button.align_text_left
-			internal_pixmap.set_with_named_file ("D:\My Documents\Documentation Project\systems\DocBuilder\resources\icons\icon_cut_color.ico")
+			create l_file_name.make_from_string (Pixmap_directory)
+			l_file_name.extend ("icon_cut_color.ico")
+			internal_pixmap.set_with_named_file (l_file_name)
 			xml_button.set_pixmap (internal_pixmap)
 			html_button.set_text ("HTML")
 			html_button.align_text_left
-			internal_pixmap.set_with_named_file ("D:\My Documents\Documentation Project\systems\DocBuilder\resources\icons\icon_copy_color.ico")
+			create l_file_name.make_from_string (Pixmap_directory)
+			l_file_name.extend ("icon_copy_color.ico")
+			internal_pixmap.set_with_named_file (l_file_name)
 			html_button.set_pixmap (internal_pixmap)
 			
 				--Connect events.

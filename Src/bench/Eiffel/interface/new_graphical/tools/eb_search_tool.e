@@ -412,6 +412,7 @@ feature {NONE} -- Implementation
 			vbox: EV_VERTICAL_BOX
 			frm: EV_FRAME
 			options_toolbar: EV_TOOL_BAR
+			cell: EV_CELL
 		do
 				-- Option "Match case"
 			create case_sensitive_button.make_with_text (Interface_names.l_Match_case)
@@ -449,7 +450,13 @@ feature {NONE} -- Implementation
 			create options_toolbar
 			options_toolbar.extend (options_button)
 			create frm
-			frm.extend (options_toolbar)
+				-- This is a small workaround for a bug on Windows, where a toolbar
+				-- directly inserted within an EV_FRAME, overlaps the bottom of the frame.
+				-- There is currently no easy fix for this so this code has been added temporarily
+				-- as a work around. Julian.
+			create cell
+			frm.extend (cell)
+			cell.extend (options_toolbar)
 			create Result
 			Result.extend (frm)
 			Result.disable_item_expand (frm)

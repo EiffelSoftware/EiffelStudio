@@ -2190,8 +2190,18 @@ int where;					/* Invariant after or before */
 				last = iget();					/* Push `obj' */
 				last->type = SK_REF;
 				last->it_ref = obj;
-				IC = melt[body_id];
-				interpret(INTERP_INVA, where);	/* Interpret invariant code */
+
+				/*IC = melt[body_id];
+				/*interpret(INTERP_INVA, where);/* Interpret invariant code */
+
+				/* The proper way to start the interpretation of a melted
+		 		* invariant code is to call `xiinv' in order to initialize the
+		 		* calling context (which is not done by `interpret').
+		 		* `tagval' will therefore be set, but we have to 
+		 		* resynchronize the registers anyway. --ericb
+		 		*/
+				xiinv(melt[body_id], where);
+
 				sync_registers(scur, stop);		/* Resynchronize registers */
 			}
 		}
@@ -2827,8 +2837,18 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
 	} else {
-		IC = melt[body];					/* Melted byte code */
-		interpret(INTERP_CMPD, 0);			/* Interpret (tagval not set) */
+	
+		/*IC = melt[body];					/* Melted byte code */
+		/*interpret(INTERP_CMPD, 0);		/* Interpret (tagval not set) */
+
+		/* The proper way to start the interpretation of a melted
+		 * feature is to call `xinterp' in order to initialize the
+		 * calling context (which is not done by `interpret').
+		 * `tagval' will therefore be set, but we have to 
+		 * resynchronize the registers anyway. --ericb
+		 */
+		xinterp(melt[body]);
+	
 		result = 1;							/* Compulsory synchronisation */
 	}
 	IC = old_IC;					/* Restore IC back-up */

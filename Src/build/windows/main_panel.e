@@ -27,7 +27,7 @@ inherit
 
 	SHARED_CONTEXT
 
-	LICENCE_COMMAND
+	SHARED_LICENSE
 
 	MODE_CONSTANTS
 
@@ -54,11 +54,15 @@ feature -- Creation
 			!! windows_category.make (Menu_names.Windows, menu_bar)
 			!! help_category.make (Menu_names.Help, menu_bar)
 					--| File menu
-			!! generate_menu_entry.make (Menu_names.Generate, file_category)
-			!! import_menu_entry.make (Menu_names.Import, file_category)
-			!! menu_separator1.make ("", file_category)
+			!! new_project_entry.make (Menu_names.New, file_category)
+			!! open_project_entry.make (Menu_names.Open, file_category)
+			!! menu_separator.make ("", file_category)
 			!! save_project_menu_entry.make (Menu_names.Save, file_category)
 			!! save_as_menu_entry.make (Menu_names.Save_as, file_category)
+			!! menu_separator1.make ("", file_category)
+			!! import_menu_entry.make (Menu_names.Import, file_category)
+			!! generate_menu_entry.make (Menu_names.Generate, file_category)
+			!! menu_separator2.make ("", file_category)
 			!! exit_menu_entry.make (Menu_names.Exit, file_category)
 					--| Action menu
 			!! create_command_entry.make (Menu_names.create_command, action_category)
@@ -71,7 +75,7 @@ feature -- Creation
 			!! application_editor_entry.make (Menu_names.Application_editor, windows_category)
 			!! class_importer_entry.make (Menu_names.Class_importer, windows_category)
 			!! history_window_entry.make (Menu_names.History_window, windows_category)
-			!! menu_separator2.make ("", windows_category)
+			!! menu_separator3.make ("", windows_category)
 			!! command_editor_entry.make (Menu_names.Instance_editor, windows_category)
 			!! editors_entry.make (Menu_names.Editors, windows_category)
 			!! interface_entry.make (Menu_names.Interface, windows_category)
@@ -296,18 +300,24 @@ feature -- Creation
 			generate: GENERATE
 			save_project: SAVE_PROJECT
 			exit_cmd: EXIT_EIFFEL_BUILD_CMD
+			change_mode_cmd: CHANGE_MODE_CMD
 		do
+			new_project_entry.add_activate_action (create_proj_b, Void)
+			base.set_action ("Ctrl<Key>N", create_proj_b, Void)
+			open_project_entry.add_activate_action (load_proj_b, Void)
+			base.set_action ("Ctrl<Key>O", load_proj_b, Void)
+			!! save_project
+			save_project_menu_entry.add_activate_action (save_project, Void)
+			base.set_action ("Ctrl<Key>S", save_project, Void)
 			!! raise_import_window
 			import_menu_entry.add_activate_action (raise_import_window, Void)
 			!! generate
 			generate_menu_entry.add_activate_action (generate, Void)
-			!! save_project
-			save_project_menu_entry.add_activate_action (save_project, Void)
-			base.set_action ("Ctrl<Key>S", save_project, Void)
 			!! exit_cmd
 			exit_menu_entry.add_activate_action (exit_cmd, Void)
-			execute_b.add_value_changed_action (Current, execute_b)
-			edit_b.add_value_changed_action (Current, edit_b)
+			!! change_mode_cmd
+			execute_b.add_value_changed_action (change_mode_cmd, execute_b)
+			edit_b.add_value_changed_action (change_mode_cmd, edit_b)
 		end
 
 feature -- Attributes
@@ -316,6 +326,9 @@ feature -- Attributes
 
 	project_initialized: BOOLEAN
 			-- Is project initialized?
+
+	project_changed: BOOLEAN
+			-- Project changed since last compilation
 
 	hide_show_windows: HIDE_SHOW_WINDOWS
 			-- Hide/show windows for Main panel iconization
@@ -334,6 +347,13 @@ feature -- Implementation
 			-- an open folder.
 		do
 			save_b.set_unsaved_symbol
+			project_changed := True
+		end
+
+	set_project_compiled is
+			-- Set `project_changed' to false.
+		do
+			project_changed := False
 		end
 
 feature {NONE} -- Graphical interface
@@ -397,7 +417,10 @@ feature -- Graphical interface
 		--| Entries in the File category
 	generate_menu_entry: PUSH_B
 	import_menu_entry: PUSH_B
-	menu_separator1, menu_separator2: SEPARATOR
+	menu_separator, menu_separator1,
+	menu_separator2, menu_separator3: SEPARATOR
+	new_project_entry: PUSH_B
+	open_project_entry: PUSH_B
 	save_project_menu_entry: PUSH_B
 	save_as_menu_entry: SAVE_AS_BUTTON
 	exit_menu_entry: PUSH_B
@@ -506,62 +529,6 @@ feature -- Realization
 			command_catalog.realize
 			hide_context_tree
 			show_context_tree
-		end
-
-feature {NONE} -- Execute/Edit action
-
-	work (arg: ANY) is 
-			-- Execute `edit_b' and `execute_b' command.
-		local
-			generate: GENERATE
-			temp: STRING
-			project_file: RAW_FILE
-			first_compilation: BOOLEAN
-		do 
-			if arg = edit_b and then current_mode = executing_mode then
-				execute_b.set_toggle_off
-				base.set_normal_state
-				enable
-				interface_entry.arm
-				interface_only_entry.disarm
-				set_mode (editing_mode)
-			elseif arg = execute_b and then current_mode = editing_mode then
-				edit_b.set_toggle_off
---				interface_only_entry.arm
---				interface_entry.disarm
-				disable
-				base.set_iconic_state
-				set_mode (executing_mode)
-					--| Compile the generated application
-				!! generate
-				generate.execute (Void)
-				!! temp.make (0)
-				temp.append (environment.Es4_file)
-				!! project_file.make (environment.Project_epr_file)
-				if project_file.exists then
-					temp.append (" -project ")
-					temp.append (environment.Project_epr_file)
-				else
-					first_compilation := True
-					temp.append (" -project_path ")
-					temp.append (environment.project_directory)
-					temp.append (" -ace ")
-					temp.append (environment.project_ace_file)
-				end
-				environment.system (temp)
-				environment.change_working_directory (environment.W_code_directory)
-				if first_compilation then
-					first_compilation := False
-					temp.wipe_out
-					temp.append (environment.Finish_freezing_file)
-					environment.system (temp)
-				end
-				temp.wipe_out
-				temp.append (environment.Application_name)
-				environment.system (temp)
-				environment.change_working_directory (environment.project_directory)
-				edit_b.arm
-			end
 		end
 
 feature -- Closing Current
@@ -691,7 +658,10 @@ feature -- Enable/Disable menus
 	enable_menus is 
 			-- Enable menus after openning a project.
 		do
+			save_project_menu_entry.set_sensitive
+			save_as_menu_entry.set_sensitive
 			import_menu_entry.set_sensitive
+			generate_menu_entry.set_sensitive
 			action_category.set_sensitive
 			view_category.set_sensitive
 			windows_category.set_sensitive
@@ -700,7 +670,10 @@ feature -- Enable/Disable menus
 	disable_menus is
 			-- Disable all the menus except `File' and `Help'.
 		do
+			save_project_menu_entry.set_insensitive
+			save_as_menu_entry.set_insensitive
 			import_menu_entry.set_insensitive
+			generate_menu_entry.set_insensitive
 			action_category.set_insensitive
 			view_category.set_insensitive
 			windows_category.set_insensitive

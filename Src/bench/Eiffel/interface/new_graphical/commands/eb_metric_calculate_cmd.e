@@ -95,10 +95,7 @@ feature -- Displayed messages in text form.
 			metric_not_void: current_metric /= Void
 		local
 			final_result, archive_name: STRING
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			l_deserialized_document: XM_DOCUMENT
 			measure_element, node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			retried, same_metric: BOOLEAN
@@ -106,28 +103,18 @@ feature -- Displayed messages in text form.
 			basic_metric: EB_METRIC_BASIC
 		do
 			if not retried then
-				create l_file.make (f.name)
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_parser.make
-					create l_tree_pipe.make
-					create l_xm_concatenator.make_null
-					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-					l_parser.parse_from_stream (l_file)
-					l_file.close
-					check
-						ok_parsing: l_parser.is_correct
-					end
-					if tool.archive.archive_syntax (l_tree_pipe.document.root_element) then
+				l_deserialized_document := deserialize_document (f.name)
+				if l_deserialized_document /= Void then
+					if tool.archive.archive_syntax (l_deserialized_document.root_element) then
 						basic_metric ?= current_metric
 						if basic_metric = Void then
 							same_metric := has_metric (current_metric, f)
 						end
 						if (basic_metric /= Void or same_metric) then
-							if l_tree_pipe.document.root_element.has_attribute_by_name ("System") then
-								archive_name := l_tree_pipe.document.root_element.attribute_by_name ("System").value						
+							if l_deserialized_document.root_element.has_attribute_by_name ("System") then
+								archive_name := l_deserialized_document.root_element.attribute_by_name ("System").value						
 							end
-							measure_element := element_by_name (l_tree_pipe.document.root_element, "RECORDED_MEASURES")
+							measure_element := element_by_name (l_deserialized_document.root_element, "RECORDED_MEASURES")
 							a_cursor := measure_element.new_cursor
 							Result := "Metric: " + current_metric.name + "      " + "Scope: Archive"
 							from

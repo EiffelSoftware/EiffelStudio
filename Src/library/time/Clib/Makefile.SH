@@ -13,11 +13,12 @@ echo "Extracting "."/Makefile (with variable substitutions)"
 $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
-CFLAGS = $optimize $ccflags $large -I\$(EIFFEL3)/bench/spec/\$(PLATFORM)/include
+AR = ar rc
+CFLAGS = $optimize $ccflags $large -I$(EIFFEL4)/bench/spec/$(PLATFORM)/include
 LDFLAGS = $ldflags
 LIBS = $libs
 MAKE = make
-MKDEP = $mkdep \$(DPFLAGS) --
+MKDEP = $mkdep $(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
@@ -25,22 +26,21 @@ RM = $rm -f
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 .c.o:
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -D$(PLATFORM) -c $<
 
-OBJECTS= \
-datetime.o 
+OBJECTS = datetime.o
 
-
-datetime.a: $(OBJECTS)
-	$(RM) datetime.a
-	ar cr datetime.a $(OBJECTS)
-	$(RANLIB) datetime.a
+libdatetime.a: $(OBJECTS)
+	mkdir -p ../spec/$(PLATFORM)/lib
+	$(RM) $@
+	$(AR) $@ $(OBJECTS)
+	$(MV) $@ ../spec/$(PLATFORM)/lib
+	$(RANLIB) ../spec/$(PLATFORM)/lib/$@
+#	$(MAKE) clean
 
 clean:
-	$(RM) $(OBJECTS) core *~a 
-
-clobber: clean
-	$(RM) Makefile config.sh datetime.a
+	$(RM) libdatetime.a $(OBJECTS) config.sh Makefile
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
+

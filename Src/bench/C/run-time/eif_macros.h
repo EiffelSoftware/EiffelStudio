@@ -27,6 +27,8 @@
 #include "eif_gen_conf.h"
 #if !defined CUSTOM || defined NEED_OPTION_H
 #include "eif_option.h"
+#elif defined EIF_WIN32
+#include <windows.h>
 #endif
 #include "eif_bits.h"
 
@@ -119,7 +121,7 @@ RT_LNK int fcount;
  *  RTRV(x,y) returns 'y' if it conforms to type 'x', void otherwise
  *  RTRM(x,y) memorizes 'x' if not void and 'y' is old with 'x' new
  */
-#define RTRC(x,y) econfm(x,y)
+#define RTRC(x,y) eif_gen_conf((int16) y, (int16) x)
 #define RTRA(x,y) ((y) == (char *) 0 ? 0 : RTRC((x),Dftype(y)))
 #define RTRV(x,y) (RTRA((x),(y)) ? (y) : (char *) 0)
 #define RTRM(x,y) ((x) == (char *) 0 ? 0 : RTAX(x,y))

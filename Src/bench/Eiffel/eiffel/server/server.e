@@ -133,12 +133,12 @@ feature {NONE} -- External features
 			"C | %"pstore.h%""
 		end
 
-	retrieve_all (f_desc: INTEGER; size: INTEGER pos: INTEGER): T is
+	retrieve_all (f_desc: INTEGER; pos: INTEGER): T is
 		external
 			"C | %"pretrieve.h%""
 		end
 
-	partial_retrieve (file_desc: INTEGER; size: INTEGER; pos, nb_obj: INTEGER): T is
+	partial_retrieve (file_desc: INTEGER; pos, nb_obj: INTEGER): T is
 		external
 			"C | %"pretrieve.h%""
 		end

@@ -99,7 +99,7 @@ feature
 
 	
 	generate_dynamic_types is
-			-- Generate dynaminc types of type classes availible in the
+			-- Generate dynamic types of type classes available in the
 			-- system
 		local
 			class_type: CLASS_TYPE;

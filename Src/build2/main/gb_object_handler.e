@@ -414,19 +414,11 @@ feature -- Basic operation
 			window_object.events.wipe_out
 		end
 		
-	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
-			-- Is a GB_OBJECT with name matching `object_name' contained
-			-- in `objects' or `events' of all objects in `obejcts.
-			-- Case insensitive search. Ignore `an_object' name
-			-- if not `Void', but still check the events for `an_object'.
-			-- Returns `False' if `object_name' is empty. This is because you are
-			-- allowed to have as many "unnamed" objects as you wish.
+	string_is_object_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
 		local
 			current_name_lower, name_lower: STRING
 			current_object: GB_OBJECT
-			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		do
-				-- Do nothing if `object_name' is empty.
 			if not object_name.is_empty then
 				name_lower := object_name
 				name_lower.to_lower
@@ -444,6 +436,27 @@ feature -- Basic operation
 							Result := True
 						end
 					end
+					objects.forth
+				end
+			end
+		end
+		
+	string_is_feature_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
+		local
+			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+			current_name_lower, name_lower: STRING
+			current_object: GB_OBJECT
+		do
+				-- Do nothing if `object_name' is empty.
+			if not object_name.is_empty then
+				name_lower := object_name
+				name_lower.to_lower
+				from
+					objects.start
+				until
+					objects.off or Result
+				loop
+					current_object := objects.item
 						-- Access events of `current_object' locally, for speed
 					object_events := current_object.events
 						-- No need to check further if `object_events' is empty.
@@ -465,6 +478,75 @@ feature -- Basic operation
 					objects.forth
 				end
 			end
+		end
+	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
+			-- Is a GB_OBJECT with name matching `object_name' contained
+			-- in `objects' or `events' of all objects in `objects.
+			-- Case insensitive search. Ignore `an_object' name
+			-- if not `Void', but still check the events for `an_object'.
+			-- Returns `False' if `object_name' is empty. This is because you are
+			-- allowed to have as many "unnamed" objects as you wish.
+		local
+			current_name_lower, name_lower: STRING
+			current_object: GB_OBJECT
+			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+		do
+			Result := string_is_object_name (object_name, an_object) or
+				string_is_feature_name (object_name, an_object)
+		end
+		
+	
+	existing_feature_matches (feature_name, type: STRING): BOOLEAN is
+			-- Do all action sequences with feature named `feature_name' connected,
+			-- have a type that is compatible (argument wise) with `type'.
+		require
+			feature_name_already_used: string_is_feature_name (feature_name, Void)
+		local
+			current_name_lower, name_lower: STRING
+			current_object: GB_OBJECT
+			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+			action_sequence1, action_sequence2: GB_EV_ACTION_SEQUENCE
+			first_types, second_types: STRING
+		do
+			Result := True
+			name_lower := feature_name.as_lower
+				from
+					objects.start
+				until
+					objects.off or not Result
+				loop
+					current_object := objects.item
+						-- Access events of `current_object' locally, for speed
+					object_events := current_object.events
+						-- Note that we always check the events, even if `an_object' /= `Void'.
+					if not object_events.is_empty then
+						from
+							object_events.start
+						until
+								-- No need to loop if already found not to match.
+							object_events.off or not Result
+						loop
+							if name_lower.is_equal (object_events.item.feature_name) then
+								action_sequence1 ?= new_instance_of (dynamic_type_from_string ("GB_" + type))
+								check
+									action_sequence_not_void: action_sequence1 /= Void
+								end
+								action_sequence2 ?= new_instance_of (dynamic_type_from_string ("GB_" + object_events.item.type))
+								check
+									action_sequence_not_void: action_sequence2 /= Void
+								end
+								first_types := action_sequence1.argument_types_as_string
+								second_types := action_sequence2.argument_types_as_string
+								if first_types /= second_types then
+									Result := False
+								end
+							end
+							object_events.forth
+						end
+					end
+
+					objects.forth
+				end
 		end
 		
 		

@@ -84,7 +84,7 @@ feature {NONE}
 			loop
 				!!a_segment.make;
 				a_segment.set_line_width (App_const.arrow_head_line_w);	
-				a_segment.set_foreground_color (App_const.black);
+				a_segment.set_foreground_color (Resources.foreground_figure_color);
 				arrow_head.replace (a_segment);
 				arrow_head.forth
 			end;

@@ -27,6 +27,11 @@ feature
 			!! Result
 		end;
 
+	Resources: RESOURCES is
+		once
+			!! Result.initialize
+		end;
+
 	Stone_types: STONE_TYPES is
 		once
 			!! Result

@@ -190,7 +190,7 @@ feature {NONE}
 			-- Initialize the line.
 		do
 			arrow_create;
-			set_foreground_color (App_const.black);
+			set_foreground_color (Resources.foreground_figure_color);
 			set_line_width (App_const.standard_thickness);
 		end; 
 
@@ -201,10 +201,10 @@ feature {NONE}
 			int: INTERIOR
 		do
 			!!path.make;
-			path.set_foreground_color (App_const.black);
+			path.set_foreground_color (Resources.foreground_figure_color);
 			path.set_line_width (App_const.selection_square_thickness_sl);
 			!!int.make;
-			int.set_foreground_color (App_const.white);
+			int.set_foreground_color (Resources.background_figure_color);
 			!!selection_square.make;	
 			selection_square.set_path (path);
 			selection_square.set_interior (int);

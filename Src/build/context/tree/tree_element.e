@@ -113,8 +113,8 @@ feature
 			show_children := True;
 			data := a_context;
 			text_image_create;
-			set_foreground_color (App_const.black);
-			set_background_color (App_const.white);
+			set_foreground_color (Resources.foreground_figure_color);
+			set_background_color (Resources.background_figure_color);
 			set_text (a_context.label);
 			attach_drawing (tree);
 			tree.append (Current);

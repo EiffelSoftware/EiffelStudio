@@ -3,12 +3,13 @@ class TRANSL_EDITOR
 
 inherit
 
-	CONSTANTS;
 	COMMAND;
 	WINDOWS;
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as shell_make
+		redefine
+			set_geometry
 		end;
 	CLOSEABLE
 
@@ -16,6 +17,13 @@ creation
 
 	make
 	
+feature -- Geometry
+
+	set_geometry is
+		do
+			set_width (Resources.trans_ed_width)
+		end;
+
 feature {NONE, EAR_BUTTON}
 
 	trans_text: TEXT_FIELD;
@@ -96,6 +104,7 @@ feature {NONE}
 			trans_text.set_text ("");
 			!! del_com.make (Current);
 			set_delete_command (del_com);
+			initialize_window_attributes
 		end;
 
 feature 

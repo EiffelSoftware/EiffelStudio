@@ -97,9 +97,12 @@ feature {NONE}
 			editor_already_set: editor /= Void
 		do
 			form_create_unmanaged (a_name, a_parent);
+			if Resources.background_color /= Void then
+				set_background_color (Resources.background_color);
+			end;
 			editor.attach_attributes_form (Current);
-			is_initialized := true;
 			hide;
+			is_initialized := true;
 		ensure
 			not_shown: not shown
 		end;
@@ -107,7 +110,12 @@ feature {NONE}
 	show_current is
 		require
 			not_shown: not shown
+		local
+			set_colors: SET_WINDOW_ATTRIBUTES_COM
 		do
+			!! set_colors;
+			set_colors.execute (Current);
+			editor.attach_attributes_form (Current);
 			manage;
 			show;
 		ensure

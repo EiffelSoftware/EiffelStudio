@@ -3,20 +3,31 @@ class CONTEXT_CATALOG
 
 inherit
 
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as top_shell_create,
 			realize as top_shell_realize
+		redefine
+			set_geometry
 		end;
 	WINDOWS;
 	SHARED_TRANSLATIONS;
-	CONSTANTS;
 	SHARED_CONTEXT;
 	CLOSEABLE
 
 creation
 
 	make
+
+feature -- Geometry
+
+	set_geometry is
+		do
+			set_x_y (Resources.cont_cat_x,
+					Resources.cont_cat_y);
+			set_size (Resources.cont_cat_width,
+					Resources.cont_cat_height);
+		end;
 
 feature {NONE}
 
@@ -74,6 +85,7 @@ feature
 			!! menu_page.make (form, rc);
 			!! set_page.make (form, rc);
 			!! group_page.make (form, rc);
+			initialize_window_attributes;
 			current_button := window_page.button;
 
 			form.attach_top (edit_hole, 0);

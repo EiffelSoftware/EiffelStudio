@@ -3,26 +3,35 @@ class CMD_INST_EDITOR
 	
 inherit
 
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as top_shell_create,
 			destroy as shell_destroy
-		end
-	TOP_SHELL
 		redefine
-			make, destroy
+			set_geometry
+		end
+	EB_TOP_SHELL
+		redefine
+			make, destroy, set_geometry
 		select
 			make, destroy
 		end
 	WINDOWS;
-	CONSTANTS;
 	CLOSEABLE
 
 creation
 
 	make
 
-feature 
+feature -- Geometry
+
+	set_geometry is
+		do
+			set_size (Resources.cmd_inst_ed_width,
+						Resources.cmd_inst_ed_height)
+		end
+
+feature
 
 	command_instance: CMD_INSTANCE;
 			-- Currently command_instance
@@ -132,6 +141,7 @@ feature
 			!! close_b.make (Current, form, focus_label);
 			!! argument_sw.make (Widget_names.scroll2, form);
 			!! arguments.make (Widget_names.icon_box1, argument_sw);
+			initialize_window_attributes;
 				-- *******************
 				-- Perform attachments 
 				-- *******************

@@ -155,6 +155,9 @@ feature
 					!! mp;					
 					mp.set_watch_shape;
 					page.make_unmanaged (page_sw);
+					if Resources.background_color /= Void then
+						page.set_background_color (Resources.background_color)
+					end;
 					if not page.empty then
 						page.go_i_th (1);
 						page.update_display

@@ -2,22 +2,23 @@ class CMD_EDITOR
 
 inherit
 
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as top_shell_create,
 			destroy as shell_destroy
 		export
 			{NONE} all
-		end
-	TOP_SHELL
 		redefine
-			make, destroy
+			set_geometry
+		end
+	EB_TOP_SHELL
+		redefine
+			make, destroy,set_geometry
 		select
 			make, destroy
 		end
 	COMMAND;
 	WINDOWS;
-	CONSTANTS;
 	ERROR_POPUPER
 		redefine
 			continue_after_popdown
@@ -38,6 +39,14 @@ feature {NONE, CMD_INH_HOLE}
 	-- Void if `current_command' is
 	-- not editable.
 	edited_command: USER_CMD
+
+feature -- Geometry
+
+	set_geometry is
+		do
+			set_size (Resources.cmd_type_ed_width,
+					Resources.cmd_type_ed_height)
+		end;
  
 feature 
 
@@ -362,6 +371,7 @@ feature {NONE}
 			!! label_sw.make (Widget_names.scroll2, label_form)
 			!! labels.make (Widget_names.icon_box3, label_sw, Current)
 			!! del_com.make (Current);
+			initialize_window_attributes;
 			inherit_hole.unmanage;
 			set_delete_command (del_com);
 		end

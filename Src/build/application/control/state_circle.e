@@ -94,11 +94,11 @@ feature
 			Result.set_center (a_center); 
 			!!a_path.make; 
 			a_path.set_line_width (App_const.standard_thickness); 
-			a_path.set_foreground_color (App_const.black); 
+			a_path.set_foreground_color (Resources.foreground_figure_color); 
 			Result.set_path (a_path); 
 			Result.path.set_xor_mode; 
 			!!temp_int.make; 
-			temp_int.set_foreground_color (App_const.white); 
+			temp_int.set_foreground_color (Resources.background_figure_color); 
 		 	Result.set_interior (temp_int); 
 			Result.interior.set_xor_mode; 
 		end; -- moving_fig

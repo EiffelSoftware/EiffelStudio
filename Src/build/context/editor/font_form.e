@@ -3,7 +3,7 @@ class FONT_FORM
 
 inherit
 
-	EDITOR_OK_FORM;
+	EDITOR_OK_FORM
 
 creation
 
@@ -36,7 +36,7 @@ feature -- Interface
 		do
 			initialize (Widget_names.font_form_name, a_parent);
 			create_ok_button;
-			!!font_b.make (Widget_names.font_box_name, Current);
+			!! font_b.make (Widget_names.font_box_name, Current);
 			font_b.hide_ok_button;
 			font_b.hide_cancel_button;
 			font_b.hide_apply_button;
@@ -54,7 +54,10 @@ feature -- Interface
 			detach_top (font_stone);
 			detach_top (separator);
 			detach_left (font_stone);
-			show_current
+			show_current;
+				-- Shake font box so it will
+				-- resize correctly.
+			font_b.set_height (font_b.height + 1);
 		end;
 	
 feature {NONE}

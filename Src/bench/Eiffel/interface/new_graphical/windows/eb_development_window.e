@@ -2053,26 +2053,6 @@ feature -- Resource Update
 				an_action.call([])
 			end
 		end
-		
-	attach_argument_dialog  (a_dialog: EB_ARGUMENT_DIALOG) is
-			-- Attach newly created argument dialog to Current
-		require
-			not_void_dialog: a_dialog /= Void
-		do
-			if arguments_dialog = Void then
-				arguments_dialog := a_dialog
-			end		
-		end
-		
-	detach_argument_dialog is
-			-- Destroy the Current srguments dialog
-		require
-			has_arguments_dialog: arguments_dialog /= Void
-		do
-			arguments_dialog := Void
-		ensure
-			has_not_arguments_dialog: arguments_dialog = Void
-		end		
 
 feature -- Window management
 

@@ -12,6 +12,8 @@ inherit
 
 feature {NONE}
 
+	Additional_args: STRING is "arguments.wb"
+
 	Backup: STRING is "BACKUP"
 
 	Backup_info: STRING is "compilation_info.txt"

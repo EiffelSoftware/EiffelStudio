@@ -100,6 +100,14 @@ feature -- Eiffel Project Directories
 		once
 			create Result.make
 		end
+		
+	Arguments_file_name: FILE_NAME is
+			-- Full name of file where additional arguments
+			-- information for system is stored
+		once
+			create Result.make_from_string (Project_directory_name);
+			Result.set_file_name (Additional_args);
+		end	
 
 feature -- Temporary access prior to the creation or the opening of a file.
 

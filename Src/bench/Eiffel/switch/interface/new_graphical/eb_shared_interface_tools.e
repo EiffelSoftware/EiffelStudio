@@ -86,7 +86,19 @@ feature {NONE} -- Shared tools access
 	system_window_is_valid: BOOLEAN is
 			-- Is `system_window' valid?
 		do
-			Result := (system_window /= Void) and then	(not system_window.destroyed)
+			Result := (system_window /= Void) and then (not system_window.destroyed)
+		end
+		
+	argument_dialog: EB_ARGUMENT_DIALOG is
+			-- Project argument dialog
+		do
+			Result := Argument_dialog_cell.item
+		end
+
+	argument_dialog_is_valid: BOOLEAN is
+			-- Is `argument_dialog' valid?
+		do
+			Result := (argument_dialog /= Void)
 		end
 		
 feature {NONE} -- Shared tools change
@@ -101,6 +113,12 @@ feature {NONE} -- Shared tools change
 			-- Makes `sw' shared system window.
 		do
 			System_window_cell.put (sw)
+		end
+		
+	set_argument_dialog (a_argument_dialog: EB_ARGUMENT_DIALOG) is
+			-- Makes 'a_argument_dialog' shared argument dialog.
+		do
+			Argument_dialog_cell.put (a_argument_dialog)
 		end
 
 feature {NONE} -- Implementation
@@ -126,6 +144,12 @@ feature {NONE} -- Implementation
 
 	System_window_cell: CELL [EB_SYSTEM_WINDOW] is
 			-- Cell for system tool
+		once
+			create Result.put (Void)
+		end
+		
+	Argument_dialog_cell: CELL [EB_ARGUMENT_DIALOG] is
+			-- Cell for argument dialog
 		once
 			create Result.put (Void)
 		end

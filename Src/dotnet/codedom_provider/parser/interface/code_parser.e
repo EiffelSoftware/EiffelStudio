@@ -20,38 +20,39 @@ feature -- Interface
 	parse (code_stream: TEXT_READER): SYSTEM_DLL_CODE_COMPILE_UNIT is
 			-- implementation of parse feature.
 		local
-			l_eiffel_parser: EIFFEL_PARSER
-			l_class_to_parse: STRING
-			l_class_as: CLASS_AS
-			l_visitor: CODE_CODEDOM_VISITOR
-			l_support: CODE_SUPPORT
-			l_retried: BOOLEAN
-			l_code_stream: SYSTEM_STRING
+--			l_eiffel_parser: EIFFEL_PARSER
+--			l_class_to_parse: STRING
+--			l_class_as: CLASS_AS
+--			l_visitor: CODE_CODEDOM_VISITOR
+--			l_support: CODE_SUPPORT
+--			l_retried: BOOLEAN
+--			l_code_stream: SYSTEM_STRING
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
-			if not l_retried then
-				initialize_referenced_assemblies
-				create l_eiffel_parser.make
-				
-					-- FIXME IEK We do not deal with dos files correctly yet so we convert to unix.
-				l_code_stream := code_stream.read_to_end.replace_string_string ("%R%N", "%N")
-				create l_class_to_parse.make_from_cil (l_code_stream)
-				l_eiffel_parser.parse_from_string (l_class_to_parse)
-				l_class_as := l_eiffel_parser.root_node
-				initialize_attributes (l_class_as)
-				create l_visitor.make
-				l_class_as.process (l_visitor)
-	
-				create l_support
-				Result ?= l_support.last_element_created;
-				last_compile_unit_generated := Result
-			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
+			(create {EXCEPTIONS}).raise ("Not supported")
+--			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
+--			if not l_retried then
+--				initialize_referenced_assemblies
+--				create l_eiffel_parser.make
+--				
+--					-- FIXME IEK We do not deal with dos files correctly yet so we convert to unix.
+--				l_code_stream := code_stream.read_to_end.replace_string_string ("%R%N", "%N")
+--				create l_class_to_parse.make_from_cil (l_code_stream)
+--				l_eiffel_parser.parse_from_string (l_class_to_parse)
+--				l_class_as := l_eiffel_parser.root_node
+--				initialize_attributes (l_class_as)
+--				create l_visitor.make
+--				l_class_as.process (l_visitor)
+--	
+--				create l_support
+--				Result ?= l_support.last_element_created;
+--				last_compile_unit_generated := Result
+--			end
+--			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
 		rescue
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
-			l_retried := True
-			Result := last_compile_unit_generated
-			retry
+--			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+--			l_retried := True
+--			Result := last_compile_unit_generated
+--			retry
 		end
 		
 	last_compile_unit_generated: SYSTEM_DLL_CODE_COMPILE_UNIT

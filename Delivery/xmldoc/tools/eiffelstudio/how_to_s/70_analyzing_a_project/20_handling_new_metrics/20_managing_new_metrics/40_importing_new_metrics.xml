@@ -1,0 +1,57 @@
+<document output="studio" title="Example procedure topic">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>Importing new metrics
+		</heading>
+		<paragraph>To import a set of metrics from a file, you must have already clicked on 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
+			</image> in the "Metric" tab of the context tool.
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/manage.png</url>
+			</image>
+		</paragraph>
+		<list ordered="true">
+			<item>Click on the "Import..." button.</item>
+			<item>A dialog allows you to select a file containing a set of metrics.</item>
+			<item>After you have opened a file containing metrics, the following interface will pop up to help you making your selection:
+				<line_break/>
+				<line_break/>
+				<image>
+					<url>/images/eiffelstudio/metrics_png/import.png</url>
+				</image>
+				<line_break/>
+				<line_break/>            - On selecting a metric, its definition formula appears in the field            "Formula of the selected metric", its unit appears in the            "Unit of the selected metric" field..
+				<line_break/>            - To import metrics from the selected file to the current system,            you can either click on "Add-&gt;", or pick and drop the            selected metric from the "New metrics" list to the            "Current metrics" one
+				<line_break/>            - To remove a metric you have mistakenly imported, you can either            click on "&lt;-Remove", or pick and drop the selected            metric from the "Current metrics" list to the "New            metrics" one.
+				<line_break/>            - You can also reorder metrics using the pick and drop facility            inside each list.         
+			</item>
+			<item>Click on "OK" to validate importation.         </item>
+			<item>If you have introduced some changes, you have to save again on the            
+				<link>
+					<anchor_name>interface</anchor_name>
+					<label>main interface</label>
+				</link>.          
+			</item>
+			<item>Click on "Exit" to hide the interface.</item>
+		</list>
+		<seealso>
+			<bold>See Also:</bold>
+			<line_break/>        Pick and drop, 
+			<link>
+				<url>10_reordering_new_metrics.xml</url>
+				<label>reordering        new metrics</label>
+			</link>, 
+			<link>
+				<url>20_deleting_new_metrics.xml</url>
+				<label>deleting new        metrics</label>
+			</link>, 
+			<link>
+				<url>30_editing_new_metrics.xml</url>
+				<label>editing new metrics</label>
+			</link>.
+		</seealso>
+	</paragraph></document>

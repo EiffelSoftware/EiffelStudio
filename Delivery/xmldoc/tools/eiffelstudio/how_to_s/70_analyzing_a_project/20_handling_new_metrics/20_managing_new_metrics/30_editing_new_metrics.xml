@@ -1,0 +1,55 @@
+<document output="studio" title="Example procedure topic">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>Editing new metrics
+		</heading>
+		<paragraph>To edit a metric, you must have already clicked on 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
+			</image> in the "Metric" tab of the context tool.
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/manage.png</url>
+			</image>
+		</paragraph>
+		<list ordered="true">
+			<item>Select a metric</item>
+			<item>Click on the "Edit" button or double click on the metric.
+				<line_break/>The interface previously used to define new metrics will pop up, filled regarding the selected metric's definition. For e.g. editing the selected metric above leads to:
+				<line_break/>
+				<line_break/>
+				<image>
+					<url>/images/eiffelstudio/metrics_png/edit.png</url>
+				</image>
+				<line_break/>
+			</item>
+			<item>If you make some changes, "Save" will be sensitive so that you can register your modifications.</item>
+			<item>You can also define other new metrics if wished</item>
+			<item>Click on "OK" to save your changes if any and exit. Click on "Cancel" to exit editing.</item>
+			<item>If you have introduced some changes, you have to save again on the 
+				<link>
+					<anchor_name>interface</anchor_name>
+					<label>main interface</label>
+				</link>.
+			</item>
+			<item>Click on "Exit" to hide the interface.</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>10_reordering_new_metrics.xml</url>
+				<label>reordering new metrics</label>
+			</link>, 
+			<link>
+				<url>20_deleting_new_metrics.xml</url>
+				<label>deleting        new metrics</label>
+			</link>, 
+			<link>
+				<url>40_importing_new_metrics.xml</url>
+				<label>importing new        metrics</label>
+			</link>.
+		</seealso>
+	</paragraph></document>

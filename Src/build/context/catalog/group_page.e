@@ -31,6 +31,8 @@ feature {NONE}
 			!!group_hole.make (Current);
 			!!scrolled_w.make (Widget_names.scrolledwindow, Current);
 			!!icon_box.make (Widget_names.icon_box, scrolled_w);
+			icon_box.set_row_layout;
+			icon_box.set_preferred_count (5);
 
 			!!group_name.make (Widget_names.group_name, Current);
 
@@ -48,7 +50,7 @@ feature {NONE}
 			attach_bottom (text, 1);
 
 			attach_left (group_hole, 1);
-			attach_left_widget (group_hole, group_name, 10);
+			attach_left_widget (group_hole, group_name, 40);
 			attach_left_widget (group_name, text, 10);
 			attach_right (text, 1);
 		end;

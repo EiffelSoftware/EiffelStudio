@@ -1737,7 +1737,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 			struct gt_info *info;
 
 			o_ptr = (EIF_REFERENCE) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
-			count = *(long *) o_ptr;
+			count = *(EIF_INTEGER *) o_ptr;
 			vis_name = System(o_type).cn_generator;
 
 
@@ -1967,7 +1967,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 			struct gt_info *info;
 
 			o_ptr = (EIF_REFERENCE) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
-			count = *(long *) o_ptr;
+			count = *(EIF_INTEGER *) o_ptr;
 			vis_name = System(o_type).cn_generator;
 
 
@@ -2138,7 +2138,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 #if DEBUG & 1
 					for (ref = object; count > 0; count--,
 							ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1)) {
-						printf (" %lx", *(EIF_REFERENCE *)(ref));
+						printf (" %lx", ref);
 						if (!(count % 40))
 							printf ("\n");
 					}

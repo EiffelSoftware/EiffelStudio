@@ -80,6 +80,9 @@ feature -- MSIL options
 
 	compatibility_combo: EV_COMBO_BOX
 			-- Compatibility status of current assembly.
+			
+	clr_runtime_version_combo: EV_COMBO_BOX
+			-- Enable user to target a specific version of the run-time.
 
 feature -- Parent access
 
@@ -176,7 +179,13 @@ feature -- Store/Retrieve
 						defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_culture, 
 							culture_combo.selected_item.text.substring 
 							(1, culture_combo.selected_item.text.index_of (',', 1) - 1), False))
-				end			
+				end
+
+				if not clr_runtime_version_combo.is_empty then
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_clr_version,
+						clr_runtime_version_combo.text, False))
+				end
+		
 				defaults.extend (new_special_option_sd (feature 
 					{FREE_OPTION_SD}.Msil_assembly_compatibility, compatibility_combo.text, False))
 			end
@@ -275,6 +284,8 @@ feature {NONE} -- Filling
 					set_selected (cluster_name_check, val.is_yes)
 				when feature {FREE_OPTION_SD}.Use_all_cluster_name_as_namespace then
 					set_selected (full_cluster_name_check, val.is_yes)
+				when feature {FREE_OPTION_SD}.Msil_clr_version then
+					select_runtime_version (val.value)
 				else
 					is_item_removable := False
 				end
@@ -405,6 +416,26 @@ feature {NONE} -- Initialization
 			vbox2.extend (item_box)
 			vbox2.disable_item_expand (item_box)
 			load_culture
+			
+			
+			create item_box
+			create label.make_with_text (".NET runtime version: ")
+			label.align_text_left
+			item_box.extend (label)
+			item_box.disable_item_expand (label)
+			create clr_runtime_version_combo
+			item_box.extend (clr_runtime_version_combo)
+			item_box.disable_item_expand (clr_runtime_version_combo)
+			item_box.set_padding (Layout_constants.Tiny_padding_size)
+			load_runtime_version
+			
+				-- As soon as we do a successful compilation we cannot
+				-- change some options.
+			widgets_set_before_has_compilation_started.extend (clr_runtime_version_combo)
+		
+			vbox2.extend (item_box)
+			vbox2.disable_item_expand (item_box)
+			
 			hbox.extend (vbox2)
 			
 			create vbox2
@@ -455,6 +486,10 @@ feature {NONE} -- Initialization
 			vbox2.extend (item_box)
 			hbox.extend (vbox2)
 			vbox2.disable_item_expand (item_box)
+
+			vbox.extend (hbox)
+			vbox.disable_item_expand (hbox)
+
 	
 			create vbox2
 			create h_item_box
@@ -478,9 +513,6 @@ feature {NONE} -- Initialization
 			
 			vbox2.extend (h_item_box)
 			vbox2.disable_item_expand (h_item_box)
-		
-			vbox.extend (hbox)
-			vbox.disable_item_expand (hbox)
 			vbox.extend (vbox2)
 			vbox.disable_item_expand (vbox2)
 
@@ -556,6 +588,30 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
+	load_runtime_version is
+			-- Load all installed version of CLR runtime on current computer.
+		require
+			clr_runtime_version_combo_not_void: clr_runtime_version_combo /= Void
+		local
+			l_versions: LINEAR [STRING]
+			l_il_environment: IL_ENVIRONMENT
+		do
+			create l_il_environment
+			l_versions := l_il_environment.installed_runtimes
+			from
+				l_versions.start
+			until
+				l_versions.after
+			loop
+				clr_runtime_version_combo.extend
+					(create {EV_LIST_ITEM}.make_with_text (l_versions.item))
+				l_versions.forth
+			end
+			if clr_runtime_version_combo.is_empty then
+				clr_runtime_version_combo.disable_sensitive
+			end
+		end
+		
 	load_culture is
 			-- Fill `culture_combo' with list of available cultures		
 		require
@@ -581,31 +637,65 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	select_culture (a_culture: STRING) is
-			-- Select culture in 'culture_combo' associated with 'a_culture'
-			require
-				culture_not_void: a_culture /= Void
-			local
-				match_found: BOOLEAN
-				curr_culture: STRING
-			do
-				from 
-					culture_combo.start
+	select_runtime_version (a_version: STRING) is
+			-- Select version in 'clr_runtime_version_combo' associated with 'a_version'
+		require
+			a_version_not_void: a_version /= Void
+			clr_runtime_version_combo_not_void: clr_runtime_version_combo /= Void			
+		local
+			match_found: BOOLEAN
+			l_version: STRING
+			l_sensitive: BOOLEAN
+		do
+			if not clr_runtime_version_combo.is_empty then
+				l_sensitive := clr_runtime_version_combo.is_sensitive
+				clr_runtime_version_combo.enable_sensitive
+				from
+					clr_runtime_version_combo.start
 				until
-					culture_combo.after or match_found
+					clr_runtime_version_combo.after or match_found
 				loop
-					curr_culture := culture_combo.item.text
-					curr_culture := curr_culture.substring (1, curr_culture.index_of (',', 1) - 1)
-					if curr_culture.is_equal (a_culture) then
-						culture_combo.item.enable_select
+					l_version := clr_runtime_version_combo.item.text
+					if l_version.is_equal (a_version) then
+						clr_runtime_version_combo.item.enable_select
 						match_found := True
 					end
-					culture_combo.forth
+					clr_runtime_version_combo.forth
 				end
 				if not match_found then
-					culture_combo.i_th (1).enable_select
+					clr_runtime_version_combo.i_th (1).enable_select
 				end
-			end	
+				if not l_sensitive then
+					clr_runtime_version_combo.disable_sensitive
+				end
+			end
+		end
+	
+	select_culture (a_culture: STRING) is
+			-- Select culture in 'culture_combo' associated with 'a_culture'
+		require
+			culture_not_void: a_culture /= Void
+		local
+			match_found: BOOLEAN
+			curr_culture: STRING
+		do
+			from 
+				culture_combo.start
+			until
+				culture_combo.after or match_found
+			loop
+				curr_culture := culture_combo.item.text
+				curr_culture := curr_culture.substring (1, curr_culture.index_of (',', 1) - 1)
+				if curr_culture.is_equal (a_culture) then
+					culture_combo.item.enable_select
+					match_found := True
+				end
+				culture_combo.forth
+			end
+			if not match_found then
+				culture_combo.i_th (1).enable_select
+			end
+		end	
 			
 	select_assembly_compatibility (a_comp_type: STRING) is
 			-- Select a compatiblity type associated with 'a_comp_type'

@@ -218,6 +218,13 @@ feature -- Implementation
 	implementation: EV_FONT_I
 			-- Implementation of font
 
+	set_implementation (value: EV_FONT_IMP) is
+			-- Make `value' the new implementation.
+			-- Needed by windows.
+		do
+			implementation := value
+		end
+
 end -- class EV_FONT
 
 --|----------------------------------------------------------------

@@ -65,7 +65,7 @@ rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
     EIF_GET_CONTEXT
-    eif_ignore_invisible = (unsigned char) 1;
+    eif_ignore_invisible = (unsigned char) 0;
     EIF_END_GET_CONTEXT
 }
 
@@ -73,7 +73,7 @@ rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
     EIF_GET_CONTEXT
-    eif_ignore_invisible = (unsigned char) 0;
+    eif_ignore_invisible = (unsigned char) 1;
     EIF_END_GET_CONTEXT
 }
 
@@ -91,7 +91,7 @@ rt_public int eifreturntype (char *routine, EIF_TYPE_ID cid) {
     int i;
     uint32 field_type;              /* for scanning type */
     if (cid == EIF_NO_TYPE)
-        eif_panic ("Unknown dynamic typei\n");  /* Check if dynamic exists */
+        eif_panic ("Unknown dynamic type\n");  /* Check if dynamic exists */
 
 
     sk = &System(Deif_bid(cid_to_dtype(cid)));    /* Fetch skeleton entry */

@@ -6,7 +6,6 @@ include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\nmake'
 link32='$compiler_path\bin\link'
-del='del'
 #
 obj='obj'
 lib='lib'
@@ -70,4 +69,5 @@ input_cmd='/Fd$(INDIR)\\'
 cc='cl'
 extra_object_files=''
 compiler_path='d:\apps\DevStudio\VC'
+all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #

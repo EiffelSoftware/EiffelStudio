@@ -1,6 +1,6 @@
 indexing
-	description: "English settings";
-	date: "$Date$";
+	description: "English settings"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class 
@@ -24,7 +24,7 @@ feature
 				"FRI",
 				"SAT"
 				
-			>>;
+			>>
 			Result.compare_objects
 		end
 
@@ -43,7 +43,7 @@ feature
 				"OCT",
 				"NOV",
 				"DEC"
-			>>;
+			>>
 			Result.compare_objects
 		end
 
@@ -58,7 +58,7 @@ feature
 				"FRIDAY",
 				"SATURDAY"
 				
-			>>;
+			>>
 			Result.compare_objects
 		end
 
@@ -77,7 +77,7 @@ feature
 				"OCTOBER",
 				"NOVEMBER",
 				"DECEMBER"
-			>>;
+			>>
 			Result.compare_objects
 		end
 

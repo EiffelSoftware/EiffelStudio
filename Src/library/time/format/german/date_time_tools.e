@@ -1,6 +1,6 @@
 indexing
-	description: "German settings";
-	date: "$Date$";
+	description: "German settings"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class 
@@ -24,7 +24,7 @@ feature
 				"FRE",
 				"SAM"
 				
-			>>;
+			>>
 			Result.compare_objects
 		end
 
@@ -43,7 +43,7 @@ feature
 				"OCT",
 				"NOV",
 				"DEZ"
-			>>;
+			>>
 			Result.compare_objects
 		end
 
@@ -58,7 +58,7 @@ feature
 				"FREITAG",
 				"SAMSTAG"
 				
-			>>;
+			>>
 			Result.compare_objects
 		end
 
@@ -77,7 +77,7 @@ feature
 				"OCTOBER",
 				"NOVEMBER",
 				"DEZEMBER"
-			>>;
+			>>
 			Result.compare_objects
 		end
 

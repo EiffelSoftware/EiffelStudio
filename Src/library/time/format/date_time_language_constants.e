@@ -1,6 +1,6 @@
 indexing
-	description: "Language settings";
-	date: "$Date$";
+	description: "Language settings"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class

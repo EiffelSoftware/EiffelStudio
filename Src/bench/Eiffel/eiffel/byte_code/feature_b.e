@@ -258,10 +258,31 @@ feature -- IL code generation
 					else
 					end
 				end
+
+				if class_c.is_native_array then
+					native_array_class_type ?= cl_type.associated_class_type
+					check
+						native_array_class_type_not_void: native_array_class_type /= Void
+					end
+				end
 				
 				if parameters /= Void then
 						-- Generate parameters if any.
-					parameters.generate_il
+					if
+						native_array_class_type /= Void and then
+						feature_name_id = feature {PREDEFINED_NAMES}.put_name_id
+					then
+						check
+							parameters_count_is_two: parameters.count = 2
+						end
+						parameters.i_th (1).generate_il
+						if parameters.i_th (2).type.is_true_expanded then
+							native_array_class_type.generate_il_put_preparation (cl_type)
+						end
+						parameters.i_th (2).generate_il
+					else
+						parameters.generate_il
+					end
 					l_count := parameters.count
 				end
 
@@ -269,11 +290,7 @@ feature -- IL code generation
 
 				need_generation := True
 
-				if class_c.is_native_array then
-					native_array_class_type ?= cl_type.associated_class_type
-					check
-						native_array_class_type_not_void: native_array_class_type /= Void
-					end
+				if native_array_class_type /= Void then
 					need_generation := False
 					native_array_class_type.generate_il (feature_name_id, cl_type)
 					if System.il_verifiable then

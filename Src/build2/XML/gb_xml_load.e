@@ -36,41 +36,27 @@ feature -- Basic operation
 
 	load is
 			-- Load the system.
-		local
-			display_window_shown: BOOLEAN
-			builder_window_shown: BOOLEAN
 		do
 			initialize_load_output
 				-- Do initialization necessary
 			parser := create_tree_parser
-		
-				-- Hide `display_window' and `builder_window' if
-				-- shown. We store whether they are shown or not.
-			display_window_shown := display_window.is_show_requested
-			if display_window_shown then
-				display_window.hide	
-			end
-			builder_window_shown := builder_window.is_show_requested
-			if builder_window_shown then
-				builder_window.hide
-			end
-			
+
+			--|FIXME this is a test to see whether either of these windows
+			--| is shown while executing this code. I think that this is now impossible
+			--| due to other changes, so have just removed the code that stored
+			--| the state, and replaced it with these four lines. When sure that
+			--| this check never fails, we can remove it.
+		check
+			display_window_hidden: not display_window.is_show_requested
+			builder_window_hidden: not builder_window.is_show_requested
+		end
+
 				-- Load and parse file `filename'.
 			load_and_parse_xml_file (filename)
 			
 				-- Build deferred parts.
 			deferred_builder.build
-			
-			
-				-- Show `display_window' and `builder_window' if
-				-- they were shown before executing the load.
-			if builder_window_shown then
-				builder_window.show	
-			end
-			if display_window_shown then
-				display_window.show
-			end
-			
+
 				-- As we have just loaded the project, the
 				-- system should know that it has not been modifified
 				-- by the user.

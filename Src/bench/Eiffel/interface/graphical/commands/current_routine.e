@@ -57,8 +57,7 @@ feature {NONE} -- Implementation
 					-- Should never happen.
 				warner (popup_parent).gotcha_call (w_Unknown_feature)
 			else
-				e_class := status.origin_class;
-				!! st.make (status.e_feature, e_class);
+				!! st.make (status.e_feature);
 				tool.process_feature (st);
 				tool.highlight_breakable (status.break_index)
 			end

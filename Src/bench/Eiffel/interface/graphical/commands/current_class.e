@@ -57,8 +57,7 @@ feature {NONE} -- Implementation
 				warner (popup_parent).gotcha_call (w_Unknown_class)
 			else
 					-- Show the current routine in that class.
-				e_class := status.origin_class;
-				!! st.make (status.e_feature, e_class);
+				!! st.make (status.e_feature);
 				tool.process_feature (st)
 			end
 		end;

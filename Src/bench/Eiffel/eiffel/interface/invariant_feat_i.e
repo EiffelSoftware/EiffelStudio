@@ -6,7 +6,8 @@ inherit
 
 	DYN_PROC_I
 		redefine
-			melt, execution_unit
+			melt, execution_unit,
+			can_be_inlined
 		end;
 	SHARED_BODY_ID
 
@@ -50,5 +51,10 @@ feature
 		do
 			!!Result.make (cl_type, Current);
 		end;
+
+feature -- Inlining
+
+	can_be_inlined: BOOLEAN is False
+			-- An invariant is not inlined
 
 end

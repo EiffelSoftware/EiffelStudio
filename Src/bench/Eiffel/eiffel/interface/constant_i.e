@@ -12,13 +12,13 @@ inherit
 			equiv as basic_equiv
 		redefine
 			melt, generate, is_once, in_pass3, redefinable, is_constant,
-			set_type, type
+			set_type, type, can_be_inlined
 		end;
 	FEATURE_I
 		redefine
 			transfer_to, check_types, access, equiv,
 			melt, generate, is_once, in_pass3, redefinable, is_constant,
-			set_type, type
+			set_type, type, can_be_inlined
 		select
 			transfer_to, check_types, access, equiv
 		end;
@@ -296,5 +296,9 @@ feature -- Byte code generation
 			other.set_type (type);
 			other.set_value (value);
 		end;
+
+feature -- Inlining
+
+	can_be_inlined: BOOLEAN is False
 
 end

@@ -9,15 +9,40 @@ class
 
 feature -- Access
 
-	Pbm_setrange: INTEGER is 1025
+	Pbm_setrange: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"PBM_SETRANGE"
+		end
 
-	Pbm_setpos: INTEGER is 1026
+	Pbm_setpos: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"PBM_SETPOS"
+		end
 
-	Pbm_deltapos: INTEGER is 1027
+	Pbm_deltapos: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"PBM_DELTAPOS"
+		end
 
-	Pbm_setstep: INTEGER is 1028
+	Pbm_setstep: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"PBM_SETSTEP"
+		end
 
-	Pbm_stepit: INTEGER is 1029
+	Pbm_stepit: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"PBM_STEPIT"
+		end
 
 end -- class WEL_PBM_CONSTANTS
 

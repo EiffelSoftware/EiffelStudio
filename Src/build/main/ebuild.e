@@ -4,26 +4,35 @@ indexing
 	Date: "$Date$"
 	Revision: "$Revision$"
 
-class EBUILD 
+class EBUILD
 
 inherit
+	EV_APPLICATION
+		redefine
+			make
+		end
+
+	WINDOWS
 
 	CONSTANTS
+
 	ARGUMENTS
-	WINDOWS
+
 	SHARED_LICENSE
+
 	UNIX_SIGNALS
 		rename
 			meaning as sig_meaning,
 			ignore as sig_ignore,
 			catch as sig_catch
 		end
+
 	ERROR_POPUPER
 
 creation
 	make
 
-feature 
+feature {NONE} -- Initialization
 
 	make is
 		local
@@ -32,37 +41,26 @@ feature
 			retried: BOOLEAN
 		do
 			if not retried then
-				init_windowing
-				!! init
+				create init
 				init.perform_initial_check
 				if init.error then
 					error := True
-				elseif init_licence then
+				elseif init_license then
 						-- Initialize the resources
-					if Pixmaps.presentation_pixmap.is_valid then
-						presentation_window.realize
-					end
+					presentation_window.show
 					if resources = Void then end
-					init_project
-					project_initialized := True
-					read_command_line
-					iterate
+					if argument_count > 0 then
+						project_directory := argument (1)
+					end
+					{EV_APPLICATION} Precursor
 					discard_license
 				end
 			else
 				error := True
 			end
 			if error then
-			   if project_initialized then
---					temp := original_tag_name
---					if temp = Void then
---						!! temp.make (0)
---					end
-					error_box.popup (Current, Messages.crash_error, Void)
-					error_box.error_d.set_x_y (eb_screen.width // 2 -
-						error_box.error_d.width // 2,
-						eb_screen.height // 2 - error_box.error_d.height // 2)
-					iterate
+			   if popuper_parent /= Void then
+					error_dialog.popup (Current, Messages.crash_error, Void)
 					error := False
 				else
 					io.error.putstring (Messages.crash_error)
@@ -80,31 +78,11 @@ feature
 			end
 		end
 
-	popuper_parent: COMPOSITE is	
-		do
-			if project_initialized then
-				Result := main_panel.base
-			else
-				Result := presentation_window
-			end
-		end
-
-feature {NONE} -- Initialize toolkit
-
-	project_initialized: BOOLEAN
-
-	init_windowing is
-			-- Initialize toolkit
-		do
-			if (init_toolkit = Void) then end
-			if (toolkit = Void) then end
-		end
-
-feature {NONE}
+feature {NONE} -- Implementation
 
 	Application_name: STRING is "eiffelbuild"
 
-	init_licence: BOOLEAN is
+	init_license: BOOLEAN is
 		do
 			license.get_license
 			license.set_version (3)
@@ -112,25 +90,16 @@ feature {NONE}
 			Result := license.licensed
 		end
 
-	read_command_line is
-		local
-			cmd: OPEN_PROJECT
-		do
-			if argument_count > 1 then
-				!! cmd
-				cmd.execute (argument (1))
-			end
-		end
-
 	rescue_project is
 		local
-			storer: STORER
+--			storer: STORER
 		do
-			if main_panel.project_initialized then
+			if main_window.project_initialized then
 				history_window.wipe_out
-				!! storer.make
-				storer.store (Environment.restore_directory)
+--				create storer.make
+--				storer.store (Environment.restore_directory)
 			end
 		end
 
-end
+end -- class EBUILD
+

@@ -48,6 +48,14 @@ feature {NONE} -- Initialization
 
 feature -- execution mode
 
+	is_classic: BOOLEAN is
+			-- Is this application a classic system ?
+		require
+			system_defined: Eiffel_system.workbench.system_defined			
+		do
+			Result := not is_dotnet
+		end
+
 	is_dotnet: BOOLEAN is
 			-- Is this application a dotnet system ?
 		require

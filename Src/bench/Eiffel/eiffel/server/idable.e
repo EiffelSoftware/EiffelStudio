@@ -1,17 +1,21 @@
--- Abstract class for units manipulated by an instance of SERVER
--- or CACHE
+-- Object identification used in server storage
 
-deferred class IDABLE 
-	
-feature 
+deferred class IDABLE
 
-	id: INTEGER is
+inherit
+
+	COMPILER_EXPORTER
+
+feature
+
+	id: COMPILER_ID is
 			-- Object id
 		deferred
-		end;
+		end
 
-	set_id (i: INTEGER) is
+	set_id (i: like id) is
+			-- Set `id' to `i'
 		deferred
-		end;
+		end
 
-end
+end -- class IDABLE

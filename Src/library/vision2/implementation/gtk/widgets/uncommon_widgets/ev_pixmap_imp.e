@@ -23,11 +23,19 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		rename
-			make as old_make,
-			set_parent as old_set_parent
+			make as old_make
+		export {NONE}
+			set_parent,
+			has_parent,
+			parent_set
 		redefine
 			width,
 			height
+		end
+
+	MEMORY
+		redefine
+			dispose
 		end
 	
 creation
@@ -51,10 +59,9 @@ feature {NONE} -- Initialization
 			-- Here we create the pixmap with a default xpm.
 			widget := c_gtk_pixmap_create_empty (creation_window)
 
-			-- (3) We need to add a reference because of the unreference
-			-- in feature `set_pixmap'.
-			gtk_object_ref (widget)
-                end
+			-- setting status
+			is_locked := False
+	            end
 
 	make_with_size (w, h: INTEGER) is
 			-- Create a pixmap with 'par' as parent, 
@@ -70,11 +77,13 @@ feature {NONE} -- Initialization
 feature -- Measurement
 
 	width: INTEGER is
+			-- width of the pixmap.
 		do
 			Result := c_gtk_pixmap_width (widget)
 		end
 
 	height: INTEGER is
+			-- height of the pixmap.
 		do
 			Result := c_gtk_pixmap_height (widget)
 		end
@@ -86,17 +95,34 @@ feature -- Element change
 			-- If the file does not exist or it is in a 
 			-- wrong format, an exception is raised.
 		local
-			 a: ANY
+			a: ANY
 		do
 			a := file_name.to_c
-			
+
 			if widget = Void then
-				widget := c_gtk_pixmap_create_from_xpm (creation_window, 
-									$a)
+				widget := c_gtk_pixmap_create_from_xpm (creation_window, $a)
 			else
 				c_gtk_pixmap_read_from_xpm (widget, creation_window, $a)
 			end
+
+			-- The following is done only once.
+			if (creation_window /= default_pointer) then
+				-- Add a reference to the pixmap othewise it will be
+				-- destroyed when we will destroy the `creation_window' below.
+				gtk_object_ref (widget)
+
+				-- Destroy the temporary window which
+				-- was needed at the creation of the pixmap
+				gtk_widget_destroy (creation_window)
+				creation_window := Default_pointer
+			end
 		end	
+
+feature -- Assertion
+
+	is_locked: BOOLEAN
+			-- Is the pixmap free and then can be added in a
+			-- control?
 
 feature {NONE} -- Implementation
 
@@ -108,22 +134,25 @@ feature {EV_PIXMAPABLE_IMP} -- Implementation
 			-- gtk window defined because to create the pixmap
 			-- we need a realized widget.
 
-	set_window_pointer (pointer: POINTER) is
-			-- Set attribute `creation_pointer' to `pointer'.
-		do
-			creation_window := pointer
-		end
-
 	gdk_pixmap_widget: POINTER
 			-- GDK pixmap pointer given when pixmap is created
 			-- using `make_with_size'.
 			-- This means we will use the pixmap in a drawing
 			-- area.
 
-	set_parent (par_imp: EV_PIXMAPABLE_IMP) is
-			-- Set `parent_imp' attribute to `par'
+feature {} -- Removal
+
+	dispose is
+			-- Action to be executed just before garbage collection
+			-- reclaims an object.
+			-- Default version does nothing; redefine in descendants
+			-- to perform specific dispose actions. Those actions
+			-- should only take care of freeing external resources;
+			-- they should not perform remote calls on other objects
+			-- since these may also be dead and reclaimed.
 		do
-			parent_imp := par_imp
+			-- Destroy the gtkPixmap.
+			gtk_widget_destroy (widget)
 		end
 
 feature {NONE} -- Inapplicable

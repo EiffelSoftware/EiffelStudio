@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			widget := gtk_tree_item_new_with_label ($a)
 			gtk_object_ref (widget)
 		end
@@ -119,7 +119,7 @@ feature -- Element change
 				check
 					parent_not_void: par_imp /= Void
 				end
-				parent_imp ?= par_imp
+				parent_imp := par_imp
 
 
 				parent_temp ?= parent_imp.interface
@@ -144,7 +144,8 @@ feature -- Event : command association
 
 	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be
-			-- executed when the menu item is activated
+			-- executed when the selection subtree
+			-- expanded or collapsed.
 		do
 			add_command ("expand", cmd, arg)
 			add_command ("collapse", cmd, arg)
@@ -156,7 +157,8 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the selection subtree is expanded or collapsed.
 		do
-			check False end
+			remove_commands (expand_id)
+			remove_commands (collapse_id)
 		end
 
 feature {NONE} -- Implementation

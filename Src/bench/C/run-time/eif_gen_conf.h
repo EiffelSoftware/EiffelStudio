@@ -3,6 +3,8 @@
 #ifndef _eif_gen_conf
 #define _eif_gen_conf
 
+#include "eif_cecil.h"	/* For EIF_TYPE_ID definition */
+
 #ifdef __cplusplus
 extern "C" {
 #endif

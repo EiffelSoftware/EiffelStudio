@@ -498,6 +498,12 @@ feature {NONE} -- Keywords
 			create Result.make ("redefine")
 		end
 
+	ti_Reference_keyword: KEYWORD_TEXT is
+			-- "reference" keyword
+		once
+			create Result.make ("reference")
+		end
+
 	ti_Rename_keyword: KEYWORD_TEXT is
 			-- "rename" keyword
 		once
@@ -574,6 +580,12 @@ feature {NONE} -- Keywords
 			-- "variant" keyword
 		once
 			create Result.make ("variant")
+		end
+
+	ti_void: KEYWORD_TEXT is
+			-- `Void' feature.
+		once
+			create Result.make ("Void")
 		end
 
 	ti_When_keyword: KEYWORD_TEXT is
@@ -864,14 +876,6 @@ feature {NONE} -- Feature signature items
 			-- Index in open arguments parameter list.
 		once
 			create Result.make ("Open argument")
-		end
-
-feature {NONE} -- Standard features
-
-	ti_Void_feature: BASIC_TEXT is
-			-- `Void' feature.
-		once
-			create Result.make ("Void")
 		end
 
 feature {NONE} -- Standard classes

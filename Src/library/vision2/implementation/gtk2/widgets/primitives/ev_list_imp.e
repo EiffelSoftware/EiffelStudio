@@ -11,7 +11,8 @@ inherit
 	EV_LIST_I
 		undefine
 			wipe_out,
-			selected_items
+			selected_items,
+			call_pebble_function
 		redefine
 			interface
 		end
@@ -20,8 +21,12 @@ inherit
 		redefine
 			interface,
 			visual_widget,
-			initialize
-		end	
+			initialize,
+			row_from_y_coord,
+			start_transport_filter,
+			row_height
+		end
+
 create
 	make
 
@@ -218,6 +223,72 @@ feature -- Status setting
 		do
 			a_selection := feature {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			feature {EV_GTK_EXTERNALS}.gtk_tree_selection_unselect_all (a_selection)
+		end
+
+feature -- PND
+
+	row_index_from_y_coord (a_y: INTEGER): INTEGER is
+			-- Returns the row index at relative coordinate `a_y'.
+		local
+			a_tree_path, a_tree_column: POINTER
+			a_success: BOOLEAN
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
+		do
+			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			if a_success then
+				a_int_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+				Result := mp.read_integer_32 (0) + 1	
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+			end
+		end
+
+	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+			-- Returns the row at relative coordinate `a_y'
+		local
+			a_row_index: INTEGER
+		do
+			a_row_index := row_index_from_y_coord (a_y)
+			if a_row_index > 0 then
+				Result ?= i_th (a_row_index).implementation
+			end
+		end
+
+	start_transport_filter (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Initialize a pick and drop transport.
+		local
+			a_row_index: INTEGER
+		do
+			a_row_index := row_index_from_y_coord (a_y)
+			if a_row_index > 0 then
+				pnd_row_imp ?= i_th (a_row_index).implementation
+				if not pnd_row_imp.able_to_transport (a_button) then
+					pnd_row_imp := Void
+				end
+			end
+			if pnd_row_imp /= Void or else pebble /= Void then
+				Precursor (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			else
+				call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			end
+		end
+
+	row_height: INTEGER is
+			-- Height of rows in `Current'
+			-- (export status {NONE})
+		local
+			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
+			a_gtk_c_str: EV_GTK_C_STRING
+			a_vert_sep: INTEGER
+		do
+			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			a_cell_rend_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_get_fixed_size (a_cell_rend, null, $Result)
+			a_gtk_c_str := "vertical-separator"
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			Result := Result + a_vert_sep
 		end
 
 feature {EV_ANY_I} -- Implementation

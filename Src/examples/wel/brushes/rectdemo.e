@@ -40,6 +40,7 @@ feature -- Basic operations
 			dc.select_brush (brush)
 			dc.rectangle (r_left, r_top, r_right, r_bottom)
 			dc.release
+			brush.delete
 		end
 
 feature {NONE} -- Implementation

@@ -46,7 +46,7 @@ feature {NONE} -- Execution
 --			att: WINDOW_ATTRIBUTES
 			p_tool: EB_PREFERENCE_TOOL
 
-			gtk_kernel: EB_KERNEL
+			gtk_kernel: EB_KERNEL1
 		do
 			create gtk_kernel.make
 --			!! mp.set_watch_cursor

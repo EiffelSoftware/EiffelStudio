@@ -218,6 +218,9 @@ cluster
 	new_tty (interface):		"$/new_tty"
 
 	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
+		exclude
+			"md_strong_name.e"; "md_public_key.e"
+		end
 
 	all xml_deserializer:		"$EIFFEL_SRC/Eiffel/library/xml_deserializer"
 

@@ -39,11 +39,28 @@ create
 
 feature -- Basic operations
 
-	redraw is
-			-- Clear the window and call `expose_actions'.
+	clear_and_redraw is
+			-- Clear the window and redraw it.
 		do
-			implementation.clear
-			expose_actions.call ([0, 0, width, height])
+			implementation.clear_and_redraw
+		end
+
+	redraw is
+			-- Redraw the window without clearing it.
+		do
+			implementation.redraw
+		end
+
+	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+			-- Clear and redraw the rectangle (`x1',`y1') - (`x2', `y2')
+		do
+			implementation.clear_and_redraw_rectangle (x1, y1, x2, y2)
+		end
+
+	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+			-- Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+		do
+			implementation.redraw_rectangle (x1, y1, x2, y2)
 		end
 
 feature -- Events
@@ -107,8 +124,8 @@ end -- class EV_DRAWING_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.11  2000/02/14 11:40:52  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.12  2000/02/16 18:08:05  pichery
+--| added new features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
 --|
 --| Revision 1.10.6.28  2000/01/28 20:00:19  oconnor
 --| released

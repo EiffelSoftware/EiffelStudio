@@ -32,6 +32,7 @@
 #include "bits.h"
 #include "eiffel.h"
 
+extern void set_breakpoint_number()		/* Sets the breakpoint interrupt number */
 rt_public int rqstcnt = 0;				/* Request count */
 rt_private char gc_stopped;
 
@@ -117,6 +118,7 @@ Request *rqst;				/* The received request to be processed */
 		break;
 	case RESUME:					/* Resume execution */
 		if (!gc_stopped) gc_run();
+		set_breakpoint_number (arg_2);
 		dstatus(arg_1);				/* Debugger status (DX_STEP, DX_NEXT,..) */
 #ifdef USE_ADD_LOG
 		add_log(9, "RESUME");

@@ -100,7 +100,7 @@ feature -- Standard output
 			end
 		end
 		
-feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP} -- WEL Implementation
+feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL Implementation
 
 	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): INTEGER is
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
@@ -126,7 +126,9 @@ feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP} -- WEL Implementation
 					menu_text := clone (ev_children.item.text)
 					if menu_text /= Void then
 						menu_text.to_lower
-						if menu_text.substring_index (shortcut_text, 1) /= 0 then
+						if menu_text.count > shortcut_text.count and then
+						   menu_text.substring_index (shortcut_text, 1) /= 0
+						then
 							if Result = 0 then
 									-- item with the right letter found,
 									-- execute it.

@@ -14,9 +14,16 @@ inherit
 			copy, is_equal
 		end
 
-	EXTEND_TABLE [FEATURE_I, STRING]
-		export {CLASS_C, COMPILED_CLASS_INFO}
-			iteration_position
+	EXTEND_TABLE [FEATURE_I, INTEGER]
+		rename
+			item as item_id,
+			has as has_id,
+			put as put_id,
+			key_for_iteration as key_for_iteration_id,
+			replace as replace_id,
+			search as search_id
+		export
+			{CLASS_C, COMPILED_CLASS_INFO} iteration_position
 		end
 
 	SHARED_WORKBENCH
@@ -59,10 +66,17 @@ inherit
 			copy, is_equal
 		end	
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 creation
 	make
 	
-feature 
+feature -- Access
 
 	origin_table: SELECT_TABLE;
 			-- Table of the features sorted by origin
@@ -74,12 +88,86 @@ feature
 		do
 			Result := System.class_of_id (feat_tbl_id);
 		end;
-			
+
+feature -- Access: compatibility
+
+	item (s: STRING): FEATURE_I is
+			-- Item of name `s'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		local
+			id: INTEGER
+		do
+			id := Names_heap.id_of (s)
+			if id > 0 then
+				Result := item_id (id)
+			end
+		end
+
+	has (s: STRING): BOOLEAN is
+			-- Has item of name `s'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		do
+			Result := has_id (Names_heap.id_of (s))
+		end
+
+	put (f: FEATURE_I; key: STRING) is
+			-- Insert `f' with `key' if there is no other item
+			-- associated with the same key.
+			-- Make `inserted' true if and only if an insertion has
+			-- been made (i.e. `key' was not present).
+		require
+			key_not_void: key /= Void
+			key_not_empty: not key.is_empty
+			valid_key (Names_heap.id_of (key))
+		do
+			put_id (f, Names_heap.id_of (key))
+		end
+
+	key_for_iteration: STRING is
+			-- Name of associated `key_for_iteration_id'.
+		do
+			Result := Names_heap.item (key_for_iteration_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
+
+	replace (new: FEATURE_I; key: STRING) is
+			-- Replace item at `key', if present,
+			-- with `new'; do not change associated key.
+			-- Make `replaced' true if and only if a replacement has
+			-- been made (i.e. `key' was present).
+			-- (from HASH_TABLE)
+		require
+			valid_key (Names_heap.id_of (key))
+		do
+			replace_id (new, Names_heap.id_of (key))
+		end
+
+	search (key: STRING) is
+			-- Search for item of key `key'
+			-- If found, set `found' to True, and set
+			-- `found_item' to item associated with `key'.
+			-- (from HASH_TABLE)
+		require
+			valid_key (Names_heap.id_of (key))
+		do
+			search_id (Names_heap.id_of (key))
+		end
+	
+feature -- Settings
+
 	set_origin_table (t: like origin_table) is
 			-- Assign `t' to `origin_table'.
 		do
 			origin_table := t;
 		end;
+
+feature -- Comparison
 
 	equiv (other: like Current; pass2_ctrl: PASS2_CONTROL): BOOLEAN is
 			-- Incrementality test on feature table in second pass.
@@ -404,7 +492,7 @@ end;
 					-- since it will be done in by pass2 in `feature_unit' if need be
 
 					removed_feature_ids.extend (f.feature_id);
-					remove (key_for_iteration);
+					remove (key_for_iteration_id);
 				end;
 				forth
 			end

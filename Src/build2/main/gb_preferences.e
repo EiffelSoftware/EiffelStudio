@@ -76,6 +76,8 @@ feature -- Access
 	
 	show_changing_client_type_warning: STRING is "show_changing_client_type_warning"
 	
+	type_selector_classic_mode: string is "type_selector_classic_mode"
+	
 	tools_on_top:STRING is "tools_on_top"
 			
 feature -- Basic operations

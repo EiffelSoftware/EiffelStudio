@@ -365,7 +365,7 @@ feature {FORMAT_CONTEXT} -- Implementation
 									else
 										t_type := t_type.instantiation_in 
 												(target_enclosing_class.actual_type,
-												target_enclosing_class.class_id).actual_type;
+												source_enclosing_class.class_id).actual_type;
 									end
 								end;
 							end;

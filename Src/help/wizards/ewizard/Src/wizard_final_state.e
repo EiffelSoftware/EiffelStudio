@@ -12,6 +12,11 @@ inherit
 		redefine
 			proceed_with_current_info
 		end
+		
+	WIZARD_WIZARD_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -36,23 +41,15 @@ feature -- Basic Operations
 feature {NONE} -- Implementation
 
 	display_state_text is
+			-- Display message text relative to current state.
 		local
-			word: STRING
+			message_text: STRING
 		do
-			title.set_text ("Completing the New Wizard %NApplication Wizard")
-			if wizard_information.compile_project then
-				word :=" and compile "
-			else
-				word := " "
-			end
-			message.set_text (
-				"You have specified the following settings:%N%
-				%%N%
-				%Project name: %T" + wizard_information.project_name + "%N%
-				%Location:     %T" + wizard_information.project_location + "%N%
-				%%N%
-				%%N%
-				%Click Finish to generate" + word + "this project")
+			message_text :=	Interface_names.m_Final_state(wizard_information.compile_project,
+					wizard_information.project_name, wizard_information.project_location)
+
+			title.set_text (Interface_names.t_Final_state)
+			message.set_text (message_text)
 		end
 
 	final_message: STRING is

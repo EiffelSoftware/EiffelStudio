@@ -64,6 +64,12 @@ feature
 
 feature -- Context Cursors
 
+	arrow_cursor: SCREEN_CURSOR is
+			-- The default arrow cursor shape
+		once
+			Result := create_cursor (Left_ptr)
+		end;
+	
 	move_cursor: SCREEN_CURSOR is
 			-- Cross cursor shape (move mode)
 		once

@@ -8,7 +8,7 @@ indexing
 class COMMAND_HOLDER
 
 inherit
-	HOLDER
+	EB_HOLDER
 		redefine
 			set_selected
 		end

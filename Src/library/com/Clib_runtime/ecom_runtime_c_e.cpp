@@ -129,7 +129,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_date (DATE a_date)
 
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_hresult (HRESULT a_hresult, EIF_OBJECT an_object)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_hresult (HRESULT a_hresult)
 
 // Create Eiffel object ECOM_HRESULT from C HRESULT.
 {
@@ -139,15 +139,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_hresult (HRESULT a_hresult, EIF_OBJECT an
 
 	type_id = eif_type_id ("ECOM_HRESULT");
 	make = eif_procedure ("make_from_integer", type_id);
-	if ((an_object == NULL) || (eif_access (an_object) == NULL))
-		result = eif_create (type_id);
-	else
-		result = an_object;
+	result = eif_create (type_id);
+	
 	make (eif_access (result), (EIF_INTEGER) a_hresult);
-	if ((an_object == NULL) || (eif_access (an_object) == NULL))
-		return eif_wean (result);
-	else
-		return NULL;
+	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
 
@@ -155,7 +150,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_bstr (BSTR a_bstr)
 
 // Create Eiffel STRING from Basic string
 {
-	return eif_wean (bstr_to_eif_obj (a_bstr));
+	return eif_wean (bstr_to_eif_obj (a_bstr)); 
 };
 //-------------------------------------------------------------------------
 
@@ -462,14 +457,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_decimal (DECIMAL * a_decimal)
 	result = eif_create (eif_decimal_id);
 	make (eif_access (result), (EIF_POINTER)a_decimal);
 	return eif_wean (result);
-};
-//-------------------------------------------------------------------------
-
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF_OBJECT an_object)
-
-// Create ECOM_HRESULT from pointer to HRESULT.
-{
-	return ccom_ce_hresult (* (HRESULT *)a_hresult, an_object);
 };
 //-------------------------------------------------------------------------
 
@@ -1163,7 +1150,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (HRESULT *)&((ccom_c_array_element (an_array, i, HRESULT)));
-		put (eif_access (intermediate_array), ccom_ce_hresult ((HRESULT)*an_array_element, NULL), i + 1);
+		put (eif_access (intermediate_array), ccom_ce_hresult ((HRESULT)*an_array_element), i + 1);
 	}
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -2970,7 +2957,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 			sa_indeces[i] = index [dim_count - 1 - i];
 		}
 		SafeArrayGetElement (a_safearray, sa_indeces, &sa_element);
-		put (eif_access (result), ccom_ce_hresult (sa_element, NULL), eif_access (eif_index));
+		put (eif_access (result), ccom_ce_hresult (sa_element), eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 

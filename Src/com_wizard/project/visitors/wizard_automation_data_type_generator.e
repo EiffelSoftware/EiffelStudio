@@ -90,7 +90,6 @@ feature -- Basic operations
 			elseif is_error (a_type) or is_hresult (a_type) then
 				ce_function_name.append ("ccom_ce_hresult")
 				ec_function_name.append ("ccom_ec_hresult")
-				writable := True
 
 			elseif is_variant (a_type) then
 				ce_function_name.append ("ccom_ce_variant")

@@ -16,10 +16,10 @@ feature -- Status report
 			Result := (implementation = Void)
 		end
 
-	is_valid: BOOLEAN is
+	is_valid (object: EV_ANY): BOOLEAN is
 			-- Is Current object valid?
 		do
-			Result := Current /= Void and then not Current.destroyed
+			Result := object /= Void and then not object.destroyed
 		end
 
 feature -- Status setting
@@ -30,10 +30,8 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		do
---			if not destroyed then
-				implementation.destroy
-				remove_implementation
---			end
+			implementation.destroy
+			remove_implementation
 		ensure
 			destroyed: destroyed
 		end

@@ -151,7 +151,7 @@ feature -- Status report
 		require
 			font_specified: is_specified
 		do
-			Result := implementation.is_valid 
+			Result := implementation /= Void and then not implementation.destroyed
 		end
 
 	is_proportional: BOOLEAN is

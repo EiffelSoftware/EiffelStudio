@@ -5,12 +5,12 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	EV_PIXMAP_IMP
 
 inherit
-
 	EV_PIXMAP_I
+
+	EV_DRAWABLE_IMP
 
 	WEL_MEMORY_DC
 		rename
@@ -26,20 +26,17 @@ inherit
 		end
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
 
 	make (par: EV_PIXMAP_CONTAINER) is
-		local
-			compatible_window: WEL_WINDOW
 		do
-			compatible_window ?= par.implementation
+			parent_imp ?= par.implementation
 			check
-				parent_not_void: compatible_window /= Void
+				parent_not_void: parent_imp /= Void
 			end
-			!! compatible_dc.make (compatible_window)
+			!! compatible_dc.make (parent_imp.wel_window)
 			compatible_dc.get
 			make_by_dc (compatible_dc)
 			compatible_dc.release
@@ -47,18 +44,44 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	parent_imp: EV_PIXMAP_CONTAINER_IMP
+
 	compatible_dc: WEL_PAINT_DC
+
+feature -- Status report
+
+	destroyed: BOOLEAN is
+			-- Is Current object destroyed?  
+		do
+			Result := not exists
+		end
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy actual object.
+		do
+			destroy_item
+		end
 
 feature -- Measurement
 
 	width: INTEGER is
 		do
-			Result := bitmap.width
+			if bitmap /= Void then
+				Result := bitmap.width
+			else
+				Result := 0
+			end
 		end
 
 	height: INTEGER is
 		do
-			Result := bitmap.height
+			if bitmap /= Void then
+				Result := bitmap.height
+			else
+				Result := 0
+			end
 		end
 
 feature -- Element change
@@ -81,7 +104,7 @@ feature -- Element change
 			select_palette (compatible_dc.palette)
 			select_bitmap (bmp)
 			compatible_dc.release
-	--		compatible_dc.delete
+			parent_imp.pixmap_size_changed
 		end	
 
 end -- class EV_PIXMAP_IMP

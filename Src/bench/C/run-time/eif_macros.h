@@ -160,7 +160,7 @@ RT_LNK int fcount;
  *  RTRV(x,y) returns 'y' if it conforms to type 'x', void otherwise
  *  RTRM(x,y) memorizes 'x' if not void and 'y' is old with 'x' new
  */
-#define RTRC(x,y) (((int16)(x) == (int16)(y)) ? 1 : eif_gen_conf ((int16) (y), (int16) (x)))
+#define RTRC(x,y) eif_gen_conf ((int16) (y), (int16) (x))
 #define RTRA(x,y) ((y) == (EIF_REFERENCE) 0 ? 0 : RTRC((x),Dftype(y)))
 #define RTRV(x,y) (RTRA((x),(y)) ? (y) : (EIF_REFERENCE) 0)
 #define RTRM(x,y) ((x) == (EIF_REFERENCE) 0 ? 0 : RTAX(x,y))
@@ -548,7 +548,7 @@ RT_LNK int fcount;
  *  RTFCID(ct,x,y,z) fetches the creation type of a generic feature in final mode
 */
 
-#define RTCID(tp,x,y,z) ((*(tp) != -1) ? *(tp) : eif_compound_id((tp),(x),(y),(z)))
+#define RTCID(tp,x,y,z) eif_compound_id((tp),(x),(y),(z))
 #define RTFCID(ct,x,y,z) eif_final_id((ct),(x),(y),(z))
 #define RTGPTID(st,x,y) eif_gen_param_id ((st),(x),(y))
 

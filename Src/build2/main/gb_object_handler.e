@@ -345,14 +345,15 @@ feature -- Basic operation
 			root_window_void: root_window_object = Void
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
+			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 		do
 			window_object ?= build_object_from_string_and_assign_id ("EV_TITLED_WINDOW")
 			check
 				object_was_window: window_object /= Void
 			end
 			add_new_window (window_object)
-			window_object.set_name (initial_main_window_name)
-			window_selector.set_item_for_prebuilt_window (window_object)
+			window_object.set_name (initial_main_window_name);
+			create window_selector_item.make_with_object (window_object)
 			window_selector.add_alphabetically (window_object.window_selector_item)
 			window_object.window_selector_item.enable_select
 			window_object.set_as_root_window
@@ -368,6 +369,7 @@ feature -- Basic operation
 			--| FIXME, this is a function with a side effect.
 		local
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 		do
 			Result := build_object_from_string (a_type)
 			titled_window_object ?= Result
@@ -376,7 +378,7 @@ feature -- Basic operation
 			else
 				add_new_object (Result)
 			end
-			window_selector.set_item_for_prebuilt_window (Result)
+			create window_selector_item.make_with_object (Result)
 		ensure
 			result_not_void: Result /= Void
 		end

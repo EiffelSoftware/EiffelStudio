@@ -144,8 +144,7 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("build_window")
 		end
-		
-		
+	
 	Icon_minimize: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("minimize")
@@ -165,6 +164,12 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("close")
 		end
+		
+	Icon_directory: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("cluster_symbol")
+		end
+		
 		
 	pixmap_by_name (a_name: STRING): EV_PIXMAP is
 			-- `Result' is a pixmap loaded from file matching

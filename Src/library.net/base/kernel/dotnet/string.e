@@ -157,11 +157,12 @@ feature -- Initialization
 			c_string_exists: c_string /= default_pointer
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
+		local
+			new_ptr: POINTER
 		do
-			check
-				False
-				-- Not supported.
-			end
+			new_ptr := c_string + (start_pos - 1)
+			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi_int_ptr_int32 (new_ptr,
+				end_pos - start_pos + 1))
 		ensure
 			valid_count: count = end_pos - start_pos + 1
 			-- characters: for all i in 1..count, item (i) equals

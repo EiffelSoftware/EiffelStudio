@@ -60,7 +60,7 @@ feature -- Callbacks
 					last_name_chooser.call (Current)
 					choose_again := False
 				elseif redo_project then
-					-- create_project
+					-- create_project --FIXME 
 				elseif has_project_name then
 				else
 					retrieve_project
@@ -91,6 +91,8 @@ feature {NONE} -- Implementation
 			expiration: INTEGER
 			new_name_chooser: NAME_CHOOSER_W
 			file: RAW_FILE
+			environment_variable: EXECUTION_ENVIRONMENT
+			last_directory_opened:STRING
 		do
 			if not project_tool.initialized then
 				if has_project_name then
@@ -104,9 +106,14 @@ feature {NONE} -- Implementation
 					end
 				else
 					if argument = project_tool then
+						-- We open the file_selection dialog on the last opened directory.
+						!! environment_variable
 						new_name_chooser := name_chooser (Project_tool)
-						new_name_chooser.set_title (Interface_names.t_Select_a_file)
+						last_directory_opened := environment_variable.get (Bench_Directory_List)
+						new_name_chooser.set_last_directory_viewed(last_directory_opened.substring(1,last_directory_opened.index_of(';',1) -1 ))
+						new_name_chooser.set_file_selection
 
+						new_name_chooser.set_title (Interface_names.t_Select_a_file)
 						new_name_chooser.set_pattern ("*.epr")
 						new_name_chooser.set_pattern_name ("Eiffel Project File (*.epr)")
 
@@ -168,6 +175,9 @@ feature -- Project Initialization
 			project_directory_exist: project_dir /= Void
 		local
 			dir_name: STRING
+			root_class_name: STRING
+			root_class_c: CLASS_C
+			project_text:GRAPHICAL_TEXT_WINDOW
 		do
 			if has_project_name then
 				dir_name := file_name.substring (1, file_name.last_index_of
@@ -183,6 +193,20 @@ feature -- Project Initialization
 
 			Eiffel_project.make (project_dir)
 			retrieve_project
+	
+			-- We print text in the project_tool text concerning the system.	
+			if eiffel_project.system /= Void then	
+				root_class_name:= clone(eiffel_system.root_class_name)
+				project_text ?= project_tool.text_window
+				project_text.put_string("%NSYSTEM       : ")
+				project_text.put_string(eiffel_system.name)
+				if root_class_name /= Void then
+					project_text.put_string("%NROOT CLASS   : ")
+					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(0).compiled_class
+					root_class_name.to_upper
+					project_text.put_class(root_class_c, root_class_name)
+				end
+			end
 		end
 
 	retrieve_project is

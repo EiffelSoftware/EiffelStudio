@@ -18,22 +18,17 @@ class CONSOLE inherit
 			{NONE} 
 				all;
 			{ANY}
-				make_open_stdin, make_open_stdout,
-				readint, readreal, readdouble, readchar,
-				readline, readstream, readword, next_line,
-				separator, append, putint, putbool, putreal,
-				putdouble, putstring, putchar, new_line,
-				file_pointer, lastchar, lastint, lastreal,
-				laststring, lastdouble, exists,
-				file_readable
+				separator, append, file_pointer, last_character, last_integer, 
+				last_real, last_string, last_double, file_readable,
+				lastchar, lastint, lastreal, laststring, lastdouble 
 		redefine
-			make_open_stdin, make_open_stdout,
-			count, empty, exists,
-			readint, readreal, readdouble, readchar,
-			readline, readstream, readword, next_line,
-			putint, putbool, putreal,
-			putdouble, putstring, putchar, new_line, end_of_file,
-			file_close
+			make_open_stdin, make_open_stdout, count, empty, exists,
+			read_integer, read_real, read_double, read_character,
+			read_line, read_stream, read_word, next_line, put_integer, 
+			put_boolean, put_real, put_double, put_string, put_character, 
+			new_line, end_of_file, file_close,
+			readint, readreal, readdouble, readchar, readline, readstream, 
+			readword, putint, putbool, putreal, putdouble, putstring, putchar
 		end
 
 creation
@@ -47,7 +42,7 @@ feature -- Initialization
 			make (fn);
 			file_pointer := console_def (0);
 			set_read_mode
-			!! laststring.make (256)
+			!! last_string.make (256)
 		end;
 
 	make_open_stdout (fn: STRING) is
@@ -82,33 +77,33 @@ feature -- Status report
 
 feature -- Input
 
-	readint is
+	read_integer, readint is
 			-- Read a new integer from standard input.
-			-- Make result available in `lastint'.
+			-- Make result available in `last_integer'.
 		do
-			lastint := console_readint (file_pointer)
+			last_integer := console_readint (file_pointer)
 		end;
 
-	readreal is
+	read_real, readreal is
 			-- Read a new real from standard input.
-			-- Make result available in `lastreal'.
+			-- Make result available in `last_real'.
 		do
-			lastreal := console_readreal (file_pointer)
+			last_real := console_readreal (file_pointer)
 		end;
 
-	readdouble is
+	read_double, readdouble is
 			-- Read a new double from standard input.
-			-- Make result available in `lastdouble'.
+			-- Make result available in `last_double'.
 		do
-			lastdouble := console_readdouble (file_pointer)
+			last_double := console_readdouble (file_pointer)
 		end;
 
-	readline is
+  read_line, readline is
 			-- Read a string until new line or end of file.
-			-- Make result available in `laststring'.
-			-- New line will be consumed but not part of `laststring'.
+			-- Make result available in `last_string'.
+			-- New line will be consumed but not part of `last_string'.
 		require else
-			is_readable: file_readable;
+			is_readable: file_readable
 		local
 			str_cap: INTEGER;
 			read: INTEGER;  -- Amount of bytes already read
@@ -116,8 +111,8 @@ feature -- Input
 			done: BOOLEAN
 		do
 			from
-				str_area := laststring.to_c;
-				str_cap := laststring.capacity;
+				str_area := last_string.to_c;
+				str_cap := last_string.capacity;
 			until
 				done
 			loop
@@ -127,40 +122,40 @@ feature -- Input
 						-- End of line not reached yet
 						--|The string must be consistently set before
 						--|resizing.
-					laststring.set_count (str_cap);
-					laststring.resize (str_cap + 1024);
-					str_cap := laststring.capacity;
+					last_string.set_count (str_cap);
+					last_string.resize (str_cap + 1024);
+					str_cap := last_string.capacity;
 					read := read - 1;	   -- True amount of byte read
-					str_area := laststring.to_c;
+					str_area := last_string.to_c;
 				else
-					laststring.set_count (read);
+					last_string.set_count (read);
 					done := true
 				end;
 			end;
 				-- Ensure fair amount of garbage.
 			if read < 1024 then
-				laststring.resize (read);
+				last_string.resize (read);
 			end;
 		end;
 
-	readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER) is
  			-- Read a string of at most `nb_char' bound characters
 			-- from standard input.
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		local
 			new_count: INTEGER
 			str_area: ANY
 		do
-			laststring.resize (nb_char)
-			str_area := laststring.to_c
+			last_string.resize (nb_char)
+			str_area := last_string.to_c
 			new_count := console_readstream (file_pointer, $str_area,
 nb_char)
-			laststring.set_count (new_count)
+			last_string.set_count (new_count)
 		end;
 
-	readword is
+	read_word, readword is
 			-- Read a new word from standard input.
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		local
 			str_area: ANY;
 			str_cap: INTEGER;
@@ -168,8 +163,8 @@ nb_char)
 			read: INTEGER;
 		do
 			from
-				str_area := laststring.to_c;
-				str_cap := laststring.capacity;
+				str_area := last_string.to_c;
+				str_cap := last_string.capacity;
 			until
 				done
 			loop
@@ -177,26 +172,26 @@ nb_char)
 					console_readword (file_pointer, $str_area, str_cap, read);
 				if read > str_cap then
 						-- End of word not reached yet
-					laststring.resize (str_cap + 1024);
-					str_cap := laststring.capacity;
+					last_string.resize (str_cap + 1024);
+					str_cap := last_string.capacity;
 					read := read - 1;	   -- True amount of byte read
 			   else
-					laststring.set_count (read);
+					last_string.set_count (read);
 					done := true
 				end;
 			end;
 				-- Ensure fair amount of garbage.
 			if read < 1024 then
-				laststring.resize (read);
+				last_string.resize (read);
 			end;
 			separator := console_separator (file_pointer); -- Look ahead
 		end;
 
-	readchar is
+	read_character, readchar is
 			-- Read a new character from standard input.
-			-- Make result available in `lastchar'.
+			-- Make result available in `last_character'.
 		do
-			lastchar := console_readchar (file_pointer)
+			last_character := console_readchar (file_pointer)
 		end;
 
 
@@ -208,13 +203,13 @@ nb_char)
 
 feature -- Output 
 
-	putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at end of default output.
 		do
 			console_pc (file_pointer, c)
 		end;
 
-	putstring (s: STRING) is
+	put_string, putstring (s: STRING) is
 			-- Write `s' at end of default output.
 		local
 			external_s: ANY;
@@ -225,31 +220,31 @@ feature -- Output
 			end
 		end;
 
-	putreal (r: REAL) is
+	put_real, putreal (r: REAL) is
 			-- Write `r' at end of default output.
 		do
 			console_pr (file_pointer, r)
 		end;
 
-	putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE) is
 			-- Write `d' at end of default output.
 		do
 			console_pd (file_pointer, d)
 		end;
 
-	putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER) is
 			-- Write `i' at end of default output.
 		do
 			console_pi (file_pointer, i)
 		end;
 
-	putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' at end of default output.
 		do
 			if b then
-				putstring ("true")
+				put_string ("true")
 			else
-				putstring ("false")
+				put_string ("false")
 			end 
 		end; 
 
@@ -347,10 +342,10 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 	
-	console_readword (file: POINTER; string: ANY; length, begin: INTEGER):
+	console_readword (file: POINTER; a_string: ANY; length, begin: INTEGER):
 INTEGER is
 			-- Read a string excluding white space and stripping
-			-- leading white space from `file' into `string'.
+			-- leading white space from `file' into `a_string'.
 			-- White space characters are: blank, new_line,
 			-- tab, vertical tab, formfeed or end of file.
 			-- If it does not fit, result is `length' - `begin' + 1,
@@ -359,7 +354,7 @@ INTEGER is
 			"C"
 		end;
 
-	console_readline (file: POINTER; string: ANY; length, begin: INTEGER): INTEGER is
+	console_readline (file: POINTER; a_string: ANY; length, begin: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
 			"C"
@@ -371,7 +366,7 @@ INTEGER is
 			"C"
 		end;
 
-	console_readstream (file: POINTER; string: ANY; length: INTEGER): INTEGER is
+	console_readstream (file: POINTER; a_string: ANY; length: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
 			"C"

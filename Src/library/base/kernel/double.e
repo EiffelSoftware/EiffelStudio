@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Double-precision real numbers";
+		"Real values, double precision";
 
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -23,7 +23,7 @@ expanded class DOUBLE inherit
 
 feature -- Comparison
 
-	infix "<" (other: DOUBLE): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater than current double?
 		do
 			-- Built-in
@@ -31,43 +31,43 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	infix "+" (other: DOUBLE): DOUBLE is
+	infix "+" (other: like Current): like Current is
 			-- Sum with `other'
 		do
 			-- Built-in
 		end;
 
-	infix "-" (other: DOUBLE): DOUBLE is
+	infix "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
 			-- Built-in
 		end;
 
-	infix "*" (other: DOUBLE): DOUBLE is
+	infix "*" (other: like Current): like Current is
 			-- Product with `other'
 		do
 			-- Built-in
 		end;
 
-	infix "/" (other: DOUBLE): DOUBLE is
+	infix "/" (other: like Current): like Current is
 			-- Division by `other'
 		do
 			-- Built-in
 		end;
 
-	infix "^" (other: DOUBLE): DOUBLE is
-			-- Current object to the power `other'
+	infix "^" (other: NUMERIC): DOUBLE is
+			-- Current double to the power `other'
 		do
 			-- Built-in
 		end;
 
-	prefix "+": DOUBLE is
+	prefix "+": like Current is
 			-- Unary plus
 		do
 			-- Built-in
 		end;
 
-	prefix "-": DOUBLE is
+	prefix "-": like Current is
 			-- Unary minus
 		do
 			-- Built-in

@@ -379,11 +379,12 @@ feature {NONE} -- Implementation
 								end
 								if node.elements /= Void and then not node.elements.is_empty then								
 									sub_node := node.elements.item (1)	
-								end
-								if sub_node /= Void then
+								
+									if sub_node /= Void then
 										-- Found preference default value								
-									pref_value := sub_node.text									
-									default_values.put ([pref_description, pref_value], pref_name)
+										pref_value := sub_node.text									
+										default_values.put ([pref_description, pref_value], pref_name)
+									end
 								end
 							end
 						end

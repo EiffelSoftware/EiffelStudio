@@ -28,8 +28,10 @@ feature {NONE} -- Focusable
 		local
 			pw: SAVE_AS_PROJ_WIN
 		do
-			!!pw.make (main_panel.base)
-			pw.popup
+			if main_panel.project_initialized then
+				!!pw.make (main_panel.base)
+				pw.popup
+			end
 		end;
 
 end

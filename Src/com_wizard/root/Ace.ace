@@ -8,6 +8,7 @@ system
 
 root
 	APPLICATION (root_cluster): "make"
+--	NONE
 
 default
 	assertion (all)

@@ -52,6 +52,9 @@ feature {NONE} -- Initialization
 			-- left-align and middle-vertical align
 			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
 			gtk_misc_set_padding (label_widget, 21, 0)
+
+			-- Create the array where the items will be listed.
+			create ev_children.make (0)
 		end
 
 feature -- Access
@@ -59,20 +62,29 @@ feature -- Access
 	parent_imp: EV_MENU_ITEM_HOLDER_IMP
 			-- Parent of the current widget.
 
-	count: INTEGER is
-			-- Number of direct children of the holder.
-		do
-		end
+--	count: INTEGER is
+--			-- Number of direct children of the holder.
+--		do
+--			check
+--				To_be_implemented: False
+--			end
+--		end
 
-	get_item (pos: INTEGER): EV_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `pos'.
-		do
-		end
+--	get_item (pos: INTEGER): EV_ITEM is
+--			-- Give the item of the list at the zero-base
+--			-- `pos'.
+--		do
+---			check
+--				To_be_implemented: False
+--			end
+--		end
 
 	index: INTEGER is
 			-- Index of the current item.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Status report
@@ -127,6 +139,9 @@ feature -- Element change
 			-- Make `pos' the new index of the item in the
 			-- list.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Assertion

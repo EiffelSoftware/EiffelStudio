@@ -2,7 +2,7 @@
  * Main Jmakefile
  */
 
-SUB = shared daemon ewb
+SUB = shared daemon ewb app
 
 all::
 

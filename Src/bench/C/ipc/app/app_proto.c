@@ -15,23 +15,37 @@
 #include <stdio.h>		/* For error reports -- FIXME */
 #include <sys/types.h>
 #include "request.h"
+#include "rqst_idrs.h"
 #include "com.h"
 #include "stream.h"
 #include "transfer.h"
-
-#ifdef THE_REAL_THING
+#include "ewbio.h"
+#include "stack.h"
+#include "idrf.h"
 #include "debug.h"
 #include "except.h"
 #include "server.h"
 #include "interp.h"
-#include "stack.h"
-#endif
-public void greetings();	/* For tests */
 
 public int rqstcnt = 0;				/* Request count */
 
 private void process_request();		/* Dispatch request processing */
 private void inspect();				/* Object inspection */
+private void load_bc();				/* Load byte code information */
+
+private IDRF idrf;			/* IDR filter for serialize communications */
+
+extern char *simple_out();	/* Out routine for simple time (from run-time) */
+
+/*
+ * IDR protocol initialization.
+ */
+
+public void prt_init()
+{
+	if (-1 == idrf_create(&idrf, IDRF_SIZE))
+		fatal("cannot initialize streams");		/* Run-time routine */
+}
 
 /*
  * Handling requests.
@@ -40,16 +54,15 @@ private void inspect();				/* Object inspection */
 public void rqsthandle(s)
 int s;
 {
-	/* Given a connected socket, wait for a request and process it */
+	/* Given a connected socket, wait for a request and process it. Since it
+	 * is an error at the application level to not be able to receive a packet,
+	 * recv_packet will exit via esdie() as soon as the connection is broken.
+	 */
 	
 	Request rqst;		/* The request we are waiting for */
 
-#ifdef THE_REAL_THING
-	if (-1 == recv_packet(s, &rqst))		/* Get request */
-		return;
-#endif
-
-	process_request(s, &rqst);		/* Process the received request */
+	recv_packet(s, &rqst);		/* Get request */
+	process_request(s, &rqst);	/* Process the received request */
 }
 
 private void process_request(s, rqst)
@@ -58,11 +71,16 @@ Request *rqst;				/* The received request to be processed */
 {
 	/* Process the received request */
 
+	STREAM *sp = stream_by_fd[s];
+
 #define arg_1	rqst->rq_opaque.op_first
 #define arg_2	rqst->rq_opaque.op_second
 #define arg_3	rqst->rq_opaque.op_third
 
-#ifdef THE_REAL_THING
+#ifdef USE_ADD_LOG
+	add_log(9, "received request type %d", rqst->rq_type);
+#endif
+
 	switch (rqst->rq_type) {
 	case INSPECT:					/* Object inspection */
 		inspect(s, &rqst->rq_opaque);
@@ -78,16 +96,25 @@ Request *rqst;				/* The received request to be processed */
 		break;
 	case RESUME:					/* Resume execution */
 		dstatus(arg_1);				/* Debugger status (DX_STEP, DX_NEXT,..) */
+#ifdef USE_ADD_LOG
+		add_log(9, "RESUME");
+		if ((void (*)()) 0 == rem_input(s))
+			add_log(12, "rem_input: %s (%s)", s_strerror(), s_strname());
+#else
 		(void) rem_input(s);		/* Stop selection -> exit listening loop */
+#endif
 		break;
 	case QUIT:						/* Die, immediately */
-		exit(0);
+		esdie(0);
+	case HELLO:							/* Initial handshake */
+		send_ack(writefd(sp), AK_OK);	/* Ok, we're up */
+		break;
 	case KPALIVE:					/* Dummy request for connection checks */
 		break;
+	case LOAD:						/* Load byte code information */
+		load_bc(arg_1, arg_2);
+		break;
 	}
-#else
-	greetings(s);
-#endif
 
 #undef arg_1
 #undef arg_2
@@ -105,12 +132,24 @@ Request *rqst;		/* The request to be sent */
 	/* Sends an answer to the client */
 	
 	rqstcnt++;			/* One more request sent to daemon */
+	idrf_pos(&idrf);	/* Reposition IDR streams */
+
+	/* Serialize the request */
+	if (!idr_Request(&idrf.i_encode, rqst)) {
+#ifdef USE_ADD_LOG
+		add_log(2, "ERROR unable to serialize request %d", rqst->rq_type);
+#endif
+		fprintf(stderr, "cannot serialize request\n");
+		esdie(1);
+	}
 
 	/* Send the answer and propagate error report */
-	if (-1 == net_send(s, rqst, OUT_RQST)) {
+	if (-1 == net_send(s, idrs_buf(&idrf.i_encode), IDRF_SIZE)) {
+#ifdef USE_ADD_LOG
 		add_log(1, "SYSERR send: %m (%e)");
+#endif
 		fprintf(stderr, "cannot send request\n");
-		exit(1);
+		esdie(1);
 	}
 
 #ifdef DEBUG
@@ -123,42 +162,32 @@ int s;				/* The connected socket */
 Request *dans;		/* The daemon's answer */
 {
 	/* Wait for an answer and fill in the Request structure, then de-serialize
-	 * it. If an error occurs, return -1. Otherwise return 0;
+	 * it. If an error occurs, exit immediately. The signature has to be 'int',
+	 * since some shared functions do expect that signature. However, since
+	 * no error recovery will be possible at the application level once the
+	 * debugging link to ised is broken, it is wise to exit by calling esdie().
 	 */
 	
 	/* Wait for request */
-	if (-1 == net_recv(s, dans, IN_RQST))
-		return -1;		/* Connection lost, probably */
+	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE))
+		esdie(1);		/* Connection lost, probably */
+
+	idrf_pos(&idrf);	/* Reposition IDR streams */
+
+	/* Deserialize request */
+	if (!idr_Request(&idrf.i_decode, dans))
+		esdie(1);
 
 #ifdef DEBUG
 	trace_request("got", dans);
 #endif
 
-	return 0;		/* All is ok */
+	return 0;		/* All is ok, for lint */
 }
 
 /*
  * Protocol specific routines
  */
-
-public void greetings(s)
-int s;
-{
-	/* Application's hello to workbench */
-
-	char test[100];
-	char *got;
-	STREAM *sp = stream_by_fd[s];
-
-	tpipe(sp);
-	got = tread((int *) 0);
-	printf("Message we got: %s\n", got);
-	sprintf(test, "and this is a reply to '%s'%c", got, '\0');
-	free(got);
-	twrite(test, strlen(test));
-}
-
-#ifdef THE_REAL_THING
 
 public void stop_rqst(s)
 int s;
@@ -171,13 +200,14 @@ int s;
 	Request rqst;			/* XDR request built */
 	struct where wh;		/* Where did the program stop? */
 
-#define st_status	rq_stop.st_why.op_first
-#define st_excode	rq_stop.st_why.op_second
+#define st_status	rq_stop.st_why
+#define st_extag	rq_stop.st_tag
+#define st_excode	rq_stop.st_code
 #define st_wh		rq_stop.st_where
 
 	rqst.rq_type = STOPPED;				/* Stop request */
 	rqst.st_status = d_cxt.pg_status;	/* Why we stopped */
-	rqst.rq_stop.st_tag = "";			/* No exception tag by default */
+	rqst.st_extag = "";			/* No exception tag by default */
 
 	/* If we stopped because an exception has occurred, also give the
 	 * exception code.
@@ -198,6 +228,7 @@ int s;
 	rqst.st_wh.wh_offset = wh.wh_offset;	/* Offset in byte code */
 
 #undef st_status
+#undef st_extag
 #undef st_excode
 #undef st_where
 
@@ -247,5 +278,56 @@ Opaque *what;		/* Generic structure describing request */
 	free(out);
 }
 
-#endif /* THE_REAL_THING */
+private void load_bc(slots, amount)
+int slots;		/* Number of new slots needed in the melting table */
+int amount;		/* Amount of byte codes to be downloaded */
+{
+	/* Upon receiving a LOAD request, the application attempts to download the
+	 * byte code from the compiler. The 'slots' parameters indicates the amount
+	 * of new slots for the melting table, so that we can pre-extend it once
+	 * and for all. An acknowledgment is then sent back. If that extension
+	 * succeeeded, we attempt to load each byte code, one by one, punctuating
+	 * each loading with an acknowledgment. We stop as soon as there is an
+	 * error, of course.
+	 */
+
+	STREAM *sp = stream_by_fd[EWBOUT];
+	Request rqst;				/* Loading BYTECODE request */
+	char *bc;					/* Location of loaded byte code */
+	int s = writefd(sp);		/* Writing "socket" */
+	int r = readfd(sp);			/* Reading "socket" */
+	int i;
+
+	if (-1 == dmake_room(slots)) {		/* Extend melting table */
+		send_ack(s, AK_ERROR);			/* Notify failure */
+		return;							/* Abort procedure */
+	} else
+		send_ack(s, AK_OK);				/* Extension succeeded */
+
+#define arg_1	rqst.rq_opaque.op_first
+#define arg_2	rqst.rq_opaque.op_second
+
+	/* The byte codes have a BYTECODE leading request giving the body index
+	 * and body ID information, which is followed by a transfer request to
+	 * download the byte code itself.
+	 */
+
+	for (i = 0; i < amount; i++) {		/* Now loop to get all byte codes */
+		recv_packet(r, &rqst);			/* Read BYTECODE request */
+		if (rqst.rq_type != BYTECODE) {	/* Wrong request */
+			send_ack(s, AK_PROTO);		/* Protocol error */
+			return;
+		}
+		bc = tread((int *) 0);			/* Get byte code in memory */
+		if (bc == (char *) 0) {			/* Not enough memory */
+			send_ack(s, AK_ERROR);		/* Notify failure */
+			return;						/* And abort downloading */
+		}
+		drecord_bc(arg_1, arg_2, bc);	/* Place byte code in run-time tables */
+		send_ack(s, AK_OK);				/* Byte code loaded successfully */
+	}
+
+#undef arg_1
+#undef arg_2
+}
 

@@ -55,8 +55,8 @@ SED = $sed
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  \$(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c
-OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) x2c.o debug.o interp.o option.o update.o wbench.o
+SOURCES =  \$(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c main.c
+OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) \$(EOBJ) \$(EOBJ) x2c.o debug.o interp.o option.o update.o wbench.o main.o
 LSCRIPTS =  size.h
 
 ########################################################################
@@ -68,7 +68,6 @@ LSCRIPTS =  size.h
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
-
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules,v 2.8.1.4 91/11/18 13:19:07 ram Exp Locker: ram $
@@ -87,17 +86,18 @@ CFLAGS = -I$(TOP)
 DPFLAGS = -I$(TOP)
 
 NETWORK_OBJ = ../ipc/app/network.o
-NETWORK_LIB = ../ipc/shared/libshared.a
 
 LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
-	hector.c cecil.c bits.c file.c dir.c string.c misc.c main.c \
+	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c
+
+OTHER = main.c
 
 WADD = debug.c interp.c option.c update.c wbench.c
 
-# NETWORK = network.o
+NETWORK = network.o
 
 WSRC = \
 	wmath.c \
@@ -127,14 +127,51 @@ WSRC = \
 	wdir.c \
 	wstring.c \
 	wmisc.c \
-	wmain.c \
 	wpattern.c \
 	werror.c \
 	wumain.c \
 	wmemory.c \
 	wargv.c \
 	wboolstr.c \
-	wsearch.c 
+	wsearch.c \
+	wmain.c 
+
+ESRC = \
+	wmath.c \
+	wmalloc.c \
+	wgarcol.c \
+	wlocal.c \
+	wexcept.c \
+	wstore.c \
+	wretrieve.c \
+	whash.c \
+	wtraverse.c \
+	whashin.c \
+	wtools.c \
+	winternal.c \
+	wplug.c \
+	wcopy.c \
+	wequal.c \
+	wlmalloc.c \
+	wout.c \
+	wtimer.c \
+	wurgent.c \
+	wsig.c \
+	whector.c \
+	wcecil.c \
+	wbits.c \
+	wfile.c \
+	wdir.c \
+	wstring.c \
+	wmisc.c \
+	wpattern.c \
+	werror.c \
+	wumain.c \
+	wmemory.c \
+	wargv.c \
+	wboolstr.c \
+	wsearch.c \
+	bmain.c 
 
 LOBJ = \
 	math.o \
@@ -164,14 +201,14 @@ LOBJ = \
 	dir.o \
 	string.o \
 	misc.o \
-	main.o \
 	pattern.o \
 	error.o \
 	umain.o \
 	memory.o \
 	argv.o \
 	boolstr.o \
-	search.o 
+	search.o \
+	main.o 
 
 WOBJ = \
 	$(NETWORK) \
@@ -202,7 +239,6 @@ WOBJ = \
 	wdir.o \
 	wstring.o \
 	wmisc.o \
-	wmain.o \
 	wpattern.o \
 	werror.o \
 	wumain.o \
@@ -210,6 +246,49 @@ WOBJ = \
 	wargv.o \
 	wboolstr.o \
 	wsearch.o \
+	wmain.o \
+	debug.o \
+	interp.o \
+	option.o \
+	update.o \
+	wbench.o 
+
+EOBJ = \
+	wmath.o \
+	wmalloc.o \
+	wgarcol.o \
+	wlocal.o \
+	wexcept.o \
+	wstore.o \
+	wretrieve.o \
+	whash.o \
+	wtraverse.o \
+	whashin.o \
+	wtools.o \
+	winternal.o \
+	wplug.o \
+	wcopy.o \
+	wequal.o \
+	wlmalloc.o \
+	wout.o \
+	wtimer.o \
+	wurgent.o \
+	wsig.o \
+	whector.o \
+	wcecil.o \
+	wbits.o \
+	wfile.o \
+	wdir.o \
+	wstring.o \
+	wmisc.o \
+	wpattern.o \
+	werror.o \
+	wumain.o \
+	wmemory.o \
+	wargv.o \
+	wboolstr.o \
+	wsearch.o \
+	bmain.o \
 	debug.o \
 	interp.o \
 	option.o \
@@ -226,14 +305,14 @@ size.h: size_h.SH
 
 install:: $(SCRIPTS) $(LSCRIPTS)
 	@for file in $(SCRIPTS) $(LSCRIPTS); do \
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \
-		(set -x; $(INSTALL) -c -m 555 $$file $(SCRIPTDIR)); \
+	case '${MFLAGS}' in *[i]*) set +e;; esac; \
+	(set -x; $(INSTALL) -c -m 555 $$file $(SCRIPTDIR)); \
 	done
 
 deinstall::
 	@for file in $(SCRIPTS) $(LSCRIPTS); do \
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \
-		(set -x; $(RM) $(SCRIPTDIR)/$$file); \
+	case '${MFLAGS}' in *[i]*) set +e;; esac; \
+	(set -x; $(RM) $(SCRIPTDIR)/$$file); \
 	done
 
 install.man:: size_h.man
@@ -260,6 +339,16 @@ local_realclean::
 libwkbench.a: $(WOBJ)
 	$(RM) $@
 	$(AR) $@ $(WOBJ)
+	$(RANLIB) $@
+
+all:: libebench.a
+
+local_realclean::
+	$(RM) libebench.a
+
+libebench.a: $(EOBJ)
+	$(RM) $@
+	$(AR) $@ $(EOBJ)
 	$(RANLIB) $@
 
 all:: x2c
@@ -464,12 +553,6 @@ wmisc.c: misc.c
 remove::
 	$(RM) wmisc.c
 
-wmain.c: main.c
-	$(RM) wmain.c
-	$(LN) main.c wmain.c
-remove::
-	$(RM) wmain.c
-
 wpattern.c: pattern.c
 	$(RM) wpattern.c
 	$(LN) pattern.c wpattern.c
@@ -511,6 +594,12 @@ wsearch.c: search.c
 	$(LN) search.c wsearch.c
 remove::
 	$(RM) wsearch.c
+
+wmain.c: main.c
+	$(RM) wmain.c
+	$(LN) main.c wmain.c
+remove::
+	$(RM) wmain.c
 
 
 wmath.o: wmath.c
@@ -621,10 +710,6 @@ wmisc.o: wmisc.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
-wmain.o: wmain.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
 wpattern.o: wpattern.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
@@ -653,6 +738,10 @@ wsearch.o: wsearch.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
+wmain.o: wmain.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
 
 debug.o: debug.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
@@ -674,6 +763,30 @@ local_clean:: remove
 
 final: libruntime.a
 work: libwkbench.a
+
+.FORCE:
+
+../ipc/app/network.o: .FORCE
+	@echo "Checking "network.o" in "../ipc/app"..."
+	cd ../ipc/app; $(MAKE) network.o
+	@echo "Continuing in $(CURRENT)..."
+
+network.o: ../ipc/app/network.o
+
+network.o:
+	$(LN) $(NETWORK_OBJ) $@
+
+bmain.c: main.c
+	$(RM) bmain.c
+	$(LN) main.c bmain.c
+remove::
+	$(RM) bmain.c
+
+
+bmain.o: bmain.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c
+	$(RM) $*.c
+
 
 TESTS = mram gram lram eram sram
 
@@ -724,12 +837,12 @@ local_clobber:: local_realclean
 
 Makefile.SH: Jmakefile
 	-@if test -f $(TOP)/.package; then \
-		if test -f Makefile.SH; then \
-			echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
-			$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
-		fi; \
-		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
-		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	if test -f Makefile.SH; then \
+	echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+	fi; \
+	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
 	else touch $@; exit 0; fi
 
 Makefile: Makefile.SH

@@ -109,6 +109,7 @@ struct exprint {
 	unsigned char rescued;	/* Routine entered in a rescue clause */
 	unsigned char code;		/* Exception code */
 	unsigned char last;		/* The very last exception record */
+	unsigned char previous;	/* Previous exception code printed */
 	char *rname;			/* Routine name of enclosing call */
 	char *tag;				/* Exception tag of current exception */
 	char *obj_id;			/* Object's ID */
@@ -166,7 +167,7 @@ struct exprint {
 #define EN_IO		21			/* I/O error */
 #define EN_SYS		22			/* Operating system error */
 #define EN_RETR		23			/* Retrieval error */
-#define EN_PROG		24			/* Programmer exception */
+#define EN_PROG		24			/* Developer exception */
 #define EN_FATAL	25			/* Eiffel run-time fatal error */
 #define EN_OSTK		97			/* Run-time exception catching */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */
@@ -184,6 +185,7 @@ extern struct xstack eif_trace;	/* Unsolved exception trace */
 extern struct except exdata;	/* Exception handling global flags */
 
 /* Exported routines (used by the generated C code or run-time) */
+extern void expop();			/* Pops an execution vector off */
 extern void eraise();			/* Raise an Eiffel exception */
 extern void xraise();			/* Raise an exception with no tag */
 extern void eviol();			/* Eiffel violation of last assertion */

@@ -15,8 +15,8 @@
 
 extern int rqstcnt;				/* Request count (number of requests sent) */
 
-/* Command spawning via ised */
-public int shell();				/* Run shell command synchronously */
-public int background();		/* Run shell command asynchronously */
+extern void prt_init();			/* Initialize IDR filters */
+extern void send_packet();		/* Send IDR packet to ised */
+extern int recv_packet();		/* Receive IDR packet from ised */
 
 #endif

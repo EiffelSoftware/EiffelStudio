@@ -86,11 +86,10 @@ public void wide_listen()
 		if (d_data.d_app > 0 && !has_input(readfd(d_data.d_as))) {
 			d_data.d_app = 0;
 			close_stream(d_data.d_as);
-#ifdef USE_ADD_LOG
-			add_log(12, "app is dead");
-#endif
+			dead_app();				/* Send a DEAD notification to ewb */
 		}
 
+/* Begin code for not EOFPIPE */
 #ifndef EOFPIPE
 		/* Perform active checks only when the select timed out. Otherwise, we
 		 * know the other end is alive (it is talking to us).
@@ -107,12 +106,11 @@ public void wide_listen()
 			if (0 != active_check(d_data.d_as, d_data.d_app)) {
 				d_data.d_app = 0;
 				close_stream(d_data.d_as);
-#ifdef USE_ADD_LOG
-				add_log(12, "app is dead");
-#endif
+				dead_app();			/* Send a DEAD notification to ewb */
 			}
 		}
 #endif
+/* End code for not EOFPIPE */
 	}
 
 #ifdef USE_ADD_LOG
@@ -157,9 +155,9 @@ int pid;		/* Child's pid */
 	}
 #else
 	rqst.rq_type = KPALIVE;
-	if (-1 == send_packet(writefd(sp), &rqst)) {	/* Cannot send dummy rqst */
-		(void) rem_input(readfd(sp));				/* Remove its input */
-		return 1;
+	send_packet(writefd(sp), &rqst);	/* Send dummy request */
+	if (!has_input(readfd(sp)))			/* Failure, could not send request */
+		return 1;						/* Child is dead */
 	}
 #endif
 

@@ -7,7 +7,7 @@
  #    #  #    #  #   ##  #   ##  #       #    #     #     ###    #    #
   ####    ####   #    #  #    #  ######   ####      #     ###     ####
 
-	Connection with daemon.
+	Connection with daemon (via named socket).
 */
 
 #include "config.h"

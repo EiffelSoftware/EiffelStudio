@@ -34,11 +34,17 @@ DIR = $DIR
 # Parameters set by Configure -- edit config.sh if changes are needed
 
 CTAGS = ctags
+LD = ld
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RM = $rm -f
 SED = $sed
+
+########################################################################
+# Automatically generated parameters -- do not edit
+
+SOURCES =  \$(LIB)
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
@@ -58,27 +64,31 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the application
-#LIB = connect.c listen.c proto.c server.c
-LIB = listen.c proto.c
-SRC = main.c
+LIB = listen.c proto.c server.c
 
 # Derived object file names
 OBJ = \
-	main.o 
+	listen.o \
+	proto.o \
+	server.o 
 
 # Derived library object file names
 LOBJ = \
 	listen.o \
-	proto.o 
+	proto.o \
+	server.o 
 
 # Where shared archive is located (path and name)
 LIBDIR = ../shared
 LIBRUN = ../../run-time
-LIBNAME = libshared.a
+LIBIDR = ../../idrs
+LIBIDRNAME = libidr.a
+LIBNAME = libipc.a
 LIBWKBENCH = libwkbench.a
 LIBARCH = $(LIBDIR)/$(LIBNAME)
+LIBIDRARCH = $(LIBIDR)/$(LIBIDRNAME)
 
-DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN)
+DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
 CFLAGS = $(DPFLAGS) -DWORKBENCH
 #LDFLAGS = $(LIBARCH)
 LDFLAGS = $(LIBDIR)/$(LIBNAME)
@@ -96,6 +106,36 @@ depend::
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
 	$(RM) Makefile.new
+
+all:: $(OBJ)
+
+local_realclean::
+	$(RM) $(OBJ)
+
+.FORCE:
+
+$(LIBDIR)/$(LIBNAME): .FORCE
+	@echo "Checking "$(LIBNAME)" in "$(LIBDIR)"..."
+	cd $(LIBDIR); $(MAKE) $(LIBNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+network.o: $(LIBDIR)/$(LIBNAME)
+
+$(LIBIDR)/$(LIBIDRNAME): .FORCE
+	@echo "Checking "$(LIBIDRNAME)" in "$(LIBIDR)"..."
+	cd $(LIBIDR); $(MAKE) $(LIBIDRNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+network.o: $(LIBIDR)/$(LIBIDRNAME)
+
+all:: network.o
+
+local_realclean::
+	$(RM) network.o
+
+network.o: $(LOBJ)
+	$(RM) $@
+	$(LD) $(JLKFLAGS) -r $(LOBJ) -o $@ $(LIBARCH) $(LIBIDRARCH)
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit

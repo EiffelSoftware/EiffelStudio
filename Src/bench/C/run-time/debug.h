@@ -36,8 +36,7 @@ struct dcall {					/* Debug context call */
 /* Execution status */
 #define DX_CONT		0			/* Continue until next breakpoint */
 #define DX_STEP		1			/* Advance one step */
-#define DX_NEXT		2			/* Advance until next call */
-#define DX_LINE		3			/* Go on until end of line */
+#define DX_NEXT		2			/* Advance until next line */
 
 /* Commands for breakpoint setting */
 #define DT_SET		0			/* Activate breakpoint */
@@ -123,6 +122,10 @@ extern struct dcall *dpush();	/* Push value on stack */
 extern struct dcall *dpop();	/* Pop value off stack */
 extern struct dcall *dtop();	/* Current top value */
 extern void dmove();			/* Move active routine cursor */
+
+/* Downloading byte code from compiler */
+extern int dmake_room();		/* Pre-extend melting table */
+extern void drecord_bc();		/* Record new byte code in run-time tables */
 
 /* Macro used to get a calling context on top of the stack */
 #define dget()	dpush((struct dcall *) 0)

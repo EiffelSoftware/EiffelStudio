@@ -145,6 +145,10 @@ char *source;
 	hash_malloc(&hclone, obj_nb);	/* Hash table allocation */
 	map_start();					/* Restart at bottom of FIFO stack */
 
+#ifdef DEBUG
+	printf("Computed %d objects\n", obj_nb);
+#endif
+
 	/* Throughout the deep cloning process, we need to maintain the notion of
 	 * enclosing object for GC aging tests. The enclosing object is defined as
 	 * being the object to which the currently cloned tree will be attached.
@@ -163,7 +167,6 @@ char *source;
 	map_reset(0);							/* And free maping table */
 
 #ifdef DEBUG
-	printf("Computed %d objects\n", obj_nb);
 	xobjs= nomark(source);
 	printf("Source now has %d objects\n", xobjs);
 	xobjs = nomark(anchor.boot);

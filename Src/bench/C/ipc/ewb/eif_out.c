@@ -11,97 +11,111 @@
 */
 
 #include "eif_io.h"
+#include "eiffel.h"
 
-extern char *makestr();			/* Run-time make string call */
-
-/*
- * Synchronous requests
- */
-
-public int sync_success;		/* Status of last synchronous request (1=ok) */
-
-public void c_sync_order(code)
-int code;		/* Request type */
+public void send_rqst_0 (code) 
+long code;
 {
-	/* Send the simple request whose specification is given by code */
-
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
 	rqst.rq_type = code;
 	send_packet(writefd(sp), &rqst);
-	sync_success = 1;
-}
+};
 
-public void c_sync_shell(cmd)
-char *cmd;
+public void send_rqst_1 (code, info1) 
+long code;
+long info1;
 {
-	/* Send the shell command `cmd', to be executed synchronously */
-
-	sync_success = shell(cmd) == 0 ? 1 : 0;
-}
-
-public char *c_sync_object(type, index, address)
-long type;		/* Variable's type */
-long index;		/* Variable's index */
-long address;	/* Variable's address */
-{
-	/* Return a string (tagged_out) of the object in the application, specified
-	 * by the given parameters.
-	 */
-
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
-	char *string_read;
-	int length;
-	char *result;
 
-	rqst.rq_type = INSPECT;
-	rqst.rq_opaque.op_first = (int) type;
-	rqst.rq_opaque.op_second = (int) index;
-	rqst.rq_opaque.op_third = address;
+	rqst.rq_type = code;
+	rqst.rq_opaque.op_first = (int) info1;
 	send_packet(writefd(sp), &rqst);
+};
 
-	tpipe(sp);
-	string_read = tread(&length);
-	if (string_read == (char *) 0) {
-		sync_success = 0;			/* Transmission problem? */
-#ifdef USE_ADD_LOG
-		add_log(2, "ERROR cannot receive string");
-#endif
-		return (char *) 0;
+public void send_rqst_2 (code, info1, info2) 
+long code;
+long info1;
+long info2;
+{
+	Request rqst;
+	STREAM *sp = stream_by_fd[EWBOUT];
+
+	rqst.rq_type = code;
+	rqst.rq_opaque.op_first = (int) info1;
+	rqst.rq_opaque.op_second = (int) info2;
+	send_packet(writefd(sp), &rqst);
+};
+
+public void send_rqst_3 (code, info1, info2, info3) 
+long code;
+long info1;
+long info2;
+long info3;
+{
+	Request rqst;
+	STREAM *sp = stream_by_fd[EWBOUT];
+
+	rqst.rq_type = code;
+	rqst.rq_opaque.op_first = (int) info1;
+	rqst.rq_opaque.op_second = (int) info2;
+	rqst.rq_opaque.op_third = (long) info3;
+	send_packet(writefd(sp), &rqst);
+};
+
+public EIF_BOOLEAN recv_ack ()
+{
+	Request pack;
+	STREAM *sp = stream_by_fd[EWBOUT];
+	
+	if (-1 == recv_packet(readfd(sp), &pack))
+		return (EIF_BOOLEAN) 0;
+
+	switch (pack.rq_type) {
+	case ACKNLGE:
+		switch (pack.rq_ack.ak_type) {
+		case AK_OK:
+			return (EIF_BOOLEAN) 1;
+		case AK_ERROR:
+			return (EIF_BOOLEAN) 0;
+		default:
+			return (EIF_BOOLEAN) 0;
+		}
+		break;
+	default:
+		return (EIF_BOOLEAN) 0;
 	}
-
-	result = makestr(string_read, length);
-	free(string_read);
-
-	return result;
 }
 
-/*
- * Asynchronous requests.
- */
-
-public int c_async_order(code)
-int code;
+public void c_send_str (s)
+char *s;
 {
-	/* Send a simple request whose specification is only given by a single code.
-	 * The request will be processed asynchronously. Note that it does not buy
-	 * you much to do this since the extra fork in the daemon usually takes more
-	 * time than the processing of the request itself--RAM. The function
-	 * returns the job number of the request.
-	 */
+	STREAM *sp = stream_by_fd[EWBOUT];
+	send_str (sp, s);
+}
+
+public void c_twrite (s, l)
+char *s;
+long l;
+{
+	twrite (s, (int) l);
+}
+
+public void send_simple_request(code)
+long code;		/* Request type */
+{
+	/* Send the simple request specified by code */
 
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
- 
+
 	rqst.rq_type = code;
-	rqst.rq_opaque.op_first = rqstcnt;  /* Use request count as job number */
 	send_packet(writefd(sp), &rqst);
-	return rqst.rq_opaque.op_first;		 /* The command's job number */
 }
 
-public int c_async_shell(cmd)
+public int async_shell(cmd)
 char *cmd;
 {
 	/* Send a shell command to be performed in the background and return the
@@ -110,5 +124,25 @@ char *cmd;
 	 */
 
 	return background(cmd);
+}
+
+public void send_run_request(code, buf, len)
+long code;
+char *buf;
+long len;
+{
+/*
+	Request rqst;
+	STREAM *sp = stream_by_fd[EWBOUT];
+
+	rqst.rq_type = code;
+
+	if (-1 == send_packet (writefd(sp), &rqst))
+		error
+
+	? = twrite (buf, size);
+
+	ACK ???
+*/
 }
 

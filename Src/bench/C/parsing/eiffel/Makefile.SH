@@ -95,7 +95,7 @@ CFLAGS = -I$(SHARED_CLIB) -I$(RUN_TIME) -I$(TOP)
 YFLAGS = -d
 
 SRCS = eiffel_c.c eif_err.c encode.c pretrieve.c date.c keyword.c \
-	byte.c offset.c parser.y lexic.l
+	byte.c offset.c parser.y lexic.l infix.c prefix.c
 
 SMODE = pstore.c
 
@@ -112,6 +112,8 @@ OBJS = \
 	offset.o \
 	parser.o \
 	lexic.o \
+	infix.o \
+	prefix.o \
 	pstore.o 
 
 WOBJS = \
@@ -125,6 +127,8 @@ WOBJS = \
 	offset.o \
 	parser.o \
 	lexic.o \
+	infix.o \
+	prefix.o \
 	wpstore.o 
 
 wpstore.c: pstore.c
@@ -204,6 +208,22 @@ keyword.c: eiffel.gperf
 	else \
 		echo "	gperf -p -t -l -k 1,'$$',4 eiffel.gperf > $@"; \
 		gperf -p -t -l -k 1,'$$',4 eiffel.gperf > $@ ; \
+	fi
+
+infix.c: infix.gperf
+	@if test -s infix.c; then \
+		touch $@; \
+	else \
+		echo "  gperf -l -k '1,2,$' -N std_infix infix.gperf > $@"; \
+		gperf -l -k '1,2,$$' -N std_infix infix.gperf > $@ ; \
+	fi
+
+prefix.c: prefix.gperf
+	@if test -s prefix.c; then \
+		touch $@; \
+	else \
+		echo "  gperf -l -k '1,2,$' -N std_prefix prefix.gperf > $@"; \
+		gperf -l -k '1,2,$$' -N std_prefix prefix.gperf > $@ ; \
 	fi
 
 keyword.o: parser.h

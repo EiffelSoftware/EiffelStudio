@@ -172,7 +172,7 @@ private char *ex_tag[] = {
 	"I/O error.",						/* EN_IO */
 	"Operating system error.",			/* EN_SYS */
 	"Retrieval error.",					/* EN_RETR */
-	"Programmer exception.",			/* EN_PROG */
+	"Developer exception.",				/* EN_PROG */
 	"Eiffel run-time fatal error.",		/* EN_FATAL */
 #ifdef WORKBENCH
 	"$ applied on melted feature.",		/* EN_DOL */
@@ -1143,6 +1143,11 @@ private void exorig()
 	 */
 
 	if (echlvl == 1) {				/* Only one level -> bottom of stack */
+		if (eif_trace.st_hd == (struct stxchunk *) 0) {		/* No stack yet */
+			echorg = echval;				/* Original is current exception */
+			echotag = echtg;				/* As well as original tag */
+			return;
+		}
 		top = eif_trace.st_hd->sk_arena;	/* This is the bottom */
 		if (top == eif_trace.st_top) {		/* Empty stack (yes, can happen) */
 			echorg = echval;				/* Original is current exception */
@@ -1555,6 +1560,8 @@ private void dump_trace_stack()
 	/* Print body of history table. A little look-ahead is necessary, in order
 	 * to give meaningful routine names and effects (retried, rescued, failed).
 	 */
+
+	except.previous = 0;		/* Previous exception code */
 	recursive_dump(0);			/* Recursive dump, starting at level 0 */
 }
 
@@ -1645,25 +1652,29 @@ private void print_top()
 
 #ifdef DEBUG
 	dump_vector("print_top: top of trace is", eif_trace.st_bot);
-	dprintf(1)("print_top: code = %d %s%s%s\n",
-		code, except.retried ? "was retried" : "",
+	dprintf(1)("print_top: code = %d (previous %d) %s%s%s\n",
+		code, except.previous, except.retried ? "was retried" : "",
 		(except.retried && except.rescued) ? " and " : "",
 		except.rescued ? "was rescued" : "");
 #endif
 
-	/* Do not print anything if the retry flag is on and the exception is
-	 * routine failure or resumption attempt failed. Indeed, the cause of
+	/* Do not print anything if the retry flag is on and the previous exception
+	 * was not not a routine failure nor a resumption attempt failed. Indeed,
 	 * the exception that led to a retry has already been printed and we do
 	 * not want to see two successive 'retry' lines.
 	 * Similarily, a rescued routine fails, and is not 'rescued' at the end
 	 * of the rescue clause.
 	 */
-	if (code == EN_FAIL || code == EN_RES) {
-		if (except.retried) {
-			(void) exnext();		/* Remove the top */
-			return;					/* We already printed the retry line */
-		}
+	if (
+		except.retried &&			/* Call has been retried */
+		except.previous != 0 &&		/* Something has been already printed */
+		except.previous != EN_FAIL && except.previous != EN_RES
+	) {
+		(void) exnext();		/* Remove the top */
+		return;					/* We already printed the retry line */
 	}
+
+	except.previous = code;		/* Update previous exception code */
 
 	if (except.tag)
 		sprintf(buf, "%.28s:", except.tag);
@@ -1728,7 +1739,9 @@ private void print_top()
 		fprintf(stderr, "Exit\n%s\n", failed);
 		return;
 	} else if (code == EN_FAIL || code == EN_RES) {
-		if (except.rescued)
+		if (except.retried)
+			fprintf(stderr, "Retry\n%s\n", retried);
+		else if (except.rescued)
 			fprintf(stderr, "Rescue\n%s\n", failed);
 		else
 			fprintf(stderr, "Fail\n%s\n", failed);
@@ -1813,6 +1826,7 @@ register1 int size;					/* Initial size */
 	register4 struct stxchunk *chunk;	/* Address of the chunk */
 
 	size *= sizeof(struct ex_vect);
+	size += sizeof(*chunk);				/* Ensure arena is a correct multiple */
 	chunk = (struct stxchunk *) cmalloc(size);
 	if (chunk == (struct stxchunk *) 0)
 		return (struct ex_vect *) 0;	/* Malloc failed for some reason */
@@ -1843,6 +1857,7 @@ register1 int size;					/* Size of new chunk to be added */
 	register4 struct stxchunk *chunk;	/* Address of the chunk */
 
 	size *= sizeof(struct ex_vect);
+	size += sizeof(*chunk);				/* Or arena might not be padded */
 	chunk = (struct stxchunk *) cmalloc(size);
 	if (chunk == (struct stxchunk *) 0) {
 		chunk = (struct stxchunk *) uchunk();	/* Attempt with urgent mem */

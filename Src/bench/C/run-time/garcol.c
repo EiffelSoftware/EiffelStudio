@@ -3215,61 +3215,8 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 public void onceset(ptr)
 register4 char **ptr;
 {
-	/* Given the address of Result in a once function 'ptr', record it in the
-	 * once stack. If the result was allocated in the scavenge zone, it is
-	 * artificially aged to the maximum possible age. Otherwise, it enters
-	 * directly the old generation.
-	 * In case of error, an exception "No more memory" is raised, so we
-	 * will never return to the once.
-	 */
-	
-	register1 char *object = *ptr;		/* Location of Result object */
-	register2 union overhead *zone;		/* Malloc info zone */
-	register3 uint32 flags;				/* Eiffel flags */
 
-
-	if (object == (char *) 0)			/* Void once object */
-		return;
-
-	zone = HEADER(object);				/* Points to Eiffel header */
-
-	if (
-		gen_scavenge & GS_ON &&
-		object > sc_from.sc_arena && object <= sc_from.sc_end
-	) {
-		/* Object is in scavenge zone. Artificially age it to the maximum
-		 * possible age, so that it get tenured quickly (we know that object
-		 * will always be alive).
-		 */
-		
-		zone->ov_flags |= EO_AGE;	/* Maximum reachable age */
-
-	} else {
-
-		/* Object is in the chunk list. Make sure it is an old one and
-		 * force it into the remembered set. Why? Because the object is not in
-		 * the scavenge zone, hence it is part of the remembered set. But no
-		 * old object may exist there if they are not remembered, as they would
-		 * be swept should the next cycle be a generation-base one (old objects
-		 * are not marked by the generation_mark routine).
-		 */
-
-		flags = zone->ov_flags;			/* Fetch flags */
-
-		if (flags & EO_NEW) {			/* Young object */
-			flags |= EO_OLD;			/* Make it an old one */
-			flags &= ~EO_NEW;			/* And clear new object bit */
-			zone->ov_flags = flags;		/* Resynchronize flags */
-			eremb(object);				/* Remember it or raise exception */
-		}
-	}
-
-#ifdef DEBUG
-	dprintf(32)("onceset: value 0x%x at 0x%x\n", *ptr, ptr);
-	flush;
-#endif
-
-	/* Now add the address of Result (i.e. where the result of the once is
+	/* Add the address of Result (i.e. where the result of the once is
 	 * stored) to the once_set stack. Raise an exception if address cannot
 	 * be pushed.
 	 */

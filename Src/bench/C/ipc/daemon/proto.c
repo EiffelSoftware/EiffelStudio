@@ -18,6 +18,8 @@
 #include "com.h"
 #include "stream.h"
 #include "logfile.h"
+#include "idrf.h"
+#include "rqst_idrs.h"
 #include <stdio.h>		/* For BUFSIZ */
 
 #define OTHER(x)	\
@@ -34,10 +36,24 @@ private void run_command();			/* Run specified command */
 private void run_asynchronous();	/* Run command in background */
 private void start_app();			/* Start Eiffel application */
 
+private IDRF idrf;					/* IDR filters used for serializing */
+
 extern void dexit();				/* Daemon exiting procedure */
 extern STREAM *spawn_child();		/* Start up child with ipc link */
 
 extern int errno;					/* System call error number */
+
+/*
+ * IDR protocol initialization.
+ */
+
+public void prt_init()
+{
+	if (-1 == idrf_create(&idrf, IDRF_SIZE)) {
+		fprintf(stderr, "cannot initialize streams\n");
+		exit(1);
+	}
+}
 
 public void rqsthandle(s)
 int s;
@@ -62,6 +78,10 @@ Request *rqst;				/* The received request to be processed */
 	 * appropriate processing.
 	 */
 
+#ifdef USE_ADD_LOG
+	add_log(8, "processing request type %d", rqst->rq_type);
+#endif
+
 	switch (rqst->rq_type) {
 	case TRANSFER:			/* Data transfer via daemon */
 		transfer(s, rqst);
@@ -76,10 +96,14 @@ Request *rqst;				/* The received request to be processed */
 		start_app(s);
 		break;
 	default:
-		(void) send_packet(OTHER(s), rqst);
+		send_packet(writefd(OTHER(s)), rqst);
 		break;
 	}
 }
+
+/*
+ * Sending/receiving packets.
+ */
 
 public int recv_packet(s, rqst)
 int s;			/* The connected socket */
@@ -91,7 +115,7 @@ Request *rqst;	/* The request received */
 	 */
 
 	/* If we cannot receive data, then the connection is surely broken */
-	if (-1 == net_recv(s, rqst, IN_RQST)) {
+	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE)) {
 #ifdef USE_ADD_LOG
 		add_log(9, "SYSERR recv: %m (%e)");
 		add_log(12, "connection broken on fd #%d", s);
@@ -104,6 +128,15 @@ Request *rqst;	/* The request received */
 	}
 
 	rqstcnt++;			/* One more request */
+	idrf_pos(&idrf);	/* Reposition IDR streams */
+
+	/* Deserialize request */
+	if (!idr_Request(&idrf.i_decode, rqst)) {
+#ifdef USE_ADD_LOG
+		add_log(2, "ERROR cannot deserialize request #%d", rqstcnt);
+#endif
+		return -1;
+	}
 
 #ifdef DEBUG
 	trace_request("got", rqst);
@@ -121,17 +154,33 @@ Request *dans;	/* The answer to send back */
 	 * support though, simply add a few XDR calls here or there--RAM.
 	 */
 
-	/* Send the answer */
-	if (-1 == net_send(s, dans, OUT_RQST)) {
+	STREAM *sp = stream_by_fd[s];
+
+	rqstsent++;			/* Keep track of the messages sent */
+	idrf_pos(&idrf);	/* Reposition IDR streams */
+
+	/* Serialize the request */
+	if (!idr_Request(&idrf.i_encode, dans)) {
+#ifdef USE_ADD_LOG
+		add_log(2, "ERROR unable to serialize request %d", dans->rq_type);
+#endif
+		return;
+	}
+
+	/* Send the answer. Note that it is a fatal error if we cannot talk to the
+	 * workbench. If we try to write to the application, simply remove input
+	 * selection. That will trigger a DEAD request later on when we get back
+	 * to wide_listen().
+	 */
+	if (-1 == net_send(s, idrs_buf(&idrf.i_encode), IDRF_SIZE)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR send: %m (%e)");
 		add_log(2, "ERROR while sending answer %d", dans->rq_type);
 #endif
 		if (s == writefd(d_data.d_cs))	/* Talking to the workbench? */
 			dexit(1);					/* Can't allow this stream to break */
+		(void) rem_input(readfd(sp));	/* Stop listening to that channel */
 	}
-
-	rqstsent++;			/* Keep track of the messages sent */
 
 #ifdef DEBUG
 	trace_request("sent", dans);
@@ -174,7 +223,7 @@ Request *rqst;	/* The request received */
 	 * then simply commute the first.
 	 */
 
-	(void) send_packet(writefd(sp), rqst);
+	send_packet(writefd(sp), rqst);
 	commute(s, writefd(sp), rqst->rq_ack.ak_type);
 }
 
@@ -266,8 +315,8 @@ Request *rqst;
 		send_packet(writefd(sp), &dans);
 		break;
 	case 0:					/* Child is performing the command */
-		progpid = getpid();
 #ifdef USE_ADD_LOG
+		progpid = getpid();
 		close_log();		/* Closing and reopening to avoid share of file */
 		reopen_log();
 #endif
@@ -303,6 +352,7 @@ int s;
 	Pid_t pid;			/* Child pid */
 	
 	sp = stream_by_fd[s];				/* Fetch associated stream */
+	printf("Ised: reading name of application\n");
 	cmd = recv_str(sp, (int *) 0);		/* Get command */
 	printf("Application is %s\n", cmd);
 	cp = spawn_child(cmd, &pid);			/* Start up children */
@@ -318,5 +368,24 @@ int s;
 			send_ack(writefd(sp), AK_OK);		/* Application started ok */
 	} else
 		send_ack(writefd(sp), AK_ERROR);	/* Could not start application */
+}
+
+public void dead_app()
+{
+	/* Signal ewb that the application is dead. This is why each transaction
+	 * has to be acknowledged, so that ewb does not remain hung waiting for
+	 * a reply which will never come. Settting a timeout would also be an
+	 * option--RAM.
+	 */
+
+	Request rqst;					/* Request to send */
+	int s = writefd(d_data.d_cs);	/* "socket" to contact ewb */
+
+#ifdef USE_ADD_LOG
+	add_log(12, "app is dead");
+#endif
+
+	rqst.rq_type = DEAD;			/* Application is dead */
+	send_packet(s, &rqst);			/* Notify workbench */
 }
 

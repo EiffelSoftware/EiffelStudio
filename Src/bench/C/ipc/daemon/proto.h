@@ -38,5 +38,7 @@ extern void rqsthandle();			/* General request processor */
 extern void apphandle();			/* Handle messages from application */
 extern void send_packet();			/* Send an asnwer to client */
 extern int recv_packet();			/* Receive data from client */
+extern void dead_app();				/* Signals ewb that app is dead */
+extern void prt_init();				/* Initialize IDR filters */
 
 #endif

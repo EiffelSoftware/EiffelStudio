@@ -25,5 +25,12 @@
 
 extern int rqstcnt;		/* Request count (number of requests sent) */
 
+/* FIX THIS CRAP -- RAM */
+#define APP_MSG 5
+#define APP_BREAK 4
+#define APP_EXCEPT 3
+#define APP_EXIT 2
+#define APP_JOBSTATUS 1
+
 #endif
 

@@ -18,10 +18,19 @@
 #include "malloc.h"
 #include "sig.h"
 #include "struct.h"
+#include "local.h"			/* For epop() */
+#include "out.h"			/* For build_out() */
+#include "hector.h"
 
 #undef STACK_CHUNK
 #define STACK_CHUNK		200			/* Number of items in a stack chunk */
 #define CALL_SZ			sizeof(struct dcall)
+
+/*#define DEBUG 63		/* Activate debugging code */
+
+/* For debugging */
+#define dprintf(n)		if (DEBUG & (n)) printf
+#define flush			fflush(stdout)
 
 /* The debugging level is the body ID of the first debuggable feature. This
  * reduces to the size of the melted table.
@@ -84,8 +93,8 @@ public void dmove();					/* Move inside calling context stack */
 private void call_down();				/* Move cursor downwards */
 private void call_up();					/* Move cursor upwards */
 
-/* From the interpreter */
 extern struct opstack op_stack;			/* Operational stack */
+extern long mcount;						/* Size of the melting table */
 
 #ifndef lint
 private char *rcsid =
@@ -244,9 +253,13 @@ int why;
 	 * run-time context and return.
 	 */
 
+#ifdef NEVER
 	escontext(why);				/* Save run-time context */
 	dserver();					/* Put application in server mode */
 	esresume();					/* Restore run-time context */
+#else
+	dserver();
+#endif
 
 	/* Returning from this routine will resume execution where it stopped */
 }
@@ -270,12 +283,12 @@ int what;			/* Command (DT_SET, DT_REMOVE, ...) */
 
 	switch (what) {
 	case DT_SET:				/* Set a breakpoint */
-		if (*where != BC_NEXT)
+		if ((*where != BC_NEXT) && (*where != BC_BREAK))
 			panic("byte code botched");
 		*where = BC_BREAK;
 		break;
 	case DT_REMOVE:				/* Remove a breakpoint */
-		if (*where != BC_BREAK)
+		if ((*where != BC_NEXT) && (*where != BC_BREAK))
 			panic("byte code botched");
 		*where = BC_NEXT;
 		break;
@@ -749,8 +762,8 @@ int offset;		/* Offset by which cursor should move within context stack */
 private void call_down(level)
 int level;		/* Delta by which we should move active cursor */
 {
-	/* Artificially increase the top of the calling stack context to move the
-	 * active routine "cursor" upwards. Primitive range checking is done,
+	/* Artificially decrease the top of the calling stack context to move the
+	 * active routine "cursor" downwards. Primitive range checking is done,
 	 * because npop() will panic if we give it too much to pop.
 	 */
 
@@ -822,8 +835,96 @@ int level;		/* Delta by which we should move active cursor */
 	db_stack.st_end = s->sk_end;
 }
 
-dserver()
+/*
+ * Viewing objects.
+ */
+
+shared char *dview(root)
+char *root;
 {
-	/* Temporary -- FIXME */
+	/* Compute the tagged out form for object 'root' and return a pointer to
+	 * the location of the C buffer holding the string. Note that the
+	 * build_out() run-time routine expects an EIF_OBJ pointer.
+	 */
+
+	EIF_OBJ object;				/* The hector pointer */
+	char *out;					/* Where out form is stored */
+
+	object = hrecord(root);		/* Protect object against GC effects */
+	out = build_out(object);	/* Build `tagged_out' (I hate that name--RAM) */
+	epop(&hec_stack);			/* Release object from hector stack */
+
+	return out;		/* To-be-freed pointer to the tagged out representation */
+}
+
+/*
+ * Debuggable byte-code loading.
+ */
+
+public int dmake_room(new)
+int new;		/* Amount of new entries in melting table */
+{
+	/* Pre-extend the melting table, making room for the new byte codes entries.
+	 * This avoids successive realloc() which could cause fragmentation within
+	 * the C memory. The function returns -1 in case of error.
+	 */
+
+	char **new_melt;			/* New melting table address */
+
+	if (new == 0)				/* Table does not need any extension */
+		return 0;				/* Everything is fine */
+
+#ifdef DEBUG
+	dprintf(4)("dmake_room: extending melt (0x%x), %d items by %d\n",
+		 melt, mcount, new);
+#endif
+
+	if (melt == (char **) 0)
+		new_melt = (char **) cmalloc(melt, new * sizeof(char *));
+	else
+		new_melt = (char **) crealloc(melt, (mcount + new) * sizeof(char *));
+	if (new_melt == (char **) 0)
+		return -1;				/* Not enough memory for extension */
+
+	mcount += new;				/* New melting table size */
+	melt = new_melt;			/* Melting table address may have changed */
+	
+#ifdef DEBUG
+	dprintf(4)("dmake_room: extension ok, melt now at 0x%x, %d items\n",
+		 melt, mcount);
+#endif
+
+	new_melt = (char **) crealloc(melt, (mcount + new) * sizeof(char *));
+	return 0;					/* Reallocation ok */
+}
+
+public void drecord_bc(body_idx, body_id, addr)
+int body_idx;		/* Body index for byte code (index in dispatch table) */
+int body_id;		/* ID of byte code (index in melt table) */
+char *addr;			/* Address where byte code is stored */
+{
+	/* Update the dispatch table and the melting table by introducing the
+	 * new debuggable byte code into the system. We know the byte code has
+	 * to be recorded in the melting table, which means body_id > zeroc.
+	 */
+
+#ifdef DEBUG
+	dprintf(4)("drecord_bc: recording 0x%x (%d), idx: %d, id: %d\n",
+		 addr, body_id - zeroc, body_idx, body_id);
+#endif
+
+	dispatch[body_idx] = body_id;		/* Set-up indirection table */
+	melt[body_id - zeroc] = addr;		/* And record new byte code */
+}
+
+public void dexit(code)
+{
+	/* This routine is called by functions from libipc.a to raise immediate
+	 * termination with a chance to trap the action and perform some clean-up.
+	 * Here we call esdie() which will collect all the Eiffel objects and
+	 * eventually call dispose() on some of them.
+	 */
+
+	esdie(code);		/* Propagate dying request */
 }
 

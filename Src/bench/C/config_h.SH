@@ -130,6 +130,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$d_chown HAS_CHOWN		/**/
 
+/* HAS_DLOPEN:
+ *	This symbol, if defined, indicates that the dlopen routine is
+ *	available.
+ */
+#$d_dlopen HAS_DLOPEN		/**/
+
 /* HAS_DUP2:
  *	This symbol, if defined, indicates that the dup2 routine is
  *	available to duplicate file descriptors.
@@ -319,13 +325,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$d_sbrk HAS_SBRK	/**/
 
-/* USE_BSDPGRP:
- *	This symbol, if defined, indicates that the BSD notion of process
- *	group is to be used. For instance, you have to say setpgrp(pid, pgrp)
- *	instead of the USG setpgrp().
- */
-#$d_bsdpgrp USE_BSDPGRP		/**/
-
 /* HAS_SYS_SIGLIST:
  *	This symbol, if defined, indicates that the sys_siglist array is
  *	available to translate signal numbers to strings.
@@ -418,13 +417,7 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	Note that this became obsolete on some systems (SUNOS), which now
  * use getrusage(). It may be necessary to include <sys/times.h>.
  */
-/* Clock_t:
- *	This symbol holds the type returned by times(). It can be long,
- *	or clock_t on BSD sites (in which case <sys/types.h> should be
- *	included).
- */
 #$d_times HAS_TIMES		/**/
-#define Clock_t $clocktype	/* Clock time */
 
 /* HAS_USLEEP:
  *	This symbol, if defined, indicates that the usleep routine is
@@ -465,6 +458,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$i_dirent I_DIRENT		/**/
 #$d_dirnamlen DIRNAMLEN	/**/
+
+/* I_DLFCN:
+ *	This symbol, if defined, indicates that <dlfcn.h> exists and should
+ *	be included.
+ */
+#$i_dlfcn I_DLFCN		/**/
 
 /* I_FCNTL:
  *	This manifest constant tells the C program to include <fcntl.h>.
@@ -518,14 +517,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	include <sys/file.h> to get definition of R_OK and friends.
  */
 #$i_sysfile I_SYS_FILE		/**/
-
-/* USE_TIOCNOTTY:
- *	This symbol, if defined indicate to the C program that the ioctl()
- *	call with TIOCNOTTY should be used to void tty association.
- *	Otherwise (on USG probably), it is enough to close the standard file
- *	decriptors and do a setpgrp().
- */
-#$d_voidtty USE_TIOCNOTTY	/**/
 
 /* I_SYS_NDIR:
  *	This symbol, if defined, indicates to the C program that it should
@@ -658,13 +649,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	mmap() system call.
  */
 #$sbrksmart HAS_SMART_SBRK /**/
-
-/* Caddr_t:
- *	This symbol holds the type of a core address. It is inteded to be used
- *	to safely declare the return type of system calls like sbrk(). It might
- *	be necessary to include <sys/types.h> as well.
- */
-#define Caddr_t $sbrktype	/* <core address> type */
 
 /* Select_fd_set_t:
  *	This symbol holds the type used for the 2nd, 3rd, and 4th

@@ -190,6 +190,9 @@ feature -- Basic operations
 					-- Ensure there is no longer a root window.
 				Object_handler.remove_root_window
 				
+					-- Update title of `main_window'.
+				main_window.update_title
+				
 				command_handler.update
 			end
 

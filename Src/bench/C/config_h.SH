@@ -22,8 +22,8 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  * running Configure.
  *
  * Feel free to modify any of this as the need arises.  Note, however,
- * that running config.h.SH again will wipe out any changes you've made.
- * For a more permanent change edit config.sh and rerun config.h.SH.
+ * that running config_h.SH again will wipe out any changes you've made.
+ * For a more permanent change edit config.sh and rerun config_h.SH.
  *
  * \$Id$
  */
@@ -556,6 +556,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 #$i_time I_TIME		/**/
 #$i_systime I_SYS_TIME		/**/
 #$i_systimek I_SYS_TIME_KERNEL		/**/
+
+/* I_UTIME:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <utime.h>.
+ */
+#$i_utime I_UTIME		/**/
 
 /* I_STDARG:
  *	This symbol, if defined, indicates that <stdarg.h> exists and should

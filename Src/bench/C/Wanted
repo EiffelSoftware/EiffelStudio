@@ -79,6 +79,7 @@
 >I_SYS_UN
 >I_TIME
 >I_TMVAL_SYS_SELECT
+>I_UTIME
 >I_VARARGS
 >I_XM_PROTOCOLS
 >KEEPALIVE
@@ -230,6 +231,7 @@ i_systimes
 i_sysun
 i_time
 i_tmvlsyss
+i_utime
 i_varargs
 i_xm_protocols
 intsize

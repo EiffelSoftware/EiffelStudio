@@ -117,7 +117,13 @@ feature -- Window Properties
 		end;
 
 	search_cmd_holder: COMMAND_HOLDER;
-			-- Command to search for a text.
+			-- Command to search for a text
+
+	print_cmd_holder: COMMAND_HOLDER;
+			-- Command to print text
+
+	menu_bar: BAR;
+			-- Menu bar
 
 	edit_menu: MENU_PULL;
 			-- Edit menu
@@ -125,6 +131,9 @@ feature -- Window Properties
 
 	file_menu: MENU_PULL;
 			-- File menu
+
+	help_menu: MENU_PULL;
+			-- Help menu
 
 	toolbar_parent: ROW_COLUMN;
 			-- Toolbar parent
@@ -235,7 +244,16 @@ feature -- Window Implementation
 			ss: SEARCH_STRING
 		do
 			ss ?= search_cmd_holder.associated_command;
-			ss.close
+			ss.close_search_window
+		end;
+
+	close_print_window is
+			-- Close print window.
+		local
+			pc: PRINT_COMMAND
+		do
+			pc ?= print_cmd_holder.associated_command;
+			pc.close_print_window
 		end;
 
 feature -- Window settings
@@ -565,7 +583,7 @@ feature -- Pick and Throw Implementation
 			set_title (tool_name);
 			set_font_to_default;
 			set_default_format;
-			text_window.clear_window;
+			text_window.reset;
 			update_save_symbol;
 			set_file_name (Void);
 			reset_stone;
@@ -673,6 +691,33 @@ feature {PROJECT_W} -- Implementation
 			!! search_button.make (search_cmd, search_button_parent);
 			!! search_menu_entry.make (search_cmd, edit_menu);
 			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
+		end;
+
+	build_help_menu is
+			-- Create a print command to be inserted into a menu.
+		require
+			valid_bar: menu_bar /= Void
+		local
+			help_cmd: HELP_COMMAND;
+			help_menu_entry: EB_MENU_ENTRY;
+		do
+			!! help_menu.make (Interface_names.f_Help, menu_bar);
+			!! help_cmd;
+			!! help_menu_entry.make_default (help_cmd, help_menu);
+			menu_bar.set_help_button (help_menu.menu_button)
+		end;
+
+	build_print_menu_entry is
+			-- Create a print command to be inserted into a menu.
+		require
+			valid_file_menu: file_menu /= Void
+		local
+			print_cmd: PRINT_COMMAND;
+			print_menu_entry: EB_MENU_ENTRY;
+		do
+			!! print_cmd.make (Current);
+			!! print_menu_entry.make (print_cmd, file_menu);
+			!! print_cmd_holder.make_plain (print_cmd)
 		end;
 
 	init_text_window is

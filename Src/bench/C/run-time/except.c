@@ -372,7 +372,7 @@ rt_public struct ex_vect *exft(void)
 	/* Get an execution vector, in final mode. We don't bother setting the
 	 * feature name or the object ID as there is no stack dump in final mode.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 struct ex_vect *vector;	/* The exception vector */
 
 	SIGBLOCK;				/* Critical section, protected against signals */
@@ -401,6 +401,7 @@ rt_public struct ex_vect *exft(void)
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
 	return vector;		/* Execution vector of current Eiffel routine */
+	EIF_END_GET_CONTEXT
 }
 #endif
 

@@ -55,17 +55,22 @@ feature -- Basic Operations
 			container, nested: STRING
 			i: INTEGER
 		do
-			Result := clone (name)
-			if Result.item (Result.count) = '&' then
-				Result.keep_head (Result.count - 1)
+			operators.search (name)
+			if operators.found then
+				Result := operators.found_item
+			else
+				Result := clone (name)
+				if Result.item (Result.count) = '&' then
+					Result.keep_head (Result.count - 1)
+				end
+				Result.replace_substring_all (".", "_")
+				Result.replace_substring_all ("___", "_")
+				Result.replace_substring_all ("__", "_")
+				if Result.item (1) = '_' then
+					Result.prepend_character ('x')
+				end
+				Result := generic_format (Result)
 			end
-			Result.replace_substring_all (".", "_")
-			Result.replace_substring_all ("___", "_")
-			Result.replace_substring_all ("__", "_")
-			if Result.item (1) = '_' then
-				Result.prepend_character ('x')
-			end
-			Result := generic_format (Result)
 		ensure
 			non_void_result: Result /= Void
 		end	
@@ -271,7 +276,62 @@ feature {NONE} -- Implementation
 			Result.put ("false_", "false")
 			Result.put ("result_", "result")
 			Result.put ("bit_", "bit")
-		end
+		end 
 
+	operators: HASH_TABLE [STRING, STRING] is
+			-- Operator symbols table
+		once
+			create Result.make (50)
+			
+			-- Unary operators
+			Result.put ("#--", "op_Decrement");
+			Result.put ("#++", "op_Increment");
+			Result.put ("-", "op_UnaryNegation");
+			Result.put ("+", "op_UnaryPlus");
+			Result.put ("not", "op_LogicalNot");
+			Result.put ("#true", "op_True");
+			Result.put ("#false", "op_False");
+			Result.put ("&", "op_AddressOf");
+			Result.put ("#~", "op_OnesComplement");
+			Result.put ("*", "op_PointerDereference");
+			
+			-- Binary operators
+			Result.put ("+", "op_Addition" );
+			Result.put ("-", "op_Subtraction");
+			Result.put ( "*", "op_Multiply");
+			Result.put ( "/", "op_Division");
+			Result.put ( "\\", "op_Modulus");
+			Result.put ( "xor", "op_ExclusiveOr");
+			Result.put ("&", "op_BitwiseAnd");
+			Result.put ("|", "op_BitwiseOr");
+			Result.put ("and", "op_LogicalAnd");
+			Result.put ("or", "op_LogicalOr");
+			Result.put ("#=", "op_Assign");
+			Result.put ("#<<", "op_LeftShift");
+			Result.put ("#>>", "op_RightShift");
+			Result.put ("#|>>", "op_SignedRightShift");
+			Result.put ("|>>", "op_UnsignedRightShift");
+			Result.put ("#==", "op_Equality");
+			Result.put (">", "op_GreaterThan");
+			Result.put ("<", "op_LessThan");
+			Result.put ("|=", "op_Inequality");
+			Result.put (">=", "op_GreaterThanOrEqual");
+			Result.put ("<=", "op_LessThanOrEqual");
+			Result.put ("#|>>=", "op_UnsignedRightShiftAssignment");
+			Result.put ("#->", "op_MemberSelection");
+			Result.put ("#>>=", "op_RightShiftAssignment");
+			Result.put ("#*=", "op_MultiplicationAssignment");
+			Result.put ("#->*", "op_PointerToMemberSelection");
+			Result.put ("#-=", "op_SubtractionAssignment");
+			Result.put ("#^=", "op_ExclusiveOrAssignment");
+			Result.put ("#<<=", "op_LeftShiftAssignment");
+			Result.put ("#\\=", "op_ModulusAssignment");
+			Result.put ("#+=", "op_AdditionAssignment");
+			Result.put ("#&=", "op_BitwiseAndAssignment");
+			Result.put ("#|=", "op_BitwiseOrAssignment");
+			Result.put ("#,", "op_Comma");
+			Result.put ("#/=", "op_DivisionAssignment");
+		end
+		
 end -- class NAME_FORMATTER
 

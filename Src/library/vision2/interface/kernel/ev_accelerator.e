@@ -7,8 +7,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
---| FIXME This feature names in this class should be propogated to the _I.
-
 class
 	EV_ACCELERATOR
 
@@ -88,7 +86,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_key (a_key: INTEGER) is
+	set_key (a_key: EV_KEY) is
 			-- Assign `a_key' to `key'.
 		require
 			a_key_not_void: a_key /= Void
@@ -136,7 +134,7 @@ feature -- Status setting
 		do
 			implementation.enable_control_key
 		ensure
-			control_reuqired: control_reuqired
+			control_required: control_required
 		end
 
 	disable_control_key is
@@ -144,7 +142,7 @@ feature -- Status setting
 		do
 			implementation.disable_control_key
 		ensure
-			not_control_reuqired: not control_reuqired
+			not_control_required: not control_required
 		end
 
 feature -- Status report
@@ -194,12 +192,6 @@ feature {NONE} -- Implementation
 			create {EV_ACCELERATOR_IMP} implementation.make (Current)
 		end
 
-feature -- Obsolete
-
-	id: INTEGER is check false end
-			-- Integer representation of key combination.
-			--| FIXME Used by EV_INTERNAL_ACCELERATOR_IMP.
-
 invariant
 	actions_not_void: actions /= Void
 	key_not_void: key /= Void
@@ -228,6 +220,9 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/15 23:04:46  brendel
+--| Fixed compiler errors.
+--|
 --| Revision 1.8  2000/03/15 22:08:24  oconnor
 --| updated comments and modifier feature names
 --|

@@ -181,7 +181,7 @@ feature -- Events handling
 				when Key_enter then
 					close_and_complete
 				when Key_up then
-					if not choice_list.is_empty
+					if not choice_list.is_empty then
 						if to_be_inserted.has_focus then
 							if choice_list.count > 0 then
 								choice_list.first.enable_select

@@ -74,6 +74,8 @@ feature -- Output
 			-- Append `Current' to `st' with `indent' tabs the left margin.
 		local
 			status: APPLICATION_STATUS
+			is_special_of_char: BOOLEAN
+			char_value: CHARACTER_VALUE
 		do
 			append_tabs (st, indent);
 			st.add_feature_name (name, e_class);
@@ -96,14 +98,36 @@ feature -- Output
 				st.add_string ("... Items skipped ...");
 				st.add_new_line
 			end;
-			from
+			if items.count /= 0 then
 				items.start
-			until
-				items.after
-			loop
-				items.item.append_to (st, indent + 2);
-				items.forth
-			end;
+				char_value ?= items.item
+				is_special_of_char := char_value /= Void
+			end 
+			if not is_special_of_char then
+				from
+					items.start
+				until
+					items.after
+				loop
+					items.item.append_to (st, indent + 2);
+					items.forth
+				end;
+			else
+				st.add_string ("%"")
+				from
+					items.start
+				until
+					items.after
+				loop
+					char_value ?= items.item
+					check
+						valid_character_element: char_value /= Void
+					end
+					st.add_char (char_value.value)
+					items.forth
+				end;
+				st.add_string ("%"%N")
+			end
 			if 0 <= sp_upper and sp_upper < capacity - 1 then
 				append_tabs (st, indent + 2);
 				st.add_string ("... More items ...");

@@ -21,11 +21,12 @@
 #include "stack.h"
 #include "eif_io.h"
 
+typedef void (*EIF_PROC_REF_REAL) (EIF_REFERENCE, EIF_REAL); /* No conversion into DOUBLE */
 EIF_PROC set_rout;
 EIF_PROC set_integer;
 EIF_PROC set_bool;
 EIF_PROC set_char;
-EIF_PROC set_real;
+EIF_PROC_REF_REAL set_real;
 EIF_PROC set_double;
 EIF_PROC set_ref;
 EIF_PROC set_pointer;
@@ -184,7 +185,7 @@ rt_public void c_recv_value (EIF_OBJ target)
 }
 
 
-rt_public void c_pass_recv_routines (EIF_PROC d_int, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
+rt_public void c_pass_recv_routines (EIF_PROC d_int, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC_REF_REAL d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
 /*
  *	Register the routines to communicate with a RECV_VALUE
  */

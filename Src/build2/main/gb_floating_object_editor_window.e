@@ -29,6 +29,7 @@ feature {NONE} -- Initialize
 	initialize is
 			-- Initialize `Current'.
 		do
+			Precursor {EV_DIALOG}
 				-- We must allocate the pixmap correctly during
 				-- creation, and before it is displayed.
 				-- Must be done due to the Windows icon pixmap bug.

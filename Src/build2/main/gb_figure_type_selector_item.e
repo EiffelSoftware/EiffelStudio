@@ -33,13 +33,14 @@ feature {NONE} -- Initialization
 			type := a_text
 			create pixmaps
 			create item.make_with_pixmap (pixmaps.pixmap_by_name (type.as_lower))
+			item.set_data (Current)
 			item.pointer_motion_actions.force_extend (agent display_type)
 			item.set_pebble_function (agent generate_transportable)
 		end
 
 feature -- Access
 
-	item: EV_FIGURE_PICTURE
+	item: FIGURE_PICTURE_WITH_DATA
 		-- Graphical representation of `Current' used in the type selector.
 
 feature {NONE} -- Implementation

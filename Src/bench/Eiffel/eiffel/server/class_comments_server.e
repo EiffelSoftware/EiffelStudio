@@ -40,8 +40,7 @@ feature -- Update
 				an_id := other.key_for_iteration;
 				old_info := tbl_item (an_id);
 				if old_info /= Void then
-					old_server_file := Server_controler.file_of_id
-																(old_info.id);
+					old_server_file := Server_controler.file_of_id (old_info.id);
 					old_server_file.remove_occurence;
 					if old_server_file.occurence = 0 then
 						file_ids.prune (old_server_file.id);

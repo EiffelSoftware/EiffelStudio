@@ -106,6 +106,15 @@ feature -- Status setting
 		deferred
 		end
 
+feature -- Element change
+
+	clear_items is
+			-- Clear all the items of the list.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	

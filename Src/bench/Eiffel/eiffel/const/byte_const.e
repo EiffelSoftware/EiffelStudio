@@ -139,6 +139,8 @@ feature {NONE}
 	Bc_pop:				CHARACTER is '%/131/';
 	Bc_ref_to_ptr:		CHARACTER is '%/132/';
 	Bc_rcreate:		CHARACTER is '%/133/';
+	Bc_gen_param_create:	CHARACTER is '%/134/';
+	Bc_create_exp:	CHARACTER is '%/135/';
 
 		-- Instructions for Concurrent Eiffel
 

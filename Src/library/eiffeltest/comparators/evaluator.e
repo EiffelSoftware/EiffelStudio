@@ -1,0 +1,65 @@
+indexing
+	description:
+		"Evaluators for test steps"
+
+	status:	"See note at end of class"
+	author: "Patrick Schoenbach"
+	date: "$Date$"
+	revision: "$Revision$"
+
+deferred class EVALUATOR inherit
+
+	CALLBACK
+		rename
+			callback as test_step, set_callback as set_test_step
+		end
+
+feature -- Access
+
+	name: STRING
+			-- Name of evaluator
+
+feature -- Status report
+
+	is_setup_ok: BOOLEAN is
+			-- Is evaluator set up?
+		do
+			Result := name /= Void and then not name.empty
+		end
+
+	is_true: BOOLEAN is
+			-- Does evaluator yield true?
+		require
+			setup_ok: is_setup_ok
+		deferred
+		end
+	 
+feature -- Status setting
+
+	set_name (s: STRING) is
+			-- Set name to `s'.
+		require
+			non_empty_name: s /= Void and then not s.empty
+		do
+			name := s
+		ensure
+			name_set: name = s
+		end
+
+end -- class EVALUATOR
+
+--|----------------------------------------------------------------
+--| EiffelTest: Reusable components for developing unit tests.
+--| Copyright (C) 2000 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

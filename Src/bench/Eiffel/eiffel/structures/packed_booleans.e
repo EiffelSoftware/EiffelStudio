@@ -79,9 +79,9 @@ feature -- Element change
 		do	
 			index := i // Integer_size
 			if v then
-				area.put (area.item (index) | ((1).bit_shift_left (i \\ Integer_size)), index)
+				area.put (area.item (index) | ((1).to_integer_32 |<<  (i \\ Integer_size)), index)
 			else
-				area.put (area.item (index) & ((1).bit_shift_left (i \\ Integer_size)).bit_not, index)
+				area.put (area.item (index) & ((1).to_integer_32 |<< (i \\ Integer_size)).bit_not, index)
 			end
 		ensure
 			inserted: v = item (i)

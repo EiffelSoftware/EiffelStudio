@@ -14,10 +14,10 @@
 		<paragraph>When discovering any approach to software construction, however ambitious its goals, it is reassuring to see first a small example of the big picture -- a complete program to print the famous "Hello World" string.  Here is how to perform this fascinating task in the Eiffel notation.  </paragraph>
 		<paragraph>You write a class 
 			<code>
-				<string>HELLO</string>
+				<class_name>HELLO</class_name>
 			</code> with a single procedure, say 
 			<code>
-				<string>make</string>
+				<feature_name>make</feature_name>
 			</code>, also serving as creation procedure.  If you like short texts, here is a minimal version:
 		</paragraph>
 		<code_block>
@@ -55,7 +55,7 @@
 		<keyword>do</keyword>      
 			<feature_name>io</feature_name>.<feature_name>put_string</feature_name> (<string>"Hello World"</string>)
 			<feature_name>io</feature_name>.<feature_name>put_new_line</feature_name>
-	        <keyword>end</keyword>
+		<keyword>end</keyword>
 
 <keyword>end</keyword> <comment>-- class HELLO</comment>
 </code_block>
@@ -70,28 +70,28 @@
 			</code> and 
 			<code>
 				<string>author</string>
-			</code> .  
+			</code>.  
 		</paragraph>
 		<paragraph>The name of the class is 
 			<code>
-				<string>HELLO</string>
-			</code> .  Any class may contain "features"; 
+				<class_name>HELLO</class_name>
+			</code>.  Any class may contain "features"; 
 			<code>
-				<string>HELLO </string>
+				<class_name>HELLO </class_name>
 			</code>has just one, called 
 			<code>
-				<string>make</string>
-			</code> .  The 
+				<feature_name>make</feature_name>
+			</code>. The 
 			<code>
 				<keyword>create</keyword>
 			</code> clause indicates that 
 			<code>
-				<string>make</string>
+				<feature_name>make</feature_name>
 			</code> is a "creation procedure", that is to say an operation to be executed at class instantiation time.  The class could have any number of creation procedures.  
 		</paragraph>
 		<paragraph>The definition of 
 			<code>
-				<string>make</string>
+				<feature_name>make</feature_name>
 			</code> appears in a 
 			<code>
 				<keyword>feature</keyword>
@@ -103,9 +103,10 @@
 			</code> (two hyphen signs) is a comment; more precisely it is a "header comment", which style rules invite software developers to write for every such feature, just after the 
 			<code>
 				<keyword>is</keyword>
-			</code> .  As will be seen in 
+			</code>.  As will be seen in 
 			<link>
 				<url>tutorial-09.xml#78482</url>
+				<label>"The contract form of a class", page 44</label>
 			</link>, the tools of EiffelStudio know about this convention and use it to include the header comment in the automatically generated class documentation.  
 		</paragraph>
 		<paragraph>The body of the feature is introduced by the 
@@ -114,54 +115,48 @@
 			</code> keyword and terminated by 
 			<code>
 				<keyword>end</keyword>
-			</code> .  It consists of two output instructions.  They both use 
+			</code>.  It consists of two output instructions.  They both use 
 			<code>
-				<string>io</string>
+				<feature_name>io</feature_name>
 			</code>, a generally available reference to an object that provides access to standard input and output mechanisms; the notation 
 			<code>
-				<string>io</string>
-			</code> 
-			<span>.  </span> 
+				<feature_name>io</feature_name>
+			</code>
+			<span>.</span>
 			<code>
-				<string>f</string>
+				<feature_name>f</feature_name>
 			</code>, for some feature 
 			<code>
-				<string>f</string>
-			</code> of the corresponding library class ( 
+				<feature_name>f</feature_name>
+			</code> of the corresponding library class (
 			<code>
-				<string>STD_FILES</string>
-			</code> ), means "apply 
+				<class_name>STD_FILES</class_name>
+			</code>), means "apply 
 			<code>
-				<string>f</string>
+				<feature_name>f</feature_name>
 			</code> to 
 			<code>
-				<string>io</string>
-			</code> ".  Here we use two such features:
+				<feature_name>io</feature_name>
+			</code>".  Here we use two such features:
 		</paragraph>
 		<list ordered="false">
 			<item>
 				<code>
-					<string>put_string</string>
+					<feature_name>put_string</feature_name>
 				</code> outputs a string, passed as argument, here 
 				<code>
-					<comment>"</comment>
-				</code> 
-				<code>
-					<string>World Hello</string>
-				</code> 
-				<code>
-					<comment>"</comment>
-				</code> .  
+					<string>"Hello World"</string>
+				</code>.  
 			</item>
 			<item>
 				<code>
-					<string>put_new_line</string>
+					<feature_name>put_new_line</feature_name>
 				</code> terminates the line.  
 			</item>
 		</list>
 		<paragraph>Rather than using a call to 
 			<code>
-				<string>put_new_line</string>
+				<feature_name>put_new_line</feature_name>
 			</code>, the first version of the class simply includes a new-line character, denoted as 
 			<code>
 				<string>%N</string>
@@ -172,15 +167,15 @@
 			<item>Start EiffelStudio</item>
 			<item>When prompted, ask EiffelStudio to build a system for you; specify 
 				<code>
-					<string>HELLO</string>
+					<class_name>HELLO</class_name>
 				</code> as the "root class" and 
 				<code>
-					<string>make</string>
+					<feature_name>make</feature_name>
 				</code> as the "root procedure".  
 			</item>
 			<item>You can either use EiffelStudio to type in the above class text, or you may use any text editor and store the result into a file 
 				<code>
-					<keyword>hello.e</keyword>
+					<string>hello.</string><keyword>e</keyword>
 				</code> in the current directory.  
 			</item>
 			<item>Click the "Compile" icon.  </item>

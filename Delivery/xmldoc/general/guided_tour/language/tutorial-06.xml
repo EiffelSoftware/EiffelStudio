@@ -26,99 +26,98 @@
 		<paragraph>For the system to make sense, it must contains all the classes on which the root 
 			<bold>depends</bold> directly or indirectly.  A class 
 			<code>
-				<string>B</string>
+				<class_name>B</class_name>
 			</code> depends on a class 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code> if it is either a 
 			<bold>client</bold> of 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code>, that is to say uses objects of type 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code>, or an 
 			<bold>heir</bold> of 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code>, that is to say extends or specializes 
 			<code>
-				<string>A</string>
-			</code>.  (These two relations, client and inheritance, are coveredbelow.  )
+				<class_name>A</class_name>
+			</code>.  (These two relations, client and inheritance, are coveredbelow.)
 		</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Classes</content>
 		</heading>
-		<paragraph>The notion of class is central to the Eiffel approach.  A class is the description of a type of run-time data structures ( 
-			<span>objects</span> ), characterized by common operations 
-			<span>features</span> ) and properties.  Examples of classes include:
+		<paragraph>The notion of class is central to the Eiffel approach.  A class is the description of a type of run-time data structures (objects), characterized by common operations 
+			features) and properties.  Examples of classes include:
 		</paragraph>
 		<list ordered="false">
 			<item>In a banking system, a class 
 				<code>
-					<string>ACCOUNT</string>
+					<class_name>ACCOUNT</class_name>
 				</code> may have features such as 
 				<code>
-					<string>deposit</string>
+					<feature_name>deposit</feature_name>
 				</code>, adding a certain amount to an account, 
 				<code>
-					<string>all_deposits</string>
+					<feature_name>all_deposits</feature_name>
 				</code>, yielding the list of deposits since the account's opening, and 
 				<code>
-					<string>balance</string>
+					<feature_name>balance</feature_name>
 				</code>, yielding the current balance, with properties stating that 
 				<code>
-					<string>deposit</string>
+					<feature_name>deposit</feature_name>
 				</code> must add an element to the 
 				<code>
-					<string>all_deposits</string>
+					<feature_name>all_deposits</feature_name>
 				</code> list and update 
 				<code>
-					<string>balance</string>
+					<feature_name>balance</feature_name>
 				</code> by adding the sum deposited, and that the current value of 
 				<code>
-					<string>balance</string>
+					<feature_name>balance</feature_name>
 				</code> must be consistent with the lists of deposits and withdrawals.
 			</item>
 			<item> A class 
 				<code>
-					<string>COMMAND</string>
+					<class_name>COMMAND</class_name>
 				</code> in an interactive system of any kind may have features such as 
 				<code>
-					<string>execute</string>
+					<feature_name>execute</feature_name>
 				</code> and 
 				<code>
-					<string>undo</string>
+					<feature_name>undo</feature_name>
 				</code> , as well as a feature 
 				<code>
-					<string>undoable</string>
+					<feature_name>undoable</feature_name>
 				</code> which indicates whether a command can be undone, with the property that 
 				<code>
-					<string>undo</string>
+					<feature_name>undo</feature_name>
 				</code> is only applicable if 
 				<code>
-					<string>undoable</string>
+					<feature_name>undoable</feature_name>
 				</code> yields the value true.
 			</item>
 			<item> A class 
 				<code>
-					<string>LINKED_LIST</string>
+					<class_name>LINKED_LIST</class_name>
 				</code> may have features such as 
 				<code>
-					<string>put</string>
+					<feature_name>put</feature_name>
 				</code>, which adds an element to a list, and 
 				<code>
-					<string>count</string>
+					<feature_name>count</feature_name>
 				</code>, yielding the number of elements in the list, with properties stating that 
 				<code>
-					<string>put</string>
+					<feature_name>put</feature_name>
 				</code> increases 
 				<code>
-					<string>count</string>
+					<feature_name>count</feature_name>
 				</code> by one and that 
 				<code>
-					<string>count</string>
+					<feature_name>count</feature_name>
 				</code> is always non-negative.
 			</item>
 		</list>
@@ -131,97 +130,94 @@
 		<list ordered="false">
 			<item> You can define a class 
 				<code>
-					<string>C</string>
+					<class_name>C</class_name>
 				</code> as a 
 				<bold>client</bold> of a class 
 				<code>
-					<string>A</string>
+					<class_name>A</class_name>
 				</code> to enable the features of 
 				<code>
-					<string>C</string>
+					<class_name>C</class_name>
 				</code> to rely on objects of type 
 				<code>
-					<string>A</string>
-				</code> .
+					<class_name>A</class_name>
+				</code>.
 			</item>
 			<item> You may define a class 
 				<code>
-					<string>B</string>
+					<class_name>B</class_name>
 				</code> as an 
 				<bold>heir</bold> of a class 
 				<code>
-					<string>A</string>
+					<class_name>A</class_name>
 				</code> to provide 
 				<code>
-					<string>B</string>
+					<class_name>B</class_name>
 				</code> with all the features and properties of 
 				<code>
-					<string>A</string>
+					<class_name>A</class_name>
 				</code>, letting 
 				<code>
-					<string>B</string>
+					<class_name>B</class_name>
 				</code> add its own features and properties and modify some of the inherited features if appropriate.
 			</item>
 		</list>
 		<paragraph>If 
 			<code>
-				<string>C</string>
+				<class_name>C</class_name>
 			</code> is a client of 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code>, 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code> is a 
 			<bold>supplier</bold> of 
 			<code>
-				<string>C</string>
-			</code> .  If 
+				<class_name>C</class_name>
+			</code>.  If 
 			<code>
-				<string>B</string>
+				<class_name>B</class_name>
 			</code> is an heir of 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code>, 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code> is a 
 			<bold>parent</bold> of 
 			<code>
-				<string>B</string>
+				<class_name>B</class_name>
 			</code>.  A 
 			<bold>descendant</bold> of 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code> is either 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code> itself or, recursively, a descendant of an heir of 
 			<code>
-				<string>A</string>
-			</code> ; in more informal terms a descendant is a direct or indirect heir, or the class itself.  To exclude 
+				<class_name>A</class_name>
+			</code>; in more informal terms a descendant is a direct or indirect heir, or the class itself.  To exclude 
 			<code>
-				<string>A</string>
+				<class_name>A</class_name>
 			</code> itself we talk of 
-			<bold>proper descendant</bold> .  In the reverse direction the terms are 
+			<bold>proper descendant</bold>.  In the reverse direction the terms are 
 			<bold>ancestor</bold> and 
-			<bold>proper ancestor</bold> .
+			<bold>proper ancestor</bold>.
 		</paragraph>
 		<paragraph>The client relation can be cyclic; an example involving a cycle would be classes 
 			<code>
-				<string>PERSON</string>
+				<class_name>PERSON</class_name>
 			</code> and 
 			<code>
-				<string>HOUSE</string>
+				<class_name>HOUSE</class_name>
 			</code>, modeling the corresponding informal everyday "object" types and expressing the properties that every person has a home and every home has an architect.  The inheritance (heir) relation may not include any cycle.
 		</paragraph>
 		<paragraph>In modeling terms, client roughly represents the relation "has" and heir roughly represents "is".  For example we may use Eiffel classes to model a certain system and express that every child 
 			<code>
-				<string>has</string>
-			</code> a birth date (client relation) and 
-			<code>
-				<string>is</string>
-			</code> a person (inheritance).
+				<feature_name>has</feature_name>
+			</code> a birth date (client relation) and is a person (inheritance).
 		</paragraph>
 		<paragraph>Distinctive of Eiffel is the rule that lasses can only be connected through these two relations.  This excludes the behind-the-scenes dependencies often found in other approaches, such as the use of global variables, which jeopardize the modularity of a system.  Only through a strict policy of limited and explicit inter-class relations can we achieve the goals of reusability and extendibility.  </paragraph>
 		<heading>
@@ -230,50 +226,52 @@
 		</heading>
 		<paragraph>An Eiffel class that you write does not come into a vacuum but fits in a preordained structure, shown in the figure and involving two library classes: 
 			<code>
-				<string>ANY</string>
+				<class_name>ANY</class_name>
 			</code> and 
 			<code>
-				<string>NONE</string>
-			</code> .
+				<class_name>NONE</class_name>
+			</code>.
 		</paragraph>
 		<image>
 			<url>tutorial-4.png</url>
 		</image>
 		<paragraph>Any class that does not explicitly inherit from another is considered to inherit from 
 			<code>
-				<string>ANY</string>
+				<class_name>ANY</class_name>
 			</code>, so that every class is a descendant, direct or indirect, of 
 			<code>
-				<string>ANY</string>
-			</code> . 
+				<class_name>ANY</class_name>
+			</code>. 
 			<code>
-				<string>ANY</string>
+				<class_name>ANY</class_name>
 			</code> introduces a number of general-purpose features useful everywhere, such as copying, cloning and equality testing operations (page 
 			<link>
 				<url>tutorial-07.xml#12485</url>
-			</link> ) and default input-output.  The procedure 
+				<label>28</label>
+			</link>) and default input-output.  The procedure 
 			<code>
 				<string>print</string>
 			</code> used in the first version of our "Hello World" (page 
 			<link>
 				<url>tutorial-05.xml#80381</url>
-			</link> ) comes from 
+				<label>11</label>
+			</link>) comes from 
 			<code>
-				<string>ANY</string>
-			</code> .
+				<class_name>ANY</class_name>
+			</code>.
 		</paragraph>
 		<paragraph>
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code> inherits from any class that has no explicit heir.  Since inheritance has no cycles, 
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code> cannot have proper descendants.  This makes it useful, as we will see, to specify non-exported features, and to denote the type of void values.  Unlike 
 			<code>
-				<string>ANY</string>
+				<class_name>ANY</class_name>
 			</code>, class 
 			<code>
-				<string>NONE</string>
+				<class_name>NONE</class_name>
 			</code> doesn't have an actual class text; instead, it's a convenient fiction.
 		</paragraph>
 		<heading>
@@ -284,7 +282,8 @@
 		<paragraph>Above classes, you will find the concept of cluster.  A cluster is a group of related classes.  Clusters are a property of the method, enabling managers to organize the development into teams.  As we have already seen (section 
 			<link>
 				<url>tutorial-04.xml#41726</url>
-			</link> ) they also play a central role in the lifecycle model.  Clusters are an organizational concept, not a form of module, and do not require an Eiffel language construct.
+				<label>3</label>
+			</link>) they also play a central role in the lifecycle model.  Clusters are an organizational concept, not a form of module, and do not require an Eiffel language construct.
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -302,8 +301,8 @@
 </code_block>
 		<paragraph>to indicate that it is actually an encapsulation of a C function whose original name is 
 			<code>
-				<string>fstat _</string>
-			</code> .  The 
+				<feature_name>fstat _</feature_name>
+			</code>.  The 
 			<code>
 				<keyword>alias</keyword>
 			</code> clause is optional, but here it is needed because the C name, starting with an underscore, is not valid as an Eiffel identifier.

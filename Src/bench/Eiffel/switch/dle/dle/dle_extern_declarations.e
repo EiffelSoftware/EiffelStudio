@@ -84,13 +84,14 @@ feature -- Generation
 			f: INDENT_FILE
 		do	
 			!!f.make (file_name);
-			f.open_write;
+			f.open_append;
 
 			f.putstring ("#include %"portable.h%"%N%N");
 
 				-- now generate the include files required by externals
 			generate_header_files (f)
 
+			f.generate_cpp_wrapper_start;
 			from
 				routines.start
 			until
@@ -102,6 +103,8 @@ feature -- Generation
 				f.putstring ("();%N");
 				routines.forth
 			end;
+			f.generate_cpp_wrapper_end;
+
 			from
 				routine_tables.start
 			until

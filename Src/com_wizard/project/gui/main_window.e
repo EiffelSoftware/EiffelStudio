@@ -76,6 +76,10 @@ inherit
 			{NONE} all
 		end
 
+	WEL_HELP_CONSTANTS
+		export
+			{NONE} all
+		end
 create
 	make
 
@@ -212,7 +216,7 @@ feature -- GUI Elements
 			-- Help menu
 		once
 			create Result.make
-			Result.append_string ("&Help", 1000)
+			Result.append_string ("&Help", Help_string_constant)
 			Result.append_string ("&About EiffelCOM", About_string_constant)
 		ensure
 			menu_not_void: Result /= Void
@@ -499,8 +503,16 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				tool_bar.disable_button (Generate_string_constant)
 			when About_string_constant then
 				about_dialog.activate
+			when Help_string_constant then
+				launch_help
 			else
 			end
+		end
+
+	launch_help is
+			-- Launch Help			
+		do
+			win_help ("eiffelcom.hlp", Help_finder, 0)
 		end
 
 	on_control_id_command (control_id: INTEGER) is
@@ -544,6 +556,18 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 		do
 			output_edit.resize (a_width, a_height - rebar.height)
 			rebar.reposition
+		end
+
+feature {NONE} -- Externals
+
+	cwin_create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
+							a_herit_handles: BOOLEAN; a_flags: INTEGER; an_environment, a_directory,
+							a_startup_info, a_process_info: POINTER): BOOLEAN is
+			-- SDK CreateProcess
+		external
+			"C [macro <winbase.h>] (LPCTSTR, LPTSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES, BOOL, DWORD, LPVOID, LPCTSTR, LPSTARTUPINFO, LPPROCESS_INFORMATION) :EIF_BOOLEAN"
+		alias
+			"CreateProcess"
 		end
 
 invariant

@@ -39,7 +39,7 @@ feature -- Basic operations
 			midl_library: EI_MIDL_LIBRARY
 			midl_coclass_creator: EI_MIDL_COCLASS_CREATOR
 		do
-			message_output.add_message (Current, "Process Eiffel class")
+			message_output.add_message (Current, "Processing Eiffel class")
 
 			destination_folder := clone (shared_wizard_environment.destination_folder)
 
@@ -68,7 +68,7 @@ feature -- Basic operations
 				Shared_wizard_environment.set_abort (Idl_generation_error)
 			else
 				if not shared_wizard_environment.abort then
-					message_output.add_message (Current, "Generate IDL file")
+					message_output.add_message (Current, "Generating IDL file")
 				end
 
 				create midl_library.make (shared_wizard_environment.eiffel_class_name)

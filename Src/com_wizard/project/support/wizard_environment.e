@@ -39,7 +39,7 @@ feature -- Access
 			-- Intermediate file for IDL generator
 		once
 			Result := clone (destination_folder)
-			Result.append ("\idl\e2idl.output")
+			Result.append ("idl\e2idl.output")
 	
 		end
 

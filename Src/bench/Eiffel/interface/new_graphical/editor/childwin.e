@@ -643,10 +643,12 @@ feature {NONE} -- Display functions
 			first_line_to_draw	: INTEGER
 			last_line_to_draw	: INTEGER
 			curr_y				: INTEGER
+			wel_rect			: WEL_RECT
 		do
 				-- Draw all lines
 			first_line_to_draw := (first_line_displayed + top // line_increment - 1).max (1)
 			last_line_to_draw := (first_line_displayed + bottom // line_increment).min (number_of_lines)
+			curr_y := top
 
 			if first_line_to_draw <= last_line_to_draw then
 				text_displayed.go_i_th (first_line_to_draw)
@@ -662,13 +664,13 @@ feature {NONE} -- Display functions
 				end
 
 				curr_y := (curr_line - first_line_displayed) * line_increment
-				if curr_y < bottom then
-					-- The file is too small for the screen, so we fill in the
-					-- last portion of the screen.
+			end
 
---					dc.fill
-				end
-				
+			if curr_y < bottom then
+				-- The file is too small for the screen, so we fill in the
+				-- last portion of the screen.
+				create wel_rect.make(0, curr_y, width, bottom)
+				dc.fill_rect(wel_rect, text_background_brush)
 			end
 		end
 
@@ -874,6 +876,14 @@ feature {NONE} -- Implementation
 		once
 			create black_color.make_rgb (0, 0, 0)
 			create Result.make_solid (black_color)
+		end
+
+	text_background_brush: WEL_BRUSH is
+		local
+			the_background_color: WEL_COLOR_REF
+		once
+			create the_background_color.make_rgb (255, 255, 255)
+			create Result.make_solid (the_background_color)
 		end
 
 	initialized: BOOLEAN

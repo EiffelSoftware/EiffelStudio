@@ -43,13 +43,13 @@ feature -- Output
 			-- Clear the contents of the window.
 		do
 			set_changed (True)
-			{SCROLLED_TEXT_WINDOW} precursor 
+			{SCROLLED_TEXT_WINDOW} Precursor 
 			set_changed (False)
 		end
 
 	reset is
 		do
-			{SCROLLED_TEXT_WINDOW} precursor
+			{SCROLLED_TEXT_WINDOW} Precursor
 			wipe_out_graphical_values
 		end
 
@@ -65,7 +65,7 @@ feature -- Output
 		do
 			set_changed (True)
 			init_graphical_values
-			{SCROLLED_TEXT_WINDOW} precursor 
+			{SCROLLED_TEXT_WINDOW} Precursor 
 			set_changed (False)
 		end
 
@@ -75,7 +75,7 @@ feature -- Output
 		do
 			hide_text_window
 			set_changed (True)
-			{SCROLLED_TEXT_WINDOW} precursor (texts)
+			{SCROLLED_TEXT_WINDOW} Precursor (texts)
 			set_changed (False)
 			show_text_window
 		end
@@ -112,13 +112,14 @@ feature -- Update
 		local
 			previous_position: INTEGER
 		do
+			set_changed (True)
 			implementation.hide_selection
 			previous_position := implementation.cursor_position
 			implementation.set_selection (0, implementation.count)
 			implementation.set_character_format_word (text_format)
 			implementation.set_selection (previous_position, previous_position)
 			implementation.show_selection
-			{SCROLLED_TEXT_WINDOW} precursor
+			{SCROLLED_TEXT_WINDOW} Precursor
 		end
 
 	put_after_class (e_class: CLASS_C str: STRING) is

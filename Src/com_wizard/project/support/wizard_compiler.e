@@ -41,39 +41,6 @@ create
 
 feature -- Access
 
-	eiffel_compilation_successful (a_folder: STRING): BOOLEAN is
-			-- Was Eiffel precompilation in `a_folder' successful?
-		require
-			non_void_folder: a_folder /= Void
-			valid_folder: not a_folder.empty
-		local
-			a_directory: DIRECTORY
-			a_local_folder: STRING
-			a_file_list: LIST [STRING]
-		do
-			a_local_folder := clone (Shared_wizard_environment.destination_folder)
-			a_local_folder.append (a_folder)
-			-- The ".epr" file is in the Eifgen folder for a precompiled system
-			if 
-				a_folder.is_equal (Client) or
-				component_empty (a_folder)
-			then
-				a_local_folder.append_character (Directory_separator)
-				a_local_folder.append (Eifgen)
-			end
-			create a_directory.make (a_local_folder)
-			if a_directory.exists then
-				from
-					a_file_list := a_directory.linear_representation
-					a_file_list.start
-				until
-					a_file_list.after or Result
-				loop
-					Result := (a_file_list.item.substring (a_file_list.item.count + 1 - Eiffel_project_extension.count, a_file_list.item.count)).is_equal (Eiffel_project_extension)
-					a_file_list.forth
-				end
-			end
-		end
 
 	ace_file_generated: BOOLEAN
 			-- Was generated project ace file generated?
@@ -86,6 +53,52 @@ feature -- Access
 
 feature -- Basic Operations
 
+	eiffel_compilation_successful (a_folder: STRING): BOOLEAN is
+			-- Was Eiffel precompilation in `a_folder' successful?
+		require
+			non_void_folder: a_folder /= Void
+			valid_folder: not a_folder.is_empty
+		local
+			a_directory: DIRECTORY
+			a_local_folder: STRING
+			a_file_list: LIST [STRING]
+		do
+			a_local_folder := clone (Shared_wizard_environment.destination_folder)
+			a_local_folder.append (a_folder)
+			-- The ".epr" file is in the Eifgen folder for a precompiled system
+			Result := has_directory_epr (a_local_folder)
+			if not Result then
+				if 
+					a_folder.is_equal (Client) or
+					component_empty (a_folder)
+				then
+					a_local_folder.append_character (Directory_separator)
+					a_local_folder.append (Eifgen)
+					Result := has_directory_epr (a_local_folder)
+				end
+			end
+		end
+
+	has_directory_epr (a_directory_name: STRING): BOOLEAN is
+			-- Does directory have epr file?
+		local
+			a_directory: DIRECTORY
+			a_file_list: LIST [STRING]
+		do
+			create a_directory.make (a_directory_name)
+			if a_directory.exists then
+				from
+					a_file_list := a_directory.linear_representation
+					a_file_list.start
+				until
+					a_file_list.after or Result
+				loop
+					Result := (a_file_list.item.substring (a_file_list.item.count + 1 - Eiffel_project_extension.count, a_file_list.item.count)).is_equal (Eiffel_project_extension)
+					a_file_list.forth
+				end
+			end
+		end
+		
 	set_makefile_generated (a_boolean: BOOLEAN) is
 			-- Set `makefile_generated'.
 		do
@@ -168,7 +181,7 @@ feature -- Basic Operations
 		end
 
 	component_empty (a_folder: STRING): BOOLEAN is
-			-- Check whether Component directory is empty.
+			-- Check whether Component directory is is_empty.
 		require
 			non_void_folder: a_folder /= Void
 			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
@@ -251,7 +264,7 @@ feature -- Basic Operations
 			-- Check whether finish_freezing was successful in `a_folder\EIFGEN\W_code'.
 		require
 			non_void_folder: a_folder /= Void
-			valid_folder: not a_folder.empty
+			valid_folder: not a_folder.is_empty
 		local
 			a_directory: DIRECTORY
 			a_local_folder: STRING
@@ -412,7 +425,7 @@ feature {NONE} -- Implementation
 			-- Launch EiffelBench with first project in `a_folder'
 		require
 			non_void_folder: a_folder /= Void
-			valid_folder: not a_folder.empty
+			valid_folder: not a_folder.is_empty
 			--contains_eiffel_project: a_folder has one and only one '.epr' file.
 		local
 			a_directory: DIRECTORY

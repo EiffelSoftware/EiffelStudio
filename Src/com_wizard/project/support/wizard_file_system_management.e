@@ -15,8 +15,8 @@ feature -- Basic Operations
 		require
 			non_void_source: a_source /= Void
 			non_void_destination: a_destination /= Void
-			valid_source: not a_source.empty
-			valid_destination: not a_destination.empty
+			valid_source: not a_source.is_empty
+			valid_destination: not a_destination.is_empty
 		local
 			a_file_source, a_file_dest: RAW_FILE
 			retried: BOOLEAN
@@ -42,7 +42,7 @@ feature -- Basic Operations
 			-- Do nothing if `a_file_name' not a valid file name.
 		require
 			non_void_file_name: a_file_name /= Void
-			valid_file_name: not a_file_name.empty
+			valid_file_name: not a_file_name.is_empty
 		local
 			a_file: RAW_FILE
 			retried: BOOLEAN

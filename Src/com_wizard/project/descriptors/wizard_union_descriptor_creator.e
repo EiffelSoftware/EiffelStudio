@@ -32,7 +32,7 @@ feature -- Basic operations
 			valid_documentation: a_documentation /= Void
 		do
 			name := clone (a_documentation.name)
-			if name = Void or else name.empty then
+			if name = Void or else name.is_empty then
 				create name.make (100)
 				name.append ("union_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)

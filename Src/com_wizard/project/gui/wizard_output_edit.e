@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 		end
 
 	Empty_text: STRING is ""
-			-- Empty string
+			-- is_empty string
 
 	Output_edit_name: STRING is "Output"
 			-- Output edit name

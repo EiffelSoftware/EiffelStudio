@@ -88,13 +88,13 @@ feature -- Behavior
 			cluster_name := cluster_edit.text
 
 			project_file_name.to_lower
-			if project_file_name = Void or else project_file_name.empty then
+			if project_file_name = Void or else project_file_name.is_empty then
 				msg_box.error_message_box (Current, Empty_project_file, Initialization_error)
-			elseif eiffel_class_name = Void or else eiffel_class_name.empty then
+			elseif eiffel_class_name = Void or else eiffel_class_name.is_empty then
 				msg_box.error_message_box (Current, Empty_class_name, Initialization_error)
-			elseif ace_file_name = Void or else ace_file_name.empty then
+			elseif ace_file_name = Void or else ace_file_name.is_empty then
 				msg_box.error_message_box (Current, Empty_ace_file, Initialization_error)
-			elseif cluster_name = Void or else cluster_name.empty then
+			elseif cluster_name = Void or else cluster_name.is_empty then
 				msg_box.error_message_box (Current, Empty_cluster_name, Initialization_error)
 			else
 				shared_wizard_environment.set_project_name (project_name)
@@ -190,21 +190,21 @@ feature {NONE} -- Implementation
 					%Please enter a valid definition file"
 			-- Invalid destination folder message.
 
-	Empty_destination_folder: STRING is "Empty destination folder%N%
+	Empty_destination_folder: STRING is "is_empty destination folder%N%
 					%Please enter a valid destination folder"
 			-- Invalid destination folder message
 
-	Empty_project_file: STRING is "Empty project file%N%
+	Empty_project_file: STRING is "is_empty project file%N%
 					%Please enter a valid project file"
 			-- Invalid destination folder message.
 
-	Empty_ace_file: STRING is "Empty Ace file%NPlease enter a valid Ace file"
+	Empty_ace_file: STRING is "is_empty Ace file%NPlease enter a valid Ace file"
 			-- Invalid destination folder message.
 
-	Empty_class_name: STRING is "Empty class name%NPlease enter a valid class name"
+	Empty_class_name: STRING is "is_empty class name%NPlease enter a valid class name"
 			-- Invalid class name message.
 
-	Empty_cluster_name: STRING is "Empty cluster name%N%
+	Empty_cluster_name: STRING is "is_empty cluster name%N%
 					%Please enter a valid cluster name"
 			-- Invalid cluster name message.
 

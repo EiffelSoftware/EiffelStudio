@@ -70,7 +70,7 @@ feature -- Basic Operations
 			-- Delete all files and subdirectories from directory `a_directory_name'
 		require
 			non_void_directory_name: a_directory_name /= Void
-			valid_directory_name: not a_directory_name.empty
+			valid_directory_name: not a_directory_name.is_empty
 		local
 			a_directory: DIRECTORY
 			a_file: RAW_FILE
@@ -115,7 +115,7 @@ feature -- Basic Operations
 			-- Delete all object files in directory `a_directory_name'.
 		require
 			non_void_directory_name: a_directory_name /= Void
-			valid_directory_name: not a_directory_name.empty
+			valid_directory_name: not a_directory_name.is_empty
 		local	
 			a_file_list: LIST [STRING]
 			a_directory: DIRECTORY
@@ -150,7 +150,7 @@ feature -- Basic Operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				if a_file_name /= Void and then not a_file_name.empty then
+				if a_file_name /= Void and then not a_file_name.is_empty then
 					create a_file.make (a_file_name)
 					if a_file.exists then
 						a_file.delete

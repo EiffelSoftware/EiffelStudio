@@ -73,7 +73,7 @@ feature -- Basic Operations
 			if not shared_wizard_environment.abort then
 				message_output.initialize_log_file
 
-				if Eiffel4_location = Void or else Eiffel4_location.empty then
+				if Eiffel4_location = Void or else Eiffel4_location.is_empty then
 					message_output.add_error (Current, message_output.Eiffel4_not_set)
 				end
 			end
@@ -308,9 +308,9 @@ feature {NONE} -- Implementation
 			-- Initialize `a_subdirectory' folder relative to `a_path'.
 		require
 			non_void_path: a_path /= Void
-			valid_path: not a_path.empty
+			valid_path: not a_path.is_empty
 			non_void_subdirectory: a_subdirectory /= Void
-			valid_subdirectory: not a_subdirectory.empty
+			valid_subdirectory: not a_subdirectory.is_empty
 		local
 			a_path2: STRING
 		do
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			-- Initialize Clib and Include folders relative to `a_path'.
 		require
 			non_void_path: a_path /= Void
-			valid_path: not a_path.empty
+			valid_path: not a_path.is_empty
 		do
 			initialize_subdirectory (a_path, Clib)
 			initialize_subdirectory (a_path, Include)

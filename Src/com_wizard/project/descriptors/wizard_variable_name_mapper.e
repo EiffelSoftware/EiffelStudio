@@ -49,21 +49,21 @@ feature -- Basic Operations
 			-- Name for user defined precondition.
 		require
 			non_void_name: a_feature_name /= Void
-			valid_name: not a_feature_name.empty
+			valid_name: not a_feature_name.is_empty
 		do
 			Result := clone (a_feature_name)
 			Result.append (Underscore)
 			Result.append (User_precondition)
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 	namespace_name (a_name: STRING): STRING is
 			-- Namespace name.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			create Result.make (50)
 			if not a_name.is_equal ("stdole") then
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			-- Convert `a_name' to Eiffel legitimate name.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		local
 			i: INTEGER
 			privious_upper: BOOLEAN
@@ -116,14 +116,14 @@ feature -- Basic Operations
 
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 	name_for_class (a_name: STRING; a_type: INTEGER; is_client: BOOLEAN): STRING is
 			-- Convert to Eiffel class name.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 			valid_type: is_valid_type_kind (a_type)
 		do
 			Result := to_eiffel_name (a_name)
@@ -153,27 +153,27 @@ feature -- Basic Operations
 			end
 		ensure
 			non_void_class_name: Result /= Void
-			valid_class_name: not Result.empty
+			valid_class_name: not Result.is_empty
 		end
 
 	name_for_feature (a_name: STRING): STRING is
 			-- Convert to Eiffel feature name.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			Result := to_eiffel_name (a_name)
 			Result.to_lower
 		ensure
 			non_void_feature_name: Result /= Void
-			valid_feature_name: not Result.empty
+			valid_feature_name: not Result.is_empty
 		end
 
 	name_for_feature_with_keyword_check (a_name: STRING): STRING is
 			-- Convert to Eiffel feature name and for conflicts with Eiffel keywords.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			Result :=name_for_feature (a_name)
 
@@ -182,33 +182,33 @@ feature -- Basic Operations
 			end
 		ensure
 			non_void_feature_name: Result /= Void
-			valid_feature_name: not Result.empty
+			valid_feature_name: not Result.is_empty
 		end
 
 	external_feature_name (a_name: STRING): STRING is
 			-- Name of external feature name.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			create Result.make (100)
 			Result.append (Ccom_clause)
 			Result.append (name_for_feature (a_name))
 		ensure
 			non_void_feature_name: Result /= Void
-			valid_feature_name: not Result.empty
+			valid_feature_name: not Result.is_empty
 		end
 
 	header_name (a_namespace, a_name: STRING): STRING is
 			-- Name for header file.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		local
 			tmp_string: STRING
 		do
 			create Result.make (20)
-			if a_namespace /= Void and then not a_namespace.empty then
+			if a_namespace /= Void and then not a_namespace.is_empty then
 				Result.append (a_namespace)
 			end
 			Result.append ("_")
@@ -227,7 +227,7 @@ feature -- Basic Operations
 			end
 		ensure
 			non_void_header_name: Result /= Void
-			valid_header_name: not Result.empty
+			valid_header_name: not Result.is_empty
 		end
 
 	standard_structures: HASH_TABLE [STRING, STRING] is

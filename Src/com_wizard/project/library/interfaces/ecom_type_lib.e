@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Load type library with `file_name'.
 		require
 			non_void_file_name: file_name /= Void
-			valid_file_name: not file_name.empty
+			valid_file_name: not file_name.is_empty
 		local 
 			wide_string: ECOM_WIDE_STRING
 		do
@@ -47,7 +47,7 @@ feature -- Access
 			-- `count' indicates number of instances to look for.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
@@ -136,7 +136,7 @@ feature -- Status report
 			-- Is name described in library?
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		local
 			wide_string: ECOM_WIDE_STRING
 		do

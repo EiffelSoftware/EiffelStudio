@@ -37,7 +37,7 @@ feature -- Basic operations
 			-- Set browse directory.
 		require
 			non_void_directory: a_directory /= Void
-			valid_directory: not a_directory.empty
+			valid_directory: not a_directory.is_empty
 		do
 			browse_directory_cell.put (a_directory)
 			execution_environment.put (a_directory, Eiffelcom_browse_directory)

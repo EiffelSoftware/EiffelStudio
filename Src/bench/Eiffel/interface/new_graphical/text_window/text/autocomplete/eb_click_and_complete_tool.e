@@ -144,7 +144,7 @@ feature -- Reinitialization
 		require
 			features_position_not_void: features_position /= Void
 		do
-			pos_in_file := 0
+			pos_in_file := 1
 			split_string := False
 			features_position.start
 		end
@@ -299,7 +299,7 @@ feature -- Click list update
 				content.start
 				line := content.current_line
 				token := line.first_token
-				pos_in_file := 0
+				pos_in_file := 1
 				search_indexes := True
 			until
 				token = Void
@@ -411,16 +411,9 @@ feature -- Basic Operations
 			feat_table			: E_FEATURE_TABLE 
 			feat				: E_FEATURE
 			cls_c				: CLASS_C
-			type				: TYPE_A
 			crtrs				: HASH_TABLE [EXPORT_I, STRING]
 			externals			: ARRAYED_LIST [E_FEATURE]
-			par_cnt				: INTEGER
-			par_token			: EDITOR_TOKEN
-			blnk				: EDITOR_TOKEN_BLANK
-			spc					: EDITOR_TOKEN_SPACE
-			eol					: EDITOR_TOKEN_EOL
 			show_any_features	: BOOLEAN
-			s					: STRING
 			l_current_class_c	: CLASS_C
 		do			
 			create insertion
@@ -1204,7 +1197,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 		local
 			line: EDITOR_LINE
 			token, 
-			par_token, save_token: EDITOR_TOKEN
+			par_token: EDITOR_TOKEN
 			par_cnt: INTEGER
 			blnk: EDITOR_TOKEN_BLANK
 			type: TYPE_A

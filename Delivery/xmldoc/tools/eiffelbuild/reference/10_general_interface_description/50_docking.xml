@@ -3,15 +3,15 @@
 	<paragraph>
 		<paragraph>The docking mechanism permits customization of the EiffelBuild interface through the re-ordering of tools to suit your preferences. You may simply "drag" one of the supported tools to a new location as desired. The 
 			<link>
-				<url>/tools/eiffelbuild/reference/30_type_selector/index.html</url>
+				<url>/tools/eiffelbuild/reference/30_type_selector/index.xml</url>
 				<label>Type Selector</label>
 			</link>, 
 			<link>
-				<url>/tools/eiffelbuild/reference/63_component_selector/index.html</url>
+				<url>/tools/eiffelbuild/reference/63_component_selector/index.xml</url>
 				<label>Component Selector</label>
 			</link> and 
 			<link>
-				<url>/tools/eiffelbuild/reference/64_window_selector/index.html</url>
+				<url>/tools/eiffelbuild/reference/64_window_selector/index.xml</url>
 				<label>Window Selector</label>
 			</link> all support docking.
 		</paragraph>
@@ -62,7 +62,7 @@
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
-					<url>/tools/eiffelbuild/reference/10_general_interface_description/index.html</url>
+					<url>/tools/eiffelbuild/reference/10_general_interface_description/index.xml</url>
 					<label>General interface description</label>
 				</link>
 			</seealso>

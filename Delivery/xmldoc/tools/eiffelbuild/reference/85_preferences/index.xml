@@ -18,12 +18,12 @@
 			<bold>See also</bold>:
 			<line_break/>
 			<link>
-				<url>/tools/eiffelbuild/reference/10_general_interface_description/index.html</url>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/index.xml</url>
 				<label>General interface description</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/tools/eiffelbuild/reference/index.html</url>
+				<url>/tools/eiffelbuild/reference/index.xml</url>
 				<label>EiffelBuild reference</label>
 			</link>
 		</seealso>

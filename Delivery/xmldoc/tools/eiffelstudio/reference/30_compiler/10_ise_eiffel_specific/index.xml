@@ -25,7 +25,7 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>/general/guided_tour/language/tutorial-08.html</url>
+					<url>/general/guided_tour/language/tutorial-08.xml</url>
 					<label>Generic            creation</label>
 				</link>
 			</item>
@@ -56,13 +56,13 @@
 			<item>Mutually recursive constraints: one can now write class A [H, G-&gt;H] or class B [H -&gt; C, G -&gt; ARRAY [H]]. As a result, the declaration A [D, E] is valid only if E is a descendant of D. Similarly, the declaration B [E, ARRAY [D]] is not valid, if E is a descendant of D.</item>
 			<item>
 				<link>
-					<url>/general/guided_tour/language/tutorial-11.html</url>
+					<url>/general/guided_tour/language/tutorial-11.xml</url>
 					<label>Tuples</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>/general/guided_tour/language/tutorial-12.html</url>
+					<url>/general/guided_tour/language/tutorial-12.xml</url>
 					<label>Agents</label>
 				</link>
 			</item>
@@ -91,12 +91,12 @@
 		<heading><size>2</size>Added external support</heading>
 		<paragraph>Look at the page for 
 			<link>
-				<url>../30_external_features/10_c_externals.html</url>
+				<url>../30_external_features/10_c_externals.xml</url>
 				<label>C</label>
 			</link>
 			 and 
 			<link>
-				<url>../30_external_features/20_cpp_externals.html</url>
+				<url>../30_external_features/20_cpp_externals.xml</url>
 				<label>C++</label>
 			</link>
 			 with the introduction of `struct' and C++ external features encapsulation.</paragraph>

@@ -16,6 +16,9 @@
 #include "config.h"
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
+#ifdef HAS_MMAP
+#include <sys/mman.h>
+#endif
 #include "eiffel.h"			/* For bcopy/memcpy */
 #include "malloc.h"
 #include "garcol.h"			/* For Eiffel flags and function declarations */
@@ -135,6 +138,10 @@ shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
 public long eiffel_usage = 0;			/* Monitor Eiffel memory usage */
 extern long th_alloc;					/* Allocation threshold (in bytes) */
 
+#ifdef HAS_MMAP
+extern char *root_obj;
+#endif
+
 /* Error message commonly used */
 private char *inconsistency = "free-list inconsistency";
 
@@ -168,7 +175,15 @@ shared int split_block();				/* Split a block (return length) */
 shared void lxtract();					/* Extract a block from free list */
 shared char *gmalloc();					/* Wrapper to xmalloc */
 
+#ifdef HAS_MMAP
+extern Caddr_t mmap();
+extern int munmap ();
+#else
+#ifdef HAS_SBRK
 extern Caddr_t sbrk();					/* Set break (system call) */
+#endif
+#endif
+
 extern char *to_chunk();				/* Base address of partial 'to' chunk */
 extern void erembq();					/* Quick insertion in moved set */
 
@@ -807,8 +822,9 @@ register3 unsigned int nbytes;
 int type;
 {
 	/* Get more core from kernel, increasing the data segement of the process
-	 * by calling sbrk(). We try to request at least CHUNK bytes to allow for
-	 * efficient scavenging. If more than that amount is requested, the value
+	 * by calling mmap() or sbrk() or. We try to request at least CHUNK bytes 
+	 * to allow for efficient scavenging. 
+	 * If more than that amount is requested, the value
 	 * is padded to the nearest multiple of the system page size. If less than
 	 * that amount are requested but the system call fails, successive attempts
 	 * are made, decreasing each time by one system page size. A pointer to a
@@ -857,13 +873,18 @@ int type;
 #endif
 
 		/* Now request for some more core, checking the return value
-		 * from sbrk(). Every failure is handled as a "no more memory"
+		 * from mmap() if available or sbrk() if available or malloc()
+		 * as the last option. Every failure is handled as a "no more memory"
 		 * condition.
 		 */
+#ifdef HAS_MMAP
+		oldbrk = (union overhead *) mmap (root_obj, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
+#else
 #ifdef HAS_SBRK
 		oldbrk = (union overhead *) sbrk(asked);
 #else
 		oldbrk = (union overhead *) malloc(asked);
+#endif
 #endif
 
 #ifdef DEBUG
@@ -981,11 +1002,9 @@ private int free_last_chunk()
 	uint32 i;				/* Index in hash table where block is stored */
 	uint32 r;				/* To compute hashing index for released block */
 
-#ifdef HAS_SBRK
-#ifndef HAS_SMART_SBRK
+#if (!defined (HAS_MMAP)) && defined (HAS_SBRK) && (!defined (HAS_SMART_SBRK))
 	return -5;
-#endif
-#endif
+#else
 	last_chk = cklst.ck_tail;			/* Last chunk in memory */
 	if (last_chk == (struct chunk *) 0)	/* No more chunk */
 		return -4;						/* Make sure a failure is reported */
@@ -1033,9 +1052,12 @@ private int free_last_chunk()
 	}
 
 #ifdef DEBUG
+#if (!defined HAS_MMAP) && defined HAS_SBRK
 	dprintf(1)("free_last_chunk: %d bytes to be removed before 0x%lx\n",
 		nbytes, sbrk(0));
 	flush;
+
+#endif
 #endif
 
 	SIGBLOCK;			/* Entering in critical section */
@@ -1045,7 +1067,7 @@ private int free_last_chunk()
 	 * was not correctly determined by Configure--RAM.
 	 */
 
-#ifdef HAS_SBRK
+#if (!defined HAS_MMAP) && defined HAS_SBRK
 	brk = sbrk(0);						/* Fetch current break value */
 	if (brk != last_addr) {				/* There *is* something */
 		SIGRESUME;						/* End of critical section */
@@ -1082,10 +1104,18 @@ private int free_last_chunk()
 		disconnect_free_list(arena, i);		/* Remove arena from free list */
 	}
 
-	/* Now here we go. Attempt the shrinking process by calling sbrk() with a
-	 * negative value, bringing the memory used by the chunk back to the kernel.
+	/* Now here we go. Attempt the shrinking process by calling munmap() or sbrk() with a
+	 * negative value or free, bringing the memory used by the chunk back to the kernel.
 	 */
 
+#ifdef HAS_MMAP
+	if (munmap (last_chk, nbytes) == -1) {
+		if (i != -1)
+			connect_free_list (arena, 1);
+		SIGRESUME;
+		return -1;
+	}
+#else
 #ifdef HAS_SBRK
 	status = (int) sbrk(-nbytes);		/* Shrink process's data segment */
 	if (status == -1) {					/* System call failed */
@@ -1096,15 +1126,15 @@ private int free_last_chunk()
 	}
 #else
     free (last_chk);
-    if (i != -1)
-       connect_free_list (arena, i);
-    SIGRESUME;
+#endif
 #endif
 
 #ifdef DEBUG
+#if (!defined HAS_MMAP) && defined HAS_SBRK
 	dprintf(1+2)("free_last_chunk: shrinking succeeded, new break at 0x%lx\n",
 		sbrk(0));
 	flush;
+#endif
 #endif
 
 	/* The break value was sucessfully lowered. It's now time to update the
@@ -1167,6 +1197,7 @@ private int free_last_chunk()
 	SIGRESUME;							/* Critical section ends */
 
 	return 0;			/* Signals no error */
+#endif
 }
 
 private char *set_up(selected, nbytes)

@@ -79,6 +79,9 @@ feature -- Access
 			homogeneous_button.select_actions.extend (agent toggle_homogeneous)
 			Result.extend (homogeneous_button)
 			create layout_button.make_with_text ("Position children")
+			if first.widget_count = 0 then
+				layout_button.disable_sensitive
+			end
 			layout_button.select_actions.extend (agent show_layout_window)
 			Result.extend (layout_button)
 			selected_item_color := red

@@ -67,6 +67,9 @@ feature -- Access
 			button: EV_BUTTON
 		do
 			create button.make_with_text ("Position children")
+			if first.is_empty then
+				button.disable_sensitive
+			end
 			Result := Precursor {GB_EV_ANY}
 			Result.extend (button)
 			button.select_actions.extend (agent show_layout_window)

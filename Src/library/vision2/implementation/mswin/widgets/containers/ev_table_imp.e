@@ -676,7 +676,7 @@ feature {NONE} -- Implementation
 			else
 				create Result.make_filled (count1 + 1)
 				
-				total_size := new_size
+				total_size := new_size - border_width * 2
 				rate := (total_size - total_sum) // count1
 				total_rest := (total_size - total_sum) \\ count1
 

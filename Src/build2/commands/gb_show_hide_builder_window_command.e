@@ -27,7 +27,9 @@ feature {GB_COMMAND_HANDLER} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			is_selected := builder_window.is_show_requested
+			if builder_window /= Void then
+				is_selected := builder_window.is_show_requested
+			end
 		end
 
 feature -- Access

@@ -39,7 +39,7 @@ feature -- Access
 	button: INTEGER
 	keyval: INTEGER
 
-feature {EV_WIDGET_IMP, EV_BUTTON_EVENT_DATA_I}-- Element change
+feature {EV_PND_TARGET_I, EV_BUTTON_EVENT_DATA_I}-- Element change
 	
 	set_x (new_x: DOUBLE) is
 		do

@@ -136,7 +136,7 @@ feature {NONE} -- Execution
 			if arg = last_name_chooser then
 				!! mp.set_watch_cursor;
 				!! file_name.make_from_string (last_name_chooser.selected_file)
-				print_file (file_name);
+				print_file (file_name, False);
 				mp.restore;
 			elseif arg = cancel_b then
 				popdown
@@ -150,9 +150,8 @@ feature {NONE} -- Execution
 					close;
 					chooser.call (Current)
 				else
-					!! file_name.make_from_string (tmp_directory);
-					file_name.set_file_name ("bench_tmp_file")
-					print_file (file_name);
+					!! file_name.make_from_string (generate_temp_name)
+					print_file (file_name, True);
 					mp.restore;
 					close
 				end;
@@ -161,7 +160,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-	print_file (file_name: FILE_NAME) is
+	print_file (file_name: FILE_NAME; delete_after: BOOLEAN) is
 			-- Print a file name.
 		local
 			cmd_string: STRING;
@@ -188,6 +187,10 @@ feature {NONE} -- Implementation
 				if not print_to_file_t.state then
 					!! shell_request;
 					shell_request.execute (cmd_string)
+					if delete_after then
+						!! file.make (file_name)
+						file.delete
+					end
 				end
 			end
 		end;
@@ -227,5 +230,27 @@ feature {NONE} -- Implementation
 				end
 			end
 		end;
+
+feature {NONE} -- Externals
+
+	generate_temp_name: STRING is
+			-- Generate a temporary file name.
+		local
+			prefix_name: STRING
+			a: ANY
+			p: POINTER
+		do
+			prefix_name := "bench_"
+			a := prefix_name.to_c
+			p := tempnam (default_pointer, $a)
+
+			!! Result.make (0)
+			Result.from_c (p)
+		end
+
+	tempnam (d,p: POINTER): POINTER is
+		external
+			"C | <stdio.h>"
+		end
 
 end -- class PRINTER_DIALOG

@@ -26,7 +26,7 @@ cluster
 		-- EiffelBase.NET
 	all base_net: "$ISE_EIFFEL\library.net\base"
 
-external
+assembly
 	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
 
 	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"

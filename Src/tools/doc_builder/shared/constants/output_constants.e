@@ -15,6 +15,8 @@ feature -- Access
 			Result.compare_objects
 			Result.extend (studio_flag, studio_desc)
 			Result.extend (envision_flag, envision_desc)
+			Result.extend (studio_lin_flag, studio_lin_desc)
+			Result.extend (studio_mac_flag, studio_mac_desc)
 			Result.extend (unfiltered_flag, unfiltered)
 		end
 		
@@ -23,9 +25,9 @@ feature -- Access
 		once
 			create Result.make (3)
 			Result.compare_objects
-			Result.extend (Xml_to_help_flag)
-			Result.extend (Html_to_help_flag)
-			Result.extend (Xml_to_html_flag)
+			Result.extend (xml_to_help_flag)
+			Result.extend (html_to_help_flag)
+			Result.extend (xml_to_html_flag)
 		end
 		
 	help_generation_types: ARRAYED_LIST [STRING] is
@@ -33,32 +35,16 @@ feature -- Access
 		once
 			create Result.make (3)
 			Result.compare_objects
-			Result.extend (Web_help_flag)
-			Result.extend (Studio_help_flag)
-			Result.extend (Envision_help_flag)
+			Result.extend (web_help_flag)
+			Result.extend (mshtml_help_flag)
+			Result.extend (vsip_help_flag)
 		end	
 		
-feature -- Flags		
-
-	none: STRING is "none"
-
-	none_desc: STRING is "Excluded"
-
-	unfiltered: STRING is "Unfiltered"
-		
-	studio_flag: STRING is "studio"
+feature -- Help Tags
 	
-	envision_flag: STRING is "envision"
-	
-	unfiltered_flag: STRING is "all"
+	mshtml_help_flag: STRING is "mshtml"
 
-	studio_desc: STRING is "EiffelStudio"
-	
-	envision_desc: STRING is "ENViSioN!"
-
-	studio_help_flag: STRING is "mshtml"
-
-	envision_help_flag: STRING is "vsip"
+	vsip_help_flag: STRING is "vsip"
 
 	web_help_flag: STRING is "web"
 
@@ -67,5 +53,35 @@ feature -- Flags
 	html_to_help_flag: STRING is "html2help"
 	
 	xml_to_help_flag: STRING is "xml2help"	
+		
+feature -- Filter tags
+		
+	unfiltered_flag: STRING is "all"	
+		
+	studio_flag: STRING is "studio"
+	
+	studio_win_flag: STRING is "studio_win"
+	
+	studio_lin_flag: STRING is "studio_lin"
+	
+	studio_mac_flag: STRING is "studio_mac"
+	
+	envision_flag: STRING is "envision"
+
+feature -- Filter Descriptions
+
+	none_desc: STRING is "Excluded"
+
+	unfiltered: STRING is "Unfiltered"
+	
+	studio_desc: STRING is "EiffelStudio"
+	
+	studio_win_desc: STRING is "EiffelStudio for Windows"
+	
+	studio_lin_desc: STRING is "EiffelStudio for Unix/Linux"
+	
+	studio_mac_desc: STRING is "EiffelStudio for Mac OS X"
+	
+	envision_desc: STRING is "ENViSioN!"
 
 end -- class OUTPUT_CONSTANTS

@@ -1016,6 +1016,7 @@ feature -- Element change
 			columns.go_i_th (j)
 			columns.put_left (a_col)
 			
+			recompute_column_offsets
 			redraw_client_area
 			
 				-- Remove column from header and insert at the appropriate position
@@ -1728,18 +1729,21 @@ feature {NONE} -- Drawing implementation
 		local
 			i: INTEGER
 			temp_columns: like columns
+			column_index: INTEGER
+			l_column_count: INTEGER
 		do
 			temp_columns := columns
 			create column_offsets.make (column_count)
 			column_offsets.extend (0)
+			l_column_count := temp_columns.count
 			from
-				temp_columns.start
+				column_index := 1
 			until
-				temp_columns.off
+				column_index > l_column_count
 			loop
-				i := i + temp_columns.item.width
+				i := i + temp_columns.i_th (column_index).width
 				column_offsets.extend (i)
-				temp_columns.forth
+				column_index := column_index + 1
 			end
 		ensure
 			counts_equal: column_offsets.count = column_count + 1

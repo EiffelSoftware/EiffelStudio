@@ -46,10 +46,11 @@ static int get_string();		/* Read a string (after a double quote) */
 static int get_char();			/* Read a char (after a single quote) */
 static int eif_char(char);		/* Eiffel character value */
 
-static int	process();			/* Update position marks */
-static int 	process_name();		/* Update position marks for ids */
+static int	process(int);			/* Update position marks */
+static int 	process_name(int);		/* Update position marks for ids */
 static int 	process_int();		/* Remove underscores from integer values */
 static int 	process_bit();		/* Process bit value */
+static int 	process_tilde(int);		/* Process number of tildes */
 
 /*
  * Extern declarations
@@ -60,6 +61,7 @@ extern int inherit_context;		/* Flag for context sensitivity of
 extern struct location *current_location;		/* Position marks */
 
 extern char token_str[];		/* Buffer for ids and strings */
+extern int nb_tilde;			/* Number of occurences of ~ */
 
 struct token {					/* For gperf */
 	char *name;					/* This is the keyword value */
@@ -103,7 +105,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 								current_location->end_position += yyleng;
 								current_location->line_number = yylineno;}
 {D}+/".."					{return process_name(TE_INTEGER);}
-"~"							{return process(TE_TILDE);}
+("~")+						{return process_tilde(TE_TILDE);}
 ";"							{return process(TE_SEMICOLON);}
 ":"							{return process(TE_COLON);}
 ","							{return process(TE_COMMA);}
@@ -175,6 +177,12 @@ static int process(int token_code)
 	current_location->end_position += yyleng;
 	current_location->line_number = yylineno;
 	return token_code;
+}
+
+static int process_tilde (int token_code)
+{
+	nb_tilde = yyleng;	
+	return process (token_code);
 }
 
 static int process_name(int token_code)

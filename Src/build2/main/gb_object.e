@@ -153,7 +153,7 @@ feature -- Access
 				end
 			end	
 		ensure
-			window_has_no_parent_object: is_instance_of (object, dynamic_type_from_string (object_handler.ev_window_string)) implies Result = Void
+			window_has_no_parent_object: is_instance_of (object, dynamic_type_from_string (ev_window_string)) implies Result = Void
 		end
 		
 	all_children_recursive (a_list: ARRAYED_LIST [GB_OBJECT]) is

@@ -68,9 +68,6 @@ iff not defined NO_COMPILE then
 		fullrd Clib
 		fullrd Clib_runtime
 	endiff
-	remtrace Eiffel2Java
-	cd %INSTALL_DIR\library\Eiffel2Java\Clib
-	all_makes
 	remtrace net
 	cd %INSTALL_DIR\library\net\Clib
 	all_makes
@@ -92,7 +89,6 @@ else
 	quick_move /s library\com\spec
 	fullrd %INSTALL_DIR\library\com\Clib
 	fullrd %INSTALL_DIR\library\com\Clib_runtime
-	quick_move /s library\Eiffel2Java\spec
 	quick_move /s library\net\spec
 	quick_move /s library\store\spec
 	quick_move /s library\vision2\spec

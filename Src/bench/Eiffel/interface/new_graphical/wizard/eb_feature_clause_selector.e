@@ -20,6 +20,8 @@ inherit
 		end
 
 	EB_FORMATTER_DATA
+		export
+			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end

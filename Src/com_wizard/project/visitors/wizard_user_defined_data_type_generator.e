@@ -243,16 +243,16 @@ feature -- Processing
 			need_generate_ec := True
 
 			create ce_function_name.make (0)
-			ce_function_name.append ("ccom_ce_pointed_record_")
+			ce_function_name.append ("ccom_ce_record_")
 			ce_function_name.append (eiffel_type)
 			ce_function_name.append_integer (local_counter)
 
 			create ce_function_signature.make (0)
 			ce_function_signature.append (c_type)
-			ce_function_signature.append (" * a_record")
+			ce_function_signature.append ("a_record")
 
 			create ce_function_body.make (0)
-			ce_function_body.append (ce_function_body_record (eiffel_type))
+			ce_function_body.append (ce_function_body_record (eiffel_type, c_type))
 
 			create ce_function_return_type.make (0)
 			ce_function_return_type.append (Eif_reference)
@@ -279,11 +279,13 @@ feature {NONE} -- Implementation
 	local_counter: INTEGER
 			-- Counter value
 
-	ce_function_body_record (a_class_name: STRING): STRING is
+	ce_function_body_record (a_class_name, a_c_type: STRING): STRING is
 			-- ce function body for records
 		require
 			non_void_class_name: a_class_name /= Void
 			valid_class_name: not a_class_name.empty
+			non_void_c_type: a_c_type /= Void
+			valid_c_type: not a_c_type.empty
 		do
 			create Result.make (0)
 
@@ -293,15 +295,22 @@ feature {NONE} -- Implementation
 
 			Result.append (Ce_mapper)
 			Result.append (Dot)
-			Result.append ("ccom_ce_pointed_record")
+			Result.append ("ccom_ce_record")
 			Result.append (Space)
 			Result.append (Open_parenthesis)
+			Result.append (Ampersand)
 			Result.append ("a_record")
 			Result.append (Comma)
 			Result.append (Space)
 			Result.append (Double_quote)
 			Result.append (a_class_name)
 			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Sizeof)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (a_c_type)
+			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 		ensure

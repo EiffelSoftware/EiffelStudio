@@ -5508,7 +5508,7 @@ rt_public void idump(FILE *fd, char *start)
 
 		IC += sizeof (long);    /* Skip flag and reserved space */
 	}
-		/*
+		
 	switch (code = *IC++) {		/* Read current byte-code and advance IC */
 
 	/*

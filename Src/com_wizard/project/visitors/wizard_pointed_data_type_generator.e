@@ -50,8 +50,8 @@ feature -- Basic operations
 			c_post_type := clone (pointed_visitor.c_post_type)
 			c_header_file := clone (pointed_visitor.c_header_file)
 
-			create ce_function_name.make (0)
-			create ec_function_name.make (0)
+			create ce_function_name.make (100)
+			create ec_function_name.make (100)
 			local_counter := counter (a_descriptor)
 
 			if pointed_visitor.is_structure then
@@ -67,7 +67,7 @@ feature -- Basic operations
 				ec_function_name.append ("ccom_ec_pointed_record_")
 				ec_function_name.append_integer (local_counter)
 
-				create ce_function_signature.make (0)
+				create ce_function_signature.make (100)
 				ce_function_signature.append (c_type)
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_record_pointer")
@@ -75,7 +75,7 @@ feature -- Basic operations
 				ce_function_return_type := clone (Eif_reference)
 				ce_function_body := ce_function_body_record (eiffel_type)
 
-				create ec_function_signature.make (0)
+				create ec_function_signature.make (100)
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("eif_ref")
@@ -101,7 +101,7 @@ feature -- Basic operations
 				need_generate_ce := True
 				need_generate_ec := True
 
-				create ce_function_signature.make (0)
+				create ce_function_signature.make (100)
 				ce_function_signature.append (c_type)
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_interface_pointer")
@@ -109,7 +109,7 @@ feature -- Basic operations
 				ce_function_body := ce_function_body_interface (eiffel_type)
 				ce_function_return_type := clone (Eif_reference)
 
-				create ec_function_signature.make (0)
+				create ec_function_signature.make (100)
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("eif_ref")
@@ -135,7 +135,7 @@ feature -- Basic operations
 				need_generate_ce := True
 				need_generate_ec := True
 
-				create ce_function_signature.make (0)
+				create ce_function_signature.make (100)
 				ce_function_signature.append (c_type)
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_interface_pointer")
@@ -143,7 +143,7 @@ feature -- Basic operations
 				ce_function_body := ce_function_body_interface (eiffel_type)
 				ce_function_return_type := clone (Eif_reference)
 
-				create ec_function_signature.make (0)
+				create ec_function_signature.make (100)
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("eif_ref")
@@ -160,9 +160,9 @@ feature -- Basic operations
 				is_basic_type_ref := True
 				pointed_descriptor := a_descriptor.pointed_data_type_descriptor
 				a_type := pointed_visitor.vt_type
-				create eiffel_type.make (0)
-				create ce_function_name.make (0)
-				create ec_function_name.make (0)
+				create eiffel_type.make (100)
+				create ce_function_name.make (100)
+				create ec_function_name.make (100)
 				can_free := True
 				writable := True
 
@@ -239,12 +239,12 @@ feature -- Basic operations
 			elseif pointed_visitor.is_enumeration then
 				is_basic_type_ref := True
 
-				create eiffel_type.make (0)
+				create eiffel_type.make (100)
 				eiffel_type.append (Integer_ref_type)
 				writable := True
 
-				create ce_function_name.make (0)
-				create ec_function_name.make (0)
+				create ce_function_name.make (100)
+				create ec_function_name.make (100)
 				ec_function_name.append ("ccom_ec_pointed_integer")
 				ce_function_name.append ("ccom_ce_pointed_integer")
 
@@ -262,7 +262,7 @@ feature -- Basic operations
 					is_coclass_pointer_pointer := True
 				end
 
-				create eiffel_type.make (0)
+				create eiffel_type.make (100)
 				eiffel_type.append ("CELL")
 				eiffel_type.append (Space)
 				eiffel_type.append (Open_bracket)
@@ -281,7 +281,7 @@ feature -- Basic operations
 				ec_function_name.append ("ccom_ec_pointed_cell_")
 				ec_function_name.append_integer (local_counter)
 
-				create ce_function_signature.make (0)
+				create ce_function_signature.make (100)
 				ce_function_signature.append (c_type)
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_pointer")
@@ -295,7 +295,7 @@ feature -- Basic operations
 					pointed_visitor.eiffel_type, pointed_visitor.can_free, 
 					pointed_visitor.need_generate_ce, pointed_visitor.writable)
 
-				create ec_function_signature.make (0)
+				create ec_function_signature.make (100)
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("eif_ref")
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 		require
 			valid_name: a_class_name /= Void and then not a_class_name.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 
 			Result.append (tab)
 			Result.append (Return)
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 		require
 			valid_name: a_class_name /= Void and then not a_class_name.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 
 			Result.append (tab)
 			Result.append (Return)
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 			non_void_element_eiffel_name: element_eiffel_name /= Void
 			valid_element_eiffel_name: not element_eiffel_name.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (Tab)
 
 			-- EIF_TYPE_ID type_id = -1;
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 			valid_element_c_type: not element_c_type.empty
 			valid_element_ec_function: not element_ec_function.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (Tab)
 
 			-- EIF_OBJECT eif_object = 0;
@@ -842,7 +842,7 @@ feature {NONE} -- Implementation
 			valid_eiffel_name: not eiffel_type_name.empty
 			valid_c_name: not c_type_name.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (Tab)
 
 			-- EIF_OBJECT eif_object = 0;

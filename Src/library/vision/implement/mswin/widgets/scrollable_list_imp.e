@@ -22,10 +22,8 @@ inherit
 	SCROLLABLE_LIST_I
 		rename
 			resize as arrayed_list_resize,
-			copy as arrayed_list_copy,
-			setup as arrayed_list_setup
+			copy as arrayed_list_copy
 		select
-			arrayed_list_setup,
 			arrayed_list_copy
 		end
 

@@ -17,9 +17,7 @@ inherit
 			composite_return as world_return
 		undefine
 			is_equal,
-			copy,
-			consistent,
-			setup
+			copy
 		redefine
 			set_origin,
 			set_no_origin,

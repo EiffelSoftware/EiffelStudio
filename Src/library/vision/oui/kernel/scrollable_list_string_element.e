@@ -16,8 +16,6 @@ inherit
 
 	SCROLLABLE_LIST_ELEMENT
 		undefine
-			setup,
-			consistent,
 			copy,
 			out,
 			is_equal

@@ -15,16 +15,14 @@ inherit
 		export
 			{NONE} all
 		undefine
-			is_equal, copy, setup,
-			consistent 
+			is_equal, copy
 		end;
 
 	ASCII
 		export
 			{NONE} all
 		undefine
-			is_equal, copy, setup,
-			consistent 
+			is_equal, copy
 		end;
 
 	ARRAY [WIDGET]

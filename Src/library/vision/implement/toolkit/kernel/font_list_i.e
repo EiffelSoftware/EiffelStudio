@@ -14,9 +14,7 @@ inherit
 			{NONE} all
 		undefine
 			copy,
-			is_equal,
-			consistent,
-			setup
+			is_equal
 		end;
 
 feature -- Access

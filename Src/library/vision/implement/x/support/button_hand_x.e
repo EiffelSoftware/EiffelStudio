@@ -20,17 +20,17 @@ inherit
 
 	MEL_COMMAND
 		undefine
-			is_equal, consistent, copy, setup
+			is_equal, copy
 		end;
 
 	READ_EVENT_X
 		undefine
-			is_equal, consistent, copy, setup
+			is_equal, copy
 		end;
 
 	SHARED_CALLBACK_STRUCT
 		undefine
-			is_equal, consistent, copy, setup
+			is_equal, copy
 		end
 
 creation

@@ -102,7 +102,7 @@ feature -- Element change
 			add_flag (Cc_rgbinit)
 			cwel_choose_color_set_rgbresult (item, color.item)
 		ensure
-			color_set: rgb_result.is_equal (color)
+			color_set: rgb_result.item = (color.item)
 		end
 
 	set_custom_colors (a_custom_colors: WEL_CUSTOM_COLORS) is

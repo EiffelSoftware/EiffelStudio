@@ -1,8 +1,8 @@
 # wel.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -Ox -W3 -I. -I$(EIFFEL4)\bench\spec\windows\include
-MTCFLAGS = -DEIF_THREADS -MT -Ox -W3 -I. -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS = -Ox -W3 -I. -I$(ISE_EIFFEL)\bench\spec\windows\include
+MTCFLAGS = -DEIF_THREADS -MT -Ox -W3 -I. -I$(ISE_EIFFEL)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) -c $<

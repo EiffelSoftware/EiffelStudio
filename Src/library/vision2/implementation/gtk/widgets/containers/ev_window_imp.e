@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 			is_initialized := False
 			create upper_bar
 			create lower_bar
-			
+			set_maximum_size (interface.maximum_dimension, interface.maximum_dimension)
 			signal_connect_true ("delete_event", agent call_close_request_actions)
 			initialize_client_area
 			enable_user_resize

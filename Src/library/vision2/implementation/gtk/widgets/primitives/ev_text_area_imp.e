@@ -19,8 +19,6 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_IMP
---		undefine
---			set_default_options
 		redefine
 			interface
 		end
@@ -36,6 +34,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_text_new (Default_pointer, Default_pointer))
 			C.gtk_text_set_editable (c_object, True)
+			entry_widget := c_object
 		end
 
 feature -- Access
@@ -266,6 +265,11 @@ feature -- Assertions
 			Result := not ((text @ text.count) = '%N')
 		end
 
+feature {NONE} -- Implementation
+
+	entry_widget: POINTER
+		-- Pointer to the gtk text editable.
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TEXT
@@ -293,6 +297,9 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/08 21:40:06  king
+--| Added entry_widget pointer to be compatible with new text_component imp
+--|
 --| Revision 1.19  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

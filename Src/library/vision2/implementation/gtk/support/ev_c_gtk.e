@@ -110,6 +110,13 @@ feature -- Externals (XTEST extension)
 			"XTestQueryExtension"
 		end
 
+	x_test_grab_control (a_display: POINTER; impervious: BOOLEAN) is
+		external
+			"C (Display *, Bool)| <X11/extensions/XTest.h>"
+		alias
+			"XTestGrabControl"
+		end
+
 
 feature -- Externals
 

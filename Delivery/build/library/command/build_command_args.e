@@ -1,21 +1,56 @@
 indexing
 
     description:
-        "General notion of non undoable command.";
+        "Shared routines for argument passing.";
 
     status: "See notice at end of class";
     date: "$Date$";
     revision: "$Revision$"
 
-deferred class NON_UNDOABLE_CMD
-
-inherit
-
-	CMD
+class BUILD_COMMAND_ARGS
 
 feature
 
-end -- class NON_UNDOABLE_CMD
+	Nothing: ANY is
+		once
+		end;
+
+	First: ANY is
+		once
+			!!Result
+		end;
+
+	Second: ANY is
+		once
+			!!Result
+		end;
+
+	Third: ANY is
+		once
+			!!Result
+		end;
+
+	Fourth: ANY is
+		once
+			!!Result
+		end;
+
+	Fifth: ANY is
+		once
+			!!Result
+		end;
+
+	Sixth: ANY is
+		once
+			!!Result
+		end;
+
+	Seventh: ANY is
+		once
+			!!Result
+		end;
+
+end -- Class BUILD_COMMAND_ARGS
 
 --|----------------------------------------------------------------
 --| EiffelBuild library.
@@ -28,3 +63,4 @@ end -- class NON_UNDOABLE_CMD
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

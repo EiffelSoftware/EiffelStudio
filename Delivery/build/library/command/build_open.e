@@ -7,11 +7,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class OPEN
+class BUILD_OPEN
 
 inherit
 
-	CMD
+	BUILD_CMD
 		rename
 			context_data as nothing_data
 		undefine
@@ -119,7 +119,7 @@ feature -- Execution
 			error_box.popdown
 		end;
 
-end -- class OPEN
+end -- class BUILD_OPEN
 
 --|----------------------------------------------------------------
 --| EiffelBuild library.

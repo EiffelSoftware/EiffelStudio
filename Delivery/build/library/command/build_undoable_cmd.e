@@ -8,11 +8,11 @@ indexing
 	revision: "$Revision$"
 
 
-deferred class UNDOABLE_CMD
+deferred class BUILD_UNDOABLE_CMD
 
 inherit
 
-   CMD
+   BUILD_CMD
 
 feature
 
@@ -29,7 +29,7 @@ feature
 	  deferred
 	  end;
 
-end -- class UNDOABLE_CMD
+end -- class BUILD_UNDOABLE_CMD
 
 --|----------------------------------------------------------------
 --| EiffelBuild library.

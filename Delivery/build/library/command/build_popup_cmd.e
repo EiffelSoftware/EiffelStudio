@@ -2,17 +2,18 @@ indexing
 
 	description:
 		"EiffelBuild predefined command for %
-		%popping down a temporary window.";
+		%popping up a temporary window.";
 
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POPDOWN_CMD 
+
+class BUILD_POPUP_CMD 
 
 inherit
 
-	CMD
+	BUILD_CMD
 
 creation
 
@@ -31,20 +32,23 @@ feature -- Access
 	argument1: TEMP_WIND;
 			-- The command's argument
 
-	popdown_label: STRING is "popdown";
-			-- Text of label for Popdown transition
+	popup_label: STRING is "popup";
+			-- Text of label for Popup transition
 
 feature -- Execution
 
 	execute is
-			-- Set transition to `popdown_label' and popdown
+			-- Set transition to `popup_label' and popup
 			-- `argument1'.
 		do
-			set_transition_label (popdown_label);
-			argument1.popdown
+			set_transition_label (popup_label);
+			if not argument1.realized then
+				argument1.realize
+			end;
+			argument1.popup
 		end;
 
-end -- class POPDOWN
+end -- class BUILD_POPUP_CMD
 
 --|----------------------------------------------------------------
 --| EiffelBuild library.

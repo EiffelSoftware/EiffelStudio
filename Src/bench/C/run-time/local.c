@@ -39,6 +39,7 @@
 #include <varargs.h>
 #endif
 #endif
+#include "main.h" /* for eif_alloc_init() */
 
 #define dprintf(n)		if (DEBUG & (n)) printf
 
@@ -427,6 +428,14 @@ rt_shared void initstk(void)
 
 	EIF_GET_CONTEXT
 	char **top;
+
+#ifndef EIF_THREADS
+	/*
+	 * Set the default chunk and scavenge zone size. In multithreaded mode,
+	 * eif_alloc_init is called from eif_thr_register.
+	 */
+	eif_alloc_init();
+#endif
 
 	top = st_alloc(&loc_set, STACK_CHUNK);
 	if (top != (char **) 0)

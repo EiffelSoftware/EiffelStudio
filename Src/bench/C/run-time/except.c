@@ -3082,7 +3082,7 @@ rt_public char *eelclass(void)	/* %%zmt never called in C dir. */
 	if (echval == 0)		/* No current exception */
 		return (char *) 0;
 
-	if (echclass != 0) {
+	if (echclass >= 0) {
 		cl_name = Origin(echclass);
 		return makestr(cl_name, strlen(cl_name)); /* Last exception tag */
 	}

@@ -26,6 +26,15 @@ feature -- Access
 
 	Product_name: STRING is "EiffelBuild"
 		-- Name of system displayed to users.
+		
+	Visual_studio_argument: STRING is "from_visualstudio"
+		-- Command line argument to start from VisualStudio.
+		
+	Project_argument: STRING is "project"
+		-- Command line argument to start as a complete project.
+	
+	Class_argument: STRING is "class"
+		-- Command line argument to start as class only.
 	
 feature -- Menu texts.
 	

@@ -28,7 +28,7 @@ feature -- Access
 			-- Linker options
 
 	Common_standard_c_compiler_options: STRING is 
-			-- C compiler options
+			-- C compiler options to compile generated code (Client and Server folders)
 		once
 			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\common\include /I"
 			Result.append (get (Eiffel4))
@@ -37,8 +37,28 @@ feature -- Access
 			Result.append ("\library\com\include ")
 		end
 
+	Client_standard_c_compiler_options: STRING is 
+			-- C compiler options to compile generated code (Common folders for client)
+		once
+			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\client\include /I"
+			Result.append (get (Eiffel4))
+			Result.append ("\bench\spec\windows\include /I")
+			Result.append (get (Eiffel4))
+			Result.append ("\library\com\include ")
+		end
+
+	Server_standard_c_compiler_options: STRING is 
+			-- C compiler options to compile generated code (Common folders for server)
+		once
+			Result := "/W0 /Ox /D %"_WIN32_DCOM%" /c /I..\include /I..\..\server\include /I"
+			Result.append (get (Eiffel4))
+			Result.append ("\bench\spec\windows\include /I")
+			Result.append (get (Eiffel4))
+			Result.append ("\library\com\include ")
+		end
+
 	Common_c_compiler_options: STRING is 
-			-- C compiler options
+			-- C compiler options to compile Proxy/Stub
 		once
 			Result := "/ML /W0 /GD /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /YX /c /I..\include /I..\..\common\include /I"
 			Result.append (get (Eiffel4))

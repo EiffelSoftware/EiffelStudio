@@ -50,6 +50,10 @@ feature {NONE} -- Initialization
 			
 				-- Initialize the marshal object.
 			create gtk_marshal
+			
+				-- Initialize the dependent routines object
+			create gtk_dependent_routines
+
 		end
 
 	launch is
@@ -104,6 +108,9 @@ feature {EV_ANY_IMP} -- Access
 		
 	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		-- Marshal object for all gtk signal emission event handling.
+
+	gtk_dependent_routines: EV_GTK_DEPENDENT_ROUTINES
+		-- Object used for exporting gtk version dependent routines to independent implementation
 		
 	call_idle_actions is
 			-- Execute idle actions
@@ -410,6 +417,12 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (Result, 65535)
 			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (Result, 65535)
 			a_success := feature {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
+		end
+
+	reusable_color_struct: POINTER is
+			-- 
+		do
+			Result := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 		end
 
 feature {NONE} -- External implementation

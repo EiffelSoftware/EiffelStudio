@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		"";
+	description: "";
 	date: "$Date$";
 	revision: "$Revision $"
 

@@ -8,7 +8,6 @@ indexing
 class LACE_LIST [T->AST_LACE]
 
 inherit
-
 	AST_LACE
 		undefine 
 			pass_address, copy, setup, consistent, is_equal
@@ -18,7 +17,6 @@ inherit
 	CONSTRUCT_LIST [T]
 
 creation
-
 	make
 
 feature {COMPILER_EXPORTER}

@@ -189,7 +189,7 @@ feature {NONE} -- Implementation; error handling
 			generate_html_header;
 			stdout.putstring (error_message);
 			stdout.new_line;
-			new_die(0)
+			die(0)
 		end
 
 	set_error (msg: STRING) is

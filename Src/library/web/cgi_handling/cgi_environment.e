@@ -158,6 +158,7 @@ feature -- Environment variable setting
 			put (val, variable)
 		end
 
+
 feature {NONE} -- Implementation
 
 	get_env_variable (v: STRING): STRING is
@@ -168,12 +169,6 @@ feature {NONE} -- Implementation
 				Result := ""
 			end
 		end;
-
-	putenv (s: POINTER): INTEGER is
-			-- C side putenv function.
-		external
-			"C :int"
-		end
 
 end -- class CGI_ENVIRONMENT
 

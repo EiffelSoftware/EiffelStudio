@@ -885,11 +885,7 @@ feature -- Metric importation
 	import_metrics (file_name: STRING) is
 			-- Import metrics of archive `file'.
 		do
-			if tool.manage.ev_list = Void then
-				tool.manage.create_ev_list
-			else
-				tool.manage.ev_list.wipe_out
-			end
+			tool.manage.ev_list.wipe_out
 			tool.manage.fill_ev_list (tool.manage.ev_list)
 			if tool.manage.import.importable_metric_list /= Void and tool.manage.import.current_metric_list /= Void then
 				tool.manage.import.importable_metric_list.wipe_out

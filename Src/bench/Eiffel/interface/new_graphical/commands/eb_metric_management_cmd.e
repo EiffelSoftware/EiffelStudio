@@ -28,6 +28,10 @@ feature -- Initialization
 		do
 			Precursor (a_target)
 			create import.make (Current)
+			create ev_list
+			ev_list.set_minimum_height (100)
+			ev_list.key_press_actions.extend (~key_delete_action)
+			ev_list.select_actions.extend (~on_select)
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is
@@ -83,10 +87,7 @@ feature -- Widget
 							vb2.extend (label)
 							vb2.disable_item_expand (label)
 
-							create ev_list
-							ev_list.set_minimum_height (100)
-							ev_list.key_press_actions.extend (~key_delete_action)
-							ev_list.select_actions.extend (~on_select)
+							ev_list.wipe_out
 							create hb1
 							hb1.extend (ev_list)
 							vb2.extend (hb1)
@@ -245,12 +246,6 @@ feature -- Access
 		
 feature -- Setting
 
-	create_ev_list is
-			-- Assign `a_list' to `ev_list'.
-		do
-			create ev_list
-		end
-		
 	fill_ev_list (a_list: EV_LIST) is
 			-- Fill `ev_list' with available non basic metrics of current system.
 		require
@@ -476,7 +471,7 @@ feature -- Action
 	key_delete_action (a_key: EV_KEY) is
 			-- Action to be performed on pressing delete.
 		do
-			if a_key.code = Key_delete then
+			if a_key.code = Key_delete and then ev_list.selected_item /= Void then
 				delete_action
 			end
 		end
@@ -1066,11 +1061,7 @@ feature -- Edit
 				build_management_dialog
 			end
 			management_dialog.set_position (x_pos, y_pos)
-			if ev_list = Void then
-				create ev_list
-			else
-				ev_list.wipe_out
-			end
+			ev_list.wipe_out
 			fill_ev_list (ev_list)
 			if import.importable_metric_list /= Void and import.current_metric_list /= Void then
 				import.importable_metric_list.wipe_out

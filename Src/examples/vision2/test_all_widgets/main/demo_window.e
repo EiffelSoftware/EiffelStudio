@@ -44,9 +44,13 @@ feature -- Initialization
 	
 	make (par: EV_WINDOW) is
 		do
-			parent := par
+			the_parent := par
 		end
 	
+feature -- Access
+
+	the_parent: EV_WINDOW
+
 feature -- Status setting
         
 	set_widgets is
@@ -65,8 +69,8 @@ feature -- Command executing
 	
 	execute (argument: EV_ARGUMENT2[MAIN_WINDOW, EV_TOGGLE_BUTTON]) is
 		do
-			if argument.second.pressed then
-				parent_make (parent) 
+--			if argument.second.pressed then
+				parent_make (the_parent) 
 				set_widgets
 				set_values
 				show
@@ -75,7 +79,7 @@ feature -- Command executing
 				argument.first.set_insensitive (True)
 				effective_button := argument.second
 				set_close_command (argument.first)
-			end
+--			end
 			
 		end
 end

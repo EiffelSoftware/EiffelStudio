@@ -47,7 +47,12 @@ extern 		EIF_REAL c_read_float ();
 extern 		EIF_DOUBLE c_read_double ();
 extern 		EIF_INTEGER c_read_stream ();
 
+#ifdef EIF_WIN32
+#define		c_concur_read_int(s)				(c_read_int(s))
+   /*It's weird for Windows!! */
+#else
 #define		c_concur_read_int(s)				ntohl(c_read_int(s))
+#endif
 #define		c_concur_read_real(s)				c_read_float(s)
 #define		c_concur_read_double(s)				c_read_double(s)
 #define 	c_concur_my_read_stream(s, l, b)	c_read_stream(s, l, b)

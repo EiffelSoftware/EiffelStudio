@@ -38,7 +38,7 @@ feature -- Access
 			!! Result.make
 		end
 
-	bindex_cid_table: EXTEND_TABLE [INTEGER, INTEGER]
+	bindex_cid_table: HASH_TABLE [INTEGER, INTEGER]
 			-- you give it a body_index and it tells you in which 
 			-- class the corresponding feature is written
 

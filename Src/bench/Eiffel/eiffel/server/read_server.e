@@ -64,7 +64,7 @@ feature -- Access
 			cache.remove_id (an_id)
 		end
 
-	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
+	offsets: HASH_TABLE [SERVER_INFO, INTEGER] is
 			-- Class offsets in the corresponding server
 		deferred
 		end

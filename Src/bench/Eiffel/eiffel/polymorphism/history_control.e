@@ -23,7 +23,7 @@ feature -- Initialization
 
 feature
 
-	new_units: EXTEND_TABLE [POLY_TABLE [ENTRY], INTEGER];
+	new_units: HASH_TABLE [POLY_TABLE [ENTRY], INTEGER];
 			-- New units 
 
 	count: INTEGER;

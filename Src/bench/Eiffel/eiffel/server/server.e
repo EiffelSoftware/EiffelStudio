@@ -7,7 +7,7 @@ deferred class
 	ISE_SERVER [G -> SERVER_INFO, T -> IDABLE]
 
 inherit
-	EXTEND_TABLE [G, INTEGER]
+	HASH_TABLE [G, INTEGER]
 		rename
 			make as tbl_make,
 			item as tbl_item,

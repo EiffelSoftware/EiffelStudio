@@ -58,7 +58,7 @@ feature
 			!! Result.make
 		end
 		
-	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
+	offsets: HASH_TABLE [SERVER_INFO, INTEGER] is
 		do
 			Result := Tmp_ast_server;
 		end;

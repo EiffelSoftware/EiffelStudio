@@ -301,8 +301,11 @@ rt_shared void map_reset(int emergency)
 	} else
 		xfree((char *) (map_stack.st_cur));	/* Free last chunk in stack */
 
+#ifdef VXWORKS
+	memset (&map_stack, 0, sizeof(map_stack));	/* Reset an empty stack */
+#else
 	bzero(&map_stack, sizeof(map_stack));	/* Reset an empty stack */
-
+#endif
 	/* Release all the hector pointers asked for during the map table
 	 * construction (obj_nb exactly, even if we were interrupted by an
 	 * exception in the middle of the traversal...

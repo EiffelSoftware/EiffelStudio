@@ -8,6 +8,8 @@ deferred class
 	ECOM_QUERIABLE
 
 inherit
+	ECOM_INTERFACE
+
 	MEMORY
 		export
 			{NONE} all
@@ -17,7 +19,7 @@ inherit
 
 feature  {NONE} -- Initialization
 
-	make_from_other (other: ECOM_QUERIABLE) is
+	make_from_other (other: ECOM_INTERFACE) is
 			-- Make from other Queriable.
 		require
 			non_void_other: other /= Void

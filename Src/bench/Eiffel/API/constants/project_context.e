@@ -29,7 +29,7 @@ feature {NONE} -- Eiffel Project Directories
 			!! Result.make
 		end;
 
-	Precompilation_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY,INTEGER] is
+	Precompilation_directories: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY,INTEGER] is
 			-- Shared precompilation directories, indexed by precompilation ids
 		once
 			!! Result.make (5)

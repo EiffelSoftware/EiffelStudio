@@ -91,7 +91,7 @@ feature -- Drawing operations
 
 	flush is
 		do
-			if is_displayed then
+			if is_show_requested then
 				C.gtk_widget_draw (gtk_pixmap, NULL)
 			end
 		end

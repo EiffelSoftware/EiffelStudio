@@ -246,7 +246,7 @@ feature {NONE}
 			end
 		end
 
-	current_state: STATE is
+	current_state: BUILD_STATE is
 			-- Current state on the main panel.
 		do
 			Result := main_panel.current_state
@@ -530,6 +530,8 @@ feature {NONE}
 					-- In a group, move is applied to the group,
 					-- even if the cursor is on the children
 				widget.add_enter_action (Eb_selection_mgr, Current)
+			else
+				widget.add_enter_action (Eb_selection_mgr, parent)
 			end
 			add_common_callbacks (widget)
 			initialize_transport
@@ -538,13 +540,15 @@ feature {NONE}
 	add_common_callbacks (a_widget: WIDGET) is
 			-- General callbacks forall types of contexts
 		do
-				-- Move and resize actions
+				-- Move and resize action
 			a_widget.set_action ("<Btn1Down>", Eb_selection_mgr, third)
 			a_widget.set_action ("<Btn1Up>", Eb_selection_mgr, second_arg)
 				-- Shift actions
 			a_widget.set_action ("Shift<Btn1Down>", Eb_selection_mgr, fourth)
+			a_widget.set_action ("Shift<Btn1Up>", Eb_selection_mgr, second_arg)
 				-- Ctrl actions (group)
 			a_widget.set_action ("Ctrl<Btn1Down>", Eb_selection_mgr, fifth)
+			a_widget.set_action ("Ctrl<Btn1Up>", Eb_selection_mgr, second_arg)
 				-- Callbacks for arrow keys
 			a_widget.set_action ("<Key>osfLeft", Eb_selection_mgr, Sixth)
 			a_widget.set_action ("<Key>osfRight", Eb_selection_mgr, Seventh)

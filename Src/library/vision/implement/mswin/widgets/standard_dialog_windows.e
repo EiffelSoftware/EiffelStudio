@@ -13,6 +13,7 @@ inherit
 		rename
 			wel_move as wel_move_relative
 		redefine
+			class_background,
 			default_style,
 			default_ex_style,
 			popup,
@@ -30,6 +31,7 @@ inherit
 
 	DIALOG_WINDOWS
 		redefine
+			class_background,
 			default_style,
 			default_ex_style,
 			popup,
@@ -781,6 +783,20 @@ feature {NONE} -- Implementation
 			-- Default extended style of a dialog
 		do
 			Result := Ws_ex_dlgmodalframe
+		end
+
+	class_background: WEL_BRUSH is
+			-- Default background.
+		local
+			windows_color: COLOR_WINDOWS
+		do
+			if private_background_color = Void then
+				-- FIXME Will be Windows 3D object color.
+				!! Result.make_by_sys_color (Color_menu)
+			else
+				windows_color ?= private_background_color.implementation
+				Result := windows_color.brush
+			end
 		end
 
 feature {NONE} -- Inapplicable

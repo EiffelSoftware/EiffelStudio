@@ -551,10 +551,6 @@ feature {NONE} -- Implementation
 			--
 		local
 			px, py, qx, qy: INTEGER
-			w: INTEGER
-			lx, ly: INTEGER
-			lgw, lgh: INTEGER
-			bbox: EV_RECTANGLE
 		do
 			Precursor {EG_POLYLINE_LABEL} (new_x, new_y, p, q)
 			px := p.x

@@ -642,7 +642,7 @@ feature -- Status setting
 			cwin_set_rop2 (item, a_rop2)
 		ensure
 			rop2_set: rop2 = a_rop2
-		end
+		end	
 
 	set_stretch_blt_mode (a_mode: INTEGER) is
 			-- Set the bitmap stretching mode with `a_mode'.
@@ -1450,6 +1450,14 @@ feature -- Basic operations
 				a_width, a_height, dc_source.item, x_source, y_source,
 				mask_bitmap.item, x_mask, y_mask, raster_operation)
 		end
+		
+	make_rop4 (fore, back: INTEGER): INTEGER is
+			-- `Result' is raster operation code corresponding to
+			-- `fore' and `back' for argument `raster_operation' code
+			-- of `mask_blt'. This corresponds to Windows macro Makerop4
+		do
+			Result := cwin_make_rop4 (fore, back)
+		end
 
 	stretch_blt (x_destination, y_destination, width_destination,
 				height_destination: INTEGER; dc_source: WEL_DC;
@@ -1831,7 +1839,7 @@ feature {NONE} -- Externals
 		alias
 			"Rectangle"
 		end
-
+		
 	cwin_invert_rect (hdc: POINTER; rect: POINTER) is
 			-- SDK InvertRect
 		external
@@ -2208,6 +2216,15 @@ feature {NONE} -- Externals
 		alias
 			"SetROP2"
 		end
+		
+	cwin_make_rop4 (fore, back: INTEGER): INTEGER is
+			-- SDK MakeROP4
+		external
+			"C [macro <windows.h>] (int, int): EIF_INTEGER"
+		alias
+			"MAKEROP4"
+		end
+		
 
 	cwin_get_rop2 (hdc: POINTER): INTEGER is
 			-- SDK GetROP2

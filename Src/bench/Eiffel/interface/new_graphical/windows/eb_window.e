@@ -37,6 +37,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
 
 	EB_RECYCLER
 		rename
@@ -197,7 +202,7 @@ feature -- Status setting
 			-- Note: The window cannot be moved while update is locked.
 		do
 			if lock_level = 0 then
-				if (create {EV_ENVIRONMENT}).application.locked_window = Void then
+				if ev_application.locked_window = Void then
 					window.lock_update
 					unlock_needed := True
 				else
@@ -215,7 +220,7 @@ feature -- Status setting
 			lock_level_positive: lock_level > 0
 		do
 			lock_level := lock_level - 1
-			if unlock_needed and then lock_level = 0 and then (create {EV_ENVIRONMENT}).application.locked_window = window then
+			if unlock_needed and then lock_level = 0 and then ev_application.locked_window = window then
 				window.unlock_update
 			end
 		ensure

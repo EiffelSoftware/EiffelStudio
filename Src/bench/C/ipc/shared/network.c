@@ -21,7 +21,7 @@
 #include <setjmp.h>
 #include <sys/types.h>
 
-#define TIMEOUT		20		/* Time out on reads after 20 seconds */
+extern unsigned TIMEOUT;		/* Time out on reads */
 
 #ifdef ETIMEDOUT
 #define NET_TIMEOUT ETIMEDOUT	/* Try to return a meaningful error code */

@@ -66,7 +66,7 @@ feature -- Constants
 
 feature -- C externals
 
-	get_error: INTEGER is
+	frozen get_error: INTEGER is
 			-- Retrieve error code if any.
 		external
 			"dllwin mscorsn.dll signature : EIF_INTEGER use <StrongName.h>"
@@ -74,7 +74,7 @@ feature -- C externals
 			"StrongNameErrorInfo"
 		end
 		
-	strong_name_free_buffer (a_key_blob: POINTER) is
+	frozen strong_name_free_buffer (a_key_blob: POINTER) is
 			-- Free buffer allocated by routines below.
 		external
 			"dllwin mscorsn.dll signature (BYTE *) use <StrongName.h>"
@@ -82,7 +82,7 @@ feature -- C externals
 			"StrongNameFreeBuffer"
 		end
 
-	strong_name_key_gen (a_container_name: POINTER; flags: INTEGER;
+	frozen strong_name_key_gen (a_container_name: POINTER; flags: INTEGER;
 			a_public_key, a_key_size: POINTER): INTEGER
 		is
 			-- Generate a new key pair for strong name use.
@@ -92,7 +92,7 @@ feature -- C externals
 			"StrongNameKeyGen"
 		end
 
-	strong_name_install (a_container_name: POINTER; a_public_key: POINTER;
+	frozen strong_name_install (a_container_name: POINTER; a_public_key: POINTER;
 			a_key_size: INTEGER): INTEGER
 		is
 			-- Import key pair into a key container.
@@ -102,7 +102,7 @@ feature -- C externals
 			"StrongNameKeyInstall"
 		end
 		
-	strong_name_delete (a_container_name: POINTER): INTEGER is
+	frozen strong_name_delete (a_container_name: POINTER): INTEGER is
 			-- Import key pair into a key container.
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR): EIF_INTEGER use <StrongName.h>"
@@ -110,7 +110,7 @@ feature -- C externals
 			"StrongNameKeyDelete"
 		end
 
-	strong_name_get_public_key (a_container_name: POINTER; a_key_blob: POINTER;
+	frozen strong_name_get_public_key (a_container_name: POINTER; a_key_blob: POINTER;
 			a_key_blob_size: INTEGER; a_public_key: POINTER; a_public_key_size: POINTER): INTEGER
 		is
 			-- Retrieve the public portion of a key pair.
@@ -123,7 +123,7 @@ feature -- C externals
 			"StrongNameGetPublicKey"
 		end
 
-	strong_name_hash_size (a_hash_alg: INTEGER; a_hash_size: POINTER): INTEGER is
+	frozen strong_name_hash_size (a_hash_alg: INTEGER; a_hash_size: POINTER): INTEGER is
 			-- Compute size of buffer in `a_hash_size' needed to hold a hash
 			-- for a given hash algorithm `a_hash_alg'.
 		external
@@ -132,7 +132,7 @@ feature -- C externals
 			"StrongNameHashSize"
 		end
 
-	strong_name_signature_size (a_public_key: POINTER; a_key_size: INTEGER;
+	frozen strong_name_signature_size (a_public_key: POINTER; a_key_size: INTEGER;
 			a_hash_size: POINTER): INTEGER
 		is
 			-- Compute size that needs to be allocated for a signature in an assembly.
@@ -142,7 +142,7 @@ feature -- C externals
 			"StrongNameSignatureSize"
 		end
 
-	strong_name_signature_generation (a_file_path, a_container, a_public_key: POINTER;
+	frozen strong_name_signature_generation (a_file_path, a_container, a_public_key: POINTER;
 			a_public_key_size: INTEGER; a_hash_buffer, a_hash_buffer_size: POINTER): INTEGER
 		is
 			-- Hash and sign a manifest.
@@ -155,7 +155,7 @@ feature -- C externals
 			"StrongNameSignatureGeneration"
 		end
 	
-	strong_name_token_from_public_key (public_key: POINTER; key_length: INTEGER;
+	frozen strong_name_token_from_public_key (public_key: POINTER; key_length: INTEGER;
 			token, token_lenght: POINTER): INTEGER
 		is
 			-- Create a strong name token from a public key blob.
@@ -168,7 +168,7 @@ feature -- C externals
 			"StrongNameTokenFromPublicKey"
 		end
 		
-	get_hash_from_assembly_file (a_file_path: POINTER; a_hash_alg_id: POINTER;
+	frozen get_hash_from_assembly_file (a_file_path: POINTER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
 		is
 			-- Compute hash of `a_blob' using `a_hash_alg_id'.
@@ -181,7 +181,7 @@ feature -- C externals
 			"GetHashFromAssemblyFileW"
 		end
 			
-	get_hash_from_blob (a_blob: POINTER; a_blob_size: INTEGER; a_hash_alg_id: POINTER;
+	frozen get_hash_from_blob (a_blob: POINTER; a_blob_size: INTEGER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
 		is
 				-- Compute hash of `a_blob' using `a_hash_alg_id'.
@@ -195,7 +195,7 @@ feature -- C externals
 			"GetHashFromBlob"
 		end
 
-	get_hash_from_file (a_path: POINTER; a_hash_alg_id: POINTER; a_hash_buffer: POINTER;
+	frozen get_hash_from_file (a_path: POINTER; a_hash_alg_id: POINTER; a_hash_buffer: POINTER;
 			a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
 		is
 		external
@@ -208,7 +208,7 @@ feature -- C externals
 			"GetHashFromFileW"
 		end
 
-	get_environment_variable (name, buffer: POINTER; size: INTEGER): INTEGER is
+	frozen get_environment_variable (name, buffer: POINTER; size: INTEGER): INTEGER is
 			-- Get environment variable `name' and put result in `buffer' with size `size'.
 			-- Return size of variable or 0 if not found.
 		external
@@ -217,7 +217,7 @@ feature -- C externals
 			"GetEnvironmentVariable"
 		end
 
-	set_environment_variable (name, value: POINTER): BOOLEAN is
+	frozen set_environment_variable (name, value: POINTER): BOOLEAN is
 			-- Set environment variable `name' with value `value'.
 			-- Return True if successful.
 		external

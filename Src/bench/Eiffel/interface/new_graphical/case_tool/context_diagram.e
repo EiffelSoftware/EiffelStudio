@@ -2180,6 +2180,12 @@ feature {DIAGRAM_COMPONENT, CLASS_TEXT_MODIFIER} -- Implementation
 				add_descendant_relations (f)
 				add_client_relations (f)
 				add_supplier_relations (f)
+			else
+					-- Class is not compiled but forced into diagram.
+					-- We will force its compilation at next recompilation
+					-- so that we can have more information about the class
+					-- in diagram.
+				Eiffel_system.system.add_unref_class (f.class_i)
 			end
 			excluded_figures.prune_all (f)
 			if not included_figures.has (f) then

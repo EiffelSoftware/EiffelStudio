@@ -26,7 +26,7 @@ feature -- Creation
 	make_loop is
 		do
 			first_run := true;
-			filenames.force ("*.profile_information", filenames.count + 1);
+			filenames.force ("*.pfi", filenames.count + 1);
 		end;
 
 feature {NONE} -- Help message
@@ -68,7 +68,7 @@ feature {NONE} -- Execute
 			command_arguments := command_line_io.command_arguments;
 			if first_run and command_arguments.argument_count = 1 then
 				filenames.copy (empty_array);
-				filenames.force ("*.profile_information", filenames.count + 1);
+				filenames.force ("*.pfi", filenames.count + 1);
 			else
 				if command_arguments.argument_count = 1 then
 					if filenames.count = 1 then

@@ -474,7 +474,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			--pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
@@ -932,6 +932,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/03/14 18:45:10  rogers
+--| Uncommented pnd_press in on_right_button_down.
+--|
 --| Revision 1.54  2000/03/14 03:02:54  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

@@ -9,6 +9,7 @@ class
 
 feature -- Access
 
+	User_precondition: STRING is "user_precondition"
 
 	Class_footer: STRING is ""
 

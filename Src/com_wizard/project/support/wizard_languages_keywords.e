@@ -141,6 +141,10 @@ feature -- Eiffel keywords
 
 feature -- C keywords
 
+	Begin_comment: STRING is "/*"
+
+	End_comment: STRING is "*/"
+
 	Static_cast: STRING is "static_cast"
 
 	Reinterpret_cast: STRING is "reinterpret_cast"

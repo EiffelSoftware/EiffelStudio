@@ -60,7 +60,9 @@ feature -- Insertion/Removal
 	add_external (ext: EXTERNAL_I) is
 			-- Add `ext' in Current.
 		require
+			ext_not_void: ext /= Void
 			is_c_external: ext.is_c_external
+			valid_key: valid_key (ext.written_in)
 		local
 			l_s: SEARCH_TABLE [INTEGER]
 		do
@@ -70,23 +72,30 @@ feature -- Insertion/Removal
 				force (l_s, ext.written_in)
 			end
 			l_s.force (ext.feature_name_id)
+		ensure
+			added: has (ext.written_in) and then item (ext.written_in).has (ext.feature_name_id)
 		end
 
 	remove_external (ext: EXTERNAL_I) is
 			-- Remove `ext' in Current.
 		require
+			ext_not_void: ext /= Void
 			is_c_external: ext.is_c_external
+			valid_key: valid_key (ext.written_in)
 			has_entry: has (ext.written_in)
 		local
 			l_s: SEARCH_TABLE [INTEGER]
 		do
 			l_s := item (ext.written_in)
-			if l_s /= Void then
-				l_s.remove (ext.feature_name_id)
-				if l_s.is_empty then
-					remove (ext.written_in)
-				end
+			check
+				l_s_not_void: l_s /= Void
 			end
+			l_s.remove (ext.feature_name_id)
+			if l_s.is_empty then
+				remove (ext.written_in)
+			end
+		ensure
+			removed: not has (ext.written_in) or else not item (ext.written_in).has (ext.feature_name_id)
 		end
 
 feature -- Freeze externals.

@@ -74,7 +74,10 @@ extern "C" {
 
 	/* For insertion in various global set such as `rem_set', `moved_set' */
 #define EIF_GC_SET_MUTEX_LOCK \
-	EIF_LW_MUTEX_LOCK(eif_gc_set_mutex, "Could not lock GC rem_set mutex")
+	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_GC_SET); \
+	EIF_LW_MUTEX_LOCK(eif_gc_set_mutex, "Could not lock GC rem_set mutex"); \
+	RTGC; \
+	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 #define EIF_GC_SET_MUTEX_UNLOCK \
 	EIF_LW_MUTEX_UNLOCK(eif_gc_set_mutex, "Could not unlock GC rem_set mutex")
 
@@ -83,6 +86,7 @@ extern "C" {
 #define EIF_THREAD_GC_REQUESTED	1001
 #define EIF_THREAD_GC_RUNNING	1002
 #define EIF_THREAD_GC_GSZ		1003
+#define EIF_THREAD_GC_SET		1004
 #define EIF_THREAD_BLOCKED 		3
 #define EIF_THREAD_SUSPENDED	4
 #define EIF_THREAD_DYING		5

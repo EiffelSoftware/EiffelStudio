@@ -4367,6 +4367,7 @@ rt_public void eremb(EIF_REFERENCE obj)
 	 * normally done by the RTAR macro.
 	 */
 
+	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(&rem_set, obj)) {		/* Low on memory */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
@@ -4403,6 +4404,7 @@ rt_public void erembq(EIF_REFERENCE obj)
 	 * on every 'put' operation).
 	 */
 
+	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(&rem_set, obj)) {		/* Cannot record object */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);

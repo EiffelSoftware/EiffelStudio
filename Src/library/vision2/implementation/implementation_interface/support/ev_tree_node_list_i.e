@@ -60,27 +60,27 @@ Feature -- Status report
 			index_not_changed: old interface.index = interface.index
 		end
 		
-		recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]]) is
-				-- Apply `action' to every item.
-				-- Semantics not guaranteed if `action' changes the structure;
-				-- in such a case, apply iterator to clone of structure instead.
-			local
-				t: TUPLE [EV_TREE_NODE]
-			do
-				create t.make
-				from
-					interface.start
-				until
-					interface.after
-				loop
-					item.recursive_do_all (action)
-					t.put (item, 1)
-					action.call (t)
-					interface.forth
-				end
+	recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]]) is
+			-- Apply `action' to every item.
+			-- Semantics not guaranteed if `action' changes the structure;
+		local
+			t: TUPLE [EV_TREE_NODE]
+		do
+			create t.make
+			from
+				interface.start
+			until
+				interface.after
+			loop
+				item.recursive_do_all (action)
+				t.put (item, 1)
+				action.call (t)
+				interface.forth
 			end
+		end
 
-end -- class EV_TREE_ITEM_NDOE_I
+
+end -- class EV_TREE_ITEM_NODE_I
 
 --|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.

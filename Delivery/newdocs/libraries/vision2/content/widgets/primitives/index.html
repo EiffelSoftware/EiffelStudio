@@ -8,7 +8,30 @@
 
 	<BODY>
 		<H1>Vision2 Primitives</H1>
+			<P>All vision2 primitives inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/primitives/ev_primitive_chart.html">EV_PRIMITIVE</A>.
 			<P>
+			<H2>What is a primitive?</H2>
+			A primitive is a Vision2 widget that may not contain other widgets. Primitives may be placed in <A HREF="/libraries/vision2/content/widgets/containers/index.html">containers</A>, but
+			no <A HREF="/libraries/vision2/content/widgets/index.html">widgets</A> may be contained in a primitive. Some examples of primitives are <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.html">EV_BUTTON</A> and
+			<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_label_chart.html">EV_LABEL</A>.
 			</P>
+		<H2>Features</H2>
+			<P>
+			All primitives inherit from <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/properties/ev_tooltipable_chart.html">EV_TOOLTIPABLE</A> and therefore can have tooltips assigned to them.
+			Each descendent of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/primitives/ev_primitive_chart.html">EV_PRIMITIVE</A> will typically have many available features, specific to their type. For example,
+			<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primtives/ev_separator_chart.html">EV_SEPARATOR</A> has no extra features, but
+			<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_label_chart.html">EV_LABEL</A> has features for modifying the current font and also the text to de displayed.
+			</p>
+		<H2>Items</H2>
+			Although no primitive can contain another widget, certain primitives can contain <A HREF="/libraries/vision2/content/items/index.html">items</A>.
+			The following primitives can contain items:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/primitives/ev_tool_bar_chart.html">EV_TOOL_BAR</A> can contain items of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_tool_bar_item_chart.html">EV_TOOL_BAR_ITEM</A>
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/primitives/ev_multi_column_list_chart.html">EV_MULTI_COLUMN_LIST</A> can contain items of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_multi_column_list_row_chart.html">EV_MULTI_COLUMN_LIST_ROW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/primitives/ev_list_chart.html">EV_LIST</A> can contain items of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_list_item_chart.html">EV_LIST_ITEM</A>
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/primitives/ev_combo_box_chart.html">EV_COMBO_BOX</A> can contain items of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_list_item_chart.html">EV_LIST_ITEM</A>
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/primitives/ev_tree_chart.html">EV_TREE</A> can contain items of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_tree_node_chart.html">EV_TREE_NODE</A>
+				
+			</UL>
 	</BODY>
 </HTML>

@@ -8,7 +8,7 @@ inherit
 			dump,
 			is_long,
 			is_numeric,
-			same_as,
+			same_as, element_type,
 			description, sk_value, generate_cecil_value, hash_code,
 			generate_byte_code_cast, generated_id, heaviest, typecode
 		end
@@ -28,6 +28,24 @@ feature -- Initialization
 			size := n
 		ensure
 			size_set: size = n
+		end
+
+feature -- Status report
+
+	element_type: INTEGER_8 is
+			-- Pointer element type
+		do
+				-- FIXME: Manu 4/8/2002: In order to be CLS compliant and to be
+				-- able to consume CLS compliant type, we force our INTEGER_8 to
+				-- be unsigned by using `Element_type_u1'.
+				-- Fix is to introduce UNSIGNED_INTEGER_8 as well as a basic
+				-- class.
+			inspect size
+			when 8 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1
+			when 16 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2
+			when 32 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4
+			when 64 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8
+			end
 		end
 
 feature -- Access

@@ -7,12 +7,20 @@ inherit
 			dump,
 			is_double,
 			is_numeric,
-			same_as,
+			same_as, element_type,
 			description, sk_value, generate_cecil_value, hash_code,
 			generate_byte_code_cast, generated_id, typecode
 		end
 
 	BYTE_CONST
+
+feature -- Status report
+
+	element_type: INTEGER_8 is
+			-- Pointer element type
+		do
+			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8
+		end
 
 feature
 

@@ -7,7 +7,7 @@ inherit
 		redefine
 			dump,
 			is_char,
-			same_as,
+			same_as, element_type,
 			description, sk_value, generate_cecil_value, hash_code,
 			generated_id, typecode
 		end
@@ -33,6 +33,12 @@ feature -- Property
 
 	is_char: BOOLEAN is True
 			-- Is the type a char type ?
+
+	element_type: INTEGER_8 is
+			-- Pointer element type
+		do
+			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_char
+		end
 
 feature -- Access
 

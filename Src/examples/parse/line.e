@@ -8,13 +8,14 @@ inherit
 	AGGREGATE
 		export
 			{PROCESS} all
-		undefine
-			copy, is_equal
 		redefine 
 			post_action
 		end;
 
 	POLYNOM
+		undefine
+			copy, is_equal
+		end
 
 create
 

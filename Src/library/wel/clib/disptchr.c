@@ -77,7 +77,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 		}
 }
 
-BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+INT_PTR CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	/*
 	 * Receive dialog messages and call the Eiffel routine `dialog_procedure'
@@ -88,9 +88,9 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 	WGTCX
 
 	if (dispatcher) {
-		LONG dialog_result;
+		INT_PTR dialog_result;
 
-		dialog_result = (LONG) ((wel_dlgproc) (
+		dialog_result = (INT_PTR) ((wel_dlgproc) (
 #ifndef EIF_IL_DLL
 			(EIF_OBJECT) eif_access (dispatcher),
 #endif
@@ -100,6 +100,8 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 			(EIF_INTEGER) lparam));
 
 		switch (msg) {
+			case WM_CHARTOITEM:
+			case WM_COMPAREITEM:
 			case WM_CTLCOLORBTN:
 			case WM_CTLCOLORDLG:
 			case WM_CTLCOLOREDIT:
@@ -107,9 +109,7 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 			case WM_CTLCOLORMSGBOX:
 			case WM_CTLCOLORSCROLLBAR:
 			case WM_CTLCOLORSTATIC:
-			case WM_COMPAREITEM:
 			case WM_VKEYTOITEM:
-			case WM_CHARTOITEM:
 			case WM_QUERYDRAGICON:
 					return (BOOL) dialog_result;
 			default:

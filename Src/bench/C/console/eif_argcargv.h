@@ -15,7 +15,7 @@ extern "C" {
 typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
 
 	/* Register `f' as a clean up function */
-extern void eif_register_cleanup(EIF_CLEANUP f);
+RT_LNK void eif_register_cleanup(EIF_CLEANUP f);
 
 #ifdef __cplusplus
 }

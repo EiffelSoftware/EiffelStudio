@@ -11,6 +11,9 @@ inherit
 	ECOM_STRUCTURE
 
 	ECOM_VAR_TYPE
+		undefine
+			copy, is_equal
+		end
 
 creation	
 	make,

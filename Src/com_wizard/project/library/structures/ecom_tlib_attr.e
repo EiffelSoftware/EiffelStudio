@@ -11,8 +11,14 @@ inherit
 	ECOM_STRUCTURE
 
 	ECOM_SYS_KIND
+		undefine
+			copy, is_equal
+		end
 
 	ECOM_LIB_FLAGS
+		undefine
+			copy, is_equal
+		end
 
 creation
 	make, make_from_pointer

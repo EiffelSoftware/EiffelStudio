@@ -14,8 +14,14 @@ inherit
 		end
 
 	ECOM_VAR_FLAGS
+		undefine
+			copy, is_equal
+		end
 
 	ECOM_VAR_KIND
+		undefine
+			copy, is_equal
+		end
 
 creation
 	make,

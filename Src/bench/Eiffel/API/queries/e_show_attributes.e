@@ -19,7 +19,7 @@ creation
 
 feature -- Access
 
-	criterium (f: FEATURE_I): BOOLEAN is
+	criterium (f: E_FEATURE): BOOLEAN is
 			-- Criterium for feature `f'
 		do
 			Result := any_criterium (f);

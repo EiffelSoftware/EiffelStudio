@@ -106,11 +106,15 @@ public class EiffelClassGenerator: Globals
 	{	
 		if( !IsAssemblyImported( assembly ) )
 		{
-			EmitXmlFiles( assembly, PathName );
+			if( XmlGeneration )
+				EmitXmlFiles( assembly, PathName );
 			EmitEiffelClasses( assembly, PathName );
 		}
 		else
-			EmitEiffelClassesFromXml( assembly, null );
+		{
+			if( XmlGeneration )
+				EmitEiffelClassesFromXml( assembly, null );
+		}
 	}		
 
 	// Has `assembly' already been imported to the Eiffel assembly cache?

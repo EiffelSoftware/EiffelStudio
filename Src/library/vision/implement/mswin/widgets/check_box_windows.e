@@ -32,7 +32,6 @@ feature {NONE} -- Initalization
 			set_margin_width (5)
 			set_margin_height (5)
 			managed := man
-			set_same_size
 		end
 
 feature {NONE} -- Implementation

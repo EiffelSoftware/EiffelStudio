@@ -176,18 +176,15 @@ feature -- Basic operations
 							current_height := current_row.height
 						end
 
-						if not first_row_index_set and then i + current_height > invalid_y_start then
+						if not first_row_index_set and then (i + current_height) > (invalid_y_start) then
 							first_row_index := row_counter
 							first_row_index_set := True
 						end
 						if first_row_index_set then
 							Result.extend (row_counter)
---							check
---								row_counter_positive: row_counter >= 0
---							end
 						end
 
-						if not last_row_index_set and then invalid_y_end <= i + current_height then
+						if not last_row_index_set and then (invalid_y_end) < i + current_height then
 							last_row_index := row_counter
 							last_row_index_set := True
 						end
@@ -207,6 +204,7 @@ feature -- Basic operations
 					first_row_index := grid.row_count
 				end
 			end
+			
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -352,8 +350,11 @@ feature -- Basic operations
 			if grid.row_count > 0 and grid.column_count > 0 then
 				column_offsets := grid.column_offsets
 				row_offsets := grid.row_offsets	
-				visible_column_indexes := items_spanning_horizontal_span (an_x, a_width)
-				visible_row_indexes := items_spanning_vertical_span (a_y, a_height)
+					-- Note that here we need to remove 1 from `a_width' and `a_height' before
+					-- calculating the visible column and row indexes, as one of the pixels
+					-- is already included within the offset pixel.
+				visible_column_indexes := items_spanning_horizontal_span (an_x, a_width - 1)
+				visible_row_indexes := items_spanning_vertical_span (a_y, a_height - 1)
 				if not (visible_column_indexes.is_empty or visible_row_indexes.is_empty) then
 					first_column_index := visible_column_indexes.first
 					last_column_index := visible_column_indexes.last

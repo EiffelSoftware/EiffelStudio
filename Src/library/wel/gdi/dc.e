@@ -49,6 +49,12 @@ inherit
 			{ANY} valid_map_mode_constant
 		end
 
+	WEL_POLYGON_FILL_MODE_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_polygon_fill_mode_constant
+		end
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
@@ -355,6 +361,18 @@ feature -- Status report
 			valid_map_mode: valid_map_mode_constant (Result)
 		end
 
+	polygon_fill_mode: INTEGER is
+			-- Current polygon fill mode
+			-- See class WEL_POLYGON_FILL_MODE_CONSTANTS for values.
+		require
+			exists: exists
+		do
+			Result := cwin_get_poly_fill_mode (item)
+		ensure
+			valid_polygon_fill_mode:
+				valid_polygon_fill_mode_constant (Result)
+		end
+
 	valid_extent_map_mode (mode: INTEGER): BOOLEAN is
 			-- Is `mode' a valid window or viewport extent map mode?
 		require
@@ -419,6 +437,21 @@ feature -- Status setting
 			map_mode_set: map_mode = mode
 		end
 
+	set_polygon_fill_mode (mode: INTEGER) is
+			-- Set the polygon fill mode `polygon_fill_mode' with
+			-- `mode'.
+			-- See class WEL_POLYGON_FILL_MODE_CONSTANTS for
+			-- `mode' values.
+		require
+			exists: exists
+			valid_polygon_fill_mode:
+				valid_polygon_fill_mode_constant (mode)
+		do
+			cwin_set_poly_fill_mode (item, mode)
+		ensure
+			polygon_fill_mode_set: polygon_fill_mode = mode
+		end
+
 	set_window_extent (x_extent, y_extent: INTEGER) is
 			-- Set the `x_extent' and `y_extent' of the window
 			-- associated with the device context
@@ -469,11 +502,11 @@ feature -- Status setting
 			cwin_set_viewport_org_ex (item, x_origin, y_origin,
 				default_pointer)
 		ensure
-			x_viewport_origin_set: window_origin.x = x_origin
-			y_viewport_origin_set: window_origin.y = y_origin
+			x_viewport_origin_set: viewport_origin.x = x_origin
+			y_viewport_origin_set: viewport_origin.y = y_origin
 		end
 
-	set_bk_color (color: WEL_COLOR_REF) is
+	set_background_color (color: WEL_COLOR_REF) is
 			-- Set the `background_color' to `color'
 		require
 			exists: exists
@@ -907,7 +940,7 @@ feature -- Basic operations
 			line_to (x2, y2)
 		end
 
-	poly_line (points: ARRAY [INTEGER]) is
+	polyline (points: ARRAY [INTEGER]) is
 			-- Draws a series of line segments by connecting the
 			-- points specified in `points'.
 		require
@@ -918,7 +951,7 @@ feature -- Basic operations
 			a: ANY
 		do
 			a := points.to_c
-			cwin_poly_line (item, $a, points.count // 2)
+			cwel_polyline (item, $a, points.count // 2)
 		end
 
 	line_to (x, y: INTEGER) is
@@ -992,7 +1025,7 @@ feature -- Basic operations
 			a: ANY
 		do
 			a := points.to_c
-			cwin_polygon (item, $a, points.count // 2)
+			cwel_polygon (item, $a, points.count // 2)
 		end
 
 	ellipse (left, top, right, bottom: INTEGER) is
@@ -1298,6 +1331,18 @@ feature {NONE} -- Implementation
 	Max_text_face: INTEGER is 255
 		-- Maximum text face name for `text_face'
 
+feature -- Obsolete
+
+	set_bk_color (color: WEL_COLOR_REF) is obsolete "Use ``set_background_color''"
+		do
+			set_background_color (color)
+		end
+
+	poly_line (points: ARRAY [INTEGER]) is obsolete "Use ``polyline''"
+		do
+			polyline (points)
+		end
+
 feature {NONE} -- Externals
 
 	cwin_text_out (hdc: POINTER; x, y: INTEGER; string: POINTER;
@@ -1358,12 +1403,10 @@ feature {NONE} -- Externals
 			"LineTo"
 		end
 
-	cwin_poly_line (hdc, pts: POINTER; num: INTEGER) is
+	cwel_polyline (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK Polyline
 		external
-			"C [macro <wel.h>] (HDC, POINT *, int)"
-		alias
-			"Polyline"
+			"C"
 		end
 
 	cwin_rectangle (hdc: POINTER; x1, y1, x2, y2: INTEGER) is
@@ -1391,12 +1434,10 @@ feature {NONE} -- Externals
 			"ExtFloodFill"
 		end
 
-	cwin_polygon (hdc, pts: POINTER; num: INTEGER) is
+	cwel_polygon (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK Polygon
 		external
-			"C [macro <wel.h>] (HDC, POINT *, int)"
-		alias
-			"Polygon"
+			"C"
 		end
 
 	cwin_ellipse (hdc: POINTER; x1, y1, x2, y2: INTEGER) is
@@ -1578,12 +1619,28 @@ feature {NONE} -- Externals
 			"SetMapMode"
 		end
 
+	cwin_set_poly_fill_mode (hdc: POINTER; mode: INTEGER) is
+			-- SDK SetPolyFillMode
+		external
+			"C [macro <wel.h>] (HDC, int)"
+		alias
+			"SetPolyFillMode"
+		end
+
 	cwin_get_map_mode (hdc: POINTER): INTEGER is
 			-- SDK GetMapMode
 		external
 			"C [macro <wel.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetMapMode"
+		end
+
+	cwin_get_poly_fill_mode (hdc: POINTER): INTEGER is
+			-- SDK GetPolyFillMode
+		external
+			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+		alias
+			"GetPolyFillMode"
 		end
 
 	cwin_get_text_align (hdc: POINTER): INTEGER is

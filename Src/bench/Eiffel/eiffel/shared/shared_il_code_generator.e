@@ -7,7 +7,7 @@ indexing
 class
 	SHARED_IL_CODE_GENERATOR
 
-feature {NONE} -- IL generator object
+feature -- IL generator object
 
 	il_generator: IL_CODE_GENERATOR is
 			-- To generate IL code
@@ -15,7 +15,7 @@ feature {NONE} -- IL generator object
 			create Result.make
 		end
 
-feature {NONE} -- IL label factory
+feature -- IL label factory
 
 	il_label_factory: IL_LABEL_FACTORY is
 			-- To create `label' in IL code.

@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_DC
+		redefine
+			destroy_item
+		end
 
 creation
 	make_by_pointer

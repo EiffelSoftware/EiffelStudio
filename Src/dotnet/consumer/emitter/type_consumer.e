@@ -17,6 +17,8 @@ inherit
 	
 	METHOD_RETRIEVER
 
+	ARGUMENT_SOLVER
+
 create
 	make
 
@@ -419,41 +421,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	consumed_arguments (info: METHOD_BASE): ARRAY [CONSUMED_ARGUMENT] is
-			-- Argument of `info'.
-		require
-			non_void_method: info /= Void
-		local
-			i, count: INTEGER
-			en, dn: STRING
-			params: NATIVE_ARRAY [PARAMETER_INFO]
-			p: PARAMETER_INFO
-			t: TYPE
-		do
-			create Result.make (1, info.get_parameters.count)
-			params := info.get_parameters
-			from
-				i := 0
-				count := params.count
-			until
-				i >= count
-			loop
-				p := params.item (i)
-				create dn.make_from_cil (p.name)
-				en := formatted_argument_name (dn, i + 1)
-				if dn = Void or dn.is_empty then
-					dn := en.clone (en)
-				end
-				t := p.parameter_type
-				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,
-					referenced_type_from_type (t),
-					p.is_out or t.is_by_ref), i + 1)
-				i := i + 1
-			end
-		ensure
-			non_void_arguments: Result /= Void
-		end
-
 	consumed_procedure (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_PROCEDURE is
 			-- Consumed procedure.
 		require
@@ -473,7 +440,7 @@ feature {NONE} -- Implementation
 					l_unique_eiffel_name,
 					l_dotnet_name,
 					formatted_feature_name (l_dotnet_name),
-					consumed_arguments (info),
+					arguments (info),
 					info.is_final,
 					info.is_static,
 					info.is_abstract,
@@ -503,7 +470,7 @@ feature {NONE} -- Implementation
 					l_unique_eiffel_name,
 					l_dotnet_name,
 					formatted_feature_name (l_dotnet_name),
-					consumed_arguments (info),
+					arguments (info),
 					referenced_type_from_type (info.return_type),
 					info.is_final,
 					info.is_static,

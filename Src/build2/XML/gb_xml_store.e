@@ -97,7 +97,8 @@ feature {GB_XML_HANDLER} -- Implementation
 		
 		
 	output_attributes (an_object: GB_OBJECT; element: XML_ELEMENT; add_names: BOOLEAN) is
-			--
+			--Output attributes of `an_object' to `element'. If `add_names' then generate
+			-- a unique name for each object that is not named.
 		local
 			handler: GB_EV_HANDLER
 			supported_types: ARRAYED_LIST [STRING]

@@ -90,6 +90,7 @@ feature -- Il code generation
 			basic_i: BASIC_I
 			feat: FEATURE_I
 			ref_class: CLASS_C
+			l_decl_type: CL_TYPE_I
 		do
 			basic_i ?= a_type
 			
@@ -100,16 +101,19 @@ feature -- Il code generation
 			il_generator.generate_local_assignment (local_number)
 			
 				-- Create _REF class
-			(create {CREATE_TYPE}.make (basic_i.associated_reference.type)).generate_il
+			(create {CREATE_TYPE}.make (basic_i.reference_type)).generate_il
 			il_generator.duplicate_top
 			
 				-- Call `set_item' from the _REF class
-			ref_class := basic_i.associated_reference.associated_class
+			ref_class := basic_i.reference_type.base_class
 			feat := ref_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
+
+			l_decl_type := il_generator.implemented_type (feat.origin_class_id,
+				basic_i.reference_type)
 			
 			il_generator.generate_local (local_number)
-			il_generator.generate_feature_access (basic_i.associated_reference.type,
-				feat.feature_id, feat.argument_count, feat.has_return_value, False)
+			il_generator.generate_feature_access (l_decl_type,
+				feat.origin_feature_id, feat.argument_count, feat.has_return_value, False)
 		end
 
 feature -- C generation

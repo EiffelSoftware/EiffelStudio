@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 					-- and respond accordingly.
 				if (command_line.argument_array @ 5).as_lower.is_equal (Visual_studio_project_argument) then
 					check
-						five_arguments: command_line.argument_array.count = 6
+						seven_arguments: command_line.argument_array.count = 7
 					end
 						-- For Visual Studio launches, the arguments are as follows:
 						-- 1. The location to the installation directory of Build. This points to the root directory of Build.

@@ -86,7 +86,7 @@ rt_public size_t s_search(struct s_table *tbl, char *object)
 	}
 }
 
-rt_public void s_resize(register struct s_table *tbl)
+rt_public void s_resize(struct s_table *tbl)
 {
 	/* Resize `tbl' to a bigger size */
 

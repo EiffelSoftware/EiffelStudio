@@ -177,7 +177,7 @@ rt_public long get_offset (uint32 o_type, uint32 attrib_num);
 rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
 rt_public void free_sorted_attributes(void);
 rt_public void allocate_gen_buffer(void);
-rt_shared void buffer_write(register char *data, size_t size);
+rt_shared void buffer_write(char *data, size_t size);
 
 rt_public void rt_reset_store (void);
 
@@ -2062,7 +2062,7 @@ printf ("Free s_attr (%d) %lx\n", i, s_attr);
 	}
 }
 
-rt_shared void buffer_write(register char *data, size_t size)
+rt_shared void buffer_write(char *data, size_t size)
 {
 	RT_GET_CONTEXT
 	size_t i;
@@ -2083,7 +2083,7 @@ rt_shared void buffer_write(register char *data, size_t size)
 /* Bufferization of information on buffer. If the buffer is full
  * we write the buffer on IO_MEDIUM and flush the buffer so we can
  * do another write operation */
-rt_public void new_buffer_write(register char *data, int size)
+rt_public void new_buffer_write(char *data, int size)
 {
 	RT_GET_CONTEXT
 	if (current_position + size >= buffer_size) {
@@ -2136,7 +2136,7 @@ void store_write(void)
 	char* cmps_out_ptr = (char *)0;
 	size_t cmps_in_size = 0;
 	size_t cmps_out_size = 0;
-	register char * ptr = (char *)0;
+	char * ptr = (char *)0;
 	int number_left = 0;
 	int number_writen = 0;
 

@@ -579,4 +579,88 @@ feature -- Warning Dialogs
 	
 	Invalid_bpr_file: STRING is "The .BPR file you are attempting to load was created with the beta version of EiffelBuild.%NThe information stored in the project settings are incompatible with this version of Build.%NClick 'Continue' if you wish to load the project, with default Build settings."
 
+feature -- Object editor properties
+
+	gb_ev_widget_minimum_width: STRING is "Minimum Width"
+	gb_ev_widget_minimum_width_tooltip: STRING is "feature `minimum_width' from EV_WIDGET."
+	gb_ev_widget_minimum_height: STRING is "Minimum Height"
+	gb_ev_widget_minimum_height_tooltip: STRING is "feature `minimum_height' from EV_WIDGET."
+	
+	gb_ev_gauge_value: STRING is "Value"
+	gb_ev_gauge_value_tooltip: STRING is "feature `value' from EV_GAUGE."
+	gb_ev_gauge_step: STRING is "Step"
+	gb_ev_gauge_step_tooltip: STRING is "feature `step' from EV_GAUGE."
+	gb_ev_gauge_leap: STRING is "Leap"
+	gb_ev_gauge_leap_tooltip: STRING is "feature `leap' from EV_GAUGE."
+	gb_ev_gauge_upper: STRING is "Upper"
+	gb_ev_gauge_upper_tooltip: STRING is "feature `upper' from EV_GAUGE."
+	gb_ev_gauge_lower: STRING is "Lower"
+	gb_ev_gauge_lower_tooltip: STRING is "feature `lower' from EV_GAUGE."
+	
+	gb_ev_viewport_x_offset: STRING is "X Offset"
+	gb_ev_viewport_x_offset_tooltip: STRING is "feature `x_offset' from EV_VIEWPORT"
+	gb_ev_viewport_y_offset: STRING is "Y Offset"
+	gb_ev_viewport_y_offset_tooltip: STRING is "feature `y_offset' from EV_VIEWPORT"
+	gb_ev_viewport_item_height: STRING is "Item Height"
+	gb_ev_viewport_item_height_tooltip: STRING is "feature `item_height' from EV_VIEWPORT"
+	gb_ev_viewport_item_width: STRING is "Item Width"
+	gb_ev_viewport_item_width_tooltip: STRING is "feature `item_width' from EV_VIEWPORT"
+	
+	gb_ev_window_user_can_resize: STRING is "User can resize?"
+	gb_ev_window_user_can_Resize_tooltip: STRING is "feature `user_can_resize' from EV_WINDOW"
+	gb_ev_window_maximum_width: STRING is "Maximum Width"
+	gb_ev_window_maximum_width_tooltip: STRING is "feature `maximum_width' from EV_WINDOW"
+	gb_ev_window_maximum_height: STRING is "Maximum Height"
+	gb_ev_window_maximum_height_tooltip: STRING is "feature `maximum_height' from EV_WINDOW"
+	
+	gb_ev_box_padding_width: STRING is "Padding Width"
+	gb_ev_box_padding_width_tooltip: STRING is "feature `padding_width' from EV_BOX"
+	gb_ev_box_border_width: STRING is "Border Width"
+	gb_ev_box_border_width_tooltip: STRING is "feature `border_width' from EV_BOX"
+	
+	gb_ev_table_rows: STRING is "Rows"
+	gb_ev_table_rows_tooltip: STRING is "feature `rows' from EV_TABLE"
+	gb_ev_table_columns: STRING is "Columns"
+	gb_ev_table_columns_tooltip: STRING is "feature `columns' from EV_TABLE"
+	gb_ev_table_row_spacing: STRING is "Row Spacing"
+	gb_ev_table_row_spacing_tooltip: STRING is "feature `row_spacing' from EV_TABLE"
+	gb_ev_table_column_spacing: STRING is "Column Spacing"
+	gb_ev_table_column_spacing_tooltip: STRING is "feature `column_spacing' from EV_TABLE"
+	gb_ev_table_border_width: STRING is "Border Width"
+	gb_ev_table_border_width_tooltip: STRING is "feature `border_width' from EV_TABLE"
+	
+	gb_ev_colorizable_foreground_color: STRING is "Foreground color"
+	gb_ev_colorizable_foreground_color_tooltip: STRING is "feature `foreground_color' from GB_EV_COLORIZABLE"
+	gb_ev_colorizable_background_color: STRING is "Background color"
+	gb_ev_colorizable_background_color_tooltip: STRING is "feature `background_color' from GB_EV_COLORIZABLE"
+	
+	gb_ev_deselectable_is_selected: STRING is "Is Selected?"
+	gb_ev_deselectable_is_selected_tooltip: STRING is "feature `is_selected' from EV_SELECTABLE"
+	
+	gb_ev_sensitive_is_sensitive: STRING is "Is Sensitive?"
+	gb_ev_sensitive_is_sensitive_tooltip: STRING is "feature `is_sensitive' from EV_SENSITIVE"
+	
+	gb_ev_textable_text: STRING is "Text"
+	gb_ev_textable_text_tooltip: STRING is "feature `text' from EV_TEXTABLE"
+	
+	gb_ev_text_alignable: STRING is "Text alignment"
+	gb_ev_text_alignable_tooltip: STRING is "feature `text_alignment' from EV_TEXT_ALIGNABLE"
+	
+	gb_ev_tooltipable_tooltip: STRING is "Tooltip"
+	gb_ev_tooltipable_tooltip_tooltip: STRING is "feature `tooltip' from EV_TOOLTIPABLE"
+	
+	gb_ev_pixmapable_pixmap: STRING is "Pixmap"
+	gb_ev_pixmapable_pixmap_tooltip: STRING is "feature `pixmap' from EV_PIXMAPABLE"
+	
+	gb_ev_container_radio_groups: STRING is "Merged radio groups"
+	gb_ev_container_radio_groups_tooltip: STRING is "feature `merge_radio_groups' from EV_CONTAINER"
+	
+	gb_ev_text_component_is_editable: STRING is "Is editable?"
+	gb_ev_text_component_is_editable_tooltip: STRING is "feature `is_editable' from EV_TEXT_COMPONENT"
+	
+	gb_ev_notebook_tab_position: STRING is "Tab Position"
+	gb_ev_notebook_tab_position_tooltip: STRING is "feature `tab_position' from EV_NOTEBOOK"
+	
+	select_button_text: STRING is "Select..."
+
 end -- class GB_CONSTANTS

@@ -1,6 +1,10 @@
 indexing 
 	description:
-		"Eiffel Vision horizontal Progress bar. Gauge displaying a bar graph."
+		"Horizontal bar graph gauge for displaying progress of a process."
+	appearance:
+		"+-------------+%N%
+		"|###   25%    |%N%
+		"+-------------+"
 	status: "See notice at end of class"
 	keywords: "status, progress, bar, horizontal"
 	date: "$Date$"
@@ -20,18 +24,19 @@ create
 	make_with_range,
 	make_for_test
 
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_HORIZONTAL_PROGRESS_BAR_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of horizontal progress bar.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_HORIZONTAL_PROGRESS_BAR_IMP}
 				implementation.make (Current)
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_HORIZONTAL_PROGRESS_BAR_I
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR
 
@@ -56,6 +61,9 @@ end -- class EV_HORIZONTAL_PROGRESS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/21 02:09:45  oconnor
+--| comments and formatting
+--|
 --| Revision 1.7  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -1,6 +1,12 @@
 indexing
 	description: 
-		"Eiffel Vision list. Displays a list from which the user can select."
+		"Displays a list of items from which the user can select."
+	appearance:
+		"+-------------+%N%
+		%| 'first'     |%N%
+		%|  ...        |%N%
+		%| `last'      |%N%
+		%+-------------+"
 	status: "See notice at end of class"
 	keywords: "list, select, menu"
 	date: "$Date$"
@@ -51,23 +57,6 @@ feature -- Initialization
 			items_created: count = strings.count
 		end
 
-	make_for_test is
-		local
-			list_item: EV_LIST_ITEM
-			counter: INTEGER
-		do
-			{EV_PRIMITIVE} Precursor
-			from
-			until
-				counter = 10
-			loop
-				counter := counter + 1
-				create list_item.make_with_text ("Test item " + counter.out)
-				extend (list_item)
-				select_item (counter)
-			end
-		end
-
 feature -- Access
 
 	selected_item: EV_LIST_ITEM is
@@ -80,7 +69,7 @@ feature -- Access
 		end
 
 	selected_items: LINKED_LIST [EV_LIST_ITEM] is
-			-- List of currently selected items.
+			-- Currently selected items.
 		do
 			Result := implementation.selected_items
 		ensure
@@ -116,7 +105,7 @@ feature -- Status setting
 		end
 
 	clear_selection is
-			-- Clear the selection of the list.
+			-- Ensure there are no `selected_items'.
 		do
 			implementation.clear_selection
 		ensure
@@ -147,40 +136,57 @@ feature -- Event handling
 	deselect_actions: EV_LIST_ITEM_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed when an item is deselected.
 
+feature {EV_ANY_I, EV_LIST} -- Implementation
+
+	implementation: EV_LIST_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of list widget.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_LIST_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
-            		-- Create action sequence objects.
+   			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_PRIMITIVE} Precursor
 			create select_actions
 			create deselect_actions
 		end
 
-feature {EV_ANY_I, EV_LIST} -- Implementation
+feature -- Contract support
 
-	implementation: EV_LIST_I	
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+	make_for_test is
+			-- Create with items for testing.
+		local
+			list_item: EV_LIST_ITEM
+			counter: INTEGER
+		do
+			{EV_PRIMITIVE} Precursor
+			from
+			until
+				counter = 10
+			loop
+				counter := counter + 1
+				create list_item.make_with_text ("Test item " + counter.out)
+				extend (list_item)
+				select_item (counter)
+			end
+		end
 
 invariant
-	selected_items_not_void:
-		is_useable implies selected_items /= Void
-
+	selected_items_not_void: is_useable implies selected_items /= Void
 	selected_items_first_is_selected_item:
-		is_useable implies not selected_items.empty implies selected_items.first = selected_item
-
+		is_useable and not selected_items.empty implies
+		selected_items.first = selected_item
 	selected_items_empty_xor_selected_item_not_void:
 		is_useable implies selected_items.empty xor selected_item /= Void
-
 	selection_size_within_bounds:
-		is_useable implies not multiple_selection_enabled implies selected_items.count <= 1
+		is_useable and not multiple_selection_enabled implies
+		selected_items.count <= 1
 
 end -- class EV_LIST
 
@@ -205,6 +211,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/21 02:11:50  oconnor
+--| comments and formatting
+--|
 --| Revision 1.39  2000/03/06 20:15:23  king
 --| Changed action sequence types
 --|
@@ -227,7 +236,8 @@ end -- class EV_LIST
 --| added make_for_test
 --|
 --| Revision 1.32  2000/02/24 19:59:15  rogers
---| Corrected postconditions in select_item and deselect_item, they now reference an_index instead of index.
+--| Corrected postconditions in select_item and deselect_item, they now
+--| reference an_index instead of index.
 --|
 --| Revision 1.31  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting

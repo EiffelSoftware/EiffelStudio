@@ -1,8 +1,10 @@
 indexing 
 	description:
-		"Eiffel Vision horizontal separator."
+		"Scored horizontal line."
+	appearance:
+		"---------------"
 	status: "See notice at end of class"
-	keywords: "seperator, horizontal"
+	keywords: "seperator, horizontal, line, score"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,15 +23,14 @@ create
 
 feature {NONE} -- Implementation
 
+	implementation: EV_HORIZONTAL_SEPARATOR_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
-			-- Create implementation of horizontal separator.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_HORIZONTAL_SEPARATOR_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_HORIZONTAL_SEPARATOR_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
 
 end -- class EV_HORIZONTAL_SEPARATOR
 
@@ -54,6 +55,9 @@ end -- class EV_HORIZONTAL_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/21 02:11:00  oconnor
+--| comments and formatting
+--|
 --| Revision 1.9  2000/03/01 20:28:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -34,7 +34,7 @@ feature -- Initialization
 			!! routine_list.make ("", top_form)
 			!! generate_button.make ("Generate", top_form)
 			!! separator.make ("", top_form)
-			!! precondition_toggle_b.make ("Precondition test")
+			!! precondition_toggle_b.make ("Precondition test", top_form)
 			set_values
 			attach_all
 			set_callbacks

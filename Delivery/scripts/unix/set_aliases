@@ -114,15 +114,15 @@ CANCEL
 # CVS Commands: up, checkout, export
 up ()
 {
-cvs -q up -Pd $* >> $INSTALL_LOG
+cvs -z9 -q up -Pd $* >> $INSTALL_LOG
 }
 co ()
 {
-cvs -q co -P $* >> $INSTALL_LOG
+cvs -z9 -q co -P $* >> $INSTALL_LOG
 }
 exprt ()
 {
-cvs -q export $* >> $INSTALL_LOG
+cvs -z9 -q export $* >> $INSTALL_LOG
 }
 # Tries to update or check out. $1: CVS path $2: local path
 safe_up ()

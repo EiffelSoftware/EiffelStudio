@@ -22,6 +22,8 @@ inherit
 			child_minheight_changed
 		end
 
+	EV_SYSTEM_PEN_IMP
+
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
@@ -47,11 +49,6 @@ inherit
 			default_ex_style,
 			on_paint,
 			background_brush
-		end
-
-	WEL_PS_CONSTANTS
-		export
-			{NONE} all
 		end
 
 creation
@@ -191,30 +188,6 @@ feature {NONE} -- Implementation : WEL features
 				paint_dc.line (1, top + 1, 7, top +1)
 				paint_dc.line (width - 3, top + 1, paint_dc.string_size (text).width + 13, top + 1)
 			end
-		end
-
-	shadow_pen: WEL_PEN is
-			-- Pen with the shadow color
-		local
-			color: WEL_COLOR_REF
-		once
-			!! color.make_system (Color_btnshadow)
-			!! Result.make (ps_solid, 1, color)
-		ensure
-			result_not_void: Result /= Void
-			result_exists: Result.exists
-		end
-
-	highlight_pen: WEL_PEN is
-			-- Pen with the highlight color
-		local
-			color: WEL_COLOR_REF
-		once
-			!! color.make_system (Color_btnhighlight)
-			!! Result.make (ps_solid, 1, color)
-		ensure
-			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 	private_font: WEL_FONT

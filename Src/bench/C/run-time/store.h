@@ -37,7 +37,7 @@ extern "C" {
 #define GENERAL_STORE_3_3 '\05'
 #define GENERAL_STORE_4_0 '\07'
 #define INDEPENDENT_STORE_3_2 '\04'
-#define INDEPENDENT_STORE_4_0 '\08'
+#define INDEPENDENT_STORE_4_0 '\10' /* Octal values */
 
 /*
  * Eiffel calls
@@ -72,6 +72,9 @@ extern char * cmps_general_buffer;
 
 extern void (*store_write_func)();
 extern void store_write();
+
+extern void rt_init_store();
+extern void rt_reset_store();
 
 extern long get_offset();          /* get offset of attrib in object*/
 

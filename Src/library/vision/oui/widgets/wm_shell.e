@@ -401,7 +401,7 @@ feature {WM_SHELL_I}
 			-- Set window manager shell implementation to `a_wm_shell_imp'.
 		do
 			implementation := a_wm_shell_imp
-		end; -- set_wm_imp
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

@@ -172,7 +172,7 @@ feature -- Callbacks (adding)
 			Valid_translation: a_translation /= Void
 		do
 			implementation.set_action (a_translation, a_command, argument)
-		end; -- set_action
+		end;
 
 feature -- Callbacks (removing)
 

@@ -19,7 +19,7 @@ feature {NONE}
 			-- Set default value and build the terminal
 		do
 			implementation.build
-		end; -- set_default
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

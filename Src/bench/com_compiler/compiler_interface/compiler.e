@@ -11,12 +11,18 @@ inherit
 		redefine
 			make,
 			is_successful,
-			compile
+			compile,
+			compiler_version
 		end
 		
 	SHARED_EIFFEL_PROJECT
-		export {NONE}
-			all
+		export
+			{NONE} all
+		end
+
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
 		end
 
 create
@@ -47,6 +53,12 @@ feature -- Access
 
 	last_error_message: STRING
 			-- Last error message.
+
+	compiler_version: STRING is
+			-- Compiler version.
+		do
+			Result := Version_number
+		end
 
 feature -- Basic Operations
 

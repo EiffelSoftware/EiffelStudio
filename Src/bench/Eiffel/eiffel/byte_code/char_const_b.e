@@ -28,7 +28,7 @@ feature
 	print_register is
 			-- Print the character constant
 		do
-			generated_file.putchar ('%'');
+			generated_file.putstring ("(EIF_CHARACTER) %'");
 			generated_file.escape_char (value);
 			generated_file.putchar ('%'');
 		end;

@@ -15,7 +15,7 @@
 #include "eif_equal.h"			/* For Eiffel boolean */
 #include "eif_struct.h"			/* For skeleton structure */
 #include "eif_traverse.h"		/* For traversing objects */
-#include "eif_macros.h"			/* For macro LNGPAD */
+#include "x2c.h"			/* For macro LNGPAD */
 #include "eif_tools.h"			/* For `nprime' */
 #include "eif_search.h"
 
@@ -120,8 +120,8 @@ rt_public int spequal(register char *target, register char *source)
 	register4 char *t_ref;
 
 	/* First condition: same count */
-	s_ref = (char *) (source + s_size - LNGPAD(2));
-	t_ref = (char *) (target + t_size - LNGPAD(2));
+	s_ref = (char *) (source + s_size - LNGPAD_2);
+	t_ref = (char *) (target + t_size - LNGPAD_2);
 	if (*(long *) s_ref != *(long *) t_ref)
 		return FALSE;
 
@@ -204,8 +204,8 @@ rt_public int spiso(register char *target, register char *source)
 	t_size = t_zone->ov_size & B_SIZE;
 
 	/* First condition: same count */
-	s_ref = (char *) (source + s_size - LNGPAD(2));
-	t_ref = (char *) (target + t_size - LNGPAD(2));
+	s_ref = (char *) (source + s_size - LNGPAD_2);
+	t_ref = (char *) (target + t_size - LNGPAD_2);
 
 #ifdef DEBUG
 	dprintf(2)("spiso: source = 0x%lx [%d] target = 0x%lx [%d]\n",
@@ -326,7 +326,7 @@ rt_private int rdeepiso(char *target, char *source)
 			return TRUE;
 
 		/* Evaluation of the count of the target special object */
-		t_ref = (char *) (target + (zone->ov_size & B_SIZE) - LNGPAD(2));
+		t_ref = (char *) (target + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		count = *(long *) t_ref;
 
 		/* Traversal of references */

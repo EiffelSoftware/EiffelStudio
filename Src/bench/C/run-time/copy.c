@@ -24,6 +24,7 @@
 #include "eif_local.h"
 #include "eif_hector.h"
 #include "eif_garcol.h"
+#include "x2c.h"		/* For macro LNGPAD */
 
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */
@@ -82,8 +83,8 @@ rt_public char *spclone(char *source)
 	/* Keep the reference flag and the composite one and the type */
 	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP | EO_TYPE);
 	/* Keep the count and the element size */
-	r_ref = result + size - LNGPAD(2);
-	s_ref = source + size - LNGPAD(2);
+	r_ref = result + size - LNGPAD_2;
+	s_ref = source + size - LNGPAD_2;
 	*(long *) r_ref = *(long *) s_ref;
 	*(long *) (r_ref + sizeof(long)) = *(long *) (s_ref + sizeof(long));
 
@@ -314,7 +315,7 @@ rt_private void rdeepclone (char *source, char *enclosing, int offset)
 		}
 		zone = HEADER(clone);
 		size = zone->ov_size & B_SIZE;		/* Size of special object */
-		c_ref = clone + size - LNGPAD(2);	/* Where count is stored */
+		c_ref = clone + size - LNGPAD_2;	/* Where count is stored */
 		count = *(long *) c_ref;			/* Number of items in special */
 
 		/* If object is filled up with references, loop over it and recursively
@@ -434,7 +435,7 @@ rt_public void spcopy(register char *source, register char *target)
 	uint32 flags;
 
 	/* Evaluation of the size field to copy */
-	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD(2);
+	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD_2;
 
 	safe_bcopy(source, target, field_size);			/* Block copy */
 
@@ -721,7 +722,7 @@ rt_public void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER st
 	uint32 flags;
 
 	count = end - start + 1;
-	ref = source + (HEADER(source)->ov_size & B_SIZE) - LNGPAD(2);
+	ref = source + (HEADER(source)->ov_size & B_SIZE) - LNGPAD_2;
 	esize = *(long *) (ref + sizeof(long));
 	safe_bcopy(source+start*esize, target+index*esize, count*esize);
 
@@ -754,7 +755,7 @@ rt_public void spclearall (EIF_POINTER spobj)
 	char *ref;
 
 	zone = HEADER(spobj);
-	ref = spobj + (zone->ov_size & B_SIZE) - LNGPAD(2);
+	ref = spobj + (zone->ov_size & B_SIZE) - LNGPAD_2;
 	count = *(long *) ref;
 	elem_size = *(long *) (ref + sizeof(long));
 

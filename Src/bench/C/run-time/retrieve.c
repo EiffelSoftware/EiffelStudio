@@ -27,6 +27,7 @@
 #include "eif_rtlimits.h"
 #include "eif_traverse.h"
 #include "eif_compress.h"
+#include "x2c.h"		/* For macro LNGPAD */
 
 #include <ctype.h>					/* For isspace() */
 
@@ -600,7 +601,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 				spec_size = Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
 			}
 			buffer_read((char *)(&count), sizeof(uint32));
-			nb_char = CHRPAD(count * spec_size ) + LNGPAD(2);
+			nb_char = CHRPAD(count * spec_size ) + LNGPAD_2;
 			buffer_read((char *)(&elm_size), sizeof(uint32));
 
 #if DEBUG & 1
@@ -611,7 +612,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 			{
 				long * o_ref;
 
-				o_ref = (long *) (newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD(2));
+				o_ref = (long *) (newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD_2);
 				*o_ref++ = count; 		
 				*o_ref = spec_size;
 				/* FIXME spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;*/
@@ -795,7 +796,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 				spec_size = Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
 			}
 			ridr_norm_int (&count);
-			nb_char = CHRPAD(count * spec_size ) + LNGPAD(2);
+			nb_char = CHRPAD(count * spec_size ) + LNGPAD_2;
 			ridr_norm_int (&elm_size);
 
 #if DEBUG & 1
@@ -806,7 +807,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 			{
 				long * o_ref;
 
-				o_ref = (long *) (newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD(2));
+				o_ref = (long *) (newadd + (HEADER(newadd)->ov_size & B_SIZE) - LNGPAD_2);
 				*o_ref++ = count; 		
 				*o_ref = spec_size;
 				spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;
@@ -1014,7 +1015,7 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 			return;
 
 		size = zone->ov_size & B_SIZE;	
-		o_ref = (char *) (new + size - LNGPAD(2));
+		o_ref = (char *) (new + size - LNGPAD_2);
 		count = *(long *) o_ref; 		
 		if (!(flags & EO_COMP)) {		/* Special of references */
 			nb_references = count;
@@ -1778,7 +1779,7 @@ rt_private void gen_object_read (char *object, char *parent)
 			uint32 dgen;
 			struct gt_info *info;
 
-			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2));
+			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(long *) o_ptr;
 			vis_name = System(o_type).cn_generator;
 
@@ -1982,7 +1983,7 @@ rt_private void object_read (char *object, char *parent)
 			uint32 dgen;
 			struct gt_info *info;
 
-			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2));
+			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(long *) o_ptr;
 			vis_name = System(o_type).cn_generator;
 

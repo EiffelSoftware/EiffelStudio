@@ -34,6 +34,7 @@ extern "C" {
 #include "eif_sig.h"
 #include "eif_urgent.h"
 #include "eif_search.h"
+#include "x2c.h"		/* For macro LNGPAD */
 
 #ifdef EIF_THREADS
 #include "eif_once.h"
@@ -1678,7 +1679,7 @@ marked:		/* I need this goto label to avoid code duplication */
 		 * header is not taken into account).
 		 */
 		size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-		size -= LNGPAD(2);					/* Go backward to 'count' */
+		size -= LNGPAD_2;					/* Go backward to 'count' */
 		offset = *(long *) (root + size);	/* Get the count (# of items) */
 
 		/* Treat arrays of expanded object here, because we have a special
@@ -1892,7 +1893,7 @@ marked: /* Goto label needed to avoid code duplication */
 			 * the header is not taken into account).
 			 */
 			size = zone->ov_size & B_SIZE;			/* Fetch size of block */
-			size -= LNGPAD(2);						/* Go backward to 'count' */
+			size -= LNGPAD_2;						/* Go backward to 'count' */
 			count = offset = *(long *) (current + size);	/* Get # of items */
 
 			/* Treat arrays of expanded object here, because we have a special
@@ -2136,7 +2137,7 @@ marked:
 			 * the header is not taken into account).
 			 */
 			size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-			size -= LNGPAD(2);					/* Go backward to 'count' */
+			size -= LNGPAD_2;					/* Go backward to 'count' */
 			offset = *(long *) (node + size);	/* Get the count (# of items) */
 		} else
 			offset = References(flags & EO_TYPE);	/* # of references */
@@ -2245,7 +2246,7 @@ not_explorable:
 			if (flags & EO_SPEC) {
 				zone = HEADER(node);
 				size = zone->ov_size & B_SIZE;
-				size -= LNGPAD(2);
+				size -= LNGPAD_2;
 				offset = *(long *) (node + size);
 			} else
 				offset = References(flags & EO_TYPE);
@@ -3838,7 +3839,7 @@ rt_private char *generation_mark(char *root)
 		 * header is not taken into account).
 		 */
 		size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-		size -= LNGPAD(2);					/* Go backward to 'count' */
+		size -= LNGPAD_2;					/* Go backward to 'count' */
 		offset = *(long *) (root + size);	/* Get the count (# of items) */
 
 		/* Treat arrays of expanded object here, because we have a special
@@ -4019,7 +4020,7 @@ rt_private char *hybrid_gen_mark(char *root)
 			 * the header is not taken into account).
 			 */
 			size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-			size -= LNGPAD(2);					/* Go backward to 'count' */
+			size -= LNGPAD_2;					/* Go backward to 'count' */
 			count = offset = *(long *) (current + size);	/* Get # items */
 
 			/* Treat arrays of expanded object here, because we have a special
@@ -4229,7 +4230,7 @@ rt_private char *it_gen_mark(char *root)
 			 * the header is not taken into account).
 			 */
 			size = zone->ov_size & B_SIZE;		/* Fetch size of block */
-			size -= LNGPAD(2);					/* Go backward to 'count' */
+			size -= LNGPAD_2;					/* Go backward to 'count' */
 			offset = *(long *) (node + size);	/* Get the count (# of items) */
 		} else
 			offset = References(flags & EO_TYPE);	/* # of references */
@@ -4338,7 +4339,7 @@ not_explorable:
 			if (flags & EO_SPEC) {
 				zone = HEADER(node);
 				size = zone->ov_size & B_SIZE;
-				size -= LNGPAD(2);
+				size -= LNGPAD_2;
 				offset = *(long *) (node + size);
 			} else
 				offset = References(flags & EO_TYPE);
@@ -4848,7 +4849,7 @@ rt_shared int refers_new_object(register char *object)
 	if (flags & EO_SPEC) {				/* Special object */
 		if (!(flags & EO_REF))			/* (see recursive_mark() for details) */
 			return 0;					/* No references at all */
-		size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2);
+		size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
 		refs = *(long *) (object + size);
 		if (flags & EO_COMP)			/* Composite object = has expandeds */
 			size = *(long *) (object + size + sizeof(long)) + OVERHEAD;

@@ -27,6 +27,7 @@
 #include "eif_malloc.h"
 #include "eif_lmalloc.h"		/* for eif_malloc() */
 #include "eif_macros.h"
+#include "x2c.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>
@@ -343,7 +344,7 @@ rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 */
 
 	zone = HEADER(area);
-	ref = area + (zone->ov_size & B_SIZE) - LNGPAD(2);
+	ref = area + (zone->ov_size & B_SIZE) - LNGPAD_2;
 	ref += sizeof(long);
 	elem_size = *(long *) ref;			/* Extract the element size */
 

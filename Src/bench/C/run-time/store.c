@@ -28,6 +28,7 @@
 #include "eif_error.h"
 #include "eif_main.h"
 #include "eif_compress.h"
+#include "x2c.h"			/* For macro LNGPAD */
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -65,10 +66,10 @@ rt_private int s_fides;	/* File descriptor used during the storing process */
  */
 rt_private void internal_store(char *object);
 rt_private void st_store(char *object);				/* Second pass of the store */
-rt_private void ist_write(char *object);
-rt_private void gst_write(char *object);
-rt_private void make_header(void);				/* Make header */
-rt_private void imake_header(void);				/* Make header */
+rt_public void ist_write(char *object);
+rt_public void gst_write(char *object);
+rt_public void make_header(void);				/* Make header */
+rt_public void imake_header(void);				/* Make header */
 rt_private int store_buffer();		/* %%ss undefined not used in run-time */
 rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
@@ -477,7 +478,7 @@ rt_private void st_store(char *object)
 			long count, elem_size;
 			char *ref;
 
-			o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+			o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(long *) o_ptr;
 			if (!(flags & EO_COMP)) {		/* Special of references */
 				for (ref = object; count > 0; count--,
@@ -589,7 +590,7 @@ rt_private void gst_write(char *object)
 	if (flags & EO_SPEC) {
 		char * o_ptr;
 		uint32 count, elm_size;
-		o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+		o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		count = (uint32)(*(long *) o_ptr);
 		elm_size = (uint32)(*(long *) (o_ptr + sizeof (long *)));
 
@@ -634,7 +635,7 @@ rt_private void ist_write(char *object)
 	if (flags & EO_SPEC) {
 		char * o_ptr;
 		uint32 count, elm_size;
-		o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+		o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		count = (uint32)(*(long *) o_ptr);
 		elm_size = (uint32)(*(long *) (o_ptr + sizeof (long *)));
 
@@ -756,7 +757,7 @@ rt_private void gen_object_write(char *object)
 			uint32 dgen, dgen_typ;
 			struct gt_info *info;
 
-			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2));
+			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(long *) o_ptr;
 			vis_name = System(o_type).cn_generator;
 
@@ -922,7 +923,7 @@ rt_private void object_write(char *object)
 			uint32 dgen, dgen_typ;
 			struct gt_info *info;
 
-			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2));
+			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(long *) o_ptr;
 			vis_name = System(o_type).cn_generator;
 

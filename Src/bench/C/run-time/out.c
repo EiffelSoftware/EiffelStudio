@@ -17,13 +17,13 @@
 #include "eif_out.h"
 #include "eif_plug.h"
 #include "eif_struct.h"
-#include "eif_macros.h"		/* For macro LNGPAD */
 #include "eif_hashin.h"
 #include "eif_except.h"		/* For `eraise' */
 #include "eif_sig.h"
 #include "eif_hector.h"
 #include "eif_bits.h"
 #include "eif_globals.h"
+#include "x2c.h"			 /* For macro LNGPAD */
 
 /*
  * Private declarations
@@ -295,7 +295,7 @@ rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 	int dt_type;
 
 	zone = HEADER(object);
-	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 	count = *(long *) o_ref;
 	old_count = count;
 	elem_size = *(long *) (o_ref + sizeof(long));

@@ -203,7 +203,7 @@ rt_public long ei_size(char *object)
 	/* Returns physical size occupied by `object'. */
 
 	if (HEADER(object)->ov_flags & EO_SPEC)
-		return (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2);
+		return (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
 	else
 		return (long) Size(Dtype(object));
 }

@@ -30,6 +30,7 @@
 #include "eif_equal.h"	/* for xequal() */
 #include <math.h>
 #include "eif_main.h"
+#include "x2c.h"		/* For LNGPAD */
 
 #ifdef CONCURRENT_EIFFEL
 #include "eif_curextern.h"
@@ -2281,7 +2282,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						sp_area += BITOFF(LENGTH(it->it_bit)); 
 						break;
 					case SK_EXP:
-						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));
+						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(long));
 						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
 						break;
 					case SK_REF:
@@ -2369,7 +2370,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						sp_area += BITOFF(LENGTH(it->it_bit)); 
 						break;
 					case SK_EXP:
-						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));
+						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(long));
 						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
 						break;
 					case SK_REF:

@@ -107,7 +107,7 @@ feature -- Access
 		deferred
 		ensure
 			text_substring_not_void: Result /= Void
-			text_substring_empty: (s > e) implies Result.empty
+			text_substring_empty: (s > e) implies Result.is_empty
 			definition: s <= e implies Result.is_equal (text.substring (s, e))
 		end
 

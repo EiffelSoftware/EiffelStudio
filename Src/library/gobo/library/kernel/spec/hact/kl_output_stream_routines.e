@@ -26,7 +26,7 @@ feature -- Initialization
 			-- if operation was successful.
 		require
 			a_filename_not_void: a_filename /= Void
-			a_filename_not_empty: not a_filename.empty
+			a_filename_not_empty: not a_filename.is_empty
 		local
 			rescued: BOOLEAN
 			a_file: PLAIN_TEXT_FILE

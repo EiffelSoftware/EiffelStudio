@@ -37,21 +37,25 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (f_id, f_rout_id: INTEGER) is
-			-- Initialize Current with `f_id' and `f_name_id'.
+	make (f_id, f_rout_id: INTEGER; a_class: CLASS_C) is
+			-- Initialize Current with `f_id' and `f_name_id'
+			-- in context of class `a_class_id'.
 		require
 			valid_f_id: f_id > 0
 			valid_f_rout_id: f_rout_id > 0
-		local
-			type_set: SEARCH_TABLE [INTEGER]
+			valid_class: a_class /= Void
 		do
 			feature_id := f_id
 			routine_id := f_rout_id
 
-			type_set := System.type_set
-			if not type_set.has (f_rout_id) then
-					-- Found a new routine id having a type table
-				type_set.force (f_rout_id)
+				-- It is faster to force the same value again
+				-- in `type_set' than testing if it is already
+				-- present or not and then insert it.
+			System.type_set.force (f_rout_id)
+			
+				-- Add it to current class too for IL code generation.
+			if System.il_generation then
+				a_class.extend_type_set (f_rout_id)
 			end
 		ensure
 			feature_id_set: feature_id = f_id

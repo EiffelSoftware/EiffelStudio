@@ -10,6 +10,8 @@ deferred class FILTERABLE
 inherit
 
 	FORMATTER
+		rename
+			init as make
 		redefine
 			filter
 		end

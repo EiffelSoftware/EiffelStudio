@@ -1209,11 +1209,8 @@ feature -- Status setting
 			-- Therefore, when calling `update_tab_positions' explicitly, any value may be passed.
 		local
 			array: ARRAY [INTEGER]
-			counter: INTEGER
-			value_in_twips: INTEGER
+			counter, value_in_twips, logical_pixels, current_default: INTEGER
 			screen_dc: WEL_SCREEN_DC
-			logical_pixels: INTEGER
-			current_default: INTEGER
 		do
 			if tab_positions.count > 0 then
 				safe_store_caret
@@ -1393,7 +1390,9 @@ feature {EV_CONTAINER_IMP} -- Implementation
 						character_range_consistent: character_range.minimum = character_range.maximum
 					end
 					if caret_move_actions_internal /= Void then
-						caret_move_actions_internal.call ([character_range.minimum + 1])
+							-- Limit the caret position to the last valid caret position as per EiffelVision2.
+							-- It is possible to move the caret position to text_length + 2 in a rich edit control.
+						caret_move_actions_internal.call ([(character_range.minimum + 1).min (text_length + 1)])
 					end
 				else
 					must_fire_final_selection := True

@@ -456,6 +456,41 @@ feature -- Editing
 			labels := l
 		end;
 
+feature {S_COMMAND} -- Update from storage
+
+	update_inherited_label is
+		require
+			inherited: parent_type /= Void
+		local
+			inherited_labels: like labels;
+			inh_cmd_label, cmd_label: CMD_LABEL;
+			found: BOOLEAN
+		do
+			inherited_labels := parent_type.labels;
+			if not inherited_labels.empty then
+				from
+					labels.start
+				until
+					labels.after
+				loop
+					cmd_label := labels.item;
+					from
+						inherited_labels.start
+					until
+						inherited_labels.after or else found
+					loop
+						inh_cmd_label := inherited_labels.item;
+						found := cmd_label.is_equal (inh_cmd_label);
+						inherited_labels.forth
+					end
+					if found then
+						cmd_label.set_parent (parent_type)
+					end;
+					labels.forth
+				end
+			end
+		end;
+
 feature {NONE}
 
 	save_arguments is 
@@ -639,13 +674,16 @@ feature -- Arguments
 		do
 			arguments.start;
 			arguments.search (a);
-			if
-				(not arguments.after) and then
-				(not arguments.item.inherited)
-			then
-				!!remove_argument_cmd;
-				remove_argument_cmd.set_index (arguments.index);
-				remove_argument_cmd.execute (Current);
+			if not arguments.after then
+				if arguments.item.inherited then
+					Error_box.popup (Current,
+						Messages.Cannot_remove_argument_er,
+						arguments.item.label)	
+				else
+					!!remove_argument_cmd;
+					remove_argument_cmd.set_index (arguments.index);
+					remove_argument_cmd.execute (Current);
+				end
 			end
 		end;
 
@@ -701,13 +739,16 @@ feature -- labels {CMD_EDITOR}
 		do
 			labels.start;
 			labels.search (l);
-			if
-				(not labels.after) and then
-				(not labels.item.inherited)
-			then
-				!!remove_label_cmd;
-				remove_label_cmd.set_index (labels.index);
-				remove_label_cmd.execute (Current);
+			if not labels.after then
+				if labels.item.inherited then
+					Error_box.popup (Current,
+						Messages.Cannot_remove_label_er,
+						labels.item.label)	
+				else
+					!!remove_label_cmd;
+					remove_label_cmd.set_index (labels.index);
+					remove_label_cmd.execute (Current);
+				end
 			end
 		end;
 

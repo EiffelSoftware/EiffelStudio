@@ -7,47 +7,40 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class 
-	
-	CLIENT
+deferred class CLIENT
 
 inherit
-	SOCKET_R;
 
-	STORABLE;
+	SOCKET_RESOURCES
+
+	STORABLE
 
 feature -- Access
 
 	in_out: SOCKET
-		-- Receive and send sockets.
+			-- Receive and send sockets.
 
-	received : SOCKET_STORABLE
-		-- message received on `in'
+	received : STORABLE
+			-- message received on `in'
 
-	make (a : SOCKET_ADDRESS) is
-		require
-			socket_address_non_void: a /= Void
+	cleanup is
 		deferred
 		end
 
-	close is
-		deferred
-		end
-
-	send (msg : SOCKET_STORABLE) is
+	send (msg : STORABLE) is
 		do
 			msg.general_store (in_out)
 		end
 
 	receive is
 		do
-			received ?= socket_retrieved (in_out)
+			received ?= retrieved (in_out)
 		end
 	
 end -- class CLIENT
 
 --|----------------------------------------------------------------
---| Eiffelnet: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.

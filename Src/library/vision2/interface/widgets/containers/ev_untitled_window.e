@@ -18,7 +18,8 @@ inherit
 			parent,
 			show,
 			widget_make,
-			parent_needed
+			parent_needed,
+			is_window
 		end
 
 creation
@@ -258,6 +259,12 @@ feature -- Assertion features
 
 	parent_needed: BOOLEAN is
 			-- Is a parent needed by the widget
+		do
+			Result := True
+		end
+
+	is_window: BOOLEAN is
+			-- Is the current widget a window?
 		do
 			Result := True
 		end

@@ -144,9 +144,11 @@ feature -- Status report
 feature -- Status setting
 
 	hide is
-		 	-- Make widget invisible on the screen.
+		 	-- Make widget invisible in his parent.
 		require
 			exists: not destroyed
+			parent_or_window: implementation.has_parent or
+							is_window
 		do
 			implementation.hide
 		ensure
@@ -154,11 +156,11 @@ feature -- Status setting
 		end
 
 	show is
-		 	-- Make widget visible on the screen. (default)
-			-- Do nothing if the widget has no parent.
+		 	-- Make widget visible in his parent. (default)
 		require
 			exists: not destroyed
-			has_parent: implementation.has_parent
+			parent_or_window: implementation.has_parent or
+							is_window
 		do
 			implementation.show
 		ensure
@@ -484,7 +486,13 @@ feature -- Resizing
 feature -- Assertion features
 
 	parent_needed: BOOLEAN is
-			-- Is a parent needed by the widget
+			-- Is a parent needed by the widget?
+		do
+			Result := False
+		end
+
+	is_window: BOOLEAN is
+			-- Is the current widget a window?
 		do
 			Result := False
 		end

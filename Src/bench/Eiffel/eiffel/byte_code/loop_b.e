@@ -6,7 +6,7 @@ inherit
 
 	INSTR_B
 		redefine
-			need_enlarging, enlarged, make_byte_code
+			need_enlarging, enlarged, make_byte_code, has_loop
 		end;
 	ASSERT_TYPE
 		export
@@ -142,5 +142,9 @@ feature -- Byte code generation
 				-- Write jump value for conditional exit
 			ba.write_forward;
 		end;
+
+feature -- Array optimization
+
+	has_loop: BOOLEAN is True
 
 end

@@ -16,9 +16,9 @@ feature {NONE}
 
 	Backup_info: STRING is "compilation_info.txt"
 
-	Bench_directory_list: STRING is "DIRECTORYLIST"
+	Studio_directory_list: STRING is "DIRECTORYLIST"
 
-	Bench_recent_files: STRING is "BENCH_RECENT_FILES"
+	Studio_recent_files: STRING is "STUDIO_RECENT_FILES"
 
 	Casegen: STRING is "CASEGEN"
 

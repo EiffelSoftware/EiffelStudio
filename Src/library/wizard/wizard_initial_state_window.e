@@ -37,12 +37,12 @@ feature -- Basic Operations
 			message.align_text_left
 			message.set_minimum_height (180)
 			create title
-			title.set_size (330, 20)
+			title.set_minimum_width (330) -- , 20)
 			title.set_background_color (white_color)
-			title.align_text_vertical_center
-			title.our_font.set_family (2)
-			title.enable_bold
 			title.align_text_center
+			title.align_text_middle
+			title.set_font (title_font)
+
 			create sep_v
 			cont:= pixmap.parent
 			if cont /= Void then

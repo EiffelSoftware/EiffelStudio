@@ -151,7 +151,7 @@ feature -- Access
 	message: EV_LABEL
 			-- Page message
 
-	title: SMART_LABEL
+	title: EV_RICH_LABEL
 			-- Page title.
 
 	is_final_state: BOOLEAN is

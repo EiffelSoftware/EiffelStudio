@@ -100,39 +100,16 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
+	enable_select is
+			-- Select the item.
 		do
-			if flag then
-				C.c_gtk_list_item_select (c_object)
-			else
-				C.c_gtk_list_item_unselect (c_object)
-			end
+			C.c_gtk_list_item_select (c_object)
 		end
 
-	toggle is
-			-- Change the state of the toggle button to
-			-- opposit status.
+	disable_select is
+			-- Deselect the item.
 		do
-			set_selected (not is_selected)
-		end
-
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item in the
-			-- list.
-		do
-			-- Reference the widget otherwise it will be destroyed
-			-- when removed from the list.
-			C.gtk_object_ref (c_object)
-			--FIXME is this ref wrapper needed
-			-- Remove the item from the list.
-			C.c_gtk_list_remove_item (parent_imp.list_widget, c_object)
-
-			-- Add the item at the given index.
-			C.c_gtk_list_insert_item (parent_imp.list_widget, c_object, value - 1)
-
-			-- Unreference the widget which has an extra reference.
-			C.gtk_object_unref (c_object)
+			C.c_gtk_list_item_unselect (c_object)
 		end
 
 feature -- element change
@@ -188,6 +165,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/29 22:11:55  king
+--| Added enable/disable select, removed redundant set_index
+--|
 --| Revision 1.30  2000/03/08 21:35:22  king
 --| Removed signal connection, now performed by parent
 --|

@@ -187,23 +187,34 @@ feature -- Project initialization
 			e_displayer: BENCH_ERROR_DISPLAYER
 			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
 			msg: STRING
+			retried: BOOLEAN
 		do
-			Eiffel_project.make_new (project_dir)
-			msg := clone (Interface_names.t_New_project)
-			msg.append (": ")
-			msg.append (project_dir.name)
-			project_tool.set_title (msg)
-			project_tool.set_initialized
-
-			!! e_displayer.make (Error_window);
-			Eiffel_project.set_error_displayer (e_displayer);
-			Application.set_interrupt_number (Project_resources.interrupt_every_n_instructions.actual_value);
-			if not Project_resources.graphical_output_disabled.actual_value then
-				!! g_degree_output
-				Project_tool.set_progress_dialog (g_degree_output)
+			if not retried then
+				Eiffel_project.make_new (project_dir, True)
+				msg := clone (Interface_names.t_New_project)
+				msg.append (": ")
+				msg.append (project_dir.name)
+				project_tool.set_title (msg)
+				project_tool.set_initialized
+	
+				!! e_displayer.make (Error_window);
+				Eiffel_project.set_error_displayer (e_displayer);
+				Application.set_interrupt_number (Project_resources.interrupt_every_n_instructions.actual_value);
+				if not Project_resources.graphical_output_disabled.actual_value then
+					!! g_degree_output
+					Project_tool.set_progress_dialog (g_degree_output)
+				end
+					-- We erase the content of the Project window
+				Project_tool.active_menus (True)
+			else
+				msg := Warning_messages.w_Project_could_not_deleted (project_dir.name)
+				choose_again := True
+				warner (Project_tool).custom_call (Current, msg ,
+					Interface_names.b_Ok, Void, Void)
 			end
-				-- We erase the content of the Project window
-			Project_tool.active_menus (True)
+		rescue
+			retried := True
+			retry
 		end;
 
 feature -- Tool
@@ -215,7 +226,7 @@ feature -- Tool
 			-- Location of the project directory
 
 	choose_again: BOOLEAN
-			-- We need to choose again the file
+			-- Do we need to choose again a file
 
 feature {NONE} -- Attributes
 

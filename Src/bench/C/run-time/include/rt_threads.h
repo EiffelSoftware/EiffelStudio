@@ -26,6 +26,9 @@ extern "C" {
 /* GC synchronization feature */
 extern void eif_synchronize_gc(rt_global_context_t *);
 extern void eif_unsynchronize_gc(rt_global_context_t *);
+#ifdef EIF_ASSERTIONS
+extern int eif_is_synchronized (void);
+#endif
 
 /*---------------------------------------*/
 /*---  In multi-threaded environment  ---*/
@@ -599,13 +602,12 @@ extern void eif_unsynchronize_gc(rt_global_context_t *);
 	/* We use Solaris lwp_mutex hrere */
 #define EIF_LW_MUTEX_TYPE	lwp_mutex_t
 #define EIF_LW_MUTEX_CREATE(m,msg) \
-    	m = (EIF_LW_MUTEX_TYPE *) eif_malloc (sizeof(EIF_LW_MUTEX_TYPE));
+    	m = (EIF_LW_MUTEX_TYPE *) eif_malloc (sizeof(EIF_LW_MUTEX_TYPE)); \
+		memset(m, 0, sizeof(EIF_LW_MUTEX_TYPE));
 #define EIF_LW_MUTEX_LOCK(m,msg) \
-		if (_lwp_mutex_lock(m)) \
-			eraise (msg, EN_EXT);
+		_lwp_mutex_lock(m) 
 #define EIF_LW_MUTEX_UNLOCK(m,msg) \
-		if (_lwp_mutex_unlock(m)) \
-			eraise (msg, EN_EXT);
+		_lwp_mutex_unlock(m)
 #define EIF_LW_MUTEX_DESTROY(m,msg) \
 		eif_free(m);
 

@@ -568,6 +568,12 @@ feature {NONE} -- Implementation
 			is_initialized := True
 		end
 		
+	client_area: POINTER is
+			-- Pointer to the widget that is treated as the main holder of the client area within the window.
+		do
+			Result := c_object
+		end
+	
 	initialize_client_area is
 			-- FIXME: Need comments
 		local
@@ -575,7 +581,7 @@ feature {NONE} -- Implementation
 		do
 			vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (vbox)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, vbox)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (client_area, vbox)
 			hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
 

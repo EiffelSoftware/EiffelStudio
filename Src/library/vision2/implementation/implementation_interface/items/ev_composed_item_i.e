@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
@@ -250,6 +251,9 @@ end -- class EV_COMPOSED_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/10 19:45:49  brendel
+--| Unreleased.
+--|
 --| Revision 1.13  2000/03/10 01:25:23  king
 --| Inheriting from PND
 --|

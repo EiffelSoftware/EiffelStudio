@@ -31,19 +31,15 @@ struct ex_vect {
 		int exu_errno;			/* Error number reported by kernel */
 		struct {
 			char *exua_name;	/* The assertion tag */
-#ifdef WORKBENCH
 			char *exua_where;	/* The routine name where assertion was found */
 			int exua_from;		/* And its origin (where it was written) */
 			char *exua_oid;		/* Object ID (value of Current) */
-#endif
 		} exua;					/* Used by assertions */
 		struct {
 			char *exur_jbuf;	/* Execution buffer address, null if none */
-#ifdef WORKBENCH
 			char *exur_id;		/* Object ID (value of Current) */
 			char *exur_rout;	/* The routine name */
 			int exur_orig;		/* Origin of the routine */
-#endif
 		} exur;					/* Used by routines */
 	} exu;
 };
@@ -203,13 +199,12 @@ extern void exok();				/* Resumption has been successful */
 extern void esfail();			/* Eiffel system failure */
 extern void ereturn();			/* Return to lastly recorded rescue entry */
 extern struct ex_vect *exget();	/* Get a new vector on stack */
-#ifdef WORKBENCH
 extern void excatch();			/* Set exception catcher from C to interpret */
-extern struct ex_vect *exset();	/* Set execution stack on routine entrance */
-extern struct ex_vect *exnext();	/* Read next eif_trace item from bottom */
-#else
+#ifndef WORKBENCH
 extern struct ex_vect *exft();	/* Set execution stack in final mode */
 #endif
+extern struct ex_vect *exset();	/* Set execution stack on routine entrance */
+extern struct ex_vect *exnext();	/* Read next eif_trace item from bottom */
 
 /* Routines for run-time usage only */
 extern struct ex_vect *extop();	/* Top of Eiffel stack */

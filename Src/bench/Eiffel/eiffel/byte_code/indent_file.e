@@ -139,13 +139,21 @@ feature
 
 	putoctal (i: INTEGER) is
 			-- Print octal representation of `i'
+			--| always generate 3 digits
 		local
 			val, remain: INTEGER;
 			s, t: STRING;
 		do
 			if i = 0 then
-				file_putstring ("0")
+				file_putstring ("000")
+			elseif i < 8 then
+				file_putstring ("00")
+				file_putint (i)
 			else
+				if i < 64 then
+					file_putstring ("0")
+				end
+				
 				!!s.make (3);
 				from
 					val := i;

@@ -27,14 +27,7 @@ inherit
 		undefine
 			default_create
 		end
-		
-	GB_GENERAL_UTILITIES
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
+
 	GB_EV_TEXTABLE_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
@@ -97,8 +90,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				escaped_text := escape_special_characters (strip_cdata (element_info.data))
-				Result := info.name + ".set_text (%"" + escaped_text + "%")"
+				Result := info.name + ".set_text (" + retrieve_string_setting (text_string) + ")"
 			end
 			Result := strip_leading_indent (Result)
 		end

@@ -20,13 +20,14 @@ feature -- Access
 
 	tooltip: STRING is
 			-- Tooltip displayed on `Current'.
+			-- If `Result.is_empty' then no tooltip displayed.
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.tooltip
 		ensure
-			bridge_ok: (Result = Void and implementation.tooltip = Void) or
-				Result.is_equal (implementation.tooltip)
+			bridge_ok: equal (Result, implementation.tooltip)
+			not_void: Result /= Void
 		end
 
 feature -- Element change
@@ -36,21 +37,21 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			tooltip: a_tooltip /= Void
-			a_tooltip_not_empty: not a_tooltip.is_empty
 		do
 			implementation.set_tooltip (a_tooltip)
 		ensure
-			tooltip_assigned: a_tooltip.is_equal (tooltip) and tooltip /= a_tooltip
+			tooltip_assigned: a_tooltip.is_equal (tooltip)
+			cloned: tooltip /= a_tooltip
 		end
 
 	remove_tooltip is
-			-- Make `tooltip' `Void'.
+			-- Make `tooltip' empty.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.remove_tooltip
+			set_tooltip ("")
 		ensure
-			tooltip_removed: tooltip = Void
+			tooltip_removed: tooltip.is_empty
 		end
 
 feature {NONE} -- Contract support

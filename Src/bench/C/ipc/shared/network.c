@@ -212,9 +212,9 @@ closed:
 }
 
 #ifdef EIF_WIN32
-rt_public int net_send(STREAM *cs, char *buffer, size_t size)
+rt_public int net_send(STREAM *cs, char *buf, size_t size)
 #else
-rt_public int net_send(int cs, char *buffer, size_t size)
+rt_public int net_send(int cs, char *buf, size_t size)
 #endif
        				/* The connected socket descriptor */
           			/* Where data are stored */
@@ -223,7 +223,6 @@ rt_public int net_send(int cs, char *buffer, size_t size)
 	/* Write to network */
 
 	size_t amount;
-	char * volatile buf = buffer;
 
 #ifdef EIF_WIN32
 	DWORD error;

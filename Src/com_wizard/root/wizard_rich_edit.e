@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once
-			Result := Ws_visible + Ws_child + Es_savesel + Es_multiline + Ws_border
+			Result := Ws_visible + Ws_child + Es_savesel + Es_multiline
 		end
 
 end -- class WIZARD_RICH_EDIT

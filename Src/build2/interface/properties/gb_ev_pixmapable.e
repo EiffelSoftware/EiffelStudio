@@ -19,9 +19,9 @@ inherit
 		end
 
 	GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR
-		undefine
-			default_create
-		end
+	--	undefine
+	--		default_create
+	--	end
 		
 	CONSTANTS
 		undefine

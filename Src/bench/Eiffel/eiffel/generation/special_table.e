@@ -1,12 +1,14 @@
--- Special routine table: dispose routine table and initialization
--- routine table
+indexing
+	description: "Special routine table: dispose routine table and initialization routine table."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SPECIAL_TABLE
 
 inherit
 	ROUT_TABLE
 		redefine
-			generate, final_table_size
+			min_used, max_used, generate, final_table_size, used
 		end
 
 create
@@ -14,64 +16,37 @@ create
 
 feature
 
+	min_used: INTEGER is 1
+	max_used: INTEGER is
+		do
+			Result := System.type_id_counter.value
+		end
+
 	final_table_size: INTEGER is
-			-- Table size
+			-- Size of C table
 		require else
 			True
 		do
-			Result := System.type_id_counter.value;
-		end;
+			Result := max_used
+		end
+
+	used: BOOLEAN is True
+			-- Special tables are always used.
 
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generation of the routine table in buffer "erout*.c".
-		local
-			entry: ROUT_ENTRY;
-			i, nb, index: INTEGER;
-			r_name: STRING;
-			empty_function_ptr_string: STRING
-			function_ptr_cast_string: STRING
-			exists: BOOLEAN
-			local_copy: like Current
 		do
-			empty_function_ptr_string := "(char *(*)()) 0,%N"
-			function_ptr_cast_string := "(char *(*)()) "
-
-			from
+			if max_position = 0 then
 				buffer.putstring ("char *(*");
 				buffer.putstring (Encoder.table_name (rout_id));
-				buffer.putstring ("[])() = {%N");
-				i := 1;
-				nb := final_table_size;
-				exists := max_position /= 0
-				if exists then
-					goto_used (i);
-					index := position
-				end
-				local_copy := Current
-			until
-				i > nb
-			loop
-				if exists then
-					entry := local_copy.array_item (index);
-					if (index <= max_position) and then i = entry.type_id then
-						r_name := entry.routine_name
-						buffer.putstring (function_ptr_cast_string);
-						buffer.putstring (r_name);
-						buffer.putstring (",%N");
-						index := index + 1;
-							-- Remember external declaration
-						Extern_declarations.add_routine (void_type, r_name)
-					else
-						buffer.putstring (empty_function_ptr_string);
-					end;
-				else
-					buffer.putstring (empty_function_ptr_string);
-				end
-				i := i + 1;
-			end;
-
-			buffer.putstring ("};%N%N");
-		end;
+				buffer.putstring ("[")
+				buffer.putint (final_table_size)
+				buffer.putstring ("])();");
+				buffer.new_line
+			else
+				Precursor {ROUT_TABLE} (buffer)
+			end
+		end
 
 	void_type: VOID_I is
 			-- Void universal type

@@ -154,19 +154,14 @@ feature
 			-- (at or after current cursor position)
 			-- where item is equal to `v' (shallow equality);
 			-- go off right if none.
-		require else
-			search_element_exists: not (v = Void)
-		
 		do
 			from
 				start
 			until
-				off or v.n_ame.is_equal (item.n_ame)
+				off or v.name.is_equal (item.name)
 			loop
 				forth
 			end
-		ensure then
-			(not off) implies (v.n_ame.is_equal (item.n_ame))
 		end; 
 
 	

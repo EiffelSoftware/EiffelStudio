@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 
 	progress_bar_color: EV_COLOR is
 		do
-			Result := preferences.misc_data.progress_bar_color
+			Result := preferences.development_window_data.progress_bar_color
 		end
 
 end -- class EB_PROGRESS_DIALOG

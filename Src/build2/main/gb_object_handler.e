@@ -353,7 +353,7 @@ feature -- Basic operation
 			add_new_window (window_object)
 			window_object.set_name (initial_main_window_name)
 			window_selector.set_item_for_prebuilt_window (window_object)
-			window_selector.extend (window_object.window_selector_item)
+			window_selector.add_alphabetically (window_object.window_selector_item)
 			window_object.window_selector_item.enable_select
 			window_object.set_as_root_window
 		ensure
@@ -572,7 +572,7 @@ feature -- Basic operation
 		ensure
 			objects_is_empty: objects.is_empty
 			deleted_objects_is_empty: deleted_objects.is_empty
-			window_selector_is_empty: window_selector.is_empty
+			window_selector_is_empty: window_selector.count = 0
 		end
 		
 	string_used_globally_as_object_or_feature_name (a_string: STRING): BOOLEAN is
@@ -1007,7 +1007,6 @@ feature -- Basic operation
 				an_object := some_objects.item
 				if an_object.name.is_empty then
 					an_object.set_name (unique_name_from_array (names, an_object.short_type))
-					an_object.window_selector_item.set_text (name_and_type_from_object (an_object))	
 						--Add the new name to `names' so that it is not used again.
 					names.extend (an_object.name)
 				end

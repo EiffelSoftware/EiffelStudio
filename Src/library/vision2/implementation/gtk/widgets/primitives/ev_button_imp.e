@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
-			connect_signal_to_actions ("clicked", interface.press_actions)
+			connect_signal_to_actions ("clicked", interface.select_actions)
 			is_initialized := True
 			align_text_center
 		end
@@ -176,6 +176,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/22 23:53:18  brendel
+--| Replaced obsolete call.
+--|
 --| Revision 1.28  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

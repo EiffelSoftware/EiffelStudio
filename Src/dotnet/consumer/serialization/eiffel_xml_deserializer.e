@@ -121,27 +121,27 @@ feature {NONE} -- Implementation
 							ft
 						when Integer_type then
 							read_next
-							set_integer_field (i, obj, feature {CONVERT}.to_int_32_string (xml_reader.value))
+							set_integer_field (i, obj, feature {SYSTEM_CONVERT}.to_int_32_string (xml_reader.value))
 							read_next
 						when Real_type then
 							read_next
-							set_real_field (i, obj, feature {CONVERT}.to_single_string (xml_reader.value))
+							set_real_field (i, obj, feature {SYSTEM_CONVERT}.to_single_string (xml_reader.value))
 							read_next
 						when Double_type then
 							read_next
-							set_double_field (i, obj, feature {CONVERT}.to_double_string (xml_reader.value))
+							set_double_field (i, obj, feature {SYSTEM_CONVERT}.to_double_string (xml_reader.value))
 							read_next
 						when Character_type then
 							read_next
-							set_character_field (i, obj, feature {CONVERT}.to_char_string (xml_reader.value))
+							set_character_field (i, obj, feature {SYSTEM_CONVERT}.to_char_string (xml_reader.value))
 							read_next
 						when Boolean_type then
 							read_next
-							set_boolean_field (i, obj, feature {CONVERT}.to_boolean_string (xml_reader.value))
+							set_boolean_field (i, obj, feature {SYSTEM_CONVERT}.to_boolean_string (xml_reader.value))
 							read_next
 						when Pointer_type then
 							read_next
-							set_pointer_field (i, obj, default_pointer + feature {CONVERT}.to_int_32_string (xml_reader.value))
+							set_pointer_field (i, obj, default_pointer + feature {SYSTEM_CONVERT}.to_int_32_string (xml_reader.value))
 							read_next
 						when Reference_type then
 							if xml_reader.name.equals (String_node) then
@@ -177,10 +177,10 @@ feature {NONE} -- Implementation
 		do
 			s := xml_reader.get_attribute (Array_lower_bound_xml_attribute)
 			if s/= Void then
-				lower := feature {CONVERT}.to_int_32_string (s)
+				lower := feature {SYSTEM_CONVERT}.to_int_32_string (s)
 				s := xml_reader.get_attribute (Array_count_xml_attribute)
 				if s /= Void then
-					count := feature {CONVERT}.to_int_32_string (s)
+					count := feature {SYSTEM_CONVERT}.to_int_32_string (s)
 					s := xml_reader.get_attribute (Type_xml_attribute)
 					if s/= Void then
 						if s.equals (Integer_node) then
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			until
 				xml_reader.node_type = feature {XML_XML_NODE_TYPE}.end_element or not successful
 			loop
-				index := feature {CONVERT}.to_int_32_string (xml_reader.get_attribute (Field_name_xml_attribute))
+				index := feature {SYSTEM_CONVERT}.to_int_32_string (xml_reader.get_attribute (Field_name_xml_attribute))
 				if xml_reader.name.equals (Reference_node) then
 					item_processor.call ([reference_from_xml, index])
 				elseif xml_reader.name.equals (Array_node) then

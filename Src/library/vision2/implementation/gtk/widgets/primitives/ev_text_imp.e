@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, entry_widget)
 			gtk_text_set_editable (entry_widget, True)
+			enable_word_wrapping
 		end
 
 feature -- Access
@@ -287,6 +288,24 @@ feature -- Basic operation
 			thaw
 		end
 
+	enable_word_wrapping is
+			-- Set 'has_word_wrapping' to True.
+		do
+			has_word_wrapping := True
+			gtk_text_set_line_wrap (entry_widget, 1)
+			gtk_text_set_word_wrap (entry_widget, 1)
+		end
+
+	disable_word_wrapping is
+			-- Set 'has_word_wrapping' to False.
+		do
+			has_word_wrapping := False
+			gtk_text_set_line_wrap (entry_widget, 0)
+		end
+		
+	has_word_wrapping: BOOLEAN
+			-- Does 'Current' have word wrapping enabled?
+
 feature -- Assertions
 
 	last_line_not_empty: BOOLEAN is
@@ -390,6 +409,16 @@ feature {NONE} -- Externals
 		external
 			"C (GtkText*) | <gtk/gtk.h>"
 		end
+		
+	gtk_text_set_word_wrap (a_text: POINTER; word_wrap: INTEGER) is
+		external
+			"C (GtkText*, gint) | <gtk/gtk.h>"
+		end
+
+	gtk_text_set_line_wrap (a_text: POINTER; word_wrap: INTEGER) is
+		external
+			"C (GtkText*, gint) | <gtk/gtk.h>"
+		end		
 
 feature {EV_ANY_I} -- Implementation
 

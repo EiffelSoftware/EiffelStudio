@@ -6,6 +6,11 @@ inherit
 	ANY
 		redefine
 			is_equal
+		end;
+
+	HASHABLE
+		redefine
+			is_equal
 		end
 
 feature
@@ -57,6 +62,13 @@ feature -- comparison
 		do
 			Result := (other.offset = offset) and 
 							(other.real_body_id = real_body_id)
+		end;
+
+feature -- Hash code
+
+	hash_code: INTEGER is
+		do
+			Result := real_body_id * 100 + offset
 		end;
 
 end

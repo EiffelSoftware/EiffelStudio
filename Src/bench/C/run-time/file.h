@@ -119,7 +119,6 @@ extern void file_pr(FILE *f, EIF_REAL number);
 extern void file_pib(FILE *f, EIF_INTEGER number);
 extern void file_prb(FILE *f, EIF_REAL number);
 extern void file_ps(FILE *f, char *str, EIF_INTEGER len);
-extern void file_pt_ps(FILE *f, char *str, EIF_INTEGER len);
 extern void file_pc(FILE *f, char c);
 extern void file_pd(FILE *f, EIF_DOUBLE val);
 extern void file_pdb(FILE *f, EIF_DOUBLE val);

@@ -1,54 +1,49 @@
 indexing
-	description: "COM LARGE_INTEGER 64-bit integer"
+	description: "Encapsulation of EXEPTINFO structure"
 	status: "See notice at end of class"
+	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ECOM_LARGE_INTEGER
+	ECOM_EXCEP_INFO
 
 inherit
-	
 	ECOM_STRUCTURE
 
 creation
-	make, make_by_pointer,
-	make_from_integer
+	make,
+	make_by_pointer
 
-feature {NONE} -- Initialization
-
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
-		do
-			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			item /= Default_pointer
-		end
+feature -- Access
 
 feature -- Measurement
 
 	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
+			-- Size of EXCEPINFO structure
 		do
-			Result := c_size_of_large_integer 
+			Result := c_size_of_excep_info
 		end
-	
-feature {NONE} -- Externals 
 
-	c_size_of_large_integer: INTEGER is
+
+feature -- Conversion
+
+feature -- Miscellaneous
+
+feature -- Basic operations
+
+feature {NONE} -- Implementation
+
+feature {NONE} -- Externals
+
+	c_size_of_excep_info: INTEGER is
 		external 
-			"C [macro <objbase.h>]"
+			"C [macro %"E_excepinfo.h%"]"
 		alias
-			"sizeof(LARGE_INTEGER)"
+			"sizeof(EXCEPINFO)"
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
-		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
-		end
-
-end -- class ECOM_LARGE_INTEGER
+end -- class ECOM_EXCEP_INFO
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

@@ -1,54 +1,63 @@
 indexing
-	description: "COM LARGE_INTEGER 64-bit integer"
+	description: "COM CUSTDATA structure"
 	status: "See notice at end of class"
+	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ECOM_LARGE_INTEGER
+	ECOM_CUST_DATA
 
 inherit
-	
 	ECOM_STRUCTURE
-
+	
 creation
-	make, make_by_pointer,
-	make_from_integer
+	make,
+	make_by_pointer
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
+	count_items: INTEGER is
+			-- Number of CUSTDATAITEMs
 		do
-			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			item /= Default_pointer
+			Result := ccom_custdata_items (item)
+		end
+
+	cust_data_items: ARRAY [ECOM_CUST_DATA_ITEM] is
+			-- Array of custom data items
+		do
+			Result := ccom_custdata_array (item)
 		end
 
 feature -- Measurement
 
 	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
+			-- Size of CUSTDATA structure
 		do
-			Result := c_size_of_large_integer 
+			Result := c_size_of_cust_data 
 		end
-	
-feature {NONE} -- Externals 
 
-	c_size_of_large_integer: INTEGER is
+feature {NONE} -- Externals
+
+	c_size_of_cust_data: INTEGER is
 		external 
-			"C [macro <objbase.h>]"
+			"C [macro %"E_custdata.h%"]"
 		alias
-			"sizeof(LARGE_INTEGER)"
+			"sizeof(CUSTDATA)"
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
+	ccom_custdata_items (a_ptr: POINTER): INTEGER is
 		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
+			"C [macro %"E_custdata.h%"](EIF_POINTER): EIF_INTEGER"
 		end
 
-end -- class ECOM_LARGE_INTEGER
+	ccom_custdata_array (a_ptr: POINTER): ARRAY [ECOM_CUST_DATA_ITEM] is
+		external
+			"C (EIF_POINTER): EIF_REFERENCE | %"E_custdata.h%""
+		end
+
+
+end -- class ECOM_CUST_DATA
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

@@ -1,54 +1,74 @@
 indexing
-	description: "COM LARGE_INTEGER 64-bit integer"
+	description: "Real element of SAFEARRAY"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ECOM_LARGE_INTEGER
+	ECOM_SAFEARRAY_REAL_ELEMENT
 
 inherit
-	
+	ECOM_SAFEARRAY_ELEMENT
+
 	ECOM_STRUCTURE
 
 creation
-	make, make_by_pointer,
-	make_from_integer
+	make, make_from_real
 
 feature {NONE} -- Initialization
 
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
+	make_from_real (a_real: Real) is
+			-- Initialize
 		do
 			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			item /= Default_pointer
+			ccom_safearray_el_from_value (item, a_real)
+		ensure then
+			correct_value: value = a_real
 		end
 
+feature -- Access
+
+	type: INTEGER is
+			-- Type of SAFEARRAY element
+			-- See ECOM_VAR_TYPE for possible values
+		once
+			Result := Vt_r4
+		end
+
+	value: REAL is
+			-- Value of element
+		do
+			Result := ccom_safearray_el_real_value (item)
+		end
+		
 feature -- Measurement
 
 	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
+			-- Size of VARIANT structure
 		do
-			Result := c_size_of_large_integer 
+			Result := c_size_of_real
 		end
-	
-feature {NONE} -- Externals 
 
-	c_size_of_large_integer: INTEGER is
+feature {NONE} -- Implementation
+
+	c_size_of_real: INTEGER is
 		external 
-			"C [macro <objbase.h>]"
+			"C [macro %"E_safearray_element.h%"]"
 		alias
-			"sizeof(LARGE_INTEGER)"
+			"sizeof(float)"
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
+	ccom_safearray_el_from_value (a_ptr: POINTER; a_real: REAL) is
 		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
+			"C [macro %"E_safearray_element.h%"](EIF_POINTER, EIF_REAL)"
 		end
 
-end -- class ECOM_LARGE_INTEGER
+	ccom_safearray_el_real_value (a_ptr: POINTER): REAL is
+		external
+			"C [macro %"E_safearray_element.h%"](EIF_POINTER): EIF_REAL"
+		end
+
+end -- class ECOM_SAFEARRAY_REAL_ELEMENT
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

@@ -618,11 +618,6 @@ end;
 				freeze_system;
 				freeze := False;
 
-					-- Empty update file
-				Update_file.open_write;
-					-- Nothing to update
-				Update_file.putchar ('%U');
-				Update_file.close;
 			else
 					-- Verbose
 				io.error.putstring ("Melting changes%N");
@@ -965,7 +960,7 @@ end;
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
 			from
-				local_cursor := changed_classes.first_element
+				local_cursor := changed_classes.first_element;
 			until
 				local_cursor = Void
 			loop
@@ -1334,6 +1329,11 @@ feature  -- Freeezing
 
 			generate_exec_tables;
 
+				-- Empty update file
+			Update_file.open_write;
+				-- Nothing to update
+			Update_file.putchar ('%U');
+			Update_file.close;
 		end;
 
 	shake is
@@ -1617,10 +1617,10 @@ end;
 			rout_id: INTEGER;
 			table: POLY_TABLE [ENTRY];
 		do
-			Attr_generator.make;
-			Rout_generator.make;
-
 			final_mode := byte_context.final_mode;
+			Attr_generator.init;
+			Rout_generator.init;
+
 			if not final_mode then
 				!!array_ids1.make (0, routine_id_counter.value);
 				!!array_ids2.make (0, routine_id_counter.value);
@@ -1747,24 +1747,26 @@ end;
 		local
 			i, nb: INTEGER;
 			class_type: CLASS_TYPE;
+			file: UNIX_FILE
 		do
+			file := Size_file (byte_context.final_mode);
 			from
 				i := 1;
 				nb := type_id_counter.value;
-				Size_file.open_write;
-				Size_file.putstring ("#include %"macros.h%"%N%N");
-				Size_file.putstring ("long esize[] = {%N");
+				file.open_write;
+				file.putstring ("#include %"macros.h%"%N%N");
+				file.putstring ("long esize[] = {%N");
 			until
 				i > nb
 			loop
 				class_type := class_types.item (i);
-				class_type.skeleton.generate_size (Size_file);
-				Size_file.putstring (",");
-				Size_file.new_line;
+				class_type.skeleton.generate_size (file);
+				file.putstring (",");
+				file.new_line;
 				i := i + 1;
 			end;
-			Size_file.putstring ("};%N");
-			Size_file.close;
+			file.putstring ("};%N");
+			file.close;
 		end;
 
 	generate_reference_table is
@@ -2159,11 +2161,12 @@ end;
 	generate_plug is
 			-- Generate plug with run-time
 		local
-			string_cl, bit_cl: CLASS_C;
-			type_id, str_id: INTEGER;
+			string_cl, bit_cl, array_cl: CLASS_C;
+			arr_type_id, str_type_id, type_id, id: INTEGER;
 			set_count_feat, creation_feature: FEATURE_I;
 			creators: EXTEND_TABLE [EXPORT_I, STRING];
-			dispose_name, make_name, init_name, set_count_name: STRING;
+			dispose_name, str_make_name, init_name, set_count_name: STRING;
+			arr_make_name: STRING;
 			special_cl: SPECIAL_B;
 			cl_type: CLASS_TYPE;
 		do
@@ -2174,22 +2177,39 @@ end;
 				-- Extern declarations
 			string_cl := class_of_id (string_id);
 			cl_type := string_cl.types.first;
-			str_id := cl_type.id;
-			type_id := cl_type.type_id;
+			id := cl_type.id;
+			str_type_id := cl_type.type_id;
 			creators := string_cl.creators;
 			creators.start;
+			--! make string declaration
 			creation_feature := string_cl.feature_table.item
 											(creators.key_for_iteration);
 			set_count_feat := string_cl.feature_table.item ("set_count");
-			make_name := Encoder.feature_name
-							(str_id, creation_feature.body_id).duplicate;
+			str_make_name := Encoder.feature_name
+							(id, creation_feature.body_id).duplicate;
 			set_count_name := Encoder.feature_name
-							(str_id, set_count_feat.body_id).duplicate;
+							(id, set_count_feat.body_id).duplicate;
 			Plug_file.putstring ("extern void ");
-			Plug_file.putstring (make_name);
+			Plug_file.putstring (str_make_name);
 			Plug_file.putstring ("();%N");
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (set_count_name);
+			Plug_file.putstring ("();%N");
+
+			--! make array declaration
+			array_cl := class_of_id (array_id);
+				--! Array ref type (i.e. ARRAY[ANY])
+			cl_type := Instantiator.Array_type.associated_class_type; 
+			id := cl_type.id;
+			arr_type_id := cl_type.type_id;
+			creators := array_cl.creators;
+			creators.start;
+			creation_feature := array_cl.feature_table.item
+											(creators.key_for_iteration);
+			arr_make_name := Encoder.feature_name
+							(id, creation_feature.body_id).duplicate;
+			Plug_file.putstring ("extern void ");
+			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring ("();%N");
 
 			if byte_context.final_mode then
@@ -2208,7 +2228,11 @@ end;
 
 				-- Pointer on creation feature of class STRING
 			Plug_file.putstring ("void (*strmake)() = ");
-			Plug_file.putstring (make_name);
+			Plug_file.putstring (str_make_name);
+			Plug_file.putstring (";%N");
+				-- Pointer on creation feature of class ARRAY[ANY]
+			Plug_file.putstring ("void (*arrmake)() = ");
+			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring (";%N");
 			
 				--Pointer on `set_count' of class STRING
@@ -2218,7 +2242,12 @@ end;
 
 				-- Dynamic type of class STRING
 			Plug_file.putstring ("int str_dtype = ");
-			Plug_file.putint (type_id - 1);
+			Plug_file.putint (str_type_id - 1);
+			Plug_file.putstring (";%N");
+
+				-- Dynamic type of class ARRAY[ANY]
+			Plug_file.putstring ("int arr_dtype = ");
+			Plug_file.putint (arr_type_id - 1);
 			Plug_file.putstring (";%N");
 
 				-- Dynamic type of class BIT_REF
@@ -2244,7 +2273,7 @@ end;
 
 			special_cl ?= special_class.compiled_class;
 			special_cl.generate_dynamic_types;
-
+			generate_dynamic_ref_type;
 			Plug_file.close;
 		end;
 

@@ -173,6 +173,8 @@ feature
 			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SEPARATOR}.make_for_test)
 			Result.extend (create {EV_PIXMAP}.make_for_test)
+			Result.extend (create {EV_TEXT}.make_for_test)
+			Result.extend (create {EV_PASSWORD_FIELD}.make_for_test)
 		end
 
 	windows: LINKED_LIST [EV_WINDOW] is
@@ -348,6 +350,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/14 16:54:11  brendel
+--| Added EV_TEXT and EV_PASSWORD_FIELD.
+--|
 --| Revision 1.15  2000/04/13 19:37:00  oconnor
 --| more tests
 --|

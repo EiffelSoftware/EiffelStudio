@@ -762,7 +762,6 @@ feature {NONE} -- Implementation
 		local
 			rate, total_rest, mark: INTEGER
 			total_size, count1: INTEGER
-			homogeneous_value: INTEGER
 		do
 			count1 := minimums.count
 			if count1 = 1 then
@@ -876,7 +875,6 @@ feature {NONE} -- Implementation
 			cur: CURSOR
 			left, right, bottom, top: INTEGER
 			column_spacing_to_add, row_spacing_to_add: INTEGER
-			highest_column, highest_row: INTEGER
 		do
 				-- Initialize local variables for speed.
 			list := ev_children
@@ -939,9 +937,6 @@ feature {NONE} -- Implementation
 			length, current_minimums_total, step, total_rest: INTEGER
 			cur: CURSOR
 			clone_min: ARRAYED_LIST [INTEGER]
-			value_to_share: INTEGER
-			value_portion: INTEGER
-			modulus_value: INTEGER
 		do
 			-- Lets see what is the length of the current cells the
 			-- widget covers and place it in `current_minimums_total'.

@@ -221,7 +221,11 @@ feature
 					if extension.is_dll then
 							-- In the case of a dll, the encapsulation will be called (encoded name)
 						rout_table ?= Eiffel_table.poly_table (routine_id)
-						rout_table.goto_implemented (typ.type_id)
+						if is_static_call then
+							rout_table.goto_implemented (static_class_type.type_id)
+						else
+							rout_table.goto_implemented (typ.type_id)
+						end
 						check
 							is_valid_routine: rout_table.is_implemented
 						end

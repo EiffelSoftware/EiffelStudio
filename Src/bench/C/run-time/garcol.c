@@ -880,7 +880,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	static double lastsys[GST_NBR];		/* Last kernel time for last call */
 #endif
 	rt_uint_ptr mem_used;						/* Current amount of memory used */
-	rt_uint_ptr e_mem_used;
+	rt_uint_ptr e_mem_used_before, e_mem_used_after;
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
 	int nbstat;							/* Current number of statistics */
@@ -894,7 +894,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 
 	nb_full = g_data.nb_full;
 	mem_used = m_data.ml_used + m_data.ml_over;		/* Count overhead */
-	e_mem_used = e_data.ml_used + e_data.ml_over;
+	e_mem_used_before = e_data.ml_used + e_data.ml_over;
 	nbstat = ++nb_stats[i];							/* One more computation */
 
 	/* Reset scavenging-related figures, since those will be updated by the
@@ -956,7 +956,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		 * pool because for example we moved objects outside the scavenge zone
 		 * and therefore more objects have been allocated in memory. */
 	if (mem_used > g_data.mem_used) {
-		gstat->mem_collect = mem_used - (long) g_data.mem_used;	/* Memory collected */
+		gstat->mem_collect = mem_used - g_data.mem_used;	/* Memory collected */
 	} else {
 		gstat->mem_collect = 0;
 	}
@@ -974,7 +974,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		rt_uint_ptr partial_used_memory = (e_data.ml_used + e_data.ml_over) / 3;
 		rt_uint_ptr freed_memory;
 		if (mem_used > g_data.mem_used) {
-			freed_memory = mem_used - (long) g_data.mem_used;
+			freed_memory = mem_used - g_data.mem_used;
 		} else {
 			freed_memory = 0;
 		}
@@ -1031,14 +1031,15 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 			}
 		}
 	} else {
-		e_mem_used -= e_data.ml_used + e_data.ml_over;
-		if (e_mem_used > 0 ) {
+		e_mem_used_after = e_data.ml_used + e_data.ml_over;
+		if (e_mem_used_before > e_mem_used_after) {
 				// Some memory of free list was freed, so we should update `eiffel_usage'
 				// accordingly.
-			if (eiffel_usage < e_mem_used) {
-				eiffel_usage = 0;
+			e_mem_used_before -= e_mem_used_after;
+			if (eiffel_usage > e_mem_used_before) {
+				eiffel_usage -= e_mem_used_before;
 			} else {
-				eiffel_usage -= e_mem_used;
+				eiffel_usage = 0;
 			}
 		}
 	}
@@ -1256,9 +1257,9 @@ rt_public void reclaim(void)
 #endif
 
 #ifdef ISE_GC
-		if (eif_no_reclaim || (g_data.status & GC_STOP)) {	/* Does user want no reclaim? */
+		if (!eif_no_reclaim && !(g_data.status & GC_STOP)) {	/* Does user want no reclaim? */
 #else
-		if (eif_no_reclaim) {
+		if (!eif_no_reclaim) {
 #endif
 
 #ifdef RECLAIM_DEBUG
@@ -2807,9 +2808,9 @@ rt_private void split_to_block(void)
 		size = ps_to.sc_end - ps_to.sc_top;		/* Memory unused (freed) */
 
 		m_data.ml_used -= size;
-		if (ps_to.sc_flgs & B_CTYPE)
+		if (ps_to.sc_flgs & B_CTYPE) {
 			c_data.ml_used -= size;
-		else {
+		} else {
 			e_data.ml_used -= size;
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used (-%ld), %ld total (split_to_block)\n",
@@ -2945,10 +2946,11 @@ rt_private int sweep_from_space(void)
 		} else {
 			lxtract(zone);			/* Extract it from free list */
 			m_data.ml_used += size;	/* Memory accounting */
-			if (flags & B_CTYPE)	/* Bloc is in a C chunk */
+			if (flags & B_CTYPE) {	/* Bloc is in a C chunk */
 				c_data.ml_used += size;
-			else								
+			} else {
 				e_data.ml_used += size;
+			}
 		}
 
 		/* Whenever we reach a "first" block which will be the first one in the
@@ -3324,10 +3326,11 @@ rt_private void find_to_space(struct sc_zone *to)
 	lxtract((union overhead *) arena);	/* Extract block from free list */
 
 	m_data.ml_used += (flags & B_SIZE) + OVERHEAD;
-	if (flags & B_CTYPE)
+	if (flags & B_CTYPE) {
 		c_data.ml_used += (flags & B_SIZE) + OVERHEAD;
-	else
+	} else {
 		e_data.ml_used += (flags & B_SIZE) + OVERHEAD;
+	}
 
 #ifdef DEBUG
 	dprintf(1)("find_to_space: coalesced a to space at 0x%lx (#%d)\n",

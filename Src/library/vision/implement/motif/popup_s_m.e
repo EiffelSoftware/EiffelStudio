@@ -99,7 +99,7 @@ feature -- Display
 				when 2 then
 					popup_non_exclusive
 				end;
-				is_popped_up := False
+				is_popped_up := True
 			end
 		end;
 

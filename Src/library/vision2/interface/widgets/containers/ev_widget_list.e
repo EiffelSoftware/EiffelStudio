@@ -33,7 +33,9 @@ inherit
 			move
 		redefine
 			start,
-			finish
+			finish,
+			merge_left,
+			merge_right
 		select
 			dl_put
 		end
@@ -165,6 +167,37 @@ feature -- Element change
 			item_inserted: has (v)
 	 		new_count: count = old count + 1
 	 		same_index: index = old index
+		end
+
+	merge_left (other: like Current) is
+			-- Merge `other' into current structure before cursor
+			-- position. Do not move cursor. Empty `other'.
+			--| Redefined because our `put_left'
+			--| automatically removes item from `other'.
+		do
+			from
+				other.start
+			until
+				other.empty
+			loop
+				put_left (other.item)
+			end
+		end
+
+	merge_right (other: like Current) is
+			-- Merge `other' into current structure after cursor
+			-- position. Do not move cursor. Empty `other'.
+			--| Redefined because our `put_right'
+			--| automatically removes item from `other'.
+		do
+			from
+				other.finish
+			until
+				other.empty
+			loop
+				put_right (other.item)
+				other.back
+			end
 		end
 
 feature -- Removal
@@ -312,6 +345,12 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/02 19:47:08  brendel
+--| Added redefinition of `merge_left' and `merge_right', because the
+--| original implementation removes the items explicitly and our versions
+--| of `put_right', `put_left' adn `put_front' delete an item automatically
+--| when it was in another list.
+--|
 --| Revision 1.7  2000/03/02 18:01:45  oconnor
 --| improved prune comment further :)
 --|

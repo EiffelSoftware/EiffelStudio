@@ -26,24 +26,9 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := application_cell.item
+			Result := implementation.application
 		ensure
-			Result = application_cell.item
-		end
-
-feature {EV_APPLICATION} -- Access
-
-	set_application (an_application: EV_APPLICATION) is
-			-- Specify `an_application' as the single application object for the
-			-- system. Must be called exactly once from EV_APPLICATION's
-			-- creation procedure.
-		require
-			not_destroyed: not is_destroyed
-			application_not_already_set: application = Void
-		do
-			application_cell.put (an_application)
-		ensure
-			application_assigned: application = an_application
+			bridge_ok: Result = implementation.application
 		end
 		
 feature {NONE} -- Contract support
@@ -68,15 +53,6 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_ENVIRONMENT_IMP} implementation.make (Current)
-		end
-
-	Application_cell: CELL [EV_APPLICATION] is
-			-- A global cell where `item' is the single application object for
-			-- the system.
-		require
-			not_destroyed: not is_destroyed
-		once
-			create Result.put (Void)
 		end
 		
 feature -- Obsolete

@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			create C
 			create ev_gtk_callback_marshal
 			C.c_gtk_init_toolkit
+			C.gdk_rgb_init
 			tooltips := C.gtk_tooltips_new
 			set_tooltip_delay (500) --| FIXME Check this.
 			idle_actions_agent := (interface.idle_actions)~call ([])
@@ -359,6 +360,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/31 19:27:12  oconnor
+--| added C.gdk_rgb_init
+--|
 --| Revision 1.22  2000/03/31 19:09:08  king
 --| Rename pebble_over_widget -> pointer_over_widget
 --|

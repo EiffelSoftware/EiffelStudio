@@ -20,6 +20,8 @@ deferred class
 inherit
 	EV_WIDGET_I
 
+	EV_SIZEABLE_IMP
+
 	EV_EVENT_HANDLER_IMP
 
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
@@ -39,16 +41,17 @@ feature {NONE} -- Initialization
 			check
 				parent_not_void: par_imp /= Void
 			end
+			!! child_cell
+			initialize_list (command_count)
 			par_imp.add_child (Current)
 			plateform_build (par_imp)
 			build
+			par_imp.update_display
 		end
 
 	plateform_build (par: EV_CONTAINER_I) is
 			-- Plateform dependant initializations.
 		do
-			!! child_cell
-			initialize_list (command_count)
 		end
 
 feature -- Access
@@ -133,67 +136,6 @@ feature -- Status setting
 			foreground_color_imp ?= color.implementation
 		end
 
-feature -- Measurement
-	
-	minimum_width: INTEGER 
-			-- Minimum width of widget, `0' by default
-	
-	minimum_height: INTEGER
-			-- Minimum height of widget, `0' by default
-	
-feature -- Resizing
-
-	set_size (new_width:INTEGER; new_height: INTEGER) is
-			-- Resize the widget and notify the parent of 
-			-- the resize which must be bigger than the
-			-- minimal size or nothing happens
-		do
-			set_width (new_width)
-			set_height (new_height)
-		end
-	
-	set_width (value:INTEGER) is
-			-- Make `value' the new width and notify the parent
-			-- of the change.
-		do
-			child_cell.set_width (value.max (minimum_width))
-			resize (child_cell.width, height)
-		end
-		
-	set_height (value: INTEGER) is
-			-- Make `value' the new `height' and notify the
-			-- parent of the change.
-		do
-			child_cell.set_height (value.max (minimum_height))
-			resize (width, child_cell.height)
-		end
-	
-	set_minimum_height (value: INTEGER) is
-			-- Make `value' the new `minimum__height' and
-			-- notify the parent of the change. If this new minimum is
-			-- bigger than the Current `height', the widget is resized.
-		do
-			minimum_height := value
-			parent_imp.child_minheight_changed (value, Current)
-		end
-
-	set_minimum_width (value: INTEGER) is
-			-- Make `value' the new `minimum_width' and
-			-- notify the parent of the change. If this new minimum is
-			-- bigger than the Current `width', the widget is resized.
-		do
-			minimum_width := value
-			parent_imp.child_minwidth_changed (value, Current)
-		end
-
-	set_x_y (new_x: INTEGER; new_y: INTEGER) is
-			-- Put at horizontal position `new_x' and at
-			-- vertical position `new_y' relative to parent.
-		do
-			child_cell.move (new_x, new_y)
-			move (new_x, new_y)
-		end
-
 feature -- Event - command association
 
 	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
@@ -201,14 +143,14 @@ feature -- Event - command association
 			-- button no 'mouse_button' is pressed.
 		do
 			inspect mouse_button 
-				when 1 then
-					add_command (Cmd_button_one_press, cmd, arg)
-				when 2 then
-					add_command (Cmd_button_two_press, cmd, arg)
-				when 3 then
-					add_command (Cmd_button_three_press, cmd, arg)
-				else
-					io.putstring ("This button do not exists")
+			when 1 then
+				add_command (Cmd_button_one_press, cmd, arg)
+			when 2 then
+				add_command (Cmd_button_two_press, cmd, arg)
+			when 3 then
+				add_command (Cmd_button_three_press, cmd, arg)
+			else
+				io.putstring ("This button do not exists")
 			end
 		end
 	
@@ -217,14 +159,14 @@ feature -- Event - command association
 			-- button no 'mouse_button' is released.
 		do
 			inspect mouse_button
-				when 1 then
-					add_command (Cmd_button_one_release, cmd, arg)
-				when 2 then
-					add_command (Cmd_button_two_release, cmd, arg)
-				when 3 then
-					add_command (Cmd_button_three_release, cmd, arg)
-				else
-					io.putstring ("This button do not exists")
+			when 1 then
+				add_command (Cmd_button_one_release, cmd, arg)
+			when 2 then
+				add_command (Cmd_button_two_release, cmd, arg)
+			when 3 then
+				add_command (Cmd_button_three_release, cmd, arg)
+			else
+				io.putstring ("This button do not exists")
 			end
 		end
 
@@ -233,14 +175,14 @@ feature -- Event - command association
 			-- button no `mouse_button' is double clicked.
 		do
 			inspect mouse_button
-				when 1 then
-					add_command (Cmd_button_one_dblclk, cmd, arg)
-				when 2 then
-					add_command (Cmd_button_two_dblclk, cmd, arg)
-				when 3 then
-					add_command (Cmd_button_three_dblclk, cmd, arg)
-				else
-					io.putstring ("This button do not exists")
+			when 1 then
+				add_command (Cmd_button_one_dblclk, cmd, arg)
+			when 2 then
+				add_command (Cmd_button_two_dblclk, cmd, arg)
+			when 3 then
+				add_command (Cmd_button_three_dblclk, cmd, arg)
+			else
+				io.putstring ("This button do not exists")
 			end
 		end
 
@@ -306,49 +248,6 @@ feature -- Event - command association
 			-- Id of the last command added by feature
 			-- 'add_command'
 
-feature -- Postconditions
-
-	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-		-- Check if the dimensions of the widget are set to 
-		-- the values given or the minimum values possible 
-		-- for that widget.
-		local
-			temp: INTEGER
-		do
-			temp := width
-			temp := height
-			Result := (width = new_width or else width = minimum_width) and then
-				  (height = new_height or else height = minimum_height)
-		end
-
-	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-		do
-			if new_width = -1 then
-				Result := new_height = minimum_height
-			elseif new_height = -1 then
-				Result := new_width = minimum_width
-			else
-				Result := new_width = minimum_width and new_height = minimum_height
-			end
-		end		
-
-	position_set (new_x, new_y: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-		do
-			if new_x = -1 then
-				Result := new_y = y
-			elseif new_y = -1 then
-				Result := new_x = x
-			else
-				Result := new_x = x and new_y = y
-			end
-		end
-
 feature -- Implementation
 
 	background_color_imp: EV_COLOR_IMP
@@ -365,43 +264,11 @@ feature -- Implementation
 			Result ?= parent
 		end
 
-	set_minimum_size (min_width, min_height: INTEGER) is
-			-- set `minimum_width' to `min_width'
-			-- set `minimum_height' to `min_height'
-		do
-			set_minimum_width (min_width)
-			set_minimum_height (min_height)
-		end
-
-	set_move_and_size (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Move and resize the widget. Only the parent can call this feature
-			-- because it doesn't notify the parent of the change.
-		do
-			child_cell.move (a_x, a_y)
-			parent_ask_resize (a_width, a_height)
-		end
-
-	parent_ask_resize (a_width, a_height: INTEGER) is
-			-- When the parent asks the resize, it's not 
-			-- necessary to send him back the information
-		do
-			child_cell.resize (minimum_width.max(a_width), minimum_height.max (a_height))
-			if resize_type = 3 then
-				move_and_resize (child_cell.x, child_cell.y, child_cell.width, child_cell.height, True)
-			elseif resize_type = 2 then
-				move_and_resize ((child_cell.width - width)//2 + child_cell.x, child_cell.y, minimum_width, child_cell.height, True)
-			elseif resize_type = 1 then
-				move_and_resize (child_cell.x, (child_cell.height - height)//2 + child_cell.y, child_cell.width, minimum_height, True)
-			else
-				move_and_resize ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y, minimum_width, minimum_height, True)
-			end
-		end
-
 	on_first_display is
 			-- Called by the top_level window when it is displayed
-			-- for the first time
+			-- for the first time.
+			-- Do nothing in general
 		do
-			parent_ask_resize (minimum_width, minimum_height)
 		end
 
 feature {NONE} -- Implementation, mouse button events
@@ -574,30 +441,19 @@ feature -- Implementation : deferred features of WEL_WINDOW that are used
 		deferred
 		end
 
-	move (a_x, a_y: INTEGER) is
-			-- Move the window to `a_x', `a_y'.
-		deferred
-		end
-
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-			repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
-		deferred
-		end
-
-	resize (a_width, a_height: INTEGER) is
-			-- Resize the window with `a_width', `a_height'.
-		deferred
-		end
-
 	parent: WEL_WINDOW is
 		deferred
 		end
 
-	child_cell: EV_CHILD_CELL_IMP
-			-- The space that the parent allow to the current
-			-- child.
+	client_rect: WEL_RECT is
+			-- Used by EV_SPLIT_AREA_IMP.
+		deferred
+		end
+
+	invalidate is
+			-- Used by EV_SPLIT_AREA_IMP
+		deferred
+		end
 
 end -- class EV_WIDGET_IMP
 

@@ -1609,11 +1609,6 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			tools_menu.extend (command_menu_item)
 			
-				-- Toggle feature signature command.
-			command_menu_item := toggle_feature_signature_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)						
-
 				-- Delete class/cluster command.
 			command_menu_item := delete_class_cluster_cmd.new_menu_item
 			add_recyclable (command_menu_item)

@@ -7,7 +7,7 @@ class
 	EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	EB_TOOLBARABLE_COMMAND
 		redefine
 			mini_pixmap, new_mini_toolbar_item
 		end
@@ -53,7 +53,6 @@ feature {NONE} -- Implementation
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
-			Result := Pixmaps.Icon_new_feature
 		end
 
 	tooltip: STRING is

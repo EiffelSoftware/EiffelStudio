@@ -21,10 +21,6 @@ creation
 
 feature -- Attributes
 
-	id: INTEGER;
-			-- Unique identifier of the cluster
-			--| not used => remove
-
 	date: INTEGER;
 			-- Date for time stamp
 
@@ -99,18 +95,6 @@ feature -- Element change
 
 feature {COMPILER_EXPORTER} -- Conveniences
 
-	set_id (i: INTEGER) is
-			-- Assign `i` to `id'.
-		do
-			id := i
-		end;
-
-	set_new_id is
-			-- Assign the next integer value available to `id'
-		do
-			id := Universe.cluster_counter.next
-		end
-
 	set_date (i: INTEGER) is
 			-- Assign `i' to `date'.
 		do
@@ -172,8 +156,6 @@ feature {COMPILER_EXPORTER} -- Creation feature
 			valid_arg: old_cluster_i /= Void
 		do
 			make (old_cluster_i.dollar_path)
-
-			id := old_cluster_i.id
 
 			copy_old_cluster (old_cluster_i)
 
@@ -310,7 +292,6 @@ end;
 				Universe.insert_cluster (Result);
 
 				Result.set_old_cluster (duplicate);
-				Result.set_id (id);
 debug ("REMOVE_CLASS")
 	io.error.putstring ("New cluster calling fill%N");
 end;

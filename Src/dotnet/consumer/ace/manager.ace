@@ -36,16 +36,16 @@ cluster
 	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
 		exclude
 			"CVS"; "EIFGEN"; 
+		visible
+			COM_ISE_CACHE_MANAGER
+			end
+			COM_ASSEMBLY_INFORMATION
+			end
 		end
 
 	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
 		exclude
 			"CVS"; 
-		visible
-			COM_ISE_CACHE_MANAGER
-			end,
-			COM_ASSEMBLY_INFORMATION
-			end
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"

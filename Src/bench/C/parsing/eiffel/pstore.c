@@ -31,18 +31,20 @@
 
 /* Exported feature */
 rt_public long store_append (EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s);
-rt_public void parsing_store_initialize (void);
+rt_public void parsing_store_initialize (long size);
 
 /* Internal variables */
 rt_private fnptr make_index;	/* Index building routine */
 rt_private fnptr need_index;	/* Index checking routine */
 rt_private char *server;		/* Current server used */
-rt_private int file_descriptor;	/* File descriptor of the file where we want to write */
 rt_private long file_position;	/* Position in current opened file */
-rt_private long amount_written;	/* Amount of bytes written in the opened_file */
+
+rt_private char *parsing_buffer = (char *) 0;
+rt_private long parsing_position = 0;
+rt_private long parsing_buffer_size = 0;
 
 rt_private long pst_store(char *object, long int object_count);	/* Recursive store */
-rt_private void partial_store_write(void);
+rt_private void parsing_store_write(void);
 rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid, char *s);
 
 /* Memory writing function */
@@ -51,6 +53,14 @@ rt_private int parsing_char_write (char *pointer, int size);	/* store in stream 
 /* Followings declaration are coming from store.c and eif_store.h */
 #define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
 
+rt_public void parsing_store_initialize (long size) {
+	if (parsing_buffer_size < size) {
+		parsing_buffer = (char *) malloc (sizeof (char) * size);
+		parsing_buffer_size = size;
+		parsing_position = 0;
+	}
+}
+
 rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s)
 {
 	/* Append `object' in file `f', and applies routine `mid'
@@ -58,8 +68,10 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 	 * stored. */
 
 	/* Initialization */
+	parsing_store_initialize (EIF_BUFFER_SIZE);
+
 	rt_init_store(
-		partial_store_write,
+		parsing_store_write,
 		parsing_char_write,
 		flush_st_buffer,
 		st_write,
@@ -67,15 +79,16 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 		0,
 		EIF_BUFFER_SIZE);
 
-	file_descriptor = f_desc;
-	file_position = lseek ((int) f_desc, 0, SEEK_CUR);
-	amount_written = 0L;
+	file_position = lseek ((int) f_desc, 0, SEEK_END);
 	if (file_position == -1)
 		eraise ("Unable to seek on internal data files", EN_SYS);
 
 	parsing_store_append(object, mid, nid, s);
 
+	write (f_desc, parsing_buffer, parsing_position);
+	parsing_position = 0;
 	rt_reset_store();
+
 	return file_position;
 }
 
@@ -149,7 +162,7 @@ rt_private long pst_store(char *object, long int object_count)
 			 */
 		flush_st_buffer();
 
-		saved_file_pos = lseek (file_descriptor, 0, SEEK_CUR);
+		saved_file_pos = file_position + parsing_position;
 		if (saved_file_pos == -1)
 			esys();
 	}
@@ -214,43 +227,35 @@ rt_private long pst_store(char *object, long int object_count)
 	return object_count;
 }
 
-rt_private void partial_store_write(void)
+rt_private void parsing_store_write(void)
 {
-	char* cmps_in_ptr = (char *)0;
-	char* cmps_out_ptr = (char *)0;
-	int cmps_in_size = 0;
+	char* cmps_in_ptr = general_buffer;
+	char* cmps_out_ptr = cmps_general_buffer;
 	int cmps_out_size = 0;
-	register char * ptr = (char *)0;
-	register int number_left = 0;
 	int number_writen = 0;
 	
-	cmps_in_ptr = general_buffer;
-	cmps_in_size = current_position;
-	cmps_out_ptr = cmps_general_buffer;
-	
 	eif_compress ((unsigned char*)cmps_in_ptr, 
-				  (unsigned long)cmps_in_size, 
+				  (unsigned long)current_position,  /* corresponds to cmps_in_size */
 				  (unsigned char*)cmps_out_ptr, 
 				  (unsigned long*)&cmps_out_size);
 				  
-	ptr = cmps_general_buffer;
-	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
-	
-	while (number_left > 0) {
-		number_writen = write (file_descriptor, ptr, number_left);
-		if (number_writen <= 0)
-			eraise ("Unable to write on specified device", EN_IO);
-		number_left -= number_writen;
-		ptr += number_writen;
-		}
-		
-	if ((unsigned int) (ptr - cmps_general_buffer) == cmps_out_size + EIF_CMPS_HEAD_SIZE) {
+	number_writen = parsing_char_write (cmps_general_buffer,
+							cmps_out_size + EIF_CMPS_HEAD_SIZE);
+	if (number_writen <= 0)
+		eraise ("Unable to write on specified device", EN_IO);
+	else
 		current_position = 0;
-		amount_written += number_left;
-	} else
-		eraise ("(Storing write function) Incorrect number of bytes read!", EN_IO);
 }
 
-rt_private int parsing_char_write (char *pointer, int size) {
-	return write (file_descriptor, pointer, size);
+rt_private int parsing_char_write (char *pointer, int size)
+{
+	if (parsing_buffer_size - parsing_position < size) {
+		parsing_buffer_size += parsing_buffer_size;
+		parsing_buffer = realloc (parsing_buffer, parsing_buffer_size);
+	}
+
+	memcpy ((parsing_buffer + parsing_position), pointer, size);
+	parsing_position += size;
+	return size;
 }
+

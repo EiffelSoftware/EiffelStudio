@@ -26,7 +26,7 @@ feature {CASE_CLUSTER_INFO}
 	classc: CLASS_C;
 			-- Class to be used for case information
 
-	formulate_class_data (flat_struct: FLAT_STRUCT) is
+	formulate_class_data (format_reg: FORMAT_REGISTRATION) is
 			-- Record renamings, suppliers, parents, is_def ...
 			-- in `s_class_data'. 
 		require
@@ -37,16 +37,16 @@ feature {CASE_CLUSTER_INFO}
 			record_inherit_info_com: CASE_RECORD_INHERIT_INFO;
 			record_chart_info_com: CASE_RECORD_CHART_INFO
 		do
-			flat_struct.set_class (classc);
-			flat_struct.fill (True);
-			class_ast := flat_struct.ast;
+			format_reg.set_class (classc);
+			format_reg.fill (True);
+			class_ast := format_reg.target_ast;
 			Inst_context.set_cluster (classc.cluster);
 				-- Record index, and name
 			s_class_data := class_ast.header_storage_info (classc);
 				-- Record id
 			s_class_data.set_id (classc.id);
 				-- Record features, invariant
-			flat_struct.store_case_information (s_class_data);
+			format_reg.store_case_information (s_class_data);
 				-- Record base file name
 			s_class_data.set_file_name (classc.lace_class.base_name);
 				-- Must have processed the features
@@ -68,31 +68,6 @@ feature {CASE_CLUSTER_INFO}
 			record_relation_com.execute;
 			!! record_inherit_info_com.make (classc, s_class_data);
 			record_inherit_info_com.execute;
-
-				-- removed: processing is done by EiffelCase
-			--!! record_chart_info_com.make (classc, s_class_data);
-			--record_chart_info_com.execute;
-
-			process_old_info;
 		end
-
-
-	process_old_info is
-				-- Get old descrition and explanation for data (if any) 
-				-- and update s_class_data
-		local
-			old_class_info: OLD_CASE_LINKABLE_INFO;
-		do
-			old_class_info := old_classes_info.item (s_class_data.name);
-			if old_class_info /= Void then
-				if old_class_info.description /= Void then
-					s_class_data.set_description (old_class_info.description)
-				end
-				if old_class_info.explanation /= Void then
-					s_class_data.set_explanation 
-						(old_class_info.explanation)
-				end
-			end;
-		end;
 
 end

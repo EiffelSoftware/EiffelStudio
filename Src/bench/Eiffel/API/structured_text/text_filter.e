@@ -44,21 +44,26 @@ feature {NONE} -- Initialization
 		local
 			full_pathname: FILE_NAME
 		do
-			create full_pathname.make_from_string (filter_path)
-			full_pathname.extend (filtername)
-			full_pathname.add_extension ("fil")
-			make_from_filename (full_pathname)
+			if not filtername.is_empty then
+				create full_pathname.make_from_string (filter_path)
+				full_pathname.extend (filtername)
+				full_pathname.add_extension ("fil")
+				make_from_filename (full_pathname)
+			else
+				make_from_filename (create {FILE_NAME}.make_from_string (filtername))
+			end
 		end
 
 	make_from_filename (filename: STRING) is
 			-- Make a new text filter with information read from `filename'.
 		require
 			filename_not_void: filename /= Void;
-			not_filename_empty: not filename.is_empty
 		do
 			create format_table.make (50)
 			create escape_characters.make (5)
-			read_formats (filename)
+			if not filename.is_empty then
+				read_formats (filename)
+			end
 			create image.make (2000)
 			init_file_separator
 			init_file_suffix

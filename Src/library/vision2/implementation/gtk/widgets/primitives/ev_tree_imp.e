@@ -44,7 +44,8 @@ inherit
 			add_to_container,
 			list_widget,
 			visual_widget,
-			count
+			count,
+			wipe_out
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
@@ -72,7 +73,6 @@ feature {NONE} -- Initialization
 			a_event_box := C.gtk_event_box_new
 			C.gtk_widget_show (a_event_box)
 			C.gtk_container_add (a_event_box, list_widget)
-			--C.gtk_widget_set_usize (list_widget, 100, 100)
 			C.gtk_ctree_set_line_style (list_widget, C.GTK_CTREE_LINES_DOTTED_ENUM)
 			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_BROWSE_ENUM)
 			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
@@ -80,19 +80,17 @@ feature {NONE} -- Initialization
 			C.gtk_scrolled_window_add_with_viewport (c_object, a_event_box)
 			C.gtk_widget_show (list_widget)
 			create ev_children.make (0)
+				-- Make initial hash table with room for 100 child pointers, may be increased later.
 			create tree_node_ptr_table.make (100)
-			-- Make initial hash table with room for 100 child pointers, may be increased later.
 			C.gtk_clist_set_row_height (list_widget, row_height)
 		end
 
 	initialize is
 			-- Connect action sequences to signals.
-
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_TREE_I} Precursor
 			real_signal_connect (visual_widget, "motion_notify_event", ~motion_handler, Default_translate)
-
 
 			real_signal_connect (
 				list_widget,
@@ -552,41 +550,36 @@ feature {NONE} -- Implementation
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local
---			item_alloc_y: INTEGER
---			v_adjustment: POINTER
+			item_imp: EV_TREE_NODE_IMP
 		do
---			-- Move down in to ev_list_imp or refactor a scrolled window pointer.
---			item_alloc_y := C.gtk_allocation_struct_y (
---				C.gtk_widget_struct_allocation (l_item.c_object)
---			)
---			if item_alloc_y /= -1 then
---				--print ("Scroll window to " + item_alloc_y.out + "%N")
---				v_adjustment := C.gtk_scrolled_window_get_vadjustment (c_object)
---				C.set_gtk_adjustment_struct_value (v_adjustment, item_alloc_y)
---				C.gtk_scrolled_window_set_vadjustment (c_object, v_adjustment)
---			end
+			item_imp ?= an_item.implementation
+
+				-- Show the node `an_item'
+			C.gtk_ctree_node_moveto (list_widget, item_imp.tree_node_ptr, 0, 0.0, 1.0)
 		end
 
 	spacing: INTEGER is 5
-		-- Spacing between pixmap and text.
+			-- Spacing between pixmap and text.
 
 	row_height: INTEGER is 15
 
 	previous_selected_item: EV_TREE_NODE
-		-- Item that was selected previously.
+			-- Item that was selected previously.
 
 	count: INTEGER is
+			-- Number of children
 		do
 			Result := ev_children.count
 		end
 
 	i_th (i: INTEGER): EV_TREE_NODE is
+			-- `i'_th child of Current.
 		do
 			Result := (ev_children @ i).interface
 		end
 
 	add_to_container (v: like item) is
-			-- Add `v' to tree at position `i'.
+			-- Add `v' to tree.
 		local
 			item_imp: EV_TREE_NODE_IMP
 		do
@@ -598,6 +591,32 @@ feature {NONE} -- Implementation
 			update_pnd_status
 		end
 
+	wipe_out is
+			-- Remove all items.
+		local
+			item_imp: EV_TREE_NODE_IMP
+		do
+				-- Remove all items (GTK part)
+			C.gtk_clist_clear (list_widget)
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				item_imp := ev_children.item
+				item_imp.set_item_and_children (NULL)
+				item_imp.set_parent_imp (Void)
+				ev_children.forth
+			end
+
+				-- Remove all items (Eiffel part)
+			ev_children.wipe_out
+			tree_node_ptr_table.wipe_out
+			index := 0
+
+			update_pnd_status
+		end
+
 	remove_i_th (a_position: INTEGER) is
 			-- Remove item at `a_position'
 		local
@@ -605,12 +624,12 @@ feature {NONE} -- Implementation
 		do
 			item_imp := (ev_children @ (a_position))
 
-			-- Remove from tree
+				-- Remove from tree
 			C.gtk_ctree_remove_node (list_widget, item_imp.tree_node_ptr)
 			item_imp.set_item_and_children (NULL)
 			item_imp.set_parent_imp (Void)
 
-			-- remove the row from the `ev_children'
+				-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
 
@@ -625,13 +644,9 @@ feature {NONE} -- Implementation
 			a_counter: INTEGER
 		do
 			item_imp ?= v.implementation
-			C.gtk_clist_row_move (
-				list_widget,
-				item_imp.index - 1,
-				a_position - 1
-			)
-			-- Insert `v' in to ev_children list.	
+			C.gtk_clist_row_move (list_widget, item_imp.index - 1, a_position - 1)
 
+				-- Insert `v' in to ev_children list.	
 			create temp_list.make (0)
 			from
 				a_counter := 1
@@ -642,7 +657,7 @@ feature {NONE} -- Implementation
 				a_counter := a_counter + 1
 			end
 			
-			-- Insert `v' at a_position
+				-- Insert `v' at a_position
 			temp_list.extend (item_imp)
 
 			from
@@ -667,10 +682,7 @@ feature {NONE} -- Implementation
 
 feature {EV_TREE_NODE_IMP} -- Implementation
 
-	insert_ctree_node (
-			a_item_imp: EV_TREE_NODE_IMP;
-			par_node, a_sibling: POINTER
-			): POINTER is
+	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER is
 		local
 			text_ptr: POINTER
 		do
@@ -699,7 +711,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		end
 
 	list_widget: POINTER
-		-- Pointer to the gtktree widget.
+			-- Pointer to the gtktree widget.
 
 feature {EV_ANY_I} -- Implementation
 

@@ -55,6 +55,14 @@ debug ("HECTOR")
 end
 		end;
 
+	is_hector_addr (h_addr: STRING): BOOLEAN is
+			-- Is `h_addr' a known hector address?
+		require
+			h_addr_not_void: h_addr /= Void
+		do
+			Result := addr_table.has_item (h_addr)
+		end;
+
 feature -- Updating
 
 	keep_objects (kept_addrs: SET [STRING]) is
@@ -123,7 +131,8 @@ end
 			-- the key is the physical addr of the object, the item is
 			-- its hector addr (with indirection)
 		once
-			!! Result.make (40)
+			!! Result.make (40);
+			Result.compare_objects
 		end;
 
 end -- class OBJECT_ADDR	

@@ -318,45 +318,16 @@ feature -- Access
 		once
 			create Result
 			Result.set_pixmap (pixmap_by_name ("directory_search_small"))
-			Result.select_actions.extend (agent include_dirs)
+			Result.select_actions.extend (agent include_all_directories)
 			Result.set_tooltip ("Include all sub-directories")
 		ensure
 			result_not_void: result /= Void
 		end
 		
-	include_dirs is
+	include_all_directories is
 			-- Include all dirs reachable from the project location, to the current project
-		local
-			iterated_directory, current_directory: DIRECTORY
-			file_name: FILE_NAME
-			items: LINEAR [STRING]
-			command_add_directory: GB_COMMAND_ADD_DIRECTORY
 		do
-			create current_directory.make_open_read (system_status.current_project_settings.project_location)
-			check
-				directory_exists: current_directory.exists
-			end
-			items := current_directory.linear_representation
-			from
-				items.start
-			until
-				items.off
-			loop
-				create file_name.make_from_string (current_directory.name)
-				file_name.extend (items.item)
-				create iterated_directory.make (file_name)
-				if iterated_directory.exists and not items.item.is_equal (".") and not items.item.is_equal ("..") then
-					create command_add_directory.make (Void, items.item)
-					command_add_directory.supress_warnings
-					command_add_directory.create_new_directory
-					if command_add_directory.directory_added_succesfully then
-						command_add_directory.execute
-						system_status.enable_project_modified
-						command_handler.update
-					end
-				end
-				items.forth
-			end
+			internal_include_all_directories (create {DIRECTORY}.make (system_status.current_project_settings.project_location), create {ARRAYED_LIST [STRING]}.make (5))			
 		end
 
 	update_select_root_window_command is
@@ -1277,6 +1248,60 @@ feature {NONE} -- Implementation
 			node_list.go_to (l_cursor)
 		ensure
 			position_not_changed: index = old index
+		end
+		
+	internal_include_all_directories (directory: DIRECTORY; represented_path: ARRAYED_LIST [STRING]) is
+			-- Include all dirs reachable from the project location, to the current project
+		require
+			directory_not_void: directory /= Void
+			directory_exists: directory.exists
+			represented_path_not_void: represented_path /= Void
+		local
+			iterated_directory: DIRECTORY
+			file_name: FILE_NAME
+			items: LINEAR [STRING]
+			command_add_directory: GB_COMMAND_ADD_DIRECTORY
+			parent_path: ARRAYED_LIST [STRING]
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+		do
+			items := directory.linear_representation
+			from
+				items.start
+			until
+				items.off
+			loop
+				create file_name.make_from_string (directory.name)
+				file_name.extend (items.item)
+				create iterated_directory.make (file_name)
+				if iterated_directory.exists and not items.item.is_equal (".") and not items.item.is_equal ("..") then
+						-- Set the parent path before we add the current item to `represented_path'.
+					parent_path := represented_path.twin
+					represented_path.extend (items.item)
+					if tree_item_matching_path (window_selector, represented_path) = Void then
+						if parent_path.is_empty then
+								-- We are at the root level.
+							directory_item := Void
+						else
+								-- Retrieve the directory_item matching `parent_path' within `window_selector'.
+							directory_item ?= tree_item_matching_path (window_selector, parent_path)
+						end
+						create command_add_directory.make (directory_item, items.item)
+						command_add_directory.supress_warnings
+						command_add_directory.create_new_directory
+						if command_add_directory.directory_added_succesfully then
+							command_add_directory.execute
+							system_status.enable_project_modified
+							command_handler.update
+						end
+					end
+					internal_include_all_directories (iterated_directory, represented_path)
+				end
+				items.forth
+			end
+			if not represented_path.is_empty then
+					-- Restore `represented_path' as we are about to go back up a level if nested.
+				represented_path.prune_all (represented_path.last)
+			end
 		end
 
 end -- class GB_WINDOW_SELECTOR

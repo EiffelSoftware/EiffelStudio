@@ -23,7 +23,8 @@ inherit
 			execute_warner_ok as keep_name
 		end;
 	SHARED_EIFFEL_PROJECT;
-	EIFFEL_ENV
+	EIFFEL_ENV;
+	WINDOW_ATTRIBUTES
 
 creation
 
@@ -33,23 +34,26 @@ feature -- Initialization
 
 	make (a_tool: CLASS_W) is
 		do
-			init_from_tool (a_tool);
+			init (a_tool);
 			form_d_make (name, a_tool.popup_parent);
 			set_title (name);
 			!! class_l.make ("", Current);
 			!! cluster_form.make ("", Current);
 			!! cluster_name.make ("", cluster_form);
 			!! cluster_list.make ("", cluster_form);
-			--cluster_list.set_visible_item_count (10);
 			!! file_form.make ("", Current);
 			!! file_label.make ("", file_form);
 			!! file_entry.make ("", file_form);
 			!! form.make ("", Current);
+			!! separator.make ("", Current);
+			form.set_fraction_base (2);
 			!! create_b.make ("Create", form);
 			!! cancel_b.make (l_Cancel, form);
+			cluster_form.attach_top (cluster_list, 0);
 			cluster_form.attach_left (cluster_name, 0);
 			cluster_form.attach_right (cluster_list, 0);
 			cluster_form.attach_left_widget (cluster_name, cluster_list, 5);
+			cluster_form.attach_bottom (cluster_list, 0);
 			file_form.attach_left (file_label, 0);
 			file_form.attach_right (file_entry, 0);
 			file_form.attach_left_widget (file_label, file_entry, 5);
@@ -59,23 +63,29 @@ feature -- Initialization
 			attach_left (cluster_form, 10);
 			attach_top_widget (class_l, file_form, 5);
 			attach_top_widget (file_form, cluster_form, 5);
-			attach_top_widget (cluster_form, form, 5);
-			form.attach_left (create_b, 5);
-			form.attach_top (create_b, 5);
-			form.attach_bottom (create_b, 5);
-			form.attach_right (cancel_b, 5);
-			form.attach_top (cancel_b, 5);
-			form.attach_bottom (cancel_b, 5);
+			attach_bottom_widget (separator, cluster_form, 5);
+			attach_bottom_widget (form, separator, 5);
+			attach_left (separator, 5);
+			attach_right (separator, 5);
+			form.attach_left (create_b, 3);
+			form.attach_top (create_b, 0);
+			form.attach_bottom (create_b, 0);
+			form.attach_right_position (create_b, 1);
+			form.attach_left_position (cancel_b, 1);
+			form.attach_right (cancel_b, 0);
+			form.attach_top (cancel_b, 0);
+			form.attach_bottom (cancel_b, 0);
 			attach_right (cluster_form, 5);
 			attach_right (file_form, 5);
-			attach_left (form, 10);
-			attach_right (form, 10);
-			attach_bottom (form, 10);
+			attach_left (form, 5);
+			attach_right (form, 5);
+			attach_bottom (form, 5);
 			cluster_name.set_text ("Cluster: ");
 			file_label.set_text ("File name: ");
 			file_entry.add_activate_action (Current, create);
 			cancel_b.add_activate_action (Current, cancel);
 			create_b.add_activate_action (Current, create);
+			set_composite_attributes (Current);
 			set_exclusive_grab
 		end;
 
@@ -140,6 +150,8 @@ feature -- Properties
 			-- Class tool
 
 	aok: BOOLEAN;
+
+	separator: SEPARATOR
 
 feature -- Access
 
@@ -235,15 +247,18 @@ feature -- Execution
 						!! stone.make (class_i);
 						if not file.exists then
 							load_default_class_text (file);
+							unrealize;
 							popdown;
 						elseif
 							not (file.is_readable and then file.is_plain)
 						then
+							unrealize;
 							popdown;
 							warner (popup_parent).gotcha_call (w_Cannot_read_file (f_name))
 						else
 								--| Reading in existing file (created outside
 								--| ebench). Ask for confirmation
+							unrealize;
 							popdown;
 							warner (popup_parent).custom_call
 								(Current, w_File_exists_edit_it (f_name),
@@ -252,6 +267,7 @@ feature -- Execution
 					end;
 				end;
 			elseif argument = cancel then
+				unrealize;
 				popdown
 				if last_warner /= Void then
 					last_warner.popdown

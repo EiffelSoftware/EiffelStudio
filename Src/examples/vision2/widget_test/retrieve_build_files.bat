@@ -5,6 +5,7 @@ REM Copy constants and eiffel environment to interface.
 XCOPY /Y Src\Build2\constants\gb_constants.e .\interface
 XCOPY /Y Src\Build2\utilities\eiffel_env.e .\interface
 XCOPY /Y Src\Build2\utilities\gb_general_utilities.e .\interface
+XCOPY /Y Src\Build2\utilities\gb_widget_utilities.e .\interface
 XCOPY /Y Src\Build2\main\gb_supported_events.e .\interface
 
 REM Copy modified vision2 interface failes needed.

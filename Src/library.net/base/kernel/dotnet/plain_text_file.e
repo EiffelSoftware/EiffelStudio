@@ -41,7 +41,8 @@ feature -- Output
 			-- Write `s' at current position.
 		do
 			if s.count /= 0 then
-				writer.write_string (s.to_cil.replace_string_string (eiffel_newline, writer.new_line))
+				writer.write_string (s.to_cil.replace_string_string (eiffel_newline,
+					writer.new_line))
 			end
 		end
 
@@ -307,13 +308,8 @@ feature {NONE} -- Implementation
 	c_open_modifier: INTEGER is 16384
 			-- File should be opened in plain text mode.
 
-	eiffel_newline: SYSTEM_STRING is
+	eiffel_newline: SYSTEM_STRING is "%N"
 			-- Representation of Eiffel `%N' character as a SYSTEM_STRING.
-		once
-			Result := ("%N").to_cil
-		ensure
-			eiffel_newline_not_void: Result /= Void
-		end
 
 invariant
 

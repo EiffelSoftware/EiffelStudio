@@ -79,9 +79,9 @@ feature {NONE} -- Processing
 		do
 				-- Process creation feature of `a_class'.
 			a_class.process_creation_feature
-
-				-- Type checking and maybe byte code production for `a_class'.
 			a_class.pass3
+			
+				-- Type checking and maybe byte code production for `a_class'.
 			if System.il_generation then
 				a_class.update_anchors			
 			end
@@ -124,7 +124,7 @@ feature -- Element change
 	insert_class (a_class: CLASS_C) is
 			-- Add `a_class' to be processed.
 		do
-			if not a_class.degree_3_needed then
+			if not a_class.is_true_external and then not a_class.degree_3_needed then
 				a_class.add_to_degree_3
 				count := count + 1
 			end

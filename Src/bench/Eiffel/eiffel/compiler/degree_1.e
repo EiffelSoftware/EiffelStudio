@@ -63,7 +63,7 @@ feature -- Element change
 	insert_class (a_class: CLASS_C) is
 			-- Add `a_class' to be processed.
 		do
-			if not a_class.degree_1_needed then
+			if not a_class.is_true_external and not a_class.degree_1_needed then
 				a_class.add_to_degree_1
 				count := count + 1
 			end

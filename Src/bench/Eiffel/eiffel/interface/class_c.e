@@ -2616,6 +2616,7 @@ feature -- Parent checking
 					types.wipe_out
 				end
 			end
+			Error_handler.checksum
 		end
 
 feature -- Supplier checking

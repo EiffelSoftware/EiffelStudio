@@ -30,6 +30,7 @@ feature -- Access
 		local
 			target_type, source_type: TYPE_A
 			vjrv1: VJRV1
+			l_formal: FORMAL_A
 			vjrv2: VJRV2
 		do
 			conversion_info := Void
@@ -47,11 +48,17 @@ feature -- Access
 					vjrv1.set_target_type (target_type)
 					Error_handler.insert_error (vjrv1)
 				elseif target_type.is_formal then
-					create vjrv2
-					context.init_error (vjrv2)
-					vjrv2.set_target_name (target.access_name)
-					vjrv2.set_target_type (target_type)
-					Error_handler.insert_error (vjrv2)
+					l_formal ?= target_type
+					check
+						l_formal_not_void: l_formal /= Void
+					end
+					if not l_formal.is_reference then
+						create vjrv2
+						context.init_error (vjrv2)
+						vjrv2.set_target_name (target.access_name)
+						vjrv2.set_target_type (target_type)
+						Error_handler.insert_error (vjrv2)
+					end
 				else
 						-- Special case `t ?= exp' where we convert
 						-- `exp' to its associated reference before
@@ -62,7 +69,9 @@ feature -- Access
 							source_type.reference_actual_type)
 					then
 						conversion_info := context.last_conversion_info
-						context.supplier_ids.extend (conversion_info.depend_unit)
+						if conversion_info.has_depend_unit then
+							context.supplier_ids.extend (conversion_info.depend_unit)
+						end
 					end
 				end
 			end

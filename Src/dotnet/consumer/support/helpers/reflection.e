@@ -14,7 +14,7 @@ feature -- Status Report
 			parent_name: SYSTEM_STRING
 			parent_type: TYPE
 		do
-			if is_cls_compliant (t) then
+			if is_cls_compliant_type (t) then
 				Result := t.is_public
 				if not Result then
 					if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
@@ -100,7 +100,7 @@ feature -- Status Report
 				if Result then
 					l_mi ?= m
 					if l_mi /= Void and then l_mi.return_type /= Void then
-						Result := is_cls_compliant (l_mi.return_type)
+						Result := is_cls_compliant_type (l_mi.return_type)
 					end					
 				end
 			end
@@ -160,11 +160,13 @@ feature -- Status Report
 		require
 			a_type_not_void: a_type /= Void
 		do
-			if a_type.has_element_type then
-				Result := is_cls_compliant_type (a_type.get_element_type)
-			else
-				Result := is_cls_compliant (a_type)
-			end	
+			if not a_type.is_pointer then
+				if a_type.has_element_type then
+					Result := is_cls_compliant_type (a_type.get_element_type)
+				else
+					Result := is_cls_compliant (a_type)
+				end					
+			end
 		end
 
 	is_cls_compliant (member: MEMBER_INFO): BOOLEAN is

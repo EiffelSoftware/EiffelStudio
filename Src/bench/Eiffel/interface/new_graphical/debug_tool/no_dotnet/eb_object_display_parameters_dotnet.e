@@ -16,7 +16,7 @@ create {SHARED_DEBUG}
 
 feature -- Transformation
 
-	object_full_output: STRING is
+	object_type_and_value: STRING is
 			-- Full ouput representation for related object
 		do
 		end

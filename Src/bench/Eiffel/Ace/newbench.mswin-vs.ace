@@ -132,8 +132,6 @@ cluster
 				end
 			completion_information
 				end
-			completion_entry_enumerator
-				end
 			html_doc_generator
 				end
 			ieiffel_htmldoc_events_impl_stub

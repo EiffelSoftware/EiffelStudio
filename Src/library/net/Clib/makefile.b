@@ -33,6 +33,6 @@ net.lib: $(OBJS)
 	$(AR) $@ /c +network_r.obj +network.obj +hostname.obj +syncpoll.obj +storable.obj
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
-	if not exist ..\spec\bcc mkdir ..\spec\bcc
-	if not exist ..\spec\bcc\lib mkdir ..\spec\bcc\lib
-	copy net.lib ..\spec\bcc\lib\net.lib
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy net.lib ..\spec\bcb\lib\net.lib

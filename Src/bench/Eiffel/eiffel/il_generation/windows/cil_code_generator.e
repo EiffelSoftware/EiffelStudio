@@ -3572,10 +3572,18 @@ feature -- Exception handling
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ise_last_exception_token)
 		end
 
+	generate_leave_to (a_label: IL_LABEL) is
+			-- Instead of using `branch_to' which is forbidden in a `try-catch' clause,
+			-- we generate a `leave' opcode that has the same semantic except that it
+			-- should branch outside the `try-catch' clause.
+		do
+			method_body.put_opcode_label (feature {MD_OPCODES}.Leave, a_label.id)
+		end
+
 	generate_end_exception_block is
 			-- Mark end of rescue clause.
 		do
-			method_body.put_opcode_label (feature {MD_OPCODES}.Leave, rescue_label)
+			method_body.put_opcode (feature {MD_OPCODES}.rethrow)
 			method_body.exception_block.set_end_position (method_body.count)
 			method_body.mark_label (rescue_label)
 		end
@@ -5325,8 +5333,14 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			l_external_class: EXTERNAL_CLASS_C
 			l_assembly: ASSEMBLY_I
 			l_precompiled_assembly: ASSEMBLY_INFO
+			l_native_array: NATIVE_ARRAY_CLASS_TYPE
 		do
-			if a_class_type.is_generated then
+			l_native_array ?= a_class_type
+			if l_native_array /= Void then
+				internal_assemblies.put (
+					assembly_token (l_native_array.deep_il_element_type.associated_class_type),
+					a_class_type.implementation_id)
+			elseif a_class_type.is_generated then
 				internal_assemblies.put (main_module_token, a_class_type.implementation_id)
 			else
 				if

@@ -132,7 +132,7 @@ feature -- Type check
 			creation_class: CLASS_C
 			a_feature: FEATURE_I
 			export_status, context_export: EXPORT_I
-			create_type: CREATE_TYPE
+			create_type: CREATE_INFO
 			creators: HASH_TABLE [EXPORT_I, STRING]
 			depend_unit: DEPEND_UNIT
 			feature_name: STRING
@@ -165,8 +165,11 @@ feature -- Type check
 
 				-- We need to evaluate `type' in context of current class
 				-- and current feature.
-			new_creation_type := creation_evaluator.evaluated_type (
+			creation_type := creation_evaluator.evaluated_type (
 				type, Context.feature_table, Context.current_feature)
+				
+				-- Fully evaluated type for `creation_type'.
+			new_creation_type := creation_type.actual_type
 
 			if new_creation_type.has_expanded then
 				if new_creation_type.expanded_deferred then
@@ -183,6 +186,9 @@ feature -- Type check
 			if new_creation_type.is_formal then
 					-- Cannot be Void
 				formal_type ?= new_creation_type
+				check
+					formal_type_not_void: formal_type /= Void
+				end
 					-- Get the corresponding constraint type of the current class
 				formal_dec := context.current_class.generics.i_th (formal_type.position)
 				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
@@ -223,8 +229,7 @@ feature -- Type check
 					vtcg3.set_error_list (new_creation_type.constraint_error_list)
 					Error_handler.insert_error (vtcg3)
 				else
-					creation_type := new_creation_type
-					gen_type ?= creation_type
+					gen_type ?= new_creation_type
 					if gen_type /= Void then
 						Instantiator.dispatch (gen_type, context.current_class)
 					end
@@ -237,13 +242,13 @@ feature -- Type check
 				-- Check for errors
 			Error_handler.checksum
 
-			creation_class := creation_type.associated_class
+			creation_class := new_creation_type.associated_class
 			if creation_class.is_deferred and then not is_formal_creation then
 					-- Associated class cannot be deferred
 				create vgcc2
 				context.init_error (vgcc2)
 				vgcc2.set_target_name ("")
-				vgcc2.set_type (creation_type)
+				vgcc2.set_type (new_creation_type)
 				Error_handler.insert_error (vgcc2)
 				Error_handler.raise_error
 			end
@@ -277,7 +282,7 @@ feature -- Type check
 			creators := creation_class.creators
 
 			if the_call /= Void then
-				context.replace (creation_type)
+				context.replace (new_creation_type)
 
 					-- Inform the next type checking that we are handling
 					-- a creation expression and that this is not needed
@@ -293,11 +298,7 @@ feature -- Type check
 					-- But since a creation routine is a feature its TYPE_A is of type
 					-- VOID_A which is not what we want here, that's why we need to update
 					-- the type now.
-				if is_formal_creation then
-					context.replace (formal_type)
-				else
-					context.replace (creation_type)
-				end
+				context.replace (new_creation_type)
 
 				if not is_formal_creation then
 						-- Check if creation routine is non-once procedure
@@ -305,7 +306,7 @@ feature -- Type check
 						create vgcc5
 						context.init_error (vgcc5)
 						vgcc5.set_target_name ("")
-						vgcc5.set_type (creation_type)
+						vgcc5.set_type (new_creation_type)
 						a_feature := creation_class.feature_table.item (feature_name)
 						vgcc5.set_creation_feature (a_feature)
 						Error_handler.insert_error (vgcc5)
@@ -316,7 +317,7 @@ feature -- Type check
 							create vgcc5
 							context.init_error (vgcc5)
 							vgcc5.set_target_name ("")
-							vgcc5.set_type (creation_type)
+							vgcc5.set_type (new_creation_type)
 							a_feature := creation_class.feature_table.item (feature_name)
 							vgcc5.set_creation_feature (a_feature)
 							Error_handler.insert_error (vgcc5)
@@ -348,20 +349,20 @@ feature -- Type check
 				end
 			else
 				if not is_formal_creation then
-					context.replace (creation_type)
+					context.replace (new_creation_type)
 					if (creators = Void) or is_default_creation then
 					elseif creators.is_empty then
 						create vgcc5
 						context.init_error (vgcc5)
 						vgcc5.set_target_name ("")
-						vgcc5.set_type (creation_type)
+						vgcc5.set_type (new_creation_type)
 						vgcc5.set_creation_feature (Void)
 						Error_handler.insert_error (vgcc5)
 					else
 						create vgcc4
 						context.init_error (vgcc4)
 						vgcc4.set_target_name ("")
-						vgcc4.set_type (creation_type)
+						vgcc4.set_type (new_creation_type)
 						Error_handler.insert_error (vgcc4)
 					end
 				else
@@ -378,13 +379,10 @@ feature -- Type check
 			Error_handler.checksum
 
 				-- Compute creation information
-			if is_formal_creation then
-				create {CREATE_FORMAL_TYPE} create_type.make (formal_type.type_i)
-			else
-				create create_type.make (creation_type.type_i)
-			end
+			create_type := creation_type.create_info
 
 			context.creation_infos.insert (create_type)
+			context.creation_types.insert (new_creation_type.type_i)
 		end
 
 feature
@@ -392,9 +390,10 @@ feature
 	byte_node: CREATION_EXPR_B is
 			-- Associated byte code.
 		local
-			create_type: CREATE_TYPE
+			create_type: CREATE_INFO
 			call_access: CALL_ACCESS_B
 			the_call: like call
+			l_type: TYPE_I
 		do
 			create Result
 
@@ -420,8 +419,14 @@ feature
 				create_type_not_void: create_type /= Void
 			end
 			
+			l_type := context.creation_types.item
+			context.creation_types.forth
+			check
+				l_type_not_void: l_type /= Void
+			end
+			
 			Result.set_info (create_type)
-			Result.set_type (create_type.type)
+			Result.set_type (l_type)
 			Result.set_line_number (line_number)
 		end
 

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 					i > 9
 				loop
 					s := string_resource_value (base_resource_name + i.out, "")
-					if not s.is_empty then
+					if not s.is_empty and not s.is_equal (" ") then
 						create c.make_from_resource (s)
 					end
 					i := i + 1

@@ -10,6 +10,8 @@ deferred class
 inherit
 	MANAGER_WINDOWS
 		redefine
+			set_x,
+			set_y,
 			hide,
 			show,
 			destroy
@@ -73,6 +75,30 @@ feature -- Access
 		end
 
 feature -- Status setting
+
+	set_x (new_x: INTEGER) is
+			-- Set `x' to `new_x'.
+		do
+			private_attributes.set_x (new_x)
+			if exists then
+				wel_set_x (new_x)
+				if number_of_toggles > 0 then
+					reposition_toggles
+				end
+			end
+		end
+
+	set_y (new_y: INTEGER) is
+			-- Set `y' to `new_y'.
+		do
+			private_attributes.set_y (new_y)
+			if exists then
+				wel_set_y (new_y)
+				if number_of_toggles > 0 then
+					reposition_toggles
+				end
+			end
+		end
 
 	hide is
 			-- Hide the box and the toggles
@@ -156,6 +182,30 @@ feature {TOGGLE_B_WINDOWS} -- Status setting
 			toggle_list.go_to (c)
 			set_size (largest_width.max (Minimum_width), (toggle_list.count * (child_height)) +
 				vertical_spacing + text_height_box // 2)
+		end
+
+	reposition_toggles is
+			-- Set the width/height according to the toggles
+		require
+			toggles_present: number_of_toggles > 0
+		local
+			c: CURSOR
+			largest_width: INTEGER
+		do
+			largest_width := wel_width
+			c := toggle_list.cursor
+			from
+				toggle_list.start
+			variant
+				toggle_list.count - toggle_list.index
+			until
+				toggle_list.after
+			loop
+				toggle_list.item.set_x_y (horizontal_spacing,
+					((toggle_list.index - 1) * child_height) + vertical_spacing)
+				toggle_list.forth
+			end;
+			toggle_list.go_to (c)
 		end
 
 feature {TOGGLE_B_WINDOWS} -- Status report

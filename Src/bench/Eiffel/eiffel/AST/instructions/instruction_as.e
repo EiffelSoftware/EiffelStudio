@@ -11,7 +11,7 @@ inherit
 			byte_node
 		redefine
 			number_of_stop_points, line_number,
-			find_breakable, format, type_check
+			find_breakable, type_check
 		end
 
 feature -- Access
@@ -40,14 +40,6 @@ feature -- Debugger
 			-- or inspect statements to actually propagate the message.
 		do
 			record_break_node		-- Most node are atomic instructions
-		end
-
-feature -- Output
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Format Current instruction.
-		do
-			simple_format (ctxt)
 		end
 
 feature -- Update

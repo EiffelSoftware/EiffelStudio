@@ -8,7 +8,7 @@ deferred class
 	EV_RICH_TEXT_I
 
 inherit
-	EV_TEXT_I
+	EV_SCROLLABLE_TEXT_I
 
 feature -- Access
 

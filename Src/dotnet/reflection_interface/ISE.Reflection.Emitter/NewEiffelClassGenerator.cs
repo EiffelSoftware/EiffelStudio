@@ -500,11 +500,11 @@ public class EiffelClassGenerator: Globals
 			// Do not generate creation clause for deferred classes or expanded classes.
 		if(( ClassFactory.CreationRoutines.Count > 0 )&&( !ClassFactory.IsDeferred )&&( !EiffelClassFactory.SpecialClasses.ContainsKey( ClassFactory.Name ) ) )
 		{
-			if (!ClassFactory.IsExpanded) 
+			/*if (!ClassFactory.IsExpanded) 
 			{
 				foreach( String CreationRoutine in ClassFactory.CreationRoutines.Keys )
 					GeneratedEiffelClass.AddCreationRoutine( CreationRoutine );				
-			}
+			}*/
 			foreach( String CreationRoutine in ClassFactory.CreationRoutines.Keys )
 				GeneratedEiffelClass.AddInitializationFeature( GeneratedFeature( ClassFactory, CreationRoutine, ClassFactory.CreationRoutines ) );
 			
@@ -610,8 +610,8 @@ public class EiffelClassGenerator: Globals
 			IsBinaryOperator = BinaryOperators().ContainsKey((( EiffelMethodFactory )FeatureTable [FeatureName]).Info.Name );
 			IsUnaryOperator = UnaryOperators().ContainsKey((( EiffelMethodFactory )FeatureTable [FeatureName]).Info.Name );
 			MethodFactory = ( EiffelMethodFactory )FeatureTable [FeatureName];
-			if( MethodFactory.NewSlot )
-				GeneratedEiffelFeature.SetNewSlot();
+			GeneratedEiffelFeature.SetNewSlot( MethodFactory.NewSlot );
+			
 			MethodDescriptor =( MethodInfo )(MethodFactory.Info);
 			GeneratedEiffelFeature.SetStatic( MethodDescriptor.IsStatic );
 			GeneratedEiffelFeature.SetAbstract( MethodDescriptor.IsAbstract );
@@ -623,13 +623,11 @@ public class EiffelClassGenerator: Globals
 		{
 			FieldDescriptor =(( FieldInfo )FeatureTable [FeatureName]);
 			IsLiteral = FieldDescriptor.IsLiteral;
-			if( IsLiteral )
-				GeneratedEiffelFeature.SetLiteral();
+			GeneratedEiffelFeature.SetLiteral( IsLiteral );
+
 			IsEnumLiteral = IsLiteral  && ClassFactory.UnderlyingType.IsEnum;
-			if( IsEnumLiteral )
-				GeneratedEiffelFeature.SetEnumLiteral();
-			if( FieldDescriptor.DeclaringType.AssemblyQualifiedName.ToLower().Equals( ClassFactory.UnderlyingType.AssemblyQualifiedName.ToLower() ) )
-				GeneratedEiffelFeature.SetNewSlot();
+			GeneratedEiffelFeature.SetEnumLiteral( IsEnumLiteral );
+			GeneratedEiffelFeature.SetNewSlot( FieldDescriptor.DeclaringType.AssemblyQualifiedName.ToLower().Equals( ClassFactory.UnderlyingType.AssemblyQualifiedName.ToLower() ) );
 			GeneratedEiffelFeature.SetStatic( FieldDescriptor.IsStatic );
 			
 			//ReturnType = new SignatureType();

@@ -278,7 +278,7 @@ end;
 			a_feature.set_is_selected (False);
 			a_feature.set_is_origin (True);
 			select_table.put (a_feature, new_rout_id);
-			new_t.replace_id (a_feature, feature_name_id);
+			new_t.replace (a_feature, feature_name_id);
 
 				-- Remove unselection
 			remove;
@@ -323,7 +323,7 @@ feature -- Conceptual Replication
 				inh_info := item
 				curr_feat := item.a_feature
 				replication := curr_feat.replicated
-				new_t.replace_id (replication, replication.feature_name_id)
+				new_t.replace (replication, replication.feature_name_id)
 				inh_info.set_a_feature (replication)
 				forth
 			end

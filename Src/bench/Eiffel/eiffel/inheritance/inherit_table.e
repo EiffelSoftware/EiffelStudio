@@ -701,7 +701,7 @@ end;
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.written_in = id then
-					feature_name_id := feature_table.key_for_iteration_id;
+					feature_name_id := feature_table.key_for_iteration;
 						-- recompute a former local declaration
 					analyze_local (feature_i.duplicate, feature_name_id);
 				end;
@@ -1262,7 +1262,7 @@ end;
 				-- adapted export status specified in inheritance clause
 			f.set_export_status (inherit_feat.exports (Names_heap.item (feature_name_id)));
 				-- Insert it in the table `inherited_features'.
-			inherited_features.put_id (f, feature_name_id);
+			inherited_features.put (f, feature_name_id)
 		end;
 
 	give_new_feature_id (f: FEATURE_I) is
@@ -1327,7 +1327,7 @@ end;
 			vmfn: VMFN;
 		do
 			feature_name_id := f.feature_name_id;
-			inherited_features.put_id (f, feature_name_id);
+			inherited_features.put (f, feature_name_id);
 			if inherited_features.conflict then
 				!!vmfn;
 				vmfn.set_class (a_class);

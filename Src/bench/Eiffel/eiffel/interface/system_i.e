@@ -627,7 +627,29 @@ end
 	init_recompilation is
 			-- Initialization before a recompilation.
 		do
-			change_classes
+				-- Mark classes to be recompiled.
+			if not any_class.is_compiled then
+					-- First compilation.
+				init
+			else
+				if
+					not marked_precompiled_classes and then
+					not Compilation_modes.is_precompiling and then uses_precompiled
+				then
+					mark_only_used_precompiled_classes
+				end
+				if root_class.compiled_class = Void then
+						-- If root_class is not compiled (i.e. root class has
+						-- changed since last compilaton), insert it in the
+						-- changed_classes.
+					Workbench.change_class (root_class)
+				end
+				add_visible_classes
+			end
+			if Lace.compile_all_classes or Compilation_modes.is_precompiling then
+					-- `None' is specified as the root class
+				Workbench.change_all_new_classes
+			end
 
 				-- If status of compilation is successful, copy
 				-- a duplication of the body index table in
@@ -644,35 +666,14 @@ end
 				original_body_index_table.copy (body_index_table)
 				Degree_1.wipe_out
 			end
-		end
 
-	change_classes is
-			-- Mark classes to be recompiled.
-		do
-			if not any_class.is_compiled then
-					-- First compilation.
-				init
-			else
-				if
-					not marked_precompiled_classes and then
-					not Compilation_modes.is_precompiling and then uses_precompiled
-				then
-					mark_only_used_precompiled_classes
-				end
-				if root_class.compiled_class = Void then
-					-- If root_class is not compiled (i.e. root class has
-					-- changed since last compilaton), insert it in the
-					-- changed_classes.
-					Workbench.change_class (root_class)
-					add_visible_classes
-				else
-					add_visible_classes
-				end
-			end
-			if Lace.compile_all_classes then
-					-- `None' is specified as the root class
-				Workbench.change_all_new_classes
-			end
+				-- Reset internal data that needs to be recomputed
+				-- at each recompilation in case it might changed during
+				-- a recompilation. It happens if at the first compilation
+				-- you do, there is an error, then those IDs from the routines
+				-- of ANY will definitely be changed
+			internal_default_rescue_id := -1
+			internal_default_create_id := -1
 		end
 
 feature -- default_rescue routine
@@ -683,14 +684,19 @@ feature -- default_rescue routine
 			-- does not have a feature named `default_rescue'.
 		local
 			feature_i: FEATURE_I
-		once
-			if any_class /= Void and then
-					any_class.compiled_class /= Void then
-				feature_i := any_class.compiled_class.
-					feature_table.item_id (names.default_rescue_name_id)
-				if feature_i /= Void then
-					Result := feature_i.rout_id_set.first
+		do
+			Result := internal_default_rescue_id
+			if Result < 0 then
+				Result := 0
+				if any_class /= Void and then
+						any_class.compiled_class /= Void then
+					feature_i := any_class.compiled_class.
+						feature_table.item_id (names.default_rescue_name_id)
+					if feature_i /= Void then
+						Result := feature_i.rout_id_set.first
+					end
 				end
+				internal_default_rescue_id := Result
 			end
 		end
 
@@ -702,16 +708,29 @@ feature -- default_create routine
 			-- does not have a feature named `default_create'.
 		local
 			feature_i: FEATURE_I
-		once
-			if any_class /= Void and then
-					any_class.compiled_class /= Void then
-				feature_i := any_class.compiled_class.
-					feature_table.item_id (names.default_create_name_id)
-				if feature_i /= Void then
-					Result := feature_i.rout_id_set.first
+		do
+			Result := internal_default_create_id
+			if Result < 0 then
+				Result := 0
+				if any_class /= Void and then
+						any_class.compiled_class /= Void then
+					feature_i := any_class.compiled_class.
+						feature_table.item_id (names.default_create_name_id)
+					if feature_i /= Void then
+						Result := feature_i.rout_id_set.first
+					end
 				end
+				internal_default_create_id := Result
 			end
 		end
+
+feature {NONE} -- Implementation: predefined routine IDs
+
+	internal_default_rescue_id: INTEGER
+			-- Once per compilation value of routine id of `default_rescue_id'.
+
+	internal_default_create_id: INTEGER
+			-- Once per compilation value of routine id of `default_create'.
 
 feature -- Recompilation 
 
@@ -749,10 +768,11 @@ feature -- Recompilation
 				create d1.make_now
 			end
 				-- Recompilation initialization
-			if Compilation_modes.is_precompiling then
-				init_precompilation
-			else
-				init_recompilation
+			init_recompilation
+			if Compilation_modes.is_precompiling and il_generation then
+					-- For a precompiled library we require a freeze in non-IL
+					-- code generation.
+				private_freeze := True
 			end
 
 			if first_compilation then
@@ -3907,23 +3927,6 @@ feature -- Conveniences
 		end
 
 feature -- Precompilation
-
-	init_precompilation is
-			-- Initialization before a precompilation.
-		do
-			if not any_class.is_compiled then
-				init
-			else
-				if root_class.compiled_class = Void then
-					workbench.change_class (root_class)
-				end
-				add_visible_classes
-			end
-			if root_class = any_class then
-				Workbench.change_all
-			end
-			private_freeze := True
-		end
 
 	save_precompilation_info is
 			-- Save usefull values for inclusion of

@@ -289,7 +289,7 @@ feature {NONE} -- Processing
 			l_parent,
 			l_script_tag: XM_ELEMENT
 		do
-			if shared_constants.help_constants.is_tree_web_help then				
+			if not shared_constants.help_constants.is_tree_web_help then				
 				l_script_text := "//empty"
 			else				
 				l_script_text := "doc = window.location.href;if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%

@@ -11,6 +11,27 @@ inherit
 	EV_TREE_ITEM_HOLDER_I
 
 	EV_HASH_TABLE_ITEM_HOLDER_IMP
+	
+feature -- element_change
+
+	remove_all_items is
+			-- Remove `children' without destroying them.
+		local
+			temp_children: ARRAYED_LIST [EV_ITEM_IMP]
+			current_item:  EV_TREE_ITEM
+		do
+			from
+				temp_children := children
+				temp_children.finish
+			until
+				temp_children.before
+			loop
+				current_item ?= temp_children.item.interface
+				current_item.set_parent (Void)
+				temp_children.back
+			end
+		end
+
 
 Feature -- Status report
 
@@ -31,7 +52,7 @@ Feature -- Status report
 				if equal (data, litem.data) then
 					Result ?= litem
 				else
-					Result ?= litem.find_item_by_data (data)
+					Result ?= litem.find_item_recursively_by_data (data)
 				end
 				list.forth
 			end

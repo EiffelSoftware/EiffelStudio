@@ -52,6 +52,24 @@ feature -- Access
 
 feature -- Element change
 
+	remove_all_items is
+			-- Remove `children' without destroying them.
+		local
+			temp_children: ARRAYED_LIST [EV_ITEM_IMP]
+			current_item: EV_ITEM
+		do
+			from
+				temp_children := children
+				temp_children.finish
+			until
+				temp_children.before
+			loop
+				current_item ?= temp_children.item.interface
+				current_item.set_parent (Void)
+				temp_children.back
+			end
+		end
+
 	add_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Add `item_imp' into container.
 		local
@@ -173,8 +191,10 @@ feature -- Element change
 					it ?= cc.first
 					if it = Void then
 						sep ?= cc.first
+						sep.interface.remove_implementation
 						remove_separator (sep)
 					else
+						it.interface.remove_implementation
 						remove_item (it)
 					end
 				end

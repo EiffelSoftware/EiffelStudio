@@ -9,7 +9,10 @@ inherit
 			reset_modified_flags as composite_reset_modified_flags,
 			position_modified as default_position,
 			undo_cut as old_undo_cut,
-			link_to_parent as add_to_window_list
+			link_to_parent as add_to_window_list,
+			title_label as comp_title_label,
+			show as old_show,
+			hide as old_hide
 		redefine
 			create_context, cut, position_initialization,
 			is_in_a_group, root, set_position,
@@ -18,7 +21,7 @@ inherit
 			set_x_y, set_size, set_visual_name,
 			raise, x, y, set_real_x_y, is_window,
 			add_to_window_list, retrieve_set_visual_name, 
-			shown, is_able_to_be_grouped
+			shown, is_able_to_be_grouped, realize
 		end;
 	COMPOSITE_C
 		rename
@@ -33,9 +36,10 @@ inherit
 			reset_modified_flags,
 			raise, x, y, set_real_x_y, is_window,
 			add_to_window_list, retrieve_set_visual_name, 
-			shown, is_able_to_be_grouped
+			shown, is_able_to_be_grouped, title_label,
+			show, hide, realize
 		select
-			reset_modified_flags, undo_cut
+			reset_modified_flags, undo_cut, title_label, hide, show
 		end
 	
 feature -- Specification
@@ -53,6 +57,13 @@ feature -- Specification
 	start_hidden: BOOLEAN
 
 	start_hidden_modified: BOOLEAN
+
+	is_really_shown: BOOLEAN;
+		-- Setting show/hide does not set `shown' instantly (always
+		-- false if calling show/hide until the next event loop).
+		-- I needed this info immediately after a hide/show hence
+		-- the need for this boolean. This boolean is used
+		-- for the hide/show facility on the Context Tree
 
 feature -- Setting values
 
@@ -101,6 +112,17 @@ feature {NONE}
 		end
 
 feature 
+
+	title_label: STRING is
+		do
+			Result := comp_title_label;
+				-- Only concerned after Current is retrieved
+			if retrieved_node = Void and then 
+				not is_really_shown 
+			then
+				Result.extend ('*');
+			end
+		end;
 
 	set_start_hidden (flag: BOOLEAN) is
 		do
@@ -287,13 +309,21 @@ feature
 		deferred
 		end;
 
-	remove_popup_action is
-		deferred
-		end;
-
 	shown: BOOLEAN is
 		do
 			Result := widget.realized and then widget.shown
+		end;
+
+	show is
+		do
+			old_show;
+			update_label (True);
+		end;
+
+	hide is
+		do
+			old_hide;
+			update_label (False);
 		end;
 
 	raise is
@@ -304,26 +334,31 @@ feature
 			widget.raise
 		end;
 
+	realize is
+		do
+			widget.realize;
+			update_label (True);
+		end;
+
+	update_label (is_shown: BOOLEAN) is
+			-- Update label for window visibility.
+		local
+			cur: CURSOR
+		do
+			is_really_shown := is_shown;
+			cur := Shared_window_list.cursor;
+			update_tree_element;
+			Shared_window_list.go_to (cur);
+		end;
+
+feature
+
 	execute (argument: ANY) is
 		local
 			win_cmd: WIN_CONFIG_CMD
 			top: PERM_WIND_C
 		do
-			if argument = Current then
-				-- This is a hack because there is a bug
-				-- under motif for x and y positions
-				-- (see x_offset and y_offset) but will
-				-- be compatible with other toolkits. If 
-				-- there is not a bug then x_offset and 
-				-- y_offset will be zero.
-				-- This is executed the first time Current
-				-- is popped up.
-					-- Initalize x and y offset
-				if x_offset = Void then end;
-				if y_offset = Void then end;
-				remove_popup_action;
-				add_window_geometry_action;	
-			elseif not widget.destroyed and then not deleted then
+			if not widget.destroyed and then not deleted then
 					-- This is just in case that the event
 					-- is still called just after a destruction
 				x := widget.x - x_offset;

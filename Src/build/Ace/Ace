@@ -1,0 +1,93 @@
+system ebuild
+
+root
+
+	ebuild (root_cluster): "make"
+
+default
+
+	assertion (no);
+cluster
+
+	root_cluster: 	"$EIFFELSRC/Main";
+
+	kernel:			"$EIFFELBASE/kernel";
+	support:		"$EIFFELBASE/support";
+	access:			"$EIFFELBASE/structures/access";
+	cursors:		"$EIFFELBASE/structures/cursors";
+	dispenser:		"$EIFFELBASE/structures/dispenser";
+	list:			"$EIFFELBASE/structures/list";
+	sort:			"$EIFFELBASE/structures/sort";
+	storage:		"$EIFFELBASE/structures/storage";
+	traversing:		"$EIFFELBASE/structures/traversing";
+
+	abs_kernel:		"$EV3/oui/kernel";
+	abs_commands:	"$EV3/oui/commands";
+	abs_widgets:	"$EV3/oui/widgets";
+	tools:			"$EV3/tools";
+	x:				"$EV3/implement/X";
+	toolkit:		"$EV3/implement/toolkit";
+	motif_res:		"$EV3/implement/motif/Resources";
+	motif_widgets:	"$EV3/implement/motif/widgets";
+	figures: 		"$EV3/figures";
+
+	c1:				"$EIFFELSRC/Catalog";
+	c2:				"$EIFFELSRC/Catalog/Commands";
+	c3:				"$EIFFELSRC/Utility";
+	c4:				"$EIFFELSRC/Constants";
+	c5:				"$EIFFELSRC/Icon";
+	c6:				"$EIFFELSRC/Structures";
+	c7:				"$EIFFELSRC/Windows";
+	c8:				"$EIFFELSRC/WindowMgr";
+
+	c9:				"$EIFFELSRC/Storage/Command";
+	c10:			"$EIFFELSRC/Storage/Context";
+	c11:			"$EIFFELSRC/Storage/Control";
+	c12:			"$EIFFELSRC/Storage/Function";
+	c13:			"$EIFFELSRC/Storage/Application";
+
+
+	c14:			"$EIFFELSRC/Generation";
+
+	c15:			"$EIFFELSRC/Transport";
+
+	c16:			"$EIFFELSRC/Context/Commands";
+	c17:			"$EIFFELSRC/Context/Editor";
+	c18:			"$EIFFELSRC/Context/Catalog";
+	c20:			"$EIFFELSRC/Context/Widgets";
+	c21:			"$EIFFELSRC/Context/NewWidgets";
+	c22:			"$EIFFELSRC/Context/Tree";
+
+
+	c23:			"$EIFFELSRC/Application/Control";
+	c24:			"$EIFFELSRC/Application/Commands";
+
+
+	c25:			"$EIFFELSRC/Event";
+
+
+	c26:			"$EIFFELSRC/Function/Commands";
+	c27:			"$EIFFELSRC/Function/Editor";
+	c28:			"$EIFFELSRC/Function/Functions";
+	c29:			"$EIFFELSRC/Function/Holes";
+	c30:			"$EIFFELSRC/Function/Stones";
+	c31:			"$EIFFELSRC/Function/IconBox";
+
+
+	c32:			"$EIFFELSRC/Command/Catalog";
+	c33:			"$EIFFELSRC/Command/Commands";
+	c34:			"$EIFFELSRC/Command/Editor";
+	c35:			"$EIFFELSRC/Command/Predef";
+	c36:			"$EIFFELSRC/Command/Stones";
+	c37:			"$EIFFELSRC/Command/Instance";
+
+external
+
+	object:
+		"$(VISION)/figures/Clib/xwindow.a";
+		"$(VISION)/implement/X/Clib/Xt.a";
+		"$(VISION)/implement/motif/Clib/motif_Clib.a";
+    	"$(EIFFELSRC)/Clib/Motif/efb.a";
+		"-lXm -lXt -lX11";
+
+end

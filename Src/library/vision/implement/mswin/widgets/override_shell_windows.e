@@ -17,8 +17,8 @@ inherit
 			default_style,
 			minimal_height,
 			minimal_width,
-			realize,
 			realized,
+			realize_current,
 			set_enclosing_size,
 			unrealize
 		end
@@ -31,7 +31,7 @@ inherit
 			destroy,
 			minimal_height,
 			minimal_width,
-			realize,
+			realize_current,
 			realized,
 			set_enclosing_size,
 			unrealize
@@ -55,6 +55,13 @@ feature -- Initialization
 			parent ?= oui_parent.implementation
 			shell_width := 2 * window_border_height
 			shell_height := 2 * window_border_width
+		end
+
+	realize_current is
+			-- Realize current widget.
+		do
+			make_top_with_coordinates ("", x, y, width + shell_width, height + shell_height)
+			realized := True
 		end
 
 feature -- Status report
@@ -90,8 +97,7 @@ feature -- Status setting
 			if exists then
 				wel_show
 			else
-				make_top_with_coordinates ("", x, y, width+shell_width, height+shell_height)
-				realize_children
+				realize		
 			end
 			if is_exclusive_grab then
 				set_windows_insensitive
@@ -108,12 +114,6 @@ feature -- Status setting
 			if exists then 
 				wel_hide
 			end
-		end
-
-	realize is
-			-- Realize current override shell.
-		do
-			realized := true
 		end
 
 	set_enclosing_size is

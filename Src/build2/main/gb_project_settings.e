@@ -14,7 +14,7 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
-			{ANY} True_string, False_string, Optimal_string
+			{ANY} True_string, False_string, False_optimal_string, False_non_exported_string
 		end
 		
 	GB_FILE_CONSTANTS
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			main_window_class_name := "MAIN_WINDOW"
 			application_class_name := "VISION2_APPLICATION"
 			project_name := "VISION2_PROJECT"
-			attributes_local := Optimal_string
+			attributes_local := False_optimal_string
 			enable_complete_project
 			enable_grouped_locals
 			enable_rebuild_ace_file
@@ -324,7 +324,7 @@ feature -- Status Setting
 			-- Assign `locality' to `attributes_local'.
 		require
 			valid_locality: locality.is_equal (True_string) or locality.is_equal (False_string) or
-				locality.is_equal (Optimal_string)
+				locality.is_equal (False_optimal_string) or locality.is_equal (false_non_exported_string)
 		do
 			attributes_local := locality
 		end

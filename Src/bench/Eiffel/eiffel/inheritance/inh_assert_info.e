@@ -43,10 +43,10 @@ feature
 			Result := (has_precondition = other.has_precondition) and then
 					(has_postcondition = other.has_postcondition) and then
 					(body_index = other.body_index);
-			io.putstring ("assert info:%N ");
-			trace;
-			io.putstring ("othe assert info:%N ");
-			other.trace
+--			io.putstring ("assert info:%N ");
+--			trace;
+--			io.putstring ("othe assert info:%N ");
+--			other.trace
 		end;
 
 	trace is

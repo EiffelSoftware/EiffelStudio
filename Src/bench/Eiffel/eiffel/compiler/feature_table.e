@@ -320,7 +320,7 @@ end;
 		local
 			non_deferred, deferred_found: BOOLEAN;
 			feature_i: FEATURE_I;
-			vdcc: VDCC;
+			vcch1: VCCH1;
 			vcch2: VCCH2;
 		do
 			from
@@ -333,10 +333,10 @@ end;
 				if feature_i.is_deferred then
 					deferred_found := True;
 					if non_deferred then
-						!!vdcc;
-						vdcc.set_class_id (associated_class.id);
-						vdcc.set_a_feature (feature_i);
-						Error_handler.insert_error (vdcc);
+						!!vcch1;
+						vcch1.set_class_id (associated_class.id);
+						vcch1.set_a_feature (feature_i);
+						Error_handler.insert_error (vcch1);
 					end;
 				end;
 				check_feature (feature_i);
@@ -400,6 +400,24 @@ end;
 			loop
 				feat := item_for_iteration;
 				if feat.body_id = i then
+					Result := feat;
+				end;
+				forth;
+			end;
+		end;
+
+	feature_of_body_index (i: INTEGER): FEATURE_I is
+			-- Feature of body index equal to `i'.
+		local
+			feat: FEATURE_I;
+		do
+			from
+				start
+			until
+				offright or else Result /= Void
+			loop
+				feat := item_for_iteration;
+				if feat.body_index = i then
 					Result := feat;
 				end;
 				forth;

@@ -49,7 +49,7 @@ end;
 			-- Error window
 		do
 			if batch_mode then
-				Result := term_error_window
+				Result := term_window
 			else
 				Result := bench_error_window
 			end;
@@ -60,7 +60,7 @@ end;
 			Result := project_tool.text_window
 		end;
 
-	term_error_window: TERM_WINDOW is
+	term_window: TERM_WINDOW is
 		once
 			!!Result
 		end;
@@ -73,8 +73,8 @@ end;
 
 	debug_window: CLICK_WINDOW is
 			-- Debug window
-		do
-			Result := error_window
+		once
+			Result := term_window
 		end;
 
 	explain_window: EXPLAIN_W is

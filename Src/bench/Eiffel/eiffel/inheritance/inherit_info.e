@@ -52,6 +52,20 @@ feature
 				end
 			end;
 		end;
-			
+
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring ("INHERIT_INFO ");
+			if a_feature /= Void then
+				a_feature.trace;
+			end;
+			if parent /= Void then
+				parent.trace;
+			end;
+			io.error.new_line;	
+		end;
+
 end
 			

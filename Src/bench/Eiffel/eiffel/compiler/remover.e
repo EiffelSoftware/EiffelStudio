@@ -80,6 +80,11 @@ feature {NONE}
 			unit: ROUT_UNIT;
 			c: BI_LINKABLE [ROUT_UNIT];
 			redef_unit: TRAVERSAL_UNIT;
+			assert_id_set: ASSERT_ID_SET;
+			inh_assert: INH_ASSERT_INFO;
+			i, nb: INTEGER;
+			ancestor_feature: FEATURE_I;
+			ancestor_class: CLASS_C;
 		do
 			f := traversal_unit.a_feature;
 			static_class := traversal_unit.static_class;
@@ -92,6 +97,27 @@ feature {NONE}
 					-- Case for an non existing routine table: a deferred
 					-- feature without any implementation in descendant classes
 					-- leads to NO routine table.
+			end;
+			if f.assert_id_set /= Void then
+				-- The routine has chained assertions.
+				-- mark all the previous definitions with assertions
+				-- as used.
+				from
+					assert_id_set := f.assert_id_set;
+					i := 1;
+					nb := assert_id_set.count
+				until
+					i > nb
+				loop
+					inh_assert := assert_id_set.item (i);
+					if inh_assert.has_assertion then
+						ancestor_class := System.class_of_id (inh_assert.written_in);
+						ancestor_feature := ancestor_class.feature_table.feature_of_body_index
+														(inh_assert.body_index);
+						mark_and_record (ancestor_feature, ancestor_class);
+					end;
+					i := i + 1;
+				end;
 			end;
 			if Tmp_poly_server.has (rout_id_val) then
 					-- If routine id available: this is not a deferred feature

@@ -303,4 +303,55 @@ feature
 			end;
 		end;
 
+
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring ("PARENT_C ");
+			io.error.putstring (class_name);
+			io.error.new_line;
+			if renaming /= Void then
+			io.error.putstring ("%TRenamings:%N");
+			from
+				renaming.start
+			until
+				renaming.offright
+			loop
+				io.error.putstring ("%T");
+				io.error.putstring (renaming.key_for_iteration);
+				io.error.putstring (" as ");
+				io.error.putstring (renaming.item_for_iteration);
+				io.error.new_line;
+				renaming.forth
+			end;
+			end;
+			if redefining /= Void then
+				io.error.putstring ("%TRedefinitions:%N");
+				trace_list (redefining);
+			end;
+			if undefining /= Void then
+				io.error.putstring ("%TUndefinitions:%N");
+				trace_list (undefining);
+			end;
+			if selecting /= Void then
+				io.error.putstring ("%TSelections:%N");
+				trace_list (selecting);
+			end;
+		end;
+
+	trace_list (a_list: SEARCH_TABLE [STRING]) is
+		do
+			from
+				a_list.start
+			until
+				a_list.offright
+			loop
+				io.error.putstring ("%T");
+				io.error.putstring (a_list.item_for_iteration);
+				io.error.new_line;
+				a_list.forth
+			end;
+		end;
+
 end

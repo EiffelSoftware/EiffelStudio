@@ -12,7 +12,7 @@ inherit
 
 	FEATURE_AS
 		redefine
-			feature_names, body, set_unique_values, set,
+			feature_names, body, set,
 			associated_feature_name
 		end;
 
@@ -60,37 +60,12 @@ feature -- Initialization
 			end_position := yacc_int_arg (1);
 			id := System.feature_as_counter.next_id;
 			if body.is_unique then
-				set_unique_values
+				System.current_class.set_has_unique
 			end;
 			set_start_position;
 		ensure then
 			feature_names /= Void;
 			body /= Void;
-		end;
-
-	set_unique_values is
-			-- Store the values of the unique constants
-			-- in the AST_CONTEXT (temporary, the hash table is
-			-- stored in the CLASS_INFO at the end of pass1)
-		local
-			unique_values: HASH_TABLE [INTEGER, STRING];
-			counter: COUNTER;
-		do
-			unique_values := context.unique_values;
-			if unique_values = Void then
-				!!unique_values.make (feature_names.count);
-				context.set_unique_values (unique_values);
-			end;
-			counter := System.current_class.unique_counter;
-			from
-				feature_names.start
-			until
-				feature_names.after
-			loop
-				unique_values.put (	counter.next,
-									feature_names.item.internal_name)
-				feature_names.forth
-			end
 		end;
 
 	set_body_id (i: BODY_ID) is
@@ -103,6 +78,21 @@ feature -- Initialization
 			-- Set `id' to `i'.
 		do
 			id := i
+		end;
+
+feature -- Update
+
+	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
+			-- Assign values to Unique features defined in the current class
+		do
+			from
+				feature_names.start
+			until
+				feature_names.after
+			loop
+				values.put (counter.next, feature_names.item.internal_name)
+				feature_names.forth
+			end
 		end;
 
 feature -- Type check, byte code and dead code removal

@@ -103,4 +103,19 @@ feature -- Formatting
 			end;
 		end;
 
+feature -- Update
+
+	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
+			-- Assign values to Unique features defined in the current class
+		do
+			from
+				features.start
+			until
+				features.after
+			loop
+				features.item.assign_unique_values (counter, values)
+				features.forth
+			end
+		end
+
 end -- class FEATURE_CLAUSE_AS_B

@@ -373,4 +373,22 @@ feature {CASE_CLASS_INFO} -- Case storage output
 			end;
 		end;
 
+feature {CLASS_C} -- Update
+
+	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
+			-- Assign values to Unique features defined in the current class
+		require
+			associated_class_has_unique: System.current_class.has_unique
+			valid_args: counter /= Void and values /= Void
+		do
+			from
+				features.start
+			until
+				features.after
+			loop
+				features.item.assign_unique_values (counter, values)
+				features.forth
+			end
+		end
+
 end -- class CLASS_AS_B

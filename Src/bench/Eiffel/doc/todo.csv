@@ -214,6 +214,7 @@ Diagram,,,,
 ,3,Merge the command history with the one of the editor,Xavier,DGM0002
 ,2,Add an undo all item at the top of the history dialog to be able to undo all modifications,Xavier,DGM0003
 ,2,Give a list of all removed classes to be able to show them again,Xavier,DGM0004
+,3,Let the user change the grid size,Julian,DGM0005
 
 
 

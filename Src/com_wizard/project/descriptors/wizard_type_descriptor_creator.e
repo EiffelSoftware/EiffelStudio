@@ -36,9 +36,9 @@ feature -- Basic Operations
 				not system_descriptor.c_types.has (name) and
 				not is_forbidden_c_word (name)
 			loop
-				name.append (One)
+				name.append ("_2")
 			end
-			system_descriptor.add_c_type (name)
+			system_descriptor.add_c_type (clone (name))
 		end
 
 	add_type_lib_description (a_type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is

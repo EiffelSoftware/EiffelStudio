@@ -334,7 +334,7 @@ feature {NONE} -- Update
 				Result.extend ("bitmaps")
 				Result.extend (Pixmap_suffix)
 				Result.set_file_name (file)
-				Result.extend (pixmap_suffix)
+				Result.add_extension (pixmap_suffix)
 			else
 				create Result.make_from_string (Bitmap_path)
 				Result.set_file_name (file)

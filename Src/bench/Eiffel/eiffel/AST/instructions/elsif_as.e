@@ -27,7 +27,7 @@ feature {AST_FACTORY} -- Initialization
 		do
 			expr := e
 			compound := c
-			location := clone (l)
+			location := l.twin
 		ensure
 			expr_set: expr = e
 			compound_set: compound = c

@@ -24,7 +24,7 @@ feature {AST_FACTORY} -- Initialization
 		do
 			tag := t
 			expr := e
-			location := clone (l)
+			location := l.twin
 		ensure
 			tag_set: tag = t
 			expr_set: expr = e

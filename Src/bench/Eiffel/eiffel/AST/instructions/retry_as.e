@@ -21,7 +21,7 @@ feature {AST_FACTORY} -- Initialization
 		require
 			l_not_void: l /= Void
 		do
-			location := clone (l)
+			location := l.twin
 		ensure
 			location_set: location.is_equal (l)			
 		end

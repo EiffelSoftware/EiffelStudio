@@ -22,7 +22,7 @@ feature {AST_FACTORY} -- Initialization
 		do
 			target := t
 			source := s
-			location := clone (l)
+			location := l.twin
 		ensure
 			target_set: target = t
 			source_set: source = s

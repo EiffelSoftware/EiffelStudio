@@ -26,8 +26,8 @@ feature {AST_FACTORY} -- Initialization
 			compound := cmp
 			elsif_list := ei
 			else_part := e
-			location := clone (l)
-			end_location := clone (el)
+			location := l.twin
+			end_location := el.twin
 		ensure
 			condition_set: condition = cnd
 			compound_set: compound = cmp

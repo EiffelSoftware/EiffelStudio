@@ -98,15 +98,17 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			to_implement ("EV_GRID_ITEM_I.enable_select")
 			is_selected := True
+			parent_grid_i.redraw_client_area
+			fixme ("Perform a more optimal redraw when available")
 		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
 		do
-			to_implement ("EV_GRID_ITEM_I.disable_select")
-			is_selected := False
+			is_selected := True
+			parent_grid_i.redraw_client_area
+			fixme ("Perform a more optimal redraw when available")
 		end
 
 feature -- Status report

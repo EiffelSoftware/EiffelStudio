@@ -205,11 +205,14 @@ feature -- Analyzis
 				loop
 					arg := real_type (args @ 1)
 					if arg.is_true_expanded then
+							-- Force GC hook and its usage even if not used within
+							-- body of current routine. See FIXME of `generate_expanded_cloning'
+							-- for possible improvement.
 						context.force_gc_hooks
-						i := nb + 1
-					else
-						i := i + 1
+						arg_var.set_position (i)
+						context.set_local_index (arg_var.register_name, arg_var.enlarged)
 					end
+					i := i + 1
 				end
 			end
 		end
@@ -258,8 +261,6 @@ feature -- Analyzis
 
 				-- Starting body of C routine
 			buf.indent
-
-			process_expanded
 
 				-- Declaration of all the local entities, such as
 				-- Eiffel local variables, Result, temporary registers...
@@ -507,8 +508,8 @@ end
 					if i <= used_upper and then context.local_vars.item(i) then
 						type_i := real_type (locals.item (i))
 						if type_i.is_true_expanded or type_i.is_bit then
-							context.local_var.set_position (i)
-							type_i.generate_expanded_creation (Current, context.local_var,
+							local_var.set_position (i)
+							type_i.generate_expanded_creation (Current, local_var,
 								context.workbench_mode)
 						end
 					end
@@ -528,7 +529,7 @@ end
 			-- Clone expanded parameters
 		local
 			arg: TYPE_I
-			i, count, nb_exp: INTEGER
+			i, count: INTEGER
 			buf: GENERATION_BUFFER
 		do
 			if arguments /= Void then
@@ -541,60 +542,22 @@ end
 				loop
 					arg := real_type (arguments.item (i))
 					if arg.is_true_expanded then
-						context.arg_var.set_position (i)
-						buf.putstring ("if ((EIF_REFERENCE) 0 == ")
-						context.arg_var.print_register
-						buf.putchar (')')
+							-- FIXME: Manu: 05/10/2004: if argument is not
+							-- used and if associated type does not redefine `copy'
+							-- then we could skip this call for more efficiency.
+							-- See `analyze_arguments' too as the above fixme is related
+							-- to what `analyze_arguments' does to mark the expanded
+							-- arguments used.
+						arg_var.set_position (i)
+						arg_var.print_register
+						buf.putstring (" = RTCL(")
+						arg_var.print_register
+						buf.putstring (");")
 						buf.new_line
-						buf.indent
-						buf.putstring ("RTET(%"")
-						buf.putstring (escaped_feature_name)
-						buf.putstring ("%", EN_VEXP);")
-						buf.new_line
-						buf.exdent
-							-- Expanded cloning protocol
-						if context.exp_args > 1 then
-							buf.putstring ("if (idx[")
-							buf.putint (nb_exp)
-							buf.putstring ("] == -1L)")
-							buf.new_line
-							buf.indent
-							generate_arg_var_cloning (-1)
-							buf.exdent
-							buf.putstring ("else")
-							buf.new_line
-							buf.indent
-							generate_arg_var_cloning (nb_exp)
-							buf.exdent
-							nb_exp := nb_exp + 1
-						else
-							generate_arg_var_cloning (-1)
-						end
 					end
 					i := i + 1
 				end
 			end
-		end
-
-	generate_arg_var_cloning (idx: INTEGER) is
-			-- Generate cloning operation on Arg_var parameter from context
-		local
-			buf: GENERATION_BUFFER
-		do
-			context.arg_var.print_register
-			buf := buffer
-			buf.putstring (" = RTCL(")
-			context.arg_var.print_register
-				-- If `idx' is not -1, then the reference was the one for the
-				-- enclosing object and it needs adjusting by the expanded
-				-- object's offset whithin that bigger object.
-			if idx /= -1 then
-				buf.putstring (" + idx[")
-				buf.putint (idx)
-				buf.putchar (']')
-			end
-			buf.putstring (");")
-			buf.new_line
 		end
 
 	generate_save_args is
@@ -807,15 +770,6 @@ end
 					end
 					i := i + 1
 				end
-			end
-
-				-- Generate index table if we have more than one expanded
-				-- argument (cloning protocol).
-			if context.exp_args > 1 then
-				buf.putstring ("long idx[")
-				buf.putint (context.exp_args)
-				buf.putstring ("];")
-				buf.new_line
 			end
 
 				-- Generate temporary locals under the control of the GC
@@ -1639,6 +1593,20 @@ feature -- Inlining
 			else
 				Result := Current
 			end
+		end
+
+feature {NONE} -- Convenience
+
+	local_var: LOCAL_B is
+			-- Instance used to generate local variable name
+		once
+			create Result
+		end
+
+	arg_var: ARGUMENT_B is
+			-- Instance used to generate local variable name
+		once
+			create Result
 		end
 
 end

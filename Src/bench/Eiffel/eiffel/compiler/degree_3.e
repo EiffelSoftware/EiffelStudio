@@ -32,11 +32,19 @@ feature -- Processing
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			mem: MEMORY
+			l_conv_checker: CONVERTIBILITY_CHECKER
 		do
 			nb := count
 			Degree_output.put_start_degree (Degree_number, nb)
 			classes := System.classes.sorted_classes
 			create mem
+
+				-- Check convertibility validity, there should be only one way
+				-- to convert one type to the other.
+			create l_conv_checker
+			l_conv_checker.system_validity_checking (classes)
+			Error_handler.checksum
+
 			from i := 1 until nb = 0 loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_3_needed then

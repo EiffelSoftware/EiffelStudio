@@ -581,6 +581,7 @@ feature -- Type check, byte code and dead code removal
 			local_info: LOCAL_INFO
 			local_name_id: INTEGER
 			local_type: TYPE
+			counter: INTEGER
 		do
 			if locals /= Void then
 				from
@@ -602,6 +603,8 @@ feature -- Type check, byte code and dead code removal
 					loop
 						local_name_id := id_list.item
 						create local_info
+						counter := counter + 1
+						local_info.set_position (counter)
 						local_info.set_type (solved_type)
 						Result.put (local_info, Names_heap.item (local_name_id))
 						id_list.forth

@@ -93,6 +93,7 @@
                   <File Id="bool_string.e" Name="BOOL_S~1.E" LongName="bool_string.e" />
                   <File Id="identified_controller.e" Name="IDENTI~2.E" LongName="identified_controller.e" />
                   <File Id="internal.e" Name="internal.e" />
+				  <File Id="eiffel_class_name_attribute.e" Name="EIFFEL~1.E" LongName="eiffel_class_name_attribute.e" />
                   <File Id="identified.e" Name="IDENTI~1.E" LongName="identified.e" />
                 </Component>
               </Directory>

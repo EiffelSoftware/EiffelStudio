@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_STRUCTURE
+		redefine
+			make
+		end
 
 	WEL_STARTUP_CONSTANTS
 
@@ -19,6 +22,15 @@ inherit
 create
 	make
 
+feature {NONE} -- Initialize
+
+	make is
+			-- Allocate `item'.
+		do
+			Precursor {WEL_STRUCTURE}
+			cwel_init (item)
+		end
+		
 feature -- Access
 
 	title: STRING is
@@ -296,6 +308,14 @@ feature {NONE} -- Externals
 			"C [macro %"wel_startup_info.h%"]"
 		alias
 			"sizeof (STARTUPINFO)"
+		end
+		
+	cwel_init (ptr: POINTER) is
+			-- Initialize structure size of `ptr'.
+		external
+			"C inline use <windows.h>"
+		alias
+			"((LPSTARTUPINFO)$ptr)->cb = sizeof (STARTUPINFO)"
 		end
 
 	cwel_startup_info_title (ptr: POINTER): POINTER is

@@ -25,7 +25,7 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 	on_activate is
 			-- Is called by the menu when th item is activate.
 		do
-			menu.uncheck_radio_items
+			parent_imp.uncheck_radio_items
 			set_state (True)
 			execute_command (Cmd_item_activate, Void)
 		end

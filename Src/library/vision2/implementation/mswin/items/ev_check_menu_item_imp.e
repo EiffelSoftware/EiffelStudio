@@ -25,7 +25,7 @@ feature -- Status report
 	state: BOOLEAN is
 			-- Is current menu-item checked ?.
 		do
-			Result := menu.item_checked (id)	
+			Result := parent_menu.item_checked (id)	
 		end
 	
 feature -- Status setting
@@ -34,9 +34,9 @@ feature -- Status setting
 			-- Make `flag' the new state of the menu-item.
 		do
 			if flag then
-				menu.check_item (id)
+				parent_menu.check_item (id)
 			else
-				menu.uncheck_item (id)
+				parent_menu.uncheck_item (id)
 			end
 		end
 

@@ -16,7 +16,6 @@
 #define _idr_h_
 
 #include "eif_config.h"
-#include "eif_portable.h"
 #include <sys/types.h>
 
 #ifdef I_NETINET_IN
@@ -27,6 +26,9 @@
 #endif
 #endif
 
+#include "eif_portable.h"
+		/* Included after standard include files to avoid
+		 * redefinition of macros. */
 #ifdef I_STRING
 #include <string.h>
 #else

@@ -42,6 +42,8 @@ inherit
 			move as wel_move,
 			item as wel_item
 		undefine
+			on_hide,
+			on_show,
 			on_left_button_up,
 			on_key_up,
 			on_left_button_down,
@@ -100,6 +102,8 @@ inherit
 			move as wel_move,
 			item as wel_item
 		undefine
+			on_hide,
+			on_show,
 			on_left_button_up,
 			on_key_up,
 			on_left_button_down,
@@ -146,7 +150,7 @@ feature -- Initialization
 			!! private_list.make (10)
 			private_attributes.set_width (100)
 			private_attributes.set_height (100)
-			private_visible_item_count := 5
+			private_visible_item_count := 1
 			fixed_size_flag := is_fixed
 			oui_widget := a_list
 		end
@@ -178,7 +182,7 @@ feature -- Initialization
 				end
 				if private_visible_item_count > 0 then
 					set_visible_item_count (private_visible_item_count)
-				elseif not fixed_size then 
+				elseif not fixed_size_flag then 
 					set_visible_item_count (private_visible_item_count)
 					if count > 0 then
 						set_visible_item_count (count.max (1)) 
@@ -301,13 +305,16 @@ feature -- Removal
 			-- Set the height to closest `new_height' possible.
 		local
 			a_visible_count: INTEGER
+			old_height: INTEGER
 		do
+			old_height := height
 			private_attributes.set_height (new_height)
 			if realized then
 				a_visible_count := new_height // item_height
 				set_visible_item_count (a_visible_count.max(1))
+				private_attributes.set_height (height)
 			end
-			if parent /= Void then
+			if old_height /= height then
 				parent.child_has_resized
 			end
 		end
@@ -338,21 +345,22 @@ feature -- Removal
 			private_attributes.set_width (new_width)
 			if realized then
 				a_visible_count := new_height // item_height
-				set_visible_item_count (a_visible_count.max(1))
+				set_visible_item_count (a_visible_count.max (1))
+				private_attributes.set_height (height)
 				set_width (new_width)
-			end
-			if parent /= Void then
-				parent.child_has_resized
 			end
 		end
 
 	set_visible_item_count (a_count: INTEGER) is
+		local
+			old_height: INTEGER
 		do
+			old_height := height
 			private_visible_item_count := a_count
 			if realized then
 				private_attributes.set_height (a_count * item_height + 2 * Border_height)
 				wel_set_height (item_height * a_count + 2 * Border_height)
-				if parent /= Void then
+				if (height /= old_height) then
 					parent.child_has_resized
 				end
 			end
@@ -366,12 +374,15 @@ feature -- Removal
 
 	set_width (new_width: INTEGER) is
 			-- Set the width to `new_width'
+		local
+			old_width: INTEGER
 		do
+			old_width := width
 			if realized then
 				wel_set_width (new_width)
 			end
-			private_attributes.set_width (new_width)
-			if parent /= Void then
+			private_attributes.set_width (width)
+			if (width /= old_width) then
 				parent.child_has_resized
 			end
 		end
@@ -409,9 +420,6 @@ feature {NONE} -- Implementation
 					add_string (s)
 				end
 			end
-			--if not fixed_size then
-			--	set_visible_item_count (count)
-			--end
 		end
 
 	delete_item (i: INTEGER) is
@@ -591,9 +599,6 @@ feature {NONE} -- Implementation
 			if exists then
 				delete_string (index - 1)
 			end
-			if empty then
-				index := 0
-			end
 		ensure then
 			not_empty_unchanged_index: not empty implies index = old index
 		end
@@ -628,8 +633,8 @@ feature {NONE} -- Implementation
 				if realized then
 					reset_content 				
 				end
+				index := 0
 			end
-			index := 0
 		end
 
 	select_i_th (i: INTEGER) is

@@ -42,7 +42,7 @@ inherit
 			compute_minimum_size
 		end
 
-	EV_ITEM_HOLDER_IMP
+	EV_HASH_TABLE_ITEM_HOLDER_IMP
 
 	WEL_TOOL_BAR
 		rename
@@ -194,19 +194,8 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_button (button: EV_TOOL_BAR_BUTTON_IMP) is
-			-- Add `but' to the toolbar.
-		require
-			valid_button: button /= Void and then not button.destroyed
-		do
-			insert_button (button, count + 1)
-		end
-
-	insert_button (button: EV_TOOL_BAR_BUTTON_IMP; index: INTEGER) is
+	insert_item (button: EV_TOOL_BAR_BUTTON_IMP; index: INTEGER) is
 			-- Insert `button' at the `index' position in the tool-bar.
-		require
-			valid_button: button /= Void and then not button.destroyed
-			valid_index: index >= 1 and then index <= count + 1
 		local
 			bmp: WEL_TOOL_BAR_BITMAP
 			but: WEL_TOOL_BAR_BUTTON
@@ -248,28 +237,21 @@ feature -- Element change
 			notify_change (2 + 1)
 		end
 
-	move_button (button: EV_TOOL_BAR_BUTTON_IMP; index: INTEGER) is
-			-- Move `button' to the `index' position.
-		do
-			remove_button (button)
-			insert_button (button, index)
-		end
-
-	remove_button (button: EV_TOOL_BAR_BUTTON_IMP) is
+	remove_item (button: EV_TOOL_BAR_BUTTON_IMP) is
 			-- Remove button from the toolbar.
 		do
-			delete_button (internal_index (button.id))
+			delete_button (internal_get_index (button))
 			ev_children.remove (button.id)
 			notify_change (2 + 1)
 		end
 
 feature -- Basic operation
 
-	internal_index (command_id: INTEGER): INTEGER is
+	internal_get_index (button: EV_TOOL_BAR_BUTTON_IMP): INTEGER is
 			-- Retrieve the current index of the button with
 			-- `command_id' as id.
 		do
-			Result := cwin_send_message_result (item, Tb_commandtoindex, command_id, 0)
+			Result := cwin_send_message_result (item, Tb_commandtoindex, button.id, 0)
 		end
 
 	compute_minimum_width is
@@ -309,9 +291,9 @@ feature -- Basic operation
 		local
 			index: INTEGER
 		do
-			index := internal_index (but.id) + 1
-			remove_button (but)
-			insert_button (but, index)
+			index := internal_get_index (but) + 1
+			remove_item (but)
+			insert_item (but, index)
 		end
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
@@ -344,6 +326,16 @@ feature -- Basic operation
 		end
 
 feature {NONE} -- Implementation
+
+	item_type: EV_TOOL_BAR_BUTTON_IMP is
+			-- An empty feature to give a type.
+			-- We don't use the genericity because it is
+			-- too complicated with the multi-platform design.
+			-- Need to be redefined.
+		do
+		end
+
+feature {NONE} -- WEL Implementation
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- We must not resize the height of the tool-bar.
@@ -559,6 +551,32 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			cwin_show_window (bar.item, cmd_show)
+		end
+
+feature -- TEMP
+
+	clear_items is
+			-- Clear all the items of the list.
+		local
+			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+		do
+--			from
+--				list := ev_children
+--				list.start
+--			until
+--				list.after or Result /= Void
+--			loop
+--				remove_item (list.item)
+--				list.forth
+--			end
+		end
+
+	children: ARRAYED_LIST [like item_type] is
+			-- List of the direct children of the item holder.
+			-- Should be define here, but is not because we cannot
+			-- do the hastable deferred, it doesn't work, it should,
+			-- but it doesn't.
+		do
 		end
 
 end -- class EV_TOOL_BAR_IMP

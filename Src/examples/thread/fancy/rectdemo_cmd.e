@@ -17,6 +17,7 @@ feature -- Basic operations
 			r_left, r_top, r_right, r_bottom: INTEGER
 			brush: WEL_BRUSH
 			color: WEL_COLOR_REF
+			l_rect: WEL_RECT
 		do
 			create dc.make (t_parent)
 			dc.get
@@ -28,10 +29,19 @@ feature -- Basic operations
 			create brush.make_solid (color)
 			dc.select_brush (brush)
 			dc.rectangle (r_left, r_top, r_right, r_bottom)
+			create l_rect.make (1, 1, t_parent.width, 30)
+ 			dc.draw_text (count.out, l_rect, feature {WEL_DT_CONSTANTS}.Dt_bottom)
  			dc.release
 			brush.delete
+			count := count + 1
 		end
 
+	count: INTEGER
+			-- Number of time where `draw' has been called.
+
+invariant
+	count_nonnegative: count >= 0
+	
 end -- class RECTANGLE_DEMO_CMD
 
 --|----------------------------------------------------------------

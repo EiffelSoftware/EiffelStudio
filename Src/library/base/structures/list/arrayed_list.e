@@ -378,20 +378,22 @@ feature -- Removal
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor)
 		local
-			i,j: INTEGER;
-			default_value: G;
+			i,j: INTEGER
+			default_value: G
+			l_count: INTEGER
 		do
 			if not off then
 				from
-					i := index - 1;
+					i := index - 1
+					l_count := count - 1
 				until
-					i >= count - 1
+					i >= l_count
 				loop
-					j := i + 1;
-					area.put (area.item (j), i);
-					i := j;
+					j := i + 1
+					area.put (area.item (j), i)
+					i := j
 				end;
-				put_i_th (default_value, count);
+				put_i_th (default_value, count)
 				count := count - 1
 			end
 		end;

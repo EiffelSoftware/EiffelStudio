@@ -325,7 +325,7 @@ feature {NONE} -- Command arguments
 			-- Process an action based on `arg'.
 		local
 			super_melt_cmd: EB_SUPER_MELT_CMD
-			insert_breakpoint_cmd: EB_INSERT_BREAKPOINT_CMD
+--			insert_breakpoint_cmd: EB_INSERT_BREAKPOINT_CMD
 			st: STONE
 --			target: HOLE
 			wid: EV_WIDGET
@@ -371,14 +371,14 @@ feature {NONE} -- Command arguments
 --					deselect_all
 				end
 
-			elseif arg = insert_breakpoint_action then
+--			elseif arg = insert_breakpoint_action then
 --				update_before_transport (data)
-				st := focus
-				if st /= Void then
+--				st := focus
+--				if st /= Void then
 --					create insert_breakpoint_cmd.do_nothing
 --					insert_breakpoint_cmd.work (st)
 --					deselect_all
-				end
+--				end
 				
 			end
 		end

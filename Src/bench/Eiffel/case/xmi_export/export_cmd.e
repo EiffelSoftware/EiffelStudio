@@ -60,7 +60,8 @@ feature {NONE} -- Implementation
 				xe.generate (Degree_output)
 			end
 		rescue
-			create dial.make_with_text ("'" + wizard.directory.name + "' is not a valid directory and/or cannot be created%NPlease choose a valid and writable directory.")
+			create dial.make_with_text (
+				(create {WARNING_MESSAGES}).w_Invalid_directory_or_cannot_be_created (wizard.directory.name))
 			dial.show_modal_to_window (window_manager.last_focused_development_window.window)
 			retried := True
 			retry

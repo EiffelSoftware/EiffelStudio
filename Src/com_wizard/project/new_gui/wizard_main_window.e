@@ -96,6 +96,8 @@ feature {NONE} -- Initialization
 			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_tab), True, False, True)
 			l_accel.actions.extend (agent on_previous)
 			accelerators.extend (l_accel)
+			
+			set_icon_pixmap (Wizard_ico)
 		end
 
 feature -- Basic Operations

@@ -79,6 +79,16 @@ feature -- Access
 			Result := create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0)
 		end
 
+	wizard_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("wizard.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	settings_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -247,15 +257,3 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 end -- class WIZARD_CONSTANTS_IMP
-
---+----------------------------------------------------------------
---| EiffelCOM Wizard
---| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
---| Eiffel Software Confidential
---| Duplication and distribution prohibited.
---|
---| Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| http://www.eiffel.com
---+----------------------------------------------------------------
-

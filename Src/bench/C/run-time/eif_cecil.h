@@ -1,11 +1,23 @@
 /*
-  ####   ######   ####      #    #               #    #
- #    #  #       #    #     #    #               #    #
- #       #####   #          #    #               ######
- #       #       #          #    #        ###    #    #
- #    #  #       #    #     #    #        ###    #    #
-  ####   ######   ####      #    ######   ###    #    #
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
+/*
 	Definitions and macros for the C-Eiffel Call-In Library.
 */
 
@@ -215,7 +227,7 @@ struct ctable {
  * gt_gen is associated to the same index i in gt_type).
  */
 struct cecil_info {
-	int nb_param;			/* Number of generic parameters, 0 if none*/
+	uint32 nb_param;			/* Number of generic parameters, 0 if none*/
 	int16 dynamic_type;		/* Dynamic type when no generics. */
 	int32 *patterns;		/* Generic parameters patterns, if generics, otherwise NULL. */
 	int16 *dynamic_types;	/* Dynamic type for each meta-type, if generics, otherwise NULL. */

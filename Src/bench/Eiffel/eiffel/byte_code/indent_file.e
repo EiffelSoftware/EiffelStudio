@@ -371,6 +371,9 @@ feature -- prototype code generation
 			extern_dec_file.generate_function_declaration
 				(type, f_name, True, extern, arg_types)
 			putstring ("#ifdef __STDC__%N")
+			if not extern then
+				putstring ("static ")
+			end
 			putstring (type)
 			putchar (' ')
 			putstring (f_name)
@@ -397,6 +400,9 @@ feature -- prototype code generation
 			end
 			putstring (")%N%
 					%#else%N")
+            if not extern then
+                putstring ("static ")
+            end
 			putstring (type)
 			putchar (' ')
 			putstring (f_name)

@@ -231,14 +231,14 @@ feature -- Basic Operations
 		
 	compile_to_pipe is
 			-- compile to pipe - returns pipe name
-		require
+		require else
 			non_void_output_pipe_name: output_pipe_name /= Void
 			valid_output_pipe_name: not output_pipe_name.is_empty
 		do
 			output_pipe_name := Eiffel_ace.file_name
 			is_output_piped := True
 			main_window.process_compile
-		ensure
+		ensure then
 			output_is_piped: is_output_piped
 		end
 		
@@ -274,13 +274,13 @@ feature -- Basic Operations
 		
 	finalize_to_pipe is
 			-- finalize to pipe - returns pipe name
-		require
+		require else
 			non_void_output_pipe_name: output_pipe_name /= Void
 			valid_output_pipe_name: not output_pipe_name.is_empty
 		do
 			is_output_piped := True
 			main_window.process_finalize
-		ensure
+		ensure then
 			output_is_piped: is_output_piped
 		end
 	
@@ -322,7 +322,7 @@ feature -- Basic Operations
 		do
 			is_output_piped := True
 			main_window.process_precompile
-		ensure
+		ensure then
 			output_is_piped: is_output_piped
 		end
 		
@@ -392,7 +392,7 @@ feature -- Element Change
 			valid_name: not a_name.is_empty
 		do
 			output_pipe_name := a_name.clone (a_name)
-		ensure
+		ensure then
 			output_pipe_name_set: output_pipe_name.is_equal (a_name)
 		end
 		

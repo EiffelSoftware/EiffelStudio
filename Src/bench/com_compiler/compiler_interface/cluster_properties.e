@@ -109,7 +109,7 @@ feature -- Access
 			if Result = Void then
 				Result := ""
 			end
-		ensure
+		ensure then
 			non_void_result: Result /= Void
 		end
 
@@ -436,11 +436,11 @@ feature -- Access
 
 	cluster_id: INTEGER is
 			-- Cluster identifier.
-		require
+		require else
 			id_set: is_id_defined
 		do
 			Result := id
-		ensure
+		ensure then
 			valid_id: Result > 0
 		end	
 		
@@ -478,7 +478,7 @@ feature -- Status
 			-- Does Current have parent cluster?
 		do
 			Result := cluster_sd.has_parent			
-		ensure
+		ensure then
 			has_parent: Result implies parent_name /= Void
 			not_has_parent: not Result implies parent_name = Void
 		end

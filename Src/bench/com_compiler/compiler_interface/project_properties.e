@@ -103,7 +103,7 @@ feature -- Access
 			else
 				Result := feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none				
 			end
-		ensure
+		ensure then
 			valid_result:
 				Result >= feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_none and then
 				Result <= feature {ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM}.eif_cluster_namespace_generation_full_cluster_name
@@ -142,7 +142,7 @@ feature -- Access
 					Result := feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_windows_application
 				end
 			end
-		ensure
+		ensure then
 			valid_result:
 				Result >= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_console_application and then
 				Result <= feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library
@@ -185,7 +185,7 @@ feature -- Access
 			if ace.loop_evaluated then
 				Result := Result + feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_loop
 			end
-		ensure
+		ensure then
 			valid_result: Result >= 0
 		end
 		

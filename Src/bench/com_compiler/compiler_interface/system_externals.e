@@ -275,7 +275,7 @@ feature -- Element change
 		
 	remove_include_path (include_path: STRING) is
 			-- removes and include path from the list of include paths
-		require
+		require else
 			valid_name: include_path /= Void
 			non_empty_name: include_path.count > 0
 		do
@@ -291,7 +291,7 @@ feature -- Element change
 					include_paths_list.forth
 				end
 			end
-		ensure
+		ensure then
 			removed: not include_paths_list.has (include_path)
 		end
 		

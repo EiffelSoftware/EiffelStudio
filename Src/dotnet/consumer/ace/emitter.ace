@@ -83,8 +83,4 @@ external
 	include_path:
 		"\$(EIFFEL_SRC)\library\wel\spec\windows\include"
 
-	assembly:
-		"C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\system.dll",
-		"C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
-
 end

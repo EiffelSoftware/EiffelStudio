@@ -64,13 +64,13 @@ register4 long nbr;
 #endif
 	register7 char** attr_names;
 	char *attr;
-	int found, i;
+	int i;
+	char found;
 	int16 curr_dtype;
 	uint32 type, *types;
-	long temp;
 
 	curr_dtype = Dtype(curr);	/* Dynamic type of current object instance */
-	obj_desc = &System(dtype); 	/* Dynamic type where strip is found */
+	obj_desc = &System(dtype); 	/* Dynamic type where strip is defined */
 	nbr_attr = obj_desc->cn_nbattr;
 	attr_names = obj_desc->cn_names;
 #ifndef WORKBENCH
@@ -89,11 +89,11 @@ register4 long nbr;
 	epush (&loc_stack, &sp);	/* Protect address in case it moves */
 
 	while (nbr_attr--) {
-		found = 0;
+		found = NULL;
 		for (i=0; i<nbr & (!found); i++) {
 			attr = items[i];
 			if (!(strcmp (attr, attr_names[nbr_attr])))
-				found = 1;
+				found = 't';
 		}
 		if (!found) {
 			type = types[nbr_attr];
@@ -120,11 +120,14 @@ register4 long nbr;
 				break;
 			case SK_DOUBLE:
 				new_obj = RTLN(doub_ref_dtype);
-				temp = *(double *) o_ref;
-				*(double *) new_obj = temp;
+#ifndef WORKBENCH
+printf ("bug in metamorphosis for double in final mode\n");
+#else
+				*(double *) new_obj = *(double *) o_ref;
+#endif
 				break;
 			case SK_FLOAT:
-				new_obj = RTLN(doub_ref_dtype);
+				new_obj = RTLN(real_ref_dtype);
 				*(float *) new_obj = *(float *) o_ref;
 				break;
 			case SK_POINTER:

@@ -118,8 +118,10 @@ feature {NONE}
 
 			end;
 			if not temp.empty then
-				editor.trans_text.clear;
-				editor.trans_text.set_text (temp);
+				editor.trans_text.clear
+				editor.negate_t.set_toggle_off
+				editor.only_t.set_toggle_off
+				editor.trans_text.set_text (temp)
 			end;
 		end;
 

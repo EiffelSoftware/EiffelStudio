@@ -44,10 +44,15 @@ feature -- Settings
 
 			l_pos := l_new_pos + 1
 			l_new_pos := vers.index_of ('.', l_pos)
-			build := vers.substring (l_pos, l_new_pos - 1).to_integer
-
-			l_pos := l_new_pos + 1
-			revision := vers.substring (l_pos, vers.count).to_integer
+			if l_new_pos > 0 then
+				build := vers.substring (l_pos, l_new_pos - 1).to_integer
+	
+				l_pos := l_new_pos + 1
+				revision := vers.substring (l_pos, vers.count).to_integer
+			else
+				build := vers.substring (l_pos, vers.count).to_integer
+				revision := 0
+			end
 		end
 		
 feature -- Checking
@@ -87,10 +92,10 @@ feature -- Checking
 					i := i + 1
 				end
 				if Result then
-						-- It is a valid version number if there was 3 colons
+						-- It is a valid version number if there was 2 or 3 colons
 						-- and that we were waiting for a colon or a digit for
 						-- the last input.
-					Result := nb_colons = 3 and then state = 2
+					Result := (nb_colons = 2 or nb_colons = 3) and then state = 2
 				end
 			end
 		end

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 		do
 			Precursor
+			create buttons.make (5)
 			create vb
 			extend (vb)
 			create hb
@@ -78,8 +79,11 @@ feature -- Status setting
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set icon associated with dialog.
 		do
+			if pixmap_box.full then
+				pixmap_box.wipe_out
+			end
 			if a_pixmap /= Void then
-				pixmap_box.extend (create {EV_LABEL}.make_with_text ("pixmap%Nto%Nbe%Nimp-%Nleme-%Nnted."))
+				pixmap_box.extend (a_pixmap)
 			end
 		end
 
@@ -99,6 +103,7 @@ feature -- Status setting
 			i: INTEGER
 		do
 			button_box.wipe_out
+			buttons.clear_all
 			button_box.extend (create {EV_CELL})
 			from i := 1 until i > but_texts.count loop
 				add_button (but_texts @ i)
@@ -107,7 +112,32 @@ feature -- Status setting
 			button_box.extend (create {EV_CELL})
 		end
 
+feature -- Status report
+
+	has_button (a_label: STRING): BOOLEAN is
+			-- Does button with `a_label' exist in the dialog?
+		require
+			a_label_not_void: a_label /= Void
+		do
+			Result := buttons.has (a_label)
+		end
+
+	button (a_label: STRING): EV_BUTTON is
+			-- Get the button object with `a_label'.
+		require
+			a_label_not_void: a_label /= Void
+			has_button_with_a_label: has_button (a_label)
+		do
+			Result := buttons.item (a_label)
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
+
+	buttons: HASH_TABLE [EV_BUTTON, STRING]
+			-- Lookup-table for the buttons on the dialog based on
+			-- their captions.
 
 	button_box: EV_HORIZONTAL_BOX
 			-- Bar with all buttons of the dialog.
@@ -121,14 +151,19 @@ feature {NONE} -- Implementation
 	add_button (s: STRING) is
 			-- An item has been added to `buttons'.
 		local
-			button: EV_BUTTON
+			new_button: EV_BUTTON
 		do
-			create button.make_with_text (s)
-			button.press_actions.extend (~on_button_press (s))
-			button_box.extend (button)
-			button_box.disable_child_expand (button)
-			button.set_minimum_width (60)
-			button.align_text_center
+			create new_button.make_with_text (s)
+
+			--| We now put the button in the hash-table to give the
+			--| user access to it.
+			buttons.extend (new_button, s)
+
+			new_button.press_actions.extend (~on_button_press (s))
+			button_box.extend (new_button)
+			button_box.disable_child_expand (new_button)
+			new_button.set_minimum_width (60)
+			new_button.align_text_center
 		end
 
 	on_button_press (a_button_text: STRING) is
@@ -145,7 +180,7 @@ feature -- Status report
 
 end -- class EV_MESSAGE_DIALOG
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -159,15 +194,19 @@ end -- class EV_MESSAGE_DIALOG
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/02/14 11:40:50  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.13  2000/02/14 20:38:36  oconnor
+--| mergerd from HACK-O-RAMA
+--|
+--| Revision 1.11.6.8  2000/02/14 20:09:01  brendel
+--| Added features `has_button' and `button'.
+--| Before, the user did not have access to the buttons created with `set_buttons'.
 --|
 --| Revision 1.11.6.7  2000/01/28 22:24:23  oconnor
 --| released

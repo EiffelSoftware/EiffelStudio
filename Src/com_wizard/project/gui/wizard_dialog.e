@@ -22,6 +22,16 @@ inherit
 			{NONE} all
 		end
 
+	EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
+	WEL_HELP_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	id_cancel: WEL_PUSH_BUTTON
@@ -33,8 +43,11 @@ feature -- Access
 	id_back: WEL_PUSH_BUTTON
 			-- Back button
 
---	help_button: WEL_PUSH_BUTTON
+	help_button: WEL_PUSH_BUTTON
 			-- Help button
+
+	help_topic_id: INTEGER
+			-- Topic ID for Help
 
 feature -- Behavior
 
@@ -48,9 +61,9 @@ feature -- Behavior
 	on_control_command (control: WEL_CONTROL) is
 			-- A command has been received from `control'.
 		do
-		--	if control = help_button then
-		--	elseif 
-			if control = id_back then
+			if control = help_button then
+				on_help
+			elseif control = id_back then
 				terminate (Idcancel)
 			end
 		end
@@ -59,6 +72,16 @@ feature -- Behavior
 			-- Give focus to Next button.
 		do
 			id_ok.set_focus
+		end
+
+	on_help is
+			-- Invoce Help.
+		local
+			tmp_help_path: STRING			
+		do
+			tmp_help_path := clone (get ("EIFFEL4"))
+			tmp_help_path.append ("\wizards\com\eiffelcom.hlp")
+			win_help (tmp_help_path, Help_context, help_topic_id)
 		end
 
 end -- class WIZARD_DIALOG

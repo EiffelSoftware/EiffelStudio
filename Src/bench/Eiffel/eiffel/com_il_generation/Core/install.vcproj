@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.00"
+	Name="install"
+	ProjectGUID="{94E2E920-443F-430F-9722-167764A920F8}"
+	Keyword="MakeFileProj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="."
+			ConfigurationType="10"
+			DeleteExtensionsOnClean="$(TargetPath)">
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Install new assemblies in GAC"
+				CommandLine="gacutil -nologo -if $(SolutionDir)\EiffelCompiler.dll
+gacutil -nologo -if $(SolutionDir)\run-time\ise_runtime.dll
+regasm -nologo $(SolutionDir)\EiffelCompiler.dll"/>
+			<Tool
+				Name="VCPreBuildEventTool"
+				ExcludedFromBuild="TRUE"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="."
+			ConfigurationType="10"
+			DeleteExtensionsOnClean="$(TargetPath)">
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Install new assemblies in GAC"
+				CommandLine="gacutil -nologo -if $(SolutionDir)\EiffelCompiler.dll
+gacutil -nologo -if $(SolutionDir)\run-time\ise_runtime.dll
+regasm -nologo $(SolutionDir)\EiffelCompiler.dll"/>
+			<Tool
+				Name="VCPreBuildEventTool"
+				ExcludedFromBuild="TRUE"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

@@ -140,60 +140,6 @@ feature -- Basic Operations
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			Result.append (Type_id)
-			Result.append (Space_equal_space)
-			Result.append ("eif_type ")
-			Result.append (Space_open_parenthesis)
-			Result.append (Eiffel_object)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			Result.append (Eif_procedure)
-			Result.append (Space)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- eiffel_procedure = eif_procedure ("set_item", tid)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (Eif_procedure_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Double_quote)
-			Result.append ("set_item")
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Type_id)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line)
-			Result.append (New_line_tab)
-
-			Result.append ("(FUNCTION_CAST (")
-			Result.append (Void_c_keyword)
-			Result.append (Comma)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_reference)
-			Result.append (Comma_space)
-			Result.append (Eif_pointer)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eiffel_object)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_pointer)
-			Result.append (Close_parenthesis)
-			Result.append ("this")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-	
 			if dispatch_interface then
 				Result.append (New_line_tab)
 				Result.append (Type_info_variable_name)
@@ -249,13 +195,13 @@ feature -- Basic Operations
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- eiffel_procedure = eif_procedure ("make", tid)
+			-- eiffel_procedure = eif_procedure ("make_from_pointer", tid)
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (Eif_procedure_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
-			Result.append (make_word)
+			Result.append ("make_from_pointer")
 			Result.append (Double_quote)
 			Result.append (Comma_space)
 			Result.append (Type_id)
@@ -606,14 +552,16 @@ feature -- Basic Operations
 			until
 				interface_desc.functions.after
 			loop
-				if is_propertyget (interface_desc.functions.item.invoke_kind) then
-					prop_get_functions.force (propertyget_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
-				elseif is_propertyput (interface_desc.functions.item.invoke_kind) then
-					prop_put_functions.force (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
-				elseif is_propertyputref (interface_desc.functions.item.invoke_kind) then
-					prop_put_functions.force (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
-				else
-					Result.append (function_case (interface_desc.functions.item))
+				if (interface_desc.functions.item.func_kind = Func_dispatch) then
+					if is_propertyget (interface_desc.functions.item.invoke_kind) then
+						prop_get_functions.force (propertyget_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
+					elseif is_propertyput (interface_desc.functions.item.invoke_kind) then
+						prop_put_functions.force (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
+					elseif is_propertyputref (interface_desc.functions.item.invoke_kind) then
+						prop_put_functions.force (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
+					else
+						Result.append (function_case (interface_desc.functions.item))
+					end
 				end
 
 				interface_desc.functions.forth
@@ -1379,7 +1327,11 @@ feature -- Basic Operations
 				local_buffer.append (Struct_selection_operator)
 				local_buffer.append ("vt")
 				local_buffer.append (Space_equal_space)
-				local_buffer.append_integer (visitor.vt_type)
+				if visitor.vt_type = Vt_hresult then
+					local_buffer.append_integer (Vt_error)
+				else
+					local_buffer.append_integer (visitor.vt_type)
+				end
 				local_buffer.append (Semicolon)
 				local_buffer.append (New_line_tab_tab_tab)
 				local_buffer.append (Tab)

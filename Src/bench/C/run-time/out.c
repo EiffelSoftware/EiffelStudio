@@ -638,6 +638,22 @@ rt_private void write_string(char *str)
  * Building `out' representation for various data types.
  */
 
+rt_public EIF_REFERENCE c_outu(EIF_NATURAL_32 i)
+{
+	RT_GET_CONTEXT
+	register int len;
+	len = sprintf(buffero, "%lu", i);
+	return makestr(buffero, len);
+}
+
+rt_public EIF_REFERENCE c_outu64(EIF_NATURAL_64 i)
+{
+	RT_GET_CONTEXT
+	register int len;
+	len = sprintf(buffero, "%" EIF_NATURAL_64_DISPLAY, i);
+	return makestr(buffero, len);
+}
+
 rt_public EIF_REFERENCE c_outi(EIF_INTEGER i)
 {
 	RT_GET_CONTEXT

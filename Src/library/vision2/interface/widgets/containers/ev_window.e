@@ -301,6 +301,35 @@ feature -- Event - command association
 			implementation.add_move_command (cmd, arg)
 		end
 
+feature -- Event -- removing command association
+
+	remove_close_commands is
+			-- Empty the list of commands to be executed
+			-- when the window is closed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_close_commands
+		end
+
+	remove_resize_commands is
+			-- Empty the list of commands to be executed
+			-- when the window is resized.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_resize_commands
+		end
+
+	remove_move_commands is
+			-- Empty the list of commands to be executed
+			-- when the widget is resized.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_move_commands
+		end
+
 feature -- Implementation
 
 	implementation: EV_WINDOW_I

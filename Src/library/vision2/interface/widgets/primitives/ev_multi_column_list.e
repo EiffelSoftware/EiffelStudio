@@ -229,6 +229,26 @@ feature -- Event : command association
 			implementation.add_column_click_command (cmd, arg)
 		end
 
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_selection_commands
+		end
+
+	remove_column_click_commands is
+			-- Empty the list of commands to be executed
+			-- when a column is clicked.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_column_click_commands
+		end
+
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 	
 	implementation: EV_MULTI_COLUMN_LIST_I	

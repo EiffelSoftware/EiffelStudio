@@ -54,7 +54,17 @@ feature -- Event - command association
 			valid_command: cmd /= Void
 		deferred
 		end	
-	
+
+feature -- Event -- removing command association
+
+	remove_toggle_commands is	
+			-- Empty the list of commands to be executed
+			-- when the button is toggled.
+		require
+			exists: not destroyed
+		deferred
+		end	
+
 end -- class EV_TOGGLE_BUTTON_I
 
 

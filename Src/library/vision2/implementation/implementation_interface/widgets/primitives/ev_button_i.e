@@ -44,6 +44,16 @@ feature -- Event - command association
 		deferred
 		end
 
+feature -- Event -- removing command association
+
+	remove_click_commands is	
+			-- Empty the list of commands to be executed when
+			-- the button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature {EV_PIXMAP} -- Implementation
 
 	pixmap_size_ok (pixmap: EV_PIXMAP): BOOLEAN is

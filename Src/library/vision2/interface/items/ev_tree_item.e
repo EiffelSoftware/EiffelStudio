@@ -57,13 +57,24 @@ feature -- Status report
 feature -- Event : command association
 
 	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make 'cmd' the executed command when the subtree expand
-			-- or collapse.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the selection subtree is expanded or collapsed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_subtree_command (cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_subtree_commands is
+			-- Empty the list of commands to be executed when
+			-- the selection subtree is expanded or collapsed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_subtree_commands
 		end
 
 feature {EV_TREE_ITEM_CONTAINER, EV_TREE_ITEM_CONTAINER_I} -- Implementation

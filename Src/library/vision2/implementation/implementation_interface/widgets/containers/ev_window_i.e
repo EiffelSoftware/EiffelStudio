@@ -269,6 +269,32 @@ feature -- Event - command association
 		deferred
 		end
 
+feature -- Event -- removing command association
+
+	remove_close_commands is
+			-- Empty the list of commands to be executed
+			-- when the window is closed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_resize_commands is
+			-- Empty the list of commands to be executed
+			-- when the window is resized.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_move_commands is
+			-- Empty the list of commands to be executed
+			-- when the widget is resized.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 end -- clas EV_WINDOW_I
 
 --|----------------------------------------------------------------

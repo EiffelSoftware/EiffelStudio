@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			valid_parent: is_valid (par)
 		deferred
 		end
-		
+
 	widget_make (par: EV_CONTAINER) is
 			-- This is a general initialization for 
 			-- widgets and has to be called by all the 
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	parent: EV_WIDGET is
 			-- The parent of the Current widget
 			-- If the widget is an EV_WINDOW without parent,
@@ -53,7 +53,7 @@ feature -- Access
 				Result := Void
 			end
 		end
-	
+
 feature -- Status report
 
 	insensitive: BOOLEAN is
@@ -66,7 +66,7 @@ feature -- Status report
 		do
 			Result := implementation.insensitive
 		end
-	
+
 	shown: BOOLEAN is
 			-- Is current widget visible?
 		require
@@ -74,7 +74,7 @@ feature -- Status report
 		do
 			Result := implementation.shown
 		end
-	
+
 	managed: BOOLEAN
 			-- Is the geometry of current widget managed by its 
 			-- container? This is the case always unless 
@@ -90,7 +90,7 @@ feature -- Status report
 		do
 			Result := implementation.expandable
 		end
-		
+
 	horizontal_resizable: BOOLEAN is
 			-- Does the widget change its width when the parent
 			-- or the user want to resize the widget
@@ -275,7 +275,7 @@ feature -- Measurement
 		ensure
 			Positive_height: Result >= 0
 		end 
-	
+
 	minimum_width: INTEGER is
 			-- Minimum width that application wishes widget
 			-- instance to have
@@ -286,7 +286,7 @@ feature -- Measurement
 		ensure
 			Positive_height: Result >= 0
 		end 
-	
+
 	minimum_height: INTEGER is
 			-- Minimum height that application wishes widget
 			-- instance to have
@@ -297,7 +297,7 @@ feature -- Measurement
 		ensure
 			Positive_height: Result >= 0
 		end 
-	
+
 feature -- Resizing
 
 	set_size (new_width: INTEGER; new_height: INTEGER) is
@@ -340,7 +340,7 @@ feature -- Resizing
 		ensure					
 			dimensions_set: implementation.dimensions_set (width, value)
 		end
-	
+
 	set_minimum_size (min_width, min_height: INTEGER) is
 			-- Make `min_width' the new `minimum_width'
 			-- and `min_height' the new `minimum_height'.
@@ -353,7 +353,7 @@ feature -- Resizing
 		ensure
 			minimum_dimension_set: implementation.minimum_dimensions_set (min_width, min_height)
 		end
-		
+
 	set_minimum_width (value: INTEGER) is
 			-- Make `value' the new `minimum_width'.
 		require
@@ -364,7 +364,7 @@ feature -- Resizing
 		ensure
 			minimum_width_set: implementation.minimum_width_set (value)
 		end
-        
+
 	set_minimum_height (value: INTEGER) is
 			-- Make `value' the new `minimum_height'.
 		require
@@ -413,27 +413,17 @@ feature -- Resizing
 		end
 
 feature -- Event - command association
-	
+
 	add_button_press_command (mouse_button: INTEGER; 
 		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button number 'mouse_button' is pressed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is pressed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_button_press_command (mouse_button,
-								 cmd, arg)
+			implementation.add_button_press_command (mouse_button, cmd, arg)
 		end
-
---	remove_button_press_commands (mouse_button: INTEGER) is
---			-- Empty the list of commands to be executed when
---			-- button number 'mouse_button' is pressed.
---		require
---			exists: not destroyed
---		do
---			implementation.remove_button_press_commands (mouse_button)
-	--	end
 
 --	get_button_press_commands (mouse_button: INTEGER): LINKED_LIST[EV_COMMAND] is
 --			-- Return the list of commands to be executed when
@@ -446,94 +436,93 @@ feature -- Event - command association
 
 	add_button_release_command (mouse_button: INTEGER;
 		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button number 'mouse_button' is released.
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is released.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_button_release_command (mouse_button,
-								   cmd, arg)
+			implementation.add_button_release_command (mouse_button, cmd, arg)
 		end
-	
+
 	add_double_click_command (mouse_button: INTEGER;
 			  cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- button number `mouse_button' is double clicked.
+			-- Add `cmd' to the list of commands to be executed 
+			-- when button number `mouse_button' is double
+			-- clicked.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_double_click_command (mouse_button,
-								 cmd, arg)
+			implementation.add_double_click_command (mouse_button, cmd, arg)
 		end
-	
+
 	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- mouse move.
+			-- Add `cmd' to the list of commands to be executed
+			-- when mouse move.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_motion_notify_command (cmd, arg)
 		end
-	
+
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- the widget is destroyed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget is destroyed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_destroy_command (cmd, arg)
 		end	
-	
+
 	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- the widget has to be redrawn because it was exposed from
-			-- behind another widget.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget has to be redrawn because it was
+			-- exposed from behind another widget.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_expose_command (cmd, arg)
 		end	
-	
-	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- a key is pressed on the keyboard while the widget has the
-			-- focus.
+
+	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is			-- Add `cmd' to the list of commands to be executed when 
+			-- Add `cmd' to the list of commands to be executed
+			-- when a key is pressed on the keyboard while the
+			-- widget has the focus.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_key_press_command (cmd, arg)
 		end	
-	
+
 	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- a key is released on the keyboard while the widget has the
-			-- focus.
+			-- Add `cmd' to the list of commands to be executed
+			-- when a key is released on the keyboard while the
+			-- widget has the focus.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_key_release_command (cmd, arg)
 		end	
-	
+
 	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- the cursor of the mouse enter the widget.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the cursor of the mouse enter the widget.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_enter_notify_command (cmd, arg)
 		end	
-	
+
 	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when 
-			-- the cursor of the mouse leave the widget.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the cursor of the mouse leave the widget.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -541,22 +530,137 @@ feature -- Event - command association
 			implementation.add_leave_notify_command (cmd, arg)
 		end	
 
-	remove_command (id: INTEGER) is
-			-- Remove the command associated with `id' from the
-			-- list of actions for this context. If there is no command
-			-- associated with `id', nothing happens.
+	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget get the focus.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_get_focus_command (cmd, arg)
+		end
+
+	add_loose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget loose the focus.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_loose_focus_command (cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
 		require
 			exists: not destroyed
 		do
-			implementation.remove_command (id)
+			implementation.remove_button_press_commands (mouse_button)
 		end
-		
-	last_command_id: INTEGER is
-			-- Id of the last command added by feature `add_command'
-		require		
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		require
 			exists: not destroyed
 		do
-			Result := implementation.last_command_id
+			implementation.remove_button_release_commands (mouse_button)
+		end
+
+	remove_double_click_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is double clicked.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_double_click_commands (mouse_button)
+		end
+
+	remove_motion_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the mouse move.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_motion_notify_commands
+		end
+
+	remove_destroy_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget is destroyed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_destroy_commands
+		end
+
+	remove_expose_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget has to be redrawn because it was exposed from
+			-- behind another widget.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_expose_commands
+		end
+
+	remove_key_press_commands is
+			-- Empty the list of commands to be executed when
+			-- a key is pressed on the keyboard while the widget has the
+			-- focus.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_key_press_commands
+		end
+
+	remove_key_release_commands is
+			-- Empty the list of commands to be executed when
+			-- a key is released on the keyboard while the widget has the
+			-- focus.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_key_release_commands
+		end
+
+	remove_enter_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the cursor of the mouse enter the widget.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_enter_notify_commands
+		end
+
+	remove_leave_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the cursor of the mouse leave the widget.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_leave_notify_commands
+		end
+
+	remove_get_focus_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget get the focus.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_get_focus_commands
+		end
+
+	remove_loose_focus_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget loose the focus.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_loose_focus_commands
 		end
 	
 feature {EV_ANY_I, EV_ANY} -- Implementation

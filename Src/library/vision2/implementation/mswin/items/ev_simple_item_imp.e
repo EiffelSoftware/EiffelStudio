@@ -35,17 +35,33 @@ feature -- Access
 feature -- Event : command association
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make `cmd' the executed command when the item is 
-			-- activated.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
 		do
 			add_command (Cmd_item_activate, cmd, arg)			
 		end	
 
 	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make `cmd' the executed command when the item is
-			-- unactivated.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
 		do
 			add_command (Cmd_item_deactivate, cmd, arg)		
+		end
+
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		do
+			remove_command (Cmd_item_activate)			
+		end	
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		do
+			remove_command (Cmd_item_deactivate)		
 		end
 
 feature {EV_ITEM_CONTAINER_IMP} -- Implementation

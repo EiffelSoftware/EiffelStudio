@@ -30,9 +30,7 @@ inherit
 
 creation
 	make,
-	make_with_text,
-	make_with_pixmap,
-	make_with_all
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -51,22 +49,6 @@ feature {NONE} -- Initialization
 			a := txt.to_c
 			widget := gtk_tree_item_new_with_label ($a)
 			gtk_object_ref (widget)
-		end
-
-	make_with_pixmap (pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent and `pix'
-			-- as pixmap.
-		do
-			make
-			-- Not implemented
-		end
-
-	make_with_all (txt: STRING; pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `pix' as pixmap.
-		do
-			make_with_text (txt)
-			-- Not implemented
 		end
 
 feature -- Access

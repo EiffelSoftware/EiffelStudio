@@ -29,10 +29,7 @@ inherit
 
 creation
 	make,
-	make_with_text,
-	make_with_pixmap,
-	make_with_all
-
+	make_with_text
 
 feature -- Initialization
 
@@ -65,22 +62,6 @@ feature -- Initialization
 			text := txt
 		ensure then
 			text_set: text.is_equal (txt)
-		end
-
-	make_with_pixmap (pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent and `pix'
-			-- as pixmap.
-		do
---			make
---			-- Not implemented
-		end
-
-	make_with_all (txt: STRING; pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `pix' as pixmap.
-		do
---			make_with_text (txt)
-			-- Not implemented
 		end
 
 feature -- Access

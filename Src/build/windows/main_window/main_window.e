@@ -293,7 +293,7 @@ feature -- Popup and popdown actions
 
 	popup is
 		do
-			if was_popped_down then
+			if was_popped_down and then project_initialized then
 				if cont_cat_t.armed then
 					Context_catalog.show
 				end;
@@ -322,10 +322,14 @@ feature -- Popup and popdown actions
 	popdown is
 		do
 			was_popped_down := True;
-			if cont_cat_t.armed then
+			if cont_cat_t.armed and then
+				Context_catalog.realized 
+			then
 				Context_catalog.hide
 			end
-			if cont_tree_t.armed then
+			if cont_tree_t.armed and then
+				Tree.realized 
+			then
 				Tree.hide
 			end
 			if history_t.armed then
@@ -334,7 +338,9 @@ feature -- Popup and popdown actions
 			if editor_t.armed then
 				Window_mgr.hide_all_editors
 			end;
-			if cmd_cat_t.armed then
+			if cmd_cat_t.armed and then 
+				Command_catalog.realized
+			then
 				Command_catalog.hide
 			end;
 			if app_edit_t.armed then
@@ -354,27 +360,35 @@ feature -- Popup and popdown actions
 feature -- Interface
 
 	hide_interface is
+		local
+			window_c: WINDOW_C
 		do
 			from
 				Shared_window_list.start
 			until
 				Shared_window_list.after
 			loop
-				Shared_window_list.item.hide
+				window_c := Shared_window_list.item;
+				window_c.hide;
+				window_c.set_x_y (window_c.x, window_c.y);
 				Shared_window_list.forth
 			end
 		end
 
 	show_interface is
+		local
+			window_c: WINDOW_C;
 		do
 			from
 				Shared_window_list.start
 			until
 				Shared_window_list.after
 			loop
-				Shared_window_list.item.show
+				window_c := Shared_window_list.item;
+				window_c.show;
+				window_c.set_x_y (window_c.x, window_c.y);
 				Shared_window_list.forth
-			end
+			end;
 		end;
 
 end

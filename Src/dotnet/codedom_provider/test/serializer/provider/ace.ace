@@ -10,13 +10,15 @@ default
 	msil_clr_version ("v1.1.4322")
 	msil_generation_type ("dll")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	msil_use_optimized_precompile (yes)
+	dotnet_naming_convention (yes)
 	version ("2.0.0.0")
 	use_cluster_name_as_namespace (yes)
 	use_all_cluster_name_as_namespace (yes)
 	cls_compliant (yes)
 	il_verifiable (yes)
 	console_application (no)
-	line_generation (yes)
+	line_generation (no)
 	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build\ISE.EiffelVision2\obj\Debug")
 
 cluster 

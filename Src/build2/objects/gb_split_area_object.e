@@ -47,7 +47,9 @@ feature -- Basic operation
 				display_object_not_void: widget2 /= Void
 			end
 			
-			if position = 1 then
+				-- We need to put in the first position if
+				-- there is currently a second position.
+			if position = 1 or (position = 2 and object.second /=  Void) then
 				object.set_first (widget)
 				display_object.child.set_first (widget2)
 				if not layout_item.has (an_object.layout_item) then
@@ -58,7 +60,7 @@ feature -- Basic operation
 				object.set_second (widget)
 				display_object.child.set_second (widget2)
 				if not layout_item.has (an_object.layout_item) then
-					layout_item.go_i_th (1)
+					layout_item.go_i_th (2)
 					layout_item.put_left (an_object.layout_item)
 				end
 			end	

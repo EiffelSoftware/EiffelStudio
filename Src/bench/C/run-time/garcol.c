@@ -304,7 +304,7 @@ rt_public struct stack memory_set =
 #endif
 
 #ifdef EIF_THREADS
-rt_public EIF_MUTEX_TYPE *eif_gc_mutex = NULL;	/* Mutex used to protect GC collection or allocation */
+rt_public EIF_LW_MUTEX_TYPE *eif_gc_mutex = NULL;	/* Mutex used to protect GC collection or allocation */
 rt_public EIF_MUTEX_TYPE *eif_global_once_mutex = NULL;	/* Mutex used to protect insertion and computation of global onces. */
 #endif
 

@@ -66,8 +66,8 @@ extern "C" {
 
 /* Macro used to protect concurrent running of GC. */
 #ifdef EIF_THREADS
-#define EIF_GC_MUTEX_LOCK	EIF_MUTEX_LOCK(eif_gc_mutex, "Could not lock GC mutex")
-#define EIF_GC_MUTEX_UNLOCK	EIF_MUTEX_UNLOCK(eif_gc_mutex, "Could not unlock GC mutex")
+#define EIF_GC_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_gc_mutex, "Could not lock GC mutex")
+#define EIF_GC_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_gc_mutex, "Could not unlock GC mutex")
 #endif
 
 #ifdef __cplusplus

@@ -64,12 +64,12 @@ rt_shared  int eif_lm_free ();
 /*----------------------*/
 
 #ifdef EIF_THREADS
-rt_private EIF_MUTEX_TYPE *lm_lock = NULL;
+rt_private EIF_LW_MUTEX_TYPE *lm_lock = NULL;
 #define EIF_LM_LOCK \
-	EIF_MUTEX_LOCK (lm_lock, "Couldn't lock lm lock"); \
+	EIF_LW_MUTEX_LOCK (lm_lock, "Couldn't lock lm lock"); \
 
 #define EIF_LM_UNLOCK \
-	EIF_MUTEX_UNLOCK (lm_lock, "Couldn't lock lm lock"); 
+	EIF_LW_MUTEX_UNLOCK (lm_lock, "Couldn't lock lm lock"); 
 
 #else	/* EIF_THREADS */
 #define EIF_LM_LOCK
@@ -109,7 +109,7 @@ rt_private int lm_put (void *ptr, char *file, int line) {
 			return 0;
 		}
 		alloc = 1;
-		EIF_MUTEX_CREATE (lm_lock, "Couldn't create lm lock\n");
+		EIF_LW_MUTEX_CREATE (lm_lock, "Couldn't create lm lock\n");
 		lm_put (lm_lock, "N/A", 0);
 	}  
 	CHECK ("lm already created", alloc == 1);
@@ -232,7 +232,7 @@ rt_shared void eif_lm_display () {
 	struct lm_entry *cur;
 
 #ifdef EIF_THREADS
-	REQUIRE ("lm_lock exists", lm_lock != (EIF_MUTEX_TYPE *) 0);
+	REQUIRE ("lm_lock exists", lm_lock != (EIF_LW_MUTEX_TYPE *) 0);
 #endif
 	EIF_LM_LOCK;
 	if (!(*lm)) {
@@ -274,7 +274,7 @@ rt_shared int eif_lm_free () {
 	EIF_LM_UNLOCK
 #ifdef EIF_THREADS
 	fprintf (stderr, "*** Destroy and free lm lock 0x%lx\n", (unsigned long) lm_lock);
-	EIF_MUTEX_DESTROY (lm_lock, "Couldn't destroy lm lock");
+	EIF_LW_MUTEX_DESTROY (lm_lock, "Couldn't destroy lm lock");
 	lm_lock = NULL;
 #endif /* EIF_THREADS */
 	return 0;

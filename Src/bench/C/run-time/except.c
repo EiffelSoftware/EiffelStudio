@@ -126,12 +126,12 @@ rt_private struct exprint eif_except;		/* Where exception has been raised */
 #define EIF_EXCEPT_LOCK	
 #define EIF_EXCEPT_UNLOCK 
 #else	/* EIF_THREADS */
-rt_private	EIF_MUTEX_TYPE *eif_except_lock = (EIF_MUTEX_TYPE *) 0;
+rt_private	EIF_LW_MUTEX_TYPE *eif_except_lock = (EIF_LW_MUTEX_TYPE *) 0;
 #define EIF_EXCEPT_LOCK	\
 	if (!eif_except_lock) \
-		EIF_MUTEX_CREATE (eif_except_lock, "Couldn't create exception lock");\
-	EIF_MUTEX_LOCK (eif_except_lock, "Couldn't lock exception lock");
-#define EIF_EXCEPT_UNLOCK EIF_MUTEX_UNLOCK (eif_except_lock, "Couldn't unlock exception lock");
+		EIF_LW_MUTEX_CREATE (eif_except_lock, "Couldn't create exception lock");\
+	EIF_LW_MUTEX_LOCK (eif_except_lock, "Couldn't lock exception lock");
+#define EIF_EXCEPT_UNLOCK EIF_LW_MUTEX_UNLOCK (eif_except_lock, "Couldn't unlock exception lock");
 
 
 #endif /* EIF_THREADS */

@@ -14,6 +14,9 @@
 #define _rt_garcol_h_
 
 #include "eif_garcol.h"
+#ifdef EIF_THREADS
+#include "rt_threads.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,7 +72,7 @@ extern "C" {
 #endif
 
 #ifdef EIF_THREADS
-extern EIF_MUTEX_TYPE *eif_gc_mutex;	/* GC mutex */
+extern EIF_LW_MUTEX_TYPE *eif_gc_mutex;	/* GC mutex */
 #endif
 
 #ifdef ISE_GC

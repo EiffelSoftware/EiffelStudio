@@ -52,7 +52,7 @@ feature {NONE}
 			c ?= dropped.data
 			t ?= dropped.data
 			if (c = Void) and (t = Void) then
-				command_editor.add_argument (dropped)
+				command_editor.command_tool.add_argument (dropped)
 			end
 		end
 

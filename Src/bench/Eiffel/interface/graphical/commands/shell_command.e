@@ -51,7 +51,9 @@ feature {NONE}
 				if routine_text /= Void then
 					-- routine text window
 					feature_stone ?= fs; -- Cannot fail
-					cmd_string.replace_substring_all ("$line", feature_stone.line_number.out)
+					if not cmd_string.empty then
+						cmd_string.replace_substring_all ("$line", feature_stone.line_number.out)
+					end
 				elseif
 					class_text /= Void and then (
 					class_text.last_format = class_text.tool.showtext_command or
@@ -71,18 +73,26 @@ feature {NONE}
 						end;
 						i := i + 1
 					end;
-					cmd_string.replace_substring_all ("$line", line_nb.out)
+					if not cmd_string.empty then
+						cmd_string.replace_substring_all ("$line", line_nb.out)
+					end
 				else
-					cmd_string.replace_substring_all ("$line", "1")
+					if not cmd_string.empty then
+						cmd_string.replace_substring_all ("$line", "1")
+					end
 				end;
-				cmd_string.replace_substring_all ("$target", fs.file_name);
+				if not cmd_string.empty then
+					cmd_string.replace_substring_all ("$target", fs.file_name);
+				end
 				!!req;
 				req.set_command_name (cmd_string);
 				req.send;		-- execute the command
 			elseif text_window.file_name /= Void then
 				cmd_string := clone (command_shell_name);
-				cmd_string.replace_substring_all ("$line", "1");
-				cmd_string.replace_substring_all ("$target", text_window.file_name);
+				if not cmd_string.empty then
+					cmd_string.replace_substring_all ("$line", "1");
+					cmd_string.replace_substring_all ("$target", text_window.file_name);
+				end
 				!!req;
 				req.set_command_name (cmd_string);
 				req.send;       -- execute the command

@@ -22,10 +22,15 @@ feature
 		end;
 
 	enlarged: UN_OLD_BL is
+		require else
+			valid_old_exprs: Context.byte_code.old_expressions /= Void
+		local
+			old_expr: LINKED_LIST [UN_OLD_B]
 		do
 			!!Result;
 			Result.set_expr (expr.enlarged);
-			Context.c_old_expressions.add (Result);	
+			old_expr := Context.byte_code.old_expressions;
+			old_expr.add (Result);
 		end;
 
 	operator_constant: CHARACTER is

@@ -86,10 +86,26 @@ feature -- Conveniences
 
 feature -- Incrementality
 
-	equiv (other: like Current): BOOLEAN is
+	equiv (other: like Current): BOOLEAN is 
 			-- Is the current feature equivalent to `other' ?
 		do
 			Result := deep_equal (body, other.body);
+		end;
+
+	is_body_equiv (other: like Current): BOOLEAN is
+			-- Is the current feature equivalent to `other' ?
+		require
+			valid_body: body /= Void
+		do
+			Result := body.is_body_equiv (other.body);
+		end;
+ 
+	is_assertion_equiv (other: like Current): BOOLEAN is
+			-- Is the current feature equivalent to `other' ?
+		require
+			valid_body: body /= Void
+		do
+			Result := body.is_assertion_equiv (other.body);
 		end;
 
 feature -- Type check, byte code and dead code removal

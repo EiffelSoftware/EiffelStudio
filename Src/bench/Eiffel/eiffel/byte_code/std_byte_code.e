@@ -24,40 +24,60 @@ feature
 			-- Builds a proper context (for C code).
 		local
 			workbench_mode: BOOLEAN;
-			type_i: TYPE_I
+			type_i: TYPE_I;
+			feat: FEATURE_I;
+			have_assert: BOOLEAN;
+			inh_assert: INHERITED_ASSERTION;
 		do
 			workbench_mode := context.workbench_mode;
+			feat := Context.associated_class.feature_table.item (feature_name);
+			inh_assert := Context.inherited_assertion;
+			inh_assert.init;
+			if 	Context.has_inherited_assertion and then
+				not Context.associated_class.is_basic and then
+				feat.assert_id_set /= Void then
+				--! Do not get inherited pre & post for basic types
+				formulate_inherited_assertions (feat.assert_id_set);
+			end;
 			context.set_assertion_type (0);
 
 				-- Enlarge the tree to get some attribute where we
 				-- can store information gathered by analyze.
 			enlarge_tree;
 				-- Analyze preconditions
-			if 	precondition /= Void
-				and
-				(workbench_mode or else context.assertion_level.check_precond)
-			then
+			have_assert := (precondition /= Void or else
+							inh_assert.has_precondition) and then
+				(workbench_mode or else context.assertion_level.check_precond);
+			if 	have_assert then
 				if workbench_mode then
 					context.add_dt_current;
 				end;
-				precondition.analyze;
+				if precondition /= Void then
+					precondition.analyze;
+				end;
+				if inh_assert.has_precondition then
+					inh_assert.analyze_precondition;
+				end	
 			end;
+			have_assert := (postcondition /= Void or else
+							inh_assert.has_postcondition) and then
+				(workbench_mode or else context.assertion_level.check_postcond);
 				-- Analyze postconditions
-			if  postcondition /= Void 
-				and
-				(workbench_mode or else context.assertion_level.check_postcond)
-			then
+			if 	have_assert then
 				if workbench_mode then
 					context.add_dt_current;
 				end;
-				postcondition.analyze;
+				if postcondition /= Void then
+					postcondition.analyze;
+				end;
+				if inh_assert.has_postcondition then
+					inh_assert.analyze_postcondition;
+				end	
 			end;
-				-- If result is expanded, we need to create it anyway
+				-- If result is expanded or a bit, we need to create it anyway
 			if not result_type.is_void then
 				type_i := context.real_type (result_type);
-				if
-					type_i.is_expanded or else type_i.is_bit
-				then
+				if type_i.is_expanded or else type_i.is_bit then
 					context.mark_result_used;
 				end;
 			end;
@@ -134,9 +154,7 @@ feature
 				generate_save_assertion_level;
 			end;
 				-- Precondition check generation
-			if precondition /= Void then
-				generate_precondition;
-			end;
+			generate_precondition;
 				-- Generate old variables
 			generate_old_variables;
 			if rescue_clause /= Void then
@@ -145,14 +163,18 @@ feature
 				generated_file.putstring ("RTEJ;");
 				generated_file.new_line;
 			end;
+			if 
+				Context.has_chained_prec
+			then
+				-- For chained precondition (to implement or else...)
+				Context.generate_body_label
+			end;
 				-- Generate local expanded variable creations
 			generate_expanded_variables;
 				-- Now we want the body
 			generate_compound;
 				-- Now the postcondition
-			if postcondition /= Void then
-				generate_postcondition;
-			end;
+			generate_postcondition;
 			if not result_type.is_void then
 					-- Function returns something. So generate the return
 					-- expression, if necessary. Otherwise, have some mercy
@@ -175,6 +197,7 @@ feature
 			generated_file.new_line;
 				-- Leave a blank line after function definition
 			generated_file.new_line;
+			Context.inherited_assertion.wipe_out;
 		end;
 
 	generate_compound is
@@ -564,47 +587,82 @@ feature
 
 	generate_precondition is
 			-- Generate precondition check if needed
-		require
-			has_precond: precondition /= Void
 		local
 			workbench_mode: BOOLEAN;
+			feat: FEATURE_I;
+			have_assert: BOOLEAN;
+			inh_assert: INHERITED_ASSERTION;
+			count, i: INTEGER;
 		do
 			context.set_assertion_type (In_precondition);
 			workbench_mode := context.workbench_mode;
-			if workbench_mode or else context.assertion_level.check_precond
-			then
+			inh_assert := Context.inherited_assertion;
+			have_assert := (precondition /= Void or else
+							inh_assert.has_precondition) and then
+				(workbench_mode or else context.assertion_level.check_precond);
+			if have_assert then
 				if workbench_mode then
 					generated_file.putstring ("if (RTAL & CK_REQUIRE) {");
 					generated_file.new_line;
 					generated_file.indent;
 				end;
 				generate_invariant_before;
-				precondition.generate;
-				if workbench_mode then
-					generated_file.putchar ('}');
+				if precondition /= Void then
+					context.set_is_prec_first_block (True);
+					Context.inc_label;
+					precondition.generate;
+					generated_file.putstring ("RTJB;");
 					generated_file.new_line;
 					generated_file.exdent;
+					generated_file.exdent;
+					context.print_current_label;
+					generated_file.putchar (':');
+					generated_file.new_line;
+					generated_file.indent;
+					generated_file.indent;
+				end;
+				
+				if inh_assert.has_precondition then
+					inh_assert.generate_precondition
+				end;
+
+				if have_assert then
+					if workbench_mode then
+						generated_file.putstring ("RTCF;");
+						generated_file.new_line;
+						generated_file.putchar ('}');
+						generated_file.new_line;
+						generated_file.exdent;
+					end;
 				end;
 			end;
 		end;
 
 	generate_postcondition is
 			-- Generate postcondition check if needed
-		require
-			has_precond: postcondition /= Void
 		local
 			workbench_mode: BOOLEAN;
+			have_assert: BOOLEAN;
+			inh_assert: INHERITED_ASSERTION
 		do
-			context.set_assertion_type (In_postcondition);
 			workbench_mode := context.workbench_mode;
-			if workbench_mode or else context.assertion_level.check_postcond
-		   	then
+			inh_assert := Context.inherited_assertion;
+			have_assert := (postcondition /= Void or else
+							inh_assert.has_postcondition) and then
+				(workbench_mode or else context.assertion_level.check_postcond);
+			if have_assert then
+				context.set_assertion_type (In_postcondition);
 				if workbench_mode then
 					generated_file.putstring ("if (RTAL & CK_ENSURE) {");
 					generated_file.new_line;
 					generated_file.indent;
 				end;
-				postcondition.generate;
+				if postcondition /= Void then
+					postcondition.generate;
+				end;
+				if inh_assert.has_postcondition then
+					inh_assert.generate_postcondition
+				end;
 				generate_invariant_after;
 				if workbench_mode then
 					generated_file.putchar ('}');
@@ -762,17 +820,96 @@ feature
 
 feature -- Byte code generation
 
+	formulate_inherited_assertions (assert_id_set: ASSERT_ID_SET) is
+			-- Formulate inherited post and pre conditions
+			-- from the precursor definition of feature `feat'
+			-- and save the details in inherited_assertion.
+		require
+			valid_arg: assert_id_set /= Void;
+			current_not_basic: not Context.associated_class.is_basic;
+		local
+			byte_code: BYTE_CODE;
+			inh_f: INH_ASSERT_INFO;
+			ct: CLASS_TYPE;
+			inh_c: CLASS_C;
+			bd_id, i: INTEGER;
+		do
+			from
+				i := 1;
+			until
+				i > assert_id_set.count
+			loop
+				inh_f := assert_id_set.item (i);
+				if inh_f.has_assertion then
+					--! Has assertion
+					inh_c := System.class_of_id (inh_f.written_in);
+					if inh_c.generics = Void then
+						ct := inh_c.types.first;
+					else
+						ct := inh_c.meta_type (Context.current_type).associated_class_type;
+					end;
+					bd_id := System.body_index_table.item (inh_f.body_index);
+					byte_code := System.byte_server.item (bd_id);
+					if inh_f.has_precondition then
+						Context.inherited_assertion.add_precondition_type (ct, byte_code);
+					end;
+					if inh_f.has_postcondition then
+						Context.inherited_assertion.add_postcondition_type (ct, byte_code);
+					end;
+				end;
+				i := i + 1;
+			end;
+		end;
+
 	make_body_code (ba: BYTE_ARRAY) is
 			-- Generate compound byte code
+		local
+			have_assert: BOOLEAN;
+			feat: FEATURE_I;
+			inh_assert: INHERITED_ASSERTION;
 		do
-			if precondition /= Void then
+			feat := Context.associated_class.feature_table.item (feature_name);
+			inh_assert := Context.inherited_assertion;
+			inh_assert.init;
+debug ("ACTIVITY")
+			io.putstring ("feature name: ");
+			io.putstring (feature_name);
+			io.new_line;
+end;
+			if 	Context.has_inherited_assertion and then 
+				not Context.associated_class.is_basic and then
+				feat.assert_id_set /= Void then
+				--! Do not get inherited pre & post for basic types
+				formulate_inherited_assertions (feat.assert_id_set);
+			end;
+			have_assert := precondition /= Void or else inh_assert.has_precondition;
+			if have_assert then
 				context.set_assertion_type (In_precondition);
 				ba.append (Bc_precond);
 				ba.mark_forward;
+			end;
+			if precondition /= Void then
+				context.set_is_prec_first_block (True);
 				precondition.make_byte_code (ba);
+				ba.append (Bc_goto_body);
+				ba.mark_forward;
+			end;
+			if inh_assert.has_precondition then
+				inh_assert.make_precondition_byte_code (ba);
+			end;
+			if have_assert then
+				ba.append (Bc_raise_prec);
+				if precondition /= Void then
+					ba.write_forward;
+				end;
+				if inh_assert.has_precondition then
+					inh_assert.write_forward (ba)
+				end;
 				ba.write_forward;
 			end;
-			if postcondition /= Void then 	-- Make byte code for old expression
+			if 	postcondition /= Void and then 	
+				old_expressions /= Void then
+					-- Make byte code for old expression
 					--! Order is important since interpretor pops expression
 					--! bottom up.
 				from
@@ -784,17 +921,34 @@ feature -- Byte code generation
 					old_expressions.back
 				end
 			end;
+				-- Make byte code for inherited old expressions
+			have_assert := postcondition /= Void or else inh_assert.has_postcondition;
+			if 	have_assert then
+				if inh_assert.has_postcondition then
+					inh_assert.make_old_exp_byte_code (ba);
+				end;
+			end;
 			context.record_breakable (ba);	-- Breakpoint on body entrance
 			if compound /= Void then
 				compound.make_byte_code (ba);
 			end;
-			if postcondition /= Void then
+
+				-- Make byte code for postcondition
+			if have_assert then
 				context.set_assertion_type (In_postcondition);
 				ba.append (Bc_postcond);
 				ba.mark_forward;
+			end;
+			if postcondition /= Void then
 				postcondition.make_byte_code (ba);
+			end;
+			if inh_assert.has_postcondition then
+				inh_assert.make_postcondition_byte_code (ba);
+			end;
+			if have_assert then
 				ba.write_forward;
 			end;
+			inh_assert.wipe_out;
 		end;
 
 end

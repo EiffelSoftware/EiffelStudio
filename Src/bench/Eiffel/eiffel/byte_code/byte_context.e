@@ -9,7 +9,8 @@ inherit
 			{NONE} all
 		end;
 	ASSERT_TYPE;
-	SHARED_ARRAY_BYTE
+	SHARED_ARRAY_BYTE;
+	SHARED_SERVER
 
 
 creation
@@ -50,8 +51,10 @@ feature
 
 	current_type: CL_TYPE_I is
 			-- Current class type in which byte code is processed
+		require
+			valid_type: class_type /= Void
 		do
-			Result := type_stack.item;
+			Result := class_type.type
 		end;
 
 	class_type: CLASS_TYPE;
@@ -60,23 +63,14 @@ feature
 	generated_file: INDENT_FILE;
 			-- File used for code generation
 
-	byte_code: BYTE_CODE is
+	inherited_assertion: INHERITED_ASSERTION;
+			-- Used to record inherited assertions
+
+	byte_code: BYTE_CODE;
 			-- Current root of processed byte code
-		do
-			Result := byte_stack.item;
-		end;
-
-	type_stack: EXTEND_STACK [CL_TYPE_I];
-			-- Used to record type levels when generating assertions
-
-	byte_stack: EXTEND_STACK [BYTE_CODE];
-			-- Used to record successive byte code informations for assertions
 
 	old_expressions: LINKED_LIST [UN_OLD_B];
 			-- Used to record old expressions in Pass 3.
-
-	c_old_expressions: LINKED_LIST [UN_OLD_BL];
-			-- Used to record old expressions for C generation.
 
 	make is
 			-- Initialization
@@ -85,49 +79,15 @@ feature
 			!!local_vars.make (1, 100);
 			!!local_index_table.make (10);
 			!!associated_register_table.make (10);
-			!!type_stack.make;
-			!!byte_stack.make;
 			!!local_list.make;
 			!!old_expressions.make;
-			!!c_old_expressions.make;
-		end;
-
-	set_class_type (c: CLASS_TYPE) is
-			-- Assign `c' to `class_type'
-		do
-			class_type := c;
-		end;
-
-	set_current_type (t: like current_type) is
-			-- Assign `t' to `current_type'.
-		require
-			t /= Void or else t.has_formal
-		do
-			type_stack.put (t);
-		end;
-
-	set_byte_code (bt: BYTE_CODE) is
-			-- Assign `bt' to `byte_code'.
-		do
-			byte_stack.put (bt);
+			!!inherited_assertion.make;
 		end;
 
 	set_generated_file (f: like generated_file) is
 			-- Assign `f' to `generated_file'.
 		do
 			generated_file := f;
-		end;
-
-	restore_type is
-			-- Restore previous type
-		do
-			type_stack.remove;
-		end;
-
-	restore_byte_code is
-			-- Restore previous byte code
-		do
-			byte_stack.remove;
 		end;
 
 	non_gc_tmp_vars: INTEGER;
@@ -171,6 +131,9 @@ feature
 	assertion_type: INTEGER;
 			-- Type of assertion being generated
 
+	is_prec_first_block: BOOLEAN;
+			-- Is precondition in first block  
+
 	Current_register: CURRENT_B is
 			-- An instance of Current register for local var index computation
 		once
@@ -202,11 +165,27 @@ feature
 			assertion_type := a;
 		end;
 
+	set_is_prec_first_block (a: BOOLEAN) is
+			-- Assign `a' to `assertion_type'
+		do
+			is_prec_first_block := a;
+		end;
+
+	has_chained_prec: BOOLEAN is
+			-- Feature has chained preconditions?
+		do
+			Result := (byte_code.precondition /= Void
+					or else inherited_assertion.has_precondition)
+		end;
+
 	has_rescue: BOOLEAN is
 			-- Feature has a rescue clause ?
 		do
 			Result := byte_code.rescue_clause /= Void
 		end;
+
+	has_inherited_assertion: BOOLEAN;
+			-- Does class have inherited assertions?
 
 	has_postcondition: BOOLEAN is
 			-- Do we have to generate any postcondition ?
@@ -294,7 +273,8 @@ feature
 	real_type (type: TYPE_I): TYPE_I is
 			-- Convenience
 		require
-			good_argument: type /= Void
+			good_argument: type /= Void;
+			valid_class_type: class_type /= Void;
 		do
 			Result := constrained_type (type);
 			Result := instantiation_of (Result);
@@ -302,12 +282,37 @@ feature
 			not Result.is_formal
 		end;
 
-	init (t: CL_TYPE_I) is
-			-- Initialization
+
+	set_byte_code (bc: BYTE_CODE) is
+			-- Assign `bc' to byte_code.
 		require
-			good_argument: t /= Void
+			good_argument: bc /= Void
 		do
-			set_current_type (t);
+			byte_code := bc
+		end;
+
+	init (t: CLASS_TYPE) is
+			-- Initialization of byte context.
+			-- Check to see if class type has inherited
+			-- assertions. If it does not then set
+			-- has_inherited_assertion to False. Otherwize,
+			-- set has_inherited_assertion to True.
+		do
+			set_class_type (t);
+			--if System.Redef_feat_server.has (associated_class.id) then
+				--has_inherited_assertion := True
+			--else
+				--has_inherited_assertion := False
+			--end;
+			has_inherited_assertion := True;
+		end;
+
+	set_class_type (t: CLASS_TYPE) is
+			-- Assign `t' to class_type.
+		require
+			good_argument: t /= Void;
+		do
+			class_type := t;
 		end;
 
 	add_non_gc_vars is
@@ -399,6 +404,27 @@ feature
 			label := label + 1;
 		end;
 
+	generate_body_label is
+			-- Generate label "body"
+		do
+			generated_file.exdent;
+			generated_file.putstring ("body:");
+			generated_file.new_line;
+			generated_file.indent;
+		end;
+
+	print_body_label is
+			-- Print label "body"
+		do
+			generated_file.putstring ("body");
+		end;
+
+	generate_current_label is
+			-- Generate current label `label'.
+		do
+			generate_label (label)
+		end;
+
 	generate_label (l: INTEGER) is
 			-- Generate label number `l'
 		require
@@ -409,6 +435,12 @@ feature
 			generated_file.putchar (':');
 			generated_file.new_line;
 			generated_file.indent;
+		end;
+
+	print_current_label is
+			-- Print label number `label'.
+		do
+			print_label (label);
 		end;
 
 	print_label (l: INTEGER) is
@@ -520,7 +552,7 @@ feature
 			current_used := false;
 			need_gc_hook_computed := false;
 			label := 0;
-			byte_stack.wipe_out;
+			is_prec_first_block := False;
 			non_gc_reg_vars := 0;
 			non_gc_tmp_vars := 0;
 			local_list.wipe_out;
@@ -529,7 +561,6 @@ feature
 				-- This should not be necessary but may limit the
 				-- effect of bugs in register allocation (if any).
 			register_server.clear_all;
-			c_old_expressions.wipe_out;
 		end;
 
 	wipe_out is
@@ -539,9 +570,8 @@ feature
 			local_vars := Void;
 			local_index_table := Void;
 			associated_register_table := Void;
-			type_stack := Void;
-			byte_stack := Void;
 			class_type := Void;
+			byte_code := Void;
 		end;
 
 	saved_current_used: BOOLEAN;

@@ -96,4 +96,14 @@ feature
 			changed_status.add (a_class.id)
 		end;
 
+feature -- Dino stuff
+
+	set_assertion_prop_list (a_class: CLASS_C; l: LINKED_LIST [INTEGER]) is
+		local
+			pass_c: PASS2_C
+		do
+			pass_c ?= controler_of (a_class);
+			pass_c.set_assertion_prop_list (l);
+		end;
+ 
 end

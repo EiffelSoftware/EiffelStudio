@@ -236,7 +236,45 @@ end;
 				forth;
 			end;
 		end;
-					
+
+	propagate_assertions (assert_list: LINKED_LIST [INTEGER]) is
+			-- Propagate features to Pass 4 using the routine ids
+			-- in `assert_list'.
+		local
+			stop: BOOLEAN;
+		do
+			from
+				start
+			until
+				offright
+			loop
+				if item_for_iteration.written_in = feat_tbl_id and then 
+					not item_for_iteration.is_deferred then
+					from
+						assert_list.start;
+						stop := False;
+					until
+						assert_list.after or else stop
+					loop
+						if
+							item_for_iteration.rout_id_set.has (assert_list.item)
+						then
+							stop := True;
+debug ("ASSERTION")
+	io.putstring ("inserting feature for pass 4:%N");
+	io.putstring (item_for_iteration.feature_name);
+	io.new_line;
+end;
+							associated_class.insert_changed_assertion
+								(item_for_iteration)
+						end;
+						assert_list.forth
+					end;
+				end;
+				forth
+			end;
+		end;
+
 		-- Check
 
 	update_table is

@@ -69,6 +69,14 @@ feature
 	rescue_clause: BYTE_LIST [BYTE_NODE];
 			-- List of INSTR_B instances: can be Void.
 
+	clear_old_expressions is
+			-- Clear old_expressions
+		require
+			valid_old_exp: old_expressions /= Void
+		do
+			old_expressions.wipe_out
+		end;
+
 	compound: BYTE_LIST [BYTE_NODE] is
 			-- Compound byte code
 		do
@@ -143,6 +151,8 @@ feature
 
 	set_old_expressions (var: like old_expressions) is
 			-- Assign `var' to old_expressions.
+		require
+			exp_not_empty: (var /= Void) implies not var.empty
 		do
 			old_expressions := var
 		end;
@@ -168,13 +178,27 @@ feature
 	enlarge_tree is
 			-- Enlarges byte code tree for C code generation
 		local
-			expr: UN_OLD_B
+			item: UN_OLD_B;
+			inh_assert: INHERITED_ASSERTION
 		do
+			inh_assert := Context.inherited_assertion;
+			if inh_assert.has_assertion then
+				inh_assert.enlarge_tree;
+			end;
 			if precondition /= Void then
+				Context.set_assertion_type (In_precondition);
 				precondition.enlarge_tree;
+				Context.set_assertion_type (0);
 			end;
 			if compound /= Void then
 				compound.enlarge_tree;
+			end;
+			if old_expressions /= Void then
+				--! Wipe out old expression and rebuild
+				--! it with enlarged function through 
+				--! postconditions enlargement.
+				--! (Look at enlarged in class UN_OLD_B)
+				old_expressions.wipe_out;
 			end;
 			if postcondition /= Void then
 				postcondition.enlarge_tree;
@@ -256,28 +280,39 @@ feature
 			-- Generate value for old variables
 		local
 			workbench_mode: BOOLEAN;
-			old_exp: UN_OLD_BL;
-			c_old_expr: LINKED_LIST [UN_OLD_BL]
+			list_old_expr: LINKED_LIST [like old_expressions];
+			old_expr: like old_expressions;
+			temp_type: CL_TYPE_I;
+			temp_class_type: CLASS_TYPE;
+			inh_assert: INHERITED_ASSERTION;
+			item: UN_OLD_BL;
 		do
 			workbench_mode:= Context.workbench_mode;
-			c_old_expr := Context.c_old_expressions;
-			if context.has_postcondition and then (old_expressions /= Void)
-				and then (not old_expressions.empty)
+			inh_assert := Context.inherited_assertion;
+			if Context.has_postcondition and then (old_expressions /= Void
+				or else inh_assert.has_old_expression)
 			then
 				if workbench_mode then
 						generated_file.putstring ("if (RTAL & CK_ENSURE) {");
 						generated_file.new_line;
 						generated_file.indent;
 				end;
-				from
-					c_old_expr.start;
-				until
-					c_old_expr.offright
-				loop
-					old_exp := c_old_expr.item;
-					old_exp.initialize;
-					c_old_expr.forth;
+				if old_expressions /= Void then
+					from
+						old_expressions.start;
+					until
+						old_expressions.after
+					loop
+						item ?= old_expressions.item;
+						item.initialize; -- Cannot fail
+						old_expressions.forth;
+					end;
 				end;
+				if inh_assert.has_old_expression then
+						-- Generate old assertions
+					inh_assert.generate_old_variables;
+				end;
+
 				if workbench_mode then
 					generated_file.putchar ('}');
 					generated_file.new_line;
@@ -292,7 +327,8 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code
 		require else
-			not_external: not is_external
+			not_external: not is_external;
+			valid_class_type: Context.class_type /= Void;
 		local
 			i, nb: INTEGER;
 			r_type, formal_type: TYPE_I;	
@@ -392,7 +428,6 @@ feature -- Byte code generation
 					i > nb
 				loop
 					formal_type := context.real_type (arguments.item (i));
-					
 					if formal_type.is_expanded or else formal_type.is_bit
 					then
 						Temp_byte_code_array.append (Bc_clone_arg);

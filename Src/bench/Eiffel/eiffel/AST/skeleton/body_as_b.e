@@ -170,20 +170,46 @@ feature -- New feature description
 					extern_func.set_type (type);
 					extern_func.set_c_type (external_body.type_string);
 					func := extern_func;
-                else
-                    !!dyn_func;
+				else
+					!!dyn_func;
 					dyn_func.set_type (type);
 					func := dyn_func;
-                end;
-                if arguments /= Void then
-                        -- Arguments initialization
+				end;
+				if arguments /= Void then
+						-- Arguments initialization
 					func.init_arg (arguments);
-                end;
+				end;
 				func.init_assertion_flags (routine);
 				if routine.obsolete_message /= Void then
 					func.set_obsolete_message (routine.obsolete_message.value);
 				end;
-                Result := func;
+				Result := func;
+			end;
+		end;
+
+	is_body_equiv (other: like Current): BOOLEAN is
+			-- Is the current feature equivalent to `other' ?
+		do
+			Result := 	deep_equal (arguments, other.arguments) and then
+						deep_equal (type, other.type);
+			if Result and then content /= Void then
+				Result := content.is_body_equiv (other.content);
+			else
+				Result := Result and then True;
+			end;
+		end;
+ 
+	is_assertion_equiv (other: like Current): BOOLEAN is
+			-- Is the current feature equivalent to `other' ?
+		do
+			if content /= Void then
+				if other.content = Void then -- It is an attribute
+					Result := False
+				else
+					Result := content.is_assertion_equiv (other.content);
+				end;
+			else
+				Result := True
 			end;
 		end;
 				

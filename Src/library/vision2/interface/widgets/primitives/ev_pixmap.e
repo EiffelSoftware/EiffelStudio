@@ -146,6 +146,12 @@ feature -- Duplication
 --			draw_pixmap (0, 0, other)
 		end
 
+feature -- Events
+
+	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
+			-- Actions to be performed when part of the drawing area needs to be
+			-- redrawn.
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -158,6 +164,7 @@ feature {NONE} -- Implementation
 		do
 			{EV_DRAWABLE} Precursor
 			{EV_PRIMITIVE} Precursor
+			create expose_actions
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -197,6 +204,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/12 01:42:03  pichery
+--| added expose_action and their initialization.
+--|
 --| Revision 1.27  2000/04/12 00:22:03  king
 --| Now inheriting directly from drawable
 --|

@@ -12,7 +12,7 @@ inherit
 			hide as row_hide
 		export
 			{NONE} all
-		end;
+		end
 	ROW_COLUMN
 		rename 
 			make as make_row_col,
@@ -22,7 +22,7 @@ inherit
 			show, hide
 		select
 			show, hide
-		end;
+		end
 	EB_LINKED_LIST [T]
 		rename
 			extend as list_extend,
@@ -34,7 +34,7 @@ inherit
 			make as linked_list_make
 		redefine
 			merge, set
-		end;
+		end
 	EB_LINKED_LIST [T]
 		rename
 			make as linked_list_make
@@ -50,37 +50,37 @@ inherit
 	
 feature -- List operations
 
-	make_box (a_name: STRING; a_parent: COMPOSITE) is
+	make_box (a_name: STRING a_parent: COMPOSITE) is
 		do
 			if first_element = Void then
-				linked_list_make;
-			end;
+				linked_list_make
+			end
 			if icons = Void then
 				!!icons.make
-			end;
-			make_row_col (a_name, a_parent);
-		end;
+			end
+			make_row_col (a_name, a_parent)
+		end
 
-	make_box_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_box_unmanaged (a_name: STRING a_parent: COMPOSITE) is
 		do
 			if first_element = Void then
-				linked_list_make;
-			end;
+				linked_list_make
+			end
 			if icons = Void then
 				!!icons.make
-			end;
-			make_row_col_unmanaged (a_name, a_parent);
-		end;
+			end
+			make_row_col_unmanaged (a_name, a_parent)
+		end
 
 	go_i_th (i: INTEGER) is
 			-- Go to i position in Current and
 			-- relative position in icons.
 		do
-			list_go_i_th (i);
+			list_go_i_th (i)
 			if not (icons = Void) then
 				icons.go_i_th (relative_position)
 			end
-		end;
+		end
 
 	merge (other: EB_LINKED_LIST [like item]) is
 			-- Merge `other' at the end of the current
@@ -93,30 +93,30 @@ feature -- List operations
 				not other.empty
 			then
 				from
-					pos := index;
-					finish;
-					merge_pos := index;
+					pos := index
+					finish
+					merge_pos := index
 					other.start
 				until
 					other.after
 				loop
-					list_put_right (other.item);
-					other.forth;
+					list_put_right (other.item)
+					other.forth
 					forth
-				end;
-				list_go_i_th (merge_pos + 1);
-				merge_icons;
+				end
+				list_go_i_th (merge_pos + 1)
+				merge_icons
 			end
-		end; -- merge
+		end -- merge
 	
 	put (v: like item) is
 			-- Put item v at cursor position. Also
 			-- put item v as the data in
 			-- icons.
 		do
-			list_put (v);
+			list_put (v)
 			icons.item.set_data (item)
-		end; -- put
+		end -- put
 
 
 	remove is
@@ -124,62 +124,59 @@ feature -- List operations
 			-- to the right. If no right neighbour then move
 			-- cursor position to the left.
 		local
-			finished: BOOLEAN;
-			old_pos: INTEGER;
-			next_icon, current_icon: like new_icon;
+			finished: BOOLEAN
+			old_pos: INTEGER
+			next_icon, current_icon: like new_icon
 		do
-			old_pos := index;
+			old_pos := index
 			if (icons /= Void) then
-				icons.go_i_th (relative_position);
 				from
-					forth
+					icons.go_i_th (relative_position)
+					list_remove
+--					forth
 				until
-					finished or icons.after
+					after or icons.after
 				loop
-					current_icon := icons.item;
-					if not after then
-						current_icon.set_data (item);
-						icons.forth;
-						forth
-					else
-						current_icon.reset_data;
-						current_icon.set_managed (False);
-						finished := True
-					end
+					current_icon := icons.item
+					current_icon.set_data (item)
+					icons.forth
+					forth
 				end
-			end;
-			go_i_th (old_pos);
-			list_remove;
-			if after and then not empty then
-				back
-			end;
-		end; -- remove
+				current_icon := icons.item
+				current_icon.reset_data
+				current_icon.set_managed (False)
+			end
+			go_i_th (old_pos)
+--			if after and then not empty then
+--				back
+--			end
+		end -- remove
 
 	wipe_out is
 			-- Make list empty and unmanage icons.
 		do
 			if icons /= Void then
-				clear_icons;
-			end;
-			list_wipe_out;
-		end; -- wipe_out
+				clear_icons
+			end
+			list_wipe_out
+		end -- wipe_out
 	
 feature {NONE}
 
 	relative_position: INTEGER is
 			-- Icons relative position to list
 		deferred
-		end;
+		end
 
 	Initial_count: INTEGER is
 		deferred
-		end;
+		end
 			-- Initial allocation of icons to be managed
 
-	new_icon: ICON_STONE;
+	new_icon: ICON_STONE
 			-- Icon_stone type to be used in icons
 
-	icons: LINKED_LIST [like new_icon];
+	icons: LINKED_LIST [like new_icon]
 			-- Contains icons for displaying purposes 
 
 	clear_icons is
@@ -192,13 +189,13 @@ feature {NONE}
 					icons.after or else
 					(not icons.item.managed)
 				loop
-					icons.item.reset_data;
-					icons.item.set_managed (False);
+					icons.item.reset_data
+					icons.item.set_managed (False)
 					icons.forth
-				end;
+				end
 				icons.start
-			end;
-		end; -- clear_icons
+			end
+		end -- clear_icons
 
 feature -- Other features
 
@@ -208,40 +205,40 @@ feature -- Other features
 		do
 			row_show
 			from
-				start;
+				start
 				icons.start
 			until
 				after
 			loop
-				icon := icons.item;
+				icon := icons.item
 				if icon.realized and then not 
 					icon.shown 
 				then
 					icon.show
-				end;
+				end
 				forth
 				icons.forth
-			end;
-		end;
+			end
+		end
 
 	hide is
 		local
 			icon: ICON
 		do
-			row_hide;
+			row_hide
 			from
-				start;
+				start
 				icons.start
 			until
 				after
 			loop
 				if not icons.after and then icons.item.realized then
-					icons.item.hide;
-				end;
-				forth;
-				icons.forth;
-			end;
-		end;
+					icons.item.hide
+				end
+				forth
+				icons.forth
+			end
+		end
 
 	insert_after (dest_stone, moved_stone: T) is
 			-- Insert `moved_stone' to the right 
@@ -255,48 +252,48 @@ feature -- Other features
 			dest_pos, removed_pos: INTEGER
 		do
 			if dest_stone /= moved_stone then
-				start;
-				search (moved_stone);
+				start
+				search (moved_stone)
 				if not after then
-					removed_pos := index;
-					start;
-					search (dest_stone);
+					removed_pos := index
+					start
+					search (dest_stone)
 					if not after then
-						dest_pos := index;
+						dest_pos := index
 						if
 							not ((dest_pos + 1) = removed_pos)
 						then	
-							go_i_th (removed_pos);
-							remove;
+							go_i_th (removed_pos)
+							remove
 							if
 								removed_pos < dest_pos
 							then
 								dest_pos := dest_pos - 1
-							end;
-							go_i_th (dest_pos);
+							end
+							go_i_th (dest_pos)
 							put_right (moved_stone)
 						end
 					end
 				end
 			end
-		end; -- insert
+		end -- insert
 
 	set (other: EB_LINKED_LIST [like item]) is
 			-- Set the current list to `other' and manage the
 			-- corresponding icons to `other'.
 		do
-			list_wipe_out;
+			list_wipe_out
 			from
 				other.start
 			until
 				other.after
 			loop
-				list_put_right (other.item);
-				other.forth;
+				list_put_right (other.item)
+				other.forth
 				forth
-			end;
+			end
 			set_icons
-		end; -- set
+		end -- set
 	
 feature {NONE}
 
@@ -312,18 +309,18 @@ feature {NONE}
 			until
 				i > Initial_count and i > count
 			loop
-				create_new_icon;	
-				new_icon.make_unmanaged (Current);
-				new_icon.update_attributes;
-				icons.extend (new_icon);
+				create_new_icon	
+				new_icon.make_unmanaged (Current)
+				new_icon.update_attributes
+				icons.extend (new_icon)
 				i := i + 1
-			end;
-		end; 
+			end
+		end 
 
 	create_new_icon is
 		do
 			!!new_icon
-		end; -- icon_create
+		end -- icon_create
 	
 feature {NONE}
 
@@ -339,19 +336,19 @@ feature {NONE}
 			until
 				icons.after or after
 			loop
-				icon := icons.item;
+				icon := icons.item
 				if icon.data /= item then
-					icon.set_data (item);
-				end;
+					icon.set_data (item)
+				end
 				if not icon.managed then
 					icons.item.set_managed (True)
-				end;
-				icons.forth;
-				forth;
-			end;
-			finish;
+				end
+				icons.forth
+				forth
+			end
+			finish
 			icons.go_i_th (index)
-		end; -- merge_icons
+		end -- merge_icons
 
 feature {NONE}
 
@@ -359,27 +356,27 @@ feature {NONE}
 			-- Set the icons
 		do
 			from
-				icons.start;
+				icons.start
 				start
 			until
 				icons.after or after
 			loop
-				icons.item.set_data (item);
-				icons.item.set_managed (True);
-				icons.forth;
-				forth;
-			end;
+				icons.item.set_data (item)
+				icons.item.set_managed (True)
+				icons.forth
+				forth
+			end
 			if after and not icons.after then
 				from
 				until
 					icons.after
 				loop
-					icons.item.reset_data;
-					icons.item.set_managed (False);
+					icons.item.reset_data
+					icons.item.set_managed (False)
 					icons.forth
 				end
 			end
-		end; -- set_icons
+		end -- set_icons
 
 feature -- Unregisting holes
 
@@ -394,14 +391,14 @@ feature -- Unregisting holes
 				until
 					icons.after
 				loop
-					hole ?= icons.item;
+					hole ?= icons.item
 					if hole /= Void then
-						hole.unregister;
-					end;
+						hole.unregister
+					end
 					icons.forth
 				end
 			end
-		end;
+		end
 
 invariant
 

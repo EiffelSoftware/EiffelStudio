@@ -13,7 +13,7 @@ feature {NONE}
 
 	info: POLYNOM_INFO is
 		once
-			!!Result.make
+			create Result.make
 		end
 
 end -- POLYNOM

@@ -34,7 +34,7 @@ inherit
 
 	POLY_LEX
 
-creation
+create
 
 	make
 
@@ -48,7 +48,7 @@ feature
 			t_b: BOOLEAN;
 			text_name: STRING
 		do  
-			!!root_line.make;
+			create root_line.make;
 			build (root_line.document);
 			io.putstring ("Do you want to test for left recursion? ");
 			io.readword;

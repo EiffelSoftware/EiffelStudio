@@ -9,7 +9,7 @@ class
 inherit
 	OBJECT_CONTROL
 		-- needed for `freeze'
-creation
+create
 	make
 
 feature
@@ -53,10 +53,10 @@ feature
 			p_finished := finish
 			it := i
 			buffer_size := size - 1
-			!!monitor.make
-			!!notfull.make
-			!!notempty.make
-			!!data.make (0,buffer_size)
+			create monitor.make
+			create notfull.make
+			create notempty.make
+			create data.make (0,buffer_size)
 			frozen_ptr := freeze (data)
 			
 		end

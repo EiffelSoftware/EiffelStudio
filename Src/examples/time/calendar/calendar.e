@@ -2,7 +2,7 @@ class
 
 	CALENDAR
 
-creation
+create
 
 	make
 
@@ -20,7 +20,7 @@ feature -- Initialization
 			set_week_header_width (3);
 			show_week_number;
 			set_week_days_size (<<2,1,2,1,2,1,2>>);
-			!! month_format.make (l, line_size);
+			create month_format.make (l, line_size);
 		
 			localizer.force_boolean (False, "day_of_the_month_shown");
 			localizer.force_boolean (False, "day_of_the_week_shown");
@@ -30,13 +30,13 @@ feature -- Initialization
 
 			month_format.center_justify;
 		
-			!! l1.make(0);
-			!! l2.make(0);
-			!! l3.make(0);
-			!! l4.make(0);
-			!! l5.make(0);
-			!! l6.make(0);
-			!! tab_li.make(1,6);
+			create l1.make(0);
+			create l2.make(0);
+			create l3.make(0);
+			create l4.make(0);
+			create l5.make(0);
+			create l6.make(0);
+			create tab_li.make(1,6);
 			tab_li.put (l1,1);
 			tab_li.put (l2,2);
 			tab_li.put (l3,3);
@@ -156,7 +156,7 @@ feature -- Conversion
 			fill_lines (d);
 			month_format.set_localizer (localizer);
 			month_format.set_width (line_size);
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append (month_format.justify (month_format.formatted (d)));
 			Result.append("%N");
 			Result.append (days_header); Result.append("%N");
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			i: INTEGER;
 			short: STRING
         do
-            !! Result.make (1, 7);
+            create Result.make (1, 7);
 			from
 				i := 1
 			until
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
         do
-            !! Result.make (line_size);
+            create Result.make (line_size);
 			Result.fill_blank;
 			from
 				i := 1
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			first_day: DATE;
 			current_line: STRING
 		do
-			!! first_day.make (d.year, d.month, 1);
+			create first_day.make (d.year, d.month, 1);
 			from
 				day_of_the_month := 1;
 				offset := first_day.day_of_the_week - 2;

@@ -15,7 +15,7 @@ inherit
 
 	CONSTANTS
 
-creation
+create
 
 	make
 

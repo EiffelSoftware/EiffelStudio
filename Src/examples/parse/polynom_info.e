@@ -9,7 +9,7 @@
 
 class POLYNOM_INFO 
 
-creation
+create
 
 	make
 
@@ -17,8 +17,8 @@ feature
 
 	make is
 		do
-			!!id_table.make;
-			!!id_value.make
+			create id_table.make;
+			create id_value.make
 		end; -- make
 
 	end_session: BOOLEAN;

@@ -54,11 +54,17 @@ rt_public void esys(void)
 	xraise(EN_SYS);					/* Operating system error */
 }
 
-rt_public void eio(void)
+rt_public void eio (void)
+	/* As a special case, an I/O error is raised when a system call which is
+	 * I/O bound fails.  */
+{
+	xraise (EN_IO);
+}
+
+rt_public void eise_io(char *tag)
 {
 	/* As a special case, an I/O error is raised when a system call which is
-	 * I/O bound fails.
-	 */
+	 * I/O bound fails.  */
 
-	xraise(EN_IO);					/* I/O error */
+	eraise(tag, EN_ISE_IO);					/* I/O error */
 }

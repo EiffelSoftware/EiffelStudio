@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			paste_menu_item.select_actions.extend 			(agent Shared_document_editor.paste)
 			search_menu_item.select_actions.extend 			(agent Shared_document_editor.open_search_dialog)
 			parser_menu_item.select_actions.extend 			(agent open_expression_dialog)
+			preferences_menu_item.select_actions.extend 	(agent open_preferences_window)
 			
 					-- View Menu
 			element_selector_menu.set_data (element_area)
@@ -570,6 +571,12 @@ feature {NONE} -- Dialog
 			-- Regular Expression dialog for document text parsing
 		do
 			Shared_dialogs.expression_dialog.show_modal_to_window (Current)
+		end
+		
+	open_preferences_window is
+			-- Regular Expression dialog for document text parsing
+		do
+			Shared_preferences.show_preferences_window (Current)
 		end
 
 	open_character_dialog is

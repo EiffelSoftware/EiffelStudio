@@ -214,9 +214,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_23.extend (okay_bt)
 			l_ev_horizontal_box_23.extend (cancel_bt)
 			
-			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_height)
-			set_title ("Project Settings")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_frame_1.set_text ("Project Settings")
@@ -391,6 +388,9 @@ feature {NONE}-- Initialization
 			okay_bt.set_minimum_width (button_width)
 			cancel_bt.set_text (button_cancel_text)
 			cancel_bt.set_minimum_width (button_width)
+			set_minimum_width (dialog_width)
+			set_minimum_height (dialog_height)
+			set_title ("Project Settings")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -402,32 +402,38 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
-	l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7, l_ev_vertical_box_8, 
-	l_ev_vertical_box_9, l_ev_vertical_box_10, l_ev_vertical_box_11, l_ev_vertical_box_12, 
-	l_ev_vertical_box_13, l_ev_vertical_box_14: EV_VERTICAL_BOX
-	l_ev_frame_1: EV_FRAME
-	l_ev_notebook_1: EV_NOTEBOOK
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
-	l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, 
-	l_ev_horizontal_box_9, l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, 
-	l_ev_horizontal_box_13, l_ev_horizontal_box_14, l_ev_horizontal_box_15, l_ev_horizontal_box_16, 
-	l_ev_horizontal_box_17, l_ev_horizontal_box_18, l_ev_horizontal_box_19, l_ev_horizontal_box_20, 
-	l_ev_horizontal_box_21, l_ev_horizontal_box_22, l_ev_horizontal_box_23: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, 
-	l_ev_label_7, l_ev_label_8, color_label: EV_LABEL
-	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2, l_ev_horizontal_separator_3, 
-	l_ev_horizontal_separator_4, l_ev_horizontal_separator_5, l_ev_horizontal_separator_6: EV_HORIZONTAL_SEPARATOR
-	name_text, schema_loc_text, css_loc_text, header_loc_text, footer_loc_text, filter_description_text, 
-	filter_tag_name_text: EV_TEXT_FIELD
-	browse_schema_bt, browse_css_bt, browse_header_button, browse_footer_button, add_description_button, 
-	add_tag_button, color_button, apply_bt, okay_bt, cancel_bt: EV_BUTTON
-	header_override_check, footer_override_check, use_include_tags, header_include_check, 
-	footer_include_check, html_stylesheet_check, nav_links_check, dhtml_filter_check, 
+	header_override_check, footer_override_check, use_include_tags, header_include_check,
+	footer_include_check, html_stylesheet_check, nav_links_check, dhtml_filter_check,
 	generate_feature_nodes_check: EV_CHECK_BUTTON
-	header_file_radio, header_generate_check, footer_file_radio, footer_generate_check: EV_RADIO_BUTTON
+	l_ev_notebook_1: EV_NOTEBOOK
+	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2,
+	l_ev_horizontal_separator_3, l_ev_horizontal_separator_4, l_ev_horizontal_separator_5,
+	l_ev_horizontal_separator_6: EV_HORIZONTAL_SEPARATOR
+	header_file_radio, header_generate_check, footer_file_radio,
+	footer_generate_check: EV_RADIO_BUTTON
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3,
+	l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7,
+	l_ev_vertical_box_8, l_ev_vertical_box_9, l_ev_vertical_box_10, l_ev_vertical_box_11,
+	l_ev_vertical_box_12, l_ev_vertical_box_13, l_ev_vertical_box_14: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
+	l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9,
+	l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, l_ev_horizontal_box_13,
+	l_ev_horizontal_box_14, l_ev_horizontal_box_15, l_ev_horizontal_box_16, l_ev_horizontal_box_17,
+	l_ev_horizontal_box_18, l_ev_horizontal_box_19, l_ev_horizontal_box_20, l_ev_horizontal_box_21,
+	l_ev_horizontal_box_22, l_ev_horizontal_box_23: EV_HORIZONTAL_BOX
 	filters_list, tags_list: EV_LIST
+	l_ev_label_1,
+	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7,
+	l_ev_label_8, color_label: EV_LABEL
+	browse_schema_bt, browse_css_bt, browse_header_button,
+	browse_footer_button, add_description_button, add_tag_button, color_button, apply_bt,
+	okay_bt, cancel_bt: EV_BUTTON
+	l_ev_frame_1: EV_FRAME
 	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
+	name_text,
+	schema_loc_text, css_loc_text, header_loc_text, footer_loc_text, filter_description_text,
+	filter_tag_name_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
@@ -438,11 +444,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class PREFERENCES_DIALOG_IMP

@@ -122,9 +122,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.extend (finish_button)
 			l_ev_horizontal_box_4.extend (cancel_button)
 			
-			set_minimum_width (dialog_wide_width)
-			set_minimum_height (dialog_tall_height)
-			set_title ("Generation Wizard")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (filter_frame)
@@ -215,6 +212,9 @@ feature {NONE}-- Initialization
 			finish_button.set_minimum_width (button_width)
 			cancel_button.set_text (button_cancel_text)
 			cancel_button.set_minimum_width (button_width)
+			set_minimum_width (dialog_wide_width)
+			set_minimum_height (dialog_tall_height)
+			set_title ("Generation Wizard")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -226,18 +226,24 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
-	l_ev_vertical_box_5, web_toc_type_box, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
-	filter_frame, help_frame, l_ev_frame_1, l_ev_frame_2: EV_FRAME
-	l_ev_horizontal_box_1, convert_box, transform_box, l_ev_horizontal_box_2, l_ev_horizontal_box_3, 
-	help_toc_box, help_filter_box, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
-	transform_file_combo, filter_option_combo, web_filter_option_combo, web_toc_option_combo: EV_COMBO_BOX
-	location_text, help_name_text: EV_TEXT_FIELD
-	browse_button, finish_button, cancel_button: EV_BUTTON
 	html_radio, vs_radio, web_radio, tree_web_help_radio, tree_web_simple_radio: EV_RADIO_BUTTON
-	toc_list, filter_list: EV_MULTI_COLUMN_LIST
+	toc_list,
+	filter_list: EV_MULTI_COLUMN_LIST
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4,
+	l_ev_vertical_box_5, web_toc_type_box, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	convert_box, transform_box, l_ev_horizontal_box_2, l_ev_horizontal_box_3, help_toc_box,
+	help_filter_box, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3,
+	l_ev_label_4: EV_LABEL
+	browse_button, finish_button, cancel_button: EV_BUTTON
+	filter_frame, help_frame,
+	l_ev_frame_1, l_ev_frame_2: EV_FRAME
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
+	transform_file_combo,
+	filter_option_combo, web_filter_option_combo, web_toc_option_combo: EV_COMBO_BOX
+	location_text,
+	help_name_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
@@ -248,11 +254,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class GENERATION_DIALOG_IMP

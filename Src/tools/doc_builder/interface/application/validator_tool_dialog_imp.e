@@ -64,9 +64,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (okay_bt)
 			l_ev_horizontal_box_1.extend (cancel_bt)
 			
-			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_height)
-			set_title ("Validator")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_2)
@@ -101,6 +98,9 @@ feature {NONE}-- Initialization
 			okay_bt.set_minimum_width (80)
 			cancel_bt.set_text ("Cancel")
 			cancel_bt.set_minimum_width (80)
+			set_minimum_width (dialog_width)
+			set_minimum_height (dialog_height)
+			set_title ("Validator")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -112,13 +112,14 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, link_radio_box, 
-	document_tree_box: EV_VERTICAL_BOX
-	l_ev_label_1: EV_LABEL
 	xml_radio, schema_radio, link_radio, spell_check_button: EV_RADIO_BUTTON
+	l_ev_vertical_box_1, l_ev_vertical_box_2,
+	l_ev_vertical_box_3, link_radio_box, document_tree_box: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_label_1: EV_LABEL
+	apply_bt,
+	okay_bt, cancel_bt: EV_BUTTON
 	l_ev_cell_1: EV_CELL
-	apply_bt, okay_bt, cancel_bt: EV_BUTTON
 
 feature {NONE} -- Implementation
 
@@ -129,11 +130,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class VALIDATOR_TOOL_DIALOG_IMP

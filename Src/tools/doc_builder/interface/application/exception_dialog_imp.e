@@ -66,11 +66,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.extend (okay_button)
 			l_ev_horizontal_box_4.extend (l_ev_cell_2)
 			
-			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_height)
-			set_maximum_width (4000)
-			set_maximum_height (5000)
-			set_title ("Exception Report")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
@@ -104,6 +99,11 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.disable_item_expand (okay_button)
 			okay_button.set_text ("OK")
 			okay_button.set_minimum_width (button_width)
+			set_minimum_width (dialog_width)
+			set_minimum_height (dialog_height)
+			set_maximum_width (4000)
+			set_maximum_height (5000)
+			set_title ("Exception Report")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -115,12 +115,15 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, summary_label, l_ev_label_3, excpt_type_label, l_ev_label_4: EV_LABEL
 	excpt_trace_text: EV_TEXT
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+	l_ev_label_1,
+	l_ev_label_2, summary_label, l_ev_label_3, excpt_type_label, l_ev_label_4: EV_LABEL
 	okay_button: EV_BUTTON
+	l_ev_cell_1,
+	l_ev_cell_2: EV_CELL
 
 feature {NONE} -- Implementation
 
@@ -131,11 +134,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class EXCEPTION_DIALOG_IMP

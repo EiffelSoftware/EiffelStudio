@@ -62,9 +62,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.extend (cancel_button)
 			l_ev_horizontal_box_2.extend (l_ev_cell_3)
 			
-			set_maximum_width (dialog_width)
-			set_maximum_height (dialog_medium_height)
-			set_title ("New Table of Contents")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_label_1)
@@ -90,6 +87,9 @@ feature {NONE}-- Initialization
 			okay_button.set_minimum_width (button_width)
 			cancel_button.set_text ("Cancel")
 			cancel_button.set_minimum_width (button_width)
+			set_maximum_width (dialog_width)
+			set_maximum_height (dialog_medium_height)
+			set_title ("New Table of Contents")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -101,13 +101,15 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
-	l_ev_label_1, l_ev_label_2: EV_LABEL
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-	toc_name_text: EV_TEXT_FIELD
 	project_radio, empty_radio: EV_RADIO_BUTTON
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2: EV_LABEL
 	okay_button, cancel_button: EV_BUTTON
+	l_ev_cell_1,
+	l_ev_cell_2, l_ev_cell_3: EV_CELL
+	toc_name_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
@@ -118,11 +120,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class TOC_NEW_DIALOG_IMP

@@ -29,7 +29,6 @@ feature -- Initialization
 			non_void_an_assembly_name: an_assembly_name /= Void
 			not_empty_an_assembly_name: not an_assembly_name.is_empty
 		local
-			f: RAW_FILE
 			retried: BOOLEAN
 			l_xml_file: KL_BINARY_INPUT_FILE
 			l_parser: XM_EIFFEL_PARSER

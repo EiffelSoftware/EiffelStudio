@@ -78,38 +78,38 @@ feature
 		end;
 
 	set_commands is 
-	local
-		a_command1 : ADD_CLUSTER_REVERSE
-		a_command2 : CASE_COMMAND2
-	do
-		!! a_command1.make ( scroll_list1,scroll_list2,TRUE)
-		arrow_b1.add_activate_action (a_command1, Void )
-		!! a_command1.make ( scroll_list2,scroll_list1, FALSE)
-		arrow_b2.add_activate_action  (a_command1, Void )
-		! EXIT_REVERSE ! a_command2.make ( Current)
-		exit_b.add_activate_action (a_command2, Void )
-		! GENERATE_ALL_REVERSE ! a_command2.make ( Current )
-		generate_all_b.add_activate_action ( a_command2, Void )
-		! GENERATE_SELEC_REVERSE ! a_command2.make ( Current )
-		generate_selec_b.add_activate_action ( a_command2, Void )
-	end
+		local
+			a_command1 : ADD_CLUSTER_REVERSE
+			a_command2 : CASE_COMMAND2
+		do
+			!! a_command1.make ( scroll_list1,scroll_list2,TRUE)
+			arrow_b1.add_activate_action (a_command1, Void )
+			!! a_command1.make ( scroll_list2,scroll_list1, FALSE)
+			arrow_b2.add_activate_action  (a_command1, Void )
+			! EXIT_REVERSE ! a_command2.make ( Current)
+			exit_b.add_activate_action (a_command2, Void )
+			! GENERATE_ALL_REVERSE ! a_command2.make ( Current )
+			generate_all_b.add_activate_action ( a_command2, Void )
+			! GENERATE_SELEC_REVERSE ! a_command2.make ( Current )
+			generate_selec_b.add_activate_action ( a_command2, Void )
+		end
 	
 
 	initialize_lists is
 		-- initiliaze the lists of clusters
-	local
-		el : SCROLLABLE_LIST_CLUSTERS
-	do
-		from 
-			universe.clusters.start
-		until
-			universe.clusters.after
-		loop
-			!! el.make (universe.clusters.item)
-			scroll_list1.put_right(el)
-			universe.clusters.forth
+		local
+			el : SCROLLABLE_LIST_CLUSTERS
+		do
+			from 
+				universe.clusters.start
+			until
+				universe.clusters.after
+			loop
+				!! el.make (universe.clusters.item)
+				scroll_list1.put_right(el)
+				universe.clusters.forth
+			end
 		end
-	end
 
 	set_values is
 		do
@@ -164,9 +164,8 @@ feature
 			set_size (524, 411);
 		end;
 
-	execute (c : ANY ) is do end
-
-	
-
+	execute (c : ANY ) is
+		do
+		end
 
 end -- class PERM_WIND1

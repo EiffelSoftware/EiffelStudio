@@ -36,10 +36,18 @@ feature -- Measurement
 
 feature -- Conversion
 
-	get_pointer_from_array_by_index (pointer_array: POINTER; index: INTEGER): POINTER is
-			-- void ** pointer_array
-			-- int index
-			-- void * Result
+	pointer_array_i_th (pointer_array: POINTER; index: INTEGER): POINTER is
+			-- void * pointer_array_i_th (void ** pointer_array, int index) {
+			--     return pointer_array [index];
+			-- }
+		external
+			"C | %"ev_c_util.h%""
+		end
+
+	string_pointer_deref (pointer: POINTER): POINTER is
+			-- char* pointer_deref (cha*** pointer) {
+			--     return *pointer;
+			-- }
 		external
 			"C | %"ev_c_util.h%""
 		end

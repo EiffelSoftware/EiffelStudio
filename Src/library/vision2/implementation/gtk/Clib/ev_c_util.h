@@ -10,7 +10,9 @@
 #ifndef _EV_C_UTIL_H_INCLUDED_
 #define _EV_C_UTIL_H_INCLUDED_
 
-void * get_pointer_from_array_by_index (void ** pointer_array, int index);
+void* pointer_array_i_th (void** pointer_array, int index);
+
+char* string_pointer_deref (char** pointer) { return *pointer; }
 
 void enable_ev_gtk_log (void);
 
@@ -37,6 +39,10 @@ void enable_ev_gtk_log (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.3  2000/04/18 17:57:53  oconnor
+// Renamed get_pointer_from_array_by_index -> pointer_array_i_th
+// Added string_pointer_deref (pointer: POINTER): POINTER
+//
 // Revision 1.2  2000/02/14 12:05:08  oconnor
 // added from prerelease_20000214
 //

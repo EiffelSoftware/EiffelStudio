@@ -10,15 +10,15 @@
 #include "ev_c_util.h"
 #include "eif_except.h"
 
-void * get_pointer_from_array_by_index (void ** pointer_array, int index)
+void* pointer_array_i_th (void** pointer_array, int index)
 {
 	return pointer_array [index];
 }
 
 void ev_gtk_log (
-	const gchar *log_domain,
+	const gchar* log_domain,
 	GLogLevelFlags log_level,
-	const gchar *message,
+	const gchar* message,
 	gpointer user_data
 ) {
 	char buf[1000];
@@ -67,7 +67,9 @@ void ev_gtk_log (
 
 void enable_ev_gtk_log (void)
 {
-	g_log_set_handler ("Gtk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO | G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, NULL);
+	g_log_set_handler ("Gtk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
+		G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, NULL);
 }
 
 //------------------------------------------------------------------------------
@@ -91,6 +93,10 @@ void enable_ev_gtk_log (void)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2000/04/18 17:58:01  oconnor
+// Renamed get_pointer_from_array_by_index -> pointer_array_i_th
+// Added string_pointer_deref (pointer: POINTER): POINTER
+//
 // Revision 1.3  2000/02/17 22:40:58  oconnor
 // modified eraise call to not need snprintf, NOt avalible on Solaris.
 //

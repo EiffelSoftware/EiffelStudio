@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CHECK_BOX_M 
+class 
+	CHECK_BOX_M 
 
 inherit
 
@@ -42,11 +43,12 @@ feature {NONE} -- Initialization
 
 	make (a_check_box: CHECK_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif check_box.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_check_make (a_check_box.identifier,
-					mel_parent (a_check_box, widget_index),
-					man);
+			mel_check_make (a_check_box.identifier, mc, man)
 		end
 
 end -- class CHECK_BOX_M

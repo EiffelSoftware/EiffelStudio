@@ -65,6 +65,8 @@ feature -- Basic operations
 			current_column_width, current_row_height: INTEGER
 			rectangle_width, rectangle_height: INTEGER
 			i: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
+			grid_item_exists: BOOLEAN
 			
 			current_item_y_position, current_item_x_position: INTEGER
 		do
@@ -129,7 +131,7 @@ feature -- Basic operations
 				end
 				
 					-- Calculate the rows that must be displayed.
-					
+					-- Compute the virtual positions of the invalidated area.
 				invalid_y_start := virtual_y_position + a_y - vertical_buffer_offset
 				invalid_y_end := virtual_y_position + a_y - vertical_buffer_offset + a_height
 				if grid.is_row_height_fixed then
@@ -140,9 +142,6 @@ feature -- Basic operations
 					fixme ("implement using a binary search")
 					from
 						row_offsets.start
-							-- Compute the virtual positions of the invalidated area.
---						invalid_y_start := virtual_y_position + a_y - vertical_buffer_offset
---						invalid_y_end := virtual_y_position + a_y - vertical_buffer_offset + a_height
 					until
 						last_row_index_set or row_offsets.off
 					loop
@@ -182,6 +181,8 @@ feature -- Basic operations
 					(not grid.is_row_height_fixed and row_counter > row_offsets.count) or
 					first_row_index = 0
 				loop
+						-- Assume that there is no grid item at the current position.
+					grid_item_exists := False
 					if not bool and printing_values then
 						print ("%N%NStarting to draw row%N")
 					end
@@ -207,19 +208,28 @@ feature -- Basic operations
 							print ("An_x : " + an_x.out + "%N")
 							print ("a_width : " + a_width.out + "%N")
 						end
-						if current_row /= Void then
+						if current_row /= Void and then current_row.count > (current_index_in_row - 1) then
 							grid_item := current_row @ (current_index_in_row - 1)
-							
-							if grid_item /= Void then
-	
-								current_item_x_position  := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
-								current_column_width := column_offsets @ (column_counter + 1) - column_offsets @ (column_counter)
-						
-								grid_item.redraw (current_item_x_position , current_item_y_position, current_column_width, current_row_height, grid.drawable)
-							end
-						else
-							--drawable.fill
+								-- In this case, we have found the grid item so we flag this fact
+								-- so that the calculations for the partial dynamic content know that
+								-- a new item must not be retrieved.
+							grid_item_exists := False
 						end
+	
+						current_item_x_position  := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
+						current_column_width := column_offsets @ (column_counter + 1) - column_offsets @ (column_counter)
+						
+						if grid.is_content_partially_dynamic and then not grid_item_exists then
+							create label_item.make_with_text ("A dynamic item with index of : " + (current_index_in_column).out)
+							grid.set_item (current_index_in_row.min (grid.row_count), current_index_in_column, label_item)
+							grid_item ?= label_item.implementation
+						end
+						
+						if grid_item /= Void then
+							grid_item.redraw (current_item_x_position , current_item_y_position, current_column_width, current_row_height, grid.drawable)
+						else
+							-- drawable.fill
+						end							
 						
 						column_counter := column_counter + 1
 						current_index_in_row := current_index_in_row + 1

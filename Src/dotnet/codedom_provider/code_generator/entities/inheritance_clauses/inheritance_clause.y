@@ -231,7 +231,7 @@ New_exports_opt: -- Empty
 
 New_exports: TE_EXPORT New_export_list
 			{
-				if $2 /= Void or else $2.is_empty then
+				if $2 = Void or else $2.is_empty then
 					$$ := Void
 				else
 					$$ := $2
@@ -242,9 +242,7 @@ New_exports: TE_EXPORT New_export_list
 	;
 
 New_export_list: New_export_item
-			{
-				$$ := $1
-			}
+			{ $$ := $1 }
 	|	New_export_list New_export_item
 			{
 				$$ := $1

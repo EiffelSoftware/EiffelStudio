@@ -250,9 +250,6 @@ feature {NONE} -- Implementation
 				
 				set_progress (0.7)
 				
-				if project_settings.client_of_window then
-					create_local ("window")
-				end
 					-- Generate the widget declarations and creation lines.
 				generate_declarations
 				
@@ -471,7 +468,11 @@ feature {NONE} -- Implementation
 								-- applied to the window without requiring the window to
 								-- be named. Look at a generated code example.
 							if current_type.is_equal (Ev_titled_window_string) then
-								info.set_name ("")
+								if System_status.current_project_settings.client_of_window then
+									info.set_name (Client_window_string)
+								else
+									info.set_name ("")
+								end
 							else
 								info.set_name (element_info.data)
 							end
@@ -505,7 +506,11 @@ feature {NONE} -- Implementation
 				all_ids.off
 			loop
 				generated_info := document_info.generated_info_by_id.item (all_ids.item)
-				if generated_info.name /= Void and then not generated_info.name.is_empty then
+				if generated_info.name /= Void and then not generated_info.name.is_empty and then
+					generated_info.name /= Client_window_string then
+						-- If the name is equal to `client_window_string' then we must be the window
+						-- in a client based system. This has a special attribute clauses added in the
+						-- file, so we do not add it in the same fashion as other attributes.
 					if system_status.current_project_settings.grouped_locals then
 						add_local_on_grouped_line (generated_info.type, generated_info.name)
 					else

@@ -293,7 +293,8 @@ feature -- Clearing and drawing operations
 		end
 
 	clear_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
+			-- Erase rectangle (`x1, `y1) - (`x2', `y2') 
+			-- with `background_color'.
 		local
 			a_rect: WEL_RECT
 		do
@@ -329,7 +330,7 @@ feature -- Drawing operations
 		end
 
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
-			-- Draw infinite straight line through (`x1', 'y1') and (`x2', 'y2').
+			-- Draw infinite straight line through (`x1','y1') and (`x2','y2').
 		local
 			ax1, ax2, ay1, ay2, dx, dy: INTEGER
 		do
@@ -352,10 +353,15 @@ feature -- Drawing operations
 			draw_segment (ax1, ay1, ax2, ay2)			
 		end
 
-	draw_arc (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_arc (
+		x,y : INTEGER;
+		a_vertical_radius, a_horizontal_radius: INTEGER;
+		a_start_angle, an_aperture: REAL
+	) is
 			-- Draw a part of an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Start at `a_start_angle' and stop at `a_start_angle'
+			-- + `an_aperture'.
 			-- Angles are measured in radians.
 		local
 			left, top, right, bottom: INTEGER
@@ -365,10 +371,14 @@ feature -- Drawing operations
 			right := x + a_horizontal_radius
 			top := y - a_vertical_radius
 			bottom := y + a_vertical_radius
-			x_start_arc := x + (a_horizontal_radius * cosine (a_start_angle)).rounded
-			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
-			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
-			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
+			x_start_arc := x + (a_horizontal_radius * 
+				cosine (a_start_angle)).rounded
+			y_start_arc := y - (a_vertical_radius * 
+				sine (a_start_angle)).rounded
+			x_end_arc := x + (a_horizontal_radius * 
+				cosine ((a_start_angle + an_aperture))).rounded
+			y_end_arc := y - (a_vertical_radius * 
+				sine ((a_start_angle + an_aperture))).rounded
 
 			if not internal_initialized_pen then
 				reset_pen
@@ -383,8 +393,9 @@ feature -- Drawing operations
 			pix_imp: EV_PIXMAP_IMP
 		do
 			pix_imp ?= a_pixmap.implementation
-			dc.bit_blt (x, y, pix_imp.width, pix_imp.height, 
-				pix_imp.bitmap_dc, 0, 0, Srccopy)
+			pix_imp.reset_dc(True)
+			dc.bit_blt (x, y, pix_imp.width, 
+				pix_imp.height, pix_imp.dc, 0, 0, Srccopy)
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -451,10 +462,15 @@ feature -- Drawing operations
 			dc.polyline (flat_points)
 		end
 
-	draw_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_pie_slice (
+		x, y: INTEGER;
+		a_vertical_radius, a_horizontal_radius: INTEGER;
+		a_start_angle, an_aperture: REAL
+	) is
 			-- Draw a part of an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + 
+			-- `an_aperture'.
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
 		local
@@ -466,10 +482,14 @@ feature -- Drawing operations
 			right := x + a_horizontal_radius
 			top := y - a_vertical_radius
 			bottom := y + a_vertical_radius
-			x_start_arc := x + (a_horizontal_radius * cosine (a_start_angle)).rounded
-			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
-			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
-			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
+			x_start_arc := x + (a_horizontal_radius * 
+				cosine (a_start_angle)).rounded
+			y_start_arc := y - (a_vertical_radius * 
+				sine (a_start_angle)).rounded
+			x_end_arc := x + (a_horizontal_radius * 
+				cosine ((a_start_angle + an_aperture))).rounded
+			y_end_arc := y - (a_vertical_radius * 
+				sine ((a_start_angle + an_aperture))).rounded
 			remove_brush
 			if not internal_initialized_pen then
 				reset_pen
@@ -535,10 +555,15 @@ feature -- Filling operations
 			reset_pen
 		end
 
-	fill_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	fill_pie_slice (
+		x, y :INTEGER;
+		a_vertical_radius, a_horizontal_radius: INTEGER;
+		a_start_angle, an_aperture: REAL
+	) is
 			-- Draw a part of an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' +
+			-- `an_aperture'.
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
 		local
@@ -549,10 +574,14 @@ feature -- Filling operations
 			right := x + a_horizontal_radius
 			top := y - a_vertical_radius
 			bottom := y + a_vertical_radius
-			x_start_arc := x + (a_horizontal_radius * cosine (a_start_angle)).rounded
-			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
-			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
-			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
+			x_start_arc := x + (a_horizontal_radius * 
+				cosine (a_start_angle)).rounded
+			y_start_arc := y - (a_vertical_radius * 
+				sine (a_start_angle)).rounded
+			x_end_arc := x + (a_horizontal_radius * 
+				cosine ((a_start_angle + an_aperture))).rounded
+			y_end_arc := y - (a_vertical_radius * 
+				sine ((a_start_angle + an_aperture))).rounded
 			remove_pen
 			if not internal_initialized_brush then
 				reset_brush
@@ -586,7 +615,8 @@ feature {NONE} -- Implementation
 			-- requested by the WM_ERASEBKGND windows message.
 		do
 			if not internal_initialized_background_brush then
-				internal_background_brush := allocated_brushes.get(Void, wel_bg_color)
+				internal_background_brush := allocated_brushes.get(
+					Void, wel_bg_color)
 				internal_initialized_background_brush := True
 			end
 
@@ -608,9 +638,11 @@ feature {NONE} -- Implementation
 			if not internal_initialized_brush then
 				if tile /= Void then
 					pix_imp ?= tile.implementation
-					internal_brush := allocated_brushes.get(pix_imp.bitmap, Void)
+					internal_brush := allocated_brushes.get(
+						pix_imp.bitmap, Void)
 				else
-					internal_brush := allocated_brushes.get(Void, wel_fg_color)
+					internal_brush := allocated_brushes.get(
+						Void, wel_fg_color)
 				end
 				internal_initialized_brush := True
 			end
@@ -642,7 +674,8 @@ feature {NONE} -- Implementation
 					else
 						dmode := Ps_solid
 					end
-					internal_pen := allocated_pens.get (dmode, line_width, wel_fg_color)
+					internal_pen := allocated_pens.get (
+						dmode, line_width, wel_fg_color)
 					internal_initialized_pen := True
 				end
 
@@ -756,6 +789,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/20 23:33:04  pichery
+--| Added a small modification to `draw_pixmap' for speed optimisation.
+--|
 --| Revision 1.22  2000/03/14 19:41:20  brendel
 --| Replaced R2_notcopypen with R2_not.
 --|
@@ -838,7 +874,8 @@ end -- class EV_DRAWABLE_IMP
 --| Corrected insufficiently copied/pasted code for pie-slice.
 --|
 --| Revision 1.14.6.7  1999/12/17 17:19:44  rogers
---| Altered to fit in with the review branch. Previous commital would not compile at all, so this work attemopts to fix it.
+--| Altered to fit in with the review branch. Previous commital would 
+--| not compile at all, so this work attemopts to fix it.
 --|
 --| Revision 1.14.6.6  1999/12/09 18:16:34  brendel
 --| Improved `draw_straight_line'.

@@ -79,8 +79,6 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_with_named_file (filename)	
 		end
-		
-		
 	
 	select_pixmap is
 			-- Assign `selected_pixmap' to `selected_item' of `list'.

@@ -18,17 +18,11 @@ inherit
 		export
 			{NONE} all
 		end
-	
-feature {NONE}
-
-	make (a_clr_version: STRING) is
-			-- Create new instance of CACHE_PATH for CLR runtime version `a_clr_version'.
-		require
-			a_clr_version_not_void: a_clr_version /= Void
-		do
-			clr_version := a_clr_version
-		ensure
-			clr_version_set: clr_version = a_clr_version
+		
+	SHARED_CLR_VERSION
+		export
+			{NONE} all
+			{ANY} clr_version
 		end
 		
 feature {CACHE_READER} -- Access
@@ -212,9 +206,6 @@ feature {CACHE_READER} -- Access
 
 	eac_path: STRING is "dotnet\assemblies"
 			-- EAC path relative to $ISE_EIFFEL
-			
-	clr_version: STRING
-			-- Version of runtime used to consume/read XML.
 
 feature {EMITTER} -- Access
 		

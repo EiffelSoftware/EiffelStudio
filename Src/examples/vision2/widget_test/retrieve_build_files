@@ -1,7 +1,5 @@
 #/bin/bash
 
-rm -rf interface/
-mkdir interface
 # Check out Build source.
 cvs co Src/build2
 

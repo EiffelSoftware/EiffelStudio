@@ -10,6 +10,13 @@ class
 inherit
 	GB_CONSTANT
 	
+	GB_SHARED_OBJECT_EDITORS
+		rename
+			Visual_studio_information as old_Visual_studio_information
+		export
+			{NONE} all	
+		end
+	
 create
 	make_with_name_and_value
 	
@@ -91,6 +98,43 @@ feature -- Status setting
 			cross_referers.prune_all (cross_referer)
 		ensure
 			not_has_cross_referer: not cross_referers.has (cross_referer)
+		end
+		
+feature {GB_CONSTANTS_DIALOG} -- Implementation
+		
+	modify_value (new_value: STRING) is
+			-- Modify `value' to `new_value' and update all referers.
+		local
+			constant_context: GB_CONSTANT_CONTEXT
+			gb_ev_any: GB_EV_ANY
+			execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]
+			pixmap_constant: GB_PIXMAP_CONSTANT
+			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+		do
+			value := new_value
+			from
+				cross_referers.start
+			until
+				cross_referers.off
+			loop
+				pixmap_constant ?= cross_referers.item
+				check
+					only_pixmaps_cross_reference_directories: pixmap_constant /= Void
+				end
+				pixmap_constant.update
+				editors := all_editors
+				from
+					editors.start
+				until
+					editors.off
+				loop
+					editors.i_th (editors.index).constant_changed (pixmap_constant)
+					editors.forth
+				end
+				cross_referers.forth
+			end
+		ensure
+			value_set: value = new_value
 		end
 
 invariant

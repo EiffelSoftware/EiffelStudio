@@ -18,6 +18,7 @@ extern "C" {
 #endif
 
 #include "hector.h"
+#include "eif_globals.h"
 
 /* Flags for traversal */
 #define TR_PLAIN		0x00		/* No accounting during object traversal */
@@ -26,7 +27,7 @@ extern "C" {
 #define INDEPEND_ACCOUNT		0x05		/* Accounting of objects in obj_nb */
 
 extern long obj_nb;					/* Count of marked objects */
-extern void traversal(char *object, int accounting);			/* Traversal of objects */
+extern void traversal(char *object, int p_accounting); /* Traversal of objects */
 
 /* Maping table handling */
 extern void map_start(void);			/* Reset LIFO stack into a FIFO one */

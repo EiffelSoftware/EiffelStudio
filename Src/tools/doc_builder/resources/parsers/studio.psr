@@ -11,7 +11,7 @@
 <meta[^>]*> || 
 <style[^>]*> || 
 <html[^>]*> || <document output="studio">
-<head> || <help/>
+<head> || <meta_data/>
 </head> || 
 <body[^>]*> || <paragraph>
 </body> || </paragraph>
@@ -72,7 +72,7 @@ src="([^"]*)" || <url>\1\</url>
 <enumber>([^<]*)</enumber> || <code><number>\1\</number></code>
 <echar>([^<]*)</echar> || <code><character>\1\</character></code>
 <eitag>([^<]*)</eitag> || <code><indexing_tag>\1\</indexing_tag></code>
-<document><help/><title>([^<]*)</title> || <document title="\1\"><help/>
+<document><meta_data/><title>([^<]*)</title> || <document title="\1\"><meta_data/>
 <a href="([^"]*)">([^<]*)</a> || <link><url>\1\</url><label>\2\</label></link>
 <ahref="([^"]*)">([^<]*)</a> || <link><url>\1\</url><label>\2\</label></link>
 <a [^>]*> || 
@@ -88,4 +88,5 @@ src="([^"]*)" || <url>\1\</url>
 <table><row><cell>Eiffel ENViSioN!</cell></row><row><cell>[^<]*</cell></row></TABLE> ||
 <table><row><cell>© 2003-2004 Eiffel Software. All rights reserved.</cell></row></TABLE> ||
 </LINK></LINK></LINK> ||
+(<document output="studio")><meta_data/><TITLE>([^<]*)</TITLE> || \1\ title="\2\"><meta_data/>
 

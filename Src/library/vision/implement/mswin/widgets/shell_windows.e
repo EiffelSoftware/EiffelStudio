@@ -1,14 +1,17 @@
 indexing 
-
 	status: "See notice at end of class"; 
 	date: "$Date$"; 
 	revision: "$Revision$" 
  
 class
-
 	SHELL_WINDOWS 
   
 inherit 
+	WEL_SIZE_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	COMPOSITE_WINDOWS
 		redefine
 			on_size,
@@ -58,6 +61,8 @@ inherit
 			set_menu as wel_set_menu,
 			menu as wel_menu
 		undefine
+			on_hide,
+			on_show,
 			on_move,
 			on_destroy,
 			on_right_button_up,
@@ -120,8 +125,13 @@ feature -- Access
 	real_y: INTEGER is
 			-- Relative y-position of the client-area to the screen.
 		do
-			Result := absolute_y + title_bar_height + window_border_height +
-				window_frame_height
+			if has_menu then
+				Result := absolute_y + title_bar_height + window_border_height +
+					window_frame_height + menu_bar_height
+			else
+				Result := absolute_y + title_bar_height + window_border_height +
+					window_frame_height
+			end
 		end
 
 	height: INTEGER is
@@ -218,9 +228,27 @@ feature {NONE} -- Implementation
 	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
+		local
+			resize_data: RESIZE_CONTEXT_DATA
+			wa: WIDGET_ACTIONS
 		do
+			if size_type = Size_minimized then
+				wa := unmap_actions.widget_actions (Current)
+				if wa /= Void then
+					shown := False
+					wa.execute (Void)
+				end
+			elseif size_type = Size_maximized or size_type = Size_restored then
+				wa := map_actions.widget_actions (Current)
+				if wa /= Void then
+					shown := True
+					wa.execute (Void)
+				end
+			else
+				!! resize_data.make (owner, a_width, a_height, size_type)
+				resize_actions.execute (Current, resize_data)
+			end
 			resize_shell_children (a_width, a_height)
-			resize_actions.execute (Current, Void)
 		end
 
 	resize_shell_children (a_width, a_height: INTEGER) is

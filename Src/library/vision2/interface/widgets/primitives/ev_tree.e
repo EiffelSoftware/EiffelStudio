@@ -15,32 +15,14 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			implementation
-		end
-
-	EV_TREE_ITEM_HOLDER
-		undefine
+			implementation,
 			create_action_sequences
+		end
+
+	EV_ITEM_LIST [EV_TREE_ITEM]
 		redefine
-			implementation
-		end
-
-feature -- Access
-
-	selected_item: EV_TREE_ITEM is
-			-- Item which is currently selected.
-		require
-		do
-			Result := implementation.selected_item
-		end
-
-	total_count: INTEGER is
-			-- Total number of items in the tree.
-		require
-		do
-			Result := implementation.total_count
-		ensure
-			positive_result: Result >= 0
+			implementation,
+			create_action_sequences
 		end
 
 feature -- Status report
@@ -52,42 +34,6 @@ feature -- Status report
 			Result := implementation.selected
 		end
 
-feature -- Event : command association
-
-	add_select_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when an item has been selected.
-		require
-		do
-			--FIXME implementation.add_select_command (a_command, arguments)
-		end
-
-	add_unselect_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when an item has been unselected.
-		require
-		do
-			--FIXME implementation.add_unselect_command (a_command, arguments)
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is	
-			-- Empty the list of commands to be executed
-			-- when an item has been selected.
-		require
-		do
-			--FIXME implementation.remove_select_commands
-		end
-
-	remove_unselect_commands is	
-			-- Empty the list of commands to be executed
-			-- when an item has been unselected.
-		require
-		do
-			--FIXME implementation.remove_unselect_commands
-		end
-
 feature -- Implementation
 	
 	implementation: EV_TREE_I	
@@ -97,6 +43,13 @@ feature -- Implementation
 			-- Create implementation of tree
 		do
 			create {EV_TREE_IMP} implementation.make (Current)
+		end
+
+	create_action_sequences is
+			-- Create the action sequences for the tree.
+		do
+			{EV_PRIMITIVE} Precursor
+			{EV_ITEM_LIST} Precursor
 		end
 
 end -- class EV_TREE
@@ -122,6 +75,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/22 21:41:12  king
+--| Tidied up interface, now inheriting from item_list
+--|
 --| Revision 1.16  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

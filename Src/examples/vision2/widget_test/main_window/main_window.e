@@ -337,33 +337,7 @@ feature {NONE} -- Implementation
 				generate_button.set_pixmap (pixmap_by_name ("icon_code_generation_color"))
 			end
 		end
-		
-	pixmap_by_name (a_name: STRING): EV_PIXMAP is
-			-- `Result' is a pixmap corresponding to `a_name'.
-		require
-			name_not_void: a_name /= Void
-		local
-			file_name: FILE_NAME
-			file_location: STRING
-			file: RAW_FILE
-		do
-			if installation_location /= Void then
-				create file_name.make_from_string (installation_location)
-				file_name.extend ("bitmaps")
-				file_name.extend (image_extension)
-				file_name.extend (a_name + "." + image_extension)
-				create file.make (file_name.out)
-				if file.exists then
-					create Result
-					Result.set_with_named_file (file_name.out)
-				else
-					Missing_files.extend (a_name + "." + image_extension)
-				end
-			else
-				missing_files.extend (a_name + "." + image_extension)
-			end
-		end
-		
+
 	display_missing_pixmaps is
 			-- Warn user that files are missing.
 		local
@@ -389,19 +363,6 @@ feature {NONE} -- Implementation
 				warning_dialog.set_text (message_text)
 				warning_dialog.show_modal_to_window (Current)
 			end
-		end
-	
-	image_extension: STRING is
-			-- Extension type of image formats on current platform.
-			-- either "png" or "ico"
-		once
-			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
-				Result := "ico"
-			else
-				Result := "png"
-			end
-		ensure
-			Result_valid: Result.is_equal ("png") or Result.is_equal ("ico")
 		end
 
 	perform_generation is

@@ -20,6 +20,11 @@ inherit
 		select
 			implementation
 		end
+		
+	GB_STORABLE_TOOL
+		undefine
+			default_create, copy, is_equal
+		end
 
 	GB_LAYOUT_NODE
 		rename
@@ -50,7 +55,7 @@ inherit
 create
 	default_create
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current' and add a root
@@ -112,6 +117,14 @@ feature -- Access
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_view_small_color"))
 		end
 		
+	tool_bar: EV_TOOL_BAR is
+			-- A tool bar containing all buttons associated with `Current'.
+		do
+			create Result
+		end
+		
+	name: STRING is "Layout Constructor"
+			-- Full name used to represent `Current'.
 
 feature {GB_XML_LOAD} -- Implementation
 

@@ -87,8 +87,11 @@ feature -- Access
 			-- Specifies, whether function virtual or dispatch
 			-- See ECOM_FUNC_KIND for values.
 
+	dual: BOOLEAN
+			-- Can function be accessed through IDispatch and Vtable?
+		
 	invoke_kind: INTEGER
-			-- Invokation kind
+			-- Invocation kind
 			-- See class ECOM_INVOKE_KIND for return values
 
 	call_conv: INTEGER 
@@ -182,24 +185,6 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_member_id: member_id = a_member_id
 		end
 
-	set_argument_count (an_argument_count: INTEGER) is
-			-- Set `argument_count' with `an_argument_count'.
-		do
-			argument_count := an_argument_count
-		ensure
-			valid_argument_count: argument_count = an_argument_count
-		end
-
-	set_arguments (some_arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]) is
-			-- Set `arguments' with `some_arguments'
-		require
-			valid_arguments: some_arguments /= Void
-		do
-			arguments := some_arguments
-		ensure
-			valid_arguments: arguments /= Void and arguments = some_arguments
-		end
-
 	set_vtbl_offset (an_offset: INTEGER) is
 			-- Set `vtbl_offset' with `an_offset'
 		do
@@ -238,6 +223,26 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_call_conv: is_valid_callconv (call_conv) and call_conv = a_convention
 		end
 
+feature -- Basic operations
+
+	set_argument_count (an_argument_count: INTEGER) is
+			-- Set `argument_count' with `an_argument_count'.
+		do
+			argument_count := an_argument_count
+		ensure
+			valid_argument_count: argument_count = an_argument_count
+		end
+
+	set_arguments (some_arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]) is
+			-- Set `arguments' with `some_arguments'
+		require
+			valid_arguments: some_arguments /= Void
+		do
+			arguments := some_arguments
+		ensure
+			valid_arguments: arguments /= Void and arguments = some_arguments
+		end
+
 	set_return_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR) is
 			-- Set `return_type' with `a_data_type'.
 		require
@@ -248,6 +253,14 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_return_type: return_type /= Void and return_type = a_data_type
 		end
 
+	set_dual (a_boolean: BOOLEAN) is
+			-- Set `dual' with `a_boolean'.
+		do
+			dual := a_boolean
+		ensure
+			valid_dual: dual = a_boolean
+		end
+		
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

@@ -140,7 +140,7 @@ feature -- Access
 						"External assemblies: %N" + assemblies_string (wizard_information.selected_assemblies))				
 				end
 			else
-				message_text_field.set_text ("%N%N%N%N" + Common_message)			
+				message_text_field.set_text (Common_message)			
 			end
 			message.set_text ("Click Finish to generate" + word + "this project.")
 		end

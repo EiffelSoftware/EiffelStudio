@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Real values";
+		"Real values, single precision";
 
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -23,55 +23,55 @@ expanded class REAL inherit
 
 feature -- Comparison
 
-	infix "<" (other: REAL): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater than current real?
 		do
 			-- Built-in
-		end; -- infix "<"
+		end;
 
 feature -- Basic operations
 
-	infix "+" (other: REAL): REAL is
+	infix "+" (other: like Current): like Current is
 			-- Sum with `other'
 		do
 			-- Built-in
-		end; -- infix "+"
+		end;
 
-	infix "-" (other: REAL): REAL is
+	infix "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
 			-- Built-in
-		end; -- infix "-"
+		end;
 
-	infix "*" (other: REAL): REAL is
+	infix "*" (other: like Current): like Current is
 			-- Product by `other'
 		do
 			-- Built-in
-		end; -- infix "*"
+		end;
 
-	infix "/" (other: REAL): REAL is
+	infix "/" (other: like Current): like Current is
 			-- Division by `other'
 		do
 			-- Built-in
-		end; -- infix "/"
+		end;
 
-	infix "^" (other: REAL): REAL is
+	infix "^" (other: NUMERIC): DOUBLE is
 			-- Current real to the power `other'
 		do
 			-- Built-in
-		end; -- infix "^"
+		end;
 
-	prefix "+": REAL is
+	prefix "+": like Current is
 			-- Unary plus
 		do
 			-- Built-in
-		end; -- prefix "+"
+		end;
 
-	prefix "-": REAL is
+	prefix "-": like Current is
 			-- Unary minus
 		do
 			-- Built-in
-		end; -- prefix 
+		end;
 
 end -- class REAL
 

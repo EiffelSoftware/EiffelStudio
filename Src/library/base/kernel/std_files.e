@@ -33,7 +33,7 @@ feature -- Access
 		end;
 
 	default_output: PLAIN_TEXT_FILE;
-			-- Default output.
+			-- Default output
 
 	standard_default: PLAIN_TEXT_FILE is
 			-- Return the `default_output' or `output'
@@ -50,35 +50,35 @@ feature -- Access
 
 feature -- Status report
 
-	lastchar: CHARACTER is
-			-- Last character read by `readchar'
+	last_character, lastchar: CHARACTER is
+			-- Last character read by `read_character'
 		do
-			Result := input.lastchar
+			Result := input.last_character
 		end;
 
-	lastint: INTEGER is
-			-- Last integer read by `readint'
+	last_integer, lastint: INTEGER is
+			-- Last integer read by `read_integer'
 		do
-			Result := input.lastint
+			Result := input.last_integer
 		end;
 
-	lastreal: REAL is
-			-- Last real read by `readreal'
+	last_real, lastreal: REAL is
+			-- Last real read by `read_real'
 		do
-			Result := input.lastreal
+			Result := input.last_real
 		end;
 
-	laststring: STRING is
-			-- Last string read by `readline',
-			-- `readstream', or `readword'
+	last_string, laststring: STRING is
+			-- Last string read by `read_line',
+			-- `read_stream', or `read_word'
 		do
-			Result := input.laststring
+			Result := input.last_string
 		end;
 
-	lastdouble: DOUBLE is
-			-- Last double read by `readdouble'
+	last_double, lastdouble: DOUBLE is
+			-- Last double read by `read_double'
 		do
-			Result := input.lastdouble
+			Result := input.last_double
 		end;
 
 feature -- Element change
@@ -95,13 +95,13 @@ feature -- Element change
 			default_output := error;
 		end;
 
-	putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at end of default output.
 		do
 			console_pc (standard_default.file_pointer, $c)
 		end;
 
-	putstring (s: STRING) is
+	put_string, putstring (s: STRING) is
 			-- Write `s' at end of default output.
 		require
 			s /= Void
@@ -112,31 +112,31 @@ feature -- Element change
 			console_ps (standard_default.file_pointer, $external_s, s.count)
 		end;
 
-	putreal (r: REAL) is
+	put_real, putreal (r: REAL) is
 			-- Write `r' at end of default output.
 		do
 			console_pr (standard_default.file_pointer, r)
 		end;
 
-	putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE) is
 			-- Write `d' at end of default output.
 		do
 			console_pd (standard_default.file_pointer, d)
 		end;
 
-	putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER) is
 			-- Write `i' at end of default output.
 		do
 			console_pi (standard_default.file_pointer, i)
 		end;
 
-	putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' at end of default output.
 		do
 			if b then
-				putstring ("true")
+				put_string ("true")
 			else
-				putstring ("false")
+				put_string ("false")
 			end 
 		end; 
 
@@ -148,54 +148,54 @@ feature -- Element change
 
 feature -- Input
 
-	readint is
+	read_integer, readint is
 			-- Read a new integer from standard input.
-			-- Make result available in `lastint'.
+			-- Make result available in `last_integer'.
 		do
-			input.readint
+			input.read_integer
 		end;
 
-	readreal is
+	read_real, readreal is
 			-- Read a new real from standard input.
-			-- Make result available in `lastreal'.
+			-- Make result available in `last_real'.
 		do
-			input.readreal
+			input.read_real
 		end;
 
-	readdouble is
+	read_double, readdouble is
 			-- Read a new double from standard input.
-			-- Make result available in `lastdouble'.
+			-- Make result available in `last_double'.
 		do
-			input.readdouble
+			input.read_double
 		end;
 
-	readline is
+	read_line, readline is
 			-- Read a line from standard input.
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		do
-			input.readline
+			input.read_line
 		end;
 
-	readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER) is
  			-- Read a string of at most `nb_char' bound characters
 			-- from standard input.
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		do
-			input.readstream (nb_char)
+			input.read_stream (nb_char)
 		end;
 
-	readword is
+	read_word, readword is
 			-- Read a new word from standard input.
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		do
-			input.readword
+			input.read_word
 		end;
 
-	readchar is
+	read_character, readchar is
 			-- Read a new character from standard input.
-			-- Make result available in `lastchar'.
+			-- Make result available in `last_character'.
 		do
-			input.readchar
+			input.read_character
 		end;
 
 
@@ -208,7 +208,7 @@ feature -- Input
 feature {NONE} -- Implementation
 
 	console_pc (file: POINTER; c: CHARACTER) is
-		-- Write character `c' at end of `file'
+			-- Write character `c' at end of `file'
 		external
 			"C"
 		end;

@@ -34,7 +34,7 @@ feature -- Initialization
 		do
 			name := fn;
 			mode := Closed_file;
-			!! laststring.make (256)
+			!! last_string.make (256)
 		ensure
 			file_named: name.is_equal (fn);
 			file_closed: is_closed;
@@ -139,8 +139,8 @@ feature -- Access
 	item: CHARACTER is
 			-- Current item
 		do
-			readchar
-			Result := lastchar
+			read_character
+			Result := last_character
 			back
 		end;
 
@@ -896,7 +896,7 @@ feature -- Element change
 	extend (v: CHARACTER) is
 			-- Include `v' at end.
 		do
-			putchar (v)
+			put_character (v)
 		end;
 
 	flush is
@@ -946,27 +946,27 @@ feature -- Element change
 			files_closed: f.is_closed and is_closed;
 		end;
 
-	putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER) is
 			-- Write `i' at current position.
 		deferred
 		end;
 
-	putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' at current position.
 		deferred
 		end;
 
-	putreal (r: REAL) is
+	put_real, putreal (r: REAL) is
 			-- Write `r' at current position.
 		deferred
 		end;
 
-	putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE) is
 			-- Write `d' at current position.
 		deferred
 		end;
 
-	putstring (s: STRING) is
+	put_string, putstring (s: STRING) is
 			-- Write `s' at current position.
 		local
 			ext_s: ANY
@@ -977,7 +977,7 @@ feature -- Element change
 			end;
 		end;
 
-	putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		do
 			file_pc (file_pointer, c);
@@ -1176,13 +1176,13 @@ feature -- Removal
 			if mode /= Closed_file then
 				close
 			end;
-			lastint := 0;
-			if laststring /= Void then
-				laststring.wipe_out
+			last_integer := 0;
+			if last_string /= Void then
+				last_string.wipe_out
 			end;
-			lastreal := 0.0;
-			lastchar := '%U';
-			lastdouble := 0.0
+			last_real := 0.0;
+			last_character := '%U';
+			last_double := 0.0
 		ensure
 			file_renamed: name = fn;
 			file_closed: is_closed
@@ -1190,45 +1190,45 @@ feature -- Removal
 
 feature -- Input
 
-	readreal is
+	read_real, readreal is
 			-- Read a new real.
-			-- Make result available in `lastreal'.
+			-- Make result available in `last_real'.
 		require else
-			is_readable: file_readable;
+			is_readable: file_readable
 		deferred
 		end;
 
-	readdouble is
+	read_double, readdouble is
 			-- Read a new double.
-			-- Make result available in `lastdouble'.
+			-- Make result available in `last_double'.
 		require else
-			is_readable: file_readable;
+			is_readable: file_readable
 		deferred
 		end;
 
-	readchar is
+	read_character, readchar is
 			-- Read a new character.
-			-- Make result available in `lastchar'.
+			-- Make result available in `last_character'.
 		require else
-			is_readable: file_readable;
+			is_readable: file_readable
 		do
-			lastchar := file_gc (file_pointer)
+			last_character := file_gc (file_pointer)
 		end;
 
-	readint is
+	read_integer, readint is
 			-- Read a new integer.
-			-- Make result available in `lastint'.
+			-- Make result available in `last_integer'.
 		require else
-			is_readable: file_readable;
+			is_readable: file_readable
 		deferred
 		end;
 
-	readline is
+	read_line, readline is
 			-- Read a string until new line or end of file.
-			-- Make result available in `laststring'.
-			-- New line will be consumed but not part of `laststring'.
+			-- Make result available in `last_string'.
+			-- New line will be consumed but not part of `last_string'.
 		require else
-			is_readable: file_readable;
+			is_readable: file_readable
 		local
 			str_cap: INTEGER;
 			read: INTEGER;	-- Amount of bytes already read
@@ -1236,8 +1236,8 @@ feature -- Input
 			done: BOOLEAN
 		do
 			from
-				str_area := laststring.to_c; 
-				str_cap := laststring.capacity;
+				str_area := last_string.to_c; 
+				str_cap := last_string.capacity;
 			until
 				done
 			loop
@@ -1247,54 +1247,54 @@ feature -- Input
 						-- End of line not reached yet
 						--|The string must be consistently set before
 						--|resizing.
-					laststring.set_count (str_cap);
-					laststring.resize (str_cap + 1024);
-					str_cap := laststring.capacity;
+					last_string.set_count (str_cap);
+					last_string.resize (str_cap + 1024);
+					str_cap := last_string.capacity;
 					read := read - 1;		-- True amount of byte read
-					str_area := laststring.to_c;
+					str_area := last_string.to_c;
 				else
-					laststring.set_count (read);
+					last_string.set_count (read);
 					done := true
 				end;
 			end;
 				-- Ensure fair amount of garbage.
 			if read < 1024 then
-				laststring.resize (read);
+				last_string.resize (read);
 			end;
 		end;
 
-	readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		require else
-			is_readable: file_readable;
+			is_readable: file_readable
 		local
 			new_count: INTEGER;
 			str_area: ANY
 		do
-			laststring.resize (nb_char);
-			str_area := laststring.to_c;
+			last_string.resize (nb_char);
+			str_area := last_string.to_c;
 			new_count := file_gss (file_pointer, $str_area, nb_char);
-			laststring.set_count (new_count);
+			last_string.set_count (new_count);
 		end;
 
-	readword is
+	read_word, readword is
 			-- Read a string, excluding white space and stripping
 			-- leading white space. 
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 			-- White space characters are: blank, new_line, tab,
 			-- vertical tab, formfeed, end of file.
 		require
-			is_readable: file_readable;
+			is_readable: file_readable
 		local
 			str_area: ANY;
 			str_cap: INTEGER;
 			read: INTEGER;	-- Amount of bytes already read
 		do
 			from
-				str_area := laststring.to_c; 
-				str_cap := laststring.capacity;
+				str_area := last_string.to_c; 
+				str_cap := last_string.capacity;
 			until
 				read > str_cap
 			loop
@@ -1302,17 +1302,17 @@ feature -- Input
 					file_gw (file_pointer, $str_area, str_cap, read);
 				if read > str_cap then
 						-- End of word not reached yetO
-					laststring.resize (str_cap + 1024);
-					str_cap := laststring.capacity;
+					last_string.resize (str_cap + 1024);
+					str_cap := last_string.capacity;
 					read := read - 1;		-- True amount of byte read
 				else
-					laststring.set_count (read);
+					last_string.set_count (read);
 					read := str_cap + 1;	-- End of loop
 				end;
 			end;
 				-- Ensure fair amount of garbage.
 			if read < 1024 then
-				laststring.resize (read);
+				last_string.resize (read);
 			end;
 			separator := file_lh (file_pointer); -- Look ahead
 		end;
@@ -1401,8 +1401,8 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_gs (file: POINTER; string: ANY; length, begin: INTEGER): INTEGER is
-			-- `string' updated with characters read from `file'
+	file_gs (file: POINTER; a_string: ANY; length, begin: INTEGER): INTEGER is
+			-- `a_string' updated with characters read from `file'
 			-- until new line, with `begin' characters already read.
 			-- If it does not fit, result is `length' - `begin' + 1.
 			-- If it fits, result is number of characters read.
@@ -1410,17 +1410,17 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_gss (file: POINTER; string: ANY; length: INTEGER): INTEGER is
+	file_gss (file: POINTER; a_string: ANY; length: INTEGER): INTEGER is
 			-- Read min (`length', remaining bytes in file) characters
-			-- into `string'. If it does not fit, result is `length' + 1.
+			-- into `a_string'. If it does not fit, result is `length' + 1.
 			-- Otherwise, result is the number of characters read.
 		external
 			"C"
 		end;
 
-	file_gw (file: POINTER; string: ANY; length, begin: INTEGER): INTEGER is
+	file_gw (file: POINTER; a_string: ANY; length, begin: INTEGER): INTEGER is
 			-- Read a string excluding white space and stripping
-			-- leading white space from `file' into `string'.
+			-- leading white space from `file' into `a_string'.
 			-- White space characters are: blank, new_line,
 			-- tab, vertical tab, formfeed or end of file.
 			-- If it does not fit, result is `length' - `begin' + 1,
@@ -1511,8 +1511,8 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_ps (file: POINTER; string: ANY; length: INTEGER) is
-			-- Print `string' to `file'.
+	file_ps (file: POINTER; a_string: ANY; length: INTEGER) is
+			-- Print `a_string' to `file'.
 		external
 			"C"
 		end;
@@ -1629,8 +1629,8 @@ feature {FILE} -- Implementation
 
 invariant
 
-	valid_mode: Closed_file <= mode and mode <= Append_Read_file
-	name_exists: name /= Void
+	valid_mode: Closed_file <= mode and mode <= Append_Read_file;
+	name_exists: name /= Void;
 	name_not_empty: not name.empty
 
 end -- class FILE

@@ -44,20 +44,20 @@ feature -- Status report
 		do
 		end
 
-	lastchar: CHARACTER;
-			-- Last character read by `readchar'
+	last_character: CHARACTER;
+			-- Last character read by `read_character'
 
-	laststring: STRING;
+	last_string: STRING;
 			-- Last string read
 
-	lastint: INTEGER;
-			-- Last integer read by `readint'
+	last_integer: INTEGER;
+			-- Last integer read by `read_integer'
 
-	lastreal: REAL;
-			-- Last real read by `readreal'
+	last_real: REAL;
+			-- Last real read by `read_real'
 
-	lastdouble: DOUBLE;
-			-- Last double read by `readdouble'
+	last_double: DOUBLE;
+			-- Last double read by `read_double'
 
 	exists: BOOLEAN is
 			-- Does medium exist?
@@ -140,43 +140,43 @@ feature -- Output
 		deferred
 		end;
 
-	putstring (s: STRING) is
-			-- Write `s' to medium
+	put_string, putstring (s: STRING) is
+			-- Write `s' to medium.
 		require
 			extendible: extendible
 			non_void: s /= Void
 		deferred
 		end;
 
-	putchar (c: CHARACTER) is
-			-- Write `c' to medium
+	put_character, putchar (c: CHARACTER) is
+			-- Write `c' to medium.
 		require
 			extendible: extendible
 		deferred
 		end;
 
-	putreal (r: REAL) is
-			-- Write `r' to medium
+	put_real, putreal (r: REAL) is
+			-- Write `r' to medium.
 		require
 			extendible: extendible
 		deferred
 		end;
 
-	putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER) is
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end;
 	
-	putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' to medium.
 		require
 			extendible: extendible
 		deferred
 		end;
 	
-	putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE) is
 			-- Write `d' to medium.
 		require
 			extendible: extendible
@@ -185,56 +185,88 @@ feature -- Output
 
 feature -- Input 
 	
-	readreal is
+	read_real, readreal is
 			-- Read a new real.
-			-- Make result available in `lastreal'.
+			-- Make result available in `last_real'.
 		require
-			is_readable: readable;
+			is_readable: readable
 		deferred
 		end;
 
-	readdouble is
+	read_double, readdouble is
 			-- Read a new double.
-			-- Make result available in `lastdouble'.
+			-- Make result available in `last_double'.
 		require
-			is_readable: readable;
+			is_readable: readable
 		deferred
 		end;
 
-	readchar is
+	read_character, readchar is
 			-- Read a new character.
-			-- Make result available in `lastchar'.
+			-- Make result available in `last_character'.
 		require
-			is_readable: readable;
+			is_readable: readable
 		deferred
 		end;
 
-	readint is
+	read_integer, readint is
 			-- Read a new integer.
-			-- Make result available in `lastint'.
+			-- Make result available in `last_integer'.
 		require
-			is_readable: readable;
+			is_readable: readable
 		deferred
 		end;
 
-	readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of medium is encountered.
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		require
-			is_readable: readable;
+			is_readable: readable
 		deferred
 		end;
 
-	readline is
+	read_line, readline is
 			-- Read characters until a new line or
 			-- end of medium.
-			-- Make result available in `laststring'.
+			-- Make result available in `last_string'.
 		require
-			is_readable: readable;
+			is_readable: readable
 		deferred
 		end;
 			
+feature -- Obsolete
+
+	lastchar: CHARACTER is
+			-- Last character read by `read_character'
+		do
+			Result := last_character
+		end;
+
+	laststring: STRING is
+			-- Last string read
+		do
+			Result := last_string
+		end;
+
+	lastint: INTEGER is
+			-- Last integer read by `read_integer'
+		do
+			Result := last_integer
+		end;
+
+	lastreal: REAL is
+			-- Last real read by `read_real'
+		do
+			Result := last_real
+		end;
+
+	lastdouble: DOUBLE is
+			-- Last double read by `read_double'
+		do
+			Result := last_double
+		end;
+
 end -- class IO_MEDIUM
 
 --|----------------------------------------------------------------

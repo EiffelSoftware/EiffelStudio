@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 				application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
 				
 				application_file_name := clone (generated_path)
-				application_file_name.extend (application_class_name + ".e")
+				application_file_name.extend (application_class_name + eiffel_class_extension)
 
 				create application_output_file.make_open_write (application_file_name)
 				application_output_file.start
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 					
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)
-				window_file_name.extend (system_status.current_project_settings.main_window_class_name + class_implementation_extension.as_lower + ".e")--system_status.current_project_settings.main_window_file_name)
+				window_file_name.extend (system_status.current_project_settings.main_window_class_name + class_implementation_extension.as_lower + eiffel_class_extension)
 				create window_output_file.make_open_write (window_file_name)
 				window_output_file.start
 				window_output_file.putstring (class_text)

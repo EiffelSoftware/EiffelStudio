@@ -196,23 +196,23 @@ feature -- New feature description
 		do
 			if content = Void then
 					-- It is an attribute
-				create attr
+				create attr.make
 				check
 					type_exists: type /= Void
 				end
 				attr.set_type (type)
 				Result := attr
-				Result.set_empty_body (True)
+				Result.set_is_empty (True)
 			elseif content.is_constant then
 					-- It is a constant feature
 				constant ?= content
 				if content.is_unique then
 						-- No constant value is processed for a unique
 						-- feature, since the second pass does it.
-					create {UNIQUE_I} const
+					create {UNIQUE_I} const.make
 				else
 					ras ?= type
-					create const
+					create const.make
 						-- Constant value is processed here.
 					if (ras = Void) then
 						const.set_value (constant.value_i)
@@ -234,7 +234,7 @@ feature -- New feature description
 				end
 				const.set_type (type)
 				Result := const
-				Result.set_empty_body (True)
+				Result.set_is_empty (True)
 
 			elseif type = Void then
 				routine ?= content
@@ -296,7 +296,7 @@ feature -- New feature description
 					proc.set_obsolete_message (routine.obsolete_message.value)
 				end
 				Result := proc
-				Result.set_empty_body (content.is_empty)
+				Result.set_is_empty (content.is_empty)
 			else
 				routine ?= content
 				check
@@ -344,13 +344,13 @@ feature -- New feature description
 						extern_func.set_type (type)
 						func := extern_func
 					elseif is_attribute_external then
-						create attr
+						create attr.make
 						check
 							il_generation: System.il_generation
 							type_exists: type /= Void
 						end
 						attr.set_type (type)
-						attr.set_empty_body (True)
+						attr.set_is_empty (True)
 						attr.set_extension (il_ext)
 						Result := attr
 						if external_body.alias_name_id > 0 then
@@ -383,7 +383,7 @@ feature -- New feature description
 						func.set_obsolete_message (routine.obsolete_message.value)
 					end
 					Result := func
-					Result.set_empty_body (content.is_empty)
+					Result.set_is_empty (content.is_empty)
 				end
 			end
 		end

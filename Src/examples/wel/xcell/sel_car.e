@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			if number_edit.text.is_integer then
 				if number_edit.text.to_integer < 1 or number_edit.text.to_integer > 52 then
 					information_message_box ("You can only select a number of cards%N%
-						%within the range of 1-52", "Information")
+						%within the range of 1-52.", "Information")
 					number_edit.set_text (no_cards.out)
 				else
 					no_cards := number_edit.text.to_integer
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 				end
 			else
 					information_message_box ("This field requires %
-					%a number.", "Information")
+						%a number.", "Information")
 					number_edit.set_text (no_cards.out)
 			end
 

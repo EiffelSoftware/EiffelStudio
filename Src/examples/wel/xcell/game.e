@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			-- destination?
 		do
 			Result := (difference (card_from (go_from), card_from (go_to)) = 1) 
-				and color_difference  (card_from(go_from), card_from (go_to)) 
+				and color_difference (card_from(go_from), card_from (go_to))
 				and card_from (go_from) /= 0
 				or (card_from (go_from) /= 0 and card_from (go_to) = 0)
 		end

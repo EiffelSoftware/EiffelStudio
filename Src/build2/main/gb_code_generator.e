@@ -408,7 +408,13 @@ feature {NONE} -- Implementation
 				--| FIXME handle visual studio wizard.
 				
 					--Firstly read the contents of the file.
-				constants_file := open_text_file_for_read (constants_template_imp_file_name)
+				if system_status.is_wizard_system then
+					create constants_file_name.make_from_string (visual_studio_information.wizard_installation_path)
+					constants_file_name.extend ("templates")
+					constants_file_name.extend ("constants_imp.e")
+				else
+					constants_file := open_text_file_for_read (constants_template_imp_file_name)	
+				end
 				if constants_file /= Void then
 					constants_file.read_stream (constants_file.count)
 					constants_file.close
@@ -481,8 +487,15 @@ feature {NONE} -- Implementation
 					
 							-- Now generate the interface class name for constants.
 							
-								--Firstly read the contents of the file.
-					constants_file := open_text_file_for_read (constants_template_file_name)
+							--Firstly read the contents of the file.
+					if system_status.is_wizard_system then
+						create constants_file_name.make_from_string (visual_studio_information.wizard_installation_path)
+						constants_file_name.extend ("templates")
+						constants_file_name.extend ("constants.e")
+					else
+						constants_file := open_text_file_for_read (constants_template_file_name)
+					end
+					
 					if constants_file /= Void then
 						constants_file.read_stream (constants_file.count)
 						constants_file.close

@@ -218,6 +218,17 @@ feature -- Status report
 			-- taking into account line breaks ('%N').
 		do
 			Result := wel_font.string_size (a_string)
+				--| FIXME The Result from `wel_font' is not correctly being
+				--| returned when `Current' is italic. The width is smaller
+				--| than the displayed width. I believe the overhang from
+				--| text_metric should be taken into account, but when
+				--| queried, this would always return 0. See TEXTMETRIC from
+				--| MSDN. For now, if `Current' is italic then we add 1/6 of the
+				--| height. Julian 11/01/2001
+			if shape = shape_italic then
+				Result.put (Result.integer_item (2) // 6 +
+					Result.integer_item (1), 1)
+			end
 		end
 
 	horizontal_resolution: INTEGER is

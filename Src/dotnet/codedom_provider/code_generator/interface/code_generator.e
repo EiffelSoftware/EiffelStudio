@@ -8,61 +8,15 @@ class
 
 inherit
 	SYSTEM_DLL_ICODE_GENERATOR
-		undefine
-			default_rescue
-		end
-
 	CODE_SHARED_ANALYSIS_CONTEXT
-		redefine
-			default_rescue
-		end
-	
 	CODE_SHARED_GENERATION_CONTEXT
-		redefine
-			default_rescue
-		end
-	
 	CODE_SHARED_EVENT_MANAGER
-		export
-			{NONE} all
-		undefine
-			default_rescue
-		end
-
 	CODE_SHARED_FACTORIES
-		export
-			{NONE} all
-		undefine
-			default_rescue
-		end
-	
 	CODE_SHARED_METADATA_ACCESS
-		export
-			{NONE} all
-		undefine
-			default_rescue
-		end
-
 	CODE_SHARED_GENERATION_HELPERS
-		export
-			{NONE} all
-		undefine
-			default_rescue
-		end
-
 	CODE_SHARED_TYPE_REFERENCE_FACTORY
-		export
-			{NONE} all
-		undefine
-			default_rescue
-		end
-
 	CODE_SHARED_NAME_FORMATTER
-		export
-			{NONE} all
-		undefine
-			default_rescue
-		end
+	CODE_SHARED_ACCESS_MUTEX
 
 create
 	default_create,
@@ -102,103 +56,133 @@ feature -- Interface
 			-- | Create `code_dom_source' and call `generate_code' on it, which calls appropriate code_generator.
 			-- | Call `compile_unit' on current `CODE_COMPILE_UNIT' and write code in `a_text_writer'.
 		do
-			reset
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromCompileUnit"])
-			if a_compile_unit = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromCompileUnit"])
-			else
-				initialize (a_text_writer, a_options)
-				set_current_state (Code_analysis)
-				code_dom_generator.generate_compile_unit_from_dom (a_compile_unit)
-				set_current_state (Code_generation)
-				output.write_string (last_compile_unit.code)
-				output := Void
+			if Access_mutex.wait_one then
+				reset
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromCompileUnit"])
+				if a_compile_unit = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromCompileUnit"])
+				else
+					initialize (a_text_writer, a_options)
+					set_current_state (Code_analysis)
+					code_dom_generator.generate_compile_unit_from_dom (a_compile_unit)
+					set_current_state (Code_generation)
+					output.write_string (last_compile_unit.code)
+					output := Void
+				end
+				Type_reference_factory.reset_cache
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromCompileUnit"])
+				Access_mutex.release_mutex
 			end
-			Type_reference_factory.reset_cache
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromCompileUnit"])
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end
 		
 	generate_code_from_namespace (a_namespace: SYSTEM_DLL_CODE_NAMESPACE; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_namespace_from_dom'.
 			-- | Call `namespace' on `CODE_NAMESPACE' and write code in `a_text_writer'.
 		do
-			reset
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
-			Type_reference_factory.reset_cache
-			if a_namespace = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromNamespace"])
-			else
-				initialize (a_text_writer, a_options)
-				set_current_state (Code_analysis)
-				code_dom_generator.generate_namespace_from_dom (a_namespace)
-				set_current_state (Code_generation)
-				output.write_string (last_namespace.code)
-				output := Void
+			if Access_mutex.wait_one then
+				reset
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
+				Type_reference_factory.reset_cache
+				if a_namespace = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromNamespace"])
+				else
+					initialize (a_text_writer, a_options)
+					set_current_state (Code_analysis)
+					code_dom_generator.generate_namespace_from_dom (a_namespace)
+					set_current_state (Code_generation)
+					output.write_string (last_namespace.code)
+					output := Void
+				end
+				Type_reference_factory.reset_cache
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromNamespace"])
+				Access_mutex.release_mutex
 			end
-			Type_reference_factory.reset_cache
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromNamespace"])
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end
 
 	generate_code_from_type (a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_type_from_dom'.
 			-- | Call `type' on `CODE_GENERATED_TYPE' and write code in `a_text_writer'.
 		do
-			reset
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromType"])
-			if a_type = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromType"])
-			else
-				initialize (a_text_writer, a_options)
-				set_current_state (Code_analysis)
-				code_dom_generator.generate_type_from_dom (a_type)
-				set_current_state (Code_generation)
-				output.write_string (last_type.code)
-				output := Void
+			if Access_mutex.wait_one then
+				reset
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromType"])
+				if a_type = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromType"])
+				else
+					initialize (a_text_writer, a_options)
+					set_current_state (Code_analysis)
+					code_dom_generator.generate_type_from_dom (a_type)
+					set_current_state (Code_generation)
+					output.write_string (last_type.code)
+					output := Void
+				end
+				Type_reference_factory.reset_cache
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromType"])
+				Access_mutex.release_mutex
 			end
-			Type_reference_factory.reset_cache
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromType"])
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end
 
 	generate_code_from_statement (a_statement: SYSTEM_DLL_CODE_STATEMENT; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_statement_from_dom'.
 			-- | Call `statement' on `CODE_STATEMENT' and write code in `a_text_writer'.
 		do
-			reset
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromStatement"])
-			if a_statement = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
-			else
-				initialize (a_text_writer, a_options)
-				set_current_state (Code_analysis)
-				code_dom_generator.generate_statement_from_dom (a_statement)
-				set_current_state (Code_generation)
-				if last_statement /= Void then
-					output.write_string (last_statement.code)
+			if Access_mutex.wait_one then
+				reset
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromStatement"])
+				if a_statement = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
+				else
+					initialize (a_text_writer, a_options)
+					set_current_state (Code_analysis)
+					code_dom_generator.generate_statement_from_dom (a_statement)
+					set_current_state (Code_generation)
+					if last_statement /= Void then
+						output.write_string (last_statement.code)
+					end
+					output := Void
 				end
-				output := Void
+				Type_reference_factory.reset_cache
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromStatement"])
+				Access_mutex.release_mutex
 			end
-			Type_reference_factory.reset_cache
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromStatement"])
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end		
 
 	generate_code_from_expression (a_expression: SYSTEM_DLL_CODE_EXPRESSION; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_expression_from_dom'
 			-- | Call `expression' on `CODE_EXPRESSION' and write code in `a_text_writer'.
 		do
-			reset
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromExpression"])
-			if a_expression = Void then
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
-			else
-				initialize (a_text_writer, a_options)
-				set_current_state (Code_analysis)
-				code_dom_generator.generate_expression_from_dom (a_expression)
-				set_current_state (Code_generation)
-				output.write_string (last_expression.code)
-				output := Void
+			if Access_mutex.wait_one then
+				reset
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromExpression"])
+				if a_expression = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
+				else
+					initialize (a_text_writer, a_options)
+					set_current_state (Code_analysis)
+					code_dom_generator.generate_expression_from_dom (a_expression)
+					set_current_state (Code_generation)
+					output.write_string (last_expression.code)
+					output := Void
+				end
+				Type_reference_factory.reset_cache
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromExpression"])
+				Access_mutex.release_mutex
 			end
-			Type_reference_factory.reset_cache
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.GenerateCodeFromExpression"])
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end
 
 	create_escaped_identifier (a_value: SYSTEM_STRING): SYSTEM_STRING is
@@ -379,12 +363,6 @@ feature {NONE} -- Implementation
 			create Result.make (4)
 			Result.append ("x")
 			Result.append (a_char.code.out)
-		end
-
-	default_rescue is
-			-- Handle exceptions
-		do
-			Event_manager.process_exception
 		end
 
 end -- class CODE_GENERATOR

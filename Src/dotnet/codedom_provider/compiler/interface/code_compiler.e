@@ -8,70 +8,16 @@ class
 
 inherit
 	SYSTEM_DLL_ICODE_COMPILER
-		redefine
-			default_rescue
-		end
-
 	CODE_DOM_PATH
-		redefine
-			default_rescue
-		end
-
 	CODE_CONFIGURATION
-		export
-			{NONE} all
-		redefine
-			default_rescue
-		end
-
 	CODE_SHARED_CONTEXT
-		export
-			{NONE} all
-		redefine
-			default_rescue
-		end
-
 	CODE_FILE_HANDLER
-		export
-			{NONE} all
-		redefine
-			default_rescue
-		end
-
 	CODE_EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		redefine
-			default_rescue
-		end
-
 	CODE_SHARED_TEMPORARY_FILES
-		export
-			{NONE} all
-		redefine
-			default_rescue
-		end
-
 	CODE_SHARED_EVENT_MANAGER
-		export
-			{NONE} all
-		redefine
-			default_rescue
-		end
-
 	CODE_REFERENCED_ASSEMBLIES
-		export
-			{NONE} all
-		redefine
-			default_rescue
-		end
-
 	CODE_SHARED_GENERATION_HELPERS
-		export
-			{NONE} all
-		redefine
-			default_rescue
-		end
+	CODE_SHARED_ACCESS_MUTEX
 
 create
 	default_create
@@ -94,20 +40,26 @@ feature -- Basic Operations
 		local
 			l_res: SYSTEM_OBJECT
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSource"])
-			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
-			initialize (a_options)
-			if is_initialized then
-				source_generator.generate (a_source)
-				compile
-				Result := last_compilation_results
-			else
-				create Result.make (a_options.temp_files)
-				l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed (1)"))
+			if Access_mutex.wait_one then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSource"])
+				(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
+				initialize (a_options)
+				if is_initialized then
+					source_generator.generate (a_source)
+					compile
+					Result := last_compilation_results
+				else
+					create Result.make (a_options.temp_files)
+					l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed (1)"))
+				end
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSource"])
+				Access_mutex.release_mutex
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSource"])
 		ensure then
 			non_void_results: Result /= Void
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end
 
 	compile_assembly_from_source_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_sources: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
@@ -119,27 +71,33 @@ feature -- Basic Operations
 			i, l_count: INTEGER
 			l_res: SYSTEM_OBJECT
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSourceBatch"])
-			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
-			initialize (a_options)
-			if is_initialized then
-				from
-					l_count := a_sources.count
-				until
-					i = l_count				
-				loop
-					source_generator.generate (a_sources.item (i))
-					i := i + 1
+			if Access_mutex.wait_one then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSourceBatch"])
+				(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
+				initialize (a_options)
+				if is_initialized then
+					from
+						l_count := a_sources.count
+					until
+						i = l_count				
+					loop
+						source_generator.generate (a_sources.item (i))
+						i := i + 1
+					end
+					compile
+					Result := last_compilation_results
+				else
+					create Result.make (a_options.temp_files)
+					l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed (2)"))
 				end
-				compile
-				Result := last_compilation_results
-			else
-				create Result.make (a_options.temp_files)
-				l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed (2)"))
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSourceBatch"])
+				Access_mutex.release_mutex
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSourceBatch"])
 		ensure then
 			non_void_results: Result /= Void
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end
 
 	compile_assembly_from_file (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_name: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
@@ -151,22 +109,28 @@ feature -- Basic Operations
 			l_file: PLAIN_TEXT_FILE
 			l_res: SYSTEM_OBJECT
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFile"])
-			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
-			create l_file.make (a_file_name)
-			if l_file.exists then
-				l_file.open_read
-				l_file.read_stream (l_file.count)
-				l_file.close
-				Result := compile_assembly_from_source (a_options, l_file.last_string)
-			else
-				create Result.make (a_options.temp_files)
-				l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Source file is missing"))
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_source_file, [a_file_name])
+			if Access_mutex.wait_one then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFile"])
+				(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
+				create l_file.make (a_file_name)
+				if l_file.exists then
+					l_file.open_read
+					l_file.read_stream (l_file.count)
+					l_file.close
+					Result := compile_assembly_from_source (a_options, l_file.last_string)
+				else
+					create Result.make (a_options.temp_files)
+					l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Source file is missing"))
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_source_file, [a_file_name])
+				end
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFile"])
+				Access_mutex.release_mutex
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFile"])
 		ensure then
 			non_void_results: Result /= Void
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end
 
 	compile_assembly_from_file_batch (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_file_names: NATIVE_ARRAY [SYSTEM_STRING]): SYSTEM_DLL_COMPILER_RESULTS is
@@ -179,35 +143,41 @@ feature -- Basic Operations
 			l_file: PLAIN_TEXT_FILE
 			l_res: SYSTEM_OBJECT
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFileBatch"])
-			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
-			initialize (a_options)
-			if is_initialized then
-				from
-					l_count := a_file_names.count
-				until
-					i = l_count
-				loop
-					create l_file.make (a_file_names.item (i))
-					if l_file.exists then
-						l_file.open_read
-						l_file.read_stream (l_file.count)
-						l_file.close
-						source_generator.generate (l_file.last_string)
-					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_source_file, [a_file_names.item (i)])
+			if Access_mutex.wait_one then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFileBatch"])
+				(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
+				initialize (a_options)
+				if is_initialized then
+					from
+						l_count := a_file_names.count
+					until
+						i = l_count
+					loop
+						create l_file.make (a_file_names.item (i))
+						if l_file.exists then
+							l_file.open_read
+							l_file.read_stream (l_file.count)
+							l_file.close
+							source_generator.generate (l_file.last_string)
+						else
+							Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_source_file, [a_file_names.item (i)])
+						end
+						i := i + 1
 					end
-					i := i + 1
+					compile
+					Result := last_compilation_results;
+				else
+					create Result.make (a_options.temp_files)
+					l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed (3)"))
 				end
-	 			compile
-				Result := last_compilation_results;
-			else
-				create Result.make (a_options.temp_files)
-				l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed (3)"))
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFileBatch"])
+				Access_mutex.release_mutex
 			end
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFileBatch"])
 		ensure then
 			non_void_results: Result /= Void
+		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 		end
 
 	compile_assembly_from_dom (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_compilation_unit: SYSTEM_DLL_CODE_COMPILE_UNIT): SYSTEM_DLL_COMPILER_RESULTS is
@@ -220,20 +190,25 @@ feature -- Basic Operations
 			l_writer: STREAM_WRITER
 			l_path: SYSTEM_STRING
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDom"])
-			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
-			l_path := temp_files.add_extension ("es")
-			create l_stream.make (l_path, feature {FILE_MODE}.Create_, feature {FILE_ACCESS}.Write, feature {FILE_SHARE}.Write)
-			create l_writer.make (l_stream)
-			(create {CODE_GENERATOR}).generate_code_from_compile_unit (a_compilation_unit, l_writer, Code_generator_options)
-			l_writer.flush
-			l_writer.close
-			l_stream.close
-			Result := compile_assembly_from_file (a_options, l_path)
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDom"])
+			if Access_mutex.wait_one then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDom"])
+				(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
+				l_path := temp_files.add_extension ("es")
+				create l_stream.make (l_path, feature {FILE_MODE}.Create_, feature {FILE_ACCESS}.Write, feature {FILE_SHARE}.Write)
+				create l_writer.make (l_stream)
+				(create {CODE_GENERATOR}).generate_code_from_compile_unit (a_compilation_unit, l_writer, Code_generator_options)
+				l_writer.flush
+				l_writer.close
+				l_stream.close
+				Result := compile_assembly_from_file (a_options, l_path)
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDom"])
+				Access_mutex.release_mutex
+			end
 		ensure then
 			non_void_results: Result /= Void
 		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 			if l_stream /= Void then
 				l_stream.close
 			end
@@ -251,29 +226,34 @@ feature -- Basic Operations
 			l_path: SYSTEM_STRING
 			i, l_count: INTEGER
 		do
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDomBatch"])
-			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
-			from
-				l_count := a_compilation_units.length
-				create l_paths.make (l_count)
-			until
-				i = l_count
-			loop
-				l_path := temp_files.add_extension (i.out + ".es")
-				l_paths.put (i, l_path)
-				create l_stream.make (l_path, feature {FILE_MODE}.Create_, feature {FILE_ACCESS}.Write, feature {FILE_SHARE}.Write)
-				create l_writer.make (l_stream)
-				(create {CODE_GENERATOR}).generate_code_from_compile_unit (a_compilation_units.item (i), l_writer, Code_generator_options)
-				l_writer.flush
-				l_writer.close
-				l_stream.close
-				i := i + 1
+			if Access_mutex.wait_one then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromDomBatch"])
+				(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
+				from
+					l_count := a_compilation_units.length
+					create l_paths.make (l_count)
+				until
+					i = l_count
+				loop
+					l_path := temp_files.add_extension (i.out + ".es")
+					l_paths.put (i, l_path)
+					create l_stream.make (l_path, feature {FILE_MODE}.Create_, feature {FILE_ACCESS}.Write, feature {FILE_SHARE}.Write)
+					create l_writer.make (l_stream)
+					(create {CODE_GENERATOR}).generate_code_from_compile_unit (a_compilation_units.item (i), l_writer, Code_generator_options)
+					l_writer.flush
+					l_writer.close
+					l_stream.close
+					i := i + 1
+				end
+				Result := compile_assembly_from_file_batch (a_options, l_paths)
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDomBatch"])
+				Access_mutex.release_mutex
 			end
-			Result := compile_assembly_from_file_batch (a_options, l_paths)
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromDomBatch"])
 		ensure then
 			non_void_results: Result /= Void
 		rescue
+			Access_mutex.release_mutex
+			Event_manager.process_exception
 			if l_stream /= Void then
 				l_stream.close
 			end
@@ -308,6 +288,7 @@ feature {NONE} -- Implementation
 				else
 					set_temp_files (a_options.temp_files)
 				end
+				
 				l_temp_dir := temp_files.temp_dir
 				if l_temp_dir.item (l_temp_dir.count) = Directory_separator then
 					l_temp_dir.keep_head (l_temp_dir.count - 1)
@@ -322,7 +303,7 @@ feature {NONE} -- Implementation
 				
 				-- Finally initialize compiler
 				create l_ace_file.make
-				ace_file_path := temp_files.add_extension ("ace")
+ 				ace_file_path := temp_files.add_extension ("ace")
 					
 				system_path := a_options.output_assembly
 				if system_path = Void or else system_path.is_empty then
@@ -634,12 +615,6 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	default_rescue is
-			-- Handle exceptions
-		do
-			Event_manager.process_exception
-		end
-
 	read_output is
 			-- Read output from `output_stream'.
 			-- Set result in `compiler_output'.
@@ -657,7 +632,7 @@ feature {NONE} -- Implementation
 		do
 			compiler_error := error_stream.read_to_end
 		end
-		
+	
 feature {NONE} -- Private access
 
 	Code_generator_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS is

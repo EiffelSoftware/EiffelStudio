@@ -5,7 +5,7 @@ indexing
 	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_MENU_IMP
 	
@@ -32,25 +32,39 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING
-		-- Label of the current menu
+			-- Label of the current menu
+
+	parent_imp: EV_MENU_HOLDER_IMP
+			-- EV parent of the current menu
+
+	index: INTEGER is
+			-- Index of the current item.
+		do
+			Result := parent_imp.internal_get_index (Current)
+		end
+
+	menu: WEL_MENU is
+			-- Wel menu used when the item is a sub-menu.
+		do
+			Result := Current
+		end
+
+	item_handler: EV_MENU_ITEM_HANDLER_IMP is
+			-- The handler of the item.
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.item_handler
+			else
+				Result := Void
+			end
+		end
 
 feature -- Status report
 
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?  
 		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-feature -- Access
-
-	get_item (index: INTEGER): EV_MENU_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		do
-			Result ?= (ev_children.item (index)).interface
+			Result := not exists
 		end
 
 feature -- Status setting
@@ -58,9 +72,15 @@ feature -- Status setting
 	destroy is
 			-- Destroy actual object.
 		do
-			check
-				not_yet_implemented: False
+			if parent_imp /= Void then
+				parent_imp.remove_menu (Current)
+				parent_imp := Void
 			end
+			interface.remove_implementation
+			interface := Void
+			remove_children
+			text := Void
+			-- After, it will be collected
 		end
 
 feature -- Element change
@@ -69,6 +89,9 @@ feature -- Element change
 			-- Set `text' to `str'
 		do
 			text := str
+			if item_handler /= Void then
+				item_handler.update_menu
+			end
 		end
 
 	set_parent (par: EV_MENU_HOLDER) is
@@ -80,7 +103,6 @@ feature -- Element change
 			end
 			if par /= Void then
 				parent_imp ?= par.implementation
-				ev_children := parent_imp.ev_children
 				parent_imp.add_menu (Current)
 			end
 		end
@@ -89,36 +111,9 @@ feature -- Event association
 
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
 			-- `sitem' has been selected'
+			-- Called only when it has a parent.
 		do
 			parent_imp.on_selection_changed (sitem)
-		end
-
-feature {EV_MENU_ITEM_HOLDER_IMP} -- Implementation
-
-	submenu: WEL_MENU is
-			-- Wel menu used when the item is a sub-menu.
-		do
-			Result := Current
-		end
-
-	parent_imp: EV_MENU_HOLDER_IMP
-			-- EV parent of the current menu
-
-	clear_ev_children is
-			-- Clear all the items of the list.
-		local
-			list: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
-		do
-			from
-				list := ev_children
-				list.start
-			until
-				list.after
-			loop
-				list.item_for_iteration.interface.remove_implementation
-				list.forth
-			end
-			list.clear_all
 		end
 
 end -- class EV_MENU_IMP

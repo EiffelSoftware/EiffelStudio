@@ -68,10 +68,23 @@ feature -- formatter
 			until
 				i > value.count
 			loop
-				if value.item (i) = '%N' then
+				inspect value.item (i)
+				when '%N' then
 					tmp.append ("%%N");
-				elseif value.item (i) = '%U' then
+				when '%U' then
 					tmp.append ("%%U");
+				when '%B' then
+					tmp.append ("%%B");
+				when '%F' then
+					tmp.append ("%%F");
+				when '%R' then
+					tmp.append ("%%R");
+				when '%%' then
+					tmp.append ("%%%%");
+				when '%'' then
+					tmp.append ("%%%'");
+				when '%"' then
+					tmp.append ("%%%"");
 				else
 					tmp.extend (value.item (i))
 				end;

@@ -10,20 +10,24 @@ feature
 
      append_value (cw: CLICK_WINDOW) is 
 		local
-			c_stone: STONE
+			pointer_class: CLASS_I
         do 
-			c_stone := Universe.class_stone ("pointer");
-			cw.put_clickable_string (c_stone, "POINTER");
+			pointer_class := System.pointer_class;
+			if pointer_class.compiled then
+				pointer_class.compiled_class.append_clickable_name (cw)
+			else
+				pointer_class.append_clickable_name (cw)
+			end;
 			cw.put_string (" = C pointer ");
-            cw.put_string (value.out)
+			cw.put_string (value)
         end;
 
 
-	value: POINTER;
+	value: STRING;
 
-	make (v: like value) is
+	make (v: POINTER) is
 		do
-			value := v
+			value := v.out
 		end
 
 end

@@ -10,10 +10,14 @@ feature
 
      append_value (cw: CLICK_WINDOW) is 
 		local
-			c_stone: STONE
+			integer_class: CLASS_I
         do 
-			c_stone := Universe.class_stone ("integer");
-			cw.put_clickable_string (c_stone, "INTEGER");
+			integer_class := System.integer_class;
+			if integer_class.compiled then
+				integer_class.compiled_class.append_clickable_name (cw)
+			else
+				integer_class.append_clickable_name (cw)
+			end;
 			cw.put_string (" = ");
             cw.put_string (value.out)
         end;

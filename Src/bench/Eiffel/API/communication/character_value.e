@@ -12,11 +12,15 @@ feature
 
 	 append_value (cw: CLICK_WINDOW) is 
 		local
-			tmp_code: INTEGER;
-			c_stone: STONE
+			character_class: CLASS_I;
+			tmp_code: INTEGER
 		do 
-			c_stone := Universe.class_stone ("character");
-			cw.put_clickable_string (c_stone, "CHARACTER");
+			character_class := System.character_class;
+			if character_class.compiled then
+				character_class.compiled_class.append_clickable_name (cw)
+			else
+				character_class.append_clickable_name (cw)
+			end;
 			cw.put_string (" = ");
 			if (value < ' ') then
 				cw.put_string ("Ctrl-");

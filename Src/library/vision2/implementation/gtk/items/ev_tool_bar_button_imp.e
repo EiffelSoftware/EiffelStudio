@@ -62,14 +62,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_ANY_I is
+	parent_imp: EV_TOOL_BAR_IMP
 			-- The parent of the Current widget
 			-- Can be void.
-		local
-			tmp: EV_ANY_I
-		do
-			Result := tmp
-		end
 
 	index: INTEGER is
 			-- Index of the button in the tool-bar.
@@ -78,9 +73,15 @@ feature -- Access
 
 feature -- Element change
 
-	set_parent (par: EV_ANY) is
+	set_parent (par: EV_TOOL_BAR) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
+		do
+		end
+
+	set_index (pos: INTEGER) is
+			-- Make `pos' the new index of the item in the
+			-- list.
 		do
 		end
 
@@ -102,14 +103,6 @@ feature -- Status setting
 	set_sensitive (flag: BOOLEAN) is
 			-- Make the current button sensitive if `flag' and
 			-- enable if `not flag'
-		do
-		end
-
-feature -- Element change
-
-	set_parent_with_index (par: EV_TOOL_BAR; value: INTEGER) is
-			-- Make `par' the new parent of the widget and set
-			-- the current button at `value'.
 		do
 		end
 

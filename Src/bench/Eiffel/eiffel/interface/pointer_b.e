@@ -89,7 +89,7 @@ feature -- Validity
 			else
 					-- First check there is only one generic.
 				if generics = Void or else generics.count > 1 then
-					create special_error.make (Case_26, Current)
+					create special_error.make (typed_pointer_case_1, Current)
 					Error_handler.insert_error (special_error)
 				end
 				skelet := types.first.skeleton
@@ -97,25 +97,25 @@ feature -- Validity
 					skelet.count /= 1 or else
 					not skelet.first.type_i.same_as (pointer_type.type_i)
 				then
-					create special_error.make (Case_27, Current)
+					create special_error.make (typed_pointer_case_2, Current)
 					Error_handler.insert_error (special_error)
 				else
 						-- Check it is indeed called `pointer_item'.
 					l_attr ?= feature_table.item ("pointer_item")
 					if l_attr = Void then
-						create special_error.make (Case_15_bis, Current)
+						create special_error.make (typed_pointer_case_3, Current)
 						Error_handler.insert_error (special_error)
 					end
 				end
 				
 					-- Check for a procedure `set_item'.
-				l_feat ?= feature_table.item_id (Names_heap.set_item_name_id)
+				l_feat ?= feature_table.item_id (names_heap.set_item_name_id)
 				if
 					l_feat = Void or else
 					l_feat.argument_count /= 1 or else
 					not l_feat.arguments.i_th (1).same_as (pointer_type)
 				then
-					create special_error.make (Case_15_ter, Current)
+					create special_error.make (typed_pointer_case_4, Current)
 					Error_handler.insert_error (special_error)
 				end
 			end

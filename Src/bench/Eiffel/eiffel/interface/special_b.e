@@ -8,7 +8,7 @@ class SPECIAL_B
 inherit
 	CLASS_C
 		redefine
-			check_validity, new_type, is_special, is_special_array
+			check_validity, new_type, is_special
 		end
 
 	SPECIAL_CONST
@@ -23,32 +23,65 @@ feature -- Validity
 		local
 			special_error: SPECIAL_ERROR
 			feat_table: FEATURE_TABLE
-			item_feature, put_feature: FEATURE_I
+			item_feature, put_feature, make_feature: FEATURE_I
+			done: BOOLEAN
 		do
-				-- First, check if class has one formal generic parameter
-			if generics = Void or else generics.count /= 1 then
-				create special_error.make (Case_11, Current)
+				-- Check if class has one formal generic parameter
+			if generics = Void or else generics.count /= 1 then -- or else not is_frozen then
+				create special_error.make (special_case_1, Current)
 				Error_handler.insert_error (special_error)
 			end
 
-				-- Second, check if class has a feature item (INTEGER): Generic #1
 			feat_table := feature_table
-			item_feature := feat_table.item ("item")
-			if item_feature = Void
-				or else not (item_feature.written_in = class_id)
-				or else not item_feature.same_signature (Item_signature)
+
+				-- Check if class has a feature make (INTEGER)
+			make_feature := feat_table.item_id (names_heap.make_name_id)
+			if
+				make_feature = Void
+				or else not (make_feature.written_in = class_id)
+				or else not make_feature.same_signature (make_signature)
 			then
-				create special_error.make (Case_12, Current)
+				create special_error.make (special_case_2, Current)
 				Error_handler.insert_error (special_error)
 			end
 			
-				-- Third, check if class has a feature put (Generic #1, INTEGER)
-			put_feature := feat_table.item ("put")
+				-- Check that `make' is indeed a creation procedure
+			if creators = Void then
+				create special_error.make (special_case_3, Current)
+				Error_handler.insert_error (special_error)
+			else
+				from
+					creators.start
+				until
+					done or else creators.after
+				loop
+					done := creators.key_for_iteration.
+						is_equal (names_heap.item (Names_heap.make_name_id))
+					creators.forth
+				end
+				if not done then
+					create special_error.make (special_case_3, Current)
+					Error_handler.insert_error (special_error)
+				end
+			end
+
+				-- Check if class has a feature item (INTEGER): Generic #1
+			item_feature := feat_table.item_id (names_heap.item_name_id)
+			if item_feature = Void
+				or else not (item_feature.written_in = class_id)
+				or else not item_feature.same_signature (item_signature)
+			then
+				create special_error.make (special_case_4, Current)
+				Error_handler.insert_error (special_error)
+			end
+			
+				-- Check if class has a feature put (Generic #1, INTEGER)
+			put_feature := feat_table.item_id (names_heap.put_name_id)
 			if put_feature = Void
 				or else not (put_feature.written_in = class_id)
-				or else not put_feature.same_signature (Put_signature)
+				or else not put_feature.same_signature (put_signature)
 			then
-				create special_error.make (Case_13, Current)
+				create special_error.make (special_case_5, Current)
 				Error_handler.insert_error (special_error)
 			end
 		end
@@ -59,9 +92,10 @@ feature -- Typing
 			-- New class type for class SPECIAL
 		do
 			create Result.make (data)
-			if has_externals then
-				system.set_freeze
-			end
+				-- Unlike the parent version, each time a new SPECIAL derivation
+				-- is added we need to freeze so that we call the right version of
+				-- `put' and `item'.
+			system.set_freeze
 			if already_compiled then
 					-- Melt all the code written in the associated class of the new class type
 				melt_all
@@ -70,7 +104,7 @@ feature -- Typing
 
 feature -- Status report
 
-	is_special, is_special_array: BOOLEAN is True
+	is_special: BOOLEAN is True
 			-- Is class SPECIAL?
 	
 feature -- Code generation
@@ -163,12 +197,26 @@ feature -- Code generation
 
 feature {NONE} -- Implementation
 
-	Item_signature: DYN_FUNC_I is
+	make_signature: DYN_PROC_I is
+			-- Required signature for feature `make' of class SPECIAL
+		local
+			args: FEAT_ARG
+		do
+			create args.make (1)
+			args.put_i_th (Integer_type, 1)
+			create Result
+			Result.set_arguments (args)
+			Result.set_feature_name_id (Names_heap.make_name_id)
+		ensure
+			item_signature_not_void: Result /= Void
+		end
+
+	item_signature: DYN_FUNC_I is
 			-- Required signature for feature `item' of class SPECIAL
 		local
 			args: FEAT_ARG
 			f: FORMAL_A
-		once
+		do
 			create args.make (1)
 			args.put_i_th (Integer_type, 1)
 			create Result
@@ -180,12 +228,12 @@ feature {NONE} -- Implementation
 			item_signature_not_void: Result /= Void
 		end
 
-	Put_signature: DYN_PROC_I is
+	put_signature: DYN_PROC_I is
 			-- Required signature for feature `put' of class SPECIAL
 		local
 			args: FEAT_ARG
 			f: FORMAL_A
-		once
+		do
 			create f.make (False, False, 1)
 			create args.make (2)
 			args.put_i_th (f, 1)

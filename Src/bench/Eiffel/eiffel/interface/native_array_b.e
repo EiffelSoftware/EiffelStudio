@@ -30,7 +30,7 @@ feature -- Validity
 			l_feat_tbl := feature_table
 				-- First check if current class has one formal generic parameter
 			if (generics = Void) or else generics.count /= 1 then
-				create special_error.make (Case_20, Current)
+				create special_error.make (native_array_case_1, Current)
 				Error_handler.insert_error (special_error)
 			end
 
@@ -45,8 +45,8 @@ feature -- Validity
 				loop
 					l_feat := l_feat_tbl.item (creators.key_for_iteration)
 					if
-						l_feat.feature_name.is_equal (Make_signature.feature_name) and then
-						l_feat.same_signature (Make_signature)
+						l_feat.feature_name_id = names_heap.make_name_id and then
+						l_feat.same_signature (make_signature)
 					then
 						done := True
 					else
@@ -56,7 +56,7 @@ feature -- Validity
 				error := not done
 			end
 			if error then
-				create  special_error.make (Case_21, Current)
+				create  special_error.make (native_array_case_2, Current)
 				Error_handler.insert_error (special_error)
 			end
 
@@ -65,9 +65,9 @@ feature -- Validity
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (Item_signature)
+				or else not l_feat.same_signature (item_signature)
 			then
-				create special_error.make (Case_22, Current)
+				create special_error.make (native_array_case_3, Current)
 				Error_handler.insert_error (special_error)
 			end
 			
@@ -75,9 +75,9 @@ feature -- Validity
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (Infix_at_signature)
+				or else not l_feat.same_signature (infix_at_signature)
 			then
-				create special_error.make (Case_23, Current)
+				create special_error.make (native_array_case_4, Current)
 				Error_handler.insert_error (special_error)
 			end
 	
@@ -86,9 +86,9 @@ feature -- Validity
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (Put_signature)
+				or else not l_feat.same_signature (put_signature)
 			then
-				create special_error.make (Case_24, Current)
+				create special_error.make (native_array_case_5, Current)
 				Error_handler.insert_error (special_error)
 			end
 
@@ -97,9 +97,9 @@ feature -- Validity
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (Count_signature)
+				or else not l_feat.same_signature (count_signature)
 			then
-				create special_error.make (Case_25, Current)
+				create special_error.make (native_array_case_6, Current)
 				Error_handler.insert_error (special_error)
 			end
 		end
@@ -142,11 +142,11 @@ feature -- Status report
 
 feature {NONE}
 
-	Make_signature: DYN_PROC_I is
+	make_signature: DYN_PROC_I is
 			-- Required signature for feature `make' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
-		once
+		do
 			create  args.make (1)
 			args.put_i_th (Integer_type, 1)
 			create  Result
@@ -154,11 +154,11 @@ feature {NONE}
 			Result.set_feature_name_id (feature {PREDEFINED_NAMES}.make_name_id)
 		end
 
-	Count_signature: DYN_FUNC_I is
+	count_signature: DYN_FUNC_I is
 			-- Required signature for feature `count' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
-		once
+		do
 			create args.make (0)
 			create Result
 			Result.set_arguments (args)
@@ -168,12 +168,12 @@ feature {NONE}
 			item_signature_not_void: Result /= Void
 		end
 
-	Item_signature: DYN_FUNC_I is
+	item_signature: DYN_FUNC_I is
 			-- Required signature for feature `item' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
 			f: FORMAL_A
-		once
+		do
 			create args.make (1)
 			args.put_i_th (Integer_type, 1)
 			create Result
@@ -185,12 +185,12 @@ feature {NONE}
 			item_signature_not_void: Result /= Void
 		end
 
-	Infix_at_signature: DYN_FUNC_I is
+	infix_at_signature: DYN_FUNC_I is
 			-- Required signature for feature `infix "@"' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
 			f: FORMAL_A
-		once
+		do
 			create args.make (1)
 			args.put_i_th (Integer_type, 1)
 			create Result
@@ -202,12 +202,12 @@ feature {NONE}
 			item_signature_not_void: Result /= Void
 		end
 
-	Put_signature: DYN_PROC_I is
+	put_signature: DYN_PROC_I is
 			-- Required signature for feature `put' of class NATIVE_ARRAY.
 		local
 			args: FEAT_ARG
 			f: FORMAL_A
-		once
+		do
 			create f.make (False, False, 1)
 			create args.make (2)
 			args.put_i_th (Integer_type, 1)

@@ -38,11 +38,11 @@ feature -- Measurement
 		end
 		
 	structure_size: INTEGER is
-			-- Size of `EIF_IMAGE_COR20_HEADER'.
+			-- Size of `CLI_IMAGE_COR20_HEADER'.
 		external
 			"C macro use <cli_writer.h>"
 		alias
-			"sizeof(EIF_IMAGE_COR20_HEADER)"
+			"sizeof(CLI_IMAGE_COR20_HEADER)"
 		end
 
 feature -- Access
@@ -111,55 +111,55 @@ feature {NONE} -- Implementation
 	c_set_cb (an_item: POINTER; i: INTEGER) is
 			-- Set `cb' to `i'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access cb type DWORD use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access cb type DWORD use <cli_writer.h>"
 		end
 
 	c_set_major_runtime_version (an_item: POINTER; i: INTEGER_16) is
 			-- Set `MajorRuntimeVersion' to `i'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access MajorRuntimeVersion type WORD use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access MajorRuntimeVersion type WORD use <cli_writer.h>"
 		end
 
 	c_set_minor_runtime_version (an_item: POINTER; i: INTEGER_16) is
 			-- Set `MinorRuntimeVersion' to `i'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access MinorRuntimeVersion type WORD use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access MinorRuntimeVersion type WORD use <cli_writer.h>"
 		end
 
 	c_meta_data (an_item: POINTER): POINTER is
 			-- Access `MetaData'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access &MetaData use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access &MetaData use <cli_writer.h>"
 		end
 
 	c_set_flags (an_item: POINTER; i: INTEGER) is
 			-- Set `Flags' to `i'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access Flags type DWORD use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access Flags type DWORD use <cli_writer.h>"
 		end
 
 	c_set_entry_point_token (an_item: POINTER; i: INTEGER) is
 			-- Set `EntryPointToken' to `i'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access EntryPointToken type DWORD use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access EntryPointToken type DWORD use <cli_writer.h>"
 		end
 
 	c_flags (an_item: POINTER): INTEGER is
 			-- Access `Flags'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access Flags use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access Flags use <cli_writer.h>"
 		end
 
 	c_resources (an_item: POINTER): POINTER is
 			-- Access `Resources'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access &Resources use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access &Resources use <cli_writer.h>"
 		end
 
 	c_strong_name_signature (an_item: POINTER): POINTER is
 			-- Access `StrongNameSignature'.
 		external
-			"C struct EIF_IMAGE_COR20_HEADER access &StrongNameSignature use <cli_writer.h>"
+			"C struct CLI_IMAGE_COR20_HEADER access &StrongNameSignature use <cli_writer.h>"
 		end
 
 end -- class CLI_HEADER

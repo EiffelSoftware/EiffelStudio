@@ -23,11 +23,11 @@ feature -- Status report
 	peers: LINKED_LIST [like interface] is
 			-- List of all radio items in the group `Current' is in.
 		local
-			cur: POINTER
+			cur, wid_obj: POINTER
 			peer_imp: like Current
 		do
 			create Result.make
-			if radio_group = NULL then
+			if radio_group = NULL or else widget_object (radio_group) = NULL then
 				Result.extend (interface)
 			else
 				from
@@ -35,8 +35,11 @@ feature -- Status report
 				until
 					cur = NULL
 				loop
-					peer_imp ?= eif_object_from_c (widget_object (cur))
-					Result.extend (peer_imp.interface)
+					wid_obj := widget_object (cur)
+					if wid_obj /= NULL then
+						peer_imp ?= eif_object_from_c (wid_obj)
+						Result.extend (peer_imp.interface)
+					end		
 					cur := C.gslist_struct_next (cur)
 				end
 			end
@@ -45,10 +48,10 @@ feature -- Status report
 	selected_peer: like interface is
 			-- Radio item that is currently selected.
 		local
-			cur: POINTER
+			cur, wid_obj: POINTER
 			peer_imp: like Current
 		do
-			if radio_group = NULL then
+			if radio_group = NULL or else widget_object (radio_group) = NULL then
 				Result := interface
 			else
 				from
@@ -56,9 +59,12 @@ feature -- Status report
 				until
 					cur = NULL or else Result /= void
 				loop
-					peer_imp ?= eif_object_from_c (widget_object (cur))
-					if peer_imp.is_selected then
-						Result := peer_imp.interface
+					wid_obj := widget_object (cur)
+					if wid_obj /= NULL then
+						peer_imp ?= eif_object_from_c (widget_object (cur))
+						if peer_imp.is_selected then
+							Result := peer_imp.interface
+						end
 					end
 					cur := C.gslist_struct_next (cur)
 				end

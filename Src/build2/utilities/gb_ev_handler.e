@@ -31,6 +31,7 @@ feature -- Access
 			Result.extend ("gb_ev_notebook")
 			Result.extend ("gb_ev_gauge")
 			Result.extend ("gb_ev_text_component")
+			Result.extend ("gb_ev_text_alignable")
 		end
 	
 	--| FIXME This version has been commented, so that we do not need to have

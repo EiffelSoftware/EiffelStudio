@@ -166,7 +166,7 @@ feature -- Status setting
 						root_ast.defaults.after
 					loop
 						conv_opt ?= root_ast.defaults.item.option
-						if conv_opt /= Void and then conv_opt.code = conv_opt.force_recompile then
+						if conv_opt /= Void and then conv_opt.code = feature {FREE_OPTION_SD}.force_recompile then
 							root_ast.defaults.remove
 						else
 							root_ast.defaults.forth
@@ -375,7 +375,7 @@ feature -- Status setting
 						conv_opt ?= new_ast.defaults.item.option
 						if
 							conv_opt /= Void and then
-							conv_opt.code = conv_opt.Force_recompile and then
+							conv_opt.code = feature {FREE_OPTION_SD}.Force_recompile and then
 							new_ast.defaults.item.value.is_yes
 						then
 							full_degree_6_needed := True

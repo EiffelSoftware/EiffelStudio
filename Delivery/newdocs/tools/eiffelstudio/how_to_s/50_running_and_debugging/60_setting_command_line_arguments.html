@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Setting the command line arguments</TITLE>
+		<META NAME="MS-HKWD" CONTENT="command line arguments, using">
+		<META NAME="MS-HKWD" CONTENT="setting command line arguments">
+		<META NAME="MS-HKWD" CONTENT="using command line arguments">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Setting the command line arguments</H1>
+        <p>To debug a program that uses command line parameters, it is possible
+        to have the debugger call the generated program with certain command
+        line arguments automatically.&nbsp;</p>
+
+        <p>To change the command line arguments used when debugging:</p>
+
+		<UL>
+			<LI>Open the <a href="HYPERLINK(reference_project_settings)">System Settings</A> dialog.
+			<LI>In the <b>Debug/Profile</b> tab, type the command line arguments
+              you want to use when debugging in the <b>Program arguments</b>
+              entry.
+			<LI>Click <b> Apply</b> or <b>OK</b>.
+			<LI>You must <a href="10_generating_executables.html">recompile</a> your project for the changes to take effect.
+		</UL>
+
+        <p>SCREENSHOT(Program arguments in project settings dialog).</p>
+
+        <P CLASS="note"><B>Note</B>: All command line arguments are
+        automatically saved, which makes it easy to switch between different
+        command lines.<br>
+        To remove a command line definitely, click the delete <IMG SRC="/images/eiffelstudio/icon_delete_color.gif" width="16" height="16"> button on the
+        right of the <b>Program arguments</b> entry.</P>
+
+        <P CLASS="tip"><B>Tip</B>: To get the command line arguments in a
+        program, it is possible to either define the root feature as taking an
+        array of STRING objects, or to use the HYPERLINK(base reference:
+        ARGUMENTS class) ARGUMENTS class, which provides many functionalities
+        linked with command line arguments.
+	</BODY>
+</HTML>

@@ -556,6 +556,7 @@ feature {NONE} -- Implementation
 			Result.append (Eif_wean)
 			Result.append (Space_open_parenthesis)
 			Result.append ("tmp_object")
+			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 

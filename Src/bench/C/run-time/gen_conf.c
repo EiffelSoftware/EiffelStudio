@@ -3169,7 +3169,7 @@ rt_private int is_generic (struct gt_info *type, char *class)
 	}
 }
 
-rt_public EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
+rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
 {
 	struct gt_info type;
 	EIF_TYPE_ID result;

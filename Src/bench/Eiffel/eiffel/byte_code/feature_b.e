@@ -75,7 +75,7 @@ feature -- Access
 			-- If found return True (and keep reference position).
 			-- Otherwize, return false
 		do
-			Result := special_routines.has (feature_name, compilation_type, target_type)
+			Result := special_routines.has (feature_name_id, compilation_type, target_type)
 		end
 
 	init (f: FEATURE_I) is

@@ -1,18 +1,20 @@
 # wel.lib - Makefile for Borland C
 
 CC = bcc32
-CFLAGS = -c -O2 -X -I$(EIFFEL3)\library\wel\spec\windows\include -I$(EIFFEL3)\bench\spec\w32bcc\include
+CFLAGS = -c -O2 -X -w- -I$(EIFFEL3)\library\wel\spec\windows\include -I$(EIFFEL3)\bench\spec\w32bcc\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.obj
+OBJ = disptchr.obj enumfont.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
-	tlib $@ +$(OBJ)
+	tlib $@ +disptchr.obj
+	tlib $@ +enumfont.obj
 	if not exist $(EIFFEL3)\library\wel\spec\w32bcc mkdir $(EIFFEL3)\library\wel\spec\w32bcc
 	if not exist $(EIFFEL3)\library\wel\spec\w32bcc\lib mkdir $(EIFFEL3)\library\wel\spec\w32bcc\lib
 	copy $@ $(EIFFEL3)\library\wel\spec\w32bcc\lib
 	del $@
-	del $(OBJ)
+	del disptchr.obj
+	del enumfont.obj

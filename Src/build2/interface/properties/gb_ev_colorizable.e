@@ -32,6 +32,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	INTERNAL
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -48,58 +53,86 @@ feature -- Access
 		local
 			first_object: EV_COLORIZABLE
 			label: EV_LABEL
+			bounding_frame: EV_FRAME
 			horizontal_box: EV_HORIZONTAL_BOX
-			button: EV_BUTTON
+			vertical_box: EV_VERTICAL_BOX
+			button, button1: EV_BUTTON
 			frame: EV_FRAME
 			cell: EV_CELL
 		do
 			Result := Precursor {GB_EV_ANY}
 			create color_dialog
 			first_object := objects.first
-			create label.make_with_text (gb_ev_colorizable_background_color)
-			label.set_tooltip (gb_ev_colorizable_background_color_tooltip)
-			Result.extend (label)
+			create bounding_frame.make_with_text (gb_ev_colorizable_background_color)
+			Result.extend (bounding_frame)
+			
 			create horizontal_box
-			Result.extend (horizontal_box)
+			create vertical_box
+			bounding_frame.extend (vertical_box)
+			vertical_box.extend (horizontal_box)
 			create frame
 			create b_area
+			frame.set_minimum_width (40)
 			b_area.set_tooltip (gb_ev_colorizable_background_color_tooltip)
 			create button.make_with_text (Select_button_text)
 			button.set_tooltip ("Select background color")
 			background_color := first_object.background_color	
 			frame.extend (b_area)
 			horizontal_box.set_padding (2)
+			create cell
+			horizontal_box.extend (cell)
+			horizontal_box.disable_item_expand (cell)
 			horizontal_box.extend (frame)
 			horizontal_box.extend (button)
 			horizontal_box.disable_item_expand (button)
-			create cell
-			cell.set_minimum_width (50)
-			horizontal_box.extend (cell)
+			horizontal_box.disable_item_expand (frame)
 			b_area.expose_actions.force_extend (agent b_area.clear)
 			button.select_actions.extend (agent update_background_color)
+			create horizontal_box
+			horizontal_box.set_border_width (2)
+			create button1.make_with_text (gb_ev_colorizable_restore_color)
+			button1.select_actions.extend (agent restore_background_color)
+			horizontal_box.extend (button1)
+			vertical_box.extend (horizontal_box)
+			horizontal_box.disable_item_expand (button1)
+				-- Add two for the padding of the box
+			button1.set_minimum_width (button.minimum_width + frame.minimum_width + 2)
+			
+			
 
-			create label.make_with_text (gb_ev_colorizable_foreground_color)
-			label.set_tooltip (gb_ev_colorizable_foreground_color_tooltip)
-			Result.extend (label)
+			create bounding_frame.make_with_text (gb_ev_colorizable_foreground_color)
+			Result.extend (bounding_frame)
 
 			create horizontal_box
-			Result.extend (horizontal_box)
+			create vertical_box
+			bounding_frame.extend (vertical_box)
+			vertical_box.extend (horizontal_box)
 			create frame
 			create f_area
+			frame.set_minimum_width (40)
 			f_area.set_tooltip (gb_ev_colorizable_foreground_color_tooltip)
 			create button.make_with_text (Select_button_text)
 			button.set_tooltip ("Select foreground color")
 			foreground_color := first_object.foreground_color	
 			frame.extend (f_area)
 			horizontal_box.set_padding (2)
+			create cell
+			horizontal_box.extend (cell)
+			horizontal_box.disable_item_expand (cell)
 			horizontal_box.extend (frame)
 			horizontal_box.extend (button)
 			horizontal_box.disable_item_expand (button)
-			create cell
-			cell.set_minimum_width (50)
-			horizontal_box.extend (cell)
+			horizontal_box.disable_item_expand (frame)
 			f_area.expose_actions.force_extend (agent f_area.clear)
 			button.select_actions.extend (agent update_foreground_color)
+			create horizontal_box
+			horizontal_box.set_border_width (2)
+			create button1.make_with_text (gb_ev_colorizable_restore_color)
+			button1.select_actions.extend (agent restore_foreground_color)
+			horizontal_box.extend (button1)
+			vertical_box.extend (horizontal_box)
+			horizontal_box.disable_item_expand (button1)
+			button1.set_minimum_width (button.minimum_width + frame.minimum_width + 2)
 			
 			update_attribute_editor
 
@@ -182,6 +215,37 @@ feature {GB_CODE_GENERATOR} -- Output
 
 feature {NONE} -- Implementation
 
+	restore_background_color is
+			-- Restore `background_color' of objects to originals.
+		local
+			colorizable: EV_COLORIZABLE
+		do
+			colorizable ?= new_instance_of (dynamic_type (first))
+			check
+				correct_type: colorizable /= Void
+			end
+			colorizable.default_create
+			for_all_objects (agent {EV_COLORIZABLE}.set_background_color (colorizable.background_color))
+			update_editors
+			update_background_display
+		end
+		
+	restore_foreground_color is
+			-- Restore `foreground_color' of objects to originals.
+		local
+			colorizable: EV_COLORIZABLE
+		do
+			colorizable ?= new_instance_of (dynamic_type (first))
+			check
+				correct_type: colorizable /= Void
+			end
+			colorizable.default_create
+			for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (colorizable.foreground_color))
+			update_editors
+			update_foreground_display
+		end
+		
+
 	update_background_color is
 			-- Update `background_color' of objects through an EV_COLOR_DIALOG.
 		local
@@ -211,9 +275,7 @@ feature {NONE} -- Implementation
 			f_area.set_background_color (first.foreground_color)
 			f_area.clear
 		end
-		
-		
-		
+
 	update_foreground_color is
 			-- Update `foreground_color' of objects through an EV_COLOR_DIALOG.
 		local

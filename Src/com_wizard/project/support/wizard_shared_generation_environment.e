@@ -38,12 +38,6 @@ feature -- Access
 			create Result.make
 		end
 
-	Shared_process_launcher: WIZARD_PROCESS_LAUNCHER is
-			-- Process launcher
-		once
-			create Result
-		end
-
 	compiler: WIZARD_COMPILER is
 			-- IDL/C compiler
 		once

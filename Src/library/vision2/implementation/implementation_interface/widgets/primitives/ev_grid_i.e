@@ -12,7 +12,9 @@ deferred class
 inherit
 	EV_CELL_I
 		rename
-			item as cell_item
+			item as cell_item,
+			pointer_motion_actions as cell_pointer_motion_actions,
+			pointer_motion_actions_internal as cell_pointer_motion_actions_internal
 		redefine
 			interface
 		end
@@ -95,6 +97,21 @@ feature -- Access
 			Result := item_internal (a_column, a_row, True).interface
 		ensure
 			item_not_void: Result /= Void
+		end
+		
+	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM is
+			-- Cell at virtual position `a_virtual_x', `a_virtual_y' or
+			-- `Void' if none.
+		require
+			virtual_x_valid: a_virtual_x >=0 and a_virtual_x <= virtual_width
+			virtual_y_valid: a_virtual_y >=0 and a_virtual_y <= virtual_height
+		local
+			item_i: EV_GRID_ITEM_I
+		do
+			item_i := drawer.item_at_virtual_position (a_virtual_x, a_virtual_y)
+			if item_i /= Void then
+				Result := item_i.interface
+			end
 		end
 
 	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
@@ -302,6 +319,27 @@ feature -- Access
 			Result := viewport.height
 		ensure
 			viewable_height_valid: viewable_height >= 0 and viewable_height <= height
+		end
+		
+	viewable_x_offset: INTEGER is
+			-- Horizontal distance in pixels from the left edge of `Current' to
+			-- the left edge of the viewable area (defined by `viewable_width', `viewable_height')
+			-- in which all content is displayed.
+		do
+				-- Always 0 at the moment as nothing affects this value.
+			Result := 0
+		ensure
+			viewable_x_offset_valid: Result >=0 and Result <= width
+		end
+			
+	viewable_y_offset: INTEGER is
+			-- Vertical distance in pixels from the top edge of `Current' to
+			-- the top edge of the viewable area (defined by `viewable_width', `viewable_height')
+			-- in which all content is displayed.
+		do
+			Result := header.height
+		ensure
+			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
 feature -- Status setting
@@ -823,7 +861,9 @@ feature -- Status setting
 					end
 					vertical_scroll_bar.set_value (visible_row_index)
 				else
-					vertical_scroll_bar.set_value (visible_row_count - 1)
+					if row_count > 0 then
+						vertical_scroll_bar.set_value (visible_row_count - 1)
+					end
 				end	
 				vertical_scroll_bar.change_actions.resume
 			else
@@ -1297,7 +1337,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			drawable.redraw
 		end
 
-feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITEM_I, EV_GRID} -- Implementation
+feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID} -- Implementation
 
 	column_offsets: ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each column in pixels.
@@ -1561,8 +1601,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 					-- so that they do reach the very left-hand edge of `viewport'
 				viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
 				header_viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
-				
---				horizontal_scroll_bar.change_actions.resume
 			end
 		end
 	
@@ -1656,7 +1694,7 @@ feature {NONE} -- Drawing implementation
 			drawable.resize_actions.extend (agent resize_received (?, ?, ?, ?))
 
 			
-			drawable.expose_actions.force_extend (agent drawer.partial_redraw)
+			drawable.expose_actions.force_extend (agent drawer.redraw_area_in_drawable_coordinates)
 			update_scroll_bar_spacer
 			
 			enable_selection_on_click
@@ -1923,10 +1961,6 @@ feature {NONE} -- Drawing implementation
 	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
 		-- Horizontal scroll bar of `Current'.
 		
---	viewport: EV_VIEWPORT
---		-- Viewport containing `header' and `drawable', permitting the header to be offset
---		-- correctly in relation to the horizontal scroll bar.
-		
 	header_viewport: EV_VIEWPORT
 		
 	scroll_bar_spacer: EV_CELL
@@ -1947,7 +1981,7 @@ feature {NONE} -- Drawing implementation
 	resizing_line_border: INTEGER is 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 		
-	buffered_drawable_size: INTEGER is 32000--2000
+	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 		
 feature {NONE} -- Event handling
@@ -2009,7 +2043,17 @@ feature {NONE} -- Event handling
 
 	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_motion_actions' of `drawable'.
+		local
+			pointed_item: EV_GRID_ITEM_I
 		do
+			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
+				pointed_item := drawer.item_at_position (a_x, a_y)
+				if pointed_item /= Void then
+					pointer_motion_actions_internal.call ([a_x, a_x, pointed_item.interface])
+				else
+					pointer_motion_actions_internal.call ([a_x, a_x, Void])
+				end
+			end
 		end
 
 	pointer_double_press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is

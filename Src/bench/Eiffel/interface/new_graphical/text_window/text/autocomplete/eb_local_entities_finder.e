@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 								count = 0 or else not build_classes_list
 							loop
 								count := count - 1
-								class_list.extend (internal_token.image)
+								class_list.extend (internal_token.image.as_upper)
 							end
 							go_to_end_of_class_name
 							if found_end_of_class_name then

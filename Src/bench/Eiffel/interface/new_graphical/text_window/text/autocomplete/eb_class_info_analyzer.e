@@ -1137,7 +1137,7 @@ feature {NONE}-- Implementation
 									if ent_list.item.count = count then
 										tst := ent_list.item.as_lower
 										if tst.is_equal (lower_name) then
-											tst := Local_analyzer.found_class_names.i_th (ent_list.index).as_lower
+											tst := Local_analyzer.found_class_names.i_th (ent_list.index)
 											if Universe /= Void then
 												class_i  := Universe.class_named (tst, Universe.cluster_of_name (cluster_name))
 												if class_i /= void and then class_i.compiled then

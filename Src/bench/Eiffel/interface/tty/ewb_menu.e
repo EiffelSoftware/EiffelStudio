@@ -32,6 +32,8 @@ feature -- Properties
 
 	is_main: BOOLEAN
 
+	parent: EWB_MENU
+
 feature -- Access
 
 	abbrev_item (abb: CHARACTER): EWB_CMD is
@@ -111,6 +113,11 @@ feature -- Setting
 			is_main := True
 		end;
 
+	set_parent (new_parent: EWB_MENU) is
+		do
+			parent := new_parent;
+		end;
+
 feature -- Output
 
 	print_help is
@@ -132,6 +139,9 @@ feature -- Output
 			print_one_help (loop_help_cmd_name, loop_help_help, help_abb);
 			if not is_main then
 				print_one_help (main_cmd_name, main_help, main_abb);
+			end;
+			if parent /= Void and then not parent.is_main then
+				print_one_help (parent_cmd_name, parent_help, parent_abb);
 			end;
 			print_one_help (quit_cmd_name, quit_help, quit_abb);
 			print_one_help (yank_cmd_name, yank_help, yank_abb);

@@ -1,5 +1,7 @@
 indexing
-	description: "Dynamically expandable tree items"
+	description:
+		"Dynamically expandable tree items"
+	status: "See notice at end of file"
 	author: "Mark Howard"
 	date: "11/4/1999"
 	revision: "$Revision$"

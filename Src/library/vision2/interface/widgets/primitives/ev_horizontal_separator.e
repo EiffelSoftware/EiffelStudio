@@ -1,5 +1,6 @@
 indexing 
-	description: "Eiffel Vision horizontal separator."
+	description:
+		"Eiffel Vision horizontal separator."
 	status: "See notice at end of class"
 	keywords: "seperator, horizontal"
 	date: "$Date$";
@@ -52,6 +53,9 @@ end -- class EV_HORIZONTAL_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.5  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

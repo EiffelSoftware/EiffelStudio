@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision scrollbar."
+	description:
+		"Eiffel Vision scrollbar."
 	status: "See notice at end of class."
 	keywords: "scroll, bar, horizontal, vertical, gauge, leap, step, page"
 	date: "$Date$"
@@ -42,6 +43,9 @@ end -- class EV_SCROLL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.5  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

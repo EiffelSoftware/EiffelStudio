@@ -1,6 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision toolbar. Only toolbar items%
+	description:
+		"EiffelVision toolbar. Only toolbar items%
 		% can be placed into a tool-bar."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -59,6 +60,9 @@ end -- class EV_TOOL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/29 18:09:11  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.8  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

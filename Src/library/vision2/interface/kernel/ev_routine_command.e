@@ -1,10 +1,11 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	" Routine notion of command. To create this kind of%
-	% command any procedure with the following signature :%
-	% execute (arg: EV_ARGUMENT; event_data: EV_EVENT_DATA)%
-	% can be used."
+	description:
+		"Routine notion of command. To create this kind of%
+		% command any procedure with the following signature :%
+		% execute (arg: EV_ARGUMENT; event_data: EV_EVENT_DATA)%
+		% can be used."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,6 +42,9 @@ end -- class EV_ROUTINE_COMMAND
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.4  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

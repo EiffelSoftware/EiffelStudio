@@ -4,6 +4,7 @@ indexing
 		%one is the center of the circle and one is the starting point %N%
 		%of the circle. Then there is the aperture, an angle specifying %N%
 		%the size of the slice."
+	status: "See notice at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 

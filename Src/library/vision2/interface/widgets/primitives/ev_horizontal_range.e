@@ -1,5 +1,6 @@
 indexing 
-	description: "Eiffel Vision horizontal range."
+	description:
+		"Eiffel Vision horizontal range."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +52,9 @@ end -- class EV_HORIZONTAL_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.4  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

@@ -1,6 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Eiffel Vision menu item list"
+	description:
+		"Eiffel Vision menu item list"
 	status: "See notice at end of class"
 	keywords: "menu, bar, drop down, popup"
 	date: "$Date$"
@@ -38,6 +39,9 @@ end -- class EV_MENU_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.3  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

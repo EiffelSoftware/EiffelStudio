@@ -1,5 +1,7 @@
 indexing
-	description: "EiffelVision2 polygon."
+	description:
+		"EiffelVision2 polygon."
+	status: "See notice at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,8 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Tuple notion of argument."
+	description:
+		"Tuple notion of argument."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,6 +87,9 @@ end -- class EV_TUPLE_ARGUMENT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.4  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

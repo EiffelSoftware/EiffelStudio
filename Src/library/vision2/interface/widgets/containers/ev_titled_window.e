@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision titled window. Top level titled window."
+	description:
+		"Eiffel Vision titled window. Top level titled window."
 	status: "See notice at end of class"
 	keywords: "window, title bar, title"
 	date: "$Date$"
@@ -191,6 +192,9 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.3  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

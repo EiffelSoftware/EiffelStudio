@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision scrollable area."
+	description:
+		"Eiffel Vision scrollable area."
 	status: "See notice at end of class"
 	keywords: "container, scroll, scrollbar, viewport"
 	date: "$Date$"
@@ -146,6 +147,9 @@ end -- class EV_SCROLLABLE_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.10  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

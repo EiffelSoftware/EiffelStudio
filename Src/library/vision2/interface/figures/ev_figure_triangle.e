@@ -1,7 +1,9 @@
 indexing
-	description: "EiffelVision2 new-style figure that represents a%
+	description:
+		"EiffelVision2 new-style figure that represents a%
 		% rectangle by two points."
 		--| FIXME Improve descriptions of figure classes. Refer to EV_FIGURE etc.
+	status: "See notice at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 

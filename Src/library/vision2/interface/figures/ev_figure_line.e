@@ -1,5 +1,7 @@
 indexing
-	description: "Figure that represents a line as two positions."
+	description:
+		"Figure that represents a line as two positions."
+	status "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

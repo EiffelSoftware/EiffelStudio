@@ -9,6 +9,7 @@ indexing
 		%The projector ignores any figure objects it does not know %N%
 		%If you create new figures, modify the projector so that it now %N%
 		%displays your figures."
+	status: "See notice at end of file"
 	keywords: "figures, project, pointer, drawing, points"
 	date: "$Date$"
 	revision: "$Revision$"

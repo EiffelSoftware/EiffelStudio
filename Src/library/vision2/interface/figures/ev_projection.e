@@ -1,7 +1,9 @@
 indexing
-	description: "Projection of a world onto any device.%
+	description:
+		"Projection of a world onto any device.%
 		%This class is useless. Inherit from it and do your own%
 		%projection or use EV_STANDARD_PROJECTION."
+	status: "See notice at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,8 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "List of default colors used by the system."
+	description:
+		"List of default colors used by the system."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -204,6 +205,9 @@ end -- class EV_BASIC_COLORS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.7  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

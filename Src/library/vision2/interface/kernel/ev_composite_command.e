@@ -1,8 +1,9 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Notion of a composite command, that is a command that%
-					 %groups one or more unduable commands together."
+	description:
+		"Notion of a composite command, that is a command that%
+		 %groups one or more unduable commands together."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -135,6 +136,9 @@ end -- class EV_COMPOSITE_COMMAND
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.6  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

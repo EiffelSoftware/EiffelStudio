@@ -1,5 +1,6 @@
 indexing	
-	description: "Eiffel Vision check menu item."
+	description:
+		"Eiffel Vision check menu item."
 	status: "See notice at end of class"
 	keywords: "menu, item, check, select, deselect, uncheck"
 	date: "$Date$"
@@ -70,6 +71,9 @@ end -- class EV_CHECK_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.15  2000/02/24 20:30:27  brendel
 --| Removed features `is_selected' and `enable_select', since they are now
 --| defined in EV_SELECT_MENU_ITEM.

@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision horizontal scroll bar."
+	description:
+		"Eiffel Vision horizontal scroll bar."
 	status: "See notice at end of class."
 	keywords: "horizontal, scroll, bar, gauge"
 	date: "$Date$"
@@ -52,6 +53,9 @@ end -- class EV_HORIZONTAL_SCROLL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.4  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

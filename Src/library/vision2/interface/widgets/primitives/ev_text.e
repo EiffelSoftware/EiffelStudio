@@ -2,7 +2,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-	"EiffelVision text area. To query multiple lines of text from the user"
+		"EiffelVision text area. To query multiple lines of text from the user"
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -205,6 +205,9 @@ end -- class EV_TEXT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.14  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

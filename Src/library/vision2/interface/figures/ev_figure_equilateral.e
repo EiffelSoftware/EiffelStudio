@@ -1,7 +1,9 @@
 indexing
-	description: "EiffelVision2 Equilateral figure. Has a center and one%
+	description:
+		"EiffelVision2 Equilateral figure. Has a center and one%
 		% corner point. The rest of the corner points are calculated%
 		% through the number of sides."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

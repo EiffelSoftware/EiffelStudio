@@ -1,7 +1,7 @@
 --| FIXME Not for release
 indexing
 	description: 
-	"EiffelVision scrollable text area. To query multiple lines of text from the user."
+		"EiffelVision scrollable text area. To query multiple lines of text from the user."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"

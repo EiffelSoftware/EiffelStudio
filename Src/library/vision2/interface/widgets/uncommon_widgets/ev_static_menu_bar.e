@@ -1,7 +1,8 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision static menu bar. A menu bar that always%
+	description:
+		"EiffelVision static menu bar. A menu bar that always%
 		%stay on the top of the window."
 	status: "See notice at end of class"
 	id: "$Id$"
@@ -74,6 +75,9 @@ end -- class EV_MENU_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/29 18:09:11  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.10  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

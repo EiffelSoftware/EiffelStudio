@@ -1,8 +1,9 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision point. Description of geometric%
-				% abstract coordinates"
+	description:
+		"EiffelVision point. Description of geometric%
+		% abstract coordinates"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -294,6 +295,9 @@ end -- class EV_POINT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.10  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

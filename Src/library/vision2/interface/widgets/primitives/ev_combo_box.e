@@ -1,8 +1,9 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description: "EiffelVision Combo-box. A combo-box contains a %
-				% text field and a button. When the button is    %
-				% pressed, a list of possible choices is opened."
+	description:
+		"EiffelVision Combo-box. A combo-box contains a %
+		% text field and a button. When the button is    %
+		% pressed, a list of possible choices is opened."
 	note: "The `height' of a combo-box is the one of the text  %
 		% field. To have the height of the text field plus the %
 		% list, use extended_height."
@@ -95,6 +96,9 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.26  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

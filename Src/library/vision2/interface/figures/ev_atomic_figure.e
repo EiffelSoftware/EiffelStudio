@@ -1,5 +1,7 @@
 indexing
-	description: "A figure that has no childs."
+	description:
+		"A figure that has no childs."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,8 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Angle accessable in either degrees or radians."
+	description:
+		"Angle accessable in either degrees or radians."
 	keywords: "angle degrees radians"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -179,6 +180,9 @@ end -- class EV_ANGLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.11  2000/02/18 23:16:50  brendel
 --| Added obsolete clause.
 --|

@@ -72,7 +72,7 @@ feature
 				object_menu.extend (menu_item)
 				non_widgets.forth
 			end
-			create timer.make_with_interval (120000)
+			create timer.make_with_interval (30*60*1000)
 			timer.actions.extend (~exit_zero_wrapper)
 		end
 
@@ -350,6 +350,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/20 18:16:21  oconnor
+--| made self destruct delay longer
+--|
 --| Revision 1.19  2000/04/19 16:17:49  brendel
 --| Spelling.
 --| Changed MENU to MENU ITEM for non-widgets.

@@ -158,6 +158,8 @@ feature -- IL generation
  				then 
  						-- We generate a metamorphosed version of type.
  					expr.generate_il_metamorphose (actual_type, target_type, True)
+				elseif target_type.is_basic then
+					target_type.il_convert_from (actual_type)
  				end
 
  				il_generator.put_integer_32_constant (i)

@@ -29,18 +29,18 @@ feature -- Access
 
 feature -- Basic Operations
 
-	ToString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.RenameClause"
-		alias
-			"ToString"
-		end
-
 	Space: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
 			"Space"
+		end
+
+	SetTargetName (a_target_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.RenameClause"
+		alias
+			"SetTargetName"
 		end
 
 	MakeFromInfo (a_source_name: STRING; a_target_name: STRING) is
@@ -50,18 +50,18 @@ feature -- Basic Operations
 			"MakeFromInfo"
 		end
 
+	ToString: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.RenameClause"
+		alias
+			"ToString"
+		end
+
 	RenameKeyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
 			"RenameKeyword"
-		end
-
-	SetTargetName (a_target_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.RenameClause"
-		alias
-			"SetTargetName"
 		end
 
 	AsKeyword: STRING is

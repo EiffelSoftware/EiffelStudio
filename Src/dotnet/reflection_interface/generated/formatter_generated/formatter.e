@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	Generator: "Eiffel Emitter 2.4b2"
 	external_name: "Formatter"
 
 external class
@@ -13,6 +13,24 @@ feature {NONE} -- Initialization
 	frozen make is
 		external
 			"IL creator use Formatter"
+		end
+
+feature -- Access
+
+	frozen EiffelFormatting: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use Formatter"
+		alias
+			"get_EiffelFormatting"
+		end
+
+feature -- Element Change
+
+	frozen set_EiffelFormatting (value: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use Formatter"
+		alias
+			"set_EiffelFormatting"
 		end
 
 feature -- Basic Operations
@@ -57,6 +75,15 @@ feature -- Basic Operations
 			"IL signature (System.String): System.String use Formatter"
 		alias
 			"FormatVariableName"
+		end
+
+feature {NONE} -- Implementation
+
+	frozen FormatToEiffel (Value: STRING): STRING is
+		external
+			"IL signature (System.String): System.String use Formatter"
+		alias
+			"FormatToEiffel"
 		end
 
 end -- class FORMATTER

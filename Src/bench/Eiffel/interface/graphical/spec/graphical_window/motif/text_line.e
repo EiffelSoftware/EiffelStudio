@@ -36,8 +36,8 @@ feature -- Properties
 	figures: GRAPHICAL_FIGURES;
 			-- Associated figure list
 
-	is_in_debug_line: BOOLEAN
-			-- Is the Current line in a debug line?
+	is_in_highlighted_line: BOOLEAN
+			-- Is the Current line in a highlighted line?
 
 	width: INTEGER is
 		do
@@ -211,21 +211,21 @@ feature -- Access
 
 feature -- Setting
 
-	set_is_in_debug_line (b: BOOLEAN) is
-			-- Set `is_in_debug_line' to `b'.
+	set_is_in_highlighted_line (b: BOOLEAN) is
+			-- Set `is_in_highlighted_line' to `b'.
 		do
-			is_in_debug_line := b
+			is_in_highlighted_line := b
 		ensure
-			set: is_in_debug_line = b
+			set: is_in_highlighted_line = b
 		end;
 
 feature -- Output
 
-	update_debug_line (d: DRAWING_X; b: BOOLEAN; x_offset, y_offset: INTEGER) is
+	update_highlighted_line (d: DRAWING_X; b: BOOLEAN; x_offset, y_offset: INTEGER) is
 			-- Select line if `b' is True. Otherwize, deselect it.
 		do
-			if b /= is_in_debug_line then
-				set_is_in_debug_line (b);
+			if b /= is_in_highlighted_line then
+				set_is_in_highlighted_line (b);
 				highlight_line (d, b, x_offset, y_offset)
 				draw (d, x_offset, y_offset)
 			end;
@@ -239,7 +239,7 @@ feature -- Output
 			b: BOOLEAN;
 			drawing: DRAWING_X;
 		do
-			b := is_in_debug_line;
+			b := is_in_highlighted_line;
 			if b then
 				highlight_line (d, True, x_offset, y_offset)
 			end;
@@ -257,18 +257,27 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	highlight_line (d: DRAWING_X; is_in_debug: BOOLEAN; 
+	highlight_line (d: DRAWING_X; is_highlighted: BOOLEAN; 
 				x_offset, y_offset: INTEGER) is
-			-- Draw the current debug text line.
+			-- Draw the current highlighted text line.
+		local
+			padded_width: INTEGER;
+			bp: BREAKABLE_FIGURE
 		do
-			if is_in_debug then
-				d.set_foreground_gc_color (g_Selected_breakpoint_line_bg_color);
+			if is_highlighted then
+				d.set_foreground_gc_color (g_Highlighted_line_bg_color);
+				if count > 0 then
+					bp ?= first;
+					if bp /= Void then
+						padded_width := figures.padded_width
+					end;
+				end;
 			else
 				d.set_foreground_gc_color (g_Bg_color);
 			end;
 				-- Coords are upper left corner for mel
 			d.mel_fill_rectangle (d, 
-				figures.padded_width - x_offset, 
+				padded_width, 
 				bottom_left_y - y_offset + 
 				figures.maximum_descent_per_line - 
 				figures.maximum_height_per_line, 

@@ -59,6 +59,7 @@ feature -- Formatting
 					not stone.same_as (root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
+						tool.close_search_window;
 						if stone.clickable then
 							display_temp_header (stone);
 							!! mp.set_watch_cursor;
@@ -85,11 +86,15 @@ feature -- Formatting
 						else
 							tool.showtext_frmt_holder.execute (stone)
 						end
+					else
+						holder.set_selected (False);
 					end
 				end
 			else
+				if mp /= Void then
+					mp.restore
+				end;
 				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info);
-				restore_cursors
 			end
 		rescue
 			if original_exception = Io_exception then

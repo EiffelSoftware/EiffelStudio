@@ -53,7 +53,7 @@ feature -- Access
 			if r /= Void then
 				Result := r.actual_value
 			else
-				Create Result.make_with_rgb_with_8_bits (rd, gd, bd)
+				Create Result.make_with_8_bit_rgb (rd, gd, bd)
 			end
 		end
 

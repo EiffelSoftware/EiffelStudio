@@ -36,6 +36,7 @@ inherit
 		redefine
 			print_register, make_byte_code,
 			is_simple_expr, is_predefined, generate_il,
+			is_fast_as_local,
 			evaluate
 		end;
 
@@ -347,6 +348,9 @@ feature -- Generation
 			end
 			buf.put_character (')')
 		end
+
+	is_fast_as_local: BOOLEAN is true
+			-- Is expression calculation as fast as loading a local?
 
 	generate_il is
 			-- Generate IL code for integer constant value.

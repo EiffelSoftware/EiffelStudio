@@ -9,7 +9,8 @@ inherit
 			enlarged, type, is_argument, is_local, is_creatable,
 			make_byte_code, register_name, array_descriptor,
 			pre_inlined_code, print_register, generate_il_call_access,
-			generate_il_address
+			generate_il_address,
+			is_fast_as_local
 		end;
 	
 feature 
@@ -79,6 +80,9 @@ feature
 		end
 
 feature -- IL code generation
+
+	is_fast_as_local: BOOLEAN is true
+			-- Is expression calculation as fast as loading a local?
 
 	generate_il_call_access (is_target_of_call: BOOLEAN) is
 			-- Generate IL code for an access to an argument

@@ -563,7 +563,6 @@ feature -- Status report
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
 			flags, mask: INTEGER
 		do
-			disable_redraw
 			current_selection := selection
 			if current_selection.minimum /= current_selection.maximum and
 				start_position = current_selection.minimum + 1 and
@@ -571,6 +570,7 @@ feature -- Status report
 			then
 				range_already_selected := True
 			else
+				disable_redraw
 				safe_store_caret
 				set_selection (start_position - 1, end_position - 1)
 			end
@@ -596,8 +596,8 @@ feature -- Status report
 			create Result.make_with_flags (flags)
 			if not range_already_selected then
 				safe_restore_caret
+				enable_redraw
 			end
-			enable_redraw
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is

@@ -60,7 +60,9 @@ feature -- IL code generation
 
 	generate_il is
 		do
-			--| FIXME: not yet supported
+			check
+				not_yet_supported: False
+			end
 		end
 
 feature -- Byte code generation

@@ -71,6 +71,7 @@ feature -- Basic operations
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
+				a_file_name: FILE_NAME
 			do
 				create dialog
 				dialog.set_filter (project_file_filter)
@@ -84,7 +85,7 @@ feature -- Basic operations
 				from
 				until
 					opened and then
-					((valid_file_name (dialog.file_name) and file_handler.last_load_successful) or dialog.file_name.is_empty)
+					((valid_file_name (dialog.file_name) and file_handler.last_load_successful and not project_settings.load_cancelled) or dialog.file_name.is_empty)
 				loop
 						-- Display the dialog.
 					dialog.show_modal_to_window (main_window)
@@ -95,17 +96,27 @@ feature -- Basic operations
 					if not dialog.file_name.is_empty and valid_file_name (dialog.file_name) then
 						create project_settings
 						project_settings.load (dialog.file_name, file_handler)
-						if file_handler.last_load_successful then
-							system_status.set_current_project (project_settings)
+						if file_handler.last_load_successful and not project_settings.load_cancelled then
 							-- Check that the filename is valid.
 							-- i.e. that the system_interface file exists.
-							create test_file.make (filename)
-							if test_file.exists then
-								xml_handler.load
-								main_window.show_tools
-								command_handler.update
-									-- Compress all used ids.
-								id_compressor.compress_all_id
+							if not project_settings.load_cancelled then
+									-- Do nothing if we cancelled the loading.
+								if project_settings.main_window_class_name = Void then
+										-- If the main window class name is Void, then it means that
+										-- the settings were not loaded, so we fill in the location, 
+										-- and use the default_values
+									create project_settings.make_with_default_values
+									project_settings.set_project_location (dialog.file_path)
+								end
+								system_status.set_current_project (project_settings)
+								create test_file.make (filename)
+								if test_file.exists then
+									xml_handler.load
+									main_window.show_tools
+									command_handler.update
+										-- Compress all used ids.
+									id_compressor.compress_all_id
+								end
 							end
 						end	
 					end

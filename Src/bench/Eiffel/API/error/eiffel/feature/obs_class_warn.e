@@ -8,10 +8,9 @@ indexing
 class OBS_CLASS_WARN
 
 inherit
-
 	WARNING
 		redefine
-			build_explain, infix "<", help_file_name,
+			build_explain, help_file_name,
 			is_defined
 		end;
 
@@ -51,16 +50,6 @@ feature -- Access
 			yes_implies_valid_classes: Result implies 
 							associated_class /= Void and then
 							obsolete_class /= Void
-		end;
-
-
-feature -- Comparison
-	
-	infix "<" (other: like Current): BOOLEAN is
-		do
-			Result := code < other.code or else
-				(code.is_equal (other.code) and then
-					associated_class < other.associated_class)
 		end;
 
 feature -- Output

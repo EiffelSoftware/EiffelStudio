@@ -9,11 +9,6 @@ deferred class ERROR
 
 inherit
 	EIFFEL_ENV
-		undefine
-			is_equal
-		end
-
-	COMPARABLE
 
 feature -- Properties 
 
@@ -43,15 +38,6 @@ feature -- Access
 		do
 			Result := True
 		end
-
-feature -- Comparison
-
-	infix "<" (other: like Current): BOOLEAN is
-		do
-			Result := code < other.code or else
-						(code.is_equal (other.code) and then
-							subcode < other.subcode)
-		end;
 
 feature -- Output
 

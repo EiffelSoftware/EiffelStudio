@@ -73,13 +73,13 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			parent_imp.internal_select (Current)
+			parent_imp.internal_select_item (Current)
 		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
 		do
-			parent_imp.internal_deselect (Current)
+			parent_imp.internal_deselect_item (Current)
 		end
 
 feature {EV_ANY_I} -- Access
@@ -90,11 +90,11 @@ feature {EV_ANY_I} -- Access
 		do
 			list_imp ?= parent_imp
 			check
-				parent_not_void: list_imp /= Void
+				list_imp /= Void
 			end
 			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
-					a_screen_y)
+				start_transport (a_x, a_y, a_button, 0, 0, 
+					0.5, a_screen_x, a_screen_y)
 				list_imp.set_parent_source_true
 				list_imp.set_item_source (Current)
 				list_imp.set_item_source_true
@@ -119,7 +119,7 @@ feature {EV_ANY_I} -- Access
 			Result := parent_imp.internal_get_index (Current)
 		end
 
-	parent_imp: EV_LIST_IMP
+	parent_imp: EV_LIST_ITEM_LIST_IMP
 		-- Parent of `Current'
 	
 	set_parent (par: like parent) is
@@ -142,7 +142,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and Drop
 			end
 		end
 
-feature {EV_LIST_IMP} -- Implementation.
+feature {EV_LIST_IMP, EV_COMBO_BOX_IMP} -- Implementation.
 
 	relative_y: INTEGER is
 			-- `Result' is relative y coordinate in pixels to parent.
@@ -157,17 +157,30 @@ feature {EV_LIST_IMP} -- Implementation.
 	is_displayed: BOOLEAN is
 			-- Can the user view `Current'?
 		local
-			local_index: INTEGER
+			local_index: INTEGER -- current index
 			first_index: INTEGER -- first displayed index
 			last_index: INTEGER	-- last displayed index
+			combo_imp: EV_COMBO_BOX_IMP
+			is_visible: BOOLEAN -- Is the list visible?
 		do
-			if parent_imp /= Void then
+			if parent_imp /= Void then -- otherwise...it's not displayed
 				local_index := index - 1
 				first_index := parent_imp.top_index
 				last_index := first_index + parent_imp.visible_count
 
-				Result := (local_index >= first_index and
-						   local_index < last_index)
+				combo_imp ?= parent_imp
+				if combo_imp /= Void then
+						-- The parent is not a combo. Is the list visible?
+					is_visible := combo_imp.list_shown
+				else
+						-- The parent is not a combo, the list is
+						-- always visible
+					is_visible := True
+				end
+
+				Result := is_visible and then
+						  local_index >= first_index and
+						  local_index < last_index
 			end
 		end
 
@@ -224,6 +237,13 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/04/20 01:01:56  pichery
+--| - internal_select -> internal_select_item
+--| - internal_deselect -> internal_deselect_item
+--| - Cosmetics
+--| - Some change to take into account that
+--|   the elements can be added in a COMBO_BOX.
+--|
 --| Revision 1.48  2000/04/19 01:28:05  pichery
 --| Fixed bugs...
 --|

@@ -20,18 +20,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen LastWriteSuccessful: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"LastWriteSuccessful"
-		end
-
 	frozen AssemblyFolderPath: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"AssemblyFolderPath"
+		end
+
+	frozen LastWriteSuccessful: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"LastWriteSuccessful"
 		end
 
 	frozen EiffelAssembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
@@ -71,6 +71,13 @@ feature -- Access
 
 feature -- Basic Operations
 
+	PrepareTypeStorage_AssemblyDescriptor (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"PrepareTypeStorage"
+		end
+
 	ReplaceType (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): ISE_REFLECTION_TYPESTORER is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelClass): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
@@ -78,11 +85,11 @@ feature -- Basic Operations
 			"ReplaceType"
 		end
 
-	Commit is
+	HasReadLockCode: INTEGER is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (): System.Int32 use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"Commit"
+			"HasReadLockCode"
 		end
 
 	WriteLockCreationFailedCode: INTEGER is
@@ -120,6 +127,13 @@ feature -- Basic Operations
 			"UpdateIndex"
 		end
 
+	Commit is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"Commit"
+		end
+
 	RemoveAssembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
@@ -127,25 +141,11 @@ feature -- Basic Operations
 			"RemoveAssembly"
 		end
 
-	HasReadLockCode: INTEGER is
-		external
-			"IL signature (): System.Int32 use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"HasReadLockCode"
-		end
-
 	MakeCacheHandler is
 		external
 			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"MakeCacheHandler"
-		end
-
-	PrepareTypeStorage_AssemblyDescriptor (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"PrepareTypeStorage"
 		end
 
 	GenerateAssemblyXmlFile is

@@ -57,46 +57,18 @@ feature -- Access
 
 feature -- Basic Operations
 
-	Make is
+	ReadLockFilename: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"ReadLockFilename"
+		end
+
+	GenerateArguments is
 		external
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"Make"
-		end
-
-	GenerateClassFooter is
-		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"GenerateClassFooter"
-		end
-
-	EiffelAssemblyFromXml (a_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
-		external
-			"IL signature (System.String): ISE.Reflection.EiffelAssembly use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"EiffelAssemblyFromXml"
-		end
-
-	GenerateFeatures (element_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"GenerateFeatures"
-		end
-
-	GenerateFeatureAssertions (element_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"GenerateFeatureAssertions"
-		end
-
-	GenerateParents is
-		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"GenerateParents"
+			"GenerateArguments"
 		end
 
 	HasWriteLock (a_folder_name: STRING): BOOLEAN is
@@ -106,11 +78,74 @@ feature -- Basic Operations
 			"HasWriteLock"
 		end
 
+	ValidPath (a_path: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"ValidPath"
+		end
+
+	CreateFolder (a_path: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"CreateFolder"
+		end
+
+	EiffelAssemblyFromXml (a_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL signature (System.String): ISE.Reflection.EiffelAssembly use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"EiffelAssemblyFromXml"
+		end
+
+	GenerateClassHeader is
+		external
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenerateClassHeader"
+		end
+
+	GenerateFeatures (element_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenerateFeatures"
+		end
+
 	HasReadLock (a_folder_name: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use ISE.Reflection.CodeGenerationSupport"
 		alias
 			"HasReadLock"
+		end
+
+	EiffelClassFromXml (a_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
+		external
+			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"EiffelClassFromXml"
+		end
+
+	WriteLockFilename: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"WriteLockFilename"
+		end
+
+	GenerateComments is
+		external
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenerateComments"
+		end
+
+	Make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"Make"
 		end
 
 	SetFeatureInfo is
@@ -127,46 +162,25 @@ feature -- Basic Operations
 			"GenerateClassBody"
 		end
 
-	ReadLockFilename: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"ReadLockFilename"
-		end
-
-	GenerateClassHeader is
+	GenerateParents is
 		external
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateClassHeader"
+			"GenerateParents"
 		end
 
-	GenerateComments is
+	GenerateFeatureAssertions (element_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"GenerateFeatureAssertions"
+		end
+
+	GenerateClassFooter is
 		external
 			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"GenerateComments"
-		end
-
-	WriteLockFilename: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"WriteLockFilename"
-		end
-
-	EiffelClassFromXml (a_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
-		external
-			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"EiffelClassFromXml"
-		end
-
-	GenerateArguments is
-		external
-			"IL signature (): System.Void use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"GenerateArguments"
+			"GenerateClassFooter"
 		end
 
 end -- class ISE_REFLECTION_CODEGENERATIONSUPPORT

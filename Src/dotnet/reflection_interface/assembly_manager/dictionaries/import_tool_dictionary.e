@@ -38,6 +38,12 @@ feature -- Shortcuts
 		
 feature -- Error messages
 
+	Error_browsing_GAC: STRING is "An error occurred while retrieving assemblies from the GAC."
+		indexing
+			description: "Error message when an error occurs when browsing assemblies in the GAC"
+			external_name: "ErrorBrowsingGac"
+		end
+		
 	Non_signed_assembly: STRING is "The selected assembly is not signed. Please sign it before using ISE Assembly Manager."		
 		indexing
 			description: "Error message when user selects a non-signed assembly."
@@ -66,19 +72,13 @@ feature -- Open file dialog constants
 
 feature -- Toolbar icons filename
 
-	Open_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\open.bmp"	
+	Open_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_open_file_color.ico"
 		indexing
 			description: "Filename of icon on open toolbar button"
 			external_name: "ShowOpenIconFilename"
 		end
 		
-	Show_name_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\general.bmp"	
-		indexing
-			description: "Filename of icon on `show name' toolbar button"
-			external_name: "ShowNameIconFilename"
-		end
-
-	Import_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\update.bmp"
+	Import_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_assembly_color.ico"
 		indexing
 			description: "Filename of icon on import toolbar button"
 			external_name: "ImportIconFilename"
@@ -90,6 +90,22 @@ feature -- Other constants
 		indexing
 			description: "Text that appears in the blue header of the data grid"
 			external_name: "CaptionText"
+		end
+
+	Import_tool_icon: SYSTEM_DRAWING_ICON is
+		indexing
+			description: "Icon appearing in import tool header"
+			external_name: "ImportToolIcon"
+		once
+			create Result.make_icon (Import_tool_icon_filename)
+		ensure
+			icon_created: Result /= Void
+		end
+
+	Import_tool_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_tool_title_color.ico"
+		indexing
+			description: "Filename of icon appearing in import tool header"
+			external_name: "ImportToolIconFilename"
 		end
 		
 end -- class IMPORT_TOOL_DICTIONARY	

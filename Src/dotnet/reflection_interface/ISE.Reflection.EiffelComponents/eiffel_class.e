@@ -427,6 +427,18 @@ feature -- Status Setting
 		ensure
 			full_external_name_set: full_external_name.Equals_String (a_full_name)
 		end
+	
+	set_parents (a_table: like parents) is
+		indexing
+			description: "Set `parents' with `a_table'."
+			external_name: "SetParents"
+		require
+			non_void_table: a_table /= Void
+		do
+			parents := a_table
+		ensure
+			parents_set: parents = a_table
+		end
 		
 feature -- Basic Operations
 

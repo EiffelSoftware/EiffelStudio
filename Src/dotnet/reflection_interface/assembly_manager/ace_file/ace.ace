@@ -2,7 +2,7 @@ system
 	"ISE.AssemblyManager"
 
 root
-	ASSEMBLY_VIEWER (root_cluster): "make"
+	IMPORTED_ASSEMBLY_VIEWER (root_cluster): "make"
 
 default
 	assertion (all)
@@ -18,7 +18,9 @@ cluster
 	
 	support: "F:\Src\dotnet\reflection_interface\assembly_manager\support"
 	
-	modifications_interface: "F:\Src\dotnet\reflection_interface\assembly_manager\modifications_interface"
+	folder_dialog: "F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog"
+	
+	modifications: "F:\Src\dotnet\reflection_interface\assembly_manager\modifications_interface"
 	
 	all generated: "F:\Src\dotnet\reflection_interface\generated"
 
@@ -35,9 +37,11 @@ external
 			"F:\Src\dotnet\reflection_interface\generated\reflection_interface_generated\ISE.Reflection.ReflectionInterface.dll",
 			"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
 	 		"F:\Src\dotnet\reflection_interface\generated\emitter_generated\emitter.exe",
+	 		"F:\Src\dotnet\reflection_interface\generated\new_emitter_generated\ISE.Reflection.Emitter.exe",
 	 		"F:\Src\dotnet\reflection_interface\generated\eiffel_assembly_cache_generated\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
 	 		"F:\Src\dotnet\reflection_interface\generated\notifier_generated\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",
 	 		"F:\Src\dotnet\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll",
 	 		"F:\Src\dotnet\reflection_interface\generated\code_generator_generated\ISE.Reflection.CodeGenerator.dll",
-	 		"F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser\ISE.AssemblyManager.WindowsDirectoryExtractor.dll"
+	 		"F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser\ISE.AssemblyManager.WindowsDirectoryExtractor.dll",
+	 		"F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Core\ISE.AssemblyManager.FolderDialog.dll"
 end

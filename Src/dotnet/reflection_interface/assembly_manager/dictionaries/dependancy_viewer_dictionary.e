@@ -6,7 +6,7 @@ class
 	DEPENDANCY_VIEWER_DICTIONARY
 
 inherit
-	DIALOG_DICTIONARY
+	DEPENDANCY_DIALOG_DICTIONARY
 
 feature -- Access
 
@@ -16,18 +16,28 @@ feature -- Access
 			external_name: "AssemblyLabelText"
 		end
 
-	Close_button_label: STRING is "Close"
-			-- Close button label
+	Caption_text: STRING is "Dependencies"
 		indexing
-			external_name: "CloseButtonLabel"
+			description: "Text that appears in the blue header of the data grid"
+			external_name: "CaptionText"
 		end
-	
-	Dependancies_label_text: STRING is "Dependancies: " 
-			-- Text of dependancies label
+		
+	Dependancies_icon: SYSTEM_DRAWING_ICON is
 		indexing
-			external_name: "DependanciesLabelText"
+			description: "Icon appearing in dependancy viewer header"
+			external_name: "DependanciesIcon"
+		once
+			create Result.make_icon (Dependancies_icon_filename)
+		ensure
+			icon_created: Result /= Void
 		end
 
+	Dependancies_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_title_dependencies_color.ico"
+		indexing
+			description: "Filename of icon appearing in dependancy viewer header"
+			external_name: "DependanciesIconFilename"
+		end
+		
 	No_dependancies_text: STRING is "The selected assembly has no dependancy."
 			-- Text whenever selected assembly has no dependancy	
 		indexing

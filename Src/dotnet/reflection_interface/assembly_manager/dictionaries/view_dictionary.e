@@ -10,41 +10,32 @@ inherit
 
 feature -- Access
 
-	Assembly_description (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is 
-			-- Text representing `a_descriptor' (does not include assembly name).
+	Edit_icon: SYSTEM_DRAWING_ICON is
 		indexing
-			external_name: "AssemblyDescription"
-		require
-			non_void_assembly_descriptor: a_descriptor /= Void
-			non_void_assembly_name: a_descriptor.name /= Void
-			not_empty_assembly_name: a_descriptor.name.Length > 0
+			description: "Icon appearing in assembly view and type view header"
+			external_name: "EditIcon"
 		once
-			Result := Opening_bracket
-			Result := Result.concat_string_string_string (Result, Description (a_descriptor), Closing_bracket)
-		end
-		
-	Closing_bracket: STRING is ")"
-			-- Closing round bracket
-		indexing
-			external_name: "ClosingBracket"
-		end
-	
-	Opening_bracket: STRING is "("
-			-- Opening round bracket
-		indexing
-			external_name: "OpeningBracket"
+			create Result.make_icon (Edit_icon_filename)
+		ensure
+			icon_created: Result /= Void
 		end
 
-	Space: STRING is " "
-			-- Space 
+	Edit_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_edit_title_color.ico"
 		indexing
-			external_name: "Space"
-		end
+			description: "Filename of icon appearing in assembly view and type view header"
+			external_name: "EditIconFilename"
+		end	
 		
-	Window_height: INTEGER is 600
-			-- Window height
+	Window_height: INTEGER is 500
 		indexing
+			description: "Window height"
 			external_name: "WindowHeight"
+		end	
+		
+	Window_width: INTEGER is 750
+			-- Window width
+		indexing
+			external_name: "WindowWidth"
 		end
 	
 end -- class VIEW_DICTIONARY

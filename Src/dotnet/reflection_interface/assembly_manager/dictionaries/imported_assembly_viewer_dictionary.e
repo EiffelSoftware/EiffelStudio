@@ -33,6 +33,12 @@ feature -- Menu items
 			description: "Text of remove menu item"
 			external_name: "RemoveMenuItem"
 		end
+
+	Eiffel_generation_menu_item: STRING is "Eiffel &Generation"
+		indexing
+			description: "Text of Eiffel menu item"
+			external_name: "EiffelMenuItem"
+		end
 		
 	Import_menu_item: STRING is "&Import Tool"
 		indexing
@@ -60,33 +66,39 @@ feature -- Shortcuts
 			external_name: "CtrlRShortcut"
 		end
 
+	Ctrl_G_shortcut: INTEGER is 131143
+		indexing
+			description: "Ctrl+G shortcut, enum value: 0x 20047"
+			external_name: "CtrlGShortcut"
+		end
+		
 feature -- Toolbar icons filename
 
-	Path_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\general.bmp"
+	Path_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_paths_color.ico"
 		indexing
 			description: "Filename of icon on eiffel path toolbar button"
 			external_name: "PathIconFilename"
 		end
-
-	Show_name_and_path_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\general.bmp"	
-		indexing
-			description: "Filename of icon on `show name and path' toolbar button"
-			external_name: "ShowNameAndPathIconFilename"
-		end
 		
-	Edit_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\editobj.bmp"
+	Edit_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_edit_assembly_color.ico"
 		indexing
 			description: "Filename of icon on edit toolbar button"
 			external_name: "EditIconFilename"
 		end
 		
-	Remove_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\smodifie.bmp"
+	Remove_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_delete_color.ico"
 		indexing
 			description: "Filename of icon on remove toolbar button"
 			external_name: "RemoveIconFilename"
 		end
 		
-	Import_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\update.bmp"
+	Eiffel_generation_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_to_eiffel_color.ico"
+		indexing
+			description: "Filename of icon on Eiffel generation toolbar button"
+			external_name: "EiffelGenerationIconFilename"
+		end
+
+	Import_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_assembly_tool_color.ico"
 		indexing
 			description: "Filename of icon on import toolbar button"
 			external_name: "ImportIconFilename"
@@ -109,11 +121,23 @@ feature -- Messages
 		end
 
 feature -- Other constants
+	
+	Cancel: INTEGER is 2
+		indexing
+			description: "Value indicating that the `Cancel' button of the message box has been clicked"
+			external_name: "Cancel"
+		end
 
 	Caption_text: STRING is "Imported Assemblies"
 		indexing
 			description: "Text that appears in the blue header of the data grid"
 			external_name: "CaptionText"
+		end
+
+	Non_editable_assembly: STRING is "This assembly cannot be edited from the Eiffel Assembly Cache."
+		indexing
+			description: "Error message in case the user wants to edit an assembly that cannot be edited"
+			external_name: "NonEditbleAssembly"
 		end
 		
 end -- class IMPORTED_ASSEMBLY_VIEWER_DICTIONARY	

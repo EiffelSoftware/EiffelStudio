@@ -6,92 +6,54 @@ class
 	IMPORT_DIALOG_DICTIONARY
 
 inherit
-	DIALOG_DICTIONARY
+	GENERATION_DIALOG_DICTIONARY
 	
 feature -- Access
 	
-	Assembly_and_dependancies_importation_message: STRING is "The assembly manager will now import the selected assembly and its dependancies. This may take a few minutes. Please be patient."
+	Assembly_and_dependancies_importation_message: STRING is "The assembly manager will now import the selected assembly and its dependencies. This may take a few minutes. Please be patient."
 			-- Message to let the user know selected assembly and its dependancies will be imported to the Eiffel repository.
 		indexing
 			external_name: "AssemblyAndDependanciesImportationMessage"
 		end
 
-	Assembly_importation_message: STRING is "The assembly manager will now import the selected assembly without any dependancies. This may take a few minutes. Please be patient."
+	Assembly_importation_message: STRING is "The assembly manager will now import the selected assembly without any dependencies. This may take a few minutes. Please be patient."
 			-- Message to let the user know selected assembly will be imported to the Eiffel repository.
 		indexing
 			external_name: "AssemblyImportationMessage"
 		end
 		
-	Assembly_label_text: STRING is "Selected assembly: "
-			-- Text of assembly label
+	Caption_text: STRING is "Non imported dependencies"
 		indexing
-			external_name: "AssemblyLabelText"
-		end
-
-	Browse_button_label: STRING is "Browse..."
-			-- Browse button label
-		indexing
-			external_name: "BrowseButtonLabel"
-		end
-
-	Cancel_button_label: STRING is "Cancel"
-			-- Cancel button label
-		indexing
-			external_name: "CancelButtonLabel"
+			description: "Text that appears in the blue header of the data grid"
+			external_name: "CaptionText"
 		end
 		
-	Dependancies_check_box_text: STRING is "Import assembly dependancies"
+	Dependancies_check_box_text: STRING is "Import assembly dependencies"
 			-- Dependancies check box text
 		indexing
 			external_name: "DependanciesCheckBoxText"
 		end
-		
-	Destination_path_label_text: STRING is "Destination path: " 
-			-- Text of destination path label
+
+	Import_icon: SYSTEM_DRAWING_ICON is
 		indexing
-			external_name: "DestinationPathLabelText"
+			description: "Icon appearing in import dialog header"
+			external_name: "ImportIcon"
+		once
+			create Result.make_icon (Import_icon_filename)
+		ensure
+			icon_created: Result /= Void
 		end
 
-	Destination_path_selection_title: STRING is "Select a destination path"
-			-- Title of browse dialog used to select the destination path
+	Importation_error: STRING is "An errors occurred during assembly importation. Please check the assembly is signed. If not, sign it and try importation again."
 		indexing
-			external_name: "DestinationPathSelectionTitle"
-		end
-		
-	Empty_string: STRING is ""
-			-- Empty string
-		indexing
-			external_name: "EmptyString"
-		end
-		
-	Explanation_label_text: STRING is "Path to directory where Eiffel classes will be generated." 
-			-- Explanation of destination path
-		indexing
-			external_name: "ExplanationLabelText"
-		end	
-	
-	Neutral_culture: STRING is "neutral"
-			-- Neutral culture
-		indexing
-			external_name: "NeutralCulture"
+			description: "Error message when assembly importation fails"
+			external_name: "ImportationError"
 		end
 
-	No_path: STRING is "Please select a folder where Eiffel code will be generated."
+	Import_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_assembly_title_color.ico"
 		indexing
-			description: "Error message when no path has been selected"
-			external_name: "NoPath"
-		end
-		
-	Ok_button_label: STRING is "OK"
-			-- OK button label
-		indexing
-			external_name: "OkButtonLabel"
-		end
-
-	Red_color: SYSTEM_DRAWING_COLOR
-			-- Red color
-		indexing
-			external_name: "RedColor"
+			description: "Filename of icon appearing in import dialog header"
+			external_name: "ImportIconFilename"
 		end
 		
 	Title: STRING is "Import a .NET assembly"
@@ -100,10 +62,16 @@ feature -- Access
 			external_name: "Title"
 		end
 	
-	Warning_text: STRING is "Are you sure you want to import the .NET assembly without its dependancies?"
+	Warning_text: STRING is "Are you sure you want to import the .NET assembly without its dependencies?"
 			-- Warning in case user does not ask for importation of assembly dependancies
 		indexing
 			external_name: "WarningText"
 		end
 
+	Window_height: INTEGER is 280
+			-- Window height
+		indexing
+			external_name: "WindowHeight"
+		end
+		
 end -- class IMPORT_DIALOG_DICTIONARY

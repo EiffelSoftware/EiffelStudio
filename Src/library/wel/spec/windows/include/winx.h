@@ -6,7 +6,7 @@
 #define __WEL_WINDOWSX__
 
 #ifndef __WEL__
-#	include <wel.h>
+#	include "wel.h"
 #endif
 
 #ifndef _INC_WINDOWSX

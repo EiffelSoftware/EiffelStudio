@@ -161,11 +161,7 @@ feature
 					-- and the source an int.
 				target_ctype := target_type.c_type;
 				source_ctype := source_type.c_type;
-				if target_type.is_float then
-					cast_generated := True;
-					generated_file.putstring ("(EIF_REAL) ("); -- ss for ANSI rt
-					--generated_file.putstring ("(EIF_DOUBLE) (");
-				elseif source_ctype.level /= target_ctype.level then
+				if source_ctype.level /= target_ctype.level then
 					cast_generated := True;
 					target_ctype.generate_cast (generated_file);
 					generated_file.putchar('(');

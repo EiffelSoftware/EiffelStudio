@@ -1,8 +1,7 @@
 indexing
 	description	: "Listener to the daemon to execute corresponding request"
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class ISED_X_SLAVE
 
@@ -28,7 +27,7 @@ feature -- Initialization
 			if old_style then
 				create_handler
 			else
-				create io_watcher.make_with_action (~execute (Void))
+				create io_watcher.make_with_action (agent execute (Void))
 			end
 
 			pass_adresses

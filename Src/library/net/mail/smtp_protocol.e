@@ -55,7 +55,7 @@ feature -- Access EMAIL_PROTOCOL
 feature -- Implementation (EMAIL_RESOURCE).
 
 	transfer (resource: MEMORY_RESOURCE) is
-			-- Send the email and add a %N. at the end of the message.
+			-- Send the email and add a %R%N. at the end of the message.
 		do
 			if not error then
 				memory_resource := resource
@@ -165,11 +165,11 @@ feature {NONE} -- Basic operations
 
 	send_mails	is
 		do
-				header_from:= memory_resource.header (H_from).unique_entry
-				sub_header:= ""
-				set_recipients
-				build_sub_header
-				send_all
+			header_from:= memory_resource.header (H_from).unique_entry
+			sub_header:= ""
+			set_recipients
+			build_sub_header
+			send_all
 		end
 
 	set_recipients is

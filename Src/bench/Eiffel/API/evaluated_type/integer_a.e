@@ -98,7 +98,8 @@ feature {COMPILER_EXPORTER}
 			else
 				if other.is_integer then
 					int ?= other
-					Result := int.compatibility_size >= compatibility_size
+					Result := int.size >= size or else
+						(int.compatibility_size >= compatibility_size)
 				else
 					Result := Precursor {BASIC_A} (other, False)
 						or else other.is_real

@@ -33,15 +33,9 @@ inherit
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
 		redefine
+			initialize,
 			interface
 		end
-
-	--EV_PICK_AND_DROPABLE_IMP
-	--	undefine
-	--		set_pointer_style
-	--	redefine
-	--		interface
-	--	end
 
 	WEL_TREE_VIEW_ITEM
 		rename
@@ -84,6 +78,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do post creation initialization.
 		do
+			Precursor
 			create internal_children.make (1)
 			create ev_children.make (1)
 			is_initialized := True
@@ -431,6 +426,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/24 19:16:20  rogers
+--| Redefined initialize from EV_ARRAYED_LIST_ITEM_HOLDER_IMP. Removed commented PND inheritence.
+--|
 --| Revision 1.40  2000/03/24 17:15:36  rogers
 --| Added tree_view_pixmap_height, tree_view_pixmap_width, and fixed set_pixmap so that repeated icons are shared internally in the image list.
 --|

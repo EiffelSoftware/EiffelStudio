@@ -45,15 +45,13 @@
         name, again <i>/tmp/here</i> for this example. The address will be an
         argument of the creation procedure used to obtain a socket <i>soc1 </i>on
         either side:
-        <blockquote>
-          <blockquote>
-          <code>
-            <p><span CLASS="ekeyword">create soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_client <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)</span><br>
-            <span CLASS="ekeyword">create</span> soc1<span CLASS="esymbol">.</span><span CLASS="efeature">make_server <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)</span></p>
+         <blockquote>
+         <code>
+            <p><span CLASS="ekeyword">create</span> soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_client </span><span CLASS="esymbol">(</span><span CLASS="estring">&quot;/tmp/here&quot;</span><span CLASS="esymbol">)</span><br>
+            <span CLASS="ekeyword">create</span> soc1<span CLASS="esymbol">.</span><span CLASS="efeature">make_server </span><span CLASS="esymbol">(</span><span CLASS="estring">&quot;/tmp/here&quot;</span><span CLASS="esymbol">)</span></p>
             </code>
-          </blockquote>
-        </blockquote>
-        <p>The <i>make_</i> procedures take care of all the hassles of
+         </blockquote>
+       <p>The <i>make_</i> procedures take care of all the hassles of
         establishing a socket for a client or a server: creating an address
         object, setting it to the given path name, binding the socket to the
         address, and in the client case establishing the connection. For finer
@@ -70,25 +68,17 @@
         presence of two creation procedures <i>make_client</i> and <i>make_server
         </i>as illustrated above. To initiate the communication, the client will
         execute:
-        <ul>
-          <dl>
-            <dd>
+         <blockquote>
             <code>
               <p>soc1<span CLASS="esymbol">.</span><span CLASS="efeature">connect</span></p>
              </code>
-            </dd>
-          </dl>
-        </ul>
-        <p>To make itself ready for the communication, the server will execute:
-        <ul>
-          <dl>
-            <dd>
+          </blockquote>
+         <p>To make itself ready for the communication, the server will execute:
+         <blockquote>
              <code>
-             <p>soc1<span CLASS="esymbol">.</span><span CLASS="efeature">listen <span CLASS="esymbol">(</span>n<span CLASS="esymbol">)</span></span></p>
+             <p>soc1<span CLASS="esymbol">.</span><span CLASS="efeature">listen </span><span CLASS="esymbol">(</span>n<span CLASS="esymbol">)</span></p>
              </code>
-           </dd>
-          </dl>
-        </ul>
+         </blockquote>
         <p>where <i>n</i> is a positive integer indicating the maximum number of
         client connection attempts that may be queued. The value 5, used in the
         example, is typical for <i>n</i>.</p>
@@ -98,14 +88,12 @@
         <p>Whenever the server needs to exchange objects with one of the
         clients, it obtains access to the socket through the following sequence:
         <blockquote>
-          <blockquote>
              <code>
            <p>soc1<span CLASS="esymbol">.</span><span CLASS="efeature">accept</span><br>
-            soc2<span CLASS="esymbol">:=</span> soc1<span CLASS="esymbol">.</span><span CLASS="efeature">accepted</span><br>
+            soc2 <span CLASS="esymbol">:=</span> soc1<span CLASS="esymbol">.</span><span CLASS="efeature">accepted</span><br>
             ... Storage and retrieval operations using soc2 (not soc1) ...<br>
             soc2<span CLASS="esymbol">.</span><span CLASS="efeature">close</span></p>
               </code>
-        </blockquote>
         </blockquote>
         <p>Procedure <i>accept </i>ensures synchronization with the client. When
         communication is established, <i>accept</i> creates a new socket which
@@ -113,15 +101,11 @@
         here assigned to the local entity <i>soc2</i>. To receive objects, the
         server will use operations of the form introduced earlier (<a href="20_overview.html#structures">An
         overview of EiffelNet, sending and receiving object structures</a>):
-        <ul>
-          <dl>
-            <dd>
+        <blockquote>
              <code>
              <p>struct <span CLASS="esymbol">?=</span> soc2<span CLASS="esymbol">.</span><span CLASS="efeature">retrieved</span></p>
              </code>
-           </dd>
-          </dl>
-        </ul>
+        </blockquote>
         <p>applying to <i>soc2</i>, not <i>soc1</i>; this makes <i>soc1 </i>available
         to accept connections with other clients, a fundamental feature of
         client-server mechanisms.</p>
@@ -139,108 +123,108 @@
         processing has been put aside in a procedure <i>process</i>.
         <code>
         <ul>
-              <span CLASS="ekeyword">class<br>
-              &nbsp;&nbsp;&nbsp;</span> OUR_SERVER
-              <p>inherit</p>
+              <span CLASS="ekeyword">class</span><br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="eclass">OUR_SERVER</span>
+              <p><span CLASS="ekeyword">inherit</span></p>
               <p>&nbsp;&nbsp;&nbsp; <a CLASS="eclass" href="../reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</a></p>
               <p>	&nbsp;&nbsp;&nbsp; <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a></p>
               <p><span CLASS="ekeyword">creation</span>
               <br>
-              &nbsp;&nbsp;&nbsp; make</p>
+              &nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span></p>
               <p><span CLASS="ekeyword">feature</span></p>
-              <p>	&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">,</span>  soc2<span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/local/socket/unix_stream_socket_chart.html">UNIX_STREAM_SOCKET</a></p>
-              <p>	&nbsp;&nbsp;&nbsp; make <span CLASS="ekeyword">is</span>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">soc1</span><span CLASS="esymbol">,</span>  <span CLASS="efeature">soc2</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/local/socket/unix_stream_socket_chart.html">UNIX_STREAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">make </span><span CLASS="ekeyword">is</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- Accept communication with client and exchange messages&lt;<br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              <span CLASS="ecomment">-- Accept communication with client and exchange messages&lt;</span><br>
+              &nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">local</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              count<span CLASS="esymbol">:</span>   <a href="../../base/reference/kernel/integer_chart.html">  INTEGER</a><br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              <span CLASS="elocal">count</span><span CLASS="esymbol">:</span>   <a href="../../base/reference/kernel/integer_chart.html">  INTEGER</a><br>
+              &nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span>
               <br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span CLASS="ekeyword">create</span>  soc1<span CLASS="esymbol">.</span>make_server <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)</span>
+              &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">create</span>  <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_server </span><span CLASS="esymbol">(</span><span CLASS="estring">&quot;/tmp/here&quot;</span><span CLASS="esymbol">)</span>
               <br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">from</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc1listen <span CLASS="esymbol">(</span>5<span CLASS="esymbol">)</span>
+              <span CLASS="efeature">soc1listen </span><span CLASS="esymbol">(</span><span CLASS="enumber">5</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              count <span CLASS="esymbol">:=</span>  0<br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              <span CLASS="elocal">count </span><span CLASS="esymbol">:=</span>  <span CLASS="enumber">0</span><br>
+              &nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">until</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              count = 3<br>
+              <span CLASS="elocal">count </span><span CLASS="esymbol">=</span> <span CLASS="enumber">3</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">loop</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              process -- See below<br>
+              <span CLASS="efeature">process</span> <span CLASS="ecomment">-- See below</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              count <span CLASS="esymbol">:=</span>  count <span CLASS="esymbol">+</span>
-              1<br>
+              <span CLASS="elocal">count </span><span CLASS="esymbol">:=</span>  <span CLASS="elocal">count </span> <span CLASS="esymbol">+</span>
+              <span CLASS="enumber">1</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc1<span CLASS="esymbol">.</span>cleanup<br>
+              <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">cleanup</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">rescue</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc1<span CLASS="esymbol">.</span>cleanup<br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">cleanup</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span CLASS="ekeyword">end</span></p>
-              <p>process <span CLASS="ekeyword">is</span>
+              <p><span CLASS="efeature">process </span><span CLASS="ekeyword">is</span>
               <br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Receive a message,
-              extend it, and send it back<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ecomment">-- Receive a message,
+              extend it, and send it back</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               <span CLASS="ekeyword">local</span>
               <br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; our_new_list<span CLASS="esymbol">:</span>
-              OUR_MESSAGE<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">:</span>
+              <span CLASS="eclass">OUR_MESSAGE</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> <span CLASS="ekeyword">do</span><br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">.</span>accept<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; soc2 ?= soc1<span CLASS="esymbol">.</span>accepted<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; our_new_list ?=
-              retrieved <span CLASS="esymbol">(</span>soc2<span CLASS="esymbol">)</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">accept</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="efeature">soc2</span> <span CLASS="esymbol">?=</span><span CLASS="efeature"> soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">accepted</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="elocal">our_new_list </span><span CLASS="symbol">?=</span>
+              <span CLASS="efeature">retrieved </span><span CLASS="esymbol">(</span><span CLASS="efeature">soc2</span><span CLASS="esymbol">)</span>
               <br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">from</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_new_list<span CLASS="esymbol">.</span>start<br>
+              <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">start</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">until</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_new_list<span CLASS="esymbol">.</span>after<br>
+              <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">after</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">loop</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io<span CLASS="esymbol">.</span>putstring <span CLASS="esymbol">(</span>our_new_list<span CLASS="esymbol">.</span>item<span CLASS="esymbol">)</span>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring</span> <span CLASS="esymbol">(</span><span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">item</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io<span CLASS="esymbol">.</span>new_line<br>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">new_line</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_new_list<span CLASS="esymbol">.</span>forth<br>
+              <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">forth</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span>
               <br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; our_new_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;%N
-              I'm back<span CLASS="esymbol">.</span>%N&quot;<span CLASS="esymbol">)</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend </span><span CLASS="esymbol">(</span><span CLASS="estring">&quot;%N
+              I'm back<span CLASS="esymbol">.</span>%N&quot;</span><span CLASS="esymbol">)</span>
               <br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; our_new_list<span CLASS="esymbol">.</span>general_store <span CLASS="esymbol">(</span>soc2<span CLASS="esymbol">)</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">general_store </span><span CLASS="esymbol">(</span>soc2<span CLASS="esymbol">)</span>
               <br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; soc2<span CLASS="esymbol">.</span>close<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="efeature">soc2</span><span CLASS="esymbol">.</span><span CLASS="efeature">close</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> <span CLASS="ekeyword">end</span></p>
               <p><span CLASS="ekeyword">end</span></p>
         </ul>
@@ -254,91 +238,91 @@
         <ul>
               <p><span CLASS="ekeyword">class</span>
               <br>
-              &nbsp;&nbsp;&nbsp; OUR_CLIENT</p>
+              &nbsp;&nbsp;&nbsp; <span CLASS="eclass">OUR_CLIENT</span></p>
               <p><span CLASS="ekeyword">inherit</span></p>
-              <p><a CLASS="eclass" href="../reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</a></p>
+              <p><a CLASS="eclass" href="../reference/abstract/socket/socket_resources_chart.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SOCKET_RESOURCES</a></p>
               <p><span CLASS="ekeyword">creation</span>
               <br>
-              &nbsp;&nbsp;&nbsp; make</p>
+              &nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span></p>
               <p><span CLASS="ekeyword">feature</span></p>
-              <p>	&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/local/socket/unix_stream_socket_chart.html">UNIX_STREAM_SOCKET</a></p>
-              <p>	&nbsp;&nbsp;&nbsp; make <span CLASS="ekeyword">is</span>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">soc1</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/local/socket/unix_stream_socket_chart.html">UNIX_STREAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span> <span CLASS="ekeyword">is</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- Establish communication with server, and exchange messages<br>
+              <span CLASS="ecomment">-- Establish communication with server, and exchange messages</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span>
               <br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span CLASS="ekeyword">create</span>  soc1<span CLASS="esymbol">.</span>make_client <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">create</span>  <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_client </span><span CLASS="esymbol">(</span><span CLASS="estring">&quot;/tmp/here&quot;</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc1<span CLASS="esymbol">.</span>connect<br>
+              <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">connect</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               process -- See below<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc1<span CLASS="esymbol">.</span>cleanup<br>
+              <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">cleanup</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">rescue</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc1<span CLASS="esymbol">.</span>cleanup<br>
+              <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">cleanup</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
               <span CLASS="ekeyword">end</span></p>
-              <p>&nbsp;&nbsp;&nbsp; process <span CLASS="ekeyword">is</span>
+              <p>&nbsp;&nbsp;&nbsp; <span CLASS="efeature">process </span><span CLASS="ekeyword">is</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- Build a message to server, receive answer, build<br>
+              <span CLASS="ecomment">-- Build a message to server, receive answer, build<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- modified message from that answer, and print it.<br>
-              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              -- modified message from that answer, and print it.</span><br>
+              &nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">local</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_list, our_new_list<span CLASS="esymbol">:</span>  OUR_MESSAGE<br>
+              <span CLASS="elocal">our_list</span>, <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">:</span>  <span CLASS="eclass">OUR_MESSAGE</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span>
               <br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span CLASS="ekeyword">create</span>  our_list<span CLASS="esymbol">.</span>make<br>
+              <span CLASS="ekeyword">create</span>  <span CLASS="elocal">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">make</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_list<span CLASS="esymbol">.</span>extend<span CLASS="esymbol">(</span>&quot;This&quot;<span CLASS="esymbol">)</span>;
-              our_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;
-              is&quot;<span CLASS="esymbol">)</span>
+              <span CLASS="elocal">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span><span CLASS="esymbol">(</span><span CLASS="estring">&quot;This&quot;</span><span CLASS="esymbol">)</span><span CLASS="esymbol">;</span>
+              <span CLASS="elocal">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;
+              is&quot;</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;
-              our&quot;<span CLASS="esymbol">)</span>; our_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;
-              test&quot;<span CLASS="esymbol">)</span>
+              <span CLASS="elocal">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;
+              our&quot;</span><span CLASS="esymbol">)</span><span CLASS="esymbol">;</span> <span CLASS="elocal">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;
+              test&quot;</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_list<span CLASS="esymbol">.</span>general_store <span CLASS="esymbol">(</span>soc1<span CLASS="esymbol">)</span>
+              <span CLASS="elocal">our_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">general_store</span> <span CLASS="esymbol">(</span><span CLASS="efeature">soc1</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_new_list ?= soc1<span CLASS="esymbol">.</span>retrieved<br>
+              <span CLASS="elocal">our_new_list</span> <span CLASS="esymbol">?=</span> <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span>retrieved<br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">from</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_new_list<span CLASS="esymbol">.</span>start<br>
+              <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">start</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">until</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_new_list<span CLASS="esymbol">.</span>after<br>
+              <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">after</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">loop</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io<span CLASS="esymbol">.</span>putstring <span CLASS="esymbol">(</span>our_new_list<span CLASS="esymbol">.</span>item<span CLASS="esymbol">)</span>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring</span> <span CLASS="esymbol">(</span><span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">item</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              our_new_list<span CLASS="esymbol">.</span>forth<br>
+              <span CLASS="elocal">our_new_list</span><span CLASS="esymbol">.</span><span CLASS="efeature">forth</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io<span CLASS="esymbol">.</span>new_line<br>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">new_line</span><br>
               <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
               <span CLASS="ekeyword">end</span></p>
               <p><span CLASS="ekeyword">end</span></p>
@@ -362,7 +346,9 @@
         will be set up so as to listen to clients from any machine; it
         designates a <b>port</b>, identified by an integer, on which it will
         listen. The socket creation on the server side is then
-        <pre>	create soc1.make_server_port (2000)</pre>
+        <code>
+        <p>	<span CLASS="ekeyword">create</span><span CLASS="efeature"> soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_server_port </span><span CLASS="esymbol">(</span><span CLASS="enumber">2000</span><span CLASS="esymbol">)</span></p>
+        </code>
         <p>For the client, the creation will specify two elements of
         information: the port number and the server. The server argument, a
         string, identifies the machine used as a server; it may be the host name
@@ -376,7 +362,7 @@
             <dd>
               <p><span CLASS="ekeyword">class</span>
               <br>
-              &nbsp;&nbsp;&nbsp; OUR_SERVER</p>
+              &nbsp;&nbsp;&nbsp; <span CLASS="eclass">OUR_SERVER</span></p>
             </dd>
             <dd>
               <p><span CLASS="ekeyword">inherit</span></p>
@@ -388,31 +374,31 @@
             <dd>
               <p><span CLASS="ekeyword">creation</span>
               <br>
-              &nbsp;&nbsp;&nbsp; make</p>
+              &nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span></p>
             </dd>
             <dd>
               <p><span CLASS="ekeyword">feature</span></p>
             </dd>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">,</span> soc2<span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_stream_socket_chart.html">NETWORK_STREAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">soc1</span><span CLASS="esymbol">,</span> <span CLASS="efeature">soc2</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_stream_socket_chart.html">NETWORK_STREAM_SOCKET</a></p>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp; make <span CLASS="ekeyword">is</span>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span> <span CLASS="ekeyword">is</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- Accept communication with client and exchange messages.<br>
-		<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              <span CLASS="ecomment">-- Accept communication with client and exchange messages.</span><br>
+			&nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp;&nbsp;
 		<span CLASS="ekeyword">do</span>
               <br>
 			<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span CLASS="ekeyword">create</span>  soc1<span CLASS="esymbol">.</span>make_server_by_port <span CLASS="esymbol">(</span>2000<span CLASS="esymbol">)</span>
+			<span CLASS="ekeyword">create</span>  <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_server_by_port </span><span CLASS="esymbol">(</span><span CLASS="enumber">2000</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               ... The rest as before...<br>
 		<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>    &nbsp;&nbsp;&nbsp;&nbsp;
 		<span CLASS="ekeyword">end</span>    &nbsp;&nbsp;&nbsp;&nbsp;    </p>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp; process <span CLASS="ekeyword">is</span>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">process</span> <span CLASS="ekeyword">is</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... As before ...<br>
 	<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
@@ -425,7 +411,7 @@
             <dd>
               <p><span CLASS="ekeyword">class</span>
               <br>
-              &nbsp;&nbsp;&nbsp; OUR_CLIENT</p>
+              &nbsp;&nbsp;&nbsp; <span CLASS="eclass">OUR_CLIENT</span></p>
             </dd>
             <dd>
               <p><span CLASS="ekeyword">inherit</span></p>
@@ -435,30 +421,30 @@
             <dd>
               <p><span CLASS="ekeyword">creation</span>
               <br>
-              &nbsp;&nbsp;&nbsp; make</p>
+              &nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span></p>
             </dd>
             <dd>
               <p><span CLASS="ekeyword">feature</span></p>
             </dd>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_stream_socket_chart.html">NETWORK_STREAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">soc1</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_stream_socket_chart.html">NETWORK_STREAM_SOCKET</a></p>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp; make <span CLASS="ekeyword">is</span>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span> <span CLASS="ekeyword">is</span>
               <br>
 		<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
               &nbsp;&nbsp;&nbsp;&nbsp;
 		<span CLASS="ekeyword">do</span>
               <br>
 			<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span CLASS="ekeyword">create</span>  soc1<span CLASS="esymbol">.</span>make_client_by_port <span CLASS="esymbol">(</span>2000<span CLASS="esymbol">,</span>
-              &quot;serverhost&quot;<span CLASS="esymbol">)</span>
+			<span CLASS="ekeyword">create</span>  <span CLASS="efeature">soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_client_by_port </span><span CLASS="esymbol">(</span><span CLASS="enumber">2000</span><span CLASS="esymbol">,</span>
+              <span CLASS="estring">&quot;serverhost&quot;</span><span CLASS="esymbol">)</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               ... The rest as before ...<br>
 		<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
 		<span CLASS="ekeyword">end</span></p>
             <dd>
-              <p>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; process <span CLASS="ekeyword">is</span>
+              <p>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="efeature">process </span><span CLASS="ekeyword">is</span>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               ... As before ...<br>

@@ -181,6 +181,8 @@ feature -- Basic operations
 			Result.force (Dark_red)
 			Result.force (Magenta)
 			Result.force (Dark_magenta)
+		ensure
+			all_colors_included: Result.count = 18
 		end
 
 feature {NONE} -- Implementation
@@ -216,7 +218,6 @@ invariant
 	Default_background_color_not_void:  Default_background_color /= Void
 	Default_foreground_color_not_void:  Default_foreground_color /= Void
 	All_colors_not_void:  All_colors /= Void
-	All_colors_count_is_sixteen: All_colors.count = 18
 
 end -- class EV_STOCK_COLORS
 

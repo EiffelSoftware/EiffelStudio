@@ -64,6 +64,7 @@ feature {NONE}
 
 	work (argument: ANY) is
         do
+			warner.popdown;
 			if argument = ok_it then
 				text_window.search (selection_text);
 				if text_window.found then

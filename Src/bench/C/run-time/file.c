@@ -15,6 +15,7 @@
 #include "portable.h"
 #include "except.h"
 #include "plug.h"
+#include "err_msg.h"
 
 #include <stdio.h>
 #include <errno.h>
@@ -726,8 +727,6 @@ int uid;
 		}
 		break;
 	}
-#else
-	fprintf (stderr, "chown is not available\n");
 #endif
 }
 
@@ -756,8 +755,6 @@ int gid;
 		}
 		break;
 	}
-#else
-	fprintf (stderr, "chown is not available\n");
 #endif
 }
 
@@ -997,8 +994,6 @@ char *to;
 		}
 		break;
 	}
-#else
-	fprintf (stderr, "link is not available\n");
 #endif
 }
 
@@ -1351,27 +1346,6 @@ int gid;
 #endif
 	
 	return makestr(str, strlen(str));
-}
-
-public char *file_def(file)
-int file;
-{
-	/* Convert the integer `i' into the corresponding
-     * inpout output standard file :
-     *       0 : standard input file descriptor
-     *       1 : standard output file descriptor
-     *       2 : standard error file descriptor
-     *      otherwise : panic
-     */
-
-	switch (file) {
-	case 0: return (char *) stdin;
-	case 1: return (char *) stdout;
-	case 2: return (char *) stderr;
-	default: panic("invalid file request");
-	}
-
-	/* NOTREACHED */
 }
 
 /*

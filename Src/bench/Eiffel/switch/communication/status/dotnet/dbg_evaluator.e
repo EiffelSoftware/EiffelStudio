@@ -146,6 +146,7 @@ feature -- Access
 			-- Evaluate dotnet function
 		require
 			is_dotnet: application.is_dotnet
+			not_f_is_attribute: not f.is_attribute
 		local
 			l_icdv_obj: ICOR_DEBUG_VALUE
 			l_icd_function: ICOR_DEBUG_FUNCTION

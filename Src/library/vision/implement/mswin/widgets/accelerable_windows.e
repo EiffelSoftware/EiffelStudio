@@ -73,12 +73,10 @@ feature -- Status setting
 				key_string := ""
 				i := a_translation.count
 			until
-				i = 0 or else not
-				((a_translation @ i).is_alpha or
-				(a_translation @ i).is_digit)
+				i = 0 or else not a_translation.item (i).is_alpha or a_translation.item (i).is_digit
 
 			loop
-				key_string.prepend_character (a_translation @ i)
+				key_string.prepend_character (a_translation.item (i))
 				i := i - 1
 			end
 			if key_string /= "" then
@@ -88,7 +86,7 @@ feature -- Status setting
 				until
 					key /= 0 or else i > 255
 				loop
-					if (virtual_keys @ i).is_equal (key_string) then
+					if virtual_keys.item (i).is_equal (key_string) then
 						key := i
 					end
 					i := i + 1

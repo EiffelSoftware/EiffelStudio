@@ -53,29 +53,29 @@ feature {GB_XML_STORE} -- Output
 			font: EV_FONT
 		do
 			full_information := get_unique_full_info (element)
-			create font
-			element_info := full_information @ (family_string)
-			if element_info /= Void then
-				font.set_family (element_info.data.to_integer)
-			end
-			element_info := full_information @ (weight_string)
-			if element_info /= Void then
-				font.set_weight (element_info.data.to_integer)
-			end
-			element_info := full_information @ (shape_string)
-			if element_info /= Void then
-				font.set_shape (element_info.data.to_integer)
-			end
-			element_info := full_information @ (height_string)
-			if element_info /= Void then
-				font.set_height (element_info.data.to_integer)
-			end
-			element_info := full_information @ (preferred_family_string)
-			if element_info /= Void then
-				font.preferred_families.extend (element_info.data)
-			end
 				-- Must only set the font if a font was really contained.
 			if full_information @ family_string /= Void then
+				create font
+				element_info := full_information @ (family_string)
+				if element_info /= Void then
+					font.set_family (element_info.data.to_integer)
+				end
+				element_info := full_information @ (weight_string)
+				if element_info /= Void then
+					font.set_weight (element_info.data.to_integer)
+				end
+				element_info := full_information @ (shape_string)
+				if element_info /= Void then
+					font.set_shape (element_info.data.to_integer)
+				end
+				element_info := full_information @ (height_string)
+				if element_info /= Void then
+					font.set_height (element_info.data.to_integer)
+				end
+				element_info := full_information @ (preferred_family_string)
+				if element_info /= Void then
+					font.preferred_families.extend (element_info.data)
+				end
 				for_all_objects (agent {EV_FONTABLE}.set_font (font))
 			end
 		end

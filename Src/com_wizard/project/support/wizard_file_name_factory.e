@@ -62,6 +62,13 @@ feature -- Basic operations
 			process_c_common
 		end
 
+	create_definition_file_name (a_generator: WIZARD_DEFINITION_FILE_GENERATOR; a_writer: WIZARD_WRITER) is
+			-- Create filename for 'a_generator'
+		do
+			transient_writer := a_writer
+			process_definition_file_writer
+		end
+
 	create_generated_mapper_file_name (a_writer: WIZARD_WRITER_CPP_CLASS) is
 			-- File name for generated Eiffel to C structure mapper
 		do
@@ -215,12 +222,6 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 			-- Create filename for 'a_generator'
 		do
 			process_c_server
-		end
-
-	process_definition_file is
-			-- Create filename for 'a_generator'
-		do
-			process_definition_file_writer
 		end
 
 feature {NONE} -- Implementation

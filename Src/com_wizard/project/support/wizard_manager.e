@@ -175,6 +175,7 @@ feature {NONE} -- Implementation
 			inproc_reg_gen: WIZARD_INPROC_EIFFEL_REGISTRATION_GENERATOR
 			c_reg_gen: WIZARD_C_REGISTRATION_CODE_GENERATOR
 			an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
+			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
 		do
 			-- Initialization
 			message_output.add_title (Current, Analysis_title)
@@ -328,6 +329,11 @@ feature {NONE} -- Implementation
 						if Shared_wizard_environment.server then
 							compiler.generate_ace_file (Server)
 							compiler.generate_resource_file (Server)
+							if shared_wizard_environment.in_process_server then
+								create definition_file_generator
+								definition_file_generator.generate
+							end
+
 						else
 							compiler.generate_ace_file (Client)
 							compiler.generate_resource_file (Client)

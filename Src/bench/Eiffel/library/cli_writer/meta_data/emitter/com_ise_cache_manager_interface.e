@@ -20,22 +20,31 @@ create
 	
 feature -- Initialization
 
-	initialize is
+	initialize (a_clr_version: UNI_STRING) is
 			-- Initialize current.
+		require
+			a_clr_version_not_void: a_clr_version /= Void
+		local
+			l_ver: BSTR_STRING
 		do
-			last_call_success := c_initialize (item)
+			create l_ver.make_by_uni_string (a_clr_version)
+			last_call_success := c_initialize (item, l_ver.item)
 			is_initialized := True
 		ensure
 			success: last_call_success = 0
 		end
 		
-	initialize_with_path (a_path: UNI_STRING) is
+	initialize_with_path (a_path, a_clr_version: UNI_STRING) is
 			-- Initialize current with `a_path' as ISE_EIFFEL var.
+		require
+			a_path_not_void: a_path /= Void
+			a_clr_version_not_void: a_clr_version /= Void
 		local
-			l_path: BSTR_STRING
+			l_path, l_ver: BSTR_STRING
 		do
 			create l_path.make_by_uni_string (a_path)
-			last_call_success := c_initialize_with_path (item, l_path.item)
+			create l_ver.make_by_uni_string (a_clr_version)
+			last_call_success := c_initialize_with_path (item, l_path.item, l_ver.item)
 			is_initialized := True
 		ensure
 			success: last_call_success = 0
@@ -187,18 +196,18 @@ feature -- Basic Oprtations
 		
 feature {NONE} -- Implementation
 		
-	c_initialize (ap:POINTER): INTEGER is
+	c_initialize (ap, ver: POINTER): INTEGER is
 			-- initialize COM object 
 		external
-			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature ():EIF_INTEGER use %"ise_cache_manager.h%""
+			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"ise_cache_manager.h%""
 		alias
 			"initialize"
 		end
 		
-	c_initialize_with_path (ap:POINTER; ap2: POINTER): INTEGER is
+	c_initialize_with_path (ap:POINTER; ap2, ver: POINTER): INTEGER is
 			-- initialize COM object with alternative ISE_EIFFEL path ?
 		external
-			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"ise_cache_manager.h%""
+			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature (BSTR, BSTR):EIF_INTEGER use %"ise_cache_manager.h%""
 		alias
 			"initialize_with_path"
 		end

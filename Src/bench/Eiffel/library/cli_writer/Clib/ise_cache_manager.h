@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Thu Oct 02 11:30:41 2003
+/* at Thu Oct 02 14:48:28 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -117,10 +117,12 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
         
         virtual /* [restricted] */ void STDMETHODCALLTYPE Missing11( void) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( void) = 0;
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( 
+            /* [in] */ BSTR a_clr_version) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize_with_path( 
-            /* [in] */ BSTR a_path) = 0;
+            /* [in] */ BSTR a_path,
+            /* [in] */ BSTR a_clr_version) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE is_initialized( 
             /* [retval][out] */ VARIANT_BOOL *pRetVal) = 0;
@@ -215,11 +217,13 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )( 
-            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+            /* [in] */ BSTR a_clr_version);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize_with_path )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-            /* [in] */ BSTR a_path);
+            /* [in] */ BSTR a_path,
+            /* [in] */ BSTR a_clr_version);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *is_initialized )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
@@ -299,11 +303,11 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing11(This)	\
     (This)->lpVtbl -> Missing11(This)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This)	\
-    (This)->lpVtbl -> initialize(This)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This,a_clr_version)	\
+    (This)->lpVtbl -> initialize(This,a_clr_version)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path(This,a_path)	\
-    (This)->lpVtbl -> initialize_with_path(This,a_path)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path(This,a_path,a_clr_version)	\
+    (This)->lpVtbl -> initialize_with_path(This,a_path,a_clr_version)
 
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_is_initialized(This,pRetVal)	\
     (This)->lpVtbl -> is_initialized(This,pRetVal)
@@ -394,7 +398,8 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing11_Stub(
 
 
 /* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Proxy( 
-    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+    /* [in] */ BSTR a_clr_version);
 
 
 void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Stub(
@@ -406,7 +411,8 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Stub(
 
 /* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-    /* [in] */ BSTR a_path);
+    /* [in] */ BSTR a_path,
+    /* [in] */ BSTR a_clr_version);
 
 
 void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path_Stub(

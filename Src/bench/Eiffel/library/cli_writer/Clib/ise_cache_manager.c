@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Thu Oct 02 11:30:41 2003
+/* at Thu Oct 02 14:48:28 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -99,7 +99,7 @@ MIDL_DEFINE_GUID(CLSID, CLSID_ISE_Cache_Impl_COM_ISE_CACHE_MANAGER,0xE1FFE16A,0x
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Thu Oct 02 11:30:41 2003
+/* at Thu Oct 02 14:48:28 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win64 (32b run,appending)

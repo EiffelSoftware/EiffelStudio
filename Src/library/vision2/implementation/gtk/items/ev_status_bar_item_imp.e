@@ -25,7 +25,8 @@ inherit
 			set_pixmap,
 			unset_pixmap,
 			set_foreground_color,
-			set_background_color
+			set_background_color,
+			parent_imp
 		end
 
 create
@@ -102,7 +103,7 @@ feature -- Status setting
 			-- Feature redefined to set expand options for the
 			-- last status bar item.
                 do
-			parent_imp.remove_status_bar_item (Current)
+			parent_imp.remove_item (Current)
 				-- we do not need to use 'gtk_widget_destroy'
 				-- because the widget is automatically destroyed when
 				-- no more affected to a parent.
@@ -135,35 +136,6 @@ feature -- Element change
 			text := txt		
 		end
 
-	set_parent (par: EV_STATUS_BAR) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-			-- Before to remove the widget from the
-			-- container, we increment the number of
-			-- reference on the object otherwise gtk
-			-- destroyed the object. And after having
-			-- added the object to another container,
-			-- we remove this supplementary reference.
-		local
-			par_imp: EV_STATUS_BAR_IMP
-		do
-			if parent_imp /= Void then
-				gtk_object_ref (widget)
-				parent_imp.remove_status_bar_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				par_imp ?= par.implementation
-				check
-					parent_not_void: par_imp /= Void
-				end
-				parent_imp ?= par_imp
-				par_imp.add_status_bar_item (Current)
-				show
-				gtk_object_unref (widget)
-			end
-		end
-	
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do

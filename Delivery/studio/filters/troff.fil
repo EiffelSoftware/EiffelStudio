@@ -1,6 +1,9 @@
--- EFF (Eiffel Filter Format)
--- troff
-
+--!-----------------------------------------------------------------------------
+--! TROFF filter for EiffelBench documentation output.
+--!-----------------------------------------------------------------------------
+--! $Date$
+--! $Revision$
+--!-----------------------------------------------------------------------------
 
 -- Escape characters
 
@@ -22,3 +25,13 @@ New_line				|%N.br%N
 .						|\fR\s-3\(bu\s+3\fI
 -						|\fR\-\fI
 %*						|\fR\v'.3m'\s+2%*\s-2\v'-.3m'\fI
+
+--!-----------------------------------------------------------------------------
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------

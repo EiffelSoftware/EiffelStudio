@@ -6,11 +6,9 @@ indexing
 	revision: "$Revision$"
 
 class 
-	
 	EV_DIALOG_I
 
 inherit
-
 	EV_WINDOW_IMP
 		export
 			{EV_DIALOG} make 
@@ -19,7 +17,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature {EV_DIALOG} -- Initialization
@@ -47,7 +44,7 @@ feature {EV_DIALOG} -- Initialization
 			display_area.set_minimum_width (250)
 
 			!! action_area.make (dbox)
-			--action_area.set_border_width (3)
+			action_area.set_border_width (3)
 			action_area.set_spacing (4)
 			action_area.set_expand (False)
 			action_area.set_minimum_height (30)

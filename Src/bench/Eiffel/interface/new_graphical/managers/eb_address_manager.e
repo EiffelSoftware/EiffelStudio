@@ -297,11 +297,14 @@ feature -- Observer management
 			cur_sel: STONE
 		do
 			class_address.select_actions.block
+			class_address.change_actions.block
 			class_address.wipe_out
 			feature_address.select_actions.block
+			feature_address.change_actions.block
 			feature_address.wipe_out
 			if mode then
 				cluster_address.select_actions.block
+				cluster_address.change_actions.block
 				cluster_address.wipe_out
 			end
 			list := history_manager.feature_display_list
@@ -372,9 +375,12 @@ feature -- Observer management
 				update_labels
 				address_dialog.hide
 				cluster_address.select_actions.resume
+				cluster_address.change_actions.resume
 			end
 			class_address.select_actions.resume
+			class_address.change_actions.resume
 			feature_address.select_actions.resume
+			feature_address.change_actions.resume
 		end
 
 	on_item_added (a_stone: STONE; a_stone_position: INTEGER) is
@@ -1376,95 +1382,97 @@ feature {NONE} -- open new class
 				-- The text in `class_address' has changed => we don't know what's inside.
 			current_typed_class := Void
 			str := clone (class_address.text)
-			last_caret_position := class_address.caret_position
-			class_address.change_actions.block
-			if str /= Void then
-				str.left_adjust
-				str.right_adjust
-				str.to_lower
-				nb := str.count
-				do_not_complete :=	last_key_was_delete or
-									not enable_complete or
-									not is_typing or
-									last_caret_position /= str.count + 1 or
-									not Workbench.system_defined
-				if nb > 0 and last_key_was_backspace and had_selection then
-					str.head (nb - 1)
-					nb := nb - 1
+			if not str.is_empty and then (str @ (str.count) /= ' ') then
+				last_caret_position := class_address.caret_position
+				class_address.change_actions.block
+				if str /= Void then
+					str.left_adjust
+					str.right_adjust
+					str.to_lower
+					nb := str.count
+					do_not_complete :=	last_key_was_delete or
+										not enable_complete or
+										not is_typing or
+										last_caret_position /= str.count + 1 or
+										not Workbench.system_defined
+					if nb > 0 and last_key_was_backspace and had_selection then
+						str.head (nb - 1)
+						nb := nb - 1
+					end
 				end
-			end
-			is_typing := False
-			
-			if not do_not_complete and nb > 1 then
-				list := System.classes
-				array_count := system.class_counter.count
-				from
-					index := 1
-					str_area := str.area
-				until
-					index > array_count
-				loop
-					l_class := (list @ index)
-					if l_class /= Void then
-						cname := l_class.name
-						other_area := cname.area
-							-- We first check that other_area and str_area have the same start.
-						if other_area.count >= nb then
-							from
-								j := 0
-								same_st := True
-							until
-								j = nb or not same_st
-							loop
-								same_st := (str_area.item (j)) = (other_area.item (j))
-								j := j + 1
-							end
-							if same_st then
-								if current_found = Void then
-									current_found := cname
-									current_area := other_area
-								else
-									from
-										minc := other_area.count.min (current_area.count)
-										dif := False
-									until
-										dif or j = minc
-									loop
-										if (current_area.item (j)) /= (other_area.item (j)) then
-											dif := True
-											if (current_area.item (j)) > (other_area.item (j)) then
-												current_found := cname
-												current_area := other_area
-											end
-										end
-										j := j + 1
-									end
-									if not dif and other_area.count < current_area.count then
-											-- Other and Current have the same characters.
-											-- Return the shorter one.
+				is_typing := False
+				
+				if not do_not_complete and nb > 1 then
+					list := System.classes
+					array_count := system.class_counter.count
+					from
+						index := 1
+						str_area := str.area
+					until
+						index > array_count
+					loop
+						l_class := (list @ index)
+						if l_class /= Void then
+							cname := l_class.name
+							other_area := cname.area
+								-- We first check that other_area and str_area have the same start.
+							if other_area.count >= nb then
+								from
+									j := 0
+									same_st := True
+								until
+									j = nb or not same_st
+								loop
+									same_st := (str_area.item (j)) = (other_area.item (j))
+									j := j + 1
+								end
+								if same_st then
+									if current_found = Void then
 										current_found := cname
 										current_area := other_area
+									else
+										from
+											minc := other_area.count.min (current_area.count)
+											dif := False
+										until
+											dif or j = minc
+										loop
+											if (current_area.item (j)) /= (other_area.item (j)) then
+												dif := True
+												if (current_area.item (j)) > (other_area.item (j)) then
+													current_found := cname
+													current_area := other_area
+												end
+											end
+											j := j + 1
+										end
+										if not dif and other_area.count < current_area.count then
+												-- Other and Current have the same characters.
+												-- Return the shorter one.
+											current_found := cname
+											current_area := other_area
+										end
 									end
 								end
 							end
 						end
+						index := index + 1
 					end
-					index := index + 1
-				end
-				if current_found /= Void then
-					current_found := clone (current_found)
-					current_found.to_upper
-					class_address.set_text (current_found)
-					class_address.select_region (nb + 1, current_found.count)
-				elseif not (last_key_was_backspace and had_selection) then
+					if current_found /= Void then
+						current_found := clone (current_found)
+						current_found.to_upper
+						class_address.set_text (current_found)
+						class_address.select_region (nb + 1, current_found.count)
+					elseif not (last_key_was_backspace and had_selection) then
+						str.to_upper
+						class_address.set_text (str)
+						class_address.set_caret_position (str.count + 1)
+					end
+				else
 					str.to_upper
 					class_address.set_text (str)
-					class_address.set_caret_position (str.count + 1)
+					class_address.set_caret_position (last_caret_position)
 				end
-			else
-				str.to_upper
-				class_address.set_text (str)
-				class_address.set_caret_position (last_caret_position)
 			end
 			class_address.change_actions.resume
 			is_typing := False
@@ -1567,6 +1575,7 @@ feature {NONE} -- open new class
 				cluster_address.set_caret_position (last_caret_position)
 			end
 			cluster_address.change_actions.resume
+			is_typing := False
 		end
 
 	type_feature is
@@ -1586,92 +1595,95 @@ feature {NONE} -- open new class
 		do
 			feature_address.change_actions.block
 			str := clone (feature_address.text)
-			last_caret_position := feature_address.caret_position
-			if str /= Void then
-				str.left_adjust
-				str.right_adjust
-				str.to_lower
-				nb := str.count
-				do_not_complete :=	last_key_was_delete or
-									not enable_complete or
-									not is_typing or
-									last_caret_position /= str.count + 1
-				if nb > 0 and last_key_was_backspace and feature_had_selection then
-					str.head (nb - 1)
-					nb := nb - 1
+			if not str.is_empty and then not (str.substring_index (l_From, 1) > 0) then
+				last_caret_position := feature_address.caret_position
+				if str /= Void then
+					str.left_adjust
+					str.right_adjust
+					str.to_lower
+					nb := str.count
+					do_not_complete :=	last_key_was_delete or
+										not enable_complete or
+										not is_typing or
+										last_caret_position /= str.count + 1
+					if nb > 0 and last_key_was_backspace and feature_had_selection then
+						str.head (nb - 1)
+						nb := nb - 1
+					end
 				end
-			end
-			is_typing := False
-
-			if
-				current_typed_class /= Void and then
-				current_typed_class.has_feature_table and
-				not do_not_complete and
-				nb > 0
-			then
-				list := current_typed_class.feature_table
-				from
-					list.start
-					str_area := str.area
-				until
-					list.after
-				loop
-					cname := list.item_for_iteration.feature_name
-					other_area := cname.area
-						-- We first check that other_area and str_area have the same start.
-					if other_area.count >= nb then
-						from
-							j := 0
-							same_st := True
-						until
-							j = nb or not same_st
-						loop
-							same_st := (str_area.item (j)) = (other_area.item (j))
-							j := j + 1
-						end
-						if same_st then
-							if current_found = Void then
-								current_found := cname
-								current_area := other_area
-							else
-								from
-									minc := other_area.count.min (current_area.count)
-									dif := False
-								until
-									dif or j = minc
-								loop
-									if (current_area.item (j)) /= (other_area.item (j)) then
-										dif := True
-										if (current_area.item (j)) > (other_area.item (j)) then
-											current_found := cname
-											current_area := other_area
-										end
-									end
-									j := j + 1
-								end
-								if not dif and other_area.count < current_area.count then
-										-- Other and Current have the same characters.
-										-- Return the shorter one.
+				is_typing := False
+	
+				if
+					current_typed_class /= Void and then
+					current_typed_class.has_feature_table and
+					not do_not_complete and
+					nb > 0
+				then
+					list := current_typed_class.feature_table
+					from
+						list.start
+						str_area := str.area
+					until
+						list.after
+					loop
+						cname := list.item_for_iteration.feature_name
+						other_area := cname.area
+							-- We first check that other_area and str_area have the same start.
+						if other_area.count >= nb then
+							from
+								j := 0
+								same_st := True
+							until
+								j = nb or not same_st
+							loop
+								same_st := (str_area.item (j)) = (other_area.item (j))
+								j := j + 1
+							end
+							if same_st then
+								if current_found = Void then
 									current_found := cname
 									current_area := other_area
+								else
+									from
+										minc := other_area.count.min (current_area.count)
+										dif := False
+									until
+										dif or j = minc
+									loop
+										if (current_area.item (j)) /= (other_area.item (j)) then
+											dif := True
+											if (current_area.item (j)) > (other_area.item (j)) then
+												current_found := cname
+												current_area := other_area
+											end
+										end
+										j := j + 1
+									end
+									if not dif and other_area.count < current_area.count then
+											-- Other and Current have the same characters.
+											-- Return the shorter one.
+										current_found := cname
+										current_area := other_area
+									end
 								end
 							end
 						end
+						list.forth
 					end
-					list.forth
-				end
-				if current_found /= Void then
-					feature_address.set_text (current_found)
-					feature_address.select_region (nb + 1, current_found.count)
-				elseif not (last_key_was_backspace and feature_had_selection) then
+					if current_found /= Void then
+						feature_address.set_text (current_found)
+						feature_address.select_region (nb + 1, current_found.count)
+					elseif not (last_key_was_backspace and feature_had_selection) then
+						feature_address.set_text (str)
+						feature_address.set_caret_position (str.count + 1)
+					end
+				else
 					feature_address.set_text (str)
-					feature_address.set_caret_position (str.count + 1)
+					feature_address.set_caret_position (last_caret_position)
 				end
-			else
-				feature_address.set_text (str)
-				feature_address.set_caret_position (last_caret_position)
 			end
 			feature_address.change_actions.resume
+			is_typing := False
 		end
 
 	current_class: CLASS_C is

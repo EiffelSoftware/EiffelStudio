@@ -20,9 +20,6 @@ CFLAGS = -I. -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 NETWORK = $(TOP)\ipc\app\network.$lib
 MT_NETWORK = $(TOP)\ipc\app\mtnetwork.$lib
 
-LIBDIR=$(OUTDIR)
-DLLDIR=$(OUTDIR)
-
 OBJECTS = \
 	$(INDIR)\lmalloc.$obj \
 	$(INDIR)\malloc.$obj \
@@ -300,9 +297,10 @@ MT_WOBJECTS = \
 	$(TOP)\console\mtwinconsole.$lib \
 
 all:: eif_size.h
+all:: $output_libraries
 
-all:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib 
-all:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib
+standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib 
+standard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib
 
 $(OUTDIR)\finalized.$lib: $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.$lib
@@ -327,25 +325,25 @@ LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS)
 
-mtwkbench.dll : $(DLLDIR) $(MT_WOBJECTS)
-	$(RM) $(DLLDIR)\mtwkbench.dll
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(DLLDIR)\mtwkbench.dll \
-		-IMPLIB:$(DLLDIR)\dll_mtwkbench.lib $(MT_WOBJECTS)
+mtwkbench.dll : $(OUTDIR) $(MT_WOBJECTS)
+	$(RM) $(OUTDIR)\mtwkbench.dll
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\mtwkbench.dll \
+		-IMPLIB:$(OUTDIR)\dll_mtwkbench.lib $(MT_WOBJECTS)
 
-mtfinalized.dll : $(DLLDIR) $(MT_OBJECTS)
-	$(RM) $(DLLDIR)\mtfinalized.dll
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(DLLDIR)\mtfinalized.dll \
-		-IMPLIB:$(DLLDIR)\dll_mtfinalized.lib $(MT_OBJECTS)
+mtfinalized.dll : $(OUTDIR) $(MT_OBJECTS)
+	$(RM) $(OUTDIR)\mtfinalized.dll
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\mtfinalized.dll \
+		-IMPLIB:$(OUTDIR)\dll_mtfinalized.lib $(MT_OBJECTS)
 
-wkbench.dll : $(DLLDIR) $(WOBJECTS)
-	$(RM) $(DLLDIR)\wkbench.dll
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(DLLDIR)\wkbench.dll \
-		-IMPLIB:$(DLLDIR)\dll_wkbench.lib $(WOBJECTS) 
+wkbench.dll : $(OUTDIR) $(WOBJECTS)
+	$(RM) $(OUTDIR)\wkbench.dll
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\wkbench.dll \
+		-IMPLIB:$(OUTDIR)\dll_wkbench.lib $(WOBJECTS) 
 
-finalized.dll : $(DLLDIR) $(OBJECTS)
-	$(RM) $(DLLDIR)\finalized.dll
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(DLLDIR)\finalized.dll \
-		-IMPLIB:$(DLLDIR)\dll_finalized.lib $(OBJECTS)
+finalized.dll : $(OUTDIR) $(OBJECTS)
+	$(RM) $(OUTDIR)\finalized.dll
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\finalized.dll \
+		-IMPLIB:$(OUTDIR)\dll_finalized.lib $(OBJECTS)
 
 ..\console\winconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
 	cd ..\console

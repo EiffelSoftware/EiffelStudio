@@ -19,7 +19,7 @@ inherit
 			create_text_label
 		redefine
 			destroy,
-			set_expand,
+--			set_expand,
 			make_with_text,
 			set_text,
 			text,
@@ -92,21 +92,11 @@ feature -- Status setting
 			c_gtk_widget_set_size (widget, value, height)
 				-- XX update `width'
 			if (value = -1) then
-				set_expand (True)
+--				c_gtk_box_set_child_expandable (parent_imp.widget, widget, True)
+				c_gtk_box_set_child_options (parent_imp.widget, widget, True, True)
 			else
-				set_expand (False)
-			end
-		end
-
-	set_expand (flag: BOOLEAN) is
-			-- Make `flag' the new expand option.
-			-- function redefines because older set_expand
-			-- applies to widget_parent_imp intead
-			-- of `parent_imp'
-		do
-			expandable := flag
-			if parent_imp /= Void then
-				c_gtk_box_set_child_options (parent_imp.widget, widget, expandable, True)
+--				c_gtk_box_set_child_expandable (parent_imp.widget, widget, False)
+				c_gtk_box_set_child_options (parent_imp.widget, widget, False, True)
 			end
 		end
 

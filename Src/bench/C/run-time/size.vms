@@ -1,0 +1,62 @@
+/*
+
+  ####      #    ######  ######          #    #
+ #          #        #   #               #    #
+ #          #        #   #               #    #
+  ####      #       #    #####           ######
+      #     #      #     #               #    #
+ #    #     #     #      #        ###    #    #
+  ####      #    ######  ######   ###    #    #
+
+	Size of basic types and access macros.
+	--- eif_size.h for VMS (size.vms)  ---
+*/
+
+#ifndef _size_h_
+#define _size_h_
+
+#include "eif_config.h"
+
+#ifndef EIF_VMS
+CONFIGURATION ERROR EIF_VMS NOT DEFINED
+#else	/* this extends to the end of the file */
+
+/* Basic sizes */
+#ifdef __alpha	/* Alpha hardware dependent values */
+#define ALIGN	8		/* Alignment restrictions */
+#define DBLSIZ	8		/* Size of double */
+#define FLTSIZ	4		/* Size of float */
+#define REFSIZ	4		/* Size of char * */
+#define LNGSIZ	4		/* Size of long */
+#define CHRSIZ	1		/* Size of char */
+#define PTRSIZ	4		/* Size of a function pointer: FIXME */
+#define BYTSIZ	8		/* Size of a byte, in bits */
+
+#else	/* VAX hardware dependent values */
+CONFIGURATION ERROR SIZE.VMS VAX SIZES NOT DEFINED
+#endif	/* __alpha or vax */
+
+#define BITLONG (BYTSIZ * LNGSIZ) /* Number of bits in a long */
+
+/* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
+ * This means some garbage bits may be found at the end of the bit field.
+ * BIT_NBPACK computes the number of 'uint32' fields (bit units) needed to
+ * store a given amount of bits.
+ */
+#define BIT_PACKSIZE    sizeof(uint32)	/* Size of a bit unit in bytes */
+#define BIT_UNIT		(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
+#define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
+#define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
+
+#define REFPAD(n) (((((n)*REFSIZ)/ALIGN)+((((n)*REFSIZ)%ALIGN)?1:0))*ALIGN)
+#define CHRPAD(n) (((((n)*CHRSIZ)/ALIGN)+((((n)*CHRSIZ)%ALIGN)?1:0))*ALIGN)
+#define LNGPAD(n) (((((n)*LNGSIZ)/ALIGN)+((((n)*LNGSIZ)%ALIGN)?1:0))*ALIGN)
+#define FLTPAD(n) (((((n)*FLTSIZ)/ALIGN)+((((n)*FLTSIZ)%ALIGN)?1:0))*ALIGN)
+#define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
+#define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
+
+
+#define LNGPAD_2 ( LNGPAD(2) )
+
+#endif /* EIF_VMS */
+#endif /* _size_h_ */

@@ -82,7 +82,7 @@ feature -- Access
 			--       using `Ilc_mask + Ilc_colorXXXX' as `image_type'
 
 	count: INTEGER is
-		-- Retrieves the number of images in an image list. 
+			-- Retrieves the number of images in the image list.
 		do
 			Result := cwel_imagelist_get_image_count(item)
 		end
@@ -176,8 +176,41 @@ feature -- Basic operations
 			-- `icon_to_add'.
 		require
 			icon_not_void: icon_to_add /= Void
+			index_not_too_small: index >= 0
+			index_not_too_big: index < count
 		do
 			cwel_imagelist_replace_icon(item, index, icon_to_add.item)
+		end
+
+	remove_image (index: INTEGER) is
+			-- Remove the image at index `index' from the image list.
+			--
+			-- When an image is removed, the indexes of the remaining images are 
+			-- adjusted so that the image indexes always range from zero to one
+			-- less than the number of images in the image list. 
+			-- For example, if you remove the image at index 0, then image 1 becomes 
+			-- image 0, image 2 becomes image 1, and so on. 
+		require
+			index_not_too_small: index >= 0
+			index_not_too_big: index < count
+		local
+			success: INTEGER
+		do
+			success := cwel_imagelist_remove(item, index)
+			check
+				operation_successful: success /= 0
+			end
+		end
+
+	remove_all_images (index: INTEGER) is
+			-- Remove all images from the image list.
+		local
+			success: INTEGER
+		do
+			success := cwel_imagelist_remove_all(item)
+			check
+				operation_successful: success /= 0
+			end
 		end
 
 	set_background_color(new_color: WEL_COLOR_REF) is
@@ -275,6 +308,20 @@ feature {NONE} -- Externals
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST): int"
 		alias
 			"ImageList_GetImageCount"
+		end
+
+	cwel_imagelist_remove (ptr: POINTER; index: INTEGER): INTEGER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int): BOOL"
+		alias
+			"ImageList_Remove"
+		end
+
+	cwel_imagelist_remove_all (ptr: POINTER): INTEGER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST): BOOL"
+		alias
+			"ImageList_RemoveAll"
 		end
 
 feature {NONE} -- Private Constants

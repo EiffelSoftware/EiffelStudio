@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			out_value, signature, free_memory, variables, return_value: STRING
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			visitor, l_pointed_visitor: WIZARD_DATA_TYPE_VISITOR
 			tmp_name, l_header_file: STRING
 		do
 			Result := check_interface_pointer (interface_name)
@@ -114,7 +114,6 @@ feature {NONE} -- Implementation
 						c_header_files.force (l_header_file)
 					end
 					if is_paramflag_fretval (arguments.item.flags) then
-
 						if visitor.is_structure_pointer or visitor.is_interface_pointer then
 							variables.append (retval_struct_pointer_set_up (visitor))
 							signature.append (" ret_value,")
@@ -130,7 +129,7 @@ feature {NONE} -- Implementation
 							variables.append (visitor.c_type)
 							variables.append (" ret_value")
 							variables.append (visitor.c_post_type)
-							variables.append (" = 0;%R%N%T")
+							variables.append (" = 0;%N%T")
 							return_value.append (return_value_setup (visitor, "ret_value"))
 						end
 					else 
@@ -157,13 +156,13 @@ feature {NONE} -- Implementation
 							if not visitor.is_array_type then
 								variables.append (visitor.c_post_type)
 							end
-							variables.append (" = 0;%R%N%T")
+							variables.append (" = 0;%N%T")
 							
 							signature.append ("tmp_")
 							signature.append (arguments.item.name)
 	
 							variables.append (in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
-							variables.append ("%R%N%T")
+							variables.append ("%N%T")
 							if is_paramflag_fout (arguments.item.flags) then
 								out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
 							else
@@ -186,11 +185,11 @@ feature {NONE} -- Implementation
 				if not signature.is_empty then
 					signature.remove (signature.count)
 				end
-				signature.append (");%R%N")
+				signature.append (");%N")
 
 				-- Set up body
 				Result.append (variables)
-				Result.append ("%R%N%T")
+				Result.append ("%N%T")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append ("hr = ")
 				elseif not (func_desc.return_type.type = Vt_void) then
@@ -210,11 +209,11 @@ feature {NONE} -- Implementation
 				Result.append (out_value)
 				Result.append (free_memory)
 				if not return_value.is_empty then
-					Result.append ("%R%N")
+					Result.append ("%N")
 					Result.append (return_value)
 				end
 			else
-				Result.append ("%R%N%T")
+				Result.append ("%N%T")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append ("hr = ")
 				elseif not (func_desc.return_type.type = Vt_void) then
@@ -227,7 +226,7 @@ feature {NONE} -- Implementation
 				Result.append (interface_name)
 				Result.append ("->")
 				Result.append (func_desc.name)
-				Result.append (" ();%R%N")
+				Result.append (" ();%N")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append (examine_hresult ("hr"))
 				end
@@ -336,10 +335,10 @@ feature {NONE} -- Implementation
 			end
 			if a_visitor.is_structure or a_visitor.is_structure_pointer then
 				Result.append (New_line_tab)
-				Result.append ("EIF_PROCEDURE eiffel_procedure = 0;%R%N%T")
-				Result.append ("EIF_TYPE_ID type_id = eif_type_id (%"" + a_visitor.eiffel_type + "%");%R%N%T")
-				Result.append ("eiffel_procedure = eif_procedure (%"set_unshared%", type_id);%R%N%T")
-				Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_result));%R%N%T")
+				Result.append ("EIF_PROCEDURE eiffel_procedure = 0;%N%T")
+				Result.append ("EIF_TYPE_ID type_id = eif_type_id (%"" + a_visitor.eiffel_type + "%");%N%T")
+				Result.append ("eiffel_procedure = eif_procedure (%"set_unshared%", type_id);%N%T")
+				Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_result));%N%T")
 			end
 			Result.append (New_line_tab)
 			Result.append ("return ")

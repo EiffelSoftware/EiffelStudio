@@ -82,18 +82,18 @@ feature -- Basic operations
 		do
 			create Result.make (1000)
 			Result.append ("%T%T%T%
-							%if " + table_name + " /= Void then%R%N%T%T%T%T%
-								%from%R%N%T%T%T%T%T" +
-									table_name + ".start%R%N%T%T%T%T%
-								%until%R%N%T%T%T%T%T" +
-									table_name + ".after%R%N%T%T%T%T%
-								%loop%R%N%T%T%T%T%T") 
+							%if " + table_name + " /= Void then%N%T%T%T%T%
+								%from%N%T%T%T%T%T" +
+									table_name + ".start%N%T%T%T%T%
+								%until%N%T%T%T%T%T" +
+									table_name + ".after%N%T%T%T%T%
+								%loop%N%T%T%T%T%T") 
 			if  does_routine_have_result (a_function) then
 				Result.append ("Result := ")
 			end
-			Result.append (table_name + ".item_for_iteration." + function_call (a_function) + "%R%N%T%T%T%T%T" +
-							table_name + ".forth%R%N%T%T%T%T%
-							%end%R%N%T%T%Tend")
+			Result.append (table_name + ".item_for_iteration." + function_call (a_function) + "%N%T%T%T%T%T" +
+							table_name + ".forth%N%T%T%T%T%
+							%end%N%T%T%Tend")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

@@ -41,8 +41,8 @@ feature {NONE} -- Implementation
 		do
 			if dispatch_interface then
 				create Result.make (200)
-				Result.append ("%R%N%Texcepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));")
-				Result.append ("%R%N%Tif (excepinfo != NULL)%R%N%T%T")
+				Result.append ("%N%Texcepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));")
+				Result.append ("%N%Tif (excepinfo != NULL)%N%T%T")
 				Result.append ("memset (excepinfo, %'\0%', sizeof (EXCEPINFO));")
 			else
 				create Result.make (0)
@@ -60,9 +60,9 @@ feature {NONE} -- Implementation
 			create Result.make (500)
 			Result.append ("if (p_")
 			Result.append (a_name)
-			Result.append (" != NULL)%R%N%T%Tp_")
+			Result.append (" != NULL)%N%T%Tp_")
 			Result.append (a_name)
-			Result.append ("->Release ();%R%N%T")
+			Result.append ("->Release ();%N%T")
 		ensure
 			non_void_release_interface: Result /= Void
 			valid_release_interface: not Result.is_empty
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			non_void_function_body: Result.body /= Void
 		end
 
-	co_initialize_ex_function: STRING is "%Thr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);%R%N"
+	co_initialize_ex_function: STRING is "%Thr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);%N"
 			-- CoInitialize function call
 
 end -- class WIZARD_COMPONENT_C_CLIENT_GENERATOR

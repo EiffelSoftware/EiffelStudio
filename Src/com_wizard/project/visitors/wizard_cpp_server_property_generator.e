@@ -78,10 +78,10 @@ feature {NONE} -- Implementation
 			non_void_visitor: l_visitor /= Void
 		do
 			create Result.make (1000)
-			Result.append ("%TECATCH;%R%N%R%N%T")
+			Result.append ("%TECATCH;%N%N%T")
 			Result.append (cecil_function (l_name, l_visitor))
 
-			Result.append ("%R%N%T*a_value = ")
+			Result.append ("%N%T*a_value = ")
 			if l_visitor.is_basic_type or l_visitor.is_enumeration then
 				Result.append ("(")
 				Result.append (l_visitor.c_type)
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 				end
 				Result.append (")")
 			end
-			Result.append (";%R%N%TEND_ECATCH;%R%N%T")
+			Result.append (";%N%TEND_ECATCH;%N%T")
 			Result.append ("return S_OK;")
 		end
 
@@ -111,11 +111,11 @@ feature {NONE} -- Implementation
 			non_void_visitor: l_visitor /= Void
 		do
 			create Result.make (1000)
-			Result.append ("%TECATCH;%R%N")
+			Result.append ("%TECATCH;%N")
 			Result.append (set_variable (l_visitor))
-			Result.append ("%R%N%T")
+			Result.append ("%N%T")
 			Result.append (cecil_procedure (l_name, l_visitor))
-			Result.append ("%R%N%TEND_ECATCH;%R%N%T")
+			Result.append ("%N%TEND_ECATCH;%N%T")
 			Result.append ("return S_OK;")
 		end
 
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 				Result.append (l_visitor.ce_function_name)
 				Result.append (" (a_value)")
 			else
-				Result.append ("EIF_OBJECT tmp_value;%R%N%T")
+				Result.append ("EIF_OBJECT tmp_value;%N%T")
 				Result.append ("tmp_value = eif_protect (")
 				if l_visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
@@ -163,11 +163,7 @@ feature {NONE} -- Implementation
 		local
 			cecil_function_type, cecil_function_name, cecil_type: STRING
 		do
-			if 
-				l_visitor.is_basic_type or
-				l_visitor.is_enumeration or
-				l_visitor.vt_type = Vt_bool
-			then
+			if l_visitor.is_basic_type or l_visitor.is_enumeration or l_visitor.vt_type = Vt_bool then
 				cecil_type := l_visitor.cecil_type
 				if 
 					is_int (l_visitor.vt_type) or 
@@ -178,23 +174,16 @@ feature {NONE} -- Implementation
 					is_unsigned_short (l_visitor.vt_type) 
 				then
 					cecil_function_type := Eif_integer_function
-					cecil_function_name := Eif_integer_function_name
-					
-				elseif 
-					is_character (l_visitor.vt_type) or 
-					is_unsigned_char (l_visitor.vt_type) 
-				then
+					cecil_function_name := Eif_integer_function_name					
+				elseif is_character (l_visitor.vt_type) or is_unsigned_char (l_visitor.vt_type) then
 					cecil_function_type := Eif_character_function
-					cecil_function_name := Eif_character_function_name
-					
+					cecil_function_name := Eif_character_function_name					
 				elseif is_real4 (l_visitor.vt_type) then
 					cecil_function_type := Eif_real_function
-					cecil_function_name := Eif_real_function_name
-					
+					cecil_function_name := Eif_real_function_name					
 				elseif is_real8 (l_visitor.vt_type) then
 					cecil_function_type := Eif_double_function
 					cecil_function_name := Eif_double_function_name
-					
 				elseif l_visitor.vt_type = Vt_bool then
 					cecil_function_type := Eif_boolean_function
 					cecil_function_name := Eif_boolean_function_name
@@ -206,7 +195,7 @@ feature {NONE} -- Implementation
 			end
 
 			Result := cecil_function_code (cecil_function_type, cecil_function_name, function_name)
-			Result.append ("%R%N%T")
+			Result.append ("%N%T")
 
 			Result.append (cecil_type)
 			Result.append (" tmp_value")
@@ -214,21 +203,21 @@ feature {NONE} -- Implementation
 			if not (l_visitor.is_basic_type or l_visitor.is_enumeration or l_visitor.vt_type = Vt_bool) then
 				Result.append (" = 0")
 			end
-			Result.append (";%R%N%T")
+			Result.append (";%N%T")
 			
-			Result.append ("if (eiffel_function != NULL)%R%N%T%T")
+			Result.append ("if (eiffel_function != NULL)%N%T%T")
 			
 			Result.append ("tmp_value = (FUNCTION_CAST (")
 			Result.append (cecil_type)
-			Result.append (", (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));%R%N%T")
+			Result.append (", (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));%N%T")
 			
-			Result.append ("else%R%N%T%T")
+			Result.append ("else%N%T%T")
 			
 			Result.append ("tmp_value = eif_field (eif_access (eiffel_object), %"")
 			Result.append (function_name)
 			Result.append ("%", ")
 			Result.append (cecil_type)
-			Result.append (");%R%N%T")
+			Result.append (");%N%T")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty
@@ -245,13 +234,13 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (200)
 			Result.append (function_type)
-			Result.append (" eiffel_function = 0;%R%N%T")
+			Result.append (" eiffel_function = 0;%N%T")
 			
 			Result.append ("eiffel_function = ")
 			Result.append (function_name)
 			Result.append (" (%"")
 			Result.append (call_func_name)
-			Result.append ("%", type_id);%R%N%T")
+			Result.append ("%", type_id);%N%T")
 		ensure
 			non_void_code: Result /= Void
 			valid_code: not Result.is_empty
@@ -264,11 +253,11 @@ feature {NONE} -- Implementation
 			non_void_visitor: l_visitor /= Void
 		do
 			create Result.make (10000)
-			Result.append ("EIF_PROCEDURE eiffel_procedure;%R%N%T")
+			Result.append ("EIF_PROCEDURE eiffel_procedure;%N%T")
 
 			Result.append ("eiffel_procedure = eif_procedure (%"")
 			Result.append (function_name)
-			Result.append ("%", type_id);%R%N%T")
+			Result.append ("%", type_id);%N%T")
 
 			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, ")
 			if l_visitor.is_basic_type or l_visitor.is_enumeration then
@@ -287,7 +276,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append (");")
 			if not (l_visitor.is_basic_type or l_visitor.vt_type = Vt_bool or l_visitor.is_enumeration) then
-				Result.append ("%R%N%Teif_wean (tmp_value);")
+				Result.append ("%N%Teif_wean (tmp_value);")
 			end
 		ensure
 			non_void_procedure: Result /= Void

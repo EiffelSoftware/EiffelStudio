@@ -233,11 +233,11 @@ feature {NONE} -- Implementation
 							local_variable.append (l_arguments.item.name)
 							local_variable.append (": ANY")
 							feature_writer.add_local_variable (local_variable)
-							Result.append ("%R%N%T%T%Ttmp_")
+							Result.append ("%N%T%T%Ttmp_")
 							Result.append (l_arguments.item.name)
 							Result.append (" := ")
 							Result.append (l_arguments.item.name)
-							Result.append (".to_c%R%N%T%T%T$tmp_")
+							Result.append (".to_c%N%T%T%T$tmp_")
 							l_string.append (l_arguments.item.name)
 						elseif l_visitor.is_interface or l_visitor.is_interface_pointer or l_visitor.is_coclass or l_visitor.is_coclass_pointer then
 							feature_writer.add_local_variable (argument_item_name (l_arguments.item.name) + ": POINTER")
@@ -278,15 +278,15 @@ feature {NONE} -- Implementation
 			create Result.make (200)
 			Result.append ("if ")
 			Result.append (an_argument_name)
-			Result.append (" /= Void then%R%N%T%T%T%Tif (")
+			Result.append (" /= Void then%N%T%T%T%Tif (")
 			Result.append (an_argument_name)
-			Result.append (".item = default_pointer) then%R%N%T%T%T%T%Ta_stub ?= ")
+			Result.append (".item = default_pointer) then%N%T%T%T%T%Ta_stub ?= ")
 			Result.append (an_argument_name)
-			Result.append ("%R%N%T%T%T%T%Tif a_stub /= Void then%R%N%T%T%T%T%T%Ta_stub.create_item%R%N%T%T%T%T%Tend%R%N%T%T%T%Tend%R%N%T%T%T%T")
+			Result.append ("%N%T%T%T%T%Tif a_stub /= Void then%N%T%T%T%T%T%Ta_stub.create_item%N%T%T%T%T%Tend%N%T%T%T%Tend%N%T%T%T%T")
 			Result.append (argument_item_name (an_argument_name))
 			Result.append (" := ")
 			Result.append (an_argument_name)
-			Result.append (".item%R%N%T%T%Tend%R%N%T%T%T")
+			Result.append (".item%N%T%T%Tend%N%T%T%T")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

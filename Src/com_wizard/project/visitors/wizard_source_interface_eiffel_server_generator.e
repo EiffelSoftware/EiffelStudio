@@ -137,8 +137,8 @@ feature -- Basic operations
 			
 			create body.make (1000)
 			body.append (Tab_tab_tab)
-			body.append ("if " + interface_table_name (an_interface) + " /= Void then%R%N%T%T%T%T")
-			body.append ("Result := " + interface_table_name (an_interface) + ".has (a_cookie)%R%N%T%T%Tend")
+			body.append ("if " + interface_table_name (an_interface) + " /= Void then%N%T%T%T%T")
+			body.append ("Result := " + interface_table_name (an_interface) + ".has (a_cookie)%N%T%T%Tend")
 			Result.set_body (body)
 		ensure
 			non_void_feature: Result /= Void

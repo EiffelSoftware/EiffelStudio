@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			create feature_body.make (1000)
 			feature_body.append ("%T%T%Tinitializer := ")
 			feature_body.append (ccom_create_feature_name)
-			feature_body.append ("%R%N%T%T%Titem := ccom_item (initializer)")
+			feature_body.append ("%N%T%T%Titem := ccom_item (initializer)")
 
 			Result.set_effective
 			Result.set_body (feature_body)

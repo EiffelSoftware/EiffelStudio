@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 				l_comment := feature_writer.comment.twin
 			end
 			if not l_comment.is_empty and a_visitor.is_enumeration then
-				l_comment.append ("%R%N%T%T%T-- ")
+				l_comment.append ("%N%T%T%T-- ")
 			end
 			l_comment.append (enumeration_comment (a_name, l_type, 	a_visitor))
 			if not l_comment.is_empty then
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			loop
 				if not is_paramflag_fretval (l_arguments.item.flags) then
 					if not l_comment.is_empty then 
-						l_comment.append ("%R%N%T%T%T-- ")
+						l_comment.append ("%N%T%T%T-- ")
 					end
 					l_comment.append ("`")
 					l_comment.append (l_arguments.item.name)

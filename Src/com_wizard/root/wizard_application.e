@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 			l_valid_options := l_clp.valid_options
 			if l_clp.invalid_options_found then				
 				print (l_clp.error_message)
-				print (l_cls.program_usage (exe_name) + "%R%N")
-				print ("Use -h/--help for more help." + "%R%N")
+				print (l_cls.program_usage (exe_name) + "%N")
+				print ("Use -h/--help for more help." + "%N")
 			else
 				if l_valid_options.has ("-g") then
 					make_and_launch
@@ -58,8 +58,8 @@ feature {NONE} -- Initialization
 					elseif not l_valid_options.is_empty then
 						if l_valid_options.has ("-e") and not (l_valid_options.has ("-a") and l_valid_options.has ("-f") and l_valid_options.has ("-u")) then
 							print ("Options '-a', '-f' and '-u' required by option '-e'.")
-							print (l_cls.program_usage (exe_name) + "%R%N")
-							print ("Use -h/--help for more help." + "%R%N")
+							print (l_cls.program_usage (exe_name) + "%N")
+							print ("Use -h/--help for more help." + "%N")
 						else
 							l_valid_options.search ("-a")
 							if l_valid_options.found then
@@ -75,6 +75,8 @@ feature {NONE} -- Initialization
 							l_valid_options.search ("-d")
 							if l_valid_options.found then
 								environment.set_destination_folder (l_valid_options.found_item.first.twin)
+							else
+								environment.set_destination_folder ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
 							end
 							l_valid_options.search ("-f")
 							if l_valid_options.found then
@@ -150,8 +152,8 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 		do
-			s := "EiffelCOM Wizard " + version_number + "%R%N"
-			s.append ("Copyright (c) 2005, Eiffel Software. All rights reserved." + "%R%N")
+			s := "EiffelCOM Wizard " + version_number + "%N"
+			s.append ("Copyright (c) 2005, Eiffel Software. All rights reserved." + "%N")
 			print (s)
 		end
 	
@@ -174,26 +176,26 @@ feature {NONE} -- Implementation
 				inspect
 					l_output_event.id
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_error then
-					print ("ERROR:%R%N")
+					print ("ERROR:%N")
 					print (l_output_event.text)
-					print ("%R%N%R%N")
+					print ("%N%N")
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_message then
 					print (l_output_event.text)
-					print ("%R%N")
+					print ("%N")
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_text then
 					print (l_output_event.text)
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_title then
-					print ("%R%N")
+					print ("%N")
 					print (l_output_event.text)
 					create l_underline.make (l_output_event.text.count)
 					l_underline.fill_character ('-')
-					print ("%R%N")
+					print ("%N")
 					print (l_underline)
-					print ("%R%N%R%N")
+					print ("%N%N")
 				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_warning then
-					print ("WARNING:%R%N")
+					print ("WARNING:%N")
 					print (l_output_event.text)
-					print ("%R%N")
+					print ("%N")
 				else
 				end
 			end

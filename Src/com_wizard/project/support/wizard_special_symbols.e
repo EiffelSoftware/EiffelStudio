@@ -10,7 +10,7 @@ feature -- Special simbols -- 1
 
 	Space: STRING is " "
 	
-	New_line: STRING is "%R%N"
+	New_line: STRING is "%N"
 	
 	Tab: STRING is "%T"
 	
@@ -18,11 +18,11 @@ feature -- Special simbols -- 1
 
 	Tab_tab_tab: STRING is "%T%T%T"
 	
-	New_line_tab: STRING is "%R%N%T"
+	New_line_tab: STRING is "%N%T"
 	
-	New_line_tab_tab: STRING is "%R%N%T%T"
+	New_line_tab_tab: STRING is "%N%T%T"
 	
-	New_line_tab_tab_tab: STRING is "%R%N%T%T%T"
+	New_line_tab_tab_tab: STRING is "%N%T%T%T"
 	
 	Open_parenthesis: STRING is "("
 	

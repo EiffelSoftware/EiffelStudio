@@ -55,9 +55,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
 			prune_all (name_label)
-
-			real_ellipse_border_horizontal := 10
-			real_ellipse_border_vertical := 10
 			
 			create ellipse
 			extend (ellipse)
@@ -398,10 +395,19 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			-- Some properties of `Current' may have changed.
 		local
 			l_min_size: like minimum_size
+			cx, cy, a, b: INTEGER
 		do
-			l_min_size := minimum_size			
-			ellipse.set_point_a_position (l_min_size.left - ellipse_border_horizontal, l_min_size.top - ellipse_border_vertical)
-			ellipse.set_point_b_position (l_min_size.right + ellipse_border_horizontal, l_min_size.bottom + ellipse_border_vertical)
+			l_min_size := minimum_size
+			
+			cx := l_min_size.width // 2 + l_min_size.left
+			cy := l_min_size.height // 2 + l_min_size.top
+			
+			a := ellipse_radius_1.truncated_to_integer
+			b := ellipse_radius_2.truncated_to_integer
+			
+			ellipse.set_point_a_position (cx - a, cy - b)
+			ellipse.set_point_b_position (cx + a, cy + b)
+			
 			if anchor.is_show_requested then
 				anchor.set_x_y (ellipse.point_a_x + 3, ellipse.point_a_y + 3)
 			end
@@ -416,8 +422,8 @@ feature {EV_MODEL_GROUP} -- Figure group
 			-- groups center
 		do
 			Precursor {EIFFEL_CLASS_FIGURE} (a_transformation)
-			real_ellipse_border_horizontal := real_ellipse_border_horizontal * a_transformation.item (1, 1)
-			real_ellipse_border_vertical := real_ellipse_border_vertical * a_transformation.item (2, 2)
+			ellipse_radius_1 := ellipse_radius_1 * a_transformation.item (1, 1)
+			ellipse_radius_2 := ellipse_radius_2 * a_transformation.item (2, 2)
 		end
 		
 feature {EIFFEL_PROJECTOR} -- Ellipse
@@ -442,25 +448,12 @@ feature {NONE} -- Implementation
 
 	is_default_background_color_used: BOOLEAN
 			-- Was background color not changed by client?
-
-	ellipse_border_horizontal: INTEGER is
-			-- Horizontal border for the ellipse.
-		do
-			Result := real_ellipse_border_horizontal.truncated_to_integer
-		end
-		
-	real_ellipse_border_horizontal: REAL
-			-- Real value of `ellipse_border_horizontal'.
-			-- Needed to prevent rounding errors on scale.
+			
+	ellipse_radius_1: DOUBLE
+			-- Horizontal radius of `ellipse'.
 	
-	ellipse_border_vertical: INTEGER is
-			-- Vertical border for the ellipse.
-		do
-			Result := real_ellipse_border_vertical.truncated_to_integer
-		end
-		
-	real_ellipse_border_vertical: REAL
-			-- Real value of `ellipse_border_vertical'.
+	ellipse_radius_2: DOUBLE
+			-- Vertical radius of `ellipse'.
 
 	number_of_figures: INTEGER is 2
 			-- Number of figures used to visualize `Current'.
@@ -577,7 +570,7 @@ feature {NONE} -- Implementation
 					part_text.set_x (0)
 					name_labels.extend (part_text)
 				end
-				s := rest			
+				s := rest
 				create part_text.make_with_text (s)
 				assign_class_name_properties_to_text (part_text)
 				part_text.set_point_position (0, name_labels.bounding_box.height)
@@ -678,6 +671,9 @@ feature {NONE} -- Implementation
 		local
 			ibbox, nbbox, gbbox: EV_RECTANGLE
 			h, w, cur_pos, cur_y_pos: INTEGER
+			l_min_size: like minimum_size
+			r: DOUBLE
+			omega: DOUBLE
 		do
 			ibbox := icon_figures.bounding_box
 			nbbox := name_labels.bounding_box
@@ -712,6 +708,15 @@ feature {NONE} -- Implementation
 				
 				generics_label.set_point_position (port_x, cur_pos)	
 			end
+			
+			l_min_size := minimum_size
+			
+			w := l_min_size.width
+			h := l_min_size.height
+			r := distance (l_min_size.left, l_min_size.top, l_min_size.left + w / 2, l_min_size.top + h / 2)			
+			omega := line_angle (l_min_size.left + w / 2, l_min_size.top + h / 2, l_min_size.left + w, l_min_size.top)
+			ellipse_radius_2 := sqrt (r^2*sine(omega)^2*(1 + (cosine(omega)^2/(sine(omega)^2*(w^2/h^2)))))
+			ellipse_radius_1 := w * ellipse_radius_2 / h
 		end
 
 	set_ellipse_properties is

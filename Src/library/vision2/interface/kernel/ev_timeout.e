@@ -43,7 +43,7 @@ feature -- Access
 
 	interval: INTEGER is
 			-- Time between calls to `actions' in milliseconds.
-			-- Zero when disabled.
+			-- If 0, then `actions' are disabled.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -54,7 +54,7 @@ feature -- Access
 
 	set_interval (an_interval: INTEGER) is
 			-- Assign `an_interval' in milliseconds to `interval'.
-			-- Zero disables.
+			-- If `an_interval' is 0, `actions' are disabled.
 		require
 			not_destroyed: not is_destroyed
 			an_interval_not_negative: an_interval >= 0
@@ -67,6 +67,7 @@ feature -- Access
 
 	actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Actions to be performed at a regular `interval'.
+		-- Only called when `interval' is greater than 0.
 
 feature -- Status report
 
@@ -96,7 +97,7 @@ feature -- Status setting
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
-			-- Is `Current' in its default sate.
+			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ANY} and (
 				interval = 0 and

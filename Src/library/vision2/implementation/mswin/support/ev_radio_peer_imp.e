@@ -112,7 +112,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 			radio_group := Void
 		ensure
-			void: radio_group = Void
+			radio_group_void: radio_group = Void
 		end
 		
 feature {EV_CONTAINER_IMP} -- Implementation

@@ -1,13 +1,14 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.1"
+	generator: "geyacc version 3.3"
 
 class LACE_TOKENS
 
 inherit
 
 	YY_PARSER_TOKENS
+
 
 feature -- Access
 
@@ -156,4 +157,4 @@ feature -- Token codes
 	LAC_YES: INTEGER is 299
 	LAC_LIBRARY: INTEGER is 300
 
-end -- class LACE_TOKENS
+end

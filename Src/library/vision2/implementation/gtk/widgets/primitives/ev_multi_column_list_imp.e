@@ -119,7 +119,6 @@ feature {NONE} -- Initialization
 
 				column_title_changed (temp_title, i)
 				column_width_changed (temp_width, i)
-
 				i := i + 1
 			end
 
@@ -494,6 +493,12 @@ feature {NONE} -- Implementation
 			)
 		end
 
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+			-- Set row `a_row' pixmap to `a_pixmap'.
+		do
+			--| Do nothing, implementation not needed for GTK.
+		end
+
 feature {NONE} -- Implementation
 
 	expand_column_count_to (a_columns: INTEGER) is
@@ -632,6 +637,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/03/29 01:42:02  king
+--| Added redundant set_row_pixmap feature
+--|
 --| Revision 1.53  2000/03/28 21:29:26  king
 --| Implemented to deal with setting of titles and widths
 --|

@@ -62,7 +62,7 @@ feature -- Access
 			bridge_ok: Result = implementation.column_count
 		end
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW is
+	selected_item: like item is
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items').
@@ -74,7 +74,7 @@ feature -- Access
 			bridge_ok: Result = implementation.selected_item
 		end
 
-	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: DYNAMIC_LIST [like item] is
 			-- Currently selected items.
 		require
 			not_destroyed: not is_destroyed

@@ -64,6 +64,16 @@ feature -- Properties
 
 feature -- Setting
 
+	set_root_name (rn: like root_name) is
+			-- Set `root_name' with `rn'.
+		require	
+			rn_not_void: rn /= Void
+		do
+			root_name := rn.as_upper
+		ensure
+			root_name_set: root_name.is_equal (rn.as_upper)
+		end
+
 	set_creation_procedure_name (cp: like creation_procedure_name) is
 			-- Set `creation_procedure_name' with lower case version
 			-- of `cp'.

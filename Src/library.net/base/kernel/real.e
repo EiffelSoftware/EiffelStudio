@@ -12,7 +12,12 @@ inherit
 			is_equal,
 			to_string
 		end
-	SYSTEM_ICOMPARABLE
+	ICOMPARABLE
+		redefine
+			get_hash_code,
+			is_equal,
+			to_string
+		end
 	SYSTEM_IFORMATTABLE
 
 feature -- Access

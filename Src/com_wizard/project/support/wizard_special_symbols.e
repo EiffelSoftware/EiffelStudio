@@ -1,6 +1,5 @@
 indexing
 	description: "Special symbols"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -22,24 +22,26 @@ inherit
 			set_height as menu_set_height,
 			set_managed as menu_set_managed,
 			managed as menu_managed,
-            is_shown as shown
+			is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
 			set_x_y, real_x, real_y, x, y, set_x, set_y, height, width,
-			set_insensitive, insensitive
+			set_insensitive, insensitive, children_has_accelerators,
+			parent
 		end;
 
 	MENU_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
 			set_x_y, set_size, set_width, set_height, real_x, real_y, x, y,
 			set_x, set_y, height, width, managed, set_managed,
 			set_foreground_color, set_background_color,
-			set_insensitive, insensitive
+			set_insensitive, insensitive, children_has_accelerators,
+			parent
 		select
 			set_size, set_width, set_height, 
 			set_foreground_color, set_background_color,
@@ -57,26 +59,24 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
-            is_shown as shown
+			is_shown as shown
 		redefine
-			set_size, set_width, set_height, managed,
+			set_size, set_width, set_height, 
 			set_x, set_x_y, set_y, real_x, real_y,
-			x, y, height, width
+			x, y, height, width, parent
 		end
 
 creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_pulldown: OPT_PULL; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif pulldown menu.
 		local
 			pulldown_identifier: STRING;
-			mel_p: MEL_COMPOSITE;
-			mel_opt_menu: MEL_OPTION_MENU;
-			p: COMPOSITE
+			mel_opt_menu: MEL_OPTION_MENU
 		do
 				-- The widget index is incremented by one since
 				-- the option_button will be inserted before Current
@@ -84,24 +84,26 @@ feature -- Initialization
 			widget_index := widget_manager.last_inserted_position + 1;
 			pulldown_identifier := clone (a_pulldown.identifier);
 			pulldown_identifier.append ("_pull");
-			p ?= widget_manager.parent_using_index (a_pulldown,
-							widget_index - 1);
-			check
-				intern: p /= Void
-			end;
 			if man then
-				!! option_button.make (a_pulldown.identifier, p);
+				!! option_button.make (a_pulldown.identifier, oui_parent);
 			else
-				!! option_button.make_unmanaged (a_pulldown.identifier, p);
+				!! option_button.make_unmanaged (a_pulldown.identifier, oui_parent);
 			end;
-			mel_p ?= p.implementation;
-			mel_make_menu_pull (pulldown_identifier, mel_p);
 			mel_opt_menu ?= option_button.implementation;
-			check
-				valid_mel_opt_menu: mel_opt_menu /= Void
-			end;
-			mel_opt_menu.button_gadget.set_sub_menu (Current);
+			mel_make_menu_pull (pulldown_identifier, mel_opt_menu);
+			mel_opt_menu.set_sub_menu (Current)		
 			abstract_menu := a_pulldown;
+		end;
+
+feature -- Access
+
+	parent: MEL_MENU_SHELL;
+			-- Parent of option pull
+
+	children_has_accelerators: BOOLEAN is
+			-- Can children have accelerators?
+			-- (No it can't)
+		do
 		end;
 
 feature -- Status report
@@ -273,8 +275,8 @@ feature -- Status setting
 	set_background_color (a_color: COLOR) is
 			--set background color on both option button and menu pane
 		do
-			--option_button.set_background_color (a_color);
-			--menu_set_background_color (a_color);
+			option_button.set_background_color (a_color);
+			menu_set_background_color (a_color);
 		end;
 
 	allow_recompute_size  is

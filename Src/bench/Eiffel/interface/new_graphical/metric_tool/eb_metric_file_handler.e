@@ -98,14 +98,17 @@ feature -- Loading files
 
 feature -- Metrics loading
 
-	retrieve_metric (f: PLAIN_TEXT_FILE; metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XML_ELEMENT]) is
+	retrieve_metric (f: PLAIN_TEXT_FILE; metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XM_ELEMENT]) is
 			-- Retrieve recorded metric definitions from `file_manager.metric_file'.
 			-- Store metric objects in `metric_list' and their XML definition in `xml_list'.
 		local
-			s, metric_name, metric_unit, scope_num, scope_den, type, parent_name: STRING
-			parser: XML_TREE_PARSER
-			metric_element, node, definition, scope_element: XML_ELEMENT
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			metric_name, metric_unit, scope_num, scope_den, type, parent_name: STRING
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			metric_element, node, definition, scope_element: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			min_scope, i: INTEGER
 			composite_metric: EB_METRIC_COMPOSITE
 			derived_metric: EB_METRIC_DERIVED
@@ -118,14 +121,19 @@ feature -- Metrics loading
 		do
 			if not retried then
 				tool.set_min_scope_available (tool.scope (interface_names.metric_this_system).index)
-				create parser.make
-				f.start
-				f.read_stream (f.count)
-				s := f.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				if parser.is_correct then
-					metric_element := element_by_name (parser.root_element, "METRIC_DEFINITIONS")
+				create l_parser.make
+				create l_file.make (f.name)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_tree_pipe.make
+					create l_xm_concatenator.make_null
+					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+					l_parser.parse_from_stream (l_file)
+					l_file.close
+					check
+						ok_parsing: l_parser.is_correct
+					end
+					metric_element := element_by_name (l_tree_pipe.document.root_element, "METRIC_DEFINITIONS")
 					a_cursor := metric_element.new_cursor
 
 					from
@@ -136,22 +144,22 @@ feature -- Metrics loading
 					loop
 						node ?= a_cursor.item
 						if node /= Void then
-							info_missing := (not node.attributes.has ("Name") or else node.attributes.item ("Name").value.is_empty) or
-											(not node.attributes.has ("Unit") or else node.attributes.item ("Unit").value.is_empty) or
-											(not node.attributes.has ("Type") or else node.attributes.item ("Type").value.is_empty) or
-											(not node.attributes.has ("Min_scope") or else node.attributes.item ("Min_scope").value.is_empty) or
+							info_missing := (not node.has_attribute_by_name ("Name") or else node.attribute_by_name ("Name").value.is_empty) or
+											(not node.has_attribute_by_name ("Unit") or else node.attribute_by_name ("Unit").value.is_empty) or
+											(not node.has_attribute_by_name ("Type") or else node.attribute_by_name ("Type").value.is_empty) or
+											(not node.has_attribute_by_name ("Min_scope") or else node.attribute_by_name ("Min_scope").value.is_empty) or
 											(not node.has (element_by_name (node, "DEFINITION"))
 											or else (element_by_name (node, "DEFINITION")).is_empty)
 
 							if not info_missing then
-								metric_name := node.attributes.item ("Name").value
-								metric_unit := node.attributes.item ("Unit").value
-								type := node.attributes.item ("Type").value
+								metric_name := node.attribute_by_name ("Name").value
+								metric_unit := node.attribute_by_name ("Unit").value
+								type := node.attribute_by_name ("Type").value
+								min_scope := corresponding_scope_index (node.attribute_by_name ("Min_scope").value)
 								is_derived := equal ("Derived", type)
 								is_linear := equal ("Linear", type)
 								is_metric_ratio := equal ("MRatio", type)
 								is_scope_ratio := equal ("SRatio", type)
-								min_scope := corresponding_scope_index (node.attributes.item ("Min_scope").value)
 								definition := element_by_name (node, "DEFINITION")
 								if is_derived then
 									create bf
@@ -169,15 +177,15 @@ feature -- Metrics loading
 										composite_metric.set_metric_ratio (is_metric_ratio)
 										composite_metric.set_scope_ratio (is_scope_ratio)
 										if is_metric_ratio or is_scope_ratio then
-											percentage := node.attributes.item ("Percentage").value.to_boolean
+											percentage := node.attribute_by_name ("Percentage").value.to_boolean
 											composite_metric.set_percentage (percentage)
 										end
 										if is_scope_ratio then
 											scope_element ?= definition.item (2)
-											scope_num := content_of_node (scope_element)
+											scope_num := scope_element.text
 											composite_metric.set_scope_num (tool.scope (scope_num))
 											scope_element ?= definition.item (3)
-											scope_den := content_of_node (scope_element)
+											scope_den := scope_element.text
 											composite_metric.set_scope_den (tool.scope (scope_den))
 										end
 										if metric_list /= tool.metrics or else tool.metric (composite_metric.name) = Void then
@@ -206,8 +214,8 @@ feature -- Metrics loading
 						end
 						a_cursor.forth
 					end
-				elseif not parser.is_correct or info_missing or tree = Void then
-					parser_problems := not parser.is_correct or info_missing or tree = Void
+				elseif not l_parser.is_correct or info_missing or tree = Void then
+					parser_problems := not l_parser.is_correct or info_missing or tree = Void
 --				if not parser.is_correct or info_missing or tree = Void then
 --					create error_dialog.make_with_text ("File: " + file_manager.metric_file_name + "%Nhas syntax error or missing information")
 --					error_dialog.show_modal_to_window (tool.development_window.window)
@@ -223,13 +231,13 @@ feature -- Metrics loading
 
 feature -- Metric operators
 
-	build_operator (a_metric_definition: XML_ELEMENT; linear, metric_ratio, scope_ratio, success: BOOLEAN): EB_METRIC_VALUE is
+	build_operator (a_metric_definition: XM_ELEMENT; linear, metric_ratio, scope_ratio, success: BOOLEAN): EB_METRIC_VALUE is
 			-- Translate `a_metric_definition' to a polish syntax and return tool to allow metric calculation.
 			-- Called on defining new metric or on retrieveing saved-in-file metric.
 		local
 			stack: LINKED_STACK [EB_METRIC_VALUE]
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			node: XML_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node: XM_ELEMENT
 			node_item: STRING
 			parameter: DOUBLE
 			met_constant: EB_METRIC_CONSTANT
@@ -250,18 +258,14 @@ feature -- Metric operators
 						node ?= a_cursor.item
 						if node /= Void then
 							if node.name.is_equal ("PARAMETER") then
-								node_item := content_of_node (node)
-								parameter := node_item.to_double
+								parameter := node.text.to_double
 								create met_constant.make (parameter)
 								stack.put (met_constant)
-							end
-							if node.name.is_equal ("METRIC") then
-								node_item := content_of_node (node)		
-								create met_measure.make (node_item, tool)
+							elseif node.name.is_equal ("METRIC") then
+								create met_measure.make (node.text, tool)
 								stack.put (met_measure)
-							end
-							if node.name.is_equal ("OPERATOR") then
-								node_item := content_of_node (node)
+							elseif node.name.is_equal ("OPERATOR") then
+								node_item := node.text
 								value1 := stack.item
 								stack.remove
 								value2 := stack.item
@@ -295,23 +299,7 @@ feature -- Metric operators
 			value_not_void: success implies Result /= Void
 		end
 
-	content_of_node (node: XML_ELEMENT): STRING is
-			-- Return content of `node'.
-		local
-			cd: XML_CHARACTER_DATA
-		do
-			if node /= Void then
-				if not node.is_empty then
-					cd ?= node.first
-					if cd /= Void then
-						Result := cd.string
-						valid_tags_read
-					end
-				end
-			end
-		end
-
-	build_agent_array (a_definition: XML_ELEMENT; bf: EB_METRIC_BASIC_FUNCTIONALITIES): ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]] is
+	build_agent_array (a_definition: XM_ELEMENT; bf: EB_METRIC_BASIC_FUNCTIONALITIES): ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]] is
 			-- Return array containing agent for criteria evaluation for derived metrics.
 		require
 			valid_definition: a_definition /= Void
@@ -331,7 +319,7 @@ feature -- Metric operators
 			agent_built: Result /= Void
 		end
 
-	agent_array_for_classes (a_definition: XML_ELEMENT; bf: EB_METRIC_BASIC_FUNCTIONALITIES): ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]] is
+	agent_array_for_classes (a_definition: XM_ELEMENT; bf: EB_METRIC_BASIC_FUNCTIONALITIES): ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]] is
 			-- Return array containing agent for criteria evaluation for derived metrics
 			-- when parent raw metric is "classes".
 		require
@@ -369,7 +357,7 @@ feature -- Metric operators
 			agent_built: Result /= Void
 		end
 
-	agent_array_for_dependents (a_definition: XML_ELEMENT; bf: EB_METRIC_BASIC_FUNCTIONALITIES): ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]] is
+	agent_array_for_dependents (a_definition: XM_ELEMENT; bf: EB_METRIC_BASIC_FUNCTIONALITIES): ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]] is
 			-- Return array containing agent for criteria evaluation for derived metrics
 			-- when parent raw metric is "dependents".
 		require
@@ -415,7 +403,7 @@ feature -- Metric operators
 			agent_built: Result /= Void
 		end
 
-	agent_array_for_features (a_definition: XML_ELEMENT; bf: EB_METRIC_BASIC_FUNCTIONALITIES): ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]] is
+	agent_array_for_features (a_definition: XM_ELEMENT; bf: EB_METRIC_BASIC_FUNCTIONALITIES): ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]] is
 			-- Return array containing agent for criteria evaluation for derived metrics
 			-- when parent raw metric is "features".
 		require
@@ -516,10 +504,12 @@ feature -- Measures
 	retrieve_recorded_measures (f: PLAIN_TEXT_FILE) is
 			-- Retrieve recorded measures from `file_manager.metric_file'.
 		local
-			s: STRING
-			parser: XML_TREE_PARSER
-			metric_element, node: XML_ELEMENT
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			metric_element, node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			row_array: ARRAY [STRING]
 			row: EV_MULTI_COLUMN_LIST_ROW
 			retried, info_missing, a_percentage: BOOLEAN
@@ -529,14 +519,19 @@ feature -- Measures
 			error_dialog:EB_INFORMATION_DIALOG
 		do
 			if not retried then
-				create parser.make
-				f.start
-				f.read_stream (f.count)
-				s := f.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				if parser.is_correct then
-					metric_element := element_by_name (parser.root_element, "RECORDED_MEASURES")
+				create l_parser.make
+				create l_file.make (f.name)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_tree_pipe.make
+					create l_xm_concatenator.make_null
+					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+					l_parser.parse_from_stream (l_file)
+					check
+						ok_parsing: l_parser.is_correct
+					end
+					l_file.close
+					metric_element := element_by_name (l_tree_pipe.document.root_element, "RECORDED_MEASURES")
 					a_cursor := metric_element.new_cursor
 					from
 						a_cursor.start
@@ -572,21 +567,25 @@ feature -- Measures
 									create row
 									row.fill (row_array)
 										-- `recorded_measures_manager' needs a DOUBLE value.
-									row.put_i_th ((xml_double (node,"RESULT")).out, 5)
+									row.put_i_th ((xml_double (node, "RESULT")).out, 5)
 
 										-- Each observer updates measure_header. To avoid redunduncies, other observers must
 										-- not update measure_header just if they are alone.
 									if not tool.is_file_loaded and then file_manager.observer_list.count = 1 then
-										file_manager.add_row (row, node.attributes.item ("STATUS").value)
+										if node.has_attribute_by_name ("STATUS") then
+											file_manager.add_row (row, node.attribute_by_name ("STATUS").value)
+										end
+									end
+									if node.has_attribute_by_name ("STATUS") then
+										if node.attribute_by_name ("STATUS").value.is_equal ("old") then
+											row.set_pixmap (Pixmaps.Icon_red_cross)
+										else
+											row.set_pixmap (Pixmaps.Icon_green_tick)
+										end
 									end
 
-									if node.attributes.item ("STATUS").value.is_equal ("old") then
-										row.set_pixmap (Pixmaps.Icon_red_cross)
-									else
-										row.set_pixmap (Pixmaps.Icon_green_tick)
-									end
 										-- `multi_column_list' needn't a DOUBLE value.
-									row.put_i_th (tool.fix_decimals_and_percentage (xml_double (node,"RESULT"), a_percentage), 5)
+									row.put_i_th (tool.fix_decimals_and_percentage (xml_double (node, "RESULT"), a_percentage), 5)
 									tool.multi_column_list.extend (row)
 								end
 							else
@@ -595,8 +594,8 @@ feature -- Measures
 						a_cursor.forth
 					end
 					tool.progress_dialog.hide
-				elseif not parser.is_correct or info_missing then
-					parser_problems := not parser.is_correct or info_missing
+				elseif not l_parser.is_correct or info_missing then
+					parser_problems := not l_parser.is_correct or info_missing
 --				if not parser.is_correct or info_missing then
 --					create error_dialog.make_with_text ("File: " + file_manager.metric_file_name + "%Nhas syntax error or missing information.")
 --					error_dialog.show_modal_to_window (tool.development_window.window)

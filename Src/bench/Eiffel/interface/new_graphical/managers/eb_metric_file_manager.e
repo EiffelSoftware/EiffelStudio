@@ -22,24 +22,33 @@ feature -- Initialization
 
 	make is
 			-- Create XML elements to store metrics and measures.
+		local
+			l_node: XM_ELEMENT
+			l_namespace: XM_NAMESPACE
 		do
 			create observer_list.make (10)
-			create file_header.make_root ("ROOT")
-			create metric_header.make_root ("METRIC_DEFINITIONS")
-			file_header.put_last (metric_header)
-			create measure_header.make_root ("RECORDED_MEASURES")
-			file_header.put_last (measure_header)
+			create l_namespace.make ("", "")
+--			create file_header.make_root ("ROOT", l_namespace)
+			create l_node.make_root ("ROOT", l_namespace)
+			create file_header.make
+			file_header.force_first (l_node)
+			create metric_header.make_child (l_node, "METRIC_DEFINITIONS", l_namespace)
+			l_node.put_last (metric_header)
+			--file_header.root_element.put_last (metric_header)
+			create measure_header.make_child (l_node, "RECORDED_MEASURES", l_namespace)
+			l_node.put_last (measure_header)
+			--file_header.root_element.put_last (measure_header)
 		end
 
 feature -- Access
 
-	file_header: XML_ELEMENT
+	file_header: XM_DOCUMENT
 		-- XML header containing metric definitions and recorded measures.
 
-	metric_header: XML_ELEMENT
+	metric_header: XM_ELEMENT
 		-- XML element containing metric definitions.
 
-	measure_header: XML_ELEMENT
+	measure_header: XM_ELEMENT
 		-- XML element containing recorded measures.
 
 	metric_file: PLAIN_TEXT_FILE
@@ -104,7 +113,9 @@ feature -- File creation
 				end
 				metric_file.wipe_out
 				metric_file.open_read_write
-				metric_file.put_string ("<?xml version = %"1.0%" encoding = %"UTF-8%"?>" + file_header.out)
+				save_xml_document (metric_file, file_header)
+
+				--metric_file.put_string ("<?xml version = %"1.0%" encoding = %"UTF-8%"?>" + file_header.out)
 			end
 		rescue
 			retried := True
@@ -116,26 +127,24 @@ feature -- File creation
 
 feature -- Metric definitions
 
-	metric_element (name, unit, type: STRING): XML_ELEMENT is
+	metric_element (name, unit, type: STRING): XM_ELEMENT is
 			-- XML element for new metric definitions.
 		require
 			name_not_empty: name /= Void and then not name.is_empty
 			unit_not_empty: unit /= Void and then not unit.is_empty
 			type_not_empty: type /= Void and then not type.is_empty
 		local
-			xml_attribute: XML_ATTRIBUTE
+			l_namespace: XM_NAMESPACE
 		do
-			create Result.make_root ("METRIC")
+			create l_namespace.make ("", "")
+			create Result.make_root ("METRIC", l_namespace)
 
-			create xml_attribute.make ("Name", name)
-			Result.attributes.add_attribute (xml_attribute)
-			create xml_attribute.make ("Unit", unit)
-			Result.attributes.add_attribute (xml_attribute)
-			create xml_attribute.make ("Type", type)
-			Result.attributes.add_attribute (xml_attribute)
+			Result.add_attribute ("Name", l_namespace, name)
+			Result.add_attribute ("Unit", l_namespace, unit)
+			Result.add_attribute ("Type", l_namespace, type)
 		end
 
-	add_metric (metric: XML_ELEMENT; index: INTEGER) is
+	add_metric (metric: XM_ELEMENT; index: INTEGER) is
 			-- Add `metric' to `metric_header' at `index' position.
 		require
 			metric_not_void: metric /= Void
@@ -143,7 +152,7 @@ feature -- Metric definitions
 			metric_header.put (metric, index)
 		end
 
-	replace_metric (index_old_metric: INTEGER; new_metric: XML_ELEMENT) is
+	replace_metric (index_old_metric: INTEGER; new_metric: XM_ELEMENT) is
 			-- Overwrite metric at `index_old_metric' with `new_metric'.
 		require
 			new_metric_not_void: new_metric /= Void
@@ -159,9 +168,9 @@ feature -- Metric definitions
 		require
 			metric_name_not_empty: metric_name /= Void and then not metric_name.is_empty
 		local
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			i: INTEGER
-			node, a_metric_element: XML_ELEMENT
+			node, a_metric_element: XM_ELEMENT
 			node_name: STRING
 		do
 			a_cursor := metric_header.new_cursor
@@ -173,8 +182,8 @@ feature -- Metric definitions
 			loop
 				node ?= a_cursor.item
 				if node /= Void then
-					node_name := node.attributes.item ("Name").value
-					if equal (node_name, metric_name) then
+					node_name := node.attribute_by_name ("Name").value
+					if node_name.is_equal (metric_name) then
 						a_metric_element := node
 					end
 				end
@@ -186,7 +195,7 @@ feature -- Metric definitions
 			index_found: Result >= 1 and Result <= metric_header.count
 		end
 
-	new_metric_notify_all (new_metric: EB_METRIC; new_metric_element: XML_ELEMENT; overwrite: BOOLEAN; index: INTEGER) is
+	new_metric_notify_all (new_metric: EB_METRIC; new_metric_element: XM_ELEMENT; overwrite: BOOLEAN; index: INTEGER) is
 			-- Notify all observers of a change in metric definitions.
 		do
 			if metric_file.is_closed then
@@ -204,7 +213,7 @@ feature -- Metric definitions
 		rescue
 		end
 
-	management_metric_notify_all (metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XML_ELEMENT]) is
+	management_metric_notify_all (metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XM_ELEMENT]) is
 			-- Notify all observers of a change in metric definitions.
 		do
 			if metric_file.is_closed then
@@ -224,11 +233,14 @@ feature -- Metric definitions
 
 feature -- Recorded_measures
 
-	measure_element (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING): XML_ELEMENT is
+	measure_element (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING): XM_ELEMENT is
 			-- XML element for new recorded measures.
+		local
+			l_namespace: XM_NAMESPACE
 		do
-			create Result.make_root ("MEASURE")
-			Result.attributes.add_attribute (create {XML_ATTRIBUTE}.make ("STATUS", status))
+			create l_namespace.make ("", "")
+			create Result.make_root ("MEASURE", l_namespace)
+			Result.add_attribute ("STATUS", l_namespace, status)
 			Result.put_last (xml_node (Result, "MEASURE_NAME", row.i_th (1)))
 			Result.put_last (xml_node (Result, "SCOPE_TYPE", row.i_th (2)))
 			Result.put_last (xml_node (Result, "SCOPE_NAME", row.i_th (3)))
@@ -242,7 +254,7 @@ feature -- Recorded_measures
 			row_not_void: row /= Void
 			status_correct: equal (status, "new") or equal (status, "old")
 		local
-			added_row: XML_ELEMENT
+			added_row: XM_ELEMENT
 		do
 			added_row := measure_element (row, status)
 			added_row.set_parent (measure_header)
@@ -263,7 +275,7 @@ feature -- Recorded_measures
 			row_not_void: row /= Void
 			correct_range: index >= 1 and index <= measure_header.count
 		local
-			updated_row: XML_ELEMENT
+			updated_row: XM_ELEMENT
 		do
 			measure_header.remove (index)
 			updated_row := measure_element (row, "new")

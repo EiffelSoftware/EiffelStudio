@@ -343,7 +343,7 @@ feature -- Metric constituents
 			ratio_metric: Result.is_metric_ratio and not Result.is_linear and not Result.is_scope_ratio
 		end
 
-	new_metric_element: XML_ELEMENT is
+	new_metric_element: XM_ELEMENT is
 			-- Build a storable definition for the metric being saved.
 		require else
 			entered_formula: text_field.text /= Void and then not not text_field.text.is_empty
@@ -351,16 +351,15 @@ feature -- Metric constituents
 			formula_set: formula /= Void and then not formula.is_empty
 		local
 			a_name, a_unit: STRING
-			xml_elements_def_list : LINKED_LIST [XML_ELEMENT]
-			xml_attribute: XML_ATTRIBUTE
+			xml_elements_def_list : LINKED_LIST [XM_ELEMENT]
+			l_namespace: XM_NAMESPACE
 		do
 			a_name := name_field.text
 			a_unit := unit_field.text
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "MRatio")
-			create xml_attribute.make ("Percentage", percentage.out)
-			Result.attributes.add_attribute (xml_attribute)
+			Result.add_attribute ("Percentage", l_namespace, percentage.out)
 			Result.put_last (xml_node (Result, "FORMULA", displayed_metric))
-			create metric_definition.make (Result, "DEFINITION")
+			create metric_definition.make_child (Result, "DEFINITION", l_namespace)
 				-- Fill metric_definition with convinient xml element in polish syntax.
 			xml_elements_def_list := translate_formula_to_polish_syntax (formula, metric_definition)
 			from
@@ -374,8 +373,7 @@ feature -- Metric constituents
 
 			if valid_metric_definition then
 				Result.put_last (metric_definition)
-				create xml_attribute.make ("Min_scope", to_scope (min_scope))
-				Result.attributes.add_attribute (xml_attribute)
+				Result.add_attribute ("Min_scope", l_namespace, to_scope (min_scope))
 			end		
 		end
 
@@ -387,8 +385,8 @@ feature -- Metric constituents
 			correct_metric_definition: metric_definition /= Void and then not metric_definition.is_empty
 		local
 			i: INTEGER
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			sub_node: XML_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			sub_node: XM_ELEMENT
 			a_name, op: STRING
 			metric: EB_METRIC
 		do
@@ -408,16 +406,16 @@ feature -- Metric constituents
 					inspect i 
 						when 1 then
 							Result := Result and equal (a_name, "METRIC") and not (element_by_name (metric_definition, "METRIC")).is_empty
-							metric := interface.tool.metric (interface.tool.file_handler.content_of_node (sub_node))
+							metric := interface.tool.metric (sub_node.text)
 							Result := Result and metric /= Void
 						when 2 then
 							Result := Result and equal (a_name, "METRIC") and not (element_by_name (metric_definition, "METRIC")).is_empty
-							metric := interface.tool.metric (interface.tool.file_handler.content_of_node (sub_node))
+							metric := interface.tool.metric (sub_node.text)
 							Result := Result and metric /= Void
 						when 3 then
 							Result := Result and equal (a_name, "OPERATOR") and not (element_by_name (metric_definition, "OPERATOR")).is_empty
-							op := interface.tool.file_handler.content_of_node (sub_node)
-							Result := Result and equal (op, " / ")
+							op := sub_node.text
+							Result := Result and op.is_equal (" / ")
 					end
 					i := i + 1
 				end
@@ -426,7 +424,7 @@ feature -- Metric constituents
 			new_metric_successful := Result
 		end
 
-	translate_formula_to_polish_syntax (sub_formula: LINKED_LIST [STRING]; a_metric_definition: XML_ELEMENT): LINKED_LIST [XML_ELEMENT] is
+	translate_formula_to_polish_syntax (sub_formula: LINKED_LIST [STRING]; a_metric_definition: XM_ELEMENT): LINKED_LIST [XM_ELEMENT] is
 			-- Make xml element for each item of `sub_formula' and reorder it into polish syntax.
 		require
 			correct_formula: sub_formula /= Void and then not sub_formula.is_empty
@@ -503,7 +501,7 @@ feature -- Ratio action.
 			existing_combobox: a_combobox /= Void
 			existing_definition: a_definition_field /= Void
 		local
-			xml_location: XML_ELEMENT
+			xml_location: XM_ELEMENT
 			basic_metric: EB_METRIC_BASIC
 			other_metric: EB_METRIC
 			key: INTEGER

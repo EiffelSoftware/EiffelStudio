@@ -635,21 +635,21 @@ feature -- Initialization
 			new_metric_successful := True
 		end
 
-	new_metric_element: XML_ELEMENT is
+	new_metric_element: XM_ELEMENT is
 			-- Build a storable definition for the metric being saved.
 		require else
 			valid_raw_metric_name: raw_metric_combobox.text /= Void and then not raw_metric_combobox.text.is_empty
 		local
 			a_name, a_unit, raw_metric_name: STRING
-			xml_attribute: XML_ATTRIBUTE
 			formula: STRING
+			l_namespace: XM_NAMESPACE
 		do
 			a_name := name_field.text
 			a_unit := unit_field.text
+			create l_namespace.make ("", "")
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "Derived")
-			create xml_attribute.make ("Min_scope", to_scope (min_scope))
-			Result.attributes.add_attribute (xml_attribute)
-			create metric_definition.make (Result, "DEFINITION")
+			Result.add_attribute ("Min_scope", l_namespace, to_scope (min_scope))
+			create metric_definition.make_child (Result, "DEFINITION", l_namespace)
 			raw_metric_name := raw_metric_combobox.text
 			metric_definition.put_last (xml_node (metric_definition, "Raw_metric", raw_metric_name))
 			metric_definition.put_last (xml_node (metric_definition, "And", and_button.is_selected.out))
@@ -705,7 +705,6 @@ feature -- Initialization
 				if not ignore_post_equi.is_selected then
 					metric_definition.put_last (xml_node (metric_definition, "Post_equi", post_equi.is_selected.out))
 				end
-
 			end
 
 			Result.put_last (metric_definition)
@@ -719,7 +718,7 @@ feature -- Initialization
 		require
 			metric_definition_built: metric_definition /= Void and then not metric_definition.is_empty
 		local
-			node: XML_ELEMENT
+			node: XM_ELEMENT
 		do
 			Result := ""
 			from
@@ -728,7 +727,7 @@ feature -- Initialization
 				metric_definition.after
 			loop
 				node ?= metric_definition.item_for_iteration
-				Result.append (node.name + ": " + interface.tool.file_handler.content_of_node (node) + ", ")
+				Result.append (node.name + ": " + node.text + ", ")
 				metric_definition.forth
 			end
 			Result.keep_head (Result.count - 2)

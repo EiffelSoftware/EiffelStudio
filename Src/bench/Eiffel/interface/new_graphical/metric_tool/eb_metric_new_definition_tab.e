@@ -46,7 +46,7 @@ feature -- Access
 	new_metric_successful: BOOLEAN
 		-- Has new metric definition been successful?
 
-	metric_definition: XML_ELEMENT
+	metric_definition: XM_ELEMENT
 		-- XML representation of the currently defined metric.
 
 	error_name: BOOLEAN
@@ -199,7 +199,7 @@ feature -- Metric constituents.
 			metric_built: Result /= Void
 		end
 
-	new_metric_element: XML_ELEMENT is
+	new_metric_element: XM_ELEMENT is
 			-- Build a storable definition for the metric being saved.
 		require
 			valid_name: name_field.text /= Void and then not name_field.text.is_empty

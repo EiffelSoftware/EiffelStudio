@@ -85,7 +85,7 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 		rename
 			has as has_item
 		redefine
-			has_item, copy, is_equal
+			has_item, copy, is_equal, correct_mismatch
 		end
 
 	TABLE [G, H]
@@ -96,7 +96,7 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 		export
 			{NONE} prune_all
 		redefine
-			copy, is_equal, clear_all, has_item
+			copy, is_equal, clear_all, has_item, correct_mismatch
 		end
 
 create
@@ -831,6 +831,44 @@ feature -- Duplication
 			set_keys (clone (other.keys))
 			set_content (clone (other.content))
 			set_deleted_marks (clone (other.deleted_marks))
+		end
+
+feature {NONE} -- Transformation
+
+	correct_mismatch is
+			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
+		local
+			array_content: ARRAY [G]
+			array_keys: ARRAY [H]
+			array_marks: ARRAY [BOOLEAN]
+		do
+				-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'
+				-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for
+				-- efficiency reasons. In order to retrieve an old HASH_TABLE we
+				-- need to convert those ARRAY instances into SPECIAL instances.
+				
+				-- Convert `content' from ARRAY to SPECIAL
+			array_content ?= mismatch_information.item ("content")
+			if array_content /= Void then
+				content := array_content.area
+			end
+
+				-- Convert `keys' from ARRAY to SPECIAL
+			array_keys ?= mismatch_information.item ("keys")
+			if array_keys /= Void then
+				keys := array_keys.area
+			end
+
+				-- Convert `deleted_marks' from ARRAY to SPECIAL
+			array_marks ?= mismatch_information.item ("deleted_marks")
+			if array_marks /= Void then
+				deleted_marks := array_marks.area
+			end
+			
+			if content = Void or keys = Void or deleted_marks = Void then
+					-- Could not retrieve old version of HASH_TABLE. We throw an exception.
+				Precursor {TABLE}
+			end
 		end
 
 feature {HASH_TABLE} -- Implementation: content attributes and preservation

@@ -403,54 +403,72 @@ feature -- Basic operations
 			-- Close request received by `dockable_dialog' so
 			-- restore widget contained back to its original position
 			-- in its old parent if possible.
+			-- We must fire `dock_ended' actions.
 		local
 			dialog_item: EV_WIDGET
 			original_index: INTEGER
 			cell: EV_CELL
+			widget_list: EV_WIDGET_LIST
 			box: EV_BOX
 			tool_bar, old_tool_bar: EV_TOOL_BAR
 			tool_bar_button: EV_TOOL_BAR_BUTTON
+			target_i: EV_DOCKABLE_TARGET_I
+			dockable_source: EV_DOCKABLE_SOURCE
 		do
-	--		if not dockable_dialog.original_parent.is_full then
-				dialog_item := dockable_dialog.item
-				dockable_dialog.wipe_out
-				cell ?= dockable_dialog.original_parent
-				if cell /= Void and then cell.is_empty then
-					cell.extend (dialog_item)
+			dialog_item := dockable_dialog.item
+			dockable_dialog.wipe_out
+			cell ?= dockable_dialog.original_parent
+			if cell /= Void and then cell.is_empty then
+				cell.extend (dialog_item)
+			end
+			widget_list ?= dockable_dialog.original_parent
+			if widget_list /= Void then
+				original_index := dockable_dialog.original_parent_index
+				if widget_list.valid_index (original_index) then
+					widget_list.go_i_th (original_index)	
+				else
+					widget_list.go_i_th (widget_list.count + 1)
 				end
-				box ?= dockable_dialog.original_parent
+				widget_list.put_left (dialog_item)
+				box ?= widget_list
 				if box /= Void then
-					original_index := dockable_dialog.original_parent_index
-					if box.valid_index (original_index) then
-						box.go_i_th (original_index)	
-					else
-						box.go_i_th (box.count + 1)
-					end
-					box.put_left (dialog_item)
 						-- Disable item expand if originally not expanded.
 					if dockable_dialog.expansion_was_disabled then
 						box.disable_item_expand (dialog_item)
 					end
 				end
-				tool_bar ?= dockable_dialog.original_parent
-				if tool_bar /= Void then
-					old_tool_bar ?= dialog_item
-					check
-						old_parent_was_tool_bar: old_tool_bar /= Void
-					end
-					tool_bar_button ?= old_tool_bar.i_th (1)
-					old_tool_bar.wipe_out
-					original_index := dockable_dialog.original_parent_index
-					
-					if tool_bar.valid_index (original_index) then
-						tool_bar.go_i_th (original_index)	
-					else
-						tool_bar.go_i_th (tool_bar.count + 1)
-					end
-					tool_bar.put_left (tool_bar_button)
+			end
+			tool_bar ?= dockable_dialog.original_parent
+			if tool_bar /= Void then
+				old_tool_bar ?= dialog_item
+				check
+					old_parent_was_tool_bar: old_tool_bar /= Void
 				end
-				dockable_dialog.destroy
-	--		end
+				tool_bar_button ?= old_tool_bar.i_th (1)
+				old_tool_bar.wipe_out
+				original_index := dockable_dialog.original_parent_index
+				
+				if tool_bar.valid_index (original_index) then
+					tool_bar.go_i_th (original_index)	
+				else
+					tool_bar.go_i_th (tool_bar.count + 1)
+				end
+				tool_bar.put_left (tool_bar_button)
+				dockable_source := tool_bar_button
+			else
+					-- If the source was not a tool bar button, then
+					-- use `dialog_item' as the source.
+				dockable_source := dialog_item
+			end
+			target_i ?= dockable_dialog.original_parent.implementation
+			check
+				target_not_void: target_i /= Void
+			end
+			if target_i.docked_actions_internal /= Void then
+				target_i.docked_actions_internal.call ([dockable_source])
+			end
+
+			dockable_dialog.destroy
 		ensure
 			dockable_dialog_destroyed: dockable_dialog.is_destroyed
 		end
@@ -526,6 +544,9 @@ feature {NONE} -- Implementation
 			-- the coordinates of the mouse relative to `Current' when the transport
 			-- began.
 		do
+			if dock_started_actions_internal /= Void then
+				dock_started_actions_internal.call ([])
+			end
 			if source.real_source /= Void then
 				source_being_docked ?= source.real_source.implementation
 			else
@@ -696,7 +717,7 @@ feature {NONE} -- Implementation
 									remove_insert_sep
 								else
 									if insert_label.parent /= Void then
-										insert_label_pos := position_in_parent (insert_sep_imp)
+-- FIXME								insert_label_pos := position_in_parent (insert_sep_imp)
 										if insert_label_pos < insert_position then
 											insert_position := insert_position - 1
 										end
@@ -745,7 +766,12 @@ feature {NONE} -- Implementation
 			local
 				box: EV_BOX
 				cell: EV_CELL
+				target: EV_DOCKABLE_TARGET_I
 			do
+				target ?= insert_label.parent.implementation
+				check
+					target_not_void: target /= Void
+				end
 				box ?= insert_label.parent
 				if box /= Void then
 					box.put_i_th (widget_source_being_docked.interface, box.index_of (insert_label, 1))
@@ -753,6 +779,9 @@ feature {NONE} -- Implementation
 				cell ?= insert_label.parent
 				if cell /= Void then
 					cell.put (widget_source_being_docked.interface)
+				end
+				if target.docked_actions_internal /= Void then
+					target.docked_actions.call ([widget_source_being_docked.interface])
 				end
 			ensure
 				source_parented: widget_source_being_docked.parent /= Void
@@ -768,6 +797,7 @@ feature {NONE} -- Implementation
 			local
 				tool_bar: EV_TOOL_BAR
 				tool_bar_item: EV_TOOL_BAR_ITEM
+				source: EV_DOCKABLE_SOURCE
 			do
 				tool_bar ?= insert_sep.parent
 				check
@@ -777,7 +807,14 @@ feature {NONE} -- Implementation
 				check
 					tool_bar_item_not_void: tool_bar_item /= Void
 				end
+				source ?= tool_bar_item
+				check
+					source_not_void: source /= Void
+				end
 				tool_bar.put_i_th (tool_bar_item, tool_bar.index_of (insert_sep, 1))
+				if tool_bar.implementation.docked_actions_internal /= Void then
+					tool_bar.docked_actions.call ([source])
+				end
 			ensure
 				source_parented: item_source_being_docked.parent /= Void
 				insert_sep_not_parented: insert_sep.parent = Void

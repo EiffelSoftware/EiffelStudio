@@ -97,6 +97,8 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			pt := client_to_screen (x_pos, y_pos)
 			if item_is_pnd_source then
 				pnd_item_source.check_drag_and_drop_release (x_pos, y_pos)
+			elseif parent_is_pnd_source then
+				check_drag_and_drop_release (x_pos, y_pos)
 			end
 			interface.pointer_button_release_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end

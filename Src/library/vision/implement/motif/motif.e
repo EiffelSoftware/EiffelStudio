@@ -37,10 +37,10 @@ feature {NONE}
 
 feature 
 
-	arrow_b (an_arrow_button: ARROW_B): ARROW_B_M is
+	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN): ARROW_B_M is
 			-- Motif implementation of `an_arrow_button'
 		do
-			!! Result.make (an_arrow_button)
+			!! Result.make (an_arrow_button, managed)
 		end; -- arrow_b
 
 	base (a_base: BASE): BASE_M is
@@ -71,16 +71,16 @@ feature
 			!! Result.make (a_cursor)
 		end;
 
-	draw_b (a_draw_b: DRAW_B): DRAW_B_M is
+	draw_b (a_draw_b: DRAW_B; managed: BOOLEAN): DRAW_B_M is
 			-- Motif implementation of `a_draw_b'
 		do
-			!! Result.make (a_draw_b)
+			!! Result.make (a_draw_b, managed)
 		end; -- draw_b
 
-	drawing_area (a_drawing_area: DRAWING_AREA): D_AREA_M is
+	drawing_area (a_drawing_area: DRAWING_AREA; managed: BOOLEAN): D_AREA_M is
 			-- Motif implementation of `a_drawing_area'
 		do
-			!! Result.make (a_drawing_area)
+			!! Result.make (a_drawing_area, managed)
 		end; -- drawing_area
 
 	exit is
@@ -96,10 +96,10 @@ feature
 			!! Result.make (a_font)
 		end;
 
-	font_box (a_font_box: FONT_BOX): FONT_BOX_M is
+	font_box (a_font_box: FONT_BOX; managed: BOOLEAN): FONT_BOX_M is
 			-- Motif implementation of `a_font_box'
 		do
-			!! Result.make (a_font_box)
+			!! Result.make (a_font_box, managed)
 		end; -- font_box
 
 	font_box_d (a_font_box_d: FONT_BOX_D): FONT_B_D_M is
@@ -120,10 +120,10 @@ feature
 			xt_app_main_loop (application_context)
 		end;
 
-	pict_color_b (a_picture_color_button: PICT_COLOR_B): PICT_COL_B_M is
+	pict_color_b (a_picture_color_button: PICT_COLOR_B; managed: BOOLEAN): PICT_COL_B_M is
 			-- Motif implementation of `a_picture_color_button'
 		do
-			!! Result.make (a_picture_color_button)
+			!! Result.make (a_picture_color_button, managed)
 		end;
 
 	pixmap (a_pixmap: PIXMAP): PIXMAP_X is

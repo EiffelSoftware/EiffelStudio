@@ -366,10 +366,10 @@ feature -- Basic operations
 			passed: BOOLEAN
 			an_object: EV_ANY
 		do
-			passed := c_check_assert (False)
+			passed := feature {ISE_RUNTIME}.check_assert (False)
 			an_object ?= new_instance_of (dynamic_type_from_string (type))
 			an_object.default_create
-			passed := c_check_assert (True)	
+			passed := feature {ISE_RUNTIME}.check_assert (True)
 			Result := an_object
 		ensure
 			result_not_void: Result /= Void

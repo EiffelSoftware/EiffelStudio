@@ -35,6 +35,7 @@ feature
 				not extra_message.empty
 		local
 			tmp: STRING;
+			top: TOP
 		do
 			make (c.popuper_parent, ok_label,
 								cancel_label, help_label);
@@ -47,6 +48,11 @@ feature
 			end;
 			quest_d.set_message (tmp);
 			quest_d.popup;
+
+			top ?= c.popuper_parent
+			if top /= Void and then top.is_iconic_state then
+				quest_d.set_x_y (0, 0)
+			end
 		end;
 
 	popup (c: QUEST_POPUPER; s: STRING; extra_message: STRING) is
@@ -61,6 +67,7 @@ feature
 				not extra_message.empty
 		local
 			tmp: STRING;
+			top: TOP
 		do
 			make (c.popuper_parent, Widget_names.yes_label,
 								Widget_names.no_label, Void);
@@ -73,6 +80,11 @@ feature
 			end;
 			quest_d.set_message (tmp);
 			quest_d.popup;
+
+			top ?= c.popuper_parent
+			if top /= Void and then top.is_iconic_state then
+				quest_d.set_x_y (0, 0)
+			end
 		end;
 
 	popdown is

@@ -35,14 +35,14 @@ if [ ! -e cdrom ]; then
 	mkdir cdrom
 fi
 
-if [ ! -f Eiffel55_deliv.tgz ]; then
-	remtrace Saving empty delivery in Eiffel55_deliv.tgz
-	tar -c Eiffel55 | gzip -c > Eiffel55_deliv.tgz
+if [ ! -f Eiffel56_deliv.tgz ]; then
+	remtrace Saving empty delivery in Eiffel56_deliv.tgz
+	tar -c Eiffel56 | gzip -c > Eiffel56_deliv.tgz
 fi
 
-if [ ! -e Eiffel55 ]; then
+if [ ! -e Eiffel56 ]; then
 	remtrace Extracting current delivery
-	gunzip -c Eiffel55_deliv.tgz | tar -xf -
+	gunzip -c Eiffel56_deliv.tgz | tar -xf -
 fi
 
 
@@ -59,12 +59,11 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
 
 	remtrace Building Home CD image
-	mv Eiffel55 cdrom
-	cp cdrom/Eiffel55/INSTALL cdrom	
-	make_cd_image Eiffel55_free Eiffel55_free.iso cdrom
-	gzip Eiffel55_free.iso
-	mv cdrom/Eiffel55 Eiffel55
-	tar -c Eiffel55 | gzip -c > Eiffel55_free.tgz
+	mv Eiffel56 cdrom
+	make_cd_image Eiffel56_free Eiffel56_free.iso cdrom
+	gzip Eiffel56_free.iso
+	mv cdrom/Eiffel56 Eiffel56
+	tar -c Eiffel56 | gzip -c > Eiffel56_free.tgz
 
 	remtrace Preparing University version
 	cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
@@ -78,12 +77,11 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
 
 	remtrace Building Home CD image
-	mv Eiffel55 cdrom
-	cp cdrom/Eiffel55/INSTALL cdrom	
-	make_cd_image Eiffel55_university Eiffel55_university.iso cdrom
-	gzip Eiffel55_university.iso
-	mv cdrom/Eiffel55 Eiffel55
-	tar -c Eiffel55 | gzip -c > Eiffel55_university.tgz
+	mv Eiffel56 cdrom
+	make_cd_image Eiffel56_university Eiffel56_university.iso cdrom
+	gzip Eiffel56_university.iso
+	mv cdrom/Eiffel56 Eiffel56
+	tar -c Eiffel56 | gzip -c > Eiffel56_university.tgz
 fi
 
 remtrace Preparing Enterprise version
@@ -105,9 +103,8 @@ cp $INSTALL_DIR/studio/bitmaps/png/logo.png $INSTALL_DIR/setup/install_logo.png
 cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
 
 remtrace Building Enterprise CD image
-mv Eiffel55 cdrom
-cp cdrom/Eiffel55/INSTALL cdrom	
-make_cd_image Eiffel55_enterprise Eiffel55_enterprise.iso cdrom
-gzip Eiffel55_enterprise.iso
-mv cdrom/Eiffel55 Eiffel55
-tar -c Eiffel55 | gzip -c > Eiffel55_enterprise.tgz
+mv Eiffel56 cdrom
+make_cd_image Eiffel56_enterprise Eiffel56_enterprise.iso cdrom
+gzip Eiffel56_enterprise.iso
+mv cdrom/Eiffel56 Eiffel56
+tar -c Eiffel56 | gzip -c > Eiffel56_enterprise.tgz

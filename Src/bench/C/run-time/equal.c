@@ -281,6 +281,8 @@ rt_public int ediso(char *target, char *source)
 	 * feature.
 	 * Return a boolean.
 	 */
+
+	EIF_GET_CONTEXT
 	char g_status = g_data.status;		/* Save GC status */
 	int result;
 
@@ -291,6 +293,7 @@ rt_public int ediso(char *target, char *source)
 	xfree((char *) (table->s_keys));	/* Free search table keys */
 	xfree((char *) table);						/* Free search table descriptor */
 	return result;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int rdeepiso(char *target, char *source)

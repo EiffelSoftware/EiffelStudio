@@ -23,15 +23,33 @@
 
 #ifdef EIF_REENTRANT
 
+/****************************************
+ *                                      *
+ *    Reentrant run-time definitions    *
+ *                                      *
+ ****************************************/
+
+
 #define EIF_DECL_GLOBAL(x)
-#define MTC_NOARG	eif_globals
-#define MTC			MTC_NOARG,
-#define EIF_CONTEXT_NOARG	eif_global_context_t	*MTC_NOARG
-#define EIF_CONTEXT			EIF_CONTEXT_NOARG,
+#define MTC_NOARG			/* eif_globals */
+#define MTC					/* MTC_NOARG, */
+#define EIF_CONTEXT_NOARG	/* eif_global_context_t	*MTC_NOARG */
+#define EIF_CONTEXT			/* EIF_CONTEXT_NOARG, */
 #define EIF_STATIC_OPT
 
+extern EIF_TSD_TYPE eif_global_key
 
-typedef struct tag_eif_globals 		/* Structure containing all global variables to the run-time */
+#define EIF_GET_CONTEXT \
+	EIF_TSD_TYPE eif_globals;\
+	EIF_ERRCODE_TYPE tsd_key_err;
+	EIF_TSD_GET(eif_global_key,eif_globals,tsd_key_err);
+	if (EIF_TSD_INVALID_ERRCODE(tsd_key_err)) {
+		panic();
+	else {
+#define EIF_END_GET_CONTEXT }
+
+
+typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
 
 		/* except.c */

@@ -146,10 +146,6 @@ feature -- Basic operation
 				process_message (msg)
 				msg.peek_all
 			end
-
-				-- Signal to Windows to our thread is now
- 				-- idle.
-			c_sleep (0)
 		end
 
 	sleep (msec: INTEGER) is
@@ -531,10 +527,10 @@ feature {NONE} -- Implementation
 		do
 			from
 				create msg.make
-			until
-				stop_processing_requested
-			loop
 				msg.peek_all
+			until
+				msg.message = stop_processing_requested_msg
+			loop
 				if msg.last_boolean_result then
 					process_message (msg)
 				else
@@ -547,12 +543,8 @@ feature {NONE} -- Implementation
 						msg.wait
 					end
 				end
+				msg.peek_all
 			end
-				-- Signal to Windows to our thread is now
- 				-- idle.
-			c_sleep (0)
-			stop_processing_requested := False
-			msg.peek_all
 		end
 		
 	stop_processing is

@@ -47,6 +47,12 @@ feature -- Basic operations
 				name.append ("_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
+
+			if prefixed_libraries.has (tmp_guid) then
+				name.prepend (Underscore)
+				name.prepend (tmp_lib_descriptor.name)
+			end
+
 			create eiffel_class_name.make (0)
 			eiffel_class_name.append ("ECOM_")
 			eiffel_class_name.append (name_for_class (name, type_kind, False))

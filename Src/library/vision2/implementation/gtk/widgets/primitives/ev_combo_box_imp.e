@@ -104,7 +104,6 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Connect action sequences to signals.
 		do
-			initialize_pixmaps
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 
 			--| We don't call EV_TEXT_FIELD_IMP Precursor as this only
@@ -265,9 +264,11 @@ feature {NONE} -- Implementation
 			v_imp.set_item_parent_imp (Current)
 			real_signal_connect (v_imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)
 			real_signal_connect (v_imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
-			if count = 1 and is_sensitive then
-				feature {EV_GTK_EXTERNALS}.gtk_list_item_select (v_imp.c_object)
-			end
+
+			-- Make sure the first item is always selected.
+			avoid_callback := True
+			feature {EV_GTK_EXTERNALS}.gtk_list_select_item (container_widget, 1)
+			avoid_callback := False
 		end
 
 	remove_i_th (a_position: INTEGER) is

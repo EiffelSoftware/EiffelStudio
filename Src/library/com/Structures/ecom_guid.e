@@ -31,7 +31,7 @@ feature -- Basic operation
 	generate is
 			-- Generate a new GUID
 		do
-			item := ccom_generate_guid
+			item := ccom_generate_guid (item)
 		end
 
 feature {NONE} -- Initialization
@@ -124,9 +124,9 @@ feature {NONE} -- Externals
 			"C [macro %"E_guid.h%"]"
 		end
 
-	ccom_generate_guid: POINTER is
+	ccom_generate_guid (a_guid: POINTER) is
 		external
-			"C ():EIF_POINTER | %"E_guid.h%""
+			"C (GUID *)| %"E_guid.h%""
 		end
 
 	ccom_guid_to_wide_string (a_guid: POINTER): POINTER is

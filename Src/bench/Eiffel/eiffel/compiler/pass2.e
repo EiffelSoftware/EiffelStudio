@@ -108,7 +108,6 @@ feature
 					local_changed_classes.remove;
 				end
 			end
-			deg_output.put_end_degree;
 
 				-- Check now the validity on creation constraint, i.e. that the
 				-- specified creation procedures are indeed part of the constraint
@@ -162,6 +161,7 @@ feature
 			System.set_current_class (Void);
 
 			changed_status.wipe_out;
+			deg_output.put_end_degree;
 		end;
 
 	remove_class (a_class: CLASS_C) is

@@ -106,13 +106,13 @@ feature {NONE} -- Implementation
 			l_header := i & 0xFF000000
 			l_val := i & 0x00FFFFFF
 
-			if l_header = 0x01000000 then
+			if l_header = feature {MD_TOKEN_TYPES}.Md_type_ref then
 					-- TypeRef token
 				l_encoding := 1
-			elseif l_header = 0x02000000 then
+			elseif l_header = feature {MD_TOKEN_TYPES}.Md_type_def then
 					-- TypeDef token
 				l_encoding := 0
-			elseif l_header = 0x1b000000 then
+			elseif l_header = feature {MD_TOKEN_TYPES}.Md_type_spec then
 					-- TypeSpec token
 				l_encoding := 2
 			else

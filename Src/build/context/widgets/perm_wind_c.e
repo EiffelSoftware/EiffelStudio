@@ -34,6 +34,19 @@ feature -- Widget type
 			Result := Pixmaps.top_shell_pixmap
 		end;
 
+feature -- File name
+
+	base_file_name_without_dot_e: FILE_NAME is
+		local
+			tmp: STRING;
+		do
+			tmp := clone (entity_name);
+			tmp.to_lower;
+			tmp.replace_substring_all (Window_seed_to_lower, 
+						Resources.perm_window_file_name)
+			!! Result.make_from_string (tmp);
+		end;
+
 feature
 
 	type: CONTEXT_TYPE is
@@ -82,6 +95,10 @@ feature -- Adding/removing callbacks
 
 feature {NONE}
 
+	Window_seed: STRING is "Perm_wind";
+
+	Window_seed_to_lower: STRING is "perm_wind";
+
 	add_widget_callbacks is
 			-- Define the general behavior of perm window.
 		do
@@ -90,7 +107,7 @@ feature {NONE}
 
 	namer: NAMER is
 		once
-			!!Result.make ("Perm_wind");
+			!!Result.make (Window_seed);
 		end;
 
 feature 

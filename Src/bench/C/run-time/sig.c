@@ -23,7 +23,8 @@ doc:<file name="sig.c" header="eif_sig.h" version="$Id$" summary="Signal handlin
 
 #include "eif_portable.h"
 #include "rt_except.h"
-#include "eif_sig.h"
+#include "rt_constants.h"
+#include "rt_sig.h"
 #include <signal.h>
 #include <errno.h>
 #include <stdio.h>				/* For sprintf() */

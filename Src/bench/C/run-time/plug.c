@@ -25,9 +25,9 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #include "rt_macros.h"
 #include "eif_except.h"
 #include "eif_local.h"
-#include "eif_interp.h"
+#include "rt_interp.h"
 #if !defined CUSTOM || defined NEED_HASHIN_H
-#include "eif_hashin.h"
+#include "rt_hashin.h"
 #endif
 #include "eif_bits.h"
 #include "rt_struct.h"

@@ -11,13 +11,13 @@
 */
 
 /*
-doc:<file name="search.c" header="eif_search.h" version="$Id$" summary="Search table, ie hash table where keys are the elements">
+doc:<file name="search.c" header="rt_search.h" version="$Id$" summary="Search table, ie hash table where keys are the elements">
 */
 
 #include "eif_portable.h"
-#include "eif_search.h"
-#include "eif_tools.h"
-#include "eif_except.h"	/* for xcalloc(),cmalloc(),xfree(),enomem() */
+#include "rt_search.h"
+#include "rt_tools.h"
+#include "rt_malloc.h"
 #include <string.h>
 
 rt_public struct s_table *s_create(uint32 size)

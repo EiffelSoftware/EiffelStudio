@@ -7,20 +7,20 @@
     #    #    #  #    #  #       #    #   ###    #    #
     #     ####    ####   ######   ####    ###    #    #
 
-	General purpose utility functions.
+	Private general purpose utility functions.
 */
 
-#ifndef _eif_tools_h_
-#define _eif_tools_h_
+#ifndef _rt_tools_h_
+#define _rt_tools_h_
 
-#include "eif_portable.h"
+#include "eif_tools.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Computes hashcode for a string */
-RT_LNK EIF_INTEGER hashcode(register char *s, register EIF_INTEGER count);
+extern uint32 nprime(register uint32 n);				/* Find first prime above a given number */
+extern int prime(register uint32 n);					/* Test whether a number is prime or not */
 
 #ifdef __cplusplus
 }

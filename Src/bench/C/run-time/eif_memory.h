@@ -13,7 +13,6 @@
 #define _eif_memory_h_
 
 #include "eif_eiffel.h"
-#include "eif_constants.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -242,6 +242,15 @@ extern struct opstack op_stack;               /* Operational stack */
 
 extern void metamorphose_top(); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 
+extern void call_disp(uint32 dtype, char *object);				/* Function to call dispose routines */ 
+extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
+extern void xinitint(void);										/* Initialize the interpreter */
+extern struct item *otop(void);									/* Top of the stack */
+extern struct item *ivalue(int code, int num, uint32 start);	/* Value request from current routine */
+extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);		/* Resynchronize registers on routine */
+
+extern void idump(FILE *fd, char *start);
+
 #ifdef __cplusplus
 }
 #endif

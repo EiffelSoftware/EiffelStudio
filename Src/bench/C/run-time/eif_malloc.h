@@ -20,11 +20,6 @@
 extern "C" {
 #endif
 
-#define xcalloc		eif_rt_xcalloc
-#define xmalloc		eif_rt_xmalloc
-#define xfree		eif_rt_xfree
-#define split_block	eif_rt_split_block
-
 /*
  * Documentation shows that mmap, and sbrk are 
  * incompatible with parallel use of standard malloc 
@@ -72,45 +67,16 @@ RT_LNK EIF_REFERENCE emalloc_size(uint32 ftype, uint32 dtype, uint32 size);	/* A
 RT_LNK EIF_REFERENCE bmalloc(long int size);			/* Bit object creation */
 RT_LNK EIF_REFERENCE tuple_malloc (uint32 ftype);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic);	/* Allocated tuple object */
-rt_public EIF_REFERENCE smart_emalloc (uint32 ftype);
+RT_LNK EIF_REFERENCE smart_emalloc (uint32 ftype);
 RT_LNK EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic);			/* Allocate an Eiffel special object */
 RT_LNK void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper);	/* Initialize special object of expanded */
 
 RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */
-extern EIF_REFERENCE eif_strset(EIF_REFERENCE object, unsigned int nbytes);
 						/* Set the string header. */
 RT_LNK EIF_REFERENCE cmalloc(unsigned int nbytes);				/* Allocate a C object */
-extern EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
-extern EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */
-extern void xfree(register EIF_REFERENCE ptr);				/* Free */
-extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C object */
-extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
 RT_LNK EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems);			/* Reallocate an Eiffel special object */
 RT_LNK EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems);			/* Reallocate an Eiffel special object */
 
-#ifdef ISE_GC
-extern EIF_REFERENCE gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
-extern struct emallinfo *meminfo(int type);	/* Memory statistics */
-extern void xfreechunk(EIF_REFERENCE ptr);					/* Free memory chunks */
-#endif /* ISE_GC */
-
-
-#ifdef ISE_GC
-/*
- * Shared routines
- */
-extern int split_block(register union overhead *selected, register uint32 nbytes);			/* Block spliting */
-extern void lxtract(union overhead *next);				/* Extraction from free list */
-extern void rel_core(void);				/* Give memory back to kernel */
-extern int chunk_coalesc(struct chunk *c);			/* Coalescing to reduce fragmentation */
-extern char *get_to_from_core(unsigned int nbytes);	/* Get to_space from core for partial scavenging */
-extern void memck(unsigned int max_dt);
-
-extern void mem_diagnose(int sig);			/* Memory usage dump */
-extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
-extern void sc_stop(void);
-
-#endif /* ISE_GC */
 
 #ifdef __cplusplus
 }

@@ -24,16 +24,17 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include <string.h>
 #include "rt_except.h"
 #include "eif_local.h"
-#include "eif_urgent.h"
+#include "rt_urgent.h"
 #include "rt_sig.h"				/* For signal description */
 #include "eif_macros.h"
 #include "rt_debug.h"
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #include "rt_main.h"
 #include "rt_garcol.h"
 #include "rt_threads.h"
-#include "eif_error.h"
-#include "eif_lmalloc.h"		/* for eif_free, eif_realloc */
+#include "rt_error.h"
+#include "rt_lmalloc.h"		/* for eif_free, eif_realloc */
+#include "rt_malloc.h"
 #include "rt_assert.h"
 
 #ifdef EIF_WIN32

@@ -119,10 +119,6 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */
 #define EN_OLVL		99			/* Out level: pseudo-type for execution trace */
 
-/* Maximum number of internal exceptions (EN_NEX) defined in
- * eif_constants.h
- */
-
 /* Exported routines (used by the generated C code or run-time) */
 RT_LNK void expop(register1 struct xstack *stk);	/* Pops an execution vector off */
 #ifdef EIF_IL_DLL

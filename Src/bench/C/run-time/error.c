@@ -16,7 +16,7 @@ doc:<file name="error.c" header="eif_error.h" version="$Id$" summary="System err
 
 #include "eif_portable.h"
 #include "rt_except.h"
-#include "eif_error.h"
+#include "rt_error.h"
 
 #include <string.h>			/* Try to find strerror() there */
 
@@ -52,13 +52,6 @@ rt_public void esys(void)
 		xraise(EN_EXT);				/* External event */
 
 	xraise(EN_SYS);					/* Operating system error */
-}
-
-rt_public void eio (void)
-	/* As a special case, an I/O error is raised when a system call which is
-	 * I/O bound fails.  */
-{
-	xraise (EN_IO);
 }
 
 rt_public void eise_io(char *tag)

@@ -16,11 +16,11 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_portable.h"
 #include "eif_project.h"
 #include "rt_interp.h"
-#include "eif_malloc.h"
+#include "rt_malloc.h"
 #include "eif_plug.h"
 #include "eif_eiffel.h"
 #include "rt_macros.h"
-#include "eif_hashin.h"
+#include "rt_hashin.h"
 #include "eif_cecil.h"
 #include "eif_hector.h"
 #include "rt_except.h"
@@ -28,7 +28,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_copy.h"
 #include "rt_debug.h"
 #include "rt_sig.h"
-#include "eif_bits.h"
+#include "rt_bits.h"
 #include "eif_equal.h"	/* for xequal() */
 #include <math.h>
 #include "eif_main.h"

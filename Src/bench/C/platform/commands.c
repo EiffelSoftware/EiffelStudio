@@ -22,7 +22,7 @@
 
 #include "eif_dir.h"
 #include "eif_file.h"	/* for PATH_MAX */
-#include "eif_error.h"
+#include "rt_error.h"
 #include "eif_path_name.h"  /* for eifrt_vms_filespec() */
 #include "eif_commands.h"
 

@@ -24,7 +24,7 @@ doc:<file name="cecil.c" header="eif_cecil.h" version="$Id$" summary="C-Eiffel C
 #include "eif_tools.h"
 #include "eif_eiffel.h"				/* Need string header */
 #include "rt_macros.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #include "eif_project.h"
 #include "rt_except.h"
 #include "rt_threads.h"
@@ -414,14 +414,13 @@ rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * con
 #endif
 }
 
-
 rt_public int eiflocate (EIF_OBJECT object, char *name) {
     /* Return the index of attribute `name' in EIF_OBJECT `object' */
 
     return locate (eif_access (object), name);
 }
 
-rt_private int locate(char *object, char *name)
+rt_private int locate(EIF_REFERENCE object, char *name)
 {
 	/* Locate the attribute 'name' in the specified object and return the index
 	 * in the cn_offsets array, or EIF_NO_ATTRIBUTE if there is no such attribute.

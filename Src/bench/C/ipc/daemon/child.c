@@ -16,7 +16,7 @@
 #endif
 #include "eif_portable.h"
 
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #include "rt_assert.h"
 
 #include <sys/types.h>
@@ -31,6 +31,8 @@
 #include <windows.h>
 #include "uu.h"
 #endif
+
+#include "rt_dir.h"
 
 #include <signal.h>
 #include <setjmp.h>

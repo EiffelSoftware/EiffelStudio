@@ -16,10 +16,6 @@
 #include "eif_portable.h"
 #include "eif_cecil.h"
 
-#ifdef WORKBENCH
-#include "eif_hashin.h"
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif

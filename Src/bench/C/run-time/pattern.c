@@ -23,9 +23,10 @@ doc:<file name="pattern.c" header="eif_pattern.h" version="$Id$" summary="Patter
 #include "eif_malloc.h"
 #include "eif_hector.h"
 #include "rt_except.h"
+#include "rt_constants.h"
 #include "eif_globals.h"
 #include "eif_eiffel.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 
 
 #ifndef EIF_THREADS

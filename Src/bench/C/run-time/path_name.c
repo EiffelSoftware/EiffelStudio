@@ -27,7 +27,7 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 #include "eif_macros.h"
 #include "eif_plug.h"
 #include "eif_eiffel.h"			/* For Windows and OS2 */
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 
 #ifdef EIF_VMS
 #include "rt_assert.h"

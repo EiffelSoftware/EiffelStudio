@@ -11,10 +11,10 @@
 */
 
 #include "eif_config.h"
-#include "eif_tools.h"
+#include "rt_tools.h"
 #include "eif_hashinin.h"
-#include "eif_malloc.h"
-#include "eif_lmalloc.h"    /* for eif_calloc, eif_malloc, eif_free */
+#include "rt_malloc.h"
+#include "rt_lmalloc.h"    /* for eif_calloc, eif_malloc, eif_free */
 #include "eif_except.h"	/* for eif_panic() */
 
 #ifdef I_STRING

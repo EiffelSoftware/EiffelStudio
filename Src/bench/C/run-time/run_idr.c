@@ -12,7 +12,7 @@
 */
 
 /*
-doc:<file name="idr_run.c" header="eif_run_idr.h" version="$Id$" summary="IDR = Internal Data Representation, used for serialization in independent store">
+doc:<file name="idr_run.c" header="rt_run_idr.h" version="$Id$" summary="IDR = Internal Data Representation, used for serialization in independent store">
 */
 
 #include "eif_portable.h"
@@ -32,16 +32,16 @@ doc:<file name="idr_run.c" header="eif_run_idr.h" version="$Id$" summary="IDR = 
 #include "eif_globals.h"
 #include "eif_store.h"	/* For rt_kind_version */
 #include "eif_eiffel.h"
-#include "eif_bits.h"
-#include "eif_err_msg.h"
+#include "rt_bits.h"
+#include "rt_err_msg.h"
 #if !defined(CUSTOM) || defined(NEED_RETRIEVE_H)
 #include "rt_retrieve.h"
 #endif
 #if !defined(CUSTOM) || defined(NEED_STORE_H)
 #include "rt_store.h"
 #endif
-#include "eif_error.h"
-#include "eif_run_idr.h"
+#include "rt_error.h"
+#include "rt_run_idr.h"
 #include "../idrs/idrf.h"
 #ifdef EIF_OS2
 #include <io.h>

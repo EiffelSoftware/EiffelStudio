@@ -26,17 +26,18 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #endif
 #include "eif_struct.h"
 #include "eif_option.h"
-#include "eif_hashin.h"
-#include "eif_lmalloc.h"
+#include "rt_hashin.h"
+#include "rt_lmalloc.h"
 #include "rt_garcol.h"
-#include "eif_malloc.h"
+#include "rt_malloc.h"
 #include "eif_macros.h"
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #include "rt_except.h"
-#include "eif_timer.h"
+#include "rt_timer.h"
 #include "eif_misc.h"
 #include "eif_tools.h"		/* For hashcode() */
 #include "rt_main.h"
+#include "rt_dir.h"
 #include <stdio.h>
 #include <string.h>
 

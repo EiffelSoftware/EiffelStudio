@@ -14,6 +14,8 @@
 #define _rt_garcol_h_
 
 #include "eif_garcol.h"
+#include "rt_constants.h"
+
 #ifdef EIF_THREADS
 #include "rt_threads.h"
 #endif

@@ -88,7 +88,7 @@ LOBJ = \
 # Where shared archive is located (path and name)
 LIBRUN = ../run-time
 
-DPFLAGS = -I$(TOP) -I$(LIBRUN)
+DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBRUN)/include
 CFLAGS = $(DPFLAGS)
 
 all:: libplatform.a

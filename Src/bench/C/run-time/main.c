@@ -23,26 +23,19 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 
 #include "eif_project.h"
 #include <string.h>
-#include "eif_urgent.h"
+#include "rt_urgent.h"
 #include "rt_except.h"
-#include "eif_sig.h"
+#include "rt_sig.h"
 #include "eif_gen_conf.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"		/* %%ss added for create_desc */
-#include "eif_interp.h"
-#include "eif_update.h"
+#include "rt_interp.h"
+#include "rt_update.h"
 #include "server.h"						/* ../ipc/app */
 #endif /* WORKBENCH */
 
-#include "eif_err_msg.h"
-
-#ifdef EIF_WIN32
-#include <windows.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <direct.h>
-#endif
+#include "rt_err_msg.h"
 
 #if !defined CUSTOM || defined NEED_UMAIN_H
 #include "eif_umain.h"
@@ -52,7 +45,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_argv.h"
 #endif
 
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #include "rt_malloc.h"
 #include "rt_garcol.h"
 #include "rt_main.h"

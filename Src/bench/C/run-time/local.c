@@ -19,7 +19,7 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #include "rt_malloc.h"
 #include "rt_garcol.h"
 #include "eif_except.h"
-#include "eif_urgent.h"
+#include "rt_urgent.h"
 #include "eif_local.h"
 #include "eif_hector.h"
 #include "rt_sig.h"

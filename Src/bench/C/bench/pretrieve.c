@@ -15,9 +15,10 @@
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "rt_store.h"
-#include "eif_error.h"
+#include "rt_error.h"
 #include "eif_globals.h"
 #include "rt_retrieve.h"
+#include "rt_hashin.h"
 #include "minilzo.h"
 #include <string.h>
 

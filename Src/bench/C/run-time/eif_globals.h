@@ -21,7 +21,6 @@
 #define _eif_globals_h_
 
 #include "eif_portable.h"
-#include "eif_constants.h"
 #include "eif_types.h"
 #include "eif_threads.h"
 #include "eif_main.h"

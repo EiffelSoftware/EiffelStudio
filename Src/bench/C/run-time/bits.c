@@ -19,14 +19,14 @@ doc:<file name="bits.c" header="eif_bits.h" version="$Id$" summary="Primitives f
 
 #include "eif_portable.h"
 #include "eif_garcol.h"
-#include "eif_malloc.h"
+#include "rt_malloc.h"
 #include "eif_cecil.h"
 #include "rt_macros.h"					/* for BIT_PACKSIZE, BIT_UNIT */
-#include "eif_bits.h"
+#include "rt_bits.h"
 #include "eif_local.h"
 #include "eif_plug.h"
 #include "eif_except.h"
-#include "eif_lmalloc.h"				/* for eif_malloc() */
+#include "rt_lmalloc.h"				/* for eif_malloc() */
 #include "eif_project.h"
 #include <assert.h>
 

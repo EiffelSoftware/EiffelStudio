@@ -25,14 +25,15 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "eif_portable.h"
 #include "eif_eiffel.h"
 #include "rt_threads.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #include "eif_globals.h"
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #include "eif_sig.h"
 #include "rt_garcol.h"
 #include "rt_malloc.h"
 #include "rt_macros.h"
 #include "rt_types.h"
+#include "rt_interp.h"
 #include "rt_assert.h"
 
 #include <string.h>

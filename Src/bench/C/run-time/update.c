@@ -12,40 +12,33 @@
 */
 
 /*
-doc:<file name="update.c" header="eif_update.h" version="$Id$" summary="Update runtime data with melted information.">
+doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update runtime data with melted information.">
 */
 
 #include "eif_portable.h"
 #include "eif_project.h"
-#ifdef EIF_WIN32
-#define WIN32_LEAN_AND_MEAN
+#include "rt_dir.h"
 #include "eif_console.h"
-#include <direct.h>		
-#include <windows.h>
-#endif
 
 #include <string.h>
 
-#ifdef EIF_OS2
-#include <direct.h>
-#endif
-
 #include "eif_macros.h"
 #include "rt_struct.h"
-#include "eif_hashin.h"
+#include "rt_hashin.h"
 #include "eif_except.h"
-#include "eif_update.h"
+#include "rt_update.h"
 #include "eif_cecil.h"
 #include "eif_misc.h"
 #include "eif_file.h"
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #include "rt_main.h"
 #include "eif_gen_conf.h"
-#include "eif_error.h"					/* for error_tag() */
+#include "rt_error.h"					/* for error_tag() */
+#include "rt_malloc.h"
 #include "eif_path_name.h"				/* for eifrt_vms_has_path_terminator */
 
 #ifdef DEBUG
-#include "eif_interp.h"					/* For idump() */
+#include "rt_interp.h"					/* For idump() */
 #endif
 
 #include "rt_assert.h" 				/* For assertions checking. */

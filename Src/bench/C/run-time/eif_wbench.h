@@ -15,7 +15,6 @@
 #define _eif_wbench_h_
 
 #include "eif_debug.h"			/* for onceadd() */
-#include "eif_update.h"			/* for update() */
 #include "eif_globals.h"
 #include "eif_struct.h"
 

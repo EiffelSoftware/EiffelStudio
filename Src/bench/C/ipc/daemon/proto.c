@@ -18,7 +18,7 @@
 #define print_err_msg fprintf
 #else
 #define USE_SIGNAL
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #endif
 
 #include <sys/types.h>
@@ -40,6 +40,7 @@
 #include <string.h>
 #include <signal.h>
 #include <stdlib.h>
+#include "rt_dir.h"
 #include "rt_assert.h"
 
 #ifdef EIF_VMS

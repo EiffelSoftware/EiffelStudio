@@ -11,7 +11,7 @@
 #include <windows.h>
 
 #include "eif_argcargv.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #include "eif_except.h"		/* For `eraise' */
 
 #define EIF_CLEANUP_TABLE_SIZE 20		/* Clean up table size */

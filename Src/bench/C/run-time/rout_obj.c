@@ -8,7 +8,7 @@ doc:<file name="rout_obj.c" header="eif_rout_obj.h" version="$Id$" summary="Rout
 #include "eif_interp.h"
 #include "eif_project.h"
 #include "eif_rout_obj.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #include "rt_gen_types.h"
 #ifdef WORKBENCH
 #include <string.h>

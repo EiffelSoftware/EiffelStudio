@@ -11,12 +11,12 @@
 */
 
 /*
-doc:<file name="timer.c" header="eif_timer.h" version="$Id$" summary="Time related routines">
+doc:<file name="timer.c" header="rt_timer.h" version="$Id$" summary="Time related routines">
 */
 
 #include "eif_portable.h"
 #include "eif_confmagic.h"
-#include "eif_timer.h"
+#include "rt_timer.h"
 
 #ifndef HAS_GETRUSAGE
 #if defined HAS_TIMES && !defined __VMS

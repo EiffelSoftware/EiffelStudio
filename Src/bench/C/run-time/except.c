@@ -1862,8 +1862,19 @@ private void print_top()
 		buf[0] = '\0';
 
 	if (except.from >= 0)
-		print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
-			Class(except.obj_id), except.rname, buf);
+		if (except.obj_id) {
+			int obj_dtype = Dtype(except.obj_id);
+
+			if (obj_dtype>=0 && obj_dtype < scount)
+				print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
+					Class(except.obj_id), except.rname, buf);
+			else
+				print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
+					"Invalid object", except.rname, buf);
+			}
+		else
+			print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
+				"Invalid object", except.rname, buf);
 	else
 		print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
 			"RUN-TIME", except.rname, buf);
@@ -1876,10 +1887,14 @@ private void print_top()
 	 * functions--RAM.
 	 */
 
-	if (except.from >= 0 && except.from != Dtype(except.obj_id))
-		sprintf(buf, "(From %.15s)", Origin(except.from));
-	else
-		buf[0] = '\0';
+	buf[0] = '\0';
+
+	if (except.from >= 0)
+		if (except.obj_id) {
+			if (except.from != Dtype(except.obj_id))
+				sprintf(buf, "(From %.15s)", Origin(except.from));
+		} else
+			sprintf(buf, "(From %.15s)", Origin(except.from));
 
 	print_err_msg(stderr, "<%08X>          %-22.22s %-29.29s ",
 		except.obj_id, buf, exception_string(code));

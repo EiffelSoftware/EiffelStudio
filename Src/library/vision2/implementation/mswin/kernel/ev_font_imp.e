@@ -68,7 +68,13 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name:STRING is
+			-- Face name.
+		do
+			Result := wel_log_font.face_name
+		end
+
+	system_name: STRING is
 			-- String form of font details
 		local
 			size_in_point: INTEGER

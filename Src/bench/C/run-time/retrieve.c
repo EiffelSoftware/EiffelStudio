@@ -283,7 +283,7 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
  */
 rt_private void independent_retrieve_init (long idrf_size)
 {
-	run_idr_init (idrf_size);
+	run_idr_init (idrf_size, 0);
 
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 	if (idr_temp_buf == (char *)0)

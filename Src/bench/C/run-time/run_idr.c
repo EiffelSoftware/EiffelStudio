@@ -131,7 +131,7 @@ rt_public int run_idrf_create(int size)
 }
 
 
-rt_public void run_idr_init (long idrf_size)
+rt_public void run_idr_init (long idrf_size, int type)
 {
 	idrf_buffer_size = idrf_size;
 
@@ -142,6 +142,12 @@ rt_public void run_idr_init (long idrf_size)
 
 		/* Reset amount_read */
 	amount_read = 0;
+
+		/* When writting a storable we mark some space at the front of the buffer
+		 * to store upon writting the size of block, so that only one write operation
+		 * is performed */
+	if (type)
+		run_idr_setpos (&idrf.i_encode, sizeof(int32));
 }
 
 rt_public void run_idr_destroy (void)
@@ -189,10 +195,8 @@ rt_private void run_idr_write (IDR *bu)
 		print_err_msg(stderr, "send size equal zero");
 #endif
 
-	host_send = htonl (send_size);
-
-	if ((char_write_func ((char *)&host_send, sizeof (int32))) < sizeof (int32))
-		eise_io("Independent retrieve: unable to write buffer size.");
+	host_send = htonl (send_size - sizeof(int32));
+	memcpy (ptr, &host_send, sizeof(int32));
 
 	while (send_size > 0) {
 		if ((number_writen = char_write_func (ptr, (int) send_size)) <= 0)
@@ -212,7 +216,7 @@ rt_public void check_capacity (IDR *bu, int size)
 	} else {
 		if ((bu->i_ptr + size) > (bu->i_buf + bu->i_size)) {
 			run_idr_write (bu);
-			(void) run_idr_setpos (bu, 0);
+			(void) run_idr_setpos (bu, sizeof(int32));
 		}
 	}
 }

@@ -312,7 +312,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	s_fides = (int) file_desc;
 
 	rt_init_store (
-		store_write,
+		(void (*)(void)) 0,
 		char_write,
 		idr_flush,
 		ist_write,
@@ -320,7 +320,8 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 		INDEPEND_ACCOUNT,
 		EIF_BUFFER_SIZE);
 
-	run_idr_init (buffer_size);
+		/* Initialize serialization streams for writting (1 stands for write) */
+	run_idr_init (buffer_size, 1);
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 
 	internal_store(object);
@@ -336,7 +337,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGER *real_size)
 {
 	rt_init_store (
-		store_write,
+		(void (*)(void)) 0,
 		stream_write,
 		idr_flush,
 		ist_write,
@@ -348,7 +349,8 @@ rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGE
 	stream_buffer_size = size;
 	stream_buffer_position = 0;
 
-	run_idr_init (buffer_size);
+		/* Initialize serialization streams for writting (1 stands for write) */
+	run_idr_init (buffer_size, 1);
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 	
 	internal_store(object);
@@ -365,7 +367,8 @@ rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGE
 
 rt_public void independent_free_store (char *object)
 {
-	run_idr_init (buffer_size);
+		/* Initialize serialization streams for writting (1 stands for write) */
+	run_idr_init (buffer_size, 1);
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 
 	internal_store(object);

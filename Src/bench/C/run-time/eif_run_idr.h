@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-extern void run_idr_init (long idrf_size);
+extern void run_idr_init (long idrf_size, int type);
 extern void run_idr_destroy (void);
 extern void check_capacity (IDR *bu, int size);
 extern void idr_flush (void);

@@ -579,7 +579,6 @@ feature -- Generation Structure
 			l_size: INTEGER
 			l_alg_id: INTEGER
 		do
-			-- Do nothing
 			current_module := main_module
 
 			if not is_single_module then
@@ -595,22 +594,13 @@ feature -- Generation Structure
 					if l_type /= Void and then l_type.is_generated then
 						l_module := il_modules (l_type)
 						
-						if file_token.has (l_module) then
-							l_file_token := file_token.item (l_module)
+						file_token.search (l_module)
+						if file_token.found then
+							l_file_token := file_token.found_item
 						else
-							create l_hash.make (1024)
-							l_uni_string.set_string (l_module.module_file_name)
-							l_result := feature {MD_STRONG_NAME}.get_hash_from_file (
-								l_uni_string.item, $l_alg_id, l_hash.item, l_hash.count, $l_size)
-								
-							check
-								l_result_ok: l_result = 0
-							end
-							
-							create l_hash_res.make_from_pointer (l_hash.item, l_size)
-
-							l_uni_string.set_string (l_module.module_name)
-							l_file_token := md_emit.define_file (l_uni_string, l_hash_res)
+							l_file_token := define_file (main_module,
+								l_module.module_file_name, l_module.module_name,
+								feature {MD_FILE_FLAGS}.Has_meta_data)
 							file_token.put (l_file_token, l_module)
 						end
 						
@@ -644,6 +634,81 @@ feature -- Generation Structure
 			main_module.save_to_disk
 		end
 
+	define_resource (a_module: IL_MODULE; a_file, a_name: STRING) is
+			-- Add resource file `a_file' with name `a_name' to `a_module'.
+		require
+			a_module_not_void: a_module /= Void
+			a_file_not_void: a_file /= Void
+			a_file_exists: (create {RAW_FILE}.make (a_file)).exists
+			a_name_not_void: a_name /= Void
+		local
+			l_uni_string: UNI_STRING
+			l_token: INTEGER
+			l_resources: CLI_RESOURCES
+			l_data: MANAGED_POINTER
+			l_raw_file: RAW_FILE
+		do
+				-- Get resources of `a_module' if already initialized,
+				-- otherwise create a new one.
+			if a_module.resources /= Void then
+				l_resources := a_module.resources
+			else
+				create l_resources.make
+				a_module.set_resources (l_resources)
+			end
+
+				-- Read content of `a_file' and add it to the list of known resources
+				-- of `a_module'.
+			create l_raw_file.make_open_read (a_file)
+			create l_data.make (l_raw_file.count)
+			l_raw_file.read_data (l_data.item, l_raw_file.count)
+			l_raw_file.close
+			l_resources.extend (l_data)
+
+				-- Add entry in manifest resource table of current module.
+			l_token := a_module.md_emit.define_manifest_resource (
+				create {UNI_STRING}.make (a_name), 0, 0, feature {MD_RESOURCE_FLAGS}.Public)
+		ensure
+			inserted: a_module.resources /= Void
+		end
+
+	define_file (a_module: IL_MODULE; a_file, a_name: STRING; file_flags: INTEGER): INTEGER is
+			-- Add `a_file' of name `a_name' in list of files referenced by `a_module'.
+		require
+			a_module_not_void: a_module /= Void
+			a_file_not_void: a_file /= Void
+			a_name_not_void: a_name /= Void
+			a_file_valid: a_file.has_substring (a_name) and
+				a_name.is_equal (
+					a_file.substring (a_file.count - a_name.count + 1, a_file.count))
+			file_flags_valid:
+				(file_flags = feature {MD_FILE_FLAGS}.Has_meta_data) or
+				(file_flags = feature {MD_FILE_FLAGS}.Has_no_meta_data)
+		local
+			l_uni_string: UNI_STRING
+			l_hash: MANAGED_POINTER
+			l_hash_res: MANAGED_POINTER
+			l_alg_id, l_result: INTEGER
+			l_size: INTEGER
+		do
+			create l_uni_string.make (a_file)
+
+			create l_hash.make (1024)
+			l_result := feature {MD_STRONG_NAME}.get_hash_from_file (
+				l_uni_string.item, $l_alg_id, l_hash.item, l_hash.count, $l_size)
+				
+			check
+				l_result_ok: l_result = 0
+			end
+			
+			l_uni_string.set_string (a_name)
+			create l_hash_res.make_from_pointer (l_hash.item, l_size)
+			Result := a_module.md_emit.define_file (l_uni_string, l_hash_res, file_flags)
+		ensure
+			valid_result: Result & feature {MD_TOKEN_TYPES}.Md_mask =
+				feature {MD_TOKEN_TYPES}.Md_file
+		end
+		
 	define_assertion_level (class_type: CLASS_TYPE) is
 			-- Define assertion level for `class_type'.
 		require

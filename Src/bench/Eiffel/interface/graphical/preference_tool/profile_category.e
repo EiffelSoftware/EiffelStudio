@@ -27,9 +27,10 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all resources valid for Current.
 		do
-			!! tool_width.make ("profile_tool_width", rt, 400);
-			!! query_tool_width.make ("profile_query_tool_width", rt, 450);
-			!! query_tool_height.make ("profile_query_tool_height", rt, 400);
+			!! tool_width.make ("profile_tool_width", rt, 450);
+			!! tool_height.make ("profile_tool_height", rt, 490);
+			!! query_tool_width.make ("profile_query_tool_width", rt, 500);
+			!! query_tool_height.make ("profile_query_tool_height", rt, 500);
 		end
 
 feature -- Validation
@@ -43,6 +44,7 @@ feature -- Validation
 feature -- Resources
 
 	tool_width: INTEGER_RESOURCE;
+	tool_height: INTEGER_RESOURCE;
 	query_tool_width: INTEGER_RESOURCE;
 	query_tool_height: INTEGER_RESOURCE;
 

@@ -12,7 +12,9 @@ inherit
 		rename
 			make as top_shell_make
 		end
+
 	COMMAND
+
 	TOOLTIP_INITIALIZER
 
 feature {NONE} -- Initialization

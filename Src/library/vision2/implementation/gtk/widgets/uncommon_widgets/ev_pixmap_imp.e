@@ -167,9 +167,9 @@ feature -- Element change
 	stretch, stretch_image (a_x, a_y: INTEGER) is
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		local
-			source_gdkimage, destination_gdkimage: POINTER
+			source_gdkimage, source_mask_gdkimage, destination_mask_gdkimage, destination_gdkimage: POINTER
 			gdkpix, gdkmask: POINTER
-			pixgc: POINTER
+			pixgc, maskgc: POINTER
 			column_counter, row_counter, a_pixel: INTEGER
 			mapped_x, mapped_y, source_width, source_height: INTEGER
 			mapped_x_lookup, mapped_y_lookup: ARRAY [INTEGER]
@@ -204,10 +204,17 @@ feature -- Element change
 			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
 			pixgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
 			
-				-- Retrieve our existing image information
-			source_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
-			destination_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (gdkpix, 0, 0, a_x, a_y)
 			
+				-- Retrieve our existing image information
+			source_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (drawable, 0, 0, width, height)
+			destination_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (gdkpix, 0, 0, a_x, a_y)
+			if mask /= NULL then
+				gdkmask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (NULL, a_x, a_y, 1)
+				source_mask_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (mask, 0, 0, width, height)
+				destination_mask_gdkimage := feature {EV_GTK_EXTERNALS}.gdk_image_get (gdkmask, 0, 0, a_x, a_y)
+				maskgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (gdkmask)
+			end
+		
 			from
 					-- We are using zero-based arrays to match gdkimage lookup and thus gain performance
 				row_counter := 0
@@ -226,6 +233,15 @@ feature -- Element change
 						row_counter,
 						feature {EV_GTK_EXTERNALS}.gdk_image_get_pixel (source_gdkimage, mapped_x_lookup @ column_counter, mapped_y_lookup @ row_counter)
 					)
+						-- Map mask destination to mask source.
+					if gdkmask /= NULL then
+						feature {EV_GTK_EXTERNALS}.gdk_image_put_pixel (
+							destination_mask_gdkimage,
+							column_counter,
+							row_counter,
+							feature {EV_GTK_EXTERNALS}.gdk_image_get_pixel (source_mask_gdkimage, mapped_x_lookup @ column_counter, mapped_y_lookup @ row_counter)
+						)
+					end
 					column_counter := column_counter + 1
 				end
 				row_counter := row_counter + 1
@@ -233,10 +249,21 @@ feature -- Element change
 			
 				-- Copy image over to our new pixmap and cleanup
 			feature {EV_GTK_EXTERNALS}.gdk_draw_image (gdkpix, pixgc, destination_gdkimage, 0, 0, 0, 0, a_x, a_y)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
+			if gdkmask /= NULL then
+				feature {EV_GTK_EXTERNALS}.gdk_draw_image (gdkmask, maskgc, destination_mask_gdkimage, 0, 0, 0, 0, a_x, a_y)
+			end
+			
 			set_pixmap (gdkpix, gdkmask)
+			
+			feature {EV_GTK_EXTERNALS}.gdk_gc_unref (pixgc)
 			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (source_gdkimage)
 			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (destination_gdkimage)
+			
+			if gdkmask /= NULL then
+				feature {EV_GTK_EXTERNALS}.gdk_image_destroy (source_mask_gdkimage)
+				feature {EV_GTK_EXTERNALS}.gdk_image_destroy (destination_mask_gdkimage)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
+			end
 		end
 
 	set_size (a_x, a_y: INTEGER) is

@@ -32,6 +32,13 @@ feature -- Basic Operations
 			ccom_folder_name (initializer, result1)
 		end
 
+	set_starting_folder (result1: CELL [STRING]) is
+			-- Set initial folder name.
+			-- `result1' [in].  
+		do
+			ccom_set_starting_folder (initializer, result1)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -44,6 +51,12 @@ feature {NONE}  -- Externals
 
 	ccom_folder_name (cpp_obj: POINTER; result1: CELL [STRING]) is
 			-- Folder chosen by the user.
+		external
+			"C++ [ecom_FolderBrowser::IFolderBrowser_impl_proxy %"ecom_FolderBrowser_IFolderBrowser_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_set_starting_folder (cpp_obj: POINTER; result1: CELL [STRING]) is
+			-- Set initial folder name.
 		external
 			"C++ [ecom_FolderBrowser::IFolderBrowser_impl_proxy %"ecom_FolderBrowser_IFolderBrowser_impl_proxy_s.h%"](EIF_OBJECT)"
 		end

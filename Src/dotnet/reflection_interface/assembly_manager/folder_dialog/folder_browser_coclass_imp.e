@@ -15,9 +15,9 @@ creation
 feature {NONE}  -- Initialization
 
 	make is
-			-- Creation. Implement if needed.
+			-- Creation.
 		do
-			create folder_dialog.make			
+			create folder_dialog.make
 		end
 
 	make_from_pointer (cpp_obj: POINTER) is
@@ -37,18 +37,23 @@ feature -- Basic Operations
 
 	folder_name (result1: CELL [STRING]) is
 			-- Folder chosen by the user.
-			-- Empty if no folder was selected.
-			-- `result1' [out].  
+			-- Empty if no folder was selected.			
 		do
 			folder_dialog.activate_without_parent
 			result1.put (folder_dialog.folder_name)
+		end
+
+	set_starting_folder (result1: CELL [STRING]) is
+			-- Set initial folder name.
+		do
+			folder_dialog.set_starting_folder (result1.item)
 		end
 
 feature {NONE} -- Implementation
 
 	folder_dialog: FOLDER_BROWSER_DIALOG
 			-- Standard windows folder dialog.
-
+			
 feature {NONE}  -- Externals
 
 	ccom_create_item (eif_object: like Current): POINTER is

@@ -24,6 +24,13 @@ feature -- Access
 			"LastFolder"
 		end
 
+	frozen set_start_folder (str: STRING) is
+		external
+			"IL signature (System.String): System.Void use FolderDialog"
+		alias
+			"SetStartingFolder"
+		end
+		
 feature -- Basic Operations
 
 	frozen ask_for_folder is

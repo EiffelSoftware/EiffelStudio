@@ -19,6 +19,13 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	set_starting_folder (result1: CELL [STRING]) is
+			-- Set initial folder name.
+			-- `result1' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	create_item is
 			-- Initialize `item'
 		do

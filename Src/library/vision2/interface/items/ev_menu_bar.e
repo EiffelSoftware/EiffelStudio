@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision menu bar."
+		"Menu bar containing drop down menus. See EV_MENU."
 	status: "See notice at end of class"
 	keywords: "menu, bar, item, file, edit, help"
 	date: "$Date$"
@@ -22,10 +22,12 @@ create
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_BAR_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
 
 	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MENU_BAR_IMP} implementation.make (Current)
 		end
@@ -53,6 +55,9 @@ end -- class EV_MENU BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.10  2000/02/29 18:09:11  oconnor
 --| reformatted indexing cluase
 --|

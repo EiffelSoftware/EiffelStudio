@@ -1,9 +1,11 @@
 indexing
 	description:
-		"Eiffel Vision default colors. Standard GUI drawing colors."
+		"Facilities for accessing standardized colors."
 	keywords: "color, default"
 	date: "$Date$"
 	revision: "$Revision$"
+
+--| FIXME these comments sound a bit silly IMHO. - sam
 
 class
 	EV_DEFAULT_COLORS
@@ -15,8 +17,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (1, 1, 1)
 			Result.set_name ("white")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Black: EV_COLOR is
@@ -24,26 +24,20 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0, 0, 0)
 			Result.set_name ("black")
-		ensure
-			valid_result: Result /= Void
 		end
 
-	Grey: EV_COLOR is
+	Grey, Gray: EV_COLOR is
 			-- Grey color named "grey"
 		once
 			create Result.make_with_rgb (0.7, 0.7, 0.7)
 			Result.set_name ("grey")
-		ensure
-			valid_result: Result /= Void
 		end
 
-	Dark_grey: EV_COLOR is
+	Dark_grey, Dark_gray: EV_COLOR is
 			-- Dark grey color named "dark grey"
 		once
 			create Result.make_with_rgb (0.5, 0.5, 0.5)
 			Result.set_name ("dark grey")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Blue: EV_COLOR is
@@ -51,8 +45,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0, 0, 1)
 			Result.set_name ("blue")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Dark_blue: EV_COLOR is
@@ -60,8 +52,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0, 0, 0.5)
 			Result.set_name ("dark blue")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Cyan: EV_COLOR is
@@ -69,8 +59,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0, 1, 1)
 			Result.set_name ("cyan")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Dark_cyan: EV_COLOR is
@@ -78,8 +66,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0, 0.5, 0.5)
 			Result.set_name ("dark cyan")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Green: EV_COLOR is
@@ -87,8 +73,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0, 1, 0)
 			Result.set_name ("green")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Dark_green: EV_COLOR is
@@ -96,8 +80,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0, 0.5, 0)
 			Result.set_name ("dark green")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Yellow: EV_COLOR is
@@ -105,8 +87,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (1, 1, 0)
 			Result.set_name ("yellow")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Dark_yellow: EV_COLOR is
@@ -114,8 +94,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0.5, 0.5, 0)
 			Result.set_name ("dark yellow")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Red: EV_COLOR is
@@ -123,8 +101,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (1, 0, 0)
 			Result.set_name ("red")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Dark_red: EV_COLOR is
@@ -132,8 +108,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0.5, 0, 0)
 			Result.set_name ("dark red")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Magenta: EV_COLOR is
@@ -141,8 +115,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (1, 0, 1)
 			Result.set_name ("magenta")
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Dark_magenta: EV_COLOR is
@@ -150,8 +122,6 @@ feature -- Access
 		once
 			create Result.make_with_rgb (0.5, 0, 0.5)
 			Result.set_name ("dark magenta")
-		ensure
-			valid_result: Result /= Void
 		end
 
 feature -- Access
@@ -204,7 +174,9 @@ feature -- Basic operations
 			create Result.make
 			Result.force (White)
 			Result.force (Black)
+			Result.force (Gray)
 			Result.force (Grey)
+			Result.force (Dark_gray)
 			Result.force (Dark_grey)
 			Result.force (Blue)
 			Result.force (Dark_blue)
@@ -218,18 +190,42 @@ feature -- Basic operations
 			Result.force (Dark_red)
 			Result.force (Magenta)
 			Result.force (Dark_magenta)
-		ensure
-			count_equals_sixteen: Result.count = 16
 		end
 
 feature {NONE} -- Implementation
 
 	default_color_imp: EV_DEFAULT_COLORS_IMP is
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 		once
 			create Result
 		end
+
+invariant
+	White_not_void: White /= Void
+	Black_not_void:  Black /= Void
+	Grey_not_void:  Grey /= Void
+	Gray_not_void:  Gray /= Void
+	Dark_grey_not_void:  Dark_grey /= Void
+	Dark_gray_not_void:  Dark_gray /= Void
+	Blue_not_void:  Blue /= Void
+	Dark_blue_not_void:  Dark_blue /= Void
+	Cyan_not_void:  Cyan /= Void
+	Dark_cyan_not_void:  Dark_cyan /= Void
+	Green_not_void:  Green /= Void
+	Dark_green_not_void:  Dark_green /= Void
+	Yellow_not_void:  Yellow /= Void
+	Dark_yellow_not_void:  Dark_yellow /= Void
+	Red_not_void:  Red /= Void
+	Dark_red_not_void:  Dark_red /= Void
+	Magenta_not_void:  Magenta /= Void
+	Dark_magenta_not_void:  Dark_magenta /= Void
+	Color_dialog_not_void:  Color_dialog /= Void
+	Color_read_only_not_void:  Color_read_only /= Void
+	Color_read_write_not_void:  Color_read_write /= Void
+	Default_background_color_not_void:  Default_background_color /= Void
+	Default_foreground_color_not_void:  Default_foreground_color /= Void
+	All_colors_not_void:  All_colors /= Void
+	All_colors_count_is_sixteen: All_colors.count = 18
 
 end -- class EV_DEFAULT_COLORS
 
@@ -254,6 +250,9 @@ end -- class EV_DEFAULT_COLORS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.9  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

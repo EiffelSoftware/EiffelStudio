@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision item list. Base class for widgets that display EV_ITEMs"
+		"Base class for widgets that contain EV_ITEMs"
 	status: "See notice at end of class."
 	keywords: "item, list"
 	date: "$Date$"
@@ -265,7 +265,8 @@ feature -- Removal
 		do
 			implementation.remove
 		ensure then
-			removed_item_parent_is_void: old item /= Void implies (old item).parent = Void
+			removed_item_parent_is_void:
+				old item /= Void implies (old item).parent = Void
 		end
 
 	remove_left is
@@ -403,7 +404,7 @@ feature {EV_ANY_I} -- Implementation
 			-- toolkit.
 
 invariant
---FIXME	parent_of_items_is_current: is_useable implies parent_of_items_is_current
+--FIXMEparent_of_items_is_current: is_useable implies parent_of_items_is_current
 --FIXME	items_unique: is_useable implies items_unique
 	
 end -- class EV_ITEM_LIST
@@ -429,6 +430,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.9  2000/03/16 23:14:06  king
 --| Removed inapplicable indexing post cond from put_front
 --|
@@ -454,7 +458,8 @@ end -- class EV_ITEM_LIST
 --| added from prerelease_20000214
 --|
 --| Revision 1.1.2.12  2000/02/09 23:05:44  rogers
---| Changed the item type from EV_ITEM to G. All features that previously took 'like item' as an argument now take 'G'.
+--| Changed the item type from EV_ITEM to G. All features that previously took
+--| 'like item' as an argument now take 'G'.
 --|
 --| Revision 1.1.2.11  2000/02/09 21:50:29  oconnor
 --| changed like item to G in renamed features

@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision default fonts. Standard GUI fonts."
+		"Facilities for accessing default fonts."
 	keywords: "font, default"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,25 +14,24 @@ feature -- Access
 			-- Default screen font.
 		once
 			create Result
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Dialog_font: EV_FONT is
 			-- Font used in dialogs.
 		do
 			Result := Screen_font
-		ensure
-			valid_result: Result /= Void
 		end
 
 	Menu_font: EV_FONT is
 			-- Font used in menus.
 		do
 			Result := Screen_font
-		ensure
-			valid_result: Result /= Void
 		end
+
+invariant
+	Screen_font_not_void: Screen_font /= void
+	Dialog_font_not_void: Dialog_font /= void
+	Menu_font_not_void:Menu_font /= void
 
 end -- class EV_DEFAULT_FONTS
 
@@ -51,3 +50,15 @@ end -- class EV_DEFAULT_FONTS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.2  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

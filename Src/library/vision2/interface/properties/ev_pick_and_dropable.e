@@ -1,15 +1,15 @@
 indexing
 	description:
-		"Eiffel Vision pick and drop mechanism.%N%
-		%Decendents can act as both pick and drop sources and targets.%N%
-		%When the user picks a `pebble' from a source and drops on a target,%N%
+		"Facilities for pick and drop mechanism.%N%
+		%Decendents can act both as pick and drop sources and as targets.%N%
+		%When the user picks a `pebble' from a source and drops on a target,%
 		%the `drop_actions' of the target receive the `pebble' as input.%N%
-		%The user interface can be either pick and drop or drag and drop,%N%
+		%The user interface can be either pick and drop or drag and drop,%
 		%selected by `set_pick_and_drop' and `set_drag_and_drop'."
 	example:
-		"Create two buttons one with the string %"Hello world!%" as pebble%N%
+		"Create two buttons one with the string %"Hello world!%" as pebble%
 		%and the other with io~put_string as a drop action.%N%
-		%Picking the first button and dropping on the second will print%N%
+		%Picking the first button and dropping on the second will print:%N%
 		%%"Hello world!%".%N%
 		%b1, b2: BUTTON%N%
 		%create b1; create b2%N%
@@ -145,7 +145,7 @@ feature -- User input events
 feature {NONE}-- Implementation
 
 	create_action_sequences is
-			-- Create pick and drop action sequences.
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			create pick_actions
 			create conforming_pick_actions
@@ -159,8 +159,7 @@ feature {NONE}-- Implementation
 feature {EV_APPLICATION_I, EV_PICK_AND_DROPABLE_I} -- Implementation
 
 	implementation: EV_PICK_AND_DROPABLE_I
-            -- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 invariant
 	user_interface_modes_mutually_exclusive:
@@ -192,6 +191,9 @@ end -- class EV_PICK_AND_DROPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.4  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -211,7 +213,8 @@ end -- class EV_PICK_AND_DROPABLE
 --| added --| FIXME Not for release
 --|
 --| Revision 1.1.2.1  2000/01/24 23:04:45  oconnor
---| removed pick_and_drop/ev_pnd_source.e, contents now in properties/ev_pick_and_dropable.e
+--| removed pick_and_drop/ev_pnd_source.e, contents now in
+--| properties/ev_pick_and_dropable.e
 --|
 --| Revision 1.10.4.1.2.10  2000/01/24 23:02:49  oconnor
 --| comments
@@ -246,7 +249,6 @@ end -- class EV_PICK_AND_DROPABLE
 --|
 --| Revision 1.10.2.3  1999/11/02 17:20:12  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

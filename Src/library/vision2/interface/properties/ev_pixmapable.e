@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision pixmapable. Objects that display a pixmap."
+		"Abstarction for objects that have a pixmap property."
 	status: "See notice at end of class"
 	keywords: "pixmap, bitmap, icon, graphic, image"
 	date: "$Date$"
@@ -51,8 +51,7 @@ feature -- Element change
 feature {EV_PIXMAPABLE_I} -- Implementation
 	
 	implementation: EV_PIXMAPABLE_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_PIXMAPABLE
 
@@ -77,6 +76,9 @@ end -- class EV_PIXMAPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.16  2000/03/03 01:44:01  oconnor
 --| fixed call on void problem in PC of set_pixmap
 --|

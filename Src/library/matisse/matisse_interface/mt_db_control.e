@@ -11,10 +11,7 @@ inherit
 
 	MT_DB_CONTROL_EXTERNAL
 	
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make
@@ -293,7 +290,6 @@ feature {NONE} -- Implementation
 		end
 	
 	dispose is
-			-- Redefinition of dispose of MEMORY.
 			-- Free mt_connection_pointer.
 		local
 			current_connection: INTEGER

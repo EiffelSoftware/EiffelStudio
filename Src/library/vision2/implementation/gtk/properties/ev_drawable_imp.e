@@ -16,7 +16,7 @@ inherit
 
 	EV_DRAWABLE_CONSTANTS
 
-	MEMORY
+	DISPOSABLE
 		undefine
 			copy,
 			default_create

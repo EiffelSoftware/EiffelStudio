@@ -8,19 +8,12 @@ deferred class
 	ECOM_WRAPPER
 
 inherit
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 	ECOM_EXCEPTION_CODES
 		export
 			{NONE} all
 		end
-
-	ANY
 
 feature -- Initialization
 

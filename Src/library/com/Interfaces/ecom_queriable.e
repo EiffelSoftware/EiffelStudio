@@ -10,12 +10,7 @@ deferred class
 inherit
 	ECOM_INTERFACE
 
-	MEMORY
-		export
-			{NONE} all
-		redefine 
-			dispose
-		end
+	DISPOSABLE
 
 feature  {NONE} -- Initialization
 

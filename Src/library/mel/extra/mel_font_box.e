@@ -10,19 +10,13 @@ class
 	MEL_FONT_BOX
 
 inherit
-
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose
-		end;
-
 	MEL_FORM
 		redefine
 			make, set_background, set_background_color,
 			set_foreground, set_foreground_color
-		end;
+		end
+
+	DISPOSABLE
 
 create
 	make

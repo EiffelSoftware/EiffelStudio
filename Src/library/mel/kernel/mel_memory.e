@@ -13,15 +13,7 @@ deferred class
 	MEL_MEMORY
 
 inherit
-
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			is_equal, dispose
-		end;
-
-	ANY
+	DISPOSABLE
 		redefine
 			is_equal
 		end

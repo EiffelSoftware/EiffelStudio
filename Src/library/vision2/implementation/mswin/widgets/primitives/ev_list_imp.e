@@ -38,6 +38,9 @@ inherit
 			set_default_colors
 		redefine
 			make,
+			on_left_button_down,
+			on_middle_button_down,
+			on_right_button_down,
 			on_key_down,
 			on_mouse_move
 		end
@@ -86,7 +89,6 @@ inherit
 			hide
 		redefine
 			wel_select_item,
-			on_lbn_dblclk,
 			on_lbn_selchange,
 			on_size,
 			default_style,
@@ -244,6 +246,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation : WEL features
 
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		local
+			it: EV_LIST_ITEM_IMP
+			pt: WEL_POINT
+		do
+			it := find_item_at_position (x_pos, y_pos)
+			if it /= Void then
+				pt := client_to_screen (x_pos, y_pos)
+				it.interface.pointer_button_press_actions.call ([x_pos,y_pos - it.relative_y, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
+		end
+
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
 			-- Result  is list item at pixel position `x_pos', `y_pos'.
 		local
@@ -291,13 +306,9 @@ feature {NONE} -- Implementation : WEL features
 				if actual.is_selected then
 					actual.interface.select_actions.call ([])
 					interface.select_actions.call ([actual.interface])
-					--| FIXME actual.execute_command (Cmd_item_activate, Void)
-					--| FIXME execute_command (Cmd_select, Void)
 				else
 					actual.interface.deselect_actions.call ([])
 					interface.deselect_actions.call ([actual.interface])
-					--| FIXME actual.execute_command (Cmd_item_deactivate, Void)
-					--| FIXME execute_command (Cmd_unselect, Void)
 				end
 
 			-- Another treatment in single selection mode.
@@ -343,23 +354,28 @@ feature {NONE} -- Implementation : WEL features
 			end
 		end
 
-	on_lbn_dblclk is
-			-- Double click on a string.
-			-- Send the event to the current selected item or to the one
-			-- that has the focus.
-		local
-			actual: EV_LIST_ITEM_IMP
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
-			-- In multiple selection mode, the item can be selected or
-			-- unselected.
-			if multiple_selection_enabled then
-				actual := ev_children @ (caret_index + 1)
-			else
-				actual := ev_children @ (selected_index + 1)
-			end
-			if actual /= Void then
-				--| FIXME actual.execute_command (Cmd_item_dblclk, Void)
-			end
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+		end
+
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+		end
+
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -565,8 +581,8 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.48  2000/03/15 16:50:34  rogers
---| Finished implementing on_mouse_move. Correct coordinates are now passed to the item.
+--| Revision 1.49  2000/03/15 17:06:36  rogers
+--| Removed commented code. Added internal_propagate_pointer_press, on_left_button_down, on_middle_button_down, on_right_button_down. Removed on_lbn_dblclick.
 --|
 --| Revision 1.47  2000/03/14 23:53:09  rogers
 --| Redefined on_mouse_move from EV_PRIMITIVE_IMP so items events can be called. Added find_item_at_position.

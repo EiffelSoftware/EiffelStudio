@@ -114,7 +114,10 @@ feature {NONE} -- Implementation
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
-			-- Nothing to perform here.
+			execution_agents.extend (agent actually_set_foreground_color (?), foreground_color_string)
+			validate_agents.extend (agent valid_color, foreground_color_string)
+			execution_agents.extend (agent actually_set_background_color (?), background_color_string)
+			validate_agents.extend (agent valid_color, background_color_string)
 		end
 
 	default_object_by_type (a_type: STRING): EV_ANY is

@@ -68,8 +68,7 @@ char **argv;
 	 * Fill the array
 	 */
 	for (i=0;i<argc;i++) {
-		*((char **) sp) = makestr(argv[i], strlen(argv[i]));
-		sp += sizeof (char *);
+		((char **) sp)[i] = makestr(argv[i], strlen(argv[i]));
 	}
 
 	epop(&loc_stack, 1);		/* Remove protection for area */
@@ -109,7 +108,7 @@ register4 long nbr;
 	char found;
 	int16 curr_dtype;
 	uint32 type, *types;
-	long offset_bis;					/* offset already taken :-) */
+	long offset_bis = 0;					/* offset already taken :-) */
 
 	curr_dtype = Dtype(curr);	/* Dynamic type of current object instance */
 	obj_desc = &System(dtype); 	/* Dynamic type where strip is defined */
@@ -128,7 +127,9 @@ register4 long nbr;
 	nstcall = 0;
 	(eif_arrmake)(array, 1L, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
-	offset_bis = NULL;
+
+	sp = *(char **) array;		/* Get the area of the ARRAY */
+	epush (&loc_stack, &sp);	/* Protect the area */
 
 	while (nbr_attr--) {
 		found = NULL;
@@ -163,11 +164,7 @@ register4 long nbr;
 				break;
 			case SK_DOUBLE:
 				new_obj = RTLN(doub_ref_dtype);
-#ifndef WORKBENCH
-printf ("bug in metamorphosis for double in final mode\n");
-#else
 				*(double *) new_obj = *(double *) o_ref;
-#endif
 				break;
 			case SK_FLOAT:
 				new_obj = RTLN(real_ref_dtype);
@@ -191,11 +188,10 @@ printf ("bug in metamorphosis for double in final mode\n");
 	 * it is lost on the first call to the GC. Waiting for a better idea.
 	 * -- Fabrice.
 	 */		
-		sp = *(char **) array + offset_bis;
-		*((char **) sp) = new_obj;
-		offset_bis = offset_bis + sizeof (char *);
+		((char **) sp)[offset_bis++] = new_obj;
 		}
 	}
+	epop(&loc_stack, 1);		/* Remove protection for area */
 	epop(&loc_stack, 1);		/* Remove protection for array */
 	return array;
 }

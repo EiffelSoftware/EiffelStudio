@@ -85,6 +85,7 @@ feature {AST_EIFFEL} -- Output
 			if check_list /= Void then
 				ctxt.indent
 				ctxt.new_line
+				ctxt.set_new_line_between_tokens
 				ctxt.format_ast (check_list)
 				ctxt.exdent
 				ctxt.new_line

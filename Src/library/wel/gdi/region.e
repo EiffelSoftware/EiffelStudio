@@ -60,10 +60,10 @@ feature {NONE} -- Initialization
 			points_not_void: points /= Void
 			points_count: points.count \\ 2 = 0
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
-			a := points.to_c
-			item := cwin_create_polygon_rgn ($a, points.count // 2,
+			!! a.make (points)
+			item := cwin_create_polygon_rgn (a.item, points.count // 2,
 				Alternate)
 		end
 
@@ -75,10 +75,10 @@ feature {NONE} -- Initialization
 			points_not_void: points /= Void
 			points_count: points.count \\ 2 = 0
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
-			a := points.to_c
-			item := cwin_create_polygon_rgn ($a, points.count // 2,
+			!! a.make (points)
+			item := cwin_create_polygon_rgn (a.item, points.count // 2,
 				Winding)
 		end
 

@@ -63,6 +63,7 @@
 			<TEXT DESCRIPTION="Special mode (if selected above) : True = Vi, False = Emacs">special_mode_is_vi<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Underscore %'_%' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Quadruple click selects all">quadruple_click<BOOLEAN>True</BOOLEAN></TEXT>
 			<TOPIC TOPIC_ID="Automatic completion" ICON="icon_preferences_folder">
 				<HEAD>Autocomplete preferences</HEAD>
 				<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>False</BOOLEAN></TEXT>

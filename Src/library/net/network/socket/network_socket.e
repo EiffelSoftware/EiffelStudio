@@ -7,11 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
-
-	NETWORK_SOCKET
-
-inherit
+deferred class NETWORK_SOCKET inherit
 
 	SOCKET
 		undefine
@@ -19,10 +15,10 @@ inherit
 			put_integer, putint, put_boolean, putbool,
 			put_real, putreal, put_double, putdouble
 		redefine
-			address, set_peer_address
+			address, is_valid_peer_address
 	end
 
-feature -- Status Report
+feature -- Status report
 
 	address: NETWORK_SOCKET_ADDRESS;
 			-- Local address of socket
@@ -41,15 +37,40 @@ feature -- Status Report
 			Result := temp_addr.port
 		end
 
-feature -- Status_setting
-
-	set_peer_address (addr: like address) is
-			-- Set peer address to `addr'.
-		require else
-			same_type: addr.family = family
+	reuse_address: BOOLEAN is
+			-- Is reuse_address option set?
+		require
+			socket_exists: exists
+		local
+			reuse: INTEGER
 		do
-			peer_address := addr
-		end;
+			reuse := c_get_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr);
+			Result := reuse /= 0
+		end
+
+	is_valid_peer_address (addr: like address): BOOLEAN is
+			-- Is `addr' a valid peer address?
+		do
+			Result := (addr.family = family)
+		end
+
+	ready_for_reading: BOOLEAN is
+			-- Is data available for reading from the socket within 
+			-- `timeout' seconds?
+		do
+			Result := c_select_poll_with_timeout (descriptor, True, timeout)
+		end
+	
+	ready_for_writing: BOOLEAN is
+			-- Can data be written to the socket within `timeout' seconds?
+		do
+			Result := c_select_poll_with_timeout (descriptor, False, timeout)
+		end
+	
+	timeout: INTEGER
+			-- Duration of timeout in seconds
+		
+feature -- Status setting
 
 	set_reuse_address is
 			-- Set the reuse_address option on.
@@ -67,20 +88,34 @@ feature -- Status_setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 0)
 		end;
 
-	reuse_address: BOOLEAN is
-			-- Is reuse_address option set ?
+	set_timeout (n: INTEGER) is
+			-- Set timeout to `n' seconds.
 		require
-			socket_exists: exists
-		local
-			reuse: INTEGER
+			non_negative: n >= 0
 		do
-			reuse := c_get_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr);
-			Result := reuse /= 0
+			timeout := n
+		ensure
+			timeout_set: timeout = n
 		end
 
+feature {NONE} -- Constants
+
+	default_timeout: INTEGER is 20
+			-- Default timeout duration in seconds
+
+feature {NONE} -- Externals
+
+	c_select_poll_with_timeout (fd: INTEGER; is_read_mode: BOOLEAN;
+								timeout_secs: INTEGER): INTEGER is
+		external
+			"C"
+		end
+		
+invariant
+
+	timeout_set: timeout > 0
+
 end -- class NETWORK_SOCKET
-
-
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

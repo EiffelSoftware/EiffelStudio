@@ -30,7 +30,7 @@
 #include "eif_portable.h"
 #include "timehdr.h" 	/* %%ss moved */
 #include "select.h"
-/* #include "timehdr.h" */
+#include "string.h"
 
 #ifdef EIF_WIN32
 #include "eif_logfile.h"

@@ -34,6 +34,8 @@ feature {NONE}
 			-- Is the menu entry `Application Editor' armed?
 	interface_state: BOOLEAN
 			-- Is the menu entry `Interface' armed?
+	class_importer_state: BOOLEAN
+			-- Is the menu entry `Class importer' armed?
 
 	toggle_pressed is
 			-- Display or hide the interface.
@@ -76,7 +78,11 @@ feature {NONE}
 			interface_state := main_panel.interface_entry.armed
 			if not interface_state then
 				main_panel.interface_entry.arm
-			end	
+			end
+			class_importer_state := main_panel.class_importer_entry.armed
+			if class_importer_state then
+				main_panel.class_importer_entry.disarm
+			end
 		end
 
 	reinstate_toggles is
@@ -114,6 +120,11 @@ feature {NONE}
 			if not interface_state then
 				main_panel.interface_entry.disarm
 			end	
+			if class_importer_state and then
+				not main_panel.class_importer_entry.armed
+			then
+				main_panel.class_importer_entry.arm
+			end
 		end
 
 end -- class INTERFACE_ONLY_ENTRY

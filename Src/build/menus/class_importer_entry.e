@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 			if armed then
 				class_importer.display
 			else
-				class_importer.hide
+				class_importer.close
 			end
 		end
 

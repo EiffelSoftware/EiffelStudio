@@ -24,8 +24,10 @@ feature {NONE}
 			-- Display or hide the interface.
 		do
 			if armed then
+				main_panel.show_context_editor
 				window_mgr.show_all_editors
 			else
+				main_panel.hide_context_editor
 				window_mgr.hide_all_editors
 			end
 		end

@@ -10,7 +10,7 @@ Class_declaration		|%
 %<head><title>Eiffel Class</title></head>%N%
 %<body>%N%
 %<pre>%N%
-%<em>*</em>%N%
+%<i>*</i>%N%
 %</pre>%N%
 %</body>%N%
 %</html>%N
@@ -21,7 +21,7 @@ Cluster_declaration		|%
 %<head><title>Eiffel Cluster</title></head>%N%
 %<body>%N%
 %<pre>%N%
-%<em>*</em>%N%
+%<i>*</i>%N%
 %</pre>%N%
 %</body>%N%
 %</html>%N
@@ -30,12 +30,12 @@ Class_name, Cluster_name	|<a href="$.html">*</a>
 
 -- General specifications
 
-Keyword					|<strong>*</strong>
-Symbol					|</em>*<em>
-Comment					|</em>*<em>
+Keyword					|</i><b>*</b><i>
+Symbol					|</i>*<i>
+Comment					|</i>*<i>
 
 -- Symbols
-.                       |<strong>.</strong>
+.                       |</i><b><bigger>.</bigger></b><i>
 
 -- Meta-characters
 

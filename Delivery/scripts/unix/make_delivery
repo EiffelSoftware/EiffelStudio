@@ -67,7 +67,12 @@ md $INSTALL_DIR
 cd $INSTALL_DIR
 remtrace studio
 exprt -r $DEFAULT_CVS_TAG -d studio Delivery/studio
-rm -rf studio/config/windows
+fullrd studio/config/windows
+fullrd studio/wizards/new_projects/wizard
+fullrf studio/wizards/new_projects/wizard.dsc
+fullrd studio/wizards/new_projects/dotnet
+fullrf studio/wizards/new_projects/dotnet.dsc
+
 remtrace eifinit
 exprt -r $DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
 remtrace precomp
@@ -75,6 +80,13 @@ safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
 exprt -r $DEFAULT_CVS_TAG -d unix Delivery/precomp/spec/unix
+cd unix
+fullrd lex
+fullrd mel
+fullrd net
+fullrd net-mt
+fullrd parse
+fullrd vision
 cd $INSTALL_DIR
 remtrace wizards
 exprt -r $DEFAULT_CVS_TAG -d wizards Delivery/wizards
@@ -88,6 +100,7 @@ fullrd Delivery >> $INSTALL_LOG
 remtrace Borland files
 fullrf BCC55.tar.gz
 fullrf *.bat
+fullrf *.exe
 
 md docs
 
@@ -166,6 +179,9 @@ if [ ! "$NO_INSTALL" ]; then
 	copy set_aliases $EXPORT_DIR
 	give_time_to compile the delivery
 fi
+
+fullrd $NEW_EIFFEL_SRC
+fullrd $INSTALL_DIR
 
 # Finish
 remtrace final time:

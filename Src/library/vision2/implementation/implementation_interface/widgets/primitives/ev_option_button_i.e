@@ -12,6 +12,52 @@ inherit
 	EV_MENU_HOLDER_I
 
 	EV_BUTTON_I
+		redefine
+			set_center_alignment,
+			set_left_alignment,
+			set_right_alignment,
+			add_click_command,
+			set_text
+		end
+
+feature {NONE} -- Inapplicable
+
+	set_center_alignment is
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	set_left_alignment is
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	set_right_alignment is
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+		-- Do not work with option buttons in GTK.
+		-- use add_button_press_command instead.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	set_text (txt: STRING) is
+		do
+			check
+				Inapplicable: False
+			end
+		end
 
 end -- class EV_OPTION_BUTTON_I
 

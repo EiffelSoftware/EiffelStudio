@@ -1,6 +1,6 @@
 <EIFFEL_DOCUMENT>
-<TOPIC TOPIC_ID="Bench_preferences" ICON="icon_preferences_root">
-	<HEAD>EiffelBench Resources, version 4.8</HEAD>
+<TOPIC TOPIC_ID="EiffelStudio_preferences" ICON="icon_preferences_root">
+	<HEAD>EiffelStudio Resources, version 5.2</HEAD>
 	<TOPIC TOPIC_ID="Global_preferences" ICON="icon_preferences_folder">
 		<HEAD>Global preferences</HEAD>
 		<TEXT DESCRIPTION="Text files format: True = Windows / False = UNIX">text_mode_is_windows<BOOLEAN>True</BOOLEAN></TEXT>

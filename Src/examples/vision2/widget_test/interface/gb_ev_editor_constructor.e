@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
-	new_object_editor (object: GB_OBJECT) is
+	new_object_editor (an_object: GB_OBJECT) is
 			-- Generate a new object editor containing `object'.
 		deferred
 		end
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 		
-	rebuild_associated_editors (object: EV_ANY) is
+	rebuild_associated_editors (an_object: EV_ANY) is
 			-- For all editors referencing `vision2_object', rebuild any associated object editors.
 		do
 		end
@@ -159,6 +159,25 @@ feature {NONE} -- Implementation
 			-- is to be performed on STRING data
 		do
 			Result := True
+		end
+		
+	object: GB_OBJECT
+
+	set_object (an_object: GB_OBJECT) is
+			--
+		do
+			object := an_object
+		end
+	
+	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is
+			-- For all instance referers recursively of `an_object', call `p' with the current
+			-- instance referer filled as the open argument. Used in places where `for_all_objects'
+			-- can not be used directly as some level of indirection and/or calculation is required
+			-- for each individual setting.
+		require
+			an_object_not_void: an_object /= Void
+			procedure_not_void: p /= Void
+		do
 		end
 
 end -- class GB_EV_EDITOR_CONSTRUCTOR

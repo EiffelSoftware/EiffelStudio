@@ -12,12 +12,12 @@ inherit
 			interface
 		end
 		
-	EV_TEXTABLE_IMP
+	EV_TEXTABLE_I
 		redefine
 			interface
 		end
 	
-	EV_PIXMAPABLE_IMP
+	EV_PIXMAPABLE_I
 		redefine
 			interface,
 			remove_pixmap,
@@ -46,17 +46,35 @@ feature {NONE} -- Initialization
 			-- Image displayed on `Current' or Void if none.
 		do
 			if notebook /= Void then
-			--	Result := notebook_imp.item_pixmap (widget)
+				Result := notebook_imp.item_pixmap (widget)
+			end
+		end
+
+	text: STRING is
+			-- Text displayed on `Current'
+		do
+			if notebook /= Void then
+				Result := notebook_imp.item_text (widget)
+			else
+				create Result.make (0)
 			end
 		end
 
 feature -- Element change
 
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			if notebook /= Void then
+				notebook_imp.set_item_text (widget, a_text)
+			end
+		end
+
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			if notebook /= Void then
-			--	notebook_imp.set_item_pixmap (widget, a_pixmap)	
+				notebook_imp.set_item_pixmap (widget, a_pixmap)	
 			end
 		end
 
@@ -64,40 +82,9 @@ feature -- Element change
 			-- Make `pixmap' `Void'.
 		do
 			if notebook /= Void then
-				--notebook_imp.set_item_pixmap (widget, Void)
+				notebook_imp.set_item_pixmap (widget, Void)
 			end
 		end
-		
---	wel_text: STRING is
---			-- Text displayed in label.
---		do
---			if notebook /= Void then
---				Result := notebook_imp.item_text (widget)
---			else
---					-- Although when `notebook' is Void it is not possible to query
---					-- `text' from the interface, this must be set to an empty string as
---					-- otherwise assertions fail during creation.
---				Result := ""
---			end
---		end
-		
-	text_length: INTEGER is
-			-- Number of characters making up `text'.
-		do
-			Result := 0--wel_text.count
-		end
-
-	needs_event_box: BOOLEAN is False
-
-feature -- Element change
-
---	wel_set_text (a_text: STRING) is
---			-- Assign `a_text' to `text'.
---		do
---			if notebook /= Void then
---				notebook_imp.set_item_text (widget, a_text)
---			end
---		end
 
 feature {NONE} -- Implementation
 

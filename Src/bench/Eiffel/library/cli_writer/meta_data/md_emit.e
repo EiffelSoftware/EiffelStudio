@@ -168,7 +168,8 @@ feature -- Definition: creation
 			extend_token_valid:
 				(extend_token & Md_mask = Md_type_def) or
 				(extend_token & Md_mask = Md_type_ref) or
-				(extend_token & Md_mask = Md_type_spec)
+				(extend_token & Md_mask = Md_type_spec) or
+				extend_token = 0
 			--implements_valid: for_all (implemements.item (i) is a Md_type_def, Md_type_ref
 			--	or Md_type_spec.
 		local
@@ -197,12 +198,25 @@ feature -- Definition: creation
 			implementation_token_valid:
 				(implementation_token & Md_mask = Md_file) or
 				(implementation_token & Md_mask = Md_exported_type)
-			type_def_token_valid: type_def_token & Md_mask = Md_type_def
+			type_def_token_valid: type_def_token = 0 or (type_def_token & Md_mask = Md_type_def)
 		do
 			Result := assembly_emitter.define_exported_type (type_name, implementation_token,
 				type_def_token, type_flags)
 		ensure
 			valid_result: Result & Md_mask = Md_exported_type
+		end
+		
+	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER): INTEGER is
+			-- Create a row in File table
+		require
+			file_name_not_void: file_name /= Void
+			file_name_not_empty: not file_name.is_empty
+			hash_value_not_void: hash_value /= Void
+			hash_value_not_empty: hash_value.count > 0
+		do
+			Result := assembly_emitter.define_file (file_name, hash_value, 0)
+		ensure
+			valid_result: Result & Md_mask = Md_file
 		end
 			
 	define_method (method_name: UNI_STRING; in_class_token: INTEGER;

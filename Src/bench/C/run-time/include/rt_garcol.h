@@ -148,8 +148,19 @@ extern void st_truncate(register struct stack *stk);	/* Truncate stack if necess
 extern void st_wipe_out(register struct stchunk *chunk);/* Remove unneeded chunk from stack */
 extern void st_reset(register struct stack *stk);/* Clean stack */
 
+/* Once manifest string manipulation:
+ * 	ALLOC_OMS(a) allocates array to store string objects and assigns it to `a'
+ * 	FREE_OMS(a) frees previously allocated array `a'
+ */
+#if defined(WORKBENCH) || defined(EIF_THREADS)
 extern EIF_REFERENCE **alloc_oms ();
 extern void free_oms (EIF_REFERENCE **oms_array);
+#define ALLOC_OMS(a)	{a = alloc_oms ();}
+#define FREE_OMS(a)	{free_oms (a); a = NULL;}
+#else
+#define ALLOC_OMS(a)
+#define FREE_OMS(a)
+#endif
 
 #ifdef __cplusplus
 }

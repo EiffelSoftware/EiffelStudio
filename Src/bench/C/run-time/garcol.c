@@ -1174,6 +1174,7 @@ rt_private void clean_up(void)
 }
 #endif /* ISE_GC */
 
+#if defined (WORKBENCH) || defined (EIF_THREADS)
 /*
 doc:	<routine name="alloc_oms" return_type="EIF_REFERENCE **" export="shared">
 doc:		<summary>Allocate array of once manifest strings.</summary>
@@ -1217,6 +1218,7 @@ rt_shared void free_oms (EIF_REFERENCE **oms_array)
 	}
 	eif_free (oms_array); /* have been allocated with eif_malloc */
 }
+#endif
 
 rt_public void reclaim(void)
 {
@@ -1277,8 +1279,7 @@ rt_public void reclaim(void)
 
 	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
 
-	free_oms (EIF_oms); /* Free array of once manifest strings */
-	EIF_oms = NULL;
+	FREE_OMS (EIF_oms); /* Free array of once manifest strings */
 
 	eif_free (starting_working_directory);
 	eif_gen_conf_cleanup ();

@@ -49,6 +49,11 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 		deferred
 		end
 
+	mask: POINTER is
+			-- Pointer to the mask used by `Current'
+		deferred
+		end
+
 	line_style: INTEGER
 			-- Dash-style used when drawing lines.
 
@@ -458,6 +463,17 @@ feature -- Drawing operations
 			end
 		end
 
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- 
+		local
+			pix_imp: EV_PIXMAP_IMP
+			a_src_pixbuf, a_dest_pixbuf: POINTER
+		do
+			create Result.make_with_size (area.width, area.height)
+			pix_imp ?= Result.implementation
+			pix_imp.set_pixmap_from_pixbuf (pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height))
+		end
+
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		do
@@ -680,7 +696,79 @@ feature {NONE} -- Implemention
 			Result := ((ang / Pi) * 180 * 64).rounded
 		end
 
+feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
+
+	pixbuf_from_drawable: POINTER is
+			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
+		do
+			Result := pixbuf_from_drawable_at_position (0, 0, 0, 0, -1, -1)
+		end
+
+	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER is
+			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
+		local
+			a_pix, mask_pixbuf1, mask_pixbuf2: POINTER
+		do
+			a_pix := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
+			if mask /= default_pointer then
+				mask_pixbuf1 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
+				mask_pixbuf2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf1, True, '%/255/', '%/255/', '%/255/')
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf2, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 254)
+				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (a_pix)
+				draw_mask_on_pixbuf (Result, mask_pixbuf2)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf1)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf2)
+			else
+				Result := a_pix
+			end
+		end
+
+	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER is
+			-- Return a GdkPixbuf object from the current Gdkpixbuf structure with dimensions `a_width' * `a_height'
+		local
+			a_pixbuf: POINTER
+		do
+			a_pixbuf := pixbuf_from_drawable
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
+			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+		end
+		
 feature {NONE} -- Implementation
+
+	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+				int x, y;
+				
+				GdkPixbuf *pixbuf, *mask;
+				
+				pixbuf = (GdkPixbuf*) $a_pixbuf_ptr;
+				mask = (GdkPixbuf*) $a_mask_ptr; 
+				
+				for (y = 0; y < gdk_pixbuf_get_height (pixbuf); y++)
+				{
+					guchar *src, *dest;
+					
+					src = gdk_pixbuf_get_pixels (mask) + y * gdk_pixbuf_get_rowstride (mask);
+					dest = gdk_pixbuf_get_pixels (pixbuf) + y * gdk_pixbuf_get_rowstride (pixbuf);
+					
+					for (x = 0; x < gdk_pixbuf_get_width (pixbuf); x++)
+					{
+						if (src [0] == 0)
+							dest [3] = 0;
+						
+						src += 4;
+						dest += 4;				
+					}
+					
+				}
+				}
+			]"
+		end
 
 	app_implementation: EV_APPLICATION_IMP is
 			-- Return the instance of EV_APPLICATION_IMP.

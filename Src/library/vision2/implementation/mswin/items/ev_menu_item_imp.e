@@ -68,6 +68,13 @@ inherit
 			{NONE} all
 		end
 
+	MEMORY
+		export
+			{NONE} all
+		redefine
+			dispose
+		end
+		
 create
 	make
 

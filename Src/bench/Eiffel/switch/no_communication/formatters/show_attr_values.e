@@ -54,61 +54,8 @@ feature {NONE} -- Properties
 		end;
 
 	create_structured_text (object: OBJECT_STONE): STRUCTURED_TEXT is
-		local
-			obj: DEBUGGED_OBJECT;
-			attributes: LIST [DEBUG_VALUE];
-			type_name: STRING;
-			is_special: BOOLEAN;
-			dynamic_class: E_CLASS;
-			status: APPLICATION_STATUS;
-			stone: CLASSC_STONE;
 		do
-			status := Application.status;
-			if status = Void then
-				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_running)
-			elseif not status.is_stopped then
-				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
-			else
-				!! Result.make;
-				!! obj.make (object.object_address,
-					tool.sp_lower, tool.sp_upper);
-				attributes := obj.attributes;
-				is_special := obj.is_special;
-				tool.set_sp_capacity (obj.max_capacity);
-				dynamic_class := object.dynamic_class;
-				type_name := clone (dynamic_class.name);
-				type_name.to_upper;
-				Result.add_classi (dynamic_class.lace_class, type_name);
-				Result.add_string (" [");
-				Result.add_address (object.object_address, object.name, dynamic_class);
-				Result.add_char (']');
-				Result.add_new_line;
-				Result.add_new_line;
-				if 
-					is_special and then (attributes.empty or else 
-					attributes.first.name.to_integer > 0) 
-				then
-					Result.add_indent;
-					Result.add_string ("... Items skipped ...");
-					Result.add_new_line
-				end;
-				from
-					attributes.start
-				until
-					attributes.after
-				loop
-					attributes.item.append_to (Result, 1);
-					attributes.forth
-				end;
-				if 
-					is_special and then (attributes.empty or else 
-					attributes.last.name.to_integer < obj.capacity - 1)
-				then
-					Result.add_indent;
-					Result.add_string ("... More items ...");
-					Result.add_new_line
-				end
-			end
+			!! Result.make;
 		end;
 
 feature {NONE} -- Implementation

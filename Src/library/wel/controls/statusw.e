@@ -365,17 +365,6 @@ feature {NONE} -- Implementation
 			Result := Ws_visible + Ws_child + Sbars_sizegrip
 		end
 
-	Sbars_sizegrip: INTEGER is 256
-			-- Style to draw the size grip.
-			--| This constant is not defined in `commctrl.h' file
-			--| shipped with Microsoft Visual C++ 2.0 and
-			--| Borland C++ 4.50.
-		--external
-		--	  "C [macro <cctrl.h>]"
-		--alias
-		--	  "SBARS_SIZEGRIP"
-		--end
-
 feature {NONE} -- Inapplicable
 
 	text: STRING is
@@ -396,6 +385,14 @@ feature {NONE} -- Externals
 			"C [macro <cctrl.h>]"
 		alias
 			"STATUSCLASSNAME"
+		end
+
+	Sbars_sizegrip: INTEGER is
+			-- Style to draw the size grip.
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"SBARS_SIZEGRIP"
 		end
 
 end -- class WEL_STATUS_WINDOW

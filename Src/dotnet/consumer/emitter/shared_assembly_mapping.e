@@ -14,7 +14,7 @@ feature -- Access
 			Result := assembly_mapping_cell.item
 		end
 
-	referenced_type_from_type (t: TYPE): CONSUMED_REFERENCED_TYPE is
+	referenced_type_from_type (t: SYSTEM_TYPE): CONSUMED_REFERENCED_TYPE is
 			-- Consumed type from `t'
 		require
 			non_void_type: t /= Void

@@ -35,7 +35,7 @@ feature {NONE} -- Access
 	eiffel_names: HASH_TABLE [HASH_TABLE [STRING, STRING], STRING]
 			-- give hash_table of eiffel names for a dotnet type name.
 
-	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: TYPE; declared_type: TYPE): STRING is
+	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: SYSTEM_TYPE; declared_type: SYSTEM_TYPE): STRING is
 			-- return signature corresponding to args.
 		local
 			i: INTEGER
@@ -62,7 +62,7 @@ feature {NONE} -- Access
 
 feature	-- Access
 
-	unique_eiffel_name (a_dotnet_name: SYSTEM_STRING; args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: TYPE; declaring_type: TYPE): STRING is
+	unique_eiffel_name (a_dotnet_name: SYSTEM_STRING; args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: SYSTEM_TYPE; declaring_type: SYSTEM_TYPE): STRING is
 		require
 			non_void_a_dotnet_name: a_dotnet_name /= Void
 			non_void_args: args /= Void

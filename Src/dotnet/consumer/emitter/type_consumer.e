@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t: TYPE; en: STRING) is
+	make (t: SYSTEM_TYPE; en: STRING) is
 			-- Initialize type consumer for type `t' with eiffel name `en'.
 		require
 			non_void_type: t /= Void
@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 		local
 			dotnet_name: STRING
 			parent_name: SYSTEM_STRING
-			inter: NATIVE_ARRAY [TYPE]
+			inter: NATIVE_ARRAY [SYSTEM_TYPE]
 			interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			parent: CONSUMED_REFERENCED_TYPE
 			i, nb, count: INTEGER
-			parent_type: TYPE
+			parent_type: SYSTEM_TYPE
 			l_is_nested: BOOLEAN
 		do
 			create dotnet_name.make_from_cil (t.full_name)
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			is_consumed_field: is_consumed_field (info)
 		local
 			dotnet_name: STRING
-			l_type: TYPE
+			l_type: SYSTEM_TYPE
 			l_value: SYSTEM_OBJECT
 		do
 			create dotnet_name.make_from_cil (info.name)
@@ -831,10 +831,10 @@ feature {NONE} -- Status Setting.
 			Result := not info.return_type.equals_type (Void_type)
 		end
 		
-	Void_type: TYPE is
+	Void_type: SYSTEM_TYPE is
 			-- Void .NET type
 		once
-			Result := feature {TYPE}.get_type_string (("System.Void").to_cil)
+			Result := feature {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
 		end
 
 	Operator_name_prefix: SYSTEM_STRING is "op_"
@@ -863,7 +863,7 @@ feature {NONE} -- Status Setting.
 
 feature {NONE} -- Added features of System.Object to Interfaces
 
-	update_interface_members (t: TYPE) is
+	update_interface_members (t: SYSTEM_TYPE) is
 			-- 
 		local
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
@@ -939,7 +939,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			internal_members := l_members
 		end
 
-	internal_update_interface_members (t: TYPE; processed: HASHTABLE) is
+	internal_update_interface_members (t: SYSTEM_TYPE; processed: HASHTABLE) is
 			-- Update `internal_methods', `internal_properties' and `internal_events' and recursively explores parent interface
 			-- if not already in `processed'.
 		local
@@ -947,9 +947,9 @@ feature {NONE} -- Added features of System.Object to Interfaces
 --			l_merged_methods: NATIVE_ARRAY [METHOD_INFO]
 			l_merged_properties: NATIVE_ARRAY [PROPERTY_INFO]
 			l_merged_events: NATIVE_ARRAY [EVENT_INFO]
-			l_interfaces: NATIVE_ARRAY [TYPE]
+			l_interfaces: NATIVE_ARRAY [SYSTEM_TYPE]
 			i, nb: INTEGER
-			l_interface: TYPE
+			l_interface: SYSTEM_TYPE
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
 --			l_methods: NATIVE_ARRAY [METHOD_INFO]
 			l_properties: NATIVE_ARRAY [PROPERTY_INFO] 
@@ -1011,11 +1011,11 @@ feature {NONE} -- Added features of System.Object to Interfaces
 	object_methods: HASH_TABLE [METHOD_INFO, STRING] is
 			-- List of members of System.Object.
 		local
-			l_type: TYPE
+			l_type: SYSTEM_TYPE
 			l_methods: NATIVE_ARRAY [METHOD_INFO]
 			i, nb: INTEGER
 		once
-			l_type := feature {TYPE}.get_type_string ("System.Object")
+			l_type := feature {SYSTEM_TYPE}.get_type_string ("System.Object")
 			l_methods := l_type.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
 				feature {BINDING_FLAGS}.public)
 			create Result.make (l_methods.count)
@@ -1153,7 +1153,7 @@ feature {NONE} -- Added features for ENUM types.
 			-- Referenced type of `System.Int32'.
 		do
 			Result := referenced_type_from_type (
-				feature {TYPE}.get_type_string (("System.Int32").to_cil))
+				feature {SYSTEM_TYPE}.get_type_string (("System.Int32").to_cil))
 		ensure
 			integer_type_not_void: integer_type /= Void
 		end
@@ -1202,16 +1202,16 @@ feature {NONE} -- Added features for ENUM types.
 			converted: Result /= Void and then not Result.is_empty
 		end
 
-	Double_type: TYPE is
+	Double_type: SYSTEM_TYPE is
 			-- typeof (double)
 		once
-			Result := feature {TYPE}.get_type_string (("System.Double").to_cil)
+			Result := feature {SYSTEM_TYPE}.get_type_string (("System.Double").to_cil)
 		end
 
-	Real_type: TYPE is
+	Real_type: SYSTEM_TYPE is
 			-- typeof (float)
 		once
-			Result := feature {TYPE}.get_type_string (("System.Single").to_cil)
+			Result := feature {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil)
 		end
 
 end -- class TYPE_CONSUMER

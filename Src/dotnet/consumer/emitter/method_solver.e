@@ -130,10 +130,10 @@ feature {METHOD_SOLVER, OVERLOAD_SOLVER} -- Implementation
 
 feature {NONE} -- Constants
 
-	Void_type: TYPE is
+	Void_type: SYSTEM_TYPE is
 			-- Void .NET type
 		once
-			Result := feature {TYPE}.get_type_string (("System.Void").to_cil)
+			Result := feature {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
 		end
 
 	op_implicit: SYSTEM_STRING is "op_Explicit"

@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t: TYPE) is
+	make (t: SYSTEM_TYPE) is
 			-- Initialize from .NET type `t'.
 		require
 			non_void_type: t /= Void
@@ -78,7 +78,7 @@ feature -- Comparison
 
 feature {TYPE_NAME_SOLVER, ASSEMBLY_CONSUMER} -- Implementation
 
-	internal_type: TYPE
+	internal_type: SYSTEM_TYPE
 			-- Type whose name is consumed
 
 end -- class TYPE_NAME_SOLVER

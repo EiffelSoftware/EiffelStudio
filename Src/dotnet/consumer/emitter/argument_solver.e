@@ -22,7 +22,7 @@ feature -- Access
 			en, dn: STRING
 			params: NATIVE_ARRAY [PARAMETER_INFO]
 			p: PARAMETER_INFO
-			t: TYPE
+			t: SYSTEM_TYPE
 		do
 			create Result.make (1, info.get_parameters.count)
 			params := info.get_parameters

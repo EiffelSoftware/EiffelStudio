@@ -18,7 +18,7 @@ create {EMITTER}
 
 feature -- Redefined
 
-	consumed_type (t: TYPE): CONSUMED_TYPE is
+	consumed_type (t: SYSTEM_TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `t'.
 		do
 			Types_cache.search (t.full_name)
@@ -80,7 +80,7 @@ feature -- Initialization
 
 feature -- Access
 
-	type_name (t: TYPE): STRING is
+	type_name (t: SYSTEM_TYPE): STRING is
 			-- Eiffel name of .NET type `t'.
 		local
 			ct: CONSUMED_TYPE
@@ -93,7 +93,7 @@ feature -- Access
 			end
 		end	
 
-	feature_name (t: TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [TYPE]): STRING is
+	feature_name (t: SYSTEM_TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [SYSTEM_TYPE]): STRING is
 			-- Eiffel name of .NET function `dotnet_name' from type `t' with arguments `args'.
 		require
 			non_void_type: t /= Void
@@ -278,7 +278,7 @@ feature -- Access
 			end
   		end
 
-	entity (entities_list: LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [TYPE]): CONSUMED_ENTITY is
+	entity (entities_list: LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [SYSTEM_TYPE]): CONSUMED_ENTITY is
 			-- return `consumed_entity' corresponding to parameters.
 			-- `entities_list' is given by `entities'.
 		require
@@ -319,7 +319,7 @@ feature -- Access
 			end
 		end
 
-	entities (t: TYPE; dotnet_feature_name: STRING): LIST [CONSUMED_ENTITY] is
+	entities (t: SYSTEM_TYPE; dotnet_feature_name: STRING): LIST [CONSUMED_ENTITY] is
 			-- Return list of Eiffel Eiffel entities associated to `dotnet_feature_name'.
 		require
 			non_void_t: t /= Void

@@ -157,8 +157,8 @@ feature {NONE} -- Implementation
 			i, j, type_count, module_count, generated_count: INTEGER
 			done: BOOLEAN
 			type_consumer: TYPE_CONSUMER
-			module_types: NATIVE_ARRAY [TYPE]
-			t: TYPE
+			module_types: NATIVE_ARRAY [SYSTEM_TYPE]
+			t: SYSTEM_TYPE
 			type_name: TYPE_NAME_SOLVER
 			simple_name, dotnet_name: STRING
 			list: SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER]

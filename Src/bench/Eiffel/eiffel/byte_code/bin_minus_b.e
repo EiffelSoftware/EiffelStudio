@@ -1,3 +1,8 @@
+indexing
+	description: "- operator"
+	date: "$date: $"
+	revision: "$revision: $"
+
 class BIN_MINUS_B 
 
 inherit
@@ -9,18 +14,10 @@ inherit
 		redefine
 			generate_operator, is_simple,
 			generate_simple, generate_plus_plus,
-			is_additive,
-			is_reverted
+			is_additive
 		end
 	
 feature -- Status report
-
-	is_reverted: BOOLEAN is true
-			-- Has result of expression to be converted back to original type of expression
-			-- so that result does not depend on implicit conversion performed by an underlying
-			-- platform to a type with higher precision?
-
-feature
 
 	is_simple: BOOLEAN is
 			-- Operation is usually simple (C can compact it in affectations)
@@ -31,6 +28,8 @@ feature
 	is_additive: BOOLEAN is True
 			-- Operation is additive (in the mathematical sense).
 	
+feature -- C code generation
+
 	generate_operator is
 			-- Generate the operator
 		do

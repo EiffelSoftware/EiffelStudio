@@ -28,7 +28,8 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `st'.
 		do
-			st.add_string ("%NError: feature `")
+			st.add_new_line
+			st.add_string ("Error: feature `")
 			st.add_string (feature_name)
 			st.add_string ("' does not exist in class ")
 			constraint_class.append_signature (st)

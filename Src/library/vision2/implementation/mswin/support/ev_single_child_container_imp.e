@@ -110,18 +110,30 @@ feature -- Basic operations
 	propagate_background_color is
 			-- Propagate the current background color of `Current'
 			-- to the children.
+		local
+			c: EV_CONTAINER
 		do
 			if item /= Void then
 				item.set_background_color (background_color)
+				c ?= item
+				if c /= Void then
+					c.propagate_background_color
+				end
 			end
 		end
 
 	propagate_foreground_color is
 			-- Propagate the current foreground color of `Current'
 			-- to the children.
+		local
+			c: EV_CONTAINER
 		do
 			if item /= Void then
 				item.set_foreground_color (foreground_color)
+				c ?= item
+				if c /= Void then
+					c.propagate_foreground_color
+				end
 			end
 		end
 

@@ -38,7 +38,6 @@ feature {NONE}
 		do
 			!!top_shell.make (a_name, a_screen);
 			eb_bulletin_create (a_name, top_shell);
-			top_shell.set_action ("<Configure>", Current, Current);
 		end;
 
 feature

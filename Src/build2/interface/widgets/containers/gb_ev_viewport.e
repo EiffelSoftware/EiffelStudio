@@ -115,7 +115,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -128,22 +128,22 @@ feature {GB_CODE_GENERATOR} -- Output
 			
 			element_info := full_information @ X_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
-				Result := a_name + ".set_x_offset (" + element_info.data + ")"
+				Result := info.name + ".set_x_offset (" + element_info.data + ")"
 			end
 			
 			element_info := full_information @ Y_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
-				Result := Result + indent + a_name + ".set_y_offset (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_y_offset (" + element_info.data + ")"
 			end
 			
 			element_info := full_information @ item_width_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result := Result + indent + a_name + ".set_item_width (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_item_width (" + element_info.data + ")"
 			end
 			
 			element_info := full_information @ item_height_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result := Result + indent + a_name + ".set_item_height (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_item_height (" + element_info.data + ")"
 			end
 		end
 

@@ -95,7 +95,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -107,7 +107,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				Result := a_name + ".set_text (%"" + element_info.data + "%")"
+				Result := info.name + ".set_text (%"" + element_info.data + "%")"
 			end
 			Result := strip_leading_indent (Result)
 		end

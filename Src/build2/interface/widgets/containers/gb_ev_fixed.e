@@ -159,7 +159,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -171,6 +171,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			counter: INTEGER
 			lower, upper: INTEGER
 			current_child_name: STRING
+			children_names: ARRAYED_LIST [STRING]
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
@@ -190,17 +191,20 @@ feature {GB_CODE_GENERATOR} -- Output
 			if element_info /= Void then
 				temp_height_string := element_info.data
 			end
-			check
-				strings_equal_in_length: temp_x_position_string.count = temp_y_position_string.count and
-					temp_x_position_string.count = temp_width_string.count and
-					temp_x_position_string.count = temp_height_string.count
-				strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
-					-- Cannot check this, as `Current' will have been built especially
-					-- for code generation purposes, and `objects' will be empty,
-					-- hence `first' will be Void.
-				--strings_correct_length: temp_x_position_string.count // 4 = first.count			
+			if temp_x_position_string /= Void then
+				check
+					strings_equal_in_length: temp_x_position_string.count = temp_y_position_string.count and
+						temp_x_position_string.count = temp_width_string.count and
+						temp_x_position_string.count = temp_height_string.count
+					strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
+						-- Cannot check this, as `Current' will have been built especially
+						-- for code generation purposes, and `objects' will be empty,
+						-- hence `first' will be Void.
+					--strings_correct_length: temp_x_position_string.count // 4 = first.count			
+				end
 			end
-			Result := Result + indent + "%T-- Size and position all children of `" + a_name + "'."
+			Result := Result + indent + "%T-- Size and position all children of `" + info.name + "'."
+			children_names := info.child_names
 			from
 				counter := 1
 			until
@@ -209,10 +213,10 @@ feature {GB_CODE_GENERATOR} -- Output
 				lower := (counter - 1) * 4 + 1
 				upper := (counter - 1) * 4 + 4
 				current_child_name := children_names @ counter
-				Result := Result + indent + a_name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")"
-				Result := Result + indent + a_name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")"
-				Result := Result + indent + a_name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")"
-				Result := Result + indent + a_name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")"
+				Result := Result + indent + info.name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")"
+				Result := Result + indent + info.name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")"
+				Result := Result + indent + info.name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")"
+				Result := Result + indent + info.name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")"
 				counter := counter + 1
 			end			
 		end

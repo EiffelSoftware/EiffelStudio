@@ -146,7 +146,7 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 		
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -159,25 +159,25 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (User_can_resize_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result := a_name + ".enable_user_resize"
+					Result := info.name + ".enable_user_resize"
 				else
-					Result := a_name + ".disable_user_resize"
+					Result := info.name + ".disable_user_resize"
 				end
 			end
 		
 			element_info := full_information @ (Maximum_width_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_maximum_width (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_maximum_width (" + element_info.data + ")"
 			end
 				
 			element_info := full_information @ (Maximum_height_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_maximum_height (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_maximum_height (" + element_info.data + ")"
 			end
 			
 			element_info := full_information @ (Title_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_title (%"" + element_info.data + "%")"
+				Result := Result + indent + info.name + ".set_title (%"" + element_info.data + "%")"
 			end
 
 			Result := strip_leading_indent (Result)

@@ -8,8 +8,6 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
-		undefine
-			to_string, finalize, equals, get_hash_code
 		redefine
 			dispose_boolean
 		end
@@ -111,7 +109,7 @@ feature -- Implementation
 			btn_OK.set_tab_index (9)
 			btn_OK.set_text ("&OK")
 
-			pnl_month_background.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
+			pnl_month_background.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 43)
 			pnl_month_background.set_location (l_point)
 			l_size.make (48, 16)
@@ -127,7 +125,7 @@ feature -- Implementation
 			btn_title_back_color.set_text ("Change")
 			btn_title_back_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_title_back_color_click))
 
-			pnl_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
+			pnl_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 19)
 			pnl_fore_color.set_location (l_point)
 			l_size.make (48, 16)
@@ -135,7 +133,7 @@ feature -- Implementation
 			pnl_fore_color.set_tab_index (10)
 			pnl_fore_color.set_text ("panel1")
 
-			pnl_title_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
+			pnl_title_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 91)
 			pnl_title_fore_color.set_location (l_point)
 			l_size.make (48, 16)
@@ -151,7 +149,7 @@ feature -- Implementation
 			btn_month_background.set_text ("Change")
 			btn_month_background.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_month_background_click))
 
-			pnl_title_back_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
+			pnl_title_back_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 67)
 			pnl_title_back_color.set_location (l_point)
 			l_size.make (48, 16)
@@ -182,7 +180,7 @@ feature -- Implementation
 			btn_fore_color.set_text ("Change")
 			btn_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_fore_color_click))
 
-			pnl_trailing_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
+			pnl_trailing_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 115)
 			pnl_trailing_fore_color.set_location (l_point)
 			l_size.make (48, 16)

@@ -81,7 +81,7 @@ rt_public void eifuvisex (void)  {
  * Type checking
  */
 
-rt_public int eifreturntype (char *routine, EIF_TYPE_ID cid) {
+rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
     /* Return type of `routine' defined in class of type `cid' */
    
     EIF_GET_CONTEXT
@@ -99,13 +99,13 @@ rt_public int eifreturntype (char *routine, EIF_TYPE_ID cid) {
 
 
     for (i = 0, n = sk->cn_names; i < nb_attr; i++, n++)
-        if (0 == strcmp(routine, *n))
+        if (0 == strcmp(attr_name, *n))
             break;                  /* Attribute was found */
 
     if (i == nb_attr)               /* Attribute not found */
-        return (EIF_INTEGER) -1;                  /* Will certainly raise a bus error */
+        return EIF_NO_TYPE;                  /* Will certainly raise a bus error */
 
-    field_type = System(cid).cn_types[i];
+    field_type = sk->cn_types[i];
     switch (field_type & SK_HEAD)   {
 
         case SK_REF:    return EIF_REFERENCE_TYPE;
@@ -116,7 +116,8 @@ rt_public int eifreturntype (char *routine, EIF_TYPE_ID cid) {
         case SK_DOUBLE: return EIF_DOUBLE_TYPE;
         case SK_EXP:    return EIF_EXPANDED_TYPE;
         case SK_BIT:    return EIF_BIT_TYPE;
-        default:        return EIF_POINTER_TYPE;
+        case SK_POINTER:    return EIF_POINTER_TYPE;
+        default:        return EIF_NO_TYPE;
     }
     EIF_END_GET_CONTEXT
 }  
@@ -231,18 +232,6 @@ rt_public EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid)
 	return (EIF_FN_POINTER) eifref(routine, cid);	/* Returning POINTER */
 }
 
-rt_public EIF_POINTER eifrout (EIF_OBJ rout_name, EIF_OBJ class_name) {
-    /* Get the pointer to the Eiffel routine described by its 
-     * name `rout_name' and its class `class_name'
-     */
-
-   
-    return (EIF_POINTER) eifref (eif_access (rout_name),
-                                     eifcid (eif_access (class_name))
-                                    );
-
-    }
-
 rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 {
 	/* Look for the routine named 'routine' in the type 'cid' (there is no
@@ -328,9 +317,10 @@ rt_public char *eifname(EIF_TYPE_ID cid)
 	 * is returned.
 	 */
 
+
 	int dtype = Deif_bid(cid_to_dtype(cid));		/* Convert to dynamic type */
 
-	if (dtype < 0)						/* Not a reference type */
+	if ((dtype < 0) || (cid == EIF_NO_TYPE))						/* Not a reference type */
 		return (char *) 0;
 
 	return System(dtype).cn_generator;	/* Pointer to static data */

@@ -39,7 +39,17 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
-	
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_OBJECT_HANDLER	
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 create
 	make_with_name
 	
@@ -51,7 +61,8 @@ feature {NONE} -- Initialization
 			default_create
 			set_text (a_name)
 			set_pixmap (((create {GB_SHARED_PIXMAPS}).icon_directory) @ 1)
-			drop_actions.extend (agent add_window_object)
+			drop_actions.extend (agent add_object)
+			drop_actions.set_veto_pebble_function (agent restrict_drop_to_valid_types)
 			set_pebble (Current)
 		ensure
 			name_set: a_name.is_equal (text)
@@ -108,7 +119,7 @@ feature -- Implementation
 		
 feature -- Implementation
 	
-	add_window_object (an_object: GB_TITLED_WINDOW_OBJECT) is
+	add_object (an_object: GB_OBJECT) is
 			-- Add representation of `an_object' to `Current'.
 		require
 			an_object_not_void: an_object /= Void
@@ -116,9 +127,30 @@ feature -- Implementation
 			if an_object.window_selector_item = Void then
 				window_selector.add_new_object (an_object)
 			end
-			add_selector_item (an_object.window_selector_item)
+			if an_object.window_selector_item /= Void then
+				add_selector_item (an_object.window_selector_item)
+			else
+				add_selector_item (object_handler.deep_object_from_id (an_object.associated_top_level_object).window_selector_item)
+			end
 			system_status.enable_project_modified
 			command_handler.update
 		end
+		
+	restrict_drop_to_valid_types (an_object: GB_OBJECT): BOOLEAN is
+			-- Return `True' if `an_object' is a top level object.
+		require
+			an_object_not_void: an_object /= Void
+		local
+			type: STRING
+		do
+			type := an_object.generating_type
+			Result := type.substring_index ("_ITEM_", 1) = 0
+				and type.substring_index ("MENU", 1) = 0
+				and not an_object.is_instance_of_top_level_object
+		ensure
+		-- | FIXME Crashes transport. No idea why.
+		--	Result = (an_object.object /= Void) implies an_object.is_top_level_object
+		end
+		
 		
 end -- class GB_WINDOW_SELECTOR_DIRECTORY_ITEM

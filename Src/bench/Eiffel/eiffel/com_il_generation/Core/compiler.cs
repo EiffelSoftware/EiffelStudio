@@ -389,7 +389,7 @@ feature -- Generation Structure
 		#if DEBUG
 			Log ("EndParentsList");
 		#endif
-		if (!Classes [CurrentTypeID].IsInterface && Classes [CurrentTypeID].BaseType == NoValue) {
+		if (!Classes [CurrentTypeID].IsInterface && Classes [CurrentTypeID].BaseType == No_value) {
 			Classes [CurrentTypeID].AddParent (Object_id);
 		}		
 		Classes [CurrentTypeID].CreateTypeBuilder();
@@ -916,24 +916,30 @@ feature -- Generation Structure
 					MethodIL = ((MethodBuilder) Method.method_builder).GetILGenerator();
 					GenerateCurrent ();
 					MethodIL.Emit (OpCodes.Ldfld, DefinitionMethod.attribute_builder);
+					generate_cast (Method.return_type_id, DefinitionMethod.return_type_id);
 					MethodIL.Emit (OpCodes.Ret);		
 
 					MethodBuilder Setter = Method.setter_builder;
 					MethodIL = Setter.GetILGenerator();
 					GenerateCurrent ();
 					GenerateArgument (1);
+					generate_cast (Method.return_type_id, DefinitionMethod.return_type_id);
 					MethodIL.Emit (OpCodes.Stfld, DefinitionMethod.attribute_builder);
 				} else {
 					MethodIL = ((MethodBuilder) Method.method_builder).GetILGenerator();
 					nb = DefinitionMethod.argument_count + 1;
-					if (DefinitionMethod.is_c_external) {
-						for (i = 1; i < nb; i++)
-							GenerateArgument (i);
-					} else {
-						for (i = 0; i < nb; i++)
-							GenerateArgument (i);
+					if (!DefinitionMethod.is_c_external) {
+						GenerateCurrent();
+					}
+					for (i = 1; i < nb; i++) {
+						GenerateArgument (i);
+						generate_cast (Method.parameter_type_ids [i - 1],
+							DefinitionMethod.parameter_type_ids [i - 1]);
 					}
 					MethodIL.Emit (OpCodes.Call, DefinitionMethod.method_builder);
+					if (Method.has_return_type) {
+						generate_cast (DefinitionMethod.return_type_id, Method.return_type_id);
+					}
 				}
 			} else {
 				MethodIL = ((MethodBuilder) Method.method_builder).GetILGenerator();
@@ -1000,12 +1006,8 @@ feature -- Generation Structure
 				GenerateCurrent ();
 				for (i = 0; i < nb ; i++) {
 					GenerateArgument (i + 1);
-					if (is_verifiable) {
-						if (Method.parameter_type_ids [i] != ParentMethod.parameter_type_ids [i]) {
-							MethodIL.Emit (OpCodes.Castclass,
-								Classes [Method.parameter_type_ids [i]].Builder);
-						}
-					}
+					generate_cast (ParentMethod.parameter_type_ids [i],
+						Method.parameter_type_ids [i]);
 				}
 				MethodIL.Emit (OpCodes.Callvirt, Method.method_builder);
 				MethodIL.Emit (OpCodes.Ret);
@@ -1026,12 +1028,8 @@ feature -- Generation Structure
 					MethodIL = Override.GetILGenerator();
 					GenerateCurrent ();
 					GenerateArgument (1);
-					if (is_verifiable) {
-						if (Method.parameter_type_ids [i] != ParentMethod.parameter_type_ids [i]) {
-							MethodIL.Emit (OpCodes.Castclass,
-								Classes [Method.parameter_type_ids [i]].Builder);
-						}
-					}
+					generate_cast (ParentMethod.parameter_type_ids [0],
+						Method.parameter_type_ids [0]);
 					MethodIL.Emit (OpCodes.Callvirt, Method.setter_builder);
 					MethodIL.Emit (OpCodes.Ret);
 
@@ -1061,7 +1059,7 @@ feature -- Generation Structure
 		MethodIL = ((MethodBuilder) Method.method_builder).GetILGenerator();
 		GenerateCurrent ();
 		MethodIL.Emit (OpCodes.Call, MemberwiseCloneMethod);
-		GenerateCheckCast (0, CurrentTypeID);
+		generate_cast (0, CurrentTypeID);
 		MethodIL.Emit (OpCodes.Ret);		
 	}
 
@@ -1206,7 +1204,7 @@ feature -- Generation Structure
 
 		try {
 			#if ASSERTIONS	
-				if (f == null || f.return_type_id == NoValue)
+				if (f == null || f.return_type_id == No_value)
 					throw new ApplicationException ("Not an attribute or like function");
 			#endif
 
@@ -1259,6 +1257,21 @@ feature -- Generation Structure
 	// Generate Cast
 	public void GenerateCheckCast (int SourceTypeID, int TargetTypeID) {
 		MethodIL.Emit (OpCodes.Castclass, Classes [TargetTypeID].Builder);
+	}
+
+	public void generate_cast (int source_id, int target_id)
+		// If `is_verifiable' is True, and `source_id' is different from `target_id'
+		// and `source_id' does not conform to `target_id', we generate a cast
+		// to type represented by `target_id'.
+		// If `source_id' is `0' we force a cast to `target_id'.
+	{
+		if
+			(is_verifiable && (source_id != target_id) &&
+			(source_id == 0 ||
+			!Classes [target_id].Builder.IsSubclassOf (Classes [source_id].Builder)))
+		{
+			MethodIL.Emit (OpCodes.Castclass, Classes [target_id].Builder);
+		}
 	}
 
 /* Conversion */
@@ -2130,7 +2143,7 @@ feature -- Statics
 	private static string Key_filename_extension = ".snk";
 	
 	// Initial values for IDs
-	internal static int NoValue = -1;
+	internal const int No_value = -1;
 
 	// Eiffel classes to be generated
 	internal static CLASS[] Classes;

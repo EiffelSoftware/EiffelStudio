@@ -56,7 +56,7 @@ feature {EV_ITEM, EV_ANY_I, EV_RADIO} -- Implementation
 			create pointer_motion_actions
 		end
 
-feature {EV_ANY_I, EV_RADIO}
+feature {EV_ANY_I, EV_RADIO} -- Implementation
 
 	implementation: EV_ITEM_I
 			-- Responsible for interaction with the underlying native graphics
@@ -85,6 +85,9 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/13 19:11:46  king
+--| Added feature tag
+--|
 --| Revision 1.11  2000/03/10 02:20:31  oconnor
 --| Corrected export clause for implementation
 --|

@@ -1,6 +1,6 @@
 class SHARED_GENERATION
 
-feature {NONE}
+feature
 
 	gc_equal: STRING is " = "
 

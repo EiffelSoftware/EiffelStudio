@@ -456,19 +456,79 @@ feature -- Status report
 
 	changeable_comparison_criterion: BOOLEAN is False
 
+
 	is_integer: BOOLEAN is
 			-- Does `Current' represent an INTEGER?
 		local
-			retried: BOOLEAN
-			i: INTEGER
+			l_c: CHARACTER
+			l_area: like internal_string_builder
+			i, nb, l_state: INTEGER
 		do
-			if not retried then
-				i := feature {CONVERT}.to_int_32_string (to_cil)
+				-- l_state = 0 : waiting sign or first digit.
+				-- l_state = 1 : sign read, waiting first digit.
+				-- l_state = 2 : in the number.
+				-- l_state = 3 : trailing white spaces
+				-- l_state = 4 : error state.
+			from
+				l_area := internal_string_builder
+				i := 0
+				nb := count - 1
+			until
+				i > nb or l_state > 3
+			loop
+				l_c := l_area.chars (i)
+				i := i + 1
+				inspect l_state
+				when 0 then
+						-- Let's find beginning of an integer, if any.
+					if l_c.is_digit then
+						l_state := 2
+					elseif l_c = '-' or l_c = '+' then
+						l_state := 1
+					elseif l_c = ' ' then
+					else
+						l_state := 4
+					end
+				when 1 then
+						-- Let's find first digit after sign.
+					if l_c.is_digit then
+						l_state := 2
+					else
+						l_state := 4
+					end
+				when 2 then
+						-- Let's find another digit or end of integer.
+					if l_c.is_digit then
+					elseif l_c = ' ' then
+						l_state := 3
+					else
+						l_state := 4
+					end
+				when 3 then
+						-- Consume remaining white space.
+					if l_c /= ' ' then
+						l_state := 4
+					end
+				end
 			end
-			Result := not retried
-		rescue
-			retried := True
-			retry
+			Result := l_state = 2 or l_state = 3
+		ensure
+			syntax_and_range:
+				-- Result is true if and only if the following two
+				-- conditions are satisfied:
+				--
+				-- 1. In the following BNF grammar, the value of
+				--	Current can be produced by "Integer_literal":
+				--
+				-- Integer_literal = [Space] [Sign] Integer [Space]
+				-- Space 	= " " | " " Space
+				-- Sign		= "+" | "-"
+				-- Integer	= Digit | Digit Integer
+				-- Digit	= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+				--
+				-- 2. The integer value represented by Current
+				--	is within the range that can be represented
+				--	by an instance of type INTEGER.
 		end
 
 	is_real: BOOLEAN is

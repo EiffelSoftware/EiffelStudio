@@ -19,15 +19,6 @@ feature -- Warning messages
 								%that is not optimal in speed and size.%N";
 	w_Beginning_of_history: STRING is "Beginning of history";
 	w_Cannot_compile: STRING is "Read-only project: cannot compile.";
-	w_Cannot_create_class (class_name: STRING): STRING is
-		require
-			class_name_not_void: class_name /= Void
-		do
-			!!Result.make (30);
-			Result.append ("Cannot create class: ");
-			Result.append (class_name)
-			Result.append ("%Nin precompiled system");
-		end;
 	w_Cannot_create_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void

@@ -3,7 +3,6 @@ class ROUTINE_WIN_MGR
 
 inherit
 
-	SHARED_DEBUG;
 	EDITOR_MGR
 		redefine
 			editor_type

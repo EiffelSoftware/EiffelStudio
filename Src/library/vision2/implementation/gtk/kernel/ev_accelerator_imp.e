@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			-- dummy c_object
-			set_c_object (C.gtk_button_new)
+			set_c_object (C.gtk_label_new (NULL))
 			create key
 		end
 
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			create actions_internal
 			connect_signal_to_actions (
-				"pressed",
+				"show",
 				actions_internal,
 				Void
 			)
@@ -48,38 +48,6 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	interface: EV_ACCELERATOR
-
-	accel_group: POINTER
-			-- The shared accelerator group object.
-
-	add_accel is
-			-- Add the current key combination to the invisible button.
-		local
-			temp_string: ANY
-		do
-			if accel_group /= NULL then
-				temp_string := ("pressed").to_c
-				C.gtk_widget_add_accelerator (
-					c_object,
-					$temp_string,
-					accel_group,
-					key_code_to_gtk (key.code),
-					modifier_mask,
-					0)
-			end
-		end
-
-	remove_accel is
-			-- Remove the current key combination to the invisible button.
-		do
-			if accel_group /= NULL then
-				C.gtk_widget_remove_accelerator (
-					c_object,
-					accel_group,
-					key_code_to_gtk (key.code),
-					modifier_mask)
-			end
-		end
 
 	modifier_mask: INTEGER is
 			-- The mask consisting of alt, shift and control keys.
@@ -97,11 +65,35 @@ feature {NONE} -- Implementation
 
 feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
-	set_accel_group (a_grp: POINTER) is
+	add_accel (a_accel_grp: POINTER) is
+			-- Add the current key combination to the invisible button.
+		require
+			a_accel_grp_not_null: a_accel_grp /= NULL
+		local
+			temp_string: ANY
 		do
-			remove_accel
-			accel_group := a_grp
-			add_accel
+			temp_string := ("show").to_c
+			C.gtk_widget_add_accelerator (
+				c_object,
+				$temp_string,
+				a_accel_grp,
+				key_code_to_gtk (key.code),
+				modifier_mask,
+				0
+			)
+		end
+
+	remove_accel (a_accel_grp: POINTER) is
+			-- Remove the current key combination to the invisible button.
+		require
+			a_accel_grp_not_null: a_accel_grp /= NULL
+		do
+			C.gtk_widget_remove_accelerator (
+				c_object,
+				a_accel_grp,
+				key_code_to_gtk (key.code),
+				modifier_mask
+			)
 		end
 
 feature -- Access
@@ -124,57 +116,43 @@ feature -- Element change
 	set_key (a_key: EV_KEY) is
 			-- Set `a_key' as new key that has to be pressed.
 		do
-			remove_accel
-			key := a_key
-			add_accel
+			key := clone (a_key)
 		end
 
 	enable_shift_required is
 			-- "Shift" must be pressed for the key combination.
 		do
-			remove_accel
 			shift_required := True
-			add_accel
 		end
 
 	disable_shift_required is
 			-- "Shift" is not part of the key combination.
 		do
-			remove_accel
 			shift_required := False
-			add_accel
 		end
 
 	enable_alt_required is
 			-- "Alt" must be pressed for the key combination.
 		do
-			remove_accel
 			alt_required := True
-			add_accel
 		end
 
 	disable_alt_required is
 			-- "Alt" is not part of the key combination.
 		do
-			remove_accel
 			alt_required := False
-			add_accel
 		end
 
 	enable_control_required is
 			-- "Control" must be pressed for the key combination.
 		do
-			remove_accel
 			control_required := True
-			add_accel
 		end
 
 	disable_control_required is
 			-- "Control" is not part of the key combination.
 		do
-			remove_accel
 			control_required := False
-			add_accel
 		end
 
 end -- class EV_ACCELERATOR_IMP

@@ -117,16 +117,29 @@ feature -- Status report
 			is_window_pointer: is_window (hwnd)
 		local
 			l_data, null: POINTER
+			retried: BOOLEAN
 		do
-			l_data := cwin_get_window_long (hwnd, gwl_userdata)
-			if l_data /= null then
-				Result := eif_id_object (feature {WEL_INTERNAL_DATA}.object_id (l_data))
+			if not retried then
+				l_data := cwin_get_window_long (hwnd, gwl_userdata)
+				if l_data /= null then
+					Result := eif_id_object (feature {WEL_INTERNAL_DATA}.object_id (l_data))
+				end
+			else
+					-- We received an exception because looks like `l_data'
+					-- was not a memory area we allocated (e.g. an other instance
+					-- of a WEL_WINDOW from a different program, or a program
+					-- that uses GWL_USERDATA). In this case, we should return
+					-- Void.
+				Result := Void
 			end
 		ensure
 			is_wel_window: Result /= Void implies 
 				(create {INTERNAL}).type_conforms_to (
 					(create {INTERNAL}).dynamic_type (Result),
 					(create {INTERNAL}).dynamic_type_from_string ("WEL_WINDOW"))
+		rescue
+			retried := True
+			retry
 		end
 		
 	key_state (virtual_key: INTEGER): BOOLEAN is

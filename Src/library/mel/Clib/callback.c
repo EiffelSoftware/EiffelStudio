@@ -67,7 +67,7 @@ Cardinal *num_params;
 	EIF_OBJ trans;
 
 	if (*num_params) {
-		sscanf (params [0], "%lx", &trans);
+		sscanf (params [0], "0x%lX", &trans);
 		(e_handle_translation) (
 				(EIF_OBJ) eif_access (dispatcher),
 				(EIF_POINTER) scr_obj,			/* Widget which invoked callback */

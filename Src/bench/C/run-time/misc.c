@@ -21,8 +21,8 @@
 #include "cecil.h"
 
 #ifdef __WATCOMC__
-#include "windows.h"
-#include "argv.h"
+#include <windows.h>
+#include <argv.h>
 #endif
 
 /*

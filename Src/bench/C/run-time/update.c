@@ -23,7 +23,7 @@
 #include "err_msg.h"
 
 #ifdef __WATCOMC__
-#include "windows.h"
+#include <windows.h>
 #endif
 
 private void cnode_updt();			/* Update a cnode structure */

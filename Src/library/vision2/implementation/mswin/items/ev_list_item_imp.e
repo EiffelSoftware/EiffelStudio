@@ -320,7 +320,7 @@ feature {EV_ITEM_LIST_I} -- Implementation
 
 	on_parented is
 		do
-			if parent_imp /= Void then
+			if parent_imp /= Void and private_pixmap /= Void then
 				set_pixmap_in_parent
 			end
 		end

@@ -36,7 +36,7 @@
 #endif
 #endif
 
-extern fnptr dir_open();
+extern EIF_POINTER dir_open();
 extern void dir_rewind();
 extern char *dir_search();
 extern char *dir_next();

@@ -43,8 +43,12 @@ feature
 		local
 			answer: STRING
 		do
-			if confirmed ("Finalizing implies some C compilation and linking.%N%
-							%Do you want to do it now") then
+			if Project_read_only.item then
+				io.error.put_string ("Read-only project: cannot compile.%N")
+			elseif 
+				confirmed ("Finalizing implies some C compilation and linking.%
+							%%NDo you want to do it now") 
+			then
 				io.putstring ("--> Keep assertions (y/n): ");
 				wait_for_return;
 				answer := io.laststring;

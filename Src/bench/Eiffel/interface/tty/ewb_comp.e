@@ -3,7 +3,10 @@ class EWB_COMP
 
 inherit
 
-	EWB_CMD;
+	EWB_CMD
+		redefine
+			loop_execute
+		end;
 	EIFFEL_ENV;
 
 feature
@@ -155,6 +158,15 @@ feature -- Compilation
 					exit := True
 				end
 			end;
+		end;
+
+	loop_execute is
+		do
+			if Project_read_only.item then
+				io.error.put_string ("Read-only project: cannot compile.%N")
+			else
+				execute
+			end
 		end;
 
 	execute is

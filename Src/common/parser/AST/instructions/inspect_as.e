@@ -10,6 +10,9 @@ class INSPECT_AS
 inherit
 
 	INSTRUCTION_AS
+		redefine
+			number_of_stop_points
+		end
 
 feature {NONE} -- Initialization
 
@@ -33,6 +36,21 @@ feature -- Properties
 
 	else_part: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Else part
+
+feature -- Access
+
+    number_of_stop_points: INTEGER is
+            -- Number of stop points for AST
+        do
+            Result := 1;
+            if case_list /= Void then
+				Result := Result + case_list.number_of_stop_points
+            end;
+            if else_part /= Void then
+				Result := Result + else_part.number_of_stop_points
+            	Result := Result + 1;
+            end;
+        end
 
 feature -- Comparison
 

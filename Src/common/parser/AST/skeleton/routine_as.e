@@ -12,7 +12,8 @@ inherit
 	CONTENT_AS
 		redefine
 			is_require_else, is_ensure_then, has_rescue,
-			has_precondition, has_postcondition
+			has_precondition, has_postcondition,
+			number_of_stop_points
 		end;
 
 feature {NONE} -- Initialization
@@ -114,6 +115,19 @@ feature -- Properties
 		end;
 
 feature -- Access
+
+    number_of_stop_points: INTEGER is
+            -- Number of stop points for AST
+        do
+                -- Order matters.
+            if routine_body /= Void then
+                Result := routine_body.number_of_stop_points;
+            end;
+            if rescue_clause /= Void then
+                Result := Result + rescue_clause.number_of_stop_points;
+                Result := Result + 1
+            end;
+        end;
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does this routine has instruction `i'?

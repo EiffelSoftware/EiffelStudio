@@ -11,7 +11,8 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			has_instruction, index_of_instruction
+			has_instruction, index_of_instruction,
+			number_of_stop_points
 		end
 
 feature {NONE} -- Initialization
@@ -28,6 +29,15 @@ feature -- Properties
 			-- Compound
 
 feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+			if compound /= Void then
+				Result := compound.number_of_stop_points;
+			end;
+			Result := Result + 1;
+		end;
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does the current routine body has instruction `i'?

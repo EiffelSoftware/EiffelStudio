@@ -10,6 +10,17 @@ deferred class INSTRUCTION_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			number_of_stop_points
+		end
+
+feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+			Result := 1
+		end
 
 feature -- Comparison
 

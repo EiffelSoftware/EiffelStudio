@@ -11,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			is_feature_obj
+			is_feature_obj, number_of_stop_points
 		end;
 	COMPARABLE
 		undefine
@@ -75,6 +75,13 @@ feature -- Properties
 		end;
 
 feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+				-- Traverse tree to record instructions
+			Result := body.number_of_stop_points
+		end;
 
 	feature_name: STRING is
 			-- Feature name representing AST 

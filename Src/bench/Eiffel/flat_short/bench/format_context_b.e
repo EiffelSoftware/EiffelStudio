@@ -131,6 +131,27 @@ feature -- Properties
 			Result := is_short and then not current_class_only
 		end;
 
+	is_feature_short: BOOLEAN is
+			-- Is the Current format doing a flat-short?
+		local
+			f: FEATURE_I;
+			written_in: E_CLASS
+		do
+			Result := is_short;
+			if not Result then
+				f := global_adapt.target_enclosing_feature;
+				if f /= Void then
+					written_in := f.written_class;
+					if 
+						written_in.is_precompiled and then 
+						written_in.lace_class.hide_implementation 
+					then
+						Result := True
+					end
+				end
+			end
+		end;
+
 	class_c: CLASS_C;
 			-- Current class being processed
 	

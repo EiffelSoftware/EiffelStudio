@@ -194,6 +194,7 @@ feature -- Array optimization
 		do
 		end
 
+
 feature -- Generic conformance
 
 	generated_id (final_mode : BOOLEAN) : INTEGER is
@@ -202,8 +203,10 @@ feature -- Generic conformance
 			Result := -10       -- Invalid type id.
 		end
 
-	gen_type_string (final_mode : BOOLEAN) : STRING is
+	gen_type_string (final_mode, use_info : BOOLEAN) : STRING is
 			-- Mode dependent sequence of type id's separated by commas.
+			-- `use_info' is true iff we generate code for a 
+			-- creation instruction.
 		do
 			!!Result.make (0)
 			Result.append_integer (generated_id (final_mode))
@@ -212,9 +215,12 @@ feature -- Generic conformance
 			exists : Result /= Void
 		end
 
-	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
 			-- Put type id's in byte array.
+			-- `use_info' is true iff we generate code for a 
+			-- creation instruction.
 		do
 			ba.append_short_integer (generated_id (False))
 		end
+
 end

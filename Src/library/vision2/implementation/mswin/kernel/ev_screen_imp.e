@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision screen, implementation interface."
 	status: "See notice at end of class"
@@ -30,7 +29,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a screen object.
+			-- Create `Current', a screen object.
 		local
 			color: EV_COLOR
 		do
@@ -42,12 +41,12 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	dc: WEL_SCREEN_DC
-			-- DC for drawing
+			-- DC for drawing.
 
 feature -- Status report
 
 	destroyed: BOOLEAN is
-			-- Is Current object destroyed?
+			-- Is `Current' destroyed?
 		do
 			Result := not dc.exists
 		end
@@ -109,7 +108,7 @@ feature -- Basic operation
 		end
 
 	fake_key_press (a_key: EV_KEY) is
-			-- Simulate the user pressing a `key'.
+			-- Simulate the user pressing `a_key'.
 		local
 			vk_code: INTEGER
 		do
@@ -118,7 +117,7 @@ feature -- Basic operation
 		end
 
 	fake_key_release (a_key: EV_KEY) is
-			-- Simulate the user releasing a `key'.
+			-- Simulate the user releasing `a_key'.
 		local
 			vk_code: INTEGER
 		do
@@ -129,13 +128,13 @@ feature -- Basic operation
 feature -- Measurement
 
 	width: INTEGER is
-			-- Width of the widget
+			-- Width of `Current'.
 		do
 			Result := dc.width
 		end
 
 	height: INTEGER is
-			-- Height of the widget
+			-- Height of `Current'.
 		do
 			Result := dc.height
 		end
@@ -158,19 +157,20 @@ feature -- Implementation
 feature {NONE} -- Constants
 
 	System_metrics_constants: WEL_SYSTEM_METRICS is
-			-- System metrics constants
+			-- System metrics constants.
 		once
 			create Result
 		end
 	
 	Key_conversion: EV_WEL_KEY_CONVERSION is
+			-- Key conversion routines.
 		once
 			create Result
 		end
 
 end -- class EV_SCREEN_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -184,13 +184,16 @@ end -- class EV_SCREEN_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/05/02 22:43:55  rogers
+--| Removed FIXME NOT_REVIEWED. Comments. Formatting.
+--|
 --| Revision 1.14  2000/04/26 22:34:39  pichery
 --| Implemented features "not yet implemented"
 --| features.

@@ -26,19 +26,9 @@ feature -- Access
 	main_widget: EV_MULTI_COLUMN_LIST is
 			-- The main widget of the demo
 		once
-			!!Result.make_with_size (Current, 5)
-
-			Result.set_column_title ("colonne 1", 1)
-			Result.set_column_width (80, 1)
-			Result.set_column_title ("colonne 2", 2)
-			Result.set_column_width (80, 2) 
-			Result.set_column_title ("colonne 3", 3)
-			Result.set_column_width (80, 3)
-			Result.set_column_title ("colonne 4", 4)
-			Result.set_column_width (80, 4)
-			Result.set_column_title ("colonne 5", 5)
-			Result.set_column_width (80, 5)
-
+			!! Result.make_with_text (Current, <<"colonne 1",
+				"colonne 2", "colonne 3", "colonne 4",
+				"colonne 5">>)
 			Result.set_right_alignment (2)
 			Result.set_center_alignment (3)
 			Result.set_left_alignment (4)

@@ -1,9 +1,12 @@
 ; This file is maintained by HCW. Do not modify this file directly.
 
 [OPTIONS]
-LCID=0x409 0x0 0x0 ; English (United States)
+COMPRESS=12 Hall Zeck
+LCID=0x409 0x6 0x0 ; English (United States)
 REPORT=Yes
-FTS=1
+FTS=3
+CONTENTS=IDH_started
+TITLE=Getting Started
 CNT=eiffelcom.cnt
 COPYRIGHT=Interactive Software Engineering
 HLP=eiffelcom.hlp
@@ -14,5 +17,14 @@ gettingstarted.rtf
 library.rtf
 wizard.rtf
 
+[MAP]
+IDH_code_type_dialog=732        ; Generated Code Type Dialog
+IDH_definition_file_dialog=733              ; Definition File Dialog
+IDH_eiffel_project_dialog=734             ; Eiffel Project File Dialog
+IDH_final_dialog=737            ; Final Dialog
+IDH_idl_marshling_dialog=735            ; IDL Marshalling Definition Dialog
+IDH_main_win=731        ; Introduction Dialog
+IDH_type_lib_marshaling_dialog=736          ; Type Marshalling Definition Dialog
+
 [WINDOWS]
-ECOM="EiffelCOM Help",(541,102,469,684),20740,,,f3; EiffelCOM help files
+ECOM="EiffelCOM Help",(541,102,469,684),53508,,,f3; EiffelCOM help files

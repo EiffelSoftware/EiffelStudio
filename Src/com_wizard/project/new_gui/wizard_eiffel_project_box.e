@@ -9,8 +9,18 @@ class
 
 inherit
 	WIZARD_EIFFEL_PROJECT_BOX_IMP
+		redefine
+			show
+		end
 
 	WIZARD_VALIDITY_CHECKER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
+	WIZARD_SHARED_DATA
 		undefine
 			default_create,
 			is_equal,
@@ -23,10 +33,10 @@ feature {NONE} -- Initialization
 			-- called by `initialize'.
 		do
 			initialize_checker
-			epr_box.setup ("Path to Eiffel project file (*.epr):", "epr_key", agent valid_file_path (?, "Invalid path to Eiffel project file"), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.epr", "Eiffel Project File (*.epr)"]>>), "Browse for Eiffel Project File")
-			ace_file_box.setup ("Path to system's ace file (*.ace):", "ace_key", agent valid_file_path (?, "Invalid path to system's ace file"), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.ace", "LACE File (*.ace)"], ["*.*", "All Files (*.*)"]>>), "Browse for system's ace file")
-			facade_box.setup ("Name of Eiffel facade class:", "facade_key", agent is_valid_eiffel_identifier (?, "Invalid Eiffel facade class name"))
-			facade_cluster_box.setup ("Name of Eiffel facade class cluster:", "cluster_key", agent is_valid_eiffel_identifier (?, "Invalid Eiffel facade class cluster"))
+			epr_box.setup ("Path to Eiffel project file (*.epr):", "epr_key", agent is_valid_eiffel_project (?, Invalid_project), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.epr", "Eiffel Project File (*.epr)"]>>), "Browse for Eiffel Project File")
+			ace_file_box.setup ("Path to system's ace file (*.ace):", "ace_key", agent is_valid_ace_file (?, Invalid_ace), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.ace", "LACE File (*.ace)"], ["*.*", "All Files (*.*)"]>>), "Browse for system's ace file")
+			facade_box.setup ("Name of Eiffel facade class:", "facade_key", agent is_valid_eiffel_class (?, Invalid_class), Void)
+			facade_cluster_box.setup ("Name of Eiffel facade class cluster:", "cluster_key", agent is_valid_cluster (?, Invalid_cluster), Void)
 		end
 
 feature -- Basic Operations
@@ -37,9 +47,81 @@ feature -- Basic Operations
 			facade_box.save_combo_text
 			facade_cluster_box.save_combo_text
 		end
+
+	update_environment is
+			-- Update `environment' according to text fields contents.
+		local
+			l_text: STRING
+		do
+			l_text := epr_box.value
+			if valid_file_path (l_text, Invalid_project) then
+				environment.set_eiffel_project (l_text)
+				environment.set_project_name (l_text.substring (l_text.last_index_of ('\', l_text.count) + 1, l_text.count))
+			end
+			l_text := ace_file_box.value
+			if valid_file_path (l_text, Invalid_ace) then
+				environment.set_ace_file_name (l_text)
+			end
+			l_text := facade_box.value
+			if is_valid_eiffel_identifier (l_text, Invalid_class) then
+				environment.set_eiffel_class_name (l_text)
+			end
+			l_text := facade_cluster_box.value
+			if is_valid_eiffel_identifier (l_text, Invalid_cluster) then
+				environment.set_class_cluster_name (l_text)
+			end
+		end
+
+	show is
+			-- Update environment and show.
+		do
+			Precursor {WIZARD_EIFFEL_PROJECT_BOX_IMP}
+			update_environment
+		end
 		
 feature {NONE} -- Implementation
 
+	is_valid_eiffel_project (a_project_file, a_error_message: STRING): BOOLEAN is
+			-- Is `a_project_file' a valid eiffel project file?
+			-- Setup environment accordingly.
+		do
+			Result := valid_file_path (a_project_file, a_error_message)
+			if Result then
+				environment.set_eiffel_project (a_project_file)
+				environment.set_project_name (a_project_file.substring (a_project_file.last_index_of ('\', a_project_file.count) + 1, a_project_file.count))
+			end
+		end
+		
+	is_valid_ace_file (a_ace_file, a_error_message: STRING): BOOLEAN is
+			-- Is `a_ace_file' a valid eiffel ace file?
+			-- Setup environment accordingly.
+		do
+			Result := valid_file_path (a_ace_file, a_error_message)
+			if Result then
+				environment.set_ace_file_name (a_ace_file)
+			end
+		end
+		
+	is_valid_eiffel_class (a_eiffel_class, a_error_message: STRING): BOOLEAN is
+			-- Is `a_eiffel_class' a valid eiffel class?
+			-- Setup environment accordingly.
+		do
+			Result := is_valid_eiffel_identifier (a_eiffel_class, a_error_message)
+			if Result then
+				environment.set_eiffel_class_name (a_eiffel_class)
+			end
+		end
+		
+	is_valid_cluster (a_cluster, a_error_message: STRING): BOOLEAN is
+			-- Is `a_cluster' a valid eiffel cluster?
+			-- Setup environment accordingly.
+		do
+			Result := is_valid_eiffel_identifier (a_cluster, a_error_message)
+			if Result then
+				environment.set_class_cluster_name (a_cluster)
+			end
+		end
+		
 	valid_file_path (a_path, a_error_message: STRING): BOOLEAN is
 			-- Is `a_path' a valid file path?
 		require
@@ -71,6 +153,20 @@ feature {NONE} -- Implementation
 			end
 			set_error (Result, a_error_message)
 		end
+
+feature {NONE} -- Private Access
+
+	Invalid_project: STRING is "Invalid path to Eiffel project file"
+			-- Invalid project error
+
+	Invalid_ace: STRING is "Invalid path to system's ace file"
+			-- Invalid ace file error
+
+	Invalid_class: STRING is "Invalid Eiffel facade class name"
+			-- Invalid facade class name
+
+	Invalid_cluster: STRING is "Invalid Eiffel facade class cluster"
+			-- Invalid facade class cluster name
 
 end -- class WIZARD_EIFFEL_PROJECT_BOX
 

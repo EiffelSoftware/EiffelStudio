@@ -97,7 +97,6 @@ feature {NONE}
 		do
 			if project_tool = Void then end;
 			if name_chooser = Void then end;
-			if confirmer = Void then end;
 			project_tool.popup_file_selection;
 		end
  

@@ -114,6 +114,7 @@ modifications are relative to the previously released version.</p>
 			<li>If a dialog with a default cancel button was displayed using `show', then minimizing the dialog would cause the system to fail internally.</li>
 			<li>Fix bug in `show_relative_to_window' which would cause any associated menus to be removed.</li>
 			<li>Fixed bug in `show', as if the dialog had already been shown modelessly to a window, then calling `show' did not show it independently, but still modelessly.</li>
+			<LI>Fixed bug with `show_actions' which would be wiped out if you called `show_modal_to_window' and then `hide'.</li>
 		</ul></li>
 	<li><b>EV_TEXT_COMPONENT</b> - Fixed `text_length' which was returning incorrect value for all descendents.</li>
 	<li><b>EV_TEXT</b> - Fixed `line_count' which was previously returning the correct result + 1.</li>

@@ -119,7 +119,9 @@ feature {NONE} -- Externals
 			--	return double_array [index];
 			-- }
 		external
-			"C | %"ev_c_util.h%""
+			"C inline"
+		alias
+			"( ((double *) $double_array ) [ (int) $index] )"
 		end
 
 	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER is

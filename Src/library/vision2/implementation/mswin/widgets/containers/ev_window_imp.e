@@ -353,6 +353,7 @@ feature -- Element change
 			-- Set `is_modal' to `True'.
 		do
 			is_modal := True
+			set_capture_type (Capture_normal)
 			enable_capture
 		end
 
@@ -361,6 +362,7 @@ feature -- Element change
 		do
 			is_modal := False
 			disable_capture
+			set_capture_type (Capture_heavy)
 		end
 
 	set_blocking_window (a_window: EV_WINDOW) is
@@ -853,6 +855,11 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/29 19:12:30  pichery
+--| changed `enable_modal' & `disable_modal' to avoid them to capture
+--| the mouse with the "heavy" method which should be reserved to the
+--| pick&drop.
+--|
 --| Revision 1.32  2000/03/21 02:29:39  brendel
 --| Removed old command code.
 --|

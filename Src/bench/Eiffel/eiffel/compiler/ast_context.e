@@ -95,6 +95,7 @@ feature
 			!!parameters.make;
 			!!supplier_ids.make;
 			!! instruction_line.make
+			!! separate_calls.make (1, 0)
 		end;
 
 	set_a_class (cl: CLASS_C) is
@@ -365,6 +366,7 @@ feature
 			level4 := False;
 			check_for_special_error := False;
 			supplier_ids.wipe_out;
+			separate_calls.make (1, 0)
 			wipe_out;
 		end;
 
@@ -384,6 +386,29 @@ feature -- Unique values
 		do
 			unique_values := u;
 		end;
+
+feature -- Concurrent Eiffel
+
+	separate_call_on_argument (i: INTEGER): BOOLEAN is
+			-- Is argument `i' used in a separate call?
+		do
+			if i <= separate_calls.upper then
+				Result := separate_calls @ i
+			end
+		end
+
+	set_separate_call_on_argument (arg_name: ID_AS_B) is
+			-- Record argument `i' as been used in separate call.
+		require
+			feature_has_argument: a_feature.argument_position (arg_name) /= 0
+		do
+			separate_calls.force (True, a_feature.argument_position (arg_name))
+		end
+
+feature {STD_BYTE_CODE} -- Concurrent Eiffel
+
+	separate_calls: ARRAY [BOOLEAN]
+			-- Record separate calls on arguments
 
 feature
 

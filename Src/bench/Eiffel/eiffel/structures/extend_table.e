@@ -35,17 +35,17 @@ feature -- Merging
 feature -- Cursor for iteration
 
 	position_for_iteration : INTEGER is
-		obsolete "Use pos_for_iter"
+		obsolete "Use iteration_position"
 		do
-			Result := pos_for_iter
+			Result := iteration_position
 		end
 
 	go (p: INTEGER) is
 			-- set position_for_iteration to p
 		do
-			pos_for_iter := p;
+			iteration_position := p;
 			if p < keys.lower then
-				pos_for_iter := keys.lower - 1	
+				iteration_position := keys.lower - 1	
 			end;
 		end;
 

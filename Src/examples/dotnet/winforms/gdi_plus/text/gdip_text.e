@@ -76,14 +76,14 @@ feature -- Access
 			
 	flowed_text_1: SYSTEM_STRING is 
 		once
-			Result := ("I went down to the St James Infirmary,\nSaw my baby there,\nStretched out on a long white table,\nSo sweet,so cold,so fair,\nLet her go,let her go,God bless her,\nWherever she may be,\nShe can look this wide world over,\nBut she'll never find a sweet man like me,\nWhen I die want you to dress me in straight lace shoes,\nI wanna a boxback coat and a Stetson hat,\nPut a twenty dollar gold piece on my watch chain,\nSo the boys'll know that I died standing up.").to_cil
+			Result := ("I went down to the St James Infirmary,%NSaw my baby there,%NStretched out on a long white table,%NSo sweet,so cold,so fair,%NLet her go,let her go,God bless her,%NWherever she may be,%NShe can look this wide world over,%NBut she'll never find a sweet man like me,%NWhen I die want you to dress me in straight lace shoes,%NI wanna a boxback coat and a Stetson hat,%NPut a twenty dollar gold piece on my watch chain,%NSo the boys'll know that I died standing up.").to_cil
 		ensure
 			non_void_result: Result /= Void
 		end
 	
 	flowed_text_2: SYSTEM_STRING is 
 		once
-			Result := ("the sky seems full when you're in the cradle\nthe rain will fall and wash your dreams\nstars are stars and they shine so hard...\nnow spit out the sky because its empty\nand hollow and all your dreams are hanging out to dry\nstars are stars and they shine so cold...\nonce i like crying twice i like laughter\ncome tell me what i'm after").to_cil
+			Result := ("the sky seems full when you're in the cradle%Nthe rain will fall and wash your dreams%Nstars are stars and they shine so hard...%Nnow spit out the sky because its empty%Nand hollow and all your dreams are hanging out to dry%Nstars are stars and they shine so cold...%Nonce i like crying twice i like laughter%Ncome tell me what i'm after").to_cil
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			graph.draw_string_string_font_brush_real_real (title_text, title_font, title_shadow_brush, 15, 25)
 			graph.draw_string_string_font_brush_real_real (title_text, title_font, text_texture_brush, 10, 20)
 
-			text_to_draw := ("Hello Symetrical World").to_cil
+			text_to_draw := ("Hello Symmetrical World").to_cil
 
 			-- Use Measure string to display a string at the center of the window
 			window_center := display_rectangle.width / 2
@@ -186,12 +186,6 @@ feature {NONE} -- Implementation
 			create format.make
 			format.set_alignment (feature {DRAWING_STRING_ALIGNMENT}.center)
 			graph.draw_string_string_font_brush_rectangle_f_string_format (flowed_text_2, text_font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.Blue), rectangle_21, format)
-
-			-- Work out how many lines and characters we printed just now.
---			dummy := e.graphics.measure_string_string_font_size_f_string_format_integer (flowed_text_2, text_font, rectangle_21.size, format, characters, lines)
-			what_rendered_text :=(("").to_cil).concat_string_string_string_string (("We printed ").to_cil, characters.to_string, (" characters and ").to_cil, lines.to_string)
-			what_rendered_text := what_rendered_text.concat_string_string (what_rendered_text, (" lines").to_cil)
-			e.graphics.draw_string_string_font_brush_real_real (what_rendered_text, text_font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.Black), 400.0,440.0)
 
 			-- If we have the Japanese language pack draw some text in Japanese
 			-- Rotate it to make life truly exciting
@@ -224,15 +218,17 @@ feature {NONE} -- Implementation
 				do_japanese_sample := True
 				-- Load the fonts we want to use
 				japanese_font := (create {DRAWING_FONT}.make_from_family_name_and_em_size (("MS Mincho").to_cil, 36))
---				linear_grad_brush := create {DRAWING_LINEAR_GRADIENT_BRUSH}.make_with_point_1 (create {DRAWING_POINT}.make_from_x_y (0, 0), create {DRAWING_POINT}.make_from_x_y (0, 45), feature {DRAWING_COLOR}.Blue, feature {DRAWING_COLOR}.Red)
-					-- FIXME: uncomment the above line and delete the next one. (compiler problem).
-				do_japanese_sample := False
+				linear_grad_brush := create {DRAWING_LINEAR_GRADIENT_BRUSH}.make_with_point_1 
+					(create {DRAWING_POINT}.make_from_x_and_y (0, 0), 
+					create {DRAWING_POINT}.make_from_x_and_y (0, 45), 
+					feature {DRAWING_COLOR}.Blue, 
+					feature {DRAWING_COLOR}.Red)
 			else
 				do_japanese_sample := False
 			end
 		rescue
 			res := feature {WINFORMS_MESSAGE_BOX}.show (
-				("The Japanese font MS Mincho needs be present to run the Japanese part of this sample\n\n").to_cil)
+				("The Japanese font MS Mincho needs be present to run the Japanese part of this sample%N%N").to_cil)
 			retried := True
 			retry
 		end

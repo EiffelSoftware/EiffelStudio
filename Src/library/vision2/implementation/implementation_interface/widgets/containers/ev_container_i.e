@@ -308,6 +308,26 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 			end
 		end
 		
+	has_radio_button: BOOLEAN is
+			-- 	Does `Current' contain one or more radio buttons?
+		local
+			children: linear [EV_WIDGET]
+			radio_button: EV_RADIO_BUTTON
+		do
+			children := interface.linear_representation
+			from
+				children.start
+			until
+				children.off or Result = True
+			loop
+				radio_button ?= children.item
+				if radio_button /= Void then
+					Result := True
+				end
+				children.forth
+			end			
+		end
+	
 feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 
 	all_radio_buttons_connected: BOOLEAN is

@@ -23,13 +23,13 @@ creation
 	
 feature -- Initialization
 
-	make (a_composite: COMPOSITE; t_w: TEXT_WINDOW) is
+	make (a_tool: TOOL_W) is
 			-- Create a file selection dialog
 		local
 			void_argument: ANY
 		do
-			text_window := t_w;
-			prompt_dialog_create (l_Search, a_composite);
+			tool := a_tool;
+			prompt_dialog_create (l_Search, a_tool.popup_parent);
 			set_title (l_Search);
 			set_selection_label ("Search");
 			hide_apply_button;
@@ -37,7 +37,6 @@ feature -- Initialization
 			set_width (200);
 			set_ok_label ("Next");
 			add_ok_action (Current, ok_it);
-			text_window.set_action ("Ctrl<Key>d", Current, ok_it);
 			add_cancel_action (Current, cancel_it);
 			set_composite_attributes (Current)
 		end;
@@ -74,8 +73,8 @@ feature {NONE} -- Properties
 			!! Result
 		end;
 
-	text_window: TEXT_WINDOW
-			-- Text_window which popped up current
+	tool: TOOL_W
+			-- Tool which popped up current
 
 feature {NONE} -- Implementation
 
@@ -85,10 +84,7 @@ feature {NONE} -- Implementation
 				last_warner.popdown
 			end;
 			if argument = ok_it then
-				text_window.search (selection_text);
-				if text_window.found then
-					--popdown
-				end
+				tool.text_window.search (selection_text);
 			elseif argument = cancel_it then
 				popdown
 			end

@@ -13,15 +13,11 @@ inherit
 			{NONE} all
 		end
 
-	ECOM_FUNC_KIND
+	WIZARD_DISPATCH_FUNCTION_HELPER
 		export 
 			{NONE} all
 		end
 
-	ECOM_PARAM_FLAGS
-		export 
-			{NONE} all
-		end
 
 create
 	make
@@ -35,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			create body.make (10000)
 			create local_buffer.make (10000)
+			create release_interfaces.make (200)
 			func_desc := a_func_desc
 		ensure
 			non_void_body: body /= Void
@@ -48,6 +45,9 @@ feature -- Access
 		
 	local_buffer: STRING 
 			-- Additional buffer.
+			
+	release_interfaces: STRING
+			-- Release interfaces after function call.
 	
 	func_desc: WIZARD_FUNCTION_DESCRIPTOR
 			-- Function descriptor.
@@ -89,19 +89,8 @@ feature -- Staus report.
 		
 	has_result: BOOLEAN is
 			-- Does routine have result?
-		local
-			cursor: CURSOR
 		do
-			if is_dispatch_function then
-				Result := not func_desc.return_type.name.is_equal (Void_c_keyword)
-			else
-				if func_desc.argument_count > 0 then
-					cursor := func_desc.arguments.cursor
-					func_desc.arguments.go_i_th (func_desc.argument_count)
-					Result := is_paramflag_fretval (func_desc.arguments.item.flags)
-					func_desc.arguments.go_to (cursor)
-				end
-			end
+			Result := does_routine_have_result (func_desc)
 		end
 		
 	result_type_visitor: WIZARD_DATA_TYPE_VISITOR is
@@ -136,6 +125,45 @@ feature -- Staus report.
 	
 feature -- Basic operations
 
+	release_interface_pointer_code (an_argument_name: STRING): STRING is
+			-- Code for release interface.
+		require
+			non_void_argument_name: an_argument_name /= Void
+			valid_argument_name: not an_argument_name.empty
+		do
+			create Result.make (100)
+			Result.append ("if (" + an_argument_name + " != NULL)")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab_tab)
+			Result.append (an_argument_name + Release_function)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
+		ensure
+			non_void_code: Result /= Void
+			valid_code: not Result.empty
+		end
+
+	release_interface_pointer_pointer_code (an_argument_name: STRING): STRING is
+			-- Code for release interface.
+		require
+			non_void_argument_name: an_argument_name /= Void
+			valid_argument_name: not an_argument_name.empty
+		do
+			create Result.make (100)
+			Result.append ("if (" + an_argument_name + " != NULL)")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab_tab)
+			Result.append ("if (* " + an_argument_name + " != NULL)")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab_tab_tab)
+			Result.append ("(* " + an_argument_name + ")" + Release_function)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
+		ensure
+			non_void_code: Result /= Void
+			valid_code: not Result.empty
+		end
+	
 	process_arguments is
 			-- Process function arguments.
 		require
@@ -153,7 +181,7 @@ feature -- Basic operations
 			body.append (Close_parenthesis)
 			body.append (Co_task_mem_alloc)
 			body.append (Space_open_parenthesis)
-			body.append_integer (argument_count )
+			body.append_integer (argument_count)
 			body.append (Asterisk)
 			body.append (Sizeof)
 			body.append (Space_open_parenthesis)
@@ -165,6 +193,25 @@ feature -- Basic operations
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab)
 
+			body.append ("VARTYPE vt_type [] = {")
+			from
+				func_desc.arguments.start
+				counter := 0
+			until
+				counter = argument_count 
+			loop
+				if counter /= 0 then
+					body.append (", ")
+				end
+				body.append_integer (func_desc.arguments.item.type.visitor.vt_type)
+				counter := counter + 1
+				func_desc.arguments.forth
+			end
+			body.append ("};")
+			body.append (New_line)
+			body.append (New_line_tab_tab_tab)
+			body.append (Tab)
+			
 			body.append (If_keyword)
 			body.append (Space_open_parenthesis)
 			body.append ("cNamedArgs")
@@ -186,37 +233,19 @@ feature -- Basic operations
 			body.append (Close_parenthesis)
 
 			body.append (New_line_tab_tab_tab)
+			body.append (Tab_tab)
+			body.append (Open_curly_brace)
+			body.append (New_line_tab_tab_tab)
 			body.append (Tab_tab_tab)
-			body.append (Memcpy)
-			body.append (Space)
-			body.append (Open_parenthesis)
-			body.append (Ampersand)
-			body.append (Open_parenthesis)
-			body.append (Tmp_variable_name)
-			body.append (Space)
-			body.append (Open_bracket)
-			body.append ("rgdispidNamedArgs")
-			body.append (Space)
-			body.append (Open_bracket)
-			body.append ("i")
-			body.append (Close_bracket)
-			body.append (Close_bracket)
-			body.append (Close_parenthesis)
-			body.append (Comma_space)
-			body.append (Ampersand)
-			body.append (Open_parenthesis)
-			body.append ("rgvarg")
-			body.append (Open_bracket)
-			body.append ("i")
-			body.append (Close_bracket)
-			body.append (Close_parenthesis)
-			body.append (Comma_space)
-			body.append (Sizeof)
-			body.append (Space_open_parenthesis)
-			body.append ("VARIANTARG")
-			body.append (Close_parenthesis)
-			body.append (Close_parenthesis)
-			body.append (Semicolon)
+			
+			body.append ("VariantInit (&(tmp_value [rgdispidNamedArgs [i]]));")
+			body.append (New_line_tab_tab_tab)
+			body.append (Tab_tab_tab)
+			
+			body.append ("memcpy (&(tmp_value [rgdispidNamedArgs [i]]), &(rgvarg [i]), sizeof (VARIANTARG));")
+			body.append (New_line_tab_tab_tab)
+			body.append (Tab_tab)
+			body.append (Close_curly_brace)
 			body.append (New_line)
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab)
@@ -235,39 +264,20 @@ feature -- Basic operations
 			body.append ("i--")
 			body.append (Close_parenthesis)
 			body.append (New_line_tab_tab_tab)
+			body.append (Tab)
+			body.append (Open_curly_brace)
+			body.append (New_line_tab_tab_tab)
 			body.append (Tab_tab)
 
-			body.append (Memcpy)
-			body.append (Space)
-			body.append (Open_parenthesis)
-			body.append (Ampersand)
-			body.append (Open_parenthesis)
-			body.append (Tmp_variable_name)
-			body.append (Space)
-			body.append (Open_bracket)
-			body.append ("rgdispidNamedArgs")
-			body.append (Space)
-			body.append (Open_bracket)
-			body.append ("cArgs")
-			body.append (Close_bracket)
-			body.append (" - i")
-			body.append (Close_bracket)
-			body.append (Close_parenthesis)
-			body.append (Comma_space)
-			body.append (Ampersand)
-			body.append (Open_parenthesis)
-			body.append ("rgvarg")
-			body.append (Open_bracket)
-			body.append ("i - 1")
-			body.append (Close_bracket)
-			body.append (Close_parenthesis)
-			body.append (Comma_space)
-			body.append (Sizeof)
-			body.append (Space_open_parenthesis)
-			body.append ("VARIANTARG")
-			body.append (Close_parenthesis)
-			body.append (Close_parenthesis)
-			body.append (Semicolon)
+			body.append ("VariantInit (&(tmp_value [cArgs - i]));")
+			body.append (New_line_tab_tab_tab)
+			body.append (Tab_tab)
+			
+			body.append ("memcpy (&(tmp_value [cArgs - i]), &(rgvarg [i - 1]), sizeof (VARIANTARG));")
+			
+			body.append (New_line_tab_tab_tab)
+			body.append (Tab)
+			body.append (Close_curly_brace)
 			body.append (New_line)
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab)
@@ -282,16 +292,28 @@ feature -- Basic operations
 
 				body.append (If_keyword)
 				body.append (Space_open_parenthesis)
-				body.append (Tmp_variable_name)
-				body.append (Space)
-				body.append (Open_bracket)
-				body.append_integer (counter)
-				body.append (Close_bracket)
-				body.append (Dot)
-				body.append ("vt")
-				body.append (Space)
-				body.append (C_not_equal)
-				body.append_integer (visitor.vt_type)
+				if 
+					visitor.is_interface_pointer or
+					visitor.is_coclass_pointer
+				then
+					body.append ("(tmp_value [" + counter.out +"].vt != VT_UNKNOWN) && (tmp_value [" + counter.out +"].vt != VT_DISPATCH)")
+				elseif
+					visitor.is_interface_pointer_pointer or
+					visitor.is_coclass_pointer_pointer
+				then
+					body.append ("(tmp_value [" + counter.out +"].vt != (VT_UNKNOWN | VT_BYREF)) && (tmp_value [" + counter.out +"].vt != (VT_DISPATCH | VT_BYREF))")
+				else
+					body.append (Tmp_variable_name)
+					body.append (Space)
+					body.append (Open_bracket)
+					body.append_integer (counter)
+					body.append (Close_bracket)
+					body.append (Dot)
+					body.append ("vt")
+					body.append (Space)
+					body.append (C_not_equal)
+					body.append_integer (visitor.vt_type)
+				end
 				body.append (Close_parenthesis)
 				body.append (New_line_tab_tab_tab)
 				body.append (Tab)
@@ -322,8 +344,25 @@ feature -- Basic operations
 						"arg_" + counter.out, 
 						Tmp_variable_name + " %(" + counter.out +"%)", 
 						counter, has_arguments))
-
+				
+				if 
+					(visitor.is_interface_pointer or
+					visitor.is_coclass_pointer) and 
+					not is_paramflag_fout (func_desc.arguments.item.flags)
+				then
+					release_interfaces.append (release_interface_pointer_code ("arg_" + counter.out))
+				elseif
+					(visitor.is_interface_pointer_pointer or
+					visitor.is_coclass_pointer_pointer) and
+					not is_paramflag_fout (func_desc.arguments.item.flags)
+				then
+					release_interfaces.append (release_interface_pointer_pointer_code ("arg_" + counter.out))
+				end
 				if is_paramflag_fout (func_desc.arguments.item.flags) then
+					local_buffer.append ("VariantClear (&(" + Tmp_variable_name + "[" + counter.out + "]));")
+					local_buffer.append (New_line_tab_tab_tab)	
+					local_buffer.append (Tab)
+					
 					local_buffer.append (Tmp_variable_name)
 					local_buffer.append (Space)
 					local_buffer.append (Open_bracket)
@@ -405,9 +444,15 @@ feature -- Basic operations
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab)
 
-			local_buffer.append ("VariantClear (pVarResult);")
+			local_buffer.append ("if (pVarResult != NULL)")
 			local_buffer.append (New_line_tab_tab_tab)
 			local_buffer.append (Tab)
+			local_buffer.append (Open_curly_brace)
+			local_buffer.append (New_line_tab_tab_tab)
+			local_buffer.append (Tab_tab)
+			local_buffer.append ("VariantClear (pVarResult);")
+			local_buffer.append (New_line_tab_tab_tab)
+			local_buffer.append (Tab_tab)
 			local_buffer.append ("pVarResult")
 			local_buffer.append (Struct_selection_operator)
 			local_buffer.append ("vt")
@@ -419,7 +464,7 @@ feature -- Basic operations
 			end
 			local_buffer.append (Semicolon)
 			local_buffer.append (New_line_tab_tab_tab)
-			local_buffer.append (Tab)
+			local_buffer.append (Tab_tab)
 
 			if visitor.is_structure then
 				local_buffer.append (memcpy)
@@ -449,7 +494,9 @@ feature -- Basic operations
 			local_buffer.append (Semicolon)
 			local_buffer.append (New_line_tab_tab_tab)
 			local_buffer.append (Tab)
-		ensure
+			local_buffer.append (Close_curly_brace)
+			local_buffer.append (New_line_tab_tab_tab)
+			local_buffer.append (Tab_tab)
 		end
 	
 	call_vtable_function is
@@ -547,6 +594,9 @@ feature -- Basic operations
 			body.append (Tab)
 
 			call_vtable_function 
+			
+			body.append (New_line_tab_tab_tab)
+			body.append (Tab)
 			
 			if return_hresult then
 				body.append (check_failer (not has_arguments, excepinfo_setting, "DISP_E_EXCEPTION"))
@@ -649,11 +699,7 @@ feature -- Basic operations
 				body.append (Tmp_variable_name)
 				body.append (Space)
 				body.append (Open_bracket)
-				body.append ("rgdispidNamedArgs")
-				body.append (Space)
-				body.append (Open_bracket)
 				body.append ("cArgs")
-				body.append (Close_bracket)
 				body.append (" - i")
 				body.append (Close_bracket)
 				body.append (Close_parenthesis)
@@ -668,6 +714,7 @@ feature -- Basic operations
 				body.append (New_line_tab_tab_tab)
 				body.append (Tab)
 
+				body.append (release_interfaces)
 				body.append (Co_task_mem_free)
 				body.append (Space_open_parenthesis)
 				body.append (Tmp_variable_name)

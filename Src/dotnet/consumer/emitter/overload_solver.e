@@ -87,7 +87,6 @@ feature -- Basic Operations
 			name, type: STRING
 			i, index, param_count: INTEGER
 			is_unique, same_param_count: BOOLEAN
-			l_dotnet_name: STRING
 			eiffel_args: HASH_TABLE [STRING, STRING]
 		do
 			from
@@ -104,56 +103,51 @@ feature -- Basic Operations
 					if method_list.after then
 						same_param_count := False
 					else
-						same_param_count := method_list.item.arguments.count = param_count
+						same_param_count := method_list.item.arguments.count = param_count and then
+							not first_method.is_conversion_operator
 					end
 				until
 					method_list.after
 				loop
 					method := method_list.item
-					same_param_count := same_param_count and method.arguments.count = param_count
-					l_dotnet_name := method.dotnet_name
-					if method.is_get_property and then l_dotnet_name.substring_index ("get_", 1) = 1 then
-						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
-					end
-					from
-						name := formatted_feature_name (l_dotnet_name)
-						is_unique := is_unique_signature (method, method_list, 0)
-						i := 1
-					until
-						is_unique or i > method.arguments.count
-					loop
-						name.append_character ('_')
-						name.append (
-							formatted_variable_type_name (method.arguments.item (i).type.name))
-						is_unique := is_unique_signature (method, method_list, i)
-						i := i + 1
+					if method.is_conversion_operator then
+						name := formatted_feature_name (method.starting_resolution_name)
+					else
+						same_param_count :=
+							same_param_count and method.arguments.count = param_count
+						from
+							name := formatted_feature_name (method.starting_resolution_name)
+							is_unique := is_unique_signature (method, method_list, 0)
+							i := 1
+						until
+							is_unique or i > method.arguments.count
+						loop
+							name.append_character ('_')
+							name.append (
+								formatted_variable_type_name (method.arguments.item (i).type.name))
+							is_unique := is_unique_signature (method, method_list, i)
+							i := i + 1
+						end
 					end
 					method.set_eiffel_name (unique_feature_name (name))
 					method_list.forth
 				end
 				if same_param_count then
-					l_dotnet_name := method.dotnet_name
-					if method.is_get_property and then l_dotnet_name.substring_index ("get_", 1) = 1 then
-						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
-					end
 					from
-						name := formatted_feature_name (l_dotnet_name)
+						name := formatted_feature_name (method.starting_resolution_name)
 						i := 1
 					until
 						i > param_count
 					loop
 						name.append_character ('_')
-						name.append (
-							formatted_variable_type_name (first_method.arguments.item (i).type.name))
+						name.append (formatted_variable_type_name (
+							first_method.arguments.item (i).type.name))
 						i := i + 1
 					end
 					first_method.set_eiffel_name (unique_feature_name (name))
 				else
-					l_dotnet_name := first_method.dotnet_name
-					if first_method.is_get_property and then l_dotnet_name.substring_index ("get_", 1) = 1 then
-						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
-					end
-					first_method.set_eiffel_name (unique_feature_name (l_dotnet_name))
+					first_method.set_eiffel_name (unique_feature_name (
+						first_method.starting_resolution_name))
 				end
 				method_table.forth
 			end
@@ -170,10 +164,17 @@ feature -- Basic Operations
 				loop
 					method := method_list.item
 					if eiffel_names.has (method.dotnet_name) then
-						eiffel_names.item (method.dotnet_name).put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.return_type, method.internal_method.declaring_type))
+						eiffel_names.item (method.dotnet_name).put (
+							method.eiffel_name,
+							key_args (method.internal_method.get_parameters,
+								method.internal_method.return_type,
+								method.internal_method.declaring_type))
 					else
 						create eiffel_args.make (1)
-						eiffel_args.put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.return_type, method.internal_method.declaring_type))
+						eiffel_args.put (method.eiffel_name,
+							key_args (method.internal_method.get_parameters,
+								method.internal_method.return_type,
+								method.internal_method.declaring_type))
 						eiffel_names.put (eiffel_args, method.dotnet_name)
 					end
 					method_list.forth
@@ -214,7 +215,8 @@ feature -- Basic Operations
 							i > count or not Result
 						loop
 							Result := method_list.item = method or i > 0 and then
-										not method_list.item.arguments.item (i).type.is_equal (method.arguments.item (i).type)
+								not method_list.item.arguments.item (i).type.is_equal
+									(method.arguments.item (i).type)
 							i := i + 1
 						end
 					end
@@ -237,7 +239,7 @@ feature -- Element Settings
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
 		require
-			non_void_meth: meth /= void
+			non_void_meth: meth /= Void
 		local
 			name: STRING
 		do
@@ -248,7 +250,7 @@ feature -- Element Settings
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
 		require
-			non_void_property: property /= void
+			non_void_property: property /= Void
 		local
 			l_meth: METHOD_INFO
 		do
@@ -270,7 +272,7 @@ feature -- Element Settings
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
 		require
-			non_void_event: event /= void
+			non_void_event: event /= Void
 		local
 			l_meth: METHOD_INFO
 			property_name: STRING
@@ -301,7 +303,7 @@ feature {NONE} -- Internal Statur Setting
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
 		require
-			non_void_meth: meth /= void
+			non_void_meth: meth /= Void
 			is_consumed_method: is_consumed_method (meth)
 		local
 			name: STRING

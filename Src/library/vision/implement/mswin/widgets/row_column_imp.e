@@ -341,11 +341,17 @@ feature -- Element change
 					end
 					c.forth
 				end
- 				if is_row_layout then
- 					largest_h := largest_h.max (height // preferred_count)
- 				else
- 					largest_w := largest_w.max (width // preferred_count)
- 				end
+				if preferred_count = 1 then
+						--| If `preferred_count' is 1, we have to do that because
+						--| if the elements are forms, the size (`height' or `width')
+						--| that is returned corresponds to the size of the attached
+						--| form.
+					if is_row_layout then
+ 						largest_h := largest_h.max (height)
+ 					else
+ 						largest_w := largest_w.max (width)
+	 				end
+				end
 				set_children_sizes (c, largest_w, largest_h)
 				if is_row_layout then
 					set_children_in_rows (c, largest_h)

@@ -644,7 +644,11 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
  */
 $inttypes_include
 #define EIF_INTEGER_64_DISPLAY $eif_integer_64_display
+#define EIF_NATURAL_64_DISPLAY $eif_natural_64_display
 #define EIF_POINTER_DISPLAY $eif_pointer_display
+
+/* Does current platform support conversion from uin64 to floating point? */
+#$d_uint64_to_real	HAS_BUILTIN_CONVERSION_FROM_UINT64_TO_FLOATING_POINT	/* NC */
 
 /* INTEGER_64 constant definition: */
 #define RTI64C(x)	$eif_integer_64_constant

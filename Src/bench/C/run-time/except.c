@@ -26,7 +26,11 @@
 #include "main.h"
 #include "garcol.h"
 #include "error.h"
+
+#ifdef EIF_WIN32
 #include "econsole.h"
+#endif
+
 #ifdef CONCURRENT_EIFFEL
 #include "curextern.h"
 #endif

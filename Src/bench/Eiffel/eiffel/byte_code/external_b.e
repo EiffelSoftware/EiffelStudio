@@ -133,7 +133,7 @@ feature -- Byte code generation
 					parameters.after
 				loop
 					parameter_b ?= parameters.item;
-					if parameter_b.is_hector then
+					if parameter_b /= Void and then parameter_b.is_hector then
 						has_hector := True;
 						expr_address_b ?= parameter_b.expression;
 						if expr_address_b /= Void and then expr_address_b.is_protected then

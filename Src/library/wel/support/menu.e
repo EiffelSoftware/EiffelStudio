@@ -47,6 +47,7 @@ feature -- Access
 			-- Popup menu at the zero-based relative `position'
 		require
 			exists: exists
+			positive_position: position >= 0
 			popup_exists: popup_exists (position)
 		do
 			!! Result.make_by_pointer (cwin_get_sub_menu (item,
@@ -104,6 +105,22 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
+	append_bitmap (bitmap: WEL_BITMAP; an_id: INTEGER) is
+			-- Append `bitmap' with the identifier `an_id' to the
+			-- menu.
+		require
+			exists: exists
+			bitmap_not_void: bitmap /= Void
+			bitmap_exists: bitmap.exists
+			item_not_exists: not item_exists (an_id)
+		do
+			cwin_append_menu (item, Mf_bitmap + Mf_bycommand,
+				an_id, bitmap.item)
+		ensure
+			new_count: count = old count + 1
+			item_exists: item_exists (an_id)
+		end
+
 	insert_string (a_string: STRING; a_position, an_id: INTEGER) is
 			-- Insert `a_string' at zero-based `position' with
 			-- `an_id'.
@@ -153,6 +170,23 @@ feature -- Element change
 		do
 			cwin_insert_menu (item, a_position,
 				Mf_separator, 0, default_pointer)
+		ensure
+			new_count: count = old count + 1
+		end
+
+	insert_bitmap (bitmap: WEL_BITMAP; a_position, an_id: INTEGER) is
+			-- Insert `bitmap' at zero-based `position' with
+			-- `an_id'.
+		require
+			exists: exists
+			a_position_large_enough: a_position >= 0
+			a_position_small_enough: a_position <= count
+			bitmap_not_void: bitmap /= Void
+			bitmap_exists: bitmap.exists
+			item_not_exists: not item_exists (an_id)
+		do
+			cwin_insert_menu (item, a_position,
+				Mf_bitmap + Mf_bycommand, an_id, bitmap.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -369,6 +403,7 @@ feature -- Status report
 			-- the zero-based position?
 		require
 			exists: exists
+			positive_position: position >= 0
 		do
 			Result := cwin_get_sub_menu (item,
 				position) /= default_pointer

@@ -841,6 +841,14 @@ feature -- API
 			Result := list
         end;
 
+feature {FORMAT_REGISTRATION} -- Init
+
+	init_origin_table is
+			-- Initialize the origin table (for formatting).
+		do
+			!! origin_table.make (0)
+		end
+
 feature -- Debugging
 
 	trace is

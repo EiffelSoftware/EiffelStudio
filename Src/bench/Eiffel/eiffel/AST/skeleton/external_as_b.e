@@ -10,11 +10,13 @@ inherit
 
 feature -- Attributes
 
-	language_name: STRING_AS;
+	language_name: EXTERNAL_LANG_AS;
 			-- Language name
+			-- might be replaced by external_declaration or external_definition
 
 	alias_name: STRING_AS;
 			-- Optional external name
+
 
 feature -- Initialization
 
@@ -54,7 +56,8 @@ feature -- Conveniences
 		end; -- external_name
 
 	type_string: STRING is
-			-- C type specified in the string `language_name'.
+			-- C type specified in the string `language_name.language_name'.
+			-- Shouldn't it be obsolete ?
 		local
 			s: STRING;
 			stop: BOOLEAN;
@@ -62,7 +65,7 @@ feature -- Conveniences
 		do
 			from
 				i := 1;
-				s := language_name.value;
+				s := language_name.language_name.value;
 				nb := s.count;
 			until
 				i > nb or else stop
@@ -105,7 +108,7 @@ feature -- Formatter
 			ctxt.indent_one_more;
 			ctxt.next_line;
 			ctxt.indent_one_less;
-			language_name.format (ctxt);
+			language_name.language_name.format (ctxt);
 			if external_name /= void then
 				ctxt.next_line;
 				ctxt.put_keyword ("alias");

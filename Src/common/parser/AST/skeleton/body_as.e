@@ -155,6 +155,7 @@ feature -- New feature description
 					!!extern_proc;
 					external_body ?= routine.routine_body;
 					extern_proc.set_alias_name (external_body.external_name);
+					extern_proc.set_external_characteristics (external_body);
 
 -- Assertions and Rescue compound are not supported in
 -- externals.
@@ -195,6 +196,7 @@ feature -- New feature description
 					!!extern_func;
 					external_body ?= routine.routine_body;
 					extern_func.set_alias_name (external_body.external_name);
+					extern_func.set_external_characteristics (external_body);
 
 -- Assertions and Rescue compound are not supported in
 -- externals.

@@ -115,5 +115,6 @@ feature {NONE}
 	pointer_type_as: INTEGER is 154;
 	address_current_as: INTEGER is 155;
 	address_result_as: INTEGER is 156;
+	external_lang_as: INTEGER is 158;
 
 end

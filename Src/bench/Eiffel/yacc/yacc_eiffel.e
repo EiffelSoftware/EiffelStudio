@@ -121,6 +121,7 @@ feature
 			as112: POINTER_TYPE_AS;
 			as113: ADDRESS_CURRENT_AS;
 			as114: ADDRESS_RESULT_AS;
+			as115: EXTERNAL_LANG_AS;
 		do
 			!!as1;
 			as1.pass_address(class_as);
@@ -338,6 +339,8 @@ feature
 			as113.pass_address (address_current_as);
 			!!as114;
 			as114.pass_address (address_result_as);
+			!!as115;
+			as115.pass_address (external_lang_as);
 		end;
 
 end

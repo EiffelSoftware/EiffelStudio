@@ -58,7 +58,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	pixmap_size_ok (pixmap: EV_PIXMAP): BOOLEAN is
+	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do

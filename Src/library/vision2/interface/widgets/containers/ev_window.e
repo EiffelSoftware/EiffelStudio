@@ -285,11 +285,11 @@ feature -- Status setting
 			-- Assign `a_status_bar' to `status_bar'.
 		require
 			no_status_bar_assigned: status_bar = Void
-			a_bar_not_void: a_bar /= Void
+			a_status_bar_not_void: a_status_bar /= Void
 		do
-			implementation.set_status_bar (a_bar)
+			implementation.set_status_bar (a_status_bar)
 		ensure
-			a_bar_assigned: status_bar = a_bar
+			a_status_bar_assigned: status_bar = a_status_bar
 		end
 
 	remove_status_bar is
@@ -370,6 +370,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/03/18 01:06:39  king
+--| Corrected set_status_bar
+--|
 --| Revision 1.49  2000/03/18 00:52:23  oconnor
 --| formatting, layout and comment tweaks
 --|

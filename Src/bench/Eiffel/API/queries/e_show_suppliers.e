@@ -22,7 +22,7 @@ feature -- Output
 			-- Execute Current command.
 		local
 			suppliers: SUPPLIER_LIST;
-			a_supplier: CLASS_C
+			a_supplier: E_CLASS
 		do
 			output_window.put_string ("Suppliers of class ");
 			current_class.append_clickable_signature (output_window);

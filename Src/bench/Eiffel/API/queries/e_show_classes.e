@@ -11,7 +11,7 @@ class E_SHOW_CLASSES
 inherit
 
 	E_CMD;
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -27,9 +27,9 @@ feature -- Execution
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
 			a_classi: CLASS_I;
-			a_classc: CLASS_C;
+			a_classe: E_CLASS;
 		do
-			clusters := Universe.clusters;
+			clusters := Eiffel_universe.clusters;
 			if not clusters.empty then
 				!! sorted_classes.make;
 				from 
@@ -57,9 +57,9 @@ feature -- Execution
 					sorted_classes.after 
 				loop
 					a_classi := sorted_classes.item;
-					a_classc := a_classi.compiled_class;
-					if a_classc /= Void then
-						a_classc.append_clickable_signature (output_window)
+					a_classe := a_classi.compiled_eclass;
+					if a_classe /= Void then
+						a_classe.append_clickable_signature (output_window)
 					else
 						a_classi.append_clickable_name (output_window)
 					end;

@@ -29,7 +29,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	displayed: LINKED_LIST [CLASS_C];
+	displayed: LINKED_LIST [E_CLASS];
 
 	tabs (i: INTEGER): STRING is
 		local
@@ -46,11 +46,11 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	rec_display (i: INTEGER; c: CLASS_C) is
+	rec_display (i: INTEGER; c: E_CLASS) is
 			-- Display parents of `c' in tree form.
 		local
-			descendants: LINKED_LIST [CLASS_C]
-			descendant_class: CLASS_C;
+			descendants: LINKED_LIST [E_CLASS]
+			descendant_class: E_CLASS;
 		do
 			descendants := c.descendants;
 			if not descendants.empty then

@@ -17,20 +17,14 @@ creation
 
 feature -- Access
 
-	criterium (f: FEATURE_I): BOOLEAN is
+	criterium (f: E_FEATURE): BOOLEAN is
 			-- Criterium for feature `f'
-		local
-			any_class: CLASS_C
 		do
-			any_class := System.any_class.compiled_class;
-			if any_class /= Void then
-				Result := any_criterium (f) and f.is_exported_for (any_class)
-			end
+			Result := any_criterium (f) and f.is_exported_to (any_class)
 		ensure then
 			good_criterium: Result implies
-				System.any_class.compiled_class /= Void and then
 					any_criterium (f) and then
-					f.is_exported_for ( System.any_class.compiled_class)
+					f.is_exported_to (Any_class)
 		end
 
 end -- class E_SHOW_EXPORTED_ROUTINES

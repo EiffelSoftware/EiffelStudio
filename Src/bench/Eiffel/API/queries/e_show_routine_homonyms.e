@@ -13,7 +13,7 @@ inherit
 		redefine
 			has_valid_feature
 		end;
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -34,14 +34,13 @@ feature -- Execution
 		local
 			clusters: LINKED_LIST [CLUSTER_I];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
-			classc: CLASS_C;
-			feature_table: FEATURE_TABLE;
-			feat: FEATURE_I;
+			e_class: E_CLASS;
+			feat: E_FEATURE;
 			feature_name: STRING;
 			class_name: STRING
 		do
-			feature_name := current_feature.feature_name;
-			clusters := Universe.clusters;
+			feature_name := current_feature.name;
+			clusters := Eiffel_universe.clusters;
 			from 
 				clusters.start 
 			until 
@@ -53,15 +52,14 @@ feature -- Execution
 				until 
 					classes.after 
 				loop
-					classc := classes.item_for_iteration.compiled_class;
-					if classc /= Void then 
-						feature_table := classc.feature_table;
-						if feature_table.has (feature_name) then
-							class_name := classc.class_name;
-							feat := feature_table.item (feature_name);
-							feat.append_clickable_signature (output_window, classc);
+					e_class := classes.item_for_iteration.compiled_eclass;
+					if e_class /= Void then 
+						feat := e_class.feature_with_name (feature_name);
+						if feat /= Void then
+							class_name := e_class.name;
+							feat.append_clickable_signature (output_window, e_class);
 							output_window.put_string ("%N%TFrom class ");
-							classc.append_clickable_signature (output_window);
+							e_class.append_clickable_signature (output_window);
 							output_window.new_line;
 						end
 					end;

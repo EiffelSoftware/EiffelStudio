@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision menu, implementation interface."
 	status: "See notice at end of class"
@@ -8,7 +7,6 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_MENU_I
 	
 inherit
@@ -16,10 +14,15 @@ inherit
 
 feature {NONE} -- Initialization
 
-        make_with_text (par: EV_MENU_CONTAINER; txt: STRING) is
-                        -- Create a menu with name. 
-			deferred
-			end	
+	make (par: EV_MENU_CONTAINER) is
+			-- Create an empty menu.
+		deferred
+		end	
+
+	make_with_text (par: EV_MENU_CONTAINER; txt: STRING) is
+			-- Create an empty menu with `label' as label. 
+		deferred
+		end	
 
 feature -- Status report
 

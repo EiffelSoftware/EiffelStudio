@@ -92,7 +92,7 @@ rt_public int net_recv(int cs, char *buf, int size)
 	}
 
 	while (len < size) {
-		timer = SetTimer(NULL, timer, TIMEOUT*1000, timeout);   /* Give read only TIMEOUT seconds to succeed */
+		timer = SetTimer(NULL, timer, TIMEOUT*1000, (TIMERPROC) timeout);   /* Give read only TIMEOUT seconds to succeed */
 		fSuccess = ReadFile(readfd(cs), buf + len, size - len, &length, NULL);
 		KillTimer (NULL, timer);
 
@@ -290,7 +290,7 @@ rt_private Signal_t timeout(void)
 {
 	longjmp(env, 1);			/* Alarm signal received */
 	/* NOTREACHED */
-#ifdef EIF_WIN32
+#ifndef EIF_WIN32
 	return 0;
 #endif
 }

@@ -254,18 +254,26 @@ feature {NONE} -- Event handling
 			cst: CLASSC_STONE
 			ost: OBJECT_STONE
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
+			
+			warning_dlg: EB_WARNING_DIALOG
 		do
-			ost ?= s
-			if ost /= Void then
-				create dlg.make_with_object (ost.object_address)
-				dlg.set_callback (agent add_expression (dlg))
-				dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+			if Application.is_dotnet then
+--| FIXME: JFIAT
+				create warning_dlg.make_with_text ("Sorry not yet available for Dotnet debugging")
+				warning_dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 			else
-				cst ?= s
-				if cst /= Void then
-					create dlg.make_with_class (cst.e_class)
+				ost ?= s
+				if ost /= Void then
+					create dlg.make_with_object (ost.object_address)
 					dlg.set_callback (agent add_expression (dlg))
 					dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+				else
+					cst ?= s
+					if cst /= Void then
+						create dlg.make_with_class (cst.e_class)
+						dlg.set_callback (agent add_expression (dlg))
+						dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+					end
 				end
 			end
 		end
@@ -388,7 +396,7 @@ feature {NONE} -- Implementation
 				res := dmp.full_output
 				Result.extend (res)
 				if dmp.address /= Void then
-					create ost.make (dmp.address, " ", dmp.dynamic_type)
+					create ost.make (dmp.address, " ", dmp.dynamic_class)
 					Result.set_pebble (ost)
 					Result.set_accept_cursor (ost.stone_cursor)
 					Result.set_deny_cursor (ost.X_stone_cursor)

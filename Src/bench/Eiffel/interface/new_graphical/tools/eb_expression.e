@@ -620,7 +620,7 @@ feature {EB_EXPRESSION} -- Status report: intermediate results.
 		require
 			evaluated: result_object /= Void
 		do
-			Result := result_object.dynamic_type
+			Result := result_object.dynamic_class
 		end
 
 	result_static_type: CLASS_C
@@ -1075,7 +1075,7 @@ feature {NONE} -- Implementation
 					end
 				elseif f.name.is_equal ("item") then
 					result_object := value
-					result_static_type := value.dynamic_type
+					result_static_type := value.dynamic_class
 				else
 					error_message := "Cannot evaluate an attribute of a basic type"
 				end

@@ -62,7 +62,7 @@ grep -v -- "--|" event/action_sequence.e > vision2/interface/support/action_sequ
 grep -v -- "--|" event/active_list.e > vision2/interface/support/active_list.e
 grep -v -- "--|" event/interactive_list.e > vision2/interface/support/interactive_list.e
 echo "See vision2/RELEASE_NOTES" > README
-tar czf $1.tgz README vision2 base gel wel libpng zlib
+tar czf $1.tgz make_msc.bat README vision2 base gel wel libpng zlib
 rm -rf base gel event vision2 wel C_library libpng zlib
 echo "Done!"
 exit 0

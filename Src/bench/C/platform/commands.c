@@ -32,12 +32,6 @@
 #include <os2.h>
 #endif
 
-#undef FALSE
-#define FALSE ((EIF_BOOLEAN) '\0')
-
-#undef TRUE
-#define TRUE ((EIF_BOOLEAN) '\01')
-
 private fnptr set_proc;
 private fnptr send_proc;
 
@@ -369,9 +363,9 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 EIF_BOOLEAN tabs_disabled_for_the_platform()
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
-	return TRUE;
+	return EIF_TRUE;
 #else
-	return FALSE;
+	return EIF_FALSE;
 #endif
 }
 

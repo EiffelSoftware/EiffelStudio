@@ -18,7 +18,7 @@ feature -- Initialization
 
 	make is
 		do
-			!! new_units.make (3000)
+			!! new_units.make (500)
 		end
 
 feature
@@ -134,10 +134,11 @@ end
 				new_units.forth;
 			end;
 debug ("TRANSFER")
-			io.error.putstring("taille de newunits : ")
-			io.error.putint(new_units.count)
-			io.error.putstring("%N")
-			io.error.putstring("... out transfer")
+			print ("%NPoly_tables count: ")
+			print (tmp_poly_server.count)
+			print ("%Nnewunits size : ")
+			print (new_units.count)
+			print ("%N... out transfer")
 end
 			new_units.clear_all;
 			count := 0;
@@ -154,6 +155,6 @@ end
 			end;
 		end;
 
-	Overload: INTEGER is 50000;
+	Overload: INTEGER is 20000;
 
 end

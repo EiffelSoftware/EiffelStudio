@@ -312,6 +312,10 @@ internal class FEATURE
 			setter_builder.DefineParameter (1, ParameterAttributes.In, name ());
 		}
 
+		if (is_c_external && is_static) {
+			((MethodBuilder) method_builder).SetCustomAttribute (suppress_check_attr ());
+		}
+
 		if
 			(COMPILER.is_debugging_enabled &&
 			!info.is_interface_routine && !info.is_static)
@@ -336,7 +340,12 @@ internal class FEATURE
 	// Debugger CAs to hide dummy callbacks routine
 	private static CustomAttributeBuilder internal_debugger_step_through_attr;
 	private static CustomAttributeBuilder internal_debugger_hidden_attr;
-	private static CustomAttributeBuilder debugger_step_through_attr () {
+	private static CustomAttributeBuilder internal_suppress_check_attr;
+
+	private static CustomAttributeBuilder debugger_step_through_attr ()
+		// Once: Predefined Custom attribute to force debugger
+		// to skip certain routines.
+	{
 		if (internal_debugger_step_through_attr == null) {
 			Type type = Type.GetType ("System.Diagnostics.DebuggerStepThroughAttribute");
 			ConstructorInfo constructor = type.GetConstructor (Type.EmptyTypes);
@@ -345,7 +354,11 @@ internal class FEATURE
 		}
 		return internal_debugger_step_through_attr;
 	}
-	private static CustomAttributeBuilder debugger_hidden_attr () {
+
+	private static CustomAttributeBuilder debugger_hidden_attr ()
+		// Once: Predefined Custom attribute to force debugger
+		// to hide certain routines.
+	{
 		if (internal_debugger_hidden_attr == null) {
 			Type type = Type.GetType ("System.Diagnostics.DebuggerHiddenAttribute");
 			ConstructorInfo constructor = type.GetConstructor (Type.EmptyTypes);
@@ -353,6 +366,19 @@ internal class FEATURE
 				new CustomAttributeBuilder (constructor, new object [0] {});
 		}
 		return internal_debugger_hidden_attr;
+	}
+
+	private static CustomAttributeBuilder suppress_check_attr ()
+		// Once: Predefined Custom attribute to force .net runtime
+		// not to perform a stack walk when calling a C external.
+	{
+		if (internal_suppress_check_attr == null) {
+			Type type = Type.GetType ("System.Security.SuppressUnmanagedCodeSecurityAttribute");
+			ConstructorInfo constructor = type.GetConstructor (Type.EmptyTypes);
+			internal_suppress_check_attr =
+				new CustomAttributeBuilder (constructor, new object [0] {});
+		}
+		return internal_suppress_check_attr;
 	}
 
 } // end of FEATURE

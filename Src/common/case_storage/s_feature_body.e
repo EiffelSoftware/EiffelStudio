@@ -19,7 +19,7 @@ feature -- Setting
     set_text ( li_st : LINKED_LIST [STRING] ) is
         do
             if count >0 then
-                wipe_out
+                discard_items
             end
             from
                 start
@@ -38,7 +38,7 @@ feature -- Setting
 				from
 					l.start
 					start
-					wipe_out
+					discard_items
 				until
 					l.after
 				loop

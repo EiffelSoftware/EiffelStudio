@@ -203,7 +203,7 @@ feature -- Analyzis
 				until
 					i > nb
 				loop
-					arg := real_type (args @ 1)
+					arg := real_type (args.item (i))
 					if arg.is_true_expanded then
 							-- Force GC hook and its usage even if not used within
 							-- body of current routine.

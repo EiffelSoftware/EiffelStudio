@@ -189,13 +189,13 @@ feature {NONE} -- Code generation
 			arg_types: ARRAY [STRING]
 			generated_file: INDENT_FILE
 		do
-			generated_file := Context.generated_file
-			if generate_parameter_cast then
-				generate_cast := True
-				arg_types := argument_types
-			end
 			if parameters /= Void then
 				from
+					generated_file := Context.generated_file
+					if generate_parameter_cast then
+						generate_cast := True
+						arg_types := argument_types
+					end
 					parameters.start
 					if type = standard then
 							-- Skip C++ object

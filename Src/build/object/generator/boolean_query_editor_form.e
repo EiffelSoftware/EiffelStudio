@@ -87,7 +87,7 @@ feature {NONE} --GUI
 			menu_false_field.set_text ("No")
 			menu_false_field.set_width (115)
 			query_label.set_left_alignment
-			if object_tool_generator.precondition_test.state then
+			if class_importer.object_tool_generator.precondition_test.state then
 				test_toggle_b.arm
 			else	
 				test_text_field.set_insensitive

@@ -11,9 +11,9 @@ class
 
 inherit
 
-	SCROLLABLE_LIST_ELEMENT
+	EV_LIST_ITEM
 		redefine
-			is_equal
+			make_with_text, is_equal
 		end
 
 	COMPARABLE
@@ -22,21 +22,22 @@ inherit
 		end
 
 creation
-	make
+	make_with_text
 
 feature -- Creation
 
-	make (a_name: STRING) is
-			-- Create a class with the name `a_name'.
-		require
-			class_name_not_void: a_name /= Void
-			class_name_not_empty: not a_name.empty
+	make_with_text (par: EV_LIST; txt: STRING) is
+			-- Create a class with the name `txt'.
+		require else
+			class_name_not_void: txt /= Void
+			class_name_not_empty: not txt.empty
 		do
-			class_name := a_name
-			!! query_list.make
-			!! command_list.make
-			!! routine_list.make
-			!! generated_routines.make
+			class_name := txt
+			create query_list.make
+			create command_list.make
+			create routine_list.make
+			create generated_routines.make
+			{EV_LIST_ITEM} Precursor (par, txt)
 		end
 
 feature -- Attributes
@@ -89,13 +90,13 @@ feature -- Access
 			generated_routines.extend (a_routine)
 		end
 	
-feature -- SCROLLABLE_LIST_ELEMENT
-
-	value: STRING  is
-			-- String that appears in a scrollable list.
-		do
-			Result := class_name
-		end
+-- feature -- SCROLLABLE_LIST_ELEMENT
+-- 
+-- 	value: STRING  is
+-- 			-- String that appears in a scrollable list.
+-- 		do
+-- 			Result := class_name
+-- 		end
 
 feature -- Comparison
 

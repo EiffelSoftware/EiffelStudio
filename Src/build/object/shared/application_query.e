@@ -8,10 +8,6 @@ indexing
 class
 	APPLICATION_QUERY
 
-inherit
-
-	SCROLLABLE_LIST_ELEMENT
-
 creation
 	make
 

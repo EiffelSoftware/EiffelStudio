@@ -32,13 +32,13 @@ feature -- Execution
 			mp: MOUSE_PTR
 		do
 			!! mp
-			application_class := object_tool_generator.edited_class
+			application_class := class_importer.object_tool_generator.edited_class
 			mp.set_watch_shape
 			generate_interface
 			generate_command
 			generate_instance
 			mp.restore
-			object_tool_generator.close
+			class_importer.object_tool_generator.close
 		end
 
 	undo is
@@ -86,7 +86,7 @@ feature -- Tool generation
 			a_query_editor_form: QUERY_EDITOR_FORM
 		do
 			generate_permanent_window
-			form_list := object_tool_generator.form_table.linear_representation
+			form_list := class_importer.object_tool_generator.form_table.linear_representation
 			from
 				width := 300
 				form_list.start

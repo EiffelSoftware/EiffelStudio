@@ -11,7 +11,7 @@ class
 
 inherit
 
-	EB_TOP_SHELL
+	EV_WINDOW
 		redefine
 			make
 		end
@@ -20,95 +20,78 @@ inherit
 
 	CLOSEABLE
 
+	CONSTANTS
+
 creation
 
 	make
 
 feature -- Initialization
 
-	make (a_name: STRING; a_screen: SCREEN) is
+	make (par: EV_WINDOW) is
 			-- Create the object tool generator.
+		local
+			vertical_box: EV_VERTICAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
+			frame: EV_FRAME
 		do
-			{EB_TOP_SHELL} Precursor (a_name, a_screen)
-			!! top_form.make ("", Current)
-			!! available_label.make ("Available commands:", top_form)
-			!! generated_label.make ("Generated commands:", top_form)
-			!! routine_list.make ("", top_form)
-			!! generated_routines.make ("", top_form)
-			!! generate_button.make ("Generate", top_form)
-			!! separator.make ("", top_form)
-			!! precondition_toggle_b.make ("Precondition test", top_form)
+			{EV_WINDOW} Precursor (par)
+
+			create vertical_box.make (Current)
+			vertical_box.set_homogeneous (False)
+			vertical_box.set_spacing (5)
+			create frame.make_with_text (vertical_box, "Available features")
+			create routine_list.make (frame)
+
+			create horizontal_box.make (vertical_box)
+			horizontal_box.set_expand (False)
+			create precondition_toggle_b.make_with_text (horizontal_box,
+														"Precondition test")
+			create generate_button.make (horizontal_box)
+
+			create frame.make_with_text (vertical_box, "Generated commands")
+			create generated_routines.make (frame)
+
 			set_values
-			attach_all
 			set_callbacks
 		end
 
 	set_values is
 			-- Set velues for GUI elements.
-		local
-			set_colors: SET_WINDOW_ATTRIBUTES_COM
+--		local
+--			set_colors: SET_WINDOW_ATTRIBUTES_COM
 		do
-			!! set_colors
-			set_colors.execute (Current)
-			set_size (Resources.Object_command_generator_width, Resources.Object_command_generator_height)
-		end
+			set_title ("Object command generator:")
+--			!! set_colors
+--			set_colors.execute (Current)
+			set_minimum_width (resources.Object_command_generator_width)
+			set_minimum_height (resources.Object_command_generator_height)
+			generate_button.set_text ("Generate")
+			generate_button.set_horizontal_resize (False)
+			generate_button.set_vertical_resize (False)
 
-	attach_all is
-			-- Perform attachments.
-		do
-			top_form.set_fraction_base (2)
-			top_form.attach_bottom (generate_button, 0)
-			top_form.attach_bottom (precondition_toggle_b, 0)
-			top_form.attach_left (precondition_toggle_b, 5)
-			top_form.attach_right (generate_button, 0)
-			top_form.attach_bottom_widget (generate_button, separator, 0)
-			top_form.attach_left (separator, 0)
-			top_form.attach_right (separator, 0)
-			top_form.attach_bottom_widget (separator, routine_list, 0)
-			top_form.attach_bottom_widget (separator, generated_routines, 0)
-			top_form.attach_left (routine_list, 0)
-			top_form.attach_right_position (routine_list, 1)
-			top_form.attach_right (generated_routines, 0)
-			top_form.attach_left_position (generated_routines, 1)
-			top_form.attach_top_widget (available_label, routine_list, 3)
-			top_form.attach_top_widget (generated_label, generated_routines, 3)
-			top_form.attach_top (available_label, 0)
-			top_form.attach_left (available_label, 0)
-			top_form.attach_right_position (available_label, 1)
-			top_form.attach_top (generated_label, 0)
-			top_form.attach_right (generated_label, 0)
-			top_form.attach_left_position (generated_label, 1)
+ 			precondition_toggle_b.set_state (True)
 		end
 
 	set_callbacks is
 			-- Set callbacks.
 		local
-			del_com: DELETE_WINDOW
+			close_cmd: CLOSE_WINDOW
 			generate_cmd: GENERATE_OBJECT_COMMAND_CMD
 		do
-			!! generate_cmd
-			generate_button.add_activate_action (generate_cmd, precondition_toggle_b)
-			routine_list.add_default_action (generate_cmd, precondition_toggle_b)
-			!! del_com.make (Current)
-			set_delete_command (del_com)
-			precondition_toggle_b.arm
+-- 			!! generate_cmd
+-- 			generate_button.add_activate_action (generate_cmd, precondition_toggle_b)
+-- 			routine_list.add_default_action (generate_cmd, precondition_toggle_b)
+ 			create close_cmd.make (Current)
+ 			add_close_command (close_cmd, Void)
 		end
 
 feature {NONE} -- GUI attributes
 
-	available_label,
-			-- Available routines label
-
-	generated_label: LABEL
-			-- Generated routines label
-
-	top_form: FORM
-			-- Form of the top shell
-
-	generate_button: PUSH_B
+	generate_button: EV_BUTTON
 			-- `Generate' button
 
-	separator: THREE_D_SEPARATOR
+	separator: EV_HORIZONTAL_SEPARATOR
 			-- Separator between the list and the button
 
 feature -- GUI attributes
@@ -116,10 +99,10 @@ feature -- GUI attributes
 	routine_list,
 			-- List of available routines
 
-	generated_routines: SCROLLABLE_LIST
+	generated_routines: EV_LIST
 			-- List of generated routines
 
-	precondition_toggle_b: TOGGLE_B
+	precondition_toggle_b: EV_CHECK_BUTTON
 			-- Precondition tes toggle button
 
 feature -- Command execution
@@ -129,13 +112,13 @@ feature -- Command execution
 		local
 			routine: APPLICATION_ROUTINE
 		do
-			routine_list.go_i_th (routine_list.selected_position)
-			generated_routines.extend (routine_list.item)
-			generated_routines.set_insensitive
-			routine ?= routine_list.item
-			edited_class.add_generated_routine (routine)
-			routine_list.remove
-			routine_list.go_i_th (routine_list.count)			
+-- 			routine_list.go_i_th (routine_list.selected_position)
+-- 			generated_routines.extend (routine_list.item)
+-- 			generated_routines.set_insensitive
+-- 			routine ?= routine_list.item
+-- 			edited_class.add_generated_routine (routine)
+-- 			routine_list.remove
+-- 			routine_list.go_i_th (routine_list.count)			
 		end
 			
 
@@ -147,22 +130,18 @@ feature -- Closeable
 			hide
 		end
 
-	display (application_class: SCROLLABLE_LIST_ELEMENT) is
+	display (application_class: EV_LIST_ITEM) is
 			-- Display object tool generator.
 		require
 			class_not_void: application_class /= Void
 		do
-			if not realized then
-				realize
-			else
-				show
-				raise
-			end
-			edited_class ?= application_class
-			check
-				edited_class_not_void: edited_class /= Void
-			end
-			update_interface
+			show
+-- 			raise
+ 			edited_class ?= application_class
+ 			check
+ 				edited_class_not_void: edited_class /= Void
+ 			end
+ 			update_interface
 		end
 
 feature {NONE} -- Implementation
@@ -176,34 +155,37 @@ feature {NONE} -- Implementation
 			rout_list: LINKED_LIST [APPLICATION_ROUTINE]
 			generated_routines_list: LINKED_LIST [APPLICATION_ROUTINE]
 			temp_title: STRING
+			list_item: EV_LIST_ITEM
 		do
-			!! temp_title.make (0)
-			temp_title.append ("Object command generator: ")
-			temp_title.append (edited_class.class_name)
-			set_title (temp_title)
-			routine_list.wipe_out
-			generated_routines.wipe_out
-			generated_routines_list := edited_class.generated_routines
-			rout_list := edited_class.routine_list
-			from
-				generated_routines_list.start
-			until
-				generated_routines_list.after
-			loop
-				generated_routines.extend (generated_routines_list.item)
-				generated_routines_list.forth
-			end
-				
-			from
-				rout_list.start
-			until
-				rout_list.after
-			loop
-				if not generated_routines.has (rout_list.item) then
-					routine_list.extend (rout_list.item)
-				end
-				rout_list.forth
-			end
+ 			create temp_title.make (0)
+ 			temp_title.append ("Object command generator: ")
+ 			temp_title.append (edited_class.class_name)
+ 			set_title (temp_title)
+ 			routine_list.clear_items
+ 			generated_routines.clear_items
+ 			generated_routines_list := edited_class.generated_routines
+ 			rout_list := edited_class.routine_list
+ 			from
+ 				generated_routines_list.start
+ 			until
+ 				generated_routines_list.after
+ 			loop
+				create list_item.make_with_text (generated_routines,
+											generated_routines_list.item.value)
+ 				generated_routines_list.forth
+ 			end
+ 				
+ 			from
+ 				rout_list.start
+ 			until
+ 				rout_list.after
+ 			loop
+-- 				if not generated_routines.has (rout_list.item) then
+					create list_item.make_with_text (routine_list,
+													rout_list.item.value)
+-- 				end
+ 				rout_list.forth
+ 			end
 		end
 
 feature -- Attribute

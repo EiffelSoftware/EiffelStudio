@@ -16,8 +16,6 @@ inherit
 			method_name as routine_name
 		end
 
-	SCROLLABLE_LIST_ELEMENT
-
 creation
 	make, make_from_command
 
@@ -30,7 +28,7 @@ feature -- Creation
 			valid_routine_name: rout_name /= Void and not rout_name.empty
 			valid_arguments: arg_list /= Void 
 		do
-			!! precondition_list.make
+			create precondition_list.make
 			routine_name := rout_name
 			argument_list := arg_list
 		end
@@ -43,19 +41,19 @@ feature -- Creation
 			arg: APPLICATION_ARGUMENT
 		do
 			routine_name := a_command.command_name
-			!! precondition_list.make
-			!! argument_list.make
-			!! arg.make (a_command.argument_name, a_command.argument_type)
+			create precondition_list.make
+			create argument_list.make
+			create arg.make (a_command.argument_name, a_command.argument_type)
 			argument_list.extend (arg)
 			precondition_list := a_command.precondition_list
 		end
 
-feature -- Scrollable element
+feature -- List display
 
 	value: STRING is
-			-- Value displayed in a scrollable list.
+			-- Value displayed in a list.
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.append (routine_name)
 			if not argument_list.empty then
 				Result.append (" (")

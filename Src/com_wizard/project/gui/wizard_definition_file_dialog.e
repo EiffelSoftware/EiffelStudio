@@ -186,13 +186,13 @@ feature {NONE} -- Implementation
 	File_filters_descriptions: ARRAY [STRING] is
 			-- Open file dialog file filters descriptions
 		once
-			Result := <<"IDL File (*.idl)", "Type Library (*.tlb)", "Object Library (*.olb)", "Dynamic Link Library (*.dll)", "Executable (*.exe)", "All (*.*)">>
+			Result := <<"IDL File (*.idl)", "Type Library (*.tlb)", "ActiveX Control (*.ocx)", "Object Library (*.olb)", "Dynamic Link Library (*.dll)", "Executable (*.exe)", "All (*.*)">>
 		end
 	
 	File_filters: ARRAY [STRING] is
 			-- Open file dialog file filters
 		once
-			Result := <<"*.idl", "*.tlb", "*.olb", "*.dll", "*.exe", "*.*">>
+			Result := <<"*.idl", "*.tlb", "*.ocx", "*.olb", "*.dll", "*.exe", "*.*">>
 		end
 
 	Folder_selection_dialog_title: STRING is "Choose Destination Folder"

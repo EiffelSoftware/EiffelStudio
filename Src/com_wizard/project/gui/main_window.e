@@ -97,6 +97,7 @@ feature {NONE} -- Initialization
 			create ps_dialog.make (Current)
 			create final_dialog.make (Current)
 			create first_choice_dialog.make (Current)
+			create about_dialog.make (Current)
 			resize (600, 400)
 			set_z_order (Hwnd_top)
 			show
@@ -167,6 +168,9 @@ feature -- GUI Elements
 	first_choice_dialog: WIZARD_FIRST_CHOICE_DIALOG
 			-- Wizard first choice dialog
 
+	about_dialog: WIZARD_ABOUT_DIALOG
+			-- About dialog
+
 	Title: STRING is "EiffelCOM Wizard"
 			-- Window title
 
@@ -176,6 +180,7 @@ feature -- GUI Elements
 			create Result.make
 			Result.append_popup (file_menu, "&File")
 			Result.append_popup (build_menu, "&Build")
+			Result.append_popup (help_menu, "&Help")
 		ensure
 			main_menu_not_void: Result /= Void
 		end
@@ -201,6 +206,16 @@ feature -- GUI Elements
 			Result.append_string ("&Generate (no wizard)", Generate_string_constant)
 		ensure
 			build_menu_not_void: Result /= Void
+		end
+
+	help_menu: WEL_MENU is
+			-- Help menu
+		once
+			create Result.make
+			Result.append_string ("&Help", 1000)
+			Result.append_string ("&About EiffelCOM", About_string_constant)
+		ensure
+			menu_not_void: Result /= Void
 		end
 
 	open_file_dialog: WEL_OPEN_FILE_DIALOG is
@@ -482,6 +497,8 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
 				tool_bar.disable_button (Save_string_constant)
 				tool_bar.disable_button (Generate_string_constant)
+			when About_string_constant then
+				about_dialog.activate
 			else
 			end
 		end

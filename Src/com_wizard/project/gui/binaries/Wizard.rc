@@ -204,7 +204,7 @@ BEGIN
                     225,10
     LTEXT           "What would you like to do?",Title_Question_Static,115,
                     25,220,10
-    CONTROL         "Create a new project from Eiffel class",
+    CONTROL         "Create a new project from existing Eiffel project",
                     Create_Project_From_Eiffel_Check,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,125,76,145,10
 END
@@ -222,11 +222,11 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Eiffel Project File"
 FONT 8, "MS Sans Serif"
 BEGIN
-    EDITTEXT        Project_File_Edit,115,31,170,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",Project_File_Browse_Button,290,31,50,13
-    EDITTEXT        Eiffel_Class_Edit,115,90,170,12,ES_AUTOHSCROLL
-    EDITTEXT        Destination_Folder_Edit,114,138,170,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",Destination_Folder_Browse_Button,290,138,50,12
+    EDITTEXT        Project_File_Edit,115,31,170,15,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",Project_File_Browse_Button,290,31,50,15
+    EDITTEXT        Eiffel_Class_Edit,115,90,170,14,ES_AUTOHSCROLL
+    EDITTEXT        Destination_Folder_Edit,114,135,170,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",Destination_Folder_Browse_Button,290,135,50,14
     PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
@@ -236,17 +236,28 @@ BEGIN
     LTEXT           "Enter the Eiffel project:",Definition_File_Input_Static,
                     116,20,100,10
     LTEXT           "Enter the destination folder:",
-                    Destination_Folder_Input_Static,114,128,100,8
+                    Destination_Folder_Input_Static,114,127,100,8
     LTEXT           "The destination folder is the folder where the wizard will place all generated files.",
-                    Destination_Folder_Static,114,108,175,18
+                    Destination_Folder_Static,114,108,175,16
     LTEXT           "A project file contains information about an Eiffel project.",
                     Definition_File_Static,115,10,195,10
     LTEXT           "Enter Eiffel class name:",Definition_File_Static2,115,
                     79,120,9
-    EDITTEXT        Ace_File_Edit,115,61,170,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",Ace_File_Browse_Button,290,61,50,12
+    EDITTEXT        Ace_File_Edit,115,61,170,15,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",Ace_File_Browse_Button,290,61,50,15
     LTEXT           "Enter the project Ace file:",
                     Definition_File_Input_Static2,115,51,100,10
+END
+
+WIZARD_ABOUT_DIALOG DIALOG DISCARDABLE  0, 0, 322, 161
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About EiffelCOM Release 4.5 Build 3"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,137,140,50,14
+    CONTROL         127,IDC_STATIC,"Static",SS_BITMAP,7,7,167,113
+    LTEXT           "EiffelCOM 4.5 Build 3 \n\nCopyright (C) 1999-2000\nInteractive Software Engineering Inc. \n\n ISE Building, 2nd floor \n 270 Storke Road, Goleta, \nCA 93117 USA \n\nTel: (805)685-1006   Fax: (805)695-6869 \nEmail: <info@eiffel.com> \n Webpage: http://www.eiffel.com \n\nSupport Webpage: http://support.eiffel.com",
+                    ABOUT_STATIC,180,7,135,112
 END
 
 
@@ -326,6 +337,14 @@ BEGIN
         RIGHTMARGIN, 340
         TOPMARGIN, 7
         BOTTOMMARGIN, 176
+    END
+
+    WIZARD_ABOUT_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 315
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 154
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -438,6 +457,8 @@ BEGIN
     Exit_String             "Clear Output"
     Launch_String           "Launch Wizard"
     Generate_String         "Generate Code (no wizard)"
+    About_string            "About EiffelCOM"
+    Help_string             "Help topics"
 END
 
 #endif    // English (U.S.) resources

@@ -10,10 +10,9 @@ create
 feature {NONE} -- Initialization
 
 	<FL_CREATION_ROUTINE_NAME> is
-		indexing
-			description: "Entry point"
+			-- Entry point.
 		do
 			-- Write your code here.
 		end
 
-end -- class <FL_ROOT_CLASS_NAME>
+end

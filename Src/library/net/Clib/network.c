@@ -2,8 +2,9 @@
 	Eiffel Net C interfacing
 */
 
-#include "config.h"
-#include "size.h" /* for LNGSIZ */
+#include "eif_config.h"
+#include "eif_except.h"
+#include "eif_size.h" /* for LNGSIZ */
 
 #ifdef EIF_WIN32
 #define FD_SETSIZE 256
@@ -12,7 +13,6 @@
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #define EINPROGRESS WSAEINPROGRESS
 #include <stdio.h>
-#include "except.h"
 #endif
 
 #ifdef EIF_OS2
@@ -38,7 +38,7 @@
 #include <sys/ioctl.h>
 #endif
 
-#include "cecil.h"
+#include "eif_cecil.h"
 
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>

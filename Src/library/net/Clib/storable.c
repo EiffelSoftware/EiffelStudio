@@ -1,7 +1,7 @@
-#include "except.h"		/* eraise */
-#include "store.h"
-#include "retrieve.h"
-#include "compress.h"
+#include "eif_except.h"		/* eraise */
+#include "eif_store.h"
+#include "eif_retrieve.h"
+#include "eif_compress.h"
 
 #ifdef EIF_WIN32
 #include "winsock.h"

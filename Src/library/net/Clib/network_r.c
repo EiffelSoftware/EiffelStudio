@@ -3,7 +3,7 @@
 */
 
 
-#include "config.h"
+#include "eif_config.h"
 
 #ifdef EIF_OS2
 #include <stdlib.h>
@@ -59,7 +59,7 @@
 #endif
 #include <errno.h>
 #include <fcntl.h>
-#include "cecil.h"
+#include "eif_cecil.h"
 
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>

@@ -2,8 +2,8 @@
 	Synchronous polling facilities
 */
 
-#include "config.h"
-#include "size.h" /* for LNGSIZ */
+#include "eif_config.h"
+#include "eif_size.h" /* for LNGSIZ */
 
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -41,9 +41,9 @@
 #define FNDELAY O_NDELAY
 #endif
 
-#include "cecil.h"
-#include "except.h"
-#include "error.h"
+#include "eif_cecil.h"
+#include "eif_except.h"
+#include "eif_error.h"
 
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>

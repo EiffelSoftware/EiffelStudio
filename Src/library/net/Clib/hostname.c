@@ -2,7 +2,7 @@
 	added c features
 */
 
-#include "portable.h"
+#include "eif_portable.h"
 
 #if defined EIF_WIN32 || defined EIF_OS2
 	/* unistd.h doesn't exist */

@@ -1,4 +1,11 @@
-class PROF_CONVERTER
+indexing
+
+	description:
+		"Initialized the PROFILE_CONVERTER and does extra checks.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class CONVERTER_CALLER
 
 inherit
 	PROJECT_CONTEXT
@@ -6,12 +13,11 @@ inherit
 creation
 	make
 
-feature {EWB_GENERATE} -- creation
+feature {EWB_GENERATE} -- Initialization
 
 	make (arguments: ARRAY [STRING]; shared_prof_config: SHARED_PROF_CONFIG) is
-			-- creates the system
-			-- command line arguments:	1) path to profiling outputfile
-			--							2) "workbench" or "final"
+			-- Initialize the converter with the `arguments'. The first argument
+			-- should be the profiler's output file, the second the compile type used.
 		do
 			config := shared_prof_config;
 			if arguments.count /= 2 then
@@ -38,10 +44,10 @@ feature {EWB_GENERATE} -- creation
 			end
 		end -- make
 
-feature {PROF_CONVERTER} -- implementation
+feature {PROF_CONVERTER} -- Implementation
 
 	check_profile_file(profile_name: STRING; comp_type: STRING) is
-			-- Checks if the file exists
+			-- Checks if the file exists.
 		local
 			file: PLAIN_TEXT_FILE
 		do
@@ -59,6 +65,7 @@ feature {PROF_CONVERTER} -- implementation
 		end -- check_profile_file
 
 	check_project_directory (comp_type: STRING) is
+			-- Checks wether the project directory exists.
 		local
 			file: PLAIN_TEXT_FILE;
 		do
@@ -76,14 +83,14 @@ feature {PROF_CONVERTER} -- implementation
 		end -- check_project_directory
 	
 	do_convertion is
-			-- creates both files and initiates conversion
+			-- Creates both files and initiates conversion.
 		do
 			!!profile_converter.make (profile_output_dir, translat_dir, config);
 			profile_converter.convert_profile_listing
-		end -- do_convertion
+		end;
 
 	help is
-			-- generate output for command line arguments
+			-- Generate output for command line arguments.
 		do
 			io.error.putstring("Usage: ");
 			io.error.putstring(" <profile_path> compile_type%N");
@@ -91,27 +98,27 @@ feature {PROF_CONVERTER} -- implementation
 			io.error.putstring("%Tprofile_path: path and filename of the profiler's output file.%N");
 			io.error.putstring("%Tcompile_type: `workbench' or `final'.%N");
 			io.error.new_line
-		end -- help
+		end;
 
 feature {NONE} -- attributes
 
 	command_name : STRING
-			-- the name of the system while executing
+			-- The name of the system while executing.
 
 	profile_converter : PROFILE_CONVERTER
-			-- the converter for output files of `profile'.
+			-- The converter for output files of `profile'.
 
 	exists : BOOLEAN
-			-- does the file passed as argument exist?
+			-- Does the file passed as argument exist?
 
 	profile_output_dir: STRING
 			-- Directory where the output file is written.
 
 	translat_dir: STRING
-			-- directory where TRANSLAT really; is based upon
-			-- commandline argument (2)
+			-- Directory where TRANSLAT really is; is based upon
+			-- commandline argument (2).
 
 	config: SHARED_PROF_CONFIG
 			-- Object to hold the configuration values.
 
-end -- class PROF_CONVERTER
+end -- class CONVERTER_CALLER

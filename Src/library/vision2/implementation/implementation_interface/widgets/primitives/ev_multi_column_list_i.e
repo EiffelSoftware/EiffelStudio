@@ -296,7 +296,7 @@ feature -- Element change
 			-- Assign `a_width' `column_width'(`a_column').
 		require
 			a_column_within_range: a_column > 0 and a_column <= column_count
-			a_width_positive: a_width > 0
+			a_width_positive: a_width >= 0
 		do
 			update_column_width (a_width, a_column)
 			column_width_changed (a_width, a_column)

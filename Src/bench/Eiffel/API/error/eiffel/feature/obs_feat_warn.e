@@ -47,28 +47,56 @@ feature -- Access
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
+		local
+			m: STRING
+			i: INTEGER
+			j: INTEGER
 		do
-			st.add_string ("Class: ");
-			associated_class.append_name (st);
+			st.add_string ("Class: ")
+			associated_class.append_name (st)
 			if a_feature /= Void then
-				st.add_new_line;
-				st.add_string ("Feature: ");
-				a_feature.append_name (st);
+				st.add_new_line
+				st.add_string ("Feature: ")
+				a_feature.append_name (st)
 			else
-				st.add_new_line;
+				st.add_new_line
 				st.add_string ("Feature: invariant")
-			end;
-			st.add_new_line;
-			st.add_string ("Obsolete feature: ");
-			obsolete_feature.append_signature (st);
-			st.add_string (" (class ");
-			obsolete_class.append_name (st);
-			st.add_string (")");
-			st.add_new_line;
-			st.add_string ("Obsolete message: ");
-			st.add_string (obsolete_feature.obsolete_message);
+			end
 			st.add_new_line
-		end;
+			st.add_string ("Obsolete feature: ")
+			obsolete_feature.append_signature (st)
+			st.add_string (" (class ")
+			obsolete_class.append_name (st)
+			st.add_string (")")
+			st.add_new_line
+			st.add_string ("Obsolete message: ")
+			m := obsolete_feature.obsolete_message
+			if m.has ('%N') then
+					-- Preserve formatting for multi-line message
+				from
+					i := 1
+				invariant
+					valid_index: 1 <= i and i <= m.count + 2
+				variant
+					m.count + 2 - i
+				until
+					i > m.count
+				loop
+					j := m.index_of ('%N', i)
+					if j = 0 then
+						j := m.count + 1
+					end
+						-- Add indented line without trailing '%N'
+					st.add_new_line
+					st.add_indent
+					st.add_string (m.substring (i, j - 1))
+					i := j + 1
+				end
+			else
+				st.add_string (m)
+			end
+			st.add_new_line
+		end
 
 feature {ACCESS_FEAT_AS, PRECURSOR_AS} -- Setting
 

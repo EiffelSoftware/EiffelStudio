@@ -24,6 +24,7 @@ inherit
 	SHARED_CODE_FILES;
 	SHARED_BODY_ID;
 	SHARED_PASS;
+	SHARED_DIALOG;
 	EXCEPTIONS;
 	MEMORY;
 	SK_CONST;
@@ -401,6 +402,7 @@ feature -- Third pass: byte code production and type check
 			feature_changed, not_empty: BOOLEAN;
 				-- Is the current feature `feature_i' changed ?
 			dependances: CLASS_DEPENDANCE;
+			rep_dep: REP_CLASS_DEPEND;
 			new_suppliers: like suppliers;
 			feature_name: STRING;
 			f_suppliers: FEATURE_DEPENDANCE;
@@ -408,6 +410,9 @@ feature -- Third pass: byte code production and type check
 			melted_info: FEAT_MELTED_INFO;
 			melt_set: like melted_set;
 			type_check_error: BOOLEAN;
+			body_id: INTEGER;
+			feat_dep: FEATURE_DEPENDANCE;
+			rep_removed: BOOLEAN;
 		do
 				-- Verbose
 			io.error.putstring ("Pass 3 on class ");
@@ -427,6 +432,10 @@ feature -- Third pass: byte code production and type check
 				else
 					!!dependances.make (changed_features.count);
 					dependances.set_id (id);
+				end;
+				if Rep_depend_server.has (id) then
+					rep_dep := Rep_depend_server.item (id);
+				else
 				end;
 				if changed then
 					new_suppliers := suppliers.same_suppliers;
@@ -854,6 +863,29 @@ feature -- Melting
 			loop
 				if not local_cursor.item.is_precompiled then
 					local_cursor.item.melt;			
+				end;
+				local_cursor := local_cursor.right
+			end;
+
+				-- Forget melted list
+			melted_set := Void;
+		end;
+	
+	update_dispatch_table is
+			-- Update dispatch table.
+		require
+			good_context: has_features_to_melt
+		local
+			local_cursor: LINKABLE [CLASS_TYPE]
+		do
+			Inst_context.set_cluster (cluster);
+			from
+				local_cursor := types.first_element
+			until
+				local_cursor = Void
+			loop
+				if not local_cursor.item.is_precompiled then
+					local_cursor.item.update_dispatch_table;			
 				end;
 				local_cursor := local_cursor.right
 			end;
@@ -2636,6 +2668,191 @@ feature -- PS
 					Feat_tbl_server.has (id)
 		end;
 
+	check_expanded is do end;
+
+feature -- Replication
+
+	propagate_replication (feat_dep: REP_FEATURE_DEPEND) is
+			-- Propagate `feat_dep' to do pass 2
+		local
+			unit: REP_DEPEND_UNIT;
+			class_c: CLASS_C;
+			rep_depend: REP_CLASS_DEPEND;
+			feat_depend: REP_FEATURE_DEPEND;
+			f_table: FEATURE_TABLE;
+			feat: FEATURE_I;
+		do
+			from
+				feat_dep.start
+			until
+				feat_dep.after
+			loop
+				unit := feat_dep.item;
+				class_c := System.class_of_id (unit.id);
+					-- Get feature table
+				f_table := class_c.feature_table;
+					-- Get feature_i to be propagated (if valid)
+				feat := f_table.item (unit.feature_name);
+				if 
+					(feat /= Void) and then
+					(feat.rout_id_set.same_as (unit.rout_id_set))
+				then
+					-- Then Propagate
+					class_c.set_changed2 (True);
+					pass2_controler.insert_new_class (class_c);
+					if Rep_depend_server.has (unit.id) then
+						rep_depend := Rep_depend_server.item (unit.id);
+						feat_depend := rep_depend.item (unit.feature_name);
+						if feat_depend /= Void then
+							propagate_replication (feat_depend);
+							if feat_depend.count > 0 then
+								Tmp_rep_depend_server.put (rep_depend)
+							else
+								Tmp_rep_depend_server.remove (unit.id)
+							end;
+						end
+					end;
+debug ("REPLICATION")
+	io.error.putstring ("propagating feature: ");
+	io.error.putstring (unit.feature_name);
+	io.error.putstring ("to class : ");
+	io.error.new_line;
+end;
+					feat_dep.forth;
+				else
+debug ("REPLICATION")
+	io.error.putstring ("removing dependency to feature: ");
+	io.error.putstring (unit.feature_name);
+	io.error.putstring ("from class : ");
+	io.error.new_line;
+end;
+                    feat_dep.remove;
+				end;
+debug ("REPLICATION")
+	io.error.putstring (class_c.class_name);
+	io.error.new_line;
+end;
+			end;
+		end;
+
+	process_replicated_features is
+			-- Process replicated features for Current
+		require
+			have_replicated_features: Tmp_rep_info_server.has (id)
+		local
+			rep_class_info: REP_CLASS_INFO;	
+			stored_rep_name_list: S_REP_NAME_LIST;
+			replicator: REPLICATOR;
+			rep_name: S_REP_NAME;
+			old_feat, new_feat: FEATURE_I;
+			old_body_id, new_body_id: INTEGER;
+			rep_table: REP_FEATURES;
+			new_feat_as, old_feat_as: FEATURE_AS;
+			rep_features: LINKED_LIST [S_REP_NAME];
+		do
+debug ("REPLICATION")
+	io.error.putstring ("Replication for class ");
+	io.error.putstring (class_name);
+	io.new_line;
+end;
+			rep_class_info := Tmp_rep_info_server.item (id);
+			from
+				!!rep_table.make (rep_class_info.count, id);
+				rep_class_info.start
+			until
+				rep_class_info.after
+			loop
+				stored_rep_name_list := rep_class_info.item;
+				rep_features := stored_rep_name_list.replicated_features;
+				from
+					rep_features.start
+				until
+					rep_features.after
+				loop
+					rep_name := rep_features.item;
+					old_feat := rep_name.old_feature;
+					new_feat := rep_name.new_feature;
+					!!replicator.make (old_feat,
+									new_feat,
+									stored_rep_name_list,
+									stored_rep_name_list.parent,
+									Current,
+									new_feat.feature_name);
+					new_feat_as := replicator.ast;
+					new_body_id := new_feat.body_id;
+					if new_body_id = 0 then
+						-- Must check old and new ast for incrementality
+						old_body_id := new_feat.original_body_id;
+						old_feat_as := Rep_feat_server.server_item (old_body_id);
+						if 
+							not old_feat_as.is_assertion_equiv (new_feat_as) 
+							or else not old_feat_as.is_body_equiv (new_feat_as) 
+						then
+							new_body_id := System.body_id_counter.next;
+							insert_changed_feature (new_feat.feature_name);
+							if Tmp_body_server.has (old_body_id) then
+								Tmp_body_server.desactive (old_body_id);
+							else
+								Tmp_rep_feat_server.desactive (old_body_id)
+							end;
+debug ("REPLICATION")
+	io.error.putstring ("following feature AST was NOT equiv to previous%N")
+end;
+						else
+							new_body_id := old_body_id;
+debug ("REPLICATION")
+	io.error.putstring ("following feature AST was equiv to previous%N")
+end;
+						end;
+					
+						System.body_index_table.force (new_body_id, new_feat.body_index);
+					end;
+					rep_table.force (new_feat_as, new_body_id);
+debug ("ACTUAL_REPLICATION")
+	new_feat.trace;
+end;
+debug ("REPLICATION")
+	new_feat.trace;
+end;
+					rep_features.forth;
+				end;
+				rep_class_info.forth;
+			end;
+			update_rep_feat_server (rep_table);
+		end;
+
+	update_rep_feat_server (rep_table: REP_FEATURES) is
+				-- Update the rep_feat_server with body_id
+				-- and its corresponding read_info
+		local
+			index: EXTEND_TABLE [READ_INFO, INTEGER];
+			feature_as: FEATURE_AS;
+			read_info: READ_INFO;
+			rep_body_table: EXTEND_TABLE [READ_INFO, INTEGER];
+		do
+			-- Clear index
+			Tmp_rep_server.clear_index;
+			-- Put formulates read info index
+			Tmp_rep_server.put (rep_table);
+			index := Tmp_rep_server.index;
+			-- Clear index for next class
+			from
+				!!rep_body_table.make (rep_table.count);
+				rep_table.start
+			until
+				rep_table.offright
+			loop
+				feature_as := rep_table.item_for_iteration;
+				read_info := index.item (feature_as.id);
+				-- Place the read_info for the feature's body id
+				rep_body_table.force (read_info, rep_table.key_for_iteration);
+				rep_table.forth;
+			end;
+			-- Update read info in rep_feat servers
+			Tmp_rep_feat_server.merge (rep_body_table);
+			Tmp_rep_server.clear_index;
+		end;
+ 
 feature -- Dino stuff
 
 	insert_changed_assertion (a_feature: FEATURE_I) is

@@ -788,48 +788,9 @@ feature {NONE} -- Drawing implementation
 			-- Respond to `header_item' being resized.
 		require
 			header_item_not_void: header_item /= Void
-		local
-			l_total_header_width: INTEGER
-			l_client_width: INTEGER
 		do
-				-- Retrieve the 
-			l_total_header_width := total_header_width
-			
-			l_client_width := viewport.width
-				-- Note that `width' was not used as we want it to represent only the width of
-				-- the "client area" which is `viewport'.
-			
-				
-			if l_total_header_width > l_client_width then
-					-- The headers are wider than the visible client area.
-				if not horizontal_scroll_bar.is_show_requested then
-						-- Show `horizontal_scroll_bar' if not already shown.
-					horizontal_scroll_bar.show
-					update_scroll_bar_spacer
-				end
-					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
-					-- `l_total_header_width' and `l_client_width'.
-				horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
-				horizontal_scroll_bar.set_leap (width)
-			else
-					-- The headers are not as wide as the visible client area.
-				if horizontal_scroll_bar.is_show_requested then
-						-- Hide `horizontal_scroll_bar' as it is not required.
-					horizontal_scroll_bar.hide
-					update_scroll_bar_spacer
-				end
-			end
-			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < viewport.width) then
-					-- If `header' and `drawable' currently have a position that starts before the client area of
-					-- `viewport' and the total header width is small enough so that at the current position, `header' and
-					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
-					-- so that they do reach the very left-hand edge of `viewport'
-				horizontal_scroll_bar.change_actions.block
-				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
-				header_viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
-				
-				horizontal_scroll_bar.change_actions.resume
-			end
+				-- Update horizontal scroll bar size and position.
+			recompute_horizontal_scroll_bar
 			
 			if is_resizing_divider_enabled then
 					-- Draw a resizing line if enabled.
@@ -910,16 +871,56 @@ feature {NONE} -- Drawing implementation
 
 	recompute_horizontal_scroll_bar is
 			-- Recompute horizontal scroll bar positioning.
+		local
+			l_total_header_width: INTEGER
+			l_client_width: INTEGER
 		do
-			header_item_resizing (header.last)
-			header_item_resize_ended (header.last)
+				-- Retrieve the 
+			l_total_header_width := total_header_width
+			
+			l_client_width := viewport.width
+				-- Note that `width' was not used as we want it to represent only the width of
+				-- the "client area" which is `viewport'.
+			
+				
+			if l_total_header_width > l_client_width then
+					-- The headers are wider than the visible client area.
+				if not horizontal_scroll_bar.is_show_requested then
+						-- Show `horizontal_scroll_bar' if not already shown.
+					horizontal_scroll_bar.show
+					update_scroll_bar_spacer
+				end
+					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
+					-- `l_total_header_width' and `l_client_width'.
+				horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
+				horizontal_scroll_bar.set_leap (width)
+			else
+					-- The headers are not as wide as the visible client area.
+				if horizontal_scroll_bar.is_show_requested then
+						-- Hide `horizontal_scroll_bar' as it is not required.
+					horizontal_scroll_bar.hide
+					update_scroll_bar_spacer
+				end
+			end
+			
+			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < viewport.width) then
+					-- If `header' and `drawable' currently have a position that starts before the client area of
+					-- `viewport' and the total header width is small enough so that at the current position, `header' and
+					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
+					-- so that they do reach the very left-hand edge of `viewport'
+				horizontal_scroll_bar.change_actions.block
+				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+				header_viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+				
+				horizontal_scroll_bar.change_actions.resume
+			end
 		end
 		
 	recompute_vertical_scroll_bar is
 			-- Recompute dimensions of `vertical_scroll_bar'.
 		do
 			vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_count))
-			horizontal_scroll_bar.set_leap (height // 16)
+			vertical_scroll_bar.set_leap (height // 16)
 		end
 		
 
@@ -971,9 +972,10 @@ feature {NONE} -- Drawing implementation
 			a_height_non_negative: a_height >= 0
 		do
 			if not header.is_empty then
-					-- Update horizontal scroll bar settings.
-				header_item_resizing (header.last)
+					-- Update horizontal scroll bar size and position.
+				recompute_horizontal_scroll_bar
 			end
+			
 			recompute_vertical_scroll_bar
 		ensure
 			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= viewport.width and
@@ -1056,7 +1058,8 @@ feature {NONE} -- Implementation
 					]")
 			header.go_i_th (a_index)
 			header.put_left (column_implementation.header_item)
-			recompute_horizontal_scroll_bar
+			header_item_resizing (header.last)
+			header_item_resize_ended (header.last)
 		ensure
 			column_count_set: not replace_existing_item implies ((a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index)
 		end
@@ -1092,7 +1095,8 @@ feature {NONE} -- Implementation
 			else
 				grid_rows.put_left (a_grid_row.implementation)
 			end
-			recompute_horizontal_scroll_bar
+			header_item_resizing (header.last)
+			header_item_resize_ended (header.last)
 		end
 
 	enlarge_row_list (new_count: INTEGER) is

@@ -74,6 +74,7 @@ feature {NONE} -- Initialization
 			list_make (30);
 			set_action ("c<Btn3Down>", Current, new_tooler_action)
 			set_action ("Shift<Btn3Down>", Current, super_melt_action)
+			set_action ("c<Btn1Down>", Current, Void)
 			highlighted_line := Void;
 			selected_clickable_text := Void;
 			!! text.make (0);

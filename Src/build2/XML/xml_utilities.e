@@ -273,11 +273,11 @@ feature -- Access
 			until
 				counter > xml_string.count
 			loop
-				if xml_string @ counter = ('<')  then
+				if (xml_string @ counter).is_equal ('<') then
 					closing_index := xml_string.index_of ('>', counter  + 1)
 					if closing_index - counter > 1 then
 						tag_contents := xml_string.substring (counter + 1, closing_index - 1)
-						if tag_contents.has ('/') then
+						if tag_contents.has ('/') and tag_contents.substring_index ("CDATA", 1) = 0 then
 							if not ((tag_contents @ tag_contents.count) = '/') then
 								if depth > 0 then
 									depth := depth - 1

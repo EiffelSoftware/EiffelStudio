@@ -261,13 +261,6 @@ feature {WEL_CONTROL} -- Implementation
 	dialog_children: LINKED_LIST [WEL_CONTROL]
 			-- Temporary children list
 
-feature {WEL_CONTROL} -- Obsolete
-
-	dialog_child: LINKED_LIST [WEL_CONTROL] is obsolete "Use ``dialog_children''"
-		do
-			Result := dialog_children
-		end
-
 feature {NONE} -- Externals
 
 	cwin_get_dlg_item (hwnd: POINTER; an_id: INTEGER): POINTER is

@@ -63,9 +63,9 @@ feature -- Content change
 		do
 			if (not load_without_save) and then changed then
 				load_without_save := True
-				dev_window.save_and (~process_text (str_text))
+				dev_window.save_and (agent process_text (str_text))
 			else
-				{EB_CLICKABLE_EDITOR} Precursor (str_text)
+				Precursor {EB_CLICKABLE_EDITOR} (str_text)
 			end
 			load_without_save := False
 		end
@@ -74,7 +74,7 @@ feature -- Content change
 			-- Reload the file named `file_name' in the editor.
 		do
 			load_without_save := True
-			{EB_CLICKABLE_EDITOR} Precursor
+			Precursor {EB_CLICKABLE_EDITOR}
 		end
 
 feature -- Status report
@@ -197,7 +197,7 @@ feature {NONE} -- Text loading
 	reset is
 			-- Make the editor ready to load a new content.
 		do
-			{EB_CLICKABLE_EDITOR} Precursor
+			Precursor {EB_CLICKABLE_EDITOR}
 			completion_mode := 0
 		end
 
@@ -219,14 +219,14 @@ feature {NONE} -- Process Vision2 events
 			-- Process single click on mouse buttons.
 		do
 			completion_mode := 0
-			{EB_CLICKABLE_EDITOR} Precursor (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
+			Precursor {EB_CLICKABLE_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 		end
 
 	on_double_click (abs_x_pos, y_pos, button: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Process double clicks on mouse buttons 
 		do
 			completion_mode := 0
-			{EB_CLICKABLE_EDITOR} Precursor (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
+			Precursor {EB_CLICKABLE_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 		end
 
 feature {NONE} -- Handle keystokes
@@ -243,7 +243,7 @@ feature {NONE} -- Handle keystokes
 			switch_auto_point := auto_point and then not (code = Key_shift or code = Key_left_meta or code = Key_right_meta)
 			if code = Key_tab and then completion_mode > 0 then
 					-- Tab action
-				run_if_editable (~tab_action)
+				run_if_editable (agent tab_action)
 
 			elseif code = Key_enter and then not has_selection then
 					-- Return/Enter key action
@@ -271,7 +271,7 @@ feature {NONE} -- Handle keystokes
 						check_cursor_position
 						refresh_now
 					else
-						{EB_CLICKABLE_EDITOR} Precursor (ev_key)
+						Precursor {EB_CLICKABLE_EDITOR} (ev_key)
 					end
 				else
 					display_not_editable_warning_message
@@ -413,7 +413,7 @@ feature {NONE} -- Handle keystokes
 			-- go_right, ... an example of agent `action' is
 			-- cursor~go_left_char.
 		do
-			{EB_CLICKABLE_EDITOR} Precursor (action)
+			Precursor {EB_CLICKABLE_EDITOR} (action)
 			switch_auto_point := False
 		end
 
@@ -693,16 +693,16 @@ feature {NONE} -- Implementation
 			-- Create array of customizable commands.
 		do
 			create customizable_commands.make (1, 10)
-			customizable_commands.put (~complete_feature_name, 1)
-			customizable_commands.put (~complete_class_name, 2)
-			customizable_commands.put (~search, 3)
-			customizable_commands.put (~replace, 4)
-			customizable_commands.put (~find_selection, 5)
-			customizable_commands.put (~find_next, 6)
-			customizable_commands.put (~find_previous, 7)
-			customizable_commands.put (~insert_customized_string (1), 8)
-			customizable_commands.put (~insert_customized_string (2), 9)
-			customizable_commands.put (~insert_customized_string (3), 10)
+			customizable_commands.put (agent complete_feature_name, 1)
+			customizable_commands.put (agent complete_class_name, 2)
+			customizable_commands.put (agent search, 3)
+			customizable_commands.put (agent replace, 4)
+			customizable_commands.put (agent find_selection, 5)
+			customizable_commands.put (agent find_next, 6)
+			customizable_commands.put (agent find_previous, 7)
+			customizable_commands.put (agent insert_customized_string (1), 8)
+			customizable_commands.put (agent insert_customized_string (2), 9)
+			customizable_commands.put (agent insert_customized_string (3), 10)
 		end
 
 	insert_customized_string (index: INTEGER) is
@@ -749,7 +749,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				after_reading_text_actions.extend(~show_syntax_warning)
+				after_reading_text_actions.extend(agent show_syntax_warning)
 			end
 		rescue
 			retried := True
@@ -772,9 +772,9 @@ feature {NONE} -- Implementation
 		do
 			if (not load_without_save) and then changed then
 				load_without_save := True
-				dev_window.save_and (~load_file (a_file_name))
+				dev_window.save_and (agent load_file (a_file_name))
 			else
-				{EB_CLICKABLE_EDITOR} Precursor (a_file_name)
+				Precursor {EB_CLICKABLE_EDITOR} (a_file_name)
 			end
 			load_without_save := False
 		end
@@ -784,9 +784,9 @@ feature {NONE} -- Implementation
 		do
 			if (not load_without_save) and then changed then
 				load_without_save := True
-				dev_window.save_and (~load_text (s))
+				dev_window.save_and (agent load_text (s))
 			else
-				{EB_CLICKABLE_EDITOR} Precursor (s)
+				Precursor {EB_CLICKABLE_EDITOR} (s)
 			end
 			load_without_save := False
 		end

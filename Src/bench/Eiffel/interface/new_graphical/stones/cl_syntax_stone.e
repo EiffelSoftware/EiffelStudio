@@ -37,7 +37,7 @@ inherit
 			class_file_name
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -18,7 +18,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

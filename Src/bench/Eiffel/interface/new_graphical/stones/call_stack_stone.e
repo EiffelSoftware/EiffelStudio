@@ -42,7 +42,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization

@@ -16,7 +16,7 @@ inherit
 			is_storable
 		end
 
-creation
+create
 
 	make
 

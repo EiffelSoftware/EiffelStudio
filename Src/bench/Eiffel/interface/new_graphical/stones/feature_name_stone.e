@@ -15,7 +15,7 @@ inherit
 			check_validity, history_name, feature_name
 		end 
 
-creation 		
+create 		
 	make
 
 feature {NONE} -- Initialization
@@ -71,7 +71,7 @@ feature -- Update
 							e_feature := feat
 							if start_position = -1 then
 									-- calculate positions
-								{FEATURE_STONE} Precursor	
+								Precursor {FEATURE_STONE}	
 							end
 						end
 					end

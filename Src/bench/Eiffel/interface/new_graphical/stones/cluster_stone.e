@@ -17,7 +17,7 @@ inherit
 			same_as
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

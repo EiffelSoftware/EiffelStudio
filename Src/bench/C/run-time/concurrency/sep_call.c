@@ -3,7 +3,7 @@
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_struct.h"
-#include "eif_hashin.h"
+#include "rt_hashin.h"
 #include "eif_except.h"
 #include "eif_wbench.h"
 #include "eif_interp.h"

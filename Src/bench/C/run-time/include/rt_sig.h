@@ -43,6 +43,16 @@ extern struct s_stack sig_stk;	/* The signal stack */
 #define SIGBLOCK	esigblk++
 #define SIGRESUME	if (--esigblk == 0 && signal_pending) esdpch(MTC_NOARG)
 
+extern Signal_t ehandlr(EIF_CONTEXT register int sig);			/* Eiffel main signal handler */
+extern void esdpch(EIF_CONTEXT_NOARG);			/* Dispatch queued signals */
+extern char *signame(int sig);			/* Give English description of a signal */
+extern void trapsig(void (*handler) (int));			/* Set a trap for most of the signals */
+extern Signal_t exfpe(int sig);		/* Routine trapped for floating point exception */
+
+#ifdef HAS_SYS_SIGLIST
+	extern char *sys_siglist[];
+#endif
+
 #ifdef __cplusplus
 }
 #endif

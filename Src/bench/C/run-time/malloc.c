@@ -22,7 +22,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 
 #include "eif_portable.h"
 #include "eif_project.h"
-#include "eif_lmalloc.h"	/* for eif_calloc, eif_malloc, eif_free */
+#include "rt_lmalloc.h"	/* for eif_calloc, eif_malloc, eif_free */
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
 #include "rt_assert.h"
@@ -35,7 +35,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include <signal.h>
 
 #include "eif_eiffel.h"			/* For bcopy/memcpy */
-#include "eif_timer.h"			/* For getcputime */
+#include "rt_timer.h"			/* For getcputime */
 #include "rt_malloc.h"
 #include "rt_macros.h"
 #include "rt_garcol.h"			/* For Eiffel flags and function declarations */
@@ -46,7 +46,8 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "x2c.h"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "rt_sig.h"
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
+#include "rt_bits.h"
 #ifdef ISE_GC
 #endif
 #ifdef VXWORKS

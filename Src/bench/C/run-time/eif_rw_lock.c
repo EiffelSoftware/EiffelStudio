@@ -24,7 +24,7 @@ doc:<file name="eif_rw_lock.c" header="rt_rw_lock.h" version="$Id$" summary="Mul
 #include "eif_portable.h"
 #include "rt_rw_lock.h"
 #include "rt_threads.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 
 #ifdef EIF_THREADS /* Only in MT mode */
 

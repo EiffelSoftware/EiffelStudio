@@ -12,7 +12,7 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #include <sys/types.h>
 
 #ifdef EIF_WIN32
@@ -34,6 +34,7 @@
 #include "server.h"
 #include "rt_interp.h"
 #include "rt_wbench.h"
+#include "rt_malloc.h"
 #include "select.h"
 #include "eif_hector.h"
 #include "eif_bits.h"

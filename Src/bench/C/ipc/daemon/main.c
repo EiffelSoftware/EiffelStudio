@@ -16,7 +16,7 @@
 #ifdef EIF_WIN32
 #define print_err_msg fprintf
 #else
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #endif
 
 #include <sys/types.h>

@@ -12,7 +12,7 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #include "shared.h"
 #include <sys/types.h>
 

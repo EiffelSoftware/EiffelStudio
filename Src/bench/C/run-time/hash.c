@@ -11,13 +11,13 @@
 */
 
 /*
-doc:<file name="hash.c" header="eif_hash.h" version="$Id$" summary="Hash table implementation">
+doc:<file name="hash.c" header="rt_hash.h" version="$Id$" summary="Hash table implementation">
 */
 
 #include "eif_portable.h"
-#include "eif_tools.h"
-#include "eif_malloc.h"
-#include "eif_hash.h"
+#include "rt_tools.h"
+#include "rt_malloc.h"
+#include "rt_hash.h"
 
 /* 
  * Declarations

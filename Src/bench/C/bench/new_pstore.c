@@ -15,7 +15,7 @@
 #include "eif_portable.h"
 #include "eif_memory.h"
 #include "eif_hashinin.h"
-#include "eif_error.h"
+#include "rt_error.h"
 #include <assert.h>
 
 #ifdef EIF_WIN32

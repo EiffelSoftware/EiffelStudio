@@ -11,12 +11,12 @@
 */
 
 /*
-doc:<file name="urgent.c" header="eif_urgent.h" version="$Id$" summary="Urgent memory chunk handling">
+doc:<file name="urgent.c" header="rt_urgent.h" version="$Id$" summary="Urgent memory chunk handling">
 doc:	<summary>The purpose of urgent memory is to let the run-time get some memory in situations where the garbage collector cannot be called. A typical use would be getting a small chunk to let one of the internal stacks grow. Given that the overhead of the urgent memory is really small, it is allocated even if the package is optimized for memory.</summary>
 */
 
 #include "eif_portable.h"
-#include "eif_urgent.h"
+#include "rt_urgent.h"
 #include "eif_malloc.h"
 #ifdef EIF_THREADS
 #include "eif_globals.h"

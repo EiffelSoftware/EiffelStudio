@@ -14,7 +14,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 */
 
 #include "eif_portable.h"
-#include "eif_lmalloc.h"	/* for eif_malloc, eif_free */
+#include "rt_lmalloc.h"	/* for eif_malloc, eif_free */
 #include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 
 #include <stdio.h>
@@ -52,7 +52,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 #include "eif_dir.h"
 #include "eif_file.h" /* %%ss moved from 2 lines above */
 #include "eif_plug.h"
-#include "eif_error.h"
+#include "rt_error.h"
 
 #include <string.h>
 
@@ -63,6 +63,13 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 #endif
 
 #define ST_MODE     0x0fff      /* Keep only permission mode */
+
+#ifdef EIF_WIN32
+typedef struct tagEIF_WIN_DIRENT {
+	char	name [MAX_PATH];
+	HANDLE	handle;
+} EIF_WIN_DIRENT;
+#endif
 
 /*
  * Opening and closing a directory.

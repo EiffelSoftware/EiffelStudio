@@ -19,6 +19,7 @@ doc:<file name="string.c" header="eif_string.h" version="$Id$" summary="External
 #include "eif_macros.h"			/* For EIF_FALSE|EIF_TRUE. */
 #include "eif_str.h"
 #include "eif_globals.h"
+#include "rt_constants.h"
 #include <ctype.h>
 #include <string.h>
 

@@ -17,11 +17,12 @@ doc:<file name="equal.c" header="eif_equal.h" version="$Id$" summary="Equality o
 #include "eif_eiffel.h"			/* For standard macros */
 #include "eif_equal.h"			/* For Eiffel boolean */
 #include "rt_struct.h"			/* For skeleton structure */
-#include "eif_traverse.h"		/* For traversing objects */
+#include "rt_traverse.h"		/* For traversing objects */
 #include "x2c.h"			/* For macro LNGPAD */
-#include "eif_tools.h"			/* For `nprime' */
-#include "eif_search.h"
+#include "rt_tools.h"			/* For `nprime' */
+#include "rt_search.h"
 #include "eif_plug.h"			/* for econfg */
+#include "rt_malloc.h"
 #include "rt_garcol.h"
 #include "rt_wbench.h"
 #include "rt_gen_types.h"

@@ -66,7 +66,7 @@ struct utimbuf {
 #include <processes.h>		/* for system() */
 #endif /* EIF_VMS */
 
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #ifdef I_PWD
 #include <pwd.h>
 #endif
@@ -95,11 +95,11 @@ struct utimbuf {
 
 #include "rt_except.h"
 #include "eif_plug.h"
-#include "eif_error.h"
+#include "rt_error.h"
 #include "eif_dir.h"
 
 #include "eif_file.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 
 #define FS_START	0			/* Beginning of file for `fseek' */
 #define FS_CUR		1			/* Current position for `fseek' */

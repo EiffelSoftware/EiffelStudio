@@ -31,8 +31,9 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include "rt_assert.h"
 #include "eif_misc.h"
 #include "eif_malloc.h"
-#include "eif_lmalloc.h"		/* for eif_malloc() */
+#include "rt_lmalloc.h"		/* for eif_malloc() */
 #include "rt_macros.h"
+#include "rt_dir.h"
 #include "x2c.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */

@@ -21,7 +21,7 @@ extern "C" {
 #include "eif_portable.h"
 #include <string.h>
 #include "rt_assert.h"
-#include "eif_constants.h"
+#include "rt_constants.h"
 #include "rt_malloc.h"
 #include "rt_garcol.h"
 #include "eif_except.h"

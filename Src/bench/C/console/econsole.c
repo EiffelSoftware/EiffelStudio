@@ -13,9 +13,10 @@
 #include <stdio.h>
 #include <windows.h>
 #include "eif_argcargv.h"
-#include "eif_err_msg.h"
-#include "eif_error.h"
+#include "rt_err_msg.h"
+#include "rt_error.h"
 #include "rt_threads.h"
+#include "rt_dir.h"
 #include "rt_main.h"
 #include <io.h>
 #include <fcntl.h>

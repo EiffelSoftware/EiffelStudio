@@ -5,6 +5,7 @@
 
 #include <windows.h>
 #include <process.h>
+#include "eif_portable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,12 +39,12 @@ typedef struct
 typedef HANDLE pthread_mutex_t;
 typedef void pthread_condattr_t ; /* unused */
 
-extern int pthread_cond_init (pthread_cond_t *,const pthread_condattr_t * ) ;
-extern int pthread_cond_wait (pthread_cond_t *, pthread_mutex_t );
-extern int pthread_cond_timedwait (pthread_cond_t *, pthread_mutex_t, int);
-extern int pthread_cond_broadcast (pthread_cond_t *);
-extern int pthread_cond_signal (pthread_cond_t *cv);
-extern int pthread_cond_destroy (pthread_cond_t *cv) ;
+RT_LNK int pthread_cond_init (pthread_cond_t *, const pthread_condattr_t * ) ;
+RT_LNK int pthread_cond_wait (pthread_cond_t *, pthread_mutex_t );
+RT_LNK int pthread_cond_timedwait (pthread_cond_t *, pthread_mutex_t, int);
+RT_LNK int pthread_cond_broadcast (pthread_cond_t *);
+RT_LNK int pthread_cond_signal (pthread_cond_t *cv);
+RT_LNK int pthread_cond_destroy (pthread_cond_t *cv) ;
 
 #endif  /* EIF_THREADS */
 

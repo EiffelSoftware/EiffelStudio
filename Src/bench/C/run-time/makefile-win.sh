@@ -1024,28 +1024,28 @@ $(INDIR)\malloc.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h 
 			eif_size.h eif_struct.h
 
 $(INDIR)\garcol.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
-			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_search.h eif_sig.h \
-			eif_size.h eif_struct.h eif_timer.h eif_urgent.h
+			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h include\rt_search.h eif_sig.h \
+			eif_size.h eif_struct.h include\rt_timer.h include\rt_urgent.h
 
 $(INDIR)\local.$obj : eif_cecil.h eif_except.h eif_garcol.h eif_hector.h eif_local.h eif_malloc.h \
-			eif_plug.h eif_sig.h eif_struct.h eif_urgent.h
+			eif_plug.h eif_sig.h eif_struct.h include\rt_urgent.h
 
 $(INDIR)\except.$obj : eif_cecil.h eif_copy.h eif_debug.h eif_except.h eif_garcol.h eif_hector.h \
-			eif_local.h eif_malloc.h eif_plug.h eif_sig.h eif_size.h eif_struct.h eif_urgent.h
+			eif_local.h eif_malloc.h eif_plug.h eif_sig.h eif_size.h eif_struct.h include\rt_urgent.h
 
 $(INDIR)\store.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hector.h eif_local.h \
 			eif_malloc.h eif_plug.h eif_size.h eif_store.h eif_struct.h eif_traverse.h
 
-$(INDIR)\retrieve.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hashin.h eif_hector.h \
+$(INDIR)\retrieve.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h include\rt_hashin.h eif_hector.h \
 			eif_local.h eif_malloc.h eif_plug.h eif_retrieve.h eif_size.h eif_struct.h
 
-$(INDIR)\hash.$obj : eif_hash.h eif_tools.h
+$(INDIR)\hash.$obj : include/rt_hash.h eif_tools.h
 
-$(INDIR)\traverse.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hashin.h eif_hector.h \
+$(INDIR)\traverse.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h include\rt_hashin.h eif_hector.h \
 			eif_local.h eif_malloc.h eif_plug.h eif_size.h eif_store.h eif_struct.h \
 			eif_traverse.h
 
-$(INDIR)\hashin.$obj : eif_hashin.h eif_malloc.h eif_tools.h
+$(INDIR)\hashin.$obj : include\rt_hashin.h eif_malloc.h eif_tools.h
 
 $(INDIR)\tools.$obj : eif_tools.h
 
@@ -1054,26 +1054,26 @@ $(INDIR)\internal.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.
 			eif_struct.h
 
 $(INDIR)\plug.$obj : eif_bits.h eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
-			eif_hashin.h eif_hector.h eif_interp.h eif_local.h eif_malloc.h eif_option.h \
+			include\rt_hashin.h eif_hector.h eif_interp.h eif_local.h eif_malloc.h eif_option.h \
 			eif_out.h eif_plug.h eif_size.h eif_struct.h
 
 $(INDIR)\copy.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
-			eif_hash.h eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_size.h \
+			include/rt_hash.h eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_size.h \
 			eif_struct.h eif_traverse.h
 
 $(INDIR)\equal.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_equal.h eif_except.h eif_file.h \
 			eif_garcol.h eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h \
-			eif_search.h eif_size.h eif_struct.h eif_tools.h eif_traverse.h
+			include\rt_search.h eif_size.h eif_struct.h eif_tools.h eif_traverse.h
 
 $(INDIR)\lmalloc.$obj : eif_garcol.h eif_malloc.h eif_plug.h eif_struct.h
 
 $(INDIR)\out.$obj : eif_bits.h eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
-			eif_hashin.h eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h \
+			include\rt_hashin.h eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h \
 			eif_sig.h eif_size.h eif_struct.h
 
-$(INDIR)\timer.$obj : eif_timer.h
+$(INDIR)\timer.$obj : include\rt_timer.h
 
-$(INDIR)\urgent.$obj : eif_urgent.h
+$(INDIR)\urgent.$obj : include\rt_urgent.h
 
 $(INDIR)\sig.$obj : eif_except.h eif_garcol.h eif_malloc.h eif_plug.h eif_sig.h eif_struct.h
 
@@ -1106,30 +1106,30 @@ $(INDIR)\memory.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hect
 
 $(INDIR)\argv.$obj : eif_malloc.h eif_plug.h
 
-$(INDIR)\search.$obj : eif_search.h eif_tools.h
+$(INDIR)\search.$obj : include\rt_search.h eif_tools.h
 
 $(INDIR)\x2c.$obj : eif_size.h
 
-$(INDIR)\debug.$obj : eif_cecil.h eif_copy.h eif_debug.h eif_except.h eif_garcol.h eif_hashin.h \
+$(INDIR)\debug.$obj : eif_cecil.h eif_copy.h eif_debug.h eif_except.h eif_garcol.h include\rt_hashin.h \
 			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_sig.h \
 			eif_size.h eif_struct.h
 
 $(INDIR)\interp.$obj : eif_bits.h eif_cecil.h eif_copy.h eif_debug.h eif_dir.h eif_except.h eif_file.h \
-			eif_garcol.h eif_hashin.h eif_hector.h eif_interp.h eif_local.h eif_malloc.h \
+			eif_garcol.h include\rt_hashin.h eif_hector.h eif_interp.h eif_local.h eif_malloc.h \
 			eif_out.h eif_plug.h eif_sig.h eif_size.h eif_struct.h
 
 $(INDIR)\option.$obj : eif_option.h eif_struct.h
 
-$(INDIR)\update.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hashin.h eif_hector.h \
-			eif_local.h eif_malloc.h eif_plug.h eif_size.h eif_struct.h eif_update.h
+$(INDIR)\update.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h include\rt_hashin.h eif_hector.h \
+			eif_local.h eif_malloc.h eif_plug.h eif_size.h eif_struct.h include\rt_update.h
 
-$(INDIR)\wbench.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hashin.h eif_hector.h \
+$(INDIR)\wbench.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h include\rt_hashin.h eif_hector.h \
 			eif_interp.h eif_local.h eif_malloc.h eif_plug.h eif_size.h eif_struct.h eif_wbench.h
 
-$(INDIR)\main.$obj : eif_except.h eif_garcol.h eif_malloc.h eif_plug.h eif_sig.h eif_struct.h eif_urgent.h
+$(INDIR)\main.$obj : eif_except.h eif_garcol.h eif_malloc.h eif_plug.h eif_sig.h eif_struct.h include\rt_urgent.h
 
 $(INDIR)\wmain.$obj : eif_except.h eif_garcol.h main.c eif_malloc.h eif_plug.h eif_sig.h eif_struct.h \
-			eif_urgent.h
+			include\rt_urgent.h
 
 $(INDIR)\object_id.$obj : eif_garcol.h eif_except.h eif_hector.h
 

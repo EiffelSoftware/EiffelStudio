@@ -14,13 +14,13 @@
 */
 
 /*
-doc:<file name="lmalloc.c" header="eif_lmalloc.h" version="$Id$" summary="Malloc library functions">
+doc:<file name="lmalloc.c" header="rt_lmalloc.h" version="$Id$" summary="Malloc library functions">
 */
 
 #include "eif_portable.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #if defined LMALLOC_DEBUG || defined LMALLOC_CHECK
 #include <stdio.h>
 #endif	/* LMALLOC_CHECK or LMALLOC_DEBUG */

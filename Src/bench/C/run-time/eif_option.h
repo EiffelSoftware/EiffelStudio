@@ -16,13 +16,6 @@
 #include "eif_portable.h"
 #include "eif_globals.h"
 
-#ifdef EIF_WIN32
-#include <windows.h>
-#include <direct.h>	/* In order to use chdir and getcwd */
-#else
-#include <unistd.h>	/* In order to use chdir and getcwd */
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif

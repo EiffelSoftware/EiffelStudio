@@ -21,17 +21,17 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 #include "rt_except.h"
 #include "rt_store.h"
 #include "rt_retrieve.h"
-#include "eif_traverse.h"
+#include "rt_traverse.h"
 #include "eif_cecil.h"
 #include <stdio.h>
 #include "rt_struct.h"
-#include "eif_bits.h"
+#include "rt_bits.h"
 #include "eif_plug.h"
-#include "eif_run_idr.h"
-#include "eif_error.h"
+#include "rt_run_idr.h"
+#include "rt_error.h"
 #include "eif_main.h"
 #include "rt_compress.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #include "rt_gen_types.h"
 #include "x2c.h"	/* For macro LNGPAD */
 #ifdef VXWORKS

@@ -15,7 +15,7 @@
 doc:<file name="tools.c" header="eif_tools.h" version="$Id$" summary="General purpose tools">
 */
 
-#include "eif_tools.h"
+#include "rt_tools.h"
 #include <stddef.h>					/* For size_t typedef. */
 
 #ifndef lint

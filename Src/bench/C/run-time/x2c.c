@@ -19,7 +19,7 @@ doc:<file name="x2c.c" header="x2c.h" version="$Id$" summary="Convert .x file in
 #ifdef EIF_WINDOWS
 #define print_err_msg fprintf
 #else
-#include "eif_err_msg.h"
+#include "rt_err_msg.h"
 #endif
 
 #include <stdio.h>

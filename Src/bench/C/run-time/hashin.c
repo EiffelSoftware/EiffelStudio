@@ -11,14 +11,14 @@
 */
 
 /*
-doc:<file name="hashin.c" header="eif_hashin.h" version="$Id$" summary="Hash table implementation indexed by integer keys">
+doc:<file name="hashin.c" header="rt_hashin.h" version="$Id$" summary="Hash table implementation indexed by integer keys">
 */
 
 #include "eif_portable.h"
-#include "eif_tools.h"
-#include "eif_hashin.h"
-#include "eif_malloc.h"
-#include "eif_lmalloc.h"    /* for eif_calloc, eif_malloc, eif_free */
+#include "rt_tools.h"
+#include "rt_hashin.h"
+#include "rt_malloc.h"
+#include "rt_lmalloc.h"    /* for eif_calloc, eif_malloc, eif_free */
 #include "eif_except.h"	/* for eif_panic() */
 
 #include <string.h>		/* For memset(), bzero() */

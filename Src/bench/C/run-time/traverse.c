@@ -17,7 +17,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 
 #include "eif_portable.h"
 #include "rt_garcol.h"
-#include "eif_malloc.h"
+#include "rt_malloc.h"
 #include "rt_macros.h"
 #include "eif_except.h"
 
@@ -25,11 +25,11 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include "rt_store.h"
 #endif
 #if !defined CUSTOM || defined NEED_HASH_H
-#include "eif_hashin.h"
+#include "rt_hashin.h"
 #endif
 
 #include "rt_hector.h"
-#include "eif_traverse.h"
+#include "rt_traverse.h"
 #include "eif_memory.h"
 #include "rt_gen_types.h"
 #include "x2c.h"		/* For LNGPAD macros... */

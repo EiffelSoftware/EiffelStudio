@@ -54,7 +54,7 @@ to indicate indirect(also called Eiffel or protected) address.
 #include "eif_hector.h"
 #include "eif_macros.h"
 #include "eif_object_id.h"
-#include "eif_timer.h"
+#include "rt_timer.h"
 
 #ifdef __cplusplus
 extern "C" {

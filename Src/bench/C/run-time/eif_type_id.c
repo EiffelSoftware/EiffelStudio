@@ -7,7 +7,7 @@ doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic ty
 #include "eif_struct.h"
 #include "eif_gen_conf.h"
 #include "eif_cecil.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #include "eif_threads.h"
 #include "rt_gen_types.h"
 #include <assert.h>

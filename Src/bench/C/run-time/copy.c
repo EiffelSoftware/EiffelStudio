@@ -17,10 +17,10 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include "eif_portable.h"
 #include "eif_eiffel.h"
 #include "eif_copy.h"
-#include "eif_traverse.h"		/* For deep copies */
+#include "rt_traverse.h"		/* For deep copies */
 
 #if ! defined CUSTOM || defined NEED_HASH_H
-#include "eif_hash.h"			/* For deep copies */
+#include "rt_hash.h"			/* For deep copies */
 #endif
 
 #include "eif_struct.h"

@@ -43,20 +43,12 @@ RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 #define it_bit		itu.itu_bit
 
 /* Interpreter interface to outside world */
-RT_LNK void call_disp(uint32 dtype, char *object);				/* Function to call dispose routines */ 
 RT_LNK void xinterp(unsigned char *icval);					/* Compound from a given address */
-extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
-extern void xinitint(void);										/* Initialize the interpreter */
 RT_LNK struct item *opush(register struct item *val);			/* Push value on operational stack */
 RT_LNK struct item *opop(void);									/* Remove value from operational stack */
-extern struct item *otop(void);									/* Top of the stack */
-extern struct item *ivalue(int code, int num, uint32 start);	/* Value request from current routine */
-extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);		/* Resynchronize registers on routine */
 
 /* Macro used to prepare a cell on top of the stack */
 #define iget()	opush((struct item *) 0)	/* Push empty cell on stack */
-
-extern void idump(FILE *fd, char *start);
 
 #ifdef __cplusplus
 }

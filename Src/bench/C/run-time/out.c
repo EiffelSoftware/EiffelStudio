@@ -20,15 +20,16 @@ doc:<file name="out.c" header="eif_out.h" version="$Id$" summary="Routines for p
 #include "eif_out.h"
 #include "eif_plug.h"
 #include "rt_struct.h"
-#include "eif_hashin.h"
+#include "rt_hashin.h"
 #include "eif_except.h"		/* For `eraise' */
 #include "eif_sig.h"
 #include "eif_hector.h"
-#include "eif_bits.h"
+#include "rt_bits.h"
 #include "eif_globals.h"
 #include "rt_malloc.h"
 #include "rt_wbench.h"
 #include "rt_macros.h"
+#include "rt_constants.h"
 #include "rt_gen_types.h"
 #include "x2c.h"		/* For macro LNGPAD */
 #include "rt_assert.h"

@@ -13,11 +13,11 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "rt_macros.h"
-#include "eif_traverse.h"
+#include "rt_traverse.h"
 #include "eif_garcol.h"
 #include "eif_except.h"
 #include "eif_memory.h"
-#include "eif_error.h"
+#include "rt_error.h"
 #include "x2c.h"		/* For LNGPAD macro */
 #include "rt_store.h"
 #include "pstore.h"

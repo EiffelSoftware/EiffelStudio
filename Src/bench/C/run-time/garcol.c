@@ -27,15 +27,15 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "rt_garcol.h"
 #include "rt_types.h"
 #include "rt_threads.h"
-#include "eif_lmalloc.h"	/* for eif_free */
+#include "rt_lmalloc.h"	/* for eif_free */
 #include "eif_memory.h"
 #if ! defined CUSTOM || defined NEED_TIMER_H
-#include "eif_timer.h"
+#include "rt_timer.h"
 #endif
 #include "rt_macros.h"
 #include "rt_sig.h"
-#include "eif_urgent.h"
-#include "eif_search.h"
+#include "rt_urgent.h"
+#include "rt_search.h"
 #include "eif_gen_conf.h"	/* For eif_gen_conf_cleanup () */
 #include "rt_gen_types.h"	/* For tuple marking */
 #include "eif_cecil.h"

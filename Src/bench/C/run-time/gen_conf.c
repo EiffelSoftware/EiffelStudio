@@ -8,7 +8,7 @@ doc:<file name="gen_conf.c" header="eif_gen_conf.h" version="$Id$" summary="Gene
 #include "eif_struct.h"
 #include "eif_gen_conf.h"
 #include "rt_gen_types.h"
-#include "eif_lmalloc.h"
+#include "rt_lmalloc.h"
 #include "rt_threads.h"
 #include "rt_assert.h"
 #include <ctype.h>

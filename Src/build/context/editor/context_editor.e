@@ -93,7 +93,8 @@ feature
 			drawing_box_form: DRAWING_BOX_FORM
 			bull_resize_form: BULL_RESIZE_FORM
 			grid_form: GRID_FORM;
-			del_com: DELETE_WINDOW
+			del_com: DELETE_WINDOW;
+			focus_area_form: FORM
 		do
 			!!form_list.make (1, Context_const.total_nbr_of_forms);
 
@@ -104,30 +105,35 @@ feature
 				set_icon_pixmap (Pixmaps.context_pixmap);
 			end;
 			!!top_form.make (Widget_names.form, Current)
+			!!focus_area_form.make (Widget_names.form1, top_form);
 
-			!! context_hole.make (Current, top_form)
-			!! focus_label.make (top_form);
+			!! context_hole.make (Current, focus_area_form)
+			!! focus_label.make (focus_area_form);
+			!! close_button.make (Current, focus_area_form, focus_label)
 			!! first_separator.make (Widget_names.separator, top_form)
 			first_separator.set_horizontal (True)
 			!! second_separator.make (Widget_names.separator1, top_form)
 			second_separator.set_horizontal (True)
-			!! close_button.make (Current, top_form, focus_label)
 			!! formats_rc.make (Widget_names.row_column, top_form) 
 			formats_rc.set_row_layout
 			formats_rc.set_preferred_count (1)
 			formats_rc.set_spacing (5)
 
-			top_form.attach_top (focus_label, 5)
-			top_form.attach_top (close_button, 0)
-			top_form.attach_top (context_hole, 0)
-			top_form.attach_right (close_button, 0)
-			top_form.attach_left (context_hole, 0)
-			top_form.attach_left_widget (context_hole, focus_label, 0)
-			top_form.attach_right_widget (close_button, focus_label, 0)
-			top_form.attach_top_widget (focus_label, first_separator, 0)
-			top_form.attach_top_widget (context_hole, first_separator, 0)
-			top_form.attach_top_widget (close_button, first_separator, 0)
+			focus_area_form.attach_top (focus_label, 0)
+			focus_area_form.attach_top (close_button, 0)
+			focus_area_form.attach_top (context_hole, 0)
+			focus_area_form.attach_right (close_button, 0)
+			focus_area_form.attach_left (context_hole, 0)
+			focus_area_form.attach_left_widget (context_hole, focus_label, 0)
+			focus_area_form.attach_right_widget (close_button, focus_label, 0)
+			focus_area_form.attach_bottom (focus_label, 0)
+			focus_area_form.attach_bottom (context_hole, 0)
+			focus_area_form.attach_bottom (close_button, 0)
 
+			top_form.attach_top (focus_area_form, 0);
+			top_form.attach_left (focus_area_form, 0);
+			top_form.attach_right (focus_area_form, 0);
+			top_form.attach_top_widget (focus_area_form, first_separator, 2)
 			top_form.attach_left (first_separator, 0)
 			top_form.attach_right (first_separator, 0)
 			top_form.attach_bottom (formats_rc, 1)
@@ -275,7 +281,7 @@ feature
 			!! tmp.make (0);
 			tmp.append (Widget_names.Context_name);
 			tmp.append (": ");
-			tmp.append (edited_context.label)
+			tmp.append (edited_context.full_label)
 			set_title (tmp);
 			set_icon_name (tmp);
 		end;

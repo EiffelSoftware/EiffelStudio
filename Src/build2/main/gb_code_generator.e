@@ -638,9 +638,6 @@ feature {NONE} -- Implementation
 			if local_string = Void then
 				local_string := name + ": " + local_type
 			else
-				if name.is_equal ("l_tool_bar_button_2") then
-					do_nothing	
-				end
 				from
 					search_counter := 1
 				until
@@ -665,15 +662,13 @@ feature {NONE} -- Implementation
 					end
 				end
 				if index_of_type > 0 then
-					if name.is_equal ("l_tool_bar_button_5") then
-						do_nothing	
-					end
 					local_string.insert_string (", " + name, index_of_type - 2)
 					from
 						search_counter := index_of_type
 						found_correctly := False
 					until
-						search_counter = index_of_type - 80 or found_correctly
+						search_counter = index_of_type - 80 or found_correctly or
+						search_counter = 0
 					loop
 						if (local_string @ search_counter) = '%R' then
 							found_correctly := True

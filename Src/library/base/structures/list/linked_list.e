@@ -64,7 +64,9 @@ feature -- Access
 				Result := count + 1
 			elseif not before then
 				p ?= cursor;
-						check p /= Void end;
+				check
+					p /= Void
+				end;
 				from
 					start; Result := 1
 				until

@@ -11,14 +11,14 @@ copy ISE.Runtime.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer\ace
-compile_dotnet emitter.ace
-wff
-iff not exist EIFGEN\W_code\emitter.exe then
+finalize emitter.ace
+fff
+iff not exist EIFGEN\F_code\emitter.exe then
 	remtrace Could not compile emitter.exe
 	CANCEL
 endiff
-copy EIFGEN\W_code\emitter.exe %INSTALL_DIR\dotnet_binaries
-copy EIFGEN\W_code\emitter.exe %INSTALL_DIR\dotnet\assemblies
+copy EIFGEN\F_code\emitter.exe %INSTALL_DIR\dotnet_binaries
+copy EIFGEN\F_code\emitter.exe %INSTALL_DIR\dotnet\assemblies
 cdd %INSTALL_DIR\dotnet\assemblies
 set TMP_EIFFEL=%ISE_EIFFEL
 set ISE_EIFFEL=%INSTALL_DIR
@@ -37,12 +37,12 @@ copy ISE.VS.FusionSupport.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling CodeDom
 cdd %EIFFEL_SRC\dotnet\CodeDom\src\ace_file
-compile_dotnet ace.ace
-wff
-iff not exist EIFGEN\W_code\ISE.CodeDomProvider.dll then
+finalize ace.ace
+fff
+iff not exist EIFGEN\F_code\ISE.CodeDomProvider.dll then
 	remtrace Could not compile Codedom
 	CANCEL
 endiff
-copy EIFGEN\W_code\ISE.CodeDomProvider.dll %INSTALL_DIR\dotnet_binaries
+copy EIFGEN\F_code\ISE.CodeDomProvider.dll %INSTALL_DIR\dotnet_binaries
 
 cdd %EIFFEL_SRC

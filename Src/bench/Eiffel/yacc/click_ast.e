@@ -8,7 +8,7 @@ inherit
 
 	AST_YACC
 
-feature {AST_FACTORY} -- Initialization
+feature {AST_FACTORY, LACE_AST_FACTORY} -- Initialization
 
 	initialize (n: like node; s, e: INTEGER) is
 			-- Create a new clickable element for `n'.

@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			-- Create an empty notebook.
 		do
 			wel_make (default_parent, 0, 0, 0, 0, 0)
-			tab_pos := Pos_top
+			tab_pos := Tab_top
 		end
 
 feature -- Access
@@ -110,19 +110,19 @@ feature -- Status report
 			Result := current_selection + 1
 		end
 
-	tab_position: STRING is
+	tab_position: INTEGER is
 			-- Position of the tabs.
 		do
 			inspect
 				tab_pos
-			when Pos_top then
-				Result:="top"
-			when Pos_bottom then
-				Result:="bottom"
-			when Pos_left then
-				Result:="left"
-			when Pos_right then
-				Result:="right"
+			when Tab_top then
+				Result:= Tab_top
+			when Tab_bottom then
+				Result:= Tab_bottom
+			when Tab_left then
+				Result:= Tab_left
+			when Tab_right then
+				Result:= Tab_right
 			end
 		end
 
@@ -132,7 +132,7 @@ feature -- Status setting
 			-- Set the current minimum size.
 		do
 			set_font (font)
-			if tab_pos = Pos_top or tab_pos = Pos_bottom then
+			if tab_pos = Tab_top or tab_pos = Tab_bottom then
 				internal_set_minimum_height (tab_height)
 			else
 				internal_set_minimum_width (tab_height)
@@ -219,7 +219,7 @@ feature -- Element change
 		local
 			local_font_windows: EV_FONT_IMP
 		do
-			if (tab_pos = Pos_top) or (tab_pos = Pos_bottom) then
+			if (tab_pos = Tab_top) or (tab_pos = Tab_bottom) then
 				private_font := f
 				local_font_windows ?= private_font.implementation
 				check
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			end
 
 			-- We found the biggest child
-			if tab_pos = Pos_top or tab_pos = Pos_bottom then
+			if tab_pos = Tab_top or tab_pos = Tab_bottom then
 				internal_set_minimum_width (value + 6)
 			else
 				internal_set_minimum_width (value + tab_height + 2)
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			end
 
 			-- We found the biggest child
-			if tab_pos = Pos_left or tab_pos = Pos_right then
+			if tab_pos = Tab_left or tab_pos = Tab_right then
 				internal_set_minimum_height (value + tab_height + 2)
 			else
 				internal_set_minimum_height (value + 6)
@@ -505,9 +505,9 @@ feature {NONE} -- Implementation
 
 			-- We found the biggest child
 			inspect tab_pos
-			when Pos_top, Pos_bottom then
+			when Tab_top, Tab_bottom then
 				internal_set_minimum_size (mw + 6, mh + tab_height + 2)
-			when Pos_left, Pos_right then
+			when Tab_left, Tab_right then
 				internal_set_minimum_size (mw + tab_height + 2, mh + 6)
 			end
 		end
@@ -559,31 +559,31 @@ feature {NONE} -- WEL Implementation
 				+ Ws_clipchildren + Ws_clipsiblings
 				+ Ws_visible
 			inspect tab_pos
-			when Pos_top then
+			when Tab_top then
 				Result := Result + Tcs_singleline
-			when Pos_bottom then
+			when Tab_bottom then
  				Result := Result + Tcs_bottom + Tcs_singleline
- 			when Pos_left then
+ 			when Tab_left then
  				Result := Result + Tcs_vertical + Tcs_fixedwidth 
 					+ Tcs_multiline
-			when Pos_right then
+			when Tab_right then
  				Result := Result + Tcs_right + Tcs_vertical
 					+ Tcs_fixedwidth + Tcs_multiline
  			end
  		end
 
 	tab_height: INTEGER is
-			-- The height of the tabs in `Pos_top' ot `Pos_bottom' status,
+			-- The height of the tabs in `Tab_top' ot `Tab_bottom' status,
 			-- the width of the tabs otherwise.
 		do
 			inspect tab_pos 
-			when Pos_top then
+			when Tab_top then
 				Result := sheet_rect.top - client_rect.top
-			when Pos_left then
+			when Tab_left then
 				Result := sheet_rect.left - client_rect.left
-			when Pos_bottom then
+			when Tab_bottom then
 				Result := client_rect.bottom - sheet_rect.bottom
-			when Pos_right then
+			when Tab_right then
 				Result := client_rect.right - sheet_rect.right
 			else
 				Result := 0

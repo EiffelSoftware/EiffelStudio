@@ -961,11 +961,6 @@ feature -- Binary_operator generation
 		deferred
 		end
 
-	generate_implies is
-			-- Generate `implies operator.
-		deferred
-		end
-
 	generate_eq is
 			-- Generate `=' operator.
 		deferred
@@ -987,11 +982,6 @@ feature -- Binary_operator generation
 		end
 
 feature -- Unary operator generation
-
-	generate_uplus is
-			-- Generate '+' operator.
-		deferred
-		end
 
 	generate_uminus is
 			-- Generate '-' operator.

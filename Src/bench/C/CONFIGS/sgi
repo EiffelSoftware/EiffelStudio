@@ -15,7 +15,7 @@ start_test='if [ ! -f finished ] ; then'
 end_test='; fi'
 create_test='touch finished'
 
-command_makefile='make'
+command_makefile='make -f'
 d_bsdsig='define'
 lngpad_2='8'
 d_bsd='undef'

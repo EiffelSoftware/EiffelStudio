@@ -12,15 +12,17 @@ OBJECTS =  $(OBJS) $(WOBJS)
 all:: net.lib
 
 .c.obb:
-	$(CC) -o$@ -c $(CFLAGS) $<
+	$(CC) -o $@ -c $(CFLAGS) $<
 
-SMODE = network.c networkr.c storable.c
+SMODE = network.c network_r.c hostname.c syncpoll.c storable.c
 
 LSRCS = $(SMODE)
 
 OBJS = \
 	network.obj \
-	networkr.obj \
+	network_r.obj \
+	hostname.obj \
+	syncpoll.obj \
 	storable.obj
 
 local_clean:: remove
@@ -35,6 +37,6 @@ net.lib: $(OBJS)
 	$(AR) $@ /c +networkr.obj +network.obj +storable.obj
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
-	if not exist ..\spec\w32bcc mkdir ..\spec\w32bcc
-	if not exist ..\spec\w32bcc\lib mkdir ..\spec\w32bcc\lib
-	copy net.lib ..\spec\w32bcc\lib\net.lib
+	if not exist ..\spec\bcc mkdir ..\spec\bcc
+	if not exist ..\spec\bcc\lib mkdir ..\spec\bcc\lib
+	copy net.lib ..\spec\bcc\lib\net.lib

@@ -23,12 +23,10 @@ inherit
 		redefine
 			add_child,
 			set_insensitive,
-			parent_ask_resize,
-			set_width,
-			set_height,
 			child_minwidth_changed,
 			child_minheight_changed,
-			on_first_display
+			on_first_display,
+			update_display
 		end
 
 	WEL_CONTROL_WINDOW
@@ -50,10 +48,11 @@ inherit
 			on_char,
 			on_key_up,
 			on_draw_item,
+			background_brush,
 			on_menu_command
 		redefine
 			default_style,
-			background_brush
+			move_and_resize
 		end
 
 creation
@@ -215,28 +214,7 @@ feature -- Element change
 			child.hide
 		end
 
-feature -- Measurement
-
-	set_width (value:INTEGER) is
-			-- Make `value' the new width and notify the parent
-			-- of the change.
-		do
-			child_cell.set_width (value.max (minimum_width))
-			set_local_size (child_cell.width, child_cell.height)
-		end
-		
-	set_height (value: INTEGER) is
-			-- Make `value' the new `height' and notify the
-			-- parent of the change.
-		do
-			child_cell.set_height (value.max (minimum_height))
-			set_local_size (child_cell.width, child_cell.height)
-		end
-
 feature {NONE} -- Implementation attributes
-
-	already_displayed: BOOLEAN
-			-- Did the container was displayed already?
 
 	ev_children: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			-- List of the children of the tab
@@ -398,29 +376,15 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-feature {NONE} -- Implementation to resize the table when it comes from the parent
+feature {NONE} -- Resize Implementation
 
-	parent_ask_resize (new_width, new_height: INTEGER) is
-			-- When the parent asks the resize, it's not 
-			-- necessary to send him back the information
-		local
-			cc: EV_CHILD_CELL_IMP
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+			repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
 		do
- 			cc := child_cell
- 			cc.resize (minimum_width.max(new_width), minimum_height.max (new_height))
- 			if resize_type = 3 then
- 				set_local_size (cc.width, cc.height)
- 				move (cc.x, cc.y)
- 			elseif resize_type = 2 then
- 				move ((cc.width - width)//2 + cc.x, cc.y)
- 				set_local_size (minimum_width, cc.height)
- 			elseif resize_type = 1 then
- 				move (cc.x, (cc.height - height)//2 + cc.y)
- 				set_local_size (cc.width, minimum_height)
- 			else
- 				move ((cc.width - width)//2 + cc.x, (cc.height - height)//2 + cc.y)
- 				set_local_size (minimum_width, minimum_height)
- 			end
+			set_local_size (a_width, a_height)
+			move (a_x, a_y)
 		end
 
 	set_local_size (new_width, new_height: INTEGER) is
@@ -615,7 +579,7 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 				-- it to the the following lines.
 				if rest > 0 then
 					from
-						if line.after then
+						if line.index > line.count then
 							line.go_i_th (2)
 						end
 					until
@@ -801,40 +765,43 @@ feature {NONE} -- EiffelVision implementation
    	on_first_display is
 		local
 			i: INTEGER
-   		do
- 			if not ev_children.empty then
- 				from
- 					i := 1
- 				until
-  					i = ev_children.count + 1
-   				loop
- 					(ev_children @ i).widget.on_first_display
- 					i := i + 1
- 				end
- 			end
+  		do
+			if not ev_children.empty then
+				from
+					i := 1
+				until
+					i = ev_children.count + 1
+				loop
+					(ev_children @ i).widget.on_first_display
+					i := i + 1
+				end
+			end
 			already_displayed := True
 			child_minwidth_changed (0, child)
 			child_minheight_changed (0, child)
 			initialize_at_minimum
-   		end
+  		end
 
-feature {NONE} -- Implementation of WEL functions
+	update_display is
+			-- Feature that update the actual container.
+			-- It check the size of the child and resize
+			-- the child or the container itself depending
+			-- on the case.
+		do
+			if already_displayed then
+				child_minwidth_changed (0, child)
+				child_minheight_changed (0, child)				initialize_at_minimum
+				initialize_at_minimum
+				parent_ask_resize (child_cell.width, child_cell.height)
+			end
+		end
+
+feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 		once
 			Result := Ws_child + Ws_visible + Ws_clipchildren 
-						+ Ws_clipsiblings
-		end
-
-	background_brush: WEL_BRUSH is
-			-- Current window background color used to refresh the window when
-			-- requested by the WM_ERASEBKGND windows message.
-			-- By default there is no background
-		do
-			if background_color /= Void then
-				!! Result.make_solid (background_color_imp)
-				disable_default_processing
-			end
+					+ Ws_clipsiblings
 		end
 
 invariant

@@ -19,6 +19,12 @@
 #include <windows.h>
 #endif
 
+#undef FALSE
+#define FALSE ((EIF_BOOLEAN) '\0')
+
+#undef TRUE
+#define TRUE ((EIF_BOOLEAN) '\01')
+
 private fnptr set_proc;
 private fnptr send_proc;
 
@@ -217,6 +223,18 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 	(*send_proc)(eif_access(request));
 
 	xfree(cmd);
+#endif
+}
+
+
+/* Misc */
+
+EIF_BOOLEAN tabs_disabled_for_the_platform()
+{
+#ifdef __WINDOWS_386__
+	return TRUE;
+#else
+	return FALSE;
 #endif
 }
 

@@ -301,9 +301,12 @@ feature -- Analyzis
 			generate_profile_start
 
 				-- Generate GC synchronization macro
-			if not is_external then
+			if not is_external and context.need_gc_hook then
 					-- No need to generate a synchronization point before
-					-- calling an external. If it is needed, then it is
+					-- calling an external or a small routine that does not
+					-- have GC hooks as it could mess up the references to
+					-- Eiffel object that this routine might have.
+					-- For blocking externals, if it is needed, then it is
 					-- using the `blocking' keyword in its specification.
 				buf.putstring ("RTGC;")
 				buf.new_line

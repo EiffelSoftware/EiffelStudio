@@ -69,14 +69,12 @@ feature -- Access
 			Result.append (
 					"external%N%
 					%	include_path:	%"$ISE_EIFFEL\library\wel\spec\windows\include%",%N%
-					%			%"$ISE_EIFFEL\library\time\Clib%",%N%
 					%			%"$ISE_EIFFEL\library\com\spec\windows\include%",%N")
 		end
 
 	End_ace_file: STRING is
 			-- End of ace file used to precompile generated Eiffel system
 		"	object: 	%"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib%",%N%
-		%			%"$(ISE_EIFFEL)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib%",%N%
 		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib%",%N%
 		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib%",%N"
 

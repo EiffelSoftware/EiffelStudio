@@ -10,9 +10,10 @@ class E_SHOW_PROFILE_QUERY
 inherit
 	E_OUTPUT_CMD
 		rename
-			make as e_cmd_make
+			make as e_cmd_make,
+			work as execute
 		redefine
-			executable
+			executable, execute
 		end
 
 creation
@@ -30,7 +31,7 @@ feature -- Initialization
 			profiler_query_not_void: profiler_query /= Void;
 			profiler_options_not_void: profiler_options /= Void
 		do
-			st := new_st;
+			structured_text := new_st;
 			prof_query := profiler_query;
 			prof_options := profiler_options;
 			!! expanded_filenames.make
@@ -41,7 +42,7 @@ feature -- Access
 	executable: BOOLEAN is
 			-- Is Current executable?
 		do
-			Result := st /= Void and then
+			Result := structured_text /= Void and then
 					prof_query /= Void and then
 					prof_options /= Void
 		end;
@@ -119,13 +120,13 @@ debug("SHOW_PROF_QUERY")
 	io.error.putstring ("profile information not VOID");
 	io.error.new_line
 end;
-						st.add_string (current_item);
-						st.add_new_line;
+						structured_text.add_string (current_item);
+						structured_text.add_new_line;
 						!! line_str.make (current_item.count);
 						line_str.fill_character ('-');
-						st.add_string (line_str);
-						st.add_new_line;
-						st.add_new_line
+						structured_text.add_string (line_str);
+						structured_text.add_new_line;
+						structured_text.add_new_line
 					else
 debug("SHOW_PROF_QUERY")
 	io.error.putstring ("profile information VOID");
@@ -133,17 +134,17 @@ debug("SHOW_PROF_QUERY")
 end;
 					end
 				else
-					st.add_string ("last output");
-					st.add_new_line;
-					st.add_string ("-----------");
-					st.add_new_line;
-					st.add_new_line;
+					structured_text.add_string ("last output");
+					structured_text.add_new_line;
+					structured_text.add_string ("-----------");
+					structured_text.add_new_line;
+					structured_text.add_new_line;
 					profile_information := int_last_output
 				end
 			else
-				st.add_string ("Error during retrieval of: ");
-				st.add_string (current_item);
-				st.add_new_line
+				structured_text.add_string ("Error during retrieval of: ");
+				structured_text.add_string (current_item);
+				structured_text.add_new_line
 			end
 		rescue
 			retried := true;
@@ -321,11 +322,11 @@ end;
 			until
 				i > prof_options.output_names.count
 			loop
-				st.add_string (prof_options.output_names.item(i));
-				st.add_indent;
+				structured_text.add_string (prof_options.output_names.item(i));
+				structured_text.add_indent;
 				i := i + 1
 			end;
-			st.add_new_line
+			structured_text.add_new_line
 		end;
 
 	print_result is
@@ -685,25 +686,25 @@ end;
 				i > prof_options.output_names.count
 			loop
 				if prof_options.output_names.item (i).is_equal ("featurename") then
-					item.function.append_to (st);
-					st.add_indent
+					item.function.append_to (structured_text);
+					structured_text.add_indent
 				elseif prof_options.output_names.item (i).is_equal ("calls") then
-					st.add_string (item.number_of_calls.out)
+					structured_text.add_string (item.number_of_calls.out)
 				elseif prof_options.output_names.item (i).is_equal ("self") then
-					st.add_string (item.self_sec.out)
+					structured_text.add_string (item.self_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("descendents") then
-					st.add_string (item.descendents_sec.out);
-					st.add_indent
+					structured_text.add_string (item.descendents_sec.out);
+					structured_text.add_indent
 				elseif prof_options.output_names.item (i).is_equal ("total") then
-					st.add_string (item.total_sec.out)
+					structured_text.add_string (item.total_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("percentage") then
-					st.add_string (item.percentage.out);
-					st.add_indent
+					structured_text.add_string (item.percentage.out);
+					structured_text.add_indent
 				end
-				st.add_indent
+				structured_text.add_indent
 				i := i + 1
 			end;
-			st.add_new_line
+			structured_text.add_new_line
 		end;
 
 feature {NONE} -- Attributes
@@ -725,8 +726,5 @@ feature {NONE} -- Attributes
 
 	prof_options: PROFILER_OPTIONS;
 		-- The options specified by the user.
-
-	st: STRUCTURED_TEXT;
-			-- The text that is to be displayed.
 
 end -- class E_SHOW_PROFILE_QUERY

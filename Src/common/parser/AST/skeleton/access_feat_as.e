@@ -286,7 +286,6 @@ end;
 						!!vape;
 						context.init_error (vape);
 						vape.set_exported_feature (a_feature);
-						vape.trace
 						Error_handler.insert_error (vape);
 						Error_handler.raise_error;
 					end;

@@ -30,7 +30,7 @@ feature -- Access
 			end
 			Result.record_separate_calls_on_arguments
 			
-			body := Context.a_feature.body
+			body := Context.current_feature.body
 			check
 				body_not_void: body /= Void
 			end

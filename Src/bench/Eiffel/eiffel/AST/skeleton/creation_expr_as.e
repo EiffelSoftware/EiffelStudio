@@ -172,7 +172,7 @@ feature -- Type check
 					create vtec1
 					context.init_error (vtec1)
 					Error_handler.insert_error (vtec1)
-				elseif not new_creation_type.valid_expanded_creation (context.a_class) then
+				elseif not new_creation_type.valid_expanded_creation (context.current_class) then
 					create vtec2
 					context.init_error (vtec2)
 					Error_handler.insert_error (vtec2)
@@ -183,7 +183,7 @@ feature -- Type check
 					-- Cannot be Void
 				formal_type ?= new_creation_type
 					-- Get the corresponding constraint type of the current class
-				formal_dec := context.a_class.generics.i_th (formal_type.position)
+				formal_dec := context.current_class.generics.i_th (formal_type.position)
 				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
 					new_creation_type := formal_dec.constraint_type
 					is_formal_creation := True
@@ -199,8 +199,8 @@ feature -- Type check
 
 			if not new_creation_type.good_generics then
 				vtug := new_creation_type.error_generics
-				vtug.set_class (context.a_class)
-				vtug.set_feature (context.a_feature)
+				vtug.set_class (context.current_class)
+				vtug.set_feature (context.current_feature)
 				Error_handler.insert_error (vtug)
 				Error_handler.raise_error
 			elseif
@@ -214,18 +214,18 @@ feature -- Type check
 				Error_handler.insert_error (vgcc3)
 			else
 				new_creation_type.reset_constraint_error_list
-				new_creation_type.check_constraints (context.a_class)
+				new_creation_type.check_constraints (context.current_class)
 				if not new_creation_type.constraint_error_list.is_empty then
 					create vtcg3
-					vtcg3.set_class (context.a_class)
-					vtcg3.set_feature (context.a_feature)
+					vtcg3.set_class (context.current_class)
+					vtcg3.set_feature (context.current_feature)
 					vtcg3.set_error_list (new_creation_type.constraint_error_list)
 					Error_handler.insert_error (vtcg3)
 				else
 					creation_type := new_creation_type
 					gen_type ?= creation_type
 					if gen_type /= Void then
-						Instantiator.dispatch (gen_type, context.a_class)
+						Instantiator.dispatch (gen_type, context.current_class)
 					end
 						-- We do not update type stack now, since the call to
 						-- `call.type_check' will change the information, we will
@@ -310,7 +310,7 @@ feature -- Type check
 						Error_handler.insert_error (vgcc5)
 					elseif creators /= Void then
 						export_status := creators.item (feature_name)
-						if not export_status.valid_for (context.a_class) then
+						if not export_status.valid_for (context.current_class) then
 								-- Creation procedure is not exported
 							create vgcc5
 							context.init_error (vgcc5)
@@ -321,7 +321,7 @@ feature -- Type check
 							Error_handler.insert_error (vgcc5)
 						else
 							if context.level4 then
-								context_export := context.a_feature.export_status
+								context_export := context.current_feature.export_status
 								if not context_export.is_subset (export_status) then
 									create vape
 									context.init_error (vape)

@@ -93,7 +93,7 @@ feature -- Implementation of inherited deferred features
 					if System.in_pass3 then
 							-- There is a dependance between `f' and the `anchor_feature'
 							-- Record it for the propagation of the recompilations
-						!! depend_unit.make (context.a_class.class_id, anchor_feature)
+						!! depend_unit.make (context.current_class.class_id, anchor_feature)
 						context.supplier_ids.extend (depend_unit)
 					end
 				end

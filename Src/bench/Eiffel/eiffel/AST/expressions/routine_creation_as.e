@@ -128,7 +128,7 @@ feature -- Type check, byte code and dead code removal
 				-- Open target; feature comes from
 				-- current class
 				target_type := context.actual_class_type
-				a_class := context.a_class
+				a_class := context.current_class
 			else
 				if target.target /= Void then
 					-- Target is an entity
@@ -166,7 +166,7 @@ feature -- Type check, byte code and dead code removal
 								a_class := target_type.associated_class
 							else
 								target_type := context.actual_class_type
-								a_class := context.a_class
+								a_class := context.current_class
 							end
 						end
 					end
@@ -211,7 +211,7 @@ feature -- Type check, byte code and dead code removal
 				context.supplier_ids.extend (depend_unit)
 
 				type := routine_type (a_table, a_feature, a_class.class_id)
-				System.instantiator.dispatch (type, context.a_class)
+				System.instantiator.dispatch (type, context.current_class)
 				context.put (type)
 			end
 			Error_handler.checksum
@@ -525,8 +525,8 @@ feature {NONE} -- Type
 				--  f: B [H]
 				--  f~g
 				-- The creation of `f~g' crashed because we were looking for the second formal in B.
-			solved_type := Creation_evaluator.evaluated_type (target_type, context.a_class.feature_table, a_feature)
-			solved_type := solved_type.instantiation_in (context.actual_class_type, context.a_class.class_id)
+			solved_type := Creation_evaluator.evaluated_type (target_type, context.current_class.feature_table, a_feature)
+			solved_type := solved_type.instantiation_in (context.actual_class_type, context.current_class.class_id)
 			tgt_type := solved_type.deep_actual_type
 			generics.put (tgt_type, 1)
 

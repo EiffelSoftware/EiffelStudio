@@ -87,7 +87,7 @@ feature -- Type check, byte code and dead code removal
 			create controler.make
 			Inspect_controlers.put_front (controler)
 			controler.set_node (Current)
-			controler.set_feature_table (context.a_class.feature_table)
+			controler.set_feature_table (context.current_class.feature_table)
 
 				-- Type check if it is an expression conform either to
 				-- and integer or to a character

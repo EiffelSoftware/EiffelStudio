@@ -84,7 +84,7 @@ feature
 			end
 			create Result.make (constant, bits_value)
 			if System.in_pass3 then
-				!!depend_unit.make (context.a_class.class_id, constant)
+				!!depend_unit.make (context.current_class.class_id, constant)
 				context.supplier_ids.extend (depend_unit)
 			end
 		end; -- solved_type

@@ -18,11 +18,8 @@ feature -- Access
 
     is_argument: BOOLEAN is
             -- Is this an access to an argument
-		local
-			a_feature: FEATURE_I
         do
-            a_feature := context.a_feature
-            Result := a_feature.argument_position (feature_name) /= 0
+            Result := context.current_feature.argument_position (feature_name) /= 0
         end
 
 	access_type: TYPE_A is
@@ -39,7 +36,7 @@ feature -- Access
 			vuar1: VUAR1
 			veen2b: VEEN2B
 		do
-			a_feature := context.a_feature
+			a_feature := context.current_feature
 				-- Look for an argument
 			argument_position := a_feature.argument_position (feature_name)
 			if argument_position /= 0 then
@@ -63,10 +60,10 @@ feature -- Access
 				local_info := context.locals.item (feature_name)
 				if local_info /= Void then
 						-- Local found
-					!! veen2B
-					context.init_error (veen2B)
-					veen2B.set_identifier (feature_name)
-					Error_handler.insert_error (veen2B)
+					!! veen2b
+					context.init_error (veen2b)
+					veen2b.set_identifier (feature_name)
+					Error_handler.insert_error (veen2b)
 				else
 						-- Look for a feature
 					Result := {ACCESS_INV_AS} Precursor

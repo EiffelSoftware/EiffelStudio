@@ -133,7 +133,7 @@ feature -- Type check, byte code and dead code removal
 					-- Cannot be Void
 				formal_type ?= creation_type
 					-- Get the corresponding constraint type of the current class
-				formal_dec := context.a_class.generics.i_th (formal_type.position)
+				formal_dec := context.current_class.generics.i_th (formal_type.position)
 				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
 					creation_type := formal_dec.constraint_type
 					is_formal_creation := True
@@ -185,7 +185,7 @@ feature -- Type check, byte code and dead code removal
 								context.init_error (vtec1)
 								vtec1.set_entity_name (target.access_name)
 								Error_handler.insert_error (vtec1)
-							elseif not new_creation_type.valid_expanded_creation (context.a_class) then
+							elseif not new_creation_type.valid_expanded_creation (context.current_class) then
 								create vtec2
 								context.init_error (vtec2)
 								vtec2.set_entity_name (target.access_name)
@@ -194,8 +194,8 @@ feature -- Type check, byte code and dead code removal
 						end
 						if not new_creation_type.good_generics then
 							vtug := new_creation_type.error_generics
-							vtug.set_class (context.a_class)
-							vtug.set_feature (context.a_feature)
+							vtug.set_class (context.current_class)
+							vtug.set_feature (context.current_feature)
 							Error_handler.insert_error (vtug)
 							Error_handler.raise_error
 						elseif
@@ -223,11 +223,11 @@ feature -- Type check, byte code and dead code removal
 							Error_handler.insert_error (vgcc31)
 						else
 							new_creation_type.reset_constraint_error_list
-							new_creation_type.check_constraints (context.a_class)
+							new_creation_type.check_constraints (context.current_class)
 							if not new_creation_type.constraint_error_list.is_empty then
 								create vtcg3
-								vtcg3.set_class (context.a_class)
-								vtcg3.set_feature (context.a_feature)
+								vtcg3.set_class (context.current_class)
+								vtcg3.set_feature (context.current_feature)
 								vtcg3.set_entity_name (target.access_name)
 								vtcg3.set_error_list (new_creation_type.constraint_error_list)
 								Error_handler.insert_error (vtcg3)
@@ -235,7 +235,7 @@ feature -- Type check, byte code and dead code removal
 								creation_type := new_creation_type
 								gen_type ?= creation_type
 								if gen_type /= Void then
-									Instantiator.dispatch (gen_type, context.a_class)
+									Instantiator.dispatch (gen_type, context.current_class)
 								end
 		
 									-- Update type stack
@@ -322,7 +322,7 @@ feature -- Type check, byte code and dead code removal
 							Error_handler.insert_error (vgcc5)
 						elseif creators /= Void then
 							export_status := creators.item (feature_name)
-							if not export_status.valid_for (context.a_class) then
+							if not export_status.valid_for (context.current_class) then
 									-- Creation procedure is not exported
 								create vgcc5
 								context.init_error (vgcc5)
@@ -381,7 +381,7 @@ feature -- Type check, byte code and dead code removal
 			elseif type /= Void then
 				create {CREATE_TYPE} create_info.make (creation_type.type_i)
 			elseif access.is_result then
-				feature_type ?= context.a_feature.type
+				feature_type ?= context.current_feature.type
 				create_info := feature_type.create_info
 			elseif access.is_local then
 				local_b ?= access
@@ -444,7 +444,7 @@ feature -- Type check, byte code and dead code removal
 				-- executable.
 			create_feat ?= create_info
 			if create_feat /= Void then
-				rout_id := context.a_class.feature_table.item_id
+				rout_id := context.current_class.feature_table.item_id
 					(create_feat.feature_name_id).rout_id_set.first
 				type_set := System.type_set
 				if not type_set.has (rout_id) then

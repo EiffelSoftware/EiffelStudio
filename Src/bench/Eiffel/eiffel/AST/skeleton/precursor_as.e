@@ -574,11 +574,20 @@ feature {AST_EIFFEL} -- Output
 				parent_class := current_feature.precursors.last
 			end
 
-			real_feature := current_feature.ancestor_version (parent_class)
+			if parent_class /= Void then
+				real_feature := current_feature.ancestor_version (parent_class)
+			end
 
-			ctxt.put_text_item (
-				create {PRECURSOR_KEYWORD_TEXT}.make (real_feature)
-			)
+			if real_feature /= Void then
+				ctxt.put_text_item (
+					create {PRECURSOR_KEYWORD_TEXT}.make (real_feature)
+				) 
+			else
+					-- For some reason the parent feature could not be found, so the keyword won't be pickable.
+				ctxt.put_text_item (
+					create {KEYWORD_TEXT}.make (Ti_precursor_keyword.image)
+				)
+			end
 
 			if parent_name /= Void then
 				ctxt.put_text_item (ti_space)

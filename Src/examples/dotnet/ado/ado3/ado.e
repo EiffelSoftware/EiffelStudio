@@ -62,7 +62,16 @@ feature -- Initialization
 					-- Close everything
 				reader.close
 				connection.close
+			else
+				if reader /= Void then 
+					reader.close 
+				end
+				if connection /= Void then
+					connection.close
+				end
 			end
+				-- Wait before closing the console
+			io.read_line
 		rescue
 				-- Rescue any exception and display corresponding error message
 			io.put_string ("%NThe following error occured: ")

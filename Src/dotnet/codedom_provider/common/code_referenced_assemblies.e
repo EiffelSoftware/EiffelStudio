@@ -198,14 +198,6 @@ feature -- Basic Operations
 			end
 		end
 		
-feature {NONE} -- Implementation
-
-	Directory_separator: CHARACTER is
-			-- Platform specific directory separator
-		once
-			Result := (create {OPERATING_ENVIRONMENT}).Directory_separator
-		end
-
 invariant
 	non_void_default_assemblies: Default_assemblies /= Void
 

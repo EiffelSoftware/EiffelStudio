@@ -10,17 +10,19 @@ class EB_ENVIRONMENT
 inherit
 
 	OPERATING_ENVIRONMENT
+
 	EXECUTION_ENVIRONMENT
 		rename
 			put as environment_put
 		end
-	SHARED_TOOLKIT_NAME
+	G_ANY
 
 feature -- Directory name constants
 
 	Ace_name: STRING is "Ace"
 	Application_name: STRING is "app"
 	-- Old Application_name: STRING is "Application"
+	Bench_name: STRING is "bench"
 	Bitmaps_name: STRING is "bitmaps"
 	Bin_name: STRING is "bin"
 	Build_name: STRING is "build"
@@ -75,6 +77,9 @@ feature -- File name constants
 	Command_doc_file_name: STRING is "cmd.doc"
 	Command_temp_old_file_name: STRING is "cmd_tmp.old"
 	Command_temp_new_file_name: STRING is "cmd_tmp.new"
+	Epr_name_in_lower_case: STRING is "epr"
+	Es4_file_name: STRING is "es4"
+	Finish_freezing_name: STRING is "finish_freezing"
 	Groups_file_name: STRING is "groups"
 	Interface_file_name: STRING is "contexts"
 	-- old Interface_file_name: STRING is "interface"
@@ -106,7 +111,7 @@ feature -- File names for EiffelBuild
 			!! Result.make_from_string (EiffelBuild_directory)
 			Result.extend (Ace_name)
 			Result.set_file_name (Ace_name)
-			Result.add_extension (Shared_toolkit_name)
+			Result.add_extension (toolkit.name)
 			Result.add_extension (Ace_name_in_lower_case)
 		end
 
@@ -132,6 +137,41 @@ feature -- File names for EiffelBuild
 		once
 			!! Result.make_from_string (EiffelBuild_bin)
 			Result.set_file_name (Merge2_file_name)
+		end
+
+	Es4_file: FILE_NAME is
+		once
+			!! Result.make_from_string (EiffelBench_bin)
+			Result.set_file_name (Es4_file_name)
+		end
+
+	Finish_freezing_file: FILE_NAME is
+		once
+			!! Result.make_from_string (EiffelBench_bin)
+			Result.set_file_name (Finish_freezing_name)
+		end
+
+	Project_epr_file: FILE_NAME is
+		once
+			!! Result.make_from_string (Project_Directory)
+			Result.set_file_name (Application_name)
+			Result.add_extension (Epr_name_in_lower_case)
+		end
+
+feature -- EiffelBench directory name
+
+	EiffelBench_bin: DIRECTORY_NAME is
+		once
+			!! Result.make_from_string (Eiffel_directory)
+			Result.extend_from_array (<< Bench_name, Spec_name,
+							get (Platform_variable_name),
+							Bin_name >>)
+		end
+
+	W_code_directory: DIRECTORY_NAME is
+		once
+			!! Result.make_from_string (Project_Directory)
+			Result.extend_from_array (<< "EIFGEN", "W_code" >>)
 		end
 
 feature -- Directory names for EiffelBuild

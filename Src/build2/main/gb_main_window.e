@@ -346,10 +346,14 @@ feature {NONE} -- Implementation
 				
 			create temp_tool_bar
 			temp_tool_bar.extend (window_selector.new_directory_button)
+			temp_tool_bar.extend (window_selector.expand_all_button)
 			vertical_holder.third_holder.add_command_tool_bar (temp_tool_bar)
 			
 			create constructor_box
 			create horizontal_split_area.make_with_tools (vertical_holder, layout_constructor, "Layout constructor")
+			create temp_tool_bar
+			temp_tool_bar.extend (Layout_constructor.expand_all_button)
+			horizontal_split_area.tool_holder.add_command_tool_bar (temp_tool_bar)
 			horizontal_box.extend (horizontal_split_area)
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)

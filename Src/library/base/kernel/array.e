@@ -39,20 +39,20 @@ feature -- Initialization
 	make (minindex, maxindex: INTEGER) is
 			-- Allocate array; set index interval to
 			-- `minindex' .. `maxindex'; set all values to default.
-			-- (Make array empty if `minindex' > `maxindex').
+			-- (Make array empty if `minindex' = `maxindex' + 1).
+		require
+			valid_indices: minindex <= maxindex or (minindex = maxindex + 1)
 		do
+			lower := minindex;
+			upper := maxindex;
 			if minindex <= maxindex then
-				make_area (maxindex - minindex + 1);
-				lower := minindex;
-				upper := maxindex
+				make_area (maxindex - minindex + 1)
 			else
-				lower := 0;
-				upper := -1;
 				make_area (0)
 			end;
 		ensure
-			no_count: (minindex > maxindex) implies (count = 0);
-			count_constraint: (minindex <= maxindex) implies (count = maxindex - minindex + 1)
+			lower = minindex;
+			upper = maxindex
 		end;
 
 	make_from_array (a: ARRAY [G]) is

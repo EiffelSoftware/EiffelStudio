@@ -173,8 +173,6 @@ feature {NONE} -- Initialization
 			
 			set_row_height (App_implementation.default_font_height + 10)
 				-- We explicitly set the row height to be proportional to the default gtk application font
-				
-						--real_signal_connect (tree_view, "row-activated", agent print ("Row activated%N"), Void)
 		end
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
@@ -253,36 +251,6 @@ feature {NONE} -- Initialization
 					a_row_imp.pointer_motion_actions_internal.call (t)
 				end
 			end
-		end
-		
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	expand_callback (a_tree_item: POINTER) is
-			-- Expand callback passing expanded `a_tree_item' node pointer.
-		local
-			a_tree_node_imp: EV_TREE_NODE_IMP
-		do	
-		end
-
-	collapse_callback (a_tree_item: POINTER) is
-			-- Collapse callback passing collapsed `a_tree_item' node pointer.
-		local
-			a_tree_node_imp: EV_TREE_NODE_IMP
-		do
-		end
-
-	select_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is selected
-		local
-			a_tree_node_imp: EV_TREE_NODE_IMP
-		do
-		end
-		
-	deselect_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is deselected.
-		local
-			a_tree_node_imp: EV_TREE_NODE_IMP
-		do
 		end
 
 feature -- Status report

@@ -47,6 +47,13 @@ inherit
 		undefine
 			is_equal, copy, default_create
 		end
+		
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			is_equal, copy, default_create
+		end
 	
 create
 	make,
@@ -369,6 +376,7 @@ feature {NONE} -- Implementation
 		local
 			constant: GB_INTEGER_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
+			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if list_item.data /= Void then
 				constant ?= list_item.data
@@ -385,7 +393,11 @@ feature {NONE} -- Implementation
 					remove_selected_constant
 					last_selected_constant := constant
 				else
-					constants_combo_box.first.enable_select
+					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Do_not_show_again)
+					constants_combo_box.first.enable_select					
+					warning_dialog.set_ok_action (agent do_nothing)
+					warning_dialog.set_title ("Invalid Constant Selected")
+					warning_dialog.show_modal_to_window (parent_window (Current))
 				end
 			end
 		end

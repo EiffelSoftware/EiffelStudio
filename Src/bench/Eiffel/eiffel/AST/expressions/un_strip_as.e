@@ -12,6 +12,11 @@ inherit
 			type_check, byte_node
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 feature {AST_FACTORY} -- Initialization
 
 	initialize (i: like id_list) is
@@ -26,7 +31,7 @@ feature {AST_FACTORY} -- Initialization
 
 feature -- Attributes
 
-	id_list: EIFFEL_LIST [ID_AS]
+	id_list: ARRAYED_LIST [INTEGER]
 			-- Attribute list
 
 feature -- Comparison
@@ -34,7 +39,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (id_list, other.id_list)
+			Result := equal (id_list, other.id_list)
 		end
 
 feature -- Type check, byte code and dead code removal
@@ -42,7 +47,7 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check a strip expression
 		local
-			an_id: ID_AS
+			an_id: INTEGER
 			pos: INTEGER
 			feature_table: FEATURE_TABLE
 			attribute_i: ATTRIBUTE_I
@@ -64,14 +69,14 @@ feature -- Type check, byte code and dead code removal
 						-- Id appears more than once in attribute list
 					!! vwst2
 					context.init_error (vwst2)
-					vwst2.set_attribute_name (an_id)
+					vwst2.set_attribute_name (Names_heap.item (an_id))
 					Error_handler.insert_error (vwst2)
 				else
-					attribute_i ?= feature_table.item (an_id)
+					attribute_i ?= feature_table.item_id (an_id)
 					if attribute_i = Void then
 						!! vwst1
 						context.init_error (vwst1)
-						vwst1.set_attribute_name (an_id)
+						vwst1.set_attribute_name (Names_heap.item (an_id))
 						Error_handler.insert_error (vwst1)
 					else
 						!! depend_unit.make (context.a_class.class_id,
@@ -116,7 +121,7 @@ feature -- Type check, byte code and dead code removal
 			until
 				id_list.after
 			loop
-				attribute_i ?= feature_table.item (id_list.item)
+				attribute_i ?= feature_table.item_id (id_list.item)
 				if not attribute_i.feature_name.is_equal ("void") then
 					Result.feature_ids.put (attribute_i.feature_id)
 				end
@@ -139,18 +144,20 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		local
 			first_printed: BOOLEAN
+			l_names_heap: like Names_heap
 		do
 			ctxt.put_text_item (ti_Strip_keyword)
 			ctxt.put_space
 			ctxt.put_text_item_without_tabs (ti_L_parenthesis)
 
 			from
+				l_names_heap := Names_heap
 				id_list.start
 			until
 				id_list.after
 			loop
 				ctxt.new_expression
-				ctxt.prepare_for_feature (id_list.item, Void)
+				ctxt.prepare_for_feature (l_names_heap.item (id_list.item), Void)
 				if ctxt.is_feature_visible then
 					if first_printed then
 						ctxt.put_text_item_without_tabs (ti_Comma)

@@ -167,7 +167,7 @@ feature -- Access
 			end
 		end
 
-feature {GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
+feature {GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Deletion
 			
 		delete is
 				-- Perform any necessary pre processing for
@@ -217,7 +217,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			end
 		end
 
-feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER} -- Status setting
+feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR} -- Status setting
 
 	set_layout_item (a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
 			-- Assign `a_layout_item' to `layout_item'.
@@ -238,25 +238,38 @@ feature {GB_OBJECT_HANDLER, GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_ADD_
 			-- Removed `Current' from its parents. All representations
 			-- of `an_object' must be removed from their parents to
 			-- concide with this change.
-		local
-			parent_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+		
 		do
 			unparent_ev_object (object)
 			unparent_ev_object (display_object)
 
-				-- Remove `layout_item' from its parent.
-			parent_item ?= layout_item.parent
-			check
-				parent_item_not_void: parent_item /= Void
-				item_contained_in_parent: parent_item.has (layout_item)
-			end
-			parent_item.prune (layout_item)
+			unparent_layout_item
 			
 				-- Notify the system that we have modified something.
 			system_status.enable_project_modified
 			command_handler.update
 		ensure
 			layout_item_parent_void: layout_item.parent = Void
+		end
+		
+feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
+		
+	unparent_layout_item is
+			-- Remove layout item representation from its parent.
+		local
+			parent_item: EV_TREE_NODE_LIST
+		do
+				-- Remove `layout_item' from its parent.
+			parent_item ?= layout_item.parent
+			if parent_item /= Void then
+				check
+						-- No longer perform this check, as window object layout items
+						-- will have no parent unless they are currently being edited.
+					--parent_item_not_void: parent_item /= Void
+					--item_contained_in_parent: parent_item.has (layout_item)
+				end
+				parent_item.prune (layout_item)			
+			end
 		end
 
 feature {GB_OBJECT_HANDLER} -- Status setting
@@ -287,7 +300,7 @@ feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 			id_set: id /= 0
 		end
 
-feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
 
 	create_object_from_type is
 			-- Create an object of type `type' and assign
@@ -421,8 +434,7 @@ feature -- Basic operations
 			add_new_object_in_parent (a_component.object)
 			
 		end
-		
-		
+
 	add_new_object_in_parent (an_object: GB_OBJECT) is
 			-- Add `an_object' to parent of `Current', before `Current'.
 		require
@@ -601,7 +613,7 @@ feature {GB_OBJECT} -- Implementation
 			end
 		end
 		
-feature {GB_OBJECT_EDITOR} -- Implementation
+feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 
 	edited_name: STRING
 		-- The name being entered for `Current' in an object editor.
@@ -663,22 +675,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			Result := "extend (" + child_name + ")"
 		end
 		
-feature {NONE} -- Implementation
-
-	vision2_object_from_type (a_type: STRING): EV_ANY is
-			-- `Result' is a vision2 object of type `a_type'
-		local
-			passed: BOOLEAN
-			an_object: EV_ANY
-		do
-			passed := feature {ISE_RUNTIME}.check_assert (False)
-			an_object ?= new_instance_of (dynamic_type_from_string (type))
-			an_object.default_create
-			passed := feature {ISE_RUNTIME}.check_assert (True)
-			Result := an_object
-		ensure
-			result_not_void: Result /= Void
-		end
+feature {GB_LAYOUT_CONSTRUCTOR} -- Implementation
 
 	build_drop_actions_for_layout_item is
 			-- Build the drop actions for the layout item.
@@ -689,6 +686,8 @@ feature {NONE} -- Implementation
 			layout_item.drop_actions.extend (agent add_new_component_wrapper (?))
 			layout_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
+		
+feature {GB_BUILDER_WINDOW} -- Implementation
 
 	add_new_object_wrapper (an_object: GB_OBJECT) is
 			-- If shift pressed then add `an_object' to
@@ -724,7 +723,24 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	display_invalid_drop_message (obj2: GB_OBJECT; new_type: STRING; does_accept_child: boolean) is
+feature {NONE} -- Implementation
+
+	vision2_object_from_type (a_type: STRING): EV_ANY is
+			-- `Result' is a vision2 object of type `a_type'
+		local
+			passed: BOOLEAN
+			an_object: EV_ANY
+		do
+			passed := feature {ISE_RUNTIME}.check_assert (False)
+			an_object ?= new_instance_of (dynamic_type_from_string (type))
+			an_object.default_create
+			passed := feature {ISE_RUNTIME}.check_assert (True)
+			Result := an_object
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	display_invalid_drop_message (obj2: GB_OBJECT; new_type: STRING; does_accept_child: BOOLEAN) is
 			-- Display message in status bar indicating the invalid drop status of `obj2'.
 			-- `new_type' is the type of the transported object, and `does_accept_child' is
 			-- result of last call to `override_drop_on_child' which is False if the child is

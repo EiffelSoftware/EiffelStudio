@@ -16,6 +16,14 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_DOCKABLE_TARGET
+		undefine
+			is_equal
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 feature -- Status report
 

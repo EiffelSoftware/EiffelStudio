@@ -3493,11 +3493,11 @@ feature -- Precompilation
 
 feature -- Log files
 
-	used_features_log_file: PLAIN_TEXT_FILE;
+	used_features_log_file: USED_FEAT_LOG_FILE;
 		-- File where the names (Eiffel and encoded) of the used features
 		-- are generated
 
-	removed_log_file: PLAIN_TEXT_FILE;
+	removed_log_file: REMOVED_FEAT_LOG_FILE;
 		-- File where the names of the removed features are generated
 
 	open_log_files is

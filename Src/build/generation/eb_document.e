@@ -27,16 +27,22 @@ feature
 			directory_name := clone(s);
 		end;
 
+	error: BOOLEAN;
+			-- Was there an error when updating the document?
+
 feature 
 
-	update (s: STRING) is
+	update (new_templ: STRING) is
 		local
 			template_file_name: FILE_NAME;
 			class_file_name: FILE_NAME;	
 			new_template_file_name: FILE_NAME;
-			file: PLAIN_TEXT_FILE;
-			unix_command: STRING;
+			file, user_file, new_tmp_file, old_tmp_file: PLAIN_TEXT_FILE;
+			merge_result: STRING
+			different: BOOLEAN;
+			merger: MERGER
 		do
+			error := False;
 			!! template_file_name.make_from_string (Environment.templates_directory);
 			template_file_name.set_file_name (document_name);
 
@@ -47,48 +53,90 @@ feature
 			!! new_template_file_name.make_from_string (template_file_name);
 			new_template_file_name.add_extension ("n");
 			!!file.make_open_write (new_template_file_name);
-			file.putstring (s);
+			file.putstring (new_templ);
 			file.close;
 
-			!! unix_command.make (10);
-			unix_command.append (Environment.merge1_file);
+			!! file.make (template_file_name)
+			if not file.exists then
+				file.open_write;
+				file.putstring (new_templ)
+				file.close
+			end
 
-			unix_command.extend (' ');
-			unix_command.append (class_file_name);
-			unix_command.extend (' ');
-			unix_command.append (template_file_name);
-			unix_command.extend (' ');
-			unix_command.append (new_template_file_name);
-
-			Environment.system (unix_command);
-		end;
-
-	foo: STRING is
-		local
-			class_file_name: FILE_NAME;
-			file: PLAIN_TEXT_FILE;	
-		do
-			!! class_file_name.make_from_string (directory_name);
-			class_file_name.set_file_name (document_name);
-			class_file_name.add_extension ("e");
-			!! file.make (class_file_name);
-			if file.exists and then file.is_readable then
-				file.open_read;
-				!! Result.make (0);
-				from
-					file.readline;
-				until
-					file.end_of_file
-				loop
-					Result.append (file.laststring);
-					Result.append ("%N");
-					file.readline;
+			!! user_file.make (class_file_name)
+			if user_file.exists then
+				user_file.open_read;
+				user_file.read_stream (user_file.count);
+				user_file.close;
+				!! merger;
+				debug ("MERGER")
+					io.error.putstring ("start parsing file: ");
+					io.error.putstring (document_name);
+					io.error.putstring ("... ");
 				end;
+				merger.parse_files (template_file_name,
+					class_file_name,
+					new_template_file_name);
+				debug ("MERGER")
+					io.error.putstring ("finished%N")
+				end;
+				error := merger.error;
+				if not error then
+					if merger.require_merge then
+						debug ("MERGER")
+							io.error.putstring ("start merging file: ");
+							io.error.putstring (document_name);
+							io.error.putstring ("... ");
+						end;
+						merger.merge_files (template_file_name,
+								class_file_name,
+								new_template_file_name);
+						debug ("MERGER")
+							io.error.putstring ("finished%N")
+						end;
+						merge_result := merger.merge_result;
+							-- Merge went ok
+						user_file.open_read;
+						if user_file.count > 0 then
+							user_file.readstream (user_file.count);
+						end;
+						user_file.close;
+						if not user_file.last_string.is_equal 
+									(merger.merge_result) 
+						then 
+							debug ("MERGER")
+								io.error.putstring ("updating file: ");
+								io.error.putstring (document_name);
+								io.error.putstring ("%N");
+							end;
+								-- Only update if necessary
+							user_file.open_write;
+							user_file.put_string (merge_result);
+							user_file.close;
+						end;
+								-- Copy new template file as old_template;
+						!! new_tmp_file.make (new_template_file_name);
+						!! old_tmp_file.make (template_file_name);
+						old_tmp_file.wipe_out
+						old_tmp_file.append (new_tmp_file)
+						new_tmp_file.delete
+					end
+				end
 			else
-				Result := "Cannot read file ";
-				Result.append (file.name)
-			end;
-			file.close;
+				user_file.wipe_out;
+				!! new_tmp_file.make (new_template_file_name);
+				!! old_tmp_file.make (template_file_name);
+				old_tmp_file.wipe_out
+
+				-- new_template_file > class_file
+				user_file.append (new_tmp_file)
+
+				-- new_template_file > template_file
+				old_tmp_file.append (new_tmp_file)
+				
+				-- rm new_template_file
+				new_tmp_file.delete
+			end
 		end;
 
 	save_text (txt: STRING) is

@@ -208,7 +208,9 @@ feature -- Status setting
 					end
 					if selected_rad_but = Void and not l.is_empty then
 						rad_but_imp ?= eif_object_from_c (l.first)
-						rad_but_imp.enable_select
+						if rad_but_imp /= Void then
+							rad_but_imp.enable_select
+						end
 					end
 					if a_child_list /= NULL then
 						feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)

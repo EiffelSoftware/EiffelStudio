@@ -285,7 +285,9 @@ feature -- Basic Operations
 		do
 			-- clear last exception
 			last_exception := Void
-			
+			if a_project_directory_path.item (a_project_directory_path.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator then
+				a_project_directory_path.keep_head (a_project_directory_path.count - 1)
+			end
 			if not valid_project then
 				if not Eiffel_project.initialized then
 					check_ace_file (a_ace_file_name)
@@ -303,12 +305,6 @@ feature -- Basic Operations
 						Eiffel_ace.set_file_name (a_ace_file_name)
 						create {PROJECT_PROPERTIES} project_properties_internal.make
 						Valid_project_ref.set_item (True)
-						l_properties ?= project_properties
-						if not l_properties.msil_generation then
-							Valid_project_ref.set_item (False)
-							create last_exception.make (errors_table.item (Eif_exceptions_non_dotnet_project), Eif_exceptions_non_dotnet_project)
-							last_exception.raise
-						end
 					else
 						create last_exception.make (errors_table.item (eif_exceptions_invalid_ace_file), eif_exceptions_invalid_ace_file)
 						last_exception.raise
@@ -327,6 +323,9 @@ feature -- Basic Operations
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
+				if a_project_directory_path.item (a_project_directory_path.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator then
+					a_project_directory_path.keep_head (a_project_directory_path.count - 1)
+				end
 				Project_directory_name.wipe_out
 				Project_directory_name.set_directory (a_project_directory_path)
 				

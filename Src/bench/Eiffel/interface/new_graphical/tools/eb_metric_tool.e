@@ -489,7 +489,7 @@ feature -- Metric
 	derived_metric_list: LINKED_LIST [EB_METRIC]
 		-- List of basic metrics displayed in sub-menus of `metric_menu'.
 
-	user_metrics_xml_list: LINKED_LIST [XML_ELEMENT]
+	user_metrics_xml_list: LINKED_LIST [XM_ELEMENT]
 		-- List of composite metric definitions, as stored in `file_manager.metric_file'.
 
 	nb_basic_metrics: INTEGER
@@ -902,15 +902,16 @@ feature -- Setting
 			file_manager_exists: file_manager /= Void
 			system_recompiled: is_recompiled
 		local
-			a_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			node: XML_ELEMENT
-			old_attribute: XML_ATTRIBUTE
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node: XM_ELEMENT
+			l_attribute_list: DS_LIST [XM_ATTRIBUTE]
 			retried: BOOLEAN
 		do
 			if not retried then
 				if  file_manager.metric_file /= Void and then 
 					file_manager.metric_file.exists
-					and not file_handler.parser_problems then
+					and not file_handler.parser_problems
+				then
 					a_cursor := file_manager.measure_header.new_cursor
 					from
 						a_cursor.start
@@ -918,9 +919,16 @@ feature -- Setting
 						a_cursor.after
 					loop
 						node ?= a_cursor.item
-						create old_attribute.make ("STATUS", "old")
-						if node /= Void then
-							node.attributes.replace (old_attribute, "STATUS")
+						l_attribute_list := node.attributes
+						from
+							l_attribute_list.start
+						until
+							l_attribute_list.after
+						loop
+							if l_attribute_list.item_for_iteration.name.is_equal ("STATUS") then
+								l_attribute_list.item_for_iteration.set_value ("old")
+							end
+							l_attribute_list.forth
 						end
 						a_cursor.forth
 					end
@@ -1081,7 +1089,7 @@ feature -- Displayed messages in column list form
 			a_feature: E_FEATURE
 			a_class: CLASS_C
 			a_cluster: CLUSTER_I
-			xml_element: XML_ELEMENT
+			xml_element: XM_ELEMENT
 			a_composite_metric: EB_METRIC_COMPOSITE
 			a_metric: EB_METRIC
 			a_percentage, retried: BOOLEAN
@@ -1093,7 +1101,7 @@ feature -- Displayed messages in column list form
 
 				index_updated_row := multi_column_list.index_of (row, 1)
 				xml_element ?= file_manager.measure_header.item (index_updated_row)
-				row_status := xml_element.attributes.item ("STATUS").value
+				row_status := xml_element.attribute_by_name ("STATUS").value
 				row_scope := row.i_th (2)
 				row_stone_name := clone (row.i_th (3))
 				row_metric := row.i_th (4)
@@ -1292,7 +1300,7 @@ feature -- Storing results.
 		end
 	
 
-	notify_new_metric (new_defined_metric: EB_METRIC; new_metric_element: XML_ELEMENT; overwrite: BOOLEAN; index: INTEGER) is
+	notify_new_metric (new_defined_metric: EB_METRIC; new_metric_element: XM_ELEMENT; overwrite: BOOLEAN; index: INTEGER) is
 			-- Notify current observer when added new metric definition.
 			-- Update changes in current observer when new metric had been defined.
 		require else
@@ -1337,7 +1345,7 @@ feature -- Storing results.
 			update_displayed_dialogs
 		end
 		
-	notify_management_metric (metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XML_ELEMENT]) is
+	notify_management_metric (metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XM_ELEMENT]) is
 			-- The state of the manager has changed. Metrics have been changed. Update `Current'.
 		local
 			old_metric_displayed: EB_METRIC

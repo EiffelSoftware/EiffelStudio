@@ -278,7 +278,7 @@ feature -- Access
 	save_dialog: EV_FILE_SAVE_DIALOG
 		-- Dialog to save new archive.
 
-	archived_root_element: XML_ELEMENT
+	archived_root_element: XM_ELEMENT
 		-- XML element written in archive file.
 
 	archived_file: PLAIN_TEXT_FILE
@@ -393,9 +393,12 @@ feature -- Action
 		local
 			file: PLAIN_TEXT_FILE
 			file_name: STRING
-			s, root_name, system_name: STRING
+			root_name, system_name: STRING
 			right_file, retried: BOOLEAN
-			parser: XML_TREE_PARSER
+			l_parser: XM_EIFFEL_PARSER
+			l_file: KL_BINARY_INPUT_FILE
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
 			error_dialog: EB_INFORMATION_DIALOG
 			x_pos, y_pos: INTEGER
 			ee: EXECUTION_ENVIRONMENT
@@ -408,23 +411,23 @@ feature -- Action
 			file_name := open_dialog.file_name
 			if not retried then
 				if file_name /= Void and then not file_name.is_empty then
-					create file.make (file_name)
-					if file.exists then
+					create l_file.make (file_name)
+					if l_file.exists then
 						update_archive_field.set_text (file_name)
-						file.open_read_write
-						file.start
-						file.read_stream (file.count)
-						s := file.last_string
-						create parser.make
-						parser.parse_string (s)
-						parser.set_end_of_file
-						if parser.is_correct then
-							root_name := parser.root_element.name
-							if parser.root_element.attributes.has ("System") then
-								system_name := parser.root_element.attributes.item ("System").value
+						l_file.open_read
+						if l_file.is_open_read then
+							create l_parser.make
+							create l_tree_pipe.make
+							create l_xm_concatenator.make_null
+							l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+							check
+								ok_parsing: l_parser.is_correct
+							end
+							if l_tree_pipe.document.root_element.has_attribute_by_name ("System") then
+								system_name := l_tree_pipe.document.root_element.attribute_by_name ("System").value						
 							end
 						end
-						file.close
+						l_file.close
 						right_file := (root_name /= Void and then equal (root_name, "ARCHIVE")) and
 									(system_name /= Void and then equal (system_name, tool.System.name))
 						if right_file then
@@ -442,6 +445,7 @@ feature -- Action
 						confirm_dialog.show_modal_to_window (archive_dialog)
 						if overwrite then
 							update_archive_field.set_text (file_name)
+							create file.make (file_name)
 							file.open_write
 							fill_archive (file)
 							file.close
@@ -491,7 +495,7 @@ feature -- Action
 			browse_archive_field.set_text (file_name)
 		end
 	
-	archive_syntax (root_element: XML_ELEMENT): BOOLEAN is
+	archive_syntax (root_element: XM_ELEMENT): BOOLEAN is
 			-- Is `root_element' the XML representation of an archive file?
 		require
 			element_not_void: root_element /= Void
@@ -499,7 +503,7 @@ feature -- Action
 			Result := (root_element.name /= Void and then equal (root_element.name, "ARCHIVE")) and
 					root_element.has (element_by_name (root_element, "METRIC_DEFINITIONS")) and
 					root_element.has (element_by_name (root_element, "RECORDED_MEASURES")) and
-					(root_element.attributes.has ("System") and then root_element.attributes.item ("System").value /= Void)
+					(root_element.has_attribute_by_name ("System") and then root_element.attribute_by_name ("System").value /= Void)
 		end
 
 	handle_archive (file_name: STRING) is
@@ -509,12 +513,14 @@ feature -- Action
 		require
 			existing_file_name: file_name /= Void and then not file_name.is_empty
 		local
-			file: PLAIN_TEXT_FILE			
-			s, root_name, system_name, archived_result: STRING
+			root_name, system_name, archived_result: STRING
 			right_syntax, retried: BOOLEAN
-			parser: XML_TREE_PARSER
+			l_parser: XM_EIFFEL_PARSER
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_file: KL_BINARY_INPUT_FILE
+			l_xm_concatenator: XM_CONTENT_CONCATENATOR
 			error_dialog: EB_INFORMATION_DIALOG
-			root_element, current_measure_xml, metric_definitions: XML_ELEMENT
+			root_element, current_measure_xml, metric_definitions: XM_ELEMENT
 			row: EV_MULTI_COLUMN_LIST_ROW
 			a_metric: EB_METRIC
 			current_measure: DOUBLE
@@ -524,20 +530,23 @@ feature -- Action
 			y_pos := archive_dialog.y_position + 50
 			if not retried then
 				if file_name /= Void and then not file_name.is_empty then
-					create file.make (file_name)
-					if file.exists then
-						file.open_read
-						file.start
-						file.read_stream (file.count)
-						s := file.last_string
-						create parser.make
-						parser.parse_string (s)
-						parser.set_end_of_file
-						if parser.is_correct then
-							root_element := parser.root_element
-							root_name := parser.root_element.name
-							if parser.root_element.attributes.has ("System") then
-								system_name := parser.root_element.attributes.item ("System").value
+					create l_file.make (file_name)
+					if l_file.exists then
+						l_file.open_read
+						if l_file.is_open_read then
+							create l_parser.make
+							create l_tree_pipe.make
+							create l_xm_concatenator.make_null
+							l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+							l_parser.parse_from_stream (l_file)
+							l_file.close
+							check
+								ok_parsing: l_parser.is_correct
+							end
+							root_element := l_tree_pipe.document.root_element
+							root_name := l_tree_pipe.document.root_element.name
+							if l_tree_pipe.document.root_element.has_attribute_by_name ("System") then
+								system_name := l_tree_pipe.document.root_element.attribute_by_name ("System").value
 							end
 			--				right_syntax := (root_name /= Void and then equal (root_name, "ARCHIVE")) and
 			--						root_element.has (element_by_name (root_element, "METRIC_DEFINITIONS")) and
@@ -548,7 +557,7 @@ feature -- Action
 							if right_syntax then
 								import := False
 								tool.set_default_archive (False)
-								archived_file := file
+								create archived_file.make (file_name)
 								archived_root_element := root_element
 								metric_definitions := element_by_name (archived_root_element, "METRIC_DEFINITIONS")
 								if not metric_definitions.is_empty then
@@ -570,12 +579,13 @@ feature -- Action
 									current_measure_xml ?= tool.file_manager.measure_header.item (i)
 									check current_measure_xml /= Void end
 									current_measure := xml_double (current_measure_xml, "RESULT")
-									archived_result := retrieve_archived_result (a_metric, file, root_element, archive_mode, current_measure)
+									archived_result := retrieve_archived_result (a_metric, archived_file, root_element, archive_mode, current_measure)
 									row.put_i_th (archived_result, 6)
 									tool.multi_column_list.forth
 									i := i + 1
 								end
 								tool.multi_column_list.set_column_title ("Comparison to: " + system_name, 6)
+								archived_file.close
 							else
 								create error_dialog.make_with_text ("Selected file is not%Nan archive.")
 								error_dialog.set_position (x_pos, y_pos)
@@ -587,7 +597,7 @@ feature -- Action
 							error_dialog.show_modal_to_window (archive_dialog)
 
 						end
-						file.close
+						--l_file.close
 					else
 						create error_dialog.make_with_text ("File does not exist.%N%
 													%Please check location.")
@@ -710,21 +720,24 @@ feature -- Action
 		require
 			concrete_file: f /= Void
 		local
-			archive_header, metric_header, measure_header, xml_element: XML_ELEMENT
-			xml_attribute: XML_ATTRIBUTE
+			archive_header: XM_DOCUMENT
+			node, metric_header, measure_header, xml_element: XM_ELEMENT
 			metric_list: LINKED_LIST [EB_METRIC]
 			metric_result: DOUBLE
 			scope: EB_METRIC_SCOPE
 			a_metric: EB_METRIC_COMPOSITE
 			retried: BOOLEAN
+			l_namespace: XM_NAMESPACE
 		do
 			if not retried then
-				create archive_header.make_root ("ARCHIVE")
-				create xml_attribute.make ("System", tool.System.name)
-				archive_header.attributes.add_attribute (xml_attribute)
+				create l_namespace.make ("", "")
+				create node.make_root ("ARCHIVE", l_namespace)
+				node.add_attribute ("System", l_namespace, tool.System.name)
+				create archive_header.make
+				archive_header.force_last (node)
 				metric_header := tool.file_manager.metric_header
-				archive_header.put_last (metric_header)
-				create measure_header.make_root ("RECORDED_MEASURES")
+				node.put_last (metric_header)
+				create measure_header.make_child (node, "RECORDED_MEASURES", l_namespace)
 				scope := tool.scope (interface_names.metric_this_system)
 				scope.set_system_i (tool.System)
 				metric_list := tool.metrics
@@ -735,18 +748,16 @@ feature -- Action
 				loop
 					a_metric ?= metric_list.item
 					if a_metric = Void or else not a_metric.is_scope_ratio then
-						create xml_element.make_root ("MEASURE")
-						create xml_attribute.make ("Metric", metric_list.item.name)
-						xml_element.attributes.add_attribute (xml_attribute)
+						create xml_element.make_child (node, "MEASURE", l_namespace)
+						xml_element.add_attribute ("Metric", l_namespace, metric_list.item.name)
 						metric_result := tool.calculate.calculate_metric (metric_list.item, scope)
-						create xml_attribute.make ("Result", metric_result.out)
-						xml_element.attributes.add_attribute (xml_attribute)
+						xml_element.add_attribute ("Result", l_namespace, metric_result.out)
 						measure_header.put_last (xml_element)
 					end
 					metric_list.forth
 				end
-				archive_header.put_last (measure_header)
-				f.put_string ("<?xml version = %"1.0%" encoding = %"UTF-8%"?>" + archive_header.out)
+				node.put_last (measure_header)
+				save_xml_document (f, archive_header)
 				tool.progress_dialog.hide
 			end
 		rescue
@@ -759,7 +770,7 @@ feature -- Action
 
 feature -- Comparison
 
-	retrieve_archived_result (a_metric: EB_METRIC; f: PLAIN_TEXT_FILE; root_element: XML_ELEMENT; mode: STRING; current_measure: DOUBLE): STRING is
+	retrieve_archived_result (a_metric: EB_METRIC; f: PLAIN_TEXT_FILE; root_element: XM_ELEMENT; mode: STRING; current_measure: DOUBLE): STRING is
 			-- Return saved measure for `a_metric' in file `f'
 		require
 			metric_not_void: a_metric /= Void
@@ -770,9 +781,10 @@ feature -- Comparison
 						equal (mode, "value")
 		local
 			basic_metric: EB_METRIC_BASIC
-			measure_header, measure_element: XML_ELEMENT
+			measure_header, measure_element: XM_ELEMENT
 			archived_result, displayed_result: DOUBLE
 			retried: BOOLEAN
+			metric_value: STRING
 		do
 			if not retried then
 				basic_metric ?= a_metric
@@ -785,9 +797,12 @@ feature -- Comparison
 						measure_header.after or Result /= Void
 					loop
 						measure_element ?= measure_header.item_for_iteration
-						if measure_element /= Void and then 
-							equal (measure_element.attributes.item ("Metric").value, a_metric.name) then
-							archived_result := measure_element.attributes.item ("Result").value.to_double
+						metric_value := measure_element.attribute_by_name ("Metric").value
+						archived_result := measure_element.attribute_by_name ("Result").value.to_double
+						if
+							measure_element /= Void and then
+							equal (metric_value, a_metric.name)
+						then
 							if equal (mode, "default") then
 								displayed_result := current_measure / archived_result
 								Result := tool.fix_decimals_and_percentage (displayed_result, True)

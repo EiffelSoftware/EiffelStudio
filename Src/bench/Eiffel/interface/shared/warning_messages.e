@@ -375,6 +375,8 @@ feature -- Project settings warnings
 	w_cluster_with_name_exists: STRING is "A cluster with this name already exists. Please use another name."
 
 	w_cluster_name_not_valid: STRING is "Cluster name is not valid."
+
+	w_cluster_path_not_valid: STRING is "Cluster path is not valid."
 			
 feature -- Debug warnings
 

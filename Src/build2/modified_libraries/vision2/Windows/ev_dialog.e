@@ -77,6 +77,17 @@ feature -- Access
 		do
 			Result := implementation.is_relative
 		end
+		
+	blocking_window: EV_WINDOW is
+			-- `Result' is window `Current' is shown to if
+			-- `is_modal' or `is_relative'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.blocking_window
+		ensure
+			bridge_ok: Result = implementation.blocking_window
+		end
 
 feature -- Status Setting
 		

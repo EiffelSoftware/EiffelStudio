@@ -130,6 +130,15 @@ feature -- Status Report
 		do
 			Result := False
 		end
+		
+	blocking_window: EV_WINDOW is
+			-- `Result' is window `Current' is shown to if
+			-- `is_modal' or `is_relative'.
+		do
+			if is_show_requested then
+				Result := parent_window
+			end
+		end
 
 feature -- Status Setting
 

@@ -231,8 +231,20 @@ feature {NONE} -- Implementation
 					-- First replace the name of the class
 				set_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
 
+				-- Add code which implements `show' if necessary, when using EV_WINDOW
+					-- as client.
+				if project_settings.client_of_window then
+					add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_feature, custom_feature_tag)
+				else
+					add_generated_string (class_text, Void, custom_feature_tag)
+				end
+	
 				
 				set_progress (0.7)
+				
+				if project_settings.client_of_window then
+					create_local ("window")
+				end
 					-- Generate the widget declarations and creation lines.
 				generate_declarations (current_document.root_element, 1)
 				
@@ -270,7 +282,8 @@ feature {NONE} -- Implementation
 				else
 					add_generated_string (class_text, local_string, attribute_tag)
 					if class_text.substring_index (pixmap_name, 1) /= 0 then
-						class_text.replace_substring_all (local_tag + "%R%N%T%T", "local" + indent + pixmap_name + ": EV_PIXMAP" + indent_less_one)	
+						class_text.replace_substring_all (local_tag + "%R%N%T%T", "local" + indent + pixmap_name +
+							": EV_PIXMAP" + indent_less_one)	
 					else
 						class_text.replace_substring_all (local_tag + "%R%N%T%T", "")
 					end
@@ -286,6 +299,21 @@ feature {NONE} -- Implementation
 					end
 					create_string.append_string (indent + "create " + pixmap_name)
 				end
+				
+					-- Add code for inheritance structure to `class_text'.
+				if project_settings.client_of_window then
+					add_generated_string (class_text, window_access, inheritance_tag)
+				else
+					add_generated_string (class_text, window_inheritance, inheritance_tag)
+				end
+				
+					-- Add code for Precursor call in `intialize'.
+				if project_settings.client_of_window then
+					add_generated_string (class_text, Void, precursor_tag)
+				else
+					add_generated_string (class_text, "Precursor {EV_TITLED_WINDOW}", precursor_tag)
+				end
+				
 					-- Add code for creation of widgets to `class_text'.
 				add_generated_string (class_text, create_string, create_tag)
 				
@@ -296,7 +324,7 @@ feature {NONE} -- Implementation
 				add_generated_string (class_text, event_connection_string, event_connection_tag)
 
 					-- Add declaration of features as deferred to `class_text'.
-				add_generated_string (class_text, event_declaration_string, event_declaration_tag)				
+				add_generated_string (class_text, event_declaration_string, event_declaration_tag)
 
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)
@@ -308,10 +336,11 @@ feature {NONE} -- Implementation
 			end
 			
 	build_main_window is
-			--
+			-- Generate interface of our window.
 		local
 			window_template_file, window_output_file: RAW_FILE
 			window_file_name, window_template: FILE_NAME
+			temp_string: STRING
 		do
 				-- Retrieve the template for a class file to generate.
 			if system_status.is_wizard_system then
@@ -332,7 +361,19 @@ feature {NONE} -- Implementation
 				-- First replace the name of the class
 			set_class_name (system_status.current_project_settings.main_window_class_name)
 			
-			set_inherited_class_name (system_status.current_project_settings.main_window_class_name.as_lower + class_implementation_extension)
+			temp_string := system_status.current_project_settings.main_window_class_name.as_upper + class_implementation_extension
+			if project_settings.client_of_window then
+					-- Add redefinition of `default_create' if we are client.
+				temp_string := temp_string + default_create_redefinition
+			end
+				-- Generate the inheritance from the window implementation.
+			set_inherited_class_name (temp_string)
+			
+			if project_settings.client_of_window then
+				add_generated_string (class_text, redefined_creation, creation_tag)
+			else
+				add_generated_string (class_text, Void, creation_tag)
+			end
 			
 			add_generated_string (class_text, event_implementation_string, event_declaration_tag)
 			
@@ -356,12 +397,16 @@ feature {NONE} -- Implementation
 		local
 			temp_index: INTEGER
 		do
-			if new /= Void then
+			if new /= Void and not new.is_equal ("") then
 				temp_index := a_class_text.substring_index (tag, 1)
 				a_class_text.replace_substring_all (tag, "")
 				a_class_text.insert_string (new, temp_index)
 			else
+				temp_index := a_class_text.substring_index (tag, 1)
 				a_class_text.replace_substring_all (tag, "")
+					-- Prune the "%N" following the tag, as we do not want
+					-- a new line added anymore.
+				a_class_text.remove_substring (temp_index + 1, temp_index + 2)
 			end
 		end
 		
@@ -377,7 +422,6 @@ feature {NONE} -- Implementation
 			-- Replace all occurances of `inherited_class_name_tag' with
 			-- `a_name' within `class_text'.
 		do
-			a_name.to_upper
 			class_text.replace_substring_all (inherited_class_name_tag, a_name)
 		end
 		
@@ -526,10 +570,18 @@ feature {NONE} -- Implementation
 										--| not in this class.
 									menu_bar_object ?= new_object
 									if menu_bar_object /= Void then
-										add_build ("set_menu_bar (" + element_info.data + ")")
+										if project_settings.client_of_window then
+											add_build ("window.set_menu_bar (" + element_info.data + ")")
+										else
+											add_build ("set_menu_bar (" + element_info.data + ")")
+										end
 									else
 										if not parent_type.is_equal (Ev_table_string) then
-											add_build (new_object.extend_xml_representation (element_info.data))						
+											if project_settings.client_of_window then
+												add_build ("window." + new_object.extend_xml_representation (element_info.data))
+											else
+												add_build (new_object.extend_xml_representation (element_info.data))
+											end
 										end
 									end
 								else
@@ -592,7 +644,7 @@ feature {NONE} -- Implementation
 
 	generate_events (element: XML_ELEMENT; depth: INTEGER) is
 			-- With information in `element', generate code which will
-			-- set_all_objects.
+			-- connect all events.
 		local
 			current_element: XML_ELEMENT
 			current_data_element: XML_CHARACTER_DATA
@@ -665,7 +717,7 @@ feature {NONE} -- Implementation
 									if action_sequence.count = 0 then
 										add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + ")")
 									else
-										add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))") --current_iterative_name)
+										add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))")
 									end
 										
 										-- We must not generate the feature names again, if we have multiple events connected
@@ -897,8 +949,12 @@ feature {NONE} -- Implementation
 				-- we may have the . at the start which is uneeded in
 				-- the code. Remove it.
 			if not non_void_set.is_empty and then (non_void_set @ 1) = '.' then
-				non_void_set := non_void_set.substring (2, non_void_set.count)
-				non_void_set.replace_substring_all (indent + ".", indent)
+				if project_settings.client_of_window then
+					non_void_set := "window" + non_void_set
+				else
+					non_void_set := non_void_set.substring (2, non_void_set.count)
+					non_void_set.replace_substring_all (indent + ".", indent)
+				end
 			end
 			
 			

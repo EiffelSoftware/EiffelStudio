@@ -196,9 +196,19 @@ feature -- Access
 
 	parent: EV_CONTAINER is
 			-- Parent of `Current'
+		local
+			agg_cell: EV_AGGREGATE_CELL
 		do
 			if parent_imp /= Void then
 				Result := parent_imp.interface
+			end
+
+			agg_cell ?= Result
+			if agg_cell /= Void then
+				Result := agg_cell.real_parent
+				check
+					real_parent_not_void: Result /= Void
+				end
 			end
 		end
 
@@ -914,6 +924,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/03/29 01:18:30  brendel
+--| Improved `parent'.
+--|
 --| Revision 1.63  2000/03/23 23:23:41  brendel
 --| Renamed on_contained to on_parented.
 --| Added on_orphaned.

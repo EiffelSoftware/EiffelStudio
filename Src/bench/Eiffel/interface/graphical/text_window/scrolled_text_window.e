@@ -211,7 +211,6 @@ feature -- Displaying
 		do
 			set_editable;
 			set_text (image);
-			image.wipe_out;
 			set_read_only
 		ensure then
 			up_to_date: not changed

@@ -11,15 +11,9 @@ inherit
 
 	SCROLLBAR_I;
 
-	SCROLLBAR_R_M
-		export
-			{NONE} all
-		end;
+	SCROLLBAR_R_M;
 
 	PRIMITIVE_M
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -173,17 +167,17 @@ feature
 		end;
 
 	set_horizontal (flag: BOOLEAN) is
-            -- Set orientation of the scale to horizontal if `flag',
-            -- to vertical otherwise.
-        do
-            if flag then
-                set_xt_unsigned_char (screen_object, MHORIZONTAL, Morientation)
-            else
-                set_xt_unsigned_char (screen_object, MVERTICAL, Morientation)
-            end
-        ensure then
-            value_correctly_set: is_horizontal = flag
-        end;
+			-- Set orientation of the scale to horizontal if `flag',
+			-- to vertical otherwise.
+		do
+			if flag then
+				set_xt_unsigned_char (screen_object, MHORIZONTAL, Morientation)
+			else
+				set_xt_unsigned_char (screen_object, MVERTICAL, Morientation)
+			end
+		ensure then
+			value_correctly_set: is_horizontal = flag
+		end;
 
 	set_initial_delay (new_delay: INTEGER) is
 			-- Set the amount of time to wait (milliseconds) before
@@ -207,25 +201,26 @@ feature
 		end;
 
 	set_maximum_right_bottom (flag: BOOLEAN) is
-            -- Set maximum value on the right side when orientation
-            -- is horizontal or on the bottom side when orientation
-            -- is vertical if `flag', and at the opposite side otherwise.
-        do
-            if flag then
-                if is_horizontal then
-                    set_xt_unsigned_char (screen_object, MMAX_ON_RIGHT, MprocessingDirection)
-                else
-                    set_xt_unsigned_char (screen_object, MMAX_ON_BOTTOM, MprocessingDirection)
-                end
-            else
-                if is_horizontal then
-                    set_xt_unsigned_char (screen_object, MMAX_ON_LEFT, MprocessingDirection)
-                else
-                    set_xt_unsigned_char (screen_object, MMAX_ON_TOP, MprocessingDirection)                end
-            end
-        ensure then
-            maximum_value_on_right_bottom: is_maximum_right_bottom = flag
-        end;
+			-- Set maximum value on the right side when orientation
+			-- is horizontal or on the bottom side when orientation
+			-- is vertical if `flag', and at the opposite side otherwise.
+		do
+			if flag then
+				if is_horizontal then
+					set_xt_unsigned_char (screen_object, MMAX_ON_RIGHT, MprocessingDirection)
+				else
+					set_xt_unsigned_char (screen_object, MMAX_ON_BOTTOM, MprocessingDirection)
+				end
+			else
+				if is_horizontal then
+					set_xt_unsigned_char (screen_object, MMAX_ON_LEFT, MprocessingDirection)
+				else
+					set_xt_unsigned_char (screen_object, MMAX_ON_TOP, MprocessingDirection)
+				end
+			end
+		ensure then
+			maximum_value_on_right_bottom: is_maximum_right_bottom = flag
+		end;
 
 	set_minimum (new_minimum: INTEGER) is
 			-- Set minimum value of slider position to `new_minimum'.

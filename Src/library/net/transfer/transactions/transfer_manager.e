@@ -23,6 +23,13 @@ class TRANSFER_MANAGER inherit
 			{NONE} all
 		end
 
+	DATA_RESOURCE_ERROR_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+		
 create
 
 	make
@@ -84,6 +91,31 @@ feature -- Status report
 			Result := check_query (transaction~error)
 		end
 		
+	error_reason: STRING is
+			-- Reason of most recent error
+		require
+			error_exists: error
+		local
+			idx: INTEGER
+			error_found: BOOLEAN
+		do
+			idx := index
+			from start until error_found or after loop
+				if source.error then
+					Result := error_text (source.error_code)
+					error_found := True
+				elseif target.error then
+					Result := error_text (target.error_code)
+					error_found := True
+				end
+				forth
+			end
+			select_transaction (idx)
+		ensure
+			non_empty_string: Result /= Void and then not Result.is_empty
+			index_unchanged: index = old index
+		end
+
 	transactions_succeeded: BOOLEAN is
 			-- Have all transactions succeeded?
 		require

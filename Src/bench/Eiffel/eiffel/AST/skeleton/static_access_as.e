@@ -16,7 +16,7 @@ inherit
 		redefine
 			type_check, is_equivalent, simple_format,
 			valid_feature, report_error_for_feature,
-			associated_class
+			associated_class, byte_node
 		end
 
 create
@@ -92,6 +92,13 @@ feature -- Type check, byte code and dead code removal
 				vsta1.set_class (system.current_class)
 				error_handler.insert_error (vsta1)
 				error_handler.raise_error
+			else
+				if class_type_as.actual_type.has_generics then
+					create vsta1.make (class_type_as.class_name, feature_name)
+					vsta1.set_class (system.current_class)
+					error_handler.insert_error (vsta1)
+					error_handler.raise_error
+				end
 			end
 
 				-- Check validity of call.
@@ -142,6 +149,23 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
+	byte_node: ACCESS_B is
+			-- Associated byte code.
+		local
+			ext: EXTERNAL_B
+			cl_type_i: CL_TYPE_I
+		do
+			Result := Precursor {ACCESS_FEAT_AS}
+			ext ?= Result
+			check
+				ext_not_void: ext /= Void
+			end
+			ext.enable_static_call
+			ext.set_written_in (associated_class (Void).class_id)
+			cl_type_i ?= class_type.actual_type.type_i
+			ext.set_static_class_type (cl_type_i)
+		end
+		
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is

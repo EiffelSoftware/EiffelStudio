@@ -316,7 +316,6 @@ feature {NONE} -- Implementation
 								add_relative_constant (pixmap_constant)
 							end
 						end
-						pixmap_list.forth
 			--| FIXME These warning have been turned off for the time being.
 			--| When turning them on, they must be implemented correctly. Just uncommenting the code may not be enough.
 			--				if absolute_constant_radio_button.is_selected then
@@ -341,6 +340,7 @@ feature {NONE} -- Implementation
 			--					end
 			--				end
 					end
+					pixmap_list.forth
 				end
 			end
 		end

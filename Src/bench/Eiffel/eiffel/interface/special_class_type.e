@@ -33,7 +33,7 @@ feature
 				generate_item (feat, file);
 			else
 					-- Basic generation
-				{CLASS_TYPE} precursor (feat, file);
+				{CLASS_TYPE} Precursor (feat, file);
 			end;
 		end;
 
@@ -57,10 +57,7 @@ feature
 			type_c := gen_param.c_type;
 			assertion_level := associated_class.assertion_level;
 
-			file.putstring ("%
-				%/*%N%
-				% * put%N%
-				% */%N");
+			file.putstring ("/* put */%N");
 			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "put", encoded_name);
@@ -168,10 +165,7 @@ feature
 			type_c := gen_param.c_type;
 			assertion_level := associated_class.assertion_level;
 
-			file.putstring ("%
-				%/*%N%
-				% * item%N%
-				% */%N");
+			file.putstring ("/* item */%N");
 
 			encoded_name := feat.body_id.feature_name (id);
 
@@ -214,7 +208,7 @@ feature
 
 			if is_expanded then
 				if final_mode then
-						-- Optimization: size of expanded is know at compile time
+						-- Optimization: size of expanded is known at compile time
 
 					file.putstring ("%Treturn Current + OVERHEAD + arg1 * (Size(");
 					non_expanded_type ?= gen_param;

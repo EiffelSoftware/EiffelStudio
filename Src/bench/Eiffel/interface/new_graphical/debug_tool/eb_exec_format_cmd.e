@@ -40,13 +40,17 @@ feature -- Formatting
 	execute_from_argument_dialog (a_execution_mode: INTEGER) is
 			-- Execute from argument dialog and therefore ALWAYS stop at breakpoints.
 		do
-			internal_execute (a_execution_mode)
+			if is_sensitive then
+				internal_execute (a_execution_mode)
+			end
 		end
 
 	execute is
 			-- Set the execution format to `stone'.
 		do
-			internal_execute (execution_mode)
+			if is_sensitive then
+				internal_execute (execution_mode)
+			end
 		end
 
 feature -- Properties

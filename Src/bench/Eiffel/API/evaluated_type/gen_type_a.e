@@ -14,9 +14,10 @@ inherit
 			has_like, duplicate, solved_type, type_i, good_generics,
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
-			same_as, same_class_type, format, is_equivalent,
+			same_as, format, is_equivalent,
 			deep_actual_type, instantiation_in,
-			conformance_type, update_dependance, hash_code
+			conformance_type, update_dependance, hash_code,
+			is_full_named_type
 		end
 
 create
@@ -50,7 +51,7 @@ feature -- Comparison
 			i, nb: INTEGER
 			other_generics: like generics
 		do
-			Result := is_true_expanded = other.is_true_expanded and then
+			Result := is_expanded = other.is_expanded and then
 				is_separate = other.is_separate and then
 				class_id = other.class_id
 			if Result then
@@ -74,16 +75,15 @@ feature -- Access
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		local
-			other_gen_type: GEN_TYPE_A
+			other_gen_type: like Current
 			i, nb: INTEGER
 			other_generics: like generics
 		do
 			other_gen_type ?= other
-			if 	other_gen_type /= Void
-				and then
-				other_gen_type.class_id = class_id
-				and then
-				is_true_expanded = other_gen_type.is_true_expanded
+			if
+				other_gen_type /= Void
+				and then other_gen_type.class_id = class_id
+				and then is_expanded = other_gen_type.is_expanded
 			then
 				from
 					i := 1
@@ -93,8 +93,7 @@ feature -- Access
 				until
 					i > nb or else not Result
 				loop
-					Result := generics.item (i).same_as
-												(other_generics.item (i))
+					Result := generics.item (i).same_as (other_generics.item (i))
 					i := i + 1
 				end
 			end
@@ -232,7 +231,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 		do
 			from
-				Result := is_true_expanded
+				Result := is_expanded
 				i := 1
 				count := generics.count
 			until
@@ -255,6 +254,22 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i > count or else not Result
 			loop
 				Result := generics.item (i).is_valid
+				i := i + 1
+			end
+		end
+
+	is_full_named_type: BOOLEAN is
+			-- Is Current a fully named type?
+		local
+			i, count: INTEGER
+		do
+			from
+				i := 1
+				count := generics.count
+			until
+				i > count or else Result
+			loop
+				Result := generics.item (i).is_full_named_type
 				i := i + 1
 			end
 		end
@@ -300,10 +315,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 			create Result.make (class_id)
 			Result.set_meta_generic (meta_generic)
 			Result.set_true_generics (true_generics)
-			Result.set_is_true_expanded (is_true_expanded)
+			Result.set_is_expanded (is_expanded)
 		end
 
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): GEN_TYPE_A is
+	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): like Current is
 			-- Calculate type in function of feature `f' and the feature
 			-- table `feat_table'.
 		local
@@ -325,7 +340,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := i + 1
 				end
 				create Result.make (class_id, new_generics)
-				Result.set_is_true_expanded (is_true_expanded)
+				Result.set_is_expanded (is_expanded)
 			end
 		end
 
@@ -349,7 +364,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := i + 1
 				end
 				create Result.make (class_id, new_generics)
-				Result.set_is_true_expanded (is_true_expanded)
+				Result.set_is_expanded (is_expanded)
 			end
 		end
 
@@ -373,7 +388,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := i + 1
 				end
 				create Result.make (class_id, new_generics)
-				Result.set_is_true_expanded (is_true_expanded)
+				Result.set_is_expanded (is_expanded)
 			end
 		end
 
@@ -432,7 +447,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Check generic parameters
 		local
 			i, count: INTEGER
-			gen_type: GEN_TYPE_A
+			gen_type: like Current
 			gen_type_generics: like generics
 		do
 			if class_id = type.class_id then
@@ -446,8 +461,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 					until
 						i > count or else not Result
 					loop
-						Result := gen_type_generics.item (i).internal_conform_to
-													(generics.item (i), True)
+						Result := gen_type_generics.item (i).
+							conform_to (generics.item (i))
 						i := i + 1
 					end
 				end
@@ -598,6 +613,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			constraint_type: TYPE_A
 			formal_type, other_formal_type: FORMAL_A
 			gen_type: GEN_TYPE_A
+			l_ref: TYPE_A
 			pos: INTEGER
 			conformance_on_formal, is_conform: BOOLEAN
 			formal_dec_as: FORMAL_DEC_AS
@@ -652,13 +668,13 @@ feature {COMPILER_EXPORTER} -- Primitives
 					if formal_type /= Void then
 							-- Case 1
 						if not formal_type.same_as (generics.item (pos)) then
-							generate_constraint_error (formal_type, constraint_type, i)
+							generate_constraint_error (Current, formal_type, constraint_type, i)
 							is_conform := False
 						end
 					else
 							-- Case 2
 						if not to_check.conform_to (generics.item (pos)) then
-							generate_constraint_error (to_check, constraint_type, i)
+							generate_constraint_error (Current, to_check, constraint_type, i)
 							is_conform := False
 						end
 					end
@@ -680,9 +696,27 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 				
 					-- Check the conformance in the case the constraint_type was not a formal one.
-				if not conformance_on_formal and then not to_check.conform_to (constraint_type) then
-					generate_constraint_error (to_check, constraint_type, i)
-					is_conform := False
+				if not conformance_on_formal then
+					if not to_check.conform_to (constraint_type) then
+							-- Check new VTCG3 rule for expanded actual generic parameter against
+							-- reference constraint_type.
+						if to_check.is_expanded and then not constraint_type.is_expanded then
+							l_ref := to_check.reference_actual_type
+							if system.in_pass3 then
+								if not (to_check.convert_to (context_class, l_ref) and l_ref.conform_to (constraint_type)) then
+									generate_constraint_error (Current, to_check, constraint_type, i)
+									is_conform := False
+								end
+							else
+								add_future_checking (context_class,
+									agent delayed_convert_constraint_check (
+										context_class, Current, to_check, constraint_type, i, False))
+							end
+						else 
+							generate_constraint_error (Current, to_check, constraint_type, i)
+							is_conform := False
+						end
+					end
 				end
 
 				if is_conform then
@@ -701,9 +735,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 									formal_dec_as, constraint_type, context_class,
 									to_check, i, formal_type)
 						else
-							add_future_checking (
-								Current, formal_dec_as, constraint_type, context_class,
-								to_check, i, formal_type)
+							add_future_checking (context_class,
+								agent delayed_creation_constraint_check (formal_dec_as,
+								constraint_type, context_class, to_check, i, formal_type))
 						end
 					end
 				end
@@ -743,6 +777,36 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 			
 				i := i + 1
+			end
+		end
+
+	delayed_creation_constraint_check (
+			formal_dec_as: FORMAL_DEC_AS
+			constraint_type: TYPE_A;
+			context_class: CLASS_C;
+			to_check: TYPE_A;
+			i: INTEGER;
+			formal_type: FORMAL_A) is
+				-- Check that declaration of generic class is conform to
+				-- defined creation constraint in delayed mode.
+		require
+			formal_dec_as_not_void: formal_dec_as /= Void
+			creation_constraint_exists: formal_dec_as.has_creation_constraint
+		local
+			l_vtcg7: VTCG7
+		do
+			reset_constraint_error_list
+			if context_class.is_valid and to_check.is_valid then
+				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
+				if not constraint_error_list.is_empty then
+						-- The feature listed in the creation constraint have
+						-- not been declared in the constraint class.
+					create l_vtcg7
+					l_vtcg7.set_class (context_class)
+					l_vtcg7.set_error_list (constraint_error_list)
+					l_vtcg7.set_parent_type (Current)
+					Error_handler.insert_error (l_vtcg7)
+				end
 			end
 		end
 
@@ -830,7 +894,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 	
 				if not matched then
-					generate_constraint_error (to_check, constraint_type, i)
+					generate_constraint_error (Current, to_check, constraint_type, i)
 				end
 			else
 					-- Check if there is a creation constraint clause
@@ -870,31 +934,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 
 				if not matched then
-					generate_constraint_error (formal_type, constraint_type, i)
-				end
-			end
-		end
-
-	same_class_type (other: CL_TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		local
-			other_gen_type: GEN_TYPE_A
-			i, nb: INTEGER
-			other_generics: like generics
-		do
-			other_gen_type ?= other
-			if other_gen_type /= Void and then other_gen_type.class_id = class_id then
-				from
-					Result := True
-					i := 1
-					nb := generics.count
-					other_generics := other_gen_type.generics
-				until
-					i > nb or else not Result
-				loop
-					Result := generics.item (i).actual_type.same_as
-								(other_generics.item (i).actual_type)
-				   i := i + 1
+					generate_constraint_error (Current, formal_type, constraint_type, i)
 				end
 			end
 		end
@@ -968,21 +1008,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 				ctxt.put_text_item (ti_R_bracket)
 			end
-		end
-
-feature {NONE} -- Error generation
-
-	generate_constraint_error (current_type, constraint_type: TYPE_A; position: INTEGER) is
-			-- Build the error corresponding to the VTCG error
-		local
-			constraint_info: CONSTRAINT_INFO
-		do
-			create constraint_info
-			constraint_info.set_type (Current)
-			constraint_info.set_actual_type (current_type)
-			constraint_info.set_formal_number (position)
-			constraint_info.set_constraint_type (constraint_type)
-			constraint_error_list.extend (constraint_info)
 		end
 
 invariant

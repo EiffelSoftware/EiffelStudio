@@ -231,7 +231,7 @@ feature -- Type check, byte code and dead code removal
 			idx, cnt: INTEGER
 			op: OPERAND_B
 			p : PARAMETER_B
-			int: INT_CONST_B
+			int: INTEGER_CONSTANT
 			open_b, closed_b: ARRAY_CONST_B
 		do
 			a_class := target_type.associated_class
@@ -298,8 +298,7 @@ feature -- Type check, byte code and dead code removal
 				until
 					idx > cnt
 				loop
-					!!int
-					int.set_value (open_map.item (idx))
+					create int.make (open_map.item (idx))
 					new_list.put (int)
 					idx := idx + 1
 					new_list.forth
@@ -321,8 +320,7 @@ feature -- Type check, byte code and dead code removal
 				until
 					idx > cnt
 				loop
-					!!int
-					int.set_value (closed_map.item (idx))
+					create int.make (closed_map.item (idx))
 					new_list.put (int)
 					idx := idx + 1
 					new_list.forth

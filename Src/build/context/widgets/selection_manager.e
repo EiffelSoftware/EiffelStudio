@@ -617,7 +617,7 @@ feature {PERM_WIND_C}
 						begin_mvt
 					elseif cursor_shape = Cursors.move_cursor then
 						move_rectangle
-					elseif cursor_shape /= Void then
+					elseif cursor_shape /= Void or else cursor_shape = Cursors.arrow_cursor then
 						resize_rectangle
 					end
 				end;

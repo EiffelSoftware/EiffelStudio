@@ -1,0 +1,35 @@
+class WINDOWS
+
+inherit
+
+	GRAPHICS
+		redefine
+			init_toolkit
+		end
+
+feature
+
+	application_screen: SCREEN is
+		once
+			!!Result.make ("")
+		end;
+
+	init_toolkit: MOTIF is
+		once
+			!!Result.make ("")
+		end;
+
+	init_windowing is
+		do
+			if (init_toolkit = Void) then end;
+			if (toolkit = Void) then end;
+			Perm_wind1.realize;
+			iterate
+		end;
+
+	Perm_wind1: PERM_WIND1 is
+		once
+			!!Result.make ("Perm_wind1", application_screen);
+		end;
+
+end

@@ -270,12 +270,12 @@ feature {NONE} -- Implementation : WEL features
 				actual := ev_children @ (caret_index + 1)
 				if actual.is_selected then
 					actual.interface.select_actions.call ([])
-					interface.select_actions.call ([caret_index + 1, actual.interface])
+					interface.select_actions.call ([actual.interface])
 					--| FIXME actual.execute_command (Cmd_item_activate, Void)
 					--| FIXME execute_command (Cmd_select, Void)
 				else
 					actual.interface.deselect_actions.call ([])
-					interface.deselect_actions.call ([caret_index + 1, actual.interface])
+					interface.deselect_actions.call ([actual.interface])
 					--| FIXME actual.execute_command (Cmd_item_deactivate, Void)
 					--| FIXME execute_command (Cmd_unselect, Void)
 				end
@@ -291,14 +291,14 @@ feature {NONE} -- Implementation : WEL features
 							-- from the item now selected then call the deselect events
 							-- on this previously selected item.
 						last.interface.deselect_actions.call ([])
-						interface.deselect_actions.call ([interface.index_of (last.interface, 1), last.interface])
+						interface.deselect_actions.call ([last.interface])
 					end
 					if last = Void or last /= actual then
 							-- If there is no previously selected child (Required for at
 							-- start when last and actual may be void, so => equal), or
 							-- the selected item is different from the previously selected
 							-- item then call the deselect events on the previously selected item.
-						interface.select_actions.call ([selected_index + 1, actual.interface])
+						interface.select_actions.call ([actual.interface])
 						actual.interface.select_actions.call ([])
 					end
 					if selected then
@@ -312,13 +312,13 @@ feature {NONE} -- Implementation : WEL features
 								-- We check that `actual' has not been destroyed during the agent call.
 							actual.interface.deselect_actions.call ([])
 						end
-						interface.deselect_actions.call ([actual_index, actual.interface])
+						interface.deselect_actions.call ([actual.interface])
 					end
 				else
 						-- Call the deselect events on the previously selected item.
 					last_selected_item := Void
 					last.interface.deselect_actions.call ([])
-					interface.deselect_actions.call ([interface.index_of (last.interface, 1), last.interface])
+					interface.deselect_actions.call ([last.interface])
 				end
 			end
 		end
@@ -522,6 +522,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/06 20:47:36  rogers
+--| The list select and deselect action sequences now only return the selected item, so any calls to these action sequences have been modified.
+--|
 --| Revision 1.42  2000/02/29 23:13:24  rogers
 --| Removed selected_item as it is no longer platform dependent, it now comes from EV_LIST_I.
 --|

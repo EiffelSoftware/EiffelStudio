@@ -37,6 +37,8 @@ feature -- Access
 
 	pointer_position: EV_COORDINATES is
 			-- Position of the screen pointer relative to `Current'.
+		require
+			is_show_requested: is_show_requested
 		do
 			Result := implementation.pointer_position
 			-- Because the pointer position may have changed between assigning
@@ -748,7 +750,8 @@ feature -- Obsolete
 		end
 
 invariant
-	pointer_position_not_void: is_useable implies pointer_position /= Void
+	pointer_position_not_void: is_useable and is_show_requested implies
+		pointer_position /= Void
 
 	background_color_not_void: is_useable implies background_color /= void
 	foreground_color_not_void: is_useable implies foreground_color /= void
@@ -813,6 +816,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.81  2000/05/03 18:05:42  brendel
+--| Added precondition to pointer_position: is_show_requested.
+--|
 --| Revision 1.80  2000/05/02 23:33:04  oconnor
 --| cosmetics
 --|

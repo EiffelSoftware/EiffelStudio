@@ -291,8 +291,7 @@
 					<EV_COLORIZABLE />
 					<EV_SENSITIVE />
 					<EV_WIDGET />
-					<EV_PIXMAPABLE ><Pixmap_path >D:\Work\build2\dialogs\temp\button_images.bmp</Pixmap_path>
-						</EV_PIXMAPABLE>
+					<EV_PIXMAPABLE />
 					<EV_CONTAINER />
 					</item>
 				</item>

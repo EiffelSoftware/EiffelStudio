@@ -27,8 +27,6 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			internal_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
@@ -55,7 +53,6 @@ feature {NONE}-- Initialization
 			create l_vertical_box_3
 			create ok_button
 			create l_cell_3
-			create internal_pixmap
 			
 			extend (l_vertical_box_1)
 			l_vertical_box_1.extend (l_horizontal_box_1)
@@ -115,8 +112,6 @@ feature {NONE}-- Initialization
 			l_vertical_box_3.disable_item_expand (ok_button)
 			ok_button.set_text ("OK")
 			ok_button.set_minimum_width (80)
-			internal_pixmap.set_with_named_file (constant_by_name ("pixmap_location") + "\button_images.bmp")
-			l_cell_3.set_background_pixmap (internal_pixmap)
 			
 			constants_list.select_actions.extend (agent item_selected_in_list (?))
 			constants_list.deselect_actions.extend (agent item_deselected_in_list (?))

@@ -10,6 +10,11 @@ class E_FEATURE_ARGUMENTS
 inherit
 
 	FIXED_LIST [TYPE_A]
+		rename
+			put_i_th as list_put_i_th
+		export
+			{NONE} list_put_i_th
+		end
 
 creation
 
@@ -30,6 +35,16 @@ feature -- Setting
 			argument_names := n	
 		ensure
 			set: argument_names = n
+		end;
+
+feature -- Element change
+
+	put_i_th (type: TYPE_A; i: INTEGER) is
+			-- Put `type' at `i' position.
+		require
+			valid_type: type /= Void
+		do
+			list_put_i_th (type, i)
 		end;
 
 end -- class E_FEATURE_ARGUMENTS

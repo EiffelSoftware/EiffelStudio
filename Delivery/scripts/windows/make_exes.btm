@@ -208,38 +208,12 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	move ec.exe %INSTALL_DIR\releases\enterprise
 else
 	iff not defined NO_NEW_EC then
-		remtrace compiling Enterprise Editions
-		cdd %FINALIZATION_DIR
-		copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin-vs.ace finalizedbench.ace
-		iff not exist finalizedbench.ace then
-			remtrace Cannot find the finalization Ace for EiffelStudio
-			CANCEL
-		endiff
-
-		remtrace Enterprise edition for Envision
-		copy %EIFFEL_SRC\com_compiler\ace_file\cec.rc .
-		copy %EIFFEL_SRC\com_compiler\ace_file\cec.ico .
-		copy %EIFFEL_SRC\com_compiler\ace_file\cec.tlb .
-		clean_project
-		finalize finalizedbench.ace
-		fff
-		cleanup_eiffel cec.exe
-		iff not exist cec.exe then
-			remtrace Could not finalize a new "enterprise" EiffelStudio for Envision
-			CANCEL
-		endiff
-		move cec.exe %INSTALL_DIR\releases\enterprise
-
 		remtrace Enterprise edition for EiffelStudio
+		cdd %FINALIZATION_DIR
 		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
-		sed -r "s/cec/ec/g" finalizedbench.ace >> newace.ace
-		move newace.ace finalizedbench.ace
-		sed -r "s/eiffel_studio_52/eiffel_envision_10/g" finalizedbench.ace >> newace.ace
-		move newace.ace finalizedbench.ace
-		sed -r "s/console_application \(no\)/console_application \(yes\)/g" finalizedbench.ace >> newace.ace
-		move newace.ace finalizedbench.ace
+
 		clean_project
-		finalize finalizedbench.ace
+		finalize newbench.mswin.ace
 		fff
 		cleanup_eiffel ec.exe
 		iff not exist ec.exe then
@@ -247,7 +221,6 @@ else
 			CANCEL
 		endiff
 		move ec.exe %INSTALL_DIR\releases\enterprise
-
 
 		remtrace Free edition
 		cdd %FINALIZATION_DIR

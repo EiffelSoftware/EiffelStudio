@@ -12,6 +12,10 @@
 	If this file is compiled with -DTEST, it will produce a standalone
 	executable.
 */
+
+/*#define MEMCHK /**/
+/* #define MEM_STAT /**/
+
 #include "config.h"
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
@@ -161,9 +165,11 @@ rt_private void disconnect_free_list(register union overhead *next, register uin
 rt_private int coalesc(register union overhead *zone);					/* Coalescing (return # of bytes) */
 rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, int gc_flag);		/* Allocate block in one of the lists */
 rt_private char *allocate_free_list(register unsigned int nbytes, register union overhead **hlist);		/* Allocate block from free list */
-rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist);		/* Allocate block asking for core */
-rt_private char *set_up(register union overhead *selected, unsigned int nbytes);					/* Set up block before public ussage */
+rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist, char block_type);		/* Allocate block asking for core */
+rt_private char *set_up(register union overhead *selected, unsigned int nbytes);					/* Set up block before public usage */
+rt_private char *set_up_chunk(register union overhead *selected, unsigned int nbytes);			/* Set up big chunk */
 rt_shared int chunk_coalesc(struct chunk *c);				/* Coalescing on a chunk */
+rt_private void xfreeblock(union overhead *zone, uint32 r);				/* Release block to the free list */
 rt_shared int full_coalesc(int chunk_type);				/* Coalescing over specified chunks */
 rt_private int free_last_chunk(void);			/* Detach last chunk from core */
 
@@ -548,7 +554,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 		 * from the free list if the coalescing brought a big enough bloc.
 		 */
 
-		result = allocate_from_core(nbytes, hlist);	/* Ask for more core */
+		result = allocate_from_core(nbytes, hlist, MB_EO);	/* Ask for more core */
 		if ((char *) 0 != result)
 			return result;				/* We got it */
 	
@@ -576,7 +582,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 #ifdef HAS_SMART_MMAP
 				{
 					free_unused ();
-					result = allocate_from_core(nbytes, hlist);
+					result = allocate_from_core(nbytes, hlist, MB_EO);
 										/* Ask for more core */
 					if ((char *) 0 != result)
 						return result;				/* We got it */
@@ -594,7 +600,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 #ifdef HAS_SMART_MMAP
 				{
 					free_unused ();
-					result = allocate_from_core(nbytes, hlist);
+					result = allocate_from_core(nbytes, hlist, MB_EO);
 										/* Ask for more core */
 					if ((char *) 0 != result)
 						return result;				/* We got it */
@@ -672,7 +678,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 	}
 
 	/* No other choice but to request for more core */
-	return allocate_from_core(nbytes, hlist);
+	return allocate_from_core(nbytes, hlist, MB_EO);
 }
 
 #ifdef HAS_SMART_MMAP
@@ -792,10 +798,13 @@ rt_shared char *get_to_from_core (unsigned int nbytes)
 	 * the to_space.
 	 */
 
-	return allocate_from_core (nbytes, e_hlist);
+	return allocate_from_core (nbytes, e_hlist, MB_CHUNK);
 }
 
-rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist)
+rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist, char block_type)
+                    
+                        
+                			/* Eiffel object or memory chunk */
 {
 	/* Given a correctly padded size 'nbytes', we ask for some core to be
 	 * able to make a chunk capable of holding 'nbytes'. The chunk will be
@@ -872,7 +881,11 @@ rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist)
 	/* Block is ready to be set up for use of 'nbytes' (eventually after
 	 * having been split). Memory accounting is done in set_up().
 	 */
-	return set_up(selected, nbytes);
+
+	if (block_type == MB_EO)
+		return set_up(selected, nbytes);
+	else
+		return set_up_chunk(selected, nbytes);
 }
 
 rt_private union overhead *add_core(register unsigned int nbytes, int type)
@@ -988,6 +1001,10 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 	if (type == EIFFEL_T) {
 		e_data.ml_chunk++;
 		e_data.ml_total += asked;
+#ifdef MEM_STAT
+		printf ("Eiffel: %ld used, %ld total (+%ld) (add_core)\n",
+			e_data.ml_used, e_data.ml_total, asked);
+#endif
 		e_data.ml_over += sizeof(struct chunk) + OVERHEAD;
 	} else {
 		c_data.ml_chunk++;
@@ -1327,8 +1344,13 @@ rt_private char *set_up(register union overhead *selected, unsigned int nbytes)
 	m_data.ml_used += i;				/* Account for memory used */
 	if (r & B_CTYPE)
 		c_data.ml_used += i;
-	else
+	else {
 		e_data.ml_used += i;
+#ifdef MEM_STAT
+		printf ("Eiffel: %ld used (+%ld) %ld total (set_up)\n",
+			e_data.ml_used, i, e_data.ml_total);
+#endif
+	}
 
 	SIGRESUME;				/* Re-enable signal exceptions */
 
@@ -1348,6 +1370,65 @@ rt_private char *set_up(register union overhead *selected, unsigned int nbytes)
 	return (char *) (selected + 1);		/* Free data space */
 }
 
+rt_private char *set_up_chunk(register union overhead *selected, unsigned int nbytes)
+{
+	/* Same as set_up() but for memory chunk when they are explicitely
+	 * allocated from core for the partial scavenging.
+	 */
+
+	register2 uint32 r;		/* For temporary storage */
+	register3 uint32 i;		/* To store true size */
+
+#ifdef DEBUG
+	dprintf(8)("set_up_chunk: selected is 0x%lx (%s, %d bytes)\n",
+		selected, selected->ov_size & B_LAST ? "last" : "normal",
+		selected->ov_size & B_SIZE);
+	flush;
+#endif
+
+	SIGBLOCK;				/* Critical section, cannot be interrupted */
+
+	(void) split_block(selected, nbytes);	/* Eventually split the area */
+
+	/* The 'selected' block is now in use and the real size is in
+	 * the ov_size area. To mark the block as used, we have to set
+	 * two bits in the flags part (block is busy and it is a C block).
+	 * Another part of the run-time will overwrite this if Eiffel is
+	 * to ever use this object.
+	 */
+	
+	r = selected->ov_size;
+	selected->ov_size = r | B_NEW;
+	i = r & B_SIZE;						/* Keep only true size */
+
+	/* Memory accounting is relevant only if the current block has been 
+	 * allocated in a C chunk (memory for Eiffel allocated in a C chunk).
+	 * This memory block is used only as container for other Eiffel blocks
+	 * (which are already counted).
+	 */
+	if (r & B_CTYPE) {
+		m_data.ml_used += i;				/* Account for memory used */
+		c_data.ml_used += i;
+	}
+
+	SIGRESUME;				/* Re-enable signal exceptions */
+
+	/* Now it's done. We return the address of data space, that
+	 * is to say (selected + 1) -- yes ! The area holds at least
+	 * 'nbytes' (entrance value) of free space.
+	 */
+
+#ifdef DEBUG
+	dprintf(8)("set_up_chunk: returning %s %s block starting at 0x%lx (%d bytes)\n",
+		(selected->ov_size & B_CTYPE) ? "C" : "Eiffel",
+		(selected->ov_size & B_LAST) ? "last" : "normal",
+		(char *) (selected + 1), selected->ov_size & B_SIZE);
+	flush;
+#endif
+
+	return (char *) (selected + 1);		/* Free data space */
+}
+
 rt_public void xfree(register char *ptr)
 {
 	/* Frees the memory block which starts at 'ptr'. This has
@@ -1357,10 +1438,9 @@ rt_public void xfree(register char *ptr)
 	 * rely on this as it may change without notice.
 	 */
 	
-	register1 uint32 r;					/* For shifting purposes */
-	register2 uint32 i;					/* Index in hlist */
-	register3 union overhead *zone;		/* The to-be-freed zone */
-	register5 uint32 size;				/* Size of the coalesced block */
+	uint32 r;					/* For shifting purposes */
+	union overhead *zone;		/* The to-be-freed zone */
+	uint32 i;					/* Index in hlist */
 
 	zone = ((union overhead *) ptr) - 1;	/* Walk backward to header */
 	r = zone->ov_size;						/* Size of block */
@@ -1372,6 +1452,19 @@ rt_public void xfree(register char *ptr)
 	 */
 	if (!(r & B_BUSY))
 		return;				/* Nothing to be done */
+
+	/* Memory accounting */
+	i = r & B_SIZE;				/* Amount of memory released */
+	m_data.ml_used -= i;		/* At least this is free */
+	if (r & B_CTYPE)
+		c_data.ml_used -= i;
+	else {
+		e_data.ml_used -= i;
+#ifdef MEM_STAT
+	printf ("Eiffel: %ld used (-%ld), %ld total (xfree)\n",
+		e_data.ml_used, i, e_data.ml_total);
+#endif
+	}
 
 #ifdef DEBUG
 	dprintf(1)("free: on a %s %s block starting at 0x%lx (%d bytes)\n",
@@ -1390,15 +1483,114 @@ rt_public void xfree(register char *ptr)
 	flush;
 #endif
 
-	SIGBLOCK;					/* Critical section starts */
+	/* Now put back in the free list a memory block starting at `zone', of
+	 * size 'r' bytes.
+	 */
+	xfreeblock(zone, r);
+
+#ifdef DEBUG
+	dprintf(8)("free: %s %s block starting at 0x%lx holds %d bytes free\n",
+		(zone->ov_size & B_LAST) ? "last" : "normal",
+		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
+		ptr, zone->ov_size & B_SIZE);
+#endif
+}
+
+rt_public void xfreechunk(char *ptr)
+{
+	/* Frees the memory chunk which starts at 'ptr'. This has
+	 * to be a pointer returned by malloc, otherwise impredictable
+	 * results will follow...
+	 * The contents of the block are preserved, though one should not
+	 * rely on this as it may change without notice.
+	 * The only difference with the xfree() routine is that the Eiffel 
+	 * memory used is updated if the block is not a block freed by partial
+	 * scavenging (as the objects it was holding have already been counted).
+	 */
+	
+	uint32 r;					/* For shifting purposes */
+	union overhead *zone;		/* The to-be-freed zone */
+	uint32 i;					/* Index in hlist */
+
+	zone = ((union overhead *) ptr) - 1;	/* Walk backward to header */
+	r = zone->ov_size;						/* Size of block */
+
+	/* If the bloc is in the generation scavenge zone, nothing has to be done.
+	 * This is easy to detect because objects in the scavenge zone have the
+	 * B_BUSY bit reset. Testing for that bit will also enable the routine
+	 * to return immediately if the address of a free block is given.
+	 */
+	if (!(r & B_BUSY))
+		return;				/* Nothing to be done */
 
 	/* Memory accounting */
 	i = r & B_SIZE;				/* Amount of memory released */
 	m_data.ml_used -= i;		/* At least this is free */
 	if (r & B_CTYPE)
 		c_data.ml_used -= i;
-	else
-		e_data.ml_used -= i;
+
+#ifdef DEBUG
+	dprintf(1)("free: on a %s %s block starting at 0x%lx (%d bytes)\n",
+		(zone->ov_size & B_LAST) ? "last" : "normal",
+		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
+		ptr, zone->ov_size & B_SIZE);
+	flush;
+	if (DEBUG & 128) {					/* Print type and class name */
+		char *obj = (char *) (zone + 1);
+		if (zone->ov_size & B_FWD)		/* Object was forwarded */
+			obj = zone->ov_fwd;
+		if (!(HEADER(obj)->ov_flags & EO_C))
+			printf("free: %s object [%d]\n",
+				System(Dtype(obj)).cn_generator, Dtype(obj));
+	}
+	flush;
+#endif
+
+	/* Now put back in the free list a memory block starting at `zone', of
+	 * size 'r' bytes.
+	 */
+	xfreeblock(zone, r);
+
+#ifdef DEBUG
+	dprintf(8)("free: %s %s block starting at 0x%lx holds %d bytes free\n",
+		(zone->ov_size & B_LAST) ? "last" : "normal",
+		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
+		ptr, zone->ov_size & B_SIZE);
+#endif
+}
+
+rt_public char *xcalloc(unsigned int nelem, unsigned int elsize)
+{
+	/* Allocate space for 'nelem' elements of 'elsize' bytes and set the new
+	 * space with zeros. This is NEVER used by the Eiffel run time but it is
+	 * provided to keep the C interface with the standard malloc package.
+	 */
+	
+	register1 unsigned int nbytes;	/* Number of bytes requested */
+	register2 char *allocated;		/* Address of new arena */
+
+	nbytes = nelem * elsize;
+	allocated = xmalloc(nbytes, C_T, GC_ON);	/* Ask for C space */
+
+	if (allocated != (char *) 0)
+		bzero(allocated, nbytes);		/* Fill arena with zeros */
+
+	return allocated;		/* Pointer to new zero-filled zone */
+}
+
+rt_private void xfreeblock(union overhead *zone, uint32 r)
+                     		/* The to-be-freed zone */
+         					/* Size of block */
+{
+	/* Put the memory block starting at 'zone' into the free_list.
+	 * Note that zone points at the beginning of the memory block
+	 * (beginning of the header) and not at an object data area.
+	 */
+
+	register2 uint32 i;					/* Index in hlist */
+	register5 uint32 size;				/* Size of the coalesced block */
+
+	SIGBLOCK;					/* Critical section starts */
 
 	/* The block will be inserted in the sorted hashed free list.
 	 * The current size is fetched from the header. If the block
@@ -1425,33 +1617,6 @@ rt_public void xfree(register char *ptr)
 	connect_free_list(zone, i);		/* Insert block in free list */
 
 	SIGRESUME;					/* Critical section ends */
-
-#ifdef DEBUG
-	dprintf(8)("free: %s %s block starting at 0x%lx holds %d bytes free\n",
-		(zone->ov_size & B_LAST) ? "last" : "normal",
-		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
-		ptr, zone->ov_size & B_SIZE);
-	flush;
-#endif
-}
-
-rt_public char *xcalloc(unsigned int nelem, unsigned int elsize)
-{
-	/* Allocate space for 'nelem' elements of 'elsize' bytes and set the new
-	 * space with zeros. This is NEVER used by the Eiffel run time but it is
-	 * provided to keep the C interface with the standard malloc package.
-	 */
-	
-	register1 unsigned int nbytes;	/* Number of bytes requested */
-	register2 char *allocated;		/* Address of new arena */
-
-	nbytes = nelem * elsize;
-	allocated = xmalloc(nbytes, C_T, GC_ON);	/* Ask for C space */
-
-	if (allocated != (char *) 0)
-		bzero(allocated, nbytes);		/* Fill arena with zeros */
-
-	return allocated;		/* Pointer to new zero-filled zone */
 }
 
 rt_public char *crealloc(char *ptr, unsigned int nbytes)
@@ -1534,8 +1699,13 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 		m_data.ml_used -= r + OVERHEAD;	/* Data we lose in realloc */
 		if (zone->ov_size & B_CTYPE)
 			c_data.ml_used -= r + OVERHEAD;
-		else
+		else {
+#ifdef MEM_STAT
+		printf ("Eiffel: %ld used (-%ld), %ld total (xrealloc)\n",
+			e_data.ml_used, r + OVERHEAD, e_data.ml_total);
+#endif
 			e_data.ml_used -= r + OVERHEAD;
+		}
 
 #ifdef DEBUG
 		dprintf(16)("realloc: shrinked block is now %d bytes (lost %d bytes)\n",
@@ -1596,8 +1766,14 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 			m_data.ml_used += r;		/* Update memory used */
 			if (zone->ov_size & B_CTYPE)
 				c_data.ml_used += r;
-			else
+			else {
 				e_data.ml_used += r;
+#ifdef MEM_STAT
+		printf ("Eiffel: %ld used (+%ld), %ld total (xrealloc)\n",
+			e_data.ml_used, r, e_data.ml_total);
+#endif
+			}
+
 			SIGRESUME;					/* Exiting from critical section */
 			return ptr;					/* Leave block unsplit */
 		}
@@ -1606,8 +1782,13 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 		m_data.ml_used += r;			/* Data we gained in realloc */
 		if (zone->ov_size & B_CTYPE)
 			c_data.ml_used += r;
-		else
+		else {
 			e_data.ml_used += r;
+#ifdef MEM_STAT
+		printf ("Eiffel: %ld used (+%ld), %ld total (xrealloc)\n",
+			e_data.ml_used, r, e_data.ml_total);
+#endif
+		}
 
 #ifdef DEBUG
 		dprintf(16)("realloc: block is now %d bytes\n",

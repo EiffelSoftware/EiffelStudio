@@ -221,7 +221,7 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 	if (rt_kind == INDEPENDENT_STORE) {
 		iread_header();					/* Make correspondance table */
 		retrieved = irt_make();
-	} else if (rt_type == GENERAL_STORE_3_3) {
+	} else if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_3_3)) {
 		read_header(rt_type);					/* Make correspondance table */
 		retrieved = grt_make();
 	} else {
@@ -1093,7 +1093,7 @@ rt_private void read_header(char rt_type)
 	if (dtypes == (int *) 0)
 		xraise(EN_MEM);
 
-	if (rt_type == GENERAL_STORE_3_3) {
+	if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_3_3)) {
 		sorted_attributes = (unsigned int **) xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attributes);
@@ -1184,7 +1184,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 		}
 		dtypes[dtype] = new_dtype;
 
-		if (rt_type == GENERAL_STORE_3_3)
+		if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_3_3))
 			sort_attributes(new_dtype);
 	}
 	xfree (r_buffer);

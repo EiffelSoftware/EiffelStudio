@@ -29,7 +29,8 @@ inherit
 	EXCEPTIONS
 		rename
 			raise as raise_exception
-		end
+		end;
+	SHARED_WORKBENCH
 
 creation
 
@@ -84,7 +85,6 @@ feature
 			if bm_Project_icon.is_valid then
 				set_icon_pixmap (bm_Project_icon);
 			end;
-			set_icon_name (tool_name);
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Map>,<Prop>", Current, popup);
 			set_delete_command (quit_command)
@@ -161,6 +161,11 @@ feature -- xterminal
 					end	
 				end
 			elseif arg = popdown then
+				if System.system_name /= Void then
+					set_icon_name (System.system_name)
+				else
+					set_icon_name (tool_name)
+				end;
 				close_windows;
 				window_manager.hide_all_editors;
 				if 	system_tool.realized and then system_tool.shown then

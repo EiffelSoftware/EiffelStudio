@@ -82,11 +82,11 @@ feature {NONE}
 			full_path: FILE_NAME;
 			a_pix: PIXMAP
 		do
-			!! full_path.make_from_string (Cursor_path);
+			create full_path.make_from_string (Cursor_path);
 			full_path.set_file_name (fn);
-			!! a_pix.make;
+			create a_pix.make;
 			a_pix.read_from_file (full_path);
-			!! Result.make;
+			create Result.make;
 			if a_pix.is_valid then
 				Result.set_pixmap (a_pix, a_pix);
 			else

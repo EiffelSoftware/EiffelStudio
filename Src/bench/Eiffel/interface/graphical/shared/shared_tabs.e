@@ -15,7 +15,7 @@ feature -- Properties
 		local
 			tab_integer: INTEGER
 		once
-			!!Result;
+			create Result;
 			tab_integer := General_resources.tab_step.actual_value;
 			Result.set_item (tab_integer)
 		end;

@@ -9,10 +9,9 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
-// Revision 1.4  1998/02/02 18:05:02  raphaels
-// Added TypeComp support.
-// Updated TypeLib and TypeInfo support.
-// Modified some file names.
+// Revision 1.5  1998/02/02 18:10:28  raphaels
+// Added ITypeComp support.
+// Corrected some bugs in ITypeLib and ITypeInfo.
 //
 // Revision 1.3  1998/01/20 23:47:54  raphaels
 // Removed obsolete files.
@@ -1468,5 +1467,4 @@ extern "C" void eole2_tinfo_release_var_desc(
 
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
-
 

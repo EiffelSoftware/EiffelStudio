@@ -32,4 +32,3 @@ extern "C" EIF_INTEGER eole2_select_picture_hbmp_out (EIF_POINTER ptr) {
 	SelectPicture *sp = (SelectPicture*)ptr;
 	return (EIF_INTEGER)sp -> hbmpOut;
 	}
-

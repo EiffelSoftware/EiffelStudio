@@ -2123,4 +2123,3 @@ extern "C" HRESULT E_IOleContainer_LockContainer (
 #endif // !__WRAPFUNC_H_INC__
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

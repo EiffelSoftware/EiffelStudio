@@ -3720,4 +3720,3 @@ extern "C" EIF_INTEGER eole2_textmetric_get_digitized_aspect_y (EIF_POINTER _thi
 
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

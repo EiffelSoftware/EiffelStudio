@@ -453,4 +453,3 @@ extern EIF_FN_POINTER Ocxdisp_TypeInfoGetNames;
 #endif // !__OCXCECIL_H_INC__
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

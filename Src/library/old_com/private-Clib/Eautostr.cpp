@@ -1233,4 +1233,3 @@ extern "C" EIF_INTEGER eole2_currency_get_Hi (EIF_POINTER _this) {
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

@@ -8,7 +8,7 @@ inherit
 		redefine
 			enlarged, read_only, is_local, is_creatable,
 			make_byte_code, register_name,
-			creation_access,
+			creation_access, print_register,
 			assign_code, expanded_assign_code, reverse_code,
 			make_end_assignment, make_end_reverse_assignment,
 			bit_assign_code, assigns_to, array_descriptor,
@@ -81,6 +81,12 @@ feature
 			Result.append ("loc");
 			Result.append (position.out);
 		end;
+
+	print_register is
+			-- Print local
+		do
+			buffer.putstring (register_name)
+		end
 
 feature -- Byte code generation
 

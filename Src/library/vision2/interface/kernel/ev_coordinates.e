@@ -1,7 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision coordinates (x, y)"
+		"A position in a 2 dimensional space as INTEGERs (x, y)"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,17 +16,7 @@ inherit
 
 create
 	default_create,
-	make,
 	set
-
-feature {NONE} -- Initialization
-
-	make is
-			-- Empty initialization.
-		obsolete
-			"Use the default_create method."
-		do
-		end
 
 feature -- Access
 
@@ -39,46 +28,47 @@ feature -- Access
 
 feature -- Element change
 
-	set (new_x, new_y: INTEGER) is
-			-- Set `x' to `new_x' and `y' to `new_y'.
+	set (a_x, a_y: INTEGER) is
+			-- Assign `a_x' to `x' and `a_y' to `y'.
 		do
-			x := new_x
-			y := new_y
+			x := a_x
+			y := a_y
 		ensure
-			x_set: x = new_x
-			y_set: y = new_y
+			x_assigned: x = a_x
+			y_assigned: y = a_y
 		end
 
-	set_x (new_x: INTEGER) is
-			-- Set `x' to `new_x'.
+	set_x (a_x: INTEGER) is
+			-- Assign `a_x' to `x'.
 		do
 			x := new_x
 		ensure
-			x_set: x = new_x
+			x_assigned: x = a_x
 		end
 
-	set_y (new_y: INTEGER) is
-			-- Set `y' to `new_y'.
+	set_y (a_y: INTEGER) is
+			-- Assign `a_y' to `y'.
 		do
-			y := new_y
+			y := a_y
 		ensure
-			y_set: y = new_y
+			y_assigned: y = a_y
 		end
 		
-feature -- Debug
-
-	print_contents is
-			-- Write string representation to standard output.
-		obsolete
-			"Use: io.put_string (yours.out)."
-		do
-			io.put_string (out)
-		end
+feature -- Output
 
 	out: STRING is
-			-- Return readable string.
+			-- Textual representation.
 		do
 			Result := "(X: " + x.out + ", Y: " + y.out + ")%N"
+		end
+
+feature {NONE} -- Obsolete
+
+	make is
+			-- Empty initialization.
+		obsolete
+			"Use the default_create method."
+		do
 		end
 
 end -- class EV_COORDINATES
@@ -99,12 +89,14 @@ end -- class EV_COORDINATES
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
 
-
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/16 01:12:44  oconnor
+--| improved operand names and comments
+--|
 --| Revision 1.5  2000/02/29 19:20:22  oconnor
 --| removed simicolons from indexing
 --|
@@ -131,7 +123,6 @@ end -- class EV_COORDINATES
 --|
 --| Revision 1.6.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -6,4 +6,4 @@ SRCLIST = ..\..\..\tools\emitter\newemitter.cs ..\..\..\tools\emitter\renameclau
 	csc $*.cs
 
 ISE.Reflection.Emitter.exe : $(SRCLIST) makefile
-	csc /out:ISE.Reflection.Emitter.exe $(SRCLIST) /r:%EIFFEL_SRC%\dotnet\reflection_interface\bin\ISE.Reflection.CodeGenerator.dll /r:%EIFFEL_SRC%\dotnet\reflection_interface\bin\ISE.Reflection.EiffelComponents.dll /r:%EIFFEL_SRC%\dotnet\reflection_interface\bin\ISE.Reflection.ReflectionInterface.dll /r:%EIFFEL_SRC%\dotnet\reflection_interface\bin\ISE.Reflection.Support.dll /r:%EIFFEL_SRC%\dotnet\reflection_interface\bin\ISE.Reflection.Formatter.dll
+	csc /out:ISE.Reflection.Emitter.exe $(SRCLIST) /r:..\bin\ISE.Reflection.CodeGenerator.dll /r:..\bin\ISE.Reflection.EiffelComponents.dll /r:..\bin\ISE.Reflection.ReflectionInterface.dll /r:..\bin\ISE.Reflection.Support.dll /r:..\bin\ISE.Reflection.Formatter.dll

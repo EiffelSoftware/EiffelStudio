@@ -363,6 +363,7 @@
 		<row><td>Library</td><td>{0FEA0AF1-E705-4712-8744-33CF25097FF2}</td><td>LIBRARY</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LibraryDotNet</td><td>{E05D8E65-9CEB-4E1D-8353-72E4663A9DA1}</td><td>LIBRARY.NET</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MDRegFiles</td><td>{507C0807-FE24-4381-A19B-C3E1699DB266}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>PrecompAceFile</td><td>{FE6A533D-B2B6-40AD-BB04-E844118BAEFF}</td><td>PRECOMP1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PrecompFiles</td><td>{05CE14DC-C21E-49A7-B910-7278A3F86E4D}</td><td>PRECOMP</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>SamplesFiles</td><td>{48631DB0-DD04-46BF-AA0B-A84D7B320573}</td><td>SAMPLES1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>VirtualDirComponent</td><td>{70E9460C-4F29-4900-A0DD-A32B0052696C}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1149,6 +1150,7 @@
 		<row><td>LocalAppDataFolder</td><td>TARGETDIR</td><td>.:LocalA~1|LocalAppData</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
 		<row><td>PRECOMP</td><td>INSTALLDIR</td><td>Precomp</td><td/><td>0</td><td/></row>
+		<row><td>PRECOMP1</td><td>COMPILER</td><td>precomp</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFiles64Folder</td><td>TARGETDIR</td><td>.:Prog64~1|Program Files 64</td><td/><td>0</td><td/></row>
@@ -1425,6 +1427,7 @@
 		<row><td>Feature</td><td>Library</td></row>
 		<row><td>Feature</td><td>LibraryDotNet</td></row>
 		<row><td>Feature</td><td>MDRegFiles</td></row>
+		<row><td>Feature</td><td>PrecompAceFile</td></row>
 		<row><td>Feature</td><td>PrecompFiles</td></row>
 		<row><td>Feature</td><td>VirtualDirComponent</td></row>
 		<row><td>Feature</td><td>XCACLS</td></row>
@@ -1450,6 +1453,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>ace.ace</td><td>PrecompAceFile</td><td>ace.ace</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_DELIVERY_FILES&gt;\compiler\precomp\ace.ace</td><td>1</td><td/></row>
 		<row><td>default.aspx</td><td>SamplesFiles</td><td>DEFAUL~1.ASP|default.aspx</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SAMPLES_FILES&gt;\default.aspx</td><td>1</td><td/></row>
 		<row><td>default.css</td><td>SamplesFiles</td><td>default.css</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SAMPLES_FILES&gt;\default.css</td><td>1</td><td/></row>
 		<row><td>default.ecd</td><td>DefaultConfigFile</td><td>default.ecd</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CONFIGS_FILES&gt;\default.ecd</td><td>1</td><td/></row>
@@ -1664,6 +1668,7 @@
 		<row><td>Library</td><td/><td/><td>_90E8817E_BF3D_4872_93B7_5DFC046A13B3_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>LibraryDotNet</td><td/><td/><td>_664E0909_D1D9_447D_9BC1_224D5B752C79_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>MDRegFiles</td><td/><td/><td>_6EE03059_909F_4C1A_BF27_541041502459_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>PrecompAceFile</td><td/><td/><td>_128D6C62_AE13_49AF_B102_1192AF0D125E_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>PrecompFiles</td><td/><td/><td>_09596789_E01C_425B_BFDF_99545880CAB3_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>SamplesFiles</td><td/><td/><td>_1768F1B0_B374_455C_8A90_A00012558DE7_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>VirtualDirComponent</td><td/><td/><td>_2186BDB6_DC0C_4E01_A286_C99E24D4AD50_FILTER</td><td/><td/><td/><td/></row>

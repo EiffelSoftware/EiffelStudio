@@ -2,27 +2,35 @@ class CONTEXT_EDITOR
 
 inherit
 
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as shell_make,
 			destroy as shell_destroy
-		end
-	TOP_SHELL
 		redefine
-			make, destroy
+			set_geometry
+		end
+	EB_TOP_SHELL
+		redefine
+			make, destroy, set_geometry
 		select
 			make, destroy
 		end
 	WINDOWS;
-	CONSTANTS;
 	CLOSEABLE
 
 creation
 
 	make
-	
-feature {NONE}
 
+feature -- Geometry
+
+	set_geometry is
+		do
+			top_form.set_size (Resources.cont_ed_width,
+					Resources.cont_ed_height)
+		end;
+
+feature {NONE}
 
 	context_hole: CON_EDIT_HOLE
 	
@@ -30,18 +38,15 @@ feature
 
 	-- Context edited in the context editor
 	edited_context: CONTEXT
+
 	current_form_number: INTEGER
-
 	
-feature 
-
 	top_form: FORM
-
 	
 feature {NONE}
 
-	first_separator: SEPARATOR_G
-	second_separator: SEPARATOR_G
+	first_separator: SEPARATOR
+	second_separator: SEPARATOR
 	
 feature 
 
@@ -100,9 +105,9 @@ feature
 			end;
 			!!top_form.make (Widget_names.form, Current)
 
-			!!context_hole.make (Current, top_form)
+			!! context_hole.make (Current, top_form)
 			!! focus_label.make (top_form);
-			!!first_separator.make (Widget_names.separator, top_form)
+			!! first_separator.make (Widget_names.separator, top_form)
 			first_separator.set_horizontal (True)
 			!! second_separator.make (Widget_names.separator1, top_form)
 			second_separator.set_horizontal (True)
@@ -163,7 +168,8 @@ feature
 
 			current_form_number := 0;
 			!! del_com.make (Current);
-			set_delete_command (del_com)
+			set_delete_command (del_com);
+			initialize_window_attributes;
 		end
 
 	attach_attributes_form (a_form: EDITOR_FORM) is
@@ -212,13 +218,17 @@ feature
 								not edited_context.eiffel_type.is_equal 
 									(new_context.eiffel_type)
 							then
-								formats_rc.unmanage;
+								if formats_rc.realized then
+									formats_rc.hide;
+								end;
 								format_list.update_buttons (option_list);
-								formats_rc.manage;
+								if formats_rc.realized then
+									formats_rc.show;
+								end;
 							end;
 							edited_context := new_context;
 							update_title;
-							set_form (option_list @ 1)
+							set_form (default_option_number (option_list))
 						else
 							other_editor.raise
 						end
@@ -240,6 +250,22 @@ feature
 			else
 				other_editor.raise
 			end
+		end;
+
+	default_option_number (opt_list: ARRAY [INTEGER]): INTEGER is
+			-- Default option list number
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				Result /= 0 or else
+					i > opt_list.count 
+			loop
+				Result := opt_list.item (i);
+				i := i + 1
+			end	
 		end;
 
 	update_title is
@@ -270,12 +296,16 @@ feature
 			current_form_number := a_form_number;
 			new_form := form_list @ (current_form_number);
 			if not new_form.is_initialized then
+				if prev_form /= Void then
+					-- This is done here since it
+					-- looks better under X
+					prev_form.hide;
+				end;
 				!!mp;
 				mp.set_watch_shape;
 				new_form.make_visible (top_form);
 				mp.restore;
 				if prev_form /= Void then
-					prev_form.hide;
 					format := prev_form.associated_format_button;
 					format.unselect_symbol
 				end;
@@ -353,14 +383,13 @@ feature -- Reseting
 		local
 			current_form: EDITOR_FORM
 		do
-			if current_form /= Void then
+			if current_form_number /= 0 then
 				reset_behavior_editor
-				edited_context := Void
-				if current_form_number /= 0 then
-					current_form := form_list @ (current_form_number);
-					current_form.hide;
-				end;
+				current_form := form_list @ (current_form_number);
+				current_form.hide;
+				current_form.associated_format_button.unselect_symbol
 			end;
+			edited_context := Void;
 			current_form_number := 0;
 			set_title (Widget_names.context_editor);
 			set_icon_name (Widget_names.context_editor);

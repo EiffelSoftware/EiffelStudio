@@ -11,6 +11,8 @@ class
 
 inherit
 	EV_ENVIRONMENT_I
+	
+	EXECUTION_ENVIRONMENT
 
 create
 	make
@@ -45,6 +47,14 @@ feature -- Access
 			-- a mouse wheel scroll event.
 		do
 			Result := 3
+		end
+		
+	has_printer: BOOLEAN is
+			-- Is a default printer available?
+			-- `Result' is `True' if at least one printer is installed.
+		do
+			system ("which lpr >& /dev/null")
+			Result := return_code = 0
 		end
 
 end -- class EV_ENVIRONMENT_IMP

@@ -384,7 +384,7 @@ feature -- Contract support
 				until
 					list1.after or else Result = False
 				loop
-					Result := list1.item /= list2.item
+					Result := list1.item = list2.item
 					list1.forth
 					list2.forth
 				end
@@ -432,6 +432,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/29 22:15:34  king
+--| Corrected lists_equal
+--|
 --| Revision 1.11  2000/03/29 21:44:51  brendel
 --| Corrected implementation of `lists_equal'.
 --|

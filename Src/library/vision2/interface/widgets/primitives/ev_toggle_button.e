@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Button with 'par' as parent and 'txt' as 
 			-- text label
 		do
-			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_label (par, txt)
+			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_text (par, txt)
 			widget_make (par)
 		end			
 		

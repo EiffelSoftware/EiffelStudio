@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to signals.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
-			Precursor {EV_TEXT_FIELD_IMP}
+				-- List item sets up all events
 
 			feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (
 				list_widget,

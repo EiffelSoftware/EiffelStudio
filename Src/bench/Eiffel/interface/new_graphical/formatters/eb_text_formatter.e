@@ -25,10 +25,10 @@ creation
 
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showtext 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showtext 
+		end
 	
 feature {EB_FEATURE_TOOL_LIST} -- Displaying
 
@@ -201,6 +201,8 @@ feature {NONE} -- Properties
 		do
 			Result := ""
 		end
+
+	post_fix: STRING is "txt"
 
 	menu_name: STRING is
 			-- Name used in menu entry

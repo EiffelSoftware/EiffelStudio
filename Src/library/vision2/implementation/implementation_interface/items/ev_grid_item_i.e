@@ -108,6 +108,7 @@ feature -- Status setting
 					if parent_row_i.is_selected then
 						parent_grid_i.update_row_selection_status (parent_row_i)
 					end
+					parent_grid_i.update_item_selection_status (Current)
 					parent_grid_i.redraw_client_area
 					fixme ("Perform a more optimal redraw when available")
 				end

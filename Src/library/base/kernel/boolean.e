@@ -7,63 +7,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-expanded class BOOLEAN inherit
+expanded class BOOLEAN
 
+inherit
 	BOOLEAN_REF
-		redefine
-			infix "and",
-			infix "and then",
-			infix "implies",
-			prefix "not",
-			infix "or",
-			infix "or else",
-			infix "xor"
-		end
-
-feature -- Basic operations
-
-	infix "and" (other: BOOLEAN): BOOLEAN is
-			-- Boolean conjunction with `other'
-		do
-			-- Built-in
-		end;
-
-	infix "and then" (other: BOOLEAN): BOOLEAN is
-			-- Boolean semi-strict conjunction with `other'
-		do
-			-- Built-in
-		end;
-
-	infix "implies" (other: BOOLEAN): BOOLEAN is
-			-- Boolean implication of `other'
-			-- (semi-strict)
-		do
-			-- Built-in
-		end;
-
-	prefix "not" : BOOLEAN is
-			-- Negation.
-		do
-			-- Built-in
-		end;
-
-	infix "or" (other: BOOLEAN): BOOLEAN is
-			-- Boolean disjunction with `other'
-		do
-			-- Built-in
-		end;
-
-	infix "or else" (other: BOOLEAN): BOOLEAN is
-			-- Boolean semi-strict disjunction with `other'
-		do
-			-- Built-in
-		end;
-
-	infix "xor" (other: BOOLEAN): BOOLEAN is
-			-- Boolean exclusive or with `other'
-		do
-			-- Built-in
-		end;
 
 end -- class BOOLEAN
 

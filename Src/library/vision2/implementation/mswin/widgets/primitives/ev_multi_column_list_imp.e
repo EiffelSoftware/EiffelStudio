@@ -331,9 +331,6 @@ feature -- Event : command association
 	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when a row has been selected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
 		do
 			add_command (Cmd_select, cmd, arg)
 		end
@@ -341,9 +338,6 @@ feature -- Event : command association
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when a row has been unselected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
 		do
 			add_command (Cmd_unselect, cmd, arg)
 		end
@@ -351,9 +345,6 @@ feature -- Event : command association
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when a column is clicked.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
 		do
 			add_command (Cmd_column_click, cmd, arg)
 		end

@@ -320,9 +320,6 @@ feature -- Event : command association
 	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when an item has been selected.
-		require
-			exists: not destroyed
-			valid_cmd: cmd /= Void
 		do
 			add_command (Cmd_select, cmd, arg)
 		end
@@ -330,9 +327,6 @@ feature -- Event : command association
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when an item has been unselected.
-		require
-			exists: not destroyed
-			valid_cmd: cmd /= Void
 		do
 			add_command (Cmd_unselect, cmd, arg)
 		end
@@ -341,9 +335,6 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the text in the field is activated, i.e. the
 			-- user press the enter key.
-		require
-			exists: not destroyed
-			valid_cmd: cmd /= Void
 		do
 			add_command (Cmd_activate, cmd, arg)
 		end

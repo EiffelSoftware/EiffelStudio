@@ -1,20 +1,10 @@
 class DEBUG_CONTEXT
 
 inherit
-
-	FORMAT_FEAT_CONTEXT
-		rename
-			emit_tabs as old_emit_tabs,
-			execute as feat_execute
-		redefine
-			put_breakable
-		end
 	FORMAT_FEAT_CONTEXT
 		redefine
 			put_breakable, emit_tabs,
 			execute
-		select
-			emit_tabs, execute
 		end
 
 creation
@@ -28,7 +18,7 @@ feature -- Execution
 			-- clickable with class `c' as context
 		do
 			e_feature := a_target_feat;
-			feat_execute (a_target_feat)
+			{FORMAT_FEAT_CONTEXT} Precursor (a_target_feat)
 		end;
 
 feature {NONE}
@@ -58,7 +48,7 @@ feature {NONE}
 			else
 				text.add (ti_padded_debug_mark)
 			end;
-			old_emit_tabs;
+			{FORMAT_FEAT_CONTEXT} Precursor;
 		end;
 
 end	 -- class DEBUG_CONTEXT

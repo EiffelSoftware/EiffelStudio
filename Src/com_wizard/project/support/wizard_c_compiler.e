@@ -51,7 +51,7 @@ create
 
 feature -- Basic Operations
 
-	compile_folder (a_folder_name: STRING; a_progress_report: WIZARD_PROGRESS_REPORT) is
+	compile_folder (a_folder_name: STRING) is
 			-- Compiler C files in folder `a_folder_name'.
 			-- Report progress with `a_progress_report' if not void.
 		require

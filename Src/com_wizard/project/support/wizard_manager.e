@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 								Clib_folder_name.append_character (Directory_separator)
 								Clib_folder_name.append (Clib)
 								progress_report.set_title (C_client_compilation_title)
-								compiler.compile_folder (Clib_folder_name, Current)
+								compiler.compile_folder (Clib_folder_name)
 								compiler.link_all (Clib_folder_name, CLib_name)
 							end
 							if shared_wizard_environment.server and not shared_wizard_environment.abort then
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 								Clib_folder_name.append_character (Directory_separator)
 								Clib_folder_name.append (Clib)
 								progress_report.set_title (C_server_compilation_title)
-								compiler.compile_folder (Clib_folder_name, Current)
+								compiler.compile_folder (Clib_folder_name)
 								compiler.link_all (Clib_folder_name, CLib_name)
 							end
 							if not shared_wizard_environment.abort then
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 								Clib_folder_name.append_character (Directory_separator)
 								Clib_folder_name.append (Clib)
 								progress_report.set_title (C_common_compilation_title)
-								compiler.compile_folder (Clib_folder_name, Current)
+								compiler.compile_folder (Clib_folder_name)
 								compiler.link_all (Clib_folder_name, CLib_name)
 							end
 							if Shared_wizard_environment.compile_eiffel then

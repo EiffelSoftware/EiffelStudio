@@ -2138,7 +2138,8 @@ static int get_char()
 	end_position++;
 
 	c = input(); end_position++;
-	if (!c)
+	if (c == 0 || c == (char) EOF)
+		/* Flex and lex don't return the same value on EOF */
 		/* Bad character: no more input */
 		return EIF_ERROR5;
 	else {
@@ -2173,7 +2174,7 @@ static int get_string()
 	start_position = end_position;
 	end_position++;
 
-	while ((c = input()) != 0 && c != '"' && n < STRINGLENGTH && c != '\n') {
+	while ((c = input()) != 0 && c != (char) EOF && c != '"' && n < STRINGLENGTH && c != '\n') {
 		end_position++;
 		if (c == '%') {
 			extension = 0;

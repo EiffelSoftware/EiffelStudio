@@ -67,7 +67,7 @@ static int get_string()
 	char	c, cc;
 	int		extension;
 
-	while ((c = input()) != 0 && c != '"') {
+	while ((c = input()) != 0 && c != (char) EOF && c != '"') {
 		if (c == '%') {
 			extension = 0;
 			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {

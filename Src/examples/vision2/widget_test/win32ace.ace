@@ -41,7 +41,7 @@ default
 cluster
 	all root_cluster:		"."
 		exclude
-			"templates"; "generation_only"
+			"templates";
 		end
 
 
@@ -54,7 +54,7 @@ cluster
 
 	all vision2:		"$ISE_EIFFEL\library\vision2"
 		exclude
-			"gtk"; 
+			"gtk"; "ev_pixmap.e"; "ev_pixmapable.e";
 		end
 
 external

@@ -16,7 +16,6 @@ inherit
 
 	ANY
 
-
 create
 	make
 
@@ -62,8 +61,6 @@ feature {NONE} -- Initialization
 		
 		end
 
-
-
 feature -- Access
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER
@@ -78,7 +75,6 @@ feature -- Access
 	window_count: INTEGER
 			-- number of windows.
 
-
 feature {NONE} -- Implementation
 
 	initialize_component is
@@ -90,7 +86,7 @@ feature {NONE} -- Implementation
 			create components.make
 			create main_menu.make
 			create status_bar.make
-			
+
 			set_text (("MDI Example").to_cil)
 			set_menu (main_menu)
 			l_size.make_from_width_and_height (5, 13)
@@ -100,7 +96,7 @@ feature {NONE} -- Implementation
 
 			create main_menu.make
 			set_menu (main_menu)
-			
+
 			status_bar.set_back_color (feature {DRAWING_SYSTEM_COLORS}.control)
 			l_point.make_from_x_and_y (0, 180)
 			status_bar.set_location (l_point)
@@ -113,7 +109,6 @@ feature {NONE} -- Implementation
 			non_void_main_menu: main_menu /= Void
 			non_void_status_bar: status_bar /= Void
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -153,7 +148,7 @@ feature {NONE} -- Implementation
 		do
 			add_document
 		end
-	
+
 	on_file_exit_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- File->Exit Menu item handler.
 		require
@@ -175,7 +170,7 @@ feature {NONE} -- Implementation
 				status_bar.set_text (active_mdi_child.text)
 			end
 		end
-	
+
 	on_window_cascade_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Window->Cascade Menu item handler.
 		require
@@ -184,7 +179,7 @@ feature {NONE} -- Implementation
 		do
 			layout_mdi (feature {WINFORMS_MDI_LAYOUT}.cascade)
 		end
-	
+
 	on_window_tileH_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Window->Tile Horizontally Menu item handler.
 		require
@@ -193,7 +188,7 @@ feature {NONE} -- Implementation
 		do
 			layout_mdi (feature {WINFORMS_MDI_LAYOUT}.tile_horizontal)
 		end
-	
+
 	on_window_tileV_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Window->Tile Vertically Menu item handler.
 		require

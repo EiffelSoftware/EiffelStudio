@@ -63,7 +63,6 @@ feature -- Access
 	btn_fore_color, btn_month_background, btn_title_back_color, btn_title_fore_color, btn_trailing_fore_color: WINFORMS_BUTTON			
 			-- System.Windows.Forms.Button
 
-
 feature -- Implementation
 
 	initialize_components is

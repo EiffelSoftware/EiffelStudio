@@ -98,7 +98,6 @@ feature {NONE} -- Initialization
 			non_void_rich_text_box: rich_text_box /= Void
 		end
 
-
 feature -- Access
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER
@@ -128,7 +127,6 @@ feature -- Access
 	sans_serif_font_family,
 	serif_font_family: DRAWING_FONT_FAMILY
 			-- System.Windows.Forms.FontFamily.
-
 
 feature {NONE} -- Implementation
 
@@ -166,7 +164,6 @@ feature {NONE} -- Implementation
 			non_void_rich_text_box: rich_text_box /= Void
 		end
 
-
 feature {NONE} -- Implementation
 
 	dispose_boolean (a_disposing: BOOLEAN) is
@@ -202,7 +199,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	on_load_document_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- File->Load Document Menu item handler.
 		require
@@ -227,7 +223,7 @@ feature {NONE} -- Implementation
 			mi_clicked.set_checked (True)
 			mi_format_font_checked.set_checked (False)
 			mi_format_font_checked := mi_clicked
-			
+
 			if mi_clicked.equals (mi_sans_serif) then
 				current_font_family := sans_serif_font_family
 			elseif mi_clicked.equals (mi_serif) then
@@ -235,7 +231,7 @@ feature {NONE} -- Implementation
 			else
 				current_font_family := mono_space_font_family
 			end
-			
+
 			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
 		end
 
@@ -253,7 +249,7 @@ feature {NONE} -- Implementation
 			mi_clicked.set_checked (True)
 			mi_format_size_checked.set_checked (False)
 			mi_format_size_checked := mi_clicked
-			
+
 			font_size_string := mi_clicked.text
 			if font_size_string.equals (("&Small").to_cil) then
 				font_size := font_sizes ("Small")

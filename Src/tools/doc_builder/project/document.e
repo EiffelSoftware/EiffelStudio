@@ -221,7 +221,7 @@ feature -- Status Setting
 	set_widget (a_widget: like widget) is
 			-- Set `widget'
 		require
-			widget_not_void: widget /= Void
+			widget_not_void: a_widget /= Void
 		do
 			widget := a_widget
 		ensure
@@ -298,6 +298,7 @@ feature {NONE} -- Implementation
 					text.append_character ('%N')
 				end
 				file.putstring (text)
+				shared_document_editor.update_date (file.date)
 				file.flush
 				file.close
 				saved_text := text

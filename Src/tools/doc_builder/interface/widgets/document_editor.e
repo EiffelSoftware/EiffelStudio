@@ -149,6 +149,12 @@ feature -- Commands
 			current_document.save
 		end				
 		
+	update_date (a_date: INTEGER) is
+			-- 
+		do
+			date_of_file_when_loaded := a_date
+		end	
+		
 	validate_document is
 			-- Validate current document to loaded schema
 		local

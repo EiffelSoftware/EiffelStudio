@@ -829,7 +829,7 @@ feature -- Third pass: byte code production and type check
 				feat_table := Feat_tbl_server.item (class_id)
 				def_resc := default_rescue_feature (feature_table)
 
-				ast_context.set_a_class (Current)
+				ast_context.set_current_class (Current)
 
 				if melted_set /= Void then
 					melted_set.clear_all
@@ -920,7 +920,7 @@ end
 						feature_changed := True
 					end
 	
-					ast_context.set_a_feature (feature_i)
+					ast_context.set_current_feature (feature_i)
 
 					if feature_i.in_pass3 then
 						if
@@ -1039,14 +1039,14 @@ end
 					if not type_checked and then changed3 and then
 						not (feature_i.is_attribute or else feature_i.is_constant) then
 						-- Forced type check on the feature
-						ast_context.set_a_feature (feature_i)
+						ast_context.set_current_feature (feature_i)
 
 						feature_i.type_check
 						check_local_names_needed := False
 						ast_context.clear2
 					end
 					if check_local_names_needed then
-						ast_context.set_a_feature (feature_i)
+						ast_context.set_current_feature (feature_i)
 						feature_i.check_local_names
 						ast_context.clear2
 					end
@@ -1059,7 +1059,7 @@ end
 					if feature_i.is_deferred then
 							-- Just type check it. See if VRRR or
 							-- VMRX error has occurred.
-						ast_context.set_a_feature (feature_i)
+						ast_context.set_current_feature (feature_i)
 
 						feature_i.type_check
 						ast_context.clear2
@@ -3102,8 +3102,7 @@ end
 			class_type: CLASS_TYPE
 			type_i: CL_TYPE_I
 		do
-			!!type_i
-			type_i.set_base_id (class_id)
+			create type_i.make (class_id)
 			class_type := new_type (type_i)
 			types.put_front (class_type)
 			System.insert_class_type (class_type)

@@ -88,16 +88,6 @@ feature
 			valid_when_correct: last_operation_correct implies is_valid;
 		end;
 
-	retrieve (a_file_name: STRING) is
-			-- Retreive the pixmap from a file named `a_file_name'.
-			-- Set `last_operation_correct'.
-		require
-			a_file_name_exists: not (a_file_name = Void)
-		deferred
-		ensure
-			last_operation_correct implies is_valid
-		end;
-
 	store (a_file_name: STRING) is
 			-- Store the pixmap into a file named `a_file_name'.
 			-- Create the file if it doesn't exist and override else.

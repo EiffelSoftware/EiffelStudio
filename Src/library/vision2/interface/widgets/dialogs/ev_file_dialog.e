@@ -119,9 +119,6 @@ invariant
 	start_directory_not_void: start_directory /= Void
 	file_name_not_void_implies_path_and_title_not_void: file_name /= Void
 		implies (file_title /= Void and then file_path /= Void)
-	path_plus_title_equals_name: file_name /= Void implies
-		file_name.is_equal (file_path +
-		Operating_environment.Directory_separator.out + file_title)
 
 end -- class EV_FILE_DIALOG
 

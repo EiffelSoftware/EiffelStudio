@@ -134,8 +134,6 @@ feature {NONE}
 
 	Melted_dle: STRING is "melted.dle";
 
-	Multithreaded_tag: STRING is "multithreaded"
-
 	Precomp_eif: STRING is "precomp.eif"
 
 	Prelink_script: STRING is "prelink"

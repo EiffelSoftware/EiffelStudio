@@ -101,6 +101,10 @@ feature -- Input
 					io.error.putstring (a_file_name)
 					io.error.new_line
 				end
+				if hot_x = 0 and then hot_y = 0 then
+					hot_x := width // 2
+					hot_y := height // 2
+				end
 			else
 				io.error.putstring ("Unable to read pixmap ")
 				io.error.putstring (a_file_name)

@@ -443,8 +443,7 @@ feature {NONE}-- Clickable/Editable implementation
 						processed_type := complete_expression_type (exp)
 					end
 				else
-					name := current_token.image.out
-					name.to_lower
+					name := current_token.image.as_lower
 					if name.is_equal (Precursor_word) then
 						go_to_next_token
 						if token_image_is_same_as_word (current_token, Opening_brace) then
@@ -522,8 +521,7 @@ feature {NONE}-- Clickable/Editable implementation
 			until
 				error or else after_searched_token
 			loop
-				name := current_token.image.out
-				name.to_lower
+				name := current_token.image.as_lower
 				processed_class := processed_type.associated_class
 				error := True
 				if processed_class /= Void  and then processed_class.has_feature_table then
@@ -938,8 +936,7 @@ feature {NONE}-- Implementation
 						end
 					else
 							-- type is Void
-						name := sub_exp.item.image.out
-						name.to_lower
+						name := sub_exp.item.image.as_lower
 						if current_class_c.has_feature_table then
 							processed_feature := current_class_c.feature_with_name (name)
 						end
@@ -977,8 +974,7 @@ feature {NONE}-- Implementation
 						if sub_exp.after then
 							error := True
 						else
-							name := sub_exp.item.image.out
-							name.to_lower
+							name := sub_exp.item.image.as_lower
 							processed_class := type.associated_class
 							type := Void
 							if processed_class /= Void and then processed_class.has_feature_table then
@@ -1027,8 +1023,7 @@ feature {NONE}-- Implementation
 				Result := found_class.actual_type
 			end
 			if Result = Void then
-				image := current_token.image.out
-				image.to_lower
+				image := current_token.image.as_lower
 				class_i := Universe.class_named (image, Universe.cluster_of_name (cluster_name))
 				if class_i /= Void and then class_i.compiled then
 					found_class := class_i.compiled_class
@@ -1049,8 +1044,7 @@ feature {NONE}-- Implementation
 			feat: E_FEATURE
 			cls_c: CLASS_C
 		do
-			name := a_name.out
-			name.to_lower
+			name := a_name.as_lower
 			if name.is_equal (Equal_sign) or name.is_equal (Different_sign) then
 				create {BOOLEAN_A} Result
 			else

@@ -66,16 +66,13 @@ feature -- Comparison
 		end
 		
 	begins_with (s:STRING): BOOLEAN is
-			-- does this feature name begins with `s'?
+			-- Does this feature name begins with `s'?
 		local
-			lower_current, lower_s: STRING
+			lower_s: STRING
 		do
 			if count >= s.count then
-				lower_current := out
-				lower_current.to_lower
-				lower_s := s.out
-				lower_s.to_lower
-				Result := lower_current.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
+				lower_s := s.as_lower
+				Result := as_lower.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
 			end
 		end	
 

@@ -74,8 +74,7 @@ feature -- basic operations
 			image: STRING
 		do
 			if token /= Void then
-				image := token.image.out
-				image.to_lower
+				image := token.image.as_lower
 				Result := image.is_equal (word)
 			end
 		end
@@ -89,8 +88,7 @@ feature -- basic operations
 			i: INTEGER
 		do
 			if token /= Void then
-				image := token.image.out
-				image.to_lower
+				image := token.image.as_lower
 				from 
 					i := words.lower
 				until

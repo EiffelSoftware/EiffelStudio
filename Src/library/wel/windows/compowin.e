@@ -74,6 +74,9 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	scroller: WEL_SCROLLER
+			-- Scroller object for processing scroll messages.
+
 feature -- Status report
 
 	closeable: BOOLEAN is
@@ -112,6 +115,80 @@ feature -- Status report
 			Result := window_minimum_height
 		end
 
+	horizontal_position: INTEGER is
+			-- Current position of the horizontal scroll box
+		require
+			exists: exists
+		do
+			Result := cwin_get_scroll_pos (item, Sb_horz)
+		ensure
+			result_small_enough: Result <= maximal_horizontal_position
+			result_large_enough: Result >= minimal_horizontal_position
+		end
+
+	vertical_position: INTEGER is
+			-- Current position of the vertical scroll box
+		require
+			exists: exists
+		do
+			Result := cwin_get_scroll_pos (item, Sb_vert)
+		ensure
+			result_small_enough: Result <= maximal_vertical_position
+			result_large_enough: Result >= minimal_vertical_position
+		end
+
+	maximal_horizontal_position: INTEGER is
+			-- Maxium position of the horizontal scroll box
+		require
+			exists: exists
+		local
+			min, max: INTEGER
+		do
+			cwin_get_scroll_range (item, Sb_horz, $min, $max)
+			Result := max
+		ensure
+			result_large_enough: Result >= minimal_horizontal_position
+		end
+
+	maximal_vertical_position: INTEGER is
+			-- Maxium position of the vertical scroll box
+		require
+			exists: exists
+		local
+			min, max: INTEGER
+		do
+			cwin_get_scroll_range (item, Sb_vert, $min, $max)
+			Result := max
+		ensure
+			result_large_enough: Result >= minimal_vertical_position
+		end
+
+	minimal_horizontal_position: INTEGER is
+			-- Minimum position of the horizontal scroll box
+		require
+			exists: exists
+		local
+			min, max: INTEGER
+		do
+			cwin_get_scroll_range (item, Sb_horz, $min, $max)
+			Result := min
+		ensure
+			result_small_enough: Result <= maximal_horizontal_position
+		end
+
+	minimal_vertical_position: INTEGER is
+			-- Minimum position of the vertical scroll box
+		require
+			exists: exists
+		local
+			min, max: INTEGER
+		do
+			cwin_get_scroll_range (item, Sb_vert, $min, $max)
+			Result := min
+		ensure
+			result_small_enough: Result <= maximal_vertical_position
+		end
+
 feature -- Status setting
 
 	set_menu (a_menu: WEL_MENU) is
@@ -135,6 +212,94 @@ feature -- Status setting
 			cwin_set_menu (item, default_pointer)
 		ensure
 			menu_unset: not has_menu
+		end
+
+	set_horizontal_position (position: INTEGER) is
+			-- Set `horizontal_position' with `position'.
+		require
+			exists: exists
+			position_small_enough: position <= maximal_horizontal_position
+			position_large_enough: position >= minimal_horizontal_position
+		do
+			cwin_set_scroll_pos (item, Sb_horz, position, True)
+		ensure
+			horizontal_position_set: horizontal_position = position
+		end
+
+	set_vertical_position (position: INTEGER) is
+			-- Set `vertical_position' with `position'.
+		require
+			exists: exists
+			position_small_enough: position <= maximal_vertical_position
+			position_large_enough: position >= minimal_vertical_position
+		do
+			cwin_set_scroll_pos (item, Sb_vert, position, True)
+		ensure
+			vertical_position_set: vertical_position = position
+		end
+
+	set_horizontal_range (minimum, maximum: INTEGER) is
+			-- Set `minimal_horizontal_position' and
+			-- `maximal_horizontal_position' with `minimum' and
+			-- `maximum'.
+		require
+			exists: exists
+			consistent_range: minimum < maximum
+		do
+			cwin_set_scroll_range (item, Sb_horz, minimum,
+				maximum, True)
+		ensure
+			minimal_horizontal_position_set: minimal_horizontal_position =
+				minimum
+			maximal_horizontal_position_set: maximal_horizontal_position =
+				maximum
+		end
+
+	set_vertical_range (minimum, maximum: INTEGER) is
+			-- Set `minimal_vertical_position' and
+			-- `maximal_vertical_position' with `minimum' and
+			-- `maximum'.
+		require
+			exists: exists
+			consistent_range: minimum < maximum
+		do
+			cwin_set_scroll_range (item, Sb_vert, minimum,
+				maximum, True)
+		ensure
+			minimal_vertical_position_set: minimal_vertical_position =
+				minimum
+			maximal_vertical_position_set: maximal_vertical_position =
+				maximum
+		end
+
+	horizontal_update (inc, position: INTEGER) is
+			-- Update the window and the horizontal scroll box with
+			-- `inc' and `position'.
+		require
+			exists: exists
+                        position_small_enough: position <= maximal_horizontal_position
+			position_large_enough: position >= minimal_horizontal_position
+		do
+			scroll (inc, 0)
+			set_horizontal_position (position)
+			update
+		ensure
+			horizontal_position_set: horizontal_position = position
+		end
+
+	vertical_update (inc, position: INTEGER) is
+			-- Update the window and the vertical scroll box with
+			-- `inc' and `position'.
+		require
+			exists: exists
+			position_small_enough: position <= maximal_vertical_position
+			position_large_enough: position >= minimal_vertical_position
+		do
+			scroll (0, inc)
+			set_vertical_position (position)
+			update
+		ensure
+			vertical_position_set: vertical_position = position
 		end
 
 feature -- Basic operations
@@ -167,7 +332,8 @@ feature -- Basic operations
 			exists: exists
 		do
 			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0, Swp_nosize + Swp_nozorder)
+				a_x, a_y, 0, 0,
+				Swp_nosize + Swp_nozorder + Swp_noactivate)
 		ensure
 			absolute_x_set: absolute_x = a_x
 			absolute_y_set: absolute_y = a_y
@@ -236,6 +402,19 @@ feature -- Messages
 		do
 		end
 
+	on_sys_command (command, x_pos, y_pos: INTEGER) is
+			-- Wm_syscommand message.
+			-- This message is sent when the user selects a command
+			-- from the system menu or when the user selects the
+			-- Maximize or Minimize button.
+			-- See class WEL_SC_CONSTANTS for `command' values.
+			-- `x_pos' and `y_pos' specify the x and y coordinates
+			-- of the cursor.
+		require
+			exists: exists
+		do
+		end
+
 	on_accelerator_command (accelerator_id: INTEGER) is
 			-- The `acelerator_id' has been activated.
 		require
@@ -254,13 +433,26 @@ feature -- Messages
 		do
 		end
 
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_paint message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		require
+			paint_dc_not_void: paint_dc /= Void
+			paint_dc_exists: paint_dc.exists
+			invalid_rect_not_void: invalid_rect /= Void
+		do
+		end
+
 	on_vertical_scroll_control (scroll_code, position: INTEGER;
 			bar: WEL_BAR) is
 			-- Vertical scroll is received with a
-			-- `scroll_code' type. `position' is
-			-- the new scrollbox position. `bar'
-			-- indicates the scrollbar or trackbar
-			-- control activated.
+			-- `scroll_code' type. See class WEL_SB_CONSTANTS
+			-- for `scroll_code' values. `position' is the new
+			-- scrollbox position. `bar' indicates the scrollbar
+			-- or trackbar control activated.
 		require
 			exists: exists
 			bar_not_void: bar /= Void
@@ -271,14 +463,129 @@ feature -- Messages
 	on_horizontal_scroll_control (scroll_code, position: INTEGER;
 			bar: WEL_BAR) is
 			-- Horizontal scroll is received with a
-			-- `scroll_code' type. `position' is
-			-- the new scrollbox position. `bar'
-			-- indicates the scrollbar or trackbar
-			-- control activated.
+			-- `scroll_code' type. See class WEL_SB_CONSTANTS
+			-- for `scroll_code' values. `position' is the new
+			-- scrollbox position. `bar' indicates the scrollbar
+			-- or trackbar control activated.
 		require
 			exists: exists
 			bar_not_void: bar /= Void
 			bar_exists: bar.exists
+		do
+		end
+
+	on_vertical_scroll (scroll_code, position: INTEGER) is
+			-- Vertical scroll is received with a
+			-- `scroll_code' type. See class WEL_SB_CONSTANTS for
+			-- `scroll_code' values. `position' is the new
+			-- scrollbox position.
+		require
+			exists: exists
+		do
+			if scroller /= Void then
+				scroller.on_vertical_scroll (scroll_code,
+					position)
+			end
+		end
+
+	on_horizontal_scroll (scroll_code, position: INTEGER) is
+			-- Horizontal scroll is received with a
+			-- `scroll_code' type. See class WEL_SB_CONSTANTS for
+			-- `scroll_code' values. `position' is the new
+			-- scrollbox position.
+		require
+			exists: exists
+		do
+			if scroller /= Void then
+				scroller.on_horizontal_scroll (scroll_code,
+					position)
+			end
+		end
+
+	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+			-- Wm_drawitem message.
+			-- A owner-draw control identified by `control_id' has
+			-- been changed and must be drawn. `draw_item' contains
+			-- informations about the item to be drawn and the type
+			-- of drawing required.
+		require
+			exists: exists
+			draw_item_not_void: draw_item /= Void
+			draw_item_exists: draw_item.exists
+		do
+		end
+
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+			-- Wm_getminmaxinfo message.
+			-- The size or position of the window is about to
+			-- change. An application can change `min_max_info' to
+			-- override the window's default maximized size and
+			-- position, or its default minimum or maximum tracking
+			-- size.
+		require
+			exists: exists
+			min_max_info_not_void: min_max_info /= Void
+			min_max_info_exists: min_max_info.exists
+		do
+		end
+
+	on_window_pos_changed (window_pos: WEL_WINDOW_POS) is
+			-- Wm_windowpschanged message.
+			-- This message is sent to a window whose size,
+			-- position, or place in the Z order has changed as a
+			-- result of a call to `move' or `resize'.
+		require
+			exists: exists
+			window_pos_not_void: window_pos /= Void
+			window_pos_exists: window_pos.exists
+		do
+		end
+
+	on_window_pos_changing (window_pos: WEL_WINDOW_POS) is
+			-- Wm_windowposchanging
+			-- This message is sent to a window whose size,
+			-- position or place in the Z order is about to change
+			-- as a result of a call to `move', `resize'.
+			-- `window_pos' can be changed to override the default
+			-- values.
+		require
+			exists: exists
+			window_pos_not_void: window_pos /= Void
+			window_pos_exists: window_pos.exists
+		do
+		end
+
+	on_palette_is_changing (window: WEL_WINDOW) is
+			-- Wm_paletteischanging.
+			-- Inform that an application is going to realize its
+			-- logical palette. `window' identifies the window
+			-- that is going to realize its logical palette.
+		require
+			exists: exists
+		do
+		end
+
+	on_palette_changed (window: WEL_WINDOW) is
+			-- Wm_palettechanged message.
+			-- This message is sent after the window with the
+			-- keyboard focus has realized its logical palette.
+			-- `window' identifies the window that caused the
+			-- system palette to change.
+		require
+			exists: exists
+		do
+		end
+
+	on_query_new_palette is
+			-- Wm_querrynewpalette message.
+			-- Inform an application that is about to receive the
+			-- keyboard focus, giving the application an opportunity
+			-- to realize its logical palette when it receives the
+			-- focus. If the window realizes its logical palette,
+			-- it must return True; otherwise it must return False.
+			-- (False by default)
+		require
+			exists: exists
 		do
 		end
 
@@ -343,7 +650,6 @@ feature {NONE} -- Implementation
 			exists: exists
 		local
 			p: POINTER
-			menu_item, flags: INTEGER
 			a_menu: WEL_MENU
 		do
 			p := cwin_get_wm_menuselect_hmenu (wparam, lparam)
@@ -352,39 +658,130 @@ feature {NONE} -- Implementation
 				on_menu_select (cwin_get_wm_menuselect_cmd (wparam, lparam),
 					cwin_get_wm_menuselect_flags (wparam, lparam),
 					a_menu)
+			else
+				on_menu_select (cwin_get_wm_menuselect_cmd (wparam, lparam),
+					cwin_get_wm_menuselect_flags (wparam, lparam),
+					Void)
 			end
+		end
+
+	on_wm_paint is
+			-- Wm_paint message.
+			-- A WEL_DC and WEL_PAINT_STRUCT are created and
+			-- passed to the `on_paint' routine.
+			-- To be more efficient when the windows does not
+			-- need to paint something, this routine can be
+			-- redefined to do nothing (eg. The object creation are
+			-- useless).
+		require
+			exists: exists
+		local
+			paint_dc: WEL_PAINT_DC
+		do
+			!! paint_dc.make (Current)
+			paint_dc.get
+			if scroller /= Void then
+				paint_dc.set_viewport_origin (-scroller.horizontal_position,
+					-scroller.vertical_position)
+			end
+			on_paint (paint_dc, paint_dc.paint_struct.rect_paint)
+			paint_dc.release
 		end
 
 	on_wm_vscroll (wparam, lparam: INTEGER) is
 			-- Wm_vscroll message.
+		require
+			exists: exists
 		local
 			a_bar: WEL_BAR
+			p: POINTER
 		do
-			a_bar ?= windows.item (cwin_get_wm_vscroll_hwnd (wparam,
-				lparam))
-			check
-				a_bar_not_void: a_bar /= Void
-				a_bar_exists: a_bar.exists
+			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
+			if p /= default_pointer then
+				-- The message comes from a scroll bar control
+				a_bar ?= windows.item (p)
+				check
+					a_bar_not_void: a_bar /= Void
+					a_bar_exists: a_bar.exists
+				end
+				on_vertical_scroll_control (cwin_get_wm_vscroll_code (wparam, lparam),
+					cwin_get_wm_vscroll_pos (wparam, lparam),
+					a_bar)
+			else
+				-- The message comes from a window scroll bar
+				on_vertical_scroll (cwin_get_wm_vscroll_code (wparam, lparam),
+					cwin_get_wm_vscroll_pos (wparam, lparam))
 			end
-			on_vertical_scroll_control (cwin_get_wm_vscroll_code (wparam, lparam),
-				cwin_get_wm_vscroll_pos (wparam, lparam),
-				a_bar)
 		end
 
 	on_wm_hscroll (wparam, lparam: INTEGER) is
 			-- Wm_hscroll message.
+		require
+			exists: exists
 		local
 			a_bar: WEL_BAR
+			p: POINTER
 		do
-			a_bar ?= windows.item (cwin_get_wm_hscroll_hwnd (wparam,
-				lparam))
-			check
-				a_bar_not_void: a_bar /= Void
-				a_bar_exists: a_bar.exists
+			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
+			if p /= default_pointer then
+				-- The message comes from a scroll bar control
+				a_bar ?= windows.item (p)
+				check
+					a_bar_not_void: a_bar /= Void
+					a_bar_exists: a_bar.exists
+				end
+				on_horizontal_scroll_control (cwin_get_wm_hscroll_code (wparam, lparam),
+					cwin_get_wm_hscroll_pos (wparam, lparam),
+					a_bar)
+			else
+				-- The message comes from a window scroll bar
+				on_horizontal_scroll (cwin_get_wm_hscroll_code (wparam, lparam),
+					cwin_get_wm_hscroll_pos (wparam, lparam))
 			end
-			on_horizontal_scroll_control (cwin_get_wm_hscroll_code (wparam, lparam),
-				cwin_get_wm_hscroll_pos (wparam, lparam),
-				a_bar)
+		end
+
+	on_wm_draw_item (wparam, lparam: INTEGER) is
+			-- Wm_drawitem message
+		require
+			exists: exists
+		local
+			di: WEL_DRAW_ITEM_STRUCT
+		do
+			!! di.make_by_pointer (cwel_integer_to_pointer (lparam))
+			on_draw_item (wparam, di)
+		end
+
+	on_wm_get_min_max_info (lparam: INTEGER) is
+			-- Wm_getminmaxinfo message
+		require
+			exists: exists
+		local
+			mmi: WEL_MIN_MAX_INFO
+		do
+			!! mmi.make_by_pointer (cwel_integer_to_pointer (lparam))
+			on_get_min_max_info (mmi)
+		end
+
+	on_wm_window_pos_changed (lparam: INTEGER) is
+			-- Wm_windowposchanged message
+		require
+			exists: exists
+		local
+			wp: WEL_WINDOW_POS
+		do
+			!! wp.make_by_pointer (cwel_integer_to_pointer (lparam))
+			on_window_pos_changed (wp)
+		end
+
+	on_wm_window_pos_changing (lparam: INTEGER) is
+			-- Wm_windowposchanging message
+		require
+			exists: exists
+		local
+			wp: WEL_WINDOW_POS
+		do
+			!! wp.make_by_pointer (cwel_integer_to_pointer (lparam))
+			on_window_pos_changing (wp)
 		end
 
 	on_wm_close: BOOLEAN is
@@ -428,14 +825,35 @@ feature {WEL_DISPATCHER}
 			-- parent class.
 			Result := window_process_message (hwnd, msg,
 				wparam, lparam)
-			if msg = Wm_command then
+			if msg = Wm_paint then
+				on_wm_paint
+			elseif msg = Wm_command then
 				on_wm_command (wparam, lparam)
+			elseif msg = Wm_syscommand then
+				on_sys_command (wparam, cwin_lo_word (lparam),
+					cwin_hi_word (lparam))
 			elseif msg = Wm_menuselect then
 				on_wm_menu_select (wparam, lparam)
 			elseif msg = Wm_vscroll then
 				on_wm_vscroll (wparam, lparam)
 			elseif msg = Wm_hscroll then
 				on_wm_hscroll (wparam, lparam)
+			elseif msg = Wm_drawitem then
+				on_wm_draw_item (wparam, lparam)
+			elseif msg = Wm_getminmaxinfo then
+				on_wm_get_min_max_info (lparam)
+			elseif msg = Wm_windowposchanged then
+				on_wm_window_pos_changed (lparam)
+			elseif msg = Wm_windowposchanging then
+				on_wm_window_pos_changing (lparam)
+			elseif msg = Wm_paletteischanging then
+				on_palette_is_changing (windows.item (
+					cwel_integer_to_pointer (wparam)))
+			elseif msg = Wm_palettechanged then
+				on_palette_changed (windows.item (
+					cwel_integer_to_pointer (wparam)))
+			elseif msg = Wm_querynewpalette then
+				on_query_new_palette
 			elseif msg = Wm_close then
 				if on_wm_close then
 					Result := -1
@@ -491,6 +909,41 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (int)"
 		alias
 			"PostQuitMessage"
+		end
+
+	cwin_set_scroll_pos (hwnd: POINTER; flag, a_position: INTEGER;
+			redraw: BOOLEAN) is
+			-- SDK SetScrollPos
+		external
+			"C [macro <wel.h>] (HWND, int, int, BOOL)"
+		alias
+			"SetScrollPos"
+		end
+
+	cwin_set_scroll_range (hwnd: POINTER; flag, min, max: INTEGER;
+			redraw: BOOLEAN) is
+			-- SDK SetScrollRange
+		external
+			"C [macro <wel.h>] (HWND, int, int, int, BOOL)"
+		alias
+			"SetScrollRange"
+		end
+
+	cwin_get_scroll_pos (hwnd: POINTER; flag: INTEGER): INTEGER is
+			-- SDK GetScrollPos
+		external
+			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
+		alias
+			"GetScrollPos"
+		end
+
+	cwin_get_scroll_range (hwnd: POINTER; flag: INTEGER;
+			min, max: POINTER) is
+			-- SDK GetScrollRange
+		external
+			"C [macro <wel.h>] (HWND, int, LPINT, LPINT)"
+		alias
+			"GetScrollRange"
 		end
 
 	cwin_get_wm_command_id (wparam, lparam: INTEGER): INTEGER is

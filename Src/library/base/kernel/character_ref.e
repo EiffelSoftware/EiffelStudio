@@ -43,6 +43,51 @@ feature -- Output
 			Result := c_outc ($item)
 		end;
 
+
+feature -- Conversion
+
+	upper: CHARACTER is
+			-- Uppercase value of `item'
+			-- Returns `item' if not `is_lower'
+		do
+			Result := chupper (item)
+		end;
+
+	lower: CHARACTER is
+			-- Lowercase value of `item'
+			-- Returns `item' if not `is_upper'
+		do
+			Result := chlower (item)
+		end;
+
+feature -- Status report
+
+	is_lower: BOOLEAN is
+			-- Is `item' lowercase?
+		do
+			Result := chis_lower (item)
+		end;
+
+	is_upper: BOOLEAN is
+			-- Is `item' uppercase?
+		do
+			Result := chis_upper (item)
+		end;
+
+	is_digit: BOOLEAN is
+			-- Is `item' a digit?
+			-- A digit is one of 0123456789
+		do
+			Result := chis_digit (item)
+		end;
+
+	is_alpha: BOOLEAN is
+			-- Is `item' alphabetic?
+			-- Alphabetic is `is_upper' or `is_lower'
+		do
+			Result := chis_alpha (item)
+		end;
+
 feature {NONE} -- Implementation
 
 	chcode (c: like item): INTEGER is
@@ -51,9 +96,38 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-
 	c_outc (c: CHARACTER): STRING is
 			-- Printable representation of character.
+		external
+			"C"
+		end;
+
+	chupper (c: CHARACTER): CHARACTER is
+		external
+			"C"
+		end;
+
+	chlower (c: CHARACTER): CHARACTER is
+		external
+			"C"
+		end;
+
+	chis_lower (c: CHARACTER): BOOLEAN is
+		external
+			"C"
+		end;
+
+	chis_upper (c: CHARACTER): BOOLEAN is
+		external
+			"C"
+		end;
+
+	chis_digit (c: CHARACTER): BOOLEAN is
+		external
+			"C"
+		end;
+
+	chis_alpha (c: CHARACTER): BOOLEAN is
 		external
 			"C"
 		end;

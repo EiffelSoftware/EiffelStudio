@@ -8,8 +8,6 @@ class
 	
 inherit
  	INHERITANCE_CLAUSE
- 		rename 
- 			make as make_inheritance_clause
  		redefine
  			is_equal
  		end

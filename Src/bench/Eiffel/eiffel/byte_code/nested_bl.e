@@ -3,18 +3,6 @@
 class NESTED_BL 
 
 inherit
-
-	NESTED_B
-		rename
-			print_register as old_print_register,
-			free_register as old_free_register
-		redefine
-			stored_register, has_call, has_gcable_variable, c_type,
-			set_register, register, set_parent, parent, propagate,
-			unanalyze, generate_creation_call, generate, analyze,
-			allocates_memory
-		end;
-
 	NESTED_B
 		redefine
 			print_register, free_register,
@@ -22,43 +10,41 @@ inherit
 			set_register, register, set_parent, parent, propagate,
 			unanalyze, generate_creation_call, generate, analyze,
 			allocates_memory
-		select
-			print_register, free_register
-		end;
+		end
 	
 feature 
 
-	register: REGISTRABLE;
+	register: REGISTRABLE
 			-- In which register the expression is stored
 
 	set_register (r: REGISTRABLE) is
 			-- Set current register to `r'
 		do
-			register := r;
-		end;
+			register := r
+		end
 
-	parent: NESTED_BL;
+	parent: NESTED_BL
 			-- Parent of current node
 	
 	set_parent (p: NESTED_BL) is
 			-- Set `parent' to `p'
 		do
-			parent := p;
-		end;
+			parent := p
+		end
 
 	c_type: TYPE_C is
 			-- Current C type (used by `get_register')
 		do
-			Result := local_type.c_type;
-		end;
+			Result := local_type.c_type
+		end
 
 	local_type: TYPE_I is
 			-- Type of the current call
 		require
 			valid_message: message /= Void
 		do
-			Result := real_type (message.target.type);
-		end;
+			Result := real_type (message.target.type)
+		end
 
 	has_gcable_variable: BOOLEAN is
 			-- Is the current call using a GCable variable ?
@@ -67,12 +53,12 @@ feature
 			if message.target = message then
 					-- We are the last call
 				Result := target.has_gcable_variable or
-					message.has_gcable_variable;
+					message.has_gcable_variable
 			else
 					-- Propagate the request
-				Result := message.has_gcable_variable;
-			end;
-		end;
+				Result := message.has_gcable_variable
+			end
+		end
 
 	propagate (r: REGISTRABLE) is
 			-- Propagates register to calls in expression whose type matches
@@ -86,7 +72,7 @@ feature
 					-- be inlined).
 				if 	register = Void
 					and
-					local_type.c_type.same_type (r.c_type)
+					local_type.c_type.same_class_type (r.c_type)
 					and
 					(r = No_register implies not target.type.is_basic)
 					and
@@ -94,22 +80,22 @@ feature
 					and 
 					not context.has_invariant
 				then
-					register := r;
-					context.set_propagated;
-				end;
+					register := r
+					context.set_propagated
+				end
 			else
 					-- Grab register only if it has the same type as ours
 					-- and if it is not used later in the expression.
 					-- We never grab temporary registers in the middle of a
 					-- multidot expression.
 				if not (r.is_temporary or forth_used (r)) then
-					if local_type.c_type.same_type (r.c_type) then
+					if local_type.c_type.same_class_type (r.c_type) then
 							-- Don't bother calling set_propagated, because we
 							-- know it'll be done at the end of the call anyway.
 						if register = Void and not context.has_invariant then
-							register := r;
-						end;
-					end;
+							register := r
+						end
+					end
 						-- We may safely propagate register to our target only
 						-- when that register is not used further in the call.
 						-- If r is No_register, make sure the target is NOT an
@@ -125,24 +111,24 @@ feature
 								and
 								context.propagate_no_register)
 					then
-						target.propagate (r);
-					end;
-				end;
+						target.propagate (r)
+					end
+				end
 					-- Recursively propagate register on the whole call tree
-				message.propagate (r);
-			end;
-		end;
+				message.propagate (r)
+			end
+		end
 
 	stored_register: REGISTRABLE is
 			-- Register in which the call is stored (last one)
 		do
 			if message.target = message then
 					-- We are in the last multidot cal
-				Result := register;
+				Result := register
 			else
-				Result := message.stored_register;
-			end;
-		end;
+				Result := message.stored_register
+			end
+		end
 
 	print_register is
 			-- Print register or generate if there are no register.
@@ -156,26 +142,26 @@ feature
 				if register /= No_register then
 						-- There is a register, hence the call has already
 						-- been generated and the result is in the register.
-					old_print_register;
+					register.print_register
 				else
 						-- There is no register, which means the call has not
 						-- been generated yet.
 					if parent = Void then
 							-- This is the first call.
-						message.target.generate_on (target);
+						message.target.generate_on (target)
 					else
 							-- This is part of a dot call. Generate a call on
 							-- the entity stored in the parent's register.
-						message.target.generate_on (parent.register);
-					end;
-				end;
+						message.target.generate_on (parent.register)
+					end
+				end
 			else
 					-- Simply propagate the request (it is impossible for a
 					-- call which is part of a multidot expression to have
 					-- its register set to No_register).
-				message.print_register;
-			end;
-		end;
+				message.print_register
+			end
+		end
 
 	free_register is
 			-- Free register used by last call expression. If No_register was
@@ -184,63 +170,63 @@ feature
 		do
 			if message.target = message then
 					-- Reached last call
-				old_free_register;
+				{NESTED_B} precursor
 					-- Free those registers which where kept because No_register
 					-- was propagated, hence call was meant to be expanded
 					-- in-line.
 				if register = No_register then
-					target.free_register;
-					message.free_register;
-				end;
+					target.free_register
+					message.free_register
+				end
 			else
 					-- Propagate the request
-				message.free_register;
-			end;
-		end;
+				message.free_register
+			end
+		end
 
 	free_target_register is
 			-- Free the register used by the message target
 		local
-			msg_target: ACCESS_B;
+			msg_target: ACCESS_B
 		do
-			msg_target := message.target;
+			msg_target := message.target
 			if msg_target /= message and message.register /= No_register
 			then
 					-- Last call was not reached. Free the next target
 					-- iff not to be stored in No_register
-				msg_target.free_register;
+				msg_target.free_register
 			elseif msg_target = message and register /= No_register then
-				msg_target.free_register;
-			end;
-		end;
+				msg_target.free_register
+			end
+		end
 
 	unanalyze is
 			-- Undo the analysis of the expression
 		local
-			void_register: REGISTER;
+			void_register: REGISTER
 		do
 			if parent = Void then
 					-- At the top of the tree.
-				target.unanalyze;
-			end;
-			message.target.unanalyze;
-			register := void_register;
+				target.unanalyze
+			end
+			message.target.unanalyze
+			register := void_register
 			if message.target /= message then
 					-- We are not the last call on the chain.
-				message.unanalyze;
-			end;
-		end;
+				message.unanalyze
+			end
+		end
 
 	analyze is
 			-- Analyze expression
 		local
-			msg_target: ACCESS_B;
+			msg_target: ACCESS_B
 			reg: REGISTER;		-- For debug
 		do
 debug
-io.error.putstring ("In nested_bl%N");
-end;
-			msg_target := message.target;
+io.error.putstring ("In nested_bl%N")
+end
+			msg_target := message.target
 			if parent = Void then
 					-- If we are at the top of the tree hierarchy, then
 					-- this has never been analyzed. If the access has
@@ -271,13 +257,13 @@ end;
 					or
 					msg_target.is_polymorphic)
 				then
-					context.init_propagation;
-					target.propagate (No_register);
-				end;
-				target.analyze;
-			end;
+					context.init_propagation
+					target.propagate (No_register)
+				end
+				target.analyze
+			end
 				-- Analyze the next target
-			msg_target.analyze_on (target);
+			msg_target.analyze_on (target)
 				-- These register will be freed by a call to free_register if
 				-- register = No_register (remember: this is NOT possible in
 				-- the middle of a nested call).
@@ -287,93 +273,93 @@ end;
 					-- otherwise we would not be able to check the invariant
 					-- after the call (as the variable playing 'Current' might
 					-- get overwritten if re-used now).
-				get_register;
-			end;
+				get_register
+			end
 debug
-io.error.putstring ("TARGET REGISTER%N");
+io.error.putstring ("TARGET REGISTER%N")
 if target.register /= Void then
-	io.error.putstring (target.register.out);
+	io.error.putstring (target.register.out)
 else
-	io.error.putstring ("%TVOID%N");
-end;
-io.error.putstring ("MESSAGE TARGET REGISTER%N");
+	io.error.putstring ("%TVOID%N")
+end
+io.error.putstring ("MESSAGE TARGET REGISTER%N")
 if msg_target.register /= Void then
-	io.error.putstring (msg_target.register.out);
+	io.error.putstring (msg_target.register.out)
 else
-	io.error.putstring ("%TVOID%N");
-end;
-io.error.putstring ("CURRENT REGISTER%N");
+	io.error.putstring ("%TVOID%N")
+end
+io.error.putstring ("CURRENT REGISTER%N")
 if register /= Void then
-	io.error.putstring (register.out);
+	io.error.putstring (register.out)
 else
-	io.error.putstring ("%TVOID%N");
-end;
-end;
+	io.error.putstring ("%TVOID%N")
+end
+end
 			if register /= No_register then
 				if (parent = Void) then
 						-- First call. Otherwise, target is freed by parent.
-					target.free_register;
+					target.free_register
 				else
 						-- The register used by our parent is no longer needed.
-					parent.register.free_register;
-				end;
+					parent.register.free_register
+				end
 					-- Free the register used by the message target
-				free_target_register;
-			end;
+				free_target_register
+			end
 				-- Take a register if none has been propagated
 				-- The register will be freed later on (this may well be
 				-- part of a parameter list).
 			if not context.has_invariant then
-				get_register;
-			end;
+				get_register
+			end
 			if msg_target /= message then
 					-- We are not the last call on the chain.
-				message.analyze;
-			end;
+				message.analyze
+			end
 debug
-io.error.putstring ("Out nested_bl%N");
-end;
-		end;
+io.error.putstring ("Out nested_bl%N")
+end
+		end
 
 	generate is
 			-- Generate expression
 		local
-			with_inv: BOOLEAN;
+			with_inv: BOOLEAN
 		do
-			with_inv := context.has_invariant;
+			with_inv := context.has_invariant
 			if parent = Void then
 					-- This is the first call. Generate the target.
-				target.generate;
+				target.generate
 					-- Generate a call on an entity stored in `target'
-				generate_call (target, with_inv);
+				generate_call (target, with_inv)
 			else
 					-- This is part of a dot call. Generate a call on the
 					-- entity stored in the parent's register.
-				generate_call (parent.register, with_inv);
-			end;
+				generate_call (parent.register, with_inv)
+			end
 			if message.target /= message then
 					-- We are not the last call on the chain.
-				message.generate;
-			end;
-		end;
+				message.generate
+			end
+		end
 
 	generate_creation_call is
 			-- Generate creation call
 		do
-			target.generate;
-			generate_call (target, False);
-		end;
+			target.generate
+			generate_call (target, False)
+		end
 
 	generate_call (reg: REGISTRABLE; with_inv: BOOLEAN) is
 			-- Generate a call on entity held in `reg'
 		local
-			message_target: ACCESS_B;
-			value_type: TYPE_I;
+			message_target: ACCESS_B
+			value_type: TYPE_I
 			cl_type: CL_TYPE_I
 		do
-			message_target := message.target;
+			message_target := message.target
 				-- Put parameters, if any, in temporary registers
-			message_target.generate_parameters (reg);
+			message_target.generate_parameters (reg)
 				-- Now if there is a result for the call and the result
 				-- has to be stored in a real register, do generate the
 				-- assignment.
@@ -381,69 +367,69 @@ end;
 					-- generated directly by a call to `print_register'.
 					-- Otherwise, we have to generate it now.
 				if register /= Void and register /= No_register	and not real_type(target.type).is_separate then
-					old_print_register;
-					generated_file.putstring (" = ");
-				end;
+					register.print_register
+					generated_file.putstring (" = ")
+				end
 					-- If register is No_register, then the call will be
 					-- generated directly by a call to `print_register'.
 					-- Otherwise, we have to generate it now.
 				if register /= No_register then
-					message_target.generate_on (reg);
+					message_target.generate_on (reg)
 					if not real_type(target.type).is_separate then
-						generated_file.putchar (';');
-						generated_file.new_line;
+						generated_file.putchar (';')
+						generated_file.new_line
 					end
-				end;
+				end
 					-- Now, we process separate feature call which return a basic data
 					-- or separate object.
 				if register /= Void and register /= No_register and real_type(target.type).is_separate then
-					old_print_register;
-					generated_file.putstring (" = ");
-					value_type := context.real_type(message.target.type);
---					value_type := message.target.context_type;
---					value_type := context.real_type(message.type);
---					value_type := context.real_type(type);
+					register.print_register
+					generated_file.putstring (" = ")
+					value_type := context.real_type(message.target.type)
+--					value_type := message.target.context_type
+--					value_type := context.real_type(message.type)
+--					value_type := context.real_type(type)
 					if value_type.is_boolean then
-						generated_file.putstring ("CURGB(0);");
+						generated_file.putstring ("CURGB(0);")
 					elseif value_type.is_char then
-						generated_file.putstring ("CURGC(0);");
+						generated_file.putstring ("CURGC(0);")
 					elseif value_type.is_double then
-						generated_file.putstring ("CURGD(0);");
+						generated_file.putstring ("CURGD(0);")
 					elseif value_type.is_float then
-						generated_file.putstring ("CURGR(0);");
+						generated_file.putstring ("CURGR(0);")
 					elseif value_type.is_long then
-						generated_file.putstring ("CURGI(0);");
+						generated_file.putstring ("CURGI(0);")
 					elseif value_type.is_feature_pointer then
-						generated_file.putstring ("CURGP(0);");
+						generated_file.putstring ("CURGP(0);")
 					elseif value_type.is_expanded then
-						generated_file.putstring ("CURGO(0);");
+						generated_file.putstring ("CURGO(0);")
 					else
 					-- if value_type.is_separate or value_type.is_reference then
-						generated_file.putstring ("CURGSO(0);");
+						generated_file.putstring ("CURGSO(0);")
 					end	
 					
 					generated_file.new_line
 				end
 			else
 				if register /= Void and register /= No_register then
-					old_print_register;
-					generated_file.putstring (" = ");
-				end;
+					register.print_register
+					generated_file.putstring (" = ")
+				end
 					-- If register is No_register, then the call will be
 					-- generated directly by a call to `print_register'.
 					-- Otherwise, we have to generate it now.
 				if register /= No_register then
-					message_target.generate_on (reg);
-					generated_file.putchar (';');
-					generated_file.new_line;
-				end;
-			end;
-			message_target.reset_added_gc_hooks;
-		end;
+					message_target.generate_on (reg)
+					generated_file.putchar (';')
+					generated_file.new_line
+				end
+			end
+			message_target.reset_added_gc_hooks
+		end
 
-	has_call: BOOLEAN is True;
+	has_call: BOOLEAN is True
 			-- The expression has at least one call
 
-	allocates_memory: BOOLEAN is True;
+	allocates_memory: BOOLEAN is True
 
 end

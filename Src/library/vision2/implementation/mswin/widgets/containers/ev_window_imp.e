@@ -805,12 +805,12 @@ feature {NONE} -- Implementation
 				if item /= Void then
 					item_imp.parent_ask_resize (client_width, client_height)
 				end
-				if status_bar /= Void then
-					sb_imp ?= status_bar.implementation
-					if sb_imp /= Void then
-						sb_imp.reposition
-					end
-				end
+			--	if status_bar /= Void then
+			--		sb_imp ?= status_bar.implementation
+			--		if sb_imp /= Void then
+			--			sb_imp.reposition
+			--		end
+			--	end
 				interface.resize_actions.call ([x_position, y_position, a_width, a_height])
 			end
 		end
@@ -1008,6 +1008,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/04/28 22:13:30  brendel
+--| Commented out statusbar code.
+--|
 --| Revision 1.41  2000/04/28 21:43:35  brendel
 --| Replaced EV_STATUS_BAR with EV_WIDGET.
 --|

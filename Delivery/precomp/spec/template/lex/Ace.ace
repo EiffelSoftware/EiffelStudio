@@ -1,0 +1,18 @@
+system EiffelLex
+
+root
+
+	ANY
+
+default
+
+	assertion (require);
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+
+cluster
+
+-- EiffelLex
+
+		lex:				"$EIFFEL4/library/lex";
+
+end

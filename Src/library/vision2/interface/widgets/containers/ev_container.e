@@ -96,6 +96,7 @@ feature -- Element change
 
 	extend (v: like item) is
 			-- Ensure that structure includes `v'.
+			-- Do not move cursor.
 		require
 			extendible: extendible
 			v_not_void: v /= Void
@@ -293,6 +294,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/01 02:22:26  brendel
+--| Improved comment comment of `extend'.
+--|
 --| Revision 1.21  2000/03/01 00:09:59  brendel
 --| Fixed bug in `all_radio_buttons_connected' feature, where before it
 --| assumed that linear_representation returned a copy of a list.

@@ -135,11 +135,11 @@ Cluster_clause          : /* empty */
 							{$$ = NULL;}
 /* Recude/Reduce conflict here */
                         | Name Parent_tag LAC_COLUMN Name
-							{$$ = create_node3 (CLUSTER_SD,$1,$4,NULL,$2);}
+							{$$ = create_node4 (CLUSTER_SD,$1,$4,NULL,$2);}
                         | Name Parent_tag LAC_COLUMN Name LAC_END
-							{$$ = create_node3 (CLUSTER_SD,$1,$4,NULL,$2);}
+							{$$ = create_node4 (CLUSTER_SD,$1,$4,NULL,$2);}
                         | Name Parent_tag LAC_COLUMN Name Cluster_properties LAC_END
-							{$$ = create_node3 (CLUSTER_SD,$1,$4,$5,$2);}
+							{$$ = create_node4 (CLUSTER_SD,$1,$4,$5,$2);}
                         ;
 
 Parent_tag              : /* empty */

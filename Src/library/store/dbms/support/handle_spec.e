@@ -10,15 +10,12 @@ feature -- Access
 
 	db_spec: DATABASE is
 			-- Handle to actual database
-		local
-			db: DATABASE
 		do
-			db := db_spec_impl.object
-			if db = Void then
+			Result := db_spec_impl.object
+			if Result = Void then
 				change_object
-				db := db_spec_impl.object
+				Result := db_spec_impl.object
 			end
-			Result := db
 		ensure
 			not_void: Result /= Void 
 		end

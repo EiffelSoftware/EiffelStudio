@@ -1,7 +1,9 @@
 indexing
 
 	description: 
-		"EiffelVision composite, gtk implementation."
+		"EiffelVision container. Allows only one children.%
+		 % Deferred class, parent of all the containers.  %
+		 % Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -13,15 +15,22 @@ deferred class
 	
 inherit
 	EV_CONTAINER_I	
+		
 
 	EV_WIDGET_IMP
-	
+		redefine
+			parent_ask_resize
+		end
+
+	WEL_WM_CONSTANTS
+
 feature {EV_CONTAINER}
 	
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		do
-			child_imp.set_parent_imp (Current) 
+			child_imp.set_parent_imp (Current)
+			the_child := child_imp
 			-- no other implementation needed (yet?) XXX
 		end
 
@@ -30,37 +39,45 @@ feature -- Access
 	client_width: INTEGER is
 			-- Width of the client area of container
 		do
-			Result := wel_window.client_rect.height
+			Result := wel_window.client_rect.width
 		end
 	
 	client_height: INTEGER is
 			-- Height of the client area of container
 		do
-			Result := wel_window.client_rect.width
+			Result := wel_window.client_rect.height
 		end
 
-feature {EV_WIDGET_IMP} -- Resizing
+feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Resizing
+
+	parent_ask_resize (new_width, new_height: INTEGER) is
+			-- When the parent asks the resize, it's not 
+			-- necessary to send him back the information
+		do
+			wel_window.disable_commands 
+			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
+			if the_child /= Void then
+				the_child.parent_ask_resize (client_width, client_height)
+			end
+			wel_window.enable_commands
+		end
 	
-	child_has_resized (new_width: INTEGER; new_height: INTEGER) is
+	child_has_resized (new_width, new_height: INTEGER; child: EV_WIDGET_IMP) is
 			-- Resize the container according to the 
 			-- resize of the child
 		do
 			-- XX Have to take into account the borders 
 			-- (new_width and new_height are the 
 			-- dimensions of the client area)
-			set_size (new_width + 2*system_metrics.window_frame_width, 
-				  new_height + system_metrics.title_bar_height + system_metrics.window_border_height + 2 * system_metrics.window_frame_height)
+			set_size (new_width, new_height)
 		end
 	
 	
-feature {NONE} -- Implementation
-	
-	system_metrics: WEL_SYSTEM_METRICS is
-			-- System metrics to query things like
-			-- window_frame_width
-		once
-			!!Result
-		end
+feature -- Access
+
+	the_child: EV_WIDGET_IMP
+			-- The child of the composite
+
 end
 
 --|----------------------------------------------------------------

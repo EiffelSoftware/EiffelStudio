@@ -57,6 +57,7 @@ feature -- Initialization
 --			set_default_cancel_button (exit_b)
 
 			show_actions.extend (~on_shown)
+			enable_user_resize
 		end
 
 feature
@@ -80,7 +81,8 @@ feature
 				-- Default medium size of characters.
 				-- font.maximum_width is too much, so we add 4 to the average width.
 			char_width := (create {EV_FONT}).width + 4
-			char_height := (create {EV_FONT}).height
+				-- + 1 because there may be a space between list items.
+			char_height := (create {EV_FONT}).height + 1
 
 			list.wipe_out
 			from
@@ -143,7 +145,7 @@ feature
 		do
 			list.set_focus
 			if not list.is_empty then
-				list.i_th (2).enable_select
+				list.first.enable_select
 			end
 --			exit_b.focus_out_actions.wipe_out
 --			exit_b.focus_out_actions.extend (~one_lost_focus)
@@ -239,7 +241,7 @@ feature {NONE} -- Implementation
 --		end
 
 	List_minimum_width: INTEGER is 70
-	List_maximum_width: INTEGER is 200
+	List_maximum_width: INTEGER is 300
 	List_minimum_height: INTEGER is 50
 	List_maximum_height: INTEGER is 300
 		-- Bounds for the displayed list.

@@ -13,7 +13,7 @@ class POINTER_REF inherit
 
 	HASHABLE
 		redefine
-			out, is_hashable
+			is_hashable, out
 		end
 
 feature -- Access
@@ -107,7 +107,8 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of pointer value
 		do
-			create Result.make_from_cil (item.to_string)
+			create Result.make_from_cil (feature {ISE_RUNTIME}.tagged_out (item))
+			Result.prepend ("0x")
 		end
 
 feature -- Conversion

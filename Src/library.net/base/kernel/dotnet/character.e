@@ -9,40 +9,24 @@ frozen expanded external class
 inherit
 	VALUE_TYPE
 		undefine
-			finalize
-		redefine
+			finalize,
 			get_hash_code,
 			equals,
-			to_string
+			to_string,
+			memberwise_clone
 		end
 	ICOMPARABLE
+		undefine
+			memberwise_clone
+		end
 		
 	CHARACTER_REF
-		redefine
-			get_hash_code,
-			equals,
-			to_string
-		end
 
 create {NONE}
 
 feature -- Access
 
 feature -- Basic Operations
-
-	get_hash_code: INTEGER is
-		external
-			"IL signature (): System.Int32 use System.Char"
-		alias
-			"GetHashCode"
-		end
-
-	to_string: SYSTEM_STRING is
-		external
-			"IL signature (): System.String use System.Char"
-		alias
-			"ToString"
-		end
 
 	frozen is_lower_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
 		external
@@ -91,13 +75,6 @@ feature -- Basic Operations
 			"IL static signature (System.String): System.Char use System.Char"
 		alias
 			"Parse"
-		end
-
-	equals (obj: SYSTEM_OBJECT): BOOLEAN is
-		external
-			"IL signature (System.Object): System.Boolean use System.Char"
-		alias
-			"Equals"
 		end
 
 	frozen is_separator_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is

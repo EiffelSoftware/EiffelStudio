@@ -826,14 +826,14 @@ end;
 					-- Update body index/body id correpondances
 				if new_body_id /= Void then
 						-- A new body id has been computed for `feature_i'.
-					if replace_body_id then
+					--if replace_body_id then
 							-- we change the body_id correponding to an old body_index
-						feature_i.change_body_id
-					else
+					--	feature_i.change_body_id
+					--else
 							-- we use a brand new body_index
 						Body_index_table.force
 									(new_body_id, feature_i.body_index);
-					end
+					--end
 debug ("ACTIVITY")
 	io.error.putstring ("Insert new body id: ");
 	new_body_id.trace;
@@ -1008,12 +1008,16 @@ end;
 						-- Computes a new body id for the changed
 						-- feature.
 					new_body_id := Body_id_counter.next_id;
+					--feature_i.change_body_id
+					--new_body_id := feature_i.body_id
 						-- Take reading information left by the server
 						-- `Tmp_ast_server' during first pass and put
 						-- it in the server `Tmp_body_server'.
 					body_table.put (read_info, new_body_id);	
 						-- Insert the changed feature in the table of
 						-- changed features of class `a_class'.
+					depend_server.change_ids (new_body_id, old_body_id)
+					depend_server.item (feature_i.written_in).replace_key (new_body_id, old_body_id)
 debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features%N%

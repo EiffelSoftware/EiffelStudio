@@ -112,7 +112,7 @@ feature -- Element change
 			-- Make `value' the new font.
 		require
 			exists: not destroyed
-			valid_font: is_valid (font)
+			valid_font: is_valid (value)
 		do
 			implementation.set_font (value)
 		ensure
@@ -123,7 +123,7 @@ feature -- Element change
 			-- Make `value' the new color.
 		require
 			exists: not destroyed
-			valid_color: is_valid (color)
+			valid_color: is_valid (value)
 		do
 			implementation.set_color (value)
 		ensure

@@ -43,6 +43,11 @@ class STRING inherit
 		redefine
 			copy, is_equal, out
 		end
+		
+	MISMATCH_CORRECTOR
+		redefine
+			copy, is_equal, out, correct_mismatch
+		end
 
 create
 	make,
@@ -1733,6 +1738,15 @@ feature {NONE} -- Empty string implementation
 			internal_hash_code := v
 		ensure
 			internal_hash_code_set: internal_hash_code = v
+		end
+
+feature {NONE} -- Transformation
+
+	correct_mismatch is
+			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
+		do
+			-- Nothing to be done because we only added `internal_hash_code' that will
+			-- be recomputed next time we query `hash_code'.
 		end
 		
 feature {STRING} -- Implementation

@@ -54,7 +54,7 @@ feature -- Basic operations
 					-- Add the project to the list, at position one, dropping
 					-- the last project from the list if necessary.
 				if recent_projects.count < number_of_projects then
-					recent_projects.resize (1, recent_projects.count + 1)
+					recent_projects.conservative_resize (1, recent_projects.count + 1)
 				end
 				from
 					counter := recent_projects.count - 1

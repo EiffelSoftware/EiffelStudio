@@ -59,8 +59,12 @@ feature -- Access
 
 	font_families: LINEAR [STRING] is
 			-- List of fonts available on the system
+		local
+			font_list: ARRAYED_LIST [STRING]
 		do
-			--| FIXME IEK To be implemented
+			create font_list.make (5)
+			font_list.extend ("Helvetica")
+			Result := font_list
 		end
 
 end -- class EV_ENVIRONMENT_IMP

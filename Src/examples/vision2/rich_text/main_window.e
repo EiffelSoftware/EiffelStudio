@@ -108,14 +108,6 @@ feature {NONE} -- Initialization
 			end
 			rich_text.flush_buffer_to (rich_text.text_length + 1, rich_text.text_length + 1)
 			
-			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_d), False, True, False)
-			accelerators.extend (accelerator)
-			accelerator.actions.extend (agent random_test)
-
-			
-				-- Initialize a test that checks the contents of each line.
-	--		create timer.make_with_interval (2000)
-	--		timer.actions.extend (agent check_line_positions)
 			show_actions.extend (agent window_shown)
 		end
 
@@ -594,7 +586,7 @@ feature {NONE} -- Implementation
 			vertical_offset.set_value (effects.vertical_offset)
 			vertical_offset.change_actions.resume
 
-				-- Udpate displayed font size.
+				-- Update displayed font size.
 			size_selection.set_text (font.height_in_points.out)
 			
 				-- Update displayed font name.
@@ -1120,79 +1112,7 @@ feature {NONE} -- Implementation
 		once
 			Result := <<8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72>>
 		end
-			
-feature {NONE} -- To be removed
 
-	--| FIXME all of the routines in this feature clause are only for
-	--| testing purposes, and should be removed.
-
-	check_line_positions is
-			-- Check that querying all lines of text in `Current' appended together are equivalent to
-			-- `text'.
-		local
-			counter: INTEGER
-			current_line: STRING
-			start_index, end_index: INTEGER
-			a_text: STRING
-			substring: STRING
-			color: EV_COLOR
-			current_text: STRING
-		do
-			a_text := rich_text.text
-			current_text := ""
-			from
-				counter := 1
-			until
-				counter > rich_text.line_count
-			loop
-				current_line := rich_text.line (counter)
-				start_index := rich_text.first_position_from_line_number (counter)
-				end_index := rich_text.last_position_from_line_number (counter)
-				substring := a_text.substring (start_index, end_index)
-				if not substring.is_equal (current_line) then
-					check
-						False
-					end
-						-- A check for anybody that has checking turned off.
-					print (color.red.out)
-				end
-				current_text.append (current_line)
-				counter := counter + 1
-			end
-			if not current_text.is_equal (a_text) then
-				check
-					False
-				end
-					-- A check for anybody that has checking turned off.
-				print (color.red.out)
-			end
-		end
-
-	timer: EV_TIMEOUT
-		-- Timer used for testing purposes.
-
-	random_test is
-			-- A feature connected to an accelerator for testing purposes.
-		do
---			--| FIXME remove this.
-----			from
-----				counter := 1
-----			until
-----				counter > 100
-----			loop
-----				create format
-----				if counter \\ 2 = 1 then
-----					format.enable_left_alignment
-----				else
-----					format.enable_center_alignment
-----				end
-----				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), format)
-----				(create {EV_ENVIRONMENT}).application.process_events
-----				counter := counter + 1
-----			end
---		--	format := rich_text.paragraph_format (10)
-		end
-		
 	open_file is
 			-- Called by `select_actions' of `open_menu_item'.
 		do
@@ -1290,13 +1210,6 @@ feature {NONE} -- To be removed
 				app.process_events
 			end
 		end
-		
-	
-	offset: INTEGER
-	
-	timeout: EV_TIMEOUT
-		
-	accelerator: EV_ACCELERATOR
 
 end -- class MAIN_WINDOW
 

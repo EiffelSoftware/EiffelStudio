@@ -13,7 +13,7 @@ inherit
 		redefine
 			is_require_else, is_ensure_then, has_rescue,
 			has_precondition, has_postcondition,
-			number_of_stop_points
+			number_of_stop_points, is_equivalent
 		end;
 
 feature {NONE} -- Initialization
@@ -116,18 +116,18 @@ feature -- Properties
 
 feature -- Access
 
-    number_of_stop_points: INTEGER is
-            -- Number of stop points for AST
-        do
-                -- Order matters.
-            if routine_body /= Void then
-                Result := routine_body.number_of_stop_points;
-            end;
-            if rescue_clause /= Void then
-                Result := Result + rescue_clause.number_of_stop_points;
-                Result := Result + 1
-            end;
-        end;
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+				-- Order matters.
+			if routine_body /= Void then
+				Result := routine_body.number_of_stop_points;
+			end;
+			if rescue_clause /= Void then
+				Result := Result + rescue_clause.number_of_stop_points;
+				Result := Result + 1
+			end;
+		end;
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does this routine has instruction `i'?
@@ -143,15 +143,19 @@ feature -- Access
 
 feature -- Comparison
 
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := is_body_equiv (other) and is_assertion_equiv (other)
+		end
+
 	is_body_equiv (other: like Current): BOOLEAN is
 			-- Is the current feature equivalent to `other' ?
 		do
-			reset_locals;
-			other.reset_locals;
 			Result := equivalent (routine_body, other.routine_body) and then
 				equivalent (locals, other.locals) and then
-				deep_equal (rescue_clause, other.rescue_clause) and then
-				deep_equal (obsolete_message, other.obsolete_message)
+				equivalent (rescue_clause, other.rescue_clause) and then
+				equivalent (obsolete_message, other.obsolete_message)
 		end;
  
 	is_assertion_equiv (other: like Current): BOOLEAN is
@@ -159,38 +163,8 @@ feature -- Comparison
 		require else
 			valid_other: other /= Void
 		do
-			reset_assertions;
-			other.reset_assertions;
-			Result :=   deep_equal (precondition, other.precondition) and then
-				deep_equal (postcondition, other.postcondition)
-		end;
-
-feature {COMPILER_EXPORTER, ROUTINE_AS}
-
-	reset_locals is obsolete "use is_equivalent"
-			-- Reset the positions in the list
-		do
-			if locals /= Void then
-				from
-					locals.start
-				until
-					locals.after
-				loop
-					locals.item.reset;
-					locals.forth
-				end;
-				locals.start;
-			end;
-		end;
-
-	reset_assertions is
-		do
-			if precondition /= Void then
-				precondition.reset;
-			end;
-			if postcondition /= Void then
-				postcondition.reset;
-			end;
+			Result := equivalent (precondition, other.precondition) and then
+				equivalent (postcondition, other.postcondition)
 		end;
 
 feature {AST_EIFFEL} -- Output
@@ -214,13 +188,13 @@ feature {AST_EIFFEL} -- Output
 			end
 
 			comments := ctxt.feature_comments;
-            if comments /= Void then
-                ctxt.indent
-                ctxt.indent
-                ctxt.put_comments (comments)
-                ctxt.exdent
-                ctxt.exdent
-            end;
+			if comments /= Void then
+				ctxt.indent
+				ctxt.indent
+				ctxt.put_comments (comments)
+				ctxt.exdent
+				ctxt.exdent
+			end;
 
 			ctxt.indent;
 			if precondition /= Void then
@@ -255,7 +229,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.exdent
 		end;
 
-feature	{ROUTINE_AS, FEATURE_AS, ROUTINE_MERGER, USER_CMD, CMD}  -- Replication and for flattening of a routine
+feature	{ROUTINE_AS, FEATURE_AS, ROUTINE_MERGER, USER_CMD, CMD} -- Replication and for flattening of a routine
 
 	set_precondition (p: like precondition) is
 		do

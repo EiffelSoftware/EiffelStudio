@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			elseif integer_input.parent /= Void then
 				Result := True
 			elseif directory_input.parent /= Void then
-				Result := True--not directory_input.text.is_empty
+				Result := True
 			elseif filename_input.parent /= Void then
 				Result := not filename_input.text.is_empty
 			elseif type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
@@ -374,19 +374,23 @@ feature {NONE} -- Implementation
 				new_button.enable_sensitive
 			end
 			remove_displayed_input_field
-			pixmap_constant ?= modify_constant
-			check
-				pixmap_constant_selected: pixmap_constant /= Void
+			if modify_constant /= Void then
+					-- Only display pixmap if `modify_constant' is not `Void' which may occur
+					-- when selecting the pixmap list item from the combo box.
+				pixmap_constant ?= modify_constant
+				check
+					pixmap_constant_selected: pixmap_constant /= Void
+				end
+				create pixmap
+				pixmap.copy (pixmap_constant.small_pixmap)
+					-- `pixmap' is inserted in a box, so it can be displayed to the left hand side of
+					-- `entry_selection_parent'.
+				create box
+				box.extend (pixmap)
+				pixmap.set_minimum_size (pixmap.width, pixmap.height)
+				box.disable_item_expand (box.first)	
+				entry_selection_parent.extend (box)
 			end
-			create pixmap
-			pixmap.copy (pixmap_constant.small_pixmap)
-				-- `pixmap' is inserted in a box, so it can be displayed to the left hand side of
-				-- `entry_selection_parent'.
-			create box
-			box.extend (pixmap)
-			pixmap.set_minimum_size (pixmap.width, pixmap.height)
-			box.disable_item_expand (box.first)	
-			entry_selection_parent.extend (box)
 			
 			if not display_all_types.is_selected and not currently_selected_type.is_equal (Pixmap_constant_type) then
 				rebuild_for_selected_type (pixmap_item.text)

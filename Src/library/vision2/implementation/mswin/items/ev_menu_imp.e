@@ -48,6 +48,34 @@ feature {NONE} -- Initialization
 			{EV_MENU_ITEM_LIST_IMP} Precursor
 		end
 
+feature -- Basic operations
+
+	show is
+			-- Pop up on the current pointer position.
+		local
+			wel_point: WEL_POINT
+			wel_win: WEL_COMPOSITE_WINDOW
+		do
+			if count /= 0 then
+				wel_win ?= parent_imp
+				create wel_point.make (0, 0)
+				wel_point.set_cursor_position
+				show_track (wel_point.x, wel_point.y, wel_win)
+			end
+		end
+
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+			-- Pop up on `a_x', `a_y' relative to the top-left corner
+			-- of `a_widget'.
+		local
+			wel_win: WEL_COMPOSITE_WINDOW
+		do
+			wel_win ?= a_widget.implementation
+			if wel_win /= Void then
+				show_track (a_x, a_y, wel_win)
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU	
@@ -75,6 +103,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/22 22:51:08  brendel
+--| Added show and show_at. Do not work yet.
+--|
 --| Revision 1.16  2000/02/24 01:39:48  brendel
 --| Added undefine of the parent from the interface.
 --|

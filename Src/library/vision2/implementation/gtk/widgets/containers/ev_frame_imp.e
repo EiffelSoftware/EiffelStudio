@@ -33,6 +33,49 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_frame_new (Default_pointer))
 		end
 
+feature -- Access
+
+	style: INTEGER is
+			-- Visual appearance. See: EV_FRAME_CONSTANTS.
+		local
+			gtk_style: INTEGER
+		do
+			gtk_style := C.gtk_frame_struct_shadow_type (c_object)
+			if gtk_style = C.Gtk_shadow_in_enum then
+				Result := Ev_frame_lowered
+			elseif gtk_style = C.Gtk_shadow_out_enum then
+				Result := Ev_frame_raised
+			elseif gtk_style = C.Gtk_shadow_etched_in_enum then
+				Result := Ev_frame_etched_in
+			elseif gtk_style = C.Gtk_shadow_etched_out_enum then
+				Result := Ev_frame_etched_out
+			else
+				check
+					valid_value: False
+				end
+			end
+		end
+
+feature -- Element change
+
+	set_style (a_style: INTEGER) is
+			-- Assign `a_style' to `style'.
+		local
+			gtk_style: INTEGER
+		do
+			inspect a_style
+				when Ev_frame_lowered then gtk_style := C.Gtk_shadow_in_enum
+				when Ev_frame_raised then gtk_style := C.Gtk_shadow_out_enum
+				when Ev_frame_etched_in then gtk_style := C.Gtk_shadow_etched_in_enum
+				when Ev_frame_etched_out then gtk_style := C.Gtk_shadow_etched_out_enum
+			else
+				check
+					valid_value: False
+				end
+			end
+			C.gtk_frame_set_shadow_type (c_object, gtk_style)
+		end
+
 feature -- Status setting
 
 	align_text_left is
@@ -112,6 +155,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/27 17:35:07  brendel
+--| Implemented `style' and `set_style'.
+--|
 --| Revision 1.9  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

@@ -34,6 +34,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("dd")
+		ensure
+			definition: Result = s.is_equal ("dd")
 		end
 
 	is_day0 (s: STRING): BOOLEAN is
@@ -43,6 +45,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("[0]dd")
+		ensure
+			definition: Result = s.is_equal ("[0]dd")
 		end
 
 	is_day_text (s: STRING): BOOLEAN is
@@ -51,6 +55,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("ddd")
+		ensure
+			definition: Result = s.is_equal ("ddd")
 		end
 
 	is_year4 (s: STRING): BOOLEAN is
@@ -60,6 +66,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("yyyy")
+		ensure
+			definition: Result = s.is_equal ("yyyy")
 		end
 
 
@@ -70,6 +78,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("yy")
+		ensure
+			definition: Result = s.is_equal ("yy")
 		end
 
 
@@ -79,8 +89,9 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("mm")
+		ensure
+			definition: Result = s.is_equal ("mm")
 		end
-
 
 	is_month0 (s: STRING): BOOLEAN is
 			-- Is the code a month-numeric
@@ -89,6 +100,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("[0]mm")
+		ensure
+			definition: Result = s.is_equal ("[0]mm")
 		end
 
 
@@ -98,6 +111,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("mmm")
+		ensure
+			definition: Result = s.is_equal ("mmm")
 		end
 
 
@@ -107,6 +122,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("hh")
+		ensure
+			definition: Result = s.is_equal ("hh")
 		end
 
 
@@ -117,6 +134,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("[0]hh")
+		ensure
+			definition: Result = s.is_equal ("[0]hh")
 		end
 
 
@@ -126,6 +145,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("hh12")
+		ensure
+			definition: Result = s.is_equal ("hh12")
 		end
 
 
@@ -135,6 +156,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("mi")
+		ensure
+			definition: Result = s.is_equal ("mi")
 		end
 
 
@@ -145,6 +168,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("[0]mi")
+		ensure
+			definition: Result = s.is_equal ("[0]mi")
 		end
 
 
@@ -154,6 +179,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("ss")
+		ensure
+			definition: Result = s.is_equal ("ss")
 		end
 
 
@@ -164,6 +191,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("[0]ss")
+		ensure
+			definition: Result = s.is_equal ("[0]ss")
 		end
 
 
@@ -175,9 +204,14 @@ feature -- Preconditions
 		local
 			substrg, substrg2: STRING
 		do
-			substrg := s.substring (1, 2)
-			substrg2 := s.substring (3, s.count)
-			Result := substrg.is_equal ("ff") and substrg2.is_integer
+			if s.count > 2 then
+				substrg := s.substring (1, 2)
+				substrg2 := s.substring (3, s.count)
+				Result := substrg.is_equal ("ff") and substrg2.is_integer
+			end
+		ensure
+			definition: Result = (s.count > 2) and then (s.substring (1, 2).is_equal ("ff") and
+									s.substring (3, s.count).is_integer)
 		end
 
 	is_colon (s: STRING): BOOLEAN is
@@ -186,6 +220,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal (":")
+		ensure
+			definition: Result = s.is_equal (":")
 		end
 
 
@@ -195,6 +231,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("/")
+		ensure
+			definition: Result = s.is_equal ("/")
 		end
 
 
@@ -204,6 +242,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal ("-")
+		ensure
+			definition: Result = s.is_equal ("-")
 		end
 
 
@@ -213,6 +253,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal (",")
+		ensure
+			definition: Result = s.is_equal (",")
 		end
 
 
@@ -222,6 +264,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal (" ")
+		ensure
+			definition: Result = s.is_equal (" ")
 		end
 
 
@@ -231,6 +275,8 @@ feature -- Preconditions
 			s_exists: s /= Void
 		do
 			Result := s.is_equal (".")
+		ensure
+			definition: Result = s.is_equal (".")
 		end
 
 	is_separator (s: STRING): BOOLEAN is
@@ -241,6 +287,10 @@ feature -- Preconditions
 			Result := is_slash (s) or else is_colon (s) or else
 				is_minus (s) or else is_comma (s) or else is_space (s) or else
 				is_dot (s)
+		ensure
+			definition: Result = is_slash (s) or else is_colon (s) or else
+						is_minus (s) or else is_comma (s) or else
+						is_space (s) or else is_dot (s)
 		end
 
 	is_meridiem (s: STRING): BOOLEAN is
@@ -253,6 +303,9 @@ feature -- Preconditions
 			tmp := clone (s)
 			tmp.to_upper
 			Result := tmp.is_equal ("AM") or tmp.is_equal ("PM")
+		ensure
+			definition: Result = s.as_upper.is_equal ("AM") or
+								s.as_upper.is_equal ("PM")
 		end
 
 end -- class CODE_VALIDITY_CHECKER

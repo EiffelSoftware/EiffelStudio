@@ -162,6 +162,14 @@ feature -- Status report
 				False
 			end
 		end
+		
+	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
+				-- Objects that have same dynamic type as `an_object'.
+			do
+				check
+					False
+				end
+			end
 
 feature -- Status setting
 

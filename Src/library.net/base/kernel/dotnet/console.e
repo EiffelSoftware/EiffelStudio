@@ -21,7 +21,13 @@ class CONSOLE inherit
 			{ANY}
 				separator, append, file_pointer, last_character, last_integer,
 				last_real, last_string, last_double, file_readable,
-				lastchar, lastint, lastreal, laststring, lastdouble
+				lastchar, lastint, lastreal, laststring, lastdouble,
+				read_character, readchar, read_real, 
+				read_line, read_stream, read_word, put_integer,
+				put_boolean, put_real, put_double, put_string, put_character,
+				put_new_line, new_line, readint, readreal, readline, readstream,
+				readword, putint, putbool, putreal, putdouble, putstring, putchar,
+			dispose
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			close, dispose, end_of_file, back, next_line,

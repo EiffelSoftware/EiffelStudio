@@ -111,7 +111,7 @@ feature -- Initialization
 			shared_implementation: not shared_with (s)
 		end
 
-	make_from_special (arr: NATIVE_ARRAY [CHARACTER]) is
+	make_from_native_array (arr: NATIVE_ARRAY [CHARACTER]) is
 			-- Initialize `Current' according to the contents of `arr'.
 		local
 			sys: SYSTEM_STRING

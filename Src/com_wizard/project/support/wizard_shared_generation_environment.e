@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Shared_file_name_factory: WIZARD_FILE_NAME_FACTORY is
@@ -185,170 +190,204 @@ feature -- Access
 	Generation_Aborted: STRING is "Generation aborted"
 			-- Successful ending message
 
-	eiffel_key_words: LINKED_LIST [STRING] is
+	eiffel_key_words: HASH_TABLE [STRING, STRING] is
 			-- List of Eiffel key words.
 		local
 			tmp_string: STRING
 		once
-			create Result.make
+			create Result.make (100)
 			Result.compare_objects
-			Result.force (clone (Alias_keyword))
-			Result.force (clone (All_keyword))
-			Result.force (clone (And_keyword))
-			Result.force (clone (As_keyword))
-			Result.force (clone (Check_keyword))
-			Result.force (clone (Class_keyword))
-			Result.force (clone (Create_keyword))
-			Result.force (clone (Creation_keyword))
-			Result.force (clone (Debug_keyword))
-			Result.force (clone (Deferred_keyword))
-			Result.force (clone (Do_keyword))
-			Result.force (clone (Else_keyword))
-			Result.force (clone (Elseif_keyword))
-			Result.force (clone (End_keyword))
-			Result.force (clone (Ensure_keyword))
-			Result.force (clone (Expanded_keyword))
-			Result.force (clone (Export_keyword))
-			Result.force (clone (External_keyword))
-			Result.force (clone (Feature_keyword))
-			Result.force (clone (From_keyword))
-			Result.force (clone (Frozen_keyword))
-			Result.force (clone (If_keyword))
-			Result.force (clone (Implies_keyword))
-			Result.force (clone (Indexing_keyword))
-			Result.force (clone (Infix_keyword))
-			Result.force (clone (Inherit_keyword))
-			Result.force (clone (Inspect_keyword))
-			Result.force (clone (Invariant_keyword))
-			Result.force (clone (Is_keyword))
-			Result.force (clone (Like_keyword))
-			Result.force (clone (Local_keyword))
-			Result.force (clone (Loop_keyword))
-			Result.force (clone (Not_keyword))
-			Result.force (clone (Obsolete_keyword))
-			Result.force (clone (Old_keyword))
-			Result.force (clone (Once_keyword))
-			Result.force (clone (Or_keyword))
-			Result.force (clone (Prefix_keyword))
-			Result.force (clone (Redefine_keyword))
-			Result.force (clone (Rename_keyword))
-			Result.force (clone (Require_keyword))
-			Result.force (clone (Rescue_keyword))
-			Result.force (clone (Retry_keyword))
-			Result.force (clone (Select_keyword))
-			Result.force (clone (Separate_keyword))
-			Result.force (clone (Then_keyword))
-			Result.force (clone (Undefine_keyword))
-			Result.force (clone (Until_keyword))
-			Result.force (clone (Variant_keyword))
-			Result.force (clone (When_keyword))
-			Result.force (clone (Xor_keyword))
+			Result.force (clone (Alias_keyword), clone (Alias_keyword))
+			Result.force (clone (All_keyword), clone (All_keyword))
+			Result.force (clone (And_keyword), clone (And_keyword))
+			Result.force (clone (As_keyword), clone (As_keyword))
+			Result.force (clone (Check_keyword), clone (Check_keyword))
+			Result.force (clone (Class_keyword), clone (Class_keyword))
+			Result.force (clone (Create_keyword), clone (Create_keyword))
+			Result.force (clone (Creation_keyword), clone (Creation_keyword))
+			Result.force (clone (Debug_keyword), clone (Debug_keyword))
+			Result.force (clone (Deferred_keyword), clone (Deferred_keyword))
+			Result.force (clone (Do_keyword), clone (Do_keyword))
+			Result.force (clone (Else_keyword), clone (Else_keyword))
+			Result.force (clone (Elseif_keyword), clone (Elseif_keyword))
+			Result.force (clone (End_keyword), clone (End_keyword))
+			Result.force (clone (Ensure_keyword), clone (Ensure_keyword))
+			Result.force (clone (Expanded_keyword), clone (Expanded_keyword))
+			Result.force (clone (Export_keyword), clone (Export_keyword))
+			Result.force (clone (External_keyword), clone (External_keyword))
+			Result.force (clone (Feature_keyword), clone (Feature_keyword))
+			Result.force (clone (From_keyword), clone (From_keyword))
+			Result.force (clone (Frozen_keyword), clone (Frozen_keyword))
+			Result.force (clone (If_keyword), clone (If_keyword))
+			Result.force (clone (Implies_keyword), clone (Implies_keyword))
+			Result.force (clone (Indexing_keyword), clone (Indexing_keyword))
+			Result.force (clone (Infix_keyword), clone (Infix_keyword))
+			Result.force (clone (Inherit_keyword), clone (Inherit_keyword))
+			Result.force (clone (Inspect_keyword), clone (Inspect_keyword))
+			Result.force (clone (Invariant_keyword), clone (Invariant_keyword))
+			Result.force (clone (Is_keyword), clone (Is_keyword))
+			Result.force (clone (Like_keyword), clone (Like_keyword))
+			Result.force (clone (Local_keyword), clone (Local_keyword))
+			Result.force (clone (Loop_keyword), clone (Loop_keyword))
+			Result.force (clone (Not_keyword), clone (Not_keyword))
+			Result.force (clone (Obsolete_keyword), clone (Obsolete_keyword))
+			Result.force (clone (Old_keyword), clone (Old_keyword))
+			Result.force (clone (Once_keyword), clone (Once_keyword))
+			Result.force (clone (Or_keyword), clone (Or_keyword))
+			Result.force (clone (Prefix_keyword), clone (Prefix_keyword))
+			Result.force (clone (Redefine_keyword), clone (Redefine_keyword))
+			Result.force (clone (Rename_keyword), clone (Rename_keyword))
+			Result.force (clone (Require_keyword), clone (Require_keyword))
+			Result.force (clone (Rescue_keyword), clone (Rescue_keyword))
+			Result.force (clone (Retry_keyword), clone (Retry_keyword))
+			Result.force (clone (Select_keyword), clone (Select_keyword))
+			Result.force (clone (Separate_keyword), clone (Separate_keyword))
+			Result.force (clone (Then_keyword), clone (Then_keyword))
+			Result.force (clone (Undefine_keyword), clone (Undefine_keyword))
+			Result.force (clone (Until_keyword), clone (Until_keyword))
+			Result.force (clone (Variant_keyword), clone (Variant_keyword))
+			Result.force (clone (When_keyword), clone (When_keyword))
+			Result.force (clone (Xor_keyword), clone (Xor_keyword))
 
   			tmp_string := clone (Bit_keyword)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
  			tmp_string := clone (Current_keyword)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
  			tmp_string := clone (False_keyword)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
 			tmp_string := clone (Precursor_keyword)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
 			tmp_string := clone (Result_keyword)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
 			tmp_string := clone (Strip_keyword)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
 			tmp_string := clone (True_keyword)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
 			tmp_string := clone (Unique_keyword)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
 			tmp_string := clone (Eof_word)
 			tmp_string.to_lower
-			Result.force (tmp_string)
+			Result.force (tmp_string, tmp_string)
 
-			Result.force (clone (Make_word))
-			Result.force (clone (Make_from_other))
-			Result.force (clone (Make_from_pointer))
-			Result.force (clone (Item_clause))
-			Result.force (clone (Ccom_item_function_name))
-			Result.force (clone (Last_error_code))
-			Result.force (clone (Last_error_description))
-			Result.force (clone (Last_error_help_file))
-			Result.force (clone (Last_source_of_exception))
-			Result.force (clone (Ccom_last_error_code))
-			Result.force (clone (Ccom_last_error_description))
-			Result.force (clone (Ccom_last_error_help_file))
-			Result.force (clone (Ccom_last_source_of_exception))
+			Result.force (clone (Make_word), clone (Make_word))
+			Result.force (clone (Make_from_other), clone (Make_from_other))
+			Result.force (clone (Make_from_pointer), clone (Make_from_pointer))
+			Result.force (clone (Item_clause), clone (Item_clause))
+			Result.force (clone (Ccom_item_function_name), clone (Ccom_item_function_name))
+			Result.force (clone (Last_error_code), clone (Last_error_code))
+			Result.force (clone (Last_error_description), clone (Last_error_description))
+			Result.force (clone (Last_error_help_file), clone (Last_error_help_file))
+			Result.force (clone (Last_source_of_exception), clone (Last_source_of_exception))
+			Result.force (clone (Ccom_last_error_code), clone (Ccom_last_error_code))
+			Result.force (clone (Ccom_last_error_description), clone (Ccom_last_error_description))
+			Result.force (clone (Ccom_last_error_help_file), clone (Ccom_last_error_help_file))
+			Result.force (clone (Ccom_last_source_of_exception), clone (Ccom_last_source_of_exception))
 
-			Result.force (clone (generated_type_routine))
-			Result.force (clone (generator_routine))
-			Result.force (clone (deep_equal_routine))
-			Result.force (clone (equal_routine))
-			Result.force (clone (is_equal_routine))
-			Result.force (clone (standard_equal_routine))
-			Result.force (clone (standard_is_equal_routine))
-			Result.force (clone (conforms_to_routine))
-			Result.force (clone (same_type_routine))
-			Result.force (clone (clone_routine))
-			Result.force (clone (copy_routine))
-			Result.force (clone (deep_clone_routine))
-			Result.force (clone (deep_copy_routine))
-			Result.force (clone (standard_clone_routine))
-			Result.force (clone (default_routine))
-			Result.force (clone (default_create_routine))
-			Result.force (clone (default_pointer_routine))
-			Result.force (clone (default_rescue_routine))
-			Result.force (clone (do_nothing_routine))
-			Result.force (clone (io_routine))
-			Result.force (clone (out_routine))
-			Result.force (clone (print_routine))
-			Result.force (clone (tagged_out_routine))
+			Result.force (clone (generated_type_routine), clone (generated_type_routine))
+			Result.force (clone (generator_routine), clone (generator_routine))
+			Result.force (clone (deep_equal_routine), clone (deep_equal_routine))
+			Result.force (clone (equal_routine), clone (equal_routine))
+			Result.force (clone (is_equal_routine), clone (is_equal_routine))
+			Result.force (clone (standard_equal_routine), clone (standard_equal_routine))
+			Result.force (clone (standard_is_equal_routine), clone (standard_is_equal_routine))
+			Result.force (clone (conforms_to_routine), clone (conforms_to_routine))
+			Result.force (clone (same_type_routine), clone (same_type_routine))
+			Result.force (clone (clone_routine), clone (clone_routine))
+			Result.force (clone (copy_routine), clone (copy_routine))
+			Result.force (clone (deep_clone_routine), clone (deep_clone_routine))
+			Result.force (clone (deep_copy_routine), clone (deep_copy_routine))
+			Result.force (clone (standard_clone_routine), clone (standard_clone_routine))
+			Result.force (clone (default_routine), clone (default_routine))
+			Result.force (clone (default_create_routine), clone (default_create_routine))
+			Result.force (clone (default_pointer_routine), clone (default_pointer_routine))
+			Result.force (clone (default_rescue_routine), clone (default_rescue_routine))
+			Result.force (clone (do_nothing_routine), clone (do_nothing_routine))
+			Result.force (clone (io_routine), clone (io_routine))
+			Result.force (clone (out_routine), clone (out_routine))
+			Result.force (clone (print_routine), clone (print_routine))
+			Result.force (clone (tagged_out_routine), clone (tagged_out_routine))
 
-			Result.force (clone (tagged_out_routine))
-			Result.force (clone (allocate_compact_routine))
-			Result.force (clone (allocate_fast_routine))
-			Result.force (clone (allocate_tiny_routine))
-			Result.force (clone (chunk_size_routine))
-			Result.force (clone (coalesce_period_routine))
-			Result.force (clone (collect_routine))
-			Result.force (clone (collecting_routine))
-			Result.force (clone (collection_off_routine))
-			Result.force (clone (collection_on_routine))
-			Result.force (clone (collection_period_routine))
-			Result.force (clone (disable_time_accounting_routine))
-			Result.force (clone (dispose_routine))
-			Result.force (clone (enable_time_accounting_routine))
-			Result.force (clone (free_routine))
-			Result.force (clone (full_coalesce_routine))
-			Result.force (clone (full_collect_routine))
-			Result.force (clone (gc_monitoring_routine))
-			Result.force (clone (gc_statistics_routine))
-			Result.force (clone (generation_object_limit_routine))
-			Result.force (clone (largest_coalesced_block_routine))
-			Result.force (clone (max_mem_routine))
-			Result.force (clone (mem_free_routine))
-			Result.force (clone (memory_statistics_routine))
-			Result.force (clone (memory_threshold_routine))
-			Result.force (clone (scavenge_zone_size_routine))
-			Result.force (clone (set_coalesce_period_routine))
-			Result.force (clone (set_collection_period_routine))
-			Result.force (clone (set_max_mem_routine))
-			Result.force (clone (set_memory_threshold_routine))
-			Result.force (clone (tenure_routine))
+			Result.force (clone (allocate_compact_routine), clone (allocate_compact_routine))
+			Result.force (clone (allocate_fast_routine), clone (allocate_fast_routine))
+			Result.force (clone (allocate_tiny_routine), clone (allocate_tiny_routine))
+			Result.force (clone (chunk_size_routine), clone (chunk_size_routine))
+			Result.force (clone (coalesce_period_routine), clone (coalesce_period_routine))
+			Result.force (clone (collect_routine), clone (collect_routine))
+			Result.force (clone (collecting_routine), clone (collecting_routine))
+			Result.force (clone (collection_off_routine), clone (collection_off_routine))
+			Result.force (clone (collection_on_routine), clone (collection_on_routine))
+			Result.force (clone (collection_period_routine), clone (collection_period_routine))
+			Result.force (clone (disable_time_accounting_routine), clone (disable_time_accounting_routine))
+			Result.force (clone (dispose_routine), clone (dispose_routine))
+			Result.force (clone (enable_time_accounting_routine), clone (enable_time_accounting_routine))
+			Result.force (clone (free_routine), clone (free_routine))
+			Result.force (clone (full_coalesce_routine), clone (full_coalesce_routine))
+			Result.force (clone (full_collect_routine), clone (full_collect_routine))
+			Result.force (clone (gc_monitoring_routine), clone (gc_monitoring_routine))
+			Result.force (clone (gc_statistics_routine), clone (gc_statistics_routine))
+			Result.force (clone (generation_object_limit_routine), clone (generation_object_limit_routine))
+			Result.force (clone (largest_coalesced_block_routine), clone (largest_coalesced_block_routine))
+			Result.force (clone (max_mem_routine), clone (max_mem_routine))
+			Result.force (clone (mem_free_routine), clone (mem_free_routine))
+			Result.force (clone (memory_statistics_routine), clone (memory_statistics_routine))
+			Result.force (clone (memory_threshold_routine), clone (memory_threshold_routine))
+			Result.force (clone (scavenge_zone_size_routine), clone (scavenge_zone_size_routine))
+			Result.force (clone (set_coalesce_period_routine), clone (set_coalesce_period_routine))
+			Result.force (clone (set_collection_period_routine), clone (set_collection_period_routine))
+			Result.force (clone (set_max_mem_routine), clone (set_max_mem_routine))
+			Result.force (clone (set_memory_threshold_routine), clone (set_memory_threshold_routine))
+			Result.force (clone (tenure_routine), clone (tenure_routine))
+		end
+
+	windows_structures: HASH_TABLE [WIZARD_WINDOWS_STRUCTURE, STRING] is
+			-- Standard Windows structures.
+		local
+			a_file: PLAIN_TEXT_FILE
+			a_directory: DIRECTORY
+			eiffel4, tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
+			a_count, i: INTEGER
+			a_name, a_file_protector: BOOLEAN
+			a_structure: WIZARD_WINDOWS_STRUCTURE
+		once
+			create Result.make (500)
+			Result.compare_objects
+
+			eiffel4 := clone (get ("EIFFEL4"))
+			tmp_path := eiffel4 + "\wizards\com\config\wizard_struct.cfg"
+
+			create a_directory.make_open_read (eiffel4 + "\wizards\com\config")
+			if a_directory.has_entry ("wizard_struct.cfg") then
+				create a_file.make_open_read (tmp_path)
+
+				from
+					a_file.start
+				until
+					a_file.end_of_file
+				loop
+					a_file.read_line
+					a_line := clone (a_file.last_string)
+					if not a_line.empty then
+						create a_structure.make (a_line)
+						Result.put (a_structure, a_structure.name)
+					end
+				end
+			end
 		end
 
 feature {WIZARD_MANAGER} -- Element Change

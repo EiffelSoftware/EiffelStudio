@@ -90,7 +90,7 @@ feature {NONE}-- Initialization
 			progress_bar_inner_box.set_padding_width (7)
 			progress_bar_inner_box.disable_item_expand (inner_progress_label_box)
 			inner_progress_label_box.disable_item_expand (percentage_label)
-			percentage_label.set_text ("100")
+			percentage_label.set_text ("0")
 			percentage_label.set_minimum_width (20)
 			percentage_label.align_text_right
 			percent_label.set_text ("%%")

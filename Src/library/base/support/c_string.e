@@ -145,6 +145,22 @@ feature -- Element change
 			count_set: count = a_count
 		end
 		
+	fill_blank is
+			-- Fill Current with zeros.
+		do
+			fill_value (0)
+		ensure
+			-- all_values: For every `i' in 1..`count', `item' (`i') = `0'
+		end
+		
+	fill_value (a_value: INTEGER_8) is
+			-- Fill Current with `a_value'.
+		do
+			managed_data.item.memory_set (a_value, managed_data.count)
+		ensure
+			-- all_values: For every `i' in 1..`count', `item' (`i') = `a_value'
+		end
+		
 feature {NONE} -- Implementation
 
 	managed_data: MANAGED_POINTER

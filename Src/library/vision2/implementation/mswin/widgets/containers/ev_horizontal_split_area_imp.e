@@ -17,7 +17,7 @@ inherit
 			child_minheight_changed,
 			set_default_minimum_size
 		end
-	
+
 creation
 	make
 
@@ -43,22 +43,14 @@ feature {NONE} -- Access
 			-- Minimum level that the splitter is allowed to go
 			-- Depends of the first child minimum size
 		do
-			if child1 = Void then
-				Result := 0
-			else
-				Result := child1.minimum_width
-			end
+			Result := 0
 		end	
 
 	maximum_level: INTEGER is
 			-- Maximum level that the splitter is allowed to go
 			-- Depends of the second child minimum size
 		do
-			if child2 = Void then
-				Result := width - size
-			else
-				Result := width - child2.minimum_width - size
-			end
+			Result := width - size
 		end
 
 feature -- Element change
@@ -66,7 +58,7 @@ feature -- Element change
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			set_minimum_width (size)
+			set_minimum_size (size, 0)
 		end
 
 feature {NONE} -- Basic operation
@@ -76,10 +68,10 @@ feature {NONE} -- Basic operation
 			-- splitter.
 		do
 			if child1 /= Void then
-				child1.parent_ask_resize (a_level, height)
+				child1.split_ask_resize (a_level, height)
 			end
 			if child2 /= Void then
-				child2.set_move_and_size (a_level + size, 0, 
+				child2.split_move_and_size (a_level + size, 0, 
 							width - a_level - size, height)
 			end
 			refresh
@@ -88,7 +80,7 @@ feature {NONE} -- Basic operation
 	update_display is
 			-- Feature that update the actual container.
 		do
-			if child1.width = 0 then
+			if child1 /= Void then
 				child1.parent_ask_resize (child1.minimum_width, height)
 			end
 			resize_children (level)
@@ -98,31 +90,15 @@ feature {NONE} -- Implementation for automatic size compute
 
 	child_minwidth_changed (child_new_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the current minimum_width because the child did.
-		local
-			local_width: INTEGER
 		do
-			if child1 /= Void then
-				local_width := local_width + child1.minimum_width
-			end
-			if child2 /= Void then
-				local_width := local_width + child2.minimum_width
-			end
-			set_minimum_width (local_width + size)
+			-- Do nothing for a split area.
 		end
 
    	child_minheight_changed (value: INTEGER; the_child: EV_SIZEABLE_IMP) is
    			-- Change the minimum width of the container because
    			-- the child changed his own minimum width.
-		local
-			temp: INTEGER
 		do
-			if child1 /= Void then
-				temp := child1.minimum_height
-			end
-			if child2 /= Void then
-	 			temp := temp.max (child2.minimum_height)
-			end
-			set_minimum_height (temp)
+			-- Do nothing for a split area.
 		end
 
 feature {NONE} -- Implementation

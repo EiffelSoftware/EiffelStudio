@@ -211,7 +211,7 @@
  *	only when HAS_SAFE_BCOPY is not defined. If neither is there, roll your
  *	own version.
  */
-#define HAS_MEMMOVE	/*/
+#define HAS_MEMMOVE	/**/
 
 /* HAS_MKDIR:
  *	This symbol, if defined, indicates that the mkdir routine is available

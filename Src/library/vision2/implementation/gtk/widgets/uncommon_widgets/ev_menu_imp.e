@@ -23,11 +23,10 @@ inherit
 		end
 
 	EV_MENU_ITEM_LIST_IMP
-		rename
-			list_widget as menu_widget
 		redefine
 			interface,
-			initialize
+			initialize,
+			list_widget
 		end
 
 create
@@ -37,9 +36,9 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			menu_widget := C.gtk_menu_new
-			C.gtk_menu_item_set_submenu (c_object, menu_widget)
-			C.gtk_widget_show (menu_widget)
+			list_widget := C.gtk_menu_new
+			C.gtk_menu_item_set_submenu (c_object, list_widget)
+			C.gtk_widget_show (list_widget)
 			Precursor
 		end
 
@@ -49,7 +48,7 @@ feature -- Basic operations
 			-- Pop up on the current pointer position.
 		do
 			if not interface.empty then
-				C.gtk_menu_popup (menu_widget, Default_pointer,
+				C.gtk_menu_popup (list_widget, Default_pointer,
 					Default_pointer, Default_pointer,
 					Default_pointer, 0, 0)
 			end
@@ -65,6 +64,8 @@ feature -- Basic operations
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	list_widget: POINTER
 
 	interface: EV_MENU
 	
@@ -91,6 +92,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/06 23:58:35  brendel
+--| Renamed menu_widget to list_widget.
+--|
 --| Revision 1.28  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

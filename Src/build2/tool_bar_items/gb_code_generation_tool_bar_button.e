@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 		
 	code_generation_dialog: GB_CODE_GENERATION_DIALOG is
 			-- `Result' is dialog
-		once
+		do
 			create Result.make_default
 		end
 		

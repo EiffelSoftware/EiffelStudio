@@ -16,6 +16,8 @@ inherit
 	MANAGER_M
 		rename
 			is_shown as shown
+		undefine
+			is_frame
 		end;
 
 	MEL_FRAME

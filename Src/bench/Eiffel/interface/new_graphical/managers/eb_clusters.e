@@ -869,7 +869,9 @@ feature {NONE} -- Implementation
 						not receiver.is_library
 					then
 						ace_clusters := root_ast.clusters
-						new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), new_id_sd (receiver.cluster_name, False), new_id_sd (ace_path, True), Void, is_recursive, is_library)
+						create new_csd.initialize (new_id_sd (a_cluster.cluster_name, False),
+							new_id_sd (receiver.cluster_name, False),
+							new_id_sd (ace_path, True), Void, is_recursive, is_library)
 						ace_clusters.extend (new_csd)
 						save_content
 					else
@@ -881,10 +883,13 @@ feature {NONE} -- Implementation
 							-- We didn't modify the Ace file.
 							-- However, we must perform a full degree 6 next time to keep the new cluster.
 						if root_ast.defaults = Void then
-							root_ast.set_defaults (new_lace_list_d_option_sd (5))
+							root_ast.set_defaults (create {LACE_LIST [D_OPTION_SD]}.make (5))
 						end
 						if not Lace.full_degree_6_needed then
-							root_ast.defaults.put_front (new_d_option_sd (new_free_option_sd (new_id_sd ("force_recompile", False)), new_yes_sd (new_id_sd ("yes", False))))
+							root_ast.defaults.put_front (create {D_OPTION_SD}.initialize (
+								create {FREE_OPTION_SD}.initialize (
+									new_id_sd ("force_recompile", False)),
+									create {OPT_VAL_SD}.make_yes))
 							Lace.set_full_degree_6_needed (True)
 							save_content
 						end
@@ -921,7 +926,8 @@ feature {NONE} -- Implementation
 				end
 				if root_ast /= Void then
 					ace_clusters := root_ast.clusters
-					new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), Void, new_id_sd (ace_path, True), Void, is_recursive, is_library)
+					create new_csd.initialize (new_id_sd (a_cluster.cluster_name, False),
+						Void, new_id_sd (ace_path, True), Void, is_recursive, is_library)
 					ace_clusters.extend (new_csd)
 					save_content
 				else
@@ -951,9 +957,9 @@ feature {NONE} -- Implementation
 			found: BOOLEAN
 			child: BOOLEAN
 			cp: CLUST_PROP_SD
-			excl_sd: EXCLUDE_SD
+			excl_sd: FILE_NAME_SD
 			new_csd: CLUSTER_SD
-			list_sd: LACE_LIST [EXCLUDE_SD]
+			list_sd: LACE_LIST [FILE_NAME_SD]
 		do
 			error_in_ace_parsing := False
 			if not retried then
@@ -1042,24 +1048,29 @@ feature {NONE} -- Implementation
 							found := cl_name.is_equal (ace_clusters.item.cluster_name)
 							if found then
 									-- We add an exclude clause to the top parent.
-								excl_sd := new_exclude_sd (new_id_sd (base_name (a_cluster), False))
+								create excl_sd.initialize (new_id_sd (base_name (a_cluster), False))
 								cp := ace_clusters.item.cluster_properties
 								if cp = Void then
-									list_sd := new_lace_list_exclude_sd (5)
+									create list_sd.make (5)
 									list_sd.extend (excl_sd)
-									cp := new_clust_prop_sd (Void, Void, Void, list_sd, Void, Void, Void, Void)
+									create cp.initialize (Void, Void, Void, list_sd,
+										Void, Void, Void, Void)
 								else
 									if cp.exclude_option = Void then
-										list_sd := new_lace_list_exclude_sd (5)
+										create list_sd.make (5)
 										list_sd.extend (excl_sd)
 									else
 										list_sd := cp.exclude_option
 										list_sd.extend (excl_sd)
 									end
-									cp := new_clust_prop_sd (cp.dependencies, cp.use_name, cp.include_option, list_sd, cp.adapt_option, cp.default_option, cp.options, cp.visible_option)
+									create cp.initialize (cp.dependencies, cp.use_name,
+										cp.include_option, list_sd, cp.adapt_option,
+										cp.default_option, cp.options, cp.visible_option)
 								end
 								new_csd := ace_clusters.item
-								new_csd := new_cluster_sd (new_csd.cluster_name, new_csd.parent_name, new_csd.directory_name, cp, new_csd.is_recursive, new_csd.is_library)
+								create new_csd.initialize (new_csd.cluster_name,
+									new_csd.parent_name, new_csd.directory_name, cp,
+									new_csd.is_recursive, new_csd.is_library)
 								ace_clusters.replace (new_csd)
 								save_content
 							else

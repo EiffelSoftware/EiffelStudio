@@ -69,14 +69,14 @@ feature -- Store/Retrieve
 					root_ast.set_externals (cl)
 				end
 				if not include_path_list.is_empty then
-					cl.extend (new_lang_trib_sd (
-						new_language_name_sd (new_id_sd ("include_path", False)),
+					cl.extend (create {LANG_TRIB_SD}.initialize (
+						create {LANGUAGE_NAME_SD}.initialize (new_id_sd ("include_path", False)),
 						new_lace_list (include_path_list.list)))
 				end
 				
 				if not object_file_list.is_empty then
-					cl.extend (new_lang_trib_sd (
-						new_language_name_sd (new_id_sd ("object", False)),
+					cl.extend (create {LANG_TRIB_SD}.initialize (
+						create {LANGUAGE_NAME_SD}.initialize (new_id_sd ("object", False)),
 						new_lace_list (object_file_list.list)))
 				end
 			end

@@ -210,8 +210,8 @@ feature {NONE} -- Filling
 			-- Initialize check buttons and text field associated with `a_opt'.
 		require
 			a_opt_not_void: a_opt /= Void
-			a_opt_not_precompiled_option: not a_opt.conforms_to (create {D_PRECOMPILED_SD})
-			a_opt_not_optional_option: not a_opt.conforms_to (create {O_OPTION_SD})
+			a_opt_not_precompiled_option: not a_opt.is_precompiled
+			a_opt_not_optional_option: not a_opt.is_optional
 			a_opt_has_option: a_opt.option /= Void
 			a_opt_has_no_precompiled_option: not a_opt.option.is_precompiled
 			a_opt_has_value: a_opt.value /= Void

@@ -17,8 +17,18 @@ inherit
 		end
 		
 	GB_EV_TOOLTIPABLE_EDITOR_CONSTRUCTOR
+	
+	GB_GENERAL_UTILITIES
+		undefine
+			default_create
+		end
 		
 	GB_XML_UTILITIES
+		undefine
+			default_create
+		end
+		
+	CDATA_HANDLER
 		undefine
 			default_create
 		end
@@ -29,7 +39,7 @@ feature {GB_XML_STORE} -- Output
 			-- Generate an XML representation of `Current' in `element'.
 		do
 			if not objects.first.tooltip.is_empty then
-				add_element_containing_string (element, Tooltip_string, objects.first.tooltip)	
+				add_element_containing_string (element, Tooltip_string, enclose_in_cdata (objects.first.tooltip))	
 			end
 		end
 		
@@ -38,11 +48,13 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			stripped_text: STRING
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Tooltip_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				for_all_objects (agent {EV_TOOLTIPABLE}.set_tooltip (element_info.data))
+				stripped_text := strip_cdata (element_info.data)
+				for_all_objects (agent {EV_TOOLTIPABLE}.set_tooltip (stripped_text))
 			end
 		end
 
@@ -55,12 +67,14 @@ feature {GB_CODE_GENERATOR} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			escaped_text: STRING
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Tooltip_string)
-			if element_info /= Void then
-				Result := info.name + ".set_tooltip (%"" + element_info.data + "%")"
+			if element_info /= Void and then element_info.data.count /= 0 then
+				escaped_text := escape_special_characters (strip_cdata (element_info.data))
+				Result := info.name + ".set_tooltip (%"" + escaped_text + "%")"
 			end
 			Result := strip_leading_indent (Result)
 		end

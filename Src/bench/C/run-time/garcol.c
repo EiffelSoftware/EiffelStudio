@@ -4899,7 +4899,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 */
 
 #ifdef EIF_STRING_OPTIMIZATION
-			assert (!(HEADER (root)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF) ) /* Cannot be a special AND full of refs. */
+			assert (!(HEADER (root)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF) ); /* Cannot be a special AND full of refs. */
 #else
 			assert (!(HEADER (root)->ov_flags & EO_SPEC));	/* Cannot be a special. */
 #endif	/* EIF_STRING_OPTIMIZATION */

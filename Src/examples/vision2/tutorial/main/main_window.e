@@ -72,7 +72,7 @@ feature -- Initialization
 			split.set_position (200)
 			create label.make_with_text (vbox, "Please choose an item.")
 			label.set_minimum_width (200)
-			label.set_expand (False)
+			vbox.set_child_expandable (label, False)
 			create tree.make (vbox)
 			tree.set_minimum_size (195, 195)
 			split.set_first_area_shrinkable (False)
@@ -81,7 +81,7 @@ feature -- Initialization
 			-- We set the action button
 			create item.make_with_title (Void, "", "")
 			item.action_button.set_parent (vbox)
-			item.action_button.set_expand (False)
+			vbox.set_child_expandable (item.action_button, False)
 			item.action_button.set_insensitive (True)
 
 			-- We set the notebook
@@ -121,7 +121,7 @@ feature -- Menu Features
 			menu_item: EV_MENU_ITEM
 			
 			check_item: EV_CHECK_MENU_ITEM
-			radio_item: EV_RADIO_MENU_ITEM
+			ri1, ri2, ri3: EV_RADIO_MENU_ITEM
 		do
 			create menu.make_with_text (mbar, "Categories")
 			create menu_item.make_with_text (menu, "Widgets")
@@ -129,9 +129,9 @@ feature -- Menu Features
 			create menu_item.make_with_text (menu, "Properties")
 
 			create menu.make_with_text (mbar, "View")
-			create radio_item.make_with_text (menu, "Demo")
-			create radio_item.make_with_text (menu, "Documentation")
-			create radio_item.make_with_text (menu, "Text")
+			create ri1.make_with_text (menu, "Demo")
+			create ri2.make_peer_with_text (menu, "Documentation", ri1)
+			create ri3.make_peer_with_text (menu, "Text", ri1)
 			create check_item.make_with_text (menu, "Control Window")
 		end
 
@@ -153,6 +153,17 @@ feature -- Tree features
 
 			-- Figures items
 			figure: FIGURE_ITEM
+
+			-- Items item
+			simple, composed: DEMO_ITEM [NO_DEMO_WINDOW]
+			mcitem: DEMO_ITEM [MC_ITEM_WINDOW]
+			tb_button: DEMO_ITEM [TB_BUTTON_WINDOW]
+			tb_toggle: DEMO_ITEM [TB_TOGGLE_WINDOW]
+			tb_radio: DEMO_ITEM [TB_RADIO_WINDOW]
+			listitem: DEMO_ITEM [LISTITEM_WINDOW]
+			treeitem: DEMO_ITEM [TREEITEM_WINDOW]
+			statusitem: DEMO_ITEM [STATUSITEM_WINDOW]
+			menuitem: DEMO_ITEM [MENUITEM_WINDOW]
 
 			-- Primitives
 			gauge:		DEMO_ITEM [GAUGE_WINDOW]
@@ -220,9 +231,16 @@ feature -- Tree features
 			create uncommon.make_with_text		(widgets, "uncommon widgets")
 
 			-- The sub topics for item root node
-			--create simple.make_with_text (items, "EV_SIMPLE_ITEM")
-			--create composed.make_with_text (items, "EV_COMPOSED_ITEM")
-			--create separator.make_with_text (items, "EV_SEPARATOR_ITEM")
+			create simple.make_with_title (items, "ev_simple_item", "no_demo_window")
+			create composed.make_with_title (items, "ev_composed_item", "no_demo_window")
+			create mcitem.make_with_title (composed, "ev_multi_column_list_row", "mc_item_window")
+			create tb_button.make_with_title (simple, "ev_tool_bar_button", "tb_button_window")
+			create tb_toggle.make_with_title (tb_toggle, "ev_tool_bar_toggle_button", "tb_toggle_window")
+			create tb_radio.make_with_title (tb_radio, "ev_tool_bar_radio_button", "tb_radio_window")
+			create listitem.make_with_title (simple, "ev_list_item", "listitem_window")
+			create treeitem.make_with_title (simple, "ev_tree_item", "treeitem_window")
+			create statusitem.make_with_title (simple, "ev_status_item", "statusitem_window")
+			create menuitem.make_with_title (simple, "ev_menu_item", "menuitem_window")
 
 			-- The demos
 			create acceleratord.make_with_title	(kernel, "ev_accelerator", "accelerator_window")

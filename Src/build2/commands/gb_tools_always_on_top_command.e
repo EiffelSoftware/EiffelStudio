@@ -140,17 +140,10 @@ feature -- Execution
 				iconable_tool /= Void
 			end
 
-				-- Note that we must also update the icons on the windows,
-				-- dependent on whether they are relative of not.
-				-- This is because on Windows, if we have multiple windows
-				-- show relative, they all share the same icon. Therefore,
-				-- we need to set it to an appropriate one.
 			if tool_window.is_show_requested and not tool_window.is_relative then
 				tool_window.show_relative_to_window (main_window)
-				iconable_tool.set_default_icon
 			elseif tool_window.is_show_requested and tool_window.is_relative then
 				tool_window.show
-				iconable_tool.restore_icon
 			end
 		end
 

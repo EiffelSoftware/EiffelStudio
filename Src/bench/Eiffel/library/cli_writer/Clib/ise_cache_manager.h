@@ -5,9 +5,9 @@
 
 
  /* File created by MIDL compiler version 6.00.0347 */
-/* at Thu Jul 18 15:05:06 2002
+/* at Wed Aug 28 15:33:37 2002
  */
-/* Compiler settings for ise_cache_manager.IDL:
+/* Compiler settings for ise_cache_manager.idl:
     Os, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext
     error checks: allocation ref bounds_check enum stub_data 
@@ -110,10 +110,16 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE is_successful( 
             /* [retval][out] */ VARIANT_BOOL *pRetVal) = 0;
         
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE is_initialized( 
+            /* [retval][out] */ VARIANT_BOOL *pRetVal) = 0;
+        
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE last_error_message( 
             /* [retval][out] */ BSTR *pRetVal) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( void) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize_with_path( 
+            /* [in] */ IUnknown *a_path) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE consume_gac_assembly( 
             /* [in] */ BSTR aname,
@@ -191,12 +197,20 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [retval][out] */ VARIANT_BOOL *pRetVal);
         
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *is_initialized )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+            /* [retval][out] */ VARIANT_BOOL *pRetVal);
+        
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *last_error_message )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [retval][out] */ BSTR *pRetVal);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize_with_path )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+            /* [in] */ IUnknown *a_path);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *consume_gac_assembly )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
@@ -265,11 +279,17 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful(This,pRetVal)	\
     (This)->lpVtbl -> is_successful(This,pRetVal)
 
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_is_initialized(This,pRetVal)	\
+    (This)->lpVtbl -> is_initialized(This,pRetVal)
+
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message(This,pRetVal)	\
     (This)->lpVtbl -> last_error_message(This,pRetVal)
 
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This)	\
     (This)->lpVtbl -> initialize(This)
+
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path(This,a_path)	\
+    (This)->lpVtbl -> initialize_with_path(This,a_path)
 
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_consume_gac_assembly(This,aname,aversion,aculture,akey)	\
     (This)->lpVtbl -> consume_gac_assembly(This,aname,aversion,aculture,akey)
@@ -313,6 +333,18 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful_Stub(
     DWORD *_pdwStubPhase);
 
 
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_is_initialized_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+    /* [retval][out] */ VARIANT_BOOL *pRetVal);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_is_initialized_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
 /* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [retval][out] */ BSTR *pRetVal);
@@ -330,6 +362,18 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Stub(
 
 
 void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+    /* [in] */ IUnknown *a_path);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

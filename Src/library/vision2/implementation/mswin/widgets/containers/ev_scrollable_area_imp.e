@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create scroller.make_with_options (Current, 0, 10, 0, 10, 10, 30, 10, 30)
+			show_scroll_bars
 		end
 
 feature -- Access
@@ -155,6 +156,10 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/09 16:29:34  brendel
+--| Added `show_scroll_bars' to initialization but does not seem to make a
+--| difference.
+--|
 --| Revision 1.18  2000/03/09 01:19:48  brendel
 --| Useable, but features are not yet implemented.
 --| Scrollbars (dis)appear dynamically.

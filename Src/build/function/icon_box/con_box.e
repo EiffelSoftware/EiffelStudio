@@ -36,7 +36,7 @@ feature
 
 	make (a_name: STRING; a_parent: COMPOSITE; ed: like associated_editor) is
 		do
-			page_size := 5;
+			page_size := 3;
 			function_make (a_name, a_parent, ed);
 		end;
 

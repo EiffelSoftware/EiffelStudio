@@ -31,7 +31,8 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_set_cursor,
-			on_char
+			on_char,
+			default_process_message
 		end
 
 create
@@ -179,7 +180,10 @@ feature {NONE} -- Implementation
 			-- Wm_setcursor message.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		do
-			parent.on_set_cursor (hit_code)
+			if (hit_code = (feature {WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = (feature {WEL_HT_CONSTANTS}.Htclient))
+				and then parent.cursor_pixmap /= Void then
+				parent.internal_on_set_cursor
+			end
 		end
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -191,6 +195,33 @@ feature {NONE} -- Implementation
 		do
 			disable_default_processing
 			set_message_return_value (1)
+		end
+		
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		do
+			if msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_contextmenu) then
+				allow_pick_and_drop
+			else
+				Precursor {WEL_SINGLE_LINE_EDIT} (msg, wparam, lparam)
+			end
+		end
+		
+	allow_pick_and_drop is
+			-- Override context menu on `Current' if pick and drop
+			-- should be handled instead. We must handle two cases :-
+			-- 1. We are attempting to pick from `Current'.
+			-- 2. We are attempting to drop from `Current'.
+		do
+			if parent.application_imp.pick_and_drop_source /= Void then
+				disable_default_processing
+			elseif parent.pebble /= Void then
+				disable_default_processing
+			elseif parent.override_context_menu then
+				disable_default_processing
+			end
+			parent.enable_context_menu
 		end
 
 end -- class EV_INTERNAL_COMBO_FIELD_IMP

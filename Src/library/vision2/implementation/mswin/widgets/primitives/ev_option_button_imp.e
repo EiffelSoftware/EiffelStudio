@@ -12,32 +12,24 @@ inherit
 	EV_OPTION_BUTTON_I
 		redefine
 			interface
---		select
---			set_text
+		select
+			interface
 		end
 
 	EV_MENU_ITEM_LIST_IMP
 		rename
 			wel_make as wel_menu_make,
-			make_by_id as wel_menu_make_by_id
+			make_by_id as wel_menu_make_by_id,
+			interface as sdsdsdsd
 		undefine
 			exists,
 			destroy_item,
 			initialize,
 			main_args,
 			destroy
-		redefine
-			interface
 		end
 
 	EV_BUTTON_IMP
-		rename
---			set_text as internal_set_text,
---			add_click_command as add_popup_command
---		undefine
---			align_text_center,
---			align_text_left,
---			align_text_right
 		redefine
 			on_bn_clicked,
 			default_style,
@@ -293,6 +285,9 @@ end -- class EV_OPTION_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/21 01:37:36  rogers
+--| Altered redefinitions for compilation, see diffs.
+--|
 --| Revision 1.21  2000/02/19 07:31:53  oconnor
 --| removed old command stuff
 --|

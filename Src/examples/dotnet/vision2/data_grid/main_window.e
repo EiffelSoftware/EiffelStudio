@@ -50,6 +50,9 @@ feature {NONE} -- Initialization
 
 				-- Set the initial size of the window
 			set_size (Window_width, Window_height)
+			
+				-- Destroy application on closing
+			close_request_actions.extend (agent (create {EV_APPLICATION}).destroy)
 		end
 
 	is_in_default_state: BOOLEAN is
@@ -126,9 +129,9 @@ feature {NONE} -- Menu Implementation
 			file_menu.extend (create {EV_MENU_SEPARATOR})
 
 				-- Create the File/Exit menu item and make it call
-				-- `request_close_window' when it is selected.
+				-- `{EV_APPLICATION}.destroy' when it is selected.
 			create menu_item.make_with_text (Menu_file_exit_item)
-			menu_item.select_actions.extend (agent request_close_window)
+			menu_item.select_actions.extend (agent (create {EV_APPLICATION}).destroy)
 			file_menu.extend (menu_item)
 		ensure
 			file_menu_created: file_menu /= Void and then not file_menu.is_empty
@@ -197,27 +200,6 @@ feature {NONE} -- About Dialog Implementation
 			about_dialog.show_modal_to_window (Current)
 		end
 
-feature {NONE} -- Implementation, Close event
-
-	request_close_window is
-			-- The user wants to close the window
-		local
-			question_dialog: EV_CONFIRMATION_DIALOG
-		do
-			create question_dialog.make_with_text (Label_confirm_close_window)
-			question_dialog.show_modal_to_window (Current)
-
-			if question_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-					-- Destroy the window
-				destroy;
-				
-					-- End the application
-					--| TODO: Remove this line if you don't want the application
-					--|       to end when the first window is closed..
-				(create {EV_ENVIRONMENT}).application.destroy
-			end
-		end
-		
 feature {NONE} -- Implementation
 
 	main_container: EV_VERTICAL_BOX
@@ -352,8 +334,6 @@ feature {NONE} -- Implementation
 			command_on_suppliers.set_command_type (feature {DATA_COMMAND_TYPE}.Text)
 			suppliers_adapter.set_select_command (command_on_suppliers)
 
-			io.put_string ("The connection is open.%N")
-
 			create data_set.make ("Customers")
 			l_count := suppliers_adapter.fill_data_set (data_set)
 
@@ -368,8 +348,6 @@ feature {NONE} -- Implementation
 			products_adapter.set_select_command (command_on_products)
 			l_count := products_adapter.fill_data_set (data_set)
 			northwind_connection.Close
-
-			io.put_string ("The connection is closed.%N")
 
 				-- You must create a DATA_DATA_RELATION to link the two tables.
 				-- Get the parent and child columns of the two tables.

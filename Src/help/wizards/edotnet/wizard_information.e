@@ -332,11 +332,8 @@ feature -- Basic operation
 		
 feature {NONE} -- Implementation
 
-	Default_project_name: STRING is
+	Default_project_name: STRING is "my_dotnet_application"
 			-- Default project name
-		do
-			Result := "my_dotnet_application"
-		end
 
 	display_confirmation_dialog is
 			-- Display confirmation dialog

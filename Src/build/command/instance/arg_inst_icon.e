@@ -93,4 +93,9 @@ feature
 			end;
 		end;
 
+	popuper_parent: COMPOSITE is
+		do
+			Result := Current
+		end;
+
 end

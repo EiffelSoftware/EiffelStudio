@@ -52,8 +52,13 @@ feature -- Callbacks
 			-- Process the call back of the help button,
 			-- which is in fact the (no C comp) button
 		do
-			start_c_compilation := False
-			compile (last_warner)
+			if Eiffel_ace.file_name = Void then
+					-- We choose "Build".
+				{UPDATE_PROJECT} Precursor
+			else
+				start_c_compilation := False
+				compile (last_warner)
+			end
 		end
 
 feature {NONE} -- Implementation

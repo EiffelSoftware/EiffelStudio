@@ -38,11 +38,11 @@ extern struct token *in_word_set2();
 
 %%
 [ \t\n\r]+								{	start_position = end_position;
-											end_position += yyleng;}
+											end_position += xxleng;}
 :										return process(LAC_COLUMN);
 ","										return process(LAC_COMMA);
 --.*									{	start_position = end_position;
-											end_position += yyleng;}
+											end_position += xxleng;}
 "("										return process(LAC_LEFT_PARAM);
 ")"										return process(LAC_RIGHT_PARAM);
 ";"										return process(LAC_SEMICOLON);
@@ -50,7 +50,7 @@ extern struct token *in_word_set2();
 ([a-z]|[A-Z])([a-z]|_|[A-Z]|[0-9])*		return process_name(LAC_IDENTIFIER);
 .										{	/* Unknown character */
 											start_position = end_position;
-											end_position += yyleng;
+											end_position += xxleng;
 											xxerror ((char *) 0);}
 
 %%
@@ -62,7 +62,7 @@ int token_code;
 	 * `end_position'.
 	 */
 	start_position = end_position;
-	end_position += yyleng;
+	end_position += xxleng;
 	return token_code;
 }
 
@@ -76,13 +76,13 @@ int token_code;
 	struct token *key;
 	
 	/* truncation of identifiers */
-	length= yyleng;
+	length= xxleng;
 
 	if (length >= IDLENGTH)
 		return LAC_ERROR7;
 
 	/* Copy into `token_str' */
-	strncpy(token_str,yytext,length);
+	strncpy(token_str,xxtext,length);
 	token_str[length]= '\0';
 
 	/* Conversion into lower case characters */
@@ -222,7 +222,7 @@ char c;
 void reset_lace_lex_parser()
 {
 #ifdef FLEX_SCANNER
-	yyrestart (xxin);
+	xxrestart (xxin);
 #else
 	/* Reset lex parser */
 	xxsptr = xxsbuf;

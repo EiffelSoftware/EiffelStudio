@@ -466,7 +466,7 @@ Name                    : LAC_IDENTIFIER
 
 %%
 
-yywrap()
+xxwrap()
 {
     return 1;
 }

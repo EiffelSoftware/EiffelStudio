@@ -17,7 +17,7 @@ feature -- Access
 			non_void_type: t /= Void
 			non_void_name: dotnet_name /= Void
 			valid_name: not dotnet_name.is_empty
-			valid_args: args /= Void implies args.get_length > 0
+			valid_args: args /= Void implies args.count > 0
 		local
 			ct: CONSUMED_TYPE
 			crt: CONSUMED_REFERENCED_TYPE
@@ -54,7 +54,7 @@ feature -- Access
 							i > count or found
 						loop
 							cargs := constructors.item (i).arguments
-							if cargs.count = args.get_length then
+							if cargs.count = args.count then
 								from
 									j := 1
 									found := True

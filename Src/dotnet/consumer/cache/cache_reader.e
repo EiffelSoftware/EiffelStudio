@@ -99,7 +99,7 @@ feature -- Access
 					from
 						j := 0
 					until
-						j = names.get_length
+						j = names.count
 					loop
 						ca := Consumed_assembly_factory.consumed_assembly_from_name (names.item (j))
 						if ca.is_equal (assembly) then

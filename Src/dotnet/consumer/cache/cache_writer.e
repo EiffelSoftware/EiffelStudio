@@ -58,7 +58,7 @@ feature -- Basic Operations
 					from
 						i := 0
 					until
-						i = names.get_length
+						i = names.count
 					loop
 						name := names.item (i)
 						if not cr.is_assembly_in_cache (name) then

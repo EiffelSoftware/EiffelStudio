@@ -175,6 +175,14 @@ feature -- Basic operation
 		do
 			Result := internal_current_position.item
 		end
+		
+	change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- `Result' is an action sequence fired each time
+			-- the position in the history changes.
+		once
+			create Result
+		end
+		
 
 feature {GB_HISTORY_DIALOG} -- Status setting
 		
@@ -184,6 +192,7 @@ feature {GB_HISTORY_DIALOG} -- Status setting
 			position_valid: a_value >= -1 and a_value <= command_list.count
 		do
 			internal_current_position.set_item (a_value)
+			change_actions.call (Void)
 		ensure
 			current_position_set: internal_current_position.item = a_value
 		end

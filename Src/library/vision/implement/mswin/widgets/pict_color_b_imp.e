@@ -9,19 +9,6 @@ class
 
 inherit
 	OWNER_DRAW_BUTTON_WINDOWS
-		rename
-			realize as draw_realize
-		redefine
-			on_draw,
-			set_default_size,
-			set_background_pixmap,
-			on_left_button_up,
-			on_left_button_down,
-			on_lbutton_move,
-			on_bn_clicked
-		end
-
-	OWNER_DRAW_BUTTON_WINDOWS
 		redefine
 			on_draw,
 			set_default_size,
@@ -31,8 +18,6 @@ inherit
 			on_left_button_down,
 			on_lbutton_move,
 			on_bn_clicked
-		select
-			realize
 		end
 		
 	PICT_COLOR_B_I
@@ -80,7 +65,11 @@ feature -- Status setting
 			-- Set the pixmap for the button
 		do
 			pixmap := a_pixmap
-			if (fixed_size_flag and (pixmap.height + Total_offset > height or pixmap.width + Total_offset > width)) or not fixed_size_flag then
+			if
+				(fixed_size_flag and 
+				(pixmap.height + Total_offset > height or pixmap.width + Total_offset > width))
+				or not fixed_size_flag
+			then
 				set_form_width ((pixmap.width + Total_offset).min (maximal_width))
 				set_form_height ((pixmap.height + Total_offset).min (maximal_height))
 			end
@@ -108,7 +97,7 @@ feature -- Element change
 
 	realize is
 		do
-			draw_realize;
+			{OWNER_DRAW_BUTTON_WINDOWS} Precursor;
 			invalidate
 		end
 

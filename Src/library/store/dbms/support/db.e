@@ -13,11 +13,6 @@ inherit
 			{NONE} all
 		end
 	
-	MEMORY
-		export {NONE} all
-		redefine
-			dispose
-		end
 
 feature -- Status report
 
@@ -102,18 +97,6 @@ feature -- Status report
 		end
 
 feature {NONE} -- Status report
-
-	dispose is
-			-- Whenever an instance conforming to Current
-			-- is reclaimed, disconnect from database server
-			-- if not already done.
-		local
-			status: INTEGER
-		do
-			if db_control.is_connected then
-				status := db_control.disconnect
-			end
-		end
 
 	sql_struct: DATABASE_DATA [G] is
 			-- Implementation of the data.

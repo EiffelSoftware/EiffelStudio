@@ -37,8 +37,8 @@ feature -- Basic operations
 			valid_type_info: a_type_info.type_attr.type_kind = Tkind_record or a_type_info.type_attr.type_kind = Tkind_union
 			valid_documentation: a_documentation /= Void
 		local
-			tmp_type_lib: ECOM_TYPE_LIB
-			tmp_guid: ECOM_GUID
+			l_type_lib: ECOM_TYPE_LIB
+			l_guid: ECOM_GUID
 		do
 			name := a_documentation.name.twin
 			description := a_documentation.doc_string.twin
@@ -46,9 +46,9 @@ feature -- Basic operations
 
 			is_union := (type_kind = Tkind_union)
 			create guid.make_from_guid (a_type_info.type_attr.guid)
-			tmp_type_lib := a_type_info.containing_type_lib
-			tmp_guid := tmp_type_lib.library_attributes.guid
-			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			l_type_lib := a_type_info.containing_type_lib
+			l_guid := l_type_lib.library_attributes.guid
+			type_library_descriptor := system_descriptor.library_descriptor (l_guid)
 			add_type_lib_description (type_library_descriptor)
 			if name = Void or else name.is_empty then
 				create name.make (100)
@@ -60,7 +60,7 @@ feature -- Basic operations
 
 			namespace := namespace_name (type_library_descriptor.name)
 
-			if prefixed_libraries.has (tmp_guid) then
+			if prefixed_libraries.has (l_guid) then
 				name.prepend (Underscore)
 				name.prepend (type_library_descriptor.name)
 			end

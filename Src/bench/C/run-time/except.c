@@ -2936,7 +2936,6 @@ rt_private struct stack hec_stack;
 
 #include "eif_macros.h"
 
-rt_private int cc_for_speed = 1;	/* Optimized for speed */
 
 /* Classes held in the pseudo-test system (these have to be statically allocated
  * strings as the dumping of the exception stack does address comparaison).

@@ -36,7 +36,7 @@ feature -- Initialization
 			create cmd1.make (~leap_forward)
 			b1.add_click_command (cmd1, Void)
 			b1.set_vertical_resize(False)
-			set_child_position (b1, 2, 0, 3, 0)
+			set_child_position (b1, 2, 0, 3, 3)
 
 
 			create b2.make_with_text(Current, "Decrease Leap")

@@ -51,6 +51,7 @@ feature
 				set_icon_pixmap (hole.icon_symbol);
 			end;
 			set_icon_name (tool_name);
+			set_action ("<Unmap>,<Prop>", Current, popdown);
 			transporter_init
 		end;
 
@@ -237,12 +238,16 @@ feature -- quit actions
 	
 	execute (argument: ANY) is
 		do
-			if argument = task_end then
+			if argument = popdown then
+				close_windows
+			elseif argument = task_end then
 				task_end.remove_action (Current, task_end);
 				quit_command.execute (Void);
 			else
 				tool_w_execute (argument)
 			end;
 		end;
+
+	popdown: ANY is once !!Result end;
 
 end -- class BAR_AND_TEXT

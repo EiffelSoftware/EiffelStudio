@@ -13,7 +13,7 @@ make='$compiler_path\bin\make'
 #
 #-- MT no debug
 #--------------
-ccflags='-tWM -DEIF_THREADS'
+#ccflags='-tWM -DEIF_THREADS'
 #
 #-- no MT debug
 #--------
@@ -24,13 +24,14 @@ ccflags='-tWM -DEIF_THREADS'
 #ccflags=''
 #
 #
-link_line='&$compiler_path\bin\tlib /c $@ +$**'
-link_wline='&$compiler_path\bin\tlib /c $@ +$**'
-link_eline='&$compiler_path\bin\tlib /c $@ +$**'
+optimize='-O2'
+#optimize=''
+link_line='&$compiler_path\bin\tlib /p256 /c $@ +$**'
+link_wline='&$compiler_path\bin\tlib /p256 /c $@ +$**'
+link_eline='&$compiler_path\bin\tlib /p256 /c $@ +$**'
 cc='bcc32'
 output_cmd='-o'
 input_cmd=''
-optimize='-O2'
 extra_object_files=''
-compiler_path='d:\apps\bc5'
+compiler_path='e:\bc5'
 #

@@ -270,16 +270,16 @@ feature -- Status report
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
-			Result := has_struct_flag (C.GTK_VISIBLE_ENUM)
+			Result := has_struct_flag (c_object, C.GTK_VISIBLE_ENUM)
 			check
-				Result = (((C.gtk_object_struct_flags (visual_widget)// C.GTK_VISIBLE_ENUM) \\ 2) = 1)
+				Result = (((C.gtk_object_struct_flags (c_object)// C.GTK_VISIBLE_ENUM) \\ 2) = 1)
 			end
 		end
 
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
 		do
-			Result := has_struct_flag (C.GTK_MAPPED_ENUM)
+			Result := has_struct_flag (visual_widget, C.GTK_MAPPED_ENUM)
 			check
 				Result = ((((C.gtk_object_struct_flags (visual_widget)// C.GTK_MAPPED_ENUM) \\ 2)) = 1)
 			end
@@ -294,7 +294,7 @@ feature -- Status report
 	has_capture: BOOLEAN is
 			-- Has capture?
 		do
-			Result := has_struct_flag (C.GTK_HAS_GRAB_ENUM)
+			Result := has_struct_flag (c_object, C.GTK_HAS_GRAB_ENUM)
 			check
 				Result = (((
 					(C.gtk_object_struct_flags (c_object)
@@ -574,11 +574,11 @@ feature {EV_ANY_I} -- Implementation
 				
 feature {NONE} -- Implementation
 
-	has_struct_flag (a_flag: INTEGER): BOOLEAN is
+	has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
 			-- Has this widget the flag `a_flag' in struct_flags?
 		do
 				--| Shift to put bit in least significant place then take mod 2.
-			Result := (((C.gtk_object_struct_flags (visual_widget) // a_flag) \\ 2)) = 1
+			Result := (((C.gtk_object_struct_flags (a_gtk_object) // a_flag) \\ 2)) = 1
 		end
 
 	cursor_signal_tag: INTEGER
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 		do
 				--| Shift to put bit in least significant place then take mod 2.
 			if a_c_object /= NULL then
-				Result := has_struct_flag (C.GTK_HAS_FOCUS_ENUM)
+				Result := has_struct_flag (a_c_object, C.GTK_HAS_FOCUS_ENUM)
 				check
 					Result = ((((C.gtk_object_struct_flags (a_c_object) // C.GTK_HAS_FOCUS_ENUM) \\ 2)) = 1)
 				end

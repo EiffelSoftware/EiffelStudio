@@ -316,7 +316,7 @@ feature -- Element change
 			C.gtk_window_set_title (c_object, a_gs.item)
 
 			-- Make sure the gtk window has a corresponding gdk window
-			if not has_struct_flag (C.GTK_REALIZED_ENUM) then
+			if not has_struct_flag (c_object, C.GTK_REALIZED_ENUM) then
 				C.gtk_widget_realize (c_object)
 			end	
 		end

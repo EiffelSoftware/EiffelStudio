@@ -64,10 +64,10 @@ feature -- Commands
 				if not l_dir.exists then
 					l_dir.create_dir
 				end
-				replace_token (l_text, html_toc_script_token, "../simple_toc.js")
+				replace_token (l_text, html_toc_script_token, "../" + toc_filename)
 				replace_token (l_text, html_toc_style_token, "../toc.css")
 			else
-				replace_token (l_text, html_toc_script_token, "simple_toc.js")
+				replace_token (l_text, html_toc_script_token, toc_filename)
 				replace_token (l_text, html_toc_style_token, "toc.css")
 			end
 			
@@ -191,10 +191,10 @@ feature -- Access
 				if not l_dir.exists then
 					l_dir.create_dir
 				end
-				replace_token (l_text, html_toc_script_token, "../../simple_toc.js")
+				replace_token (l_text, html_toc_script_token, "../../" + toc_filename)
 				replace_token (l_text, html_toc_style_token, "../../toc.css")
 			else
-				replace_token (l_text, html_toc_script_token, "../simple_toc.js")
+				replace_token (l_text, html_toc_script_token, "../" + toc_filename)
 				replace_token (l_text, html_toc_style_token, "../toc.css")
 			end
 			
@@ -236,13 +236,15 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 		do
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
-			if shared_constants.application_constants.is_gui_mode then				
+--			if shared_constants.application_constants.is_gui_mode then				
+			if toc_count > 1 then
 				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
 					create l_util
 					l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
 				else						
 					l_filename.extend (toc.name)	
 				end
+			end
 				create l_dir.make (l_filename.string)
 				if not l_dir.exists then
 					l_dir.create_dir
@@ -252,7 +254,7 @@ feature {NONE} -- Implementation
 				if not Result.exists then
 					Result.create_dir
 				end
-			end
+--			end
 		end
 
 	template_file_name: STRING is
@@ -272,12 +274,6 @@ feature {NONE} -- Implementation
 		do
 			Result := tocs_directory.name + "/0.html"
 		end
-			
-	filter_template_file_name: STRING is
-			-- Filter template file
-		do
-			Result := html_simple_filter_template_file_name
-		end			
 		
 	resource_files: ARRAYED_LIST [STRING] is
 			-- List of resource file to copy with project
@@ -297,9 +293,36 @@ feature {NONE} -- Implementation
 			create Result.make (6)
 			Result.extend ("toc.css")
 			Result.extend ("simple_toc.js")
+			Result.extend ("simple_toc_single.js")
 			Result.extend ("header.html")
 			Result.extend ("header_mainarea.jpg")
 			Result.extend ("header.css")	
 		end
+		
+	toc_count: INTEGER is
+			-- Number of tocs being generated
+		do
+			Result := generation_data.filter_toc_hash.count
+		end		
+		
+	toc_filename: STRING is
+			-- Toc filename
+		do
+			if toc_count < 2 then
+				Result := "simple_toc_single.js"
+			else
+				Result := "simple_toc.js"
+			end
+		end		
+		
+	filter_template_file_name: STRING is
+			-- Filter file name
+		do
+			if toc_count < 2 then
+				Result := html_simple_filter_template_file_name
+			else
+				Result := html_simple_filter_template_file_name_single
+			end
+		end		
 		
 end -- class WEB_HELP_PROJECT_SIMPLE

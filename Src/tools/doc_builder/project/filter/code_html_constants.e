@@ -92,6 +92,16 @@ feature -- Web Help Files
 			Result := l_file_path.string
 		end	
 		
+	html_simple_filter_template_file_name_single: STRING is
+			-- HTML template file for left side filter code (single toc)
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("HTMLSimpleFilterTemplate_single.html")
+			Result := l_file_path.string
+		end		
+		
 	web_help_project_template_file_name: STRING is
 			-- HTML template file for web based help project
 		local

@@ -1587,83 +1587,78 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 	return gdp->gen_seq;
 }
 /*------------------------------------------------------------------*/
-/* Create an id from a type array 'cidarr'. If 'dtype_map' is not   */
+/* Create an id from a type array 'a_cidarr'. If 'dtype_map' is not   */
 /* NULL, use it to map old to new dtypes ('retrieve')               */
 /* Format:                                                          */
 /* First entry: count                                               */
 /* Then 'count' type ids, then TERMINATOR                           */
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
+rt_public int16 eif_gen_id_from_cid (int16 *a_cidarr, int *dtype_map)
 
 {
 	int16   dftype;
 	int16   count, i, dtype;
 
-	if (cidarr == (int16 *) 0)
-	{
-		eif_panic ("Invalid cid array");
-	}
+	REQUIRE ("Valid cid array", a_cidarr);
 
-	count   = *cidarr;
-	*cidarr = -10;
+	count   = *a_cidarr;
+	*a_cidarr = -10;
 
-	if (dtype_map != (int *) 0)
-	{
-		/* We need to map old dtypes to new dtypes */
+	if (dtype_map != (int *) 0) {
+			/* We need to map old dtypes to new dtypes */
+		for (i = 1; i <= count; i++) {
+			dtype = a_cidarr [i];
 
-		for (i = count; i; --i)
-		{
-			dtype = cidarr [i];
-
-			if (dtype <= EXPANDED_LEVEL)
-			{
-				/* expanded */
-
+			if (dtype <= EXPANDED_LEVEL) {
 				dtype = dtype_map [EXPANDED_LEVEL-dtype];
 				dtype = EXPANDED_LEVEL - RTUD_INV(dtype);
-			}
-			else
-			{
-				if (dtype >= 0)
-				{
+				a_cidarr [i] = dtype;
+			} else {
+				if (dtype >= 0) {
 					dtype = (int16) dtype_map [dtype];
 					dtype = RTUD_INV(dtype);
-				}
-			}
-
-			cidarr [i] = dtype;
-		}
-	}
-	else
-	{
-		/* We only need to undo the effect of RTUD */
-
-		for (i = count; i; --i)
-		{
-			dtype = cidarr [i];
-
-			if (dtype <= EXPANDED_LEVEL)
-			{
-				/* expanded */
-
-				dtype = EXPANDED_LEVEL - RTUD_INV((EXPANDED_LEVEL-dtype));
-			}
-			else
-			{
-				if (dtype >= 0)
-				{
+					a_cidarr [i] = dtype;
+				} else if (dtype = TUPLE_TYPE) {
+						/* We simply update uniformizer and number of generic
+						 * parameters of the tuple */
+					i = i + 1;
+					dtype = a_cidarr [i];
+					dtype  = (int16) dtype_map [dtype];
 					dtype = RTUD_INV(dtype);
+					a_cidarr [i] = dtype;
+					i = i + 1;
 				}
 			}
+		}
+	} else {
+			/* We only need to undo the effect of RTUD */
+		for (i = 1; i <= count; i++) {
+			dtype = a_cidarr [i];
 
-			cidarr [i] = dtype;
+			if (dtype <= EXPANDED_LEVEL) {
+				dtype = EXPANDED_LEVEL - RTUD_INV((EXPANDED_LEVEL-dtype));
+				a_cidarr [i] = dtype;
+			} else {
+				if (dtype >= 0) {
+					dtype = RTUD_INV(dtype);
+					a_cidarr [i] = dtype;
+				} else if (dtype == TUPLE_TYPE) {
+						/* We simply update uniformizer and number of generic
+						 * parameters of the tuple */
+					i = i + 1;
+					dtype = a_cidarr [i];
+					dtype = RTUD_INV(dtype);
+					a_cidarr [i] = dtype;
+					i = i + 1;
+				}
+			}
 		}
 	}
 
-	cidarr [count+1] = TERMINATOR;
-	dftype  = eif_compound_id ((int16 *)0, (EIF_REFERENCE )0, *(cidarr+1), cidarr);
-	*cidarr = count;
+	a_cidarr [count+1] = TERMINATOR;
+	dftype  = eif_compound_id ((int16 *)0, (EIF_REFERENCE )0, *(a_cidarr+1), a_cidarr);
+	*a_cidarr = count;
 
 	return dftype;
 }
@@ -2876,8 +2871,12 @@ rt_private int16 eif_gen_seq_len (int16 dftype)
 
 	/* Is it a TUPLE? */
 
-	if (gdp->is_tuple)
-		len = 2;
+	if (gdp->is_tuple) {
+			/* Size is `3' because we need to take into account
+			 * TUPLE_TYPE constant, uniformizer and number of
+			 * generic parameters in seqence for tuple type */
+		len = 3;
+	}
 
 	for (i = gdp->size-1; i >= 0; --i)
 		len += eif_gen_seq_len (gdp->typearr [i]);

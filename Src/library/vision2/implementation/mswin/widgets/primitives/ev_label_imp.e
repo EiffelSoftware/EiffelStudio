@@ -253,10 +253,6 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 	
 					-- Compute the bounding rectangle where the text need
 					-- to be displayed.
-				check
-					text_height_ok: (not internal_text.is_empty) implies 
-						text_height = draw_font.string_height (internal_text)
-				end
 				create draw_rect.make (
 					draw_item_struct_rect.left, draw_item_struct_rect.top + 
 						(draw_item_struct_rect.height - text_height) // 2,
@@ -267,7 +263,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			
 					-- Draw the text
 				draw_dc.select_font (draw_font)
-				if draw_item_struct.item_state = Ods_disabled then
+				if flag_set (draw_item_struct.item_state, Ods_disabled) then
 					-- Label is disabled
 					draw_dc.draw_disabled_text (internal_text, draw_rect, 
 						draw_flags)

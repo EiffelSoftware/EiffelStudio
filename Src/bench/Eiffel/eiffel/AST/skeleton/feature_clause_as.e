@@ -55,32 +55,30 @@ feature -- Attributes
 			class_text_not_void: class_text /= Void
 		local
 			end_pos, real_pos: INTEGER
-			retried: BOOLEAN
 		do
-			if not retried then
-				real_pos := class_text.substring_index ("--", end_position)
-				if real_pos /= 0 then
-					if not features.is_empty then
-						end_pos := features.first.start_position
-					end
-					if end_pos = 0 or else real_pos < end_pos then
-						Result := class_text.substring (real_pos + 2, class_text.index_of ('%N', real_pos) - 1)
-						Result.prune_all_leading (' ')
-					else
-						create Result.make (0)
-					end
+			end_pos := end_position
+				-- `end_position' might not be up-to-date, so that we may look
+				-- after the end of the file. Case were new class text is shorter
+				-- than the previous text of the compiled version.
+			if end_pos <= class_text.count then
+				real_pos := class_text.substring_index ("--", end_pos)
+			end
+			if real_pos /= 0 then
+				if not features.is_empty then
+					end_pos := features.first.start_position
 				else
-					create Result.make (0)
+					end_pos := 0
 				end
-			else
+				if end_pos = 0 or else real_pos < end_pos then
+					Result := class_text.substring (real_pos + 2, class_text.index_of ('%N', real_pos) - 1)
+					Result.prune_all_leading (' ')
+				end
+			end
+			if Result = Void then
 				create Result.make (0)
 			end
 		ensure
 			not_void: Result /= Void
-		rescue
-				-- `Position' might not be up-to-date, so that we may look after the end of the file.
-			retried := True
-			retry
 		end
 
 feature -- Comparison

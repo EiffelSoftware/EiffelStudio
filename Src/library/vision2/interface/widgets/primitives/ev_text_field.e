@@ -53,8 +53,8 @@ feature -- Status setting
 		end
 
 feature -- Event - command association
-	
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+
+	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed 
 			-- when the text field is activated, ie when the user
 			-- press the enter key.
@@ -62,19 +62,44 @@ feature -- Event - command association
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_activate_command (cmd, arg)
+			implementation.add_return_command (cmd, arg)
+		end	
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
+		obsolete
+			"Use add_return command instead."
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_return_command (cmd, arg)
 		end	
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+	remove_return_commands is
 			-- Empty the list of commands to be executed
 			-- when the text field is activated, ie when the user
 			-- press the enter key.
 		require
 			exists: not destroyed
 		do
-			implementation.remove_activate_commands
+			implementation.remove_return_commands
+		end
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
+		obsolete
+			"Use remove_return_command instead."
+		require
+			exists: not destroyed
+		do
+			implementation.remove_return_commands
 		end
 
 feature {NONE} -- Implementation

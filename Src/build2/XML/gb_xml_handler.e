@@ -148,6 +148,33 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
+	component_root_element_type (a_name: STRING): STRING is
+			-- `Result' is the type of object representing the root element
+			-- of the component. i.e. "EV_BUTTON".
+		local
+			an_element: XML_ELEMENT
+			component_element: XML_ELEMENT
+			internal_element: XML_ELEMENT
+			current_name: STRING
+		do
+			an_element ?= component_document.first
+			component_element := child_element_by_name (an_element, a_name)
+			from
+				component_element.start
+			until
+				component_element.off or Result /= Void
+			loop
+				internal_element ?= component_element.item_for_iteration
+				current_name := internal_element.name.to_utf8
+				if current_name.is_equal (Item_string) then
+					Result := internal_element.attribute_by_name (type_string).value.to_utf8
+				end
+				component_element.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
 		
 feature {NONE} -- Implementation
 

@@ -31,20 +31,41 @@ feature -- Widget hierarchy
 
 feature -- Color
 
-	foreground: COLOR is
+	foreground: COLOR is obsolete "Use ``foreground_color''"
+			-- Foreground color of Current widget
+		do
+			Result := foreground_color
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	foreground_color: COLOR is
 			-- Foreground color of Current widget
 		do
 			Result:= implementation.foreground
+		ensure
+			valid_result: Result /= Void
 		end;
 
-	set_foreground (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
 		require
 			Valid_color: new_color /= Void
 		do
-			implementation.set_foreground (new_color)
+			implementation.set_foreground_color (new_color)
 		ensure
-			Foreground_set: foreground = new_color
+			foreground_set: foreground_color = new_color
+		end 
+
+	set_foreground (new_color: COLOR) is 
+			-- Set foreground color to `new_color'.
+		obsolete "Use ``set_foreground_color''"
+		require
+			Valid_color: new_color /= Void
+		do
+			set_foreground_color (new_color)
+		ensure
+			foreground_set: foreground = new_color
 		end 
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}

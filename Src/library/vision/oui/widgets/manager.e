@@ -20,7 +20,6 @@ inherit
 			implementation
 		end;
 
-
 feature -- Parent composite
 
 	parent: COMPOSITE is
@@ -31,10 +30,26 @@ feature -- Parent composite
 
 feature -- Color
 
-	foreground: COLOR is
+	foreground: COLOR is obsolete "Use ``foreground_color''"
 			-- Foreground color of manager widget
 		do
-			Result:= implementation.foreground
+			Result:= foreground_color
+		end;
+
+	foreground_color: COLOR is
+			-- Foreground color of manager widget
+		do
+			Result:= implementation.foreground_color
+		end;
+
+	set_foreground_color (new_color: COLOR) is
+			-- Set foreground color to `new_color'.
+		require
+			color_not_void: not (new_color = Void)
+		do
+			implementation.set_foreground_color (new_color)
+		ensure
+			foreground_color = new_color
 		end;
 
 	set_foreground (new_color: COLOR) is
@@ -42,9 +57,9 @@ feature -- Color
 		require
 			color_not_void: not (new_color = Void)
 		do
-			implementation.set_foreground (new_color)
+			set_foreground_color (new_color)
 		ensure
-			foreground = new_color
+			foreground_color = new_color
 		end 
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}

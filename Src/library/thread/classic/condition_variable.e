@@ -65,7 +65,7 @@ feature -- Status setting
 			a_mutex_not_void: a_mutex /= Void
 			timeout_positive: a_timeout >= 0
 		do
-			eif_thr_cond_wait_with_timeout (cond_pointer, a_mutex.mutex_pointer, a_timeout)
+			Result := (eif_thr_cond_wait_with_timeout (cond_pointer, a_mutex.mutex_pointer, a_timeout) = 1)
 		end
 
 	destroy is
@@ -115,9 +115,13 @@ feature {NONE} -- Externals
 			"C blocking  use %"eif_threads.h%""
 		end
 
-	eif_thr_cond_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER) is
+	eif_thr_cond_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER is
 		external
-			"C blocking use %"eif_threads.h%""
+			"[
+				C blocking
+				signature (EIF_POINTER, EIF_POINTER, EIF_INTEGER): EIF_INTEGER
+				use %"eif_threads.h%"				
+			]"
 		end
 
 	eif_thr_cond_destroy (a_mutex_ptr: POINTER) is

@@ -121,17 +121,11 @@ feature {NONE} -- WEL Implementation
 			-- information about the item to be drawn and the type
 			-- of drawing required.
 		local
-			pixcon: EV_PIXMAPABLE_IMP
-			itemcon: EV_ITEM_HOLDER_IMP
+			pixcon: EV_OPTION_BUTTON_IMP
 		do
 			pixcon ?= draw_item.window_item
 			if pixcon /= Void then
 				pixcon.on_draw (draw_item)
-			else
-				itemcon ?= draw_item.window_item
-				if itemcon /= Void then
-					itemcon.on_draw (draw_item)
-				end
 			end
 		end
 

@@ -18,10 +18,16 @@
 
 #ifdef LMALLOC_DEBUG
 #include <stdio.h>
-#define eif_malloc(x) (fprintf (stderr, "%s:%d\t|", __FILE__, __LINE__), eiffel_malloc (x))
-#define eif_calloc(x,y) (fprintf (stderr, "%s:%d\t|", __FILE__, __LINE__), eiffel_realloc (x, y))
-#define eif_realloc(x,y) (fprintf (stderr, "%s:%d\t|", __FILE__, __LINE__), eiffel_realloc (x, y))
-#define eif_free(x) (fprintf (stderr, "%s:%d\t|", __FILE__, __LINE__), eiffel_free (x))
+#define eif_malloc(x) (fprintf (stderr, "%s:%d\t| ", __FILE__, __LINE__), eiffel_malloc (x, __FILE__, __LINE__))
+#define eif_calloc(x,y) (fprintf (stderr, "%s:%d\t| ", __FILE__, __LINE__), eiffel_calloc (x, y, __FILE__, __LINE__))
+#define eif_realloc(x,y) (fprintf (stderr, "%s:%d\t| ", __FILE__, __LINE__), eiffel_realloc (x, y, __FILE__, __LINE__))
+#define eif_free(x) (fprintf (stderr, "%s:%d\t| ", __FILE__, __LINE__), eiffel_free (x, __FILE__, __LINE__))
+#elif defined LMALLOC_CHECK
+#include <stdio.h>
+#define eif_malloc(x) eiffel_malloc (x, __FILE__, __LINE__)
+#define eif_calloc(x,y) eiffel_calloc (x, y, __FILE__, __LINE__)
+#define eif_realloc(x,y) eiffel_realloc (x, y, __FILE__, __LINE__)
+#define eif_free(x) eiffel_free (x, __FILE__, __LINE__)
 #else
 #define eif_malloc(x) eiffel_malloc (x)
 #define eif_calloc(x,y) eiffel_calloc (x,y)
@@ -36,10 +42,17 @@ extern "C" {
 RT_LNK int is_in_lm (void *ptr);
 RT_LNK void eif_lm_display ();
 RT_LNK int eif_lm_free ();
+#if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
+RT_LNK Malloc_t eiffel_malloc (register unsigned int nbytes, char *file, int line);
+RT_LNK Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize, char *file, int line) ;
+RT_LNK Malloc_t eiffel_realloc (void *ptr, unsigned int nbytes, char *file, int line);
+RT_LNK void eiffel_free (void *ptr, char *s, int l);
+#else
 RT_LNK Malloc_t eiffel_malloc (register unsigned int nbytes);
 RT_LNK Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize) ;
 RT_LNK Malloc_t eiffel_realloc (void *ptr, unsigned int nbytes);
-RT_LNK void eiffel_free (void *ptr) ;
+RT_LNK void eiffel_free (void *ptr);
+#endif
 
 #ifdef __cplusplus
 }

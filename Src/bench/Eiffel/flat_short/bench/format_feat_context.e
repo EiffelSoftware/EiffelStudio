@@ -48,11 +48,8 @@ feature -- Execution
 				Error_handler.wipe_out
 				f_ast := target_feat.body
 				export_status := target_feat.export_status
-				create format_stack.make
-				create text.make
-				create format
+				initialize
 				last_was_printed := True;
-				format_stack.extend (format);
 				System.set_current_class (class_c);
 				Inst_context.set_cluster (class_c.cluster);
 				begin;
@@ -101,7 +98,7 @@ feature -- Execution
 				create assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
 				indent;
-				f_ast.format (Current);
+				formatter.format (f_ast)
 				commit;
 			else
 				execution_error := True;

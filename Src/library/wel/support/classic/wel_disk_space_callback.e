@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 	cwin_query_disk_space(current_object: POINTER; drive_letter: CHARACTER; 
 			callback_function: POINTER): BOOLEAN is
 		external 
-			"C signature (EIF_OBJECT, EIF_CHARACTER, EIF_POINTER): EIF_BOOLEAN use %"wel_disk_space.h%""
+			"C signature (EIF_REFERENCE, EIF_CHARACTER, EIF_POINTER): EIF_BOOLEAN use %"wel_disk_space.h%""
 		end
 
 	eif_set_disk_space_attributes_callback(

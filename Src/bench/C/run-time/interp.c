@@ -644,15 +644,15 @@ end:
 #endif
 		op_stack.st_cur = scur;					/* Restore stack context */
 		op_stack.st_top = stop;
-		op_stack.st_end = scur->sk_end;
+		if (scur) op_stack.st_end = scur->sk_end;
 		loc_set.st_cur = l_cur;
-		loc_set.st_end = l_cur->sk_end;
+		if (l_cur) loc_set.st_end = l_cur->sk_end;
 		loc_set.st_top = l_top;
 		loc_stack.st_cur = ls_cur;
-		loc_stack.st_end = ls_cur->sk_end;
+		if (ls_cur) loc_stack.st_end = ls_cur->sk_end;
 		loc_stack.st_top = ls_top;
 		hec_stack.st_cur = h_cur;
-		hec_stack.st_end = h_cur->sk_end;
+		if (h_cur) hec_stack.st_end = h_cur->sk_end;
 		hec_stack.st_top = h_top;
 		sync_registers(scur, stop);
 		RTEU;

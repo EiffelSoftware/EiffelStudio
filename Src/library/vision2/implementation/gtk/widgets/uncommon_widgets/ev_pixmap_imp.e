@@ -206,7 +206,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			Result := C.gtk_pixmap_struct_pixmap (c_object)
 		end
 
-feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation
+feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP, EV_COMPOSED_ITEM_IMP} -- Implementation
 
 	interface: EV_PIXMAP
 
@@ -244,6 +244,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/15 19:25:29  king
+--| Made interface exportable to composed_item
+--|
 --| Revision 1.16  2000/02/14 11:40:33  oconnor
 --| merged changes from prerelease_20000214
 --|

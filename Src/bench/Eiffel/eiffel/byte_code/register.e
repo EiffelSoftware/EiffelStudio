@@ -66,7 +66,7 @@ feature
 			-- ASCII representation of register
 		do
 			Result := Buffer;
-			Result.clear;
+			Result.wipe_out;
 			inspect
 				c_type.level
 			when C_long then

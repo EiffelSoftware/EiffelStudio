@@ -1699,7 +1699,7 @@ feature -- Class initialization
 			pos: INTEGER;
 			parent_class: CLASS_C;
 		do
-			pos := parents.position;
+			pos := parents.index;
 			from
 				Result := True;
 				parents.start;
@@ -1734,7 +1734,7 @@ feature -- Class initialization
 			pos: INTEGER;
 			parent_class: CLASS_C;
 		do
-			pos := parents.position;
+			pos := parents.index;
 			from
 				Result := True;
 				old_parents.start

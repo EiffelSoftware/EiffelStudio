@@ -12,6 +12,7 @@ inherit
 	SHARED_DEBUG_LEVEL;
 	SHARED_VISIBLE_LEVEL;
 	SHARED_WORKBENCH;
+	SYSTEM_CONSTANTS
 
 creation
 
@@ -36,7 +37,7 @@ feature
 			-- Full file name of the class
 		do
 			Result := cluster.path.duplicate;
-			Result.append ("/");
+			Result.append_character (Directory_separator);
 			Result.append (base_name)
 		end;
 

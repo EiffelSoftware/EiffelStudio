@@ -54,7 +54,7 @@ feature
 			-- The "Result" string
 		do
 			Result := Buffer;
-			Result.clear;
+			Result.wipe_out;
 			Result.append ("Result");
 		end;
 

@@ -18,7 +18,13 @@ feature
 
 	Descendants_abb: CHARACTER is 'd';
 
+	Edit_ace_abb: CHARACTER is 'v';
+
+	Edit_class_abb: CHARACTER is 'v';
+
 	Externals_abb: CHARACTER is 'x';
+
+	Feature_abb: CHARACTER is 'f';
 
 	Flat_abb: CHARACTER is 'f';
 

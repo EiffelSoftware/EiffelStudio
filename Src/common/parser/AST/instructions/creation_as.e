@@ -7,6 +7,7 @@ inherit
 			type_check, byte_node, format,
 			fill_calls_list, replicate
 		end;
+	SHARED_INSTANTIATOR
 
 feature -- Attributes
 
@@ -61,6 +62,7 @@ feature -- Type check, byte code and dead code removal
 			vgcc7: VGCC7;
 			vtug: VTUG;
 			not_supported: NOT_SUPPORTED;
+			gen_type: GEN_TYPE_A;
 		do
 				-- Init the type stack
 			context.begin_expression;
@@ -155,6 +157,11 @@ feature -- Type check, byte code and dead code removal
 						Error_handler.insert_error (vgcc31);
 					else
 						creation_type := new_creation_type;
+						gen_type ?= creation_type;
+						if gen_type /= Void then
+							Instantiator.dispatch (gen_type, context.a_class);
+						end;
+
 							-- Update type stack
 						context.change_item (creation_type);
 							-- Update the access line

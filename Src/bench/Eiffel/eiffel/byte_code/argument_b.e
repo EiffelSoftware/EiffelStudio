@@ -58,7 +58,7 @@ feature
 			-- The "arg<num>" string
 		do
 			Result := Buffer;
-			Result.clear;
+			Result.wipe_out;
 			Result.append ("arg");
 			Result.append (position.out);
 		end;

@@ -17,7 +17,14 @@ inherit
 	SHARED_EWB_CMD_NAMES;
 	SHARED_EWB_ABBREV;
 	COMPARABLE;
-	LIC_EXITER
+	LIC_EXITER;
+	EXECUTION_ENVIRONMENT
+		rename
+			put as env_put,
+			get as env_get,
+			system as env_system
+		end;
+
 
 feature -- Creation
 
@@ -233,34 +240,6 @@ if not initialized.item then
 	-- (Introduced for the command loop)
 initialized.put (True);
 end
-		end;
-
-feature -- Compilation
-
-	compile is
-			-- Regular compilation
-		local
-			exit: BOOLEAN;
-			str: STRING
-		do
-			from
-			until
-				exit
-			loop
-				Workbench.recompile;
-				if not Workbench.successfull then
-					if stop_on_error then
-						lic_die (-1);
-					end;
-					if termination_requested then
-						--lic_die (0);
-							-- es3 -loop does NOT like lic_die(0)
-						exit := True
-					end
-				else
-					exit := True
-				end
-			end;
 		end;
 
 feature {NONE} -- I/O
@@ -526,6 +505,25 @@ feature -- Execution
 	loop_execute is
 		do
 			check_arguments_and_execute
+		end;
+
+feature
+
+	edit (a_file: STRING) is
+		local
+			editor: STRING;
+			cmd: STRING;
+		do
+			editor := env_get ("EIF_EDITOR");
+			if editor /= Void then
+				!!cmd.make (0);
+				cmd.append (editor);
+				cmd.append_character (' ');
+				cmd.append (a_file);
+				env_system (cmd);
+			else
+				io.error.putstring ("The variable EIF_EDITOR is not set%N");
+			end;
 		end;
 
 end

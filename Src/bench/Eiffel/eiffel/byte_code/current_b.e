@@ -42,7 +42,7 @@ feature
 			-- The "Current" string
 		do
 			Result := Buffer;
-			Result.clear;
+			Result.wipe_out;
 			Result.append("Current");
 		end;
 

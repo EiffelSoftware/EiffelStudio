@@ -54,10 +54,10 @@ feature {NONE}
 			-- Hole caraterizing current
 
 	set_default_position is
-        local
-            i: INTEGER;
-        do
-            i := 10 * window_manager.explain_windows_count;
+		local
+			i: INTEGER;
+		do
+			i := 10 * window_manager.explain_windows_count;
 			set_x_y (600 + i, i)
 		end;
 

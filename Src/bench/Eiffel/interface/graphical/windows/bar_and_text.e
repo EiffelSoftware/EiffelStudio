@@ -6,20 +6,31 @@ class BAR_AND_TEXT
 inherit
 
 	TOOL_W
+		rename
+			execute as tool_w_execute
 		redefine
 			save_command, set_default_format,
 			hole
+		end;
+	TOOL_W
+		redefine
+			save_command, set_default_format,
+			hole, execute
+		select
+			execute
 		end;
 	TOP_SHELL
 		rename
 			make as shell_make,
 			realize as shell_realize
+		redefine
+			delete_window_action
 		end;
 	TOP_SHELL
 		rename
 			make as shell_make
 		redefine
-			realize
+			realize, delete_window_action
 		select
 			realize
 		end
@@ -212,5 +223,26 @@ feature
 			global_form.attach_right (format_bar, 0);
 			global_form.attach_bottom (format_bar, 0);
 		end
+
+feature -- quit actions
+
+	task_end: TASK;
+
+	delete_window_action  is
+		do
+			!!task_end.make;
+			task_end.add_action (Current, task_end);
+			iterate;
+		end;
+	
+	execute (argument: ANY) is
+		do
+			if argument = task_end then
+				task_end.remove_action (Current, task_end);
+				quit_command.execute (Void);
+			else
+				tool_w_execute (argument)
+			end;
+		end;
 
 end -- class BAR_AND_TEXT

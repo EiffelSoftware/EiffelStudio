@@ -118,7 +118,7 @@ feature -- Incrementality
 			c := clients.count;
 			other_clients := other.clients;
 			if c = other_clients.count then
-				pos := other_clients.position;
+				pos := other_clients.index;
 				from
 					Result := True;
 					i := 1;
@@ -130,7 +130,7 @@ feature -- Incrementality
 					Result := not other_clients.after;
 					i := i + 1;
 				end;
-				other_clients.go (pos);
+				other_clients.go_i_th (pos);
 			end;
 		end;
 

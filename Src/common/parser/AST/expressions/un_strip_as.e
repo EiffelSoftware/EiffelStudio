@@ -46,7 +46,7 @@ feature -- Type check, byte code and dead code removal
 				id_list.after
 			loop
 				an_id := id_list.item;
-				pos := id_list.position;
+				pos := id_list.index;
 				id_list.forth;
 				id_list.search_equal (an_id);
 				if not id_list.after then
@@ -68,7 +68,7 @@ feature -- Type check, byte code and dead code removal
 						context.supplier_ids.add (depend_unit);
 					end;
 				end;
-				id_list.go (pos);
+				id_list.go_i_th (pos);
 				id_list.forth;
 			end;
 			context.put (Strip_type);

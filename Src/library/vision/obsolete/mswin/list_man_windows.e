@@ -204,7 +204,9 @@ feature -- Cursor movement
 	start is
 			-- Move cursor to first position.
 		do
-			index := 1
+			if not empty then
+				index := 1
+			end
 		end
 
 feature -- Element change

@@ -460,7 +460,6 @@ feature -- Basic Operations
 	reload_text is
 			-- Recompute token informationfor for loaded text.
 		local
-			l_line: EDITOR_LINE
 			l_line_index: INTEGER
 		do
 			from

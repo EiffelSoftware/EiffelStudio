@@ -1121,8 +1121,6 @@ feature {UNDO_CMD} -- Basic Text changes
 		local
 			first_image, last_image, aux: STRING
 			t: EDITOR_TOKEN
-			cline, new_line: EDITOR_LINE
-			i,j, si, ei: INTEGER
 			end_pos: INTEGER
 			ln: EDITOR_LINE
 			tokens_group: EDITOR_TOKEN_GROUP

@@ -667,7 +667,7 @@ feature {EV_INTERMEDIARY_ROUTINES}
 	call_close_request_actions is
 			-- Call the close request actions.
 		do
-			if close_request_actions_internal /= Void then
+			if close_request_actions_internal /= Void and then not App_implementation.is_in_transport then
 				close_request_actions_internal.call (Void)
 			end
 		end

@@ -8,11 +8,6 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
-		undefine
-			to_string,
-			finalize,
-			equals,
-			get_hash_code
 		redefine
 			on_paint,
 			dispose_boolean
@@ -31,7 +26,6 @@ feature {NONE} -- Initialization
 			-- Entry point.
 		local
 			l_background_image, l_text_image: DRAWING_BITMAP
-			return: SYSTEM_OBJECT
 		do
 			create serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
 
@@ -126,7 +120,6 @@ come tell me what i'm after
 	japanese_text: SYSTEM_STRING is
 			-- A japanese text to draw.
 		local
-			l_japanese_charecter: CHARACTER
 			l_japanese_string: NATIVE_ARRAY [CHARACTER]
 		once
 			create l_japanese_string.make (11)
@@ -141,7 +134,7 @@ come tell me what i'm after
 			l_japanese_string.put (8, (12391).to_character)
 			l_japanese_string.put (9, (12377).to_character)
 			l_japanese_string.put (10, (12290).to_character)
-			create result.make (l_japanese_string)
+			create Result.make (l_japanese_string)
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -166,7 +159,7 @@ feature {NONE} -- Implementation
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
 		rescue
-			retried := true
+			retried := True
 			retry
 		end
 
@@ -174,14 +167,12 @@ feature {NONE} -- Implementation
 			-- Feature performed when form is painted.
 		local
 			graph: DRAWING_GRAPHICS
-			title_text, text_to_draw, what_rendered_text: SYSTEM_STRING
+			title_text, text_to_draw: SYSTEM_STRING
 			rectangle_11, rectangle_21: DRAWING_RECTANGLE_F
 			rectangle_12, rectangle_22: DRAWING_RECTANGLE
 			format: DRAWING_STRING_FORMAT
-			characters, lines: INTEGER
 			window_center, start_pos: DOUBLE
 			string_size: DRAWING_SIZE_F
-			dummy: SYSTEM_OBJECT
 		do
 			graph := e.graphics
 

@@ -57,6 +57,9 @@ feature -- Error Codes
 	No_midl_compiler: INTEGER is 16
 			-- No MIDL compiler but using IDL
 
+	Initialization_error: INTEGER is 17
+			-- Could not create destination folder
+
 feature -- Access
 
 	error_title (a_error: INTEGER): STRING is
@@ -82,7 +85,7 @@ feature {NONE} -- Implementation
 	Error_table: ARRAY [STRING] is
 			-- Error table
 		once
-			create Result.make (1, 16)
+			create Result.make (1, 17)
 			Result.put ("Could not find EiffelStudio installation", No_ise_eiffel)
 			Result.put ("Generation stopped by user", User_stop)
 			Result.put ("An exception was raised", Exception_raised)
@@ -99,6 +102,7 @@ feature {NONE} -- Implementation
 			Result.put ("C link failed", Link_failed)
 			Result.put ("Could not cleanup destination folder, check for locked files", Destination_folder_cleanup_error)
 			Result.put ("Could not find MIDL compiler, do not use IDL file for COM definition", No_midl_compiler)
+			Result.put ("Could not create destination folder", Initialization_error)
 		end
 		
 end -- class WIZARD_ERRORS

@@ -61,13 +61,13 @@ feature {NONE} -- Initialization
 			is_initialized := False
 			real_signal_connect (
 				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_ok_button (c_object),
-				"pressed",
+				"clicked",
 				agent (App_implementation.gtk_marshal).directory_dialog_on_ok_intermediary (c_object),
 				Void
 			)
 			real_signal_connect (
 				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_cancel_button (c_object),
-				"pressed",
+				"clicked",
 				agent (App_implementation.gtk_marshal).directory_dialog_on_cancel_intermediary (c_object),
 				Void
 			)

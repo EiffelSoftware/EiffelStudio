@@ -7,7 +7,7 @@ inherit
 
 	DLE_MAKER
 		undefine
-			generate_other_objects, generate_additional_rules
+			generate_additional_rules
 		end;
 
 	WBENCH_MAKER
@@ -15,9 +15,10 @@ inherit
 			init_objects_baskets, add_common_objects,
 			generate_partial_system_objects_dependencies,
 			generate_simple_executable, generate_system_makefile,
-			generate_cecil, add_cecil_objects, system_name
+			generate_cecil, add_cecil_objects, system_name,
+			generate_other_objects, run_time
 		redefine
-			add_specific_objects, add_eiffel_objects, run_time
+			add_specific_objects, add_eiffel_objects
 		end
 
 creation
@@ -93,14 +94,6 @@ feature -- Add objects in baskets
 				end
 				classes.forth
 			end
-		end;
-
-feature -- Access
-
-	 run_time: STRING is
-			-- No run-time needs to be linked
-		do
-			Result := ""
 		end;
 
 end -- class WBENCH_DLE_MAKER

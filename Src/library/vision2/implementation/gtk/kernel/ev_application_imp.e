@@ -393,7 +393,7 @@ feature -- External implementation
 	
 	gtk_init is
 		external
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""
 		alias
     		"gtk_init (&eif_argc, &eif_argv)"
 		end

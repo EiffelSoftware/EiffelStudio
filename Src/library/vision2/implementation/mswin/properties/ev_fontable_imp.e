@@ -19,6 +19,8 @@ feature -- Access
 			-- Font of `Current'.
 		local
 			font_imp: EV_FONT_IMP
+			private_font_imp: EV_FONT_IMP
+			a_font: WEL_FONT
 		do
 			if private_font = Void then
 				create Result
@@ -27,10 +29,23 @@ feature -- Access
 				private_font := Result
 				private_wel_font := Void
 			else
-				Result := private_font	
+				create Result.make_with_values (private_font.family, private_font.weight, private_font.shape, private_font.height)
 			end
 		end
-	
+		
+	internal_font: EV_FONT is
+			-- Font of `Current' for internal queries.
+			-- Faster than calling `font' as we do not need to
+			-- create a new EV_FONT every time.
+		do
+			if private_font = Void then
+				Result := font
+			else
+				Result := private_font
+			end
+		end
+		
+
 feature -- Status setting
 
 	set_font (ft: EV_FONT) is

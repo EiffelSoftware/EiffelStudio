@@ -122,6 +122,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
+			initialize_pixmaps
 			
 			--| Event position 1 in intermediary
 			real_signal_connect (

@@ -68,6 +68,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_move_action (a_command, argument)
@@ -79,6 +80,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_value_changed_action (a_command, argument)
@@ -90,6 +92,7 @@ feature -- Callbacks (removing)
 			-- Remove `a_command' from the list of action to be executed when
 			-- slide is moved.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_move_action (a_command, argument)
@@ -99,6 +102,7 @@ feature -- Callbacks (removing)
 			-- Remove `a_command' from the list of action to be executed when
 			-- value is changed.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_value_changed_action (a_command, argument)
@@ -109,6 +113,8 @@ feature -- Slider setup (max, min., gran, ...)
 	granularity: INTEGER is
 			-- Value of the amount to move the slider of the current
 			-- scrollbar when a move action occurs
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.granularity
 		ensure
@@ -118,6 +124,8 @@ feature -- Slider setup (max, min., gran, ...)
 
 	maximum: INTEGER is
 			-- Maximum value of slider value
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.maximum
 		ensure
@@ -126,6 +134,8 @@ feature -- Slider setup (max, min., gran, ...)
 
 	minimum: INTEGER is
 			-- Minimum value of slider value
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.minimum
 		ensure
@@ -136,6 +146,7 @@ feature -- Slider setup (max, min., gran, ...)
 			-- Set amount to move the slider when a move action 
 			-- occurs to `new_granularity'.
 		require
+			exists: not destroyed;
 			granularity_large_enough: new_granularity >= 1;
 			granularity_small_enough: new_granularity <= (maximum - minimum)
 		do
@@ -147,6 +158,7 @@ feature -- Slider setup (max, min., gran, ...)
 	set_maximum (new_maximum: INTEGER) is
 			-- Set maximum value of slider value to `new_maximum'.
 		require
+			exists: not destroyed;
 			maximum_greater_than_mini: new_maximum > minimum
 		do
 			implementation.set_maximum (new_maximum)
@@ -157,6 +169,7 @@ feature -- Slider setup (max, min., gran, ...)
 	set_minimum (new_minimum: INTEGER) is
 			-- Set minimum value of slider value to `new_minimum'.
 		require
+			exists: not destroyed;
 			minimum_smaller_than_maxi: new_minimum < maximum
 		do
 			implementation.set_minimum (new_minimum)
@@ -169,6 +182,8 @@ feature -- Delay
 	initial_delay: INTEGER is
 			-- Amount of time to wait (milliseconds) before starting
 			-- continuous slider movement
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.initial_delay
 		ensure
@@ -178,6 +193,8 @@ feature -- Delay
 	repeat_delay: INTEGER is
 			-- Amount of time to wait (milliseconds) between subsequent
 			-- slider movements after the initial delay
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.repeat_delay
 		ensure
@@ -188,6 +205,7 @@ feature -- Delay
 			-- Set the amount of time to wait (milliseconds) between
 			-- subsequent movements after the initial delay to 'new_delay'.
 		require
+			exists: not destroyed;
 			positive_delay: new_delay > 0
 		do
 			implementation.set_repeat_delay (new_delay)
@@ -199,6 +217,7 @@ feature -- Delay
 			-- Set the amount of time to wait (milliseconds) before
 			-- starting continuous slider movement to `new_delay'.
 		require
+			exists: not destroyed;
 			positive_delay: new_delay > 0
 		do
 			implementation.set_initial_delay (new_delay)
@@ -217,16 +236,18 @@ feature -- Orientation
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
-			do
-				implementation.set_horizontal (flag)
-			ensure
-				value_correctly_set: is_horizontal = flag
-			end;
+		do
+			implementation.set_horizontal (flag)
+		ensure
+			value_correctly_set: is_horizontal = flag
+		end;
 
 feature -- Slider value 
 
 	value: INTEGER is
 			-- Slider value
+		require
+			exists: not destroyed
 		do
 			Result := implementation.position
 		ensure
@@ -237,6 +258,7 @@ feature -- Slider value
 	set_value (new_value: INTEGER) is
 			-- Set slider value to `new_value'.
 		require
+			exists: not destroyed;
 			value_small_enough: new_value <= maximum;
 			value_large_enough: new_value >= minimum
 		do

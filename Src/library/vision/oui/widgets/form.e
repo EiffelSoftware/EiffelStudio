@@ -63,10 +63,11 @@ feature -- Attachments using offet
 			-- Attach right side of `a_child' to the right side of current form
 			-- with `right_offset' spaces between each other.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Child_parent_equal_current: a_child.parent = Current;
-			Offset_non_negative: right_offset >= 0
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			child_parent_equal_current: a_child.parent = Current;
+			offset_non_negative: right_offset >= 0
 		do
 			implementation.attach_right (a_child.implementation, right_offset)
 		end;
@@ -75,10 +76,11 @@ feature -- Attachments using offet
 			-- Attach left side of `a_child' to the left side of current form
 			-- with `left_offset' spaces between each other.
 		require
-			Valid_childe: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Child_parent_equal_current: a_child.parent = Current;
-			Offset_non_negative: left_offset >= 0
+			exists: not destroyed;
+			valid_childe: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			child_parent_equal_current: a_child.parent = Current;
+			offset_non_negative: left_offset >= 0
 		do
 			implementation.attach_left (a_child.implementation, left_offset)
 		end;
@@ -87,10 +89,11 @@ feature -- Attachments using offet
 			-- Attach bottom side of `a_child' to the bottom side of current form
 			-- with `bottom_offset' spaces between each other.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Child_parent_equal_current: a_child.parent = Current;
-			Offset_non_negative: bottom_offset >= 0
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			child_parent_equal_current: a_child.parent = Current;
+			offset_non_negative: bottom_offset >= 0
 		do
 			implementation.attach_bottom (a_child.implementation, bottom_offset)
 		end;
@@ -99,10 +102,11 @@ feature -- Attachments using offet
 			-- Attach top side of `a_child' to the top side of current form
 			-- with `top_offset' spaces between each other.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Child_parent_equal_current: a_child.parent = Current;
-			Offset_non_negative: top_offset >= 0
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			child_parent_equal_current: a_child.parent = Current;
+			offset_non_negative: top_offset >= 0
 		do
 			implementation.attach_top (a_child.implementation, top_offset)
 		end;
@@ -111,12 +115,13 @@ feature -- Attachments using offet
 			-- Attach right side of `a_child' to the left side of 
 			-- `a_widget' with `right_offset' spaces between each other.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Valid_widget: a_widget /= Void;
-			Child_parent_equal_current: a_child.parent = Current;
-			Widget_parent_equal_current: a_widget.parent = Current;
-			Offset_non_negative: right_offset >= 0
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			valid_widget: a_widget /= Void;
+			child_parent_equal_current: a_child.parent = Current;
+			widget_parent_equal_current: a_widget.parent = Current;
+			offset_non_negative: right_offset >= 0
 		do
 			implementation.attach_right_widget (a_widget.implementation, a_child.implementation, right_offset)
 		end;
@@ -125,12 +130,13 @@ feature -- Attachments using offet
 			-- Attach left side of `a_child' to the right side of
 			-- `a_widget' with `left_offset' spaces between each other.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Valid_widget: a_widget /= Void;
-			Child_parent_equal_current: a_child.parent = Current;
-			Widget_parent_equal_current: a_widget.parent = Current;
-			Offset_non_negative: left_offset >= 0
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			valid_widget: a_widget /= Void;
+			child_parent_equal_current: a_child.parent = Current;
+			widget_parent_equal_current: a_widget.parent = Current;
+			offset_non_negative: left_offset >= 0
 		do
 			implementation.attach_left_widget (a_widget.implementation, a_child.implementation, left_offset)
 		end;
@@ -139,12 +145,13 @@ feature -- Attachments using offet
 			-- Attach bottom side of `a_child' to the top side of
 			-- `a_widget' with `bottom_offset' spaces between each other.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Valid_widget: a_widget /= Void;
-			Child_parent_equal_current: a_child.parent = Current;
-			Widget_parent_equal_current: a_widget.parent = Current;
-			Offset_non_negative: bottom_offset >= 0
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			valid_widget: a_widget /= Void;
+			child_parent_equal_current: a_child.parent = Current;
+			widget_parent_equal_current: a_widget.parent = Current;
+			offset_non_negative: bottom_offset >= 0
 		do
 			implementation.attach_bottom_widget (a_widget.implementation, a_child.implementation, bottom_offset)
 		end;
@@ -153,12 +160,13 @@ feature -- Attachments using offet
 			-- Attach top side of `a_child' to the bottom side of
 			-- `a_widget' with `top_offset' spaces between each other.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
 			not_widget_void: a_widget /= Void;
-			Child_parent_equal_current: a_child.parent = Current;
-			Widget_parent_equal_current: a_widget.parent = Current;
-			Offset_non_negative: top_offset >= 0
+			child_parent_equal_current: a_child.parent = Current;
+			widget_parent_equal_current: a_widget.parent = Current;
+			offset_non_negative: top_offset >= 0
 		do
 			implementation.attach_top_widget (a_widget.implementation, a_child.implementation, top_offset)
 		end;
@@ -171,11 +179,12 @@ feature -- Attachments using positioning
 			-- of the width of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Position_large_enough: a_position >= 0;
-			Position_small_enough: a_position <= fraction_base;
-			Child_parent_equal_current: a_child.parent = Current
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			position_large_enough: a_position >= 0;
+			position_small_enough: a_position <= fraction_base;
+			child_parent_equal_current: a_child.parent = Current
 		do
 			implementation.attach_left_position (a_child.implementation, a_position)
 		end;
@@ -186,11 +195,12 @@ feature -- Attachments using positioning
 			-- of the width of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Position_large_enough: a_position >= 0;
-			Position_small_enough: a_position <= fraction_base;
-			Child_parent_equal_current: a_child.parent = Current
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			position_large_enough: a_position >= 0;
+			position_small_enough: a_position <= fraction_base;
+			child_parent_equal_current: a_child.parent = Current
 		do
 			implementation.attach_right_position (a_child.implementation, a_position)
 		end;
@@ -201,11 +211,12 @@ feature -- Attachments using positioning
 			-- of the height of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Position_large_enough: a_position >= 0;
-			Position_small_enough: a_position <= fraction_base;
-			Child_parent_equal_current: a_child.parent = Current
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			position_large_enough: a_position >= 0;
+			position_small_enough: a_position <= fraction_base;
+			child_parent_equal_current: a_child.parent = Current
 		do
 			implementation.attach_bottom_position (a_child.implementation, a_position)
 		end;
@@ -216,11 +227,12 @@ feature -- Attachments using positioning
 			-- of the height of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
 		require
-			Valid_child: a_child /= Void;
-			Not_shell_child: is_valid (a_child);
-			Position_large_enough: a_position >= 0;
-			Position_small_enough: a_position <= fraction_base;
-			Child_parent_equal_current: a_child.parent = Current
+			exists: not destroyed;
+			valid_child: a_child /= Void;
+			not_shell_child: is_valid (a_child);
+			position_large_enough: a_position >= 0;
+			position_small_enough: a_position <= fraction_base;
+			child_parent_equal_current: a_child.parent = Current
 		do
 			implementation.attach_top_position (a_child.implementation, a_position)
 		end;
@@ -228,6 +240,8 @@ feature -- Attachments using positioning
 	fraction_base: INTEGER is
 			-- Value used to compute child position with
 			-- position attachment
+		require
+			exists: not destroyed
 		do
 			Result := implementation.fraction_base
 		ensure
@@ -239,7 +253,8 @@ feature -- Attachments using positioning
 			-- Unsecure to set it after any position attachment,
 			-- contradictory constraints could occur.
 		require
-			Value_greater_than_zero: a_value > 0
+			exists: not destroyed;
+			value_greater_than_zero: a_value > 0
 		do
 			implementation.set_fraction_base (a_value)
 		end;
@@ -249,7 +264,8 @@ feature -- Detachments
 	detach_right (a_child: WIDGET) is
 			-- Detach right side of `a_child'.
 		require
-			Valid_child: a_child /= Void
+			exists: not destroyed;
+			valid_child: a_child /= Void
 		do
 			implementation.detach_right (a_child.implementation)
 		end;
@@ -257,7 +273,8 @@ feature -- Detachments
 	detach_left (a_child: WIDGET) is
 			-- detach left side of `a_child'.
 		require
-			Valid_child: a_child /= Void
+			exists: not destroyed;
+			valid_child: a_child /= Void
 		do
 			implementation.detach_left (a_child.implementation)
 		end;
@@ -265,7 +282,8 @@ feature -- Detachments
 	detach_bottom (a_child: WIDGET) is
 			-- detach bottom side of `a_child'.
 		require
-			Valid_child: a_child /= Void
+			exists: not destroyed;
+			valid_child: a_child /= Void
 		do
 			implementation.detach_bottom (a_child.implementation)
 		end; 
@@ -273,7 +291,8 @@ feature -- Detachments
 	detach_top (a_child: WIDGET) is
 			-- detach top side of `a_child'.
 		require
-			Valid_child: a_child /= Void
+			exists: not destroyed;
+			valid_child: a_child /= Void
 		do
 			implementation.detach_top (a_child.implementation)
 		end;

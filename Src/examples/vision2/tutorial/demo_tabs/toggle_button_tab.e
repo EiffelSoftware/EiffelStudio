@@ -71,12 +71,15 @@ feature -- Execution feature
 	set_state_val (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Get the state of the toggle button.
 		do
-			if f1.combo.selected_item = iTrue then
-				current_widget.set_state(True)
-			else
-				current_widget.set_state(False)
-			end
-					
+			-- We test if there is a selected item
+			-- in the combo box.
+			if f1.combo.selected then
+				if f1.combo.selected_item = iTrue then
+					current_widget.set_state(True)
+				else
+					current_widget.set_state(False)
+				end
+			end					
 		end
 
 	toggle_button (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is

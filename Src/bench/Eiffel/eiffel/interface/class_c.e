@@ -1727,66 +1727,53 @@ feature
 
 feature -- Skeleton processing
 
-	process_skeleton is
-			-- Process the skeleton of class types in `types'.
-			-- For a class marked `changed2' or else `changed3', the class
-			-- types must be all reprocessed and mark `is_changed' if needed
-			-- so a new skeleton must be generated.
-			-- For class marked `changed4' only, a new type was introduced.
+	init_process_skeleton (old_skeletons: ARRAY [SKELETON]) is
+			-- Fill `old_skeletons' with old skeleton of class types in `types'.
+		require
+			old_skeletons_not_void: old_skeletons /= Void
 		local
-			feature_table_changed: BOOLEAN
 			class_type: CLASS_TYPE
-			new_skeleton, old_skeleton: SKELETON
 		do
-debug ("SKELETON")
-io.error.putstring ("Class: ")
-io.error.putstring (name)
-io.error.putstring (" process_skeleton%N")
-end
 			from
-				feature_table_changed := changed2
 				types.start
 			until
 				types.after
 			loop
 				class_type := types.item
-				if 	feature_table_changed
-					or else
-					(changed4 and then class_type.is_changed)
-				then
-					old_skeleton := class_type.skeleton
-					new_skeleton := skeleton.instantiation_in (class_type)
-					if
-						old_skeleton = Void
-						or else not new_skeleton.equiv (old_skeleton)
-					then
-						class_type.set_is_changed (True)
-						class_type.set_skeleton (new_skeleton)
-debug ("SKELETON")
-io.error.putstring ("Changed_skeleton:%N")
-new_skeleton.trace
-io.error.putstring ("Old skeleton:%N")
-old_skeleton.trace
-io.error.new_line
-end
+				old_skeletons.force (class_type.skeleton, class_type.type_id)
+				types.forth
+			end
+		end
 
-						Degree_1.insert_class (Current)
-					else
-debug ("SKELETON")
-io.error.putstring ("Skeleton has not changed:%N")
-new_skeleton.trace
-io.error.new_line
-end
-					end
-				else
-debug ("SKELETON")
-io.error.putstring ("Nothing is done%N")
-end
+	process_skeleton (old_skeletons: ARRAY [SKELETON]) is
+			-- Type skeleton processing: If skeleton of a class type changed,
+			-- it must be re-processed and marked `is_changed'.
+		require
+			old_skeletons_not_void: old_skeletons /= Void
+		local
+			class_type: CLASS_TYPE
+			new_skeleton, old_skeleton: SKELETON
+		do
+			from
+				types.start
+			until
+				types.after
+			loop
+				class_type := types.item
+				old_skeleton := class_type.skeleton
+				new_skeleton := skeleton.instantiation_in (class_type)
+				if
+					old_skeleton = Void
+					or else not new_skeleton.equiv (old_skeletons, old_skeleton)
+				then
+					class_type.set_is_changed (True)
+					class_type.set_skeleton (new_skeleton)
+					Degree_1.insert_class (Current)
 				end
 				types.forth
 			end
-changed2 := False
-changed4 := False
+			changed2 := False
+			changed4 := False
 		end
 
 feature -- Class initialization

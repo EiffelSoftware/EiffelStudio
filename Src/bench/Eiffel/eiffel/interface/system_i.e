@@ -1196,16 +1196,10 @@ end
 		end
 
 	process_skeleton is
-			-- Type skeleton processing: for a class marked `changed2', the
-			-- feature table has changed so the skeleton of its class
-			-- types must be re-processed and markged `is_changed' if different.
-			-- For a class marked `changed4', inspection of the types (instance
-			-- of CLASS_TYPE) looking for a new one (marked `is_changed also).
-		local
-			compile_all_classes: BOOLEAN
+			-- Type skeleton processing: If skeleton of a class type changed,
+			-- it must be re-processed and marked `is_changed'.
 		do
-			compile_all_classes := Compilation_modes.is_precompiling or Lace.compile_all_classes
-			Degree_2.process_skeleton (compile_all_classes)
+			Degree_2.process_skeleton
 				-- Check expanded client relation.
 			check_expanded
 				-- Check sum error.

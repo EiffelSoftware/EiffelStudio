@@ -94,65 +94,50 @@ feature -- Processing
 			end
 		end
 
-	process_skeleton (compile_all_classes: BOOLEAN) is
-			-- Type skeleton processing: for a class marked `changed2', the
-			-- feature table has changed so the skeleton of its class
-			-- types must be re-processed and markged `is_changed' if different.
-			-- For a class marked `changed4', inspection of the types (instance
-			-- of CLASS_TYPE) looking for a new one (marked `is_changed also).
+	process_skeleton is
+			-- Type skeleton processing: If skeleton of a class type changed,
+			-- it must be re-processed and marked `is_changed'.
 		local
 			i, nb: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
-			il_generation: BOOLEAN
+			l_old_skeletons: ARRAY [SKELETON]
 		do
-									debug ("ACTIVITY", "SKELETON")
-										io.error.put_string ("Process_skeleton%N")
-									end
 			classes := System.classes.sorted_classes
-			il_generation := System.il_generation
-			if compile_all_classes then
-				nb := count
-				from i := 1 until nb = 0 loop
-					a_class := classes.item (i)
-					if a_class /= Void and then a_class.degree_2_needed then
-							debug ("ACTIVITY", "SKELETON")
-								io.error.put_string ("%T")
-								io.error.put_string (a_class.name)
-								io.error.put_new_line
-							end
-						if a_class.has_types then
-								-- Process skeleton(s) for `a_class'.
-							a_class.process_skeleton
-
-								-- Check validity of special classes ARRAY,
-								-- STRING, TO_SPECIAL, SPECIAL.
-							a_class.check_validity
-						end
-						nb := nb - 1
+			create l_old_skeletons.make (0, System.type_id_counter.value)
+			from
+				i := classes.lower
+				nb := classes.upper
+			until
+				i > nb
+			loop
+				a_class := classes.item (i)
+				if a_class /= Void then
+					if a_class.has_types then
+							-- Fill `old_skeletons' with old version of skeleton if it exists.
+						a_class.init_process_skeleton (l_old_skeletons)
 					end
-					i := i + 1
 				end
-			else
-				nb := count
-				from i := 1 until nb = 0 loop
-					a_class := classes.item (i)
-					if a_class /= Void and then a_class.degree_2_needed then
-							debug ("ACTIVITY", "SKELETON")
-								io.error.put_string ("%T")
-								io.error.put_string (a_class.name)
-								io.error.put_new_line
-							end
+				i := i + 1
+			end
+			from
+				i := classes.lower
+				nb := classes.upper
+			until
+				i > nb
+			loop
+				a_class := classes.item (i)
+				if a_class /= Void then
+					if a_class.has_types then
 							-- Process skeleton(s) for `a_class'.
-						a_class.process_skeleton
+						a_class.process_skeleton (l_old_skeletons)
 
 							-- Check validity of special classes ARRAY,
 							-- STRING, TO_SPECIAL, SPECIAL.
 						a_class.check_validity
-						nb := nb - 1
 					end
-					i := i + 1
 				end
+				i := i + 1
 			end
 		end
 

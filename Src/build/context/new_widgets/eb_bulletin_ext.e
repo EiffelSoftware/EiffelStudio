@@ -89,28 +89,46 @@ feature -- Setting sizes
 		end;
 
 	set_width (new_w: INTEGER) is
+		local
+			w: INTEGER
 		do
 			bull_set_width (new_w);
 			seph1.unmanage;
 			seph2.unmanage;
 			sepv2.unmanage;
-			seph1.set_width (new_w - separator_offset);
-			seph2.set_width (new_w - separator_offset);
-			sepv2.set_x (new_w - separator_width);
+			w := new_w - separator_offset;
+			if w > 0 then
+				seph1.set_width (w);
+				seph2.set_width (w);
+				sepv2.set_x (new_w - separator_width);
+			else
+				seph1.set_width (1);
+				seph2.set_width (1);
+				sepv2.set_x (separator_width);
+			end
 			sepv2.manage;
 			seph2.manage;
 			seph1.manage;
 		end;
 
 	set_height (new_h: INTEGER) is
+		local
+			h: INTEGER
 		do
 			bull_set_height (new_h);
 			sepv1.unmanage;
 			sepv2.unmanage;
 			seph2.unmanage;
-			sepv1.set_height (new_h - separator_offset);
-			sepv2.set_height (new_h - separator_offset);
-			seph2.set_y (new_h - separator_width);
+			h := new_h - separator_offset;
+			if h > 0 then
+				sepv1.set_height (h);
+				sepv2.set_height (h);
+				seph2.set_y (new_h - separator_width);
+			else
+				sepv1.set_height (1);
+				sepv2.set_height (1);
+				seph2.set_y (separator_width);
+			end
 			seph2.manage;
 			sepv2.manage;
 			sepv1.manage;

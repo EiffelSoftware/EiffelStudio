@@ -85,13 +85,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cursor: EV_CURSOR --is
+	cursor: EV_CURSOR is
 			-- Cursor used currently on the widget.
-	--	do
-	--		check
-	--			not_yet_implemented: False
-	--		end
-	--	end
+		do
+			if cursor_imp = Void then
+				create Result.make
+			else
+				Result ?= cursor_imp.interface
+				check
+					cursor_interface_exists: Result /= Void
+				end
+			end
+		end
+
+	cursor_imp: EV_CURSOR_IMP
 
 	background_color: EV_COLOR is
 			-- Color used for the background of the widget
@@ -360,12 +367,10 @@ feature -- Element change
 
 	set_cursor (cur: EV_CURSOR) is
 			-- Make `cur' the cursor of the widget.
-		local
-			cur_imp: EV_CURSOR_IMP
 		do
-			cur_imp ?= cur.implementation
+			cursor_imp ?= cur.implementation
 			check
-				cursor_implementation_exists: cur_imp /= Void
+				cursor_implementation_exists: cursor_imp /= Void
 			end
 
 					-- Disconnect previous callback if any
@@ -376,8 +381,8 @@ feature -- Element change
 				-- that sets the cursor on mouse entry to prevent
 				-- Gtk assertion violation when setting a widgets
 				-- cursor when its root window isn't shown
-			cursor := cur
-			cursor_signal_tag := c_gtk_widget_set_cursor (widget, cur_imp.cursor)
+
+			cursor_signal_tag := c_gtk_widget_set_cursor (widget, cursor_imp.cursor)
 		end
 
 	c_gtk_widget_set_cursor (wid: POINTER; cur: POINTER): INTEGER is

@@ -105,6 +105,7 @@ feature -- IL code generation
 			l_cl_type: CL_TYPE_I
 			local_number: INTEGER
 			l_type: TYPE_I
+			l_need_attribute_to_be_assigned_back: BOOLEAN
 		do
 			can_discard_target := not message.need_target
 
@@ -128,12 +129,19 @@ feature -- IL code generation
 					-- the address of `target' instead of `target' itself.
 					-- `message' will manage the boxing operation if needed.
 				target.generate_il_call_access (True)
-					-- We need to generate an address operation of most recently
-					-- pushed value, but because it is not a predefined entity
-					-- we need to do something special.
+					-- In case of attributes which requires their address to be loaded
+					-- to perform the call, we check wether or not the value needs to be
+					-- assigned back to the attribute or not, that is to say if they
+					-- are first in the call chain.
+					-- If it does then its address was loaded in previous call to `target', so
+					-- we need to duplicate it.
 				l_attr ?= target
-				if l_attr /= Void and then l_attr.need_address (True) then
-					il_generator.duplicate_top
+				if l_attr /= Void then
+					l_need_attribute_to_be_assigned_back :=  l_attr.need_address (True) and then
+						l_attr.is_first and then not context.associated_class.is_single 
+					if l_need_attribute_to_be_assigned_back then
+						il_generator.duplicate_top
+					end
 				end
 			end
 
@@ -148,7 +156,7 @@ feature -- IL code generation
 			else
 				message.generate_il
 			end
-			if l_attr /= Void and then l_attr.need_address (True) then
+			if l_need_attribute_to_be_assigned_back then
 				l_type := Context.real_type (message.type)
 				if not l_type.is_void then
 					context.add_local (l_type)

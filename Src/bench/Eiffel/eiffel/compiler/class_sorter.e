@@ -16,10 +16,10 @@ feature -- Initialization
 	make is
 			-- Creation
 		do
-			!! order.make (1,1)
-			!! precursor_count.make (1,1)
-			!! successors.make (1,1)
-			!! original.make (1,1)
+			!! order.make (1,0)
+			!! precursor_count.make (1,0)
+			!! successors.make (1,0)
+			!! original.make (1,0)
 			!! outsides1.make
 			!! outsides2.make
 		end

@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"Routines applied to different widgets for a particalar toolkit. %
 		%In some instances, it was not worth while to abstract separate %
@@ -43,8 +42,7 @@ feature -- Setting
 			end
 		end;
 
-	--paste_text_to_widget (a_widget: SCROLLED_T_IMP) is
-	paste_text_to_widget (a_widget: SCROLLED_T_I) is -- VISIONLITE
+	paste_text_to_widget (a_widget: SCROLLED_T_I) is
 			-- Paste the text to `a_widget'.
 		local
 			wel_edit: WEL_EDIT
@@ -53,14 +51,12 @@ feature -- Setting
 			wel_edit.clip_paste
 		end;
 
-	--init_button (a_button: BUTTON_IMP) is
-	init_button (a_button: BUTTON_I) is --VISIONLITE
+	init_button (a_button: BUTTON_I) is
 			-- Initialize the button.
 		do
 		end;
 
-	--real_project_height (a_widget: WIDGET_IMP): INTEGER is
-	real_project_height (a_widget: WIDGET_I): INTEGER is --VISIONLITE
+	real_project_height (a_widget: WIDGET_I): INTEGER is
 		local
 			wel_window: WEL_WINDOW
 		do

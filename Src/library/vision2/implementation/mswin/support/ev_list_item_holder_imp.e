@@ -103,7 +103,7 @@ feature -- Basic operations
 		local
 			id: INTEGER
 		do
-			id := ev_children.index_of (item_imp, 1)
+			id := ev_children.index_of (item_imp, 1) - 1
 			select_item (id)
 		end
 
@@ -112,7 +112,7 @@ feature -- Basic operations
 		local
 			id: INTEGER
 		do
-			id := ev_children.index_of (item_imp, 1)
+			id := ev_children.index_of (item_imp, 1) - 1
 			deselect_item (id)
 		end
 

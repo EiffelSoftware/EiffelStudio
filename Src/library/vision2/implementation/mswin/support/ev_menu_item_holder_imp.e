@@ -175,7 +175,7 @@ feature -- Basic operation
 			-- Graphical insert of a sub-menu.
 			-- container.
 		do
-			menu.insert_popup (item_imp.menu, item_imp.index, item_imp.text)
+			menu.insert_popup (item_imp.menu, item_imp.index - 1, item_imp.text)
 		end
 
 	internal_insert_item (item_imp: EV_MENU_ITEM_IMP) is

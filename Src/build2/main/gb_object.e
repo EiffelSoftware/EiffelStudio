@@ -198,6 +198,9 @@ feature -- Access
 		-- Used to expand and collapse `layout_constructor_item' as required
 		-- when displaying or hiding `Current'. 
 		
+	generate_as_client: BOOLEAN
+		-- Should `Current' be generated as a client of the EiffelVision2 type?
+		
 	short_type: STRING is
 			-- Result is a short version of type with "EV_" removed from start.
 		require
@@ -790,6 +793,9 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 			if is_instance_of_top_level_object then
 				add_element_containing_integer (element, reference_id_string, associated_top_level_object)
 			end
+			if generate_as_client then
+				add_element_containing_boolean (element, client_string, generate_as_client)
+			end
 		end
 		
 	modify_from_xml (element: XM_ELEMENT) is
@@ -822,6 +828,10 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 				associated_top_level_object_on_loading := element_info.data.to_integer
 			else
 				associated_top_level_object_on_loading := 0
+			end
+			element_info ?= full_information @ client_string
+			if element_info /= Void then
+				enable_client_generation
 			end
 		end
 
@@ -861,6 +871,20 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_C
 			not_contained: not children.has (an_object)
 		end
 		
+feature {GB_OBJECT_EDITOR, GB_PROJECT_SETTINGS} -- Status setting
+
+	enable_client_generation is
+			-- Ensure `Current' is generated using EiffelVision2 as a client.
+		do
+			generate_as_client := True
+		end
+		
+	disable_client_generation is
+			-- Ensure `Current' is generated inheriting from EiffelVision2.
+		do
+			generate_as_client := False
+		end
+	
 feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 
 	assign_id is

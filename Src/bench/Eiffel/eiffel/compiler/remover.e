@@ -5,32 +5,25 @@ class REMOVER
 inherit
 	FEAT_ITERATOR
 		rename
-			make as old_make,
-			mark_alive as old_mark_alive
-		end
-
-	FEAT_ITERATOR
+			make as old_make
 		redefine
-			make, mark_alive
-		select
-			make, mark_alive
+			mark_alive
 		end
 
 	SHARED_EIFFEL_PROJECT
 
 creation
-
 	make
 
 feature
 
-	make is
+	make (system_array_optimizer: ARRAY_OPTIMIZER; system_inliner: INLINER) is
 			-- Initialization
 		do
 			old_make
 			!! control.make
-			!! array_optimizer.make
-			!! inliner.make
+			array_optimizer := system_array_optimizer
+			inliner := system_inliner
 		end;
 
 feature
@@ -103,8 +96,7 @@ feature {NONE}
 				depend_unit := depend_list.item;
 				if not depend_unit.is_special then
 					static_class := System.class_of_id (depend_unit.id);
-					depend_feature := static_class.feature_table.feature_of_feature_id
-												(depend_unit.feature_id);
+					depend_feature := static_class.feature_table.feature_of_feature_id (depend_unit.feature_id);
 					if not is_marked (depend_feature) then
 debug ("DEAD_CODE_REMOVAL")
 	io.error.putstring ("Propagated to ");
@@ -120,30 +112,33 @@ end;
 				depend_list.forth
 			end;
 
-				-- Array optimization
-			array_optimizer.process (written_class, original_feature, depend_list);
+			if array_optimizer /= Void then
+					-- Array optimization
+				array_optimizer.process (written_class, original_feature, depend_list)
+			end
 
-				-- Inlining
-			inliner.process (original_feature)
+			if inliner /= Void then
+					-- Inlining
+				inliner.process (original_feature)
+			end
 		end;
 
 	features: INTEGER;
 		-- Number of features for the current dot
 
-	features_per_message: INTEGER is 50;
+	features_per_message: INTEGER is 10;
 
 	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
 			-- Record feature `feat'
 		local
 			deg_output: DEGREE_OUTPUT
 		do
-			old_mark_alive (feat, rout_id_val);
+			{FEAT_ITERATOR} precursor (feat, rout_id_val);
 
 			features := features + 1;
 			if features = features_per_message then
 				deg_output := Degree_output;
-				degree_output.put_dead_code_removal_message 
-					(features, control.count)
+				degree_output.put_dead_code_removal_message (features, control.count)
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (control.count);

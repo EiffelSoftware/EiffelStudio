@@ -912,11 +912,14 @@ feature {EV_ANY_I} -- Implementation
 						--| button matches the type of transport of `widget_imp'.
 					if (button_pressed = 1 and widget_imp.mode_is_drag_and_drop) or
 						(button_pressed = 3 and widget_imp.mode_is_pick_and_drop) then
-
-							-- We execute the pebble function
-						pebble_result := widget_imp.query_pebble_function (wel_point.x - widget_imp.screen_x,
+							-- This feature may get called more then once, so we only
+							-- perform the pebble query the first time, before the
+							-- transport has started.
+						if application_imp.pick_and_drop_source = Void then
+						widget_imp.call_pebble_function (wel_point.x - widget_imp.screen_x,
 							wel_point.y - widget_imp.screen_y, wel_point.x, wel_point.y)
-						if widget_imp.pebble /= Void or pebble_result /= Void then
+						end
+						if widget_imp.pebble /= Void then
 							Result := widget_imp
 						end
 						item_list_imp ?= widget_imp
@@ -925,8 +928,8 @@ feature {EV_ANY_I} -- Implementation
 								- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
 							if an_item_imp /= Void then
 										--| FIXME we need to pass the relative coordinates to `query_pebble_function'.
-									pebble_result := an_item_imp.query_pebble_function (0, 0, wel_point.x, wel_point.y)
-								if an_item_imp.pebble /= Void or pebble_result /= Void then
+									an_item_imp.call_pebble_function (0, 0, wel_point.x, wel_point.y)
+								if an_item_imp.pebble /= Void then--or pebble_result /= Void then
 										-- If the cursor is over an item and the item is a
 										-- pick and drop target then we set the target id to that of the
 										-- item, as the items are conceptually 'above' the list and so

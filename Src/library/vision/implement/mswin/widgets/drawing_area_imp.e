@@ -59,10 +59,6 @@ inherit
 		redefine
 			class_name,
 			on_paint,
-			on_left_button_down,
-			on_left_button_up,
-			on_right_button_down,
-			on_right_button_up,
 			default_ex_style
 		end
 

@@ -680,14 +680,14 @@ feature {NONE} -- Implementation
 			-- Unset the default button style for `a_button'.
 		do
 			cwin_send_message (a_button.item, Bm_setstyle,
-				Bs_pushbutton, cwin_make_long (1, 0))
+				to_wparam (Bs_pushbutton), cwin_make_long (1, 0))
 		end
 
 	set_default_button_style (a_button: WEL_PUSH_BUTTON) is
 			-- Set the default button style for `a_button'.
 		do
 			cwin_send_message (a_button.item, Bm_setstyle,
-				Bs_defpushbutton, cwin_make_long (1, 0))
+				to_wparam (Bs_defpushbutton), cwin_make_long (1, 0))
 		end
 
 	set_position is

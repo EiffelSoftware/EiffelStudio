@@ -233,7 +233,7 @@ feature -- Implementation
 
 feature -- Behaviour
 
-	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT) is
 			-- Wm_drawitem message.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains

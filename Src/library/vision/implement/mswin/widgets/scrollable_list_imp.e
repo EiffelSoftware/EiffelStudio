@@ -190,8 +190,8 @@ feature  -- Access
 				if multiple_selection then
 					Result := count_selected_items > 0
 				else
-					Result := cwin_send_message_result (wel_item,
-						Lb_getcursel, 0, 0) /= Lb_err
+					Result := cwin_send_message_result_integer (wel_item,
+						Lb_getcursel, to_wparam (0), to_lparam (0)) /= Lb_err
 				end
 			end
 		end
@@ -202,8 +202,8 @@ feature  -- Access
 			exits: exists
 			multiple_selection: multiple_selection
 		do
-			Result := cwin_send_message_result (wel_item,
-				Lb_getselcount, 0, 0)
+			Result := cwin_send_message_result_integer (wel_item,
+				Lb_getselcount, to_wparam (0), to_lparam (0))
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result <= count
@@ -213,9 +213,9 @@ feature  -- Access
 			-- Select item at position `a_index'.
 		do
 			if multiple_selection then
-				cwin_send_message (wel_item, Lb_setsel, 1, a_index)
+				cwin_send_message (wel_item, Lb_setsel, to_wparam (1), to_lparam (a_index))
 			else
-				cwin_send_message (wel_item, Lb_setcursel, a_index, 0)
+				cwin_send_message (wel_item, Lb_setcursel, to_wparam (a_index), to_lparam (0))
 			end
 		ensure then
 			selected: not multiple_selection implies selected
@@ -731,10 +731,10 @@ feature {NONE} -- Implementation
 			item_selected: is_selected (a_index - 1)
 		do
 			if multiple_selection then
-				cwin_send_message (wel_item, Lb_setsel, 0, a_index - 1)
+				cwin_send_message (wel_item, Lb_setsel, to_wparam (0), to_lparam (a_index - 1))
 				private_selected_positions.prune (a_index)
 			else
-				cwin_send_message (wel_item, Lb_setcursel, -1, 0)
+				cwin_send_message (wel_item, Lb_setcursel, to_wparam (-1), to_lparam (0))
 				private_selected_position := 0
 			end
 		ensure
@@ -852,7 +852,7 @@ feature {NONE} -- Implementation
 			end_index_large_enough: end_index >= 0
 			valid_range: end_index >= start_index
 		do
-			cwin_send_message (wel_item, Lb_selitemrange, 0,
+			cwin_send_message (wel_item, Lb_selitemrange, to_wparam (0),
 				cwin_make_long (start_index, end_index))
 			private_selected_positions.wipe_out
 		ensure
@@ -865,7 +865,7 @@ feature {NONE} -- Implementation
 			exists: exists
 			single_selection: not multiple_selection
 		do
-			cwin_send_message (wel_item, Lb_setcursel, -1, 0)
+			cwin_send_message (wel_item, Lb_setcursel, to_wparam (-1), to_lparam (0))
 			private_selected_position := 0
 		ensure
 			unselected: not selected

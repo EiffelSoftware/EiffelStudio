@@ -41,6 +41,7 @@ inherit
 			wel_make as make_child,
 			unrealize as bulletin_unrealize
 		undefine
+			class_requires_icon,
 			x,
 			set_default_position,
 			show,

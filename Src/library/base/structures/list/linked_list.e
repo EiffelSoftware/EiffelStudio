@@ -404,15 +404,13 @@ feature -- Element change
 						other_first_element /= Void;
 						other_last_element /= Void
 					end;
-				if empty or else isfirst then
-					if not empty then
-						p := first_element;
-						if p /= Void then
-							other_last_element.put_right (p)
-						end;
-					end;
+				if empty then
 					first_element := other_first_element;
-					active := first_element;
+					active := first_element
+				elseif isfirst then
+					p := first_element;
+					other_last_element.put_right (p);
+					first_element := other_first_element
 				else
 					p := previous;
 					if p /= Void then

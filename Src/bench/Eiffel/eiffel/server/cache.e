@@ -10,6 +10,7 @@ inherit
 		export
 			{CACHE} out_index, in_index, lower, upper, area
 		end;
+	SHARED_RESOURCES
 
 feature
 
@@ -21,8 +22,27 @@ feature
 			out_index := 0;
 		end;
 
-	Cache_size: INTEGER is
+	cache_size: INTEGER is
 			-- Cache size
+		local
+			s: STRING
+		do
+			s := generator
+			s.to_lower
+			Result := Resources.get_integer (
+				s, Resources.get_integer ("cache_size", Default_size))
+
+debug ("SERVER")
+	io.error.putstring ("Size of ")
+	io.error.putstring (generator)
+	io.error.putstring (" is ")
+	io.error.putint (Result)
+	io.error.new_line
+end
+		end
+
+	Default_size: INTEGER is
+			-- Default cache size
 		deferred
 		end;
 

@@ -12,7 +12,7 @@ creation
 
 feature
 
-	Cache_size: INTEGER is 200;
+	Default_size: INTEGER is 200;
 			-- Size of cache
 
 end

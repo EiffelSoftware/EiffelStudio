@@ -10,7 +10,7 @@ creation
 	
 feature 
 
-	Cache_size: INTEGER is 20;
+	default_size: INTEGER is 20;
 			-- Size of cache
 
 end -- class STAT_CALL_CACHE

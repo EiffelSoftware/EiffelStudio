@@ -31,6 +31,14 @@ feature -- Status setting
 		deferred
 		end
 
+	get_maximum_text_length: INTEGER is
+			-- Return the maximum number of characters that the
+			-- user may enter.
+		require
+			exist: not destroyed
+		deferred
+		end
+
 feature -- Event - command association
 
 	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

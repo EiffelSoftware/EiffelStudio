@@ -1,4 +1,9 @@
 #!/usr/bin/perl -w
+#===============================================================================
+# gen_action_sequences
+# This program translates an action sequence definition file into a collection
+# of eiffel classes. 
+#===============================================================================
 
 while (<>) {
 	@args = ();

@@ -322,7 +322,7 @@ feature {FEATURE_CLAUSE_AS, FEATURE_CLAUSE_EXPORT} -- Case storage
 		do
 		end;
 
-feature {FEATURE_AS, CASE_CLUSTER_INFO} -- Case storage
+feature {FEATURE_AS, CASE_CLASS_INFO} -- Case storage
 
 	store_information (classc: CLASS_C; f: S_FEATURE_DATA) is
 			-- Store current information into `f'.

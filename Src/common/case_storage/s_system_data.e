@@ -2,7 +2,8 @@ class S_SYSTEM_DATA
 
 inherit
 
-	STORABLE
+	STORABLE;
+	S_CASE_INFO
 
 feature
 
@@ -92,19 +93,19 @@ feature -- Storing
 			valid_path: path /= Void;
 			--slash_at_end: path requires slash at end
 		local
-			id_file_name, system_file_name: STRING;
+			id_file_name, file_name: STRING;
 			id_file: PLAIN_TEXT_FILE;
 			system_file: RAW_FILE;
 		do
 			id_file_name := clone (path);
-			id_file_name.append (".idfile");
+			id_file_name.append (System_id_name);
 			!!id_file.make (id_file_name);
 			id_file.open_write;
-			id_file.putstring ("ISE.EiffelCase");
+			id_file.putstring (EiffelBench_project_type);
 			id_file.close;
-			system_file_name := clone (path);
-			system_file_name.append ("system_file");
-			!! system_file.make (system_file_name);
+			file_name := clone (path);
+			file_name.append (System_name);
+			!! system_file.make (file_name);
 			system_file.open_write;
 			independent_store (system_file);
 			system_file.close;

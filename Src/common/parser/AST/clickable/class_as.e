@@ -194,7 +194,7 @@ feature -- formatting
 			ctxt.commit;
 		end;
 
-feature {CASE_CLUSTER_INFO} -- Case storage 
+feature {CASE_CLASS_INFO} -- Case storage 
 
 	header_storage_info: S_CLASS_DATA is
 			-- Header storage information for Current

@@ -73,9 +73,12 @@ feature {NONE}
 		do
 			add_common_callbacks (widget);
 			add_common_callbacks (widget.scrolled_window);
+			widget.scrolled_window.add_pointer_motion_action (eb_selection_mgr, first_arg);
+
 			initialize_transport;
 			if (parent = Void) or else not parent.is_group_composite then
-				 widget.scrolled_window.add_enter_action (eb_selection_mgr, Current);
+				widget.add_enter_action (eb_selection_mgr, Current);
+				widget.scrolled_window.add_enter_action (eb_selection_mgr, Current);
 			end;
 		end;
 

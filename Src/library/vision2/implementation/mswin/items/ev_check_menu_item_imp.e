@@ -11,8 +11,13 @@ class
 
 inherit
 	EV_CHECK_MENU_ITEM_I
+		select
+			parent_imp
+		end
 
 	EV_MENU_ITEM_IMP
+		rename
+			parent_imp as old_menu_parent_imp
 		redefine
 			on_activate,
 			is_selected,

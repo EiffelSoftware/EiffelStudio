@@ -24,7 +24,8 @@ inherit
 			set_editable_text_window, has_editable_text, 
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource,
-			update_integer_resource
+			update_integer_resource,
+			set_title
 		end
 
 	BAR_AND_TEXT
@@ -39,7 +40,8 @@ inherit
 			set_editable_text_window, has_editable_text,
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource,
-			update_integer_resource
+			update_integer_resource,
+			set_title
 		select
 			reset, make_shell
 		end;
@@ -163,6 +165,7 @@ feature -- Resetting
 			-- Close Current.
 		do
 			if is_a_shell then
+				Project_tool.remove_routine_entry (Current);
 				hide;
 				reset
 			else
@@ -276,6 +279,15 @@ feature -- Update
 		end;
 
 feature -- Status setting
+
+	set_title (s: STRING) is
+			-- Set `title' to `s'.
+		do
+			if is_a_shell then
+				eb_shell.set_title (s);
+				Project_tool.change_routine_entry (Current)
+			end
+		end;
 
 	set_editable_text_window (ed: like editable_text_window) is
 			-- Set `editable_text_window' to `ed'.

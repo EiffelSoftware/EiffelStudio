@@ -21,7 +21,8 @@ inherit
 			process_object, build_basic_bar,
 			close, set_default_size,
 			update_boolean_resource,
-			update_integer_resource
+			update_integer_resource,
+			set_title
 		end;
 	BAR_AND_TEXT
 		rename
@@ -32,7 +33,8 @@ inherit
 			stone, stone_type, synchronize, process_object,
 			build_basic_bar, close, make_shell, reset,
 			update_boolean_resource, set_default_size,
-			update_integer_resource
+			update_integer_resource,
+			set_title
 		select
 			close_windows, make_shell, reset
 		end;
@@ -168,6 +170,15 @@ feature -- Status report
 
 feature -- Status seting
 
+	set_title (s: STRING) is
+			-- Set `title' to `s'.
+		do
+			if is_a_shell then
+				eb_shell.set_title (s);
+				Project_tool.change_object_entry (Current)
+			end
+		end;
+
 	set_sp_bounds (l, u: INTEGER) is
 			-- Set the bounds for special object inspection.
 		do
@@ -257,6 +268,7 @@ feature -- Resetting
 			-- Reset
 		do
 			if is_a_shell then
+				Project_tool.remove_object_entry (Current);
 				hide;
 				reset
 			else

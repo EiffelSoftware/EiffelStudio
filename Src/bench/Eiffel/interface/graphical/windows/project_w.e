@@ -289,6 +289,18 @@ feature -- Pulldown Menus
 	window_menu: MENU_PULL;
 			-- Window menu.
 
+	open_classes_menu: MENU_PULL;
+			-- Menu for open class tools
+
+	open_routines_menu: MENU_PULL;
+			-- Menu for open feature tools
+
+	open_objects_menu: MENU_PULL;
+			-- Menu for open object tools
+
+	open_explain_menu: MENU_PULL;
+			-- Menu for open explain tools
+
 	edit_feature_menu: MENU_PULL;
 			-- Edit menu specific for the feature part
 
@@ -515,6 +527,66 @@ feature -- Update
 			saved_cursor := Void
 		end;
 
+	add_routine_entry (r_w: ROUTINE_W) is
+		do
+			add_tool_to_menu (r_w, open_routines_menu)
+		end;
+
+	change_routine_entry (r_w: ROUTINE_W) is
+		do
+			change_tool_in_menu (r_w, open_routines_menu)
+		end;
+
+	remove_routine_entry (r_w: ROUTINE_W) is
+		do
+			remove_tool_from_menu (r_w, open_routines_menu)
+		end;
+
+	add_class_entry (c_w: CLASS_W) is
+		do
+			add_tool_to_menu (c_w, open_classes_menu)
+		end;
+
+	change_class_entry (c_w: CLASS_W) is
+		do
+			change_tool_in_menu (c_w, open_classes_menu)
+		end;
+
+	remove_class_entry (c_w: CLASS_W) is
+		do
+			remove_tool_from_menu (c_w, open_classes_menu)
+		end;
+
+	add_object_entry (o_w: OBJECT_W) is
+		do
+			add_tool_to_menu (o_w, open_objects_menu)
+		end;
+
+	change_object_entry (o_w: OBJECT_W) is
+		do
+			change_tool_in_menu (o_w, open_objects_menu)
+		end;
+
+	remove_object_entry (o_w: OBJECT_W) is
+		do
+			remove_tool_from_menu (o_w, open_objects_menu)
+		end;
+
+	add_explain_entry (e_w: EXPLAIN_W) is
+		do
+			add_tool_to_menu (e_w, open_explain_menu)
+		end;
+
+	change_explain_entry (e_w: EXPLAIN_W) is
+		do
+			change_tool_in_menu (e_w, open_explain_menu)
+		end;
+
+	remove_explain_entry (e_w: EXPLAIN_W) is
+		do
+			remove_tool_from_menu (e_w, open_explain_menu)
+		end
+
 feature -- Graphical Interface
 
 	build_widgets is
@@ -615,6 +687,8 @@ feature -- Graphical Interface
 	build_top is
 			-- Build top bar
 		local
+			close_all: CLOSE_ALL_CMD;
+			close_all_menu_entry: EB_MENU_ENTRY;
 			quit_cmd: QUIT_PROJECT;
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY;
@@ -662,9 +736,22 @@ feature -- Graphical Interface
 			!! quit_cmd_holder.make_plain (quit_cmd);
 			quit_cmd_holder.set_menu_entry (quit_menu_entry);
 			!! version_button.make (Version_number, help_menu);
+
+				-- Close all command
+			!! close_all.make (Current);
+			!! close_all_menu_entry.make (close_all, window_menu);
+			!! sep.make ("", window_menu);
+
+				-- Sub menus for open tools.
+			!! open_explain_menu.make ("Explain tools", window_menu);
+			!! open_classes_menu.make ("Class tools", window_menu);
+			!! open_routines_menu.make ("Feature tools", window_menu);
+			!! open_objects_menu.make ("Objects tools", window_menu);
+
+				-- Regular menu entries.
 			!! explain_cmd.make (Current);
 			!! explain_button.make (explain_cmd, classic_bar);
-			!! explain_menu_entry.make (explain_cmd, help_menu);
+			!! explain_menu_entry.make (explain_cmd, open_explain_menu);
 			!! explain_hole_holder.make (explain_cmd, explain_button, explain_menu_entry);
 			!! system_cmd.make (Current);
 			!! system_button.make (system_cmd, classic_bar);
@@ -672,19 +759,19 @@ feature -- Graphical Interface
 			!! system_hole_holder.make (system_cmd, system_button, system_menu_entry);
 			!! class_cmd.make (Current);
 			!! class_button.make (class_cmd, classic_bar);
-			!! class_menu_entry.make (class_cmd, window_menu);
+			!! class_menu_entry.make (class_cmd, open_classes_menu);
 			!! class_hole_holder.make (class_cmd, class_button, class_menu_entry);
 			!! routine_cmd.make (Current);
 			!! routine_button.make (routine_cmd, classic_bar);
-			!! routine_menu_entry.make (routine_cmd, window_menu);
+			!! routine_menu_entry.make (routine_cmd, open_routines_menu);
 			!! routine_hole_holder.make (routine_cmd, routine_button, routine_menu_entry);
 			!! object_cmd.make (Current);
 			!! object_button.make (object_cmd, classic_bar);
-			!! object_menu_entry.make (object_cmd, window_menu);
+			!! object_menu_entry.make (object_cmd, open_objects_menu);
 			!! object_hole_holder.make (object_cmd, object_button, object_menu_entry);
 			!! stop_points_cmd.make (Current);
 			!! stop_points_button.make (stop_points_cmd, classic_bar);
-			!! stop_points_menu_entry.make (stop_points_cmd, window_menu);
+			!! stop_points_menu_entry.make (stop_points_cmd, debug_menu);
 			!! stop_points_hole_holder.make (stop_points_cmd, stop_points_button, stop_points_menu_entry);
 			!! clear_bp_cmd.make (Current);
 			!! clear_bp_button.make (clear_bp_cmd, classic_bar);

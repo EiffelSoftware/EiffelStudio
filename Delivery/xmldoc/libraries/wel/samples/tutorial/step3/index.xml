@@ -1,5 +1,11 @@
-<document output="studio" title="Tutorial Step 3">
-	<meta_data/>
+<document title="Tutorial Step 3">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Samples/Eiffel Class Library Samples/WEL Samples/Tutorial</envision_location>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>This sample demonstrates the use of a WEL_CLIENT_DC to display output in the MAIN_WINDOW. The ouput is shown below: </paragraph>
 		<image> 

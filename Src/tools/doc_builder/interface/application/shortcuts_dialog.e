@@ -97,10 +97,10 @@ feature {NONE} -- Implementation
 			l_row: EV_MULTI_COLUMN_LIST_ROW
 			l_key: EV_KEY
 			l_accelerator: EV_ACCELERATOR
-			l_code: reference INTEGER
+			l_code: INTEGER_REF
 		do
 			l_code ?= keys_combo.selected_item.data
-			create l_key.make_with_code (l_code)
+			create l_key.make_with_code (l_code.item)
 			from
 				accelerator_list.start
 			until

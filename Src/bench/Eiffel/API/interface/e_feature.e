@@ -25,7 +25,7 @@ inherit
 	COMPILER_EXPORTER
 		undefine
 			is_equal
-		end;
+		end
 
 feature -- Initialization
 
@@ -240,6 +240,39 @@ feature -- Properties
 
 feature -- Access
 
+	text: STRING is
+			-- Text of the Current lace file.
+			-- Void if unreadable file
+		local
+			class_text: STRING;
+			start_position, end_position: INTEGER;
+			body_as: FEATURE_AS;
+			cn: STRING;
+			c: like written_class;	
+		do
+			c := written_class;
+			class_text := c.text;
+			if class_text /= Void then
+				body_as := ast;
+				start_position := body_as.start_position;
+				end_position := body_as.end_position;
+				Result := "-- Version from class: ";
+				cn := clone (c.name)
+				cn.to_upper;
+				Result.append (cn);
+				Result.append ("%N%N%T");
+				if
+					class_text.count >= end_position and
+					start_position < end_position
+				then
+					class_text := class_text.substring 
+								(start_position + 1, end_position);
+					Result.append (class_text)
+				end;
+				Result.append ("%N");
+			end
+		end;
+
 	written_class: E_CLASS is
 			-- Class where the feature is written in
 		require
@@ -394,41 +427,45 @@ feature -- Comparison
 
 feature -- Output
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW; c: E_CLASS) is
-			-- Append the signature of current feature in `a_clickable'
+	append_signature (ow: OUTPUT_WINDOW; c: E_CLASS) is
+			-- Append the signature of current feature in `ow'
+		require
+			non_void_ow: ow /= Void
 		local
 			args: like arguments
 		do
 			args := arguments;
-			append_clickable_name (a_clickable, c);
+			append_name (ow, c);
 			if args /= Void then
-				a_clickable.put_string (" (");
+				ow.put_string (" (");
 				from
 					args.start
 				until
 					args.after
 				loop
-					a_clickable.put_string (args.argument_names.i_th 
+					ow.put_string (args.argument_names.i_th 
 									(args.index));
-					a_clickable.put_string (": ");
-					args.item.append_clickable_signature (a_clickable);
+					ow.put_string (": ");
+					args.item.append_to (ow);
 					args.forth;
 					if not args.after then
-						a_clickable.put_string ("; ")
+						ow.put_string ("; ")
 					end
 				end;
-				a_clickable.put_char (')')
+				ow.put_char (')')
 			end;
 			if type /= Void then
-				a_clickable.put_string (": ");
-				type.append_clickable_signature (a_clickable);
+				ow.put_string (": ");
+				type.append_to (ow);
 			end;
 		end;
 
-	append_clickable_name (a_clickable: CLICK_WINDOW; c: E_CLASS) is
-			-- Append the name of the feature in `a_clickable'
+	append_name (ow: OUTPUT_WINDOW; c: E_CLASS) is
+			-- Append the name of the feature in `ow'
+		require
+			valid_ow: ow /= Void
 		do
-			a_clickable.put_clickable_string (stone (c), name);
+			ow.put_feature (Current, c, name) 
 		end;
 
 	signature: STRING is
@@ -456,11 +493,6 @@ feature -- Output
 				end;
 				Result.append (")")
 			end;
-		end;
-
-	stone (c: E_CLASS): FEATURE_STONE is
-		do
-			!! Result.make (Current, c);
 		end;
 
 	valid_body_id: BOOLEAN is

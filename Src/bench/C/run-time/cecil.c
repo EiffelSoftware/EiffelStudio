@@ -34,16 +34,32 @@
 #endif
 #endif
 
-#define GEN_MAX	8				/* Maximum number of generic parameters */
+/*
+doc:<file name="cecil.c" header="eif_cecil.h">
+doc:	<attribute name="eif_visible_is_off" return_type="char">
+doc:		<summary>If set to True, we will not throw an exception if feature cannot be found or is not visible.</summary>
+doc:		<thread_safety>Safe as access is done through `cecil_lock'.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="cecil_lock" return_type="EIF_LW_MUTEX_TYPE *">
+doc:		<summary>To protect multithreaded access to `eif_visible_is_off'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="eif_default_pointer" return_type="void *">
+doc:		<summary>Return value when `eif_field_safe' fails.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+doc:</file>
+*/
+rt_shared unsigned char eif_visible_is_off = (unsigned char) 1;
+rt_private void *eif_default_pointer = NULL;
 
 /* 
  * Cecil mutex in MT mode. 
  */
-
 #ifdef EIF_THREADS
+rt_private EIF_LW_MUTEX_TYPE *cecil_lock = (EIF_LW_MUTEX_TYPE *) 0;
 
-rt_private EIF_LW_MUTEX_TYPE *cecil_lock = (EIF_LW_MUTEX_TYPE *) 0; 
-rt_shared  void eif_cecil_init (); 
+rt_shared  void eif_cecil_init ();
 #define EIF_CECIL_LOCK	\
 	EIF_LW_MUTEX_LOCK (cecil_lock, "Couldn't lock cecil mutex");
 #define EIF_CECIL_UNLOCK	\
@@ -56,8 +72,6 @@ rt_shared  void eif_cecil_init ();
 
 #endif	/* EIF_THREADS */
 
-/* Null pointer */
-rt_private void *eif_default_pointer = NULL;
 /* Function declarations */
 rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
 rt_private int locate(EIF_REFERENCE object, char *name);			/* Locate attribute by name in skeleton */
@@ -68,7 +82,6 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_shared unsigned char eif_visible_is_off = (unsigned char) 1;
 
 /* 
  * `visible' exception handling
@@ -688,7 +701,7 @@ rt_shared void eif_cecil_init () {
 	REQUIRE ("Root thread", eif_thr_is_root ());
 	REQUIRE ("Cecil mutex not created", !cecil_lock);
 
-	EIF_LW_MUTEX_CREATE (cecil_lock, "Couldn't create cecil lock");
+	EIF_LW_MUTEX_CREATE(cecil_lock, "Couldn't create cecil lock");
 }
 
 rt_shared void eif_cecil_reclaim () {
@@ -696,7 +709,7 @@ rt_shared void eif_cecil_reclaim () {
 	REQUIRE ("Root thread", eif_thr_is_root ());
 	REQUIRE ("Cecil mutex created", cecil_lock);
 
-	EIF_LW_MUTEX_DESTROY (cecil_lock, "Couldn't destroy cecil mutex");
+	EIF_LW_MUTEX_DESTROY(cecil_lock, "Couldn't destroy cecil mutex");
 }
 
 rt_shared void eif_set_thr_context () {

@@ -12,6 +12,7 @@ inherit
 		undefine
 			copy,out,is_equal
 		end
+
 	STRING
 		redefine
 			clear_all
@@ -283,6 +284,10 @@ feature {GENERATION_BUFFER} -- prototype code generation
 	generate_function_declaration (type: STRING; f_name: STRING;
 			extern: BOOLEAN; arg_types: ARRAY [STRING]) is
 				-- Generate funtion declaration using macros
+		require
+			type_not_void: type /= Void
+			f_name_not_void: f_name /= Void
+			arg_types_not_void: arg_types /= Void
 		local
 			i, nb: INTEGER
 		do

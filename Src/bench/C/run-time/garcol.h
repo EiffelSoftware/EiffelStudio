@@ -19,7 +19,7 @@
 #include "plug.h"		/* Not wanted when runnning tests */
 #endif
 
-#include "malloc.h" 	/* %%ss added for overhead */
+#include "malloc.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -238,13 +238,13 @@ feature -- Status report
 
 	hide_selection is
 		do
-			{WEL_RICH_EDIT} precursor
+			{WEL_RICH_EDIT} Precursor
 			is_selection_visible := False
 		end
 
 	show_selection is
 		do
-			{WEL_RICH_EDIT} precursor
+			{WEL_RICH_EDIT} Precursor
 			is_selection_visible := True
 		end
 

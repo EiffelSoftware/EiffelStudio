@@ -74,7 +74,6 @@ LSCRIPTS =  eif_size.h
 # New suffixes and associated building rules -- edit with care
 
 .c.o:
-	\$(RM) \$@
 	\$(CC) -c \$(JCFLAGS) \$<
 
 !GROK!THIS!
@@ -519,7 +518,6 @@ local_realclean::
 	$(RM) libmtfinalized.so	
 
 libmtfinalized.so: $(MT_LOBJ)
-	$(RM) $@
 	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(MT_LOBJ)
 	
 all:: libmtfinalized.a
@@ -528,7 +526,6 @@ local_realclean::
 	$(RM) libmtfinalized.a
 
 libmtfinalized.a: $(MT_LOBJ)
-	$(RM) $@
 	$(AR) $@ $(MT_LOBJ)
 	$(RANLIB) $@
 
@@ -538,7 +535,6 @@ local_realclean::
 	$(RM) libmtwkbench.a
 
 libmtwkbench.a: $(MT_WOBJ)
-	$(RM) $@
 	$(AR) $@ $(MT_WOBJ)
 	$(RANLIB) $@
 
@@ -549,7 +545,6 @@ local_realclean::
 	$(RM) libwkbench.so 
 
 libwkbench.so: $(WOBJ)
-	$(RM) $@
 	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(WOBJ)
 
 all:: libfinalized.so 
@@ -558,7 +553,6 @@ local_realclean::
 	$(RM) libfinalized.so	
 
 libfinalized.so: $(LOBJ)
-	$(RM) $@
 	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(LOBJ)
 	
 all:: libfinalized.a
@@ -567,7 +561,6 @@ local_realclean::
 	$(RM) libfinalized.a
 
 libfinalized.a: $(LOBJ)
-	$(RM) $@
 	$(AR) $@ $(LOBJ)
 	$(RANLIB) $@
 
@@ -577,7 +570,6 @@ local_realclean::
 	$(RM) libwkbench.a
 
 libwkbench.a: $(WOBJ)
-	$(RM) $@
 	$(AR) $@ $(WOBJ)
 	$(RANLIB) $@
 
@@ -587,7 +579,6 @@ local_realclean::
 	$(RM) libebench.a
 
 libebench.a: $(EOBJ)
-	$(RM) $@
 	$(AR) $@ $(EOBJ)
 	$(RANLIB) $@
 
@@ -597,7 +588,6 @@ local_realclean::
 	$(RM) x2c
 
 x2c: x2c.o
-	$(RM) $@
 	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
 	$(CC) -o $@ x2c.o $(JLDFLAGS) $(LIBS)
 
@@ -607,15 +597,12 @@ local_realclean::
 	$(RM) eif_config.h eif_portable.h eif_confmagic.h
 
 eif_config.h: $(TOP)/eif_config.h
-	$(RM) $@
 	$(LN) $(TOP)/eif_config.h .
 
 eif_confmagic.h: $(TOP)/eif_confmagic.h
-	$(RM) $@
 	$(LN) $(TOP)/eif_confmagic.h .
 
 eif_portable.h: $(TOP)/eif_portable.h
-	$(RM) $@
 	$(LN) $(TOP)/eif_portable.h .
 
 depend:: ../mkdep

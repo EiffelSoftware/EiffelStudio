@@ -82,6 +82,11 @@ feature
 			end;
 		end;
 
+	-- FIXME
+
+	-- Use of the select table??
+
+
 	record_ancestors (ss: PART_SORTED_SET [CLASS_C]; f: FEATURE_I) is
 		local
 			assert_id_set: ASSERT_ID_SET;

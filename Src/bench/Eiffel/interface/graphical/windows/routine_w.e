@@ -518,9 +518,10 @@ feature {NONE} -- Implementation Graphical Interface
  			toolbar_parent.set_margin_height (0)
  			toolbar_parent.set_spacing (1)
  			!! routine_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
- 			routine_toolbar.set_height (23)
 			if not Platform_constants.is_windows then
 				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			else
+	 			routine_toolbar.set_height (23)
 			end
 		end
 

@@ -358,6 +358,7 @@ feature -- Element change
 		do
 			if not error then
 				prev_class := System.current_class;
+				compiled_info ?= Current;
 				System.set_current_class (compiled_info);
 				last_syntax_cell.put (Void);
 				class_ast := build_ast;
@@ -365,7 +366,6 @@ feature -- Element change
 					-- Mark the class syntactically changed
 				set_changed (True);
 				Tmp_ast_server.put (class_ast);
-				compiled_info ?= Current;
 				pass1_controler.insert_parsed_class (compiled_info);
 				pass2_controler.insert_new_class (compiled_info);
 				pass3_controler.insert_new_class (compiled_info);

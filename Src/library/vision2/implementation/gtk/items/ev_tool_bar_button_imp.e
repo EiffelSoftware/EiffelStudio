@@ -29,7 +29,6 @@ inherit
 			set_pixmap,
 			remove_pixmap,
 			parent,
-			pointer_over_widget,
 			set_foreground_color,
 			foreground_color_pointer,
 			visual_widget

@@ -10,16 +10,8 @@ inherit
 			interface
 		end
 
-feature
+feature {EV_ANY_I} -- Implementation
 
-	pointer_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-		deferred
-		end
-		
-	parent_widget_is_displayed: BOOLEAN is
-		deferred
-		end
-		
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
 		do
 			create Result

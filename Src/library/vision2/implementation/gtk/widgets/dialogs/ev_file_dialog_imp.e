@@ -16,7 +16,8 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			on_ok
 		end
 
 feature {NONE} -- Initialization
@@ -127,6 +128,18 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	on_ok is
+			-- The user has requested that the dialog be activated.
+		local
+			temp_filename: STRING
+		do
+			create temp_filename.make (0)
+			temp_filename.from_c (C.gtk_file_selection_get_filename (c_object))
+			if not temp_filename.item (temp_filename.count).is_equal ('/') then
+				Precursor {EV_STANDARD_DIALOG_IMP}
+			end	
+		end
+
 	interface: EV_FILE_DIALOG
 
 end -- class EV_FILE_DIALOG_IMP
@@ -152,6 +165,9 @@ end -- class EV_FILE_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/25 22:17:34  king
+--| Changed file dialog to mimic Windows file dialog behaviour
+--|
 --| Revision 1.13  2001/06/22 00:50:03  king
 --| Now using initialize precursor
 --|

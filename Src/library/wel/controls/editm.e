@@ -78,7 +78,8 @@ feature -- Status setting
 			exists: exists
 			positive_tab: tab > 0
 		do
-			cwin_send_message (item, Em_settabstops, 1, 0)
+			cwin_send_message (item, Em_settabstops, 1,
+				cwel_pointer_to_integer ($tab))
 		end
 
 	set_tab_stops_array (tab: ARRAY [INTEGER]) is

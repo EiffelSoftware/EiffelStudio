@@ -435,18 +435,23 @@ feature -- Context_editor list
 			-- Clear the group page (of Current) and 
 			-- the translation page of the Behaviour editor.
 		local
-			cont: WINDOW_C
+			cont: PERM_WIND_C
 		do
 			from
 				Shared_window_list.start
 			until	
 				Shared_window_list.after
 			loop
-				cont := Shared_window_list.item;
-				if not cont.widget.destroyed then
-						-- Temp windows may be already destroyed
-						-- if its parent is a perm window.
-					cont.widget.hide;
+				Shared_window_list.item.hide;
+				Shared_window_list.forth
+			end;
+			from
+				Shared_window_list.start
+			until	
+				Shared_window_list.after
+			loop
+				cont ?= Shared_window_list.item;
+				if cont /= Void then
 					cont.widget.destroy;
 				end;
 				Shared_window_list.forth

@@ -47,10 +47,8 @@ feature -- Status setting
 				-- Filter out double click events.
 			do
 				if a_type = feature {EV_GTK_EXTERNALS}.gdk_button_press_enum then
-					if a_button = 1 and not dawaiting_movement and not App_implementation.is_in_docking then
+					if a_button = 1 and not dawaiting_movement and widget_imp_at_pointer_position = Current then
 							orig_cursor := pointer_style
-							enable_capture
-							App_implementation.enable_is_in_docking
 							original_x_offset := a_x
 							original_y_offset := a_y
 							original_screen_x := a_screen_x
@@ -63,16 +61,13 @@ feature -- Status setting
 								App_implementation.default_translate
 							)
 							drag_motion_notify_connection_id := last_signal_connection_id
-							start_dragable (
-								a_x,
-								a_y,
-								a_button,
-								a_x_tilt,
-								a_y_tilt,
-								a_pressure,
-								a_screen_x,
-								a_screen_y
+							real_signal_connect (
+								c_object,
+								"button-release-event",
+								agent end_dragable (?, ?, ?, ?, ?, ?, ?, ?),
+								App_implementation.default_translate
 							)
+							drag_button_release_connection_id := last_signal_connection_id
 					end
 				end
 			end
@@ -88,12 +83,23 @@ feature -- Status setting
 			if dawaiting_movement then
 				if (original_screen_x - a_screen_x).abs > drag_and_drop_starting_movement or
 					(original_screen_y - a_screen_y).abs > drag_and_drop_starting_movement
-					then 
-					real_start_dragging (original_x_offset, original_y_offset, 1,
-						0.0, 0.0, 0.0,
-						a_screen_x + (original_x_offset - a_x), a_screen_y +
-						(original_y_offset - a_y))
-					dawaiting_movement := False
+					then
+						dawaiting_movement := False
+						start_dragable (
+								a_x,
+								a_y,
+								1,
+								a_x_tilt,
+								a_y_tilt,
+								a_pressure,
+								a_screen_x,
+								a_screen_y
+							)
+						real_start_dragging (original_x_offset, original_y_offset, 1,
+							0.0, 0.0, 0.0,
+							a_screen_x + (original_x_offset - a_x), a_screen_y +
+							(original_y_offset - a_y))
+						
 				end
 			else
 				execute_dragging (a_x, a_y, 0, 0, 0.5, a_screen_x, a_screen_y)
@@ -133,16 +139,10 @@ feature {NONE} -- Implementation
 		do
 			--call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 
-			--pointer_motion_actions_internal.block
+			--pointer_motion_actions_internal.block	
+			enable_capture
 			initialize_transport (a_screen_x, a_screen_y, interface)
-			
-			real_signal_connect (
-				c_object,
-				"button-release-event",
-				agent end_dragable (?, ?, ?, ?, ?, ?, ?, ?),
-				App_implementation.default_translate
-			)
-			drag_button_release_connection_id := last_signal_connection_id
+			App_implementation.enable_is_in_transport
 		end
 		
 	drag_button_press_connection_id, drag_button_release_connection_id, drag_motion_notify_connection_id: INTEGER
@@ -186,10 +186,10 @@ feature {NONE} -- Implementation
 				original_x_offset := -1
 				original_y_offset := -1
 				dawaiting_movement := False
+				App_implementation.disable_is_in_transport
 			elseif dawaiting_movement then
 				dawaiting_movement := False
 			end
-			App_implementation.disable_is_in_docking
 		end
 		
 	enable_capture is

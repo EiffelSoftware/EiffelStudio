@@ -35,8 +35,6 @@ void c_ev_gtk_callback_marshal_delayed_agent_call (gint, EIF_OBJECT);
 
 guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
 
-guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT);
-
 guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 
 
@@ -47,6 +45,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2004/02/12 22:39:47  king
+// Removed redundant idle connection code
+//
 // Revision 1.3  2004/02/06 00:32:20  king
 // Removed externals that are now written in Eiffel using inline
 //

@@ -9,9 +9,7 @@ deferred class
 	EV_COMBO_BOX_I
 
 inherit
-
 	EV_TEXT_FIELD_I
-
 
 feature -- Access
 
@@ -66,6 +64,16 @@ feature -- Element change
 
 	remove_all_elements is
 			-- Remove all the elements of the combo-box.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
 		require
 			exists: not destroyed
 		deferred

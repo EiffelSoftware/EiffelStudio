@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_with_resource (a_parent: EV_CONTAINER; a_resource: like resource) is
+	make_with_resource (a_parent: EV_BOX; a_resource: like resource) is
 			-- Display Current
 		local
 			cmd: EV_ROUTINE_COMMAND
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 			Create cmd.make (~execute)
 			Create arg.make (void)
-			text.add_activate_command (cmd, arg)
+			text.add_return_command (cmd, arg)
 		end
 
 feature -- Validation

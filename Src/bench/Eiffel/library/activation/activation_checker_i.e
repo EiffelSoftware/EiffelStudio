@@ -121,7 +121,9 @@ http://support.eiffel.com.
 		do
 			if internal_engine = Void then
 				create Result.make (Product_name, Product_version)
+				internal_engine := Result
 			end
+			Result := internal_engine
 		end
 
 	internal_engine: KG_ENGINE

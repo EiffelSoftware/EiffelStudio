@@ -19,8 +19,8 @@ feature -- Access
 	date: INTEGER;
 			-- Time stamp of file named `file_name'
 
-	successfull: BOOLEAN;
-			-- Is the last compilation successfull ?
+	successful: BOOLEAN;
+			-- Is the last compilation successful?
 
 	not_first_parsing: BOOLEAN;
 
@@ -28,15 +28,15 @@ feature -- Access
 			-- Universe of the previous compilation
 			-- usefull for checking  the removed clusters
 
-    date_has_changed: BOOLEAN is
-        local
-            str: ANY;
-            new_date: INTEGER
-        do
-            str := file_name.to_c;
-            new_date := eif_date ($str);
-            Result := new_date /= date;
-        end;
+	date_has_changed: BOOLEAN is
+		local
+			str: ANY;
+			new_date: INTEGER
+		do
+			str := file_name.to_c;
+			new_date := eif_date ($str);
+			Result := new_date /= date;
+		end;
 
 feature -- Status setting
 
@@ -68,7 +68,7 @@ end;
 			ptr := file_name.to_c;
 			!!file.make (file_name);
 			if not file.exists then
-				successfull := False;
+				successful := False;
 				!!vd22;
 				vd22.set_file_name (file_name);
 				Error_handler.insert_error (vd22);
@@ -86,8 +86,11 @@ end;
 	root_ast: ACE_SD;
 			-- Root of last parsed ACE
 
-	ace_options: ACE_OPTIONS;
+	ace_options: ACE_OPTIONS is
 			-- Options explicitly set in the ace file
+		once
+				!! Result
+		end
 
 	do_recompilation is
 			-- Recompile ACE description
@@ -100,7 +103,7 @@ end;
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
-				successfull := False;
+				successful := False;
 			end
 		end;
 
@@ -117,7 +120,7 @@ end;
 			if root_ast /= Void then
 					-- Options explicitely set in the ace file
 					--| Processing is done in `build_universe' in ACE_SD
-				!! ace_options
+				ace_options.reset
 
 				if not_first_parsing = False then
 					precompiled_options := root_ast.precompiled_options;
@@ -163,7 +166,7 @@ end;
 
 				old_universe := Void;
 
-				successfull := True;
+				successful := True;
 			end
 		rescue
 			if Rescue_status.is_error_exception then
@@ -178,7 +181,7 @@ end;
 					System.copy (old_system)
 				end;
 				old_universe := Void;
-				successfull := False;
+				successful := False;
 			end
 		end;
 

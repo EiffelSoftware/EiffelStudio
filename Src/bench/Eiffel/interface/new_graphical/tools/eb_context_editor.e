@@ -394,6 +394,8 @@ feature -- Status setting
 					create_class_view (class_stone.class_i)
 				elseif cluster_stone /= Void then
 					create_cluster_view (cluster_stone.cluster_i)
+				else
+					disable_toolbar
 				end
 				development_window.window.set_pointer_style (Default_pixmaps.Standard_cursor)
 			elseif class_view /= Void and then class_view.cancelled then

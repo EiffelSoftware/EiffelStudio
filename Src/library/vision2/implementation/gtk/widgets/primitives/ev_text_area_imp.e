@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
         make is
                         -- Create a gtk label.
-                do
+               do
                         widget := gtk_text_new (Default_pointer, 
 						Default_pointer)
 			gtk_object_ref (widget)
@@ -54,18 +54,11 @@ feature -- Access
 
 feature -- Status setting
 	
---	set_editable (flag: BOOLEAN) is
---			-- `flag' true make the component read-write and
---			-- `flag' false make the component read-only.
---		do
---			gtk_text_set_editable (widget, flag)
---		end
-
 	insert_text (txt: STRING) is
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			c_gtk_text_insert (widget, $a)
 		end
 	
@@ -73,7 +66,7 @@ feature -- Status setting
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			delete_text (0, text_length)
 			insert_text (txt)
 		end
@@ -97,12 +90,6 @@ feature -- Status setting
 		do
 			set_position (start)
 			gtk_text_backward_delete (widget, finish - start + 1)
-		end
-
-	set_maximum_text_length (len: INTEGER) is
-			-- Maximum number of charachters on line
-		do
-			gtk_entry_set_max_length (widget, len)
 		end
 
 feature -- Basic operation

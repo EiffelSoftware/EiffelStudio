@@ -42,6 +42,8 @@ extern "C" {
 #define INDEPENDENT_STORE_4_3 '\11' /* Octal values */
 #define INDEPENDENT_STORE_4_4 '\12' /* Octal values */
 
+extern char rt_kind_version;
+
 /*
  * Utilities
  */

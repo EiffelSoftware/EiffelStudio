@@ -412,8 +412,10 @@ rt_private void internal_store(char *object)
 		if (account == (char *) 0)
 			xraise(EN_MEM);
 		bzero(account, scount * sizeof(char));
-		if (accounting == INDEPEND_ACCOUNT)
+		if (accounting == INDEPEND_ACCOUNT) {
 			c = INDEPENDENT_STORE_4_4;
+			rt_kind_version = INDEPENDENT_STORE_4_4;
+		}
 		else {
 			c = GENERAL_STORE_4_0;
 

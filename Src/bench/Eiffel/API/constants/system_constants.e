@@ -143,8 +143,8 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			-- Tags used in project file header.
 
 	Major_version_number: INTEGER is 5
-	Minor_version_number: INTEGER is 0
-	Build_version_number: INTEGER is 36
+	Minor_version_number: INTEGER is 1
+	Build_version_number: INTEGER is 01
 			-- Version number
 
 	Version_number: STRING is

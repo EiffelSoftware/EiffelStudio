@@ -32,6 +32,7 @@ feature -- Execution
 			application_class := object_tool_generator.edited_class
 			generate_interface
 			generate_command
+			object_tool_generator.close
 		end
 
 	undo is

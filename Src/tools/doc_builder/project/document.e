@@ -320,6 +320,10 @@ feature {NONE} -- Implementation
 			end
 			create file.make_open_write (name)
 			if file.is_open_write then
+					-- Add a new line character to end of all files
+				if text.item (text.count) /= '%N' then
+					text.append_character ('%N')
+				end
 				file.putstring (text)
 				file.flush
 				file.close

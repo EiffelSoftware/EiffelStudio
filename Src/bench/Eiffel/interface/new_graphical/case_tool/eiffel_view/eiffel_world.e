@@ -341,10 +341,8 @@ feature -- Element change.
 		do
 			cluster_legend.update
 			cluster_legend.hide
-			if not cluster_legend.was_moved_by_user then
-				bbox := bounding_box
-				cluster_legend.set_point_position (bbox.left, bbox.top)
-			end
+			bbox := bounding_box
+			cluster_legend.set_point_position (bbox.left, bbox.top)
 			cluster_legend.show
 			cluster_legend.enable_sensitive
 			if not has (cluster_legend) then

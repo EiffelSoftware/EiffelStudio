@@ -143,7 +143,7 @@ feature -- Access
 					if is_redefined and then parent /= Void then
 						Result := parent.eiffel_name
 					else
-						Result := Name_formatter.formatted_feature_name (name)
+						Result := Name_formatter.valid_variable_name (name)
 					end
 				else
 					l_type := implementing_type.dotnet_type
@@ -151,7 +151,7 @@ feature -- Access
 						Result := Metadata_provider.feature_eiffel_name (name, native_arguments, l_type)
 					end
 					if Result = Void then
-						Result := Name_formatter.formatted_feature_name (name)
+						Result := Name_formatter.valid_variable_name (name)
 					end
 				end
 				internal_eiffel_name := Result

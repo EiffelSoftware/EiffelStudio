@@ -16,8 +16,6 @@ inherit
 		end;
 
 	EXPR_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -65,13 +63,7 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			if tag /= void then
-				ctxt.put_string(tag);
-				ctxt.put_text_item (ti_Colon);
-				ctxt.put_space
-			end;
-			ctxt.new_expression;
-			expr.format (ctxt);
+			simple_format (ctxt);
 			if ctxt.last_was_printed then
 				ctxt.commit;
 			else
@@ -100,14 +92,14 @@ feature	-- Replication
 
 feature -- Case Storage
 
-	storage_info (ctxt: FORMAT_CONTEXT_B): S_TAG_DATA is
+	storage_info (ctxt: FORMAT_CONTEXT): S_TAG_DATA is
 		require
 			valid_context: ctxt /= Void;
 			empty_text: ctxt.text.empty
 		local
 			txt: STRING
 		do
-			expr.format (ctxt);
+			expr.simple_format (ctxt);
 			if tag = Void then
 				!! Result.make (Void, ctxt.text.image);
 			else

@@ -110,6 +110,14 @@ feature {NONE} -- Initialization
 			set_bitmap_size (w, h)
 		end
 
+	make_with_height (h: INTEGER) is
+			-- Create the tool-bar with all buttons of height (h)
+		--| FIXME needs implementing IEK 19990928
+		do
+			make
+			-- set_bitmap_size (0, h)
+		end
+
 feature -- Access
 
 	bar: EV_INTERNAL_TOOL_BAR_IMP is

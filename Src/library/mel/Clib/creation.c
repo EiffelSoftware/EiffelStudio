@@ -1,5 +1,9 @@
 #include "mel.h"
 #include <Xm/List.h>
+#include <Xm/RowColumn.h>
+#include <Xm/Text.h>
+#include <Xm/ScrolledW.h>
+#include <Xm/MainW.h>
 
 /*
  *
@@ -146,14 +150,6 @@ char * a_name;
 EIF_POINTER a_parent;
 {
 	return (EIF_POINTER) XtCreatePopupShell (a_name, overrideShellWidgetClass, (Widget) a_parent, NULL, 0);
-}
-
-toto (scr_obj, resource_name, call_data)
-Widget scr_obj;
-XtPointer resource_name;
-XtPointer call_data;
-{
-	printf ("toto\n");
 }
 
 EIF_POINTER xt_create_app_shell (app_name, class_name, disp, screen)

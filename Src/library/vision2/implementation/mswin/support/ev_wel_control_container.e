@@ -89,8 +89,8 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default style used by windows at creation.
 		do
-			Result := Ws_child + Ws_clipchildren
-					+ Ws_clipsiblings + Ws_visible
+			Result := Ws_child | Ws_clipchildren |
+				Ws_clipsiblings | Ws_visible
 		end
 
 	default_ex_style: INTEGER is

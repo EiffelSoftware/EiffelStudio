@@ -105,8 +105,7 @@ feature {EV_ANY_I} -- Implementation
 
 	default_style: INTEGER is
 		do
-			Result := Ws_child + Ws_visible
-				 + Ws_clipchildren + Ws_clipsiblings
+			Result := Ws_child | Ws_visible | Ws_clipchildren | Ws_clipsiblings
 		end
 
 	interface: EV_FIXED

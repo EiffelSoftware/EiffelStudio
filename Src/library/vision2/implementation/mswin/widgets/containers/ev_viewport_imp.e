@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 
 	default_style: INTEGER is
 		do
-			Result := Ws_child + Ws_clipchildren + Ws_clipsiblings + Ws_visible
+			Result := Ws_child | Ws_clipchildren | Ws_clipsiblings | Ws_visible
 		end
 
 	default_ex_style: INTEGER is

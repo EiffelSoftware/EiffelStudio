@@ -10,6 +10,7 @@
 # Configured by: paulv
 # Target system: hp-ux rio a.09.05 a 9000712 2005001273 two-user license 
 
+d_bsdsig='undef'
 sh='/bin/sh'
 cc='cchppa'
 cpp='$(VXWORKS)/host/parisc-hpux9/bin/cpp'

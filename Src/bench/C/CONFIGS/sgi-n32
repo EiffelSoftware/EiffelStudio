@@ -11,6 +11,7 @@
 # Target system: irix seattle 6.3 12161207 ip32 
 
 d_bsd='undef'
+d_bsdsig='define'
 d_eunice='undef'
 d_xenix='undef'
 eunicefix=':'

@@ -11,6 +11,7 @@
 # Target system: sunos lannion 5.4 generic_101945-39 sun4m sparc 
 
 
+d_bsdsig='undef'
 sh='sh'
 cc='gcc'
 cpp='/usr/ccs/lib/cpp'

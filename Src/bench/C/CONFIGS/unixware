@@ -4,6 +4,7 @@
 # Configured by: manuelt
 # Target system: unix_sv emc 4.2mp 2.1 i386 x86at 
 
+d_bsdsig='undef'
 ld='ld'
 ar='ar'
 d_bsd='undef'

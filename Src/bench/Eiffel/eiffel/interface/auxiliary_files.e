@@ -738,31 +738,27 @@ feature -- Plug and Makefile file
 			-- Generate dynaminc reference types of basic classes.
 		require
 			buffer_exists: buffer /= Void
-		local
-			local_system: SYSTEM_I
 		do
-			local_system := System
-
 			buffer.put_string ("%N%Tegc_int8_ref_dtype = ")
-			buffer.put_type_id (int8_c_type.reference_type.type_id)
+			buffer.put_type_id (system.integer_ref_type_id (8))
 			buffer.put_string (";%N%Tegc_int16_ref_dtype = ")
-			buffer.put_type_id (int16_c_type.reference_type.type_id)
+			buffer.put_type_id (system.integer_ref_type_id (16))
 			buffer.put_string (";%N%Tegc_int32_ref_dtype = ")
-			buffer.put_type_id (int32_c_type.reference_type.type_id )
+			buffer.put_type_id (system.integer_ref_type_id (32))
 			buffer.put_string (";%N%Tegc_int64_ref_dtype = ")
-			buffer.put_type_id (int64_c_type.reference_type.type_id )
+			buffer.put_type_id (system.integer_ref_type_id (64))
 			buffer.put_string (";%N%Tegc_bool_ref_dtype = ")
-			buffer.put_type_id (boolean_c_type.reference_type.type_id)
+			buffer.put_type_id (system.boolean_ref_type_id)
 			buffer.put_string (";%N%Tegc_real_ref_dtype = ")
-			buffer.put_type_id (float_c_type.reference_type.type_id)
+			buffer.put_type_id (system.real_ref_type_id)
 			buffer.put_string (";%N%Tegc_char_ref_dtype = ")
-			buffer.put_type_id (char_c_type.reference_type.type_id)
+			buffer.put_type_id (system.character_ref_type_id)
 			buffer.put_string (";%N%Tegc_wchar_ref_dtype = ")
-			buffer.put_type_id (wide_char_c_type.reference_type.type_id)
+			buffer.put_type_id (system.wide_char_ref_type_id)
 			buffer.put_string (";%N%Tegc_doub_ref_dtype = ")
-			buffer.put_type_id (double_c_type.reference_type.type_id)
+			buffer.put_type_id (system.double_ref_type_id)
 			buffer.put_string (";%N%Tegc_point_ref_dtype = ")
-			buffer.put_type_id (pointer_c_type.reference_type.type_id)
+			buffer.put_type_id (system.pointer_ref_type_id)
 			buffer.put_string (";%N");	
 
 			buffer.put_string ("%N%Tegc_int8_dtype = ")

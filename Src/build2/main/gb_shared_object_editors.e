@@ -81,6 +81,41 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	destroy_floating_editors is
+			-- For evey item in `floating_object_editors',
+			-- remove and destroy.
+		local
+			a_window_parent: EV_WINDOW
+		do
+			from
+				floating_object_editors.start
+			until
+				floating_object_editors.is_empty
+			loop
+				a_window_parent := floating_object_editors.item.parent_window (floating_object_editors.item)
+				check
+					a_window_parent_not_void: a_window_parent /= Void
+				end
+				floating_object_editors.item.destroy
+				a_window_parent.destroy
+				floating_object_editors.remove
+			end
+		ensure
+			no_floating_editors: floating_object_editors.is_empty
+		end
+		
+		
+--			if editor = docked_object_editor then
+--						editor.make_empty
+--					else
+--						window_parent := editor.window_parent
+--						editor.destroy
+--						window_parent.destroy
+--						--| FIXME should this be `editors' prune?
+--						--| if not, then we may not even need the argument anymore.
+--						floating_object_editors.prune (editor)
+--					end
+		
 	force_name_change_completion_on_all_editors is
 			-- Force all object editors that are editing an object
 			-- to update their object to use either the newly enterd name
@@ -110,7 +145,7 @@ feature {NONE} -- Implementation
 			editor: GB_OBJECT_EDITOR
 		do
 			create window
-			window.close_request_actions.extend (agent remove_editor (window))
+			window.close_request_actions.extend (agent remove_floating_object_editor (window))
 			window.close_request_actions.extend (agent window.destroy)
 			create editor
 			window.extend (editor)
@@ -126,7 +161,7 @@ feature {NONE} -- Implementation
 		do
 			create window
 			window.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_object_window @ 1)
-			window.close_request_actions.extend (agent remove_editor (window))
+			window.close_request_actions.extend (agent remove_floating_object_editor (window))
 			window.close_request_actions.extend (agent window.destroy)
 			create editor
 			window.extend (editor)
@@ -135,10 +170,15 @@ feature {NONE} -- Implementation
 			window.show
 		end
 		
-feature {NONE}
+feature {NONE} -- Implementation
 
-	remove_editor (a_window: EV_WINDOW) is
-			-- Remove object editor from `a_window'.
+	remove_floating_object_editor (a_window: EV_WINDOW) is
+			-- Remove object editor contained in `a_window'
+			-- from `floating_object_editors'.
+		require
+			a_window_not_void: a_window /= Void
+			-- Object editor is in floating object editors.
+			
 		local
 			editor: GB_OBJECT_EDITOR
 		do
@@ -146,7 +186,9 @@ feature {NONE}
 			check
 				editor /= Void
 			end
-			all_editors.prune (editor)
+			floating_object_editors.prune_all (editor)
+		ensure
+			-- Object editor is not in floating object editors.
 		end
 		
 

@@ -14,7 +14,7 @@
 #include "eif_cons.h"			/* extra/mswin/console or extra/win32/console */
 #endif
 
-public EIF_POINTER file_def(file)
+rt_public EIF_POINTER file_def(file)
 int file;
 {
 	/* Convert the integer `i' into the corresponding
@@ -35,7 +35,7 @@ int file;
 	/* NOTREACHED */
 }
 
-public EIF_POINTER console_def(file)
+rt_public EIF_POINTER console_def(file)
 int file;
 {
 #ifdef EIF_WINDOWS
@@ -45,7 +45,7 @@ int file;
 #endif
 }            
 
-public EIF_BOOLEAN console_eof(fp)
+rt_public EIF_BOOLEAN console_eof(fp)
 FILE *fp;      
 {
 #ifdef EIF_WINDOWS
@@ -59,7 +59,7 @@ FILE *fp;
  * I/O routines (output).
  */
 
-public void console_pi(f, number)
+rt_public void console_pi(f, number)
 FILE *f;
 EIF_INTEGER	number;
 {
@@ -79,7 +79,7 @@ EIF_INTEGER	number;
 #endif
 }
 
-public void console_pr(f, number)
+rt_public void console_pr(f, number)
 FILE *f;
 EIF_REAL number;
 {
@@ -93,7 +93,7 @@ EIF_REAL number;
 #endif
 }
 
-public void console_ps(f, str, len)
+rt_public void console_ps(f, str, len)
 FILE *f;
 char *str;
 EIF_INTEGER len;
@@ -108,7 +108,7 @@ EIF_INTEGER len;
 #endif
 }
 
-public void console_pc(f, c)
+rt_public void console_pc(f, c)
 FILE *f;
 EIF_CHARACTER c;
 {
@@ -122,7 +122,7 @@ EIF_CHARACTER c;
 #endif
 }
 
-public void console_pd(f, val)
+rt_public void console_pd(f, val)
 FILE *f;
 EIF_DOUBLE val;
 {
@@ -136,7 +136,7 @@ EIF_DOUBLE val;
 #endif
 }
 
-public void console_tnwl(f)
+rt_public void console_tnwl(f)
 FILE *f;
 {
 		console_pc(f,'\n');
@@ -146,7 +146,7 @@ FILE *f;
  * I/O routines (input).
  */
 
-public void console_next_line(f)
+rt_public void console_next_line(f)
 FILE *f;
 {
 #ifdef EIF_WIN_31
@@ -157,7 +157,7 @@ FILE *f;
 #endif
 }
 
-public EIF_INTEGER console_readint(f) 
+rt_public EIF_INTEGER console_readint(f) 
 FILE *f;     
 {
 #ifdef EIF_WINDOWS
@@ -167,7 +167,7 @@ FILE *f;
 #endif             
 }
 
-public EIF_REAL console_readreal(f) 
+rt_public EIF_REAL console_readreal(f) 
 FILE *f;     
 {
 #ifdef EIF_WINDOWS
@@ -177,7 +177,7 @@ FILE *f;
 #endif             
 }
 
-public EIF_DOUBLE console_readdouble(f) 
+rt_public EIF_DOUBLE console_readdouble(f) 
 FILE *f;     
 {
 #ifdef EIF_WINDOWS
@@ -186,7 +186,7 @@ FILE *f;
 	return file_gd(f);
 #endif             
 }
-public EIF_CHARACTER console_readchar(f)
+rt_public EIF_CHARACTER console_readchar(f)
 FILE *f;
 {
 #ifdef EIF_WINDOWS
@@ -196,7 +196,7 @@ FILE *f;
 #endif
 }
 
-public EIF_INTEGER console_readline(f, s, bound, start)
+rt_public EIF_INTEGER console_readline(f, s, bound, start)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
@@ -209,7 +209,7 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 #endif
 }
 
-public EIF_INTEGER console_readstream(f, s, bound)
+rt_public EIF_INTEGER console_readstream(f, s, bound)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
@@ -221,7 +221,7 @@ EIF_INTEGER bound;		/* Size of the target buffer */
 #endif
 }
 
-public EIF_INTEGER console_readword(f, s, bound, start)
+rt_public EIF_INTEGER console_readword(f, s, bound, start)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
@@ -234,7 +234,7 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 #endif
 }
 
-public EIF_CHARACTER console_separator(f)
+rt_public EIF_CHARACTER console_separator(f)
 FILE *f;
 {
 #ifdef EIF_WINDOWS
@@ -244,7 +244,7 @@ FILE *f;
 #endif
 }
 
-public void console_file_close (f)
+rt_public void console_file_close (f)
 FILE *f;
 {
 #ifdef EIF_WINDOWS

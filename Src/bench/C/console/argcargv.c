@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <windows.h>
 
-#include "argcargv.h"
+#include "eif_argcargv.h"
 #include "eif_except.h"		/* For `eraise' */
 
 extern int main();		/* Main entry point */

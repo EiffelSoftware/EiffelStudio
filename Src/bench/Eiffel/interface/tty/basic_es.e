@@ -16,7 +16,10 @@ inherit
 	SHARED_EWB_CMD_NAMES;
 	WINDOWS;
 	SHARED_EXEC_ENVIRONMENT;
-	COMMAND_LINE_PROJECT;
+	COMMAND_LINE_PROJECT
+		redefine
+			new_license
+		end;
 	SHARED_RESOURCES
 
 creation
@@ -93,23 +96,33 @@ feature -- Initialization
 		end;
 
 	make_licensed is
+			-- Analyze the command line options and
+			-- execute the appropriate command.
+			-- Get a license before the call
 		do
 			if init_licence then
-				make
-				discard_licence
-			end
-		end
+				make;
+				discard_licence;
+			end;
+		end;
 
-feature -- Licensing
+feature -- License manager
 
 	init_licence: BOOLEAN is
+			-- Initialization of the license
 		do
-			licence.set_version (3.5)
-			licence.set_application_name ("eiffelbench")
-			licence.get_licence
-			Result := licence.licensed
-		end
+			licence.set_version (3.5);
+			licence.set_application_name ("eiffelbench");
+			licence.get_licence;
+			Result := licence.licensed;
+		end;
 
+	new_license: LICENCE is
+			-- New instance of a license
+		do
+			!BENCH_LICENCE!Result.make
+		end
+ 
 feature -- Properties
 
 	command: EWB_CMD;

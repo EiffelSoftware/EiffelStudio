@@ -51,7 +51,7 @@ feature -- Status setting
 		do
 			release_action := Ev_pnd_disabled
 			press_action := Ev_pnd_disabled
-			motion_action := Ev_pnd_disabled -- FIXME needed??
+			motion_action := Ev_pnd_disabled
 			is_transport_enabled := False
 		end
 
@@ -374,20 +374,29 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	is_pnd_in_transport,
+	is_pnd_in_transport: BOOLEAN
+		-- Is `Current' executing pick and drop?
 	is_dnd_in_transport: BOOLEAN
+		-- Is `Current' executing drag and drop?
 	
 	press_action: INTEGER
+		-- State which is used to decide action on pick/drag and drop press.
 	release_action: INTEGER
+		-- State which is used to describe action on pick/drag and drop release.
 	motion_action: INTEGER
+		-- State which is used to describe action on pick/drab and drop
+		-- pointer motion.
 
 	Ev_pnd_disabled: INTEGER is 0
 	Ev_pnd_start_transport: INTEGER is 1
 	Ev_pnd_end_transport: INTEGER is 2
 	Ev_pnd_execute: INTEGER is 3
+		-- Allowable states for use with `press_action', release_action' and
+		-- `motion_action'.
 
-	old_pointer_x,
-	old_pointer_y: INTEGER
+	old_pointer_x, old_pointer_y: INTEGER
+		-- Hold the last position that the rubber band was drawn to.
+		--| Used to stop unecessary re-draw of the band when no movement.
 
 	cursor_imp: EV_CURSOR_IMP
 			-- Cursor used on the widget.
@@ -409,6 +418,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+			-- Cursor of `Current'.
 		deferred
 		end
 
@@ -426,6 +436,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	real_draw_rubber_band is
+			-- Draw rubber band.
 		do
 			pnd_screen.set_invert_mode
 			pnd_screen.draw_segment
@@ -535,8 +546,8 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.28  2000/04/27 17:21:36  rogers
---| Comments and formatting.
+--| Revision 1.29  2000/04/27 17:34:46  rogers
+--| More formatting and comments.
 --|
 --| Revision 1.26  2000/04/14 23:27:10  rogers
 --| start transport sets capture type to Capture_heavy.

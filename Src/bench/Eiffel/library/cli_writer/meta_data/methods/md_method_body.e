@@ -261,10 +261,11 @@ feature {NONE} -- Opcode insertion helpers
 				i > 4
 			loop
 				internal_put ((l_val & 0x000000FF).to_integer_8, l_pos)
+				l_pos := l_pos + 1
 				l_val := l_val |>> 8
 				i := i + 1
 			end
-			current_position := l_pos + 4
+			current_position := l_pos
 		end
 		
 	add_integer_64 (val: INTEGER_64) is

@@ -199,65 +199,37 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 		end
 		
 	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
-			-- All fields, procedures and functions implemented by type.
+			-- All fields, procedures and functions immediately implemented by type.
 		require
 			fields_not_void: fields /= Void
 			functions_not_void: functions /= Void
 			procedures_not_void: procedures /= Void
-		local
-			i: INTEGER
 		do
-			create Result.make (0)
-			Result.fill (fields)
-			
-			-- Filter out PROPERTY and EVENT Eiffelized entities.
-			-- Only add members declared in this type.
-
-			from 
-				i := 1
-			until
-				i > functions.count or else functions.item (i) = Void
-			loop
-				if not functions.item (i).is_property_or_event and functions.item (i).declared_type.is_equal (associated_reference_type) then
-					Result.extend (functions @ i)
-				end
-				i := i + 1
-			end
-
-			from 
-				i := 1
-			until
-				i > procedures.count or else procedures.item (i) = Void
-			loop
-				if not procedures.item (i).is_property_or_event and procedures.item (i).declared_type.is_equal (associated_reference_type) then
-					Result.extend (procedures @ i)
-				end
-				i := i + 1
-			end
-			
-			from 
-				i := 1
-			until
-				i > events.count or else events.item (i) = Void
-			loop
-				if events.item (i).declared_type.is_equal (associated_reference_type) then
-					Result.extend (events @ i)
-				end
-				i := i + 1
-			end
-			
-			from 
-				i := 1
-			until
-				i > properties.count or else properties.item (i) = Void
-			loop
-				if properties.item (i).declared_type.is_equal (associated_reference_type) then
-					Result.extend (properties @ i)
-				end
-				i := i + 1
-			end
+			Result := consumed_type_entities (True)
 		ensure
-			entities_not_void: Result /= Void
+			result_not_void: Result /= Void
+		end
+		
+	inherited_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- All fields, procedures and functions inherited by type.
+		require
+			fields_not_void: fields /= Void
+			functions_not_void: functions /= Void
+			procedures_not_void: procedures /= Void
+		do
+			Result := consumed_type_entities (False)
+		end
+		
+	flat_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- All field, procedures and functions implemented/inherited by type.
+		require
+			fields_not_void: fields /= Void
+			functions_not_void: functions /= Void
+			procedures_not_void: procedures /= Void
+		do
+			Result := consumed_type_entities (True)
+			Result.fill (consumed_type_entities (False))
+			-- This is quite inefficient but only sparingly.
 		end
 
 	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE] is
@@ -280,6 +252,68 @@ feature {NONE} -- Implementation
 		-- Reference type of `Current'.
 			
 feature {NONE} -- Internal
+
+	consumed_type_entities (a_immediate: BOOLEAN): ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- All fields, procedures and functions implemented by type.
+			-- If `a_immediate' then return immediate features, else return inherited.
+		local
+			i: INTEGER
+		do
+			create Result.make (0)
+			Result.fill (fields)
+			
+			-- Filter out PROPERTY and EVENT Eiffelized entities.
+			-- Only add members declared in this type.
+
+			from 
+				i := 1
+			until
+				i > functions.count or else functions.item (i) = Void
+			loop
+				if not functions.item (i).is_property_or_event and then
+							(functions.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
+					Result.extend (functions @ i)
+				end
+				i := i + 1
+			end
+
+			from 
+				i := 1
+			until
+				i > procedures.count or else procedures.item (i) = Void
+			loop
+				if not procedures.item (i).is_property_or_event and then
+					(procedures.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
+					Result.extend (procedures @ i)
+				end
+				i := i + 1
+			end
+			
+			from 
+				i := 1
+			until
+				i > events.count or else events.item (i) = Void
+			loop
+				if (events.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
+					Result.extend (events @ i)
+				end
+				i := i + 1
+			end
+			
+			from 
+				i := 1
+			until
+				i > properties.count or else properties.item (i) = Void
+			loop
+				if (properties.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
+					Result.extend (properties @ i)
+				end
+				i := i + 1
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 
 	internal_flags: INTEGER
 			-- Store status of current type.

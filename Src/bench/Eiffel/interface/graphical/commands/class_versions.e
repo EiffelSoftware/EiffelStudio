@@ -119,7 +119,7 @@ feature {NONE} -- Execution
 					display_choice (classc.lace_class);
 				else
 					!! output_list.make;
-					choice.popup (Current, output_list)
+					choice.popup (Current, output_list, Interface_names.t_Select_class_version)
 				end
 			end
 		end;
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 				!! choice.make (popup_parent)
 			end;
 			stone := tool.stone;
-			choice.popup (Current, output_list)
+			choice.popup (Current, output_list, Interface_names.t_Select_class_version)
 		end
 
 end -- class CLASS_TEXT_FIELD

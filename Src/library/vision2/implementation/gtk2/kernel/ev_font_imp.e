@@ -369,7 +369,7 @@ feature {EV_FONT_DIALOG_IMP} -- Implementation
 			end
 		end
 
-feature {EV_FONT_IMP} -- Implementation
+feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP} -- Implementation
 
 	--| String-routines to facilitate in searching the best matching font.
 
@@ -387,6 +387,7 @@ feature {EV_FONT_IMP} -- Implementation
 
 	family_string: STRING is
 			-- Get standard string to represent family.
+			-- This is for 
 		do
 			check valid_family (family) end
 			inspect family
@@ -402,6 +403,33 @@ feature {EV_FONT_IMP} -- Implementation
 				Result := "lucida"
 			else
 				Result := "*"
+			end
+		end
+		
+	pango_family_string: STRING is
+			-- Get standard string to represent family.
+			-- This is for 
+		do
+			create Result.make (0)
+			from
+				preferred_families.start
+			until
+				preferred_families.after
+			loop
+				Result := Result + preferred_families.item + ","
+				preferred_families.forth
+			end
+			inspect family
+			when Family_screen then
+				Result.append ("monospace")
+			when Family_roman then
+				Result.append ("serif")
+			when Family_typewriter then
+				Result.append ("courier")
+			when Family_sans then
+				Result.append ("sans")
+			when Family_modern then
+				Result.append ("lucida")
 			end
 		end
 

@@ -346,6 +346,7 @@ feature {NONE} -- Implementation
 			cl_type: CL_TYPE_I
 			il_ext: IL_EXTENSION_I
 			real_metamorphose: BOOLEAN
+			real_target: like target
 		do
 			if not extension.is_il then
 					-- Generate call to C external.
@@ -382,12 +383,21 @@ feature {NONE} -- Implementation
 					end
 				elseif cl_type.is_expanded then
 						-- No need to do anything special in case of a call to
-						-- a constructor. The generation of `parent.target' already
+						-- a constructor. The generation of `target' of current call already
 						-- did any special transformation to perfom call.
 					if il_ext.type /= creator_type then
-						if parent.target.is_predefined or parent.target.is_attribute then
+						if is_message then
+							real_target := parent.target
+						else
+							if parent.parent = Void then
+								real_target := parent.target
+							else
+								real_target := parent.parent.target
+							end
+						end
+						if real_target.is_predefined or real_target.is_attribute then
 								-- For same reason we don't do anything for a call to
-								-- a constructor, when `parent.target' is predefined or is
+								-- a constructor, when `real_target' is predefined or is
 								-- an attribute any special transformation have already been done.
 							if real_metamorphose then
 									-- Feature is written in an inherited class of current

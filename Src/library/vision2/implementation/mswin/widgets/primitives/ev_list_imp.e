@@ -306,7 +306,7 @@ feature {NONE} -- Implementation : WEL features
 			Result := Ws_child + Ws_visible + Ws_group 
 						+ Ws_tabstop + Ws_border + Ws_vscroll
 						+ Lbs_notify --+ Lbs_ownerdrawfixed 
-						+ Lbs_hasstrings --+ Lbs_nointegralheight
+						+ Lbs_hasstrings + Lbs_nointegralheight
 			if is_multiple_selection then
 				Result := Result + Lbs_multiplesel
 			end

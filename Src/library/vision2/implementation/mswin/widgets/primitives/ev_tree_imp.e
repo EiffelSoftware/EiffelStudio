@@ -57,6 +57,33 @@ feature {NONE} -- Initialization
 			!! ev_children.make (1)
 		end
 
+feature -- Access
+
+	ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, INTEGER]
+			-- Children of the tree Classified by their h_item
+
+feature -- Element change
+
+	add_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Add `item_imp' to the list
+		local
+			insert_struct: WEL_TREE_VIEW_INSERT_STRUCT
+		do
+			!! insert_struct.make
+			insert_struct.set_root
+			insert_struct.set_tree_view_item (item_imp)
+			insert_item (insert_struct)
+			item_imp.set_h_item (last_item)
+			ev_children.extend (item_imp, last_item)
+		end
+
+	remove_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Remove `item_imp' from the children.
+		do
+			ev_children.remove (item_imp.h_item)
+			delete_item (item_imp)
+		end
+
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -73,31 +100,6 @@ feature -- Event -- removing command association
 			-- when the selection has changed.
 		do
 			remove_command (Cmd_selection)
-		end
-
-feature {EV_TREE_ITEM_CONTAINER_IMP} -- Implementation attributes
-
-	ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, INTEGER]
-			-- Children of the tree Classified by their h_item
-
-feature {NONE} -- Implementation
-
-	add_item (an_item: EV_TREE_ITEM) is
-			-- Add `item' to the list
-		local
-			item_imp: EV_TREE_ITEM_IMP
-			insert_struct: WEL_TREE_VIEW_INSERT_STRUCT
-		do
-			item_imp ?= an_item.implementation
-			check
-				valid_item: item_imp /= Void
-			end
-			!! insert_struct.make
-			insert_struct.set_root
-			insert_struct.set_tree_view_item (item_imp)
-			insert_item (insert_struct)
-			item_imp.set_h_item (last_item)
-			ev_children.extend (item_imp, last_item)
 		end
 
 feature {NONE} -- WEL Implementation

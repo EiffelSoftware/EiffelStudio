@@ -63,6 +63,14 @@ feature -- Update
 			makefile_names := l
 		end
 
+	set_has_cpp_externals (v: BOOLEAN) is
+			-- Set `has_cpp_externals' to `v'.
+		do
+			has_cpp_externals := v
+		ensure
+			has_cpp_externals_set: has_cpp_externals = v
+		end
+
 feature -- Update for the precompilation
 
 	set_compilation_id is
@@ -120,6 +128,9 @@ feature -- Access
 
 	makefile_names: LIST [STRING];
 			-- Makefile names to execute before the linking
+
+	has_cpp_externals: BOOLEAN
+			-- Did system included a C++ external at some point.
 
 feature -- Access for the precompilation configuration
 

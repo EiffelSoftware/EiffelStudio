@@ -720,7 +720,7 @@ feature -- Generation (Linking rules)
 			if System.makefile_names /= Void then
 				make_file.putstring ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
 			end
-			if System.externals.has_cpp_externals then
+			if System.has_cpp_externals then
 				make_file.putstring ("%T$(CPP")
 			else
 				make_file.putstring ("%T$(CC")

@@ -118,6 +118,9 @@ feature -- Conveniences
 		do
 			has_cpp_status_changed := b /= has_cpp_externals
 			has_cpp_externals := b
+			if b then
+				system.set_has_cpp_externals (b)
+			end
 		end
 
 	set_type (t: CL_TYPE_I) is

@@ -17,6 +17,7 @@ ecom_eiffel_compiler::IEiffelProject_impl_stub::IEiffelProject_impl_stub( EIF_OB
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
+	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -27,6 +28,7 @@ ecom_eiffel_compiler::IEiffelProject_impl_stub::~IEiffelProject_impl_stub()
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
+	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

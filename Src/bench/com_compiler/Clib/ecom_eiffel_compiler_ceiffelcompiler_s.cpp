@@ -27,6 +27,7 @@ ecom_eiffel_compiler::CEiffelCompiler::CEiffelCompiler( EIF_TYPE_ID tid )
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);
 	p_ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler = new ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler (this, eiffel_object, type_id);
+	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -37,6 +38,7 @@ ecom_eiffel_compiler::CEiffelCompiler::CEiffelCompiler( EIF_OBJECT eif_obj )
 	type_id = eif_type (eiffel_object);
 	
 	p_ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler = new ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler (this, eiffel_object, type_id);
+	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -48,6 +50,7 @@ ecom_eiffel_compiler::CEiffelCompiler::~CEiffelCompiler()
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
 	delete p_ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler;
+	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

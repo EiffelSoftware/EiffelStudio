@@ -24,6 +24,8 @@ class CEiffelCompiler;
 
 #include "server_registration.h"
 
+#include "CEiffelCompiler_factory.h"
+
 #include "ecom_eiffel_compiler_IEiffelCompiler_s.h"
 
 #include "ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler.h"

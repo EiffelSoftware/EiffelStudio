@@ -24,6 +24,8 @@ class CEiffelProject;
 
 #include "server_registration.h"
 
+#include "CEiffelProject_factory.h"
+
 #include "ecom_eiffel_compiler_IEiffelProject_s.h"
 
 #ifdef __cplusplus

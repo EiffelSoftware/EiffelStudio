@@ -35,11 +35,6 @@ inherit
 			initialize
 		end
 
-	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
-		redefine
-			interface
-		end
-
 	WEL_LIST_VIEW
 		rename
 			make as wel_make,
@@ -757,6 +752,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.78  2000/04/11 16:58:55  rogers
+--| Removed direct inheritance from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.77  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -34,7 +34,8 @@ inherit
 			on_size_allocate,
 			show,
 			hide,
-			internal_set_minimum_size
+			internal_set_minimum_size,
+			on_widget_mapped
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -508,6 +509,14 @@ feature {EV_ANY_IMP} -- Implementation
 			-- Window that `Current' is relative to.
 
 feature {NONE} -- Implementation
+
+	on_widget_mapped is
+			-- `Current' has been mapped to the screen.
+		do
+			if show_actions_internal /= Void then
+				show_actions_internal.call (Void)
+			end
+		end
 
 	has_wm_decorations: BOOLEAN is
 			-- Does current Window object have WM decorations.

@@ -41,7 +41,9 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object, C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
+				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
+				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM)
 			entry_widget := gtk_text_new (NULL, NULL)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, entry_widget)

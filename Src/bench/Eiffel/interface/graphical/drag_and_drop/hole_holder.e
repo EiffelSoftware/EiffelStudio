@@ -8,7 +8,7 @@ indexing
 class HOLE_HOLDER
 
 inherit
-	HOLDER
+	EB_HOLDER
 		redefine
 			associated_command, associated_button,
 			set_selected

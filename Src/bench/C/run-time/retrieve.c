@@ -16,7 +16,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 
 #include "eif_portable.h"
 #include "rt_lmalloc.h"
-#include "eif_project.h" /* for egc_ce_gtype, egc_bit_dtype */
+#include "eif_project.h" /* for egc_ce_type, egc_bit_dtype */
 #include "rt_macros.h"
 #include "rt_malloc.h"
 #include "rt_garcol.h"
@@ -312,6 +312,7 @@ rt_private int readline (register char *ptr, register int *maxlen);
 rt_private int buffer_read (register char *object, int size);
 rt_private void rt_read_cid (uint32 *, uint32 *, uint32);
 rt_private void rt_id_read_cid (uint32 *, uint32 *, uint32);
+rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name);
 
 /* Initialization and Resetting for retrieving an independent store */
 rt_private void independent_retrieve_init (long idrf_size);
@@ -643,13 +644,15 @@ rt_private void grow_mismatch_table (void)
 
 rt_private void free_mismatch_table (mismatch_table *table)
 {
-	eif_wean (table->objects);
-	eif_wean (table->values);
-	table->objects = NULL;
-	table->values = NULL;
-	table->capacity = 0;
-	table->count = 0;
-	eif_rt_xfree ((char *) table);
+	if (table) {
+		eif_wean (table->objects);
+		eif_wean (table->values);
+		table->objects = NULL;
+		table->values = NULL;
+		table->capacity = 0;
+		table->count = 0;
+		eif_rt_xfree ((char *) table);
+	}
 }
 
 /*
@@ -1317,27 +1320,30 @@ rt_private void rt_create_table (int32 count)
 
 rt_shared uint32 special_generic_type (uint32 o_type)
 {
-	int16 *gt_type;
-	int32 *gt_gen;
+	int16 *dynamic_types;
+	int32 *patterns;
 	int nb_gen;
 	char *vis_name = System (o_type).cn_generator;
-	struct gt_info *info = (struct gt_info *) ct_value (&egc_ce_gtype, vis_name);
+	struct cecil_info *info;
+	
+		/* Special cannot be expanded, thus we only look in `egc_ce_type'. */
+	info = (struct cecil_info *) ct_value (&egc_ce_type, vis_name);
 
-	CHECK ("Must be generic", info != NULL);
+	CHECK ("Must be generic", (info != NULL) && (info->nb_param > 0));
 
 	/* Generic type, :
 	 *	"dtype visible_name size nb_generics {meta_type}+"
 	 */
-	gt_type = info->gt_type;
-	nb_gen = info->gt_param;
+	dynamic_types = info->dynamic_types;
+	nb_gen = info->nb_param;
 
 	for (;;) {
-		if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+		if ((*dynamic_types++) == (int16) o_type)
 			break;
 	}
-	gt_type--;
-	gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-	return *gt_gen;
+	dynamic_types--;
+	patterns = info->patterns + nb_gen * (dynamic_types - info->dynamic_types);
+	return *patterns;
 }
 
 rt_public EIF_REFERENCE rt_make(void)
@@ -1546,7 +1552,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 						case SK_DOUBLE: spec_size = sizeof (EIF_DOUBLE); break;
 						case SK_POINTER: spec_size = sizeof (EIF_POINTER); break;
 						case SK_DTYPE:
-						case SK_REF: spec_size = sizeof (EIF_OBJECT); break;
+						case SK_REF: spec_size = sizeof (EIF_REFERENCE); break;
 						default:
 							if (dgen & SK_BIT) 
 								spec_size = BITOFF(dgen & SK_DTYPE);
@@ -1713,9 +1719,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 						case SK_DOUBLE: spec_size = sizeof (EIF_DOUBLE); break;
 						case SK_POINTER: spec_size = sizeof (EIF_POINTER); break;
 						case SK_DTYPE:
-						case SK_REF:
-							spec_size = sizeof (EIF_OBJECT);
-							break;
+						case SK_REF: spec_size = sizeof (EIF_REFERENCE); break;
 						default:
 							if (dgen & SK_BIT) 
 								spec_size = BITOFF(dgen & SK_DTYPE);
@@ -2435,7 +2439,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			temp_buf = next_item (temp_buf);
 
 		if (nb_gen > 0) {
-			struct gt_info *info;
+			struct cecil_info *info;
 			int32 *t;
 			int matched;
 			int j, index;
@@ -2451,14 +2455,15 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 				itype = sitype;
 			}
 
-
-			/* Generic class */
-			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			if (info == (struct gt_info *) 0)
+				/* Generic class */
+			info = cecil_info (NULL, vis_name);
+			if (info == NULL) {
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
+			}
 
-			if (info->gt_param != nb_gen)
+			if (info->nb_param != nb_gen) {
 				eraise(vis_name, EN_RETR);	/* No good generic count */
+			}
 
 			for (j=0; j<nb_gen; j++) {		/* Read meta-types */
 				if (sscanf(temp_buf," %ld", &gtype[j]) != 1)
@@ -2467,7 +2472,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 					
 			}
 
-			for (t = info->gt_gen; /* empty */; /* empty */) {
+			for (t = info->patterns; /* empty */; /* empty */) {
 
 				if (*t == SK_INVALID)		/* Cannot find good meta-type */
 					eraise(vis_name, EN_RETR);
@@ -2486,20 +2491,21 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 					break;			/* End of loop processing */
 				}
 			}
-			index = (int) ((t - info->gt_gen) / nb_gen);
-			new_dtype = info->gt_type[index] & SK_DTYPE;
+			index = (int) ((t - info->patterns) / nb_gen);
+			new_dtype = info->dynamic_types[index];
 			if (nb_gen > MAX_GENERICS) {
 				eif_rt_xfree ((char *) gtype);
 				eif_rt_xfree ((char *) itype);
 			}
 		} else {
-			int32 *addr;
+			struct cecil_info *info;
 
-			/* Non generic class */
-			addr = (int32 *) ct_value(&egc_ce_type, vis_name);
-			if (addr == (int32 *) 0)
+				/* Non generic class */
+			info = cecil_info (NULL, vis_name);
+			if (info == NULL) {
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
-			new_dtype = *addr & SK_DTYPE;
+			}
+			new_dtype = info->dynamic_types[0];
 		}
 		if (EIF_Size(new_dtype) != size) {
 			eraise(vis_name, EN_RETR);		/* No good size */
@@ -2584,7 +2590,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 			temp_buf = next_item (temp_buf);
 
 		if (nb_gen > 0) {
-			struct gt_info *info;
+			struct cecil_info *info;
 			int32 *t;
 			int matched;
 			int j, index;
@@ -2600,13 +2606,14 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 				itype = sitype;
 			}
 
-			/* Generic class */
-			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			if (info == (struct gt_info *) 0)
+			info = cecil_info (NULL, vis_name);
+			if (info == NULL) {
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
+			}
 
-			if (info->gt_param != nb_gen)
+			if (info->nb_param != nb_gen) {
 				eraise(vis_name, EN_RETR);	/* No good generic count */
+			}
 
 			for (j=0; j<nb_gen; j++) {		/* Read meta-types */
 				if (sscanf(temp_buf," %ld", &gtype[j]) != 1)
@@ -2615,7 +2622,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 					
 			}
 
-			for (t = info->gt_gen; /* empty */; /* empty */) {
+			for (t = info->patterns; /* empty */; /* empty */) {
 
 				if (*t == SK_INVALID)		/* Cannot find good meta-type */
 					eraise(vis_name, EN_RETR);
@@ -2634,20 +2641,21 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 					break;						/* End of loop processing */
 				}
 			}
-			index = (int) ((t - info->gt_gen) / nb_gen);
-			new_dtype = info->gt_type[index] & SK_DTYPE;
+			index = (int) ((t - info->patterns) / nb_gen);
+			new_dtype = info->dynamic_types[index];
 			if (nb_gen > MAX_GENERICS) {
 				eif_rt_xfree ((char *) gtype);
 				eif_rt_xfree ((char *) itype);
 			}
 		} else {
-			int32 *addr;
+			struct cecil_info *info;
 
-			/* Non generic class */
-			addr = (int32 *) ct_value(&egc_ce_type, vis_name);
-			if (addr == (int32 *) 0)
+				/* Non generic class */
+			info = cecil_info (NULL, vis_name);
+			if (info == NULL) {
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
-			new_dtype = *addr & SK_DTYPE;
+			}
+			new_dtype = info->dynamic_types[0];
 		}
 
 								/* retrieve the number of attributes
@@ -2850,7 +2858,7 @@ rt_shared char *generic_name (int32 gtype, int old_types)
 {
 	static char buffer[512 + 9];
 	char *result;
-	if (gtype == SK_DTYPE)
+	if (gtype == SK_DTYPE)	/* To be kept for handling old storables which were using SK_DTYPE. */
 		result = "REFERENCE";
 	else switch (gtype & SK_HEAD) {
 		case SK_EXP:
@@ -2895,23 +2903,26 @@ rt_shared void print_old_generic_names (int32 *gtypes, int count)
 	}
 }
 
-rt_shared void print_generic_names (struct gt_info *info, int type)
+rt_shared void print_generic_names (struct cecil_info *info, int type)
 {
-	int i;
-	printf ("[");
-	for (i=0; (unsigned int) info->gt_type[i] != SK_INVALID; ++i)
-		if (info->gt_type[i] == type)
-			break;
+	int i, j, found = 0;
+	int32 *patterns;
 
-	if ((unsigned int) info->gt_type[i] == SK_INVALID)
-		printf ("UNKNOWN_GENERIC_TYPE");
-	else {
-		int32 *gt_gen = info->gt_gen + i * info->gt_param;
-		int j;
-		for (j=0; j<info->gt_param; ++j)
-			printf ("%s%s", j > 0 ? ", " : "", generic_name (gt_gen[j], 0));
+	for (i = 0; i < info->nb_param ; ++i) {
+		if (info->dynamic_types[i] == type) {
+			found = 1;
+			printf ("[");
+			*patterns = info->patterns + i * info->nb_param;
+			for (j = 0; j < info->nb_param; ++j) {
+				printf ("%s%s", j > 0 ? ", " : "", generic_name (patterns[j], 0));
+			}
+			printf ("]");
+		}
 	}
-	printf ("]");
+
+	if (found == 0) {
+		printf ("[UNKNOWN_GENERIC_TYPE]");
+	}
 }
 
 rt_shared void print_object_summary (
@@ -3217,11 +3228,11 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		 * in storing system */
 		if (nb_gen == 0) {
 			/* Non generic class */
-			int32 *addr = (int32 *) ct_value (&egc_ce_type, vis_name);
-			if (addr == NULL)
+			struct cecil_info *info = cecil_info (conv, vis_name);
+			if (info == NULL)
 				new_dtype = -1;		/* Cannot find class name */
 			else
-				new_dtype = *addr & SK_DTYPE;
+				new_dtype = info->dynamic_types[0];
 #ifdef RECOVERABLE_DEBUG
 			if (new_dtype == -1)
 				printf ("Type %d {%s} not in system ***\n", dtype, vis_name);
@@ -3232,7 +3243,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		}
 		else {
 			/* Generic class */
-			struct gt_info *info;
+			struct cecil_info *info;
 			int j;
 
 			/* Read meta-types */
@@ -3244,25 +3255,30 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 				long gtype;
 				if (sscanf (temp_buf," %ld", &gtype) != 1)
 					eise_io ("Independent retrieve: unable to read generic information.");
-				conv->generics[j] = gtype;
+				CHECK ("old storable version", rt_kind_version < INDEPENDENT_STORE_5_5);
+				if (gtype == SK_DTYPE) {
+						/* Before we use to store SK_DTYPE, now we store SK_REF for
+						 * references. */
+					conv->generics[j] = SK_REF;
+				} else {
+					conv->generics[j] = gtype;
+				}
 				temp_buf = next_item (temp_buf);
 			}
 
-			info = (struct gt_info *) ct_value (&egc_ce_gtype, vis_name);
+			info = cecil_info (conv, vis_name);
 			if (info == NULL) {
 				new_dtype = -1;		/* Cannot find generic class name */
 #ifdef RECOVERABLE_DEBUG
 				printf ("Type %d {%s} not in system ***\n", dtype, vis_name);
 #endif
-			}
-			else if (info->gt_param != nb_gen) {
+			} else if (info->nb_param != nb_gen) {
 				new_dtype = -1;		/* Generic parameter count does not match */
 #ifdef RECOVERABLE_DEBUG
 				printf ("Type %d {%s} has different generic parameter count ***\n",
 						dtype, vis_name);
 #endif
-			}
-			else {
+			} else {
 				int32 *gtypes = conv->generics;
 				int32 *t;
 				int matched;
@@ -3273,28 +3289,23 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 				print_old_generic_names ((int32 *) gtypes, nb_gen);
 				printf ("}\n");
 #endif
-				for (t = info->gt_gen; ; ) {
+				for (t = info->patterns; ; ) {
 					if ((unsigned int) *t == SK_INVALID) /* Cannot find good meta-type */
 						eraise (vis_name, EN_RETR);
 					matched = 1;					/* Assume a perfect match */
 #ifdef RECOVERABLE_DEBUG
 					printf ("        ? %d {%s ",
-							info->gt_type[(t-info->gt_gen)/nb_gen] & SK_DTYPE, vis_name);
-					print_generic_names (info, (t-info->gt_gen)/nb_gen);
+							info->dynamic_types[(t-info->patterns)/nb_gen], vis_name);
+					print_generic_names (info, (t-info->patterns)/nb_gen);
 					printf ("}");
 #endif
 					for (j=0; j<nb_gen; j++) {
 						int32 gt = gtypes[j];
 						int32 itype = *t++;
-						if (itype != gt)	{ /* Matching done on the fly */
-							/* If both types are not expandeds, then no match */
-							if (!((itype & SK_EXP) && (gt & SK_EXP)))
-								matched = 0;
-							/* If dynamic type of expandeds are not equivalent,
-							 * then no match */
-							else if (type_description (gt & SK_DTYPE)->new_type !=
-										(itype & SK_DTYPE))
-								matched = 0;
+						if (((itype & SK_HEAD) == SK_EXP) && ((gt & SK_HEAD) == SK_EXP)) {
+							matched = (type_description (gt & SK_DTYPE)->new_type != (itype & SK_DTYPE));
+						} else {
+							matched = (gt == itype);
 						}
 					}
 					if (matched) {					/* We found the type */
@@ -3308,8 +3319,8 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 					printf ("\n");
 #endif
 				}
-				index = (int) ((t - info->gt_gen) / nb_gen);
-				new_dtype = info->gt_type[index] & SK_DTYPE;
+				index = (int) ((t - info->patterns) / nb_gen);
+				new_dtype = info->dynamic_types[index];
 			}
 		}
 
@@ -3399,12 +3410,12 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	expop (&eif_stack);
 }
 
-rt_private int16 map_generics (struct gt_info *info, int16 count, int32 *generics)
+rt_private int16 map_generics (struct cecil_info *info, int16 count, int32 *generics)
 {
 	int16 result = TYPE_NOT_PRESENT;
 	int i;
-	/* For each tuple of generic parameters in the list... */
-	for (i=0; (unsigned int) info->gt_gen[i] != SK_INVALID; i+=count) {
+	/* For each set of generic parameters in the list... */
+	for (i=0; (unsigned int) info->patterns[i] != SK_INVALID; i+=count) {
 		int matched = 1;
 		int k;
 		for (k=0; k<count && matched; k++) {
@@ -3412,10 +3423,8 @@ rt_private int16 map_generics (struct gt_info *info, int16 count, int32 *generic
 			 * tuple value of the candidate type.
 			 */
 			int32 otype = generics[k];
-			int32 ntype = info->gt_gen[i+k];
-			if ((ntype & SK_EXP) == 0  && (otype & SK_EXP) == 0)
-				matched = (ntype == otype);
-			else if ((ntype & SK_EXP) && (otype & SK_EXP)) {
+			int32 ntype = info->patterns[i+k];
+			if (((ntype & SK_HEAD) == SK_EXP) && ((otype & SK_HEAD) == SK_EXP)) {
 				type_descriptor *t = NULL;
 				if (type_defined ((int16) (otype & SK_DTYPE)))
 					t = type_description (otype & SK_DTYPE);
@@ -3425,13 +3434,13 @@ rt_private int16 map_generics (struct gt_info *info, int16 count, int32 *generic
 					matched = 0;
 					result = TYPE_UNRESOLVED_GENERIC;
 				}
+			} else {
+				matched = (ntype == otype);
 			}
-			else
-				matched = 0;
 		}
 		if (matched) {					/* We found the type */
 			int type_index = i / count;
-			result = info->gt_type[type_index] & SK_DTYPE;
+			result = info->dynamic_types[type_index];
 			break;
 		}
 	}
@@ -3448,15 +3457,22 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 	RT_GET_CONTEXT
 	int result = 0;
 	char *name = class_translation_lookup (conv->name);
-	struct gt_info *ginfo = (struct gt_info *) ct_value (&egc_ce_gtype, name);
-	if (ginfo != NULL && ginfo->gt_param == conv->generic_count) {
-		/* Generic class in storing and retrieving systems */
-		int16 orig_value = conv->new_type;
-		conv->new_type = map_generics (ginfo, conv->generic_count, conv->generics);
-		if (conv->new_type != orig_value)
+	struct cecil_info *ginfo = cecil_info (conv, name); 
+	if (ginfo != NULL && ginfo->nb_param == conv->generic_count) {
+		if (ginfo->nb_param > 0) {
+			/* Generic class in storing and retrieving systems */
+			int16 orig_value = conv->new_type;
+			conv->new_type = map_generics (ginfo, conv->generic_count, conv->generics);
+			if (conv->new_type != orig_value) {
+				result = 1;
+			}
+			if (conv->new_type == TYPE_UNRESOLVED_GENERIC) {
+				(*unresolved)++;
+			}
+		} else {
+			conv->new_type = ginfo->dynamic_types[0];
 			result = 1;
-		if (conv->new_type == TYPE_UNRESOLVED_GENERIC)
-			(*unresolved)++;
+		}
 	}
 	else if (ginfo == NULL) {
 		if (strchr (name, '[') != NULL) {
@@ -3469,17 +3485,7 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 			}
 			result = 1;
 		}
-		else {
-			/* Non-generic class in storing and retrieving systems */
-			int32 *addr = (int32 *) ct_value (&egc_ce_type, name);
-			if (addr == NULL)
-				conv->new_type = TYPE_NOT_PRESENT;
-			else
-				conv->new_type = *addr & SK_DTYPE;
-			result = 1;
-		}
-	}
-	else {
+	} else {
 		conv->new_type = TYPE_NOT_PRESENT;
 		result = 1;
 	}
@@ -3497,7 +3503,7 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 			printf (" -> NOT IN SYSTEM");
 		else if (conv->new_type >= 0) {
 			printf (" -> %d %s", (int) conv->new_type, eif_typename (conv->new_type));
-			if (ginfo != NULL && ginfo->gt_param > 0) {
+			if (ginfo != NULL && ginfo->nb_param > 0) {
 				printf (" ");
 				print_generic_names (ginfo, conv->new_type);
 			}
@@ -3645,6 +3651,7 @@ rt_private void rread_type (int type_index)
 	int16 nb_gen;
 	int16 num_attrib;
 	int16 name_length;
+	int32 flags;
 	int16 dtype;
 
 	ridr_multi_int16 (&name_length, 1);
@@ -3653,6 +3660,15 @@ rt_private void rread_type (int type_index)
 		xraise (EN_MEM);
 	ridr_multi_char ((EIF_CHARACTER *) vis_name, name_length);
 	vis_name[name_length] = '\0';
+	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
+		ridr_multi_int32 (&flags, 1);
+	} else {
+			/* Old storable did not save this information, we default to `0', meaning
+			 * that all retrieved types will be looked up first in the reference
+			 * tables, and if not found in the expanded one.
+			 */
+		flags = 0;
+	}
 	ridr_multi_int16 (&dtype, 1);
 	ridr_multi_int16 (&nb_gen, 1);
 
@@ -3660,6 +3676,7 @@ rt_private void rread_type (int type_index)
 	conv = type_conversions->descriptions + type_index;
 	CHECK ("Not yet defined", conv->new_type == TYPE_UNDEFINED);
 	conv->name = vis_name;
+	conv->flags = flags;
 	conv->old_type = dtype;
 
 	/* Determine dynamic type in current system corresponding to type
@@ -3670,6 +3687,15 @@ rt_private void rread_type (int type_index)
 			xraise (EN_MEM);
 		conv->generic_count = nb_gen;
 		ridr_multi_int32 (conv->generics, nb_gen);
+		if (rt_kind_version < INDEPENDENT_STORE_5_5) {
+				/* Convert SK_DTYPE usage by SK_REF */
+			int i;
+			for (i = 0; i < nb_gen; i++) {
+				if (conv->generics [i] == SK_DTYPE) {
+					conv->generics [i] = SK_REF;
+				}
+			}
+		}
 	}
 	ridr_multi_int16 (&num_attrib, 1);
 	conv->attribute_count = num_attrib;
@@ -4588,48 +4614,44 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 		 * to avoid offset computation from Eiffel code */
 	l_item++;
 	count--;
-	for (; count > 0; count--, l_item++) {
-		ridr_multi_char(&l_type, 1);
-			/* Because the EIF_XXX and the OLD_EIF_XXX sets are disjoint, there is no
-			 * need for an explicit test to `rt_kind_version'. The OLD_EIF_XXX are used
-			 * when retrieving storable versions that are strictly less than INDEPENDENT_STORE_5_5. */
-		CHECK("Same type", (rt_kind_version >= INDEPENDENT_STORE_5_5) ^ (l_type == eif_tuple_item_type(l_item)));
-		switch (l_type) {
-			case EIF_REFERENCE_CODE:
-			case OLD_EIF_REFERENCE_CODE:
-				ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
-			case EIF_BOOLEAN_CODE:
-			case OLD_EIF_BOOLEAN_CODE:
-				ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
-			case EIF_CHARACTER_CODE:
-			case OLD_EIF_CHARACTER_CODE:
-				ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
-			case EIF_DOUBLE_CODE:
-			case OLD_EIF_DOUBLE_CODE:
-				ridr_multi_double (&eif_double_tuple_item(l_item), 1); break;
-			case EIF_REAL_CODE:
-			case OLD_EIF_REAL_CODE:
-				ridr_multi_float (&eif_real_tuple_item(l_item), 1); break;
-			case EIF_INTEGER_8_CODE:
-			case OLD_EIF_INTEGER_8_CODE:
-				ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
-			case EIF_INTEGER_16_CODE:
-			case OLD_EIF_INTEGER_16_CODE:
-				ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
-			case EIF_INTEGER_32_CODE:
-			case OLD_EIF_INTEGER_32_CODE:
-				ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
-			case EIF_INTEGER_64_CODE:
-			case OLD_EIF_INTEGER_64_CODE:
-				ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
-			case EIF_POINTER_CODE:
-			case OLD_EIF_POINTER_CODE:
-				ridr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
-			case EIF_WIDE_CHAR_CODE:
-			case OLD_EIF_WIDE_CHAR_CODE:
-				ridr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
-			default:
-				eise_io ("Recoverable retrieve: unsupported tuple element type.");
+	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
+		for (; count > 0; count--, l_item++) {
+			ridr_multi_char(&l_type, 1);
+			CHECK("Same type", l_type == eif_tuple_item_type(l_item));
+			switch (l_type) {
+				case EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
+				case EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
+				case EIF_CHARACTER_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
+				case EIF_DOUBLE_CODE: ridr_multi_double (&eif_double_tuple_item(l_item), 1); break;
+				case EIF_REAL_CODE: ridr_multi_float (&eif_real_tuple_item(l_item), 1); break;
+				case EIF_INTEGER_8_CODE: ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
+				case EIF_INTEGER_16_CODE: ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
+				case EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
+				case EIF_INTEGER_64_CODE: ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
+				case EIF_POINTER_CODE: ridr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
+				case EIF_WIDE_CHAR_CODE: ridr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
+				default:
+					eise_io ("Recoverable retrieve: unsupported tuple element type.");
+			}
+		}
+	} else {
+		for (; count > 0; count--, l_item++) {
+			ridr_multi_char(&l_type, 1);
+			switch (l_type) {
+				case OLD_EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
+				case OLD_EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
+				case OLD_EIF_CHARACTER_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
+				case OLD_EIF_DOUBLE_CODE: ridr_multi_double (&eif_double_tuple_item(l_item), 1); break;
+				case OLD_EIF_REAL_CODE: ridr_multi_float (&eif_real_tuple_item(l_item), 1); break;
+				case OLD_EIF_INTEGER_8_CODE: ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
+				case OLD_EIF_INTEGER_16_CODE: ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
+				case OLD_EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
+				case OLD_EIF_INTEGER_64_CODE: ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
+				case OLD_EIF_POINTER_CODE: ridr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
+				case OLD_EIF_WIDE_CHAR_CODE: ridr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
+				default:
+					eise_io ("Recoverable retrieve: unsupported tuple element type.");
+			}
 		}
 	}
 
@@ -4654,6 +4676,41 @@ rt_private int stream_read(char *pointer, int size)
 	memcpy (pointer, (stream_buffer + stream_buffer_position), size);
 	stream_buffer_position += size;
 	return size;
+}
+
+/*
+doc:	<routine name="cecil_info" export="private">
+doc:		<summary>Find CECIL information about a given class. If we are retrieving a storable version greater than INDEPENDENT_STORE_5_5, then a type descriptor was provided and we search on either the reference or expanded tables of CECIL depending on the value of the type descriptor. Otherwise no type descriptor is provided and we use an heuristic which first search for the reference version, and then for the expanded version.</summary>
+doc:		<param name="conv" type="type_descriptor *">Type descriptor for the class we are looking for.</param>
+doc:		<param name="name" type="char *">Name of the class we are looking for.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>GC mutex</synchronization>
+doc:	</routine>
+*/
+
+rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
+{
+	RT_GET_CONTEXT
+	struct cecil_info * result;
+
+	REQUIRE("valid_conv", (rt_kind_version < INDEPENDENT_STORE_5_5) || (conv != NULL));
+
+	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
+		if (conv->flags & EIF_IS_EXPANDED_FLAG) {
+			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
+		} else {
+			result = (struct cecil_info *) ct_value (&egc_ce_type, name);
+		}
+	} else {
+			/* Heuristic for old storable. We search for a reference type, and if
+			 * not found, for an expanded one. */
+		result = (struct cecil_info *) ct_value (&egc_ce_type, name);
+		if (result == NULL) {
+			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
+		}
+	}
+
+	return result;
 }
 
 rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)

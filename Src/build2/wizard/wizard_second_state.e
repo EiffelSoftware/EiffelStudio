@@ -31,16 +31,17 @@ feature -- Basic Operation
 			-- Build entries.
 		do
 			if project_settings.complete_project then
-				create project_name.make (Current)
-				project_name.set_label_string_and_size ("Project name", 50)
+					-- Not currently needed, but may be needed when different options specified.
+				--create project_name.make (Current)
+				--project_name.set_label_string_and_size ("Project name", 50)
 				create application_class_name.make (Current)
 				application_class_name.set_label_string_and_size ("Application class name", 50)
-				project_name.set_text (project_settings.project_name)
+			--	project_name.set_text (project_settings.project_name)
 				application_class_name.set_text (project_settings.application_class_name)
-				project_name.generate
+			--	project_name.generate
 				application_class_name.generate
 				
-				choice_box.extend (project_name.widget)
+			--	choice_box.extend (project_name.widget)
 				choice_box.extend (application_class_name.widget)
 			end
 			create window_class_name.make (Current)
@@ -84,15 +85,15 @@ feature -- Basic Operation
 				-- If we are the project wizard, we need to check all three entries,
 				-- otherwise, we only validate the class name
 			if project_settings.complete_project then
-				project_name_lower := project_name.text.as_lower
+				--project_name_lower := project_name.text.as_lower
 				application_name_lower := application_class_name.text.as_lower
 					-- Check for valid names/and or reserved words used.
 				if not valid_class_name (application_name_lower) or
 					not valid_class_name (class_name_lower) or
-					not valid_class_name (project_name_lower) or
+					--not valid_class_name (project_name_lower) or
 					reserved_words.has (application_name_lower) or
-					reserved_words.has (class_name_lower) or
-					reserved_words.has (project_name_lower) then
+					reserved_words.has (class_name_lower) then 
+					--reserved_words.has (project_name_lower) then
 					
 					validate_successful := False
 				end
@@ -116,7 +117,8 @@ feature -- Basic Operation
 			Entries_checked := True
 				-- If we are just creating a class, we do not care about these classes.
 			if project_settings.complete_project then
-				project_settings.set_project_name (project_name.text)
+					-- Not currently needed, but may be needed when different options specified.				
+				--project_settings.set_project_name (project_name.text)
 				project_settings.set_application_class_name (application_class_name.text)
 			end
 			project_settings.set_main_window_class_name (window_class_name.text)

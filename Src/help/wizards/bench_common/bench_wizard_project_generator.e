@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 		do
 				-- Add the project name.
 			project_name := wizard_information.project_name
-			create tuple.make
+			create tuple
 			tuple.put ("<FL_PROJECT_NAME>", 1)
 			tuple.put (project_name, 2)
 			map_list.extend (tuple)
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 				-- Add the project name (in uppercase)
 			project_name_uppercase := clone (project_name)
 			project_name_uppercase.to_upper
-			create tuple.make
+			create tuple
 			tuple.put ("<FL_PROJECT_NAME_UPPERCASE>", 1)
 			tuple.put (project_name_uppercase, 2)
 			map_list.extend (tuple)
@@ -127,14 +127,14 @@ feature {NONE} -- Implementation
 			map_list.extend (tuple)
 
 				-- Add the project location
-			create tuple.make
+			create tuple
 			tuple.put ("<FL_LOCATION>", 1)
 			tuple.put (wizard_information.project_location, 2)
 			map_list.extend (tuple)
 
 				-- Add the date for indexing clause.
 			create current_time.make_by_current_time
-			create tuple.make
+			create tuple
 			tuple.put ("<FL_DATE>", 1)
 			tuple.put (
 				"$Date: "+current_time.year.out+"/"+current_time.month.out+"/"+current_time.day.out+" "+

@@ -259,7 +259,7 @@ feature {NONE} -- Tools
 
 					if not sys_name.is_empty then
 						create it			
-						create info_lib.make
+						create info_lib
 						info_lib.put (path_name, 1)
 
 						if has__case_insensitive_comparison (list_of_file, "EIFGEN") and

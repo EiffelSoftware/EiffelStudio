@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 	realize_current is
 			-- Realize current widget.
 		do
+			associated_root ?= parent
 			realized := True
 		end
 
@@ -136,15 +137,13 @@ feature -- Status setting
 		local
 			c: ARRAYED_LIST [WIDGET_WINDOWS]
 		do
-			associated_root := root
-			!! id_children.make (5)
 			c := children_list
 			from
 				c.finish
 			until
 				c.off
 			loop
-				put_child_in_menu (c.item, root)
+				add_a_child (c.item)
 				c.back
 			end
 		end
@@ -164,9 +163,9 @@ feature -- Status setting
 				associated_root.add (button)
 				if button.managed then
 					append_string (button.text, associated_root.value)
+					button.set_hash_code
+					id_children.put (associated_root.value, button)
 				end
-				button.set_hash_code
-				id_children.put (associated_root.value, button)
 				toggle_b ?= widget
 				if toggle_b /= Void and then toggle_b.managed then
 					if toggle_b.state then
@@ -196,7 +195,7 @@ feature -- Status setting
 			end
 		end
 
-	put_child_in_menu (widget: WIDGET_WINDOWS; root: ROOT_MENU_WINDOWS) is
+	xxput_child_in_menu (widget: WIDGET_WINDOWS; root: ROOT_MENU_WINDOWS) is
 			-- Add `widget' to the menu
 		require
 			widget_exists: widget /= Void
@@ -277,7 +276,7 @@ feature -- Element change
 					check
 						parent_not_void: mp /= Void
 					end
-					mp.manage_separator (s)
+					-- ++ -- mp.manage_separator (s) -- ++ -- XXX To be Implemented
 				else
 					mp ?= w
 					if mp /= Void then
@@ -412,8 +411,13 @@ feature {NONE} -- Implementation
 			Result_exists: Result /= Void
 		end
 
-	id_children: HASH_TABLE [INTEGER, WIDGET_WINDOWS]
+	id_children: HASH_TABLE [INTEGER, WIDGET_WINDOWS] is
 			-- id in menu for a child
+		once
+			!! Result.make (5)
+		ensure
+			result_not_void: Result /= Void
+		end
 
 	id_of_child (w: WIDGET_WINDOWS): INTEGER is
 			-- id of child `w'

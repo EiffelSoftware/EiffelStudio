@@ -30,7 +30,7 @@ feature -- Access
 	Common_c_compiler_options: STRING is 
 			-- C compiler options
 		once
-			Result := "/MT /W0 /GD /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /YX /c /I..\include /I..\..\common\include /I"
+			Result := "/ML /W0 /GD /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /YX /c /I..\include /I..\..\common\include /I"
 			Result.append (get (Eiffel4))
 			Result.append ("\bench\spec\windows\include /I")
 			Result.append (get (Eiffel4))

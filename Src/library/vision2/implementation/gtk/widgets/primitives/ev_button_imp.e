@@ -22,7 +22,8 @@ inherit
 			make,
 			pointer_over_widget,
 			set_foreground_color,
-			foreground_color_pointer
+			foreground_color_pointer,
+			on_focus_changed
 		end
  
 	EV_PIXMAPABLE_IMP
@@ -71,6 +72,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
+		local
+			dummy_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			C.gtk_container_set_border_width (c_object, 0)
@@ -80,6 +83,7 @@ feature {NONE} -- Initialization
 			initialize_button_box
 			is_initialized := True
 			align_text_center
+			dummy_focus_in_actions := focus_in_actions
 		end
 
 	initialize_button_box is
@@ -235,6 +239,25 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		end
 	
 feature {NONE} -- implementation
+
+	on_focus_changed (a_has_focus: BOOLEAN) is
+			-- Called from focus intermediary agents when focus for `Current' has changed.
+			-- if `a_has_focus' then `Current' has just received focus.
+		local
+			top_level_dialog_imp: EV_DIALOG_IMP
+		do
+			Precursor {EV_PRIMITIVE_IMP} (a_has_focus)
+			top_level_dialog_imp ?= top_level_window_imp
+			if
+				top_level_dialog_imp /= Void
+			then
+				if a_has_focus then
+					top_level_dialog_imp.set_current_push_button (interface)
+				elseif top_level_dialog_imp.default_push_button = interface  then
+					top_level_dialog_imp.set_current_push_button (Void)
+				end
+			end
+		end
 
 	foreground_color_pointer: POINTER is
 		do

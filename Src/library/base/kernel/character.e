@@ -36,45 +36,45 @@ feature -- Comparison
 feature -- Conversion
 
 	upper: CHARACTER is
-			-- Uppercase value of `Current'
-			-- Returns `Current' if not `is_lower'
+			-- Uppercase value of `item'
+			-- Returns `item' if not `is_lower'
 		do
-			Result := chupper (Current)
+			Result := chupper (item)
 		end;
 
 	lower: CHARACTER is
-			-- Lowercase value of `Current'
-			-- Returns `Current' if not `is_upper'
+			-- Lowercase value of `item'
+			-- Returns `item' if not `is_upper'
 		do
-			Result := chlower (Current)
+			Result := chlower (item)
 		end;
 
 feature -- Status report
 
 	is_lower: BOOLEAN is
-			-- Is `Current' lowercase?
+			-- Is `item' lowercase?
 		do
-			Result := chis_lower (Current)
+			Result := chis_lower (item)
 		end;
 
 	is_upper: BOOLEAN is
-			-- Is `Current' uppercase?
+			-- Is `item' uppercase?
 		do
-			Result := chis_upper (Current)
+			Result := chis_upper (item)
 		end;
 
 	is_digit: BOOLEAN is
-			-- Is `Current' a digit?
+			-- Is `item' a digit?
 			-- A digit is one of 0123456789
 		do
-			Result := chis_digit (Current)
+			Result := chis_digit (item)
 		end;
 
 	is_alpha: BOOLEAN is
-			-- Is `Current' alphabetic?
+			-- Is `item' alphabetic?
 			-- Alphabetic is `is_upper' or `is_lower'
 		do
-			Result := chis_alpha (Current)
+			Result := chis_alpha (item)
 		end;
 
 end -- class CHARACTER

@@ -8,10 +8,7 @@ class STRING_AS_B
 
 inherit
 
-	STRING_AS
-		redefine
-			infix "<"
-		end;
+	STRING_AS;
 
 	ATOMIC_AS_B
 		redefine
@@ -45,13 +42,6 @@ feature -- Type check and byte code
 		do
 			!!Result;
 			Result.set_value (value);
-		end;
-
-feature -- formatter
-
-	infix "<" (other: like Current): BOOLEAN is
-		do
-			Result := value_i.str_val < other.value_i.str_val 
 		end;
 
 end -- class STRING_AS_B

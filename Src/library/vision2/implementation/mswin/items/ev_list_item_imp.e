@@ -114,7 +114,7 @@ feature {EV_ANY_I} -- Access
 		end
 
 	index: INTEGER is
-			-- Index of the current item.
+			-- One-based Index of the current item.
 		do
 			Result := parent_imp.internal_get_index (Current)
 		end
@@ -151,7 +151,7 @@ feature {EV_LIST_IMP} -- Implementation.
 		local
 			wel_point: WEL_POINT
 		do
-			Result := parent_imp.get_item_position (index).y
+			Result := parent_imp.get_item_position (index - 1).y
 		end
 
 	is_displayed: BOOLEAN is
@@ -162,7 +162,7 @@ feature {EV_LIST_IMP} -- Implementation.
 			last_index: INTEGER	-- last displayed index
 		do
 			if parent_imp /= Void then
-				local_index := index
+				local_index := index - 1
 				first_index := parent_imp.top_index
 				last_index := first_index + parent_imp.visible_count
 
@@ -224,6 +224,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/04/19 01:28:05  pichery
+--| Fixed bugs...
+--|
 --| Revision 1.47  2000/04/18 21:19:47  pichery
 --| Changed the implementation of EV_LIST_IMP. It now
 --| inherit from WEL_LIST_VIEW instead of WEL_LIST_BOX.

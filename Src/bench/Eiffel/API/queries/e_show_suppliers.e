@@ -21,23 +21,23 @@ feature -- Output
 	execute is
 			-- Execute Current command.
 		local
-			suppliers: SUPPLIER_LIST;
-			a_supplier: E_CLASS;
+			suppliers: SORTED_TWO_WAY_LIST [CLASS_I];
+			a_supplier: E_CLASS
 		do
 			structured_text.add_string ("Suppliers of class ");
 			current_class.append_signature (structured_text);
 			structured_text.add_string (":%N%N");
 			from	
-				suppliers := current_class.suppliers;
-				suppliers.start;
+				suppliers := sorted_list (current_class.suppliers.e_classes);
+				suppliers.start
 			until
 				suppliers.after
 			loop
-				a_supplier := suppliers.item.supplier;
+				a_supplier := suppliers.item.compiled_eclass;
 				if (current_class /= a_supplier) then
 					structured_text.add_char ('%T');
 					a_supplier.append_signature (structured_text);
-					structured_text.add_new_line;
+					structured_text.add_new_line
 				end;
 				suppliers.forth
 			end

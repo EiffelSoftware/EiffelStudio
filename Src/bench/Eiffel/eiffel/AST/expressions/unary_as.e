@@ -75,7 +75,6 @@ feature -- Type check, byte code and dead code removal
 			last_class: CLASS_C
 			depend_unit: DEPEND_UNIT
 			vwoe: VWOE
-			vhne: VHNE
 			vuex: VUEX
 			vape: VAPE
 		do
@@ -84,9 +83,9 @@ feature -- Type check, byte code and dead code removal
 			
 			last_constrained := context.last_constrained_type
 			if last_constrained.is_none then
-				!!vhne
-				context.init_error (vhne)
-				Error_handler.insert_error (vhne)
+				create vuex.make_for_none (prefix_feature_name)
+				context.init_error (vuex)
+				Error_handler.insert_error (vuex)
 					-- Cannot go on here
 				Error_handler.raise_error
 			end

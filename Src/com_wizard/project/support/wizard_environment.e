@@ -101,6 +101,9 @@ feature -- Access
 	backup: BOOLEAN
 			-- Should wizard backup existing files?
 
+	cleanup: BOOLEAN
+			-- Should destination folder be cleaned up prior to generation?
+
 	error_message: STRING is
 			-- Error message
 		require
@@ -358,6 +361,14 @@ feature -- Element Change
 			backup := a_boolean
 		ensure
 			backup_set: backup = a_boolean
+		end
+
+	set_cleanup (a_boolean: BOOLEAN) is
+			-- Set `cleanup' with `a_boolean'.
+		do
+			cleanup := a_boolean
+		ensure
+			cleanup_set: cleanup = a_boolean
 		end
 
 feature {NONE} -- Implementation

@@ -95,7 +95,10 @@ feature {NONE}-- Initialization
 			create backup_label
 			create backup_inner_box
 			create backup_padding_cell
-			create backup_check_button
+			create backup_buttons_box
+			create cleanup_radio_button
+			create backup_radio_button
+			create overwrite_radio_button
 			create generation_options_padding_cell
 			create general_options_bottom_box
 			create separator
@@ -172,7 +175,10 @@ feature {NONE}-- Initialization
 			backup_box.extend (backup_label)
 			backup_box.extend (backup_inner_box)
 			backup_inner_box.extend (backup_padding_cell)
-			backup_inner_box.extend (backup_check_button)
+			backup_inner_box.extend (backup_buttons_box)
+			backup_buttons_box.extend (cleanup_radio_button)
+			backup_buttons_box.extend (backup_radio_button)
+			backup_buttons_box.extend (overwrite_radio_button)
 			generation_options_outter_box.extend (generation_options_padding_cell)
 			generation_options_outter_box.extend (general_options_bottom_box)
 			general_options_bottom_box.extend (separator)
@@ -273,15 +279,17 @@ feature {NONE}-- Initialization
 			compile_eiffel_check_button.enable_select
 			compile_eiffel_check_button.set_text ("Do not compile Eiffel code")
 			compile_c_code_check_button.set_text ("Do not compile C code")
+			backup_box.set_padding_width (5)
 			backup_box.disable_item_expand (backup_label)
 			backup_box.disable_item_expand (backup_inner_box)
-			backup_label.set_text ("The EiffelCOM Wizard can backup files it overwrites by adding the extension '.bac'.")
+			backup_label.set_text ("The Wizard can delete all files in the destination folder before generating new files.%NAlternatively, it can backup files it overwrites or just overwrite them with no backup.")
 			backup_label.align_text_left
 			backup_inner_box.disable_item_expand (backup_padding_cell)
-			backup_inner_box.disable_item_expand (backup_check_button)
 			backup_padding_cell.set_minimum_width (10)
-			backup_check_button.enable_select
-			backup_check_button.set_text ("Backup overwritten files")
+			backup_buttons_box.disable_item_expand (backup_radio_button)
+			cleanup_radio_button.set_text ("Clean destination folder prior to generation")
+			backup_radio_button.set_text ("Backup overwritten files by adding the extension '.bac'")
+			overwrite_radio_button.set_text ("Overwrite existing files")
 			general_options_bottom_box.set_padding_width (7)
 			general_options_bottom_box.disable_item_expand (separator)
 			general_options_bottom_box.disable_item_expand (general_options_bottom_buttons_box)
@@ -308,7 +316,9 @@ feature {NONE}-- Initialization
 			out_of_process_radio_button.select_actions.extend (agent on_select_out_of_process)
 			compile_eiffel_check_button.select_actions.extend (agent on_select_compile_eiffel)
 			compile_c_code_check_button.select_actions.extend (agent on_no_c_compilation)
-			backup_check_button.select_actions.extend (agent on_select_backup)
+			cleanup_radio_button.select_actions.extend (agent on_select_cleanup)
+			backup_radio_button.select_actions.extend (agent on_select_backup)
+			overwrite_radio_button.select_actions.extend (agent on_select_overwrite)
 			previous_button.select_actions.extend (agent on_previous)
 			second_generate_button.select_actions.extend (agent on_generate)
 				-- Close the application when an interface close
@@ -325,19 +335,19 @@ feature -- Access
 	notebook: EV_NOTEBOOK
 	destination_folder_box: WIZARD_FOLDER_PATH_BOX
 	compile_eiffel_check_button,
-	compile_c_code_check_button, backup_check_button: EV_CHECK_BUTTON
+	compile_c_code_check_button: EV_CHECK_BUTTON
 	separator: EV_HORIZONTAL_SEPARATOR
 	file_menu, help_menu: EV_MENU
 	com_client_project_radio_button,
 	com_server_project_radio_button, eiffel_project_radio_button, in_process_radio_button,
-	out_of_process_radio_button: EV_RADIO_BUTTON
+	out_of_process_radio_button, cleanup_radio_button, backup_radio_button, overwrite_radio_button: EV_RADIO_BUTTON
 	menu: EV_MENU_BAR
 	com_project_box: WIZARD_COM_PROJECT_BOX
-	settings_box, settings_inner_box,
-	project_type_box, project_type_internal_buttons_box, general_settings_box, settings_bottom_box,
-	generation_options_outter_box, generation_options_inner_box, component_type_outter_box,
-	component_type_box, component_type_vbox, generation_options_box, compilation_box,
-	compile_buttons_box, backup_box, general_options_bottom_box: EV_VERTICAL_BOX
+	settings_box,
+	settings_inner_box, project_type_box, project_type_internal_buttons_box, general_settings_box,
+	settings_bottom_box, generation_options_outter_box, generation_options_inner_box,
+	component_type_outter_box, component_type_box, component_type_vbox, generation_options_box,
+	compilation_box, compile_buttons_box, backup_box, backup_buttons_box, general_options_bottom_box: EV_VERTICAL_BOX
 	project_outter_box,
 	project_type_buttons_box, buttons_box, component_type_hbox, compile_box, backup_inner_box,
 	general_options_bottom_buttons_box: EV_HORIZONTAL_BOX
@@ -432,8 +442,18 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
+	on_select_cleanup is
+			-- Called by `select_actions' of `cleanup_radio_button'.
+		deferred
+		end
+	
 	on_select_backup is
-			-- Called by `select_actions' of `backup_check_button'.
+			-- Called by `select_actions' of `backup_radio_button'.
+		deferred
+		end
+	
+	on_select_overwrite is
+			-- Called by `select_actions' of `overwrite_radio_button'.
 		deferred
 		end
 	

@@ -90,10 +90,10 @@ feature {EV_ITEM_HOLDER_IMP, EV_ITEM_IMP} -- Implementation
 		deferred
 		end
 
-feature {EV_ITEM_HOLDER_IMP} -- Implementation
+feature {EV_ITEM_HOLDER_IMP, EV_LIST_ITEM_IMP} -- Implementation
  
  	ev_children: ARRAYED_LIST [EV_ITEM_IMP] is
- 			-- List of the children
+ 			-- List of the children.
  		deferred
  		end
  

@@ -84,6 +84,60 @@ feature -- Element Change
 
 feature -- Basic Operations
 
+	delete_selection (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+			-- Delete text between `start_selection' until `end_selection'.
+			-- `end_selection' is not included.
+		local
+			s, aux: STRING
+			line: EDITOR_LINE
+			t : EDITOR_TOKEN
+		do
+				-- Retrieving line before `start_selection'.
+			line := start_selection.line
+			t := start_selection.token
+			if t /= line.end_token then
+				from
+					s := t.image.substring (1, start_selection.pos_in_token - 1)
+					t := t.previous
+				until
+					t = Void
+				loop
+					s.prepend (t.image)
+					t := t.previous
+				end
+			else
+				s := line.image
+			end
+				-- Retrieving line after `end_selection'.
+			line := end_selection.line
+			t := end_selection.token
+			if t /= line.end_token then
+				from
+					s.append (t.image.substring (end_selection.pos_in_token, t.image.count))
+					t := t.next
+				until
+					t = line.end_token
+				loop
+					s.append (t.image)
+					t := t.next
+				end
+			end
+				-- Removing unwanted lines.
+			line := start_selection.line
+			if line /= end_selection.line then
+				from
+				until
+					line.next = end_selection.line
+				loop
+					line.next.delete
+				end
+				line.next.delete
+			end
+				-- Rebuild line with previously collected parts.
+			lexer.execute (s)
+			line.make_from_lexer (lexer)
+		end
+
 --	list is
 --		do
 --			chapter.list

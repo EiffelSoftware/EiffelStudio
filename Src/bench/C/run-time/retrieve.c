@@ -115,10 +115,30 @@ int old_retrieve_read_with_compression ();
 int (*retrieve_read_func)() = retrieve_read_with_compression;
 
 /*
+ * Convenience functions
+ */
+ 
+/* Initialize retrieve function pointers and globals */
+ 
+rt_public void rt_init_retrieve(retrieve_function, buf_size)
+int (*retrieve_function)();
+int buf_size;
+{
+    retrieve_read_func = retrieve_function;
+	if (buf_size)
+		buffer_size = buf_size;
+}
+ 
+/* Reset retrieve function pointers and globals to their default values */
+ 
+rt_public void rt_reset_retrieve(){
+    retrieve_read_func = retrieve_read_with_compression;
+}
+ 
+
+/*
  * Function definitions
  */
-
-
 
 rt_public char *eretrieve(file_desc, file_storage_type)
 EIF_INTEGER file_desc;
@@ -155,24 +175,27 @@ EIF_CHARACTER file_storage_type;
 
 	switch (rt_type) {
 		case BASIC_STORE_3_1:			/*old basic store */
-			retrieve_read_func = old_retrieve_read;
+			rt_init_retrieve(old_retrieve_read, 1024);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
 		case BASIC_STORE_3_2:			/* New basic store */
-			retrieve_read_func = retrieve_read;
+			rt_init_retrieve(retrieve_read, 1024);
+			allocate_gen_buffer ();
+			rt_kind = BASIC_STORE;
+			break;
 		case BASIC_STORE_4_0:
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
 		case GENERAL_STORE_3_1:			/* Old general store */
-			retrieve_read_func = old_retrieve_read;
+			rt_init_retrieve(old_retrieve_read, 1024);
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
 			break;
 		case GENERAL_STORE_3_2:			/* New General store */
 		case GENERAL_STORE_3_3:			/* New General store 3.3 */
-			retrieve_read_func = retrieve_read;
+			rt_init_retrieve(retrieve_read, 1024);
 		case GENERAL_STORE_4_0:			/* New General store */
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
@@ -226,7 +249,8 @@ EIF_CHARACTER file_storage_type;
 			free_sorted_attributes();
 			break;
 		case INDEPENDENT_STORE_3_2:
-		case INDEPENDENT_STORE_4_0: {
+		case INDEPENDENT_STORE_4_0:
+			{
 			int i;
 
 			run_idr_destroy ();
@@ -241,7 +265,7 @@ EIF_CHARACTER file_storage_type;
 			break;
 		}
 	}
-	retrieve_read_func = retrieve_read_with_compression;
+	rt_reset_retrieve();
 
 	return retrieved;
 }
@@ -856,7 +880,7 @@ rt_private void rt_clean()
 		}
 	}
 	free_sorted_attributes();
-	retrieve_read_func = retrieve_read;
+	rt_reset_retrieve();
 }
 
 rt_private void rt_update1 (old, new)

@@ -52,6 +52,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+		end
+		
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		end
 	
 create
 	initialize
@@ -98,6 +108,23 @@ feature -- Access
 				object_contained_in_object_result := True
 			end
 		end
+		
+	objects_all_named (some_objects: ARRAYED_LIST [GB_OBJECT]): BOOLEAN is
+			-- Are all GB_OBJECT in `objects' named?
+		do
+			Result := True
+			from
+				some_objects.start
+			until
+				some_objects.off or not Result
+			loop
+				if some_objects.item.name.is_empty then
+					Result := False
+				end
+				some_objects.forth
+			end
+		end
+		
 		
 feature -- Basic operation
 
@@ -811,6 +838,48 @@ feature -- Basic operation
 					end
 					counter := counter + 1
 				end	
+			end
+		end
+		
+	add_default_names (some_objects: ARRAYED_LIST [GB_OBJECT]) is
+			-- For all objects in `some_objects', add a default name, if
+			-- they do not have a name assigned.
+		local
+			names: ARRAYED_LIST [STRING]
+			an_object: GB_OBJECT
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+		do
+				-- We firstly find all names that are used, as we must know all of them
+				-- before we actually start to set them.
+			create names.make (2)
+			from
+				some_objects.start
+			until
+				some_objects.off
+			loop
+				if not some_objects.item.name.is_empty then
+					names.extend (clone (some_objects.item.name))
+				end
+				some_objects.forth
+			end
+				-- Now actually perform the renaming.
+			from
+				some_objects.start
+			until
+				some_objects.off
+			loop
+				an_object := some_objects.item
+				if an_object.name.is_empty then
+					an_object.set_name (unique_name (names, an_object.short_type))
+					an_object.layout_item.set_text (name_and_type_from_object (an_object))
+					titled_window_object ?= an_object
+					if titled_window_object /= Void then
+						titled_window_object.window_selector_item.set_text (name_and_type_from_object (an_object))	
+					end
+						--Add the new name to `names' so that it is not used again.
+					names.extend (an_object.name)
+				end
+				some_objects.forth
 			end
 		end
 

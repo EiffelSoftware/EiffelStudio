@@ -34,6 +34,10 @@ rt_private EIF_MUTEX_TYPE *eif_exception_trace_mutex = (EIF_MUTEX_TYPE *) 0;
 rt_private void eif_show_console(void);					/* Show the DOS console if needed */
 rt_private void safe_readconsole (char **buffer, DWORD *size);	/* Read console entry and remove all nasty characters such as KEY_CR and KEY_LF */
 
+rt_private void readconsole (HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped); /* Call ReadConsole, if no success call ReadFile */
+
+rt_private void writeconsole(HANDLE hConsoleOutput, CONST VOID *lpBuffer, DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPVOID lpOverlapped); /* Call WriteConsole and if it does not succeed call WriteFile */
+
 EIF_INTEGER eif_console_readint()
 {
 	long lastint;
@@ -85,8 +89,7 @@ EIF_CHARACTER eif_console_readchar(void)
 
 	eif_show_console();
 
-	if (!ReadConsole(eif_coninfile, eif_console_buffer, 1, &buffer_length, NULL))
-		eio();
+	readconsole(eif_coninfile, eif_console_buffer, 1, &buffer_length, NULL);
 
 	eif_is_console_clean_for_input = EIF_FALSE;
 	return eif_console_buffer [0];
@@ -108,8 +111,7 @@ long eif_console_readline(char *s,long bound,long start)
 		done = TRUE;
 	}
 	if (c == NULL) {
-		if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-			eio();
+		readconsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL);
 		c = eif_console_buffer;
 	}
 
@@ -150,8 +152,8 @@ long eif_console_readstream(char *s, long bound)
 	EIF_INTEGER amount = bound;	/* Number of characters to be read */
 	char c;						/* Last char read */
 	long i = 0;					/* Counter */
-	long to_be_read;		/* Number of characters that will be read by ReadConsole */
-	long read;				/* Number of characters remainings for ReadConsole */
+	long to_be_read;		/* Number of characters that will be read by `readconsole' */
+	long read;				/* Number of characters remainings for `readconsole' */
 	DWORD buffer_length = (DWORD) 0;
 	char done = (char) 0;
 	
@@ -159,13 +161,12 @@ long eif_console_readstream(char *s, long bound)
 
 	to_be_read = min (bound, BUFFER_SIZE);
 	read = bound - to_be_read;
-	if (!ReadConsole(eif_coninfile, eif_console_buffer, to_be_read, &buffer_length, NULL))
-		eio();
+	readconsole(eif_coninfile, eif_console_buffer, to_be_read, &buffer_length, NULL);
 
 	if ((long) buffer_length < to_be_read)
 		read = 0;	/* It seems that the request to read `bound' characters was too big
-					   We need to stop any calls to ReadConsole to avoid a blocking situation
-					   where we are waiting for more characters */
+					   We need to stop any calls to `readconsole' to avoid a
+					   blocking situation where we are waiting for more characters */
 
 	while ((amount-- > 0) && (done == (char) 0)) {
 		c = eif_console_buffer [i];
@@ -176,13 +177,12 @@ long eif_console_readstream(char *s, long bound)
 			else {
 				to_be_read = min (read, BUFFER_SIZE);
 				read = read - to_be_read;
-				if (!ReadConsole(eif_coninfile, eif_console_buffer,
-							to_be_read, &buffer_length, NULL))
-					eio();
+				readconsole(eif_coninfile, eif_console_buffer,
+							to_be_read, &buffer_length, NULL);
 	
 				if ((long) buffer_length < to_be_read)
 					read = 0;	/* It seems that the request to read `bound' characters
-								   was too big. We need to stop any calls to ReadConsole
+								   was too big. We need to stop any calls to `readconsole'
 								   to avoid a blocking situation where we are waiting
 								   for more characters */
 				i = 0;
@@ -269,7 +269,7 @@ void eif_console_putint (long l)
 	eif_show_console();
 
 	t = sprintf (eif_console_buffer, "%ld", l);
-	WriteFile(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
+	writeconsole(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
 }
 
 void eif_console_putchar (EIF_CHARACTER c)
@@ -277,7 +277,7 @@ void eif_console_putchar (EIF_CHARACTER c)
 	DWORD dummy_length = (DWORD) 0;
 
 	eif_show_console();
-	WriteFile(eif_conoutfile, &c,1, &dummy_length, NULL);
+	writeconsole(eif_conoutfile, &c,1, &dummy_length, NULL);
 }
 
 void eif_console_putstring (EIF_POINTER s, long length)
@@ -285,7 +285,7 @@ void eif_console_putstring (EIF_POINTER s, long length)
 	DWORD dummy_length = (DWORD) 0;
 
 	eif_show_console();
-	WriteFile(eif_conoutfile,s, length, &dummy_length, NULL);
+	writeconsole(eif_conoutfile,s, length, &dummy_length, NULL);
 }
 
 void eif_console_putreal (EIF_REAL r)
@@ -296,7 +296,7 @@ void eif_console_putreal (EIF_REAL r)
 	eif_show_console();
 
 	t = sprintf (eif_console_buffer, "%g", r);
-	WriteFile(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
+	writeconsole(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
 }
 
 void eif_console_putdouble (EIF_DOUBLE d)
@@ -307,7 +307,7 @@ void eif_console_putdouble (EIF_DOUBLE d)
 	eif_show_console();
 
 	t = sprintf (eif_console_buffer, "%.17g", d);
-	WriteFile(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
+	writeconsole(eif_conoutfile, eif_console_buffer, t, &dummy_length, NULL);
 }
 
 EIF_BOOLEAN eif_console_eof ()
@@ -403,11 +403,11 @@ rt_private void eif_show_console(void)
 {
 	if (!eif_console_allocated) {
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
-	   	BOOL bLaunched;
+		BOOL bLaunched;
 		BOOL bSuccess;
 
 		bSuccess = AllocConsole();
-
+	
 		if (bSuccess) {
 			eif_conoutfile = CreateFile ("CONOUT$", GENERIC_WRITE | GENERIC_READ,
 				FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
@@ -458,8 +458,7 @@ rt_private void safe_readconsole (char **buffer, DWORD *size)
 	int done = 0;
 
 	while (!done) {
-		if (!ReadConsole(eif_coninfile, *buffer, BUFFER_SIZE, size, NULL))
-			eio();
+		readconsole(eif_coninfile, *buffer, BUFFER_SIZE, size, NULL);
 	
 		switch (*size) {
 			case 1:
@@ -474,3 +473,21 @@ rt_private void safe_readconsole (char **buffer, DWORD *size)
 		}
 	}
 }
+
+rt_private void readconsole (HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)
+	/* Call ReadConsole and if it does not succeed call ReadFile */
+{
+	if (!ReadConsole(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped))
+		if (!ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped))
+			eio();
+}
+
+rt_private void writeconsole(HANDLE hConsoleOutput, CONST VOID *lpBuffer, DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPOVERLAPPED lpOverlapped)
+	/* Call WriteConsole and if it does not succeed call WriteFile */
+{
+	if (!WriteConsole(hConsoleOutput, lpBuffer, nNumberOfCharsToWrite, lpNumberOfCharsWritten, lpOverlapped))
+		if (!WriteFile(hConsoleOutput, lpBuffer, nNumberOfCharsToWrite, lpNumberOfCharsWritten, lpOverlapped))
+			eio ();
+}
+ 
+

@@ -328,7 +328,7 @@ rt_public int wtype_gen(int static_type, int32 feature_id, EIF_REFERENCE object)
 	if (gen_type != (int16 *) 0)
 		*gen_type = (int16) static_type;
 
-	return (int) eif_compound_id ((int16 *)0, object, type, gen_type);
+	return (int) eif_compound_id ((int16 *)0, (int16) Dftype (object), type, gen_type);
 }
 
 rt_public int wptype_gen(int static_type, int32 origin, int32 offset, EIF_REFERENCE object)
@@ -347,7 +347,7 @@ rt_public int wptype_gen(int static_type, int32 origin, int32 offset, EIF_REFERE
 	if (desc->gen_type != (int16 *) 0)
 		*(desc->gen_type) = (int16) static_type;
 
-	return (int) eif_compound_id ((int16 *) 0,object, desc->type, desc->gen_type);
+	return (int) eif_compound_id ((int16 *) 0, (int16) Dftype (object), desc->type, desc->gen_type);
 }
 
 rt_public EIF_REFERENCE_FUNCTION wdisp(int dyn_type)

@@ -497,7 +497,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			cid = cn_gtypes [i];
 
 			if ((cid != (int16 *) 0) && (cid [1] != -1)) {
-				dftype = eif_compound_id ((int16 *)0, parent,(int16) (exp_dtype & EO_TYPE), cid);
+				dftype = eif_compound_id ((int16 *)0, (int16) Dftype (parent),(int16) (exp_dtype & EO_TYPE), cid);
 				exp_dtype = (exp_dtype & EO_UPPER) | dftype;
 			}
 

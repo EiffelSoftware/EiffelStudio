@@ -30,6 +30,7 @@ feature -- Initialization
 			non_void_config_name: a_config_name /= Void
 		do
 			initialize_default_values
+			initialize_prefixes
 			set_name (a_config_name)
 			set_folder (a_config_folder)
 			save

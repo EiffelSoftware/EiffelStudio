@@ -34,7 +34,7 @@ feature -- Filtering Implementation
 					display_filter_header (root_stone, filtername)
 					tool.set_file_name (filtered_file_name 
 							(root_stone, filtername))
-					tool.text_window.set_editable (True)
+					tool.text_window.set_editable (False)
 					filter_name := clone (filtername)
 					filtered := true
 				end

@@ -41,7 +41,7 @@ feature
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
 				%.x.o:%N%
-				%%T$(EIFFEL3)/bench/spec/$(PLATFORM)/bin/x2c < $< > $*.c%N%
+				%%T$(EIFFEL3)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%
 				%%T$(CC) $(CFLAGS) -c $*.c%N%
 				%%T$(RM) $*.c%N%N");
 		end;

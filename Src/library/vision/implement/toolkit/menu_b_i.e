@@ -41,7 +41,13 @@ feature
 		deferred
 		end;
 
-
+	attach_menu (a_menu: MENU_PULL) is
+			-- Attach menu `a_menu' to the menu button, it will
+			-- be the menu which will appear when the button
+			-- is armed.
+		deferred
+		end;
+ 
 end 
 
 

@@ -71,7 +71,7 @@ feature -- Basic operations
 			l_location: STRING
 			l_is_network_path: BOOLEAN
 		do
-			l_location := a_file_name
+			l_location := a_file_name.twin
 			if not l_location.is_empty then
 				l_location.replace_substring_all ("/", "\")
 				if l_location.count > 2 and then l_location.substring (1, 2).is_equal ("\\") then

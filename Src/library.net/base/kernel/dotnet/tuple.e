@@ -949,12 +949,16 @@ feature {NONE} -- Implementation
 		do
 			l_item := fast_item (pos)
 			if l_item /= Void then
+					-- We already have an item stored in TUPLE, so get its type.
 				l_item := reverse_lookup.item (l_item.get_type)
-				if l_item /= Void then
-					Result ?= l_item
-				else
-					Result := reference_code
-				end
+			else
+					-- Void element we need to retrieve type from actual generic
+					-- parameter.
+				l_item := reverse_lookup.item (
+					feature {ISE_RUNTIME}.type_of_generic_parameter (Current, pos + 1))
+			end
+			if l_item /= Void then
+				Result ?= l_item
 			else
 				Result := reference_code
 			end

@@ -11,15 +11,25 @@ class
 	
 inherit
 	EV_NOTEBOOK_I
+		redefine
+			build
+		end
 
 	EV_CONTAINER_IMP
+		undefine
+			add_child_ok
 		redefine
+			build,
 			add_child,
 			child_minheight_changed,
-			child_height_changed
+			child_height_changed,
+			parent_ask_resize
 		end
 
 	EV_FONTABLE_IMP
+		redefine
+			set_font
+		end
 
 	WEL_TAB_CONTROL
 		rename
@@ -32,7 +42,6 @@ inherit
 			remove_command,
 			set_width,
 			set_height,
---			destroy,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -43,7 +52,13 @@ inherit
 			on_char,
 			on_key_up
 		redefine
-			default_style
+			default_style,
+			default_ex_style
+		end
+
+	WEL_TCIF_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
@@ -55,27 +70,81 @@ feature {NONE} -- Initialization
 			-- Create a fixed widget with, `par' as
 			-- parent
 		local
-			comctrl: WEL_COMMON_CONTROLS_DLL
 			wel_imp: WEL_WINDOW
 		do
-			!! comctrl.make
 			wel_imp ?= par.implementation
 			check
 				parent_not_void: wel_imp /= Void
 			end
 			wel_make (wel_imp, 0, 0, 0, 0, 0)
-			set_minimum_height (tab_height)
-			set_font (font)
 		end
+
+	build is
+			-- Called after creation. Set the current size and
+			-- notify the parent.
+		do
+			{EV_CONTAINER_IMP} Precursor
+			set_font (font)
+			set_minimum_height (tab_height)
+		end
+
+feature {NONE} -- Access
+
+	tab_pos: INTEGER
+			-- Actual position of the tab.
 
 feature -- Status setting
 	
 	set_tab_position (pos: INTEGER) is
 			-- set position of tabs (left, right, top or bottom)
+		local
+			temp_window: wel_window
+			children: LINKED_LIST [WEL_TAB_CONTROL_ITEM]
 		do
+			tab_pos := pos
+			temp_window := wel_parent 
+			if count > 0 then
+				from
+					!! children.make
+				until
+					children.count = count
+				loop
+					children.extend (get_item (children.count))
+					children.last.window.set_parent (temp_window)
+					children.last.window.hide
+				end
+				wel_destroy
+				wel_make (temp_window, 0, 0, 0, 0, 0)
+				from
+					children.start
+				until
+					children.after
+				loop
+					children.item.window.set_parent (Current)
+					insert_item (count, children.item)
+					children.forth
+				end
+			else
+				wel_destroy
+				wel_make (temp_window, 0, 0, 0, 0, 0)
+			end
+			set_font (font)
+			set_minimum_height (tab_height)
 		end
 	
 feature -- Element change
+
+	set_page_title (index: INTEGER; str: STRING) is
+			-- Set the label of the `index' page of the notebook.
+			-- The first page is the page number 1.
+		local
+			wel_item: WEL_TAB_CONTROL_ITEM
+		do
+			wel_item := get_item (index - 1)
+			wel_item.set_text (str)
+			delete_item (index - 1)
+			insert_item (index - 1, wel_item)
+		end
 	
 	append_page (child_imp: EV_WIDGET_I; label: STRING) is
 		-- Add a new page for notebook containing 'child_imp' with tab 
@@ -98,8 +167,7 @@ feature -- Implementation
 			-- child of the container whose page is currently selected.
 		do
 			child ?= child_imp
---			child.set_y (tab_height)
---			ev_children.extend (child)
+			child_imp.hide
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation
@@ -120,20 +188,57 @@ feature {EV_WIDGET_IMP} -- Implementation
 			set_minimum_height (new_child_minimum + tab_height)
 		end
 
+ 	parent_ask_resize (new_width, new_height: INTEGER) is
+   			-- When the parent asks the resize, it's not
+   			-- necessary to send him back the information
+   		do
+ 			resize (minimum_width.max (new_width), minimum_height.max (new_height))
+ 		end
+
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
 			-- Default style used to create the control
-		once
+		do
 			Result := {WEL_TAB_CONTROL} Precursor + Ws_clipchildren
-					+ Ws_clipsiblings
+				+ Ws_clipsiblings + Tcs_multiline
+			if tab_pos = Pos_bottom then
+				Result := Result + Tcs_bottom
+			elseif tab_pos = Pos_left then
+				Result := Result + Tcs_vertical + Tcs_fixedwidth
+			elseif tab_pos = Pos_right then
+				Result := Result + Tcs_vertical + Tcs_right + Tcs_fixedwidth
+			end
 		end
+
+	default_ex_style: INTEGER is
+   			-- Default extented style used to create the window
+   		do
+ 			Result := Ws_ex_staticedge
+ 		end
 
 	tab_height: INTEGER is
 			-- The height of the bar with the pages.
 		do
-			Result := wel_font.log_font.height + 8
+			Result := 20 --client_rect.top - sheet_rect.top
 		end
+
+	set_font (f: EV_FONT) is
+   			-- Set `font' to `f'.
+   		local
+   			local_font_windows: EV_FONT_IMP
+   		do
+ 			private_font := f
+ 			local_font_windows ?= private_font.implementation
+			check
+   				valid_font: local_font_windows /= void
+   			end
+			if (tab_pos = Pos_top) or (tab_pos = Pos_bottom) then
+				wel_set_font (local_font_windows.wel_font)
+			else
+				set_vertical_font (local_font_windows.wel_font)
+			end
+ 		end
 
 end -- EV_NOTEBOOK_IMP
 

@@ -1,6 +1,7 @@
 indexing
 	description: "Type storer"
 	external_name: "ISE.Reflection.TypeStorer"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	TYPE_STORER
@@ -376,27 +377,27 @@ feature {NONE} -- Implementation
 							rename_clauses := inheritance_clauses.Item (0)
 							if rename_clauses.Count > 0 then
 									-- <rename>
-								generate_xml_element_from_list (RenameElement, rename_clauses)
+								generate_xml_element_from_inheritance_clauses (RenameElement, rename_clauses)
 							end
 							undefine_clauses := inheritance_clauses.Item (1)
 							if undefine_clauses.Count > 0 then
 									-- <undefine>
-								generate_xml_element_from_list (UndefineElement, undefine_clauses)
+								generate_xml_element_from_inheritance_clauses (UndefineElement, undefine_clauses)
 							end						
 							redefine_clauses := inheritance_clauses.Item (2)
 							if redefine_clauses.Count > 0 then
 									-- <redefine>
-								generate_xml_element_from_list (RedefineElement, redefine_clauses)
+								generate_xml_element_from_inheritance_clauses (RedefineElement, redefine_clauses)
 							end						
 							select_clauses := inheritance_clauses.Item (3)
 							if select_clauses.Count > 0 then
 									-- <select>
-								generate_xml_element_from_list (SelectElement, select_clauses)
+								generate_xml_element_from_inheritance_clauses (SelectElement, select_clauses)
 							end						
 							export_clauses := inheritance_clauses.Item (4)
 							if export_clauses.Count > 0 then
 									-- <export>
-								generate_xml_element_from_list (ExportElement, export_clauses)
+								generate_xml_element_from_inheritance_clauses (ExportElement, export_clauses)
 							end						
 						end
 					end
@@ -562,6 +563,31 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+	generate_xml_element_from_inheritance_clauses (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+			-- Generate `xml_element' from `a_list'.
+		indexing
+			external_name: "GenerateXmlElementFromInheritanceClauses"
+		require
+			non_void_element: xml_element /= Void
+			not_empty_element: xml_element.Length > 0
+			non_void_list: a_list /= Void
+			not_empty_list: a_list.Count > 0
+		local
+			names: STRING
+			retried: BOOLEAN
+		do
+			if not retried then
+				names := string_from_inheritance_clauses (a_list)
+				if names.Length > 0 then
+						-- <xml_element>
+					text_writer.writeelementstring (xml_element, names)
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 	generate_xml_features_element (features: SYSTEM_COLLECTIONS_ARRAYLIST) is
 			-- Generate XML features elements from `features'.
 		indexing
@@ -880,4 +906,32 @@ feature {NONE} -- Implementation
 			end
 		end	
 
+	string_from_inheritance_clauses (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): STRING is
+			-- Generate string from `a_list'.
+			-- | a_list: SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
+		indexing
+			external_name: "StringFromInheritanceClauses"
+		require
+			non_void_list: a_list /= Void
+			not_empty_list: a_list.Count > 0
+		local
+			i: INTEGER
+			an_item: ISE_REFLECTION_INHERITANCECLAUSE
+		do
+			from
+				create Result.make_2 ('%U', 0)
+			until
+				i = a_list.Count
+			loop
+				an_item ?= a_list.Item (i)
+				if an_item /= Void then
+					Result := Result.Concat_String_String (Result, an_item.tostring)
+					if i < a_list.Count - 1 then
+						Result := Result.Concat_String_String_String (Result, Comma, Space)
+					end
+				end
+				i := i + 1
+			end
+		end	
+		
 end -- TYPE_STORER

@@ -1,6 +1,7 @@
 indexing
 	description: "Error messages for type XML code generation"
 	external_name: "ISE.Reflection.TypeStorerErrorMessages"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	TYPE_STORER_ERROR_MESSAGES

@@ -1,6 +1,7 @@
 indexing
 	description: "Provide support for code generation."
 	external_name: "ISE.Reflection.CodeGenerationSupport"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	CODE_GENERATION_SUPPORT
@@ -62,7 +63,6 @@ feature -- Access
 				if type_description.Name.Equals_String (xml_elements.Footer_element) then
 					generate_class_footer
 				end
-				--type_description.ReadEndElement
 				type_description.Close
 				Result := eiffel_class
 				eiffel_class := Void
@@ -78,7 +78,7 @@ feature -- Access
 			retry
 		end	
 
-	eiffel_assembly_from_xml (a_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
+	eiffel_assembly_from_xml (a_filename: STRING): EIFFEL_ASSEMBLY is
 			-- Instance of `eiffel_assembly' corresponding to Xml file with filename `a_filename'.
 		indexing
 			external_name: "EiffelAssemblyFromXml"
@@ -93,89 +93,52 @@ feature -- Access
 			assembly_public_key: STRING
 			eiffel_cluster_path: STRING
 			emitter_version_number: STRING
-			type_filename: STRING
-			reflection_support: REFLECTION_SUPPORT
+			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			retried: BOOLEAN
 		do
 			if not retried then
 				create assembly_description.make_xmltextreader_10 (a_filename)	
 					-- WhitespaceHandling = None
 				assembly_description.set_WhitespaceHandling (2)
-
-				create Result.make1
-				Result.Make
+				
 				assembly_description.ReadStartElement_String (xml_elements.Assembly_element)
 
 					-- Set `assembly_name'.
 				if assembly_description.Name.Equals_String (xml_elements.Assembly_name_element) then
 					assembly_name := assembly_description.ReadElementString_String (xml_elements.Assembly_name_element)
-					if assembly_name /= Void and then assembly_name.Length > 0 then
-						Result.SetAssemblyName (assembly_name)
-					end
 				end
 
 					-- Set `assembly_version'.
 				if assembly_description.Name.Equals_String (xml_elements.Assembly_version_element) then
 					assembly_version := assembly_description.ReadElementString_String (xml_elements.Assembly_version_element)
-					if assembly_version /= Void and then assembly_version.Length > 0 then
-						Result.SetAssemblyVersion (assembly_version)
-					end
 				end
 
 					-- Set `assembly_culture'.
 				if assembly_description.Name.Equals_String (xml_elements.Assembly_culture_element) then
 					assembly_culture := assembly_description.ReadElementString_String (xml_elements.Assembly_culture_element)
-					if assembly_culture /= Void and then assembly_culture.Length > 0 then
-						Result.SetAssemblyCulture (assembly_culture)
-					end
 				end
 
 					-- Set `assembly_public_key'.
 				if assembly_description.Name.Equals_String (xml_elements.Assembly_public_key_element) then
 					assembly_public_key := assembly_description.ReadElementString_String (xml_elements.Assembly_public_key_element)
-					if assembly_public_key /= Void and then assembly_public_key.Length > 0 then
-						Result.SetAssemblyPublicKey (assembly_public_key)
-					end
 				end
 
 					-- Set `eiffel_cluster_path'.
 				if assembly_description.Name.Equals_String (xml_elements.Eiffel_cluster_path_element) then
 					eiffel_cluster_path := assembly_description.ReadElementString_String (xml_elements.Eiffel_cluster_path_element)
-					if eiffel_cluster_path /= Void and then eiffel_cluster_path.Length > 0 then
-						Result.SetEiffelClusterPath (eiffel_cluster_path)
-					end
 				end
 
 				-- Set `emitter_version_number'.
 				if assembly_description.Name.Equals_String (xml_elements.Emitter_version_number_element) then
 					emitter_version_number := assembly_description.ReadElementString_String (xml_elements.Emitter_version_number_element)
-					if emitter_version_number /= Void and then emitter_version_number.Length > 0 then
-						Result.SetEmitterVersionNumber (emitter_version_number)
-					end
 				end
-
-				-- Add `types'.
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_types_element) then
-					create reflection_support.make
-					assembly_description.ReadStartElement_String (xml_elements.Assembly_types_element)
-					from
-					until
-						not assembly_description.Name.Equals_String (xml_elements.Assembly_type_filename_element)
-					loop
-						type_filename := assembly_description.ReadElementString_String (xml_elements.Assembly_type_filename_element)
-						type_filename := type_filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
-						Result.AddType (eiffel_class_from_xml (type_filename))
-					end
-					assembly_description.ReadEndElement
-				end
-				assembly_description.ReadEndElement
+				create a_descriptor.make1
+				a_descriptor.make (assembly_name, assembly_version, assembly_culture, assembly_public_key)
+				create Result.make (a_descriptor, eiffel_cluster_path, emitter_version_number)
 				assembly_description.Close
 			else
-				create Result.make1
-				Result.make
+				Result := Void
 			end
-		ensure
-			non_void_eiffel_assembly: Result /= Void
 		rescue
 			retried := True
 			create_error (error_messages.Eiffel_assembly_generation_failed, error_messages.Eiffel_assembly_generation_failed_message)
@@ -406,6 +369,13 @@ feature {NONE} -- Implementation
 			parent_name: STRING
 			comma_index: INTEGER
 			rename_clauses_string, undefine_clauses_string, redefine_clauses_string: STRING
+			rename_clause_text: STRING
+			export_text: STRING
+			support: CONVERSION_SUPPORT
+			undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE
+			redefine_clause: ISE_REFLECTION_REDEFINECLAUSE
+			select_clause: ISE_REFLECTION_SELECTCLAUSE
+			export_clause: ISE_REFLECTION_EXPORTCLAUSE
 			select_clauses_string, export_clauses_string: STRING
 			clause_added: INTEGER
 			rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST		
@@ -414,7 +384,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				if type_description.Name.Equals_String (xml_elements.Inherit_element) then
 					type_description.ReadStartElement_String (xml_elements.Inherit_element)
-
+					create support
 					from
 					until
 						not type_description.Name.Equals_String (xml_elements.Parent_element)
@@ -431,17 +401,18 @@ feature {NONE} -- Implementation
 							rename_clauses_string := type_description.ReadElementString_String (xml_elements.Rename_element)
 							if rename_clauses_string.Length > 0 then
 								if rename_clauses_string.IndexOf_Char (',') = -1 then
-									clause_added := rename_clauses.Add (rename_clauses_string)
+									clause_added := rename_clauses.Add (support.rename_clause_from_text (rename_clauses_string))
 								else					
 									from
 									until
 										rename_clauses_string.IndexOf_Char (',') = -1 
 									loop
 										comma_index := rename_clauses_string.IndexOf_Char (',')
-										clause_added := rename_clauses.Add (rename_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										rename_clause_text := rename_clauses_string.Substring_Int32_Int32 (0, comma_index)
+										clause_added := rename_clauses.Add (support.rename_clause_from_text (rename_clause_text))
 										rename_clauses_string := rename_clauses_string.Substring (comma_index + 1).Trim
 									end
-									clause_added := rename_clauses.Add (rename_clauses_string)
+									clause_added := rename_clauses.Add (support.rename_clause_from_text (rename_clauses_string))
 								end
 							end					
 						end
@@ -449,17 +420,23 @@ feature {NONE} -- Implementation
 							undefine_clauses_string := type_description.ReadElementString_String (xml_elements.Undefine_element)
 							if undefine_clauses_string.Length > 0 then
 								if undefine_clauses_string.IndexOf_Char (',') = -1 then
-									clause_added := undefine_clauses.Add (undefine_clauses_string)
+									create undefine_clause.make_undefineclause
+									undefine_clause.make (undefine_clauses_string)
+									clause_added := undefine_clauses.Add (undefine_clause)
 								else					
 									from
 									until
 										undefine_clauses_string.IndexOf_Char (',') = -1 
 									loop
 										comma_index := undefine_clauses_string.IndexOf_Char (',')
-										clause_added := undefine_clauses.Add (undefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										create undefine_clause.make_undefineclause
+										undefine_clause.make (undefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										clause_added := undefine_clauses.Add (undefine_clause)
 										undefine_clauses_string := undefine_clauses_string.Substring (comma_index + 1).Trim
 									end
-									clause_added := undefine_clauses.Add (undefine_clauses_string)
+									create undefine_clause.make_undefineclause
+									undefine_clause.make (undefine_clauses_string)
+									clause_added := undefine_clauses.Add (undefine_clause)
 								end
 							end						
 						end
@@ -467,17 +444,23 @@ feature {NONE} -- Implementation
 							redefine_clauses_string := type_description.ReadElementString_String (xml_elements.Redefine_element)
 							if redefine_clauses_string.Length > 0 then
 								if redefine_clauses_string.IndexOf_Char (',') = -1 then
-									clause_added := redefine_clauses.Add (redefine_clauses_string)
+									create redefine_clause.make_redefineclause
+									redefine_clause.make (redefine_clauses_string)
+									clause_added := redefine_clauses.Add (redefine_clause)
 								else					
 									from
 									until
 										redefine_clauses_string.IndexOf_Char (',') = -1 
 									loop
 										comma_index := redefine_clauses_string.IndexOf_Char (',')
-										clause_added := redefine_clauses.Add (redefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										create redefine_clause.make_redefineclause
+										redefine_clause.make (redefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										clause_added := redefine_clauses.Add (redefine_clause)
 										redefine_clauses_string := redefine_clauses_string.Substring (comma_index + 1).Trim
 									end
-									clause_added := redefine_clauses.Add (redefine_clauses_string)
+									create redefine_clause.make_redefineclause
+									redefine_clause.make (redefine_clauses_string)
+									clause_added := redefine_clauses.Add (redefine_clause)
 								end
 							end						
 						end
@@ -485,17 +468,23 @@ feature {NONE} -- Implementation
 							select_clauses_string := type_description.ReadElementString_String (xml_elements.Select_element)
 							if select_clauses_string.Length > 0 then
 								if select_clauses_string.IndexOf_Char (',') = -1 then
-									clause_added := select_clauses.Add (select_clauses_string)
+									create select_clause.make_selectclause
+									select_clause.make (select_clauses_string)
+									clause_added := select_clauses.Add (select_clause)
 								else					
 									from
 									until
 										select_clauses_string.IndexOf_Char (',') = -1 
 									loop
 										comma_index := select_clauses_string.IndexOf_Char (',')
-										clause_added := select_clauses.Add (select_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										create select_clause.make_selectclause
+										select_clause.make (select_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										clause_added := select_clauses.Add (select_clause)
 										select_clauses_string := select_clauses_string.Substring (comma_index + 1).Trim
 									end
-									clause_added := select_clauses.Add (select_clauses_string)
+									create select_clause.make_selectclause
+									select_clause.make (select_clauses_string)
+									clause_added := select_clauses.Add (select_clause)
 								end
 							end						
 						end
@@ -503,17 +492,18 @@ feature {NONE} -- Implementation
 							export_clauses_string := type_description.ReadElementString_String (xml_elements.Export_element)
 							if export_clauses_string.Length > 0 then
 								if export_clauses_string.IndexOf_Char (',') = -1 then
-									clause_added := export_clauses.Add (export_clauses_string)
+									clause_added := export_clauses.Add (support.export_clause_from_text (export_clauses_string))
 								else					
 									from
 									until
 										export_clauses_string.IndexOf_Char (',') = -1 
 									loop
 										comma_index := export_clauses_string.IndexOf_Char (',')
-										clause_added := export_clauses.Add (export_clauses_string.Substring_Int32_Int32 (0, comma_index))
+										export_text := export_clauses_string.Substring_Int32_Int32 (0, comma_index)
+										clause_added := export_clauses.Add (support.export_clause_from_text (export_text))
 										export_clauses_string := export_clauses_string.Substring (comma_index + 1).Trim
 									end
-									clause_added := export_clauses.Add (export_clauses_string)
+									clause_added := export_clauses.Add (support.export_clause_from_text (export_clauses_string))
 								end
 							end							
 						end

@@ -1,6 +1,7 @@
 indexing
 	description: "Generate Eiffel class from emitter information"
 	external_name: "ISE.Reflection.EiffelCodeGenerator"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 	
 class
 	EIFFEL_CODE_GENERATOR
@@ -30,8 +31,8 @@ feature {NONE} -- Initialization
 			external_name: "MakeFromInfo"
 		require
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: an_eiffel_assembly.AssemblyName /= Void
-			not_empty_eiffel_assembly_name: an_eiffel_assembly.AssemblyName.Length > 0
+			non_void_eiffel_assembly_name: an_eiffel_assembly.assemblydescriptor.Name /= Void
+			not_empty_eiffel_assembly_name: an_eiffel_assembly.AssemblyDescriptor.Name.Length > 0
 			non_void_eiffel_cluster_path: an_eiffel_assembly.EiffelClusterPath.Length > 0
 			non_void_emitter_version_number: an_eiffel_assembly.EmitterVersionNumber /= Void
 			not_empty_emitter_version_number: an_eiffel_assembly.EmitterVersionNumber.Length > 0
@@ -93,8 +94,8 @@ feature -- Basic Operations
 			non_void_eiffel_class_full_external_name: an_eiffel_class.FullExternalName /= Void
 			not_empty_eiffel_class_full_external_name: an_eiffel_class.FullExternalName.Length > 0
 			non_void_eiffel_assembly: eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: eiffel_assembly.AssemblyName /= Void
-			not_empty_eiffel_assembly_name: eiffel_assembly.AssemblyName.Length > 0
+			non_void_eiffel_assembly_name: eiffel_assembly.AssemblyDescriptor.Name /= Void
+			not_empty_eiffel_assembly_name: eiffel_assembly.AssemblyDescriptor.Name.Length > 0
 			non_void_eiffel_cluster_path: eiffel_assembly.EiffelClusterPath.Length > 0
 			non_void_emitter_version_number: eiffel_assembly.EmitterVersionNumber /= Void
 			not_empty_emitter_version_number: eiffel_assembly.EmitterVersionNumber.Length > 0
@@ -116,12 +117,7 @@ feature -- Basic Operations
 				eiffel_cluster_path := eiffel_cluster_path.Concat_String_String (eiffel_cluster_path, "\")
 			end
 			full_external_name := eiffel_class.FullExternalName
-			--if dir.Exists (eiffel_cluster_path) then
-				filename := eiffel_cluster_path.Concat_String_String_String (eiffel_cluster_path, formatter.FormatTypeName (full_external_name).ToLower, Eiffel_class_extension)
-			--else
-			--	cluster_path := env.CurrentDirectory
-			--	filename := cluster_path.Concat_String_String_String_String (cluster_path, "\", formatter.FormatTypeName (full_external_name).ToLower, Eiffel_class_extension)
-			--end
+			filename := eiffel_cluster_path.Concat_String_String_String (eiffel_cluster_path, formatter.FormatTypeName (full_external_name).ToLower, Eiffel_class_extension)
 			create file_stream.make_streamwriter_5 (filename, False, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 
 			create generated_code.make_2 ('%U', 0)
@@ -495,6 +491,7 @@ feature {NONE} -- Implementation
 
 	generate_inheritance_clauses (clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
 			-- Generate inheritance clauses from `clauses'.
+			-- | clauses: SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_INHERITANCECLAUSE]
 		indexing
 			external_name: "GenerateInheritanceClauses"
 		require
@@ -502,16 +499,16 @@ feature {NONE} -- Implementation
 			not_empty_clauses: clauses.Count > 0
 		local
 			i: INTEGER
-			a_clause: STRING
+			a_clause: ISE_REFLECTION_INHERITANCECLAUSE
 		do
 			from
 			until
 				i = clauses.Count
 			loop
 				a_clause ?= clauses.Item (i)
-				if a_clause /= Void and then a_clause.Length > 0 then
+				if a_clause /= Void then
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, New_line, Tab, Tab) 
-					generated_code := generated_code.Concat_String_String_String (generated_code, Tab, a_clause) 
+					generated_code := generated_code.Concat_String_String_String (generated_code, Tab, a_clause.tostring) 
 					if i < (clauses.Count - 1) then
 						generated_code := generated_code.Concat_String_String (generated_code, Comma)
 					end

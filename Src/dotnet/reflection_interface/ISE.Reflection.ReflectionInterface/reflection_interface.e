@@ -1,6 +1,7 @@
 indexing
 	description: "Kind of database where user can put xml files describing types and retrieve a more user-friendly type representation. Apply only for shared assemblies."
 	external_name: "ISE.Reflection.ReflectionInterface"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 	
 class
 	REFLECTION_INTERFACE
@@ -449,11 +450,8 @@ feature {NONE} -- Implementation
 			if not retried then
 				Result := support.EiffelAssemblyFromXml (xml_filename)
 			else
-				create Result.make1
-				Result.make
-			end
-		ensure
-			eiffel_assembly_created: Result /= Void		
+				Result := Void
+			end	
 		rescue
 			retried := True
 			retry

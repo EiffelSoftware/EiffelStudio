@@ -1,6 +1,7 @@
 indexing
 	description: "Possible errors when using ISE reflection interface"
 	external_name: "ISE.Reflection.ErrorsTable"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	ERRORS_TABLE

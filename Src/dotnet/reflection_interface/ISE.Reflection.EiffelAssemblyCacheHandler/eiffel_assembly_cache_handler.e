@@ -1,6 +1,7 @@
 indexing
 	description: "Add and remove files from Eiffel/.NET assembly cache."
 	external_name: "ISE.Reflection.EiffelAssemblyCacheHandler"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	EIFFEL_ASSEMBLY_CACHE_HANDLER
@@ -74,7 +75,7 @@ feature -- Status Report
 				
 feature -- Basic Operations
 		
-	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY): TYPE_STORER is
+	store_assembly (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY): TYPE_STORER is
 			-- Store assembly corresponding to `an_eiffel_assembly': 
 			-- Create assembly folder from `an_eiffel_assembly' if it does not exist yet.
 		indexing
@@ -144,6 +145,7 @@ feature -- Basic Operations
 			subset: STRING
 			file: SYSTEM_IO_FILE
 			index_path: STRING
+			path_to_remove: STRING
 			write_lock: SYSTEM_IO_FILESTREAM
 			notifier: ISE_REFLECTION_NOTIFIER
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
@@ -192,8 +194,10 @@ feature -- Basic Operations
 							end
 							xml_reader.ReadEndElement
 							xml_reader.Close
-
-							assembly_folders_list.Remove (assembly_path)
+							
+							path_to_remove := assembly_path.replace (reflection_support.Eiffeldeliverypath, reflection_support.Eiffelkey)
+							assembly_folders_list.Remove (path_to_remove)
+							
 							if assembly_folders_list.Count /= 0 then
 								create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 									-- Set generation options
@@ -232,7 +236,6 @@ feature -- Basic Operations
 							create notifier.make1
 							notifier.make
 							notifier.NotifyRemove (a_descriptor)
-
 							last_removal_successful := True
 						end
 					end
@@ -285,7 +288,7 @@ feature {NONE} -- Implementation
 			external_name: "AssemblyFolderPath"
 		end
 	
-	eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+	eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY
 			-- Assembly being stored
 		indexing
 			external_name: "EiffelAssembly"

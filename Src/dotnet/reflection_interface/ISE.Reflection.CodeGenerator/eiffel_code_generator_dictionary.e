@@ -1,6 +1,7 @@
 indexing
 	description: "Eiffel keywords and useful strings to generate Eiffel classes"
 	external_name: "ISE.Reflection.EiffelCodeGeneratorDictionary"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 	
 class
 	EIFFEL_CODE_GENERATOR_DICTIONARY

@@ -1,6 +1,7 @@
 indexing
 	description: "Provide support for reflection."
 	external_name: "ISE.Reflection.ReflectionSupport"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	REFLECTION_SUPPORT
@@ -76,9 +77,7 @@ feature -- Access
 			public_key := a_descriptor.PublicKey
 			string_to_code := name.Concat_String_String_String_String (name, dictionary.Dash, version, dictionary.Dash)
 			string_to_code := string_to_code.Concat_String_String_String_String (string_to_code, culture, dictionary.Dash, public_key)
-			--folder_name := hash_value (string_to_code)
 			Result := Assemblies_folder_path
-			--Result := Result.Concat_String_String (Result, folder_name)
 			Result := Result.Concat_String_String (Result, string_to_code)
 		ensure
 			assembly_folder_name_generated: Result /= Void

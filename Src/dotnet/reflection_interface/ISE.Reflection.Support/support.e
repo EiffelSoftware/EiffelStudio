@@ -1,6 +1,7 @@
 indexing
 	description: "Provide support for code generation and reflection."
 	external_name: "ISE.Reflection.Support"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 deferred class
 	SUPPORT

@@ -1,6 +1,7 @@
 indexing
 	description: "XML elements names for assembly and type decription xml files"
 	external_name: "ISE.Reflection.XmlElements"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	XML_ELEMENTS

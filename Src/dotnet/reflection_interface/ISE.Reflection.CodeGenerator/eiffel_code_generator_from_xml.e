@@ -1,6 +1,7 @@
 indexing
 	description: "Generate Eiffel classes from Xml description files."
 	external_name: "ISE.Reflection.EiffelCodeGeneratorFromXml"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	EIFFEL_CODE_GENERATOR_FROM_XML

@@ -27,6 +27,7 @@ feature -- Access
 			Result := implementation.text
 		ensure
 			Result_not_void: Result /= Void
+			cloned: Result /= implementation.text
 		end
 
 feature -- Status setting

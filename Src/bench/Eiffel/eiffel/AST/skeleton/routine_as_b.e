@@ -72,13 +72,13 @@ feature -- default rescue
 		do
 			if rescue_clause = Void and then
 			   not (routine_body.is_deferred or routine_body.is_external) then
-				!!def_resc_id.make (1)
+				!! def_resc_id.make (1)
 				def_resc_id.load (def_resc_name)
-				!!def_resc_call
+				!! def_resc_call
 				def_resc_call.set_feature_name (def_resc_id)
-				!!def_resc_instr
+				!! def_resc_instr
 				def_resc_instr.set_call (def_resc_call)
-				!!rescue_clause.make (1)
+				!! rescue_clause.make_filled (1)
 				rescue_clause.put_i_th (def_resc_instr, 1)
 			end
 		end

@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_fore_color)
 			res := color_dialog.show_dialog
-			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_fore_color (color_dialog.color)
 				synchronize_panel_colors()
 			end
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_month_background)
 			res := color_dialog.show_dialog
-			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_month_background (color_dialog.color)
 				synchronize_panel_colors()
 			end
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_title_back_color)
 			res := color_dialog.show_dialog
-			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then 
+			if res = feature {WINFORMS_DIALOG_RESULT}.OK then 
 				dtp.set_calendar_title_back_color (color_dialog.color)
 				synchronize_panel_colors()
 			end
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_title_fore_color)
 			res := color_dialog.show_dialog
-			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_title_fore_color (color_dialog.color)
 				synchronize_panel_colors
 			end
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_trailing_fore_color)
 			res := color_dialog.show_dialog
-			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_trailing_fore_color (color_dialog.color)
 				synchronize_panel_colors
 			end

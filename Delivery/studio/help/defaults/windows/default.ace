@@ -13,7 +13,7 @@ cluster
 	$root_cluster_line
 
 		-- EiffelBase
-	library base:				"$ISE_EIFFEL/library/base"
+	library base:				"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3";"desc"
 		end

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			if not label_text.is_empty then
 				add_label (label_text, tooltip)
 			end
-			internal_property := a_type
+			internal_type := a_type
 			internal_gb_ev_any ?= any
 			check
 				internal_gb_ev_any /= Void
@@ -89,7 +89,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			constant_context: GB_CONSTANT_CONTEXT
 			list_item: EV_LIST_ITEM
 		do
-			constant_context := object.constants.item (internal_gb_ev_any.type + internal_property)
+			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 			if constant_context /= Void then
 				constants_button.select_actions.block
 				constants_button.enable_select
@@ -120,10 +120,6 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 
 	execution_agent: PROCEDURE [ANY, TUPLE [EV_FONT]]
 		-- Agent to execute command associated with value entered into `Current'.
-
-	internal_property: STRING
-		-- Property referenced by `Current'. This is required, so that the constants can
-		-- be correctly handled. For example "Padding" or "Minimum_width".
 		
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main box used in creation of `Current'.
@@ -180,8 +176,8 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				list_item.set_data (font_constants.item)
 				
 				constants_combo_box.extend (list_item)
-				if internal_property /= Void then
-					lookup_string := internal_gb_ev_any.type + internal_property
+				if internal_type /= Void then
+					lookup_string := internal_gb_ev_any.type + internal_type
 					if internal_gb_ev_any.object.constants.has (lookup_string) and
 						font_constants.item = internal_gb_ev_any.object.constants.item (lookup_string).constant then
 						constants_button.enable_select
@@ -209,7 +205,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				validate_agent.call ([constant.value])
 			
 				if validate_agent.last_result then
-					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_property)
+					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					execute_agent (constant.value)
@@ -226,11 +222,12 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 		end
 
 	list_item_deselected (list_item: EV_LIST_ITEM) is
+			-- `list_item' has been deselected from `constants_combo_box'.
 		local
 			constant: GB_INTEGER_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
 		do
-			constant_context := object.constants.item (internal_gb_ev_any.type + internal_property)
+			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 			if constant_context /= Void then
 				constant ?= constant_context.constant
 				constant_context.destroy

@@ -32,11 +32,20 @@ feature -- Access
 	cancel_button_text: STRING is "Cancel"
 		-- `Result' is STRING constant named cancel_button_text.
 
+	large_spacing_width: INTEGER is 12
+		-- `Result' is INTEGER constant named large_spacing_width.
+
+	next_tip_text: STRING is "Next tip"
+		-- `Result' is STRING constant named next_tip_text.
+
 	ok_button_text: STRING is "OK"
 		-- `Result' is STRING constant named ok_button_text.
 
 	default_button_width: INTEGER is 80
 		-- `Result' is INTEGER constant named default_button_width.
+
+	close_text: STRING is "Close"
+		-- `Result' is STRING constant named close_text.
 
 
 feature -- Access

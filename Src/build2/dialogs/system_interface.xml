@@ -3,6 +3,14 @@
 		<Name >cancel_button_text</Name>
 		<Value >Cancel</Value>
 		</Constant>
+	<Constant ><type >INTEGER</type>
+		<Name >large_spacing_width</Name>
+		<Value >12</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >next_tip_text</Name>
+		<Value >Next tip</Value>
+		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >ok_button_text</Name>
 		<Value >OK</Value>
@@ -10,6 +18,10 @@
 	<Constant ><type >INTEGER</type>
 		<Name >default_button_width</Name>
 		<Value >80</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >close_text</Name>
+		<Value >Close</Value>
 		</Constant>
 	</item>
 <item type="Directory"><Internal_properties ><name >constants_dialog</name>
@@ -1548,6 +1560,206 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<EV_TEXT_ALIGNABLE />
 					<EV_PIXMAPABLE />
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES cancel_button_pressed</Event>
+						</Events>
+					</item>
+				</item>
+			</item>
+		</item>
+	</item>
+<item type="Directory"><Internal_properties ><name >tip_of_the_day_dialog</name>
+		</Internal_properties>
+	<item type="EV_DIALOG"><Internal_properties ><id >118</id>
+			<name >gb_tip_of_the_day_dialog</name>
+			<Expanded >1</Expanded>
+			</Internal_properties>
+		<EV_COLORIZABLE />
+		<EV_SENSITIVE />
+		<EV_WIDGET />
+		<EV_WINDOW ><Title ><![CDATA[Tip of the Day]]></Title>
+			</EV_WINDOW>
+		<EV_PIXMAPABLE />
+		<EV_CONTAINER />
+		<Events ><Event >show_actions EV_WINDOW_ACTION_SEQUENCES window_shown</Event>
+			</Events>
+		<item type="EV_VERTICAL_BOX"><Internal_properties ><id >119</id>
+				<Expanded >1</Expanded>
+				</Internal_properties>
+			<EV_COLORIZABLE />
+			<EV_SENSITIVE />
+			<EV_WIDGET />
+			<EV_BOX ><Padding ><Constant >large_spacing_width</Constant>
+					</Padding>
+				<Border ><Constant >large_spacing_width</Constant>
+					</Border>
+				<Is_item_expanded >10</Is_item_expanded>
+				</EV_BOX>
+			<EV_PIXMAPABLE />
+			<EV_CONTAINER />
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >120</id>
+					<Expanded >1</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_SENSITIVE />
+				<EV_WIDGET />
+				<EV_BOX ><Is_item_expanded >1</Is_item_expanded>
+					</EV_BOX>
+				<EV_PIXMAPABLE />
+				<EV_CONTAINER />
+				<item type="EV_VERTICAL_BOX"><Internal_properties ><id >121</id>
+						<Expanded >1</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_SENSITIVE />
+					<EV_WIDGET />
+					<EV_BOX ><Is_item_expanded >1</Is_item_expanded>
+						</EV_BOX>
+					<EV_PIXMAPABLE />
+					<EV_CONTAINER />
+					<item type="EV_FRAME"><Internal_properties ><id >122</id>
+							<Expanded >1</Expanded>
+							</Internal_properties>
+						<EV_COLORIZABLE />
+						<EV_FONTABLE />
+						<EV_SENSITIVE />
+						<EV_TEXTABLE />
+						<EV_WIDGET />
+						<EV_FRAME />
+						<EV_TEXT_ALIGNABLE />
+						<EV_PIXMAPABLE />
+						<EV_CONTAINER />
+						<item type="EV_VERTICAL_BOX"><Internal_properties ><id >123</id>
+								<Expanded >1</Expanded>
+								</Internal_properties>
+							<EV_COLORIZABLE />
+							<EV_SENSITIVE />
+							<EV_WIDGET />
+							<EV_BOX ><Is_item_expanded >001</Is_item_expanded>
+								</EV_BOX>
+							<EV_PIXMAPABLE />
+							<EV_CONTAINER />
+							<item type="EV_LABEL"><Internal_properties ><id >124</id>
+									<Expanded >0</Expanded>
+									</Internal_properties>
+								<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+									</EV_COLORIZABLE>
+								<EV_FONTABLE ><Family >3</Family>
+									<Weight >7</Weight>
+									<Shape >10</Shape>
+									<Height >19</Height>
+									<Preferred_family >Microsoft Sans Serif</Preferred_family>
+									</EV_FONTABLE>
+								<EV_SENSITIVE />
+								<EV_TEXTABLE ><Text >Did you know...</Text>
+									</EV_TEXTABLE>
+								<EV_TOOLTIPABLE />
+								<EV_WIDGET />
+								<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+									</EV_TEXT_ALIGNABLE>
+								</item>
+							<item type="EV_LABEL"><Internal_properties ><id >125</id>
+									<Expanded >0</Expanded>
+									</Internal_properties>
+								<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+									</EV_COLORIZABLE>
+								<EV_FONTABLE ><Family >3</Family>
+									<Weight >7</Weight>
+									<Shape >10</Shape>
+									<Height >13</Height>
+									<Preferred_family >Microsoft Sans Serif</Preferred_family>
+									</EV_FONTABLE>
+								<EV_SENSITIVE />
+								<EV_TEXTABLE />
+								<EV_TOOLTIPABLE />
+								<EV_WIDGET />
+								<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+									</EV_TEXT_ALIGNABLE>
+								</item>
+							<item type="EV_CELL"><Internal_properties ><id >126</id>
+									<Expanded >0</Expanded>
+									</Internal_properties>
+								<EV_COLORIZABLE ><Background_color >255255255</Background_color>
+									</EV_COLORIZABLE>
+								<EV_SENSITIVE />
+								<EV_WIDGET />
+								<EV_PIXMAPABLE />
+								<EV_CONTAINER />
+								</item>
+							</item>
+						</item>
+					</item>
+				</item>
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >127</id>
+					<Expanded >1</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_SENSITIVE />
+				<EV_WIDGET />
+				<EV_BOX ><Padding ><Constant >large_spacing_width</Constant>
+						</Padding>
+					<Is_item_expanded >0100</Is_item_expanded>
+					</EV_BOX>
+				<EV_PIXMAPABLE />
+				<EV_CONTAINER />
+				<item type="EV_CHECK_BUTTON"><Internal_properties ><id >128</id>
+						<name >show_tips_button</name>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_FONTABLE />
+					<EV_DESELECTABLE />
+					<EV_SENSITIVE />
+					<EV_TEXTABLE ><Text >Show tips at startup</Text>
+						</EV_TEXTABLE>
+					<EV_TOOLTIPABLE />
+					<EV_WIDGET />
+					<EV_TEXT_ALIGNABLE />
+					<EV_PIXMAPABLE />
+					</item>
+				<item type="EV_CELL"><Internal_properties ><id >129</id>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_SENSITIVE />
+					<EV_WIDGET />
+					<EV_PIXMAPABLE />
+					<EV_CONTAINER />
+					</item>
+				<item type="EV_BUTTON"><Internal_properties ><id >130</id>
+						<name >next_tip_button</name>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_FONTABLE />
+					<EV_SENSITIVE />
+					<EV_TEXTABLE ><Text ><Constant >next_tip_text</Constant>
+							</Text>
+						</EV_TEXTABLE>
+					<EV_TOOLTIPABLE />
+					<EV_WIDGET ><Minimum_width ><Constant >default_button_width</Constant>
+							</Minimum_width>
+						</EV_WIDGET>
+					<EV_TEXT_ALIGNABLE />
+					<EV_PIXMAPABLE />
+					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES next_tip_selected</Event>
+						</Events>
+					</item>
+				<item type="EV_BUTTON"><Internal_properties ><id >131</id>
+						<name >close_button</name>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_FONTABLE />
+					<EV_SENSITIVE />
+					<EV_TEXTABLE ><Text ><Constant >close_text</Constant>
+							</Text>
+						</EV_TEXTABLE>
+					<EV_TOOLTIPABLE />
+					<EV_WIDGET ><Minimum_width ><Constant >default_button_width</Constant>
+							</Minimum_width>
+						</EV_WIDGET>
+					<EV_TEXT_ALIGNABLE />
+					<EV_PIXMAPABLE />
+					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES close_button_selected</Event>
 						</Events>
 					</item>
 				</item>

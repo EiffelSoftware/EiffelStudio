@@ -9,7 +9,7 @@ class
 	WEL_DEFAULT_PRINTER_DC
 
 inherit
-	WEL_DC
+	WEL_PRINTER_DC
 
 creation
 	make
@@ -32,37 +32,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Basic operations
-
-	start_document (title: STRING) is
-			-- Start the job `title' on the printer
-		require
-			exists: exists
-			title_not_void: title /= Void
-		local
-			a: ANY
-		do
-			a := title.to_c
-			cwin_escape (item, Startdoc, title.count, $a,
-				default_pointer)
-		end
-
-	new_frame is
-			-- Send a new frame to the printer
-		require
-			exists: exists
-		do
-			cwin_escape (item, Newframe, 0, default_pointer,
-				default_pointer)
-		end
-
-	end_document is
-			-- End the job on the printer
-		require
-			exists: exists
-		do
-			cwin_escape (item, Enddoc, 0, default_pointer,
-				default_pointer)
-		end
 
 	retrieve_default_printer is
 			-- Retrieve the default printer installed and set
@@ -117,11 +86,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	destroy_item is
-		do
-			delete
-		end
-
 	Windows_const: STRING is "windows"
 
 	Device_const: STRING is "device"
@@ -144,39 +108,7 @@ feature {NONE} -- Externals
 			"GetProfileString"
 		end
 
-	cwin_escape (dc: POINTER; escape_code, size: INTEGER; 
-			input_struct, output_struct: POINTER) is
-			-- SDK Escape
-		external
-			"C [macro <wel.h>] (HDC, int, int, LPCSTR, %
-				%void *)"
-		alias
-			"Escape"
-		end
-
-	Startdoc: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"STARTDOC"
-		end
-
-	Enddoc: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"ENDDOC"
-		end
-
-	Newframe: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"NEWFRAME"
-		end
-
 invariant
-
 	device_not_void: device /= Void
 	driver_not_void: driver /= Void
 	output_not_void: output /= Void

@@ -17,7 +17,6 @@ inherit
 			process_message,
 			on_wm_destroy,
 			on_wm_notify,
-			on_wm_erase_background,
 			destroy
 		end
 
@@ -862,21 +861,6 @@ feature {NONE} -- Implementation
 			if application_main_window.is_application_main_window (Current) then
 				cwin_post_quit_message (0)
 			end
-		end
-
-	on_wm_erase_background (wparam: INTEGER) is
-			-- Wm_erasebkgnd message.
-			-- A WEL_DC and WEL_PAINT_STRUCT are created and passed to the
-			-- `on_erase_background' routine.
-		local
-			paint_dc: WEL_PAINT_DC
-		do
-			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
-			if scroller /= Void then
-				paint_dc.set_viewport_origin (-scroller.horizontal_position,
-					-scroller.vertical_position)
-			end
-			on_erase_background (paint_dc, client_rect )
 		end
 
 	application_main_window: WEL_APPLICATION_MAIN_WINDOW is

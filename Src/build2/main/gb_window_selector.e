@@ -182,9 +182,9 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	assign_main_window_button: EV_TOOL_BAR_BUTTON is
+	assign_root_window_button: EV_TOOL_BAR_BUTTON is
 			-- `Result' is a tool bar button that
-			-- calls `add_new_directory'.
+			-- sets the root window for the project.
 		local
 			pixmaps: GB_SHARED_PIXMAPS
 		do
@@ -192,7 +192,7 @@ feature -- Access
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_titled_window_main_small_color"))
 			Result.select_actions.extend (agent change_root_window)
-			Result.drop_actions.extend (agent change_root_window_on_drop)
+			Result.drop_actions.extend (agent change_root_window_to)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -430,7 +430,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	change_root_window_on_drop (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
+	change_root_window_to (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Change the root window of the project to `titled_window_object'.
 		require
 			titled_window_object_not_void: titled_window_object /= Void
@@ -445,8 +445,8 @@ feature {NONE} -- Implementation
 		
 
 	change_root_window is
-			-- Ensure that window currently displayed in the layout constructor is the main
-			-- window.
+			-- Ensure that the window selected in the layout constructor is the
+			-- root window of the project.
 		local
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			titled_window_object: GB_TITLED_WINDOW_OBJECT

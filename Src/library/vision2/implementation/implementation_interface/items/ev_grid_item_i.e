@@ -17,7 +17,7 @@ inherit
 			copy, default_create
 		end
 	
-	EV_SELECTABLE_I
+	EV_DESELECTABLE_I
 		redefine
 			interface
 		end

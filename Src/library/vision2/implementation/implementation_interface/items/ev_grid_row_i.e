@@ -14,7 +14,7 @@ inherit
 	
 	EV_GRID_ROW_ACTION_SEQUENCES
 	
-	EV_SELECTABLE_I
+	EV_DESELECTABLE_I
 		redefine
 			interface
 		end
@@ -171,7 +171,7 @@ feature -- Access
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
 		do
-			Result := selected_item_count = count
+			Result := selected_item_count > 0 and then selected_item_count = count
 		end
 
 feature -- Status report

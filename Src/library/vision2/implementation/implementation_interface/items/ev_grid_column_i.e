@@ -9,7 +9,7 @@ class
 inherit
 	REFACTORING_HELPER
 	
-	EV_SELECTABLE_I
+	EV_DESELECTABLE_I
 		redefine
 			interface
 		end
@@ -150,9 +150,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
 		do
-			if parent_i /= Void then
-				Result := selected_item_count = count
-			end		
+			Result := selected_item_count > 0 and then selected_item_count = count		
 		end
 			
 feature -- Element change
@@ -224,11 +222,17 @@ feature {EV_GRID_I} -- Implementation
 		end
 
 	enable_select is
-			-- Select the object.
+			-- Select `Current' in `parent_i'
 		do
 			selected_item_count := count
 			parent_i.redraw_client_area
 			fixme ("EV_GRID_COLUMN_I:enable_select - Perform a more optimal redraw when available")	
+		end
+
+	disable_select is
+			-- Deselect `Current' from `parent_i'
+		do
+			
 		end
 
 	destroy is

@@ -12,19 +12,22 @@ inherit
 	
 feature 
 
-	init_connection is
+	init_connection (really_connect: BOOLEAN) is
 			-- Connect with ised 
-			-- and watch for inputs from ised.
+			-- and watch for inputs from ised if 
+			-- `really_connect' is True.
 		do
-			init_connect;
-				-- Initialize the connection
-				-- with the ised daemon.
-			create_handler;
+			if really_connect then
+				init_connect;
+					-- Initialize the connection
+					-- with the ised daemon.
+				create_handler;
 
-			pass_adresses;
-				-- Pass adresses of RQST_HANDLER objects to 
-				-- C, so they can be called when the
-				-- the workbench is in server mode.
+				pass_adresses;
+					-- Pass adresses of RQST_HANDLER objects to 
+					-- C, so they can be called when the
+					-- the workbench is in server mode.
+			end;
 
 			enable_server_mode
 		end;

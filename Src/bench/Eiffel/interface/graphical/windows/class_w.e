@@ -167,7 +167,8 @@ feature {NONE}
 	execute (argument: ANY) is
 		do
 			if argument = resize_action then
-				change_class_command.update_text
+				change_class_command.update_text;
+				change_class_command.choice.update_position
 			else
 				old_execute (argument)
 			end
@@ -283,6 +284,13 @@ feature {NONE}
 			set_x_y (screen.x, screen.y)
 		end;
 
+	shell_command: SHELL_COMMAND;
+	current_target: CURRENT_CLASS;
+	previous_target: PREVIOUS_TARGET;
+	next_target: NEXT_TARGET
+
+feature -- Formats
+
 	showflat_command: SHOW_FLAT;
 	showflatshort_command: SHOW_FS;
 	showancestors_command: SHOW_ANCESTORS;
@@ -297,9 +305,5 @@ feature {NONE}
 	showexternals_command: SHOW_EXTERNALS;
 	showonces_command: SHOW_ONCES;
 	--showcustom_command: SHOW_CUSTOM
-	shell_command: SHELL_COMMAND;
-	current_target: CURRENT_CLASS;
-	previous_target: PREVIOUS_TARGET;
-	next_target: NEXT_TARGET
 
 end -- class CLASS_W

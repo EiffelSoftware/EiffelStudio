@@ -278,6 +278,7 @@ feature
 						)
 						l.set_background_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 1.0))
 						wbox.extend (l)
+						test_subject.set_minimum_size (300, 100)
 						wbox.extend (test_subject)
 						test_subject.set_pebble (test_subject)
 						if n \\ 2 = 0 then
@@ -314,6 +315,7 @@ feature
 			Result.extend (create {EV_BUTTON}.make_for_test)
 			Result.extend (create {EV_CHECK_BUTTON}.make_for_test)
 			Result.extend (create {EV_DRAWING_AREA}.make_for_test)
+			Result.extend (create {EV_FIXED}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_PROGRESS_BAR}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_RANGE}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_SCROLL_BAR}.make_for_test)
@@ -507,6 +509,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/05/02 15:21:39  brendel
+--| Added EV_FIXED.
+--|
 --| Revision 1.42  2000/04/28 23:43:26  brendel
 --| Corrected.
 --|

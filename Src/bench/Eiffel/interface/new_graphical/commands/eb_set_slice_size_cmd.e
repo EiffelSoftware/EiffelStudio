@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				check
-					obj /= Void
+					tool /= Void
 					-- XR: This shouldn't happen (no toolbar button for
 					-- this command in the pretty print dialog!)
 				end

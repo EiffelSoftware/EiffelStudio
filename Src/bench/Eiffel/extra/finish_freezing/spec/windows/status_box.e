@@ -76,7 +76,7 @@ feature -- Initialization
 feature {NONE} -- Implementation
 
 	Click_cancel_message: STRING is "%N%
-		%Click Ok to terminate.%N%
+		%Click OK to terminate.%N%
 		%Click Cancel to open a command line console.%N"
 
 	append_c_error_msg (make_util, msg: STRING) is

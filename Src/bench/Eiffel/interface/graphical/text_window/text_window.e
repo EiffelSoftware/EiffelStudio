@@ -323,11 +323,9 @@ feature
 			then
 				search_sub := text.substring (c_pos + 1, text.count);
 				search_sub.to_lower;
-				s1 := search_sub.to_c;
 				temp := clone (s);
 				temp.to_lower;	
-				s2 := temp.to_c;
-				start_position := text_window_search_str_after (s1, s2);
+				start_position := search_sub.substring_index (temp, 1) - 1;
 				if start_position >= 0 then
 					start_position := start_position + c_pos;
 					set_cursor_position (start_position + s.count);
@@ -337,12 +335,10 @@ feature
 					if (c_pos > 0) then
 						search_sub := text.substring (1, c_pos);
 						search_sub.to_lower;
-						s1 := search_sub.to_c;
 						temp := clone (s);
 						temp.to_lower;	
-						s2 := temp.to_c;
 						start_position := 
-							text_window_search_str_after (s1, s2);
+							search_sub.substring_index (temp, 1) - 1;
 						if start_position >= 0 then
 							start_position := start_position;
 							set_cursor_position (start_position + temp.count);
@@ -458,13 +454,6 @@ feature {NONE} -- External features
 			"C"
 		alias
 			"x_pos"
-		end;
-
-	text_window_search_str_after (s1, s2: ANY): INTEGER is
-		external
-			"C"
-		alias
-			"search_str_after"
 		end;
 
 	text_window_cur_pos (p: POINTER; i, j: INTEGER): INTEGER is

@@ -149,7 +149,7 @@ feature -- Access
 		local
 			wel: WEL_CHARACTER_FORMAT		
 		do
-			!! Result.make
+			create Result.make
 			wel?= Result.implementation
 			wel.set_all_masks
 			cwin_send_message (item, Em_getcharformat, 1,
@@ -273,7 +273,7 @@ feature -- Basic operation
 			wel: WEL_POINT
 		do
 			wel := position_from_character_index (value - 1)
-			!! Result.set (wel.x, wel.y)
+			create Result.set (wel.x, wel.y)
 		end
 
 feature {NONE} -- WEL Implementation

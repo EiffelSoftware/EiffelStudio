@@ -25,10 +25,10 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+	make (a_text_window: CLASS_TEXT) is
 			-- Initialize the command.
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Properties
@@ -65,7 +65,7 @@ feature -- Formatting
 				root_stone ?= text_window.root_stone;
 				if
 					do_format or else filtered or else
-					(text_window.last_format /= Current or
+					(text_window.last_format_2.associated_formatter /= Current or
 					not equal (stone, root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
@@ -76,8 +76,8 @@ feature -- Formatting
 							text_window.set_file_name (file_name (stone));
 							display_info (stone);
 							if 
-								text_window.last_format = 
-									text_window.tool.showtext_command
+								text_window.last_format_2 = 
+									text_window.tool.showtext_frmt_holder
 							then
 								last_cursor_position := text_window.cursor_position;
 								last_top_position := text_window.top_character_position;
@@ -97,14 +97,14 @@ feature -- Formatting
 								text_window.set_top_character_position (last_top_position)
 							end;
 							text_window.set_root_stone (stone);
-							text_window.set_last_format (Current);
+							text_window.set_last_format_2 (holder);
 							filtered := false;
 							display_header (stone);
 							mp.restore
 						else
 							tool ?= text_window.tool;
 							if tool /= Void then
-								tool.showtext_command.execute (stone)
+								tool.showtext_frmt_holder.execute (stone)
 							end
 						end
 					end
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if text_window.last_format = Current then
+			if text_window.last_format_2.associated_formatter = Current then
 				text_window.display_header ("Producing clickable format...")
 			else
 				text_window.display_header ("Switching to clickable format...")

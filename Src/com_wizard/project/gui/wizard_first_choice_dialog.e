@@ -9,7 +9,8 @@ inherit
 		redefine
 			setup_dialog,
 			on_ok,
-			parent
+			parent,
+			on_wm_destroy
 		end
 
 	APPLICATION_IDS
@@ -41,6 +42,7 @@ feature {NONE} -- Initialization
 feature -- Behavior
 
 	setup_dialog is
+			-- Disable back button and setup buttons.
 		do
 			id_back.disable
 			open_project_radio.set_checked
@@ -49,13 +51,27 @@ feature -- Behavior
 		end
 
 	on_ok is
+			-- Record values of buttons.
 		do
 			if open_project_radio.checked then
+				new_project := False
 				Precursor {WEL_MODAL_DIALOG}
-				parent.on_menu_command (Open_string_constant)
 			else
+				new_project := True
 				Precursor {WEL_MODAL_DIALOG}
-				parent.on_menu_command (Launch_string_constant)
+			end
+		end
+
+	on_wm_destroy is
+			-- Should launch next dialog after this on has been totally destroyed.
+		do
+			Precursor {WEL_MODAL_DIALOG}
+			if ok_pushed then
+				if new_project then
+					parent.on_menu_command (Launch_string_constant)
+				else
+					parent.on_menu_command (Open_string_constant)
+				end
 			end
 		end
 
@@ -63,6 +79,9 @@ feature -- Access
 
 	open_project_radio: WEL_RADIO_BUTTON
 			-- Open existing project button
+
+	new_project: BOOLEAN
+			-- Should a new EiffelCOM project be created?
 			
 	create_project_radio: WEL_RADIO_BUTTON
 			-- Create new project button

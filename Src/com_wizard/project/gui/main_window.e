@@ -233,7 +233,7 @@ feature -- Output
 
 feature {NONE} -- State management
 
-	Introduction_state, Initial_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
+	First_state, Introduction_state, Initial_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
 			-- Possible states
 
 	state: INTEGER
@@ -247,6 +247,8 @@ feature {NONE} -- State management
 		do
 			inspect
 				state
+			when First_state then
+				Result := first_choice_dialog
 			when Introduction_state then
 				Result := Generated_code_type_dialog
 			when Initial_state then
@@ -267,13 +269,16 @@ feature {NONE} -- State management
 			clear
 			from
 				previous_states.extend (Abort_state)
+				previous_states.extend (First_state)
 				state := Introduction_state
 				shared_wizard_environment.set_no_abort
 			until
 				state = Finished_state or state = Abort_state
 			loop
 				current_dialog.activate
-				change_state (current_dialog.ok_pushed)
+				if state /= Abort_state then
+					change_state (current_dialog.ok_pushed)
+				end
 			end
 			if not (state = Abort_state) then
 				create wizard_manager.make (Current)
@@ -488,7 +493,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 invariant
 	
 	valid_state: state = Introduction_state or state = Initial_state or state = Idl_state or state = Ps_state or 
-				state = Final_state or state = Finished_state or state = Abort_state
+				state = Final_state or state = Finished_state or state = Abort_state or state = First_state
 
 end -- class MAIN_WINDOW
 

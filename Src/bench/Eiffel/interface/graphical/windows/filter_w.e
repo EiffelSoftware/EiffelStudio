@@ -43,7 +43,7 @@ feature -- Initialization
 
 			!!list.make (new_name, Current);
 			list.compare_objects;
-			list.set_visible_item_count (6);
+			list.set_visible_item_count (9);
 			list.add_click_action (Current, list);
 			attach_left (list, 10);
 			attach_top_widget (filter_label, list, 10);
@@ -257,8 +257,7 @@ feature {NONE} -- Implementation
 				loop
 					name_count := file_name.count;
 					if name_count > 4 then 
-						file_suffix := 
-							file_name.substring (name_count - 3, name_count);
+						file_suffix := file_name.substring (name_count - 3, name_count);
 						file_suffix.to_lower;
 						if file_suffix.is_equal (".fil") then
 							file_name.head (name_count - 4);
@@ -282,7 +281,7 @@ feature {NONE} -- Implementation
 					loop
 						!! str_element.make (0);
 						str_element.append (filter_names.item);
-						list.put_right (str_element)
+						list.extend (str_element)
 						list.forth;
 						filter_names.forth
 					end

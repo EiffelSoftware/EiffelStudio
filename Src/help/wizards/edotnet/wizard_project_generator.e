@@ -297,7 +297,8 @@ feature {NONE} -- Implementation
 			an_assembly: ASSEMBLY_INFORMATION
 			a_dependency: ASSEMBLY_INFORMATION
 			a_local_assembly: STRING
-			a_local_dependency: STRING		
+			a_local_dependency: STRING	
+			a_location: STRING
 		do
 			create Result.make (1024)
 			Result.append (External_keyword + New_line + Tab + Assembly_keyword + New_line)
@@ -310,7 +311,10 @@ feature {NONE} -- Implementation
 				selected_assemblies.after
 			loop
 				an_assembly := selected_assemblies.item
-				Result.append (Tab + Tab + Tab + Inverted_comma + assembly_location (an_assembly) + Inverted_comma + Comma + New_line)				
+				a_location := assembly_location (an_assembly)
+				if a_location /= Void and then not a_location.is_empty then
+					Result.append (Tab + Tab + Tab + Inverted_comma + a_location + Inverted_comma + Comma + New_line)				
+				end
 				selected_assemblies.forth
 			end
 			
@@ -323,7 +327,10 @@ feature {NONE} -- Implementation
 				dependencies.after
 			loop
 				a_dependency := dependencies.item
-				Result.append (Tab + Tab + Tab + Inverted_comma + assembly_location (a_dependency) + Inverted_comma + Comma + New_line)
+				a_location := assembly_location (a_dependency) 
+				if a_location /= Void and then not a_location.is_empty then
+					Result.append (Tab + Tab + Tab + Inverted_comma + a_location + Inverted_comma + Comma + New_line)
+				end
 				dependencies.forth
 			end
 
@@ -380,9 +387,33 @@ feature {NONE} -- Implementation
 			non_void_info: info /= Void
 		local
 			proxy: ASSEMBLY_MANAGER_INTERFACE_PROXY
+			project_location: STRING
+			an_assembly_filename: STRING
+			dll_filename: STRING
+			dll_file: RAW_FILE
+			exe_filename: STRING
+			exe_file: RAW_FILE
 		do
 			proxy := wizard_information.proxy
 			Result := proxy.assembly_location (info.name, info.version, info.culture, info.public_key)
+			if Result = Void or else Result.is_empty then
+				project_location := clone (wizard_information.project_location)
+				an_assembly_filename := clone (project_location) + "\" + clone (info.name)					
+				dll_filename := clone (an_assembly_filename) + Dll_extension
+				
+				create dll_file.make (dll_filename)
+				if dll_file.exists then
+					Result := dll_filename
+				else
+					exe_filename := clone (an_assembly_filename) + Exe_extension
+					create exe_file.make (exe_filename)
+					if exe_file.exists then
+						Result := exe_filename
+					else
+						Result := ""
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Constants
@@ -413,6 +444,12 @@ feature {NONE} -- Constants
 	
 	Eiffel_extension: STRING is ".e"
 			-- Eiffel classes extension
+		
+	Dll_extension: STRING is ".dll"
+			-- DLLs extension
+	
+	Exe_extension: STRING is ".exe"
+			-- EXEs extension
 	
 	Ace_template_filename: STRING is "template_ace.ace"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications

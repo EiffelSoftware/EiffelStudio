@@ -23,11 +23,6 @@ inherit
 			type_check, byte_node, find_breakable, 
 			format, fill_calls_list, replicate
 		end;
-	IDABLE
-		rename
-			id as body_id,
-			set_id as set_body_id
-		end;
 	COMPARABLE
 		undefine
 			is_equal

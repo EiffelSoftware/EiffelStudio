@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			accel_group := C.gtk_accel_group_new
 			C.gtk_window_add_accel_group (c_object, accel_group)
 		end
-
+		
 feature {NONE} -- Accelerators
 
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -273,6 +273,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/22 00:49:01  king
+--| Formatting
+--|
 --| Revision 1.4  2001/06/21 23:43:36  king
 --| Removed useless policy setting
 --|

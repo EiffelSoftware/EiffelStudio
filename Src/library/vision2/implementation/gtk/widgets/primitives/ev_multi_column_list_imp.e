@@ -245,7 +245,6 @@ feature {NONE} -- Initialization
 
 			from
 				ev_children.start
-				C.gtk_clist_freeze (list_widget)
 			until
 				ev_children.after
 			loop
@@ -256,8 +255,6 @@ feature {NONE} -- Initialization
 				update_child (ev_children.item, ev_children.index)
 				ev_children.forth
 			end
-			C.gtk_clist_thaw (list_widget)
-			
 			if old_list_widget /= NULL then
 				C.gtk_container_remove (visual_widget, old_list_widget)
 			end

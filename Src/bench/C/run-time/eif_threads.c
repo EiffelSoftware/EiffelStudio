@@ -136,11 +136,6 @@ rt_private struct stack_list rt_globals_list = {
 #define LAUNCH_MUTEX_UNLOCK \
 	EIF_LW_MUTEX_UNLOCK(eif_thread_launch_mutex, "Cannot unlock mutex for the thread launcher\n"); 
 
-#undef EIF_ENTER_EIFFEL
-#undef EIF_EXIT_EIFFEL
-#define EIF_ENTER_EIFFEL	rt_globals->gc_thread_status = EIF_THREAD_RUNNING
-#define EIF_EXIT_EIFFEL 	rt_globals->gc_thread_status = EIF_THREAD_BLOCKED
-
 rt_public void eif_thr_init_root(void) 
 {
 	/*
@@ -955,10 +950,7 @@ rt_public void eif_thr_join_all(void)
 	 * first thread, so we can implement a simpler join_all mechanism 
 	 */
 
-	EIF_ENTER_C;
 	EIF_THR_JOIN_ALL;
-	RTGC;
-	EIF_EXIT_C;
 }
 #else
 rt_public void eif_thr_join_all(void)
@@ -984,8 +976,6 @@ rt_public void eif_thr_join_all(void)
 	/* If no thread has been launched, the mutex isn't initialized */
 	if (!eif_children_mutex) return;
 
-	EIF_ENTER_C;
-
 #ifdef EIF_NO_CONDVAR
 	EIF_THR_YIELD;
 	while (!end) {
@@ -1004,9 +994,6 @@ rt_public void eif_thr_join_all(void)
 		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
 	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 #endif
-	
-	RTGC;
-	EIF_EXIT_C;
 }
 #endif
 
@@ -1040,9 +1027,7 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	/* If no thread has been launched, the mutex isn't initialized */
 	if (!eif_children_mutex) return;
 
-	EIF_ENTER_C;
 #ifdef EIF_NO_CONDVAR
-
 	/* This version is for platforms that don't support condition
 	 * variables. If the platform doesn't support yield() either, this
 	 * function can use much of the CPU time.
@@ -1073,9 +1058,6 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 
 #endif
 	RT_GC_WEAN(thread_object);
-
-	RTGC;
-	EIF_EXIT_C;
 }
 
 rt_public void eif_thr_join (EIF_POINTER tid)
@@ -1087,11 +1069,7 @@ rt_public void eif_thr_join (EIF_POINTER tid)
 	 */
 
 	if (tid != (EIF_POINTER) 0) {
-		RT_GET_CONTEXT;
-		EIF_ENTER_C;
 		EIF_THR_JOIN(* (EIF_THR_TYPE *) tid);
-		RTGC;
-		EIF_EXIT_C;
 	} else {
 		eraise ("Trying to join a thread whose ID is NULL", EN_EXT);
 	}
@@ -1153,11 +1131,7 @@ rt_public EIF_POINTER eif_thr_mutex_create(void) {
 rt_public void eif_thr_mutex_lock(EIF_POINTER mutex_pointer) {
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
-		RT_GET_CONTEXT
-		EIF_ENTER_C;
 		EIF_MUTEX_LOCK(a_mutex_pointer, "cannot lock mutex\n");
-		RTGC;
-		EIF_EXIT_C;
 	} else 
 		eraise("Trying to lock a NULL mutex", EN_EXT);
 }
@@ -1174,11 +1148,7 @@ rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer) {
 	int status = 0;
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
-		RT_GET_CONTEXT
-		EIF_ENTER_C;
 		EIF_MUTEX_TRYLOCK(a_mutex_pointer, status, "cannot trylock mutex\n");
-		RTGC;
-		EIF_EXIT_C;
 	} else
 		eraise("Trying to lock a NULL mutex", EN_EXT);
 	return ((EIF_BOOLEAN)(!status));
@@ -1221,11 +1191,7 @@ rt_public void eif_thr_sem_wait (EIF_POINTER sem)
 #ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
-		RT_GET_CONTEXT
-		EIF_ENTER_C;
 		EIF_SEM_WAIT(a_sem_pointer, "cannot lock semaphore");
-		RTGC;
-		EIF_EXIT_C;
 	} else 
 		eraise("Trying to lock a NULL semaphore", EN_EXT);
 #endif
@@ -1248,11 +1214,7 @@ rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
 	int status = 0;
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
-		RT_GET_CONTEXT
-		EIF_ENTER_C;
 		EIF_SEM_TRYWAIT(a_sem_pointer, status, "cannot trywait semaphore\n");
-		RTGC;
-		EIF_EXIT_C;
 	} else
 		eraise("Trying to trywait a NULL semaphore", EN_EXT);
 	return ((EIF_BOOLEAN)(!status));
@@ -1325,11 +1287,7 @@ rt_public void eif_thr_cond_wait (EIF_POINTER cond_ptr, EIF_POINTER mutex_ptr)
 	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
 
 	if (cond != (EIF_COND_TYPE *) 0) {
-		RT_GET_CONTEXT
-		EIF_ENTER_C;
 		EIF_COND_WAIT(cond, mutex, "cannot cond_wait");
-		RTGC;
-		EIF_EXIT_C;
 	} else
 		eraise ("Trying to cond_wait on NULL", EN_EXT);
 #endif /* EIF_NO_CONDVAR */
@@ -1342,11 +1300,7 @@ rt_public void eif_thr_cond_wait_with_timeout (EIF_POINTER cond_ptr, EIF_POINTER
 	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
 
 	if (cond != (EIF_COND_TYPE *) 0) {
-		RT_GET_CONTEXT
-		EIF_ENTER_C;
 		EIF_COND_WAIT_WITH_TIMEOUT(cond, mutex, a_timeout, "cannot cond_wait with timeout");
-		RTGC;
-		EIF_EXIT_C;
 	} else
 		eraise ("Trying to cond_wait_with_timeout on NULL", EN_EXT);
 #endif /* EIF_NO_CONDVAR */

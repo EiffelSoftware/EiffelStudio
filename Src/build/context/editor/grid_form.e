@@ -57,11 +57,11 @@ feature -- Interface
 			attach_top_widget (grid_title, grids, 10)
 			detach_bottom (grids)
 			no_grid.arm
-			no_grid.add_arm_action (Current, First)
-			grid5.add_arm_action (Current, Second)
-			grid10.add_arm_action (Current, Third)
-			grid15.add_arm_action (Current, Fourth)
-			grid20.add_arm_action (Current, Fifth)
+			no_grid.add_activate_action (Current, First)
+			grid5.add_activate_action (Current, Second)
+			grid10.add_activate_action (Current, Third)
+			grid15.add_activate_action (Current, Fourth)
+			grid20.add_activate_action (Current, Fifth)
 			grids.set_always_one (True)
 			show_current
 		end

@@ -17,6 +17,15 @@ inherit
 			implementation
 		end
 
+feature {NONE} -- Initialization
+
+	make (par: EV_CONTAINER) is
+			-- Create a message dialog with `par' as parent.
+		require
+			valid_parent: is_valid (par)
+		deferred
+		end
+
 feature -- Status setting
 
 	show is
@@ -27,6 +36,17 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.show
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the dialog.
+		require
+			exists: not destroyed
+			valid_parent: is_valid (par)
+		do
+			implementation.set_parent (par)
 		end
 
 feature -- Implementation

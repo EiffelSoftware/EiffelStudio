@@ -10,6 +10,15 @@ deferred class
 inherit
 	EV_ANY_I
 
+feature {NONE} -- Initialization
+
+	make (par: EV_CONTAINER) is
+			-- Create a message dialog with `par' as parent.
+		require
+			valid_parent: is_valid (par)
+		deferred
+		end
+
 feature -- Status setting
 
 	show is
@@ -18,6 +27,16 @@ feature -- Status setting
 			-- until the user closed the window.
 		require
 			exists: not destroyed
+		deferred
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the dialog.
+		require
+			exists: not destroyed
+			valid_parent: is_valid (par)
 		deferred
 		end
 

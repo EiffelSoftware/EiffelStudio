@@ -10,6 +10,9 @@ inherit
 	ROOT_MENU_WINDOWS
 
 	MENU_WINDOWS
+		redefine
+			associated_shell
+		end
 
 	POPUP_I
 
@@ -39,6 +42,12 @@ feature -- Output
 			parent.associate_menu (Current)
 			show_track (x, y, ww)
 			parent.remove_menu
+		end
+
+feature {NONE} -- Inapplicable
+
+	associated_shell: WM_SHELL_WINDOWS is
+		do
 		end
 
 end -- class POPUP_WINDOWS

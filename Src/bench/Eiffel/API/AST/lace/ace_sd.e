@@ -840,6 +840,9 @@ feature {NONE} -- Incrementality
 			System.set_system_namespace (Void)
 			System.set_msil_key_file_name (Void)
 			System.set_msil_generation_type ("exe")
+			system.set_dotnet_naming_convention (False)
+			System.set_use_cluster_as_namespace (True)
+			System.set_use_all_cluster_as_namespace (True)
 		end
 
 end -- class ACE_SD

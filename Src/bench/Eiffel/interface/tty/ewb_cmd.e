@@ -493,7 +493,11 @@ feature -- Execution
 			else
 				io.error.putstring ("File: ");
 				io.error.putstring (an);
-				io.error.putstring (" cannot be read%N");
+				if f.exists then
+					io.error.putstring (" cannot be read%N");
+				else
+					io.error.putstring (" does not exist%N");
+				end;
 				lic_die (-1)
 			end
 		end;
@@ -510,6 +514,8 @@ feature -- Execution
 feature
 
 	edit (a_file: STRING) is
+		require
+			file_not_void: a_file /= Void
 		local
 			editor: STRING;
 			cmd: STRING;

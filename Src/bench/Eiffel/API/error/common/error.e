@@ -55,6 +55,11 @@ feature -- Debug pupose
 			build_explain;
 		end;
 
+	help_file_name: STRING is
+		do
+			Result := code
+		end;
+
 	print_short_help is
 		local
 			file_name: STRING;
@@ -62,7 +67,7 @@ feature -- Debug pupose
 		do
 			file_name := help_path.duplicate;
 			file_name.append ("/short/");
-			file_name.append (code);
+			file_name.append (help_file_name);
 			if subcode /= 0 then
 				file_name.append_integer (subcode)
 			end;

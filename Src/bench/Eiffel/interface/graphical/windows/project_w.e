@@ -47,17 +47,13 @@ feature
 
 	display: SCREEN is
 		local
-			any: ANY;
 			display_name: STRING;
 		do
 			!!Result.make ("");
 		rescue
 			io.error.putstring ("Cannot open display %"");
-			any := ("DISPLAY").to_c;
-			any := getenv ($any);
-			if any /= Void then
-				!!display_name.make (0);
-				display_name.from_c (any);
+			display_name := env_get ("DISPLAY");
+			if display_name /= Void then
 				io.error.putstring (display_name);
 			end;
 			io.error.putstring ("%"%N%

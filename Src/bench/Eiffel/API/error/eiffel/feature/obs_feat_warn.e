@@ -6,14 +6,19 @@ inherit
 
 	OBS_CLASS_WARN
 		redefine
-			build_explain, code
+			build_explain, code, help_file_name
 		end;
 
 feature
 
 	code: STRING is
 		do
-			Result := "Obsolete_call"
+			Result := "Obsolete call"
+		end;
+
+	help_file_name: STRING is
+		do
+			Result := "OBS_CALL"
 		end;
 
 	obsolete_feature: FEATURE_I;

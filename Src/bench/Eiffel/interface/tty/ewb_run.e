@@ -23,9 +23,10 @@ feature
 			args: STRING;
 			f: UNIX_FILE;
 			make_f: UNIX_FILE;
-			error: BOOLEAN
+			error: BOOLEAN;
+			root_creation_name: STRING;
+			root_feat: FEATURE_I;
 		do
-				-- Get the arguments
 			!!appl_name.make (0);
 			!!makefile_sh_name.make (0);
 			if melt_only then
@@ -56,10 +57,19 @@ feature
 					end;
 				end;
 				if not error then
-					appl_name.append_character (' ');
-					io.putstring ("--> Arguments: ");
-					wait_for_return;
-					appl_name.append (io.laststring);
+					root_creation_name := System.creation_name;
+					if root_creation_name /= Void then
+						root_feat := System.root_class.compiled_class.
+							feature_table.item (root_creation_name);
+						if root_feat.argument_count = 1 then
+
+								-- Get the arguments
+							appl_name.append_character (' ');
+							io.putstring ("--> Arguments: ");
+							wait_for_return;
+							appl_name.append (io.laststring);
+						end;
+					end;
 					env_put (Workbench_generation_path, "MELT_PATH");
 					env_system (appl_name);
 				end;

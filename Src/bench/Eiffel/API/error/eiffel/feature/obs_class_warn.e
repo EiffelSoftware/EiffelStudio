@@ -6,7 +6,7 @@ inherit
 
 	WARNING
 		redefine
-			build_explain, infix "<"
+			build_explain, infix "<", help_file_name
 		end;
 
 feature
@@ -35,6 +35,11 @@ feature
 			Result := "Obsolete";
 		end;
 
+	help_file_name: STRING is
+		do
+			Result := "OBS_CLASS"
+		end;
+	
 	infix "<" (other: like Current): BOOLEAN is
 		do
 			Result := code < other.code or else

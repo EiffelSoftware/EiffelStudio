@@ -9,9 +9,6 @@ class
 
 inherit
 	SHARED_XML_ROUTINES
-		export
-			{NONE} all
-		end
 		
 	EB_FILE_DIALOG_CONSTANTS
 		export

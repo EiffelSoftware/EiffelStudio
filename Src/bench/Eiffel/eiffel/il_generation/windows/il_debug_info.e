@@ -8,6 +8,8 @@ class
 	IL_DEBUG_INFO
 
 inherit
+	ANY
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all

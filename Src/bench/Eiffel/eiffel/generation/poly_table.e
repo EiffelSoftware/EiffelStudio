@@ -18,9 +18,8 @@ inherit
 			is_empty as array_is_empty,
 			entry as array_entry
 		export
-			{NONE} all
-			{POLY_TABLE} array_item
 			{ANY} count
+			{POLY_TABLE} all
 		end
 
 	IDABLE

@@ -7,6 +7,8 @@ class
 	EB_GENERAL_DATA
 
 inherit
+	ANY
+
 	SHARED_RESOURCES
 		rename
 			initialize as initialize_resources

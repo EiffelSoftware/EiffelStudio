@@ -34,7 +34,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
+	make (a_manager: like manager; an_explorer_bar: like explorer_bar) is
 			-- Create a new tool with `a_manager' as manager.
 		require
 			a_manager_exists: a_manager /= Void

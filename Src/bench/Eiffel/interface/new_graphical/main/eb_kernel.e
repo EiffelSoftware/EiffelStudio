@@ -7,6 +7,8 @@ class
 	EB_KERNEL
 
 inherit
+	ANY
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

@@ -25,7 +25,7 @@ create
 feature -- Initialization
 
 	make_from_relative_pos (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN;
-				pos: INTEGER; a_text: SELECTABLE_TEXT) is
+				pos: INTEGER; a_text: like text) is
 			-- Create a cursor for `text', at position given by
 			-- `a_line', `a_token' and `pos'.
 		do
@@ -35,7 +35,7 @@ feature -- Initialization
 			set_current_char (a_token, pos)
 		end
 
-	make_from_character_pos (ch_num, y: INTEGER; a_text: SELECTABLE_TEXT) is
+	make_from_character_pos (ch_num, y: INTEGER; a_text: like text) is
 			-- Create a cursor for `text', at the `ch_num'th
 			-- character in line `y'.
 		require
@@ -49,7 +49,7 @@ feature -- Initialization
 			set_x_in_characters (ch_num)
 		end
 
-	make_from_integer (ch_num: INTEGER; a_text: SELECTABLE_TEXT) is
+	make_from_integer (ch_num: INTEGER; a_text: like text) is
 			-- Create a cursor in `a_window', at the `ch_num'th
 			-- character of the whole text.
 		require

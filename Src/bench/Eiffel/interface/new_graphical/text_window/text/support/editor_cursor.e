@@ -33,7 +33,7 @@ feature -- Element change
 			-- Update `x_in_pixels' accordingly.
 		do
 			Precursor {TEXT_CURSOR} (a_token, a_position)
-			on_cursor_move
+			text.on_cursor_move (Current)
 		end
 
 feature {EDITABLE_TEXT} -- Implementation
@@ -43,7 +43,7 @@ feature {EDITABLE_TEXT} -- Implementation
 			-- It is required that the cursor is not in the left margin.
 		do
 			Precursor {TEXT_CURSOR}
-			on_cursor_move
+			text.on_cursor_move (Current)
 		end
 
 feature {NONE} -- Implementation
@@ -57,13 +57,5 @@ feature {NONE} -- Implementation
 
 	text: EDITABLE_TEXT
 			-- Text that contains `current'.
-
-feature {NONE} -- Observer Pattern
-
-	on_cursor_move is
-			-- Notify associated text that `Current' has moved.
-		do
-			text.on_cursor_move (Current)
-		end
 
 end -- class EDITOR_CURSOR

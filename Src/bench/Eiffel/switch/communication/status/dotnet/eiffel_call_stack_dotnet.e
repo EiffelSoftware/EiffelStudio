@@ -51,8 +51,10 @@ inherit
 		end			
 
 create {RUN_INFO, APPLICATION_STATUS_DOTNET}
-
 	make
+	
+create {EIFFEL_CALL_STACK_DOTNET}
+	list_make, make_sublist
 
 feature -- Properties
 

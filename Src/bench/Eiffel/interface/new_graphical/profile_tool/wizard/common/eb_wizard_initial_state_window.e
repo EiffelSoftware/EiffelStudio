@@ -9,9 +9,6 @@ deferred class
 
 inherit
 	EB_WIZARD_STATE_WINDOW
-		export
-			{NONE} all
-		end
 
 feature -- Access
 

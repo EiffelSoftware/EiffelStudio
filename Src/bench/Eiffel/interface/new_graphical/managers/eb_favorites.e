@@ -29,6 +29,9 @@ create
 	default_create,
 	make_with_string
 
+create {EB_FAVORITES}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -307,5 +310,13 @@ feature {NONE} -- Implementation
 feature {NONE} -- Attributes
 
 	observer_list: ARRAYED_LIST [EB_FAVORITES_OBSERVER]
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
 
 end -- class EB_FAVORITES

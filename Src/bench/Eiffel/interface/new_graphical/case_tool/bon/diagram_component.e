@@ -8,6 +8,8 @@ deferred class
 
 inherit
 	EV_FIGURE_GROUP
+		undefine
+			new_filled_list
 		redefine
 			world
 		end

@@ -51,7 +51,7 @@ inherit
 			default_create, copy
 		end
 
-feature {NONE} -- Initialization
+feature {EV_ANY} -- Initialization
 
 	initialize is
 			-- Set defaults.
@@ -91,6 +91,8 @@ feature {NONE} -- Initialization
 			vb.set_border_width (Layout_constants.Default_border_size)
 			set_default_cancel_button (cancel_button)
 		end
+
+feature {NONE} -- Implementation
 
 	set_default_settings is
 			-- Initialize user selection.

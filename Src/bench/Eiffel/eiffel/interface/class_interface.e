@@ -10,8 +10,6 @@ inherit
 	HASHABLE
 		rename
 			hash_code as class_id
-		export
-			{NONE} all
 		end
 
 	SHARED_WORKBENCH

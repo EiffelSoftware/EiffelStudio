@@ -1,6 +1,8 @@
 class DEBUG_INFO
 
 inherit
+	ANY
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

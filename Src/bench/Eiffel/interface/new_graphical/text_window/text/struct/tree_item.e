@@ -47,13 +47,13 @@ feature -- Element change
 			tree := t
 		end
 
-	set_next (ti: TREE_ITEM) is
+	set_next (ti: like Current) is
 			-- Make `ti' the next item.
 		do
 			next := ti
 		end
 
-	set_previous (ti: TREE_ITEM) is
+	set_previous (ti: like Current) is
 			-- Make `ti' the previous item.
 		do
 			previous := ti

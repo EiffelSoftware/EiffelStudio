@@ -8,11 +8,7 @@ deferred class
 	EIFNET_DEBUGGER_BREAKPOINT_INFO
 	
 inherit
-	
 	ICOR_EXPORTER
-		export
-			{NONE} all
-		end
 
 feature -- Access
 

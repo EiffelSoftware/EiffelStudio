@@ -22,7 +22,7 @@ feature
 			non_void_feat_table: feat_table /= Void
 			non_void_feature: f /= Void
 		local
-			error_msg: VTAT1
+			error_msg: like new_error
 		do
 				-- Wipe out the like controler
 			Like_control.wipe_out

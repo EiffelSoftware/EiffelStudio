@@ -12,9 +12,9 @@ inherit
 		rename
 			make_with_values as st_make_with_values,
 			make as sr_make,
-			default_value as value
+			default_value as sr_default_value
 		redefine
-			set_value, value, has_changed
+			set_value, has_changed
 		end;
 
 create
@@ -40,9 +40,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	value: STRING
-			-- Value of the resource 
 
 	default_value, actual_value: ARRAY [STRING]
 			-- The array, as reprensented by `value'.

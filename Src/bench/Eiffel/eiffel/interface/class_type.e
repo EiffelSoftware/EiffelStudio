@@ -69,7 +69,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t: CL_TYPE_I) is
+	make (t: like type) is
 			-- Create new generic derivation CLASS_TYPE based on
 			-- `t', type of actual CLASS_C as used in Eiffel code.
 		require
@@ -301,16 +301,6 @@ feature -- Settings
 			end
 		ensure
 			has_cpp_externals_set: has_cpp_externals = b
-		end
-
-	set_type (t: CL_TYPE_I) is
-			-- Assign `t' to `type'.
-		require
-			t_not_void: t /= Void
-		do
-			type := t
-		ensure
-			type_set: type = t
 		end
 
 	set_type_id (i: INTEGER) is
@@ -913,6 +903,7 @@ feature -- Generation
 			bits_desc: BITS_DESC
 			value: INTEGER
 			gen_type: GEN_TYPE_I
+			l_formal: FORMAL_I
 			l_formal_type: CREATE_FORMAL_TYPE
 		do
 			c_name := Encoder.feature_name (static_type_id, Initialization_body_index)
@@ -993,8 +984,9 @@ feature -- Generation
 
 				if gen_type = Void then
 					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = ")
-					if exp_desc.type_i.is_formal then
-						create l_formal_type.make (exp_desc.type_i)
+					l_formal ?= exp_desc.type_i
+					if l_formal /= Void then
+						create l_formal_type.make (l_formal)
 						l_formal_type.generate_type_id (buffer, byte_context.final_mode)
 					else
 							-- Not an expanded generic

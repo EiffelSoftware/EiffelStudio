@@ -68,7 +68,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 			end
 		end
 
-	make_from_old_cluster (old_cluster_i: CLUSTER_I; par_clus: like Current) is
+	make_from_old_cluster (old_cluster_i: like Current; par_clus: like Current) is
 		require
 			valid_arg: old_cluster_i /= Void
 		do
@@ -80,7 +80,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 			cluster_name := old_cluster_i.cluster_name
 		end
 
-	make_from_precompiled_cluster (old_cluster_i: CLUSTER_I) is
+	make_from_precompiled_cluster (old_cluster_i: like Current) is
 		require
 			valid_arg: old_cluster_i /= Void
 		do
@@ -282,7 +282,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_new_classs (class_i: CLASS_I) is
+	add_new_classs (class_i: like class_anchor) is
 		require
 			non_void_class_i: class_i /= Void
 			name_set: class_i.name /= Void
@@ -296,7 +296,7 @@ feature -- Element change
 			in_cluster: classes.has (class_i.name)
 		end
 
-	add_sub_cluster (c: CLUSTER_I) is
+	add_sub_cluster (c: like Current) is
 			-- Add cluster `c' to `sub_clusters.
 		require
 			valid_c: c /= Void
@@ -333,7 +333,7 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			cluster_name := s
 		end
 
-	set_old_cluster (c: CLUSTER_I) is
+	set_old_cluster (c: like old_cluster) is
 			-- Assign `c' to `old_cluster'.
 		do
 			old_cluster := c
@@ -835,7 +835,7 @@ feature {COMPILER_EXPORTER} -- Element change
 	insert_class_from_file (file_name: STRING) is
 		local
 			class_path: FILE_NAME
-			a_class: CLASS_I
+			a_class: like class_anchor
 			class_name: STRING
 			vscn: VSCN
 			str: ANY
@@ -1429,7 +1429,7 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			-- Full directory path where the changes in Current will be stored
 		local
 			d: DIRECTORY
-			cluster: like Current
+			cluster: CLUSTER_I
 		do
 			create Result.make_from_string (Workbench.backup_subdirectory)
 			create d.make (Result)
@@ -1796,6 +1796,13 @@ feature -- Formatting
 			st.add_string (path)
 		end
 
+feature -- Type anchors
+
+	class_anchor: CLASS_I is
+			-- Type of classes one can insert in Current
+		do
+		end
+		
 feature {NONE} -- Externals
 
 	eif_date (s: POINTER): INTEGER is

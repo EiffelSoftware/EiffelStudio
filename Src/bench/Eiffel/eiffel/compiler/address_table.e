@@ -12,8 +12,8 @@ inherit
 			has as class_has_dollar_operator,
 			cursor as ht_cursor
 		export
-			{NONE} all
-			{ANY} class_has_dollar_operator, merge
+			{ADDRESS_TABLE} all
+			{ANY} class_has_dollar_operator, valid_key, merge
 		end
 
 	SHARED_CODE_FILES

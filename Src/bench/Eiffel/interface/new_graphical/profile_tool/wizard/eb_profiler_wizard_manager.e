@@ -9,9 +9,6 @@ class
 
 inherit
 	EB_WIZARD_MANAGER
-		export
-			{NONE} all
-		end
 	
 	EB_CONSTANTS
 		export

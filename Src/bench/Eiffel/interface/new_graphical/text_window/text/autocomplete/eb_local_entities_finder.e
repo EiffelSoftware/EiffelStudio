@@ -8,6 +8,8 @@ class
 	EB_LOCAL_ENTITIES_FINDER
 
 inherit
+	ANY
+
 	EB_TOKEN_TOOLKIT
 		export
 			{NONE} All

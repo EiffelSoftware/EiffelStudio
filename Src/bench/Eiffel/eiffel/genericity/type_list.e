@@ -11,13 +11,18 @@ class TYPE_LIST
 inherit
 	ARRAYED_LIST [CLASS_TYPE]
 		export
-			{NONE} all
 			{ANY} first, start, after, forth, item, is_empty, count,
-				remove, cursor, go_to, wipe_out, extend
+				remove, cursor, go_to, wipe_out, extend, valid_index,
+				valid_cursor, extendible, prunable, readable, index, off,
+				writable
+			{TYPE_LIST} all
 		end
 
 create
 	make
+	
+create {TYPE_LIST}
+	make_filled
 
 feature -- Search
 

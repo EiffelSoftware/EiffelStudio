@@ -6,6 +6,7 @@ indexing
 deferred class APPLICATION_EXECUTION_IMP
 
 inherit
+	ANY
 
 	SHARED_APPLICATION_EXECUTION
 		export

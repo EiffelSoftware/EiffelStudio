@@ -8,6 +8,8 @@ class
 	EB_DIALOGS_DATA
 
 inherit
+	ANY
+
 	SHARED_RESOURCES
 		rename
 			initialize as initialize_resources

@@ -7,6 +7,8 @@ class
 	EB_FILE_OPENER
 
 inherit
+	ANY
+
 	EB_CONSTANTS
 		export
 			{NONE} all

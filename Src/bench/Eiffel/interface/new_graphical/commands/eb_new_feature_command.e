@@ -76,6 +76,14 @@ feature -- Basic operations
 			retry
 		end
 
+feature -- Access
+
+	mini_pixmap: ARRAY [EV_PIXMAP] is
+			-- Pixmaps representing the command for mini toolbars.
+		do
+			Result := Pixmaps.Icon_new_feature_small
+		end
+
 feature {NONE} -- Implementation
 
 	menu_name: STRING is
@@ -89,12 +97,6 @@ feature {NONE} -- Implementation
 			-- gray version, one for the color version).
 		do
 			Result := Pixmaps.Icon_new_feature
-		end
-
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command for mini toolbars.
-		do
-			Result := Pixmaps.Icon_new_feature_small
 		end
 
 	tooltip: STRING is

@@ -8,15 +8,15 @@ class
 
 inherit
 	EB_DOCUMENTATION_WIZARD
-	redefine
-		go_to_page,
-		initialize
-	end
+		redefine
+			go_to_page,
+			initialize
+		end
 
 create
 	default_create
 
-feature -- Initialization
+feature {EV_ANY} -- Initialization
 
 	initialize is
 			-- Sets defaults.

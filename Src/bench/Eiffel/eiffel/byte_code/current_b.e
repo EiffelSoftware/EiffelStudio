@@ -81,7 +81,7 @@ feature -- Byte code generation
 
 feature -- Inlining
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: CURRENT_B is
 		do
 			create {INLINED_CURRENT_B} Result
 		end

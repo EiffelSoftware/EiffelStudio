@@ -8,11 +8,7 @@ class
 	EIFNET_DEBUG_VALUE_INFO
 
 inherit
-	
 	ICOR_EXPORTER
-		export
-			{NONE} all
-		end
 	
 	SHARED_IL_DEBUG_INFO_RECORDER
 		export

@@ -27,7 +27,7 @@ inherit
 			type as return_type,
 			set_type as set_return_type
 		export
-			{NONE} all
+			{TYPE_FEATURE_I} all
 			{ANY}
 				feature_id, rout_id_set, origin_class_id, is_origin,
 				feature_name, written_in, origin_feature_id,
@@ -35,7 +35,7 @@ inherit
 				set_feature_id, set_rout_id_set, set_origin_class_id,
 				set_is_origin, set_feature_name, set_written_in,
 				set_origin_feature_id, set_feature_name_id,
-				instantiate, duplicate, new_rout_id
+				instantiate, duplicate, new_rout_id, return_type, names_heap
 		redefine
 			new_entry, is_type_feature, check_expanded, is_valid
 		end

@@ -7,6 +7,8 @@ deferred class
 	EB_SYSTEM_TAB
 
 inherit
+	ANY
+
 	LACE_AST_FACTORY
 		export
 			{NONE} all

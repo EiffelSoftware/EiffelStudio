@@ -24,6 +24,8 @@ inherit
 		rename
 			name as dup_name,
 			make as dup_make
+		export
+			{ANY} class_i, could_not_delete
 		undefine
 			enable_sensitive,
 			disable_sensitive,

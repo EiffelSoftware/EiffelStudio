@@ -8,6 +8,8 @@ class
 	EB_PROFILER_WIZARD_GENERATOR
 	
 inherit
+	ANY
+
 	EB_ERROR_MANAGER
 		export
 			{NONE} all

@@ -8,6 +8,8 @@ class
 	DEBUG_OUTPUT_SYSTEM_I
 
 inherit
+	ANY
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

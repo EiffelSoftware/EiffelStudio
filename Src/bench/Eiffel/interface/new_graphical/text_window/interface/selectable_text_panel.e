@@ -451,7 +451,7 @@ feature {NONE} -- Handle mouse clicks
 				-- Save cursor position.	
 			if not text_displayed.has_selection then	
 					-- There is no selection, so we start a selection.
-				text_displayed.set_selection_cursor(cursor.twin)
+				text_displayed.set_selection_cursor(text_displayed.cursor.twin)
 				text_displayed.enable_selection
 			end
 	

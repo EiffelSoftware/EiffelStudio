@@ -7,6 +7,8 @@ class
 	SHARED_IL_EMITTER
 
 inherit
+	ANY
+
 	SHARED_ERROR_HANDLER
 		export 
 			{NONE} all 

@@ -56,7 +56,7 @@ feature -- Commands
 					buffer.append_character ('\')
 				when '%'' then
 					buffer.append_character ('\')
-					buffer.append_character (''')
+					buffer.append_character ('%'')
 				when '?' then
 					buffer.append_character ('\')
 					buffer.append_character ('?')

@@ -16,6 +16,9 @@ inherit
 create
 	make_with_classes
 
+create {BON_CLIENT_SUPPLIER_FIGURE}
+	make_filled
+
 feature -- Access
 
 	start_point: EV_RELATIVE_POINT is
@@ -733,6 +736,14 @@ feature {EB_DIAGRAM_TO_PS_COMMAND} -- Postscript
 			if name_figure.is_show_requested then				
 				ps_proj.draw_figure_text (name_figure)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class BON_CLIENT_SUPPLIER_FIGURE

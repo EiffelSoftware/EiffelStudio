@@ -9,6 +9,8 @@ class
 	EB_CLASS_TEXT_MANAGER
 
 inherit
+	ANY
+
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all

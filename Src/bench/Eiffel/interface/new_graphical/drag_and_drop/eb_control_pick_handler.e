@@ -8,6 +8,8 @@ class
 	EB_CONTROL_PICK_HANDLER
 
 inherit
+	ANY
+
 	EB_GENERAL_DATA
 		export
 			{NONE} all

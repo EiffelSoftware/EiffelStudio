@@ -8,6 +8,7 @@ class
 	IL_DEBUG_INFO_HELPERS
 
 inherit
+	ANY
 
 	SHARED_WORKBENCH
 		export

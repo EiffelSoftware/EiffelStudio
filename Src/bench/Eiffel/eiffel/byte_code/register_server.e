@@ -3,11 +3,13 @@
 class REGISTER_SERVER 
 
 inherit
+	ANY
 
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
 		end;	-- DEBUG only
+
 	SHARED_C_LEVEL
 		export
 			{NONE} all

@@ -4,11 +4,11 @@ indexing
 	date        : "$Date$"
 	revision    : "$Revision$"
 
-deferred
-class
+deferred class
 	DBG_EXPRESSION_EVALUATOR
 
 inherit
+	ANY
 	
 	SHARED_DBG_EVALUATOR
 		export
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_expression (expr: DBG_EXPRESSION) is
+	make_with_expression (expr: like dbg_expression) is
 			-- Create Current from `expr'.
 		require
 			expr_not_void: expr /= Void

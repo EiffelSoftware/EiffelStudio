@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_expr (e: EXPR_B) is
+	set_expr (e: like expr) is
 			-- Assign `e' to `expr'.
 		do
 			expr := e

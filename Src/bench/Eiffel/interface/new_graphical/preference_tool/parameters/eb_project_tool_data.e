@@ -8,6 +8,8 @@ class
 	EB_PROJECT_TOOL_DATA
 
 inherit
+	ANY
+
 	SHARED_RESOURCES
 		rename
 			initialize as initialize_resources

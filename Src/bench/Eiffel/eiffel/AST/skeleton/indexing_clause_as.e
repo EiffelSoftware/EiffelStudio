@@ -9,8 +9,8 @@ class
 inherit
 	EIFFEL_LIST [INDEX_AS]
 		export
-			{NONE} all
-			{ANY} is_empty
+			{INDEXING_CLAUSE_AS} all
+			{ANY} is_empty, extendible
 		redefine
 			process,
 			make, extend
@@ -18,6 +18,9 @@ inherit
 
 create
 	make
+
+create {INDEXING_CLAUSE_AS}
+	make_filled
 
 feature -- Initialization
 

@@ -10,7 +10,7 @@ class
 inherit
 	PRODUCT_NAMES
 		export
-			{NONE} all
+			{NONE} workbench_name
 		end
 
 feature -- Project file/directory warnings

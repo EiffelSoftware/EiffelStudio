@@ -292,6 +292,7 @@ feature -- Cache manipulations
 			l_array: array [H_CELL[T]]
 			h_cell: H_CELL[T]
 			to_remove: T
+			l_default: T
 		do	
 			i := e.id \\ Size
 			l_array := area.item (i)
@@ -301,7 +302,7 @@ feature -- Cache manipulations
 			if to_remove /= Void then
 				internal_remove (to_remove)
 			else
-				last_removed_item := Void
+				last_removed_item := l_default
 				count := count + 1
 			end
 			t := array_count.item (i)

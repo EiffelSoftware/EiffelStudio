@@ -34,6 +34,9 @@ inherit
 create
 	make
 
+create {DESC_LIST}
+	make_filled
+
 feature -- Creation
 
 	make (c: CLASS_C; s: INTEGER) is

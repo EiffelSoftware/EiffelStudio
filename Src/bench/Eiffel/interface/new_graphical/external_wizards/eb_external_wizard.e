@@ -8,6 +8,8 @@ deferred class
 	EB_EXTERNAL_WIZARD
 
 inherit
+	ANY
+
 	EIFFEL_ENV
 		export
 			{NONE} all

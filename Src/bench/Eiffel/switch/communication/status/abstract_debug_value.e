@@ -23,9 +23,6 @@ inherit
 		end	
 		
 	COMPARABLE
-		export
-			{NONE} all
-		end		
 
 	VALUE_TYPES
 		export

@@ -8,9 +8,9 @@ class SUPPLIER_LIST
 inherit
 	ARRAYED_LIST [SUPPLIER_INFO]
 		export
-			{NONE} all
-			{ANY} count, start, after, forth, item, cursor, go_to, is_empty, wipe_out
-			{SUPPLIER_LIST} put_right
+			{ANY} count, start, after, forth, item, cursor, go_to, is_empty, wipe_out,
+				valid_index, index, readable, off, valid_cursor, prunable, extendible
+			{SUPPLIER_LIST} all
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -27,6 +27,9 @@ inherit
 
 create
 	make
+
+create {SUPPLIER_LIST}
+	make_filled
 
 feature -- Element change
 
@@ -110,8 +113,7 @@ feature -- Element change
 			until
 				after
 			loop
-				Result.put_right (item.twin)
-				Result.forth
+				Result.extend (item.twin)
 				forth
 			end
 		end

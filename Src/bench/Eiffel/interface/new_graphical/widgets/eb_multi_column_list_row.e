@@ -13,6 +13,9 @@ inherit
 create
 	default_create
 
+create {EB_MULTI_COLUMN_LIST_ROW}
+	make_filled
+
 feature -- Element access
 
 	tooltip: STRING is

@@ -9,8 +9,12 @@ class
 	SHARED_XML_ROUTINES
 
 inherit
+	ANY
+
 	XM_CALLBACKS_FILTER_FACTORY
-		export {NONE} all end
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Implementation
 

@@ -11,10 +11,6 @@ class BREAKPOINT
 
 inherit
 	HASHABLE
-			-- to be able to create an hashtable of breakpoints
-		export
-			{NONE} all
-			{ANY} is_equal
 		redefine
 			is_equal
 		end

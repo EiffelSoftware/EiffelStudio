@@ -21,6 +21,9 @@ create
 	make,
 	make_from_string
 
+create {EB_FILE_NAME}
+	string_make
+
 feature -- Status setting
 
 	set_separator (a_sep: CHARACTER) is

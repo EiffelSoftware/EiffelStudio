@@ -20,6 +20,8 @@ class
 	CLASS_TEXT_MODIFIER
  
 inherit
+	ANY
+
 	EB_CLASS_TEXT_MANAGER
 		export
 			{NONE} all

@@ -3324,10 +3324,8 @@ end
 			no_generic: not is_generic
 		local
 			class_type: CLASS_TYPE
-			type_i: CL_TYPE_I
 		do
-			type_i := actual_type.type_i
-			class_type := new_type (type_i)
+			class_type := new_type (actual_type.type_i)
 			types.extend (class_type)
 			System.insert_class_type (class_type)
 		end
@@ -3689,7 +3687,7 @@ feature {NONE} -- Implementation
 
 feature -- Initialization
 
-	initialize (l: CLASS_I) is
+	initialize (l: like lace_class) is
 			-- Initialization of Current.
 		require
 			good_argument: l /= Void
@@ -3838,7 +3836,7 @@ feature -- status
 
 feature {CLASS_I} -- Settings
 
-	set_lace_class (cl: CLASS_I) is
+	set_lace_class (cl: like lace_class) is
 			-- Assign `cl' to `lace_class'.
 		require
 			cl_not_void: cl /= Void

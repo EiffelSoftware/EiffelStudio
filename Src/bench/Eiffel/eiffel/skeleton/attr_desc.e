@@ -135,7 +135,7 @@ feature -- Code generation
 			buffer_not_void: buffer /= Void
 			has_type: type_i /= Void
 		local
-			l_type: like type_i
+			l_type: TYPE_I
 		do
 			buffer.put_string ("static int16 g_atype")
 			buffer.put_integer (code)

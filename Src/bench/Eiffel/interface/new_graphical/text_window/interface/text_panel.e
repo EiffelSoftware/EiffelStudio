@@ -11,18 +11,15 @@ class
 	TEXT_PANEL
 
 inherit
+	TEXT_OBSERVER
+		redefine
+			on_text_loaded,
+			on_text_block_loaded
+		end
 
 	EV_FONT_CONSTANTS
 		export
 			{NONE} all
-		end
-	
-	TEXT_OBSERVER
-		export
-			{NONE} all
-		redefine
-			on_text_loaded,
-			on_text_block_loaded
 		end
 		
 create

@@ -60,7 +60,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	set_pebble (a_pebble: STONE) is
+	set_pebble (a_pebble: like pebble) is
 			-- Set `pebble' to `a_pebble'
 		do
 			pebble := a_pebble

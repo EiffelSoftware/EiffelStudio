@@ -77,6 +77,7 @@ feature
 			non_void_arguement:	e /= Void
 		local
 			new_one: INTEGER
+			l_default: G
 		do
 			if count < size then
 				new_one := free_cells.item (count)
@@ -90,7 +91,7 @@ feature
 				previous.put(younger, new_one)
 				younger := new_one
 				put (e, new_one)
-				to_remove := Void
+				to_remove := l_default
 			else
 				-- we are full: the older must leave
 				new_one := older
@@ -129,7 +130,6 @@ feature
 				next.put (-1, i)
 				next.put (i, younger)
 				younger := i
-				
 			end		
 		end
 
@@ -141,8 +141,9 @@ feature
 				out_of_bound: i <= capacity
 		local
 			previous_i, next_i: INTEGER
+			l_default: G
 		do
-			put (Void, i)
+			put (l_default, i)
 			if count > 1 then		
 				previous_i := previous.item (i)
 				next_i := next.item (i)
@@ -169,6 +170,7 @@ feature
 		local
 			int_array: ARRAY [INTEGER]
 			i: INTEGER
+			l_default: G
 		do
 			count := 0
 			younger := -1
@@ -181,7 +183,7 @@ feature
 					int_array.put (i, i)
 					i := i + 1
 			end
-			to_remove := Void
+			to_remove := l_default
 		end	
 		
 	set_item (e: G; i: INTEGER) is

@@ -35,6 +35,9 @@ inherit
 create
 	make
 
+create {FEAT_ARG}
+	make_filled
+
 feature {NONE} -- Implementation
 
 	make (n: INTEGER) is

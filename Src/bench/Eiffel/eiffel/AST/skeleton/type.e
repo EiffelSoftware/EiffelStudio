@@ -38,7 +38,7 @@ feature -- Access
 			--| the same (problem detected for LIKE_FEATURE). Xavier
 		do
 			Result := other /= Void and then other.same_type (Current)
-				and then is_equivalent (other)
+				and then is_internal_equivalent (other)
 		end;
 
 feature -- Comparison
@@ -49,6 +49,23 @@ feature -- Comparison
 		do
 		end;
 
+feature {NONE} -- Comparison
+
+	frozen is_internal_equivalent (other: TYPE_AS): BOOLEAN is
+			-- Safe call for descendants classes of AST_EIFFEL to `is_equivalent'.
+		require
+			other_not_void: other /= Void
+			same_type: same_type (other)
+		local
+			l_other: like Current
+		do
+			l_other ?= other
+			check
+				not_void_since_same_type: l_other /= Void
+			end
+			Result := is_equivalent (l_other)
+		end
+	
 feature
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is

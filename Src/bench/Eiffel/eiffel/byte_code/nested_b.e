@@ -278,7 +278,6 @@ feature -- Inlining
 
 	pre_inlined_code: like Current is
 		local
-			nested_b: NESTED_B
 			inlined_current_b: INLINED_CURRENT_B
 			access: like target
 			access_expr_b: ACCESS_EXPR_B
@@ -306,16 +305,15 @@ feature -- Inlining
 						-- Current.feature
 						-- (Current is in fact inlined_current_b)
 
-					create nested_b;
+					create parent;
 
-					nested_b.set_message (Current);
-					parent := nested_b;
+					parent.set_message (Current);
 
 					create inlined_current_b;
-					nested_b.set_target (inlined_current_b);
-					inlined_current_b.set_parent (nested_b);
+					parent.set_target (inlined_current_b);
+					inlined_current_b.set_parent (parent);
 
-					Result := nested_b
+					Result := parent
 				end;
 			end;
 				-- Cannot fail: `parent' of `target' is Current, thus not void

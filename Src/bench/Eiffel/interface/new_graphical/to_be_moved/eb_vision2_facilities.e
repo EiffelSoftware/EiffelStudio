@@ -10,9 +10,6 @@ class
 	
 inherit
 	EB_CONSTANTS
-		export
-			{NONE} all
-		end
 
 feature -- Basic operations
 

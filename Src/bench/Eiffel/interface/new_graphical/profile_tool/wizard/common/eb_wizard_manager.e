@@ -8,6 +8,8 @@ deferred class
 	EB_WIZARD_MANAGER
 
 inherit
+	ANY
+
 	EB_WIZARD_SHARED
 		export
 			{NONE} all

@@ -8,7 +8,6 @@ class
 	ES_PROJECTOR
 
 inherit
-
 	EV_WIDGET_PROJECTOR
 		export
 			{NONE} set_drawable
@@ -73,6 +72,10 @@ feature -- Element change
 			end
 			update
 		end
+
+feature -- Status report
+
+	buffer_used: BOOLEAN is True	
 
 feature -- Display updates
 
@@ -287,8 +290,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants 		
 
-	buffer_used: BOOLEAN is True	
-		
 	Buffer_scale_factor: INTEGER is 2
 	
 invariant

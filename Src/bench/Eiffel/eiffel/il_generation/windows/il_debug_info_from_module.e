@@ -20,7 +20,7 @@ class
 inherit
 	SHARED_IL_DEBUG_INFO
 		export
-			{NONE} all
+			{NONE} il_debug_info
 		end
 
 create

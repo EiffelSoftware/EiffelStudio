@@ -7,7 +7,7 @@ indexing
 class
 	SHARED_IL_DEBUG_INFO
 
-feature {NONE}
+feature -- Access
 
 	Il_debug_info: IL_DEBUG_INFO is
 			-- Common information about System used by IL_DEBUG_INFO_XYZ objects

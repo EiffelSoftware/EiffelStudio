@@ -50,6 +50,9 @@ inherit
 create
 	default_create
 
+create {EB_TOOLBAR}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is

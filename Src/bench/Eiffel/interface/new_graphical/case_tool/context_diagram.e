@@ -15,6 +15,8 @@ inherit
 	EV_FIGURE_WORLD
 		export {CLASS_TEXT_MODIFIER}
 			Default_pixmaps
+		undefine
+			new_filled_list
 		end
 
 	SHARED_EIFFEL_PROJECT

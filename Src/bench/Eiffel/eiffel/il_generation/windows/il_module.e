@@ -14,7 +14,7 @@ inherit
 	SHARED_WORKBENCH
 		export
 			{NONE} all
-			{ANY} System
+			{ANY} system, workbench
 		end
 	
 	SHARED_BYTE_CONTEXT

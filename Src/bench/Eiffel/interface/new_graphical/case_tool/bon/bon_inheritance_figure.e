@@ -16,6 +16,9 @@ inherit
 create
 	make_with_classes
 
+create {BON_INHERITANCE_FIGURE}
+	make_filled
+
 feature -- Access
 
 	start_point: EV_RELATIVE_POINT is
@@ -242,6 +245,14 @@ feature {NONE} -- Implementation
 			Result.set_pointer_style (Cursors.cur_Inherit_link)
 			Result.set_foreground_color (Default_colors.Red)
 			Result.set_line_width (2)
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class BON_INHERITANCE_FIGURE

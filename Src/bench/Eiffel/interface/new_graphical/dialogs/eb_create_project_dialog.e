@@ -9,9 +9,6 @@ class
 
 inherit
 	EV_DIALOG
-		export
-			{NONE} all
-		end
 
 	EXCEPTIONS
 		rename

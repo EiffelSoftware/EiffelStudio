@@ -7,6 +7,8 @@ class
 	EB_WINDOW_MANAGER
 
 inherit
+	ANY
+
 	EB_SHARED_INTERFACE_TOOLS
 		export
 			{NONE} all

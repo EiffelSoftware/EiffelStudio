@@ -8,6 +8,7 @@ class
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 	
 inherit
+	ANY
 
 	SHARED_IL_DEBUG_INFO_RECORDER 
 		export 

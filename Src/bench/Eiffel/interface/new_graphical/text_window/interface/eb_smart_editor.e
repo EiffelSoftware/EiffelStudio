@@ -640,10 +640,12 @@ feature {EB_EDITOR_TOOL} -- Implementation
 			syntax_error_dialog := Void
 		end
 
-feature {NONE} -- Implementation
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_SEARCH_PERFORMER} -- Access
 
 	text_displayed: SMART_TEXT
 			-- Displayed text.
+
+feature {NONE} -- Implementation
 
 	process_click_tool_error is
 			-- Show warning corresponding to `click_tool' error.

@@ -22,6 +22,9 @@ inherit
 
 create
 	make
+	
+create {EIFFEL_COMMENTS}
+	make_filled
 
 feature {NONE}
 	

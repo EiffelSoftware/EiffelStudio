@@ -9,9 +9,6 @@ class
 
 inherit
 	ICOR_EXPORTER
-		export
-			{NONE} all
-		end
 
 	SHARED_EIFFEL_PROJECT
 		export

@@ -376,7 +376,7 @@ feature -- Array optimization
 			Result.set_generated_offsets (old_context.generated_offsets.deep_twin)
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: LOOP_B is
 		local
 			opt_loop: OPT_LOOP_B
 			opt_context: OPTIMIZATION_CONTEXT

@@ -11,6 +11,7 @@ class
 	EB_EXPRESSION
 
 inherit
+	ANY
 
 	EB_CONSTANTS
 		export
@@ -228,9 +229,15 @@ feature -- Basic operations
 		
 	create_internal_evaluator is
 			-- Create internal_evaluator
+		local
+			l_expr_b: DBG_EXPRESSION_B
 		do
 			if internal_evaluator = Void then
-				create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (dbg_expression)
+				l_expr_b ?= dbg_expression
+				check
+					l_expr_b_not_void: l_expr_b /= Void
+				end
+				create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (l_expr_b)
 				internal_evaluator.set_context_class (context_class)
 				internal_evaluator.set_context_address (context_address)
 				internal_evaluator.set_on_class (on_class)

@@ -8,7 +8,6 @@ indexing
 class EWB_EDIT
 
 inherit
-
 	TTY_CONSTANTS;
 
 feature -- Element change

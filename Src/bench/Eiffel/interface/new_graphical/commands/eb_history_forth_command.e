@@ -16,6 +16,21 @@ inherit
 create
 	make
 	
+feature -- Access
+
+	executable: BOOLEAN is
+			-- Is `operate' possible (i.e. can we go forth)?
+		do
+			Result := history_manager.is_forth_possible
+		end
+
+	mini_pixmap: ARRAY [EV_PIXMAP] is
+			-- Mini pixmaps representing the command (one for the
+			-- gray version, one for the color version).
+		do
+			Result := Pixmaps.Icon_mini_forth
+		end
+
 feature {NONE} -- Implementation
 
 	operate is
@@ -24,24 +39,11 @@ feature {NONE} -- Implementation
 			history_manager.forth
 		end
 
-	executable: BOOLEAN is
-			-- Is `operate' possible (i.e. can we go forth)?
-		do
-			Result := history_manager.is_forth_possible
-		end
-
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
 			Result := Pixmaps.Icon_forth
-		end
-
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Mini pixmaps representing the command (one for the
-			-- gray version, one for the color version).
-		do
-			Result := Pixmaps.Icon_mini_forth
 		end
 
 	menu_name: STRING is

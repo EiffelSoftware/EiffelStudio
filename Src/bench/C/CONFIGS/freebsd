@@ -14,8 +14,8 @@ mtlibs='-lm -lcompat -lpthread'
 mtsharedlibs='-lm -lcompat -lpthread'
 
 warning_level='-Wall'
-optimize='-O2 -m486'
-wkoptimize='-O'
+optimize='-O3'
+wkoptimize='-O0'
 
 start_test='if [ ! -f finished ] ; then'
 end_test='; fi'

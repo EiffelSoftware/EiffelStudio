@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 				then
 					aok := False;
 					warner (popup_parent).gotcha_call (w_Not_creatable (new_file.name))
-                end;
+				end;
 
 				if aok then
 					new_file.open_write;

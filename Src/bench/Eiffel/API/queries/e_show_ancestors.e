@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 						else	
 							st.add_new_line;
 							displayed.extend (parents.item);
-							displayed.forth
+							displayed.finish
 							rec_display (i+1, parent_class, st);
 						end;			
 						parents.forth

@@ -189,18 +189,6 @@ feature -- Basic operations
 			drawable.clear
 		end
 
-feature {NONE} -- Implementation
-
-	draw_pixel (x, y: INTEGER) is
-			-- Put a pixel on (`x', `y').
-			--| Used to test on_mouse_over event.
-		do
-			drawable.set_foreground_color (
-				create {EV_COLOR}.make_with_rgb (1, 0, 0)
-			)
-			drawable.draw_point (x, y)
-		end
-
 feature {NONE} -- Event implementation
 
 	current_figure: EV_FIGURE
@@ -535,33 +523,6 @@ feature {NONE} -- Implementation
 			loop
 				project_rel_point (nl.item)
 				nl.forth
-			end
-		end
-
-feature -- Testing
-
-	ray_trace (fig: EV_FIGURE_GROUP) is
-			-- Test the event mask/calculation.
-		local
-			xc, yc: INTEGER
-		do
-			drawable.set_foreground_color (Default_colors.Red)
-			from
-				xc := 0
-			until
-				xc > drawable.width
-			loop
-				from
-					yc := 0
-				until
-					yc > drawable.width
-				loop
-					if figure_on_position (fig, xc, yc) /= Void then
-						drawable.draw_point (xc, yc)
-					end
-					yc := yc + 4
-				end
-				xc := xc + 4
 			end
 		end
 

@@ -173,9 +173,9 @@ feature -- Element Change
 			pix_imp := (internal_pixmaps @ column)
 
 			-- Set the pixmap and the text in the given column.
-			if (pix_imp /= void) then
+			if (pix_imp /= void and then parent_imp /= Void) then
 				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, pix_imp.c_object, $txt)
-			else
+			elseif parent_imp /= Void then
 				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, default_pointer, $txt)
 			end
 			-- Update the `internal_text' and `internal_pixmaps' arrays.
@@ -197,12 +197,12 @@ feature -- Element Change
 			a := txt.to_c
 
 			-- Set the pixmap and the text in the given column.
-			if (pix_imp /= void) then
+			if (pix_imp /= void and then parent_imp /= Void) then
 				C.gtk_pixmap_get (pix_imp.c_object, $pixdata, $mask)
 				pixmap_pointer := C.gtk_pixmap_new (pixdata, mask)
 				C.gtk_widget_show (pixmap_pointer)
 				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, pixmap_pointer, $a)
-			else
+			elseif parent_imp /= Void then
 				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, default_pointer, $a)
 			end
 			-- Update the `internal_text' and `internal_pixmaps' arrays.
@@ -341,6 +341,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/17 21:47:20  king
+--| Added check for parent in set_cell_*
+--|
 --| Revision 1.26  2000/02/16 23:00:51  king
 --| Removed redundant features
 --|

@@ -8,7 +8,7 @@ class C_EXTENSION_AS
 inherit
 	EXTERNAL_EXTENSION_AS
 		redefine
-			parse_special_part
+			need_encapsulation, parse_special_part
 		end
 
 create

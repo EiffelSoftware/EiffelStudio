@@ -7,6 +7,9 @@ class IL_EXTENSION_AS
 
 inherit
 	EXTERNAL_EXTENSION_AS
+		redefine
+			need_encapsulation
+		end
 
 	SHARED_IL_CONSTANTS
 

@@ -48,14 +48,6 @@ feature -- Properties
 	is_external: BOOLEAN is True
 			-- Is the current routine body an external one ?
 
-	external_name: STRING is
-			-- Alias name: Void if none
-		do
-			if alias_name_id > 0 then
-				Result := Names_heap.item (alias_name_id)
-			end
-		end; -- external_name
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -70,10 +62,8 @@ feature -- Conveniences
 	type_check is
 			-- Type checking
 		do
-			if language_name.extension /= Void then
-				Error_handler.set_error_position (language_name.start_position)
-				language_name.extension.type_check (Current)
-			end
+			Error_handler.set_error_position (language_name.start_position)
+			language_name.extension.type_check (Current)
 		end
 
 feature -- Byte code
@@ -82,12 +72,7 @@ feature -- Byte code
 			-- Byte code for external feature
 		local
 			extern: EXTERNAL_I
-			arguments: FEAT_ARG
-			i: INTEGER
-			local_dec: ARRAY[TYPE_I]
-			arg_c: INTEGER
 			extension: EXTERNAL_EXTENSION_AS
-			extension_bc: EXT_EXT_BYTE_CODE
 			ext_byte_code: EXT_BYTE_CODE
 		do
 			extern ?= context.current_feature
@@ -100,40 +85,12 @@ feature -- Byte code
 				end
 
 				extension := language_name.extension
-	
-				if extension /= Void then
-					extension_bc := extension.byte_node
-					extension.init_byte_node (extension_bc)
-
-					ext_byte_code := extension_bc
-				else
-					create ext_byte_code
-				end
+				ext_byte_code := extension.byte_node
+				extension.init_byte_node (ext_byte_code)
 
 				ext_byte_code.set_external_name_id (extern.external_name_id)
 				ext_byte_code.set_encapsulated (extern.encapsulated)
 
-				if
-					extension /= Void and then
-					(extension.is_macro or extension.is_struct or extension.has_signature)
-				then
-					ext_byte_code.set_result_type (extern.type.actual_type.type_i)
-					arg_c := extern.argument_count
-					if arg_c > 0 then
-						from
-							arguments := extern.arguments
-							i := 1
-							!!local_dec.make (1, arg_c)
-						until
-							i > arg_c
-						loop
-							local_dec.put 
-								(arguments.i_th (i).actual_type.type_i, i)
-							i := i + 1
-						end
-						ext_byte_code.set_arguments (local_dec)
-					end
-				end
 				check
 					external_name_not_void: ext_byte_code.external_name /= Void
 				end
@@ -152,7 +109,7 @@ feature {AST_EIFFEL, FEATURE_I} -- Output
 			ctxt.format_ast (language_name.language_name)
 			ctxt.exdent
 			ctxt.new_line
-			if external_name /= Void then
+			if alias_name_id > 0 /= Void then
 				ctxt.put_text_item (ti_Alias_keyword)
 				ctxt.indent
 				ctxt.new_line

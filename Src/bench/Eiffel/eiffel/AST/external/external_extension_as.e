@@ -85,7 +85,8 @@ feature -- Feature information
 
 	need_encapsulation: BOOLEAN is
 			-- Does this language extension need an encapsulation?
-		deferred
+		do
+			Result := True
 		end
 
 feature -- Type check
@@ -123,12 +124,12 @@ feature -- Type check
 
 feature -- Byte code
 
-	byte_node: EXT_EXT_BYTE_CODE is
+	byte_node: EXT_BYTE_CODE is
 			-- Byte code for external extension
 		deferred
 		end
 
-	init_byte_node (b: EXT_EXT_BYTE_CODE) is
+	init_byte_node (b: EXT_BYTE_CODE) is
 			-- Initialize byte node.
 		require
 			b_not_void: b /= Void

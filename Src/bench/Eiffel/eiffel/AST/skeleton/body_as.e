@@ -263,8 +263,7 @@ feature -- New feature description
 							il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
 					end
 					if not is_deferred_external then
-						create extern_proc
-						extern_proc.set_extension (extension)
+						create extern_proc.make (extension)
 
 	-- Assertions and Rescue compound are not supported in
 	-- externals.
@@ -327,8 +326,7 @@ feature -- New feature description
 							
 					end
 					if not is_deferred_external and not is_attribute_external then
-						create extern_func
-						extern_func.set_extension (extension)
+						create extern_func.make (extension)
 
 	-- Assertions and Rescue compound are not supported in
 	-- externals.

@@ -9,7 +9,7 @@ inherit
 	EXTERNAL_EXTENSION_AS
 		redefine
 			parse_special_part, is_macro,
-			byte_node, need_encapsulation
+			byte_node
 		end
 
 create
@@ -62,11 +62,6 @@ feature -- Get the macro extension
 			create Result.make (is_cpp)
 			init_extension_i (Result)
 		end
-
-feature -- Encapsulation
-
-	need_encapsulation: BOOLEAN is True
-			-- A macro needs to be encapsulated for polymorphic purpose.
 
 feature -- Byte code
 

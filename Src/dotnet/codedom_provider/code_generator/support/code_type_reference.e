@@ -116,6 +116,8 @@ feature -- Access
 			-- Log error if not found.
 		require
 			non_generated_type: not Resolver.is_generated (Current)
+		local
+			l_name: STRING
 		do
 			if search_for_type then
 				Result := feature {TYPE}.get_type (name)
@@ -129,6 +131,25 @@ feature -- Access
 						referenced_assemblies.forth
 					end
 				end
+				
+				-- Now search with `System' prefix since CodeDom might
+				-- use simple names for basic types (e.g. 'Int32' 'Boolean')
+				if Result = Void then
+					from
+						referenced_assemblies.start
+						create l_name.make (name.count + 7)
+						l_name.append ("System.")
+						l_name.append (name)
+						Result := feature {TYPE}.get_type (l_name)
+					until
+						referenced_assemblies.after or Result /= Void
+					loop
+						Result := referenced_assemblies.item.assembly.get_type (l_name)
+						referenced_assemblies.forth
+					end
+				end
+				
+				-- Maybe it's an array?
 				if Result = Void then
 					if element_type /= Void then
 						-- Special case for arrays of generated types:
@@ -138,7 +159,12 @@ feature -- Access
 						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [name])
 					end
 				end
-				internal_type := Result
+
+				if Result = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_dotnet_member, [a_name, name])
+				else
+					internal_type := Result
+				end
 				search_for_type := False
 			else
 				Result := internal_type
@@ -458,8 +484,6 @@ feature {NONE} -- Implementation
 					end
 					Result := l_features.first
 					members_cache.put (l_features, a_name)
-				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_dotnet_member, [a_name, name])
 				end
 			end
 		end

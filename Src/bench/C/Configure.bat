@@ -48,7 +48,7 @@ copy config.sh bench
 copy make.w32 bench\make.bat
 copy config.sh console
 copy make.w32 console\make.bat
-if not %remove_desc% == 1 (
+if not "%remove_desc%" == "1" (
 	copy config.sh desc
 	copy make.w32 desc\make.bat
 )
@@ -90,7 +90,7 @@ cd ..\console
 ..\rt_converter.exe makefile-win.sh makefile
 cd ..\bench
 ..\rt_converter.exe makefile-win.sh makefile
-if not %remove_desc% == 1 (
+if not "%remove_desc%" == "1" (
 	cd ..\desc
 	..\rt_converter.exe makefile-win.sh makefile
 )
@@ -126,7 +126,7 @@ echo cd platform>> make.bat
 echo call make>> make.bat
 echo cd ..\bench >> make.bat
 echo call make >> make.bat
-if not %remove_desc% == 1 (
+if not "%remove_desc%" == "1" (
 	echo cd ..\desc>> make.bat
 	echo call make>> make.bat
 )
@@ -161,7 +161,7 @@ echo del cleanup.bat >> cleanup.bat
 
 copy cleanup.bat console\
 copy cleanup.bat bench\
-if not %remove_desc% == 1 (
+if not "%remove_desc%" == "1" (
 	copy cleanup.bat desc\
 )
 copy cleanup.bat ipc\app\
@@ -179,7 +179,7 @@ cd bench
 call cleanup
 cd ..\console
 call cleanup
-if not %remove_desc% == 1 (
+if not "%remove_desc%" == "1" (
 	cd ..\desc
 	call cleanup
 )

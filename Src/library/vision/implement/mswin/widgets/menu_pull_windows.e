@@ -18,10 +18,8 @@ creation
 
 feature -- Initialization
 
-	make (a_pulldown: MENU_PULL; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_pulldown: MENU_PULL; man: BOOLEAN; oui_parent: MENU) is
 			-- Create a menu_pull.
-		local
-			menu: MENU
 		do
 			!! private_attributes
 			parent ?= oui_parent.implementation
@@ -30,8 +28,7 @@ feature -- Initialization
 			end
 			managed := man
 			text := a_pulldown.identifier
-			menu ?= oui_parent
-			!! menu_button.make (text, menu)
+			!! menu_button.make (text, oui_parent)
 			menu_button.attach_menu (a_pulldown)
 		end
 
@@ -41,7 +38,6 @@ feature -- Initialization
 		end
 
 feature -- Element change
-
 
 	set_text (t: STRING) is
 			-- Set `text' to `t'

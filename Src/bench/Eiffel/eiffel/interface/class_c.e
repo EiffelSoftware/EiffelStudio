@@ -494,21 +494,24 @@ feature -- Building conformance table
 		local
 			a_parent: CLASS_C
 			a_table: ARRAY [BOOLEAN]
+			l_area: SPECIAL [CL_TYPE_A]
+			i, nb: INTEGER
 		do
 			a_table := cl.conformance_table
 			if a_table.item (topological_id) = False then
 					-- The parent has not been inserted yet
 				a_table.put (True, topological_id)
 				from
-					parents.start
+					l_area := parents.area
+					nb := parents.count
 				until
-					parents.after
+					i = nb
 				loop
-					a_parent := parents.item.associated_class
+					a_parent := l_area.item (i).associated_class
 					if a_parent /= Void then
 						a_parent.build_conformance_table_of (cl)
 					end
-					parents.forth
+					i := i + 1
 				end
 			end
 		end
@@ -1890,32 +1893,34 @@ feature -- Class initialization
 		require
 			good_argument: old_parents /= Void
 		local
-			pos: INTEGER
+			i, nb, j, l_count: INTEGER
+			l_area, o_area: SPECIAL [CL_TYPE_A]
 			parent_class: CLASS_C
 		do
-			pos := parents.index
 			from
 				Result := True
-				parents.start
+				l_area := parents.area
+				nb := parents.count
+				o_area := old_parents.area
+				l_count := old_parents.count
 			until
-				parents.after or else not Result
+				i = nb or else not Result
 			loop
-				parent_class := parents.item.associated_class
+				parent_class := l_area.item (i).associated_class
 				from
-					old_parents.start
+					j := 0
 					Result := False
 				until
-					old_parents.after or else Result
+					j = l_count or else Result
 				loop
-					Result := parent_class = old_parents.item.associated_class
-					old_parents.forth
+					Result := parent_class = o_area.item (j).associated_class
+					j := j + 1
 				end
-				parents.forth
+				i := i + 1
 			end
 			if Result then
 				Result := removed_parent (old_parents)
 			end
-			parents.go_i_th (pos)
 		end
 
 	removed_parent (old_parents: like parents): BOOLEAN is
@@ -1926,26 +1931,30 @@ feature -- Class initialization
 		local
 			pos: INTEGER
 			parent_class: CLASS_C
+			l_area, o_area: SPECIAL [CL_TYPE_A]
+			i, nb: INTEGER
+			j, l_count: INTEGER
 		do
-			pos := parents.index
 			from
 				Result := True
-				old_parents.start
+				l_area := parents.area
+				l_count := parents.count
+				o_area := old_parents.area
+				nb := old_parents.count
 			until
-				old_parents.after or else not Result
+				i = nb or else not Result
 			loop
-				parent_class := old_parents.item.associated_class
+				parent_class := o_area.item (i).associated_class
 				from
-					parents.start
+					j := 0	
 				until
-					parents.after or else Result
+					j= l_count or else Result
 				loop
-					Result := parent_class = parents.item.associated_class
-					parents.forth
+					Result := parent_class = l_area.item (j).associated_class
+					j := j + 1
 				end
-				old_parents.forth
+				i := i + 1
 			end
-			parents.go_i_th (pos)
 		end
 
 	Any_type: CL_TYPE_A is
@@ -2038,16 +2047,17 @@ feature
 			parents_exists: parents /= Void
 		local
 			des: LINKED_LIST [CLASS_C]
-			parents_list: like parents
+			l_area: SPECIAL [CL_TYPE_A]
+			i, nb: INTEGER
 			c: CLASS_C
 		do
 			from
-				parents_list := parents
-				parents_list.start
+				l_area := parents.area
+				nb := parents.count
 			until
-				parents_list.after
+				i = nb
 			loop
-				c := parents_list.item.associated_class
+				c := l_area.item (i).associated_class
 				if c /= Void then
 					des:= c.descendants
 					des.start
@@ -2056,7 +2066,7 @@ feature
 						des.remove
 					end
 				end
-				parents_list.forth
+				i := i + 1
 			end
 		end
 
@@ -2086,19 +2096,19 @@ feature
 		local
 			generic_dec, next_dec: FORMAL_DEC_AS
 			generic_name: ID_AS
-			pos: INTEGER
 			vcfg1: VCFG1
 			vcfg2: VCFG2
 			error: BOOLEAN
-			gens: like generics
+			l_area: SPECIAL [FORMAL_DEC_AS]
+			i, j, nb: INTEGER
 		do
-			gens := generics
 			from
-				gens.start
+				l_area := generics.area
+				nb := generics.count
 			until
-				error or else gens.after
+				error or else i = nb
 			loop
-				generic_dec := gens.item
+				generic_dec := l_area.item (i)
 				generic_name := generic_dec.formal_name
 
 					-- First, check if the formal generic name is not the
@@ -2113,13 +2123,12 @@ feature
 
 					-- Second, check if the formal generic name doesn't
 					-- appear twice in `generics'.
-				pos := gens.index
 				from
-					gens.start
+					j := 0
 				until
-					error or else gens.after
+					error or else j = nb
 				loop
-					next_dec := gens.item
+					next_dec := l_area.item (j)
 					if next_dec /= generic_dec then
 						if next_dec.formal_name.is_equal (generic_name) then
 							!!vcfg2
@@ -2129,11 +2138,9 @@ feature
 							error := True
 						end
 					end
-					gens.forth
+					j := j + 1
 				end
-				gens.go_i_th (pos)
-
-				gens.forth
+				i := i + 1
 			end
 		end
 
@@ -2146,15 +2153,16 @@ feature
 			generic_dec: FORMAL_DEC_AS
 			generic_name: ID_AS
 			vcfg1: VCFG1
-			gens: like generics
+			l_area: SPECIAL [FORMAL_DEC_AS]
+			i, nb: INTEGER
 		do
-			gens := generics
 			from
-				gens.start
+				l_area := generics.area
+				nb := generics.count
 			until
-				gens.after
+				i = nb
 			loop
-				generic_dec := gens.item
+				generic_dec := l_area.item (i)
 				generic_name := generic_dec.formal_name
 
 				if Universe.class_named (generic_name, cluster) /= Void then
@@ -2163,7 +2171,7 @@ feature
 					vcfg1.set_formal_name (generic_name)
 					Error_handler.insert_error (Vcfg1)
 				end
-				gens.forth
+				i := i + 1
 			end
 		end
 
@@ -2173,20 +2181,21 @@ feature
 		local
 			generic_dec: FORMAL_DEC_AS
 			constraint_type: TYPE
-			gens: like generics
+			l_area: SPECIAL [FORMAL_DEC_AS]
+			i, nb: INTEGER
 		do
-			gens := generics
 			Inst_context.set_cluster (cluster)
 			from
-				gens.start
+				l_area := generics.area
+				nb := generics.count
 			until
-				gens.after
+				i = nb
 			loop
-				generic_dec := gens.item
+				generic_dec := l_area.item (i)
 				if generic_dec.has_constraint and then generic_dec.has_creation_constraint then
 					generic_dec.check_constraint_creation (Current, generic_dec.constraint)
 				end
-				gens.forth
+				i := i + 1
 			end
 		end
 
@@ -2197,21 +2206,22 @@ feature
 		local
 			generic_dec: FORMAL_DEC_AS
 			constraint_type: TYPE
-			gens: like generics
+			l_area: SPECIAL [FORMAL_DEC_AS]
+			i, nb: INTEGER
 		do
-			gens := generics
 			Inst_context.set_cluster (cluster)
 			from
-				gens.start
+				l_area := generics.area
+				nb := generics.count
 			until
-				gens.after
+				i = nb
 			loop
-				generic_dec := gens.item
+				generic_dec := l_area.item (i)
 				constraint_type := generic_dec.constraint
 				if constraint_type /= Void then
 					constraint_type.check_constraint_type (Current)
 				end
-				gens.forth
+				i := i + 1
 			end
 		end
 
@@ -2224,15 +2234,16 @@ feature -- Parent checking
 			vtcg4: VTCG4
 			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 			parent_actual_type: CL_TYPE_A
-			parent_list: like parents
+			l_area: SPECIAL [CL_TYPE_A]
+			i, nb: INTEGER
 		do
-			parent_list := parents
 			from
-				parent_list.start
+				l_area := parents.area
+				nb := parents.count
 			until
-				parent_list.after
+				i = nb
 			loop
-				parent_actual_type := parent_list.item
+				parent_actual_type := l_area.item (i)
 				if not parent_actual_type.good_generics then
 						-- Wrong number of geneneric parameters in parent
 					vtug := parent_actual_type.error_generics
@@ -2249,12 +2260,11 @@ feature -- Parent checking
 						!!vtcg4
 						vtcg4.set_class (Current)
 						vtcg4.set_error_list (constraint_error_list)
-						vtcg4.set_parent_type (parent_list.item)
+						vtcg4.set_parent_type (parent_actual_type)
 						Error_handler.insert_error (vtcg4)
 					end
 				end
-
-				parent_list.forth
+				i := i + 1
 			end
 		end
 
@@ -2312,14 +2322,18 @@ feature -- Supplier checking
 			-- and add perhaps classes to the system.
 		require
 			good_argument: parent_list /= Void
+		local
+			l_area: SPECIAL [PARENT_AS]
+			i, nb: INTEGER
 		do
 			from
-				parent_list.start
+				l_area := parent_list.area
+				nb := parent_list.count
 			until
-				parent_list.after
+				i = nb
 			loop
-				check_one_supplier (parent_list.item.type.class_name)
-				parent_list.forth
+				check_one_supplier (l_area.item (i).type.class_name)
+				i := i + 1
 			end
 		end
 
@@ -2761,19 +2775,22 @@ end
 		local
 			generic_parent: GEN_TYPE_A
 			parent_type: CL_TYPE_A
+			l_area: SPECIAL [CL_TYPE_A]
+			i, nb: INTEGER
 		do
 			from
-				parents.start
+				l_area := parents.area
+				nb := parents.count
 			until
-				parents.after
+				i = nb
 			loop
-				parent_type := parents.item
+				parent_type := l_area.item (i)
 				if parent_type.generics /= Void then
 						-- Found a generic type in the inheritance clause
 					generic_parent ?= parent_type
 					Instantiator.dispatch (generic_parent, Current)
 				end
-				parents.forth
+				i := i + 1
 			end
 		end
 

@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 	default_slice_max_value: INTEGER is
 		do
-			Result := parent.tool.debugger_manager.default_expanded_view_size
+			Result := parent.debugger_manager.default_expanded_view_size
 		end		
 
 	user_initialization is
@@ -171,7 +171,7 @@ feature -- Status setting
 				end
 			end
 			
-			parent.tool.debugger_manager.keep_object (st.object_address)
+			parent.debugger_manager.keep_object (st.object_address)
 			retrieve_dump_value
 			refresh
 		end

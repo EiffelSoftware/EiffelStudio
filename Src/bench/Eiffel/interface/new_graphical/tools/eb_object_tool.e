@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 			cmd.enable_sensitive
 			mini_toolbar.extend (cmd.new_mini_toolbar_item)
 
-			create pretty_print_cmd.make (Current)
+			create pretty_print_cmd.make
 			pretty_print_cmd.enable_sensitive
 			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
 

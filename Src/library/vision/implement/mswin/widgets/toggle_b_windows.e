@@ -11,6 +11,8 @@ inherit
 	ACCELERABLE_WINDOWS
 
 	BUTTON_WINDOWS
+		rename
+			set_managed as widget_set_managed
 		redefine
 			realize,
 			x, 
@@ -18,7 +20,23 @@ inherit
 			set_x,
 			set_y,
 			extra_width,
-			unrealize
+			unrealize,
+			set_insensitive
+		end
+
+	BUTTON_WINDOWS
+		redefine
+			realize,
+			x, 
+			y,
+			set_x,
+			set_y,
+			extra_width,
+			unrealize,
+			set_insensitive,
+			set_managed
+		select
+			set_managed
 		end
 
 	TOGGLE_B_I
@@ -170,6 +188,59 @@ feature -- Status report
 		end;
 
 feature -- Status setting
+
+	set_managed (flag: BOOLEAN) is
+			-- Enable geometry managment on screen widget implementation,
+			-- by window manager of parent widget if `flag', disable it
+			-- otherwise.
+		require else
+			parent_not_option_pull: not is_parent_option_pull
+		local
+			mp: MENU_PULL_WINDOWS
+		do
+			if in_menu then
+				if realized then
+					if parent /= Void and parent.realized then
+						if not managed and then flag then
+							managed := flag
+							mp ?= parent
+							mp.manage_item (Current)
+						elseif managed and then not flag then
+							managed := flag
+							mp ?= parent
+							mp.unmanage_item (Current)
+						end
+					end
+					managed := flag
+				else
+					managed := flag
+					realize
+				end
+				managed := flag
+			else
+				widget_set_managed (flag)
+			end
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+			-- Set current widget in insensitive mode if `flag'.
+		local
+			mp: MENU_PULL_WINDOWS
+		do
+			private_attributes.set_insensitive (flag)
+			if exists then
+				if in_menu then
+					mp ?= parent
+					mp.set_insensitive_widget (Current, flag)
+				else
+					if flag then
+						disable
+					else
+						enable
+					end
+				end
+			end
+		end
 
 	set_x (a_x: INTEGER) is
 		do

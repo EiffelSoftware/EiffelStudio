@@ -56,6 +56,12 @@ feature -- Type check, byte code and dead code removal
 			vtug: VTUG;
 			not_supported: NOT_SUPPORTED;
 			gen_type: GEN_TYPE_A;
+
+			formal_type: FORMAL_A
+			formal_dec: FORMAL_DEC_AS_B
+			constraint_type: TYPE_A
+			class_type: CL_TYPE_A
+			valid_formal_creation: BOOLEAN
 		do
 				-- Init the type stack
 			context.begin_expression;
@@ -85,8 +91,24 @@ feature -- Type check, byte code and dead code removal
 			end;
 
 			if creation_type.is_formal then
+				formal_type ?= creation_type
+					-- Get the corresponding constraint type of the current class
+				formal_dec := context.a_class.generics.i_th (formal_type.position)
+				if formal_dec.constraint /= Void then
+					constraint_type := formal_dec.constraint_type
+					class_type ?= constraint_type
+					if class_type /= Void then
+						creation_type := class_type
+						valid_formal_creation := True
+					end
+				end
+			else
+				valid_formal_creation := True
+			end
+
+			if not valid_formal_creation then
 					-- An entity of type a formal generic parameter cannot be
-					-- created
+					-- created here because there is no creation routine constraints
 				!!vgcc1;
 				context.init_error (vgcc1);
 				vgcc1.set_target_name (target.access_name);
@@ -190,8 +212,7 @@ feature -- Type check, byte code and dead code removal
 						context.init_error (vgcc5);
 						vgcc5.set_target_name (target.access_name);
 						vgcc5.set_type (creation_type);
-						a_feature := 		
-							creation_class.feature_table.item (feature_name);
+						a_feature := creation_class.feature_table.item (feature_name);
 						vgcc5.set_creation_feature (a_feature);
 						Error_handler.insert_error (vgcc5);
 					else
@@ -244,11 +265,19 @@ feature -- Type check, byte code and dead code removal
 				create_info := create_type;
 			elseif access.is_result then
 				feature_type ?= context.a_feature.type;
-				create_info := feature_type.create_info;
+				if feature_type.is_formal then
+					create_info := class_type.create_info
+				else
+					create_info := feature_type.create_info;
+				end
 			elseif access.is_local then
 				local_b ?= access;
 				local_type := context.local_ith (local_b.position).type;
-				create_info := local_type.create_info;
+				if local_type.is_formal then
+					create_info := class_type.create_info
+				else
+					create_info := local_type.create_info;
+				end
 			elseif access.is_attribute then
 				attribute_b ?= access;
 				!!create_feat;

@@ -1044,8 +1044,52 @@ feature -- Element change
 
 	append_integer (i: INTEGER) is
 			-- Append the string representation of `i' at end.
+		local
+			l_value: INTEGER
+			l_starting_index, l_ending_index: INTEGER
+			l_temp: CHARACTER
+			l_area: like area
 		do
-			append (i.out)
+			if i = 0 then
+				append_character ('0')
+			else
+					-- Extract integer value digit by digit from right to left.
+				from
+					l_starting_index := count
+					if i < 0 then
+						append_character ('-')
+						l_starting_index := l_starting_index + 1
+						l_value := -i
+							-- Special case for minimum integer value as negating it
+							-- as no effect.
+						if l_value = feature {INTEGER_REF}.Min_value then
+							append_character ((-(l_value \\ 10) + 48).to_character)
+							l_value := -(l_value // 10)
+						end
+					else
+						l_value := i
+					end
+				until
+					l_value = 0
+				loop
+					append_character (((l_value \\ 10)+ 48).to_character)
+					l_value := l_value // 10
+				end
+
+					-- Now put digits in correct order from left to right.
+				from
+					l_ending_index := count - 1
+					l_area := area
+				until
+					l_starting_index >= l_ending_index
+				loop
+					l_temp := l_area.item (l_starting_index)
+					l_area.put (l_area.item (l_ending_index), l_starting_index)
+					l_area.put (l_temp, l_ending_index)
+					l_ending_index := l_ending_index - 1
+					l_starting_index := l_starting_index + 1
+				end
+			end
 		end
 
 	append_real (r: REAL) is

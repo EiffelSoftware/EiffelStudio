@@ -2775,7 +2775,7 @@ rt_private int attribute_types_matched (int16 *gtypes, int16 *atypes)
 		 * means that generic parameters were removed.
 		 */
 		result = 1;
-		for (i=0; gtypes[i] != TERMINATOR; i++)
+		for (i=0; (result == 1) && (gtypes[i] != TERMINATOR); i++)
 			result = attribute_type_matched (gtypes[i], atypes[i]);
 	}
 	return result;

@@ -212,21 +212,21 @@ feature -- Element change
 
 feature -- Event - command association
 
-	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add 'cmd' to the list of commands to be executed
-			-- the button is pressed.
-		do
-			add_command (Cmd_click, cmd, arg)
-		end
+--|FIXME	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+--|FIXME			-- Add 'cmd' to the list of commands to be executed
+--|FIXME			-- the button is pressed.
+--|FIXME		do
+--|FIXME			add_command (Cmd_click, cmd, arg)
+--|FIXME		end
 
 feature -- Event -- removing command association
 
-	remove_click_commands is	
-			-- Empty the list of commands to be executed when
-			-- the button is pressed.
-		do
-			remove_command (Cmd_click)
-		end
+--|FIXME	remove_click_commands is	
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- the button is pressed.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_click)
+--|FIXME		end
 
 feature {NONE} -- WEL Implementation
 
@@ -317,6 +317,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/02/19 05:58:51  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.37  2000/02/19 05:45:01  oconnor
 --| released
 --|

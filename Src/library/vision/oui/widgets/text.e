@@ -11,33 +11,86 @@ class TEXT
 inherit
 
 	TEXT_FIELD
-		rename
-			make as text_field_make
 		redefine
+			make, make_unmanaged, create_ev_widget,
 			implementation
 		end
 
 creation
 
-	make
+	make, make_word_wrapped, make_unmanaged, make_word_wrapped_unmanaged
 	
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
-		require
-			Valid_name: a_name /= Void;
-			Valid_parent: a_parent /= Void
+		do
+			 create_ev_widget (a_name, a_parent, True)
+		ensure then
+			is_multi_line_mode: is_multi_line_mode
+		end;
+
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create an unmanaged text with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		do
+			 create_ev_widget (a_name, a_parent, False)
+		ensure then
+			is_multi_line_mode: is_multi_line_mode
+		end;
+
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+			-- Create a text with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.text (Current);
+			implementation := toolkit.text (Current, man);
 			set_default
+		end;
+
+	make_word_wrapped (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create a text with `a_name' as identifier, 
+			-- `a_parent' as parent, call `set_default'
+			-- and enable word wrap.
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
+		do
+			create_ev_widget_ww (a_name, a_parent, True)
 		ensure
-			Parent_set: parent = a_parent;
-			Identifier_set: identifier.is_equal (a_name)
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+			managed: managed
+		end;
+
+	make_word_wrapped_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create an unmanaged text with `a_name' as identifier, 
+			-- `a_parent' as parent, call `set_default'
+			-- and enable word wrap.
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
+		do
+			create_ev_widget_ww (a_name, a_parent, False)
+		ensure
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+			not_managed: not managed
+		end;
+
+	create_ev_widget_ww (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+			-- Create a text with `a_name' as identifier, 
+			-- `a_parent' as parent, call `set_default'
+			-- and enable word wrap.
+		do
+			depth := a_parent.depth+1;
+			widget_manager.new (Current, a_parent);
+			identifier := clone (a_name);
+			implementation := toolkit.text_word_wrapped (Current, man);
+			set_default
 		end;
 
 feature -- Callbacks (adding)
@@ -188,7 +241,6 @@ feature -- Text cursor position
 			Result <= count
 		end; -- cursor_position
 
-
 	end_of_selection: INTEGER is
 			-- Position of the end of the current selection highlightened
 		require
@@ -291,17 +343,17 @@ feature -- Text mode
 		end; -- set_editable
 
 	disable_word_wrap is
+				obsolete "Use ``make'' instead (cannot be called after creation)"
 			-- Specify that lines are free to go off the right edge
 			-- of the window.
 		do
-			implementation.disable_word_wrap
 		end; -- disable_word_wrap
 
 	enable_word_wrap is
 			-- Specify that lines are to be broken at word breaks.
 			-- The text does not go off the right edge of the window.
+				obsolete "Use ``make_with_word_wrap'' instead  (cannot be called after creation)"
 		do
-			implementation.enable_word_wrap
 		end; -- disable_word_wrap
 
 	disable_verify_bell is
@@ -314,6 +366,59 @@ feature -- Text mode
 			-- Enable the bell when an action is forbidden
 		do
 			implementation.enable_verify_bell
+		end;
+
+	rows: INTEGER is
+			-- Height of Current widget measured in character
+			-- heights. 
+		require
+			is_multi_line_mode: is_multi_line_mode
+		do
+			Result := implementation.rows
+		end;
+
+	set_rows (i: INTEGER) is
+			-- Set the character height of Current widget to `i'.
+		require
+			is_multi_line_mode: is_multi_line_mode;
+			valid_i: i > 0
+		do
+			implementation.set_rows (i)
+		end;
+
+	set_single_line_mode is
+			-- Set editing for single line text.
+		do
+			implementation.set_single_line_mode
+		ensure
+			is_single_line_mode: not is_multi_line_mode
+		end;
+
+	set_multi_line_mode is
+			-- Set editing for multiline text.
+		do
+			implementation.set_multi_line_mode
+		ensure
+			is_multi_line_mode: is_multi_line_mode
+		end;
+
+	is_multi_line_mode: BOOLEAN is
+			-- Is Current editing a multiline text?
+		do
+			Result := implementation.is_multi_line_mode
+		end;
+
+	is_cursor_position_visible: BOOLEAN is
+			-- Is the insert cursor position marked
+			-- by a blinking text cursor?
+		do
+			Result := implementation.is_cursor_position_visible
+		end;
+
+	set_cursor_position_visible (flag: BOOLEAN) is
+			-- Set is_cursor_position_visible to flag.
+		do
+			implementation.set_cursor_position_visible (flag)
 		end;
 
 feature -- Resize policies

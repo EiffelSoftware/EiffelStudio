@@ -893,7 +893,7 @@ feature {EV_ANY_I} -- Implementation
 						--| We only need to perform further processing if the pointer
 						--| button matches the type of transport of `widget_imp'.
 					if (button_pressed = 1 and widget_imp.mode_is_drag_and_drop) or
-						(button_pressed = 3 and widget_imp.mode_is_pick_and_drop) then
+						(button_pressed = 3 and (widget_imp.mode_is_pick_and_drop or widget_imp.mode_is_target_menu)) then
 							-- This feature may get called more then once, so we only
 							-- perform the pebble query the first time, before the
 							-- transport has started.

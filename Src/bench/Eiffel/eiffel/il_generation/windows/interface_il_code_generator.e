@@ -53,6 +53,7 @@ feature -- IL Generation
 			-- Generate IL code for feature in `class_c'.
 		local
 			class_interface: CLASS_INTERFACE
+			dispose_feat: FEATURE_I
 		do
 				-- Reset data
 			rout_ids_tbl.wipe_out
@@ -88,7 +89,10 @@ feature -- IL Generation
 				-- `Finalize' should not be generate all the time, as it might
 				-- slow down code execution.
 			if current_select_tbl.has (System.memory_dispose_id) then
-				generate_finalize_feature (current_select_tbl.item (System.Memory_dispose_id))
+				dispose_feat := current_select_tbl.item (System.Memory_dispose_id)
+				if not dispose_feat.is_deferred then
+					generate_finalize_feature (dispose_feat)
+				end
 			end
 				-- Generate `ToString' from System.Object.
 			generate_to_string_feature (current_select_tbl.item (internal_to_string_rout_id))

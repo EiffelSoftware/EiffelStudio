@@ -2,7 +2,10 @@
 
 class PROJECT_CONTEXT
 
-	
+
+inherit
+	SYSTEM_CONSTANTS
+
 feature {NONE}
 
 	Project_directory: PROJECT_DIR is
@@ -20,11 +23,16 @@ feature {NONE}
 	init_project_directory: PROJECT_DIR is do end;
 	init_precompilation_directory: PROJECT_DIR is do end;
 
+	Project_directory_name: STRING is
+		once
+			Result := Project_directory.name
+		end;
+
 	Eiffel_gen_path: STRING is
 		once
-			!!Result.make (Project_directory.name.count + 11);
-			Result.append (Project_directory.name);
-			Result.append ("/EIFFELGEN");
+			!!Result.make (Project_directory_name.count + 11);
+			Result.append (Project_directory_name);
+			Result.append (Eiffelgen_rel_path);
 		end;
 
 	Create_eiffel_gen_directory is
@@ -39,16 +47,16 @@ feature {NONE}
 
 	Workbench_generation_path: STRING is
 		once
-			!!Result.make (Eiffel_gen_path.count + 7);
-			Result.append (Eiffel_gen_path);
-			Result.append ("/W_code")
+			!!Result.make (Project_directory_name.count + 18);
+			Result.append (Project_directory_name);
+			Result.append (W_code_rel_path)
 		end;
 
 	Final_generation_path: STRING is
 		once
-			!!Result.make (Eiffel_gen_path.count + 7);
-			Result.append (Eiffel_gen_path);
-			Result.append ("/F_code")
+			!!Result.make (Project_directory_name.count + 7);
+			Result.append (Project_directory_name);
+			Result.append (F_code_rel_path)
 		end;
 
 	Create_generation_directory is
@@ -69,9 +77,9 @@ feature {NONE}
 	Compilation_path: STRING is
 			-- Path to the compilation directory
 		once
-			!!Result.make (Eiffel_gen_path.count + 6);
-			Result.append (Eiffel_gen_path);
-			Result.append ("/COMP")
+			!!Result.make (Project_directory_name.count + 16);
+			Result.append (Project_directory_name);
+			Result.append (Comp_rel_path)
 		end;
 
 	Create_compilation_directory is
@@ -89,28 +97,94 @@ feature {NONE}
 	Project_file_name: STRING is
 			-- Full name of the file where the workbench is stored
 		once
-			!!Result.make (Project_directory.name.count + 8);
-			Result.append (Project_directory.name);
-			Result.append (storing_name)
+			!!Result.make (Project_directory_name.count + 21);
+			Result.append (Project_directory_name);
+			Result.append (workb_rel_path)
 		end;
-
-	storing_name: STRING is "/EIFFELGEN/.workbench";
 
 	Precompilation_path: STRING is
 			-- Path to the precompilation directory
 		once
-			!!Result.make (Precompilation_directory.name.count + 6);
+			!!Result.make (Precompilation_directory.name.count + 16);
 			Result.append (Precompilation_directory.name);
-			Result.append ("/EIFFELGEN/COMP")
+			Result.append (Comp_rel_path)
 		end;
 
 	Precompilation_file_name: STRING is
 			-- Full name of the file where the precompiled 
 			-- workbench is stored
 		once
-			!!Result.make (Precompilation_directory.name.count + 8);
+			!!Result.make (Precompilation_directory.name.count + 22);
 			Result.append (Precompilation_directory.name);
-			Result.append (storing_name)
+			Result.append (workb_rel_path)
+		end;
+
+	Precompilation_preobj: STRING is
+			-- Full name of the `preobj' object file
+		once
+			!!Result.make (Precompilation_directory.name.count + 22);
+			Result.append (Precompilation_directory.name);
+			Result.append (Preobj_rel_path)
+		end;
+
+	Precompilation_driver: STRING is
+			-- Full name of the `preobj' object file
+		once
+			!!Result.make (Precompilation_directory.name.count + 22);
+			Result.append (Precompilation_directory.name);
+			Result.append (Driver_rel_path)
+		end;
+
+feature {NONE} -- Relative paths
+
+	build_path (path, base_name: STRING): STRING is
+		do
+			!!Result.make (0);
+			Result.append (path);
+			Result.append_character (Directory_separator);
+			Result.append (base_name);
+		end;
+
+	Eiffelgen_rel_path: STRING is
+			-- "/EIFFELGEN"
+		once
+			Result := build_path ("", Eiffelgen);
+		end;
+
+	workb_rel_path: STRING is
+			-- "/EIFFELGEN/.workbench"
+		once
+			Result := build_path (Eiffelgen_rel_path, Dot_workbench);
+		end;
+
+	Comp_rel_path: STRING is
+			-- "/EIFFELGEN/COMP"
+		once
+			Result := build_path (Eiffelgen_rel_path, Comp);
+		end;
+
+	W_code_rel_path: STRING is
+			-- "/EIFFELGEN/W_code"
+		once
+			Result := build_path (Eiffelgen_rel_path, W_code);
+		end;
+
+	F_code_rel_path: STRING is
+			-- "/EIFFELGEN/F_code"
+		once
+			Result := build_path (Eiffelgen_rel_path, F_code);
+		end;
+
+	Driver_rel_path: STRING is
+			-- "/EIFFELGEN/W_code/driver"
+		once
+			Result := build_path (W_code_rel_path, Driver);
+		end;
+
+	Preobj_rel_path: STRING is
+			-- "/EIFFELGEN/W_code/preobj.o"
+		once
+			Result := build_path (W_code_rel_path, Preobj);
 		end;
 
 end

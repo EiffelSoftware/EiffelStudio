@@ -2,6 +2,7 @@ class SPECIAL_COMMAND
 
 inherit
 
+	SYSTEM_CONSTANTS
 	ICONED_COMMAND
 
 creation
@@ -39,6 +40,11 @@ feature
 			Result := bm_Default 
 		end;
  
-	command_name: STRING is do Result := "ISE Eiffel 3 (v3.2)" end;
+	command_name: STRING is
+		once
+			Result := "ISE Eiffel 3 (v";
+			Result.append (Version_number);
+			Result.append_character (')');
+		end;
 
 end

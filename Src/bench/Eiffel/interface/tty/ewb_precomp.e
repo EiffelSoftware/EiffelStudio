@@ -4,6 +4,10 @@ class EWB_PRECOMP
 inherit
 
 	EWB_CMD
+		rename
+			name as precompile_cmd_name,
+			help_message as precompile_help
+		end
 
 feature
 

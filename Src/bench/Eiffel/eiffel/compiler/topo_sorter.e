@@ -137,7 +137,7 @@ feature -- Initialization
 					k := precursor_count.item (succ_id);
 					if k = 0 then
 						-- Nothing
-					elseif k - 1 = 0 then
+					elseif k = 1 then
 						outsides.add (succ_item);
 						precursor_count.put (0, succ_id)
 					else

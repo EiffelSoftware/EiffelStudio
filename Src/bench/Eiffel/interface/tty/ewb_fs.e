@@ -28,7 +28,15 @@ feature -- Creation
 
 feature
 
-	name: STRING is "print %"flat-short%" form";
+	name: STRING is
+		do
+			Result := flatshort_cmd_name;
+		end;
+
+	help_message: STRING is
+		do
+			Result := flatshort_help
+		end;
 
 	loop_execute is
 		do

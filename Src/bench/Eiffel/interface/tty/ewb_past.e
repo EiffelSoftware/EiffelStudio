@@ -4,6 +4,10 @@ class EWB_PAST
 inherit
 
 	EWB_CMD
+		rename
+			name as aversions_cmd_name,
+			help_message as aversions_help
+		end
 
 creation
 

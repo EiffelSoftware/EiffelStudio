@@ -90,14 +90,24 @@ feature -- Object basket managment
 		deferred
 		end;
 
+	add_in_system_basket (base_name: STRING) is
+		local	
+			object_name: STRING
+		do
+			!!object_name.make (0);
+			object_name.append (base_name);
+			object_name.append (Dot_o);
+			system_basket.put (object_name)
+		end;
+
 	add_common_objects is
 			-- Add common objects file
 		do
-			system_basket.put ("Econform.o");
-			system_basket.put ("Eplug.o");
-			system_basket.put ("Eskelet.o");
-			system_basket.put ("Evisib.o");
-			system_basket.put ("Einit.o");
+			add_in_system_basket (Econform);
+			add_in_system_basket (Eplug);
+			add_in_system_basket (Eskelet);
+			add_in_system_basket (Evisib);
+			add_in_system_basket (Einit);
 		end;
 
 	compute_partial_objects is
@@ -426,7 +436,8 @@ feature -- Generation (Linking rules)
 			Make_file.putchar (' ');
 			generate_objects_macros (partial_system_objects, True);
 			Make_file.putchar (' ');
-			Make_file.putstring ("Emain.o");
+			Make_file.putstring (Emain);
+			Make_file.putstring (Dot_o);
 			Make_file.new_line;
 			Make_file.putstring ("%T$(RM) ");
 			Make_file.putstring (system_name);
@@ -442,7 +453,8 @@ feature -- Generation (Linking rules)
 			Make_file.putchar (' ');
 			generate_objects_macros (partial_system_objects, True);
 			Make_file.putchar (' ');
-			Make_file.putstring ("Emain.o");
+			Make_file.putstring (Emain);
+			Make_file.putstring (Dot_o);
 			Make_file.putchar (' ');
 			Make_file.putchar ('\');
 			Make_file.new_line;
@@ -534,6 +546,7 @@ feature -- Generation (Linking rules)
 				Make_file.new_line;
 					-- The following is not portable (if people want to use
 					-- their own linker).
+					-- FIXME
 				Make_file.putstring ("%Tld -r -o ");
 				if system_obj then
 					Make_file.putstring ("e")

@@ -4,6 +4,10 @@ class EWB_HISTORY
 inherit
 
 	EWB_CMD
+		rename
+			name as implementers_cmd_name,
+			help_message as implementers_help
+		end
 
 creation
 

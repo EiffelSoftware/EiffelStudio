@@ -100,19 +100,15 @@ feature {NONE}
 			cmd_string: STRING
 		do
 			if System.uses_precompiled then
-					-- Source
-				arg1 := Precompilation_directory.name.duplicate;
-				arg1.append ("/EIFFELGEN/W_code/driver");
 					-- Target
-				arg2 := Workbench_generation_path.duplicate;
-				arg2.append ("/")
-				arg2.append (System.system_name);
+				arg2 := build_path (Workbench_generation_path,
+									System.system_name);
 					-- Request
 				!!req;
 				!!cmd_string.make (200);
 				cmd_string.append
 						("$EIFFEL3/bench/spec/$PLATFORM/bin/prelink ");
-				cmd_string.append (arg1);
+				cmd_string.append (Precompilation_driver);
 				cmd_string.append (" ");
 				cmd_string.append (arg2);
 				req.set_command_name (cmd_string);

@@ -4,6 +4,10 @@ class EWB_SUPPLIERS
 inherit
 
 	EWB_CMD
+		rename
+			name as suppliers_cmd_name,
+			help_message as suppliers_help
+		end;
 
 creation
 
@@ -20,8 +24,6 @@ feature -- Creation
 	class_name: STRING;
 
 feature
-
-	name: STRING is "compute the suppliers";
 
 	loop_execute is
 		do

@@ -306,9 +306,9 @@ feature -- Generation
 		do
 			file_name := full_file_name;
 			if byte_context.final_mode then
-				file_name.append (".x")
+				file_name.append (Dot_x)
 			else
-				file_name.append (".c");
+				file_name.append (Dot_c);
 			end;
 			!!Result.make (file_name);
 		end;
@@ -321,7 +321,8 @@ feature -- Generation
 			file_name: STRING;
 		do
 			file_name := full_file_name;
-			file_name.append ("D.c");
+			file_name.append (Descriptor_suffix);
+			file_name.append (Dot_c);
 			!!Result.make (file_name);
 		end;
 
@@ -329,7 +330,7 @@ feature -- Generation
 			-- File for external declarations in final mode
 		do
 			Result := full_file_name;
-			Result.append (".h");
+			Result.append (Dot_h);
 		end;
 
 	full_file_name: STRING is
@@ -512,21 +513,23 @@ feature -- Generation
 			creation_feature: FEATURE_I
 			pos: INTEGER
 		do
-			pos := skeleton.position;
-			from
-				skeleton.go_expanded;
-			until
-				skeleton.after
-			loop
-				exp_desc ?= skeleton.item;
-				cl := exp_desc.class_type.associated_class;
-				creation_feature := cl.creation_feature;
-            	if creation_feature /= Void then
-					r.record (creation_feature, cl);
+			if associated_class.has_expanded then
+				pos := skeleton.position;
+				from
+					skeleton.go_expanded;
+				until
+					skeleton.after
+				loop
+					exp_desc ?= skeleton.item;
+					cl := exp_desc.class_type.associated_class;
+					creation_feature := cl.creation_feature;
+            		if creation_feature /= Void then
+						r.record (creation_feature, cl);
+					end;
+					skeleton.forth;
 				end;
-				skeleton.forth;
+				skeleton.go (pos);
 			end;
-			skeleton.go (pos);
 		end;
 
 	init_procedure_name: STRING is

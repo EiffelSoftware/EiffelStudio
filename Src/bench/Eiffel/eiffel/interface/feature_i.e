@@ -1778,6 +1778,7 @@ feature -- Debugging
 			type_list: LINKED_LIST [CLASS_TYPE]
 		do
 			if is_debuggable then
+				Inst_context.set_cluster (written_class.cluster);
 				!!Result.make;
 				from
 					type_list := written_class.types;

@@ -45,7 +45,7 @@ feature {NONE}
 				if argument = name_chooser then
 					dir_name := name_chooser.selected_file.duplicate;
 					last_char := dir_name.item (dir_name.count); 
-					if last_char = '/' then
+					if last_char = Directory_separator then
 						dir_name.remove (dir_name.count)
 					end;
 					!!project_dir.make (dir_name);
@@ -81,7 +81,7 @@ feature
 				ok := True;
 					!! temp.make (0);
 					temp.append (project_dir.name);
-					temp.append ("/EIFFELGEN/.workbench");
+					temp.append (workb_rel_path);
 				!!workbench_file.make (temp);
 				if 
 					project_dir.is_new or else

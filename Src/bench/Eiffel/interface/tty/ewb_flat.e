@@ -4,6 +4,10 @@ class EWB_FLAT
 inherit
 
 	EWB_CMD
+		rename
+			name as flat_cmd_name,
+			help_message as flat_help
+		end
 
 creation
 
@@ -20,8 +24,6 @@ feature -- Creation
 	class_name: STRING;
 
 feature
-
-	name: STRING is "print %"flat%" form";
 
 	loop_execute is
 		do

@@ -54,14 +54,24 @@ feature
 			status: BOOLEAN
 		do
 			if Run_info.is_running then
-					-- Application is running. Continue execution.
-				status := cont_request.send_byte_code;
-				if status then
-					cont_request.send_breakpoints
+				if Run_info.is_stopped then
+debug
+	io.error.putstring (generator);
+	io.error.putstring (": Contine execution%N");
+end;
+						-- Application is running. Continue execution.
+					status := cont_request.send_byte_code;
+					if status then
+						cont_request.send_breakpoints
+					end;
+					debug_info.tenure;
+					cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
 				end;
-				debug_info.tenure;
-				cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
 			else
+debug
+	io.error.putstring (generator);
+	io.error.putstring (": Start execution%N");
+end;
 					-- Application is not running. Start it.
 				if project_tool.initialized and then 
 					System.system_name /= Void 

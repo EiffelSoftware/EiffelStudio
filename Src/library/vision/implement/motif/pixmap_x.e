@@ -1,467 +1,277 @@
 indexing
 
+	description:
+		"Implementation of an mult-plane pixmap.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PIXMAP_X 
+class 
+	PIXMAP_X 
 
 inherit
 
-	PIXMAP_I;  
+	PIXMAP_I
+		undefine
+			is_equal
+		end;
 
-	RESOURCES_X [ANY]
+	RESOURCE_X
+		undefine
+			is_equal
+		end;
+
+	MEL_PIXMAP
 		rename
-			make as resources_x_make
+			make as old_make
+		undefine
+			has_valid_display
+		redefine
+			display
 		end;
 
 	MEMORY
+		rename
+			free as gc_free
 		export
 			{NONE} all
+		undefine
+			is_equal
 		redefine
 			dispose
+		end;
+
+	SHARED_MEL_DISPLAY
+		undefine
+			is_equal
 		end
 
 creation
 
-	make
+	make, 
+	make_for_screen
 
-feature 
-
-	arx_pixmap: POINTER;
-			-- Pointer to the C ArXpixmap structure
-
-	default_pixmap: POINTER;
-
-feature {NONE}
-
-	bitmaps: BITMAPS_RES_X;
-			-- List of bitmaps
-
-feature 
-
-	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER) is
-			-- Copy the area specified by `x', `y', `p_width', `p_height' of
-			-- `a_widget' into the pixmap.
-		require else
-			a_widget_realized: a_widget.realized;
-			left_edge_in_a_widget: x >= 0;
-			top_edge_in_a_widget: y >= 0;
-			width_positive: p_width > 0;
-			height_positive: p_height > 0;
-			right_edge_in_a_widget: x+p_width <= a_widget.width;
-			bottom_edge_in_a_widget: y+p_height <= a_widget.height
-		local
-			new_arx_pixmap: POINTER;
-			a_resource: RESOURCE_X;
-			null_pointer: POINTER
-		do
-			default_pixmap := null_pointer;
-			new_arx_pixmap := c_copy_from (a_widget.screen_object, 
-								x, y, p_width, p_height);
-			if new_arx_pixmap /= null_pointer then
-				free_resources;
-				arx_pixmap := new_arx_pixmap;
-				last_operation_correct := true;
-				update_widgets
-			else
-				last_operation_correct := false
-			end
-		ensure then
-			last_operation_correct implies is_valid
-		end; 
+feature {NONE} -- Initialization
 
 	make (a_pixmap: pixmap) is
 			-- Create a pixmap.
 		require
-			a_pixmap_exists: a_pixmap /= Void
+			last_open_display_not_null: last_open_display /= Void
 		do
-			resources_x_make;
-			!!bitmaps.make
-		ensure
-			valid_bitmaps: bitmaps /= Void
+			display := last_open_display
 		end; 
 
-	depth: INTEGER is
-			-- Depth of pixmap (Number of colors)
-		do
-			if is_arx_valid then
-				Result := c_pixmap_depth (arx_pixmap)
-			else
-				Result := 1
-			end
-		ensure then
-			valid_result: Result >= 1
-		end; 
-
-feature {NONE}
-
-	dispose is
-			-- Called when the pixmap is garbaged
+	make_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN) is
+			-- Create a font.
+		require
+			valid_screen: a_screen /= Void and then a_screen.is_valid
 		local
-			null_pointer: POINTER
+			mel_display: MEL_DISPLAY
 		do
-			if arx_pixmap /= null_pointer then
-				c_free_pixmap (arx_pixmap)
-				arx_pixmap := null_pointer;
+			display ?= a_screen.implementation;
+			check
+				valid_display: display /= Void
 			end
-		end; 
-
-	free_resources is
-			-- Free all pixmap resources.
-		do
-			from
-				start
-			until
-				after
-			loop
-				if item.is_allocated then
-					c_free_xpixmap (item.screen_object, item.identifier);
-					item.set_allocated (False);
-				end;
-				forth
-			end;
-			wipe_out;
-			from
-				bitmaps.start
-			until
-				bitmaps.after
-			loop
-				if bitmaps.item.is_allocated then
-					x_free_pixmap (bitmaps.item.screen_object, 
-							bitmaps.item.identifier);
-					bitmaps.item.set_allocated (False);
-				end;
-				bitmaps.forth
-			end;
-			bitmaps.wipe_out;
-			dispose
 		end;
-	
-feature 
 
-	height: INTEGER is
+feature -- Access
+
+	display: MEL_DISPLAY;
+			-- Display where resource is allocated
+
+	bitmap: BITMAP_RESOURCE_X
+			-- Single plane bitmap 
+
+	height: INTEGER;
 			-- Height of pixmap
-		do
-			if is_arx_valid then
-				Result := c_pixmap_height (arx_pixmap)
-			else
-				Result := 1
-			end
-		ensure then
-			valid_result: Result >= 1
-		end;
 
-	hot_x: INTEGER is
+	hot_x: INTEGER;
 			-- Horizontal position of "hot" point
-		do
-			if is_arx_valid then
-				Result := c_pixmap_hot_x (arx_pixmap)
-			end;
-		ensure then
-			valid_result: Result >= 0
-		end;
 
-	hot_y: INTEGER is
+	hot_y: INTEGER;
 			-- Vertical position of "hot" point
-		do
-			if is_arx_valid then
-				Result := c_pixmap_hot_y (arx_pixmap)
-			end
-		ensure then
-			valid_result: Result >= 0
-		end;
-
 	
-feature {NONE}
+	width: INTEGER 
+			-- Width of pixmap
 
-	is_used_by (a_widget: WIDGET): BOOLEAN is
-			-- Is `a_widget' using this resource ?
-		require else
-			a_widget_exists: not (a_widget = Void)
-		local
-			pixmap: PIXMAP
+	last_operation_correct: BOOLEAN is
+			-- Was the last operation correctly performed ?
 		do
-			pixmap := a_widget.background_pixmap;
-			Result := (pixmap /= Void) and then 
-						(pixmap.implementation = Current)
-		ensure then
-			(number_of_uses = 0) implies (not Result)
-		end;
-	
-feature 
-
-	is_valid: BOOLEAN is
-			-- Is the pixmap valid and usable ?
-		do
-			Result := (is_arx_valid or else is_default_valid)
-				and then (is_arx_valid = not is_default_valid)
+			Result := is_valid
 		end;
 
-	is_arx_valid: BOOLEAN is
-			-- Is the pixmap valid and usable ?
-		local
-			null_pointer: POINTER
+feature -- Status setting
+
+	set_default_pixmap (a_pixmap: MEL_PIXMAP) is
+			-- Set default pixmap for widget's screen object `src_obj'.
+		require
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid
 		do
-			Result := arx_pixmap /= null_pointer
+			identifier := a_pixmap.identifier;
+			is_allocated := False;
+			display_handle := a_pixmap.display_handle;
+			height := 1;
+			width := 1;
+			depth := 2
 		end;
 
-	is_default_valid: BOOLEAN is
-			-- Is the pixmap valid and usable ?
-		local
-			null_pointer: POINTER
-		do
-			Result := default_pixmap /= null_pointer
-		end;
-
-	last_operation_correct: BOOLEAN;
-			-- Is the last operation correctly performed ?
+feature -- Element change
 
 	read_from_file (a_file_name: STRING) is
 			-- Load the bitmap described in `a_file_name'.
 			-- `a_file_name' must be a X11 bitmap file.
-		require else
-			a_file_name_exists: a_file_name /= Void
 		local
-			new_arx_pixmap: POINTER;
-			ext_name: ANY;
-			null_pointer: POINTER
+			bitmap_format: MEL_BITMAP_FORMAT;
+			pixmap: MEL_PIXMAP;
+			gc: MEL_GC
 		do
-			ext_name := a_file_name.to_c;		
-			new_arx_pixmap := pix_read_from_file ($ext_name);
-			if new_arx_pixmap /= null_pointer then
-				free_resources;
-				arx_pixmap := new_arx_pixmap;
-				last_operation_correct := true;
-				update_widgets
-			else
-				last_operation_correct := false
-			end
-		ensure then
-			last_operation_correct implies is_valid;
-			last_operation_correct implies depth <= 2
+			free_resources;
+			!! bitmap_format.make_from_file (display.default_screen, a_file_name);
+			if bitmap_format.is_valid then
+				is_allocated := True;
+				height := bitmap_format.height;
+				width := bitmap_format.width;
+				hot_x := bitmap_format.x_hot;
+				hot_y := bitmap_format.y_hot;
+				if hot_x < 0 or else hot_x >= width then
+					hot_x := width // 2
+				end;
+				if hot_y < 0 or else hot_y >= height then
+					hot_y := height // 2
+				end;
+				!! gc.make (display.default_screen);
+				pixmap := bitmap_format.to_pixmap (display.default_screen, gc);
+				identifier := pixmap.identifier;
+				display_handle := pixmap.display_handle;
+				depth := 2; -- Black and white bitmap
+				update_widgets;
+				bitmap_format.bitmap.free
+			end;
 		end;
 
-	resource_bitmap (a_screen: SCREEN_I): POINTER is
-			-- Number of resource with the window `screen_object'
-			-- To be used as a bitmap
-		require
-			is_valid: is_valid
+	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER) is
+			-- Copy the area specified by `x', `y', `p_width', `p_height' of
+			-- `a_widget' into the pixmap.
 		local
-			a_resource: RESOURCE_X
+			mp: MEL_PIXMAP;
+			mel_d: MEL_DISPLAY;
+			mel_s: MEL_SCREEN;
+			gc: MEL_GC;
+			mel_widget: MEL_WIDGET
 		do
-			a_resource := bitmaps.find_same_screen (a_screen);
-			if (a_resource = Void) then
-					-- C Type: Result -> Pixmap
-				Result := c_resource_bitmap (arx_pixmap, a_screen.screen_object);
-				!BITMAP_RES_X! a_resource.make (a_screen, Result, true);
-				bitmaps.put_front (a_resource)
-			else
-				Result := a_resource.identifier
+			free_resources;
+			mel_d := display;
+			mel_s := mel_d.default_screen;
+			!! mp.make (mel_s, 
+					p_width, p_height, mel_s.default_depth);
+			if mp.is_valid then
+				mel_widget ?= a_widget;
+				!! gc.make (mel_s);
+				mp.copy_area (mel_widget, gc, x, y, p_width, p_height, 0, 0);
+				is_allocated := True; 
+				update_widgets;
 			end
-		end;
-
-	set_default_pixmap (pix: POINTER) is
-			-- Set default pixmap for widget's screen object `src_obj'
-		require
-			void_arx_pixmap: not is_arx_valid;
-		do
-			default_pixmap := pix
-		end;
-
-	resource_pixmap (a_screen: SCREEN_I): POINTER is
-			-- Number of resource with the window `screen_object'
-			-- To be used as a pixmap
-		require
-			is_valid: is_valid;
-		local
-			pixmap_pointer: POINTER;
-			a_resource: RESOURCE_X
-		do
-			a_resource := find_same_screen (a_screen);
-			if (a_resource = Void) then
-				if is_arx_valid then
-						-- C Type: Result -> ArXXpixmap
-					Result := c_resource_pixmap 
-						(arx_pixmap, a_screen.screen_object);
-					!PIXMAP_RES_X! a_resource.make (a_screen, Result, true);
-					put_front (a_resource);
-						-- C Type: Result -> Pixmap
-					Result := c_real_pixmap (Result)
-				else
-						-- C Type: Result -> Pixmap
-					Result := default_pixmap;
-				end
-			else 
-				if is_arx_valid then
-						-- C Type: Result -> Pixmap
-					Result := c_real_pixmap (a_resource.identifier)
-				else
-					Result := default_pixmap
-				end
-			end
-		end;
+		end; 
 
 	retrieve (a_file_name: STRING) is
 			-- Retreive the pixmap from a file named `a_file_name'.
 			-- Set `last_operation_correct'.
-		require else
-			a_file_name_exists: a_file_name /= Void
 		local
-			new_arx_pixmap: POINTER;
-			ext_name: ANY;
-			null_pointer: POINTER
+			mel_scr: MEL_SCREEN
 		do
-			ext_name := a_file_name.to_c;		
-			default_pixmap := null_pointer;
-			new_arx_pixmap := c_retrieve ($ext_name);
-			if new_arx_pixmap /= null_pointer then
-				free_resources;
-				arx_pixmap := new_arx_pixmap;
-				wipe_out;
-				bitmaps.wipe_out;
-				last_operation_correct := true;
-				update_widgets
-			else
-				last_operation_correct := false
-			end
-		ensure then
-			last_operation_correct implies is_valid
+			-- use display
+			free_resources;
+			is_allocated := True;
+			update_widgets;
 		end;
+
+feature -- Output
 
 	store (a_file_name: STRING) is
 			-- Store the pixmap into a file named `a_file_name'.
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
-		require else
-			a_file_name_exists: a_file_name /= Void;
+		do
+		end;
+
+feature -- Element change
+
+	allocate_bitmap is
+			-- Allocate a single plane bitmap.
+		require
 			is_valid: is_valid
 		local
-			ext_name: ANY;
+			gc: MEL_GC
 		do
-			ext_name := a_file_name.to_c;		
-			last_operation_correct := c_store (arx_pixmap, $ext_name)
+			if bitmap = Void then
+				!! bitmap.make (display.default_screen, width, height, 1)
+				!! gc.make (bitmap);
+				bitmap.copy_plane (Current, gc, 0, 0, width, height, 0, 0, 1)
+			end;
+		ensure
+			valid_bitmap: bitmap /=  Void and then bitmap.is_valid
+			bitmap_is_a_bitmap: bitmap.is_bitmap
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
-	update_widgets is
-			-- Update widgets.
+	free_resources is
+			-- Free the pixmap resources.
+		do
+			if bitmap /= Void then	
+				bitmap.free;
+				bitmap := Void
+			end;
+			dispose
+		end;
+
+	dispose is
+			-- Called when the pixmap is garbaged
+		do
+			if is_allocated then
+				free;
+				is_allocated := False
+			end
+		end; 
+
+	update_widget_resource (widget_m: WIDGET_M) is
+			-- Update resource for `widget_m'.
 		local
-			widgets_to_update: LINKED_LIST [WIDGET_M]
+			a_pixmap: PIXMAP;
+			pcb: PICT_COL_B_M;
+			wms: WM_SHELL_M
 		do
-			from
-				widgets_to_update ?= objects;
-				widgets_to_update.start
-			until
-				widgets_to_update.after
-			loop
-				widgets_to_update.item.update_background_pixmap;
-				widgets_to_update.forth
-			end
-		end;
-
-feature 
-
-	width: INTEGER is
-			-- Width of pixmap
-		do
-			if is_arx_valid then
-				Result := c_pixmap_width (arx_pixmap)
+			a_pixmap := widget_m.private_background_pixmap;
+			if (a_pixmap /= Void) and then 
+				(a_pixmap.implementation = Current)
+			then
+				number_of_users := number_of_users + 1;
+				widget_m.update_background_pixmap
+			end;	
+			pcb ?= widget_m;
+			if pcb /= Void then
+				a_pixmap := pcb.private_pixmap;
+				if a_pixmap /= Void and then
+					(a_pixmap.implementation = Current)
+				then
+					number_of_users := number_of_users + 1;
+					pcb.update_pixmap
+				end
 			else
-				Result := 1
+				wms ?= widget_m;
+				if wms /= Void then
+					a_pixmap := wms.private_icon_pixmap;
+					if a_pixmap /= Void and then
+						(a_pixmap.implementation = Current)
+					then
+						number_of_users := number_of_users + 1;
+						wms.update_pixmap
+					end
+				end
 			end
-		ensure then
-			valid_result: Result >= 1
-		end
-
-feature {NONE} -- External features
-
-	c_copy_from (scr_obj: POINTER; x, y, a_width, a_height: INTEGER): POINTER is
-		external
-			"C"
-		end; 
-
-	c_pixmap_width (pix: POINTER): INTEGER is
-		external
-			"C"
-		end; 
-
-	c_store (pix: POINTER; file_name: POINTER): BOOLEAN is
-		external
-			"C"
 		end;
-
-	c_retrieve (file_name: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	c_real_pixmap (ident: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	c_resource_pixmap (pix, scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	c_resource_bitmap (pix, scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	pix_read_from_file (file_name: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	c_pixmap_hot_y (pix: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	c_pixmap_hot_x (pix: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-	c_pixmap_height (pix: POINTER): INTEGER is
-		external
-			"C"
-		end; 
-
-	c_free_xpixmap (scr_obj, ident: POINTER) is
-		external
-			"C"
-		end;
-
-	c_free_pixmap (pix: POINTER) is
-		external
-			"C"
-		end;
-
-	x_free_pixmap (scr_obj, ident: POINTER) is
-		external
-			"C"
-		end;
-
-	c_pixmap_depth (pix: POINTER): INTEGER is
-		external
-			"C"
-		end;
-
-invariant
-
-	is_valid implies (width > 0);
-	is_valid implies (height > 0);
-	is_valid implies (depth > 0);
-	is_valid implies ((hot_x >= 0) and (hot_x < width));
-	is_valid implies ((hot_y >= 0) and (hot_x < height))
-
-end
-
+	
+end -- class PIXMAP_X
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

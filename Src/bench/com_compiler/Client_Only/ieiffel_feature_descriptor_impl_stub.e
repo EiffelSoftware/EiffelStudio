@@ -48,6 +48,18 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	parameters: IENUM_PARAMETER_INTERFACE is
+			-- Feature parameters.
+		do
+			-- Put Implementation here.
+		end
+
+	return_type: STRING is
+			-- Feature return type.
+		do
+			-- Put Implementation here.
+		end
+
 	all_callers: IENUM_FEATURE_INTERFACE is
 			-- List of all feature callers, includding callers of ancestor and descendant versions.
 		do

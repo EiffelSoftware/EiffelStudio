@@ -16,6 +16,7 @@ ecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub.obj \
+ecom_eiffel_compiler_ieiffelparameterdescriptor_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelprojectproperties_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelsystemassemblies_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelsystembrowser_impl_stub.obj \
@@ -30,6 +31,7 @@ ecom_eiffel_compiler_ienumeiffelclass_impl_stub.obj \
 ecom_eiffel_compiler_ienumfeature_impl_stub.obj \
 ecom_eiffel_compiler_ienumincludepaths_impl_stub.obj \
 ecom_eiffel_compiler_ienumobjectfiles_impl_stub.obj \
+ecom_eiffel_compiler_ienumparameter_impl_stub.obj \
 
 
 WOBJ = wecom_eiffel_compiler_ieiffelassemblyproperties_impl_stub.obj \
@@ -43,6 +45,7 @@ wecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub.obj \
+wecom_eiffel_compiler_ieiffelparameterdescriptor_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelprojectproperties_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelsystemassemblies_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelsystembrowser_impl_stub.obj \
@@ -57,6 +60,7 @@ wecom_eiffel_compiler_ienumeiffelclass_impl_stub.obj \
 wecom_eiffel_compiler_ienumfeature_impl_stub.obj \
 wecom_eiffel_compiler_ienumincludepaths_impl_stub.obj \
 wecom_eiffel_compiler_ienumobjectfiles_impl_stub.obj \
+wecom_eiffel_compiler_ienumparameter_impl_stub.obj \
 
 
 all:: ecom.lib ecom_final.lib
@@ -113,6 +117,9 @@ wecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.obj: ecom_eiffel_compiler_i
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub.obj: ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
+wecom_eiffel_compiler_ieiffelparameterdescriptor_impl_stub.obj: ecom_eiffel_compiler_ieiffelparameterdescriptor_impl_stub.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
 wecom_eiffel_compiler_ieiffelprojectproperties_impl_stub.obj: ecom_eiffel_compiler_ieiffelprojectproperties_impl_stub.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
@@ -153,5 +160,8 @@ wecom_eiffel_compiler_ienumincludepaths_impl_stub.obj: ecom_eiffel_compiler_ienu
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumobjectfiles_impl_stub.obj: ecom_eiffel_compiler_ienumobjectfiles_impl_stub.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_eiffel_compiler_ienumparameter_impl_stub.obj: ecom_eiffel_compiler_ienumparameter_impl_stub.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 

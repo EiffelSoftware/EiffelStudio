@@ -25,6 +25,22 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
+	add_local (name: STRING; type: STRING) is
+			-- Add a local variable used for solving member completion list
+			-- `name' [in].  
+			-- `type' [in].  
+		do
+			ccom_add_local (initializer, name, type)
+		end
+
+	add_argument (name: STRING; type: STRING) is
+			-- Add an argument used for solving member completion list
+			-- `name' [in].  
+			-- `type' [in].  
+		do
+			ccom_add_argument (initializer, name, type)
+		end
+
 	target_features (target: STRING; feature_name: STRING; file_name: STRING): IENUM_COMPLETION_ENTRY_INTERFACE is
 			-- Features accessible from target.
 			-- `target' [in].  
@@ -32,6 +48,15 @@ feature -- Basic Operations
 			-- `file_name' [in].  
 		do
 			Result := ccom_target_features (initializer, target, feature_name, file_name)
+		end
+
+	target_feature (target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+			-- Feature information
+			-- `target' [in].  
+			-- `feature_name' [in].  
+			-- `file_name' [in].  
+		do
+			Result := ccom_target_feature (initializer, target, feature_name, file_name)
 		end
 
 feature {NONE}  -- Implementation
@@ -44,8 +69,26 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
+	ccom_add_local (cpp_obj: POINTER; name: STRING; type: STRING) is
+			-- Add a local variable used for solving member completion list
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT)"
+		end
+
+	ccom_add_argument (cpp_obj: POINTER; name: STRING; type: STRING) is
+			-- Add an argument used for solving member completion list
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT)"
+		end
+
 	ccom_target_features (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING): IENUM_COMPLETION_ENTRY_INTERFACE is
 			-- Features accessible from target.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+		end
+
+	ccom_target_feature (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+			-- Feature information
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end

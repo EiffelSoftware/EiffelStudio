@@ -110,7 +110,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::add_status
 	EIF_OBJECT tmp_new_callback = NULL;
 	if (new_callback != NULL)
 	{
-		tmp_new_callback = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_interface_230 (new_callback));
+		tmp_new_callback = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_interface_241 (new_callback));
 		new_callback->AddRef ();
 	}
 	
@@ -137,7 +137,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::remove_sta
 	EIF_OBJECT tmp_old_callback = NULL;
 	if (old_callback != NULL)
 	{
-		tmp_old_callback = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_interface_230 (old_callback));
+		tmp_old_callback = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_interface_241 (old_callback));
 		old_callback->AddRef ();
 	}
 	

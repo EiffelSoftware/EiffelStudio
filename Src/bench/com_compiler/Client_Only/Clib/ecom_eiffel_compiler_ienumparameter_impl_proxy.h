@@ -1,16 +1,16 @@
 /*-----------------------------------------------------------
-Implemented `IEiffelCompletionInfo' Interface.
+Implemented `IEnumParameter' Interface.
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_EIFFEL_COMPILER_IEIFFELCOMPLETIONINFO_IMPL_PROXY_H__
-#define __ECOM_EIFFEL_COMPILER_IEIFFELCOMPLETIONINFO_IMPL_PROXY_H__
+#ifndef __ECOM_EIFFEL_COMPILER_IENUMPARAMETER_IMPL_PROXY_H__
+#define __ECOM_EIFFEL_COMPILER_IENUMPARAMETER_IMPL_PROXY_H__
 #ifdef __cplusplus
 extern "C" {
 
 
 namespace ecom_eiffel_compiler
 {
-class IEiffelCompletionInfo_impl_proxy;
+class IEnumParameter_impl_proxy;
 }
 
 }
@@ -20,11 +20,9 @@ class IEiffelCompletionInfo_impl_proxy;
 
 #include "eif_eiffel.h"
 
-#include "ecom_eiffel_compiler_IEiffelCompletionInfo.h"
+#include "ecom_eiffel_compiler_IEnumParameter.h"
 
-#include "ecom_eiffel_compiler_IEnumCompletionEntry.h"
-
-#include "ecom_eiffel_compiler_IEiffelFeatureDescriptor.h"
+#include "ecom_eiffel_compiler_IEiffelParameterDescriptor.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,34 +32,46 @@ extern "C" {
 extern "C" {
 namespace ecom_eiffel_compiler
 {
-class IEiffelCompletionInfo_impl_proxy
+class IEnumParameter_impl_proxy
 {
 public:
-	IEiffelCompletionInfo_impl_proxy (IUnknown * a_pointer);
-	virtual ~IEiffelCompletionInfo_impl_proxy ();
+	IEnumParameter_impl_proxy (IUnknown * a_pointer);
+	virtual ~IEnumParameter_impl_proxy ();
 
 	/*-----------------------------------------------------------
-	Add a local variable used for solving member completion list
+	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_local(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT type );
-
-
-	/*-----------------------------------------------------------
-	Add an argument used for solving member completion list
-	-----------------------------------------------------------*/
-	void ccom_add_argument(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT type );
+	void ccom_next(  /* [out] */ EIF_OBJECT rgelt,  /* [out] */ EIF_OBJECT pcelt_fetched );
 
 
 	/*-----------------------------------------------------------
-	Features accessible from target.
+	No description available.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_target_features(  /* [in] */ EIF_OBJECT target,  /* [in] */ EIF_OBJECT feature_name,  /* [in] */ EIF_OBJECT file_name );
+	void ccom_skip(  /* [in] */ EIF_INTEGER celt );
 
 
 	/*-----------------------------------------------------------
-	Feature information
+	No description available.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_target_feature(  /* [in] */ EIF_OBJECT target,  /* [in] */ EIF_OBJECT feature_name,  /* [in] */ EIF_OBJECT file_name );
+	void ccom_reset();
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_clone1(  /* [out] */ EIF_OBJECT ppenum );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_ith_item(  /* [in] */ EIF_INTEGER an_index,  /* [out] */ EIF_OBJECT rgelt );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	EIF_INTEGER ccom_count(  );
 
 
 	/*-----------------------------------------------------------
@@ -78,7 +88,7 @@ private:
 	/*-----------------------------------------------------------
 	Interface pointer
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelCompletionInfo * p_IEiffelCompletionInfo;
+	ecom_eiffel_compiler::IEnumParameter * p_IEnumParameter;
 
 
 	/*-----------------------------------------------------------

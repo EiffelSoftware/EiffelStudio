@@ -58,7 +58,7 @@ feature -- Byte code generation
 			-- Generate byte code for a hardcoded creation type
 		do
 			ba.append (Bc_gen_param_create)
-			ba.append_integer (context.current_type.generated_id (False))
+			ba.append_short_integer (context.current_type.generated_id (False))
 			ba.append_integer (formal_position)
 		end;
 

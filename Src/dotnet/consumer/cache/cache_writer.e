@@ -18,35 +18,29 @@ inherit
 
 feature -- Basic Operations
 
-	add_assembly (aname: ASSEMBLY_NAME) is
+	add_assembly (assembly: ASSEMBLY) is
 			-- Add `assembly' and its dependencies in EAC.
 		require
-			non_void_assembly: aname /= Void
-			signed_assembly: aname.get_public_key_token /= Void
+			non_void_assembly: assembly /= Void
+			signed_assembly: assembly.get_name.get_public_key_token /= Void
 		local
 			info: CACHE_INFO
 			consumer: ASSEMBLY_CONSUMER
 			cr: CACHE_READER
 			dir: DIRECTORY
-			names: NATIVE_ARRAY [ASSEMBLY_NAME]
-			i: INTEGER
-			name: ASSEMBLY_NAME
-			assembly: ASSEMBLY
 			retried: BOOLEAN
 			l_string_tuple: TUPLE [STRING]
+			l_assembly: ASSEMBLY
+			l_directory_name: STRING
 			l_new_assembly: BOOLEAN
 		do
 			if not retried then
-				assembly := feature {ASSEMBLY}.load_assembly_name (aname)
-				check
-					assembly_not_void: assembly /= Void
-				end
 				create cr
-				create dir.make (cr.absolute_assembly_path (aname))
+				create dir.make (cr.absolute_assembly_path_from_location (create {STRING}.make_from_cil (assembly.location)))
 
 				create consumer
-					-- only consume the assembly if it has been modified or the
-					-- assembly is not already in the EAC.
+					-- Only consume the assembly if it has been modified 
+					-- or is not allready in the Eiffel assembly cache
 				if consumer.is_assembly_modified (assembly, dir.name) then
 					if dir.exists then
 						dir.recursive_delete
@@ -61,85 +55,62 @@ feature -- Basic Operations
 					consumer.consume (assembly)
 					
 					if not consumer.successful then
-						set_error (Consume_error, create {STRING}.make_from_cil (aname.name))
+						--set_error (Consume_error, create {STRING}.make_from_cil (assembly.get_name.name))
 					elseif l_new_assembly then
-							-- Only add it in `info' if not yet added.
+						-- Update info.xml with new assembly
 						info := cr.info
-		 				info.add_assembly (Consumed_assembly_factory.consumed_assembly_from_name (aname))
+						create l_directory_name.make_from_string (dir.name)
+						l_directory_name.remove_tail (1)
+						l_directory_name.remove_head (l_directory_name.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, l_directory_name.count))
+		 				info.add_assembly ( create {CONSUMED_ASSEMBLY_INFO}.make (
+													Consumed_assembly_factory.consumed_assembly_from_name (assembly.get_name),
+													create {STRING}.make_from_cil (assembly.location),
+													l_directory_name, assembly.get_name.flags.value_)
+											)
 						update_info (info)
+					else
+						-- Info.xml does not need to be updated
 					end
 				else
 					if status_printer /= Void then
 						create l_string_tuple.make
-						l_string_tuple.put ("Up-to-date check: '" +	create {STRING}.make_from_cil (aname.full_name) +
+						l_string_tuple.put ("Up-to-date check: '" +	create {STRING}.make_from_cil (assembly.get_name.full_name) +
 							"' has not been modified since last consumption.%N", 1)
 						status_printer.call (l_string_tuple)
 					end
 				end
-				
-				if consumer.successful then
-					names := assembly.get_referenced_assemblies
-					from
-						i := 0
-					until
-						i = names.count
-					loop
-						name := names.item (i)
-						if not cr.is_assembly_in_cache (name) then
-							add_assembly (name)
-						end
-						i := i + 1
-					end
-				end
 			else
-				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.name))
+				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (assembly.get_name.name))
 			end
 		rescue
 			retried := True
 			retry
 		end
-	
-	remove_assembly (aname: ASSEMBLY_NAME) is
-			-- Remove `aname' and its clients from cache.
+
+	remove_assembly (location: STRING) is
+			-- Remove remove assembly associated to `location' from cache.
 		require
-			non_void_assembly: aname /= Void
-			assembly_in_cache: (create {CACHE_READER}).is_assembly_in_cache (aname)
+			non_void_location: location /= Void
+			not_empty_location: not location.is_empty
+			valid_location: feature {SYSTEM_FILE}.exists (location.to_cil)
 		local
 			info: CACHE_INFO
 			cr: CACHE_READER
 			i: INTEGER
-			assemblies: ARRAY [CONSUMED_ASSEMBLY]
-			name: ASSEMBLY_NAME
-			conv: CACHE_CONVERSION
-			ca: CONSUMED_ASSEMBLY
 			dir: DIRECTORY
 			retried: BOOLEAN
 		do
 			if not retried then
 				create cr
-				create dir.make (cr.absolute_assembly_path (aname))
+				create dir.make (cr.absolute_assembly_path_from_location (location))
 				if dir.exists then
 					dir.recursive_delete
 				end
 				info := cr.info
-				ca := Consumed_assembly_factory.consumed_assembly_from_name (aname)
-				info.remove_assembly (ca)
+				info.remove_assembly_from_location (location)
 				update_info (info)
-				assemblies := cr.client_assemblies (ca)
-				create conv
-				from
-					i := 1
-				until
-					i > assemblies.count
-				loop
-					name := conv.assembly (assemblies.item (i)).get_name
-					if cr.is_assembly_in_cache (name) then
-						remove_assembly (name)					
-					end
-					i := i + 1
-				end
 			else
-				set_error (Remove_error, create {STRING}.make_from_cil (aname.name))
+				set_error (Remove_error, location)
 			end
 		rescue
 			retried := True
@@ -151,15 +122,15 @@ feature -- Basic Operations
 		require
 			non_void_info: info /= Void
 		local
-			l_absolute_xml_info_path: STRING
+			l_info_path: STRING
 			serializer: EIFFEL_XML_SERIALIZER
 			bin_serializer: EIFFEL_BINARY_SERIALIZER
 		do
-			l_absolute_xml_info_path := (create {CACHE_READER}).Absolute_info_path
 			create serializer
-			serializer.serialize (info, l_absolute_xml_info_path)
+			l_info_path := (create {CACHE_READER}).Absolute_info_path
+			serializer.serialize (info, l_info_path)
 			create bin_serializer
-			bin_serializer.serialize (info, l_absolute_xml_info_path)
+			bin_serializer.serialize (info, l_info_path)
 		end
 
 end -- class CACHE_WRITER

@@ -10,13 +10,26 @@ class
 inherit
 	WEL_ANY
 
-feature {NONE} -- Removal
+feature -- Removal
 
-	destroy_item is
-			-- Delete the gdi object `item'
+	delete is
+			-- Delete the current gdi object
+		require
+			exists: exists
 		do
 			cwin_delete_object (item)
 			item := default_pointer
+		ensure
+			not_exists: not exists
+		end
+
+feature {NONE} -- Removal
+
+	destroy_item is
+			-- Ensure the current gdi object is deleted when
+			-- garbage collected.
+		do
+			delete
 		end
 
 feature {NONE} -- Externals

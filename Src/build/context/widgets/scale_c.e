@@ -73,9 +73,24 @@ feature
 	direction_modified: BOOLEAN;
 
 	set_vertical (flag: BOOLEAN) is
+		local
+			was_managed: BOOLEAN;
+			max_rb: BOOLEAN;
 		do
+			was_managed := widget.managed;
+			if was_managed then
+				max_rb := widget.is_maximum_right_bottom;	
+				widget.set_maximum_right_bottom (False);
+				widget.unmanage;
+			end;
 			direction_modified := True;
 			widget.set_horizontal (not flag)
+			if was_managed then
+				if max_rb /= widget.is_maximum_right_bottom then
+					widget.set_maximum_right_bottom (max_rb);
+				end;
+				widget.manage;
+			end
 		end;
 
 	text: STRING;

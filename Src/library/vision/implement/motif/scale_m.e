@@ -170,19 +170,22 @@ feature -- Status setting
 	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			scroll_bar.set_override_translation (a_translation,
-					x_event_vision_callback (a_command), argument)
+			!! list.make;
+			scroll_bar.set_translation (a_translation, list, Void);
+			list.add_command (a_command, argument)
 		end;
 
-    set_value_shown (flag: BOOLEAN) is
-        do
+	set_value_shown (flag: BOOLEAN) is
+		do
 			if flag then	
 				show_value
 			else
 				hide_value
 			end
-        end;
+		end;
 
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
@@ -359,31 +362,57 @@ feature -- Element change
 	add_move_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			add_drag_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (drag_command);
+			if list = Void then
+				!! list.make;
+				set_drag_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
+		local
+			list: VISION_COMMAND_LIST
 		do
-			remove_value_changed_callback (mel_vision_callback (a_command), argument)
+			list := vision_command_list (value_changed_command);
+			if list = Void then
+				!! list.make;
+				set_value_changed_callback (list, Void)
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is pressed.
+		local
+			list: BUTTON_HAND_X
 		do
-			scroll_bar.add_event_handler (ButtonPressMask,
-					x_button_vision_callback (a_command, number), argument)
+			list := button_command (scroll_bar.event_command (ButtonPressMask));
+			if list = Void then
+				!! list.make;
+				scroll_bar.set_event_handler (ButtonPressMask, list, Void)
+			end;
+			list.add_command (number, a_command, argument)
 	   end;
 
 	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is released.
+		local
+			list: BUTTON_HAND_X
 		do
-			scroll_bar.add_event_handler (ButtonReleaseMask,
-					x_button_vision_callback (a_command, number), argument)
+			list := button_command (scroll_bar.event_command (ButtonPressMask));
+			if list = Void then
+				!! list.make;
+				scroll_bar.set_event_handler (ButtonReleaseMask, list, Void)
+			end;
+			list.add_command (number, a_command, argument)
 		end;
 
 	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
@@ -406,8 +435,7 @@ feature -- Element change
 			else
 			end
 			if a_mask /= 0 then
-				scroll_bar.add_event_handler (a_mask,
-					x_event_vision_callback (a_command), argument)
+				add_scrollbar_xt_event_command (a_mask, a_command, argument)
 			end
 		end;
 
@@ -415,40 +443,35 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when the
 			-- pointer enter the window.
 		do
-			scroll_bar.add_event_handler (EnterWindowMask,
-					x_event_vision_callback (a_command), argument)
+			add_scrollbar_xt_event_command (EnterWindowMask, a_command, argument)
 		end;
 
 	add_key_press_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when a key
 			-- is pressed.
 		do
-			scroll_bar.add_event_handler (KeyPressMask,
-				x_event_vision_callback (a_command), argument)
+			add_scrollbar_xt_event_command (KeyPressMask, a_command, argument)
 		end;
 
 	add_key_release_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when a key
 			-- is released.
 		do
-			scroll_bar.add_event_handler (KeyReleaseMask,
-				x_event_vision_callback (a_command), argument)
+			add_scrollbar_xt_event_command (KeyReleaseMask, a_command, argument)
 		end;
 
 	add_leave_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- pointer leave the window.
 		do
-			scroll_bar.add_event_handler (LeaveWindowMask,
-				x_event_vision_callback (a_command), argument)
+			add_scrollbar_xt_event_command (LeaveWindowMask, a_command, argument)
 		end;
 
 	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved.
 		do
-			scroll_bar.add_event_handler (PointerMotionMask,
-				x_event_vision_callback (a_command), argument)
+			add_scrollbar_xt_event_command (PointerMotionMask, a_command, argument)
 		end;
 
 	grab (a_cursor: SCREEN_CURSOR) is
@@ -477,21 +500,21 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- slide is moved.
 		do
-			remove_drag_callback (mel_vision_callback (a_command), argument)
+			remove_command (drag_command, a_command, argument)
 		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
-			remove_drag_callback (mel_vision_callback (a_command), argument)
+			remove_command (value_changed_command, a_command, argument)
 		end;
 
 	remove_action (a_translation: STRING) is
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		do
-			scroll_bar.remove_override_translation (a_translation)
+			scroll_bar.remove_translation (a_translation)
 		end;
 
 	remove_button_motion_action (number: INTEGER; a_command: COMMAND;
@@ -515,8 +538,7 @@ feature -- Removal
 			else
 			end
 			if a_mask /= 0 then
-				scroll_bar.remove_event_handler (a_mask,
-					x_event_vision_callback (a_command), argument)
+				remove_command (scroll_bar.event_command (a_mask), a_command, argument)
 			end
 		end;
 
@@ -524,58 +546,62 @@ feature -- Removal
 			argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is pressed.
+		local
+			list: BUTTON_HAND_X
 		do
-			scroll_bar.remove_event_handler (ButtonPressMask,
-					x_button_vision_callback (a_command, number), argument)
+			--list := vision_command_list (scroll_bar.event_command (ButtonPressMask));
+			if list /= Void then
+				list.remove_command (number, a_command, argument)
+			end
 		end;
 
 	remove_button_release_action (number: INTEGER; a_command: COMMAND;
 			argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is released.
+		local
+			list: BUTTON_HAND_X
 		do
-			scroll_bar.remove_event_handler (ButtonReleaseMask,
-					x_button_vision_callback (a_command, number), argument)
+			--list := vision_command_list (scroll_bar.event_command (ButtonReleaseMask));
+			if list /= Void then
+				list.remove_command (number, a_command, argument)
+			end
 		end;
 
 	remove_enter_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when the
 			-- pointer enter the window.
 		do
-			scroll_bar.remove_event_handler (EnterWindowMask,
-					x_event_vision_callback (a_command), argument)
+			remove_command (scroll_bar.event_command (EnterWindowMask), 
+					a_command, argument)
 		end;
 
 	remove_key_press_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when a key
 			-- is pressed.
 		do
-			scroll_bar.remove_event_handler (KeyPressMask,
-				x_event_vision_callback (a_command), argument)
+			remove_command (scroll_bar.event_command (KeyPressMask), a_command, argument)
 		end;
 
 	remove_key_release_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when a key
 			-- is released.
 		do
-			scroll_bar.remove_event_handler (KeyReleaseMask,
-				x_event_vision_callback (a_command), argument)
+			remove_command (scroll_bar.event_command (KeyReleaseMask), a_command, argument)
 		end;
 
 	remove_leave_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when the
 			-- pointer leave the window.
 		do
-			scroll_bar.remove_event_handler (LeaveWindowMask,
-				x_event_vision_callback (a_command), argument)
+			remove_command (scroll_bar.event_command (LeaveWindowMask), a_command, argument)
 		end;
 
 	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when the
 			-- mouse is moved.
 		do
-			scroll_bar.remove_event_handler (PointerMotionMask,
-				x_event_vision_callback (a_command), argument)
+			remove_command (scroll_bar.event_command (PointerMotionMask), a_command, argument)
 		end;
 
 feature -- Color
@@ -589,6 +615,23 @@ feature -- Color
 			if private_foreground_color /= Void then
 				update_foreground_color
 			end
+		end;
+
+feature {NONE} -- Implementation
+
+	add_scrollbar_xt_event_command (a_mask: INTEGER; 
+					a_command: COMMAND; an_argument: ANY) is
+			-- Add the EiffelVision command to the mel command list
+			-- for event mask `mask' for `scroll_bar'.
+		local
+			list: VISION_COMMAND_LIST
+		do
+			list := vision_command_list (scroll_bar.event_command (a_mask));
+			if list = Void then
+				!! list.make;
+				scroll_bar.set_event_handler (a_mask, list, an_argument)
+			end;
+			list.add_command (a_command, an_argument)
 		end;
 
 end -- class SCALE_M

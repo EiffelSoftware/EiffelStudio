@@ -112,6 +112,9 @@ feature {NONE} -- Initialization
 			real_signal_connect (visual_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 				--| "button-press-event" is a special case, see below.
 				
+			real_signal_connect (visual_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
+			real_signal_connect (visual_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
+				
 			connect_button_press_switch_agent := agent (App_implementation.gtk_marshal).connect_button_press_switch_intermediary (c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
@@ -245,9 +248,13 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
 			if a_has_focus then
-				focus_in_actions_internal.call ((App_implementation.gtk_marshal).Empty_tuple)
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.call ((App_implementation.gtk_marshal).Empty_tuple)
+				end
 			else
-				focus_out_actions_internal.call ((App_implementation.gtk_marshal).Empty_tuple)
+				if focus_out_actions_internal /= Void then
+					focus_out_actions_internal.call ((App_implementation.gtk_marshal).Empty_tuple)
+				end
 			end
 		end
 

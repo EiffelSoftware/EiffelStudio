@@ -298,7 +298,10 @@ feature {NONE} -- Implementation
 	is_being_pressed: BOOLEAN
 		-- Is this button currently being pressed?
 
-	Total_offset: INTEGER is 5
+	Total_offset: INTEGER is 
+		do
+			Result := 5
+		end
 
 	in_button_area (a_x, a_y: INTEGER): BOOLEAN is
 			-- Is position marked by `a_x' and `a_y' in the

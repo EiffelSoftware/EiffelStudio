@@ -35,13 +35,6 @@ extern "C" {
  * List of body_ids (uint32)
  */
 
-struct id_list {
-	struct idlchunk *idl_hd;	/* Head of chunk list */
-	struct idlchunk *idl_tl;	/* Tail of chunk list */
-	uint32 *idl_last;			/* Last (pointer to next free location) */
-	uint32 *idl_end;			/* First element beyond current chunk */
-};
-
 struct idlchunk {
 	struct idlchunk *idl_next;	/* Next chunk in list */
 	struct idlchunk *idl_prev;	/* Previous chunk in list */

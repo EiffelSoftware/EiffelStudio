@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 		require
 			menus_not_initialized: menus_initialized = False
 		local
-			help_about, file_exit, project_menu_settings: EV_MENU_ITEM
+			help_about, file_exit: EV_MENU_ITEM
 			menu_separator: EV_MENU_SEPARATOR
 			
 		do
@@ -191,9 +191,7 @@ feature {NONE} -- Implementation
 			-- create and layout "widgets" within `Current'.
 		local
 			separator: EV_HORIZONTAL_SEPARATOR
-			vertical_box1: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
-			gb_tool_holder: GB_TOOL_HOLDER
 		do
 			create tool_holder
 			create separator

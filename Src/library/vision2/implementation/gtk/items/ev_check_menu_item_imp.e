@@ -30,9 +30,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_check_menu_item_new)
 			C.gtk_check_menu_item_set_show_toggle (c_object, True)
-
-			--| FIXME Toggle is not shown because we put our
-			--| own box in the item.
+			C.gtk_check_menu_item_set_active (c_object, False)
 		end
 	
 feature -- Status report
@@ -90,6 +88,10 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/22 20:02:44  brendel
+--| Removed comment because that turned out not to be true.
+--| Default state of check menu items is unchecked.
+--|
 --| Revision 1.16  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

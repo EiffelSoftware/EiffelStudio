@@ -63,6 +63,7 @@ char *s;
 	store_write_func = partial_store_write;
 
 	fides = (int)f_desc;				/* For use of `st_write' */
+	fstoretype = 'F';
 	result = lseek (fides, 0, SEEK_CUR);
 	if (result==-1) esys();
 

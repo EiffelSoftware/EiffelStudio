@@ -31,6 +31,7 @@ long position, nb_obj;
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
+	r_fstoretype = 'F';
 	if (lseek(r_fides, position, SEEK_SET) == -1) esys();	/* bail out */
 	allocate_gen_buffer();
 	result = rt_nmake(nb_obj);			/* Retrieve `nb_obj' objects */
@@ -54,6 +55,7 @@ long position;
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
+	r_fstoretype = 'F';
 	if (lseek(r_fides, position, SEEK_SET) == -1) esys();	/* bail out */
 	allocate_gen_buffer();
 	result = rt_make();

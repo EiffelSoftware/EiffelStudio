@@ -1,8 +1,8 @@
-AR = tlib 
-CC = bcc32
-CFLAGS = -O2 -tWM -DEIF_THREADS -I$(EIFFEL5)\bench\spec\$(PLATFORM)\include
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib 
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
+CFLAGS = -O2 -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
 LN = copy
-MAKE = make
+MAKE = $(ISE_EIFFEL)\BCC55\bin\make
 RANLIB = echo
 RM = del
 

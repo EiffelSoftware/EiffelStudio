@@ -283,6 +283,25 @@ feature  -- Status report
 		deferred
 		end;
 
+feature  -- Default action callbacks
+
+	add_default_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to
+			-- execute when items are selected with double
+			-- click or by pressing `RETURN' in current
+			-- scroll list.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+	remove_default_action is
+			-- Remove all actions executed when items are
+			-- selected with double click or by pressing
+			-- `RETURN' in current scroll list.
+		deferred
+		end;
+
 feature  -- Status setting
 
 	add_click_action (a_command: COMMAND; argument: ANY) is

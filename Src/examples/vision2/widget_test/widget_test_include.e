@@ -16,6 +16,7 @@ feature {NONE} -- Implementation
 			fixed_increase_item_position_demo: FIXED_INCREASE_ITEM_POSITION_TEST
 			fixed_z_order_test: FIXED_Z_ORDER_TEST
 			button_select_actions_test: BUTTON_SELECT_ACTIONS_TEST
+			button_pixmp_test: BUTTON_PIXMAP_TEST
 			label_basic_test: LABEL_BASIC_TEST
 			label_text_alignment_test: LABEL_TEXT_ALIGNMENT_TEST
 			label_multi_line_test: LABEL_MULTI_LINE_TEST
@@ -25,19 +26,25 @@ feature {NONE} -- Implementation
 			notebook_selection_actions_test: NOTEBOOK_SELECTION_ACTIONS_TEST
 			horizontal_box_padding_width_test: HORIZONTAL_BOX_PADDING_WIDTH_TEST
 			vertical_box_padding_width_test: VERTICAL_BOX_PADDING_WIDTH_TEST
+			vertical_box_disable_item_expand_test: VERTICAL_BOX_DISABLE_ITEM_EXPAND_TEST
 			horizontal_box_border_width_test: HORIZONTAL_BOX_BORDER_WIDTH_TEST
+			horizontal_box_disable_item_expand_test: HORIZONTAL_BOX_DISABLE_ITEM_EXPAND_TEST
 			vertical_box_border_width_test: VERTICAL_BOX_BORDER_WIDTH_TEST
 			horizontal_split_area_extend_test: HORIZONTAL_SPLIT_AREA_EXTEND_TEST
 			vertical_split_area_extend_test: VERTICAL_SPLIT_AREA_EXTEND_TEST
+			horizontal_split_area_single_child_test: HORIZONTAL_SPLIT_AREA_SINGLE_CHILD_TEST
+			vertical_split_area_single_child_test: VERTICAL_SPLIT_AREA_SINGLE_CHILD_TEST
 			check_button_simple_test: CHECK_BUTTON_SIMPLE_TEST
 			check_button_select_actions_test: CHECK_BUTTON_SELECT_ACTIONS_TEST
 			combo_box_simple_test: COMBO_BOX_SIMPLE_TEST
+			combo_box_pixmap_test: COMBO_BOX_PIXMAP_TEST
 			list_basic_test: LIST_BASIC_TEST
 			list_pixmap_test: LIST_PIXMAP_TEST
 			list_multiple_selection_test: LIST_MULTIPLE_SELECTION_TEST
 			password_field_basic_test: PASSWORD_FIELD_BASIC_TEST
 			password_field_validate_entry_test: PASSWORD_FIELD_VALIDATE_ENTRY_TEST
 			toggle_button_is_toggled_test: TOGGLE_BUTTON_IS_SELECTED_TEST
+			toggle_button_pixmap_test: TOGGLE_BUTTON_PIXMAP_TEST
 			frame_basic_test: FRAME_BASIC_TEST
 			frame_text_alignment_test: FRAME_TEXT_ALIGNMENT_TEST
 			frame_style_test: FRAME_STYLE_TEST
@@ -45,6 +52,7 @@ feature {NONE} -- Implementation
 			scrollable_area_large_item_test: SCROLLABLE_AREA_LARGE_ITEM_TEST
 			viewport_small_item_test: VIEWPORT_SMALL_ITEM_TEST
 			viewport_small_item_move_test: VIEWPORT_OFFSET_TEST
+			viewport_advanced_offset_test: VIEWPORT_ADVANCED_OFFSET_TEST
 			table_single_child: TABLE_SINGLE_CHILD_TEST
 			table_three_children_test: TABLE_THREE_CHILDREN_TEST
 			table_many_children_test: TABLE_MANY_CHILDREN_TEST
@@ -57,9 +65,11 @@ feature {NONE} -- Implementation
 			vertical_separator_basic_test: VERTICAL_SEPARATOR_BASIC_TEST
 			horizontal_progress_bar_simple_test: HORIZONTAL_PROGRESS_BAR_SIMPLE_TEST
 			vertical_progress_bar_simple_test: VERTICAL_PROGRESS_BAR_SIMPLE_TEST
+			vertical_progress_bar_segmentation_test: VERTICAL_PROGRESS_BAR_SEGMENTATION_TEST
 			horizontal_progress_bar_adjusting_test: HORIZONTAL_PROGRESS_BAR_ADJUSTING_TEST
 			vertical_progress_bar_adjusting_test: VERTICAL_PROGRESS_BAR_ADJUSTING_TEST
 			horizontal_range_bar_simple_test: HORIZONTAL_RANGE_SIMPLE_TEST
+			horizontal_progress_bar_segmentation_test: HORIZONTAL_PROGRESS_BAR_SEGMENTATION_TEST
 			vertical_range_bar_simple_test: VERTICAL_RANGE_SIMPLE_TEST
 			horizontal_range_bar_adjusting_test: HORIZONTAL_RANGE_ADJUSTING_TEST
 			vertical_range_bar_adjusting_test: VERTICAL_RANGE_ADJUSTING_TEST
@@ -84,9 +94,21 @@ feature {NONE} -- Implementation
 			tool_bar_radio_button_test: TOOL_BAR_RADIO_BUTTON_TEST
 			tool_bar_toggle_button_test: TOOL_BAR_TOGGLE_BUTTON_TEST
 			tool_bar_combo_box_test: TOOL_BAR_COMBO_BOX_TEST
+			checkable_list_test: CHECKABLE_LIST_BASIC_TEST
+			checkable_list_pixmap_test: CHECKABLE_LIST_PIXMAP_TEST -- 84
+			pixmap_basic_test: PIXMAP_BASIC_TEST
+			pixmap_drawing_test: PIXMAP_DRAWING_TEST
+			text_basic_test: TEXT_BASIC_TEST
+			test_scroll_to_line_test: TEXT_SCROLL_TO_LINE_TEST
+			cell_background_pixmap_test: CELL_BACKGROUND_PIXMAP_TEST
+			cell_basic_test: CELL_BASIC_TEST
+			cell_as_padding_test: CELL_AS_PADDING_TEST
+			drawing_area_simple_drawing_test: DRAWING_AREA_SIMPLE_DRAWING_TEST
+			drawing_area_expose_actions_test: DRAWING_AREA_EXPOSE_ACTIONS_TEST
+			drawing_area_clipped_test: DRAWING_AREA_CLIPPED_TEST
 			
 			--| FIXME remove
-			--table_testing_test: TABLE_TESTING_TEST
+			table_testing_test: TABLE_TESTING_TEST
 		do
 		end
 

@@ -48,10 +48,12 @@ feature
 			is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			expanded_type, non_expanded_type: CL_TYPE_I;
+			exp_class_type: CLASS_TYPE;
 			gen_type: GEN_TYPE_I;
 			dtype: INTEGER;
 			c_name: STRING;
 			final_mode: BOOLEAN;
+			has_init, has_creation: BOOLEAN
 			encoded_name: STRING
 		do
 			gen_param := first_generic;
@@ -60,26 +62,25 @@ feature
 
 				-- HEADER:
 				--		void make_area(Current, arg1)
-				--		char *Current;
-				--		long arg1;
+				--		EIF_REFERENCE Current;
+				--		EIF_INTEGER arg1;
 				--		{
-				--			char *result;
+				--			char *ref;
 				--			struct union overhead *zone;
 			file.putstring ("%
 				%/*%N%
 				% * make_area%N%
-				% */%Nvoid ");
+				% */%N");
 			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "make_area", encoded_name);
 
-			file.putstring (encoded_name);
+			file.generate_function_signature ("void", encoded_name, "", file,
+				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>)
+
 			file.putstring ("%
-				% (Current, arg1)%N%
-				%char *Current;%N%
-				%long arg1;%N%
 				%{%N%
-				%%Tchar *result, *ref;%N%
+				%%Tchar *ref;%N%
 				%%Tunion overhead *zone;%N%
 				%%TRTLD;%N%N");
 
@@ -165,31 +166,77 @@ feature
 				-- Set element size
 			file.putstring ("%T*(long *) (ref + sizeof(long)) = ");
 			if is_expanded then
-				file.putstring ("Size(");
-				file.putint (dtype);
-				file.putstring (") + OVERHEAD;%N");
-				file.putstring ("%Tzone->ov_flags |= EO_COMP;%N");
+				if final_mode then
+					file.putstring ("Size(");
+					file.putint (dtype);
+					file.putstring (") + OVERHEAD;%N");
+					file.putstring ("%Tzone->ov_flags |= EO_COMP;%N");
+
+					exp_class_type := expanded_type.associated_class_type
+
+					has_init := exp_class_type.has_creation_routine
+					has_creation :=
+						exp_class_type.associated_class.creation_feature /= Void
+
+					file.putstring ("%
+						%%T{%N%
+						%%T%Tchar *ref;%N%
+						%%T%Tlong i;%N");
+
+					if has_init then
+							-- Call initialization routines
+						file.putstring ("%T%Tinit = Create(")
+						file.putint (dtype)
+						file.putstring (");%N")
+					end
+
+					file.putstring ("%
+						%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
+								%ref += Size(");
+					file.putint (dtype);
+					file.putstring (")+OVERHEAD){%N%
+						%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
+						%%T%T%THEADER(ref)->ov_flags = ");
+					file.putint (dtype);
+					file.putstring (" + EO_EXP;%N")
+
+						-- FIXME: call to creation routine?????
+
+					if has_init then
+						file.putstring ("%T%T%T(init)(ref, l[1]);%N")
+					end
+
+					file.putstring ("%T%T};%N%T};%N")
+				else
+
+						-- FIXME: call to creation routine?????
+
+					file.putstring ("Size(");
+					file.putint (dtype);
+					file.putstring (") + OVERHEAD;%N");
+					file.putstring ("%Tzone->ov_flags |= EO_COMP;%N");
 				
-					-- Call initialization routines
-				file.putstring ("%
-					%%T{%N%
-					%%T%Tchar *ref;%N%
-					%%T%Tlong i;%N%
-					%%T%Tfnptr init;%N%
-					%%T%Tinit = Create(");
-				file.putint (dtype);
-				file.putstring (");%N%
-					%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
-							%ref += Size(");
-				file.putint (dtype);
-				file.putstring (")+OVERHEAD){%N%
-					%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
-				   %%T%T%THEADER(ref)->ov_flags = ");
-				file.putint (dtype);
-				file.putstring (";%N%
-					%%T%T%Tif ((fnptr) 0 != init)%N%
-					%%T%T%T%T(init)(ref, l[1]);%N%
-					%%T%T};%N%T};%N");
+						-- Call initialization routines
+					file.putstring ("%
+						%%T{%N%
+						%%T%Tchar *ref;%N%
+						%%T%Tlong i;%N%
+						%%T%Tfnptr init;%N%
+						%%T%Tinit = Create(");
+					file.putint (dtype);
+					file.putstring (");%N%
+						%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
+								%ref += Size(");
+					file.putint (dtype);
+					file.putstring (")+OVERHEAD){%N%
+						%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
+				   	%%T%T%THEADER(ref)->ov_flags = ");
+					file.putint (dtype);
+					file.putstring (" + EO_EXP;%N%
+						%%T%T%Tif ((fnptr) 0 != init)%N%
+						%%T%T%T%T(init)(ref, l[1]);%N%
+						%%T%T};%N%T};%N");
+				end
 			else
 				type_c.generate_size (file);
 				file.putstring (";%N");

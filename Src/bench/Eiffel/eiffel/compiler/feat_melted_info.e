@@ -37,7 +37,6 @@ feature {NONE} -- Implementation
 			-- Create new EXECUTION_UNIT corresponding to Current type.
 		local
 			res: TYPE_I
-			gen_type: GEN_TYPE_I
 		do
 			if is_encapsulated_call then
 				create {ENCAPSULATED_EXECUTION_UNIT} Result.make (class_type)
@@ -50,8 +49,7 @@ feature {NONE} -- Implementation
 
 			res := result_type
 			if res.has_formal then
-				gen_type ?= class_type.type
-				res := res.instantiation_in (gen_type) 
+				res := res.instantiation_in (class_type) 
 			end
 
 			Result.set_type (res.c_type)

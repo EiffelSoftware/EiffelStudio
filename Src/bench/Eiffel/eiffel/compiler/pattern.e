@@ -100,12 +100,12 @@ feature
 			end;
 		end;
 
-	instantiation_in (gen_type: GEN_TYPE_I): PATTERN is
+	instantiation_in (gen_type: CLASS_TYPE): PATTERN is
 			-- Instantiated pattern in the context of generical type
 			-- `gen_type'.
 		require
-			good_argument: gen_type /= Void;
-			no_formal: not gen_type.has_formal;
+			gen_type_not_void: gen_type /= Void
+			gen_type_is_generic: gen_type.is_generic
 			has_formal: has_formal;
 		local
 			i, n: INTEGER;

@@ -77,28 +77,20 @@ feature
 			Result := System.class_of_id (written_in);
 		end;
 
-	instantiation_in (type: CL_TYPE_I): PATTERN is
+	instantiation_in (type: CLASS_TYPE): PATTERN is
 			-- Instantiation of `pattern' in the context of `type'.
 		require
-			good_argument: type /= Void;
-			no_formals: not type.has_formal;
-			consistency1: type.base_class.conform_to (associated_class);
-			consistency2: 	pattern.has_formal
-							implies
-					(associated_class.meta_type (type).meta_generic /= Void);
-		local
-			ancestor_type: CL_TYPE_I;
-			gen_type: GEN_TYPE_I;
+			good_argument: type /= Void
+			consistency1: type.associated_class.conform_to (associated_class)
+			consistency2: pattern.has_formal implies associated_class.meta_type (type).is_generic
 		do
-			Result := pattern;
+			Result := pattern
 			if Result.has_formal then
-				ancestor_type := associated_class.meta_type (type);
-				gen_type ?= ancestor_type;		-- Cannot fail.
-				Result := Result.instantiation_in (gen_type);
-			end;
+				Result := Result.instantiation_in (associated_class.meta_type (type))
+			end
 		ensure
-			no_formal: not Result.has_formal;
-		end;
+			no_formal: not Result.has_formal
+		end
 
 	trace is
 			-- Debug purpose

@@ -159,7 +159,6 @@ feature -- Status setting
 			-- Replace object editor item of type `a_type' with a newly built one.
 			-- This forces an update due to the current state of `object'.
 		local
-			ev_sensitive: EV_SENSITIVE
 			found: BOOLEAN
 			editor_item: GB_OBJECT_EDITOR_ITEM
 		do
@@ -283,7 +282,6 @@ feature {NONE} -- Implementation
    -- Check that name `class_name' is a valid class name.
   local
    cn: STRING
-   wd: EV_WARNING_DIALOG
    cchar: CHARACTER
    i: INTEGER
   do

@@ -282,13 +282,25 @@ feature -- Conversion
 	to_hex_string: STRING is
 			-- Convert `item' into an hexadecimal string.
 		local
-			tmp: INTEGER
+			i, val: INTEGER
+			a_digit: INTEGER
 		do
-			tmp := item
-			Result := tmp.to_hex_string
+			from
+				i := 2
+				create Result.make (i)
+				Result.fill_blank
+				val := item
+			until
+				i = 0
+			loop
+				a_digit := (val & 15)
+				Result.put (a_digit.to_hex_character, i)
+				val := val |>> 4
+				i := i - 1
+			end
 		ensure
-			Result_not_void: Result /= Void
-			Result_valid_count: Result.count = 2
+			result_not_void: Result /= Void
+			result_valid_count: Result.count = 2
 		end
 
 	to_hex_character: CHARACTER is

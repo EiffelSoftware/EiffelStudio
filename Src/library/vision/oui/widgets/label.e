@@ -70,6 +70,8 @@ feature -- Resizing policies
 	allow_recompute_size is
 			-- Allow current label to recompute its size according to
 			-- changes on its value.
+		require
+			exists: not destroyed
 		do
 			implementation.allow_recompute_size
 		end;
@@ -77,6 +79,8 @@ feature -- Resizing policies
 	forbid_recompute_size is
 			-- Forbid current label to recompute its size according to
 			-- changes on its value.
+		require
+			exists: not destroyed
 		do
 			implementation.forbid_recompute_size
 		end;
@@ -85,18 +89,24 @@ feature -- Text
 	
 	set_center_alignment is
 			-- Set text alignment of current label to center.
+		require
+			exists: not destroyed
 		do
 			implementation.set_center_alignment
 		end;
 
 	set_right_alignment is
 			-- Set text alignment of current label to right.
+		require
+			exists: not destroyed
 		do
 			implementation.set_right_alignment
 		end;
 	
 	set_left_alignment is
 			-- Set text alignment of current label to left.
+		require
+			exists: not destroyed
 		do
 			implementation.set_left_alignment
 		end;
@@ -104,7 +114,8 @@ feature -- Text
 	set_text (a_text: STRING) is
 			-- Set text of current label to `a_text'.
 		require
-			not_a_text_void: not (a_text = Void)
+			exists: not destroyed;
+			not_a_text_void: a_text /= Void
 		do
 			unmanage;
 			implementation.set_text (a_text);
@@ -115,6 +126,8 @@ feature -- Text
 
 	text: STRING is
 			-- Text of current label
+		require
+			exists: not destroyed
 		do
 			Result:= implementation.text
 		end 

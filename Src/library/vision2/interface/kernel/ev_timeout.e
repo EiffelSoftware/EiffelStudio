@@ -104,13 +104,13 @@ feature -- Miscellaneous
 			f.extend (vb)
 			create hb
 			vb.extend (hb)
-			create interval_label.make_with_text ("Interval: 500")
+			create interval_label.make_with_text ("Interval: 500 milliseconds")
 			create interval_gauge.make_with_range (0 |..| 1000)
+			interval_gauge.change_actions.extend (
+				~on_value_change (interval_gauge, interval_label))
 			hb.extend (interval_gauge)
 			interval_gauge.set_value (500)
 			set_interval (500)
-			interval_gauge.change_actions.extend (
-				~on_value_change (interval_gauge, interval_label))
 			create reset_button.make_with_text ("Reset count")
 			reset_button.select_actions.extend (~reset_count)
 			hb.extend (reset_button)
@@ -128,7 +128,7 @@ feature -- Miscellaneous
 			-- `interval_gauge.value' changed.
 		do
 			set_interval (a_gauge.value)
-			a_label.set_text ("Interval: " + interval.out)
+			a_label.set_text ("Interval: " + interval.out + " milliseconds")
 		end
 
 	on_timer (a_label: EV_LABEL) is
@@ -196,6 +196,9 @@ end -- class EV_TIMEOUT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/05/01 21:20:46  brendel
+--| Added "milliseconds" to interval.
+--|
 --| Revision 1.9  2000/05/01 19:33:29  brendel
 --| Improved `test_widget'.
 --|

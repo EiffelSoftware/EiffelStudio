@@ -22,69 +22,73 @@ inherit
 		end
 
 creation
-	make, make_with_automatic_scrolling, make_from_existing
+	make, 
+	make_with_automatic_scrolling, 
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif scrolled window.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
-			widget_name: ANY
+			widget_name: ANY;
+			w: POINTER
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_window (a_parent.screen_object,
 									$widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
+			w := c_get_widget (screen_object, XmNclipWindow);
+			if w /= default_pointer then	
+				!! clip_window.make_from_existing (w, Current)
+			end;
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 	make_with_automatic_scrolling (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif scrolled window with an automatic scrolling.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
-			widget_name: ANY
+			widget_name: ANY;
+			w: POINTER
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_window_with_automatic_scrolling
 									(a_parent.screen_object, $widget_name);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
+			w := c_get_widget (screen_object, XmNclipWindow);
+			if w /= default_pointer then	
+				!! clip_window.make_from_existing (w, Current)
+			end;
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Status report
 
-	clip_window: MEL_OBJECT is
-			-- Clipping area
-		require
-			exists: not is_destroyed
-		local
-			w: POINTER
-		do
-			w := c_get_widget (screen_object, XmNclipWindow);
-			if w /= default_pointer then	
-				Result := Mel_widgets.item (w);
-				if Result = Void then
-					!MEL_WIDGET! Result.make_from_existing (w)
-				end
-			end
-		end;
+	clip_window: MEL_DRAWING_AREA;
+			-- Clipping area 
+			--| Implemented as a drawing area (6A-page298)
 
 	horizontal_scroll_bar: MEL_SCROLL_BAR is
 			-- Horizontal scrollbar
@@ -97,7 +101,7 @@ feature -- Status report
 			if w /= default_pointer then	
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w)
+					!! Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -113,7 +117,7 @@ feature -- Status report
 			if w /= default_pointer then	
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w)
+					!! Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -322,7 +326,8 @@ feature -- Status setting
 			-- Set `work_window' to `a_widget'.
 		require
 			exists: not is_destroyed;
-			a_widget_exists: not a_widget.is_destroyed
+			a_widget_exists: not a_widget.is_destroyed;
+			valid_widget_parent: a_widget.parent = Current
 		do
 			work_window := a_widget;
 			set_xt_widget (screen_object, XmNworkWindow, a_widget.screen_object)

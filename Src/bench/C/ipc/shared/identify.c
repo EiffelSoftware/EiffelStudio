@@ -23,6 +23,7 @@
  */
 
 #include "eif_config.h"
+#include "ipcvms.h"		/* only affects VMS */
 #include "eif_portable.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -222,7 +223,11 @@ rt_public int identify(void)
 	 * then return if nothing is available within that time frame.
 	 */
 
+#ifdef __VMS	/* I admit it; it can take a long time to spawn on vms. */
+	tm.tv_sec = 5;
+#else
 	tm.tv_sec = 2;
+#endif /* vms */
 	tm.tv_usec = 0;
 	if (-1 == select(EWBIN + 1, &mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm)) {
 #ifdef USE_ADD_LOG

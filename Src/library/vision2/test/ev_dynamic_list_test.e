@@ -61,7 +61,7 @@ feature -- Initialization
 			then
 				destroy
 			else
-				exit_one (1)
+				exit_one
 			end
 		end
 

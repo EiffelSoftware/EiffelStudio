@@ -107,8 +107,8 @@ feature -- Access
 			hide_help_button;
 			show_cancel_button;
 			show_ok_button;
-			set_ok_label (" OK ");
-			set_cancel_label ("Cancel");
+			set_ok_label (l_Ok);
+			set_cancel_label (l_Cancel);
 			last_caller := a_command;
 			set_message (a_message);
 			set_exclusive_grab;

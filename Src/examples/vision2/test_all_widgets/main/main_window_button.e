@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Command
 
-	execute (argument: EV_ARGUMENT1[MAIN_WINDOW]) is
+	execute (argument: EV_ARGUMENT1[MAIN_WINDOW]; data: EV_EVENT_DATA) is
 		local
 			temp_dem: DEMO_WINDOW
 		do

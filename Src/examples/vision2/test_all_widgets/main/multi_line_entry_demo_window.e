@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 	"TEXT_AREA_DEMO_WINDOW, demo window to test multi line text area widget. Belongs to EiffelVision example."
 	status: "See notice at end of class"
@@ -11,12 +10,14 @@ class
 	TEXT_AREA_DEMO_WINDOW
 
 inherit
-
 	DEMO_WINDOW
-	
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
 
 creation
-
 	make
 
 feature -- Access
@@ -31,13 +32,14 @@ feature -- Status setting
 	
 	set_widgets is
 		do
-			main_widget.show
+--			main_widget.show
 		end
 	
 	set_values is
 		do
 			set_title ("Text area demo")
---			main_widget.set_text ("edit me")
+--			main_widget.insert_text ("edit me")
+			main_widget.append_text ("edit me")
 --			main_widget.set_height (40)
 		end
 end

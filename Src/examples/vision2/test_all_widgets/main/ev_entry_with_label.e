@@ -22,9 +22,9 @@ feature -- Initialization
 			!!box.make (par)
 			box.set_homogeneous (False)
 			!!label.make (box)
-			Precursor (box)
-			set_minimum_width (40)
-			label.set_width (50)
+			{EV_TEXT_FIELD} Precursor (box)
+			set_text ("0")
+			set_minimum_width (50)
 		end
 	
 	make_with_label (par: EV_CONTAINER; name: STRING) is

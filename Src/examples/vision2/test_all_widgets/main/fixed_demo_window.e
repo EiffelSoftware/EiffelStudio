@@ -13,7 +13,13 @@ class
 inherit
 
 	DEMO_WINDOW
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
 	
+	EV_COMMAND
 
 creation
 
@@ -24,6 +30,7 @@ feature -- Access
 	main_widget: EV_FIXED is
 		once
 			!!Result.make (Current)
+			Result.set_minimum_size(300,300)
 		end
 
 feature -- Access
@@ -45,6 +52,7 @@ feature -- Status setting
 		do
 			set_title ("Fixed demo")
 			button1.set_text ("Press me")
+			button1.add_click_command (Current, Void)
 			button2.set_text ("Me too!")
 			button1.set_x_y (10, 20)
 			button2.set_x_y (10, 50)
@@ -62,6 +70,14 @@ feature -- Status setting
 		--	!!c
 		--	button.add_command (e, c, a)
 		end
+
+feature -- Execute
+
+	execute (arg: EV_ARGUMENTS; data: EV_EVENT_DATA) is
+		do
+			button2.set_x_y (button2.x + 10, button2.y + 10)
+		end
+
 	
 end
 --|----------------------------------------------------------------

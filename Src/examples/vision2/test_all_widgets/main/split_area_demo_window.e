@@ -13,6 +13,11 @@ class
 inherit
 
 	DEMO_WINDOW
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
 	
 creation
 

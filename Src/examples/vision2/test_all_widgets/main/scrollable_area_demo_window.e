@@ -13,6 +13,11 @@ class
 inherit
 
 	DEMO_WINDOW
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
 	
 creation
 
@@ -23,6 +28,7 @@ feature -- Access
 	main_widget: EV_SCROLLABLE_AREA is
 		once
 			!!Result.make (Current)
+			Result.set_minimum_size(200,200)
 		end
 	
 	
@@ -30,10 +36,10 @@ feature -- Status setting
 	
 	set_widgets is
 		local
-			p: EV_PIXMAP
+			t: EV_TEXT_AREA
 		do
-			!!p.make (main_widget)
-			p.read_from_file ("../pixmaps/vision.xpm")
+			!!t.make (main_widget)
+			t.set_size (300, 300)
 		end
 	
 feature -- Status setting

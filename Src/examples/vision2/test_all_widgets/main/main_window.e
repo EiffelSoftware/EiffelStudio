@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 	"MAIND_WINDOW, main window for the application. Belongs to EiffelVision example."
 	status: "See notice at end of class"
@@ -11,7 +10,6 @@ class
 	MAIN_WINDOW
 
 inherit
-
 	EV_WINDOW
 		redefine	
 			make_top_level
@@ -19,6 +17,7 @@ inherit
 	
 	EV_COMMAND
 	
+	EXECUTION_ENVIRONMENT
 
 creation
 
@@ -29,7 +28,7 @@ feature --Access
 	container: EV_DYNAMIC_TABLE
 	
 	current_demo_window: DEMO_WINDOW
-	
+
 feature -- Initialization
 	
 	make_top_level is
@@ -48,12 +47,17 @@ feature -- Initialization
 			c11: LIST_DEMO_WINDOW
 			c12: TABLE_DEMO_WINDOW
 			c13: DYNAMIC_TABLE_DEMO_WINDOW
-			c14: TREE_DEMO_WINDOW
+--			c14: TREE_DEMO_WINDOW
+			c15: MC_LIST_DEMO_WINDOW
+			c16: DIALOG_DEMO_WINDOW
+			c18: COMBO_DEMO_WINDOW
+
 		do
 			Precursor
 			!!container.make (Current)
-			container.set_finite_dimension (2)
+			container.set_finite_dimension (3)
 			container.set_row_layout
+			set_x_y (0, 0)
 			!!c1.make (Current)
 			!!c2.make (Current)
 			!!c3.make (Current)
@@ -67,32 +71,39 @@ feature -- Initialization
 			!!c11.make (Current)
 			!!c12.make (Current)		
 			!!c13.make (Current)
-			!!c14.make (Current)
+--			!!c14.make (Current)
+			!!c15.make (Current)
+			!!c16.make (Current)
+			!!c18.make (Current)
+			
 			!!b.make_button (Current, "Label", "", c1)
-			!!b.make_button (Current, "Buttons", "pixmaps/buttons.xpm", c10)
-			!!b.make_button (Current, "Fixed", "pixmaps/fixed.xpm", c2)
-			!!b.make_button (Current, "Box", "pixmaps/box.xpm", c3)
-			!!b.make_button (Current, "Notebook", "pixmaps/notebook.xpm", c4)
-			!!b.make_button (Current, "Text field", "pixmaps/text_field.xpm", c5)
-			!!b.make_button (Current, "Text area", "pixmaps/text_area.xpm", c6)
-			!!b.make_button (Current, "Menu", "pixmaps/menu.xpm", c7)
-			!!b.make_button (Current, "Split area", "pixmaps/split_area.xpm", c8)
-			!!b.make_button (Current, "Scrollable area", "pixmaps/scrollable_area.xpm", c9)
+			!!b.make_button (Current, "Buttons", pixname("buttons"), c10)
+			!!b.make_button (Current, "Fixed", "", c2) -- pixname("fixed")
+			!!b.make_button (Current, "Box", pixname("box"), c3) 
+			!!b.make_button (Current, "Notebook", pixname("notebook"), c4) 
+			!!b.make_button (Current, "Text field", pixname("text_field"), c5)  
+			!!b.make_button (Current, "Text area", pixname("text_area"), c6)
+ 			!!b.make_button (Current, "Menu", pixname("menu"), c7) 
+			!!b.make_button (Current, "Split area", pixname("split_area"), c8)
+			!!b.make_button (Current, "Scrollable area", pixname("scrollable_area"), c9)
 			!!b.make_button (Current, "List", "", c11)
-			!!b.make_button (Current, "Table", "pixmaps/table.xpm", c12)
-			!!b.make_button (Current, "Dynamic Table", "pixmaps/dtable.xpm", c13)
-			!!b.make_button (Current, "Tree", "pixmaps/tree.xpm", c14)
+			!!b.make_button (Current, "Table", "", c12)  --pixname("table")
+			!!b.make_button (Current, "Dynamic Table", "", c13) -- pixname("dtable")
+--			!!b.make_button (Current, "Tree", pixname("tree"), c14) 
+			!!b.make_button (Current, "MC List", "", c15)
+			!!b.make_button (Current, "Dialog", "", c16)
+			!!b.make_button (Current, "Combo box", "", c18)
 
 			set_values
 		end
-	
+
 feature -- Status setting
 	
-	execute (arg: EV_ARGUMENT1[DEMO_WINDOW]) is
+	execute (arg: EV_ARGUMENT1[DEMO_WINDOW]; data: EV_EVENT_DATA) is
 			-- called when actions window is deleted
 		do
  			arg.first.effective_button.set_state (False)
-			if arg.first.actions_window /= Void then
+			if not arg.first.actions_window.destroyed then
 				arg.first.actions_window.destroy
 			end
 			arg.first.hide
@@ -102,8 +113,22 @@ feature -- Status setting
 feature -- Status setting
 	
 	set_values is
+		local
+			tfield: EV_TEXT_FIELD
 		do
 			set_title ("Test all widgets")
+			!!tfield.make (container)
+		end
+
+feature -- Basic operation
+
+	pixname (a_name: STRING): STRING is
+			-- Return the complete path of the given pixmap : root/../pixmaps/name
+		do
+--			Result := root_directory_name
+			Result := "d:\aitkaci\vision2\temp_examples\test_all_widgets\bitmap\"
+			Result.append (a_name)
+			Result.append (".bmp")
 		end
 
 end

@@ -279,7 +279,7 @@ feature -- Editing
 
 feature -- Code Generation
 
-	eiffel_inherit_text (rl: LINKED_LIST [STRING]): STRING is
+	eiffel_inherit_text: STRING is
 			-- Code generation for the 
 			-- inherit clause of Current.
 		local
@@ -310,18 +310,6 @@ feature -- Code Generation
 				Result.append (n.value);
 				arguments.forth
 			end;
-			from
-				rl.start
-			until
-				rl.after
-			loop
-				Result.append (",%N%T%T%T");
-				old_label := rl.item.substring (eiffel_type.count + 2, rl.item.count);
-				Result.append (old_label);
-				Result.append (" as ");
-				Result.append (rl.item);
-				rl.forth;
-			end;
 			Result.append ("%N%T%Tend;%N%T");
 				temp.to_upper;
 			Result.append (temp);
@@ -343,18 +331,6 @@ feature -- Code Generation
 				Result.append ("_");
 				Result.append (n.value);
 				arguments.forth
-			end;
-			from
-				rl.start
-			until
-				rl.after
-			loop
-				Result.append (",%N%T%T%T");
-				old_label := rl.item.substring (eiffel_type.count + 2, rl.item.count);
-				Result.append (old_label);
-				Result.append (" as ");
-				Result.append (rl.item);
-				rl.forth;
 			end;
 			Result.append ("%N%T%Tredefine%N%T%T%Texecute");
 			Result.append ("%N%T%Tselect%N%T%T%Texecute%N%T%Tend");

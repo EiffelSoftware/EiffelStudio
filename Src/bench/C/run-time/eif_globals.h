@@ -113,6 +113,14 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 							 * trigger an invariant check in generated C routines  */
 	char *inv_mark_tablep;	/* Marking table to avoid checking the same invariant several times */
 
+
+		/* sig.c */
+	char sig_ign[NSIG];		/* Is signal ignored by default? */
+	char osig_ign[NSIG];	/* Original signal default (1 = ignored) */
+	int esigblk = 0;		/* By default, signals are not blocked */
+	struct s_stack sig_stk;	/* Initialized by initsig() */
+
+
 #ifdef WORKBENCH
 		/* except.c */
 	unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
@@ -203,6 +211,12 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define nstcall			(eif_globals->nstcall)			/* rt_public */
 #define inv_mark_tablep	(eif_globals->inv_mark_tablep)	/* rt_private */
 
+	/* sig.c */
+#define sig_ign					(eif_globals->sig_ign)		/* rt_public */
+#define osig_ign				(eif_globals->osig_ign)		/* rt_public */
+#define esigblk					(eif_globals->esigblk)		/* rt_shared */
+#define sig_stk					(eif_globals->sig_stk)		/* rt_shared */
+
 
 #else
 
@@ -257,6 +271,10 @@ extern long eiffel_usage;			/* For memory statistics */
 	/* plug.c */
 extern int nstcall;	/* Nested call global variable: signals a nested call and
 					 * trigger an invariant check in generated C routines  */
+
+	/* sig.h */
+extern int esigblk;				/* Are signals blocked for later delivery? */
+extern struct s_stack sig_stk;	/* The signal stack */
 
 
 #endif	/* EIF_REENTRANT */

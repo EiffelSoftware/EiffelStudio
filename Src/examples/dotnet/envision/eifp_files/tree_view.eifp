@@ -39,11 +39,6 @@
 		"ProjRelPath" = "T"
 		"NodeType" = "File"
 	}
-	"platform_invoke_kernel_32.e"
-	{
-		"ProjRelPath" = "T"
-		"NodeType" = "File"
-	}
 	"tree_view_ctl.e"
 	{
 		"ProjRelPath" = "T"

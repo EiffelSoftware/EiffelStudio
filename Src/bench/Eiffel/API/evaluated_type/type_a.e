@@ -352,12 +352,6 @@ feature {COMPILER_EXPORTER} -- Access
 			context_set: Result implies context.last_conversion_info /= Void
 		end
 		
-	has_formal_generic: BOOLEAN is
-			-- Has the current type formal generic parameter in its type ?
-		do
-			-- Do nothing
-		end
-
 	valid_generic (type: TYPE_A): BOOLEAN is
 			-- Do the generic parameter of `type' conform to those of
 			-- Current ?

@@ -14,9 +14,6 @@
 */
 
 #include "config.h"
-#ifdef CONCURRENT_EIFFEL
-#include "curextern.h"
-#endif
 #include <stdio.h>
 #include <signal.h>
 #include "except.h"
@@ -29,6 +26,9 @@
 #include "main.h"
 #include "garcol.h"
 #include "error.h"
+#ifdef CONCURRENT_EIFFEL
+#include "curextern.h"
+#endif
 
 #ifdef WORKBENCH
 #ifndef NOHOOK					/* For debug_mode */

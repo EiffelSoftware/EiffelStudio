@@ -325,6 +325,7 @@ int where;			/* Are we checking invariant before or after compound? */
 	int assert_type;				/* Assertion type */
 	int is_extern = 0;				/* External flag for featue call */
 	char pre_success;				/* Flag for precondition success */ 
+	char in_first_block;			/* Flag for chained preconditions */ 
 	long rtype;						/* Result type */
 	char *once_done = (char *) 0;	/* Address of the once mark */
 	char *rvar;						/* Result address for once */
@@ -471,6 +472,11 @@ int where;			/* Are we checking invariant before or after compound? */
 			 */
 			RTEA(string, code, icurrent->it_ref);
 			dexset(exvect);
+			scur = op_stack.st_cur;		/* Save stack context */
+			stop = op_stack.st_top;		/* needed for setjmp() and calls */
+			dostk();					/* Record position in calling context */
+			if (is_nested)
+				icheck_inv(icurrent->it_ref, scur, stop, 0);	/* Invariant */
 
 #ifdef DEBUG
 			dprintf(1)("\tFeature %s written in %s on 0x%x [%s]\n",
@@ -484,15 +490,14 @@ int where;			/* Are we checking invariant before or after compound? */
 		dprintf(1)("\tInvariant on 0x%x [%s]\n",
 			icurrent->it_ref, System(Dtype(icurrent->it_ref)).cn_generator);
 #endif
+			scur = op_stack.st_cur;		/* Save stack context */
+			stop = op_stack.st_top;		/* needed for setjmp() and calls */
+			dostk();					/* Record position in calling context */
 			break;
 
 		default:
 			panic(botched);
 		}
-		
-		scur = op_stack.st_cur;		/* Save stack context */
-		stop = op_stack.st_top;		/* needed for setjmp() and calls */
-		dostk();					/* Record position in calling context */
 
 		rescue = (char *) 0;		/* No rescue */
 		if (*IC++) {
@@ -610,6 +615,7 @@ end:
 #ifdef DEBUG
 		dprintf(2)("BC_RETRY\n");
 #endif
+		in_assertion = 0;
 		offset = get_long();					/* Get the retry offset */
 		IC += offset;
 		exvect = exret(exvect);					/* Retries a routine */
@@ -623,12 +629,11 @@ end:
 		dprintf(2)("BC_PRECOND\n");
 #endif
 		offset = get_long();
-		if (!(WASC(icur_dtype) & CK_REQUIRE))	/* No precondition check? */
+		if (!(~in_assertion & WASC(icur_dtype) & CK_REQUIRE))	/* No precondition check? */
 			IC += offset;						/* Skip preconditions */
-		else if (is_nested)
-			icheck_inv(icurrent->it_ref, scur, stop, 0);	/* Invariant */
 
 		pre_success = '\01';
+		in_first_block = '\01';
 		break;
 
 	/*
@@ -639,7 +644,7 @@ end:
 		dprintf(2)("BC_POSTCOND\n");
 #endif
 		offset = get_long();
-		if (!(WASC(icur_dtype) & CK_ENSURE))	/* No postcondition check? */
+		if (!(~in_assertion & WASC(icur_dtype) & CK_ENSURE))	/* No postcondition check? */
 			IC += offset;						/* Skip postconditions */
 		break;
 
@@ -966,7 +971,7 @@ end:
 		dprintf(2)("BC_CHECK\n");
 #endif
 		offset = get_long();	/* Jump offset in assertion is not checked */
-		if (!(WASC(icur_dtype) & CK_CHECK))
+		if (!(~in_assertion & WASC(icur_dtype) & CK_CHECK))
 			/* Check assertions are not checked */
 			IC += offset;
 		break;
@@ -979,7 +984,7 @@ end:
 		dprintf(2)("BC_LOOP\n");
 #endif
 		offset = get_long();	/* Jump offset if assertion is not checked */
-		if (!(WASC(icur_dtype) & CK_LOOP))
+		if (!(~in_assertion & WASC(icur_dtype) & CK_LOOP))
 			/* Loop assertions are not checked */
 			IC += offset;
 		break;
@@ -1006,16 +1011,16 @@ end:
 		case BC_TAG:				/* Assertion tag */
 			string = IC;
 			IC += strlen(IC) + 1;
-			if (assert_type != EX_CINV)
-				RTCT(string, assert_type);
-			else
+			if ((assert_type == EX_CINV) || (assert_type == EX_INVC))
 				RTIT(string, icurrent->it_ref);
+			else
+				RTCT(string, assert_type);
 			break;
 		case BC_NOTAG:				/* No assertion tag */
-			if (assert_type != EX_CINV)
-				RTCS (assert_type);
-			else
+			if ((assert_type == EX_CINV) || (assert_type == EX_INVC))
 				RTIS(icurrent->it_ref);
+			else
+				RTCS (assert_type);
 			break;
 		case BC_NOT_REC: break;		/* Do not record assertion */
 		default:
@@ -1034,10 +1039,12 @@ end:
 		code = (int) opop()->it_char;	/* Get the assertion 
 										 * boolean result 
 										 */
-		if (code)
+		if (code) {
 			RTCK;				/* Assertion success */
-		else
+		}
+		else {
 			RTCF;				/* Assertion failure */
+		}
 		break;
 
 	/*
@@ -1053,10 +1060,12 @@ end:
 		if (pre_success)			/* Was previous precondition a success? */
 			if (!code) 
 				pre_success = '\0';
-			else
+			else {
 				RTCK;
-		else
+			}
+		else {
 			RTCK;
+		}
 		break;
 
 	/*
@@ -1068,9 +1077,10 @@ end:
 #endif
 		code = (int) opop()->it_char;	
 									/* Get the assertion boolean result */
-		if (pre_success)    		/* Was previous precondition a success? */
+		if (pre_success)     		/* Was previous precondition a success? */
 			if (!code)
 				pre_success = '\0';
+
 		break;
 
 	/*
@@ -1094,11 +1104,16 @@ end:
 			offset = get_long(); 	/* Get offset to skip remaining 
 									 * chained assertions.
 									 */
-			if (pre_success) 
+			if (pre_success){ 
 				IC += offset;		/* Go to the body of routine */
+				if (!in_first_block) {
+					RTCK;
+				}
+			}
 			else
-				pre_success = '\0';
+				pre_success = '\01';
 									/* Reset success for next block */
+			in_first_block = '\0';
 			break;
 		}
 
@@ -1117,10 +1132,12 @@ end:
 			offset = opop()->it_long;	/* Get the new variant value */
 			old_val = last->it_long;	/* Get the old variant value */
 			last->it_long = offset;		/* Save the new variant value */
-			if ((old_val == -1L || old_val > offset) && offset >= 0)
+			if ((old_val == -1L || old_val > offset) && offset >= 0) {
 				RTCK;
-			else
+			}
+			else {
 				RTCF;
+			}
 		}
 		break;
 
@@ -1156,6 +1173,16 @@ end:
 		offset = get_long();	/* Get the jump value */
 		if (!code)
 			IC += offset;
+		break;
+
+	/*
+	 * Invariant checking after creation
+	 */
+	case BC_CREAT_INV:
+#ifdef DEBUG
+		dprintf(2)("BC_CREAT_INV\n");
+#endif
+		icheck_inv(opop()->it_ref, scur, stop, 1);    /* Invariant */
 		break;
 
 	/*
@@ -1341,9 +1368,9 @@ end:
 		if (!is_extern)
 			dprintf(2)("BC_FEATURE\n");
 #endif
-		nstcall = 0;						/* Invariant check turned off */
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
+		nstcall = 0;						/* Invariant check turned off */
 		if (icall(offset, code, is_extern))
 			sync_registers(scur, stop);
 		is_extern = 0;
@@ -1373,6 +1400,7 @@ end:
 			eraise(string, EN_VOID);		/* Yes, raise exception */
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
+		nstcall = 1;					/* Invariant check turned on */
 		if (icall(offset, code, is_extern))
 			sync_registers(scur, stop);
 		is_extern = 0;						/* No side effect */
@@ -1817,7 +1845,7 @@ end:
 #endif
 		{	char *ref;
 				
-			if (!(WASC(icur_dtype) & CK_ENSURE)) /* No postcondition check? */
+			if (!(~in_assertion & WASC(icur_dtype) & CK_ENSURE)) /* No postcondition check? */
 				opop();					/* Item is poped here because 
 										 * byte code for old is generated
 										 * at the start of the routine
@@ -2019,11 +2047,18 @@ end:
 		if (rescue != (char *) 0)
 			RTOK;
 null:
+
 		if (is_nested)		/* Nested feature call (dot notation) */
 			icheck_inv(icurrent->it_ref, scur, stop, 1);	/* Invariant */
-
 		pop_registers();	/* Pop registers */
 		RTEE;				/* Remove vector pushed by RTEA */
+		return;
+
+	case BC_INV_NULL:
+#ifdef DEBUG
+		dprintf(2)("BC_INV_NULL\n");
+#endif
+		pop_registers();	/* Pop registers */
 		return;
 
 	default:
@@ -2039,6 +2074,10 @@ null:
  * Invariant checking
  */
 
+private char *inv_mark_table;		/* Marking table to avoid checking the same
+									 * invariant several times
+									 */
+
 private void icheck_inv(obj, scur, stop, where)
 char *obj;
 struct stochunk *scur;		/* Current chunk (stack context) */
@@ -2050,8 +2089,12 @@ int where;					/* Invariant after or before */
 
 	union overhead *zone = HEADER(obj);
 	int dtype = Dtype(obj);
+	int i;
 
-	if (WASC(dtype) & CK_INVARIANT && !(zone->ov_flags & EO_INV)) {
+	inv_mark_table = (char *) cmalloc (scount * sizeof(char));
+	for (i=0; i<scount; i++) inv_mark_table[i]=(char) 0;
+
+	if ((~in_assertion & WASC(dtype) & CK_INVARIANT) && !(zone->ov_flags & EO_INV)) {
 		old_IC = IC;				/* Save IC */
 		epush(&loc_stack, &obj);	/* Automatic updating of the `obj' ref. */
 		zone->ov_flags |= EO_INV;	/* Mark it in assertion evaluation */
@@ -2060,6 +2103,8 @@ int where;					/* Invariant after or before */
 		epop(&loc_stack, 1);		/* Release protection of `obj' */
 		IC = old_IC;				/* Restore IC */
 	}
+
+	xfree(inv_mark_table);
 }
 
 private void irecursive_chkinv(dtype, obj, scur, stop, where)
@@ -2075,6 +2120,13 @@ int where;					/* Invariant after or before */
 	int *cn_parents;
 	int p_type;
 	int32 inv_body_id;			/* Invariant body id */
+
+	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
+
+	if ((char) 0 != inv_mark_table[dtype])	/* Already checked */
+		return;
+	else
+		inv_mark_table[dtype] = (char) 1;	/* Mark as checked */
 
 	/* Automatic protection of `obj' */
 	epush(&loc_stack, &obj);
@@ -2096,22 +2148,24 @@ int where;					/* Invariant after or before */
 		struct item *last;
 
 		CBodyIdx(body_index,INVARIANT_ID,dtype);	
-		body_id = dispatch[body_index];
-		if (body_id < zeroc) { 				/* Frozen invariant */
-			unsigned long stagval = tagval;	/* Tag value backup */
-
-			((void (*)()) frozen[body_id])(obj, where);
-
-			if (tagval != stagval)			/* Resynchronize registers */
-				sync_registers(scur, stop);
-
-		} else {							/* Melted invariant */
-			last = iget();					/* Push `obj' */
-			last->type = SK_REF;
-			last->it_ref = obj;
-			IC = melt[body_id];
-			interpret(INTERP_INVA, where);	/* Interpret invariant code */
-			sync_registers(scur, stop);		/* Resynchronize registers */
+		if (body_index != -1) {
+			body_id = dispatch[body_index];
+			if (body_id < zeroc) { 				/* Frozen invariant */
+				unsigned long stagval = tagval;	/* Tag value backup */
+	
+				((void (*)()) frozen[body_id])(obj, where);
+	
+				if (tagval != stagval)			/* Resynchronize registers */
+					sync_registers(scur, stop);
+	
+			} else {							/* Melted invariant */
+				last = iget();					/* Push `obj' */
+				last->type = SK_REF;
+				last->it_ref = obj;
+				IC = melt[body_id];
+				interpret(INTERP_INVA, where);	/* Interpret invariant code */
+				sync_registers(scur, stop);		/* Resynchronize registers */
+			}
 		}
 	}
 
@@ -4012,15 +4066,15 @@ char *start;
 	 * Start of precondition check
  	 */
 	case BC_PRECOND:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_PRECOND");
-		return;
+		fprintf(fd, "0x%X %s, offset: %d\n", IC - 1, "BC_PRECOND", get_long());
+		break;
 
 	/*
 	 * Start of postcondition check.
 	 */
 	case BC_POSTCOND:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_POSTCOND");
-		return;
+		fprintf(fd, "0x%X %s, offset: %d\n", IC - 1, "BC_POSTCOND", get_long());
+		break;
 
 	/*
  	 * End of rescue compound
@@ -4235,6 +4289,7 @@ char *start;
 	 */
 	case BC_END_FST_PRE:
 		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_FST_PRE");
+		break;
 
 	/*
 	 * End of precondition.
@@ -4254,7 +4309,7 @@ char *start;
 	 * Go to the body of the routine. 
 	 */
 	case BC_GOTO_BODY:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_GOTO_BODY");
+		fprintf(fd, "0x%X %s, offset: %d\n", IC - 1, "BC_GOTO_BODY", get_long());
 		break;
 
 	/*
@@ -4299,6 +4354,15 @@ char *start;
 		offset = get_long();	/* Get the jump value */
 		fprintf(fd, "0x%X JUMP not debug 0x%X\n", IC - sizeof(long),
 			IC + offset);
+		break;
+
+	/*
+	 * Invariant checking after creation
+	 */
+	case BC_CREAT_INV:
+#ifdef DEBUG
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_CREAT_INV");
+#endif
 		break;
 
 	/*
@@ -4784,6 +4848,13 @@ char *start;
 	 */
 	case BC_NULL:
 		fprintf(fd, "0x%X BC_NULL\n", IC - 1);
+		return;
+
+	/*
+	 * End of current Eiffel invariant.
+	 */
+	case BC_INV_NULL:
+		fprintf(fd, "0x%X BC_INV_NULL\n", IC - 1);
 		return;
 
 	/*

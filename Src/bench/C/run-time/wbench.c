@@ -188,6 +188,8 @@ char *name;		/* Feature name to apply */
 	/* Offset of attribute of feature id `feature_id' in the class of
 	 * static type `static_type' in an object `object'.
 	 * Return a long integer.
+	 * Invariants are currently not being checked on attribute access
+	 * The code is commented out -- FRED
 	 */
 
 	int dyn_type;
@@ -200,8 +202,16 @@ char *name;		/* Feature name to apply */
 		eraise(name, EN_VOID);
 
 	dyn_type = Dtype(object);
-	if (WASC(dyn_type) & CK_INVARIANT)	/* Invariant checking */
-		chkinv(object);
+
+/*
+ * Commented out by FRED
+ *
+ *	if (~in_assertion & WASC(dyn_type) & CK_INVARIANT) {
+ *		in_assertion = ~0;
+ *		chkinv(object);
+ *		in_assertion = 0;
+ *	}
+ */
 
 	rout_id = Routids(static_type)[feature_id];
 	CAttrOffs(offset,rout_id,dyn_type);
@@ -304,7 +314,7 @@ public void init_desc()
 	int i;
 	struct bounds def;
 
-	def.max = 0; def.min = ccount;
+	def.max = -1; def.min = ccount;
 	bounds_tab = (struct bounds *) 
 			cmalloc (sizeof(struct bounds) * (ccount + 1));	
 	if ((struct bounds *) 0 == bounds_tab)
@@ -316,7 +326,7 @@ public void init_desc()
 	mdesc_tab_size = MDESC_INC;
 	mdesc_count = 0;
 	
-	for (i=1;i<=ccount;i++)
+	for (i=0;i<=ccount;i++)
 		bounds_tab[i] = def;
 
 	desc_fill = 0;
@@ -393,9 +403,9 @@ public void create_desc()
 	struct mdesc *mdesc_ptr;
 	int size;
 
-	for (i=upper=1;i<=ccount;i++) {
+	for (i=upper=0;i<=ccount;i++) {
 		b = bounds_tab+i;
-		upper += (0==b->max)?0:(i-upper);
+		upper += (-1==b->max)?0:(i-upper);
 	}
 
 	/* Allocation of the global descriptor table.
@@ -410,7 +420,7 @@ public void create_desc()
 	 * and insertion
 	 */
 
-	for (i=1;i<=upper;i++) {
+	for (i=0;i<=upper;i++) {
 		b = bounds_tab+i;
 		size = b->max - b->min + 1;
 		if (size > 0) {

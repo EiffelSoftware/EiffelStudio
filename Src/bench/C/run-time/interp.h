@@ -201,5 +201,7 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_CAST_LONG     	110
 #define BC_CAST_FLOAT    	111
 #define BC_CAST_DOUBLE  	112
+#define BC_INV_NULL  		113
+#define BC_CREAT_INV		114
 
 #endif

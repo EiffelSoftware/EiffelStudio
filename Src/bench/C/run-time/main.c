@@ -36,6 +36,7 @@ public int scount;						/* Number of dynamic types */
 public int ccount;						/* Number of classes */
 public int fcount;						/* Number of frozen dynamic types */
 
+public int in_assertion = 0;			/* Is an assertion being evaluated ? */
 #ifdef WORKBENCH
 public struct cnode *esystem;			/* Updated Eiffel system */
 public struct conform **co_table;		/* Updated Eiffel conformance table */

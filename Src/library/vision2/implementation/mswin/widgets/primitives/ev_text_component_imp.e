@@ -150,8 +150,13 @@ feature {EV_ANY_I}-- element change
 			previous_caret_position: INTEGER
 		do
 			previous_caret_position := caret_position
-			temp_text := text
-			temp_text.append (txt)
+				-- We have to handle the case where `text' is void.
+			if text = Void then
+				temp_text := txt
+			else
+				temp_text := text
+				temp_text.append (txt)
+			end
 			set_text (temp_text)
 			set_caret_position (previous_caret_position)
 		end
@@ -163,8 +168,13 @@ feature {EV_ANY_I}-- element change
 			previous_caret_position: INTEGER
 		do
 			previous_caret_position := caret_position
-			temp_text := text
-			temp_text.prepend (txt)
+				-- We have to handle the case where `text' is void.
+			if text = Void then
+				temp_text := txt
+			else
+				temp_text := text
+				temp_text.prepend (txt)
+			end
 			set_text (temp_text)
 			set_caret_position (previous_caret_position)
 		end
@@ -341,6 +351,10 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2001/06/30 00:08:42  rogers
+--| Fixed `append_text' and `prepend_text' so that they work correctly
+--| when `text' is `Void'.
+--|
 --| Revision 1.34  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -63,6 +63,7 @@ feature -- Status setting
 			s_x, s_y: DOUBLE
 			angle: REAL
 			se_nw_label, strong_slope: BOOLEAN
+			final_line_segment: BON_LINE
 		do
 			p1 := vertices.i_th (vertices.count - 1)
 			p2 := end_point
@@ -135,6 +136,49 @@ feature -- Status setting
 						name_figure.point.set_position (x_label, y_label)
 						name_figure_mover.point.set_position (x_label, y_label)
 					end
+				end
+
+				final_line_segment := lines.i_th (lines.count)
+					-- Retrieve the final line of `Current'.
+					
+				if final_line_segment.is_cut_figure then
+						-- Position cut of `final_line_segment' if `is_cut_figure'.
+						
+					p1 := vertices.i_th (vertices.count - 1)
+					p2 := vertices.i_th (vertices.count)
+					o_x := enclosing_figure.point.x_abs
+					o_y := enclosing_figure.point.y_abs
+					s_x := client.world.scale_x
+					s_y := client.world.scale_y
+					x1 := ((p1.x_abs - o_x) / s_x).rounded
+					y1 := ((p1.y_abs - o_y) / s_y).rounded
+					x2 := ((p2.x_abs - o_x) / s_x).rounded
+					y2 := ((p2.y_abs - o_y) / s_y).rounded
+						-- Calculate start and end coordinates of line
+						-- into `x1', `y1', `x2' and `y2' based on
+						-- current vertices.
+					
+						-- The current value of `x2' and `y2' are equal to the
+						-- centre of the class bubble, and hence must be translated
+						-- to match the intersection of the line with the bubble.
+						-- This improves the bahaviour, as the cut is no longer moved
+						-- within the class bubble when the link is very short.
+					x2 := x2 + lines.i_th (lines.count).point_b.x
+					y2 := y2 + lines.i_th (lines.count).point_b.y
+					
+						-- The current value of `x1' and `y2' either correspond to
+						-- the centre of the class bubble, or the centre of a link point.
+						-- If they are not pointing to a link point (only one line comprises `Current'),
+						-- they must be adjusted to match the edge of the bubble, which
+						-- improves the calculations in the same fashion as performed above.
+					if lines.count = 1 then
+						x1 := x1 + lines.i_th (1).point_a.x
+						y1 := y1 + lines.i_th (1).point_a.y
+					end
+			
+					final_line_segment.set_cut_position (- final_line_segment.Minimum_cut_position -
+						(distance (x1, y1, x2, y2) - final_line_segment.Minimum_cut_position) // 5)
+						-- Set cut position on `final_line_segment' based on calculated positions.
 				end
 			else
 				name_figure.point.set_origin (client.point)

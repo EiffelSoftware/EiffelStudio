@@ -72,7 +72,7 @@ feature -- Initialization
 				loop
 					cluster := cl.item
 					cl_name := cluster.cluster_name
-					create node.make_with_cluster_sd_and_ace_accesser (cluster, ace_accesser)
+					create node.make_with_cluster_sd_and_ace_accesser (cluster, Void, ace_accesser)
 					if cluster.has_parent then
 						parent_node := clusters_table.item (cluster.parent_name)
 						if parent_node /= Void then
@@ -80,6 +80,7 @@ feature -- Initialization
 								-- that parent has been wrongly specified
 								-- in Ace file
 							parent_node.add_child (node)
+							node.set_parent_cluster (parent_node)
 						end
 					else
 						clusters_impl.extend (node)
@@ -120,21 +121,28 @@ feature -- Basic Operations
 			non_void_cluster_name: cluster_name /= Void
 			non_void_cluster_path: cluster_path /= Void
 			valid_cluster_name: is_valid_name (cluster_name);
-			valid_cluster_path: not cluster_path.is_empty
 			cluster_already_exists: not has_cluster (cluster_name)
 		local
 			cluster_sd: CLUSTER_SD
 			parent_id: ID_SD
 			cluster_prop: CLUSTER_PROPERTIES
+			temp_cluster_path: STRING
+			parent_cluster: CLUSTER_PROPERTIES
 		do
+			--| Fix Me PAUL
+			temp_cluster_path := clone (cluster_path)
+			if temp_cluster_path.is_empty then
+				temp_cluster_path := "."
+			end
 			if parent_name /= Void and then not parent_name.is_empty then
 				parent_id := new_id_sd (parent_name, False)
+				parent_cluster := clusters_table.item (parent_name)
 			end
 			create cluster_sd.initialize (new_id_sd (cluster_name, False), 
 										parent_id,
-										new_id_sd (cluster_path, True),
+										new_id_sd (temp_cluster_path, True),
 										Void, False, False)
-			create cluster_prop.make_with_cluster_sd_and_ace_accesser (cluster_sd, ace_accesser)
+			create cluster_prop.make_with_cluster_sd_and_ace_accesser (cluster_sd, parent_cluster, ace_accesser)
 			if parent_name /= Void and then not parent_name.is_empty then
 				clusters_table.item (parent_name).add_child (cluster_prop)
 			else
@@ -239,6 +247,15 @@ feature -- Basic Operations
 
 				-- Save clusters
 			copy_clusters := clone (clusters_table)
+			from
+				copy_clusters.start
+			until
+				copy_clusters.after
+			loop
+				copy_clusters.item_for_iteration.store
+				copy_clusters.forth
+			end
+			
 			l_clusters := ace_accesser.root_ast.clusters
 			if l_clusters = Void then
 					-- No cluster option, we need to create them
@@ -387,51 +404,55 @@ feature -- Validation
 			i: INTEGER
 			lower_name: STRING
 		do
-			Result := true
-			
-			if a_name.is_empty or a_name = Void then
-				Result := false
-			end
-			
-			-- check for illegal characters
-			from 
-				i := 1
-			until
-				i > a_name.count or Result = false
-			loop
-				inspect a_name.item (i)
-				when 'A'..'Z', 'a'..'z' then
-					Result := true
-				when '0'..'9', '_' then
-					if i > 1 then
+			if not a_name.is_empty then
+				Result := true
+				
+				if a_name.is_empty or a_name = Void then
+					Result := false
+				end
+				
+				-- check for illegal characters
+				from 
+					i := 1
+				until
+					i > a_name.count or Result = false
+				loop
+					inspect a_name.item (i)
+					when 'A'..'Z', 'a'..'z' then
 						Result := true
+					when '0'..'9', '_' then
+						if i > 1 then
+							Result := true
+						else
+							Result := false
+						end
 					else
 						Result := false
 					end
-				else
-					Result := false
+					i := i + 1
 				end
-				i := i + 1
-			end
-			
-			lower_name := a_name.clone (a_name)
-			lower_name.to_lower
-			
-			-- check the reserved words
-			if Result = true then
-				if ace_accesser /= Void then
-					from
-						ace_accesser.reserved_keywords.start
-					until
-						ace_accesser.reserved_keywords.after or Result = false
-					loop
-						if ace_accesser.reserved_keywords.item.is_equal (lower_name) then
-							Result := false
-						end	
-						ace_accesser.reserved_keywords.forth
+				
+				lower_name := a_name.clone (a_name)
+				lower_name.to_lower
+				
+				-- check the reserved words
+				if Result = true then
+					if ace_accesser /= Void then
+						from
+							ace_accesser.reserved_keywords.start
+						until
+							ace_accesser.reserved_keywords.after or Result = false
+						loop
+							if ace_accesser.reserved_keywords.item.is_equal (lower_name) then
+								Result := false
+							end	
+							ace_accesser.reserved_keywords.forth
+						end
+						
 					end
-					
-				end
+				end	
+			else
+				Result := False
 			end
 		end	
 

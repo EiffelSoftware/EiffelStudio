@@ -34,6 +34,8 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	buffer_locked_in_format_mode: BOOLEAN is
@@ -44,6 +46,10 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.buffer_locked_in_format_mode
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	buffer_locked_in_append_mode: BOOLEAN is
@@ -54,6 +60,10 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.buffer_locked_in_append_mode
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
@@ -66,6 +76,9 @@ feature -- Access
 			Result := implementation.index_from_position (an_x_position, a_y_position)
 		ensure
 			index_valid: Result >= 1 and Result <= text_length
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	position_from_index (an_index: INTEGER): EV_COORDINATE is
@@ -79,6 +92,9 @@ feature -- Access
 		ensure
 			position_valid: Result.x >= 0 and Result.x <= width and
 				Result.y >= 0 and Result.y <= height
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	character_displayed (an_index: INTEGER): BOOLEAN is
@@ -88,6 +104,10 @@ feature -- Access
 			index_valid: an_index >= 1 and an_index <= text_length
 		do
 			Result := implementation.character_displayed (an_index)
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	tab_positions: ACTIVE_LIST [INTEGER] is
@@ -100,6 +120,9 @@ feature -- Access
 			Result := implementation.tab_positions
 		ensure
 			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	tab_width: INTEGER is
@@ -110,6 +133,9 @@ feature -- Access
 			Result := implementation.tab_width
 		ensure
 			result_positive: Result > 0
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 
 feature -- Status setting
@@ -122,6 +148,10 @@ feature -- Status setting
 			format_not_void: format /= Void
 		do
 			implementation.set_current_format (format)
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
@@ -203,6 +233,9 @@ feature -- Status setting
 			implementation.set_tab_width (a_width)
 		ensure
 			tab_width_set: tab_width = a_width
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 
 feature {NONE} -- Contract support

@@ -63,7 +63,7 @@
             			<comment>-- and handle various cases,</comment>
             			<comment>-- or display a dialog box with an error message</comment>
             			<comment>-- `hresult_message'.</comment>
-        	<keyword>end</keyword>
+        		<keyword>end</keyword>
 		        retried <symbol>:</symbol><symbol>=</symbol> True
 		        <keyword>retry</keyword>
 		<keyword>end</keyword>

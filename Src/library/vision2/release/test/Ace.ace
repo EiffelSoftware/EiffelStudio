@@ -19,6 +19,7 @@ all vision2(dev):				"$/vision2"
 	exclude
 		"mswin";
 		"EIFGEN";
+		"obsolete";
 	end
 
 all base(dev):					"$/base"

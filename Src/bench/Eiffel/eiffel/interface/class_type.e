@@ -324,9 +324,6 @@ feature -- Generation
 
 			current_class := associated_class
 
-				--| The search on `types' is changing types' cursor position
-				--| Keep this in Mind
-				--| ES
 			if current_class.types.search_item (type) = Current then
 					-- Do not generate twice the same type if it has
 					-- been derived in two different merged precompiled

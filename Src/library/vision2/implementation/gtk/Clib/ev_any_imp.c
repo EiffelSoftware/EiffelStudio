@@ -23,14 +23,13 @@ EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id (GtkWidget* c_object
             int eif_oid;
             EIF_REFERENCE eif_reference = NULL;
     // debug
-		/*
+    	if (0)
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_any_imp_get_eif_reference_from_object_id (%X (%s)) = %X",
             (int) c_object,
             gtk_type_name (GTK_OBJECT_TYPE (c_object)),
             (int) eif_id_object ((int) gtk_object_get_data (GTK_OBJECT (c_object), "eif_oid"))
         );
-		*/
     // require
             g_assert (c_object != NULL);
             g_assert (GTK_IS_WIDGET (c_object));
@@ -53,7 +52,7 @@ void c_ev_any_imp_c_object_dispose (GtkWidget* c_object, int eif_oid)
     // local
             EIF_REFERENCE eif_reference;
     // debug
-		/*
+    	if (0)
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_any_imp_c_object_dispose (%X (%s), %d (%X))",
             (int) c_object,
@@ -61,7 +60,6 @@ void c_ev_any_imp_c_object_dispose (GtkWidget* c_object, int eif_oid)
             eif_oid,
             (int) eif_id_object (eif_oid)
         );
-		*/
     // require
             g_assert (c_object != NULL);
             g_assert (GTK_IS_WIDGET (c_object));
@@ -79,14 +77,13 @@ gboolean c_ev_any_imp_c_object_references_eif_object (GtkWidget* c_object)
         // Does `c_object' reference Eiffel object?
 {
     // debug
-		/*
+    	if (0)
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_any_imp_c_object_references_eif_object (%X (%s)) = %d",
             (int) c_object,
             gtk_type_name (GTK_OBJECT_TYPE (c_object)),
             gtk_object_get_data (GTK_OBJECT (c_object), "eif_object") ? 1 : 0
         );
-		*/
     // require
             g_assert (c_object != NULL);
             g_assert (GTK_IS_WIDGET (c_object));
@@ -103,14 +100,13 @@ gboolean c_ev_any_imp_eif_object_references_c_object (GtkWidget* c_object)
         // Does Eiffel object reference `c_object'?
 {
     // debug
-		/*
+    	if (0)
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_any_imp_eif_object_references_c_object (%X (%s)) = %d",
             (int) c_object,
             gtk_type_name (GTK_OBJECT_TYPE (c_object)),
             gtk_object_get_data (GTK_OBJECT (c_object), "ref_from_eif") ? 1 : 0
         );
-		*/
     // require
             g_assert (c_object != NULL);
             g_assert (GTK_IS_WIDGET (c_object));
@@ -132,13 +128,12 @@ void c_ev_any_imp_set_gtk_controls_object_life (GtkWidget* c_object)
             EIF_REFERENCE eif_reference;
             EIF_OBJECT eif_object;
     // debug
-		/*
+    	if (0)
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_any_imp_set_gtk_controls_object_life (%X (%s))",
             (int) c_object,
             gtk_type_name (GTK_OBJECT_TYPE (c_object))
         );
-		*/
     // require
             g_assert (c_object != NULL);
             g_assert (GTK_IS_WIDGET (c_object));
@@ -175,13 +170,12 @@ void c_ev_any_imp_set_eiffel_controls_object_life (GtkWidget* c_object)
         // Add GTK reference to `c_object'.
 {
     // debug
-		/*
+    	if (0)
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_any_imp_set_eiffel_controls_object_life (%X (%s))",
             (int) c_object,
             gtk_type_name (GTK_OBJECT_TYPE (c_object))
         );
-		*/
     // require
             g_assert (c_object != NULL);
             g_assert (GTK_IS_WIDGET (c_object));
@@ -213,7 +207,7 @@ void c_ev_any_imp_on_c_object_parent_set (
         // When a widget is parented hand it to GTK.
 {
     // debug
-		/*
+    	if (0)
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_any_imp_on_c_object_parent_set (%X (%s), old: %X (%s), %X) new: %X (%s)",
             (int) c_object,
@@ -226,7 +220,6 @@ void c_ev_any_imp_on_c_object_parent_set (
             GTK_WIDGET (c_object)->parent ?
             gtk_type_name (GTK_OBJECT_TYPE (GTK_WIDGET (c_object)->parent)) : "unparented"
         );
-		*/
     // do
             if (c_object->parent) {
                 if ( ! c_ev_any_imp_c_object_references_eif_object (c_object)) {
@@ -248,7 +241,7 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
         // Set up signal handlers.
 {
     // debug
-		/*
+    	if (0)
         g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
             "c_ev_any_imp_set_eif_oid_in_c_object (%X (%s), %d (%X), %X)",
             (int) c_object,
@@ -257,7 +250,6 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
             (int) eif_id_object (eif_oid),
             (int) c_object_dispose
         );
-		*/
     // require
             g_assert (c_object != NULL);
             g_assert (GTK_IS_WIDGET (c_object));
@@ -331,6 +323,9 @@ gboolean c_ev_any_imp_invariant (GtkWidget* c_object)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.3  2000/03/01 03:12:30  oconnor
+// added create make_for_testnterface/widgets/primitives/ev_vertical_separator.e
+//
 // Revision 1.2  2000/02/14 12:05:07  oconnor
 // added from prerelease_20000214
 //

@@ -49,12 +49,14 @@ feature {NONE}
 		require else
 			a_widget_exists: a_widget /= Void
 		local
-			fontable: FONTABLE
+			fontable: FONTABLE;
+			font: FONT
 		do
 			if a_widget.is_fontable then
 				fontable ?= a_widget;
-				Result := (not (fontable.font = Void)) and then 
-							(fontable.font.implementation = Current)
+				font := fontable.font;
+				Result := (font /= Void) and then 
+							(font.implementation = Current)
 			end
 		ensure then
 			(number_of_uses = 0) implies (not Result)

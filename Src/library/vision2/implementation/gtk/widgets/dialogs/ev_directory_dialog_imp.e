@@ -85,6 +85,9 @@ feature -- Access
 			then
 				create Result.make (0)
 				Result.from_c (C.gtk_file_selection_get_filename (c_object))
+				if Result.item (Result.count) /= '/' then
+					Result.append ("/")
+				end
 			else
 				Result := ""
 			end

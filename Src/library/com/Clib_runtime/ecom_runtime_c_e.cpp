@@ -5048,19 +5048,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointer (void ** a_pointer, EIF_O
 {
   EIF_GET_CONTEXT
   static EIF_TYPE_ID type_id = -1;
-  EIF_PROCEDURE set_item = 0;
+  EIF_PROCEDURE put = 0;
   EIF_OBJECT result = 0;
 
   if (-1 == type_id)
     type_id = eif_type_id ("CELL [POINTER]");
-  set_item = eif_procedure ("set_item", type_id);
+  put = eif_procedure ("put", type_id);
   if ((an_object == NULL) || (eif_access (an_object) == NULL))
     result = eif_create (type_id);
   else
     result = an_object;
 
   nstcall = 0;
-  (FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))set_item)(eif_access (result), (((a_pointer != NULL) && (*a_pointer != NULL)) ? (EIF_POINTER)*a_pointer : NULL));
+  (FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))put)(eif_access (result), (((a_pointer != NULL) && (*a_pointer != NULL)) ? (EIF_POINTER)*a_pointer : NULL));
 
   if ((an_object == NULL) || (eif_access (an_object) == NULL))
     return eif_wean (result);

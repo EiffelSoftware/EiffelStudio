@@ -103,9 +103,18 @@ feature -- Status setting
 				set_internal_merged_radio_button_group (container_i.internal_merged_radio_button_groups)
 				container_i.internal_merged_radio_button_groups.extend (interface)
 				
+					-- If `Current' and `other' already share the same list, they must be already
+					-- merged, and therefore, nothing is to be performed.
+			elseif internal_merged_radio_button_groups /= Void and container_i.internal_merged_radio_button_groups /= Void and
+				internal_merged_radio_button_groups = container_i.internal_merged_radio_button_groups then
+					-- Nothing to perform here, as the groups are already merged.
+					
 					-- If `Current' and `other' both have individual groups of their own, then merge groups,
 					-- and update references, all to point to same group.
 			elseif internal_merged_radio_button_groups /= Void and container_i.internal_merged_radio_button_groups /= Void then
+				check
+					internal_merged_radio_button_groups /= container_i.internal_merged_radio_button_groups
+				end
 					-- Store the original count so we only need to update as few groups as possible.
 				original_count := internal_merged_radio_button_groups.count
 				internal_merged_radio_button_groups.append (container_i.internal_merged_radio_button_groups)

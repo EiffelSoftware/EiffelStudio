@@ -16,6 +16,10 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end
+	SHARED_GENERATION
+		undefine
+			copy, setup, consistent, is_equal
+		end
 
 creation
 
@@ -189,62 +193,70 @@ feature -- Generation
 			-- Generate patterns
 		local
 			i, nb: INTEGER
+			pattern_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
-			Pattern_file.open_write_c
+				-- Clear buffer for current generation
+			buffer := generation_buffer
+			buffer.clear_all
 
-			Pattern_file.putstring ("%
+			buffer.open_write_c
+
+			buffer.putstring ("%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%
 				%#include %"eif_interp.h%"%N%N")
 	
 			if System.has_separate then
-				Pattern_file.putstring ("%
-					%#include %"eif_curextern.h%"%N%N")
+				buffer.putstring ("%%#include %"eif_curextern.h%"%N%N")
 			end
 
-			generate_pattern
+			generate_pattern (buffer)
 
 			if System.has_separate then
-				generate_separate_pattern
+				generate_separate_pattern (buffer)
 			end
 				-- Generate pattern table
-			Pattern_file.putstring ("struct p_interface egc_fpattern_init[] = {%N")
+			buffer.putstring ("struct p_interface egc_fpattern_init[] = {%N")
 			from
 				i := 1
 				nb := c_pattern_id_counter.value
 			until
 				i > nb
 			loop
-				Pattern_file.putstring ("{(void (*)()) toc")
-				Pattern_file.putint (i)
-				Pattern_file.putstring (", (fnptr) toi")
-				Pattern_file.putint (i)
-				Pattern_file.putstring ("},%N")
+				buffer.putstring ("{(void (*)()) toc")
+				buffer.putint (i)
+				buffer.putstring (", (fnptr) toi")
+				buffer.putint (i)
+				buffer.putstring ("},%N")
 				i := i + 1
 			end
-			Pattern_file.putstring ("};%N%N")
+			buffer.putstring ("};%N%N")
 
 			if System.has_separate then
 					-- Generate separate pattern table
-				Pattern_file.putstring ("fnptr separate_pattern[] = {%N")
+				buffer.putstring ("fnptr separate_pattern[] = {%N")
 				from
 					i := 1
 					nb := c_pattern_id_counter.value
 				until
 					i > nb
 				loop
-					Pattern_file.putstring ("(fnptr) sepcall")
-					Pattern_file.putint (i)
-					Pattern_file.putstring (",%N")
+					buffer.putstring ("(fnptr) sepcall")
+					buffer.putint (i)
+					buffer.putstring (",%N")
 					i := i + 1
 				end
-				Pattern_file.putstring ("};%N%N")
+				buffer.putstring ("};%N%N")
 			end
+			buffer.close_c
 
-			Pattern_file.close_c
+			!! pattern_file.make_open_write (workbench_file_name (Epattern));
+			pattern_file.put_string (buffer)
+			pattern_file.close
 		end
 
-	generate_pattern is
+	generate_pattern (buffer: GENERATION_BUFFER) is
 			-- Generate pattern for interfacing C generated code and
 			-- the interpreter
 		do
@@ -253,14 +265,14 @@ feature -- Generation
 			until
 				c_patterns.after
 			loop
-				c_patterns.item_for_iteration.generate_pattern
+				c_patterns.item_for_iteration.generate_pattern (buffer)
 				c_patterns.forth
 			end
 		end
 
 feature -- Concurrent Eiffel
 
-    generate_separate_pattern is
+    generate_separate_pattern (buffer: GENERATION_BUFFER) is
             -- Generate pattern for separate calls
 		require
 			has_separate_calls: System.has_separate
@@ -270,12 +282,12 @@ feature -- Concurrent Eiffel
             until
                 c_patterns.after
             loop
-                c_patterns.item_for_iteration.generate_separate_pattern
+                c_patterns.item_for_iteration.generate_separate_pattern (buffer)
                 c_patterns.forth
             end
         end
 
-    generate_only_separate_pattern (file: INDENT_FILE) is
+    generate_only_separate_pattern (buffer: GENERATION_BUFFER) is
             -- Generate pattern for separate calls in FIANALIZE mode.
         do
             from
@@ -283,7 +295,7 @@ feature -- Concurrent Eiffel
             until
                 c_patterns.after
             loop
-                c_patterns.item_for_iteration.generate_only_separate_pattern (file)
+                c_patterns.item_for_iteration.generate_only_separate_pattern (buffer)
                 c_patterns.forth
             end
         end
@@ -293,36 +305,43 @@ feature -- Concurrent Eiffel
 		local
 			i, nb: INTEGER
 			final_pattern_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
-			!!final_pattern_file.make (gen_file_name (True, Epattern))
-			final_pattern_file.open_write_c
+				-- Clear buffer for current generation
+			buffer := generation_buffer
+			buffer.clear_all
 
-			final_pattern_file.putstring ("%
+			buffer.open_write_c
+
+			buffer.putstring ("%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%
 				%#include %"eif_interp.h%"%N%N")
 	
-			final_pattern_file.putstring ("%
+			buffer.putstring ("%
 				%#include %"eif_curextern.h%"%N%N")
 
-			generate_only_separate_pattern (final_pattern_file)
+			generate_only_separate_pattern (buffer)
 
 				-- Generate separate pattern table
-			final_pattern_file.putstring ("fnptr separate_pattern[] = {%N")
+			buffer.putstring ("fnptr separate_pattern[] = {%N")
 			from
 				i := 1
 				nb := c_pattern_id_counter.value
 			until
 				i > nb
 			loop
-				final_pattern_file.putstring ("(fnptr) sepcall")
-				final_pattern_file.putint (i)
-				final_pattern_file.putstring (",%N")
+				buffer.putstring ("(fnptr) sepcall")
+				buffer.putint (i)
+				buffer.putstring (",%N")
 				i := i + 1
 			end
-			final_pattern_file.putstring ("};%N%N")
+			buffer.putstring ("};%N%N")
+			buffer.close_c
 
-			final_pattern_file.close_c
+			!! final_pattern_file.make_open_write (gen_file_name (True, Epattern))
+			final_pattern_file.put_string (buffer)
+			final_pattern_file.close
 		end
 
 	sep_insert (written_in: CLASS_ID; pattern: PATTERN): BOOLEAN is

@@ -79,10 +79,10 @@ feature
 			put (True, i);
 		end;
 
-	generate (conformance_file: INDENT_FILE) is
+	generate (conformance_buffer: GENERATION_BUFFER) is
 			-- Generates the current conformance table
 		require
-			Conformance_file.is_open_write;
+			exists: conformance_buffer /= Void;
 			min_type_id \\ Char_size = 1;
 			max_type_id \\ Char_size = 0;
 		local
@@ -90,15 +90,15 @@ feature
 			local_copy: like Current
 		do
 debug
-Conformance_file.putstring ("/* Conformance table for ");
-System.class_type_of_id (type_id).type.dump (Conformance_file);
-Conformance_file.putstring (" [");
-Conformance_file.putint (type_id);
-Conformance_file.putstring ("] */%N");
+conformance_buffer.putstring ("/* Conformance table for ");
+System.class_type_of_id (type_id).type.dump (conformance_buffer);
+conformance_buffer.putstring (" [");
+conformance_buffer.putint (type_id);
+conformance_buffer.putstring ("] */%N");
 end;
-			Conformance_file.putstring ("static char ctf");
-			Conformance_file.putint (type_id);
-			Conformance_file.putstring ("[] = {%N");
+			conformance_buffer.putstring ("static char ctf");
+			conformance_buffer.putint (type_id);
+			conformance_buffer.putstring ("[] = {%N");
 			from
 				local_copy := Current
 				i := min_type_id;
@@ -115,20 +115,20 @@ end;
 				if local_copy.item (i + 5) then val := val + 4; 	end;
 				if local_copy.item (i + 6) then val := val + 2;	end;
 				if local_copy.item (i + 7) then val := val + 1;	end;
-				Conformance_file.putstring ("(char) ");
-				Conformance_file.putint (val);
-				Conformance_file.putstring (",%N");
+				conformance_buffer.putstring ("(char) ");
+				conformance_buffer.putint (val);
+				conformance_buffer.putstring (",%N");
 				i := i + Char_size;
 			end;
-			Conformance_file.putstring ("};%N%Nstatic struct conform conf");
-			Conformance_file.putint (type_id);
-			Conformance_file.putstring (" = {(int16) ");
-			Conformance_file.putint (min_type_id - 1);
-			Conformance_file.putstring (",(int16) ");
-			Conformance_file.putint (max_type_id - 1);
-			Conformance_file.putstring (", ctf");
-			Conformance_file.putint (type_id);
-			Conformance_file.putstring ("};%N%N");
+			conformance_buffer.putstring ("};%N%Nstatic struct conform conf");
+			conformance_buffer.putint (type_id);
+			conformance_buffer.putstring (" = {(int16) ");
+			conformance_buffer.putint (min_type_id - 1);
+			conformance_buffer.putstring (",(int16) ");
+			conformance_buffer.putint (max_type_id - 1);
+			conformance_buffer.putstring (", ctf");
+			conformance_buffer.putint (type_id);
+			conformance_buffer.putstring ("};%N%N");
 			
 		end;
 

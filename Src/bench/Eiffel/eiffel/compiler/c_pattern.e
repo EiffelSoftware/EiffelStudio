@@ -104,15 +104,15 @@ feature
 
 feature -- Pattern generation
 
-	generate_hooks (file: INDENT_FILE) is
+	generate_hooks (buffer: GENERATION_BUFFER) is
 			-- Generate garbage collector hooks
 		local
 			i, nb: INTEGER;
 		do
-			file.putstring ("%T%TRTLI(");
-			file.putint (nb_hooks);
-			file.putstring (");%N");
-			file.putstring ("%T%Tl[0] = Current;%N");
+			buffer.putstring ("%T%TRTLI(");
+			buffer.putint (nb_hooks);
+			buffer.putstring (");%N");
+			buffer.putstring ("%T%Tl[0] = Current;%N");
 			from
 				i := 1;
 				nb := argument_count;
@@ -120,18 +120,18 @@ feature -- Pattern generation
 				i > nb
 			loop
 				if argument_types.item (i).is_pointer then
-					file.putstring ("%T%Tl[");
-					file.putint (argument_hook_index (i));
-					file.putstring ("] = arg");
-					file.putint (i);
-					file.putstring (";%N");
+					buffer.putstring ("%T%Tl[");
+					buffer.putint (argument_hook_index (i));
+					buffer.putstring ("] = arg");
+					buffer.putint (i);
+					buffer.putstring (";%N");
 				end;
 				i := i + 1;
 			end;
 			if result_type.is_pointer then
-				file.putstring ("%T%Tl[");
-				file.putint (nb_hooks - 1);
-				file.putstring ("] = Result;%N");
+				buffer.putstring ("%T%Tl[");
+				buffer.putint (nb_hooks - 1);
+				buffer.putstring ("] = Result;%N");
 			end;
 		end;
 
@@ -226,7 +226,7 @@ feature -- Pattern generation
 			end;
 		end
 
-	generate_argument_declaration (nbtab: INTEGER; file: INDENT_FILE) is
+	generate_argument_declaration (nbtab: INTEGER; buffer: GENERATION_BUFFER) is
 			-- Generate argument declarations
 		local
 			i, j, nb: INTEGER;
@@ -242,19 +242,19 @@ feature -- Pattern generation
 				until
 					j > nbtab
 				loop
-					file.putchar ('%T');
+					buffer.putchar ('%T');
 					j := j + 1;
 				end;
-				argument_types.item (i).generate (file);
-				file.putstring ("arg");
-				file.putint (i);
-				file.putchar (';');
-				file.new_line;
+				argument_types.item (i).generate (buffer);
+				buffer.putstring ("arg");
+				buffer.putint (i);
+				buffer.putchar (';');
+				buffer.new_line;
 				i := i + 1;
 			end;
 		end;
 
-	generate_arguments_in_call (file: INDENT_FILE) is
+	generate_arguments_in_call (buffer: GENERATION_BUFFER) is
 			-- Generate arguments in call
 		local
 			i, nb: INTEGER;
@@ -266,66 +266,66 @@ feature -- Pattern generation
 				i > nb
 			loop
 				if argument_types.item (i).is_pointer then
-					file.putstring (", l[");
-					file.putint (argument_hook_index (i));
-					file.putchar (']');
+					buffer.putstring (", l[");
+					buffer.putint (argument_hook_index (i));
+					buffer.putchar (']');
 				else
-					file.putstring (", arg");
-					file.putint (i);
+					buffer.putstring (", arg");
+					buffer.putint (i);
 				end;
 				i := i + 1;
 			end;
 		end;
 
-	generate_pattern (id: INTEGER; file: INDENT_FILE) is
+	generate_pattern (id: INTEGER; buffer: GENERATION_BUFFER) is
 			-- Generate pattern
 		local
 			arg: TYPE_C;
 			i, nb: INTEGER;
 		do
 				-- Generate pattern from C code to interpreter
-			generate_toi_compound (id, file);
+			generate_toi_compound (id, buffer);
 
 				-- Compound pattern from interpreter to C code
-			generate_toc_compound (id, file);
+			generate_toc_compound (id, buffer);
 		end;
 
-	generate_separate_pattern (id: INTEGER; file: INDENT_FILE) is
+	generate_separate_pattern (id: INTEGER; buffer: GENERATION_BUFFER) is
 		local
 			f_name: STRING
 		do
 			f_name := "sepcall";
 			f_name.append_integer (id);
 
-			file.generate_function_signature ("void", f_name, False, file,
+			buffer.generate_function_signature ("void", f_name, False, buffer,
 					<<"ptr", "is_extern">>,
 					<<"fnptr", "int">>);
 
-			file.putstring ("%
+			buffer.putstring ("%
 				%%TEIF_REFERENCE Current;%N%
 				%%TEIF_INTEGER ack = _concur_command_ack;%N");
 			if not result_type.is_void then
-				file.putchar ('%T');
-				result_type.generate (file);
-				file.putstring ("result;%N");
+				buffer.putchar ('%T');
+				result_type.generate (buffer);
+				buffer.putstring ("result;%N");
 			end;
-			generate_argument_declaration (1, file);
-			generate_separate_get (file);
-			file.putstring ("%Tif (is_extern)%N%T%T");
-			generate_routine_call (True, file);
-			file.putstring ("%Telse%N%T%T");
-			generate_routine_call (False, file);
+			generate_argument_declaration (1, buffer);
+			generate_separate_get (buffer);
+			buffer.putstring ("%Tif (is_extern)%N%T%T");
+			generate_routine_call (True, buffer);
+			buffer.putstring ("%Telse%N%T%T");
+			generate_routine_call (False, buffer);
 			if result_type.is_void then
-				file.putstring ("%TCURSPA(_concur_current_client->sock, ack);%N")
+				buffer.putstring ("%TCURSPA(_concur_current_client->sock, ack);%N")
 			else
-				file.putstring ("%T");
-				file.putstring (result_type.separate_send_macro);
-				file.putstring ("(result);%N");
+				buffer.putstring ("%T");
+				buffer.putstring (result_type.separate_send_macro);
+				buffer.putstring ("(result);%N");
 			end;
-			file.putstring ("}%N%N"); -- ss MT
+			buffer.putstring ("}%N%N"); -- ss MT
 		end;
 
-	generate_toc_compound (id: INTEGER; file: INDENT_FILE) is
+	generate_toc_compound (id: INTEGER; buffer: GENERATION_BUFFER) is
 			-- Generate compound pattern from interpreter to C code
 		local
 			f_name: STRING
@@ -333,34 +333,34 @@ feature -- Pattern generation
 			f_name := "toc";
 			f_name.append_integer (id);
 
-			file.generate_function_signature ("void", f_name, False, file,
+			buffer.generate_function_signature ("void", f_name, False, buffer,
 					<<"ptr", "is_extern">>,
 					toc_arg_types);
-			file.putstring ("%
+			buffer.putstring ("%
 				%%TEIF_REFERENCE Current;%N");
 			if not result_type.is_void then
-				file.putchar ('%T');
-				result_type.generate (file);
-				file.putstring ("result;%N%Tstruct item *it;%N");
+				buffer.putchar ('%T');
+				result_type.generate (buffer);
+				buffer.putstring ("result;%N%Tstruct item *it;%N");
 			end;
-			generate_argument_declaration (1, file);
-			generate_toc_pop (file);
-			file.putstring ("%Tif (is_extern)%N%T%T");
-			generate_routine_call (True, file);
-			file.putstring ("%Telse%N%T%T");
-			generate_routine_call (False, file);
+			generate_argument_declaration (1, buffer);
+			generate_toc_pop (buffer);
+			buffer.putstring ("%Tif (is_extern)%N%T%T");
+			generate_routine_call (True, buffer);
+			buffer.putstring ("%Telse%N%T%T");
+			generate_routine_call (False, buffer);
 			if not result_type.is_void then
-				file.putstring ("%Tit = iget();%N");
-				file.putstring ("%Tit->type = ");
-				result_type.generate_sk_value (file);
-				file.putstring (";%N%Tit->");
-				result_type.generate_union (file);
-				file.putstring (" = result;%N");
+				buffer.putstring ("%Tit = iget();%N");
+				buffer.putstring ("%Tit->type = ");
+				result_type.generate_sk_value (buffer);
+				buffer.putstring (";%N%Tit->");
+				result_type.generate_union (buffer);
+				buffer.putstring (" = result;%N");
 			end;
-			file.putstring ("}%N%N"); -- ss MT
+			buffer.putstring ("}%N%N"); -- ss MT
 		end;
 
-	generate_toi_compound (id: INTEGER; file: INDENT_FILE) is
+	generate_toi_compound (id: INTEGER; buffer: GENERATION_BUFFER) is
 			-- Generate compound pattern from C code to the interpreter
 		local
 			f_name: STRING
@@ -374,24 +374,24 @@ feature -- Pattern generation
 
 			arg_types := argument_type_array (True);
 
-			file.generate_function_signature
-				(result_string, f_name, False, file,
+			buffer.generate_function_signature
+				(result_string, f_name, False, buffer,
 				 argument_name_array, arg_types);
 
-			file.putstring ("%Tstruct item *it;%N");
-			generate_toi_push (file);
-			file.putstring ("%Txinterp(IC);%N");
+			buffer.putstring ("%Tstruct item *it;%N");
+			generate_toi_push (buffer);
+			buffer.putstring ("%Txinterp(IC);%N");
 			if not result_type.is_void then
-				file.putstring ("%
+				buffer.putstring ("%
 					%%Tit = opop();%N%
 					%%Treturn it->");
-				result_type.generate_union (file);
-				file.putstring (";%N");
+				result_type.generate_union (buffer);
+				buffer.putstring (";%N");
 			end;
-			file.putstring ("}%N%N"); -- ss MT
+			buffer.putstring ("}%N%N"); -- ss MT
 		end;
 
-	generate_toi_push (file: INDENT_FILE) is
+	generate_toi_push (buffer: GENERATION_BUFFER) is
 			-- Generates stack pushing instruction for the patterns
 			-- going from C to the interpreter
 		local
@@ -405,87 +405,87 @@ feature -- Pattern generation
 				i > nb
 			loop
 				arg := argument_types.item (i);
-				file.putstring ("%Tit = iget();%N");
-				file.putstring ("%Tit->type = ");
-				arg.generate_sk_value (file);
-				file.putstring (";%N%Tit->");
-				arg.generate_union (file);
-				file.putstring (" = arg");
-				file.putint (i);
-				file.putstring (";%N");
+				buffer.putstring ("%Tit = iget();%N");
+				buffer.putstring ("%Tit->type = ");
+				arg.generate_sk_value (buffer);
+				buffer.putstring (";%N%Tit->");
+				arg.generate_union (buffer);
+				buffer.putstring (" = arg");
+				buffer.putint (i);
+				buffer.putstring (";%N");
 				i := i + 1;
 			end;
-			file.putstring ("%
+			buffer.putstring ("%
 				%%Tit = iget();%N%
 				%%Tit->type = SK_REF;%N%
 				%%Tit->it_ref = Current;%N");
 		end;
 
-	generate_toc_pop (file: INDENT_FILE) is
+	generate_toc_pop (buffer: GENERATION_BUFFER) is
 			-- Generate poping instructions for pattern from interpreter
 			-- to C code
 		local
 			i: INTEGER;
 		do
-			file.putstring ("%TCurrent = opop()->it_ref;%N");
+			buffer.putstring ("%TCurrent = opop()->it_ref;%N");
 			from
 				i := argument_count;
 			until
 				i < 1
 			loop
-				file.putstring ("%Targ");
-				file.putint (i);
-				file.putstring (" = opop()->");
-				argument_types.item (i).generate_union (file);
-				file.putstring (";%N");
+				buffer.putstring ("%Targ");
+				buffer.putint (i);
+				buffer.putstring (" = opop()->");
+				argument_types.item (i).generate_union (buffer);
+				buffer.putstring (";%N");
 				i := i - 1;
 			end;
 		end;
 
-	generate_separate_get (file: INDENT_FILE) is
+	generate_separate_get (buffer: GENERATION_BUFFER) is
 			-- Generate get instructions for pattern for separate call
 		local
 			i: INTEGER
 		do
-			file.putstring ("%TCurrent = CUROBJ;%N");
+			buffer.putstring ("%TCurrent = CUROBJ;%N");
 			from
 				i := argument_count;
 			until
 				i < 1
 			loop
-				file.putstring ("%Targ");
-				file.putint (i);
-				file.putstring (" = ");
-				file.putstring (argument_types.item (i).separate_get_macro);
-				file.putchar ('(');
-				file.putint (i - 1);
-				file.putstring (");%N");
+				buffer.putstring ("%Targ");
+				buffer.putint (i);
+				buffer.putstring (" = ");
+				buffer.putstring (argument_types.item (i).separate_get_macro);
+				buffer.putchar ('(');
+				buffer.putint (i - 1);
+				buffer.putstring (");%N");
 				i := i - 1;
 			end
 		end;
 
-	generate_routine_call (is_extern: BOOLEAN; file: INDENT_FILE) is
+	generate_routine_call (is_extern: BOOLEAN; buffer: GENERATION_BUFFER) is
 			-- Generate C routine call
 		local
 			i, nb: INTEGER;
 			generate_test_macro: BOOLEAN;
 		do
 			if not result_type.is_void then
-				file.putstring ("result = ");
+				buffer.putstring ("result = ");
 			end;
 			if is_extern and then result_type.is_boolean then
 				generate_test_macro := True;
-				file.putstring ("EIF_TEST((");
+				buffer.putstring ("EIF_TEST((");
 			else
-				file.putchar ('(');
+				buffer.putchar ('(');
 			end;
-			result_type.generate_function_cast (file, argument_type_array (not is_extern));
-			file.putstring ("ptr)(");
+			result_type.generate_function_cast (buffer, argument_type_array (not is_extern));
+			buffer.putstring ("ptr)(");
 			nb := argument_count;
 			if not is_extern then
-				file.putstring ("Current");
+				buffer.putstring ("Current");
 				if nb > 0 then
-					file.putchar (',');
+					buffer.putchar (',');
 				end;
 			end;
 			from
@@ -493,17 +493,17 @@ feature -- Pattern generation
 			until
 				i > nb
 			loop
-				file.putstring ("arg");
-				file.putint (i);
+				buffer.putstring ("arg");
+				buffer.putint (i);
 				if i < nb then
-					file.putchar (',');
+					buffer.putchar (',');
 				end;
 				i := i + 1;
 			end;
 			if generate_test_macro then
-				file.putchar (')');
+				buffer.putchar (')');
 			end;
-			file.putstring (");%N");
+			buffer.putstring (");%N");
 		end;
 
 	trace is

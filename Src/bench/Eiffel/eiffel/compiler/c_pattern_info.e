@@ -46,25 +46,25 @@ feature
 			Result := pattern.hash_code;
 		end;
 
-	generate_pattern is
+	generate_pattern (buffer: GENERATION_BUFFER) is
 			-- Generate pattern for interface between C generated code
 			-- and the interpreter
 		do
-			pattern.generate_pattern (c_pattern_id, Pattern_file);
+			pattern.generate_pattern (c_pattern_id, buffer);
 		end;
 
 feature -- Concurrent Eiffel
 
-	generate_separate_pattern is
+	generate_separate_pattern (buffer: GENERATION_BUFFER) is
 			-- Generate pattern for separate calls
 		do
-			pattern.generate_separate_pattern (c_pattern_id, Pattern_file);
+			pattern.generate_separate_pattern (c_pattern_id, buffer);
 		end
 
-	generate_only_separate_pattern (file: INDENT_FILE) is
+	generate_only_separate_pattern (buffer: GENERATION_BUFFER) is
 			-- Generate pattern for separate calls in FINALIZED mode
 		do
-			pattern.generate_separate_pattern (c_pattern_id, file);
+			pattern.generate_separate_pattern (c_pattern_id, buffer);
 		end
 
 feature -- Debug

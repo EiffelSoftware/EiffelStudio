@@ -101,8 +101,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_anchored_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `generate_anchored_type_class_mapping'.
+	generate_none_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_none_type_class_mapping'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -143,8 +143,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	add_eiffel_interface_user_precondition (type_id: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `add_eiffel_interface'.
+	set_implementation_class_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `set_implementation_class'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -360,8 +360,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_formal_feature_user_precondition (feature_id: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `generate_formal_feature'.
+	generate_type_feature_user_precondition (feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_type_feature'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -1267,11 +1267,11 @@ feature -- Basic Operations
 
 		end
 
-	generate_anchored_type_class_mapping (type_id: INTEGER) is
+	generate_none_type_class_mapping (type_id: INTEGER) is
 			-- No description available.
 			-- `type_id' [in].  
 		require
-			generate_anchored_type_class_mapping_user_precondition: generate_anchored_type_class_mapping_user_precondition (type_id)
+			generate_none_type_class_mapping_user_precondition: generate_none_type_class_mapping_user_precondition (type_id)
 		deferred
 
 		end
@@ -1325,11 +1325,10 @@ feature -- Basic Operations
 
 		end
 
-	add_eiffel_interface (type_id: INTEGER) is
+	set_implementation_class is
 			-- No description available.
-			-- `type_id' [in].  
 		require
-			add_eiffel_interface_user_precondition: add_eiffel_interface_user_precondition (type_id)
+			set_implementation_class_user_precondition: set_implementation_class_user_precondition
 		deferred
 
 		end
@@ -1630,11 +1629,11 @@ feature -- Basic Operations
 
 		end
 
-	generate_formal_feature (feature_id: INTEGER) is
+	generate_type_feature (feature_id: INTEGER) is
 			-- No description available.
 			-- `feature_id' [in].  
 		require
-			generate_formal_feature_user_precondition: generate_formal_feature_user_precondition (feature_id)
+			generate_type_feature_user_precondition: generate_type_feature_user_precondition (feature_id)
 		deferred
 
 		end

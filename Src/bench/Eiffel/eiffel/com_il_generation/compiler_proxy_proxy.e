@@ -142,11 +142,11 @@ feature -- Basic Operations
 			ccom_generate_formal_type_class_mapping (initializer, type_id)
 		end
 
-	generate_anchored_type_class_mapping (type_id: INTEGER) is
+	generate_none_type_class_mapping (type_id: INTEGER) is
 			-- No description available.
 			-- `type_id' [in].  
 		do
-			ccom_generate_anchored_type_class_mapping (initializer, type_id)
+			ccom_generate_none_type_class_mapping (initializer, type_id)
 		end
 
 	generate_basic_type_class_mapping (type_id: INTEGER) is
@@ -188,11 +188,10 @@ feature -- Basic Operations
 			ccom_add_interface (initializer, type_id)
 		end
 
-	add_eiffel_interface (type_id: INTEGER) is
+	set_implementation_class is
 			-- No description available.
-			-- `type_id' [in].  
 		do
-			ccom_add_eiffel_interface (initializer, type_id)
+			ccom_set_implementation_class (initializer)
 		end
 
 	end_parents_list is
@@ -418,11 +417,11 @@ feature -- Basic Operations
 			ccom_start_il_generation (initializer, type_id)
 		end
 
-	generate_formal_feature (feature_id: INTEGER) is
+	generate_type_feature (feature_id: INTEGER) is
 			-- No description available.
 			-- `feature_id' [in].  
 		do
-			ccom_generate_formal_feature (initializer, feature_id)
+			ccom_generate_type_feature (initializer, feature_id)
 		end
 
 	generate_feature_il (feature_id: INTEGER; type_id: INTEGER; code_feature_id: INTEGER) is
@@ -1250,7 +1249,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
 		end
 
-	ccom_generate_anchored_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
+	ccom_generate_none_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
@@ -1286,10 +1285,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
 		end
 
-	ccom_add_eiffel_interface (cpp_obj: POINTER; type_id: INTEGER) is
+	ccom_set_implementation_class (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"]()"
 		end
 
 	ccom_end_parents_list (cpp_obj: POINTER) is
@@ -1472,7 +1471,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
 		end
 
-	ccom_generate_formal_feature (cpp_obj: POINTER; feature_id: INTEGER) is
+	ccom_generate_type_feature (cpp_obj: POINTER; feature_id: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"

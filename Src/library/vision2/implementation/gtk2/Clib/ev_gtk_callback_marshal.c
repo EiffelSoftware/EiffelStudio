@@ -199,8 +199,8 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
 )
         // Call an `agent' every `delay' milliseconds.
 {
-      guint connection_id;
-      connection_id = g_timeout_add_full (
+	guint connection_id;
+	connection_id = g_timeout_add_full (
 				G_PRIORITY_DEFAULT,
 				delay,
 				(GSourceFunc)
@@ -208,7 +208,7 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
         eif_adopt (agent),          // User data for function.
         (GDestroyNotify) eif_wean // To call on hook disconnect.
 			);
-		return (connection_id);
+	return (connection_id);
 }
 
 guint c_ev_gtk_callback_marshal_delete_connect (

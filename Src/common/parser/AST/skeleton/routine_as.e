@@ -14,7 +14,10 @@ inherit
 			has_precondition, has_postcondition
 		end;
 
-feature -- Attributes
+feature -- Properties
+
+	body_start_position: INTEGER;
+			-- Position at the start of the main body (after the comments)
 
 	obsolete_message: STRING_AS;
 			-- Obsolete clause message
@@ -35,11 +38,6 @@ feature -- Attributes
 	rescue_clause: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Rescue compound
 
-	comment: EIFFEL_COMMENTS is
-			-- Routine comments
-		do
-		end;
-
 feature -- Initialization
 
 	set is
@@ -51,12 +49,9 @@ feature -- Initialization
 			routine_body ?= yacc_arg (3);
 			postcondition ?= yacc_arg (4);
 			rescue_clause ?= yacc_arg (5);
+			body_start_position := yacc_int_arg (0);
 		ensure then
 			routine_body /= Void
-		end;
-
-	set_comment (c: EIFFEL_COMMENTS) is
-		do
 		end;
 
 feature -- Conveniences
@@ -187,6 +182,8 @@ feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			comments: EIFFEL_COMMENTS
 		do
 			ctxt.put_space
 			ctxt.put_text_item_without_tabs (ti_Is_keyword)
@@ -201,13 +198,14 @@ feature -- Simple formatting
 				ctxt.exdent
 			end
 
-            if comment /= Void then
+			comments := ctxt.feature_comments;
+            if comments /= Void then
                 ctxt.indent
                 ctxt.indent
-                ctxt.put_comment (comment)
+                ctxt.put_comments (comments)
                 ctxt.exdent
                 ctxt.exdent
-            end
+            end;
 
 			ctxt.indent;
 			if precondition /= Void then

@@ -5,7 +5,7 @@ inherit
 	AST_EIFFEL
 		redefine
 			position
-		end;
+		end
 
 feature -- Propertoes
 
@@ -15,14 +15,8 @@ feature -- Propertoes
 	features: EIFFEL_LIST [FEATURE_AS];
 			-- Features
 
-	comment: EIFFEL_COMMENTS is
-			-- Feature clause comments
-		do	
-		end;
-
 	position: INTEGER;
-		-- Position after feature [{clients}]: 
-		-- expected comment
+			-- Position after feature keyword
 
 feature -- Initialization
 
@@ -31,9 +25,10 @@ feature -- Initialization
 		do
 			clients ?= yacc_arg (0);
 			features ?= yacc_arg (1);
-			position := yacc_position;
+			position := yacc_int_arg (0);
 		ensure then
 			features_exists: features /= Void;
+			positive_position: position > 0
 		end;
 
 feature
@@ -81,13 +76,15 @@ feature
 			if other = Void then
 				Result := False
 			else
-				if clients = Void and other.clients = Void and then
-					equal (comment, other.comment) then
-						Result := True
-				elseif clients /= Void and then other.clients /= Void  then
-					Result := clients.is_equiv (other.clients) and then
-						equal (comment, other.comment)
-				end
+				Result := clients.is_equiv (other.clients)
+					-- To be fixed!!!
+				--if clients = Void and other.clients = Void and then
+					--equal (comment, other.comment) then
+						--Result := True
+				--elseif clients /= Void and then other.clients /= Void  then
+					--Result := clients.is_equiv (other.clients) and then
+						--equal (comment, other.comment)
+				--end
 			end
 		end;
 
@@ -135,15 +132,12 @@ feature -- Setting
 			clients := c
 		end;
 
-	set_comment (c: EIFFEL_COMMENTS) is
-			-- Set comment for clause.
-		do
-		end;
-
 feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			comments: EIFFEL_COMMENTS
 		do
 			ctxt.put_text_item (ti_Feature_keyword)
 			ctxt.put_space
@@ -152,27 +146,71 @@ feature -- Simple formatting
 				ctxt.set_space_between_tokens;
 				clients.simple_format (ctxt);
 			end;
-			if comment = Void then
+			comments := ctxt.eiffel_file.current_feature_clause_comments;
+			if comments = Void then
 				ctxt.new_line
 			else
-				if comment.count > 1 then
+				if comments.count > 1 then
 					ctxt.indent
 					ctxt.indent
 					ctxt.new_line
-					ctxt.put_comment (comment)
+					ctxt.put_comments (comments)
 					ctxt.exdent
 					ctxt.exdent
 				else
 					ctxt.put_space;
-					ctxt.put_comment (comment)
+					ctxt.put_comments (comments)
 				end
 			end
 			ctxt.new_line;
 			ctxt.indent;
 			ctxt.set_new_line_between_tokens;
 			ctxt.set_separator (Void);
-			features.simple_format (ctxt);
+			features_simple_format (ctxt);
 			ctxt.exdent;
+		end;
+
+feature 
+
+	features_simple_format (ctxt :FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		local
+			i, l_count: INTEGER;
+			f: like features;
+			next_feat, feat: FEATURE_AS;
+			e_file: EIFFEL_FILE
+		do
+			f := features;
+			ctxt.begin;
+			e_file := ctxt.eiffel_file;
+			from
+				i := 1;
+				l_count := f.count;
+				if l_count > 0 then		
+					feat := f.i_th (1)
+				end
+			until
+				i > l_count
+			loop
+				ctxt.new_expression;
+				if i > 1 then
+					ctxt.put_separator;
+				end;
+				ctxt.new_expression;
+				ctxt.begin;
+				i := i + 1;
+				if i > l_count then
+					e_file.set_next_feature (Void);
+				else
+					next_feat := f.i_th (i);
+					e_file.set_next_feature (next_feat);
+				end;
+				e_file.set_current_feature (feat);
+				feat.simple_format (ctxt);
+				feat := next_feat;
+				ctxt.commit;
+			end;
+			ctxt.commit;
 		end;
 
 end -- class FEATURE_CLAUSE_AS

@@ -68,7 +68,7 @@
 // =========================================================================
 //                                                                 Constants
 
-#define EIFFEL_BASE_DISPID  10000
+#define EIFFEL_BASE_DISPID  1
 
 // =========================================================================
 //                                                             Dispatch Id's
@@ -137,6 +137,7 @@ enum
     DISPID_EiffelComCompiler_FreezeCommandArguments,
     DISPID_EiffelComCompiler_RemoveFileLocks,
     DISPID_EiffelComCompiler_DisplayWarnings,
+    DISPID_EiffelComCompiler_DiscardAssertions,
     DISPID_EiffelComCompiler_ExpandPath,
     DISPID_EiffelComCompiler_GenerateMsilKeyFileName,
 
@@ -389,6 +390,10 @@ enum
     DISPID_EiffelComCompiler_RemoveObjectFile,
     DISPID_EiffelComCompiler_ReplaceObjectFile,
     DISPID_EiffelComCompiler_ObjectFiles,
+    DISPID_EiffelComCompiler_AddDotnetResource,
+    DISPID_EiffelComCompiler_RemoveDotnetResource,
+    DISPID_EiffelComCompiler_ReplaceDotnetResource,
+    DISPID_EiffelComCompiler_DotnetResources,
     DISPID_EiffelComCompiler_Store,
 
     // IEnumIncludePaths dispatch ID's

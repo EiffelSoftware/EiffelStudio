@@ -32,6 +32,8 @@ feature -- Access
 	
 	renaming_window: STRING is "Renaming a window or dialog that has already been generated,%Nmodifies the file and class names of the generated files on%Ndisk immediately."
 	
+	loading_constants: STRING is "Selecting %"Load constants from file%" within the project%Nsettings, ensures that constants are generated into a%Nfile, and loaded automatically when your generated system is executed.%NBy having different versions of this file, languages may be easily changed."
+	
 	all_tips: ARRAYED_LIST [STRING] is
 			-- All tips avaialable from `Current'.
 		once
@@ -48,6 +50,7 @@ feature -- Access
 			Result.extend (changing_type)
 			Result.extend (renaming_window)
 			Result.extend (directory_addition)
+			Result.extend (loading_constants)
 		end
 	
 	tip_count: INTEGER is

@@ -214,7 +214,9 @@ feature {NONE} -- Implementation
 					activate_actions.execute (Current, Void)
 				end
 				is_being_pressed := False
-				invalidate
+				if exists then
+					invalidate
+				end
 			else
 				is_being_pressed := False
 			end

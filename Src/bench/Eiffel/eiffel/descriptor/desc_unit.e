@@ -21,7 +21,7 @@ feature {NONE} -- Creation
 	make (c_id: INTEGER; sz: INTEGER) is
 		do
 			class_id := c_id
-			make_area (sz)
+			create area.make (sz)
 			count := sz
 		end
 
@@ -52,6 +52,7 @@ feature -- Generation
 			l_count: INTEGER
 			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
+			l_area: like area
 			entry_item: ENTRY
 			body_index_type, int16, gen_type, separator, null_init: STRING
 			invalid_entry: STRING
@@ -64,10 +65,11 @@ feature -- Generation
 				null_init := ", (int16 *) 0"
 				Invalid_entry := ", (int16) -1, (int16 *) 0},"
 				l_count := count - 1
+				l_area := area
 			until
 				i > l_count
 			loop
-				entry_item := item (i)
+				entry_item := l_area.item (i)
 				if entry_item /= Void then
 					re ?= entry_item
 					if re /= Void then
@@ -136,6 +138,7 @@ feature -- Generation
 			entry_item: ENTRY
 			info, desc1, desc2, gen_type, type: STRING
 			non_generic, gen_type_string, end_of_line: STRING
+			l_area: like area
 		do
 			from
 					-- Initialize all the constant string used during this generation
@@ -148,11 +151,12 @@ feature -- Generation
 				gen_type_string := " gen_type"
 				end_of_line := ";%N"
 				l_count := count - 1
+				l_area := area
 			until
 				i > l_count
 			loop
 				nb := i + start
-				entry_item := item (i)
+				entry_item := l_area.item (i)
 				if entry_item /= Void then
 					re ?= entry_item
 					if re /= Void then
@@ -233,16 +237,18 @@ feature -- Generation
 			l_count: INTEGER
 			entry_item: ENTRY
 			static_decl, start_decl, end_decl: STRING
+			l_area: like area
 		do
 			from
 				static_decl := "static int16 gen_type"
 				start_decl := " [] = {0,"
 				end_decl := "-1};%N"
 				l_count := count - 1
+				l_area := area
 			until
 				i > l_count
 			loop
-				entry_item := item (i)
+				entry_item := l_area.item (i)
 				if entry_item /= Void and then entry_item.is_generic then
 					buffer.put_string (static_decl)
 					buffer.put_integer (cnt.value)
@@ -271,6 +277,7 @@ feature -- Melting
 			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
+			l_area: like area
 		do
 				-- Append the id of the origin class
 			ba.append_short_integer (class_id)
@@ -284,10 +291,11 @@ feature -- Melting
 			from
 					-- For loop purposes we decreased `l_count'.
 				l_count := l_count - 1
+				l_area := area
 			until
 				i > l_count
 			loop
-				entry_item := item (i)
+				entry_item := l_area.item (i)
 				if entry_item /= Void then
 					re ?= entry_item
 					if re /= Void then

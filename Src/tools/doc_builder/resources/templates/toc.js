@@ -8,26 +8,11 @@ function swapTOC (listItem)
 	}
 }
 
-function toggleTOC (show)
-//Hide or show toc
-{
-	//alert ('DEBUG: Showing or hiding TOC')
-	if (show)
-	{
-		top.column_frameset.cols = "250,*";
-  		top.content_frame.document.all("showtoc").style.display = "none";	
-  	}
-  	else
-  	{
-		top.column_frameset.cols = "1,*";
-  		top.content_frame.document.all("showtoc").style.display = "block";
-  	}
-}
-
 function Toggle (node)
 //Toggle node
 {	
-	if (node.nextSibling){
+	if (node.nextSibling)
+	{
 		// Unfold the branch if it isn't visible
 		if (node.nextSibling.nextSibling != null)
 		{
@@ -37,11 +22,11 @@ function Toggle (node)
 				if (divNode.style.display == 'none')
 				{
 					// Change the image (if there is an image)
-					if (node.children.length > 0)
+					if (node.childNodes.length > 0)
 					{
-						if (node.children.item(0).tagName == "IMG")
+						if (node.childNodes[0].tagName == "IMG")
 						{
-							node.children.item(0).src = "icon_toc_folder_open.gif";
+							node.childNodes[0].src = "icon_toc_folder_open.gif";
 						}
 					}
 
@@ -51,11 +36,11 @@ function Toggle (node)
 				else
 				{
 					// Change the image (if there is an image)
-					if (node.children.length > 0)
+					if (node.childNodes.length > 0)
 					{
-						if (node.children.item(0).tagName == "IMG")
+						if (node.childNodes[0].tagName == "IMG")
 						{
-							node.children.item(0).src = "icon_toc_folder_closed.gif";
+							node.childNodes[0].src = "icon_toc_folder_closed.gif";
 						}
 					}
 					divNode.style.display = 'none';
@@ -70,7 +55,7 @@ function ToggleAll()
 {
 	if (top.toc_frame)
 	{	
-		var pageHrefs= top.toc_frame.document.getElementsByTagName("a")
+		var pageHrefs = top.toc_frame.document.getElementsByTagName("a")
 	
 		for (i = 0; i < pageHrefs.length; i++)
 		{

@@ -50,6 +50,7 @@ feature {COMPILER_EXPORTER} -- Update
 					elseif value.is_name then
 						v := No_option
 						Lace.ace_options.set_has_external_profile (True)
+						Lace.ace_options.set_has_profile (False)
 					else
 						error (value);
 					end;

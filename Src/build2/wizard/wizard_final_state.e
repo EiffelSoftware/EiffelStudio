@@ -37,6 +37,7 @@ feature {NONE} -- Implementation
 			-- Note: You can remove this feature if you don't need
 			--       a progress bar.
 		do
+			first_window.disable_user_resize
 			main_window.hide_all_floating_tools
 			choice_box.wipe_out
 			choice_box.set_border_width (10)
@@ -112,7 +113,13 @@ feature {NONE} -- Implementation
 		do
 			first_window.set_final_state ("Finish")
 			build
-			first_window.set_size (dialog_unit_to_pixels (503).max (first_window.width), dialog_unit_to_pixels (385))
+				-- Remove ability to resize from window.
+			first_window.disable_user_resize
+				-- Set size back to standard dialog size. Note that
+				-- we cannot do this in `build' as it is only called the
+				-- first time that the page is built. After that it is cached.
+			first_window.set_minimum_size (100, 100)
+			first_window.set_size (dialog_unit_to_pixels (503), dialog_unit_to_pixels (385))
 		end
 
 	display_state_text is

@@ -48,7 +48,7 @@ feature -- Basic operations
 
 				if not input_file.last_string.empty then
 					if input_file.last_string.substring_index (Class_header_indicator,1) > 0 then
-						class_not_found := False  -- Class found
+						class_not_found := False  
 
 						input_file.read_line
 						l_name := clone (input_file.last_string)

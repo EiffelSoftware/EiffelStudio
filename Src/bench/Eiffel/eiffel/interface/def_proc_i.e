@@ -9,7 +9,7 @@ inherit
 
 	PROCEDURE_I			
 		redefine
-			is_deferred, has_entry, to_generate_in,
+			is_deferred, has_entry, to_generate_in, extension,
 			to_melt_in, update_api, transfer_to, access_for_feature
 		end
 	

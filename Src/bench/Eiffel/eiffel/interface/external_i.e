@@ -9,7 +9,7 @@ inherit
 	PROCEDURE_I
 		redefine
 			transfer_to, equiv, update_api,
-			melt, generate, duplicate,
+			melt, generate, duplicate, extension,
 			access_for_feature, is_external, new_rout_entry, valid_body_id,
 			set_renamed_name, set_renamed_name_id, external_name_id, undefinable
 		end;

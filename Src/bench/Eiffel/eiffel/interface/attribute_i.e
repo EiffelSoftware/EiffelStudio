@@ -8,7 +8,7 @@ class ATTRIBUTE_I
 inherit
 	ENCAPSULATED_I
 		redefine
-			transfer_to, process_pattern, unselected,
+			transfer_to, process_pattern, unselected, extension,
 			new_rout_entry, melt, access_for_feature, generate, new_rout_id,
 			in_pass3, is_none_attribute, set_type, type, is_attribute,
 			has_entry, undefinable, check_expanded

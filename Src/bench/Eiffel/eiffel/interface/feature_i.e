@@ -884,43 +884,46 @@ end
 	
 feature -- Polymorphism
 
- 	has_poly_unit: BOOLEAN is
+ 	has_entry: BOOLEAN is
  			-- Has the feature an associated polymorphic unit ?
  		do
  			Result := True
  		end
  
- 	new_poly_unit (rout_id: ROUTINE_ID): POLY_UNIT is
+ 	new_entry (rout_id: ROUTINE_ID): ENTRY is
  			-- New polymorphic unit
  		require
 			rout_id_not_void: rout_id /= Void
  		do
  			if not is_attribute or not rout_id.is_attribute then
- 				Result := new_rout_unit
+ 				Result := new_rout_entry
  			else
- 				Result := new_attr_unit
+ 				Result := new_attr_entry
  			end
  		end
  
- 	new_rout_unit: ROUT_UNIT is
+ 	new_rout_entry: ROUT_ENTRY is
  			-- New routine unit
  		require
  			not_deferred: not is_deferred
  		do
  			!!Result
  			Result.set_body_index (body_index)
- 			Result.set_type (type.actual_type)
+ 			Result.set_type_a (type.actual_type)
  			Result.set_written_in (written_in)
  			Result.set_pattern_id (pattern_id)
  		end
  
- 	new_attr_unit: ATTR_UNIT is
+ 	new_attr_entry: ATTR_ENTRY is
  			-- New attribute unit
  		require
  			is_attribute: is_attribute
+		local
+			type_a: TYPE_A
  		do
+			type_a := type.actual_type
  			!!Result
- 			Result.set_type (type.actual_type)
+ 			Result.set_type_a (type.actual_type)
  			Result.set_feature_id (feature_id)
  		end
  

@@ -4,9 +4,9 @@ inherit
 	FEATURE_I
 		redefine
 			transfer_to, process_pattern, unselected,
-			new_rout_unit, melt, access, generate, new_rout_id,
+			new_rout_entry, melt, access, generate, new_rout_id,
 			in_pass3, is_none_attribute, set_type, type, is_attribute,
-			has_poly_unit, undefinable, to_generate_in, generation_class_id,
+			has_entry, undefinable, to_generate_in, generation_class_id,
 			to_melt_in, check_expanded
 		end
 
@@ -50,20 +50,20 @@ feature
 			Result := type.actual_type.is_none
 		end
 
-	has_poly_unit: BOOLEAN is
+	has_entry: BOOLEAN is
 			-- Has the attribute an associated polymorphic unit ?
 		do
 			Result := not is_none_attribute
 		end
 
-	new_rout_unit: ROUT_UNIT is
+	new_rout_entry: ROUT_ENTRY is
 			-- New routine unit
 		require else
 			has_to_be_generated: generate_in /= Void
 		do
 			!!Result
 			Result.set_body_index (body_index)
-			Result.set_type (type.actual_type)
+			Result.set_type_a (type.actual_type)
 			Result.set_written_in (generate_in)
 			Result.set_pattern_id (pattern_id)
 		end

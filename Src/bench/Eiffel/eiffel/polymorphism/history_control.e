@@ -9,6 +9,8 @@ inherit
 
 	SHARED_SERVER
 
+	SHARED_WORKBENCH
+
 creation
 	make
 
@@ -21,38 +23,96 @@ feature -- Initialization
 
 feature
 
-	new_units: EXTEND_TABLE [POLY_UNIT_TABLE [POLY_UNIT], ROUTINE_ID];
+	new_units: EXTEND_TABLE [POLY_TABLE [ENTRY], ROUTINE_ID];
 			-- New units 
 
 	count: INTEGER;
 			-- Count of new and obsolete units already recorded
 
-	add_new (u: POLY_UNIT; rout_id: ROUTINE_ID; pattern_id: PATTERN_ID) is
+	add_new (entry: ENTRY; rout_id: ROUTINE_ID; pattern_id: PATTERN_ID) is
 			-- Add a new unit for routine id `rout_id' to the controler
 		require
-			good_argument: u /= Void
+			good_argument: entry /= Void
 		local
 			old_count: INTEGER;
-			poly_table: POLY_UNIT_TABLE [POLY_UNIT];
+			poly_table: POLY_TABLE [ENTRY];
 		do
 			poly_table := new_units.item (rout_id);
 			if poly_table = Void then
-				poly_table := u.new_poly_table (pattern_id);
+				poly_table := entry.new_poly_table;
 				poly_table.set_rout_id (rout_id);
 				new_units.put (poly_table, rout_id);
-			end;
-			old_count := poly_table.count;
-			poly_table.extend (u);
-			if poly_table.count > old_count then
+				create_poly_table_with_entry (poly_table, entry);
 				count := count + 1
-			end;
+			else
+--				old_count := poly_table.count;
+					-- Extension of `poly_table' to take care of genericty
+				extend_poly_table_with_entry (poly_table, entry);
+--				if poly_table.count > old_count then
+					count := count + 1
+--				end;
+			end
 		end;
+
+	create_poly_table_with_entry (poly_table: POLY_TABLE [ENTRY]; entry: ENTRY) is
+			-- Add `entry' in newly created `poly_table' with the generic derivations.
+		require
+			poly_table_empty: poly_table.empty
+		local
+			associated_class: CLASS_C
+			types: TYPE_LIST
+			modified_entry: ENTRY
+		do
+			associated_class := entry.id.associated_class
+			if associated_class /= Void then
+					-- Classes could have been removed
+				from
+					types := associated_class.types
+					types.start
+					poly_table.create_block (types.count)
+				until
+					types.after
+				loop
+					modified_entry := clone (entry)
+					modified_entry.update (types.item)
+					poly_table.extend (modified_entry);
+					types.forth
+				end
+			end
+		end
+
+	extend_poly_table_with_entry (poly_table: POLY_TABLE [ENTRY]; entry: ENTRY) is
+			-- Extend `poly_table' with `entry'
+		require
+			not_poly_table_empty: not poly_table.empty
+		local
+			associated_class: CLASS_C
+			types: TYPE_LIST
+			modified_entry: ENTRY
+		do
+			associated_class := entry.id.associated_class
+			if associated_class /= Void then
+					-- Classes could have been removed
+				from
+					types := associated_class.types
+					types.start
+					poly_table.extend_block (types.count)
+				until
+					types.after
+				loop
+					modified_entry := clone (entry)
+					modified_entry.update (types.item)
+					poly_table.extend (modified_entry);
+					types.forth
+				end
+			end
+		end
 
 	transfer is
 			-- Transfer new recorded (and remove obsolete) units in the
 			-- temporary server of polymorphic unit tables.
 		local
-			new_set, server_set: POLY_UNIT_TABLE [POLY_UNIT];
+			new_set, server_set: POLY_TABLE [ENTRY];
 			id: ROUTINE_ID;
 		do
 			from
@@ -68,6 +128,7 @@ feature
 				else
 					server_set := new_set;
 				end;
+				server_set.sort
 				Tmp_poly_server.put (server_set);
 				new_units.forth;
 			end;

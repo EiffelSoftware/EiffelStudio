@@ -1,17 +1,6 @@
 deferred class PROCEDURE_I 
 
 inherit
-		
-	FEATURE_I
-		rename
-			transfer_to as basic_transfer_to
-		redefine
-			duplicate,
-			has_postcondition, has_precondition, is_ensure_then,
-			is_require_else, is_procedure, argument_names, arguments,
-			obsolete_message, assert_id_set, set_assert_id_set,
-			check_local_names, duplicate_arguments
-		end;
 	FEATURE_I
 		redefine
 			transfer_to, duplicate,
@@ -19,8 +8,6 @@ inherit
 			is_require_else, is_procedure, argument_names, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
 			check_local_names, duplicate_arguments
-		select
-			transfer_to
 		end
 	
 feature 
@@ -180,7 +167,7 @@ feature
 	transfer_to (other: PROCEDURE_I) is
 			-- Transfer datas form `other' into Current.
 		do
-			basic_transfer_to (other);
+			{FEATURE_I} Precursor (other);
 			other.set_arguments (arguments);
 			other.set_is_require_else (is_require_else);
 			other.set_is_ensure_then (is_ensure_then);

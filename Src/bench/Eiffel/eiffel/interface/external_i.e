@@ -8,7 +8,7 @@ inherit
 		redefine
 			transfer_to, equiv, update_api,
 			melt, execution_unit, generate,
-			access, is_external, new_rout_unit, valid_body_id,
+			access, is_external, new_rout_entry, valid_body_id,
 			can_be_inlined
 		end;
 	
@@ -163,18 +163,18 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			{PROCEDURE_I} precursor (other);
+			{PROCEDURE_I} Precursor (other);
 			other.set_alias_name (alias_name);
 			other.set_encapsulated (encapsulated);
 			other.set_extension (extension);
 		end;
 
-	new_rout_unit: EXTERNAL_UNIT is
+	new_rout_entry: EXTERN_ENTRY is
 			-- New external unit
 		do
 			!!Result;
 			Result.set_body_index (body_index);
-			Result.set_type (type.actual_type);
+			Result.set_type_a (type.actual_type);
 			Result.set_written_in (written_in);
 			Result.set_pattern_id (pattern_id);
 			Result.set_external_name (external_name);

@@ -32,10 +32,10 @@ feature {NONE}
 			descendant_feature: FEATURE_I;
 			des_feat_table: FEATURE_TABLE;
 			des_orig_table: SELECT_TABLE;
-			table: ROUT_UNIT_TABLE;
-			c: CURSOR;
+			table: ROUT_TABLE;
+			old_position: INTEGER;
 			body_table: BODY_INDEX_TABLE;
-			unit: ROUT_UNIT;
+			unit: ROUT_ENTRY;
 			redef_unit: TRAVERSAL_UNIT;
 --			assert_id_set: ASSERT_ID_SET;
 			inh_assert: INH_ASSERT_INFO;
@@ -94,7 +94,7 @@ feature {NONE}
 				loop
 					unit := table.item;
 					if System.class_of_id (unit.id).conform_to (written_class) then
-						c := table.cursor;
+						old_position := table.position;
 						other_body_id := body_table.item (unit.body_index);
 						if not bid_rid_is_marked (other_body_id, rout_id_val) then
 							descendant_class := System.class_of_id (unit.id);
@@ -113,7 +113,7 @@ feature {NONE}
 								end;
 							end;
 						end;
-						table.go_to (c);
+						table.go_to (old_position);
 					end;
 					table.forth
 				end;

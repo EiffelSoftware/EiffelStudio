@@ -75,11 +75,11 @@ feature -- Insertion
 
 	put_invariant (f: INVARIANT_FEAT_I) is
 		local
-			u: POLY_UNIT
+			u: ENTRY
 			local_class_types: LINKED_LIST [CLASS_TYPE]
 		do
-			if f.has_poly_unit then
-				u := f.new_poly_unit (System.routine_id_counter.invariant_rout_id)
+			if f.has_entry then
+				u := f.new_entry (System.routine_id_counter.invariant_rout_id)
 				if u /= Void then
 					from
 						local_class_types := class_types
@@ -105,7 +105,7 @@ feature -- Insertion
 			--|is found in the global system table Rout_info_table 
 			--|which is built during pass 2.
 		local
-			u: POLY_UNIT
+			u: ENTRY
 			ri: ROUT_INFO
 			origin: CLASS_ID
 			offset, nb_routines: INTEGER
@@ -115,10 +115,10 @@ feature -- Insertion
 			local_class_types: LINKED_LIST [CLASS_TYPE]
 		do
 				-- Get the polymorphical unit corresponding to `f'
-				--|Note: see if and how `has_poly_unit' may be used.
+				--|Note: see if and how `has_entry' may be used.
 
-			if f.has_poly_unit then
-				u := f.new_poly_unit (r_id)
+			if f.has_entry then
+				u := f.new_entry (r_id)
 				if u /= Void then
 
 						-- Get the origin of the routine of id `r_id' and

@@ -23,7 +23,7 @@ feature -- Final mode
 			-- Insert units of Current in the history
 			-- controler (routine table construction)
 		local
-			new_unit: POLY_UNIT;
+			new_unit: ENTRY;
 			feature_i: FEATURE_I;
 			rout_id: ROUTINE_ID;
 		do
@@ -33,9 +33,9 @@ feature -- Final mode
 				after
 			loop
 				feature_i := item_for_iteration;
-				if feature_i.has_poly_unit then
+				if feature_i.has_entry then
 					rout_id := key_for_iteration;
-					new_unit := feature_i.new_poly_unit (rout_id);
+					new_unit := feature_i.new_entry (rout_id);
 					new_unit.set_id (id);
 					History_control.add_new (new_unit, rout_id, feature_i.pattern_id);
 				end;

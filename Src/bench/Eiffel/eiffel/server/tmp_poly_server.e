@@ -3,7 +3,7 @@
 class TMP_POLY_SERVER
 
 inherit
-	DELAY_SERVER [POLY_UNIT_TABLE [POLY_UNIT], ROUTINE_ID]
+	DELAY_SERVER [POLY_TABLE [ENTRY], ROUTINE_ID]
 		redefine
 			clear
 		end
@@ -13,7 +13,7 @@ creation
 
 feature
 
-	id (t: POLY_UNIT_TABLE [POLY_UNIT]): ROUTINE_ID is
+	id (t: POLY_TABLE [ENTRY]): ROUTINE_ID is
 			-- Id associated with `t'
 		do
 			Result := t.rout_id

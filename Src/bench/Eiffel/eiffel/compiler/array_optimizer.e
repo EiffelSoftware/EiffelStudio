@@ -438,9 +438,9 @@ feature -- Detection of safe/unsafe features
 	is_safe (f: FEATURE_I): BOOLEAN is
 			-- Can the feature be safely called within an optimized loop?
 		local
-			table: ROUT_UNIT_TABLE
+			table: ROUT_TABLE
 			rout_id_val: ROUTINE_ID
-			unit: ROUT_UNIT
+			unit: ROUT_ENTRY
 			written_class, descendant_class: CLASS_C
 			body_table: BODY_INDEX_TABLE
 			other_body_id: BODY_ID

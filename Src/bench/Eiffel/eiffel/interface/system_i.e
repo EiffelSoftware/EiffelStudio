@@ -2491,7 +2491,7 @@ end
 				rout_id := Tmp_poly_server.key_for_iteration
 
 				if Eiffel_table.is_used (rout_id) then
-					table := Tmp_poly_server.item (rout_id).poly_table
+					table := Tmp_poly_server.item (rout_id)
 					table.write
 				end
 				Tmp_poly_server.forth
@@ -2962,10 +2962,11 @@ end
 			class_type: CLASS_TYPE
 		do
 			from
-				!! rout_table.make
+				!! rout_table
 				rout_table.set_rout_id (routine_id_counter.initialization_rout_id)
 				i := 1
 				nb := Type_id_counter.value
+				rout_table.create_block (nb)
 			until
 				i > nb
 			loop
@@ -2982,6 +2983,7 @@ if class_type /= Void then
 end
 				i := i + 1
 			end
+			rout_table.sort_till_position
 			rout_table.write
 		end
 
@@ -3052,10 +3054,11 @@ feature -- Dispose routine
 			written_class: CLASS_C
 		do
 			from
-				!! rout_table.make
+				!! rout_table
 				rout_table.set_rout_id (routine_id_counter.dispose_rout_id)
 				i := 1
 				nb := Type_id_counter.value
+				rout_table.create_block (nb)
 			until
 				i > nb 
 			loop
@@ -3084,6 +3087,7 @@ if class_type /= Void then
 end
 				i := i + 1
 			end
+			rout_table.sort_till_position
 			rout_table.write
 		end
 

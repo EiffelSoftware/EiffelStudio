@@ -3,7 +3,6 @@
 class ATTR_ENTRY
 
 inherit
-
 	ENTRY
 
 feature
@@ -16,6 +15,25 @@ feature
 		do
 			feature_id := i;
 		end;
+
+feature -- previously in ATTR_UNIT
+
+	new_poly_table: ATTR_TABLE is
+			-- New associated polymorhic table
+		do
+			!!Result
+		end;
+
+	entry (class_type: CLASS_TYPE): ATTR_ENTRY is
+			-- Attribute entry in an attribute offset table
+		do
+			!!Result;
+			Result.set_type_id (class_type.type_id);
+			Result.set_feature_id (feature_id);
+			Result.set_type (feature_type (class_type));
+		end;
+
+feature -- from ATTR_ENTRY
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for an offset entry

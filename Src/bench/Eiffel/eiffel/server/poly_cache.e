@@ -3,8 +3,7 @@
 class POLY_CACHE
 
 inherit
-
-	CACHE [POLY_UNIT_TABLE [POLY_UNIT], ROUTINE_ID]
+	CACHE [POLY_TABLE [ENTRY], ROUTINE_ID]
 
 creation
 

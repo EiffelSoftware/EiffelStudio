@@ -196,22 +196,6 @@ feature -- Traversals
 			end
 		end
 
-	generate_poly_table (unit: POLY_UNIT; poly_table: POLY_TABLE [ENTRY]) is
-			-- Generate the polymorphic table in final mode
-		require
-			unit_exits: unit /= Void
-			poly_table_exists: poly_table /= Void
-		do
-			from
-				start
-			until
-				after
-			loop
-				poly_table.extend (unit.entry (item))
-				forth
-			end
-		end
-
 feature -- Merging
 
 	append (other: like Current) is

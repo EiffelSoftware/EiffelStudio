@@ -71,14 +71,14 @@ feature -- Status report
 
 feature -- Status setting
 	
-	ensure_i_th_visible (an_index: INTEGER) is
-			-- Ensure item `an_index' is visible in `Current'.
+	ensure_item_visible (an_item: EV_LIST_ITEM) is
+			-- Ensure item `an_item' is visible in `Current'.
 		require
 			not_destroyed: not is_destroyed
 			is_displayed: is_displayed
-			an_index_valid: an_index > 0 and an_index <= count
+			an_item_contained: has (an_item)
 		do
-			implementation.ensure_i_th_visible (an_index)
+			implementation.ensure_item_visible (an_item)
 		end
 
 	enable_multiple_selection is
@@ -102,8 +102,8 @@ feature -- Status setting
 		end
 
 	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set the size of displayed pixmaps in `Current'.
-			-- Note: The Default value is 16x16
+			-- Set size of pixmaps disaplyed in `Current'.
+			-- Note: Default value is 16x16
 		require
 			not_destroyed: not is_destroyed
 			valid_width: a_width > 0

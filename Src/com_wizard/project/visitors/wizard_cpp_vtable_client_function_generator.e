@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			then
 				Result.append (a_visitor.cecil_type)
 			else
-				Result.append (Eif_reference)
+				Result.append (Eif_object)
 			end
 			Result.append (" eiffel_result = ")
 			

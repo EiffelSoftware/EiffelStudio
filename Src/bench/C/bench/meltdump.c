@@ -42,6 +42,7 @@ static  EIF_CHARACTER rchar (void);
 static  EIF_INTEGER rlong (void);
 static  EIF_INTEGER_16 rshort (void);
 static  uint32  ruint32 (void);
+static  BODY_INDEX  rbody_index (void);
 static  void    rseq (int);
 static  char    *rbuf (int);
 static  void    print_line (void);
@@ -911,7 +912,7 @@ static  void    analyze_desc ()
 
 				while (j--)
 				{
-					info = (long) rshort ();
+					info = (long) rbody_index ();
 					type = (long) rshort ();
 
 /*
@@ -1002,6 +1003,10 @@ static  uint32  ruint32 ()
 	}
 
 	return result;
+}
+
+static BODY_INDEX rbody_index () {
+	return ruint32 ();
 }
 /*------------------------------------------------------------------*/
 

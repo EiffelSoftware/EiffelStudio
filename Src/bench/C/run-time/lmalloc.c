@@ -46,19 +46,7 @@ rt_private char *rcsid =
 rt_public Malloc_t eif_malloc(register unsigned int nbytes)
 {
 
-#ifdef EIF_WIN32
-/* For the Windows platforms we use malloc() implemented in the C-library */
-	malloc (nbytes);
-#else
-#ifdef VXWORKS
-/* For VXWORKS, we have a special run-time. HP provides their own malloc ()
- *we do not have, so we call malloc() from the C-library to perform test */
-#warning: file should not be linked for VXWORKS runtime. 
-	malloc (nbytes);
-#endif
-#else
 #ifdef EIF_THREADS 
-
 /* In multithreaded mode, we do not want to use the eiffel implementation * 
  * of eif_malloc () because when calling reclaim () in a thread we want*
  * the thread to give back the memory to the system and not to the        *
@@ -66,9 +54,17 @@ rt_public Malloc_t eif_malloc(register unsigned int nbytes)
  * manuelt. */
 
 	malloc (nbytes);
+#else
 
-#endif /* EIf_THREADS */	
-#else 
+#ifdef EIF_WIN32
+/* For the Windows platforms we use malloc() implemented in the C-library */
+	malloc (nbytes);
+#elif defined VXWORKS
+/* For VXWORKS, we have a special run-time. HP provides their own malloc ()
+ *we do not have, so we call malloc() from the C-library to perform test */
+#warning: file should not be linked for VXWORKS runtime. 
+	malloc (nbytes);
+#else
 /* all the other platforms (Unix/Linux) use an eiffel implementation *
  * for eif_malloc() */ 
 
@@ -84,22 +80,21 @@ rt_public Malloc_t eif_malloc(register unsigned int nbytes)
 		HEADER(arena)->ov_flags = EO_C;		/* Clear all flags but EO_C */
 
 	return (Malloc_t) arena;
-
 #endif /* EIF_WIN32 */
+#endif /* EIF_THREADS */	
 }
 
 rt_public Malloc_t eif_calloc(unsigned int nelem, unsigned int elsize)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_THREADS 
 	calloc (nelem, elsize);
 #else
-#ifdef VXWORKS
+
+#ifdef EIF_WIN32
+	calloc (nelem, elsize);
+#elif defined VXWORKS
 #warning: file should not be linked for VXWORKS runtime.
 	calloc (nelem, elsize);
-#endif
-#ifdef EIF_THREADS 
-	malloc (nbytes);
-#endif /* EIf_THREADS */	
 #else /* all the other platforms (Unix/Linux) use an eiffel implementation */
       /* for eif_realloc() */ 
 	register1 unsigned int nbytes = nelem * elsize;
@@ -112,20 +107,20 @@ rt_public Malloc_t eif_calloc(unsigned int nelem, unsigned int elsize)
 	return allocated;
 
 #endif /* EIF_WIN32 */
+#endif /* EIf_THREADS */	
 }
 
 rt_public Malloc_t eif_realloc(register void *ptr, register unsigned int nbytes)
 {
-#ifdef EIF_WIN32
-	realloc (ptr, nbytes);
-#else
-#ifdef VXWORKS
-#warning: file should not be linked for VXWORKS runtime.
-	realloc (ptr,nbytes);
-#endif
 #ifdef EIF_THREADS 
 	malloc (nbytes);
-#endif /* EIf_THREADS */	
+#else
+
+#ifdef EIF_WIN32
+	realloc (ptr, nbytes);
+#elif defined VXWORKS
+#warning: file should not be linked for VXWORKS runtime.
+	realloc (ptr,nbytes);
 #else /* all the other platforms (Unix/Linux) use an eiffel implementation */
       /* for eif_realloc() */ 
 
@@ -136,21 +131,21 @@ rt_public Malloc_t eif_realloc(register void *ptr, register unsigned int nbytes)
 
 	return (Malloc_t) xrealloc(ptr, nbytes, GC_OFF);
 
-endif /* EIF_WIN32 */
+#endif /* EIF_WIN32 */
+#endif /* EIF_THREADS */	
 }
 
 void eif_free(register void *ptr)
 {
-#ifdef EIF_WIN32
+#ifdef EIF_THREADS 
 	free (ptr);
 #else
-#ifdef VXWORKS
+
+#ifdef EIF_WIN32
+	free (ptr);
+#elif defined VXWORKS
 #warning: file should not be linked for VXWORKS runtime
 	free (ptr);
-#endif
-#ifdef EIF_THREADS 
-	malloc (nbytes);
-#endif /* EIf_THREADS */	
 #else /* all the other platforms (Unix/Linux) use an eiffel implementation */
       /* for eif_free() */ 
 
@@ -164,5 +159,6 @@ void eif_free(register void *ptr)
 	xfree(ptr);
 
 #endif /* EIF_WIN32 */
+#endif /* EIF_THREADS */	
 }
 

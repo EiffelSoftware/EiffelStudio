@@ -16,7 +16,7 @@ CFLAGS = -I. -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 
 NETWORK = $(TOP)\ipc\app\network.lib
 
-OBJECTS = math.obj malloc.obj garcol.obj local.obj except.obj store.obj \
+OBJECTS = lmalloc.obj math.obj malloc.obj garcol.obj local.obj except.obj store.obj \
 	retrieve.obj hash.obj traverse.obj hashin.obj tools.obj internal.obj \
 	plug.obj copy.obj equal.obj out.obj timer.obj urgent.obj \
 	sig.obj hector.obj cecil.obj bits.obj file.obj dir.obj string.obj \
@@ -26,7 +26,7 @@ OBJECTS = math.obj malloc.obj garcol.obj local.obj except.obj store.obj \
 	path_name.obj object_id.obj $(TOP)\console\econsole.lib \
 	compress.obj eif_threads.obj $extra_object_files
 
-WOBJECTS = $(NETWORK) wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
+WOBJECTS = $(NETWORK) wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wstore.obj wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj \
 	winterna.obj wplug.obj wcopy.obj wequal.obj wout.obj \
 	wtimer.obj wurgent.obj wsig.obj whector.obj wcecil.obj wbits.obj \
@@ -37,7 +37,7 @@ WOBJECTS = $(NETWORK) wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wobject_id.obj $(TOP)\console\econsole.lib \
 	compress.obj weif_threads.obj $extra_object_files
 
-EOBJECTS = wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
+EOBJECTS = wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
 	wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj winterna.obj \
 	wplug.obj wcopy.obj wequal.obj wout.obj wtimer.obj \
 	wurgent.obj wsig.obj whector.obj wcecil.obj wbits.obj wfile.obj wdir.obj \

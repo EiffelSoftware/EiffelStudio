@@ -364,6 +364,7 @@ rt_public void eif_thr_exit(void)
 	free (eif_thr_context);			/* Thread context passed by parent */
 	free (eif_globals);				/* Global variables specific to the current
 									 * thread of the run-time */
+
 	EIF_THR_EXIT(0);
 	EIF_END_GET_CONTEXT
 }

@@ -513,13 +513,13 @@ feature -- Execution features
 			old_item := list.selected_item
 			accelerator ?= old_item.data
 			if accelerator /= Void then
-				item := combo.find_item_by_data (accelerator.keycode)
+				item ?= combo.find_item_by_data (accelerator.keycode)
 				item.set_selected (True)
 				shift.set_state (accelerator.shift_key)
 				alt.set_state (accelerator.alt_key)
 				control.set_state (accelerator.control_key)
 			else
-				item := combo.get_item (1)
+				item ?= combo.get_item (1)
 				item.set_selected (True)
 				shift.set_state (False)
 				alt.set_state (False)

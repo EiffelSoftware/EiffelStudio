@@ -5,7 +5,7 @@ set INSTALL_LOG="D:\install.log"
 REM NB: The following directory must contain a finalization Ace for ec.exe called finalizedbench.ace
 set FINALIZATION_DIR="D:\Compils\newbench"
 REM NB: The following directory must contain document.exe
-set DOCUMENT_SRC="D:\Delivery"
+set DOCUMENT_DIR="D:\Delivery"
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
 set INSTALL_DIR="D:\InstalledEiffel50"
 REM Get where hhc and wfwi are located, to be able to compile the documentation and the delivery.

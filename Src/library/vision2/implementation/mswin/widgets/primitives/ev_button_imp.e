@@ -1,7 +1,7 @@
 indexing
 
         description: 
-                "EiffelVision push button, gtk implementation.";
+                "EiffelVision push button. Mswindows implementation.";
         status: "See notice at end of class";
         id: "$Id$";
         date: "$Date$";
@@ -55,9 +55,9 @@ feature {NONE} -- Implementation
 			check
 				font_not_void: fw /= Void
 			end
-			set_size (fw.string_width (Current, text) +
-				  Extra_width,
-				  (7 * fw.string_height (Current, text)) // 4 - 2)
+			set_minimum_width (fw.string_width (Current, text) + Extra_width)
+			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
+			set_size (minimum_width, minimum_height)
 		end
 	
 	Extra_width: INTEGER is 10
@@ -67,5 +67,20 @@ feature {NONE} -- Implementation
 	wel_window: WEL_PUSH_BUTTON
 end
 
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
 
 

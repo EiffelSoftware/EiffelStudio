@@ -823,6 +823,12 @@ end
 
 					reset_melted_conformance_table
 				end
+
+				if il_generation then
+						-- Ensure unicity of names
+					check_full_class_name_unicity
+				end
+
 					-- Inheritance analysis: `Degree_4' is sorted by class 
 					-- topological ids so the parent come first the heirs after.
 				process_degree_4
@@ -874,6 +880,10 @@ end
 debug ("VERBOSE")
 	io.error.putstring ("Saving melted.eif%N")
 end
+				end
+			else
+				if System.il_generation then
+					check_full_class_name_unicity
 				end
 			end
 			if not il_generation and then freeze then
@@ -1584,6 +1594,98 @@ feature -- IL code generation
 			end
 		end
 
+feature {NONE} -- IL generation
+
+	check_full_class_name_unicity is
+			-- Ensure that two classes or more in system do not have
+			-- same IL full name, i.e. namespace + class name.
+		require
+			il_generation: System.il_generation
+			classes_not_void: classes /= Void
+		local
+			i, nb: INTEGER
+			l_table: HASH_TABLE [CLASS_C, STRING]
+			l_conflicts: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
+			l_list: SEARCH_TABLE [CLASS_C]
+			l_class: CLASS_C
+			l_name: STRING
+			l_vifc: VIFC
+			l_types: TYPE_LIST
+		do
+				-- Process done in two passes. First we collect all names
+				-- and we collect conflicting one in `l_conflicts'.
+				-- Once this is done, we process `l_conflicts' to create
+				-- the associated VIFC error.
+			from
+				create l_table.make (classes.count)
+				create l_conflicts.make (10)
+				i := classes.lower
+				nb := classes.upper
+			until
+				i > nb
+			loop
+				l_class := classes.item (i)
+				if l_class /= Void and then l_class.is_generated then
+						-- We now process each generic derivation in each class,
+						-- as it might be possible that we will have a class
+						-- called A_INT32 and a class A [INTEGER] which resolves
+						-- to the same type and we don't want that to happen.
+					from
+						l_types := l_class.types
+						l_types.start
+					until
+						l_types.after
+					loop
+							-- Compute full type name. We do not need to check the
+							-- `full_il_implementation_type_name' as there is no way
+							-- that an Eiffel class can have a `.' in its name.
+						l_name := l_types.item.full_il_type_name
+
+						if cls_compliant then
+								-- CLS compliant prevent to have two types
+								-- with full name that only differs by case.
+							l_name := l_name.as_lower
+						end
+
+						if l_table.has (l_name) then
+								-- This name has already been inserted, we
+								-- record it in `l_conflicts' to report an error later.
+							if l_conflicts.has (l_name) then
+									-- An error has already been processed on this type,
+									-- get list of classes involved to add current `l_class'.
+								l_list := l_conflicts.item (l_name)
+							else
+									-- No error on `l_name', we create a new list.
+								create l_list.make (2)
+								l_conflicts.put (l_list, l_name)
+							end
+								-- Add classes involved in error.
+							l_list.force (l_class)
+							l_list.force (l_table.item (l_name))
+						else
+								-- Mark `l_class' as being processed.
+							l_table.put (l_class, l_name)
+						end
+						l_types.forth
+					end
+				end
+				i := i + 1
+			end
+
+				-- Process `l_conflicts' and generate errors if any.
+			from
+				l_conflicts.start
+			until
+				l_conflicts.after
+			loop
+				create l_vifc.make (l_conflicts.item_for_iteration, l_conflicts.key_for_iteration)
+				Error_handler.insert_error (l_vifc)
+				l_conflicts.forth
+			end
+
+			Error_handler.checksum
+		end
+	
 feature -- Freeezing
 
 	freeze_system is

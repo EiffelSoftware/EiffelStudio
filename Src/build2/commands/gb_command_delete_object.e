@@ -76,8 +76,21 @@ feature -- Basic Operation
 		
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
+		local
+			child_name, parent_name: STRING
 		do
-			Result := child_layout_item.object.short_type + " removed from " + parent_layout_item.object.short_type
+			if not child_layout_item.object.name.is_empty then
+				child_name := child_layout_item.object.name
+			else
+				child_name := child_layout_item.object.short_type
+			end
+			
+			if not parent_layout_item.object.name.is_empty then
+				parent_name := parent_layout_item.object.name
+			else
+				parent_name := parent_layout_item.object.short_type
+			end
+			Result := child_name + " removed from " + parent_name
 		end
 		
 		

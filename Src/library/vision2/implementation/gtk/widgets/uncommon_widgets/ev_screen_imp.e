@@ -33,19 +33,15 @@ feature {NONE} -- Initialization
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
-			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (gc, {EV_GTK_EXTERNALS}.gdk_include_inferiors_enum)
-			init_default_values
 		end
 
 	initialize is
 			-- Set up action sequence connections and create graphics context.
 		do
+			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (gc, {EV_GTK_EXTERNALS}.gdk_include_inferiors_enum)
+			init_default_values
 			is_initialized := True
-			
-			--| FIXME IEK Gdk event handling needs implementing
-			--connect_signal_to_actions ("expose-event",
-			--	interface.expose_actions)
 		end
 
 feature -- Status report
@@ -163,9 +159,9 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_key_code := key_constants.key_code_to_gtk (a_key.code)
+			a_key_code := key_constants.key_code_to_gtk (a_key.code).to_integer_32
 			a_key_code := x_keysym_to_keycode ({EV_GTK_EXTERNALS}.gdk_display, a_key_code)
-			a_success_flag := x_test_fake_key_event ({EV_GTK_EXTERNALS}.gdk_display, a_key_code, True, 0)
+			a_success_flag := x_test_fake_key_event ( {EV_GTK_EXTERNALS}.gdk_display, a_key_code, True, 0)
 			check
 				fake_key_press_success: a_success_flag
 			end		
@@ -180,8 +176,8 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_key_code := key_constants.key_code_to_gtk (a_key.code)
-			a_key_code := x_keysym_to_keycode ({EV_GTK_EXTERNALS}.gdk_display, a_key_code)
+			a_key_code := key_constants.key_code_to_gtk (a_key.code).to_integer_32
+			a_key_code := x_keysym_to_keycode ( {EV_GTK_EXTERNALS}.gdk_display, a_key_code)
 			a_success_flag := x_test_fake_key_event (
 								{EV_GTK_EXTERNALS}.gdk_display,
 								a_key_code,
@@ -278,6 +274,12 @@ feature {NONE} -- Implementation
 
 	flush is
 			-- Force all queued draw to be called.
+		do
+			-- By default do nothing
+		end
+
+	update_if_needed is
+			-- Update `Current' if needed
 		do
 			-- By default do nothing
 		end

@@ -22,7 +22,7 @@ feature
 
 				-- First obtain the value of the CLASSPATH environment 
 				-- variable
-			cpp := exec.get ($(("CLASSPATH").to_c))
+			cpp := $(exec.get ("CLASSPATH").to_c)
 			if cpp = default_pointer then
 				!!ex
 				ex.raise ("Can't get CLASSPATH")

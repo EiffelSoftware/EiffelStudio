@@ -863,7 +863,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_as
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	SAFEARRAY *  ret_value = 0;
+	ecom_eiffel_compiler::IEnumImportedAssemblies * ret_value = 0;
 	
 	hr = p_IEiffelProjectProperties->assemblies( &ret_value);
 	if (FAILED (hr))
@@ -874,8 +874,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_as
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_safearray_bstr (ret_value));
-	rt_ce.free_memory_safearray (ret_value);
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_115 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

@@ -64,7 +64,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_system
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
+	ecom_eiffel_compiler::IEnumEiffelClass * ret_value = 0;
 	
 	hr = p_IEiffelSystemBrowser->system_classes( &ret_value);
 	if (FAILED (hr))
@@ -311,7 +311,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_search
 	tmp_a_string = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_string));
 	VARIANT_BOOL tmp_is_substring = 0;
 	tmp_is_substring = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_substring);
-	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
+	ecom_eiffel_compiler::IEnumEiffelClass * ret_value = 0;
 	
 	hr = p_IEiffelSystemBrowser->search_classes(tmp_a_string,tmp_is_substring, &ret_value);
 	if (FAILED (hr))

@@ -37,11 +37,11 @@ class IEnumFeature;
 
 
 
-#ifndef __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
-#define __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
+#ifndef __ecom_eiffel_compiler_IEnumEiffelClass_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumEiffelClass_FWD_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumClass;
+class IEnumEiffelClass;
 }
 #endif
 
@@ -122,7 +122,7 @@ public:
 	/*-----------------------------------------------------------
 	List of class clients.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_clients ) = 0;
+	virtual STDMETHODIMP clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_clients ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -134,7 +134,7 @@ public:
 	/*-----------------------------------------------------------
 	List of class suppliers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP suppliers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_suppliers ) = 0;
+	virtual STDMETHODIMP suppliers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_suppliers ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -146,7 +146,7 @@ public:
 	/*-----------------------------------------------------------
 	List of direct ancestors of class.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ancestors(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_ancestors ) = 0;
+	virtual STDMETHODIMP ancestors(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_ancestors ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -158,7 +158,7 @@ public:
 	/*-----------------------------------------------------------
 	List of direct descendants of class.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendants(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_descendants ) = 0;
+	virtual STDMETHODIMP descendants(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_descendants ) = 0;
 
 
 	/*-----------------------------------------------------------

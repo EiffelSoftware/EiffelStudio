@@ -61,7 +61,7 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes );
+	STDMETHODIMP classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_classes );
 
 
 	/*-----------------------------------------------------------

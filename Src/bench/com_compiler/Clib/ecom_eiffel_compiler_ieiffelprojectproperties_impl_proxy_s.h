@@ -24,6 +24,8 @@ class IEiffelProjectProperties_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelSystemClusters_s.h"
 
+#include "ecom_eiffel_compiler_IEnumImportedAssemblies_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

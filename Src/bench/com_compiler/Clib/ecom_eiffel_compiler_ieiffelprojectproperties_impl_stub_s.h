@@ -181,7 +181,7 @@ public:
 	/*-----------------------------------------------------------
 	Imported assemblies.
 	-----------------------------------------------------------*/
-	STDMETHODIMP assemblies(  /* [out, retval] */ SAFEARRAY *  * return_value );
+	STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumImportedAssemblies * * return_value );
 
 
 	/*-----------------------------------------------------------

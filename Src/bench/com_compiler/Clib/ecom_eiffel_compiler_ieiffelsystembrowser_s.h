@@ -27,11 +27,11 @@ class IEiffelSystemBrowser;
 extern "C" {
 #endif
 
-#ifndef __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
-#define __ecom_eiffel_compiler_IEnumClass_FWD_DEFINED__
+#ifndef __ecom_eiffel_compiler_IEnumEiffelClass_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumEiffelClass_FWD_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumClass;
+class IEnumEiffelClass;
 }
 #endif
 
@@ -102,7 +102,7 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in system.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes ) = 0;
+	virtual STDMETHODIMP system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_classes ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -144,7 +144,7 @@ public:
 	/*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes ) = 0;
+	virtual STDMETHODIMP search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_classes ) = 0;
 
 
 	/*-----------------------------------------------------------

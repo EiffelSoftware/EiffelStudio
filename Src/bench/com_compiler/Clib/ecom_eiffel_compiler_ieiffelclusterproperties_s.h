@@ -27,6 +27,16 @@ class IEiffelClusterProperties;
 extern "C" {
 #endif
 
+#ifndef __ecom_eiffel_compiler_IEnumClusterExcludes_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumClusterExcludes_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumClusterExcludes;
+}
+#endif
+
+
+
 #ifndef __ecom_eiffel_compiler_IEnumClusterProp_FWD_DEFINED__
 #define __ecom_eiffel_compiler_IEnumClusterProp_FWD_DEFINED__
 namespace ecom_eiffel_compiler
@@ -53,12 +63,6 @@ public:
 	Cluster name.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Cluster name.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_name(  /* [in] */ BSTR return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -160,7 +164,7 @@ public:
 	/*-----------------------------------------------------------
 	List of excluded directories.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP excluded(  /* [out, retval] */ SAFEARRAY *  * return_value ) = 0;
+	virtual STDMETHODIMP excluded(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterExcludes * * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

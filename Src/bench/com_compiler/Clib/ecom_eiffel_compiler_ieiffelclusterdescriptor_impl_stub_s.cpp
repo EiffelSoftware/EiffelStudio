@@ -120,7 +120,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::tool_tip(
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_classes )
 
 /*-----------------------------------------------------------
 	List of classes in cluster.

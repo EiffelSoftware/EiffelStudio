@@ -95,6 +95,12 @@ public:
 	virtual STDMETHODIMP cluster_properties_by_id(  /* [in] */ ULONG cluster_id, /* [out, retval] */ ecom_eiffel_compiler::IEiffelClusterProperties * * return_value ) = 0;
 
 
+	/*-----------------------------------------------------------
+	Change cluster name.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP change_cluster_name(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_new_name ) = 0;
+
+
 
 protected:
 

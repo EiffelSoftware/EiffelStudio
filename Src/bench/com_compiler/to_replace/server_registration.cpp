@@ -22,9 +22,9 @@ TCHAR file_name[MAX_PATH];
 
 OLECHAR ws_file_name[MAX_PATH];
 
-const REG_DATA reg_entries[] = 
+const REG_DATA reg_entries[] =
 {
-  
+
   {
     __TEXT("CLSID\\{28F511DB-0CCE-44C5-9DD5-E93066C0B00F}"),
     0,
@@ -300,7 +300,7 @@ void ccom_unregister_server_function()
   -----------------------------------------------------------*/
 {
   HRESULT hr = CoInitialize (0);
-  
+
   Unregister (reg_entries, com_entries_count);
   CoUninitialize ();
   return;
@@ -326,7 +326,7 @@ void ccom_initialize_com_function()
   {
     com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
   }
-  
+
 };
 
 void ccom_cleanup_com_function()
@@ -336,7 +336,7 @@ void ccom_cleanup_com_function()
   -----------------------------------------------------------*/
 {
   CoRevokeClassObject (dwRegister_CEiffelProject);
-    
+
   CoUninitialize ();
 };
 #ifdef __cplusplus

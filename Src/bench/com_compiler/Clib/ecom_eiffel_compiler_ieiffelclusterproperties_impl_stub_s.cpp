@@ -65,32 +65,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::name(  /*
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_name(  /* [in] */ BSTR return_value )
-
-/*-----------------------------------------------------------
-	Cluster name.
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
-	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
-	}
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_name", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::cluster_path(  /* [out, retval] */ BSTR * path )
 
 /*-----------------------------------------------------------
@@ -458,7 +432,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::set_asser
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::excluded(  /* [out, retval] */ SAFEARRAY *  * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::excluded(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterExcludes * * return_value )
 
 /*-----------------------------------------------------------
 	List of excluded directories.
@@ -477,7 +451,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::excluded(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_safearray_bstr (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_137 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -638,7 +612,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::subcluste
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_117 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_118 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -909,7 +883,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
 
-				SAFEARRAY *  result = 0;
+				ecom_eiffel_compiler::IEnumClusterExcludes * result = 0;
 				
 				hr = excluded (&result);
 				
@@ -933,8 +907,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 8200;
-					pVarResult->parray = result;
+					pVarResult->vt = 13;
+					pVarResult->punkVal = result;
 				}
 					
 			}
@@ -1981,62 +1955,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 					pVarResult->bstrVal = result;
 				}
 					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				
-				hr = set_name ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("Eif_compiler");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
 			}
 			break;
 

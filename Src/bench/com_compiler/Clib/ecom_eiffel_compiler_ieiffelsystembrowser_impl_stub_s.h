@@ -43,7 +43,7 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in system.
 	-----------------------------------------------------------*/
-	STDMETHODIMP system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes );
+	STDMETHODIMP system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_classes );
 
 
 	/*-----------------------------------------------------------
@@ -85,7 +85,7 @@ public:
 	/*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
 	-----------------------------------------------------------*/
-	STDMETHODIMP search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes );
+	STDMETHODIMP search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_classes );
 
 
 	/*-----------------------------------------------------------

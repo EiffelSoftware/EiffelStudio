@@ -47,12 +47,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Cluster name.
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_name(  /* [in] */ BSTR return_value );
-
-
-	/*-----------------------------------------------------------
 	Full path to cluster.
 	-----------------------------------------------------------*/
 	STDMETHODIMP cluster_path(  /* [out, retval] */ BSTR * path );
@@ -151,7 +145,7 @@ public:
 	/*-----------------------------------------------------------
 	List of excluded directories.
 	-----------------------------------------------------------*/
-	STDMETHODIMP excluded(  /* [out, retval] */ SAFEARRAY *  * return_value );
+	STDMETHODIMP excluded(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterExcludes * * return_value );
 
 
 	/*-----------------------------------------------------------

@@ -54,7 +54,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_tree
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_117 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_118 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -172,7 +172,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_prop
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_120 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_121 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -205,11 +205,44 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_prop
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_120 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_121 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
 		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::change_cluster_name(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_new_name )
+
+/*-----------------------------------------------------------
+	Change cluster name.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_a_name = NULL;
+	if (a_name != NULL)
+	{
+		tmp_a_name = eif_protect (rt_ce.ccom_ce_bstr (a_name));
+	}
+	EIF_OBJECT tmp_a_new_name = NULL;
+	if (a_new_name != NULL)
+	{
+		tmp_a_new_name = eif_protect (rt_ce.ccom_ce_bstr (a_new_name));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("change_cluster_name", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_a_name != NULL) ? eif_access (tmp_a_name) : NULL), ((tmp_a_new_name != NULL) ? eif_access (tmp_a_new_name) : NULL));
+	if (tmp_a_name != NULL)
+		eif_wean (tmp_a_name);
+	if (tmp_a_new_name != NULL)
+		eif_wean (tmp_a_new_name);
 	
 	END_ECATCH;
 	return S_OK;
@@ -649,6 +682,77 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 					pVarResult->pdispVal = result;
 				}
 					
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 1610743814:
+			{
+				if (pDispParams->cArgs != 2)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (2*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8, 8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				if (tmp_value [1]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [1], tmp_value [1], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 1;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_1 = (BSTR)tmp_value [1]->bstrVal;
+				
+				hr = change_cluster_name ( arg_0, arg_1);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("Eif_compiler");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
 				CoTaskMemFree (tmp_value);
 			}
 			break;

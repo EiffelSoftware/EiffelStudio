@@ -270,6 +270,27 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
 			write_out();
 			break;
+		case SK_UINT8:
+			/* Natural 8 bits attribute */
+			sprintf(buffero, "NATURAL_8 = %d\n", *(EIF_NATURAL_8 *)o_ref);
+			write_out();
+			break;
+		case SK_UINT16:
+			/* Natural 16 bits attribute */
+			sprintf(buffero, "NATURAL_16 = %d\n", *(EIF_NATURAL_16 *)o_ref);
+			write_out();
+			break;
+		case SK_UINT32:
+			/* Natural 32 bits attribute */
+			sprintf(buffero, "NATURAL = %d\n", *(EIF_NATURAL_32 *)o_ref);
+			write_out();
+			break;
+		case SK_UINT64:
+			/* Natural 64 bits attribute */
+			sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n",
+				 *(EIF_NATURAL_64 *) o_ref);
+			write_out();
+			break;
 		case SK_INT8:
 			/* Integer 8 bits attribute */
 			sprintf(buffero, "INTEGER_8 = %d\n", *(EIF_INTEGER_8 *)o_ref);
@@ -282,7 +303,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			break;
 		case SK_INT32:
 			/* Integer 32 bits attribute */
-			sprintf(buffero, "INTEGER = %d\n", *(EIF_INTEGER_32 *)o_ref);
+			sprintf(buffero, "INTEGER_32 = %d\n", *(EIF_INTEGER_32 *)o_ref);
 			write_out();
 			break;
 		case SK_INT64:
@@ -436,7 +457,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					sprintf(buffero, "INTEGER_16 = %d\n", *(EIF_INTEGER_16 *)o_ref);
 					write_out();
 				} else if (dtype == egc_sp_int32) {
-					sprintf(buffero, "INTEGER = %d\n", *(EIF_INTEGER_32 *)o_ref);
+					sprintf(buffero, "INTEGER_32 = %d\n", *(EIF_INTEGER_32 *)o_ref);
 					write_out();
 				} else if (dtype == egc_sp_int64) {
 					sprintf(buffero, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY "\n",
@@ -517,7 +538,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 				write_out();
 				break;
 			case EIF_INTEGER_32_CODE:
-				sprintf(buffero, "INTEGER = %d\n", eif_integer_32_item(object,i));
+				sprintf(buffero, "INTEGER_32 = %d\n", eif_integer_32_item(object,i));
 				write_out();
 				break;
 			case EIF_POINTER_CODE:
@@ -687,45 +708,26 @@ rt_shared char *simple_out(struct item *val)
 	case SK_REF:
 		eif_rt_xfree(tagged_out);							/* What a waste of CPU cycles */
 		return build_out((EIF_OBJECT)(&val->it_ref));	/* Only for the beauty of it */
-	case SK_VOID:
-		sprintf(tagged_out, "Not an object!");
-		break;
-	case SK_BOOL:
-		sprintf(tagged_out, "BOOLEAN = %s", val->it_char ? "True" : "False");
-		break;
-	case SK_CHAR:
-		write_char(val->it_char, tagged_out);
-		break;
-	case SK_WCHAR:
-		sprintf(tagged_out, "WIDE_CHARACTER = U+%x", val->it_wchar);
-		break;
-	case SK_INT8:
-		sprintf(tagged_out, "INTEGER_8 = %d", val->it_int8);
-		break;
-	case SK_INT16:
-		sprintf(tagged_out, "INTEGER_16 = %d", val->it_int16);
-		break;
-	case SK_INT32:
-		sprintf(tagged_out, "INTEGER = %d", val->it_int32);
-		break;
-	case SK_INT64:
-		sprintf(tagged_out, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY, val->it_int64);
-		break;
-	case SK_REAL32:
-		sprintf(tagged_out, "REAL = %g", val->it_real32);
-		break;
-	case SK_REAL64:
-		sprintf(tagged_out, "DOUBLE = %.17g", val->it_real64);
-		break;
-	case SK_BIT:
-		sprintf(tagged_out, "Bit object");
-		break;
+	case SK_VOID: sprintf(tagged_out, "Not an object!"); break;
+	case SK_BOOL: sprintf(tagged_out, "BOOLEAN = %s", val->it_char ? "True" : "False"); break;
+	case SK_CHAR: write_char(val->it_char, tagged_out); break;
+	case SK_WCHAR: sprintf(tagged_out, "WIDE_CHARACTER = U+%x", val->it_wchar); break;
+	case SK_UINT8: sprintf(tagged_out, "NATURAL_8 = %d", val->it_uint8); break;
+	case SK_UINT16: sprintf(tagged_out, "NATURAL_16 = %d", val->it_uint16); break;
+	case SK_UINT32: sprintf(tagged_out, "NATURAL_32 = %d", val->it_uint32); break;
+	case SK_UINT64: sprintf(tagged_out, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY, val->it_uint64); break;
+	case SK_INT8: sprintf(tagged_out, "INTEGER_8 = %d", val->it_int8); break;
+	case SK_INT16: sprintf(tagged_out, "INTEGER_16 = %d", val->it_int16); break;
+	case SK_INT32: sprintf(tagged_out, "INTEGER_32 = %d", val->it_int32); break;
+	case SK_INT64: sprintf(tagged_out, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY, val->it_int64); break;
+	case SK_REAL32: sprintf(tagged_out, "REAL = %g", val->it_real32); break;
+	case SK_REAL64: sprintf(tagged_out, "DOUBLE = %.17g", val->it_real64); break;
+	case SK_BIT: sprintf(tagged_out, "Bit object"); break;
 	case SK_POINTER:
 		sprintf(tagged_out, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "", (rt_uint_ptr) val->it_ref);
 		break;
 	default:
 		sprintf(tagged_out, "Not an object?");
-		break;
 	}
 
 	return tagged_out;

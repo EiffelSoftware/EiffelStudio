@@ -193,6 +193,22 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 				new_obj = RTLN(egc_bool_ref_dtype);
 				*(EIF_BOOLEAN *) new_obj = *(EIF_BOOLEAN *) o_ref;
 				break;
+			case SK_UINT8:
+				new_obj = RTLN(egc_uint8_ref_dtype);
+				*(EIF_NATURAL_8 *) new_obj = *(EIF_NATURAL_8 *) o_ref;
+				break;
+			case SK_UINT16:
+				new_obj = RTLN(egc_uint16_ref_dtype);
+				*(EIF_NATURAL_16 *) new_obj = *(EIF_NATURAL_16 *) o_ref;
+				break;
+			case SK_UINT32:
+				new_obj = RTLN(egc_uint32_ref_dtype);
+				*(EIF_NATURAL_32 *) new_obj = *(EIF_NATURAL_32 *) o_ref;
+				break;
+			case SK_UINT64:
+				new_obj = RTLN(egc_uint64_ref_dtype);
+				*(EIF_NATURAL_64 *) new_obj = *(EIF_NATURAL_64 *) o_ref;
+				break;
 			case SK_INT8:
 				new_obj = RTLN(egc_int8_ref_dtype);
 				*(EIF_INTEGER_8 *) new_obj = *(EIF_INTEGER_8 *) o_ref;

@@ -486,27 +486,20 @@ rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target, 
 #endif
 		switch (skeleton->cn_types[index] & SK_HEAD) {
 		case SK_BOOL:
-		case SK_CHAR:
-			*t_ref = *s_ref; break;
-		case SK_WCHAR:
-			*(EIF_WIDE_CHAR *) t_ref = *(EIF_WIDE_CHAR *) s_ref; break;
-		case SK_INT8:
-			*(EIF_INTEGER_8 *) t_ref = *(EIF_INTEGER_8 *) s_ref; break;
-		case SK_INT16:
-			*(EIF_INTEGER_16 *) t_ref = *(EIF_INTEGER_16 *) s_ref; break;
-		case SK_INT32:
-			*(EIF_INTEGER_32 *) t_ref = *(EIF_INTEGER_32 *) s_ref; break;
-		case SK_INT64:
-			*(EIF_INTEGER_64 *) t_ref = *(EIF_INTEGER_64 *) s_ref; break;
-		case SK_REAL32:
-			*(EIF_REAL_32 *) t_ref = *(EIF_REAL_32 *) s_ref; break;
-		case SK_REAL64:
-			*(EIF_REAL_64 *) t_ref = *(EIF_REAL_64 *) s_ref; break;
-		case SK_POINTER:
-			*(EIF_POINTER *) t_ref = *(EIF_POINTER *) s_ref; break;
-		case SK_EXP:
-			eif_std_ref_copy (t_ref, s_ref);
-			break;
+		case SK_CHAR: *t_ref = *s_ref; break;
+		case SK_WCHAR: *(EIF_WIDE_CHAR *) t_ref = *(EIF_WIDE_CHAR *) s_ref; break;
+		case SK_UINT8: *(EIF_NATURAL_8 *) t_ref = *(EIF_NATURAL_8 *) s_ref; break;
+		case SK_UINT16: *(EIF_NATURAL_16 *) t_ref = *(EIF_NATURAL_16 *) s_ref; break;
+		case SK_UINT32: *(EIF_NATURAL_32 *) t_ref = *(EIF_NATURAL_32 *) s_ref; break;
+		case SK_UINT64: *(EIF_NATURAL_64 *) t_ref = *(EIF_NATURAL_64 *) s_ref; break;
+		case SK_INT8: *(EIF_INTEGER_8 *) t_ref = *(EIF_INTEGER_8 *) s_ref; break;
+		case SK_INT16: *(EIF_INTEGER_16 *) t_ref = *(EIF_INTEGER_16 *) s_ref; break;
+		case SK_INT32: *(EIF_INTEGER_32 *) t_ref = *(EIF_INTEGER_32 *) s_ref; break;
+		case SK_INT64: *(EIF_INTEGER_64 *) t_ref = *(EIF_INTEGER_64 *) s_ref; break;
+		case SK_REAL32: *(EIF_REAL_32 *) t_ref = *(EIF_REAL_32 *) s_ref; break;
+		case SK_REAL64: *(EIF_REAL_64 *) t_ref = *(EIF_REAL_64 *) s_ref; break;
+		case SK_POINTER: *(EIF_POINTER *) t_ref = *(EIF_POINTER *) s_ref; break;
+		case SK_EXP: eif_std_ref_copy (t_ref, s_ref); break;
 		default:
 			*(EIF_REFERENCE *)t_ref = *(EIF_REFERENCE *)s_ref;
 			break;

@@ -145,6 +145,10 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
         case SK_CHAR:   return EIF_CHARACTER_TYPE;
         case SK_WCHAR:   return EIF_WIDE_CHAR_TYPE;
         case SK_BOOL:   return EIF_BOOLEAN_TYPE;
+        case SK_UINT8:    return EIF_NATURAL_8_TYPE;
+        case SK_UINT16:    return EIF_NATURAL_16_TYPE;
+        case SK_UINT32:    return EIF_NATURAL_32_TYPE;
+        case SK_UINT64:    return EIF_NATURAL_64_TYPE;
         case SK_INT8:    return EIF_INTEGER_8_TYPE;
         case SK_INT16:    return EIF_INTEGER_16_TYPE;
         case SK_INT32:    return EIF_INTEGER_32_TYPE;

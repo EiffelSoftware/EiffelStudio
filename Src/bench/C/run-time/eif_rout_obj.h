@@ -38,6 +38,10 @@ typedef union {
 	EIF_CHARACTER	carg;
 	EIF_WIDE_CHAR	wcarg;
 	EIF_REAL_64		darg;
+	EIF_NATURAL_8	u8arg;
+	EIF_NATURAL_16	u16arg;
+	EIF_NATURAL_32	u32arg;
+	EIF_NATURAL_64	u64arg;
 	EIF_INTEGER_8	i8arg;
 	EIF_INTEGER_16	i16arg;
 	EIF_INTEGER_32	i32arg;
@@ -84,6 +88,10 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define RWCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_WIDE_CHAR) 0 : *((EIF_WIDE_CHAR *)v))
 #define RDVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_REAL_64) 0.0 : *((EIF_REAL_64 *)v))
 #define RFVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_REAL_32) 0.0 : *((EIF_REAL_32 *)v))
+#define RU8VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_NATURAL_8) 0 : *((EIF_NATURAL_8 *)v))
+#define RU16VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_NATURAL_16) 0 : *((EIF_NATURAL_16 *)v))
+#define RU32VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_NATURAL_32) 0 : *((EIF_NATURAL_32 *)v))
+#define RU64VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_NATURAL_64) 0 : *((EIF_NATURAL_64 *)v))
 #define RI8VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_INTEGER_8) 0 : *((EIF_INTEGER_8 *)v))
 #define RI16VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_INTEGER_16) 0 : *((EIF_INTEGER_16 *)v))
 #define RI32VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_INTEGER_32) 0 : *((EIF_INTEGER_32 *)v))
@@ -95,6 +103,10 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define rout_obj_putwc(a,i,v) (((EIF_ARG_UNION *)(a))[i].wcarg = RWCVAL(v))
 #define rout_obj_putd(a,i,v) (((EIF_ARG_UNION *)(a))[i].darg = RDVAL(v))
 #define rout_obj_putf(a,i,v) (((EIF_ARG_UNION *)(a))[i].farg = RFVAL(v))
+#define rout_obj_putu8(a,i,v) (((EIF_ARG_UNION *)(a))[i].u8arg = RU8VAL(v))
+#define rout_obj_putu16(a,i,v) (((EIF_ARG_UNION *)(a))[i].u16arg = RU16VAL(v))
+#define rout_obj_putu32(a,i,v) (((EIF_ARG_UNION *)(a))[i].u32arg = RU32VAL(v))
+#define rout_obj_putu64(a,i,v) (((EIF_ARG_UNION *)(a))[i].u64arg = RU64VAL(v))
 #define rout_obj_puti8(a,i,v) (((EIF_ARG_UNION *)(a))[i].i8arg = RI8VAL(v))
 #define rout_obj_puti16(a,i,v) (((EIF_ARG_UNION *)(a))[i].i16arg = RI16VAL(v))
 #define rout_obj_puti32(a,i,v) (((EIF_ARG_UNION *)(a))[i].i32arg = RI32VAL(v))
@@ -107,6 +119,10 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define rout_putwc(a,i,v) (((EIF_ARG_UNION *)(a))[i].wcarg = (v))
 #define rout_putd(a,i,v) (((EIF_ARG_UNION *)(a))[i].darg = (v))
 #define rout_putf(a,i,v) (((EIF_ARG_UNION *)(a))[i].farg = (v))
+#define rout_putu8(a,i,v) (((EIF_ARG_UNION *)(a))[i].u8arg = (v))
+#define rout_putu16(a,i,v) (((EIF_ARG_UNION *)(a))[i].u16arg = (v))
+#define rout_putu32(a,i,v) (((EIF_ARG_UNION *)(a))[i].u32arg = (v))
+#define rout_putu64(a,i,v) (((EIF_ARG_UNION *)(a))[i].u64arg = (v))
 #define rout_puti8(a,i,v) (((EIF_ARG_UNION *)(a))[i].i8arg = (v))
 #define rout_puti16(a,i,v) (((EIF_ARG_UNION *)(a))[i].i16arg = (v))
 #define rout_puti32(a,i,v) (((EIF_ARG_UNION *)(a))[i].i32arg = (v))
@@ -131,7 +147,11 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define eif_boolean_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.barg
 #define eif_character_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.carg
 #define eif_wide_character_tuple_item(item)	((EIF_TYPED_ELEMENT *) (item))->element.wcarg
-#define eif_real_64_tuple_item(item)			((EIF_TYPED_ELEMENT *) (item))->element.darg
+#define eif_real_64_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.darg
+#define eif_natural_8_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.u8arg
+#define eif_natural_16_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.u16arg
+#define eif_natural_32_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.u32arg
+#define eif_natural_64_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.u64arg
 #define eif_integer_8_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.i8arg
 #define eif_integer_16_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.i16arg
 #define eif_integer_32_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.i32arg
@@ -147,6 +167,10 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define eif_character_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg
 #define eif_wide_character_item(tuple,pos)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg
 #define eif_real_64_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg
+#define eif_natural_8_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u8arg
+#define eif_natural_16_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u16arg
+#define eif_natural_32_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u32arg
+#define eif_natural_64_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u64arg
 #define eif_integer_8_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i8arg
 #define eif_integer_16_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i16arg
 #define eif_integer_32_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i32arg
@@ -160,6 +184,10 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define EIF_CHARACTER_ITEM eif_character_item
 #define EIF_WIDE_CHARACTER_ITEM eif_wide_character_item
 #define EIF_REAL_64_ITEM eif_real_64_item
+#define EIF_NATURAL_8_ITEM eif_natural_8_item
+#define EIF_NATURAL_16_ITEM eif_natural_16_item
+#define EIF_NATURAL_32_ITEM eif_natural_32_item
+#define EIF_NATURAL_64_ITEM eif_natural_64_item
 #define EIF_INTEGER_8_ITEM eif_integer_8_item
 #define EIF_INTEGER_16_ITEM eif_integer_16_item
 #define EIF_INTEGER_32_ITEM eif_integer_32_item
@@ -174,6 +202,10 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define eif_put_character_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = *(EIF_CHARACTER *)(val)
 #define eif_put_wide_character_item_with_object(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = *(EIF_WIDE_CHAR *)(val)
 #define eif_put_real_64_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg = *(EIF_REAL_64 *)(val)
+#define eif_put_natural_8_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u8arg = *(EIF_NATURAL_8 *)(val)
+#define eif_put_natural_16_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u16arg = *(EIF_NATURAL_16 *)(val)
+#define eif_put_natural_32_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u32arg = *(EIF_NATURAL_32 *)(val)
+#define eif_put_natural_64_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u64arg = *(EIF_NATURAL_64 *)(val)
 #define eif_put_integer_8_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i8arg = *(EIF_INTEGER_8 *)(val)
 #define eif_put_integer_16_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i16arg = *(EIF_INTEGER_16 *)(val)
 #define eif_put_integer_32_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i32arg = *(EIF_INTEGER_32 *)(val)
@@ -187,6 +219,10 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define eif_put_character_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = (EIF_CHARACTER)(val)
 #define eif_put_wide_character_item(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = (EIF_WIDE_CHAR)(val)
 #define eif_put_real_64_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg = (EIF_REAL_64)(val)
+#define eif_put_natural_8_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u8arg = (EIF_NATURAL_8)(val)
+#define eif_put_natural_16_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u16arg = (EIF_NATURAL_16)(val)
+#define eif_put_natural_32_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u32arg = (EIF_NATURAL_32)(val)
+#define eif_put_natural_64_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u64arg = (EIF_NATURAL_64)(val)
 #define eif_put_integer_8_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i8arg = (EIF_INTEGER_8)(val)
 #define eif_put_integer_16_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i16arg = (EIF_INTEGER_16)(val)
 #define eif_put_integer_32_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i32arg = (EIF_INTEGER_32)(val)

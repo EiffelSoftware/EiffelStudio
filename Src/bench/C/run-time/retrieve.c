@@ -1544,6 +1544,10 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 
 				if (!((dgen & SK_HEAD) == SK_EXP)) {
 					switch (dgen) {
+						case SK_UINT8: spec_size = sizeof (EIF_NATURAL_8); break;
+						case SK_UINT16: spec_size = sizeof (EIF_NATURAL_16); break;
+						case SK_UINT32: spec_size = sizeof (EIF_NATURAL_32); break;
+						case SK_UINT64: spec_size = sizeof (EIF_NATURAL_64); break;
 						case SK_INT8: spec_size = sizeof (EIF_INTEGER_8); break;
 						case SK_INT16: spec_size = sizeof (EIF_INTEGER_16); break;
 						case SK_INT32: spec_size = sizeof (EIF_INTEGER_32); break;
@@ -1718,6 +1722,10 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 
 				if (!((dgen & SK_HEAD) == SK_EXP)) {
 					switch (dgen) {
+						case SK_UINT8: spec_size = sizeof (EIF_NATURAL_8); break;
+						case SK_UINT16: spec_size = sizeof (EIF_NATURAL_16); break;
+						case SK_UINT32: spec_size = sizeof (EIF_NATURAL_32); break;
+						case SK_UINT64: spec_size = sizeof (EIF_NATURAL_64); break;
 						case SK_INT8: spec_size = sizeof (EIF_INTEGER_8); break;
 						case SK_INT16: spec_size = sizeof (EIF_INTEGER_16); break;
 						case SK_INT32: spec_size = sizeof (EIF_INTEGER_32); break;
@@ -1879,6 +1887,10 @@ rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint3
 #endif
 	} else {
 		switch (dgen) {
+		case SK_UINT8: spec_size = sizeof (EIF_NATURAL_8); break;
+		case SK_UINT16: spec_size = sizeof (EIF_NATURAL_16); break;
+		case SK_UINT32: spec_size = sizeof (EIF_NATURAL_32); break;
+		case SK_UINT64: spec_size = sizeof (EIF_NATURAL_64); break;
 		case SK_INT8:    spec_size = sizeof (EIF_INTEGER_8);  break;
 		case SK_INT16:   spec_size = sizeof (EIF_INTEGER_16); break;
 		case SK_INT32:   spec_size = sizeof (EIF_INTEGER_32); break;
@@ -2794,13 +2806,17 @@ static char *type2name (long type)
 		case SK_EXP:     name = "expanded";       break;
 		case SK_BOOL:    name = "BOOLEAN";        break;
 		case SK_CHAR:    name = "CHARACTER";      break;
-		case SK_INT8:    name = "INTEGER8";       break;
-		case SK_INT:     name = "INTEGER";        break;
-		case SK_INT16:   name = "INTEGER16";      break;
+		case SK_UINT8:   name = "NATURAL_8";      break;
+		case SK_UINT16:  name = "NATURAL_16";     break;
+		case SK_UINT:    name = "NATURAL_32";     break;
+		case SK_UINT64:  name = "NATURAL_64";     break;
+		case SK_INT8:    name = "INTEGER_8";      break;
+		case SK_INT16:   name = "INTEGER_16";     break;
+		case SK_INT32:   name = "INTEGER_32";     break;
+		case SK_INT64:   name = "INTEGER_64";     break;
 		case SK_REAL32:  name = "REAL_32";        break;
 		case SK_WCHAR:   name = "WIDE_CHARACTER"; break;
 		case SK_REAL64:  name = "REAL_64";        break;
-		case SK_INT64:   name = "INTEGER64";      break;
 		case SK_BIT:     name = "BIT";            break;
 		case SK_POINTER: name = "POINTER";        break;
 		case SK_REF:     name = "REFERENCE";      break;
@@ -2909,13 +2925,17 @@ rt_shared char *generic_name (int32 gtype, int old_types)
 			break;
 		case SK_BOOL:    result = "BOOLEAN";        break;
 		case SK_CHAR:    result = "CHARACTER";      break;
+		case SK_UINT8:   result = "NATURAL_8";      break;
+		case SK_UINT16:  result = "NATURAL_16";     break;
+		case SK_UINT:    result = "NATURAL_32";     break;
+		case SK_UINT64:  result = "NATURAL_64";     break;
 		case SK_INT8:    result = "INTEGER_8";      break;
-		case SK_INT:     result = "INTEGER";        break;
 		case SK_INT16:   result = "INTEGER_16";     break;
+		case SK_INT32:   result = "INTEGER_32";     break;
+		case SK_INT64:   result = "INTEGER_64";     break;
 		case SK_REAL32:  result = "REAL_32";        break;
 		case SK_WCHAR:   result = "WIDE_CHARACTER"; break;
 		case SK_REAL64:  result = "REAL_64";        break;
-		case SK_INT64:   result = "INTEGER_64";     break;
 		case SK_POINTER: result = "POINTER";        break;
 		case SK_REF:     result = "REFERENCE";      break;
 		default:
@@ -4012,6 +4032,10 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 			types_cn = *(System(o_type).cn_types + num_attrib);
 
 			switch (types_cn & SK_HEAD) {
+				case SK_UINT8: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_8)); break;
+				case SK_UINT16: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_16)); break;
+				case SK_UINT32: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_32)); break;
+				case SK_UINT64: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_64)); break;
 				case SK_INT8: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_8)); break;
 				case SK_INT16: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_16)); break;
 				case SK_INT32: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_32)); break;
@@ -4081,6 +4105,10 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 				uint32 dgen;
 				dgen = special_generic_type (o_type);
 				switch (dgen & SK_HEAD) {
+					case SK_UINT8: buffer_read(object, count*sizeof(EIF_NATURAL_8)); break;
+					case SK_UINT16: buffer_read(object, count*sizeof(EIF_NATURAL_16)); break;
+					case SK_UINT32: buffer_read(object, count*sizeof(EIF_NATURAL_32)); break;
+					case SK_UINT64: buffer_read(object, count*sizeof(EIF_NATURAL_64)); break;
 					case SK_INT8: buffer_read(object, count*sizeof(EIF_INTEGER_8)); break;
 					case SK_INT16: buffer_read(object, count*sizeof(EIF_INTEGER_16)); break;
 					case SK_INT32: buffer_read(object, count*sizeof(EIF_INTEGER_32)); break;
@@ -4187,31 +4215,23 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 
 			types_cn = *(System(o_type).cn_types + num_attrib);
 
 			switch (types_cn & SK_HEAD) {
-				case SK_INT8:
-					ridr_multi_int8 ((EIF_INTEGER_8 *) (object + attrib_offset), 1);
-					break;
-				case SK_INT16:
-					ridr_multi_int16 ((EIF_INTEGER_16 *) (object + attrib_offset), 1);
-					break;
-				case SK_INT32:
-					ridr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1);
-					break;
-				case SK_INT64:
-					ridr_multi_int64 ((EIF_INTEGER_64 *) (object + attrib_offset), 1);
-					break;
+					/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
+					 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
+					 * unsigned SK_UINTXX too. */
+				case SK_UINT8: ridr_multi_int8 ((EIF_NATURAL_8 *) (object + attrib_offset), 1); break;
+				case SK_UINT16: ridr_multi_int16 ((EIF_NATURAL_16 *) (object + attrib_offset), 1); break;
+				case SK_UINT32: ridr_multi_int32 ((EIF_NATURAL_32 *) (object + attrib_offset), 1); break;
+				case SK_UINT64: ridr_multi_int64 ((EIF_NATURAL_64 *) (object + attrib_offset), 1); break;
+				case SK_INT8: ridr_multi_int8 ((EIF_INTEGER_8 *) (object + attrib_offset), 1); break;
+				case SK_INT16: ridr_multi_int16 ((EIF_INTEGER_16 *) (object + attrib_offset), 1); break;
+				case SK_INT32: ridr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1); break;
+				case SK_INT64: ridr_multi_int64 ((EIF_INTEGER_64 *) (object + attrib_offset), 1); break;
 				case SK_BOOL:
 				case SK_CHAR:
-					ridr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1);
-					break;
-				case SK_WCHAR:
-					ridr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1);
-					break;
-				case SK_REAL32:
-					ridr_multi_float ((EIF_REAL_32 *) (object + attrib_offset), 1);
-					break;
-				case SK_REAL64:
-					ridr_multi_double ((EIF_REAL_64 *) (object + attrib_offset), 1);
-					break;
+					ridr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1); break;
+				case SK_WCHAR: ridr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1); break;
+				case SK_REAL32: ridr_multi_float ((EIF_REAL_32 *) (object + attrib_offset), 1); break;
+				case SK_REAL64: ridr_multi_double ((EIF_REAL_64 *) (object + attrib_offset), 1); break;
 				case SK_BIT:
 						{
 #if DEBUG & 1
@@ -4289,6 +4309,13 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 
 				uint32 dgen;
 				dgen = special_generic_type (o_type);
 				switch (dgen & SK_HEAD) {
+						/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
+						 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
+						 * unsigned SK_UINTXX too. */
+					case SK_UINT8: ridr_multi_int8 ((EIF_NATURAL_8 *) object, count); break;
+					case SK_UINT16: ridr_multi_int16 ((EIF_NATURAL_16 *) object, count); break;
+					case SK_UINT32: ridr_multi_int32 ((EIF_NATURAL_32 *) object, count); break;
+					case SK_UINT64: ridr_multi_int64 ((EIF_NATURAL_64 *) object, count); break;
 					case SK_INT8: ridr_multi_int8 ((EIF_INTEGER_8 *)object, count); break;
 					case SK_INT16: ridr_multi_int16 ((EIF_INTEGER_16 *)object, count); break;
 					case SK_INT32: ridr_multi_int32 ((EIF_INTEGER_32 *)object, count); break;
@@ -4425,6 +4452,45 @@ rt_private EIF_REFERENCE object_rread_attributes (
 		}
 
 		switch (old_attrib_type & SK_HEAD) {
+				/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
+				 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
+				 * unsigned SK_UINTXX too. */
+			case SK_UINT8:
+				ridr_multi_int8 (&value.vuint8, 1);
+				if (attr_address != NULL)
+					*(EIF_NATURAL_8 *) attr_address = value.vuint8;
+				if (mismatched) {
+					old_value = RTLN (egc_int8_ref_dtype);
+					*(EIF_NATURAL_8 *) old_value = value.vuint8;
+				}
+				break;
+			case SK_UINT16:
+				ridr_multi_int16 (&value.vuint16, 1);
+				if (attr_address != NULL)
+					*(EIF_NATURAL_16 *) attr_address = value.vuint16;
+				if (mismatched) {
+					old_value = RTLN (egc_int16_ref_dtype);
+					*(EIF_NATURAL_16 *) old_value = value.vuint16;
+				}
+				break;
+			case SK_UINT32:
+				ridr_multi_int32 (&value.vuint32, 1);
+				if (attr_address != NULL)
+					*(EIF_NATURAL_32 *) attr_address = value.vuint32;
+				if (mismatched) {
+					old_value = RTLN (egc_int32_ref_dtype);
+					*(EIF_NATURAL_32 *) old_value = value.vuint32;
+				}
+				break;
+			case SK_UINT64:
+				ridr_multi_int64 (&value.vuint64, 1);
+				if (attr_address != NULL)
+					*(EIF_NATURAL_64 *) attr_address = value.vuint64;
+				if (mismatched) {
+					old_value = RTLN (egc_int64_ref_dtype);
+					*(EIF_NATURAL_64 *) old_value = value.vuint64;
+				}
+				break;
 			case SK_INT8:
 				ridr_multi_int8 (&value.vint8, 1);
 				if (attr_address != NULL)
@@ -4678,6 +4744,13 @@ rt_private EIF_REFERENCE object_rread_special (
 	}
 	if (!(flags & EO_REF)) {			/* Special of simple types */
 		switch (conv->generics[0] & SK_HEAD) {
+				/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
+				 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
+				 * unsigned SK_UINTXX too. */
+			case SK_UINT8: ridr_multi_int8 ((EIF_NATURAL_8 *) addr, count); break;
+			case SK_UINT16: ridr_multi_int16 ((EIF_NATURAL_16 *) addr, count); break;
+			case SK_UINT32: ridr_multi_int32 ((EIF_NATURAL_32 *) addr, count); break;
+			case SK_UINT64: ridr_multi_int64 ((EIF_NATURAL_64 *) addr, count); break;
 			case SK_INT8:   ridr_multi_int8   ((EIF_INTEGER_8  *) addr, count); break;
 			case SK_INT16:  ridr_multi_int16  ((EIF_INTEGER_16 *) addr, count); break;
 			case SK_INT32:  ridr_multi_int32  ((EIF_INTEGER_32 *) addr, count); break;

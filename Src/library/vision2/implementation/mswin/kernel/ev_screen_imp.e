@@ -61,7 +61,8 @@ feature -- Status report
 		local
 			wel_point: WEL_POINT
 		do
-			create wel_point.make_by_cursor_position
+			create wel_point.make (0, 0)
+			wel_point.set_cursor_position
 			create Result.set (wel_point.x, wel_point.y)
 		end
 
@@ -69,11 +70,8 @@ feature -- Basic operation
 
 	set_pointer_position (x, y: INTEGER) is
 			-- Set `pointer_position' to (`x',`y`).
-		local
-			wel_point: WEL_POINT
 		do
-			create wel_point.make (0,0)
-			wel_point.set_cursor_position (x, y)
+			(create {WEL_WINDOWS_ROUTINES}).set_cursor_position (x, y)
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
@@ -153,6 +151,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/11 22:44:11  brendel
+--| Fixed get_cursor_position.
+--|
 --| Revision 1.11  2000/04/11 21:40:24  pichery
 --| implemented set_pointer_position & pointer_position.
 --|

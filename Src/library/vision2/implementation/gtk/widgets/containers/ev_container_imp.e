@@ -233,6 +233,16 @@ feature {EV_CONTAINER_IMP, EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
+feature -- External
+
+	gtk_menu_bar_set_shadow_type (bar: POINTER; style: INTEGER) is
+		external
+			"C (GtkMenuBar *, gint) | <gtk/gtk.h>"
+		end
+
+	GTK_SHADOW_NONE: INTEGER is 0
+		-- Style used to have no shadow on menu
+
 end -- class EV_CONTAINER_IMP
 
 --!----------------------------------------------------------------

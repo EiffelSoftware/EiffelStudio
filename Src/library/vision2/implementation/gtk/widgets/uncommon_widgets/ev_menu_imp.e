@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_menu_new ()
 			gtk_object_ref (widget)
+			gtk_menu_bar_set_shadow_type (widget, GTK_SHADOW_NONE)
 
 			-- Create the array where the items will be listed.
 			create ev_children.make (1)

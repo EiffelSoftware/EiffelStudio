@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 
 	parent_widget: POINTER
 
-feature {EV_PIXMAPABLE_IMP} -- Implementation
+feature {EV_PIXMAPABLE_IMP, EV_WINDOW_IMP} -- Implementation
 
 	create_window: POINTER
 			-- gtk window defined because to create the pixmap

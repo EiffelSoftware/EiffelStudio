@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			par_imp: EV_WINDOW_IMP
 		do
 			widget := gtk_menu_bar_new ()
+			gtk_menu_bar_set_shadow_type (widget, GTK_SHADOW_NONE)
 			parent_imp ?= par.implementation
 			check
 				good_implementation: parent_imp /= Void

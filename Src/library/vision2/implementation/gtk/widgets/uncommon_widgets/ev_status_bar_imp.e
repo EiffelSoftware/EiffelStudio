@@ -25,7 +25,8 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_STATUS_BAR_ITEM]
 		redefine
-			interface
+			interface,
+			insert_i_th
 		end
 
 create
@@ -58,6 +59,15 @@ feature {NONE} -- Implementation
 			C.gtk_box_reorder_child (a_container, a_child, a_position)
 		end
 
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert 'v'.
+		do
+			Precursor (v, i)
+			if v.width > 0 then
+				v.set_width (v.width)
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_STATUS_BAR
@@ -69,6 +79,10 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/26 21:07:33  brendel
+--| Added redefinitoin of insert_i_th that sets the internal width of a
+--| status bar item when the user set it before it was parented.
+--|
 --| Revision 1.17  2000/04/06 23:59:12  brendel
 --| Removed assignment to list_widget.
 --|

@@ -66,22 +66,33 @@ feature -- Access
 			end
 		end
 
-	icon_mask: EV_PIXMAP is
-			-- Bitmap that could be used by window manager
-			-- to clip `icon_pixmap' bitmap to make the
-			-- icon nonrectangular 
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 	icon_pixmap: EV_PIXMAP is
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
+		local
+			icon_res: INTEGER
+			icon: WEL_ICON
+			ev_pixmap: EV_PIXMAP
+			ev_pixmap_imp: EV_PIXMAP_IMP
+			default_pixmaps: EV_DEFAULT_PIXMAPS
 		do
-			check
-				not_yet_implemented: False
+			icon_res := cwin_send_message_result (
+				wel_item, 
+				Wm_geticon, 
+				Wel_icon_constants.Icon_big,
+				0
+				)
+			if icon_res /= 0 then
+				create icon.make_by_pointer(
+					cwel_integer_to_pointer(icon_res)
+					)
+				create ev_pixmap
+				ev_pixmap_imp ?= ev_pixmap.implementation
+				ev_pixmap_imp.set_with_icon (icon)
+				Result := ev_pixmap
+			else
+				create default_pixmaps
+				Result := default_pixmaps.Default_window_icon
 			end
 		end
 
@@ -178,20 +189,29 @@ feature -- Element change
 			end
 		end	
 
-	set_icon_mask (pixmap: EV_PIXMAP) is
-			-- Make `pixmap' the new icon mask.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	set_icon_pixmap (pixmap: EV_PIXMAP) is
+	set_icon_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Make `pixmap' the new icon pixmap.
+		local
+			icon: WEL_ICON
+			pixmap_imp: EV_PIXMAP_IMP_STATE
 		do
-			check
-				not_yet_implemented: False
+			pixmap_imp ?= a_pixmap.implementation
+			icon := pixmap_imp.icon
+			if icon = Void then
+				icon := pixmap_imp.build_icon
 			end
+			cwin_send_message (
+				wel_item, 
+				Wm_seticon, 
+				Wel_icon_constants.Icon_big,
+				cwel_pointer_to_integer(icon.item)
+				)
+			cwin_send_message (
+				wel_item, 
+				Wm_seticon, 
+				Wel_icon_constants.Icon_small,
+				cwel_pointer_to_integer(icon.item)
+				)
 		end
 
 feature {NONE} -- Implementation
@@ -311,9 +331,11 @@ feature {NONE} -- WEL Implementation
 		local
 			str: STRING
 		do
-			if size_type = size_minimized then
+			if size_type = Wel_window_constants.Size_minimized then
 				set_text (icon_name)
-			elseif size_type = size_restored or size_type = size_maximized then
+			elseif size_type = Wel_window_constants.Size_restored or
+			       size_type = Wel_window_constants.Size_maximized
+			then
 				set_text (title)
 			end
 			{EV_WINDOW_IMP} Precursor (size_type, a_width, a_height)
@@ -322,6 +344,14 @@ feature {NONE} -- WEL Implementation
 feature {NONE} -- Implementation
 
 	interface: EV_TITLED_WINDOW
+
+feature {NONE} -- Constants
+
+	Wel_icon_constants: WEL_ICON_CONSTANTS is
+			-- Icon constants (Icon_Big & Icon_small)
+		once
+			create Result
+		end
 
 end -- class EV_TITLED_WINDOW_IMP
 
@@ -346,6 +376,11 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2000/05/03 00:34:35  pichery
+--| Removed `icon_mask' & related features
+--| Implemented `icon_pixmap' and `set_icon_pixmap'.
+--| It does not work yet.
+--|
 --| Revision 1.68  2000/04/29 03:29:34  pichery
 --| Fixed bug.
 --|

@@ -150,7 +150,6 @@ feature -- Status report
 		require
 			function_supported: comctl32_version >= version_471
 		local
-			a_size: WEL_SIZE
 			error_code: INTEGER
 		do
 			create Result
@@ -375,8 +374,6 @@ feature -- Element change
 			compatible_width_for_bitmaps: a_bitmap.width = a_mask_bitmap.width
 			compatible_height_for_bitmaps: a_bitmap.height = a_mask_bitmap.height
 			--| FIXME ARNAUD: Ensure that the mask is a monochrome bitmap
-		local
-			a_toolbar_bitmap: WEL_TOOL_BAR_BITMAP
 		do
 			if use_image_list then
 					-- Create the ImageList if not already created
@@ -400,8 +397,6 @@ feature -- Element change
 			compatible_width_for_bitmaps: a_bitmap.width = a_mask_bitmap.width
 			compatible_height_for_bitmaps: a_bitmap.height = a_mask_bitmap.height
 			--| FIXME ARNAUD: Ensure that the mask is a monochrome bitmap
-		local
-			a_toolbar_bitmap: WEL_TOOL_BAR_BITMAP
 		do
 			if use_image_list then
 					-- Create the ImageList if not already created
@@ -427,8 +422,6 @@ feature -- Resizing
 			--
 			-- If an application does not explicitly set the bitmap
 			-- size, the default size is 16 by 15 pixels.
-		local
-			button_size: INTEGER
 		do
 			bitmaps_width := a_width
 			bitmaps_height := a_height

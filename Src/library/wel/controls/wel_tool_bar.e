@@ -415,8 +415,6 @@ feature -- Element change
 			exists: exists
 			bitmap_not_void: tb_bitmap /= Void
 			positive_bitmap_count: bitmap_count > 0
-		local
-			a_bitmap: WEL_BITMAP
 		do
 			last_bitmap_index := cwin_send_message_result (item, Tb_addbitmap, bitmap_count, tb_bitmap.to_integer)
 			has_bitmap := True
@@ -431,7 +429,6 @@ feature -- Element change
 		local
 			i: INTEGER
 			s: STRING
-			a: ANY
 			wel_s: WEL_STRING
 		do
 			from

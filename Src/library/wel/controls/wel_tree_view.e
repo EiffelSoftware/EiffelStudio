@@ -231,7 +231,6 @@ feature -- Status report
 			valid_item: has_item (an_item)
 		local
 			mask: INTEGER
-			win_result: INTEGER
 		do
 			mask := an_item.mask
 			an_item.set_mask (Tvif_children)
@@ -600,7 +599,6 @@ feature {WEL_NM_TREE_VIEW} -- Implementation
       local
 			buffer: STRING
 			item_found: BOOLEAN
-			state: INTEGER
 		do
 			an_item.set_mask (Tvif_text + Tvif_state + Tvif_param)
 			create buffer.make (Buffer_size)

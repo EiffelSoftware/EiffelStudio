@@ -31,7 +31,7 @@ feature -- Access
 	code_size: INTEGER_8 is
 			-- Size of current feature.
 		do
-			Result := (internal_data & 0xF8) |>> 4
+			Result := (internal_data & 0xFC) |>> 2
 		ensure
 			valid_result: Result >= 0 and Result < 64
 		end
@@ -61,7 +61,7 @@ feature -- Settings
 		require
 			valid_size: a_size >= 0 and a_size < 64
 		do
-			internal_data := feature {MD_METHOD_CONSTANTS}.tiny_format | (a_size |<< 4)
+			internal_data := feature {MD_METHOD_CONSTANTS}.tiny_format | (a_size |<< 2)
 		ensure
 			code_size_set: code_size = a_size			
 		end

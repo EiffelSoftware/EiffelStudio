@@ -17,7 +17,7 @@ feature -- Access
 				--| Julian 11/12/01.
 			Result := <<"EV_CELL", "EV_FIXED", "EV_FRAME", "EV_HORIZONTAL_SPLIT_AREA",
 				"EV_HORIZONTAL_BOX", "EV_NOTEBOOK", "EV_SCROLLABLE_AREA", "EV_VERTICAL_BOX",
-				"EV_VERTICAL_SPLIT_AREA">>
+				"EV_VERTICAL_SPLIT_AREA", "EV_VIEWPORT">>
 		end
 				
 	primitives: ARRAY [STRING] is 
@@ -105,6 +105,7 @@ feature {NONE} -- Implementation
 			gb_ev_text_component: GB_EV_TEXT_COMPONENT
 			gb_ev_pixmapable: GB_EV_PIXMAPABLE
 			gb_ev_fixed: GB_EV_FIXED
+			gb_ev_viewport: GB_EV_VIEWPORT
 		do
 		end
 

@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			-- Check argument zero to compare execution paths.
 			temp_string := get ("ISE_EIFFEL")
 			previous_gtk_rc_files := get ("GTK_RC_FILES")
-			put (temp_string + "/eifinit/bench/spec/gtk/studiorc", "GTK_RC_FILES")			
+			put (temp_string + "/eifinit/studio/spec/gtk/studiorc", "GTK_RC_FILES")			
 			
 			C.gtk_rc_parse (eiffel_to_c ("studiorc"));
 			if previous_gtk_rc_files /= Void then

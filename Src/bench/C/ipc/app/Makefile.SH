@@ -78,41 +78,41 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the application
-LIB = listen.c proto.c server.c
+LIB = app_listen.c app_proto.c app_server.c
 
 # Derived object file names
 OBJ = \
-	listen.o \
-	proto.o \
-	server.o 
+	app_listen.o \
+	app_proto.o \
+	app_server.o 
 
 # Derived object file names for MT lib generation
 MT_OBJ = \
-    MTlisten.o \
-    MTproto.o \
-    MTserver.o
+    MTapp_listen.o \
+    MTapp_proto.o \
+    MTapp_server.o
 
-MTlisten.o: listen.c
+MTapp_listen.o: app_listen.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
-MTproto.o: proto.c
+MTapp_proto.o: app_proto.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
-MTserver.o: server.c
+MTapp_server.o: app_server.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 # Derived library object file names
 LOBJ = \
-	listen.o \
-	proto.o \
-	server.o 
+	app_listen.o \
+	app_proto.o \
+	app_server.o 
 
 #derived library object file names for MT libs
 
 MT_LOBJ = \
-    MTlisten.o \
-    MTproto.o \
-    MTserver.o
+    MTapp_listen.o \
+    MTapp_proto.o \
+    MTapp_server.o
 
 # Where shared archive is located (path and name)
 LIBDIR = ../shared

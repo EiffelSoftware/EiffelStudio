@@ -11,7 +11,7 @@ feature -- Access
 	Lvcf_fmt: INTEGER is
 			-- The fmt member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVCF_FMT"
 		end
@@ -19,7 +19,7 @@ feature -- Access
 	Lvcf_subitem: INTEGER is
 			-- The iSubItem member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVCF_SUBITEM"
 		end
@@ -27,7 +27,7 @@ feature -- Access
 	Lvcf_text: INTEGER is
 			-- The pszText member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVCF_TEXT"
 		end
@@ -35,19 +35,18 @@ feature -- Access
 	Lvcf_width: INTEGER is
 			-- The cx member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVCF_WIDTH"
 		end
 
--- XX Not defined in Borland C++
---	Lvcf_image: INTEGER is
---			-- The ilmage member is valid
---		external
---			"C [macro <cctrl.h>]"
---		alias
---			"LVCF_IMAGE"
---		end
+	Lvcf_image: INTEGER is
+			-- The ilmage member is valid
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"LVCF_IMAGE"
+		end
 
 feature -- Format
 
@@ -56,7 +55,7 @@ feature -- Format
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVCFMT_RIGHT"
 		end
@@ -66,7 +65,7 @@ feature -- Format
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVCFMT_CENTER"
 		end
@@ -76,7 +75,7 @@ feature -- Format
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVCFMT_LEFT"
 		end
@@ -86,7 +85,7 @@ feature -- Format
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVCFMT_JUSTIFYMASK"
 		end
@@ -98,7 +97,8 @@ feature -- Status report
 		do
 			Result := value = Lvcfmt_left or else
 				value = Lvcfmt_center or else
-				value = Lvcfmt_right
+				value = Lvcfmt_right or else
+				value = Lvcfmt_justifymask
 		end
 
 end -- class WEL_LVCF_CONSTANTS

@@ -30,9 +30,6 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_from_array (floating_object_editors)
 			Result.force (docked_object_editor)
-			--create Result.make (0)
-			--Result.force (object_editor)
-			--Result.merge_right (deep_clone (object_editors))
 		end
 
 	update_editors_for_property_change (vision2_object: EV_ANY; property_type: STRING; calling_object_editor: GB_OBJECT_EDITOR) is
@@ -91,6 +88,7 @@ feature {NONE} -- Implementation
 			editor: GB_OBJECT_EDITOR
 		do
 			create window
+			window.close_request_actions.extend (agent remove_editor (window))
 			window.close_request_actions.extend (agent window.destroy)
 			create editor
 			window.extend (editor)
@@ -105,6 +103,7 @@ feature {NONE} -- Implementation
 			editor: GB_OBJECT_EDITOR
 		do
 			create window
+			window.close_request_actions.extend (agent remove_editor (window))
 			window.close_request_actions.extend (agent window.destroy)
 			create editor
 			window.extend (editor)
@@ -112,5 +111,20 @@ feature {NONE} -- Implementation
 			editor.set_object (object)
 			window.show
 		end
+		
+feature {NONE}
+
+	remove_editor (a_window: EV_WINDOW) is
+			-- Remove object editor from `a_window'.
+		local
+			editor: GB_OBJECT_EDITOR
+		do
+			editor ?= a_window.item
+			check
+				editor /= Void
+			end
+			all_editors.prune (editor)
+		end
+		
 
 end -- class GB_ACCESSIBLE_OBJECT_EDITOR

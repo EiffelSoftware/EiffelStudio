@@ -108,6 +108,7 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define EIF_BIT_TYPE        8
 #define EIF_POINTER_TYPE    0
 
+
 /* Accessing an attribute in read/write mode (this is both an lvalue and
  * a rvalue). The 'type' is the C type of the attribute being accessed. It
  * must be correct or havoc will result. It can't be used to access bits
@@ -122,6 +123,21 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 
 #define eif_attribute_safe(object,name,type_int,ret) eif_field_safe(object, name, type_int, ret)	/* For debugging: check type. Must be preceded by *(EIF_TYPE*) */
 
+/* Miscellaneous useful functions. */
+
+/* Make an Eiffel array from a C array:
+ * `eif_array' is the direct reference to the Eiffel array.
+ * `c_array' is the C array.
+ * `nelts' the number of elements to copy in the eiffel array, it has to
+ * be equal to `eif_array.count'.
+ * type is an Eiffel type.
+ */
+#define eif_make_from_c(eif_array, c_array, nelts, type) \
+	{ \
+		EIF_REFERENCE area = eif_field (eif_array, \
+										"area", EIF_REFERENCE); \
+		memcpy ((type *) area, c_array, nelts * sizeof (type));\
+	}
 
 /* Accessing bits is done via special macros, because they have no counterpart
  * in C. We provide macros for reading and writing bit fields in an Eiffel

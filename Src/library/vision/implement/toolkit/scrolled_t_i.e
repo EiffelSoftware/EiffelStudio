@@ -42,11 +42,6 @@ feature
 		deferred
 		end -- is_horizontal_scrollbar
 
-	action_target: POINTER is
-			-- Widget ID on which action must be applied
-		deferred
-		end
-
 end -- class SCROLLED_T_I
 
 

@@ -28,7 +28,7 @@ mtccflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS
 cppflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
 mtcppflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
 shared_flags: "-DEIF_USE_DLL"
-il_flags: "-DEIF_IL_DLL"
+il_flags: "-MD -DEIF_IL_DLL"
 
 large: ""
 
@@ -154,7 +154,7 @@ system_dynlib: "%T/def:$(DEF_FILE) \%N%
 il_system_compilation_line: "%
 	%$(IL_SYSTEM): $(OBJECTS) $(IL_RESOURCE).res%N%
 	%%T$(FILE_EXIST) $(IL_SYSTEM) $(RM) $(IL_SYSTEM) %N%
-	%%T$(SHAREDLINK) $(LDSHAREDFLAGS) -out:$(IL_SYSTEM) $(OBJECTS) $(SHAREDLIBS) $(EXTERNALS) $(IL_RESOURCE).res %N%
+	%%T$(SHAREDLINK) $(LDSHAREDFLAGS) -NODEFAULTLIB:libc -out:$(IL_SYSTEM) $(OBJECTS) $(SHAREDLIBS) $(EXTERNALS) $(IL_RESOURCE).res %N%
 	%%T$(RM) $(OBJECTS)%N%
 	%%Techo Success > completed.eif%N%N%
 	%..\..\$(IL_RESOURCE).rc:%N%

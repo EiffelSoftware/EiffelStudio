@@ -51,7 +51,7 @@ struct define
 {
 	ub1 buf[MAX_ITEM_BUFFER_SIZE];
 	float flt_buf;
-	sword int_buf;
+	sword int_buf; //removable in current case.
 	sb2 indp;
 	ub2 col_retlen, col_retcode;
 };
@@ -81,6 +81,7 @@ static int max_size;
 text error_message[512];
 
 short ora_tranNumber=0; /* number of transaction opened at present */
+
 
 /* each function return 0 in case of success */
 /* and database error code ( >= 1) else */
@@ -410,6 +411,7 @@ void print_rows(Cda_Def *tmp, sword ncols, int no_desc) {
 	} /* end for (;;) */
 }
 
+
 int ora_put_data (int no_des, int index, char *result) {
 	int size;
 	size = strlen ((char *) def [no_des] [index-1].buf);
@@ -471,6 +473,7 @@ int ora_start_order (int no_desc) {
 
 /* If the statement is a query, describe and define
 all select–list items before doing the oexec. */
+	fprintf(stdout, "Hi\n");
 	if (sql_function == FT_SELECT) {
 		if ((ncol [no_desc] = describe_define(cda[no_desc], no_desc)) == -1) {
 			ora_error_handler(cda[no_desc]);
@@ -486,8 +489,8 @@ all select–list items before doing the oexec. */
 	/* Fetch and display the rows for the query. */
 	/*	if (sql_function == FT_SELECT)
 		{
-		print_header(ncols);
-		print_rows(&cda[no_desc], ncols);
+		print_header(ncol [no_desc], no_desc);
+		print_rows(cda[no_desc], ncol [no_desc], no_desc);
 		}*/
 	/* Print the rows–processed count. */
 	/*if (sql_function == FT_SELECT ||
@@ -545,6 +548,7 @@ int ora_terminate_order (int no_des)
 int ora_next_row (int no_des)
 {	    
 	Cda_Def *dap = cda[no_des];
+	int col;
 	//ncol = describe_define (dap);
 
 //	for (;;)
@@ -552,6 +556,7 @@ int ora_next_row (int no_des)
 		//fputc('\n', stdout);
 /* Fetch a row. Break on end of fetch,
 disregard null fetch ”error”. */
+
 		if (ofetch(dap))
 		{
 			if (dap->rc == NO_DATA_FOUND)
@@ -778,6 +783,10 @@ int ora_get_boolean_data (int no_desc, int i) {
 	return (int) def [no_desc] [i-1].int_buf;
 }
 
+int ora_is_null_data(int no_desc, int i) {
+	return (def [no_desc] [i-1].col_retcode == NULL_VALUE_RETURNED );
+}
+
 
 char date[19];
 char d[2];
@@ -794,6 +803,7 @@ int ora_get_date_data (int no_des, int i)
 		size = desc [no_des] [i-1].buflen;
 		if (*(def [no_des] [i-1].buf) == '\0')
 			memcpy (&date, default_date, sizeof(date));
+			//return 0; could be added
 		else
 			memcpy (&date, def [no_des] [i-1].buf, sizeof(date));
 		return 1;

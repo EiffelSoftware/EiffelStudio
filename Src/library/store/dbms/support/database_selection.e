@@ -115,13 +115,12 @@ feature -- Status setting
 			r_any: ANY
 			tst : BOOLEAN
 			database_data: DATABASE_DATA [G]
---			database: G
 		do
+--			object := 
 			database_data ?= cursor.data
 			if database_data /= Void then
 				from
 					i := 1
---					create database
 				until
 					i > database_data.count or not is_ok
 				loop
@@ -129,9 +128,10 @@ feature -- Status setting
 					pos := database_data.map_table.item (i)
 					if r_any /= Void and pos > 0 then
 						tst := field_copy (pos, object,
---								database.convert_string_type (r_any,
-								db_spec.convert_string_type (r_any,
-									  field_name (pos, object), r_any.generator))
+							db_spec.convert_string_type (r_any,
+							field_name (pos, object), r_any.generator))
+					elseif pos > 0 then
+						tst := field_clean (pos, object)
 					end
 					i := i + 1
 				end

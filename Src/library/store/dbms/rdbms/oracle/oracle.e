@@ -373,7 +373,13 @@ feature -- External features
 
 	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
 		do
-			Result := (ora_get_boolean_data (no_descriptor, ind)=1)
+			Result := ora_get_boolean_data (no_descriptor, ind)
+		end
+
+	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+			-- is last retrieved data null? 
+		do
+			Result := ora_is_null_data (no_descriptor, ind)
 		end
 
 	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
@@ -609,10 +615,15 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
-	ora_get_boolean_data (no_descriptor:INTEGER; ind: INTEGER): INTEGER is
+	ora_get_boolean_data (no_descriptor:INTEGER; ind: INTEGER): BOOLEAN is
 		external
 			"C | %"oracle.h%""
 		end
+
+	ora_is_null_data (no_descriptor:INTEGER; ind: INTEGER): BOOLEAN is
+		external
+			"C | %"oracle.h%""
+		end	
 
 	ora_get_date_data (desc: INTEGER; index: INTEGER): INTEGER is
 		external

@@ -573,6 +573,12 @@ feature -- External
 			Result := odbc_get_boolean_data (no_descriptor, ind)
 		end
 
+	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+			-- is last retrieved data null? 
+		do
+			Result := odbc_is_null_data (no_descriptor, ind)
+		end
+
 	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
 		do
 			Result := odbc_get_date_data (no_descriptor, ind)
@@ -822,6 +828,11 @@ feature {NONE} -- External features
 		end
 
 	odbc_get_boolean_data (no_descriptor: INTEGER ind: INTEGER): BOOLEAN is
+		external
+			"C"
+		end
+
+	odbc_is_null_data (no_descriptor: INTEGER ind: INTEGER): BOOLEAN is
 		external
 			"C"
 		end

@@ -70,7 +70,6 @@ feature -- Basic operations
 	get_value (obj: ANY; str: STRING) is
 			-- Retrieve string value of `obj' and put in `str'.
 		require
-			object_exists: obj /= Void
 			str_exists: str /= Void
 		local
 			r_int: INTEGER_REF
@@ -81,37 +80,41 @@ feature -- Basic operations
 			r_bool: BOOLEAN_REF
 			r_double: DOUBLE_REF
 		do
-			if is_integer (obj) then
-				r_int ?= obj
-				str.append (r_int.out)
-			elseif is_double (obj) then
-				r_double ?= obj
-				str.append (r_double.out)
-			elseif is_real (obj) then
-				r_real ?= obj
-				str.append (r_real.out)
-			elseif is_character (obj) then
-				r_character ?= obj
-				str.extend ('%'')
-				str.extend (r_character.item)
-				str.extend ('%'')
-			elseif is_string (obj) then
-				r_string ?= obj
-				if not r_string.empty then
-					buffer.copy (r_string)
-					buffer.replace_substring_all ("'", "''")
-					str.append (string_format (buffer))
-				else
-					str.append (Null_string)
-				end
-			elseif is_boolean (obj) then
-				r_bool ?= obj
-				str.append (boolean_format (r_bool.item))
-			elseif is_date (obj) then
-				r_date ?= obj
-				str.append (date_format (r_date))
+			if is_void (obj) then
+				str.append (Null_string)
 			else
-				get_complex_value (obj, str)
+				if is_integer (obj) then
+					r_int ?= obj
+					str.append (r_int.out)
+				elseif is_double (obj) then
+					r_double ?= obj
+				str.append (r_double.out)
+				elseif is_real (obj) then
+					r_real ?= obj
+					str.append (r_real.out)
+				elseif is_character (obj) then
+					r_character ?= obj
+					str.extend ('%'')
+					str.extend (r_character.item)
+					str.extend ('%'')
+				elseif is_string (obj) then
+					r_string ?= obj
+					if not r_string.empty then
+						buffer.copy (r_string)
+						buffer.replace_substring_all ("'", "''")
+						str.append (string_format (buffer))
+					else
+						str.append (Null_string)
+					end
+				elseif is_boolean (obj) then
+					r_bool ?= obj
+					str.append (boolean_format (r_bool.item))
+				elseif is_date (obj) then
+					r_date ?= obj
+					str.append (date_format (r_date))
+				else
+					get_complex_value (obj, str)
+				end
 			end
 		end
 

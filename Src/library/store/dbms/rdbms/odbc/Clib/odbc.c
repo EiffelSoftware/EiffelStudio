@@ -81,6 +81,7 @@ short odbc_tranNumber=0; /* number of transaction opened at present */
 rt_private int odbc_first_descriptor_available (void);
 rt_private void change_to_low(char *buf, int length);
 
+int is_null_data;
 
 /* each function return 0 in case of success */
 /* and database error code ( >= 1) else */
@@ -1591,7 +1592,7 @@ int odbc_put_data (int no_des, int index, char *result)
   data_type = GetDbCType (dap, i);
   
   memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-  if (odbc_tmp_indicator == SQL_NULL_DATA) {
+  if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
   /* the retrived value is NULL, we use empty string to represent NULL */
 	result[0] = '\0';
 	return 0;
@@ -1615,8 +1616,8 @@ int odbc_get_integer_data (int no_des, int index)
 	data_type = GetDbCType(dbp, i);
 	
 	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if (odbc_tmp_indicator == SQL_NULL_DATA) {
-	/* the retrived value is NULL, we use 0 to be NULL value */
+	if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
+	/* the retrieved value is NULL, we use 0 to be NULL value */
 		return 0;
 	}
 	switch (data_type) {
@@ -1649,10 +1650,11 @@ int odbc_get_boolean_data (int no_des, int index)
   ODBCSQLDA * dbp = odbc_descriptor[no_des];
   
   data_type = GetDbCType (dbp,i);
+
   if (data_type == SQL_C_BIT)
     {
 	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if (odbc_tmp_indicator == SQL_NULL_DATA) {
+	if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
 	/* the retrived value is NULL, we use false to be NULL value */
 		return 0;
 	}
@@ -1679,8 +1681,8 @@ double odbc_get_float_data (int no_des, int index)
   if ( data_type == SQL_C_DOUBLE )
     {
 	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if (odbc_tmp_indicator == SQL_NULL_DATA) {
-	/* the retrived value is NULL, we use 0.0 to be NULL value */
+	if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
+	/* the retrieved value is NULL, we use 0.0 to be NULL value and we indicate it*/
 		return 0.0;
 	}
 	memcpy((char *)(&result_double), GetDbColPtr(dbp, i), DB_SIZEOF_DOUBLE);
@@ -1706,8 +1708,8 @@ float odbc_get_real_data (int no_des, int index)
   data_type = GetDbCType (dbp, i);
   if (data_type == SQL_C_FLOAT)  {
 	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if (odbc_tmp_indicator == SQL_NULL_DATA) {
-	/* the retrived value is NULL, we use 0.0 to be NULL value */
+	if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
+	/* the retrieved value is NULL, we use 0.0 to be NULL value */
 		return 0.0;
 	}
 	memcpy((char *)(&result_real), GetDbColPtr(dbp, i), DB_SIZEOF_REAL);
@@ -1724,7 +1726,12 @@ float odbc_get_real_data (int no_des, int index)
   }
 }
 
+// The following function tell whether the retrieved data is null or not 
 
+int odbc_is_null_data(int no_des, int index)
+{
+  return (odbc_indicator[no_des][index-1] == SQL_NULL_DATA);
+}
 
 /*****************************************************************/
 /*  The following function deal with the DATE data of  ODBC      */
@@ -1743,14 +1750,14 @@ int odbc_get_date_data (int no_des, int index)
   if (data_type == SQL_C_TYPE_DATE || data_type == SQL_C_TYPE_TIMESTAMP || data_type == SQL_C_TYPE_TIME)
     {
 	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
-	if (odbc_tmp_indicator == SQL_NULL_DATA) {
+	if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
 	/* the retrived value is NULL, we use 01/01/1991 0:0:0 to be NULL value */
-		odbc_date.year = 1991;
-		odbc_date.month = 1;
-		odbc_date.day = 1;
-		odbc_date.hour = 0;
-		odbc_date.minute = 0;
-		odbc_date.second = 0;
+		//odbc_date.year = 1991;
+		//odbc_date.month = 1;
+		//odbc_date.day = 1;
+		//odbc_date.hour = 0;
+		//odbc_date.minute = 0;
+		//odbc_date.second = 0;
 		return 1;
 	}
 	//if (data_type == SQL_C_DATE) {

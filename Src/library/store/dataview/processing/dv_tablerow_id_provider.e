@@ -58,7 +58,7 @@ feature -- Basic operations
 			not_void: selecting_ctrl /= Void
 		do
 			selecting_control := selecting_ctrl
-			selecting_control.set_action (~ok)
+			selecting_control.set_action (agent ok)
 		end
 
 feature {DV_COMPONENT} -- Access

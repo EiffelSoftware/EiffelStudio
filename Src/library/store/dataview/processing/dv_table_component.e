@@ -171,7 +171,7 @@ feature -- Status setting
 			not_activated: not is_activated
 		do
 			writing_control := writing_ctrl
-			writing_control.set_action (~write)
+			writing_control.set_action (agent write)
 			writing_control.disable_sensitive
 		ensure
 			is_writing: is_writing
@@ -185,7 +185,7 @@ feature -- Status setting
 			not_activated: not is_activated
 		do
 			refreshing_control := refreshing_ctrl
-			refreshing_control.set_action (~refresh_from_database)
+			refreshing_control.set_action (agent refresh_from_database)
 			refreshing_control.disable_sensitive
 		ensure
 			is_refreshing: is_refreshing
@@ -212,7 +212,7 @@ feature -- Status setting
 			not_activated: not is_activated
 		do
 			deleting_control := deleting_ctrl
-			deleting_control.set_action (~delete_after_confirmation)
+			deleting_control.set_action (agent delete_after_confirmation)
 			deleting_control.disable_sensitive
 		ensure
 			is_deleting: is_deleting
@@ -344,13 +344,13 @@ feature -- Basic operations
 				db_creator.activate
 			end
 			if not status_handler_set then
-				status_handler := ~basic_message_handler
+				status_handler := agent basic_message_handler
 			end
 			if not warning_handler_set then
-				warning_handler := ~basic_message_handler
+				warning_handler := agent basic_message_handler
 			end
 			if not confirmation_handler_set then
-				confirmation_handler := ~basic_confirmation_handler
+				confirmation_handler := agent basic_confirmation_handler
 			end
 			from
 				dependent_table_list.start
@@ -644,7 +644,7 @@ feature {NONE} -- Basic operations
 		require
 			is_activated: is_activated
 		do
-			confirmation_handler.call ([deletion_confirmation (table_description.Table_name), ~delete])
+			confirmation_handler.call ([deletion_confirmation (table_description.Table_name), agent delete])
 		end
 
 	delete is

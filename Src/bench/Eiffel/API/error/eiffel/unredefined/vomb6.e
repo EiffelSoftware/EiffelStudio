@@ -1,5 +1,5 @@
 -- Error when all unique constants involved in an inspect 
--- instruction son't have the same origin class
+-- instruction don't have the same origin class
 
 class VOMB6 
 
@@ -39,11 +39,11 @@ feature
 			wclass: CLASS_C
 		do
 			wclass := unique_feature.written_class;
-			put_string ("Incompatible constant: ");
+			put_string ("Constant: ");
 			unique_feature.append_clickable_name (error_window, wclass);
-			put_string (" written in ");
+			put_string (" From: ");
 			wclass.append_clickable_name (error_window);
-			put_string ("%NOthers constants written in ");
+			put_string ("%NOrigin of conflicting constants: ");
 			written_class.append_clickable_name (error_window);
 			new_line;
 		end;

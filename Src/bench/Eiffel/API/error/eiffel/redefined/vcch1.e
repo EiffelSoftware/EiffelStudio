@@ -32,9 +32,9 @@ feature
 			wclass: CLASS_C;
 		do
 			wclass := a_feature.written_class;
-			put_string ("Deferred feature name: ");
+			put_string ("Deferred feature: ");
 			a_feature.append_clickable_name (error_window, wclass);
-			put_string (" written in: ");
+			put_string (" From: ");
 			wclass.append_clickable_name (error_window);
 			new_line;
 		end;

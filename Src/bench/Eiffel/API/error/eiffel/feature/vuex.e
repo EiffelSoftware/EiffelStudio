@@ -53,13 +53,14 @@ feature
 			w_class: CLASS_C
 		do
 			w_class := exported_feature.written_class;
-			put_string ("Feature name: ");
+			put_string ("Feature: ");
 			exported_feature.append_clickable_name (error_window, w_class);
-			put_string (" written in: ");
-			w_class.append_clickable_name (error_window);
-			put_string (" from class: ");
+			put_string (" Class: ");
 			static_class.append_clickable_name (error_window);
-			put_string (" is not exported to class ");
+			put_string (" Version from: ");
+			w_class.append_clickable_name (error_window);
+			new_line;
+			put_string ("Not exported to class ");
 			class_c.append_clickable_name (error_window);
 			new_line
 		end

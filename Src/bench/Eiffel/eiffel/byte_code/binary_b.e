@@ -229,7 +229,16 @@ feature -- Byte code generation
 			-- Generate byte code for an inxed call
 		local
 			param: BYTE_LIST [EXPR_B];
+			Nested: NESTED_B;
+			Access_expr: ACCESS_EXPR_B
 		do
+				-- Access on expression
+			!! Access_expr;
+				-- Nested buffer for byte code generation of a binary
+				-- operation on non-simple types
+			!! Nested;
+			Nested.set_target (Access_expr);
+			Access_expr.set_parent (Nested);
 				-- Production of a nested structure: target is
 				-- an access expression (`left') and parameter
 				-- of `access' is expression `right'.
@@ -247,21 +256,6 @@ feature -- Byte code generation
 			-- Byte code constant associated to current binary
 			-- operation
 		deferred
-		end;
-
-	Nested: NESTED_B is
-			-- Nested buffer for byte code generation of a binary
-			-- operation on non-simple types
-		once
-			!!Result;
-			Result.set_target (Access_expr);
-			Access_expr.set_parent (Result);
-		end;
-
-	Access_expr: ACCESS_EXPR_B is
-			-- Access on expression
-		once
-			!!Result;
 		end;
 
 end

@@ -1275,7 +1275,32 @@ feature -- Class initialization
 			Inst_context.set_cluster (cluster);
 			parents_as := ast.parents;
 			parent_list := class_info.parents;
+
 			if not (parents_as = Void) then
+
+					-- Separate loop for VHPR3 checking
+				from
+					p := parents_as;
+					check p.lower = 1 end;
+					lower := 1;
+					upper := p.upper;
+				until
+					lower > upper
+				loop
+						-- Evaluation of the parent type
+					raw_type := p.item (lower).type;
+						-- Check if there is no anchor in the parent type
+					if raw_type.has_like then
+						!!ve04;
+						ve04.set_class (Current);
+						ve04.set_parent_type (parent_type);
+						Error_handler.insert_error (ve04);
+							-- Cannot ge on here
+						Error_handler.raise_error;
+					end;
+					lower := lower + 1;
+				end;
+
 					-- Take the structure produced by Yacc
 				from
 					p := parents_as;
@@ -1286,17 +1311,6 @@ feature -- Class initialization
 				until
 					lower > upper
 				loop
-						-- Evaluation of the parent type
-					raw_type := p.item (lower).type;
-						-- Check if there is no anchor in the parent type
-					if	raw_type.has_like then
-						!!ve04;
-						ve04.set_class (Current);
-						ve04.set_parent_type (parent_type);
-						Error_handler.insert_error (ve04);
-							-- Cannot ge on here
-						Error_handler.raise_error;
-					end;
 						-- Fill attribute `parents' of class CLASS_INFO
 					parent_c := p.item (lower).parent_c;
 					parent_list.put_i_th (parent_c, lower);

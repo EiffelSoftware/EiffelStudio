@@ -138,21 +138,6 @@ feature
 			end;
 		end;
 
-	Nested: NESTED_B is
-			-- Nested buffer for byte code generation of a binary
-			-- operation on non-simple types
-		once
-			!!Result;
-			Result.set_target (Access_expr);
-			Access_expr.set_parent (Result);
-		end;
-
-	Access_expr: ACCESS_EXPR_B is
-			-- Access on expression
-		once
-			!!Result;
-		end;
-
 feature -- Byte code generation
 
 	is_built_in: BOOLEAN is
@@ -177,7 +162,17 @@ feature -- Byte code generation
 
 	make_call_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for an infixed call
+		local
+			Nested: NESTED_B;
+			Access_expr: ACCESS_EXPR_B
 		do
+				-- Access on expression
+			!! Access_expr;
+				-- Nested buffer for byte code generation of a binary
+				-- operation on non-simple types
+			!! Nested;
+			Nested.set_target (Access_expr);
+			Access_expr.set_parent (Nested);
 				-- Production of a nested call wich target is `expr
 				-- and message `access'.
 			Nested.set_message (access);

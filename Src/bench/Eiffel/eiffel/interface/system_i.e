@@ -1825,11 +1825,10 @@ end;
 			History_control.transfer;
 			tmp_poly_server.flush;
 
-				-- Verbose
-			io.error.putstring ("Removing dead code...%N");
-
 				-- Dead code removal
 			if not remover_off then
+				-- Verbose
+				io.error.putstring ("Removing dead code...%N");
 				remove_dead_code;
 			end;
 

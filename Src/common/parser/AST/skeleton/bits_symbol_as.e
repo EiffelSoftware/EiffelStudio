@@ -25,11 +25,20 @@ feature -- Initialization
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BITS_A is
 		local
 			vtbt: VTBT;
+			veen: VEEN;
 			constant: CONSTANT_I;
 			bits_value: INTEGER;
 			error: BOOLEAN;
 			int_value: INT_VALUE_I;
 		do
+			if not feat_table.has (bits_symbol) then
+				!! veen;
+				veen.set_class (feat_table.associated_class);
+				veen.set_feature (f);
+				veen.set_identifier (bits_symbol);
+				Error_handler.insert_error (veen);
+				Error_handler.raise_error
+			end;
 			constant ?= feat_table.item (bits_symbol);
 			error := constant = Void;
 			if not error then

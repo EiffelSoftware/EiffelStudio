@@ -191,11 +191,41 @@ feature -- Type check, byte code and dead code removal
 						i := i - 1;
 					end;
 				end;
+
+					-- Get the type of Current feature.
 				Result ?= a_feature.type;
+
+					-- If the declared target type is formal
+					-- and if the corresponding generic parameter is
+					-- constrained to a class which is also generic
+					-- Result id a FORMAL_A object with no more information
+					-- than the position of the formal in the generic parameter
+					-- list of the class in which the feature "feature_name" is 
+					-- declared.
+					-- Example:
+					--
+					-- 	class TEST [G -> ARRAY [STRING]]
+					--	...
+					--	x: G
+					-- 		x.item (1)
+					--
+					-- For the evaluation of `item', last_type is "Generic #1" (of TEST)
+					-- `last_constrained_type' is ARRAY [STRING], `a_feature.type'
+					-- is "Generic #1" (of ARRAY)
+					-- We need to convert the type to the constrained type for proper
+					-- type evaluation of remote calls.
+					-- "Generic #1" (of ARRAY) is thus replaced by the corresponding actual
+					-- type in the declaration of the constraint class type (in this case
+					-- class STRING).
+					-- Note: the following conditional instruction will not be executed
+					-- if the class type of the constraint id not generic since in that
+					-- case `Result' would not be formal.
+				if last_type.is_formal and then Result.is_formal then
+					Result := last_constrained.generics.item (Result.base_type)
+				end;
 				Result := Result.conformance_type;
 				context.pop (count);
-				Result :=
-					Result.instantiation_in (last_type, last_id).actual_type;
+				Result := Result.instantiation_in (last_type, last_id).actual_type;
 					-- Export validity
 				if not is_export_valid (a_feature) then
 					!!vuex;

@@ -5,7 +5,13 @@ indexing
 	
 class
 	OLE_CONTROL_PROXY
-	
+
+inherit
+	DVASPECT_ENUM
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	unknown_control: ECOM_INTERFACE
@@ -18,10 +24,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_dispatch
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_dispatch = Void then
+					create m_dispatch.make_from_other (unknown_control)
 				end
+				Result := m_dispatch
 			end
 		rescue
 			retried := True
@@ -36,10 +42,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_quick_activate
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_quick_activate = Void then
+					create m_quick_activate.make_from_other (unknown_control)
 				end
+				Result := m_quick_activate
 			end
 		rescue
 			retried := True
@@ -54,10 +60,28 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_ole_object
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_ole_object = Void then
+					create m_ole_object.make_from_other (unknown_control)
 				end
+				Result := m_ole_object
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	object_with_site: IOBJECT_WITH_SITE_IMPL_PROXY is
+			-- IObjectWithSite interface of control.
+		require
+			non_void_control_unknown: unknown_control /= Void
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				if m_object_with_site = Void then
+					create m_object_with_site.make_from_other (unknown_control)
+				end
+				Result := m_object_with_site
 			end
 		rescue
 			retried := True
@@ -72,10 +96,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_persist_memory
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_persist_memory = Void then
+					create m_persist_memory.make_from_other (unknown_control)
 				end
+				Result := m_persist_memory
 			end
 		rescue
 			retried := True
@@ -90,10 +114,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_persist_stream_init
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_persist_stream_init = Void then
+					create m_persist_stream_init.make_from_other (unknown_control)
 				end
+				Result := m_persist_stream_init
 			end
 		rescue
 			retried := True
@@ -108,10 +132,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_ole_control
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_ole_control = Void then
+					create m_ole_control.make_from_other (unknown_control)
 				end
+				Result := m_ole_control
 			end
 		rescue
 			retried := True
@@ -126,10 +150,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_ole_in_place_object
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_ole_in_place_object = Void then
+					create m_ole_in_place_object.make_from_other (unknown_control)
 				end
+				Result := m_ole_in_place_object
 			end
 		rescue
 			retried := True
@@ -144,10 +168,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_ole_in_place_object_windowless
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_ole_in_place_object_windowless = Void then
+					create m_ole_in_place_object_windowless.make_from_other (unknown_control)
 				end
+				Result := m_ole_in_place_object_windowless
 			end
 		rescue
 			retried := True
@@ -162,10 +186,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_ole_in_place_active_object
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_ole_in_place_active_object = Void then
+					create m_ole_in_place_active_object.make_from_other (unknown_control)
 				end
+				Result := m_ole_in_place_active_object
 			end
 		rescue
 			retried := True
@@ -180,10 +204,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_ole_cache
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_ole_cache = Void then
+					create m_ole_cache.make_from_other (unknown_control)
 				end
+				Result := m_ole_cache
 			end
 		rescue
 			retried := True
@@ -198,10 +222,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_view_object
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_view_object = Void then
+					create m_view_object.make_from_other (unknown_control)
 				end
+				Result := m_view_object
 			end
 		rescue
 			retried := True
@@ -216,10 +240,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_view_object2
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_view_object2 = Void then
+					create m_view_object2.make_from_other (unknown_control)
 				end
+				Result := m_view_object2
 			end
 		rescue
 			retried := True
@@ -234,10 +258,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_view_object_ex
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_view_object_ex = Void then
+					create m_view_object_ex.make_from_other (unknown_control)
 				end
+				Result := m_view_object_ex
 			end
 		rescue
 			retried := True
@@ -252,10 +276,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_data_object
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_data_object = Void then
+					create m_data_object.make_from_other (unknown_control)
 				end
+				Result := m_data_object
 			end
 		rescue
 			retried := True
@@ -270,10 +294,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_persist_property_bag
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_persist_property_bag = Void then
+					create m_persist_property_bag.make_from_other (unknown_control)
 				end
+				Result := m_persist_property_bag
 			end
 		rescue
 			retried := True
@@ -288,10 +312,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_specify_property_pages
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_specify_property_pages = Void then
+					create m_specify_property_pages.make_from_other (unknown_control)
 				end
+				Result := m_specify_property_pages
 			end
 		rescue
 			retried := True
@@ -306,10 +330,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_per_property_browsing
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_per_property_browsing = Void then
+					create m_per_property_browsing.make_from_other (unknown_control)
 				end
+				Result := m_per_property_browsing
 			end
 		rescue
 			retried := True
@@ -324,10 +348,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_persist
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_persist = Void then
+					create m_persist.make_from_other (unknown_control)
 				end
+				Result := m_persist
 			end
 		rescue
 			retried := True
@@ -342,16 +366,58 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := m_persist_storage
-				if Result = Void then
-					create Result.make_from_other (unknown_control)
+				if m_persist_storage = Void then
+					create m_persist_storage.make_from_other (unknown_control)
 				end
+				Result := m_persist_storage
 			end
 		rescue
 			retried := True
 			retry
 		end
 
+feature -- Basic Operations
+
+	release_all is
+			-- Release all interfaces.
+		do
+			if 
+				unknown_control /= Void and then
+				view_object /= Void 
+			then
+				view_object.set_advise (Dvaspect_content, 0, Void)
+			end
+			-- Unadvise on IAdviseSink here
+			-- TODO
+			if 
+				unknown_control /= Void and then
+				ole_object /= Void 
+			then
+				
+			end
+			unknown_control := Void
+			m_dispatch := Void
+			m_quick_activate := Void	
+			m_ole_object := Void
+			m_object_with_site := Void
+			m_persist_memory := Void
+			m_persist_stream_init := Void
+			m_ole_control := Void
+			m_ole_in_place_object := Void
+			m_ole_in_place_object_windowless := Void
+			m_ole_in_place_active_object := Void
+			m_ole_cache := Void
+			m_view_object := Void
+			m_view_object2 := Void
+			m_view_object_ex := Void
+			m_data_object := Void
+			m_persist_property_bag := Void
+			m_specify_property_pages := Void
+			m_per_property_browsing := Void
+			m_persist := Void
+			m_persist_storage := Void
+		end
+		
 feature {NONE} -- Implementation
 
 	m_dispatch: ECOM_AUTOMATION_INTERFACE 
@@ -363,6 +429,9 @@ feature {NONE} -- Implementation
 	m_ole_object: IOLE_OBJECT_IMPL_PROXY 
 			-- IOleObject interface of control.
 
+	m_object_with_site: IOBJECT_WITH_SITE_IMPL_PROXY
+			-- IObjectWithSite interface of control.
+	
 	m_persist_memory: IPERSIST_MEMORY_IMPL_PROXY
 			-- IPersistMemory interface of control.
 

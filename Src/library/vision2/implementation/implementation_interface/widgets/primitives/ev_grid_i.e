@@ -142,6 +142,23 @@ feature -- Access
 			-- If `True', each change of the vertical scroll bar increments the vertical
 			-- offset by the current row height.
 			-- If `False', the scrolling is smooth on a per-pixel basis.
+			
+	is_content_partially_dynamic: BOOLEAN
+			-- Is the content of `Current' partially dynamic? If `True' then
+			-- whenever an item must be re-drawn and it is not already set within `Current',
+			-- then it is queried via `content_requested_actions'. The returned item is added
+			-- to `Current' so the query only occurs once.
+		
+	is_content_completely_dynamic: BOOLEAN
+			-- Is the content of `Current' completely dynamic? If `True' then
+			-- whenever an item must be re-drawn it is always queried via `content_requested_actions'
+			-- and not added to `Current'.
+		
+	is_row_height_fixed: BOOLEAN
+			-- Must all rows in `Current' have the same height?
+		
+	row_height: INTEGER
+			-- Height of all rows within `Current'.
 
 feature -- Status setting
 
@@ -363,6 +380,80 @@ feature -- Status setting
 			has_vertical_scrolling_per_item_just_changed := False
 		ensure
 			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
+		end
+		
+	set_row_height (a_row_height: INTEGER) is
+			-- Set height of all rows within `Current' to `a_row_height
+			-- If not `is_row_height_fixed' then set the height individually per row instead.
+		require
+			is_row_height_fixed: is_row_height_fixed
+			a_row_height_positive: a_row_height >= 1
+		do
+			to_implement ("EV_GRID_I.set_row_height")
+		ensure
+			row_height_set: row_height = a_row_height
+		end
+		
+	enable_complete_dynamic_content is
+			-- Ensure contents of `Current' must be retrieved when required via
+			-- `content_requested_actions'. Contents are requested each time they
+			-- are displayed even if already contained in `Current'.
+		do
+			to_implement ("EV_GRID_I.enable_complete_dynamic_content")
+		ensure
+			content_completely_dynamic: is_content_completely_dynamic
+		end
+		
+	enable_partial_dynamic_content is
+			-- Ensure contents of `Current' must be retrieved when required via
+			-- `content_requested_actions' only if the item is not already set
+			-- in `Current'.
+		do
+			to_implement ("EV_GRID_I.enable_partial_dynamic_content")
+		ensure
+			content_partially_dynamic: is_content_partially_dynamic
+		end
+		
+	disable_dynamic_content is
+			-- Ensure contents of `Current' are not dynamic and are no longer retrieved as such.
+		do
+			to_implement ("EV_GRID_I.disable_dynamic_content")
+		ensure
+			content_not_dynamic: not is_content_completely_dynamic and not is_content_partially_dynamic
+		end
+		
+	enable_row_height_fixed is
+			-- Ensure all rows have the same height.
+		do
+			to_implement ("EV_GRID_I.enable_row_height_fixed")
+		end
+		
+	disable_row_height_fixed is
+			-- Permit rows to have varying heights.
+		do
+			to_implement ("EV_GRID_I.disable_row_height_fixed")
+		end
+		
+	set_column_count_to (a_column_count: INTEGER) is
+			-- Resize `Current' to have `a_column_count' columns.
+		require
+			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
+			a_column_count_positive: a_column_count >= 1
+		do
+			to_implement ("EV_GRID_I.set_column_count_to")
+		ensure
+			column_count_set: column_count = a_column_count
+		end
+		
+	set_row_count_to (a_row_count: INTEGER) is
+			-- Resize `Current' to have `a_row_count' columns.
+		require
+			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
+			a_row_count_positive: a_row_count >= 1
+		do
+			to_implement ("EV_GRID_I.set_row_count_to")
+		ensure
+			row_count_set: row_count = a_row_count
 		end
 
 feature -- Status report
@@ -775,6 +866,7 @@ feature {NONE} -- Drawing implementation
 			is_horizontal_scrolling_per_item := False
 			is_vertical_scrolling_per_item := True
 			is_header_displayed := True
+			row_height := 16
 			
 			create internal_row_data.make
 			create grid_columns.make

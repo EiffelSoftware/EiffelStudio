@@ -7,11 +7,6 @@ class
 
 inherit
 	RESOURCE_STRUCTURE_I
-		rename
-			root_folder_i as root_folder_imp
-		redefine
-			root_folder_imp
-		end
 
 create
 	make
@@ -21,11 +16,10 @@ feature -- Initialization
 	initialize, initialize_from_file (default_file: STRING; normal_file: STRING) is
 		local
 			file_name: FILE_NAME
-			environment: EXECUTION_ENVIRONMENT
 		do
 			make_default (default_file)
 			create file_name.make_from_string (normal_file)
-			if root_folder_imp /= Void then
+			if root_folder_i /= Void then
 				update_from_file_name (file_name)
 			else
 				make_from_file_name (file_name)
@@ -43,29 +37,8 @@ feature -- Initialization
 		do
 			location := file_name
 			create table.make (100)
-			create p.make
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				file.read_stream (file.count)
-				s := file.last_string
-				p.parse_string (s)
-				p.set_end_of_file
-				file.close
-				parser := p
-				if not p.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
-					error_message := "EIFFEL_DOCUMENT TAG missing%N"
-				else
-					create root_folder_imp.make_root (parser.root_element, interface)
-					root_folder_imp.create_interface
-				end
-			else
-				error_message := "does not exist%N"
-				error_message.prepend (location)
-			end
-			if error_message /= Void then
-				io.put_string (error_message)
-			end
+			create {RESOURCE_FOLDER_IMP} root_folder_i.make_root (location, interface)
+			root_folder_i.create_interface
 		end
 
 feature -- Update
@@ -80,58 +53,14 @@ feature -- Update
 			error_message: STRING
 		do
 			location := file_name
-			create p.make
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				file.read_stream (file.count)
-				s := file.last_string
-				p.parse_string (s)
-				p.set_end_of_file
-				file.close
-				parser := p
-				if not p.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
-					error_message := "EIFFEL_DOCUMENT TAG missing%N"
-				else
-					root_folder_imp.update_root (parser.root_element)
-				end
-			else
-				error_message := "does not exist%N"
-				error_message.prepend (location)
-			end
-			if error_message /= Void then
-				io.put_string (error_message)
-			end
+			root_folder_i.update_root (file_name)
 		end
-
-feature -- Access
-
-	root_folder_imp: RESOURCE_FOLDER_IMP
 
 feature -- Saving
 
 	save is
-		local
-			file: RAW_FILE
-			s: STRING
-			l: LINKED_LIST [RESOURCE_FOLDER_IMP]
 		do
-			create file.make_open_write (location)
-			if file.exists then
-				s := "<EIFFEL_DOCUMENT>%N"
-				from
-					l := root_folder_imp.child_list
-					l.start
-				until
-					l.after
-				loop
-					s.append (l.item.xml_trace (""))
-					l.forth
-				end
-				s.append ("</EIFFEL_DOCUMENT>%N")
-				file.put_string (s)
-				file.close
-			end
+			root_folder_i.root_save (location)
 		end
 
 	save_resource (r: RESOURCE) is

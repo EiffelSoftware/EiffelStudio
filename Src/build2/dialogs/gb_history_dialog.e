@@ -98,13 +98,17 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 		end	
 		
 	remove_selection is
-			--
+			-- Remove seleection from `history_list'.
 		do
-			history_list.selected_item.disable_select
+			if history_list.selected_item /= Void then
+				history_list.selected_item.disable_select
+			end
 				-- When going from no slection to a selection,
 				-- without this, `last_selected_item' would still be
 				-- 1 and therefore nothing would happen in `item_selected'.
 			last_selected_item := 0
+		ensure
+			no_item_selected: history_list.selected_item = Void
 		end
 		
 	remove_items_from_position (pos: INTEGER) is

@@ -9,6 +9,9 @@ class
 
 inherit
 	WIZARD_CPP_FUNCTION_GENERATOR
+		redefine
+			add_header_file
+		end
 
 feature -- Basic operations
 
@@ -19,6 +22,7 @@ feature -- Basic operations
 		local
 			signature: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
+			a_result_type: STRING
 		do
 			func_desc := a_descriptor
 
@@ -33,44 +37,13 @@ feature -- Basic operations
 
 			visitor := func_desc.return_type.visitor 
 
-			if visitor.c_type.is_equal (Hresult) then
-				ccom_feature_writer.set_result_type(Std_method_imp)
-			else
-				ccom_feature_writer.set_result_type(visitor.c_type)
-			end
+			set_vtable_function_return_type
 
 			if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
 				c_header_files.force (visitor.c_header_file)
 			end
 
-			if not func_desc.arguments.empty then
-				from
-					func_desc.arguments.start
-				until
-					func_desc.arguments.off
-				loop
-					visitor := func_desc.arguments.item.type.visitor 
-
-					signature.append (visitor.c_type)
-					if visitor.is_array_type then
-						signature.append (Asterisk)
-					end
-					signature.append (Space)
-					signature.append (func_desc.arguments.item.name)
-					signature.append (Comma)
-					if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
-						c_header_files.force (visitor.c_header_file)
-					end
-
-					func_desc.arguments.forth
-				end
-				-- Remove the last comma
-				if signature.item (signature.count).is_equal(',') then
-					signature.remove (signature.count)
-				end
-			end
-
-			ccom_feature_writer.set_signature(signature)
+			ccom_feature_writer.set_signature(vtable_signature)
 
 		ensure
 			ccom_feature_writer_exist: ccom_feature_writer /= Void
@@ -146,6 +119,13 @@ feature -- Basic operations
 			function_descriptor_exist: func_desc /= Void
 		end
 
+	add_header_file (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Add header file to list of header files if needed.
+		do
+			if a_visitor.c_header_file /= Void and then not a_visitor.c_header_file.empty then
+				c_header_files.force (a_visitor.c_header_file)
+			end
+		end
 
 end -- class WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
 

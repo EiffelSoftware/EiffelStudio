@@ -105,6 +105,7 @@ feature -- Status setting
 		deferred
 		ensure
 			color_set: background_color.is_equal (a_color)
+			bcolor_set: bcolor_set
 		end
 		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
@@ -186,6 +187,9 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			-- Blue, Green, Red
 		deferred
 		end
+		
+	bcolor_set: BOOLEAN
+			-- Has `bcolor' been set explicitly via `bcolor_set'?
 
 feature {EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 

@@ -608,11 +608,10 @@ feature {NONE} -- Implementation
 				on_wm_control_id_command (control_id)
 				control ?= windows.item (hwnd_control)
 				if control /= Void then
-					check
-						control_exists: control.exists
+					if exists and then control.exists then
+						on_control_command (control)
 					end
-					on_control_command (control)
-					if control.exists then
+					if exists and then control.exists then
 						notify (control, notify_code)
 					end
 					if control.exists then

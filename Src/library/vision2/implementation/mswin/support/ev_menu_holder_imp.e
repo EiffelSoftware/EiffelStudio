@@ -10,21 +10,6 @@ deferred class
 inherit
 	EV_MENU_CONTAINER_I
 
-	EV_ITEM_CONTAINER_IMP
-		export {EV_MENU_ITEM_IMP}
-			set_name
-		end
-
-feature -- Access
-
-	menu_container: WEL_MENU is
-			-- Actual WEL container
-		deferred
-		end
-
-	ev_children: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
-			-- List of all the children
-
 feature -- Event association
 
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
@@ -47,6 +32,16 @@ feature {EV_MENU_CONTAINER} -- Implementation
 			menu_imp.set_position (menu_container.count)
 			menu_imp.set_parent_container (Current)
 		end
+
+feature {EV_MENU_IMP} -- Implementation
+
+	menu_container: WEL_MENU is
+			-- Actual WEL container
+		deferred
+		end
+
+	ev_children: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
+			-- List of all the children
 
 end -- class EV_MENU_CONTAINER_IMP
 

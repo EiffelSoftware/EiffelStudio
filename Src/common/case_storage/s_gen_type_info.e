@@ -28,7 +28,7 @@ feature -- Properties
 			Result := (generics /= Void)
 		end
 
-	real_class_ids: LINKED_LIST [INTEGER] is
+	real_class_ids: LINKED_LIST [CLASS_ID] is
 			-- List of real class ids that exist in system
 			-- in the generic paraments
 		do

@@ -27,6 +27,18 @@ feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
 		ensure
 			Result = application_cell.item
 		end
+		
+	supported_image_formats: LINEAR [STRING] is
+			-- `Result' contains all supported image formats
+			-- on current platform, in the form of their three letter extension.
+			-- e.g. PNG, BMP, XPM, ICO
+		require
+			not_destroyed: not is_destroyed
+		deferred
+		ensure
+			result_not_void: Result /= Void
+			object_comparison_set: Result.object_comparison
+		end
 
 feature {EV_ANY_I} -- Implementation
 

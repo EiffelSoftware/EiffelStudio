@@ -31,6 +31,19 @@ feature -- Access
 			bridge_ok: Result = implementation.application
 		end
 		
+	supported_image_formats: LINEAR [STRING] is
+			-- `Result' contains all supported image formats
+			-- on current platform, as a three letter uppercase 
+			-- extension. e.g. PNG, BMP, XPM, ICO.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.supported_image_formats
+		ensure
+			result_not_void: Result /= Void
+			object_comparison_set: Result.object_comparison
+		end
+
 feature {NONE} -- Contract support
 
 	application_exists: BOOLEAN is

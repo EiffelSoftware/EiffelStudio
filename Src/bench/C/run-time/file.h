@@ -134,7 +134,6 @@ extern char file_creatable();
 extern long file_fd();
 extern char *file_owner();
 extern char *file_group();
-extern char *file_def();
 extern int rename();
 extern int rmdir();
 

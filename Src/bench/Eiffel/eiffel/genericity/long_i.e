@@ -57,10 +57,10 @@ feature -- Status report
 			-- Pointer element type
 		do
 			inspect size
-			when 8 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1
-			when 16 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i2
-			when 32 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4
-			when 64 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_i8
+			when 8 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i1
+			when 16 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i2
+			when 32 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i4
+			when 64 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i8
 			end
 		end
 
@@ -69,10 +69,10 @@ feature -- Status report
 		do
 			inspect
 				size
-			when 8 then Result := feature {SHARED_GEN_CONF_LEVEL}.integer_8_tuple_code
-			when 16 then Result := feature {SHARED_GEN_CONF_LEVEL}.integer_16_tuple_code
-			when 32 then Result := feature {SHARED_GEN_CONF_LEVEL}.integer_32_tuple_code
-			when 64 then Result := feature {SHARED_GEN_CONF_LEVEL}.integer_64_tuple_code
+			when 8 then Result := {SHARED_GEN_CONF_LEVEL}.integer_8_tuple_code
+			when 16 then Result := {SHARED_GEN_CONF_LEVEL}.integer_16_tuple_code
+			when 32 then Result := {SHARED_GEN_CONF_LEVEL}.integer_32_tuple_code
+			when 64 then Result := {SHARED_GEN_CONF_LEVEL}.integer_64_tuple_code
 			end
 		end
 

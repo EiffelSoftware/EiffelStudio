@@ -106,6 +106,7 @@ feature {NONE}
 			-- connection to the Relational database
 			set_base
 
+
 			-- Create usefull classes
 			-- 'session_control' provides informations control access and 
 			--  the status of the database.

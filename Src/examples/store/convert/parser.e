@@ -34,7 +34,7 @@ feature {NONE}
 			io.putstring ("First example file:%N");
 			descriptor.make_conform (book);
 			converter1.set_descriptor (descriptor);
-			converter1.set_file_name ("e:\Eiffel42F\examples\store\convert\example1.dat");
+			converter1.set_file_name ("example1.dat");
 			converter1.parse_file;
 			if converter1.conv_error then 
 				io.putstring (converter1.conv_message)

@@ -183,7 +183,6 @@ feature {NONE}
 		-- display data resulting of a query.
 		-- In this example, it converts a tuple in an eiffel object of type 'book' and
 		-- display it using a method of its own class.
-
 		do
 			base_selection.object_convert (book)
 			base_selection.cursor_to_object

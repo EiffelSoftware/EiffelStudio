@@ -1,8 +1,8 @@
-system inserter
+system parser
 
 root
 	
-	inserter (root_cluster): "make"
+	parser (root_cluster): "make"
 
 default
 
@@ -11,10 +11,9 @@ default
 
 cluster
 
-	root_cluster:		".";
-
-	estore_examples_objects:"$EIFFEL4/library/store/examples/Utilities";
-	sybase_handle:		"$EIFFEL4/library/store/examples/Utilities/sybase";
+	root_cluster:		"$EIFFEL4/examples/store/convert";
+	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
+	ingres_handle:		"$EIFFEL4/examples/store/Utilities/ingres";
 
 -- EiffelStore
 
@@ -22,15 +21,15 @@ cluster
 	estore_interface:	"$EIFFEL4/library/store/interface";
 	estore_date:		"$EIFFEL4/library/store/date_and_time";
 	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
-	estore_sybase:		"$EIFFEL4/library/store/dbms/rdbms/sybase";
+	estore_ingres:		"$EIFFEL4/library/store/dbms/rdbms/ingres";
 
 external
 
 	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
-		"-lsupport";
-		"-lsybase";
 		"-lsys_time";
-		"-L$(SYBASE)/lib"; 
-		"-lsybdb"
+		"-lsupport";
+		"-lingres_store";
+		"-L$(II_SYSTEM)/ingres/lib"; 
+		"-lingres"
 
 end

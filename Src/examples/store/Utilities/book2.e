@@ -57,9 +57,9 @@ feature
 	set_year (y: INTEGER) is
 			-- Set `year' with `y'
 		local
-			date:DATE
+			date: DATE 
 		do
-			!!date.make_month_day_year (1,1,y)
+			!! date.make(y,1,1)
 			year.set_date(date)
 		end
 
@@ -80,7 +80,7 @@ feature
 		do
 			!! title.make (80)
 			!! author.make (80)
-			!! year.make_now
+			!! year.make_now 
 		end
 
 

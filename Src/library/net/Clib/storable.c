@@ -120,9 +120,9 @@ rt_private char* net_buffer (int min_size)
 	if (buffer_size < min_size)
 	{
 		if (buffer == NULL)
-			buffer = (char*) eif_malloc (min_size);
+			buffer = (char*) malloc (min_size);
 		else
-			buffer = (char*) eif_realloc (buffer, min_size);
+			buffer = (char*) realloc (buffer, min_size);
 
 		if (buffer == NULL)
 			eraise ("Out of memory in buffered_write", EN_RETR);
@@ -208,13 +208,18 @@ int net_char_write(char *pointer, int size)
 
 rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 {
+#ifndef EIF_IL_DLL
 	socket_fides = file_desc;
 
 	return portable_retrieve(net_char_read);
+#else
+	return NULL;
+#endif
 }
 
 rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 {
+#ifndef EIF_IL_DLL
 	socket_fides = file_desc;
 
 	rt_init_store(
@@ -228,10 +233,12 @@ rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 	basic_general_free_store(object);
 
 	rt_reset_store();
+#endif
 }
 
 rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 {
+#ifndef EIF_IL_DLL
 	socket_fides = file_desc;
 
 	rt_init_store(
@@ -245,10 +252,12 @@ rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 	basic_general_free_store(object);
 
 	rt_reset_store();
+#endif
 }
 
 rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 {
+#ifndef EIF_IL_DLL
 	socket_fides = file_desc;
 
 	rt_init_store(
@@ -261,5 +270,6 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 
 	independent_free_store (object);
 	rt_reset_store();
+#endif
 }
 

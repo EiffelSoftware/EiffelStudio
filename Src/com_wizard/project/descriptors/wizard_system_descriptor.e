@@ -10,6 +10,11 @@ class
 inherit 
 	WIZARD_SPECIAL_TYPE_LIBRARIES
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -149,7 +154,8 @@ feature -- Basic operations
 			
 			-- Pass 1: generate raw descriptors except coclasses
 			l_descriptor.generate
-			
+			progress_report.step
+
 			-- Pass 2: generate inherited interfaces
 			from
 				start
@@ -161,6 +167,7 @@ feature -- Basic operations
 				l_descriptor.finalize_inherited_interfaces
 				forth
 			end
+			progress_report.step
 			
 			-- Pass 3: Build interface vtable and IDispatch feature tables
 			from
@@ -174,6 +181,7 @@ feature -- Basic operations
 				end
 				forth
 			end
+			progress_report.step
 
 			-- Pass 4: Resolve Eiffel class name clashes,
 			--         Resolve interface feature names clashes,
@@ -192,6 +200,7 @@ feature -- Basic operations
 				end
 				forth
 			end
+			progress_report.step
 			
 			-- Pass 5: Resolve coclass (Eiffel and C) feature names clashes
 			from
@@ -205,6 +214,7 @@ feature -- Basic operations
 				end
 				forth
 			end
+			progress_report.step
 		end
 
 	add_library_descriptor (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is

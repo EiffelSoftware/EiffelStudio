@@ -76,9 +76,15 @@ feature {EV_BOX} -- Implementation
 			-- Remove the given child.
 			-- Function redefined because the widget is in a box. 
 		do
+			gtk_object_ref (child_imp.widget)
+				-- Increment child_imp.widget to 2 so it will
+				-- not be destroyed when removed from child_imp.box_widget
+				-- below.
+			
 			gtk_container_remove (GTK_CONTAINER (child_imp.box_widget), child_imp.widget)
 			gtk_container_remove (GTK_CONTAINER (widget), child_imp.box_widget)
-			
+				-- This destroys child_imp.box_widget as it has no more reference.
+				-- We destroy it as we do not use it any longer.
 		end
 
 end -- class EV_BOX_IMP

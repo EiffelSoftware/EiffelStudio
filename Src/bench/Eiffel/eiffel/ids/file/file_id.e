@@ -41,8 +41,8 @@ feature {NONE} -- Implementation
 
 	counter: FILE_SUBCOUNTER is
 			-- Counter associated with the id
-		do
-			Result := System.server_controler.file_counter.item (compilation_id)
+		once
+			Result := File_counter.item (Normal_compilation)
 		end
 
 	packet_size: INTEGER is 100

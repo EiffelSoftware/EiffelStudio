@@ -10,7 +10,8 @@ inherit
 		end;
 	ATTRIBUTE_ID
 		undefine
-			is_dynamic, compilation_id
+			is_dynamic, compilation_id,
+			counter, prefix_name
 		end
 
 creation

@@ -14,8 +14,8 @@ feature {NONE} -- Implementation
 
 	counter: FEATURE_AS_SUBCOUNTER is
 			-- Counter associated with the id
-		do
-			Result := System.feature_as_counter.item (compilation_id)
+		once
+			Result := Feature_as_counter.item (Normal_compilation)
 		end
 
 end -- class FEATURE_AS_ID

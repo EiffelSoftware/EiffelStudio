@@ -11,7 +11,7 @@ inherit
 		undefine
 			compilation_id, is_precompiled
 		redefine
-			directory_path
+			directory_path, counter
 		end
 
 creation
@@ -29,6 +29,14 @@ feature -- Access
 			else
 				Result := Compilation_path
 			end
+		end
+
+feature {NONE} -- Implementation
+ 
+	counter: FILE_SUBCOUNTER is
+			-- Counter associated with the id
+		do
+			Result := File_counter.item (compilation_id)
 		end
 
 end -- class P_FILE_ID

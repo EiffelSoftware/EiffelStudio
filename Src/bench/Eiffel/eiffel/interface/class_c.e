@@ -10,7 +10,7 @@ class CLASS_C
 inherit
 
 	IDABLE;
-	SHARED_WORKBENCH;
+	SHARED_COUNTER;
 	SHARED_SERVER
 		export
 			{ANY} all
@@ -815,9 +815,9 @@ end;
 					if invariant_feature = Void then
 						!!invariant_feature.make (Current);
 						invariant_feature.set_body_index
-											(System.body_index_counter.next_id);
+											(Body_index_counter.next_id);
 					end;
-					new_body_id := System.body_id_counter.next_id;
+					new_body_id := Body_id_counter.next_id;
 					System.body_index_table.force
 								(new_body_id, invariant_feature.body_index);
 				end;
@@ -1086,9 +1086,9 @@ end;
 --					if invariant_feature = Void then
 --						!!invariant_feature.make (Current);
 --						invariant_feature.set_body_index
---											(System.body_index_counter.next_id);
+--											(Body_index_counter.next_id);
 --					end;
---					new_body_id := System.body_id_counter.next;
+--					new_body_id := Body_id_counter.next;
 --					System.body_index_table.force
 --								(new_body_id, invariant_feature.body_index);
 --				end;
@@ -1324,7 +1324,7 @@ feature -- Melting
 				!!inv_melted_info;
 				if not melted_set.has (inv_melted_info) then
 					melted_set.put (inv_melted_info);
-					new_body_id := System.body_id_counter.next_id;
+					new_body_id := Body_id_counter.next_id;
 					System.body_index_table.force
 									(new_body_id, invariant_feature.body_index);
 				end;
@@ -3245,7 +3245,7 @@ end;
 							not old_feat_as.is_assertion_equiv (new_feat_as)
 							or else not old_feat_as.is_body_equiv (new_feat_as)
 						then
-							new_body_id := System.body_id_counter.next_id;
+							new_body_id := Body_id_counter.next_id;
 							insert_changed_feature (new_feat.feature_name);
 
 								-- We do not have enough information to know

@@ -106,7 +106,6 @@ inherit
 			on_cben_endedit_item,
 			on_cbn_editchange,
 			on_cbn_selchange,
-			on_cbn_dblclk,
 			default_style
 		end
 
@@ -187,99 +186,97 @@ feature -- Status report
 		end
 
 	is_selected (an_id: INTEGER): BOOLEAN is
-			-- Is item given by `an_id' selected?
+			-- Is item given by the one-based index `an_id' selected?
 		do
 			if selected then
-				Result := (an_id = wel_selected_item)
+				Result := ( (an_id - 1) = wel_selected_item )
 			end
 		end
 
 	selected_item: EV_LIST_ITEM is
-			-- Give the item which is currently selected
-			-- It start with a zero index in wel and with a
-			-- one index for the array.
+			-- Currently selected item.
+		local
+			new_selected_item: EV_LIST_ITEM_IMP
 		do
 			if selected then
-				Result ?= (ev_children.i_th (wel_selected_item + 1)).interface
+					--| Arrays are zero-based in WEL and one-based in Vision2.
+				new_selected_item := ev_children @ (wel_selected_item + 1)
+				Result := new_selected_item.interface
 			end
 		end
 
 	has_selection: BOOLEAN is
-			-- Has a current selection?
+			-- Is there a current text selection?
+		local
+			wel_sel: INTEGER
+			start_pos, end_pos: INTEGER
+				-- starting and ending character positions of the 
+				-- current selection in an edit control
 		do
-			Result := cwin_lo_word (cwin_send_message_result (edit_item,
-				Em_getsel, 0, 0)) /=
-				cwin_hi_word (cwin_send_message_result (edit_item,
-				Em_getsel, 0, 0))
+			wel_sel := cwin_send_message_result (edit_item, Em_getsel, 0, 0)
+			start_pos := cwin_hi_word (wel_sel)
+			end_pos := cwin_lo_word (wel_sel)
+
+				-- There is a current selection if the positions
+				-- are different.
+			Result :=  start_pos /= end_pos
 		end
 
 	internal_caret_position: INTEGER is
 			-- Caret position
+		local
+			wel_sel: INTEGER
 		do
-			Result := cwin_hi_word (cwin_send_message_result (edit_item,
-				Em_getsel, 0, 0))
+			wel_sel := cwin_send_message_result (edit_item, Em_getsel, 0, 0)
+			Result := cwin_hi_word (wel_sel)
 		end
 
 feature -- Status setting
 
-	set_text (tex: STRING) is
+	set_text (a_text: STRING) is
 			-- Set the text of the combo box.
 		do
-			wel_set_text (tex)	
+			wel_set_text (a_text)	
 		end
 
 	set_default_minimum_size is
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
+			--| FIXME ARNAUD: DON'T USE FIXED NUMBER, USE
+			--| RELATIVE-FONT VALUES.
 			internal_set_minimum_size (30, 22)
 		end
 
 	select_item (an_index: INTEGER) is
-			-- Select an item of the `an_index'-th item of the list.
-			-- We cannot redefine this feature because then a
-			-- postcondition is violated because of the change
-			-- of index.
+			-- Select the item at the one-based index `an_index'.
+			--|--------------------------------------------------
+			--| We cannot redefine this feature because then a
+			--| postcondition is violated because of the change
+			--| of index.
+			--|--------------------------------------------------
 		do
-			if (not selected) or (selected and then not equal (
-						wel_selected_item, an_index - 1)) then
-					-- Only select an item if it is not already selected.
-				if selected then
-					(ev_children @ old_Selected_item.list_index
-						).interface.deselect_actions.call ([])
-						-- Call deselect events on child.
-					interface.deselect_actions.call ([(
-						ev_children @ old_selected_item.list_index).interface])
-				end
-				wel_select_item (an_index - 1)
-				old_selected_item := ev_children @ (an_index)
-					-- Now send `Cbn_selchange' message to Current control
-					-- so that we know that a change occured and to handle
-					-- it as specified by user.
-					cwin_send_message (parent_item, Wm_command, Cbn_selchange *
-						65536 + id,
-					cwel_pointer_to_integer (wel_item))
-					(ev_children @ an_index).interface.select_actions.call ([])
-						-- Call select events on child.
-					interface.select_actions.call ([(ev_children @ an_index
-							).interface])
-						-- Must now manually inform the combo box that
-						-- selection is taking place.
-				end
+				-- Select the item in the combo box
+			wel_select_item (an_index - 1)
+
+				-- Deal with the selection change.
+			on_cbn_selchange
 		end
 
 	deselect_item (an_index: INTEGER) is
-			-- Unselect the item at the one-based `an_index'.
+			-- Unselect the item at the one-based index `an_index'.
 		do
-			unselect
-			old_selected_item := Void
+			clear_selection
 		end
 
 	clear_selection is
 			-- Clear the selection of the list.
 		do
+				-- Unselect the item in the combo box
 			unselect
-			old_selected_item := Void
+
+				-- Deal with the selection change.
+			on_cbn_selchange
 		end
 
 	set_editable (flag: BOOLEAN) is
@@ -300,7 +297,7 @@ feature -- Status setting
 		end
 
 	internal_set_caret_position (pos: INTEGER) is
-			-- Set the caret position with `position'.
+			-- Set the caret position with `pos'.
 		do
 			cwin_send_message (edit_item, Em_setsel, pos, pos)
 		end
@@ -314,7 +311,7 @@ feature -- Basic operation
 		end
 
 	deselect_all is
-			-- Unselect the current selection.
+			-- Unselect the current text selection.
 		do
 			cwin_send_message (edit_item, Em_setsel, -1, 0)
 		end
@@ -354,57 +351,97 @@ feature -- Basic operation
 		local
 			wel_str: WEL_STRING
 		do
-			!! wel_str.make (txt)
-			cwin_send_message (edit_item, Em_replacesel, 0,
-				cwel_pointer_to_integer (wel_str.item))
+			create wel_str.make (txt)
+			cwin_send_message (edit_item, Em_replacesel, 
+				0, cwel_pointer_to_integer (wel_str.item))
+		end
+
+feature {EV_LIST_ITEM_IMP} -- Implementation
+
+	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Select `item_imp' in the list.
+		do
+			select_item (internal_get_index (item_imp))
+		end
+
+	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN is
+			-- Is `item_imp' selected in the list?
+		do
+			Result := is_selected (internal_get_index (item_imp))
+		end
+
+	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Deselect `item_imp' in the list.
+		do
+			deselect_item (internal_get_index (item_imp))
+		end
+
+	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
+			-- Return the index of `item_imp' in the list.
+		do
+			Result := ev_children.index_of (item_imp, 1)
+		end
+
+   	get_item_position (an_index: INTEGER): WEL_POINT is
+   			-- Retrieves the position of the zero-based `index'-th item.
+   			-- in the drop-down list.
+   		local
+   			item_imp: EV_LIST_ITEM_IMP
+   		do
+   			create Result.make (0, 0)
+   			item_imp := ev_children @ (an_index + 1)
+
+   			if item_imp.is_displayed then
+   				Result.set_y ((an_index - top_index) * item_height)
+   			end
+   		end
+
+	visible_count: INTEGER is
+   			-- Number of items that can be displayed in the list.
+   		local
+   			wel_rect: WEL_RECT
+   			list_height: INTEGER
+   		do
+   			wel_rect := dropped_rect
+   			list_height := wel_rect.bottom - wel_rect.top
+
+   			Result := list_height // list_item_height
 		end
 
 feature {NONE} -- Implementation
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
-		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate 
+			-- item event.
 		do
 			--|FIXME Implement
-		--	check
-		--		False
-		--	end
-		end
-
-	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
-			-- Is `li_imp' selected?
-		do
-			Result := is_selected (index_of_item_imp (li_imp) - 1)
-		end
-
-	select_item_imp (li_imp: EV_LIST_ITEM_IMP) is
-			-- Set `li_imp' selected.
-		do
-			select_item (index_of_item_imp (li_imp) - 1)
-		end
-
-	deselect_item_imp (li_imp: EV_LIST_ITEM_IMP) is
-			-- Set `li_imp' deselected.
-		local
-			pos: INTEGER
-		do
-			deselect_item (index_of_item_imp (li_imp) - 1)
-		end
-
-	set_item_imp_text (li_imp: EV_LIST_ITEM_IMP; a_text: STRING) is
-			-- Set `li_imp'.`text' to `a_text'.
-		local
-			pos: INTEGER
-		do
-			pos := index_of_item_imp (li_imp)
-			delete_string (pos - 1)
-			insert_string_at (li_imp.wel_text, pos - 1)
-		end
-
-	top_index: INTEGER is
-		do 
 			check
-				to_be_implemented: False
+				To_be_implemented: False
 			end
+		end
+
+	recreate_combo_box (creation_flag: INTEGER) is
+			-- Destroy the existing combo box and recreate
+			-- a new one with `creation_flag' in the style
+		local
+			par_imp: WEL_WINDOW
+			a, b, c: INTEGER
+		do
+				-- We keep some useful informations
+			par_imp ?= parent_imp
+			a := x_position
+			b := y_position
+			c := width
+
+				-- We destroy the old combo
+			wel_destroy
+
+				-- We create the new combo.
+			internal_window_make (par_imp, Void, default_style +
+				creation_flag,
+				a, b, c, 90, 0, default_pointer)
+ 			id := 0
+			internal_copy_list
 		end
 
 	set_read_only is
@@ -414,25 +451,11 @@ feature {NONE} -- Implementation
 			a, b, c: INTEGER
 		do
 			if is_editable then
-				-- We keep some useful informations
-				par_imp ?= parent_imp
-				a := x_position
-				b := y_position
-				c := width
-
-				-- We destroy the old combo
-				wel_destroy
+				recreate_combo_box (Cbs_dropdownlist)
+					
+					-- Remove the text field and create a combo.
 				text_field := Void
-
-				-- We create the new combo.
-  				internal_window_make (par_imp, Void, default_style +
-					Cbs_dropdownlist,
-					a, b, c, 90, 0, default_pointer)
- 	 			id := 0
 				create combo.make_with_combo (Current)
-				--set_text (s)
-				--| FIXME huh?
-				internal_copy_list
 			end
 		end
 
@@ -443,23 +466,11 @@ feature {NONE} -- Implementation
 			a, b, c: INTEGER
 		do
 			if not is_editable then
-				-- We keep some useful informations
-				par_imp ?= parent_imp
-				a := x_position
-				b := y_position
-				c := width
-
-				-- We destroy the old combo
-				wel_destroy
+				recreate_combo_box (Cbs_dropdown)
+					
+					-- Remove the combo and create a text field.
 				combo := Void
-
-				-- We create the new combo.
-  				internal_window_make (par_imp, Void, default_style +
-					Cbs_dropdown,
-					a, b, c, 90, 0, default_pointer)
- 	 			id := 0create text_field.make_with_combo (Current)
-				
-				internal_copy_list
+ 	 			create text_field.make_with_combo (Current)
 			end
 		end
 
@@ -469,6 +480,42 @@ feature {NONE} -- Implementation
 			Result := flag_set (style, Cbs_dropdownlist)
 		end
 
+	internal_copy_list is
+			-- Take an empty list and initialize all the children with
+			-- the contents of `ev_children'.
+		local
+			original_index: INTEGER
+			item_imp: EV_LIST_ITEM_IMP
+		do
+			original_index := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				add_string (ev_children.item.wel_text)
+				ev_children.forth
+			end
+			ev_children.go_i_th (original_index)
+		ensure
+			index_not_changed: index = old index
+		end
+
+	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
+			-- Insert `item_imp' at the one-based index `an_index'.
+		do
+			insert_string_at (item_imp.wel_text, an_index - 1)
+		end
+
+	remove_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Remove `item_imp'.
+		local
+			an_index: INTEGER
+		do
+			an_index := internal_get_index (item_imp)
+			delete_string (an_index - 1)
+		end
+
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 	-- WEL Implementation
 
@@ -476,25 +523,23 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			-- We check if the enter key is pressed)
 			-- 13 is the number of the return key.
 		local
-			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+			list: like ev_children
 			counter: INTEGER
 			found: BOOLEAN
-			t_item: EV_LIST_ITEM_imp
 		do
 			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
 			if virtual_key = Vk_return then
 				-- If return pressed, select item with matching text.
+				list := ev_children
 				from
-					list := ev_children
 					list.start
 					counter := 1
 				until
 					counter = list.count + 1 or found
 				loop
 					if equal (list.item.text, text) then
-						if not selected or (selected and not is_selected (
-								counter - 1)) then
+						if not is_selected (counter) then
 							select_item (counter)
 						end
 						found := True
@@ -502,27 +547,23 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 					list.forth
 					counter := counter + 1
 				end
-			else
-				if selected and equal (text, selected_item.text) and
-						(virtual_key /= 9) and
-					(virtual_key /= 40) and (virtual_key /= 38) then
-					t_item ?= selected_item.implementation
-					unselect;
-					(ev_children @ t_item.list_index
-						).interface.deselect_actions.call ([])
-						-- Call deselect events on child.
-					interface.deselect_actions.call ([(
-						ev_children @ t_item.list_index).interface])
-					old_selected_item := Void
-				end
+			elseif selected and equal (text, selected_item.text) and
+			   (virtual_key /= Vk_tab) and (virtual_key /= Vk_down) and
+			   (virtual_key /= Vk_up) and (virtual_key /= Vk_f4)
+			   		--| Note: F4 is used to open/close the list.
+			then
+					-- If a key is pressed and a selection is set,
+					-- we clear the selection.
+				clear_selection
 			end
 		end
 
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
+			-- Style used to create the window.
 		do
-			Result := Ws_child + Ws_visible + Ws_group 
+			Result := Ws_child + Ws_visible + Ws_group
 						+ Ws_tabstop + Ws_vscroll
 						+ Cbs_autohscroll
 		end
@@ -544,54 +585,37 @@ feature {NONE} -- WEL Implementation
 
 	on_cbn_selchange is
 			-- The selection is about to be changed.
+		local
+			new_selected_item: EV_LIST_ITEM_IMP
 		do
-			if selected and then wel_selected_item /= Void then
-				if selected and then not equal (old_selected_item,
-					ev_children.i_th (wel_selected_item + 1))
-				then
-					if old_selected_item /= Void then
-						old_selected_item.interface.deselect_actions.call ([])
-							-- Call deselect events on child.
-						interface.deselect_actions.call ([(
-							ev_children @ old_selected_item.list_index
-								).interface])
-					end
-	
-						-- Only performed if an item is selected and the new
-						-- selection is not equal to
-						-- the current selection.
-					old_selected_item := ev_children.i_th (wel_selected_item +
-						1)
-					(ev_children @ (wel_selected_item + 1)
-						).interface.select_actions.call ([])
-						-- Call select events on child.
-					interface.select_actions.call ([(ev_children @ (
-						wel_selected_item + 1)).interface])
-						-- Must now manually inform combo box that a selection
-						-- is taking place
-				elseif wel_selected_item/= Void and then not equal (
-					old_selected_item,
-				ev_children.i_th (wel_selected_item + 1)) then
-					old_selected_item := Void
-				end
-			end
-		end
-
-	on_cbn_dblclk is
-			-- The user double-clicks a string in the list box.
-		do
+					-- Retrieve the new selected item.
 			if selected then
-				--|FIXME Events have changed this event is no longer pertinent.
-				--(ev_children.i_th (wel_selected_item + 1)).execute_command (
-				-- Cmd_item_dblclk, Void)
+				new_selected_item := ev_children.i_th (wel_selected_item + 1)
+			else
+				new_selected_item := Void
+			end
+
+			if not equal (old_selected_item, new_selected_item) then
+					-- Send a "Deselect Action" to the old item, and
+					-- to the combo box.
+				if old_selected_item /= Void then
+					old_selected_item.interface.deselect_actions.call ([])
+					interface.deselect_actions.call ([old_selected_item.interface])
+				end
+					-- Send a "Select Action" to the new item, and
+					-- to the combo box.
+				if new_selected_item /= Void then
+					new_selected_item.interface.select_actions.call ([])
+					interface.select_actions.call ([new_selected_item.interface])
+				end
+					-- Remember the current selected item.
+				old_selected_item := new_selected_item
 			end
 		end
 
 	on_cbn_editchange is
 			-- The edit control portion is about to
 			-- display altered text.
-		local
-			s1,s2: STRING
 		do
 			if not equal (text, last_edit_change) then
 				interface.change_actions.call ([])
@@ -600,15 +624,15 @@ feature {NONE} -- WEL Implementation
 		end
 
    	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-   			-- We must not resize the height of the combo-box.
+	   		-- Resize Message for the combo-box.
    		do
+	   			-- We must not resize the height of the combo-box.
   			cwin_move_window (wel_item, a_x, a_y, a_width, height, repaint)
   		end
 
 	set_selection (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
-			-- `start_pos' and `end_pos'. Both `start_pos' and
-			-- `end_pos' are selected.
+			-- Hilight the text between `start_pos' and `end_pos'. 
+			-- Both `start_pos' and `end_pos' are selected.
 		do
 			cwin_send_message (wel_item, Cb_seteditsel, 0, cwin_make_long (
 				start_pos, end_pos))
@@ -684,7 +708,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-feature {NONE} -- Interface
+feature {EV_LIST_I} -- Implementation
 
 	interface: EV_COMBO_BOX
 
@@ -711,6 +735,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.74  2000/04/20 01:12:38  pichery
+--| Complete Refactoring.
+--|
 --| Revision 1.73  2000/04/17 20:58:10  brendel
 --| Commented out check False since the user can't even click on it.
 --|
@@ -732,7 +759,7 @@ end -- class EV_COMBO_BOX_IMP
 --|
 --| Revision 1.67  2000/03/30 22:40:04  rogers
 --| Fixed by re-implementing : is_item_imp_selected, select_item_imp,
---| deselect_item_imp and set_item_imp_text.
+--| deselect_item_imp and internal_set_text_item.
 --|
 --| Revision 1.66  2000/03/30 18:11:12  brendel
 --| Removed `insert_item'.

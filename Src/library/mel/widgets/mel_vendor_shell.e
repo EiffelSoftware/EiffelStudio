@@ -33,8 +33,41 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
+			Result := get_xm_font_list (screen_object, XmNdefaultFontList)
 		ensure
+			defalt_font_list_is_valid: Result /= Void and then Result.is_valid
 		end;
+
+	button_font_list: MEL_FONT_LIST is
+			-- Font list of the button children
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_font_list (screen_object, XmNbuttonFontList)
+		ensure
+			button_font_list_is_valid: Result /= Void and then Result.is_valid
+		end;
+
+	label_font_list: MEL_FONT_LIST is
+			-- Font list of the label children
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_font_list (screen_object, XmNlabelFontList)
+		ensure
+			label_font_list_is_valid: Result /= Void and then Result.is_valid
+		end;
+
+	text_font_list: MEL_FONT_LIST is
+			-- Font list of the text children
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_font_list (screen_object, XmNtextFontList)
+		ensure
+			text_font_list_is_valid: Result /= Void and then Result.is_valid
+		end;
+
 
 	is_delete_response_destroy: BOOLEAN is
 			-- Will the shell destroy the window when receiving
@@ -281,6 +314,33 @@ feature -- Status setting
 			set_xt_boolean (screen_object, XmNuseAsyncGeometry, b)
 		ensure
 			async_geometry_are_used: is_async_geometry_used = b
+		end;
+
+	set_button_font_list (a_font_list: MEL_FONT_LIST) is
+			-- Set `button_font_list' to a `a_font_list'.
+		require
+			exists: not is_destroyed
+			a_font_list_is_valid: a_font_list /= Void and then a_font_list.is_valid
+		do
+			set_xm_font_list (screen_object, XmNbuttonFontList, a_font_list)
+		end;
+
+	set_label_font_list (a_font_list: MEL_FONT_LIST) is
+			-- Set `label_font_list' to a `a_font_list'.
+		require
+			exists: not is_destroyed
+			a_font_list_is_valid: a_font_list /= Void and then a_font_list.is_valid
+		do
+			set_xm_font_list (screen_object, XmNlabelFontList, a_font_list)
+	   end;
+
+	set_text_font_list (a_font_list: MEL_FONT_LIST) is
+			-- Set `text_font_list' to `a_font_list'.
+		require
+			exists: not is_destroyed
+			a_font_list_is_valid: a_font_list /= Void and then a_font_list.is_valid
+		do
+			set_xm_font_list (screen_object, XmNtextFontList, a_font_list)
 		end;
 
 end -- class MEL_VENDOR_SHELL

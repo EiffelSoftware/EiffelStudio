@@ -10,7 +10,7 @@ indexing
 class SCROLL_LIST 
 
 obsolete
-		"Use SCROLLABLE_LIST instead - it has the same semantics as a LINKED_LIST."
+		"Use SCROLLABLE_LIST instead - it has the same semantics as a LIST."
 inherit
 
 	FONTABLE

@@ -57,7 +57,7 @@ feature -- Basic Operation
 			end
 			debugging_information.select_actions.extend (agent update_debugging_information)
 			
-			create client_of_window.make_with_text ("Generated code as client of EV_TITLED_WINDOW?")
+			create client_of_window.make_with_text ("Generated code is client of EV_TITLED_WINDOW?")
 			if project_settings.client_of_window then
 				client_of_window.enable_select
 			end

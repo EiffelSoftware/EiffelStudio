@@ -1484,11 +1484,7 @@ feature -- Byte code generation
 			inh_assert: INHERITED_ASSERTION
 		do
 				-- Allocate memory for once manifest strings if required
-			if context.byte_code.once_manifest_string_count > 0 then
-				ba.append (Bc_allocate_once_strings)
-				ba.append_integer (context.original_body_index - 1)
-				ba.append_integer (context.byte_code.once_manifest_string_count)
-			end
+			context.make_once_string_allocation_byte_code (ba, context.byte_code.once_manifest_string_count)
 
 			inh_assert := Context.inherited_assertion
 			if Context.origin_has_precondition then

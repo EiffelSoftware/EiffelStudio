@@ -210,11 +210,7 @@ feature -- Byte code geenration
 			context.set_original_body_index (body_index)
 
 				-- Allocate memory for once manifest strings if required
-			if once_manifest_string_count > 0 then
-				ba.append (Bc_allocate_once_strings)
-				ba.append_integer (body_index - 1)
-				ba.append_integer (once_manifest_string_count)
-			end
+			context.make_once_string_allocation_byte_code (ba, once_manifest_string_count)
 
 			byte_list.make_byte_code (ba);
 			ba.append (Bc_inv_null);

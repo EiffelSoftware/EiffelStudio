@@ -8,30 +8,70 @@ inherit
 	WINDOWS;
 	SHARED_LICENSE;
 	GRAPHICS;
+	UNIX_SIGNALS
+		rename
+			meaning as sig_meanging,
+			ignore as sig_ignore,
+			catch as sig_catch
+		end;
+	QUEST_POPUPER
+		redefine
+			continue_after_question_popdown
+		end
 
 feature 
 
 	make is
 		local
 			init: INIT_CHECK;
+			mp: MOUSE_PTR
 		do
-			init_windowing;
-			!!init;
-			init.perform_initial_check;
-			if init.error then
-				io.error.putstring ("EiffelBuild stopped%N");
-				exit
-			elseif init_licence then
-					-- Initialize the resources;
-				if resources = Void then end;
-				init_project;
-				read_command_line;
-				iterate;
-				discard_licence
+			no_message_on_failure;
+			if not retried then
+				init_windowing;
+				!!init;
+				init.perform_initial_check;
+				if init.error then
+					io.error.putstring ("EiffelBuild stopped%N");
+					exit
+				elseif init_licence then
+						-- Initialize the resources;
+					if resources = Void then end;
+					init_project;
+					read_command_line;
+					iterate;
+					discard_licence
+				end
+			else
+				!! mp;
+				mp.restore;
+				Question_box.popup (Current,
+					Messages.internal_error_qu,
+					original_tag_name);
+				retried := False;
+				iterate
 			end;
 		rescue
 			discard_licence;
-			rescue_project
+			if not is_signal or else signal /= Sigint then
+				retried := True;
+				rescue_project
+				retry
+			end
+		end;
+
+	popuper_parent: COMPOSITE is	
+		do
+			Result := main_panel.base
+		end;
+
+	continue_after_question_popdown (yes: BOOLEAN) is
+		do
+			if yes then
+				update_all_windows;
+			else
+				exit
+			end
 		end;
 
 feature {NONE} -- Initialize toolkit
@@ -39,7 +79,7 @@ feature {NONE} -- Initialize toolkit
 	init_windowing is
 			-- Initialize toolkit
 		do
-            if (toolkit = Void) then end
+			if (toolkit = Void) then end
 		end
 
 feature {NONE}
@@ -70,24 +110,11 @@ feature {NONE}
 		local
 			storer: STORER
 		do
-			-- no_message_on_failure;
-			if not retried then
+			if main_panel.project_initialized then
 				history_window.wipe_out;
-				-- Force garbage collection
-				if main_panel.project_initialized then
-					!! storer.make;
-					storer.store (Environment.restore_directory);
-					io.error.putstring ("EiffelBuild: internal error%N");	
-				end
+				!! storer.make;
+				storer.store (Environment.restore_directory);
 			end;
-		rescue
-			retried := True;
-			io.error.putstring ("EiffelBuild: internal error%N");	
-            if original_exception = Operating_system_exception then
-                io.error.putstring ("Reason:  ");
-                io.error.putstring (original_tag_name)
-            end;
-			retry
 		end;
 
 end

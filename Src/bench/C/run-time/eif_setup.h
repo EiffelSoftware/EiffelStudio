@@ -85,8 +85,7 @@ extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
  * is called to initialize Eiffel run-time.
  */
 
-extern void egc_init_plug ();	/* defined in E1/eplug.c. */
-
+#ifndef _CRAY
 #define EIF_RT_BASIC_SETUP(fail_func) \
 	GTCX \
 	struct ex_vect *exvect; \
@@ -100,7 +99,21 @@ extern void egc_init_plug ();	/* defined in E1/eplug.c. */
 		fail_func(); \
 	if (root_obj == (char *)0) \
 		root_obj = cmalloc(1);
-
+#else	/* !_CRAY */
+#define EIF_RT_BASIC_SETUP(fail_func) \
+	GTCX \
+	struct ex_vect *exvect; \
+	jmp_buf exenv; \
+	egc_init_plug(); \
+	initsig(); \
+	initstk(); \
+	exvect = exset((char *) 0, 0, (char *) 0); \
+	(exvect->ex_jbuf) = (char *) exenv; \
+	if ( setjmp(exenv)) \
+		fail_func(); \
+	if (root_obj == (char *)0) \
+		root_obj = cmalloc(1);
+#endif	/* !_CRAY */
 
 #define EIF_RT_BASIC_CLEANUP \
 	reclaim(); \

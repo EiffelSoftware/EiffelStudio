@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EOLE_FILETIME
+	EOLE_FILE_TIME
 
 inherit
 	EOLE_OBJECT_WITH_POINTER

@@ -98,13 +98,8 @@ feature -- Element change
 
 	on_dispatch_get_type_info (dispatch: EOLE_DISPATCH): POINTER is
 			-- Type information for `oledispatch'
-		local
-			type_info: EOLE_TYPE_INFO
 		do
-			type_info := dispatch.on_get_type_info
-			if type_info /= Void then
-				Result := type_info.ole_interface_ptr
-			end
+			Result := dispatch.on_get_type_info
 		end
 
 	on_dispatch_get_ids_of_names (dispatch: EOLE_DISPATCH; names: ARRAY [STRING]): ARRAY [INTEGER] is

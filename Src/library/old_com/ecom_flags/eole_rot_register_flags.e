@@ -1,59 +1,52 @@
 indexing
 
-	description: "ELEMDESC structure"
+	description: "Running Object Table Registration flags"
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	EOLE_ELEM_DESC
+	EOLE_ROT_REGISTER_FLAGS
 
 inherit
-	EOLE_OBJECT_WITH_POINTER
-		
+	EOLE_FLAGS
+	
 feature -- Access
 
-	type_desc: EOLE_TYPE_DESC is
-			-- Info about parameter
-		require
-			valid_c_structure: ole_ptr /= default_pointer
-		do
-			!! Result
-			Result.attach (ole2_get_elemdesc_typedesc (ole_ptr))
-		end
-
-	idl_desc: EOLE_IDL_DESC is
-			-- Info for remoting element
-		require
-			valid_c_structure: ole_ptr /= default_pointer
-		do
-			!! Result
-			Result.attach (ole2_get_elemdesc_idldesc (ole_ptr))
-		end
-
-feature {NONE} -- Externals
-
-	ole2_get_elemdesc_typedesc (this: POINTER): POINTER is
+	Rotflags_registrationkeepsalive: INTEGER is
+			-- Strong reference
 		external
-			"C"
+			"C [macro <wtypes.h>]"
 		alias
-			"eole2_get_elemdesc_typedesc"
+			"ROTFLAGS_REGISTRATIONKEEPSALIVE"
 		end
 
-	ole2_get_elemdesc_idldesc (this: POINTER): POINTER is
+	Rotflags_weakreference: INTEGER is 0
+			-- Weak reference
+
+	Rotflags_allowanyclient: INTEGER
 		external
-			"C"
+			"C [macro <wtypes.h>]"
 		alias
-			"eole2_get_elemdesc_idldesc"
+			"ROTFLAGS_ALLOWANYCLIENT"
 		end
-	
-end -- class EOLE_ELEM_DESC
+		
+	is_valid_ROT_REGISTER_flags (flags: INTEGER): BOOLEAN is
+			-- Is `flags' a valid combination of ROT_REGISTERainer flags?
+		do
+			Result := c_and (Rotflags_registrationkeepsalive + Rotflags_weakreference
+						+ Rotflags_allowanyclient, flags)
+						= Rotflags_registrationkeepsalive + Rotflags_weakreference
+						+ Rotflags_allowanyclient
+		end
+		
+end -- class EOLE_ROT_REGISTER_FLAGS
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
+--| ROT_REGISTERact ISE for any other use.
 --| Based on WINE library, copyright (C) Object Tools, 1996-1998.
 --| Modifications and extensions: copyright (C) ISE, 1998.
 --|

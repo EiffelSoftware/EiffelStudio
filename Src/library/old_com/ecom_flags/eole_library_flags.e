@@ -54,8 +54,7 @@ feature -- Access
 			Result := c_and (Libflag_frestricted + Libflag_fcontrol
 						+ Libflag_fhidden + Libflag_fhasdiskimage
 						, flag)
-						= Libflag_frestricted + Libflag_fcontrol
-						+ Libflag_fhidden + Libflag_fhasdiskimage
+						= flag
 		end
 		
 end -- class EOLE_LIBRARY_FLAGS

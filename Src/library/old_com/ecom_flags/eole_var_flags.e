@@ -67,21 +67,92 @@ feature -- Access
 			-- though it exists and is bindable.
 		external
 			"C [macro <oaidl.h>]"
-		alias
+		alias	
 			"VARFLAG_FHIDDEN"
-		end	
+		end
+
+	Varflag_frestricted: INTEGER is
+			-- Variable should not be displayed to user in browser,
+			-- though it exists and is bindable.
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VARFLAG_FRESTRICTED"
+		end
+
+	Varflag_fdefaultcollelem: INTEGER is
+			-- Variable should not be displayed to user in browser,
+			-- though it exists and is bindable.
+		external
+			"C [macro <oaidl.h>]"
+		alias	
+			"VARFLAG_FDEFAULTCOLLELEM"
+		end
+
+	Varflag_fuidefault: INTEGER is
+			-- Variable should not be displayed to user in browser,
+			-- though it exists and is bindable.
+		external
+			"C [macro <oaidl.h>]"
+		alias	
+			"VARFLAG_FUIDEFAULT"
+		end
+
+	Varflag_fnonbrowsable: INTEGER is
+			-- Variable should not be displayed to user in browser,
+			-- though it exists and is bindable.
+		external
+			"C [macro <oaidl.h>]"
+		alias	
+			"VARFLAG_FNONBROWSABLE"
+		end
+
+	Varflag_freplaceable: INTEGER is
+			-- Variable should not be displayed to user in browser,
+			-- though it exists and is bindable.
+		external
+			"C [macro <oaidl.h>]"
+		alias	
+			"VARFLAG_FREPLACEABLE"
+		end
+
+	Varflag_fimmediatebind: INTEGER is
+			-- Variable should not be displayed to user in browser,
+			-- though it exists and is bindable.
+		external
+			"C [macro <oaidl.h>]"
+		alias	
+			"VARFLAG_FIMMEDIATEBIND"
+		end
 
 	is_valid_varflag (flag: INTEGER): BOOLEAN is
 			-- Is `flag' a valid combination of varflags?
 		do
+			print (Varflag_freadonly + Varflag_fsource
+						+ Varflag_fbindable + Varflag_frequestedit
+						+ Varflag_fdisplaybind + Varflag_fdefaultbind
+						+ Varflag_fhidden + Varflag_frestricted
+						+ Varflag_fdefaultcollelem + Varflag_fuidefault
+						+ Varflag_fnonbrowsable + Varflag_freplaceable
+						+ Varflag_fimmediatebind)
+			print ("%Nand ")
+			print (flag)	
+			print ("= ")
+			print (c_and (Varflag_freadonly + Varflag_fsource
+						+ Varflag_fbindable + Varflag_frequestedit
+						+ Varflag_fdisplaybind + Varflag_fdefaultbind
+						+ Varflag_fhidden + Varflag_frestricted
+						+ Varflag_fdefaultcollelem + Varflag_fuidefault
+						+ Varflag_fnonbrowsable + Varflag_freplaceable
+						+ Varflag_fimmediatebind, flag))
 			Result := c_and (Varflag_freadonly + Varflag_fsource
 						+ Varflag_fbindable + Varflag_frequestedit
 						+ Varflag_fdisplaybind + Varflag_fdefaultbind
-						+ Varflag_fhidden, flag)
-						= Varflag_freadonly + Varflag_fsource
-						+ Varflag_fbindable + Varflag_frequestedit
-						+ Varflag_fdisplaybind + Varflag_fdefaultbind
-						+ Varflag_fhidden
+						+ Varflag_fhidden + Varflag_frestricted
+						+ Varflag_fdefaultcollelem + Varflag_fuidefault
+						+ Varflag_fnonbrowsable + Varflag_freplaceable
+						+ Varflag_fimmediatebind, flag)
+						= flag
 		end
 		
 end -- class EOLE_VARFLAGS

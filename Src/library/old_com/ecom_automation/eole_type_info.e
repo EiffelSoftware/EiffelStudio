@@ -14,6 +14,7 @@ inherit
 			{NONE} create_ole_interface_ptr
 		redefine
 			interface_identifier,
+			interface_identifier_list,
 			is_initializable_from_eiffel
 		end
 
@@ -34,12 +35,63 @@ feature -- Access
 			Result := Iid_type_info
 		end
 
+	interface_identifier_list: LINKED_LIST [STRING] is
+			-- List of supported interfaces
+		once
+			Result := Precursor
+			Result.extend (interface_identifier)
+		end
+
 	is_initializable_from_eiffel: BOOLEAN is
 			-- Does interface support Callbacks?
 		once
 			Result := False
 		end
 
+	containing_type_lib: EOLE_TYPE_LIB
+			-- Containing type library
+			-- Use `get_containing_library' to initialize.
+			
+	index_in_containing_type_lib: INTEGER
+			-- Index in containing type library
+			-- Use `get_containing_library' to initialize.
+
+	type_attr: EOLE_TYPE_ATTR is
+			-- Type attributes
+			-- Use `get_type_attr' to initialize.
+		once
+			!! Result
+		end
+			
+	func_desc: EOLE_FUNC_DESC is
+			-- Function description
+			-- Use `get_func_desc' to initialize.
+		once
+			!! Result
+		end
+			
+	var_desc: EOLE_VAR_DESC is
+			-- Variable/member data description
+			-- Use `get_var_desc' to initialize.
+		once
+			!! Result
+		end
+		
+	is_com_class: BOOLEAN is
+			-- Is described type a COM class?
+		local
+			get_type_attr_called: BOOLEAN
+		do
+			get_type_attr_called := type_attr.is_attached
+			if not get_type_attr_called then
+				get_type_attr
+			end
+			Result := type_attr.type_kind = Tkind_coclass
+			if not get_type_attr_called then
+				release_type_attr
+			end
+		end
+		
 feature -- Message Transmission
 
 	address_of_member (member_id, invoke_ind: INTEGER): POINTER is
@@ -63,17 +115,19 @@ feature -- Message Transmission
 			Result := ole2_typeinfo_create_instance (ole_interface_ptr, punk_outer, wel_string.item)
 		end
 
-	get_containing_type_lib: EOLE_TYPE_LIB is
-			-- Containing type library and index of type description within that type library
+	get_containing_type_lib is
+			-- set `containing_type_lib' to Containing type library
+			-- and `index_in_containing_type_lib' to index of type
+			-- description within that type library.
 		require
 			valid_interface: is_valid_interface
-		local
+		local	
 			ptr: POINTER
 		do
-			!! Result.make
-			ole2_typeinfo_get_containing_typelib (ole_interface_ptr, $ptr)
+			index_in_containing_type_lib := ole2_typeinfo_get_containing_typelib (ole_interface_ptr, $ptr)
 			if ptr /= default_pointer then
-				Result.attach_ole_interface_ptr (ptr)
+				!! containing_type_lib.make
+				containing_type_lib.attach_ole_interface_ptr (ptr)
 			end
 		end
 
@@ -298,41 +352,6 @@ feature -- Message Transmission
 			var_desc.detach
 		end
 
-feature -- Access
-
-	type_attr: EOLE_TYPE_ATTR is
-			-- Type attributes
-		once
-			!! Result
-		end
-			
-	func_desc: EOLE_FUNC_DESC is
-			-- Function description
-		once
-			!! Result
-		end
-			
-	var_desc: EOLE_VAR_DESC is
-			-- Variable/member data description
-		once
-			!! Result
-		end
-		
-	is_com_class: BOOLEAN is
-			-- Is described type a CoClass?
-		local
-			get_type_attr_called: BOOLEAN
-		do
-			get_type_attr_called := type_attr.is_attached
-			if not get_type_attr_called then
-				get_type_attr
-			end
-			Result := type_attr.type_kind = Tkind_coclass
-			if not get_type_attr_called then
-				release_type_attr
-			end
-		end
-
 feature {NONE} -- Externals
 
 	ole2_create_disp_type_info (idata: POINTER): POINTER is
@@ -356,7 +375,7 @@ feature {NONE} -- Externals
 			"eole2_tinfo_create_instance"
 		end
 
-	ole2_typeinfo_get_containing_typelib (this, ptypelib: POINTER) is
+	ole2_typeinfo_get_containing_typelib (this, ptypelib: POINTER): INTEGER is
 		external
 			"C"
 		alias

@@ -230,7 +230,7 @@ feature -- Access
 						stgm = Stgm_priority
 		end
 		
-end -- class STGM
+end -- class EOLE_STGM
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

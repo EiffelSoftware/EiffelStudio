@@ -10,10 +10,10 @@ class
 
 inherit
 	EOLE_UNKNOWN
-	redefine
-		interface_identifier
-	end
-	
+		redefine
+			interface_identifier,
+			interface_identifier_list
+		end
 
 creation
 	make
@@ -25,7 +25,14 @@ feature -- Access
 		once
 			Result := Iid_font
 		end
-		
+
+	interface_identifier_list: LINKED_LIST [STRING] is
+			-- List of supported interfaces
+		once
+			Result := precursor
+			Result.extend (interface_identifier)
+		end
+	
 feature -- Message Transmission
 
 	get_name: EOLE_BSTR is

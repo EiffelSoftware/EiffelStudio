@@ -70,9 +70,7 @@ feature -- Access
 			Result := c_and (Funcflag_frestricted + Funcflag_fsource
 						+ Funcflag_fbindable + Funcflag_frequestedit
 						+ Funcflag_fdisplaybind + Funcflag_fdefaultbind, flag)
-						= Funcflag_frestricted + Funcflag_fsource
-						+ Funcflag_fbindable + Funcflag_frequestedit
-						+ Funcflag_fdisplaybind + Funcflag_fdefaultbind
+						= flag
 		end
 		
 end -- class EOLE_FUNC_FLAGS

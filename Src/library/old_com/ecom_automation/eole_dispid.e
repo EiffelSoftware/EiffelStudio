@@ -575,7 +575,80 @@ feature -- Access
 		alias
 			"DISPID_PICT_RENDER"
 		end
-			
+
+	is_valid_dispid (dispid: INTEGER): BOOLEAN is
+			-- Is `dispid' a valid dispatch identifier?
+		do
+			Result := dispid = Dispid_unknown or
+						dispid = Dispid_value or		
+						dispid = Dispid_propertyput or
+						dispid = Dispid_newenum or		
+						dispid = Dispid_evaluate  or
+						dispid = Dispid_constructor or
+						dispid = Dispid_destructor or
+						dispid = Dispid_collect or
+						dispid = Dispid_autosize or	
+						dispid = Dispid_backcolor or
+						dispid = Dispid_backstyle or
+						dispid = Dispid_bordercolor or
+						dispid = Dispid_borderstyle or
+						dispid = Dispid_borderwidth or
+						dispid = Dispid_drawmode or
+						dispid = Dispid_drawstyle or
+						dispid = Dispid_drawwidth or
+						dispid = Dispid_fillcolor or	
+						dispid = Dispid_fillstyle or
+						dispid = Dispid_font or
+						dispid = Dispid_forecolor or
+						dispid = Dispid_enabled or
+						dispid = Dispid_hwnd or
+						dispid = Dispid_tabstop or
+						dispid = Dispid_text or
+						dispid = Dispid_caption or
+						dispid = Dispid_bordervisible or
+						dispid = Dispid_appearance or
+						dispid = Dispid_refresh or
+						dispid = Dispid_doclick or
+						dispid = Dispid_aboutbox or
+						dispid = Dispid_click or
+						dispid = Dispid_dblclick or
+						dispid = Dispid_keydown or
+						dispid = Dispid_keypress or
+						dispid = Dispid_keyup or
+						dispid = Dispid_mousedown or
+						dispid = Dispid_mousemove or
+						dispid = Dispid_mouseup or
+						dispid = Dispid_errorevent or
+						dispid = Dispid_ambient_backcolor or
+						dispid = Dispid_ambient_displayname or
+						dispid = Dispid_ambient_font or
+						dispid = Dispid_ambient_forecolor or
+						dispid = Dispid_ambient_localeid or
+						dispid = Dispid_ambient_messagereflect or
+						dispid = Dispid_ambient_scaleunits or
+						dispid = Dispid_ambient_usermode or
+						dispid = Dispid_ambient_uidead or
+						dispid = Dispid_ambient_showgrabhandles or
+						dispid = Dispid_ambient_showhatching or
+						dispid = Dispid_ambient_displayasdefault or
+						dispid = Dispid_ambient_supportsmnemonics or
+						dispid = Dispid_ambient_autoclip or
+						dispid = Dispid_ambient_appearance or	
+						dispid = Dispid_font_name or	
+						dispid = Dispid_font_size or	
+						dispid = Dispid_font_bold or	
+						dispid = Dispid_font_italic or
+						dispid = Dispid_font_under or
+						dispid = Dispid_font_strike or
+						dispid = Dispid_font_weight or
+						dispid = Dispid_font_charset or
+						dispid = Dispid_pict_handle or
+						dispid = Dispid_pict_hpal or
+						dispid = Dispid_pict_type or
+						dispid = Dispid_pict_width or
+						dispid = Dispid_pict_height or
+						dispid = Dispid_pict_render
+			end
 end -- class DISPID
 
 --|----------------------------------------------------------------

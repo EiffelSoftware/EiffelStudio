@@ -174,7 +174,7 @@ feature {EV_ANY_I} -- Implementation
 	on_activate is
 			-- `Current' has been clicked on.
 		do
-			interface.press_actions.call ([])
+			interface.select_actions.call ([])
 		end
 
 	interface: EV_MENU_ITEM
@@ -206,6 +206,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/28 16:33:08  rogers
+--| Changed press_actions to select_actions in on_activate.
+--|
 --| Revision 1.33  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

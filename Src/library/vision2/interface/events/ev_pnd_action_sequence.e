@@ -17,11 +17,6 @@ inherit
 			call
 		end
 
-	INTERNAL
-		undefine
-			default_create, copy, is_equal
-		end
-
 creation
 	default_create
 

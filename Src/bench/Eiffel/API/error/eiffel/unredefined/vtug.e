@@ -85,7 +85,7 @@ feature {COMPILER_EXPORTER}
 	set_feature (f: FEATURE_I) is
 		do
 			if f /= Void then
-				e_feature := f.api_feature;
+				e_feature := f.api_feature (f.written_in);
 			end
 		end;
 

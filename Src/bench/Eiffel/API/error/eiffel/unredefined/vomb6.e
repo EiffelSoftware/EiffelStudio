@@ -62,7 +62,7 @@ feature {COMPILER_EXPORTEr}
 		require
 			valid_f: f /= Void
 		do
-			unique_feature := f.api_feature;
+			unique_feature := f.api_feature (f.written_in);
 		end;
 
 	set_written_class (c: CLASS_C) is

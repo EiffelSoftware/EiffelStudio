@@ -63,8 +63,8 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_args: s /= Void and then u /= Void
 		do
-			selected_feature := s.api_feature;
-			invalid_feature := u.api_feature;
+			selected_feature := s.api_feature (s.written_in);
+			invalid_feature := u.api_feature (u.written_in);
 		end;
 
 end -- class VMRC2

@@ -51,7 +51,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_f: f /= Void
 		do
-			creation_feature := f.api_feature;
+			creation_feature := f.api_feature (f.written_in);
 		end;
 
 end -- class VSRC3

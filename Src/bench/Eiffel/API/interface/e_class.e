@@ -158,7 +158,7 @@ feature -- Access
 		do
 			f := comp_feature_table.item (n);
 			if f /= Void then
-				Result := f.api_feature
+				Result := f.api_feature (id)
 			end
 		end;
 
@@ -172,7 +172,7 @@ feature -- Access
 		do
 			feat := comp_feature_table.feature_of_body_id (bid);
 			if feat /= Void then
-				Result := feat.api_feature
+				Result := feat.api_feature (id)
 			end
 		end;
 
@@ -186,7 +186,7 @@ feature -- Access
 		do
 			feat := comp_feature_table.origin_table.item (rout_id);
 			if feat /= Void then
-				Result := feat.api_feature
+				Result := feat.api_feature (id)
 			end
 		end;
 
@@ -204,8 +204,10 @@ feature -- Access
 			-- List of once functions
 		local
 			f_table: FEATURE_TABLE;
-			feat: FEATURE_I
+			feat: FEATURE_I;
+			class_id: INTEGER
 		do
+			class_id := id;
 			!! Result.make;
 			f_table := comp_feature_table;
 			from
@@ -215,7 +217,7 @@ feature -- Access
 			loop
 				feat := f_table.item_for_iteration;
 				if feat.is_once and then feat.is_function then
-					Result.put_front (feat.api_feature)
+					Result.put_front (feat.api_feature (class_id))
 				end
 				f_table.forth
 			end;

@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			!! int_bottom_offset.make (associated_category.bottom_offset, Current)	;
 			!! bool_command_bar.make (associated_category.command_bar, Current);
 			!! bool_format_bar.make (associated_category.format_bar, Current);
+			!! bool_raise_on_error.make (associated_category.raise_on_error, Current);
 
 			resources.extend (int_width);
 			resources.extend (int_height);
@@ -43,7 +44,8 @@ feature {NONE} -- Initialization
 			resources.extend (int_object_height);
 			resources.extend (int_bottom_offset);
 			resources.extend (bool_command_bar);
-			resources.extend (bool_format_bar)
+			resources.extend (bool_format_bar);
+			resources.extend (bool_raise_on_error)
 		end
 
 feature {PREFERENCE_TOOL} -- Initialization
@@ -69,7 +71,7 @@ feature -- Access
 
 feature -- Properties
 
-	name: STRING is "Project window resources"
+	name: STRING is "Project tool preferences"
 			-- Current's name
 
 	symbol: PIXMAP is
@@ -128,6 +130,7 @@ feature {NONE} -- Resources
 	int_width, int_height,
 	int_feature_height, int_object_height,
 	int_bottom_offset: INTEGER_PREF_RES;
-	bool_command_bar, bool_format_bar: BOOLEAN_PREF_RES
+	bool_command_bar, bool_format_bar,
+	bool_raise_on_error: BOOLEAN_PREF_RES
 
 end -- class PROJECT_PREF_CAT

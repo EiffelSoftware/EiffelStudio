@@ -24,13 +24,31 @@ inherit
 
 creation
 
-	make
+	make, make_unlicensed
 
 feature -- Initialization
 
 	make is
+			-- Analyze the command line options and
+			-- execute the appropriate command.
+		do
+			invoke_batch (True)
+		end
+
+	make_unlicensed is
+			-- Analyze the command line options and
+			-- execute the appropriate command.
+		do
+			invoke_batch (False)
+		end
+
+feature {NONE} -- Initialization
+
+	invoke_batch (licensed: BOOLEAN) is
 			-- Analyze the command line options and 
 			-- execute the appropriate command.
+			-- `licensed' indicates whether we need to check the
+			-- license or not.
 		local
 			temp: STRING
 			new_resources: TTY_RESOURCES
@@ -52,7 +70,8 @@ feature -- Initialization
 					new_die (-1)
 				end;
 
-				if init_licence then
+					-- Call `init_licence' only if `licensed' is `True'
+				if not licensed or else init_licence then
 					if not licence.is_unlimited then
 					expiration := licence.time_left
 						if expiration <= 30 then

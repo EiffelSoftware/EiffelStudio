@@ -347,13 +347,10 @@ external
 
 	include_path:
 		"$(EIFFEL_SRC)\C\bench",
-		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\com_compiler\Clib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
-		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
-		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib",
@@ -371,8 +368,6 @@ external
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
 		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
-		"$(EIFFEL_SRC)\C_library\expat\lib\xmlparse.lib",
-		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",
 		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
 		"corguids.lib",

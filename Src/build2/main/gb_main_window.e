@@ -84,6 +84,7 @@ feature -- Basic operation
 			box_exists: vb /= Void
 		do
 			build_widget_structure (vb)
+			command_handler.update
 		end
 		
 
@@ -97,7 +98,7 @@ feature -- Basic operation
 			lock_update
 				-- Remove the filler.
 			wipe_out
-				-- Add the tools.
+				-- Add the tools.	
 			extend (tool_holder)
 			
 				-- Position split areas.
@@ -108,7 +109,19 @@ feature -- Basic operation
 		ensure
 			has_item: item /= Void
 			item_is_tool_holder: item = tool_holder
-		end	
+		end
+		
+	hide_all_floating_tools is
+			-- Hide all windows displayed to `Current'.
+			-- i.e. display window, all floarint object editors etc etc.
+		do
+			command_handler.show_hide_builder_window_command.disable_selected
+			command_handler.show_hide_component_viewer_command.disable_selected
+			command_handler.show_hide_display_window_command.disable_selected
+			command_handler.show_history_command.disable_selected
+			destroy_floating_editors
+		end
+		
 		
 	initialize_split_areas is
 			-- Set splitters to default positions.

@@ -10,7 +10,8 @@ inherit
 	PROMPT_D
 		rename
 			make as prompt_dialog_create
-		end
+		end;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -32,6 +33,7 @@ feature
 			add_cancel_action (Current, cancel_it);
 			set_width (350);
 			associcated_command := cmd;
+			set_composite_attributes (Current)
 		end;
 
 	

@@ -17,7 +17,8 @@ inherit
 		select
 			popup
 		end;
-	SHARED_LICENSE
+	SHARED_LICENSE;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -35,6 +36,7 @@ feature
 			set_title (l_Select_a_file);
 			set_exclusive_grab;
 			set_default_position (false);
+			set_composite_attributes (Current);
 			realize
 		end;
 

@@ -54,6 +54,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 feature {NONE} -- Implementation
 
 	initialize is
@@ -189,6 +196,28 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			extend (selector_item)
 		ensure
 			count_increased: count = old count + 1
+		end
+		
+feature {GB_XML_LOAD} -- Implementation
+
+	update_displayed_names is
+			-- Update names of all selector items (excluding directories)
+			-- based on their objects.
+		do
+			recursive_do_all (agent update_name_of_item)
+		end
+		
+feature {NONE} -- Implementation
+
+	update_name_of_item (node: EV_TREE_NODE) is
+			-- If `node' is a selector item, update its `text'.
+		local
+			window_item: GB_WINDOW_SELECTOR_ITEM
+		do
+			window_item ?= node
+			if window_item /= Void then
+				window_item.set_text (name_and_type_from_object (window_item.object))
+			end
 		end
 		
 feature {GB_OBJECT_HANDLER} -- Implementation

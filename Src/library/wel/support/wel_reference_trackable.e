@@ -105,6 +105,7 @@ feature {NONE} -- Removal
 			end
 			if internal_object_id /= 0 then
 				eif_object_id_free (internal_object_id)
+				internal_object_id := 0
 			end
 		end
 

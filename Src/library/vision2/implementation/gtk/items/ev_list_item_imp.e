@@ -13,6 +13,17 @@ inherit
 	EV_ITEM_IMP
 		rename
 			add_double_click_command as old_double_click
+		undefine
+			set_label_widget,
+			label_widget
+		end
+
+	EV_PIXMAP_CONTAINER_IMP
+		rename
+			make as old_make,
+			interface as widget_interface,
+			add_double_click_command as old_double_click,
+			set_interface as set_widget_interface
 		end
 
 creation
@@ -25,6 +36,7 @@ feature {NONE} -- Initialization
 			-- Create an item with an empty name.
 		do
 			widget := gtk_list_item_new			
+			initialize
 		end
 	
 	make_with_text (par: EV_LIST; txt: STRING) is
@@ -32,9 +44,21 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
-			widget := gtk_list_item_new_with_label ($a)
+			make (par)
+			create_text_label (txt)
+
+--			a ?= txt.to_c
+--			widget := gtk_list_item_new_with_label ($a)
+--			initialize
 		end
+
+	initialize is
+			-- Common initialization for buttons
+		do
+			box := gtk_hbox_new (False, 0)
+			gtk_container_add (GTK_CONTAINER (widget), box)
+		end			
+
 
 feature -- Status report
 

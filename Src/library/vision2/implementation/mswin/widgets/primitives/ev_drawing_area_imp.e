@@ -25,6 +25,7 @@ inherit
 
 	EV_PIXMAPABLE_IMP
 		undefine
+			pixmap_size_ok,
 			pixmap_drawable_ok
 		redefine
 			set_pixmap,

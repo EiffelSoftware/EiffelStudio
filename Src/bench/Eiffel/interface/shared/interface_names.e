@@ -996,7 +996,7 @@ feature -- Description texts
 	e_Compilation_succeeded: STRING is	"Compilation succeeded"
 	e_Compiling: STRING is				"System is being compiled"
 	e_Copy: STRING is					"Copy"
-	e_Cursor_position: STRING is		"Cursor position (lign:column)"
+	e_Cursor_position: STRING is		"Cursor position (line:column)"
 	e_Cut: STRING is					"Cut"
 	e_Diagram_hole: STRING is			"Please drop a class or a cluster on this button %N%
 										%to view its diagram.%N%

@@ -242,7 +242,7 @@ feature -- Basic operations
 			end
 		end
 
-	infix "|..|" (other: INTEGER_8): INTEGER_INTERVAL is
+	infix "|..|" (other: INTEGER): INTEGER_INTERVAL is
 			-- Interval from current element to `other'
 			-- (empty if `other' less than current integer)
 		do

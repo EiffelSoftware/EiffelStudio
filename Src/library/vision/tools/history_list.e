@@ -47,7 +47,7 @@ feature {HISTORY_L_W}
 			not (history_window = Void)
 		do
 			history_windows.finish;
-			history_windows.add_right (history_window)
+			history_windows.put_right (history_window)
 		end;
 
 feature 
@@ -144,7 +144,7 @@ feature
 			until
 				history_windows.off
 			loop
-				history_windows.item.record (a_command.n_ame);
+				history_windows.item.record (a_command.name);
 				history_windows.forth
 			end
 		end;
@@ -153,7 +153,7 @@ feature
 			-- Remove all commands after the cursor position.
 		do
 			if (not islast) and (not empty) then
-				remove_n_right (count-position);
+				remove_n_right (count-index);
 				from
 					history_windows.start
 				until

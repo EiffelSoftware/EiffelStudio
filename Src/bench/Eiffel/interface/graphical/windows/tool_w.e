@@ -222,7 +222,11 @@ feature {NONE}
 	raise_grabbed_popup is
 			-- Raise popup windows with exclusive grab set.
 		do
-			if last_warner /= Void and then last_warner.is_popped_up then
+			if 
+				last_warner /= Void and then 
+				last_warner.is_popped_up and then
+				last_warner.is_exclusive_grab 
+			then
 				last_warner.raise
 			elseif 
 				last_confirmer /= Void and then 
@@ -231,6 +235,8 @@ feature {NONE}
 				last_confirmer.raise
 			elseif name_chooser.is_popped_up then
 				name_chooser.raise
+			else
+				window_manager.class_win_mgr.raise_shell_popup
 			end
 		end;
 

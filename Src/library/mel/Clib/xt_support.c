@@ -1,0 +1,471 @@
+#include "mel.h"
+
+/*
+ *
+ * C functions to retrieve informations on widgets according 
+ * to the type of the information wished. Functions for setting
+ * the same informations are also available.
+ *
+ */
+
+EIF_REFERENCE c_get_argv (w)
+EIF_POINTER w;
+{
+	String *temp;
+	EIF_REFERENCE an_object;
+
+	XtVaGetValues ((Widget) w, XtNargv, &temp, NULL);
+
+	if (temp != NULL)
+		return (EIF_REFERENCE) RTMS (*temp);
+	else
+		return NULL;
+}
+
+EIF_INTEGER c_get_int (w, res)
+EIF_POINTER w;
+char *res;
+{
+	int temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_int (w, res, an_int)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER an_int;
+{
+	XtVaSetValues ((Widget) w, (String) res, (int) an_int, NULL);
+}
+
+EIF_INTEGER c_get_cardinal (w, res)
+EIF_POINTER w;
+char *res;
+{
+	Cardinal temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_cardinal (w, res, a_card)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER a_card;
+{
+	XtVaSetValues ((Widget) w, (String) res, (Cardinal) a_card, NULL);
+}
+
+EIF_BOOLEAN c_get_boolean (w, res)
+EIF_POINTER w;
+char *res;
+{
+	Boolean temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_BOOLEAN) (temp != 0);
+}
+
+void c_set_boolean (w, res, a_boolean)
+EIF_POINTER w;
+char *res;
+EIF_BOOLEAN a_boolean;
+{
+	XtVaSetValues ((Widget) w, (String) res, (Boolean) (a_boolean != 0), NULL);
+}
+
+EIF_INTEGER c_get_unsigned_char (w, res)
+EIF_POINTER w;
+char *res;
+{
+	unsigned char temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_unsigned_char (w, res, an_unsigned_char)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER an_unsigned_char;
+{
+	XtVaSetValues ((Widget) w, (String) res, (unsigned char) an_unsigned_char, NULL);
+}
+
+EIF_INTEGER c_get_pixmap (w, res)
+EIF_POINTER w;
+char *res;
+{
+	Pixmap temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_pixmap (w, res, a_pixmap)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER a_pixmap;
+{
+	XtVaSetValues ((Widget) w, (String) res, (Pixmap) a_pixmap, NULL);
+}
+
+EIF_POINTER c_get_widget (w, res)
+EIF_POINTER w;
+char *res;
+{
+	Widget temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_POINTER) temp;
+}
+
+void c_set_widget (w, res, a_widget)
+EIF_POINTER w;
+char *res;
+EIF_POINTER a_widget;
+{
+	XtVaSetValues ((Widget) w, (String) res, (Widget) a_widget, NULL);
+}
+
+EIF_POINTER get_i_th_widget_child (w, index)
+EIF_POINTER w;
+EIF_INTEGER index;
+{
+	WidgetList temp;
+
+	XtVaGetValues ((Widget) w, XtNchildren, &temp, NULL);
+	return (EIF_POINTER) temp[(int) index - 1];
+}
+
+EIF_INTEGER c_get_dimension (w, res)
+EIF_POINTER w;
+char *res;
+{
+	Dimension temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_dimension (w, res, a_dimension)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER a_dimension;
+{
+	XtVaSetValues ((Widget) w, (String) res, (Dimension) a_dimension, NULL);
+}
+
+EIF_INTEGER c_get_pixel (w, res)
+EIF_POINTER w;
+char *res;
+{
+	Pixel temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_pixel (w, res, a_pixel)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER a_pixel;
+{
+	XtVaSetValues ((Widget) w, (String) res, (Pixel) a_pixel, NULL);
+}
+
+EIF_INTEGER c_get_position (w, res)
+EIF_POINTER w;
+char *res;
+{
+	Position temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_position (w, res, a_position)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER a_position;
+{
+	XtVaSetValues ((Widget) w, (String) res, (Position) a_position, NULL);
+}
+
+EIF_REFERENCE c_get_string_no_free (w, res)
+EIF_POINTER w;
+char *res;
+{
+	String  temp;
+	EIF_REFERENCE an_object;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	an_object = (EIF_REFERENCE) RTMS (temp);
+	return an_object;
+}
+
+EIF_REFERENCE c_get_string (w, res)
+EIF_POINTER w;
+char *res;
+{
+	String  temp;
+	EIF_REFERENCE an_object;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	an_object = (EIF_REFERENCE) RTMS (temp);
+	XtFree (temp);
+	return an_object;
+}
+
+void c_set_string (w, res, a_string)
+EIF_POINTER w;
+char *res;
+char *a_string;
+{
+	XtVaSetValues ((Widget) w, (String) res, (String) a_string, NULL);
+}
+
+EIF_INTEGER c_get_short (w, res)
+EIF_POINTER w;
+char *res;
+{
+	short temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_short (w, res, a_short)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER a_short;
+{
+	XtVaSetValues ((Widget) w, (String) res, (short) a_short, NULL);
+}
+
+EIF_POINTER c_get_string_table (w, res)
+EIF_POINTER w;
+char *res;
+{
+	XmStringTable temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_POINTER) temp;
+}
+
+void c_set_string_table (w, res, table)
+EIF_POINTER w;
+char *res;
+EIF_POINTER table;
+{
+	XtVaSetValues ((Widget) w, (String) res, (XmStringTable) table, NULL);
+}
+
+EIF_INTEGER c_get_string_direction (w, res)
+EIF_POINTER w;
+char *res;
+{
+	XmStringDirection temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_INTEGER) temp;
+}
+
+void c_set_string_direction (w, res, dir)
+EIF_POINTER w;
+char *res;
+EIF_INTEGER dir;
+{
+	XtVaSetValues ((Widget) w, (String) res, (XmStringDirection) dir, NULL);
+}
+
+EIF_POINTER c_get_xmstring (w, res)
+EIF_POINTER w;
+char *res;
+{
+	XmString a_string;
+
+	XtVaGetValues ((Widget) w,(String) res, &a_string, NULL);
+	return (EIF_POINTER) a_string;
+}
+
+void c_set_xmstring (w, res, cmpnd_str)
+EIF_POINTER w;
+char *res;
+EIF_POINTER cmpnd_str;
+{
+	XtVaSetValues ((Widget) w,(String) res, (XmString) cmpnd_str, NULL);
+}
+
+EIF_POINTER get_i_widget_child (w, index)
+EIF_POINTER w;
+EIF_INTEGER index;
+{
+    return (EIF_POINTER) ((WidgetList) w)[(int) index];
+}
+
+/*
+ *
+ * Miscellaneous Xt functions.
+ *
+ */
+
+/* Globals */
+
+String * fallback_list = (String *) 0;
+
+/* Xt utility functions */
+
+EIF_INTEGER xt_real_x (a_widget)
+EIF_POINTER a_widget;
+{
+	/*  X screen-relative coordinates of a widget */
+	Position root_x, root_y;
+
+	XtTranslateCoords ((Widget) a_widget, 0, 0, &root_x, &root_y);
+	return (EIF_INTEGER) root_x;
+}
+
+EIF_INTEGER xt_real_y (a_widget)
+EIF_POINTER a_widget;
+{
+	/* Y screen-relative coordinates of a widget */
+	Position root_x, root_y;
+
+	XtTranslateCoords ((Widget) a_widget, 0, 0, &root_x, &root_y);
+	return (EIF_INTEGER) root_y;
+}
+
+EIF_BOOLEAN xt_is_visible (a_widget)
+EIF_POINTER	a_widget;
+{
+	/* Map state */
+	XWindowAttributes window_attributes;
+	Widget temp;
+
+	temp = (Widget) a_widget;
+	XGetWindowAttributes (XtDisplay (temp), XtWindow (temp), &window_attributes);
+	return (EIF_BOOLEAN) (window_attributes.map_state == IsViewable);
+}
+
+void x_propagate_event (a_widget, choice)
+EIF_POINTER a_widget;
+EIF_BOOLEAN choice;
+{
+	/* Specify if `a_widget' propagates event
+	 * to its ancestor or not
+	 */
+	XSetWindowAttributes set_window_attributes;
+	Widget temp;
+	unsigned long valuemask;
+
+	temp = (Widget) a_widget;
+	valuemask = CWDontPropagate | CWEventMask;
+	if (choice) {
+		set_window_attributes.do_not_propagate_mask = NoEventMask;
+		}
+	else
+	{
+		set_window_attributes.event_mask = 2261055;
+		set_window_attributes.do_not_propagate_mask = 79;
+	}
+	XChangeWindowAttributes (XtDisplay (temp), XtWindow (temp),
+						valuemask, &set_window_attributes);
+}
+
+void set_fallback_res (w, res, count)
+EIF_POINTER w;
+EIF_OBJ res;
+EIF_INTEGER count;
+{
+	int counter = 0;
+
+	if (fallback_list != (String *) 0) {
+		String * temp = fallback_list;
+		while (temp) xfree (*(temp++));
+		xfree (fallback_list);
+		fallback_list = (String *) 0;
+	}
+	if (res != (EIF_OBJ) 0) {
+		fallback_list = (String *) cmalloc (count * sizeof (String) + 1);
+		while (count > counter) {
+			*(fallback_list + counter) = (String) cmalloc (strlen (*((char **)eif_access(res) + counter)) + 1);
+			strcpy (*(fallback_list + counter), *((char **)(eif_access (res)) + counter));
+			counter++;
+		}
+		*(fallback_list + counter) = (String) 0;
+	}
+		
+	XtAppSetFallbackResources ((XtAppContext) w, fallback_list);
+}
+
+extern void handle_translation(); 
+			/* `c_trans_routine' must corresponding to the
+			 * name of above routine.
+			 */
+
+EIF_POINTER xt_init ()
+{
+	/* Initialize Xt toolkit and application context
+	 * add action c_callback_on_trans to the list of
+	 * application actions, it will be called by any
+	 * new translations or accelerators.
+	 * Prepare the Xt toolkit and create a global
+	 * application context.
+	 */
+	XtAppContext gAppContext;
+
+	static XtActionsRec	actionTable [] = {
+			{c_trans_routine, handle_translation},
+			}; 
+
+	XtToolkitInitialize ();
+	gAppContext = XtCreateApplicationContext ();
+	XtAppAddActions (gAppContext, actionTable, XtNumber (actionTable));
+	return (EIF_POINTER) gAppContext;
+}
+
+EIF_BOOLEAN compare_masks (mask1, mask2)
+EIF_INTEGER mask1;
+EIF_INTEGER mask2;
+{
+		/* 
+		 * Compare masks `mask1' and `mask2'
+		 */
+	return (EIF_BOOLEAN) (((unsigned int) mask1 & (unsigned int) mask2) != 0);
+}
+
+EIF_REFERENCE c_event_string (event_pointer)
+EIF_POINTER event_pointer;
+{
+    /* Ignore modifiers and simply return the string value */
+    /* E.g. ctrlg returns g.*/
+    char result [100];
+    XComposeStatus status;
+    KeySym keysym;
+    int length;
+   
+    length = XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
+    if (!length) return (EIF_REFERENCE) 0;
+    result [length] = '\0';
+    return (EIF_REFERENCE) makestr (result, strlen (result));
+}
+
+EIF_POINTER c_event_keysym (event_pointer)
+EIF_POINTER event_pointer;
+{
+    /* Ignore modifiers and simply return the string value */
+    /* E.g. ctrlg returns g.*/
+    char result [100];
+    XComposeStatus status;
+    KeySym keysym;
+    int length;
+   
+    length = XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
+    if (!length) return NULL;
+    result [length] = '\0';
+    return (EIF_POINTER) keysym;
+}
+

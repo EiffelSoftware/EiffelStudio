@@ -1,0 +1,98 @@
+indexing
+
+	description: 	
+		"Drawing Area resources."
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	MEL_DRAWING_AREA_RESOURCES
+		
+feature -- Implementation
+
+	XmNmarginHeight: POINTER is
+			-- Motif resource
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
+		alias
+			"XmNmarginHeight"
+		end;
+
+	XmNmarginWidth: POINTER is
+			-- Motif resource
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
+		alias
+			"XmNmarginWidth"
+		end;
+
+	XmNresizePolicy: POINTER is
+			-- Motif resource
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
+		alias
+			"XmNresizePolicy"
+		end;
+
+	XmRESIZE_NONE: INTEGER is
+			-- Motif constant value
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_INTEGER"
+		alias
+			"XmRESIZE_NONE"
+		end;
+
+	XmRESIZE_GROW: INTEGER is
+			-- Motif constant value
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_INTEGER"
+		alias
+			"XmRESIZE_GROW"
+		end;
+
+	XmRESIZE_ANY: INTEGER is
+			-- Motif constant value
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_INTEGER"
+		alias
+			"XmRESIZE_ANY"
+		end;
+
+	XmNexposeCallback: POINTER is
+			-- Motif resource
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
+		alias
+			"XmNexposeCallback"
+		end;
+
+	XmNinputCallback: POINTER is
+			-- Motif resource
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
+		alias
+			"XmNinputCallback"
+		end;
+
+	XmNresizeCallback: POINTER is
+			-- Motif resource
+		external
+			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
+		alias
+			"XmNresizeCallback"
+		end;
+
+end -- class MEL_DRAWING_AREA_RESOURCES
+
+--|-----------------------------------------------------------------------
+--| Motif Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1996, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-----------------------------------------------------------------------

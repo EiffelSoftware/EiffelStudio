@@ -68,7 +68,6 @@ feature -- Type checking
 	type_check is
 			-- Check validity of current node. 
 		local
-			l_error: NOT_SUPPORTED
 			l_type: TYPE_A
 			l_vtug: VTUG
 			l_vtcg3: VTCG3
@@ -89,13 +88,12 @@ feature -- Type checking
 					l_vtcg3.set_feature (context.current_feature)
 					l_vtcg3.set_error_list (l_type.constraint_error_list)
 					error_handler.insert_error (l_vtcg3)
-				else
-					instantiator.dispatch (l_type, context.current_class)
 				end
 			end
 			error_handler.checksum
 
 			create l_type_type.make (system.type_class.compiled_class.class_id, << l_type >>)
+			instantiator.dispatch (l_type_type, context.current_class)
 			context.put (l_type_type)
 			context.creation_types.insert (l_type_type.type_i)
 		end

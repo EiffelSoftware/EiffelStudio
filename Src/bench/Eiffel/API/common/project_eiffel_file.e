@@ -28,7 +28,7 @@ inherit
 			dispose
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

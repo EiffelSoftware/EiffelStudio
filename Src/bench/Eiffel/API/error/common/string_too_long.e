@@ -14,7 +14,7 @@ inherit
 			syntax_message
 		end
 
-creation {ERROR_HANDLER}
+create {ERROR_HANDLER}
 
 	init
 

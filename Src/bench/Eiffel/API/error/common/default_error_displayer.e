@@ -12,7 +12,7 @@ inherit
 
 	SHARED_CONFIGURE_RESOURCES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -44,7 +44,7 @@ feature -- Output
 		do
 			if not retried then
 				from
-					!! st.make;
+					create st.make;
 					warning_list := handler.warning_list
 					warning_list.start
 				until

@@ -23,7 +23,7 @@ inherit
 
 	SHARED_WORKBENCH
 
-creation
+create
 	make
 	
 feature -- Initialization

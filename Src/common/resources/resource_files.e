@@ -61,7 +61,6 @@ feature -- File names
 		local
 			directory: DIRECTORY
 			msg: STRING;
-			wd: WARNING_D;
 			file: PLAIN_TEXT_FILE
 		do
 			if Home /= Void then
@@ -98,7 +97,6 @@ feature -- File names
 		local
 			directory: DIRECTORY
 			msg: STRING;
-			wd: WARNING_D;
 			file: PLAIN_TEXT_FILE
 		do
 			if Home /= Void and Platform /= Void then

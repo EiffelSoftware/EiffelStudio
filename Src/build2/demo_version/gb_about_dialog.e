@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 
 	t_version_info: STRING is
 		once
-			Result := Precursor {GB_ABOUT_DIALOG_CONSTANTS} + "%NEvaluation Version:"
+			Result := Precursor {GB_ABOUT_DIALOG_CONSTANTS} + "%NEvaluation Version"
 		end
 
 end -- class GB_ABOUT_DIALOG

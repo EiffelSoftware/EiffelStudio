@@ -48,6 +48,11 @@ inherit
 			{NONE} all
 		end
 
+	PREFIX_INFIX_NAMES
+		export
+			{NONE} all
+		end
+
 create
 	make_with_class,
 	make_with_object,
@@ -148,7 +153,10 @@ feature -- Status setting
 			cc: CHARACTER
 			i: INTEGER
 			s: STRING
-			first_dot, par1, par2: INTEGER
+			first_dot, par1, par2, first_op: INTEGER
+			rest: STRING
+			op: STRING
+			look_for_op: BOOLEAN
 		do
 				-- Reinitialize everything.
 			error_message := Void
@@ -161,23 +169,28 @@ feature -- Status setting
 			create parameters.make (5)
 			syntax_error := False
 			expression := new_expr
+			
 			s := clone (expression)
+			remove_prefix_operators (s)
 			s.left_adjust
 			s.right_adjust
+			look_for_op := s.count < Prefix_str.count or else
+							(s.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) /= 1 and
+							s.substring_index_in_bounds (Infix_str, 1, Infix_str.count) /= 1)
 			from
 				i := 1
 			until
-					-- We can stop as soon as we find the first dot: other parentheses do not concern us.
-				i > s.count or first_dot > 0
+					-- We can stop as soon as we find the first dot or operator: other parentheses do not concern us.
+				i > s.count or first_dot > 0 or first_op > 0
 			loop
 				cc := s.item (i)
 				if cc = '(' then
 					if open_pars = 0 then
-						if par1 /= 0 then
-								-- *(*)X(*)* where X doesn't contain a point, is not valid.
-							syntax_error := True
-						else
+						if par1 = 0 then
 							par1 := i
+						else
+								-- *(*)X(*)* where X contains neither . nor operator is not a valid syntax.
+							syntax_error := True
 						end
 					end
 					open_pars := open_pars + 1
@@ -187,14 +200,19 @@ feature -- Status setting
 						par2 := i
 					end
 				elseif open_pars = 0 then
-					if cc = '.' and first_dot = 0 then
+					if cc = '.' then
 						first_dot := i
-						--| FIXME XR: support operators.
+					elseif look_for_op then
+						op := operator_starting_at (i, s)
+						if op /= Void then
+							first_op := i
+						end
 					end
 				end
 				i := i + 1
 			end
-				-- At this point, we have the positions of (, ) and . in par1, par2 and first_dot.
+				-- At this point, we have the positions of (, ), . and the first operator
+				-- in par1, par2, first_dot and first_op (whichever of both comes first).
 			if par1 = 1 then
 					-- The first character is a parenthesis => we hack with the identity feature.
 				is_identity := True
@@ -204,25 +222,35 @@ feature -- Status setting
 					syntax_error := True
 				end
 			elseif par1 > 0 then
-				-- There are parameters.
+					-- There are parameters.
 				parse_parameters (s.substring (par1 + 1, par2 - 1))
+				if parameters.count = 0 then
+					syntax_error := True
+				end
 				set_feature_name (s.substring (1, par1 - 1))
 			else
-				-- No parameters.
-				if first_dot > 0 then
-					set_feature_name (s.substring (1, first_dot - 1))
+					-- No parameters.
+				if first_dot > 0 or first_op > 0 then
+					set_feature_name (s.substring (1, first_dot.max (first_op) - 1))
 				else
 					set_feature_name (s)
 				end
 			end
 			if first_dot > 0 then
-					-- There is a dot call.
+					-- There is no operator part: just process dot calls.
 				create message.make_with_target (Current, s.substring (first_dot + 1, s.count))
+				syntax_error := syntax_error or message.syntax_error
+			elseif first_op > 0 then
+					-- There is an operator in `Current' at the first level.
+				s.tail (s.count - (first_op + op.count - 1))
+				s.prepend (infix_feature_name_with_symbol (op) + "(")
+				s.append_character (')')
+				create message.make_with_target (Current, s)
 				syntax_error := syntax_error or message.syntax_error
 			end
 		ensure
 			expression_set: expression = new_expr
-			feature_name_iff_not_error: (not syntax_error) = (feature_name /= Void)
+			feature_name_if_not_error: (not syntax_error) implies (feature_name /= Void)
 		end
 
 feature -- Status report
@@ -299,12 +327,23 @@ feature -- Basic operations
 		local
 			f: E_FEATURE
 			o: DEBUGGED_OBJECT
+			par1: EB_EXPRESSION
 		do
 			error_message := Void
 			final_result := Void
 			final_result_type := Void
 			final_result_value := Void
-			if is_constant then
+			if is_identity then
+				check
+					parameters.count = 1
+					-- Otherwise there would have been a syntax error.
+				end
+				par1 := parameters.first
+				par1.evaluate
+				result_object := par1.result_object
+				result_static_type := par1.result_static_type
+				error_message := par1.error_message
+			elseif is_constant then
 				final_result_type := constant_result_type
 				final_result_value := constant_result_value
 			elseif target /= Void then
@@ -373,12 +412,18 @@ feature -- Basic operations
 						error_message := "Could not resolve static type of " + feature_name
 					elseif result_object /= Void then
 							-- We must evaluate the message.
-						message.evaluate
-						if message.error_message /= Void then
-							error_message := message.error_message
+						if result_type /= Void then
+							message.evaluate
+							if message.error_message /= Void then
+								error_message := message.error_message
+							else
+								final_result := message.final_result
+								final_result_type := message.final_result_type
+							end
+						elseif result_object.output_value.is_equal ("Void") then
+							error_message := feature_name + " has a Void result"
 						else
-							final_result := message.final_result
-							final_result_type := message.final_result_type
+							error_message := "Could not evaluate the dynamic type of " + feature_name
 						end
 					elseif is_constant then
 						-- Nothing to do.
@@ -431,7 +476,6 @@ feature {EB_EXPRESSION} -- Status report: intermediate results.
 			-- Type of the result of `Current'.
 			--| Only valid after `evaluate' was called.
 			--| Used to evaluate the message.
-			--| FIXME XR: Is it really needed??
 		require
 			evaluated: result_object /= Void
 		do
@@ -514,11 +558,15 @@ feature {NONE} -- Implementation
 			-- Do nothing if there already was a syntax error.
 		require
 			valid_fn: fn /= Void
+		local
+			i, first_weird, last_weird: INTEGER
 		do
 			fn.left_adjust
 			fn.right_adjust
 			fn.to_lower
-			if fn.item (1) = '%"' then
+			if fn.is_empty then
+				syntax_error := True
+			elseif fn.item (1) = '%"' then
 				if fn.item (fn.count) = '%"' then
 					is_constant := True
 					constant_result_value := create {DUMP_VALUE}.make_manifest_string (fn.substring (2, fn.count - 1))
@@ -542,14 +590,107 @@ feature {NONE} -- Implementation
 				is_constant := True
 				constant_result_value := create {DUMP_VALUE}.make_boolean (fn.to_boolean)
 				constant_result_type := System.boolean_class.compiled_class
+			elseif Syntax_checker.is_valid_feature_name (fn) then
+				-- Nothing special.
 			else
-				syntax_error := syntax_error or not Syntax_checker.is_valid_identifier (fn)
+				syntax_error := True
 			end
 			if not syntax_error then
 				feature_name := fn
 			end
 		ensure
-			set_if_valid: (not syntax_error) implies (feature_name = fn)
+			set_if_valid: (not syntax_error) implies (
+						(Syntax_checker.is_valid_feature_name (feature_name) or Syntax_checker.is_constant (feature_name)) and
+						(feature_name = fn)
+					)
+		end
+
+	remove_prefix_operators (s: STRING) is
+			-- Remove prefix operators from the head of `s' and put them as function calls at the end.
+		local
+			op: STRING
+			i: INTEGER
+			ops: ARRAYED_LIST [STRING]
+		do
+			from
+				i := 1
+				create ops.make (5)
+				op := operator_starting_at (i, s)
+			until
+				(i > s.count) or else (not is_blank (s.item (i)) and op = Void)
+			loop
+				if op /= Void then
+					s.tail (s.count - (op.count + i - 1))
+					ops.extend (op)
+					i := 0
+				end
+				i := i + 1
+				op := operator_starting_at (i, s)
+			end
+			from
+				ops.finish
+			until
+				ops.before
+			loop
+				s.append_character ('.')
+				s.append (prefix_feature_name_with_symbol (ops.item))
+				ops.back
+			end
+		end
+
+	operator_starting_at (pos: INTEGER; s: STRING): STRING is
+			-- If an operator starts at `pos' in `s', return its symbol.
+		local
+			i: INTEGER
+			cop: STRING
+		do
+			if (pos = 1) or else is_blank (s.item (pos - 1)) then
+				if Syntax_checker.Free_operators_start.has (s.item (pos)) then
+						-- A free operator is surrounded by blanks
+					from
+						i := pos + 1
+					until
+						i > s.count or else is_blank (s.item (i))
+					loop
+						i := i + 1
+					end
+					Result := s.substring (pos, i - 1)
+				end
+			end
+			from
+				Syntax_checker.Basic_operators.start
+			until
+				Syntax_checker.Basic_operators.after
+			loop
+				cop := Syntax_checker.Basic_operators.item
+				if s.substring (pos, pos + cop.count - 1).is_equal (cop) then
+						-- Ah! We may have found a matching operator.
+--					if not 
+--						((pos + cop.count <= s.count) and then
+--						(s.item (pos + cop.count) = '%"') and
+--						(pos > 1 and then s.item (pos - 1) = '%"')
+--						)
+--					then
+							-- The operator is not wrapped in quotes.
+						if (Result = Void) or else (Result.count < cop.count) then
+								--Aaahh... We found a longer matching operator.
+							if cop.item (1).is_alpha then
+									-- Hmm we must check that it is surrounded by spaces.
+								if
+									(pos + cop.count <= s.count) and then
+									(is_blank (s.item (pos + cop.count))) and
+									(pos > 1 and then is_blank (s.item (pos - 1)))
+								then
+									Result := cop
+								end
+							else
+								Result := cop
+							end
+						end
+--					end
+				end
+				Syntax_checker.Basic_operators.forth
+			end
 		end
 
 	find_closing_parenthesis (s: STRING; pos: INTEGER): INTEGER is
@@ -639,35 +780,33 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_feature_on_object (f: E_FEATURE; obj: DEBUGGED_OBJECT) is
-			-- Evaluate `f' in the context of its dynamic_class.
+	evaluate_feature_on_object (sf: E_FEATURE; obj: DEBUGGED_OBJECT) is
+			-- Evaluate `sf' in the context of its dynamic_class.
 			-- Evaluate and pass `parameters' if necessary.
 		require
-			valid_feature: f /= Void
+			valid_feature: sf /= Void
 			valid_object: obj /= Void
 		local
 			lst: LIST [ABSTRACT_DEBUG_VALUE]
 			dmp: DUMP_VALUE
 			found: BOOLEAN
 			par: INTEGER
+			f: E_FEATURE
 		do
-			if f.is_once and f.is_function then
+			f := sf.ancestor_version (obj.dtype)
+			if f = Void then
+				error_message := "No descendant of feature " + sf.name + " in class " + obj.dtype.name_in_upper
+			elseif f.is_once and f.is_function then
 				evaluate_once (f)
 			elseif f.is_attribute then
-				from
-					lst := obj.attributes
-					lst.start
-				until
-					lst.after or found
-				loop
-					if lst.item.name.is_equal (f.name) then
-						found := True
-						result_object := lst.item
-					end
-					lst.forth
-				end
+				lst := obj.attributes
+				result_object := find_item_in_list (f.name, lst)
 				if result_object = Void then
-					error_message := "Could not find attribute value for " + f.name
+					if f.name.is_equal ("Void") then
+						error_message := Void
+					else
+						error_message := "Could not find attribute value for " + f.name
+					end
 				else
 					result_static_type := f.type.associated_class
 				end
@@ -829,11 +968,11 @@ feature {NONE} -- Implementation
 		do
 			cv_ref ?= dv
 			if cv_ref /= Void and then cv_ref.address /= Void then
-				create Result.make (cv_ref.address, 0, 1)
+				create Result.make (cv_ref.address, Min_slice_ref.item, Max_slice_ref.item)
 			else
 				cv_spec ?= dv
 				if cv_spec /= Void then
-					create Result.make (cv_spec.address, 0, 1)
+					create Result.make (cv_spec.address, Min_slice_ref.item, Max_slice_ref.item)
 				end
 			end
 		end
@@ -892,9 +1031,9 @@ feature {NONE} -- Implementation
 					result_object := find_item_in_list (lower_name, cse.arguments)
 					if result_object = Void then
 							-- Darn, if that's so, I'm gonna look through the current object's attributes and onces!
-						create o.make (cse.object_address, 0, 1)
-						f := o.dtype.feature_with_name (n)
+						f := cf.written_class.feature_with_name (n)
 						if f /= Void then
+							create o.make (cse.object_address, Min_slice_ref.item, Max_slice_ref.item)
 							evaluate_feature_on_object (f, o)
 						end
 					else

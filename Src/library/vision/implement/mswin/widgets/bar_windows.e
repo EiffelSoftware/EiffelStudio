@@ -81,6 +81,11 @@ feature -- Initialization
 						realize
 					end
 					associated_shell.associate_bar (Current)
+				elseif parent /= Void and then parent.realized then
+					if not exists then
+						realize
+					end
+					associated_shell.associate_bar (Current)
 				end
 			else
 				if exists then
@@ -88,23 +93,6 @@ feature -- Initialization
 					destroy_item
 				end
 			end
-		end
-
-	associated_shell: WM_SHELL_WINDOWS is
-		local
-			p : COMPOSITE_WINDOWS
-		do
-			from
-				p := parent
-				Result ?= p
-			until
-				Result /= Void or p = Void
-			loop
-				p := p.parent
-				Result ?= p
-			end
-		ensure
-			Result_exists: Result /= Void
 		end
 
 	realize is
@@ -118,6 +106,7 @@ feature -- Initialization
 			reset
 			put_children_in_menu (Current)
 			associated_shell.associate_bar (Current)
+			parent.child_has_resized
 			realized := true
 		end
 
@@ -130,6 +119,14 @@ feature -- Initialization
 feature -- Access
 
 	help_button: MENU_B
+
+	remove_popup (mp: MENU_PULL_WINDOWS) is
+			-- Remove a popup `mp' from the menu.
+		require
+			realized: realized
+		do
+			--cwin_delete_menu (wel_item, index_of (mp) - unmanaged_count (mp) - 1, Mf_byposition)
+		end
 			
 feature -- Measurement
 

@@ -171,7 +171,7 @@ feature -- Access
 			-- events.
 		once
 			!! Result.put (Void)
-		ensure
+		ensure then
 			result_exists: Result /= Void
 		end
 
@@ -336,19 +336,6 @@ feature -- Element change
 		deferred
 		end
 
-	set_pointer_style (value: EV_CURSOR) is
-			-- Make `value' the new cursor of the widget
-		do
-			if value /= Void then
-				cursor_imp ?= value.implementation
-				if cursor_on_widget.item = Current then
-					cursor_imp.set
-				end
-			else
-				cursor_imp := Void
-			end
-		end
-
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
@@ -402,9 +389,6 @@ feature -- Accelerators - command association
 --|FIXME		end
 
 feature -- Implementation
-
-	cursor_imp: EV_CURSOR_IMP
-			-- Current cursor used on the widget.
 
 	background_color_imp: EV_COLOR_IMP
 			-- Color used for the background of the widget
@@ -917,6 +901,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/03/17 23:02:51  rogers
+--| Removed set_pointer_style and cursor_imp. They are now in EV_PICK_AND_DROPABLE.
+--|
 --| Revision 1.57  2000/03/17 18:20:31  rogers
 --| Implemented screen_x and screen_y as they are now deferred from EV_WIDGET_I. Removed set_vertical_resize, set_horizontal_resize.
 --|

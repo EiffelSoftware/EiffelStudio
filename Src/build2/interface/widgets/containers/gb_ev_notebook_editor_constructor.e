@@ -73,8 +73,7 @@ feature -- Access
 			until
 				first.off
 			loop
-				create pixmap_entry.make (Current, Result, Item_pixmap_string + first.index.out, "Pixmap", "Pixmap", agent set_pixmap (?, ?, first.index), agent validate (?, ?), agent return_pixmap (first.index), agent return_pixmap_path (first.index))
-				pixmap_entry.hide_frame
+				create pixmap_entry.make (Current, Result, Item_pixmap_string + first.index.out, "", "Pixmap", agent set_pixmap (?, ?, first.index), agent validate (?, ?), agent return_pixmap (first.index), agent return_pixmap_path (first.index))
 				pixmap_entries.extend (pixmap_entry)
 				first.forth
 			end

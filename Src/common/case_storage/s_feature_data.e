@@ -22,6 +22,11 @@ feature -- Properties
 	result_type: S_RESULT_DATA;
 			-- Result type if function of attribute
 
+	body: S_FREE_TEXT_DATA is
+			-- Body of the routine (if routine)
+		do --%%%%%% to avoid new attribute
+		end
+
 	comments: S_FREE_TEXT_DATA;
 			-- Comment associated to the feature
 
@@ -73,6 +78,16 @@ feature -- Setting
 			name := s;
 		ensure
 			name_set: name = s;
+		end;
+
+	set_body (b: like body) is  --%%%%%%% 
+			-- Set bodys to `l'.
+		require
+			body_exists: b /= Void;
+			body_not_empty: not b.empty;
+		do
+		ensure
+			body_set: body = b
 		end;
 
 	set_booleans (is_d, is_e, is_r, is_att: BOOLEAN) is

@@ -490,8 +490,12 @@ feature {NONE} -- Implementation
 			display_bitmap_dc: WEL_MEMORY_DC
 			display_mask_dc: WEL_MEMORY_DC
 		do
-				-- Get the background color of the container
-			create container_background_brush.make_solid (wel_background_color)
+				-- Get the background color of the container to be used around `Current'.
+			if parent_imp /= Void and then parent_imp.background_color_imp /= Void then
+				create container_background_brush.make_solid (parent_imp.background_color_imp)
+			else
+				create container_background_brush.make_solid (wel_background_color)
+			end
 
 				-- Compute usefull constants
 			bitmap_height := height

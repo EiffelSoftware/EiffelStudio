@@ -136,12 +136,12 @@ feature {NONE} -- Implementation
 			
 			hbox.extend (create {EV_CELL})
 			
-			create ok_button.make_with_text_and_action ("Ok", ~close_dialog (True))
+			create ok_button.make_with_text_and_action ("Ok", agent close_dialog (True))
 			ok_button.set_minimum_width (Layout_constants.Default_button_width)
 			hbox.extend (ok_button)
 			hbox.disable_item_expand (ok_button)
 			
-			create cancel_button.make_with_text_and_action ("Cancel", ~close_dialog (False))
+			create cancel_button.make_with_text_and_action ("Cancel", agent close_dialog (False))
 			cancel_button.set_minimum_width (Layout_constants.Default_button_width)
 			hbox.extend (cancel_button)
 			hbox.disable_item_expand (cancel_button)

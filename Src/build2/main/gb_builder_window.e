@@ -11,7 +11,7 @@ class
 
 inherit
 	
-	EV_TITLED_WINDOW
+	EV_DIALOG
 		redefine
 			initialize
 		end
@@ -27,11 +27,24 @@ feature -- Initialization
 
 	initialize is
 			-- Initalize `Current'.
+		local
+			button: EV_BUTTON
 		do
-			Precursor {EV_TITLED_WINDOW}
+			Precursor {EV_DIALOG}
 			set_title (gb_builder_window_title)
+			
+				-- We must now temporarily create a new button, and add it to `Current'
+				-- as the default cancel button. We then remove it. This is necessary so
+				-- that we have access to the minimize, maximize and close buttons.
+				-- Note that we have custom implementations of EV_DIALOG_IMP, in order to
+				-- fire these actions when the button is not visible.
+			create button
+			extend (button)
+			button.select_actions.extend (agent show_hide_builder_window_command.disable_selected)
+			set_default_cancel_button (button)
+			prune (button)
+			
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_builder_window @ 1)
-			close_request_actions.extend (agent (show_hide_builder_window_command).execute)
 		end
 		
 feature -- Access

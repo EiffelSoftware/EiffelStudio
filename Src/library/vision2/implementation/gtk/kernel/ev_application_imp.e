@@ -116,13 +116,13 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
 	pnd_target_from_gdk_window (a_gdk_window: POINTER): EV_PICK_AND_DROPABLE is
 		local
-			c: CURSOR
+			cur: CURSOR
 			imp: EV_PICK_AND_DROPABLE_IMP
 			trg: EV_PICK_AND_DROPABLE
 		do
 			--| FIXME use this implementation instead!:
 			--| Result := hash_table.item (a_gdk_window)
-			c := pnd_targets.cursor
+			cur := pnd_targets.cursor
 			from
 				pnd_targets.start
 			until
@@ -142,7 +142,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 				end
 				pnd_targets.forth
 			end
-			pnd_targets.go_to (c)
+			pnd_targets.go_to (cur)
 		end
 
 	on_pick (a_pebble: ANY) is
@@ -322,6 +322,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/21 23:55:48  brendel
+--| c -> cur
+--|
 --| Revision 1.16  2000/03/21 23:49:51  oconnor
 --| added pnd_target_from_gdk_window stub for PND
 --|

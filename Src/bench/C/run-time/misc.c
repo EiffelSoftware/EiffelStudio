@@ -325,6 +325,7 @@ rt_public char * eif_getenv (char * k)
 		strncat (key, egc_system_name, appl_len);
 	
 		if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
+			strcpy (key, "SOFTWARE"); /* Software is in upper case in HKLM */
 			if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 				eif_free (key);
 				eif_free (lower_k);

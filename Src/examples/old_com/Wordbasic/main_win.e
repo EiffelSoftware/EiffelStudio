@@ -26,6 +26,11 @@ inherit
 			{NONE} all
 		end
 		
+	EOLE_CLSCTX
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -55,7 +60,7 @@ feature {NONE} -- Initialization
 			main_menu.disable_item (Cmd_grammar)	
 			resize (350, 150)
 			!! wordbasic
-			wordbasic.create
+			wordbasic.initialize (Clsctx_local_server)
 			if not wordbasic.is_valid then
 				!! box.make
 				box.error_message_box (Void, "Can not get IDispatch interface", "IDsipatch error")

@@ -56,7 +56,7 @@ ECHO Setting up runtime
 CD ..\..\..\compiler\C
 REM in "checkout\compiler\C"
 REM **************************************************
-sed -e "s/d:\\\apps\\\MSVC\\\VC98/C:\\\Progra~1\\\Micros~2\\\VC98/g" config.msh > new_config.msh
+sed -e "s/d:\\\apps\\\MSVC\\\VC98/C:\\\Progra~1\\\Micros~3\\\VC98/g" config.msh > new_config.msh
 REM **************************************************
 COPY /Y new_config.msh config.msh
 SET ISE_EIFFEL="%1"

@@ -3548,6 +3548,15 @@ rt_private int generational_collect(void)
 	flush;
 #endif
 
+	/* First, reset the age tables, so that we can recompute the tenure
+	 * threshold for the next pass (feedback). We reset the all array
+	 * instead of just using `eif_tenure_max' elements for two reasons:
+	 * 1 - most of the time `eif_tenure_max == TENURE_MAX'
+	 * 2 - can be optimized better by C compiler.
+	 */
+	memset (size_table, 0, TENURE_MAX * sizeof (uint32));
+	memset (age_table, 0, TENURE_MAX * sizeof (uint32));
+
 	mark_new_generation(MTC_NOARG);		/* Mark all new reachable objects */
 	full_update();				/* Sweep the youngest generation */
 	if (gen_scavenge & GS_ON)
@@ -3581,9 +3590,12 @@ rt_private int generational_collect(void)
 		if (sc_from.sc_top >= watermark) {
 			overused = sc_from.sc_top - sc_from.sc_mark + GS_FLOATMARK;
 			for (age = eif_tenure_max - 1; age >= 0; age--) {
-				overused -= size_table[age];	/* Amount tenured at 'age' */
-				if (overused <= 0)
+				if (overused >= size_table[age]) {
+						/* Amount tenured at 'age' */
+					overused -= size_table [age];
+				} else {
 					break;
+				}
 			}
 			tenure = age;		/* Tenure threshold for next cycle */
 		}
@@ -3607,9 +3619,12 @@ rt_private int generational_collect(void)
 	if (overused > OBJ_MAX) {
 		overused -= OBJ_MAX;				/* Amount of spurious objects */
 		for (age = eif_tenure_max - 1; age >= 0; age--) {
-			overused -= age_table[age];		/* Amount tenured at 'age' */
-			if (overused <= 0)
+			if (overused >= age_table [age]) {
+					/* Amount tenured at 'age' */
+				overused -= age_table[age];
+			} else {
 				break;
+			}
 		}
 		tenure = tenure < age ? tenure : age;	/* Tenure for next cycle */
 	}
@@ -3641,14 +3656,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * I am aware of the code duplication, but this is a trade for speed over
 	 * run-time size and maintainability--RAM.
 	 */
-	int age;					/* Object's age */
 	int moving = gen_scavenge & GS_ON;	/* May objects be moved? */
-
-	/* First, reset the age tables, so that we can recompute the tenure
-	 * threshold for the next pass (feedback).
-	 */
-	for (age = 0; age < eif_tenure_max; age++)
-		size_table[age] = age_table[age] = (uint32) 0;
 
 		/* Initialize our overflow depth */
 	overflow_stack_depth = 0;

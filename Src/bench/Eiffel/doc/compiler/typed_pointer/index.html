@@ -23,6 +23,8 @@
 
 <span class="ekeyword">class</span> 
 	<span class="eclass">TYPED_POINTER</span> <span class="esymbol">[</span><span class="egeneric">G</span><span class="esymbol">]</span>
+<span class="ekeyword">feature</span>
+	<span class="eclass">POINTER_REF</span>
 
 <span class="ekeyword">create</span> <span class="esymbol">{</span>NONE<span class="esymbol">}
 </span>
@@ -32,7 +34,7 @@
 <span class="ekeyword">feature</span> <span class="ecomment">-- Conversion</span>
 
 	<span class="ekeyword">frozen</span> <span class="efeature">to_pointer</span><span class="esymbol">:</span> <span class="eclass">POINTER</span><span class="ekeyword"> is</span>
-			<span class="ecomment">-- Convert current to </span><span class="eclass">TYPED_POINTER</span><span class="ecomment">.</span>
+			<span class="ecomment">-- Convert current to </span><span class="eclass">POINTER</span><span class="ecomment">.</span>
 		<span class="ekeyword">do</span>
 		<span class="ekeyword">end</span>
 	
@@ -57,11 +59,36 @@
 
 <p>The sole purpose of this class is to represent the type of the dollar 
 expressions where the expression is not a routine.</p>
+
+<p>To ensure that an instance of <span class="eclass">TYPED_POINTER</span>[G] 
+always points to a valid location in memory assignments from one <span class="eclass">TYPED_POINTER</span>[G] 
+instance to another is only authorized when it points to the inside of an 
+object. Otherwise if we were authorizing to keep reference to the stack, the 
+reference could be invalid if reference falls outside the scope of the stack 
+during execution.</p>
 <h2>Implementation</h2>
-<p>It is like pointer, except that at the C level we will generate something of 
-type EIF_XX * where XX is either INTEGER_YY, DOUBLE, REAL, ..... On .NET it is a 
-managed pointer of the given type.</p>
-<p>&nbsp;</p>
+<p>On .NET it is a managed pointer of the given type. When passed to a C 
+externals, it is considered as EIF_XX * where XX is one of the Eiffel basic 
+types. If XX is a reference, then this is the EIF_REFERENCE to which it points 
+to that is 
+passed to the external.</p>
+<h3>Classic Eiffel implementation</h3>
+<p>In the C generated code we have a new type EIF_TYPED_POINTER</p>
+<pre>typedef struct {
+	void *value;
+	EIF_REFERENCE parent;
+} EIF_TYPED_POINTER;</pre>
+<p>This is how a local or argument of type <span class="eclass">TYPED_POINTER </span>
+[G] will be declared in the C generated code.</p>
+<h4>Stack management</h4>
+<p>After having processed all GC stacks we process the typed pointer stacks.</p>
+<p>For each element on the stack, we mark the reference to parent object 
+(therefore parent will not be collected). If it has moved then we update the typed pointer location with the new 
+value which is `new parent_object location + offset'.</p>
+<h4>Object management</h4>
+<p>After having processed all reference attributes, we processed all <span class="eclass">TYPED_POINTER</span> 
+attributes. For each of those, we mark the reference to parent object and update 
+it if it has moved. After that there is nothing else to do.</p>
 <p>&nbsp;</p>
 
 </body>

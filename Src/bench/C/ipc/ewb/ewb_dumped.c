@@ -56,8 +56,9 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 	STREAM *sp = stream_by_fd [EWBOUT];
 #endif
 	Dump dump;
-	char *c_rout_name, *eif_rout_name, *obj_addr;
+	char *c_rout_name;
 	char string [128], *ptr = string;
+	EIF_REFERENCE eif_rout_name, obj_addr;
 	uint32 hack;		/* Temporary solution: 2 integers sent in one */
 	uint32 orig, dtype;
 
@@ -76,8 +77,13 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 					case DMP_MELTED:
 						c_rout_name = dump.dmp_vect -> ex_rout;
 						eif_rout_name = RTMS (c_rout_name);
+							/* Protect just created object */
+						epush(&loc_stack, (EIF_REFERENCE) (&eif_rout_name));
+
 						sprintf (ptr, "%lX\0", dump.dmp_vect -> ex_id);
 						obj_addr = RTMS (ptr);
+							/* Protect just created object */
+						epush(&loc_stack, (EIF_REFERENCE) (&obj_addr));
 
 						hack = (uint32) dump.dmp_vect -> ex_orig;
 						orig = hack >> 16;
@@ -90,6 +96,9 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 							obj_addr,
 							orig, dtype,
 							eif_rout_name);
+
+							/* Remove protection */
+						epop(&loc_stack, 2);
 						return;
 					default:
 						break; /* send error */
@@ -98,7 +107,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 				(set_rout) (eif_access (target),
 					(EIF_BOOLEAN) 0,
 					(EIF_BOOLEAN) 1, /* exhausted is true */
-					(char *) 0, 0L, (char *) 0);
+					(EIF_REFERENCE) 0, 0L, (EIF_REFERENCE) 0);
 				return;
 			default:
 				request_dispatch (pack); /* treat asynchronous request */

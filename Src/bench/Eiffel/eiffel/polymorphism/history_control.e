@@ -110,6 +110,9 @@ feature
 			new_set, server_set: POLY_TABLE [ENTRY];
 			id: ROUTINE_ID;
 		do
+debug ("TRANSFER")
+			io.error.putstring("in transfer...%N")
+end
 			from
 				new_units.start
 			until
@@ -130,6 +133,12 @@ feature
 				Tmp_poly_server.put (server_set);
 				new_units.forth;
 			end;
+debug ("TRANSFER")
+			io.error.putstring("taille de newunits : ")
+			io.error.putint(new_units.count)
+			io.error.putstring("%N")
+			io.error.putstring("... out transfer")
+end
 			new_units.clear_all;
 			count := 0;
 		ensure

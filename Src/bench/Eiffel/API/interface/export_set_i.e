@@ -171,6 +171,7 @@ feature {COMPILER_EXPORTER}
 			l_clients: LIST [STRING]
 			current_cluster: CLUSTER_I
 			l_class: CLASS_I
+			l_index: INTEGER
 		do
 			if other.is_none then
 				Result := False
@@ -196,9 +197,11 @@ feature {COMPILER_EXPORTER}
 						l_clients.after or else not Result
 					loop
 						l_class := Universe.class_named (l_clients.item, current_cluster)
+						l_index := l_clients.index
 						if l_class /= Void and then l_class.compiled then
 							Result := other_set.valid_for (l_class.compiled_class)
 						end
+						l_clients.go_i_th (l_index)
 						l_clients.forth
 					end
 					forth

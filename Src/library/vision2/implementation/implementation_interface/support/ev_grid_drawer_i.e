@@ -306,6 +306,7 @@ feature -- Basic operations
 			current_horizontal_pos: INTEGER
 			loop_current_row, loop_parent_row: EV_GRID_ROW_I
 			are_tree_node_connectors_shown: BOOLEAN
+			current_physical_column_index: INTEGER
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -463,6 +464,9 @@ feature -- Basic operations
 							visible_column_indexes.off
 						loop
 							current_column_index := visible_column_indexes.item
+							current_physical_column_index := visible_physical_column_indexes.item (current_column_index - 1)
+							
+							
 								-- Assume that there is no grid item at the current position.
 								-- It is not possible to simply set `grid_item' to Void within the loop as otherwise
 								-- this effectively inserts `Void' at the grid item's position within the grid's
@@ -474,7 +478,7 @@ feature -- Basic operations
 									-- as the current contents of the grid are never used. We also check that the current row and
 									-- current row position are valid.
 									
-								grid_item := current_row_list @ (visible_physical_column_indexes.item (current_column_index - 1))
+								grid_item := current_row_list @ (current_physical_column_index)
 									-- In this case, we have found the grid item so we flag this fact
 									-- so that the calculations for the partial dynamic content know that
 									-- a new item must not be retrieved.
@@ -490,7 +494,7 @@ feature -- Basic operations
 									-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
 									-- the grid, then we execute this code.
 									
-								dynamic_content_function.call ([visible_column_indexes.item, visible_row_indexes.item])
+								dynamic_content_function.call ([current_physical_column_index, visible_row_indexes.item])
 								grid_item_interface := dynamic_content_function.last_result
 								if grid_item_interface /= Void then
 									grid_item := grid_item_interface.implementation

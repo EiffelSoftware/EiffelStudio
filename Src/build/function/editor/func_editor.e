@@ -173,6 +173,7 @@ feature {ELMT_HOLE}
 		do
 			if edited_function /= Void then
 				set_input_stone (stone);
+				input_stone.manage;
 				edited_function.set_input_data (stone.data);
 				edited_function.drop_pair;
 			end
@@ -185,6 +186,7 @@ feature {ELMT_HOLE}
 		do
 			if edited_function /= Void then
 				set_output_stone (stone);
+				output_stone.manage;
 				edited_function.set_output_data (stone.data)
 				edited_function.drop_pair;
 			end

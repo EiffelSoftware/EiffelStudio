@@ -33,7 +33,7 @@ creation {SOCKET}
 feature -- Initialization
 
 	create_from_descriptor (fd: INTEGER) is
-			-- Create socket from the socket descriptor `fd'.
+			-- Create socket from descriptor `fd'.
 		local
 			ext: ANY
 			retried: BOOLEAN

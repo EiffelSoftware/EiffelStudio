@@ -25,6 +25,7 @@ feature -- Resource names
 	r_Windows_timer_delay: STRING is "windows_timer_delay"
 	r_Metamorphosis_disabled: STRING is	"metamorphosis_disabled"
 	r_Smart_file_system: STRING is "smart_file_system"
+	r_collection_period: STRING is "period"
 
 feature {NONE} -- Convenient access
 

@@ -194,7 +194,7 @@ feature -- Basic operation
 											-- We must now parse the generated file, and build a representation
 											-- that is contained within. This is then used by the generator,
 											-- to find paticular information regarding the structure.
-										reset_generation_constants	
+										reset_generation_constants_for_class
 									
 										prepass_xml (window_element, document_info, 1)
 											-- Generate the window implementation for the project.
@@ -209,7 +209,7 @@ feature -- Basic operation
 						elseif current_type.is_equal (Constants_string) then
 							
 						else
-							reset_generation_constants
+							reset_generation_constants_for_class
 							directory_name := generated_path.twin
 							prepass_xml (current_element, document_info, 1)
 							window_file_name := generated_path.twin
@@ -303,11 +303,18 @@ feature {NONE} -- Implementation
 
 	reset_generation_constants is
 			-- Reset all constants and attributes required before a generation.
+			-- Only called once per generation.
+		do
+			
+			reset_generation_constants_for_class
+		end
+		
+	reset_generation_constants_for_class is
+	 		-- Reset all constants required to be reset before a class generation.
 			-- This will be called multiple times, once for each set of classes
 			-- that is generated.
 		do
-			create document_info.make_root
-			create all_ids.make (50)
+			create document_info.make_root	
 			event_connection_string := ""
 			create_string := ""
 			local_string := Void
@@ -317,6 +324,7 @@ feature {NONE} -- Implementation
 			event_implementation_string := ""
 			event_declaration_string := ""
 			Generated_names.wipe_out
+			create all_ids.make (50)
 		end
 		
 
@@ -482,10 +490,10 @@ feature {NONE} -- Implementation
 						if pixmap_constant /= Void then
 							if pixmap_constant.is_absolute then
 								generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
-								"Once" + Indent + "create Result" + Indent + "Result.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
+								"once" + Indent + "create Result" + Indent + "Result.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
 							else
 								generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
-								"local" + indent + "a_file_name: FILE_NAME" + Indent_less_one + "Once" + Indent + "create Result" + Indent + 
+								"local" + indent + "a_file_name: FILE_NAME" + Indent_less_one + "once" + Indent + "create Result" + Indent + 
 								"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.set_file_name (%"" + pixmap_constant.filename +"%")" +
 								indent + "set_with_named_file (Result, a_file_name)" + Indent_less_one + "end" + "%N"
 							end
@@ -690,7 +698,12 @@ feature {NONE} -- Implementation
 					-- as client. Also export `initialize' as necessary. If client, then it
 					-- must be exported to {ANY}.
 					if project_settings.client_of_window then
-						add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_feature, custom_feature_tag)
+						if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
+							add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_window_feature, custom_feature_tag)
+						else
+							add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_widget_feature, custom_feature_tag)
+						end
+						
 					else
 						add_generated_string (class_text, Void, custom_feature_tag)
 					end
@@ -749,15 +762,35 @@ feature {NONE} -- Implementation
 
 						-- Add code for inheritance structure to `class_text'.
 					if project_settings.client_of_window then
-						temp_string := window_access.twin
-						if not document_info.type.is_equal (Ev_titled_window_string)  then
-								-- Ensure that the inheritance references the correct type.
-							temp_string := Window_access_as_dialog_part1.twin + project_settings.constants_class_name.as_upper + Window_access_as_dialog_part2.twin
-							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
-								-- Replace "window" from `window_access' with "dialog" only in comment.
-								--| FIXME This is a hack and should probably be improved as the code generation
-								--| is developed.
+						temp_string := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two
+						if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
+							temp_string.append (client_window_string)
+						else
+							temp_string.append (client_widget_string)
 						end
+						temp_string.append (": ")
+						temp_string.append (document_info.type)
+						temp_string.append (indent_less_one + "-- `Result' is widget with which `Current' is implemented")
+
+--| FIXME check this is really no longer needed and update code generation accordingly.						
+--			-- String used to define window when we are a client of window.
+--		once
+--			Result := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two +
+--			"window: " + Ev_titled_window_string + indent_less_one + "-- `Result' is window with which `Current' is implemented"
+--		end
+--						if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
+--							temp_string := window_access.twin
+--						else
+--							temp_string := widget_access.twin
+--						end
+--						if not document_info.type.is_equal (Ev_titled_window_string)  then
+--								-- Ensure that the inheritance references the correct type.
+--							temp_string := Window_access_as_dialog_part1.twin + project_settings.constants_class_name.as_upper + Window_access_as_dialog_part2.twin
+--							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+--								-- Replace "window" from `window_access' with "dialog" only in comment.
+--								--| FIXME This is a hack and should probably be improved as the code generation
+--								--| is developed.
+--						end
 						add_generated_string (class_text, temp_string,  inheritance_tag)
 					else
 						temp_string := Window_inheritance_part1.twin + project_settings.constants_class_name.as_upper + Window_inheritance_part2.twin
@@ -854,7 +887,13 @@ feature {NONE} -- Implementation
 				set_inherited_class_name (temp_string)
 				
 				if project_settings.client_of_window then
-					temp_string := redefined_creation.twin
+						-- There are different sets of setting code for windows and dialogs, or widgets.
+					if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
+						temp_string := redefined_window_creation.twin
+					else
+						temp_string := redefined_creation.twin
+					end
+					
 						if not document_info.type.is_equal (Ev_titled_window_string)  then
 							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
 						end
@@ -880,6 +919,7 @@ feature {NONE} -- Implementation
 			-- Replace `tag' in `class_text' with `new'.
 			-- If `new' is Void then add "".
 		require
+			strings_not_void: a_class_text /= Void and new /= Void and tag /= Void
 			tag_contained: a_class_text.has_substring (tag)
 		local
 			temp_index: INTEGER
@@ -900,6 +940,8 @@ feature {NONE} -- Implementation
 	set_class_name (a_name: STRING) is
 			-- Replace all occurances of `class_name_tag' with
 			-- `a_name' within `class_text'.
+		require
+			a_name_not_void: a_name /= Void
 		do
 			a_name.to_upper
 			class_text.replace_substring_all (class_name_tag, a_name)
@@ -908,12 +950,18 @@ feature {NONE} -- Implementation
 	set_inherited_class_name (a_name: STRING) is
 			-- Replace all occurances of `inherited_class_name_tag' with
 			-- `a_name' within `class_text'.
+		require
+			a_name_not_void: a_name /= Void
 		do
 			class_text.replace_substring_all (inherited_class_name_tag, a_name)
-		end
+		end	
 		
 	prepass_xml (element: XM_ELEMENT; info: GB_GENERATED_INFO; depth: INTEGER) is
 			-- With information in element, build information into `info'.
+		require
+			element_not_void: element /= Void
+			info_not_void: info /= Void
+			depth_positive: depth > 0
 		local
 			current_element: XM_ELEMENT
 			current_name, current_type: STRING
@@ -922,13 +970,14 @@ feature {NONE} -- Implementation
 			current_data_element: XM_CHARACTER_DATA
 			action_sequence_info: GB_ACTION_SEQUENCE_INFO
 			new_name: STRING
+			in_reference: BOOLEAN
 		do
 			info.set_element (element)
 			if element.has_attribute_by_name (type_string) then
 				current_type := element.attribute_by_name (type_string).value
 				info.set_type (current_type)
 			end
-	
+			in_reference := False
 			from
 				element.start
 			until
@@ -938,7 +987,9 @@ feature {NONE} -- Implementation
 				if current_element /= Void then
 					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
-						prepass_xml (current_element, info.new_child, depth + 1)
+						if not in_reference then
+							prepass_xml (current_element, info.new_child, depth + 1)
+						end
 					else
 						if current_name.is_equal (Internal_properties_string) then
 							full_information := get_unique_full_info (current_element)
@@ -952,10 +1003,16 @@ feature {NONE} -- Implementation
 								info.enable_generated_name
 								generated_names.force (new_name)					
 							end	
+
+								-- We check for root level depth to ensure if we are a root object or not.							
+							if depth = 1 then
+								info.set_as_root_object
+							end
+							element_info := full_information @ (reference_id_string)
 							
-							if current_type.is_equal (Ev_titled_window_string) or
-								current_type.is_equal (Ev_dialog_string) then
-								info.set_as_root_object	
+							if element_info /= Void then
+								info.set_associated_root_object_id (element_info.data.to_integer)
+								in_reference := True
 							end
 							element_info := full_information @ (id_string)
 							info.set_id (element_info.data.to_integer)
@@ -1024,6 +1081,7 @@ feature {NONE} -- Implementation
 			new_object : GB_OBJECT
 			menu_bar_object: GB_MENU_BAR_OBJECT
 			generated_info: GB_GENERATED_INFO
+			code_for_insert: STRING
 		do
 			from
 				all_ids.start
@@ -1032,21 +1090,33 @@ feature {NONE} -- Implementation
 			loop
 				generated_info := document_info.generated_info_by_id.item (all_ids.item)
 					-- Fixme, why assign id here? Try generating, and then see new ids after...
-				new_object := object_handler.build_object_from_string_and_assign_id (generated_info.type)
+				new_object := object_handler.build_object_from_string (generated_info.type)--_and_assign_id (generated_info.type)
+				code_for_insert := generated_info.name.twin
+				if generated_info.associated_root_object_id > 0 and project_settings.client_of_window then
+					if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
+						code_for_insert.append ("." + client_window_string)
+					else
+						code_for_insert.append ("." + client_widget_string)
+					end
+				end
 				if generated_info.parent /= Void and then generated_info.parent.type /= Void and then generated_info.parent.is_root_object then
 					menu_bar_object ?= new_object
 					if menu_bar_object /= Void then
 						if project_settings.client_of_window then
-							add_build ("window.set_menu_bar (" + generated_info.name + ")")
+							add_build (client_window_string + ".set_menu_bar (" + generated_info.name + ")")
 						else
 							add_build ("set_menu_bar (" + generated_info.name + ")")
 						end
 					else
-							if project_settings.client_of_window then
-								add_build ("window." + new_object.extend_xml_representation (generated_info.name))
+						if project_settings.client_of_window then
+							if generated_info.parent.type.is_equal (ev_titled_window_string) or generated_info.parent.type.is_equal (ev_dialog_string) then
+								add_build (client_window_string +  "." + new_object.extend_xml_representation (code_for_insert))
 							else
-								add_build (new_object.extend_xml_representation (generated_info.name))
+								add_build (client_widget_string + "." + new_object.extend_xml_representation (code_for_insert))
 							end
+						else
+							add_build (new_object.extend_xml_representation (code_for_insert))
+						end
 					end
 						-- If name is Void, the we are at the root element of the info.
 						-- This does not represent a widget at all, so do nothing
@@ -1054,7 +1124,7 @@ feature {NONE} -- Implementation
 					-- Tables need to use put, but this is done in conjunction with the placement.
 					-- So here, we do not add the children of the table, as it will be done later.
 					if generated_info.parent /= Void and then generated_info.parent.type /= Void and then not generated_info.parent.type.is_equal (Ev_table_string) then
-						add_build (generated_info.parent.name + "." + new_object.extend_xml_representation (generated_info.name))
+						add_build (generated_info.parent.name + "." + new_object.extend_xml_representation (code_for_insert))
 					end
 				end
 				all_ids.forth
@@ -1081,7 +1151,9 @@ feature {NONE} -- Implementation
 				from
 					supported_types.start
 				until
-					supported_types.off
+						-- Here we check that the current object does not represent a root object, as
+						-- if so, there is nothing to do here.
+					supported_types.off or generated_info.associated_root_object_id > 0
 				loop
 					gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + supported_types.item))
 								-- Call default_create on `gb_ev_any'
@@ -1111,7 +1183,11 @@ feature {NONE} -- Implementation
 								temp_set := temp_set.substring (dot_index + 1, temp_set.count)
 							end
 							if project_settings.client_of_window and not temp_set.is_empty then
-								temp_set := Client_window_string + "." + temp_set
+								if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
+									temp_set := Client_window_string + "." + temp_set
+								else
+									temp_set := client_widget_string + "." + temp_set
+								end
 							end
 						end
 						add_set (temp_set)	
@@ -1119,7 +1195,7 @@ feature {NONE} -- Implementation
 					end					
 					supported_types.forth
 				end
-
+				
 				all_ids.forth
 			end
 		end
@@ -1144,82 +1220,87 @@ feature {NONE} -- Implementation
 				all_ids.off
 			loop
 				generated_info := document_info.generated_info_by_id.item (all_ids.item)
-				events := generated_info.events
-				from
-					events.start
-				until
-					events.off
-				loop
-					action_sequence_info := events.item
-					action_sequence ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequence_info.type))
-					check
-						action_sequence_not_void: action_sequence /= Void
-					end
-							-- We must handle a root object as a special case, as there
-						-- is no need for a dot call, unless we are using the window as a client.
-					if generated_info.is_root_object then
-						local_name := ""
-						if project_settings.client_of_window then
-							local_name := Client_window_string + "."
+				if generated_info.associated_root_object_id = 0 then
+					events := generated_info.events
+					from
+						events.start
+					until
+						events.off
+					loop
+						action_sequence_info := events.item
+						action_sequence ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequence_info.type))
+						check
+							action_sequence_not_void: action_sequence /= Void
 						end
-					else
-						local_name := generated_info.name + "."
-					end
-
-						-- Adjust event names that have been renamed in Vision2 interface
-					renamed_action_sequence_name := modified_action_sequence_name (generated_info.type, action_sequence_info)
-									
-						-- If there are no arguments to the action sequence then generate no open arguments.
-					if action_sequence.count = 0 then
-						add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + ")")
-					else
-						add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))")
-					end
-										
-						-- We must not generate the feature names again, if we have multiple events connected
-						-- to a single action sequence and we have already generated the feature.
-					if not all_generated_events.has (action_sequence_info.feature_name.as_lower) then
-						all_generated_events.extend (action_sequence_info.feature_name.as_lower)
-							-- Use `Current' in comment if the event is connected to the window.
-						if generated_info.type.is_equal (Ev_titled_window_string) then
-							comment_object_name := "Current"
-						else
-							comment_object_name := generated_info.name
-						end
-						
-						
-							-- No parameters if zero arguments.
-						if action_sequence.count = 0 then
-							parameters := " is"
-						else
-							parameters := " (" +action_sequence.parameter_list + ") is"
-						end	
-						
-							-- If the user has selected that they wish to generate debugging output, 
-							-- then we build a representation in `feature_implementation' otherwise,
-							-- the feature implementation will be empty.
-						if project_settings.debugging_output then
-							if action_sequence.count = 0 then
-								feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
-							else
-								feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
+								-- We must handle a root object as a special case, as there
+							-- is no need for a dot call, unless we are using the window as a client.
+						if generated_info.is_root_object then
+							local_name := ""
+							if project_settings.client_of_window then
+								if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
+									local_name := Client_window_string + "."
+								else
+									local_name := client_widget_string + "."
+								end
 							end
 						else
-							feature_implementation := ""
+							local_name := generated_info.name + "."
 						end
-						
-							-- Now we must generate the event declarations.
-						add_event_declaration (action_sequence_info.feature_name + parameters +
-						indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-						indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
-						
-						add_event_implementation (action_sequence_info.feature_name + parameters +
-						indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-						indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
+	
+							-- Adjust event names that have been renamed in Vision2 interface
+						renamed_action_sequence_name := modified_action_sequence_name (generated_info.type, action_sequence_info)
+										
+							-- If there are no arguments to the action sequence then generate no open arguments.
+						if action_sequence.count = 0 then
+							add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + ")")
+						else
+							add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))")
+						end
+											
+							-- We must not generate the feature names again, if we have multiple events connected
+							-- to a single action sequence and we have already generated the feature.
+						if not all_generated_events.has (action_sequence_info.feature_name.as_lower) then
+							all_generated_events.extend (action_sequence_info.feature_name.as_lower)
+								-- Use `Current' in comment if the event is connected to the window.
+							if generated_info.type.is_equal (Ev_titled_window_string) then
+								comment_object_name := "Current"
+							else
+								comment_object_name := generated_info.name
+							end
+							
+							
+								-- No parameters if zero arguments.
+							if action_sequence.count = 0 then
+								parameters := " is"
+							else
+								parameters := " (" +action_sequence.parameter_list + ") is"
+							end	
+							
+								-- If the user has selected that they wish to generate debugging output, 
+								-- then we build a representation in `feature_implementation' otherwise,
+								-- the feature implementation will be empty.
+							if project_settings.debugging_output then
+								if action_sequence.count = 0 then
+									feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
+								else
+									feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
+								end
+							else
+								feature_implementation := ""
+							end
+							
+								-- Now we must generate the event declarations.
+							add_event_declaration (action_sequence_info.feature_name + parameters +
+							indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+							indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
+							
+							add_event_implementation (action_sequence_info.feature_name + parameters +
+							indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+							indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
+						end
+						events.forth
 					end
-					events.forth
-				end
-				
+				end				
 				all_ids.forth
 			end
 			
@@ -1240,6 +1321,8 @@ feature {NONE} -- Implementation
 			-- Each new local is placed on an individual line. e.g.
 			-- button1: EV_BUTTON
 			-- button2: EV_BUTTON
+		require
+			generated_info_not_void: generated_info /= Void
 		local	
 			temp_string,local_string_start, indent_string: STRING
 			local_type, name: STRING
@@ -1247,7 +1330,13 @@ feature {NONE} -- Implementation
 			string_to_modify: STRING
 		do
 			if not generated_info.is_root_object then
-				local_type := generated_info.type
+				if generated_info.associated_root_object_id > 0 then
+						-- This works but is not very good as we go through `object_handler'. We are supposed to
+						-- be able to generate code purely from the saved XML which is prepassed.
+					local_type := object_handler.object_from_id (generated_info.associated_root_object_id).name.as_upper
+				else
+					local_type := generated_info.type
+				end
 				name := generated_info.name
 					-- Need to generate slightly different code dependent
 					-- on whether the atrributes are local or not.
@@ -1297,7 +1386,9 @@ feature {NONE} -- Implementation
 			-- Add code representation of new local named `name' of type
 			-- `local_type' to `local_string'.
 			-- Each new local will be grouped with other locals of same type. e.g.
-			-- button1, button2: EV_BUTTON
+			-- button1, button2: EV_BUTTON.
+		require
+			generated_info_not_void: generated_info /= Void
 		local
 			temp_string, local_string_start, indent_string: STRING
 			index_of_type, search_counter: INTEGER
@@ -1307,7 +1398,13 @@ feature {NONE} -- Implementation
 			string_to_modify: STRING
 		do
 			if not generated_info.is_root_object then
-				local_type := generated_info.type
+				if generated_info.associated_root_object_id > 0 then
+						-- This works but is not very good as we go through `object_handler'. We are supposed to
+						-- be able to generate code purely from the saved XML which is prepassed.
+					local_type := object_handler.object_from_id (generated_info.associated_root_object_id).name.as_upper
+				else
+					local_type := generated_info.type
+				end
 				name := generated_info.name
 				
 					-- Need to generate slightly different code dependent
@@ -1397,6 +1494,8 @@ feature {NONE} -- Implementation
 			-- Remove the line of text from `body' containing `string'.
 			-- The "%N" following `string' is the one removed. The start of
 			-- the line is determined by the previous "%N".
+		require
+			strings_not_void: string /= Void and body /= Void
 		local
 			index: INTEGER
 			next_index: INTEGER
@@ -1413,6 +1512,8 @@ feature {NONE} -- Implementation
 	create_local (generated_info: GB_GENERATED_INFO) is
 			-- Add code representation of the creation of local based on `generated_info'
 			-- to `create_string'.
+		require
+			generated_info_not_void: generated_info /= Void
 		local
 			temp_string: STRING
 		do
@@ -1428,6 +1529,8 @@ feature {NONE} -- Implementation
 		
 	add_build (constructor: STRING) is
 			-- Add `constructor' to `build_string'.
+		require
+			constructor_not_void: constructor /= Void
 		local
 			temp_string: STRING
 		do
@@ -1442,6 +1545,8 @@ feature {NONE} -- Implementation
 	add_event_connection (event: STRING) is
 			-- Add `indent' and `event' to `event_connection_string'.
 			-- Create `event_connection_string' if empty.
+		require
+			event_not_void: event /= Void
 		do
 			if event_connection_string.is_empty then
 				event_connection_string := connect_events_comment
@@ -1452,6 +1557,8 @@ feature {NONE} -- Implementation
 	add_event_declaration (event: STRING) is
 			-- Add `indent' and `event' to `event_declaration_string'.
 			-- Create `event_declaration_string' if empty.
+		require
+			event_not_void: event /= Void
 		do
 			event_declaration_string := event_declaration_string + indent_less_two + event
 		end
@@ -1459,6 +1566,8 @@ feature {NONE} -- Implementation
 	add_event_implementation (event: STRING) is
 			-- Add `indent' and `event' to `event_implementation_string.
 			-- Create `event_implementation_string' if empty.
+		require
+			event_not_void: event /= Void
 		do
 			event_implementation_string := event_implementation_string + indent_less_two + event
 		end
@@ -1466,6 +1575,8 @@ feature {NONE} -- Implementation
 	add_set (set: STRING) is
 			-- Add a setting represention, `set' to
 			-- `set_string'.
+		require
+			set_not_void: set /= Void
 		local
 			temp_string: STRING
 			non_void_set: STRING
@@ -1486,8 +1597,7 @@ feature {NONE} -- Implementation
 					non_void_set.replace_substring_all (indent + ".", indent)
 				end
 			end
-			
-			
+
 			if set_string = Void then
 				set_string := set_widgets_comment + indent
 				temp_string := non_void_set
@@ -1627,6 +1737,8 @@ feature {NONE} -- Implementation
 			-- All names generated automatically.
 		once
 			create Result.make (0)
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 invariant

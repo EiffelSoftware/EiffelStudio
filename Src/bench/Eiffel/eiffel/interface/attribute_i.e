@@ -110,7 +110,7 @@ feature
 			vlec: VLEC
 			solved_type: TYPE_A
 		do
-			{FEATURE_I} precursor (class_c)
+			{FEATURE_I} Precursor (class_c)
 			if class_c.is_expanded then
 				solved_type ?= type
 				if
@@ -248,7 +248,7 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			{FEATURE_I} precursor (other)
+			{FEATURE_I} Precursor (other)
 			other.set_type (type)
 			other.set_has_function_origin (has_function_origin)
 			other.set_generate_in (generate_in)
@@ -268,7 +268,7 @@ feature
 			-- Process pattern
 		do
 			if not is_none_attribute then
-				{FEATURE_I} precursor
+				{FEATURE_I} Precursor
 			end
 		end
 

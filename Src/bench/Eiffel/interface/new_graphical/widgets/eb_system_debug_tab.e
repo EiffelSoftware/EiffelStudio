@@ -107,10 +107,12 @@ feature -- Store/Retrieve
 			store_arguments (root_ast)
 			store_debug (root_ast)
 
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.line_generation, Void, line_generation.is_selected))
+			defaults.extend (new_special_option_sd (
+				feature {FREE_OPTION_SD}.line_generation, Void, line_generation.is_selected))
 
 			if Has_profiler and then profile_check.is_sensitive then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
+				defaults.extend (new_special_option_sd (
+					feature {FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
 			end
 
 			if trace_check.is_sensitive then
@@ -379,12 +381,12 @@ feature {NONE} -- Graphical initialization
 			set_border_width (Layout_constants.Small_border_size)
 			set_padding (Layout_constants.Small_padding_size)
 
-				-- Execution options notebook
-			extend (execution_notebook)			
-
 				-- Miscellaneous option
 			extend (miscellaneous_frame ("Miscellaneous"))
-			disable_item_expand (i_th (2))
+			disable_item_expand (i_th (1))
+
+				-- Execution options notebook
+			extend (execution_notebook)			
 
 				-- Add C specific widgets
 			c_specific_widgets.extend (trace_check)
@@ -423,7 +425,7 @@ feature {NONE} -- Graphical initialization
 			create hbox
 			hbox.set_border_width (Layout_constants.Small_border_size)
 
-			line_generation := new_check_button (hbox, "Line number generation", True)
+			line_generation := new_check_button (hbox, "Source debug information", True)
 
 			if Has_profiler then
 				create profile_check.make_with_text ("Profiling")

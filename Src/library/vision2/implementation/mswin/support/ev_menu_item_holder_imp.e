@@ -17,23 +17,26 @@ inherit
 		export {EV_MENU_ITEM_IMP}
 			set_name
 		redefine
-			children
+			ev_children
 		end
 
+	EV_ITEM_EVENTS_CONSTANTS_IMP
+
 	WEL_MENU
+		rename
+			make as wel_make
+		end
 
 feature {EV_MENU_IMP} -- Status report
 
-	children: LINKED_LIST [EV_MENU_ITEM_IMP]
+	ev_children: LINKED_LIST [EV_MENU_ITEM_IMP]
 
 feature -- Event -- command association
 
 	on_menu_command (menu_id: INTEGER) is
 			-- The `menu_id' has been choosen from the menu.
 		do
-			if children.i_th(menu_id).command /= Void then
-				children.i_th(menu_id).command.execute (children.i_th(menu_id).arguments)
-			end
+			ev_children.i_th(menu_id).execute_command (Cmd_item_activate ,Void)
 		end
 
 feature -- Implementation
@@ -47,9 +50,9 @@ feature -- Implementation
 			check
 				valid_item: item_imp /= Void
 			end
-			children.extend (item_imp)
-			append_string (name_item, children.count)
-			item_imp.set_id (children.count)
+			ev_children.extend (item_imp)
+			append_string (name_item, ev_children.count)
+			item_imp.set_id (ev_children.count)
 		end
 
 	add_menu (menu: EV_MENU) is
@@ -69,14 +72,14 @@ feature -- Implementation
 			-- Remove the item with `id' as identification
 		do
 			delete_item (id)
-			children.go_i_th (id)
-			children.remove
+			ev_children.go_i_th (id)
+			ev_children.remove
 			from
 			until
-				children.after
+				ev_children.after
 			loop
-				children.item.set_id (children.index)
-				children.forth
+				ev_children.item.set_id (ev_children.index)
+				ev_children.forth
 			end
 		end
 
@@ -84,7 +87,7 @@ feature -- Implementation
 			-- Remove `menu' from the container.
 			-- In fact, the destroy fonction destroy the wel_item
 			-- then here, we must only remove the menu and its
-			-- item from `children'.
+			-- item from `ev_children'.
 --require
 --	menu_exists: not menu.destroyed
 		do

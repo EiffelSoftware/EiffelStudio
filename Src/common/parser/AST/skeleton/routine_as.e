@@ -203,7 +203,7 @@ feature {AST_EIFFEL} -- Output
 			end
 			if locals /= Void then
 				ctxt.put_text_item (ti_Local_keyword)
-				ctxt.set_separator (Void)
+				ctxt.set_separator (ti_Empty)
 				ctxt.indent
 				ctxt.set_new_line_between_tokens
 				ctxt.new_line

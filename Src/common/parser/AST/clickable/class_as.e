@@ -345,7 +345,7 @@ feature {COMPILER_EXPORTER} -- Output
 
 			if features /= Void then
 				ctxt.set_new_line_between_tokens;
-				ctxt.set_separator (Void);
+				ctxt.set_separator (ti_Empty);
 				features_simple_format (ctxt)
 				ctxt.new_line;
 			end

@@ -497,7 +497,7 @@ feature -- Obsolete
 		end;
 
 	add_left (an_item: STRING) is
-		Obsolete "Use `put_right'"
+		Obsolete "Use `put_left'"
 		do
 			put_left (an_item)
 		end;

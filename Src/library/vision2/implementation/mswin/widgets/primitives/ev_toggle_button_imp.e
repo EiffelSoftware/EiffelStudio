@@ -13,8 +13,7 @@ inherit
 
 	EV_BUTTON_IMP
 		redefine
-			select_action,
-			is_down,
+			default_style,
 			on_bn_clicked
 		end
 
@@ -27,7 +26,8 @@ feature -- Status report
 	state: BOOLEAN is
 			-- Is toggle pressed
 		do
-			Result := is_down
+			Result := cwin_send_message_result (item,
+				Bm_getcheck, 0, 0) = 1
 		end 
 
 feature -- Status setting
@@ -37,12 +37,10 @@ feature -- Status setting
 			-- pressed to True.
 		do
 			if flag then
-				current_state := 3
+				cwin_send_message (item, Bm_setcheck, 1, 0)
 			else
-				current_state := 1
+				cwin_send_message (item, Bm_setcheck, 0, 0)
 			end
-			invalidate
-			on_bn_clicked
 		end
 
 	toggle is
@@ -70,44 +68,23 @@ feature -- Event -- removing command association
 			remove_command (Cmd_toggle)
 		end	
 
-feature {NONE} -- Implementation
-
-	select_action is
-			-- Action to be down when `Oda_select'.
-			-- It will draw only if we obtain 0 or 2.
-			-- We need to have 4 values, because it is
-			-- called each time the user press or unpress
-			-- the button, then it is called twice for a
-			-- usual click.
-		do
-			current_state := (current_state + 1) \\ 4
-		end
-
-	is_down: BOOLEAN is
-			-- Say if the button is down or not.
-		do
-			inspect current_state
-			when 0 then
-				Result := False
-			when 1 then
-				Result := False
-			when 2 then
-				Result := True
-			when 3 then
-				Result := True
-			else
-				check
-					not_possible: False
-				end
-			end
-		end
+feature {NONE} -- Notification messages
 
 	on_bn_clicked is
 			-- When the button is pressed
-			-- To implement
 		do
 			execute_command (Cmd_click, Void)
 			execute_command (Cmd_toggle, Void)
+		end
+
+feature {NONE} -- WEL Implementation
+
+	default_style: INTEGER is
+			-- Not visible or child at creation
+		do
+			Result := Ws_child + Ws_visible + Ws_group
+						+ Ws_tabstop + Bs_autocheckbox 
+						+ Bs_pushlike
 		end
 
 end -- class EV_TOGGLE_BUTTON_IMP

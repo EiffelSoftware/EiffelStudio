@@ -1,37 +1,48 @@
 indexing
-	description: "EiffelVision event data. Implementation interface";
+	description: "EiffelVision pick and drop event data, implementation interface."
 	status: "See notice at end of class";
-	id: "$Id$";
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	EV_EVENT_DATA_I
+	EV_PND_EVENT_DATA_I
 
-feature -- Access
+inherit
+	EV_BUTTON_EVENT_DATA_I
+		redefine
+			print_contents
+		end	
+	
+feature -- Access	
+	
+	data: EV_PND_DATA
+			-- Transported data
 
-	widget: EV_WIDGET
-			-- The mouse pointer was over this widget 
-			-- when event happened
+	data_type: EV_PND_TYPE
+			-- Transported data type
 
 feature -- Element change
-
-	set_widget (wid: EV_WIDGET) is
-			-- Make `wid' the new widget.
+	
+	set_data (value: EV_PND_DATA) is
+			-- Make `value' the new data.
 		do
-			widget := wid
+			data := value
+		end
+	
+	set_data_type (value: EV_PND_TYPE) is
+			-- Make `value' the new data type.
+		do
+			data_type := value
 		end
 
 feature -- Debug
 	
 	print_contents is
+			-- print the contents of the object
 		do
-			io.put_string ("EV_EVENT_DATA: ")
-			print (widget)
-			io.put_string ("%N")
 		end
 
-end -- class EV_EVENT_DATA_I
+end -- class EV_PND_EVENT_DATA_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -48,6 +59,3 @@ end -- class EV_EVENT_DATA_I
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-
-			
-	

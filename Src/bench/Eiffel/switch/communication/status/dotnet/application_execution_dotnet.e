@@ -26,12 +26,12 @@ inherit
 			{NONE} all
 		end
 		
-	EIFNET_EXPORTER
+	ICOR_EXPORTER -- debug trace purpose
 		export
 			{NONE} all
 		end
 		
-	ICOR_EXPORTER
+	EIFNET_EXPORTER
 		export
 			{NONE} all
 		end
@@ -41,15 +41,6 @@ inherit
 			{NONE} all
 		end
 		
-	BEURK_HEXER		
-		export
-			{NONE} all
-		end
-
-	EIFNET_EXCEPTION_CODE
-		export
-			{NONE} all
-		end
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 		export
@@ -73,12 +64,13 @@ feature {SHARED_APPLICATION_EXECUTION} -- Initialization
 			create eifnet_debugger.make
 		end
 
-feature {EIFNET_DEBUGGER} -- Trigger eStudio done
+feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 
 	estudio_callback_notify is
 			-- Once the callback is done, when ec is back to life
 			-- it will process this notification.
 		do
+			callback_notification_processed := False		
 			if eifnet_debugger /= Void then
 				if eifnet_debugger.data_changed then
 					if
@@ -100,7 +92,10 @@ feature {EIFNET_DEBUGGER} -- Trigger eStudio done
 					end	
 				end
 			end
+			callback_notification_processed := True
 		end
+		
+	callback_notification_processed: BOOLEAN		
 		
 feature {APPLICATION_EXECUTION} -- load and save
 
@@ -198,6 +193,7 @@ feature -- Bridge to Debugger
 			if not retried then
 				l_icd_exception := eifnet_debugger.active_exception_value
 				create l_exception_info.make (l_icd_exception)
+
 				Result := eifnet_debugger.to_string_value_from_exception_object_value (Void, 
 					l_icd_exception,
 					l_exception_info.interface_debug_object_value
@@ -207,6 +203,29 @@ feature -- Bridge to Debugger
 			retried := True
 			retry
 		end
+		
+	exception_message: STRING is
+			-- Exception output
+		require
+			exception_occured: exception_occured
+		local
+			retried: BOOLEAN
+			l_icd_exception: ICOR_DEBUG_VALUE
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+		do
+			if not retried then
+				l_icd_exception := eifnet_debugger.active_exception_value
+				create l_exception_info.make (l_icd_exception)
+
+				Result := eifnet_debugger.get_message_value_from_exception_object_value (Void, 
+					l_icd_exception,
+					l_exception_info.interface_debug_object_value
+				)
+			end
+		rescue
+			retried := True
+			retry
+		end		
 	
 	eifnet_debugger: EIFNET_DEBUGGER
 			-- Access to the Dotnet Debugger
@@ -223,13 +242,6 @@ feature -- Bridge to Debugger
 		do
 			Result := eifnet_debugger.debug_output_value_from_object_value (a_frame, a_icd, a_icd_obj, a_class_type)
 		end
-		
-	to_string_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
-							a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING is
-			-- Debug_output string value.			
-		do
-			Result := eifnet_debugger.to_string_value_from_exception_object_value (a_frame, a_icd, a_icd_obj)
-		end		
 
 feature -- Execution
 
@@ -831,12 +843,6 @@ feature {NONE} -- Events on notification
 		end
 		
 	notify_execution_on_stopped is
-		local
-			l_exception_value   : ICOR_DEBUG_VALUE
-			l_exception_info    : EIFNET_DEBUG_VALUE_INFO
-			l_exception_token   : INTEGER
-			l_exception_message : STRING
-
 		do
 			debug ("debugger_trace")
 				print ("%N*** REASON TO STOP *** %N")
@@ -876,28 +882,10 @@ feature {NONE} -- Events on notification
 				status.set_reason_as_step
 			end			
 			if Eifnet_debugger_info.last_managed_callback_is_exception then
-				l_exception_value := Application.imp_dotnet.eifnet_debugger.active_exception_value
-				create l_exception_info.make (l_exception_value)
-				l_exception_token := l_exception_info.value_class_token
-				if l_exception_token = except_exception then
-					l_exception_message := (create {EIFNET_DEBUG_EXTERNAL_FORMATTER}).message_from_exception (l_exception_value)
-					status.set_reason_as_viol
-				else
---					l_exception_message := (create {EIFNET_DEBUG_EXTERNAL_FORMATTER}).message_from_exception (l_exception_value)
---					if l_exception_message = Void or else l_exception_message.is_empty then
---						l_exception_message := (create {EIFNET_DEBUG_EXTERNAL_FORMATTER}).message_from_exception (l_exception_info.interface_debug_object_value)
---					end
---					if l_exception_message = Void or else l_exception_message.is_empty then
---						l_exception_message := exception_string_representation (l_exception_token)
---					end					
-					l_exception_message := exception_string_representation (l_exception_token)
+				status.set_reason_as_raise				
+				status.set_exception (0, "Exception occured .. waiting for information")
 
-					status.set_reason_as_raise
-				end
-				
-				status.set_exception (0, l_exception_message)
 			end
-
 --			set_current_execution_stack (1)
 			Application.set_current_execution_stack_number (Application.number_of_stack_elements)
 

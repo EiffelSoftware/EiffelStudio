@@ -31,12 +31,10 @@ feature -- Creation
 			nothing: WIDGET
 		do
 			depth := 0;
-			widget_manager.new (Current, nothing);
-			if not (a_name = Void) then
-				identifier:= clone (a_name);
-			end;
 			screen := a_screen;
-			implementation:= toolkit.top_shell (Current);
+			identifier := clone (a_name);
+			widget_manager.new (Current, nothing);
+			implementation := toolkit.top_shell (Current);
 			set_default
 		end;
 	

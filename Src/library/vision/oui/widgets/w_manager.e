@@ -13,16 +13,36 @@ inherit
 	G_ANY
 		export
 			{NONE} all
+		undefine
+			is_equal, copy, setup,
+			consistent 
 		end;
 
 	ASCII
 		export
 			{NONE} all
+		undefine
+			is_equal, copy, setup,
+			consistent 
 		end;
 
 	BASIC_ROUTINES
 		export
 			{NONE} all
+		undefine
+			is_equal, copy, setup,
+			consistent 
+		end;
+
+	ARRAY [WIDGET]
+		rename
+			make as array_make,
+			count as array_count,
+			empty as array_empty,
+			item as i_th
+		export
+			{NONE} all;
+			{ANY} has, i_th, valid_index
 		end
 
 creation
@@ -34,7 +54,7 @@ feature -- Creation
 	make is
 			-- Create a widget manager.
 		do
-			!!list.make (1, 1)
+			array_make (1, 100)
 		end;
 
 feature -- List
@@ -42,61 +62,42 @@ feature -- List
 	forth is
 			-- Move cursor forward one position.
 		require
-			not offright
+			not_after: not after
 		do
-			from
-				position := position+1
-			until
-				(position > count) or else list.item (position) /= Void
-			loop
-				position := position+1
-			end
+			index := index + 1
 		ensure
-			position >= 1
+			moved_forth: index = old index + 1
 		end;
 
 	item: WIDGET is
 			-- Item at cursor position
 		require
-			not off
+			not_off: not off
 		do
-			Result := list.item (position)
+			Result := area.item (index - 1)
 		ensure
 			Result /= Void
 		end;
 
 	start is
 			-- Move cursor to first position.
-			-- Do nothing if empty.
 		do
-			if not empty then
-				from
-					position := 1
-				until
-					list.item (position) /= Void
-				loop
-					position := position+1
-				end
-			end
+			index := 1
 		end;
 
-	off: BOOLEAN is
-			-- Is cursor off ?
+	after: BOOLEAN is
+			-- Is there no valid cursor position 
+			-- to the right of cursor?
 		do
-			Result := offleft or offright
+			Result := index = count + 1
 		end;
 
-	offleft: BOOLEAN is
-			-- Is cursor off left edge ?
+	before: BOOLEAN is
+			-- Is there no valid cursor position 
+			-- to the left of cursor?
 		do
-			Result := position = 0
+			Result := index = 0
 		end;
-
-	offright: BOOLEAN is
-			-- Is cursor off right edge ?
-		do
-			Result := empty or (position = count+1)
-		end; 
 
 feature -- Widget 
 
@@ -104,73 +105,64 @@ feature -- Widget
 			-- Add `widget' to the list as a child of `parent'.
 		require
 			widget_exists: widget /= Void;
-			a_parent_exists_unless_depth_null: (a_parent = Void) implies (widget.depth = 0);
-			depth_not_null_unless_parent_exists: (widget.depth > 0) implies (a_parent /= Void);
-			list_has_parent: (a_parent /= Void) implies list.has (a_parent);
+			a_parent_exists_unless_depth_null: (a_parent = Void) 
+								implies (widget.depth = 0);
+			depth_not_null_unless_parent_exists: (widget.depth > 0) 
+								implies (a_parent /= Void);
+			has_parent: (a_parent /= Void) implies has (a_parent);
 		local
-			i, j: INTEGER
+			insert_position, i: INTEGER
 		do
 			if widget.depth = 0 then
-				count := count+1;
-				list.force (widget, count)
+				if count >= array_count then
+					resize (1, array_count + Chunk)
+				end;
+				area.put (widget, count);
+				count := count + 1;
 			else
-				from
-					i := 1
-				until
-					list.item (i) /= Void and then a_parent.same (list.item (i))
-				loop
-					i := i+1
+				insert_position := index_of (a_parent) + 1;
+				if count + 1 > array_count then
+						-- Resize Current if necessary
+					resize (1, array_count + Chunk)
 				end;
 				from
-					j := i
+						-- Shift widgets by one for widget insertion
+					i := count - 1
 				until
-					(j = count) or list.item (j) = Void
+					i < insert_position
 				loop
-					j := j+1
+					area.put (area.item (i), i + 1);
+					i := i - 1
 				end;
-				if (list.item (j) /= Void) then
-					count := count+1;
-					if count > list.upper then
-						list.resize (list.lower, count)
-					end;
-					j := j+1
-				end;
-				check
-					(list.item (j) = Void);
-					j > i
-				end;
-				from
-				until
-					i = j-1
-				loop
-					list.put (list.item (j-1), j);
-					j := j-1
-				end;
-				list.put (widget, i+1);
+				count := count + 1;
+				area.put (widget, insert_position);
 			end;
 		ensure
-			valid_count: not (count > list.upper);
-			widget_added: list.has (widget);
+			valid_count: count <= array_count;
+			widget_added: has (widget);
 		end;
 
 	implementation_to_oui (widget_i: WIDGET_I): WIDGET is
 			-- Object user interface widget associated with current
 			-- implementation
 		require
-			widget_i_exists: widget_i /= Void
+			widget_i_exists: widget_i /= Void;
 		local
-			i: INTEGER
+			i: INTEGER;
+			widget: WIDGET
 		do
-			from
+		   	from
 				i := 1
 			until
-				(i > count) or else ((list.item (i) /= Void) and then (list.item (i).implementation = widget_i))
+				Result /= Void
 			loop
+				widget := area.item (i - 1);
+				if widget.implementation = widget_i then
+					Result := widget
+				end;
 				i := i+1
 			end;
-			if i <= count then
-				Result := list.item (i)
-			end
+			Result := widget
 		ensure
 			Result /= Void;
 			Result.implementation = widget_i
@@ -181,17 +173,21 @@ feature -- Widget
 		require
 			widget_exists: widget /= Void
 		local
-			i: INTEGER
+			i: INTEGER;
+			parent_widget: WIDGET
 		do
 			if widget.depth > 0 then
 				from
-					i := index_of (widget)-1
+					i := index_of (widget) - 1
 				until
-					(list.item (i) /= Void) and then (list.item (i).depth+1 = widget.depth)
+					Result /= Void
 				loop
-					i := i-1
+					parent_widget := area.item (i);
+					if parent_widget.depth+1 = widget.depth then
+						Result := parent_widget
+					end;
+					i := i - 1
 				end;
-				Result := list.item (i);
 			end;
 		ensure
 			is_root: (Result = Void) implies (widget.depth = 0);
@@ -205,28 +201,41 @@ feature -- Widget
 		require
 			Valid_widget: widget /= Void
 		local
-			i: INTEGER;
+			position: INTEGER;
+			nbr_to_remove: INTEGER
+			w_position: INTEGER;
+			moved_widget: WIDGET
 		do
-			i := index_of (widget);
-			list.put (Void, i);
 			from
-				i := i + 1
+					-- Calculate the number of widgets
+					-- to be removed from list.
+				w_position := index_of (widget);
+				position := w_position + 1;
+				nbr_to_remove := 1
 			until
-				(i = count + 1) or else 
-				(list.item (i) /= Void 
-					and then (list.item (i).depth <= widget.depth))
+				(position = count) or else 
+					 (area.item (position).depth <= widget.depth)
 			loop
-				list.put (Void, i);
-				i := i+1
+				position := position + 1;
+				nbr_to_remove := nbr_to_remove + 1
 			end;
-			if i = count + 1 then
-				from
-				until
-					count = 0 or else list.item (count) /= Void
-				loop
-					count := count - 1
-				end
-			end
+					-- Remove widget(s) from Current.
+			count := count - nbr_to_remove;
+			from
+			until
+				w_position >= count - 1
+			loop
+				moved_widget := area.item (w_position + nbr_to_remove);
+				area.put (moved_widget, w_position);
+				w_position := w_position + 1;
+			end;
+			from
+			until
+				nbr_to_remove = 0
+			loop
+				area.put (Void, nbr_to_remove + count - 1);
+				nbr_to_remove := nbr_to_remove - 1
+			end;
 		end;
 
 	screen (widget: WIDGET): SCREEN is
@@ -236,7 +245,7 @@ feature -- Widget
 		do
 			Result := top (widget).screen
 		ensure
-			Result /= Void
+			valid_result: Result /= Void
 		end;
 
 	screen_object_to_oui (screen_object: POINTER): WIDGET is
@@ -244,21 +253,23 @@ feature -- Widget
 			-- implementation with same `screen_object'
 		local
 			i: INTEGER;
-			w: WIDGET;
-			done: BOOLEAN
+			widget: WIDGET;
 		do
 			from
-				i := 1
+				i := 0
 			until
-				done or else i > count
+				Result /= Void
 			loop
-				w := list.item (i);
-				if w /= Void and then w.implementation.screen_object = screen_object then
-					Result := w;
-					done := True
+				widget := area.item (i);
+				if 	
+					widget.implementation.screen_object = screen_object 
+				then
+					Result := widget;
 				end;
 				i := i+1
 			end;
+		ensure
+			valid_result: Result /= Void
 		end;
 
 	show_tree (a_file: UNIX_FILE) is
@@ -272,21 +283,21 @@ feature -- Widget
 			from
 				i := 1
 			until
-				i > count
+				i > count 
 			loop
-				if list.item (i) /= Void then
+				if i_th (i) /= Void then
 					from
-						j := list.item (i).depth
+						j := i_th (i).depth
 					until
 						j = 0
 					loop
 						a_file.putchar (charconv (Tabulation));
 						j := j-1
 					end;
-					if (list.item (i).identifier = Void) then
+					if (i_th (i).identifier = Void) then
 						a_file.putstring ("???")
 					else
-						a_file.putstring (list.item (i).identifier)
+						a_file.putstring (i_th (i).identifier)
 					end;
 					a_file.new_line
 				end;
@@ -294,42 +305,44 @@ feature -- Widget
 			end
 		end;
 
-
 	top (widget: WIDGET): TOP is
 			-- Top shell or base of the widget
 		require
-			widget_exists: not (widget = Void)
+			widget_exists: widget /= Void
 		local
 			i: INTEGER;
-			w: WIDGET;
-			done: BOOLEAN
+			top_widget: WIDGET
 		do
 			from
-				i := index_of (widget)
+				i := index_of (widget);
 			until
-				done
+				Result /= Void
 			loop
-				w := list.item (i);
-				if w /= Void and then w.depth = 0 then
-					done := True;
-					Result ?= w
+				top_widget := area.item (i);
+				if top_widget.depth = 0 then
+					Result ?= top_widget
 				end;
 				i := i - 1
 			end;
 		ensure
-			not (Result = Void)
-		end
+			valid_result: Result /= Void
+		end;
 
-	list: ARRAY [WIDGET];
-			-- list of widgets
+	off: BOOLEAN is
+		do
+			Result := after or else before
+		end;
+
+	index: INTEGER;
+			-- Current cursor index
 
 feature {NONE}
 
+	Chunk: INTEGER is 50;
+			-- Array chunk
+
 	count: INTEGER;
 			-- Index of last entry
-
-	position: INTEGER;
-			-- Current cursor position
 
 	empty: BOOLEAN is
 			-- Is the list empty ?
@@ -343,29 +356,24 @@ feature {NONE}
 			widget_exists: widget /= Void
 		do
 			from
-				Result := 1
+				Result := 0
 			until
-				(list.item (Result) /= Void) 
-					and then (widget.same (list.item (Result)))
+				widget.same (area.item (Result))
 			loop
 				Result := Result + 1
-			end
+			end;
 		ensure
-			Widget_found: widget.same (list.item (Result))
+			Widget_found: widget.same (area.item (Result))
 		end;
 
 invariant
 
-	Widget_list_lower_is_one: list.lower = 1;
-	Count_equal_or_less_list_count: count <= list.count;
-	Offright_is_empty_or_beyo: offright = (empty or (position = count + 1));
-	Offleft_is_pos_zero: offleft = (position = 0);
-	Empty_is_offleft_and_offright: empty = (offleft and offright);
+	Count_equal_or_less_list_count: count <= array_count;
+	Offright_is_empty_or_beyo: after = (empty or (index = count + 1));
 	Non_negative_count: count >= 0;
-	Non_negative_position: position >= 0;
-	Stay_on: position <= count+1;
-	Empty_implies_off: empty implies off;
-	Empty_implies_zero_position: empty implies (position = 0)
+	Non_negative_position: index >= 0;
+	Stay_on: index <= count+1;
+	Empty_implies_zero_position: empty implies (index = 0)
 
 end
 

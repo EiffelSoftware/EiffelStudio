@@ -30,18 +30,17 @@ feature
 			-- Restore the cursors as they were before `set_global_cursors'.
 		require
 --			a_global_cursor_set_before: not (global_cursor = Void)
-		
 		local
 			widget_x: WIDGET_X
 		do
 			from
 				widget_manager.start
 			until
-				widget_manager.off
+				widget_manager.after
 			loop
 				widget_x ?= widget_manager.item.implementation;
 				widget_x.undefine_cursor_if_shell;
-				if not (widget_x.cursor = Void) then
+				if widget_x.cursor /= Void then
 					widget_x.update_cursor
 				end;
 				widget_manager.forth
@@ -65,7 +64,7 @@ feature
 			from
 				widget_manager.start
 			until
-				widget_manager.off
+				widget_manager.after
 			loop
 				widget_x ?= widget_manager.item.implementation;
 				widget_x.define_cursor_if_shell (cursor);

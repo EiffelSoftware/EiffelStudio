@@ -18,11 +18,6 @@ class STRING inherit
 		end;
 
 	RESIZABLE [CHARACTER]
-		rename
-			min as basic_min,
-			max as basic_max
-		export
-			{NONE} basic_min, basic_max
 		redefine
 			copy, is_equal, out,
 			consistent, setup,

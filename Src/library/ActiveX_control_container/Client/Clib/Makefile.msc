@@ -3,9 +3,10 @@
 MV = copy
 CC = cl
 OUTPUT_CMD = -Fo
-CFLAGS = -W0 -Ox -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+CFLAGS = -W0 -Zi -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
 
-OBJ = ecom_control_library_ibindctx_impl_proxy_s.obj \
+OBJ = ecom_control_library_iadvisesink_impl_proxy_s.obj \
+ecom_control_library_ibindctx_impl_proxy_s.obj \
 ecom_control_library_ibindhost_impl_proxy_s.obj \
 ecom_control_library_ibinding_impl_proxy_s.obj \
 ecom_control_library_ibindstatuscallback_impl_proxy_s.obj \
@@ -59,7 +60,8 @@ ecom_control_library_iviewobjectex_impl_proxy_s.obj \
 ecom_control_library_iviewobject_impl_proxy_s.obj \
 
 
-WOBJ = wecom_control_library_ibindctx_impl_proxy_s.obj \
+WOBJ = wecom_control_library_iadvisesink_impl_proxy_s.obj \
+wecom_control_library_ibindctx_impl_proxy_s.obj \
 wecom_control_library_ibindhost_impl_proxy_s.obj \
 wecom_control_library_ibinding_impl_proxy_s.obj \
 wecom_control_library_ibindstatuscallback_impl_proxy_s.obj \
@@ -125,7 +127,7 @@ ecom.lib: $(WOBJ)
 ecom_final.lib: $(OBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(OBJ)
-	# del *.obj
+	del *.obj
 	if not exist msc mkdir msc
 	$(MV) $@ msc
 	del $@
@@ -135,6 +137,9 @@ ecom_final.lib: $(OBJ)
 
 
 wecom_control_library_iaxwinambientdispatch_impl_proxy_s.obj: ecom_control_library_iaxwinambientdispatch_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iadvisesink_impl_proxy_s.obj: ecom_control_library_iadvisesink_impl_proxy_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_control_library_ibindctx_impl_proxy_s.obj: ecom_control_library_ibindctx_impl_proxy_s.cpp

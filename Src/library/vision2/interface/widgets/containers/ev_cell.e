@@ -38,7 +38,7 @@ feature -- Status report
 	is_empty, extendible: BOOLEAN is
 			-- Is there no element?
 		do
-			Result := implementation.item = Void and not is_destroyed
+			Result := not full
 		end
 
 	full: BOOLEAN is

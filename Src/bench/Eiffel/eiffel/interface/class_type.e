@@ -142,6 +142,9 @@ feature -- Access
 	class_interface: CLASS_INTERFACE
 			-- Corresponding interface of current generic derivation.
 
+	assembly_info: ASSEMBLY_INFO
+			-- Information about assembly in which current class is being generated.
+
 feature -- Settings
 
 	set_is_changed (b: BOOLEAN) is
@@ -200,6 +203,16 @@ feature -- Settings
 			class_interface := cl
 		ensure
 			class_interface_set: class_interface = cl
+		end
+
+	set_assembly_info (a: like assembly_info) is
+			-- Set `assembly_info' with `a'.
+		require
+			a_not_void: a /= Void
+		do
+			assembly_info := a
+		ensure
+			assembly_info_set: assembly_info = a
 		end
 
 feature -- Conveniences

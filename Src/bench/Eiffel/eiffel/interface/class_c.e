@@ -238,9 +238,6 @@ feature -- Access: CLI implementation
 	class_interface: CLASS_INTERFACE
 			-- CLI corresponding interface of Current class.
 
-	assembly_info: ASSEMBLY_INFO
-			-- Information about assembly in which current class is being generated.
-
 feature -- Action
 
 	remove_c_generated_files is
@@ -4100,16 +4097,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			generic_features := f
 		ensure
 			generic_features_set: generic_features = f
-		end
-
-	set_assembly_info (a: like assembly_info) is
-			-- Set `assembly_info' with `a'.
-		require
-			a_not_void: a /= Void
-		do
-			assembly_info := a
-		ensure
-			assembly_info_set: assembly_info = a
 		end
 
 feature -- Removal

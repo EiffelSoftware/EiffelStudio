@@ -91,12 +91,24 @@ feature -- Access
 			-- Class name of current type.
 		local
 			l_class_c: like base_class
+			l_is_precompiled: BOOLEAN
+			l_cl_type: like associated_class_type
 		do
 			l_class_c := base_class
 			if l_class_c.is_external then
-				Result := clone (base_class.external_class_name)
+				Result := clone (l_class_c.external_class_name)
 			else
-				Result := internal_il_type_name (clone (base_class.name), a_prefix)
+				l_is_precompiled := l_class_c.is_precompiled
+				if l_is_precompiled then
+					l_cl_type := associated_class_type
+					l_is_precompiled := l_cl_type.is_precompiled
+					if l_is_precompiled then
+						Result := associated_class_type.il_type_name (a_prefix)
+					end
+				end
+				if not l_is_precompiled then
+					Result := internal_il_type_name (clone (l_class_c.name), a_prefix)
+				end
 			end
 		end
 
@@ -498,15 +510,17 @@ feature {NONE} -- Implementation
 				if l_name.is_empty then
 					l_name := a_prefix + "."
 				else
-					l_name := il_casing.namespace_casing (l_name) + "." + a_prefix + "."
+					l_name := il_casing.namespace_casing (System.dotnet_naming_convention,
+						l_name) + "." + a_prefix + "."
 				end
 			else
 				if not l_name.is_empty then					
-					l_name := il_casing.namespace_casing (l_name) + "."
+					l_name := il_casing.namespace_casing (System.dotnet_naming_convention,
+						l_name) + "."
 				end
 			end
-			Result := l_name + il_casing.pascal_casing (Result,
-				feature {IL_CASING_CONVERSION}.upper_case)
+			Result := l_name + il_casing.pascal_casing (System.dotnet_naming_convention,
+				Result, feature {IL_CASING_CONVERSION}.upper_case)
 		ensure
 			internal_il_type_name_not_void: Result /= Void
 			internal_il_type_name_not_empty: not Result.is_empty

@@ -108,7 +108,10 @@ extern int point_ref_dtype;	/* Dynamic type of POINTER_REF */
 extern char econfg();			/* Conformance query in class GENERAL */
 extern int econfm();			/* Conformance query for assignment attempt */
 extern long sp_count();			/* Count of a special object */
-extern void chkinv();			/* Invariant control call in final mode */
+extern void chkinv();			/* Invariant control call */
+#ifdef WORKBENCH
+extern void chkcinv();			/* Creation invariant call */	
+#endif
 
 #ifndef WORKBENCH
 extern void rt_norout();		/* No function pointer */

@@ -23,6 +23,8 @@
 #include "hector.h"
 #include "size.h"
 
+extern int in_assertion;
+
 /* On a BSD system, we should use _setjmp and _longjmp if they are available,
  * so that no system call is made to preserve the signal mask flag. It should
  * be taken care of by the signal handler routine.
@@ -156,8 +158,8 @@ extern int fcount;
  */
 #define RTCT(t,x) exasrt(t, x)
 #define RTCS(x) exasrt((char *) 0, x)
-#define RTCK expop(&eif_stack)
-#define RTCF eviol()
+#define RTCK in_assertion = 0; expop(&eif_stack);
+#define RTCF in_assertion = 0; eviol();
 #define RTIT(t,x) exinv(t, x)
 #define RTIS(x) exinv((char *) 0, x)
 #define RTTE(x,y) if (!(x)) goto y 
@@ -192,7 +194,7 @@ extern int fcount;
 #define RTET(t,x) eraise(t,x)
 #define RTEC(x) RTET((char *) 0,x)
 #define RTEE expop(&eif_stack)
-#define RTER exvect = exret(exvect); goto start
+#define RTER in_assertion = 0; exvect = exret(exvect); goto start
 #define RTEU exresc(exvect)
 #define RTEF exfail()
 #define RTXS(x) RTXE; RTHS; RTXI(x)
@@ -250,14 +252,17 @@ extern int fcount;
  *  RTSN saves global variable 'nstcall' within C stack
  *  RTIV(x,y) checks invariant before call on object 'x' if good flags 'y'
  *  RTVI(x,y) checks invariant after call on object 'x' if good flags 'y'
+ *  RTCI(x) checks invariant after creation call on object 'x'
  */
 #define RTSN int is_nested = nstcall
 #ifdef WORKBENCH
 #define RTIV(x,y) if (is_nested && ((y) & CK_INVARIANT)) chkinv(x,0)
 #define RTVI(x,y) if (is_nested && ((y) & CK_INVARIANT)) chkinv(x,1)
+#define RTCI(x) chkcinv(x)
 #else
-#define RTIV(x,y) if (is_nested) chkinv(x,0)
-#define RTVI(x,y) if (is_nested) chkinv(x,1)
+#define RTIV(x) if (~in_assertion & is_nested) chkinv(x,0)
+#define RTVI(x) if (~in_assertion & is_nested) chkinv(x,1)
+#define RTCI(x) if (~in_assertion) chkinv(x,1)
 #endif
 
 /*
@@ -275,7 +280,7 @@ extern int fcount;
  */
 #define RTDA int as_level
 #define RTSA(x) as_level = WASC(x)
-#define RTAL as_level
+#define RTAL (~in_assertion & as_level)
 
 /* Macros used for feature call and various accesses to objects.
  *  RTWF(x,y,z) is a feature call

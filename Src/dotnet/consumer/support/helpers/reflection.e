@@ -149,20 +149,31 @@ feature -- Status Report
 		local
 			l_cls: like cls_compliant_status
 			l_obj: SYSTEM_OBJECT
+			l_name: SYSTEM_STRING
 		do
 			l_cls := cls_compliant_status
 			l_obj := l_cls.item (a_type)
-			if l_obj = Void then
+			if l_obj /= Void then
+				Result ?= l_obj
+			else
 				if not a_type.is_pointer then
 					if a_type.has_element_type then
-						l_obj := is_cls_compliant_type (a_type.get_element_type)
+						Result := is_cls_compliant_type (a_type.get_element_type)
 					else
-						l_obj := is_cls_compliant (a_type)
-					end					
+							-- Compliant if is has the custom attribute set to True, or none.
+						Result := is_cls_compliant (a_type)
+						if Result then
+								-- Let's check now that it has a valid name and that it does not
+								-- contain `[' which is specific to generic types which we don't
+								-- support yet.
+							l_name := a_type.full_name
+							Result := l_name /= Void and then l_name.length > 0 and then
+								l_name.index_of ('[') = -1
+						end
+					end
 				end
-				l_cls.set_item (a_type, l_obj)
+				l_cls.set_item (a_type, Result)
 			end
-			Result ?= l_obj
 		end
 
 	is_cls_compliant (member: MEMBER_INFO): BOOLEAN is

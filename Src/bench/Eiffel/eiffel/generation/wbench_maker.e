@@ -84,6 +84,8 @@ feature
 			cecil_rt_basket.put ("option.o");
 			cecil_rt_basket.put ("update.o");
 			cecil_rt_basket.put ("wbench.o");
+			cecil_rt_basket.put ("wrun_idr.o");
+			cecil_rt_basket.put ("console.o");
 		end;
 
 	add_eiffel_objects is

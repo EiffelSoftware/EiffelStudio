@@ -92,7 +92,7 @@ feature {CATALOG}
 		do	
 			!! button.make (Current, button_rc, symbol)
 			set_focus_string
-			button.initialize_focus			
+			button.initialize_focus	
 		end;
 
 	set_selected_symbol is

@@ -99,8 +99,6 @@ feature {NONE} -- Initialization
 			resize (600, 400)
 			show
 			first_choice_dialog.activate
-			set_message_output (create {WIZARD_MESSAGE_OUTPUT})
-			message_output.set_output_window (Current)
 			set_z_order (Hwnd_top)
 		end
 
@@ -312,7 +310,7 @@ feature {NONE} -- State management
 				end
 			end
 			if not (state = Abort_state) then
-				create wizard_manager.make (Current)
+				create wizard_manager
 				wizard_manager.run
 			end
 			tool_bar.enable_button (Save_string_constant)
@@ -426,11 +424,13 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 			inspect
 				menu_id
 			when Launch_string_constant then
+				set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
+				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
 				start
 			when Generate_string_constant then
 				clear
 				shared_wizard_environment.set_no_abort
-				create wizard_manager.make (Current)
+				create wizard_manager
 				wizard_manager.run
 			when Exit_string_constant then
 				destroy			
@@ -448,6 +448,8 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				end
 			When New_string_constant then
 				set_shared_wizard_environment (create {WIZARD_ENVIRONMENT}.make)
+				set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
+				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
 				tool_bar.disable_button (Save_string_constant)
 				tool_bar.disable_button (Generate_string_constant)
 			else

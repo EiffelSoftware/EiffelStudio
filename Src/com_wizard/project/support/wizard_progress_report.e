@@ -13,12 +13,28 @@ inherit
 			{NONE} all
 		end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_parent: like parent) is
+			-- Set `parent' to `a_parent'.
+		require
+			non_void_parent: a_parent /= Void
+			valid_parent: a_parent.exists
+		do
+			parent := a_parent
+		ensure
+			parent_set: parent = a_parent
+		end
+
 feature -- Access
 
 	progress_dialog: WIZARD_PROGRESS_DIALOG is
 			-- Progress dialog
-		do
-			Result := progress_dialog_cell.item
+		once
+			Result := create {WIZARD_PROGRESS_DIALOG}.make (parent)
 		end
 
 	title: STRING is
@@ -33,11 +49,8 @@ feature -- Access
 			Result := running_cell.item
 		end
 
-	parent: WEL_COMPOSITE_WINDOW is
+	parent: WEL_COMPOSITE_WINDOW
 			-- Progress dialog parent window
-		do
-			Result := parent_cell.item
-		end
 
 	range: INTEGER is
 			-- Initial progress range
@@ -92,17 +105,6 @@ feature -- Element Change
 			range_set: range = a_range
 		end
 
-	set_parent (a_parent: like parent) is
-			-- Set `parent' with `a_parent'.
-		require
-			non_void_parent: a_parent /= Void
-		do
-			parent_cell.replace (a_parent)
-			progress_dialog_cell.replace (create {WIZARD_PROGRESS_DIALOG}.make (a_parent))
-		ensure
-			parent_set: parent = a_parent
-		end
-
 	set_progress (an_integer: INTEGER) is
 			-- Set `progress' with `an_integer'.
 		require
@@ -139,6 +141,7 @@ feature -- Basic Operations
 			non_void_parent: parent /= Void
 			valid_parent: parent.exists
 		do
+			parent.disable
 			if not progress_dialog.exists then
 				progress_dialog.activate
 			end
@@ -163,6 +166,8 @@ feature -- Basic Operations
 			-- Terminate report (i.e. terminate dialog)
 		require
 			running: running
+			non_void_parent: parent /= Void
+			valid_parent: parent.exists
 		do
 			if progress_dialog.exists then
 				last_x_cell.set_item (progress_dialog.x)
@@ -170,6 +175,7 @@ feature -- Basic Operations
 				progress_dialog.terminate (0)
 			end
 			running_cell.put (False)
+			parent.enable
 		ensure
 			not_running: not running
 		end
@@ -208,12 +214,6 @@ feature {NONE} -- Implementation
 			create Result.put (False)
 		end
 
-	parent_cell: CELL [WEL_COMPOSITE_WINDOW] is
-			-- Progress report parent window cell
-		once
-			create Result.put (Void)
-		end
-
 	last_x_cell: INTEGER_REF is
 			-- Progress dialog last x
 		once
@@ -231,5 +231,11 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
+
+invariant
+
+	non_void_parent: parent /= Void
+
+	valid_parent: parent.exists
 
 end -- class WIZARD_PROGRESS_REPORT

@@ -33,6 +33,12 @@ feature -- Access
 			Result := message_output_cell.item
 		end
 
+	progress_report: WIZARD_PROGRESS_REPORT is
+			-- Shared wizard progress report
+		do
+			Result := progress_report_cell.item
+		end
+
 	Ce_mapper: STRING is "rt_ce"
 			-- C++ class holding C to Eiffel mappers
 
@@ -297,6 +303,16 @@ feature {WIZARD_MANAGER} -- Element Change
 			message_output_set: message_output = a_window
 		end
 
+	set_progress_report (a_progress_report: like progress_report) is
+			-- Set `progress_report' with `a_progress_report'.
+		require
+			non_void_progress_report: a_progress_report /= Void
+		do
+			progress_report_cell.replace (a_progress_report)
+		ensure
+			progress_report_set: progress_report = a_progress_report
+		end
+
 feature {NONE} -- Implementation
 
 	System_descriptor_cell: CELL [WIZARD_SYSTEM_DESCRIPTOR] is
@@ -307,6 +323,12 @@ feature {NONE} -- Implementation
 
 	message_output_cell: CELL [WIZARD_MESSAGE_OUTPUT] is
 			-- Output window shell
+		once
+			create Result.put (Void)
+		end
+
+	progress_report_cell: CELL [WIZARD_PROGRESS_REPORT] is
+			-- Progress report shell
 		once
 			create Result.put (Void)
 		end

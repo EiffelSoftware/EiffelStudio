@@ -118,7 +118,7 @@ feature -- Basic operations
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_DECIMAL%)")
 
 			else
-				add_warning (Current, unknown_type_of_safearray_element)
+				message_output.add_warning (Current, message_output.Unknown_type_of_safearray_element)
 			end
 			set_visitor_atributes (a_visitor)
 		end

@@ -9,31 +9,16 @@ class
 
 inherit
 	WIZARD_MESSAGES
-		export
-			{NONE} all
-		end
 
 	WIZARD_WARNINGS
-		export
-			{NONE} all
-		end
 
 	WIZARD_ERRORS
-		export
-			{NONE} all
-		end
-
-	WIZARD_SHARED_GENERATION_ENVIRONMENT
-		export
-			{NONE} all
-		end
 
 	WIZARD_LOGGER
-		export
-			{NONE} all
-		end
 
 	WIZARD_OUTPUT_LEVEL
+
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -43,27 +28,34 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
+create
+	set_output
 
-	output_window: WIZARD_OUTPUT_WINDOW is
-			-- Output window
-		do
-			Result := output_window_cell.item
-		end
+feature {NONE} -- Initialization
 
-feature -- Element setting
-
-	set_output_window (a_output_window: WIZARD_OUTPUT_WINDOW) is
+	set_output (a_output_window: WIZARD_OUTPUT_WINDOW) is
 			-- Set `output_window' to `a_output_window.
 		require
 			non_void_output_window: a_output_window /= Void
 		do
-			output_window_cell.replace (a_output_window)
+			output_window := a_output_window
 		ensure
 			output_window_set: output_window = a_output_window
 		end
 
+feature -- Access
+
+	output_window: WIZARD_OUTPUT_WINDOW
+			-- Output window
+
 feature -- Basic operations
+
+	add_title (origin: ANY; reason: STRING) is
+			-- Display title.
+		do
+			output_window.add_title (reason)
+			add_log (Title, origin, reason)
+		end
 
 	add_message (origin: ANY; reason: STRING) is
 			-- Display message.
@@ -71,7 +63,7 @@ feature -- Basic operations
 			if Shared_wizard_environment.output_level = Output_all then
 				output_window.add_message (reason)
 			end
-			add_log (origin, reason)
+			add_log (Message, origin, reason)
 		end
 
 	add_warning (origin: ANY; reason: STRING) is
@@ -82,22 +74,14 @@ feature -- Basic operations
 			then
 				output_window.add_warning (reason)
 			end
-			add_log (origin, reason)
+			add_log (Warning, origin, reason)
 		end
 
 	add_error (origin: ANY; reason: STRING) is
 			-- Display error.
 		do
 			output_window.add_error (reason)
-			add_log (origin, reason)
-		end
-
-feature {NONE} -- Implementation
-
-	output_window_cell: CELL [WIZARD_OUTPUT_WINDOW] is
-			-- Output window holder
-		once
-			create Result.put (Void)
+			add_log (Error, origin, reason)
 		end
 
 end -- class WIZARD_MESSAGE_OUTPUT

@@ -74,7 +74,7 @@ feature -- Basic operations
 			element_visitor.visit (element_descriptor)
 
 			if is_void (an_element_type) then
-				add_warning (Current, void_array)
+				message_output.add_warning (Current, message_output.void_array)
 
 			elseif is_ptr (an_element_type) or is_safearray (an_element_type) or
 					is_user_defined (an_element_type) then

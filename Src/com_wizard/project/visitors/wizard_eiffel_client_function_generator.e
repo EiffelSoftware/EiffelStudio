@@ -111,9 +111,9 @@ feature {NONE} -- Implementation
 						return_type.append (Colon)
 						return_type.append (Space)
 						if visitor.is_basic_type then
-							add_warning (Current, Not_pointer_type)
+							message_output.add_warning (Current, message_output.Not_pointer_type)
 						elseif visitor.is_enumeration then
-							add_warning (Current, Invalid_use_of_enumeration)
+							message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
 						else
 							pointed_descriptor ?= arguments.item.type
 							if pointed_descriptor /= Void then
@@ -130,9 +130,9 @@ feature {NONE} -- Implementation
 						end		
 					elseif is_paramflag_fout (arguments.item.flags) then
 						if visitor.is_basic_type then
-							add_warning (Current, Not_pointer_type)
+							message_output.add_warning (Current, message_output.Not_pointer_type)
 						elseif visitor.is_enumeration then
-							add_warning (Current, Invalid_use_of_enumeration)
+							message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
 						elseif visitor.is_structure or visitor.is_interface or visitor.is_array_basic_type then
 							Result.append (visitor.c_type)
 							Result.append (Space)

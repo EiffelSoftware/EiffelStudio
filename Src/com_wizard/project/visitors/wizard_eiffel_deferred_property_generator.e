@@ -81,7 +81,7 @@ feature -- Basic operations
 						assertions.forth
 					end
 				else
-					add_warning (Current, cannot_generate_precondition);
+					message_output.add_warning (Current, message_output.cannot_generate_precondition);
 				end
 			end
 			setting_feature.set_deferred

@@ -123,8 +123,8 @@ feature {NONE} -- Implementation
 								tmp_string := clone (visitor.c_type)
 								tmp_string.append (visitor.c_post_type)
 								tmp_string.append (Struct_selection_operator)
-								tmp_string.append (Not_pointer_type)
-				 				add_warning (Current, tmp_string)
+								tmp_string.append (message_output.Not_pointer_type)
+				 				message_output.add_warning (Current, tmp_string)
 							end	
 							variables.append (out_variable_set_up (func_desc.arguments.item.name, visitor))
 							variables.append (New_line_tab)

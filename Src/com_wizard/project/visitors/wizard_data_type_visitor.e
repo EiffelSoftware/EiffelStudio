@@ -18,11 +18,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_MESSAGE_OUTPUT
-		export
-			{NONE} all
-		end
-
 	WIZARD_WRITER_DICTIONARY
 		export
 			{NONE} all

@@ -8,12 +8,13 @@ deferred class
 	WIZARD_WRITER
 
 inherit
-	WIZARD_MESSAGE_OUTPUT
+
+	WEL_PROCESS_CREATION_CONSTANTS
 		export
 			{NONE} all
 		end
-
-	WEL_PROCESS_CREATION_CONSTANTS
+	
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -90,13 +91,13 @@ feature {NONE} -- Implementation
 			if not retried then
 				create a_file.make (a_file_name)
 				if a_file.exists then
-					a_string := clone (File_already_exists)
+					a_string := clone (message_output.File_already_exists)
 					a_string.append (Colon)
 					a_string.append (Space)
 					a_string.append (a_file_name)
 					a_string.append (New_line)
-					a_string.append (File_backed_up)
-					add_warning (Current, a_string)
+					a_string.append (message_output.File_backed_up)
+					message_output.add_warning (Current, a_string)
 					file_delete (backup_file_name (a_file_name))
 					file_copy (a_file_name, backup_file_name (a_file_name))
 				end
@@ -104,11 +105,11 @@ feature {NONE} -- Implementation
 				a_file.put_string (a_content)
 				a_file.close
 			else
-				a_string := clone (Could_not_write_file)
+				a_string := clone (message_output.Could_not_write_file)
 				a_string.append (Colon)
 				a_string.append (Space)
 				a_string.append (a_file_name)
-				add_error (Current, a_string)
+				message_output.add_error (Current, a_string)
 			end
 		rescue
 			if not failed_on_rescue then

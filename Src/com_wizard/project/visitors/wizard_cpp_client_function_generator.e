@@ -297,10 +297,10 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 			if visitor.is_basic_type then
-				add_warning (Current, Not_pointer_type)
+				message_output.add_warning (Current, message_output.Not_pointer_type)
 
 			elseif visitor.is_enumeration then
-				add_warning (Current, Invalid_use_of_enumeration)
+				message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
 
 
 			elseif visitor.is_structure_pointer then
@@ -438,10 +438,10 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 			if visitor.is_basic_type and not is_ptr (visitor.vt_type) then
-				add_warning (Current, Not_pointer_type)
+				message_output.add_warning (Current, message_output.Not_pointer_type)
 
 			elseif visitor.is_enumeration then
-				add_warning (Current, Invalid_use_of_enumeration)
+				message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
 
 			elseif visitor.is_structure_pointer then
 			else 
@@ -479,10 +479,10 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 			if visitor.is_basic_type and not is_ptr (visitor.vt_type) then
-				add_warning (Current, Not_pointer_type)
+				message_output.add_warning (Current, message_output.Not_pointer_type)
 
 			elseif visitor.is_enumeration then
-				add_warning (Current, Invalid_use_of_enumeration)
+				message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
 
 			else 
 				Result.append (Put_procedure_name)

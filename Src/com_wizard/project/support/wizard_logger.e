@@ -48,6 +48,9 @@ feature -- Access
 			Result := log_file /= Void
 		end
 
+	Title, Message, Warning, Error: INTEGER is unique
+			-- Log types
+
 feature -- Basic operations
 
 	initialize_log_file is
@@ -74,22 +77,33 @@ feature -- Basic operations
 
 	close_log_file is
 			-- Close log file.
+		local
+			retried: BOOLEAN
 		do
-			log_file.close
-			Shared_log_file_cell.replace (Void)
-			generated_files_file.close
-			Shared_generated_files_file_cell.replace (Void)
+			if not retried then
+				log_file.close
+				Shared_log_file_cell.replace (Void)
+				generated_files_file.close
+				Shared_generated_files_file_cell.replace (Void)
+			end
+		rescue
+			if not failed_on_rescue then
+				retried := True
+				retry
+			end
 		end
 
-	add_log (a_origin: ANY; a_log_text: STRING) is
-			-- Add `a_log_text' to log.
+	add_log (a_type: INTEGER; a_origin: ANY; a_log_text: STRING) is
+			-- Add `a_log_text' of type `a_type' from `a_origin' to log.
 		local
 			a_date_time: DATE_TIME
 			a_string: STRING
 			an_integer, i: INTEGER
 		do
 			create a_date_time.make_now
-			a_string := a_date_time.out
+			a_string := clone (type_title.item (a_type))
+			a_string.append (Tab)
+			a_string.append (a_date_time.out)
 			a_string.append (Tab)
 			a_string.append (a_origin.generator)
 			a_string.append (New_line_tab)
@@ -100,6 +114,28 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	type_title: HASH_TABLE [STRING, INTEGER] is
+			-- Log types title table
+		once
+			create Result.make (3)
+			Result.put (Title_title, Title)
+			Result.put (Message_title, Message)
+			Result.put (Warning_title, Warning)
+			Result.put (Error_title, Error)
+		end
+
+	Title_title: STRING is "TITLE:"
+			-- Title log type title
+
+	Message_title: STRING is "MESSAGE:"
+			-- Message log type title
+
+	Warning_title: STRING is "WARNING:"
+			-- Warning log type title
+
+	Error_title: STRING is "ERROR:"
+			-- Error log type title
 
 	Shared_log_file_cell: CELL [PLAIN_TEXT_FILE] is
 			-- Log file cell

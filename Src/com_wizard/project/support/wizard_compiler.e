@@ -10,6 +10,8 @@ inherit
 		end
 
 	WIZARD_PROCESS_LAUNCHER
+		rename
+			message_output as process_launcher_message_output
 		export
 			{NONE} all
 		end
@@ -35,7 +37,7 @@ feature -- Basic Operations
 			a_string := clone (Idl_compiler)
 			a_string.append (Space)
 			a_string.append (Idl_compiler_command_line)
-			add_message (Current, a_string)
+			message_output.add_message (Current, a_string)
 			a_string := clone (Shared_wizard_environment.destination_folder)
 			a_string.append (clone (shared_wizard_environment.project_name))
 			a_string.append (".tlb")
@@ -76,7 +78,7 @@ feature -- Basic Operations
 			a_string := clone (linker)
 			a_string.append (Space)
 			a_string.append (Linker_command_line)
-			add_message (Current, a_string)
+			message_output.add_message (Current, a_string)
 			generate_make_file (Linker_command_line, Temporary_input_file_name)
 			a_string := clone (Linker)
 			a_string.append (Space)
@@ -142,7 +144,7 @@ feature {NONE} -- Implementation
 			Result.append ("%" /tlb %"")
 			Result.append (clone (shared_wizard_environment.project_name))
 			Result.append (".tlb%" ")
-			if Shared_wizard_environment.output_level = Output_none then
+			if Shared_wizard_environment.output_level = message_output.Output_none then
 				Result.append (" /nologo ")
 			end
 			Result.append (shared_wizard_environment.idl_file_name)
@@ -154,7 +156,7 @@ feature {NONE} -- Implementation
 			a_string: STRING
 		do
 			Result := clone (Common_linker_options)
-			if Shared_wizard_environment.output_level = Output_none then
+			if Shared_wizard_environment.output_level = message_output.Output_none then
 				Result.append (" /nologo ")
 			end
 			Result.append (" /out:")

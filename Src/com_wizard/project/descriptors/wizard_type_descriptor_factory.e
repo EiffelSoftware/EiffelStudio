@@ -8,12 +8,12 @@ class
 	WIZARD_TYPE_DESCRIPTOR_FACTORY
 
 inherit
-	WIZARD_MESSAGE_OUTPUT
+	ECOM_TYPE_KIND
+
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
 		end
-
-	ECOM_TYPE_KIND
 
 feature -- Basic operations
 
@@ -60,10 +60,10 @@ feature -- Basic operations
 				Result := Union_creator.create_descriptor 
 					(a_documentation, a_type_info)
 			elseif type = Tkind_module then
-				add_warning (Current, Type_info_module)
+				message_output.add_warning (Current, message_output.Type_info_module)
 			end
 			if Result /= Void then
-				add_message (Current, Result.creation_message)
+				message_output.add_message (Current, Result.creation_message)
 			end
 		end	
 

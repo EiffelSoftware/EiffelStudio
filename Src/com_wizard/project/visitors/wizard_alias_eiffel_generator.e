@@ -17,8 +17,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_MESSAGE_OUTPUT
-
 	ECOM_VAR_TYPE
 		export
 			{NONE} all
@@ -124,10 +122,10 @@ feature -- Processing
 				eiffel_writer.add_feature (writer_feature, Initialization)
 
 			else
-				a_warning := clone (Non_supported_alias)
+				a_warning := clone (message_output.Non_supported_alias)
 				a_warning.append (Space)
 				a_warning.append (a_data_type_visitor.eiffel_type)
-				add_warning (Current, a_warning)
+				message_output.add_warning (Current, a_warning)
 
 			end
 		end
@@ -198,7 +196,7 @@ feature -- Processing
 				eiffel_writer.set_empty_creation_routines
 
 			else
-				add_warning (Current, Non_supported_alias)
+				message_output.add_warning (Current, message_output.Non_supported_alias)
 
 			end
 		end

@@ -45,8 +45,9 @@ feature {NONE} -- Implementation
 	init_application is
 			-- Load common controls dlls
 		do
+			(create {WIZARD_SPLASH_DIALOG}.make).activate
 			create common_ctl_dll_ex.make_with_flags (Icc_bar_classes + Icc_cool_classes)
-			create rich_edit_dll.make
+			create rich_edit_dll.make;
 		end
 
 end -- class APPLICATION

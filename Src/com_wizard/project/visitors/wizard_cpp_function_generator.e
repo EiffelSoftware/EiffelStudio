@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 
 					if is_paramflag_fretval (arguments.item.flags) then
 						if visitor.is_basic_type then
-							add_warning (Current, Not_pointer_type)
+							message_output.add_warning (Current, message_output.Not_pointer_type)
 						else
 							pointed_descriptor ?= arguments.item.type
 							if pointed_descriptor /= Void then
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 						tmp_string.append (End_comment_paramflag)
 
 						if visitor.is_basic_type then
-							add_warning (Current, Not_pointer_type)
+							message_output.add_warning (Current, message_output.Not_pointer_type)
 
 						elseif 
 							visitor.is_array_basic_type or 

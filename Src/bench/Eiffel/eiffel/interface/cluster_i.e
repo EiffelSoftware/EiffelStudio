@@ -445,6 +445,11 @@ end;
 				c.set_cluster (Current);
 				cl.forth
 			end;
+				-- No need to keep a reference to `old_cluster' in `old_cluster_i'
+				-- as first it will not be used since now only `old_cluster_i' will be 
+				-- used as `old_cluster' in Current. Second because it is causing a huge
+				-- memory leak when using a precompiled library.
+			old_cluster_i.set_old_cluster (Void)
 		end;
 
 	reset_cluster is

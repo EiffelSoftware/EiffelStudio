@@ -14,6 +14,8 @@ inherit
 			body
 		end
 
+	WIZARD_DISPATCH_FUNCTION_HELPER
+
 feature -- Basic operation
 
 	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
@@ -77,7 +79,7 @@ feature {NONE} -- Implementation
 					func_desc.arguments.forth
 				end
 
-				if func_desc.return_type.name.is_equal (Void_c_keyword) then
+				if not does_routine_have_result (func_desc) then
 					Result.remove (Result.count)
 				else
 					visitor := func_desc.return_type.visitor
@@ -103,7 +105,10 @@ feature {NONE} -- Implementation
 			create Result.make (100000)
 			Result.append (Ecatch)
 
-			if func_desc.argument_count = 0 and func_desc.return_type.name.is_equal (Void_c_keyword) then
+			if 
+				func_desc.argument_count = 0 and 
+				not does_routine_have_result (func_desc) 
+			then
 				Result.append (New_line_tab)
 				Result.append (empty_argument_procedure_body)
 			else
@@ -131,54 +136,18 @@ feature {NONE} -- Implementation
 						out_value.append (out_value_set_up (func_desc.arguments.item.name, visitor))
 						out_value.append (New_line_tab)
 
-						arguments.append (Comma_space)
-
-						if visitor.is_basic_type or visitor.is_enumeration then
-							arguments.append (Tmp_clause)
-							arguments.append (func_desc.arguments.item.name)
-						else
-							arguments.append (Eif_access)
-							arguments.append (Space_open_parenthesis)
-							arguments.append (Tmp_clause)
-							arguments.append (func_desc.arguments.item.name)
-							arguments.append (Close_parenthesis)
-						end
+						add_to_cecil_call_arguments (visitor, func_desc.arguments.item.name)
 					else
 						variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
-						if 
-							visitor.is_basic_type or 
-							visitor.is_enumeration or
-							visitor.vt_type = Vt_bool
-						then
-							arguments.append (Comma_space)
-							arguments.append (Open_parenthesis)
-							arguments.append (visitor.cecil_type)
-							arguments.append (Close_parenthesis)
-							arguments.append (Tmp_clause)
-							arguments.append (func_desc.arguments.item.name)
-						
-						else
-							arguments.append (Comma)
-							arguments.append (Eif_access)
-							arguments.append (Space_open_parenthesis)
-							arguments.append (Tmp_clause)
-							arguments.append (func_desc.arguments.item.name)
-							arguments.append (Close_parenthesis)
-						end
+						add_to_cecil_call_arguments (visitor, func_desc.arguments.item.name)
 	
 						if 
 							not visitor.is_basic_type and 
 							not (visitor.vt_type = Vt_bool) and 
 							not visitor.is_enumeration
 						then
-							free_object.append (Eif_wean)
-							free_object.append (Space_open_parenthesis)
-							free_object.append (Tmp_clause)
-							free_object.append (func_desc.arguments.item.name)
-							free_object.append (Close_parenthesis)
-							free_object.append (Semicolon)
-							free_object.append (New_line_tab)
+							add_free_object_code (func_desc.arguments.item.name)
 						end
 					end
 
@@ -189,7 +158,7 @@ feature {NONE} -- Implementation
 				arguments.append (Semicolon)
 
 				visitor := func_desc.return_type.visitor
-				if visitor.c_type.is_equal (Void_c_keyword) then
+				if not does_routine_have_result (func_desc) then
 					cecil_call := cecil_procedure_set_up
 					cecil_call.append (arguments)
 				else
@@ -206,7 +175,7 @@ feature {NONE} -- Implementation
 				Result.append (cecil_call)
 				Result.append (New_line_tab)
 
-				if not visitor.c_type.is_equal (Void_c_keyword) then
+				if does_routine_have_result (func_desc) then
 					Result.append (Asterisk)
 					Result.append (Return_value_name)
 					Result.append (Space_equal_space)
@@ -238,7 +207,10 @@ feature {NONE} -- Implementation
 					Result.append (New_line_tab)
 				end
 
-				if func_desc.arguments.count > 0 or not visitor.c_type.is_equal (Void_c_keyword) then
+				if 
+					func_desc.arguments.count > 0 or 
+					does_routine_have_result (func_desc) 
+				then
 					Result.append (out_value)
 					Result.append (free_object)
 				end

@@ -304,8 +304,6 @@ feature {NONE} -- Implementation
 			not_void: node /= Void
 		local
 			s: STRING
-			type: INTEGER
-			b: BOOLEAN
 			txt: XML_TEXT
 			n: STRING
 			types: LINEAR [RESOURCE_TYPE]

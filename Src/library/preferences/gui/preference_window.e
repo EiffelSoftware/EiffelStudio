@@ -234,11 +234,6 @@ feature {NONE} -- Execution
 			-- Allows change to a value.
 		local
 			it: RESOURCE_LIST_ITEM
-			col: COLOR_RESOURCE
-			font: FONT_RESOURCE
-			bool: BOOLEAN_RESOURCE
-			int: INTEGER_RESOURCE
-			str: STRING_RESOURCE
 			edition_window_x: INTEGER
 			edition_window_y: INTEGER
 			column2_width: INTEGER
@@ -254,7 +249,7 @@ feature {NONE} -- Execution
 			gtype ?= it.resource.type
 			check
 				gtype /= Void
-				-- Cf. precondition in `make'.
+				-- Cf. precondition in `make': all types are graphical..
 			end
 			box := gtype.edition_box (Current)
 			box.display (it.resource)

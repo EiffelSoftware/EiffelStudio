@@ -254,7 +254,10 @@ feature {NONE} -- Storage
 	          	when feature {FREE_OPTION_SD}.arguments then
 	             	defaults.remove
 				 	defaults.back
-	           	else 
+				when feature {FREE_OPTION_SD}.Working_directory then
+				 	defaults.remove
+				 	defaults.back
+	           	else
           		end
          	end
             	defaults.forth

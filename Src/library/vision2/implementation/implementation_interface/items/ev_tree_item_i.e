@@ -14,12 +14,8 @@ inherit
 
 feature -- Access
 
-	parent: EV_TREE_ITEM_HOLDER is
-			-- Parent of the current item.
-		require
-			exists: not destroyed
-		deferred
-		end
+	parent_imp: EV_TREE_ITEM_HOLDER_IMP
+			-- Parent implementation
 
 feature -- Status report
 
@@ -42,11 +38,7 @@ feature -- Element change
 	set_parent (par: EV_TREE_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
-		require
-			exists: not destroyed
 		deferred
-		ensure
-			parent_set: parent = par
 		end
 
 feature -- Event : command association

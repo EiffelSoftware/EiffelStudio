@@ -1,0 +1,316 @@
+indexing
+
+	description: 
+		"Degree messages output during compilation. %
+		%By default, all output is redirected to `io'.";
+	date: "$Date$";
+	revision: "$Revision $"
+
+class DEGREE_OUTPUT
+
+feature -- Access
+
+	current_degree: INTEGER;
+			-- Current degree being displayed
+
+feature -- Start output features
+
+	put_start_degree_6 (total_nbr: INTEGER) is
+			-- Put message indicating the start of degree six
+			-- with `total_nbr' passes to be done.
+		require
+			positive_total_nbr: total_nbr >= 0
+		do
+			total_number := total_nbr;
+			nbr_of_clusters := total_nbr;
+			current_degree := 6;
+		end;
+
+	put_end_degree_6 is
+			-- Put message indicating the end of degree six.
+		do
+			io.error.putstring ("Processing options%N");
+			nbr_of_clusters := 0
+		end;
+
+	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
+			-- Put message indicating the start of a degree 
+			-- with `total_nbr' passes to be done.
+		require
+			valid_degree_nbr: degree_nbr >= -5 and then degree_nbr <= 6
+			positive_total_nbr: total_nbr >= 0
+		do
+			total_number := total_nbr;
+			current_degree := degree_nbr;
+			processed := 0
+		end;
+
+	put_end_degree is
+			-- Put message indicating the end of a degree.
+		do
+			current_degree := 0;
+		end;
+
+	put_melting_changes_message  is
+			-- Put message indicating that melting changes is ocurring.
+		do
+			io.error.put_string (melting_changes_message);
+			io.error.new_line
+		end;
+
+	put_freezing_message is
+			-- Put message indicating that freezing is occurring.
+		do
+			io.error.put_string (freezing_system_message);
+			io.error.new_line
+		end;
+
+	put_start_dead_code_removal_message  is
+			-- Put message indicating the start of dead code removal.
+		do
+			io.error.put_string (removing_dead_code_message);
+			io.error.new_line
+		end;
+
+	put_end_dead_code_removal_message  is
+			-- Put message indicating the start of dead code removal.
+		do
+		end;
+
+	finish_degree_output is
+			-- Process end degree output.
+			-- (Be default, do nothing).
+		do
+		end;
+
+feature -- Output on per class
+
+	put_degree_6 (a_cluster: CLUSTER_I) is
+			-- Put message to indicate that `a_cluster' is being
+			-- compiled during degree six' clusters to go. 
+		require
+			cluster_not_void: a_cluster /= Void
+			in_degree_six: current_degree = 6
+		do
+			display_degree (degree_6_message, nbr_of_clusters, a_cluster.cluster_name)
+			nbr_of_clusters := nbr_of_clusters - 1;
+		end;
+
+	skip_degree_6 is
+			-- Process Degree 6 information to skip a cluster
+			-- processing.
+		do
+			nbr_of_clusters := nbr_of_clusters - 1
+		end;
+
+	put_degree_5 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree five with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0
+			in_degree_5: current_degree = 5
+		do
+			processed := processed + 1;
+			total_number := nbr_to_go + processed;
+			display_degree (degree_5_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_4 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree four with `nbr_to_go' 
+			-- classes to go out of `total_nbr'..
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0;
+			in_degree_4: current_degree = 4
+		do
+			processed := processed + 1;
+			total_number := nbr_to_go + processed;
+			display_degree (degree_4_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_3 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree three with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0
+			in_degree_3: current_degree = 3
+		do
+			display_degree (degree_3_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_2 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree two with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0;
+			in_degree_2: current_degree = 2
+		do
+			display_degree (degree_2_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_1 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree one with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0;
+			in_degree_1: current_degree = 1
+		do
+			display_degree (degree_1_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_minus_1 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree minus one with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0;
+			in_degree_minus_1: current_degree = -1
+		do
+			display_degree (degree_minus_1_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_minus_2 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree minus two with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0;
+			in_degree_minus_2: current_degree = -2
+		do
+			display_degree (degree_minus_2_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_minus_3 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree minus three with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0;
+			in_degree_minus_3: current_degree = -3
+		do
+			display_degree (degree_minus_3_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_minus_4 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree minus four with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0;
+			in_degree_minus_4: current_degree = -4
+		do
+			display_degree (degree_minus_4_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_degree_minus_5 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_class' is being
+			-- compiled during degree minus five with `nbr_to_go' 
+			-- classes to go.
+		require
+			class_not_void: a_class /= Void;
+			positive_nbr_to_go: nbr_to_go >= 0;
+			in_degree_minus_5: current_degree = -5
+		do
+			display_degree (degree_minus_5_message, nbr_to_go, a_class.name_in_upper)
+		end;
+
+	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER) is
+			-- Put message progress the start of dead code removal.
+		do
+			processed := processed + 1;
+			io.error.putchar ('.');
+			if processed = dots_per_line then
+				io.error.new_line
+			end
+		end;
+
+feature {NONE} -- Implementation
+
+	processed: INTEGER;
+			-- Numnber of processed elements
+
+	total_number: INTEGER;
+			-- Number of entities being processed
+
+	nbr_of_clusters: INTEGER;
+			-- Number of clusters being processed
+
+	percentage_output (nbr_to_go: INTEGER): STRING is
+			-- Return percentage based on `nbr_to_go' and
+			-- `total_number'
+		require
+			positive_total_nbr: total_number > 0 
+		local
+			nbr_spaces, perc: INTEGER;
+			to_go_out, total_nbr_out: STRING
+		do
+			total_nbr_out := total_number.out;
+			!! Result.make (7);
+			Result.append ("[");
+			perc := 100 - (nbr_to_go*100//total_number);
+			if perc < 10 then
+				Result.append ("  ");
+			else
+				Result.extend (' ')
+			end;
+			Result.append_integer (perc);
+			Result.append_string ("%% - ");
+			to_go_out := nbr_to_go.out;
+			nbr_spaces := total_nbr_out.count - to_go_out.count;
+			inspect nbr_spaces 
+			when 1 then
+				Result.extend (' ')
+			when 2 then
+				Result.append ("  ")
+			when 3 then
+					-- Limit is about 99000
+				Result.append ("   ")
+			else
+			end;
+			Result.append (to_go_out)
+			Result.append ("] ")
+		end;
+
+	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
+			-- Display degree `deg_nbr' with entity `a_class'.
+		do
+			io.error.putstring (percentage_output (to_go));
+			io.error.putstring (deg_nbr);
+			io.error.putstring (a_name);
+			io.error.new_line
+		end;
+
+feature {NONE} -- Constants
+
+	dots_per_line: INTEGER is 79;
+
+	degree_6_message: STRING is "Degree 6 cluster ";
+	degree_5_message: STRING is "Degree 5 class ";
+	degree_4_message: STRING is "Degree 4 class ";
+	degree_3_message: STRING is "Degree 3 class ";
+	degree_2_message: STRING is "Degree 2 class ";
+	degree_1_message: STRING is "Degree 1 class ";
+	degree_minus_1_message: STRING is "Degree -1 class ";
+	degree_minus_2_message: STRING is "Degree -2 class ";
+	degree_minus_3_message: STRING is "Degree -3 class ";
+	degree_minus_4_message: STRING is "Degree -4 class ";
+	degree_minus_5_message: STRING is "Degree -5 class ";
+
+	melting_changes_message: STRING is "Melting changes";
+	freezing_system_message: STRING is "Freezing system";
+	removing_dead_code_message: STRING is "Removing dead code";
+
+end -- class degree_output

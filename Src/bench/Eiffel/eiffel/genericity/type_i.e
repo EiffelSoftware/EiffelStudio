@@ -1,7 +1,11 @@
+indexing
+	description: "Representation of a type during code generation."
+	date: "$Date$"
+	revision: "$Revision$"
+	
 deferred class TYPE_I
 
 inherit
-
 	HASHABLE
 	SHARED_CODE_FILES
 	SHARED_HASH_CODE
@@ -11,16 +15,59 @@ inherit
 	COMPILER_EXPORTER
 	SHARED_GEN_CONF_LEVEL
 
-feature
+feature -- Status report
 
-	append_signature (st: STRUCTURED_TEXT) is
-		deferred
+	instantiation_in (other: GEN_TYPE_I): TYPE_I is
+			-- Instantiation of Current in context of `other'
+			-- FIXME: other not used in most implementors, and causes
+			-- a crash when compiling generic expandeds
+		require
+			good_argument: other /= Void
+			other_is_data: not other.has_formal
+		do
+			Result := Current
+		ensure
+			no_formal_in_result: not Result.has_formal
+		end
+		
+	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
+			-- Instantiation of Current in context of `other'
+			-- Actual generics of reference type are kept.
+		require
+			good_argument: other /= Void
+			other_is_data: not other.has_formal
+		do
+			Result := Current
 		end
 
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
+	creation_instantiation_in (other: GEN_TYPE_I): TYPE_I is
+			-- Instantiation of Current in context of `other'
+			-- Actual generics of reference type are kept.
+			-- Act like `complete_instantiation_in' but it does a complete
+			-- recursion. This is only used to generate the
+			-- correct code at run-time.
 		require
-			buffer_exists: buffer /= Void
+			good_argument: other /= Void
+		do
+			Result := Current
+		end
+
+	c_type: TYPE_C is
+			-- Corresponding C type: either LONG_I, CHAR_I, DOUBLE_I,
+			-- REFERENCE_I, FLOAT_I
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	type_a: TYPE_A is
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	description: ATTR_DESC is
+			-- Descritpion of type for skeletons
 		deferred
 		end
 
@@ -29,32 +76,6 @@ feature
 		require
 			in_il_generation: System.il_generation
 		deferred
-		end
-
-	trace is
-			-- Debug purpose
-		local
-			s: GENERATION_BUFFER
-		do
-			!! s.make (0)
-			dump (s)
-			io.error.put_string (s)
-		end
-
-	is_identical (other: TYPE_I): BOOLEAN is
-			-- Is `other' identical with Current ?
-			-- Takes true generics into account.
-		require
-			good_argument: other /= Void
-		do
-			Result := same_as (other)
-		end
-
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' equal to Current ?
-		require
-			good_argument: other /= Void
-		do
 		end
 
 	is_valid: BOOLEAN is
@@ -78,10 +99,9 @@ feature
 	is_external: BOOLEAN is
 			-- Is class an external one?
 		do
-			
+			-- Do nothing
 		end
 		
-
 	is_boolean: BOOLEAN is
 			-- Is the type a boolean type
 		do
@@ -184,55 +204,55 @@ feature
 			-- Do nothing
 		end
 
-	instantiation_in (other: GEN_TYPE_I): TYPE_I is
-			-- Instantiation of Current in context of `other'
-			-- FIXME: other not used in most implementors, and causes a crash when compiling generic expandeds
-		require
-			good_argument: other /= Void
-			other_is_data: not other.has_formal
-		do
-			Result := Current
-		ensure
-			no_formal_in_Result: not Result.has_formal
-		end
-		
-	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
-			-- Instantiation of Current in context of `other'
-			-- Actual generics of reference type are kept.
-		require
-			good_argument: other /= Void
-			other_is_data: not other.has_formal
-		do
-			Result := Current
-		end
+feature -- Formatting
 
-	creation_instantiation_in (other: GEN_TYPE_I): TYPE_I is
-			-- Instantiation of Current in context of `other'
-			-- Actual generics of reference type are kept.
-			-- Act like `complete_instantiation_in' but it does a complete
-			-- recursion. This is only used to generate the
-			-- correct code at run-time.
-		require
-			good_argument: other /= Void
-		do
-			Result := Current
-		end
-
-	c_type: TYPE_C is
-			-- Corresponding C type: either LONG_I, CHAR_I, DOUBLE_I,
-			-- REFERENCE_I, FLOAT_I
+	append_signature (st: STRUCTURED_TEXT) is
 		deferred
 		end
 
-	description: ATTR_DESC is
-			-- Descritpion of type for skeletons
+	dump (buffer: GENERATION_BUFFER) is
+			-- Debug purpose
+		require
+			buffer_exists: buffer /= Void
 		deferred
-		end; -- description
+		end
+
+feature -- Comparison
+
+	is_identical (other: TYPE_I): BOOLEAN is
+			-- Is `other' identical with Current ?
+			-- Takes true generics into account.
+		require
+			good_argument: other /= Void
+		do
+			Result := same_as (other)
+		end
+
+	same_as (other: TYPE_I): BOOLEAN is
+			-- Is `other' equal to Current ?
+		require
+			good_argument: other /= Void
+		do
+		end
+
+feature -- Debugging
+
+	trace is
+			-- Debug purpose
+		local
+			s: GENERATION_BUFFER
+		do
+			create s.make (0)
+			dump (s)
+			io.error.put_string (s)
+		end
+
+feature -- Code generation
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate type value for cecil.
 		deferred
-		end; -- generate_cecil_value
+		end
 
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
@@ -245,10 +265,6 @@ feature
 		end
 
 feature -- Array optimization
-
-	type_a: TYPE_A is
-		deferred
-		end
 
 	conforms_to_array: BOOLEAN is
 		do
@@ -327,4 +343,5 @@ feature -- Generic conformance
 			-- Only increment counter.
 			dummy := idx_cnt.next
 		end
-end
+
+end -- class TYPE_I

@@ -51,4 +51,9 @@
 #endif
 #endif
 
-#endif
+/* Do not compile with assertions, by default. */
+#ifndef EIF_ASSERTIONS
+#define NDEBUG
+#endif	/* EIF_ASSERTIONS */
+
+#endif	/* _confmagic_h_ */

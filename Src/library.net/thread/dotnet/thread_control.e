@@ -94,7 +94,6 @@ feature -- Sleep
 			feature {SYSTEM_THREAD}.sleep_time_span
 				(feature {TIME_SPAN}.from_ticks (nanoseconds // 100))
 		end
-		
 
 feature {NONE} -- Threads management
 

@@ -10,6 +10,8 @@
 # Configured by: paulv
 # Target system: hp-ux rio a.09.05 a 9000712 2005001273 two-user license 
 
+lngpad_2='8'
+command_makefile='make'
 d_bsdsig='undef'
 sh='/bin/sh'
 cc='cchppa'
@@ -40,7 +42,6 @@ mv='/bin/mv'
 ranlib='ranlibhppa'
 rm='/bin/rm'
 eunicefix=':'
-command_makefile='make'
 
 ###########################zz
 

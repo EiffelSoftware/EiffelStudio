@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			-- Generate a COM+ assembly.
 		do
 			degree_output := deg_output
+			is_finalizing := System.in_final_mode
 		end
 
 feature -- Access
@@ -59,6 +60,9 @@ feature -- Access
 
 	assembly_info: ASSEMBLY_INFO
 			-- Info about currently generated assembly.
+
+	is_finalizing: BOOLEAN
+			-- Are we finalizing?
 
 feature -- Generation
 
@@ -89,7 +93,7 @@ feature -- Generation
 					-- Compute name of generated file if any.
 				file_name := System.name + "." + System.msil_generation_type
 				
-				if System.in_final_mode then
+				if is_finalizing then
 					location := Final_generation_path
 				else
 					location := Workbench_generation_path
@@ -235,7 +239,7 @@ feature -- Generation
 					l_source_name := clone ((create {EIFFEL_ENV}).Generation_templates_path)
 					l_source_name.set_file_name ("assembly_config.xml")
 		
-					if System.in_final_mode then
+					if is_finalizing then
 						create l_target_name.make_from_string (Final_generation_path)
 					else
 						create l_target_name.make_from_string (workbench_generation_path)
@@ -417,7 +421,11 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-				degree_output.put_start_degree (1, j)
+				if is_finalizing then
+					degree_output.put_start_degree (-2, j)
+				else
+					degree_output.put_start_degree (1, j)
+				end
 			variant
 				nb - i + 1
 			until
@@ -443,7 +451,11 @@ feature {NONE} -- Type description
 							context.init (cl_type)
 
 							if not l_class_processed then
-								degree_output.put_degree_1 (class_c, j)
+								if is_finalizing then
+									degree_output.put_degree_minus_2 (class_c, j)
+								else
+									degree_output.put_degree_1 (class_c, j)
+								end
 								System.set_current_class (class_c)
 								l_class_processed := True
 								j := j - 1
@@ -477,7 +489,11 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-				degree_output.put_start_degree (-1, j)
+				if is_finalizing then
+					degree_output.put_start_degree (-3, j)
+				else
+					degree_output.put_start_degree (-1, j)
+				end
 			variant
 				nb - i + 1
 			until
@@ -502,7 +518,11 @@ feature {NONE} -- Type description
 							context.init (cl_type)
 
 							if not l_class_processed then
-								degree_output.put_degree_minus_1 (class_c, j)
+								if is_finalizing then
+									degree_output.put_degree_minus_3 (class_c, j)
+								else
+									degree_output.put_degree_minus_1 (class_c, j)
+								end
 								System.set_current_class (class_c)
 								l_class_processed := True
 								j := j - 1
@@ -595,7 +615,7 @@ feature {NONE} -- File copying
 				Platform_constants.Directory_separator, l_path.count)
 				
 			create l_source.make (l_path)
-			if System.in_final_mode then
+			if is_finalizing then
 				create l_target_name.make_from_string (Final_bin_generation_path)
 			else
 				create l_target_name.make_from_string (Workbench_bin_generation_path)

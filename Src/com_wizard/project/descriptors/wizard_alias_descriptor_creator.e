@@ -57,7 +57,10 @@ feature -- Basic operations
 			create c_type_name.make (0)
 			c_type_name.append (name)
 			
-			c_header_file_name := clone (Alias_header_file_name)
+			create c_header_file_name.make (0)
+			c_header_file_name.append ("ecom_")
+			c_header_file_name.append (name)
+			c_header_file_name.append (".h")
 
 			type_desc := a_type_info.type_attr.type_alias
 			type_descriptor := data_type_descriptor_factory.create_data_type_descriptor 

@@ -19,15 +19,60 @@ inherit
 			implementation
 		end
 
-feature -- Status setting
+feature -- Status report
 
 	position: INTEGER is
-			-- The position of the split in pixels.
+			-- Current position of the splitter.
+		require
+			exits: not destroyed
+		do
+			Result := implementation.position
+		ensure
+			result_large_enough: Result >= minimum_position
+			result_small_enough: Result <= maximum_position
+		end
+
+	minimum_position: INTEGER is
+			-- Minimum position the splitter can have.
 		require
 			exists: not destroyed
 		do
-			Result:=implementation.position
+			Result := implementation.minimum_position
+		ensure
+			positive_value: Result >= 0
+			coherent_position: Result <= maximum_position
 		end
+
+	maximum_position: INTEGER is
+			-- Maximum position the splitter can have.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.maximum_position
+		ensure
+			positive_value: Result >= 0
+			coherent_position: Result >= minimum_position
+		end
+
+	is_first_area_shrinkable: BOOLEAN is
+			-- Can the first area be shrunk to a size smaller than the
+			-- child it contains? True if it does not contain any child.
+		require
+			exits: not destroyed
+		do
+			Result := implementation.is_first_area_shrinkable
+		end
+
+	is_second_area_shrinkable: BOOLEAN is
+			-- Can the second area be shrunk to a size smaller than the
+			-- child it contains? True if it does not contain any child.
+		require
+			exits: not destroyed
+		do
+			Result := implementation.is_second_area_shrinkable
+		end
+
+feature -- Status setting
 
 	set_position (value: INTEGER) is
 			-- Make `value' the new position of the splitter.
@@ -38,6 +83,28 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.set_position (value)
+		end
+
+	set_first_area_shrinkable (flag: BOOLEAN) is
+			-- Allow the split area to shrink the first area if `flag', forbid
+			-- it otherwise.
+		require
+			exits: not destroyed
+		do
+			implementation.set_first_area_shrinkable (flag)
+		ensure
+			flag_set: is_first_area_shrinkable = flag
+		end
+
+	set_second_area_shrinkable (flag: BOOLEAN) is
+			-- Allow the split area to shrink the second area if `flag', forbid
+			-- it otherwise.
+		require
+			exits: not destroyed
+		do
+			implementation.set_second_area_shrinkable (flag)
+		ensure
+			flag_set: is_second_area_shrinkable = flag
 		end
 
 feature {EV_MENU_ITEM} -- Implementation

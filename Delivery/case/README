@@ -5,7 +5,11 @@ EiffelCase 4.2B advice and warnings:
 You need to set $EIFFEL4 to the installation directory of ISE Eiffel 4.
 You need to also set $PLATFORM.
 
-Include into the path:
+To install EiffelCase
+	Untar the package into $EIFFEL4 directory 
+	(cd $EIFFEL4 && tar xvfz case_4_2.tar.gz) 
+
+Include into your path:
         $EIFFEL4/case/spec/$PLATFORM/bin
 
 To run eiffelcase type:

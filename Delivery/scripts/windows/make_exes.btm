@@ -20,42 +20,64 @@ mkdir %INSTALL_DIR\releases\enterprise\lib\bcb
 mkdir %INSTALL_DIR\releases\enterprise\lib\msc
 
 remtrace Compile the commercial run-times
-remtrace Compile a run-time for Borland
-fullrd C
-exprt -r %DEFAULT_CVS_TAG -d C runtime
-cd C
-call configure win32 b >>& %INSTALL_LOG
-cd %EIFFEL_SRC
-fullrf C\run-time\LIB\ebench.lib
-copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\bcb
-copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
-copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
+iff not defined WIN64 then
+	remtrace Compile a run-time for Borland
+	fullrd C
+	exprt -r %DEFAULT_CVS_TAG -d C runtime
+	cd C
+	call configure win32 b >>& %INSTALL_LOG
+	cd %EIFFEL_SRC
+	fullrf C\run-time\LIB\ebench.lib
+	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\bcb
+	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
+	copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
+endiff
+
 remtrace Compile a run-time for Microsoft
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C
+iff defined WIN64 then
+call configure win64 m >>& %INSTALL_LOG
+else
 call configure win32 m >>& %INSTALL_LOG
+endiff
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\ebench.lib
 copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\msc
-copy C\desc\ise_desc.dll %INSTALL_DIR\releases\enterprise\lib\msc
-copy C\desc\ise_desc.lib %INSTALL_DIR\releases\enterprise\lib\msc
+iff not defined WIN64 then
+	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\enterprise\lib\msc
+	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\enterprise\lib\msc
+endiff
 
 copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
 copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
-copy C\desc\ise_desc.dll %INSTALL_DIR\releases\free_version\lib\msc
-copy C\desc\ise_desc.lib %INSTALL_DIR\releases\free_version\lib\msc
+iff not defined WIN64 then
+	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\free_version\lib\msc
+	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\free_version\lib\msc
+endiff
 
 remtrace Compile a dynamic run-time
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd %EIFFEL_SRC\C/CONFIGS
-sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" windows-msc-x86 >> new_windows-msc-x86
-move new_windows-msc-x86 windows-msc-x86
-sed -e "s/standard\ mtstandard/dll\ mtdll/g" windows-msc-x86 >> new_windows-msc-x86
-move new_windows-msc-x86 windows-msc-x86
+iff not defined WIN64 then
+	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" windows-msc-x86 >> new_windows-msc-x86
+	move new_windows-msc-x86 windows-msc-x86
+	sed -e "s/standard\ mtstandard/dll\ mtdll/g" windows-msc-x86 >> new_windows-msc-x86
+	move new_windows-msc-x86 windows-msc-x86
+else
+	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" windows-msc-x86-64 >> new_windows-msc-x86-64
+	move new_windows-msc-x86-64 windows-msc-x86-64
+	sed -e "s/standard\ mtstandard/dll\ mtdll/g" windows-msc-x86-64 >> new_windows-msc-x86-64
+	move new_windows-msc-x86-64 windows-msc-x86-64
+endiff
 cd %EIFFEL_SRC\C
+iff defined WIN64 then
+call configure win64 m >>& %INSTALL_LOG
+else
 call configure win32 m >>& %INSTALL_LOG
+endiff
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\ebench.lib
 fullrf C\run-time\LIB\*.exp
@@ -281,7 +303,9 @@ iff not exist setup.exe then
 	remtrace Couldnt generate setup.exe
 	CANCEL
 endiff
-call upx.exe setup.exe
+iff not defined WIN64 then
+	call upx.exe setup.exe
+end
 move setup.exe %INSTALL_DIR
 
 remtrace Recompile configure_all

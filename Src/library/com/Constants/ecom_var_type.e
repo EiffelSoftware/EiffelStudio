@@ -303,8 +303,7 @@ feature -- Status report
 	is_character (variable_type: INTEGER): BOOLEAN is
 			-- Is variable character?
 		do
-			Result := binary_and (variable_type, Vt_ui1) = Vt_ui1 or
-				binary_and (variable_type, Vt_i1) = Vt_i1
+			Result := binary_and (variable_type, Vt_i1) = Vt_i1
 		end
 
 	is_integer2 (variable_type: INTEGER): BOOLEAN is

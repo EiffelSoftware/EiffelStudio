@@ -9,7 +9,7 @@ CFLAGS = -c -tWM -O1 -DEIF_IL_DLL \
 	-I..\spec\include \
 	-I..\..\..\C_library\libpng \
 	-I..\..\..\C_library\zlib \
-	-I$(ISE_EIFFEL)\studio\spec\windows\include \
+	-I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include \
 	-I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 
 .c.obj:

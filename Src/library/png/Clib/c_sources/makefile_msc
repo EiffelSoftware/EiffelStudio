@@ -1,4 +1,4 @@
-INCLUDE_PATH = -I. -Id:\eiffel45\bench\spec\windows\include -Id:\png\library\png\Clib\gd
+INCLUDE_PATH = -I. -Id:\eiffel45\bench\spec\$(ISE_PLATFORM)\include -Id:\png\library\png\Clib\gd
 CC = cl
 CPP = cl
 CFLAGS = -Ox -YX -nologo $(INCLUDE_PATH)

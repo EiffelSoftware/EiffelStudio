@@ -5,7 +5,7 @@ CFLAGS = -c -MT -Ox -W3 -DEIF_IL_DLL \
 	-I..\spec\include \
 	-I..\..\..\C_library\libpng \
 	-I..\..\..\C_library\zlib \
-	-I$(ISE_EIFFEL)\studio\spec\windows\include
+	-I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

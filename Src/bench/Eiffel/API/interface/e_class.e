@@ -564,11 +564,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 	feature_named (n: STRING): FEATURE_I is
 			-- Feature whose internal name is `n'
 		do
-			if
-				Tmp_feat_tbl_server.has (id)
-			then
+			if Tmp_feat_tbl_server.has (id) then
 				Result := Tmp_feat_tbl_server.item (id).item (n)
-			else
+			elseif Feat_tbl_server.has (id) then
 				Result := Feat_tbl_server.item (id).item (n)
 			end
 		end;

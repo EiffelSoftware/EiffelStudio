@@ -9,7 +9,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	SPECIAL [T]
 
 create
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			-- Not yet implemented
+			-- Built-in
 		ensure
 			area_allocated: count = n
 		end

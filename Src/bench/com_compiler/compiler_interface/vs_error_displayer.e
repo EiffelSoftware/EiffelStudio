@@ -78,6 +78,10 @@ feature -- Output
 			error_list: LINKED_LIST [ERROR]
 			st, st2: STRUCTURED_TEXT
 			syntax_error: SYNTAX_ERROR
+			feature_error: FEATURE_ERROR
+			error: ERROR
+			error_pos: INTEGER
+			error_file, error_string, class_name: STRING
 		do
 			if not retried then
 				from
@@ -87,29 +91,35 @@ feature -- Output
 				until
 					error_list.after
 				loop
-					display_separation_line (st)
-					st.add_new_line
-					error_list.item.trace (st)
-					st.add_new_line
-					error_list.forth
-					create st2.make
-					error_list.item.trace (st2)
+					error_file := Void
+					error_pos := 0
+					error_string := ""
+					
 					syntax_error ?= error_list.item
-					if syntax_error /= Void then
-						compiler_coclass.event_last_error (st2.image,
-									syntax_error.file_name,
-									line_number (syntax_error.file_name, syntax_error.start_position))
-					else
-						compiler_coclass.event_last_error (st2.image, Void, 0)
+					feature_error ?= error_list.item
+					error ?= error_list.item
+					if error /= Void then
+						create st.make
+						error.print_error_message (st)
+						error_string := st.image
 					end
+					if feature_error /= Void then
+						error_pos := feature_error.line_number
+						error_file := feature_error.class_c.file_name
+					elseif syntax_error /= Void then
+						error_pos := line_number (syntax_error.file_name, syntax_error.start_position)
+						error_file := syntax_error.file_name
+						error_string := "Syntax Error: " + syntax_error.syntax_message +
+									" in Class " + syntax_error.System.class_name + " line " + error_pos.out
+					end
+					compiler_coclass.event_last_error (error_string, error_file, error_pos)
+					error_list.forth
 				end
-				display_separation_line (st)
-				display_additional_info (st)
 			else
 				retried := False
-				display_error_error (st)
+				--display_error_error (st2)
 			end
-			output_window.process_text (st)
+			--output_window.process_text (st)
 		rescue
 			if not fail_on_rescue then
 				retried := True

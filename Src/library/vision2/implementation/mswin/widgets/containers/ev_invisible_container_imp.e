@@ -15,8 +15,7 @@ inherit
 
 	EV_CONTAINER_IMP
 		redefine
-			set_insensitive,
-			on_first_display
+			set_insensitive
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -72,27 +71,6 @@ feature -- Element change
 				loop
 					list.item.set_top_level_window_imp (a_window)
 					list.forth
-				end
-			end
-		end
-
-feature -- Basic operation
-
-	on_first_display is
-			-- Called by the top_level window.
-		local
-			i: INTEGER
-			list: ARRAYED_LIST [EV_WIDGET_IMP]
-		do
-			if not ev_children.empty then
-				list := ev_children
-				from
-					i := 1
-				until
-					i = list.count + 1
-				loop
-					(list @ i).on_first_display
-					i := i + 1
 				end
 			end
 		end

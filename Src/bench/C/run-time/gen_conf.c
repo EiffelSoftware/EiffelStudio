@@ -1832,10 +1832,6 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		**outtab = dftype;
 		(*outtab)++;
 
-		if (dftype >= 0) {
-			is_expanded = EIF_IS_EXPANDED_TYPE(System (eif_cid_map[RTUD(dftype)]));
-		}
-
 		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 

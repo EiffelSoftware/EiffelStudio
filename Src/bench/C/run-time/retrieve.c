@@ -3444,12 +3444,10 @@ rt_private void map_types (void)
 #endif
 	REQUIRE ("Finite types", type_conversions->count > 0);
 	do {
-		char *last_name;
 		int i;
 		for (unresolved_types=0, map_count = 0, i=0; i<type_conversions->count; i++) {
 			type_descriptor *conv = type_conversions->descriptions + i;
 			CHECK ("Old type known", conv->old_type >= 0);
-			last_name = conv->name;
 			if (conv->new_type < 0 && conv->new_type != TYPE_NOT_PRESENT)
 				map_count += map_type (conv, &unresolved_types);
 		}

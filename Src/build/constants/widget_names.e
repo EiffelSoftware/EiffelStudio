@@ -270,6 +270,8 @@ feature -- Misc
 	Translations_label: STRING is "Translations"
 	Undo_label: STRING is "Undo";
 	Visual_name_label: STRING is "Name: ";
+	Yes_label: STRING is "Yes";
+	No_label: STRING is "No";
 
 feature -- Names for Widget Windows
 

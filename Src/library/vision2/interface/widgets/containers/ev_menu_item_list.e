@@ -23,7 +23,7 @@ inherit
 
 feature -- Contract support
 
-	is_parent_recursive (a_list: EV_MENU_ITEM_LIST): BOOLEAN is
+	is_parent_recursive (a_list: like item): BOOLEAN is--EV_MENU_ITEM_LIST): BOOLEAN is
 			-- Is `Current' present in `a_list' hierarchy?
 		local
 			menu_item_list_parent: EV_MENU_ITEM_LIST

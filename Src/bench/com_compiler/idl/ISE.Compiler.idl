@@ -587,6 +587,9 @@ interface IEiffelSystemBrowser: IUnknown
   [helpstring ("Number of top-level clusters in system.")]
   HRESULT cluster_count ([out, retval] ULONG * return_value);
 
+  [propget, helpstring ("Number of top-level clusters in system.")]
+  HRESULT root_cluster ([out, retval] IEiffelClusterDescriptor ** return_value);
+
   [helpstring ("Cluster descriptor.")]
   HRESULT cluster_descriptor ([in] BSTR cluster_name, [out, retval] IEiffelClusterDescriptor ** return_value);
 

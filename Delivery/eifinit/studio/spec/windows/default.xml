@@ -42,7 +42,7 @@
 			<HEAD>Debugger preferences</HEAD>
 			<TEXT>debug_tool_width<INTEGER>214</INTEGER></TEXT>
 			<TEXT>debug_tool_height<INTEGER>214</INTEGER></TEXT>
-			<TEXT>debugger__project_toolbar_layout<LIST_STRING>System_tool__visible;Melt_project__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Separator;Exec_debug__visible;Exec_no_stop__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden</LIST_STRING></TEXT>
+			<TEXT>debugger__project_toolbar_layout<LIST_STRING>System_tool__visible;Melt_project__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden</LIST_STRING></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Explain_tool_preferences">
 			<HEAD>Explain tool preferences</HEAD>

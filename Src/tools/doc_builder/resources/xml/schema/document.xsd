@@ -81,12 +81,12 @@
 			<xs:documentation>A link with a label</xs:documentation>
 		</xs:annotation>
 		<xs:all minOccurs="0">
-			<xs:element name="url" type="xs:string">
+			<xs:element name="url" type="xs:string" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Physical url resource location</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="label" type="compositeTextType" minOccurs="0">
+			<xs:element name="label" type="compositeTextType">
 				<xs:annotation>
 					<xs:documentation>Label</xs:documentation>
 				</xs:annotation>
@@ -94,6 +94,11 @@
 			<xs:element name="target" type="xs:string" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Window target</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="anchor_name" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Name of anchor in document this links refers to</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:all>
@@ -191,11 +196,6 @@
 					<xs:documentation>For bold text</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="line_break" minOccurs="0" maxOccurs="unbounded">
-				<xs:annotation>
-					<xs:documentation>A line break/new line.</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="class_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>Eiffel class name</xs:documentation>
@@ -216,16 +216,12 @@
 					<xs:documentation>For syntax text</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="tab" type="xs:string" minOccurs="0" maxOccurs="unbounded">
-				<xs:annotation>
-					<xs:documentation>Formatting tab</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="compiler_error" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Compiler error formatting</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="sub_script" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="helpType">
@@ -349,7 +345,16 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="usemap" type="xs:string" minOccurs="0"/>
-			<xs:element name="border" type="xs:string" minOccurs="0"/>
+			<xs:element name="border" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Border size in pixels</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="legend" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Image title/legend</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="xmlHelpType">
@@ -473,6 +478,11 @@
 			<xs:element name="height" type="xs:string" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Height of table</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="legend" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Legend</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:choice>
@@ -618,9 +628,12 @@
 					<xs:documentation>Height in pixels or percentage</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="vertical_alignment" type="xs:string" minOccurs="0"/>
 		</xs:choice>
 		<xs:attribute name="style" type="xs:string" use="optional"/>
 		<xs:attribute name="output" type="xs:string" use="optional"/>
+		<xs:attribute name="rowspan" type="xs:string" use="optional"/>
+		<xs:attribute name="columnspan" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:complexType name="compositeTextType" mixed="true">
 		<xs:annotation>
@@ -694,11 +707,6 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="help_link" type="msLinkType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="output" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
-				<xs:annotation>
-					<xs:documentation>Output filterable section</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="code_block" type="codeType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Eiffel code formatting (use for separate code examples)</xs:documentation>
@@ -739,15 +747,31 @@
 					<xs:documentation>A line break/new line.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="tab_indent" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>A single tabulation indent</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="include" type="includeType" minOccurs="0"/>
 			<xs:element name="sub_script" type="xs:string" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>Indicates text the is sub-scripted (positioned half a character below preceeding text)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="output" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Output filterable section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="underline" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Underlined content</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="version" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Indicates current version name and number for chosen output</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="start" type="startType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="anchor" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>An anchor</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:choice>
@@ -795,5 +819,14 @@
 				</xs:annotation>
 			</xs:element>
 		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="startType">
+		<xs:annotation>
+			<xs:documentation>Block of tagged content</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="content" type="compositeTextType"/>
+		</xs:sequence>
+		<xs:attribute name="type" type="xs:string" use="required"/>
 	</xs:complexType>
 </xs:schema>

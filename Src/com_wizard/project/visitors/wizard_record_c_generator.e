@@ -31,6 +31,7 @@ feature -- Access
 			struct_def: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 			header: STRING
+			pointed_data_type: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			create c_writer.make
 			create c_writer_impl.make
@@ -78,11 +79,15 @@ feature -- Access
 				struct_def.append (Semicolon)
 				struct_def.append (New_line)
 
+				pointed_data_type ?= a_descriptor.fields.item.data_type
 				if 
 					a_data_visitor.c_header_file /= Void and then 
 					not a_data_visitor.c_header_file.empty
 				then
-					if a_data_visitor.is_structure_pointer then
+					if 
+						a_data_visitor.is_structure_pointer and
+						pointed_data_type /= Void
+					then
 						add_pointed_structure_include (a_descriptor.fields.item.data_type)
 					elseif not c_writer.import_files.has (a_data_visitor.c_header_file) then
 						c_writer.add_import (a_data_visitor.c_header_file)

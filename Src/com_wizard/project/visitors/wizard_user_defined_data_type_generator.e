@@ -232,7 +232,8 @@ feature -- Processing
 			impl_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 		do
 			impl_interface := interface_descriptor.implemented_interface
-			c_type := clone (interface_descriptor.c_type_name)
+			create c_type.make (100)
+			c_type.append (interface_descriptor.c_type_name)
 			create c_post_type.make (0)
 			is_interface := True
 			c_header_file := clone (interface_descriptor.c_header_file_name)
@@ -266,7 +267,6 @@ feature -- Processing
 				end
 				if 
 					interface_descriptor.inherit_from_dispatch or
-					interface_descriptor.dual or 
 					interface_descriptor.dispinterface
 				then
 					vt_type := Vt_dispatch

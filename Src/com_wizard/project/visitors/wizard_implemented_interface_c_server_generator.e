@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			a_constructor_body.append (Close_parenthesis)
 			a_constructor_body.append (Semicolon)
 
-			a_constructor_body.append (constructor_body)
+			a_constructor_body.append (constructor_body (an_interface))
 
 			Result.set_body (a_constructor_body)
 		ensure

@@ -28,12 +28,20 @@
           instead of on the link itself).</li>
         </ul>
 		<h2>Debugger</h2>
-        <p>Ability to debug .NET applications from EiffelStudio. It behaves like 
-        the traditional debugger except with the current limitations:</p>
+        <h3>Improvements</h3>
         <ul>
-          <li>no conditional breakpoints</li>
-          <li>no expression evaluation</li>
-          <li>no expansion to see attributes of non-Eiffel objects</li>
+          <li>Ability to debug .NET applications from EiffelStudio. It behaves like 
+        the traditional debugger except with the current limitations:<ul>
+            <li>no conditional breakpoints</li>
+            <li>no expression evaluation</li>
+            <li>no expansion to see attributes of non-Eiffel objects</li>
+          </ul>
+          </li>
+        </ul>
+        <h3>Bug fixes</h3>
+        <ul>
+          <li>Fixed issue on Unix platforms where passing more than 5 arguments 
+          will disable debugging and ultimately crash the environment.</li>
         </ul>
 		<h2>EiffelBuild</h2>
         <ul>

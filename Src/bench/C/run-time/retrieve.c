@@ -2451,6 +2451,10 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			}
 			index = (int) ((t - info->gt_gen) / nb_gen);
 			new_dtype = info->gt_type[index] & SK_DTYPE;
+			if (nb_gen > MAX_GENERICS) {
+				eif_rt_xfree ((char *) gtype);
+				eif_rt_xfree ((char *) itype);
+			}
 		} else {
 			int32 *addr;
 
@@ -2595,6 +2599,10 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 			}
 			index = (int) ((t - info->gt_gen) / nb_gen);
 			new_dtype = info->gt_type[index] & SK_DTYPE;
+			if (nb_gen > MAX_GENERICS) {
+				eif_rt_xfree ((char *) gtype);
+				eif_rt_xfree ((char *) itype);
+			}
 		} else {
 			int32 *addr;
 

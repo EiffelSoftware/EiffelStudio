@@ -42,7 +42,9 @@ feature {NONE} -- Implementation
 	child_has_resized is
 			-- Size shell children
 		do
-			resize_shell_children (width, height)
+			if not realizing_children then
+				resize_shell_children (width, height)
+			end
 		end
 
 	class_name: STRING is

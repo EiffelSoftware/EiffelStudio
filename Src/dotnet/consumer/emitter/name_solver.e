@@ -32,10 +32,10 @@ feature -- Access
 				Result.append (count.out)
 				count := count + 1
 			end
-			reserved_names.extend (Result)
+			reserved_names.put (Result, Result)
 		end
 
-	reserved_names: LIST [STRING]
+	reserved_names: HASH_TABLE [STRING, STRING]
 			-- Reserved names for overload solving
 
 feature {TYPE_CONSUMER} -- Element Settings

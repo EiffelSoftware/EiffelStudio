@@ -90,6 +90,33 @@ feature {NONE} -- Initialization
 			C.gtk_widget_hide (pixmap_box)
 		end
 
+feature -- Access
+
+	gray_pixmap: EV_PIXMAP
+			-- Image displayed on `Current'.
+
+	gray_pixmap_imp: EV_PIXMAP_IMP is
+			-- Implementation of the gray pixmap contained 
+		do
+			if gray_pixmap /= Void then
+				Result ?= gray_pixmap.implementation
+			end
+		end
+
+feature -- Element change
+
+	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
+			-- Assign `a_gray_pixmap' to `gray_pixmap'.
+		require
+			gray_pixmap_not_void: a_gray_pixmap /= Void
+		do
+		end
+
+	remove_gray_pixmap is
+			-- Make `pixmap' `Void'.
+		do
+		end
+
 feature -- Status report
 
 	index: INTEGER is
@@ -122,6 +149,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/20 23:40:04  pichery
+--| Added gray pixmap notion (not currently implemented on GTK)
+--|
 --| Revision 1.17  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

@@ -31,11 +31,6 @@ feature -- Element change
 		deferred
 		end
 
-	remove_tooltip is
-			-- Make `tooltip' `Void'.
-		deferred
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOLTIPABLE

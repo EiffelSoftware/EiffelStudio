@@ -31,19 +31,15 @@ feature {NONE} -- Initialization
 		do
 			tool := a_tool;
 			!! resources.make;
-			!! bool_auto_backup.make (associated_category.automatic_backup,
-						Current);
-			!! str_temporary_dir.make (associated_category.temporary_dir,
-						Current);
-			!! str_profiler_dir.make (associated_category.profiler_dir,
-					Current);
-			!! str_filter_dir.make (associated_category.filter_dir,
-					Current);
+			!! str_temporary_dir.make (associated_category.temporary_dir, Current);
+			!! str_profiler_dir.make (associated_category.profiler_dir, Current);
+			!! str_filter_dir.make (associated_category.filter_dir,	Current);
+			!! int_history_size.make (associated_category.history_size, Current)
 
 			resources.extend (str_profiler_dir);
 			resources.extend (str_filter_dir);
 			resources.extend (str_temporary_dir);
-			resources.extend (bool_auto_backup)
+			resources.extend (int_history_size);
 		end
 
 feature {PREFERENCE_TOOL} -- Initialization
@@ -129,12 +125,9 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Resources
 
-	bool_auto_backup: BOOLEAN_PREF_RES;
-
 	str_temporary_dir: STRING_PREF_RES;
-
 	str_profiler_dir: STRING_PREF_RES;
-
 	str_filter_dir: STRING_PREF_RES;
+	int_history_size: INTEGER_PREF_RES
 
 end -- class SYSTEM_PREF_CAT

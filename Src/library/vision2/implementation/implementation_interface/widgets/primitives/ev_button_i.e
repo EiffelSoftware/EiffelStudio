@@ -16,13 +16,6 @@ inherit
 	EV_TEXT_CONTAINER_I
 
 	
-feature {NONE} -- Initialization
-
-	make (parent: EV_CONTAINER) is
-		deferred
-		end
-
-
 end -- class EV_BUTTON_I
 
 

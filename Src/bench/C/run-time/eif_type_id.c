@@ -147,7 +147,7 @@ rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
 			 * before finding out the real type */
 		eif_type_id_ex (&error, &type, type.gt_param, type_string_array, typearr, 0, n);
 		if (error == 0) {
-			result = (EIF_TYPE_ID) eif_compound_id ((int16 *)0, (char *)0,(int16) typearr[1], typearr);
+			result = (EIF_TYPE_ID) eif_compound_id ((int16 *)0, (int16) 0,(int16) typearr[1], typearr);
 		}
 		eif_free (typearr);
 	} else

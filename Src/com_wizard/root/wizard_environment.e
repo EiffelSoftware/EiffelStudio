@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			automation := True
 			client := True
 			output_level := Output_warnings
+			Compile_eiffel := True
 		end
 
 feature -- Access
@@ -78,6 +79,9 @@ feature -- Access
 
 	output_level: INTEGER
 			-- Output level
+
+	compile_eiffel: BOOLEAN
+			-- Should generated eiffel code be compiled?
 
 feature -- Element Change
 
@@ -245,6 +249,16 @@ feature -- Element Change
 			-- Set `abort' to `False'.
 		do
 			abort := False
+		ensure
+			no_abort: not abort
+		end
+
+	set_compile_eiffel (a_boolean: like compile_eiffel) is
+			-- Set `compile_eiffel' to `a_boolean'.
+		do
+			compile_eiffel := a_boolean
+		ensure
+			compile_eiffel_set: compile_eiffel = a_boolean
 		end
 
 invariant

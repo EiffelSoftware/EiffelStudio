@@ -478,10 +478,8 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					end
 					Command_handler.Delete_object_command.delete_object (current_object_item.object)	
 				end
-				if not a_directory.off then
-						-- The act of deleting the directory may have made it `off'.
-					a_directory.forth
-				end
+				-- Note that there is no need to traverse the directory as deleting
+				-- the objects contained ensures that we always simply remove the first.
 			end
 			parent_directory ?= a_directory.parent
 			create command_delete_directory.make (a_directory, parent_directory)

@@ -384,7 +384,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GenerateFeatureInternalClone(  /* [in] */ LONG feature_id ) = 0;
+	virtual STDMETHODIMP generate_feature_internal_duplicate(  /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------

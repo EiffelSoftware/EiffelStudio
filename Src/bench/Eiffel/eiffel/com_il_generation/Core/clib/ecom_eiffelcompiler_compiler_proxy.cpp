@@ -1970,7 +1970,7 @@ void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_feature_il(  /* [in] */ 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_feature_internal_clone(  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_feature_internal_duplicate(  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -1990,7 +1990,7 @@ void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_feature_internal_clone( 
 	LONG tmp_feature_id = 0;
 	tmp_feature_id = (LONG)feature_id;
 	
-	hr = p_COMPILER_PROXY_I->GenerateFeatureInternalClone(tmp_feature_id);
+	hr = p_COMPILER_PROXY_I->generate_feature_internal_duplicate(tmp_feature_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

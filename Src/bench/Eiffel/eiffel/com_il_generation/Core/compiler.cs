@@ -1000,11 +1000,12 @@ feature -- Generation Structure
 				GenerateCurrent ();
 				for (i = 0; i < nb ; i++) {
 					GenerateArgument (i + 1);
-// FIXME: to uncomment when Eiffel is covariance safe, which it is not at the moment.
-//					if (Method.ParameterTypeIDs [i] != ParentMethod.ParameterTypeIDs [i]) {
-//						MethodIL.Emit (OpCodes.Castclass,
-//							Classes [Method.ParameterTypeIDs [i]].Builder);
-//					}
+					if (is_verifiable) {
+						if (Method.parameter_type_ids [i] != ParentMethod.parameter_type_ids [i]) {
+							MethodIL.Emit (OpCodes.Castclass,
+								Classes [Method.parameter_type_ids [i]].Builder);
+						}
+					}
 				}
 				MethodIL.Emit (OpCodes.Callvirt, Method.method_builder);
 				MethodIL.Emit (OpCodes.Ret);
@@ -1025,11 +1026,12 @@ feature -- Generation Structure
 					MethodIL = Override.GetILGenerator();
 					GenerateCurrent ();
 					GenerateArgument (1);
-// FIXME: to uncomment when Eiffel is covariance safe, which it is not at the moment.
-//					if (Method.ParameterTypeIDs [i] != ParentMethod.ParameterTypeIDs [i]) {
-//						MethodIL.Emit (OpCodes.Castclass,
-//							Classes [Method.ParameterTypeIDs [i]].Builder);
-//					}
+					if (is_verifiable) {
+						if (Method.parameter_type_ids [i] != ParentMethod.parameter_type_ids [i]) {
+							MethodIL.Emit (OpCodes.Castclass,
+								Classes [Method.parameter_type_ids [i]].Builder);
+						}
+					}
 					MethodIL.Emit (OpCodes.Callvirt, Method.setter_builder);
 					MethodIL.Emit (OpCodes.Ret);
 
@@ -1046,8 +1048,8 @@ feature -- Generation Structure
 		}
 	}
 
-	// Generate implementation of `internal_clone' of ANY
-	public void GenerateFeatureInternalClone (int FeatureID) {
+	// Generate implementation of `internal_duplicate' of ANY
+	public void generate_feature_internal_duplicate (int FeatureID) {
 		if (MemberwiseCloneMethod == null) {
 			MemberwiseCloneMethod = ObjectType.GetMethod ("MemberwiseClone",
 					BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |

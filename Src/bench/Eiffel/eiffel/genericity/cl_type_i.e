@@ -294,7 +294,7 @@ feature -- Status
 	has_associated_class_type: BOOLEAN is
 			-- Has `Current' an associated class type?
 		do
-			Result := base_class.types.has_type (Current)
+			Result := base_class.types.search_item (Current) /= Void
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is

@@ -48,13 +48,13 @@ feature -- Initialization
 			-- We want to create a line that moves with one point relative to the
 			-- controlled position and the other one moves over a path, defined by a positioning agent.
 			create line
-			line.set_point_a (controlled_position.get_relative_point (30, 0))
-			line.point_b.set_positioner (~line_positioner)
+			line.point_a.set_origin (controlled_position)
+			line.point_b.set_origin (my_world.point)
 			my_world.extend (line) -- The line is now a part of the world.
 
 			-- Some other properties of line are now set:
 			line.set_line_width (7)
-			line.set_foreground_color (create {EV_COLOR}.make_with_rgb (1, 1, 0))
+			line.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
 
 			-- Now we create an ellipse with one fixed point (100,5) and the other one exactly
 			-- on the controlled position. We do not use the controlled position as
@@ -80,7 +80,7 @@ feature -- Initialization
 
 			create picture
 			create pixmap
-			create f.make_open_read ("/var/sw/EiffelBLEEDING/bench/bitmaps/xpm/isepower.xpm")
+			create f.make_open_read ("c:\eiffel46\bench\bitmaps\bmp\isepower.bmp")
 			pixmap.set_with_file (f)
 			picture.set_pixmap (pixmap)
 			picture.point.set_origin (my_world.point)
@@ -100,12 +100,15 @@ feature -- Initialization
 			first_window.extend (my_device)
 			my_device.set_minimum_size (300, 300)
 
+			my_device.draw_pixmap (0, 0, pixmap)
+
 			my_device.expose_actions.extend (~on_repaint)
 			my_device.pointer_motion_actions.extend (~on_mouse_move)
 			my_device.pointer_button_press_actions.extend (~on_click)
 
 			-- Bind the world and the device and you're all set.
 			create projector.make (my_world, my_device)
+			projector.device.draw_figure_line (line)
 		end
 
 	first_window: EV_TITLED_WINDOW is

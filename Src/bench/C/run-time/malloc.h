@@ -76,10 +76,10 @@ extern "C" {
  * Generation scavenging parameters
  */
 #define GS_LIMIT		100		/* Max size for allocation in scavenge zone */
-#ifndef VXWORKS
-#define GS_ZONE_SZ		150*1024	/* Size of a scavenge zone (150K) */
+#ifdef VXWORKS
+#define GS_ZONE_SZ		2*PAGESIZE_VALUE	/* Size of a scavenge zone for VxWorks */
 #else
-#define GS_ZONE_SZ		2*PAGESIZE_VALUE	/* Size of a scavenge zone */
+#define GS_ZONE_SZ		150*1024	/* Size of a scavenge zone (150K) */
 #endif
 #define GS_FLOATMARK	(GS_ZONE_SZ * .40)	/* Leave that much free */
 #define GS_WATERMARK	(GS_ZONE_SZ - 1024)	/* Collect to be run after this */

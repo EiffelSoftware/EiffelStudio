@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<title>Reflection system specification</title>
+	</head>
+
+	<body>
+		<body background="#ffffff" text="#000000" link="#555ccc" vlink="#555ccc" alink="#555ccc">
+
+		<br><br>
+		<h2>5. Emitter.exe</h2>
+
+				<p>
+						When you use the emitter as an executable file, it generates both Eiffel classes and Xml files. But you can also use it as a .NET assembly. In that case, two features should be useful: </p>
+						<ul>
+								<li>GenerateEiffelClasses( String FileName, String PathName )</li>
+								<li>GenerateXmlFiles( String FileName, String PathName )</li>
+						</ul>
+				<br>
+
+				<eiffel_classes>
+				<h3>5.1 GenerateEiffelClasses</h3>
+
+						<p>
+								If you are familiar with the &quot;old emitter&quot;, `GenerateEiffelClasses' basically does the same thing, that is generating Eiffel classes from a .NET assembly.<br>
+								Internally, it generates an instance of `EIFFEL_ASSEMBLY' and then one of `EIFFEL_CLASS' for each type of the assembly. Then it calls `generate_eiffel_class' from `EiffelCodeGenerator' (from <a href = "./code_generator.html" target = "_parent">`ISE.CodeGenerator.dll'</a>), which actually generates the code.
+						</p>
+				<br>
+
+				<xml_files>
+				<h3>5.2 GenerateXmlFiles</h3>
+
+						<p>
+								`GenerateXmlFiles' aims at generating Xml files from assembly types. Internally, it uses all components of ISE reflection system. This section tries to describe the main interactions.
+						</p>
+						<p>
+								When you call `GenerateXmlFiles', the first step is be to call `start_assembly_storage' from <a href = "./reflection_interface.html" target = "_parent">`ISE.ReflectionInterface.dll'</a> with assembly version, culture and public key as parameter. Thisl creates the folder where Xml files are stored.<br>
+								Then the emitter generates an instance of `EIFFEL_ASSEMBLY' from current .NET assembly, and calls `generate_xml_file' from `XmlAssemblyCodeGenerator' (from <a href = "./code_generator.html" target = "_parent">`ISE.CodeGenerator.dll'</a>). This generates an assembly description Xml file in the folder previously created.<br>
+								Then the emitter generates an instance of `EIFFEL_CLASS' for each type in the assembly and calls `generate_xml_file' from `XmlTypeCodeGenerator' (from <a href = "./code_generator.html" target = "_parent">`ISE.CodeGenerator.dll'</a>). This generates Xml type description files in the assembly folder previously created.<br>
+								At last, the emitter calls `end_assembly_storage' from <a href = "./reflection_interface.html" target = "_parent">`ISE.ReflectionInterface.dll'</a> to notify the database that xml generation (for the selected assembly) is over. This adds the assembly folder name in the `index.xml' you can find in '$EIFFEL\dotnet\assemblies'.
+						</p>
+				<br>
+
+		<br><br>
+	</body>
+</html>

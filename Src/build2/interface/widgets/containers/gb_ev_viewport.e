@@ -34,16 +34,16 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		do
-			add_element_containing_integer (element, x_offset_string, objects.first.x_offset)
-			add_element_containing_integer (element, y_offset_string, objects.first.y_offset)
+			add_integer_element (element, x_offset_string, objects.first.x_offset)
+			add_integer_element (element, y_offset_string, objects.first.y_offset)
 				-- If we have no child, then we store -1, so we no not to perform any setting when
 				-- loading.
 			if objects.first.full then
-				add_element_containing_integer (element, item_width_string, objects.first.item.width)
-				add_element_containing_integer (element, item_height_string, objects.first.item.height)
+				add_integer_element (element, item_width_string, objects.first.item.width)
+				add_integer_element (element, item_height_string, objects.first.item.height)
 			else
-				add_element_containing_integer (element, item_width_string, -1)
-				add_element_containing_integer (element, item_height_string, -1)
+				add_integer_element (element, item_width_string, -1)
+				add_integer_element (element, item_height_string, -1)
 			end
 		end
 		
@@ -64,22 +64,20 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (Item_width_string)
 			if element_info /= Void then
 				if element_info.data.to_integer >= 0 then
-					set_item_width (element_info.data.to_integer)	
+					set_item_width (retrieve_and_set_integer_value (Item_width_string))	
 				end
 			end
 			element_info := full_information @ (Item_height_string)
 			if element_info /= Void then
 				if element_info.data.to_integer >= 0 then
-					set_item_height (element_info.data.to_integer)	
+					set_item_height (retrieve_and_set_integer_value (Item_height_string))	
 				end
 			end
-			element_info := full_information @ (X_offset_string)
-			if element_info /= Void then
-				set_x_offset (element_info.data.to_integer)
+			if full_information @ (X_offset_string) /= Void then
+				set_x_offset (retrieve_and_set_integer_value (X_offset_string))
 			end
-			element_info := full_information @ (Y_offset_string)
-			if element_info /= Void then
-				set_y_offset (element_info.data.to_integer)
+			if full_information @ (Y_offset_string) /= Void then
+				set_y_offset (retrieve_and_set_integer_value (Y_offset_string))
 			end			
 		end
 		

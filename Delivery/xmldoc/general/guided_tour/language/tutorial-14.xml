@@ -11,7 +11,8 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>Beyond this introduction, you will find the following two books essential to a mastery of the method and language:</paragraph>
+		<paragraph>Beyond this introduction, you will find the following two books essential to a mastery of the method and language:
+		<line_break/>
 		<list ordered="false">
 			<item>
 				<span>
@@ -19,7 +20,7 @@
 						<url>http://eiffel.com/doc/oosc/</url>
 						<label>Object-Oriented Software Construction</label>
 					</link>
-				</span>, Bertrand Meyer, Prentice Hall, 2nd edition 1997.  (Make sure to get the second edition.  ) About object technology in general; presents the method behind Eiffel.
+				</span>, Bertrand Meyer, Prentice Hall, 2nd edition 1997.  (Make sure to get the second edition.) About object technology in general; presents the method behind Eiffel.
 			</item>
 			<item>
 				<span>
@@ -30,6 +31,7 @@
 				</span>, Bertrand Meyer, Prentice Hall, 1992.  Language manual and reference.
 			</item>
 		</list>
+		</paragraph>
 		<paragraph>Numerous other books are available on Eiffel and Eiffel-related topics.  See an extensive list at 
 			<span>
 				<link>

@@ -11,18 +11,20 @@ inherit
 
 	FORMATTER
 		rename
+			execute as old_execute, 
 			format as old_format
 		redefine
 			dark_symbol, display_temp_header
 		end;
 	FORMATTER
 		redefine
-			dark_symbol, format, display_temp_header
+			dark_symbol, format, display_temp_header, execute
 		select
-			format
+			format, execute
 		end;
 	SHARED_APPLICATION_EXECUTION;
-	SHARED_FORMAT_TABLES
+	SHARED_FORMAT_TABLES;
+	CUSTOM_CALLER
 
 creation
 
@@ -36,6 +38,44 @@ feature -- Initialization
 		do
 			init (a_text_window);
 		end; -- make
+
+feature -- Execution
+
+	execute_apply_action (a_cust_tool: like associated_custom_tool) is
+			-- Action performed when apply button is activated
+		do
+			if a_cust_tool.is_first_option_selected = do_simple_format then
+				do_simple_format :=
+					not a_cust_tool.is_first_option_selected;
+				if tool.last_format.associated_command = Current then
+					tool.synchronize
+				end
+			end
+		end;
+
+	execute_ok_action (a_cust_tool: like associated_custom_tool) is
+			-- Action performed when ok button is activated
+		do
+				-- *** FIXME need to save resource
+			execute_apply_action (a_cust_tool)
+		end;
+
+	execute (arg: ANY) is
+			-- Execute the format.
+		local
+			rcw: ROUTINE_CUSTOM_W
+		do
+			if arg = button_three_action then
+				rcw := routine_custom_window (popup_parent);
+				rcw.set_window (popup_parent);
+				rcw.call (Current,
+						l_Showstops,
+						l_Non_clickable_showstops,
+						not do_simple_format)
+			else
+				old_execute (arg)
+			end
+		end
 
 feature -- Formatting
 
@@ -113,12 +153,11 @@ feature {NONE} -- Implementation
 	display_info (s: FEATURE_STONE) is
 			-- Display debug format of `stone'.
 		do
-			--if do_simple_format then
+			if do_simple_format then
 				text_window.process_text (simple_debug_context_text (s))
-			--else
-				--text_window.process_text (debug_context_text (s))
-			--end
-			-- **** FIXME make it configurable
+			else
+				text_window.process_text (debug_context_text (s))
+			end
 		end;
 	
 	display_temp_header (stone: STONE) is
@@ -127,18 +166,32 @@ feature {NONE} -- Implementation
 			tool.set_title ("Computing stop point positions...")
 		end;
 
-feature {NONE} -- Attributes
+feature {NONE} -- Access
+
+	associated_custom_tool: ROUTINE_CUSTOM_W is
+			-- Associated custom tool
+			-- (Used for type checking and system validity)
+		do
+		end;
 
 	name: STRING is
 			-- Name for he command.
 		do
-			Result := l_Showstops
+			if do_simple_format then
+				Result := l_Non_clickable_showstops
+			else
+				Result := l_Showstops
+			end
 		end;
 
 	title_part: STRING is
 			-- Part of the title.
 		do
-			Result := l_Stoppoints_of
+			if do_simple_format then
+				Result := l_Non_clickable_stoppoints_of
+			else
+				Result := l_Stoppoints_of
+			end
 		end;
 
 end -- class SHOW_BREAKPOINTS

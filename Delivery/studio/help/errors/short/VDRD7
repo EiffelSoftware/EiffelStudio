@@ -1,3 +1,0 @@
-Error: external routine redeclared into non-external or conversely.
-What to do: make sure that original and redeclared version are
-  both external or both internal. 

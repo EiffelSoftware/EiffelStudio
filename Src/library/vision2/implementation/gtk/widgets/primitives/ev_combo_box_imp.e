@@ -25,10 +25,7 @@ inherit
 		redefine
 			initialize,
 			make,
-			interface,
-			has_focus,
-			set_focus,
-			on_focus_changed
+			interface
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -38,7 +35,10 @@ inherit
 			set_composite_widget_pointer_style,
 			destroy,
 			on_key_event,
-			default_key_processing_blocked
+			default_key_processing_blocked,
+			on_focus_changed,
+			has_focus,
+			set_focus
 		redefine
 			select_callback,
 			remove_i_th,
@@ -47,9 +47,6 @@ inherit
 			make,
 			add_to_container,
 			interface,
-			has_focus,
-			set_focus,
-			on_focus_changed,
 			selected_item
 		end
 
@@ -93,30 +90,16 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to signals.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
+			Precursor {EV_TEXT_FIELD_IMP}
 
-			--| We don't call EV_TEXT_FIELD_IMP Precursor as this only
-			--| adds two extra ones to what ev_list_imp Precursor calls
-			--| already.
 			feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (
 				list_widget,
 				feature {EV_GTK_EXTERNALS}.gTK_SELECTION_BROWSE_ENUM
 			)
-			real_signal_connect (entry_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
-			real_signal_connect (entry_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
 			real_signal_connect (dropdown_window, "unmap-event", agent (App_implementation.gtk_marshal).on_combo_box_dropdown_unmapped (c_object), App_implementation.default_translate)
 		end
 		
 feature -- Status report
-
-	has_focus: BOOLEAN is
-			-- Does widget have the keyboard focus?
-		do
-			--| Shift to put bit in least significant place then take mod 2.
-			Result := ((
-				(feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (entry_widget)
-				// feature {EV_GTK_EXTERNALS}.gTK_HAS_FOCUS_ENUM) \\ 2) 
-			) = 1
-		end
 
 	rows: INTEGER is
 		 	-- Number of lines.
@@ -163,12 +146,6 @@ feature -- Status setting
 			feature {EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
-	set_focus is
-			-- Set the focus to the entry widget.
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (entry_widget)
-		end
-
 feature {EV_LIST_ITEM_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	container_widget: POINTER
@@ -207,22 +184,6 @@ feature {NONE} -- Implementation
 			
 	on_item_clicked_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE]
 			-- Intermediary key agent that is reused for list items in `add_to_container'.
-
-	on_focus_changed (a_has_focus: BOOLEAN) is
-			-- Focus for `Current' has changed'.
-		do
-			if a_has_focus then
-				top_level_window_imp.set_focus_widget (Current)
-				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)				
-				end
-			else
-				top_level_window_imp.set_focus_widget (Void)
-				if focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
-				end			
-			end
-		end
 
 	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to container.

@@ -261,14 +261,23 @@ feature {NONE} -- Implementation
 		do
 			Result ?= a_child;
 			if Result.parent /= Current then
-					-- This means that the widget could be
-					-- scrolled_text or a scrolled_list and the actual
-					-- attachment should be done to the parent widget. 
-				Result := Result.parent	
-				check
-					form_consistency: Result.parent = Current
-				end
+				-- This means that the widget could be
+				-- scrolled_text or a scrolled_list
+				-- and the actual attachment should be
+				-- done to the parent widget.
+				Result := Result.parent
+			end
+			if Result.parent /= Current then
+				-- This means that the widget could be
+				-- opt_pull and the attachment should
+				-- be done to the grandparent of the
+				-- widget.
+				Result := Result.parent
 			end	
+			check
+				form_consistency: Result.parent = Current
+			end
+
 		end;
 
 end -- class FORM_M

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Initialize button with tool command `a_cmd' and parent `a_parent'.
 			-- The action will pass `tool' to the argument of the command.
 		do
-			initialize_button (a_cmd, a_parent);
+			make_button_only (a_cmd, a_parent);
 			add_activate_action (a_cmd, a_cmd.tool);
 		end;
 
@@ -40,15 +40,8 @@ feature {NONE} -- Initialization
 			non_void_cmd: a_cmd /= Void;
 			non_void_parent: a_parent /= Void;
 		do
-			initialize_button (a_cmd, a_parent);
-			add_activate_action (a_cmd, Void);
-		end;
-
-	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
-			-- Initialize the button part of Current.
-		do
-			initialize_button (a_cmd, a_parent);
 			make_button_only (a_cmd, a_parent);
+			add_activate_action (a_cmd, Void);
 		end;
 
 	make_button_only (a_cmd: like associated_command; a_parent: MENU) is

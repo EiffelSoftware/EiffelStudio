@@ -41,6 +41,7 @@ feature -- Generation
 		local
 			file_name: STRING
 			retried: BOOLEAN
+			il_meta_data_generator: IL_META_DATA_GENERATOR
 		do
 			if not retried then
 				if System.java_generation then

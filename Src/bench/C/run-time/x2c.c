@@ -14,6 +14,7 @@
 #include "size.h"
 #include "err_msg.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 
 #ifdef I_STRING
@@ -53,9 +54,11 @@ struct parse {
 
 struct parse *locate();
 
+void	print_usage();
+
 FILE *input_file, *output_file;
 
-void main(argc, argv)
+int main(argc, argv)	/* DEC C will complain if declared as type void */
 int argc;
 char **argv;
 {
@@ -72,18 +75,56 @@ char **argv;
 	char buf[MAXLEN + 2];				/* Allow for '\0' and overflow */
 	struct parse *ps;
 	int pos;
+	char xfilename[255];
+	char cfilename[255];
+	char * suffix;
 
-	if (argc != 3){
+/* 950405/TomH	modified run string argument processing
+ *	Usage:	x2c	file.x	[file.c]
+ *		Second file name and suffixes are now optional.
+ *		If file.c is not supplied, default is to strip .x from
+ *		first file and add .c suffix.
+ *		Default suffix for first file is ".x"
+ *		If incorrect run string, usage is displayed to user.
+ */
+
+	if (( argc < 2 ) || ( argc > 3 )){
 		print_err_msg(stderr, "x2c: wrong number of arguments.\n");
+		print_usage();
 		exit (1);
 	}
+	strcpy(xfilename,argv[1]);
+	suffix = strrchr(xfilename,'.');
+	if (suffix == NULL) {
+		/* add .x if no suffix present */
+		strcat(xfilename,".x");
+	}
+	if (argc == 2) {
+		/* argc=2 means no C file name in run string */
+		strcpy(cfilename,xfilename);
+		suffix = strrchr(cfilename,'.');
+		if (suffix != NULL) {
+			/* convert .x suffix to .c */
+			*suffix = '\0';
+			strcat(cfilename,".c");
+		}
+	}
+	else	{ /* argc=3 */
+		strcpy(cfilename,argv[2]);
+	}
+	suffix = strrchr(cfilename,'.');
+	if (suffix == NULL) {
+		strcat(cfilename,".c");
+	}	/* didn't find . */
 
-	if ((input_file = fopen (argv[1], "r")) == (FILE *)0){
-		print_err_msg(stderr, "x2c: cannot open input file.\n");
+	if ((input_file = fopen (xfilename, "r")) == (FILE *)0){
+		print_err_msg(stderr, "x2c: cannot open input file %s\n",
+			xfilename);
 		exit (1);
 		}
-	if ((output_file = fopen (argv[2], "w")) == (FILE *)0){
-		print_err_msg(stderr, "x2c: cannot open output file.\n");
+	if ((output_file = fopen (cfilename, "w")) == (FILE *)0){
+		print_err_msg(stderr,"x2c: cannot open output file %s\n",
+			cfilename);
 		exit (1);
 		}
 
@@ -155,6 +196,13 @@ char **argv;
 	fclose (output_file);
 	exit(0);
 }
+
+void print_usage() {
+	printf("Usage:    x2c    xfile   [cfile]\n");
+	printf("    where        xfile is an input X file (.x suffix is optional)\n");
+	printf("    and          cfile is optional output C file.\n");
+	printf("    Default suffix for xfile is .x, default suffix for cfile is .c\n");
+}	/* print usage */
 
 struct parse *locate(name)
 char *name;

@@ -284,7 +284,7 @@ feature -- Measurement
 			positive_result: Result >= 0
 		end
 
-feature {NONE} -- Notifications
+feature -- Notifications
 
 	on_cbn_closeup is
 			-- The combo box has been closed.

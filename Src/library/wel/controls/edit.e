@@ -270,7 +270,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-feature {NONE} -- Notifications
+feature -- Notifications
 
 	on_en_change is
 			-- The user has taken an action

@@ -75,20 +75,35 @@ feature -- Show
 feature -- Details
 
 	set_exception_tag (t: STRING) is
-			-- 
+			-- Set tag and refresh display
 		do
 			tag := t
-			tag_text.set_text (tag)
-			tag_text.set_background_color ((create {EV_STOCK_COLORS}).white)
+			display_exception_tag_and_message
 		end
 
 	set_exception_message (t: STRING) is
-			-- 
+			-- Set message and refresh display
 		do
 			message := t
-			message_text.set_text (message)
-			message_text.disable_edit
+			display_exception_tag_and_message
 		end
+		
+	display_exception_tag_and_message is
+		local
+			s: STRING
+		do
+			s := ""
+			if tag /= Void then
+				s.append_string (tag)
+				s.append_string ("%N%N")
+			end
+			if message /= Void then
+				s.append_string (message)				
+			end
+			message_text.set_text (s)
+			message_text.disable_edit
+			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)			
+		end		
 
 	set_details (d: STRING) is
 			-- Add additional details

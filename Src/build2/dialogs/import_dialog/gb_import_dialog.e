@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-		--	change_list.disable_edit
 			change_list.set_background_color ((create {EV_STOCK_COLORS}).white)
 			set_default_push_button (ok_button)
 		end

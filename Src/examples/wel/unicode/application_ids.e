@@ -3,16 +3,12 @@ class
 
 feature -- Access
 
-	Id_imeoptions_conversionmode_eudc_constant: INTEGER is 40007
-	Idalphanumeric_constant: INTEGER is 40004
-	Id_imeoptions_conversionmode_hanja_constant: INTEGER is 40009
-	Idsoftkeyboard_constant: INTEGER is 40005
-	Idshapehalf_constant: INTEGER is 40002
-	Id_imeoptions_conversionmode_symbol_constant: INTEGER is 40008
-	Idmainmenu_constant: INTEGER is 101
-	Id_imeoptions_conversionmode_noconversion_constant: INTEGER is 40006
-	Idnative_constant: INTEGER is 40003
-	Idshapefull_constant: INTEGER is 40001
+	Idr_menu1_constant: INTEGER is 101
+	Idnative_constant: INTEGER is 40007
+	Idshapehalf_constant: INTEGER is 40003
+	Idsoftkeyboard_constant: INTEGER is 40001
+	Idshapefull_constant: INTEGER is 40004
+	Idalphanumeric_constant: INTEGER is 40008
 
 end -- class APPLICATION_IDS
 

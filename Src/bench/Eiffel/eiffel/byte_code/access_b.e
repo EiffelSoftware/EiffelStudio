@@ -326,7 +326,7 @@ feature
 				generate_access;
 				generated_file.putchar (';');
 				generated_file.new_line;
-				if System.Concurrent_Eiffel then reset_added_gc_hooks end;
+				if System.has_separate then reset_added_gc_hooks end;
 			end;
 		end;
 

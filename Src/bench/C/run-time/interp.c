@@ -4405,6 +4405,7 @@ rt_private uint32 eif_expression_type (uint32 first, uint32 second)
 rt_private void eif_interp_gt(struct item *f, struct item *s) {
 	switch(f->type & SK_HEAD) {
 	case SK_CHAR: f->it_char = f->it_char > s->it_char; break;
+	case SK_WCHAR: f->it_char = f->it_wchar > s->it_wchar; break;
 	case SK_INT8:
 		switch (s->type & SK_HEAD) {
 		case SK_INT8: f->it_char = f->it_int8 > s->it_int8; break;
@@ -4479,6 +4480,7 @@ rt_private void eif_interp_gt(struct item *f, struct item *s) {
 rt_private void eif_interp_lt(struct item *f, struct item *s) {
 	switch(f->type & SK_HEAD) {
 	case SK_CHAR: f->it_char = f->it_char < s->it_char; break;
+	case SK_WCHAR: f->it_char = f->it_wchar < s->it_wchar; break;
 	case SK_INT8:
 		switch (s->type & SK_HEAD) {
 		case SK_INT8: f->it_char = f->it_int8 < s->it_int8; break;
@@ -4554,6 +4556,7 @@ rt_private void eif_interp_eq (struct item *f, struct item *s) {
 	switch(f->type & SK_HEAD) {
 	case SK_BOOL:
 	case SK_CHAR: f->it_char = f->it_char == s->it_char; break;
+	case SK_WCHAR: f->it_char = f->it_wchar == s->it_wchar; break;
 	case SK_INT8:
 		switch (s->type & SK_HEAD) {
 		case SK_INT8: f->it_char = f->it_int8 == s->it_int8; break;
@@ -4678,6 +4681,7 @@ rt_private void eif_interp_min_max (int code)
 		case BC_MAX:
 			switch(first->type & SK_HEAD) {
 				case SK_CHAR: first->it_char = (EIF_CHARACTER) EIF_MAX(first->it_char, second->it_char); break;
+				case SK_WCHAR: first->it_wchar = (EIF_CHARACTER) EIF_MAX(first->it_wchar, second->it_wchar); break;
 				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) EIF_MAX(first->it_int8, second->it_int8); break;
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MAX(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MAX(first->it_int32, second->it_int32); break;
@@ -4690,6 +4694,7 @@ rt_private void eif_interp_min_max (int code)
 		case BC_MIN:
 			switch(first->type & SK_HEAD) {
 				case SK_CHAR: first->it_char = (EIF_CHARACTER) EIF_MIN(first->it_char, second->it_char); break;
+				case SK_WCHAR: first->it_wchar = (EIF_CHARACTER) EIF_MIN(first->it_wchar, second->it_wchar); break;
 				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) EIF_MIN(first->it_int8, second->it_int8); break;
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MIN(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MIN(first->it_int32, second->it_int32); break;

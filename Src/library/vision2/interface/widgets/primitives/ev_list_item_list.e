@@ -121,35 +121,6 @@ feature {EV_ANY_I, EV_LIST_ITEM_LIST} -- Implementation
 	implementation: EV_LIST_ITEM_LIST_I
 			-- Responsible for interaction with the native graphics toolkit.
 
-feature -- Obsolete
-	
-	clear_selection is
-		obsolete
-			"Use remove_selection instead"
-		do
-			remove_selection
-		end
-
-	select_item (an_index: INTEGER) is
-			-- Select item at `an_index'.
-		obsolete
-			"Use i_th (an_index).enable_select"
-		require
-			index_within_range: an_index > 0 and an_index <= count
-		do
-			i_th (an_index).enable_select
-		end
-
-	deselect_item (an_index: INTEGER) is
-			-- Deselect item at `an_index'.
-		obsolete
-			"Use i_th (an_index).disable_select"
-		require
-			index_within_range: an_index > 0 and an_index <= count
-		do
-			i_th (an_index).disable_select
-		end
-
 end -- class EV_LIST_ITEM_LIST
 
 --!-----------------------------------------------------------------------------

@@ -9,16 +9,6 @@ indexing
 
 class
 	EV_CUSTOM_EVENT_HANDLER [G -> HASHABLE]
-creation
-	make
-feature {NONE} -- Initialisation
-
-	make (n: INTEGER) is
-			-- Create the event handler with an estimate
-			-- of `n' event entries.
-		do
-			create event_table.make (n)
-		end
 
 feature -- Access
 
@@ -26,10 +16,13 @@ feature -- Access
 			-- Does the object has at least one command on the 
 			-- event given by `event_key'.
 		do
-			Result := event_table.has (event_key)
+			if event_table /= Void then
+				Result := event_table.has (event_key)
+			else
+				Result := False
+			end
 		end
 
-	
 feature -- Element Change
 
 	add_command (event_key: G; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -41,15 +34,15 @@ feature -- Element Change
 			list: DYNAMIC_LIST [EV_INTERNAL_COMMAND]
 			internal_command: EV_INTERNAL_COMMAND
 		do
-			if
-				event_table.has (event_key)
-			then
-				list := event_table.item(event_key)
+			if event_table = Void then
+				create event_table.make (1)
+			end
+			if event_table.has (event_key) then
+				list := event_table.item (event_key)
 			else
 				create {LINKED_LIST [EV_INTERNAL_COMMAND]} list.make
 				event_table.put (list, event_key)
 			end
-		
 			create internal_command.make (cmd, arg)
 			list.extend (internal_command)
 		ensure
@@ -62,7 +55,9 @@ feature -- Removal
 			-- Remove all the commands associated with
 			-- the event `event_key'. 
 		do
-			event_table.remove (event_key)
+			if event_table /= Void then
+				event_table.remove (event_key)
+			end
 		end
 
 feature -- Basic operation
@@ -74,18 +69,11 @@ feature -- Basic operation
 			list: DYNAMIC_LIST [EV_INTERNAL_COMMAND]
 			i: INTEGER
 		do
-					print ("executing ")
-					print (event_key.out)
-					print ("%N")
-			if
-				has_command (event_key)		
-			then
+			if has_command (event_key) then
 				list := event_table.item (event_key)
-
 				check
 					list_not_void: list /= Void
 				end
-				
 				from
 					list.start
 				until
@@ -95,13 +83,11 @@ feature -- Basic operation
 					list.forth
 				end
 			end
-						
 		end
 	
 feature {NONE} -- Implementation
 
 	event_table: HASH_TABLE [DYNAMIC_LIST [EV_INTERNAL_COMMAND], G]
-	
 
 end -- class EV_CUSTOM_EVENT_HANDLER
 

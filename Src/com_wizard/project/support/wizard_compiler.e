@@ -151,19 +151,25 @@ feature -- Basic Operations
 	compile_iid is
 			-- Compile iid C file.
 		do
-			compile_file (Generated_iid_file_name)
+			if (create {RAW_FILE}.make (Generated_iid_file_name)).exists then
+				compile_file (Generated_iid_file_name)
+			end
 		end
 	
 	compile_ps is
 			-- Compile proxy/stub C file.
 		do
-			compile_file (Generated_ps_file_name)
+			if (create {RAW_FILE}.make (Generated_ps_file_name)).exists then
+				compile_file (Generated_ps_file_name)
+			end
 		end
 
 	compile_data is
 			-- Compile dlldata C file.
 		do
-			compile_file (Generated_dlldata_file_name)
+			if (create {RAW_FILE}.make (Generated_dlldata_file_name)).exists then
+				compile_file (Generated_dlldata_file_name)
+			end
 		end
 	
 	link is
@@ -311,7 +317,6 @@ feature {NONE} -- Implementation
 			-- Proxy/Stub fil name
 		once
 			Result := environment.destination_folder.twin
-			Result.append_character (Directory_separator)
 			Result.append (environment.project_name)
 			Result.append ("_ps.dll")
 		end
@@ -366,25 +371,35 @@ feature {NONE} -- Implementation
 			Result.append (" /nologo ")
 			Result.append (" /out:%"")
 			Result.append (Proxy_stub_file_name)
-			Result.append ("%" /def:%"")
-			Result.append (Def_file_name.twin)
 			Result.append ("%"")
-			l_string := environment.destination_folder.twin
-			l_string.append (c_to_obj (Generated_iid_file_name))
-			Result.append (" %"")
-			Result.append (l_string)
-			Result.append ("%"")
-			l_string := environment.destination_folder.twin
-			l_string.append_character (Directory_separator)
-			l_string.append (c_to_obj (Generated_ps_file_name))
-			Result.append (" %"")
-			Result.append (l_string)
-			Result.append ("%"")
-			l_string := environment.destination_folder.twin
-			l_string.append (c_to_obj (Generated_dlldata_file_name))
-			Result.append (" %"")
-			Result.append (l_string)
-			Result.append ("%" ")
+			if (create {RAW_FILE}.make (environment.destination_folder + Generated_dlldata_file_name)).exists then
+				Result.append (" /def:%"")
+				Result.append (Def_file_name.twin)
+				Result.append ("%"")
+			end
+			if (create {RAW_FILE}.make (environment.destination_folder + Generated_iid_file_name)).exists then
+				l_string := environment.destination_folder.twin
+				l_string.append (c_to_obj (Generated_iid_file_name))
+				Result.append (" %"")
+				Result.append (l_string)
+				Result.append ("%"")
+			end
+			if (create {RAW_FILE}.make (environment.destination_folder + Generated_ps_file_name)).exists then
+				l_string := environment.destination_folder.twin
+				l_string.append_character (Directory_separator)
+				l_string.append (c_to_obj (Generated_ps_file_name))
+				Result.append (" %"")
+				Result.append (l_string)
+				Result.append ("%"")
+			end
+			if (create {RAW_FILE}.make (environment.destination_folder + Generated_dlldata_file_name)).exists then
+				l_string := environment.destination_folder.twin
+				l_string.append (c_to_obj (Generated_dlldata_file_name))
+				Result.append (" %"")
+				Result.append (l_string)
+				Result.append ("%"")
+			end
+			Result.append (" ")
 			Result.append (Rpc_library)
 		end
 

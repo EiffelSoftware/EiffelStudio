@@ -8,10 +8,6 @@ class
 	
 inherit
 	FEATURE_B
-		rename
-			init as make
-		export
-			{NONE} make
 		redefine
 			is_any_feature, generate_il_any_call
 		end
@@ -53,7 +49,7 @@ feature {NONE} -- IL code generation
 				feature {PREDEFINED_NAMES}.standard_equal_name_id,
 				feature {PREDEFINED_NAMES}.standard_is_equal_name_id
 			then
-				generate_frozen_boolean_routine (target_type)
+				generate_frozen_boolean_routine
 
 			when feature {PREDEFINED_NAMES}.default_name_id then
 				generate_default (target_type)
@@ -76,34 +72,34 @@ feature {NONE} -- IL code generation
 				feature {PREDEFINED_NAMES}.out_name_id,
 				feature {PREDEFINED_NAMES}.tagged_out_name_id
 			then
-				generate_string_routine (written_type, target_type)
+				generate_string_routine (written_type)
 
 			when
 				feature {PREDEFINED_NAMES}.clone_name_id,
 				feature {PREDEFINED_NAMES}.deep_clone_name_id,
 				feature {PREDEFINED_NAMES}.standard_clone_name_id
 			then
-				generate_clone_routine (target_type)
+				generate_clone_routine (l_return_type)
 
 			when
 				feature {PREDEFINED_NAMES}.copy_name_id,
 				feature {PREDEFINED_NAMES}.deep_copy_name_id,
 				feature {PREDEFINED_NAMES}.standard_copy_name_id
 			then
-				generate_copy_routine (target_type)
+				generate_copy_routine
 
 			when
 				feature {PREDEFINED_NAMES}.deep_twin_name_id,
 				feature {PREDEFINED_NAMES}.standard_twin_name_id,
 				feature {PREDEFINED_NAMES}.twin_name_id
 			then
-				generate_twin_routine (target_type)
+				generate_twin_routine (l_return_type)
 
 			when
 				feature {PREDEFINED_NAMES}.equal_name_id,
 				feature {PREDEFINED_NAMES}.is_equal_name_id
 			then
-				generate_equal_routine (target_type)
+				generate_equal_routine
 
 			when
 				feature {PREDEFINED_NAMES}.default_create_name_id,
@@ -140,12 +136,11 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_frozen_boolean_routine (target_type: TYPE_I) is
+	generate_frozen_boolean_routine is
 			-- Generate inlined call to routine of ANY that are completely frozen (that is to
 			-- say their definition is frozen and they don't call non-frozen routine in their
 			-- definition if ANY) and that returns a boolean value.
 		require
-			target_type_not_void: target_type /= Void
 			valid_feature_name:
 				feature_name_id = feature {PREDEFINED_NAMES}.conforms_to_name_id or
 				feature_name_id = feature {PREDEFINED_NAMES}.deep_equal_name_id or
@@ -186,10 +181,10 @@ feature {NONE} -- IL code generation
 			l_extension.generate_call (False)
 		end
 
-	generate_clone_routine (target_type: TYPE_I) is
+	generate_clone_routine (a_result_type: TYPE_I) is
 			-- Generate inlined call to xx_clone' routines of ANY.
 		require
-			target_type_not_void: target_type /= Void
+			a_result_type_not_void: a_result_type /= Void
 			valid_feature_name:
 				feature_name_id = feature {PREDEFINED_NAMES}.clone_name_id or
 				feature_name_id = feature {PREDEFINED_NAMES}.deep_clone_name_id or
@@ -215,13 +210,12 @@ feature {NONE} -- IL code generation
 			l_extension.generate_call (False)
 
 				-- Cast result back to proper type
-			il_generator.generate_check_cast (Void, target_type)
+			il_generator.generate_check_cast (Void, a_result_type)
 		end
 
-	generate_copy_routine (target_type: TYPE_I) is
+	generate_copy_routine is
 			-- Generate inlined call to xx_copy' routines of ANY.
 		require
-			target_type_not_void: target_type /= Void
 			valid_feature_name:
 				feature_name_id = feature {PREDEFINED_NAMES}.copy_name_id or
 				feature_name_id = feature {PREDEFINED_NAMES}.deep_copy_name_id or
@@ -321,10 +315,9 @@ feature {NONE} -- IL code generation
 			generate_call_on_void_target (target_type, False)
 		end
 
-	generate_equal_routine (target_type: TYPE_I) is
+	generate_equal_routine is
 			-- Generate inlined call to `equal' and `is_equal' routines of ANY.
 		require
-			target_type_not_void: target_type /= Void
 			valid_feature_name:
 				feature_name_id = feature {PREDEFINED_NAMES}.equal_name_id or
 				feature_name_id = feature {PREDEFINED_NAMES}.is_equal_name_id
@@ -395,12 +388,11 @@ feature {NONE} -- IL code generation
 			generate_il_normal_call (written_type, True)
 		end
 		
-	generate_string_routine (written_type, target_type: TYPE_I) is
+	generate_string_routine (written_type: TYPE_I) is
 			-- Generate inlined call to routines of ANY returning a STRING object:
 			-- `generator', `generating_type', `out' and `tagged_out'.
 		require
 			written_type_not_void: written_type /= Void
-			target_type_not_void: target_type /= Void
 			valid_feature_name:
 				feature_name_id = feature {PREDEFINED_NAMES}.generating_type_name_id or
 				feature_name_id = feature {PREDEFINED_NAMES}.generator_name_id or
@@ -452,10 +444,10 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_twin_routine (target_type: TYPE_I) is
+	generate_twin_routine (a_result_type: TYPE_I) is
 			-- Generate inlined call to xx_twin' routines of ANY.
 		require
-			target_type_not_void: target_type /= Void
+			a_result_type_not_void: a_result_type /= Void
 			valid_feature_name:
 				feature_name_id = feature {PREDEFINED_NAMES}.twin_name_id or
 				feature_name_id = feature {PREDEFINED_NAMES}.deep_twin_name_id or
@@ -481,7 +473,7 @@ feature {NONE} -- IL code generation
 			l_extension.generate_call (False)
 
 				-- Cast result back to proper type
-			il_generator.generate_check_cast (Void, target_type)
+			il_generator.generate_check_cast (Void, a_result_type)
 		end
 
 feature {NONE} -- Convenience

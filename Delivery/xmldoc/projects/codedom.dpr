@@ -1,6 +1,6 @@
 <project>
 	<project_name>ASP.NET Enabler Documentation</project_name>
-	<root_directory>$DOCUMENT_DIR/xmldoc/technologies/codedom</root_directory>
+	<root_directory>$DOCUMENT_DIR/xmldoc</root_directory>
 	<schema>$EIFFEL_SRC\Documentation Builder\resources\xml\schema\document.xsd</schema>
 	<html_css>$DOCUMENT_DIR/xmldoc/technologies/codedom/default.css</html_css>
 	<header_override>True</header_override>

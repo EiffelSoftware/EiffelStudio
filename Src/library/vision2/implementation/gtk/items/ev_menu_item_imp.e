@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box
+			real_text := ""
 			{EV_ITEM_IMP} Precursor
 		end
 		
@@ -119,7 +120,7 @@ feature -- Element change
 	remove_text is
 			-- Assign `Void' to `text'.
 		do
-			real_text := Void
+			real_text := ""
 			C.gtk_label_set_text (text_label, NULL)
 			C.gtk_widget_hide (text_label)
 		end

@@ -31,9 +31,7 @@ feature -- Access
 	text_length: INTEGER is
 			-- Length of the text in the widget.
 		do
-			if text /= Void then
-				Result := text.count
-			end
+			Result := text.count
 		end
 
 feature -- Status report

@@ -147,9 +147,8 @@ feature -- Access
 			p := C.gtk_frame_struct_label (container_widget)
 			if p /= NULL then
 				create Result.make_from_c (p)
-				if Result.count = 0 then
-					Result := Void
-				end
+			else
+				create Result.make (0)
 			end
 		end
 

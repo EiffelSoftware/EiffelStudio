@@ -1,11 +1,11 @@
 indexing
 
 	description:
-		"Formatter for non-integral numbers";
+		"Formatter for non-integral numbers"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: format_double;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class FORMAT_DOUBLE
@@ -22,14 +22,14 @@ inherit
 			comma_separate,
 			underscore_separate,
 			remove_separator
-		end;
+		end
 
 	DOUBLE_MATH
 		export {NONE}
 			all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Access
 
-	after_decimal_separate : BOOLEAN
+	after_decimal_separate: BOOLEAN
 			-- Use separators after the decimal?
 
 	decimals: INTEGER
@@ -85,7 +85,7 @@ feature -- Status setting
 			decimal = ','
 		end
 
-	set_decimals (d :INTEGER) is
+	set_decimals (d: INTEGER) is
 			-- `d' decimals to be displayed.
 		require
 			d <= width
@@ -156,10 +156,10 @@ feature -- Status setting
 
 feature -- Conversion
 
-	formatted (d : DOUBLE): STRING is
+	formatted (d: DOUBLE): STRING is
 			-- Format `d'.
 		local
-			sign : INTEGER
+			sign: INTEGER
 			integral, fraction: DOUBLE
 			ints, fracs: STRING
 			value: DOUBLE
@@ -172,15 +172,15 @@ feature -- Conversion
 				value := -value
 			end
 
-			value := value + 5*10^(-decimals -1)
+			value := value + 5 * 10 ^(- decimals - 1)
 
 			integral := floor (value)
-			fraction := floor ((value - integral) * 10^(decimals+1))
+			fraction := floor ((value - integral) * 10 ^(decimals + 1))
 
 			if not no_separator then
 				ints := split_integral (integral.out)
 				if after_decimal_separate then
-					fracs := separate_fraction (pad_fraction(fraction))
+					fracs := separate_fraction (pad_fraction (fraction))
 				else
 					fracs := pad_fraction (fraction)
 				end
@@ -188,17 +188,19 @@ feature -- Conversion
 				ints := clone (integral.out)
 				fracs := pad_fraction (fraction)
 			end
-			!!Result.make (width)
+			create Result.make (width)
 			if integral /= 0 or else not zero_not_shown then
 				Result.append (ints)
 			end
-			Result.extend (decimal)
-			if decimals > 0 then
-				Result.append (fracs)
+			if not Result.has ('e') then
+				Result.extend (decimal)
+				if decimals > 0 then
+					Result.append (fracs)
+				end
+				if not ignore_sign then
+					Result := process_sign (Result, sign)
+				end
 			end
-			if not ignore_sign then
-				Result := process_sign (Result, sign)
-			 end
 			if justification /= No_justification and then Result.count < width then
 				Result := justify (Result)
 			end
@@ -228,7 +230,7 @@ feature {NONE} -- Implementation
 			Result.count = decimals
 		end
 
-	separate_fraction (s : STRING): STRING is
+	separate_fraction (s: STRING): STRING is
 			-- Apply separators to the fraction.
 		require
 			efficiency: separator /= '%U'
@@ -237,7 +239,7 @@ feature {NONE} -- Implementation
 		do
 			from
 				count := 1
-				!!Result.make (width)
+				create Result.make (width)
 			until
 				count > s.count - 3
 			loop
@@ -264,25 +266,39 @@ feature {NONE} -- Implementation
 invariant
 	separate_all: no_separator implies not after_decimal_separate
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class FORMAT_DOUBLE
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

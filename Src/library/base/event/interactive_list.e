@@ -1,7 +1,8 @@
 indexing
-	description:
-		"Sequential, one-way linked lists that call add/remove features %N%
-		%when an item is removed or added."
+	description: "[
+		Sequential, one-way linked lists that call add/remove features
+		when an item is removed or added.
+		]"
 	status: "See notice at end of class"
 	keywords: "event, linked, list"
 	date: "$Date$"
@@ -59,7 +60,7 @@ feature -- Element Change
 			-- Do not move cursor.
 		do
 			in_operation := True
-			{LINKED_LIST} Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			in_operation := False
 
 			added_item (v)
@@ -70,7 +71,7 @@ feature -- Element Change
 			-- Do not move cursor.
 		do
 			in_operation := True
-			{LINKED_LIST} Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			in_operation := False
 
 			added_item (v)
@@ -81,7 +82,7 @@ feature -- Element Change
 			-- Do not move cursor.
 		do
 			in_operation := True
-			{LINKED_LIST} Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			in_operation := False
 
 			added_item (v)
@@ -92,7 +93,7 @@ feature -- Element Change
 			-- Do not move cursor.
 		do
 			in_operation := True
-			{LINKED_LIST} Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			in_operation := False
 
 			added_item (v)
@@ -106,7 +107,7 @@ feature -- Element Change
 			active_item := active.item
 
 			in_operation := True
-			Precursor (v)
+			Precursor {LINKED_LIST} (v)
 			in_operation := False
 
 			removed_item (active_item)
@@ -123,7 +124,7 @@ feature -- Element Change
 			active_item := active.item
 
 			in_operation := True
-			Precursor
+			Precursor {LINKED_LIST}
 			in_operation := False
 
 			removed_item (active_item)
@@ -142,7 +143,7 @@ feature -- Element Change
 			end
 
 			in_operation := True
-			Precursor
+			Precursor {LINKED_LIST}
 			in_operation := False
 
 			removed_item (item_removed)
@@ -153,7 +154,7 @@ feature -- Element Change
 			-- position. Do not move cursor. Empty `other'
 		do
 			in_operation := True
-			Precursor (other)
+			Precursor {LINKED_LIST} (other)
 			in_operation := False
 
 			add_all (other)
@@ -164,7 +165,7 @@ feature -- Element Change
 			-- position. Do not move cursor. Empty `other'
 		do
 			in_operation := True
-			Precursor (other)
+			Precursor {LINKED_LIST} (other)
 			in_operation := False
 
 			add_all (other)
@@ -177,9 +178,9 @@ feature -- Removal
 		local
 			l: like Current
 		do
-			l := clone (Current)
+			l := standard_clone (Current)
 
-			Precursor
+			Precursor {LINKED_LIST}
 
 			from
 				l.start
@@ -192,7 +193,7 @@ feature -- Removal
 			end
 		end
 
-feature  {LINKED_LIST} -- Implementation
+feature {LINKED_LIST} -- Implementation
 
 	new_cell (v: like item): like first_element is
 			-- Create new cell with `v'.
@@ -271,23 +272,37 @@ feature {NONE} -- Contract support
 invariant
 	consistency_count_equal_to_count: consistency_count = count
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class ACTIVE_LIST
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------

@@ -3,72 +3,77 @@ indexing
 	description:
 		"Hash tables, used to store items identified by hashable keys"
 
-	instructions:
-		"Several procedures are provided for inserting an item %
-		%with a given key. %
-		%%
-		%Here is how to choose between them: %
-		%%
-		%	- Use `put' if you want to do an insertion only if %
-		%	  there was no item with the given key, doing nothing %
-		%	  otherwise. (You can find out on return if there was one, %
-		%	  and what it was.) %
-		%%
-		%	- Use `force' if you always want to insert the item; %
-		%	  if there was one for the given key it will be removed, %
-		%	  (and you can find out on return what it was). %
-		%%
-		%	- Use `extend' if you are sure there is no item with %
-		%	  the given key, enabling faster insertion (but %
-		%	  unpredictable behavior if this assumption is not true). %
-		%%
-		%	- Use `replace' if you want to replace an already present %
-		%	  item with the given key, and do nothing if there is none. %
-		%%
-		%In addition you can use `replace_key' to change the key of an %
-		%already present item, identified by its previous key, or %
-		%do nothing if there is nothing for that previous key. %
-		%You can find out on return."
+	instructions: "[
+		Several procedures are provided for inserting an item
+		with a given key.
+		
+		Here is how to choose between them:
+		
+			- Use `put' if you want to do an insertion only if
+			  there was no item with the given key, doing nothing
+			  otherwise. (You can find out on return if there was one,
+			  and what it was.)
+		
+			- Use `force' if you always want to insert the item;
+			  if there was one for the given key it will be removed,
+			  (and you can find out on return what it was).
+		
+			- Use `extend' if you are sure there is no item with
+			  the given key, enabling faster insertion (but
+			  unpredictable behavior if this assumption is not true).
+		
+			- Use `replace' if you want to replace an already present
+			  item with the given key, and do nothing if there is none.
+		
+		In addition you can use `replace_key' to change the key of an
+		already present item, identified by its previous key, or
+		do nothing if there is nothing for that previous key.
+		You can find out on return.
+		]"
 
-	instructions:
-		"To find out whether a key appears in the table, use `has'. %
-		%To find out the item, if any, associated with a certain key, %
-		%use `item'. %
-		%%
-		%Both of these routines perform a search. If you need %
-		%both pieces of information (does a key appear? And, if so, %
-		%what is the associated item?), you can avoid performing %
-		%two redundant traversals by using instead the combination %
-		%of `search', `found' and `found_item' as follows:  %
-		%%
-		%	your_table.search (your_key) %
-		%	if your_table.found then %
-		%		what_you_where_looking_for := your_table.found_item %
-		%		... Do whatever is needed to `what_you_were_looking_for' ...  %
-		%	else %
-		%		... No item was present for `your_key' ... %
-		%	end"
+	instructions: "[
+		To find out whether a key appears in the table, use `has'.
+		To find out the item, if any, associated with a certain key,
+		use `item'.
+		
+		Both of these routines perform a search. If you need
+		both pieces of information (does a key appear? And, if so,
+		what is the associated item?), you can avoid performing
+		two redundant traversals by using instead the combination
+		of `search', `found' and `found_item' as follows: 
+		
+			your_table.search (your_key)
+			if your_table.found then
+				what_you_where_looking_for := your_table.found_item
+				... Do whatever is needed to `what_you_were_looking_for' ... 
+			else
+				... No item was present for `your_key' ...
+			end
+		]"
 
-	compatibility:
-		"This version of the class accepts any value of type H as key. %
-		%Previous versions did not accept the default value as a key; %
-		%this restriction no longer applies. Most clients of the old version %
-		%should work correctly with this one; a client that explicitly relied %
-		%on the default value not being hashable should use the old version %
-		%available in the EiffelBase 3.3 compatibility cluster. %
-		%%
-		%Also, `force' now sets either `found' or `not_found'. %
-		%(Previously it would always set `inserted'.)"
+	compatibility: "[
+		This version of the class accepts any value of type H as key.
+		Previous versions did not accept the default value as a key;
+		this restriction no longer applies. Most clients of the old version
+		should work correctly with this one; a client that explicitly relied
+		on the default value not being hashable should use the old version
+		available in the EiffelBase 3.3 compatibility cluster.
+		
+		Also, `force' now sets either `found' or `not_found'.
+		(Previously it would always set `inserted'.)
+		]"
 
-	storable_compatibility:
-		"Persistent instances of the old version of this class will not be %
-		% retrievable with the present version."
+	storable_compatibility: "[
+		Persistent instances of the old version of this class will not be
+		 retrievable with the present version.
+		]"
 
-	warning:
-		"Modifying an object used as a key by an item present in a table will %
-		%cause incorrect behavior. If you will be modifying key objects, %
-		%pass a clone, not the object itself, as key argument to %
-		%`put' and `replace_key'."
+	warning: "[
+		Modifying an object used as a key by an item present in a table will
+		cause incorrect behavior. If you will be modifying key objects,
+		pass a clone, not the object itself, as key argument to
+		`put' and `replace_key'.
+		]"
 
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -94,7 +99,7 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 			copy, is_equal, clear_all, has_item
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -106,16 +111,16 @@ feature -- Initialization
 		local
 			clever: PRIMES
 		do
-			!! clever
+			create clever
 			capacity := n.Max (Minimum_capacity)
 			capacity := (capacity * 100) // Initial_occupation + 1
 			capacity := clever.higher_prime (capacity)
-			!! content.make (0, capacity)
-			!! keys.make (0, capacity)
+			create content.make (0, capacity)
+			create keys.make (0, capacity)
 					-- Position `capacity' ignored by hash sequences,
 					-- used to store value for default key.
 
-			!! deleted_marks.make (0, capacity - 1)
+			create deleted_marks.make (0, capacity - 1)
 			iteration_position := capacity + 1
 		ensure
 			breathing_space: n * 100 < capacity * Initial_occupation
@@ -136,7 +141,7 @@ feature -- Initialization
 		do
 				-- (Could also use iteration facilities.)
 			from
-				!! new_table.make (count.max (n))
+				create new_table.make (count.max (n))
 			until
 				i = capacity
 			loop
@@ -243,7 +248,7 @@ feature -- Access
 		do
 			old_iteration_position := iteration_position
 			from
-				!! Result.make (1, count)
+				create Result.make (1, count)
 				start
 			until
 				off
@@ -278,7 +283,7 @@ feature -- Access
 	cursor: CURSOR is
 			-- Current cursor position
 		do
-			!HASH_TABLE_CURSOR! Result.make (iteration_position)
+			create {HASH_TABLE_CURSOR} Result.make (iteration_position)
 		ensure
 			cursor_not_void: Result /= Void
 		end
@@ -543,7 +548,7 @@ feature -- Element change
 			old_item_if_conflict: conflict implies (found_item = old (item (key)))
 			default_property:
 				has_default =
-					((inserted and (key = computed_default_key))  or
+					((inserted and (key = computed_default_key)) or
 						((conflict or (key /= computed_default_key))
 							and (old has_default)))
 		end
@@ -585,8 +590,8 @@ feature -- Element change
 			insertion_done: item (key) = new
 			now_present: has (key)
 			found_or_not_found: found or not_found
-			not_found_iff_was_not_present: not_found = not (old has (key))
-			same_count_or_one_more:  (count = old count) or (count = old count + 1)
+			not_found_if_was_not_present: not_found = not (old has (key))
+			same_count_or_one_more: (count = old count) or (count = old count + 1)
 			same_slot_count_or_one_more_unless_reallocated:
 				(used_slot_count = old used_slot_count) or
 				(used_slot_count = old used_slot_count + 1) or
@@ -618,7 +623,7 @@ feature -- Element change
 				add_space
 				search_for_insertion (key)
 			end
-			if deleted (position) then
+			if position < capacity and then deleted (position) then
 				set_not_deleted (position)
 			else
 				used_slot_count := used_slot_count + 1
@@ -784,12 +789,11 @@ feature -- Conversion
 	linear_representation: ARRAYED_LIST [G] is
 			-- Representation as a linear structure
 		local
-			i: INTEGER
 			old_iteration_position: INTEGER
 		do
 			old_iteration_position := iteration_position
 			from
-				!! Result.make (count)
+				create Result.make (count)
 				start
 			until
 				off
@@ -879,7 +883,7 @@ feature {NONE} -- Implementation
 	Extra_space: INTEGER is 50
 			-- Percentage of extra positions when resizing
 
-	Impossible_position: INTEGER is -1
+	Impossible_position: INTEGER is - 1
 			-- Position outside the array indices
 
 	used_slot_count: INTEGER
@@ -904,7 +908,7 @@ feature {NONE} -- Implementation
 			Result := (has_default and i = capacity) or else (i < capacity and then occupied (i))
 		ensure
 			normal_key: (i < capacity) implies (occupied (i) implies Result)
-			default_key: (i= capacity) implies (Result = has_default)
+			default_key: (i = capacity) implies (Result = has_default)
 		end
 
 
@@ -966,7 +970,7 @@ feature {NONE} -- Implementation
 	default_key_value: G is
 			-- Value associated with the default key, if any
 		require
-			has_default
+			has_default: has_default
 		do
 			Result := content.item (capacity)
 		end
@@ -1239,7 +1243,7 @@ feature {NONE} -- Implementation
 			breathing_space: count * 100 < capacity * Initial_occupation
 		end
 
-	Minimum_capacity : INTEGER is 5
+	Minimum_capacity: INTEGER is 5
 
 feature {NONE} -- Inapplicable
 
@@ -1268,9 +1272,9 @@ invariant
 	special_status: special_status =
 		(conflict or inserted or replaced or removed or found or not_found)
 
-	max_occupation_meaningful: (Max_occupation > 0) and (Max_Occupation < 100)
+	max_occupation_meaningful: (Max_occupation > 0) and (Max_occupation < 100)
 	initial_occupation_meaningful: (Initial_occupation > 0) and
-							(Initial_Occupation < 100)
+							(Initial_occupation < 100)
 	sized_generously_enough: Initial_occupation < Max_occupation
 	count_big_enough: 0 <= count
 	count_small_enough: count <= capacity
@@ -1280,24 +1284,38 @@ invariant
 	slot_count_small_enough: used_slot_count <= capacity
 	extra_space_non_negative: Extra_space >= 0
 							
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class HASH_TABLE
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

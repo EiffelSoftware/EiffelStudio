@@ -1,15 +1,15 @@
 indexing
 
 	description:
-		"Lists implemented by resizable arrays";
+		"Lists implemented by resizable arrays"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: sequence;
 	representation: array;
 	access: index, cursor, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class ARRAYED_LIST [G] inherit
@@ -23,39 +23,41 @@ class ARRAYED_LIST [G] inherit
 			count as array_count,
 			index_set as array_index_set,
 			bag_put as put,
-			copy as array_copy
+			valid_index as array_valid_index
 		export
 			{NONE}
-				all;
+				all
 			{ARRAYED_LIST}
-				array_make;
+				array_make, subcopy
 			{ANY}
 				capacity
 		undefine
-			linear_representation, prunable, put,
-			prune, occurrences,
-			extendible, has, is_equal
+			linear_representation, prunable, put, is_equal,
+			prune, occurrences, extendible 
 		redefine
-			extend, prune_all, full, valid_index, wipe_out
-		end;
+			extend, prune_all, full, wipe_out,
+			is_inserted, make_from_array
+		select
+			array_valid_index
+		end
 
 	DYNAMIC_LIST [G]
 		undefine
 			valid_index, infix "@", i_th, put_i_th,
-			force, is_equal
+			force, is_inserted, copy, has
 		redefine
 			first, last, swap, wipe_out,
 			go_i_th, move, prunable, start, finish,
 			count, prune, remove,
-			copy, put_left, merge_left,
+			put_left, merge_left,
 			merge_right, duplicate, prune_all
 		select
-			count, index_set, copy
-		end;
+			count, index_set
+		end
 
-creation
+create
 
-	make, make_filled
+	make, make_filled, make_from_array
 
 feature -- Initialization
 
@@ -70,7 +72,7 @@ feature -- Initialization
 			array_make (1, n)
 		ensure
 			correct_position: before
-		end;
+		end
 
 	make_filled (n: INTEGER) is
 			-- Allocate list with `n' items.
@@ -85,7 +87,17 @@ feature -- Initialization
 		ensure
 			correct_position: before
 			filled: full
-		end;
+		end
+
+	make_from_array (a: ARRAY [G]) is
+			-- Create list from array `a'.
+		do
+			Precursor (a)
+			lower := 1
+			count := a.count
+			upper := count
+			index := 0
+		end 
 
 feature -- Access
 
@@ -94,33 +106,33 @@ feature -- Access
 		require else
 			index_is_valid: valid_index (index)
 		do
-			Result := area.item (index - 1);
-		end;
+			Result := area.item (index - 1)
+		end
 
 	first: G is
 			-- Item at first position
 		do
-			Result := area.item (0);
-		end;
+			Result := area.item (0)
+		end
 
 	last: like first is
 			-- Item at last position
 		do
 			Result := area.item (count - 1)
-		end;
+		end
 
-	index: INTEGER;
+	index: INTEGER
 			-- Index of `item', if valid.
 
 	cursor: CURSOR is
 			-- Current cursor position
 		do
-			!ARRAYED_LIST_CURSOR! Result.make (index)
-		end;
+			create {ARRAYED_LIST_CURSOR} Result.make (index)
+		end
 
 feature -- Measurement
 
-	count: INTEGER;
+	count: INTEGER
 		-- Number of items.
 
 feature -- Status report
@@ -128,25 +140,25 @@ feature -- Status report
 	prunable: BOOLEAN is
 			-- May items be removed? (Answer: yes.)
 		do
-			Result := true
-		end;
+			Result := True
+		end
 
 	full: BOOLEAN is
-			-- Is structure filled to capacity? (Answer: no.)
+			-- Is structure filled to capacity?
 		do
 			Result := (count = capacity)
-		end;
+		end
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
 		local
 			al_c: ARRAYED_LIST_CURSOR
 		do
-			al_c ?= p;
+			al_c ?= p
 			if al_c /= Void then
 				Result := valid_cursor_index (al_c.index)
 			end
-		end;
+		end
 
 	valid_index (i: INTEGER): BOOLEAN is
 			-- Is `i' a valid index?
@@ -154,68 +166,40 @@ feature -- Status report
 			Result := (1 <= i) and (i <= count)
 		end
 
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			--Is other equal to Current?
-		local
-			c1,c2: like cursor;
+	is_inserted (v: G): BOOLEAN is
+			-- Has `v' been inserted at the end by the most recent `put' or
+			-- `extend'?
 		do
-			if other = Current then
-				Result := True
-			elseif (count = other.count) and 
-			   (object_comparison = other.object_comparison) then
-					--Count and comparison_criterium have to be the same
-				c1 := cursor;
-				c2 := other.cursor;
-				other.start
-				start
-				Result := True
-				if object_comparison then
-					from
-					until
-						after or not Result
-					loop
-						Result := equal (item, other.item)
-						forth
-						other.forth
-					end
-				else
-					from
-					until
-						after or not Result
-					loop
-						Result := item = other.item
-						forth
-						other.forth
-					end
-				end		
-				go_to (c1);
-				other.go_to (c2);
+			check
+				put_constraint: (v /= last) implies not off
+					-- Because, if this routine has not been called by
+					-- `extend', it was called by `put' which replaces the
+					-- current item, which implies the cursor is not `off'.
 			end
-		end;
 
-			
+			Result := (v = last) or else (v = item)
+		end
+
 feature -- Cursor movement
 
 	move (i: INTEGER) is
 			-- Move cursor `i' positions.
 		do
-			index := index + i;
+			index := index + i
 			if (index > count + 1) then
 				index := count + 1
 			elseif (index < 0) then
 				index := 0
 			end
-		end;
+		end
 
 	start is
 			-- Move cursor to first position if any.
 		do
 			index := 1
 		ensure then
-			after_when_empty: empty implies after
-		end;
+			after_when_empty: is_empty implies after
+		end
 
 	finish is
 			-- Move cursor to last position if any.
@@ -226,51 +210,38 @@ feature -- Cursor movement
 		--| the cursor is before. The parents (CHAIN, LIST...)
 		--| and decendants (ARRAYED_TREE...) need to be revised.
 		ensure then
-			before_when_empty: empty implies before
-		end;
+			before_when_empty: is_empty implies before
+		end
 
 	forth is
 			-- Move cursor one position forward.
 		do
 			index := index + 1
-		end;
+		end
 
 	back is
 			-- Move cursor one position backward.
 		do
 			index := index - 1
-		end;
+		end
 
 	go_i_th (i: INTEGER) is
 			-- Move cursor to `i'-th position.
 		do
-			index := i;
-		end;
+			index := i
+		end
 
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
 		local
 			al_c: ARRAYED_LIST_CURSOR
 		do
-			al_c ?= p;
+			al_c ?= p
 				check
 					al_c /= Void
-				end;
+				end
 			index := al_c.index
-		end;
-
-feature -- Transformation
-
-	swap (i: INTEGER) is
-			-- Exchange item at `i'-th position with item
-			-- at cursor position.
-		local
-			old_item: like item
-		do
-			old_item := item;
-			replace (area.item (i - 1));
-			area.put (old_item, i - 1);
-		end;
+		end
 
 feature -- Element change
 
@@ -278,32 +249,33 @@ feature -- Element change
 			-- Add `v' to the beginning.
 			-- Do not move cursor.
 		do
-			if empty then
+			if is_empty then
 				extend (v)
 			else
 				insert (v, 1)
-			end;
-		end;
+			end
+			index := index + 1
+		end
 
 	force, extend (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor.
 		do
-			count := count + 1;
+			count := count + 1
 			force_i_th (v, count)
-		end;
+		end
 
 	put_left (v: like item) is
 			-- Add `v' to the left of current position.
 			-- Do not move cursor.
 		do
-			if after or empty then
-				extend (v);
-				index := index + 1
+			if after or is_empty then
+				extend (v)
 			else
 				insert (v, index)
 			end
-		end;
+			index := index + 1
+		end
 
 	put_right (v: like item) is
 			-- Add `v' to the right of current position.
@@ -313,73 +285,60 @@ feature -- Element change
 				extend (v)
 			else
 				insert (v, index + 1)
-			end;
-		end;
-
+			end
+		end
 
 	replace (v: like first) is
 			-- Replace current item by `v'.
 		do
 			put_i_th (v, index)
-		end;
+		end
 
 	merge_left (other: ARRAYED_LIST [G]) is
+			-- Merge `other' into current structure before cursor.
 		local
-			i, l_count: INTEGER;
+			old_index: INTEGER
+			old_other_count: INTEGER
 		do
-			if not other.empty then
-				resize (1, count + other.count);
-				from
-					i := count - 1;
-					l_count := other.count
-				until
-					i < index - 1
-				loop
-					area.put (area.item (i), i + l_count);
-					i := i - 1
-				end;
-				from
-					other.start;
-					i := index - 1
-				until
-					other.after
-				loop
-					area.put (other.item, i);
-					i := i + 1;
-					other.forth
-				end;
-				index := index + l_count;
-				count := count + l_count;
-				other.wipe_out
-			end
-		end;
+			old_index := index
+			old_other_count := other.count
+			index := index - 1
+			merge_right (other)
+			index := old_index + old_other_count
+		end
+
 
 	merge_right (other: ARRAYED_LIST [G]) is
-		local
-			old_index: INTEGER;
+			-- Merge `other' into current structure after cursor.
 		do
-			old_index := index;
-			index := index + 1;
-			merge_left (other);
-			index := old_index
-		end;
+			if not other.is_empty then
+				resize (1, count + other.count)
+				if index < count then
+					subcopy (Current, index + 1, count, 
+						index + other.count + 1) 
+				end
+				subcopy (other, 1, other.count, index + 1) 
+				count := count + other.count
+				other.wipe_out
+			end
+		end
 
 feature -- Removal
 
 	prune (v: like item) is
 			-- Remove first occurrence of `v', if any,
 			-- after cursor position.
-			-- Move cursor to right neighbor
-			-- (or `after' if no right neighbor or `v'does not occur)
+			-- Move cursor to right neighbor.
+			-- (or `after' if no right neighbor or `v' does not occur)
 		do
-			if before then index := 1 end;
+			if before then index := 1 end
 			if object_comparison then
 				if v /= Void then
 					from
 					until
 						after or else (item /= Void and then v.is_equal (item))
 					loop
-						forth;
+						forth
 					end
 				end
 			else
@@ -387,238 +346,189 @@ feature -- Removal
 				until
 					after or else item = v
 				loop
-					forth;
+					forth
 				end
-			end;
-			if not after then remove end;
-		end;
+			end
+			if not after then remove end
+		end
 
 	remove is
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor)
 		local
-			i,j: INTEGER
 			default_value: G
-			l_count: INTEGER
 		do
-			if not off then
-				from
-					i := index - 1
-					l_count := count - 1
-				until
-					i >= l_count
-				loop
-					j := i + 1
-					area.put (area.item (j), i)
-					i := j
-				end;
-				put_i_th (default_value, count)
-				count := count - 1
+			if index < count then
+				subcopy (Current, index + 1, count, index)
 			end
-		end;
+			count := count - 1
+			area.put (default_value, count)
+		ensure then
+			index: index = old index
+		end
 
 	prune_all (v: like item) is
 			-- Remove all occurrences of `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
-			-- Leave cursor `after'.
 		local
-			i: INTEGER;
-			val, default_value: like item;
+			i: INTEGER
+			offset: INTEGER
+			res: BOOLEAN
+			obj_cmp: BOOLEAN
+			default_val: like item
 		do
-			if object_comparison then
-				if v /= Void then
-					from
-						start
-					until
-						after or else (item /= Void and then v.is_equal (item))
-					loop
-						index := index + 1;
-					end;
-					from
-						if not after then
-							i := index;
-							index := index + 1
-						end
-					until
-						after
-					loop
-						val := item;
-						if val /= Void and then not v.is_equal (val) then
-							put_i_th (val, i);
-							i := i + 1
-						end;
-						index := index + 1;
+			obj_cmp := object_comparison
+			from 
+				i := 1 
+			until 
+				i > count 
+			loop
+				if i <= count - offset then
+					if offset > 0 then 
+						put_i_th (i_th (i + offset), i) 
 					end
-				end
-			else
-				from
-					start
-				until
-					after or else (item = v)
-				loop
-					index := index + 1;
-				end;
-				from
-					if not after then
-						i := index;
-						index := index + 1
+					if obj_cmp then
+						res := equal (v, i_th (i))
+					else
+						res := (v = i_th (i))
 					end
-				until
-					after
-				loop
-					val := item;
-					if val /= v then
-						put_i_th (val, i);
-						i := i + 1;
-					end;
-					index := index + 1
+					if res then 
+						offset := offset + 1
+					else
+						i := i + 1
+					end
+				else
+					put_i_th (default_val, i)
+					i := i + 1
 				end
-			end;
-			if i > 0 then
-				index := i
-				from
-				until
-					i > count
-				loop
-					put_i_th (default_value, i);
-					i := i + 1;
-				end;
-				count := index - 1;
 			end
+			count := count - offset
+			index := count + 1
 		ensure then
-			is_after: after;
-		end;
+			is_after: after
+		end
 
 	remove_left is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
-			index := index - 1;
-			remove;
-		end;
+			index := index - 1
+			remove
+		end
 
 	remove_right is
 			-- Remove item to the right of cursor position
 			-- Do not move cursor
 		do
-			index := index + 1;
-			remove;
-			index := index - 1;
-		end;
+			index := index + 1
+			remove
+			index := index - 1
+		end
 
 	wipe_out is
 			-- Remove all items.
 		do
-			count := 0;
-			index := 0;
-			discard_items;
-		end;
+			count := 0
+			index := 0
+			discard_items
+		end
+
+feature -- Transformation
+
+	swap (i: INTEGER) is
+			-- Exchange item at `i'-th position with item
+			-- at cursor position.
+		local
+			old_item: like item
+		do
+			old_item := item
+			replace (area.item (i - 1))
+			area.put (old_item, i - 1)
+		end
 
 feature -- Duplication
-
-	copy (other: like Current) is
-		local
-			old_area: like area
-		do
-			if other /= Current then
-				old_area := area
-				standard_copy (other)
-				if old_area = Void or else old_area.count < area.count then
-					area := standard_clone (area)
-				else
-					area := old_area
-					upper := area.count
-					subcopy (other, 1, count, 1)
-				end
-			end
-		end
 
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-list beginning at current position
 			-- and having min (`n', `count' - `index' + 1) items.
 		local
-			pos: INTEGER
+			end_pos: INTEGER
 		do
-			!! Result.make (n.min (count - index + 1));
-			from
-				Result.start;
-				pos := index
-			until
-				Result.count = Result.capacity
-			loop
-				Result.extend (item);
-				forth;
-			end;
-			Result.start;
-			go_i_th (pos);
-		end;
+			if after then
+				create Result.make (0)
+			else
+				end_pos := count.min (index + n - 1)
+				create Result.make_filled (end_pos - index + 1)
+				Result.subcopy (Current, index, end_pos, 1)
+			end
+		end
 
+feature {NONE} -- Inapplicable
 
-feature {NONE} --Internal
+	new_chain: like Current is
+			-- Unused
+		do
+		end
+
+feature {NONE} -- Implementation
 
 	insert (v: like item; pos: INTEGER) is
 			-- Add `v' at `pos', moving subsequent items
 			-- to the right.
 		require
-			index_small_enough: pos <= count;
-			index_large_enough: pos >= 1;
-		local
-			i,j: INTEGER;
-			p : INTEGER;
-			last_value: like item;
-			last_item: like item;
+			index_small_enough: pos <= count
+			index_large_enough: pos >= 1
 		do
-			if index >= pos then
-				index := index + 1
-			end;
-			last_item := last;
-			count := count + 1;
-			force_i_th (last_item, count);
-			from
-				i := count - 2
-			until
-				i < pos
-			loop
-				j := i - 1;
-				area.put (area.item (j), i);
-				i := j;
-			end;
-			put_i_th (v, pos);
+			if count + 1 > capacity then
+				auto_resize (lower, count + 1)
+			end
+			count := count + 1
+			subcopy (Current, pos , count - 1 , pos + 1)
+			enter (v, pos)
 		ensure
-			new_count: count = old count + 1;
+			new_count: count = old count + 1
+			index_unchanged: index = old index
 			insertion_done: i_th (pos) = v
-		end;
-
-	new_chain: like Current is
-			-- unused
-		do
-		end;
+		end
 
 invariant
 
-	prunable: prunable;
-	starts_from_one: lower = 1;
+	prunable: prunable
+	starts_from_one: lower = 1
+	empty_means_storage_empty: is_empty implies all_default
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class ARRAYED_LIST
-
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
-

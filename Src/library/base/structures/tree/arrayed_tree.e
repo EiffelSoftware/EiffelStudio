@@ -1,22 +1,24 @@
 indexing
 
 	description:
-		"Trees where the children of each node are kept in an array";
+		"Trees where the children of each node are kept in an array"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: tree;
 	representation: recursive, array;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class ARRAYED_TREE [G] inherit
 
 	CELL [G]
 		undefine
-			copy, is_equal
-		end;
+			is_equal
+		redefine
+			copy
+		end
 
 	DYNAMIC_TREE [G]
 		rename
@@ -28,11 +30,11 @@ class ARRAYED_TREE [G] inherit
 			writable_child, child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
-			duplicate_all, fill_subtree
+			duplicate_all, fill_subtree, copy
 		select
 			object_comparison, linear_representation,
 			has
-		end;
+		end
 
 	ARRAYED_LIST [ARRAYED_TREE [G]]
 		rename
@@ -85,18 +87,20 @@ class ARRAYED_TREE [G] inherit
 				al_fill, al_full, al_empty,
 				al_remove_left, al_remove_right, al_lin_rep,
 				al_put_left, al_put_right,
-				al_merge_left, al_merge_right, al_object_comparison;
+				al_merge_left, al_merge_right, al_object_comparison
 		undefine
-			copy, is_equal, is_leaf, child_isfirst,
+			is_equal, is_leaf, child_isfirst,
 			child_islast, valid_cursor_index,
 			changeable_comparison_criterion,
 			compare_objects, compare_references,
 			al_empty
+		redefine
+			copy
 		select
 			is_leaf
 		end
 
-creation
+create
 
 	make
 
@@ -108,15 +112,15 @@ feature -- Initialization
 		require
 			valid_number_of_children: n >= 0
 		do
-			al_make (n);
+			al_make (n)
 			replace (v)
 		ensure
-			node_item: item = v;
-		end;
+			node_item: item = v
+		end
 
 feature -- Access
 
-	parent: ARRAYED_TREE [G];
+	parent: ARRAYED_TREE [G]
 			-- Parent of current node
 
 	left_sibling: like parent is
@@ -125,7 +129,7 @@ feature -- Access
 			if position_in_parent > 1 then
 				Result := parent.array_item (position_in_parent - 1)
 			end
-		end;
+		end
 
 	right_sibling: like parent is
 			-- Right neighbor if any
@@ -133,87 +137,136 @@ feature -- Access
 			if position_in_parent < parent.arity then
 				Result := parent.array_item (position_in_parent + 1)
 			end
-		end;
+		end
 
 feature -- Element change
 
 	child_put, child_replace (v: like item) is
 			-- Replace current child item with `v'.
 		do
+			if object_comparison then
+				child.compare_objects
+			else
+				child.compare_references
+			end
 			child.replace (v)
-		end;
+		end
 
 	replace_child (n: like parent) is
 			-- Make `n' the node's current child.
 		do
-			al_replace (n);
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			al_replace (n)
 			n.attach_to_parent (Current)
 		ensure then
 			child_replaced: n.parent = Current
-		end;
+		end
 
 	child_extend (v: like item) is
 			-- Add `v' at end.
 			-- Do not move child cursor.
+		local
+			n: like parent
 		do
-			al_extend (new_cell (v))
-		end;
+			n := new_cell (v)
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			al_extend (n)
+		end
 
 	child_put_left (v: like item) is
 			-- Add `v' to the left of cursor position.
 			-- Do not move child cursor.
+		local
+			n: like parent
 		do
-			al_put_left (new_cell (v))
-		end;
+			n := new_cell (v)
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			al_put_left (n)
+		end
 
 	child_put_right (v: like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move child cursor.
+		local
+			n: like parent
 		do
-			al_put_right (new_cell (v))
-		end;
+			n := new_cell (v)
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			al_put_right (n)
+		end
 
 	put_child_left (n: like parent) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
-			al_put_left (n);
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			al_put_left (n)
 			n.attach_to_parent (Current)
-		end;
+		end
 
 	put_child_right (n: like parent) is
 			-- Add `n' to the right of the cursor position.
 			-- Do not move cursor.
 		do
-			al_put_right (n);
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			al_put_right (n)
 			n.attach_to_parent (Current)
-		end;
+		end
 
 	put_child (n: like parent) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		do
-			al_extend (n);
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			al_extend (n)
 			n.attach_to_parent (Current)
-		end;
+		end
 
 	merge_tree_before (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
 		do
-			attach (other);
+			attach (other)
 			al_merge_left (other)
-		end;
+		end
 
 	merge_tree_after (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
 		do
-			attach (other);
+			attach (other)
 			al_merge_right (other)
-		end;
+		end
 
 feature -- Removal
 
@@ -221,26 +274,26 @@ feature -- Removal
 			-- Remove child at cursor position.
 			-- Move cursor to the next sibling, or `after' if none.
 		do
-			child.attach_to_parent (Void);
-			al_remove;
-		end;
+			child.attach_to_parent (Void)
+			al_remove
+		end
 
 	remove_left_child is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
-			child_back;
+			child_back
 			remove_child
-		end;
+		end
 
 	remove_right_child is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
-			child_forth;
-			remove_child;
+			child_forth
+			remove_child
 			child_back
-		end;
+		end
 
 
 feature -- Duplication
@@ -250,32 +303,44 @@ feature -- Duplication
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
 		local
-			counter: INTEGER;
+			counter: INTEGER
 			pos: CURSOR
 		do
 			from
-				Result := new_node;
-				pos := child_cursor;
+				Result := new_node
+				pos := child_cursor
 				Result.child_start
 			until
 				child_after or else (counter = n)
 			loop
 				if child /= Void then
 					Result.replace_child (child.duplicate_all)
-				end;
-				Result.child_forth;
-				child_forth;
+				end
+				Result.child_forth
+				child_forth
 				counter := counter + 1
-			end;
+			end
 			child_go_to (pos)
-		end;
+		end
+
+	copy (other: like Current) is
+			-- Copy contents from `other'.
+		local
+			tmp_tree: like Current
+			obj_comparison: BOOLEAN
+		do
+			obj_comparison := other.object_comparison
+			create tmp_tree.make (other.arity, other.item)
+			if not other.is_leaf then tree_copy (other, tmp_tree) end
+			object_comparison := obj_comparison
+		end
 
 feature {NONE} -- Inapplicable
 
 	extend (v: G) is
 			-- Add `v' as new child.
 		do
-		end;
+		end
 
 feature {ARRAYED_TREE} -- Implementation
 
@@ -285,8 +350,8 @@ feature {ARRAYED_TREE} -- Implementation
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result.make (arity, item)
-		end;
+			create Result.make (arity, item)
+		end
 
 	duplicate_all: like Current is
 			-- Copy of sub-tree including all children
@@ -294,21 +359,21 @@ feature {ARRAYED_TREE} -- Implementation
 			pos: CURSOR
 		do
 			from
-				Result := new_node;
-				pos := child_cursor;
-				Result.child_start;
+				Result := new_node
+				pos := child_cursor
+				Result.child_start
 				child_start
 			until
 				child_off
 			loop
 				if child /= Void then
 					Result.replace_child (child.duplicate_all)
-				end;
-				Result.child_forth;
-				child_forth;
-			end;
+				end
+				Result.child_forth
+				child_forth
+			end
 			child_go_to (pos)
-		end;
+		end
 
 	fill_subtree (other: TREE [G]) is
 			-- Fill children with children of `other'
@@ -316,41 +381,41 @@ feature {ARRAYED_TREE} -- Implementation
 			temp: like parent
 		do
 			from
-				other.child_start;
+				other.child_start
 				child_start
 			until
 				child_after
 			loop
 				if other.child /= Void then
-					!! temp.make (other.arity, other.child_item);
+					create temp.make (other.arity, other.child_item)
 					temp.fill_subtree (other.child)
-				end;
-				replace_child (temp);
-				child_forth;
-				other.child_forth;
+				end
+				replace_child (temp)
+				child_forth
+				other.child_forth
 			end
-		end;
+		end
 
 	attach_to_parent (n: like parent) is
 			-- Make `n' parent of current node;
 		do
-			parent := n;
-		end;
+			parent := n
+		end
 
 feature {NONE} -- Implementation
 
 	new_tree: like Current is
 			-- A newly created instance of the same type.
 		do
-			!! Result.make (0, item);
-		end;
+			create Result.make (0, item)
+		end
 
 	new_cell (v: like item): like Current is
 			-- New node with value `v' and no children.
 		do
-			!! Result.make (0, v);
+			create Result.make (0, v)
 			Result.attach_to_parent (Current)
-		end;
+		end
 
 	position_in_parent: INTEGER is
 			-- Position of current node in parent
@@ -358,50 +423,64 @@ feature {NONE} -- Implementation
 			if parent /= Void then
 				Result := parent.index_of (Current, 1)
 			end
-		end;
+		end
 
 	attach (other: like first_child) is
 				-- Attach all children of `other' to current node.
 				-- Put `other' in mode `off'.
 		local
-			c: like child;
+			c: like child
 		do
 			from
 				other.child_start
 			until
 				other.child_off
 			loop
-				c := other.child;
-				other.child_forth;
+				c := other.child
+				other.child_forth
 				c.attach_to_parent (Current)
-			end;
-		end;
+			end
+		end
 
 feature {NONE} -- Not Applicable
 
 	set_child (n: like parent) is
 		do
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class ARRAYED_TREE
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,22 +1,22 @@
 indexing
-		"Unbounded stacks implemented as linked lists";
 
-	status: "See notice at end of class";
+	description: "Unbounded stacks implemented as linked lists"
+	status: "See notice at end of class"
 	names: linked_stack, dispenser, linked_list;
 	representation: linked;
 	access: fixed, lifo, membership;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class LINKED_STACK [G] inherit
 
 	STACK [G]
 		undefine
-			replace
+			replace, copy, is_equal
 		select
 			remove, put, item
-		end;
+		end
 
 	LINKED_LIST [G]
 		rename
@@ -24,19 +24,19 @@ class LINKED_STACK [G] inherit
 			remove as ll_remove,
 			put as ll_put
 		export
-			{NONE} all;
+			{NONE} all
 			{ANY}
 				count, readable, writable, extendible,
 				make, wipe_out
 		undefine
 			readable, writable, fill,
 			append, linear_representation,
-			prune_all
+			prune_all, is_inserted
 		redefine
 			extend, force, duplicate
 		end
 
-creation
+create
 
 	make
 
@@ -46,10 +46,10 @@ feature -- Access
 			-- Item at the first position
 		do
 			check
-				not_empty: not empty
-			end;
+				not_empty: not is_empty
+			end
 			Result := first_element.item
-		end;
+		end
 
 feature -- Element change
 
@@ -57,7 +57,7 @@ feature -- Element change
 			-- Push `v' onto top.
 		do
 			put_front (v)
-		end;
+		end
 
 	extend (v: like item) is
 			-- Push `v' onto top.
@@ -75,9 +75,9 @@ feature -- Removal
 	remove is
 			-- Remove item on top.
 		do
-			start;
+			start
 			ll_remove
-		end;
+		end
 
 feature -- Conversion
 
@@ -87,18 +87,18 @@ feature -- Conversion
 		local
 			old_cursor: CURSOR
 		do
-			old_cursor := cursor;
+			old_cursor := cursor
 			from
-				!! Result.make (count);
+				create Result.make (count)
 				start
 			until
 				after
 			loop
-				Result.extend (ll_item);
+				Result.extend (ll_item)
 				forth
-			end;
+			end
 			go_to (old_cursor)
-		end;
+		end
 
 feature -- Duplication
 
@@ -109,47 +109,61 @@ feature -- Duplication
 		require else
 			positive_argument: n > 0
 		local
-			counter: INTEGER;
-			old_cursor: CURSOR;
+			counter: INTEGER
+			old_cursor: CURSOR
 			list: LINKED_LIST [G]
 		do
-			if not empty then
-				old_cursor := cursor;
+			if not is_empty then
+				old_cursor := cursor
 				from
-					!! Result.make;
-					list := Result;
+					create Result.make
+					list := Result
 					start
 				until
 					after or counter = n
 				loop
-					list.finish;
-					list.put_right (ll_item);
-					counter := counter + 1;
+					list.finish
+					list.put_right (ll_item)
+					counter := counter + 1
 					forth
-				end;
+				end
 				go_to (old_cursor)
 			end
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class LINKED_STACK
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

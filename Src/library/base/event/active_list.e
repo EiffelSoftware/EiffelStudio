@@ -1,7 +1,8 @@
 indexing
-	description:
-		"Sequential, one-way linked lists that call an action %N%
-		%sequence when an item is removed or added."
+	description: "[
+		Sequential, one-way linked lists that call an action
+		sequence when an item is removed or added.
+		]"
 	status: "See notice at end of class"
 	keywords: "event, action, linked, list"
 	date: "$Date$"
@@ -26,9 +27,9 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Initialize
 		do
-			Precursor
-			create add_actions.make
-			create remove_actions.make
+			Precursor {INTERACTIVE_LIST}
+			create add_actions
+			create remove_actions
 		end
 
 feature -- Access
@@ -57,23 +58,37 @@ invariant
 	add_actions_not_void: add_actions /= Void
 	remove_actions_not_void: remove_actions /= Void
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class ACTIVE_LIST
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------

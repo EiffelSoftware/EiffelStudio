@@ -1,11 +1,12 @@
 indexing
 
-	description:
-		"Facilities for tuning up the garbage collection mechanism. %
-		%This class may be used as ancestor by classes needing its facilities.";
+	description: "[
+		Facilities for tuning up the garbage collection mechanism.
+		This class may be used as ancestor by classes needing its facilities.
+		]"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class MEMORY inherit
@@ -22,8 +23,8 @@ feature -- Measurement
 				memory_type = Eiffel_memory or
 				memory_type = C_memory
 		do
-			!! Result.make (memory_type);
-		end;
+			create Result.make (memory_type)
+		end
 
 	gc_statistics (collector_type: INTEGER): GC_INFO is
 			-- Garbage collection information for `collector_type'.
@@ -32,8 +33,8 @@ feature -- Measurement
 				collector_type = Full_collector or
 				collector_type = Incremental_collector
 		do
-			!! Result.make (collector_type);
-		end;
+			create Result.make (collector_type)
+		end
 
 feature -- Status report
 
@@ -44,7 +45,7 @@ feature -- Status report
 			"C | %"eif_memory.h%""
 		alias
 			"mem_tget"
-		end;
+		end
 
 	collection_period: INTEGER is
 			-- Period of full collection.
@@ -56,7 +57,7 @@ feature -- Status report
 			"C | %"eif_memory.h%""
 		alias
 			"mem_pget"
-		end;
+		end
 
 	coalesce_period: INTEGER is
 			-- Period of full coalesce (in number of collections)
@@ -76,7 +77,7 @@ feature -- Status report
 			"C | %"eif_memory.h%""
 		alias
 			"gc_ison"
-		end;
+		end
 
 	largest_coalesced_block: INTEGER is
 			-- Size of largest coalesced block since last call to
@@ -85,7 +86,7 @@ feature -- Status report
 			"C | %"eif_memory.h%""
 		alias
 			"mem_largest"
-		end;
+		end
 
 	max_mem: INTEGER is
 			-- Maximum amount of bytes the run-time can allocate.
@@ -93,7 +94,7 @@ feature -- Status report
 			"C | %"eif_memory.h%""
 		alias
 			"eif_get_max_mem"
-		end;
+		end
 
 	chunk_size: INTEGER is
 			-- Minimal size of a memory chunk. The run-time always
@@ -105,7 +106,7 @@ feature -- Status report
 			"C | %"eif_memory.h%""
 		alias
 			"eif_get_chunk_size"
-		end;
+		end
 
 	tenure: INTEGER is
 			-- Maximum age of object before being considered
@@ -118,7 +119,7 @@ feature -- Status report
 			"C | %"eif_memory.h%""
 		alias
 			"eif_tenure"
-		end;
+		end
 			
 	generation_object_limit: INTEGER is
 			-- Maximum size of object in generational scavenge zone.
@@ -129,7 +130,7 @@ feature -- Status report
 			"C | %"eif_memory.h%""
 		alias
 			"eif_generation_object_limit"
-		end;
+		end
 	
 	scavenge_zone_size: INTEGER is
 			-- Size of generational scavenge zone.
@@ -143,6 +144,17 @@ feature -- Status report
 			"eif_scavenge_zone_size"
 		end
 
+feature -- Status report
+
+	referers (an_object: ANY): ARRAY [ANY] is
+			-- Objects that refer to `an_object'.
+		local
+			a: ANY
+		do
+			create Result.make (0, 200)
+			a := Result.area
+			find_referers ($an_object, $a, Result.count)
+		end
 
 feature -- Status setting
 
@@ -152,7 +164,7 @@ feature -- Status setting
 			"C | %"eif_garcol.h%""
 		alias
 			"gc_stop"
-		end;
+		end
 
 	collection_on is
 			-- Enable garbage collection.
@@ -160,7 +172,7 @@ feature -- Status setting
 			"C | %"eif_garcol.h%""
 		alias
 			"gc_run"
-		end;
+		end
 
 	allocate_fast is
 			-- Enter ``speed'' mode: will optimize speed of memory
@@ -169,7 +181,7 @@ feature -- Status setting
 			"C | %"eif_memory.h%""
 		alias
 			"mem_speed"
-		end;
+		end
 
 	allocate_compact is
 			-- Enter ``memory'' mode: will try to compact memory
@@ -178,7 +190,7 @@ feature -- Status setting
 			"C | %"eif_memory.h%""
 		alias
 			"mem_slow"
-		end;
+		end
 
 	allocate_tiny is
 			-- Enter ``tiny'' mode: will enter ``memory'' mode
@@ -187,31 +199,31 @@ feature -- Status setting
 			"C | %"eif_memory.h%""
 		alias
 			"mem_tiny"
-		end;
+		end
 
 	enable_time_accounting is
 			-- Enable GC time accouting, accessible in `gc_statistics'.
 		do
-			gc_monitoring (true);
-		end;
+			gc_monitoring (True)
+		end
 
 	disable_time_accounting is
 			-- Disable GC time accounting (default).
 		do
-			gc_monitoring (false);
-		end;
+			gc_monitoring (False)
+		end
 
 	set_memory_threshold (value: INTEGER) is
 			-- Set a new `memory_threshold' in bytes. Whenever the memory 
 			-- allocated for Eiffel reaches this value, an automatic
 			-- collection is performed.
 		require
-			positive_value: value > 0;
+			positive_value: value > 0
 		external
 			"C | %"eif_memory.h%""
 		alias
 			"mem_tset"
-		end;
+		end
 
 	set_collection_period (value: INTEGER) is
 			-- Set `collection_period'. Every `value' collection,
@@ -219,34 +231,34 @@ feature -- Status setting
 			-- on the whole memory (full collection), otherwise 
 			-- a simple partial collection is done.
 		require
-			positive_value: value >= 0;
+			positive_value: value >= 0
 		external
 			"C | %"eif_memory.h%""
 		alias
 			"mem_pset"
-		end;
+		end
 
 	set_coalesce_period (value: INTEGER) is
 			-- Set `coalesce_period'. Every `value' collection,
 			-- the Garbage Collector will coalesce
 			-- the whole memory. 
 		require
-			positive_value: value >= 0;
+			positive_value: value >= 0
 		external
 			"C | %"eif_memory.h%""
 		alias
 			"eif_set_coalesce_period"
-		end;
+		end
 
 	set_max_mem (value: INTEGER) is
 			-- Set the maximum amount of memory the run-time can allocate.
 		require
-			positive_value: value > 0;
+			positive_value: value > 0
 		external
 			"C | %"eif_memory.h%""
 		alias
 			"eif_set_max_mem"
-		end;
+		end
 
 feature -- Removal
 
@@ -259,7 +271,7 @@ feature -- Removal
 			-- they should not perform remote calls on other objects
 			-- since these may also be dead and reclaimed.
 		do
-		end;
+		end
 
 	free (object: ANY) is
 			-- Free `object', by-passing garbage collection.
@@ -267,14 +279,14 @@ feature -- Removal
 			-- referenced.
 		do
 			mem_free ($object)
-		end;
+		end
 
 	mem_free (addr: POINTER) is
 			-- Free memory of object at `addr'.
 			-- (Preferred interface is `free'.)
 		external
 			"C | %"eif_memory.h%""
-		end;
+		end
 
 	full_coalesce is
 			-- Coalesce the whole memory: merge adjacent free
@@ -284,14 +296,14 @@ feature -- Removal
 			"C | %"eif_memory.h%""
 		alias
 			"mem_coalesc"
-		end;
+		end
 
 	collect is
 			-- Force a partial collection cycle if garbage
 			-- collection is enabled; do nothing otherwise.
 		external
 			"C | %"eif_eiffel.h%""
-		end;
+		end
 
 	full_collect is
 			-- Force a full collection cycle if garbage
@@ -300,7 +312,7 @@ feature -- Removal
 			"C | %"eif_garcol.h%""
 		alias
 			"plsc"
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -310,27 +322,46 @@ feature {NONE} -- Implementation
 			"C | %"eif_memory.h%""
 		alias
 			"gc_mon"
-		end;
+		end
+	
+	find_referers (target: POINTER; esult: POINTER; result_size: INTEGER) is
+		external
+			"C | %"eif_traverse.h%""
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class MEMORY
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

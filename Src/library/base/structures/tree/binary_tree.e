@@ -1,19 +1,24 @@
 indexing
 
 	description:
-		"Binary tree: each node may have a left child and a right child";
+		"Binary tree: each node may have a left child and a right child"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: binary_tree, tree, fixed_tree;
 	representation: recursive, array;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class BINARY_TREE [G] inherit
 
-		CELL [G];
+		CELL [G]
+			undefine
+				is_equal
+			redefine
+				copy
+			end
 
 		TREE [G]
 			redefine
@@ -23,36 +28,38 @@ class BINARY_TREE [G] inherit
 				subtree_count,
 				fill_list,
 				child_remove,
-				child_after
+				child_after,
+				child_capacity,
+				copy
 			end
 
-creation
+create
 
 	make
 
 feature -- Initialization
 
 	make (v: like item) is
-			-- Create a root node with value v
+			-- Create a root node with value `v'.
 		do
 			item := v
 		ensure
-			is_root;
-			is_leaf
-		end;
+			is_root: is_root
+			is_leaf: is_leaf
+		end
 
 feature -- Access
 
-	parent: BINARY_TREE [G];
+	parent: BINARY_TREE [G]
 			-- Parent of current node
 
-	child_index: INTEGER;
+	child_index: INTEGER
 			-- Index of cursor position
 
-	left_child: like parent;
+	left_child: like parent
 			-- Left child, if any
 
-	right_child: like parent;
+	right_child: like parent
 			-- Right child, if any
 
 	left_item: like item is
@@ -61,7 +68,7 @@ feature -- Access
 			has_left: left_child /= Void
 		do
 			Result := left_child.item
-		end;
+		end
 
 	right_item: like item is
 			-- Value of right child
@@ -69,19 +76,19 @@ feature -- Access
 			has_right: right_child /= Void
 		do
 			Result := right_child.item
-		end;
+		end
 
 	first_child: like parent is
 			-- Left child
 		do
 			Result := left_child
-		end;
+		end
 
 	last_child: like parent is
 			-- Right child
 		do
 			Result := right_child
-		end;
+		end
 
 	child: like parent is
 			-- Child at cursor position
@@ -93,13 +100,13 @@ feature -- Access
 			when 2 then
 				Result := right_child
 			end
-		end;
+		end
 
 	child_cursor: CURSOR is
 			-- Current cursor position
 		do
-			!ARRAYED_LIST_CURSOR! Result.make (child_index)
-		end;
+			create {ARRAYED_LIST_CURSOR} Result.make (child_index)
+		end
 
 	left_sibling: like parent is
 			-- Left neighbor, if any
@@ -107,7 +114,7 @@ feature -- Access
 			if parent.right_child = Current then
 				Result := parent.left_child
 			end
-		end;
+		end
 
 	right_sibling: like parent is
 			-- Right neighbor, if any
@@ -115,7 +122,8 @@ feature -- Access
 			if parent.left_child = Current then
 				Result := parent.right_child
 			end
-		end;
+		end
+
 feature -- Measurement
 
 	arity: INTEGER is
@@ -123,27 +131,27 @@ feature -- Measurement
 		do
 			if has_left then
 				Result := Result + 1
-			end;
+			end
 			if has_right then
 				Result := Result + 1
-			end;
+			end
 		ensure then
 			valid_arity: Result <= 2
-		end;
+		end
 
 feature -- Status report
 
 	child_after: BOOLEAN is
 			-- Is there no valid child position to the right of cursor?
 		do
-			Result := child_index >= arity + 1
-		end;
+			Result := child_index >= child_capacity + 1
+		end
 
 	is_leaf, has_none: BOOLEAN is
 			-- Are there no children?
 		do
 			Result := left_child = Void and right_child = Void
-		end;
+		end
 
 	has_left: BOOLEAN is
 			-- Has current node a left child?
@@ -151,7 +159,7 @@ feature -- Status report
 			Result := left_child /= Void
 		ensure
 			Result = (left_child /= Void)
-		end;
+		end
 
 	has_right: BOOLEAN is
 			-- Has current node a right child?
@@ -159,7 +167,7 @@ feature -- Status report
 			Result := right_child /= Void
 		ensure
 			Result = (right_child /= Void)
-		end;
+		end
 
 	has_both: BOOLEAN is
 			-- Has current node two children?
@@ -167,8 +175,45 @@ feature -- Status report
 			Result := left_child /= Void and right_child /= Void
 		ensure
 			Result = (has_left and has_right)
-		end;
+		end
 
+feature	-- Cursor movement
+
+	child_go_to (p: ARRAYED_LIST_CURSOR) is
+			-- Move cursor to child remembered by `p'.
+		do
+			child_index := p.index
+		end
+
+	child_start is
+			-- Move to first child.
+		do
+			child_index := 1
+		end
+
+	child_finish is
+			-- Move cursor to last child.
+		do
+			child_index := 2
+		end
+
+	child_forth is
+			-- Move cursor to next child.
+		do
+			child_index := child_index + 1
+		end
+
+	child_back is
+			-- Move cursor to previous child.
+		do
+			child_index := child_index - 1
+		end
+
+	child_go_i_th (i: INTEGER) is
+			-- Move cursor to `i'-th child.
+		do
+			child_index := i
+		end
 
 feature -- Element change
 
@@ -177,38 +222,73 @@ feature -- Element change
 		require
 			no_parent: n = Void or else n.is_root
 		do
+			if n /= Void then
+				if object_comparison then
+					n.compare_objects
+				else
+					n.compare_references
+				end
+			end
 			if left_child /= Void then
 				left_child.attach_to_parent (Void)
-			end;
+			end
 			if n /= Void then
-				n.attach_to_parent (Current);
+				n.attach_to_parent (Current)
 			end
 			left_child := n
-		end;
+		end
 
 	put_right_child (n: like parent) is
 			-- Set `right_child' to `n'.
 		require
 			no_parent: n = Void or else n.is_root
 		do
+			if n /= Void then
+				if object_comparison then
+					n.compare_objects
+				else
+					n.compare_references
+				end
+			end
 			if right_child /= Void then
 				right_child.attach_to_parent (Void)
-			end;
+			end
 			if n /= Void then
-				n.attach_to_parent (Current);
+				n.attach_to_parent (Current)
 			end
 			right_child := n
-		end;
+		end
 
 	child_put, child_replace (v: like item) is
 			-- Put `v' at current child position.
+		local
+			node: like Current
 		do
-			child.put (v);
-		end;
+			if child /= Void then
+				if object_comparison then
+					child.compare_objects
+				else
+					child.compare_references
+				end
+				child.put (v)
+			else
+				create node.make (v)
+				if object_comparison then
+					node.compare_objects
+				end
+				put_child (node)
+			end
+		end
 
 	put_child, replace_child (n: like parent) is
 			-- Put `n' at current child position.
 		do
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			n.attach_to_parent (Current)
 			inspect
 				child_index
 			when 1 then
@@ -216,89 +296,55 @@ feature -- Element change
 			when 2 then
 				right_child := n
 			end
-		end;
+		end
 
 feature -- Removal
 
 	remove_left_child is
+			-- Remove left child.
 		do
 			if left_child /= Void then
 				left_child.attach_to_parent (Void)
-			end;
+			end
 			left_child := Void
 		ensure
 			not has_left
-		end;
+		end
 
 	remove_right_child is
+			-- Remove right child.
 		do
 			if right_child /= Void then
 				right_child.attach_to_parent (Void)
-			end;
+			end
 			right_child := Void
 		ensure
 			not has_right
-		end;
+		end
 
 	child_remove is
+			-- Remove current child.
 		do
 			inspect
 		 		child_index
 			when 1 then
-				left_child.attach_to_parent (Void);
+				left_child.attach_to_parent (Void)
 				left_child := Void
 			when 2 then
-				right_child.attach_to_parent (Void);
+				right_child.attach_to_parent (Void)
 				right_child := Void
 			end
-		end;
+		end
 
 	prune (n: like parent) is
+			-- Prune `n' from child nodes.
 		do
 			if left_child = n then
 				remove_left_child
 			elseif right_child = n then
 				remove_right_child
 			end
-		end;
-
-feature	-- Cursor movement
-
-	child_go_to (p: CURSOR) is
-			-- Move cursor to child remembered by `p'.
-		do
-			--child_index := p.child_index
-		end;
-
-	child_start is
-			-- Move to first child.
-		do
-			child_index := 1
-		end;
-
-	child_finish is
-			-- Move cursor to last child.
-		do
-			child_index := 2
-		end;
-
-	child_forth is
-			-- Move cursor to next child.
-		do
-			child_index := child_index + 1
-		end;
-
-	child_back is
-			-- Move cursor to previous child.
-		do
-			child_index := child_index - 1
-		end;
-
-	child_go_i_th (i: INTEGER) is
-			-- Move cursor to `i'-th child.
-		do
-			child_index := i
-		end;
+		end
 
 feature -- Duplication
 
@@ -307,25 +353,34 @@ feature -- Duplication
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
 		do
-			Result := new_tree;
+			Result := new_tree
 			if child_index <= 1 and child_index + n >= 1 and has_left then
 				Result.put_left_child (left_child.duplicate_all)
-			end;
+			end
 			if child_index <= 2 and child_index + n >= 2 and has_right then
 				Result.put_right_child (right_child.duplicate_all)
 			end
-		end;
+		end
 
 	duplicate_all: like Current is
 		do
-			Result := new_tree;
+			Result := new_tree
 			if has_left then
 				Result.put_left_child (left_child.duplicate_all)
-			end;
+			end
 			if has_right then
 				Result.put_right_child (right_child.duplicate_all)
-			end;
-		end;
+			end
+		end
+
+	copy (other: like Current) is
+			-- Copy contents from `other'.
+		local
+			tmp_tree: like Current
+		do
+			create tmp_tree.make (other.item)
+			if not other.is_leaf then tree_copy (other, tmp_tree) end
+		end
 
 feature {BINARY_TREE} -- Implementation
 
@@ -333,77 +388,95 @@ feature {BINARY_TREE} -- Implementation
 			-- Fill `al' with all the children's items.
 		do
 			if left_child /= Void then
-				al.extend (left_child.item);
+				al.extend (left_child.item)
 				left_child.fill_list (al)
-			end;
+			end
 			if right_child /= Void then
-				al.extend (right_child.item);
+				al.extend (right_child.item)
 				right_child.fill_list (al)
 			end
-		end;
+		end
 
 feature {NONE} -- Implementation
 
 	subtree_has (v: G): BOOLEAN is
+			-- Does subtree contain `v'?
 		do
 			if left_child /= Void then
 				Result := left_child.has (v)
-			end;
+			end
 			if right_child /= Void and not Result then
 				Result := right_child.has (v)
 			end
-		end;
+		end
 
 	subtree_count: INTEGER is
+			-- Number of items in subtree
 		do
 			if left_child /= Void then
 				Result := left_child.count
-			end;
+			end
 			if right_child /= Void then
 				Result := Result + right_child.count
 			end
-		end;
+		end
 
 	fill_subtree (other: BINARY_TREE [G]) is
+			-- Copy `other' to subtee.
 		do
 			if not other.is_leaf then
-				put_left_child (other.left_child.duplicate_all);
-			end;
+				put_left_child (other.left_child.duplicate_all)
+			end
 			if other.arity >= 2 then
-				put_right_child (other.right_child.duplicate_all);
-			end;
-		end;
+				put_right_child (other.right_child.duplicate_all)
+			end
+		end
 
 	new_tree: like Current is
+			-- New tree node
 		do
-			!!Result.make (item)
-		end;
+			create Result.make (item)
+			if object_comparison then
+				Result.compare_objects
+			end
+		end
 
-	child_capacity: INTEGER is 2;
+	child_capacity: INTEGER is 2
 
 invariant
 
-	child_capacity = 2
+	tree_is_binary: child_capacity = 2
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class BINARY_TREE
-
-
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
-

@@ -1,89 +1,127 @@
 indexing
 
 	description:
-		"Objects that are able to iterate over linear structures";
+		"Objects that are able to iterate over linear structures"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: iterators, iteration, linear_iterators,
 			linear_iteration;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class LINEAR_ITERATOR [G] inherit
 
 	ITERATOR [G]
 		redefine
-			target
-		end;
+			target, set
+		end
+		
+create
+	set
+	
+feature -- Initialization
 
+	set (s: like target) is
+			-- Make `s' the new target of iterations.
+		do
+			Precursor (s)
+			create internal_item_tuple.make
+		end
+
+feature -- Access
+
+	item: G is
+			-- The item at cursor position in `target'
+		require
+			traversable_exists: target /= Void
+		do
+			Result := target.item
+		end
+		
+	item_tuple: TUPLE [G] is
+			-- Tuple containing a single element,
+			-- the item at cursor position in `target'''
+		do
+			internal_item_tuple.put (target.item, 1)
+			Result := internal_item_tuple			
+		end
+	
+		
+	target: LINEAR [G]
+			-- The structure to which iteration features will apply.
+	
 feature -- Cursor movement
 
-	target: LINEAR [G];
-		-- The structure to which iteration features will apply.
-
-	do_all is
-			-- Apply `action' to every item of `target'.
-			-- (from the `start' of `target')
+	start is
+			-- Move to first position of `target'.
 		do
-			from
-				start
-			invariant
-				invariant_value
-			until
-				exhausted
-			loop
-				action ;
-				forth
-			end
-		ensure then
-			exhausted
-		end;
+			target.start
+		end
 
-	do_while is
+	forth is
+			-- Move to next position of `target'.
+		do
+			target.forth
+		end
+
+	off: BOOLEAN is
+			-- Is position of `target' off?
+		do
+			Result := target.off
+		end
+
+	exhausted: BOOLEAN is
+			-- Is `target' exhausted?
+		do
+			Result := target.exhausted
+		end
+
+feature -- Iteration
+
+	do_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item of `target' up to
 			-- and including first one not satisfying `test'.
 			-- (from the `start' of `target')
 		do
-			start;
-			continue_while
+			start
+			continue_while (action, test)
 		ensure then
-			finished: not exhausted implies not test
-		end;
+			finished: not exhausted implies not test.item (item_tuple)
+		end
 
-	continue_while is
+	continue_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item of `target' up to
 			-- and including first one not satisfying `test'
 			-- (from the current position of `target').
 		require else
-			traversable_exists: target /= Void;
 			invariant_satisfied: invariant_value
 		do
 			from
-				if not exhausted then action end
+				if not exhausted then action.call (item_tuple) end
 			invariant
 				invariant_value
 			until
-				exhausted or else not test
+				exhausted or else not test.item (item_tuple)
 			loop
 				forth
-				if not exhausted then action end
+				if not exhausted then action.call (item_tuple) end
 			end
 		ensure then
-			finished: not exhausted implies not test
-		end;
+			finished: not exhausted implies not test.item (item_tuple)
+		end
 
-	while_do is
+	while_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one not satisfying `test'.
 			-- (Apply to full list if all items satisfy `test'.)
 		do
 			start
-			while_continue
+			while_continue (action, test)
 		ensure then
-			finished: not exhausted implies not test
+			finished: not exhausted implies not test.item (item_tuple)
 		end
 
-	while_continue is
+	while_continue (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one not satisfying `test'.
 		do
@@ -91,139 +129,114 @@ feature -- Cursor movement
 			invariant
 				invariant_value
 			until
-				exhausted or else not test
+				exhausted or else not test.item (item_tuple)
 			loop
-				action
+				action.call (item_tuple)
 				forth
 			end
 		ensure
-			finished: not exhausted implies not test
+			finished: not exhausted implies not test.item (item_tuple)
 		end
 
-	until_do is
-		-- Apply `action' to every item of `target' up to
-		-- but excluding first one satisfying `test'.
+	until_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+			-- Apply `action' to every item of `target' up to
+			-- but excluding first one satisfying `test'.
 			-- (Apply to full list if no item satisfies `test'.)
 		do
-			start;
-			until_continue
+			start
+			until_continue (action, test)
 		ensure then
-			achieved: not exhausted implies test
-		end;
+			achieved: not exhausted implies test.item (item_tuple)
+		end
 
-	until_continue is
+	until_continue (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item of `target' from current
 			-- position, up to but excluding first one satisfying `test'.
 		require
-			traversable_exists: target /= Void;
 			invariant_satisfied: invariant_value
 		do
 			from
 			invariant
 				invariant_value
 			until
-				exhausted or else test
+				exhausted or else test.item (item_tuple)
 			loop
-				action;
+				action.call ([item])
 				forth
 			end
 		ensure
-			achieved: exhausted or else test;
+			achieved: exhausted or else test.item (item_tuple)
 			invariant_satisfied: invariant_value
-		end;
+		end
 
-	do_until is
+	do_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item of `target' up to
 			-- and including first one satisfying `test'.
 		do
-			start ;
-			continue_until;
+			start
+			continue_until (action, test)
 		ensure then
-			achieved: not exhausted implies test
-		end;
+			achieved: not exhausted implies test.item (item_tuple)
+		end
 
-	continue_until is
+	continue_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])is
 			-- Apply `action' to every item of `target' up to
 			-- and including first one satisfying `test'.
 			-- (from the current position of `target').
 		require
-			traversable_exists: target /= Void;
 			invariant_satisfied: invariant_value
-		local
-			finished: BOOLEAN
 		do
 			from
-				if not exhausted then action end
+				if not exhausted then action.call (item_tuple) end
 			invariant
 				invariant_value
 			until
-				exhausted or else test
+				exhausted or else test.item (item_tuple)
 			loop
-				forth ;
-				if not exhausted then action end
+				forth 
+				if not exhausted then action.call (item_tuple) end
 			end
 		ensure then
-			achieved: not exhausted implies test
-		end;
+			achieved: not exhausted implies test.item (item_tuple)
+		end
 
-	search (b: BOOLEAN) is
+	search (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; b: BOOLEAN) is
 			-- Search the first item of `target' for which `test'
 			-- has the same value as `b' (both true or both false).
-		require
-			traversable_exists: target /= Void
 		do
-			start ;
-			continue_search (b)
-		end;
+			start
+			continue_search (test, b)
+		end
 
-	continue_search (b: BOOLEAN) is
+	continue_search (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; b: BOOLEAN) is
 			-- Search the first item of `target'
 			-- satisfying: `test' equals to `b'
 			-- (from the current position of `target').
-		require
-			traversable_exists: target /= Void
 		do
 			from
 			invariant
 				invariant_value
 			until
-				exhausted or else (b = test )
+				exhausted or else (b = test.item (item_tuple))
 			loop
 				forth
 			end
 		ensure then
-			found: not exhausted = (b = test )
-		end;
+			found: not exhausted = (b = test.item (item_tuple))
+		end
 
-	do_if is
-			-- Apply `action' to every item of `target'
-			-- satisfying `test'.
-		do
-			from
-				start
-			invariant
-				invariant_value
-			until
-				exhausted
-			loop
-				if test then action end;
-				forth
-			end
-		end;
-
-	do_for (i, n, k: INTEGER) is
+	do_for (action: PROCEDURE [ANY, TUPLE [G]]; i, n, k: INTEGER) is
 			-- Apply `action' to every `k'-th item,
 			-- `n' times if possible, starting from `i'-th.
 		require
-			traversable_exists: target /= Void
-			valid_start : i >= 1
+			valid_start: i >= 1
 			valid_repetition: n >= 0
 			valid_skip: k >= 1
 		local
 			j: INTEGER
 		do
 			from
-				start ;
+				start
 				j := 1
 			invariant
 				j >= 1 and j <= i
@@ -232,17 +245,16 @@ feature -- Cursor movement
 			until
 				exhausted or else j = i
 			loop
-				forth ;
+				forth
 				j := j + 1
-			end;
-			continue_for (n, k)
-		end;
+			end
+			continue_for (action, n, k)
+		end
 
-	continue_for (n, k: INTEGER) is
+	continue_for (action: PROCEDURE [ANY, TUPLE [G]]; n, k: INTEGER) is
 			-- Apply `action' to every `k'-th item,
 			-- `n' times if possible.
 		require
-			traversable_exists: target /= Void
 			valid_repetition: n >= 0
 			valid_skip: k >= 1
 		local
@@ -256,8 +268,8 @@ feature -- Cursor movement
 			until
 				exhausted or else i = n
 			loop
-				action ;
-				i := i + 1;
+				action.call (item_tuple)
+				i := i + 1
 				from
 					j := 0
 				invariant
@@ -267,79 +279,37 @@ feature -- Cursor movement
 				until
 					exhausted or else j = k
 				loop
-					forth ;
+					forth 
 					j := j + 1
 				end
 			end
-		end;
+		end
 
-	forall: BOOLEAN is
+	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Does `test' return true for
 			-- all items of `target'?
 		do
-			search (False);
+			search (test, False)
 			Result := exhausted
-		end;
+		end
 
-	exists: BOOLEAN is
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Does `test' return true for
 			-- at least one item of `target'?
 		do
-			search (True);
+			search (test, True)
 			Result := not exhausted
-		end;
+		end
+		
+feature -- Implementation
 
-	start is
-			-- Move to first position of `target'.
-		require
-			traversable_exists: target /= Void
-		do
-			target.start
-		end;
+	internal_item_tuple: TUPLE [G]
+			-- Field holding the last item of `target'
 
-	forth is
-			-- Move to next position of `target'.
-		require
-			traversable_exists: target /= Void
-		do
-			target.forth
-		end;
+invariant
 
-	off: BOOLEAN is
-			-- Is position of `target' off?
-		require
-			traversable_exists: target /= Void
-		do
-			Result := target.off
-		end;
+	target_exists: target /= Void
+	item_tuple_exists: item_tuple /= Void
+	internal_item_tuple_exists: internal_item_tuple /= Void
 
-	exhausted: BOOLEAN is
-			-- Is `target' exhausted?
-		require
-			traversable_exists: target /= Void
-		do
-			Result := target.exhausted
-		end;
-
-end
-
-
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
-
+end -- LINEAR_ITERATOR

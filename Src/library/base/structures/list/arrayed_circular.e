@@ -1,27 +1,27 @@
 indexing
 
 	description:
-		"Circular chains implemented by resizable arrays";
+		"Circular chains implemented by resizable arrays"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: arrayed_circular, ring, sequence;
 	representation: array;
 	access: index, cursor, membership;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class ARRAYED_CIRCULAR [G] inherit
 
 	DYNAMIC_CIRCULAR [G]
 		undefine
-			readable, isfirst, writable
+			readable, isfirst, writable, is_equal
 		redefine
 			start, islast, wipe_out
 		select
 			remove, go_i_th, after, before, off,
 			prune_all, prune, first, forth
-		end;
+		end
 
 	LIST [G]
 		rename
@@ -42,37 +42,37 @@ class ARRAYED_CIRCULAR [G] inherit
 			isfirst, readable, islast, start, writable
 		end
 
-creation
+create
 
 	make
 
 feature -- Initialization
 
-	make (n : INTEGER) is
+	make (n: INTEGER) is
 			-- Create a circular chain with `n' items.
 		require
 			at_least_one: n >= 1
 		do
-			!!list.make (n)
+			create list.make (n)
 		end
 
 feature -- Access
 
-	item : G is
+	item: G is
 			-- Current item
 		do
 			Result := list.item
 		end
 
-	cursor : CURSOR is
+	cursor: CURSOR is
 			-- Current cursor position
 		do
-			!CIRCULAR_CURSOR!Result.make (list.cursor, internal_exhausted, starter)
+			create {CIRCULAR_CURSOR} Result.make (list.cursor, internal_exhausted, starter)
 		end
 
 feature -- Measurement
 
-	count : INTEGER is
+	count: INTEGER is
 			-- Number of items
 		do
 			Result := list.count
@@ -80,31 +80,31 @@ feature -- Measurement
 
 feature -- Status report
 
-	full : BOOLEAN is
+	full: BOOLEAN is
 			-- Is structure filled to capacity?
 		do
 			Result := list.full
 		end
 
-	readable : BOOLEAN is
+	readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do
 			Result := list.readable
 		end
 
-	valid_cursor (p : CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
 		local
-			c_c : CIRCULAR_CURSOR
+			c_c: CIRCULAR_CURSOR
 		do
-			c_c ?= p;
+			c_c ?= p
 			if c_c /= Void then
-				Result := list.valid_cursor(c_c.cursor) and then
+				Result := list.valid_cursor (c_c.cursor) and then
 					c_c.starter >= 0 and then c_c.starter <= count
 			end
 		end
 
-	writable : BOOLEAN is
+	writable: BOOLEAN is
 			-- Is there a current item that may be written?
 		do
 			Result := list.writable
@@ -113,35 +113,35 @@ feature -- Status report
 	isfirst: BOOLEAN is
 			-- Is cursor on first item?
 		do
-			if not empty then
+			if not is_empty then
 				if starter = 0 then
 					Result := list.isfirst
 				else
 					Result := (standard_index = starter)
 				end
 			end
-		end;
+		end
 
 	islast: BOOLEAN is
 			-- Is cursor on last item?
 		do
-			if not empty then
+			if not is_empty then
 				if (starter = 0) or (starter = 1) then
 					Result := standard_islast
 				else
-					Result := (standard_index = starter-1)
+					Result := (standard_index = starter - 1)
 				end
 			end
-		end;
+		end
 
 feature -- Cursor movement
 
-	go_to (p : CURSOR) is
+	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
 		local
-			c_c : CIRCULAR_CURSOR
+			c_c: CIRCULAR_CURSOR
 		do
-			c_c ?= p;
+			c_c ?= p
 			if c_c /= Void then
 				list.go_to (c_c.cursor)
 				internal_exhausted := c_c.internal_exhausted
@@ -152,15 +152,15 @@ feature -- Cursor movement
 			-- Select current item as the first.
 		do
 			starter := standard_index
-			internal_exhausted := false
-		end;
+			internal_exhausted := False
+		end
 
 	start is
 			-- Move to position currently selected as first.
 		do
-			internal_exhausted := false
+			internal_exhausted := False
 			if starter = 0 then
-				standard_start;
+				standard_start
 				starter := 1
 			else
 				standard_go_i_th (starter)
@@ -170,7 +170,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	replace (v : G) is
+	replace (v: G) is
 			-- Replace current item by `v'.
 		do
 			list.replace (v)
@@ -183,21 +183,21 @@ feature -- Element change
 			list.merge_right (other.list)
 		end
 
-	put_right (v : like item) is
+	put_right (v: like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
-			list.put_right(v)
+			list.put_right (v)
 		end
 
-	put_front (v : like item) is
+	put_front (v: like item) is
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		do
 			list.put_front (v)
 		end
 
-	extend (v : like item) is
+	extend (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor except if it was `off'.
 		do
@@ -205,14 +205,14 @@ feature -- Element change
 			if standard_index = 0 then list.forth end
 		end
 
-	merge_left (other : like Current) is
+	merge_left (other: like Current) is
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
 			list.merge_left (other.list)
 		end
 
-	put_left (v : like item) is
+	put_left (v: like item) is
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -228,12 +228,12 @@ feature -- Removal
 			count > 1
 		do
 			if standard_isfirst then
-				standard_finish;
+				standard_finish
 				 remove
 			else
 				standard_remove_left
 			end
-		end;
+		end
 
 	remove_right is
 			-- Remove item to the right of cursor position.
@@ -242,21 +242,21 @@ feature -- Removal
 			count > 1
 		do
 			if standard_islast then
-				standard_start;
-				remove;
+				standard_start
+				remove
 				finish
 			else
 				standard_remove_right
 			end
-		end;
+		end
 
 	wipe_out is
 			-- Remove all items.
 		do
 			list.wipe_out
 			starter := 0
-			internal_exhausted := false
-		end;
+			internal_exhausted := False
+		end
 
 feature {ARRAYED_CIRCULAR} -- Implementation
 
@@ -272,7 +272,7 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 					starter := starter + 1
 				end
 			end
-		end;
+		end
 
 	starter: INTEGER
 			-- The position currently selected as first
@@ -282,12 +282,12 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result.make (count)
-		end;
+			create Result.make (count)
+		end
 
-	list : ARRAYED_LIST[G]
+	list: ARRAYED_LIST [G]
 
-	standard_after : BOOLEAN is
+	standard_after: BOOLEAN is
 			do
 				Result := list.after
 			end
@@ -297,7 +297,7 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 				list.back
 			end
 
-	standard_before : BOOLEAN is
+	standard_before: BOOLEAN is
 			do
 				Result := list.before
 			end
@@ -312,12 +312,12 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 				list.forth
 			end
 
-	standard_go_i_th (i : INTEGER) is
+	standard_go_i_th (i: INTEGER) is
 			do
 				list.go_i_th (i)
 			end
 
-	standard_index : INTEGER is
+	standard_index: INTEGER is
 			do
 				Result := list.index
 			end
@@ -332,12 +332,12 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 				Result := list.islast
 			end
 
-	standard_move (i : INTEGER) is
+	standard_move (i: INTEGER) is
 			do
 				list.move (i)
 			end
 
-	standard_off : BOOLEAN is
+	standard_off: BOOLEAN is
 			do
 				Result := list.off
 			end
@@ -374,28 +374,42 @@ feature {NONE} -- Inapplicable
 		end
 
 invariant
-	non_negative_count: count >= 0;
+	non_negative_count: count >= 0
 	valid_starter: starter >= 0 and starter <= count
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class ARRAYED_CIRCUALR
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,27 +1,27 @@
 indexing
 
 	description:
-		"Stacks implemented by resizable arrays";
+		"Stacks implemented by resizable arrays"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: dispenser, array;
 	representation: array;
 	access: fixed, lifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class ARRAYED_STACK [G] inherit
 
 	STACK [G]
 		undefine
-			copy, is_equal, prune_all, replace
+			copy, is_equal, prune_all, replace, is_inserted
 		redefine
 			linear_representation
 		select
 			remove, extend, put
-		end;
+		end
 
 	ARRAYED_LIST [G]
 		rename
@@ -36,7 +36,7 @@ class ARRAYED_STACK [G] inherit
 			after as before,
 			before as after
 		export
-			{NONE} all;
+			{NONE} all
 			{ANY}
 				count, readable, writable, extendible,
 			 	make, wipe_out
@@ -46,9 +46,9 @@ class ARRAYED_STACK [G] inherit
 			append, fill
 		redefine
 			linear_representation
-		end;
+		end
 
-creation
+create
 
 	make
 
@@ -57,9 +57,9 @@ feature -- Element change
 	extend, put, force (v: like item) is
 			-- Push `v' on top.
 		do
-			al_extend (v);
+			al_extend (v)
 			start
-		end;
+		end
 
 feature -- Removal
 
@@ -68,9 +68,9 @@ feature -- Removal
 		require else
 			not_empty: count /= 0
 		do
-			al_remove;
+			al_remove
 			start
-		end;
+		end
 
 feature -- Conversion
 
@@ -81,35 +81,49 @@ feature -- Conversion
 			i: INTEGER
 		do
 			from
-				!! Result.make (count);
+				create Result.make (count)
 				i := count
 			until
 				i < 1
 			loop
-				Result.extend (i_th (i));
+				Result.extend (i_th (i))
 				i := i - 1
 			end
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class ARRAYED_STACK
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

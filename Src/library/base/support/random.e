@@ -1,11 +1,11 @@
 indexing
 
 	description:
-		"Pseudo-random number sequence, linear congruential method";
+		"Pseudo-random number sequence, linear congruential method"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: random;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class RANDOM inherit
@@ -13,14 +13,14 @@ class RANDOM inherit
 	COUNTABLE_SEQUENCE [INTEGER]
 		redefine
 			has
-		end;
+		end
 
 	DOUBLE_MATH
 		export
 			{NONE} all
 		end
 
-creation
+create
 	make, set_seed
 
 feature -- Initialization
@@ -87,7 +87,7 @@ feature -- Access
 			Result := randomize (n)
 		ensure
 			in_range: (Result < modulus) and (Result >= 0)
-		end;
+		end
 
 	has (n: INTEGER): BOOLEAN is
 			-- Will `n' be part of the random number sequence?
@@ -121,7 +121,7 @@ feature -- Access
 			last_item := i
 		ensure then
 			in_range: (Result < modulus) and (Result >= 0)
-		end;
+		end
 
 	real_item: REAL is
 			-- The current random number as a real between 0 and 1
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			Result := x.truncated_to_integer
 		end
 
-	double_mod (x,m: DOUBLE): DOUBLE is
+	double_mod (x, m: DOUBLE): DOUBLE is
 			-- `x' modulo `m'
 		do
 			Result := x - (floor (x / m) * m)
@@ -210,6 +210,38 @@ invariant
 	positive_multiplier: multiplier > 0
 	modulus_constraint: modulus > 1
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class RANDOM
 
 --| This class is adapted from work in:
@@ -221,22 +253,4 @@ end -- class RANDOM
 --| IMSL Scientific Subroutine Package [1978],
 --| written in Fortran for IBM 360/370 computers.
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

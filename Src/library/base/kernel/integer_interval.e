@@ -1,4 +1,5 @@
 indexing
+
 	description: "Contiguous integer intervals"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -32,69 +33,124 @@ inherit
 			copy, is_equal
 		end
 
-creation
-	make
+create
+	make,
+	make_infinite,
+	make_infinite_upper,
+	make_infinite_lower
 
 feature {NONE} -- Initialization
 
-	make (minindex, maxindex: INTEGER) is
-			-- Set up interval to have bounds `minindex' and
-			-- `maxindex' (empty if `minindex' > `maxindex')
-		require
+	make (min_index, max_index: INTEGER) is
+			-- Set up interval to have bounds `min_index' and
+			-- `max_index' (empty if `min_index' > `max_index')
 		do
-			if minindex <= maxindex then		
-				lower := minindex
-				upper := maxindex
+			lower_defined := True
+			upper_defined := True
+			if min_index <= max_index then		
+				lower_internal := min_index
+				upper_internal := max_index
 			else
-				lower := 1
-				upper := 0
+				lower_internal := 1
+				upper_internal := 0
 			end
 		ensure
+			lower_defined: lower_defined
+			upper_defined: upper_defined
 			set_if_non_empty:
-				(minindex <= maxindex) implies
-					((lower = minindex) and
-					(upper = maxindex))
+				(min_index <= max_index) implies
+					((lower = min_index) and
+					(upper = max_index))
 			empty_if_not_in_order:
-				(minindex > maxindex) implies empty
+				(min_index > max_index) implies is_empty
+		end
+
+	make_infinite is
+			-- Set up to have no bounds.
+		do
+		ensure
+			not_lower_defined: not lower_defined
+			not_upper_defined: not upper_defined
+		end
+
+	make_infinite_upper (min_index: INTEGER) is
+			-- Set up to have lower bound 'min_index'.
+		do
+			lower_defined := True
+			lower_internal := min_index
+		ensure
+			lower_defined: lower_defined
+			not_upper_defined: not upper_defined
+		end
+
+	make_infinite_lower (max_index: INTEGER) is
+			-- Set up to have lower bound 'max_index'.
+		do
+			upper_defined := True
+			upper_internal := max_index
+		ensure
+			not_lower_defined: not lower_defined
+			upper_defined: upper_defined
 		end
 
 feature -- Initialization
- 
+	
 	adapt (other: INTEGER_INTERVAL) is
 			-- Reset to be the same interval as `other'.
 		require
 			other_not_void: other /= Void
 		do
-			lower := other.lower
-			upper := other.upper
+			lower_internal := other.lower_internal
+			upper_internal := other.upper_internal
+			lower_defined := other.lower_defined
+			upper_defined := other.upper_defined
 		ensure
 			same_lower: lower = other.lower
 			same_upper: upper = other.upper
+			same_lower_defined: lower_defined = other.lower_defined
+			same_upper_defined: upper_defined = other.upper_defined
 		end
 
 feature -- Access
 
-	lower: INTEGER
-			-- Smallest value in interval
+	lower_defined: BOOLEAN
+			-- Is there a lower bound?
 
-	upper: INTEGER
+	lower: INTEGER is
+			-- Smallest value in interval
+		require
+			lower_defined: lower_defined
+		do
+			Result := lower_internal
+		end
+
+	upper_defined: BOOLEAN
+			-- Is there an upper bound?
+
+	upper: INTEGER is
 			-- Largest value in interval
+		require
+			upper_defined: upper_defined
+		do
+			Result := upper_internal
+		end
 
 	item, infix "@" (i: INTEGER): INTEGER is
 			-- Entry at index `i', if in index interval
 		do
 			Result := i
-		end;
+		end
 
-	has (v: INTEGER): BOOLEAN is
+	has, valid_index (v: INTEGER): BOOLEAN is
 			-- Does `v' appear in interval?
- 			-- (Reference or object equality,
-			-- based on `object_comparison'.)
 		do
-			Result := (v >= lower) and (v <= upper)
+			Result :=
+				upper_defined implies v <= upper and
+				lower_defined implies v >= lower
 		ensure then
 			iff_within_bounds: Result = 
-					((v >= lower) and (v <= upper))
+				upper_defined implies v <= upper and
+				lower_defined implies v >= lower
 		end
 
 feature -- Measurement
@@ -102,28 +158,37 @@ feature -- Measurement
 	occurrences (v: INTEGER): INTEGER is
 			-- Number of times `v' appears in structure
 		do
-			if v >= lower and v <= upper  then
+			if has (v) then
 				Result := 1
 			end
 		ensure then
-			one_iff_in_bounds:
-				(Result = 1) = ((v >= lower) and (v <= upper))
-			zero_otherwise: (Result /= 1) = (Result = 0)
+			one_iff_in_bounds: Result = 1 implies has (v)
+			zero_otherwise: Result /= 1 implies Result = 0
 		end
 
 	capacity: INTEGER is
 			-- Maximum number of items in interval
 			-- (here the same thing as `count')
 		do
+			check
+				terminal: upper_defined and lower_defined
+			end
 			Result := count
 		end
 
 	count: INTEGER is
 			-- Number of items in interval
 		do
-			Result := upper -lower + 1
+			check
+				finite: upper_defined and lower_defined
+			end
+			if upper_defined and lower_defined then
+				Result := upper - lower + 1
+			else
+				from until False loop end
+			end
 		ensure then
-			definition: Result = upper -lower + 1
+			definition: Result = upper - lower + 1
 		end
 
 	index_set: INTEGER_INTERVAL is
@@ -140,10 +205,13 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is array made of the same items as `other'?
 		do
-			Result := ((lower = other.lower) and (upper = other.upper))
+			Result :=
+				lower_defined implies other.lower_defined and lower = other.lower and
+				upper_defined implies other.upper_defined and upper = other.upper
 		ensure then
-			iff_same_bounds: Result = ((lower = other.lower) and (upper = other.upper))
-
+			iff_same_bounds: Result =
+				lower_defined implies other.lower_defined and lower = other.lower and
+				upper_defined implies other.upper_defined and upper = other.upper
 		end
 
 feature -- Status report
@@ -171,14 +239,6 @@ feature -- Status report
 			Result := False
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' in interval?
-		do
-			Result := ((i >= lower) and (i <= upper))
-		ensure then
-			definition: Result = ((i >= lower) and (i <= upper))
-		end
-
 feature -- Element change
 	
 	extend, put (v: INTEGER) is
@@ -186,9 +246,9 @@ feature -- Element change
 			-- to `v' (up or down).
 		do
 			if v < lower then
-				lower := v
+				lower_internal := v
 			elseif v > upper then
-				upper := v
+				upper_internal := v
 			end
 		ensure then
 			extended_down: lower = (old lower).min (v)
@@ -197,21 +257,33 @@ feature -- Element change
 
 feature -- Resizing
 
-	resize (minindex, maxindex: INTEGER) is
+	undefine_upper is
+			-- Remove upper bound.
+		do
+			upper_defined := False
+		end
+
+	undefine_lower is
+			-- Remove lower bound.
+		do
+			lower_defined := False
+		end
+
+	resize (min_index, max_index: INTEGER) is
 			-- Rearrange interval to go from at most
-			-- `minindex' to at least `maxindex',
+			-- `min_index' to at least `max_index',
 			-- encompassing previous bounds.
 		do	 
-			lower := lower.min (minindex)
-			upper := upper.max (maxindex)
+			lower_internal := min_index.min (lower)
+			upper_internal := max_index.max (upper)
 		end
 
 	resize_exactly (min_index, max_index: INTEGER) is
 			-- Rearrange interval to go from
 			-- `min_index' to `max_index'.
 		do
-			lower := min_index
-			upper := max_index
+			lower_internal := min_index
+			upper_internal := max_index
 		end
 
 	grow (i: INTEGER) is
@@ -221,14 +293,27 @@ feature -- Resizing
 				resize (lower, lower + i - 1)
 			end
 		ensure then
-			no_loss_from_bottom: lower <=  old lower
-			no_loss_from_top: upper >=  old upper
+			no_loss_from_bottom: lower <= old lower
+			no_loss_from_top: upper >= old upper
+		end
+
+feature -- Removal
+
+	wipe_out is
+			-- Remove all items.
+		do
+			lower_defined := True
+			upper_defined := True
+			lower_internal := 1
+			upper_internal := 0
 		end
 
 feature -- Conversion
 
 	as_array: ARRAY [INTEGER] is
 			-- Plain array containing interval's items
+		require
+			finite: upper_defined and lower_defined
 		local
 			i: INTEGER
 		do
@@ -249,13 +334,18 @@ feature -- Conversion
 	to_c: ANY is
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
+		require
+			finite: upper_defined and lower_defined
 		do
 			Result := as_array.to_c
-		end;
+		end
 
 	linear_representation: LINEAR [INTEGER] is
 			-- Representation as a linear structure
 		do
+			check
+				terminal: upper_defined and lower_defined
+			end
 			Result := as_array.linear_representation
 		end
 
@@ -264,12 +354,15 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Reset to be the same interval as `other'.
 		do
-			lower := other.lower
-			upper := other.upper
+			lower_internal := other.lower_internal
+			upper_internal := other.upper_internal
+			lower_defined := other.lower_defined
+			upper_defined := other.upper_defined
 		ensure then
 			same_lower: lower = other.lower
-
 			same_upper: upper = other.upper
+			same_lower_defined: lower_defined = other.lower_defined
+			same_upper_defined: upper_defined = other.upper_defined
 		end
 
 	subinterval (start_pos, end_pos: INTEGER): like Current is
@@ -285,11 +378,13 @@ feature -- Iteration
 				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
 			BOOLEAN is
 			-- Do all interval's values satisfy `condition'?
+		require
+			finite: upper_defined and lower_defined
 		local
 			i: INTEGER
 		do
 			from
-				Result := true; i := lower
+				Result := True; i := lower
 			until
 				(i > upper) or else (not condition.item ([i]))
 			loop
@@ -306,6 +401,8 @@ feature -- Iteration
 			BOOLEAN is
 			-- Does at least one of  interval's values
 			-- satisfy `condition'?
+		require
+			finite: upper_defined and lower_defined
 		local
 			i: INTEGER
 		do
@@ -327,10 +424,10 @@ feature -- Iteration
 			BOOLEAN is
 			-- Does exactly one of  interval's values
 			-- satisfy `condition'?
-		local
-			i: INTEGER
+		require
+			finite: upper_defined and lower_defined
 		do
-				Result := (hold_count (condition) = 1)
+			Result := (hold_count (condition) = 1)
 		ensure
 			consistent_with_count:
 				Result = (hold_count (condition) = 1)
@@ -341,6 +438,8 @@ feature -- Iteration
 			INTEGER is
 			-- Number of  interval's values that
 			-- satisfy `condition'
+		require
+			finite: upper_defined and lower_defined
 		local
 			i: INTEGER
 		do
@@ -358,17 +457,21 @@ feature -- Iteration
 			non_negative: Result >= 0
 		end
 
+feature {INTEGER_INTERVAL} -- Implementation
+
+	upper_internal: INTEGER
+			-- See `upper`.
+			--| `upper' has a precondition so it can't be an attribute.
+
+	lower_internal: INTEGER
+			-- See `lower`.
+			--| `lower' has a precondition so it can't be an attribute.
+
 feature {NONE} -- Inapplicable
 
-	prune (v: INTEGER ) is
+	prune (v: INTEGER) is
 			-- Remove one occurrence of `v' if any.
 			-- Not applicable here.
-		do
-		end
-
-	wipe_out is
-			-- Remove all items.
-			-- Not applicable here
 		do
 		end
 
@@ -380,30 +483,44 @@ feature {NONE} -- Inapplicable
 
 invariant
 
-	count_definition: count = upper -lower + 1
+	count_definition: upper_defined and lower_defined implies count = upper - lower + 1
 
 	index_set_is_range: equal (index_set, Current)
 
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class INTEGER_INTERVAL
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

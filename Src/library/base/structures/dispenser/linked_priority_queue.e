@@ -1,17 +1,16 @@
 indexing
 
 	description:
-		"Priority queues implemented as sorted lists";
+		"Priority queues implemented as sorted lists"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: priority_queue, queue;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
-class LINKED_PRIORITY_QUEUE [G -> COMPARABLE]
+class LINKED_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 
-inherit
 	PRIORITY_QUEUE [G]
 		undefine
 			copy, is_equal,
@@ -31,7 +30,7 @@ inherit
 				all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -39,8 +38,8 @@ feature -- Initialization
 	make is
 			-- Allocate heap space.
 		do
-			sl_make ;
-		end;
+			sl_make 
+		end
 
 feature -- Access
 
@@ -48,7 +47,7 @@ feature -- Access
 			-- Entry at top of heap.
 		do
 			Result := i_th (count)
-		end;
+		end
 
 feature -- Removal
 
@@ -58,7 +57,7 @@ feature -- Removal
 			go_i_th (count)
 			sl_remove
 			go_i_th (count)
-		end;
+		end
 
 feature -- Element change
 
@@ -66,27 +65,41 @@ feature -- Element change
 			-- Insert item `v' at its proper position.
 		do
 			extend (v)
-		end;
+		end
 
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class LINKED_PRIORITY_QUEUE
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,15 +1,15 @@
 indexing
 
 	description:
-		"Two-dimensional arrays";
+		"Two-dimensional arrays"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: array2, matrix, table;
 	representation: array;
 	access: index, row_and_column, membership;
 	size: resizable;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class ARRAY2 [G] inherit
@@ -25,14 +25,14 @@ class ARRAY2 [G] inherit
 		export
 			{NONE}
 				array_make, array_item, array_force,
-				array_resize, array_wipe_out;
+				array_resize, array_wipe_out
 			{ARRAY2}
-				array_put;
+				array_put
 			{ANY}
 				copy, is_equal, area, to_c
 		end
 
-creation
+create
 
 	make
 
@@ -43,15 +43,15 @@ feature -- Initialization
 			-- rows and `nb_columns' columns,
 			-- with lower bounds starting at 1.
 		require
-			not_flat: nb_rows > 0;
+			not_flat: nb_rows > 0
 			not_thin: nb_columns > 0
 		do
-			height := nb_rows;
-			width := nb_columns;
+			height := nb_rows
+			width := nb_columns
 			array_make (1, height * width)
 		ensure
 			new_count: count = height * width
-		end;
+		end
 
 	initialize (v: G) is
 			-- Make each entry have value `v'.
@@ -64,34 +64,34 @@ feature -- Initialization
 				row > height
 			loop
 				from
-					column := 1;
+					column := 1
 				until
 					column > width
 				loop
-					put (v, row, column);
+					put (v, row, column)
 					column := column + 1
-				end;
+				end
 				row := row + 1
 			end
-		end;
+		end
 
 feature -- Access
 
 	item (row, column: INTEGER): G is
 			-- Entry at coordinates (`row', `column')
 		require
-			valid_row: (1 <= row) and (row <= height);
+			valid_row: (1 <= row) and (row <= height)
 			valid_column: (1 <= column) and (column <= width)
 		do
 			Result := array_item ((row - 1) * width + column)
-		end;
+		end
 
 feature -- Measurement
 
-	height: INTEGER;
+	height: INTEGER
 			-- Number of rows
 
-	width: INTEGER;
+	width: INTEGER
 			-- Number of columns
 
 feature -- Element change
@@ -99,32 +99,32 @@ feature -- Element change
 	put (v: like item; row, column: INTEGER) is
 			-- Assign item `v' at coordinates (`row', `column').
 		require
-			valid_row: 1 <= row and row <= height;
+			valid_row: 1 <= row and row <= height
 			valid_column: 1 <= column and column <= width
 		do
 			array_put (v, (row - 1) * width + column)
-		end;
+		end
 
 	force (v: like item; row, column: INTEGER) is
 			-- Assign item `v' at coordinates (`row', `column').
 			-- Resize if necessary.
 		require
-			row_large_enough: 1 <= row;
+			row_large_enough: 1 <= row
 			column_large_enough: 1 <= column
 		do
-			resize (row, column);
+			resize (row, column)
 			put (v, row, column)
-		end;
+		end
 
 feature -- Removal
 
 	wipe_out is
 			-- Remove all items.
 		do
-			height := 0;
-			width := 0;
+			height := 0
+			width := 0
 			discard_items
-		end;
+		end
 
 feature -- Resizing
 
@@ -135,43 +135,43 @@ feature -- Resizing
 			-- entered items, nor changing their coordinates;
 			-- do nothing if not possible.
 		require
-			valid_row: nb_rows >= 1;
+			valid_row: nb_rows >= 1
 			valid_column: nb_columns >= 1
 		local
-			i, new_height: INTEGER;
-			in_new, in_old: INTEGER;
+			i, new_height: INTEGER
+			in_new, in_old: INTEGER
 			new: like Current
 		do
 			if nb_rows > height then
 				new_height := nb_rows
 			else
 				new_height := height
-			end;
+			end
 			if nb_columns > width then
-				!! new.make (new_height, nb_columns);
+				create new.make (new_height, nb_columns)
 				from
-					in_old := 1;
+					in_old := 1
 					in_new := 1
 				until
 					i = height
 				loop
-					i := i + 1;
-					transfer (new, in_old, in_new, width);
-					in_new := in_new + nb_columns;
+					i := i + 1
+					transfer (new, in_old, in_new, width)
+					in_new := in_new + nb_columns
 					in_old := in_old + width
-				end;
-				width := nb_columns;
-				height := new_height;
-				upper := width * height;
-				area := new.area;
+				end
+				width := nb_columns
+				height := new_height
+				upper := width * height
+				area := new.area
 			elseif new_height > height then
-				!! new.make (new_height, width);
-				transfer (new, 1, 1, width * height);
-				height := new_height;
-				upper := width * height;
+				create new.make (new_height, width)
+				transfer (new, 1, 1, width * height)
+				height := new_height
+				upper := width * height
 				area := new.area
 			end
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -183,40 +183,54 @@ feature {NONE} -- Implementation
 			i, j: INTEGER
 		do
 			from
-				i := in_old;
+				i := in_old
 				j := in_new
 			until
 				i = in_old + nb
 			loop
-				new.array_put (array_item (i), j);
-				i := i + 1;
+				new.array_put (array_item (i), j)
+				i := i + 1
 				j := j + 1
 			end
-		end;
+		end
 
 invariant
 
 	items_number: count = width * height
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class ARRAY2
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

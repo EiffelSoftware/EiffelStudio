@@ -1,10 +1,12 @@
 indexing
 
-	description: "Access to command-line arguments. This class %
-		%may be used as ancestor by classes needing its facilities.";
+	description: "[
+		Access to command-line arguments. This class 
+		may be used as ancestor by classes needing its facilities.
+		]"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -16,18 +18,18 @@ feature -- Access
 			-- `i'-th argument of command that started system execution
 			-- (the command name if `i' = 0)
 		require
-			index_large_enough: i >= 0;
+			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
 		do
 			Result := arg_option (i)
-		end;
+		end
 
 	argument_array: ARRAY [STRING] is
 			-- Array containing command name (position 0) and arguments
 		local
-			i : INTEGER
+			i: INTEGER
 		once
-			!!Result.make (0,argument_count)
+			create Result.make (0, argument_count)
 			from
 			until
 				i > argument_count
@@ -40,9 +42,9 @@ feature -- Access
 	command_line: STRING is
 			-- Total command line
 		local
-			i : INTEGER
+			i: INTEGER
 		once
-			!!Result.make (command_name.count)
+			create Result.make (command_name.count)
 			from
 			until
 				i > argument_count
@@ -61,7 +63,7 @@ feature -- Access
 			Result := arg_option (0)
 		ensure
 			definition: Result.is_equal (argument (0))
-		end;
+		end
 
 feature -- Status report
 
@@ -80,9 +82,9 @@ feature -- Status report
 			-- else 0.
 		require
 			opt_non_void: opt /= Void
-			opt_meaningful: not opt.empty
+			opt_meaningful: not opt.is_empty
 		local
-			i : INTEGER
+			i: INTEGER
 		do
 			from
 				i := 1
@@ -107,9 +109,9 @@ feature -- Status report
 			-- else 0.
 		require
 			opt_non_void: opt /= Void
-			opt_meaningful: not opt.empty
+			opt_meaningful: not opt.is_empty
 		local
-			i : INTEGER
+			i: INTEGER
 		do
 			from
 				i := 1
@@ -141,7 +143,7 @@ feature -- Status report
 		require
 			o_non_null: o /= '%U'
 		local
-			i : INTEGER
+			i: INTEGER
  		do
 			from
 				i := 1
@@ -168,16 +170,16 @@ feature -- Status report
 		require
 			o_non_null: o /= '%U'
 		local
-			p : INTEGER
+			p: INTEGER
 		do
 			p := index_of_character_option (o)
 			if p /= 0 then
 				if p = argument_count or else
-					argument_array.item (p+1).item (1) = option_sign
+					argument_array.item (p + 1).item (1) = option_sign
 				then
 					Result := ""
 				else
-					Result := argument_array.item (p+1)
+					Result := argument_array.item (p + 1)
 				end
 			end
 		end
@@ -193,18 +195,18 @@ feature -- Status report
 			--   Void if no `Xopt' argument.
 		require
 			opt_non_void: opt /= Void
-			opt_meaningful: not opt.empty
+			opt_meaningful: not opt.is_empty
 		local
-			p : INTEGER
+			p: INTEGER
 		do
 			p := index_of_word_option (opt)
 			if p /= 0 then
 				if p = argument_count or else
-					argument_array.item (p+1).item (1) = option_sign
+					argument_array.item (p + 1).item (1) = option_sign
 				then
 					Result := ""
 				else
-					Result := argument_array.item (p+1)
+					Result := argument_array.item (p + 1)
 				end
 			end
 		end
@@ -226,8 +228,8 @@ feature -- Status report
 		require
 			o_non_null: o /= '%U'
 		local
-			p : INTEGER
-			l : STRING
+			p: INTEGER
+			l: STRING
 		do
 			p := index_of_character_option (o)
 			if p /= 0 then
@@ -254,10 +256,10 @@ feature -- Status report
 			--   Void otherwise.
 		require
 			opt_non_void: opt /= Void
-			opt_meaningful: not opt.empty
+			opt_meaningful: not opt.is_empty
 		local
-			p : INTEGER
-			l : STRING
+			p: INTEGER
+			l: STRING
 		do
 			p := index_of_beginning_with_word_option (opt)
 			if p /= 0 then
@@ -265,7 +267,7 @@ feature -- Status report
 				if option_sign /= '%U' then
 					l.remove (1)
 				end
-				Result := l.substring (opt.count+1, l.count)
+				Result := l.substring (opt.count + 1, l.count)
 			end
 		end
 
@@ -275,7 +277,7 @@ feature -- Status report
 			-- to be an option
 			-- Default is '-'
 		once
-			!!Result
+			create Result
 			Result.set_item ('-')
 		end
 
@@ -298,69 +300,83 @@ feature -- Measurement
 			Result := arg_number - 1
 		ensure
 			Result >= 0
-		end;
+		end
 
 feature {NONE} -- Implementation
 
 	arg_number: INTEGER is
 		external
 			"C | %"eif_argv.h%""
-		end;
+		end
 
 	arg_option (i: INTEGER): STRING is
 		external
 			"C | %"eif_argv.h%""
-		end;
+		end
 
-	option_word_equal (arg, w : STRING): BOOLEAN is
+	option_word_equal (arg, w: STRING): BOOLEAN is
 			-- Is `arg' equal to the word option `w'?
 		do
 			if option_sign = '%U' then
 				Result := arg.is_equal (w)
 			elseif arg.item (1) = option_sign then
-				Result := arg.substring (2,arg.count).is_equal (w)
+				Result := arg.substring (2, arg.count).is_equal (w)
 			end
 		end
 
-	option_word_begins_with (arg, w : STRING): BOOLEAN is
+	option_word_begins_with (arg, w: STRING): BOOLEAN is
 			-- Does `arg' begin with the word option `w'?
 		do
 			if option_sign = '%U' and then arg.count >= w.count then
-				Result := arg.substring (1, w.count).is_equal(w)
+				Result := arg.substring (1, w.count).is_equal (w)
 			elseif arg.item (1) = option_sign and then arg.count > w.count then
 				Result := arg.substring (2, w.count + 1).is_equal (w)
 			end
 		end
 
-	option_character_equal (arg: STRING; c : CHARACTER): BOOLEAN is
+	option_character_equal (arg: STRING; c: CHARACTER): BOOLEAN is
 			-- Does `arg' contain the character option `c'?
 		do
 			if option_sign = '%U' then
 				Result := arg.has (c)
-			elseif arg.item(1) = option_sign then
-				Result := arg.substring (2,arg.count).has (c)
+			elseif arg.item (1) = option_sign then
+				Result := arg.substring (2, arg.count).has (c)
 			end
 		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class ARGUMENTS
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,13 +1,13 @@
 indexing
 
 	description:
-		"Structures whose items are sorted according to a total order relation";
+		"Structures whose items are sorted according to a total order relation"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: sorted_struct, comparable_struct;
 	access: index, membership, min, max;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
@@ -17,7 +17,7 @@ deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 			search, off
 		redefine
 			min, max
-		end;
+		end
 
 	INDEXABLE [G, INTEGER]
 		rename
@@ -26,7 +26,7 @@ deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 			bag_put as putt
 		redefine
 			putt
-		end;
+		end
 
 	LINEAR [G]
 
@@ -37,28 +37,28 @@ feature -- Measurement
 		require else
 			is_sorted: sorted
 		do
-			start;
+			start
 			Result := item
 		ensure then
 		--	smallest:
 		--		 For every `i' in `first_position' .. `last_position':
 		--				`Result <= i_th (i)';
 		--		 `Result' = `i_th' (`first_position')
-		end;
+		end
 
 	max: like item is
 			-- Maximum item
 		require else
 			is_sorted: sorted
 		do
-			finish;
+			finish
 			Result := item
 		ensure then
 		--	largest:
 		--		 For every `i' in `first_position' .. `last_position':
 		--				`i_th (`i') <= `Result';
 		--		 `Result' = `i_th' (`last_position')
-		end;
+		end
 
 	median: like item is
 			-- Median element
@@ -68,7 +68,7 @@ feature -- Measurement
 		--	median_definition:
 		--		Result = i_th (first_position +
 		--			(last_position - first_position) // 2)
-		end;
+		end
 
 feature -- Status report
 
@@ -77,22 +77,22 @@ feature -- Status report
 		local
 			m: like item
 		do
-			if empty then
-				Result := true
+			if is_empty then
+				Result := True
 			else
 				from
-					start;
-					m := item;
+					start
+					m := item
 					forth
 				until
 					exhausted or else (item < m)
 				loop
-					m := item;
+					m := item
 					forth
-				end;
+				end
 				Result := exhausted
 			end
-		end;
+		end
 
 feature -- Transformation
 
@@ -101,33 +101,47 @@ feature -- Transformation
 		deferred
 		ensure
 			is_sorted: sorted
-		end;
+		end
 
 feature {NONE} -- Inapplicable
 
 	putt (v: like item) is
 		do
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class SORTED_STRUCT
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

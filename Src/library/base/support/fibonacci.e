@@ -1,11 +1,11 @@
 indexing
 
 	description:
-		"The Fibonacci number sequence";
+		"The Fibonacci number sequence"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: fibonacci;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class FIBONACCI inherit
@@ -19,9 +19,9 @@ class FIBONACCI inherit
 
 feature -- Access
 
-	First : INTEGER is 1;
+	First: INTEGER is 1
 
-	Second : INTEGER is 1;
+	Second: INTEGER is 1
 
 	higher_fibonacci (n: INTEGER): INTEGER is
 			-- Lowest Fibonacci number greater than or equal to `n'
@@ -38,7 +38,7 @@ feature -- Access
 					Result := Result + 1
 				end
 			end
-		end;
+		end
 
 	lower_fibonacci (n: INTEGER): INTEGER is
 			-- Greatest Fibonacci number lower than or equal to `n'
@@ -57,7 +57,7 @@ feature -- Access
 					Result := Result - 1
 				end
 			end
-		end;
+		end
 
 	all_lower_fibonacci (n: INTEGER): ARRAY [BOOLEAN] is
 			-- Array of `n' boolean values, where the
@@ -67,27 +67,27 @@ feature -- Access
 			i, j: INTEGER
 		do
 			from
-				!! Result.make (1, n);
+				create Result.make (1, n)
 				j := 1
 				i := i_th (j)
 			until
 				i > n
 			loop
-				Result.put (true, i);
+				Result.put (True, i)
 				j := j + 1
 				i := i_th (j)
-			end;
-		end;
+			end
+		end
 
 	is_fibonacci (n: INTEGER): BOOLEAN is
 			-- Is `n' a Fibonacci number?
 		local
-			to_test, count : INTEGER
+			to_test, count: INTEGER
 		do
 			if n <= First then
-				Result := false
+				Result := False
 			elseif n = First then
-				Result := true
+				Result := True
 			else
 				from
 					count := First
@@ -97,16 +97,16 @@ feature -- Access
 				loop
 					count := count + 1
 					to_test := i_th (count)
-				end;
+				end
 				Result := to_test = n
 			end
-		end;
+		end
 
 	i_th (i: INTEGER): INTEGER is
 			-- The `i'-th Fibonacci number
 		local
-			count : INTEGER
-			last, second_last : INTEGER
+			count: INTEGER
+			last, second_last: INTEGER
 		do
 			if i = 1 then
 				Result := First
@@ -126,27 +126,41 @@ feature -- Access
 					count := count + 1
 				end
 			end
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class FIBONACCI
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

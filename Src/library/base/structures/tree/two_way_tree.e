@@ -1,14 +1,14 @@
 indexing
 
 	description:
-		"Trees implemented using a two way linked list representation";
+		"Trees implemented using a two way linked list representation"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: two_way_tree, tree, two_way_list;
 	representation: recursive, linked;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class TWO_WAY_TREE [G] inherit
@@ -18,10 +18,10 @@ class TWO_WAY_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off
 		redefine
-			parent
+			parent, copy
 		select
 			has
-		end;
+		end
 
 	BI_LINKABLE [G]
 		rename
@@ -31,11 +31,15 @@ class TWO_WAY_TREE [G] inherit
 			put_right as bl_put_right
 		export
 			{ANY}
-				left_sibling, right_sibling;
+				left_sibling, right_sibling
 			{TWO_WAY_TREE}
 				bl_put_left, bl_put_right,
-				forget_left, forget_right;
-		end;
+				forget_left, forget_right
+		undefine
+			is_equal
+		redefine
+			copy
+		end
 
 	TWO_WAY_LIST [G]
 		rename
@@ -80,7 +84,7 @@ class TWO_WAY_TREE [G] inherit
 			writable as child_writable
 		export
 			{ANY}
-				child;
+				child
 			{NONE}
 				twl_make, twl_has,
 				twl_fill, twl_duplicate,
@@ -89,14 +93,15 @@ class TWO_WAY_TREE [G] inherit
 			child_readable, is_leaf,
 			child_writable,
 			linear_representation,
-			child_isfirst, child_islast, valid_cursor_index
+			child_isfirst, child_islast, valid_cursor_index,
+			is_equal
 		redefine
-			first_child, last_child, new_cell
+			first_child, last_child, new_cell, copy
 		select
 			is_leaf
 		end
 
-creation
+create
 
 	make
 
@@ -105,16 +110,16 @@ feature -- Initialization
 	make (v: like item) is
 			-- Create single node with item `v'.
 		do
-			put (v);
+			put (v)
 			twl_make
-		end;
+		end
 
 feature -- Access
 
-	parent: TWO_WAY_TREE [G];
+	parent: TWO_WAY_TREE [G]
 			-- Parent node
 
-	first_child: like parent;
+	first_child: like parent
 			-- Leftmost child
 
 	last_child: like parent
@@ -127,7 +132,7 @@ feature {RECURSIVE_CURSOR_TREE} -- Element change
 			child := n
 		ensure then
 			child_set: child = n
-		end;
+		end
 
 feature -- Element change
 
@@ -135,79 +140,89 @@ feature -- Element change
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		do
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
 			if is_leaf then
-				first_child := n;
+				first_child := n
 				child := n
 			else
-				last_child.bl_put_right (n);
+				last_child.bl_put_right (n)
 				if child_after then
 					child := n
 				end
-			end;
-			last_child := n;
-			n.attach_to_parent (Current);
+			end
+			last_child := n
+			n.attach_to_parent (Current)
 			arity := arity + 1
-		end;
+		end
 
 	replace_child (n: like parent) is
 			-- Replace current child by `n'.
 		do
-			put_child_right (n);
+			put_child_right (n)
 			remove_child
-		end;
+		end
 
 	put_child_left (n: like parent) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
-			child_back;
-			put_child_right (n);
+			child_back
+			put_child_right (n)
 			child_forth; child_forth
-		end;
+		end
 
 	put_child_right (n: like parent) is
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
 		do
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
 			if child_before then
 				if is_leaf then
 					last_child := n
-				end;
-				n.bl_put_right (first_child);
-				first_child := n;
+				end
+				n.bl_put_right (first_child)
+				first_child := n
 				child := n
 			elseif child_islast then
-				child.bl_put_right (n);
+				child.bl_put_right (n)
 				last_child := n
 			else
-				n.bl_put_right (child.right_sibling);
+				n.bl_put_right (child.right_sibling)
 				n.bl_put_left (child)
-			end;
-			n.attach_to_parent (Current);
+			end
+			n.attach_to_parent (Current)
 			arity := arity + 1
-		end;
+		end
 
 	merge_tree_before (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
 		do
-			attach (other);
+			attach (other)
 			twl_merge_left (other)
-		end;
+		end
 
 	merge_tree_after (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
 		do
-			attach (other);
+			attach (other)
 			twl_merge_right (other)
-		end;
+		end
 
 	prune (n: like first_child) is
 		local
-			l_child: like first_child;
+			l_child: like first_child
 		do
 			from
 				l_child := first_child
@@ -215,7 +230,7 @@ feature -- Element change
 				l_child = Void or l_child = n
 			loop
 				l_child := l_child.right_sibling
-			end;
+			end
 			
 			if l_child /= Void then
 				if l_child = first_child then
@@ -232,33 +247,44 @@ feature -- Element change
 						child := last_child
 					end
 				else
-					l_child.right_sibling.bl_put_left (l_child.left_sibling);
+					l_child.right_sibling.bl_put_left (l_child.left_sibling)
 					if child = n then
 						child := l_child.left_sibling
 					end
-				end;
+				end
 
-				arity := arity - 1;
+				arity := arity - 1
 
 				if is_leaf and not child_before then
 					first_child := Void
 					last_child := Void
-					child_after := true
-				end;
+					child_after := True
+				end
 				n.attach_to_parent (Void)
 				n.simple_forget_left
 				n.simple_forget_right
-			end;
-		end;
+			end
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy contents from `other'.
+		local
+			tmp_tree: like Current
+		do
+			create tmp_tree.make (other.item)
+			if not other.is_leaf then tree_copy (other, tmp_tree) end
+		end
 
 feature {LINKED_TREE} -- Implementation
 
-
 	new_cell (v: like item): like first_child is
+			-- New cell containing `v'
 		do
-			!! Result.make (v);
+			create Result.make (v)
 			Result.attach_to_parent (Current)
-		end;
+		end
 
 	new_tree: like Current is
 			-- A newly created instance of the same type, with
@@ -266,50 +292,64 @@ feature {LINKED_TREE} -- Implementation
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result.make (item)
-		end;
+			create Result.make (item)
+		end
 
 feature {NONE} -- Implementation
 
 	attach (other: like first_child) is
 				-- Attach all children of `other' to current node.
 		local
-			cursor: CURSOR;
+			cursor: CURSOR
 		do
 			from
 				other.child_start
 			until
 				other.child_off
 			loop
-				other.child.attach_to_parent (Current);
+				other.child.attach_to_parent (Current)
 				other.child_forth
-			end;
+			end
 			other.child_go_to (cursor)
-		end;
+		end
 
 invariant
 
 	off_constraint: (child = Void) implies child_off
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class TWO_WAY_TREE
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,9 +1,9 @@
 indexing
 
 	description:
-		"Any medium that can perform input and/or output";
-	status: "See notice at end of class";
-	date: "$Date$";
+		"Any medium that can perform input and/or output"
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class IO_MEDIUM
@@ -23,7 +23,7 @@ feature -- Access
 	name: STRING is
 			-- Medium name
 		deferred
-		end;
+		end
 
 	retrieved: ANY is
 			-- Retrieved object structure
@@ -32,7 +32,7 @@ feature -- Access
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
 		require
-			exists: exists;
+			exists: exists
 			is_open_read: is_open_read
 			support_storable: support_storable
 		deferred
@@ -47,12 +47,12 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
 		require
-			object_not_void: object /= Void;
-			exists: exists;
+			object_not_void: object /= Void
+			exists: exists
 			is_open_write: is_open_write
 			support_storable: support_storable
 		deferred
-		end;
+		end
  
 	general_store (object: ANY) is
 			-- Produce an external representation of the
@@ -63,8 +63,8 @@ feature -- Element change
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
 		require
-			object_not_void: object /= Void;
-			exists: exists;
+			object_not_void: object /= Void
+			exists: exists
 			is_open_write: is_open_write
 			support_storable: support_storable
 		deferred
@@ -76,8 +76,8 @@ feature -- Element change
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
 		require
-			object_not_void: object /= Void;
-			exists: exists;
+			object_not_void: object /= Void
+			exists: exists
 			is_open_write: is_open_write
 			support_storable: support_storable
 		deferred
@@ -90,38 +90,38 @@ feature -- Status report
 		require
 			valid_handle: handle_available
 		deferred
-		end;
+		end
 
 	handle_available: BOOLEAN is
 			-- Is the handle available after class has been
 			-- created?
 		deferred
-		end;
+		end
 
 	is_plain_text: BOOLEAN is
 			-- Is file reserved for text (character sequences)?
 		do
 		end
 
-	last_character: CHARACTER;
+	last_character: CHARACTER
 			-- Last character read by `read_character'
 
-	last_string: STRING;
+	last_string: STRING
 			-- Last string read
 
-	last_integer: INTEGER;
+	last_integer: INTEGER
 			-- Last integer read by `read_integer'
 
-	last_real: REAL;
+	last_real: REAL
 			-- Last real read by `read_real'
 
-	last_double: DOUBLE;
+	last_double: DOUBLE
 			-- Last double read by `read_double'
 
 	exists: BOOLEAN is
 			-- Does medium exist?
 		deferred
-		end;
+		end
 
 	is_open_read: BOOLEAN is
 			-- Is this medium opened for input
@@ -138,52 +138,52 @@ feature -- Status report
 		require
 			handle_exists: exists
 		deferred
-		end;
+		end
 
 	is_executable: BOOLEAN is
 			-- Is medium executable?
 		require
 			handle_exists: exists
 		deferred
-		end;
+		end
 
 	is_writable: BOOLEAN is
 			-- Is medium writable?
 		require
 			handle_exists: exists
 		deferred
-		end;
+		end
 
 	readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		require
 			handle_exists: exists
 		deferred
-		end;
+		end
 
 	extendible: BOOLEAN is
 			-- May new items be added?
 		deferred
-		end;
+		end
 
 	is_closed: BOOLEAN is
 			-- Is the I/O medium open
 		deferred
-		end;
+		end
 
 	support_storable: BOOLEAN is
 			-- Can medium be used to store an Eiffel object?
 		deferred
-		end;
+		end
 
 feature -- Status setting
 
 	close is
 			-- Close medium.
 		require
-			medium_is_open: not is_closed;
+			medium_is_open: not is_closed
 		deferred
-		end;
+		end
 
 feature -- Removal
 
@@ -191,9 +191,9 @@ feature -- Removal
 			-- Ensure this medium is closed when garbage collected.
 		do
 			if not is_closed then
-				close;
-			end;
-		end;
+				close
+			end
+		end
 
 feature -- Output
 
@@ -202,7 +202,7 @@ feature -- Output
 		require
 			extendible: extendible
 		deferred
-		end;
+		end
 
 	put_string, putstring (s: STRING) is
 			-- Write `s' to medium.
@@ -210,42 +210,42 @@ feature -- Output
 			extendible: extendible
 			non_void: s /= Void
 		deferred
-		end;
+		end
 
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' to medium.
 		require
 			extendible: extendible
 		deferred
-		end;
+		end
 
 	put_real, putreal (r: REAL) is
 			-- Write `r' to medium.
 		require
 			extendible: extendible
 		deferred
-		end;
+		end
 
 	put_integer, putint (i: INTEGER) is
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
-		end;
+		end
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' to medium.
 		require
 			extendible: extendible
 		deferred
-		end;
+		end
 
 	put_double, putdouble (d: DOUBLE) is
 			-- Write `d' to medium.
 		require
 			extendible: extendible
 		deferred
-		end;
+		end
 
 feature -- Input
 
@@ -255,7 +255,7 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
-		end;
+		end
 
 	read_double, readdouble is
 			-- Read a new double.
@@ -263,7 +263,7 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
-		end;
+		end
 
 	read_character, readchar is
 			-- Read a new character.
@@ -271,7 +271,7 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
-		end;
+		end
 
 	read_integer, readint is
 			-- Read a new integer.
@@ -279,7 +279,7 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
-		end;
+		end
 
 	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters
@@ -288,7 +288,7 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
-		end;
+		end
 
 	read_line, readline is
 			-- Read characters until a new line or
@@ -297,7 +297,7 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
-		end;
+		end
 
 feature -- Obsolete
 
@@ -305,50 +305,64 @@ feature -- Obsolete
 			-- Last character read by `read_character'
 		do
 			Result := last_character
-		end;
+		end
 
 	laststring: STRING is
 			-- Last string read
 		do
 			Result := last_string
-		end;
+		end
 
 	lastint: INTEGER is
 			-- Last integer read by `read_integer'
 		do
 			Result := last_integer
-		end;
+		end
 
 	lastreal: REAL is
 			-- Last real read by `read_real'
 		do
 			Result := last_real
-		end;
+		end
 
 	lastdouble: DOUBLE is
 			-- Last double read by `read_double'
 		do
 			Result := last_double
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class IO_MEDIUM
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

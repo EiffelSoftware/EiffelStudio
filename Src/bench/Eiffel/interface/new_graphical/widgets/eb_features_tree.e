@@ -72,20 +72,20 @@ feature -- Status report
 feature -- Access
 
 	disable_signature_status is
-			-- 
+			-- Disable display of signature
 		do
 			signature_enabled := False
 		end	
 
 	toggle_signatures is
-			-- 
+			-- Toggle signature on/off
 		do
 			recursive_do_all (agent toggle_node_signature)
 			signature_enabled := not signature_enabled			
 		end
 		
 	toggle_node_signature (n: EV_TREE_NODE) is
-			--
+			-- Toggle signature mode on the tree node
 		local
 			ef: E_FEATURE
 			efunc: E_FUNCTION
@@ -100,7 +100,6 @@ feature -- Access
 					
 					efunc ?= ef
 					if efunc /= Void then
---						l_name.append (" : " + efunc.type.associated_class.name_in_upper)
 						l_name.append (" : " + efunc.type.dump)
 					end
 				end
@@ -109,6 +108,7 @@ feature -- Access
 		end		
 		
 	signature_enabled: BOOLEAN
+			-- Do we display signature of feature ?
 
 feature {EB_FEATURES_TOOL} -- Implementation
 

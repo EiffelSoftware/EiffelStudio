@@ -62,6 +62,28 @@ feature {NONE} -- Implementation
 
 	interface: EV_DRAWING_AREA
 
+	redraw is
+		do
+			interface.expose_actions.call ([0, 0, width, height])
+		end
+
+	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+		do
+			interface.expose_actions.call ([x1, y1, x2, y2])
+		end
+
+	clear_and_redraw is
+		do
+			clear
+			redraw
+		end
+
+	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+		do
+			clear_rectangle (x1, y1, x2, y2)
+			redraw_rectangle (x1, y1, x2, y2)
+		end
+
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
@@ -92,6 +114,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/16 18:11:25  bonnard
+--| Added redraw features.
+--|
 --| Revision 1.7  2000/02/14 11:40:32  oconnor
 --| merged changes from prerelease_20000214
 --|

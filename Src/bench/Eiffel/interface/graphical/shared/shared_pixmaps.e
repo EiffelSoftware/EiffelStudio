@@ -63,19 +63,19 @@ feature -- Access
 			Result := pixmap_file_content ("classico")
 		end
 
-	bm_Dll: PIXMAP is
+	bm_Dynamic_lib: PIXMAP is
 		once
-			Result := pixmap_file_content ("dll")
+			Result := pixmap_file_content ("dynlib")
 		end
 
-	bm_Dll_dot: PIXMAP is
+	bm_Dynamic_lib_dot: PIXMAP is
 		once
-			Result := pixmap_file_content ("dlldot")
+			Result := pixmap_file_content ("dynlibdot")
 		end
 
-	bm_Dll_icon: PIXMAP is
+	bm_Dynamic_lib_icon: PIXMAP is
 		once
-			Result := pixmap_file_content ("dllico")
+			Result := pixmap_file_content ("dynlibico")
 		end
 
 	bm_Clickable: PIXMAP is

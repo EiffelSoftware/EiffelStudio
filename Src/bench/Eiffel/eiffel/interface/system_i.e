@@ -1982,9 +1982,11 @@ end
 
 			deg_output.display_degree_output (degree_message, 8, 11)
 			t.generate_plug
-			--generate_plug
 
-			deg_output.display_degree_output (degree_message, 7, 11)
+			deg_output.display_degree_output (degree_message, 8, 12)
+			t.generate_dynamic_lib_file
+
+			deg_output.display_degree_output (degree_message, 7, 12)
 			generate_init_file
 
 			deg_output.display_degree_output (degree_message, 6, 11)
@@ -2379,6 +2381,11 @@ feature -- Generation
 			t.generate_plug
 			--generate_plug
 
+				-- Generate edynlib with run-time.
+			deg_output.display_degree_output (degree_message, 2, 10)
+			t.generate_dynamic_lib_file
+
+				-- Generate init file
 			deg_output.display_degree_output (degree_message, 1, 10)
 			generate_init_file
 

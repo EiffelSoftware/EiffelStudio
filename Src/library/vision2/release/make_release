@@ -4,12 +4,18 @@ then
 	echo "usage: $0 release_tag"
 	exit 1
 fi
+rm -rf vision2
 cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 vision2
 cp RELEASE_NOTES vision2/
 cd vision2
+find | xargs touch -t
 make
 echo -n "."
-rm -rf documentation perlvision.pl test Makefile components extra release
+rm -rf documentation perlvision.pl test Makefile components extra
+mkdir test
+cp release/test/test.e test/
+cp release/test/Ace.ace test/
+rm -rf release
 echo -n "."
 rm -rf `find . -name '*_notes*'`
 echo -n "."
@@ -23,7 +29,7 @@ do
 	then
 		rm -f $file
 	else
-		grep -v "\$Id$file > $file.new
+		grep -v "Id:" $file > $file.new
 		mv -f $file.new $file
 		if [ `grep -v \"C $file | fmt -s -w 80 | wc -l` != `grep -v \"C $file | wc -l` ]
 		then
@@ -33,5 +39,8 @@ do
 		mv -f $file.new $file
 	fi
 done
+cd ..
+tar czf vision_$1.tgz vision2
+rm -rf vision2
 echo "Done!"
 exit 0

@@ -31,6 +31,7 @@ inherit
 			is_equal,
 			copy
 		redefine
+			append,
 			force_i_th,
 			replace,
 			insert,
@@ -39,6 +40,7 @@ inherit
 			remove,
 			merge_left,
 			merge_right,
+			make_from_array,
 			default_create
 		end
 
@@ -271,6 +273,45 @@ feature -- List operations
 			Precursor
 			full_redraw
 		end
+		
+	append (s: SEQUENCE [EV_FIGURE]) is
+			-- Append a copy of `s'.
+		local
+			l: like s
+			l_cursor: CURSOR
+		do
+			if s = Current then
+				l := s.twin
+			else
+				l := s
+			end
+			from
+				l_cursor := cursor
+				l.start
+			until
+				l.exhausted
+			loop
+				extend (l.item)
+				l.forth
+			end
+			go_to (l_cursor)
+		end
+		
+	make_from_array (a: ARRAY [EV_FIGURE]) is
+			-- Create list from array `a'.
+		local
+			i: INTEGER
+		do
+			wipe_out
+			from
+				i := a.lower
+			until
+				i > a.upper
+			loop
+				extend (a.item (i))
+				i := i + 1
+			end
+		end 
 
 feature {NONE} -- Implementation
 

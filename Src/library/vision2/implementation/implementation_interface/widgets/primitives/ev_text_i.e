@@ -11,6 +11,14 @@ deferred class
 	
 inherit
 	EV_TEXT_COMPONENT_I
+		redefine
+			interface
+		end
+	
+	EV_FONTABLE_I
+		redefine
+			interface
+		end
 
 feature -- Access
 
@@ -135,6 +143,10 @@ feature -- Assertions
 		require
 		deferred
 		end
+		
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TEXT
 
 end -- class EV_TEXT_I
 

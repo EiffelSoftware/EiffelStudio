@@ -192,6 +192,7 @@ feature
 			result_type.c_type.generate (file);
 			internal_name := Encoder.feature_name
 											(class_type.id, body_id);
+			add_in_log (class_type, internal_name);
 			file.putstring (internal_name);
 			file.putstring ("(Current)");
 			file.new_line;

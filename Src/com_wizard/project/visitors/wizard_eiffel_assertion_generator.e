@@ -35,50 +35,50 @@ feature -- Access
 
 feature -- Basic operation
 
-	generate_precondition (a_name: STRING; type: WIZARD_DATA_TYPE_DESCRIPTOR; 
+	generate_precondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 
 					in_param, out_param: BOOLEAN) is
 			-- Generate precondition.
 		require
-			non_void_descriptor: type /= Void
+			non_void_descriptor: a_type /= Void
 			non_void_string: a_name /= Void
 			valid_string: not a_name.is_empty
 		local
-			tmp_tag, tmp_body: STRING
-			tmp_writer: WIZARD_WRITER_ASSERTION
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_tag, l_body: STRING
+			l_writer: WIZARD_WRITER_ASSERTION
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} assertions.make (20)
 		
-			visitor := type.visitor 
+			l_visitor := a_type.visitor 
 
 			if 
-				not visitor.is_basic_type and 
-				not is_boolean (visitor.vt_type) and 
-				not visitor.is_enumeration and 
-				not visitor.is_interface_pointer and 
-				not visitor.is_coclass_pointer and
-				not (visitor.vt_type = Vt_lpstr) and
-				not (visitor.vt_type = Vt_lpwstr) and
-				not (visitor.vt_type = Vt_bstr)
+				not l_visitor.is_basic_type and 
+				not is_boolean (l_visitor.vt_type) and 
+				not l_visitor.is_enumeration and 
+				not l_visitor.is_interface_pointer and 
+				not l_visitor.is_coclass_pointer and
+				l_visitor.vt_type /= Vt_lpstr and
+				l_visitor.vt_type /= Vt_lpwstr and
+				l_visitor.vt_type /= Vt_bstr
 			then
-				create tmp_tag.make (100)
-				tmp_tag.append ("non_void_")
-				tmp_tag.append (a_name)
+				create l_tag.make (100)
+				l_tag.append ("non_void_")
+				l_tag.append (a_name)
 				
-				create tmp_body.make (100)
-				tmp_body.append (a_name)
-				tmp_body.append (" /= Void")
+				create l_body.make (100)
+				l_body.append (a_name)
+				l_body.append (" /= Void")
 
-				create tmp_writer.make (tmp_tag, tmp_body)
+				create l_writer.make (l_tag, l_body)
 
-				assertions.extend (tmp_writer)
+				assertions.extend (l_writer)
 
-				tmp_writer := additional_precondition (a_name, type, visitor, in_param, out_param)
-				if tmp_writer /= Void then
-					assertions.extend (tmp_writer)				
+				l_writer := additional_precondition (a_name, a_type, l_visitor, in_param, out_param)
+				if l_writer /= Void then
+					assertions.extend (l_writer)				
 				end
 			end
-			visitor := Void
+			l_visitor := Void
 		ensure
 			non_void_assertions: assertions /= Void
 		end
@@ -89,13 +89,13 @@ feature -- Basic operation
 			non_void_name: a_feature_name /= Void
 			valid_name: not a_feature_name.is_empty
 		local
-			tmp_tag, tmp_body, a_precondition_name: STRING
+			l_tag, l_body, a_precondition_name: STRING
 		do
 			a_precondition_name := user_precondition_name (a_feature_name)
-			tmp_tag := a_precondition_name.twin
-			tmp_body := a_precondition_name.twin
+			l_tag := a_precondition_name.twin
+			l_body := a_precondition_name.twin
 
-			create Result.make (tmp_tag, tmp_body)
+			create Result.make (l_tag, l_body)
 		ensure
 			non_void_assertion: Result /= Void
 		end
@@ -108,19 +108,19 @@ feature -- Basic operation
 			non_void_string: a_name /= Void
 			valid_string: not a_name.is_empty
 		local
-			tmp_writer: WIZARD_WRITER_ASSERTION
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_writer: WIZARD_WRITER_ASSERTION
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} assertions.make (20)
-			visitor := a_type.visitor 
+			l_visitor := a_type.visitor 
 
-			if not visitor.is_basic_type and not is_boolean (visitor.vt_type) and not visitor.is_enumeration then
-				tmp_writer := additional_postcondition (a_name, a_type, visitor, ret_val)
-				if tmp_writer /= Void then
-					assertions.extend (tmp_writer)				
+			if not l_visitor.is_basic_type and not is_boolean (l_visitor.vt_type) and not l_visitor.is_enumeration then
+				l_writer := additional_postcondition (a_name, a_type, l_visitor, ret_val)
+				if l_writer /= Void then
+					assertions.extend (l_writer)				
 				end
 			end
-			visitor := Void
+			l_visitor := Void
 		ensure
 			non_void_assertions: assertions /= Void
 		end
@@ -141,7 +141,7 @@ feature {NONE}
 			l_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			l_descriptor ?= a_type
-			if l_descriptor /= Void and not (a_visitor.vt_type = binary_or (Vt_ptr, Vt_byref)) then
+			if l_descriptor /= Void and a_visitor.vt_type /= binary_or (Vt_ptr, Vt_byref) then
 				if a_visitor.is_structure_pointer then
 					create l_tag.make (100)
 					l_tag.append ("valid_")
@@ -150,7 +150,9 @@ feature {NONE}
 					l_body.append (a_name)
 					l_body.append (".item /= default_pointer")
 					create Result.make (l_tag, l_body)
-				elseif not a_visitor.is_basic_type_ref and a_in_param then
+				elseif not a_visitor.is_basic_type_ref and a_in_param and
+						a_visitor.vt_type /= binary_or (Vt_error, Vt_byref) and
+						a_visitor.vt_type /= binary_or (Vt_hresult, Vt_byref) then
 					create l_tag.make (100)
 					l_tag.append ("valid_")
 					l_tag.append (a_name)
@@ -174,80 +176,82 @@ feature {NONE}
 			end
 		end
 
-	additional_postcondition (a_name: STRING; type: WIZARD_DATA_TYPE_DESCRIPTOR; 
-		visitor: WIZARD_DATA_TYPE_VISITOR; ret_val: BOOLEAN): WIZARD_WRITER_ASSERTION is
+	additional_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 
+		a_visitor: WIZARD_DATA_TYPE_VISITOR; ret_val: BOOLEAN): WIZARD_WRITER_ASSERTION is
 			-- A writer
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
-			non_void_descriptor: type /= Void
-			non_void_visitor: visitor /= Void
+			non_void_descriptor: a_type /= Void
+			non_void_visitor: a_visitor /= Void
 		local
-			tmp_tag, tmp_body: STRING
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			l_tag, l_body: STRING
+			l_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
-			pointed_descriptor ?= type
-			if pointed_descriptor /= Void  then
-				if visitor.vt_type = binary_or (Vt_ptr, Vt_byref) or visitor.vt_type = binary_or (Vt_void, Vt_byref) then
-					create tmp_tag.make (100)
-					tmp_tag.append ("valid_")
-					tmp_tag.append (a_name)
+			l_descriptor ?= a_type
+			if l_descriptor /= Void  then
+				if a_visitor.vt_type = binary_or (Vt_ptr, Vt_byref) or a_visitor.vt_type = binary_or (Vt_void, Vt_byref) then
+					create l_tag.make (100)
+					l_tag.append ("valid_")
+					l_tag.append (a_name)
 					if ret_val then
-						create tmp_body.make (100)
-						tmp_body.append ("Result")
+						create l_body.make (100)
+						l_body.append ("Result")
 					else
-						create tmp_body.make (100)
-						tmp_body.append (a_name)
+						create l_body.make (100)
+						l_body.append (a_name)
 					end
-					tmp_body.append (".item /= default_pointer")
-					create Result.make (tmp_tag, tmp_body)
+					l_body.append (".item /= default_pointer")
+					create Result.make (l_tag, l_body)
 
-				elseif ret_val and visitor.is_structure_pointer then
-					create tmp_tag.make (100)
-					tmp_tag.append ("valid_")
-					tmp_tag.append (a_name)
+				elseif ret_val and a_visitor.is_structure_pointer then
+					create l_tag.make (100)
+					l_tag.append ("valid_")
+					l_tag.append (a_name)
 					
-					create tmp_body.make (100)
-					tmp_body.append ("Result")
-					tmp_body.append (".item /= default_pointer")
-					create Result.make (tmp_tag, tmp_body)
+					create l_body.make (100)
+					l_body.append ("Result")
+					l_body.append (".item /= default_pointer")
+					create Result.make (l_tag, l_body)
 
 				elseif 
-					not visitor.is_basic_type_ref and
-					not visitor.is_structure_pointer and
-					not visitor.is_interface_pointer and
-					not visitor.is_coclass_pointer 
+					not a_visitor.is_basic_type_ref and
+					not a_visitor.is_structure_pointer and
+					not a_visitor.is_interface_pointer and
+					not a_visitor.is_coclass_pointer and
+					a_visitor.vt_type /= binary_or (Vt_error, Vt_byref) and
+					a_visitor.vt_type /= binary_or (Vt_hresult, Vt_byref)
 				then
-					create tmp_tag.make (100)
-					tmp_tag.append ("valid_")
-					tmp_tag.append (a_name)
+					create l_tag.make (100)
+					l_tag.append ("valid_")
+					l_tag.append (a_name)
 					if ret_val then
-						create tmp_body.make (100)
-						tmp_body.append ("Result")
+						create l_body.make (100)
+						l_body.append ("Result")
 					else
-						create tmp_body.make (100)
-						tmp_body.append (a_name)
+						create l_body.make (100)
+						l_body.append (a_name)
 					end
-					if is_pointed_pointer (pointed_descriptor) then
-						tmp_body.append (".item /= default_pointer")
+					if is_pointed_pointer (l_descriptor) then
+						l_body.append (".item /= default_pointer")
 					else
-						tmp_body.append (".item /= Void")
+						l_body.append (".item /= Void")
 					end
-					create Result.make (tmp_tag, tmp_body)
+					create Result.make (l_tag, l_body)
 				end
-			elseif visitor.is_structure then
-				create tmp_tag.make (100)
-				tmp_tag.append ("valid_")
-				tmp_tag.append (a_name)
+			elseif a_visitor.is_structure then
+				create l_tag.make (100)
+				l_tag.append ("valid_")
+				l_tag.append (a_name)
 				if ret_val then
-					create tmp_body.make (100)
-					tmp_body.append ("Result")
+					create l_body.make (100)
+					l_body.append ("Result")
 				else
-					create tmp_body.make (100)
-					tmp_body.append (a_name)
+					create l_body.make (100)
+					l_body.append (a_name)
 				end
-				tmp_body.append (".item /= default_pointer")
-				create Result.make (tmp_tag, tmp_body)
+				l_body.append (".item /= default_pointer")
+				create Result.make (l_tag, l_body)
 
 			end
 		end

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 	setup_dialog is
 		do
-			set_cursor_position (window_rect.x + ok_button.x -
+			set_cursor_position_absolute (window_rect.x + ok_button.x -
 				sensibility, window_rect.y + ok_button.y)
 		end
 

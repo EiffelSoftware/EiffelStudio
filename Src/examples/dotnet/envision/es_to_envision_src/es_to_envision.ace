@@ -12,7 +12,7 @@ default
 -- EiffelBase
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\examples\dotnet\envision"
+	root_cluster:		"$EIFFEL_SRC\examples\dotnet\envision\es_to_envision_src"
 
 
 	library base:		"$ISE_EIFFEL\library\base"

@@ -475,6 +475,8 @@ public class EiffelClassGenerator: Globals
 		GeneratedEiffelClass.SetDeferred( ClassFactory.IsDeferred );
 		GeneratedEiffelClass.SetEiffelName( ClassFactory.Name );
 		GeneratedEiffelClass.SetExternalNames( ClassFactory.TypeName );
+		if( ClassFactory.UnderlyingType.IsEnum )
+			GeneratedEiffelClass.SetEnumType( NameFormatter.FormatArgumentTypeName( Enum.GetUnderlyingType( ClassFactory.UnderlyingType) ) );
 		
 			// Add parents
 		if( ClassFactory.Parents.Count > 1 || ClassFactory.Renames.HasClause( "ANY" ) || ClassFactory.Redefines.HasClause( "ANY" ) || ClassFactory.Undefines.HasClause( "ANY") || (( ClassFactory.Parents.Count == 1 )&&( !(( EiffelClassFactory )ClassTable [ClassFactory.Parents [0]]).Name.Equals( "ANY" ))))
@@ -643,34 +645,45 @@ public class EiffelClassGenerator: Globals
 		MethodInfo MethodDescriptor = null;
 		FieldInfo FieldDescriptor  = null;
 		ParameterInfo[] Arguments = new ParameterInfo[] {};
-		Boolean IsField, IsUnaryOperator, IsBinaryOperator, IsMethod, IsCreationRoutine;
+		Boolean IsField, IsMethod, IsCreationRoutine;
+		bool IsUnaryOperator = false;
+		bool IsBinaryOperator = false;
+		bool IsEnumLiteral = false;
 		String PrefixName, Prefix, InfixName, Infix;
 		int PrefixIndex, InfixIndex;
 		int i;
 
 		GeneratedEiffelFeature = new EiffelFeature();
 		GeneratedEiffelFeature.Make();
-		IsBinaryOperator = BinaryOperators().ContainsKey( FeatureName );
-		IsUnaryOperator = UnaryOperators().ContainsKey( FeatureName );
-		IsMethod =( FeatureTable [FeatureName].GetType() == typeof( EiffelMethodFactory ));
+		
+		IsMethod = typeof( EiffelMethodFactory ).IsInstanceOfType( FeatureTable [FeatureName]);
 		GeneratedEiffelFeature.SetMethod( IsMethod );
 		
 		if( IsMethod )
 		{
-			MethodDescriptor =(( MethodInfo )((( EiffelMethodFactory )FeatureTable [FeatureName]).Info ));
+			IsBinaryOperator = BinaryOperators().ContainsKey((( EiffelMethodFactory )FeatureTable [FeatureName]).Info.Name );
+			IsUnaryOperator = UnaryOperators().ContainsKey((( EiffelMethodFactory )FeatureTable [FeatureName]).Info.Name );
+			MethodFactory = ( EiffelMethodFactory )FeatureTable [FeatureName];
+			if( MethodFactory.NewSlot )
+				GeneratedEiffelFeature.SetNewSlot();
+			MethodDescriptor =( MethodInfo )(MethodFactory.Info);
 			GeneratedEiffelFeature.SetStatic( MethodDescriptor.IsStatic );
 			GeneratedEiffelFeature.SetAbstract( MethodDescriptor.IsAbstract );
 			Arguments = MethodDescriptor.GetParameters();
 		}
-		IsField = FeatureTable [FeatureName].GetType().IsSubclassOf( FieldInfoType );
+		IsField = FieldInfoType.IsInstanceOfType( FeatureTable [FeatureName]);
 		GeneratedEiffelFeature.SetField( IsField );
 		if( IsField )
 		{
 			FieldDescriptor =(( FieldInfo )FeatureTable [FeatureName]);
+			IsEnumLiteral = FieldDescriptor.IsLiteral  && ClassFactory.UnderlyingType.IsEnum;
+			if( IsEnumLiteral )
+				GeneratedEiffelFeature.SetEnumLiteral();
+			if( FieldDescriptor.DeclaringType.AssemblyQualifiedName.ToLower().Equals( ClassFactory.UnderlyingType.AssemblyQualifiedName.ToLower() ) )
+				GeneratedEiffelFeature.SetNewSlot();
 			GeneratedEiffelFeature.SetStatic( FieldDescriptor.IsStatic );
 			ReturnType = new SignatureType();
 			ReturnType.SetTypeFullExternalName( NameFormatter.FormatStrongName( FieldDescriptor.FieldType.FullName ) );
-			ReturnType.SetEnum( FieldDescriptor.FieldType.IsEnum );
 			GeneratedEiffelFeature.SetReturnType( ReturnType );
 		}
 		if( !IsMethod && !IsField )
@@ -684,9 +697,9 @@ public class EiffelClassGenerator: Globals
 		}
 
 		if(
-			(IsMethod &&( MethodDescriptor.IsFinal || !MethodDescriptor.IsVirtual || MethodDescriptor.IsStatic )) ||
-			(IsField) || 
-			(!IsMethod && !IsField)
+			( IsMethod &&( MethodDescriptor.IsFinal || !MethodDescriptor.IsVirtual || MethodDescriptor.IsStatic )) ||
+			( IsField ) || 
+			( !IsMethod && !IsField )
         	)
 				// Frozen Eiffel features correspond to:
 				// 1 - a feature which is final or not virtual
@@ -696,10 +709,10 @@ public class EiffelClassGenerator: Globals
 			GeneratedEiffelFeature.SetFrozen( true );
 		else
 			GeneratedEiffelFeature.SetFrozen( false );
-			
-		if( IsUnaryOperator )
+
+		if( IsUnaryOperator && (( EiffelMethodFactory )FeatureTable [FeatureName]).Name() == MethodDescriptor.Name )
 		{
-			PrefixName = ( ( String )UnaryOperators() [FeatureName] ).Trim();
+			PrefixName = ( ( String )UnaryOperators() [MethodDescriptor.Name] ).Trim();
 			Prefix = "prefix";
 			PrefixIndex = PrefixName.IndexOf( Prefix );
 			if( PrefixIndex > -1 )
@@ -713,9 +726,9 @@ public class EiffelClassGenerator: Globals
 		}
 		else
 		{
-			if( IsBinaryOperator )
+			if( IsBinaryOperator && (( EiffelMethodFactory )FeatureTable [FeatureName]).Name() == MethodDescriptor.Name )
 			{
-				InfixName = ( ( String )BinaryOperators() [FeatureName] ).Trim();
+				InfixName = ( ( String )BinaryOperators() [MethodDescriptor.Name] ).Trim();
 				Infix = "infix";
 				InfixIndex = InfixName.IndexOf( Infix );
 				if( InfixIndex > -1 )
@@ -750,7 +763,7 @@ public class EiffelClassGenerator: Globals
 				 	ArgumentExternalName = "";
 					if( !IsField && !IsMethod)
 					{
-						IsCreationRoutine = ( FeatureTable [FeatureName].GetType() == typeof( EiffelCreationRoutine ));
+						IsCreationRoutine = typeof( EiffelCreationRoutine ).IsInstanceOfType( FeatureTable [FeatureName] );
 						GeneratedEiffelFeature.SetCreationRoutine( IsCreationRoutine );
 						if( IsCreationRoutine )
 						{
@@ -772,7 +785,6 @@ public class EiffelClassGenerator: Globals
 				Argument.SetExternalName( ArgumentExternalName );
 				Argument.SetTypeEiffelName( ArgumentType );
 				Argument.SetTypeFullExternalName( ArgumentTypeFullName );
-				Argument.SetEnum( Arguments[i].ParameterType.IsEnum );
 				GeneratedEiffelFeature.AddArgument( Argument );
 			}
 		}
@@ -786,14 +798,12 @@ public class EiffelClassGenerator: Globals
 				ReturnType = new SignatureType();
 				ReturnType.SetTypeEiffelName( returnName );
 				ReturnType.SetTypeFullExternalName( NameFormatter.FormatStrongName( returnType.FullName ) ); 
-				ReturnType.SetEnum( returnType.IsEnum );
 				GeneratedEiffelFeature.SetReturnType( ReturnType );
 			}
 			else
 			{
 				ReturnType = new SignatureType();
 				ReturnType.SetTypeFullExternalName( "System.Void" );
-				ReturnType.SetEnum( returnType.IsEnum );
 				GeneratedEiffelFeature.SetReturnType( ReturnType );
 			}
 		}
@@ -803,7 +813,6 @@ public class EiffelClassGenerator: Globals
 			ReturnType = new SignatureType();
 			ReturnType.SetTypeEiffelName( NameFormatter.FormatArgumentTypeName( FieldDescriptor.FieldType ) );
 			ReturnType.SetTypeFullExternalName( NameFormatter.FormatStrongName( FieldDescriptor.FieldType.FullName ) );
-			ReturnType.SetEnum( FieldDescriptor.FieldType.IsEnum );
 			GeneratedEiffelFeature.SetReturnType( ReturnType ); 
 		}
 
@@ -812,7 +821,12 @@ public class EiffelClassGenerator: Globals
 			if( IsMethod )
 				GeneratedEiffelFeature.SetExternalName( MethodDescriptor.Name );
 			else
-				GeneratedEiffelFeature.SetExternalName( FieldDescriptor.Name );
+			{
+				if( IsEnumLiteral ) 
+					GeneratedEiffelFeature.SetExternalName( System.Convert.ToInt32( FieldDescriptor.GetValue( ClassFactory.UnderlyingType ) ).ToString() );
+				else
+					GeneratedEiffelFeature.SetExternalName( FieldDescriptor.Name );
+			}
 		}
 			
 		return GeneratedEiffelFeature;	

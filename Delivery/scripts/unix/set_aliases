@@ -144,7 +144,7 @@ fi
 default_make ()
 {
 save_path
-finish_freezing -library >> $INSTALL_LOG
+$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
 cd $TMP_PATH
 }
 all_makes ()

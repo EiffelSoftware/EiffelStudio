@@ -74,7 +74,7 @@ extern long *nbref;		/* Gives # of references given DT */
 #define References(type)	nbref[type] 	/* # of references */
 #define EIF_Size(type)		esize[type] 	/* Object's size */
 #define Dispose(type)		egc_edispose[type]	/* Dispose routine */
-#define Disp_rout(type)		(egc_edispose ? egc_edispose[type] : NULL)	/* Does type have disp routine */
+#define Disp_rout(type)		(egc_edispose && egc_edispose[type])	/* Does type have disp routine */
 #define XCreate(type)		egc_ecreate[type]	/* Initialization routine */
 #else
 #define References(type)	esystem[type].nb_ref

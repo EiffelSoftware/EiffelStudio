@@ -110,7 +110,7 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 		do
 			l_registry_resource_name := a_resource.string_type + "_" + a_resource.name
 			l_parent_key := open_key_with_access (location, key_write)
-			create l_new_value.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, a_resource.string_value)		
+			create l_new_value.make ({WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, a_resource.string_value)		
 			
 			set_key_value (l_parent_key, l_registry_resource_name, l_new_value)
 			close_key (l_parent_key)

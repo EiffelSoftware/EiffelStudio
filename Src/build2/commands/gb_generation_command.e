@@ -61,21 +61,17 @@ feature -- Basic operations
 	execute is
 				-- Execute `Current'.
 		local
-			dialog: GB_CODE_GENERATION_DIALOG
-		do
-			create dialog.make_default
-			dialog.show_relative_to_window (main_window)
-			dialog.start_generation
 			
-				-- The dialog is relative to the window until
-				-- complete, when it is replaced with a modal dialog.
-				-- This was deemed the best solution, as if we did not convert
-				-- to a modal dialog, the dialog may be dissapear before a
-				-- user would ever see it. This is not good, and the behaviour
-				-- here is an attempt to combat this problem.
-			dialog.hide
-			dialog.show_completion
+		do
+				-- Disable all other floating windows.
+			all_floating_tools.do_all (agent {EV_DIALOG}.disable_sensitive)
+			create dialog.make_default
 			dialog.show_modal_to_window (main_window)
+				-- Enable all other floating windows.
+			all_floating_tools.do_all (agent {EV_DIALOG}.enable_sensitive)
 		end
+
+	dialog: GB_CODE_GENERATION_DIALOG
+		-- Displays generation output.
 
 end -- class GB_GENERATION_COMMAND

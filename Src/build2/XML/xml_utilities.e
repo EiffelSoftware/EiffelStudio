@@ -320,11 +320,15 @@ feature -- Access
 								add_tabs (xml_string, closing_index + 2, depth)
 							end
 						else
-							if (not tag_contents.is_equal (Internal_properties_string)) then
-								depth := depth + 1
-							else
-								xml_string.insert_character ('%N', closing_index + 1)
-								add_tabs (xml_string, closing_index + 2, depth)
+							if not tag_contents.substring (1, 8).is_equal ("![CDATA[") then
+								-- We must ignore the CDATA tags, as they are not another entry, but contained within
+								-- a tag.
+								if (not tag_contents.is_equal (Internal_properties_string)) then
+									depth := depth + 1
+								else
+									xml_string.insert_character ('%N', closing_index + 1)
+									add_tabs (xml_string, closing_index + 2, depth)
+								end
 							end
 						end
 					end

@@ -79,6 +79,7 @@ feature
 			stone_text, class_name: STRING;
 			filed_stone: FILED_STONE;
 			classc_stone: CLASSC_STONE;
+			classc: CLASS_C;
 			class_text: CLASS_TEXT;
 			modified_class, position_saved: BOOLEAN;
 			last_cursor_position, last_top_position: INTEGER;
@@ -87,10 +88,16 @@ feature
 			if not retried then
 				classc_stone ?= stone;
 				if 
-					classc_stone /= Void and then classc_stone.is_valid and then
-					classc_stone.class_c.lace_class.date_has_changed 
+					classc_stone /= Void and then classc_stone.is_valid
 				then
-					modified_class := true
+					classc := classc_stone.class_c;
+					if
+						not classc.is_precompiled
+					and then
+						classc.lace_class.date_has_changed
+					then
+						modified_class := true
+					end;
 				end;
 				if
 					do_format or filtered or modified_class or else

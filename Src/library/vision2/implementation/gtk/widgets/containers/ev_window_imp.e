@@ -355,7 +355,7 @@ feature -- Element change
 					menu_bar.after
 				loop
 					menu_imp ?= menu_bar.item.implementation
-					if menu_imp.key /= 0 and then not menu_imp.is_destroyed then
+					if menu_imp.key /= 0 then
 						C.gtk_widget_remove_accelerator (menu_imp.c_object,
 							accel_group,
 							menu_imp.key,

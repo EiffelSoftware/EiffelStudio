@@ -7,9 +7,7 @@
 #include "winsock.h"
 #endif
  
-int net_char_read(pointer, size)
-char *pointer;
-int size;
+int net_char_read(char *pointer, int size)
 {
 #ifdef EIF_WIN32
 	return recv(r_fides, pointer, size, 0);
@@ -18,9 +16,7 @@ int size;
 #endif
 }
  
-int net_char_write(pointer, size)
-char *pointer;
-int size;
+int net_char_write(char *pointer, int size)
 {
 #ifdef EIF_WIN32
 	return send (fides, pointer, size, 0);
@@ -69,33 +65,26 @@ void net_store_write()
 		eio();
 }
 
-rt_public char *eif_net_retrieved(file_desc)
-EIF_INTEGER file_desc;
+rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 {
 	return portable_retrieve(file_desc, net_char_read);
 }
 
-rt_public void eif_net_basic_store(file_desc, object)
-EIF_INTEGER file_desc;
-char *object;
+rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 {
 	rt_init_store(net_store_write, net_char_write, 0);
 	estore(file_desc, object);
 	rt_reset_store();
 }
 
-rt_public void eif_net_general_store(file_desc, object)
-EIF_INTEGER file_desc;
-char *object;
+rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 {
 	rt_init_store(net_store_write, net_char_write, 0); 
 	eestore(file_desc, object);
 	rt_reset_store();
 }
 
-rt_public void eif_net_independent_store(file_desc, object)
-EIF_INTEGER file_desc;
-char *object;
+rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 {
 	rt_init_store(net_store_write, net_char_write, 0); 
 	sstore (file_desc, object);

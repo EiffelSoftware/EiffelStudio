@@ -4,6 +4,7 @@
 
 #include "config.h"
 #include "size.h" /* for LNGSIZ */
+
 #ifdef EIF_WIN32
 #define FD_SETSIZE 256
 #define WIN32_LEAN_AND_MEAN
@@ -22,18 +23,23 @@
 #endif
 
 #include <sys/types.h>
-#ifndef EIF_WINDOWS
+
+#ifndef EIF_WIN32
 #include <sys/time.h>
 #endif
+
 #include <errno.h>
+
 #ifndef BSD
 #define BSD_COMP
 #endif
-#if defined EIF_WINDOWS
-#else
+
+#ifndef EIF_WIN32
 #include <sys/ioctl.h>
 #endif
+
 #include "cecil.h"
+
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
@@ -46,10 +52,12 @@
 #ifdef I_NETINET_IN
 #include <netinet/in.h>
 #endif
+
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
-#if defined EIF_WINDOWS || defined EIF_OS2
+
+#if defined EIF_WIN32 || defined EIF_OS2
 #else
 #include <sys/un.h>
 #endif
@@ -76,7 +84,7 @@ void do_init()
 }
 #endif
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 extern void eio(void);
 void do_init(void);
 
@@ -126,8 +134,7 @@ static char ise_order_flag=0; /* value 1: No order reversing is necessary;
 															 *       0: Test if order reversing is necessary
 															 */
 
-float change_float_order(f) 
-float f;
+float change_float_order(float f) 
 {
 	float x, y;
 	unsigned char *px=(unsigned char *)(&x);
@@ -150,8 +157,7 @@ float f;
 	}
 }
 
-double change_double_order(d) 
-double d;
+double change_double_order(double d) 
 {
 	double x, y;
 	unsigned char *px=(unsigned char *)(&x);
@@ -185,33 +191,26 @@ EIF_INTEGER mask_size()
 }
 
 
-void c_mask_clear(mask, pos)
-EIF_OBJ mask;
-EIF_INTEGER pos;
+void c_mask_clear(EIF_OBJ mask, EIF_INTEGER pos)
 	/*x turn the bit for pos off in mask */
 {
 	FD_CLR((int) pos, (fd_set *) mask);
 }
 
 
-void c_set_bit(mask, pos)
-EIF_OBJ mask;
-EIF_INTEGER pos;
+void c_set_bit(EIF_OBJ mask, EIF_INTEGER pos)
 	/*x turn the bit for pos on in mask */
 {
 	FD_SET((int) pos, (fd_set *) mask);
 }
 
-EIF_BOOLEAN c_is_bit_set(mask, pos)
-EIF_OBJ mask;
-EIF_INTEGER pos;
+EIF_BOOLEAN c_is_bit_set(EIF_OBJ mask, EIF_INTEGER pos)
 	/*x test the bit for pos in mask */
 {
 	return (EIF_BOOLEAN) ((FD_ISSET((int) pos, (fd_set *) mask)) != 0);
 }
 
-void c_zero_mask(mask)
-EIF_OBJ mask;
+void c_zero_mask(EIF_OBJ mask)
 	/*x clear all bits in mask */
 {
 	FD_ZERO((fd_set *) mask);
@@ -249,32 +248,27 @@ EIF_INTEGER inet_inaddr_any()
 	return (EIF_INTEGER) INADDR_ANY;
 }
 
-void set_sin_addr(add, val)
-EIF_POINTER add;
-EIF_INTEGER val;
+void set_sin_addr(EIF_POINTER add, EIF_INTEGER val)
 {
 	/*x set the 32-bit netid/hostid address on add structure */
 
 	((struct in_addr *) add)->s_addr = (u_long) val;
 }
 
-EIF_INTEGER get_sin_addr(add)
-EIF_POINTER add;
+EIF_INTEGER get_sin_addr(EIF_POINTER add)
 {
 	/*x 32-bit netid/hostid from internet address structure */
 
 	return (EIF_INTEGER) ((struct in_addr *) add)->s_addr;
 }
 
-EIF_INTEGER net_host_addr(host_addr)
-EIF_POINTER host_addr;
+EIF_INTEGER net_host_addr(EIF_POINTER host_addr)
 	/*x convert dotted string internet address in long integer format */
 {
 	return (EIF_INTEGER) inet_addr((char *) host_addr);
 }
 
-EIF_POINTER net_host(addr)
-EIF_POINTER addr;
+EIF_POINTER net_host(EIF_POINTER addr)
 	/*x internet address string in dotted notation from address struct */
 {
 	char *res;
@@ -286,10 +280,8 @@ EIF_POINTER addr;
 	return address;
 }
 
-void host_address_from_name (addr, name)
+void host_address_from_name (EIF_POINTER addr, EIF_POINTER name)
 	/*x 32-bits netid/hostid set in addr from hostname name */
-EIF_POINTER addr;
-EIF_POINTER name;
 {
 	struct hostent *hp;
 
@@ -305,10 +297,8 @@ EIF_POINTER name;
 	((struct in_addr *) addr)->s_addr = ((struct in_addr *) (hp->h_addr))->s_addr;
 }
 
-EIF_INTEGER get_servent_port(name, proto)
+EIF_INTEGER get_servent_port(EIF_POINTER name, EIF_POINTER proto)
 	/*x get port number of a service by its name */
-EIF_POINTER name;
-EIF_POINTER proto;
 {
 	struct servent *sp;
 
@@ -324,9 +314,7 @@ EIF_POINTER proto;
 }
 
 
-void set_from_c(addr, c_part)
-EIF_POINTER addr;
-EIF_POINTER c_part;
+void set_from_c(EIF_POINTER addr, EIF_POINTER c_part)
 	/*x copy internet address from addr into c_part */
 {
 #ifdef USE_STRUCT_COPY
@@ -337,55 +325,44 @@ EIF_POINTER c_part;
 }
 
 
-void set_sock_family(add, family)
-EIF_POINTER add;
-EIF_INTEGER family;
+void set_sock_family(EIF_POINTER add, EIF_INTEGER family)
 	/*x set socket family in socket address structure add */
 {
 	((struct sockaddr *) add)->sa_family = (u_short) family;
 }
 
-EIF_INTEGER get_sock_family(add)
-EIF_POINTER add;
+EIF_INTEGER get_sock_family(EIF_POINTER add)
 	/*x get socket family in socket address structure add */
 {
 	return (EIF_INTEGER) ((struct sockaddr *) add)->sa_family;
 }
 
-void set_inet_sock_family(add, family)
-EIF_POINTER add;
-EIF_INTEGER family;
+void set_inet_sock_family(EIF_POINTER add, EIF_INTEGER family)
 	/*x set socket family in internet socket address structure (!) */
 {
 	((struct sockaddr_in *) add)->sin_family = (u_short) family;
 }
 
-EIF_INTEGER get_inet_sock_family(add)
-EIF_POINTER add;
+EIF_INTEGER get_inet_sock_family(EIF_POINTER add)
 	/*x get socket family in internet socket address structure (!) */
 {
 	return (EIF_INTEGER) ((struct sockaddr_in *) add)->sin_family;
 }
 
-void set_sock_port(add, port)
-EIF_POINTER add;
-EIF_INTEGER port;
+void set_sock_port(EIF_POINTER add, EIF_INTEGER port)
 	/*x set socket port in internet socket address structure add */
 {
 	((struct sockaddr_in *) add)->sin_port = htons((u_short) port);
 }
 
-EIF_INTEGER get_sock_port(add)
-EIF_POINTER add;
+EIF_INTEGER get_sock_port(EIF_POINTER add)
 	/*x get socket port in internet socket address structure add */
 {
 	return (EIF_INTEGER) ntohs(((struct sockaddr_in *) add)->sin_port);
 }
 
 
-void set_sock_addr_in(add, addr_in)
-EIF_POINTER add;
-EIF_POINTER addr_in;
+void set_sock_addr_in(EIF_POINTER add, EIF_POINTER addr_in)
 	/*x set 32-bit netid/hostid internet address from internet address
 	    structure addr_in (in_addr) into internet socket address stucture
 	    add (sockaddr_in) */
@@ -398,8 +375,7 @@ EIF_POINTER addr_in;
 }
 
 
-EIF_POINTER get_sock_addr_in(add)
-EIF_POINTER add;
+EIF_POINTER get_sock_addr_in(EIF_POINTER add)
 	/*x get 32-bits netid/hostid internet address into internet address
 	    structure in_addr from internet socket address structure add
 	    (sockaddr_in) */
@@ -407,26 +383,21 @@ EIF_POINTER add;
 	return (EIF_POINTER) &(((struct sockaddr_in *) add)->sin_addr);
 }
 
-void set_sock_data(add, dat)
-EIF_POINTER add;
-EIF_POINTER dat;
+void set_sock_data(EIF_POINTER add, EIF_POINTER dat)
 	/*x copy 14-bytes protocol-specific address data into socket address
 	    structure add from dat */
 {
 	strncpy(((struct sockaddr *) add)->sa_data, dat, 14);
 }
 
-EIF_POINTER get_sock_data(add)
-EIF_POINTER add;
+EIF_POINTER get_sock_data(EIF_POINTER add)
 	/*x get 14-bytes protocol-specific address data from socket address
 	    structure add */
 {
 	return (EIF_POINTER) ((struct sockaddr *)add)->sa_data;
 }
 
-void set_sock_zero(add, zero)
-EIF_POINTER add;
-EIF_POINTER zero;
+void set_sock_zero(EIF_POINTER add, EIF_POINTER zero)
 	/*x set the internet socket address sin_zero zone to 8 characters
 	    similar to the one pointed by zero, or 0 if zero is null
 	    unused (!) */
@@ -439,23 +410,20 @@ EIF_POINTER zero;
 		strncpy(((struct sockaddr_in *) add)->sin_zero, (char *) zero, 8);
 }
 
-EIF_POINTER get_sock_zero(add)
-EIF_POINTER add;
+EIF_POINTER get_sock_zero(EIF_POINTER add)
 	/*x get the sin_zero zone value in internet socket address struct add
 	    unused (!) */
 {
 	return (EIF_POINTER) ((struct sockaddr_in *) add)->sin_zero;
 }
 
-void c_unlink(name)
-EIF_POINTER name;
+void c_unlink(EIF_POINTER name)
 	/*x erase unix domain socket filename name */
 {
 	unlink((char *) name);
 }
 
-EIF_INTEGER c_socket(add_f, typ, prot)
-EIF_INTEGER add_f, typ, prot;
+EIF_INTEGER c_socket(EIF_INTEGER add_f, EIF_INTEGER typ, EIF_INTEGER prot)
 	/*x get a socket descriptor from a scoket family, type and protocol */
 {
 	int result;
@@ -475,8 +443,7 @@ EIF_INTEGER add_f, typ, prot;
 	return (EIF_INTEGER) result;
 }
 
-void c_close_socket(s)
-EIF_INTEGER s;
+void c_close_socket(EIF_INTEGER s)
 	/*x close socket descriptor s */
 {
 #ifdef EIF_WIN32
@@ -488,10 +455,7 @@ EIF_INTEGER s;
 #endif
 }
 
-void c_bind(s, add, length)
-EIF_INTEGER s;
-EIF_POINTER add;
-EIF_INTEGER length;
+void c_bind(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	/*x bind socket descriptor s to socket address address (of length
 	    length */
 {
@@ -509,10 +473,7 @@ EIF_INTEGER length;
 #endif
 }
 
-EIF_INTEGER c_accept(s, add, length)
-EIF_INTEGER s;
-EIF_POINTER add;
-EIF_INTEGER length;
+EIF_INTEGER c_accept(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	/*x accept connections on socket descriptor s, set peer address
 	    into socket address structure add (of length *length) */
 {
@@ -542,8 +503,7 @@ EIF_INTEGER length;
 	return (EIF_INTEGER) result;
 }
 
-void c_listen(s, backlog)
-EIF_INTEGER s, backlog;
+void c_listen(EIF_INTEGER s, EIF_INTEGER backlog)
 	/*x listen up to backlog connexions on socket descriptor s */
 {
 #ifdef EIF_WIN32
@@ -560,10 +520,7 @@ EIF_INTEGER s, backlog;
 #endif
 }
 
-void c_connect(s, add, length)
-EIF_INTEGER s;
-EIF_POINTER add;
-EIF_INTEGER length;
+void c_connect(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	/*x connect socket s to socket address add of length length */
 {
 #ifdef EIF_WIN32
@@ -583,10 +540,7 @@ EIF_INTEGER length;
 #endif
 }
 
-EIF_INTEGER c_select(nfds, rmask, wmask, emask, timeout, timeoutm)
-EIF_INTEGER nfds;
-EIF_OBJ rmask, wmask, emask;
-EIF_INTEGER timeout, timeoutm;
+EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_OBJ rmask, EIF_OBJ wmask, EIF_OBJ emask, EIF_INTEGER timeout, EIF_INTEGER timeoutm)
 	/* Read The Fine Manual */
 {
 	struct timeval t;
@@ -630,10 +584,7 @@ EIF_INTEGER timeout, timeoutm;
 	return (EIF_INTEGER) result;
 }
 
-void c_sock_name(s, addr, length)
-EIF_INTEGER s;
-EIF_POINTER addr;
-EIF_INTEGER length;
+void c_sock_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 	/*x socket s address structure into addr
 	    of length length (to be provided a priori) */
 {
@@ -657,10 +608,7 @@ EIF_INTEGER length;
 		eio();
 }
 
-EIF_INTEGER c_peer_name(s, addr, length)
-EIF_INTEGER s;
-EIF_POINTER addr;
-EIF_INTEGER length;
+EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 	/*x get peer address of socket s in socket address structure addr
 	    of length length (to be provided a priori) */
 {
@@ -706,23 +654,13 @@ EIF_INTEGER length;
 			eio();
 #endif
 
-void c_send_char_to(fd, c, flags, addr_pointer, sizeofaddr)
-EIF_INTEGER fd;
-EIF_CHARACTER c;
-EIF_INTEGER flags;
-EIF_OBJ addr_pointer;
-EIF_INTEGER sizeofaddr;
+void c_send_char_to(EIF_INTEGER fd, EIF_CHARACTER c, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of character c through socket fd */
 {
 	CSENDXTO(fd,&c,sizeof(char),flags,addr_pointer,sizeofaddr)
 }
 
-void c_send_int_to(fd, i, flags, addr_pointer, sizeofaddr)
-EIF_INTEGER fd;
-EIF_INTEGER i;
-EIF_INTEGER flags;
-EIF_OBJ addr_pointer;
-EIF_INTEGER sizeofaddr;
+void c_send_int_to(EIF_INTEGER fd, EIF_INTEGER i, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
 	/* transmission of Eiffel integer i through socket fd */
 {
 	unsigned long ti;
@@ -730,13 +668,7 @@ EIF_INTEGER sizeofaddr;
 	CSENDXTO(fd,&ti,sizeof(ti),flags,addr_pointer,sizeofaddr)
 }
 
-void c_send_float_to(fd, f, flags, addr_pointer, sizeofaddr)
-EIF_INTEGER fd;
-EIF_DOUBLE f;
-/* ex: EIF_REAL f; */
-EIF_INTEGER flags;
-EIF_OBJ addr_pointer;
-EIF_INTEGER sizeofaddr;
+void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of real f through socket fd */
 {
 	/* If no prototype is used for the declaration of c_send_float_to() in
@@ -749,12 +681,7 @@ EIF_INTEGER sizeofaddr;
 	CSENDXTO(fd,&tf,sizeof(tf),flags,addr_pointer,sizeofaddr)
 }
 
-void c_send_double_to(fd, d, flags, addr_pointer, sizeofaddr)
-EIF_INTEGER fd;
-EIF_DOUBLE d;
-EIF_INTEGER flags;
-EIF_OBJ addr_pointer;
-EIF_INTEGER sizeofaddr;
+void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of double d through socket fd */
 {
 	double dbl;
@@ -762,13 +689,7 @@ EIF_INTEGER sizeofaddr;
 	CSENDXTO(fd,&dbl,sizeof(dbl),flags,addr_pointer,sizeofaddr)
 }
 
-void c_send_stream_to(fd, stream_pointer, length, flags, addr_pointer, sizeofaddr)
-EIF_INTEGER fd;
-EIF_OBJ stream_pointer;
-EIF_INTEGER length;
-EIF_INTEGER flags;
-EIF_OBJ addr_pointer;
-EIF_INTEGER sizeofaddr;
+void c_send_stream_to(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of string s of size size trought socket fd */
 {
 	CSENDXTO(fd,stream_pointer,length,flags,addr_pointer,sizeofaddr)
@@ -796,17 +717,13 @@ EIF_INTEGER sizeofaddr;
 #endif
 
 
-void c_put_char(fd, c)
-EIF_INTEGER fd;
-EIF_CHARACTER c;
+void c_put_char(EIF_INTEGER fd, EIF_CHARACTER c)
 	/*x transmission of character c through socket fd */
 {
 	CPUTX(fd,&c,sizeof(char))
 }
 
-void c_put_int(fd, i)
-EIF_INTEGER fd;
-EIF_INTEGER i;
+void c_put_int(EIF_INTEGER fd, EIF_INTEGER i)
 	/* transmission of Eiffel integer i through socket fd */
 {
 	unsigned long ti;
@@ -814,10 +731,7 @@ EIF_INTEGER i;
 	CPUTX(fd,&ti,sizeof(ti))
 }
 
-void c_put_float(fd, f)
-EIF_INTEGER fd;
-/* ex: EIF_REAL f; */
-EIF_DOUBLE f;
+void c_put_float(EIF_INTEGER fd, EIF_REAL f)
 	/*x transmission of real f through socket fd */
 {
 	/* If no prototype is used for the declaration of c_put_float() in the
@@ -831,9 +745,7 @@ EIF_DOUBLE f;
 	CPUTX(fd,&tf,sizeof(tf))
 }
 
-void c_put_double(fd, d)
-EIF_INTEGER fd;
-EIF_DOUBLE d;
+void c_put_double(EIF_INTEGER fd, EIF_DOUBLE d)
 	/*x transmission of double d through socket fd */
 {
 	double dbl;
@@ -841,11 +753,8 @@ EIF_DOUBLE d;
 	CPUTX(fd,&dbl,sizeof(dbl))
 }
 
-void c_put_stream(fd, stream_pointer, length)
+void c_put_stream(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length)
 	/*x transmission of string s of size size trought socket fd */
-EIF_INTEGER fd;
-EIF_OBJ stream_pointer;
-EIF_INTEGER length;
 {
 	CPUTX(fd,stream_pointer,length)
 }
@@ -870,8 +779,7 @@ EIF_INTEGER length;
 			eio();
 #endif
 
-EIF_REAL c_read_float (fd)
-EIF_INTEGER fd;
+EIF_REAL c_read_float (EIF_INTEGER fd)
 	/*x read a real from socket fd */
 {
 	float f=0.0;
@@ -879,8 +787,7 @@ EIF_INTEGER fd;
 	return (EIF_REAL) ise_ntohf(f);
 }
 
-EIF_DOUBLE c_read_double(fd)
-EIF_INTEGER fd;
+EIF_DOUBLE c_read_double(EIF_INTEGER fd)
 	/*x read a double from socket fd */
 {
 	double d=0.0;
@@ -888,8 +795,7 @@ EIF_INTEGER fd;
 	return (EIF_DOUBLE) ise_ntohd(d);
 }
 
-EIF_CHARACTER c_read_char(fd)
-EIF_INTEGER fd;
+EIF_CHARACTER c_read_char(EIF_INTEGER fd)
 	/*x read a character from socket fd */
 {
 	char c=0;
@@ -897,8 +803,7 @@ EIF_INTEGER fd;
 	return (EIF_CHARACTER) c;
 }
 
-EIF_INTEGER c_read_int(fd)
-EIF_INTEGER fd;
+EIF_INTEGER c_read_int(EIF_INTEGER fd)
 	/*x read an integer from socket fd */
 {
 	EIF_INTEGER i=0L;
@@ -907,10 +812,7 @@ EIF_INTEGER fd;
 }
 
 
-EIF_INTEGER c_read_stream(fd, len, buf)
-EIF_INTEGER fd;
-EIF_INTEGER len;
-EIF_OBJ buf;
+EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_OBJ buf)
 	/*x read a stream of character from socket fd into buffer buf
 	    of length len */
 {
@@ -933,11 +835,7 @@ EIF_OBJ buf;
 }
 
 
-EIF_INTEGER c_receive(fd, buf, len, flags)
-EIF_INTEGER fd;
-EIF_OBJ buf;
-EIF_INTEGER len;
-EIF_INTEGER flags;
+EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER flags)
 	/*x receive at most len bytes from socket fd into buffer buf
 	    flags can be or'ed from 0, MSG_OOB, MSG_PEEK or MSG_DONTROUTE */
 {
@@ -960,13 +858,7 @@ EIF_INTEGER flags;
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_rcv_from(fd, buf, len, flags, addr, addr_len)
-EIF_INTEGER fd;
-EIF_POINTER buf;
-EIF_INTEGER len;
-EIF_INTEGER flags;
-EIF_POINTER addr;
-EIF_POINTER addr_len;
+EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_POINTER addr_len)
 	/*x like c_receive and sender address is stored into socket address
 	    structure addr and address length into *addr_len */
 {
@@ -990,10 +882,7 @@ EIF_POINTER addr_len;
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_write(fd, l, buf)
-EIF_INTEGER fd;
-EIF_INTEGER l;
-EIF_OBJ buf;
+EIF_INTEGER c_write(EIF_INTEGER fd, EIF_INTEGER l, EIF_OBJ buf)
 	/*x write at most l bytes from buffer buf into socket fd
 	    return number of actually sent bytes */
 {
@@ -1017,11 +906,7 @@ EIF_OBJ buf;
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_send(fd, buf, len, flags)
-EIF_INTEGER fd;
-EIF_OBJ buf;
-EIF_INTEGER len;
-EIF_INTEGER flags;
+EIF_INTEGER c_send(EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER flags)
 	/*x send at most len bytes from buffer buf into socket fd
 	    to connected peer address
 	    flags can be or'ed from 0 with MSG_OOB, MSG_PEEK, MSG_DONTROUTE
@@ -1036,13 +921,7 @@ EIF_INTEGER flags;
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_send_to (fd, buf, len, flags, addr, addr_len)
-EIF_INTEGER fd;
-EIF_OBJ buf;
-EIF_INTEGER len;
-EIF_INTEGER flags;
-EIF_OBJ addr;
-EIF_INTEGER addr_len;
+EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_OBJ addr, EIF_INTEGER addr_len)
 	/*x like c_send and peer address can be set through socket address
 	    structure addr of length addr_len */
 {
@@ -1062,11 +941,7 @@ EIF_INTEGER addr_len;
 	return (EIF_INTEGER) result;
 }
 
-void c_set_sock_opt_int(fd, level, opt, val)
-EIF_INTEGER fd;
-EIF_INTEGER level;
-EIF_INTEGER opt;
-EIF_INTEGER val;
+void c_set_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt, EIF_INTEGER val)
 	/*x set socket fd options */
 {
 	int arg = (int) val;
@@ -1075,10 +950,7 @@ EIF_INTEGER val;
 		eio();
 }
 
-EIF_INTEGER c_get_sock_opt_int(fd, level, opt)
-EIF_INTEGER fd;
-EIF_INTEGER level;
-EIF_INTEGER opt;
+EIF_INTEGER c_get_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt)
 	/*x get socket fd options */
 {
 	int arg, asize;
@@ -1095,8 +967,7 @@ EIF_INTEGER opt;
 	return (EIF_INTEGER) arg;
 }
 
-EIF_BOOLEAN c_is_linger_on(fd)
-EIF_INTEGER fd;
+EIF_BOOLEAN c_is_linger_on(EIF_INTEGER fd)
 	/*x does socket discard data on close ? (default linger off -> no) */
 {
 	struct linger arg;
@@ -1115,8 +986,7 @@ EIF_INTEGER fd;
 	return (EIF_BOOLEAN) (! (arg.l_onoff == 0));
 }
 
-EIF_INTEGER c_linger_time(fd)
-EIF_INTEGER fd;
+EIF_INTEGER c_linger_time(EIF_INTEGER fd)
 	/*x non null values are equivalent (despite original specification) */
 {
 	struct linger arg;
@@ -1135,10 +1005,7 @@ EIF_INTEGER fd;
 	return (EIF_INTEGER) arg.l_linger;
 }
 
-EIF_INTEGER c_set_sock_opt_linger(fd, flag, time)
-EIF_INTEGER fd;
-EIF_BOOLEAN flag;
-EIF_INTEGER time;
+EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER time)
 	/*x set linger options (on/off and timeout), does not work */
 {
 	struct linger arg;
@@ -1149,10 +1016,7 @@ EIF_INTEGER time;
 	return (EIF_INTEGER) setsockopt((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, sizeof(arg));
 }
 
-EIF_INTEGER c_fcntl(fd, cmd, arg)
-EIF_INTEGER fd;
-EIF_INTEGER cmd;
-EIF_INTEGER arg;
+EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
 	/*x set possibly open fd socket options */
 {
 #if defined EIF_WIN32 || defined EIF_OS2
@@ -1162,8 +1026,7 @@ EIF_INTEGER arg;
 #endif
 }
 
-void c_set_blocking(fd)
-EIF_INTEGER fd;
+void c_set_blocking(EIF_INTEGER fd)
 	/*x set socket fd blocking */
 {
 #ifdef EIF_OS2
@@ -1178,8 +1041,7 @@ EIF_INTEGER fd;
 #endif
 }
 
-void c_set_non_blocking(fd)
-EIF_INTEGER fd;
+void c_set_non_blocking(EIF_INTEGER fd)
 	/*x set socket fd non-blocking */
 {
 
@@ -1229,10 +1091,8 @@ EIF_OBJ data_obj;
 #endif
 }
 
-void c_set_number(data_obj, num)
+void c_set_number(EIF_OBJ data_obj, EIF_INTEGER num)
 	/*x set packet number in packet structure */
-EIF_OBJ data_obj;
-EIF_INTEGER num;
 {
 	/* Note: it is assumed here the size of a long integer (EIF_INTEGER)
 	 * is either 4 or 8.
@@ -1252,29 +1112,21 @@ EIF_INTEGER num;
 #endif
 }
 
-void c_set_data(pdata_obj, sdata_obj, count)
+void c_set_data(EIF_OBJ pdata_obj, EIF_OBJ sdata_obj, EIF_INTEGER count)
 	/*x copy count amout of bytes from pdata_obj into sdata_obj */
-EIF_OBJ pdata_obj;
-EIF_OBJ sdata_obj;
-EIF_INTEGER count;
 {
 	bcopy ((pdata_obj + c_packet_number_size()), sdata_obj, count);
 }
 
-void c_get_data(rdata_obj, pdata_obj, count)
+void c_get_data(EIF_OBJ rdata_obj, EIF_OBJ pdata_obj, EIF_INTEGER count)
 	/*x copy count amount of bytes from rdata_obj into pdata_obj */
-EIF_OBJ rdata_obj;
-EIF_OBJ pdata_obj;
-EIF_INTEGER count;
 {
 	bcopy(rdata_obj, (pdata_obj + c_packet_number_size()), count);
 }
 
 
-void c_shutdown(sock, how)
+void c_shutdown(EIF_INTEGER sock, EIF_INTEGER how)
 	/*x shut down a socket with `how' modality */
-EIF_INTEGER sock;
-EIF_INTEGER how;
 	{
 	/*x seems to only work for HP-UX, no specific flag => inhibited
 

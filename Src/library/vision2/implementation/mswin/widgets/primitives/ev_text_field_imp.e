@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 	interface: EV_TEXT_FIELD
 
 invariant
-	not_vertically_resizable: not vertical_resizable
+	not_vertically_resizable: is_useable implies not vertical_resizable
 
 end -- class EV_TEXT_FIELD_IMP
 
@@ -247,6 +247,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/06/09 01:49:10  manus
+--| Merged version 1.27.8.4 from DEVEL branch to trunc
+--|
 --| Revision 1.42  2000/06/08 18:46:50  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

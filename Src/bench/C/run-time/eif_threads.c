@@ -66,6 +66,17 @@ rt_private void load_stack_in_gc (struct stack_list *, void *);
 rt_private void remove_stack_from_gc (struct stack_list *, void *);
 rt_private void eif_stack_free (void *stack);
 
+rt_private EIF_MUTEX_TYPE *eif_thread_launch_mutex = NULL;	/* Mutex used to protect launching of a thread */
+
+#define LAUNCH_MUTEX_CREATE \
+	EIF_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n")
+#define LAUNCH_MUTEX_DESTROY \
+	EIF_MUTEX_DESTROY(eif_thread_launch_mutex, "Cannot destroy mutex for thread launcher\n");
+#define LAUNCH_MUTEX_LOCK	\
+	EIF_MUTEX_LOCK(eif_thread_launch_mutex, "Cannot lock mutex for the thread launcher\n")
+#define LAUNCH_MUTEX_UNLOCK \
+	EIF_MUTEX_UNLOCK(eif_thread_launch_mutex, "Cannot unlock mutex for the thread launcher\n"); 
+
 rt_public void eif_thr_init_root(void) 
 {
 	/*
@@ -79,6 +90,7 @@ rt_public void eif_thr_init_root(void)
 
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
 	EIF_MUTEX_CREATE(eif_gc_mutex, "Couldn't create GC mutex");
+	LAUNCH_MUTEX_CREATE;
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
 }
@@ -399,6 +411,7 @@ rt_public void eif_thr_create_with_args (EIF_REFERENCE thr_root_obj,
 	EIF_MUTEX_LOCK(eif_children_mutex, "Couldn't lock children mutex");
 	n_children ++;	
 	EIF_MUTEX_UNLOCK(eif_children_mutex, "Couldn't unlock children mutex");
+	LAUNCH_MUTEX_LOCK;
 	if (detach != (EIF_BOOLEAN) 5) {
 		EIF_THR_ATTR_TYPE attr;
 		EIF_THR_ATTR_INIT(attr,priority,policy,detach);
@@ -408,6 +421,7 @@ rt_public void eif_thr_create_with_args (EIF_REFERENCE thr_root_obj,
 	} else { /* We're called from eif_thr_create */
 		EIF_THR_CREATE(eif_thr_entry, routine_ctxt, *tid, "Cannot create thread\n");
 	}
+	LAUNCH_MUTEX_UNLOCK;
 	last_child = tid;
 }
 
@@ -423,6 +437,12 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 
 	start_routine_ctxt_t *routine_ctxt = (start_routine_ctxt_t *)arg;
 	eif_thr_register();
+		/* To prevent current thread to return too soon after call
+		 * to EIF_THR_CREATE or EIF_THR_CREATE_WITH_ATTR.
+		 * That way `tid' is properly initialized and can be freed
+		 * safely later on */
+	LAUNCH_MUTEX_LOCK;
+	LAUNCH_MUTEX_UNLOCK;
 	{
 		EIF_GET_CONTEXT
 

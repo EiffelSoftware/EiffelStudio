@@ -19,7 +19,7 @@ feature -- basic Operations
 
 	proceed_with_current_info is 
 		do
-			Precursor
+			Precursor {WIZARD_INITIAL_STATE_WINDOW}
 			proceed_with_new_state(Create {DB_CONNECTION}.make(wizard_information))
 		end
 
@@ -32,5 +32,7 @@ feature -- basic Operations
 								%%N%NBy choosing the table you want to work with, this wizard will generate%Nan Eiffel Project.%
 								%%N%NThen, you will be able to use the generated classes to build your own%NProject.")
 		end
+
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
 
 end -- class WIZARD_INITIAL_STATE

@@ -1,5 +1,5 @@
 indexing
-	description: "Specific information for the ODBC wizard."
+	description: "Specific information for the Oracle wizard."
 	author: "David S"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,5 +30,17 @@ feature -- access
 		do
 
 		end
+
+	type: DATABASE_REPOSITORY [ORACLE] is
+		once
+			create Result.make
+		end
+
+	types: TYPES [ORACLE] is
+		once
+			create Result
+		end
+
+	
 
 end -- class WIZARD_SPECIFIC

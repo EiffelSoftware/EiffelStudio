@@ -27,17 +27,8 @@ feature -- basic Operations
 		do 
 
 			create h1
---			create oracle_b.make_with_text("Oracle")
---			create odbc_b.make_with_text("ODBC")
 			create handle_b.make_with_text (handle_name)
 			handle_b.select_actions.extend(~set_handle_insensitive(FALSE))
---			if wizard_information.is_oracle then
---				odbc_b.enable_select 
---			else
---				oracle_b.enable_select
---			end
---			oracle_b.enable_select
---			oracle_b.select_actions.extend(~set_handle_insensitive(TRUE))
 			Create db_name.make("Data Source Name",wizard_information.data_source,10,20,Current, FALSE)
 			Create username.make("Username",wizard_information.username,10,20,Current, FALSE)
 			Create password.make("Password",wizard_information.password,10,20,Current, TRUE)
@@ -45,8 +36,6 @@ feature -- basic Operations
 
 			choice_box.extend(h1)
 			h1.extend (handle_b)
---			h1.extend(odbc_b)
---			h1.extend(oracle_b)
 
 			choice_box.extend (username)
 			choice_box.extend (create {EV_CELL})
@@ -78,13 +67,7 @@ feature -- basic Operations
 		do
 			precursor
 			if not b then
---				if odbc_b.is_selected then
 					set_database(database_type)
---					set_database(oracle)
---				else
---					set_database(oracle)
---					set_database(database_type)
---				end
 				if db_manager.connected then
 					db_manager.disconnect
 				end
@@ -104,7 +87,7 @@ feature -- basic Operations
 			-- Check user entries
 		do
 			wizard_information.set_database_info(username.text,
-				password.text,db_name.text,is_oracle)--oracle_b.is_selected)
+				password.text,db_name.text,is_oracle)
 			precursor			
 		end
 
@@ -133,8 +116,5 @@ feature -- Implementation
 	username,password,db_name: WIZARD_SMART_TEXT_FIELD
 		-- User text entries dealing with username, password and
 		-- Database Handle name.
-
---	oracle_b,odbc_b: EV_RADIO_BUTTON
-		-- Database Type selection thanks to radio buttons.
 
 end -- class DB_CONNECTION

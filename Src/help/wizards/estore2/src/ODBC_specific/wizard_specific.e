@@ -31,4 +31,14 @@ feature -- access
 
 		end
 
+	type: DATABASE_REPOSITORY [ODBC] is
+		once
+			create Result.make
+		end
+
+	types: TYPES [ODBC] is
+		once
+			create Result
+		end
+
 end -- class WIZARD_SPECIFIC

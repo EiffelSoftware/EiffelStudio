@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 					-- is contained.
 				if object_handler.object_contained_in_object (deleted_object, editor.object) or
 					deleted_object = editor.object then
-					editor.remove_editor
+					editor.make_empty
 				end
 			
 					-- If the parent of `an_object' is in the object editor then we must

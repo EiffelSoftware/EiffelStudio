@@ -211,7 +211,7 @@ feature -- Basic operation
 				local_all_editors.off
 			loop
 				if local_all_editors.item.object = an_object then
-					local_all_editors.item.remove_editor
+					local_all_editors.item.make_empty
 				end
 				local_all_editors.forth
 			end

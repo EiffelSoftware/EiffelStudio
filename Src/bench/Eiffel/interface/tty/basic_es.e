@@ -242,9 +242,10 @@ feature -- Output
 			io.putstring ("%
 				%-loop | -clients [-filter filtername] class |%N%
 				%%T-suppliers [-filter filtername] class |%N%
-				%%T-flatshort [-filter filtername] class |%N%
-				%%T-flat [-filter filtername] class |%N%
-				%%T-short [-filter filtername] class | -filter filtername class |%N%
+				%%T-flatshort [-filter filtername] [-all | -all_and_parents | class] |%N%
+				%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
+				%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
+				%%T-filter filtername [-all | class] |%N%
 				%%T-descendants [-filter filtername] class |%N%
 				%%T-ancestors [-filter filtername] class |%N%
 				%%T-aversions [-filter filtername] class feature |%N%
@@ -496,7 +497,17 @@ feature -- Update
 						if not option_error then
 							cn := argument (current_option);
 							if option.is_equal ("-short") then
-								!EWB_SHORT!command.make (cn, filter_name)
+								if cn.is_equal ("-all") then
+									!EWB_DOCUMENTATION! command.make_short (filter_name, false)
+								elseif cn.is_equal ("-all_and_parents") then
+									!EWB_DOCUMENTATION! command.make_short (filter_name, true)
+								else
+									!EWB_SHORT!command.make (cn, filter_name)
+								end
+							elseif cn.is_equal ("-all") then
+								!EWB_DOCUMENTATION! command.make_flat_short (filter_name, false)
+							elseif cn.is_equal ("-all_and_parents") then
+								!EWB_DOCUMENTATION! command.make_flat_short (filter_name, true)
 							else
 								!EWB_FS!command.make (cn, filter_name)
 							end;
@@ -522,7 +533,13 @@ feature -- Update
 						end;
 						if not option_error then
 							cn := argument (current_option);
-							!EWB_FLAT!command.make (cn, filter_name)
+							if cn.is_equal ("-all") then
+								!EWB_DOCUMENTATION! command.make_flat (filter_name, false)
+							elseif cn.is_equal ("-all_and_parents") then
+								!EWB_DOCUMENTATION! command.make_flat (filter_name, true)
+							else
+								!EWB_FLAT!command.make (cn, filter_name)
+							end
 						end;
 					end;
 				else
@@ -537,7 +554,11 @@ feature -- Update
 						filter_name := argument (current_option)
 						current_option := current_option + 1;
 						cn := argument (current_option);
-						!EWB_TEXT!command.make (cn, filter_name)
+						if cn.is_equal ("-all") then
+							!EWB_DOCUMENTATION! command.make_text (filter_name)
+						else
+							!EWB_TEXT!command.make (cn, filter_name)
+						end
 					end;
 				else
 					option_error := True

@@ -40,9 +40,9 @@ feature -- Initialization
 	main_menu: EWB_MENU is
 			-- Main menu options
 		local
-			ewb_cmd: EWB_CMD;
+			ewb_cmd: EWB_CMD
 		once
-			!!Result.make (1, 5);
+			!!Result.make (1, 6);
 			Result.set_is_main;
 
 			!EWB_STRING! ewb_cmd.make (class_cmd_name, class_help, class_abb, class_menu);
@@ -55,7 +55,25 @@ feature -- Initialization
 			Result.add_entry (ewb_cmd);
 			!EWB_STRING! ewb_cmd.make (profile_cmd_name, profile_help, profile_abb, profile_menu);
 			Result.add_entry (ewb_cmd);
+			!EWB_STRING! ewb_cmd.make (documentation_cmd_name, documentation_help, documentation_abb, documentation_menu);
+			Result.add_entry (ewb_cmd)
+		end;
 
+	Documentation_menu: EWB_MENU is
+			-- Documentation menu options
+		local
+			ewb_cmd: EWB_CMD
+		once
+			!! Result.make (1, 4);
+
+			!EWB_DOCUMENTATION! ewb_cmd.make_flat_short (Void, false);
+			Result.add_entry (ewb_cmd)
+			!EWB_DOCUMENTATION! ewb_cmd.make_short (Void, false);
+			Result.add_entry (ewb_cmd)
+			!EWB_DOCUMENTATION! ewb_cmd.make_flat (Void, false);
+			Result.add_entry (ewb_cmd)
+			!EWB_DOCUMENTATION! ewb_cmd.make_text (Void);
+			Result.add_entry (ewb_cmd)
 		end;
 
 	System_menu: EWB_MENU is
@@ -196,14 +214,15 @@ feature -- Initialization
 	menu_commands: ARRAY [EWB_MENU] is
 			-- Menu commands
 		once
-			!!Result.make (1, 7);
+			!!Result.make (1, 8);
 			Result.put (main_menu, 1);
 			Result.put (system_menu, 2);
 			Result.put (class_menu, 3)
 			Result.put (feature_menu, 4);
 			Result.put (compile_menu, 5);
 			Result.put (profile_menu, 6);
-			Result.put (switches_menu, 7);
+			Result.put (documentation_menu, 7);
+			Result.put (switches_menu, 8);
 		end
 
 	switches_menu: EWB_MENU is

@@ -19,7 +19,9 @@ inherit
 			on_key_down,
 			on_bn_clicked,
 			process_message,
-			default_alignment
+			default_alignment,
+			on_erase_background,
+			background_brush
 		redefine
 			interface,
 			initialize,

@@ -8,6 +8,16 @@ class
 
 feature -- Externals
 
+	frozen gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
+			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
+			--	return (GtkArg*)(args_array + index);
+			-- }
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"(GtkArg*) ((GtkArg**) $args_array + (int) $an_index )"
+		end
+
 	frozen c_gtk_menu_popup (menu: POINTER; x, y: INTEGER) is
 			-- Show `menu' on (`x', `y').
 			-- (from EV_C_GTK)
@@ -46,7 +56,7 @@ feature -- Externals
 			"C | %"ev_gtk_callback_marshal.h%""
 		end
 		
-	frozen gtk_value_int (arg: POINTER): POINTER is
+	frozen gtk_value_int (arg: POINTER): INTEGER is
 			-- Integer value from a GtkArg.
 		external
 			"C | %"ev_gtk_callback_marshal.h%""

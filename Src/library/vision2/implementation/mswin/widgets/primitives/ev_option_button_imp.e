@@ -77,11 +77,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	menu: EV_MENU_IMP is
-			-- The menu contained in the option button.
-		do
-			Result ?= menu_container
-		end
+	menu: EV_MENU_IMP 
+		-- The menu contained in the option button.
 
 feature -- Status report
 
@@ -93,12 +90,15 @@ feature -- Status setting
 
 	clear_selection is
 			-- Clear the selection by putting the `text'
-			-- of the menu on the option button if there is one,
-		    -- otherwise the first menu item.
+			-- of the menu on the option button and assigning
+			-- Void to selected_item
+		local
+			m: WEL_MENU
 		do
-			check
-				not_yet_implemented: False
-			end
+			internal_set_text (menu.text)
+				-- Assign `menu.text' back to menu.
+			selected_item := Void
+				-- Item no longer sleected.
 		end
 
 feature -- Event association
@@ -219,9 +219,16 @@ feature {NONE} -- Implementation
 
 	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Add `a_menu' into container.
+		local
+			t: STRING
 		do
+			if menu_imp.text = Void then
+				-- If there is no menu text then set one.
+				menu_imp.set_text ("")
+			end
 			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
 			internal_set_text (menu_imp.text)
+			menu := menu_imp
 		end 
 
 	remove_menu (menu_imp: EV_MENU_IMP) is

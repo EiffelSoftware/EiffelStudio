@@ -218,7 +218,7 @@ feature
 					next.set_renaming_processed;
 						-- Move the inherit feature information under 
 						-- 'new_name'.
-					replication.set_feature_name (new_name);
+					replication.set_renamed_name (new_name);
 					next.set_a_feature (replication);
 					Inherit_table.add_inherited_feature (next, new_name);
 						-- Remove the information

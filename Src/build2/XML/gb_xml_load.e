@@ -370,6 +370,7 @@ feature {NONE} -- Implementation
 			system_status.disable_project_modified
 				-- Update all names in `window_selector' to ensure that
 				-- they are current after the load.
+				--| FIXME, why is this required?
 			Window_selector.update_displayed_names
 				-- Now expand the layout selector item, so that the window is displayed as
 				-- it was when last edited.

@@ -46,7 +46,7 @@ feature -- Access
 					start
 					pos := 1
 				until
-					off or (occur = i)
+					exhausted or (occur = i)
 				loop
 					if item /= Void and then v.is_equal (item) then
 						occur := occur + 1
@@ -59,7 +59,7 @@ feature -- Access
 					start
 					pos := 1
 				until
-					off or (occur = i)
+					exhausted or (occur = i)
 				loop
 					if item = v then
 						occur := occur + 1

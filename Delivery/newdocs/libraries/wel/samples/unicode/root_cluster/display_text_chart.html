@@ -1,0 +1,193 @@
+<html>
+<head><title>Eiffel Class</title></head>
+<body>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre>
+<i></i><b>class</b><i>
+	<a href="../root_cluster/display_text_chart.html">DISPLAY_TEXT</a>
+
+</i><b>General</b><i>
+	cluster</i>:<i> root_cluster
+	description</i>:<i> "Objects that ..."
+	create</i>:<i> make
+
+</i><b>Ancestors</b><i>
+	WEL_STATIC
+
+</i><b>Queries</b><i>
+	absolute_x</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	absolute_y</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	background_brush</i>:<i> WEL_BRUSH</i> -- (from <i>WEL_WINDOW</i>)<i>
+	background_color</i>:<i> WEL_COLOR_REF
+	captured_window</i>:<i> WEL_WINDOW</i> -- (from <i>WEL_WINDOW</i>)<i>
+	client_rect</i>:<i> WEL_RECT</i> -- (from <i>WEL_WINDOW</i>)<i>
+	Color_3ddkshadow</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_3dface</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_3dhighlight</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_3dhilight</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_3dlight</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_3dshadow</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_activeborder</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_activecaption</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_appworkspace</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_background</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_btnface</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_btnhighlight</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_btnhilight</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_btnshadow</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_btntext</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_captiontext</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_desktop</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_gradientactivecaption</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_gradientinactivecaption</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_graytext</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_highlight</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_highlighttext</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_hotlight</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_inactiveborder</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_inactivecaption</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_inactivecaptiontext</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_infobk</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_infotext</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_menu</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_menubar</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_menuhilight</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_menutext</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_scrollbar</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_window</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_windowframe</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	Color_windowtext</i>:<i> INTEGER</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	command </i>(<i>message</i>:<i> INTEGER</i>)<i></i>:<i> WEL_COMMAND</i> -- (from <i>WEL_WINDOW</i>)<i>
+	command_argument </i>(<i>message</i>:<i> INTEGER</i>)<i></i>:<i> ANY</i> -- (from <i>WEL_WINDOW</i>)<i>
+	command_exists </i>(<i>message</i>:<i> INTEGER</i>)<i></i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	commands</i>:<i> WEL_COMMAND_MANAGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	commands_enabled</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	default_processing</i>:<i> BOOLEAN</i> -- (from <i>WEL_RETURN_VALUE</i>)<i>
+	enabled</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	ex_style</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	exists</i>:<i> BOOLEAN</i> -- (from <i>WEL_ANY</i>)<i>
+	focused_window</i>:<i> WEL_WINDOW</i> -- (from <i>WEL_WINDOW</i>)<i>
+	font</i>:<i> WEL_FONT</i> -- (from <i>WEL_CONTROL</i>)<i>
+	foreground_color</i>:<i> WEL_COLOR_REF
+	has_capture</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	has_focus</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	has_heavy_capture</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	has_horizontal_scroll_bar</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	has_return_value</i>:<i> BOOLEAN</i> -- (from <i>WEL_RETURN_VALUE</i>)<i>
+	has_system_font</i>:<i> BOOLEAN</i> -- (from <i>WEL_CONTROL</i>)<i>
+	has_system_window_locked</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	has_vertical_scroll_bar</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	heavy_capture_activated</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	height</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	id</i>:<i> INTEGER</i> -- (from <i>WEL_CONTROL</i>)<i>
+	is_inside</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	is_window_unicode</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	item</i>:<i> POINTER</i> -- (from <i>WEL_ANY</i>)<i>
+	maximal_height</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	maximal_width</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	maximized</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	message_return_value</i>:<i> INTEGER</i> -- (from <i>WEL_RETURN_VALUE</i>)<i>
+	minimal_height</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	minimal_width</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	minimized</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	parent</i>:<i> WEL_WINDOW</i> -- (from <i>WEL_WINDOW</i>)<i>
+	placement</i>:<i> WEL_WINDOW_PLACEMENT</i> -- (from <i>WEL_WINDOW</i>)<i>
+	shared</i>:<i> BOOLEAN</i> -- (from <i>WEL_ANY</i>)<i>
+	shown</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	style</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	text</i>:<i> STRING</i> -- (from <i>WEL_WINDOW</i>)<i>
+	text_length</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	to_integer</i>:<i> INTEGER</i> -- (from <i>WEL_ANY</i>)<i>
+	unicode_format</i>:<i> INTEGER</i> -- (from <i>WEL_CONTROL</i>)<i>
+	unicode_structure_format</i>:<i> BOOLEAN</i> -- (from <i>WEL_CONTROL</i>)<i>
+	valid_color_constant </i>(<i>c</i>:<i> INTEGER</i>)<i></i>:<i> BOOLEAN</i> -- (from <i>WEL_COLOR_CONSTANTS</i>)<i>
+	valid_hwnd_constant </i>(<i>c</i>:<i> POINTER</i>)<i></i>:<i> BOOLEAN</i> -- (from <i>WEL_HWND_CONSTANTS</i>)<i>
+	width</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	window_captured</i>:<i> BOOLEAN</i> -- (from <i>WEL_WINDOW</i>)<i>
+	window_rect</i>:<i> WEL_RECT</i> -- (from <i>WEL_WINDOW</i>)<i>
+	x</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+	y</i>:<i> INTEGER</i> -- (from <i>WEL_WINDOW</i>)<i>
+
+</i><b>Commands</b><i>
+	bring_to_top</i> -- (from <i>WEL_WINDOW</i>)<i>
+	clear</i> -- (from <i>WEL_STATIC</i>)<i>
+	default_process_notification </i>(<i>notification_code</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_CONTROL</i>)<i>
+	destroy</i> -- (from <i>WEL_WINDOW</i>)<i>
+	disable</i> -- (from <i>WEL_WINDOW</i>)<i>
+	disable_commands</i> -- (from <i>WEL_WINDOW</i>)<i>
+	disable_default_processing</i> -- (from <i>WEL_WINDOW</i>)<i>
+	disable_horizontal_scroll_bar</i> -- (from <i>WEL_WINDOW</i>)<i>
+	disable_vertical_scroll_bar</i> -- (from <i>WEL_WINDOW</i>)<i>
+	dispose</i> -- (from <i>WEL_ANY</i>)<i>
+	enable</i> -- (from <i>WEL_WINDOW</i>)<i>
+	enable_commands</i> -- (from <i>WEL_WINDOW</i>)<i>
+	enable_default_processing</i> -- (from <i>WEL_WINDOW</i>)<i>
+	enable_horizontal_scroll_bar</i> -- (from <i>WEL_WINDOW</i>)<i>
+	enable_vertical_scroll_bar</i> -- (from <i>WEL_WINDOW</i>)<i>
+	go_to_next_group_item </i>(<i>a_parent</i>:<i> WEL_COMPOSITE_WINDOW</i>;<i> after</i>:<i> BOOLEAN</i>)<i></i> -- (from <i>WEL_CONTROL</i>)<i>
+	go_to_next_tab_item </i>(<i>a_parent</i>:<i> WEL_COMPOSITE_WINDOW</i>;<i> after</i>:<i> BOOLEAN</i>)<i></i> -- (from <i>WEL_CONTROL</i>)<i>
+	hide</i> -- (from <i>WEL_WINDOW</i>)<i>
+	hide_horizontal_scroll_bar</i> -- (from <i>WEL_WINDOW</i>)<i>
+	hide_scroll_bars</i> -- (from <i>WEL_WINDOW</i>)<i>
+	hide_vertical_scroll_bar</i> -- (from <i>WEL_WINDOW</i>)<i>
+	insert_after </i>(<i>a_window</i>:<i> WEL_WINDOW</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	invalidate</i> -- (from <i>WEL_WINDOW</i>)<i>
+	invalidate_rect </i>(<i>rect</i>:<i> WEL_RECT</i>;<i> erase_background</i>:<i> BOOLEAN</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	invalidate_region </i>(<i>region</i>:<i> WEL_REGION</i>;<i> erase_background</i>:<i> BOOLEAN</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	invalidate_without_background</i> -- (from <i>WEL_WINDOW</i>)<i>
+	kill_timer </i>(<i>timer_id</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	lock_window_update</i> -- (from <i>WEL_WINDOW</i>)<i>
+	maximize</i> -- (from <i>WEL_WINDOW</i>)<i>
+	minimize</i> -- (from <i>WEL_WINDOW</i>)<i>
+	move </i>(<i>a_x</i>,<i> a_y</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	move_and_resize </i>(<i>a_x</i>,<i> a_y</i>,<i> a_width</i>,<i> a_height</i>:<i> INTEGER</i>;<i> repaint</i>:<i> BOOLEAN</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	put_command </i>(<i>a_command</i>:<i> WEL_COMMAND</i>;<i> message</i>:<i> INTEGER</i>;<i> argument</i>:<i> ANY</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	register_current_window</i> -- (from <i>WEL_WINDOW</i>)<i>
+	release_capture</i> -- (from <i>WEL_WINDOW</i>)<i>
+	release_heavy_capture</i> -- (from <i>WEL_WINDOW</i>)<i>
+	remove_command </i>(<i>message</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	resize </i>(<i>a_width</i>,<i> a_height</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	restore</i> -- (from <i>WEL_WINDOW</i>)<i>
+	scroll </i>(<i>a_x</i>,<i> a_y</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_capture</i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_class_icon </i>(<i>new_icon</i>:<i> WEL_ICON</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_class_small_icon </i>(<i>new_icon</i>:<i> WEL_ICON</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_default_processing </i>(<i>value</i>:<i> BOOLEAN</i>)<i></i> -- (from <i>WEL_RETURN_VALUE</i>)<i>
+	set_ex_style </i>(<i>an_ex_style</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_focus</i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_font </i>(<i>a_font</i>:<i> WEL_FONT</i>)<i></i> -- (from <i>WEL_CONTROL</i>)<i>
+	set_heavy_capture</i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_height </i>(<i>a_height</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_item </i>(<i>an_item</i>:<i> POINTER</i>)<i></i> -- (from <i>WEL_ANY</i>)<i>
+	set_message_return_value </i>(<i>value</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_RETURN_VALUE</i>)<i>
+	set_parent </i>(<i>a_parent</i>:<i> WEL_WINDOW</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_placement </i>(<i>a_placement</i>:<i> WEL_WINDOW_PLACEMENT</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_shared</i> -- (from <i>WEL_ANY</i>)<i>
+	set_style </i>(<i>a_style</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_text </i>(<i>a_text</i>:<i> STRING</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_timer </i>(<i>timer_id</i>,<i> time_out</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_unicode_format</i> -- (from <i>WEL_CONTROL</i>)<i>
+	set_unshared</i> -- (from <i>WEL_ANY</i>)<i>
+	set_width </i>(<i>a_width</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_x </i>(<i>a_x</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_y </i>(<i>a_y</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	set_z_order </i>(<i>z_order</i>:<i> POINTER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	show</i> -- (from <i>WEL_WINDOW</i>)<i>
+	show_horizontal_scroll_bar</i> -- (from <i>WEL_WINDOW</i>)<i>
+	show_scroll_bars</i> -- (from <i>WEL_WINDOW</i>)<i>
+	show_vertical_scroll_bar</i> -- (from <i>WEL_WINDOW</i>)<i>
+	show_with_option </i>(<i>cmd_show</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	unlock_window_update</i> -- (from <i>WEL_WINDOW</i>)<i>
+	update</i> -- (from <i>WEL_WINDOW</i>)<i>
+	update_cached_style </i>(<i>new_ex_style</i>,<i> old_ex_style</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	validate</i> -- (from <i>WEL_WINDOW</i>)<i>
+	validate_rect </i>(<i>rect</i>:<i> WEL_RECT</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	validate_region </i>(<i>region</i>:<i> WEL_REGION</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+	win_help </i>(<i>help_file</i>:<i> STRING</i>;<i> a_command</i>,<i> data</i>:<i> INTEGER</i>)<i></i> -- (from <i>WEL_WINDOW</i>)<i>
+
+</i>
+</pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; </P>
+<P ALIGN="CENTER">For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</body>
+</html>

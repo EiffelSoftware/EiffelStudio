@@ -860,6 +860,9 @@ feature {NONE} -- Events on notification
 --| Useless, but we may need it one day
 --			Application_notification_controller.notify_on_before_stopped	
 
+				--| on top of the stack = current stack/feature
+			application.set_current_execution_stack_number (1)			
+
 			--| We need to stop
 			--| Already "stopped" but let's be sure ..
 			status.set_is_stopped (True)

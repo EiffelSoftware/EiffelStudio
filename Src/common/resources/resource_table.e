@@ -138,9 +138,13 @@ feature -- Access
 					if pos = 0 then
 						an_entry := a_text.substring (last_pos, c);
 						last_pos := c;
+							--| Remove leading spaces
+						an_entry.left_adjust;
 						a_list.extend (an_entry);
 					elseif last_pos /= pos then
 						an_entry := a_text.substring (last_pos, pos - 1);
+							--| Remove leading spaces
+						an_entry.left_adjust;
 						a_list.extend (an_entry);
 						pos := pos + 1;
 						last_pos := pos;

@@ -1429,34 +1429,6 @@ feature -- Features info
 			end
 		end
 
-	define_external_feature_reference (a_feat: FEATURE_I; a_type_id: INTEGER) is
-			-- Define reference to external feature `a_feat' defined in `a_type_id'.
-		require
-			a_feat_not_void: a_feat /= Void
-			a_feat_is_il_external: a_feat.is_il_external
-		local
-			l_ext: IL_EXTENSION_I
-			l_signature: like last_external_signature
-			l_token: INTEGER
-		do
-			l_ext ?= a_feat.extension
-			check
-				l_ext_not_void: l_ext /= Void
-			end
-			l_token := l_ext.token
-			
-			if a_feat.is_attribute then
-				insert_attribute (l_token, a_type_id, a_feat.feature_id)
-			else
-				l_signature := last_external_signature
-
-				insert_implementation_feature (l_token, a_type_id, a_feat.feature_id)
-				insert_implementation_signature (l_signature, a_type_id, a_feat.feature_id)
-				insert_feature (l_token, a_type_id, a_feat.feature_id)
-				insert_signature (l_signature, a_type_id, a_feat.feature_id)
-			end
-		end
-	
 	generate_feature (feat: FEATURE_I; in_interface, is_static, is_override_or_c_external: BOOLEAN) is
 			-- Generate interface `feat' description.
 		require
@@ -2027,9 +1999,24 @@ feature -- IL Generation
 				l_class_type := class_types.item (a_type_id)
 
 				if
-					not l_is_external and then not l_class_type.is_precompiled and then
+						-- False here because of a few things:
+						-- 1 - It is not clear that generated executable are faster by
+						--     having the code inlined. It depends on the JIT quality which
+						--     we don't know much about it.
+						-- 2 - For EiffelStudio debugger, it is not easy to perform mapping
+						--     between breakpoints and generated code.
+						-- 3 - For code using $Current, it does not work as in this fake
+						--     duplication `$Current' is of type address of Impl.CLASS
+						--     instead of being address of CLASS. Makes the generated code
+						--     unverifiable.
+						--
+						-- However we keep this code as it might be usefull in the future
+						-- if we introduce a new project settings option to turn this on
+						-- or off.
+					False and then
+					(not l_is_external and then not l_class_type.is_precompiled and then
 					il_modules (current_class_type) = il_modules (l_class_type) and then
-					(l_cur_sig = Void or else l_cur_sig.is_equal (l_impl_sig))
+					(l_cur_sig = Void or else l_cur_sig.is_equal (l_impl_sig)))
 				then
 					if is_debug_info_enabled then
 						dbg_writer.open_method (l_meth_token)
@@ -2220,9 +2207,6 @@ feature -- IL Generation
 		ensure
 			method_body_set: method_body /= Void
 		end
-
-	last_external_signature: ARRAY [INTEGER]
-			-- Signature of last external processed through `external_token'.
 
 	last_non_recorded_feature_token: INTEGER
 			-- Token of last defined feature that we did not record or last override.
@@ -2425,9 +2409,9 @@ feature -- IL Generation
 			l_type: TYPE_I
 			l_real_type: STRING
 			l_is_array: BOOLEAN
+			l_is_by_ref: BOOLEAN
 			l_parameters_string: ARRAY [STRING]
 			l_return_type: STRING
-			l_signature: ARRAY [INTEGER]
 		do
 			l_class_token := current_module.external_token_mapping (base_name)
 			l_parameters_string := Names_heap.convert_to_string_array (parameters_type)
@@ -2435,6 +2419,10 @@ feature -- IL Generation
 
 			l_has_return_type := l_return_type /= Void
 			if l_has_return_type then
+				if l_return_type.item (l_return_type.count) = '&' then
+					l_real_type := l_return_type.substring (1, l_return_type.count - 1)
+					l_is_by_ref := True
+				end
 				if l_return_type.item (l_return_type.count) = ']' then
 					l_real_type := l_return_type.substring (1, l_return_type.count - 2)
 					l_is_array := True
@@ -2444,15 +2432,11 @@ feature -- IL Generation
 				l_type := external_class_mapping.item (l_real_type)
 			end
 
-			if parameters_type = Void then
-				create l_signature.make (0, 0)
-			else
-				create l_signature.make (0, parameters_type.count)
-			end
-			l_signature.compare_references
-
 			inspect ext_kind
 			when Field_type, Static_field_type, Set_field_type, Set_static_field_type then
+				check
+					not_is_by_ref: not l_is_by_ref
+				end
 				l_field_sig := field_sig
 				l_field_sig.reset
 				if l_is_array then
@@ -2461,7 +2445,6 @@ feature -- IL Generation
 				end
 				if l_type /= Void then
 					set_signature_type (l_field_sig, l_type)
-					l_signature.put (l_type.static_type_id, 0)
 				else
 					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.external_token_mapping (l_return_type))
@@ -2485,13 +2468,16 @@ feature -- IL Generation
 				l_meth_sig.set_parameter_count (nb)
 
 				if l_has_return_type then
+					if l_is_by_ref then
+						l_meth_sig.set_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
+					end
 					if l_is_array then
 						l_meth_sig.set_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 					end
 					if l_type /= Void then
-						set_method_return_type (l_meth_sig, l_type)
-						l_signature.put (l_type.static_type_id, 0)
+						set_signature_type (l_meth_sig, l_type)
 					else
 						l_meth_sig.set_return_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
@@ -2508,6 +2494,12 @@ feature -- IL Generation
 					i > nb
 				loop
 					l_real_type := l_parameters_string.item (i)
+					if l_real_type.item (l_real_type.count) = '&' then
+						l_is_by_ref := True
+						l_real_type := l_real_type.substring (1, l_real_type.count - 1)
+					else
+						l_is_by_ref := False
+					end
 					if l_real_type.item (l_real_type.count) = ']' then
 						l_is_array := True
 						l_real_type := l_real_type.substring (1, l_real_type.count - 2)
@@ -2515,13 +2507,16 @@ feature -- IL Generation
 						l_is_array := False
 					end
 					l_type := external_class_mapping.item (l_real_type)
+					if l_is_by_ref then
+						l_meth_sig.set_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
+					end
 					if l_is_array then
 						l_meth_sig.set_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 					end
 					if l_type /= Void then
 						set_signature_type (l_meth_sig, l_type)
-						l_signature.put (l_type.static_type_id, i)
 					else
 						l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 							current_module.external_token_mapping (l_real_type))
@@ -2537,7 +2532,6 @@ feature -- IL Generation
 
 				Result := md_emit.define_member_ref (uni_string, l_class_token, l_meth_sig)
 			end
-			last_external_signature := l_signature
 		end
 
 	internal_generate_external_call (an_assembly_token, a_type_token: INTEGER; base_name: STRING;
@@ -2558,6 +2552,7 @@ feature -- IL Generation
 			l_type: TYPE_I
 			l_real_type: STRING
 			l_is_array: BOOLEAN
+			l_is_by_ref: BOOLEAN
 		do
  			if base_name /= Void then
  				uni_string.set_string (base_name)
@@ -2568,6 +2563,10 @@ feature -- IL Generation
 
 			l_has_return_type := return_type /= Void
 			if l_has_return_type then
+				if return_type.item (return_type.count) = '&' then
+					l_real_type := return_type.substring (1, return_type.count - 1)
+					l_is_by_ref := True
+				end
 				if return_type.item (return_type.count) = ']' then
 					l_real_type := return_type.substring (1, return_type.count - 2)
 					l_is_array := True
@@ -2579,6 +2578,9 @@ feature -- IL Generation
 
 			inspect ext_kind
 			when Field_type, Static_field_type, Set_field_type, Set_static_field_type then
+				check
+					not_is_by_ref: not l_is_by_ref
+				end
 				l_field_sig := field_sig
 				l_field_sig.reset
 				if l_is_array then
@@ -2620,6 +2622,10 @@ feature -- IL Generation
 				l_meth_sig.set_parameter_count (nb)
 
 				if l_has_return_type then
+					if l_is_by_ref then
+						l_meth_sig.set_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
+					end
 					if l_is_array then
 						l_meth_sig.set_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
@@ -2642,6 +2648,12 @@ feature -- IL Generation
 					i > nb
 				loop
 					l_real_type := parameters_string.item (i)
+					if l_real_type.item (l_real_type.count) = '&' then
+						l_is_by_ref := True
+						l_real_type := l_real_type.substring (1, l_real_type.count - 1)
+					else
+						l_is_by_ref := False
+					end
 					if l_real_type.item (l_real_type.count) = ']' then
 						l_is_array := True
 						l_real_type := l_real_type.substring (1, l_real_type.count - 2)
@@ -2649,6 +2661,10 @@ feature -- IL Generation
 						l_is_array := False
 					end
 					l_type := external_class_mapping.item (l_real_type)
+					if l_is_by_ref then
+						l_meth_sig.set_type (
+							feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
+					end
 					if l_is_array then
 						l_meth_sig.set_type (
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
@@ -2658,10 +2674,12 @@ feature -- IL Generation
 					else
 							-- A runtime type.
 						if l_real_type.is_equal (Assertion_level_enum_class_name) then
-							l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+							l_meth_sig.set_type (
+								feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
 								current_module.external_token_mapping (l_real_type))
 						else
-							l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+							l_meth_sig.set_type (
+								feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
 								current_module.external_token_mapping (l_real_type))
 						end
 					end

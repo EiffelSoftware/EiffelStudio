@@ -1,7 +1,9 @@
 indexing
-	description: "Routine objects, with some arguments possibly still open";
-	status: "See notice at end of class";
-	date: "$Date$";
+	description:
+		"Objects representing delayed calls to a routine,%N%
+		%with some operands possibly still open"
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -9,15 +11,23 @@ deferred class
 
 inherit
 	MEMORY
+		export
+			{NONE} all
 		redefine
 			dispose, is_equal, copy
+		end
+
+	HASHABLE
+		undefine
+			copy,
+			is_equal
 		end
 
 feature -- Initialization
 
 	adapt (other: ROUTINE [ANY, OPEN_ARGS]) is
-			-- Set current routine from `other'. Useful
-			-- in descendants.
+			-- Initialize from `other'.
+			-- Useful in descendants.
 		require
 			other_exists: other /= Void
 			conforming: conforms_to (other)
@@ -30,8 +40,8 @@ feature -- Initialization
 				rout_cargs := null_ptr
 			end
 
-			arguments := other.arguments
-			closed_arguments := other.closed_arguments
+			operands := other.operands
+			closed_operands := other.closed_operands
 			open_map := other.open_map
 			closed_map := other.closed_map
 			rout_disp := other.rout_disp
@@ -43,13 +53,63 @@ feature -- Initialization
 
 feature -- Access
 
-	arguments: OPEN_ARGS
-			-- Open arguments
+	operands: OPEN_ARGS
+			-- Open operands.
+
+	target: ANY is
+			-- Target of call.
+		do
+			Result := closed_operands.item (1)
+		end
+
+	open_operand_type (i: INTEGER): INTEGER is
+			-- Type of `i'th open operand.
+		require
+			positive: i >= 1
+			within_bounds: i <= open_count
+		do
+			if open_types = Void then
+				create open_types.make (1, open_map.count)
+			end
+			Result := open_types.item (i)
+			if Result = 0 then
+				Result := eif_gen_param_id (
+					-1,
+					eif_gen_create ($Current, 2),
+					i
+				)
+				open_types.force (Result, i)
+			end
+		end
+
+	hash_code: INTEGER is
+			-- Hash code value.
+		do
+			Result := rout_disp.hash_code
+		end
+
+	precondition (args: like operands): BOOLEAN is
+			-- Do `args' satisfy routine's precondition
+			-- in current state?
+		do
+			check
+				not_implemented: False
+			end
+		end
+
+	postcondition (args: like operands): BOOLEAN is
+			-- Does current state satisfy routine's
+			-- postcondition for `args'?
+		do
+			check
+				not_implemented: False
+			end
+		end
 
 feature -- Status report
 
 	callable: BOOLEAN is
-			-- Can a routine call through Current be made?
+			-- Can routine be called on current object?
 		local
 			null_ptr: POINTER
 		do
@@ -57,12 +117,13 @@ feature -- Status report
 		end
 
 	is_equal (other: like Current): BOOLEAN is
-
+			-- Is associated routine the same as the one
+			-- associated with `other'.
 		do
-			-- Do not compare implementation data
-			Result := equal (arguments, other.arguments)
+			--| Do not compare implementation data
+			Result := equal (operands, other.operands)
 							and then
-					  equal (closed_arguments, other.closed_arguments)
+					  equal (closed_operands, other.closed_operands)
 							and then
 					  equal (open_map, other.open_map)
 							and then
@@ -71,37 +132,68 @@ feature -- Status report
 					  (rout_disp = other.rout_disp)
 		end
 
-	valid_arguments (args: OPEN_ARGS): BOOLEAN is
-			-- Are `args' valid arguments for this routine?
+	valid_operands (args: OPEN_ARGS): BOOLEAN is
+			-- Are `args' valid operands for this routine?
 		local
-			l_args: like arguments
+			l_args: like operands
+			i: INTEGER
+			mismatch: BOOLEAN
+			arg: ANY
+			arg_type_code: CHARACTER
 		do
-			if args = Void then
-				-- Void arguments are only allowed
-				-- if object has no open arguments.
+			if args = Void or open_map = Void then
+				-- Void operands are only allowed
+				-- if object has no open operands.
 				Result := (open_map = Void)
-			else
-				-- TEMPORARY VERSION
-				Result := True
---                l_args ?= args
---                Result := (largs /= Void)
+			elseif open_map /= Void and then args.count >= open_map.count then
+				from
+					i := 1
+				until
+					i > open_map.count or mismatch
+				loop
+					arg := args.item (i)
+					arg_type_code := args.arg_item_code (i)
+					if arg_type_code = 'r' then
+						if not eif_gen_conf (
+								ei_dtype ($arg),
+								open_operand_type (i)
+							)
+						then
+							mismatch := True
+						end
+					else
+						if arg_type_code /= open_type_codes.item (i + 1) then
+							mismatch := True
+						end
+					end
+						i := i + 1
+					end
+				Result := not mismatch
 			end
+		end
+
+feature -- Measurement
+
+	open_count: INTEGER is
+			-- Number of open operands.
+		do
+			Result := open_map.count
 		end
 
 feature -- Element change
 
-	set_arguments (args: OPEN_ARGS) is
-			-- Use `args' as arguments to next call.
+	set_operands (args: OPEN_ARGS) is
+			-- Use `args' as operands for next call.
 		require
-			valid_arguments: valid_arguments (args)
+			valid_operands: valid_operands (args)
 		do
-			arguments := args
+			operands := args
 		end
 
 feature -- Duplication
 
 	copy (other: like Current) is
-
+			-- Use same routine as `other'.
 		local
 			null_ptr: POINTER
 		do
@@ -111,8 +203,8 @@ feature -- Duplication
 				rout_cargs := null_ptr
 			end
 
-			arguments := other.arguments
-			closed_arguments := other.closed_arguments
+			operands := other.operands
+			closed_operands := other.closed_operands
 			open_map := other.open_map
 			closed_map := other.closed_map
 			rout_disp := other.rout_disp
@@ -127,24 +219,22 @@ feature -- Duplication
 feature -- Basic operations
 
 	call (args: OPEN_ARGS) is
-			-- Call routine with arguments `args'.
+			-- Call routine with operands `args'.
 		require
-			valid_arguments: valid_arguments (args)
+			valid_operands: valid_operands (args)
 			callable: callable
 		do
-			arguments := args
+			operands := args
 			apply
 		end
 
 	apply is
-			-- Call routine with arguments `arguments'
-			-- as last set.
+			-- Call routine with `operands' as last set.
 		require
-			valid_arguments: valid_arguments (arguments)
+			valid_operands: valid_operands (operands)
 			callable: callable
 		deferred
 		end
-
 
 feature -- Obsolete
 
@@ -164,20 +254,23 @@ feature -- Obsolete
 
 feature {ROUTINE} -- Implementation
 
-	frozen closed_arguments: TUPLE
-			-- Closed arguments provided at creation time
+	frozen closed_operands: TUPLE
+			-- Closed operands provided at creation time
 
 	frozen open_map: ARRAY [INTEGER]
-			-- Index map for open arguments
+			-- Index map for open operands
 
 	frozen closed_map: ARRAY [INTEGER]
-			-- Index map for closed arguments
+			-- Index map for closed operands
 
 	frozen open_type_codes: STRING
-			-- Type codes for open arguments
+			-- Type codes for open operands
+
+	frozen open_types: ARRAY [INTEGER]
+			-- Types of open operands
 
 	frozen closed_type_codes: STRING
-			-- Type codes for closed arguments
+			-- Type codes for closed operands
 
 	frozen rout_disp: POINTER
 			-- Routine dispatcher
@@ -196,7 +289,7 @@ feature {ROUTINE} -- Implementation
 			i, cnt: INTEGER
 		do
 			rout_disp := p
-			closed_arguments := closed_args
+			closed_operands := closed_args
 			open_map := omap
 			closed_map := cmap
 
@@ -235,7 +328,7 @@ feature {NONE}  -- Implementation
 
 
 	frozen rout_cargs: POINTER
-			-- Routine arguments
+			-- Routine operands
 
 	frozen rout_set_cargs is
 			-- Allocate and fill argument structure
@@ -248,8 +341,8 @@ feature {NONE}  -- Implementation
 			was_on: BOOLEAN
 			loc_open_map: like open_map
 			loc_closed_map: like closed_map
-			loc_arguments: like arguments
-			loc_closed_arguments: like closed_arguments
+			loc_operands: like operands
+			loc_closed_operands: like closed_operands
 			loc_open_type_codes: like open_type_codes
 			loc_closed_type_codes: like closed_type_codes
 		do
@@ -259,12 +352,12 @@ feature {NONE}  -- Implementation
 
 			loc_open_map := open_map
 			loc_closed_map := closed_map
-			loc_arguments := arguments
-			loc_closed_arguments := closed_arguments
+			loc_operands := operands
+			loc_closed_operands := closed_operands
 			loc_open_type_codes := open_type_codes
 			loc_closed_type_codes := closed_type_codes
 
-			-- Compute no. arguments, including target.
+			-- Compute no. operands, including target.
 
 			if loc_open_map /= Void then
 				ocnt := loc_open_map.count
@@ -282,7 +375,7 @@ feature {NONE}  -- Implementation
 				new_args := rout_cargs
 			end
 
-			-- Put open arguments in C structure
+			-- Put open operands in C structure
 
 			from
 				i := 1
@@ -293,9 +386,9 @@ feature {NONE}  -- Implementation
 
 				if code = 'f' then
 					-- Special treatment of reals
-					ref_arg := loc_arguments.real_item (i)
+					ref_arg := loc_operands.real_item (i)
 				else
-					ref_arg := loc_arguments.item (i)
+					ref_arg := loc_operands.item (i)
 				end
 
 				j := loc_open_map.item (i)
@@ -320,7 +413,7 @@ feature {NONE}  -- Implementation
 				i := i + 1
 			end
 
-			-- Put closed arguments in C structure
+			-- Put closed operands in C structure
 
 			from
 				i := 1
@@ -331,9 +424,9 @@ feature {NONE}  -- Implementation
 
 				if code = 'f' then
 					-- Special treatment of reals
-					ref_arg := loc_closed_arguments.real_item (i)
+					ref_arg := loc_closed_operands.real_item (i)
 				else
-					ref_arg := loc_closed_arguments.item (i)
+					ref_arg := loc_closed_operands.item (i)
 				end
 
 				j := loc_closed_map.item (i)
@@ -376,7 +469,7 @@ feature {NONE}  -- Implementation
 		end
 
 	rout_obj_new_args (cnt: INTEGER): POINTER is
-			-- Initialize for new arguments.
+			-- Initialize for new operands.
 		external "C | %"eif_rout_obj.h%""
 		end
 
@@ -420,8 +513,23 @@ feature {NONE}  -- Implementation
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	eif_gen_create (obj: POINTER; pos: INTEGER): TUPLE is
+	ei_dtype (obj: POINTER): INTEGER is
+			-- Dynamic type of `obj'.
+		external "C | %"eif_gen_conf.h%""
+		end
+
+	eif_gen_conf (type1, type2: INTEGER): BOOLEAN is
+			-- Does `type1' conform to `type2'?
+		external "C | %"eif_gen_conf.h%""
+		end
+
+	eif_gen_create (obj: POINTER; pos: INTEGER): POINTER is
 			-- Adapt `args' for `idx' and `val'.
+		external "C | %"eif_gen_conf.h%""
+		end
+
+	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is
+			-- Type of generic parameter in `obj' at position `pos'.
 		external "C | %"eif_gen_conf.h%""
 		end
 
@@ -434,6 +542,29 @@ feature {NONE}  -- Implementation
 	eif_gen_typecode_str (obj: POINTER): STRING is
 			-- Code name for generic parameter `pos' in `obj'.
 		external "C | %"eif_gen_conf.h%""
+		end
+
+feature -- Obsolete
+
+	arguments: OPEN_ARGS is
+		obsolete
+			"use operands"
+		do
+			Result := operands
+		end
+
+	set_arguments (args: OPEN_ARGS) is
+		obsolete
+			"use set_operands"
+		do
+			set_operands (args)
+		end
+
+	valid_arguments (args: OPEN_ARGS): BOOLEAN is
+		obsolete
+			"use valid_operands"
+		do
+			Result := valid_operands (args)
 		end
 
 end -- class ROUTINE

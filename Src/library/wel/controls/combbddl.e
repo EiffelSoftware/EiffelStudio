@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_COMBO_BOX
+		redefine
+			height
+		end
 
 	WEL_CBS_CONSTANTS
 		export
@@ -19,35 +22,70 @@ creation
 	make,
 	make_by_id
 
+feature -- Access
+
+	height: INTEGER is
+			-- Height including the list box
+		do
+			Result := dropped_rect.height
+		end
+
 feature -- Status setting
 
-	show_drop_down is
+	show_list is
 		require
 			exists: exists
 		do
 			cwin_send_message (item, Cb_showdropdown, 1, 0)
 		ensure
-			dropped_down: dropped_down
+			list_shown: list_shown
 		end
 
-	hide_drop_down is
+	hide_list is
 		require
 			exists: exists
 		do
 			cwin_send_message (item, Cb_showdropdown, 0, 0)
 		ensure
-			not_dropped_down: not dropped_down
+			list_not_shown: not list_shown
 		end
 
 feature -- Status report
 
-	dropped_down: BOOLEAN is
-			-- Is the list box of the combo box dropped down?
+	list_shown: BOOLEAN is
+			-- Is the drop down list shown?
 		require
 			exists: exists
 		do
 			Result := cwin_send_message_result (item,
 				Cb_getdroppedstate, 0, 0) /= 0
+		end
+
+feature -- Obsolete
+
+	show_drop_down is obsolete "Use ``show_list''"
+		require
+			exists: exists
+		do
+			show_list
+		ensure
+			list_shown: list_shown
+		end
+
+	hide_drop_down is obsolete "Use ``hide_list''"
+		require
+			exists: exists
+		do
+			hide_list
+		ensure
+			list_not_shown: not list_shown
+		end
+
+	dropped_down: BOOLEAN is obsolete "Use ``list_shown''"
+		require
+			exists: exists
+		do
+			Result := list_shown
 		end
 
 feature {NONE} -- Implementation

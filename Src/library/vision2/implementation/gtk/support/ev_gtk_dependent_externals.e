@@ -136,6 +136,14 @@ feature -- Externals
 			"C | %"ev_gtk_callback_marshal.h%""
 		end
 
+	frozen gtk_value_uint (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_VALUE_UINT (*(GtkArg*) $arg )"
+		end
+
 	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER) is
 		external
 			"C (GtkObject*, guint) | <gtk/gtk.h>"

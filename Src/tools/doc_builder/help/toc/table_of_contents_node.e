@@ -418,9 +418,8 @@ feature -- Convenience
 		local
 			l_node: like Current
 			l_filename: STRING
-		do			
-			print ("%NRetrieving list of filenames of children for node (recursive: " + recursive.out + "...")
-			if has_child then
+		do		
+			if has_child then				
 				create Result.make (children.count)
 				Result.compare_objects
 				from				
@@ -439,7 +438,6 @@ feature -- Convenience
 					children.forth			
 				end
 			end
-			print ("done%N")
 		end		
 	
 	nodes (recursive: BOOLEAN): ARRAYED_LIST [TABLE_OF_CONTENTS_NODE] is

@@ -29,7 +29,6 @@ feature -- Initialization
 	initialize is
 			-- Create main box and separator.
 		do
-			create {EV_HORIZONTAL_BOX} split_box
 			create {EV_VERTICAL_SEPARATOR} sep
 			Precursor
 		end
@@ -41,18 +40,6 @@ feature {NONE} -- Implementation
 			-- See `{EV_SPLIT_AREA}.select_from'.
 		do
 			Result := a_hor
-		end
-
-	set_first_cell_dimension (a_size: INTEGER) is
-			-- Set width of first_cell.
-		do
-			first_cell.set_minimum_width (a_size)
-		end
-
-	set_second_cell_dimension (a_size: INTEGER) is
-			-- Set width of second_cell.
-		do
-			second_cell.set_minimum_width (a_size)
 		end
 	
 end -- class EV_HORIZONTAL_SPLIT_AREA_I
@@ -78,6 +65,9 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/05/02 22:01:21  brendel
+--| Removed redundent features.
+--|
 --| Revision 1.17  2000/03/18 00:52:23  oconnor
 --| formatting, layout and comment tweaks
 --|

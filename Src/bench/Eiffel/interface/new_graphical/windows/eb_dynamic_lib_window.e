@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Window holding a dynamic library tool"
 	date: "$Date$"
 	revision: "$Revision$"
 

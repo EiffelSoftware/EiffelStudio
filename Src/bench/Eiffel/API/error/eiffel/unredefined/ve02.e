@@ -13,9 +13,9 @@ inherit
 	
 feature 
 
-	code: STRING is "VE02";
+	code: STRING is "VDRD";
 			-- Error code: should be added to VDRD validity rule
 
-	subcode: INTEGER is 0;
+	subcode: INTEGER is 8;
 
 end 

@@ -86,4 +86,9 @@ feature
 			end;
 		end;
 
+	cecil_file: UNIX_FILE is
+		do
+			Result := System.cecil_file;
+		end;
+
 end

@@ -20,6 +20,8 @@ feature
 	successfull: BOOLEAN;
 			-- Is the last compilation successfull ?
 
+	not_first_parsing: BOOLEAN;
+
 	old_universe: UNIVERSE_I;
 			-- Universe of the previous compilation
 			-- usefull for checking  the removed clusters
@@ -70,9 +72,22 @@ feature
 	build_universe is
 			-- Build the universe using the AST
 		local
+			precomp_r: PRECOMP_R;
 			old_system: SYSTEM_I;
+			precomp_project_name: STRING;
 		do
 			if root_ast /= Void then
+				if not_first_parsing = False then
+					precomp_project_name := root_ast.precomp_project_name;
+					if precomp_project_name /= Void then
+						!!precomp_r;
+						precomp_r.retrieve_precompiled (precomp_project_name);
+					else
+						System.make;
+					end;
+				end;
+				not_first_parsing := True;
+
 				old_universe := Universe.twin;
 				old_system := System.twin;
 
@@ -94,8 +109,10 @@ feature
 		rescue
 			if exception = Programmer_exception then
 					-- Reset `Workbench'
-				Universe.copy (old_universe);
-				System.copy (old_system);
+				if old_system /= Void then
+					Universe.copy (old_universe);
+					System.copy (old_system);
+				end;
 				old_universe := Void;
 				successfull := False;
 			end

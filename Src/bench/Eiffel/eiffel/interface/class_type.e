@@ -156,6 +156,8 @@ feature -- Conveniences
 
 feature -- Generation
 
+	valid_body_ids: SORTED_SET [INTEGER];
+
 	pass4 is
 			-- Generation of the C file
 		local
@@ -174,6 +176,8 @@ feature -- Generation
 			current_class_id := current_class.id;
 
 			feature_table := current_class.feature_table;
+
+			!!valid_body_ids.make;
 
 			if final_mode then
 					-- Check to see if there is really something to generate
@@ -237,6 +241,7 @@ feature -- Generation
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.to_generate_in (current_class) then
+					valid_body_ids.add (feature_i.body_id);
 					generate_feature (feature_i, file);
 				end;
 				feature_table.forth;
@@ -541,6 +546,9 @@ feature -- Byte code generation
 				--byte_context.set_class_type (Current);
 
 				feat_tbl := associated_class.feature_table;
+				if valid_body_ids = Void then
+					!!valid_body_ids.make;
+				end;
 			until
 				melted_list.after
 			loop
@@ -562,6 +570,11 @@ feature -- Byte code generation
 		end;
 
 feature -- Skeleton generation
+
+	Skeleton_file: UNIX_FILE is
+		do
+			Result := System.Skeleton_file
+		end;
 
 	generate_skeleton1 is
 			-- Generate skeleton names and types of Current class type
@@ -791,7 +804,7 @@ feature -- Conformance table generation
 	generate_conformance_table is
 			-- Generate conformance table
 		require
-			Conformance_file.is_open_write;
+			--Conformance_file.is_open_write;
 		do
 			Conf_table.init (type_id);
 			Conf_table.mark (type_id);

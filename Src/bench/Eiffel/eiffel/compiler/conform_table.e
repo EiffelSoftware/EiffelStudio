@@ -79,6 +79,11 @@ feature
 			put (True, i);
 		end;
 
+	Conformance_file: UNIX_FILE is
+		do
+			Result := System.conformance_file
+		end;
+
 	generate is
 			-- Generates the current conformance table
 		require

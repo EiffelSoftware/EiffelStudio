@@ -107,7 +107,12 @@ feature {NONE}
 			error: BOOLEAN
 		do
 				-- Time check only the valid classes
-			if System.class_of_id (a_class.id) /= Void then
+			if
+				System.class_of_id (a_class.id) /= Void
+			and then
+					-- no time check on precompiled classes
+				not a_class.is_precompiled
+			then
 
 					-- Check the date of the associated file of class
 					-- `a_class'.

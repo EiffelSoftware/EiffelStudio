@@ -5,11 +5,9 @@ class VGCC8 obsolete "NOT IN THE BOOK"
 inherit
 
 	VGCC5
-		redefine
-			subcode
-		end;
 
 feature
-		subcode: INTEGER is 8
 
+--		subcode: INTEGER is 6
+-- Same error subcode as VGCC5: 6
 end

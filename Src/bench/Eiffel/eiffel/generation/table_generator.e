@@ -52,8 +52,8 @@ feature
 		do
 			file_counter := file_counter + 1;
 			!!file_name.make
-				(infix_file_name.count + 4 + generation_path.count);
-			file_name.append (generation_path);
+				(infix_file_name.count + 4 + Final_generation_path.count);
+			file_name.append (Final_generation_path);
 			file_name.append (infix_file_name);
 			file_name.append_integer (file_counter);
 			file_name.append_character ('.');

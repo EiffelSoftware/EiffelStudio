@@ -7,7 +7,10 @@ class VE04 obsolete "NOT DEFINED IN THE BOOK"
 inherit
 
 	EIFFEL_ERROR
-	
+		redefine
+			subcode
+		end;
+
 feature
 
 	parent_type: TYPE_A;
@@ -19,7 +22,9 @@ feature
 			parent_type := p;
 		end;
 
-	code: STRING is "VE04";
+	code: STRING is "VHPR";
 			-- Error code
+
+	subcode: INTEGER is 3
 
 end

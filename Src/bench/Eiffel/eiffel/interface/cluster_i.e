@@ -35,6 +35,11 @@ feature -- Attributes
 	old_cluster: CLUSTER_I;
 			-- Old version of the cluster
 
+	is_precompiled: BOOLEAN;
+			-- Is the cluster precompiled
+			-- It won't be removed even if it is no more
+			-- in the local Ace file
+
 feature -- Conveniences
 
 	set_date (i: INTEGER) is
@@ -53,6 +58,12 @@ feature -- Conveniences
 			-- Assign `c' to `old_cluster'.
 		do
 			old_cluster := c;
+		end;
+
+	set_is_precompiled is
+			-- Assign `True' to `is_precompiled'
+		do
+			is_precompiled := True;
 		end;
 
 feature -- Creation feature
@@ -79,6 +90,7 @@ feature -- Creation feature
 			c: CLASS_I;
 		do
 			old_cluster := old_cluster_i;
+			is_precompiled := old_cluster_i.is_precompiled;
 			set_date (old_cluster_i.date);
 			from
 				cl := old_cluster.classes;

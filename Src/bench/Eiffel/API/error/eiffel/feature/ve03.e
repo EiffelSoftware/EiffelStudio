@@ -6,6 +6,9 @@ class VE03 obsolete "NOT IN THE BOOK"
 inherit
 
 	FEATURE_ERROR
+		redefine
+			build_explain
+		end
 	
 feature
 
@@ -18,7 +21,14 @@ feature
 			target := t;
 		end;
 
-	code: STRING is "VE03";
+	code: STRING is "VJAW";
 			-- Error code
+
+	build_explain is
+		do
+			put_string ("Target: ");
+			put_string (target.access_name);
+			new_line;
+		end;
 
 end

@@ -76,7 +76,7 @@ feature
 			origin_table := t;
 		end;
 
-	equiv (other: like Current): BOOLEAN is
+	equiv (other: like Current; pass2_ctrl: PASS2_CONTROL): BOOLEAN is
 			-- Incrementality test on feature table in second pass.
 			-- We must know if a feature table has possibly changed,
 			-- for recompiling descendants of a changed class. Note that
@@ -87,26 +87,34 @@ feature
 		local
 			feature_name: STRING;
 			f1, f2: FEATURE_I;
+			depend_unit: DEPEND_UNIT;
 		do
-			if other.count = count then
+			if other.count /= count then
 					-- At least the counts should be the same.
-				from
-					start;
-					Result := True;
-				until
-					after or else not Result
-				loop
-					feature_name := key_for_iteration;
-					f2 := other.item (feature_name);
-					if f2 = Void then
-						Result := False;
-					else
-						f1 := item_for_iteration;
-						check
-							f1.feature_name.is_equal (f2.feature_name);
-						end;
-						Result := f1.equiv (f2);
+				Result := False
+			end;
+
+			from
+				start;
+				Result := True;
+			until
+				after
+			loop
+				feature_name := key_for_iteration;
+				f2 := other.item (feature_name);
+				if f2 = Void then
+					Result := False;
+				else
+					f1 := item_for_iteration;
+					check
+						f1.feature_name.is_equal (f2.feature_name);
 					end;
+					if not f1.equiv (f2) then
+						Result := False;
+						!!depend_unit.make (feat_tbl_id, f2.feature_id);;
+						pass2_ctrl.propagators.add (depend_unit)
+					end;
+				end;
 debug ("ACTIVITY")
 	if not Result then
 		io.error.putstring ("%Tfeature ");
@@ -114,17 +122,16 @@ debug ("ACTIVITY")
 		io.error.putstring (" is not equiv.%N");
 	end;
 end;
-					forth
-				end;
-				if Result then
-					Result := origin_table.equiv (other.origin_table);
+				forth
+			end;
+			if Result then
+				Result := origin_table.equiv (other.origin_table);
 debug ("ACTIVITY")
 	if not Result then
 		io.error.putstring ("%TOrigin table is not equivalent%N");
 	end;
 end;
-				end;
-			end; 
+			end;
 		end;
 
 	pass2_control (other: like Current): PASS2_CONTROL is

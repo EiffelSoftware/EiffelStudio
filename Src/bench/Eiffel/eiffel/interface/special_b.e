@@ -108,6 +108,7 @@ feature
 			dtype, char_dtype, long_dtype,
 			float_dtype, double_dtype, 
 			pointer_dtype, boolean_dtype: INTEGER;
+			Plug_file: UNIX_FILE;
 		do
 			from
 				char_dtype := -1;
@@ -139,6 +140,7 @@ feature
 				end;
 				types.forth;
 			end;
+			Plug_file := System.Plug_file;
 			Plug_file.putstring ("int sp_char = ");
 			Plug_file.putint (char_dtype);
 			Plug_file.putstring (";%N");

@@ -6,6 +6,9 @@ class VE01 obsolete "NOT DEFINED IN THE BOOK"
 inherit
 
 	EIFFEL_ERROR
+		redefine
+			subcode
+		end;
 
 feature
 
@@ -24,7 +27,9 @@ feature
 			old_feature := f;
 		end;
 
-	code: STRING is "VE01";
+	code: STRING is "VDRD";
 			-- Error code
+
+	subcode: INTEGER is 7
 
 end

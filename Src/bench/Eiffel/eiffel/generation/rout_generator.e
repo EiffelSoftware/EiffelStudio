@@ -43,7 +43,7 @@ feature
 			file_name: STRING;
 		do
 			if context.final_mode then
-				file_name := generation_path.twin;
+				file_name := Final_generation_path.twin;
 				file_name.append ("/Erout");
 				file_name.append_integer (file_counter);
 				file_name.append (".h");

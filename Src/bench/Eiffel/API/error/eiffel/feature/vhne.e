@@ -5,10 +5,15 @@ class VHNE obsolete "NOT IN THE BOOK"
 inherit
 
 	FEATURE_ERROR
-	
+		redefine
+			subcode
+		end;
+
 feature
 
-	code: STRING is "VHNE";
+	code: STRING is "VUEX";
 			-- Error code
+
+	subcode: INTEGER is 2;
 
 end

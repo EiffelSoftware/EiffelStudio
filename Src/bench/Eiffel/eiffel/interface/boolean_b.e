@@ -26,7 +26,7 @@ feature
 	generate_cecil_value is
 			-- Generate Cecil type value
 		do
-			Cecil_file.putstring ("SK_BOOL");
+			System.Cecil_file.putstring ("SK_BOOL");
 		end;
 
 	cecil_value: INTEGER is

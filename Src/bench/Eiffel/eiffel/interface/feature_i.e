@@ -888,17 +888,16 @@ feature -- Signature checking
 			vffd5: VFFD5;
 			vffd6: VFFD6;
 			vffd7: VFFD7;
-			vffd8: VFFD8;
 			vtug: VTUG;
 			vtgg1: VTGG1;
 		do
 			if type.has_like and then is_once then
 					-- We have an anchored type.
 					-- Check if the feature is not a once feature
-				!!vffd8;
-				vffd8.set_class (written_class);
-				vffd8.set_feature_name (feature_name);
-				Error_handler.insert_error (vffd8);
+				!!vffd7;
+				vffd7.set_class (written_class);
+				vffd7.set_feature_name (feature_name);
+				Error_handler.insert_error (vffd7);
 			end;
 				-- Process an actual type for the feature; interpret
 				-- anchored types.
@@ -1166,7 +1165,7 @@ end;
 						ve02a.init (old_feature, Current);
 --						ve02a.set_type (new_type);
 --						ve02a.set_precursor_type (old_type);
---						ve02a.set_argument_number (i);
+						ve02a.set_argument_number (i);
 						Error_handler.insert_error (ve02a);
 					end;
 	

@@ -52,7 +52,7 @@ feature
 		do
 			set_title (tool_name);
 			set_default_format;
-			text_window.clear_window;
+			text_window.clear_window
 		end;
 
 	set_default_format is
@@ -60,20 +60,28 @@ feature
 		do
 			-- Do nothing
 		end;
-
 	
 feature {NONE}
+
+	transporting: BOOLEAN;
+		-- Is a stone currently being transported?
+
+	abort: ANY;
 
 	transporter_init is
 			-- Initialize tranport stuff.
 		local
 			void_reference: ANY
 		do
+			!! abort;
 			set_drawing (screen);
 			set_logical_mode (10);
 			set_subwindow_mode (1);
-			add_button_motion_action (3, Current, Current);
-			add_button_release_action (3, Current, text_window)
+			add_pointer_motion_action (Current, Current);
+--			add_button_click_action (3, Current, text_window);
+			add_button_press_action (3, Current, text_window);
+			add_button_press_action (1, Current, abort);
+			add_button_press_action (2, Current, abort);
 		end;
 
 	execute (argument: ANY) is
@@ -83,18 +91,31 @@ feature {NONE}
 			pointed_text: TEXT_WINDOW;
 			pointed_hole: HOLE;
 			transported_hole: HOLE;
-			transported_node: like last_transported
+			transported_node: like last_transported;
 		do
-			if argument = Current then
+			if (argument = Current) then
 				-- Motion action (when grabbed)
+				if transporting then
+					draw_segment (x0, y0, x1, y1);
+					x1 := screen.x; y1 := screen.y;
+					draw_segment (x0, y0, x1, y1)
+				end;
+			elseif (argument = abort) then
 				draw_segment (x0, y0, x1, y1);
-				x1 := screen.x; y1 := screen.y;
-				draw_segment (x0, y0, x1, y1)
+				if origin_text /= Void then
+					origin_text.deselect_all
+				end;
+				ungrab;
+				clean_type;
+				transporting := False;
 			elseif argument /= Void then
 				draw_segment (x0, y0, x1, y1);
 				if origin_text /= Void then
 					origin_text.deselect_all
 				end;
+				clean_type;
+				transporting := False;
+				ungrab;
 				pointed_widget := screen.widget_pointed;
 				pointed_hole ?= pointed_widget;
 				pointed_text ?= pointed_widget;
@@ -104,17 +125,15 @@ feature {NONE}
 					if transported_hole /= Void and then pointed_text.clickable then
 						pointed_text.change_focus;
 						transported_hole.receive (pointed_text.focus);
-						pointed_text.deselect_all
+						pointed_text.deselect_all;
 					elseif transported_node /= Void then
-						pointed_text.receive (transported_node)
+						pointed_text.receive (transported_node);
 					end
 				elseif pointed_hole /= Void then
 					if transported_node /= Void then
-						pointed_hole.receive (transported_node)
+						pointed_hole.receive (transported_node);
 					end
 				end;
-				ungrab;
-				clean_type
 			else
 				work (argument)
 			end
@@ -130,13 +149,16 @@ feature
 		require
 			tranported_not_void: element /= Void
 		do
-			origin_text := a_text;
-			last_transported := element;
-			x0 := start_x; y0 := start_y;
-			x1 := start_x; y1 := start_y;
-			draw_point (start_x, start_y);
-			tell_type (element.stone_name);
-			grab (cursor_table.item (element.stone_type))
+			if not transporting then
+				transporting := True;
+				origin_text := a_text;
+				last_transported := element;
+				x0 := start_x; y0 := start_y;
+				x1 := start_x; y1 := start_y;
+				draw_point (start_x, start_y);
+				tell_type (element.stone_name);
+				grab (cursor_table.item (element.stone_type))
+			end;
 		ensure
 			origin_text = a_text;
 			last_transported = element
@@ -175,8 +197,9 @@ feature
 feature {NONE}
 
 	screen: SCREEN is deferred end;
-	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
-	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is deferred end;
+	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
+	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
 	grab (cursor: SCREEN_CURSOR) is deferred end;
 	ungrab is deferred end;
 	

@@ -169,9 +169,15 @@ feature -- Cecil
 
 feature -- Actual generation
 
+	make_file: UNIX_FILE is
+		do
+			Result := System.make_file;
+		end;
+
 	generate is
 			-- Generate make file
 		do
+			System.set_make_file (make_f (system.in_final_mode));
 			Make_file.open_write;
 				-- Generate main /bin/sh preamble
 			generate_preamble;
@@ -208,6 +214,7 @@ feature -- Actual generation
 			generate_ending;
 
 			Make_file.close;
+			System.set_make_file (Void);
 			object_basket.wipe_out;
 			system_basket.wipe_out;
 			cecil_rt_basket.wipe_out;

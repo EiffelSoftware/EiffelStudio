@@ -59,7 +59,6 @@ feature -- Type check, byte code and dead code removal
 			vgcc4: VGCC4;
 			vgcc5: VGCC5;
 			vgcc7: VGCC7;
-			vgcc8: VGCC8;
 		do
 				-- Init the type stack
 			context.begin_expression;
@@ -178,15 +177,15 @@ feature -- Type check, byte code and dead code removal
 															(feature_name);
 						if not export_status.valid_for (context.a_class) then
 								-- Creation procedure is not exported
-							!!vgcc8;
-							context.init_error (vgcc8);
-							vgcc8.set_target_name (target.access_name);
-							vgcc8.set_type (creation_type);
+							!!vgcc5;
+							context.init_error (vgcc5);
+							vgcc5.set_target_name (target.access_name);
+							vgcc5.set_type (creation_type);
 							a_feature := 
 								creation_class.feature_table.item
 															(feature_name);
-							vgcc8.set_creation_feature (a_feature);
-							Error_handler.insert_error (vgcc8);
+							vgcc5.set_creation_feature (a_feature);
+							Error_handler.insert_error (vgcc5);
 						end;
 					end;
 				else
@@ -198,12 +197,12 @@ feature -- Type check, byte code and dead code removal
 						!!depend_unit.make (creation_class.id, -1);
 						context.supplier_ids.add (depend_unit);
 					elseif creators.empty then
-						!!vgcc8;
-						context.init_error (vgcc8);
-						vgcc8.set_target_name (target.access_name);
-						vgcc8.set_type (creation_type);
-						vgcc8.set_creation_feature (Void);
-						Error_handler.insert_error (vgcc8);
+						!!vgcc5;
+						context.init_error (vgcc5);
+						vgcc5.set_target_name (target.access_name);
+						vgcc5.set_type (creation_type);
+						vgcc5.set_creation_feature (Void);
+						Error_handler.insert_error (vgcc5);
 					else
 						!!vgcc4;
 						context.init_error (vgcc4);

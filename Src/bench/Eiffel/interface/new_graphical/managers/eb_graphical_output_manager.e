@@ -2,7 +2,7 @@ indexing
 	description	: "Manager for all output tools. Can be instanciated on the fly."
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	author		: "$Author$"
 
 class
 	EB_GRAPHICAL_OUTPUT_MANAGER

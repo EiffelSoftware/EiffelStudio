@@ -317,12 +317,8 @@ feature {NONE} -- Implementation
 			valid_arg_name: not arg_name.empty
 		do
 			create Result.make (0)
-			if visitor.is_basic_type_ref or is_hresult (visitor.vt_type) then
-				Result.append (Asterisk)
-				Result.append (arg_name)
-				Result.append (Space_equal_space)
-				Result.append (Asterisk)
-				Result.append (Open_parenthesis)
+
+			if not visitor.is_array_basic_type and not visitor.is_structure_pointer then
 				if visitor.need_generate_ec then
 					Result.append (Generated_ec_mapper)
 				else
@@ -331,10 +327,13 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
+				Result.append (Tmp_clause)
+				Result.append (arg_name)
+				Result.append (Comma_space)
 				Result.append (arg_name)
 				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
+
 			end
 		end
 
@@ -377,6 +376,10 @@ feature {NONE} -- Implementation
 				Result.append (Space_open_parenthesis)
 				Result.append (Tmp_clause)
 				Result.append (arg_name)
+				if visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
 				Result.append (Close_parenthesis)
 			end
 

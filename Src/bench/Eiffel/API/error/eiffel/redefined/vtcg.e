@@ -1,11 +1,9 @@
 indexing
-
-	description: 
-		"Error for violation of constrained genericity validity rule.";
+	description: "Error for violation of constrained genericity validity rule.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VTGG -- It should be VTCG
+class VTCG
 
 inherit
 
@@ -46,4 +44,4 @@ feature {COMPILER_EXPORTER} -- Setting
 			error_list := e;
 		end;
 
-end -- class VTGG
+end -- class VTCG

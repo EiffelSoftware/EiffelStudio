@@ -15,11 +15,21 @@ inherit
 		end;
 
 	TOGGLE_B_I
-        export
-            {NONE} all
-        end;
+		export
+			{NONE} all
+		end;
 
-	BUTTON_M;
+	BUTTON_M
+		rename
+			clean_up as button_clean_up
+		end;
+
+	BUTTON_M
+		redefine
+			clean_up
+		select
+			clean_up
+		end;
 
 	FONTABLE_M
 		rename
@@ -28,20 +38,21 @@ inherit
 
 creation
 
-    make
+	make
 
 feature -- Creation
 
 	make (a_toggle_b: TOGGLE_B) is
-            -- Create a motif toggle button.
-        local
-            ext_name: ANY
-        do
-            ext_name := a_toggle_b.identifier.to_c;
-            screen_object := create_toggle_b ($ext_name,
-				a_toggle_b.parent.implementation.screen_object);
-            a_toggle_b.set_font_imp (Current)
-        end;
+			-- Create a motif toggle button.
+		local
+			ext_name: ANY
+		do
+			widget_index := widget_manager.last_inserted_position;
+			ext_name := a_toggle_b.identifier.to_c;
+			screen_object := create_toggle_b ($ext_name,
+				parent_screen_object (a_toggle_b, widget_index));
+			a_toggle_b.set_font_imp (Current)
+		end;
 
 feature 
 
@@ -84,56 +95,70 @@ feature
 feature {NONE}
 
 	arm_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when current toggle button
-			-- is armed
+		-- An event handler to manage call-backs when current toggle button
+		-- is armed
 
 	release_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when current toggle button
-			-- is released
+		-- An event handler to manage call-backs when current toggle button
+		-- is released
 
-    value_changed_actions: EVENT_HAND_M;
-            -- An event handler to manage call-backs when value is changed
+		value_changed_actions: EVENT_HAND_M;
+		   	 -- An event handler to manage call-backs when value is changed
+
+	clean_up is
+		do
+			button_clean_up;
+			if arm_actions /= Void then
+				arm_actions.free_cdfd
+			end;
+			if release_actions /= Void then
+				release_actions.free_cdfd
+			end;
+			if value_changed_actions /= Void then
+				value_changed_actions.free_cdfd
+			end;
+		end
 
 feature
 
-    set_toggle_on is
-            -- Set Current toggle on and set
-            -- state to True.
-        do
-            xm_toggle_button_set_state (screen_object, True, False)
-        end;
+	set_toggle_on is
+			-- Set Current toggle on and set
+			-- state to True.
+		do
+			xm_toggle_button_set_state (screen_object, True, False)
+		end;
 
-    set_toggle_off is
-            -- Set Current toggle off and set
-            -- state to False.
-        do
-            xm_toggle_button_set_state (screen_object, False, False)
-        end;
+	set_toggle_off is
+			-- Set Current toggle off and set
+			-- state to False.
+		do
+			xm_toggle_button_set_state (screen_object, False, False)
+		end;
 
-    arm is
-            -- Set `state' to True and call
-            -- callback (if set).
-        do
-            xm_toggle_button_set_state (screen_object, True, True)
-        ensure then
-            state_is_true: state
-        end;
+	arm is
+			-- Set `state' to True and call
+			-- callback (if set).
+		do
+			xm_toggle_button_set_state (screen_object, True, True)
+		ensure then
+			state_is_true: state
+		end;
 
-    disarm is
-            -- Set `state' to False and call
-            -- callback (if set).
-        do
-            xm_toggle_button_set_state (screen_object, False,
+	disarm is
+			-- Set `state' to False and call
+			-- callback (if set).
+		do
+			xm_toggle_button_set_state (screen_object, False,
 					True)
-        ensure then
-            state_is_false: not state
-        end;
+		ensure then
+			state_is_false: not state
+		end;
 
-    state: BOOLEAN is
-            -- State of current toggle button.
-        do
-            Result := xm_toggle_button_get_state (screen_object)
-        end;
+	state: BOOLEAN is
+			-- State of current toggle button.
+		do
+			Result := xm_toggle_button_get_state (screen_object)
+		end;
 
 feature 
 
@@ -166,20 +191,20 @@ feature
 
 feature {NONE} -- External features
 
-    xm_toggle_button_set_state (scr_obj: POINTER; value1, value2: BOOLEAN) is
-       external
-            "C"
-        end;
+	xm_toggle_button_set_state (scr_obj: POINTER; value1, value2: BOOLEAN) is
+	   external
+			"C"
+		end;
 
-    xm_toggle_button_get_state (scr_obj: POINTER): BOOLEAN is
-        external
-            "C"
-        end;
+	xm_toggle_button_get_state (scr_obj: POINTER): BOOLEAN is
+		external
+			"C"
+		end;
 
-    create_toggle_b (t_name: ANY; scr_obj: POINTER): POINTER is
-        external
-            "C"
-        end;
+	create_toggle_b (t_name: ANY; scr_obj: POINTER): POINTER is
+		external
+			"C"
+		end;
 
 end
 

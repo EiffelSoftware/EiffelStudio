@@ -195,9 +195,6 @@ feature -- Status report
 			else
 				Result := wel_text
 			end
-			if Result /= Void and then Result.is_empty then
-				Result := Void
-			end
 		end
 
 	item_height: INTEGER is

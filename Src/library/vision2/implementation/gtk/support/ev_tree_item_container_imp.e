@@ -35,10 +35,25 @@ feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Implementation
 feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 
 	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
+			-- If `data' contained in a tree item at any level then
+			-- assign this item to `Result'.
+		local
+			list: ARRAYED_LIST [EV_ITEM_IMP]
+			litem: EV_TREE_ITEM
 		do
-			--| FIXME  Needs implementing IEK (19990927)
-			check
-				to_be_implemented: False
+			from
+				list := children
+				list.start
+			until
+				list.after or Result/= Void
+			loop
+				litem ?= list.item.interface
+				if equal (data, litem.data) then
+					Result ?= litem
+				else
+					Result ?= litem.find_item_recursively_by_data (data)
+				end
+				list.forth
 			end
 		end
 

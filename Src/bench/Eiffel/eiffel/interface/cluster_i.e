@@ -947,6 +947,7 @@ feature {COMPILER_EXPORTER} -- Element change
 			-- as it might have a completely different content than `old_class'.
 		require
 			new_class_not_void: new_class /= Void
+			new_class_not_compiled: not new_class.is_compiled
 			old_class_not_void: old_class /= Void
 		do
 			if old_class.is_compiled then
@@ -1113,12 +1114,16 @@ feature {COMPILER_EXPORTER} -- Element change
 						if not l_classes.is_empty then
 							check
 								in_override_cluster: l_classes.first.cluster.is_override_cluster
+								not_compiled: not l_classes.first.is_compiled
 							end
 								-- Move compiled info from one override cluster to another one
 							restore_compiled_class (l_classes.first, l_class)
 						else
 								-- Class has only been moved to a non-override cluster.
 								-- We restore the CLASS_C information only for the first one found.
+							check
+								not_compiled: not l_overriden_classes.first.is_compiled
+							end
 							restore_compiled_class (l_overriden_classes.first, l_class)
 								-- Now remove all overriden classes of universe.
 							from
@@ -1137,11 +1142,11 @@ feature {COMPILER_EXPORTER} -- Element change
 							-- other clusters. So let's try to find it in another cluster,
 							-- before really removing it from system.
 						l_classes := universe.classes_with_name (l_class.name)
-						if not l_classes.is_empty then
+						if not l_classes.is_empty and then not l_classes.first.is_compiled then
 								-- Class has only been moved.
 							restore_compiled_class (l_classes.first, l_class)
 						else
-								-- Class has been removed.
+								-- Class has been removed or already replaced.
 							internal_remove_class (l_class)
 						end
 					end
@@ -1155,12 +1160,12 @@ feature {COMPILER_EXPORTER} -- Element change
 				loop
 					l_class := classes.item_for_iteration
 					l_classes := universe.classes_with_name (l_class.name)
-					if not l_classes.is_empty then
+					if not l_classes.is_empty and then not l_classes.first.is_compiled then
 							-- Class has only been moved. We restore the CLASS_C
 							-- information only for the first one found.
 						restore_compiled_class (l_classes.first, l_class)
 					else
-							-- Class has been removed.
+							-- Class has been removed or already replaced.
 						internal_remove_class (l_class)
 					end
 					classes.forth
@@ -1641,6 +1646,7 @@ feature {NONE} -- Implementation
 							if not l_classes.is_empty then
 								check
 									in_override_cluster: l_classes.first.cluster.is_override_cluster
+									not_compiled: not l_classes.first.is_compiled
 								end
 									-- Move compiled info from one override cluster to another one
 								restore_compiled_class (l_classes.first, old_class)
@@ -1648,6 +1654,9 @@ feature {NONE} -- Implementation
 									-- Class has only been moved to a non-override cluster.
 									-- We restore the CLASS_C information only for the first
 									-- one found.
+								check
+									not_compiled: not l_overriden_classes.first.is_compiled
+								end
 								restore_compiled_class (l_overriden_classes.first, old_class)
 									-- Now remove all overriden classes of universe.
 								from
@@ -1666,11 +1675,11 @@ feature {NONE} -- Implementation
 								-- other clusters. So let's try to find it in another cluster,
 								-- before really removing it from system.
 							l_classes := universe.classes_with_name (old_class.name)
-							if not l_classes.is_empty then
+							if not l_classes.is_empty and then not l_classes.first.is_compiled then
 									-- Class has only been moved.
 								restore_compiled_class (l_classes.first, old_class)
 							else
-									-- Class has been removed.
+									-- Class has been removed or already replaced.
 								internal_remove_class (old_class)
 							end
 						end
@@ -1691,12 +1700,12 @@ feature {NONE} -- Implementation
 					then
 							-- Class has been moved or removed
 						l_classes := universe.classes_with_name (old_class.name)
-						if not l_classes.is_empty then
+						if not l_classes.is_empty and then not l_classes.first.is_compiled then
 								-- Class has only been moved. We restore the CLASS_C
 								-- information only for the first one found.
 							restore_compiled_class (l_classes.first, old_class)
 						else
-								-- Class has been removed.
+								-- Class has been removed or already replaced.
 							internal_remove_class (old_class)
 						end
 					end

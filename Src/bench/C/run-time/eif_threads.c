@@ -141,7 +141,7 @@ rt_public EIF_BOOLEAN eif_thr_is_root()
 	 */
 
 	EIF_GET_CONTEXT
-	return eif_thr_context ? EIF_FALSE : EIF_TRUE;
+	return (eif_thr_context ? EIF_FALSE : EIF_TRUE);
 }
 
 rt_public unsigned int eif_thr_is_initialized()
@@ -507,7 +507,7 @@ rt_public void eif_thr_exit(void)
 	EIF_MUTEX_TYPE *chld_mutex = eif_thr_context->children_mutex;
 
 	int ret;	/* Return Status of "eifaddr". */
-	EIF_REFERENCE terminated = 
+	EIF_BOOLEAN *terminated = (EIF_BOOLEAN *)
 		eifaddr (eif_access (eif_thr_context->current), "terminated", &ret);
 	eif_wean(eif_thr_context->current);
 	if (ret != EIF_CECIL_OK) 
@@ -783,10 +783,10 @@ rt_public void eif_thr_join_all(void)
 }
 #endif
 
-rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
+rt_public void eif_thr_wait (EIF_OBJECT Current)
 {
 	/*
-	 * Waits until a thread sets `terminated' to True, which means it
+	 * Waits until a thread sets `terminated' from `Current' to True, which means it
 	 * is terminated. This function is called by `join'. The calling
 	 * thread must be the direct parent of the thread, or the function
 	 * might loop indefinitely --PCV
@@ -797,6 +797,9 @@ rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
 #ifdef EIF_NO_CONDVAR
 	int end = 0;
 #endif
+	int ret;	/* Return Status of "eifaddr". */
+	EIF_INTEGER offset;	/* location of `terminated' in Current */
+	offset = eifaddr_offset (eif_access (Current), "terminated", &ret);
 
 	/* If no thread has been launched, the mutex isn't initialized */
 	if (!eif_children_mutex) return;
@@ -811,7 +814,7 @@ rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
 	EIF_THR_YIELD;
 	while (!end) {
 		EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
-		if (*terminated == EIF_FALSE) {
+		if (*(EIF_BOOLEAN *) (eif_access (Current) + offset) == EIF_FALSE) {
 			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 			EIF_THR_YIELD;
 		} else {
@@ -827,7 +830,7 @@ rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
 	 */
 
 	EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
-	while (*terminated == EIF_FALSE)
+	while (*(EIF_BOOLEAN *) (eif_access (Current) + offset) == EIF_FALSE)
 		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
 	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 

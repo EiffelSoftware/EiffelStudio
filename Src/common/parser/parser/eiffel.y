@@ -1054,11 +1054,11 @@ Assertion_clause: Set_position Assertion_clause_impl ASemi
 			{ $$ := $2 }
 	;
 
-Assertion_clause_impl: Expression
-			{ $$ := new_tagged_as (Void, $1, current_position) }
-	|	Identifier TE_COLON Expression
-			{ $$ := new_tagged_as ($1, $3, current_position) }
-	|	Identifier TE_COLON 
+Assertion_clause_impl: Position Expression
+			{ $$ := new_tagged_as (Void, $2, $1) }
+	|	Position Identifier TE_COLON Expression
+			{ $$ := new_tagged_as ($2, $4, $1) }
+	|	Position Identifier TE_COLON 
 			-- { $$ := Void }
 	;
 

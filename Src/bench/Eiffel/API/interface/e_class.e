@@ -381,6 +381,7 @@ feature -- Element change
 				check
 					syntax_error_not_void: syntax_error /= Void
 				end;
+				Error_handler.error_list.wipe_out;
 				last_syntax_cell.put (syntax_error);
 				error := False
 			end

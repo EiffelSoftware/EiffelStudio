@@ -40,6 +40,9 @@ feature -- Status setting
 	set_single_selection is
 			-- Do nothing, combo box is always single selection
 		do
+			check
+				Inapplicable: True
+			end
 		end
 
 feature -- Measurement

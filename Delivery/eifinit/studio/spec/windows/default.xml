@@ -1,493 +1,491 @@
 <EIFFEL_DOCUMENT>		
 
-	<PREF NAME="dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_freeze" DESCRIPTION="Display confirmation dialog for C compilation on freeze operation"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_save_before_compile" DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_finalize_assertions" DESCRIPTION="Display confirmation dialog for assertions on finalize operation"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_clear_breakpoints" DESCRIPTION="Display confirmation dialog on clearing breakpoints"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_ignore_all_breakpoints" DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_convert_project" DESCRIPTION="Display confirmation dialog before converting an old project"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_change_resource_need_restart" DESCRIPTION="Display warning dialog when changing resources that need you to restart EiffelStudio"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.generate_homonyms" DESCRIPTION="Display dialog that warns that homonym format can take a long time"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.stop_execution_when_compiling" DESCRIPTION="Display dialog when an application is running and a compilation is launched"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.confirm_kill" DESCRIPTION="Display dialog before killing a debugged application"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.already_editing_class" DESCRIPTION="Display dialog when editing the same class in two development windows"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="dialogs.executing_command" DESCRIPTION="Display dialog while running an external command"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_freeze" DESCRIPTION="Display confirmation dialog for C compilation on freeze operation."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_save_before_compile" DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_finalize_assertions" DESCRIPTION="Display confirmation dialog for assertions on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_clear_breakpoints" DESCRIPTION="Display confirmation dialog on clearing breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_ignore_all_breakpoints" DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_convert_project" DESCRIPTION="Display confirmation dialog before converting an old project."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_change_resource_need_restart" DESCRIPTION="Display warning dialog when changing resources that need you to restart EiffelStudio."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.generate_homonyms" DESCRIPTION="Display dialog that warns that homonym format can take a long time."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.stop_execution_when_compiling" DESCRIPTION="Display dialog when an application is running and a compilation is launched."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.confirm_kill" DESCRIPTION="Display dialog before killing a debugged application."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.already_editing_class" DESCRIPTION="Display dialog when editing the same class in two development windows."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="dialogs.executing_command" DESCRIPTION="Display dialog while running an external command."><BOOLEAN>True</BOOLEAN></PREF>
 	
-	<PREF NAME="feature_tool.expand_feature_tree" DESCRIPTION="Automatically expand the feature tree"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="feature_tool.show_all_callers" DESCRIPTION="Show all callers (as opposed to local callers) in `callers' form"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="feature_tool.expand_feature_tree" DESCRIPTION="Automatically expand the feature tree."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="feature_tool.show_all_callers" DESCRIPTION="Show all callers (as opposed to local callers) in `callers' form."><BOOLEAN>True</BOOLEAN></PREF>
 	
-	<PREF NAME="context_tool.diagram_toolbar_layout" DESCRIPTION=""><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Color__visible;Class_header_hole__visible;Separator;Cluster_filling__visible;Context_depth__visible;Separator;Zoom_out__visible;Fit_to_screen__visible;Zoom_in__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Diagram_to_png__visible;Link_tool__hidden;High_quality__hidden;Force_directed__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;UML_visibility__hidden;Force_settings__hidden;Delete_item__hidden</LIST></PREF>
-	<PREF NAME="context_tool.subcluster_depth" DESCRIPTION="Show subclusters of a cluster down to a level of"><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="context_tool.supercluster_depth" DESCRIPTION="Show superclusters of a cluster up to a level of"><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="context_tool.client_depth" DESCRIPTION="Show clients of a class up to a level of"><INTEGER>0</INTEGER></PREF>
-	<PREF NAME="context_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of"><INTEGER>0</INTEGER></PREF>
-	<PREF NAME="context_tool.ancestor_depth" DESCRIPTION="Show ancestors of a class up to a level of"><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="context_tool.descendant_depth" DESCRIPTION="Show descendants of a class down to a level of"><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="context_tool.diagram_toolbar_layout" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Color__visible;Class_header_hole__visible;Separator;Cluster_filling__visible;Context_depth__visible;Separator;Zoom_out__visible;Fit_to_screen__visible;Zoom_in__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Diagram_to_png__visible;Link_tool__hidden;High_quality__hidden;Force_directed__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;UML_visibility__hidden;Force_settings__hidden;Delete_item__hidden</LIST></PREF>
+	<PREF NAME="context_tool.subcluster_depth" DESCRIPTION="Show subclusters of a cluster down to a level of preference value."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="context_tool.supercluster_depth" DESCRIPTION="Show superclusters of a cluster up to a level of preference value."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="context_tool.client_depth" DESCRIPTION="Show clients of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
+	<PREF NAME="context_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
+	<PREF NAME="context_tool.ancestor_depth" DESCRIPTION="Show ancestors of a class up to a level of preference value."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="context_tool.descendant_depth" DESCRIPTION="Show descendants of a class down to a level of preference value."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="context_tool.ignore_excluded_class_figures" DESCRIPTION="Show ALL classes in the diagram (ignore the following list)?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="context_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams"><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
+	<PREF NAME="context_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams."><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
 	
 	<PREF NAME="project_tool.raise_on_error" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="project_tool.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="project_tool.graphical_output_disabled" DESCRIPTION="Disable graphical output"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="project_tool.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
 	
-	<PREF NAME="debug_tool.width" DESCRIPTION="Width of debug tool"><INTEGER>214</INTEGER></PREF>
-	<PREF NAME="debug_tool.height" DESCRIPTION="Height of debug tool"><INTEGER>214</INTEGER></PREF>
-	<PREF NAME="debug_tool.bar" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debug_tool.last_saved_stack_path" DESCRIPTION=""><STRING>C:\</STRING></PREF>
+	<PREF NAME="debug_tool.width" DESCRIPTION="Width of debug tool."><INTEGER>214</INTEGER></PREF>
+	<PREF NAME="debug_tool.height" DESCRIPTION="Height of debug tool."><INTEGER>214</INTEGER></PREF>	
+	<PREF NAME="debug_tool.last_saved_stack_path." DESCRIPTION="Disk location of last saved stack path information."><STRING>C:\</STRING></PREF>
 	<PREF NAME="debug_tool.interrupt_every_n_instructions" DESCRIPTION=""><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="debug_tool.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output value"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debug_tool.generating_type_evaluation"  DESCRIPTION="Display ANY.generating_type value"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debug_tool.enable_optimized_jit_debugging"  DESCRIPTION="Enable optimized JIT debugging"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="debug_tool.min_slice" DESCRIPTION=""><INTEGER>0</INTEGER></PREF>
-	<PREF NAME="debug_tool.max_slice" DESCRIPTION=""><INTEGER>50</INTEGER></PREF>
-	<PREF NAME="debug_tool.main_splitter_position" DESCRIPTION=""><INTEGER>250</INTEGER></PREF>
-	<PREF NAME="debug_tool.proportion"  DESCRIPTION=""><INTEGER>0.5</INTEGER></PREF>
-	<PREF NAME="debug_tool.default_maximum_stack_depth" DESCRIPTION=""><INTEGER>100</INTEGER></PREF>
-	<PREF NAME="debug_tool.default_displayed_string_size"  DESCRIPTION=""><INTEGER>50</INTEGER></PREF>	
-	<PREF NAME="debug_tool.left_debug_layout" DESCRIPTION=""><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0;Call stack;visible;0;0;0;38;Evaluation;visible;0;0;0;286</LIST></PREF>	
-	<PREF NAME="debug_tool.right_debug_layout" DESCRIPTION=""><LIST>Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Objects;visible;0;0;0;218</LIST></PREF>
+	<PREF NAME="debug_tool.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output value."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debug_tool.generating_type_evaluation"  DESCRIPTION="Display ANY.generating_type value."><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="debug_tool.min_slice" DESCRIPTION="Smallest number of items displayed in list data."><INTEGER>0</INTEGER></PREF>
+	<PREF NAME="debug_tool.max_slice" DESCRIPTION="Largest number of items displayed in list data."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="debug_tool.main_splitter_position" DESCRIPTION="Position of main horizontal splitter bar."><INTEGER>250</INTEGER></PREF>
+	<PREF NAME="debug_tool.proportion"  DESCRIPTION="Proportion of left side of debug tool."><INTEGER>0.5</INTEGER></PREF>
+	<PREF NAME="debug_tool.default_maximum_stack_depth" DESCRIPTION="Default size of maximum stack depth."><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="debug_tool.default_displayed_string_size"  DESCRIPTION="Default size of string (in characters) displayed in debug mode."><INTEGER>50</INTEGER></PREF>	
+	<PREF NAME="debug_tool.left_debug_layout" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0;Call stack;visible;0;0;0;38;Evaluation;visible;0;0;0;286</LIST></PREF>	
+	<PREF NAME="debug_tool.right_debug_layout" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Objects;visible;0;0;0;218</LIST></PREF>
 	
-	<PREF NAME="diagram_tool.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures"><FONT>Arial-r-regular-16-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures"><COLOR>0;0;160</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_class_fill_color" DESCRIPTION="Color for BON class figures"><COLOR>145;255;145</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_class_uncompiled_fill_color" DESCRIPTION="Color for uncompiled BON class figures"><COLOR>180;180;180</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures"><FONT>Arial-r-bold-15-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.bon_class_generics_color" DESCRIPTION="Color for generics in BON class figures"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_client_label_font" DESCRIPTION="Font for feature names on BON client supplier links"><FONT>Arial-r-regular-14-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.bon_client_label_color" DESCRIPTION="Color for feature names on BON client supplier links"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_client_color" DESCRIPTION="Color for BON client supplier links"><COLOR>0;128;64</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_client_line_width" DESCRIPTION="Line width for BON client supplier links"><INTEGER>5</INTEGER></PREF>
-	<PREF NAME="diagram_tool.bon_cluster_line_color" DESCRIPTION="Color for BON cluster line"><COLOR>0;128;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_cluster_iconified_fill_color" DESCRIPTION="Iconified BON Cluster fill color"><COLOR>183;255;201</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_cluster_name_area_color" DESCRIPTION="BON cluster name area fill color"><COLOR>215;255;255</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_cluster_name_color" DESCRIPTION="BON cluster name color"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_cluster_name_font" DESCRIPTION="BON cluster name font"><FONT>Arial-r-bold-15-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.bon_inheritance_color" DESCRIPTION="Color for BON inheritance links"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.bon_inheritance_line_width" DESCRIPTION="Line width for BON inheritance links"><INTEGER>2</INTEGER></PREF>
-	<PREF NAME="diagram_tool.uml_class_name_font" DESCRIPTION="Font for class names in UML class figures"><FONT>Arial-r-regular-16-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.uml_class_deferred_font" DESCRIPTION="Font for names of deferred classes in UML class figures"><FONT>Arial-i-regular-16-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.uml_class_properties_font" DESCRIPTION="Font for class properties in UML class figures"><FONT>Arial-i-regular-14-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.uml_class_properties_color" DESCRIPTION="Color for class properties in UML class figures"><COLOR>127;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_class_name_color" DESCRIPTION="Color for class names in UML class figures"><COLOR>0;25;127</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_class_fill_color" DESCRIPTION="Color for UML class figures"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_generics_font" DESCRIPTION="Font for generics in UML class figures"><FONT>Arial-r-bold-15-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.uml_generics_color" DESCRIPTION="Color for generics in UML class figures"><COLOR>180;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_class_features_font" DESCRIPTION="Font for class features in UML class figures"><FONT>Arial-r-regular-14-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.uml_class_features_color" DESCRIPTION="Color for class features in UML class figures"><COLOR>0;127;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures"><FONT>Arial-r-bold-14-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.uml_class_feature_section_color" DESCRIPTION="Color for class feature sections in UML class figures"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_client_line_width" DESCRIPTION="Line width for UML client supplier links"><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="diagram_tool.uml_client_color" DESCRIPTION="Color for UML client supplier links"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_client_label_color" DESCRIPTION="Color for feature names on UML client supplier links"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_client_label_font" DESCRIPTION="Font for feature names on UML client supplier links"><FONT>Arial-r-regular-15-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.uml_cluster_line_color" DESCRIPTION="Color for UML cluster line"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_cluster_iconified_fill_color" DESCRIPTION="Iconified UML Cluster fill color"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_cluster_name_area_color" DESCRIPTION="UML cluster name area fill color"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_cluster_name_color" DESCRIPTION="UML cluster name color"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.uml_cluster_name_font" DESCRIPTION="UML cluster name font"><FONT>Arial-r-regular-14-sans</FONT></PREF>
-	<PREF NAME="diagram_tool.uml_inheritance_line_width" DESCRIPTION="Line width for UML inheritance links"><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="diagram_tool.uml_inheritance_color" DESCRIPTION="Color for UML inheritance links"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="diagram_tool.autoscroll_speed" DESCRIPTION="Color for UML inheritance links"><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-16-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>0;0;160</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_class_fill_color" DESCRIPTION="Color for BON class figures."><COLOR>145;255;145</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_class_uncompiled_fill_color" DESCRIPTION="Color for uncompiled BON class figures."><COLOR>180;180;180</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures."><FONT>Arial-r-bold-15-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.bon.bon_class_generics_color" DESCRIPTION="Color for generics in BON class figures."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_client_label_font" DESCRIPTION="Font for feature names on BON client supplier links."><FONT>Arial-r-regular-14-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.bon.bon_client_label_color" DESCRIPTION="Color for feature names on BON client supplier links."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_client_color" DESCRIPTION="Color for BON client supplier links."><COLOR>0;128;64</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_client_line_width" DESCRIPTION="Line width for BON client supplier links."><INTEGER>5</INTEGER></PREF>
+	<PREF NAME="diagram_tool.bon.bon_cluster_line_color" DESCRIPTION="Color for BON cluster line."><COLOR>0;128;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_cluster_iconified_fill_color" DESCRIPTION="Iconified BON Cluster fill color."><COLOR>183;255;201</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_cluster_name_area_color" DESCRIPTION="BON cluster name area fill color."><COLOR>215;255;255</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_cluster_name_color" DESCRIPTION="BON cluster name color."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_cluster_name_font" DESCRIPTION="BON cluster name font."><FONT>Arial-r-bold-15-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.bon.bon_inheritance_color" DESCRIPTION="Color for BON inheritance links."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.bon.bon_inheritance_line_width" DESCRIPTION="Line width for BON inheritance links."><INTEGER>2</INTEGER></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_name_font" DESCRIPTION="Font for class names in UML class figures."><FONT>Arial-r-regular-16-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_deferred_font" DESCRIPTION="Font for names of deferred classes in UML class figures."><FONT>Arial-i-regular-16-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_properties_font" DESCRIPTION="Font for class properties in UML class figures."><FONT>Arial-i-regular-14-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_properties_color" DESCRIPTION="Color for class properties in UML class figures."><COLOR>127;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_name_color" DESCRIPTION="Color for class names in UML class figures."><COLOR>0;25;127</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_fill_color" DESCRIPTION="Color for UML class figures."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_generics_font" DESCRIPTION="Font for generics in UML class figures."><FONT>Arial-r-bold-15-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.uml.uml_generics_color" DESCRIPTION="Color for generics in UML class figures."><COLOR>180;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_features_font" DESCRIPTION="Font for class features in UML class figures."><FONT>Arial-r-regular-14-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_features_color" DESCRIPTION="Color for class features in UML class figures."><COLOR>0;127;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures."><FONT>Arial-r-bold-14-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.uml.uml_class_feature_section_color" DESCRIPTION="Color for class feature sections in UML class figures."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_client_line_width" DESCRIPTION="Line width for UML client supplier links."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="diagram_tool.uml.uml_client_color" DESCRIPTION="Color for UML client supplier links."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_client_label_color" DESCRIPTION="Color for feature names on UML client supplier links."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_client_label_font" DESCRIPTION="Font for feature names on UML client supplier links."><FONT>Arial-r-regular-15-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.uml.uml_cluster_line_color" DESCRIPTION="Color for UML cluster line."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_cluster_iconified_fill_color" DESCRIPTION="Iconified UML Cluster fill color."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_cluster_name_area_color" DESCRIPTION="UML cluster name area fill color."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_cluster_name_color" DESCRIPTION="UML cluster name color."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.uml.uml_cluster_name_font" DESCRIPTION="UML cluster name font."><FONT>Arial-r-regular-14-sans</FONT></PREF>
+	<PREF NAME="diagram_tool.uml.uml_inheritance_line_width" DESCRIPTION="Line width for UML inheritance links."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="diagram_tool.uml.uml_inheritance_color" DESCRIPTION="Color for UML inheritance links."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="diagram_tool.autoscroll_speed" DESCRIPTION="Color for UML inheritance links."><INTEGER>50</INTEGER></PREF>
 	
-	<PREF NAME="debugger.project_toolbar_layout" DESCRIPTION=""><LIST>System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST></PREF>
-	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION=""><INTEGER>1000</INTEGER></PREF>
-	<PREF NAME="debugger.show_text_in_project_toolbar" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debugger.show_all_text_in_project_toolbar" DESCRIPTION=""><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="debugger.display_dotnet_cmd" DESCRIPTION=""><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Expanded view: default display size"><INTEGER>500</INTEGER></PREF>
-	<PREF NAME="debugger.stack_element_width" DESCRIPTION=""><INTEGER>1000</INTEGER></PREF>
-	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION=""><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="debugger.project_toolbar_layout" DESCRIPTION="Debug toolbar items and layout information."><LIST>System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST></PREF>
+	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Depth of stack at which execution paused and a confirmation is asked to continue."><INTEGER>1000</INTEGER></PREF>
+	<PREF NAME="debugger.show_text_in_project_toolbar" DESCRIPTION="Should text be shown alongside toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debugger.show_all_text_in_project_toolbar." DESCRIPTION="Show all selected text in the project toolbar?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="debugger.display_dotnet_cmd" DESCRIPTION="Should we display the .NET command?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Expanded view: default display size."><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="debugger.stack_element_width" DESCRIPTION="Width of stack element."><INTEGER>1000</INTEGER></PREF>
+	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Maximum stack depth."><INTEGER>100</INTEGER></PREF>
 	
-	<PREF NAME="development_window.width" DESCRIPTION="Width of development window"><INTEGER>800</INTEGER></PREF>
-	<PREF NAME="development_window.height" DESCRIPTION="Height of development window"><INTEGER>600</INTEGER></PREF>
-	<PREF NAME="development_window.x_position" DESCRIPTION="Screen x position of development window"><INTEGER>50</INTEGER></PREF>
-	<PREF NAME="development_window.y_position" DESCRIPTION="Screen y position of development window"><INTEGER>50</INTEGER></PREF>
-	<PREF NAME="development_window.is_maximized" DESCRIPTION=""><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="development_window.width" DESCRIPTION="Width of development window." HIDDEN="true"><INTEGER>800</INTEGER></PREF>
+	<PREF NAME="development_window.height" DESCRIPTION="Height of development window."><INTEGER>600</INTEGER></PREF>
+	<PREF NAME="development_window.x_position" DESCRIPTION="Screen x position of development window."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="development_window.y_position" DESCRIPTION="Screen y position of development window."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="development_window.is_maximized" DESCRIPTION="Is window maximized?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="development_window.left_panel_use_explorer_style" DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time.  (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="development_window.window_left_panel_width" DESCRIPTION="Width of left panel"><INTEGER>100</INTEGER></PREF>
-	<PREF NAME="development_window.left_panel_layout" DESCRIPTION=""><LIST>Features;visible;0;0;0;190;Clusters;visible;0;0;0;250;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0</LIST></PREF>
-	<PREF NAME="development_window.right_panel_layout" DESCRIPTION=""><LIST>Editor;visible;0;0;0;190;Context;visible;0;0;0;178</LIST></PREF>	
-	<PREF NAME="development_window.show_general_toolbar" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="development_window.show_text_in_general_toolbar" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="development_window.window_left_panel_width" DESCRIPTION="Width of navigation panel"><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="development_window.left_panel_layout" DESCRIPTION="Items/tools information for navigation panel."><LIST>Features;visible;0;0;0;190;Clusters;visible;0;0;0;250;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0</LIST></PREF>
+	<PREF NAME="development_window.right_panel_layout" DESCRIPTION="Items/tools information for editor panel."><LIST>Editor;visible;0;0;0;190;Context;visible;0;0;0;178</LIST></PREF>	
+	<PREF NAME="development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="development_window.show_text_in_general_toolbar" DESCRIPTION="Should text be shown in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="development_window.show_all_text_in_general_toolbar" DESCRIPTION=""><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="development_window.show_address_toolbar" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="development_window.show_project_toolbar" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="development_window.search_tool_show_options" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="development_window.general_toolbar_layout" DESCRIPTION=""><LIST>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST></PREF>
-	<PREF NAME="development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes"><INTEGER>10</INTEGER></PREF>
-	<PREF NAME="development_window.remember_completion_list_size" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="development_window.completion_list_height" DESCRIPTION=""><INTEGER>320</INTEGER></PREF>
-	<PREF NAME="development_window.completion_list_width" DESCRIPTION=""><INTEGER>240</INTEGER></PREF>
+	<PREF NAME="development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="development_window.search_tool_show_options" DESCRIPTION="Should search tool be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="development_window.general_toolbar_layout" DESCRIPTION="Items shown in general toolbar."><LIST>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST></PREF>
+	<PREF NAME="development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes."><INTEGER>10</INTEGER></PREF>
+	<PREF NAME="development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True."><INTEGER>320</INTEGER></PREF>
+	<PREF NAME="development_window.completion_list_width" DESCRIPTION="Width of completion list.  Used if 'remember_completion_list_size' is set to True."><INTEGER>240</INTEGER></PREF>
 	
-	<PREF NAME="flat_short.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts"><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
-	<PREF NAME="flat_short.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts"><LIST>revision;date;status</LIST></PREF>
+	<PREF NAME="flat_short.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
+	<PREF NAME="flat_short.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts."><LIST>revision;date;status</LIST></PREF>
 	
-	<PREF NAME="formatter.formatters_history_size" DESCRIPTION=""><INTEGER>60</INTEGER></PREF>
-	<PREF NAME="formatter.default_class_formatter_index" DESCRIPTION="Class format that is selected by default"><INTEGER>5</INTEGER></PREF>
-	<PREF NAME="formatter.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default"><INTEGER>2</INTEGER></PREF>
-	<PREF NAME="formatter.show_syntactical_suppliers" DESCRIPTION="Show syntactical suppliers (as opposed to actual suppliers) in `suppliers' form"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="formatter.formatters_history_size" DESCRIPTION="Size of formatter history."><INTEGER>60</INTEGER></PREF>
+	<PREF NAME="formatter.default_class_formatter_index" DESCRIPTION="Class format that is selected by default."><INTEGER>5</INTEGER></PREF>
+	<PREF NAME="formatter.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default."><INTEGER>2</INTEGER></PREF>
+	<PREF NAME="formatter.show_syntactical_suppliers" DESCRIPTION="Show syntactical suppliers (as opposed to actual suppliers) in `suppliers' form."><BOOLEAN>True</BOOLEAN></PREF>
 	
-	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects"><LIST></LIST></PREF>
-	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list"><INTEGER>10</INTEGER></PREF>
+	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
+	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
 		
-	<PREF NAME="editor.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor"><INTEGER>8</INTEGER></PREF>
-	<PREF NAME="editor.margin_background_color" DESCRIPTION="Background color of line number margin"><COLOR>212;208;200</COLOR></PREF>
-	<PREF NAME="editor.margin_separator_color" DESCRIPTION="Color of separator between line number margin and editor"><COLOR>192;192;192</COLOR></PREF>
-	<PREF NAME="editor.line_number_text_color" DESCRIPTION="Color of line number text"><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."><INTEGER>8</INTEGER></PREF>
+	<PREF NAME="editor.margin_background_color" DESCRIPTION="Background color of line number margin."><COLOR>212;208;200</COLOR></PREF>
+	<PREF NAME="editor.margin_separator_color" DESCRIPTION="Color of separator between line number margin and editor."><COLOR>192;192;192</COLOR></PREF>
+	<PREF NAME="editor.line_number_text_color" DESCRIPTION="Color of line number text."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="editor.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.mouse_wheel_scroll_full_page" DESCRIPTION="Mouse wheel scroll full page"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.mouse_wheel_scroll_size" DESCRIPTION="Mouse wheel scroll size"><INTEGER>3</INTEGER></PREF>
+	<PREF NAME="editor.mouse_wheel_scroll_full_page" DESCRIPTION="Mouse wheel scroll full page?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.mouse_wheel_scroll_size" DESCRIPTION="Mouse wheel scroll size."><INTEGER>3</INTEGER></PREF>
 	<PREF NAME="editor.remove_trailing_white_space" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.automatic_update" DESCRIPTION="Automatic update when the file has not been modified"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.editor_font" DESCRIPTION="All-purpose editor font. (Requires restart)"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.automatic_update" DESCRIPTION="Automatic update when the file has not been modified."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
 	<PREF NAME="editor.keyword_font" DESCRIPTION="Keyword editor font"><FONT>Courier New-r-bold-8-typewriter</FONT></PREF>
 	<PREF NAME="editor.header_font" DESCRIPTION="Editor header font. (Requires restart)"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
-	<PREF NAME="editor.tab_step" DESCRIPTION="Tabulation size in characters"><INTEGER>4</INTEGER></PREF>
-	<PREF NAME="editor.normal_text_color" DESCRIPTION=""><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.normal_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.selection_text_color" DESCRIPTION=""><COLOR>255;255;128</COLOR></PREF>
-	<PREF NAME="editor.selection_background_color" DESCRIPTION=""><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.string_text_color" DESCRIPTION=""><COLOR>0;0;0</COLOR></PREF>	
-	<PREF NAME="editor.string_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.keyword_text_color" DESCRIPTION=""><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.keyword_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>	
-	<PREF NAME="editor.spaces_text_color" DESCRIPTION=""><COLOR>128;128;128</COLOR></PREF>
-	<PREF NAME="editor.spaces_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.comments_text_color" DESCRIPTION=""><COLOR>128;0;0</COLOR></PREF>
-	<PREF NAME="editor.comments_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.operator_text_color" DESCRIPTION=""><COLOR>255;0;0</COLOR></PREF>
-	<PREF NAME="editor.operator_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.number_text_color" DESCRIPTION=""><COLOR>128;0;255</COLOR></PREF>
-	<PREF NAME="editor.number_background_color" DESCRIPTION=""><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.tab_step" DESCRIPTION="Tabulation size in characters."><INTEGER>4</INTEGER></PREF>
+	<PREF NAME="editor.normal_text_color" DESCRIPTION="Color for normal text."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.selection_text_color" DESCRIPTION="Color of selected text."><COLOR>255;255;128</COLOR></PREF>
+	<PREF NAME="editor.selection_background_color" DESCRIPTION="Background color of selected text."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="editor.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;0;0</COLOR></PREF>	
+	<PREF NAME="editor.string_background_color" DESCRIPTION="Background color of string text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="editor.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>255;255;255</COLOR></PREF>	
+	<PREF NAME="editor.spaces_text_color" DESCRIPTION="Color of space characters."><COLOR>128;128;128</COLOR></PREF>
+	<PREF NAME="editor.spaces_background_color" DESCRIPTION="Background color of space characters."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.comments_text_color" DESCRIPTION="Color of comments text."><COLOR>128;0;0</COLOR></PREF>
+	<PREF NAME="editor.comments_background_color" DESCRIPTION="Background color of coments text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.operator_text_color" DESCRIPTION="Color of operator text."><COLOR>255;0;0</COLOR></PREF>
+	<PREF NAME="editor.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
+	<PREF NAME="editor.number_background_color" DESCRIPTION="Background color of number text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.smart_identation" DESCRIPTION="Should the editor auto-indent?"><BOOLEAN>True</BOOLEAN></PREF>	
 		
-	<PREF NAME="editor.eiffel.normal_text_color" DESCRIPTION="Foreground color for normal text"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.normal_background_color" DESCRIPTION="Background color for normal text"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.selection_text_color" DESCRIPTION="Foreground color for selected text"><COLOR>255;255;128</COLOR></PREF>
-	<PREF NAME="editor.eiffel.selection_background_color" DESCRIPTION="Background color for selected text"><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.eiffel.string_text_color" DESCRIPTION="Foreground color for manifest strings"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.string_background_color" DESCRIPTION="Background color for manifest strings"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.keyword_text_color" DESCRIPTION="Foreground color for keywords"><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.eiffel.keyword_background_color" DESCRIPTION="Background color for keywords"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.spaces_text_color" DESCRIPTION="Foreground color for spaces"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.spaces_background_color" DESCRIPTION="Background color for spaces"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.comments_text_color" DESCRIPTION="Foreground color for comments"><COLOR>128;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.comments_background_color" DESCRIPTION="Background color for comments"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.number_text_color" DESCRIPTION="Foreground color for numbers"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.number_background_color" DESCRIPTION="Background color for numbers"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.operator_text_color" DESCRIPTION="Foreground color for operators"><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.operator_background_color" DESCRIPTION="Background color for operators"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.breakpoint_background_color" DESCRIPTION="Color for breakable marks and breakpoints"><COLOR>212;208;200</COLOR></PREF>
-	<PREF NAME="editor.eiffel.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags"><COLOR>64;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.assertion_tag_background_color" DESCRIPTION="Background color for assertion tags"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.indexing_tag_text_color" DESCRIPTION="Foreground color for indexing tags"><COLOR>64;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.indexing_tag_background_color" DESCRIPTION="Background color for indexing tags"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.reserved_text_color" DESCRIPTION="Foreground color for reserved words"><COLOR>64;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.reserved_background_color" DESCRIPTION="Background color for reserved words"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.generic_text_color" DESCRIPTION="Foreground color for generics"><COLOR>255;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.generic_background_color" DESCRIPTION="Background color for generics"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.local_text_color" DESCRIPTION="Foreground color for locals"><COLOR>64;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.local_background_color" DESCRIPTION="Background color for locals"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.class_text_color" DESCRIPTION="Foreground color for classes"><COLOR>0;0;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.class_background_color" DESCRIPTION="Background color for classes"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.feature_text_color" DESCRIPTION="Foreground color for features"><COLOR>0;128;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.feature_background_color" DESCRIPTION="Background color for features"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.cluster_text_color" DESCRIPTION="Foreground color for clusters"><COLOR>128;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.cluster_background_color" DESCRIPTION="Background color for clusters"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.error_text_color" DESCRIPTION="Foreground color for errors"><COLOR>255;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.error_background_color" DESCRIPTION="Background color for errors"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.object_text_color" DESCRIPTION="Foreground color for objects"><COLOR>0;0;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.object_background_color" DESCRIPTION="Background color for objects"><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Complete once and constants with a first upper case character"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.underscore_is_separator" DESCRIPTION="Underscore '_' is a word separator"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete_brackets_and_parenthesis" DESCRIPTION="Brackets and parentheses are closed automatically"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete_quotes" DESCRIPTION="Quotes are closed automatically"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.show_any_features" DESCRIPTION="ANY features appear in the feature call complete window"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.auto_auto_complete" DESCRIPTION="Auto complete appears automatically"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Completion list entries are filtered based on matches"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Completion list shows feature signatures"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Completion list shows return type"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Enable syntax autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.quadruple_click_enabled" DESCRIPTION="Quadruple click selects all"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION=""><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.customized_string_2" DESCRIPTION=""><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.customized_string_3" DESCRIPTION=""><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.normal_text_color" DESCRIPTION="Foreground color for normal text."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.selection_text_color" DESCRIPTION="Foreground color for selected text."><COLOR>255;255;128</COLOR></PREF>
+	<PREF NAME="editor.eiffel.selection_background_color" DESCRIPTION="Background color for selected text."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="editor.eiffel.string_text_color" DESCRIPTION="Foreground color for manifest strings."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.string_background_color" DESCRIPTION="Background color for manifest strings."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.keyword_text_color" DESCRIPTION="Foreground color for keywords."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="editor.eiffel.keyword_background_color" DESCRIPTION="Background color for keywords."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.spaces_text_color" DESCRIPTION="Foreground color for spaces."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.spaces_background_color" DESCRIPTION="Background color for spaces."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.comments_text_color" DESCRIPTION="Foreground color for comments."><COLOR>128;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.comments_background_color" DESCRIPTION="Background color for comments."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.number_text_color" DESCRIPTION="Foreground color for numbers."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.number_background_color" DESCRIPTION="Background color for numbers."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.operator_text_color" DESCRIPTION="Foreground color for operators."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.operator_background_color" DESCRIPTION="Background color for operators."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.breakpoint_background_color" DESCRIPTION="Color for breakable marks and breakpoints."><COLOR>212;208;200</COLOR></PREF>
+	<PREF NAME="editor.eiffel.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags."><COLOR>64;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.assertion_tag_background_color" DESCRIPTION="Background color for assertion tags."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.indexing_tag_text_color" DESCRIPTION="Foreground color for indexing tags."><COLOR>64;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.indexing_tag_background_color" DESCRIPTION="Background color for indexing tags."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.reserved_text_color" DESCRIPTION="Foreground color for reserved words."><COLOR>64;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.reserved_background_color" DESCRIPTION="Background color for reserved words."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.generic_text_color" DESCRIPTION="Foreground color for generics."><COLOR>255;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.generic_background_color" DESCRIPTION="Background color for generics."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.local_text_color" DESCRIPTION="Foreground color for locals."><COLOR>64;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.local_background_color" DESCRIPTION="Background color for locals."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.class_text_color" DESCRIPTION="Foreground color for classes."><COLOR>0;0;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.class_background_color" DESCRIPTION="Background color for classes."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.feature_text_color" DESCRIPTION="Foreground color for features."><COLOR>0;128;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.feature_background_color" DESCRIPTION="Background color for features."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.cluster_text_color" DESCRIPTION="Foreground color for clusters."><COLOR>128;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.cluster_background_color" DESCRIPTION="Background color for clusters."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.error_text_color" DESCRIPTION="Foreground color for errors."><COLOR>255;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.error_background_color" DESCRIPTION="Background color for errors."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.object_text_color" DESCRIPTION="Foreground color for objects."><COLOR>0;0;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.object_background_color" DESCRIPTION="Background color for objects."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Complete once and constants with a first upper case character?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.underscore_is_separator" DESCRIPTION="Underscore '_' is a word separator?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete_brackets_and_parenthesis" DESCRIPTION="Brackets and parentheses are closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete_quotes" DESCRIPTION="Quotes are closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.show_any_features" DESCRIPTION="ANY features appear in the feature call complete window?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.auto_auto_complete" DESCRIPTION="Auto complete appears automatically?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Completion list entries are filtered based on matches?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Completion list shows feature signatures?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Completion list shows return type?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Enable syntax autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.quadruple_click_enabled" DESCRIPTION="Quadruple click selects all?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION="User customized string."><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.customized_string_2" DESCRIPTION="User customized string."><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.customized_string_3" DESCRIPTION="User customized string."><STRING></STRING></PREF>
 	
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_indexing" DESCRIPTION="Autocomplete indexing"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_indexing" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_indexing" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_indexing_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_indexing_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_indexing_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_indexing_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_class" DESCRIPTION="Autocomplete class"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_class" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_class" DESCRIPTION="Autocomplete class?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_class" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_class_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_class_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_class_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_class_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_inherit" DESCRIPTION="Autocomplete inherit"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_inherit" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_inherit" DESCRIPTION="Autocomplete inherit?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_inherit" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_inherit_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_inherit_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_inherit_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_inherit_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_creation" DESCRIPTION="Autocomplete creation"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_creation" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_creation" DESCRIPTION="Autocomplete creation?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_creation" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_creation_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_creation_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_creation_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_creation_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_feature" DESCRIPTION="Autocomplete feature"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_feature" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_feature" DESCRIPTION="Autocomplete feature?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_feature" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_feature_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_feature_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_feature_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_feature_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_is" DESCRIPTION="Autocomplete is"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_is" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_is" DESCRIPTION="Autocomplete is?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_is" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_is_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_is_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T%T-- $cursor$%N$indent$%T</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_is_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_is_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 	
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_require" DESCRIPTION="Autocomplete require"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_require" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_require" DESCRIPTION="Autocomplete require?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_require" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_require_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_require_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_require_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_require_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_require_else" DESCRIPTION="Autocomplete require else"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_require_else" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_require_else" DESCRIPTION="Autocomplete require else?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_require_else" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_require_else_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_require_else_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_require_else_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_require_else_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_local" DESCRIPTION="Autocomplete local"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_local" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_local" DESCRIPTION="Autocomplete local?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_local" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_local_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_local_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_local_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_local_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_do" DESCRIPTION="Autocomplete do"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_do" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_do" DESCRIPTION="Autocomplete do?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_do" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_do_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_do_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_do_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_do_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_once" DESCRIPTION="Autocomplete once"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_once" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_once" DESCRIPTION="Autocomplete once?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_once" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_once_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_once_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_once_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_once_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_deferred" DESCRIPTION="Autocomplete deferred"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_deferred" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_deferred" DESCRIPTION="Autocomplete deferred?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_deferred" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_deferred_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> end$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_deferred_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$end$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_deferred_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_deferred_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_external" DESCRIPTION="Autocomplete external"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_external" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_external" DESCRIPTION="Autocomplete external?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_external" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_external_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> "$cursor$" end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_external_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T"$cursor$"%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_external_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_external_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_rescue" DESCRIPTION="Autocomplete rescue"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_rescue" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_rescue" DESCRIPTION="Autocomplete rescue?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_rescue" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_rescue_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_rescue_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_rescue_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_rescue_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_ensure" DESCRIPTION="Autocomplete ensure"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_ensure" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_ensure" DESCRIPTION="Autocomplete ensure?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_ensure" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_ensure_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_ensure_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_ensure_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_ensure_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_ensure_then" DESCRIPTION="Autocomplete ensure then"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_ensure_then" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_ensure_then" DESCRIPTION="Autocomplete ensure then?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_ensure_then" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_ensure_then_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_ensure_then_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_ensure_then_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_ensure_then_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_alias" DESCRIPTION="Autocomplete alias"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_alias" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_alias" DESCRIPTION="Autocomplete alias?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_alias" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_alias_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> "$cursor$"</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_alias_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T"$cursor$"</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_alias_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_alias_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_if" DESCRIPTION="Autocomplete if"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_if" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_if" DESCRIPTION="Autocomplete if?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_if" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_if_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ then%N$indent$%T%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_if_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_if_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_if_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_then" DESCRIPTION="Autocomplete then"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_then" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_then" DESCRIPTION="Autocomplete then?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_then" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_then_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_then_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_then_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_then_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_elseif" DESCRIPTION="Autocomplete else if"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_elseif" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_elseif" DESCRIPTION="Autocomplete else if?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_elseif" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_elseif_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ then%N$indent$%T</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_elseif_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_elseif_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_elseif_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_else" DESCRIPTION="Autocomplete else"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_else" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_else" DESCRIPTION="Autocomplete else?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_else" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_else_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_else_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_else_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_else_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_inspect" DESCRIPTION="Autocomplete inspect"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_inspect" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_inspect" DESCRIPTION="Autocomplete inspect?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_inspect" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_inspect_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_inspect_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_inspect_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_inspect_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_when" DESCRIPTION="Autocomplete when"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_when" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_when" DESCRIPTION="Autocomplete when?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_when" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_when_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ then%N$indent$%T</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_when_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_when_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_when_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_from" DESCRIPTION="Autocomplete from"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_from" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_from" DESCRIPTION="Autocomplete from?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_from" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_from_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$%N$indent$until%N$indent$loop%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_from_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$until%N$indent$%T%N$indent$loop%N$indent$%T%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_from_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_from_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_variant" DESCRIPTION="Autocomplete variant"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_variant" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_variant" DESCRIPTION="Autocomplete variant?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_variant" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_variant_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_variant_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_variant_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_variant_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_until" DESCRIPTION="Autocomplete then"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_until" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_until" DESCRIPTION="Autocomplete then?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_until" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_until_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_until_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_until_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_until_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_loop" DESCRIPTION="Autocomplete then"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_loop" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_loop" DESCRIPTION="Autocomplete then?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_loop" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_loop_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_loop_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_loop_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_loop_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_debug" DESCRIPTION="Autocomplete debug"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_debug" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_debug" DESCRIPTION="Autocomplete debug?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_debug" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_debug_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_debug_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_debug_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_debug_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_check" DESCRIPTION="Autocomplete check"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_check" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_check" DESCRIPTION="Autocomplete check?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_check" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_check_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_check_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_check_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_check_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_rename" DESCRIPTION="Autocomplete rename"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_rename" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_rename" DESCRIPTION="Autocomplete rename?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_rename" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_rename_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_rename_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_rename_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_rename_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_redefine" DESCRIPTION="Autocomplete redefine"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_redefine" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_redefine" DESCRIPTION="Autocomplete redefine?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_redefine" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_redefine_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_redefine_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_redefine_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_redefine_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_undefine" DESCRIPTION="Autocomplete undefine"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_undefine" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_undefine" DESCRIPTION="Autocomplete undefine?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_undefine" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_undefine_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_undefine_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_undefine_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_undefine_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_select" DESCRIPTION="Autocomplete select"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_select" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_select" DESCRIPTION="Autocomplete select?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_select" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_select_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_select_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_select_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_select_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_export" DESCRIPTION="Autocomplete export"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_export" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_export" DESCRIPTION="Autocomplete export?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_export" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_export_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_export_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_export_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_export_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_precursor" DESCRIPTION="Autocomplete Precursor"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_precursor" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_precursor" DESCRIPTION="Autocomplete Precursor?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_precursor" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_precursor_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> {$cursor$}</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_precursor_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_precursor_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_precursor_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_create" DESCRIPTION="Autocomplete create"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_create" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_create" DESCRIPTION="Autocomplete create?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_create" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_create_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_create_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_create_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_create_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_obsolete" DESCRIPTION="Autocomplete obsolete"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_obsolete" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_obsolete" DESCRIPTION="Autocomplete obsolete?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_obsolete" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_obsolete_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> "$cursor$"</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_obsolete_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T"$cursor$"</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_obsolete_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_obsolete_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_invariant" DESCRIPTION="Autocomplete invariant"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_invariant" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_invariant" DESCRIPTION="Autocomplete invariant?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_invariant" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_invariant_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_invariant_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_invariant_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_invariant_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.autocomplete_end" DESCRIPTION="Autocomplete end"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.use_default_end" DESCRIPTION="Use default autocomplete"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.autocomplete_end" DESCRIPTION="Autocomplete end?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.use_default_end" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_end_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_end_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.custom_end_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
@@ -546,36 +544,39 @@
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3_shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3_shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
 	
-	<PREF NAME="browsing_tools.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="browsing_tools.history_size" DESCRIPTION=""><INTEGER>10</INTEGER></PREF>
-	<PREF NAME="browsing_tools.dock_tracking" DESCRIPTION="Docked tools track main window"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="browsing_tools.last_browsed_cluster_directory" DESCRIPTION=""><STRING>C:\</STRING></PREF>
+	<PREF NAME="browsing_tools.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="browsing_tools.history_size" DESCRIPTION="Browsing history size."><INTEGER>10</INTEGER></PREF>
+	<PREF NAME="browsing_tools.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="browsing_tools.last_browsed_cluster_directory" DESCRIPTION="Directory of last browsed cluster."><STRING>C:\</STRING></PREF>
 	
-	<PREF NAME="misc.external_command_0" DESCRIPTION="First external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_1" DESCRIPTION="Second external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_2" DESCRIPTION="Third external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_3" DESCRIPTION="Forth external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_4" DESCRIPTION="Fifth external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_5" DESCRIPTION="Sixth external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_6" DESCRIPTION="Seventh external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_7" DESCRIPTION="Eighth external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_8" DESCRIPTION="Ninth external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.external_command_9" DESCRIPTION="Tenth external command"><STRING></STRING></PREF>
-	<PREF NAME="misc.acrobat_reader" DESCRIPTION=""><STRING>acrobat</STRING></PREF>
-	<PREF NAME="misc.text_mode_is_windows" DESCRIPTION="Text files format: True = Windows / False = UNIX"><BOOLEAN>True</BOOLEAN></PREF>	
-	<PREF NAME="misc.editor" DESCRIPTION=""><STRING>notepad</STRING></PREF>
-	<PREF NAME="misc.shell_command" DESCRIPTION="Command used to launch an external editor"><STRING>notepad $target</STRING></PREF>
+	<PREF NAME="misc.external_command_0" DESCRIPTION="First external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_1" DESCRIPTION="Second external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_2" DESCRIPTION="Third external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_3" DESCRIPTION="Forth external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_4" DESCRIPTION="Fifth external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_5" DESCRIPTION="Sixth external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_6" DESCRIPTION="Seventh external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_7" DESCRIPTION="Eighth external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_8" DESCRIPTION="Ninth external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.external_command_9" DESCRIPTION="Tenth external command."><STRING></STRING></PREF>
+	<PREF NAME="misc.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acrobat</STRING></PREF>
+	<PREF NAME="misc.text_mode_is_windows" DESCRIPTION="Text files format: True = Windows / False = UNIX."><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="misc.editor" DESCRIPTION="Command to open an external editor."><STRING>notepad</STRING></PREF>
+	<PREF NAME="misc.shell_command" DESCRIPTION="Command used to launch an external editor."><STRING>notepad $target</STRING></PREF>
 	<PREF NAME="misc.filter_name" DESCRIPTION=""><STRING>PostScript</STRING></PREF>
 	<PREF NAME="misc.filter_command" DESCRIPTION=""><STRING>none</STRING></PREF>
 	<PREF NAME="misc.filter_directory" DESCRIPTION=""><STRING></STRING></PREF>
 	<PREF NAME="misc.profile_directory" DESCRIPTION=""><STRING></STRING></PREF>
-	<PREF NAME="misc.temporary_directory" DESCRIPTION=""><STRING></STRING></PREF>
-	<PREF NAME="misc.highlight clickable areas" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="misc.temporary_directory" DESCRIPTION="Temporary directory location."><STRING></STRING></PREF>
+	<PREF NAME="misc.highlight clickable areas" DESCRIPTION="Highlight clickable areas?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="misc.editor_left_side" DESCRIPTION="Display editor on left? (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="misc.dyn_lib_window_width" DESCRIPTION=""><INTEGER>450</INTEGER></PREF>
-	<PREF NAME="misc.dyn_lib_window_height" DESCRIPTION=""><INTEGER>300</INTEGER></PREF>
-	<PREF NAME="misc.ctrl_right_click_receiver" DESCRIPTION="Receiver of control-right-click"><LIST>new_window;editor;context;new_editor;new_context;external</LIST></PREF>
-	<PREF NAME="misc.progress_bar_color" DESCRIPTION="Color for progress bar"><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="misc.dynamic_library_window_width" DESCRIPTION="Height of dynamic library window."><INTEGER>450</INTEGER></PREF>
+	<PREF NAME="misc.dynamic_library_window_height" DESCRIPTION="Width of dynamic library window."><INTEGER>300</INTEGER></PREF>
+	<PREF NAME="misc.preference_window_width" DESCRIPTION="Height of preferences window."><INTEGER>450</INTEGER></PREF>
+	<PREF NAME="misc.preference_window_height" DESCRIPTION="Width of preferences window."><INTEGER>300</INTEGER></PREF>
+	<PREF NAME="misc.show_hidden_preferences" DESCRIPTION="Show hidden preferences in preference window?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="misc.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>new_window;editor;context;new_editor;new_context;external</LIST></PREF>
+	<PREF NAME="misc.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
 
 	
 </EIFFEL_DOCUMENT>

@@ -14,6 +14,7 @@ inherit
 	LICENCE_COMMAND
 
 creation
+
 	make
 	
 feature 
@@ -126,6 +127,7 @@ feature
 			!! save_as_b.make (form1)	
 			!! load_proj_b.make (form1)
 			!! create_proj_b.make (form1)
+			Resources.check_fonts (base)
 			separator.set_horizontal (True)
 			form1.attach_top (state_b, 0)
 			form1.attach_top (quit_b, 0)
@@ -194,6 +196,7 @@ feature
 			!!app_edit_t.make (Widget_names.application_editor, check_box2)
 			!!interface_t.make (Widget_names.interface_toggle, check_box2)
 			!!interface_only_t.make (Widget_names.interface_only_toggle, check_box2)
+
 			form3.set_fraction_base (2);
 			form3.attach_left (visibility_label, 0);
 			form3.attach_right (visibility_label, 0);
@@ -225,8 +228,9 @@ feature
 			cont_tree_t.arm;
 			editor_t.set_toggle_on; 
 			interface_t.set_toggle_on;
+			base.initialize_window_attributes;
 			!! del_com.make (Current);
-			base.set_delete_command (del_com)
+			base.set_delete_command (del_com);
 		end
 
 	realize is

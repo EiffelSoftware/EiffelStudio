@@ -32,8 +32,9 @@ feature {NONE}
 
 	make (a_parent: COMPOSITE) is
 		local
-			del_window: DELETE_WINDOW
+			del_window: DELETE_WINDOW;
 			mp: MOUSE_PTR;
+			set_dialog_att: SET_DIALOG_ATTRIBUTES_COM
 		do
 			!! mp;
 			mp.set_watch_shape;
@@ -47,6 +48,8 @@ feature {NONE}
 			hide_file_selection_list;
 			hide_file_selection_label;
 			dialog_command_target;
+			!! set_dialog_att;
+			set_dialog_att.execute (Current);
 			!! del_window.make (Current);
 			set_action ("<Unmap>", del_window, Void);
 			widget_command_target;

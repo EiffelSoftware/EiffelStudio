@@ -193,7 +193,6 @@ feature {NONE} -- Implementation
 			-- Free all widgets.
 		local
 			i: INTEGER
-			rn: STRING
 		do
 			check
 				dialog /= Void

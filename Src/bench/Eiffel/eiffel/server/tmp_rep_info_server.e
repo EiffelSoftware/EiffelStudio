@@ -6,9 +6,22 @@ class TMP_REP_INFO_SERVER
 
 inherit
 	DELAY_SERVER [REP_CLASS_INFO, CLASS_ID]
+		redefine
+			make
+		end
 
 creation
 	make
+
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{DELAY_SERVER}Precursor
+			!! cache.make
+		end
+
 	
 feature 
 
@@ -18,11 +31,8 @@ feature
 			Result := t.id
 		end
 
-	Cache: REP_INFO_CACHE is
+	cache: REP_INFO_CACHE 
 			-- Cache for routine tables
-		once
-			!! Result.make
-		end;
 
 	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items

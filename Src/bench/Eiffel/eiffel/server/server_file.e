@@ -188,6 +188,7 @@ end
 			is_open: is_open
 		do
 			file_close (file_pointer)
+			file_pointer := default_pointer
 			is_open := False
 			file_pointer := default_pointer
 debug ("SERVER")

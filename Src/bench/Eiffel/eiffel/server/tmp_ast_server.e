@@ -35,14 +35,12 @@ feature
 		do
 			{COMPILER_SERVER} Precursor
 			!!index.make (100)
+			!! cache.make
 		end
 
-	Cache: AST_CACHE is
+	cache: AST_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make
-		end
-
+		
 	id (t: CLASS_AS): CLASS_ID is
 			-- Id associated with `t'
 		do

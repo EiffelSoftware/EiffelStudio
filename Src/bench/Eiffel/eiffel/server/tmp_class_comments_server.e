@@ -22,6 +22,7 @@ inherit
 creation
 	make
 
+
 feature -- Element change
 
 	put (t: CLASS_COMMENTS) is

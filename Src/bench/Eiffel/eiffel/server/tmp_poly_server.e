@@ -5,11 +5,21 @@ class TMP_POLY_SERVER
 inherit
 	DELAY_SERVER [POLY_TABLE [ENTRY], ROUTINE_ID]
 		redefine
-			clear
+			clear, make
 		end
 
 creation
 	make
+
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{DELAY_SERVER}Precursor
+			!! cache.make
+		end
+
 
 feature
 
@@ -19,11 +29,8 @@ feature
 			Result := t.rout_id
 		end
 
-	Cache: POLY_CACHE is
+	cache: POLY_CACHE 
 			-- Cache for routine tables
-		once
-			!! Result.make;
-		end;
 
 	Delayed: SEARCH_TABLE [ROUTINE_ID] is
 			-- Cache for delayed items

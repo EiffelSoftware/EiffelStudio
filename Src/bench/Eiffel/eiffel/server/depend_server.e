@@ -4,9 +4,22 @@ class DEPEND_SERVER
 
 inherit
 	COMPILER_SERVER [CLASS_DEPENDANCE, CLASS_ID]
+		redefine
+			make
+		end
 
 creation
 	make
+
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{COMPILER_SERVER}Precursor
+			!! cache.make
+		end
+
 	
 feature -- Access
 
@@ -16,12 +29,9 @@ feature -- Access
 			Result := t.id
 		end
 
-	Cache: DEPEND_CACHE is
+	cache: DEPEND_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make;
-		end;
-
+		
 feature -- Server size configuration
 
 	Size_limit: INTEGER is 100

@@ -61,14 +61,12 @@ feature
 		do
 			{READ_SERVER} Precursor;
 			!!useless_body_ids.make (1, array_chunk);
+			!! cache.make
 		end;
 
-	Cache: REP_FEAT_CACHE is
+	cache: REP_FEAT_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make;
-		end;
-
+		
 	array_chunk: INTEGER is 10;
 			-- Array chunk
 

@@ -134,7 +134,7 @@ feature -- Element change
 			-- Make `str' the new name of the string.
 		require
 			exists: not destroyed
-			valid_name: str /= Void and not str.empty and str.occurences (',') = 0
+			valid_name: str /= Void and not str.empty and str.occurrences (',') = 0
 		deferred
 		end
 

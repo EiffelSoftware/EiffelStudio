@@ -93,10 +93,10 @@ feature
 				is_expanded := False;
 
 				types := base_class.types;
-				pos := types.position;
+				pos := types.index;
 				types.search (Current);
 				exp.set_class_type (types.item);
-				types.go (pos);
+				types.go_i_th (pos);
 
 				is_expanded := True;
 				Result := exp;
@@ -129,10 +129,10 @@ feature
 				Result := associated_expanded_class_type
 			else
 				types := base_class.types;
-				pos := types.position;
+				pos := types.index;
 				types.search (Current);
 				Result := types.item;
-				types.go (pos);
+				types.go_i_th (pos);
 			end;
 		end;
 

@@ -36,7 +36,7 @@ feature
 			found: BOOLEAN;
 			is_deferred: BOOLEAN;
 		do
-			pos := position;
+			pos := index;
 				-- If it is not a poofter finalization
 				-- we have a quicker algorithm handy.
 			if not System.poofter_finalization then
@@ -74,7 +74,7 @@ feature
 			if not Result then
 				Result := is_deferred and then found
 			end;
-			go (pos);
+			go_i_th (pos);
 		end;
 
 	generate (file: UNIX_FILE) is

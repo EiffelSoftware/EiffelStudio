@@ -1693,7 +1693,7 @@ feature -- PS
 				until
 					arguments.after
 				loop
-					Result.append (arguments.argument_names.i_th (arguments.position));
+					Result.append (arguments.argument_names.i_th (arguments.index));
 					Result.append (": ");
 					Result.append (arguments.item.dump);
 					arguments.forth;
@@ -1721,13 +1721,13 @@ feature -- PS
 				from
 					arguments.start
 				until
-					arguments.offright
+					arguments.after
 				loop
-					a_clickable.put_string (arguments.argument_names.i_th (arguments.position));
+					a_clickable.put_string (arguments.argument_names.i_th (arguments.index));
 					a_clickable.put_string (": ");
 					arguments.item.append_clickable_signature (a_clickable);
 					arguments.forth;
-					if not arguments.offright then
+					if not arguments.after then
 						a_clickable.put_string ("; ")
 					end
 				end;

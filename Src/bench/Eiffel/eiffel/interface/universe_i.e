@@ -254,13 +254,13 @@ feature
 		local
 			pos: INTEGER;
 		do
-			pos := clusters.position;
+			pos := clusters.index;
 
 			!!Result.make;
 			clusters.start;
 			Result.set_clusters (clusters.duplicate (clusters.count));
 
-			clusters.go (pos);
+			clusters.go_i_th (pos);
 		end;
 
 	compute_last_class (class_name: STRING; cluster: CLUSTER_I)  is

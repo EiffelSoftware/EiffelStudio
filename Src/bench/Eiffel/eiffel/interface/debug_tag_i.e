@@ -51,7 +51,7 @@ feature
 			from
 				io.error.putstring ("tags: ");
 				l := tags;
-				pos := l.position;
+				pos := l.index;
 				l.start;
 			until
 				l.after
@@ -60,7 +60,7 @@ feature
 				io.error.putstring (" ");
 				l.forth;
 			end;
-			l.go (pos);
+			l.go_i_th (pos);
 		end;
 
 	generate (file: UNIX_FILE; id: INTEGER) is

@@ -181,10 +181,10 @@ feature
 		local
 			pos: INTEGER;
 		do
-			pos := position;
+			pos := index;
 			goto (type_id);
 			Result := not after;
-			go (pos);
+			go_i_th (pos);
 		end;
 			
 	goto (type_id: INTEGER) is

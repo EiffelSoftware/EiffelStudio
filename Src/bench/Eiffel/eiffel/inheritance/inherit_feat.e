@@ -106,15 +106,15 @@ feature
 				-- The position of the list of features must be saved
 				-- because feature `treat_renamings' could call it.
 			if info.a_feature.is_deferred then
-				pos := deferred_features.position;
+				pos := deferred_features.index;
 				deferred_features.start;
 				deferred_features.put_left (info);
-				deferred_features.go (pos);
+				deferred_features.go_i_th (pos);
 			else
-				pos := features.position;
+				pos := features.index;
 				features.start;
 				features.put_left (info);
-				features.go (pos);
+				features.go_i_th (pos);
 			end;
 		end;
 
@@ -405,7 +405,7 @@ feature
 						to_compair := written_actual_type.duplicate;
 						to_compair := to_compair.instantiation_in
 							(features.first.parent.parent_type, written_id);
-						features.go (2);
+						features.go_i_th (2);
 					until
 						features.after or else not Result
 					loop

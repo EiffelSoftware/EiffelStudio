@@ -903,7 +903,7 @@ feature {NONE} -- Implementation
 			
 			
 			if set_string = Void then
-				set_string := set_widgets_comment
+				set_string := set_widgets_comment + indent
 				temp_string := non_void_set
 			else
 				if not non_void_set.is_empty then

@@ -35,7 +35,7 @@ feature -- Initialization
 feature -- Access
 
 	is_set: BOOLEAN is
-			-- Is mutex initialized?
+			-- Is semaphore initialized?
 		do
 			Result := (sem_pointer /= default_pointer)
 		end

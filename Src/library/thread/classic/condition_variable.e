@@ -130,7 +130,7 @@ feature {NONE} -- Externals
 			"C | %"eif_threads.h%""
 		end
 
-end -- class MUTEX
+end -- class CONDITION_VARIABLE
 
 
 --|----------------------------------------------------------------

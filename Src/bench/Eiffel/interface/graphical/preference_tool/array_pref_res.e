@@ -108,7 +108,7 @@ feature {PREFRENCE_CATEGORY} -- Output
 
 feature {NONE} -- Properties
 
-	text: TEXT;
+	text: SCROLLED_T;
 
 	associated_resource: ARRAY_RESOURCE
 			-- Resource Current represents

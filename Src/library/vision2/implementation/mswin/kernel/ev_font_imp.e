@@ -46,8 +46,6 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a font.
-		local
-			t: INTEGER
 		do
 			base_make (an_interface)
 			create wel_font.make_indirect (wel_log_font)
@@ -664,6 +662,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/23 02:31:10  pichery
+--| Removed a useless local variable. No big deal !
+--|
 --| Revision 1.22  2000/02/22 21:22:32  pichery
 --| The default creation of EV_FONT under Windows now creates the
 --| WEL_DEFAULT_GUI_FONT and set family, weight and shape according to

@@ -73,12 +73,14 @@ feature -- Status setting
 			format_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			format: EV_CHARACTER_FORMAT
 		do
-			format := text.character_format (1)
-			font := format.font
-			font.set_height (current_text_size)
-			format.set_font (font)
-			create format_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
-			text.modify_region (1, text.text_length, format, format_info)
+			if text.text_length /= 0 then
+				format := text.character_format (1)
+				font := format.font
+				font.set_height (current_text_size)
+				format.set_font (font)
+				create format_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
+				text.modify_region (1, text.text_length, format, format_info)
+			end
 		end
 
 feature {NONE} -- Implementation

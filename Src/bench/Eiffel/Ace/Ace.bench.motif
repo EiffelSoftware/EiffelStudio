@@ -101,4 +101,18 @@ cluster
 		 graph_kernel:		"$VISION/oui/kernel";
 		 graph_oui_widgets:	"$VISION/oui/widgets";
 
+external
+
+	object:
+		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
+		"$(BENCH)/C/parsing/lace/liblace.a";
+		"$(BENCH)/C/parsing/shared/libparsing.a";
+		"$(BENCH)/C/clicking/shared/archix.o";
+		"$(BENCH)/C/clicking/motif/libclick.a";
+		"$(VISION)/implement/motif/Clib/motif_Clib.a";
+		"$(VISION)/implement/X/Clib/Xt.a";
+		"$(BENCH)/C/ipc/ewb/libewb.a";
+		"$(BENCH)/C/ipc/shared/libipc.a";
+		"$(BENCH)/C/idrs/libidr.a";
+
 end

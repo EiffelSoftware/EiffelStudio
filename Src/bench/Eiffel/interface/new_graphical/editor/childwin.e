@@ -297,11 +297,11 @@ feature {NONE} -- Display functions
 					-- Display the cursor (if needed).
 				if cursor_line and then cursor.token = curr_token then
 						-- Compute the start pixel of the cursor.
-					start_cursor := curr_x + curr_token.get_substring_width(cursor.pos_in_token)
+					start_cursor := curr_x + curr_token.get_substring_width(cursor.pos_in_token - 1)
 						-- Compute the width of the pixel depending whether we are
 						-- in Insertion mode or not (small or plain cursor)
 					if insert_mode then
-						width_cursor := curr_token.get_substring_width(cursor.pos_in_token + 1) - curr_token.get_substring_width(cursor.pos_in_token)
+						width_cursor := curr_token.get_substring_width(cursor.pos_in_token) - curr_token.get_substring_width(cursor.pos_in_token - 1)
 						width_cursor := width_cursor.max(2)
 					else
 						width_cursor := 2

@@ -106,7 +106,7 @@ feature
 			l: SORTED_TWO_WAY_LIST [STRING];
 		do
 			from
-				ba.append (Db_tag);
+				ba.append (feature {DB_CONST}.Db_tag);
 				ba.append_short_integer (tags.count);
 				l := tags;
 				l.start

@@ -1,9 +1,5 @@
 deferred class DEBUG_I 
 
-inherit
-
-	DB_CONST
-	
 feature 
 
 	is_yes: BOOLEAN is

@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 														type_id, to_pointer (c_tread).out)
 						else
 							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, 
-														type_id, Void)
+														0, Void)
 						end
 					end
 				else

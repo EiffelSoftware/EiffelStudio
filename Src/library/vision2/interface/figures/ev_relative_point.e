@@ -22,6 +22,8 @@ class
 
 inherit
 	EV_FIGURE_MATH
+		export
+			{NONE} all
 		undefine
 			default_create
 		end

@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EV_FIGURE_MATH
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

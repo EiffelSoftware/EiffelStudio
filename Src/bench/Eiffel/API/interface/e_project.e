@@ -44,6 +44,7 @@ feature -- Initialization
  			Execution_environment.change_working_directory (project_directory.name)
 			retrieve
 			if not error_occurred then
+				is_finalizing := False
 				Workbench.on_project_loaded
 				manager.on_project_create
 				manager.on_project_loaded
@@ -387,6 +388,9 @@ feature -- Status report
 			Result := degree_output_cell.item
 		end
 
+	is_finalizing: BOOLEAN
+			-- Are we in the middle of a finalization?
+
 feature -- Status setting
 
 	set_degree_output (a_degree_ouput: like degree_output) is
@@ -544,6 +548,7 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
+			is_finalizing := True
 			melt
 			if
 				successful and then
@@ -558,10 +563,14 @@ feature -- Update
 				is_compiling_ref.set_item (False)
 				Compilation_modes.reset_modes
 			end
+			Workbench.stop_compilation
+			is_finalizing := False
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
+		rescue
+			is_finalizing := False
 		end
 
 	call_finish_freezing (workbench_mode: BOOLEAN) is

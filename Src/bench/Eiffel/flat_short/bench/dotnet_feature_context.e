@@ -38,8 +38,6 @@ feature -- Initialization
 		require
 			a_feature_not_void: a_feature /= Void
 			c_not_void: c /= Void
-		local
-			l_c_class: CLASS_C
 		do
 			class_i ?= a_feature.associated_class.lace_class
 			if class_i /= Void then

@@ -25,7 +25,7 @@ interface IEnumClusterProp;
 // Eiffel Exception Codes
 //---------------------------------------------------------------------
 [
-	uuid (UUID_EnumEIF_EXCEPTIONS),
+	uuid (UUID_ENUMEIF_EXCEPTIONS),
 	helpstring ("Eiffel Exception Codes")
 ]
 typedef enum EIF_EXCEPTIONS
@@ -59,7 +59,7 @@ typedef enum EIF_EXCEPTIONS
 // or as part of an inheritance clause
 //---------------------------------------------------------------------
 [
-	uuid (UUID_EnumEIF_COMPLETION_LOCATION),
+	uuid (UUID_ENUMEIF_COMPLETION_LOCATION),
 
 	helpstring ("Location types for completion")
 ]
@@ -73,7 +73,7 @@ typedef enum EIF_COMPLETION_LOCATION
 // Various modes of compilation
 //---------------------------------------------------------------------
 [
-	uuid (UUID_EnumEIF_COMPILATION_MODE),
+	uuid (UUID_ENUMEIF_COMPILATION_MODE),
 	helpstring ("Various modes of compilation.")
 ]
 typedef enum EIF_COMPILATION_MODE
@@ -87,7 +87,7 @@ typedef enum EIF_COMPILATION_MODE
 // Assertion levels for project settings
 //---------------------------------------------------------------------
 [
-	uuid (UUID_EnumEIF_ASSERTIONS),
+	uuid (UUID_ENUMEIF_ASSERTIONS),
 	helpstring ("Assertion levels for project settings.")
 ]
 typedef enum EIF_ASSERTIONS
@@ -104,7 +104,7 @@ typedef enum EIF_ASSERTIONS
 // Type of cluster namespace generation
 //---------------------------------------------------------------------
 [
-	uuid (UUID_EnumEIF_CLUSTER_NAMESPACE_GENERATION),
+	uuid (UUID_ENUMEIF_CLUSTER_NAMESPACE_GENERATION),
 	helpstring ("Type of cluster namespace generation.")
 ]
 typedef enum EIF_CLUSTER_NAMESPACE_GENERATION
@@ -118,7 +118,7 @@ typedef enum EIF_CLUSTER_NAMESPACE_GENERATION
 // Type of compilation for projects
 //---------------------------------------------------------------------
 [
-	uuid (UUID_EnumEIF_PROJECT_TYPES),
+	uuid (UUID_ENUMEIF_PROJECT_TYPES),
 	helpstring ("Type of compilation for projects.")
 ]
 typedef enum EIF_PROJECT_TYPES
@@ -133,7 +133,7 @@ typedef enum EIF_PROJECT_TYPES
 // Image indexes associated with a feature
 //---------------------------------------------------------------------
 [
-	uuid (UUID_EnumEIF_ENTITY_IMAGES),
+	uuid (UUID_ENUMEIF_ENTITY_IMAGES),
 	helpstring ("Image indexes associated with a feature.")
 ]
 typedef enum EIF_ENTITY_IMAGES{
@@ -154,7 +154,7 @@ typedef enum EIF_ENTITY_IMAGES{
 // Type of Eiffel feature
 //---------------------------------------------------------------------
 [
-	uuid (UUID_EnumEIF_FEATURE_TYPES),
+	uuid (UUID_ENUMEIF_FEATURE_TYPES),
 	helpstring ("Type of Eiffel feature.")
 ]
 typedef enum EIF_FEATURE_TYPES
@@ -181,7 +181,7 @@ typedef enum EIF_FEATURE_TYPES
 [
 	object,
 	dual,
-	uuid(UUID_IEiffelEnumString),
+	uuid (UUID_IEIFFELENUMSTRING),
 	helpstring ("Eiffel String Enumeration.")
 ]
 interface IEiffelEnumString: IDispatch
@@ -211,7 +211,7 @@ interface IEiffelEnumString: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelException),
+	uuid (UUID_IEIFFELEXCEPTION),
 	helpstring ("A single exception object")
 ]
 interface IEiffelException: IDispatch
@@ -232,7 +232,7 @@ interface IEiffelException: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelCompiler),
+	uuid (UUID_IEIFFELCOMPILER),
 	helpstring ("Eiffel Compiler.")
 ]
 interface IEiffelCompiler: IDispatch
@@ -286,7 +286,7 @@ interface IEiffelCompiler: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelCompilerEvents),
+	uuid (UUID_IEIFFELCOMPILEREVENTS),
 	helpstring ("Eiffel Compiler Events.")
 ]
 interface IEiffelCompilerEvents: IDispatch
@@ -319,7 +319,7 @@ interface IEiffelCompilerEvents: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelCompletionInfo),
+	uuid (UUID_IEIFFELCOMPLETIONINFO),
 	helpstring ("Eiffel Completion info.")
 ]
 interface IEiffelCompletionInfo: IDispatch
@@ -361,7 +361,7 @@ interface IEiffelCompletionInfo: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelHtmlDocumentationEvents),
+	uuid (UUID_IEIFFELHTMLDOCUMENTATIONEVENTS),
 	helpstring ("Callback interface for HTML Documentation Generator.")
 ]
 interface IEiffelHtmlDocumentationEvents: IDispatch
@@ -391,7 +391,7 @@ interface IEiffelHtmlDocumentationEvents: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelHtmlDocumentationGenerator),
+	uuid (UUID_IEIFFELHTMLDOCUMENTATIONGENERATOR),
 	helpstring ("Eiffel Project HTML Documentation Generator.")
 ]
 interface IEiffelHtmlDocumentationGenerator: IDispatch
@@ -418,7 +418,7 @@ interface IEiffelHtmlDocumentationGenerator: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelParameterDescriptor),
+	uuid (UUID_IEIFFELPARAMETERDESCRIPTOR),
 	helpstring ("Feature parameter info.")
 ]
 interface IEiffelParameterDescriptor: IDispatch
@@ -436,7 +436,7 @@ interface IEiffelParameterDescriptor: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEnumParameter),
+	uuid (UUID_IENUMPARAMETER),
 	helpstring ("Feature paramaters enumeration.")
 ]
 interface IEnumParameter: IDispatch
@@ -466,7 +466,7 @@ interface IEnumParameter: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelFeatureDescriptor),
+	uuid (UUID_IEIFFELFEATUREDESCRIPTOR),
 	helpstring ("Eiffel Feature Descriptor.")
 ]
 interface IEiffelFeatureDescriptor: IDispatch
@@ -586,7 +586,7 @@ interface IEiffelFeatureDescriptor: IDispatch
 [
 	object,
 	dual,
-	uuid(UUID_IEnumFeature),
+	uuid (UUID_IENUMFEATURE),
 	helpstring ("Eiffel Feature Enumeration.")
 ]
 interface IEnumFeature: IDispatch
@@ -616,7 +616,7 @@ interface IEnumFeature: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelClassDescriptor),
+	uuid (UUID_IEIFFELCLASSDESCRIPTOR),
 	helpstring ("Eiffel Class Descriptor.")
 ]
 interface IEiffelClassDescriptor: IDispatch
@@ -709,7 +709,7 @@ interface IEiffelClassDescriptor: IDispatch
 [
 	object,
 	dual,
-	uuid(UUID_IEnumEiffelClass),
+	uuid (UUID_IENUMEIFFELCLASS),
 	helpstring ("Eiffel Class Enumeration.")
 ]
 interface IEnumEiffelClass: IDispatch
@@ -739,7 +739,7 @@ interface IEnumEiffelClass: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelClusterDescriptor),
+	uuid (UUID_IEIFFELCLUSTERDESCRIPTOR),
 	helpstring ("Eiffel Cluster Descriptor.")
 ]
 interface IEiffelClusterDescriptor: IDispatch
@@ -784,7 +784,7 @@ interface IEiffelClusterDescriptor: IDispatch
 [
 	object,
 	dual,
-	uuid(UUID_IEnumCluster),
+	uuid (UUID_IENUMCLUSTER),
 	helpstring ("Eiffel Cluster Enumeration.")
 ]
 interface IEnumCluster: IDispatch
@@ -814,7 +814,7 @@ interface IEnumCluster: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelClusterProperties),
+	uuid (UUID_IEIFFELCLUSTERPROPERTIES),
 	helpstring ("Eiffel Cluster Properties (for Ace file).")
 ]
 interface IEiffelClusterProperties: IDispatch
@@ -913,7 +913,7 @@ interface IEiffelClusterProperties: IDispatch
 [
 	object,
 	dual,
-	uuid(UUID_IEnumClusterProp),
+	uuid (UUID_IENUMCLUSTERPROP),
 	helpstring ("Eiffel Cluster Properties Enumeration.")
 ]
 interface IEnumClusterProp: IDispatch
@@ -943,7 +943,7 @@ interface IEnumClusterProp: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelSystemClusters),
+	uuid (UUID_IEIFFELSYSTEMCLUSTERS),
 	helpstring ("Eiffel System Clusters.")
 ]
 interface IEiffelSystemClusters: IDispatch
@@ -988,7 +988,7 @@ interface IEiffelSystemClusters: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelSystemExternals),
+	uuid (UUID_IEIFFELSYSTEMEXTERNALS),
 	helpstring ("Eiffel System Externals.")
 ]
 interface IEiffelSystemExternals: IDispatch
@@ -1039,7 +1039,7 @@ interface IEiffelSystemExternals: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelAssemblyProperties),
+	uuid (UUID_IEIFFELASSEMBLYPROPERTIES),
 	helpstring ("Eiffel Assembly Properties (for Ace file).")
 ]
 interface IEiffelAssemblyProperties: IDispatch
@@ -1075,7 +1075,7 @@ interface IEiffelAssemblyProperties: IDispatch
 [
 	object,
 	dual,
-	uuid(UUID_IEnumAssembly),
+	uuid (UUID_IENUMASSEMBLY),
 	helpstring ("Eiffel Assembly Enumeration.")
 ]
 interface IEnumAssembly: IDispatch
@@ -1105,7 +1105,7 @@ interface IEnumAssembly: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelSystemAssemblies),
+	uuid (UUID_IEIFFELSYSTEMASSEMBLIES),
 	helpstring ("Eiffel System Assemblies.")
 ]
 interface IEiffelSystemAssemblies: IDispatch
@@ -1135,7 +1135,7 @@ interface IEiffelSystemAssemblies: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelSystemBrowser),
+	uuid (UUID_IEIFFELSYSTEMBROWSER),
 	helpstring ("System Browser.")
 ]
 interface IEiffelSystemBrowser: IDispatch
@@ -1190,7 +1190,7 @@ interface IEiffelSystemBrowser: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelProjectProperties),
+	uuid (UUID_IEIFFELPROJECTPROPERTIES),
 	helpstring ("Eiffel Project Properties.")
 ]
 interface IEiffelProjectProperties: IDispatch
@@ -1340,7 +1340,7 @@ interface IEiffelProjectProperties: IDispatch
 [
 	object,
 	dual,
-	uuid (UUID_IEiffelProject),
+	uuid (UUID_IEIFFELPROJECT),
 		helpstring ("Eiffel Project.")
 ]
 interface IEiffelProject: IDispatch
@@ -1395,8 +1395,8 @@ interface IEiffelProject: IDispatch
 //                                                            Type Libraries
 
 [
-	uuid (UUID_LibEiffelCompiler),
-	version(2.0),
+	uuid (UUID_LIBEIFFELCOMPILER),
+	version (VER_LIBEIFFELCOMPILER),
 	helpstring ("Eiffel language compiler library.")
 ]
 library EiffelComCompiler
@@ -1443,7 +1443,7 @@ library EiffelComCompiler
 	//---------------------------------------------------------------------
 	// CEiffelProject
 	//---------------------------------------------------------------------
-	[uuid (UUID_CEiffelProject)]
+	[uuid (UUID_CEIFFELPROJECT)]
 	coclass CEiffelProject
 	{
 		[default] interface IEiffelProject;
@@ -1452,7 +1452,7 @@ library EiffelComCompiler
 	//---------------------------------------------------------------------
 	// CEiffelCompiler
 	//---------------------------------------------------------------------
-	[uuid (UUID_CEiffelCompiler), noncreatable]
+	[uuid (UUID_CEIFFELCOMPILER), noncreatable]
 	coclass CEiffelCompiler
 	{
 		[default] interface IEiffelCompiler;
@@ -1462,7 +1462,7 @@ library EiffelComCompiler
 	//---------------------------------------------------------------------
 	// CEiffelCompletionInfo
 	//---------------------------------------------------------------------
-	[uuid (UUID_CEiffelCompletionInfo), noncreatable]
+	[uuid (UUID_CEIFFELCOMPLETIONINFO), noncreatable]
 	coclass CEiffelCompletionInfo
 	{
 		[default] interface IEiffelCompletionInfo;

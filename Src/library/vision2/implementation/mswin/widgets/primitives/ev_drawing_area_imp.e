@@ -15,10 +15,12 @@ inherit
 	EV_DRAWING_AREA_I
 
 	EV_DRAWABLE_IMP
+		
+	EV_PIXMAP_CONTAINER_IMP
 		redefine
 			pixmap_size_changed
 		end
-		
+
 	EV_WIDGET_IMP
 
 	WEL_CONTROL_WINDOW
@@ -91,6 +93,13 @@ feature {NONE} -- Implementation
 			paint_dc.copy_dc (pixmap_imp, client_rect)
 		end
 
+	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
 	destroy is
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
@@ -112,6 +121,14 @@ feature {NONE} -- Implementation
    		do
  				disable_default_processing
  		end
+
+feature -- Implementation
+
+	wel_window: WEL_WINDOW is
+			-- Current area.
+		do
+			Result ?= Current
+		end
 
 end -- class EV_DRAWING_AREA_IMP
 

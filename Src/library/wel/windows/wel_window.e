@@ -1225,7 +1225,6 @@ feature -- Removal
 			exists: exists
 		do
 			cwin_destroy_window (item)
-			destroy_item
 		ensure
 			not_exists: not exists
 		end

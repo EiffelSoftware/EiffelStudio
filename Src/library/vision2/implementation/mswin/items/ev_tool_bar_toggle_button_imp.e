@@ -10,8 +10,13 @@ class
 
 inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
+		select
+			parent_imp
+		end
 
 	EV_TOOL_BAR_BUTTON_IMP
+		rename 
+			parent_imp as old_button_parent_imp
 		redefine
 			type,
 			on_activate

@@ -8,6 +8,7 @@ class
 	GB_EV_WIDGET
 	
 	-- The following properties from EV_WIDGET are manipulated by `Current'.
+	-- Is_show_requested - Performed on the real object only. Not the display object
 	-- Minimum_width - Performed on the real object only. Not the display object
 	-- Minimum_height - Performed on the real object only. Not the display_object
 
@@ -69,8 +70,20 @@ feature {GB_XML_STORE} -- Output
 	
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
+		local
+			notebook_parent: EV_NOTEBOOK
 		do
-			if not objects.first.is_show_requested and not is_instance_of (first, dynamic_type_from_string ("EV_WINDOW")) then
+			notebook_parent ?= objects.first.parent
+			
+				-- | FIXME Windows notebook bug.
+				-- On Windows, notebooks hide their contents when the containing tab is not visible.
+				-- Therefore, there is a bug where querying `is_show_requested' for an item that is not
+				-- in the selected tab returns `False' when it should not.
+				-- We check that the item is not parented in a notebook before saving it as hidden. This does
+				-- not let you hide an item within a notebookm, but it definitely is better than the behaviour
+				-- of items being hidden. Julian.
+			
+			if not objects.first.is_show_requested and not is_instance_of (first, dynamic_type_from_string ("EV_WINDOW")) and notebook_parent = Void then
 				add_element_containing_boolean (element, is_show_requested_string, False)
 			end
 			if objects.first.minimum_width_set_by_user or uses_constant (Minimum_width_string) then

@@ -11,15 +11,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Allocated `item'.
 		local
-			a: ARRAY [INTEGER_8]
 		do
 			create item.make (Default_size)
-			create a.make (0, Default_size)
-			internal_signature := a.area
+			create item.make (Default_size)
 			current_position := 0
-			is_written := False
-		ensure
-			not_is_written: not is_written
 		end
 			
 feature -- Access
@@ -32,30 +27,6 @@ feature -- Access
 
 	item: MANAGED_POINTER
 			-- C structures that holds signature.
-
-feature -- Status report
-
-	is_written: BOOLEAN
-			-- Is current signature written in `item'?
-		
-feature -- Saving
-
-	update_item is
-			-- Write to `item'.
-		require
-			not_is_written: not is_written
-		local
-			l_spe: like internal_signature
-		do
-			l_spe := internal_signature
-			if item.size < current_position then
-				item.resize (current_position.max (item.size + Default_size))
-			end
-			item.item.memory_copy ($l_spe, current_position)
-			is_written := True
-		ensure
-			is_written: is_written
-		end
 
 feature -- Settings
 
@@ -149,17 +120,14 @@ feature {NONE} -- Implementation
 		local
 			l_capacity: INTEGER
 		do
-			l_capacity := internal_signature.count
+			l_capacity := item.count
 			if pos > l_capacity then
-				internal_signature := internal_signature.resized_area (pos.max (l_capacity + Default_size))
+				item.resize (pos.max (l_capacity + Default_size))
 			end
-			internal_signature.put (val, pos)
+			item.put_integer_8 (val, pos)
 		end
 
 feature {NONE} -- Internal signature
-
-	internal_signature: SPECIAL [INTEGER_8]
-			-- Store current signature.
 
 	current_position: INTEGER
 			-- Current position in `internal_body' for next insertion.

@@ -11,16 +11,24 @@ inherit
 			data, set_widget_default
 		end;
 	TYPE_STONE;
-	REMOVABLE
-	
+	REMOVABLE;
+	ERROR_POPUPER;
+	WINDOWS;
+
 feature 
 
 	remove_yourself is
 		local
 			cut_command: CUT_GROUP_CMD
 		do
-			!!cut_command;
-			cut_command.execute (data)
+			if data.group.not_used then
+				!!cut_command;
+				cut_command.execute (data)
+			else
+				Error_box.popup (Current, 
+					Messages.cannot_remove_group_er,
+					data.group.entity_name)
+			end
 		end;
 
 	set_widget_default is
@@ -29,5 +37,10 @@ feature
 		end;
 			
 	data: CONTEXT_GROUP_TYPE;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := Context_catalog
+		end
 
 end

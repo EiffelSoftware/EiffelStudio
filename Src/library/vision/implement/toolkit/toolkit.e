@@ -350,6 +350,16 @@ feature
 		deferred
 		end
 
+	set_default_resources (a_list: ARRAY[WIDGET_RESOURCE]) is
+			-- Set the default resources of the application
+		deferred
+		end;
+
+	widget_resource: WIDGET_RESOURCE_X is
+		deferred
+		end;
+
+
 end
 
 

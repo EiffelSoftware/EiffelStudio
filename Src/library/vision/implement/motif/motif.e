@@ -156,6 +156,34 @@ feature
 			!! Result.make (a_top_shell, app_class)
 		end
 
+	widget_resource: WIDGET_RESOURCE_X is
+			-- X widget resource object
+		do
+			!!Result.make;
+		end;
+
+	set_default_resources (a_list: ARRAY[WIDGET_RESOURCE]) is
+			-- Set the default resource setting's
+		local
+			out_list: ARRAY[ANY];
+			ext: ANY;
+			counter, number: INTEGER;
+		do
+			if a_list /= Void then
+				!!out_list.make (a_list.lower, a_list.upper);
+				from counter := a_list.lower
+				until counter > a_list.upper
+				loop
+					out_list.put (a_list.item (counter).resource_string.to_c, 
+							counter);
+					counter := counter + 1;
+				end;
+				number := a_list.count;
+				ext := out_list.to_c;
+			end;
+			set_fallback_res (application_context, ext, number);
+		end;
+
 feature {NONE} -- External features
 
 	xt_init: POINTER is
@@ -178,7 +206,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	set_fallback_res (app_contxt: POINTER; resource_list: ANY) is
+	set_fallback_res (app_contxt: POINTER; resource_list: ANY; count: INTEGER) is
 		external
 			"C"
 		end;

@@ -27,7 +27,8 @@ inherit
 			interface,
 			add_to_container,
 			remove_i_th,
-			reorder_child
+			reorder_child,
+			list_widget
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
@@ -257,14 +258,14 @@ feature {EV_ITEM_LIST_IMP} -- Implementation
 	dummy_list_widget: POINTER
 			-- Used to temporary store list widget if not in parent.
 
-	--list_widget: POINTER is
-	--		-- Pointer to the items own gtktree.
-	--	do
-	--		Result := C.gtk_tree_item_struct_subtree (c_object)
-	--		if Result = Default_pointer then
-	--			Result := dummy_list_widget
-	--		end
-	--	end
+	list_widget: POINTER is
+			-- Pointer to the items own gtktree.
+		do
+			Result := C.gtk_tree_item_struct_subtree (c_object)
+			if Result = Default_pointer then
+				Result := dummy_list_widget
+			end
+		end
 
 feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
 
@@ -311,6 +312,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/04/06 20:27:05  brendel
+--| Uncommented list_widget.
+--|
 --| Revision 1.50  2000/04/06 02:04:30  brendel
 --| Changed to comply with new EV_DYNAMIC_LIST_IMP.
 --| Does not work yet!

@@ -15,7 +15,7 @@
 #define cwel_point_get_x(_ptr_) ((EIF_INTEGER) (((POINT *) _ptr_)->x))
 #define cwel_point_get_y(_ptr_) ((EIF_INTEGER) (((POINT *) _ptr_)->y))
 
-#define cwin_pt_in_rect(_ptr_, _pt_) ((EIF_BOOLEAN) PtInRect ((RECT *) _ptr_, *((POINT *) _pt_)))
+#define cwin_window_from_point(_ptr_) ((EIF_POINTER) WindowFromPoint (*(POINT *) _ptr_))
 
 #endif /* __WEL_POINT__ */
 

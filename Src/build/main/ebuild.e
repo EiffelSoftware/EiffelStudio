@@ -44,18 +44,11 @@ feature
 					discard_licence
 				end
 			else
-				!! mp;
-				mp.restore;
-				if original_tag_name = Void then
-					tg := " "
-				else
-					tg := original_tag_name
-				end
-				Question_box.popup (Current,
-					Messages.internal_error_qu,
-					tg);
-				retried := False;
-				iterate
+				io.error.putstring ("Internal error: ");
+				if original_tag_name /= Void then
+					io.error.putstring (original_tag_name);
+				end;
+				io.error.putstring ("%NEiffelBuild stopped%N");
 			end;
 		rescue
 			discard_licence;

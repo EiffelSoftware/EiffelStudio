@@ -36,6 +36,9 @@ feature
 		local
 			rqst: ATTR_REQUEST
 		do
+			debug ("debug_recv")
+				print ("DEBUGGED_OBJECT.make%N")
+			end
 			!! rqst.make (addr);
 			rqst.set_sp_bounds (sp_lower, sp_upper);
 			rqst.send;
@@ -68,6 +71,9 @@ feature
 			class_not_void: a_class /= Void
 			class_has_types: a_class.has_types
 		do
+			debug ("debug_recv")
+				print ("DEBUGGED_OBJECT.make_with_class" + a_class.name_in_upper + "%N")
+			end
 			make (addr, 0, 1)
 			check
 				conformance: dtype.simple_conform_to (a_class)

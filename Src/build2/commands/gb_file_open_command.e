@@ -67,6 +67,10 @@ feature -- Basic operations
 				project_settings: GB_PROJECT_SETTINGS
 				opened: BOOLEAN
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
+				invalid_system_interface_file: BOOLEAN
+				test_file: RAW_FILE
+				error_dialog: EV_ERROR_DIALOG
+				dialog_constants: EV_DIALOG_CONSTANTS
 			do
 				create dialog
 				dialog.set_filter (project_file_filter)
@@ -93,13 +97,27 @@ feature -- Basic operations
 						project_settings.load (dialog.file_name, file_handler)
 						if file_handler.last_load_successful then
 							system_status.set_current_project (project_settings)
-							xml_handler.load
-							main_window.show_tools
-							command_handler.update
-								-- Compress all used ids.
-							id_compressor.compress_all_id
+							-- Check that the filename is valid.
+							-- i.e. that the system_interface file exists.
+							create test_file.make (filename)
+							if test_file.exists then
+								xml_handler.load
+								main_window.show_tools
+								command_handler.update
+									-- Compress all used ids.
+								id_compressor.compress_all_id
+							end
 						end	
 					end
+				end
+				if test_file /= Void and then not test_file.exists then
+					create error_dialog.make_with_text ("The system interface file '" + filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
+					create dialog_constants
+						-- Hide unwanted buttons from the dialog
+					error_dialog.button (dialog_constants.ev_retry).hide;
+					(error_dialog.button (dialog_constants.ev_ignore)).hide
+					error_dialog.show_modal_to_window (main_window)
+					system_status.close_current_project
 				end
 			end
 

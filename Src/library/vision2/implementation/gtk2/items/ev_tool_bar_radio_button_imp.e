@@ -26,7 +26,8 @@ inherit
 			set_parent_imp,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			pointer_double_press_actions_internal,
+			create_select_actions
 		end
 
 	EV_RADIO_PEER_IMP
@@ -65,6 +66,16 @@ feature -- Status report
 			-- Is `Current' selected.
 		do
 			Result := feature {EV_GTK_EXTERNALS}.gtk_toggle_tool_button_get_active (visual_widget)
+		end
+
+feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
+
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a select action sequence.
+			-- Attach to GTK "clicked" signal.
+		do
+			create Result
+			real_signal_connect (visual_widget, "toggled", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implementation

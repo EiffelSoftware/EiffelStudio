@@ -2696,7 +2696,7 @@ feature -- Variables access
 			end
 			if
 				l_class /= Void and then
-				l_class.is_frozen or l_class.is_single or l_class.is_external
+				(l_class.is_frozen or l_class.is_single or l_class.is_external)
 			then
 				if need_target then
 					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
@@ -3034,7 +3034,7 @@ feature -- Assignments
 			end
 			if
 				l_class /= Void and then
-				l_class.is_frozen or l_class.is_single or l_class.is_external
+				(l_class.is_frozen or l_class.is_single or l_class.is_external)
 			then
 				if need_target then
 					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld,

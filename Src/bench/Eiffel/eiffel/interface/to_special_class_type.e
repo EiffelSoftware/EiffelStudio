@@ -116,7 +116,7 @@ feature
 			buffer.putstring ("%Tl[1] = spmalloc(CHRPAD(arg1 * ");
 		
 			if is_expanded then
-				buffer.putstring ("(Size(");
+				buffer.putstring ("(EIF_Size(");
 				expanded_type ?= gen_param;
 				non_expanded_type := clone (expanded_type);
 				non_expanded_type.set_is_expanded (False);
@@ -152,13 +152,13 @@ feature
 			buffer.new_line
 
 				-- Set count
-			buffer.putstring ("%T*(long *) ref = arg1;%N");
+			buffer.putstring ("%T*(EIF_INTEGER *) ref = arg1;%N");
 
 				-- Set element size
-			buffer.putstring ("%T*(long *) (ref + sizeof(long)) = ");
+			buffer.putstring ("%T*(EIF_INTEGER *) (ref + sizeof(long)) = ");
 			if is_expanded then
 				if final_mode then
-					buffer.putstring ("Size(");
+					buffer.putstring ("EIF_Size(");
 					buffer.putint (dtype);
 					buffer.putstring (") + OVERHEAD;%N");
 					buffer.putstring ("%Tzone->ov_flags |= EO_COMP;%N");
@@ -244,7 +244,7 @@ feature
 
 					buffer.putstring ("%
 						%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
-								%ref += Size(");
+								%ref += EIF_Size(");
 					buffer.putint (dtype);
 					buffer.putstring (")+OVERHEAD){%N%
 						%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
@@ -262,7 +262,7 @@ feature
 
 						-- FIXME: call to creation routine?????
 
-					buffer.putstring ("Size(");
+					buffer.putstring ("EIF_Size(");
 					buffer.putint (dtype);
 					buffer.putstring (") + OVERHEAD;%N%
 									%%Tzone->ov_flags |= EO_COMP;%N");
@@ -338,7 +338,7 @@ feature
 					buffer.putint (dtype);
 					buffer.putstring (");%N%
 									%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
-									%ref += Size(");
+									%ref += EIF_Size(");
 					buffer.putint (dtype);
 					buffer.putstring (")+OVERHEAD){%N%
 									%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
@@ -380,7 +380,7 @@ feature
 			array_index: INTEGER
 			rout_info: ROUT_INFO
 		do
-			buffer.putstring ("*(char **) (l[0]");
+			buffer.putstring ("*(EIF_REFERENCE *) (l[0]");
 
 			area_feature := associated_class.feature_table.item ("area");
 

@@ -106,7 +106,7 @@ feature
 				if final_mode then
 						-- Optimization: size is know at compile time
 
-					buffer.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (Size(");
+					buffer.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (EIF_Size(");
 					non_expanded_type ?= gen_param;
 					non_expanded_type := clone (non_expanded_type);
 					non_expanded_type.set_is_expanded (False);
@@ -211,7 +211,7 @@ feature
 				if final_mode then
 						-- Optimization: size of expanded is known at compile time
 
-					buffer.putstring ("%Treturn Current + OVERHEAD + arg1 * (Size(");
+					buffer.putstring ("%Treturn Current + OVERHEAD + arg1 * (EIF_Size(");
 					non_expanded_type ?= gen_param;
 					non_expanded_type := clone (non_expanded_type);
 					non_expanded_type.set_is_expanded (False);

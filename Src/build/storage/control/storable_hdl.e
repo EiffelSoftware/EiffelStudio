@@ -22,12 +22,11 @@ feature
 			valid_dir_name: dir_name /= Void
 		local
 			f: RAW_FILE;
-			fn: STRING
+			fn: FILE_NAME
 		do
-			fn := clone (dir_name);
-			fn.extend (Environment.directory_separator);
-			fn.append (file_name);
-			!!f.make_open_read (fn);
+			!! fn.make_from_string (dir_name);
+			fn.set_file_name (file_name);
+			!! f.make_open_read (fn);
 			retrieved ?= storable_retrieved (f);
 			f.close
 		end;
@@ -39,13 +38,12 @@ feature
 			valid_dir_name: dir_name /= Void
 		local
 			f: RAW_FILE;
-			fn: STRING
+			fn: FILE_NAME
 		do
-			fn := clone (dir_name);
-			fn.extend (Environment.directory_separator);
-			fn.append (file_name);
-			fn.append (Environment.temporary_postfix);	
-			!!f.make_open_write (fn);
+			!! fn.make_from_string (dir_name);
+			fn.set_file_name (file_name);
+			fn.add_extension (Environment.temporary_postfix);	
+			!! f.make_open_write (fn);
 			independent_store (f);
 			f.close
 		end; 
@@ -53,15 +51,14 @@ feature
 	save_stored_information (dir_name: STRING) is
 			-- Save Current storer.
 		local
-			new_fn: STRING;
-			tmp_fn: STRING;
+			new_fn: FILE_NAME;
+			tmp_fn: FILE_NAME;
 			f: RAW_FILE;
 		do
-			new_fn := clone (dir_name);
-			new_fn.extend (Environment.directory_separator);
-			new_fn.append (file_name);
+			!! new_fn.make_from_string (dir_name);
+			new_fn.set_file_name (file_name);
 			tmp_fn := clone (new_fn);
-			tmp_fn.append (Environment.temporary_postfix);	
+			tmp_fn.add_extension (Environment.temporary_postfix);	
 			!! f.make (tmp_fn);
 			f.change_name (new_fn);	
 		end;

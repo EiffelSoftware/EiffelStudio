@@ -29,7 +29,7 @@ feature
 			else
 				rescued := False;
 				error_box.popup (Current, 
-					Messages.generate_er, Environment.generated_directory)
+					Messages.generate_er, Environment.classes_directory)
 			end
 		rescue
 			mp.restore;

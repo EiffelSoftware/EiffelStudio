@@ -25,8 +25,6 @@ feature
 			end;
 		end;
 	
-	build_dir: STRING;
-
 feature {NONE}
 
 	check_screen is
@@ -55,10 +53,10 @@ feature {NONE}
 			dir: PLAIN_TEXT_FILE;
 		do
 			!! dir.make (clone (Environment.bitmaps_directory));
-			if not dir.exists then
+			if not dir.exists and not dir.is_readable then
 				io.error.putstring ("Bitmap directory ");
 				io.error.putstring (dir.name);
-				io.error.putstring (" does not exist%N");
+				io.error.putstring (" is not readable.%N");
 				error := True
 			else
 				error := False
@@ -81,25 +79,33 @@ feature {NONE}
 				error := True
 			else
 				!! dir.make (path_name);
-				if not dir.exists then
+				if not dir.exists and then dir.is_readable then
 					io.error.putstring ("Directory ");
 					io.error.putstring (path_name);
-					io.error.putstring (" does not exist%N");
-					io.error.putstring ("Environment varaible ");
+					io.error.putstring (" is not readable.%N");
+					io.error.putstring ("Environment variable ");
 					io.error.putstring (Environment.eiffel3_variable_name);
-					io.error.putstring (" needs to be defined to the correct directory%N");
+					io.error.putstring (" needs to be set to the correct directory%N");
 					error := True
 				else
-					build_dir := clone (path_name);
-					!!dir.make (Environment.eiffelbuild_directory);
-					if not dir.exists then
+					!! dir.make (Environment.eiffelbuild_directory);
+					if not dir.exists and then not dir.is_readable then
 						io.error.putstring ("Directory ");
 						io.error.putstring (dir.name);
-						io.error.putstring (" does not exist%N");
+						io.error.putstring (" is not readable.%N");
 						error := True;
 					else
-						error := False;
-					end;
+						path_name := Environment.get 
+							(Environment.platform_variable_name);
+						if path_name = Void then
+							io.error.putstring ("Environment variable ");
+							io.error.putstring (Environment.platform_variable_name);
+							io.error.putstring (" not defined%N");
+							error := True
+						else
+							error := False
+						end
+					end
 				end;
 			end
 		end;

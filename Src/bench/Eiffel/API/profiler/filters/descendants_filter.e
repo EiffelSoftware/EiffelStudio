@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter to check whether the time spent in the descendents %
+		%of a function is equal to that what the user specified.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class DESCENDENTS_FILTER
 
 inherit

@@ -1,5 +1,9 @@
 indexing
-	description:	"Information about one cycle"
+
+	description:
+		"Profile information about a call cycle";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class CYCLE_PROFILE_DATA
 

@@ -1,3 +1,10 @@
+indexing
+
+	description:
+		"Information about a call cycle.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class CYCLE_FUNCTION
 
 inherit

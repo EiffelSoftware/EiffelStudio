@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Profile filter to check whether the number of calls to a specific %
+		%function matches the number of calls specified by the user.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class CALLS_FILTER
 
 inherit

@@ -1,7 +1,14 @@
-class EWB_SUBQUERY
+indexing
+
+	description:
+		"Sub query used to build a total query to query the profile information";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class SUBQUERY
 
 inherit
-	EWB_ACTIVATABLE
+	ACTIVATABLE
 
 creation
 	make
@@ -49,4 +56,4 @@ feature {NONE} -- Attributes
 	int_operator,
 	int_value: STRING;
 
-end -- class EWB_SUBQUERY
+end -- class SUBQUERY

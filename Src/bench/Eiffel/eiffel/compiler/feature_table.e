@@ -178,7 +178,7 @@ feature -- Comparison
 		require
 			good_argument: other /= Void;
 		local
-			feature_name: STRING;
+			feature_name_id: INTEGER;
 			f1, f2: FEATURE_I;
 			depend_unit: DEPEND_UNIT;
 			ext_i: EXTERNAL_I
@@ -192,8 +192,8 @@ feature -- Comparison
 				until
 					after
 				loop
-					feature_name := key_for_iteration;
-					f2 := other.item (feature_name);
+					feature_name_id := key_for_iteration_id
+					f2 := other.item_id (feature_name_id)
 					f1 := item_for_iteration;
 					if f2 = Void then
 							-- Old feature is not in Current feature table, this
@@ -201,12 +201,12 @@ feature -- Comparison
 						Result := False
 					else
 						check
-							f1.feature_name.is_equal (f2.feature_name);
+							f1.feature_name_id = f2.feature_name_id
 						end;
 						if not f1.equiv (f2) then
 	debug ("ACTIVITY")
 		io.error.putstring ("%Tfeature ");
-		io.error.putstring (feature_name);
+		io.error.putstring (f2.feature_name);
 		io.error.putstring (" is not equiv.%N");
 	end;
 							if f1.is_external then
@@ -256,7 +256,7 @@ end;
 			-- `other' and the current one.
 		local
 			old_feature_i, new_feature_i: FEATURE_I;
-			feature_name: STRING;
+			feature_name_id: INTEGER;
 			propagators, melted_propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT];
 			removed_features: SEARCH_TABLE [FEATURE_I];
 			depend_unit: DEPEND_UNIT;
@@ -276,9 +276,9 @@ end;
 			loop
 					-- Old feature
 				old_feature_i := item_for_iteration;
-				feature_name := old_feature_i.feature_name;
+				feature_name_id := old_feature_i.feature_name_id;
 					-- New feature
-				new_feature_i := other.item (feature_name);
+				new_feature_i := other.item_id (feature_name_id);
 				if new_feature_i /= Void then
 					has_same_type := True;
 					same_interface := old_feature_i.same_interface (new_feature_i)

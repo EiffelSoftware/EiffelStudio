@@ -11,6 +11,13 @@
 		<h2>Graphical environment</h2>
 		<h3>Improvements</h3>
 		<h3>Bug fixes</h3>
+		<ul>
+          <li>Fixed issue where setting the string background color to `auto' in 
+          the preferences will set it to a black color next time your relaunch 
+          EiffelStudio.</li>
+          <li>Fixed issue where typing in an empty features tree will close down 
+          EiffelStudio.</li>
+        </ul>
 		<h2>Compiler</h2>
         <ul>
           <li>Click
@@ -18,12 +25,34 @@
           for the compiler release notes.</li>
         </ul>
 		<h2>Libraries</h2>
+        <h3>Eiffel2Java</h3>
+        <ul>
+          <li>Fixed incorrect memory freeing in <span class="efeature">get_string</span> in <span class="eclass">JNI_ENVIRONMENT</span> 
+          that could cause some memory corruption.</li>
+        </ul>
         <h3>EiffelBase</h3>
-        <p>&nbsp;</p>
+        <ul>
+          <li>Optimized <span class="efeature">i_th</span> from <span class="eclass">PRIMES</span> for 
+          the first 200 prime numbers.</li>
+          <li>Fixed bug in <span class="efeature">generic_typecode</span> from <span class="eclass">TUPLE</span> in .NET implementation 
+          which fixed an issue with <span class="efeature">is_reference_item</span>.</li>
+          <li>Made <span class="eclass">TUPLE</span> a descendant of <span class="eclass">HASHABLE</span> 
+          and defined <span class="efeature">hash_code</span> (based on the hash_codes of the 
+          elements of a <span class="eclass">TUPLE</span>).</li>
+          <li>Added <span class="efeature">default_create</span> as creation procedure of <span class="eclass">
+          TUPLE</span> and made <span class="efeature">make</span>
+          obsolete.</li>
+          <li>Added convenience features to <span class="eclass">TUPLE</span>: <span class="efeature">put_XX_item</span> where `XX' can be 
+          replaced by `character, boolean, integer, double,...'.</li>
+          <li>Optimized <span class="eclass">ROUTINE</span>, <span class="eclass">PROCEDURE</span> and <span class="eclass">FUNCTION</span> 
+          implementation to speed up agent calls by a factor of 2 to 3.</li>
+        </ul>
         <h3>EiffelNet</h3>
         <ul>
           <li>Fixed bug in <span class="efeature">set_delay</span> and <span class="efeature">set_nodelay</span>
            in <span class="eclass">NETWORK_STREAM_SOCKET</span>, because their implementations were inverted.</li>
+          <li>Fixed incorrect spelling of <span class="efeature">
+          maximum_seg_size</span> in <span class="eclass">NETWORK_STREAM_SOCKET</span>.</li>
         </ul>
         <h3>EiffelTime</h3>
         <ul>
@@ -35,6 +64,12 @@
           <span class="efeature">make_by_compact_date</span> obsolete.</li>
           <li>In <span class="eclass">DATE_VALIDITY_CHECKER</span> added <span class="efeature">ordered_compact_date_valid</span>.</li>
         </ul>
+        <h3>EiffelThread</h3>
+        <ul>
+          <li>Added support for .NET</li>
+          <li>Made <span class="eclass">OBJECT_OWNER</span> obsolete</li>
+          <li>Added <span class="efeature">wait_with_timeout</span> in <span class="eclass">CONDITION_VARIABLE</span></li>
+        </ul>
         <h3>EiffelVision2</h3>
         <ul>
           <li>
@@ -42,9 +77,18 @@
           Click here to see list of update and modification to EiffelVision2</a>.</li>
         </ul>
         <h3>WEL</h3>
-	<ul>
-	<li>WEL_TREE_VIEW - Calling `deselect_item' will now really deselect the item, whereas previously, it only caused the item to be redrawn without selection.</li>
-	</ul>
+        <ul>
+          <li>Renamed <span class="efeature">convert</span> from <span class="eclass">CONVERTER</span> class into
+           <span class="efeature">extract_definition</span>.</li>
+          <li>Renamed <span class="efeature">convert</span> from 
+          <span class="eclass">WEL_FONT_FAMILY_ENUMERATOR</span> class into <span class="efeature">update_current</span>.</li>
+			<li>WEL_TREE_VIEW - Calling `deselect_item' will now really deselect the item, whereas previously, it only caused the item to be redrawn without selection.</li>
+        </ul>
+        <h3>.NET libraries</h3>
+        <ul>
+          <li>Renamed <span class="eclass">THREAD</span> and <span class="eclass">MUTEX</span> into <span class="eclass">SYSTEM_THREAD</span> and <span class="eclass">SYSTEM_MUTEX</span> to 
+          avoid name conflicts with EiffelThread.</li>
+        </ul>
         <p>&nbsp;</p>
         <p><a href="Eiffel53.html">Click here to check out what was new in 
         Eiffel 5.3</a></p>

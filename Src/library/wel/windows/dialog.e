@@ -28,32 +28,32 @@ feature {NONE} -- Initialization
 			-- Initialize a loadable dialog box identified by
 			-- `an_id' using `a_parent' as parent.
 		require
-			a_parent_not_void: a_parent /= Void
-			a_parent_exits: a_parent.exists
+			parent_exists: a_parent /= Void implies a_parent.exists
 		do
 			parent := a_parent
 			resource_id := an_id
-			!! dialog_child.make
+			!! dialog_children.make
 		ensure
 			parent_set: parent = a_parent
 			resource_id_set: resource_id = an_id
-			dialog_child_not_void: dialog_child /= Void
+			dialog_children_not_void: dialog_children /= Void
 		end
 
 	make_by_name (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING) is
 			-- Initialize a loadable dialog box identified by
 			-- `a_name' using `a_parent' as parent.
 		require
+			parent_exists: a_parent /= Void implies a_parent.exists
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.empty
 		do
 			parent := a_parent
 			resource_name := clone (a_name)
-			!! dialog_child.make
+			!! dialog_children.make
 		ensure
 			parent_set: parent = a_parent
 			resource_name_set: resource_name.is_equal (a_name)
-			dialog_child_not_void: dialog_child /= Void
+			dialog_children_not_void: dialog_children /= Void
 		end
 
 feature -- Access
@@ -225,16 +225,16 @@ feature {NONE} -- Implementation
 			control: WEL_CONTROL
 		do
 			from
-				dialog_child.start
+				dialog_children.start
 			until
-				dialog_child.off
+				dialog_children.off
 			loop
-				control := dialog_child.item
+				control := dialog_children.item
 				control.set_item (cwin_get_dlg_item (item,
 					control.id))
 				register_window (control)
 				control.set_exists (True)
-				dialog_child.forth
+				dialog_children.forth
 			end
 			setup_dialog
 		end
@@ -258,8 +258,15 @@ feature {NONE} -- Implementation
 
 feature {WEL_CONTROL} -- Implementation
 
-	dialog_child: LINKED_LIST [WEL_CONTROL]
+	dialog_children: LINKED_LIST [WEL_CONTROL]
 			-- Temporary children list
+
+feature {WEL_CONTROL} -- Obsolete
+
+	dialog_child: LINKED_LIST [WEL_CONTROL] is obsolete "Use ``dialog_children''"
+		do
+			Result := dialog_children
+		end
 
 feature {NONE} -- Externals
 

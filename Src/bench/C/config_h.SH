@@ -36,19 +36,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 #ifndef _config_h_
 #define _config_h_
 
-/* Specific setup for VXWORKS port */
-#ifdef VXWORKS
-
-#include <types/vxCpu.h>
-#include <types/vxTypesOld.h>
-
-#ifdef CUSTOM
-#define NEED_HASH_H
-#define NEED_TIMER_H
-#endif
-
-#endif
-
 /* VMS:
  *	This symbol, if defined, indicates that the program is running under
  *	VMS.  It is currently only set in conjunction with the EUNICE symbol.

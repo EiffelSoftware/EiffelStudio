@@ -680,7 +680,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 						if a_key.out.count /= 1 and not a_key.is_numpad then
 							temp_key_string := ""
 						end
-						if a_key.code = a_key.Key_space then
+						if a_key.code = app_implementation.Key_constants.Key_space then
 							temp_key_string := " "
 						end
 					end
@@ -847,6 +847,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.75  2001/06/29 23:00:16  king
+--| Accounted for info hide in ev_key
+--|
 --| Revision 1.74  2001/06/29 22:22:54  king
 --| Removed redundant queue_resize
 --|

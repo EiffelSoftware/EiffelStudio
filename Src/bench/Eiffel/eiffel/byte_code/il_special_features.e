@@ -64,6 +64,8 @@ feature -- Access
 						Result := True
 						inspect
 							feat.feature_name_id
+						when Infix_and_name_id then
+							function_type := basic_type_table.item (Infix_and_name_id)
 						when Infix_or_name_id then
 							function_type := basic_type_table.item (Infix_or_name_id)
 						when To_integer_name_id then

@@ -84,12 +84,6 @@ feature -- Element change
 			text_removed: text = Void
 		end
 
-feature {EV_TEXTABLE_I} -- Implementation
-
-	implementation: EV_TEXTABLE_I
-            -- Responsible for interaction with the underlying native graphics
-            -- toolkit.
-
 feature -- Obsolete
 
 	set_center_alignment is
@@ -115,6 +109,12 @@ feature -- Obsolete
 		do
 			implementation.align_text_left
 		end
+
+feature {EV_TEXTABLE_I} -- Implementation
+
+	implementation: EV_TEXTABLE_I
+            -- Responsible for interaction with the underlying native graphics
+            -- toolkit.
 
 invariant
 	text_not_void_implies_text_not_empty:
@@ -143,6 +143,9 @@ end -- class EV_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/01 20:39:55  king
+--| Moved implementation featureto bottom of class for consistency
+--|
 --| Revision 1.15  2000/02/29 18:09:08  oconnor
 --| reformatted indexing cluase
 --|

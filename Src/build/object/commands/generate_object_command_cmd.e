@@ -19,10 +19,15 @@ feature
 			-- Generate a command.
 		local
 			mp: MOUSE_PTR
+			precondition_t_b: TOGGLE_B
 		do
 			if object_command_generator.routine_list.selected_count > 0 then
 				application_class := object_command_generator.edited_class
 				application_routine ?= object_command_generator.routine_list.selected_item
+				precondition_t_b ?= arg
+				if precondition_t_b /= Void then
+					check_precondition := precondition_t_b.state
+				end
 				!! mp
 				mp.set_watch_shape
 				generate_command
@@ -56,7 +61,7 @@ feature
 			end
 		end
 
-feature -- Command generation
+feature {NONE} -- Command generation
 
 	generate_command is
 			-- Generate the command
@@ -220,10 +225,45 @@ feature {NONE} -- Code generation
 		local
 			arg_list: LINKED_LIST [APPLICATION_ARGUMENT]
 			i: INTEGER
+			preconditions: LINKED_LIST [APPLICATION_PRECONDITION]
+			formal_arguments: ARRAYED_LIST [STRING]
 		do
 			arg_list := application_routine.argument_list
 			!! Result.make (0)
-			Result.append ("feature -- Basic operations%N%N%Texecute is%N%T%Trequire else%N%T%T%Ttarget_set: target_set%N%T%Tdo%N%T%T%Ttarget.")
+			Result.append ("feature -- Basic operations%N%N%Texecute is%N%T%Trequire else%N")
+			Result.append ("%T%T%Ttarget_set: target_set%N")
+			if check_precondition then
+				Result.append ("%T%Tlocal%N")
+				Result.append ("%T%T%Tprecondition: BOOLEAN%N")
+			end
+			Result.append ("%T%Tdo%N")
+			if check_precondition then
+				preconditions := application_routine.precondition_list
+				!! formal_arguments.make (arg_list.count)
+				from
+					arg_list.start
+					i := 1
+				until
+					arg_list.after
+				loop
+					formal_arguments.extend (arg_list.item.argument_name)
+					arg_list.forth
+					i := i + 1
+				end
+				Result.append ("%T%T%Tprecondition := True%N")
+				from
+					preconditions.start
+				until
+					preconditions.after
+				loop
+					Result.append ("%T%T%Tprecondition := precondition and then ")
+					Result.append (preconditions.item.generated_text_for_routine (formal_arguments))
+					Result.append ("%N")
+					preconditions.forth
+				end
+				Result.append ("%T%T%Tif precondition then%N%T")
+			end
+			Result.append ("%T%T%Ttarget.")
 			Result.append (application_routine.routine_name)
 			if not arg_list.empty then
 				Result.append (" (")
@@ -242,6 +282,9 @@ feature {NONE} -- Code generation
 				Result.remove (Result.count)
 				Result.remove (Result.count)
 				Result.append (")")
+			end
+			if check_precondition then
+				Result.append ("%T%T%Tend")
 			end
 			Result.append ("%N%T%Tend%N%N")
 		end
@@ -272,5 +315,8 @@ feature -- Attributes
 
 	generated_command: USER_CMD
 			-- Generated command
+
+	check_precondition: BOOLEAN
+			-- Do we have to generate precondition test?
 			
 end -- class GENERATE_OBJECT_COMMAND_CMD

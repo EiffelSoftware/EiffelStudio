@@ -6,18 +6,19 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TERMINAL_M 
+class 
+	TERMINAL_M 
 
 inherit 
 
-	FONTABLE_M
-		rename
-			set_font as unused_set_font,
-			font as unused_font
+	MEL_FONTABLE_RESOURCES
+		export
+			{NONE} all
 		end;
+
 	BULLETIN_M
-		undefine
-			update_other_bg_color, update_other_fg_color
+		redefine
+			set_background_color_from_imp
 		end
 
 feature -- Status report
@@ -40,12 +41,12 @@ feature -- Status setting
 		do
 			if label_font /= Void then
 				font_implementation ?= label_font.implementation;
-				font_implementation.remove_object (Current)
+				font_implementation.decrement_users
 			end;
 			label_font := a_font;
 			font_implementation ?= a_font.implementation;
-			font_implementation.put_object (Current);
-			update_label_font (font_implementation.resource (screen))
+			font_implementation.increment_users;
+			set_font_from_imp (font_implementation, Label_font_value)
 		end;
 
 	set_button_font (a_font: FONT) is
@@ -55,12 +56,12 @@ feature -- Status setting
 		do
 			if button_font /= Void then
 				font_implementation ?= button_font.implementation;
-				font_implementation.remove_object (Current)
+				font_implementation.decrement_users
 			end;
 			button_font := a_font;
 			font_implementation ?= a_font.implementation;
-			font_implementation.put_object (Current);
-			update_button_font (font_implementation.resource (screen))
+			font_implementation.increment_users;
+			set_font_from_imp (font_implementation, Button_font_value)
 		end;
 
 	set_text_font (a_font: FONT) is
@@ -70,14 +71,14 @@ feature -- Status setting
 		do
 			if text_font /= Void then
 				font_implementation ?= text_font.implementation;
-				font_implementation.remove_object (Current)
+				font_implementation.decrement_users
 			end;
 			text_font := a_font;
 			font_implementation ?= a_font.implementation;
-			font_implementation.put_object (Current);
-			update_text_font (font_implementation.resource (screen))
+			font_implementation.increment_users;
+			set_font_from_imp (font_implementation, Text_font_value)
 		end; 
-	
+
 feature {TERMINAL_OUI}
 
 	build is
@@ -85,47 +86,178 @@ feature {TERMINAL_OUI}
 		do
 		end; 
 
+feature {FONT_X} -- Implementation
+
+	update_label_font is
+			-- Update the label font.
+		local
+			font_implementation: FONT_X
+		do
+			font_implementation ?= label_font.implementation;
+			set_font_from_imp (font_implementation, Label_font_value)
+		end;
+
+	update_text_font is
+			-- Update the text font.
+		local
+			font_implementation: FONT_X
+		do
+			font_implementation ?= text_font.implementation;
+			set_font_from_imp (font_implementation, Text_font_value)
+		end;
+
+	update_button_font is
+			-- Update the button font.
+		local
+			font_implementation: FONT_X
+		do
+			font_implementation ?= button_font.implementation;
+			set_font_from_imp (font_implementation, Button_font_value)
+		end;
+
 feature {NONE} -- Implementation
 
-	update_text_font (f_ptr: POINTER) is
-		require
-			valid_f_ptr: f_ptr /= default_pointer
-		deferred
-		end;
+	Label_font_value: INTEGER is 1;
+	Text_font_value: INTEGER is 2;
+	Button_font_value: INTEGER is 3;
 
-	update_label_font (f_ptr: POINTER) is
-		require
-			valid_f_ptr: f_ptr /= default_pointer
-		deferred
-		end;
-
-	update_button_font (f_ptr: POINTER) is
-		require
-			valid_f_ptr: f_ptr /= default_pointer
-		deferred
-		end;
-
-	set_primitive_font (w: POINTER; f_ptr: POINTER) is
-			-- Set primitive widget `w' to f_ptr (C type
-			-- is FontStruct).
-		require
-			valid_pointers: w /= default_pointer and then	
-					f_ptr /= default_pointer
+	set_background_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
+		local
+			list: like children;
+			color_id: POINTER
 		do
-			--set_motif_font (w, f_ptr, 
-					--resource_name.to_c);
+			mel_set_background_color (color_imp);
+			color_id := color_imp.identifier;
+			list := children;
+			from
+				list.start
+			until
+				list.after
+			loop
+				xm_change_color (list.item, color_id);
+				list.forth
+			end
 		end;
 
-feature {NONE} -- External features
-
-	xm_set_children_fg_color (pixel, widget: POINTER) is
-		external
-			"C"
+	set_font_from_imp (font_implementation: FONT_X; value: INTEGER) is
+			-- Set text font from `font_implementation'.
+		require
+			valid_font_imp: font_implementation /= Void;	
+			valid_value: value = Label_font_value or else
+					value = Button_font_value or else
+					value = Text_font_value
+		local
+			a_font_list: MEL_FONT_LIST;
+			an_entry: MEL_FONT_LIST_ENTRY;
+			resource: POINTER;
+			list: LINKED_LIST [POINTER]
+		do
+			font_implementation.allocate_font;
+			if font_implementation.is_valid then
+				!! an_entry.make_default_from_font_struct (font_implementation);
+				!! a_font_list.append_entry (an_entry);
+				if a_font_list.is_valid then
+					if value = Button_font_value then
+						list := button_widget_list
+					elseif value = Label_font_value then
+						list := label_widget_list
+					else
+						list := text_widget_list
+						check
+							consistency: value = Text_font_value
+						end;
+					end
+					from
+						resource := XmNfontList;
+						list.start
+					until
+						list.after
+					loop
+						set_xm_font_list (list.item, resource, a_font_list);
+						list.forth
+					end
+					a_font_list.free
+				else
+					io.error.putstring ("Warning can not allocate font%N");
+				end;
+				an_entry.free
+			else
+				io.error.putstring ("Warning can not allocate font%N");
+			end;
 		end;
 
-	xm_set_children_bg_color (pixel, widget: POINTER) is
-		external
-			"C"
+	button_widget_list: LINKED_LIST [POINTER] is
+			-- List of C button widget
+		local
+			w: POINTER;
+			list: FIXED_LIST [POINTER]
+		do
+			!! Result.make;
+			list := children;
+			from
+				list.start
+			until
+				list.after
+			loop
+				w := list.item;
+				if xm_is_push_button_gadget (w) or else
+					xm_is_cascade_button_gadget (w)
+				then	
+					Result.put_front (w)
+				end;
+				list.forth
+			end
+		ensure
+			non_void_result: Result /= Void
+		end;
+
+	text_widget_list: LINKED_LIST [POINTER] is
+			-- List of C text widget
+		local
+			w: POINTER;
+			list: FIXED_LIST [POINTER]
+		do
+			!! Result.make;
+			list := children;
+			from
+				list.start
+			until
+				list.after
+			loop
+				w := list.item;
+				if xm_is_text_field (w) or else
+					xm_is_list (w)
+				then	
+					Result.put_front (w)
+				end;
+				list.forth
+			end
+		ensure
+			non_void_result: Result /= Void
+		end;
+
+	label_widget_list: LINKED_LIST [POINTER] is
+			-- List of C label widget
+		local
+			w: POINTER;
+			list: FIXED_LIST [POINTER]
+		do
+			!! Result.make;
+			list := children;
+			from
+				list.start
+			until
+				list.after
+			loop
+				w := list.item;
+				if xm_is_label_gadget (w) then
+					Result.put_front (w)
+				end;
+				list.forth
+			end
+		ensure
+			non_void_result: Result /= Void
 		end;
 
 end -- class TERMINAL_M

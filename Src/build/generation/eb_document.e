@@ -30,6 +30,18 @@ feature
 	error: BOOLEAN;
 			-- Was there an error when updating the document?
 
+	document_file_name: FILE_NAME is
+		do
+			!! Result.make_from_string (directory_name);
+			Result.set_file_name (document_name);
+			Result.add_extension ("e");
+		end;
+
+	is_file_name_valid: BOOLEAN is
+		do
+			Result := document_file_name.is_valid
+		end;
+
 feature 
 
 	update (new_templ: STRING) is
@@ -37,7 +49,8 @@ feature
 			template_file_name: FILE_NAME;
 			class_file_name: FILE_NAME;	
 			new_template_file_name: FILE_NAME;
-			file, user_file, new_tmp_file, old_tmp_file: PLAIN_TEXT_FILE;
+			file, new_tmp_file: RAW_FILE;
+			user_file, old_tmp_file: RAW_FILE
 			merge_result: STRING
 			different: BOOLEAN;
 			merger: MERGER
@@ -46,9 +59,7 @@ feature
 			!! template_file_name.make_from_string (Environment.templates_directory);
 			template_file_name.set_file_name (document_name);
 
-			!! class_file_name.make_from_string (directory_name);
-			class_file_name.set_file_name (document_name);
-			class_file_name.add_extension ("e");
+			class_file_name := document_file_name;
 
 			!! new_template_file_name.make_from_string (template_file_name);
 			new_template_file_name.add_extension ("n");
@@ -65,9 +76,6 @@ feature
 
 			!! user_file.make (class_file_name)
 			if user_file.exists then
-				user_file.open_read;
-				user_file.read_stream (user_file.count);
-				user_file.close;
 				!! merger;
 				debug ("MERGER")
 					io.error.putstring ("start parsing file: ");
@@ -158,5 +166,10 @@ feature
 						  file.name)
 			end;
 		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := main_panel.base
+		end
 
 end	

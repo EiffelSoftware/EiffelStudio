@@ -37,6 +37,17 @@ feature -- Access
 			"HWND_NOTOPMOST"
 		end
 
+feature -- Status report
+
+	valid_hwnd_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid hwnd constant?
+		do
+			Result := c = Hwnd_top or else
+				c = Hwnd_bottom or else
+				c = Hwnd_topmost or else
+				c = Hwnd_notopmost
+		end
+
 end -- class WEL_HWND_CONSTANTS
 
 --|-------------------------------------------------------------------------

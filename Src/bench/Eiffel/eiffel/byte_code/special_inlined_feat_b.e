@@ -236,8 +236,8 @@ feature {NONE} -- Implementation
 					parameters.i_th (1).print_register
 					buf.put_string (", ")
 					l_exp_class_type.skeleton.generate_size (buf)
-					buffer.put_character (')')
-					buffer.put_character (';')
+					buf.put_character (')')
+					buf.put_character (';')
 					buf.put_new_line
 				end
 			else

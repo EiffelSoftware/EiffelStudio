@@ -123,4 +123,11 @@ feature {NONE} -- Nasty hack
                         Result := p
                 end
 
+		NULL: POINTER is
+			external
+				"C [macro <stdio.h>]"
+			alias
+				"NULL"
+			end
+		
 end

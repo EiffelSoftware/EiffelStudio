@@ -1,4 +1,7 @@
--- Unselected feature
+indexing
+	description: "Representation of an inherited unique constant which is unselected"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class D_UNIQUE_I
 
@@ -7,6 +10,9 @@ inherit
 		redefine
 			unselected, access_in, replicated, is_unselected, transfer_to
 		end
+
+create
+	make
 
 feature
 
@@ -24,7 +30,7 @@ feature
 		local
 			rep: RD1_UNIQUE_I;
 		do
-			!!rep;
+			create rep.make
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
 			Result := rep;
@@ -35,7 +41,7 @@ feature
 		local
 			rep: RD1_UNIQUE_I
 		do
-			!!rep;
+			create rep.make
 			transfer_to (rep);
 			rep.set_access_in (i);
 			Result := rep

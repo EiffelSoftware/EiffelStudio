@@ -1,4 +1,7 @@
--- Internface for unique feature
+indexing
+	description: "Representation of a unique constant"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class UNIQUE_I 
 
@@ -8,6 +11,9 @@ inherit
 			is_unique, check_types, equiv, value, 
 			replicated, unselected, new_api_feature
 		end
+
+create
+	make
 	
 feature 
 
@@ -72,7 +78,7 @@ feature
 		local
 			rep: R_UNIQUE_I
 		do
-			!!rep
+			create rep.make
 			transfer_to (rep)
 			rep.set_code_id (new_code_id)
 			Result := rep
@@ -83,7 +89,7 @@ feature
 		local
 			unselect: D_UNIQUE_I
 		do
-			!!unselect
+			create unselect.make
 			transfer_to (unselect)
 			unselect.set_access_in (in)
 			Result := unselect

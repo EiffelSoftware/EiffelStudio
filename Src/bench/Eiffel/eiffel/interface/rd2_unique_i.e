@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of an replicated unselected unique constant"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RD2_UNIQUE_I
 
@@ -7,6 +10,9 @@ inherit
 		redefine
 			access_in, transfer_to, is_unselected
 		end
+
+create
+	make
 
 feature
 

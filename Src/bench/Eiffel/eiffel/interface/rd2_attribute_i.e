@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of an replicated unselected attribute"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RD2_ATTRIBUTE_I
 
@@ -8,6 +11,9 @@ inherit
 			access_in, transfer_to, is_unselected
 		end
 
+create
+	make
+	
 feature
 
 	access_in: INTEGER

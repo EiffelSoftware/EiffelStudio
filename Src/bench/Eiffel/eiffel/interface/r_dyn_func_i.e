@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of a replicated function"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class R_DYN_FUNC_I
 

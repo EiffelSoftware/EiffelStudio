@@ -77,11 +77,6 @@ feature -- Access
 	feature_name_id: INTEGER
 			-- Id of `feature_name' in `Names_heap' table.
 
-	original_name_id: INTEGER
-			-- Original Id name where feature was first defined. Even if 
-			-- descendants of `written_in' rename current feature, `original_name_id'
-			-- is preserved.
-			
 	feature_id: INTEGER
 			-- Feature id: first key in the feature call hash table
 			-- of a class: tow features of different names have two
@@ -90,14 +85,6 @@ feature -- Access
 	written_in: INTEGER
 			-- Class id where feature is written
 
-	implemented_in: INTEGER
-			-- Class id where feature is defined to be implemented in an interface.
-			-- Useful only in IL generation.
-
-	belongs_to_interface: BOOLEAN
-			-- Does current feature needs to be declared in
-			-- corresponding interface of class being analyzed.
-	
 	body_index: INTEGER
 			-- Index of body id
 
@@ -110,20 +97,57 @@ feature -- Access
 	export_status: EXPORT_I
 			-- Export status of the feature
 
-	is_origin: BOOLEAN
-			-- Is the feature an origin ?
+	origin_feature_id: INTEGER
+			-- Feature ID of Current in associated CLASS_INTERFACE
+			-- that defines it.
+			-- Used for MSIL code generation only.
 
-	is_frozen: BOOLEAN
-			-- Is the feature frozen ?
+	origin_class_id: INTEGER
+			-- Class ID of class defining Current in associated CLASS_INTERFACE
+			-- that defines it.
+			-- Used for MSIL code generation only.
 
-	is_selected: BOOLEAN
-			-- Is the feature selected ?
+	written_feature_id: INTEGER
+			-- Feature ID of Current in associated CLASS_C of ID `written_in'
+			-- that gives a body.
+			-- Used for MSIL code generation only.
 
-	is_infix: BOOLEAN
+	frozen is_origin: BOOLEAN is
+			-- Is feature an origin?
+		do
+			Result := feature_flags & is_origin_mask = is_origin_mask
+		end
+
+	frozen is_frozen: BOOLEAN is
+			-- Is the feature frozen?
+		do
+			Result := feature_flags & is_frozen_mask = is_frozen_mask
+		end
+
+	frozen is_empty: BOOLEAN is
+			-- Is feature with an empty body?
+		do
+			Result := feature_flags & is_empty_mask = is_empty_mask
+		end
+
+	frozen is_infix: BOOLEAN is
 			-- Is the feature an infixed one ?
+		do
+			Result := feature_flags & is_infix_mask = is_infix_mask
+		end
 
-	is_prefix: BOOLEAN
+	frozen is_prefix: BOOLEAN is
 			-- Is the feature a prefixed one ?
+		do
+			Result := feature_flags & is_prefix_mask = is_prefix_mask
+		end
+
+	frozen is_selected: BOOLEAN is
+			-- Is the feature selected?
+		do
+			-- FIXME: Manu 11/21/2001.
+			-- Not used at the moment.
+		end
 
 	external_name: STRING is
 			-- External name
@@ -289,16 +313,6 @@ feature -- Setting
 			feature_name_id_set: feature_name_id = id
 		end
 
-	set_original_name_id (id: INTEGER) is
-			-- Assign `id' to `original_name_id'.
-		require
-			valid_id: Names_heap.valid_index (id)
-		do
-			original_name_id := id
-		ensure
-			original_name_id_set: original_name_id = id
-		end
-
 	set_written_in (a_class_id: like written_in) is
 			-- Assign `a_class_id' to `written_in'.
 		require
@@ -309,59 +323,107 @@ feature -- Setting
 			written_in_set: written_in = a_class_id
 		end
 
-	set_implemented_in (a_class_id: like implemented_in) is
-			-- Assign `a_class_id' to `implemented_in'.
+	set_written_feature_id (a_feature_id: like written_feature_id) is
+			-- Assign `a_feature_id' to `written_feature_id'.
 		require
-			a_class_id_not_void: a_class_id >= 0
+			valid_feature_id: a_feature_id >= 0
 		do
-			implemented_in := a_class_id
+			written_feature_id := a_feature_id
 		ensure
-			implemented_in_set: implemented_in = a_class_id
+			written_feature_id_set: written_feature_id = a_feature_id
 		end
 
-	set_belongs_to_interface (v: like belongs_to_interface) is
-			-- Set `v' to `belongs_to_interface'
+	set_origin_feature_id (a_feature_id: like origin_feature_id) is
+			-- Assign `a_feature_id' to `origin_feature_id'.
+		require
+			valid_feature_id: a_feature_id >= 0
 		do
-			belongs_to_interface := v
+			origin_feature_id := a_feature_id
 		ensure
-			belongs_to_interface: belongs_to_interface = v
+			origin_feature_id_set: origin_feature_id = a_feature_id
 		end
 
-	set_is_origin (b: BOOLEAN) is
-			-- Assign `b' to `is_origin'.
+	set_origin_class_id (a_class_id: like origin_class_id) is
+			-- Assign `a_class_id' to `origin_class_id'.
+		require
+			valid_feature_id: a_class_id >= 0
 		do
-			is_origin := b
+			origin_class_id := a_class_id
+		ensure
+			origin_class_id_set: origin_class_id = a_class_id
 		end
 
 	set_export_status (e: EXPORT_I) is
 			-- Assign `e' to `export_status'.
 		do
 			export_status := e
+		ensure
+			export_status_set: export_status = e
 		end
 
-	set_is_frozen (b: BOOLEAN) is
+	frozen set_is_origin (b: BOOLEAN) is
+			-- Assign `b' to `is_origin'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_origin_mask)
+		ensure
+			is_origin_set: is_origin = b
+		end
+
+	frozen set_is_empty (b : BOOLEAN) is
+			-- Set `is_empty' to `b'
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_empty_mask)
+		ensure
+			is_empty_set: is_empty = b
+		end
+
+	frozen set_is_frozen (b: BOOLEAN) is
 			-- Assign `b' to `is_frozen'.
 			--|Note: nothing to do with melted/frozen features
 		do
-			is_frozen := b
+			feature_flags := feature_flags.set_bit_with_mask (b, is_frozen_mask)
+		ensure
+			is_frozen_set: is_frozen = b
 		end
 
-	set_is_infix (b: BOOLEAN) is
+	frozen set_is_infix (b: BOOLEAN) is
 			-- Assign `b' to `is_infix'. 
 		do
-			is_infix := b
+			feature_flags := feature_flags.set_bit_with_mask (b, is_infix_mask)
+		ensure
+			is_infix_set: is_infix = b
 		end
 
-	set_is_prefix (b: BOOLEAN) is
+	frozen set_is_prefix (b: BOOLEAN) is
 			-- Assign `b' to `is_prefix'.
 		do
-			is_prefix := b
+			feature_flags := feature_flags.set_bit_with_mask (b, is_prefix_mask)
+		ensure
+			is_prefix_set: is_prefix = b
+		end
+
+	frozen set_is_require_else (b: BOOLEAN) is
+			-- Assign `b' to `is_require_else'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_require_else_mask)
+		ensure
+			is_require_else_set: is_require_else = b
+		end
+
+	frozen set_is_ensure_then (b: BOOLEAN) is
+			-- Assign `b' to `is_ensure_then'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, is_ensure_then_mask)
+		ensure
+			is_ensure_then_set: is_ensure_then = b
 		end
 
 	set_is_selected (b: BOOLEAN) is
 			-- Assign `b' to `is_selected'.
 		do
-			is_selected := b
+			-- FIXME: Manu 11/21/2001
+			-- Not used at the moment
+			-- is_selected := b
 		end
 
 	set_rout_id_set (set: like rout_id_set) is
@@ -457,13 +519,13 @@ end
 			if Result and then rout_id_set.first = System.default_rescue_id then
 				-- This is the default rescue feature.
 				-- Test whether emptiness of body has changed.
-				Result := (empty_body = other.empty_body)
+				Result := (is_empty = other.is_empty)
 			end
 
 			if Result and then rout_id_set.first = System.default_create_id then
 				-- This is the default create feature.
 				-- Test whether emptiness of body has changed.
-				Result := (empty_body = other.empty_body)
+				Result := (is_empty = other.is_empty)
 			end
 
 debug ("ACTIVITY")
@@ -539,18 +601,6 @@ end
 
 				-- Still a once
 			Result := Result and then is_once = other.is_once
-		end
-
-feature -- test for empty body
-
-	empty_body : BOOLEAN        -- Does feature have an empty body?
-
-	set_empty_body (b : BOOLEAN) is
-			-- Set `empty_body' to `b'
-		do
-			empty_body := b
-		ensure
-			set : empty_body = b
 		end
 
 feature -- creation of default rescue clause
@@ -690,12 +740,6 @@ feature -- Conveniences
 			end
 		end
 
-	is_require_else: BOOLEAN is
-			-- Is the precondition block of the feature a redefined one ?
-		do
-			Result := True
-		end
-
 	has_static_access: BOOLEAN is
 			-- Can Current be access in a static manner?
 		local
@@ -727,16 +771,16 @@ feature -- Conveniences
 			end			
 		end
 		
-	has_precondition: BOOLEAN is
+	frozen has_precondition: BOOLEAN is
 			-- Is the feature declaring some preconditions ?
 		do
-			-- Do nothing
+			Result := feature_flags & has_precondition_mask = has_precondition_mask
 		end
 
-	has_postcondition: BOOLEAN is
+	frozen has_postcondition: BOOLEAN is
 			-- Is the feature declaring some postconditions ?
 		do
-			-- Do nothing
+			Result := feature_flags & has_postcondition_mask = has_postcondition_mask
 		end
 
 	has_assertion: BOOLEAN is
@@ -745,10 +789,16 @@ feature -- Conveniences
 			Result := has_postcondition or else has_precondition
 		end
 
-	is_ensure_then: BOOLEAN is
+	frozen is_require_else: BOOLEAN is
+			-- Is the precondition block of the feature a redefined one ?
+		do
+			Result := feature_flags & is_require_else_mask = is_require_else_mask
+		end
+
+	frozen is_ensure_then: BOOLEAN is
 			-- Is the postcondition block of the feature a redefined one ?
 		do
-			Result := True
+			Result := feature_flags & is_ensure_then_mask = is_ensure_then_mask
 		end
 
 	can_be_encapsulated: BOOLEAN is
@@ -1681,10 +1731,9 @@ feature -- Undefinition
 			end
 			Result.set_type (type)
 			Result.set_arguments (arguments)
-			Result.set_original_name_id (original_name_id)
 			Result.set_written_in (written_in)
-			Result.set_implemented_in (implemented_in)
-			Result.set_belongs_to_interface (True)
+			Result.set_origin_feature_id (origin_feature_id)
+			Result.set_origin_class_id (origin_class_id)
 			Result.set_rout_id_set (rout_id_set)
 			Result.set_assert_id_set (assert_id_set)
 			Result.set_is_selected (is_selected)
@@ -1783,10 +1832,10 @@ feature -- Replication
 			other.set_pattern_id (pattern_id)
 			other.set_rout_id_set (rout_id_set)
 			other.set_written_in (written_in)
-			other.set_original_name_id (original_name_id)
-			other.set_implemented_in (implemented_in)
-			other.set_belongs_to_interface (belongs_to_interface)
+			other.set_written_feature_id (written_feature_id)
 			other.set_is_origin (is_origin)
+			other.set_origin_feature_id (origin_feature_id)
+			other.set_origin_class_id (origin_class_id)
 		end
 
 feature -- Genericity
@@ -1857,8 +1906,21 @@ feature -- Dead code removal
 
 feature -- Byte code access
 
-	access (access_type: TYPE_I): ACCESS_B is
+	frozen access (access_type: TYPE_I): ACCESS_B is
 			-- Byte code access for current feature
+		require
+			access_type_not_void: access_type /= Void
+		do
+			Result := access_for_feature (access_type, Void)
+		ensure
+			Result_exists: Result /= Void
+		end
+
+	access_for_feature (access_type: TYPE_I; static_type: CL_TYPE_I): ACCESS_B is
+			-- Byte code access for current feature. Dynamic binding if
+			-- `static_type' is Void, otherwise static binding on `static_type'.
+		require
+			access_type_not_void: access_type /= Void
 		local
 			feature_b: FEATURE_B
 			feature_bs: FEATURE_BS
@@ -1866,12 +1928,18 @@ feature -- Byte code access
 		do
 			last_constrained_type := context.last_constrained_type
 			if (last_constrained_type /= Void and then last_constrained_type.is_separate) then
-				!!feature_bs
+				create feature_bs
+				if static_type /= Void then
+					feature_bs.set_precursor_type (static_type)
+				end
 				feature_bs.init (Current)
 				feature_bs.set_type (access_type)
 				Result := feature_bs
 			else
-				!!feature_b
+				create feature_b
+				if static_type /= Void then
+					feature_b.set_precursor_type (static_type)
+				end
 				feature_b.init (Current)
 				feature_b.set_type (access_type)
 				Result := feature_b
@@ -2065,6 +2133,21 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_result: Result /= Void
 		end
+
+	feature_flags: INTEGER_16
+			-- Property of Current feature, i.e. frozen,
+			-- infix, origin, prefix, selected.
+
+	is_frozen_mask: INTEGER_16 is 0x0001
+	is_origin_mask: INTEGER_16 is 0x0002
+	is_empty_mask: INTEGER_16 is 0x0004
+	is_infix_mask: INTEGER_16 is 0x0008
+	is_prefix_mask: INTEGER_16 is 0x0010
+	is_require_else_mask: INTEGER_16 is 0x0020
+	is_ensure_then_mask: INTEGER_16 is 0x0040
+	has_precondition_mask: INTEGER_16 is 0x0080
+	has_postcondition_mask: INTEGER_16 is 0x0100
+			-- Mask used for each feature property.
 
 feature {INHERIT_TABLE} -- Access
 

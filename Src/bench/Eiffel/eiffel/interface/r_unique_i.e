@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of a replicated unique constant"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class R_UNIQUE_I
 
@@ -8,6 +11,9 @@ inherit
 			replicated, code_id, unselected, transfer_to,
 			is_replicated, set_code_id
 		end
+
+create
+	make
 
 feature
 
@@ -25,7 +31,7 @@ feature
 		local
 			unselect: RD2_UNIQUE_I
 		do
-			!!unselect;
+			create unselect.make
 			transfer_to (unselect);
 			unselect.set_access_in (i);
 			Result := unselect
@@ -36,7 +42,7 @@ feature
 		local
 			rep: RD2_UNIQUE_I
 		do
-			!!rep;
+			create rep.make
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
 			Result := rep;

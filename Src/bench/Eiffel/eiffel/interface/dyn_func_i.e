@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of a function"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class DYN_FUNC_I 
 
 inherit

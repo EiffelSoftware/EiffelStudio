@@ -1,4 +1,7 @@
--- Unselected feature
+indexing
+	description: "Representation of an inherited deferred procedure which is unselected"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class D_DEF_PROC_I
 

@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of a once function"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class ONCE_FUNC_I 
 
 inherit

@@ -13,6 +13,15 @@ inherit
 			to_melt_in, to_generate_in, transfer_to
 		end
 
+feature {NONE} -- Initialization
+
+	make is
+			-- Initialize an encapsulated feature.
+		do
+			set_is_require_else (True)
+			set_is_ensure_then (True)
+		end
+
 feature -- Access
 
 	can_be_encapsulated: BOOLEAN is True

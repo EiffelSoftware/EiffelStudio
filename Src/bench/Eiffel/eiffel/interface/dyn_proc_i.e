@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of a procedure"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class DYN_PROC_I 
 
 inherit

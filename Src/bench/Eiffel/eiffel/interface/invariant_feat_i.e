@@ -1,4 +1,8 @@
--- Invariant procedure
+indexing
+	description: "Representation of the invariant of a class which is internally stored%
+		%as a procedure"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INVARIANT_FEAT_I 
 

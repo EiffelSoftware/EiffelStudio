@@ -1,4 +1,7 @@
--- Internal representation of an external
+indexing
+	description: "Representation of an external procedure"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EXTERNAL_I 
 
@@ -9,7 +12,7 @@ inherit
 		redefine
 			transfer_to, equiv, update_api,
 			melt, generate,
-			access, is_external, new_rout_entry, valid_body_id,
+			access_for_feature, is_external, new_rout_entry, valid_body_id,
 			set_renamed_name, set_renamed_name_id, external_name_id, undefinable
 		end;
 	
@@ -171,20 +174,23 @@ feature
 			end
 		end
 
-	access (access_type: TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: CL_TYPE_I): ACCESS_B is
 			-- Byte code access for current feature
 		local
 			external_b: EXTERNAL_B;
 		do
-			!!external_b;
-			external_b.init (Current);
-			external_b.set_type (access_type);
-			external_b.set_external_name_id (external_name_id);
-			external_b.set_encapsulated (encapsulated);
-			external_b.set_extension (extension);
+			create external_b
+			external_b.init (Current)
+			if static_type /= Void then
+				external_b.set_static_class_type (static_type)
+			end
+			external_b.set_type (access_type)
+			external_b.set_external_name_id (external_name_id)
+			external_b.set_encapsulated (encapsulated)
+			external_b.set_extension (extension)
 			
-			Result := external_b;
-		end;
+			Result := external_b
+		end
 
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
@@ -284,11 +290,11 @@ feature
 		end;		
 		
 	valid_body_id: BOOLEAN is
-				-- if the external is encapsulated then an EXECUTION_UNIT
-				-- has been defined instead of an EXT_EXECUTION_UNIT
-				-- and real_body_id can be called
+			-- if the external is encapsulated then an EXECUTION_UNIT
+			-- has been defined instead of an EXT_EXECUTION_UNIT
+			-- and real_body_id can be called
 		do
-			Result := encapsulated;
+			Result := System.il_generation or else encapsulated;
 		end;
 
 	melt (exec: EXECUTION_UNIT) is

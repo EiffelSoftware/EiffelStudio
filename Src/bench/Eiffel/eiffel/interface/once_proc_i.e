@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of a once procedure"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class ONCE_PROC_I 
 
 inherit

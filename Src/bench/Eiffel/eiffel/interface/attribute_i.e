@@ -1,10 +1,15 @@
+indexing
+	description: "Representation of an attribute of a class"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class ATTRIBUTE_I 
 
 inherit
 	ENCAPSULATED_I
 		redefine
 			transfer_to, process_pattern, unselected,
-			new_rout_entry, melt, access, generate, new_rout_id,
+			new_rout_entry, melt, access_for_feature, generate, new_rout_id,
 			in_pass3, is_none_attribute, set_type, type, is_attribute,
 			has_entry, undefinable, check_expanded
 		end
@@ -15,6 +20,9 @@ inherit
 
 	BYTE_CONST
 
+create
+	make
+	
 feature 
 
 	type: TYPE
@@ -122,7 +130,7 @@ feature -- Element Change
 			end
 		end
 
-	access (access_type: TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: CL_TYPE_I): ACCESS_B is
 			-- Byte code access for current feature
 		local
 			attribute_b: ATTRIBUTE_B
@@ -249,7 +257,7 @@ feature -- Element Change
 		local
 			rep: R_ATTRIBUTE_I
 		do
-			!!rep
+			create rep.make
 			transfer_to (rep)
 			rep.set_code_id (new_code_id)
 			Result := rep
@@ -260,7 +268,7 @@ feature -- Element Change
 		local
 			s: D_ATTRIBUTE_I
 		do
-			!!s
+			create s.make
 			transfer_to (s)
 			s.set_access_in (in)
 			Result := s

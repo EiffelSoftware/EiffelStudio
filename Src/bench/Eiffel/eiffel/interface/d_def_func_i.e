@@ -1,4 +1,7 @@
--- Unselected feature
+indexing
+	description: "Representation of an inherited deferred function which is unselected"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class D_DEF_FUNC_I
 

@@ -1,11 +1,15 @@
+indexing
+	description: "Abstract representation of a routine"
+	date: "$Date$"
+	revision: "$Revision$"
+
 deferred class PROCEDURE_I 
 
 inherit
 	FEATURE_I
 		redefine
 			transfer_to, duplicate,
-			has_postcondition, has_precondition, is_ensure_then,
-			is_require_else, is_procedure, arguments,
+			is_procedure, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
 			check_local_names, duplicate_arguments
 		end
@@ -14,20 +18,6 @@ feature
 
 	arguments: FEAT_ARG;
 			-- Arguments type
-
-	is_require_else: BOOLEAN;
-			-- Is the preconditon block of the procedure preceeded by
-			-- `require else' ?
-
-	is_ensure_then: BOOLEAN;
-			-- Is the postcondition block of the feature preceeded by
-			-- `ensure then' ?
-
-	has_precondition: BOOLEAN;
-			-- Is the procedure declaring some precondition ?
-	
-	has_postcondition: BOOLEAN;
-			-- Is the procedure declaring some postcondition ?
 
 	obsolete_message: STRING;
 			-- Obsolete message
@@ -48,29 +38,21 @@ feature
 			arguments := args;
 		end;
 
-	set_is_require_else (b: BOOLEAN) is
-			-- Assign `b' to `is_require_else'.
-		do
-			is_require_else := b;
-		end;
-
-	set_is_ensure_then (b: BOOLEAN) is
-			-- Assign `b' to `is_ensure_then'.
-		do
-			is_ensure_then := b;
-		end;
-
-	set_has_precondition (b: BOOLEAN) is
+	frozen set_has_precondition (b: BOOLEAN) is
 			-- Assign `b' to `has_precondition'.
 		do
-			has_precondition := b;
-		end;
+			feature_flags := feature_flags.set_bit_with_mask (b, has_precondition_mask)
+		ensure
+			has_precondition_set: has_precondition = b
+		end
 
-	set_has_postcondition (b: BOOLEAN) is
+	frozen set_has_postcondition (b: BOOLEAN) is
 			-- Assign `b' to `has_postcondition'.
 		do
-			has_postcondition := b;
-		end;
+			feature_flags := feature_flags.set_bit_with_mask (b, has_postcondition_mask)
+		ensure
+			has_postcondition_set: has_postcondition = b
+		end
 
 	set_obsolete_message (s: STRING) is
 			-- Assign `s' to `obsolete_message'
@@ -89,13 +71,13 @@ feature
 	init_assertion_flags (content: ROUTINE_AS) is
 			-- Initialize assertion flags with `content'.
 		require
-			good_argument: content /= Void;
+			good_argument: content /= Void
 		do
-			is_require_else := content.is_require_else;
-			is_ensure_then := content.is_ensure_then;
-			has_precondition := content.has_precondition;
-			has_postcondition := content.has_postcondition;
-		end;
+			set_is_require_else (content.is_require_else)
+			set_is_ensure_then (content.is_ensure_then)
+			set_has_precondition (content.has_precondition)
+			set_has_postcondition (content.has_postcondition)
+		end
 
 	duplicate: like Current is
 			-- Duplicate feature

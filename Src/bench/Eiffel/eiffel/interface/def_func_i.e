@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of a deferred function"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class DEF_FUNC_I 
 
 inherit

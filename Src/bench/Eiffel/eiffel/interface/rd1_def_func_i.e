@@ -1,4 +1,7 @@
--- Replicated unselected feature
+indexing
+	description: "Representation of an unselected replicated deferred function"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RD1_DEF_FUNC_I
 

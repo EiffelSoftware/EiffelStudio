@@ -1,4 +1,7 @@
--- Replicated unselected feature
+indexing
+	description: "Representation of an unselected replicated attribute"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RD1_ATTRIBUTE_I
 
@@ -7,6 +10,9 @@ inherit
 		redefine
 			code_id, transfer_to, is_replicated, set_code_id
 		end
+
+create
+	make
 
 feature
 

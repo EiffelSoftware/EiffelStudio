@@ -1,4 +1,7 @@
--- Unselected feature
+indexing
+	description: "Representation of an inherited once procedure which is unselected"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class D_ONCE_PROC_I
 

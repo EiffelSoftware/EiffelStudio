@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of a replicated deferred procedure"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class R_DEF_PROC_I
 

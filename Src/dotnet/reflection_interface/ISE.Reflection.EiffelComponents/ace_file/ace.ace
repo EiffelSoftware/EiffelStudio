@@ -7,7 +7,7 @@ root
 default
 	assertion (all)
 	line_generation (yes)
-	il_generation ("dll")
+	msil_generation ("dll")
 
 cluster	
 	root_cluster: "$EIFFEL_SRC\dotnet\reflection_interface\ISE.Reflection.EiffelComponents"

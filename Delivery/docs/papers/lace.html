@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <td colspan="2" valign="top" width="100%">
-<p align="right"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<p align="right"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
     </td>
   </tr>
 </table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="5" cellspacing="0" border="0">
@@ -82,108 +82,89 @@ end
 </table>
 </center>
 
-<h2>Lace options</h2>
+<h2>Lace default options</h2>
 
 <p>We will describe each option as they are presented in the Ace file above. The
 default option is shown in bold.</p>
 
     <ul>
-  <p>&nbsp;
       <li><font color="#FF0000">address_expression (yes | <b>no</b>)</font>: enables you to pass
     `<b>$(s.to_c)</b>' to a
     feature instead of declaring `a' of type <b>ANY</b>, and then assigning
     `<b>s.to_c</b>'
     to `a' and passing `<b>$a</b>'.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">array_optimization (yes | <b>no</b>)</font>: enables array optimization which
     increases performances of array computation in loops. It is enabled only if
     arrays are used as local or argument of an Eiffel feature.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">assertion (no | <b>require </b>| ensure | invariant | loop | check |
     all)</font>:
     sets the assertion level of an Eiffel system. Each level includes the
     previous level, thus specifying `loop' will also check for preconditions,
     postconditions, class invariants, loop variants and loop invariants.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">check_vape (<b>yes</b> | no)</font>: enables you to
     disable type checking for <b> VAPE</b> errors in preconditions (ETL 2nd edition page
     122).</li>
-  <p>&nbsp;
       <li><font color="#FF0000">console_application (yes | <b>no</b>)</font>; has no
     effects on Unix and it has been made for Windows users. It enables Windows
     users to choose between creating a console application or a GUI application.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">collect (<b>yes</b> | no)</font>: not applicable.
     One has to use the <b>MEMORY</b> class to activate or stop the garbage
     collector.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">dead_code_removal (<b>yes</b> | no)</font>: it is
     a finalization option only. It enables you to not generate the C code for
     Eiffel routines that are not called in your code, and thus reducing the size
     of the generated application.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">debug (yes | <b>no</b> | &quot;DEBUG_TAG&quot;)</font>:
     enables you to activate or disable the code written inside `<font color="#0000FF"><b>debug</b></font>'
     statement in your Eiffel code. If you marked your code with tagged `<font color="#0000FF"><b>debug</b></font>'
     statement and if you specify the tag in the Ace file, only the kind of `<b><font color="#0000FF">debug</font></b>'
     statement will be executed.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">document (&quot;path&quot;)</font>: when
     generating the documentation from EiffelBench (`Special' menu, then
     `Documentation' then `Flat', `Flat-short', `Short' or `Text'), it will
     generate it to the `path' directory. If not specified the documentation will
     be generated at the same level of your EIFGEN directory in a directory
     called `Documentation'.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">dynamic_runtime (yes | <b>no</b>)</font>: enables
     the use of shared library version of the runtime on both Windows (DLL) and
     Unix platforms that supports shared library (click <a href="../platforms.html">here</a>
     to have the details for your platform),</li>
-  <p>&nbsp;
       <li><font color="#FF0000">exception_trace (yes | <b>no</b>)</font>: it is a
     finalization option only. It enables you to see a complete exception trace
     when your finalized application is crashing. Because it is adding some code
     to remember where the application was during the crash it can slow down the
     performance of your application by a factor of 5% to 30% depending of your
     platform.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">inlining (yes | <b>no</b>)</font>: it is a
     finalization option only. It enables to inline functions that can be inlined
     (see `inlining_size' below). The ISE Eiffel inlining is very powerful since
     it can inline a function to all your Eiffel code, there is no scope
     limitation as in C or C++ compilers.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">inlining_size (&quot;value&quot;)</font>: it is a
     finalization option only. It enables to specify the size which tells the
     compiler that a function can be inlined or not. The value given in parameter
     corresponds to the number of instructions as the Eiffel compiler see them
     (for example a := b.f corresponds to 2 instructions for the Eiffel
     compiler).</li>
-  <p>&nbsp;
       <li><font color="#FF0000">line_generation (yes | <b>no</b>)</font>: enables
     the generation of C pragmas `#line x' in the C generated code. This options
     is mostly used by embedded Eiffel developers who could not run the ISE
     EiffelBench environment on their target platform.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">multithreaded (yes | <b>no</b>)</font>: enables
     the generation of a multithreaded application. This option cannot be changed
     during the development of your project and has to be set correctly at the
     first compilation of your system.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">override_cluster (cluster_name)</font>: enables
     you to specify a certain `cluster_name' as override cluster. As a result,
     all classes in `cluster_name' will override the classes with the same names
     located in other clusters. Very useful when used in conjunction with
     configuration management tools.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">profile (yes | <b>no</b>)</font>: enables the
     Eiffel profiling (to know more about Eiffel profiling click <a href="profiler.html">here</a>).</li>
-  <p>&nbsp;
-      <li><font color="#FF0000">shared_library_definition
+      <li><font color="#FF0000"><a name="shared_library_definition">shared_library_definition</a>
     (&quot;file_name.def&quot;)</font>: enables you to specify `file_name.def'
     as file where the Eiffel compiler will look when trying to generate the
     exported function of the shared library you are developing.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">precompiled (&quot;precompiled_library_path&quot;)</font>:
     enables you to specify a precompiled library. Most examples given in the ISE
     EiffelBench delivery are using a precompiled library. It makes the
@@ -194,12 +175,97 @@ default option is shown in bold.</p>
 <h2>
 External options</h2>
     <ul>
-  <p>&nbsp;
       <li><font color="#FF0000">include_path</font>: enables you to specify the path to the header files you are
     using in external clauses of your Eiffel based source code.</li>
-  <p>&nbsp;
       <li><font color="#FF0000">object</font>: enables you to link your application with specified object files.</li>
     </ul>
+<p>&nbsp;</p>
+<h2>Lace keywords</h2>
+<table border="1" width="100%" bgcolor="#FFFFE3">
+  <tr>
+    <td><b><font color="#0000FF">adapt</font></b></td>
+    <td><b><font color="#0000FF">all</font></b></td>
+    <td><b><font color="#0000FF">assertion</font></b></td>
+    <td><b><font color="#0000FF">c</font></b></td>
+    <td><b><font color="#0000FF">check</font></b></td>
+    <td><b><font color="#0000FF">cluster</font></b></td>
+  </tr>
+  <tr>
+    <td><b><font color="#0000FF">colon</font></b></td>
+    <td><b><font color="#0000FF">comma</font></b></td>
+    <td><b><font color="#0000FF">creation</font></b></td>
+    <td><b><font color="#0000FF">debug</font></b></td>
+    <td><b><font color="#0000FF">default</font></b></td>
+    <td><b><font color="#0000FF">end</font></b></td>
+  </tr>
+  <tr>
+    <td><b><font color="#0000FF">ensure</font></b></td>
+    <td><b><font color="#0000FF">exclude</font></b></td>
+    <td><b><font color="#0000FF">executable</font></b></td>
+    <td><b><font color="#0000FF">export</font></b></td>
+    <td><b><font color="#0000FF">external</font></b></td>
+    <td><b><font color="#0000FF">generate</font></b></td>
+  </tr>
+  <tr>
+    <td><b><font color="#0000FF">identifier</font></b></td>
+    <td><b><font color="#0000FF">ignore</font></b></td>
+    <td><b><font color="#0000FF">include</font></b></td>
+    <td><b><font color="#0000FF">include_path</font></b></td>
+    <td><b><font color="#0000FF">invariant</font></b></td>
+    <td><b><font color="#0000FF">loop</font></b></td>
+  </tr>
+  <tr>
+    <td><b><font color="#0000FF">make</font></b></td>
+    <td><b><font color="#0000FF">no</font></b></td>
+    <td><b><font color="#0000FF">object</font></b></td>
+    <td><b><font color="#0000FF">optimize</font></b></td>
+    <td><b><font color="#0000FF">option</font></b></td>
+    <td><b><font color="#0000FF">precompiled</font></b></td>
+  </tr>
+  <tr>
+    <td><b><font color="#0000FF">rename</font></b></td>
+    <td><b><font color="#0000FF">require</font></b></td>
+    <td><b><font color="#0000FF">root</font></b></td>
+    <td><b><font color="#0000FF">system</font></b></td>
+    <td><b><font color="#0000FF">trace</font></b></td>
+    <td><b><font color="#0000FF">use</font></b></td>
+  </tr>
+  <tr>
+    <td><b><font color="#0000FF">visible</font></b></td>
+    <td><b><font color="#0000FF">yes</font></b></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<p>
+
+  Introduced with ISE EiffelBench 4.5 the keyword `<b><font color="#0000FF">all</font></b>'
+  can now appear before the name of a cluster. This new keyword is now used in
+  most Ace files given with your distribution. On example can be found above and
+  it is reproduced below with some explanations:
+
+<p>
+<center><table>
+<tr><td bgcolor="#FFFFE3"><pre>
+	-- EiffelBase
+all base: &quot;$EIFFEL4\library\base&quot;
+	exclude
+		&quot;table_eiffel3&quot;
+	end</pre>
+</td></tr></table></center>
+
+<p>
+
+  The meaning of `<b><font color="#0000FF">all</font></b>' is to take into
+  account all Eiffel files located below the directory pointed by the `base'
+  cluster. In addition, the example above uses `<b><font color="#0000FF">exclude</font></b>'
+  make sure that the directory called `table_eiffel3' won't be traversed. This
+  is very useful when you have two clusters which are used through a switch in
+  your Ace file.
+
   </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

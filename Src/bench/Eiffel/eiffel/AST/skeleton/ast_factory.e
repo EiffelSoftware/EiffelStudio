@@ -545,6 +545,7 @@ feature -- Access
 			n_not_void: n /= Void
 			s_not_void: s /= Void
 			cl_not_void: cl /= Void
+			co_valid: co /= Void implies not co.is_empty
 		do
 			create Result
 			Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, top_ind, bottom_ind,

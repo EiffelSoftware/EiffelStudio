@@ -246,7 +246,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	preset_for_class_view (cd: CONTEXT_DIAGRAM) is
+	preset_for_class_view (cd: EIFFEL_CLASS_DIAGRAM) is
 			-- Assign text fields with current values.
 		require
 			is_for_class_view: is_for_class_view
@@ -255,24 +255,26 @@ feature -- Initialization
 		local
 			current_index: INTEGER
 			current_views: LINKED_LIST [STRING]
+			cg: ES_CLASS_GRAPH
 		do
-			if cd.include_all_classes_of_cluster then
+			cg := cd.model
+			if cg.include_all_classes_of_cluster then
 				cb_all.enable_select
 			else
 				cb_all.disable_select
 			end
-			if cd.include_only_classes_of_cluster then
+			if cg.include_only_classes_of_cluster then
 				cb_only.enable_select
 			else
 				cb_only.disable_select
 			end
-			ancestor_depth := cd.ancestor_depth
+			ancestor_depth := cg.ancestor_depth
 			sb_ancestor.set_value (ancestor_depth)
-			descendant_depth := cd.descendant_depth
+			descendant_depth := cg.descendant_depth
 			sb_descendant.set_value (descendant_depth)
-			client_depth := cd.client_depth
+			client_depth := cg.client_depth
 			sb_client.set_value (client_depth)
-			supplier_depth := cd.supplier_depth
+			supplier_depth := cg.supplier_depth
 			sb_supplier.set_value (supplier_depth)
 			view_selector.select_actions.block
 			current_views := cd.available_views
@@ -285,13 +287,13 @@ feature -- Initialization
 			view_selector.select_actions.resume
 			view_selector.i_th (current_index).enable_select
 		ensure
-			new_values_assigned: ancestor_depth = cd.ancestor_depth and
-				descendant_depth = cd.descendant_depth and
-				client_depth = cd.client_depth and
-				supplier_depth = cd.supplier_depth
+			new_values_assigned: ancestor_depth = cd.model.ancestor_depth and
+				descendant_depth = cd.model.descendant_depth and
+				client_depth = cd.model.client_depth and
+				supplier_depth = cd.model.supplier_depth
 		end
 
-	preset_for_cluster_view (cd: CLUSTER_DIAGRAM) is
+	preset_for_cluster_view (cd: EIFFEL_CLUSTER_DIAGRAM) is
 			-- Assign text fields with current values.
 		require
 			is_for_cluster_view: not is_for_class_view
@@ -300,10 +302,12 @@ feature -- Initialization
 		local
 			current_index: INTEGER
 			current_views: LINKED_LIST [STRING]
+			cg: ES_CLUSTER_GRAPH
 		do
-			supercluster_depth := cd.supercluster_depth
+			cg := cd.model
+			supercluster_depth := cg.supercluster_depth
 			sb_supercluster.set_value (supercluster_depth)
-			subcluster_depth := cd.subcluster_depth
+			subcluster_depth := cg.subcluster_depth
 			sb_subcluster.set_value (subcluster_depth)
 			view_selector.select_actions.block
 			current_views := cd.available_views
@@ -316,8 +320,8 @@ feature -- Initialization
 			view_selector.select_actions.resume
 			view_selector.i_th (current_index).enable_select
 		ensure
-			new_values_assigned: supercluster_depth = cd.supercluster_depth and
-				subcluster_depth = cd.subcluster_depth
+			new_values_assigned: supercluster_depth = cd.model.supercluster_depth and
+				subcluster_depth = cd.model.subcluster_depth
 		end
 
 feature -- Access

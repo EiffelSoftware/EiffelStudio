@@ -344,7 +344,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Element change
 			assigned: link_tool_command = ltc
 		end
 
-	set_link_figure (lf: LINK_FIGURE) is
+	set_link_figure (lf: EIFFEL_LINK_FIGURE) is
 			-- Assign `lf' to `link_figure'.
 		require
 			figure_exists: lf /= Void
@@ -378,7 +378,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Events
 
 feature {EB_LINK_TOOL_COMMAND} -- Access
 
-	link_figure: LINK_FIGURE
+	link_figure: EIFFEL_LINK_FIGURE
 			-- Figure on which `Current' has an effect.
 
 feature {NONE} -- Implementation

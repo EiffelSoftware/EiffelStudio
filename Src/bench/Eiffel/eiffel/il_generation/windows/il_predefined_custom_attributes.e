@@ -16,6 +16,14 @@ feature -- Predefined custom attributes
 			Result.put_integer_16 (0)
 		end
 
+	cls_compliant_ca: MD_CUSTOM_ATTRIBUTE is
+			-- Blob for CLS compliant attribute
+		once
+			create Result.make
+			Result.put_boolean (True)
+			Result.put_integer_16 (0)
+		end
+
 	not_com_visible_ca: MD_CUSTOM_ATTRIBUTE is
 			-- Blob for not COM Visible attribute.
 		once

@@ -25,7 +25,7 @@ inherit
 		redefine
 			interface,
 			add_to_container,
-			remove_item_from_position,
+			remove_i_th,
 			reorder_child
 		end
 
@@ -138,9 +138,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE
 
-	list_widget: POINTER
-			-- Pointer to the tree widget
-
 feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
 
 	gtk_tree_selection (a_tree: POINTER): POINTER is
@@ -173,7 +170,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_item_from_position (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER) is
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_TREE_ITEM_IMP
@@ -229,6 +226,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/04/06 02:05:50  brendel
+--| Changed to comply with new EV_DYNAMIC_LIST_IMP.
+--|
 --| Revision 1.38  2000/04/04 21:00:33  oconnor
 --| updated signal connection for new marshaling scheme
 --|

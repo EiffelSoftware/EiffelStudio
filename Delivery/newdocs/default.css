@@ -1,138 +1,194 @@
 BODY {
-	BACKGROUND: #EEEEDD;
-	FONT-FAMILY: Verdana, Lucida, Arial, Times, Times New Roman, Arial, Helvetica, sans-serif; 
-	FONT-SIZE: 8pt; 
+	BACKGROUND=#EEEADD;
+	FONT-FAMILY=Verdana, Arial, Helvetica, sans-serif;
+	MARGIN=0px 0px 0px 0px;
+	PADDING=0px 0px 0px 0px;
+	COLOR=#000000;
+	FONT-SIZE=70%;
+	WIDTH=100%;
 }
 
-TD, SPAN, DIV, DD, DT, DL, UL, LI {
-	FONT-FAMILY: Verdana, Lucida, Arial, Helvetica, Sans-serif;
-	FONT-SIZE: 8pt;
-	PADDING-BOTTOM: 0.4mm; 
+OL, UL {
+	MARGIN=.5em 0em 0em 2em; 
 }
+
+LI {
+	MARGIN-BOTTOM=.5em;
+}
+
+UL P, OL P, DL P {
+	MARGIN-LEFT=0em;
+}
+
+UL P.LABEL, OL P.LABEL {
+	MARGIN-TOP=.5em;
+}
+
+DL {
+	MARGIN-TOP: 0em; 
+	PADDING-LEFT: 1px; /* Prevents italic-letter descenders from being cut off */
+}
+
+DD {
+	MARGIN-BOTTOM: 0em;  
+	MARGIN-LEFT: 1.5em; 
+}
+
+DT {
+	MARGIN-TOP: .5em; 
+}
+
+PRE {
+	MARGIN-TOP: .5em;
+	MARGIN-BOTTOM: .5em; 
+}
+
+PRE, CODE, .CODE {
+	FONT: 100% Courier New, Courier, mono; /* This is 100% of 70% */
+	COLOR: #000066;
+}
+
+PRE B, CODE B {
+	LETTER-SPACING: .1em; /* opens kerning on bold in Syntax/Code */
+}
+
+PRE.SYNTAX {
+	PADDING: 4px 8px;
+	CURSOR: text;
+	MARGIN-TOP: 1em;
+	MARGIN-BOTTOM: 1em; 
+		BORDER-WIDTH: 1px;
+	BORDER-STYLE: solid;
+}
+
+TD, SPAN, DIV {
+	PADDING-BOTTOM=0.4mm; 
+}
+
+IMG {
+	BORDER=none; 
+}
+
+P {
+	MARGIN=.5em 0em .5em 0em;
+}
+
+H1, H2, H3, H4 {
+	FONT-FAMILY=Verdana, Arial, Helvetica, sans-serif;
+	MARGIN-BOTTOM=.4em; 
+	MARGIN-TOP=1em;
+	FONT-WEIGHT=bold;
 
 H3 {
-	COLOR: #990000;
-	FONT-FAMILY: Arial, Helvetica, sans-serif; 
-	FONT-SIZE: 10pt; 
-	FONT-WEIGHT: bold; 
-	TEXT-DECORATION: none
+	COLOR=#990000;
+	FONT-SIZE=110%; 
+	TEXT-DECORATION=none
 }
 H2 {
-	COLOR: #990000;
-	BACKGROUND: #FFCC00;
-	FONT-SIZE: 12pt; 
-	FONT-FAMILY: Arial, Helvetica, sans-serif; 
-	FONT-WEIGHT: bold; 
-	PADDING-BOTTOM: 0.4mm; 
-	PADDING-LEFT: 1mm; 
-	PADDING-RIGHT: 1mm; 
-	PADDING-TOP: 0.4mm;
-	WIDTH: 90%;
+	COLOR=#700000;
+	BACKGROUND=#FFCC00;
+	FONT-SIZE=120%;
+	WIDTH=90%;
 }
 H1 {
-	COLOR: #990000;
-	FONT-SIZE: 14pt; 
-	FONT-FAMILY: Arial, Helvetica, sans-serif; 
-	FONT-WEIGHT: bold; 
-	PADDING-BOTTOM: 0.4mm; 
-	PADDING-RIGHT: 2mm; 
-	PADDING-TOP: 0.4mm;
+	COLOR=#990000;
+	FONT-SIZE=150%;
+	MARGIN-TOP=0em;
 }
 
 A {
-	FONT-FAMILY: Verdana, Lucida, Arial, Helvetica, sans-serif;
-	COLOR: #003399;
-	TEXT-DECORATION: none;
+	FONT-FAMILY=Verdana, Lucida, Arial, Helvetica, sans-serif;
+	COLOR=#003399;
+	TEXT-DECORATION=none;
 }
 
 A:hover {
-	COLOR: #006633;
-	TEXT-DECORATION: underline;
+	COLOR=#006633;
+	TEXT-DECORATION=underline;
 }
 
 .eclass {
-    COLOR: #0000AA;
-    FONT-WEIGHT: bold;
+    COLOR=#0000AA;
 }
 
 .neclass {
-    COLOR: black;
+    COLOR=black;
 }
 
 .ekeyword {
-    COLOR: navy;
+    COLOR=navy;
 }
 
 .esymbol {
-    COLOR: navy;
+    COLOR=navy;
 }
 
 .eitag {
-    COLOR: sienna;
+    COLOR=sienna;
 }
 
 .estring {
-    COLOR: indigo;
+    COLOR=indigo;
 }
 
 .echar {
-    COLOR: indigo;
+    COLOR=indigo;
 }
 
 .enumber {
-    COLOR: indigo;
+    COLOR=indigo;
 }
 
 .etag {
-    COLOR: sienna;
+    COLOR=sienna;
 }
 
 .efeature {
-    COLOR: darkgreen;
+    COLOR=darkgreen;
 }
 
 .nefeature {
-    COLOR: black;
+    COLOR=black;
 }
 
 .ecomment {
-    COLOR: #990000;
+    COLOR=#990000;
 }
 
 .elocal, .equoted {
-    COLOR: darkred;
-    FONT-STYLE: italic;
+    COLOR=darkred;
+    FONT-STYLE=italic;
 }
 
 .ereserved {
-    COLOR: darkgreen;
+    COLOR=darkgreen;
 }
 
 .egeneric {
-    COLOR: dodgerblue;
+    COLOR=dodgerblue;
 }
 
 .ecluster {
-    COLOR: maroon;
-    FONT-VARIANT: small-caps;
+    COLOR=maroon;
+    FONT-VARIANT=small-caps;
 }
 
 .necluster {
-    COLOR: black;
-    FONT-VARIANT: small-caps;
+    COLOR=black;
+    FONT-VARIANT=small-caps;
 }
 
 .link1 {
-	BACKGROUND-COLOR: #006633;
-	COLOR: white;
+	BACKGROUND-COLOR=#006633;
+	COLOR=white;
 }
 
 .link2 {
-	BACKGROUND-COLOR: #330066;
-	COLOR: white;
+	BACKGROUND-COLOR=#330066;
+	COLOR=white;
 }
 
 .nolink1, .nolink2 {
-	BACKGROUND-COLOR: #FFCC00;
-	COLOR: #330066;
+	BACKGROUND-COLOR=#FFCC00;
+	COLOR=#330066;
 }

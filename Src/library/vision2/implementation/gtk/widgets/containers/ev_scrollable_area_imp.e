@@ -53,16 +53,17 @@ feature -- Access
 	item: EV_WIDGET is
 			-- Current item
 		local
-			p: POINTER
+			a_child_list, p: POINTER
 			o: EV_ANY_IMP
 		do
-			p := C.gtk_container_children (viewport)
-			if p/= NULL then
-				p := C.g_list_nth_data (p, 0)
+			a_child_list := C.gtk_container_children (viewport)
+			if p /= NULL then
+				p := C.g_list_nth_data (a_child_list, 0)
 				if p /= NULL then
 					o := eif_object_from_c (p)
 					Result ?= o.interface
 				end
+				C.g_list_free (a_child_list)
 			end
 		end
 
@@ -103,7 +104,9 @@ feature -- Element change
 			i := item
 			if i /= Void then
 				imp ?= i.implementation
+				C.gtk_object_ref (imp.c_object)
 				C.gtk_container_remove (viewport, imp.c_object)
+				C.gtk_object_unref (imp.c_object)
 			end
 			if v /= Void then
 				imp ?= v.implementation

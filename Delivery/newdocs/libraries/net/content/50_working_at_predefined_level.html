@@ -1,0 +1,376 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+        <h1>Working at predefined level</h1>
+        <center>
+        <table border="1" width="75%">
+          <tbody>
+            <tr>
+              <td>The example classes discussed in this section appear in the
+                subdirectory <i>predef </i>of the example directory</td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>The first example shows how to use the predefined level classes,
+        covering many common client-server schemes. The work needed in this case
+        is minimal: just effect or redefine a few routines describing the
+        specific processing that your client and your server require.</p>
+        <h3>The example</h3>
+        <p>The example describes a simple communication protocol. The client
+        sends to the server a list of strings, which together form the message <i>&quot;This
+        is my test&quot;</i>; the server receives the corresponding object
+        structure, appends to it one more element - the string <i>&quot;I'm
+        back&quot;</i> - and returns the result to the client, which will accept
+        it and print it. The server increases a counter each time it closes a
+        connection with a client, and will only accept three connections.</p>
+        <h3>Object structures</h3>
+        <p>As noted above, it is possible with sockets, as any other <a CLASS="eclass" href="../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</a>,
+        to send and receive simple objects such as integers. But for this first
+        example we are already more ambitious and want to exchange entire linked
+        lists of strings. The structures that we will exchange are described by
+        the following class:
+        <code>
+        <ul>
+          <dl>
+            <dd>
+              <p><span CLASS="ekeyword">class</span><span CLASS="eclass"><br>
+              &nbsp;&nbsp;&nbsp; OUR_MESSAGE</span></p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">inherit</span></p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../../base/reference/structures/list/linked_list_chart.html">LINKED_LIST</a> [<a CLASS="eclass" href="../../base/reference/kernel/string_chart.html">STRING</a>]</p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a></p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">&nbsp;&nbsp;&nbsp; creation<span><br>
+              &nbsp;&nbsp;&nbsp;</span></span><span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span>make</span></p>
+            </dd>
+            <dd>
+              <p><span>end</span></p>
+            </dd>
+          </dl>
+        </ul>
+        </span>
+        </code>
+        <span><span CLASS="ekeyword"><span CLASS="ekeyword">
+        <p>Note that to make use of the storage and retrieval facilities the
+        objects to be exchanged must be instances of a class which, as here, is
+        a descendant of <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>.</p>
+        <h3>6.3 Application classes and system structure</h3>
+        <p>The client and server mechanisms will be described by instances of
+        two classes that make up the example, called OUR_CLIENT and OUR_SERVER.</p>
+        <p>We want to have the two communicating systems be two different
+        systems (compiled separately, with two separate Ace files). OUR_CLIENT<i>
+        </i>will be part of one of these systems; OUR_SERVER<i> </i>will be part
+        of the other.</p>
+        <p>There are four predefined classes, corresponding to the client and
+        server sides with, in each case, the choice between the &quot;Unix&quot;
+        (single-machine) and &quot;network&quot; (multi-machine) styles of
+        communication. Note that all these classes support stream communication;
+        for datagrams, see <a href="70_datagram_sockets.html">using datagram sockets</a>.
+        The server class should inherit from <a CLASS="eclass" href="../reference/local/client_server/unix_server_chart.html">UNIX_SERVER</a>
+        or <a href="../reference/network/client_server/network_server_chart.html">NETWORK_SERVER</a>;
+        the client class should inherit from <a CLASS="eclass" href="../reference/local/client_server/unix_client_chart.html">UNIX_CLIENT</a>
+        or <a CLASS="eclass" href="../reference/network/client_server/network_client_chart.html">NETWORK_CLIENT</a>.
+        The choice between UNIX_ and NETWORK_ classes must of course be the same
+        on both sides.</p>
+        <h3>The client</h3>
+        <p>Here is the client class:
+        <code>
+        <ul>
+          <dl>
+            <dd>
+              <p><span CLASS="ekeyword">class</span><span CLASS="eclass"><br>
+              OUR_CLIENT</span></p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">inherit</span></p>
+            </dd>
+            <dd>
+              <p>	<a CLASS="eclass" href="../reference/local/client_server/unix_client_chart.html">UNIX_CLIENT<br>
+</a>		&nbsp;&nbsp;&nbsp; redefine&nbsp;
+			<span CLASS="efeature"><br>
+            &nbsp;&nbsp;&nbsp;</span>
+              </span></span>
+			<span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp; </span>
+			<span CLASS="efeature"><span CLASS="ekeyword">received<br>
+            &nbsp;&nbsp;&nbsp;</span> </span>
+            <span CLASS="ekeyword">end</p>
+            <dd>
+              <p><span CLASS="ekeyword">creation</span>
+	<span CLASS="efeature">make_client</p>
+              <span>
+              <p><span CLASS="ekeyword">feature</span></p>
+              <dl>
+                <dd>
+                  <p>our_list<span CLASS="esymbol">:</span> <span CLASS="eclass">OUR_MESSAGE</span></p>
+                </dd>
+                <dd>
+                  <p>received<span CLASS="esymbol">:</span> <span CLASS="eclass">OUR_MESSAGE<br>
+                  &nbsp;&nbsp;&nbsp;</span> </span></span></span> <span CLASS="ecomment">-- Type redefinition</p>
+                </dd>
+              </dl>
+              <i></i>
+              <blockquote>
+                <blockquote>
+                <p><span CLASS="efeature">make_client</span><span CLASS="ekeyword"> is<br>
+                &nbsp;&nbsp;&nbsp;</span>
+                -- Build list, send it, receive modified list, and print it.<br>
+	<span CLASS="ekeyword">do<br>
+    &nbsp;&nbsp;&nbsp;</span>
+                  </span>
+	<span CLASS="ekeyword"> </span>
+ <span CLASS="ecomment">make <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)<br>
+ </span>
+		<span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span>
+                  </span><span CLASS="esymbol"> </span>
+		<span CLASS="efeature"> <span CLASS="ecomment">build_list<br>
+        &nbsp;&nbsp;&nbsp;</span> </span>
+		<span CLASS="efeature"> <span CLASS="ecomment">send <span CLASS="esymbol">(</span>our_list<span CLASS="esymbol">)<br>
+        &nbsp;&nbsp;&nbsp;</span></span></span>
+                  <span CLASS="esymbol"> </span> <span CLASS="ecomment">
+		<span CLASS="efeature">receive</span>
+                  &nbsp;<br>
+                  &nbsp;&nbsp;&nbsp; process_received
+        	<span CLASS="efeature">cleanup<br>
+                  </span>
+	<span CLASS="ekeyword">rescue</span>
+                  &nbsp;<br>
+                  &nbsp;&nbsp;&nbsp; cleanup&nbsp;<br>
+                  end</p>
+                </blockquote>
+                <p>build_list <span CLASS="ekeyword">is</span>
+                &nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Build list of strings our_list for
+                transmission to server.&nbsp;<br>
+                &nbsp;&nbsp;&nbsp; do&nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create our_list<span CLASS="esymbol">.</span><span CLASS="efeature">make</span><span CLASS="esymbol">;<br>
+                </span> &nbsp;&nbsp;&nbsp;</span><span CLASS="esymbol">&nbsp;&nbsp;&nbsp;&nbsp;
+                </span> <span CLASS="ecomment">our_list<span CLASS="esymbol">.</span><span CLASS="efeature">extend</span></span> <span CLASS="ecomment">
+                </span></span><span CLASS="ekeyword"><span CLASS="esymbol">(</span>&quot;This &quot;<span CLASS="esymbol">);</span> our_list<span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span>&quot;is &quot;<span CLASS="esymbol">)<br>
+              </span>
+              &nbsp;&nbsp;&nbsp;</span><span CLASS="esymbol">&nbsp;&nbsp;&nbsp;&nbsp;
+              </span>
+              <span CLASS="ekeyword">our_list<span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span>&quot;our &quot;<span CLASS="esymbol">);</span> our_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;test&quot;<span CLASS="esymbol">)<br>
+              &nbsp;&nbsp;&nbsp;</span>
+              </span><span CLASS="esymbol"> </span>
+              <span CLASS="ekeyword">end</p>
+              <p>process_received <span CLASS="ekeyword">is<br>
+              </span>
+		<span CLASS="ecomment">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+		<span CLASS="ecomment">-- Print the contents of received in</span></span><span CLASS="ecomment">
+              </span><span CLASS="ecomment"><span CLASS="ekeyword">sequence.<br>
+              &nbsp;&nbsp;&nbsp;</span> </span>
+              <span CLASS="ekeyword">do&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if received <span CLASS="esymbol">=</span> Void then&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring</span> (&quot;No list received&quot;)&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              from&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              received<span CLASS="esymbol">.</span><span CLASS="efeature">start</span>
+              &nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              until<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              received<span CLASS="esymbol">.</span><span CLASS="efeature">after</span>
+              &nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              loop&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring (received.item)</span>
+              &nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              received<span CLASS="esymbol">.</span><span CLASS="efeature">forth</span>
+              &nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              end&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end&nbsp;<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; io<span CLASS="esymbol">.</span><span CLASS="efeature">new_line<br>
+              &nbsp;&nbsp;&nbsp;</span> end</p>
+              </blockquote>
+              <p><span CLASS="ekeyword">end</span></p>
+            </dd>
+            <dl>
+            </dl>
+          </dl>
+        </ul>
+        </span>
+        </code>
+        <span CLASS="ekeyword">
+        <p>The scheme is very simple:
+        <ul>
+          <li>The inherited procedure <i>make</i> takes care of the many details
+            of creating a socket and setting up the communication; the following
+            sections will give some insight into what this involves. The
+            argument to <i>make</i> is the path name that has been selected to
+            enable communication with the server: <i>/tmp/here</i>.
+          <li>The client has defined a procedure <i>build_list</i> to construct
+            an object structure.
+          <li>It then uses the inherited procedure <i>send</i> to send this
+            object structure to the server; <i>send</i> expects an argument of a
+            type conforming to <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>,
+            so that it can use all the predefined storage and retrieval
+            facilities.
+          <li>The <i>receive</i> procedure, called next, obtains an object
+            structure from the server; here, as will be seen from the server's
+            text below, this is the original list to which the server has
+            appended a new element. The result of procedure <i>receive</i> is
+            available through feature <i>received</i>. To avoid the need for an
+            assignment attempt (as with the result of a <i>retrieve</i>
+            operation with <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>)
+            the class redefines <i>received</i> to be of type <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>.
+          <li>The client has defined a procedure <i>process_received</i> to
+            print the received string.
+          <li>Finally, a call to <i>cleanup </i>is necessary to close the
+            sockets that have been opened and free the corresponding resources.</li>
+        </ul>
+        <p>Of course, in a typical object-oriented design, the class and those
+        which appear in the rest of this set of examples may &quot;do&quot; more
+        than one thing and so may have more routines than the ones shown in this
+        document.</p>
+        <p>This example shows how to write a client class in the most common
+        cases: inherit from <a CLASS="eclass" href="../reference/local/client_server/unix_client_chart.html">UNIX_CLIENT</a>or
+        <a CLASS="eclass" href="../reference/network/client_server/network_client_chart.html">NETWORK_CLIENT</a>;
+        use <i>make</i> to specify the socket address, <i>send</i> to send an
+        object structure, <i>receive </i>to receive an object structure, <i>received</i>
+        to access it, and <i>cleanup </i>to clean things up.</p>
+        <p>There would be one difference for a <a CLASS="eclass" href="../reference/network/client_server/network_client_chart.html">NETWORK_CLIENT</a>:
+        procedure <i>make</i> would need two arguments, the name of a host and a
+        port on that host. For example, to connect to a server running on a
+        machine of name <i>serverhost </i>and using port 2000, the call would
+        be:
+        <p>make (&quot;serverhost&quot;, 2000)</p>
+        <p>As noted earlier, you may identify the machine by an Internet address
+        such as <i>&quot;127.0.0.1&quot;</i> rather than by a host name.</p>
+        <h3>6.5 The server</h3>
+        <p>Now, the server class:
+        <code>
+        <ul>
+          <dl>
+            <dd>
+              <p><span CLASS="eclass">class</span><br>
+              &nbsp;&nbsp;&nbsp; OUR_SERVER</p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">inherit</span></p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../reference/local/client_server/unix_server_chart.html">UNIX_SERVER<br>
+              </a>&nbsp;&nbsp;&nbsp; redefine<br>
+              <span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="efeature">received</span>, <span CLASS="efeature">respond<br>
+              &nbsp;&nbsp;&nbsp;</span></span> <span CLASS="efeature"> </span><span CLASS="ekeyword">end</p>
+            <dd>
+              <p>creation<br>
+              &nbsp;&nbsp;&nbsp; make_server</p>
+            </dd>
+            <i></i>
+            <dd>
+              <p>feature</p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp; received<span CLASS="esymbol">:</span> OUR_MESSAGE</p>
+            <dd>
+              <p>	<span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span> </span>	<span CLASS="efeature">
+              </span> <span CLASS="ekeyword">	<span CLASS="efeature">make_server</span> <span CLASS="ekeyword">is</span><span CLASS="ecomment"><br>
+              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </span><span CLASS="ecomment"><span CLASS="ekeyword">-- Receive list, print it, extend it, and send the result back.<br>
+              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span CLASS="ekeyword">do<span CLASS="efeature"><br>
+              &nbsp;&nbsp;&nbsp;</span> </span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </span> <span CLASS="ekeyword"><span CLASS="efeature">make</span> (&quot;/tmp/here&quot;)<span CLASS="efeature"><br>
+              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </span><span CLASS="efeature"><span CLASS="ekeyword">execute<br>
+              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span CLASS="ekeyword">rescue<br>
+              <span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="efeature">cleanup<br>
+              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;
+              </span><span CLASS="ekeyword">end</p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp; process_message <span CLASS="ekeyword">is</span><span CLASS="ecomment"><br>
+              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </span><span CLASS="ecomment"><span CLASS="ekeyword">-- Print received list.<br>
+              &nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span CLASS="ekeyword">do<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              from<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              received<span CLASS="esymbol">.</span><span CLASS="efeature">start<br>
+              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </span><span CLASS="ekeyword">until<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              received<span CLASS="esymbol">.</span><span CLASS="efeature">after<br>
+              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </span><span CLASS="ekeyword">loop<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putstring (received.item)</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              received<span CLASS="esymbol">.</span><span CLASS="efeature">forth<br>
+              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="efeature">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </span><span CLASS="ekeyword">end<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io.new_line<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp; respond <span CLASS="ekeyword">is</span><span CLASS="ecomment"><br>
+              &nbsp;&nbsp;&nbsp;</span></span><span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">-- Extend received list.</span></span><span CLASS="ekeyword"><br>
+            <span CLASS="ecomment">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span CLASS="ecomment">do<br>
+            &nbsp;&nbsp;&nbsp;</span></span><span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span CLASS="ekeyword">received<span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> (&quot;%N I'm back.%N&quot;)<br>
+            <span CLASS="efeature">&nbsp;&nbsp;&nbsp;</span></span></span><span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span CLASS="ecomment">resend<span> (received)<br>
+            &nbsp;&nbsp;&nbsp;</span></span></span><span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span CLASS="ekeyword">end</p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">end</span></p>
+            </dd>
+          </dl>
+        </ul>
+        </code>
+        <p>The developer's task is even easier here than on the client side. The
+        last instruction in the creation procedure is <i>execute</i>, inherited
+        from the chosen _SERVER<i> </i>class, which executes a loop that will
+        repeatedly call <i>receive</i>, <i>process_message</i>, <i>respond</i>
+        and <i>close</i>. This loop is actually an infinite one, which will only
+        terminate if the server is killed (in which case a Rescue clause will
+        execute procedure <i>cleanup</i>); indeed, a server is not expected to
+        terminate under normal circumstances.</p>
+        <p>To define a server's behavior as desired for your particular
+        application, all you are required to do is to effect the procedure <i>process_message</i>,
+        inherited from the _SERVER class in deferred form. (Remember that to
+        &quot;effect&quot; a deferred feature is to provide a non-deferred
+        version, also called an effective version.) Here the effective version
+        prints the list of strings received from the client.</p>
+        <p>In addition, you may also, as here, redefine procedure <i>respond</i>.
+        In the _SERVER class this procedure is effective, but it does nothing;
+        this means that you have nothing special to do for the common case in
+        which the server does not respond when it has received a message. Here,
+        however, we do want to respond; the redefined version of <i>respond</i>
+        extends the <i>received</i> string and returns it. Procedure <i>resend</i>
+        sends an object structure back to the last connected client. It is also
+        possible to have more sophisticated versions of <i>respond</i>, for
+        example to dispatch objects to all active clients; this will be shown in
+        a later example</p>
+        <p>As in the client case there is a cleanup procedure to free the
+        sockets, but you do not need to call it explicitly; it is called by
+        execute. You may redefine this procedure to free some additional
+        resources of your own.</p>
+        </span>
+	</BODY>
+</HTML>

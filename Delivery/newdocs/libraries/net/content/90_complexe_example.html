@@ -1,0 +1,62 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>A more complex example</H1>
+        <center>
+        <table border="1" width="75%">
+          <tbody>
+            <tr>
+              <td>The example classes discussed in this section appear in the
+                subdirectory <i>advanced </i>of the example directory</td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>The last example exercises most of EiffelNet's major facilities. It
+        consists of a server that allows an arbitrary number of clients to
+        connect to it. Each time the user of one of the client systems types a
+        line on the keyboard, the client sends this character to the server,
+        which then broadcasts it to all the clients (including the original
+        sender). This scheme allows several people to talk together, hence the
+        names chosen: the server class is called <span CLASS="eclass">CHAT</span>, and the client is
+        called <span CLASS="eclass">JOIN</span>.</p>
+        <p>The example uses the network mode of communication, based on the <a href="../reference/network/client_server/network_client_chart.html">NETWORK_CLIENT</a>
+        and <a href="../reference/network/client_server/network_server_chart.html">NETWORK_SERVER
+        </a>classes. It uses automatic polling through <a href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
+        as in the previous example; the relevant command is given by class
+        <span CLASS="eclass">CONNECTION</span>, an heir of <a href="../reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</a>.
+        The information exchanged between the server and its clients is
+        described by class <span CLASS="eclass">MESSAGE</span>, an heir of <a href="../../base/reference/structures/list/linked_list_chart.html">LINKED_LIST</a>
+        [<a href="../../base/reference/kernel/string_chart.html">STRING</a>]
+        similar to the earlier examples' OUR_MESSAGE<i> </i>(see <a href="http://www.eiffel.com/doc/online/eiffel45/papers/net/working.html#Object Structures">see
+        &quot;Object structures&quot;, 6.2 , page 14</a>). Attributes include,
+        the name <i>client_name</i> of the client that has sent this message,
+        the boolean <i>new</i> indicating whether the current message is the
+        first from a client that is trying to connect to the server, and <i>over
+        </i>indicating that the message is the last sent by a client before
+        disconnecting.</p>
+        <p>The server maintains a list of the currently active connections. In
+        the <i>receive</i> routine, it checks on the main socket for any client
+        trying to connect. The socket is set to be non-blocking to enable the
+        server to continue checking the already connected clients. If the
+        connection is successful, the server sends to the new client the list of
+        clients already connected and adds the new connection to its list. Then
+        it polls the connections in the list, and processes the messages, if
+        any. If the message is tagged <i>new</i>, the server sends a message to
+        all the clients indicating that a new client has joined the server; if
+        it is tagged <i>over</i>, it sends a message indicating that the client
+        has opted out.</p>
+        <p>Each client uses the <a href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
+        to check any message coming from the server and immediately displays any
+        such message. It also checks a special connection, created with <i>io</i>l<i>input</i>
+        as a medium, to check what the user is typing and then send it to the
+        server. If the user types <i>bye</i>, the client terminates, sending a
+        message tagged <i>over </i>to the server.</p>
+	</BODY>
+</HTML>

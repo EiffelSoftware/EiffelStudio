@@ -1,0 +1,475 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelNet</TITLE>
+		<LINK REL=StyleSheet HREF="../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Obtaining a finer degree of control</H1>
+        <p>Let us now take a more internal look at the workings of EiffelNet.
+        The two examples that follow have the same behavior as the preceding
+        one; since their text is less simple, they are only interesting as an
+        illustration of the lower-level facilities that you may want to use in
+        specific cases. If you are already familiar with socket programming,
+        they will also give you a more precise idea of how EiffelNet
+        encapsulates the basic socket mechanisms.</p>
+        <p>As before, we have a client and a server class, still called
+        OUR_CLIENT<i> </i>and<i> </i>OUR_SERVER, which are part of two different
+        systems and will run concurrently. The communication uses streams rather
+        than datagrams; the datagram form of communication will be examined in
+        section <a href="70_datagram_sockets.html">using datagram sockets</a>.</p>
+        <h3><a Machine?>7.1 A client and a server on the same machine</a></h3>
+        <center>
+        <table border="1" width="75%">
+          <tbody>
+            <tr>
+              <td>The example classes discussed in this section appear in the
+                subdirectory <i>same_mach </i>of the example directory</td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>First, let us assume that the client and server run on the same
+        machine, so that we will use the UNIX_ versions of the classes (the next
+        example will be multi-machine). The communication protocol is also the
+        same as before: the client sends a list of strings, the server returns
+        it extended.</p>
+        <p>Here we will create and manipulate sockets directly. For that reason,
+        both classes inherit from the EiffelNet class <a CLASS="eclass" href="../reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</a><i>
+        </i>which introduces a number of constants and other useful
+        socket-related features.</p>
+        <p>The two sockets must be able to refer to a common address. For a
+        communication within a single machine, as noted, this address is a path
+        name, again <i>/tmp/here</i> for this example. The address will be an
+        argument of the creation procedure used to obtain a socket <i>soc1 </i>on
+        either side:
+        <blockquote>
+          <blockquote>
+          <code>
+            <p><span CLASS="ekeyword">create soc1</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_client <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)</span><br>
+            <span CLASS="ekeyword">create</span> soc1<span CLASS="esymbol">.</span><span CLASS="efeature">make_server <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)</span></p>
+            </code>
+          </blockquote>
+        </blockquote>
+        <p>The <i>make_</i> procedures take care of all the hassles of
+        establishing a socket for a client or a server: creating an address
+        object, setting it to the given path name, binding the socket to the
+        address, and in the client case establishing the connection. For finer
+        control, these procedures are still available: you can create a bare
+        socket by using the basic creation procedure <i>make</i> (rather than
+        the more sophisticated <i>make_client </i>and <i>make_server</i>), then
+        create a separate address object, associate the two, and call the <i>bind</i>
+        and <i>connect</i> procedures.</p>
+        <p>Because communication is bidirectional, the distinction between
+        client and server is not between who sends and who receives, although
+        here the server only sends messages of acknowledgment. The client is the
+        party that initiates the communication; the server is the party which
+        stands ready to accept the communication. This difference justifies the
+        presence of two creation procedures <i>make_client</i> and <i>make_server
+        </i>as illustrated above. To initiate the communication, the client will
+        execute:
+        <ul>
+          <dl>
+            <dd>
+            <code>
+              <p>soc1<span CLASS="esymbol">.</span><span CLASS="efeature">connect</span></p>
+             </code>
+            </dd>
+          </dl>
+        </ul>
+        <p>To make itself ready for the communication, the server will execute:
+        <ul>
+          <dl>
+            <dd>
+             <code>
+             <p>soc1<span CLASS="esymbol">.</span><span CLASS="efeature">listen <span CLASS="esymbol">(</span>n<span CLASS="esymbol">)</span></span></p>
+             </code>
+           </dd>
+          </dl>
+        </ul>
+        <p>where <i>n</i> is a positive integer indicating the maximum number of
+        client connection attempts that may be queued. The value 5, used in the
+        example, is typical for <i>n</i>.</p>
+        <p>When you use the _SERVER classes of the predefined level, as in the
+        earlier example, 5 is indeed the default; you can change the value to a
+        positive integer <i>n</i> through the call <i>set_queued </i>(<i>n</i>).</p>
+        <p>Whenever the server needs to exchange objects with one of the
+        clients, it obtains access to the socket through the following sequence:
+        <blockquote>
+          <blockquote>
+             <code>
+           <p>soc1<span CLASS="esymbol">.</span><span CLASS="efeature">accept</span><br>
+            soc2<span CLASS="esymbol">:=</span> soc1<span CLASS="esymbol">.</span><span CLASS="efeature">accepted</span><br>
+            ... Storage and retrieval operations using soc2 (not soc1) ...<br>
+            soc2<span CLASS="esymbol">.</span><span CLASS="efeature">close</span></p>
+              </code>
+        </blockquote>
+        </blockquote>
+        <p>Procedure <i>accept </i>ensures synchronization with the client. When
+        communication is established, <i>accept</i> creates a new socket which
+        will be accessible through attribute <i>accepted</i>, whose value is
+        here assigned to the local entity <i>soc2</i>. To receive objects, the
+        server will use operations of the form introduced earlier (<a href="20_overview.html#structures">An
+        overview of EiffelNet, sending and receiving object structures</a>):
+        <ul>
+          <dl>
+            <dd>
+             <code>
+             <p>struct <span CLASS="esymbol">?=</span> soc2<span CLASS="esymbol">.</span><span CLASS="efeature">retrieved</span></p>
+             </code>
+           </dd>
+          </dl>
+        </ul>
+        <p>applying to <i>soc2</i>, not <i>soc1</i>; this makes <i>soc1 </i>available
+        to accept connections with other clients, a fundamental feature of
+        client-server mechanisms.</p>
+        <p>The operation <i>soc2</i>l<i>close</i> which terminates the above
+        sequence closes the new socket. In principle this is not necessary,
+        since garbage collection should eventually reclaim the socket object,
+        and the <i>dispose</i> procedure of the corresponding socket class
+        includes a call to <i>close</i>. But the risk exists that you run out of
+        sockets before garbage collection reclaims all currently opened sockets,
+        so it is preferable to include the <i>close</i> calls explicitly.</p>
+        <p>At the end of the processing it is necessary to close the original
+        socket <i>soc1</i> but also to unlink it. The feature <i>cleanup</i>
+        from class <i>SOCKET</i> takes care of both closing and unlinking.</p>
+        <p>Here is the server class based on these principles. The actual
+        processing has been put aside in a procedure <i>process</i>.
+        <code>
+        <ul>
+              <span CLASS="ekeyword">class<br>
+              &nbsp;&nbsp;&nbsp;</span> OUR_SERVER
+              <p>inherit</p>
+              <p>&nbsp;&nbsp;&nbsp; <a CLASS="eclass" href="../reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a></p>
+              <p><span CLASS="ekeyword">creation</span>
+              <br>
+              &nbsp;&nbsp;&nbsp; make</p>
+              <p><span CLASS="ekeyword">feature</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">,</span>  soc2<span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/local/socket/unix_stream_socket_chart.html">UNIX_STREAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; make <span CLASS="ekeyword">is</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Accept communication with client and exchange messages&lt;<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">local</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              count<span CLASS="esymbol">:</span>   <a href="../../base/reference/kernel/integer_chart.html">  INTEGER</a><br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span>
+              <br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">create</span>  soc1<span CLASS="esymbol">.</span>make_server <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)</span>
+              <br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">from</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc1listen <span CLASS="esymbol">(</span>5<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              count <span CLASS="esymbol">:=</span>  0<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">until</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              count = 3<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">loop</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              process -- See below<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              count <span CLASS="esymbol">:=</span>  count <span CLASS="esymbol">+</span>
+              1<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc1<span CLASS="esymbol">.</span>cleanup<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">rescue</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc1<span CLASS="esymbol">.</span>cleanup<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">end</span></p>
+              <p>process <span CLASS="ekeyword">is</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Receive a message,
+              extend it, and send it back<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              <span CLASS="ekeyword">local</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; our_new_list<span CLASS="esymbol">:</span>
+              OUR_MESSAGE<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> <span CLASS="ekeyword">do</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">.</span>accept<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; soc2 ?= soc1<span CLASS="esymbol">.</span>accepted<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; our_new_list ?=
+              retrieved <span CLASS="esymbol">(</span>soc2<span CLASS="esymbol">)</span>
+              <br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">from</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_new_list<span CLASS="esymbol">.</span>start<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">until</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_new_list<span CLASS="esymbol">.</span>after<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">loop</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span>putstring <span CLASS="esymbol">(</span>our_new_list<span CLASS="esymbol">.</span>item<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span>new_line<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_new_list<span CLASS="esymbol">.</span>forth<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; our_new_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;%N
+              I'm back<span CLASS="esymbol">.</span>%N&quot;<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; our_new_list<span CLASS="esymbol">.</span>general_store <span CLASS="esymbol">(</span>soc2<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; soc2<span CLASS="esymbol">.</span>close<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> <span CLASS="ekeyword">end</span></p>
+              <p><span CLASS="ekeyword">end</span></p>
+        </ul>
+        </code>
+        <p>Note that at the end the server should not only closes the original
+        socket <i>soc1 </i>but also unlinks it. It is recommended to have a
+        Rescue clause which, as here, ensures that the socket will be closed and
+        unlinked if the system terminates abnormally before its term.
+        <p>Here now is the client class:
+        <code>
+        <ul>
+              <p><span CLASS="ekeyword">class</span>
+              <br>
+              &nbsp;&nbsp;&nbsp; OUR_CLIENT</p>
+              <p><span CLASS="ekeyword">inherit</span></p>
+              <p><a CLASS="eclass" href="../reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</a></p>
+              <p><span CLASS="ekeyword">creation</span>
+              <br>
+              &nbsp;&nbsp;&nbsp; make</p>
+              <p><span CLASS="ekeyword">feature</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/local/socket/unix_stream_socket_chart.html">UNIX_STREAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; make <span CLASS="ekeyword">is</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Establish communication with server, and exchange messages<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span>
+              <br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">create</span>  soc1<span CLASS="esymbol">.</span>make_client <span CLASS="esymbol">(</span>&quot;/tmp/here&quot;<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc1<span CLASS="esymbol">.</span>connect<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              process -- See below<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc1<span CLASS="esymbol">.</span>cleanup<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">rescue</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              soc1<span CLASS="esymbol">.</span>cleanup<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">end</span></p>
+              <p>&nbsp;&nbsp;&nbsp; process <span CLASS="ekeyword">is</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Build a message to server, receive answer, build<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- modified message from that answer, and print it.<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">local</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_list, our_new_list<span CLASS="esymbol">:</span>  OUR_MESSAGE<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span>
+              <br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">create</span>  our_list<span CLASS="esymbol">.</span>make<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_list<span CLASS="esymbol">.</span>extend<span CLASS="esymbol">(</span>&quot;This&quot;<span CLASS="esymbol">)</span>;
+              our_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;
+              is&quot;<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;
+              our&quot;<span CLASS="esymbol">)</span>; our_list<span CLASS="esymbol">.</span>extend <span CLASS="esymbol">(</span>&quot;
+              test&quot;<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_list<span CLASS="esymbol">.</span>general_store <span CLASS="esymbol">(</span>soc1<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_new_list ?= soc1<span CLASS="esymbol">.</span>retrieved<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">from</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_new_list<span CLASS="esymbol">.</span>start<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">until</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_new_list<span CLASS="esymbol">.</span>after<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">loop</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span>putstring <span CLASS="esymbol">(</span>our_new_list<span CLASS="esymbol">.</span>item<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              our_new_list<span CLASS="esymbol">.</span>forth<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              io<span CLASS="esymbol">.</span>new_line<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">end</span></p>
+              <p><span CLASS="ekeyword">end</span></p>
+        </ul>
+        </code>
+        <h3>7.2 Communication between two different machines</h3>
+        <center>
+        <table border="1" width="75%">
+          <tbody>
+            <tr>
+              <td>The example classes discussed in this section appear in the
+                subdirectory <i>two_mach </i>of the example directory</td>
+            </tr>
+          </tbody>
+        </table>
+        </center>
+        <p>Let us now assume that the client and the server will run on two
+        separate machines. Instead of UNIX_<i> </i>sockets, we must now use
+        sockets of type <a CLASS="eclass" href="../reference/network/socket/network_stream_socket_chart.html">NETWORK_STREAM_SOCKET</a>.</p>
+        <p>The available creation procedures are slightly different. The server
+        will be set up so as to listen to clients from any machine; it
+        designates a <b>port</b>, identified by an integer, on which it will
+        listen. The socket creation on the server side is then
+        <pre>	create soc1.make_server_port (2000)</pre>
+        <p>For the client, the creation will specify two elements of
+        information: the port number and the server. The server argument, a
+        string, identifies the machine used as a server; it may be the host name
+        of that machine, for example <i>&quot;serverhost&quot; </i>as used in
+        the example; or it can be the machine's internet address, made of a
+        sequence of numbers separated by periods, such as <i>&quot;127.0.0.1&quot;</i>.</p>
+        <p>The rest of the classes is as before.
+        <code>
+        <ul>
+          <dl>
+            <dd>
+              <p><span CLASS="ekeyword">class</span>
+              <br>
+              &nbsp;&nbsp;&nbsp; OUR_SERVER</p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">inherit</span></p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</a></p>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a></p>
+            <dd>
+              <p><span CLASS="ekeyword">creation</span>
+              <br>
+              &nbsp;&nbsp;&nbsp; make</p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">feature</span></p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">,</span> soc2<span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_stream_socket_chart.html">NETWORK_STREAM_SOCKET</a></p>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp; make <span CLASS="ekeyword">is</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              -- Accept communication with client and exchange messages.<br>
+		<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+		<span CLASS="ekeyword">do</span>
+              <br>
+			<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span CLASS="ekeyword">create</span>  soc1<span CLASS="esymbol">.</span>make_server_by_port <span CLASS="esymbol">(</span>2000<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ... The rest as before...<br>
+		<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>    &nbsp;&nbsp;&nbsp;&nbsp;
+		<span CLASS="ekeyword">end</span>    &nbsp;&nbsp;&nbsp;&nbsp;    </p>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp; process <span CLASS="ekeyword">is</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... As before ...<br>
+	<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+	<span CLASS="ekeyword">end</span></p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">end</span>
+</p>
+              </dd>
+            <dd>
+              <p><span CLASS="ekeyword">class</span>
+              <br>
+              &nbsp;&nbsp;&nbsp; OUR_CLIENT</p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">inherit</span></p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</a></p>
+            <dd>
+              <p><span CLASS="ekeyword">creation</span>
+              <br>
+              &nbsp;&nbsp;&nbsp; make</p>
+            </dd>
+            <dd>
+              <p><span CLASS="ekeyword">feature</span></p>
+            </dd>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp; soc1<span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_stream_socket_chart.html">NETWORK_STREAM_SOCKET</a></p>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp; make <span CLASS="ekeyword">is</span>
+              <br>
+		<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+		<span CLASS="ekeyword">do</span>
+              <br>
+			<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span CLASS="ekeyword">create</span>  soc1<span CLASS="esymbol">.</span>make_client_by_port <span CLASS="esymbol">(</span>2000<span CLASS="esymbol">,</span>
+              &quot;serverhost&quot;<span CLASS="esymbol">)</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ... The rest as before ...<br>
+		<span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+		<span CLASS="ekeyword">end</span></p>
+            <dd>
+              <p>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; process <span CLASS="ekeyword">is</span>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ... As before ...<br>
+              <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+              <span CLASS="ekeyword">end</span></p>
+            </dd>
+            <dd>
+              <p>	<span CLASS="ekeyword">end</span></p>
+            </dd>
+          </dl>
+        </ul>
+        </code>
+	</BODY>
+</HTML>

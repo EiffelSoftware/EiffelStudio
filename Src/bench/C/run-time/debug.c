@@ -301,12 +301,6 @@ doc:	</attribute>
 */
 rt_public int already_warned;
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
-
 /*
  * Context set up and handling.
  */
@@ -993,7 +987,7 @@ rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 	 * exception hook is executed prior any backtracking is done.
 	 */
 	EIF_GET_CONTEXT
-	register1 struct ex_vect *item;	/* Item we deal with */
+	struct ex_vect *item;	/* Item we deal with */
 	struct xstack saved;			/* Saved stack context */
 
 	memcpy (&saved, &eif_stack, sizeof(struct xstack));
@@ -1106,8 +1100,8 @@ rt_private struct dcall *stack_allocate(register int size)
 	 */
 
 	RT_GET_CONTEXT
-	register2 struct dcall *arena;		/* Address for the arena */
-	register3 struct stdchunk *chunk;	/* Address of the chunk */
+	struct dcall *arena;		/* Address for the arena */
+	struct stdchunk *chunk;	/* Address of the chunk */
 
 	size *= CALL_SZ;
 	size += sizeof(*chunk);
@@ -1145,7 +1139,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 	 */
 
 	RT_GET_CONTEXT
-	register1 struct dcall *top = db_stack.st_top;	/* Top of stack */
+	struct dcall *top = db_stack.st_top;	/* Top of stack */
 	
 	/* Stack created at initialization time via initdb */
 
@@ -1160,7 +1154,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 				enomem();
 			top = db_stack.st_top;					/* New top */
 		} else {
-			register2 struct stdchunk *current;		/* New current chunk */
+			struct stdchunk *current;		/* New current chunk */
 
 			/* Update the new stack context (main structure) */
 			current = db_stack.st_cur = db_stack.st_cur->sk_next;
@@ -1188,8 +1182,8 @@ rt_private int stack_extend(register int size)
 	 */
 
 	RT_GET_CONTEXT
-	register2 struct dcall *arena;		/* Address for the arena */
-	register3 struct stdchunk *chunk;	/* Address of the chunk */
+	struct dcall *arena;		/* Address for the arena */
+	struct stdchunk *chunk;	/* Address of the chunk */
 	
 	size *= CALL_SZ;
 	size += sizeof(*chunk);
@@ -1221,9 +1215,9 @@ rt_public struct dcall *dpop(void)
 	 */
 	
 	RT_GET_CONTEXT
-	register1 struct dcall *top = db_stack.st_top;	/* Top of the stack */
-	register2 struct stdchunk *s;			/* To walk through stack chunks */
-	register3 struct dcall *arena;			/* Base address of current chunk */
+	struct dcall *top = db_stack.st_top;	/* Top of the stack */
+	struct stdchunk *s;			/* To walk through stack chunks */
+	struct dcall *arena;			/* Base address of current chunk */
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This avoids pointer manipulation (walking along the stack)
@@ -1258,9 +1252,10 @@ rt_private void npop(register int nb_items)
 	/* Removes 'nb_items' from the debugging stack */
 
 	RT_GET_CONTEXT
-	register2 struct dcall *top;		/* Current top of debugging stack */
-	register3 struct stdchunk *s;		/* To walk through stack chunks */
-	register4 struct dcall *arena;		/* Base address of current chunk */
+	struct dcall *top;		/* Current top of debugging stack */
+	struct stdchunk *s;		/* To walk through stack chunks */
+	struct dcall *arena;		/* Base address of current chunk */
+	rt_int_ptr nb = nb_items;
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. That would indeed make popping very efficient.
@@ -1268,7 +1263,7 @@ rt_private void npop(register int nb_items)
 
 	arena = db_stack.st_cur->sk_arena;
 	top = db_stack.st_top;
-	top -= nb_items;				/* Hopefully, we remain in current chunk */
+	top -= nb;				/* Hopefully, we remain in current chunk */
 	if (top >= arena) {
 		db_stack.st_top = top;		/* Yes! Update top */
 		return;						/* Done, how lucky we were! */
@@ -1282,11 +1277,11 @@ rt_private void npop(register int nb_items)
 	SIGBLOCK;				/* Critical section begins */
 
 	top = db_stack.st_top;
-	for (s = db_stack.st_cur; nb_items > 0; /* empty */) {
+	for (s = db_stack.st_cur; nb > 0; /* empty */) {
 		arena = s->sk_arena;
-		nb_items -= top - arena;
-		if (nb_items <= 0) {			/* Have we gone too far? */
-			top = arena - nb_items;		/* Yes, reset top correctly */
+		nb -= top - arena;
+		if (nb <= 0) {			/* Have we gone too far? */
+			top = arena - nb;		/* Yes, reset top correctly */
 			break;						/* Done */
 		}
 		s = s->sk_prev;					/* Look at previous chunk */
@@ -1318,8 +1313,8 @@ rt_public struct dcall *dtop(void)
 	 * stack has been created).
 	 */
 
-	register1 struct dcall *last_item;		/* Address of last item stored */
-	register2 struct stdchunk *prev;		/* Previous chunk in stack */
+	struct dcall *last_item;		/* Address of last item stored */
+	struct stdchunk *prev;		/* Previous chunk in stack */
 
 	RT_GET_CONTEXT
 	last_item = db_stack.st_top - 1;
@@ -1362,9 +1357,9 @@ rt_private int nb_calls(void)
 {
 	/* Gives the number of calling records on the stack */
 
-	register2 struct stdchunk *s;	/* To walk through the list */
-	register3 int n = 0;			/* Number of items */
-	register4 int done = 0;			/* Top of stack not reached yet */
+	struct stdchunk *s;	/* To walk through the list */
+	size_t n = 0;			/* Number of items */
+	int done = 0;			/* Top of stack not reached yet */
 
 	RT_GET_CONTEXT
 	for (s = db_stack.st_hd; s && !done; s = s->sk_next) {
@@ -1376,7 +1371,8 @@ rt_private int nb_calls(void)
 		}
 	}
 
-	return n;		/* Number of objects held in stack */
+	ENSURE("n not too big", n <= 0x7FFFFFFF);
+	return (int) n;		/* Number of objects held in stack */
 }
 
 /*
@@ -1433,12 +1429,14 @@ rt_private void call_up(int level)
 	struct dcall *top;			/* Current top op operational stack */
 	struct stdchunk *s;			/* To walk trhough stack chunks */
 	struct dcall *end;			/* Once cell above end of current chunk */
+	rt_int_ptr l_level;
 
 	RT_GET_CONTEXT
 	if (level + d_cxt.pg_index > d_cxt.pg_calls)
 		level = d_cxt.pg_calls - d_cxt.pg_index;
 
 	d_cxt.pg_index += level;
+	l_level = level;
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This will make this "pushing" efficient.
@@ -1446,7 +1444,7 @@ rt_private void call_up(int level)
 	
 	end = db_stack.st_cur->sk_end;
 	top = db_stack.st_top;
-	top += level;				/* Hopefully, we remain in current chunk */
+	top += l_level;				/* Hopefully, we remain in current chunk */
 	if (top < end) {			/* Still within chunk boundaries */
 		db_stack.st_top = top;	/* Yes! Update top */
 		return;
@@ -1457,11 +1455,12 @@ rt_private void call_up(int level)
 	 */
 
 	top = db_stack.st_top;
-	for (s = db_stack.st_cur; level > 0; /* empty */) {
+	for (s = db_stack.st_cur; l_level > 0; /* empty */) {
 		end = s->sk_end;
-		level -= end - top;		/* Number of items we stuff in this chunk */
-		if (level <= 0) {		/* Have we gone too far? */
-			top = end - level;	/* Yes, reset top correctly */
+		CHECK("end - top not too big", (end - top) <= 0x7FFFFFFF);
+		l_level -= end - top;		/* Number of items we stuff in this chunk */
+		if (l_level <= 0) {		/* Have we gone too far? */
+			top = end - l_level;	/* Yes, reset top correctly */
 			break;				/* Done */
 		}
 		s = s->sk_next;
@@ -1568,8 +1567,8 @@ rt_private BODY_INDEX *list_allocate(register int size)
 	 */
 
 	RT_GET_CONTEXT
-	register2 BODY_INDEX *arena;			/* Address for the arena */
-	register3 struct idlchunk *chunk;	/* Address of the chunk */
+	BODY_INDEX *arena;			/* Address for the arena */
+	struct idlchunk *chunk;	/* Address of the chunk */
 
 	size *= BODY_ID_SZ;
 	size += sizeof(*chunk);
@@ -1599,7 +1598,7 @@ rt_public BODY_INDEX *onceadd(BODY_INDEX id)
 	 */
 
 	RT_GET_CONTEXT
-	register1 BODY_INDEX *last = once_list.idl_last;/* Last free element of list */
+	BODY_INDEX *last = once_list.idl_last;/* Last free element of list */
 
 	/* List created at initialization time via initdb */
 
@@ -1628,8 +1627,8 @@ rt_private int list_extend(register int size)
 	 */
 
 	RT_GET_CONTEXT
-	register2 BODY_INDEX *arena;			/* Address for the arena */
-	register3 struct idlchunk *chunk;	/* Address of the chunk */
+	BODY_INDEX *arena;			/* Address for the arena */
+	struct idlchunk *chunk;	/* Address of the chunk */
 
 	size *= BODY_ID_SZ;
 	size += sizeof(*chunk);
@@ -1661,9 +1660,9 @@ rt_public BODY_INDEX *onceitem(register BODY_INDEX id)
 	 */
 
 	RT_GET_CONTEXT
-	register2 struct idlchunk *chunk;	/* To walk through the list */
-	register3 BODY_INDEX *item;				/* To walk through the chunk */
-	register4 int done = 0;				/* Last element of list not reached */
+	struct idlchunk *chunk;	/* To walk through the list */
+	BODY_INDEX *item;				/* To walk through the chunk */
+	int done = 0;				/* Last element of list not reached */
 
 	for (chunk = once_list.idl_hd; chunk && !done; chunk = chunk->idl_next) {
 		if (chunk != once_list.idl_tl)
@@ -1702,7 +1701,7 @@ rt_public struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register 
 	EIF_GET_CONTEXT
 	unsigned char *OLD_IC;				/* IC back up */
 	uint32 pid;					/* Pattern id of the frozen feature */
-	register3 int i;
+	int i;
 
 	for (i = 0; i <= arg_num ; i++)		/* Push arg_num + 1 null items */
 		iget();							/* on the operational stack */
@@ -1730,8 +1729,8 @@ rt_private void write_long(char *where, long int value)
 		char xtract[sizeof(long)];
 		long value;
 	} xlong;
-	register1 char *p = (char *) &xlong;
-	register2 int i;
+	char *p = (char *) &xlong;
+	int i;
 
 	xlong.value = value;
 
@@ -1754,8 +1753,8 @@ rt_public struct item *c_stack_allocate(EIF_CONTEXT register int size)
 	 */
 
 	EIF_GET_CONTEXT
-	register2 struct item *arena;		/* Address for the arena */
-	register3 struct stochunk *chunk;	/* Address of the chunk */
+	struct item *arena;		/* Address for the arena */
+	struct stochunk *chunk;	/* Address of the chunk */
 
 	size *= ITEM_SZ;
 	size += sizeof(*chunk);
@@ -1801,7 +1800,7 @@ rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct item *top = cop_stack.st_top;	/* Top of stack */
+	struct item *top = cop_stack.st_top;	/* Top of stack */
 	
 	if (top == (struct item *) 0)	{			/* No stack yet? */
 		top = c_stack_allocate(STACK_CHUNK);	/* Create one */
@@ -1820,7 +1819,7 @@ rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
 				enomem(MTC_NOARG);
 			top = cop_stack.st_top;					/* New top */
 		} else {
-			register2 struct stochunk *current;		/* New current chunk */
+			struct stochunk *current;		/* New current chunk */
 
 			/* Update the new stack context (main structure) */
 			current = cop_stack.st_cur = cop_stack.st_cur->sk_next;
@@ -1845,8 +1844,8 @@ rt_public int c_stack_extend(EIF_CONTEXT register int size)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register2 struct item *arena;		/* Address for the arena */
-	register3 struct stochunk *chunk;	/* Address of the chunk */
+	struct item *arena;		/* Address for the arena */
+	struct stochunk *chunk;	/* Address of the chunk */
 
 	size *= ITEM_SZ;
 	size += sizeof(*chunk);
@@ -1883,9 +1882,9 @@ rt_public struct item *c_opop(void)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 struct item *top = cop_stack.st_top;	/* Top of the stack */
-	register2 struct stochunk *s;			/* To walk through stack chunks */
-	register3 struct item *arena;			/* Base address of current chunk */
+	struct item *top = cop_stack.st_top;	/* Top of the stack */
+	struct stochunk *s;			/* To walk through stack chunks */
+	struct item *arena;			/* Base address of current chunk */
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This avoids pointer manipulation (walking along the stack)
@@ -1923,9 +1922,10 @@ rt_public void c_npop(register int nb_items)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register2 struct item *top;			/* Current top of operational stack */
-	register3 struct stochunk *s;		/* To walk through stack chunks */
-	register4 struct item *arena;		/* Base address of current chunk */
+	struct item *top;			/* Current top of operational stack */
+	struct stochunk *s;		/* To walk through stack chunks */
+	struct item *arena;		/* Base address of current chunk */
+	rt_int_ptr nb = nb_items;
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. That would indeed make popping very efficient.
@@ -1933,7 +1933,7 @@ rt_public void c_npop(register int nb_items)
 
 	arena = cop_stack.st_cur->sk_arena;
 	top = cop_stack.st_top;
-	top -= nb_items;				/* Hopefully, we remain in current chunk */
+	top -= nb;				/* Hopefully, we remain in current chunk */
 	if (top >= arena) {
 			/* If `top' is at the bottom of the current chunk, we need
 			 * to update current top to points to the top of previous
@@ -1960,11 +1960,11 @@ rt_public void c_npop(register int nb_items)
 	SIGBLOCK;			/* Entering protected section */
 
 	top = cop_stack.st_top;
-	for (s = cop_stack.st_cur; nb_items > 0; /* empty */) {
+	for (s = cop_stack.st_cur; nb > 0; /* empty */) {
 		arena = s->sk_arena;
-		nb_items -= top - arena;
-		if (nb_items <= 0) {			/* Have we gone too far? */
-			top = arena - nb_items;		/* Yes, reset top correctly */
+		nb -= top - arena;
+		if (nb <= 0) {			/* Have we gone too far? */
+			top = arena - nb;		/* Yes, reset top correctly */
 			break;						/* Done */
 		}
 		s = s->sk_prev;					/* Look at previous chunk */
@@ -2005,8 +2005,8 @@ rt_public struct item *c_otop(EIF_CONTEXT_NOARG)
 	 */
 	
 	EIF_GET_CONTEXT
-	register1 struct item *last_item;		/* Address of last item stored */
-	register2 struct stochunk *prev;		/* Previous chunk in stack */
+	struct item *last_item;		/* Address of last item stored */
+	struct stochunk *prev;		/* Previous chunk in stack */
 
 	last_item = cop_stack.st_top - 1;
 	if (last_item >= cop_stack.st_cur->sk_arena)
@@ -2064,7 +2064,7 @@ rt_public void c_stack_truncate(EIF_CONTEXT_NOARG)
 	 */
 
 	EIF_GET_CONTEXT
-	register2 struct item *top;		/* The current top of the stack */
+	struct item *top;		/* The current top of the stack */
 	struct stochunk *next;			/* Address of next chunk */
 
 	/* We know the program is running, because this function is only called
@@ -2089,7 +2089,7 @@ rt_public void c_wipe_out(register struct stochunk *chunk)
 {
 	/* Free all the chunks after 'chunk' */
 
-	register2 struct stochunk *next;	/* Address of next chunk */
+	struct stochunk *next;	/* Address of next chunk */
 
 	if (chunk == (struct stochunk *) 0)	/* No chunk */
 		return;							/* Nothing to be done */

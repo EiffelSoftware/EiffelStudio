@@ -873,16 +873,17 @@ feature {NONE} -- Read from file
 			!! Result.make;
 			if full_name.is_valid then
 				Result.read_from_file (full_name);
-				if not Result.is_valid then 
-					io.error.putstring ("Warning: cannot read pixmap file ");
-					io.error.putstring (full_name);
-					io.error.new_line;
-				end
+-- 				if not Result.is_valid then 
+-- 					io.error.putstring ("%NWarning: cannot read pixmap file ");
+-- 					io.error.putstring (full_name);
+-- 					io.error.new_line;
+-- 				end
 			else
-				io.error.putstring ("Warning: ");
-				io.error.putstring (full_name);
-				io.error.putstring (" is an invalid file name.");
-				io.error.new_line;
+				Result := Void
+-- 				io.error.putstring ("%NWarning: ");
+-- 				io.error.putstring (full_name);
+-- 				io.error.putstring (" is an invalid file name.");
+-- 				io.error.new_line;
 			end
 		end
 

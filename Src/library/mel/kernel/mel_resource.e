@@ -1,20 +1,25 @@
 indexing
 
 	description: 
-		"A MEL resource that has been allocated a `display'.";
+		"Abstract class for Motif resources that has been allocated %
+		%for a `display'. All descendents sets `shared' to True at %
+		%creation. This means that the user must call `destroy' or %
+		%`set_unshared' and not reference it to free the resource.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
+deferred class
 	MEL_RESOURCE
 
 inherit
 
-	ANY
+	MEL_MEMORY
+		rename
+			make_from_existing as make_from_existing_handle
 		redefine
-			is_equal
-		end
+			make_from_existing_handle
+		end;
 
 feature {NONE} -- Initialization
 
@@ -26,26 +31,25 @@ feature {NONE} -- Initialization
 			handle_not_null: a_handle /= default_pointer
 		do
 			handle := a_handle;
-			display_handle := a_display.handle
+			display_handle := a_display.handle;
+			shared := True;
 		ensure
 			set: handle = a_handle;
-			has_valid_display: has_valid_display
+			has_valid_display: has_valid_display;
+			shared: shared
 		end;
 
-	make_from_existing_handle (a_handle: POINTER) is
-			-- Create a MEL resource from an `a_handle'.
-		require
-			a_handle_not_null: a_handle /= default_pointer
-		do
-			handle := a_handle;
-		ensure
-			set: handle = a_handle;
-		end;
+    make_from_existing_handle (a_handle: POINTER) is
+            -- Initialize `a_handle' to `handle;.
+        do
+            handle := a_handle;
+			shared := True
+        ensure then
+            set: handle = a_handle;
+			shared: shared
+        end;
 
 feature -- Access
-
-	handle: POINTER;
-			-- handle to C resource
 
 	display_handle: POINTER;
 			-- Display C handle on which resource is allocated
@@ -56,22 +60,6 @@ feature -- Access
 			if display_handle /= default_pointer then
 				!! Result.make_from_existing (display_handle)
 			end
-		end;
-
-	is_valid: BOOLEAN is
-			-- Is the resource valid?
-		do
-			Result := handle /= default_pointer
-		ensure
-			valid_result: Result = not is_destroyed
-		end;
-
-	is_destroyed: BOOLEAN is
-			-- Is the resource destroyed?
-		do
-			Result := not is_valid
-		ensure
-			valid_result: Result = not is_valid
 		end;
 
 	has_valid_display: BOOLEAN is
@@ -102,14 +90,6 @@ feature -- Status setting
 		ensure
 			valid_display: has_valid_display;
 			set: equal (display, a_display)
-		end;
-
-feature -- Comparison
-
-	is_equal (other:like Current): BOOLEAN is
-			-- Is Current `handle' equal to `other' handle?
-		do
-			Result := handle = other.handle
 		end;
 
 end -- class MEL_RESOURCE

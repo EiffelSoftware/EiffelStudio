@@ -7,9 +7,6 @@ indexing
 class
 	WIZARD_EXECUTION_ENVIRONMENT
 
-create
-	default_create
-
 feature -- Access
 
 	Eiffel4_location: STRING is

@@ -41,6 +41,7 @@ feature -- Basic operations
 		do
 			transient_writer := a_writer
 			a_generator.create_file_name (Current)
+			transient_writer := Void
 		end
 
 	create_registration_file_name (a_generator: WIZARD_REGISTRATION_GENERATOR; a_writer: WIZARD_WRITER) is
@@ -51,6 +52,7 @@ feature -- Basic operations
 		do
 			transient_writer := a_writer
 			a_generator.create_file_name (Current)
+			transient_writer := Void
 		end
 
 	create_c_alias_file_name (a_writer: WIZARD_WRITER_C_FILE) is
@@ -60,6 +62,7 @@ feature -- Basic operations
 		do
 			transient_writer := a_writer
 			process_c_common
+			transient_writer := Void
 		end
 
 	create_definition_file_name (a_generator: WIZARD_DEFINITION_FILE_GENERATOR; a_writer: WIZARD_WRITER) is
@@ -67,6 +70,7 @@ feature -- Basic operations
 		do
 			transient_writer := a_writer
 			process_definition_file_writer
+			transient_writer := Void
 		end
 
 	create_generated_mapper_file_name (a_writer: WIZARD_WRITER_CPP_CLASS) is

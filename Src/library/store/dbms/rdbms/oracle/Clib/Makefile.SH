@@ -14,7 +14,7 @@ $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
 AR = ar rc
-CFLAGS = $optimize $ccflags $large -I$(EIFFEL4)/bench/spec/$(PLATFORM)/include
+CFLAGS = $optimize $ccflags $large -I$(EIFFEL4)/bench/spec/$(PLATFORM)/include -I$(ORACLE_HOME)/rdbms/public
 LDFLAGS = $ldflags
 LIBS = $libs
 MAKE = make
@@ -38,13 +38,8 @@ liboracle.a: $(OBJECTS)
 	$(RANLIB) ../../../../spec/$(PLATFORM)/lib/$@
 	$(MAKE) clean
 
-oracle.c: oracle.pc
-	make -f proc.mk oracle.c
-
-oracle.o: oracle.c
-
 clean:
-	$(RM) liboracle.a oracle.lis oracle.c $(OBJECTS) Makefile config.sh
+	$(RM) liboracle.a $(OBJECTS) Makefile config.sh
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile

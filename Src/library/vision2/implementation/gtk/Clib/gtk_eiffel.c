@@ -69,7 +69,12 @@ void c_signal_callback (GtkObject *w, gpointer data)
 }
 
 /* TEST */
+/* The following functions have been created because the callback functions associated
+ * to them need to have a specific signature.
+ * We shall put them in another file (such as gtk_eiffel_event.c).
+ */
 
+/* For Multi column List */
 void mclist_click_column_callback(GtkWidget *clist,
                                gint column,
                                gpointer data)
@@ -98,6 +103,53 @@ void mclist_row_selection_callback(GtkWidget *clist,
 	row_index = (int) pcbd->mouse_button;
 
 	if (row == row_index || row_index == -1)
+	{    
+	  /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
+      /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+	  /*printf("c_signal_callback (%d, %d)\n", w, data); */
+	  (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
+	}
+	
+}
+
+/* For CTree .*/
+
+void ctree_row_selection_callback(GtkCTree *ctree,
+                               GtkCTreeNode *row,
+                               gint column,
+                               gpointer data)
+{
+    callback_data_t *pcbd;
+	GtkCTreeNode *node;
+	
+    pcbd = (callback_data_t *)data;
+
+	/* The index of the row */
+	node = (GtkCTreeNode *) pcbd->extra_data;
+		
+	if ((node == row) || (node == NULL))
+	{    
+	  /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
+      /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+	  /*printf("c_signal_callback (%d, %d)\n", w, data); */
+	  (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
+	}
+	
+}
+
+void ctree_row_subtree_callback(GtkCTree *ctree,
+                               GtkCTreeNode *row,
+                               gpointer data)
+{
+    callback_data_t *pcbd;
+	GtkCTreeNode *node;
+	
+    pcbd = (callback_data_t *)data;
+
+	/* The index of the row */
+	node = (GtkCTreeNode *) pcbd->extra_data;
+		
+	if ((node == row) || (node == NULL))
 	{    
 	  /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
       /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
@@ -223,6 +275,8 @@ void c_gtk_signal_destroy_data (gpointer data)
  * > double_click = tells whether we are interested in double click events.
  *   Only applicable in button events.
  *
+ * > extra_data = extra information needed.
+ * 
  * > argument can be NULL which means that there is no arguments for
  *   execute (the corresponding ev_data can be NULL which means that event
  *   data is not needed for this event
@@ -242,7 +296,8 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 			   EIF_PROC event_data_rtn,
 			   char mouse_button,
 			   char double_click,
-			   int after)
+			   int after,
+			   gpointer extra_data)
 {
     callback_data_t *pcbd;
     int name_len;
@@ -264,6 +319,9 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
     pcbd->set_event_data = event_data_rtn;
     pcbd->mouse_button = mouse_button;
     pcbd->double_click = double_click;  
+
+	pcbd->extra_data = extra_data;  
+
     /*  printf ("connect rtn= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
 
     /* allow the garbage collection of object and argument, when the signal is destroyed */ 
@@ -325,6 +383,19 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 					(gpointer)pcbd));
 			}
 			else
+			if ((strcmp(name, "tree_select_row") == 0) || (strcmp(name, "tree_unselect_row") == 0))
+			{
+				return (gtk_signal_connect (widget, name, 
+					GTK_SIGNAL_FUNC(ctree_row_selection_callback), 
+					(gpointer)pcbd));
+			}
+			if ((strcmp(name, "tree_expand") == 0) || (strcmp(name, "tree_collapse") == 0))
+			{
+				return (gtk_signal_connect (widget, name, 
+					GTK_SIGNAL_FUNC(ctree_row_subtree_callback), 
+					(gpointer)pcbd));
+			}
+			else
 			{
 				return (gtk_signal_connect (widget, name, 
 					GTK_SIGNAL_FUNC(c_signal_callback), 
@@ -343,9 +414,10 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   EIF_POINTER ev_data_imp,
 			   EIF_PROC event_data_rtn,
 			   char mouse_button,
-			   char double_click)
+			   char double_click,
+			   gpointer extra_data)
 {
-	return c_gtk_signal_connect_general (widget, name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 0);
+	return c_gtk_signal_connect_general (widget, name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 0, extra_data);
 }
 			
 gint c_gtk_signal_connect_after (GtkObject *widget, 
@@ -359,7 +431,8 @@ gint c_gtk_signal_connect_after (GtkObject *widget,
 			   char mouse_button,
 			   char double_click)
 {
-	return c_gtk_signal_connect_general (widget, name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 1);
+	//return c_gtk_signal_connect_general (widget, name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 1, extra_data);
+	return c_gtk_signal_connect_general (widget, name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 1, NULL);
 }
 
 
@@ -1435,26 +1508,42 @@ void c_gtk_table_set_spacing_if_needed (GtkWidget *widget)
 
 /*********************************
  *
- * Function : `c_gtk_tree_item_expanded' (1)
- * 			  `c_gtk_tree_item_is_selected'	(2)
- * 			  `c_gtk_tree_set_single_selection_mode' (3)
- * 			  `c_gtk_tree_selected_item' (4)
+ * Function : `c_gtk_ctree_item_insert_node'			(1)
+ *			  `c_gtk_ctree_item_is_expanded' 			(2)
+ * 			  `c_gtk_ctree_set_single_selection_mode'	(3)
+ * 			  `c_gtk_ctree_selected_item'				(4)
+ * 			  `c_gtk_ctree_item_set_pixtext'			(5)
+ * 			  `c_gtk_ctree_item_get_position_in_tree'	(6)
  *
- * Note : (1) Tell if an item is expanded or not.
- *		  (2) is the item selected?
- *		  (3) set the selection mode to SINGLE.
- *		  (4) give the selected item of the tree.
+ * Note : (1) Inserts a node in the ctree. 
+ *		  (2) Is the tree Item expanded?
+ *		  (3) Sets the ctree to single selection mode.
+ *		  (4) Gives the selected item. 
+ *		  (5) Sets the pixmap and text of the node.
+ *		  (6) Gives the index in the given ctree of the given node.
  * 	
  * Author : Leila, Alex
  *
  *********************************/
 
-EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget)
+EIF_POINTER c_gtk_ctree_insert_node (GtkCTree *ctree, GtkCTreeNode*parent, GtkCTreeNode*sibling, gchar *name, guint8 spacing, GdkPixmap* pix, GdkBitmap* mask, gboolean is_leaf, gboolean expanded)
 {
-  return (GTK_TREE_ITEM(widget)->expanded) ? 1: 0;
+  gchar *text[1];
+  GtkCTreeNode *node;
+  
+  text[1] = name;
+
+  node = gtk_ctree_insert_node (ctree, parent, sibling, text, spacing, pix, mask, pix, mask, is_leaf, expanded);
+
+  return (EIF_POINTER) node; 
 }
 
-EIF_BOOLEAN c_gtk_tree_item_is_selected (GtkWidget *tree, GtkWidget *treeItem)
+EIF_BOOLEAN c_gtk_ctree_item_is_expanded (GtkCTreeNode *node)
+{
+  return (EIF_BOOLEAN) ((GTK_CTREE_ROW (node))->expanded) ? 1: 0;
+}
+
+/*EIF_BOOLEAN c_gtk_tree_item_is_selected (GtkWidget *tree, GtkWidget *treeItem)
 {
 	GList *list;
 	GtkWidget *item;
@@ -1475,47 +1564,50 @@ EIF_BOOLEAN c_gtk_tree_item_is_selected (GtkWidget *tree, GtkWidget *treeItem)
 	}
 	return 0; 
 }
+*/
 
-void c_gtk_tree_set_single_selection_mode (GtkWidget *tree)
+void c_gtk_ctree_set_single_selection_mode (GtkCTree *ctree)
 {
-  gtk_tree_set_selection_mode (GTK_TREE (tree), GTK_SELECTION_SINGLE);
+  gtk_clist_set_selection_mode (GTK_CLIST (ctree), GTK_SELECTION_SINGLE);
 }
 
-EIF_POINTER c_gtk_tree_selected_item (GtkWidget *tree)
+EIF_POINTER c_gtk_ctree_selected_item (GtkCTree *ctree)
 {
-	GList *list;
-	GtkTree * wid;
+  GList *list;
 
-	wid = GTK_TREE_ROOT_TREE (GTK_TREE (tree));
-list = wid->selection;
+  list = (GTK_CLIST (ctree))->selection;
 	
-	list = GTK_TREE_SELECTION(tree);
-
-  while (list){
-    GtkWidget *item;
-
-    item = GTK_WIDGET (list->data);
-    list = list->next;
+  if (list != NULL)
+  {	
+    if (list->data != NULL)
+	{
+	  return (EIF_POINTER) (list->data);
+	}
+	else return (EIF_POINTER) NULL; 	
   }
-  if (list->data != NULL)
+  else return (EIF_POINTER) NULL;
+
+}
+
+void c_gtk_ctree_item_set_pixtext (GtkCTree *ctree, GtkCTreeNode *node, gint column, GtkPixmap *p, gchar *txt, guint8 spacing)
+{
+  GdkPixmap *pix;
+  GdkBitmap *mask;
+
+  if (p != NULL)
   {
-   	return (EIF_POINTER) (list->data);
-  }	  
-  else return (EIF_POINTER) NULL; 
+	mask = p->mask;
+	pix = p->pixmap;
+    gtk_ctree_node_set_pixtext (ctree, node, column, txt, spacing, pix, mask);
+  } else
+  gtk_ctree_node_set_pixtext (ctree, node, column, txt, spacing, NULL, NULL);
+  
+}
 
-/*
-
-	if (list != NULL)
-	{	
-	  if (list->data != NULL)
-	  {
-	   	return (EIF_POINTER) (list->data);
-	  }
-	  else return (EIF_POINTER) NULL; 
-	}
-	else return (EIF_POINTER) NULL; 
-*/
-	}
+EIF_INTEGER c_gtk_ctree_item_get_position_in_tree (GtkCTree *ctree, GtkCTreeNode *node)
+{
+    return (EIF_INTEGER) g_list_index (GTK_CLIST (ctree)->row_list, (gpointer) (GTK_CTREE_ROW (node)));
+}
 
 /*********************************
  *

@@ -1,10 +1,11 @@
--- Representation of a table of routine pointer for the final Eiffel
--- executable
+indexing
+	description: "Representation of a table of routine pointer for the final Eiffel executable"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ROUT_TABLE
 
 inherit
-
 	POLY_TABLE [ROUT_ENTRY]
 		rename
 			writer as Rout_generator
@@ -141,7 +142,6 @@ feature
 			-- Generation of the routine table in buffer "erout*.c".
 		local
 			entry: ROUT_ENTRY;
-			extern_entry: EXTERN_ENTRY
 			i, nb, index: INTEGER;
 			routine_name: STRING;
 			empty_function_ptr_string: STRING
@@ -168,16 +168,8 @@ feature
 						buffer.putstring (routine_name);
 						buffer.putstring (",%N");
 			
-						extern_entry ?= entry
-						if
-							extern_entry /= Void and then not extern_entry.encapsulated
-							and then extern_entry.include_list /= Void
-						then
-							add_header_files (extern_entry.include_list)
-						else
-								-- Remember external routine declaration
-							Extern_declarations.add_routine (entry.type.c_type, routine_name)
-						end
+							-- Remember external routine declaration
+						Extern_declarations.add_routine (entry.type.c_type, routine_name)
 					else
 						buffer.putstring (empty_function_ptr_string);
 					end;

@@ -54,7 +54,6 @@ inherit
 		undefine
 			is_equal, copy, default_create
 		end
-	
 create
 	make,
 	make_without_label
@@ -393,11 +392,12 @@ feature {NONE} -- Implementation
 					remove_selected_constant
 					last_selected_constant := constant
 				else
-					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Do_not_show_again)
+					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again)
 					constants_combo_box.first.enable_select					
 					warning_dialog.set_ok_action (agent do_nothing)
 					warning_dialog.set_title ("Invalid Constant Selected")
 					warning_dialog.show_modal_to_window (parent_window (Current))
+					preferences.save_resources
 				end
 			end
 		end

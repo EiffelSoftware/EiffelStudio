@@ -1,0 +1,79 @@
+<document title="EiffelVision Pick and Drop">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelVision 2\EiffelVision Interface Content\Properties</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  Pick and drop is a mechanism which allows data to be transported from a 
+			<bold>source</bold> object to a 
+			<bold>target</bold>. Any Vision2 object inheriting  EV_PICK_AND_DROPABLE  can be used to transport or receive data. 
+		</paragraph>
+		<heading>
+			<size>2</size>A simple pick and drop example
+		</heading>
+		<paragraph>  Two necessary components for a pick and drop transport are a 
+			<bold>source</bold> and a 
+			<bold>target</bold>, both of which must conform to  EV_PICK_AND_DROPABLE. The data that is to be transported is known as a 
+			<bold>pebble</bold>.
+		</paragraph>
+		<paragraph>  The following steps need to be undertaken to set up a simple pick and drop:  
+			<list ordered="false">
+				<item>Set the 
+					<bold>source</bold> by calling set_pebble.
+				</item>
+				<item>Set one or more 
+					<bold>targets</bold> by adding a function to their drop_actions. The arguments of the function must  match the type of the 
+					<bold>pebble</bold> to be transported for the 
+					<bold>source</bold> otherwise the transport will not be permitted.
+				</item>
+			</list>
+			<paragraph>  A simple example of this is demonstrated here: </paragraph>
+			<code_block>Missing</code_block>
+			<paragraph>  As print takes an argument of type  
+				<link>
+					<url>../../../base/reference/kernel/string_chart.html</url>
+					<label>STRING</label>
+				</link>, button2 becomes a  valid target for the pebble contained in button1. Right clicking  the mouse pointer over the 
+				<bold>source</bold> will start the transport, and right clicking  with the mouse pointer over a valid 
+				<bold>target</bold> will end the transport.  The transport can be cancelled anytime with a simple left click, just as you  would do in Eiffel Studio. 
+			</paragraph>
+			<note>
+				<bold>Note</bold>: When a transport completes, the 
+				<bold>pebble</bold> that was transported is passed as an argument to all features in the 
+				<bold>targets</bold>drop_actions whose  argument type matches the 
+				<bold>pebble</bold>
+			</note>
+			<heading>
+				<size>2</size>Three different modes of transport
+			</heading>
+			<paragraph>  There are three different modes of transport available for pick and drop. They are listed below with details of their use:  
+				<list ordered="false">
+					<item>Pick and Drop mode.
+						<line_break/>This is the default mode for pick and drop, but can be set with  set_pick_and_drop_mode. Right clicking on a  
+						<bold>source</bold> starts the transport and right clicking on a valid 
+						<bold>target</bold> completes the transport. During execution, a band is drawn from the screen position where the pick started to the current mouse position. Pressing the left mouse button or the escape key during execution will end the transport.
+					</item>
+					<item>Drag and drop mode
+						<line_break/>This mode can be set with set_drag_and_drop_mode. Left clicking on a 
+						<bold>source</bold> starts the transport and releasing the left mouse button over a valid  
+						<bold>target</bold> completes the transport. During execution, a band is drawn from the screen position where the pick started to the current mouse position. Releasing the left mouse button or pressing the escape key during execution will end the transport.
+					</item>
+					<item>Target menu mode
+						<line_break/>This mode can be set with set_target_menu_mode. Right clicking on a 
+						<bold>source</bold> brings up a menu of all the valid drop 
+						<bold>targets</bold> in the system. Selecting one  of these targets completes the transport.
+					</item>
+				</list>
+			</paragraph>
+			<heading>
+				<size>2</size>Accept and deny cursors
+			</heading>
+			<paragraph>  When mode_is_pick_and_drop or  mode_is_drag_and_drop then the shape of the  mouse cursor changes to reflect whether the current GUI component below the mouse accepts the pebble or not. Calling  set_accept_cursor allows you to customize this cursor used to represent a valid 
+				<bold>target</bold> while  calling set_deny_cursor allows you to customize the cursor used for non valid 
+				<bold>targets</bold>. 
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

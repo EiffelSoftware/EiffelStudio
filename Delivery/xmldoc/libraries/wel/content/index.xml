@@ -1,0 +1,77 @@
+<document title="WEL Interface Content">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\WEL</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>    WEL is an encapsulation of the Win32 Application Programming  Interface (API), and provides users with a powerful means of creating  Win32 Applications. </paragraph>
+		<heading>
+			<size>2</size>Components
+		</heading>
+		<paragraph>The WEL library includes the following clusters:</paragraph>
+		<list ordered="false">
+			<item>A 
+				<link>
+					<url>/libraries/wel/content/windows/index.html</url>
+					<label>Windows</label>
+				</link> cluster containing classes representing available windows types
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/content/controls/index.html</url>
+					<label>Controls</label>
+				</link> cluster containing classes representing available controls
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/content/stddlgs/index.html</url>
+					<label>Stddlgs</label>
+				</link> cluster containing classes representing standard Win32 dialogs
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/reference/consts/index.html</url>
+					<label>Consts</label>
+				</link> cluster which contains constants used by WEL
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/reference/gdi/index.html</url>
+					<label>Gdi</label>
+				</link> cluster which contains classes allowing access to WIN32 Graphics Device Interfaces
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/reference/gdistock/index.html</url>
+					<label>Gdistock</label>
+				</link> cluster which contains standard Graphic Device Interfaces used by WEL
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/reference/messages/index.html</url>
+					<label>Messages</label>
+				</link> cluster which contains classes encapsulating windows messages
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/reference/shared/index.html</url>
+					<label>Shared</label>
+				</link> cluster which contains classes encapsulating system wide shared
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/reference/structs/index.html</url>
+					<label>Structs</label>
+				</link> cluster which contains classes for data structures required by Win32
+			</item>
+			<item>A 
+				<link>
+					<url>/libraries/wel/reference/support/index.html</url>
+					<label>Support</label>
+				</link> cluster which contains many supporting classes
+			</item>
+		</list>
+	</paragraph></document>

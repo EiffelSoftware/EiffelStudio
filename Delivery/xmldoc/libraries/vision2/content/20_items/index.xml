@@ -1,0 +1,83 @@
+<document title="Items">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelVision 2\EiffelVision Interface Content</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  All Vision2 items inherit EV_ITEM.  To view the classes contained in the items cluster, click 
+			<link>
+				<url>/libraries/vision2/reference/interface/items/index.html</url>
+				<label>here</label>
+			</link>. 
+		</paragraph>
+		<heading>
+			<size>2</size>What is an item?
+		</heading>
+		<paragraph>  A Vision2 item is an object that is used to display information within certain primitives. For example, EV_LIST  may hold items of type EV_LIST_ITEM. All  Vision2 items are descendants of EV_PIXMAPABLE meaning they can  display an EV_PIXMAP. </paragraph>
+		<heading>
+			<size>2</size>Item holders
+		</heading>
+		<paragraph>  Below is a structure showing the Vision2 components and the items that they  accept, all the items types available in Vision2 are included:  
+			<list ordered="false">
+				<item>EV_LIST accepts items of type:  
+					<list ordered="false">
+						<item>EV_LIST_ITEM</item>
+					</list>
+				</item>
+				<item>EV_COMBO_BOX accepts items of type:  
+					<list ordered="false">
+						<item>EV_LIST_ITEM</item>
+					</list>
+				</item>
+				<item>EV_WINDOW accepts items of type (Use set_menu_bar):  
+					<list ordered="false">
+						<item>EV_MENU_BAR accepts items of type:  
+							<list ordered="false">
+								<item>EV_MENU accepts items of type:   
+									<list ordered="false">
+										<item>EV_MENU</item>
+										<item>EV_MENU_ITEM</item>
+										<item>EV_MENU_SEPARATOR</item>
+										<item>EV_RADIO_MENU_ITEM</item>
+										<item>EV_CHECK_MENU_ITEM</item>
+									</list>
+								</item>
+							</list>
+						</item>
+					</list>
+				</item>
+				<item>EV_MULTI_COLUMN_LIST accepts items of type:  
+					<list ordered="false">
+						<item>EV_MULTI_COLUMN_LIST_ROW</item>
+					</list>
+				</item>
+				<item>EV_TOOL_BAR accepts items of type:  
+					<list ordered="false">
+						<item>EV_TOOL_BAR_BUTTON</item>
+						<item>EV_TOOL_BAR_SELECT_BUTTON</item>
+						<item>EV_TOOL_BAR_SEPARATOR</item>
+						<item>EV_TOOL_BAR_TOGGLE_BUTTON</item>
+					</list>
+				</item>
+				<item>EV_TREE accepts items of type:  
+					<list ordered="false">
+						<item>EV_DYNAMIC_TREE_ITEM accepts items of type:   
+							<list ordered="false">
+								<item>EV_DYNAMIC_TREE_ITEM</item>
+								<item>EV_TREE_ITEM</item>
+							</list>
+						</item>
+						<item>EV_TREE_ITEM accepts items of type:   
+							<list ordered="false">
+								<item>EV_DYNAMIC_TREE_ITEM</item>
+								<item>EV_TREE_ITEM</item>
+							</list>
+						</item>
+					</list>
+				</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

@@ -1,0 +1,66 @@
+<document output="studio" title="EiffelNet">
+	<meta_data/>
+	<paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.html</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_clients_servers.html</url>
+					<label>Clients and server</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_overview.html</url>
+					<label>An overview of EiffelNet         mechanisms</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_predefined_level.html</url>
+					<label>The predefined level</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_examples.html</url>
+					<label>Introduction to the examples</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_working_at_predefined_level.html</url>
+					<label>Working at the         predefined level</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>60_finer_control_degree.html</url>
+					<label>Obtaining a finer         degree of control</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>70_datagram_sockets.html</url>
+					<label>Using datagram sockets</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>80_event_driven_cmd.html</url>
+					<label>Event-driven command         execution</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>90_complexe_example.html</url>
+					<label>A more complexe example</label>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

@@ -1,0 +1,44 @@
+<document output="studio" title="Data Modification">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Use the DB_CHANGE class to perform any operation on your database that does not require access to a result. You can for instance modify table row content, drop table rows, create and delete tables.</paragraph>
+		<note>
+			<bold>Note</bold>: Take a look at the 
+			<link>
+				<url>../50_data_object_coupling/index.html#insert</url>
+				<label>Data Storing</label>
+			</link> capability if you want to 
+			<bold>insert</bold> table rows.
+		</note>
+		<paragraph>DB_CHANGE allows you to modify the database data using the SQL language:</paragraph>
+		<list ordered="false">
+			<item>Prepare your SQL query and use modify:
+				<code_block>Missing Code</code_block>
+			</item>
+			<item>Commit your changes with your session control:
+				<code_block>Missing Code</code_block>
+				<tip>
+					<bold>Tip</bold>: It is always better to check the database status for errors before committing changes.
+				</tip>
+			</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../50_data_object_coupling/index.html#insert</url>
+				<label>Data storing</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../70_stored_procedures/index.html</url>
+				<label>Stored procedures</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../../20_implementation_layer/index.html</url>
+				<label>Implementation</label>
+			</link>
+			<line_break/>
+		</seealso>
+	</paragraph></document>

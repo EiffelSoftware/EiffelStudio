@@ -1,0 +1,18 @@
+<document output="studio" title="The Lex and Parse Library Content">
+	<meta_data/>
+	<paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>lexical.html</url>
+					<label>Lexical analysis</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>parsing.html</url>
+					<label>Parsing</label>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

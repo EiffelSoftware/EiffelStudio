@@ -1,0 +1,17 @@
+<document title="WEL_SINGLE_LINE_EDIT">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\WEL\WEL Interface Content\Controls</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph> A WEL_SINGLE_LINE_EDIT is a control used to input a single line of text.   
+		<heading>
+			<size>2</size>Appearance
+		</heading>
+		<image> 
+			<url>images/wel_single_line_edit.png</url> 
+			<alt_text>wel_single_line_edit</alt_text>
+		</image>
+	</paragraph></document>

@@ -1,0 +1,76 @@
+<document output="studio" title="Event-driven command execution">
+	<meta_data/>
+	<paragraph>
+		<table>
+			<row>
+				<cell>The example classes discussed in this section appear in the        subdirectory 
+					<italic>polling </italic>of the example directory
+				</cell>
+			</row>
+		</table>
+		<heading>
+			<size>3</size>9.1 Commands and events
+		</heading>
+		<paragraph>In the preceding examples each participant in a communication had to    get ready to send or receive at specific stages of its life. Although    this did not preclude asynchronous communication, it is sometimes    desirable to make the scheme even more asynchronous, and control more    decentralized, by letting each system simply specify certain    communication events that it wants to monitor, and certain commands to    be executed on occurrence of the specified events.</paragraph>
+		<paragraph>This event-command model of computation is of course not new with    EiffelNet. In ISE Eiffel 3, it is already used in EiffelVision and    especially in EiffelBuild, which makes it possible to build a graphical    application by specifying which command should be executed in response    to each of a set of specified interface events, such as mouse click or    keyboard entry. The commands are objects, instances of a general-purpose    class COMMAND or its proper descendants. Class COMMAND has, among its    features, a procedure 
+			<italic>execute</italic> which executes the current command;    some commands are undoable and have an 
+			<italic>undo</italic> procedure.
+		</paragraph>
+		<paragraph>Class COMMAND
+			<italic/>and related classes used to be in EiffelVision    but because of their generality were moved to [2], although this    occurred after the publication of [2].
+		</paragraph>
+		<paragraph>In EiffelNet the possible events associated with a socket will be of    three kind: a read event; a write event; or a special event (out of    bounds operation). The command classes will be descendants of POLL_COMMAND,    an heir of COMMAND.</paragraph>
+		<heading>
+			<size>3</size>9.2 Command classes
+		</heading>
+		<paragraph>The example uses four command classes: CLIENT_DATAGRAM_READER,    CLIENT_DATAGRAM_WRITER and their counterpart for servers, representing    operations that must be triggered in the case of a read event and a    write event.</paragraph>
+		<paragraph>Here is the reader command for clients:    
+			<code_block>Missing code</code_block>
+			<paragraph>The 
+				<italic>execute</italic> procedure reads a packet of ten characters and    prints these characters. Its counterpart in the writing command will    produce these ten packets:    
+				<code_block>Missing code</code_block>
+				<heading>
+					<size>3</size>9.3 The server and the client
+				</heading>
+				<paragraph>Once the commands have been defined, it suffices for the server and    the client to associate instances of these commands with the    appropriate.</paragraph>
+				<paragraph>The abstraction needed for this purpose is provided by class MEDIUM_POLLER.    An instance of this class knows about a number of commands, each    associated with a certain socket in read, write or special event mode.    By applying procedure 
+					<italic>execute</italic> to such a medium poller, you direct    it to monitor these sockets for the corresponding events and to execute    the command associated with each event that will be received. Procedure 
+					<italic>execute</italic>    takes two integer arguments: the maximum number of sockets to monitor,    and the timeout in milliseconds.
+				</paragraph>
+				<paragraph>Here is the server built with this mechanism:    
+					<code_block>Missing code</code_block>
+				</paragraph>
+				<paragraph>Procedure 
+					<italic>make</italic> creates three objects: a socket, which it    associates with a specific port; a poller; and a read command (an    instance of SERVER_DATAGRAM_READER), which it attaches to the socket. It    then enters the read command into the poller, and does the same thing    with a write command. It sets up the poller to accept read commands only    and then executes the poller; this will enable the server to get the    read event triggered by the client's write command (as it appears below    in the text of class POLLING_CLIENT). Then the server reverses the    poller's set-up to write-only, and calls 
+					<italic>execute</italic> again.
+				</paragraph>
+				<paragraph>The procedures 
+					<italic>make_read_only</italic> and 
+					<italic>make_write_only</italic> are    creation procedures, so that it is possible in a single instruction to    create a poller and set it up for read-only or write-only, as in 
+					<bold>create</bold>
+					<italic>poller</italic>l
+					<italic>make_read_only</italic>. For clarity, however, the above    class and the next separate calls to these procedures from the creation    of the poller, which uses 
+					<italic>make</italic> as creation procedure.
+				</paragraph>
+				<paragraph>The client follows the same scheme, reversing the order of read and    write operations:    
+					<code_block>Missing code</code_block>
+					<heading>
+						<size>3</size>9.4 A less deterministic scheme
+					</heading>
+					<paragraph>Although the example uses the event-driven mechanisms of EiffelNet,    it is still relatively deterministic in that it follows a precise    protocol defined by a strict sequence of read and write operations on    both sides. This is why every call to 
+						<italic>execute</italic> is preceded by a    call to either 
+						<italic>make_read_only</italic> or 
+						<italic>make_write_only </italic>to set up    the poller in the appropriate mode.
+					</paragraph>
+					<paragraph>A less deterministic scheme may often be desirable, where you simply    enter a number of commands (read, write, out of bounds processing) into    a poller and then wait for arbitrary events to occur and trigger    commands. There is no need with this scheme to know in advance the order    in which events may occur: a read event will trigger the command entered    into the poller through 
+						<italic>put_read_command</italic>; a write event will    trigger the command entered through 
+						<italic>put_write_command</italic>.
+					</paragraph>
+					<paragraph>To achieve this behavior, simply create the poller using 
+						<italic>make</italic>    as creation procedure. This will set up the poller so as to accept all    socket events, and enter into event-driven command execution by calling 
+						<italic>execute</italic>    on the poller.
+					</paragraph>
+				</paragraph>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

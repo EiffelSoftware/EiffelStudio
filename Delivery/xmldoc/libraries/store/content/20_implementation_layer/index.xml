@@ -1,0 +1,98 @@
+<document output="studio" title="EiffelStore Implementation Layer">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Each interface class has an implementation counterpart that implements specific DBMS handling. The class prefix indicates clearly its layer, for instance:</paragraph>
+		<list ordered="false">
+			<item>DB_SELECTION is the interface to perform a database selection query.</item>
+			<item>DATABASE_SELECTION [DATABASE] is its implementation. </item>
+		</list>
+		<paragraph>The abstract DATABASE class represents a DBMS, i.e. it is the Eiffel-side database call interface. It is inherited for instance by the instantiable ORACLE and ODBC classes.</paragraph>
+		<paragraph>EiffelStore enables to link common interface objects with database-specific implementation objects using a 
+			<bold>handle</bold>. This handle also enables to switch between different databases.
+		</paragraph>
+		<paragraph>Let us see in 4 steps how EiffelStore implements this handle system: 
+			<list ordered="false">
+				<item>The 
+					<link>
+						<url>#handle</url>
+						<label>active database handle</label>
+					</link>.
+				</item>
+				<item>The 
+					<link>
+						<url>#association</url>
+						<label>association between interface and implementation</label>
+					</link> objects.
+				</item>
+				<item>The 
+					<link>
+						<url>#access</url>
+						<label>access to the DBMS call interface</label>
+					</link> from the implementation layer.
+				</item>
+				<item>The 
+					<link>
+						<url>#selection</url>
+						<label>active database selection</label>
+					</link> from the database application.0
+				</item>
+			</list>
+			<heading>
+				<size>2</size>The active database handle
+			</heading>
+			<paragraph>The HANDLE_USE class provides access to the unique HANDLE instance. This object stores all the information about the active database, mainly:</paragraph>
+			<list ordered="false">
+				<item>Database login information:
+					<code_block>Missing</code_block>
+				</item>
+				<item>Database status information:
+					<code_block>Missing</code_block>
+				</item>
+			</list>
+			<heading>
+				<size>2</size>Association between interface and implementation
+			</heading>
+			<paragraph>The association between an interface object and its implementation counterpart is done at the interface object creation.</paragraph>
+			<paragraph>Every interface class inherits from the HANDLE_USE class and can access the active database handle. This handle contains a DB [DATABASE] object that provides implementation objects corresponding to every interface objects.</paragraph>
+			<paragraph>The creation procedure for a DB_CHANGE object is for instance:</paragraph>
+			<code_block>Missing</code_block>
+			<heading>
+				<size>2</size>Access to the DBMS call interface
+			</heading>
+			<paragraph>Every implementation class can access the active database call interface by inheriting from the HANDLE_SPEC [DATABASE] class. This class provides access to the DATABASE object, i.e. an instance of class ORACLE or ODBC.</paragraph>
+			<paragraph>DATABASE descendants are actually wrappers for the DBMS call interfaces written in C. More precisely, call interfaces as delivered by the DBMS companies are called in an EiffelStore C library. The C libraries are then wrapped into Eiffel classes, DATABASE descendants.</paragraph>
+			<heading>
+				<size>2</size>Active database selection
+			</heading>
+			<paragraph>As seen in the 
+				<link>
+					<url>../10_interface_layer/10_database_connection/index.html</url>
+					<label>interface connection</label>
+				</link> part, active database selection is performed by the {DATABASE_APPL}.set_base feature: when a DATABASE_APPL object calls set_base, database represented by this object is activated.
+			</paragraph>
+			<paragraph>Let us give some details about the set_base feature:</paragraph>
+			<list ordered="false">
+				<item>Database call interface global reference is updated through {HANDLE_SPEC}.update_handle.</item>
+				<item>All information about the database is set to the handle, mainly: 
+					<list ordered="false">
+						<item>Login information.</item>
+						<item>Status information. </item>
+					</list>
+					<note>
+						<bold>Note</bold>: When database is inactive, its information is stored in the DATABASE_APPL object.
+					</note>
+				</item>
+			</list>
+			<paragraph>The corresponding code looks like:</paragraph>
+			<code_block>Missing</code_block>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break/>
+				<link>
+					<url>../10_interface_layer/index.html</url>
+					<label>The interface layer</label>
+				</link>
+				<line_break/>
+			</seealso>
+		</paragraph>
+	</paragraph></document>

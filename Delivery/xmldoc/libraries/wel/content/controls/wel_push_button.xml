@@ -1,0 +1,17 @@
+<document title="WEL_PUSH_BUTTON">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\WEL\WEL Interface Content\Controls</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph> A WEL_PUSH_BUTTON is a control that the user can click to provide notification to the application. 
+		<heading>
+			<size>2</size>Appearance
+		</heading>
+		<image> 
+			<url>images/wel_push_button.png</url> 
+			<alt_text>wel_push_button</alt_text>
+		</image>
+	</paragraph></document>

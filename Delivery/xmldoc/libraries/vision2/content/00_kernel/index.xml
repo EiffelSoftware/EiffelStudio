@@ -1,0 +1,89 @@
+<document title="Kernel">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelVision 2\EiffelVision Interface Content</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  The kernel cluster contains classes that provide functionality that  are common to most Windowed application. These classes are  considered the core, or kernel of any Vision2 application. The  most important of these classes is  EV_APPLICATION. This is used to  initialize the graphical toolkit and event loop of your Vision2  application. Kernel also includes classes such as 
+			<link>
+				<url>../../reference/interface/kernel/ev_timeout_chart.html</url>
+				<label> EV_TIMEOUT</label>
+			</link> that  calls procedures (via agents) at a set interval, and 
+			<link>
+				<url>../../reference/interface/kernel/ev_color_chart.html</url>
+				<label> EV_COLOR</label>
+			</link> which is used for  coloring widgets and items. For a complete list of the classes  contained in the Kernel cluster, click 
+			<link>
+				<url>/libraries/vision2/reference/interface/kernel/index.html</url>
+				<label>here</label>
+			</link>.  To start programming with Vision2, you first have to correctly  initialize  EV_APPLICATION.
+		</paragraph>
+		<heading>
+			<size>2</size>Launching your application with EV_APPLICATION - The heart of all Vision2 systems
+		</heading>
+		<paragraph>EV_APPLICATION is the basis for every  Vision2 application and is considered the most important class in the  library. It is responsible for initializing the underlying toolkit  that is driving the windowing system on the platform that you decide to  compile your system on. It also also where the main event loop  that drives your application is executed.  </paragraph>
+		<note>
+			<bold>Note:</bold> It is 
+			<bold> not</bold> possible to create a  Vision2 component unless an application exists (query  
+			<link>
+				<url>/libraries/vision2/reference/interface/kernel/ev_environment_chart.html</url>
+				<label>EV_ENVIRONMENT</label>
+			</link>).  
+		</note>  You may inherit EV_APPLICATION or use it as a client in order to create your vision2  application. A simple method of using EV_APPLICATION is as follows:  
+		<list ordered="true">
+			<item>Create an instance of EV_APPLICATION.</item>
+			<item>Create one or more windows for your application.</item>
+			<item>Launch the application.</item>
+		</list>
+		<paragraph>An example of a Vision2 application using inheritance from EV_APPLICATION is  shown below.</paragraph>
+		<code_block>Missing</code_block>
+		<paragraph>This is the same Vision2 application but instead using 
+			<code>
+				<class_name>
+					<url>/libraries/vision2/reference/interface/kernel/ev_application_chart.html</url>
+					<label>EV_APPLICATION</label>
+				</class_name>
+			</code>  in a client/supplier relationship.
+		</paragraph>
+		<code_block>Missing</code_block>
+		<paragraph>   
+			<heading>
+				<size>2</size>What does Launch actually do?
+			</heading>  In Vision2, to launch an application means to pass control to the underlying  graphical toolkit. Simply creating an application does not launch it. An explicit call to launch is required  for the event processing to begin.  
+			<note>
+				<bold>Note: </bold>A Vision2 system is event based. This means that you do not have control of the execution within a  Vision2 system, but must respond appropriately to 
+				<link>
+					<url>/libraries/vision2/content/30_events/index.html</url>
+					<label>events</label>
+				</link> as they occur. Therefore, if you call launch on  an EV_APPLICATION, the processing for the application will continue indefinitely unless you have provided a  way to exit the application. It is essential to initialize your components  correctly, so your application can be exited (call destroy on the application).  
+			</note>   
+			<heading>
+				<size>2</size>Building your application skeleton
+			</heading>
+			<paragraph>Now that you have a basic application skeleton set up you can now go  about</paragraph>
+			<list ordered="false">
+				<item>
+					<link>
+						<url>../10_widgets/index.html</url>
+						<label>Creating widgets and setting their properties.</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>../10_widgets/10_containers/index.html</url>
+						<label>Adding containers to your  window(s), then place your created widgets  in those containers.</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>../30_events/index.html</url>
+						<label>Add code to respond to user actions with agents and action sequences.</label>
+					</link>
+				</item>
+			</list>
+			<paragraph>Once you have learnt the basics of GUI programming within Vision2,  you are well on the way to creating powerful multi-platform  applications. The Application Programming Interface (API) of  Vision2 has been designed in a way to ensure that the library is as  intuitive, consistent and stylistic as possible, heavy reuse of components from  EiffelBase has been one of the main reasons that made this possible.</paragraph>
+		</paragraph>
+	</paragraph></document>

@@ -1,0 +1,111 @@
+<document title="Properties">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelVision 2\EiffelVision Interface Content</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  This cluster contains all the common properties available for Vision2 
+			<link>
+				<url>/libraries/vision2/content/10_widgets/index.html</url>
+				<label>widgets</label>
+			</link> and  
+			<link>
+				<url>../20_items/index.html</url>
+				<label>items</label>
+			</link>. Every Vision2 widget has the same set of properties inherited from EV_WIDGET,  but many widgets also inherit additional properties, further refining the  behavior of the widget. To view the classes contained in the  property cluster, click 
+			<link>
+				<url>/libraries/vision2/reference/interface/properties/index.html</url>
+				<label>here</label>
+			</link>. 
+		</paragraph>
+		<paragraph>EV_WIDGET inherits the following properties:  
+			<list ordered="false">
+				<item>
+					<link>
+						<url>../../reference/interface/properties/ev_pick_and_dropable_chart.html</url>
+						<label>EV_PICK_AND_DROPABLE</label>
+					</link>
+					<list ordered="false">
+						<item>For an overview of the Pick and Drop mechanism, click 
+							<link>
+								<url>ev_pick_and_dropable.html</url>
+								<label>here</label>
+							</link>.
+						</item>
+					</list>
+				</item>
+				<item>
+					<link>
+						<url>../../reference/interface/properties/ev_sensitive_chart.html</url>
+						<label>EV_SENSITIVE</label>
+					</link>
+					<list ordered="false">
+						<item>   If a Vision2 component inherits EV_SENSITIVE, it can be   made to ignore events.
+							<line_break/>   Use disable_sensitive to   disable event handling, and enable_sensitive to restore event handling.
+						</item>
+					</list>
+				</item>
+				<item>
+					<link>
+						<url>../../reference/interface/properties/ev_colorizable_chart.html</url>
+						<label>EV_COLORIZABLE</label>
+					</link>
+					<list ordered="false">
+						<item>   If a Vision2 component inherits EV_COLORIZABLE it has facilites   for modifying its foreground and background colors.
+							<line_break/>   Use set_foreground_color to set the foreground_color and   set_background_color to set the background_color.
+							<line_break/>   Use set_default_colors to restore the colors to their defaults.
+						</item>
+					</list>
+				</item>
+				<item>
+					<link>
+						<url>../../reference/interface/properties/ev_help_contextable_chart.html</url>
+						<label>EV_HELP_CONTEXTABLE</label>
+					</link>
+					<list ordered="false">
+						<item>   If a Vision2 component inherits EV_HELP_CONTEXTABLE,  facilities are provided for associating help to the component when F1 or Shift F1 is pressed.</item>
+					</list>
+				</item>
+				<item>
+					<link>
+						<url>../../reference/interface/properties/ev_positioned_chart.html</url>
+						<label>EV_POSITIONED</label>
+					</link>
+					<list ordered="false">
+						<item>   If a Vision2 component inherits EV_POSITIONED it is possible to query   its current position, size and minimum size.
+							<line_break/>   Use x_position and   y_position to find its position relative to its parent.
+							<line_break/>   Use width and   height to find its size.
+							<line_break/>   Use minimum_width and   minimum_height" to find its size.
+						</item>
+					</list>
+				</item>
+				<item>
+					<link>
+						<url>../../reference/interface/properties/ev_containable_chart.html</url>
+						<label>EV_CONTAINABLE</label>
+					</link>
+					<list ordered="false">
+						<item>   If a Vision2 component inherits EV_CONTAINABLE   it is able question its parent.   Use parent to query the current parent.</item>
+					</list>
+				</item>
+			</list>
+		</paragraph>
+		<note>
+			<bold>Note:</bold> EV_CONTAINABLE has no features  for setting the parent. In Vision2, a child has no features for setting its parent, while a parent such as ev_container  contains routines for adding children (one example is extend). 
+		</note>
+		<paragraph>  The following properties are also used within Vision2:  
+			<list ordered="false">
+				<item>EV_DESELECTABLE</item>
+				<item>EV_DRAWABLE</item>
+				<item>EV_FONTABLE</item>
+				<item>EV_PIXMAPABLE</item>
+				<item>EV_POSITIONABLE</item>
+				<item>EV_SELECTABLE</item>
+				<item>EV_TEXTABLE</item>
+				<item>EV_TOOLTIPABLE</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

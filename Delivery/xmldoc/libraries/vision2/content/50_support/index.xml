@@ -1,0 +1,27 @@
+<document title="Support">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelVision 2\EiffelVision Interface Content</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  The support cluster contains many classes providing useful facilities within the library. Many of the classes within this cluster are constant  classes, which are filled with constant values for specific contexts, generally indicated by their names. The following constant classes are available within this cluster:  
+			<list ordered="false">
+				<item>EV_DIALOG_CONSTANTS</item>
+				<item>EV_DRAWABLE_CONSTANTS</item>
+				<item>EV_FONT_CONSTANTS</item>
+				<item>EV_KEY_CONSTANTS</item>
+				<item>EV_POSTSCRIPT_PAGE_CONSTANTS</item>
+			</list>  In a similar vein to constant classes, the two following classes are provided to provide support for  default EV_COLOR's  and EV_PIXMAP's.  
+			<list ordered="false">
+				<item>EV_STOCK_COLORS</item>
+				<item>EV_STOCK_PIXMAPS</item>
+			</list>  Click 
+			<link>
+				<url>/libraries/vision2/reference/interface/support/index.html</url>
+				<label>here</label>
+			</link> to browse the support cluster. 
+		</paragraph>
+	</paragraph></document>

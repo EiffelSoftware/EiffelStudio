@@ -1,0 +1,56 @@
+<document output="studio" title="EiffelCOM Content">
+	<meta_data/>
+	<paragraph>
+		<paragraph> The EiffelCOM library includes the following clusters:
+			<list ordered="false">
+				<item>A 
+					<link>
+						<url>../reference/constants/index.html</url>
+						<label>Constants</label>
+					</link>         cluster provides standard COM contants and enumerations.
+				</item>
+				<item>A 
+					<link>
+						<url>01_interfaces.html</url>
+						<label>Interfaces</label>
+					</link>         cluster includes wrappers for standard interfaces that the         EiffelCOM wizard does not generate and deferred classes: 
+					<link>
+						<url>../reference/interfaces/ecom_interface.html</url>
+						<label>ECOM_INTERFACE</label>
+					</link>,
+					<link>
+						<url>../reference/interfaces/ecom_queriable.html</url>
+						<label>ECOM_QUERIABLE</label>
+					</link>, and 
+					<link>
+						<url>../reference/interfaces/ecom_stub.html</url>
+						<label>ECOM_STUB</label>
+					</link>.
+				</item>
+				<item>A 
+					<link>
+						<url>02_structures.html</url>
+						<label>Structures</label>
+					</link>         cluster includes wrappers for COM structures and additional         data structures.
+				</item>
+				<item>A 
+					<link>
+						<url>../reference/support/index.html</url>
+						<label>Support</label>
+					</link>         cluster provides access to helper classes.
+				</item>
+			</list>
+			<seealso>See Also:
+				<line_break/>
+				<link>
+					<url>/technologies/com/index.html</url>
+					<label>The    Component Object Model</label>
+				</link>
+				<line_break/>
+				<link>
+					<url>../../../tools/wizards/com/index.html</url>
+					<label>EiffelCOM    wizard</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph></document>

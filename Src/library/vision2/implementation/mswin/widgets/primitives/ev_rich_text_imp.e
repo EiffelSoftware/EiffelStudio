@@ -239,13 +239,6 @@ feature -- Status report
 	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT is
 			-- `Result' is character format at caret position `caret_index'
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT
-			a_font: EV_FONT
-			color_ref: WEL_COLOR_REF
-			effects: INTEGER
-			font_imp: EV_FONT_IMP
-			a_wel_font: WEL_FONT
-			character_effects: EV_CHARACTER_FORMAT_EFFECTS
 			already_set: BOOLEAN
 		do
 			if not has_selection and caret_position = caret_index then
@@ -315,16 +308,20 @@ feature -- Status report
 	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		local
-			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
-			alignment: INTEGER
+			already_set: BOOLEAN
 		do
-			disable_redraw
-			safe_store_caret
-			
-			set_selection (caret_index - 1, caret_index - 1)
+			if not has_selection and caret_position = caret_index then
+				already_set := True
+			else
+				disable_redraw
+				safe_store_caret
+				set_selection (caret_index - 1, caret_index - 1)
+			end
 			Result := internal_selected_paragraph_format
-			safe_restore_caret
-			enable_redraw
+			if not already_set then
+				safe_restore_caret
+				enable_redraw
+			end
 		end	
 		
 	selected_paragraph_format: EV_PARAGRAPH_FORMAT is

@@ -8,7 +8,7 @@ CFLAGS = -c -O2 -X -DEIF_BORLAND -I$(EIFFEL4)\library\wel\spec\windows\include -
 	$(CFLAGS) $<
 |
 
-OBJ = disptchr.obj enumfont.obj estream.obj
+OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
@@ -19,6 +19,4 @@ wel.lib: $(OBJ)
 	if not exist $(EIFFEL4)\library\wel\spec\bcc\lib mkdir $(EIFFEL4)\library\wel\spec\bcc\lib
 	copy $@ $(EIFFEL4)\library\wel\spec\bcc\lib
 	del $@
-	del disptchr.obj
-	del enumfont.obj
-	del estream.obj
+	del *.obj

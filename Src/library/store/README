@@ -1,5 +1,4 @@
-
-July 1998, Release: 4.3
+July 1999, Release: 4.4.005
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.
@@ -45,11 +44,10 @@ The library interface consists of two sets:
    
 Example classes are located in $EIFFEL4/examples/store
 
-EiffelStore 4.3 has currently only been tested with:
-		ISE-Eiffel Release 4.3
-   		Oracle8 8.0.3
-		Sybase Adaptive Server Enterprise for Windows NT Evaluation Copy
- Version 11.5
+EiffelStore 4.4 has currently only been tested with:
+		ISE-Eiffel Release 4.4
+   		Oracle8 8.0.4
+		Sybase Adaptive Server Enterprise for Windows NT Evaluation Copy Version 11.5
 		IngresII
 		ODBC 3.0
 
@@ -63,7 +61,8 @@ $EIFFEL4/library/store/install (a README file provides full instructions).
 
 Then, making sure that you have the requested database (Oracle,
 Sybase, etc) call: 
-   make_Clib 
+   make_bcc or make_msc depending on which C compiler you are using (bcc for Borland
+   and msc for Microsoft).
 from inside this current EiffelStore directory.
 
 In the case of Oracle, make sure you are registered as an Oracle user.

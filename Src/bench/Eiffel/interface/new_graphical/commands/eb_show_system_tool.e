@@ -101,7 +101,7 @@ feature {EB_CHOOSE_ACE_DIALOG} -- Implementation
 			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
 		do
 			create fod.make (project_tool.parent)
-			fod.set_filter (<<"System File (*.ace)">>,<<"*.ace">>)
+--			fod.set_filter (<<"System File (*.ace)">>,<<"*.ace">>)
 			create arg.make (fod)
 			fod.add_ok_command (Current, arg)
 			fod.show

@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 				l_retriever.set_arguments (arguments)
 				l_retriever.set_completion_features (completion_features)
 				l_retriever.set_feature_name (feature_name)
-				l_retriever.find (target, use_overloading)
+				l_retriever.find (target.as_lower, use_overloading)
 				if l_retriever.found then
 					Result := l_retriever.found_item
 				end
@@ -657,7 +657,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_list: a_list /= Void
 			non_void_com_array: a_com_array /= Void
-			valid_com_array: a_list.count > 0 implies (a_com_array.upper_indices.item (1) = a_list.count - start_index + 2) and (a_com_array.lower_indices.item (1) = 0)
+			valid_com_array: a_list.count > 0 implies (a_com_array.upper_indices.item (1) >= a_list.count + start_index - 1) and (a_com_array.lower_indices.item (1) = 1)
 		local
 			i: INTEGER
 		do

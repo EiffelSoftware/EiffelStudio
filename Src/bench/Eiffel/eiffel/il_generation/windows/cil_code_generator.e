@@ -4491,7 +4491,7 @@ feature -- Generic conformance
 			end
 			create_object (l_type_id)
 			duplicate_top
-			put_type_token (cl_type.implementation_id)
+			put_type_token (cl_type.static_type_id)
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				class_type_class_name,
 				"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
@@ -4518,7 +4518,7 @@ feature -- Generic conformance
 				"set_type_array", Normal_type, <<type_array_class_name>>, Void, True);
 
 			duplicate_top
-			put_type_token (gen_type.implementation_id)
+			put_type_token (gen_type.static_type_id)
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_type_class_name,
 				"set_type", Normal_type, <<type_handle_class_name>>, Void, True)

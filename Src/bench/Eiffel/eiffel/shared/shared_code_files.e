@@ -47,13 +47,13 @@ feature {NONE}
 	History_file: INDENT_FILE is
 			-- File containing history tables
 		once
-			!!Result.make (final_file_name (Ehisto));
+			!!Result.make (final_file_name (Ehisto, Dot_c));
 		end;
 
 	Reference_file: INDENT_FILE is
 			-- File where the table of number of redeferences is generated
 		once
-			!!Result.make (final_file_name (Eref));
+			!!Result.make (final_file_name (Eref, Dot_c));
 		end;
 
 	Skeleton_f (final_mode: BOOLEAN): INDENT_FILE is
@@ -79,6 +79,13 @@ feature {NONE}
 			-- File miscellenaeous datas are generated for the run-time
 		do
 			!!Result.make (gen_file_name (final_mode, Eplug));
+		end;
+
+	DLE_f (final_mode: BOOLEAN): INDENT_FILE is
+			-- File where miscellenaeous DLE related data
+			-- are genrated
+		do
+			!!Result.make (gen_file_name (final_mode, Edle));
 		end;
 
 	Pattern_file: INDENT_FILE is
@@ -142,7 +149,7 @@ feature {NONE}
 
 feature {NONE}
 
-	final_file_name (base_name: STRING): STRING is
+	final_file_name (base_name, extension: STRING): STRING is
 		local
 			subdir_name: STRING;
 			subdir: DIRECTORY;
@@ -161,7 +168,7 @@ feature {NONE}
 			end;
 			!!file_name.make_from_string (dir_name);
 			temp := clone (base_name);
-			temp.append (Dot_c);
+			temp.append (extension);
 			file_name.set_file_name (temp);
 			Result := file_name
 		end;
@@ -193,7 +200,7 @@ feature {NONE}
 	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING is
 		do
 			if final_mode then
-				Result := final_file_name (base_name)
+				Result := final_file_name (base_name, Dot_c)
 			else
 				Result := workbench_file_name (base_name)
 			end;

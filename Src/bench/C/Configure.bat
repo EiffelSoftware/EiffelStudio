@@ -7,6 +7,7 @@ echo make ...
 echo     Options:
 echo        clean   - remove unecessary files
 echo        win32 b - build a Win32 run-time for Borland
+echo        win32 g - build a Win32 run-time for GCC-cygwin
 echo        win32 m - build a Win32 run-time for Microsoft
 echo        win32 w - build a Win32 run-time for Watcom
 echo        win32 s - build a Win32 run-time for Symantec
@@ -40,9 +41,15 @@ copy config.w32s eif_config.h
 copy config.ssh config.sh
 goto process
 :watcom
-if NOT .%2. == .w. goto usage
+if NOT .%2. == .w. goto gcc
 copy config.w32w eif_config.h
 copy config.wsh config.sh
+goto process
+:gcc
+if NOT .%2. == .g. goto usage
+copy config.w32m eif_config.h
+copy config.gsh config.sh
+goto process
 :process
 type config.sh
 echo The above is the configuration file for the
@@ -127,7 +134,17 @@ rem
 rem Call make
 rem
 del make.bat
-echo cd ipc\shared>> make.bat
+echo cd console>> make.bat
+echo call make>> make.bat
+echo cd ..\idrs>> make.bat
+echo call make>> make.bat
+echo cd ..\ipc\shared>> make.bat
+echo call make>> make.bat
+echo cd ..\app>> make.bat
+echo call make>> make.bat
+echo cd ..\ewb>> make.bat
+echo call make>> make.bat
+echo cd ..\daemon>> make.bat
 echo call make>> make.bat
 echo cd ..\..\run-time>> make.bat
 echo call make>> make.bat
@@ -142,11 +159,6 @@ echo cd platform>> make.bat
 echo call make>> make.bat
 echo cd ..\bench >> make.bat
 echo call make >> make.bat
-echo cd ..>> make.bat
-echo cd ipc\daemon>> make.bat
-echo call make>> make.bat
-echo cd ..\ewb>> make.bat
-echo call make>> make.bat
 echo cd ..\..\desc>> make.bat
 echo call make>> make.bat
 echo cd ..>> make.bat

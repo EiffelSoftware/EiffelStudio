@@ -14,9 +14,9 @@ OBJECTS = yacc.$obj strsave.$obj yacc_err.$obj click.$obj
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: parsing.lib
+all:: parsing.$lib
 
-parsing.lib: $(OBJECTS)
+parsing.$lib: $(OBJECTS)
 	$link_line
 
 yacc.$obj: $(TOP)\eif_config.h

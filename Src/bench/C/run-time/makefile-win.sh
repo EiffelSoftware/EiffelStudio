@@ -16,7 +16,7 @@ LINK32 = $link32
 DLLFLAGS = $dllflags
 
 CFLAGS = -I. -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
-NETWORK = $(TOP)\ipc\app\network.lib
+NETWORK = $(TOP)\ipc\app\network.$lib
 
 all:: $(INDIR) $(OUTDIR)
 
@@ -80,7 +80,7 @@ OBJECTS = \
 	$(INDIR)\rout_obj.$obj \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\ipc\shared\shword.$obj \
-	$(TOP)\console\econsole.lib \
+	$(TOP)\console\winconsole.$lib \
 	$extra_object_files
 
 WOBJECTS = \
@@ -137,8 +137,8 @@ WOBJECTS = \
 	$(INDIR)\weif_project.$obj \
 	$(INDIR)\wgen_conf.$obj \
 	$(INDIR)\wrout_obj.$obj \
-	$(TOP)\idrs\idr.lib \
-	$(TOP)\console\econsole.lib \
+	$(TOP)\idrs\idr.$lib \
+	$(TOP)\console\winconsole.$lib \
 	$extra_object_files
 
 EOBJECTS = \
@@ -195,19 +195,19 @@ EOBJECTS = \
 	$(INDIR)\wgen_conf.$obj \
 	$(INDIR)\wrout_obj.$obj \
 	$(TOP)\ipc\shared\networku.$obj \
-	$(TOP)\console\econsole.lib
+	$(TOP)\console\winconsole.$lib
 
 all:: eif_size.h
 
 
-all:: finalized.lib
+all:: finalized.$lib
 
-finalized.lib: $(OBJECTS)
+finalized.$lib: $(OBJECTS)
 	$link_line
 
-all:: wkbench.lib
+all:: wkbench.$lib
 
-wkbench.lib: $(WOBJECTS)
+wkbench.$lib: $(WOBJECTS)
 	$link_wline
 
 mtdll:: mtwkbench.dll
@@ -267,24 +267,24 @@ finalized.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 
-..\console\econsole.lib: ..\console\econsole.c ..\console\argcargv.c
+..\console\winconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
 	cd ..\console
 	$(MAKE)
 	cd ..\run-time
 
-..\idrs\idr.lib:
+..\idrs\idr.$lib:
 	cd ..\idrs
 	$(MAKE)
 	cd ..\run-time
 
-all:: ebench.lib
+all:: ebench.$lib
 
-..\ipc\app\network.lib: ..\ipc\app\proto.c
+..\ipc\app\network.$lib: ..\ipc\app\proto.c
 	cd ..\ipc\app
 	$(MAKE)
 	cd ..\..\run-time
 
-ebench.lib: $(EOBJECTS)
+ebench.$lib: $(EOBJECTS)
 	$link_eline
 
 all:: x2c.exe
@@ -606,8 +606,8 @@ $(INDIR)\wurgent.$obj: $(RTSRC)\urgent.c
 $(INDIR)\x2c.$obj: $(RTSRC)\x2c.c
 	$(CC) $(JCFLAGS) $(RTSRC)\x2c.c
 
-final: finalized.lib
-work: wkbench.lib
+final: finalized.$lib
+work: wkbench.$lib
 
 $(INDIR)\bmain.$obj: $(RTSRC)\main.c
 	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\main.c

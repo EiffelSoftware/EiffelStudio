@@ -13,7 +13,7 @@ OBJECTS = names.$obj sizes.$obj commands.$obj
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: platform.lib
+all:: platform.$lib
 
-platform.lib: $(OBJECTS)
+platform.$lib: $(OBJECTS)
 	$link_line

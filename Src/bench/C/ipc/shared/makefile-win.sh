@@ -28,9 +28,9 @@ OBJECTS = \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: ipc.lib
+all:: ipc.$lib
 
-ipc.lib: $(OBJECTS)
+ipc.$lib: $(OBJECTS)
 	$link_line
 
 com.$obj: eif_logfile.h

@@ -13,7 +13,7 @@ OBJECTS = argcargv.$obj econsole.$obj
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: econsole.lib
+all:: winconsole.$lib
 
-econsole.lib: $(OBJECTS)
+winconsole.$lib: $(OBJECTS)
 	$link_line

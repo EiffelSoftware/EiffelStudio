@@ -28,7 +28,7 @@ OBJECTS = \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: ewb.lib
+all:: ewb.$lib
 
-ewb.lib: $(OBJECTS)
+ewb.$lib: $(OBJECTS)
 	$link_line

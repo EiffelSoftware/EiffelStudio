@@ -23,14 +23,14 @@ WOBJECTS = eiffel_c.$obj eif_err.$obj encode.$obj pretrieve.$obj date.$obj \
 	keyword.$obj byte.$obj offset.$obj parser.$obj lexic.$obj infix.$obj \
 	prefix.$obj wpstore.$obj
 
-all:: eiffel.lib
+all:: eiffel.$lib
 
-eiffel.lib: $(OBJECTS)
+eiffel.$lib: $(OBJECTS)
 	$link_line
 
-all:: weiffel.lib
+all:: weiffel.$lib
 
-weiffel.lib: $(WOBJECTS)
+weiffel.$lib: $(WOBJECTS)
 	$link_wline
 
 parser.c: parser.cwn

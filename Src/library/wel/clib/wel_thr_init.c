@@ -71,12 +71,8 @@ void wel_init_context(wel_global_context_t *wel_globals)
 
 /* estream.c */
 	
-	wel_editstream_procedure=NULL;
-	wel_editstream_object=NULL;
-	wel_editstream_buffer=NULL;
-	wel_editstream_buffer_size=0;
-	wel_editstream_in=(EIF_BOOLEAN)0;
-
+	wel_editstream_in_procedure=NULL;
+	wel_editstream_out_procedure=NULL;
 }
 
 

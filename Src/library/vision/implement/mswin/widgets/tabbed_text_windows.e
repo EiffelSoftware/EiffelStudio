@@ -49,6 +49,10 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+				if private_background_color /= Void then
+					set_background_color (private_background_color)
+				end
+				enable_standard_notifications
 				if private_font /= Void then
 					set_font (private_font)
 				end
@@ -60,6 +64,9 @@ feature -- Initialization
 				if margin_width + margin_height > 0 then
 					set_margins (margin_width, margin_height)
 				end
+				if is_multi_line_mode then
+					set_top_character_position (private_top_character_position)
+				end
 			end
 		end
 
@@ -70,7 +77,7 @@ feature -- Status setting
 		do
 			tab_length := new_length
 			if exists then
-				set_tab_stops (tab_length*4)
+				set_tab_stops (tab_length * 4)
 				invalidate
 			end
 		end
@@ -86,8 +93,8 @@ feature {NONE} -- Implementation
 			-- Default style for creation.
 		do
 			Result := Ws_child + Ws_visible + Ws_border
-				   + Es_nohidesel + Es_left
-				   + Es_multiline + Es_autovscroll
+				   + Es_nohidesel + Es_left + Es_disablenoscroll
+				   + Es_multiline + Es_autovscroll + Es_savesel
 			if not is_word_wrap_mode then
 				Result := Result + Es_autohscroll
 			end

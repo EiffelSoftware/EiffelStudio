@@ -46,6 +46,16 @@ feature -- Access
 
 feature -- Status setting
 
+	show is
+			-- Show the popup menu at the current position
+			-- of the mouse.
+		require
+			exists: not destroyed
+			valid_parent: is_valid (parent)
+		do
+			implementation.show
+		end
+
 	show_at_position (x, y: INTEGER) is
 			-- Show the popup menu at the given position
 		require

@@ -63,6 +63,19 @@ feature -- Status setting
 			destroy_item
 		end
 
+	show is
+			-- Show the popup menu at the current position
+			-- of the mouse.
+		local
+			point: WEL_POINT
+			ww: WEL_COMPOSITE_WINDOW
+		do
+			ww ?= parent_imp
+			create point.make (0, 0)
+			point.set_cursor_position
+			show_track (point.x, point.y, ww)
+		end
+
 	show_at_position (x, y: INTEGER) is
 			-- Show the popup menu at the given absolute position.
 		local

@@ -24,20 +24,18 @@ inherit
 			implementation as dialog_imp
 		end
 
-
 creation
 
 	make
-
 		
-feature 
+feature {NONE}
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a file selection dialog with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
-			name_not_void: not (a_name = Void);
-			parent_not_void: not (a_parent = Void)
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
@@ -45,11 +43,9 @@ feature
 			implementation:= toolkit.file_sel_d (Current);
 			set_default
 		ensure
-			parent = a_parent;
-			identifier.is_equal (a_name)
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name)
 		end;
-
-
 
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}

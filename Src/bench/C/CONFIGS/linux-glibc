@@ -13,15 +13,22 @@ ld='ld'
 mt_prefix='mt'
 
 mtccflags='-D_REENTRANT -DEIF_THREADS -DEIF_LINUXTHREADS'
-mtlibs='-lbsd -lm -lpthread'
-mtsharedlibs='-lbsd -lm -lpthread'
+mtlibs='-lm -lpthread'
+mtsharedlibs='-lm -lpthread'
+
+optimize='-O'
+wkoptimize='-O'
+
+start_test='if [ ! -f finished ] ; then'
+end_test='; fi'
+create_test='touch finished'
 
 # flags libs and mtlibs for graphical application (needs motif)
-#libs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lbsd -lm'
-#mtlibs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lbsd -lm -lpthread'
+#libs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lm'
+#mtlibs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lm -lpthread'
 
-libs='-lbsd -lm'
-sharedlibs='-lbsd -lm'
+libs='-lm'
+sharedlibs='-lm'
 ccflags=''
 sharedccflags='-fPIC'
 
@@ -134,7 +141,6 @@ ldsharedflags='-shared'
 sharedlink='ld'
 ldflags=''
 lkflags=''
-optimize='-O'
 cf_by='manuelt'
 cf_time='Fri Feb  6 15:24:59 PDT 1998'
 charsize='1'

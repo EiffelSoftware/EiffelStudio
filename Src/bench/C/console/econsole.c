@@ -439,25 +439,6 @@ void eif_console_cleanup ()
 	}
 }
 
-void show_trace()
-/*
-	Show the trace of an exception by displaying the string
-	that is the exception trace in a dialog
-
-	Reset the string in case we have another PANIC or problem
-	in the reclaim.
-*/
-{
-	EIF_GET_CONTEXT
-	if (exception_trace_string != NULL)
-		{
-		(void) DialogBox (eif_hInstance, "EIF_EXCEPTION_TRACE", NULL, exception_trace_dialog);
-		//free (exception_trace_string);
-		*exception_trace_string = '\0';
-		}
-	EIF_END_GET_CONTEXT
-}
-
 void eif_make_console()
 {
 	BOOL b;

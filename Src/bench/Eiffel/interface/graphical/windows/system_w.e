@@ -271,6 +271,7 @@ feature -- Graphical Interface
 				make_shell (ts);
 				ts.set_title (tool_name);
 				mp.restore
+				set_default_size;
 				set_default_format;
 				set_default_position;
 				eb_shell.display;
@@ -341,10 +342,6 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			sep: SEPARATOR
 		do
-			if eb_shell /= Void then
-				set_default_size
-			end;
-
 			create_toolbar_parent (global_form);
 
 			build_text_windows;

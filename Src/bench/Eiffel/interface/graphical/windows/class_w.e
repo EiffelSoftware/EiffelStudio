@@ -408,10 +408,6 @@ feature -- Grahpical Interface
 		local
 			sep: SEPARATOR
 		do
-			if eb_shell /= Void then
-				set_default_size
-			end;
-
 			create_toolbar_parent (global_form);
 
 			build_text_windows;

@@ -21,6 +21,13 @@ inherit
 
 feature {NONE} -- Initialization
 
+	make (an_interface: like interface) is
+			-- Create the horizontal scroll bar.
+		do
+			base_make (an_interface)
+			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 0)
+		end
+
 	initialize is
 		do
 			Precursor
@@ -34,7 +41,8 @@ feature {NONE} -- Initialization
 			--| so initialize does not have to be called again.
 		do
 			real_signal_connect (adjustment, "value-changed",
-				(interface.change_actions)~call)
+				--(interface.change_actions)~call)
+				~value_changed_handler)
 		end
 
 feature -- Access
@@ -66,13 +74,21 @@ feature -- Access
 	maximum: INTEGER is
 			-- Highest value of the gauge.
 		do
-			Result := C.gtk_adjustment_struct_upper (adjustment).rounded
+			Result := C.gtk_adjustment_struct_upper (adjustment).rounded - page_size
 		end
 
 	range: INTEGER_INTERVAL is
 			-- Get `minimum' and `maximum' as interval.
 		do
 			create Result.make (minimum, maximum)
+		end
+
+	page_size: INTEGER is
+			-- Size of slider.
+			--| We define it here to add to the internal maximum. 
+			--| Value should be zero for ranges but not for scrollbars.
+		do
+			Result := C.gtk_adjustment_struct_page_size (adjustment).rounded
 		end
 
 feature -- Status setting
@@ -109,6 +125,11 @@ feature -- Element change
 			if value /= a_value then
 				C.gtk_adjustment_set_value (adjustment, a_value)
 			end
+		ensure then
+			step_same: step = old step
+			leap_same: leap = old leap
+			maximum_same: maximum = old maximum
+			minimum_same: minimum = old minimum
 		end
 
 	set_step (a_step: INTEGER) is
@@ -118,12 +139,18 @@ feature -- Element change
 				C.set_gtk_adjustment_struct_step_increment (adjustment, a_step)
 				C.gtk_adjustment_changed (adjustment)
 			end
+		ensure then
+			value_same: value = old value
+			leap_same: leap = old leap
+			maximum_same: maximum = old maximum
+			minimum_same: minimum = old minimum
 		end
 
 	set_leap (a_leap: INTEGER) is
 			-- Set `leap' to `a_leap'.
 		do
 			if leap /= a_leap then
+				C.set_gtk_adjustment_struct_upper (adjustment, maximum + a_leap)
 				C.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
 				C.gtk_adjustment_changed (adjustment)
 			end
@@ -133,16 +160,28 @@ feature -- Element change
 			-- Set `minimum' to `a_minimum'.
 		do
 			if minimum /= a_minimum then
+				if minimum = maximum then
+					--| VB 02/15/2000 Bug/feature in GTK:
+					--| When lower equals upper, and minimum is decreased
+					--| value is decreased as well. This is evil, but
+					--| can be worked around by temporarily increasing the maximum.
+					C.set_gtk_adjustment_struct_upper (adjustment, maximum + page_size + 1)
+					C.gtk_adjustment_changed (adjustment)
+					C.set_gtk_adjustment_struct_upper (adjustment, maximum + page_size - 1)
+				end
 				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
 				C.gtk_adjustment_changed (adjustment)
 			end
+		ensure then
+			value_same: value = old value
+			maximum_same: maximum = old maximum
 		end
 
 	set_maximum (a_maximum: INTEGER) is
 			-- Set `maximum' to `a_maximum'.
 		do
 			if maximum /= a_maximum then
-				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum)
+				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + page_size)
 				C.gtk_adjustment_changed (adjustment)
 			end
 		end
@@ -152,7 +191,7 @@ feature -- Element change
 		do
 			if minimum /= a_range.lower or else maximum /= a_range.upper then
 				C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-				C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper)
+				C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper + page_size)
 				C.gtk_adjustment_changed (adjustment)
 			end
 		end
@@ -162,7 +201,7 @@ feature -- Element change
 			-- Set `value' to `a_range.lower'.
 		do
 			C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-			C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper)
+			C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper + page_size)
 			C.gtk_adjustment_changed (adjustment)
 			C.gtk_adjustment_set_value (adjustment, a_range.lower)
 			C.gtk_adjustment_value_changed (adjustment)
@@ -174,6 +213,21 @@ feature {NONE} -- Implementation
 
 	adjustment: POINTER
 			-- Pointer to GtkAdjustment of gauge.
+
+	old_value: INTEGER
+			-- Value of `value' when last "value-changed" signal occurred.
+
+	value_changed_handler is
+			-- Called when `value' changes.
+			--| We need this intermediate step because internally
+			--| GtkAdjustment uses real values and therefore the rounded
+			--| value may not have changed.
+		do
+			if value /= old_value then
+				interface.change_actions.call ([])
+				old_value := value
+			end
+		end
 
 invariant
 	adjustment_not_void: adjustment /= Default_pointer
@@ -201,6 +255,15 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/16 04:01:01  brendel
+--| 1: Now provides `make' which creates default adjustment that satisfies
+--| is_in_default_state and initializes page_size to 0.
+--| 2: The "value-changed" signal is now handled indirectly to avoid multiple
+--| calls in case the rounded value of `value' did not change.
+--| 3: Now internally the maximum is set higher by `page_size' which is useful
+--| for EV_SCROLL_BAR_IMP.
+--| 4: Provided workaround for bug/feature in GTK. See `set_minimum'.
+--|
 --| Revision 1.9  2000/02/15 16:44:11  brendel
 --| Moved implementating of feature `range' to _IMP.
 --|

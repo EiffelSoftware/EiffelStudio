@@ -12,8 +12,6 @@ inherit
 	EV_TEXT_FIELD_I
 
 	EV_LIST_I
-		rename
-			rows as count
 		undefine
 			build
 		end

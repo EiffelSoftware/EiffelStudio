@@ -9,7 +9,7 @@ eiflib='finalized'
 ld='ld'
 mt_prefix='mt'
 
-mtccflags='-DEIF_THREADS -DEIF_LINUXTHREADS'
+mtccflags='-pipe -DEIF_THREADS -DEIF_LINUXTHREADS'
 mtlibs='-lm -lpthread'
 mtsharedlibs='-lm -lpthread'
 
@@ -26,7 +26,7 @@ create_test='touch finished'
 
 libs='-lm'
 sharedlibs='-lm'
-ccflags=''
+ccflags='-pipe'
 sharedccflags='-fPIC'
 
 suffix='.a'

@@ -35,9 +35,12 @@ cluster
 		
 external
 
+	include_path:
+		"$EIFFEL4\library\store\dbms\rdbms\odbc\Clib";
+
 	object:
 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib",
 		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib",
 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/odbc_store.lib",
-		"odbc32.lib" -- Specify the correct path
+		"d:\odbcsdk\lib32\odbc32.lib" -- Specify the correct path
 end

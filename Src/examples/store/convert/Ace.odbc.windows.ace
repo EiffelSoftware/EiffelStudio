@@ -46,5 +46,5 @@ external
 		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib",
 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/odbc_store.lib",
 -- Specify the correct path
-		"odbc32.lib" 
+		"d:\odbcsdk\lib32\odbc32.lib" 
 end

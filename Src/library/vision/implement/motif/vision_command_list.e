@@ -61,6 +61,17 @@ feature -- Element change
 			extend (exec)
 		end
 
+	insert_command (command: COMMAND; argument: ANY) is
+			-- Insert `command' with `argument' to list of commands.
+		require
+			command_not_void: command /= Void
+		local
+			exec: COMMAND_EXEC
+		do
+			!! exec.make (command, argument)
+			put_front (exec)
+		end
+
 feature -- Removal
 
 	remove_command (command: COMMAND; argument: ANY) is

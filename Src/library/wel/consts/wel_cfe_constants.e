@@ -29,6 +29,10 @@ feature -- Access
 	Cfe_autocolor: INTEGER is 1073741824
 			-- The text color is the return value of
 			-- GetSysColor (COLOR_WINDOWTEXT).
+			
+	Cfe_autobackcolor: INTEGER is 67108864
+			-- The text background color is the value
+			-- of the containing control.
 
 end -- class WEL_CFE_CONSTANTS
 

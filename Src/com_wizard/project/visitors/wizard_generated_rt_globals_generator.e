@@ -27,15 +27,68 @@ feature -- Basic operations
 			-- Generate Generated Globals header file.
 		local
 			cpp_writer: WIZARD_WRITER_C_FILE
+			l_mapper: WIZARD_WRITER_MAPPER_CLASS
+			l_other, l_class_name, l_variable_name: STRING
 		do
 			create cpp_writer.make
 			cpp_writer.set_header_file_name (Ecom_generated_rt_globals_header_file_name)
 			cpp_writer.set_header ("Global variables used in generated code.")
 			cpp_writer.add_import ("ecom_rt_globals.h")
-			cpp_writer.add_import (Generated_ec_class_name + ".h")
-			cpp_writer.add_import (Generated_ce_class_name + ".h")
-			cpp_writer.add_other ("extern " + Generated_ec_class_name + " " + Generated_ec_mapper + ";")
-			cpp_writer.add_other ("extern " + Generated_ce_class_name + " " + Generated_ce_mapper + ";")
+			
+			from
+				Generated_ec_mappers.start
+			until
+				Generated_ec_mappers.after				
+			loop
+				cpp_writer.add_import (Generated_ec_mappers.item.definition_header_file_name)
+				Generated_ec_mappers.forth
+			end
+			
+			from
+				Generated_ce_mappers.start
+			until
+				Generated_ce_mappers.after				
+			loop
+				cpp_writer.add_import (Generated_ce_mappers.item.definition_header_file_name)
+				Generated_ce_mappers.forth
+			end
+			
+			from
+				Generated_ec_mappers.start
+			until
+				Generated_ec_mappers.after
+			loop
+				l_mapper := Generated_ec_mappers.item
+				l_class_name := l_mapper.name
+				l_variable_name := l_mapper.variable_name
+				create l_other.make (7 + l_class_name.count + 1 + l_variable_name.count + 1)
+				l_other.append ("extern ")
+				l_other.append (l_class_name)
+				l_other.append_character (' ')
+				l_other.append (l_variable_name)
+				l_other.append_character (';')
+				cpp_writer.add_other (l_other)
+				Generated_ec_mappers.forth
+			end
+
+			from
+				Generated_ce_mappers.start
+			until
+				Generated_ce_mappers.after
+			loop
+				l_mapper := Generated_ce_mappers.item
+				l_class_name := l_mapper.name
+				l_variable_name := l_mapper.variable_name
+				create l_other.make (7 + l_class_name.count + 1 + l_variable_name.count + 1)
+				l_other.append ("extern ")
+				l_other.append (l_class_name)
+				l_other.append_character (' ')
+				l_other.append (l_variable_name)
+				l_other.append_character (';')
+				cpp_writer.add_other (l_other)
+				Generated_ce_mappers.forth
+			end
+
 			shared_file_name_factory.create_generated_mapper_file_name (cpp_writer)
 			cpp_writer.save_header_file (shared_file_name_factory.last_created_header_file_name)
 		end

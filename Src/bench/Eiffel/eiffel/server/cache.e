@@ -6,16 +6,17 @@ indexing
 deferred class CACHE [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
-	
 	TO_SPECIAL [ARRAY [T]]
 
 	SHARED_CONFIGURE_RESOURCES
+		undefine
+			copy, is_equal, consistent, setup
+		end
 
-
-feature -- Initialisation
+feature -- Initialization
 
 	make is
-		-- Creates a table of Cache_size hash_entry
+			-- Creates a table of Cache_size hash_entry
 		local
 			i: INTEGER
 			array: ARRAY [T]
@@ -35,7 +36,7 @@ feature -- Initialisation
 		end
 
 	make_i (n : INTEGER)  is
-		-- Creates a table of n hash_entry
+			-- Creates a table of n hash_entry
 		local
 			i: INTEGER
 			array: ARRAY [T]
@@ -72,7 +73,6 @@ debug ("CACHE_SERVER")
 end
 		end;
 
-
 	default_value: INTEGER is
 			-- Default value of cache
 		do
@@ -85,11 +85,9 @@ end
 		end;
 
 	array_count: ARRAY [INTEGER]
-		-- number of element in each sub-array
-
+			-- Number of element in each sub-array
 
 feature -- Cache manipulations
-
 							
 	has_id (id: H): BOOLEAN is
 			-- Is an item of id `i' in the cache ?
@@ -112,36 +110,34 @@ feature -- Cache manipulations
 				j := j - 1
 			end
 			Result := found
-Debug ("CACHE")
-if Size < 500 then
-	from 
-		i :=  0
-		j := Size
-	until
-		i = j
-	loop
-		io.putint (array_count.item (i))
-		if i /= 0 and then i \\ 80 = 0 then
-			io.putstring (" \%N")
-		else
-			io.putstring("-")
+debug ("CACHE")
+	if Size < 500 then
+		from 
+			i :=  0
+			j := Size
+		until
+			i = j
+		loop
+			print (array_count.item (i))
+			if i /= 0 and then i \\ 80 = 0 then
+				print (" \%N")
+			else
+				print ("-")
+			end
+			i := i + 1
 		end
-		i := i + 1
 	end
-end
 
-	io.putstring ("%N")
-	io.putstring (generator)
-	io.putstring (" has a total of: ")
-	io.putint (Count)
-	io.putstring ("%N")
-	io.putstring ("Result of the has_id: ")
-	io.putbool (found)
-	io.putstring ("%N%N")
+	print ("%N")
+	print (generator)
+	print (" has a total of: ")
+	print (Count)
+	print ("%N")
+	print ("Result of the has_id: ")
+	print (found)
+	print ("%N%N")
 end
 		end
-		
-
 
 	item_id (id: H): T is
 			-- Item which id is `an_id'
@@ -167,7 +163,7 @@ end
 				j := j - 1
 			end
 			if found then
-			-- we make the accessed item younger
+					-- We make the accessed item younger
 				j := j + 1
 				tmp := l_array.item (j)
 				l_array.put (l_array.item (k), j)
@@ -176,34 +172,34 @@ end
 				last_item_array := l_array
 				last_item_pos := j
 			end
-Debug ("CACHE")
-if Size < 500 then
-	from 
-		i :=  0
-		j := Size
-	until
-		i = j
-	loop
-		io.putint (array_count.item (i))
-		if i /= 0 and then i \\ 80 = 0 then
-			io.putstring (" \%N")
-		else
-			io.putstring("-")
+
+debug ("CACHE")
+	if Size < 500 then
+		from 
+			i :=  0
+			j := Size
+		until
+			i = j
+		loop
+			print (array_count.item (i))
+			if i /= 0 and then i \\ 80 = 0 then
+				print (" \%N")
+			else
+				print("-")
+			end
+			i := i + 1
 		end
-		i := i + 1
 	end
-end
-	io.putstring ("%N")
-	io.putstring (generator)
-	io.putstring (" has a total of: ")
-	io.putint (Count)
-	io.putstring ("%NResult of the item_id:")
-	io.putbool (found)
-	io.putstring ("%N%N")
-end
 
+	print ("%N")
+	print (generator)
+	print (" has a total of: ")
+	print (Count)
+	print ("%NResult of the item_id:")
+	print (found)
+	print ("%N%N")
+end
 		end
-
 	
 	remove_id (id: H) is
 			-- Remove item of id `i' form cache.
@@ -241,11 +237,9 @@ end
 				end
 			end
 		end	
-
-
 	
 	put (e: T) is
-			-- put a new element in the cache
+			-- Put a new element in the cache
 		require
 			not_void: e /= Void
 		local
@@ -257,7 +251,7 @@ end
 				l_array := area.item (i)
 				t := array_count.item (i)
 				if t = l_array.count then	
-					l_array.grow (2 * t)
+					l_array.resize (1, 2 * t)
 				end
 				array_count.put (t + 1, i)
 				l_array.put (e, t + 1)
@@ -265,9 +259,8 @@ end
 			end
 		end
 
-
 	force (e: T) is
-			-- like put if full remove an element 
+			-- Like put if full remove an element 
 			-- to put our new one
 		require
 			not_void: e /= Void
@@ -302,24 +295,21 @@ end
 				end
 			end
 		end
-
-				
 		
 	is_full: BOOLEAN is
-		-- is the cache full ?
+			-- Is the cache full ?
 		do
 			Result := Count >= Size
 		end				
 
 	is_empty: BOOLEAN is
-		-- is the cache empty ?
+			-- Is the cache empty ?
 		do
 			Result := Count = 0
 		end
 		
-	
 	clear_all, wipe_out is
-			-- wipe all out
+			-- Wipe all out
 		local
 			s: INTEGER
 		do
@@ -329,61 +319,60 @@ end
 				s = 0
 			loop
 				s := s - 1
-				area.item(s).wipe_out
+				area.item(s).clear_all
 			end
-			array_count.wipe_out
+			array_count.clear_all
 			Count := 0
 			after := True
 		end
 
-
 	change_last_item (e: T) is
-		-- make e take the place of the last item consulted
+			-- Make e take the place of the last item consulted
 		do
 			last_item_array.put (e, last_item_pos)
 		end
 
-
 	Count: INTEGER
-		-- number of item currently in the cache
+			-- Number of item currently in the cache
 
 	Size: INTEGER
-		-- maximum number of items in the cache
+			-- Maximum number of items in the cache
 
 	last_removed_item: T
-		-- last automaticly removed item by function force
+			-- Last automaticly removed item by function force
 
-
-feature -- linear iteration
+feature -- Linear iteration
 
 	start is
-		-- put item_for_iteration on the first element of the cache
-	require
-		not_empty: not is_empty
-	local
-		item_array: INTEGER
-	do
-		from
-			item_array := 0
-		until
-			item_array = Size or else area.item (item_array).item (1) /= Void
-		loop
-			item_array := item_array + 1
+			-- Put item_for_iteration on the first element of the cache
+		require
+			not_empty: not is_empty
+		local
+			item_array: INTEGER
+		do
+			from
+				item_array := 0
+			until
+				item_array = Size or else area.item (item_array).item (1) /= Void
+			loop
+				item_array := item_array + 1
+			end
+
+			if item_array = Size then
+				after := True
+			else
+				after := False
+				last_item_array := area.item (item_array)
+				last_item_array_number := item_array
+				last_item_pos := 1
+			end
 		end
-		if item_array = Size then
-			after := True
-		else
-			after := False
-			last_item_array := area.item (item_array)
-			last_item_array_number := item_array
-			last_item_pos := 1
-		end
-	end
 
 	after: BOOLEAN
+			-- Are we at the end of the CACHE?
 		
 	forth is
-		-- put item_for_iteration on the next element of the cache
+			-- Put item_for_iteration on the next element of the cache
 		local
 			item_array, item_number, limit: INTEGER
 			array_current: ARRAY [T]
@@ -422,59 +411,57 @@ feature -- linear iteration
 		end					
 
 	item_for_iteration: T is
-			-- give the item in a linear ?????
+			-- Current item used for the linear traversal.
 		do
 			Result := last_item_array.item (last_item_pos)
 		end
 
-	
-
 feature {NONE}
 
 	last_item_array: ARRAY [T]
-		-- the array in which the last searched item 
-		-- was found
+			-- Array in which the last searched item 
+			-- was found
 
 	last_item_pos: INTEGER
-		-- the position in which the last
-		-- searched item was found
+			-- Position in which the last
+			-- searched item was found
 
 	last_item_array_number: INTEGER
-		-- the number of last_item_array	
+			-- Number of last_item_array	
 							
 feature {NONE} -- to implement force
 
 	remove_first_found is
-		-- need to remove an element whatever it is
-		-- we know that the cache is not empty
-		-- we want to make some room to put something else
-		-- so we do not touch to Count
-	require
-		not_empty_cache: not is_empty
-	local
-		item_array, j, k: INTEGER
-		l_array: ARRAY [T]
-	do
-		from
-			item_array := 0
-		until
-			item_array = Size or else area.item (item_array).item (1) /= Void
-		loop
-			item_array := item_array + 1
+			-- Need to remove an element whatever it is
+			-- we know that the cache is not empty
+			-- we want to make some room to put something else
+			-- so we do not touch to Count
+		require
+			not_empty_cache: not is_empty
+		local
+			item_array, j, k: INTEGER
+			l_array: ARRAY [T]
+		do
+			from
+				item_array := 0
+			until
+				item_array = Size or else area.item (item_array).item (1) /= Void
+			loop
+				item_array := item_array + 1
+			end
+			from 
+				l_array := area.item (item_array)
+				last_removed_item := l_array.item (1)
+				j := array_count.item (item_array)
+				array_count.put (j - 1, item_array)
+				k := 1
+			until
+				k = j
+			loop
+				l_array.put (l_array.item (k+1), k)
+				k := k + 1
+			end
+			l_array.put (Void, j)
 		end
-		from 
-			l_array := area.item (item_array)
-			last_removed_item := l_array.item (1)
-			j := array_count.item (item_array)
-			array_count.put (j - 1, item_array)
-			k := 1
-		until
-			k = j
-		loop
-			l_array.put (l_array.item (k+1), k)
-			k := k + 1
-		end
-		l_array.put (Void, j)
-	end
 
 end -- class CACHE

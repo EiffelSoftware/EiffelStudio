@@ -701,7 +701,10 @@ feature {NONE} -- Implementation
 			Result.pointer_leave_actions.extend (agent clear_debug_mode_entry)
 			create separator
 			Result.extend (separator)
-			Result.extend (clipboard.tool_bar_button)
+			Result.extend (command_handler.cut_object_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.copy_object_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.paste_object_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.clipboard_command.new_toolbar_item (True, False))
 		ensure
 			Result_not_void: Result /= Void
 		end

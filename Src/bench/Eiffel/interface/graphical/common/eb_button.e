@@ -16,7 +16,8 @@ inherit
 	WIDGET_ROUTINES
 
 creation
-	make
+	make,
+	make_without_action
 
 feature {NONE} -- Initialization
 
@@ -29,6 +30,17 @@ feature {NONE} -- Initialization
 			init_button (implementation);
 			set_symbol (cmd.symbol);
 			add_activate_action (cmd, cmd.tool);
+			initialize_focus 
+		end;
+
+	make_without_action (cmd: PIXMAP_COMMAND; a_parent: COMPOSITE) is
+			-- Initialize button  and do not add the activate
+			-- action callback to current button.
+		do
+			associated_command := cmd;
+			button_make (button_name, a_parent);
+			init_button (implementation);
+			set_symbol (cmd.symbol);
 			initialize_focus 
 		end;
 

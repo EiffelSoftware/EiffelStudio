@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 			make (a_dimension_count, some_lower_indices, some_element_counts)
 			area := a.area
 		ensure
-			valid_dimension_count: dimension_count >0
+			valid_dimension_count: dimension_count > 0
 			valid_element_counts: element_counts /= Void and then element_counts.count = dimension_count
 			valid_lower_indices: lower_indices /= Void and then lower_indices.count = dimension_count
 			valid_upper_indices: upper_indices /= Void and then upper_indices.count = dimension_count

@@ -176,7 +176,7 @@ feature {NONE} -- WEL Implemenation
 		do
 			create controls_dll.make_with_flags (Icc_userex_classes
 					+ Icc_win95_classes + Icc_cool_classes
-					+ Icc_bar_classes)
+					+ Icc_bar_classes + Icc_updown_class)
 			create rich_edit_dll.make
 		end
 
@@ -193,8 +193,10 @@ feature {NONE} -- Message loop, we redefine it because the user
 			dlg: POINTER
 		do
 			-- Destroy the spash screen
-			splash_screen.destroy
-			splash_screen := Void
+			if splash_screen /= Void then
+				splash_screen.destroy
+				splash_screen := Void
+			end
 
 			-- `accel' and `main_w' are declared
 			-- locally to get a faster access.

@@ -1,8 +1,5 @@
 indexing
 	description	: "Object to generate a project."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
 
 class
 	WIZARD_PROJECT_GENERATOR
@@ -22,9 +19,8 @@ feature -- Basic Operations
 			tuple: TUPLE [STRING, STRING]
 			project_name_lowercase: STRING
 			project_location: STRING
-		do
-			generate_external_assemblies
-			
+			root_class_name_lowercase: STRING
+		do			
 				-- cached variables
 			project_name_lowercase := clone (wizard_information.project_name)
 			project_name_lowercase.to_lower
@@ -39,10 +35,42 @@ feature -- Basic Operations
 			create tuple.make
 			tuple.put ("<FL_APPLICATION_TYPE>", 1)
 			tuple.put (wizard_information.application_type, 2)
+			map_list.extend (tuple)			
+				-- Add the root class name
+			create tuple.make
+			tuple.put ("<FL_ROOT_CLASS_NAME>", 1)
+			tuple.put (wizard_information.root_class_name, 2)
+			map_list.extend (tuple)
+				-- Add the creation routine name
+			create tuple.make
+			tuple.put ("<FL_CREATION_ROUTINE_NAME>", 1)
+			tuple.put (wizard_information.creation_routine_name, 2)
+			map_list.extend (tuple)
+				-- Add the external classes paths
+			create tuple.make
+			tuple.put ("<FL_EXTERNAL_CLASSES>", 1)
+			if not wizard_information.selected_assemblies.is_empty then
+				tuple.put (external_classes, 2)
+			else
+				tuple.put ("", 2)
+			end
+			map_list.extend (tuple)
+				-- Add the external assemblies paths
+			create tuple.make
+			tuple.put ("<FL_EXTERNAL_ASSEMBLIES>", 1)
+			if not wizard_information.selected_assemblies.is_empty then
+				tuple.put (external_assemblies, 2)
+			else
+				tuple.put ("", 2)
+			end
 			map_list.extend (tuple)
 			
-			from_template_to_project (wizard_resources_path, "template_ace.ace", 		project_location, project_name_lowercase + ".ace", map_list)
-			from_template_to_project (wizard_resources_path, "application.e",			project_location, "application.e", map_list)
+				-- Root class name
+			root_class_name_lowercase := clone (wizard_information.root_class_name)
+			root_class_name_lowercase.to_lower
+			
+			from_template_to_project (wizard_resources_path, "template_ace.ace", project_location, project_name_lowercase + ".ace", map_list)
+			from_template_to_project (wizard_resources_path, "template_application.e",	project_location, root_class_name_lowercase + ".e", map_list)
 		end
 
 	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING] is
@@ -73,70 +101,79 @@ feature -- Basic Operations
 			Result.put (an_index, 1)
 			Result.put ("", 2)
 		end
-		
-	generate_external_assemblies is
-			-- Generate external assemblies
+
+feature {NONE} -- Implementation
+
+	external_classes: STRING is
+			-- List of directories where Eiffel classes are stored
+		require
+			non_void_selected_assemblies: wizard_information.selected_assemblies /= Void
+			not_empty_selected_assemblies: not wizard_information.selected_assemblies.is_empty
 		local
-			selected_assemblies: LIST [ASSEMBLY_INFORMATION]
+			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			an_assembly: ASSEMBLY_INFORMATION
+			assembly_name: STRING
 		do
+			create Result.make (1024)
+			Result.append ("%N%T%T-- .NET System%N")
+			selected_assemblies := wizard_information.selected_assemblies
+			from
+				
+				selected_assemblies.start
+			until
+				selected_assemblies.after
+			loop
+				an_assembly := selected_assemblies.item
+				assembly_name := clone (an_assembly.name)
+				assembly_name.replace_substring_all (".", "_")
+				assembly_name.to_lower
+				Result.append ("%Tall " + assembly_name + "_generated: %"" + an_assembly.eiffel_cluster_path + "%"%N%N")
+				selected_assemblies.forth
+			end
+		ensure
+			non_void_text: Result /= Void
+			not_empty_text: not Result.is_empty
+		end			
+	
+	external_assemblies: STRING is
+			-- List of external assemblies
+		require
+			non_void_selected_assemblies: wizard_information.selected_assemblies /= Void
+			not_empty_selected_assemblies: not wizard_information.selected_assemblies.is_empty
+		local
+			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			an_assembly: ASSEMBLY_INFORMATION
+		do
+			create Result.make (1024)
+			Result.append ("external%N%Tassembly:%N")
 			selected_assemblies := wizard_information.selected_assemblies
 			from
 				selected_assemblies.start
 			until
 				selected_assemblies.after
 			loop
-				generate_external_assembly (selected_assemblies.item)
+				an_assembly := selected_assemblies.item
+				Result.append ("%T%T%T%"" + assembly_location (an_assembly) + "%"")
 				selected_assemblies.forth
+				if not selected_assemblies.after then
+					Result.append (",")
+				end
+				Result.append ("%N")
 			end
-		end
-		
-	generate_external_assembly (an_assembly: ASSEMBLY_INFORMATION) is
-			-- Generate eiffel classes for `an_assembly' from metadata
+		ensure
+			non_void_text: Result /= Void
+			not_empty_text: not Result.is_empty
+		end			
+	
+	assembly_location (info: ASSEMBLY_INFORMATION): STRING is
+			-- Location of the assembly corresponding to `info'.
+		require	
+			non_void_info: info /= Void
 		local
-			emitter_command_line: STRING
-			generation_pathname: STRING
+			proxy: ASSEMBLY_MANAGER_INTERFACE_PROXY
 		do
-			generation_pathname := generation_path (an_assembly)
-			
-			create emitter_command_line.make (100)
-			emitter_command_line.append (Emitter_command)
-			emitter_command_line.append (" ")
-			emitter_command_line.append (an_assembly.path)
-			emitter_command_line.append (" ")
-			emitter_command_line.append (generation_pathname)
-
-			(create {EXECUTION_ENVIRONMENT}).system (emitter_command_line)
-		end
-		
-	generation_path (an_assembly: ASSEMBLY_INFORMATION): STRING is
-			-- Create and return the path to store generated files for `an_assembly'
-		local
-			tmp_dir: DIRECTORY
-		do
-			create Result.make (50)
-			Result.append (wizard_information.project_location)
-			create tmp_dir.make (Result)
-			if not tmp_dir.exists then
-				tmp_dir.create_dir
-			end
-			
-			if (Result @ Result.count) /= '\' then
-				Result.append ("\")
-			end
-			Result.append ("external_assemblies")
-			create tmp_dir.make (Result)
-			if not tmp_dir.exists then
-				tmp_dir.create_dir
-			end
-			
-			Result.append ("\")
-			Result.append (an_assembly.name)
-			create tmp_dir.make (Result)
-			if not tmp_dir.exists then
-				tmp_dir.create_dir
-			end
-
-			Result.append ("\")
+			proxy := wizard_information.proxy
+			Result := proxy.assembly_location (info.name, info.version, info.culture, info.public_key)
 		end
 		
 end -- class WIZARD_PROJECT_GENERATOR

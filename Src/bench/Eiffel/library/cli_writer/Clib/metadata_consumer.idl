@@ -1,0 +1,112 @@
+// Generated .IDL file (by the OLE/COM Object Viewer)
+// 
+// typelib filename: EiffelSoftware.MetadataConsumer.tlb
+
+[
+  uuid(A2D37C7B-B9C0-31A5-914A-698D8267D9A2),
+  version(5.5)
+
+]
+library EiffelSoftware_MetadataConsumer
+{
+    // TLib :     // TLib : Common Language Runtime Library : {BED7F4EA-1A96-11D2-8F08-00A0C9A6186D}
+    importlib("mscorlib.tlb");
+    // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
+    importlib("stdole2.tlb");
+
+    // Forward declare all types defined in this typelib
+    interface EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER;
+    interface EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION;
+
+    [
+      odl,
+      uuid(E1FFE14C-4113-40E1-9BCC-E8B0CF3C0F5A),
+      version(1.0),
+      dual,
+      oleautomation
+
+    ]
+    interface EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER : IDispatch {
+        [id(0x60020000)]
+        HRESULT assembly_info_from_assembly(
+                        [in] BSTR a_path, 
+                        [out, retval] EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION** pRetVal);
+        [restricted] void Missing8();
+        [restricted] void Missing9();
+        [id(0x60020003)]
+        HRESULT consume_assembly(
+                        [in] BSTR a_name, 
+                        [in] BSTR a_version, 
+                        [in] BSTR a_culture, 
+                        [in] BSTR a_key);
+        [id(0x60020004)]
+        HRESULT consume_assembly_from_path([in] BSTR a_path);
+        [restricted] void Missing12();
+        [restricted] void Missing13();
+        [id(0x60020007)]
+        HRESULT initialize([in] BSTR a_clr_version);
+        [id(0x60020008)]
+        HRESULT initialize_with_path(
+                        [in] BSTR a_path, 
+                        [in] BSTR a_clr_version);
+        [id(0x60020009)]
+        HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
+        [id(0x6002000a)]
+        HRESULT _set_is_initialized([in] VARIANT_BOOL p1);
+        [id(0x6002000b)]
+        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
+        [id(0x6002000c)]
+        HRESULT _set_is_successful([in] VARIANT_BOOL p1);
+        [id(0x6002000d)]
+        HRESULT last_error_message([out, retval] BSTR* pRetVal);
+        [id(0x6002000e)]
+        HRESULT _set_last_error_message([in] BSTR p1);
+        [restricted] void Missing22();
+        [id(0x60020010)]
+        HRESULT relative_folder_name(
+                        [in] BSTR a_name, 
+                        [in] BSTR a_version, 
+                        [in] BSTR a_culture, 
+                        [in] BSTR a_key, 
+                        [out, retval] BSTR* pRetVal);
+        [id(0x60020011)]
+        HRESULT relative_folder_name_from_path(
+                        [in] BSTR a_path, 
+                        [out, retval] BSTR* pRetVal);
+    };
+
+    [
+      odl,
+      uuid(E1FFE1B6-5067-499A-9A25-E6DDA9076E77),
+      version(1.0),
+      dual,
+      oleautomation
+
+    ]
+    interface EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION : IDispatch {
+        [id(0x60020000)]
+        HRESULT consumed_folder_name([out, retval] BSTR* pRetVal);
+        [id(0x60020001)]
+        HRESULT culture([out, retval] BSTR* pRetVal);
+        [restricted] void Missing9();
+        [restricted] void Missing10();
+        [id(0x60020004)]
+        HRESULT is_consumed([out, retval] VARIANT_BOOL* pRetVal);
+        [restricted] void Missing12();
+        [id(0x60020006)]
+        HRESULT name([out, retval] BSTR* pRetVal);
+        [id(0x60020007)]
+        HRESULT public_key_token([out, retval] BSTR* pRetVal);
+        [id(0x60020008)]
+        HRESULT version([out, retval] BSTR* pRetVal);
+    };
+
+    [
+      uuid(E1FFE121-BD03-4F43-B575-655DAC9941A3),
+      version(1.0)
+    ]
+    coclass EiffelSoftware_MetadataConsumer_Impl_COM_CACHE_MANAGER {
+        interface _Object;
+        [default] interface EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER;
+    };
+};

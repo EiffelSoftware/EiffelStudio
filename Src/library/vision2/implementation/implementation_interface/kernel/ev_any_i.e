@@ -10,7 +10,7 @@ deferred class
 feature -- Status report
 
 	destroyed: BOOLEAN is
-			-- Is Current object destroyed?  
+			-- Is Current object destroyed?
 		deferred
 		end
 
@@ -24,9 +24,9 @@ feature -- Status setting
 
 	destroy is
 			-- Destroy actual object.
+		require
+			exist: not destroyed
 		deferred
-		ensure
-			destroyed: destroyed
 		end
 
 end -- class EV_ANY_I

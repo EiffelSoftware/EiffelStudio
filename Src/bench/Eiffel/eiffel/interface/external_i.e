@@ -239,6 +239,7 @@ feature {NONE} -- Api
 		do
 			Precursor {PROCEDURE_I} (f)
 			f.set_external (True)
+			f.set_is_il_external (is_il_external)
 		end
 
 invariant

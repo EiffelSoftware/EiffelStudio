@@ -75,6 +75,17 @@ feature -- Status report
 			Result := implementation.count
 		end
 
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		require
+			exists: not destroyed
+		do
+			implementation.add_selection_command (a_command, arguments)
+		end
+
 feature -- Element change
 
 --	remove_element (index: INTEGER) is

@@ -309,8 +309,8 @@ feature -- Interface
 					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.reference_parameters or
 			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.return_type_attributes or			No return type attributes
 			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.static_constructors or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.try_catch_statements or
-					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.win_32_resources;
+					a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.try_catch_statements
+			--		a_flag = feature {SYSTEM_DLL_GENERATOR_SUPPORT}.win_32_resources;					No win32 resources
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.Supports"])
 		end
 

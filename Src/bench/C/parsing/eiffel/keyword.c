@@ -23,9 +23,7 @@ struct token {
 */
 
 static int
-hash (str, len)
-     register char *str;
-     register unsigned int  len;
+hash (register char *str, register unsigned int len)
 {
   static unsigned char hash_table[] =
     {
@@ -59,9 +57,7 @@ hash (str, len)
 }
 
 struct token *
-in_word_set (str, len)
-     register char *str;
-     register unsigned int len;
+in_word_set (register char *str, register unsigned int len)
 {
 
   static unsigned char lengthtable[] =

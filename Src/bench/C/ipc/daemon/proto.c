@@ -30,22 +30,22 @@
 #define OTHER(x)	\
 	((x) == readfd(d_data.d_cs) ? d_data.d_as : d_data.d_cs)
 
-rt_public void drqsthandle();			/* General request processor */
-rt_public void send_packet();			/* Send an asnwer to client */
-rt_public int recv_packet();			/* Request reception */
+rt_public void drqsthandle(int s);			/* General request processor */
+rt_public void send_packet(int s, Request *dans);			/* Send an asnwer to client */
+rt_public int recv_packet(int s, Request *rqst);			/* Request reception */
 
-rt_private void dprocess_request();		/* General processing of requests */
-rt_private void transfer();			/* Handle transfer requests */
-rt_private void commute();				/* Commute data from one file to another */
-rt_private void run_command();			/* Run specified command */
-rt_private void run_asynchronous();	/* Run command in background */
-rt_private void start_app();			/* Start Eiffel application */
-rt_private void kill_app();			/* Kill Eiffel application brutally*/
+rt_private void dprocess_request(int s, Request *rqst);		/* General processing of requests */
+rt_private void transfer(int s, Request *rqst);			/* Handle transfer requests */
+rt_private void commute(int from, int to, int size);				/* Commute data from one file to another */
+rt_private void run_command(int s);			/* Run specified command */
+rt_private void run_asynchronous(int s, Request *rqst);	/* Run command in background */
+rt_private void start_app(int s);			/* Start Eiffel application */
+rt_private void kill_app(void);			/* Kill Eiffel application brutally*/
 
 rt_private IDRF idrf;					/* IDR filters used for serializing */
 
-extern void dexit();				/* Daemon exiting procedure */
-extern STREAM *spawn_child();		/* Start up child with ipc link */
+extern void dexit(int code);				/* Daemon exiting procedure */
+extern STREAM *spawn_child(char *cmd, Pid_t *child_pid);		/* Start up child with ipc link */
 
 extern int errno;					/* System call error number */
 
@@ -55,7 +55,7 @@ rt_private int interrupted;	/* Has application been asked to be interrupted */
  * IDR protocol initialization.
  */
 
-rt_public void prt_init()
+rt_public void prt_init(void)
 {
 	if (-1 == idrf_create(&idrf, IDRF_SIZE)) {
 		print_err_msg(stderr, "cannot initialize streams\n");
@@ -63,8 +63,7 @@ rt_public void prt_init()
 	}
 }
 
-rt_public void drqsthandle(s)
-int s;
+rt_public void drqsthandle(int s)
 {
 	/* Given a connected socket, wait for a request and process it */
 	
@@ -78,9 +77,9 @@ int s;
 	dprocess_request(s, &rqst);		/* Process the received request */
 }
 
-rt_private void dprocess_request(s, rqst)
-int s;						/* The connected socket */
-Request *rqst;				/* The received request to be processed */
+rt_private void dprocess_request(int s, Request *rqst)
+      						/* The connected socket */
+              				/* The received request to be processed */
 {
 	/* Process the received request. Most of the time, we simply pass along
 	 * the request to the other process we are connected to, whoever spoke
@@ -132,9 +131,9 @@ Request *rqst;				/* The received request to be processed */
  * Sending/receiving packets.
  */
 
-rt_public int recv_packet(s, rqst)
-int s;			/* The connected socket */
-Request *rqst;	/* The request received */
+rt_public int recv_packet(int s, Request *rqst)
+      			/* The connected socket */
+              	/* The request received */
 {
 	/* Receive packet from socket. For now, we only receive from a local pipe,
 	 * which is also a socket in good English. Provision is made for network
@@ -172,9 +171,9 @@ Request *rqst;	/* The request received */
 	return 0;
 }
 
-rt_public void send_packet(s, dans)
-int s;			/* The connected socket */
-Request *dans;	/* The answer to send back */
+rt_public void send_packet(int s, Request *dans)
+      			/* The connected socket */
+              	/* The answer to send back */
 {
 	/* Send and answer on the socket. For now, we only send on a local pipe,
 	 * which is also a socket in good English. Provision is make for network
@@ -218,9 +217,9 @@ Request *dans;	/* The answer to send back */
  * Protocol handling.
  */
 
-rt_private void transfer(s, rqst)
-int s;			/* The connected socket */
-Request *rqst;	/* The request received */
+rt_private void transfer(int s, Request *rqst)
+      			/* The connected socket */
+              	/* The request received */
 {
 	/* Deal with the TRANSFER request, which is used when one of the children
 	 * want to send data to the other child.
@@ -254,10 +253,10 @@ Request *rqst;	/* The request received */
 	commute(s, writefd(sp), rqst->rq_ack.ak_type);
 }
 
-rt_private void commute(from, to, size)
-int from;		/* Source file descriptor */
-int to;			/* Target file descriptor */
-int size;		/* Amount of bytes to be commuted */
+rt_private void commute(int from, int to, int size)
+         		/* Source file descriptor */
+       			/* Target file descriptor */
+         		/* Amount of bytes to be commuted */
 {
 	/* Commute 'size' bytes from source to target */
 
@@ -285,8 +284,7 @@ int size;		/* Amount of bytes to be commuted */
 	}
 }
 
-rt_private void run_command(s)
-int s;
+rt_private void run_command(int s)
 {
 	/* Run a command, which is sent to us as a string, which should be passed
 	 * unparsed to "/bin/sh -c" for execution.
@@ -299,7 +297,7 @@ int s;
 	
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 	cmd = recv_str(sp, (int *) 0);		/* Get command */
-    meltpath = strdup (cmd);
+    meltpath = (char *) (strdup (cmd));
     if (meltpath == (char *)0){
 #ifdef USE_ADD_LOG
  	    add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
@@ -337,9 +335,7 @@ int s;
 		send_ack(writefd(sp), AK_ERROR);	/* Comamnd failed */
 }
 
-rt_private void run_asynchronous(s, rqst)
-int s;
-Request *rqst;
+rt_private void run_asynchronous(int s, Request *rqst)
 {
 	/* Run a command asynchronously, that is to say in background. The command
 	 * is identified by the client via a "job number", which is inserted in
@@ -389,7 +385,7 @@ Request *rqst;
 	}
 
 /* child */
-    meltpath = strdup (cmd);
+    meltpath = (char *) (strdup (cmd));
     if (meltpath == (char *)0){
 #ifdef USE_ADD_LOG
             add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
@@ -433,8 +429,7 @@ Request *rqst;
 	/* NOTREACHED */
 }
 
-rt_private void start_app(s)
-int s;
+rt_private void start_app(int s)
 {
 	/* Start Eiffel application, setting up the necessary communication stream.
 	 * A positive acknowledgment is sent back if the process starts correctly.
@@ -474,7 +469,7 @@ int s;
 	}
 }
 
-rt_private void kill_app () 
+rt_private void kill_app (void)
 {
 	/* Kill the application brutally */
 
@@ -482,7 +477,7 @@ rt_private void kill_app ()
 		kill((Pid_t) d_data.d_app, SIGKILL);
 }
 
-rt_public void dead_app()
+rt_public void dead_app(void)
 {
 	/* Signal ewb that the application is dead. This is why each transaction
 	 * has to be acknowledged, so that ewb does not remain hung waiting for

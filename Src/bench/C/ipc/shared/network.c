@@ -40,15 +40,15 @@ rt_private char *rcsid =
 #endif
 
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
-rt_private Signal_t broken();	/* Signal handler for SIGPIPE */
-rt_private Signal_t timeout();	/* Signal handler for read timeouts */
+rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
+rt_private Signal_t timeout(void);	/* Signal handler for read timeouts */
 
 extern int errno;
 
-rt_public int net_recv(cs, buf, size)
-int cs;				/* The connected socket descriptor */
-char *buf;			/* Where data are to be stored */
-int size;			/* Amount of data to be read */
+rt_public int net_recv(int cs, char *buf, int size)
+       				/* The connected socket descriptor */
+          			/* Where data are to be stored */
+         			/* Amount of data to be read */
 {
 	/* Read from network */
 
@@ -56,7 +56,7 @@ int size;			/* Amount of data to be read */
 	int length;			/* Amount read by last system call */
 	Signal_t (*oldalrm)();
 
-	oldalrm = signal(SIGALRM, timeout);	/* Trap SIGALRM within this function */
+	oldalrm = signal(SIGALRM, (void (*)(int)) timeout);	/* Trap SIGALRM within this function */
 
 	if (0 != setjmp(env)) {
 		alarm(0);					/* Stop alarm clock */
@@ -104,10 +104,10 @@ closed:
 }
 
 
-rt_public int net_send(cs, buf, size)
-int cs;				/* The connected socket descriptor */
-char *buf;			/* Where data are stored */
-int size;			/* Amount of data to be sent */
+rt_public int net_send(int cs, char *buf, int size)
+       				/* The connected socket descriptor */
+          			/* Where data are stored */
+         			/* Amount of data to be sent */
 {
 	/* Write to network */
 
@@ -116,7 +116,7 @@ int size;			/* Amount of data to be sent */
 	int amount;
 	Signal_t (*oldpipe)();
 
-	oldpipe = signal(SIGPIPE, broken);	/* Trap SIGPIPE within this function */
+	oldpipe = signal(SIGPIPE, (void (*)(int)) broken);	/* Trap SIGPIPE within this function */
 
 	if (0 != setjmp(env)) {
 		signal(SIGPIPE, oldpipe);
@@ -145,13 +145,13 @@ int size;			/* Amount of data to be sent */
 	return 0;
 }
 
-rt_private Signal_t broken()
+rt_private Signal_t broken(void)
 {
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */
 }
 
-rt_private Signal_t timeout()
+rt_private Signal_t timeout(void)
 {
 	longjmp(env, 1);			/* Alarm signal received */
 	/* NOTREACHED */

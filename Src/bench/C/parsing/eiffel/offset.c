@@ -16,21 +16,20 @@
  * Declarations
  */
 
-long chroff();
-long lngoff();
-long fltoff();
-long ptroff();
-long dbloff();
-static long remainder();
-static long padding();
+long chroff(long int nb_ref);
+long lngoff(long int nb_ref, long int nb_char);
+long fltoff(long int nb_ref, long int nb_char, long int nb_int);
+long ptroff(long int nb_ref, long int nb_char, long int nb_int, long int nb_flt);
+long dbloff(long int nb_ref, long int nb_char, long int nb_int, long int nb_flt, long int nb_ptr);
+static long remainder(long int x);
+static long padding(long int x, long int y);
 
 
 /*
  * Functions definitions
  */
 
-long chroff(nb_ref)
-long nb_ref;
+long chroff(long int nb_ref)
 {
 	/* Return offset of first character after `nb_ref' references
 	 */
@@ -38,8 +37,7 @@ long nb_ref;
 	return nb_ref * REFSIZ + padding(nb_ref * REFSIZ, (long)CHRSIZ);
 }
 
-long lngoff(nb_ref,nb_char)
-long nb_ref, nb_char;
+long lngoff(long int nb_ref, long int nb_char)
 {
 	/* Return offset of first integer after `nb_ref' references,
 	 * and `nb_char' characters. 
@@ -49,8 +47,7 @@ long nb_ref, nb_char;
 	return to_add + padding(to_add, (long)LNGSIZ);
 }
 
-long fltoff(nb_ref,nb_char,nb_int)
-long nb_ref, nb_char, nb_int;
+long fltoff(long int nb_ref, long int nb_char, long int nb_int)
 {
 	/* Return offset of first float after `nb_ref' references,
 	 * `nb_char' characters and `nb_int' integers.
@@ -60,8 +57,7 @@ long nb_ref, nb_char, nb_int;
 	return to_add + padding(to_add, (long)FLTSIZ);
 }
 
-long ptroff(nb_ref,nb_char,nb_int,nb_flt)
-long nb_ref, nb_char, nb_int, nb_flt;
+long ptroff(long int nb_ref, long int nb_char, long int nb_int, long int nb_flt)
 {
 	/* Return offset of first pointer after `nb_ref' references,
 	 * `nb_char' characters, `nb_int' integers and `nb_flt' floats.
@@ -71,8 +67,7 @@ long nb_ref, nb_char, nb_int, nb_flt;
 	return to_add + padding(to_add, (long)PTRSIZ);
 }
 
-long dbloff(nb_ref,nb_char,nb_int,nb_flt,nb_ptr)
-long nb_ref, nb_char, nb_int, nb_flt, nb_ptr;
+long dbloff(long int nb_ref, long int nb_char, long int nb_int, long int nb_flt, long int nb_ptr)
 {
 	/* Return offset of first pointer after `nb_ref' references,
 	 * `nb_char' characters, `nb_int' integers, `nb_flt' floats,
@@ -84,7 +79,7 @@ long nb_ref, nb_char, nb_int, nb_flt, nb_ptr;
 	return to_add + padding(to_add, (long)DBLSIZ);
 }
 
-long objsiz(nb_ref,nb_char,nb_int,nb_flt,nb_ptr,nb_dbl)
+long objsiz(int nb_ref, int nb_char, int nb_int, int nb_flt, int nb_ptr, int nb_dbl)
 {
 	/* Return size of an object having `nb_ref' references,
 	 * `nb_char' characters, `nb_int' integers, `nb_flt' floats,
@@ -96,63 +91,56 @@ long objsiz(nb_ref,nb_char,nb_int,nb_flt,nb_ptr,nb_dbl)
 	return to_add + remainder(to_add);
 }
 
-long bitoff(bitval)
-long bitval;
+long bitoff(long int bitval)
 {
 	/* Return size of a bit object of size `bit_val'. */
 
 	return BITOFF(bitval);
 }
 
-long chracs(n)
-long n;
+long chracs(long int n)
 {
 	/* Return size of `n' characters */
 
 	return CHRACS(n);
 }
 
-long refacs(n)
-long n;
+long refacs(long int n)
 {
 	/* Return size of `n' references */
 
 	return REFACS(n);
 }
 
-long lngacs(n)
-long n;
+long lngacs(long int n)
 {
 	/* Return size of `n' long integers */
 
 	return LNGACS(n);
 }
 
-long fltacs(n)
-long n;
+long fltacs(long int n)
 {
 	/* Return size of `n' floats */
 
 	return FLTACS(n);
 }
 
-long ptracs(n)
-long n;
+long ptracs(long int n)
 {
 	/* Return size of `n' pointers */
 
 	return PTRACS(n);
 }
 
-long dblacs(n)
-long n;
+long dblacs(long int n)
 {
 	/* Return size of `n' doubles */
 
 	return DBLACS(n);
 }
 
-long ovhsiz()
+long ovhsiz(void)
 {
 	/* Return size of an Eiffel 3 overhead. */
 
@@ -165,14 +153,12 @@ long ovhsiz()
  * Private functions definitions
  */
 
-static long remainder(x)
-long x;
+static long remainder(long int x)
 {
 	return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0);
 }
 
-static long padding(x,y)
-long x,y;
+static long padding(long int x, long int y)
 {
 	return remainder(x) % y;
 }

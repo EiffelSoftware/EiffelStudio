@@ -19,6 +19,8 @@
 #include "plug.h"		/* Not wanted when runnning tests */
 #endif
 
+#include "malloc.h" 	/* %%ss added for overhead */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -152,7 +154,7 @@ extern int refers_new_object(register char *object);		/* Does an object refers t
 extern void gc_stop(void);				/* Stop the garbage collector */
 extern void gc_run(void);				/* Restart the garbage collector */
 extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
-extern void gfree(register union overhead *zone);				/* Garbage collector's free routine */
+extern void gfree(register union overhead *zone);	/* Garbage collector's free routine */
 
 /* Exported data-structure declarations */
 extern struct stack loc_set;			/* Local variable stack */

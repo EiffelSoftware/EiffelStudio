@@ -26,7 +26,7 @@ rt_public int debug_mode = 0;	/* Assume not in debug mode */
 
 extern char *ename;			/* Eiffel executable base name (run-time var) */
 
-rt_shared void dserver()
+rt_shared void dserver(void)
 {
 	/* This routine is called by the debugger once the program context has
 	 * been saved. The application enters in a server mode, after having
@@ -47,7 +47,7 @@ rt_shared void dserver()
 	/* Exiting from this routine resumes control to the debugger */
 }
 
-rt_shared void dinterrupt()
+rt_shared void dinterrupt(void)
 {
 	/* Send a request asking the daemon if the application has been
 	 * interrupted by the debugger.
@@ -60,7 +60,7 @@ rt_shared void dinterrupt()
 	wide_listen();			/* Listen on the socket, waiting for the answer */
 }
 
-rt_shared void winit()
+rt_shared void winit(void)
 {
 	/* Initialize the workbench process, by checking whether it has been
 	 * started under debugger control or not. This routine is called early

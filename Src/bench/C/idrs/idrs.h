@@ -62,30 +62,30 @@ struct idr_discrim {	/* Discrimination array for unions encoding */
  * IDR entry points
  */
 
-extern void idrmem_create();	/* Initialize a memory IDR stream */
-extern void idrmem_destroy();	/* Destruction of the memory IDR stream */
-extern int idr_getpos();		/* Get position in stream */
-extern int idr_size();			/* Retrieve/store a size (variable length) */
-extern bool_t idr_setpos();		/* Set position in stream */
-extern bool_t idr_void();		/* Always return TRUE */
-extern bool_t idr_char();		/* Encoding of a char */
-extern bool_t idr_u_char();		/* Encoding of an unsigned char */
-extern bool_t idr_short();		/* Encoding of a short integer */
-extern bool_t idr_u_short();		/* Encoding of an unsigned short */
-extern bool_t idr_long();		/* Encoding of a long integer */
-extern bool_t idr_u_long();		/* Encoding of an unsigned long */
-extern bool_t idr_int();		/* Encoding of an integer */
-extern bool_t idr_u_int();		/* Encoding of an unsigned integer */
-extern bool_t idr_float();		/* Encoding of a float */
-extern bool_t idr_double();		/* Encoding of a double */
-extern bool_t idr_opaque();		/* Opaque data transmission */
-extern bool_t idr_vector();		/* Fixed size array */
-extern bool_t idr_array();		/* Variable size array */
-extern bool_t idr_stack();		/* Variable size stack (size not IDR'ed) */
-extern bool_t idr_union();		/* Union encoding based on discriminent */
-extern bool_t idr_poly();		/* Polymorphic union encoding with known type */
-extern bool_t idr_read();		/* Read data from file and deserialize them */
-extern bool_t idr_write();		/* Write serialized data to file */
+extern void idrmem_create(IDR *idrs, char *addr, int len, int i_op);	/* Initialize a memory IDR stream */
+extern void idrmem_destroy(IDR *idrs);	/* Destruction of the memory IDR stream */
+extern int idr_getpos(IDR *idrs);		/* Get position in stream */
+extern int idr_size(IDR *idrs, int *lp, int maxlength);			/* Retrieve/store a size (variable length) */
+extern bool_t idr_setpos(IDR *idrs, int pos);		/* Set position in stream */
+extern bool_t idr_void(void);		/* Always return TRUE */
+extern bool_t idr_char(IDR *idrs, char *cp);		/* Encoding of a char */
+extern bool_t idr_u_char(IDR *idrs, unsigned char *cp);		/* Encoding of an unsigned char */
+extern bool_t idr_short(IDR *idrs, short int *sp);		/* Encoding of a short integer */
+extern bool_t idr_u_short(IDR *idrs, short unsigned int *sp);		/* Encoding of an unsigned short */
+extern bool_t idr_long(IDR *idrs, long int *lp);		/* Encoding of a long integer */
+extern bool_t idr_u_long(IDR *idrs, long unsigned int *lp);		/* Encoding of an unsigned long */
+extern bool_t idr_int(IDR *idrs, int *ip);		/* Encoding of an integer */
+extern bool_t idr_u_int(IDR *idrs, unsigned int *ip);		/* Encoding of an unsigned integer */
+extern bool_t idr_float(IDR *idrs, float *fp);		/* Encoding of a float */
+extern bool_t idr_double(IDR *idrs, double *dp);		/* Encoding of a double */
+extern bool_t idr_opaque(IDR *idrs, char *p, int len);		/* Opaque data transmission */
+extern bool_t idr_vector(IDR *idrs, char *array, int size, int elemsize, bool_t (*idr_elem) (/* ??? */));		/* Fixed size array */
+extern bool_t idr_array(IDR *idrs, char **ap, int *lp, int maxlength, int elemsize, bool_t (*idr_elem) (/* ??? */));		/* Variable size array */
+extern bool_t idr_stack(IDR *idrs, char **ap, int size, int elemsize, bool_t (*idr_elem) (/* ??? */));		/* Variable size stack (size not IDR'ed) */
+extern bool_t idr_union(IDR *idrs, int *type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (/* ??? */));		/* Union encoding based on discriminent */
+extern bool_t idr_poly(IDR *idrs, int type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (/* ??? */));		/* Polymorphic union encoding with known type */
+extern bool_t idr_read(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (/* ??? */));		/* Read data from file and deserialize them */
+extern bool_t idr_write(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (/* ??? */));		/* Write serialized data to file */
 
 #endif
 

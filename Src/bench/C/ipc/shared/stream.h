@@ -27,7 +27,7 @@ typedef struct stream {
 #define writefd(sp)		((sp)->sw)
 
 extern STREAM *stream_by_fd[];		/* Maps a fd to a STREAM */
-extern STREAM *new_stream();		/* Asks for a new STREAM structure */
-extern void close_stream();			/* Close stream connection */
+extern STREAM *new_stream(int read_fd, int write_fd);		/* Asks for a new STREAM structure */
+extern void close_stream(STREAM *sp);			/* Close stream connection */
 
 #endif

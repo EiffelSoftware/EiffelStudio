@@ -20,12 +20,12 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_union(idrs, type, unp, arms, dfltarm)
-IDR *idrs;					/* The serializing stream */
-int *type;					/* Union discriminent, serialized in the process */
-char *unp;					/* Pointer to the start of the union */
-struct idr_discrim *arms;	/* Null terminated array to deal with union arms */
-bool_t (*dfltarm)();		/* Default coding for arm (may be NULL) */
+rt_public bool_t idr_union(IDR *idrs, int *type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (/* ??? */))
+          					/* The serializing stream */
+          					/* Union discriminent, serialized in the process */
+          					/* Pointer to the start of the union */
+                         	/* Null terminated array to deal with union arms */
+                    		/* Default coding for arm (may be NULL) */
 {
 	/* Serialization of an union, based on the contents of the union's type
 	 * which is an integer. Depending on the value of this disciminent, the

@@ -1,7 +1,6 @@
 #include <stdio.h>
 
-char *str_save(s)
-char *s;
+char *str_save(char *s)
 {
     char *result;
 

@@ -34,11 +34,11 @@ struct d_flags {				/* Daemon flags (protocol with client) */
 extern struct d_flags d_data;	/* Global daemon's status */
 
 /* Routine declarations */
-extern void drqsthandle();			/* General request processor */
-extern void apphandle();			/* Handle messages from application */
-extern void send_packet();			/* Send an asnwer to client */
-extern int recv_packet();			/* Receive data from client */
-extern void dead_app();				/* Signals ewb that app is dead */
-extern void prt_init();				/* Initialize IDR filters */
+extern void drqsthandle(int s);	/* General request processor */
+extern void apphandle();		/* Handle messages from application */ /* %%ss undefined not used in C */
+extern void send_packet(int s, Request *dans);	/* Send an asnwer to client */
+extern int recv_packet(int s, Request *rqst);	/* Receive data from client */
+extern void dead_app(void);		/* Signals ewb that app is dead */
+extern void prt_init(void);		/* Initialize IDR filters */
 
 #endif

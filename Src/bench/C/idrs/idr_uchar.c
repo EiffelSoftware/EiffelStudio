@@ -20,9 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_u_char(idrs, cp)
-IDR *idrs;
-unsigned char *cp;
+rt_public bool_t idr_u_char(IDR *idrs, unsigned char *cp)
 {
 	return idr_char(idrs, (char *) cp);
 }

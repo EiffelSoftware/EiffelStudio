@@ -402,7 +402,7 @@ Prefix:
 Infix_operator:
 	Manifest_string
 		{
-		extern int is_infix();
+		extern int is_infix(char *s);
 
 		$$ = click_list_push ();
 		click_list_set ($1, $$);
@@ -415,7 +415,7 @@ Infix_operator:
 Prefix_operator:
 	Manifest_string
 		{
-		extern int is_prefix();
+		extern int is_prefix(char *s);
 
 		$$ = click_list_push ();
 		click_list_set ($1, $$);
@@ -1383,7 +1383,7 @@ int inherit_context;			/* Flag for context sensitivity of token
 								 * TE_END.
 								 */
 char generic_name[IDLENGTH];	/* Formal generic parameter name */
-int yywrap()
+int yywrap(void)
 {
 	return 1;
 }

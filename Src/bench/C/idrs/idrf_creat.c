@@ -18,9 +18,9 @@
 #include "portable.h"
 #include "idrf.h"
 
-rt_public int idrf_create(idrf, size)
-IDRF *idrf;		/* IDR filtering pair */
-int size;		/* Size of IDR buffers */
+rt_public int idrf_create(IDRF *idrf, int size)
+           		/* IDR filtering pair */
+         		/* Size of IDR buffers */
 {
 	/* Initializes memory for IDR operations. We create memory streams for
 	 * input and output. Thus, all the input requests will have the same length,

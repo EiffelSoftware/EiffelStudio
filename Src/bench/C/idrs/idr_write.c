@@ -20,11 +20,11 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_write(idrs, fd, bp, idr_bp)
-IDR *idrs;			/* The serializing stream */
-int fd;				/* File descriptor we want to write to */
-char *bp;			/* Pointer to structure which contains the data */
-bool_t (*idr_bp)();	/* The IDR routine called to serialize contents in bp */
+rt_public bool_t idr_write(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (/* ??? */))
+          			/* The serializing stream */
+       				/* File descriptor we want to write to */
+         			/* Pointer to structure which contains the data */
+                   	/* The IDR routine called to serialize contents in bp */
 {
 	/* Write serialized bytes from the structure pointed to by bp into the file.
 	 * The number of bytes writtem is the size of the incoming buffer of the

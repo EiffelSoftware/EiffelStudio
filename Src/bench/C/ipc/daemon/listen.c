@@ -21,10 +21,10 @@
 #define ACTIVE_TM	10		/* Active checks performed every 10 seconds */
 
 #ifndef EOFPIPE
-rt_private int active_check();	/* Monitor connection to detect child death */
+rt_private int active_check(STREAM *sp, int pid);	/* Monitor connection to detect child death */
 #endif
 
-rt_public void dwide_listen()
+rt_public void dwide_listen(void)
 {
 	/* Listen on all the file descriptors opened for reading until the
 	 * connected socket is broken. If the socket is in fact a pipe, then there
@@ -65,7 +65,7 @@ rt_public void dwide_listen()
 	 */
 
 #ifdef EOFPIPE
-	while (0 < do_select((char *) 0))
+	while (0 < do_select((struct timeval *) 0))
 #else
 	for (
 		bcopy(&tm, &tmu, sizeof(struct timeval));
@@ -130,9 +130,9 @@ rt_public void dwide_listen()
 #include "request.h"
 #endif
 
-rt_private int active_check(sp, pid)
-STREAM *sp;		/* Communication channel */
-int pid;		/* Child's pid */
+rt_private int active_check(STREAM *sp, int pid)
+	/* Communication channel */
+	/* Child's pid */
 {
 	/* Make sure 'pid' is still alive. If the pid checking facility is enabled
 	 * in the kernel, we use that. Otherwise, we send a KPALIVE request,

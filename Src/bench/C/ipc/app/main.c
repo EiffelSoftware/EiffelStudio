@@ -23,14 +23,12 @@
 #include "stream.h"
 #include "ewbio.h"
 
-rt_public void dexit();
+rt_public void dexit(int i);
 
-extern char *rindex();
+extern char *rindex(const char *s, int c);
 extern unsigned TIMEOUT;
 
-rt_public void main(argc, argv)
-int argc;
-char **argv;
+rt_public void main(int argc, char **argv)
 {
 	/* This is the main entry point for the application */
 
@@ -65,8 +63,7 @@ char **argv;
 	exit(0);
 }
 
-rt_public void dexit(status)
-int status;
+rt_public void dexit(int status)
 {
 	add_log(12, "exiting with status %d", status);
 	exit(status);

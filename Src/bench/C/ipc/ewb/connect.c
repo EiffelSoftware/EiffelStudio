@@ -35,8 +35,8 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_public int econnect(host)
-char *host;			/* The host we wish to connect to */
+rt_public int econnect(char *host)
+           			/* The host we wish to connect to */
 {
 	/* This routine requests a connection to the ISE daemon. It
 	 * returns the connected socket descriptor if connection is
@@ -137,8 +137,8 @@ char *host;			/* The host we wish to connect to */
 }
 
 
-rt_public int deconnect(cs)
-int cs;			/* The connected socket */
+rt_public int deconnect(int cs)
+       			/* The connected socket */
 {
 	/* Close the daemon connection. Returns -1 if error, 0 otherwise */
 	

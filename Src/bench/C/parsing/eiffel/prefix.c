@@ -13,9 +13,7 @@
 */
 
 static int
-hash (str, len)
-     register char *str;
-     register unsigned int  len;
+hash (register char *str, register unsigned int len)
 {
   static unsigned char hash_table[] =
     {
@@ -47,9 +45,7 @@ hash (str, len)
 }
 
 char *
-std_prefix (str, len)
-     register char *str;
-     register unsigned int len;
+std_prefix (register char *str, register unsigned int len)
 {
 
   static unsigned char lengthtable[] =

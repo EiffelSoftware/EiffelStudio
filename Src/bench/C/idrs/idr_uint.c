@@ -30,9 +30,7 @@ unsigned int *ip;
 }
 */
 
-rt_public bool_t idr_u_int(idrs, ip)
-IDR *idrs;
-unsigned int *ip;
+rt_public bool_t idr_u_int(IDR *idrs, unsigned int *ip)
 {
 	unsigned long lip;
 	bool_t ok_bool;

@@ -20,11 +20,11 @@
 
 #include "idr.h"
 
-rt_public void idrmem_create(idrs, addr, len, i_op)
-IDR *idrs;			/* The IDR structure managing the stream */
-char *addr;			/* Address of the serializing buffer */
-int len;			/* Length of the serializing buffer */
-int i_op;			/* Operation wanted */
+rt_public void idrmem_create(IDR *idrs, char *addr, int len, int i_op)
+          			/* The IDR structure managing the stream */
+           			/* Address of the serializing buffer */
+        			/* Length of the serializing buffer */
+         			/* Operation wanted */
 {
 	/* Initialize a memory stream, where the (de)serialization is done in the
 	 * provided buffer pointed to by addr.

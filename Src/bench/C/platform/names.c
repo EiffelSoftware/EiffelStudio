@@ -5,7 +5,7 @@
 
 #include "eiffel.h"
 
-rt_public EIF_REFERENCE eif_dot_e ()
+rt_public EIF_REFERENCE eif_dot_e (void)
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".E");
@@ -14,7 +14,7 @@ rt_public EIF_REFERENCE eif_dot_e ()
 #endif
 }
 
-rt_public EIF_REFERENCE eif_dot_o ()
+rt_public EIF_REFERENCE eif_dot_o (void)
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".obj");
@@ -23,7 +23,7 @@ rt_public EIF_REFERENCE eif_dot_o ()
 #endif
 }
 
-rt_public EIF_REFERENCE eif_driver ()
+rt_public EIF_REFERENCE eif_driver (void)
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS ("driver.exe");
@@ -32,7 +32,7 @@ rt_public EIF_REFERENCE eif_driver ()
 #endif
 }
 
-rt_public EIF_REFERENCE eif_exec_suffix ()
+rt_public EIF_REFERENCE eif_exec_suffix (void)
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	return RTMS (".exe");
@@ -41,7 +41,7 @@ rt_public EIF_REFERENCE eif_exec_suffix ()
 #endif
 }
 
-rt_public EIF_REFERENCE eif_finish_freezing ()
+rt_public EIF_REFERENCE eif_finish_freezing (void)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return RTMS ("es4sh");
@@ -50,7 +50,7 @@ rt_public EIF_REFERENCE eif_finish_freezing ()
 #endif
 }
 
-rt_public EIF_REFERENCE eif_preobj ()
+rt_public EIF_REFERENCE eif_preobj (void)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return RTMS ("preobj.obj");
@@ -61,7 +61,7 @@ rt_public EIF_REFERENCE eif_preobj ()
 #endif
 }
 
-rt_public EIF_REFERENCE eif_copy_cmd ()
+rt_public EIF_REFERENCE eif_copy_cmd (void)
 {
 #ifdef EIF_WINDOWS
 	return RTMS ("\\command.com /c copy");
@@ -74,8 +74,7 @@ rt_public EIF_REFERENCE eif_copy_cmd ()
 #endif
 }
 
-rt_public EIF_BOOLEAN eif_valid_class_file_extension (c)
-EIF_CHARACTER c;
+rt_public EIF_BOOLEAN eif_valid_class_file_extension (EIF_CHARACTER c)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return (EIF_TEST(tolower(c)=='e'));
@@ -86,19 +85,19 @@ EIF_CHARACTER c;
 #endif
 }
 
-rt_public EIF_REFERENCE eif_timeout_msg ()
+rt_public EIF_REFERENCE eif_timeout_msg (void)
 {
 	/* Message displayed when ebench is unable to launch
 	 * the system (because of a timeout).
 	 */
 
 #ifdef EIF_WIN_31
-	extern char *appl_ini_file ();
+	extern char *appl_ini_file (void);
 	char eif_timeout[10];
 	int l;
 #else
 	char *eif_timeout;
-	extern char *getenv();				/* Get environment variable value */
+	extern char *getenv(const char *);				/* Get environment variable value */
 #endif
 
 	char s[512];

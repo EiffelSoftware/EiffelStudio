@@ -20,10 +20,10 @@
 
 #include "idr.h"
 
-rt_public int idr_size(idrs, lp, maxlength)
-IDR *idrs;				/* The serializing stream */
-int *lp;				/* Where actual size of the array is stored */
-int maxlength;			/* Maximum length (hint to know size of lp) */
+rt_public int idr_size(IDR *idrs, int *lp, int maxlength)
+          				/* The serializing stream */
+        				/* Where actual size of the array is stored */
+              			/* Maximum length (hint to know size of lp) */
 {
 	/* This routine retrieves or stores the size pointed to by lp, knowing the
 	 * maximum possible size. As an optimization, if the maximum size can be

@@ -13,10 +13,12 @@
 #ifndef _server_h_
 #define _server_h_
 
-extern void dserver();		/* Main entry point into server mode */
-extern void dinterrupt();	/* Wonder if application has been interrupted */
-extern char *dview();		/* Computes debugger's view on objects */
+#include "cecil.h" 	/* %%ss added for EIF_OBJ */
+
+extern void dserver(void);		/* Main entry point into server mode */
+extern void dinterrupt(void);	/* Wonder if application has been interrupted */
+extern char *dview(EIF_OBJ root);	/* Computes debugger's view on objects */
 extern int debug_mode;
-extern void winit();		/* Workbench debugger initialization */
+extern void winit(void);		/* Workbench debugger initialization */
 
 #endif

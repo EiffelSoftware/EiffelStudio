@@ -8,6 +8,7 @@
     #    #    #   ####    ####  #######  ######  #    #  #    #   ###     ####
 
 */
+#include "cecil.h" 	/* %%ss added for cast in efreeze */
 #include "yacc.h"
 #include "hector.h"
 
@@ -29,12 +30,10 @@ char *yacc_file_name;			/* File name of the parsed file */
  * Initialization of Yacc error mechanism
  */
 
-void error_init(error_obj, rout1, rout2, rout3, rout4, rout5, rout6, rout7, rout8, rout9)
-char *error_obj;
-fnptr rout1, rout2, rout3, rout4, rout5, rout6, rout7, rout8, rout9;
+void error_init( char *error_obj, fnptr rout1, fnptr rout2, fnptr rout3, fnptr rout4, fnptr rout5, fnptr rout6, fnptr rout7, fnptr rout8, fnptr rout9)
 {
 	Error_handler = error_obj;
-	Error_handler = eif_freeze(&Error_handler);	/* Object should not move */
+	Error_handler = eif_freeze((EIF_OBJ) (&Error_handler));	/* Object should not move */
 	syntax1 = rout1;
 	syntax2 = rout2;
 	syntax3 = rout3;
@@ -51,21 +50,21 @@ fnptr rout1, rout2, rout3, rout4, rout5, rout6, rout7, rout8, rout9;
  * Initialization of Eiffel syntax error messages 
  */
 
-long get_start_position()
+long get_start_position(void)
 {
 	/* Return `start_position'. */
 
 	return (long) start_position;
 }
 
-long get_end_position()
+long get_end_position(void)
 {
 	/* Return `end_position'. */
 
 	return (long) end_position;
 }
 
-char *get_yacc_file_name()
+char *get_yacc_file_name(void)
 {
 	/* Return `yacc_file_name'. */
 		

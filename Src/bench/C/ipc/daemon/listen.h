@@ -13,6 +13,6 @@
 #ifndef _listen_h_
 #define _listen_h_
 
-extern void dwide_listen();		/* Listening on all read file descriptors */
+extern void dwide_listen(void);		/* Listening on all read file descriptors */
 
 #endif

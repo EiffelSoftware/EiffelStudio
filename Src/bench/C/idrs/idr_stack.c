@@ -20,12 +20,12 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_stack(idrs, ap, size, elemsize, idr_elem)
-IDR *idrs;				/* The serializing stream */
-char **ap;				/* Where address of arena is stored */
-int size;				/* Number of items in the fixed stack */
-int elemsize;			/* Size of each item */
-bool_t (*idr_elem)();	/* How to encode each item */
+rt_public bool_t idr_stack(IDR *idrs, char **ap, int size, int elemsize, bool_t (*idr_elem) (/* ??? */))
+          				/* The serializing stream */
+          				/* Where address of arena is stored */
+         				/* Number of items in the fixed stack */
+             			/* Size of each item */
+                     	/* How to encode each item */
 {
 	/* Encode a dynamically sized stack. The parameter ap must point to a
 	 * variable of type 'char *' holding the address of the array's arena.

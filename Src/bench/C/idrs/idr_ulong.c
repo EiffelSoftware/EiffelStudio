@@ -31,9 +31,7 @@ unsigned long *lp;
 
 */
 
-rt_public bool_t idr_u_long(idrs, lp)
-IDR *idrs;
-unsigned long *lp;
+rt_public bool_t idr_u_long(IDR *idrs, long unsigned int *lp)
 {
 	/* Serialize a long byte */
 

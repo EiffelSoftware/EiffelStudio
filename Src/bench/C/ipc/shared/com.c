@@ -27,12 +27,12 @@
 #define GRACETIME	5	/* Number of seconds to wait before immediate exit */
 #define MAX_STRING	512	/* Maximum string length for log messages */
 
-extern Malloc_t malloc();	/* Memory allocation */
+extern Malloc_t malloc(register unsigned int nbytes);	/* Memory allocation */
 
 /* VARARGS2 */
-rt_public void send_bye(s, code)
-int s;		/* The socket descriptor */
-int code;	/* The acknowledgment code */
+rt_public void send_bye(int s, int code)
+      		/* The socket descriptor */
+         	/* The acknowledgment code */
 {
 	/* Send a final acknowledgement report and wait some time to ensure the
 	 * client will receive the message. Then exit properly.
@@ -44,9 +44,9 @@ int code;	/* The acknowledgment code */
 }
 
 /* VARARGS2 */
-rt_public void send_ack(s, code)
-int s;		/* The socket descriptor */
-int code;	/* The acknowledgment code */
+rt_public void send_ack(int s, int code)
+      		/* The socket descriptor */
+         	/* The acknowledgment code */
 {
 	/* Send an acknowledgment report. In case it is a negative one, the error
 	 * parameter gives some complementary informations. It is possible to
@@ -65,9 +65,9 @@ int code;	/* The acknowledgment code */
 	send_packet(s, &pack);
 }
 
-rt_public void send_info(s, code)
-int s;		/* The socket descriptor */
-int code;		/* The information code */
+rt_public void send_info(int s, int code)
+      		/* The socket descriptor */
+         		/* The information code */
 {
 		/* Send an information report specified by code. */
 
@@ -78,9 +78,9 @@ int code;		/* The information code */
 	send_packet(s, &rqst);
 }
 
-rt_public int send_str(sp, buffer)
-STREAM *sp;		/* The stream descriptor */
-char *buffer;	/* Where the string is held */
+rt_public int send_str(STREAM *sp, char *buffer)
+           		/* The stream descriptor */
+             	/* Where the string is held */
 {
 	/* Send the string held in the buffer to the remote process and return
 	 * 0 if ok, -1 if the string was not sent.
@@ -143,9 +143,9 @@ char *buffer;	/* Where the string is held */
 	return 0;		/* Ok, string was sent */
 }
 
-rt_public char *recv_str(sp, sizeptr)
-STREAM *sp;		/* The STREAM pointer */
-int *sizeptr;	/* Set to the size of the string if non null pointer */
+rt_public char *recv_str(STREAM *sp, int *sizeptr)
+           		/* The STREAM pointer */
+             	/* Set to the size of the string if non null pointer */
 {
 	/* Receive a string from socket. We return the address of the malloc'ed
 	 * zone where string was stored and optionnally we set the size to the
@@ -191,9 +191,7 @@ int *sizeptr;	/* Set to the size of the string if non null pointer */
 }
 
 #ifdef DEBUG
-rt_public void trace_request(status, rqst)
-char *status;
-Request *rqst;
+rt_public void trace_request(char *status, Request *rqst)
 {
 	/* Dump the request received in the log file */
 

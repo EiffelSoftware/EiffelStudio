@@ -228,8 +228,8 @@ rt_private void run_collector(void);		/* Wrapper for full collections */
 rt_private void clean_up(void);			/* After collection, time to clean up */
 
 /* Stack markers */
-rt_private void mark_simple_stack(register struct stack *stk, register char *(*marker) (char *), register int move);	/* Marks a collector's stack */
-rt_private void mark_stack(register struct stack *stk, register char *(*marker) (char *), register int move);			/* Marks a collector's stack */
+rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move);	/* Marks a collector's stack */
+rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move);			/* Marks a collector's stack */
 rt_private void update_object_id_stack(void); /* Update the object id stack */
 
 /* Storage compation reclaimer */
@@ -295,10 +295,10 @@ rt_private char *nget();			/* Pops the top element of a stack */
 rt_private int cc_for_speed = 1;			/* Priority to speed or memory? */
 #endif
 
-rt_private void mark_ex_stack(register struct xstack *stk, register char *(*marker) (char *), register int move);		/* Marks the exception stacks */
+rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*marker) (char *), register6 int move);		/* Marks the exception stacks */
 
 #ifdef WORKBENCH
-rt_private void mark_op_stack(register char *(*marker) (char *), register int move);		/* Marks operational stack */
+rt_private void mark_op_stack(register4 char *(*marker) (char *), register5 int move);		/* Marks operational stack */
 
 #define DISP(x,y) call_disp(x,y)
 
@@ -906,7 +906,7 @@ rt_private void full_mark(void)
 #endif
 }
 
-rt_private void mark_simple_stack(register struct stack *stk, register char *(*marker) (char *), register int move)
+rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
                             		/* The stack which is to be marked */
                             		/* The routine used to mark objects */
                    					/* Are the objects expected to move? */
@@ -1054,7 +1054,7 @@ rt_private void update_object_id_stack(void)
 	}
 }
 
-rt_private void mark_stack(register struct stack *stk, register char *(*marker) (char *), register int move)
+rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
                             		/* The stack which is to be marked */
                             		/* The routine used to mark objects */
                    					/* Are the objects expected to move? */
@@ -1164,7 +1164,7 @@ rt_private char *mark_expanded(char *root, char *(*marker) (char *))
 
 /* Start of workbench-specific marking functions */
 #ifdef WORKBENCH
-rt_private void mark_op_stack(register char *(*marker) (char *), register int move)
+rt_private void mark_op_stack(register4 char *(*marker) (char *), register5 int move)
                             		/* The routine used to mark objects */
                    					/* Are the objects expected to move? */
 {
@@ -1316,7 +1316,7 @@ rt_private void mark_op_stack(register char *(*marker) (char *), register int mo
 #endif
 /* End of workbench-specific marking functions */
 
-rt_private void mark_ex_stack(register struct xstack *stk, register char *(*marker) (char *), register int move)
+rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*marker) (char *), register6 int move)
                              		/* The stack which is to be marked */
                             		/* The routine used to mark objects */
                    					/* Are the objects expected to move? */
@@ -1379,8 +1379,7 @@ rt_private void mark_ex_stack(register struct xstack *stk, register char *(*mark
 }
 
 #ifdef RECURSIVE_MARKING
-rt_private char *recursive_mark(root)
-char *root;
+rt_private char *recursive_mark(char *root)
 {
 	/* Recursively mark all the objects referenced by the root object.
 	 * I carefully avoided declaring things in registers, because as this
@@ -1705,8 +1704,7 @@ done:
 #endif /* HYBRID_MARKING */
 
 #ifdef ITERATIVE_MARKING
-rt_private char *iterative_mark(root)
-char *root;
+rt_private char *iterative_mark(char *root)
 {
 	/* Mark all the objects referenced by the root object. Recursion
 	 * is carefully avoided even if highly appropriate (might cause
@@ -2037,8 +2035,7 @@ not_explorable:
 		return root;
 }
 
-char *nget(stk)
-register1 struct stack *stk;		/* The stack */
+char *nget(register1 struct stack *stk)
 {
 	/* Pop the top item of *stk */
 
@@ -2094,8 +2091,7 @@ register1 struct stack *stk;		/* The stack */
 	}
 }
 
-char *ntop(stk)
-register1 struct stack *stk;		/* The stack */
+char *ntop( register1 struct stack *stk)
 {
 	/* Return the top item of *stk */
 	register1 char **top = stk->st_top;		/* The top of the stack */
@@ -3419,8 +3415,7 @@ rt_private void mark_new_generation(void)
 }
 
 #ifdef RECURSIVE_MARKING
-rt_private char *generation_mark(root)
-char *root;
+rt_private char *generation_mark(char *root)
 {
 	/* This function is the same as recursive_mark() but slightly different :-).
 	 * Hmm..., I know this is a bad comment and a bad practice, but, for once,
@@ -3694,8 +3689,7 @@ done:
 #endif /* HYBRID_MARKING */
 
 #ifdef ITERATIVE_MARKING
-rt_private char *it_gen_mark(root)
-char *root;
+rt_private char *it_gen_mark(char *root)
 {
 	register1 union overhead *zone;	/* Malloc info zone fields */
 	register2 uint32 flags;			/* Eiffel flags */

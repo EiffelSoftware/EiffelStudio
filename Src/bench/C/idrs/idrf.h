@@ -20,9 +20,9 @@ typedef struct idrs {	/* An encoding/decoding IDR filter */
 	IDR i_decode;		/* Stream used for decoding (deserialization) */
 } IDRF;
 
-extern int idrf_create();		/* Creation of the two IDR memory streams */
-extern void idrf_destroy();		/* Destruction of the two IDR memory streams */
-extern void idrf_pos();			/* Reposition both streams to the beginning */
+extern int idrf_create(IDRF *idrf, int size);		/* Creation of the two IDR memory streams */
+extern void idrf_destroy(IDRF *idrf);		/* Destruction of the two IDR memory streams */
+extern void idrf_pos(IDRF *idrf);			/* Reposition both streams to the beginning */
 
 #endif
 

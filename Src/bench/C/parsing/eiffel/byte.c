@@ -3,48 +3,37 @@
 #include "bits.h"
 #include <stdio.h>
 
-long ca_ssiz();			/* Short integer size */
+long ca_ssiz(void);			/* Short integer size */
 
-void ca_put(area, c, i)
-char *area;
-char c;
-long i;
+void ca_put(char *area, char c, long int i)
 {
 	/* Put character `c' at position `i' in character array `area'. */
 	
 	area[i] = c;
 }
 
-char ca_item(area, i)
-char *area;
-long i;
+char ca_item(char *area, long int i)
 {
 	/* Item at position `i' in character array `area'. */
 	
 	return area[i];
 }
 
-void ca_copy(from, to, nbitems, at)
-char *from, *to;
-long nbitems, at;
+void ca_copy(char *from, char *to, long int nbitems, long int at)
 {
 	/* Copy `nbitems' character from `from' into `to'. */
 
 	bcopy(from, to + at, nbitems * sizeof(char));
 }
 
-void ca_zero(area, size)
-char *area;
-long size;
+void ca_zero(char *area, long int size)
 {
 	/* Reset character array `area' to zero. */
 
 	bzero(area, size * sizeof(char));
 }
 
-void ca_wlong (area, val, index)
-char *area;
-long index, val;
+void ca_wlong (char *area, long int val, long int strchr)
 {
 	/* Write long integer `val' in array of character `area', starting
 	 * at the index `index'. */
@@ -58,10 +47,7 @@ long index, val;
 		*(area + i + index) = *p++;
 }
 
-void ca_wdouble (area, val, index)
-char *area;
-double val;
-long index;
+void ca_wdouble (char *area, double val, long int strchr)
 {
 	/* Write double `val' in array of character `area', starting
 	 * at the index `index'. */
@@ -75,9 +61,7 @@ long index;
 		*(area + i + index) = *p++;
 }
 
-void ca_wshort(area, val, index)
-char *area;
-long index, val;
+void ca_wshort(char *area, long int val, long int strchr)
 {
 	/* Write short integer `val' in array of character `area', starting
 	 * at the index `index'. */
@@ -91,9 +75,7 @@ long index, val;
 		*(area + i + index) = *p++;
 }
 
-void ca_wint32(area, val, index)
-char *area;
-long index, val;
+void ca_wint32(char *area, long int val, long int strchr)
 {
 	/* Write int32 integer `val' in array of character `area', starting
 	 * at the index `index'. */
@@ -107,9 +89,7 @@ long index, val;
 		*(area + i + index) = *p++;
 }
 
-void ca_wuint32(area, val, index)
-char *area;
-long index, val;
+void ca_wuint32(char *area, long int val, long int strchr)
 {
 	/* Write short integer `val' in array of character `area', starting
 	 * at the index `index'. */
@@ -124,8 +104,7 @@ long index, val;
 	}
 }
 
-long ca_bsize (blength)
-long blength;
+long ca_bsize (long int blength)
 {
 	/* Returns number of uint32 fields for encoding a bit of length
 	 * `blength'. */
@@ -133,9 +112,7 @@ long blength;
 	return BIT_NBPACK(blength);
 }
 
-void ca_wbit(area, bit, index, blength)
-char *area, *bit;
-long index, blength;
+void ca_wbit(char *area, char *bit, long int strchr, long int blength)
 {
 	/* Write bits value	`bit' of length in `area' stating at `index'.
 	 */
@@ -159,69 +136,64 @@ long index, blength;
 	ca_wuint32(area,val,index + (nb_packs-1)*sizeof(uint32));
 }
 
-long ca_ssiz()
+long ca_ssiz(void)
 {
 	/* Short integer size. */
 
 	return (long) sizeof(short);
 }
 
-long ca_sint32()
+long ca_sint32(void)
 {
 	/* int32 integer size. */
 
 	return (long) sizeof(int32);
 }
 
-long ca_suint32()
+long ca_suint32(void)
 {
 	/* uint32 integer size. */
 
 	return (long) sizeof(uint32);
 }
 
-void ca_store(area, siz, fil)
-char *area;
-long siz;
-FILE *fil;
+void ca_store(char *area, long int siz, FILE *fil)
 {
 	if (fwrite(area, sizeof(char), siz, fil) != siz)
 		xraise(EN_IO);
 }
 
-long c_char_size()
+long c_char_size(void)
 {
 	return (long) sizeof(char);
 }
 
-long c_long_size()
+long c_long_size(void)
 {
 	return (long) sizeof(long);
 }
 
-long c_float_size()
+long c_float_size(void)
 {
 	return (long) sizeof(float);
 }
 
-long c_double_size()
+long c_double_size(void)
 {
 	return (long) sizeof(double);
 }
 
-long c_pointer_size()
+long c_pointer_size(void)
 {
 	return (long) sizeof(char *(*)());
 }
 
-long c_reference_size()
+long c_reference_size(void)
 {
 	return (long) sizeof(char *);
 }
 
-void write_int (file, val)
-FILE *file;
-long val;
+void write_int (FILE *file, long int val)
 {
 	fwrite(&val, sizeof(long), 1, file);
 }

@@ -31,17 +31,17 @@ rt_private int argc;				/* Argument count */
 rt_private int where;				/* Current position within argv[] */
 
 /* Function declarations */
-rt_private int is_separator();		/* Test whether char is an IFS */
-rt_private void free_argv();		/* Free inside of argv[] array */
-rt_private int init_argv();		/* Initialize argv[] for new command */
-rt_private char *add_argv();		/* Append one word to the argv[] array */
-rt_public void shfree();			/* Free structure used by argv[] */
-rt_public char **shword();			/* Parse command string and split into words */
+rt_private int is_separator(char c);		/* Test whether char is an IFS */
+rt_private void free_argv(void);		/* Free inside of argv[] array */
+rt_private int init_argv(void);		/* Initialize argv[] for new command */
+rt_private char *add_argv(char *word);		/* Append one word to the argv[] array */
+rt_public void shfree(void);			/* Free structure used by argv[] */
+rt_public char **shword(char *cmd);			/* Parse command string and split into words */
 
-extern char *str_save();			/* Save string somewhere in memory */
+extern char *str_save(char *s);			/* Save string somewhere in memory */
 
-rt_private int is_separator(c)
-char c;			/* Character to be tested among those in the ifs set */
+rt_private int is_separator(char c)
+       			/* Character to be tested among those in the ifs set */
 {
 	/* Is char 'c' a valid input field separator ? */
 
@@ -54,7 +54,7 @@ char c;			/* Character to be tested among those in the ifs set */
 	return d ? 1 : 0;		/* Boolean stating whether we found it */
 }
 
-rt_private void free_argv()
+rt_private void free_argv(void)
 {
 	/* Loop over the argv array and free all the strings it holds. Note that
 	 * argv[argc] is always a null pointer and thus is not stored in the argv
@@ -68,7 +68,7 @@ rt_private void free_argv()
 			free(argv[i]);
 }
 
-rt_private int init_argv()
+rt_private int init_argv(void)
 {
 	/* Initializes the argument pointer array. If the reference is not already
 	 * a null pointer, the strings held in the argument array are freed but
@@ -95,8 +95,7 @@ rt_private int init_argv()
 	return 0;
 }
 
-rt_private char *add_argv(word)
-char *word;
+rt_private char *add_argv(char *word)
 {
 	/* Add a "word" at the end of the argv[] array and return a pointer to the
 	 * dynmically allocated string which holds this word (in the shell sense),
@@ -131,7 +130,7 @@ char *word;
 	return saved;			/* Operation succeded */
 }
 
-rt_public void shfree()
+rt_public void shfree(void)
 {
 	/* Free memory used by argument array */
 
@@ -142,8 +141,8 @@ rt_public void shfree()
 	argc = 0;
 }
 
-rt_public char **shword(cmd)
-char *cmd;		/* The command string */
+rt_public char **shword(char *cmd)
+          		/* The command string */
 {
 	/* Break the shell command held in 'cmd' according to the IFS, putting
 	 * each shell word in a separate array entry, hence building an argument
@@ -224,7 +223,7 @@ char *cmd;		/* The command string */
 }
 
 #ifdef TEST
-print_argv()
+print_argv(void)
 {
 	char **array = argv;
 	char *str;
@@ -237,8 +236,7 @@ print_argv()
 	printf("END\n");
 }
 
-test(cmd)
-char *cmd;
+test(char *cmd)
 {
 	printf("%s\n", cmd);
 	shword(cmd);

@@ -23,13 +23,11 @@
 #include <strings.h>
 #endif
 
-extern void welcome();			/* Print a welcome message */
-rt_public void dexit();			/* Final exiting with logging message */
-extern int identify();			/* Make sure we are started via the wrapper */
+extern void welcome(void);			/* Print a welcome message */
+rt_public void dexit(int status);	/* Final exiting with logging message */
+extern int identify(void);			/* Make sure we are started via the wrapper */
 
-rt_public void main(argc, argv)
-int argc;
-char **argv;
+rt_public void main(int argc, char **argv)
 {
 	int s;			/* The connected socket descriptor */
 	STREAM *sp;		/* Stream used for communications with ised */
@@ -69,8 +67,7 @@ char **argv;
 	dexit(0);
 }
 
-rt_public void dexit(status)
-int status;
+rt_public void dexit(int status)
 {
 #ifdef USE_ADD_LOG
 	add_log(12, "exiting with status %d", status);

@@ -37,7 +37,7 @@
 rt_private fnptr set_proc;
 rt_private fnptr send_proc;
 
-extern EIF_INTEGER eif_system();
+extern EIF_INTEGER eif_system(char *);
 
 #ifdef EIF_WIN32
 HANDLE eif_coninfile, eif_conoutfile;
@@ -48,16 +48,14 @@ extern char *eif_getenv (char *);
 extern char *eif_getenv (char *);
 #endif
 
-void async_shell_pass_address(send_address, set_address)
-fnptr send_address, set_address;
+void async_shell_pass_address(fnptr send_address, fnptr set_address)
 {
 		/* Rescord the `set_command_name' and `send' function pointers */
 	set_proc = set_address;
 	send_proc = send_address;
 }
 
-void eif_call_finish_freezing(c_code_dir, freeze_cmd_name)
-EIF_OBJ c_code_dir, freeze_cmd_name;
+void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 {
 #ifdef EIF_WINDOWS
 #ifdef EIF_WIN32
@@ -166,8 +164,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 #endif
 }
 
-void eif_gr_call_finish_freezing(request, c_code_dir, freeze_cmd_name)
-EIF_OBJ request, c_code_dir, freeze_cmd_name;
+void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	eif_call_finish_freezing(c_code_dir, freeze_cmd_name);
@@ -203,8 +200,7 @@ EIF_OBJ request, c_code_dir, freeze_cmd_name;
 
 
 
-void eif_link_driver (c_code_dir, system_name, prelink_command_name, driver_name)
-EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
+void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
 {
 #if defined EIF_WIN32 || defined EIF_OS2
 	char *src, *eiffel_dir, *eiffel_plt, *system_exe;
@@ -215,7 +211,7 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 
 		/* Given abc\EIFGEN\W_code */
 		/* The starting directory is abc or abc\EIFGEN\W_code - 14 characters */
-	start_dir = cmalloc (strlen(eif_access(c_code_dir)),1);
+	start_dir = cmalloc (strlen(eif_access(c_code_dir)));	/* %%ss removed 2nd parameter ,1 */
 	strncpy (start_dir, eif_access(c_code_dir), strlen(eif_access(c_code_dir))-14);
 
 		/* Link */
@@ -338,9 +334,7 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 #endif
 }
 
-void eif_gr_link_driver (request, c_code_dir, system_name, prelink_command_name, driver_name)
-EIF_OBJ request;
-EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
+void eif_gr_link_driver (EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
 {
 #if defined EIF_WINDOWS || __VMS || defined EIF_OS2
 	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
@@ -363,7 +357,7 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 
 /* Platform definition */
 
-EIF_BOOLEAN eif_is_os2()
+EIF_BOOLEAN eif_is_os2(void)
 {
 #ifdef EIF_OS2
 	return EIF_TRUE;
@@ -372,7 +366,7 @@ EIF_BOOLEAN eif_is_os2()
 #endif
 }
 
-EIF_BOOLEAN eif_is_vms()
+EIF_BOOLEAN eif_is_vms(void)
 {
 #ifdef __VMS
 	return EIF_TRUE;
@@ -381,7 +375,7 @@ EIF_BOOLEAN eif_is_vms()
 #endif
 }
 
-EIF_BOOLEAN eif_is_windows()
+EIF_BOOLEAN eif_is_windows(void)
 {
 #ifdef EIF_WINDOWS
 	return EIF_TRUE;
@@ -390,7 +384,7 @@ EIF_BOOLEAN eif_is_windows()
 #endif
 }
 
-EIF_BOOLEAN eif_is_win32()
+EIF_BOOLEAN eif_is_win32(void)
 {
 #ifdef EIF_WIN32
 	return EIF_TRUE;
@@ -399,7 +393,7 @@ EIF_BOOLEAN eif_is_win32()
 #endif
 }
 
-EIF_BOOLEAN eif_is_windows_3_1()
+EIF_BOOLEAN eif_is_windows_3_1(void)
 {
 #ifdef EIF_WIN_31
 	return EIF_TRUE;
@@ -408,8 +402,7 @@ EIF_BOOLEAN eif_is_windows_3_1()
 #endif
 }
 
-EIF_REFERENCE eif_date_string (a_date)
-EIF_INTEGER a_date;
+EIF_REFERENCE eif_date_string (EIF_INTEGER a_date)
 {
 	EIF_REFERENCE result;
 	char *date_string = ctime(&a_date);
@@ -433,10 +426,7 @@ UINT event_id;
 
 void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 
-void win_ioh_make_client(a, o, a_delay)
-EIF_POINTER a;
-EIF_OBJ     o;
-EIF_INTEGER a_delay;
+void win_ioh_make_client(EIF_POINTER a, EIF_OBJ o, EIF_INTEGER a_delay)
 {
 	event_callback = (EVENT_CALLBACK) a;
 	event_object = eif_adopt (o);
@@ -450,14 +440,14 @@ void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		(event_callback)(eif_access(event_object));
 }
 
-void start_timer ()
+void start_timer (void)
 {
 	/* Start the timer event to check for communications 
 	   between bench and the application */
 	event_id = SetTimer (NULL, 0, delay, (TIMERPROC) ioh_timer);
 }
 
-void stop_timer ()
+void stop_timer (void)
 {
 	/* Kill the timer event */
 	KillTimer (NULL, event_id);

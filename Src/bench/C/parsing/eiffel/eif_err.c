@@ -13,8 +13,7 @@
 #include "yacc.h"
 #include "parser.h"
 
-void yyerror(s)
-char *s;
+void yyerror(char *s)
 {
 	extern int yychar;			/* Last token */
 

@@ -20,7 +20,7 @@
 
 extern int ised;		/* Socket used to chat with the daemon */
 
-rt_public void wide_listen()
+rt_public void wide_listen(void)
 {
 	/* Listen on all the file descriptors opened for reading until the
 	 * connected socket is broken.
@@ -42,7 +42,7 @@ rt_public void wide_listen()
 	 * we are exiting immediately.
 	 */
 
-	while (0 < do_select((char *) 0)) {
+	while (0 < do_select((struct timeval *) 0)) {
 		if (!has_input(EWBIN))			/* Socket connection broken? */
 			return;						/* Anyway, abort processing */
 	}

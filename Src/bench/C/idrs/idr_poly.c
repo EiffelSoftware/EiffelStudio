@@ -20,12 +20,12 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_poly(idrs, type, unp, arms, dfltarm)
-IDR *idrs;					/* The serializing stream */
-int type;					/* Union discriminent, externally provided */
-char *unp;					/* Pointer to the start of the union */
-struct idr_discrim *arms;	/* Null terminated array to deal with union arms */
-bool_t (*dfltarm)();		/* Default coding for arm (may be NULL) */
+rt_public bool_t idr_poly(IDR *idrs, int type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (/* ??? */))
+          					/* The serializing stream */
+         					/* Union discriminent, externally provided */
+          					/* Pointer to the start of the union */
+                         	/* Null terminated array to deal with union arms */
+                    		/* Default coding for arm (may be NULL) */
 {
 	/* This is mainly the same as idr_union, but is used when the type of the
 	 * polymorphic object held in the union is externally provided (perhaps it

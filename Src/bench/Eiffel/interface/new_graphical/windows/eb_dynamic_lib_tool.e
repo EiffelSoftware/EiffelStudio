@@ -30,10 +30,8 @@ inherit
 			has_editable_text,
 --			process_feature_error,
 			able_to_edit, format_list,
---			help_index,
- icon_id,
-			build_file_menu, close_cmd,
-			save_text,
+			build_file_menu, build_special_menu,
+			close_cmd, save_text,
 			empty_tool_name,
 			close, parse_file,
 			set_default_format,
@@ -42,9 +40,6 @@ inherit
 		end
 
 	EB_SYSTEM_TOOL_DATA
-		rename
-			System_resources as resources
-		end			
 
 	SHARED_COMPILATION_MODES
 	SHARED_EIFFEL_PROJECT
@@ -78,13 +73,6 @@ feature {EB_TOOL_MANAGER} -- Initialization
 		do
 			Precursor
 
---			create_toolbar (global_form)
-
---			build_menus
---			build_format_bar
---			fill_menus
---			build_toolbar_menu
-
 --			if resources.command_bar.actual_value = False then
 --				dynamic_lib_toolbar.hide
 --			end
@@ -117,11 +105,11 @@ feature -- Properties
 
 --	help_index: INTEGER is 8
 
-	icon_id: INTEGER is
-			-- Icon id of Current window (only for windows)
-		do
-			Result := Interface_names.i_Dynamic_lib_id
-		end
+--	icon_id: INTEGER is
+--			-- Icon id of Current window (only for windows)
+--		do
+--			Result := Interface_names.i_Dynamic_lib_id
+--		end
 
 feature -- Access
 
@@ -383,6 +371,10 @@ feature -- Stone process
 		end
 
 feature -- Update
+
+	register is do end
+	update is do end
+	unregister is do end
 	
 	reset is
 			-- Reset the window contents
@@ -587,6 +579,8 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 			create filter_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Filter)
 			i.add_select_command (filter_cmd, Void)
+
+			Precursor (a_menu)
 		end
 
 feature {NONE} -- Implementation Graphical Interface

@@ -377,7 +377,7 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			--
 		local
 			temp_style: POINTER
-		once
+		do
 			temp_style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
 			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (feature {EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
@@ -386,7 +386,7 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			--
 		local
 			temp_style: POINTER
-		once
+		do
 			temp_style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
 			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (feature {EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
@@ -395,7 +395,7 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			--
 		local
 			temp_style: POINTER
-		once
+		do
 			temp_style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
 			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_descent (feature {EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end

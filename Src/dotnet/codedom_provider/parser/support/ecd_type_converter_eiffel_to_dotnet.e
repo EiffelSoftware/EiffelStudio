@@ -12,6 +12,11 @@ inherit
 			{NONE} all
 		end
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature -- Implementation
 
 	Eiffel_base_types: HASH_TABLE [STRING, STRING] is
@@ -96,7 +101,7 @@ feature -- Implementation
 						end
 						l_referenced_assemblies.forth
 					else
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_assembly, [l_referenced_assemblies.item.assembly.get_name])
+						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_assembly, [l_referenced_assemblies.item.assembly.get_name])
 					end
 				end
 

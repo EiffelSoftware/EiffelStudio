@@ -16,7 +16,7 @@ inherit
 			out
 		end
 
-<FL_ANCHOR_BEGIN=YES>
+<FL_ANCHOR_BEGIN=NO>
 	MY_INHERITANCE
 		redefine
 			my_feature

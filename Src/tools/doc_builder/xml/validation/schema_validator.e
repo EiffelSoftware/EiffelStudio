@@ -17,9 +17,6 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Is validation successful?
 
-	error_report: ERROR_REPORT
-    		-- Error
-
 feature -- Schema Validation
 
 	validate_by_filename (filename: STRING) is
@@ -43,7 +40,7 @@ feature -- Schema Validation
 				validation_reader.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
 				from
 					is_valid := True
-					error_report := Void
+					--error_report := Void
 				until
 					not validation_reader.read 
 				loop
@@ -52,7 +49,6 @@ feature -- Schema Validation
 		rescue
 			retried := True
 			is_valid := False
-			create error_report.make ("Invalid Schema Definition")
 			retry
 		end
 		
@@ -76,7 +72,6 @@ feature -- Schema and file validation
 		        vr.add_validation_event_handler (vr_handler)
 	            from
 	            	is_valid := True
-	            	error_report := Void
 	            until
 	            	not vr.read
 	            loop            		
@@ -85,7 +80,6 @@ feature -- Schema and file validation
 		rescue
 			retried := True
 			is_valid := False
-			create error_report.make ("Invalid Schema Definition")
 			retry
 		end	
 		
@@ -116,7 +110,6 @@ feature -- Schema and file validation
 		        vr.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
 	            from
 	            	is_valid := True
-	            	error_report := Void
 	            until
 	            	not vr.read
 	            loop            		
@@ -124,11 +117,10 @@ feature -- Schema and file validation
            	else
            		exception ?= feature {ISE_RUNTIME}.last_exception
            		if exception /= Void then
-           			create error_report.make ("Invalid Schema Definition")
            			create l_error.make_with_line_information (exception.message, exception.line_number, exception.line_position)
-           			l_error.set_action (agent (error_report.actions).highlight_text_in_editor (l_error.line_number, l_error.line_position))
-           			error_report.append_error (l_error)
-					error_report.show
+           			l_error.set_action (agent (shared_error_reporter.actions).highlight_text_in_editor (l_error.line_number, l_error.line_position))
+           			shared_error_reporter.set_error (l_error)
+					shared_error_reporter.show
            		end
 			end	
 		rescue
@@ -144,17 +136,14 @@ feature {NONE} -- Implementation
 			l_no, l_pos: INTEGER
 			l_error: ERROR
 		do
-			if error_report = Void then				
-				create error_report.make ("Invalid Schema Definition")
-			end
 			l_no := args.exception.line_number
 			l_pos := args.exception.line_position
 			create l_error.make_with_line_information (args.message, l_no, l_pos)
-			l_error.set_action (agent (error_report.actions).highlight_text_in_editor (l_no, l_pos))
+			l_error.set_action (agent (shared_error_reporter.actions).highlight_text_in_editor (l_no, l_pos))
 			if args.severity = feature {XML_XML_SEVERITY_TYPE}.error then
 				is_valid := False
 			end			
-			error_report.append_error (l_error)
+			shared_error_reporter.set_error (l_error)
     	end
 
 end -- class SCHEMA_VALIDATOR

@@ -16,6 +16,12 @@ feature -- Once objects
 			end
 		end
 
+	Shared_error_reporter: ERROR_REPORT is
+			-- Shared reporter for various types of errors
+		once
+			create Result
+		end		
+
 	Shared_project: DOCUMENT_PROJECT is
 			-- Document Project
 		once
@@ -25,7 +31,13 @@ feature -- Once objects
 	Shared_document_editor: DOCUMENT_EDITOR is
 			-- Document Editor
 		once
-			create Result
+			create Result.make
+		end
+
+	Shared_search_control: SEARCH_CONTROL is
+			-- Editor search control
+		once
+			create Result.make_with_panel (Shared_document_editor)
 		end
 
 	Shared_document_manager: DOCUMENT_MANAGER is
@@ -46,17 +58,11 @@ feature -- Once objects
 			create Result.make
 		end		
 		
-	Shared_web_browser: DOCUMENT_BROWSER is
+	Shared_web_browser: WEB_BROWSER_WIDGET is
 			-- Object used for web browsing and XSLT output display
 		once
 			create Result.make
 		end		
-		
-	Shared_xml_browser: DOCUMENT_BROWSER is
-			-- Object used for XML document browsing
-		once
-			create Result.make
-		end	
 
 	Generation_data: GENERATION_INFORMATION is
 			-- Generation data

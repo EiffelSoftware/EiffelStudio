@@ -60,6 +60,13 @@ feature -- Directory Paths
 			create Result.make_from_string (Resources_directory)
 			Result.extend ("icons")
 		end
+
+	cursor_resources_directory: DIRECTORY_NAME is
+			-- Directory holding all cursor
+		once
+			create Result.make_from_string (Resources_directory)
+			Result.extend ("cursors")
+		end
 		
 	parser_file_resources_directory: DIRECTORY_NAME is
 			-- Directory holding all predefinde regular expression parser files

@@ -14,6 +14,8 @@ inherit
 		
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
+		
+	SHARED_OBJECTS
 
 feature -- Access
 
@@ -396,9 +398,14 @@ feature -- Query
 			xml_not_void: xml /= Void
 		local
 			l_xm_doc: XM_DOCUMENT
+			l_error: ERROR
 		do
 			l_xm_doc := deserialize_text (xml)
-			Result := l_xm_doc /= Void
+			Result := l_xm_doc /= Void	
+			if not Result then
+				create l_error.make_with_line_information (error_description, error_line, error_column)
+				shared_error_reporter.set_error (l_error)
+			end
 		end		
 
 feature -- Storage

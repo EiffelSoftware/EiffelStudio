@@ -141,16 +141,49 @@ feature -- Access
 	index_of (c: CHARACTER; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `c' at or after `start';
 			-- 0 if none.
+		require
+			start_large_enough: start >= 1
+			start_small_enough: start <= count
 		do
 			Result := str_search ($area, c, start, count)
+		ensure
+			correct_place: Result > 0 implies item (Result) = c
+			-- forall x : start..Result 
+			--  item (x) /= c
 		end;
 
 	substring_index (other: STRING; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `other' at or after `start';
 			-- 0 if none.
+		require
+			other_nonvoid: other /= Void
+			other_notempty: not other.empty
+			start_large_enough: start >= 1
+			start_small_enough: start <= count
 		do
 			Result := str_str (area, other.area, count, other.count, start, 0);
+		ensure
+			correct_place: Result > 0 implies
+				substring (Result, Result+other.count - 1).is_equal (other)
+			-- forall x : start..Result 
+		 	--	not substring (x, x+other.count -1).is_equal (other)
 		end;
+
+	fuzzy_index (other: STRING; start: INTEGER; fuzz : INTEGER): INTEGER
+is
+			-- Position of first occurrence of `other' at or after `start'
+			-- with 0..`fuzz' mismatches between the string and `other'.
+			-- 0 if there are no fuzzy matches
+		require
+			other_exists: other /= Void
+			other_not_empty: not other.empty
+			start_large_enough: start >= 1
+			start_small_enough: start <= count
+			acceptable_fuzzy: fuzzy <= other.count
+		do
+			Result := str_str (area, other.area, count, other.count, start,
+fuzzy)
+		end
 
 feature -- Measurement
 

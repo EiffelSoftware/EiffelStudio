@@ -1,6 +1,7 @@
 #ifndef _eif_cond_var_h_
 #define _eif_cond_var_h_
 
+#ifdef EIF_THREADS
 
 #include <windows.h>
 #include <process.h>
@@ -39,4 +40,5 @@ extern int pthread_cond_broadcast (pthread_cond_t *);
 extern int pthread_cond_signal (pthread_cond_t *cv);
 extern int pthread_cond_destroy (pthread_cond_t *cv) ;
 
+#endif  /* EIF_THREADS */
 #endif  /* _eif_cond_var_h_ */

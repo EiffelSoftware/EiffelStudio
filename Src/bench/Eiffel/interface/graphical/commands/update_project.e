@@ -87,46 +87,48 @@ feature {NONE} -- Implementation
 			title: STRING;
 			mp: MOUSE_PTR
 		do
-			if not rescued then
-				reset_debugger;
-				error_window.clear_window;
-				!! mp.set_watch_cursor;
-				perform_compilation (argument);
-				if Eiffel_project.successful then
-						-- If a freezing already occured (due to a new external
-						-- or new derivation of SPECIAL), no need to freeze again.
-					tool.set_icon_name (Eiffel_system.name);
-					title := clone (l_Project);
-					title.append (": ");
-					title.append (Project_directory);
-					tool.set_title (title);
-					if Eiffel_project.save_error then
-						!! st.make;
-						st.add_string ("Could not write to ");
-						st.add_string (Project_file_name);
-						st.add_new_line;
-						st.add_string ("Please check permissions and disk space");
-						st.add_new_line;
-						st.add_string ("Then press ");
-						st.add_string (name);
-						st.add_string (" again");
-						st.add_new_line;
-						error_window.process_text (st);
-					else
-						if not finalization_error then
-							launch_c_compilation (argument)
-						end
+			if not Eiffel_project.is_compiling then
+				if not rescued then
+					reset_debugger;
+					error_window.clear_window;
+					!! mp.set_watch_cursor;
+					perform_compilation (argument);
+					if Eiffel_project.successful then
+							-- If a freezing already occured (due to a new external
+							-- or new derivation of SPECIAL), no need to freeze again.
+						tool.set_icon_name (Eiffel_system.name);
+						title := clone (l_Project);
+						title.append (": ");
+						title.append (Project_directory);
+						tool.set_title (title);
+						if Eiffel_project.save_error then
+							!! st.make;
+							st.add_string ("Could not write to ");
+							st.add_string (Project_file_name);
+							st.add_new_line;
+							st.add_string ("Please check permissions and disk space");
+							st.add_new_line;
+							st.add_string ("Then press ");
+							st.add_string (name);
+							st.add_string (" again");
+							st.add_new_line;
+							error_window.process_text (st);
+						else
+							if not finalization_error then
+								launch_c_compilation (argument)
+							end
+						end;
 					end;
+					tool_resynchronization (argument)
+				else
+						-- The project may be corrupted => the project
+						-- becomes read-only.
+					warner (popup_parent).gotcha_call (w_Project_may_be_corrupted);
 				end;
-				tool_resynchronization (argument)
-			else
-					-- The project may be corrupted => the project
-					-- becomes read-only.
-				warner (popup_parent).gotcha_call (w_Project_may_be_corrupted);
-			end;
-			Degree_output.finish_degree_output;
-			error_window.display;
-			mp.restore
+				Degree_output.finish_degree_output;
+				error_window.display;
+				mp.restore
+			end
 		rescue
 			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				if original_exception = Io_exception then

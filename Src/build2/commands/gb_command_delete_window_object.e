@@ -83,8 +83,8 @@ feature -- Basic Operation
 			end
 			update_for_delete
 			update_object_editors_for_delete (window_object, Void)
-			window_object.unparent_layout_item
-			window_object.unparent_window_selector_item
+			window_object.layout_item.unparent
+			window_object.window_selector_item.unparent
 			object_handler.mark_as_deleted (window_object)
 			
 			if not history.command_list.has (Current) then

@@ -584,7 +584,9 @@ feature -- Status setting
     			if clf /= Void then
     				clf.update_minimum_size
     			else
-    				cluster_diagram.context_editor.update_bounds (cluster_diagram)
+    				if cluster_diagram.context_editor /= Void then
+	    				cluster_diagram.context_editor.update_bounds (cluster_diagram)
+    				end
     			end
 			end
 		end

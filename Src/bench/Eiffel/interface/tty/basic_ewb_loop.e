@@ -18,26 +18,7 @@ inherit
 		end
 	COMMAND_LINE_PROJECT
 
-creation
-
-	make
-
-feature -- Initialization
-
-	make (proj: COMMAND_LINE_PROJECT) is
-			-- Create loop with project `proj'.
-		require
-			valid_proj: proj /= Void
-		do
-			project := proj
-		ensure
-			project = proj
-		end;
-
 feature -- Properties
-
-	project: COMMAND_LINE_PROJECT
-			-- Project for the batch command line
 
 	yank_window: YANK_WINDOW is
 			-- Output window to be saved to a file
@@ -206,7 +187,7 @@ feature -- Initialization
 
 			!EWB_ARGS! ewb_cmd;
 			Result.add_entry (ewb_cmd);
-			!EWB_COMP! ewb_cmd.make (project);
+			!EWB_COMP! ewb_cmd;
 			Result.add_entry (ewb_cmd);
 			!EWB_RUN! ewb_cmd;
 			Result.add_entry (ewb_cmd);
@@ -271,10 +252,13 @@ feature -- Execution
 
 	execute is
 			-- Execute current menu option.
+		local
+			proj_dir: PROJECT_DIRECTORY
 		do
-			if project.project_is_new then
+			!! proj_dir.make (Eiffel_project.name);
+			if proj_dir.is_new then
 					-- The user will have to specify the Ace file
-				Lace.set_file_name (Void);
+				Eiffel_project.set_lace_file_name (Void);
 			end;
 			ewb_iterate				
 		end;
@@ -498,8 +482,4 @@ feature -- Command loop
 			end;
 		end;
 
-invariant
-
-	non_void_project: project /= Void
-
-end
+end -- class BASIC_EWB_LOOP

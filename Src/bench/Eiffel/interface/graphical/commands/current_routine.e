@@ -26,18 +26,18 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Retarget the feature tool with the current routine if any.
 		local
-			class_c: CLASS_C
+			e_class: E_CLASS
 		do
 			if not Run_info.is_running then
 				warner (text_window).gotcha_call (w_System_not_running)
 			elseif not Run_info.is_stopped then
 				warner (text_window).gotcha_call (w_System_not_stopped)
-			elseif Run_info.feature_i = Void or Run_info.class_type = Void then
+			elseif Run_info.e_feature = Void or Run_info.class_type = Void then
 					-- Should never happen.
 				warner (text_window).gotcha_call (w_Unknown_feature)
 			else
-				class_c := Run_info.class_type.associated_class;
-				text_window.receive (Run_info.feature_i.stone (class_c));
+				e_class := Run_info.class_type.associated_eclass;
+				text_window.receive (Run_info.e_feature.stone (e_class));
 				if text_window.in_debug_format then
 					text_window.highlight_breakable (Run_info.break_index)
 				end

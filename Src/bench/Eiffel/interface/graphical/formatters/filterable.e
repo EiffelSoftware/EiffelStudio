@@ -129,7 +129,7 @@ feature
 			class_stone ?= stone;
 			if class_stone /= Void then
 				!!fname.make_from_string (tmp_directory);
-				temp_name := clone (class_stone.class_c.class_name);
+				temp_name := clone (class_stone.e_class.name);
 				if not fname.is_file_name_valid (temp_name) then
 						-- Truncate the class name to 8 characters
 						-- under Windows.

@@ -5,12 +5,9 @@ class OPEN_PROJECT
 
 inherit
 
-	PROJECT_CONTEXT
-		redefine
-			init_project_directory
-		end;
+	SHARED_EIFFEL_PROJECT;
+	PROJECT_CONTEXT;
 	ICONED_COMMAND;
-	SHARED_RESCUE_STATUS
 
 creation
 
@@ -26,12 +23,10 @@ feature
 	
 feature {NONE}
 
-	init_project_directory: PROJECT_DIR;
-
 	work (argument: ANY) is
 			-- Popup and let the user choose what he wants.
 		local
-			project_dir: PROJECT_DIR;
+			project_dir: PROJECT_DIRECTORY;
 			last_char: CHARACTER;
 			dir_name: STRING
 		do
@@ -76,157 +71,68 @@ feature {NONE}
 	
 feature 
 
-	make_project (project_dir: PROJECT_DIR) is
+	make_project (project_dir: PROJECT_DIRECTORY) is
 			-- Initialize project as a new one or retrieving existing data in the
 			-- valid directory `project_dir'.
 		local
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
-			workbench_file: RAW_FILE;
+			project_eif_file: RAW_FILE;
 			ok: BOOLEAN;
 			temp: STRING;
 			fn: FILE_NAME;
 			title: STRING
 		do
-			if not retried then
-				ok := True;
-					!! fn.make_from_string (project_dir.name);
-					fn.extend (Eiffelgen);
-					fn.set_file_name (Dot_workbench);
-				!!workbench_file.make (fn);
-				if not project_dir.exists then
-					temp := w_Directory_not_exist (project_dir.name);
-					ok := False;
-				elseif 
-					project_dir.is_new or else
-					(not workbench_file.exists)
+			ok := True;
+			if not project_dir.exists then
+				temp := w_Directory_not_exist (project_dir.name);
+				ok := False;
+			elseif project_dir.is_new then
+					-- Create new project
+				if 
+					not project_dir.is_readable or else
+					not project_dir.is_writable or else
+					not project_dir.is_executable
 				then
-						-- Create new project
-					if 
-						not project_dir.is_readable or else
-						not project_dir.is_writable or else
-						not project_dir.is_executable
-					then
-						temp := w_Directory_wrong_permissions (project_dir.name);
-						ok := False;
-					else
-						init_project_directory := project_dir;
-						if project_dir /= Project_directory then end;
-						Create_compilation_directory;
-						Create_generation_directory;
-	
-						!!workb;
-						!!init_work.make (workb);
-						workb.make;
-						title := clone (l_New_project);
-						title.append (": ");
-						title.append (project_dir.name);
-						project_tool.set_title (title);
-					end
+					temp := w_Directory_wrong_permissions (project_dir.name);
+					ok := False;
 				else
-						-- Retrieve existing project
-					if not workbench_file.is_readable then
-						temp := w_Not_readable (workbench_file.name);
-						ok := False
-					elseif not workbench_file.is_plain then
-						temp := w_Not_a_file (workbench_file.name);
-						ok := False
-					else
-						restore_cursors;
-						project_tool.set_title ("Retrieving project...");
-						set_global_cursor (watch_cursor);
-						retrieve_project (project_dir, workbench_file);
+						-- Create a new project.
+					Eiffel_project.make (project_dir);
+					title := clone (l_New_project);
+					title.append (": ");
+					title.append (project_dir.name);
+					project_tool.set_title (title);
+				end
+			else
+					-- Retrieve existing project
+				project_eif_file := project_dir.project_eif_file;
+				if not project_eif_file.is_readable then
+					temp := w_Not_readable (project_eif_file.name);
+					ok := False
+				elseif not project_eif_file.is_plain then
+					temp := w_Not_a_file (project_eif_file.name);
+					ok := False
+				else
+					restore_cursors;
+					project_tool.set_title ("Retrieving project...");
+					set_global_cursor (watch_cursor);
+					retrieve_project (project_dir);
+					if not Eiffel_project.error_occurred then
 						title := clone (l_Project);
 						title.append (": ");
 						title.append (project_dir.name);
 						project_tool.set_title (title);
+						project_tool.set_icon_name (Eiffel_system.name);
 					end;
 				end;
-		
-				if ok then
-					project_tool.set_initialized
-				else	
-					warner (text_window).custom_call (Current, temp, 
-						" OK ", Void, Void);
-				end
-			else
-				retried := False;
-				warner (text_window).custom_call (Current, 
-								w_Cannot_retrieve_project (project_dir.name), 
-								" OK ", Void, Void)
-			end
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				retried := True;
-				retry
-			end
-		end;
-
-	retried: BOOLEAN;
-
-	retrieve_project (project_dir: PROJECT_DIR; workbench_file: RAW_FILE) is
-		local
-			init_work: INIT_WORKBENCH;
-			precomp_r: PRECOMP_R;
-			extendible_r: EXTENDIBLE_R;
-			workb: WORKBENCH_I;
-			temp: STRING
-		do
-			if not retried then
-				init_project_directory := project_dir;
-				if project_dir /= Project_directory then end;
-				!!workb;
-				workbench_file.open_read;
-				workb ?= workb.retrieved (workbench_file);
-				if workb = Void then
-					retried := True
-				end;
 			end;
-			if not retried then
-				if not workbench_file.is_closed then
-					workbench_file.close
-				end;
-				!!init_work.make (workb);
-				Workbench.init;
-				if System.is_dynamic then
-					!!extendible_r;
-					extendible_r.set_extendible_dir
-				end;
-				if System.uses_precompiled then
-					!!precomp_r;
-					precomp_r.set_precomp_dir
-				end;
-				System.server_controler.init;
-				Universe.update_cluster_paths;
-				project_tool.set_icon_name (System.system_name);
-				if is_project_writable then
-					Project_read_only.set_item (false)
-				elseif is_project_readable then
-					Project_read_only.set_item (true);
-					project_tool.set_initialized;
-					warner (text_window).custom_call (Current, 
-							w_Read_only_project, " OK ", "Exit", Void)
-				else
-					project_tool.set_initialized;
-					warner (text_window).custom_call (Current, 
-							w_Cannot_open_project, Void, "Exit", Void)
-				end;
-			else
-				retried := False;
-					-- This is a big hack to enable clean exit
-					-- when the ".workbench" file is corrupted
-				if not workbench_file.is_closed then
-					workbench_file.close
-				end;
-				project_tool.set_initialized;
-				warner (text_window).custom_call (Current, 
-							w_Project_corrupted (project_dir.name), 
-							Void, "Exit now", Void)
-			end
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				retried := True;
-				retry
+	
+			if ok then
+				project_tool.set_initialized
+			else	
+				warner (text_window).custom_call (Current, temp, 
+					" OK ", Void, Void);
 			end
 		end;
 
@@ -235,7 +141,22 @@ feature
 			Result := bm_Open
 		end;
 
-	
+	retrieve_project (project_dir: PROJECT_DIRECTORY) is
+		do	
+			Eiffel_project.retrieve (project_dir);
+			if Eiffel_project.retrieval_error then
+				warner (text_window).custom_call (Current, 
+						w_Project_corrupted (project_dir.name),
+						Void, "Exit now", Void)
+			elseif Eiffel_project.read_write_error then
+				warner (text_window).custom_call (Current,
+						w_Cannot_open_project, Void, "Exit", Void)
+			elseif Eiffel_project.is_read_only then
+				warner (text_window).custom_call (Current,
+						w_Read_only_project, " OK ", "Exit", Void)
+			end;
+		end;
+
 feature {NONE}
 
 	command_name: STRING is do Result := l_Open_project end

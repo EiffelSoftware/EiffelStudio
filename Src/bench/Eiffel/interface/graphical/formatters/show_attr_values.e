@@ -42,15 +42,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Attrvalues_of end;
 
-	dynamic_class: CLASS_C;
-			-- Class associated with dynamic type of object being inspected
-
 	display_info (object: OBJECT_STONE) is
 		local
 			attr_request: ATTR_REQUEST;
-			attributes: LIST [ATTRIBUTE];
+			attributes: LIST [DEBUG_VALUE];
 			type_name: STRING;
-			is_special: BOOLEAN
+			is_special: BOOLEAN;
+			dynamic_class: E_CLASS;
 		do
 			if not Run_info.is_running then
 				warner (text_window).gotcha_call (w_System_not_running)
@@ -66,7 +64,7 @@ feature {NONE}
 					text_window.set_sp_capacity (attr_request.capacity)
 				end;
 				dynamic_class := object.dynamic_class;
-				type_name := clone (dynamic_class.class_name);
+				type_name := clone (dynamic_class.name);
 				type_name.to_upper;
 				text_window.put_clickable_string (dynamic_class.stone, type_name);
 				text_window.put_string (" [");
@@ -86,7 +84,7 @@ feature {NONE}
 				until
 					attributes.after
 				loop
-					attributes.item.append_attribute (text_window, 1);
+					attributes.item.append_to (text_window, 1);
 					attributes.forth
 				end;
 				if 

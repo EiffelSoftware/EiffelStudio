@@ -12,7 +12,7 @@ inherit
 	EWB_FILTER
 		redefine
 			name, help_message, abbreviation,
-			set_context_attributes			
+			set_format_attributes			
 		end
 
 creation
@@ -38,8 +38,8 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	set_context_attributes (ctxt: FORMAT_CONTEXT_B) is
-			-- Set context attributes `ctxt'.
+	set_format_attributes (ctxt: CLASS_TEXT_FORMATTER) is
+			-- Set format attributes `ctxt'.
 		do
 			ctxt.set_is_short;
 		end;

@@ -9,6 +9,7 @@ class EWB_EDIT_ACE
 
 inherit
 
+	EWB_EDIT;
 	EWB_CMD
 		rename
 			name as edit_ace_cmd_name,
@@ -22,11 +23,11 @@ feature {NONE} -- Execution
 		local
 			lace_name: STRING;
 		do
-			lace_name := Lace.file_name
+			lace_name := Eiffel_project.lace_file_name
 			if lace_name = Void then
 				io.error.putstring ("You must select an Ace file first%N");
 			else
-				edit (Lace.file_name);
+				edit (Eiffel_project.lace_file_name);
 			end;
 		end;
 

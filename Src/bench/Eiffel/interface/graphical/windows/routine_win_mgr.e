@@ -19,7 +19,7 @@ feature {NONE}
 
 feature -- Debugging (stop points)
 
-	show_stoppoint (routine: FEATURE_I; index: INTEGER) is
+	show_stoppoint (routine: E_FEATURE; index: INTEGER) is
 			-- Show the `index'-th breakable point of `routine' in
 			-- routine tools containing the related routine and
 			-- set with the `show_breakpoints' format.
@@ -38,8 +38,8 @@ feature -- Debugging (stop points)
 				rout_text := rout_window.text_window;
 				if 
 					rout_text.root_stone /= Void and then
-					rout_text.root_stone.feature_i /= Void and then
-					rout_text.root_stone.feature_i.body_id = routine.body_id
+					rout_text.root_stone.e_feature /= Void and then
+					rout_text.root_stone.e_feature.body_id = routine.body_id
 				then
 					if rout_text.in_debug_format then
 						rout_text.redisplay_breakable_mark (index)

@@ -4,12 +4,9 @@ deferred class ISED_X_SLAVE
 
 inherit
 
-	COMMAND_W
-		export
-			{NONE} all
-		redefine
-			execute
-		end;
+	COMMAND;
+	SHARED_STATUS;
+	GRAPHICS;
 	IO_CONST
 		export
 			{NONE} all
@@ -27,10 +24,12 @@ feature
 				-- with the ised daemon.
 			create_handler;
 
-			pass_adresses
+			pass_adresses;
 				-- Pass adresses of RQST_HANDLER objects to 
 				-- C, so they can be called when the
 				-- the workbench is in server mode.
+
+			enable_server_mode
 		end;
 
 	create_handler is
@@ -39,10 +38,6 @@ feature
 		end;
 
 feature {NONE}
-
-	work (argument: ANY) is
-		do
-		end;
 
 	execute (argument: ANY) is
 			-- Serve request from ised.

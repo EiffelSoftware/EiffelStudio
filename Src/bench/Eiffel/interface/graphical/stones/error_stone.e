@@ -8,7 +8,8 @@ inherit
 	FILED_STONE
 		redefine
 			help_text
-		end
+		end;
+	INTERFACE_W
 
 creation
 

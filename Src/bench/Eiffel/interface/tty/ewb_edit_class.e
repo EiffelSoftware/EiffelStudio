@@ -9,6 +9,7 @@ class EWB_EDIT_CLASS
 
 inherit
 
+	EWB_EDIT;
 	EWB_CLASS
 		rename
 			name as edit_class_cmd_name,

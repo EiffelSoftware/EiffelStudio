@@ -28,7 +28,7 @@ feature
 			if (rt /= Void) then
 				fs := rt.root_stone
 				if (fs /= Void) then
-					Result := fs.class_c.stone
+					Result := fs.e_class.stone
 				end
 			end
 		end;

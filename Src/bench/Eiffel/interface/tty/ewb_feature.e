@@ -92,11 +92,11 @@ feature {NONE} -- Implementation
 			feature_name_cleared: feature_name = Void
 		end
 
-	process_compiled_class (class_c: CLASS_C) is
+	process_compiled_class (e_class: E_CLASS) is
 			-- Retrieve feature from `class_c' with
 			-- `feature_name' and execute associated command.
 		local
-			feature_i: FEATURE_I;
+			e_feature: E_FEATURE;
 			class_i: CLASS_I;
 		do
 			if feature_name = Void then
@@ -104,29 +104,29 @@ feature {NONE} -- Implementation
 				feature_name := command_line_io.last_input;
 			end;
 			if not command_line_io.abort then
-				feature_i := class_c.feature_table.item (feature_name);
-				if feature_i = Void then
+				e_feature := e_class.feature_with_name (feature_name);
+				if e_feature = Void then
 					io.error.putstring (feature_name);
 					io.error.putstring (" is not a feature of ");
 					io.error.putstring (class_name);
 					io.error.new_line
 				else
-					process_feature (feature_i, class_c)
+					process_feature (e_feature, e_class)
 				end;
 			end;
 			feature_name := Void;
 		end;
 
-	process_feature (feature_i: FEATURE_I; class_c: CLASS_C) is
+	process_feature (e_feature: E_FEATURE; e_class: E_CLASS) is
 			-- Process feature `feature_i' defined in `class_c'.
 		require
-			valid_feature_i: feature_i /= Void;
-			valid_class_c: class_c /= Void
+			valid_e_feature: e_feature /= Void;
+			valid_e_class: e_class /= Void
 		local
 			cmd: like associated_cmd
 		do
 			cmd := clone (associated_cmd);
-			cmd.set (feature_i, class_c, output_window);
+			cmd.set (e_feature, e_class, output_window);
 			cmd.execute
 		end
 

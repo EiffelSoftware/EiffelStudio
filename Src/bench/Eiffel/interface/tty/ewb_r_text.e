@@ -34,20 +34,21 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	process_feature (feature_i: FEATURE_I; class_c: CLASS_C) is
-			-- Process feature `feature_i' defined in `class_c'.
+	process_feature (e_feature: E_FEATURE; e_class: E_CLASS) is
+			-- Process feature `e_feature' defined in `e_class'.
 		local
 			stone: FEATURE_STONE;
 			text: STRING;
 		do
-			stone := feature_i.stone (class_c);
+			-- ** FIXME
+			--stone := e_feature.stone (e_class);
 			text := stone.origin_text;
 			if text /= Void then
 				output_window.put_string (text);
 				output_window.new_line;
 			else
 				output_window.put_string ("Cannot open ");
-				output_window.put_string (class_c.file_name);
+				output_window.put_string (e_class.file_name);
 				output_window.new_line;
 			end;
 		end;

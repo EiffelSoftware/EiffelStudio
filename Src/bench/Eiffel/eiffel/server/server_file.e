@@ -20,6 +20,7 @@ inherit
 	IDABLE;
 	SHARED_FILES;
 	SHARED_SCONTROL;
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -67,7 +68,7 @@ feature
 			temp.append_integer (i);
 			f_name.set_file_name (temp);
 			file_make (f_name);
-			if not Project_read_only.item then
+			if not Eiffel_project.is_read_only then
 					-- If the file exists, open_write + close
 					-- will delete the previous content
 					--| Re-finalization after a crash: the COMP
@@ -115,7 +116,7 @@ end;
 		require
 			is_closed: not is_open
 		do
-			if Project_read_only.item then
+			if Eiffel_project.is_read_only then
 				open_read
 			elseif precompiled or is_static then
 				open_read

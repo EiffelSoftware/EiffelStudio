@@ -6,7 +6,8 @@ inherit
 		redefine
 			header
 		end;
-	SHARED_DEBUG
+	SHARED_DEBUG;
+	INTERFACE_W
 
 creation
 
@@ -14,17 +15,17 @@ creation
 	
 feature -- making
 
-	make (feature_i: FEATURE_I; break_index: INTEGER) is
+	make (e_feature: E_FEATURE; break_index: INTEGER) is
 		require
-			not_feature_i_void: feature_i /= Void
+			not_feature_i_void: e_feature /= Void
 		do
-			routine := feature_i;
+			routine := e_feature;
 			index := break_index
 		end; -- make
  
 feature
 
-	routine: FEATURE_I;
+	routine: E_FEATURE;
 			-- Associated routine
 
 	index: INTEGER;

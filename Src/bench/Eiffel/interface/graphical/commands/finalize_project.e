@@ -7,11 +7,9 @@ inherit
 	UPDATE_PROJECT
 		redefine
 			c_code_directory, launch_c_compilation,
-			finalization_actions, confirm_and_compile,
-			command_name, symbol, compilation_allowed,
-			finalization_error
+			confirm_and_compile, command_name, symbol, 
+			compilation_allowed, finalization_error, perform_compilation
 		end;
-	C_COMPILE_ACTIONS;
 	SHARED_ERROR_HANDLER
  
 creation
@@ -62,7 +60,6 @@ feature {NONE}
 						-- since it's value may be replaced during the first
 						-- compilation (as soon as we figured out whether the
 						-- system describes a Dynamic Class Set or not).
-					Workbench.system.set_dle_finalize (true);
 					compile (argument);
 				else
 					end_run_confirmed := true;
@@ -73,7 +70,7 @@ feature {NONE}
 			end;
 		end;
 
-	finalization_actions (argument: ANY) is
+	perform_compilation (argument: ANY) is
 		local
 			temp: STRING;
 			rescued: BOOLEAN
@@ -81,21 +78,17 @@ feature {NONE}
 			if not rescued then
 				-- If the argument is `warner' the user 
 				-- pressed on "Keep assertions"
-				finalize_system (last_warner /= Void and 
+				Eiffel_project.finalize (last_warner /= Void and 
 									argument = last_warner);
-				if System.extendible then
-					save_failed := False;
-					save_workbench_file;
-					if save_failed then
-						!! temp.make (0);
-						temp.append ("Could not write to ");
-						temp.append (Project_file_name);
-						temp.append ("%NPlease check permissions and disk space%
-							%%NThen press ");
-						temp.append (command_name);
-						temp.append (" again%N");
-						error_window.put_string (temp)
-					end
+				if Eiffel_project.save_error then
+					!! temp.make (0);
+					temp.append ("Could not write to ");
+					temp.append (Project_file_name);
+					temp.append ("%NPlease check permissions and disk space%
+						%%NThen press ");
+					temp.append (command_name);
+					temp.append (" again%N");
+					error_window.put_string (temp)
 				end;
 				finalization_error := false
 			end
@@ -108,7 +101,6 @@ feature {NONE}
 				rescued := true;
 				finalization_error := true;
 				Error_handler.trace;
-				System.set_current_class (Void);
 				retry
 			end
 		end;
@@ -123,12 +115,9 @@ feature {NONE}
 			if start_c_compilation then
 				error_window.put_string
 					("Launching C compilation in background...%N");
-				if not System.freezing_occurred then
-					link_driver
-				end;
-				finish_freezing;
+				Eiffel_project.call_finish_freezing (False);
 			end;
-			if System.poofter_finalization and not System.is_dynamic then
+			if not Eiffel_project.is_final_code_optimal then
 				error_window.put_string 
 					("Warning: the finalized system might not be optimal%N%
 					%%Tin size and speed. In order to produce an optimal%N%
@@ -137,7 +126,7 @@ feature {NONE}
 			end;
 			if 
 				(last_warner /= Void and argument = last_warner)
-				and then Lace.has_assertions
+				and then Eiffel_project.lace_has_assertions
 			then
 				error_window.put_string 
 					("Warning: the finalized system incorporates assertions.%N%

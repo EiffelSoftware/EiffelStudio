@@ -10,9 +10,7 @@ deferred class EWB_CMD
 
 inherit
 
-	WINDOWS;
-	SHARED_WORKBENCH;
-	SHARED_RESCUE_STATUS;
+	SHARED_EIFFEL_PROJECT;
 	SHARED_EWB_HELP;
 	SHARED_EWB_CMD_NAMES;
 	SHARED_EWB_ABBREV;
@@ -24,8 +22,6 @@ inherit
 		rename
 			class_name as except_class_name
 		end;
-	SHARED_EXEC_ENVIRONMENT;
-	SHARED_RESOURCES
 
 feature -- Properties
 
@@ -85,26 +81,6 @@ feature {BASIC_EWB_LOOP} -- Execution
 		end;
 
 feature {NONE} -- Implementation
-
-	edit (a_file: STRING) is
-			-- Edit file `a_file'.
-		require
-			file_not_void: a_file /= Void
-		local
-			editor: STRING;
-			cmd: STRING;
-		do
-			editor := resources.get_string (r_Editor, Void);
-			if editor /= Void then
-				!!cmd.make (0);
-				cmd.append (editor);
-				cmd.extend (' ');
-				cmd.append (a_file);
-				Execution_environment.system (cmd);
-			else
-				io.error.putstring ("The resource EDITOR is not set%N");
-			end;
-		end;
 
 	command_line_io: COMMAND_LINE_IO is
 		once

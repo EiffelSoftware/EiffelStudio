@@ -10,6 +10,7 @@ class EWB_COMP
 inherit
 
 	PROJECT_CONTEXT;
+	EWB_EDIT;
 	EWB_CMD
 		redefine
 			loop_action
@@ -18,35 +19,19 @@ inherit
 	SHARED_MELT_ONLY;
 	SHARED_ERROR_BEHAVIOR
 
-creation
-
-	make
-
 feature -- Initialization
-
-	make (proj: COMMAND_LINE_PROJECT) is
-		require
-			valid_proj: proj /= Void
-		do
-			project := proj
-		ensure
-			project = proj
-		end;
 
 	init is
 		do
-			if Lace.file_name = Void then
+			if Eiffel_project.lace_file_name = Void then
 				select_ace_file;
 			end;
-			if Lace.file_name /= Void then
+			if Eiffel_project.lace_file_name /= Void then
 				print_header;
 			end;
 		end;
 
 feature -- Properties
-
-	project: COMMAND_LINE_PROJECT;
-			-- Command line project for current command
 
 	name: STRING is
 		do
@@ -68,12 +53,13 @@ feature {NONE} -- Update
 	select_ace_file is
 			-- Select an Ace if it hasn't been specified.
 		require
-			no_lace_file: Lace.file_name = Void
+			no_lace_file: Eiffel_project.lace_file_name = Void
 		local
 			file_name, cmd: STRING;
 			option: CHARACTER;
 			exit: BOOLEAN;
 			file: PLAIN_TEXT_FILE;
+			cmd_exec: EXTERNAL_COMMAND_EXECUTOR
 		do
 			from
 			until
@@ -95,27 +81,27 @@ feature {NONE} -- Update
 				inspect
 					option
 				when 'c' then
-					Lace.set_file_name (Void)
+					Eiffel_project.set_lace_file_name (Void)
 				when 's' then
 					io.putstring ("File name (`Ace' is the default): ");
 					io.readline;
 					file_name := io.laststring;
 					if not file_name.empty then
-						Lace.set_file_name (clone(file_name));
+						Eiffel_project.set_lace_file_name (clone(file_name));
 					else
 						!!file.make ("Ace.ace");
 						if file.exists then
-							Lace.set_file_name ("Ace.ace");
+							Eiffel_project.set_lace_file_name ("Ace.ace");
 						else
 							!!file.make ("Ace")
 							if file.exists then
-								Lace.set_file_name ("Ace")
+								Eiffel_project.set_lace_file_name ("Ace")
 							else
-								Lace.set_file_name ("Ace.ace");
+								Eiffel_project.set_lace_file_name ("Ace.ace");
 							end
 						end
 					end;
-					project.check_ace_file (Lace.file_name);
+					check_ace_file (Eiffel_project.lace_file_name);
 				when 't' then
 					io.putstring ("File name: ");
 					io.readline;
@@ -129,9 +115,10 @@ feature {NONE} -- Update
 						cmd.append (Default_ace_name);
 						cmd.extend (' ');
 						cmd.append (file_name);
-						Execution_environment.system (cmd);
-						Lace.set_file_name (clone(file_name));
-						edit (Lace.file_name);
+						!! cmd_exec;
+						cmd_exec.execute (cmd);
+						Eiffel_project.set_lace_file_name (clone(file_name));
+						edit (Eiffel_project.lace_file_name);
 					end;
 				else
 					io.putstring ("Invalid choice%N%N");
@@ -142,28 +129,30 @@ feature {NONE} -- Update
 
 	compile is
 			-- Melt system.
+		require
+			non_void_lace: Eiffel_project.lace_file_name /= Void
 		local
 			exit: BOOLEAN;
 			str: STRING
 		do
 			from
 					-- Is the Ace file still there?
-				project.check_ace_file (Lace.file_name)
+				check_ace_file (Eiffel_project.lace_file_name)
 			until
 				exit
 			loop
-				Workbench.recompile;
-				if not Workbench.successfull then
+				perform_compilation;
+				if Eiffel_project.successful then
+					exit := True
+				elseif Eiffel_project.save_error then
+					save_project_again;
+				else
 					if stop_on_error then
 						lic_die (-1);
 					end;
 					if command_line_io.termination_requested then
-						--lic_die (0);
-						-- es3 -loop does NOT like lic_die(0)
 						exit := True
 					end
-				else
-					exit := True
 				end
 			end;
 		end;
@@ -175,56 +164,20 @@ feature {NONE} -- Update
 
 	execute is
 		do
-			if Project_read_only.item then
+			if Eiffel_project.is_read_only then
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			else
 				init;
-				if Lace.file_name /= Void then
+				if Eiffel_project.lace_file_name /= Void then
 					compile;
-					if Workbench.successfull then
-						project.save_project;
+					if Eiffel_project.successful then
 						print_tail;
-						if System.is_dynamic then
-							dle_link_system
-						end;
-						if System.freezing_occurred then
+						if Eiffel_project.freezing_occurred then
 							prompt_finish_freezing (False)
-						else
-							link_driver
 						end
 					end;
 				end;
 			end
-		end;
-
-	link_driver is
-		local
-			uf: PLAIN_TEXT_FILE;
-			app_name: STRING
-			file_name: FILE_NAME;
-		do
-			if
-				not melt_only and then
-				System.uses_precompiled and then
-				not System.is_dynamic
-			then
--- FIXME: check Makefile.SH
--- FIXME: check Makefile.SH
--- FIXME: check Makefile.SH
--- FIXME: check Makefile.SH
-
-					-- Target
-				!!file_name.make_from_string (Workbench_generation_path);
-				app_name := clone (System.system_name);
-				app_name.append (Executable_suffix);
-				file_name.set_file_name (app_name);
-
-				!!uf.make (file_name);
-				if not uf.exists then
-					eif_link_driver (Workbench_generation_path.to_c, System.system_name.to_c,
-						Prelink_command_name.to_c, Precompilation_driver.to_c);
-				end;
-			end;
 		end;
 
 feature {NONE} -- Output
@@ -259,45 +212,61 @@ feature {NONE} -- Output
 			io.error.putstring ("System recompiled.%N")
 		end;
 
-feature {NONE} -- Externals
+feature {NONE} -- Compilation
 
-	eif_link_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: ANY) is
-		external
-			"C"
-		end
-
-feature {NONE} -- DLE
-
-	dle_link_system is
-			-- Link executable and melted.eif files from the static system.
-		require
-			dynamic_system: System.is_dynamic
-		local
-			uf: PLAIN_TEXT_FILE;
-			app_name: STRING;
-			file_name: FILE_NAME
+	perform_compilation is
+			-- Melt eiffel project.
 		do
-			!!file_name.make_from_string (Workbench_generation_path);
-			app_name := clone (System.system_name);
-			app_name.append (Executable_suffix);
-			file_name.set_file_name (app_name);
-			!!uf.make (file_name);
-			if not uf.exists then
-				!! file_name.make_from_string (Extendible_W_code);
-				app_name := clone (System.dle_system_name);
-				app_name.append (Executable_suffix);
-				file_name.set_file_name (app_name);
-				eif_link_driver (Workbench_generation_path.to_c,
-					System.system_name.to_c,
-					Prelink_command_name.to_c,
-					file_name.to_c);
-				!! file_name.make_from_string (Extendible_W_code);
-				file_name.set_file_name (Updt);
-				eif_link_driver (Workbench_generation_path.to_c,
-					Updt.to_c,
-					Prelink_command_name.to_c,
-					file_name.to_c)
+			Eiffel_project.melt;
+		end;
+
+	save_project_again is
+			-- Try to save the project again.
+		require
+			error: Eiffel_project.save_error
+		local
+			finished: BOOLEAN;
+			temp: STRING
+		do
+			from
+			until
+				finished
+			loop
+				if Eiffel_project.save_error then
+					!! temp.make (0);
+					temp.append ("Error: could not write to ");
+					temp.append (Project_file_name);
+					temp.append ("%NPlease check permissions and disk space");
+					io.error.putstring (temp);
+					io.error.new_line;
+					finished := stop_on_error or else command_line_io.termination_requested;
+					if finished then
+						lic_die (-1)
+					else
+						Eiffel_project.save_project;
+					end;
+				end
 			end
 		end;
 
-end
+	check_ace_file (fn: STRING) is
+			-- Check that the Ace file exists and is readable and plain
+		local
+			f: PLAIN_TEXT_FILE
+		do
+			!! f.make (fn);
+			if
+				not (f.exists and then f.is_readable and then f.is_plain)
+			then
+				io.error.putstring ("Ace file `");
+				io.error.putstring (fn);
+				if f.exists then
+					io.error.putstring ("' cannot be read%N");
+				else
+					io.error.putstring ("' does not exist%N");
+				end;
+				lic_die (-1)
+			end
+		end;
+
+end -- class EWB_COMP

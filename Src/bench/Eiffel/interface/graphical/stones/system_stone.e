@@ -2,8 +2,9 @@ class SYSTEM_STONE
 
 inherit
 
-	SHARED_WORKBENCH;
-	FILED_STONE
+	SHARED_EIFFEL_PROJECT;
+	FILED_STONE;
+	INTERFACE_W
 
 creation
 
@@ -15,52 +16,30 @@ feature
 		do
 		end;
 
-	system_i: SYSTEM_I is
-			-- Since there is only one system per project, it's value
-			-- can be shared by all the system stones (i.e. not need
-			-- for a special attribute). The once function `System'
-			-- is not called here since it's value might be replaced
-			-- after the first compilation (as soon as we figured out
-			-- whether the system discribes a Dynamic Class Set or not)
-		do
-			Result := Workbench.system
-		end;
-
 feature
 
 	file_name: STRING is
 			-- Name of the lace ifle
 		do
-			if Lace /= Void then
-				Result := Lace.file_name
-			end
+			Result := Eiffel_project.lace_file_name
 		end;
  
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name' of lace.
 		do
-			if Lace /= Void then
-				Lace.set_file_name (s)
-			end
+			Eiffel_project.set_lace_file_name (s)
 		end;
  
 	click_list: ARRAY [CLICK_STONE] is
-		local
-			dummy_reference: CLASS_C
 		do
-			if 
-				(Lace /= Void) and then (Lace.root_ast /= Void) and then
-				Lace.not_first_parsing and then
-				System.root_class_name /= Void
-			then
-				Result := Lace.root_ast.click_list.clickable_stones (dummy_reference)
-			end
+			Result := Eiffel_project.lace_click_list
 		end;
  
 	signature: STRING is
 		do
-			Result := system_i.system_name;
-			if Result = Void then
+			if Eiffel_project.initialized then
+				Result := Eiffel_system.name
+			else
 				-- FIXME: `signature' is asked only when system is compiled, and therefore
 				-- `system_name' exists.
 				Result := "Uncompiled"

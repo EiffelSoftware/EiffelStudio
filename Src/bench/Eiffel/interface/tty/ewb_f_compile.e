@@ -14,13 +14,14 @@ inherit
 			name as f_compile_cmd_name,
 			help_message as f_compile_help,
 			abbreviation as f_compile_abb
+		redefine
+			workbench_mode
 		end;
 
 feature {NONE} -- Properties
 
-	c_code_directory: STRING is
+	workbench_mode: BOOLEAN is
 		do
-			Result := Final_generation_path
 		end;
 
 end -- class EWB_F_COMPILE

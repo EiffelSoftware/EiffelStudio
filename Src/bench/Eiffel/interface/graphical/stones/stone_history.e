@@ -16,7 +16,9 @@ inherit
 			{ANY} after, before, index, go_i_th, start, finish, make
 		end;
 
-	SHARED_RESOURCES
+	SHARED_RESOURCES;
+
+	INTERFACE_W
 
 creation
 

@@ -22,7 +22,7 @@ feature {NONE}
 
 	work (argument: ANY) is
 		do
-			Run_info.display_status
+			Run_info.display_status (Debug_window)
 		end;
 
 feature

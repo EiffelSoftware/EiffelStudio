@@ -12,7 +12,6 @@ inherit
 
 	ARGUMENTS;
 	SHARED_ERROR_BEHAVIOR;
-	SHARED_STATUS;
 	SHARED_EWB_HELP;
 	SHARED_EWB_CMD_NAMES;
 	WINDOWS;
@@ -147,7 +146,7 @@ feature -- Properties
 	loop_cmd: BASIC_EWB_LOOP is
 			-- Loop command 
 		do
-			!!Result.make (Current)
+			!! Result
 		end;
 
 feature -- Access
@@ -284,7 +283,7 @@ feature -- Update
 
 				-- Default command
 			if (not option_error) and then (command = Void) then
-				!EWB_COMP!command.make (Current)
+				!EWB_COMP!command
 			end
 		end;
 
@@ -515,7 +514,7 @@ feature -- Update
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_PRECOMP!command.make (Current)
+					!EWB_PRECOMP!command
 				end
 			else
 				process_special_options

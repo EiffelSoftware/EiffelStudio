@@ -5,7 +5,7 @@ class UPDATE_PROJECT
 
 inherit
 
-	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
 	ICONED_COMMAND
 		redefine
@@ -28,8 +28,6 @@ feature
 		do
 			init (c, a_text_window);
 			set_action ("!c<Btn1Down>", Current, generate_code_only)
-			!!request;
-			request.pass_address
 		end;
 
 	text_window: PROJECT_TEXT;
@@ -70,23 +68,17 @@ feature {NONE}
 				error_window.clear_window;
 				set_global_cursor (watch_cursor);
 				project_tool.set_changed (true);
-				Workbench.recompile;
-				if Workbench.successfull then
+				perform_compilation (argument);
+				if Eiffel_project.successful then
 						-- If a freezing already occured (due to a new external
 						-- or new derivation of SPECIAL), no need to freeze again.
-					if not System.freezing_occurred then
-						freezing_actions;
-					end
 					project_tool.set_changed (false);
-					project_tool.set_icon_name (System.system_name);
+					project_tool.set_icon_name (Eiffel_system.name);
 					title := clone (l_Project);
 					title.append (": ");
-					title.append (Project_directory.name);
+					title.append (Project_directory);
 					project_tool.set_title (title);
-					system.server_controler.wipe_out; -- ???
-					save_failed := False;
-					save_workbench_file;
-					if save_failed then
+					if Eiffel_project.save_error then
 						!! temp.make (0);
 						temp.append ("Could not write to ");
 						temp.append (Project_file_name);
@@ -96,10 +88,6 @@ feature {NONE}
 						temp.append (" again%N");
 						error_window.put_string (temp);
 					else
-						if System.is_dynamic then
-							dle_link_system
-						end;
-						finalization_actions (argument);
 						if not finalization_error then
 							launch_c_compilation (argument)
 						end
@@ -110,7 +98,6 @@ feature {NONE}
 					-- The project may be corrupted => the project
 					-- becomes read-only.
 				warner (text_window).gotcha_call (w_Project_may_be_corrupted);
-				Project_read_only.set_item (true)
 			end;
 			error_window.display;
 			restore_cursors
@@ -155,23 +142,13 @@ feature {NONE}
 		do
 			error_window.put_string ("System recompiled%N");
 			if start_c_compilation then
-				if System.freezing_occurred then
+				if Eiffel_project.freezing_occurred then
 					error_window.put_string
 						("System had to be frozen to include new externals.%N%
 							%Background C compilation launched.%N");
-					finish_freezing
-				else
-					link_driver
+					Eiffel_project.call_finish_freezing (True)
 				end;
 			end;
-		end;
-
-	freezing_actions is
-		do
-		end;
-
-	finalization_actions (argument: ANY) is
-		do
 		end;
 
 	finalization_error: BOOLEAN is
@@ -191,9 +168,9 @@ feature {NONE}
 				compile (argument);
 				if 
 					run_after_melt and then
-					Lace.file_name /= Void and then
-					Workbench.successfull and 
-					not System.freezing_occurred
+					Eiffel_project.lace_file_name /= Void and then
+					Eiffel_project.successful and 
+					not Eiffel_project.freezing_occurred
 				then
 						-- The system has been successfully melted.
 						-- The system can be executed as required.
@@ -226,6 +203,11 @@ feature {NONE}
 			-- beginning of the execution, so that we can still 
 			-- rely on it after a confirmation when we resume 
 			-- (i.e. re-execute) the command
+
+	perform_compilation (argument: ANY) is
+		do
+			Eiffel_project.melt
+		end
 
 feature
 
@@ -260,7 +242,7 @@ feature {NONE}
 				end;
 				arg := argument
 			end
-			if Project_read_only.item then
+			if Eiffel_project.is_read_only then
 				warner (text_window).gotcha_call (w_Cannot_compile)
 			elseif project_tool.initialized then
 				if not_saved and arg = text_window then
@@ -269,7 +251,7 @@ feature {NONE}
 						"Some files have not been saved.%N%
 						%Start compilation anyway?", "Compile")
 				elseif compilation_allowed then
-					if Lace.file_name /= Void then
+					if Eiffel_project.lace_file_name /= Void then
 						confirm_and_compile (arg);
 						if resources.get_boolean (r_Raise_on_error, true) then
 							project_tool.raise
@@ -289,7 +271,7 @@ feature {NONE}
 								f.is_readable and then 
 								f.is_plain
 							then
-								Lace.set_file_name (fn);
+								Eiffel_project.set_lace_file_name (fn);
 								work (Current)
 							elseif f.exists and then not f.is_plain then
 								warner (text_window).custom_call (Current,
@@ -314,59 +296,7 @@ feature {NONE}
 			end;
 		end;
 
-	link_driver is
-		local
-			cmd_string: STRING;
-			uf: RAW_FILE;
-			file_name: FILE_NAME;
-			app_name: STRING;
-		do
-			if
-				not melt_only and then
-				System.uses_precompiled and then
-				not System.is_dynamic
-			then
-					-- Target
-				!!file_name.make_from_string (Workbench_generation_path);
-				app_name := clone (System.system_name);
-				app_name.append (Executable_suffix);
-				file_name.set_file_name (app_name);
-
-				!!uf.make (file_name);
-				if not uf.exists then
-					eif_gr_link_driver (request, Workbench_generation_path.to_c, System.system_name.to_c,
-						Prelink_command_name.to_c, Precompilation_driver.to_c);
-				end;
-			end;
-		end;
-
 	retried: BOOLEAN;
-	save_failed: BOOLEAN;
-
-	save_workbench_file is
-			-- Save the `.workbench' file.
-		local
-			file: RAW_FILE
-		do
-			if not retried then
-				System.server_controler.wipe_out;
-				!!file.make (Project_file_name);
-				file.open_write;
-				workbench.basic_store (file);
-				file.close;
-			else
-				retried := False
-				if not file.is_closed then
-					file.close
-				end;
-				save_failed := True;
-			end
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				retried := True;
-				retry
-			end
-		end;
 
 feature {NONE}
 
@@ -374,8 +304,6 @@ feature {NONE}
 		do
 			Result := True
 		end
-
-	request: ASYNC_SHELL;
 
 	load_default_ace is
 		require
@@ -396,66 +324,13 @@ feature {NONE}
 
 feature
 
-	finish_freezing is
-		do
-			eif_gr_call_finish_freezing (request, c_code_directory.to_c, freeze_command_name.to_c);
-		end;
-
 	symbol: PIXMAP is
 		once
 			Result := bm_Update
 		end;
 
-feature {NONE} -- Externals
-
-	eif_gr_call_finish_freezing(rqst: ANY; c_code_dir, freeze_cmd: ANY) is
-		external
-			"C"
-		end
-
-	eif_gr_link_driver (rqst: ANY; c_code_dir, syst_name, prelink_cmd, driver_name: ANY) is
-		external
-			"C"
-		end
-
 feature {NONE}
 
 	command_name: STRING is do Result := l_Update end;
-
-feature -- DLE
-
-	dle_link_system is
-			-- Link executable and melted.eif files from the static system.
-		require
-			dynamic_system: System.is_dynamic
-		local
-			uf: RAW_FILE;
-			file_name: FILE_NAME;
-			app_name: STRING
-		do
-			!!file_name.make_from_string (Workbench_generation_path);
-			app_name := clone (System.system_name);
-			app_name.append (Executable_suffix);
-			file_name.set_file_name (app_name);
-			!!uf.make (file_name);
-			if not uf.exists then
-				!! file_name.make_from_string (Extendible_W_code);
-				app_name := clone (System.dle_system_name);
-				app_name.append (Executable_suffix);
-				file_name.set_file_name (app_name);
-				eif_gr_link_driver (request,
-					Workbench_generation_path.to_c,
-					System.system_name.to_c,
-					Prelink_command_name.to_c,
-					file_name.to_c);
-				!! file_name.make_from_string (Extendible_W_code);
-				file_name.set_file_name (Updt);
-				eif_gr_link_driver (request,
-					Workbench_generation_path.to_c,
-					Updt.to_c,
-					Prelink_command_name.to_c,
-					file_name.to_c);
-			end
-		end;
 
 end

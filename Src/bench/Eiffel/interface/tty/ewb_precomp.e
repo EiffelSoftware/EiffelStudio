@@ -12,12 +12,8 @@ inherit
 	EWB_COMP
 		redefine
 			name, help_message, abbreviation,
-			execute
+			execute, perform_compilation
 		end
-
-creation
-
-	make 
 
 feature -- Properties
 
@@ -41,25 +37,23 @@ feature {NONE} -- Execution
 	execute is
 		do
 			print_header;
-			if project.project_is_new then
-				Workbench.system.set_precompilation (True);
-					---- Do not call the once function `System' directly
-					---- since it's value may be replaced during the first
-					---- compilation (as soon as we figured out whether the
-					---- system describes a Dynamic Class Set or not).
+			if Eiffel_project.is_new then
 				compile;
-				if Workbench.successfull then
-					System.save_precompilation_info;
-					project.save_project;
+				if Eiffel_project.successful then
 					print_tail;
 					prompt_finish_freezing (False)
-				end;
+				end
 			else
 				io.error.putstring ("The project %"");
-				io.error.putstring (project.project_name);
+				io.error.putstring (Eiffel_project.name);
 				io.error.putstring ("%" already exists.%N%
 					%It needs to be deleted before a precompilation.%N");
 			end
+		end;
+
+	perform_compilation is
+		do
+			Eiffel_project.precompile
 		end;
 
 end -- class EWB_PRECOMP

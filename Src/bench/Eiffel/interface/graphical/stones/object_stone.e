@@ -15,6 +15,11 @@ inherit
 	OBJECT_ADDR
 		redefine
 			is_equal
+		end;
+
+	INTERFACE_W
+		redefine
+			is_equal
 		end
 	
 creation
@@ -23,7 +28,7 @@ creation
 	
 feature -- making
 
-	make (addr: STRING; dclass: CLASS_C) is
+	make (addr: STRING; dclass: E_CLASS) is
 		require
 			not_addr_void: addr /= Void;
 			dclass_exists: dclass /= Void
@@ -37,7 +42,7 @@ feature -- Access
 	object_address: STRING;
 			-- Hector address (with an indirection)
 
-	dynamic_class: CLASS_C;
+	dynamic_class: E_CLASS;
 			-- Class associated with dynamic type of `Current'
 
 feature -- dragging

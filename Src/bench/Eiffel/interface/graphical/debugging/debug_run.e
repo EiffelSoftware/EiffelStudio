@@ -3,6 +3,7 @@ class DEBUG_RUN
 inherit
 
 	IPC_SHARED;
+	SHARED_EIFFEL_PROJECT;
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -73,7 +74,7 @@ feature
 			elseif argument = specify_args then
 				argument_window.call
 			elseif last_warner /= Void and argument = last_warner then
-				project_tool.update_command.finish_freezing
+				Eiffel_project.call_finish_freezing (True)
 			elseif 
 				not project_tool.initialized or else 
 				System.system_name = Void 
@@ -157,9 +158,9 @@ end;
 					-- must not be stopped (is_stopped = False).
 				Run_info.set_is_stopped (False);
 				Window_manager.object_win_mgr.hang_on;
-				if Run_info.feature_i /= Void then
+				if Run_info.e_feature /= Void then
 					Window_manager.routine_win_mgr.show_stoppoint 
-						(Run_info.feature_i, Run_info.break_index)
+						(Run_info.e_feature, Run_info.break_index)
 				end;
 				cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
 				debug_window.clear_window;

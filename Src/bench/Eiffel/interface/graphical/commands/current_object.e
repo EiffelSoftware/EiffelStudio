@@ -23,7 +23,7 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Retarget the object tool with the current object if any.
 		local
-			class_c: CLASS_C;
+			e_class: E_CLASS;
 			address: STRING;
 			stone: OBJECT_STONE
 		do
@@ -36,8 +36,8 @@ feature {NONE}
 					-- Should never happen.
 				warner (text_window).gotcha_call (w_Unknown_object)
 			else
-				class_c := Run_info.class_type.associated_class;
-				!! stone.make (address, class_c);
+				e_class := Run_info.class_type.associated_class.e_class;
+				!! stone.make (address, e_class);
 				text_window.receive (stone)
 			end
 		end;

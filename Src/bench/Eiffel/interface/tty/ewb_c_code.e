@@ -8,12 +8,11 @@ indexing
 deferred class EWB_C_CODE
 
 inherit
-	PROJECT_CONTEXT;
+
 	EWB_CMD
 		redefine
 			loop_action
 		end;
-	EIFFEL_ENV
 
 feature {NONE} -- Implementation
 
@@ -22,28 +21,19 @@ feature {NONE} -- Implementation
 		do
 		end;
 
-	c_code_directory: STRING is
-			-- C code directory to commence C compilation.
-		deferred
-		ensure
-			non_void_result: Result /= Void
+	workbench_mode: BOOLEAN is
+		do
+			Result := True
 		end;
 
 	loop_action is
 			-- Execute Current batch command.
 		do
-			if Project_read_only.item then
+			if Eiffel_project.is_read_only then
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			else
-				eif_call_finish_freezing (c_code_directory.to_c, freeze_command_name.to_c)
+				Eiffel_project.call_finish_freezing (workbench_mode)
 			end
 		end;
-
-feature {NONE} -- Externals
-
-	eif_call_finish_freezing (c_code_dir, freeze_cmd: ANY) is
-		external
-			"C"
-		end
 
 end -- class EWB_C_CODE

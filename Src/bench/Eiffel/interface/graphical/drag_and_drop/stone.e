@@ -2,27 +2,44 @@ deferred class STONE
 
 inherit
 
-	INTERFACE_W;
-	SHARED_ERROR_HANDLER;
 	STONE_TYPES
 	
-feature 
+feature -- Properties
+
+	clickable: BOOLEAN is
+			-- Is Current an element with recorded structures information?
+			-- (An uncompiled class  is not clickable, but a compiled class is).
+		deferred
+		end
+
+	icon_name: STRING is
+			-- Icon name for tool when editing Current 
+		deferred
+		end;
+
+	stone_name: STRING is 
+			-- Name of the Current stone for the UI.
+		deferred 
+		end;
+
+	stone_type: INTEGER is 
+			-- Type determining compatibility and cursor shape
+		deferred 
+		end;
+
+feature  -- Access
 
 	help_text: STRING is
 			-- Explaination of what current element means,
 			-- "No help available" by default
-		do
-			Result := l_No_help_available
+		once
+			Result := "No help available"
 		end;
 
-	stone_name: STRING is deferred end;
-			-- Name of the Current stone for the UI.
-
-	stone_type: INTEGER is deferred end;
-			-- Type determining compatibility and cursor shape
-
-	click_list: ARRAY [CLICK_STONE] is deferred end;
+	click_list: ARRAY [CLICK_STONE] is 
 			-- Structure to make clickable the display of `origin_text'
+		deferred 
+		end;
 
 	origin_text: STRING is
 			-- What's shown by default usually. The others representations are
@@ -35,21 +52,16 @@ feature
 		deferred
 		end;
 
-	signature: STRING is deferred end;
+	signature: STRING is 
 			-- Short string to explain Current
+		deferred 
+		end;
 
-	header: STRING is do Result := signature end;
+	header: STRING is 
 			-- Short string to explain Current
-
-	clickable: BOOLEAN is
-			-- Is Current an element with recorded structures information?
-			-- A CLASSI_STONE is not clickable, but a CLASSC_STONE is.
-		deferred
-		end
-
-	icon_name: STRING is
-			-- Icon name for tool when editing Current 
-		deferred
+			-- (By default, it is the signature)
+		do 
+			Result := signature 
 		end;
 
 	is_valid: BOOLEAN is
@@ -67,4 +79,4 @@ feature
 			valid_stone: Result /= Void implies Result.is_valid
 		end;
 
-end
+end -- class STONE

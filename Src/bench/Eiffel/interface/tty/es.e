@@ -26,7 +26,7 @@ feature -- Access
 
 	loop_cmd: BASIC_EWB_LOOP is
 		do
-			!EWB_LOOP!Result.make (Current)
+			!EWB_LOOP! Result
 		end;
 
 	is_precompiled_option: BOOLEAN is
@@ -60,7 +60,7 @@ feature -- Update
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_FREEZE!command.make (Current)
+					!EWB_FREEZE!command
 				end
 			elseif option.is_equal ("-finalize") then
 				if command /= Void then
@@ -72,7 +72,7 @@ feature -- Update
 							keep := True;
 						end;
 					end;
-					!EWB_FINALIZE!command.make (keep, Current);
+					!EWB_FINALIZE!command.make (keep);
 				end
 			else
 				option_error := True

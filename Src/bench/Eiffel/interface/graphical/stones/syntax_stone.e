@@ -8,7 +8,9 @@ inherit
 			make as make_simple_error
 		redefine
 			code, file_name, help_text
-		end
+		end;
+
+	INTERFACE_W
 
 creation
 

@@ -182,7 +182,7 @@ feature -- Initialization
 	reset_debugging_data is
 				-- Reset objects who has session related data
 		do
-		
+			reset_exception_info		
 			reset_dbg_evaluator
 			reset_info
 			exit_process_occurred := False
@@ -367,12 +367,19 @@ feature -- Status
 			-- Last call succeed ?
 		do
 			Result := (last_dbg_call_success = 0)
+			exception_info_retrieved := False
 		end
 
 feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 
 	dbgsync_cb_without_stopping : BOOLEAN
 			-- Do we continue the execution without stopping ?
+			
+	on_estudio_callback_just_arrived (cb_id: INTEGER) is
+		do
+			set_last_managed_callback (cb_id)
+			
+		end
 	
 	estudio_callback_event (cb_id: INTEGER) is
 			-- Callback trigger for processing at end of dotnet callback
@@ -385,8 +392,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				print ("<" + generator + ".estudio_callback_event>%N")
 				print ("  ::Callback [" + managed_callback_name (cb_id) + "]. %N")
 			end
-
-			set_last_managed_callback (cb_id)
+			on_estudio_callback_just_arrived (cb_id)
 			if not is_inside_function_evaluation then
 				reset_current_callstack
 				eifnet_debugger_info.set_last_icd_breakpoint (Default_pointer)
@@ -470,7 +476,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			r: INTEGER
 			l_module: ICOR_DEBUG_MODULE
 		do
---			context_output_message ("Callback :: " + managed_callback_name (cb_id))
+			context_output_message ("Callback :: " + managed_callback_name (cb_id))
 			check dbg_cb_info_get_callback_id = cb_id end				
 			
 			inspect cb_id
@@ -1115,7 +1121,9 @@ feature {NONE} -- Stepping Implementation
 			edti := eifnet_debugger_info.managed_thread (thid)
 			if edti /= Void then
 				Result := edti.new_stepper
-				Result.add_ref
+				if Result /= Void then
+					Result.add_ref
+				end
 			else
 				Result := Void
 				eif_debug_display ("[DBG/WARNING] No thread available ...")
@@ -1323,6 +1331,90 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 
 feature -- Exception
 
+	reset_exception_info is
+		do
+			exception_info_retrieved   := False
+			exception_info_to_string   := Void
+			exception_info_message     := Void
+			exception_info_class_name  := Void
+			exception_info_module_name := Void
+		end
+
+	exception_info_retrieved: BOOLEAN
+			-- Are exception info retrieved ?
+
+	exception_info_to_string: STRING
+			-- Exception "ToString" output.
+
+	exception_info_message: STRING
+			-- Exception "GetMessage" output.
+
+	exception_info_class_name: STRING
+			-- Exception's class name.
+
+	exception_info_module_name: STRING
+			-- Exception's module name.
+
+	get_exception_info is
+			-- Get `exception_info_to_string' and `exception_info_message'
+		require
+			exception_occurred: exception_occurred
+			exception_not_not_yet_retrieved: not exception_info_retrieved
+		local
+			retried: BOOLEAN
+			l_icd_exception: ICOR_DEBUG_VALUE
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
+		do
+			if not retried then
+				reset_exception_info
+				
+				l_icd_exception := new_active_exception_value_from_thread
+				if 
+					l_icd_exception /= Void 
+					and then l_icd_exception.item /= Default_pointer
+				then
+					l_icd_exception.add_ref
+					create l_exception_info.make (l_icd_exception)
+
+					exception_info_class_name := l_exception_info.value_class_name
+					exception_info_module_name := l_exception_info.value_module_file_name
+
+					l_icdov := l_exception_info.interface_debug_object_value
+					if l_icdov /= Void then
+						l_icdov.add_ref
+						exception_info_to_string := to_string_value_from_exception_object_value (Void, 
+							l_icd_exception,
+							l_icdov
+						)
+						exception_info_message := get_message_value_from_exception_object_value (Void, 
+							l_icd_exception, 
+							l_icdov
+						)
+
+						l_icdov.release
+						l_icdov.clean_on_dispose
+
+						if exception_info_message = Void then
+							--| This could means the prog did exit_process
+							--| or .. anything else
+							exception_info_message := exception_info_class_name
+						end
+					end
+					l_exception_info.icd_prepared_value.clean_on_dispose
+					l_exception_info.clean
+					l_icd_exception.clean_on_dispose
+				end
+			else
+			end
+			exception_info_retrieved := True
+		ensure
+			exception_info_retrieved
+		rescue
+			retried := True
+			retry		
+		end
+
 	exception_occurred: BOOLEAN is
 			-- Last callback is about exception ?
 		do
@@ -1339,7 +1431,10 @@ feature -- Exception
 		local
 			l_last_thread: ICOR_DEBUG_THREAD
 		do
-			Result := active_exception_value.twin
+			Result := active_exception_value
+			if Result /= Void then
+				Result := Result.twin
+			end
 			if Result = Void or else Result.item = Default_pointer then
 				l_last_thread := icor_debug_thread
 				if l_last_thread /= Void then
@@ -1348,128 +1443,48 @@ feature -- Exception
 			end
 		end
 		
-	display_last_exception is
-			-- Display information related to Last Exception
-			-- debug purpose only
+	exception_class_name: STRING is
+			-- Exception's class name.
 		require
 			exception_occurred: exception_occurred
-		local
-			l_exception_info: EIFNET_DEBUG_VALUE_INFO
-			l_exception: ICOR_DEBUG_VALUE
 		do
-			l_exception := new_active_exception_value_from_thread
-			if l_exception /= Void then
-				create l_exception_info.make (l_exception)
-
-				io.error.put_string ("%N%NException ....%N")
-				io.error.put_string ("%T Class   => " + l_exception_info.value_class_name + "%N")
-				io.error.put_string ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
-				l_exception_info.icd_prepared_value.clean_on_dispose
-				l_exception_info.clean
-				l_exception.clean_on_dispose
+			if not exception_info_retrieved then
+				get_exception_info
 			end
-		end		
+			Result := exception_info_class_name
+		end
 
-	exception_details: TUPLE [STRING, STRING] is
-			-- class details , module details
+	exception_module_name: STRING is
+			-- Exception's module name.
 		require
 			exception_occurred: exception_occurred
-		local
-			l_class_details: STRING
-			l_module_details: STRING
-			retried: BOOLEAN
-			l_exception_info: EIFNET_DEBUG_VALUE_INFO
-			l_icd_exception: ICOR_DEBUG_VALUE
 		do
-			if not retried then
-				l_icd_exception := new_active_exception_value_from_thread
-				if 
-					l_icd_exception /= Void 
-					and then l_icd_exception.item /= Default_pointer
-				then
-					l_icd_exception.add_ref
-					create l_exception_info.make (l_icd_exception)
-					l_class_details := l_exception_info.value_class_name
-					l_module_details := l_exception_info.value_module_file_name
-					Result := [l_class_details, l_module_details]
-					l_exception_info.icd_prepared_value.clean_on_dispose
-					l_exception_info.clean
-					l_icd_exception.clean_on_dispose
-				end
+			if not exception_info_retrieved then
+				get_exception_info
 			end
-		rescue
-			retried := True
-			retry
+			Result := exception_info_module_name
 		end
 
 	exception_to_string: STRING is
 			-- Exception "ToString" output
 		require
 			exception_occurred: exception_occurred
-		local
-			retried: BOOLEAN
-			l_icd_exception: ICOR_DEBUG_VALUE
-			l_exception_info: EIFNET_DEBUG_VALUE_INFO
-			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
-			if not retried then
-				l_icd_exception := new_active_exception_value_from_thread
-				l_icd_exception.add_ref
-				create l_exception_info.make (l_icd_exception)
-				l_icdov := l_exception_info.interface_debug_object_value
-				if l_icdov /= Void then
-					Result := to_string_value_from_exception_object_value (Void, 
-						l_icd_exception,
-						l_icdov
-					)
-					l_icdov.clean_on_dispose
-				end
-				l_exception_info.icd_prepared_value.clean_on_dispose
-				l_exception_info.clean
-				l_icd_exception.clean_on_dispose
+			if not exception_info_retrieved then
+				get_exception_info
 			end
-		rescue
-			retried := True
-			retry
+			Result := exception_info_to_string
 		end
-		
+
 	exception_message: STRING is
 			-- Exception "GetMessage" output
 		require
 			exception_occurred: exception_occurred
-		local
-			retried: BOOLEAN
-			l_icd_exception: ICOR_DEBUG_VALUE
-			l_exception_info: EIFNET_DEBUG_VALUE_INFO
-			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
-			if not retried then
-				l_icd_exception := new_active_exception_value_from_thread
-				if l_icd_exception /= Void then
-					l_icd_exception.add_ref
-					create l_exception_info.make (l_icd_exception)
-					l_icdov := l_exception_info.interface_debug_object_value
-					if l_icdov /= Void then
-						l_icdov.add_ref
-						Result := get_message_value_from_exception_object_value (Void, 
-							l_icd_exception, 
-							l_icdov						
-						)
-						l_icdov.clean_on_dispose
-					end
-					if Result = Void then
-						--| This could means the prog did exit_process
-						--| or .. anything else
-						Result := l_exception_info.value_class_name
-					end
-					l_exception_info.icd_prepared_value.clean_on_dispose
-					l_exception_info.clean
-					l_icd_exception.clean_on_dispose
-				end
+			if not exception_info_retrieved then
+				get_exception_info
 			end
-		rescue
-			retried := True
-			retry
+			Result := exception_info_message
 		end		
 
 feature -- Easy access

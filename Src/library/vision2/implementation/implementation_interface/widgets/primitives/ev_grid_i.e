@@ -404,6 +404,7 @@ feature -- Status setting
 			-- are displayed even if already contained in `Current'.
 		do
 			is_content_completely_dynamic := True
+			is_content_partially_dynamic := False
 		ensure
 			content_completely_dynamic: is_content_completely_dynamic
 		end
@@ -414,6 +415,7 @@ feature -- Status setting
 			-- in `Current'.
 		do
 			is_content_partially_dynamic := True
+			is_content_completely_dynamic := False
 		ensure
 			content_partially_dynamic: is_content_partially_dynamic
 		end
@@ -1573,6 +1575,7 @@ invariant
 	virtual_y_position_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies virtual_y_position >= 0
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = grid_rows.count
+	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
 	
 end
 

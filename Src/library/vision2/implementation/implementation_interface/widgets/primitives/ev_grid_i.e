@@ -1006,6 +1006,7 @@ feature -- Element change
 			j_less_than_column_count: j <= column_count
 		local
 			a_col: EV_GRID_COLUMN_I
+			header_item: EV_HEADER_ITEM
 		do
 				--Retrieve column at position `i' and remove from list
 			a_col := column_internal (i)
@@ -1019,8 +1020,12 @@ feature -- Element change
 			recompute_column_offsets
 			redraw_client_area
 			
-				-- Remove column from header and insert at the appropriate position
-			fixme ("EV_GRID_I:move_column  add column header removal and redraw")
+				-- Now actually move the header items.
+			header.go_i_th (i)
+			header_item := header.item
+			header.remove
+			header.go_i_th (j)
+			header.put_left (header_item)
 		ensure
 			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
 		end

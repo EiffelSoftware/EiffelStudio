@@ -378,7 +378,7 @@ feature -- Stone updating
 
 	process_breakable (a_stone: BREAKABLE_STONE) is
 		do
-			stop_hole_button.associated_command.process_breakable (a_stone)
+			Project_tool.process_breakable (a_stone)
 		end;
 
 	process_class (a_stone: CLASSC_STONE) is
@@ -489,9 +489,6 @@ feature -- Graphical Interface
 		local
 			sep: SEPARATOR
 		do
-			if is_a_shell then
-				set_default_size
-			end;
 			build_text_windows;
 			if create_menus then
 				build_menus

@@ -900,15 +900,15 @@ feature -- Removal
 			a_col_i := column_internal (a_column)
 			a_physical_index := a_col_i.physical_index
 			
+				-- Remove association of column with `Current'
+			a_col_i.remove_parent_i
+			
 			columns.go_i_th (a_column)
 			columns.remove
 			
 			if a_col_i.is_visible then
 				visible_column_count := visible_column_count - 1
 			end
-			
-				-- Remove association of column with `Current'
-			a_col_i.remove_parent_i
 			
 			to_implement ("EV_GRID_I:remove_column removal of header, redraw and blanking of items")
 		ensure

@@ -192,7 +192,9 @@ feature {NONE} -- Implementation
 				safe_print (generator + ".dispose")
 			end
 			if c_object /= NULL and then not is_in_final_collect and then not App_implementation.gtk_marshal.is_destroyed then
-				-- Destroy has been explicitly called.
+				-- Destroy has not been explicitly called.
+				is_destroyed := True
+					-- This is incase events are fired from the calls to gtk upon disposal
 				if internal_id /= 0 then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
 				end			

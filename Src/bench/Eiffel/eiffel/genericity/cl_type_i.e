@@ -118,7 +118,7 @@ feature
 			if is_expanded then
 				a_clickable.put_string ("expanded ");
 			end;
-			base_class.append_clickable_signature (a_clickable)
+			base_class.e_class.append_clickable_signature (a_clickable)
 		end;
 
 	dump (file: FILE) is

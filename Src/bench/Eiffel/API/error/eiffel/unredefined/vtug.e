@@ -62,7 +62,7 @@ feature
 			put_string ("Invalid type: ");
 			type.append_clickable_signature (error_window);
 			put_string ("%NBase class: ");
-			base_class.append_clickable_signature (error_window);
+			base_class.e_class.append_clickable_signature (error_window);
 			new_line;
 		end;
 

@@ -195,6 +195,7 @@ feature -- Propagation of second pass
 		local
 			descendant: CLASS_C;
 			types: LINKED_LIST [CLASS_TYPE];
+			desc: LINKED_LIST [E_CLASS]
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Propagate_pass2. real_pass2: ");
@@ -202,12 +203,13 @@ debug ("ACTIVITY")
 	io.error.new_line;
 end;
 			from
+				desc := associated_class.descendants;
 				associated_class.set_changed2 (True);
-				associated_class.descendants.start
+				desc.start
 			until
-				associated_class.descendants.off
+				desc.off
 			loop
-				descendant := associated_class.descendants.item
+				descendant := desc.item.compiled_info;
 					-- Insert the descendant in the changed classes list
 					-- of the system if not present.
 debug ("ACTIVITY")
@@ -243,7 +245,7 @@ end;
 					-- the descendants are updated
 				pass4_controler.insert_new_class (descendant);
 
-				associated_class.descendants.forth
+				desc.forth
 			end;
 		end;
 
@@ -266,7 +268,7 @@ end;
 			until
 				associated_class.clients.off
 			loop
-				client := associated_class.clients.item;
+				client := associated_class.clients.item.compiled_info;
 					-- Remember the cause for type checking `client'.
 debug ("ACTIVITY")
 	io.error.putstring ("Propagating pass3 to: ");

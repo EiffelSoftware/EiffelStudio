@@ -1,0 +1,48 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Brushes</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Brushes">
+	</HEAD>
+
+	<BODY>
+		<H1>Brushes Sample</H1>
+		<CENTER><IMG SRC="brushes.png" ALT="brushes" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\brushes\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the program you will see a window displayed containing three push buttons marked "Brushes", "Rectangles" and "3D". Clicking "Brushes"
+		will open a new window demonsatrating different brushes available. Clicking "Rectangles" will open a new window within which many different shaped and colored rectangles will be drawn.
+		Clicking"3D" will open a new window demonstrating the use of multiple bitmaps for animation.
+
+		<H2>Under the Hood</H2>
+		Each of the three windows that are opened from the programs <A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/main_window_chart.html">MAIN_WINDOW</A> inherit
+		<A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> and contains code for generating their output.
+		<A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/brushes_demo_chart.html">BRUSHES_DEMO</A> redefines	<A CLASS="efeature" HREF="/libraries/wel/samples/brushes/root_cluster/brushes_demo.html#f_idle_action">idle_action</A> to force a re-draw on the applicable windows.</P>
+
+		<p class="note"><b>Note</b>. If <A CLASS="efeature" HREF="/libraries/wel/reference/support/application.html#f_enable_idle_action">enable_idle_action</A> is not called, then <A CLASS="efeature" HREF="/libraries/wel/reference/support/application.html#f_idle_action">idle_action</A> is never executed.</p>		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/brush_demo_chart.html">BRUSH_DEMO</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/brushes_demo_chart.html">BRUSHES_DEMO</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/demo_3d_chart.html">DEMO_3D</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/projection_chart.html">PROJECTION</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/rectangle_demo_chart.html">RECTANGLE_DEMO</A>
+			</UL>
+		</P>
+	</BODY>
+</HTML>

@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 				actions.after
 			loop
 				create litem.make_with_text (list, actions.item)
-				litem.add_activate_command (cmd, Void)
+				litem.add_select_command (cmd, Void)
 				actions.forth
 			end
 			actions.go_to (cur)

@@ -3,7 +3,7 @@ class REQUIRE_MERGER
 feature
 	
 	merge2 (u, n: REQUIRE_AS) is
-			-- Merge requires from `u' and `n'.
+			-- Merge requires from `u'ser file and `n'ew template.
 		local
 			require_else: REQUIRE_ELSE_AS
 			assert_list_merger: ASSERT_LIST_MERGER
@@ -26,7 +26,7 @@ feature
 			else
 				-- Otherwise the result will be the same
 				-- as the result of the previous merge
-				merge_result := Void
+				merge_result := u
 			end
 		end;
 

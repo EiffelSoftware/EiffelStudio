@@ -12,6 +12,37 @@ inherit
 
 	TEXT_I
 
+feature -- Access
+
+	expanded_position (pos: INTEGER): INTEGER is
+			-- Position in the text after tabulation expansion
+			-- (By default, it is `pos'. This is used for TABBED_TEXT)
+		require
+			valid_pos: pos >= 0 and pos <= actual_count
+		do
+			Result := pos
+		ensure
+			valid_result: Result >= 0 and Result <= count
+		end	;
+
+	unexpanded_position (pos: INTEGER): INTEGER is
+			-- Position in the text before tabulation expansion
+			-- (By default, it is `pos'. This is used for TABBED_TEXT)
+		require
+			valid_pos: pos >= 0 and pos <= count
+		do
+			Result := pos
+		ensure
+			valid_result: Result >= 0 and then Result <= actual_count
+		end;
+
+	actual_cursor_position: INTEGER is
+			-- Current position of text
+			-- (By default, it is `current_position'. This is used for TABBED_TEXT)
+		do
+			Result := cursor_position
+		end
+
 feature -- Status report
 
 	is_vertical_scrollbar: BOOLEAN is
@@ -23,6 +54,20 @@ feature -- Status report
 			-- Is horizontal scrollbar visible?
 		deferred
 		end
+
+	actual_text: STRING is
+			-- Actual text of scrolled text `text'
+			-- (By default, it is `text'. This is used for TABBED_TEXT)
+		do
+			Result := text
+		end;
+
+	actual_count: INTEGER is
+			-- Actual count of scrolled text `text'
+			-- (By default, it is `count'. This is used for TABBED_TEXT)
+		do
+			Result := count
+		end;
 
 feature -- Status setting
 

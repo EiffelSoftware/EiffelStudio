@@ -204,7 +204,6 @@ feature {NONE} -- Implementation
 				-- Update the display window representation of
 				-- the gauge, to reflect change from user.
 			do
-				io.putstring ("Check state called")
 				objects.first.set_value (user_event_widget.value)
 				update_editors
 			end

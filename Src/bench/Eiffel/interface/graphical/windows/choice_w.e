@@ -108,6 +108,8 @@ feature
 				list.set_visible_item_count (15);
 			elseif list.count > 0 then
 				list.set_visible_item_count (list.count);
+			else
+				list.set_visible_item_count (1);
 			end;
 			set_title (a_title);
 			display

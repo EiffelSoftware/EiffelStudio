@@ -8,111 +8,123 @@ iff "%@SEARCH[WfWI.exe]" == "" then
 endiff
 
 remtrace Clean previous installed
-fullrd "D:\Installations\Eiffel54\*.msm"
-fullrd "D:\Installations\Eiffel54\*.msi"
-fullrd "D:\Installations\Eiffel54\*.ini"
-fullrd "D:\Installations\Eiffel54\*.exe"
+fullrd "D:\Installations\Eiffel55\*.msm"
+fullrd "D:\Installations\Eiffel55\*.msi"
+fullrd "D:\Installations\Eiffel55\*.ini"
+fullrd "D:\Installations\Eiffel55\*.exe"
 
 remtrace Compile the installation executable
 remtrace Graphical libraries merge module
-WfWI "D:\Installations\Eiffel54\graphical_libraries.wsm" /c
-iff not exist "D:\Installations\Eiffel54\graphical_libraries.msm" then
+WfWI "D:\Installations\Eiffel55\graphical_libraries.wsm" /c
+iff not exist "D:\Installations\Eiffel55\graphical_libraries.msm" then
 	echo Couldnt Graphical libraries Merge module.
 	CANCEL
 endiff
 remtrace EiffelBase merge module
-WfWI "D:\Installations\Eiffel54\base_libraries.wsm" /c
-iff not exist "D:\Installations\Eiffel54\base_libraries.msm" then
+WfWI "D:\Installations\Eiffel55\base_libraries.wsm" /c
+iff not exist "D:\Installations\Eiffel55\base_libraries.msm" then
 	echo Couldnt Base libraries Merge module.
 	CANCEL
 endiff
 remtrace Borland merge module
-WfWI "D:\Installations\Eiffel54\borland.wsm" /c
-iff not exist "D:\Installations\Eiffel54\borland.msm" then
+WfWI "D:\Installations\Eiffel55\borland.wsm" /c
+iff not exist "D:\Installations\Eiffel55\borland.msm" then
 	echo Couldnt Borland Merge module.
 	CANCEL
 endiff
 remtrace Free Build merge module
-WfWI "D:\Installations\Eiffel54\build_free.wsm" /c
-iff not exist "D:\Installations\Eiffel54\build_free.msm" then
+WfWI "D:\Installations\Eiffel55\build_free.wsm" /c
+iff not exist "D:\Installations\Eiffel55\build_free.msm" then
 	echo Couldnt Free build Merge module.
 	CANCEL
 endiff
 remtrace Enterprise Build merge module
-WfWI "D:\Installations\Eiffel54\build_enterprise.wsm" /c
-iff not exist "D:\Installations\Eiffel54\build_enterprise.msm" then
+WfWI "D:\Installations\Eiffel55\build_enterprise.wsm" /c
+iff not exist "D:\Installations\Eiffel55\build_enterprise.msm" then
 	echo Couldnt Enterprise build Merge module.
 	CANCEL
 endiff
 remtrace Vision2 tour merge module
-WfWI "D:\Installations\Eiffel54\vision2_tour.wsm" /c
-iff not exist "D:\Installations\Eiffel54\vision2_tour.msm" then
+WfWI "D:\Installations\Eiffel55\vision2_tour.wsm" /c
+iff not exist "D:\Installations\Eiffel55\vision2_tour.msm" then
 	echo Couldnt Vision2_tour Merge module.
 	CANCEL
 endiff
 remtrace C_library merge module
-WfWI "D:\Installations\Eiffel54\c_library.wsm" /c
-iff not exist "D:\Installations\Eiffel54\c_library.msm" then
+WfWI "D:\Installations\Eiffel55\c_library.wsm" /c
+iff not exist "D:\Installations\Eiffel55\c_library.msm" then
 	echo Couldnt C_library Merge module.
 	CANCEL
 endiff
 remtrace .NET merge module
-WfWI "D:\Installations\Eiffel54\dotnet.wsm" /c
-iff not exist "D:\Installations\Eiffel54\dotnet.msm" then
+WfWI "D:\Installations\Eiffel55\dotnet.wsm" /c
+iff not exist "D:\Installations\Eiffel55\dotnet.msm" then
 	echo Couldnt Dotnet Merge module.
 	CANCEL
 endiff
 remtrace Free add ons merge module
-WfWI "D:\Installations\Eiffel54\free_add_ons.wsm" /c
-iff not exist "D:\Installations\Eiffel54\free_add_ons.msm" then
+WfWI "D:\Installations\Eiffel55\free_add_ons.wsm" /c
+iff not exist "D:\Installations\Eiffel55\free_add_ons.msm" then
 	echo Couldnt Free add ons Merge module.
 	CANCEL
 endiff
 remtrace COM merge module
-WfWI "D:\Installations\Eiffel54\eiffelcom.wsm" /c
-iff not exist "D:\Installations\Eiffel54\eiffelcom.msm" then
+WfWI "D:\Installations\Eiffel55\eiffelcom.wsm" /c
+iff not exist "D:\Installations\Eiffel55\eiffelcom.msm" then
 	echo Couldnt COM Merge module.
 	CANCEL
 endiff
 remtrace Enterprise EiffelStudio merge module
-WfWI "D:\Installations\Eiffel54\enterprise_studio.wsm" /c
-iff not exist "D:\Installations\Eiffel54\enterprise_studio.msm" then
+WfWI "D:\Installations\Eiffel55\enterprise_studio.wsm" /c
+iff not exist "D:\Installations\Eiffel55\enterprise_studio.msm" then
 	echo Couldnt Enterprise EiffelStudio Merge module.
 	CANCEL
 endiff
+remtrace University EiffelStudio merge module
+WfWI "D:\Installations\Eiffel55\university_studio.wsm" /c
+iff not exist "D:\Installations\Eiffel55\university_studio.msm" then
+	echo Couldnt University EiffelStudio Merge module.
+	CANCEL
+endiff
 remtrace Free EiffelStudio merge module
-WfWI "D:\Installations\Eiffel54\free_studio.wsm" /c
-iff not exist "D:\Installations\Eiffel54\free_studio.msm" then
+WfWI "D:\Installations\Eiffel55\free_studio.wsm" /c
+iff not exist "D:\Installations\Eiffel55\free_studio.msm" then
 	echo Couldnt Free EiffelStudio Merge module.
 	CANCEL
 endiff
 remtrace EiffelStudio install merge module
-WfWI "D:\Installations\Eiffel54\studio_core.wsm" /c
-iff not exist "D:\Installations\Eiffel54\studio_core.msm" then
+WfWI "D:\Installations\Eiffel55\studio_core.wsm" /c
+iff not exist "D:\Installations\Eiffel55\studio_core.msm" then
 	echo Couldnt Studio core Merge module.
 	CANCEL
 endiff
 
 cdd %INSTALL_DIR
 mkdir setups
+mkdir setups\University
 mkdir setups\Enterprise
 mkdir setups\Enterprise\setup
 mkdir setups\Free
-mkdir setups\Free\setup
 
 remtrace Preparing Free edition
-WfWI "D:\Installations\Eiffel54\Eiffel5.wsi" /c /p FREEVERSION="TRUE"
-copy D:\Installations\Eiffel54\Eiffel54.single.exe setups\Free\setup\
-copy D:\Installations\Eiffel54\Eiffel54.exe setups\Free\setup\
-copy D:\Installations\Eiffel54\Eiffel54.ini setups\Free\setup\
-copy D:\Installations\Eiffel54\Eiffel54.msi setups\Free\setup\
+WfWI "D:\Installations\Eiffel55\Eiffel5.wsi" /c /p FREEVERSION="TRUE"
+copy D:\Installations\Eiffel55\Eiffel55_single.exe setups\Free\
+copy D:\Installations\Eiffel55\Eiffel55.exe setups\Free\
+copy D:\Installations\Eiffel55\Eiffel55.ini setups\Free\
+copy D:\Installations\Eiffel55\Eiffel55.msi setups\Free\
+
+remtrace Preparing University edition
+copy D:\Installations\Eiffel55\Eiffel55_university.exe setups\University\install.exe
+copy D:\Installations\Eiffel55\Eiffel55_university.ini setups\University\install.ini
+copy D:\Installations\Eiffel55\Eiffel55_university.msi setups\University\
+
 
 remtrace Preparing Enterprise edition
-WfWI "D:\Installations\Eiffel54\Eiffel5.wsi" /c /p FREEVERSION="FALSE"
+WfWI "D:\Installations\Eiffel55\Eiffel5.wsi" /c /p FREEVERSION="FALSE"
 move setup.exe setups\Enterprise
-copy D:\Installations\Eiffel54\Eiffel54_enterprise.exe setups\Enterprise\setup\install.exe
-copy D:\Installations\Eiffel54\Eiffel54_enterprise.ini setups\Enterprise\setup\install.ini
-copy D:\Installations\Eiffel54\Eiffel54_enterprise.msi setups\Enterprise\setup\
+copy D:\Installations\Eiffel55\Eiffel55_enterprise.exe setups\Enterprise\setup\install.exe
+copy D:\Installations\Eiffel55\Eiffel55_enterprise.ini setups\Enterprise\setup\install.ini
+copy D:\Installations\Eiffel55\Eiffel55_enterprise.msi setups\Enterprise\setup\
 copy %INSTALL_DIR\studio\bitmaps\png\logo.png %INSTALL_DIR\setups\Enterprise\setup\install_logo.png
 copy %INSTALL_DIR\studio\bitmaps\png\activation.png %INSTALL_DIR\setups\Enterprise\setup\install_left.png
 

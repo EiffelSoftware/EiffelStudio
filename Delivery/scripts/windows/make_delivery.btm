@@ -97,6 +97,7 @@ call convert_10_to_11.btm
 del convert_10_to_11.btm
 del ace_10_to_11.btm
 fullrd studio
+fullrd winforms\data\simple_binding
 cd ..
 cd vision2
 fullrd Boxes
@@ -214,9 +215,11 @@ iff not defined NO_COMPILE then
 
 	remtrace Extracting Gobo
 	cdd %INSTALL_DIR\free_add_ons
-	tar xvfz gobo\gobo_win.tgz
+	tar xvfz gobo\gobo_33_win.tgz
 	fullrf gobo\gobo_win.tgz
 	fullrf gobo\gobo_unix.tgz
+	fullrf gobo\gobo_33_win.tgz
+	fullrf gobo\gobo_33_unix.tgz
 
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
 	sed -e s/ISE_EIFFEL/INSTALL_DIR/g zad_miner.ace >> new_ace.ace

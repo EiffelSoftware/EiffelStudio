@@ -20,7 +20,7 @@ inherit
 	SHARED_CODES
 		rename
 			studio_non_commercial_key_50 as non_commercial_key,
-			studio_enterprise_key_51 as key
+			studio_enterprise_key_52 as key
 		export
 			{NONE} all
 		end
@@ -155,8 +155,12 @@ feature -- Info
 		do
 			date_of_expiration := expiration_date
 			local_time := time
-			if local_time > date_of_expiration or (Is_beta and then local_time > Beta_limit) then
-				Result := -1
+			if Is_beta then
+				if local_time > Beta_limit then
+					Result := -1
+				end
+			elseif local_time > date_of_expiration then
+				Result := -1				
 			else
 					-- Get the number of days from a result given in seconds.
 				Result := ((date_of_expiration - local_time) // 3600) // 24
@@ -229,9 +233,6 @@ feature {NONE} -- Constants
 			Result := Max_days * 3600 * 24 + Max_waiting_time
 		end
 
-	Beta_limit: INTEGER is 1000012454
-			-- Hard coded time which corresponds to a time in September 2001.
-
 	Max_days: INTEGER is 60
 			-- Numbers of days of evaluation
 		
@@ -242,8 +243,11 @@ feature {NONE} -- Constants
 	Default_waiting_time: INTEGER is 1
 			-- Number of seconds to wait before using $EiffelGraphicalCompiler$ for the first time.
 
-	Is_beta: BOOLEAN is False
+	Is_beta: BOOLEAN is True
 			-- Is it a beta evaluation?
+
+	Beta_limit: INTEGER is 1018922706
+			-- Hard coded time which corresponds to April 15th 2002.
 
 feature {NONE} -- Externals
 

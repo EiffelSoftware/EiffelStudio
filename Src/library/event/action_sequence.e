@@ -96,7 +96,7 @@ feature -- Basic operations
 			when
 				Normal_state
 			then
-				debug ("EVENT_TRACE") print (" calling actions...%N") end
+				debug ("EVENT_TRACE") print (" calling "+count.out+" actions...%N") end
 				from
 					cursor_stack.extend (index)
 					is_aborted_stack.extend (False)
@@ -369,6 +369,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.8  1999/10/28 22:08:58  oconnor
+--| improved debug trace message
+--|
 --| Revision 1.7  1999/10/27 20:36:31  oconnor
 --| improved logging message
 --|

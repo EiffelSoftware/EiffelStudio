@@ -10,46 +10,21 @@ class
 
 feature -- Access
 
-	Pfa_left: INTEGER is
+	Pfa_left: INTEGER is 1
 			-- Paragraphs are aligned with the left margin.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFA_LEFT"
-		end
 
-	Pfa_right: INTEGER is
+	Pfa_right: INTEGER is 2
 			-- Paragraphs are aligned with the right margin.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFA_RIGHT"
-		end
-
-	Pfa_center: INTEGER is
+			
+	Pfa_center: INTEGER is 3
 			-- Paragraphs are centered.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFA_CENTER"
-		end
 		
-	Pfa_justify: INTEGER is 
+	Pfa_justify: INTEGER is 4
 			-- Paragraphs are justified.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFA_JUSTIFY"
-		end
 		
-	Pfa_full_interword: INTEGER is
-			--
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFA_FULL_INTERWORD"
-		end
-
+	Pfa_full_interword: INTEGER is 5
+			-- Paragraphs are justified by expanding blanks alone.
+			
 end -- class WEL_PFA_CONSTANTS
 
 

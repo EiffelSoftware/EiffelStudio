@@ -117,6 +117,8 @@ feature {NONE}
 
 	queries_cmd_name: STRING is "query"
 
+	quick_melt_cmd_name: STRING is "quick melt"
+
 	quit_cmd_name: STRING is "quit"
 
 	reactivate_subquery_cmd_name: STRING is "reactivate"

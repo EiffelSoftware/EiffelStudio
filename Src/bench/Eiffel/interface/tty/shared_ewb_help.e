@@ -119,6 +119,8 @@ feature {NONE}
 
 	queries_help: STRING is "manipulate subqueries";
 
+	quick_melt_help: STRING is "quick melt of the system";
+
 	quit_help: STRING is "terminate session";
 
 	r_flat_help: STRING is "show the flat form of a feature";

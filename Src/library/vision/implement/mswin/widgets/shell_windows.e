@@ -275,15 +275,16 @@ feature {NONE} -- Implementation
 						psw ?= current_item
 						if psw = Void then
 							tmp := current_item.x + current_item.width
+							if tmp > maxxw then
+								maxxw := tmp
+							end
+							tmp := current_item.y + current_item.height
+							if tmp > maxyh  then
+								maxyh := tmp
+							end
 						end
 					end
-					if tmp > maxxw then
-						maxxw := tmp
-					end
-					tmp := current_item.y + current_item.height
-					if tmp > maxyh  then
-						maxyh := tmp
-					end
+
 				end
 				c.forth
 			end

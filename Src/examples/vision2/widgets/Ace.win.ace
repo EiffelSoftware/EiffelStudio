@@ -1,0 +1,73 @@
+system
+	widgets
+
+root
+	WIDGETS: start
+
+default
+	assertion(require)
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("dlg_dispatcher")
+	disabled_debug("gdi_count")
+	disabled_debug("vision2_windows")
+	disabled_debug("vision2_windows_gdi")
+	disabled_debug("wel")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("win_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(no)
+	msil_generation_type("exe")
+	check_vape(yes)
+	console_application(no)
+	address_expression(no)
+	array_optimization(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+
+
+--!----------------------------------------------------------------
+--! Project Ace-file for Windows platforms.
+--!----------------------------------------------------------------
+-- Root cluster
+-- EiffelBase
+-- WEL
+-- Vision2
+-- accelerator example
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\examples\vision2\widgets"
+
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; 
+		end
+
+	all wel:		"$ISE_EIFFEL\library\wel"
+
+	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "bench_used"; 
+		end
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\vision2\spec\include",
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+		"$(ISE_EIFFEL)\C_library\libpng\libpng.lib",
+		"$(ISE_EIFFEL)\C_library\zlib\zlib.lib",
+
+end

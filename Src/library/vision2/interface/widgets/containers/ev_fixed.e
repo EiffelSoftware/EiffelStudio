@@ -53,27 +53,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			set_minimum_size (300, 100)
-			from start until after loop
-		--		set_item_position (item, index * 20, index * 10)
-				set_item_size (item, 50, 20)
-				forth
-			end
-		--	create swap_timer.make_with_interval (1000)
-		--	swap_timer.actions.extend (~do_test)
-			create rotate_timer.make_with_interval (1000 // 35)
+			create rotate_timer.make_with_interval (1000 // 10)
 			rotate_timer.actions.extend (~rotate_widgets (rotate_timer))
-		end
-
-	do_test is
-			-- Cycle the first widget into the last position.
-		local
-			w: EV_WIDGET
-		do
-			w := first
-			if w /= Void then
-				prune_all (w)
-				extend (w)
-			end
 		end
 
 	rotate_widgets (t: EV_TIMEOUT) is
@@ -81,8 +62,10 @@ feature {NONE} -- Initialization
 		do
 			from start until after loop
 				set_item_position (item,
-					(sine ((t.count + (index * 10)) / 50 * 2 * Pi) * 30 + 30 + index * 20).rounded,
-					(cosine ((t.count + (index * 10)) / 50 * 2 * Pi) * 30 + 30).rounded)
+					(sine ((t.count + (index * 10)) / 50 * 2 * Pi) * 30
+						+ 30 + index * 20).rounded,
+					(cosine ((t.count + (index * 10)) / 50 * 2 * Pi) * 30
+						+ 30).rounded)
 				forth
 			end
 		end
@@ -189,6 +172,9 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/05/02 17:58:11  brendel
+--| Cleanup.
+--|
 --| Revision 1.14  2000/05/02 17:18:50  brendel
 --| Widgets do not move together.
 --|

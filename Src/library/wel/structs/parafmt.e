@@ -88,6 +88,25 @@ feature -- Access
 			Result := cwel_paraformat_get_dxoffset (item)
 		end
 
+	tabulations: ARRAY [INTEGER] is
+			-- Contains tab stops
+		local
+			i: INTEGER
+		do
+			from
+				!! Result.make (0,
+					cwel_paraformat_get_ctabcount (item) - 1)
+				i := Result.lower
+			until
+				i = Result.count
+			loop
+				Result.put (cwel_paraformat_get_rgxtabs (item, i), i)
+				i := i + 1
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Element change
 
 	no_numbering is
@@ -169,6 +188,54 @@ feature -- Element change
 			alignment_set: alignment = Pfa_center
 		end
 
+	set_tabulations (tabs: ARRAY [INTEGER]) is
+			-- Set tabulation stops using the values of `tabs'.
+		require
+			tabs_not_void: tabs /= Void
+			tabs_count: tabs.count <= Max_tab_stops
+		local
+			i, j: INTEGER
+		do
+			from
+				add_mask (Pfm_tabstops)
+				cwel_paraformat_set_ctabcount (item, tabs.count)
+				i := tabs.lower
+			until
+				i > tabs.upper
+			loop
+				cwel_paraformat_set_rgxtabs (item,
+					tabs.item (i), j)
+				i := i + 1
+				j := j + 1
+			end
+		ensure
+			tabulations_set: tabulations.is_equal (tabs)
+		end
+
+	set_tabulation (tab: INTEGER) is
+			-- Set a tab stop at every `tab'.
+		local
+			a: ARRAY [INTEGER]
+			i: INTEGER
+		do
+			from
+				!! a.make (0, Max_tab_stops - 1)
+				i := a.lower
+			until
+				i = a.count
+			loop
+				a.put (i * tab, i)
+				i := i + 1
+			end
+			set_tabulations (a)
+		end
+
+	set_default_tabulation is
+			-- Set the default tabulation.
+		do
+			set_tabulations (<<Default_tab_value>>)
+		end
+
 	set_mask (a_mask: INTEGER) is
 			-- Set `mask' with `a_mask'.
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
@@ -211,6 +278,13 @@ feature -- Measurement
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_paraformat
+		end
+
+	Max_tab_stops: INTEGER is
+		external
+			"C [macro <redit.h>]"
+		alias
+			"MAX_TAB_STOPS"
 		end
 
 feature {NONE} -- Externals
@@ -262,6 +336,11 @@ feature {NONE} -- Externals
 			"C [macro <parafmt.h>]"
 		end
 
+	cwel_paraformat_set_rgxtabs (ptr: POINTER; value: INTEGER; index: INTEGER) is
+		external
+			"C [macro <parafmt.h>]"
+		end
+
 	cwel_paraformat_get_dwmask (ptr: POINTER): INTEGER is
 		external
 			"C [macro <parafmt.h>]"
@@ -297,11 +376,23 @@ feature {NONE} -- Externals
 			"C [macro <parafmt.h>]"
 		end
 
+	cwel_paraformat_get_rgxtabs (ptr: POINTER; index: INTEGER): INTEGER is
+		external
+			"C [macro <parafmt.h>]"
+		end
+
 	Pfn_bullet: INTEGER is
 		external
 			"C [macro <redit.h>]"
 		alias
 			"PFN_BULLET"
+		end
+
+	Default_tab_value: INTEGER is
+		external
+			"C [macro <redit.h>]"
+		alias
+			"lDefaultTab"
 		end
 
 end -- class WEL_PARAGRAPH_FORMAT

@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 		end
 		
 	toggle_builder_window is
-			-- 
+			-- Toggle `is_displayed' status of `builder_window'.
 		do
 			if builder_window.is_displayed then
 				builder_window.hide
@@ -193,8 +193,7 @@ feature {NONE} -- Implementation
 			generation_button: GB_CODE_GENERATION_TOOL_BAR_BUTTON
 		once
 			create Result
-			create delete_button
-			Result.extend (delete_button)
+			Result.extend (command_handler.delete_object_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.save_command.new_toolbar_item (True, False))
 			create a_new_object_editor
 			Result.extend (a_new_object_editor)

@@ -416,19 +416,19 @@ feature -- Element change
 
 feature -- Accelerators - command association
 
-	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when `acc' is completed by the user.
-		do
-			add_accel_command (acc, cmd, arg)
-		end
+--|FIXME	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when `acc' is completed by the user.
+--|FIXME		do
+--|FIXME			add_accel_command (acc, cmd, arg)
+--|FIXME		end
 
-	remove_accelerator_commands (acc: EV_ACCELERATOR) is
-			-- Empty the list of commands to be executed when
-			-- `acc' is completed by the user.
-		do
-			remove_accel_commands (acc)
-		end
+--|FIXME	remove_accelerator_commands (acc: EV_ACCELERATOR) is
+--|FIXME			-- Empty the list of commands to be executed when
+--|FIXME			-- `acc' is completed by the user.
+--|FIXME		do
+--|FIXME			remove_accel_commands (acc)
+--|FIXME		end
 
 feature -- Implementation
 
@@ -946,6 +946,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/02/19 06:34:13  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.51  2000/02/19 05:45:00  oconnor
 --| released
 --|

@@ -405,49 +405,49 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when a row has been selected.
-		do
-			add_command (Cmd_select, cmd, arg)
-		end
+--|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when a row has been selected.
+--|FIXME		do
+--|FIXME			add_command (Cmd_select, cmd, arg)
+--|FIXME		end
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when a row has been unselected.
-		do
-			add_command (Cmd_unselect, cmd, arg)
-		end
+--|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when a row has been unselected.
+--|FIXME		do
+--|FIXME			add_command (Cmd_unselect, cmd, arg)
+--|FIXME		end
 
-	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when a column is clicked.
-		do
-			add_command (Cmd_column_click, cmd, arg)
-		end
+--|FIXME	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when a column is clicked.
+--|FIXME		do
+--|FIXME			add_command (Cmd_column_click, cmd, arg)
+--|FIXME		end
 
 feature -- Event -- removing command association
 
-	remove_select_commands is	
-			-- Empty the list of commands to be executed
-			-- when a row has been selected.
-		do
-			remove_command (Cmd_select)
-		end
+--|FIXME	remove_select_commands is	
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when a row has been selected.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_select)
+--|FIXME		end
 
-	remove_unselect_commands is	
-			-- Empty the list of commands to be executed
-			-- when a row has been unselected.
-		do
-			remove_command (Cmd_unselect)
-		end
+--|FIXME	remove_unselect_commands is	
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when a row has been unselected.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_unselect)
+--|FIXME		end
 
-	remove_column_click_commands is
-			-- Empty the list of commands to be executed
-			-- when a column is clicked.
-		do
-			remove_command (Cmd_column_click)
-		end
+--|FIXME	remove_column_click_commands is
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when a column is clicked.
+--|FIXME		do
+--|FIXME			remove_command (Cmd_column_click)
+--|FIXME		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
@@ -789,6 +789,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/02/19 06:34:13  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.34  2000/02/19 05:45:01  oconnor
 --| released
 --|

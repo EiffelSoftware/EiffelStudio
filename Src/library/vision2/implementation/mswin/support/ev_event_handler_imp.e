@@ -28,33 +28,33 @@ feature {NONE} -- Status report
 
 feature {EV_PND_SOURCE_IMP} -- Element change
 
-	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' and `arg' to the list corresonding to `event_id'
-			-- in the table of commands and arguments of the widget.
-			-- If the tables don't exist, it creates them.
-		require
-			valid_command: cmd /= Void
-			valid_id: event_id >= 1 and event_id <= command_count
-		do
-		end
+--|FIXME	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' and `arg' to the list corresonding to `event_id'
+--|FIXME			-- in the table of commands and arguments of the widget.
+--|FIXME			-- If the tables don't exist, it creates them.
+--|FIXME		require
+--|FIXME			valid_command: cmd /= Void
+--|FIXME			valid_id: event_id >= 1 and event_id <= command_count
+--|FIXME		do
+--|FIXME		end
 
-	remove_single_command (event_id: INTEGER; cmd: EV_COMMAND) is
-			-- Remove `cmd' from the list of commmands associated
-			-- with the event `event_id'.
-		require
-			valid_command: cmd /= Void
-			valid_id: event_id >= 1 and event_id <= command_count
-		do
-		end
+--|FIXME	remove_single_command (event_id: INTEGER; cmd: EV_COMMAND) is
+--|FIXME			-- Remove `cmd' from the list of commmands associated
+--|FIXME			-- with the event `event_id'.
+--|FIXME		require
+--|FIXME			valid_command: cmd /= Void
+--|FIXME			valid_id: event_id >= 1 and event_id <= command_count
+--|FIXME		do
+--|FIXME		end
 
-	remove_command (event_id: INTEGER) is
-			-- Remove all the commands associated with
-			-- the event `event_id'. If the array of command
-			-- is then empty, we set it to Void.
-		require
-			valid_id: event_id >= 1 and event_id <= command_count
-		do
-		end
+--|FIXME	remove_command (event_id: INTEGER) is
+--|FIXME			-- Remove all the commands associated with
+--|FIXME			-- the event `event_id'. If the array of command
+--|FIXME			-- is then empty, we set it to Void.
+--|FIXME		require
+--|FIXME			valid_id: event_id >= 1 and event_id <= command_count
+--|FIXME		do
+--|FIXME		end
 
 feature -- Deferred features
 
@@ -86,6 +86,9 @@ end -- class EV_EVENT_HANDLER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/19 06:34:12  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.18  2000/02/19 05:45:00  oconnor
 --| released
 --|

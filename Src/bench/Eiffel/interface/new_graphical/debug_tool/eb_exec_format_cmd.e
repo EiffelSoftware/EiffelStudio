@@ -37,30 +37,16 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
+	execute_from_argument_dialog (a_execution_mode: INTEGER) is
+			-- Execute from argument dialog and therefore ALWAYS stop at breakpoints.
+		do
+			internal_execute (a_execution_mode)
+		end
+
 	execute is
 			-- Set the execution format to `stone'.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			if not executed_from_widget and not debugger_manager.raised then
-					-- The debugging window has not been updated yet.
-					-- If a shortcut was used, the corresponding window
-					-- must have the focus.
-				conv_dev ?= window_manager.last_focused_window
-				if conv_dev /= Void then
-					debugger_manager.set_debugging_window (conv_dev)
-				else
-					debug  end
-					debugger_manager.set_debugging_window (Window_manager.a_development_window)
-				end
-			end
-			debugger_manager.debug_run_cmd.execute_with_mode (execution_mode)
-			if not Application.is_running then
-					-- The application was not launched for some reason
-					-- (a compilation was running, the user didn't want to launch it after all,...)
-				debugger_manager.set_debugging_window (Void)
-			end
-			executed_from_widget := False
+			internal_execute (execution_mode)
 		end
 
 feature -- Properties
@@ -103,6 +89,33 @@ feature {NONE} -- Attributes
 		end
 
 feature {NONE} -- Implementation
+
+	internal_execute (a_execution_mode: INTEGER) is
+			-- Execute.
+		local
+			conv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			if not executed_from_widget and not debugger_manager.raised then
+					-- The debugging window has not been updated yet.
+					-- If a shortcut was used, the corresponding window
+					-- must have the focus.
+				conv_dev ?= window_manager.last_focused_window
+				if conv_dev /= Void then
+					debugger_manager.set_debugging_window (conv_dev)
+				else
+					debug  end
+					debugger_manager.set_debugging_window (Window_manager.a_development_window)
+				end
+			end
+			debugger_manager.debug_run_cmd.execute_with_mode (a_execution_mode)
+			if not Application.is_running then
+					-- The application was not launched for some reason
+					-- (a compilation was running, the user didn't want to launch it after all,...)
+				debugger_manager.set_debugging_window (Void)
+			end
+			executed_from_widget := False
+		end
+		
 
 	execute_from (widget: EV_CONTAINABLE) is
 			-- Set widget's top-level window as the debugging window.
@@ -176,7 +189,7 @@ feature {NONE} -- Implementation
 				if window /= Void then
 					dev := window.window
 					if not argument_dialog_is_valid then
-						create args_dialog.make (window, agent execute)
+						create args_dialog.make (window, agent execute_from_argument_dialog (User_stop_points))
 						set_argument_dialog (args_dialog)
 					else
 						argument_dialog.update

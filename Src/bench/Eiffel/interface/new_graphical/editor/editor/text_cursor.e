@@ -20,74 +20,91 @@ feature -- Initialization
 
 	make is
 		do
-			create tokens.make
-		end
-
-	make_from_string (s: STRING) is
-		local
-			i, j: INTEGER
-			alphanum: BOOLEAN
-			c: CHARACTER
---			s_aux: STRING
-			tok: TEXT_TOKEN
-		do
-			make
-			if s.count > 0 then
-				from
-					i := 2
-					j := 1
---					c := s @ 1
---					alphanum := ((c).is_alpha or else (c).is_digit)
-					alphanum := ((s @ 1).is_alpha or else (s @ 1).is_digit)
---					s_aux := c.out
-				until
-					i > s.count
-				loop
-					c := (s @ i)
-					if alphanum /= (c.is_alpha or else c.is_digit) then
---					if alphanum /= ((s @ i).is_alpha or else (s @ i).is_digit) then
-						alphanum := not alphanum
-						create tok.make (s.substring (j, i-1))
---						create tok.make (s_aux)
-						append_token (tok)
-						j := i
---						s_aux := c.out
---					else
---						s_aux.append_character (c)
-					end
-					i := i+1
-				end
-				create tok.make (s.substring (j, s.count))
---				create tok.make (s_aux)
-				append_token (tok)
-			end
 		end
 
 feature -- Access
 
+		--| Relative position
+
+	token: EDITOR_TOKEN
+			-- Token where Current is
+
 	pos_in_token: INTEGER
+			-- Character (in `token') Current points on
 
-	token: TEXT_TOKEN
+	line: EDITOR_LINE
+			-- Line where Current is
 
-	line: TEXT_LINE
+		--| Absolute position
 
-	paragraph: PARAGRAPH
-
-	x_in_characters: INTEGER is
-		do
-			from
-				line.tokens.start
-			until
-				line.tokens = token
-			loop
-				Result := Result + tokens.item.length
-				tokens.forth
-			end
-			Result := Result += pos_in_token
-		end
-
-	x_theoric_in_characters: INTEGER
+	x_in_pixels: INTEGER
+			-- Theoric horizontal position of Current, in pixels
 
 	y_in_lines: INTEGER
+			-- Line number of Current in the whole text
+
+feature -- Element change
+
+	set_token (t: EDITOR_TOKEN) is
+			-- Make `t' be the new value of `token'.
+		do
+			token := t
+		end
+
+	set_pos_in_token (p: INTEGER) is
+			-- Set the value of `pos_in_token' to p.
+		do
+			pos_in_token := t
+		end
+
+	set_line (l: EDITOR_LINE) is
+			-- Make `l' be the new value of `line'.
+		do
+			line := l
+		end
+
+	set_x_in_pixels (x: INTEGER) is
+			-- Make `x' be the new value of `x_in_pixels'.
+		do
+			x_in_pixels := x
+		end
+
+	set_y_in_lines (y: INTEGER) is
+			-- Make `y' be the new value of `y_in_lines'.
+		do
+			y_in_lines := y
+		end
+
+feature -- Cursor movement
+
+	go_right_char is
+		do
+			if pos_in_token = token.length then
+					-- Go to next token, first character.
+			else
+					pos_in_token = pos_in_token - 1
+			end
+			x_in_pixels := get_x_pixel_from_char (token, pos_in_token)
+			y_in_lines := line.index
+		end
+
+	go_left_char is
+		do
+			if pos_in_token = 1 then
+					-- Go to previous token, last character.
+			else
+					pos_in_token = pos_in_token - 1
+			end
+			x_in_pixels := get_x_pixel_from_char (token, pos_in_token)
+			y_in_lines := line.index
+		end
+
+	go_up_line
+
+	go_down_line
+
+	go_start_line
+
+	go_end_line
 
 end -- class TEXT_CURSOR

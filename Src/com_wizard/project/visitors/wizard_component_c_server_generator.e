@@ -178,14 +178,6 @@ feature -- Basic Operations
 				Result.append (Semicolon)
 			end
 			Result.append (constructor_addition (a_component))
-			if 
-				shared_wizard_environment.server and
-				shared_wizard_environment.out_of_process_server and
-				not system_descriptor.coclasses.is_empty
-			then
-				Result.append (New_line_tab)
-				Result.append ("LockModule ();")
-			end
 		end
 
 	add_constructor_from_object (a_component: WIZARD_COMPONENT_DESCRIPTOR)is
@@ -285,16 +277,6 @@ feature -- Basic Operations
 				Result.append (Semicolon)
 			end
 			Result.append (constructor_addition (a_component))
-
-			if 
-				shared_wizard_environment.server and
-				shared_wizard_environment.out_of_process_server and
-				not system_descriptor.coclasses.is_empty
-			then
-				Result.append (New_line_tab)
-				Result.append ("LockModule ();")
-			end
-
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
@@ -305,7 +287,25 @@ feature -- Basic Operations
 		deferred
 		end
 
+	lock_module: STRING is
+			-- "LockModule ();" line
+		do
+			create Result.make (0)
+			if 
+				shared_wizard_environment.server and
+				shared_wizard_environment.out_of_process_server and
+				not system_descriptor.coclasses.is_empty
+			then
+				Result.append (tab)
+				Result.append ("LockModule ();")
+				Result.append (New_line)
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
+		
 	add_destructor (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+			-- Add destructor.
 		local
 			tmp_body: STRING
 		do
@@ -373,17 +373,26 @@ feature -- Basic Operations
 			end
 
 			tmp_body.append (destructor_addition (a_component))
+			cpp_class_writer.set_destructor (tmp_body)
+		end
+
+	unlock_module: STRING is
+			-- "UnlockModule ();" line.
+		do
+			create Result.make (0)
 			if 
 				shared_wizard_environment.server and
 				shared_wizard_environment.out_of_process_server and
 				not system_descriptor.coclasses.is_empty
 			then
-				tmp_body.append (New_line_tab)
-				tmp_body.append ("UnlockModule ();")
+				Result.append (tab)
+				Result.append ("UnlockModule ();")
+				Result.append (New_line)
 			end
-			cpp_class_writer.set_destructor (tmp_body)
+		ensure
+			non_void_result: Result /= Void
 		end
-
+		
 	add_get_type_info_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add GetTypeInfo function.
 		require
@@ -955,6 +964,7 @@ feature -- Basic Operations
 			create func_writer.make
 
 			create tmp_body.make (500)
+			tmp_body.append (lock_module)
 			tmp_body.append (Tab)
 			tmp_body.append (Return)
 			tmp_body.append (Space)
@@ -1117,6 +1127,7 @@ feature -- Basic Operations
 			create func_writer.make
 			
 			create tmp_body.make (10000)
+			tmp_body.append (unlock_module)
 			tmp_body.append (Tab)
 			tmp_body.append (Long_macro)
 			tmp_body.append (Space)

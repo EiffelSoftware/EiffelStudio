@@ -242,6 +242,10 @@ feature -- Inapplicable
 		do
 		end
 
+	disable_default_processing is
+		do
+		end
+
 end -- class MENU_WINDOWS
 
 --|----------------------------------------------------------------

@@ -710,6 +710,12 @@ feature -- Measurement
 
 feature -- Element change
 
+	set_empty is
+			-- Set empty VARIANT.
+		do
+			ccom_set_variant_variable_type (item, Vt_empty)
+		end
+
 	set_character (a_char: CHARACTER) is
 			-- Set character value.
 		do

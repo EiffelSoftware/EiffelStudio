@@ -63,7 +63,7 @@ feature -- Initialization
 		do
 			!! storage.make
 			if storage.is_compound_file (name) then
-				storage.open_compound_file (name, STGM_SHARE_EXCLUSIVE)
+				storage.open_compound_file (name, Stgm_share_deny_write)
 				if storage.status.last_hresult = STG_E_SHAREVIOLATION then
 					!! mess_box.make
 					mess_box.error_message_box (p, "Sharing Violation", "Read error")

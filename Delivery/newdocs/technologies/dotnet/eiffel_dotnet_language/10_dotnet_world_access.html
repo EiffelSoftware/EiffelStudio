@@ -1,0 +1,199 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Accessing .NET assemblies</TITLE>
+		<LINK REL=StyleSheet HREF="../../../default.css">
+	</HEAD>
+
+<body>
+
+<h1>Accessing the .NET world</h1>
+
+<h2>Introduction</h2>
+<p>ISE  provides Eiffel.NET libraries that wrap the Microsoft framework.
+These libraries include wrappers for the Base Class Library, Windows Forms,  Web
+Forms and other standard assemblies. The Base Class Library includes the definition of the basic types needed
+for any system, such as collections, remoting services, threading services,
+security, and IO access.</p>
+<p>The Windows Forms classes allow building a GUI in the .NET Framework. They are a
+wrapper around the Win32 APIs that provides a clean object model to build a GUI.
+Web Forms also provide a way to build GUIs on the Web; they include such types
+as <b>DataGrid</b> or <b>HTMLImage</b>.</p>
+<p>These three libraries are distributed with Eiffel.NET so you can reuse these
+classes directly in your system. Take a look at the documentation regarding the <a href="../../../tools/assembly_manager/index.html">assembly
+manager</a> for more details on how to generate automatically corresponding
+Eiffel.NET libraries for other .NET components.</p>
+<h2>External Classes</h2>
+<p>They are many ways of reusing existing .NET classes. One would have been to
+find in the .NET world all the information about a class that has not been yet
+found in the Eiffel system and do a query to the .NET runtime each time we need
+the information. Another one would have been to dig up the information first and
+to save it in some format for later reuse.</p>
+<p>We chose the second solution with a file format that represents the .NET
+class as an Eiffel
+class. This Eiffel class follows a particular non-standard Eiffel syntax that we
+will describe below. We call them .NET external classes.</p>
+<p>The .NET external classes do not include any logic;
+they are just needed for the Eiffel type system. This means that the Eiffel.NET
+compiler does not generate any IL code for these classes. Any call to functions
+on classes are direct calls to the .NET Framework;
+there are no indirections and thus no performance penalty. Those classes can only include external features (features that are
+not written in Eiffel but are methods or functions on an already existing .NET
+Framework type). All the features of an external class should be features
+belonging to the same .NET Framework type. You can declare such a type with the
+following syntax:</p>
+<code>
+<span class="ekeyword">indexing</span><br>
+&nbsp;&nbsp;&nbsp;<span class="etag">external_name:</span> <span class="estring">&quot;System.Console&quot;</span><br><br>
+<span class="ekeyword">frozen external class</span><br>
+&nbsp;&nbsp;&nbsp;<span class="eclass">SYSTEM_CONSOLE</span><br>
+...
+</code>
+<p>The string that follows <SPAN CLASS="etag">external_name:</SPAN> contains the name of
+the .NET Framework type that the Eiffel class wraps. Since .NET Framework types
+might be <i>sealed</i> (they might forbid other types to inherit from them) and
+since such a concept does not exist in Eiffel, Eiffel.NET introduces a new use
+for the Eiffel keyword <SPAN CLASS="ekeyword">frozen</SPAN>. You may use
+<SPAN CLASS="ekeyword">frozen</SPAN> in front of <SPAN CLASS="ekeyword">external</SPAN> to tell the Eiffel.NET compiler
+that no Eiffel.NET class should inherit from the .NET Framework type.</p>
+<p>The external class should then list all the features you need to access. All
+these features are external features. The syntax for an external .NET Framework
+feature is the following:</p>
+<code><span class="ekeyword">frozen</span> <span class="efeature">read_line</span><SPAN class="esymbol">:</SPAN>
+<SPAN CLASS="eclass">STRING</SPAN> <SPAN CLASS="ekeyword">is</SPAN><br>
+&nbsp;&nbsp;
+&nbsp;
+   <SPAN CLASS="ekeyword">external</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;
+      <SPAN CLASS="estring">&quot;IL static signature :System.String use System.Console&quot;</SPAN><br>
+&nbsp;&nbsp;
+&nbsp;
+   <SPAN CLASS="ekeyword">alias</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;
+      <SPAN CLASS="estring">&quot;ReadLine&quot;</SPAN><br>
+&nbsp;&nbsp;
+&nbsp;
+   <SPAN CLASS="ekeyword">end</SPAN>
+</code>
+<p>Here <span class="ekeyword">frozen</span> indicates that the feature may not
+be redefined in a descendant
+<p class="note"><b>Note</b>: You may redefine external features if they
+are virtual</i>, in which case <span class="ekeyword">frozen</span> should not be
+used
+<p><span class="efeature">read_line</span> is the Eiffel.NET feature name, and
+<span class="eclass">STRING</span> the
+return type of the feature. The string that follows the <span class="ekeyword">external</span>
+keyword specifies the kind of external, the .NET Framework function signature,
+as well as the .NET Framework type on which the function is defined. The string
+following the <SPAN CLASS="ekeyword">alias</SPAN>
+keyword contains the .NET Framework name of the
+function. There are different kinds of external features depending on the type
+of method they provide access to. Eiffel.NET defines seven new kinds of
+externals listed in the following table:</p>
+<table class="data">
+  <tbody>
+    <tr vAlign="top">
+      <th class="data" align="left" width="37%">The Microsoft .NET Framework
+        Function Kind</th>
+      <th class="data" align="left" width="63%">Eiffel External</th>
+    </tr>
+    <tr vAlign="top">
+      <td class="data" width="37%">Method</td>
+      <td class="data" width="63%"><i>&quot;IL signature … use class_name&quot;</i></td>
+    </tr>
+    <tr vAlign="top">
+      <td class="data" width="37%">Static Method</td>
+      <td class="data" width="63%"><i>&quot;IL static signature … use class_name&quot;</i></td>
+    </tr>
+    <tr vAlign="top">
+      <td class="data" width="37%">Deferred Method</td>
+      <td class="data" width="63%"><i>&quot;IL deferred signature … use class_name&quot;</i></td>
+    </tr>
+    <tr vAlign="top">
+      <td class="data" width="37%">Operator</td>
+      <td class="data" width="63%"><i>&quot;IL operator … use class_name&quot;</i></td>
+    </tr>
+    <tr vAlign="top">
+      <td class="data" width="37%">Field Getter</td>
+      <td class="data" width="63%"><i>&quot;IL field signature … use class_name&quot;</i></td>
+    </tr>
+    <tr vAlign="top">
+      <td class="data" width="37%">Static Field Getter</td>
+      <td class="data" width="63%"><i>&quot;IL  static_field signature … use
+        class_name&quot;</i></td>
+    </tr>
+    <tr vAlign="top">
+      <td class="data" width="37%">Enum</td>
+      <td class="data" width="63%"><i>&quot;IL enum … use
+        class_name&quot;</i></td>
+    </tr>
+    <tr vAlign="top">
+      <td class="data" width="37%">Constructor</td>
+      <td class="data" width="63%"><i>&quot;IL creator signature … use class_name&quot;</i></td>
+    </tr>
+  </tbody>
+</table>
+<p>The .NET Framework type name that appears at the end of the string following 
+the <span class="ekeyword">external</span> keyword should be the same as the one 
+that appears after the <SPAN CLASS="ekeyword">alias</SPAN> keyword,
+following the declaration of the class (see the code fragment under
+&quot;External Classes&quot;).</p>
+<p>The external features can be called from clients or descendants of the class
+in the same way you would call any other Eiffel feature. So if your system
+includes a feature that needs user input, it can include the following code:</p>
+<code>
+<span class="efeature">need_user_input</span> <span class="ekeyword">is</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">-- Take user input and do stuff.</span><br>
+&nbsp;&nbsp;&nbsp;<span class="ekeyword">local</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">io</span><span class="esymbol">:</span>
+<span class="eclass">SYSTEM_CONSOLE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">input</span><span class="esymbol">:</span>
+<span class="eclass">STRING</span><br>
+&nbsp;&nbsp;&nbsp;<span class="ekeyword">do</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ekeyword">create</span>
+<span class="elocal">io</span><span class="esymbol">.</span><span class="efeature">make</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">input</span> <span class="esymbol">:=</span>
+<span class="elocal">io</span>.<span class="efeature">read_line</span> <span class="ecomment">-- calls 
+            System.Console.ReadLine()</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">-- do stuff</span><br>
+&nbsp;&nbsp;&nbsp;<span class="ekeyword">end</span></code><br>
+
+<p>However, because
+<span class="efeature">read_line</span> is a static external, you do not need to
+instantiate the wrapper to call it, so the following code is sufficient to make
+the external call:</p>
+<code>
+<span class="efeature">need_user_input</span> <span class="ekeyword">is</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">-- Take user input and do stuff.</span><br>
+&nbsp;&nbsp;&nbsp;<span class="ekeyword">local</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">io</span><span class="esymbol">:</span>
+<span class="eclass">SYSTEM_CONSOLE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">input</span><span class="esymbol">:</span>
+<span class="eclass">STRING</span><br>
+&nbsp;&nbsp;&nbsp;<span class="ekeyword">do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span> <span class="ecomment">-- Removed 
+creation of </span><span class="elocal">io</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">input</span> <span class="esymbol">:=</span>
+<span class="elocal">io</span>.<span class="efeature">read_line</span> <span class="ecomment">-- calls 
+            System.Console.ReadLine()</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">-- do stuff</span><br>
+&nbsp;&nbsp;&nbsp;<span class="ekeyword">end</span></code><p>
+<p>This code is also valid for static field access.
+Other kinds of externals do require the wrapper to be instantiated.</p>
+<h2>Eiffel.NET Libraries</h2>
+<p>The Eiffel.NET compiler comes together with an Eiffel.NET Base Class library,
+which follows the design principles found in the standard EiffelBase library.
+This library makes extensive use of genericity and contracts to provide a clean
+and powerful set of data structures you can reuse in your system. This library
+uses the external classes that wrap the .NET Framework Base Class Library, also
+provided with Eiffel.NET.</p>
+<p>The other sets of classes provided with the compiler wrap the standard Framework 
+assemblies so that you can easily reuse the corresponding types in you
+applications.</p>
+
+</body>
+
+</html>

@@ -440,7 +440,7 @@ feature {NONE} -- Initialization
 						l_result := System.integer_32_class
 					elseif l_name.is_equal ("System.Int64") or l_name.is_equal ("System.UInt64") then
 						l_result := System.integer_64_class
-					elseif l_name.is_equal ("System.IntPtr") then
+					elseif l_name.is_equal ("System.IntPtr") or l_name.is_equal ("System.UIntPtr") then
 						l_result := System.pointer_class
 					elseif l_name.is_equal ("System.Double") then
 						l_result := System.double_class

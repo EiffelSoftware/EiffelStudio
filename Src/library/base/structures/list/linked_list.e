@@ -495,8 +495,8 @@ feature -- Cursor movement
 	 			(old index + i) >= 0 and
 	 			(old index + i) <= (count + 1)
 	 				implies index = (old index + i);
-	 		(old index + i) <= 0 implies before;
-	 		(old index + i) >= (count + 1) implies after
+	 		before_set: (old index + i) <= 0 implies before;
+	 		after_set:  (old index + i) >= (count + 1) implies after
 		end;
 
 	go_i_th (i: INTEGER) is

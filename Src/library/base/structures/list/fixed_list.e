@@ -25,15 +25,35 @@ class FIXED_LIST [G] inherit
 			put as put_i_th,
 			item as i_th,
 			empty as array_empty,
-			duplicate as array_duplicate
+			duplicate as array_duplicate,
+			wipe_out as array_wipe_out
 		export
-			{} all;
+			{NONE} all;
 			{FIXED_LIST}
 				array_make
 		undefine
 			sequential_representation
 		select
 			array_empty
+		end;
+
+	ARRAY [G]
+		rename
+			make as array_make,
+			put as put_i_th,
+			item as i_th,
+			empty as array_empty,
+			duplicate as array_duplicate
+		export
+			{NONE} all;
+			{FIXED_LIST}
+				array_make
+		undefine
+			sequential_representation
+		redefine 
+			wipe_out
+		select
+			wipe_out
 		end;
 
 	LIST [G]
@@ -102,8 +122,11 @@ feature -- Access
 			!FIXED_LIST_CURSOR! Result.make (index)
 		end;
 
+
 feature -- Transformation
 
+	--swap(i:INTEGER) is do end;
+	
 	swap (i: INTEGER) is
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
@@ -112,10 +135,12 @@ feature -- Transformation
 		do
 			old_item := item;
 			replace (i_th (i));
-			put_i_th (old_item, i)
+			put_i_th (old_item, i);
 		end;
 
 feature -- Duplication
+
+	--duplicate(n: INTEGER): like Current is do end;
 
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-list beginning at cursor position
@@ -128,14 +153,14 @@ feature -- Duplication
 				Result.start;
 				pos := index
 			until
-				Result.after
+				Result.exhausted
 			loop
 				Result.replace (item);
 				forth;
 				Result.forth
 			end;
 			Result.start;
-			go_i_th (pos)
+			go_i_th (pos);
 		end;
 
 
@@ -145,6 +170,14 @@ feature -- Modification & Insertion
 			-- Replace current item by `v'.
 		do
 			put_i_th (v, index)
+		end;
+
+feature -- Removal
+
+	wipe_out is
+		do
+			array_wipe_out;
+			index := -1;
 		end;
 
 feature -- Cursor movement
@@ -175,7 +208,7 @@ feature -- Cursor movement
 	go_i_th (i: INTEGER) is
 			-- Move cursor to `i'-th position.
 		do
-			index := i
+			index := i;
 		end;
 
 	go_to (p: CURSOR) is

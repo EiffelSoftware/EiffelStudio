@@ -6,6 +6,7 @@
 --|---------------------------------------------------------------
 
 -- Sets implemented with linked lists
+-- items are compared with the is_equal routine
 
 indexing
 
@@ -28,13 +29,35 @@ class LINKED_SET [G] inherit
 				ll_add
 		undefine
 			put, empty
-		select
+		redefine
+			has
+		end;
+
+	 LINKED_LIST [G]
+		undefine
+			put, empty
+		redefine 
+			add, has
+		select 
 			add
-		end
+		end;
 
 creation
 
 	make
+
+feature -- Access
+
+	has (v: like item): BOOLEAN is
+			-- Does `Current' include `v'?
+			-- according to the 'equal' rule
+		do
+			if not off then
+				search_equal (v)
+			end;
+			Result := not exhausted
+		end;
+	
 
 feature -- Comparison
 
@@ -120,9 +143,5 @@ feature -- Modification & Insertion
 				other.forth
 			end
 		end;
-
-
-
-
 
 end -- class LINKED_SET

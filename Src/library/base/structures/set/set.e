@@ -17,10 +17,7 @@ indexing
 
 deferred class SET [G] inherit
 
-	COLLECTION [G]
-		redefine
-			add, remove_item
-		end
+	COLLECTION [G];
 
 feature -- Access
 

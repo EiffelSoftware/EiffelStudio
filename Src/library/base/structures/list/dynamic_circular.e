@@ -24,7 +24,10 @@ deferred class DYNAMIC_CIRCULAR [G] inherit
 
 	DYNAMIC_CHAIN [G]
 		undefine
-			valid_cursor_index
+			valid_cursor_index,
+			search, search_equal,
+			finish, start, move, go_i_th,
+			exhausted, off
 		end
 
 end -- class DYNAMIC_CIRCULAR

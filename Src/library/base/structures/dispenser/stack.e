@@ -25,6 +25,10 @@ deferred class STACK [G] inherit
 
 feature -- Modification & Insertion
 
+	push (v: like item) is
+		deferred
+		end;
+
 	add (v: like item) is
 			-- Push `v' onto `Current'.
 		deferred
@@ -76,6 +80,16 @@ feature -- Modification & Insertion
 				add (temp.item);
 				temp.remove
 			end
+		end;
+
+feature -- Removal
+
+	pop: G is
+		require
+			not_empty: not empty
+		do
+			Result := item;
+			remove;	
 		end;
 
 end -- class STACK

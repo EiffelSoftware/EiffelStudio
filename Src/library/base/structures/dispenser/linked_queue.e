@@ -39,20 +39,34 @@ class LINKED_QUEUE [G] inherit
 			readable, writable, contractable
 		redefine
 			duplicate, sequential_representation
-		select
-			add, item
-		end
+		end;
 
+	LINKED_LIST [G]
+		export
+			{NONE} all;
+			 writable, extensible, make, wipe_out,
+			contractable, readable
+		undefine
+			put, fill, remove, append, remove_item,
+			readable, writable, contractable
+		redefine
+			item, add,
+			duplicate, sequential_representation
+		select
+			item, add
+		end
+			
 creation
 
 	make
 
 feature -- Access
+	
 
 	item: G is
 			-- Oldest item
 		do
-			Result := first
+			Result := first;
 		end;
 
 feature -- Conversion
@@ -115,11 +129,13 @@ feature -- Modification & Insertion
 			-- Add item `v' to `Current'.
 		do
 			if empty then
-				ll_add (v)
+				ll_add (v);
+				after := false;
+				before := false;
 			else
-				add_right (v)
+				add_right (v);
+				forth;
 			end;
-			forth
 		ensure then
 			(old empty) implies (item = v);
 		end;

@@ -31,11 +31,43 @@ class SORTED_TWO_WAY_LIST [G -> PART_COMPARABLE] inherit
 			isfirst, start, finish, readable,
 			islast, first, remove_item, after,
 			contractable, last, off
+		redefine
+			search_after
 		end
 
 creation
 
 	make
+
+feature -- Access
+
+	search_after (v: like item) is
+		-- Go to first position with item greater
+		-- than or equal to `v'.
+		do
+			if before or else v > item then
+				from
+					if before then 
+						forth
+					end
+				until
+					after or else v <= item
+				loop
+					forth
+				end
+			else
+				from
+					back
+				until
+					before or else item < v
+				loop
+					back
+				end;
+				forth
+			end
+		end;
+					
+					
 
 feature -- Transformation
 

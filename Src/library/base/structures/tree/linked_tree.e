@@ -88,7 +88,13 @@ class LINKED_TREE [G] inherit
 			isfirst as child_isfirst,
 			islast as child_islast
 		export
-			{ANY} child
+			{ANY} 
+				child;
+			{NONE}
+				ll_make, ll_has, ll_replace,
+				ll_add, ll_put, ll_merge_left,
+				ll_merge_right, ll_fill,
+				ll_duplicate, ll_full;
 		undefine
 			child_readable, is_leaf,
 			child_writable,

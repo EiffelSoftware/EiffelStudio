@@ -186,15 +186,14 @@ feature
 				-- of class `cl' before.
 			from
 					-- Iteration on the parents of class `cl'.
-				nb := parents.count;
-				i := 1
+				parents.start
 			until
-				i > nb
+				parents.after
 			loop
 					-- Insert features inherited from a parent in the
 					-- inheritance table `Inherit_table'.
-				merge (parents.i_th (i));
-				i := i + 1;
+				merge (parents.item);
+				parents.forth
 			end;
 				-- Check if the feature renamed are available
 			check_validity1;
@@ -255,8 +254,7 @@ feature
 
 				-- Creators processing
 			old_creators := a_class.creators;
-		   	a_class.set_creators
-						(class_info.creation_table (resulting_table));
+		   	a_class.set_creators (class_info.creation_table (resulting_table));
 				-- No update of `Instantiator' if there is an error
 			Error_handler.checksum;
 
@@ -900,8 +898,7 @@ end;
 					-- Unique value processing
 				unique_feature ?= Result;
 				!!integer_value;
-				integer_value.set_int_val
-					(class_info.unique_values.item (feature_name));
+				integer_value.set_int_val (class_info.unique_values.item (feature_name));
 				unique_feature.set_value (integer_value);
 debug ("ACTIVITY")
 	io.error.putstring ("Value: ");

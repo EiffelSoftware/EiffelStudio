@@ -31,7 +31,7 @@ feature -- Conversion
 		do
 			Result := a_string.substring (cdata_opening.count + 1, a_string.count - cdata_closing.count + 1)
 		ensure
-			not has_cdata (a_string)
+			not has_cdata (Result)
 			new_count_correct: a_string.count = old a_string.count - cdata_opening.count - cdata_closing.count
 		end
 		
@@ -49,7 +49,7 @@ feature -- Conversion
 				Result := Result.clone (a_string)
 			end
 		ensure
-			not has_cdata (a_string)
+			not has_cdata (Result)
 		end
 		
 	enclose_in_cdata (a_string: STRING): STRING is

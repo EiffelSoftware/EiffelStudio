@@ -798,7 +798,6 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
 	
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is pressed.
@@ -1074,6 +1073,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.79  2001/06/11 22:14:37  pichery
+--| Cosmetics
+--|
 --| Revision 1.78  2001/06/07 23:08:14  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

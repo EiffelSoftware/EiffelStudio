@@ -1442,7 +1442,7 @@ feature -- Conversion
 			loop
 				internal_string_builder.set_chars (
 					i, 
-					feature {CHARACTER}.to_lower (internal_string_builder.chars (i))
+					feature {DOTNET_CHARACTER}.to_lower (internal_string_builder.chars (i))
 				)
 				i := i + 1
 			end
@@ -1460,7 +1460,7 @@ feature -- Conversion
 			loop
 				internal_string_builder.set_chars (
 					i, 
-					feature {CHARACTER}.to_upper (internal_string_builder.chars (i))
+					feature {DOTNET_CHARACTER}.to_upper (internal_string_builder.chars (i))
 				)
 				i := i + 1
 			end

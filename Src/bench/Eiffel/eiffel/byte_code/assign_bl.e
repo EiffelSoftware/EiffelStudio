@@ -71,11 +71,9 @@ feature
 		do
 			last_in_result := target.is_result and
 				not context.has_postcondition and
+				not context.has_invariant and
 				not context.real_type (target.type).is_expanded
 				and source.is_simple_expr;
-		ensure then
-			last_in_result = target.is_result and
-				not context.has_postcondition;
 		end;
 			
 	last_all_in_result: BOOLEAN is
@@ -89,9 +87,8 @@ feature
 	mark_last_instruction is
 			-- Signals this assigment is an exit point for the routine.
 		do
-			last_instruction := not context.has_postcondition;
-		ensure then
-			last_instruction = not context.has_postcondition;
+			last_instruction := not context.has_postcondition
+				and not context.has_invariant;
 		end;
 
 	
@@ -529,6 +526,7 @@ feature
 			-- Generate last assignment in Result (i.e. a return)
 		require
 			no_postcondition: not context.has_postcondition;
+			no_invariant: not context.has_invariant
 		local
 			target_type: TYPE_I;
 			source_type: TYPE_I;

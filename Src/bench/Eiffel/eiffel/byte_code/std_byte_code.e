@@ -605,6 +605,10 @@ feature
 					generated_file.putstring ("if (RTAL & CK_REQUIRE) {");
 					generated_file.new_line;
 					generated_file.indent;
+				else
+					generated_file.putstring ("if (~in_assertion) {");
+					generated_file.new_line;
+					generated_file.indent;
 				end;
 				generate_invariant_before;
 				if precondition /= Void then
@@ -627,10 +631,16 @@ feature
 				generated_file.putstring ("RTCF;");
 				generated_file.new_line;
 				if workbench_mode then
+					generated_file.exdent;
 					generated_file.putchar ('}');
 					generated_file.new_line;
+				else
 					generated_file.exdent;
+					generated_file.putchar ('}');
+					generated_file.new_line;
 				end;
+			else
+				generate_invariant_before
 			end;
 		end;
 
@@ -652,6 +662,10 @@ feature
 					generated_file.putstring ("if (RTAL & CK_ENSURE) {");
 					generated_file.new_line;
 					generated_file.indent;
+				else
+					generated_file.putstring ("if (~in_assertion) {");
+					generated_file.new_line;
+					generated_file.indent;
 				end;
 				if postcondition /= Void then
 					postcondition.generate;
@@ -661,10 +675,16 @@ feature
 				end;
 				generate_invariant_after;
 				if workbench_mode then
+					generated_file.exdent;
 					generated_file.putchar ('}');
 					generated_file.new_line;
+				else
 					generated_file.exdent;
+					generated_file.putchar ('}');
+					generated_file.new_line;
 				end;
+			else
+				generate_invariant_after
 			end;
 		end;
 
@@ -754,7 +774,7 @@ feature
 	exception_stack_managed: BOOLEAN is
 			-- Do we have to manage the exception stack
 		do
---			Result := context.workbench_mode;
+	--		Result := context.workbench_mode;
 			Result := true;
 		end;
 

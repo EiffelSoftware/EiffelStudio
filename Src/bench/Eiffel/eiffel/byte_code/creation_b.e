@@ -69,6 +69,10 @@ feature -- Byte code generation
 			if call /= Void then
 				call.make_creation_byte_code (ba);
 			end;
+			if not target_type.is_basic then
+				target.make_byte_code (ba);
+				ba.append (Bc_create_inv);
+			end;
 			make_breakable (ba);
 		end;
 

@@ -293,9 +293,13 @@ feature
 				or else inh_assert.has_old_expression)
 			then
 				if workbench_mode then
-						generated_file.putstring ("if (RTAL & CK_ENSURE) {");
-						generated_file.new_line;
-						generated_file.indent;
+					generated_file.putstring ("if (RTAL & CK_ENSURE) {");
+					generated_file.new_line;
+					generated_file.indent;
+				else
+					generated_file.putstring ("if (~in_assertion) {");					
+					generated_file.new_line;
+					generated_file.indent;
 				end;
 				if old_expressions /= Void then
 					from
@@ -314,9 +318,13 @@ feature
 				end;
 
 				if workbench_mode then
+					generated_file.exdent;
 					generated_file.putchar ('}');
 					generated_file.new_line;
+				else
 					generated_file.exdent;
+					generated_file.putchar ('}');
+					generated_file.new_line;
 				end;
 			end;
 		end;

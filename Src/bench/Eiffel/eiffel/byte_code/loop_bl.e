@@ -87,7 +87,9 @@ feature
 					variant_part.generate;
 					generate_end_workbench_test;
 				else
+					generate_final_mode_test;
 					variant_part.generate;
+					generate_end_final_mode_test
 				end;
 			end;
 			context.generate_label (label);
@@ -104,7 +106,9 @@ feature
 					invariant_part.generate;
 					generate_end_workbench_test;
 				else
+					generate_final_mode_test;
 					invariant_part.generate;
+					generate_end_final_mode_test;
 				end;
 			end;
 			if generate_variant then
@@ -113,7 +117,9 @@ feature
 					variant_part.print_register;
 					generate_end_workbench_test;
 				else
+					generate_final_mode_test;
 					variant_part.print_register;
+					generate_end_final_mode_test;
 				end;
 			end;
 			if compound /= Void then
@@ -145,6 +151,20 @@ feature
 			-- Generate end of dynamic test in workbench mode
 		require
 			context.workbench_mode
+		do
+			generated_file.exdent;
+			generated_file.putchar ('}');
+			generated_file.new_line;
+		end;
+
+	generate_final_mode_test is
+		do
+			generated_file.putstring ("if (~in_assertion) {");
+			generated_file.new_line;
+			generated_file.indent;
+		end;
+
+	generate_end_final_mode_test is
 		do
 			generated_file.exdent;
 			generated_file.putchar ('}');

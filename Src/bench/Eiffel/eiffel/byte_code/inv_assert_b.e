@@ -42,10 +42,12 @@ feature
 			expr.generate;
 			generated_file.putstring ("if (");
 			expr.print_register;
-			generated_file.putstring (")");
+			generated_file.putstring (") {");
 			generate_sucess;
-			generated_file.putstring ("else");
+			generated_file.putstring ("} else {");
 			generate_failure;
+			generated_file.putchar ('}');
+			generated_file.new_line;
 		end;
 
 end

@@ -35,17 +35,20 @@ feature
 		do
 			last_in_result := target.is_result and
 				not context.byte_code.is_once and
-				not context.has_postcondition;
+				not context.has_postcondition and
+				not context.has_invariant;
 		ensure then
 			last_in_result = target.is_result and
 				not context.byte_code.is_once and
-				not context.has_postcondition;
+				not context.has_postcondition and
+				not context.has_invariant;
 		end;
 
 	mark_last_instruction is
 			-- Signals this assignment is an exit point for the routine
 		do
-			last_instruction := not context.has_postcondition;
+			last_instruction := not context.has_postcondition and
+				not context.has_invariant;
 		end;
 
 	register: REGISTRABLE;
@@ -203,12 +206,25 @@ feature
 						generated_file.new_line;
 					end;
 					generate_assignment (is_expanded);
+					generate_creation_invariant;	
 				else
 					generate_register_assignment;
 					target_type.c_type.generate_cast (generated_file);
 					generated_file.putstring ("0;");
 					generated_file.new_line;
 				end;
+			end
+		end;
+
+	generate_creation_invariant is
+		do
+			if context.workbench_mode or else
+				context.assertion_level.check_invariant
+			then
+				generated_file.putstring ("RTCI(");
+				print_register;
+				generated_file.putstring(");");
+				generated_file.new_line;
 			end
 		end;
 

@@ -67,7 +67,13 @@ feature
 					generated_file.putchar ('}');
 					generated_file.new_line;
 				elseif context.assertion_level.check_check then
+					generated_file.putstring ("if (~in_assertion) {");
+					generated_file.new_line;
+					generated_file.indent;
 					check_list.generate;
+					generated_file.exdent;
+					generated_file.putchar ('}');
+					generated_file.new_line;
 				end;
 			end;
 		end;

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			cwel_choose_font_set_lstructsize (item, structure_size)
 			!! lf.make (10, "System")
 			set_log_font (lf)
-			set_flags (Cf_screenfonts)
+			set_flags (Cf_screenfonts + Cf_effects + Cf_inittologfontstruct)
 		end
 
 feature -- Access

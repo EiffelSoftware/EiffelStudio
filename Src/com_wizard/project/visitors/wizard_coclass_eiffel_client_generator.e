@@ -30,6 +30,9 @@ feature -- Access
 
 			create l_visible.make
 			l_visible.set_name (l_name)
+			l_visible.add_feature ("make")
+			l_visible.add_feature (Make_from_other)
+			l_visible.add_feature (Make_from_pointer)
 			system_descriptor.add_visible_class_client (l_visible)
 
 			add_default_features (a_descriptor)

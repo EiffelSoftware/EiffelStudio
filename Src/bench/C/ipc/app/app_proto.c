@@ -508,9 +508,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 	
 	if (new_value == NULL) {
 		/* access the object through its hector address */
-		object = (EIF_OBJECT)(&(eif_access((EIF_OBJECT) arg_addr)));
-		object = eif_access(object);
-
+		object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) arg_addr))));
 		attr_number = arg_attr_number;	
 	} else {
 		/* second call, get the new value and call the function */
@@ -524,7 +522,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 #endif
 
 		/* prepare next call (will be a 'first') */
-		object = 0;
+		object = NULL;
 		attr_number = 0;
 	}
 }
@@ -1345,9 +1343,8 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, struct ite
 				o_ref = (char *) ((char **)object + attr_number);
 
 				/* access the object through its hector address */
-				new_object_attr = (EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref))));
-				new_object_attr = eif_access(new_object_attr);
-				*(char **)o_ref = new_object_attr;
+				new_object_attr = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
+				*(EIF_REFERENCE *)o_ref = new_object_attr;
 				/* inform the GC that new_value is now referrenced as `object' */
 				RTAR(object, new_object_attr);
 				break;
@@ -1440,9 +1437,8 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, str
 				return 2;
 			default: /* Object reference */
 				/* access the object through its hector address */
-				new_object_attr = (EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref))));
-				new_object_attr = eif_access(new_object_attr);
-				*(char **)o_ref = new_object_attr;
+				new_object_attr = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
+				*(EIF_REFERENCE *)o_ref = new_object_attr;
 				/* inform the GC that new_value is now referrenced is `object' */
 				RTAR(object, new_object_attr);
 				break;

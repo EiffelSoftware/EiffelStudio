@@ -38,11 +38,12 @@ feature -- Basic operation
 
 				create eiffel_writer.make
 
-				-- Set class name and description
 				eiffel_writer.set_class_name (implemented_coclass_name (a_coclass.eiffel_class_name))
+
 				-- Process interfaces.
 				create interface_processor.make (a_coclass, eiffel_writer)
 				interface_processor.process_interfaces
+				interface_processor := Void
 
 				local_string := clone (a_coclass.eiffel_class_name)
 				local_string.append (" Implementation.")
@@ -56,6 +57,8 @@ feature -- Basic operation
 				Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 				eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 			end
+
+			eiffel_writer := Void
 		end
 
 	add_creation is

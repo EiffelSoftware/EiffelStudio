@@ -33,6 +33,7 @@ feature -- Basic operations
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
 			create cpp_class_writer.make
+			a_descriptor.set_impl_names (True)
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
 			cpp_class_writer.set_header (a_descriptor.description)
 			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
@@ -55,7 +56,6 @@ feature -- Basic operations
 			data_member.set_result_type (tmp_string)
 
 			cpp_class_writer.add_member (data_member, Private)
-
 
 			create data_member.make
 			data_member.set_comment (Default_iunknown_variable_comment)
@@ -101,8 +101,8 @@ feature -- Basic operations
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
 			cpp_class_writer.save_file (Shared_file_name_factory.last_created_file_name)
 			cpp_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-		ensure then
-			non_void_cpp_class_writer: cpp_class_writer /= Void
+
+			cpp_class_writer := Void
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

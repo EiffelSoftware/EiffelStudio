@@ -69,7 +69,7 @@ feature
 			forbid_resize;
 			build_widgets;
 			set_title (l_New_project);
-			set_x_y (screen.x, screen.y);
+			set_default_position;
 			realize;
 			transporter_init;
 			if bm_Project_icon.is_valid then
@@ -80,8 +80,6 @@ feature
 			set_action ("<Visible>", Current, remapped);
 			set_delete_command (quit_command)
 		end;
-
-	set_default_position is do end;
 
 	set_default_size is do end;
 
@@ -142,16 +140,16 @@ feature -- xterminal
 					raise
 					if hidden_warner then
 						hidden_warner := false;
-						warner.popup
-					end;
+						last_warner.popup
+					end
+					if hidden_confirmer then
+						hidden_confirmer := false;
+						last_confirmer.popup
+					end
 					if hidden_name_chooser then
 						hidden_name_chooser := false;
 						name_chooser.popup
-					end;	
-					if hidden_confirmer then
-						hidden_confirmer := false;
-						confirmer.popup
-					end	
+					end
 				else
 						-- The project tool is being raised, moved or resized.
 						-- Raise popups with an exclusive grab.
@@ -175,27 +173,30 @@ feature -- xterminal
 					system_tool.close_windows;
 					hidden_system_window := True;
 				end;
-				if warner.is_popped_up then
-					hidden_warner := true;
-					warner.popdown
-				end;
 				if name_chooser.is_popped_up then
 					hidden_name_chooser := true;
 					name_chooser.popdown
 				end;	
-				if confirmer.is_popped_up then
+				if last_warner /= Void and then last_warner.is_popped_up then
+					hidden_warner := true;
+					last_warner.popdown
+				end;
+				if 
+					last_confirmer /= Void and then 
+					last_confirmer.is_popped_up
+				then
 					hidden_confirmer := true;
-					confirmer.popdown
-				end;	
+					last_confirmer.popdown
+				end
 			else
 				old_execute (arg)
 			end
 		end;
 
 	hidden_system_window: BOOLEAN;
+	hidden_name_chooser: BOOLEAN;
 	hidden_warner: BOOLEAN;
 	hidden_confirmer: BOOLEAN;
-	hidden_name_chooser: BOOLEAN;
 	hidden_project_tool: BOOLEAN;
 
 feature -- rest
@@ -213,6 +214,29 @@ feature -- rest
 	routine_hole: ROUTINE_HOLE;
 	object_hole: OBJECT_HOLE;
 	explain_hole: EXPLAIN_HOLE;
+
+	set_default_position is
+			-- Display the window at the cursor position.
+			-- Try to display the window in the screen.
+		local
+			new_x, new_y: INTEGER
+		do
+			new_x := screen.x;
+			new_y := screen.y;
+			if new_x + width > screen.width then
+				new_x := screen.width - width
+			end;
+			if new_x < 0 then
+				new_x := 0
+			end;
+			if new_y + height > screen.height then
+				new_y := screen.height - height
+			end;
+			if new_y < 0 then
+				new_y := 0
+			end;
+			set_x_y (new_x, new_y)
+		end;
 
 	build_widgets is
 			-- Build widget.

@@ -45,14 +45,14 @@ feature {NONE} -- Initialization
 			and_plane_not_empty: not and_plane.empty
 			xor_plane_not_empty: not xor_plane.empty
 		local
-			a1, a2: ANY
+			a1, a2: WEL_CHARACTER_ARRAY
 		do
-			a1 := and_plane.to_c
-			a2 := xor_plane.to_c
+			!! a1.make (and_plane)
+			!! a2.make (xor_plane)
 			item := cwin_create_cursor (
 				main_args.current_instance.item,
 				x_hot_spot, y_hot_spot, cursor_width,
-				cursor_height, $a1, $a2)
+				cursor_height, a1.item, a2.item)
 		end
 
 	make_by_file (file_name: FILE_NAME) is
@@ -61,10 +61,10 @@ feature {NONE} -- Initialization
 		require
 			file_name_not_void: file_name /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := file_name.to_c
-			item := cwin_load_image (default_pointer, $a,
+			!! a_wel_string.make (file_name)
+			item := cwin_load_image (default_pointer, a_wel_string.item,
 				Image_cursor, 0, 0, Lr_loadfromfile)
 		end
 

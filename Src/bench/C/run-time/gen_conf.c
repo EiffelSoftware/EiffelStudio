@@ -1,5 +1,7 @@
 /*
-	Generic conformance
+	gen_conf.c : Generic conformance
+
+	$Id$
 */
 
 #include "eif_struct.h"
@@ -7,6 +9,12 @@
 #include "eif_gen_conf.h"
 #include "eif_lmalloc.h"
 #include "eif_threads.h"
+
+#ifdef EIF_VMS	/* this should be done for all platforms */
+#include <ctype.h>
+#endif
+
+
 
 /*------------------------------------------------------------------*/
 /* Debugging flag. If set, the names of the generated types will be */
@@ -72,7 +80,7 @@ rt_public int16  *eif_cid_map = (int16 *) 0;
 /* e.g. for `strip'. RTUD(no)                                       */
 /*------------------------------------------------------------------*/
 
-/* Declared in eif_project.h and eif_project.c */
+rt_public int egc_any_dtype = 2; /* Precise value determined in init */
 
 /*------------------------------------------------------------------*/
 /* Structure representing a generic derivation. We also use this    */
@@ -3148,7 +3156,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 rt_private int is_good (char c);
 rt_private int is_type_separator (char c);
 rt_private int is_generic (struct gt_info *type, char *class);
-rt_private int16 gen_type_id (int cecil_id);
+rt_private int16 gen_type_id (int32 cecil_id);
 rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array);
 rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number,
 		char **type_string_array, int16* typearr, int pos, int length);

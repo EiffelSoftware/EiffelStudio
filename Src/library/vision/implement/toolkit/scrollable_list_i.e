@@ -307,6 +307,17 @@ feature  -- Status setting
 		deferred
 		end;
 
+	scroll_to_current is
+			-- Make `item' the first visible item in the list if
+			-- `index' < `first_visible_item_index'.
+			-- Make `item' the last visible item in the list if
+			-- `index' >= `first_visible_item_position'+`visible_item_count'.
+			-- Do nothing if `item' is visible.
+		require
+			not_off: not off
+		deferred
+		end;
+
 	select_item is
 			-- Select item at current position.
 		require

@@ -1,3 +1,9 @@
+indexing
+
+	description: "Feature argument.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_ARGUMENT_DATA
 
 inherit
@@ -8,7 +14,7 @@ creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make (i: STRING; t: like type) is
 			-- Set id to `s' and set
@@ -19,19 +25,21 @@ feature {NONE}
 		do
 			id := i;
 			type := t
+		ensure
+			set: id = i and then type = t
 		end;
 
-feature 
+feature -- Properties
 
 	id: STRING;
 			-- Id of Current	
 
 	type: S_TYPE_INFO;
-			-- Type of Current
+			-- Argument type
 
 invariant
 
 	valid_id: id /= Void;
 	valid_type: type /= Void
 
-end
+end -- class S_ARGUMENT_DATA

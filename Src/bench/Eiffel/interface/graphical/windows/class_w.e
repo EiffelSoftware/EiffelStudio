@@ -16,18 +16,21 @@ inherit
 			close_windows as old_close_windows,
 			set_stone as old_set_stone
 		redefine
-			text_window, build_format_bar, hole, hole_button,
+			build_format_bar, hole, hole_button,
 			tool_name, open_cmd_holder, save_cmd_holder,
 			save_as_cmd_holder, editable,
 			create_edit_buttons, set_default_size,
 			build_widgets, resize_action,
 			build_edit_bar, stone_type, synchronize,
 			process_class_syntax, process_feature,
-			process_class, process_classi, compatible
+			process_class, process_classi, compatible,
+			set_mode_for_editing, set_font, editable_text_window,
+			set_editable_text_window, has_editable_text, read_only_text_window,
+			set_read_only_text_window
 		end;
 	BAR_AND_TEXT
 		redefine
-			text_window, build_format_bar, hole, hole_button,
+			build_format_bar, hole, hole_button,
 			tool_name, open_cmd_holder, save_cmd_holder,
 			save_as_cmd_holder, editable,
 			build_edit_bar, create_edit_buttons, reset,
@@ -35,23 +38,16 @@ inherit
 			close_windows, resize_action, stone_type,
 			synchronize, set_stone, process_class_syntax,
 			process_feature, process_class, process_classi,
-			compatible
+			compatible, set_mode_for_editing, set_font, editable_text_window,
+			set_editable_text_window, has_editable_text, read_only_text_window,
+			set_read_only_text_window
 		select
 			reset, attach_all, close_windows, set_stone
 		end
 
 creation
 
-	make
-
-feature -- Initialization
-
-	make (a_shell: EB_SHELL) is
-			-- Create a class tool.
-		do
-			make_shell (a_shell);
-			set_composite_attributes (a_shell)
-		end;
+	make_shell
 
 feature -- Properties
 
@@ -59,11 +55,21 @@ feature -- Properties
 			-- Accept any type stone
 		do
 			Result := Class_type
-		end
+		end;
 
-	text_window: CLASS_TEXT;
+	editable_text_window: TEXT_WINDOW
+			-- Text window that can be edited
+
+	read_only_text_window: TEXT_WINDOW
+			-- Text window that only reads text
 
 feature -- Access
+
+	has_editable_text: BOOLEAN is
+			-- Does Current tool have an editable text window?
+		do
+			Result := True
+		end;
 
 	compatible (a_stone: STONE): BOOLEAN is
 			-- Is Current hole compatible with `a_stone'?
@@ -73,8 +79,23 @@ feature -- Access
 				a_stone.stone_type = Breakable_type or else
 				a_stone.stone_type = Class_type
 		end;
- 
-feature {TEXT_WINDOW} -- Status setting
+
+	cluster: CLUSTER_I is
+			-- Cluster associated with root_stone
+		local
+			c: CLASSC_STONE;
+			ci: CLASSI_STONE
+		do
+			c ?= stone;
+			ci ?= stone;
+			if c /= Void then
+				Result := c.e_class.cluster
+			elseif ci /= Void then
+				Result := ci.class_i.cluster
+			end
+		end;
+
+feature -- Status setting
  
 	set_stone (s: like stone) is
 		local
@@ -90,6 +111,30 @@ feature {TEXT_WINDOW} -- Status setting
 				update_class_name (clone (ci.class_i.class_name))
 			end
 		end;
+
+	set_mode_for_editing is
+			-- Set the text mode to be editable.
+		do
+			text_window.set_editable
+		end;
+
+	set_font (a_font: FONT) is
+			-- Set new font `a_font' to window
+		do
+			class_text_field.set_font (a_font)
+		end
+
+	set_editable_text_window (ed: like editable_text_window) is
+			-- Set `editable_text_window' to `ed'.
+		do
+			editable_text_window := ed
+		end;
+
+	set_read_only_text_window (ed: like read_only_text_window) is
+			-- Set `read_only_text_window' to `ed'.
+		do
+			read_only_text_window := ed
+		end;
  
 feature -- Stone process
  
@@ -98,7 +143,7 @@ feature -- Stone process
 			if text_window.changed then
 				showtext_frmt_holder.execute (s);
 			else
-				text_window.last_format.execute (s);
+				last_format.execute (s);
 				history.extend (s)
 			end
 		end;
@@ -108,7 +153,7 @@ feature -- Stone process
 			if text_window.changed then
 				showtext_frmt_holder.execute (s);
 			else
-				text_window.last_format.execute (s);
+				last_format.execute (s);
 				history.extend (s)
 			end
 		end;
@@ -157,7 +202,7 @@ feature -- Stone process
 		do
 			synchronise_stone;
 			if stone = Void then
-				change_class_command.clear
+				class_text_field.clear
 			end
 		end;
 
@@ -167,7 +212,7 @@ feature -- Update
 			-- Reset the window contents
 		do
 			old_reset;
-			change_class_command.clear
+			class_text_field.clear
 		end;
 
 	update_class_name (s: STRING) is
@@ -175,7 +220,7 @@ feature -- Update
 			valid_arg: s /= Void
 		do
 			s.to_upper;
-			change_class_command.set_text (s);
+			class_text_field.set_text (s);
 		end;
 
 feature -- Window Settings
@@ -187,23 +232,14 @@ feature -- Window Settings
 			fc: FILTER_COMMAND
 		do
 			old_close_windows;
-			if change_class_command.choice.is_popped_up then
-				change_class_command.choice.popdown
-			end;
+			class_text_field.close_choice_window;
 			fc ?= filter_cmd_holder.associated_command;
-			fw ?= fc.filter_window;
-			if fw.is_popped_up then
-				fw.popdown
-			end
+			fc.close_filter_window;
 		end;
 
-feature -- Commands
+feature -- Widgets
 
-	change_class_command: CHANGE_CLASS;
-
-feature -- Forms And Holes
-
-	change_class_form: FORM;
+	class_text_field: CLASS_TEXT_FIELD;
 
 feature -- Formats
 
@@ -244,11 +280,7 @@ feature -- Grahpical Interface
 			if eb_shell /= Void then
 				set_default_size
 			end;
-			if tabs_disabled then
-				!! text_window.make (new_name, Current, Current)
-			else
-				!CLASS_TAB_TEXT! text_window.make (new_name, Current, Current)
-			end;
+			build_text_windows;
 			build_menus;
 			!! edit_bar.make (new_name, global_form);
 			build_bar;
@@ -257,17 +289,21 @@ feature -- Grahpical Interface
 			!! command_bar.make (new_name, global_form);
 			build_command_bar;
 			fill_menus;
-			text_window.set_last_format (default_format);
+			set_last_format (default_format);
 			attach_all 
 		end;
 
 	attach_all is
 		do
 			default_attach_all;
-			global_form.detach_right (text_window);
+			global_form.detach_right (editable_text_window.widget);
+			global_form.attach_right_widget (command_bar, editable_text_window.widget, 0);
+			if editable_text_window /= read_only_text_window then
+				global_form.detach_right (read_only_text_window.widget);
+				global_form.attach_right_widget (command_bar, read_only_text_window.widget, 0);
+			end;
 			global_form.attach_right (command_bar, 0);
 			global_form.attach_bottom_widget (format_bar, command_bar, 0);
-			global_form.attach_right_widget (command_bar, text_window, 0);
 			global_form.attach_top_widget (edit_bar, command_bar, 0);
 			global_form.attach_right (format_bar, 0);
 		end;
@@ -328,8 +364,8 @@ feature {NONE} -- Implemetation; Window Settings
 			-- Move also the choice window and update the text field.
 		do
 			raise_grabbed_popup;
-			change_class_command.update_text;
-			change_class_command.choice.update_position
+			class_text_field.update_text;
+			class_text_field.update_choice_position
 		end;
 
 feature {NONE} -- Commands
@@ -379,10 +415,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			save_as_button: EB_BUTTON;
 			save_as_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR;
-			history_list_cmd: CLASS_HISTORY
+			history_list_cmd: LIST_HISTORY
 		do
-			!! change_class_form.make (new_name, edit_bar);
-			!! change_class_command.make (change_class_form, text_window);
+			!! class_text_field.make (edit_bar, Current);
 			!! open_cmd.make (text_window);
 			!! open_button.make (open_cmd, edit_bar);
 			!! open_menu_entry.make (open_cmd, file_menu);
@@ -406,11 +441,11 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
-			!! search_cmd.make (edit_bar, text_window);
+			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
 			!! search_menu_entry.make (search_cmd, edit_menu);
 			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
@@ -434,16 +469,16 @@ feature {NONE} -- Implementation; Graphical Interface
 			filter_button: EB_BUTTON;
 			filter_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR;
-			history_list_cmd: CLASS_HISTORY
+			history_list_cmd: LIST_HISTORY
 		do
 			!! shell_cmd.make (command_bar, text_window);
 			!! shell_button.make (shell_cmd, command_bar);
-			shell_button.add_button_click_action (3, shell_cmd, Void);
+			shell_button.add_button_press_action (3, shell_cmd, Void);
 			!! shell_menu_entry.make (shell_cmd, special_menu);
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
-			!! filter_cmd.make (command_bar, text_window);
+			!! filter_cmd.make (Current);
 			!! filter_button.make (filter_cmd, command_bar);
-			filter_button.add_button_click_action (3, filter_cmd, Void);
+			filter_button.add_button_press_action (3, filter_cmd, Void);
 			!! sep.make (new_name, special_menu);
 			!! filter_menu_entry.make (filter_cmd, special_menu);
 			!! filter_cmd_holder.make (filter_cmd, filter_button, filter_menu_entry);
@@ -462,8 +497,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
 
 			!! history_list_cmd.make (text_window);
-			next_target_button.add_button_click_action (3, history_list_cmd, next_target_button);
-			previous_target_button.add_button_click_action (3, history_list_cmd, previous_target_button);
+			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
+			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
 			command_bar.attach_left (shell_button, 0);
 			command_bar.attach_bottom (shell_button, 10);
@@ -553,7 +588,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! sho_button.make (sho_cmd, format_bar);
 			!! sho_menu_entry.make (sho_cmd, format_menu);
 			!! showshort_frmt_holder.make (sho_cmd, sho_button, sho_menu_entry);
-			!! click_cmd.make (text_window);
+			!! click_cmd.make (Current);
 			!! click_button.make (click_cmd, format_bar);
 			!! click_menu_entry.make (click_cmd, format_menu);
 			!! sep.make (new_name, format_menu);
@@ -653,14 +688,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_top (hole_button, 0);
 
-			change_class_form.attach_left (change_class_command, 0);
-			change_class_form.attach_right (change_class_command, 0);
-			change_class_form.attach_top (change_class_command, 0);
-			change_class_form.attach_bottom (change_class_command, 0);
-
-			edit_bar.attach_top (change_class_form, 0);
-			edit_bar.attach_left_position (change_class_form, 7);
-			edit_bar.attach_right_widget (open_cmd_holder.associated_button, change_class_form, 2);
+			edit_bar.attach_top (class_text_field, 0);
+			edit_bar.attach_left_position (class_text_field, 7);
+			edit_bar.attach_right_widget (open_cmd_holder.associated_button, class_text_field, 2);
 			edit_bar.attach_right (quit.associated_button, 0);
 			edit_bar.attach_top (quit.associated_button, 0);
 			edit_bar.attach_top (change_font_cmd_holder.associated_button, 0);

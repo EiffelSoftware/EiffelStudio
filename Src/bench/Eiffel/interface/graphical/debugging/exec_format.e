@@ -52,7 +52,7 @@ feature {NONE}
 
 	execution_mode: INTEGER is deferred end;
 
-	display_info (i: INTEGER; s: STONE) is do end;
+	display_info (s: STONE) is do end;
 			-- Useless here.
 
 	title_part: STRING is do Result := "" end;

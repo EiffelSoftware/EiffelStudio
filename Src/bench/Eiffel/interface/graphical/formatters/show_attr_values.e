@@ -45,7 +45,7 @@ feature {NONE}
 	dynamic_class: CLASS_C;
 			-- Class associated with dynamic type of object being inspected
 
-	display_info (i: INTEGER; object: OBJECT_STONE) is
+	display_info (object: OBJECT_STONE) is
 		local
 			attr_request: ATTR_REQUEST;
 			attributes: LIST [ATTRIBUTE];

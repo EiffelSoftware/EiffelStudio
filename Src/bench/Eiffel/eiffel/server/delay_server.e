@@ -79,6 +79,11 @@ end
 				info := tbl_item (an_id);
 				if info /= Void then
 					server_file := Server_controler.file_of_id (info.file_id);
+					check
+							-- At this stage the compilation is not finished, and therefore
+							-- the file of id `info.file_id' should still exists on disk.
+						server_file_not_void: server_file /= Void
+					end
 					if not server_file.is_open then
 						Server_controler.open_file (server_file);
 					end;
@@ -102,23 +107,9 @@ end
 			-- Remove information of id `an_id'.
 			-- NO precondition, the feature will check if the
 			-- server has the element to remove.
-		local
-			old_info: SERVER_INFO;
-			old_server_file: SERVER_FILE;
 		do
-			cache.remove_id (an_id);
-
+			Precursor {COMPILER_SERVER} (an_id)
 			delayed.remove (an_id);
-
-			old_info := tbl_item (an_id);
-			if old_info /= Void then
-				old_server_file := Server_controler.file_of_id (old_info.file_id);
-				old_server_file.remove_occurrence;
-				if old_server_file.occurrence = 0 then
-					file_ids.prune (old_server_file.file_id);
-				end;
-				tbl_remove (an_id);
-			end;
 		end;
 
 	flush is
@@ -151,5 +142,8 @@ end
 		do
 			Result := cache.has_id (an_id) or else tbl_has (an_id)
 		end;
+
+invariant
+	cache_not_void: cache /= Void
 
 end -- class DELAY_SERVER

@@ -19,11 +19,11 @@ inherit
 			container, cursor
 		end
 
-feature {NONE} -- Anchor types
+feature {NONE} -- Anchored types
 
 	container: DS_LINKED_LIST [G] is do end
 	cursor: DS_LINKED_LIST_CURSOR [G] is do end
 	cell: DS_LINKABLE [G] is do end
-			-- Anchor types
+			-- Anchored types
 
 end -- class DS_LINKED_LIST_SEARCHER

@@ -538,7 +538,7 @@ feature -- Basic operations
 
 	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
 			-- Search for the string `text_to_find' in the TEXT
-			-- Return the position of the first occurence
+			-- Return the position of the first occurrence
 		require
 			text_to_find_not_void: text_to_find /= Void
 		do

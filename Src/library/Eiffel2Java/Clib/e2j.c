@@ -20,7 +20,7 @@ void c_check_for_exceptions (JNIEnv *env) {
 	  (*env)->ExceptionDescribe (env);
 	  (*env)->ExceptionClear (env);
 	  /* Raise Eiffel exception */
-	  eraise ("Java exception occured", DEVELOPER_EXCEPTION);
+	  eraise ("Java exception occurred", DEVELOPER_EXCEPTION);
   }
 }
 

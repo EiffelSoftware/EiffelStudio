@@ -336,7 +336,7 @@ feature -- Input
 				!! bitmap.make_by_dib (drawing_dc, dib, dib_rgb_colors)
 				if bitmap.item = bitmap.item.default then
 					-- windows function "CreateDIBitmap" failed
-					exception_raise("Can not create windows bitmap");
+					exception_raise("Cannot create windows bitmap");
 				end
 				drawing_dc.draw_bitmap (bitmap, a_point.x, a_point.y, bitmap.width, bitmap.height)
 				bitmap.delete

@@ -31,7 +31,7 @@ feature -- Initialization
 feature -- Access
 
 	event_code: INTEGER
-			-- Code of the event that has occured
+			-- Code of the event that has occurred
 
 	new_position: INTEGER
 			-- New thumb position

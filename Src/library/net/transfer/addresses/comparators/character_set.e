@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			s.copy (newstr)
 		ensure
 			-- no_duplicates: For every `i' in 1 .. s.count, 
-			-- s.occurences (s.item (i)) 
+			-- s.occurrences (s.item (i)) 
 		end
 
 end -- class CHARACTER_SET

@@ -61,10 +61,10 @@ feature -- Search
 		deferred
 		end
 
-feature {NONE} -- Anchor types
+feature {NONE} -- Anchored types
 
 	container: DS_LINEAR [G] is do end
 	cursor: DS_LINEAR_CURSOR [G] is do end
-			-- Anchor types
+			-- Anchored types
 
 end -- class DS_LINEAR_SEARCHER

@@ -72,10 +72,10 @@ feature -- Search
 			end
 		end
 
-feature {NONE} -- Anchor types
+feature {NONE} -- Anchored types
 
 	container: DS_HASH_TABLE [G, K] is do end
 	cursor: DS_HASH_TABLE_CURSOR [G, K] is do end
-			-- Anchor types
+			-- Anchored types
 
 end -- class DS_HASH_TABLE_SEARCHER

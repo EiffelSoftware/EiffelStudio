@@ -97,7 +97,7 @@ feature -- Access
 		end
 
 	index_of (v: like item; i: INTEGER): INTEGER is
-			-- Index of `i'th occurence of `v'.
+			-- Index of `i'th occurrence of `v'.
 		do
 			Result := implementation.index_of (v, i)
 		ensure then

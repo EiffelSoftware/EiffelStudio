@@ -99,7 +99,7 @@ extern void eif_register_cleanup(EIF_CLEANUP f);
 #define EIFNET_ERROR_HAPPENED -1
 #endif
 
-	/* Raise an Eiffel exception in case an error occured */
+	/* Raise an Eiffel exception in case an error occurred */
 
 void eif_net_check (int retcode) {
 	/* Check the return code of connect(), recv(), send(), ... */

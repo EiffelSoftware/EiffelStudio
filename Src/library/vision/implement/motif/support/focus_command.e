@@ -79,7 +79,7 @@ feature {NONE} -- Properties
 
 	popup_timer_initialized: BOOLEAN
 			-- Has the `popup_timer' been initialized?
-			-- Ie: Has a popup already occured?
+			-- Ie: Has a popup already occurred?
 
 feature {DELAYED_FOCUS_COMMAND} -- Implementation
 

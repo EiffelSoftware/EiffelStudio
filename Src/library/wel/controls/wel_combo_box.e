@@ -352,7 +352,7 @@ feature -- Notifications
 		end
 
 	on_cbn_errspace is
-			-- The combo box can not allocate enough memory to
+			-- The combo box cannot allocate enough memory to
 			-- meet a specific request.
 		require
 			exists: exists

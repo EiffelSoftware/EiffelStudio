@@ -154,6 +154,20 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 		return;
 	}
 
+	wread (&c, 1);				/* down under flag */
+
+	/*
+		The second byte in melted.eif is the java flag. If it is non-
+		zero, the runtime must raise an exception and kill the program.
+		This is because the interpreter cannot (and should not) handle
+		java specific bytecode.
+	*/
+
+	if (c)
+	{
+		eraise ("Unable to interpret Java code", EN_EXT);
+	}
+
 		/* Update the root class and the creation feature ids */
 	root_class_updt ();
 

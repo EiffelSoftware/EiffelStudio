@@ -70,7 +70,7 @@ feature -- Measurement
 			Result := cwel_size_of_size
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Externals
 
 	cwel_size_of_size: INTEGER is
 		external

@@ -1,5 +1,5 @@
 indexing
-	description: "List of item which can be selected by the user."
+	description: "List of items which can be selected by the user."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

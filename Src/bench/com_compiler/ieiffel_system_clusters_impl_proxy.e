@@ -103,6 +103,13 @@ feature -- Basic Operations
 			ccom_change_cluster_name (initializer, a_name, a_new_name)
 		end
 
+	is_valid_name (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a cluster name is valid
+			-- `cluster_name' [in].  
+		do
+			Result := ccom_is_valid_name (initializer, cluster_name)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -153,6 +160,12 @@ feature {NONE}  -- Externals
 			-- Change cluster name.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+		end
+
+	ccom_is_valid_name (cpp_obj: POINTER; cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a cluster name is valid
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
 		end
 
 	ccom_delete_ieiffel_system_clusters_impl_proxy (a_pointer: POINTER) is

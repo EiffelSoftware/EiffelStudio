@@ -171,64 +171,29 @@ feature -- Status Report
 			Result := True
 		end
 
+	externals_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `externals'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	default_namespace_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `default_namespace'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_default_namespace_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_default_namespace'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	assemblies_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `assemblies'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	add_assembly_user_precondition (assembly_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `add_assembly'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	remove_assembly_user_precondition (assembly_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `remove_assembly'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	include_paths_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `include_paths'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	add_include_path_user_precondition (include_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `add_include_path'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	remove_include_path_user_precondition (include_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `remove_include_path'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	object_files_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `object_files'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	add_object_file_user_precondition (object_file: STRING): BOOLEAN is
-			-- User-defined preconditions for `add_object_file'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	remove_object_file_user_precondition (object_file: STRING): BOOLEAN is
-			-- User-defined preconditions for `remove_object_file'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -453,80 +418,35 @@ feature -- Basic Operations
 
 		end
 
-	assemblies: IENUM_IMPORTED_ASSEMBLIES_INTERFACE is
-			-- Imported assemblies.
+	externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE is
+			-- Externals.
+		require
+			externals_user_precondition: externals_user_precondition
+		deferred
+
+		end
+
+	default_namespace: STRING is
+			-- Default namespace.
+		require
+			default_namespace_user_precondition: default_namespace_user_precondition
+		deferred
+
+		end
+
+	set_default_namespace (return_value: STRING) is
+			-- Default namespace.
+			-- `return_value' [in].  
+		require
+			set_default_namespace_user_precondition: set_default_namespace_user_precondition (return_value)
+		deferred
+
+		end
+
+	assemblies: IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE is
+			-- Assemblies.
 		require
 			assemblies_user_precondition: assemblies_user_precondition
-		deferred
-
-		end
-
-	add_assembly (assembly_path: STRING) is
-			-- Add an assembly to the project.
-			-- `assembly_path' [in].  
-		require
-			add_assembly_user_precondition: add_assembly_user_precondition (assembly_path)
-		deferred
-
-		end
-
-	remove_assembly (assembly_path: STRING) is
-			-- Remove an assembly from the project.
-			-- `assembly_path' [in].  
-		require
-			remove_assembly_user_precondition: remove_assembly_user_precondition (assembly_path)
-		deferred
-
-		end
-
-	include_paths: IENUM_INCLUDE_PATHS_INTERFACE is
-			-- Included Paths.
-		require
-			include_paths_user_precondition: include_paths_user_precondition
-		deferred
-
-		end
-
-	add_include_path (include_path: STRING) is
-			-- Add an include path to the project.
-			-- `include_path' [in].  
-		require
-			add_include_path_user_precondition: add_include_path_user_precondition (include_path)
-		deferred
-
-		end
-
-	remove_include_path (include_path: STRING) is
-			-- Remove an include path from the project.
-			-- `include_path' [in].  
-		require
-			remove_include_path_user_precondition: remove_include_path_user_precondition (include_path)
-		deferred
-
-		end
-
-	object_files: IENUM_OBJECT_FILES_INTERFACE is
-			-- Object Files.
-		require
-			object_files_user_precondition: object_files_user_precondition
-		deferred
-
-		end
-
-	add_object_file (object_file: STRING) is
-			-- Add an object file to the project.
-			-- `object_file' [in].  
-		require
-			add_object_file_user_precondition: add_object_file_user_precondition (object_file)
-		deferred
-
-		end
-
-	remove_object_file (object_file: STRING) is
-			-- Remove an object file from the project.
-			-- `object_file' [in].  
-		require
-			remove_object_file_user_precondition: remove_object_file_user_precondition (object_file)
 		deferred
 
 		end

@@ -192,6 +192,55 @@ feature -- Status Report
 			Result := True
 		end
 
+	is_eiffel_library_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_eiffel_library'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	expanded_cluster_path_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `expanded_cluster_path'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	cluster_path_exists_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `cluster_path_exists'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	create_cluster_path_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `create_cluster_path'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	all_cluster_path_not_excluded_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `all_cluster_path_not_excluded'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	cluster_namespace_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `cluster_namespace'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_cluster_namespace_user_precondition (a_namespace: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_cluster_namespace'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	name: STRING is
@@ -411,6 +460,63 @@ feature -- Basic Operations
 			-- Cluster identifier.
 		require
 			cluster_id_user_precondition: cluster_id_user_precondition
+		deferred
+
+		end
+
+	is_eiffel_library: BOOLEAN is
+			-- Is the cluster in the Eiffel library
+		require
+			is_eiffel_library_user_precondition: is_eiffel_library_user_precondition
+		deferred
+
+		end
+
+	expanded_cluster_path: STRING is
+			-- Full path to cluster with ISE_EIFFEL env var expanded.
+		require
+			expanded_cluster_path_user_precondition: expanded_cluster_path_user_precondition
+		deferred
+
+		end
+
+	cluster_path_exists: BOOLEAN is
+			-- Does the path to the cluster exsit
+		require
+			cluster_path_exists_user_precondition: cluster_path_exists_user_precondition
+		deferred
+
+		end
+
+	create_cluster_path: BOOLEAN is
+			-- Create the cluster path if it doesnt exist
+		require
+			create_cluster_path_user_precondition: create_cluster_path_user_precondition
+		deferred
+
+		end
+
+	all_cluster_path_not_excluded: BOOLEAN is
+			-- Does parent cluster have all set and does the cluster path extend upon the parents
+		require
+			all_cluster_path_not_excluded_user_precondition: all_cluster_path_not_excluded_user_precondition
+		deferred
+
+		end
+
+	cluster_namespace: STRING is
+			-- Cluster namespace.
+		require
+			cluster_namespace_user_precondition: cluster_namespace_user_precondition
+		deferred
+
+		end
+
+	set_cluster_namespace (a_namespace: STRING) is
+			-- Cluster namespace.
+			-- `a_namespace' [in].  
+		require
+			set_cluster_namespace_user_precondition: set_cluster_namespace_user_precondition (a_namespace)
 		deferred
 
 		end

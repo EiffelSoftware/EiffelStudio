@@ -5,7 +5,7 @@ inherit
 	PROCEDURE_I			
 		redefine
 			is_deferred, has_entry, to_generate_in,
-			to_melt_in, update_api, transfer_to
+			to_melt_in, update_api, transfer_to, access
 		end
 	
 feature -- Status Report
@@ -17,6 +17,25 @@ feature -- Status Report
 		do
 			Result := True
 		end;
+
+feature -- Access
+
+	access (access_type: TYPE_I): ACCESS_B is
+			-- New ACCESS_B structure for current deferred routine
+		local
+			external_b: EXTERNAL_B
+		do
+			if extension /= Void then
+				create external_b
+				external_b.init (Current)
+				external_b.set_type (access_type)
+				external_b.set_external_name_id (external_name_id)
+				external_b.set_extension (extension)
+				Result := external_b
+			else
+				Result := Precursor {PROCEDURE_I} (access_type)
+			end
+		end
 
 feature -- Conversion
 

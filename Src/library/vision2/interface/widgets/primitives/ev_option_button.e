@@ -106,15 +106,6 @@ feature {NONE} -- Implementation
 				or text.is_equal (an_item.text)
 		end
 
-feature -- Obsolete
-
-	clear_selection is
-		obsolete
-			"Use remove_selection instead"
-		do
-			remove_selection
-		end
-
 invariant
 	menu_not_void: is_usable implies menu /= Void
 

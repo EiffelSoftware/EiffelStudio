@@ -210,6 +210,14 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
+			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
+			-- as on some platforms, they end up in an invalid state, and need refreshing.
+		do
+			-- For now do nothing until further investigation has taken place.
+		end
+		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DOCKABLE_SOURCE

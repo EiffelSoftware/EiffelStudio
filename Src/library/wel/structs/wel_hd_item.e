@@ -11,10 +11,6 @@ class
 inherit
 	WEL_STRUCTURE
 	WEL_BIT_OPERATIONS
-	WEL_HDI_CONSTANTS
-		export
-			{NONE} all
-		end
 
 creation
 	make,
@@ -55,10 +51,10 @@ feature -- Access
 		end
 
 	width: INTEGER is
-			-- Width of item (Only availavle when mask contains `Hdi_width'
+			-- Width of item (Only available when mask contains `Hdi_width'
 		require
 			exists: exists
-			good_mask: flag_set (mask, Hdi_width)
+			good_mask: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_width)
 		do
 			Result := cwel_hd_item_get_cxy (item)
 		ensure
@@ -66,10 +62,10 @@ feature -- Access
 		end
 
 	height: INTEGER is
-			-- Height of item (Only availavle when mask contains `Hdi_height'
+			-- Height of item (Only available when mask contains `Hdi_height'
 		require
 			exists: exists
-			good_mask: flag_set (mask, Hdi_height)
+			good_mask: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_height)
 		do
 			Result := cwel_hd_item_get_cxy (item)
 		ensure
@@ -82,7 +78,7 @@ feature -- Access
 			-- Constants may be combined.
 		require
 			exists: exists
-			good_mask: flag_set (mask, Hdi_format)
+			good_mask: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_format)
 		do
 			Result := cwel_hd_item_get_fmt (item)
 		end
@@ -91,7 +87,7 @@ feature -- Access
 			-- Handle to item bitmap. 
 		require
 			exists: exists
-			good_mask: flag_set (mask, Hdi_bitmap)
+			good_mask: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_bitmap)
 		do
 			Result := cwel_hd_item_get_hbm (item)
 		end
@@ -100,7 +96,7 @@ feature -- Access
 			-- Application-defined item data. 
 		require
 			exists: exists
-			good_mask: flag_set (mask, Hdi_lparam)
+			good_mask: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_lparam)
 		do
 			Result := cwel_hd_item_get_l_param (item)
 		end
@@ -131,11 +127,11 @@ feature -- Element change
 			create str_text.make (a_text)
 			cwel_hd_item_set_psz_text (item, str_text.item)
 			cwel_hd_item_set_cch_text_max (item, str_text.length)
-			set_mask (set_flag (mask, Hdi_text))
+			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_text))
 		ensure
 			text_set: text.is_equal (a_text)
 			text_count_set: a_text.count = text_count
-			mask_set: flag_set (mask, Hdi_text)
+			mask_set: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_text)
 		end
 
 	set_width (value: INTEGER) is
@@ -147,9 +143,9 @@ feature -- Element change
 			positive_value: value >= 0
 		do
 			cwel_hd_item_set_cxy (item, value)
-			set_mask (set_flag (mask, Hdi_height))
+			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_height))
 		ensure
-			mask_set: flag_set (mask, Hdi_width)
+			mask_set: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_width)
 		end
 
 	set_height (value: INTEGER) is
@@ -161,9 +157,9 @@ feature -- Element change
 			positive_value: value >= 0
 		do
 			cwel_hd_item_set_cxy (item, value)
-			set_mask (set_flag (mask, Hdi_width))
+			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_width))
 		ensure
-			mask_set: flag_set (mask, Hdi_height)
+			mask_set: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_height)
 		end
 
 
@@ -176,9 +172,9 @@ feature -- Element change
 			exists: exists
 		do
 			cwel_hd_item_set_fmt (item, value)
-			set_mask (set_flag (mask, Hdi_format))
+			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_format))
 		ensure
-			mask_set: flag_set (mask, Hdi_format)
+			mask_set: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_format)
 		end
 		
 	set_bitmap (a_bitmap: WEL_BITMAP) is
@@ -189,9 +185,9 @@ feature -- Element change
 			bitmap_exsits: a_bitmap.exists
 		do
 			cwel_hd_item_set_hbm (item, a_bitmap.item)
-			set_mask (set_flag (mask, Hdi_bitmap))
+			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_bitmap))
 		ensure
-			mask_set: flag_set (mask, Hdi_bitmap)
+			mask_set: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_bitmap)
 		end
 
 	set_custom_data (value: INTEGER) is
@@ -201,9 +197,9 @@ feature -- Element change
 			exists: exists
 		do
 			cwel_hd_item_set_l_param (item, value)
-			set_mask (set_flag (mask, Hdi_lparam))
+			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_lparam))
 		ensure
-			mask_set: flag_set (mask, Hdi_lparam)
+			mask_set: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_lparam)
 		end
 		
 feature -- Measurement

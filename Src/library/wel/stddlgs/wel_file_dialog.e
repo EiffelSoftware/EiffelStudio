@@ -19,10 +19,6 @@ inherit
 			{NONE} all
 		end
 
-	WEL_OFN_CONSTANTS
-		export
-			{NONE} all
-		end
 
 feature {NONE} -- Initialization
 
@@ -42,7 +38,7 @@ feature {NONE} -- Initialization
 			cwel_open_file_name_set_lpstrfiletitle (item, str_file_title.item)
 			cwel_open_file_name_set_nmaxfiletitle (item, Max_file_title_length - 10)
 			set_default_title
-			add_flag (Ofn_hidereadonly)
+			add_flag (feature {WEL_OFN_CONSTANTS}.Ofn_hidereadonly)
 		end
 
 feature -- Access
@@ -68,11 +64,11 @@ feature -- Access
 	multiple_file_names: LINKED_LIST [STRING] is
 			-- return the full path name of all selected files.
 		require
-			multiple_files_flag_set: has_flag (Ofn_allowmultiselect)
+			multiple_files_flag_set: has_flag (feature {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
 		local
 			directory_name: STRING
 		do
-			if has_flag (Ofn_explorer) then
+			if has_flag (feature {WEL_OFN_CONSTANTS}.Ofn_explorer) then
 					-- Explorer-like dialog returns a buffer where
 					-- filename are NULL separated.
 				Result := str_file_name.null_separated_strings

@@ -58,43 +58,21 @@ feature -- Saving
 
 	write_to_stream (m: MANAGED_POINTER; pos: INTEGER) is
 			-- Write to stream `m' at position `pos'.
-		local
-			l_data: like internal_data
-			l_max_stack: INTEGER_16
-			l_code_size, l_token: INTEGER
-			l_ptr: POINTER
 		do
-			l_data := internal_data
-			l_ptr := m.item + pos
-			l_ptr.memory_copy ($l_data, 2)
-			l_ptr := l_ptr + 2
-
-			l_max_stack := max_stack
-			l_ptr.memory_copy ($l_max_stack, 2)
-			l_ptr := l_ptr + 2
-			
-			l_code_size := code_size
-			l_ptr.memory_copy ($l_code_size, 4)
-			l_ptr := l_ptr + 4
-			
-			l_token := locals_token
-			l_ptr.memory_copy ($l_token, 4)
-			l_ptr := l_ptr + 4
+			m.put_integer_16 (internal_data, pos)
+			m.put_integer_16 (max_stack, pos + 2)
+			m.put_integer_32 (code_size, pos + 4)
+			m.put_integer_32 (locals_token, pos + 8)
 		end
 		
 feature -- Settings
 
 	set_flags (f: INTEGER_8) is
 			-- Set `flags' with `f'.
-		require
-			f_has_fat: f & feature {MD_METHOD_CONSTANTS}.Fat_format = 
-				feature {MD_METHOD_CONSTANTS}.Fat_format
 		do
-			internal_data := Header_size | (
+			internal_data := Header_size | (f |
 				feature {MD_METHOD_CONSTANTS}.Fat_format |
 				feature {MD_METHOD_CONSTANTS}.Init_locals)
-		ensure
-			flags_set: flags = f
 		end
 		
 feature {NONE} -- Implementation

@@ -291,20 +291,6 @@ RT_LNK int fcount;
  */
 #define RTOC(x)			onceset();
 
-#ifdef EIF_THREADS
-/* Dynamic type of object. The name is not RTDT for historical reasons. */
-#define Dtype(x) (eif_cid_map_acc((HEADER(x)->ov_flags & EO_TYPE)))
-
-/* Dynamic (base) type (mapped through `eif_cid_map' */
-
-#define Deif_bid(x) (eif_cid_map_acc((x) & EO_TYPE))
-
-/* Header flags with type mapped through `eif_cid_map' */
-
-#define Mapped_flags(x) (((x) & EO_UPPER) | ((uint32) eif_cid_map_acc((x) & EO_TYPE)))
-
-#else
-
 /* Dynamic type of object. The name is not RTDT for historical reasons. */
 #define Dtype(x) (eif_cid_map[(HEADER(x)->ov_flags & EO_TYPE)])
 
@@ -315,8 +301,6 @@ RT_LNK int fcount;
 /* Header flags with type mapped through `eif_cid_map' */
 
 #define Mapped_flags(x) (((x) & EO_UPPER) | ((uint32) eif_cid_map [(x) & EO_TYPE]))
-
-#endif
 
 /* Full dynamic type of object - for generic conformance */
 

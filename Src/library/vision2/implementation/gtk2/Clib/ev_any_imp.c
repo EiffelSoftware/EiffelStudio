@@ -64,10 +64,6 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
                 c_ev_any_imp_c_object_dispose,
                 (gpointer*) eif_oid
             );
-            if (GTK_IS_WINDOW (c_object)) {
-			// As Windows are toplevel widgets they need to stay alive unless explicitly destroyed.
-		gtk_object_ref (GTK_OBJECT (c_object));
-            }
 }
 
 /* To store previous value of `debug_mode' */
@@ -108,6 +104,9 @@ void set_debug_mode (int a_debug_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2004/03/08 19:59:07  king
+// Removed unnecessary reffing of windows
+//
 // Revision 1.3  2004/02/12 22:38:10  king
 // Removed all unused code due to refactoring
 //

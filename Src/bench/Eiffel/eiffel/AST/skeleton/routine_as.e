@@ -276,26 +276,22 @@ feature -- Type check, byte code and dead code removal
 			end
 				-- Check preconditions
 			if precondition /= Void then
-					-- Set access id level analysis to `level1': locals
-					-- are not taken into account
-				context.set_level1 (False)
-					-- Set Result access analysis level to `level4': Result
-					-- cannot be found in preconditions
-				context.set_level4 (True)
+					-- Set Result access analysis level to `is_checking_precondition': locals
+					-- and Result cannot be found in preconditions
+				context.set_is_checking_precondition (True)
 				precondition.type_check
 					-- Reset the levels to default values
-				context.set_level1 (False)
-				context.set_level4 (False)
+				context.set_is_checking_precondition (False)
 			end
 			routine_body.type_check
 				-- Check postconditions
 			if postcondition /= Void then
-					-- Set access id level analysis to `level1': locals
+					-- Set access id level analysis to `is_checking_postcondition': locals
 					-- are not taken into account
-				context.set_level1 (True)
+				context.set_is_checking_postcondition (True)
 				postcondition.type_check
 					-- Reset the level
-				context.set_level1 (False)
+				context.set_is_checking_postcondition (False)
 			end
 
 

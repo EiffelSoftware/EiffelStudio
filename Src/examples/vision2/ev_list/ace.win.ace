@@ -9,7 +9,7 @@ root
 	EV_LIST_EXAMPLE (root_cluster): "make_and_launch"
 
 default
-	assertion			(no)
+	assertion			(all)
 	multithreaded		(no)
 	console_application	(no)
 	dynamic_runtime		(no)

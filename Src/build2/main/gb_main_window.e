@@ -102,6 +102,13 @@ inherit
 			copy, default_create
 		end
 		
+	GB_SHARED_CLIPBOAD
+		export
+			{NONE} all
+		undefine
+			copy, default_create	
+		end
+		
 create
 	default_create
 	
@@ -682,6 +689,9 @@ feature {NONE} -- Implementation
 			Result.extend (command_handler.show_hide_constants_dialog_command.new_toolbar_item (True, False))
 			Result.pointer_button_press_actions.force_extend (agent enter_debug_mode)
 			Result.pointer_leave_actions.extend (agent clear_debug_mode_entry)
+			create separator
+			Result.extend (separator)
+			Result.extend (clipboard.tool_bar_button)
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -28,7 +28,9 @@ inherit
 			update_current_push_button,
 			redraw_current_push_button,
 			internal_default_height,
-			set_default_minimum_size
+			set_default_minimum_size,
+			next_dlggroupitem,
+			on_getdlgcode
 		select
 			wel_make
 		end
@@ -102,6 +104,7 @@ inherit
 			default_process_message
 		redefine
 			on_key_down,
+			on_getdlgcode,
 			default_style
 		end
 		
@@ -170,6 +173,12 @@ feature {NONE} -- Implementation
 			process_tab_and_arrows_keys (virtual_key)
 		end
 
+	on_getdlgcode is
+			-- Called when window receives WM_GETDLGCODE message.
+		do
+			set_message_return_value (feature {WEL_DLGC_CONSTANTS}.dlgc_want_arrows)
+		end
+		
 	on_bn_clicked is
 			-- Called when `Current' is pressed.
 		do
@@ -179,8 +188,43 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control.
 		once
-			Result := Ws_visible + Ws_child + Ws_tabstop + Bs_radiobutton
-				+ Ws_clipchildren + Ws_clipsiblings
+			Result := Ws_visible | Ws_child | Ws_tabstop | Bs_radiobutton
+				| Ws_clipchildren | Ws_clipsiblings
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem.
+		local
+			l_cur: CURSOR
+		do
+			if radio_group /= Void then
+				l_cur := radio_group.cursor
+				radio_group.start
+				radio_group.search (Current)
+				check
+					radio_group_not_off: not radio_group.off
+				end
+				if previous then
+					radio_group.forth
+					if radio_group.off then
+						Result := radio_group.first.wel_item
+					else
+						Result := radio_group.item.wel_item
+					end
+				else
+					radio_group.back
+					if radio_group.off then
+						Result := radio_group.last.wel_item
+					else
+						Result := radio_group.item.wel_item
+					end
+				end
+				radio_group.go_to (l_cur)
+			else
+				Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+			end
 		end
 
 feature {NONE} -- Implementation, focus event

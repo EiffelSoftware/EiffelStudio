@@ -822,8 +822,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 				else
 						-- May be we are handling a case where the constraint only specfies
 						-- `default_create', so let's check that the constraint defines
-						-- `default_create' as creation procedure.
-					matched := crc_list.count = 1 and then formal_dec_as.has_default_create
+						-- `default_create' as creation procedure and that `creators_table'
+						-- is Void (as empty means there is no way to create an instance of this
+						-- class).
+					matched := creators_table = Void and then
+						(crc_list.count = 1 and then formal_dec_as.has_default_create)
 				end
 	
 				if not matched then

@@ -87,7 +87,7 @@ feature
 			-- object for example to make sure the modification was successful).
 		do
 				-- re-create the call stack
-			create where.make
+			create where.make (stack_max_depth)
 		end
 
 feature -- Values
@@ -134,6 +134,9 @@ feature -- Values
 		do
 			Result := where.i_th (Application.current_execution_stack_number)
 		end
+
+	stack_max_depth: INTEGER
+			-- Maximum number of stack elements that we retrieve from the application.
 
 feature -- Access
 
@@ -209,6 +212,15 @@ feature -- Setting
 		do
 			exception_code := i
 			exception_tag := s
+		end
+
+	set_max_depth (n: INTEGER) is
+			-- Set the maximum number of stack elements that should be retrieved to `n'.
+			-- -1 retrieves all elements.
+		require
+			valid_n: n = -1 or n > 0
+		do
+			stack_max_depth := n
 		end
 
 feature -- Output

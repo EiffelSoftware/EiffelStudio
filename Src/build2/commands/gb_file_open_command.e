@@ -71,6 +71,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EB_STANDARD_CMD}
 			set_tooltip ("Open Project...")
+			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_open_file)
 			set_name ("Open project...")
 			set_menu_name ("Open Project...")
 			enable_sensitive

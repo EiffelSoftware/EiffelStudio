@@ -45,8 +45,7 @@ inherit
 		end
 
 creation
-	make,
-	default_create
+	make
 	
 feature {NONE} -- Initialization
 
@@ -66,6 +65,7 @@ feature {NONE} -- Initialization
 			extend (execution_frame)
 			key_press_actions.extend (agent escape_check (?))
 			focus_in_actions.extend (agent on_window_focused)
+			close_request_actions.extend (agent hide)
 		end
 
 	execution_frame: EV_HORIZONTAL_BOX is

@@ -380,6 +380,7 @@ feature {NONE} -- Implementation
 			text_completed: BOOLEAN
 			current_text: STRING
 			current_character: CHARACTER
+			next_character: CHARACTER
 		do	
 			current_text := ""
 			from
@@ -391,12 +392,21 @@ feature {NONE} -- Implementation
 				if current_character /= '%N' and current_character /= '%R' then
 						-- New line characters have no effect on the RTF contents, so
 						-- simply ignore these characters.
-					if current_character = '\' then
-						text_completed := True
-					elseif current_character = '}' then
+					if current_character = '}' then
 						text_completed := True
 					elseif current_character = '{' then
 						text_completed := True
+					elseif current_character = '\' then
+						next_character := rtf_text.item (l_index + index + 1)
+							-- The following three characters are reserved in RTF, and therefore
+							-- if they appear in the text they must be escaped with the '\'.
+							-- We preform this here.
+						if next_character = '}' or next_character = '{' or next_character = '\' then
+							current_character := next_character
+							l_index := l_index + 1
+						else
+							text_completed := True
+						end
 					end
 					if not text_completed then
 						current_text.append_character (current_character)

@@ -8,7 +8,7 @@
  #####      #    #    #   ###     ####
 
 	Externals for directory handling.
-
+	$Id$
 */
 
 #include <stdio.h>
@@ -115,6 +115,7 @@ rt_public EIF_POINTER dir_open(char *name)
 
 	errno = 0;
 	dirp = (DIR *) opendir(name);
+
 	if (dirp == (DIR *) 0)
 		esys();
 
@@ -237,7 +238,7 @@ rt_public char *dir_search(EIF_OS2_DIRENT *dirp, char *name)
 	} /* endif */
 }
 
-#else
+#else /* UNIX, VMS */
 rt_public char *dir_search(DIR *dirp, char *name)
           		/* Directory where search is made */
            		/* Entry we are looking for */
@@ -361,7 +362,7 @@ rt_public char *dir_next(EIF_OS2_DIRENT *dirp)
 	}
 }
 
-#else
+#else  /* UNIX, VMS */
 rt_public char *dir_next(DIR *dirp)
 {
 	/* Return the Eiffel string corresponding to the next entry name, or a
@@ -373,7 +374,7 @@ rt_public char *dir_next(DIR *dirp)
 	if (dp == (DIRENTRY *) 0)
 		return (char *) 0;
 
-#ifdef EIF_VMS
+#ifdef EIF_VMS_V6_ONLY
 	/* strip any trailing version number from the returned string */
 	{
 	    char *verp = strrchr(dp->d_name, ';');
@@ -777,17 +778,126 @@ rt_public void eif_dir_delete(char *name)
 #endif	/* vms */
 }
 
+
 #ifdef EIF_VMS
-/* given a path, return the directory file name. 
-** path is returned in buf (must be at least PATH_MAX +1 bytes).
-*/
-rt_public char * eifrt_vms_dir_filename (const char* path, char* buf)
+#define USE_VMS_WRAPPERS
+/**
+*** VMS wrappers for readdir package (readdir, opendir, closedir, etc.).
+*** The wrappers ensure that only the latest file versions are returned from readdir.
+**/
+
+#ifdef  USE_VMS_WRAPPERS
+typedef struct { size_t siz; int magic; DIR* dirp; char *prev; } EIF_VMS_DIR;
+static const int magic = 7652;
+
+#undef opendir   
+#undef closedir  
+#undef rewinddir 
+#undef readdir   
+#undef seekdir   
+#undef telldir   
+#endif
+
+rt_public DIR* eif_vms_opendir (const char *dirname)
 {
-    if (!path || !buf) return NULL;
-    /* ***VMS_FIXME***    ***tbs***  */
-    return NULL;
+    DIR* DECC$OPENDIR (const char* dirname);
+#ifdef USE_VMS_WRAPPERS
+    EIF_VMS_DIR* res = NULL;
+    const size_t siz = sizeof *res;
+    struct dirent *ep;
+    if ( (res = calloc (1, sizeof *res)) ) {
+	if ( (res->prev = calloc (FILENAME_MAX +1, sizeof(char))) ) {
+	    res->magic = magic;		/* magic number */
+	    res->siz = sizeof *res;		/* size of structure */
+	    res->dirp = DECC$OPENDIR (dirname);
+	} 
+	if (!res->dirp) { 
+	    free (res->prev);
+	    free (res);
+	    res = NULL;
+	} 
+    } 
+    return (DIR*)res;
+#else
+    return DECC$OPENDIR (dirname);
+#endif
 }
-#endif /* EIF_VMS */
+
+rt_public int eif_vms_closedir (DIR* notadirp)
+{
+    int DECC$CLOSEDIR (DIR *dirp);
+#ifdef USE_VMS_WRAPPERS
+    EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
+    int res = 0;
+    if (evdp) {
+	if (evdp->dirp) res = DECC$CLOSEDIR (evdp->dirp);
+	free (evdp->prev);
+	free (evdp);
+    } else {
+	/* is closedir (NULL) harmless? */
+    }
+    return res;
+#else
+    return DECC$CLOSEDIR (notadirp);
+#endif
+}
+
+rt_public struct dirent * eif_vms_readdir (DIR* notadirp)
+{
+    struct dirent * DECC$READDIR (DIR*);
+#ifdef USE_VMS_WRAPPERS
+    EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
+    struct dirent * res;
+    do {    /* read directory until different filename encountered */
+	if ( (res = DECC$READDIR (evdp->dirp)) ) {
+	    char *endp = strchr (res->d_name, ';');
+	    if (endp)
+		res->d_name[endp - res->d_name] = '\0';
+	}
+    } while (res && !strcasecmp (evdp->prev, res->d_name));
+    if (res) {
+	strcpy (evdp->prev, res->d_name);
+    } else *evdp->prev = '\0';
+    return res;
+#else
+    return DECC$READDIR (notadirp);
+#endif
+}
+
+rt_public void eif_vms_rewinddir (DIR* notadirp)
+{
+    void DECC$REWINDDIR (DIR *dirp);
+#ifdef USE_VMS_WRAPPERS
+    EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
+    DECC$REWINDDIR (evdp->dirp);
+    *evdp->prev = '\0';
+#else
+    DECC$REWINDDIR (notadirp);
+#endif
+}
+
+rt_public void eif_vms_seekdir (DIR* notadirp, long int loc)
+{
+    void DECC$SEEKDIR (DIR*, long int);
+#ifdef USE_VMS_WRAPPERS
+    EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
+    (void) DECC$SEEKDIR (evdp->dirp, loc);
+#else
+    DECC$SEEKDIR (notadirp, loc);
+#endif
+}
+
+rt_public long eif_vms_telldir (DIR* notadirp)
+{
+    long DECC$TELLDIR (DIR*);
+#ifdef USE_VMS_WRAPPERS
+    EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
+    return DECC$TELLDIR (evdp->dirp);
+#else
+    return DECC$TELLDIR (notadirp);
+#endif
+}
+
 
 #ifdef EIF_VMS_V6_ONLY
 char * dir_dot_dir (char * duplicate)
@@ -1059,3 +1169,4 @@ main()
 }
 #endif	/* TEST */
 #endif	/* EIF_VMS_V6_ONLY */
+#endif /* EIF_VMS */

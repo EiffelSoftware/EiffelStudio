@@ -203,9 +203,9 @@ iff not defined NO_COMPILE then
 
 	remtrace Extracting Gobo
 	cdd %INSTALL_DIR\free_add_ons
-	tar xvfz gobo\gobo30win.tgz
-	fullrf gobo\gobo30win.tgz
-	fullrf gobo\gobo30.tar.gz
+	tar xvfz gobo\gobo_win.tgz
+	fullrf gobo\gobo_win.tgz
+	fullrf gobo\gobo_unix.tgz
 
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
 	sed -e s/ISE_EIFFEL/INSTALL_DIR/g zad_miner.ace >> new_ace.ace

@@ -281,6 +281,8 @@ feature -- Generation
 				file.putstring (base_file_name);
 				file.putstring (".h%"%N");
 				file.new_line;
+			else
+				System.class_counter.generate_extern_offsets (file)
 			end;
 			file.new_line;
 

@@ -14,6 +14,7 @@ class
 inherit
 	WEL_CONTROL
 		redefine
+			process_notification_info,
 			text,
 			text_length,
 			set_text
@@ -25,6 +26,11 @@ inherit
 		end
 
 	WEL_TB_STYLE_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_TBN_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -408,6 +414,34 @@ feature -- Element change
 				Tb_addbitmap, bitmap_count, bitmap.to_integer)
 		end
 
+	add_strings (strings: ARRAY [STRING]) is
+			-- Add strings to the toolbar.
+			-- The last string must finished by a double NULL char.
+		require
+			exists: exists
+			string_not_void: strings /= Void
+			strings_not_empty: not strings.empty
+		local
+			i: INTEGER
+			s: STRING
+			a: ANY
+			wel_s: WEL_STRING
+		do
+			from
+				i := strings.lower
+				s := ""
+			until
+				i > strings.upper
+			loop
+				s.append_string (strings.item (i))
+				s.append_character ('%/0/')
+				i := i + 1
+			end
+			s.append_character ('%/0/')
+			!! wel_s.make (s)
+			cwin_send_message (item, Tb_addstring, 0, wel_s.to_integer)
+		end	
+
 feature -- Removal
 
 	delete_button (index: INTEGER) is
@@ -420,6 +454,132 @@ feature -- Removal
 			cwin_send_message (item, Tb_deletebutton, index, 0)
 		ensure
 			buttons_decreased: button_count = old button_count - 1
+		end
+
+feature -- Notifications
+
+	on_tbn_getbuttoninfo (info: WEL_NM_TOOL_BAR) is
+			-- Retrieves toolbar customization.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_begindrag (info: WEL_NM_TOOL_BAR) is
+			-- The user has begun dragging a button in the toolbar.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_enddrag (info: WEL_NM_TOOL_BAR) is
+			-- The user has stopped dragging a button in the toolbar.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_beginadjust is
+			-- The user has begun customizing the toolbar.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_endadjust is
+			-- The user has stopped customizing the toolbar.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_reset is
+			-- The user has reset the content of the customise
+			-- toolbar dialog box.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_queryinsert (info: WEL_NM_TOOL_BAR) is
+			-- A button may be inserted to the left of the
+			-- specified button while the user is customizing
+			-- the toolbar.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_querydelete (info: WEL_NM_TOOL_BAR) is
+			-- A button may be deleted from the toolbar while
+			-- the user is customizing the toolbar.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_toolbarchange is
+			-- The user has customized the toolbar.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_custhelp is
+			-- The user has chosen the Help button in the 
+			-- customize toolbar dialog box.
+		require
+			exists: exists
+		do
+		end
+
+	on_tbn_dropdown (info: WEL_NM_TOOL_BAR) is
+			-- The user clicks a button that uses the 
+			-- Tbstyle_dropdown style.
+		require
+			exists: exists
+		do
+		end
+
+feature {WEL_COMPOSITE_WINDOW} -- Implementation
+
+	process_notification_info (notification_info: WEL_NMHDR) is
+			-- Process a `notification_code' sent by Windows
+			-- through the Wm_notify message
+		local
+			code: INTEGER
+			nm_info: WEL_NM_TOOL_BAR 
+		do
+			code := notification_info.code
+			if code = Tbn_getbuttoninfo then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tbn_getbuttoninfo (nm_info)
+			elseif code = Tbn_begindrag then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tbn_begindrag (nm_info)
+			elseif code = Tbn_enddrag then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tbn_enddrag (nm_info)
+			elseif code = Tbn_beginadjust then
+				on_tbn_beginadjust
+			elseif code = Tbn_endadjust then
+				on_tbn_endadjust
+			elseif code = Tbn_reset then
+				on_tbn_reset
+			elseif code = Tbn_queryinsert then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tbn_queryinsert (nm_info)
+			elseif code = Tbn_querydelete then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tbn_querydelete (nm_info)
+			elseif code = Tbn_toolbarchange then
+				on_tbn_toolbarchange
+			elseif code = Tbn_custhelp then
+				on_tbn_custhelp
+			elseif code = Tbn_dropdown then
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tbn_dropdown (nm_info)
+			end
 		end
 
 feature {NONE} -- Implementation

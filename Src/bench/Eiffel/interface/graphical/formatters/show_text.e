@@ -101,7 +101,7 @@ feature -- Formatting
 				end;
 				if
 					do_format or filtered or modified_class or else
-					(text_window.last_format_2.associated_command /= Current or
+					(text_window.last_format.associated_command /= Current or
 					not equal (stone, text_window.root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
@@ -152,13 +152,12 @@ feature -- Formatting
 						class_text ?= text_window;
 						if 
 							class_text /= Void and then (
-							(same_stone and class_text.last_format_2 = 
+							(same_stone and class_text.last_format = 
 										class_text.tool.showclick_frmt_holder) or
-							(do_format and class_text.last_format_2.associated_command = Current))
+							(do_format and class_text.last_format.associated_command = Current))
 						then
 							last_cursor_position := class_text.cursor_position;
-							last_top_position := 
-											class_text.top_character_position;
+							last_top_position := class_text.top_character_position;
 							position_saved := true
 						end;
 						text_window.set_editable;
@@ -171,12 +170,10 @@ feature -- Formatting
 							if last_top_position > text_window.size then
 								last_top_position := text_window.size
 							end;
-							text_window.set_cursor_position 
-													(last_cursor_position);
-							text_window.set_top_character_position 
-													(last_top_position)
+							text_window.set_cursor_position (last_cursor_position);
+							text_window.set_top_character_position (last_top_position)
 						end;
-						text_window.set_last_format_2 (holder);
+						text_window.set_last_format (holder);
 						display_header (stone);
 						mp.restore
 					end;
@@ -206,7 +203,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if text_window.last_format_2.associated_command = Current then
+			if text_window.last_format.associated_command = Current then
 				text_window.display_header ("Producing text format...")
 			else
 				text_window.display_header ("Switching to text format...")

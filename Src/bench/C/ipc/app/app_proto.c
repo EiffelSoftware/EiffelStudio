@@ -794,14 +794,14 @@ rt_private void obj_inspect(EIF_OBJ object)
 	flags = HEADER(ref)->ov_flags;
 	is_special = EIF_TEST(flags & EO_SPEC);	
 	twrite (&is_special, sizeof(EIF_BOOLEAN));
-
+		/* Send class dynamic id */
+	dtype = Deif_bid(flags & EO_TYPE);
+	twrite (&dtype, sizeof(int32));
+					
 	if (is_special) {
 			/* Send items recursively */
 		rec_sinspect(ref);
 	} else {
-			/* Send class dynamic id */
-		dtype = Deif_bid(flags & EO_TYPE);
-		twrite (&dtype, sizeof(int32));
 			/* Inspect recursively `object' */
 		rec_inspect(ref);
 	}

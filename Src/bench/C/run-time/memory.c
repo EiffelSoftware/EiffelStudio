@@ -86,7 +86,7 @@ rt_public void mem_slow(void)
 		return;					/* Nothing to be done */
 
 	cc_for_speed = 0;			/* We are compiled for speed from now on */
-	if (gen_scavenge == GS_SET)	/* Scavenging still wating to be activated */
+	if (gen_scavenge == GS_SET)	/* Scavenging still waiting to be activated */
 		gen_scavenge = GS_OFF;	/* Turn it off */
 
 	EIF_END_GET_CONTEXT

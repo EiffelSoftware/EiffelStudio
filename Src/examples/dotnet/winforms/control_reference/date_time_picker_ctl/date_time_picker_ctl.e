@@ -348,26 +348,28 @@ feature {NONE} -- Implementation
 
 	dtp_min_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `dtp_min_date_value' is changed.
+		local
+			res_comp: INTEGER
 		do
---			if dtp_min_date.value < dtp_max_date.value then
---				error_min.set_error (dtp_min_date, "")
---				date_time_picker.set_min_date (dtp_min_date.value)
---			else
---				dtp_min_date.set_value (date_time_picker.min_date)
---				error_min.set_error (dtp_min_date, "Max Date must be greater than Min Date")
---			end
+			if feature {SYSTEM_DATE_TIME}.compare (dtp_min_date.value, dtp_max_date.value) < 0 then
+				error_min.set_error (dtp_min_date, ("").to_cil)
+				date_time_picker.set_min_date (dtp_min_date.value)
+			else
+				dtp_min_date.set_value (date_time_picker.min_date)
+				error_min.set_error (dtp_min_date, ("Min Date must be lower than Max Date").to_cil)
+			end
 		end
 		
 	dtp_max_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `dtp_max_date_value' is changed.
 		do
---			if dtp_max_date.value > dtp_min_date.value then
---				date_time_picker.set_max_date (dtp_max_date.value)
---				error_max.set_error (dtp_max_date, "")
---			else
---				dtp_max_date.set_value (date_time_picker.max_date)
---				error_max.set_error (dtp_max_date, "Max Date must be greater than Min Date")
---			end
+			if feature {SYSTEM_DATE_TIME}.compare (dtp_max_date.value, dtp_min_date.value) >= 0 then
+				date_time_picker.set_max_date (dtp_max_date.value)
+				error_max.set_error (dtp_max_date, ("").to_cil)
+			else
+				dtp_max_date.set_value (date_time_picker.max_date)
+				error_max.set_error (dtp_max_date, ("Max Date must be greater than Min Date").to_cil)
+			end
 		end
 
 	cmb_format_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is

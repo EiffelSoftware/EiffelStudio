@@ -91,7 +91,7 @@ feature {NONE}
 							a_context := a_type.create_context (Current);
 						elseif
 							(a_type /= context_catalog.temp_wind_type) and then
-							type.is_valid_parent (Current)
+							a_type.is_valid_parent (Current)
 						then
 							a_context := a_type.create_context (Current);
 						end;

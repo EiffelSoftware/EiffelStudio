@@ -468,6 +468,27 @@ feature -- Assertion features
 			Result := False
 		end
 
+feature -- Accelerators - command association
+
+	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when `acc' is completed by the user.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_accelerator_command (acc, cmd, arg)
+		end
+
+	remove_accelerator_commands (acc: EV_ACCELERATOR) is
+			-- Empty the list of commands to be executed when
+			-- `acc' is completed by the user.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_accelerator_commands (acc)
+		end
+
 feature -- Event - command association
 
 	add_button_press_command (mouse_button: INTEGER; 

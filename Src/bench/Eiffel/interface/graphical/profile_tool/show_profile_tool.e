@@ -32,9 +32,20 @@ feature {NONE} -- Execution
 feature -- Properties
 
 	name: STRING is
-		once
-			Result := l_Profile_tool
+		do
+			Result := Interface_names.f_Profile_tool
 		end
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Profile_tool
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end;
 
 	symbol: PIXMAP is
 		do

@@ -37,12 +37,12 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showtext 
+			Result := Pixmaps.bm_Showtext 
 		end;
 	
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showtext
+			Result := Pixmaps.bm_Dark_showtext
 		end;
 	
 feature {ROUTINE_WIN_MGR} -- Displaying
@@ -114,11 +114,11 @@ feature -- Formatting
 								if filed_stone.file_name /= Void then
 									error := true;
 									warner (popup_parent).gotcha_call 	
-									(w_Cannot_read_file (filed_stone.file_name))
+									(Warning_messages.w_Cannot_read_file (filed_stone.file_name))
 								else
 									error := true;
 									warner (popup_parent).gotcha_call 
-										(w_No_associated_file)
+										(Warning_messages.w_No_associated_file)
 								end;
 							end			
 						end;
@@ -153,7 +153,7 @@ feature -- Formatting
 									class_name := classc_stone.e_class.name;
 									error := true;
 									warner (popup_parent).gotcha_call 
-										(w_Class_modified (class_name))
+										(Warning_messages.w_Class_modified (class_name))
 								end
 							else
 								text_window.update_clickable_from_stone (stone)
@@ -175,7 +175,7 @@ feature -- Formatting
 			else
 				!! mp.do_nothing;
 				mp.restore
-				warner (popup_parent).gotcha_call (w_Cannot_retrieve_info);
+				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info);
 			end
 		rescue
 			if original_exception = Io_exception then
@@ -210,12 +210,24 @@ feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showtext
+			Result := Interface_names.f_Showtext
 		end;
 
 	title_part: STRING is
 		do
 			Result := ""
 		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showtext
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Showtext
+		end
 
 end -- SHOW_TEXT

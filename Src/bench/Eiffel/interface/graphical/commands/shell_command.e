@@ -34,7 +34,7 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Shell 
+			Result := Pixmaps.bm_Shell 
 		end;
 
 	is_sensitive: BOOLEAN is
@@ -139,7 +139,18 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Shell
+			Result := Interface_names.f_Shell
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Shell
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 end -- SHELL_COMMAND

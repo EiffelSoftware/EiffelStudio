@@ -45,6 +45,7 @@ feature -- Callbacks
 			chooser: NAME_CHOOSER_W
 		do
 			chooser := name_chooser (popup_parent);
+			chooser.set_open_file;
 			chooser.call (Current)
 		end;
 
@@ -53,7 +54,7 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := bm_Update
+			Result := Pixmaps.bm_Update
 		end;
 
 	tool: PROJECT_W;
@@ -97,7 +98,7 @@ feature {NONE} -- Implementation
 							-- If a freezing already occured (due to a new external
 							-- or new derivation of SPECIAL), no need to freeze again.
 						tool.set_icon_name (Eiffel_system.name);
-						title := clone (l_Project);
+						title := clone (Interface_names.t_Project);
 						title.append (": ");
 						title.append (Project_directory);
 						tool.set_title (title);
@@ -123,7 +124,7 @@ feature {NONE} -- Implementation
 				else
 						-- The project may be corrupted => the project
 						-- becomes read-only.
-					warner (popup_parent).gotcha_call (w_Project_may_be_corrupted);
+					warner (popup_parent).gotcha_call (Warning_messages.w_Project_may_be_corrupted);
 				end;
 				Degree_output.finish_degree_output;
 				error_window.display;
@@ -303,7 +304,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Update
+			Result := Interface_names.f_Update
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Update
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Update
 		end;
 
 feature {NONE} -- Implementation
@@ -339,7 +352,7 @@ feature {NONE} -- Implementation; Execution
 				arg := argument
 			end
 			if Eiffel_project.is_read_only then
-				warner (popup_parent).gotcha_call (w_Cannot_compile)
+				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_compile)
 			elseif tool.initialized then
 				if not_saved and arg = tool then
 					end_run_confirmed := false;
@@ -369,23 +382,23 @@ feature {NONE} -- Implementation; Execution
 								work (Current)
 							elseif f.exists and then not f.is_plain then
 								warner (popup_parent).custom_call (Current,
-								w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel)
+								Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 							else
 								warner (popup_parent).custom_call
-									(Current, w_Cannot_read_file_retry (fn),
-									l_Ok, Void, l_Cancel);
+									(Current, Warning_messages.w_Cannot_read_file_retry (fn),
+									Interface_names.b_Ok, Void, Interface_names.b_Cancel);
 							end
 						else
 							warner (popup_parent).custom_call (Current,
-								w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel)
+								Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 						end
 					else
 						warner (popup_parent).custom_call (Current,
-							l_Specify_ace, l_Browse, l_Build, l_Cancel);
+							Interface_names.t_Specify_ace, Interface_names.b_Browse, Interface_names.b_Build, Interface_names.b_Cancel);
 					end;
 				else
 					warner (popup_parent).custom_call (Void,
-						w_Melt_only, l_Ok, Void, Void);
+						Warning_messages.w_Melt_only, Interface_names.b_Ok, Void, Void);
 				end
 			end;
 		end;

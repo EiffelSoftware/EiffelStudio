@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showclients 
+			Result := Pixmaps.bm_Showclients 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showclients 
+			Result := Pixmaps.bm_Dark_showclients 
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showclients
+			Result := Interface_names.f_Showclients
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showclients
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Clients_of
+			Result := Interface_names.t_Clients_of
 		end;
 
 	post_fix: STRING is "clt";

@@ -24,13 +24,24 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := bm_Debug_status
+			Result := Pixmaps.bm_Debug_status
 		end;
 
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Debug_status
+			Result := Interface_names.f_Debug_status
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Debug_status
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 feature {NONE} -- Implementation

@@ -23,24 +23,35 @@ feature -- Porperties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showhomonyms 
+			Result := Pixmaps.bm_Showhomonyms 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showhomonyms 
+			Result := Pixmaps.bm_Dark_showhomonyms 
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showhomonyms
+			Result := Interface_names.f_Showhomonyms
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showhomonyms
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Homonyms_of
+			Result := Interface_names.t_Homonyms_of
 		end;
 
 	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is

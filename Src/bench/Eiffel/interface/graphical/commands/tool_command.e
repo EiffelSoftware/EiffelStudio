@@ -1,7 +1,8 @@
 indexing
 
 	description:	
-		"Command associated with a tool.";
+		"Command associated with a tool. All of these commands %
+		%should be in menu.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -43,9 +44,19 @@ feature -- Access
 		end;
 
 	name: STRING is
-			-- Name of the command.
+			-- Name of the command
 		deferred
 		end;
+
+    menu_name: STRING is
+            -- Name used in menu entry
+        deferred
+        end;
+
+    accelerator: STRING is
+            -- Accelerator action for menu entry
+		deferred
+        end
 
 feature {EB_BUTTON} -- Implementation
 

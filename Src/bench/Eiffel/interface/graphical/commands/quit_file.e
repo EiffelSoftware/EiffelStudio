@@ -39,7 +39,7 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Quit 
+			Result := Pixmaps.bm_Quit 
 		end;
 
 feature {NONE} -- Implementation
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).call (Current, w_File_changed)
+					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 				else
 					window_manager.close (tool)
 				end
@@ -63,7 +63,18 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Exit;
+			Result := Interface_names.f_Exit;
 		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Exit;
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end
 
 end -- class QUIT_FILE

@@ -57,7 +57,7 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Quit 
+			Result := Pixmaps.bm_Quit 
 		end;
 	
 feature {NONE} -- Implementation
@@ -99,7 +99,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Exit_project;
+			Result := Interface_names.f_Exit_project;
 		end;
  
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Exit_project;
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Exit_project;
+		end;
+
 end -- class QUIT_PROJECT

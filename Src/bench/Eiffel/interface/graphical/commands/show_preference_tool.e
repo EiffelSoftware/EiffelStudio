@@ -8,12 +8,11 @@ indexing
 class SHOW_PREFERENCE_TOOL
 
 inherit
-	PIXMAP_COMMAND
+	TOOL_COMMAND
 		rename
 			init as make
 		end;
 	WINDOWS;
-	INTERFACE_W;
 	EB_CONSTANTS
 
 creation
@@ -24,18 +23,18 @@ feature {NONE} -- Execution
 	work (arg: ANY) is
 		local
 			spc: SYSTEM_PREF_CAT; -- A sample category
-			cwpc: CLASS_W_PREF_CAT -- Preference category for the class window
-			ewpc: EXPLAIN_W_PREF_CAT -- Preference category for the explain window
-			pwpc: PROJECT_PREF_CAT -- Preference category for the project window
-			swpc: SYSTEM_W_PREF_CAT -- Preference category for the system window
-			rwpc: ROUTINE_W_PREF_CAT -- Preference category for the routine window
-			owpc: OBJECT_W_PREF_CAT -- Preference category for the object window
-			grpc: GRAPHICAL_PREF_CAT -- Preference category for the graphical values
+			cwpc: CLASS_W_PREF_CAT; -- Preference category for the class window
+			ewpc: EXPLAIN_W_PREF_CAT; -- Preference category for the explain window
+			pwpc: PROJECT_PREF_CAT; -- Preference category for the project window
+			swpc: SYSTEM_W_PREF_CAT; -- Preference category for the system window
+			rwpc: ROUTINE_W_PREF_CAT; -- Preference category for the routine window
+			owpc: OBJECT_W_PREF_CAT; -- Preference category for the object window
+			grpc: GRAPHICAL_PREF_CAT; -- Preference category for the graphical values
 			mp: MOUSE_PTR;
 			att: WINDOW_ATTRIBUTES
 		do
 			!! mp.set_watch_cursor;
-			!! preference_tool.make (l_X_resourse_name, Project_tool.screen);
+			!! preference_tool.make (Interface_names.n_X_resource_name, Project_tool.screen);
 			!! spc.make (preference_tool);
 			!! pwpc.make (preference_tool);
 			!! ewpc.make (preference_tool);
@@ -53,9 +52,8 @@ feature {NONE} -- Execution
 			preference_tool.add_preference_category (owpc);
 			preference_tool.add_preference_category (grpc);
 			preference_tool.build_interface;
-				-- FIXME ****** Add to interface w
 			set_default_position;
-			preference_tool.set_title ("Preference tool");	
+			preference_tool.set_title (Interface_names.t_Preference_tool);	
 			!! att;
 			att.set_composite_attributes (preference_tool);
 			preference_tool.display;
@@ -64,11 +62,21 @@ feature {NONE} -- Execution
 
 feature -- Properties
 
-	name: STRING is "Options";
-
-	symbol: PIXMAP is
+	name: STRING is 
 		do
-		end
+			Result := Interface_names.f_Preferences
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Preferences
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end;
 
 feature {NONE} -- Properties
 

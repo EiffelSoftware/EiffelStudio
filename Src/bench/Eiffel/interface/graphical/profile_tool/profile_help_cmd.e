@@ -15,9 +15,19 @@ feature -- Access
 
 	name: STRING is
 			-- Name for Current
-		once
-			!! Result.make (0);
-			Result.append ("Help")
+		do
+			Result := Interface_names.f_Help
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Help
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end
 
 feature {NONE} -- Execution

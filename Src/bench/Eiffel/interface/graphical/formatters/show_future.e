@@ -23,24 +23,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showdversions 
+			Result := Pixmaps.bm_Showdversions 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showdversions 
+			Result := Pixmaps.bm_Dark_showdversions 
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showfuture
+			Result := Interface_names.f_Showfuture
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showfuture
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Future
+			Result := Interface_names.t_Future
 		end;
 
 	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is

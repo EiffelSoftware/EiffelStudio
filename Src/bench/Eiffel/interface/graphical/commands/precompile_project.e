@@ -15,7 +15,7 @@ inherit
 		redefine
 			launch_c_compilation, 
 			confirm_and_compile,
-			name, symbol,
+			name, menu_name, accelerator,
 			compilation_allowed, perform_compilation
 		end;
 	UPDATE_PROJECT
@@ -24,7 +24,7 @@ inherit
 		redefine
 			launch_c_compilation,
 			confirm_and_compile,
-			name, symbol,
+			name, menu_name, accelerator,
 			compilation_allowed, perform_compilation,
 			precompile_now
 		select
@@ -52,16 +52,6 @@ feature -- Callbacks
 			end
 		end;
 
-feature -- Properties
-
-	symbol: PIXMAP is 
-			-- Symbol for the button.
-		once 
-			check
-				do_not_call: false
-			end
-		end; 
- 
 feature {NONE} -- Implementation
 
 	confirm_and_compile (argument: ANY) is
@@ -72,8 +62,8 @@ feature {NONE} -- Implementation
 				(argument /= Void and then 
 				argument = last_confirmer and not end_run_confirmed) 
 			then
-				warner (popup_parent).custom_call (Current, w_Precompile_warning,
-							l_Precompile_now, Void, l_Cancel);
+				warner (popup_parent).custom_call (Current, Warning_messages.w_Precompile_warning,
+							Interface_names.b_Precompile_now, Void, Interface_names.b_Cancel);
 			elseif (argument /= Void and then argument = last_warner) then
 					precompile_now (argument)
 			elseif 
@@ -112,7 +102,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Precompile
+			Result := Interface_names.f_Precompile
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Precompile
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Precompile
 		end;
 
 end -- PRECOMPILE_PROJECT

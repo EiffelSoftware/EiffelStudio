@@ -25,24 +25,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showfs 
+			Result := Pixmaps.bm_Showfs 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showfs 
+			Result := Pixmaps.bm_Dark_showfs 
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showfs
+			Result := Interface_names.f_Showfs
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showfs
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Flatshort_form_of
+			Result := Interface_names.t_Flatshort_form_of
 		end;
 
 	post_fix: STRING is "fsh";

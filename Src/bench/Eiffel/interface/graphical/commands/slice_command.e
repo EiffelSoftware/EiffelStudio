@@ -94,13 +94,24 @@ feature {NONE} -- Attributes
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Slice 
+			Result := Pixmaps.bm_Slice 
 		end;
  
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Slice
+			Result := Interface_names.f_Slice
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Slice
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 end -- class SLICE_COMMAND

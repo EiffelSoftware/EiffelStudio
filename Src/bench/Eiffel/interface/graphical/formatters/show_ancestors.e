@@ -23,13 +23,13 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Showancestors 
+			Result := Pixmaps.bm_Showancestors 
 		end;
  
 	dark_symbol: PIXMAP is 
 			-- Dark version of `symbol'.
 		once 
-			Result := bm_Dark_showancestors
+			Result := Pixmaps.bm_Dark_showancestors
 		end;
  
 feature {NONE} -- Properties
@@ -37,12 +37,23 @@ feature {NONE} -- Properties
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Showancestors
+			Result := Interface_names.f_Showancestors
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showancestors
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Ancestors_of
+			Result := Interface_names.t_Ancestors_of
 		end;
 
 	post_fix: STRING is "anc";

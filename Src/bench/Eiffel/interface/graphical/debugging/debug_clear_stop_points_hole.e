@@ -26,13 +26,25 @@ feature -- Properties
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Clear_breakpoints
+			Result := Interface_names.f_Clear_breakpoints
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Clear_breakpoints
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Clear_breakpoints
 		end;
 
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		do 
-			Result := bm_Clear_breakpoints 
+			Result := Pixmaps.bm_Clear_breakpoints 
 		end;
 
 	clear_it_action: ANY is
@@ -114,7 +126,7 @@ feature -- Execution
 					Window_manager.routine_win_mgr.resynchronize_debugger (Void)
 				else
 					warner (popup_parent).custom_call (Current,
-						w_Clear_breakpoints, l_Ok, Void, l_Cancel)
+						Warning_messages.w_Clear_breakpoints, Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 				end
 			end;
 		end;

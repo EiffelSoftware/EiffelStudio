@@ -32,9 +32,19 @@ feature -- Access
 
 	name: STRING is
 			-- Name for Current
-		once
-			!! Result.make (0);
-			Result.append ("Exit");
+		do
+			Result := Interface_names.f_Exit
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Exit
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	tool: PROFILE_TOOL

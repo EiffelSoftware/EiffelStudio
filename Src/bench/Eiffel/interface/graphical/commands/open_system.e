@@ -40,21 +40,22 @@ feature {NONE} -- Implementation
 						Eiffel_ace.set_file_name (fn)
 					elseif f.exists and then not f.is_plain then
 						warner (popup_parent).custom_call (Current,
-							w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel)
+							Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 					else
 						warner (popup_parent).custom_call (Current, 
-						w_Cannot_read_file_retry (fn), l_Ok, Void, l_Cancel);
+						Warning_messages.w_Cannot_read_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel);
 					end
 				else
 					warner (popup_parent).custom_call (Current,
-						w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel)
+						Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 				end
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).call (Current, w_File_changed)
+					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 				else
 					chooser := name_chooser (popup_parent);
+					chooser.set_open_file;
 					last_name_chooser.call (Current) 
 				end
 			end

@@ -25,24 +25,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showshort 
+			Result := Pixmaps.bm_Showshort 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showshort 
+			Result := Pixmaps.bm_Dark_showshort 
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showshort
+			Result := Interface_names.f_Showshort
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showshort
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Short_form_of
+			Result := Interface_names.t_Short_form_of
 		end;
 
 	post_fix: STRING is "sho";

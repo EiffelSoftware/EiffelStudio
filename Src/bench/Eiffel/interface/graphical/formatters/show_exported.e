@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showexported 
+			Result := Pixmaps.bm_Showexported 
 		end;
 	
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showexported 
+			Result := Pixmaps.bm_Dark_showexported 
 		end;
 	
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showexported
+			Result := Interface_names.f_Showexported
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showexported
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Exported_of
+			Result := Interface_names.t_Exported_of
 		end;
 
 	post_fix: STRING is "exp";

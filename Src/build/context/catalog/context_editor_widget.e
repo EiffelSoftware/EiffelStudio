@@ -11,7 +11,7 @@ class
 inherit
 	EV_VERTICAL_BOX
 		redefine
-			make, destroy--, raise
+			make, destroy
 		end
 
 	CONTEXT_EDITOR
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			{EV_VERTICAL_BOX} Precursor (par)
 			create hbox.make (Current)
-			hbox.set_expand (False)
+			set_child_expandable (hbox, False)
 			create tbar.make (hbox)
 			create context_hole.make (tbar)
 			create context_editor_label.make_with_text (hbox, "Context editor")
@@ -45,10 +45,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
---	raise is
---		do
---			main_window.raise
---		end
+	raise is
+		do
+			main_window.raise
+		end
 
 	destroy is
 		do

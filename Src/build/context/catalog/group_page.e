@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			group_hole.set_pixmap (Pixmaps.context_pixmap)
 			group_hole.set_minimum_width (group_hole.pixmap.width + 10)
 			group_hole.set_minimum_height (group_hole.pixmap.height + 10)
-			group_hole.set_expand (False)
+			hbox.set_child_expandable (group_hole, False)
 			group_hole.set_vertical_resize (False)
 --			group_hole.set_background_color (background_color)
 --
@@ -49,15 +49,15 @@ feature {NONE} -- Initialization
 --			group_name.set_foreground_color (foreground_color)
  			create text.make (hbox)
 			text.set_minimum_width (100)
-			text.set_expand (False)
+			hbox.set_child_expandable (text, False)
 
 			create arrow_button.make_with_text (hbox, "<")
-			arrow_button.set_expand (False)
+			hbox.set_child_expandable (arrow_button, False)
 
 			create toolbar.make_with_size (hbox, 30, 30)
 
 			create arrow_button.make_with_text (hbox, ">")
-			arrow_button.set_expand (False)
+			hbox.set_child_expandable (arrow_button, False)
 
 			par.append_page (hbox, tab_label)
 

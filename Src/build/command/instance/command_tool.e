@@ -68,7 +68,9 @@ feature {NONE} -- Initialization
 
 				--| Toolbar
 			create separator.make (vbox)
+			vbox.set_child_expandable (separator, False)
 			create toolbar.make (vbox)
+			vbox.set_child_expandable (toolbar, False)
 			create command_hole.make (toolbar)
 			create trash_hole.make (toolbar)
 --			create tbseparator.make (toolbar)
@@ -101,7 +103,7 @@ feature {NONE} -- Initialization
 --			create fixed.make (hbox)
 --			fixed.set_minimum_width (300)
 			create details_button.make_with_text (top_box, Widget_names.Detail_label)
-			details_button.set_expand (False)
+			top_box.set_child_expandable (details_button, False)
 
 					--| Bottom split form
 			create command_editor.make (Current)

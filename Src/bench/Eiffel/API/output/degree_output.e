@@ -29,6 +29,7 @@ feature -- Start output features
 		do
 			total_number := total_nbr;
 			current_degree := 6;
+			processed := 0
 		end;
 
 	put_end_degree_6 is

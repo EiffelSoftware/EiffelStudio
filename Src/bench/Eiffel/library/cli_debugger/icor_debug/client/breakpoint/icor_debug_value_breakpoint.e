@@ -15,18 +15,18 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	get_value: ICOR_DEBUG_VALUE is
-			-- Reference to the ICorDebugValue.
-		local
-			p: POINTER
-		do
-			last_call_success := cpp_get_value (item, $p)
-			if p /= default_pointer then
-				create Result.make_by_pointer (p)
-			end
-		ensure
-			success: last_call_success = 0
-		end
+--	get_value: ICOR_DEBUG_VALUE is
+--			-- Reference to the ICorDebugValue.
+--		local
+--			p: POINTER
+--		do
+--			last_call_success := cpp_get_value (item, $p)
+--			if p /= default_pointer then
+--				create Result.make_by_pointer (p)
+--			end
+--		ensure
+--			success: last_call_success = 0
+--		end
 
 feature {NONE} -- Implementation
 

@@ -44,7 +44,7 @@ feature {ICOR_EXPORTER} -- Access
 						i > p_celt_fetched
 					loop
 						l_p := mp_tab.read_pointer((i - 1) * l_pointer_size)
-						create l_icor.make_by_pointer (l_p)
+						l_icor := icor_object_made_by_pointer (l_p)
 						l_icor.add_ref
 						Result.put (l_icor, i)
 						i := i + 1
@@ -62,6 +62,12 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
+	icor_object_made_by_pointer (a_p: POINTER): G is
+			-- 
+		do
+			create Result.make_by_pointer (a_p)
+		end
+		
 	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: POINTER): INTEGER is
 		deferred
 		end

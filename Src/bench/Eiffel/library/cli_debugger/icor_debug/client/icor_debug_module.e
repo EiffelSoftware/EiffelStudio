@@ -185,17 +185,17 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_global_variable_value (a_index: INTEGER): ICOR_DEBUG_VALUE is
-		local
-			p: POINTER
-		do
-			last_call_success := cpp_get_global_variable_value (item, a_index, $p)
-			if p /= default_pointer then
-				create Result.make_by_pointer (p)
-			end
-		ensure
-			success: last_call_success = 0
-		end
+--	get_global_variable_value (a_index: INTEGER): ICOR_DEBUG_VALUE is
+--		local
+--			p: POINTER
+--		do
+--			last_call_success := cpp_get_global_variable_value (item, a_index, $p)
+--			if p /= default_pointer then
+--				create Result.make_by_pointer (p)
+--			end
+--		ensure
+--			success: last_call_success = 0
+--		end
 
 	get_size: INTEGER is
 		do

@@ -109,6 +109,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_current_exception (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (get_active_frame)
 			end
 --		ensure
 --			success: last_call_success = 0
@@ -186,6 +187,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_create_eval (item, $p)
 			if last_call_succeed and then p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (get_active_frame)
 			end
 		ensure
 --			success: last_call_success = 0
@@ -199,6 +201,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_object (item, $p)
 			if last_call_succeed and then p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (get_active_frame)			
 			end
 		ensure
 --			success: last_call_success = 0

@@ -24,6 +24,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_object (item, $p)
 			if p /= Default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)
 			end
 		ensure
 --			success: last_call_success = 0

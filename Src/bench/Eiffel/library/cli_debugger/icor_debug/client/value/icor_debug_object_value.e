@@ -57,6 +57,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_field_value (item, a_class.item, a_mdfield_def, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)
 			end
 --		ensure
 --			success: last_call_success = 0

@@ -20,6 +20,17 @@ feature -- Properties
 	is_shown: BOOLEAN
 			-- Is Current shown?
 
+	holder: EB_HOLDER;
+			-- Holder
+
+feature -- Element change
+
+	set_holder (h: like holder) is
+			-- Set `holder' to `h'.
+		do
+			holder := h
+		end;
+
 feature -- Execution
 
 	work (argument: ANY) is

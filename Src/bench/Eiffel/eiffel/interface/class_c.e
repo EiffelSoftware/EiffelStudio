@@ -2247,6 +2247,7 @@ feature
 					create vcfg1
 					vcfg1.set_class (Current)
 					vcfg1.set_formal_name (generic_name)
+					vcfg1.set_location (generic_name)
 					Error_handler.insert_error (Vcfg1)
 					error := True
 				end
@@ -2264,6 +2265,7 @@ feature
 							create vcfg2
 							vcfg2.set_class (Current)
 							vcfg2.set_formal_name (generic_name)
+							vcfg2.set_location (generic_name)
 							Error_handler.insert_error (vcfg2)
 							error := True
 						end
@@ -2290,6 +2292,7 @@ feature
 							create vgcp3
 							vgcp3.set_class (Current)
 							vgcp3.set_feature_name (f_list.item.internal_name)
+							vgcp3.set_location (f_list.item.start_location)
 							Error_handler.insert_error (vgcp3)
 						else
 							duplicate_name.put (f_list.item.internal_name)
@@ -2326,6 +2329,7 @@ feature
 					create vcfg1
 					vcfg1.set_class (Current)
 					vcfg1.set_formal_name (generic_name)
+					vcfg1.set_location (generic_name)
 					Error_handler.insert_error (Vcfg1)
 				end
 				i := i + 1
@@ -2441,6 +2445,7 @@ feature -- Parent checking
 						create l_ve04
 						l_ve04.set_class (Current)
 						l_ve04.set_parent_type (l_raw_type)
+						l_ve04.set_location (l_parent_as.start_location)
 						Error_handler.insert_error (l_ve04)
 					else
 						l_parent_c := l_parent_as.parent_c
@@ -2564,6 +2569,7 @@ feature -- Parent checking
 						-- Wrong number of geneneric parameters in parent
 					vtug := parent_actual_type.error_generics
 					vtug.set_class (Current)
+					fixme ("Shouldn't we be able to provide a location?")
 					Error_handler.insert_error (vtug)
 				else
 					if parent_actual_type.generics /= Void then
@@ -2575,6 +2581,7 @@ feature -- Parent checking
 							vtcg4.set_class (Current)
 							vtcg4.set_error_list (parent_actual_type.constraint_error_list)
 							vtcg4.set_parent_type (parent_actual_type)
+							fixme ("Shouldn't we be able to provide a location?")
 							Error_handler.insert_error (vtcg4)
 						end
 					end
@@ -2584,6 +2591,7 @@ feature -- Parent checking
 						-- Error which occurs only during IL generation.
 					create vifi1.make (Current)
 					vifi1.set_parent_class (l_parent_class)
+					fixme ("Shouldn't we be able to provide a location?")
 					Error_handler.insert_error (vifi1)
 				end
 				i := i + 1
@@ -2595,6 +2603,7 @@ feature -- Parent checking
 					-- Error which occurs only during IL generation.
 				create vifi2.make (Current)
 				vifi2.set_parent_classes (l_single_classes)
+				fixme ("Shouldn't we be able to provide a location?")
 				Error_handler.insert_error (vifi2)
 			end
 
@@ -4209,19 +4218,6 @@ feature -- Server Access
 			-- Does Current class have an AST structure?
 		do
 			Result := Ast_server.has (class_id) or else Tmp_ast_server.has (class_id)
-		end
-
-	click_list: CLICK_LIST is
-			-- Associated click list
-		local
-			l_ast: like ast
-		do
-			l_ast := most_recent_ast
-			if l_ast /= Void then
-				Result := l_ast.click_list
-			end
-		ensure
-			valid_result: Result /= Void implies has_ast
 		end
 
 	cluster: CLUSTER_I is

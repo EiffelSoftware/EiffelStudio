@@ -67,7 +67,7 @@ feature
 			do_pass2: BOOLEAN;
 		do
 				-- Verbose
-			degree_output.put_degree_4 (associated_class.e_class, to_go);
+			degree_output.put_degree_4 (associated_class, to_go);
 
 			associated_class.set_reverse_engineered (False);
 			if associated_class.changed then
@@ -201,7 +201,7 @@ feature -- Propagation of second pass
 		local
 			descendant: CLASS_C;
 			types: LINKED_LIST [CLASS_TYPE];
-			desc: LINKED_LIST [E_CLASS]
+			desc: LINKED_LIST [CLASS_C]
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Propagate_pass2. real_pass2: ");
@@ -215,12 +215,12 @@ end;
 			until
 				desc.off
 			loop
-				descendant := desc.item.compiled_info;
+				descendant := desc.item;
 					-- Insert the descendant in the changed classes list
 					-- of the system if not present.
 debug ("ACTIVITY")
 	io.error.putstring ("Propagating pass2 to: ");
-	io.error.putstring (descendant.class_name);
+	io.error.putstring (descendant.name);
 	io.error.new_line;
 end;
 				pass2_controler.insert_new_class (descendant);
@@ -265,20 +265,22 @@ feature -- Propagation of third pass
 			good_context: pass2_control.propagate_pass3;
 		local
 			client: CLASS_C;
+			clients: LINKED_LIST [CLASS_C]
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Propagate pass3%N");
 end;
 			from
-				associated_class.clients.start
+				clients := associated_class.clients;
+				clients.start
 			until
-				associated_class.clients.off
+				clients.after
 			loop
-				client := associated_class.clients.item.compiled_info;
+				client := clients.item;
 					-- Remember the cause for type checking `client'.
 debug ("ACTIVITY")
 	io.error.putstring ("Propagating pass3 to: ");
-	io.error.putstring (client.class_name);
+	io.error.putstring (client.name);
 	io.error.new_line;
 end;
 				client.propagators.update (pass2_control);
@@ -290,7 +292,7 @@ end;
 				pass3_controler.insert_new_class (client);
 				pass4_controler.insert_new_class (client);
 
-				associated_class.clients.forth
+				clients.forth
 			end;
 		end;
 

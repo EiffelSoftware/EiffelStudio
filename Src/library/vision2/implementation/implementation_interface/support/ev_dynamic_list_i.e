@@ -196,8 +196,8 @@ feature -- Element change
 			valid_index: i > 0 and i <= count
 			v_not_void: v /= Void
 		do
-			remove_i_th (i)
 			insert_i_th (v, i)
+			remove_i_th (i + 1)
 		ensure
 			has_v: interface.has (v)
 		end
@@ -227,10 +227,10 @@ feature -- Element change
 			v: like item
 		do
 			from
-				other.start
 			until
 				other.empty
 			loop
+				other.finish
 				v := other.item
 				other.remove
 				insert_i_th (v, index + 1)
@@ -352,6 +352,9 @@ end -- class EV_DYNAMIC_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/06 00:03:17  brendel
+--| Fixed bug in merge_right.
+--|
 --| Revision 1.4  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -26,7 +26,7 @@ feature -- Properties
 			else
 				!! ctxt;
 				ctxt.set_clickable;
-				ctxt.set_feature_clause_order (Void);
+				ctxt.set_feature_clause_order (Class_tool_resources.feature_clause_order.actual_value);
 				ctxt.format (stone.e_class);
 				if not ctxt.error then
 					Result := ctxt.text;
@@ -49,7 +49,7 @@ feature -- Properties
 			else
 				!! ctxt;
 				ctxt.set_clickable;
-				ctxt.set_feature_clause_order (Void);
+				ctxt.set_feature_clause_order (Class_tool_resources.feature_clause_order.actual_value);
 				ctxt.set_is_short;
 				ctxt.format (stone.e_class);
 				if not ctxt.error then
@@ -75,6 +75,7 @@ feature -- Properties
 				ctxt.set_clickable;
 				ctxt.set_is_short;
 				ctxt.set_one_class_only;
+				ctxt.set_feature_clause_order (Class_tool_resources.feature_clause_order.actual_value);
 				ctxt.format (stone.e_class);
 				if not ctxt.error then
 					Result := ctxt.text;
@@ -187,6 +188,37 @@ feature -- Clearing tables
 			debug_table.clear_all;
 			simple_debug_table.clear_all;
 			history_list.wipe_out
+		end;
+
+	clear_class_tables is
+			-- Clear the cache for class tables except for
+			-- the `clickable_table'.
+		local
+			found: BOOLEAN;
+			a_stone: CLASSC_STONE
+		do
+			from
+				history_list.start
+			until
+				history_list.after
+			loop
+				a_stone ?= history_list.item.item1;
+				if a_stone /= Void then
+					found := flat_table.has (a_stone) or else
+						flatshort_table.has (a_stone) or else
+						short_table.has (a_stone) 
+					if found then			
+						history_list.remove
+					else
+						history_list.forth
+					end
+				else
+					history_list.forth
+				end
+			end;
+			flat_table.clear_all;
+			flatshort_table.clear_all;
+			short_table.clear_all;
 		end;
 
 feature {NONE} -- Attributes

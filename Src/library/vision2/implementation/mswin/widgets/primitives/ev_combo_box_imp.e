@@ -56,7 +56,8 @@ inherit
 			on_key_down,
 			interface,
 			initialize,
-			on_set_focus
+			on_set_focus,
+			set_foreground_color
 		end
 		
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -490,7 +491,11 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 				-- we can restore the focus to it when required.
 				--| See window_process_message in EV_WINDOW_IMP.
 			if top_level_window_imp /= Void then
-				top_level_window_imp.set_last_focused_widget (wel_item)		
+				if is_editable then
+					top_level_window_imp.set_last_focused_widget (text_field.item)		
+				else
+					top_level_window_imp.set_last_focused_widget (combo.item)	
+				end
 				top_level_titled_window ?= top_level_window_imp.interface
 				if top_level_titled_window /= Void then
 					application_imp.set_window_with_focus (top_level_titled_window)
@@ -687,6 +692,16 @@ feature {NONE} -- Implementation
 		do
 			an_index := internal_get_index (item_imp)
 			delete_string (an_index - 1)
+		end
+		
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			Precursor {EV_TEXT_COMPONENT_IMP} (color)
+			if is_displayed then
+				text_field.invalidate
+				combo.invalidate
+			end
 		end
 
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}

@@ -60,7 +60,7 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size of ASSEMBLYMETADATA structure.
 		external
-			"C macro use <cor.h>"
+			"C++ macro use <cor.h>"
 		alias
 			"sizeof(ASSEMBLYMETADATA)"
 		end

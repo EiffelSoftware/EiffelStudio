@@ -8,10 +8,10 @@ class
 
 inherit
 	EV_GRID_ITEM
-		undefine
-			is_in_default_state
 		redefine
-			implementation
+			is_in_default_state,
+			implementation,
+			create_implementation
 		end
 	
 	EV_FONTABLE

@@ -294,9 +294,11 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 								create full_d_name.initialize (dir_name)
 							elseif
 								not (char.is_alpha or else char.is_digit)
-								and then char /= '_'
+								and then char /= '_' and then char /= '(' and then char /= '{'
 							then
-									-- Substitue $ with the parent directory path
+									-- Substitue $ with the parent directory path only if it is of
+									-- the form `$X' where X is not `(' or `{' or `_' and nor an
+									-- alphanumeric character.
 									-- Note: The first time it encounters $/ it is
 									-- replaced by the parent directory. Each subsequent
 									-- compilation it will skip this.

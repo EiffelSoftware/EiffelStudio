@@ -10,6 +10,9 @@ class
 inherit
 
 	ABSTRACT_SPECIAL_VALUE
+		redefine
+			kind
+		end
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
@@ -118,6 +121,17 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 		end;
 		
 feature -- Output	
+
+	kind: INTEGER is
+			-- Actual type of `Current'. cf possible codes underneath.
+			-- Used to display the corresponding icon.
+		do
+			if is_static then
+				Result := Static_reference_value
+			else
+				Result := Special_value
+			end
+		end
 		
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.

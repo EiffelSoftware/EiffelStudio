@@ -14,6 +14,7 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
+			{ANY} True_string, False_string, Optimal_string
 		end
 		
 	GB_FILE_CONSTANTS
@@ -101,7 +102,7 @@ feature -- Access
 		-- Should debugging output be generated for each feature connected to an
 		-- action sequence?
 		
-	attributes_local: BOOLEAN
+	attributes_local: STRING
 		-- Should attributes be generated as locals?
 		
 	project_name: STRING
@@ -178,7 +179,7 @@ feature -- Basic operation
 					set_boolean_attribute (data @ 6, agent enable_complete_project, agent disable_complete_project)
 					set_boolean_attribute (data @ 7, agent enable_grouped_locals, agent disable_grouped_locals)
 					set_boolean_attribute (data @ 8, agent enable_debugging_output, agent disable_debugging_output)
-					set_boolean_attribute (data @ 9, agent enable_attributes_local, agent disable_attributes_local)
+					set_string_attribute (data @ 9, agent set_attributes_locality (?))
 					set_boolean_attribute (data @ 10, agent enable_client_of_window, agent disable_client_of_window)
 					set_boolean_attribute (data @ 11, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
 				end
@@ -298,18 +299,15 @@ feature -- Status Setting
 			debugging_output := False
 		end
 		
-	enable_attributes_local is
-			-- Assign `True' to `attributes_local'.
+	set_attributes_locality (locality: STRING) is
+			-- Assign `locality' to `attributes_local'.
+		require
+			valid_locality: locality.is_equal (True_string) or locality.is_equal (False_string) or
+				locality.is_equal (Optimal_string)
 		do
-			attributes_local := True
+			attributes_local := locality
 		end
-		
-	disable_attributes_local is
-			-- Assign `False' to `attributes_local'.
-		do
-			attributes_local := False
-		end
-		
+
 	enable_rebuild_ace_file is
 			-- Assign `True' to `rebuild_ace_file'.
 		do

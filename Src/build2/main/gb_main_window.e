@@ -335,7 +335,9 @@ feature {NONE} -- Implementation
 				warning_dialog.show_modal_to_window (Current)
 			end
 		ensure
-			project_open: System_status.project_open
+			-- Not possible to always guarantee this, as if problems are encountered with the
+			-- specified files, EiffelBuild must exit gracefully, with no open project.
+			--project_open: System_status.project_open
 		end
 	
 	initialize_split_areas is

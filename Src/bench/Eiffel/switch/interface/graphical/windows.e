@@ -162,6 +162,11 @@ feature {NONE}
 			Result := profile_tool_cell.item
 		end
 
+	Progress_dialog: DEGREE_OUTPUT is
+		do
+			Result := Project_tool.progress_dialog
+		end
+
 feature {NONE} -- Implementation
 
 	last_warner_cell: CELL [WARNER_W] is

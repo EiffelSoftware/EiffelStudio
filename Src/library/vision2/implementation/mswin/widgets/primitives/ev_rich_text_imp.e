@@ -421,10 +421,9 @@ feature -- Status report
 			-- Initialize `Current' for save operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
-		local
-			raw_file: RAW_FILE
 		do
 			Precursor {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
+			internal_actions_blocked := True
 			disable_redraw
 			if selection_change_actions_internal /= Void then
 				selection_change_actions_internal.block
@@ -432,8 +431,6 @@ feature -- Status report
 			if caret_move_actions_internal /= Void then
 				caret_move_actions_internal.block
 			end
-			create raw_file.make_create_read_write ("C:\Documents and Settings\rogers\Desktop\test1.rtf")
-			save_rtf_file (raw_file)
 		end
 		
 	complete_saving is
@@ -446,6 +443,7 @@ feature -- Status report
 			if caret_move_actions_internal /= Void then
 				caret_move_actions_internal.resume
 			end
+			internal_actions_blocked := False
 			enable_redraw
 		end
 		

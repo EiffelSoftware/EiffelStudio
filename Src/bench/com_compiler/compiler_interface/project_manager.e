@@ -32,28 +32,46 @@ feature {NONE} -- Initialization
 		do
 			valid_ace_file := False
 			create last_error_message.make_from_string ("No project loaded")
-			create {COMPILER} compiler.make
-			create {SYSTEM_BROWSER} system_browser.make
-			create {COMPLETION_INFORMATION} completion_information.make
 			create eifgen_init.make
 				--| FIXME do not forget to call `dispose' one day !
 		end
 
 feature -- Access
 
-	compiler: IEIFFEL_COMPILER_INTERFACE
+	compiler: IEIFFEL_COMPILER_INTERFACE is
 			-- Compiler.
+		do
+			if compiler_internal = Void then
+				create compiler_internal.make
+			end
+			Result := compiler_internal
+		end
 		
-	system_browser: IEIFFEL_SYSTEM_BROWSER_INTERFACE
+	system_browser: IEIFFEL_SYSTEM_BROWSER_INTERFACE is
 			-- System Browser.
+		do
+			if system_browser_internal = Void then
+				create system_browser_internal.make
+			end
+			Result := system_browser_internal
+		end
 
-	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE
-			-- Completion information
+	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE is
+			-- Completion information.
+		do
+			if completion_information_internal = Void then
+				create completion_information_internal.make
+			end
+			Result := completion_information_internal
+		end
 			
 	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
-			-- html document generator for the project
-		once
-			Result := create {HTML_DOC_GENERATOR} html_doc_generator.make
+			-- Html document generator for the project
+		do
+			if html_doc_generator_internal = Void then
+				create html_doc_generator_internal.make
+			end
+			Result := html_doc_generator_internal
 		end
 			
 	valid_project: BOOLEAN is
@@ -122,7 +140,7 @@ feature -- Access
 			-- Void until a project is opened.
 		require
 			project_initialized: valid_project
-		once
+		do
 			Result := project_properties_internal
 		end
 
@@ -133,8 +151,6 @@ feature -- Basic Operations
 		local
 			rescued: BOOLEAN
 			file: RAW_FILE
-			l_pp: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
-			doc_generator: HTML_DOC_GENERATOR
 		do
 			if not Valid_project_ref.item then
 				if not rescued then
@@ -147,7 +163,6 @@ feature -- Basic Operations
 								open_project_file (file_name)
 								load_ace_file_only (Eiffel_Ace.file_name)
 								Valid_project_ref.set_item (True)
-								l_pp := Project_properties
 							else
 								last_error_message := "Project has already been initialized"
 							end
@@ -284,6 +299,18 @@ feature {NONE} -- Project Initialization
 		end
 							
 feature {NONE} -- Implementation
+
+	compiler_internal: COMPILER
+		-- Compiler.
+	
+	system_browser_internal: SYSTEM_BROWSER
+		-- System Browser.
+	
+	completion_information_internal: COMPLETION_INFORMATION
+		-- Member completion information.
+	
+	html_doc_generator_internal: HTML_DOC_GENERATOR
+		-- Html doc generator.
 
 	valid_file_name (file_name: STRING): STRING is
 			-- Generate a valid file name from `file_name'

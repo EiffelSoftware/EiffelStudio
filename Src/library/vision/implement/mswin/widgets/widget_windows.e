@@ -235,6 +235,7 @@ feature  -- Status report
 		do
 			Result := False
 		end
+
 feature -- Status setting
 
 	destroy (wid_list: LINKED_LIST [WIDGET]) is
@@ -349,11 +350,6 @@ feature -- Status setting
 		require else
 			always_true: True
 		do
-			--debug ("WINDOWS")
-			--	check
-			--		not_supported: False
-			--	end
-			--end
 			background_pixmap := a_pixmap
 		ensure then
 			pixmap_set: valid_background_pixmap (a_pixmap) implies background_pixmap = a_pixmap
@@ -449,7 +445,7 @@ feature -- Status setting
 				end;
 				parent.child_has_resized
 			end
-		end;
+		end
 
 	set_multi_click_time (new_time: INTEGER) is
 			-- Set the double click time.
@@ -518,8 +514,11 @@ feature -- Status setting
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set `x' to `new_x', `y' to `new_y'.
 		do
-			set_x (new_x)
-			set_y (new_y)
+			private_attributes.set_y (new_y)
+			private_attributes.set_x (new_x)
+			if exists then
+				wel_move (new_x, new_y)
+			end
 		end;
 
 	set_y (new_y: INTEGER) is
@@ -529,7 +528,7 @@ feature -- Status setting
 			if exists then
 				wel_set_y (new_y)
 			end
-		end;
+		end
 
 	show is
 			-- Show widget on screen.
@@ -676,6 +675,48 @@ feature -- Element change
 			destroy_actions.add (Current, a_command, argument)
 		end;
 
+	add_map_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to execute when the
+			-- widget is mapped.
+		do
+			map_actions.add (Current, a_command, argument)
+		end
+
+	add_unmap_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to execute when the
+			-- widget is unmapped.
+		do
+			unmap_actions.add (Current, a_command, argument)
+		end
+
+	add_visible_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to execute when the
+			-- widget is unmapped.
+		do
+			visible_actions.add (Current, a_command, argument)
+		end
+
+	remove_map_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of actions to execute when the
+			-- widget is mapped.
+		do
+			map_actions.remove (Current, a_command, argument)
+		end
+
+	remove_unmap_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of actions to execute when the
+			-- widget is unmapped.
+		do
+			unmap_actions.remove (Current, a_command, argument)
+		end
+
+	remove_visible_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of actions to execute when the
+			-- widget is unmapped.
+		do
+			visible_actions.remove (Current, a_command, argument)
+		end
+
 feature -- Removal
 
 	remove_action (a_translation: STRING) is
@@ -720,6 +761,18 @@ feature -- Removal
 								remove_button_press_action (1, translation, argument);
 								remove_button_press_action (2, translation, argument);
 								remove_button_press_action (3, translation, argument)
+							end
+						end
+					else
+						if translation.other_action then
+							if translation.configure_action then
+								remove_resize_action (translation, argument)
+							elseif translation.map_action then
+								remove_map_action (translation, argument)
+							elseif translation.unmap_action then
+								remove_unmap_action (translation, argument)
+							elseif translation.visible_action then
+								remove_visible_action (translation, argument)
 							end
 						end
 					end
@@ -880,12 +933,13 @@ feature -- Removal
 			end;
 			if translation.other_action then
 				if translation.configure_action then
-						add_resize_action (translation, argument)
---elseif translation.special_translation_number <= 3 then
---	tw ?= Current;
---	if tw /= Void then
---		tw.add_resize_action (translation, argument)
---	end
+					add_resize_action (translation, argument)
+				elseif translation.map_action then
+					add_map_action (translation, argument)
+				elseif translation.unmap_action then
+					add_unmap_action (translation, argument)
+				elseif translation.visible_action then
+					add_visible_action (translation, argument)
 				end
 			end
 		end;
@@ -912,10 +966,12 @@ feature -- Implementation
 			-- Not set at creation
 
 	absolute_x: INTEGER is
+			-- Absolute x coordinate
 		deferred
 		end
 
 	absolute_y: INTEGER is
+			-- Absolute y coordinate
 		deferred
 		end
 
@@ -925,26 +981,32 @@ feature -- Implementation
 		end
 
 	enable is
+			-- Enable the widget.
 		deferred
 		end
 
 	enabled: BOOLEAN is
+			-- Is this widget enabled?
 		deferred
 		end
 
 	disable is
+			-- Disable the widget.
 		deferred
 		end
 
 	exists: BOOLEAN is
+			-- Does this widget exist?
 		deferred
 		end
 
 	invalidate is
+			-- Invalidate this widget.
 		deferred
 		end
 
 	resize (new_width, new_height: INTEGER) is
+			-- Resize widget to `new_width' and `new_height'
 		deferred
 		end
 
@@ -1089,8 +1151,11 @@ feature {NONE} -- Implementation
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		require
 			exists: exists
+		local
+			resize_data: RESIZE_CONTEXT_DATA
 		do
-			resize_actions.execute (Current, Void)
+			!! resize_data.make (owner, a_width, a_height, size_type)
+			resize_actions.execute (Current, resize_data)
 		end
 
 	on_move (x_pos, y_pos: INTEGER) is
@@ -1104,6 +1169,24 @@ feature {NONE} -- Implementation
 			exists: exists
 		do
 			resize_actions.execute (Current, Void)
+		end
+
+	on_hide is
+			-- Wm_showwindow message.
+			-- Execute a visible command if appropriate.
+		require
+			exists: exists
+		do
+			visible_actions.execute (Current, Void)
+		end
+
+	on_show is
+			-- Wm_showwindow message.
+			-- Execute a visible command if appropriate.
+		require
+			exists: exists
+		do
+			visible_actions.execute (Current, Void)
 		end
 
 	on_vision_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -1385,7 +1468,6 @@ feature {NONE} -- Implementation
 			if scw /= Void then
 				scw.set
 				Result := true
-				--disable_default_processing
 			else
 				scw := screen_cursor
 				if scw /= Void then
@@ -1397,7 +1479,6 @@ feature {NONE} -- Implementation
 					if scw /= Void then
 						scw.set
 						Result := true
-						--disable_default_processing
 					end
 				end
 			end

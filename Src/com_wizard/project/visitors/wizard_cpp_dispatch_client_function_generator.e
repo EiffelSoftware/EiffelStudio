@@ -339,27 +339,18 @@ feature {NONE} -- Implementation
 				add_warning (Current, Invalid_use_of_enumeration)
 			else
 				if visitor.is_basic_type_ref then
-					if is_boolean (type) then
-						Result.append (Ce_mapper)
-						Result.append (Dot)
-						Result.append (visitor.ce_function_name)
-						Result.append (Space_open_parenthesis)
-					end
+					Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
+					Result.append (Comma_space)
+					Result.append (name)
+					Result.append (Close_parenthesis)
+					Result.append (Semicolon)
+				elseif is_boolean (type) then
 					Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
 					Result.append (Comma_space)
 					Result.append (name)
 					Result.append (Close_parenthesis)
 					Result.append (Semicolon)
 				else
-					if visitor.need_generate_ce then
-						Result.append (Generated_ce_mapper)
-					else
-						Result.append (Ce_mapper)
-					end
-
-					Result.append (Dot)
-					Result.append (visitor.ce_function_name)
-					Result.append (Space_open_parenthesis)
 					Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
 					Result.append (Comma_space)
 					Result.append (name)

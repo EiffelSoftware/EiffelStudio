@@ -121,12 +121,14 @@ feature {NONE} -- Implementation
 			Result.append ("_itoa (nArgErr, arg_no, 10);")
 			Result.append (New_line_tab_tab)
 			Result.append ("char * arg_name = %"Argument No: %"")
+			Result.append (Semicolon)
 			Result.append (New_line_tab_tab)
 			Result.append ("int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1")
+			Result.append (Semicolon)
 			Result.append (New_line_tab_tab)
 			Result.append ("char * message;")
 			Result.append (New_line_tab_tab)
-			Result.append ("message = calloc (size, sizeof (char));")
+			Result.append ("message = (char *)calloc (size, sizeof (char));")
 			Result.append (New_line_tab_tab)
 			Result.append ("strcat (message, hresult_error);")
 			Result.append (New_line_tab_tab)
@@ -380,20 +382,33 @@ feature {NONE} -- Implementation
 					Result.append (Eif_double)
 					Result.append (Close_parenthesis)
 					Result.append (retval_value_set_up ("dblVal"))
-				else
-					Result.append (Eif_boolean)
-					Result.append (Close_parenthesis)
-					Result.append (Ce_mapper)
-					Result.append (Dot)
-					Result.append (visitor.ce_function_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (retval_value_set_up ("boolVal"))
-					Result.append (Comma_space)
-					Result.append (Null)
-					Result.append (Close_parenthesis)
 				end
 				Result.append (Semicolon)
+			elseif is_boolean (type) then
+				Result.append (Open_parenthesis)
+				Result.append (Eif_boolean)
+				Result.append (Close_parenthesis)
+				Result.append (Ce_mapper)
+				Result.append (Dot)
+				Result.append (visitor.ce_function_name)
+				Result.append (Space_open_parenthesis)
 
+				if is_byref (type) then
+					Result.append (retval_value_set_up ("pboolVal"))
+					if visitor.writable then
+						Result.append (Comma_space)
+						Result.append (Null)
+					end					
+					Result.append (Close_parenthesis)
+				else
+					Result.append (retval_value_set_up ("boolVal"))
+					if visitor.writable then
+						Result.append (Comma_space)
+						Result.append (Null)
+					end					
+				end
+				Result.append (Close_parenthesis)
+				Result.append (Semicolon)
 			elseif visitor.is_basic_type_ref then
 				Result.append (Open_parenthesis)
 				if is_int (type) then
@@ -440,8 +455,6 @@ feature {NONE} -- Implementation
 					Result.append (Open_parenthesis)
 					Result.append (retval_value_set_up ("plVal"))
 				elseif is_unsigned_long (type) then
-
-
 					Result.append (Eif_integer)
 					Result.append (Close_parenthesis)
 					Result.append (Asterisk)
@@ -459,24 +472,15 @@ feature {NONE} -- Implementation
 					Result.append (Asterisk)
 					Result.append (Open_parenthesis)
 					Result.append (retval_value_set_up ("pdblVal"))
-				else
-					Result.append (Eif_boolean)
-					Result.append (Close_parenthesis)
-					Result.append (Ce_mapper)
-					Result.append (Dot)
-					Result.append (visitor.ce_function_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (retval_value_set_up ("pboolVal"))
-					Result.append (Comma_space)
-					Result.append (Null)
-					Result.append (Close_parenthesis)
 				end
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 			else
-				Result.append (Ce_mapper)
+				if visitor.need_generate_ce then
+					Result.append (Generated_ce_mapper)
+				else
+					Result.append (Ce_mapper)
+				end
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
@@ -540,8 +544,10 @@ feature {NONE} -- Implementation
 				else
 					add_warning (Current, Not_variant_type)
 				end
-				Result.append (Comma_space)
-				Result.append (Null)
+				if visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 			end	
@@ -559,7 +565,6 @@ feature {NONE} -- Implementation
 			Result := clone (Return_variant_variable_name)
 			Result.append (Dot)
 			Result.append (attribute_name)
-			Result.append (Semicolon)
 		ensure
 			non_void_argument: Result /= Void
 			valid_argument: not Result.empty

@@ -64,7 +64,7 @@ feature {COMPILER_EXPORTER}
 			Result := Current
 		end
 
-	instantiation_of (type: TYPE_B; class_id: CLASS_ID): TYPE_A is
+	instantiation_of (type: TYPE; class_id: CLASS_ID): TYPE_A is
 			-- Insatiation of `type' in s simple type
 		do
 			Result := type.actual_type

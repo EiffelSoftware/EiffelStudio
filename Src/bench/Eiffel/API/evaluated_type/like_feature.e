@@ -93,7 +93,7 @@ feature -- Primitives
 		local
 			origin_table: HASH_TABLE [FEATURE_I, ROUTINE_ID]
 			anchor_feature, orig_feat: FEATURE_I
-			anchor_type: TYPE_B
+			anchor_type: TYPE
 		do
 			if not equal (System.current_class.id, class_id) then
 debug

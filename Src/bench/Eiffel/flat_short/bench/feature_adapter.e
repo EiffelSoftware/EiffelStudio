@@ -20,7 +20,7 @@ inherit
 
 feature -- Properties
 
-	ast: FEATURE_AS_B;
+	ast: FEATURE_AS;
 			-- Feature ast
 
 	body_index: BODY_INDEX;
@@ -49,7 +49,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	register (feature_as: FEATURE_AS_B; format_reg: FORMAT_REGISTRATION) is
+	register (feature_as: FEATURE_AS; format_reg: FORMAT_REGISTRATION) is
 			-- Initialize and register Current adapter (if possible)
 			-- with ast `feature_ast' and evaluate the source and target
 			-- feature. Also set comments to `c'.
@@ -60,12 +60,12 @@ feature -- Element change
 			same_class: BOOLEAN;
 			adapter: FEATURE_ADAPTER;
 			new_feature_as: like ast;
-			eiffel_list, names: EIFFEL_LIST_B [FEATURE_NAME_B];
+			eiffel_list, names: EIFFEL_LIST [FEATURE_NAME];
 			i, l_count: INTEGER
 			list: ARRAYED_LIST [FEATURE_I];
 			t_feat: FEATURE_I;
 			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], BODY_INDEX];
-			f_name: FEATURE_NAME_B;
+			f_name: FEATURE_NAME;
 			comment: STRING;
 			tmp: STRING;
 			is_precompiled: BOOLEAN
@@ -159,7 +159,7 @@ feature -- Element change
 
 feature -- Output
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 			-- Format Current feature into `ctxt'.
 		local
 			format_reg: FORMAT_REGISTRATION
@@ -197,7 +197,7 @@ feature {FEATURE_ADAPTER} -- Implementation
 
 feature {NONE} -- Implementation
 			
-	adapt (old_name: FEATURE_NAME_B; format_reg: FORMAT_REGISTRATION) is
+	adapt (old_name: FEATURE_NAME; format_reg: FORMAT_REGISTRATION) is
 			-- Adaptation for feature defined in current class being analyzed.
 		require
 			diff_class: format_reg.current_class /= format_reg.target_class;
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	immediate_adapt (name: FEATURE_NAME_B; format_reg: FORMAT_REGISTRATION) is
+	immediate_adapt (name: FEATURE_NAME; format_reg: FORMAT_REGISTRATION) is
 			-- Adaptation for feature defined in target_class.
 		require
 			same_class: format_reg.current_class = format_reg.target_class;

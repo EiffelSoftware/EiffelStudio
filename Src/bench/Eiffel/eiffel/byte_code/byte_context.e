@@ -1035,7 +1035,7 @@ feature -- Debugger
 	debug_mode: BOOLEAN
 			-- True when generating byte code with debugging hooks.
 
-	instruction_line: LINE [AST_EIFFEL_B]
+	instruction_line: LINE [AST_EIFFEL]
 			-- List of breakable instructions on which a breakpoint may be set.
 
 	breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION]
@@ -1059,7 +1059,7 @@ feature -- Debugger
 	record_breakable (ba: BYTE_ARRAY) is
 			-- Record breakable point (in debug mode only)
 		local
-			ast_node: AST_EIFFEL_B
+			ast_node: AST_EIFFEL
 			ast_pos: AST_POSITION
 		do
 			if debug_mode then

@@ -177,7 +177,7 @@ feature -- Access
 
 feature -- Action
 
-	build_ast: CLASS_AS_B is
+	build_ast: CLASS_AS is
 			-- Parse the file and generate the AST
 		local
 			file, copy_file: RAW_FILE
@@ -247,14 +247,14 @@ feature -- Action
 			end
 		end
 	
-	end_of_pass1 (ast_b: CLASS_AS_B) is
+	end_of_pass1 (ast_b: CLASS_AS) is
 				-- End of the first pass after syntax analysis
 		local
-			supplier_list: LINKED_LIST [ID_AS_B]
+			supplier_list: LINKED_LIST [ID_AS]
 			class_info: CLASS_INFO
 				-- Temporary structure to build about the current class
 				-- which will be useful for second pass.
-			parent_list: EIFFEL_LIST_B [PARENT_AS_B]
+			parent_list: EIFFEL_LIST [PARENT_AS]
 			invariant_info: READ_INFO
 			old_syntactical_suppliers: like syntactical_suppliers
 			unique_values: HASH_TABLE [INTEGER, STRING]
@@ -498,7 +498,7 @@ feature -- Third pass: byte code production and type check
 			rep_removed: BOOLEAN
 
 				-- Invariant
-			invar_clause: INVARIANT_AS_B
+			invar_clause: INVARIANT_AS
 			invar_byte: INVARIANT_B
 			invariant_changed: BOOLEAN
 			inv_melted_info: INV_MELTED_INFO
@@ -1017,7 +1017,7 @@ end
 --			good_argument2: changed implies new_suppliers /= Void
 --			good_argument3: melt_set /= Void
 --		local
---			invar_clause: INVARIANT_AS_B
+--			invar_clause: INVARIANT_AS
 --			invar_byte: INVARIANT_B
 --			f_suppliers: FEATURE_DEPENDANCE
 --			invariant_changed: BOOLEAN
@@ -1412,17 +1412,17 @@ changed4 := False
 
 feature -- Class initialization
 
-	init (ast_b: CLASS_AS_B; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
+	init (ast_b: CLASS_AS; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
 			-- Initialization of the class with AST produced by yacc
 		require
 			good_argument: ast_b /= Void
 		local
 			old_parents: like parents
 			old_generics: like generics
-			parents_as: EIFFEL_LIST_B [PARENT_AS_B]
-			p: ARRAY [PARENT_AS_B]
+			parents_as: EIFFEL_LIST [PARENT_AS]
+			p: ARRAY [PARENT_AS]
 			lower, upper: INTEGER
-			raw_type: CLASS_TYPE_AS_B
+			raw_type: CLASS_TYPE_AS
 			cl_type: CLASS_TYPE
 			parent_type: CL_TYPE_A
 			parent_class: CLASS_C
@@ -1939,8 +1939,8 @@ feature
 		require
 			generics_exists: generics /= Void
 		local
-			generic_dec, next_dec: FORMAL_DEC_AS_B
-			generic_name: ID_AS_B
+			generic_dec, next_dec: FORMAL_DEC_AS
+			generic_name: ID_AS
 			pos: INTEGER
 			vcfg1: VCFG1
 			vcfg2: VCFG2
@@ -1998,8 +1998,8 @@ feature
 		require
 			generics_exists: generics /= Void
 		local
-			generic_dec: FORMAL_DEC_AS_B
-			generic_name: ID_AS_B
+			generic_dec: FORMAL_DEC_AS
+			generic_name: ID_AS
 			vcfg1: VCFG1
 			gens: like generics
 		do
@@ -2026,8 +2026,8 @@ feature
 		require
 			generics_exists: generics /= Void
 		local
-			generic_dec: FORMAL_DEC_AS_B
-			constraint_type: TYPE_B
+			generic_dec: FORMAL_DEC_AS
+			constraint_type: TYPE
 			gens: like generics
 		do
 			gens := generics
@@ -2050,8 +2050,8 @@ feature
 		require
 			generics_exists: generics /= Void
 		local
-			generic_dec: FORMAL_DEC_AS_B
-			constraint_type: TYPE_B
+			generic_dec: FORMAL_DEC_AS
+			constraint_type: TYPE
 			gens: like generics
 		do
 			gens := generics
@@ -2142,7 +2142,7 @@ feature -- Supplier checking
 			end
 		end
 
-	check_suppliers (supplier_list: LINKED_LIST [ID_AS_B]) is
+	check_suppliers (supplier_list: LINKED_LIST [ID_AS]) is
 			-- Check the supplier ids of the current parsed class
 			-- and add perhaps classes to the system.
 		require
@@ -2162,7 +2162,7 @@ feature -- Supplier checking
 			end
 		end
 
-	check_parent_classes (parent_list: EIFFEL_LIST_B [PARENT_AS_B]) is
+	check_parent_classes (parent_list: EIFFEL_LIST [PARENT_AS]) is
 			-- Check the parents of the current parsed class
 			-- and add perhaps classes to the system.
 		require
@@ -3105,7 +3105,7 @@ end
 			old_feat, new_feat: FEATURE_I
 			old_body_id, new_body_id: BODY_ID
 			rep_table: REP_FEATURES
-			new_feat_as, old_feat_as: FEATURE_AS_B
+			new_feat_as, old_feat_as: FEATURE_AS
 			rep_features: LINKED_LIST [S_REP_NAME]
 		do
 			rep_class_info := Tmp_rep_info_server.item (id)
@@ -3201,7 +3201,7 @@ end
 			until
 				rep_table.after
 			loop
-					-- `rep_table.item_for_iteration' contains a FEATURE_AS_B
+					-- `rep_table.item_for_iteration' contains a FEATURE_AS
 				read_info := index.item (rep_table.item_for_iteration.id)
 
 					-- Place the read_info for the feature's body id
@@ -3286,7 +3286,7 @@ feature -- Merging
 
 feature {NONE} -- External features
 
-	c_parse (f: POINTER; s: POINTER): CLASS_AS_B is
+	c_parse (f: POINTER; s: POINTER): CLASS_AS is
 		external
 			"C"
 		end

@@ -168,7 +168,7 @@ feature -- Transformation
 		local
 			i, nb: INTEGER;
 			s_type, t_type: TYPE_A;
-			arg_list: EIFFEL_LIST_B [ID_AS_B];
+			arg_list: EIFFEL_LIST [ID_AS];
 			arg_name: STRING
 			source_arguments: FEAT_ARG;
 			target_arguments: FEAT_ARG;
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation properites
 
 feature {FORMAT_CONTEXT} -- Implementation
 
-	set_locals (body: FEATURE_AS_B) is
+	set_locals (body: FEATURE_AS) is
 			-- Set source_locals and target_locals
 			-- according to feature as `source_as'.
 		local

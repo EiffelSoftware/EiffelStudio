@@ -122,7 +122,7 @@ feature -- Access
 			Result := assert_server.current_assertion
 		end;
 
-	feature_clause_comments (ast: FEATURE_CLAUSE_AS_B): EIFFEL_COMMENTS is
+	feature_clause_comments (ast: FEATURE_CLAUSE_AS): EIFFEL_COMMENTS is
 			-- Feature clause comments for `ast'
 		require
 			non_void_ast: ast /= Void;
@@ -136,7 +136,7 @@ feature -- Access
 			end
 		end;
 
-	feature_comments (ast: FEATURE_AS_B): EIFFEL_COMMENTS is
+	feature_comments (ast: FEATURE_AS): EIFFEL_COMMENTS is
 			-- Feature comments for feature `ast'
 		require
 			non_void_ast: ast /= Void;
@@ -277,7 +277,7 @@ end;
 			end
 		end;
 
-	register_feature (feature_as: FEATURE_AS_B) is
+	register_feature (feature_as: FEATURE_AS) is
 			-- Register feature `feature_as' for format
 			-- processing
 		local
@@ -287,7 +287,7 @@ end;
 			feat_adapter.register (feature_as, Current);
 		end;
 
-	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS_B) is
+	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS) is
 			-- Register feature clause `feature_clause' after registering
 			-- features.
 			--| The reason that the feature clause is register last is
@@ -315,7 +315,7 @@ end;
 			!! current_category.make;
 		end;
 
-	register_invariant (invariant_part: INVARIANT_AS_B) is
+	register_invariant (invariant_part: INVARIANT_AS) is
 			-- Register invariant `invariant_part'. 
 		local
 			inv_adapter: INVARIANT_ADAPTER
@@ -328,7 +328,7 @@ end;
 			-- Register the invarians defined in `ancestors'.
 			-- (class ANY is skipped)
 		local
-			inv_as: INVARIANT_AS_B
+			inv_as: INVARIANT_AS
 		do
 			from 
 				record_ancestors_of_class (target_class);
@@ -377,7 +377,7 @@ feature -- Removal
 
 feature -- Output
 					
-	format_categories (ctxt: FORMAT_CONTEXT_B) is
+	format_categories (ctxt: FORMAT_CONTEXT) is
 			-- Format categories into `ctxt'.
 		require
 			valid_ctxt: ctxt /= Void
@@ -399,7 +399,7 @@ feature -- Output
 			end;	
 		end;
 
-	format_invariants (ctxt: FORMAT_CONTEXT_B) is
+	format_invariants (ctxt: FORMAT_CONTEXT) is
 			-- Format the invariants.
 		require
 			valid_ctxt: ctxt /= Void
@@ -432,7 +432,7 @@ feature -- EiffelCase output
 
 feature {NONE} -- Implementation
 
-	current_class_ast: CLASS_AS_B is
+	current_class_ast: CLASS_AS is
 			-- Retrieve the ast structure for current_class
 			--| (If class is out of date with compiled
 			--| structures reparse class)
@@ -558,7 +558,7 @@ end;
 			t: FEATURE_TABLE;
 			id: CLASS_ID;
 			f_adapter: FEATURE_ADAPTER;
-			inv_as: INVARIANT_AS_B
+			inv_as: INVARIANT_AS
 		do
 debug ("FLAT_SHORT")
 	io.error.putstring ("%TSkipped classes assertions.");
@@ -724,7 +724,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External features
 
-	c_parse (f: POINTER; s: POINTER): CLASS_AS_B is
+	c_parse (f: POINTER; s: POINTER): CLASS_AS is
 		external
 			"C"
 		end;

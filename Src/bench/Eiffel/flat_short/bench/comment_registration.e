@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (ast: CLASS_AS_B; class_c: CLASS_C) is
+	make (ast: CLASS_AS; class_c: CLASS_C) is
 			-- Initialize comment registration for complied
 			-- class `class_c' with ast structure `class_ast'.
 		require
@@ -56,7 +56,7 @@ feature -- Update
 
 feature {AST_EIFFEL} -- Element change
 
-	register_feature (feature_as: FEATURE_AS_B) is
+	register_feature (feature_as: FEATURE_AS) is
 			-- Register feature `feature_as'.
 		local
 			comments: EIFFEL_COMMENTS
@@ -67,7 +67,7 @@ feature {AST_EIFFEL} -- Element change
 			end
 		end;
 
-	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS_B) is
+	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS) is
 			-- Register feature_clause `feature_clause' after registering
             -- features.
 		local
@@ -79,7 +79,7 @@ feature {AST_EIFFEL} -- Element change
 			end
 		end;
 
-	register_invariant (invariant_part: INVARIANT_AS_B) is
+	register_invariant (invariant_part: INVARIANT_AS) is
 			-- Register invariant `invariant_part'.
 		do
 			-- Do nothing

@@ -641,16 +641,16 @@ end;
 			-- Analyze local declarations written in the class for a
 			-- syntactically changed class.
 		local
-			feature_clause: FEATURE_CLAUSE_AS_B;
-			features: EIFFEL_LIST_B [FEATURE_AS_B];
+			feature_clause: FEATURE_CLAUSE_AS;
+			features: EIFFEL_LIST [FEATURE_AS];
 				-- Reference on the feature list produced by the first pass
-			single_feature: FEATURE_AS_B;
+			single_feature: FEATURE_AS;
 				-- Single standard Eiffel feature
-			name_list: EIFFEL_LIST_B [FEATURE_NAME_B];
+			name_list: EIFFEL_LIST [FEATURE_NAME];
 				-- Attribute list names
 			feature_i: FEATURE_I;
-			feat_name: FEATURE_NAME_B;
-			clauses: EIFFEL_LIST_B [FEATURE_CLAUSE_AS_B];
+			feat_name: FEATURE_NAME;
+			clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS];
 			export_status: EXPORT_I;
 		do
 			clauses := class_info.features;
@@ -864,7 +864,7 @@ end
 			origins.put_front (feature_i.feature_name);
 		end;
 
-	feature_unit (yacc_feature: FEATURE_AS_B; feat: FEATURE_NAME_B): FEATURE_I is
+	feature_unit (yacc_feature: FEATURE_AS; feat: FEATURE_NAME): FEATURE_I is
 			-- Feature correponding to declaration `yacc_feature'.
 			-- If we found a feature named `feature_name' in a previous
 			-- feature table, don't change of feature id. If this previous
@@ -878,7 +878,7 @@ end
 				-- Feature coming from a previous recompilation
 			old_body_id, feature_body_id: BODY_ID;
 				-- Body id of a previous compiled feature
-			old_description: FEATURE_AS_B;
+			old_description: FEATURE_AS;
 				-- Abstract representation of a previous compiled feature
 			is_the_same, old_feature_in_class: BOOLEAN;
 				-- Is the parsed feature the saem than a previous
@@ -1390,7 +1390,7 @@ end;
 			invariant_info: READ_INFO;
 				-- information left by the temporary server `Tmp_ast_server'
 				-- and stored in `class_info'
-			old_invar_clause, invar_clause: INVARIANT_AS_B;
+			old_invar_clause, invar_clause: INVARIANT_AS;
 			old_clause_exists: BOOLEAN;
 		do
 				-- First: check is the invariant clause of the current
@@ -1443,7 +1443,7 @@ feature -- Replications
 		require
 			valid_rep_count: rep_parent_list.count > 0
 		local
-			feature_as: FEATURE_AS_B;
+			feature_as: FEATURE_AS;
 			new_feat, rep_feat, old_feat: FEATURE_I;
 			f_name: STRING;
 			rep_name_list: REP_NAME_LIST;
@@ -1617,7 +1617,7 @@ end;
 				-- Feature coming from a previous recompilation
 			old_body_id, feature_body_id: BODY_ID;
 				-- Body id of a previous compiled feature
-			old_description: FEATURE_AS_B;
+			old_description: FEATURE_AS;
 				-- Abstract representation of a previous compiled feature
 			is_the_same, old_feature_in_class: BOOLEAN;
 				-- Is the parsed feature the saem than a previous

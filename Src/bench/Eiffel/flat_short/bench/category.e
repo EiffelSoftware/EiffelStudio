@@ -184,7 +184,7 @@ feature -- Element change
 
 feature -- Context output
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
 			if not order_same_as_text then

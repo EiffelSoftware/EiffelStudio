@@ -108,7 +108,7 @@ feature -- Access
 			end
 		end;
 
-	adapted_type (f: FORMAL_AS_B): TYPE_A is
+	adapted_type (f: FORMAL_AS): TYPE_A is
 			-- Adapted type of `source_class' for format `f'
 		do
 			if source_class /= Void then
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	evaluate_type (last_type: TYPE_A; type: TYPE_B): TYPE_A is
+	evaluate_type (last_type: TYPE_A; type: TYPE): TYPE_A is
 			-- Evaluate type `type' in relation to `last_type'.
 		local
 			last_constrained: TYPE_A;

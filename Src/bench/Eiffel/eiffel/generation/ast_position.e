@@ -26,11 +26,11 @@ feature -- Debugger
 	position: INTEGER;
 			-- Position within byte array since start of byte code
 	
-	ast_node: AST_EIFFEL_B;
+	ast_node: AST_EIFFEL;
 			-- The AST node which is associated with the break-point (that is
 			-- the ast node which follows the break-point at `position'.
 
-	make (pos: INTEGER; node: AST_EIFFEL_B) is
+	make (pos: INTEGER; node: AST_EIFFEL) is
 			-- Initialization
 		do
 			position := pos;

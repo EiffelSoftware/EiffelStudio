@@ -569,7 +569,7 @@ feature {SHOW_HTML_TEXT} -- Parsing checking
 	
 	new_class_name (e_class: CLASS_C): STRING is
 		local
-			class_as_b: CLASS_AS_B
+			class_as_b: CLASS_AS
 		do
 			class_as_b ?= e_class.click_list.area.item (0).node
 			if class_as_b /= Void then

@@ -9,7 +9,7 @@ deferred class AST_REGISTRATION
 
 feature -- Properties
 
-	class_ast: CLASS_AS_B;
+	class_ast: CLASS_AS;
 			-- Class AST being registered
 
 	eiffel_file: EIFFEL_FILE;
@@ -25,14 +25,14 @@ feature -- Access
 
 feature {AST_EIFFEL} -- Element change
 
-	register_feature (feature_as: FEATURE_AS_B) is
+	register_feature (feature_as: FEATURE_AS) is
 			-- Register feature `feature_as'.
 		require
 			valid_feature_as: feature_as /= Void
 		deferred
 		end;
 
-	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS_B) is
+	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS) is
 			-- Register feature_clause `feature_clause' after registering
             -- features.
 		require
@@ -40,7 +40,7 @@ feature {AST_EIFFEL} -- Element change
 		deferred
 		end;
 
-	register_invariant (invariant_part: INVARIANT_AS_B) is
+	register_invariant (invariant_part: INVARIANT_AS) is
 			-- Register invariant `invariant_part'.
 		require
 			valid_invariant: invariant_part /= Void

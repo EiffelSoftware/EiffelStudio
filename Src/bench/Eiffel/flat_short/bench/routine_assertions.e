@@ -19,7 +19,7 @@ feature -- Initialization
 		require
 			valid_feat_adapter: feat_adapter /= Void
 		local
-			routine_as: ROUTINE_AS_B	
+			routine_as: ROUTINE_AS	
 		do
 			routine_as ?= feat_adapter.ast.body.content;
 			if routine_as /= Void then
@@ -29,11 +29,11 @@ feature -- Initialization
 			origin := feat_adapter.source_feature;
 		end;
 
-	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS_B) is
+	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS) is
 			-- Initialize Current with feature `feat'
 			-- and ast structure `ast'.
 		local
-			rout_as: ROUTINE_AS_B
+			rout_as: ROUTINE_AS
 		do
 			if ast /= Void then
 				rout_as ?= ast.body.content;
@@ -47,10 +47,10 @@ feature -- Initialization
 
 feature -- Properties
 
-	precondition: REQUIRE_AS_B;
+	precondition: REQUIRE_AS;
 			-- Precondition ast for origin
 
-	postcondition: ENSURE_AS_B;
+	postcondition: ENSURE_AS;
 			-- Postcondition ast for origin
 		
 	origin: FEATURE_I;
@@ -66,13 +66,13 @@ feature -- Properties
 
 feature -- Output
 
-	format_precondition (ctxt: FORMAT_CONTEXT_B) is
+	format_precondition (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.set_source_feature_for_assertion (origin);
 			precondition.format (ctxt);
 		end;
 
-	format_postcondition (ctxt: FORMAT_CONTEXT_B) is
+	format_postcondition (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.set_source_feature_for_assertion (origin);
 			postcondition.format (ctxt);

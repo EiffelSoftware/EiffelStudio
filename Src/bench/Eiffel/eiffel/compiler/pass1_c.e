@@ -20,7 +20,7 @@ feature
 	execute (degree_output: DEGREE_OUTPUT; to_go: INTEGER) is
 			-- Syntax analysis on `associated_class'
 		local
-			ast: CLASS_AS_B;
+			ast: CLASS_AS;
 			class_id: CLASS_ID;
 			temp: STRING;
 			comment_reg: COMMENT_REGISTRATION

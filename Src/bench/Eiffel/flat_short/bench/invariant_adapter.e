@@ -27,7 +27,7 @@ feature -- Update
 
 feature -- Properties
 
-	ast: INVARIANT_AS_B
+	ast: INVARIANT_AS
 			-- Associated invariant AST
 	
 	source_class: CLASS_C;
@@ -35,7 +35,7 @@ feature -- Properties
 
 feature -- Output
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 			-- Format invariant.
 		do
 			ctxt.begin;

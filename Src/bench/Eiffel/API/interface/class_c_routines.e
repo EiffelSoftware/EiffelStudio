@@ -77,7 +77,7 @@ feature -- Properties
 			-- Suppliers of the class in terms of calls
 			-- [Useful for incremental type check].
 
-	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B]
+	generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Formal generical parameters
 
 	topological_id: INTEGER
@@ -362,7 +362,7 @@ feature -- Element change
 			not_precompiled: not is_precompiled
 			file_is_readable: file_is_readable
 		local
-			class_ast: CLASS_AS_B
+			class_ast: CLASS_AS
 			error: BOOLEAN
 			syntax_error: SYNTAX_ERROR
 			compiled_info: CLASS_C
@@ -411,8 +411,8 @@ feature -- Output
 	signature: STRING is
 			-- Signature of class
 		local
-			formal_dec: FORMAL_DEC_AS_B
-			constraint_type: TYPE_B
+			formal_dec: FORMAL_DEC_AS
+			constraint_type: TYPE
 			old_cluster: CLUSTER_I
 			gens: like generics
 		do
@@ -446,8 +446,8 @@ feature -- Output
 		require
 			non_void_st: st /= Void
 		local
-			formal_dec: FORMAL_DEC_AS_B
-			constraint_type: TYPE_B
+			formal_dec: FORMAL_DEC_AS
+			constraint_type: TYPE
 			old_cluster: CLUSTER_I
 			gens: like generics
 		do
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Deferred routines to be implemented in CLASS_C
 
-	build_ast: CLASS_AS_B is
+	build_ast: CLASS_AS is
 			-- Build the AST structure of Current class
 		deferred
 		end

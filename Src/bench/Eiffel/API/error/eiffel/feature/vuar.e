@@ -46,7 +46,7 @@ feature -- Output
 			st.add_new_line;
 		end;
 
-feature {ACCESS_FEAT_AS_B, PRECURSOR_AS_B} -- Setting
+feature {ACCESS_FEAT_AS, PRECURSOR_AS} -- Setting
 
 	set_called_feature (f: FEATURE_I) is
 		require

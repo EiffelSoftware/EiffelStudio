@@ -182,7 +182,7 @@ feature -- formatter
 		end;
 
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 		local
 			temp: STRING;
 			cluster: CLUSTER_I;

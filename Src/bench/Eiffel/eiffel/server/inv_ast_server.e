@@ -4,7 +4,7 @@ class
 	INV_AST_SERVER 
 
 inherit
-	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
+	READ_SERVER [INVARIANT_AS, CLASS_ID]
 		rename
 			ast_server as offsets
 		export
@@ -31,7 +31,7 @@ feature
 			Result := Tmp_inv_ast_server.has (an_id) or else server_has (an_id);
 		end;
 
-	item (an_id: CLASS_ID): INVARIANT_AS_B is
+	item (an_id: CLASS_ID): INVARIANT_AS is
 			-- Invariant of class of id `an_id'. Look for it first in
 			-- the associated temporary server
 	   do

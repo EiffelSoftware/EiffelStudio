@@ -3,14 +3,14 @@
 class AST_SERVER 
 
 inherit
-	COMPILER_SERVER [CLASS_AS_B, CLASS_ID]
+	COMPILER_SERVER [CLASS_AS, CLASS_ID]
 
 creation
 	make
 	
 feature -- Access
 
-	id (t: CLASS_AS_B): CLASS_ID is
+	id (t: CLASS_AS): CLASS_ID is
 			-- Id associated with `t'
 		do
 			Result := t.id

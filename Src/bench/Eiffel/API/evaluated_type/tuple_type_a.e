@@ -219,7 +219,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 	error_generics: VTUG is
 		local
-			base_generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B]
+			base_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			i, base_count: INTEGER
 		do
 			-- FIXME! MS

@@ -6,7 +6,7 @@ indexing
 class FORMAT_FEAT_CONTEXT
 
 inherit
-	FORMAT_CONTEXT_B
+	FORMAT_CONTEXT
 		rename
 			execute as old_execute
 		redefine
@@ -31,7 +31,7 @@ feature -- Execution
 		local
 			start_pos, end_pos: INTEGER;
 			file: RAW_FILE;
-			f_ast: FEATURE_AS_B;
+			f_ast: FEATURE_AS;
 			rout_as: ROUTINE_AS;
 			comment: EIFFEL_COMMENTS;
 			written_in_class: CLASS_C;
@@ -122,7 +122,7 @@ feature -- Element change
 			-- Print the origin comment if necessary and
 			-- print the export status.
 		do
-			{FORMAT_CONTEXT_B} Precursor;
+			{FORMAT_CONTEXT} Precursor;
 
 				--| Print export status.
 			if not export_status.is_all then

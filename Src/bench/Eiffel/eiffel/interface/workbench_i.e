@@ -104,8 +104,8 @@ feature -- Initialization
 		local
 			eiffel_init: EBENCH_YACC_EIFFEL
 			lace_init: YACC_LACE
-			feature_as: FEATURE_AS_B
-			invariant_as: INVARIANT_AS_B
+			feature_as: FEATURE_AS
+			invariant_as: INVARIANT_AS
 		once
 				-- Initialization of Yacc-Eiffel interface
 			!!eiffel_init.init

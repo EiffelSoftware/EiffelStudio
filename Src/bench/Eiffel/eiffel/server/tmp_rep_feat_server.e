@@ -4,7 +4,7 @@
 class TMP_REP_FEAT_SERVER 
 
 inherit
-	READ_SERVER [FEATURE_AS_B, BODY_ID]
+	READ_SERVER [FEATURE_AS, BODY_ID]
 		rename
 			tmp_rep_server as offsets
 		redefine

@@ -582,13 +582,13 @@ feature -- Conveniences
 			-- Do nothing
 		end
 
-	type: TYPE_B is
+	type: TYPE is
 			-- Type of the feature
 		do
 			Result := Void_type
 		end
 
-	set_type (t: TYPE_B) is
+	set_type (t: TYPE) is
 			-- Assign `t' to `type'.
 		do
 			-- Do nothing
@@ -600,7 +600,7 @@ feature -- Conveniences
 			-- No arguments
 		end
 
-	argument_names: EIFFEL_LIST_B [ID_AS_B] is
+	argument_names: EIFFEL_LIST [ID_AS] is
 			-- Argument names
 		do
 			-- No argument names
@@ -713,10 +713,10 @@ feature -- Check
 --		do
 --		end
 
-	body: FEATURE_AS_B is
+	body: FEATURE_AS is
 			-- Body of the feature
 		local
-			class_ast: CLASS_AS_B
+			class_ast: CLASS_AS
 			bid: BODY_ID
 		do
 			if body_index /= Void then
@@ -990,7 +990,7 @@ feature -- Signature checking
 				-- of `feat_table'.
 		local
 			arg_names: like argument_names
-			arg_id: ID_AS_B
+			arg_id: ID_AS
 			vreg: VREG
 			vrfa: VRFA
 		do
@@ -1449,7 +1449,7 @@ end
 			end
 		end
 
-	argument_position (arg_id: ID_AS_B): INTEGER is
+	argument_position (arg_id: ID_AS): INTEGER is
 			-- Position of argument `arg_id' in the list of arguments
 			-- of the current feature. 0 if none or not found.
 		require
@@ -1460,7 +1460,7 @@ end
 			end
 		end
 
-	has_argument_name (arg_id: ID_AS_B): BOOLEAN is
+	has_argument_name (arg_id: ID_AS): BOOLEAN is
 			-- Has the current feature an argument named `arg_id" ?
 		do
 			if arguments /= Void then
@@ -1838,7 +1838,7 @@ feature -- Debugging
 			eu: EXECUTION_UNIT
 			new_body_id: REAL_BODY_ID
 			bc: BYTE_CODE
-			fa: FEATURE_AS_B
+			fa: FEATURE_AS
 		do
 			!!Result
 

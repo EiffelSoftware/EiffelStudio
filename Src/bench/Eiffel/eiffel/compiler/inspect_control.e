@@ -14,7 +14,7 @@ creation
 	
 feature 
 
-	node: INSPECT_AS_B;
+	node: INSPECT_AS;
 			-- Node currently checked
 
 	feature_table: FEATURE_TABLE;
@@ -23,7 +23,7 @@ feature
 	integer_type: BOOLEAN;
 			-- Type of the inspect expression
 
-	interval: INTERVAL_AS_B;
+	interval: INTERVAL_AS;
 			-- Current interval processed
 
 	unique_found: BOOLEAN;
@@ -86,7 +86,7 @@ feature
 			integer_type := True;
 		end;
 
-	set_interval (i: INTERVAL_AS_B) is
+	set_interval (i: INTERVAL_AS) is
 			-- Assign `i' to `interval'.
 		do
 			interval := i;
@@ -105,7 +105,7 @@ feature
 			good_integer_interval: interval.good_integer_interval;
 		local
 			first_int, second_int: INT_VAL_B;
-			lower, upper: ATOMIC_AS_B;
+			lower, upper: ATOMIC_AS;
 			vomb3: VOMB3;
 		do
 			lower := interval.lower;
@@ -145,7 +145,7 @@ feature
 			good_character_interval: interval.good_character_interval;
 		local
 			first_char, second_char: CHAR_VAL_B;
-			upper: ATOMIC_AS_B;
+			upper: ATOMIC_AS;
 			vomb3: VOMB3;
 		do
 			first_char := interval.lower.make_character;
@@ -177,15 +177,15 @@ feature
 			end;
 		end;
 
-	make_integer (bound: ATOMIC_AS_B): INT_VAL_B is
+	make_integer (bound: ATOMIC_AS): INT_VAL_B is
 			-- Integer bound associated to `bound'.
 		require
 			good_argument: bound /= Void;
 			consistency: bound.good_integer;
 		local
 			int_const_val: INT_CONST_VAL_B;
-			int_bound: INTEGER_AS_B;
-			id: ID_AS_B;
+			int_bound: INTEGER_AS;
+			id: ID_AS;
 			constant_i: CONSTANT_I;
 			integer_value: INT_VALUE_I;
 			constant_name: STRING;

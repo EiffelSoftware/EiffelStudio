@@ -231,8 +231,7 @@ feature -- Genericity
 					f.putint (rout_info.offset)
 				else
 					f.putstring ("RTWCT(")
-					f.putint
-						(context.current_type.associated_class_type.id.id - 1)
+					f.putint (context.current_type.associated_class_type.id.id - 1)
 					f.putstring (gc_comma)
 					f.putint (feature_id)
 				end

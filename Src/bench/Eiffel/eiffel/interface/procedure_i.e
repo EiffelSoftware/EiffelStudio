@@ -78,7 +78,7 @@ feature
 			obsolete_message := s;
 		end;
 
-	argument_names: EIFFEL_LIST_B [ID_AS_B] is
+	argument_names: EIFFEL_LIST [ID_AS] is
 			-- Argument names
 		do
 			Result := arguments.argument_names;
@@ -92,7 +92,7 @@ feature
 			end;
 		end;
 
-	init_assertion_flags (content: ROUTINE_AS_B) is
+	init_assertion_flags (content: ROUTINE_AS) is
 			-- Initialize assertion flags with `content'.
 		require
 			good_argument: content /= Void;
@@ -115,15 +115,15 @@ feature
 			end;
 		end;
 
-	init_arg (argument_as: EIFFEL_LIST_B [TYPE_DEC_AS_B]) is
+	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]) is
 			-- Initialization of arguments.
 		require
 			good_argument: argument_as /= Void;
 		local
 			i, j, count, dec_count, nb_arg: INTEGER;
-			arg_type: TYPE_B;
-			arg_dec: TYPE_DEC_AS_B;
-			id_list: EIFFEL_LIST_B [ID_AS_B];
+			arg_type: TYPE;
+			arg_dec: TYPE_DEC_AS;
+			id_list: EIFFEL_LIST [ID_AS];
 		do
 				-- Calculate the number of arguments.
 			from

@@ -18,7 +18,7 @@ creation
 
 feature -- Output
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 		local
 			is_not_first: BOOLEAN;
 			target_class: CLASS_C;
@@ -72,7 +72,7 @@ feature -- Output
 	store_case_info (s: S_CLASS_DATA) is
 		local
 			is_not_first: BOOLEAN;
-			ast: INVARIANT_AS_B
+			ast: INVARIANT_AS
 		do
 			if not empty then
 				check

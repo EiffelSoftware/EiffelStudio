@@ -21,7 +21,7 @@ indexing
 							<prefix value="WEB_" assembly="System.Web.dll"/>
 							<prefix value="WEB_" assembly="System.Web.RegularExpressions.dll"/>
 							<prefix value="WEB_" assembly="System.Web.Services.dll"/>
-							<prefix value="WEB_" assembly="System.Web.Mobile.dll"/>
+							<prefix value="WEB_MOBILE_" assembly="System.Web.Mobile.dll"/>
 							<prefix value="WEB_" assembly="System.Web.UI.MobileControls.Adapters.dll"/>
 						</prefixes>
 						<compiler>
@@ -169,7 +169,7 @@ feature -- Access
 			Result.extend ("WEB_", "system.web.dll")
 			Result.extend ("WEB_", "system.web.regularexpressions.dll")
 			Result.extend ("WEB_", "system.web.services.dll")
-			Result.extend ("WEB_", "system.web.mobile.dll")
+			Result.extend ("WEB_MOBILE_", "system.web.mobile.dll")
 			Result.extend ("WEB_", "system.web.ui.mobilecontrols.adapters.dll")
 		end
 		

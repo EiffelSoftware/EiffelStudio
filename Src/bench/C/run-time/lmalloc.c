@@ -15,6 +15,8 @@
 	archive, the malloc() used will be the one from the Eiffel run-time.
 */
 
+#ifndef EIF_THREADS
+
 #include "config.h"
 #include "portable.h"
 #include "malloc.h"
@@ -88,3 +90,4 @@ void free(register void *ptr)
 	xfree(ptr);
 }
 
+#endif /* EIF_THREADS */

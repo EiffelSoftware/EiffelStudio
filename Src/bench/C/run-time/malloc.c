@@ -49,6 +49,12 @@
 /*#undef HAS_SMART_SBRK	/* Undefine to use Purify */
 /*#undef HAS_SBRK			/* Undefine to use Purify */
 
+#ifdef EIF_THREADS
+#undef HAS_SMART_MMAP
+#undef HAS_SMART_SBRK
+#undef HAS_SBRK
+#endif
+
 /*#define MEMCHK		/* Define for memory checker */
 /*#define EMCHK		/* Define for calls to memck */
 /*#define MEMPANIC		/* Panic if memck reports a trouble */
@@ -530,7 +536,7 @@ rt_shared char *xmalloc(unsigned int nbytes, int type, int gc_flag)
 	 * The function returns a pointer to the free location found, or a null
 	 * pointer if there is no memory available.
 	 */
-	EIF_GET_CONTEXT 
+	EIF_GET_CONTEXT
 	int mod;			/* Remainder for padding */
 	char *result;		/* Pointer to the free memory location we found */
 

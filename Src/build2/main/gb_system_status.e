@@ -27,6 +27,10 @@ feature -- Access
 	is_wizard_system: BOOLEAN
 		-- Is Build behaving as a wizard?
 		
+	tools_always_on_top: BOOLEAN
+		-- Should all windows containing tools be shown modelessly
+		-- to the main window. Otherwise, they are independent.
+		
 feature -- Status setting
 
 	set_current_project (new_project_settings: GB_PROJECT_SETTINGS) is
@@ -66,5 +70,16 @@ feature -- Status setting
 			is_wizard_system := True
 		end
 		
+	enable_tools_always_on_top is
+			-- Assign `True' to `tools_always_on_top'.
+		do
+			tools_always_on_top := True
+		end
+		
+	disable_tools_always_on_top is
+			-- Assign `False' to `tools_always_on_top'.
+		do
+			tools_always_on_top := False
+		end
 
 end -- class GB_SYSTEM_STATUS

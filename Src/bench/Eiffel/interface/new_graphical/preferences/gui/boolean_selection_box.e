@@ -35,7 +35,7 @@ feature -- Creation
 			h1.extend (no_b)
 			create ok_b.make_with_text_and_action ("OK",~commit)
 			h2.extend (ok_b)
-			h2.disable_child_expand (ok_b)
+			h2.disable_item_expand (ok_b)
 --			ok_b.disable_vertical_resize
 		end
 

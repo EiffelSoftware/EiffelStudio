@@ -104,28 +104,25 @@ feature {GB_CODE_GENERATOR} -- Output
 			Result := ""
 			full_information := get_unique_full_info (element)
 			
-			element_info := full_information @ (Upper_string)
-			if element_info /= Void then
+			if attribute_set (Upper_string) then
 				element_info2 := full_information @ (Lower_string)
 				check
-					info_not_void: element_info2 /= Void
+					both_upper_and_lower_set: attribute_set (Lower_string)
 				end
-				lower := element_info2.data
-				upper := element_info.data
+				lower := retrieve_integer_setting (lower_string)
+				upper := retrieve_integer_setting (upper_string)
 				Result := info.name + ".value_range.adapt (create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))"
 			end
 			
-			element_info := full_information @ (Value_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_value (" + element_info.data + ")"
+			if attribute_set (Value_string) then
+				Result := Result + indent + info.name + ".set_value (" + retrieve_integer_setting (value_string) + ")"
 			end
-			element_info := full_information @ (Step_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_step (" + element_info.data + ")"
+			
+			if attribute_set (Step_string) then
+				Result := Result + indent + info.name + ".set_step (" + retrieve_integer_setting (step_string) + ")"
 			end
-			element_info := full_information @ (Leap_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_leap (" + element_info.data + ")"
+			if attribute_set (Leap_string) then
+				Result := Result + indent + info.name + ".set_leap (" + retrieve_integer_setting (leap_string) + ")"
 			end
 			Result := strip_leading_indent (Result)
 		end

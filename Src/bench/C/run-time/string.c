@@ -298,7 +298,7 @@ register2 char *str2;
 int l1;
 int l2;
 {
-	/* Compate the two strings 'str1' and 'str2'.
+	/* Compare the two strings 'str1' and 'str2'.
 	 * Return the sign of 'str1 - str2'.
 	 */
 

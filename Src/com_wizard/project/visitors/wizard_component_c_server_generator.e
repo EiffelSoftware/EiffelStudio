@@ -135,11 +135,22 @@ feature -- Basic Operations
 		do
 			create Result.make (1000)
 			Result.append (Tab)
+			Result.append ("ref_count = 0;")
+			Result.append (New_line_tab)
+
 			Result.append (Eiffel_object)
 			Result.append (Space_equal_space)
 			Result.append (Eif_adopt)
 			Result.append (Space_open_parenthesis)
 			Result.append ("eif_obj")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			Result.append (Type_id)
+			Result.append (Space_equal_space)
+			Result.append ("eif_type (")
+			Result.append (Eiffel_object)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
@@ -183,6 +194,15 @@ feature -- Basic Operations
 			-- Body of constructor.
 		do
 			create Result.make (1000)
+			Result.append (Tab)
+			Result.append ("ref_count = 0;")
+			Result.append (New_line_tab)
+
+			Result.append (Type_id)
+			Result.append (Space_equal_space)
+			Result.append (Type_id_variable_name)
+			Result.append (Semicolon)
+
 			Result.append (New_line_tab)
 			Result.append (Eiffel_object)
 			Result.append (Space_equal_space)
@@ -1797,12 +1817,34 @@ feature -- Basic Operations
 			tmp_body.append (New_line_tab_tab)
 
 			if dispatch_interface then
+				tmp_body.append (If_keyword)
+				tmp_body.append (Space)
+				tmp_body.append (Open_parenthesis)
+				tmp_body.append (Type_info_variable_name)
+				tmp_body.append (Space)
+				tmp_body.append (C_not_equal)
+				tmp_body.append (Null)
+				tmp_body.append (Close_parenthesis)
+				tmp_body.append (New_line_tab_tab)
+
+				tmp_body.append (Open_curly_brace)
+				tmp_body.append (New_line_tab_tab_tab)
+
 				tmp_body.append (Type_info_variable_name)
 				tmp_body.append (Struct_selection_operator)
 				tmp_body.append ("Release")
 				tmp_body.append (Space_open_parenthesis)
 				tmp_body.append (Close_parenthesis)
 				tmp_body.append (Semicolon)
+				tmp_body.append (New_line_tab_tab_tab)
+
+				tmp_body.append (Type_info_variable_name)
+				tmp_body.append (Space_equal_space)
+				tmp_body.append (Null)
+				tmp_body.append (Semicolon)
+				tmp_body.append (New_line_tab_tab)
+
+				tmp_body.append (Close_curly_brace)
 				tmp_body.append (New_line_tab_tab)
 			end
 

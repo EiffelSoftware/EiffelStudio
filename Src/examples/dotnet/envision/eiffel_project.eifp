@@ -1,0 +1,32 @@
+"General"
+{
+"ProjectIdGuid" = "{C89559FB-0470-446e-8C4E-0289EB079EBE}"
+}
+"Configurations"
+{
+    "Debug|.NET"
+    {
+    "AceFile" = ".\\ace.ace"
+    "ProjectFileName" = ".\\debug\\app.epr"
+    "OptimizeCode" = "0"
+    "RequiresCleanCompile" = "0"
+    "UseGeneratedCyrptogrpahicKey" = "0"
+    }
+    "Release|.NET"
+    {
+    "AceFile" = ".\\ace.ace"
+    "ProjectFileName" = ".\\release\\noth.epr"
+    "OptimizeCode" = "0"
+    "RequiresCleanCompile" = "0"
+    "UseGeneratedCyrptogrpahicKey" = "0"
+    }
+}
+"Files"
+{
+}
+"ProjStartupServices"
+{
+}
+"Globals"
+{
+}

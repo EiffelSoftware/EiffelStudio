@@ -37,7 +37,7 @@ feature -- Basic operations
 			if clu /= Void then
 				create clu_s.make (clu)
 				if clu_s.is_valid then
-					tool.set_stone (clu_s)
+					tool.tool.set_stone (clu_s)
 				end
 			end
 		end

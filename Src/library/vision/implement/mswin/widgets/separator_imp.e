@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 				else
 					a_paint_dc.line (width // 2 - 1, 0, width // 2 - 1, height)
 				end
-				!! color.make_rgb (255, 255, 255)
+				!! color.make_system (Color_btnhighlight)
 				!! a_pen.make (Ps_solid, 1, color)
 				a_paint_dc.select_pen (a_pen)
 

@@ -287,7 +287,7 @@ feature -- Execution
 					if uf.exists then
 						if Eiffel_system.system.il_generation then
 							if feature {EXEC_MODES}.User_stop_points = Application.execution_mode then
-								create l_il_env
+								create l_il_env.make (Eiffel_system.System.clr_runtime_version)
 								l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
 								if l_app_string /= Void then
 									if l_il_env.use_cordbg (dotnet_debugger) then

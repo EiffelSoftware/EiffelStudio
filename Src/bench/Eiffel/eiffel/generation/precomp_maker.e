@@ -44,9 +44,13 @@ feature
 			-- Generates the .c -> .o compilation rule
 		do
 			Make_file.putstring ("%
+				%%N.SUFFIXES: .cpp%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%
-				%%T$(RM) $*.c%N%N");
+				%%T$(RM) $*.c%N%N%
+				%.cpp.o:%N%
+				%%T$(CPP) $(CPPFLAGS) -c $<%N%
+				%%T$(RM) $*.cpp%N%N");
 		end;
 
 	system_name: STRING is

@@ -13,7 +13,8 @@ inherit
 		redefine
 			context_data_useful
 		end;
-	PAINTER
+	PAINTER;
+	EB_CONSTANTS
 
 creation
 
@@ -44,6 +45,9 @@ feature -- Initialization
 
 	holes: LINKED_LIST [HOLE];
 			-- List of holes 
+
+	have_active_d_and_d: BOOLEAN
+			-- Does Current want to have an active drag and drop cursor
 
 feature -- Access
 
@@ -138,6 +142,7 @@ feature -- Update
 			scr: SCREEN;
 			target: HOLE
 		do
+			have_active_d_and_d := General_resources.active_drag_and_drop.actual_value;
 			drag_source := s;
 			stone := s.transported_stone;
 			x0 := ix;
@@ -146,15 +151,17 @@ feature -- Update
 			y1 := widget.screen.y;
 			draw_segment (x0, y0, x1, y1);	
 			target := pointed_hole;
-			if 
-				target /= Void and then 
-				target.compatible (stone) 
-			then
-				is_compatible_target := True;
-				widget.grab (stone.stone_cursor)
-			else
-				is_compatible_target := False;
-				widget.grab (stone.x_stone_cursor)
+			if have_active_d_and_d then
+				if 
+					target /= Void and then 
+					target.compatible (stone) 
+				then
+					is_compatible_target := True;
+					widget.grab (stone.stone_cursor)
+				else
+					is_compatible_target := False;
+					widget.grab (stone.x_stone_cursor)
+				end;
 			end;
 			dropped := False;
 		end;
@@ -164,6 +171,14 @@ feature -- Execution
 	context_data_useful: BOOLEAN is True;
 
 	execute (argument: ANY) is
+			-- Invoke the callbacks if the stone is not void.
+		do
+			if stone /= Void then	
+				work (argument)
+			end
+		end;
+
+	work (argument: ANY) is
 			-- Callbacks associated with Current.
 			-- 1) Mouse pointer movement:
 			--	  Refresh segment.
@@ -189,15 +204,17 @@ feature -- Execution
 					x1 := scr.x; 
 					y1 := scr.y;
 					draw_segment (x0, y0, x1, y1);
-					target := pointed_hole;
-					if target /= Void and then target.compatible (stone) then
-						if not is_compatible_target then
-							is_compatible_target := True
-							widget.grab (stone.stone_cursor)
+					if have_active_d_and_d then
+						target := pointed_hole;
+						if target /= Void and then target.compatible (stone) then
+							if not is_compatible_target then
+								is_compatible_target := True
+								widget.grab (stone.stone_cursor)
+							end
+						elseif is_compatible_target then
+							is_compatible_target := False;
+							widget.grab (stone.x_stone_cursor)
 						end
-					elseif is_compatible_target then
-						is_compatible_target := False;
-						widget.grab (stone.x_stone_cursor)
 					end
 				end;
 			elseif argument = Abort_action then

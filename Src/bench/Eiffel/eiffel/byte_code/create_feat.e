@@ -41,38 +41,6 @@ feature -- Access
 	feature_name_id: INTEGER;
 			-- Feature name index in NAMES_HEAP.
 
-	is_array (type: TYPE_I): BOOLEAN is
-			-- Is type we want to create an ARRAY one?
-			-- Usefull only during IL generation.
-		require
-			type_not_void: type /= Void
-			il_generation: System.il_generation
-		local
-			cl_type: CL_TYPE_I
-		do
-			cl_type ?= type
-			check
-				cl_type_not_void: cl_type /= Void
-			end
-			Result := cl_type.base_class.is_special
-		end
-
-	is_external (type: TYPE_I): BOOLEAN is
-			-- Is type we want to create an external one?
-			-- Usefull only during IL generation.
-		require
-			type_not_void: type /= Void
-			il_generation: System.il_generation
-		local
-			cl_type: CL_TYPE_I
-		do
-			cl_type ?= type
-			check
-				cl_type_not_void: cl_type /= Void
-			end
-			Result := cl_type.base_class.is_external
-		end
-
 	rout_id: INTEGER is
 			-- Routine ID of the feature to be created
 		do

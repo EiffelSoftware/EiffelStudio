@@ -3304,13 +3304,19 @@ end
 	generate_initialization_table is
 			-- Generate table of initialization routines for composite objects
 		local
-			rout_table: SPECIAL_TABLE
-			rout_entry: SPECIAL_ENTRY
+			rout_table: ROUT_TABLE
+			rout_entry: ROUT_ENTRY
 			i, nb: INTEGER
 			class_type: CLASS_TYPE
+			l_void: VOID_I
 		do
+			if remover /= Void then
+					-- Ensure that initialization routines are marked `used'.
+				remover.used_table.put (True, body_index_counter.initialization_body_index)
+			end
 			from
 				create rout_table.make (routine_id_counter.initialization_rout_id)
+				create l_void
 				i := 1
 				nb := Type_id_counter.value
 				rout_table.create_block (nb)
@@ -3321,27 +3327,31 @@ end
 				if class_type /= Void and then class_type.has_creation_routine then
 					create rout_entry
 					rout_entry.set_type_id (i)
+					rout_entry.set_type (l_void)
 					rout_entry.set_written_type_id (i)
 					rout_entry.set_body_index (body_index_counter.initialization_body_index)
 					rout_table.extend (rout_entry)
 				end
 				i := i + 1
 			end
-			rout_table.sort_till_position
-			rout_table.write
+			rout_table.sort
+			rout_table.generate_full (routine_id_counter.initialization_rout_id,
+													header_generation_buffer)
 		end
 
 	generate_expanded_creation_table is
 			-- Generate table of creation procedures for all expanded objects.
 		local
-			rout_table: SPECIAL_TABLE
-			rout_entry: SPECIAL_ENTRY
+			rout_table: ROUT_TABLE
+			rout_entry: ROUT_ENTRY
 			i, nb: INTEGER
 			class_type: CLASS_TYPE
 			l_class: CLASS_C
+			l_void: VOID_I
 		do
 			from
 				create rout_table.make (routine_id_counter.creation_rout_id)
+				create l_void
 				i := 1
 				nb := Type_id_counter.value
 				rout_table.create_block (nb)
@@ -3354,6 +3364,7 @@ end
 					if l_class.is_used_as_expanded and l_class.creation_feature /= Void then
 						create rout_entry
 						rout_entry.set_type_id (i)
+						rout_entry.set_type (l_void)
 						rout_entry.set_written_type_id (
 							l_class.implemented_type (l_class.creation_feature.written_in,
 								class_type.type).type_id)
@@ -3363,8 +3374,9 @@ end
 				end
 				i := i + 1
 			end
-			rout_table.sort_till_position
-			rout_table.write
+			rout_table.sort
+			rout_table.generate_full (routine_id_counter.creation_rout_id,
+													header_generation_buffer)
 		end
 
 feature -- Dispose routine
@@ -3455,7 +3467,7 @@ feature -- Dispose routine
 						-- generating a standard polymorphic table and so, we cannot reuse the
 						-- one which could have been generated if there was any polymorphic
 						-- call on `dispose'.
-					entry.generate_dispose_table (routine_id_counter.dispose_rout_id,
+					entry.generate_full (routine_id_counter.dispose_rout_id,
 													header_generation_buffer)
 				end
 			end

@@ -268,18 +268,15 @@ feature {NONE} -- Implementation
 			hsplit.set_position (100)
 			create_third_tool_bar (vbox)
 			create edit.make (vbox)
-			edit.set_minimum_size (500, 200)
 
 			-- The main panel
 			create edit.make (vsplit)
-			vsplit.set_position (200) --???
-			edit.set_minimum_size (300, 200)
+			vsplit.set_position (200)
 
 			-- The object tool
 			create vbox.make (vsplit)
 			create_forth_tool_bar (vbox)
 			create edit.make (vbox)
---			edit.set_minimum_size (200, 200)
 		end
 
 feature -- Command execution

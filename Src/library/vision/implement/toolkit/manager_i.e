@@ -27,6 +27,13 @@ feature -- Status setting
 	update_foreground_color is
 		deferred
 		end;
+        
+	set_initial_input_focus (a_widget: WIDGET) is
+                    -- Set child which will initially have input focus
+        require
+            a_widget_not_void: not (a_widget = Void)
+                deferred
+                end
 
 feature -- Element change
 

@@ -37,7 +37,9 @@ feature -- Callbacks
 				Project_tool.save_environment
 			end
 				-- exit not reachable now.
+			tool_supervisor.close_all_editors
 			project_tool.destroy
+				-- "Once" tools (system, dynamic lib, profiler...) not destroyed.
 --			exit
 		end
 
@@ -66,7 +68,9 @@ feature {NONE} -- Implementation
 					Project_tool.initialized and then
 					tool_supervisor.has_modified_editor_tools
 				then
-					create wd.make_with_text (project_tool.parent, t_Confirm, "Some files have not been saved.%NDo you want to save them?")
+					create wd.make_with_text (project_tool.parent, t_Confirm,
+						"Some files have not been saved.%N%
+						%Do you want to save them before exiting?")
 					wd.show_yes_no_cancel_buttons
 					wd.add_yes_command (Current, save_and_exit)
 					wd.add_no_command (Current, do_exit)

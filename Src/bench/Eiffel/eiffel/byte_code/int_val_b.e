@@ -27,9 +27,9 @@ feature
 			Result := value < other.value;
 		end;
 
-	display (a_clickable: OUTPUT_WINDOW) is
+	display (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_int (value);
+			st.add_int (value);
 		end;
 
 	generation_value: INTEGER is

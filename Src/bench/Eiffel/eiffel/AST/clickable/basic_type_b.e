@@ -22,9 +22,9 @@ inherit
 
 feature -- Signature
 
-	append_to (cw: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
-			actual_type.append_to (cw)
+			actual_type.append_to (st)
 		end;
 
 feature -- Stoning

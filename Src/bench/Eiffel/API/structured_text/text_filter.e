@@ -17,14 +17,17 @@ inherit
 			process_filter_item, process_after_class,
 			process_class_name_text, process_comment_text,
 			process_operator_text, process_keyword_text,
-			process_symbol_text
+			process_symbol_text, process_quoted_text, process_new_line,
+			process_basic_text, process_indentation
 		end;
 	TEXT_FORMATTER
 		redefine
 			process_filter_item, process_after_class,
 			process_class_name_text, process_text,
 			process_comment_text, process_operator_text, 
-			process_keyword_text, process_symbol_text
+			process_keyword_text, process_symbol_text,
+			process_quoted_text, process_new_line,
+			process_basic_text, process_indentation
 		select
 			process_text
 		end;
@@ -89,9 +92,6 @@ feature -- Text processing
 		end;
 
 feature {NONE} -- Text processing
-
-	structured_text: STRUCTURED_TEXT;
-			-- Text being processed
 
 	process_symbol_text (text: SYMBOL_TEXT) is
 			-- Process symbol text.

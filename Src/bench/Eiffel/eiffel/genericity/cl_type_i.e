@@ -113,12 +113,12 @@ feature
 			Result := Reference_c_type;
 		end;
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		do
 			if is_expanded then
-				a_clickable.put_string ("expanded ");
+				st.add_string ("expanded ");
 			end;
-			base_class.e_class.append_signature (a_clickable)
+			base_class.e_class.append_signature (st)
 		end;
 
 	dump (file: FILE) is

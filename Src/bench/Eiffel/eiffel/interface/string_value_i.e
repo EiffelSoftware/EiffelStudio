@@ -66,11 +66,11 @@ feature
 			Result.extend ('"');
 		end;
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_char ('"');
-			a_clickable.put_string (eiffel_string (str_val));
-			a_clickable.put_char ('"');
+			st.add_char ('"');
+			st.add_string (eiffel_string (str_val));
+			st.add_char ('"');
 		end;
 
 	string_value: STRING is

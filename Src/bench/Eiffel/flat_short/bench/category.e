@@ -60,7 +60,7 @@ feature -- Access
 			-- Is the comment same as `c'?
 		do
 			Result := comments = void and c = void
-				or else comments /= void and comments.is_equal (c);
+				or else comments /= void and c /= Void and comments.is_equal (c);
 		end;
 
 feature -- Setting

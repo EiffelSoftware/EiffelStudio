@@ -23,6 +23,24 @@ creation
 
 	make
 
+feature -- Access
+
+	image: STRING is
+			-- Raw text. Result is created for each call
+		local
+			linkable: LINKABLE [TEXT_ITEM]
+		do
+			!! Result.make (0);
+			from
+				linkable := first_element
+			until
+				linkable = Void
+			loop
+				Result.append (linkable.item.image);
+				linkable := linkable.right;
+			end;
+		end;
+
 feature -- Element change
 
 	add (v: like item) is
@@ -48,10 +66,10 @@ feature -- Element change
 			at_end: islast
 		end; 
 
-	cursor_out: BOOLEAN;	
-
 	head (pos: CURSOR) is
 			-- List until `pos'.
+		local
+			cursor_out: BOOLEAN;
 		do
 			if not cursor_out then 
 					-- cursor no more in list
@@ -79,20 +97,206 @@ feature -- Element change
 			end
 		end;
 
-	image: STRING is
-			-- Raw text. Result is created for each call
+	add_new_line is
+			-- Put a new line aat current position.
 		local
-			linkable: LINKABLE [TEXT_ITEM]
+			l_item: like item
 		do
-			!! Result.make (0);
-			from
-				linkable := first_element
-			until
-				linkable = Void
-			loop
-				Result.append (linkable.item.image);
-				linkable := linkable.right;
-			end;
+			!NEW_LINE_ITEM! l_item.make;
+			add (l_item)
+		end;
+
+	add_space is
+			-- Put a space at current position.
+		local
+			l_item: like item
+		do
+			!BASIC_TEXT! l_item.make (" ");
+			add (l_item)
+		end;
+
+	add_string (s: STRING) is
+			-- Put `s' at current position.
+		require
+			s_not_void: s /= Void
+		local
+			l_item: like item
+		do
+			!BASIC_TEXT! l_item.make (s);
+			add (l_item)
+		end;
+
+	add_char (c: CHARACTER) is
+			-- Put `c' at current position.
+		local
+			l_item: like item;
+			s: STRING
+		do
+			!! s.make (0);
+			s.extend (c);
+			!BASIC_TEXT! l_item.make (s);
+			add (l_item)
+		end;
+
+	add_int (i: INTEGER) is
+			-- Put `i' at current position.
+		local
+			l_item: like item
+		do
+			!BASIC_TEXT! l_item.make (i.out);
+			add (l_item)
+		end;
+
+	add_cluster (e_cluster: CLUSTER_I; str: STRING) is
+			-- Put `e_cluster' with strring representation
+			-- `str' at current position.
+		require
+			str_not_void: str /= Void
+		local
+			l_item: like item
+		do
+			!BASIC_TEXT! l_item.make (str);
+			add (l_item)
+		end;
+
+	add_class (e_class: E_CLASS) is
+			-- Put `e_class' at current position.
+		require
+			valid_e_class: e_class /= Void
+		local
+			l_item: like item
+		do
+			!BEFORE_CLASS! l_item.make (e_class);
+			add (l_item)
+		end;
+
+	add_end_class (e_class: E_CLASS) is
+			-- Put `e_class' at current position.
+		require
+			valid_e_class: e_class /= Void
+		local
+			l_item: like item
+		do
+			!AFTER_CLASS! l_item.make (e_class);
+			add (l_item)
+		end;
+
+	add_classi (class_i: CLASS_I; str: STRING) is
+			-- Put `class_i' with string representation
+			-- `str' at current position.
+		require
+			valid_str: str /= Void
+		local
+			l_item: like item
+		do
+			!CLASS_NAME_TEXT! l_item.make (str, class_i);
+			add (l_item);
+		end;
+
+	add_error (error: ERROR; str: STRING) is
+			-- Put `error' with string representation
+			-- `str' at current position.
+		require
+			valid_error: error /= Void;
+			valid_str: str /= Void
+		local
+			l_item: like item
+		do
+			!ERROR_TEXT! l_item.make (error, str);
+			add (l_item)
+		end;
+
+	add_feature (feat: E_FEATURE; e_class: E_CLASS; str: STRING) is
+			-- Put feature `feat' defined in `e_class' with string 
+			-- representation `str' at current position.
+		require
+			valid_str: str /= Void
+		local
+			l_item: like item
+		do
+			!FEATURE_NAME_TEXT! l_item.make (str, feat, e_class);
+			add (l_item)
+		end;
+
+	add_feature_name (f_name: STRING; e_class: E_CLASS) is
+			-- Put feature name `f_name' defined in `e_class'.
+		require
+			valid_f_name: f_name /= Void
+		local
+			l_item: like item
+		do
+			!BASIC_TEXT! l_item.make (f_name);
+			add (l_item)
+		end;
+
+	add_quoted_text (s: STRING) is
+			-- Put `s' at current position.
+		require
+			s_not_void: s /= Void
+		local
+			l_item: like item
+		do
+			!QUOTED_TEXT! l_item.make (s);
+			add (l_item)
+		end;
+
+	add_comment_text (s: STRING) is
+			-- Put `s' at current position.
+		require
+			s_not_void: s /= Void
+		local
+			l_item: like item
+		do
+			!COMMENT_TEXT! l_item.make (s);
+			add (l_item)
+		end;
+
+	add_address (address: STRING; e_class: E_CLASS) is
+			-- Put `address' for `e_class'.
+		require
+			valid_address: address /= Void;
+		local
+			l_item: like item
+		do
+			!ADDRESS_TEXT! l_item.make (address, e_class);
+			add (l_item)
+		end;
+
+
+	add_class_syntax (syn: SYNTAX_ERROR; e_class: E_CLASS; str: STRING) is
+			-- Put `syn' for `e_class'.
+		require
+			valid_syn: syn /= Void;
+			valid_str: str /= Void;
+		local
+			l_item: like item
+		do
+			!CL_SYNTAX_ITEM! l_item.make (syn, e_class, str);
+			add (l_item)
+		end;
+
+	add_ace_syntax (syn: SYNTAX_ERROR; str: STRING) is
+			-- Put `address' for `e_class'.
+		require
+			valid_syn: syn /= Void;
+			valid_str: str /= Void;
+		local
+			l_item: like item
+		do
+			!ACE_SYNTAX_ITEM! l_item.make (syn, str);
+			add (l_item)
+		end;
+
+	add_breakpoint (bp: DISPLAYED_BREAK; bp_text: STRING) is
+			-- Put `bp_text'.
+		require
+			valid_bp: bp /= Void;
+			valid_bp_text: bp_text /= Void
+		local
+			l_item: like item
+		do
+			!BREAKPOINT_ITEM! l_item.make (bp, bp_text);
+			add (l_item)
 		end;
 
 end -- class STRUCTURED_TEXT

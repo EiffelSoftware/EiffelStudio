@@ -34,9 +34,9 @@ feature
 	is_reference: BOOLEAN is True;
 			-- is the C type a reference type ?
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_string ("REFERENCE");
+			st.add_string ("REFERENCE");
 		end;
 
 	dump (file: FILE) is

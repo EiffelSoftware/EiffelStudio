@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class TEXT_FORMATTER
+class TEXT_FORMATTER
 
 feature -- Output
 
@@ -17,6 +17,7 @@ feature -- Output
 		do
 			if text /= Void then
 				from
+					structured_text := text;
 					linkable := text.first_element
 				until
 					linkable = Void
@@ -27,11 +28,16 @@ feature -- Output
 			end
 		end;
 
+feature -- Properties
+
+	structured_text: STRUCTURED_TEXT
+			-- Text as displayed in Current.
+
 feature {TEXT_ITEM} -- Implementation
 
 	process_basic_text (t: BASIC_TEXT) is
 			-- Process basic text `t'.
-		deferred
+		do
 		end;
 
 	process_comment_text (text: COMMENT_TEXT) is
@@ -42,7 +48,7 @@ feature {TEXT_ITEM} -- Implementation
 
 	process_quoted_text (text: QUOTED_TEXT) is
 			-- Process the quoted `text' within a comment.
-		deferred
+		do
 		end;
 
 	process_class_name_text (t: CLASS_NAME_TEXT) is
@@ -57,7 +63,7 @@ feature {TEXT_ITEM} -- Implementation
 			process_basic_text (t)
 		end;
 
-	process_breakpoint is
+	process_breakpoint (bp_item: BREAKPOINT_ITEM) is
 			-- Process breakpoint.
 		do
 		end;
@@ -69,12 +75,12 @@ feature {TEXT_ITEM} -- Implementation
 
 	process_new_line (t: NEW_LINE_ITEM) is
 			-- Process new line text `t'.
-		deferred
+		do
 		end;
 
 	process_indentation (t: INDENT_TEXT) is
 			-- Process indentation `t'.
-		deferred
+		do
 		end;
 
 	process_after_class (t: AFTER_CLASS) is
@@ -106,6 +112,30 @@ feature {TEXT_ITEM} -- Implementation
 
 	process_operator_text (t: OPERATOR_TEXT) is
 			-- Process operator text.
+		do
+			process_basic_text (t)
+		end;
+
+	process_address_text (t: ADDRESS_TEXT) is
+			-- Process address text.
+		do
+			process_basic_text (t)
+		end;
+
+	process_error_text (t: ERROR_TEXT) is
+			-- Process error text.
+		do
+			process_basic_text (t)
+		end;
+
+	process_cl_syntax (t: CL_SYNTAX_ITEM) is
+			-- Process class syntax text.
+		do
+			process_basic_text (t)
+		end;
+
+	process_ace_syntax (t: ACE_SYNTAX_ITEM) is
+			-- Process Ace syntax text.
 		do
 			process_basic_text (t)
 		end;

@@ -85,9 +85,9 @@ feature
 		deferred
 		end;
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_string (dump)
+			st.add_string (dump)
 		end;
 
 	dump: STRING is

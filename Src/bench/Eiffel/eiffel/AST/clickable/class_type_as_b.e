@@ -313,7 +313,7 @@ feature -- Conveniences
 
 feature -- Output
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		local
 			class_c: CLASS_C;
 			e_class: E_CLASS;
@@ -330,29 +330,29 @@ feature -- Output
 			end;
 			c_name.to_upper;
 			if class_i = Void then
-				ow.put_string (c_name);
+				st.add_string (c_name);
 			else
 				e_class := class_i.compiled_eclass;
 				if e_class /= Void then
-					ow.put_class (e_class, c_name)
+					st.add_class (e_class)
 				else
-					ow.put_classi (class_i, c_name)
+					st.add_classi (class_i, c_name)
 				end
 			end;
 			if generics /= Void then
 				from
 					generics.start;
-					ow.put_string (" [");
+					st.add_string (" [");
 				until
 					generics.after
 				loop
-					generics.item.append_to (ow);
+					generics.item.append_to (st);
 					if not generics.islast then
-						ow.put_string (", ");
+						st.add_string (", ");
 					end;
 					generics.forth;
 				end;
-				ow.put_string ("]");
+				st.add_string ("]");
 			end;
 		end;
  

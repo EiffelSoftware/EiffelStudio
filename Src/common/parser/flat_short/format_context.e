@@ -325,14 +325,13 @@ feature -- Output
 			if not tabs_emitted then
 				emit_tabs;
 			end;
-			!! item.make (s);
-			text.add (item);
+			text.add_string (s);
 		end;
 
 	put_space is
 			-- Append space.
 		do
-			text.add (ti_Space)
+			text.add_space
 		end;
 
 	put_separator is
@@ -345,7 +344,7 @@ feature -- Output
 				text.add (f.separator)
 			end;
 			if f.space_between_tokens then
-				text.add (ti_Space)
+				text.add_space
 			elseif f.new_line_between_tokens then
 				new_line
 			end;
@@ -354,7 +353,7 @@ feature -- Output
 	new_line is
 			-- Go to beginning of next line in `text'.
 		do
-			text.add (ti_New_line);
+			text.add_new_line;
 			tabs_emitted := False
 		end;
 
@@ -395,28 +394,19 @@ feature -- Output
 			elseif not tabs_emitted then
 				emit_tabs
 			end;
-			!! item.make (name_of_current_feature)
-			text.add (item);
+			text.add_string (name_of_current_feature);
 			arg ?= arguments;
 			if arg /= void then
 				begin;
 				set_separator (ti_Comma);
 				set_space_between_tokens;
-				text.add (ti_Space)
+				text.add_space;
 				text.add (ti_L_parenthesis);
-				arguments.simple_format (Current);
+				arg.simple_format (Current);
 				text.add (ti_R_parenthesis);
 				commit;
-				from
-					arg.start;
-					nb := arg.count;
-					i := 1;
-				until
-					i > nb
-				loop
-					i := i + i
-				end
-			end;
+				arg.start
+			end
 		end;
 
 	put_prefix_feature is
@@ -427,8 +417,7 @@ feature -- Output
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			!! item.make (name_of_current_feature)
-			text.add (item);
+			text.add_string (name_of_current_feature)
 		end;
 
 	put_infix_feature is
@@ -437,10 +426,9 @@ feature -- Output
 			arg: EXPR_AS;
 			item: BASIC_TEXT
 		do
-			text.add (ti_Space);
-			!! item.make (operator_table.name (name_of_current_feature))
-			text.add (item);
-			text.add (ti_Space);
+			text.add_space;
+			text.add_string (operator_table.name (name_of_current_feature));
+			text.add_space;
 			arg ?= arguments;
 			if arg /= void then
 				begin;
@@ -498,15 +486,13 @@ feature -- Output
 			loop
 				if between_quotes and c_area.item (i) = '%'' then
 					if not s.empty then
-						!! quoted_text.make (s);
-						text.add (quoted_text);
+						text.add_quoted_text (s);
 						!! s.make (0)
 					end;
 					between_quotes := false
 				elseif not between_quotes and c_area.item (i) = '`' then
 					if not s.empty then
-						!! comment_text.make (s);
-						text.add (comment_text)
+						text.add_comment_text (s)
 						!! s.make (0)
 					end;
 					between_quotes := true
@@ -516,8 +502,7 @@ feature -- Output
 				i := i + 1
 			end;
 			if not s.empty then
-				!! comment_text.make (s);
-				text.add (comment_text)
+				text.add_comment_text (s)
 			end
 		end;
 

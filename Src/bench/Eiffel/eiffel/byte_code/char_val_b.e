@@ -34,11 +34,11 @@ feature
 			Result := value < other.value;
 		end;
 
-	display (a_clickable: OUTPUT_WINDOW) is
+	display (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_char ('%'');
-			a_clickable.put_char (value);
-			a_clickable.put_char ('%'');
+			st.add_char ('%'');
+			st.add_char (value);
+			st.add_char ('%'');
 		end;
 
 feature --- Byte code generation

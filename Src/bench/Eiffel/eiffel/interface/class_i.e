@@ -184,16 +184,16 @@ feature -- Comparison
 
 feature -- Output
 
-	append_name (ow: OUTPUT_WINDOW) is
+	append_name (st: STRUCTURED_TEXT) is
 			-- Append the name ot the current class in `a_clickable'
 		require
-			non_void_ow: ow /= Void
+			non_void_st: st /= Void
 		local
 			c_name: STRING;
 		do
 			c_name := clone (class_name)
 			c_name.to_upper;
-			ow.put_classi (Current, c_name) 
+			st.add_classi (Current, c_name) 
 		end;
 
 feature {COMPILER_EXPORTER} -- Properties

@@ -724,6 +724,19 @@ feature -- Status setting
 			selected_list_is_empty: selected_count = 0
 		end;
 
+	scroll_to_current is
+			-- Make `item' the first visible item in the list if
+			-- `position' < `first_visible_item_position'.
+			-- Make `item' the last visible item in the list if
+			-- `position' >= `first_visible_item_position'+`visible_item_count'.
+			-- Do nothing if `item' is visible.
+		require
+			exists: not destroyed;
+			not_off: not off
+		do
+			implementation.scroll_to_current
+		end;
+
 	select_item is
 			-- Select item at current position.
 		require

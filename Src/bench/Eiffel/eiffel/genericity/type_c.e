@@ -86,6 +86,7 @@ feature
 			good_array: arg_types.lower = 1
 		local
 			i, nb: INTEGER
+			arg_type: STRING
 		do
 			file.putchar ('(')
 			file.putstring (c_string)
@@ -99,7 +100,12 @@ feature
 				if i /= 1 then
 					file.putstring (", ")
 				end
-				file.putstring (arg_types @ i)
+				arg_type := arg_types @ i
+				if arg_type.is_equal ("EIF_REAL") then
+					file.putstring ("EIF_DOUBLE")
+				else
+					file.putstring (arg_types @ i)
+				end
 				i := i + 1
 			end
 			file.putstring (")) ")

@@ -510,8 +510,6 @@ feature -- Generation
 				True, h_file,
 				<<"Current", "parent">>, <<"EIF_REFERENCE", "EIF_REFERENCE">>);
 
-			file.putchar ('{');
-			file.new_line;
 			file.indent;
 			file.putstring ("RTLD;");
 			file.new_line;

@@ -73,8 +73,6 @@ feature
 				Byte_context.extern_declaration_file, <<"Current", "arg1", "arg2">>,
 				<<"EIF_REFERENCE", type_c.c_string, "EIF_INTEGER">>);
 
-			file.putstring ("{%N");
-
 			final_mode := byte_context.final_mode;
 
 			if is_expanded then
@@ -198,7 +196,6 @@ feature
 			file.generate_function_signature (type_c.c_string, encoded_name, True,
 				Byte_context.extern_declaration_file,
 				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>);
-			file.putstring ("{%N");
 
 			final_mode := byte_context.final_mode;
 

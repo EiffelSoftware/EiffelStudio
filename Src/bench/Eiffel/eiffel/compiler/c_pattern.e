@@ -303,7 +303,6 @@ feature -- Pattern generation
 					<<"fnptr", "int">>);
 
 			file.putstring ("%
-				%{%N%
 				%%TEIF_REFERENCE Current;%N%
 				%%TEIF_INTEGER ack = _concur_command_ack;%N");
 			if not result_type.is_void then
@@ -339,7 +338,6 @@ feature -- Pattern generation
 					<<"ptr", "is_extern">>,
 					toc_arg_types);
 			file.putstring ("%
-				%{%N%
 				%%TEIF_REFERENCE Current;%N");
 			if not result_type.is_void then
 				file.putchar ('%T');
@@ -381,7 +379,7 @@ feature -- Pattern generation
 				(result_string, f_name, False, file,
 				 argument_name_array, arg_types);
 
-			file.putstring ("{%N%Tstruct item *it;%N");
+			file.putstring ("%Tstruct item *it;%N");
 			generate_toi_push (file);
 			file.putstring ("%Txinterp(IC);%N");
 			if not result_type.is_void then

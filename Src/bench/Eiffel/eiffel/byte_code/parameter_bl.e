@@ -161,7 +161,10 @@ feature
 					-- and the source an int.
 				target_ctype := target_type.c_type;
 				source_ctype := source_type.c_type;
-				if source_ctype.level /= target_ctype.level then
+				if target_type.is_float then
+					cast_generated := True;
+					generated_file.putstring ("(EIF_DOUBLE) (");
+				elseif source_ctype.level /= target_ctype.level then
 					cast_generated := True;
 					target_ctype.generate_cast (generated_file);
 					generated_file.putchar('(');

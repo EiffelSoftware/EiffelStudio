@@ -3364,7 +3364,6 @@ feature -- Main file generation
 						<<"argc", "argv", "envp">>, <<"int", "char **", "char **" >>);
 
 			Main_file.putstring ("%
-				%{%N%
 				%%Tstruct ex_vect *exvect;%N%
 				%%Tjmp_buf exenv;%N%N%
 				%%Tinitsig();%N%
@@ -3482,7 +3481,6 @@ feature -- Main file generation
 						<<"argc", "argv">>, <<"int", "char **">>);
 
 			Initialization_file.putstring ("%
-				%{%N%
 				%%Textern char *root_obj;%N");
 
 			if final_mode then
@@ -3622,8 +3620,6 @@ feature -- Main file generation
 				Initialization_file.putstring ("}%N%N");
 
 				Initialization_file.generate_function_signature ("void", "einit", True, Initialization_file, <<>>, <<>>);
-
-				Initialization_file.putstring ("{%N");
 
 					-- Set C variable `scount'.
 				Initialization_file.putstring ("%Tscount = ");

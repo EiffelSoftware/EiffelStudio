@@ -201,8 +201,6 @@ feature
 				 Context.extern_declaration_file, argument_names, argument_types)
 
 				-- Starting body of C routine
-			generated_file.putchar ('{');
-			generated_file.new_line;
 			generated_file.indent;
 
 			process_expanded;

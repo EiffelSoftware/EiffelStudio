@@ -434,8 +434,7 @@ feature {NONE} -- Generation
 						(return_type_string, f_name, True, gen_file,
 						<<"Current">>, a_types);
 				end
-				gen_file.putstring ("{%N%
-					%%N%
+				gen_file.putstring ("%N%
 					%%T");
 
 				if final_mode then

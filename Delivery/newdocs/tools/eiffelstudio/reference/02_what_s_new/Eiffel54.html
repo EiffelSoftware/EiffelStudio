@@ -10,6 +10,10 @@
 		<H1>What's new in EiffelStudio 5.4</H1>
 		<h2>Graphical environment</h2>
 		<h3>Improvements</h3>
+		<ul>
+          <li>Added support for mouse wheel in editor and associated 
+          parameterization in preferences.</li>
+        </ul>
 		<h3>Bug fixes</h3>
 		<ul>
           <li>Fixed issue where setting the string background color to `auto' in 
@@ -17,6 +21,9 @@
           EiffelStudio.</li>
           <li>Fixed issue where typing in an empty features tree will close down 
           EiffelStudio.</li>
+          <li>Fixed issue with BON diagram where expanded client links were not 
+          properly displayed (the expanded bar was drawn on top of classes 
+          instead of on the link itself).</li>
         </ul>
 		<h2>Compiler</h2>
         <ul>
@@ -29,6 +36,7 @@
         <ul>
           <li>Fixed incorrect memory freeing in <span class="efeature">get_string</span> in <span class="eclass">JNI_ENVIRONMENT</span> 
           that could cause some memory corruption.</li>
+          <li>Fixed <span class="eerror">VDRD</span> error in <span class="efeature">method_id</span> from <span class="eclass">JAVA_OBJECT</span>.</li>
         </ul>
         <h3>EiffelBase</h3>
         <ul>
@@ -45,7 +53,12 @@
           <li>Added convenience features to <span class="eclass">TUPLE</span>: <span class="efeature">put_XX_item</span> where `XX' can be 
           replaced by `character, boolean, integer, double,...'.</li>
           <li>Optimized <span class="eclass">ROUTINE</span>, <span class="eclass">PROCEDURE</span> and <span class="eclass">FUNCTION</span> 
-          implementation to speed up agent calls by a factor of 2 to 3.</li>
+          implementation to speed up agent calls by a factor of 2 to 3. Removed 
+          <span class="efeature">open_operand_type</span> from <span class="eclass">ROUTINE</span> as its specification was only used 
+          internally and specification was not precise enough to be used by 
+          clients of <span class="eclass">ROUTINE</span>.</li>
+          <li>Fixed <span class="efeature">set_directory</span> from <span class="eclass">PATH_NAME</span> on Windows so that it will append a `\' if 
+          needed before appending the directory name.</li>
         </ul>
         <h3>EiffelNet</h3>
         <ul>
@@ -53,6 +66,9 @@
            in <span class="eclass">NETWORK_STREAM_SOCKET</span>, because their implementations were inverted.</li>
           <li>Fixed incorrect spelling of <span class="efeature">
           maximum_seg_size</span> in <span class="eclass">NETWORK_STREAM_SOCKET</span>.</li>
+          <li>Added recoverable storable to EiffelNet (was not included in 
+          previous version although recoverable storable was available for 
+          files)</li>
         </ul>
         <h3>EiffelTime</h3>
         <ul>
@@ -60,7 +76,8 @@
           <li>In <span class="eclass">DATE_VALUE</span> added 
           <span class="efeature">ordered_compact_date</span> and made <span class="efeature">compact_date</span> 
           obsolete.</li>
-          <li>In <span class="eclass">DATE </span>added <span class="efeature">make_by_ordered_compact_date</span> and
+          <li>In <span class="eclass">DATE </span>added <span class="efeature">make_by_ordered_compact_date</span> and 
+          made
           <span class="efeature">make_by_compact_date</span> obsolete.</li>
           <li>In <span class="eclass">DATE_VALIDITY_CHECKER</span> added <span class="efeature">ordered_compact_date_valid</span>.</li>
         </ul>
@@ -82,7 +99,7 @@
            <span class="efeature">extract_definition</span>.</li>
           <li>Renamed <span class="efeature">convert</span> from 
           <span class="eclass">WEL_FONT_FAMILY_ENUMERATOR</span> class into <span class="efeature">update_current</span>.</li>
-			<li>WEL_TREE_VIEW - Calling `deselect_item' will now really deselect the item, whereas previously, it only caused the item to be redrawn without selection.</li>
+			<li>In <span class="eclass">WEL_TREE_VIEW</span>, calling <span class="efeature">deselect_item</span> will now really deselect the item, whereas previously, it only caused the item to be redrawn without selection.</li>
         </ul>
         <h3>.NET libraries</h3>
         <ul>
@@ -90,13 +107,7 @@
           avoid name conflicts with EiffelThread.</li>
         </ul>
         <p>&nbsp;</p>
-        <p><a href="Eiffel53.html">Click here to check out what was new in 
-        Eiffel 5.3</a></p>
-        <p><a href="Eiffel52.html">Click here to check out what was new in 
-        Eiffel 5.2</a></p>
-        <p><a href="Eiffel51.html">Click here to check out what was new in 
-        Eiffel 5.1</a></p>
-        <p><a href="Eiffel50.html">Click here to check out what was new in 
-        Eiffel 5.0</a></p>
-	</BODY>
+        <p><a href="index.html">Click here to check out what was new in previous 
+        versions.</a></p>
+        </BODY>
 </HTML>

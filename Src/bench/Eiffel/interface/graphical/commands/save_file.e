@@ -85,7 +85,8 @@ feature {NONE} -- Implementation
 					if tool.stone /= Void and then Class_resources.parse_class_after_saving.actual_value then
 						tool.parse_file
 					end;
-					tool.update_save_symbol;
+					tool.synchronise_stone
+					tool.update_save_symbol
 				end
 			end
 		end;

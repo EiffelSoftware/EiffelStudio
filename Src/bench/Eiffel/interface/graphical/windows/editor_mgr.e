@@ -69,7 +69,7 @@ feature {WINDOW_MGR}
 			then
 				free_list.start;
 				Result := free_list.item;
-				Result.set_x_y (screen.x, screen.y);
+				Result.set_default_position;
 				Result.text_window.set_tab_length_to_default; 
 				Result.text_window.set_font_to_default; 
 				free_list.remove;
@@ -209,6 +209,22 @@ feature -- Tabulations
 				text_window.set_changed (was_changed);
 				active_editors.forth
 			end
+		end;
+
+feature -- Modifications
+
+	changed: BOOLEAN is
+			-- Has the text of one of the active editor been edited
+			-- since last display?
+		do
+			from
+				active_editors.start
+			until
+				Result or active_editors.after
+			loop
+				Result := active_editors.item.text_window.changed
+				active_editors.forth
+			end;
 		end;
 
 end 

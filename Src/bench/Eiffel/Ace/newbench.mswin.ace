@@ -252,8 +252,9 @@ external
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
 		"$(EIFFEL_SRC)\C_library\zlib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Core\Clib",
-		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib"
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
+		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -273,6 +274,7 @@ external
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib\htmlhelp.lib",
-		"$(EIFFEL_SRC)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib"
+		"$(EIFFEL_SRC)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib"
 
 end

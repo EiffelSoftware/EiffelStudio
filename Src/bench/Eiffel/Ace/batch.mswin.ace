@@ -188,7 +188,8 @@ external
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Clib",
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
-		"$(EIFFEL_SRC)\library\gobo\library\kernel\include"
+		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",
@@ -197,6 +198,7 @@ external
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
-		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib"
 
 end

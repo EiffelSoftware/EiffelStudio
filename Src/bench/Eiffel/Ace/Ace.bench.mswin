@@ -229,7 +229,8 @@ external
 		"$(EIFFEL_SRC)\library\encryption\Clib",
 		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Core\Clib",
-		"$(EIFFEL_SRC)\library\com\spec\windows\include"
+		"$(EIFFEL_SRC)\library\com\spec\windows\include",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -242,6 +243,7 @@ external
 		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib"
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib"
 
 end

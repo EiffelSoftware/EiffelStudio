@@ -38,12 +38,11 @@ feature -- Basic Operations
 			message.set_background_color (white_color)
 			create title
 			title.set_background_color (white_color)
-			title.align_text_vertical_center
-			title.our_font.set_family (2)
-			title.enable_bold
 			title.align_text_center
+			title.align_text_middle
+			title.set_font (title_font)
 
-			Create sep_v
+			create sep_v
 			cont := pixmap.parent
 			if cont /= Void then
 				cont.prune (pixmap)

@@ -95,7 +95,12 @@ feature -- Colors
 
 	white_color: EV_COLOR is
 		once
-			Create Result.make_with_rgb (1,1,1)
+			create Result.make_with_rgb (1,1,1)
+		end
+
+	title_font: EV_FONT is
+		once
+			create Result.make_with_values (2, 8, 10, 15)
 		end
 
 invariant

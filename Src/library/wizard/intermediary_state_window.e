@@ -34,9 +34,9 @@ feature {NONE} -- Basic Operations
 			title.set_background_color (white_color)
 			title.set_minimum_width (330)
 			title.align_text_center
-			title.align_text_vertical_center
-			title.our_font.set_family (2)
-			title.enable_bold
+			title.align_text_middle
+			title.set_font (title_font)
+
 			create c
 			h1.extend (c)
 			c.set_background_color (white_color)
@@ -74,7 +74,7 @@ feature {NONE} -- Basic Operations
 --			main_box.disable_item_expand (h1)
 
 			create c
-			c.set_minimum_height (20)
+			c.set_minimum_height (2)
 			main_box.extend (c)
 			main_box.disable_item_expand (c)
 

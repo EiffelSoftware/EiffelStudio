@@ -43,193 +43,211 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 56
+--|#line 56 "external.y"
 	yy_do_action_1
 when 2 then
---|#line 61
+--|#line 61 "external.y"
 	yy_do_action_2
 when 3 then
---|#line 65
+--|#line 65 "external.y"
 	yy_do_action_3
 when 4 then
---|#line 69
+--|#line 69 "external.y"
 	yy_do_action_4
 when 5 then
---|#line 73
+--|#line 73 "external.y"
 	yy_do_action_5
 when 6 then
---|#line 79
+--|#line 79 "external.y"
 	yy_do_action_6
 when 7 then
---|#line 84
+--|#line 84 "external.y"
 	yy_do_action_7
 when 8 then
---|#line 89
+--|#line 89 "external.y"
 	yy_do_action_8
 when 9 then
---|#line 94
+--|#line 94 "external.y"
 	yy_do_action_9
 when 10 then
---|#line 100
+--|#line 100 "external.y"
 	yy_do_action_10
 when 11 then
---|#line 105
+--|#line 105 "external.y"
 	yy_do_action_11
 when 12 then
---|#line 110
+--|#line 110 "external.y"
 	yy_do_action_12
 when 13 then
---|#line 115
+--|#line 115 "external.y"
 	yy_do_action_13
 when 14 then
---|#line 121
+--|#line 121 "external.y"
 	yy_do_action_14
 when 15 then
---|#line 126
+--|#line 126 "external.y"
 	yy_do_action_15
 when 16 then
---|#line 130
+--|#line 130 "external.y"
 	yy_do_action_16
 when 17 then
---|#line 134
+--|#line 134 "external.y"
 	yy_do_action_17
 when 18 then
---|#line 140
+--|#line 140 "external.y"
 	yy_do_action_18
 when 19 then
---|#line 147
+--|#line 147 "external.y"
 	yy_do_action_19
 when 20 then
---|#line 154
+--|#line 154 "external.y"
 	yy_do_action_20
 when 21 then
---|#line 156
+--|#line 156 "external.y"
 	yy_do_action_21
 when 22 then
---|#line 160
+--|#line 160 "external.y"
 	yy_do_action_22
 when 23 then
---|#line 165
+--|#line 165 "external.y"
 	yy_do_action_23
 when 24 then
---|#line 169
+--|#line 169 "external.y"
 	yy_do_action_24
 when 25 then
---|#line 173
+--|#line 173 "external.y"
 	yy_do_action_25
 when 26 then
---|#line 177
+--|#line 177 "external.y"
 	yy_do_action_26
 when 27 then
---|#line 181
+--|#line 181 "external.y"
 	yy_do_action_27
 when 28 then
---|#line 185
+--|#line 185 "external.y"
 	yy_do_action_28
 when 29 then
---|#line 189
+--|#line 189 "external.y"
 	yy_do_action_29
 when 30 then
---|#line 193
+--|#line 193 "external.y"
 	yy_do_action_30
 when 31 then
---|#line 197
+--|#line 197 "external.y"
 	yy_do_action_31
 when 32 then
---|#line 201
+--|#line 201 "external.y"
 	yy_do_action_32
 when 33 then
---|#line 205
+--|#line 205 "external.y"
 	yy_do_action_33
 when 34 then
---|#line 211
+--|#line 211 "external.y"
 	yy_do_action_34
 when 35 then
---|#line 216
+--|#line 216 "external.y"
 	yy_do_action_35
+when 36 then
+--|#line 222 "external.y"
+	yy_do_action_36
 when 37 then
---|#line 223
+--|#line 223 "external.y"
 	yy_do_action_37
 when 38 then
---|#line 227
+--|#line 227 "external.y"
 	yy_do_action_38
+when 39 then
+--|#line 234 "external.y"
+	yy_do_action_39
 when 40 then
---|#line 236
+--|#line 236 "external.y"
 	yy_do_action_40
 when 41 then
---|#line 240
+--|#line 240 "external.y"
 	yy_do_action_41
+when 42 then
+--|#line 245 "external.y"
+	yy_do_action_42
 when 43 then
---|#line 247
+--|#line 247 "external.y"
 	yy_do_action_43
 when 44 then
---|#line 251
+--|#line 251 "external.y"
 	yy_do_action_44
 when 45 then
---|#line 256
+--|#line 256 "external.y"
 	yy_do_action_45
+when 46 then
+--|#line 263 "external.y"
+	yy_do_action_46
 when 47 then
---|#line 265
+--|#line 265 "external.y"
 	yy_do_action_47
 when 48 then
---|#line 269
+--|#line 269 "external.y"
 	yy_do_action_48
 when 49 then
---|#line 276
+--|#line 276 "external.y"
 	yy_do_action_49
 when 50 then
---|#line 282
+--|#line 282 "external.y"
 	yy_do_action_50
 when 51 then
---|#line 287
+--|#line 287 "external.y"
 	yy_do_action_51
+when 52 then
+--|#line 294 "external.y"
+	yy_do_action_52
 when 53 then
---|#line 295
+--|#line 295 "external.y"
 	yy_do_action_53
 when 54 then
---|#line 301
+--|#line 301 "external.y"
 	yy_do_action_54
 when 55 then
---|#line 303
+--|#line 303 "external.y"
 	yy_do_action_55
 when 56 then
---|#line 307
+--|#line 307 "external.y"
 	yy_do_action_56
 when 57 then
---|#line 309
+--|#line 309 "external.y"
 	yy_do_action_57
+when 58 then
+--|#line 313 "external.y"
+	yy_do_action_58
 when 59 then
---|#line 315
+--|#line 315 "external.y"
 	yy_do_action_59
 when 60 then
---|#line 319
+--|#line 319 "external.y"
 	yy_do_action_60
 when 61 then
---|#line 324
+--|#line 324 "external.y"
 	yy_do_action_61
 when 62 then
---|#line 329
+--|#line 329 "external.y"
 	yy_do_action_62
 when 63 then
---|#line 336
+--|#line 336 "external.y"
 	yy_do_action_63
 when 64 then
---|#line 341
+--|#line 341 "external.y"
 	yy_do_action_64
 when 65 then
---|#line 345
+--|#line 345 "external.y"
 	yy_do_action_65
 when 66 then
---|#line 349
+--|#line 349 "external.y"
 	yy_do_action_66
 when 67 then
---|#line 355
+--|#line 355 "external.y"
 	yy_do_action_67
 when 68 then
---|#line 360
+--|#line 360 "external.y"
 	yy_do_action_68
 when 69 then
---|#line 366
+--|#line 366 "external.y"
 	yy_do_action_69
 			else
 					-- No action
@@ -238,10 +256,13 @@ when 69 then
 		end
 
 	yy_do_action_1 is
-			--|#line 56
+			--|#line 56 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 56")
+end
 
 				root_node := yytype1 (yyvs.item (yyvsp))
 			
@@ -249,10 +270,13 @@ when 69 then
 		end
 
 	yy_do_action_2 is
-			--|#line 61
+			--|#line 61 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 61")
+end
 
 				root_node := yytype1 (yyvs.item (yyvsp))
 			
@@ -260,10 +284,13 @@ when 69 then
 		end
 
 	yy_do_action_3 is
-			--|#line 65
+			--|#line 65 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 65")
+end
 
 				root_node := yytype1 (yyvs.item (yyvsp))
 			
@@ -271,10 +298,13 @@ when 69 then
 		end
 
 	yy_do_action_4 is
-			--|#line 69
+			--|#line 69 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 69")
+end
 
 				root_node := yytype1 (yyvs.item (yyvsp))
 			
@@ -282,10 +312,13 @@ when 69 then
 		end
 
 	yy_do_action_5 is
-			--|#line 73
+			--|#line 73 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 73")
+end
 
 				root_node := yytype1 (yyvs.item (yyvsp))
 			
@@ -293,10 +326,13 @@ when 69 then
 		end
 
 	yy_do_action_6 is
-			--|#line 79
+			--|#line 79 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 79")
+end
 
 				create {C_EXTENSION_AS} yyval1.initialize (yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
 			
@@ -304,10 +340,13 @@ when 69 then
 		end
 
 	yy_do_action_7 is
-			--|#line 84
+			--|#line 84 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 84")
+end
 
 					-- False because this is a C construct
 				create {STRUCT_EXTENSION_AS} yyval1.initialize (False, yytype3 (yyvs.item (yyvsp - 4)), yytype4 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
@@ -316,10 +355,13 @@ when 69 then
 		end
 
 	yy_do_action_8 is
-			--|#line 89
+			--|#line 89 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 89")
+end
 
 					-- False because this is a C construct
 				create {MACRO_EXTENSION_AS} yyval1.initialize (False, yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
@@ -328,10 +370,13 @@ when 69 then
 		end
 
 	yy_do_action_9 is
-			--|#line 94
+			--|#line 94 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 94")
+end
 
 				create {INLINE_EXTENSION_AS} yyval1.initialize (False, yytype7 (yyvs.item (yyvsp)))
 			
@@ -339,10 +384,13 @@ when 69 then
 		end
 
 	yy_do_action_10 is
-			--|#line 100
+			--|#line 100 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 100")
+end
 
 				yyval1 := yytype1 (yyvs.item (yyvsp))
 			
@@ -350,10 +398,13 @@ when 69 then
 		end
 
 	yy_do_action_11 is
-			--|#line 105
+			--|#line 105 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 105")
+end
 
 					-- True because this is a C++ construct
 				create {STRUCT_EXTENSION_AS} yyval1.initialize (True, yytype3 (yyvs.item (yyvsp - 4)), yytype4 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
@@ -362,10 +413,13 @@ when 69 then
 		end
 
 	yy_do_action_12 is
-			--|#line 110
+			--|#line 110 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 110")
+end
 
 					-- True because this is a C++ construct
 				create {MACRO_EXTENSION_AS} yyval1.initialize (True, yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
@@ -374,10 +428,13 @@ when 69 then
 		end
 
 	yy_do_action_13 is
-			--|#line 115
+			--|#line 115 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 115")
+end
 
 				create {INLINE_EXTENSION_AS} yyval1.initialize (True, yytype7 (yyvs.item (yyvsp)))
 			
@@ -385,10 +442,13 @@ when 69 then
 		end
 
 	yy_do_action_14 is
-			--|#line 121
+			--|#line 121 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 121")
+end
 
 				create {CPP_EXTENSION_AS} yyval1.initialize (standard, yytype4 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
 			
@@ -396,10 +456,13 @@ when 69 then
 		end
 
 	yy_do_action_15 is
-			--|#line 126
+			--|#line 126 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 126")
+end
 
 				create {CPP_EXTENSION_AS} yyval1.initialize (creator, yytype4 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
 			
@@ -407,10 +470,13 @@ when 69 then
 		end
 
 	yy_do_action_16 is
-			--|#line 130
+			--|#line 130 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 130")
+end
 
 				create {CPP_EXTENSION_AS} yyval1.initialize (delete, yytype4 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
 			
@@ -418,10 +484,13 @@ when 69 then
 		end
 
 	yy_do_action_17 is
-			--|#line 134
+			--|#line 134 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 134")
+end
 
 				create {CPP_EXTENSION_AS} yyval1.initialize (static, yytype4 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
 			
@@ -429,10 +498,13 @@ when 69 then
 		end
 
 	yy_do_action_18 is
-			--|#line 140
+			--|#line 140 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 140")
+end
 
 				create {DLL_EXTENSION_AS} yyval1.initialize (feature {EXTERNAL_CONSTANTS}.dll32_type,
 					yytype4 (yyvs.item (yyvsp - 3)), yytype6 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
@@ -441,10 +513,13 @@ when 69 then
 		end
 
 	yy_do_action_19 is
-			--|#line 147
+			--|#line 147 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 147")
+end
 
 				create {DLL_EXTENSION_AS} yyval1.initialize (feature {EXTERNAL_CONSTANTS}.dllwin32_type,
 					yytype4 (yyvs.item (yyvsp - 3)), yytype6 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp)))
@@ -453,30 +528,39 @@ when 69 then
 		end
 
 	yy_do_action_20 is
-			--|#line 154
+			--|#line 154 "external.y"
 		local
 			yyval6: INTEGER
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 154")
+end
 
 yyval6 := -1
 			yyval := yyval6
 		end
 
 	yy_do_action_21 is
-			--|#line 156
+			--|#line 156 "external.y"
 		local
 			yyval6: INTEGER
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 156")
+end
 
 yyval6 := token_buffer.to_integer
 			yyval := yyval6
 		end
 
 	yy_do_action_22 is
-			--|#line 160
+			--|#line 160 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 160")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 3)), normal_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -484,10 +568,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_23 is
-			--|#line 165
+			--|#line 165 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 165")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), deferred_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -495,10 +582,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_24 is
-			--|#line 169
+			--|#line 169 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 169")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), creator_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -506,10 +596,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_25 is
-			--|#line 173
+			--|#line 173 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 173")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), field_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -517,10 +610,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_26 is
-			--|#line 177
+			--|#line 177 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 177")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), static_field_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -528,10 +624,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_27 is
-			--|#line 181
+			--|#line 181 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 181")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), enum_field_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -539,10 +638,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_28 is
-			--|#line 185
+			--|#line 185 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 185")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), set_static_field_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -550,10 +652,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_29 is
-			--|#line 189
+			--|#line 189 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 189")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), set_field_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -561,10 +666,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_30 is
-			--|#line 193
+			--|#line 193 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 193")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), static_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -572,10 +680,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_31 is
-			--|#line 197
+			--|#line 197 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 197")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), get_property_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -583,10 +694,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_32 is
-			--|#line 201
+			--|#line 201 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 201")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), set_property_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -594,10 +708,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_33 is
-			--|#line 205
+			--|#line 205 "external.y"
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 205")
+end
 
 				create {IL_EXTENSION_AS} yyval1.initialize (yytype6 (yyvs.item (yyvsp - 4)), operator_type, yytype2 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp)))
 			
@@ -605,10 +722,13 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_34 is
-			--|#line 211
+			--|#line 211 "external.y"
 		local
 			yyval6: INTEGER
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 211")
+end
 
 				yyval6 := msil_language
 			
@@ -616,72 +736,132 @@ yyval6 := token_buffer.to_integer
 		end
 
 	yy_do_action_35 is
-			--|#line 216
+			--|#line 216 "external.y"
 		local
 			yyval6: INTEGER
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 216")
+end
 
 				yyval6 := java_language
 			
 			yyval := yyval6
 		end
 
-	yy_do_action_37 is
-			--|#line 223
+	yy_do_action_36 is
+			--|#line 222 "external.y"
 		local
 			yyval2: SIGNATURE_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 222")
+end
+
+
+			yyval := yyval2
+		end
+
+	yy_do_action_37 is
+			--|#line 223 "external.y"
+		local
+			yyval2: SIGNATURE_AS
+		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 223")
+end
 
 yyval2 := yytype2 (yyvs.item (yyvsp))
 			yyval := yyval2
 		end
 
 	yy_do_action_38 is
-			--|#line 227
+			--|#line 227 "external.y"
 		local
 			yyval2: SIGNATURE_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 227")
+end
 
 				create yyval2.initialize (yytype8 (yyvs.item (yyvsp - 1)), yytype3 (yyvs.item (yyvsp)))
 			
 			yyval := yyval2
 		end
 
-	yy_do_action_40 is
-			--|#line 236
+	yy_do_action_39 is
+			--|#line 234 "external.y"
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 234")
+end
+
+
+			yyval := yyval8
+		end
+
+	yy_do_action_40 is
+			--|#line 236 "external.y"
+		local
+			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 236")
+end
 
 yyval8 := yytype8 (yyvs.item (yyvsp))
 			yyval := yyval8
 		end
 
 	yy_do_action_41 is
-			--|#line 240
+			--|#line 240 "external.y"
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 240")
+end
 
 yyval8 := yytype8 (yyvs.item (yyvsp - 1))
 			yyval := yyval8
 		end
 
-	yy_do_action_43 is
-			--|#line 247
+	yy_do_action_42 is
+			--|#line 245 "external.y"
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 245")
+end
+
+
+			yyval := yyval8
+		end
+
+	yy_do_action_43 is
+			--|#line 247 "external.y"
+		local
+			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 247")
+end
 
 yyval8 := yytype8 (yyvs.item (yyvsp))
 			yyval := yyval8
 		end
 
 	yy_do_action_44 is
-			--|#line 251
+			--|#line 251 "external.y"
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 251")
+end
 
 			create {EIFFEL_LIST [EXTERNAL_TYPE_AS]} yyval8.make (Argument_list_initial_size)
 			yyval8.extend (yytype3 (yyvs.item (yyvsp)))
@@ -690,10 +870,13 @@ yyval8 := yytype8 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_45 is
-			--|#line 256
+			--|#line 256 "external.y"
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 256")
+end
 
 			yyval8 := yytype8 (yyvs.item (yyvsp - 2))
 			yyval8.extend (yytype3 (yyvs.item (yyvsp)))
@@ -701,21 +884,40 @@ yyval8 := yytype8 (yyvs.item (yyvsp))
 			yyval := yyval8
 		end
 
-	yy_do_action_47 is
-			--|#line 265
+	yy_do_action_46 is
+			--|#line 263 "external.y"
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 263")
+end
+
+
+			yyval := yyval3
+		end
+
+	yy_do_action_47 is
+			--|#line 265 "external.y"
+		local
+			yyval3: EXTERNAL_TYPE_AS
+		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 265")
+end
 
 yyval3 := yytype3 (yyvs.item (yyvsp))
 			yyval := yyval3
 		end
 
 	yy_do_action_48 is
-			--|#line 269
+			--|#line 269 "external.y"
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 269")
+end
 
 					-- False because no `struct' keyword.
 					-- Void because no `signed', `unsigned' keyword.
@@ -725,10 +927,13 @@ yyval3 := yytype3 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_49 is
-			--|#line 276
+			--|#line 276 "external.y"
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 276")
+end
 
 					-- True because `struct' keyword.
 					-- Void because no `signed', `unsigned' keyword.
@@ -738,10 +943,13 @@ yyval3 := yytype3 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_50 is
-			--|#line 282
+			--|#line 282 "external.y"
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 282")
+end
 
 					-- False because no `struct' keyword.
 				yyval3 := new_external_type_as (yytype4 (yyvs.item (yyvsp - 2)), signed_prefix, False, yytype6 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)))
@@ -750,10 +958,13 @@ yyval3 := yytype3 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_51 is
-			--|#line 287
+			--|#line 287 "external.y"
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 287")
+end
 
 					-- False because no `struct' keyword.
 				yyval3 := new_external_type_as (yytype4 (yyvs.item (yyvsp - 2)), unsigned_prefix, False, yytype6 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)))
@@ -761,11 +972,27 @@ yyval3 := yytype3 (yyvs.item (yyvsp))
 			yyval := yyval3
 		end
 
-	yy_do_action_53 is
-			--|#line 295
+	yy_do_action_52 is
+			--|#line 294 "external.y"
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 294")
+end
+
+
+			yyval := yyval3
+		end
+
+	yy_do_action_53 is
+			--|#line 295 "external.y"
+		local
+			yyval3: EXTERNAL_TYPE_AS
+		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 295")
+end
 
 			yyval3 := yytype3 (yyvs.item (yyvsp))
 		
@@ -773,70 +1000,104 @@ yyval3 := yytype3 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_54 is
-			--|#line 301
+			--|#line 301 "external.y"
 		local
 			yyval6: INTEGER
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 301")
+end
 
 yyval6 := 0
 			yyval := yyval6
 		end
 
 	yy_do_action_55 is
-			--|#line 303
+			--|#line 303 "external.y"
 		local
 			yyval6: INTEGER
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 303")
+end
 
 yyval6 := yytype6 (yyvs.item (yyvsp - 1)) + 1
 			yyval := yyval6
 		end
 
 	yy_do_action_56 is
-			--|#line 307
+			--|#line 307 "external.y"
 		local
 			yyval5: BOOLEAN
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 307")
+end
 
 yyval5 := False
 			yyval := yyval5
 		end
 
 	yy_do_action_57 is
-			--|#line 309
+			--|#line 309 "external.y"
 		local
 			yyval5: BOOLEAN
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 309")
+end
 
 yyval5 := True
 			yyval := yyval5
 		end
 
-	yy_do_action_59 is
-			--|#line 315
+	yy_do_action_58 is
+			--|#line 313 "external.y"
 		local
 			yyval7: USE_LIST_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 313")
+end
+
+
+			yyval := yyval7
+		end
+
+	yy_do_action_59 is
+			--|#line 315 "external.y"
+		local
+			yyval7: USE_LIST_AS
+		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 315")
+end
 
 yyval7 := yytype7 (yyvs.item (yyvsp))
 			yyval := yyval7
 		end
 
 	yy_do_action_60 is
-			--|#line 319
+			--|#line 319 "external.y"
 		local
 			yyval7: USE_LIST_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 319")
+end
 
 yyval7 := yytype7 (yyvs.item (yyvsp))
 			yyval := yyval7
 		end
 
 	yy_do_action_61 is
-			--|#line 324
+			--|#line 324 "external.y"
 		local
 			yyval7: USE_LIST_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 324")
+end
 
 			create {USE_LIST_AS} yyval7.make (Argument_list_initial_size)
 			yyval7.extend (yytype4 (yyvs.item (yyvsp)))
@@ -845,10 +1106,13 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_62 is
-			--|#line 329
+			--|#line 329 "external.y"
 		local
 			yyval7: USE_LIST_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 329")
+end
 
 			yyval7 := yytype7 (yyvs.item (yyvsp - 2))
 			yyval7.extend (yytype4 (yyvs.item (yyvsp)))
@@ -857,10 +1121,13 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_63 is
-			--|#line 336
+			--|#line 336 "external.y"
 		local
 			yyval4: ID_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 336")
+end
 
 			yyval4 := new_double_quote_id_as (token_buffer)
 		
@@ -868,10 +1135,13 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_64 is
-			--|#line 341
+			--|#line 341 "external.y"
 		local
 			yyval4: ID_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 341")
+end
 
 			yyval4 := new_system_id_as (token_buffer)
 		
@@ -879,10 +1149,13 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_65 is
-			--|#line 345
+			--|#line 345 "external.y"
 		local
 			yyval4: ID_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 345")
+end
 
 			yyval4 := new_system_id_as (token_buffer)
 		
@@ -890,10 +1163,13 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_66 is
-			--|#line 349
+			--|#line 349 "external.y"
 		local
 			yyval4: ID_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 349")
+end
 
 			yyval4 := new_double_quote_id_as (token_buffer)
 		
@@ -901,10 +1177,13 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_67 is
-			--|#line 355
+			--|#line 355 "external.y"
 		local
 			yyval4: ID_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 355")
+end
 
 			yyval4 := new_double_quote_id_as (token_buffer)
 		
@@ -912,10 +1191,13 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_68 is
-			--|#line 360
+			--|#line 360 "external.y"
 		local
 			yyval4: ID_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 360")
+end
 
 			yyval4 := new_double_quote_id_as (token_buffer)
 		
@@ -923,10 +1205,13 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_69 is
-			--|#line 366
+			--|#line 366 "external.y"
 		local
 			yyval4: ID_AS
 		do
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 366")
+end
 
 create yyval4.initialize (token_buffer) 
 			yyval := yyval4

@@ -17,12 +17,14 @@ inherit
 	
 	EV_TEXT_CONTAINER_I
 
+	EV_FONTABLE_I
+
 feature {NONE} -- Initialization
 
-        make_with_text (par: EV_CONTAINER; txt: STRING) is
-                        -- Create a label implementation.
+ 	make_with_text (par: EV_CONTAINER; txt: STRING) is
+ 			-- Create a label implementation.
 		deferred
-                end	
+		end	
 	
 end --class EV_LABEL_I
 

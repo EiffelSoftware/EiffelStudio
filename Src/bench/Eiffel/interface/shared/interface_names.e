@@ -1064,6 +1064,7 @@ feature -- Description texts
 	e_Set_stack_depth: STRING is		"Set maximum call stack depth"
 	e_Shell: STRING is					"Send to external editor"
 	e_Switch_num_format: STRING is 		"Hex/Dec formating"
+	e_Toggle_state_of_expressions: STRING is		"Enable/Disable expressions"
 	e_Toggle_stone_management: STRING is "Link or not the context tool to other components"
 	e_Uncomment: STRING is				"Uncomment"
 	e_Undo: STRING is					"Undo"

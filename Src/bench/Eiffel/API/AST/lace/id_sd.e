@@ -11,7 +11,7 @@ inherit
 
 	AST_LACE
 		undefine
-			copy, out, is_equal, setup, consistent
+			copy, out, is_equal
 		redefine
 			set,
 			pass_address

@@ -10,7 +10,7 @@ inherit
 		rename
 			duplicate as twin
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		redefine
 			is_multi_type, deep_actual_type
 		end

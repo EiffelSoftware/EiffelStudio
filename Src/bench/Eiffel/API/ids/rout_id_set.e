@@ -26,7 +26,7 @@ inherit
 
 	COMPILER_EXPORTER
 		undefine
-			copy, setup, is_equal, consistent
+			copy, is_equal
 		end
 
 creation

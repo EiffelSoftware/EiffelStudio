@@ -325,6 +325,8 @@ feature {NONE} -- Implementation
 				Result.append ("  ");
 			elseif perc < 100 then
 				Result.extend (' ')
+			elseif nbr_to_go /= 0 then
+				perc := 99
 			end;
 			Result.append_integer (perc);
 			Result.append_string ("%% - ");

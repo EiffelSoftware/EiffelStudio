@@ -154,7 +154,8 @@ feature -- Initialization
 		local
 			l_reader: EIFFEL_XML_DESERIALIZER
 			l_env: EIFFEL_ENV
-			l_assembly_location, l_mapping: FILE_NAME
+			l_assembly_location: PATH_NAME
+			l_mapping: FILE_NAME
 			l_location: FILE_NAME
 			
 			l_types: CONSUMED_ASSEMBLY_TYPES
@@ -237,8 +238,15 @@ feature -- Initialization
 					
 				l_assembly ?= Universe.cluster_of_path (l_assembly_location)
 				if l_assembly = Void then
-					create l_vd60.make (Current, l_cons_assembly)
-					Error_handler.insert_error (l_vd60)
+					l_assembly_location := clone (Local_assembly_path)
+					l_assembly_location.extend (build_assembly_path (
+						l_cons_assembly.name, l_cons_assembly.version,
+						l_cons_assembly.culture, l_cons_assembly.key))
+					l_assembly ?= Universe.cluster_of_path (l_assembly_location)
+					if l_assembly = Void then
+						create l_vd60.make (Current, l_cons_assembly)
+						Error_handler.insert_error (l_vd60)
+					end
 				else
 					referenced_assemblies.put (l_assembly, i)
 				end
@@ -261,8 +269,12 @@ feature {NONE} -- Implementation
 					create l_vd64
 					Error_handler.insert_error (l_vd64)
 				else			
-						-- And call emitter to generate XML file if needed.
-					l_emitter.consume_local_assembly (assembly_path, path)
+						-- If `assembly_path' is Void, then an error has
+						-- already been generated.
+					if assembly_path /= Void then
+							-- And call emitter to generate XML file if needed.
+						l_emitter.consume_local_assembly (assembly_path, Local_assembly_path)
+					end
 				end
 			end
 		end

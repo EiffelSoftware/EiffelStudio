@@ -91,6 +91,7 @@ feature {NONE} -- Initialization
 feature -- {EV_TREE_IMP}
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+			-- Possible PND status modification.
 		local
 			tree_imp: EV_TREE_IMP
 		do
@@ -129,6 +130,8 @@ feature -- {EV_TREE_IMP}
 
 	set_pixmap (p: EV_PIXMAP) is
 			-- Assign `p' to the displayed pixmap.
+		require else
+			pixmap_not_void: pixmap /= Void
 		do
 			if pixmap = Void then
 				create pixmap
@@ -161,7 +164,9 @@ feature -- {EV_TREE_IMP}
 			end
 			ev_children.go_i_th (original_index)
 			if pixmap /= Void then
+				-- If `Current' has a pixmap 
 				set_pixmap_in_parent
+					-- Assign `pixmap' to tree. 
 			end
 		ensure then
 			index_not_changed: ev_children.index = old ev_children.index
@@ -180,6 +185,8 @@ feature -- {EV_TREE_IMP}
 
 	reduce_image_list_references (i: INTEGER) is
 			-- Decrease any references to an image position > `i' by one.
+		require else
+			image_position_non_negative: i >= 0
 		local
 			original_index: INTEGER
 		do
@@ -193,9 +200,13 @@ feature -- {EV_TREE_IMP}
 				ev_children.forth
 			end
 			ev_children.go_i_th (original_index)
+				-- Restore original position in `ev_children'.
 			if image_index > i then
 				image_index := image_index - 1
+					-- Reduce `image_index'
 				set_image (image_index, image_index)
+					-- Image used is now the image at position `image index' in
+					-- the image list.
 				top_parent_imp.set_tree_item (Current)
 			end
 		end
@@ -220,6 +231,7 @@ feature -- {EV_TREE_IMP}
 				ev_children.forth
 			end
 			ev_children.go_i_th (original_index)
+				-- Restore original position in `ev_children.
 			if pixmap /= Void then
 				-- If the item has a pixmap then 
 				if pixmap_imp.icon.item /= Void then
@@ -563,6 +575,9 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM
 
+invariant
+		pixmap_image_list_index_non_negative: image_index >= 0
+
 end -- class EV_TREE_ITEM_IMP
 
 --|----------------------------------------------------------------
@@ -587,6 +602,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/03/30 18:31:58  rogers
+--| Improved comments, added pre-conditions, added invariant
+--|
 --| Revision 1.53  2000/03/29 20:36:26  brendel
 --| Modified text handling in compliance with new EV_TEXTABLE_IMP.
 --|

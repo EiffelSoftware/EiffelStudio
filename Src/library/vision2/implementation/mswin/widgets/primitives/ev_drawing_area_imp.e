@@ -187,12 +187,6 @@ feature {NONE} -- Implementation
 			{EV_DRAWABLE_IMP} Precursor (color)
 		end
 
-	redraw (left, top, right, bottom: INTEGER) is
-			-- Redraw the area if necessary.
-		do
-			-- Nothing to do here
-		end
-
 feature {NONE} -- WEL Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is

@@ -4,19 +4,44 @@ class ATTR_REQUEST
 
 inherit
 
+	DEBUG_VALUE_EXPORTER
+		export 
+			{NONE} all
+		end	
+
 	EWB_REQUEST
 		rename
 			make as old_make
+		export 
+			{NONE} all
 		redefine
 			send
-		end;
-	BEURK_HEXER;
-	BASIC_ROUTINES;
+		end
+		
+	BEURK_HEXER
+		export 
+			{NONE} all
+		end
+		
+	BASIC_ROUTINES
+		export 
+			{NONE} all
+		end
+		
 	SHARED_EIFFEL_PROJECT
+		export 
+			{NONE} all
+		end
 
 	PLATFORM
+		export 
+			{NONE} all
+		end
 
 	SK_CONST
+		export 
+			{NONE} all
+		end	
 
 create
 

@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 		local
 			pixmap: EV_PIXMAP
 		do
-			pixmap := clone ((create {EV_STOCK_PIXMAPS}).warning_pixmap)
+			pixmap := ((create {EV_STOCK_PIXMAPS}).warning_pixmap).twin
 			pixmap.set_minimum_size (pixmap.width, pixmap.height)
 			pixmap_cell.extend (pixmap)
 			set_default_cancel_button (cancel_button)

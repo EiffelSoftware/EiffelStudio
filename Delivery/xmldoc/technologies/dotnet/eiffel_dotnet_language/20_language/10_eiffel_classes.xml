@@ -96,62 +96,63 @@
 		</list>
 		<paragraph>All of the above, except Class header, are optional.  So the simplest Eiffel class you could build would look like this:</paragraph>
 		<code_block>
-class
-	SIMPLE
-end
+<keyword>class</keyword>
+	<class_name>SIMPLE</class_name>
+<keyword>end</keyword>
 </code_block>
 		<paragraph>Okay, so class SIMPLE is only interesting in its simplicity. Let's look at a more useful example:</paragraph>
 		<code_block>
-indexing
-    description: Objects that model lists
-    revision: $Revision$
+<keyword>indexing</keyword>
+	description<symbol>:</symbol> Objects that model lists
+	revision<symbol>:</symbol> <symbol>$</symbol>Revision<symbol>:</symbol> <feature_name>1</feature_name>.<feature_name>4</feature_name> <symbol>$</symbol>
 
-class
-    OLD_FASHIONED_LIST [G]
+<keyword>class</keyword>
+	<class_name>OLD_FASHIONED_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 
-obsolete "This class is obsolete, use LINKED_LIST [G] instead"
+<keyword>obsolete</keyword> "This class is obsolete, use LINKED_LIST [G] instead"
 
-inherit
-    DYNAMIC_LIST [G]
+<keyword>inherit</keyword>
+	<class_name>DYNAMIC_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 
-create
-    make
+<keyword>create</keyword>
+	<feature_name>make</feature_name>
 
-feature -- Initialization
+<keyword>feature</keyword> -- Initialization
 
-    make is
-            -- Create an empty list.
-        do
-            before := True
-        ensure is_before: before
-        end
+	<feature_name>make</feature_name> <keyword>is</keyword>
+			<comment>-- Create an empty list.</comment>
+		<keyword>do</keyword>
+			before <symbol>:</symbol><symbol>=</symbol> True
+		<keyword>ensure</keyword>
+			is_before<symbol>:</symbol> before
+		<keyword>end</keyword>
 
-feature -- Access
+<keyword>feature</keyword> <comment>-- Access</comment>
 
-    item: G is
-            -- Current item
-        do
-            Result := active.item
-        end
+	<feature_name>item</feature_name><symbol>:</symbol> <class_name>G</class_name> <keyword>is</keyword>
+			<comment>-- Current item</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>active</feature_name>.<feature_name>item</feature_name>
+		<keyword>end</keyword>
 
-    first: like item is
-            -- Item at first position
-        do
-            Result := first_element.item
-        end
-                (other features omitted)
+	<feature_name>first</feature_name><symbol>:</symbol> <keyword>like</keyword> <feature_name>item</feature_name> <keyword>is</keyword>
+			<comment>-- Item at first position</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> 	<feature_name>first_element</feature_name>.<feature_name>item</feature_name>
+		<keyword>end</keyword>
+		<symbol>(</symbol>other features omitted<symbol>)</symbol>
 
-invariant
-    before_constraint: before implies (active = first_element)
-    after_constraint: after implies (active = last_element)
+<keyword>invariant</keyword>
+	before_constraint<symbol>:</symbol> before <keyword>implies</keyword> <symbol>(</symbol>active <symbol>=</symbol> first_element<symbol>)</symbol>
+	after_constraint<symbol>:</symbol> after <keyword>implies</keyword> <symbol>(</symbol>active <symbol>=</symbol> last_element<symbol>)</symbol>
 </code_block>Here is a class that, although somewhat contrived, utilizes all of the required and optional parts of the class. Let's look at each part individually.
 		<heading>
 			<size>3</size>Indexing
 		</heading>
 		<code_block>
-indexing
-    description: Objects that model lists
-    revision: $Revision$
+<keyword>indexing</keyword>
+	description<symbol>:</symbol> Objects that model lists
+	revision<symbol>:</symbol> <symbol>$</symbol>Revision<symbol>:</symbol> 1.4 <symbol>$</symbol>
 </code_block>
 		<paragraph>The indexing part of a class is there to allow you as a producer to record information of your choice which will help you or other reuse consumers at some later time to locate understand the class. This important in Eiffel because we try to treat every class as if someday it will become reusable. </paragraph>
 		<paragraph>Information in indexing does not change the semantics of the class.</paragraph>
@@ -170,8 +171,8 @@ indexing
 			<size>3</size>Class Header
 		</heading>
 		<code_block>
-class
-    OLD_FASHIONED_LIST [G]
+<keyword>class</keyword>
+	<class_name>OLD_FASHIONED_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>The class header is introduced by the keyword "class", which in turn can be preceded by one of three keywords which mark the class as 
 			<code>
@@ -218,8 +219,8 @@ class
 			<size>3</size>Formal Generics
 		</heading>
 		<code_block>
-class
-    OLD_FASHIONED_LIST [G]
+<keyword>class</keyword>
+	<class_name>OLD_FASHIONED_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>In this example the class name is followed by the specification of one formal generic parameter " 
 			<code>
@@ -237,7 +238,7 @@ class
 			</code> of. We might make this declaration:
 		</paragraph>
 		<code_block>
-	my_list_of_cats: OLD_FASHION_LIST [CAT]
+	<feature_name>my_list_of_cats</feature_name><symbol>:</symbol> <class_name>OLD_FASHION_LIST</class_name> <symbol>[</symbol><class_name>CAT</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>The entity 
 			<code>
@@ -267,7 +268,7 @@ class
 			<size>3</size>Obsolete
 		</heading>
 		<code_block>
-obsolete "This class is obsolete, use LINKED_LIST [G] instead"
+<keyword>obsolete</keyword> "<string>This class is obsolete, use LINKED_LIST [G] instead</string>"
 </code_block>
 		<paragraph>
 			<code>
@@ -279,8 +280,8 @@ obsolete "This class is obsolete, use LINKED_LIST [G] instead"
 			<size>3</size>Inheritance
 		</heading>
 		<code_block>
-inherit
-    DYNAMIC_LIST [G]
+<keyword>inherit</keyword>
+	<class_name>DYNAMIC_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>One of the two possible 
 			<link>
@@ -325,8 +326,8 @@ inherit
 			<size>3</size>Creators
 		</heading>
 		<code_block>
-create
-    make
+<keyword>create</keyword>
+	<feature_name>make</feature_name>
 </code_block>
 		<paragraph>The creators part of a class declares a procedure as being a 
 			<link>
@@ -342,7 +343,7 @@ create
 		</paragraph>
 		<paragraph>Let's take a quick look at object creation. Consider this declaration:</paragraph>
 		<code_block>
-	my_list_of_cats: OLD_FASHION_LIST [CAT]
+	<feature_name>my_list_of_cats</feature_name><symbol>:</symbol> <class_name>OLD_FASHION_LIST</class_name> <symbol>[</symbol><class_name>CAT</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>Here the entity 
 			<code>
@@ -359,7 +360,7 @@ create
 			</code> from holding a void reference to holding a reference to a object modeling a list of cats, starts when a creation instruction is executed. The creation instruction creates the instance and may apply a creation procedure to initialize the instance. A creation instruction for the declaration above would look like this:
 		</paragraph>
 		<code_block>
-	create my_list_of_cats.make
+	<keyword>create</keyword> <feature_name>my_list_of_cats</feature_name>.<feature_name>make</feature_name>
 </code_block>
 		<paragraph>The 
 			<code>
@@ -429,29 +430,28 @@ create
 			<size>3</size>Features
 		</heading>
 		<code_block>
-feature -- Initialization
+<keyword>feature</keyword> -- Initialization
 
-    make is
-            -- Create an empty list.
-        do
-            before := True
-        ensure is_before: before
-        end
+	<feature_name>make </feature_name><keyword>is</keyword>
+			<comment>-- Create an empty list.</comment>
+		<keyword>do</keyword>
+			before <symbol>:</symbol><symbol>=</symbol> True
+			<keyword>ensure</keyword> is_before<symbol>:</symbol> before
+		<keyword>end</keyword>
 
+<keyword>feature</keyword> -- Access
 
-feature -- Access
+	<feature_name>item</feature_name><symbol>:</symbol> <class_name>G</class_name> <keyword>is</keyword>
+			<comment>-- Current item</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>active</feature_name>.<feature_name>item</feature_name>
+		<keyword>end</keyword>
 
-    item: G is
-            -- Current item
-        do
-            Result := active.item
-        end
-
-    first: like item is
-            -- Item at first position
-        do
-            Result := first_element.item
-        end
+	<feature_name>first</feature_name><symbol>:</symbol> <keyword>like</keyword> <feature_name>item</feature_name> <keyword>is</keyword>
+			<comment>-- Item at first position</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <feature_name>first_element</feature_name>.<feature_name>item</feature_name>
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>The features part of a class is the area in which we feel that most of the "programming" is done. It is here that we define those things that instances of a class have and can do. We will learn more about features in the next section 
 			<link>
@@ -498,9 +498,9 @@ feature -- Access
 			<size>3</size>Invariant
 		</heading>
 		<code_block>
-invariant
-    before_constraint: before implies (active = first_element)
-    after_constraint: after implies (active = last_element)
+<keyword>invariant</keyword>
+	before_constraint<symbol>:</symbol> before <keyword>implies</keyword> <symbol>(</symbol>active <symbol>=</symbol> first_element<symbol>)</symbol>
+	after_constraint<symbol>:</symbol> after <keyword>implies</keyword> <symbol>(</symbol>active <symbol>=</symbol> last_element<symbol>)</symbol>
 </code_block>
 		<paragraph>Here's the last word in a class definition ... both literally and figuratively. The invariant part, introduced not surprisingly by the keyword " 
 			<code>

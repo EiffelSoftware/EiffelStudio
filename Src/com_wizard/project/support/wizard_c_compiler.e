@@ -38,7 +38,7 @@ inherit
 		export
 			{NONE} all
 		undefine
-			output_window
+			message_output
 		end
 
 create

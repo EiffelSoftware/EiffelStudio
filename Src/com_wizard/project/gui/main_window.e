@@ -24,6 +24,13 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		rename
+			free as env_free
+		export
+			{NONE} all
+		end
+
 	WIZARD_RESCUABLE
 		export
 			{NONE} all
@@ -87,6 +94,8 @@ feature {NONE} -- Initialization
 			resize (600, 400)
 			show
 			first_choice_dialog.activate
+			set_message_output (create {WIZARD_MESSAGE_OUTPUT})
+			message_output.set_output_window (Current)
 		end
 
 feature -- GUI Elements

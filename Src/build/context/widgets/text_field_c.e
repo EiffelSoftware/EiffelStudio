@@ -5,20 +5,10 @@ class TEXT_FIELD_C
 inherit
 
 	PRIMITIVE_C
-		rename
-			copy_attributes as old_copy_attributes,
-			reset_modified_flags as old_reset_modified_flags
-		redefine
-			stored_node, context_initialization, is_fontable,
-			widget		
-		end;
-
-	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, 
-			copy_attributes, context_initialization, is_fontable, widget
-		select
-			copy_attributes, reset_modified_flags
+			copy_attributes, context_initialization, is_fontable,
+			widget, default_commands_list
 		end
 	
 feature 
@@ -39,6 +29,15 @@ feature
 		end;
 
 	widget: TEXT_FIELD
+
+	default_commands_list: LINKED_LIST [CMD] is
+		local
+			predefined_cmds: SHARED_PREDEF_COMS
+		do
+			Result := Precursor
+			!! predefined_cmds
+			Result.extend (predefined_cmds.reset_to_empty_cmd)
+		end
 
 feature -- Default event
 
@@ -95,7 +94,7 @@ feature
 
 	reset_modified_flags is
 		do
-			old_reset_modified_flags;
+			Precursor
 			max_size_modified := False;
 		end;
 
@@ -107,7 +106,7 @@ feature {NONE}
 			if max_size_modified then
 				other_context.set_maximum_size (maximum_size);
 			end;
-			old_copy_attributes (other_context);
+			Precursor (other_context);
 		end;
 
 	

@@ -5,23 +5,11 @@ class SCROLLABLE_LIST_C
 inherit
 
 	PRIMITIVE_C
-		rename
-			copy_attributes as old_copy_attributes,
-			reset_modified_flags as old_reset_modified_flags
-		redefine
-			stored_node, is_fontable,
-			widget, position_initialization, set_size,
-			widget_creation_routine_name
-		end;
-
-	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
-			is_fontable, 
+			is_fontable, default_commands_list,
 			widget, position_initialization, set_size,
 			widget_creation_routine_name
-		select
-			copy_attributes, reset_modified_flags
 		end;
 
 feature 
@@ -61,6 +49,20 @@ feature
 		end;
 
 	widget: SCROLLABLE_LIST;
+
+	default_commands_list: LINKED_LIST [CMD] is
+		local
+						predefined_cmds: SHARED_PREDEF_COMS
+		do
+			Result := Precursor
+			!! predefined_cmds
+			Result.extend (predefined_cmds.new_cmd)
+			Result.extend (predefined_cmds.open_cmd)
+			Result.extend (predefined_cmds.save_cmd)
+			Result.extend (predefined_cmds.popup_cmd)
+			Result.extend (predefined_cmds.popdown_cmd)
+			Result.extend (predefined_cmds.reset_to_empty_cmd)
+		end
 
 feature -- Default event
 
@@ -119,7 +121,7 @@ feature
 
 	reset_modified_flags is
 		do
-			old_reset_modified_flags;
+			Precursor
 		end;
 
 	set_size (new_w, new_h: INTEGER) is
@@ -152,7 +154,7 @@ feature {NONE}
 	copy_attributes (other_context: like Current) is
 		do
 			other_context.set_visible_item_count (visible_item_count);
-			old_copy_attributes (other_context);
+			Precursor (other_context);
 		end;
 
 	

@@ -16,7 +16,8 @@ inherit
 			make,
 			realize,
 			set_single_line_mode,
-			set_multi_line_mode
+			set_multi_line_mode,
+			default_style
 		end
 
 	SCROLLED_T_I
@@ -52,21 +53,6 @@ feature -- Initialization
 			wc: WEL_COMPOSITE_WINDOW
 		do
 			if not realized then
-				default_style := Ws_child + Ws_visible + Ws_border
-					   + Es_nohidesel + Es_left
-					   + Es_multiline + Es_autovscroll
-				if not is_word_wrap_mode then
-					default_style := default_style + Es_autohscroll
-				end
-				if is_read_only then
-					default_style := default_style + Es_readonly
-				end
-				if is_horizontal_scrollbar then
-					default_style := default_style + Ws_hscroll
-				end
-				if is_vertical_scrollbar then
-					default_style := default_style + Ws_vscroll
-				end
 				if width = 0 then
 					set_width (200)
 				end
@@ -182,6 +168,26 @@ feature {NONE} -- Inapplicable
 		end
 
 feature {NONE} -- Implementation
+
+	default_style: INTEGER is
+			-- Default style for creation.
+		do
+			Result := Ws_child + Ws_visible + Ws_border
+				   + Es_nohidesel + Es_left
+				   + Es_multiline + Es_autovscroll
+			if not is_word_wrap_mode then
+				Result := Result + Es_autohscroll
+			end
+			if is_read_only then
+				Result := Result + Es_readonly
+			end
+			if is_horizontal_scrollbar then
+				Result := Result + Ws_hscroll
+			end
+			if is_vertical_scrollbar then
+				Result := Result + Ws_vscroll
+			end
+		end
 
 	cwin_get_scroll_pos (hwnd: POINTER; flag: INTEGER): INTEGER is
 			-- SDK GetScrollPos

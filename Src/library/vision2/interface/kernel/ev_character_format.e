@@ -39,31 +39,36 @@ feature {NONE} -- Initialization
 			font_set: font.is_equal (a_font)
 		end
 		
-	make_with_font_and_color (a_font: EV_FONT; a_color: EV_COLOR) is
-			-- Create `Current' with font `a_font' and color `a_color'.
+	make_with_font_and_color (a_font: EV_FONT; a_color, a_background_color: EV_COLOR) is
+			-- Create `Current' with font `a_font', color `a_color' and
+			-- background_color `a_background_color'.
 		require
 			font_not_void: a_font /= Void
 			color_not_void: a_color /= Void
+			background_color_not_void: a_background_color /= Void
 		do
 			default_create
 			set_font (a_font)
 			set_color (a_color)
+			set_background_color (a_background_color)
 			changed := True
 		ensure
 			font_set: font.is_equal (a_font)
 			color_set: color.is_equal (a_color)
 		end
 		
-	make_with_values (a_font: EV_FONT; a_color: EV_COLOR; an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
-			-- Create `Current' with font `a_font', color `a_color' and effects `an_effect'.
+	make_with_values (a_font: EV_FONT; a_color, a_background_color: EV_COLOR; an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
+			-- Create `Current' with font `a_font', color `a_color', background color `a_background_color' and effects `an_effect'.
 		require
 			font_not_void: a_font /= Void
 			color_not_void: a_color /= Void
+			background_color_not_void: a_background_color /= Void
 			effect_not_void: an_effect /= Void
 		do
 			default_create
 			set_font (a_font)
 			set_color (a_color)
+			set_background_color (a_background_color)
 			set_effects (an_effect)
 			changed := True
 		ensure
@@ -103,6 +108,16 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	background_color: EV_COLOR is
+			-- Background color of the current format.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.background_color
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 feature -- Element change
 
@@ -130,6 +145,18 @@ feature -- Element change
 			color_set: color.is_equal (a_color)
 		end
 		
+	set_background_color (a_color: EV_COLOR) is
+			-- Make `a_color' the new background_color.
+		require
+			not_destroyed: not is_destroyed
+			color_not_void: a_color /= Void
+		do
+			implementation.set_background_color (a_color)
+			changed := True
+		ensure
+			color_set: background_color.is_equal (a_color)
+		end
+		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Make `an_effect' the new `effects'.
 		require
@@ -145,6 +172,7 @@ feature -- Element change
 			-- Is `Current' considered equal to `other'?
 		do
 			Result := other.color.is_equal (color) and
+				other.background_color.is_equal (background_color) and
 				other.font.is_equal (font) and
 				other.effects.is_underlined.is_equal (effects.is_underlined) and 
 				other.effects.is_striked_out.is_equal (effects.is_striked_out)
@@ -161,6 +189,9 @@ feature -- Element change
 			Result.append (color.red_8_bit.out)
 			Result.append (color.green_8_bit.out)
 			Result.append (color.blue_8_bit.out)
+			Result.append (background_color.red_8_bit.out)
+			Result.append (background_color.green_8_bit.out)
+			Result.append (background_color.blue_8_bit.out)
 			Result.append (effects.is_underlined.out)
 			Result.append (effects.is_striked_out.out)
 		end
@@ -171,6 +202,7 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := color.is_equal ((create {EV_STOCK_COLORS}).black) and
+			background_color.is_equal ((create {EV_STOCK_COLORS}).white) and 
 			not effects.is_striked_out and
 			not effects.is_underlined
 		end

@@ -9,7 +9,8 @@ inherit
 		end;
 	CAT_BUTTON
 		redefine
-			catalog_page
+			catalog_page,
+			set_default
 		end
 
 creation
@@ -30,6 +31,11 @@ feature {NONE}
 	stone_type: INTEGER is
 		do
 		 	Result := Stone_types.any_type
+		end;
+
+	set_default is
+		do
+			register
 		end;
 
 	process_any (dropped: STONE) is
@@ -63,7 +69,9 @@ feature {NONE}
 			elseif new_command /= Void then
 				!!cmd.make;
 				cmd.set_internal_name ("");
+				--cmd.retrieve_text_from_disk
 				cmd.set_eiffel_text (cmd.template);
+				cmd.overwrite_text
 				command_catalog.add_to_page (cmd, catalog_page);
 				if command_catalog.current_page /= catalog_page then
 					if catalog_page.is_visible and then 
@@ -76,4 +84,3 @@ feature {NONE}
 		end;
 
 end
-

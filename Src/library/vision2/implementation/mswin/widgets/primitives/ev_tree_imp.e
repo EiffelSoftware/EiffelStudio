@@ -181,7 +181,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_tvn_selchanged (info: wel_nm_tree_view) is
+	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
 			-- selection has changed from one item to another.
 		local
 			clist: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]

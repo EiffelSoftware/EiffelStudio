@@ -17,9 +17,6 @@ inherit
 		end
 
 	EV_BAR_ITEM_IMP
---		redefine
---			build
---		end
 
 	EV_TEXT_CONTAINER_IMP
 		redefine
@@ -31,11 +28,14 @@ inherit
 	WEL_STATIC
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
 			set_text as wel_set_text,
 			destroy as wel_destroy
+
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
 			-- and EV_PRIMITIVE_IMP
@@ -50,11 +50,11 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up,
-			background_color,
-			foreground_color
+			on_key_up
 		redefine
-			default_style
+			default_style,
+			wel_background_color,
+			wel_foreground_color
 		end
 
 creation
@@ -113,6 +113,16 @@ feature {NONE} -- Implementation
    		once
  			Result := ws_visible + ws_child + ws_group +  ss_left
  		end
+
+	wel_background_color: WEL_COLOR_REF is
+		do
+			Result := background_color_imp
+		end
+
+	wel_foreground_color: WEL_COLOR_REF is
+		do
+			Result := foreground_color_imp
+		end
 
 end -- class EV_LABEL_IMP
 

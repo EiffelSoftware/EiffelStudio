@@ -20,7 +20,6 @@ feature -- Properties
 
 	name: STRING is 
 			-- Current's name
-			-- FIXME: Should be in INTERFACE_W
 		do
 			Result := Interface_names.f_close_all_tools
 		end;
@@ -41,7 +40,14 @@ feature {NONE} -- Execution
 
 	work (arg: ANY) is
 		do
-			window_manager.close_all_editors
+			window_manager.close_all_editors;
+			System_tool.close;
+			if Profile_tool /= Void then
+				Profile_tool.close
+			end;
+			if Preference_tool /= Void then
+				Preference_tool.close
+			end
 		end
 
 end -- class CLOSE_ALL_CMD

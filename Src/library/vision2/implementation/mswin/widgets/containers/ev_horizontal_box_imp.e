@@ -276,7 +276,7 @@ feature {NONE} -- Basic operation
 				from
 					i := 1
 				until
-					i = ev_children.count
+					i = ev_children.count + 1
 				loop
 					Result := Result + (ev_children @ i).minimum_width
 					i := i + 1

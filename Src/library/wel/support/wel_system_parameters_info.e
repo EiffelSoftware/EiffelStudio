@@ -11,8 +11,27 @@ inherit
 		export
 			{NONE} all
 		end
+	
+	WEL_WINDOWS_VERSION
+		export
+			{NONE} all
+		end
 
 feature -- Status
+
+	has_flat_menu: BOOLEAN is
+			-- Determines whether native User menus have flat menu appearance
+		require
+			windows_xp_required: (create {WEL_WINDOWS_VERSION}).is_windows_xp_compatible
+		local
+			res: INTEGER
+			success: BOOLEAN
+		do
+			success := c_system_parameters_info (Spi_getflatmenu, 0, $res, 0)
+			if success then
+				Result := res /= 0
+			end
+		end
 
 	has_drag_full_windows: BOOLEAN is
 			-- Determines whether dragging of full windows is enabled.
@@ -24,9 +43,7 @@ feature -- Status
 		local
 			res: INTEGER
 			success: BOOLEAN
-			is_windows_95: BOOLEAN
 		do
-			is_windows_95 := (create {WEL_WINDOWS_VERSION}).is_windows_95
 			if not is_windows_95 or else has_windows_plus then
 				success := c_system_parameters_info (Spi_getdragfullwindows, 1, $res, 0)
 				if success then
@@ -41,7 +58,7 @@ feature -- Status
 			-- The pvParam parameter is not used. The function returns TRUE
 			-- if the extension is installed, or FALSE if it is not.
 		require
-			is_windows_95: (create {WEL_WINDOWS_VERSION}).is_windows_95
+			windows_95_only: (create {WEL_WINDOWS_VERSION}).is_windows_95
 		local
 			success: BOOLEAN
 			res: INTEGER

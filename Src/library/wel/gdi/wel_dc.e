@@ -20,16 +20,6 @@ inherit
 
 	WEL_REFERENCE_TRACKABLE
 
-	WEL_DT_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_RASTER_OPERATIONS_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	WEL_DIB_COLORS_CONSTANTS
 		export
 			{NONE} all
@@ -66,12 +56,6 @@ inherit
 			{ANY} valid_polygon_fill_mode_constant
 		end
 
-	WEL_ROP2_CONSTANTS
-		export
-			{NONE} all
-			{ANY} valid_rop2_constant
-		end
-
 	WEL_CAPABILITIES_CONSTANTS
 		export
 			{NONE} all
@@ -80,6 +64,12 @@ inherit
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
+		end
+	
+	WEL_DRAWING_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_rop2_constant
 		end
 
 feature -- Access
@@ -1035,6 +1025,28 @@ feature -- Basic operations
 			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
 		end
 
+	draw_state_text (a_brush: WEL_BRUSH; string: STRING; x, y: INTEGER; format: INTEGER) is
+			-- Draw the text `string' using `format' at the
+			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
+			--
+			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for 
+			-- `format' value.
+		require
+			exists: exists
+			string_not_void: string /= Void
+		local
+			a_wel_string: WEL_STRING
+			a_brush_ptr: POINTER
+			null: POINTER -- default pointer
+			success: INTEGER
+		do
+			create a_wel_string.make (string)
+			if a_brush /= Void then
+				a_brush_ptr := a_brush.item
+			end
+			success := cwin_draw_state (item, a_brush_ptr, null, a_wel_string.item, string.count, x, y, 0, 0, format)
+		end
+
 	draw_centered_text (string: STRING; rect: WEL_RECT) is
 			-- Draw the text `string' centered in `rect'.
 		require
@@ -1043,6 +1055,46 @@ feature -- Basic operations
 			rect_not_void: rect /= Void
 		do
 			draw_text (string, rect, Dt_singleline + Dt_center + Dt_vcenter)
+		end
+
+	draw_state_bitmap (a_brush: WEL_BRUSH; a_bitmap: WEL_BITMAP; x, y: INTEGER; format: INTEGER) is
+			-- Draw the bitmap `a_bitmap' using `format' at the
+			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
+			--
+			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for 
+			-- `format' value.
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+		local
+			a_brush_ptr: POINTER
+			null: POINTER -- default pointer
+			success: INTEGER
+		do
+			if a_brush /= Void then
+				a_brush_ptr := a_brush.item
+			end
+			success := cwin_draw_state (item, a_brush_ptr, null, a_bitmap.item, 0, x, y, 0, 0, format | Dst_bitmap)
+		end
+
+	draw_state_icon (a_brush: WEL_BRUSH; an_icon: WEL_GRAPHICAL_RESOURCE; x, y: INTEGER; format: INTEGER) is
+			-- Draw the icon/cursor `an_icon' using `format' at the
+			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
+			--
+			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for 
+			-- `format' value.
+		require
+			exists: exists
+			an_icon_not_void: an_icon /= Void
+		local
+			a_brush_ptr: POINTER
+			null: POINTER -- default pointer
+			success: INTEGER
+		do
+			if a_brush /= Void then
+				a_brush_ptr := a_brush.item
+			end
+			success := cwin_draw_state (item, a_brush_ptr, null, an_icon.item, 0, x, y, 0, 0, format | Dst_icon)
 		end
 
 	draw_bitmap (a_bitmap: WEL_BITMAP; x, y, a_width, a_height: INTEGER) is
@@ -1119,6 +1171,22 @@ feature -- Basic operations
 			valid_rect: a_rect /= Void and then a_rect.exists
 		do
 			cwin_draw_edge (item, a_rect.item, edge_type, edge_border)
+		end
+
+	draw_frame_control (a_rect: WEL_RECT; control_type: INTEGER; control_state: INTEGER) is
+			-- Draws a frame control of the type `control_type' with the style
+			-- `control_state'.
+			--
+			-- `control_type' is a combination of the flags DFC_xxxx
+			-- as found in WEL_DRAWING_CONSTANTS.
+			--
+			-- `control_state' is a combination of the flags DFCS_xxxx
+			-- as found in WEL_DRAWING_CONSTANTS.
+		require
+			exists: exists
+			valid_rect: a_rect /= Void and then a_rect.exists
+		do
+			cwin_draw_frame_control (item, a_rect.item, control_type, control_state)
 		end
 
 	set_pixel (x, y: INTEGER; color: WEL_COLOR_REF) is
@@ -1676,6 +1744,14 @@ feature {NONE} -- Externals
 			"DrawText"
 		end
 
+	cwin_draw_state (hdc, hbr, lpoutputfunc, ldata: POINTER; wdata, x, y, cx, cy, fuflags: INTEGER): INTEGER is
+			-- SDK DrawState
+		external
+			"C [macro <windows.h>] (HDC, HBRUSH, DRAWSTATEPROC, LPARAM, WPARAM, int, int, int, int, UINT): BOOL"
+		alias
+			"DrawState"
+		end
+
 	cwin_draw_icon (hdc: POINTER; x, y: INTEGER; hicon: POINTER) is
 			-- SDK DrawIcon
 		external
@@ -1698,6 +1774,14 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>] (HDC, LPRECT, UINT, UINT)"
 		alias
 			"DrawEdge"
+		end
+
+	cwin_draw_frame_control (hdc: POINTER; lprect: POINTER; utype: INTEGER; ustate: INTEGER) is
+			-- SDK DrawEdge
+		external
+			"C [macro <windows.h>] (HDC, LPRECT, UINT, UINT)"
+		alias
+			"DrawFrameControl"
 		end
 
 	cwin_set_pixel (hdc: POINTER; x, y: INTEGER; color: INTEGER) is
@@ -2261,6 +2345,7 @@ feature {NONE} -- Externals
 		end
 
 	mask_blt_funcaddr: POINTER is
+			-- Address of the function "MaskBlt" if it exists.
 		require
 			mask_blt_is_supported: mask_blt_supported
 		do
@@ -2268,11 +2353,11 @@ feature {NONE} -- Externals
 		end
 
 	mask_blt_funcaddr_retrieved: BOOLEAN
-		-- Have we already retrieved the address of the function "MaskBlt" ?
+			-- Have we already retrieved the address of the function "MaskBlt" ?
 
 	internal_mask_blt_funcaddr: POINTER
-		-- Address of the function "MaskBlt" if it exists.
-		-- Void if the function is not present on the current system.
+			-- Address of the function "MaskBlt" if it exists.
+			-- Void if the function is not present on the current system.
 
 	retrieve_mask_blt_funcaddr is
 		local

@@ -6,7 +6,8 @@ indexing
 deferred class
 	EB_PANEL_LIST
 
-inherit LINKED_LIST [EB_ENTRY_PANEL]
+inherit
+	LINKED_LIST [EB_ENTRY_PANEL]
 		rename
 			make as make_list
 		end

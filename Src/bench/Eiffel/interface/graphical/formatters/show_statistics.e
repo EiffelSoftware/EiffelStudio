@@ -38,14 +38,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Statistics_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Show indexing clause of classes, in `text_window'.
 		local
-			ewb_statistics: EWB_STATISTICS
+			cmd: E_SHOW_STATISTICS
 		do
-			!! ewb_statistics;
-			ewb_statistics.set_output_window (text_window)
-			ewb_statistics.display
+			!! cmd.make (text_window);
+			cmd.execute
 		end;
 
 	display_temp_header (stone: STONE) is

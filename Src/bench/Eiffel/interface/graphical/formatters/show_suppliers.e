@@ -37,14 +37,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Suppliers_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Display suppliers of `c' in tree form.
 		local
-			ewb_suppliers: EWB_SUPPLIERS
+			ewb_suppliers: E_SHOW_SUPPLIERS
 		do
-			!! ewb_suppliers.null;
-			ewb_suppliers.set_output_window (text_window);
-			ewb_suppliers.display (c.class_c);
+			!! ewb_suppliers.make (c.class_c, text_window);
+			ewb_suppliers.execute
 		end
 
 	display_temp_header (stone: STONE) is

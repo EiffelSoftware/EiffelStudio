@@ -37,14 +37,15 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Past end;
 
-	display_info (i: INTEGER; f: FEATURE_STONE)  is
+	display_info (f: FEATURE_STONE)  is
 			-- Display history of `f;
 		local
-			ewb_past: EWB_PAST;
+			cmd: E_SHOW_ROUTINE_ANCESTORS;
 		do
-			!! ewb_past.null;
-			ewb_past.set_output_window (text_window);
-			ewb_past.display (f.feature_i, f.class_c);
+			!! cmd.make (f.feature_i, f.class_c, text_window);
+			if cmd.has_valid_feature then
+				cmd.execute
+			end
 		end;
 
 	display_temp_header (stone: STONE) is

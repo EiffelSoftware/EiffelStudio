@@ -7,12 +7,12 @@
 	This console will run with either a graphical application or a console
 	application.
 
-	Changing the value of windowed_application will set the console to be a 
+	Changing the value of windowed_application will set the console to be a
 	windowed application or a console application.
 
 	More testing needs to be done for a console application being passed large strings.
 */
- 
+
 #include <stdio.h>
 #include <windows.h>
 #include <commdlg.h>
@@ -79,13 +79,13 @@ void SET_BUFFER(int x, int y, char c)
 {
 	int yy;
 	yy = y % BUFFER_LINES;
-	*(pBuffer + yy * cxBuffer + x) = c;		
+	*(pBuffer + yy * cxBuffer + x) = c;
 }
 
 char *all_buffer ()
 {
 	char *temp;
-	int i;            
+	int i;
 
 	temp = malloc (BUFFER_LINES * (BUFFER_SIZE + 2));
 	memset (temp, 0, sizeof (temp));
@@ -174,33 +174,33 @@ long eif_console_readline(char *s,long bound,long start)
 	static char *c = NULL;
 	static BOOL done = FALSE;
 	BOOL result;
-	
+
 	if (!eif_console_allocated)
 		eif_make_console();
 
 	read = 0;
 
 	if (!done)
-		{       
+		{
 		c = NULL;
 		done = TRUE;
 		}
-	if (c == NULL)  
+	if (c == NULL)
 		{
 		if (windowed_application)
 		{
 			eif_GetWindowedInput();
 			strcat (eif_console_buffer, "\r\n");
 		}
-		else {}   
+		else {}
 			//result = ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL);
 		c = eif_console_buffer;
 		}
 
 	amount = bound - start;
 	s += start;
-	
-	while (amount-- > 0) 
+
+	while (amount-- > 0)
 		{
 		if (*c == '\n')
 			break;
@@ -338,6 +338,7 @@ void eif_console_next_line()
 
 int print_err_msg (FILE *err, char *StrFmt, ...)
 {
+	EIF_GET_CONTEXT
 	va_list ap;
 	int r;
 	char s[1024], *c, *sc;
@@ -361,6 +362,7 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	eif_console_putstring (s, strlen(s));
 
 	return r;
+	EIF_END_GET_CONTEXT
 }
 
 BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
@@ -368,6 +370,7 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 	Display a dialog when an exception trace occurs.
 */
 {
+	EIF_GET_CONTEXT
 	OPENFILENAME ofn;
 	FILE *f;
 	static char *szFilter [] = {    "Log Files (*.LOG)", "*.LOG",
@@ -417,8 +420,9 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 			}
 			return 1;
 		default:
-			return 0;       
+			return 0;
 	}
+	EIF_END_GET_CONTEXT
 }
 
 void eif_console_cleanup ()
@@ -434,19 +438,21 @@ void eif_console_cleanup ()
 
 void show_trace()
 /*
-	Show the trace of an exception by displaying the string 
+	Show the trace of an exception by displaying the string
 	that is the exception trace in a dialog
 
 	Reset the string in case we have another PANIC or problem
 	in the reclaim.
 */
 {
+	EIF_GET_CONTEXT
 	if (exception_trace_string != NULL)
 		{
 		(void) DialogBox (eif_hInstance, "EIF_EXCEPTION_TRACE", NULL, exception_trace_dialog);
 		//free (exception_trace_string);
 		*exception_trace_string = '\0';
 		}
+	EIF_END_GET_CONTEXT
 }
 
 void eif_make_console()
@@ -457,20 +463,20 @@ void eif_make_console()
 	if (windowed_application)
 	{
 		WNDCLASS wc;
-		
-	
+
+
 		wc.style         = CS_VREDRAW | CS_HREDRAW;
 		wc.lpfnWndProc   = (LPVOID) eif_console_wndproc;
 		wc.cbClsExtra    = 0;
 		wc.cbWndExtra    = 0;
 		wc.hInstance     = eif_hInstance;
-		
+
 		wc.hIcon         = NULL;
 		wc.hCursor       = NULL;
 		wc.hbrBackground = (HBRUSH) GetStockObject (BLACK_BRUSH);
 		wc.lpszMenuName  = szAppName;
 		wc.lpszClassName = szAppName;
-			
+
 		if (!RegisterClass (&wc))
 			return;
 
@@ -483,7 +489,7 @@ void eif_make_console()
 	else
 	{
 		b = AllocConsole();
-	
+
 		sa.nLength = sizeof (sa);
 		sa.lpSecurityDescriptor = NULL;
 		sa.bInheritHandle = TRUE;
@@ -509,7 +515,7 @@ void eif_GetWindowedInput()
 	MSG msg;
 
 	yCaret = line_max - iVscrollMax;
-    SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;				
+    SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;
 	ShowCaret (eif_conout_window) ;
 	Reading = TRUE;
 	while (Reading == TRUE)
@@ -548,7 +554,7 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 			cxChar = tm.tmAveCharWidth ;
 			cyChar = tm.tmHeight ;
 
-			
+
 			iMaxWidth = BUFFER_SIZE;
             cxBuffer = BUFFER_SIZE;
 			line_max = 0;
@@ -657,7 +663,7 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 					iVscrollInc = 1 ;
 					break ;
 
-				case SB_PAGEUP : 
+				case SB_PAGEUP :
 					iVscrollInc = min (-1, -cyClient / cyChar) ;
 					break ;
 
@@ -711,21 +717,21 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 				case VK_DELETE :
 					for (x = xCaret ; x < cxBuffer - 1 ; x++)
 						SET_BUFFER (x, yCaret, BUFFER_CHAR (x + 1, yCaret));
-				
+
 					SET_BUFFER (cxBuffer - 1, yCaret,' ');
-				
+
 					HideCaret (hwnd) ;
 					hdc = GetDC (hwnd) ;
-				
+
 					SelectObject (hdc,GetStockObject (SYSTEM_FIXED_FONT)) ;
 					SetTextColor (hdc, RGB (175, 175, 175));
 					SetBkColor (hdc, RGB (0, 0, 0));
-					SetBkMode (hdc, OPAQUE);				
+					SetBkMode (hdc, OPAQUE);
 
 					TextOut (hdc, xCaret * cxChar, yCaret * cyChar,
 							BUFFER_STRING (xCaret, yCaret),
 							cxBuffer - xCaret) ;
-				
+
 					ShowCaret (hwnd) ;
 					ReleaseDC (hwnd, hdc) ;
 					break ;
@@ -736,7 +742,7 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 				SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;
 			}
 			return 0 ;
-      
+
 		case WM_CHAR :
 			if (Reading)
 			{
@@ -746,7 +752,7 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 					buffer_start_pos = xCaret;
 				}
 				yCaret = line_max - iVscrollMax;
-                SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;				
+                SetCaretPos (xCaret * cxChar, yCaret * cyChar) ;
 				ShowCaret (hwnd) ;
 				for (i = 0 ; i < (int) LOWORD (lParam) ; i++)
                 	{
@@ -800,7 +806,7 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 
 						default :						// character codes
 							SET_BUFFER (xCaret, line_max, (char) wParam);
-                            
+
 							HideCaret (hwnd) ;
 
 							SelectObject (client_dc,GetStockObject (SYSTEM_FIXED_FONT)) ;
@@ -900,7 +906,7 @@ void eif_PutWindowedOutput(char *s, int l)
 		iVscrollMax = max (0, line_max + 2 - line_height);
 		//iVscrollMax = min (line_max, BUFFER_LINES);
 		iVscrollPos = iVscrollMax;
-		if (iVscrollMax > 0)  
+		if (iVscrollMax > 0)
 		{
 			if (line_max > BUFFER_LINES)
 				SetScrollRange (eif_conout_window, SB_VERT, iVscrollMax - BUFFER_LINES, iVscrollMax,TRUE) ;

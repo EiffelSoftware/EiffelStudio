@@ -64,9 +64,9 @@ feature {NONE} -- Initialization
 			create {SET_VERTICAL_RESIZE_CMD} cmd
 			height_resizable_b.add_toggle_command (cmd, arg)
 
-			create expandable_b.make_with_text (Current, Widget_names.expandable_name)
-			create {SET_EXPAND_CMD} cmd
-			expandable_b.add_toggle_command (cmd, arg)
+--			create expandable_b.make_with_text (Current, Widget_names.expandable_name)
+--			create {SET_EXPAND_CMD} cmd
+--			expandable_b.add_toggle_command (cmd, arg)
 
 			create frame.make_with_text (Current, Widget_names.container_name)
 			create vbox.make (frame)
@@ -153,7 +153,7 @@ feature -- Access
 
 			width_resizable_b.set_state (context.horizontal_resizable)
 			height_resizable_b.set_state (context.vertical_resizable)
-			expandable_b.set_state (context.expandable)
+--			expandable_b.set_state (context.expandable)
 
 			if context.is_invisible_container
 			and then not context.is_fixed then
@@ -210,9 +210,9 @@ feature -- Access
 			if height_resizable_b.state /= context.vertical_resizable then
 				context.set_vertical_resize (height_resizable_b.state)
 			end
-			if expandable_b.state /= context.expandable then
-				context.set_expand (expandable_b.state)
-			end
+--			if expandable_b.state /= context.expandable then
+--				context.set_expand (expandable_b.state)
+--			end
 
 			if context.is_invisible_container then
 				inv_cont ?= context

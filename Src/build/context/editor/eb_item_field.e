@@ -16,7 +16,7 @@ creation
 
 feature -- Initialization
 
-	make_with_label (par: EV_CONTAINER; txt: STRING) is
+	make_with_label (par: EV_BOX; txt: STRING) is
 			-- Create the item field with the text `txt' before.
 
 		local
@@ -24,9 +24,9 @@ feature -- Initialization
 		do
 			create hbox.make (par)
 			hbox.set_minimum_height (23) --XX size of one item
-			hbox.set_expand (False)
+			par.set_child_expandable (hbox, False)
 			create label.make_with_text (hbox, txt)
-			label.set_expand (False)
+			hbox.set_child_expandable (label, False)
 			make (hbox)
 		end
 

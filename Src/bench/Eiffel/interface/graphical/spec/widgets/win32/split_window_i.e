@@ -9,7 +9,7 @@ indexing
 class SPLIT_WINDOW_I
 
 inherit
-	MANAGER_WINDOWS
+	MANAGER_IMP
 		rename
 			cursor as manager_cursor
 		redefine

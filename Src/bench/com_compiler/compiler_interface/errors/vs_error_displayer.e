@@ -305,11 +305,15 @@ feature {NONE} -- Implementation
 			if short_error = Void then
 				short_error := clone (full_error)				
 			end
+			short_error := format_error (short_error)
+			if file_name = Void then
+				file_name := "<no file>"
+			end
 			check
 				non_void_full_error: full_error /= Void
 				non_void_short_error: short_error /= Void
+				non_void_file_name: file_name /= Void
 			end
-			short_error := format_error (short_error)
 			compiler_coclass.event_output_error (full_error, short_error, err.code, file_name, line_pos, 0)
 		end
 

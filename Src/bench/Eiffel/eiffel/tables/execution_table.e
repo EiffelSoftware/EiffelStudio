@@ -166,12 +166,9 @@ end
 			until
 				include_set.after
 			loop
-				if not (include_set.item.is_equal("%"eif_eiffel.h%"")) then
-					file.putstring ("#include ")
-					file.putstring (include_set.item)
-				else
-					file.putstring ("#include %"eif_eiffel.h%"")
-				end
+				file.putstring ("#include ")
+				file.putstring (include_set.item)
+
 				file.putstring ("%N%N")
 				include_set.forth
 			end

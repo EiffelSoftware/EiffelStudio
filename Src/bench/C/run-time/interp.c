@@ -5274,7 +5274,7 @@ rt_private void assign(long offset, uint32 type)
 #undef l
 }
 
-void call_disp(uint32 dtype, EIF_REFERENCE object)
+rt_shared void call_disp(uint32 dtype, EIF_REFERENCE object)
 {
 	/* Save the interpreter counter and restore it after the dispose
 	 * routine for `object' with dynamic type `dtype'.

@@ -26,6 +26,8 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
+		local
+			internal_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
@@ -46,6 +48,8 @@ feature {NONE}-- Initialization
 			create copy_menu_item
 			create paste_menu_item
 			create l_ev_menu_separator_4
+			create font_menu_item
+			create wrap_menu_item
 			create doc_format
 			create menu_uppercase_tags
 			create l_ev_menu_separator_5
@@ -72,6 +76,7 @@ feature {NONE}-- Initialization
 			create about_menu_item
 			create l_ev_vertical_box_1
 			create l_ev_frame_1
+			create l_ev_horizontal_box_1
 			create main_toolbar
 			create toolbar_new
 			create toolbar_open
@@ -86,18 +91,18 @@ feature {NONE}-- Initialization
 			create toolbar_validate
 			create toolbar_properties
 			create l_ev_tool_bar_separator_4
-			create toolbar_web
-			create toolbar_studio
-			create toolbar_envision
+			create l_ev_label_1
+			create output_combo
+			create l_ev_cell_1
 			create l_ev_vertical_split_area_1
 			create l_ev_horizontal_split_area_1
 			create left_tool
 			create l_ev_vertical_box_2
 			create main_tool
-			create l_ev_horizontal_box_1
-			create l_ev_label_1
-			create l_ev_cell_1
+			create l_ev_horizontal_box_2
+			create l_ev_label_2
 			create l_ev_cell_2
+			create l_ev_cell_3
 			create l_ev_tool_bar_5
 			create main_close
 			create l_ev_vertical_split_area_2
@@ -112,23 +117,23 @@ feature {NONE}-- Initialization
 			create toc_open_button
 			create toc_save_button
 			create toc_properties_button
-			create l_ev_cell_3
+			create l_ev_cell_4
 			create toc_new_heading
 			create toc_new_page
-			create l_ev_cell_4
+			create l_ev_cell_5
 			create toc_remove_topic
 			create toc_exclude_button
-			create l_ev_cell_5
-			create toc_menu_button
 			create l_ev_cell_6
+			create toc_menu_button
+			create l_ev_cell_7
 			create document_toc
 			create node_properties_tool
 			create node_properties_area
 			create l_ev_frame_2
-			create l_ev_horizontal_box_2
-			create l_ev_label_2
-			create l_ev_cell_7
+			create l_ev_horizontal_box_3
+			create l_ev_label_3
 			create l_ev_cell_8
+			create l_ev_cell_9
 			create l_ev_tool_bar_6
 			create node_properties_close
 			create node_properties_list
@@ -138,10 +143,10 @@ feature {NONE}-- Initialization
 			create attribute_list_tool
 			create l_ev_vertical_box_3
 			create l_ev_frame_3
-			create l_ev_horizontal_box_3
-			create l_ev_label_3
-			create l_ev_cell_9
+			create l_ev_horizontal_box_4
+			create l_ev_label_4
 			create l_ev_cell_10
+			create l_ev_cell_11
 			create l_ev_tool_bar_7
 			create attribute_list_close
 			create attribute_list
@@ -150,30 +155,31 @@ feature {NONE}-- Initialization
 			create sub_element_tool
 			create l_ev_vertical_box_4
 			create l_ev_frame_4
-			create l_ev_horizontal_box_4
+			create l_ev_horizontal_box_5
 			create title_label
-			create l_ev_cell_11
 			create l_ev_cell_12
+			create l_ev_cell_13
 			create l_ev_tool_bar_8
 			create sub_element_close
 			create sub_elements_list
 			create editor_tool
 			create l_ev_vertical_box_5
 			create l_ev_frame_5
-			create l_ev_horizontal_box_5
-			create l_ev_label_4
-			create l_ev_cell_13
+			create l_ev_horizontal_box_6
+			create l_ev_label_5
 			create l_ev_cell_14
+			create l_ev_cell_15
 			create l_ev_tool_bar_9
 			create editor_close
 			create document_area
-			create l_ev_horizontal_box_6
+			create l_ev_horizontal_box_7
 			create document_editor
 			create document_status_bar
 			create l_ev_frame_6
 			create report_label
 			create l_ev_frame_7
 			create line_pos_label
+			create internal_pixmap
 			
 				-- Build_widget_structure.
 			set_menu_bar (l_ev_menu_bar_1)
@@ -191,6 +197,8 @@ feature {NONE}-- Initialization
 			document_menu.extend (copy_menu_item)
 			document_menu.extend (paste_menu_item)
 			document_menu.extend (l_ev_menu_separator_4)
+			document_menu.extend (font_menu_item)
+			document_menu.extend (wrap_menu_item)
 			document_menu.extend (doc_format)
 			doc_format.extend (menu_uppercase_tags)
 			document_menu.extend (l_ev_menu_separator_5)
@@ -217,7 +225,8 @@ feature {NONE}-- Initialization
 			help_menu.extend (about_menu_item)
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
-			l_ev_frame_1.extend (main_toolbar)
+			l_ev_frame_1.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (main_toolbar)
 			main_toolbar.extend (toolbar_new)
 			main_toolbar.extend (toolbar_open)
 			main_toolbar.extend (toolbar_save)
@@ -231,19 +240,19 @@ feature {NONE}-- Initialization
 			main_toolbar.extend (toolbar_validate)
 			main_toolbar.extend (toolbar_properties)
 			main_toolbar.extend (l_ev_tool_bar_separator_4)
-			main_toolbar.extend (toolbar_web)
-			main_toolbar.extend (toolbar_studio)
-			main_toolbar.extend (toolbar_envision)
+			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_horizontal_box_1.extend (output_combo)
+			l_ev_horizontal_box_1.extend (l_ev_cell_1)
 			l_ev_vertical_box_1.extend (l_ev_vertical_split_area_1)
 			l_ev_vertical_split_area_1.extend (l_ev_horizontal_split_area_1)
 			l_ev_horizontal_split_area_1.extend (left_tool)
 			left_tool.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (main_tool)
-			main_tool.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_label_1)
-			l_ev_horizontal_box_1.extend (l_ev_cell_1)
-			l_ev_horizontal_box_1.extend (l_ev_cell_2)
-			l_ev_horizontal_box_1.extend (l_ev_tool_bar_5)
+			main_tool.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_label_2)
+			l_ev_horizontal_box_2.extend (l_ev_cell_2)
+			l_ev_horizontal_box_2.extend (l_ev_cell_3)
+			l_ev_horizontal_box_2.extend (l_ev_tool_bar_5)
 			l_ev_tool_bar_5.extend (main_close)
 			l_ev_vertical_box_2.extend (l_ev_vertical_split_area_2)
 			l_ev_vertical_split_area_2.extend (selector)
@@ -257,24 +266,24 @@ feature {NONE}-- Initialization
 			toc_vertical_toolbar.extend (toc_open_button)
 			toc_vertical_toolbar.extend (toc_save_button)
 			toc_vertical_toolbar.extend (toc_properties_button)
-			toc_vertical_toolbar.extend (l_ev_cell_3)
+			toc_vertical_toolbar.extend (l_ev_cell_4)
 			toc_vertical_toolbar.extend (toc_new_heading)
 			toc_vertical_toolbar.extend (toc_new_page)
-			toc_vertical_toolbar.extend (l_ev_cell_4)
+			toc_vertical_toolbar.extend (l_ev_cell_5)
 			toc_vertical_toolbar.extend (toc_remove_topic)
 			toc_vertical_toolbar.extend (toc_exclude_button)
-			toc_vertical_toolbar.extend (l_ev_cell_5)
-			toc_vertical_toolbar.extend (toc_menu_button)
 			toc_vertical_toolbar.extend (l_ev_cell_6)
+			toc_vertical_toolbar.extend (toc_menu_button)
+			toc_vertical_toolbar.extend (l_ev_cell_7)
 			toc_area.extend (document_toc)
 			l_ev_vertical_split_area_3.extend (node_properties_tool)
 			node_properties_tool.extend (node_properties_area)
 			node_properties_area.extend (l_ev_frame_2)
-			l_ev_frame_2.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (l_ev_label_2)
-			l_ev_horizontal_box_2.extend (l_ev_cell_7)
-			l_ev_horizontal_box_2.extend (l_ev_cell_8)
-			l_ev_horizontal_box_2.extend (l_ev_tool_bar_6)
+			l_ev_frame_2.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_label_3)
+			l_ev_horizontal_box_3.extend (l_ev_cell_8)
+			l_ev_horizontal_box_3.extend (l_ev_cell_9)
+			l_ev_horizontal_box_3.extend (l_ev_tool_bar_6)
 			l_ev_tool_bar_6.extend (node_properties_close)
 			node_properties_area.extend (node_properties_list)
 			selector.extend (element_area)
@@ -283,11 +292,11 @@ feature {NONE}-- Initialization
 			element_split_area.extend (attribute_list_tool)
 			attribute_list_tool.extend (l_ev_vertical_box_3)
 			l_ev_vertical_box_3.extend (l_ev_frame_3)
-			l_ev_frame_3.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (l_ev_label_3)
-			l_ev_horizontal_box_3.extend (l_ev_cell_9)
-			l_ev_horizontal_box_3.extend (l_ev_cell_10)
-			l_ev_horizontal_box_3.extend (l_ev_tool_bar_7)
+			l_ev_frame_3.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (l_ev_label_4)
+			l_ev_horizontal_box_4.extend (l_ev_cell_10)
+			l_ev_horizontal_box_4.extend (l_ev_cell_11)
+			l_ev_horizontal_box_4.extend (l_ev_tool_bar_7)
 			l_ev_tool_bar_7.extend (attribute_list_close)
 			l_ev_vertical_box_3.extend (attribute_list)
 			selector.extend (type_area)
@@ -295,25 +304,25 @@ feature {NONE}-- Initialization
 			l_ev_vertical_split_area_2.extend (sub_element_tool)
 			sub_element_tool.extend (l_ev_vertical_box_4)
 			l_ev_vertical_box_4.extend (l_ev_frame_4)
-			l_ev_frame_4.extend (l_ev_horizontal_box_4)
-			l_ev_horizontal_box_4.extend (title_label)
-			l_ev_horizontal_box_4.extend (l_ev_cell_11)
-			l_ev_horizontal_box_4.extend (l_ev_cell_12)
-			l_ev_horizontal_box_4.extend (l_ev_tool_bar_8)
+			l_ev_frame_4.extend (l_ev_horizontal_box_5)
+			l_ev_horizontal_box_5.extend (title_label)
+			l_ev_horizontal_box_5.extend (l_ev_cell_12)
+			l_ev_horizontal_box_5.extend (l_ev_cell_13)
+			l_ev_horizontal_box_5.extend (l_ev_tool_bar_8)
 			l_ev_tool_bar_8.extend (sub_element_close)
 			l_ev_vertical_box_4.extend (sub_elements_list)
 			l_ev_horizontal_split_area_1.extend (editor_tool)
 			editor_tool.extend (l_ev_vertical_box_5)
 			l_ev_vertical_box_5.extend (l_ev_frame_5)
-			l_ev_frame_5.extend (l_ev_horizontal_box_5)
-			l_ev_horizontal_box_5.extend (l_ev_label_4)
-			l_ev_horizontal_box_5.extend (l_ev_cell_13)
-			l_ev_horizontal_box_5.extend (l_ev_cell_14)
-			l_ev_horizontal_box_5.extend (l_ev_tool_bar_9)
+			l_ev_frame_5.extend (l_ev_horizontal_box_6)
+			l_ev_horizontal_box_6.extend (l_ev_label_5)
+			l_ev_horizontal_box_6.extend (l_ev_cell_14)
+			l_ev_horizontal_box_6.extend (l_ev_cell_15)
+			l_ev_horizontal_box_6.extend (l_ev_tool_bar_9)
 			l_ev_tool_bar_9.extend (editor_close)
 			l_ev_vertical_box_5.extend (document_area)
-			document_area.extend (l_ev_horizontal_box_6)
-			l_ev_horizontal_box_6.extend (document_editor)
+			document_area.extend (l_ev_horizontal_box_7)
+			l_ev_horizontal_box_7.extend (document_editor)
 			document_area.extend (document_status_bar)
 			document_status_bar.extend (l_ev_frame_6)
 			l_ev_frame_6.extend (report_label)
@@ -340,6 +349,9 @@ feature {NONE}-- Initialization
 			copy_menu_item.set_text ("Copy")
 			paste_menu_item.disable_sensitive
 			paste_menu_item.set_text ("Paste")
+			font_menu_item.set_text ("Font...")
+			wrap_menu_item.enable_select
+			wrap_menu_item.set_text ("Word wrap")
 			doc_format.set_text ("Format")
 			menu_uppercase_tags.set_text ("Tags uppercase")
 			parser_menu_item.set_text ("Parser...")
@@ -370,46 +382,56 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.set_padding_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_frame_1)
 			l_ev_frame_1.set_minimum_height (30)
+			l_ev_horizontal_box_1.disable_item_expand (main_toolbar)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
+			l_ev_horizontal_box_1.disable_item_expand (output_combo)
 			main_toolbar.set_minimum_height (22)
 			toolbar_new.set_tooltip ("New")
-			toolbar_new.set_pixmap (icon_new_doc_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_new_doc.ico")
+			toolbar_new.set_pixmap (internal_pixmap)
 			toolbar_open.set_tooltip ("Open")
-			toolbar_open.set_pixmap (icon_open_file_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_open_file.ico")
+			toolbar_open.set_pixmap (internal_pixmap)
 			toolbar_save.disable_sensitive
 			toolbar_save.set_tooltip ("Save")
-			toolbar_save.set_pixmap (icon_save_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_save.ico")
+			toolbar_save.set_pixmap (internal_pixmap)
 			toolbar_cut.disable_sensitive
 			toolbar_cut.set_tooltip ("Cut")
-			toolbar_cut.set_pixmap (icon_cut_color_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_cut_color.ico")
+			toolbar_cut.set_pixmap (internal_pixmap)
 			toolbar_copy.disable_sensitive
 			toolbar_copy.set_tooltip ("Copy")
-			toolbar_copy.set_pixmap (icon_copy_color_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_copy_color.ico")
+			toolbar_copy.set_pixmap (internal_pixmap)
 			toolbar_paste.disable_sensitive
 			toolbar_paste.set_tooltip ("Paste")
-			toolbar_paste.set_pixmap (icon_paste_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_paste.ico")
+			toolbar_paste.set_pixmap (internal_pixmap)
 			toolbar_xml_format.disable_sensitive
 			toolbar_xml_format.set_tooltip ("Pretty XML")
-			toolbar_xml_format.set_pixmap (icon_format_text_color_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico")
+			toolbar_xml_format.set_pixmap (internal_pixmap)
 			toolbar_validate.disable_sensitive
 			toolbar_validate.set_tooltip ("Validate document against schema")
-			toolbar_validate.set_pixmap (icon_validate_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_validate.ico")
+			toolbar_validate.set_pixmap (internal_pixmap)
 			toolbar_properties.disable_sensitive
 			toolbar_properties.set_tooltip ("Document Properties")
-			toolbar_properties.set_pixmap (icon_info_ico)
-			toolbar_web.set_tooltip ("Unfiltered")
-			toolbar_web.set_pixmap (icon_ie_ico)
-			toolbar_studio.set_tooltip ("Filter for EiffelStudo")
-			toolbar_studio.set_pixmap (icon_studio_ico)
-			toolbar_envision.set_tooltip ("Filter for ENViSioN!")
-			toolbar_envision.set_pixmap (icon_envision_ico)
+			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_info.ico")
+			toolbar_properties.set_pixmap (internal_pixmap)
+			l_ev_label_1.set_text ("Filter ")
+			l_ev_label_1.align_text_left
+			output_combo.set_tooltip ("Output filter transformation")
+			output_combo.set_minimum_width (150)
 			left_tool.set_style (1)
 			l_ev_vertical_box_2.disable_item_expand (main_tool)
 			main_tool.set_style (2)
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_5)
-			l_ev_label_1.set_text (" Browser")
-			l_ev_label_1.align_text_left
+			l_ev_horizontal_box_2.set_padding_width (padding_width)
+			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_tool_bar_5)
+			l_ev_label_2.set_text (" Browser")
+			l_ev_label_2.align_text_left
 			main_close.set_pixmap (icon_close_color_ico)
 			selector.set_minimum_width (200)
 			selector.set_minimum_height (320)
@@ -428,13 +450,13 @@ feature {NONE}-- Initialization
 			toc_vertical_toolbar.disable_item_expand (toc_open_button)
 			toc_vertical_toolbar.disable_item_expand (toc_save_button)
 			toc_vertical_toolbar.disable_item_expand (toc_properties_button)
-			toc_vertical_toolbar.disable_item_expand (l_ev_cell_3)
+			toc_vertical_toolbar.disable_item_expand (l_ev_cell_4)
 			toc_vertical_toolbar.disable_item_expand (toc_new_heading)
 			toc_vertical_toolbar.disable_item_expand (toc_new_page)
-			toc_vertical_toolbar.disable_item_expand (l_ev_cell_4)
+			toc_vertical_toolbar.disable_item_expand (l_ev_cell_5)
 			toc_vertical_toolbar.disable_item_expand (toc_remove_topic)
 			toc_vertical_toolbar.disable_item_expand (toc_exclude_button)
-			toc_vertical_toolbar.disable_item_expand (l_ev_cell_5)
+			toc_vertical_toolbar.disable_item_expand (l_ev_cell_6)
 			toc_vertical_toolbar.disable_item_expand (toc_menu_button)
 			toc_new_button.set_tooltip ("New Table of Contents")
 			toc_new_button.set_pixmap (icon_new_doc_ico)
@@ -446,27 +468,27 @@ feature {NONE}-- Initialization
 			toc_save_button.set_pixmap (icon_save_ico)
 			toc_properties_button.set_tooltip ("Sort/Filter Table of Contents")
 			toc_properties_button.set_pixmap (icon_new_editor_color_ico)
-			l_ev_cell_3.set_minimum_height (20)
+			l_ev_cell_4.set_minimum_height (20)
 			toc_new_heading.set_tooltip ("New Topic Heading")
 			toc_new_heading.set_pixmap (icon_toc_folder_open_ico)
 			toc_new_page.set_tooltip ("New Topic File")
 			toc_new_page.set_pixmap (icon_format_text_color_ico)
-			l_ev_cell_4.set_minimum_height (20)
+			l_ev_cell_5.set_minimum_height (20)
 			toc_remove_topic.set_tooltip ("Delete Topic")
 			toc_remove_topic.set_pixmap (icon_file_close_ico)
 			toc_exclude_button.set_pixmap (icon_settings_ico)
-			l_ev_cell_5.set_minimum_height (20)
+			l_ev_cell_6.set_minimum_height (20)
 			toc_menu_button.set_tooltip ("Loaded Table of Contents")
 			toc_menu_button.set_pixmap (icon_toc_folder_closed_ico)
 			node_properties_tool.set_style (1)
 			node_properties_area.set_minimum_height (100)
 			node_properties_area.disable_item_expand (l_ev_frame_2)
 			l_ev_frame_2.set_style (2)
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_tool_bar_6)
-			l_ev_label_2.set_text (" Properties")
-			l_ev_label_2.align_text_left
+			l_ev_horizontal_box_3.set_padding_width (padding_width)
+			l_ev_horizontal_box_3.set_border_width (border_width)
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_tool_bar_6)
+			l_ev_label_3.set_text (" Properties")
+			l_ev_label_3.align_text_left
 			node_properties_close.set_pixmap (icon_close_color_ico)
 			element_area.set_padding_width (padding_width)
 			element_area.set_border_width (border_width)
@@ -474,27 +496,27 @@ feature {NONE}-- Initialization
 			attribute_list_tool.set_style (1)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_frame_3)
 			l_ev_frame_3.set_style (2)
-			l_ev_horizontal_box_3.disable_item_expand (l_ev_tool_bar_7)
-			l_ev_label_3.set_text (" Attributes")
-			l_ev_label_3.align_text_left
+			l_ev_horizontal_box_4.disable_item_expand (l_ev_tool_bar_7)
+			l_ev_label_4.set_text (" Attributes")
+			l_ev_label_4.align_text_left
 			attribute_list.set_minimum_height (90)
 			type_area.set_padding_width (padding_width)
 			type_area.set_border_width (border_width)
 			sub_element_tool.set_style (1)
 			l_ev_vertical_box_4.disable_item_expand (l_ev_frame_4)
 			l_ev_frame_4.set_style (2)
-			l_ev_horizontal_box_4.set_padding_width (padding_width)
-			l_ev_horizontal_box_4.set_border_width (border_width)
-			l_ev_horizontal_box_4.disable_item_expand (l_ev_tool_bar_8)
+			l_ev_horizontal_box_5.set_padding_width (padding_width)
+			l_ev_horizontal_box_5.set_border_width (border_width)
+			l_ev_horizontal_box_5.disable_item_expand (l_ev_tool_bar_8)
 			title_label.set_text (" Sub Elements")
 			title_label.align_text_left
 			sub_element_close.set_pixmap (icon_close_color_ico)
 			editor_tool.set_style (1)
 			l_ev_vertical_box_5.disable_item_expand (l_ev_frame_5)
 			l_ev_frame_5.set_style (2)
-			l_ev_horizontal_box_5.disable_item_expand (l_ev_tool_bar_9)
-			l_ev_label_4.set_text (" Editor")
-			l_ev_label_4.align_text_left
+			l_ev_horizontal_box_6.disable_item_expand (l_ev_tool_bar_9)
+			l_ev_label_5.set_text (" Editor")
+			l_ev_label_5.align_text_left
 			editor_close.disable_sensitive
 			editor_close.set_pixmap (icon_close_color_ico)
 			document_area.disable_item_expand (document_status_bar)
@@ -525,13 +547,13 @@ feature -- Access
 	file_menu, document_menu, doc_format, view_menu, output_sub_menu, project_menu, 
 	tool_menu, help_menu: EV_MENU
 	new_menu_item, open_menu_item, open_project_menu_item, save_menu_item, close_menu_item, 
-	cut_menu_item, copy_menu_item, paste_menu_item, parser_menu_item, search_menu_item, 
-	settings_menu_item, validator_menu_item, gen_menu_item, expression_menu_item, 
+	cut_menu_item, copy_menu_item, paste_menu_item, font_menu_item, parser_menu_item, 
+	search_menu_item, settings_menu_item, validator_menu_item, gen_menu_item, expression_menu_item, 
 	about_menu_item: EV_MENU_ITEM
 	l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3, l_ev_menu_separator_4, 
 	l_ev_menu_separator_5, l_ev_menu_separator_6: EV_MENU_SEPARATOR
-	menu_uppercase_tags, element_selector_menu, types_selector_menu, doc_selector_menu, 
-	attribute_selector_menu, sub_element_menu: EV_CHECK_MENU_ITEM
+	wrap_menu_item, menu_uppercase_tags, element_selector_menu, types_selector_menu, 
+	doc_selector_menu, attribute_selector_menu, sub_element_menu: EV_CHECK_MENU_ITEM
 	all_output_doc_item, studio_output_doc_item, envision_ouput_doc_item: EV_RADIO_MENU_ITEM
 	l_ev_vertical_box_1, l_ev_vertical_box_2, documentation_area, toc_container, toc_vertical_toolbar, 
 	node_properties_area, element_area, l_ev_vertical_box_3, type_area, l_ev_vertical_box_4, 
@@ -539,6 +561,9 @@ feature -- Access
 	l_ev_frame_1, left_tool, main_tool, node_properties_tool, l_ev_frame_2, attribute_list_tool, 
 	l_ev_frame_3, sub_element_tool, l_ev_frame_4, editor_tool, l_ev_frame_5, l_ev_frame_6, 
 	l_ev_frame_7: EV_FRAME
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, toc_area, l_ev_horizontal_box_3, 
+	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, 
+	document_status_bar: EV_HORIZONTAL_BOX
 	main_toolbar, l_ev_tool_bar_5, l_ev_tool_bar_6, l_ev_tool_bar_7, l_ev_tool_bar_8, 
 	l_ev_tool_bar_9: EV_TOOL_BAR
 	toolbar_new, toolbar_open, toolbar_save, toolbar_cut, toolbar_copy, toolbar_paste, 
@@ -546,17 +571,15 @@ feature -- Access
 	attribute_list_close, sub_element_close, editor_close: EV_TOOL_BAR_BUTTON
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3, 
 	l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
-	toolbar_web, toolbar_studio, toolbar_envision: EV_TOOL_BAR_RADIO_BUTTON
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, title_label, l_ev_label_5, 
+	report_label, line_pos_label: EV_LABEL
+	output_combo: EV_COMBO_BOX
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, 
+	l_ev_cell_7, l_ev_cell_8, l_ev_cell_9, l_ev_cell_10, l_ev_cell_11, l_ev_cell_12, 
+	l_ev_cell_13, l_ev_cell_14, l_ev_cell_15: EV_CELL
 	l_ev_vertical_split_area_1, l_ev_vertical_split_area_2, l_ev_vertical_split_area_3, 
 	element_split_area: EV_VERTICAL_SPLIT_AREA
 	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
-	l_ev_horizontal_box_1, toc_area, l_ev_horizontal_box_2, l_ev_horizontal_box_3, 
-	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6, document_status_bar: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, title_label, l_ev_label_4, report_label, 
-	line_pos_label: EV_LABEL
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, 
-	l_ev_cell_7, l_ev_cell_8, l_ev_cell_9, l_ev_cell_10, l_ev_cell_11, l_ev_cell_12, 
-	l_ev_cell_13, l_ev_cell_14: EV_CELL
 	selector, document_editor: EV_NOTEBOOK
 	document_selector, document_toc, element_selector, type_selector: EV_TREE
 	toc_new_button, toc_open_button, toc_save_button, toc_properties_button, toc_new_heading, 

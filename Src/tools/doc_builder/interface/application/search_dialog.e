@@ -1,5 +1,5 @@
 indexing
-	description: "Simple search dialog."
+	description: "Simple search dialog which performs searches on an EV_TEXT widget."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,19 +17,7 @@ inherit
 		end
 
 create
-	make,
 	default_create
-	
-feature -- Initialization
-
-	make (a_document: DOCUMENT_TEXT_WIDGET) is
-			-- Create for searching within `a_document'
-		require
-			a_document_not_void: a_document /= Void
-		do
-			default_create
-			document := a_document
-		end
 
 feature {NONE} -- Initialization
 
@@ -46,25 +34,44 @@ feature {NONE} -- Initialization
 		
 feature -- Status Setting
 
-	set_document (a_document: DOCUMENT_TEXT_WIDGET) is
-			-- Set `document' to `a_document'
+	set_widget (a_widget: EV_TEXT) is
+			-- Set `text_widget' to `a_widget'
 		require
-			document_nt_void: a_document /= Void
+			widget_not_void: a_widget /= Void
 		do
-			document := a_document			
+			text_widget := a_widget			
 		end
 
 feature {NONE} -- Implementation
 
-	document: DOCUMENT_TEXT_WIDGET
-			-- Document
+	text_widget: EV_TEXT
+			-- Widget
+
+	start_position: INTEGER is
+			-- Position from which to start search
+		do
+			Result := text_widget.caret_position
+			if Result = 0 then
+				Result := 1
+			end
+		end
 
 	search is
 			-- Search for text in 'search_text' and highlight in 
-			-- `document' if found.  If not found load message dialog
+			-- `text_widget' if found.  If not found load message dialog
+		local
+			l_string_pos,
+			l_string_length: INTEGER
 		do
-			if not search_text.text.is_empty and then document.text.has_substring (search_text.text) then
-				document.highlight_substring (search_text.text)		
+			if not search_text.text.is_empty then 
+				l_string_pos := text_widget.search (search_text.text, start_position)
+				l_string_length := search_text.text.count
+				if l_string_pos > 0 then
+					if not text_widget.has_focus then
+						text_widget.set_focus
+					end
+					text_widget.select_region (l_string_pos, l_string_pos + l_string_length - 1)				
+				end	
 			end
 		end
 	

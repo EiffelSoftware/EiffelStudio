@@ -1,0 +1,51 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>True</frozen>
+		<expanded>False</expanded>
+		<deferred>False</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_RUNTIME_INTEROPSERVICES_EXTENSIBLECLASSFACTORY</class_eiffel_name>
+		<alias>
+			<simple_name>ExtensibleClassFactory</simple_name>
+			<namespace>System.Runtime.InteropServices</namespace>
+			<assembly_name>mscorlib</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b77a5c561934e089</assembly_public_key>
+		</alias>
+		<create_none>True</create_none>
+	</header>
+	<body>
+		<basic_operations>
+			<feature>
+				<feature_modified>False</feature_modified>
+				<frozen_feature>True</frozen_feature>
+				<static>True</static>
+				<abstract>False</abstract>
+				<method>True</method>
+				<field>False</field>
+				<creation_routine>False</creation_routine>
+				<prefix>False</prefix>
+				<infix>False</infix>
+				<new_slot>True</new_slot>
+				<enum_literal>False</enum_literal>
+				<is_literal>False</is_literal>
+				<feature_eiffel_name>register_object_creation_callback</feature_eiffel_name>
+				<feature_external_name>RegisterObjectCreationCallback</feature_external_name>
+				<arguments>
+					<argument>
+						<argument_eiffel_name>callback</argument_eiffel_name>
+						<argument_external_name>callback</argument_external_name>
+						<argument_type>SYSTEM_RUNTIME_INTEROPSERVICES_OBJECTCREATIONDELEGATE</argument_type>
+						<argument_type_full_name>System.Runtime.InteropServices.ObjectCreationDelegate</argument_type_full_name>
+					</argument>
+				</arguments>
+				<return_type />
+				<return_type_full_name>System.Void</return_type_full_name>
+			</feature>
+		</basic_operations>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

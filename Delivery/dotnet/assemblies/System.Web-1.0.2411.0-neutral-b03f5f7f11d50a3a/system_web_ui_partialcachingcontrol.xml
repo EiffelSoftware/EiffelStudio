@@ -1,0 +1,62 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>False</frozen>
+		<expanded>False</expanded>
+		<deferred>False</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_WEB_UI_PARTIALCACHINGCONTROL</class_eiffel_name>
+		<alias>
+			<simple_name>PartialCachingControl</simple_name>
+			<namespace>System.Web.UI</namespace>
+			<assembly_name>System.Web</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b03f5f7f11d50a3a</assembly_public_key>
+		</alias>
+		<inherit>
+			<parent>
+				<parent_name>SYSTEM_WEB_UI_IDATABINDINGSACCESSOR</parent_name>
+				<rename>get_data_bindings as system_web_ui_idata_bindings_accessor_get_data_bindings, get_has_data_bindings as system_web_ui_idata_bindings_accessor_get_has_data_bindings</rename>
+			</parent>
+			<parent>
+				<parent_name>SYSTEM_IDISPOSABLE</parent_name>
+			</parent>
+			<parent>
+				<parent_name>SYSTEM_WEB_UI_BASEPARTIALCACHINGCONTROL</parent_name>
+			</parent>
+			<parent>
+				<parent_name>SYSTEM_WEB_UI_IPARSERACCESSOR</parent_name>
+				<rename>add_parsed_sub_object as system_web_ui_iparser_accessor_add_parsed_sub_object</rename>
+			</parent>
+			<parent>
+				<parent_name>SYSTEM_COMPONENTMODEL_ICOMPONENT</parent_name>
+			</parent>
+		</inherit>
+		<create_none>True</create_none>
+	</header>
+	<body>
+		<access>
+			<feature>
+				<feature_modified>False</feature_modified>
+				<frozen_feature>True</frozen_feature>
+				<static>False</static>
+				<abstract>False</abstract>
+				<method>True</method>
+				<field>False</field>
+				<creation_routine>False</creation_routine>
+				<prefix>False</prefix>
+				<infix>False</infix>
+				<new_slot>True</new_slot>
+				<enum_literal>False</enum_literal>
+				<is_literal>False</is_literal>
+				<feature_eiffel_name>get_cached_control</feature_eiffel_name>
+				<feature_external_name>get_CachedControl</feature_external_name>
+				<return_type>SYSTEM_WEB_UI_CONTROL</return_type>
+				<return_type_full_name>System.Web.UI.Control</return_type_full_name>
+			</feature>
+		</access>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

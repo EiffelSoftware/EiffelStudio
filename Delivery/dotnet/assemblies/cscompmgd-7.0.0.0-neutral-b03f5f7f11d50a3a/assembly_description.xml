@@ -1,0 +1,14 @@
+<!DOCTYPE assembly_description SYSTEM "../assembly_description.dtd">
+<assembly>
+	<assembly_name>cscompmgd</assembly_name>
+	<assembly_version>7.0.0.0</assembly_version>
+	<assembly_culture>neutral</assembly_culture>
+	<assembly_public_key>b03f5f7f11d50a3a</assembly_public_key>
+	<eiffel_cluster_path>$ISE_EIFFEL\library.net\cscompmgd</eiffel_cluster_path>
+	<emitter_version_number>2.7b2</emitter_version_number>
+	<assembly_types>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\cscompmgd-7.0.0.0-neutral-b03f5f7f11d50a3a\microsoft_csharp_errorlevel.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\cscompmgd-7.0.0.0-neutral-b03f5f7f11d50a3a\microsoft_csharp_compilererror.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\cscompmgd-7.0.0.0-neutral-b03f5f7f11d50a3a\microsoft_csharp_compiler.xml</assembly_type_filename>
+	</assembly_types>
+</assembly>

@@ -1,0 +1,29 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>False</frozen>
+		<expanded>False</expanded>
+		<deferred>True</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_WEB_SESSIONSTATE_IREQUIRESSESSIONSTATE</class_eiffel_name>
+		<alias>
+			<simple_name>IRequiresSessionState</simple_name>
+			<namespace>System.Web.SessionState</namespace>
+			<assembly_name>System.Web</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b03f5f7f11d50a3a</assembly_public_key>
+		</alias>
+		<inherit>
+			<parent>
+				<parent_name>ANY</parent_name>
+				<undefine>finalize, get_hash_code, is_equal, to_string</undefine>
+			</parent>
+		</inherit>
+		<create_none>False</create_none>
+	</header>
+	<body>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

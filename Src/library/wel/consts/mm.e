@@ -65,6 +65,21 @@ feature -- Access
 			"MM_ANISOTROPIC"
 		end
 
+feature -- Status report
+
+	valid_map_mode_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid map mode constant?
+		do
+			Result := c = Mm_text or else
+				c = Mm_lometric or else
+				c = Mm_himetric or else
+				c = Mm_loenglish or else
+				c = Mm_hienglish or else
+				c = Mm_twips or else
+				c = Mm_isotropic or else
+				c = Mm_anisotropic
+		end
+
 end -- class WEL_MM_CONSTANTS
 
 --|-------------------------------------------------------------------------

@@ -109,10 +109,10 @@ feature -- Element change
 	set_additional_size (new_size: INTEGER) is
 			-- Set `new_size' to BUFFER_SIZE, internal value used to
 			-- increment `buffer_size' during storable operations.
-		external
-			"C | %"eif_store.h%""
-		alias
-			"set_buffer_size"
+		do
+			check
+				not_implemented: False
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -120,51 +120,51 @@ feature {NONE} -- Implementation
 	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
-		external
-			"C | %"eif_store.h%""
-		alias
-			"stream_estore"
+		do
+			check
+				not_implemented: False
+			end
 		end
 
 	c_stream_general_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
-		external
-			"C | %"eif_store.h%""
-		alias
-			"stream_eestore"
+		do
+			check
+				not_implemented: False
+			end
 		end
 
 	c_stream_independent_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
 			-- Return new size of `buffer'.
-		external
-			"C |%"eif_store.h%""
-		alias
-			"stream_sstore"
+		do
+			check
+				not_implemented: False
+			end
 		end
 
 	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER; stream_buffer_position: INTEGER; c_real_size: POINTER): ANY is
 			-- Object structured retrieved from stream of pointer
 			-- `stream_ptr'
-		external
-			"C | %"eif_retrieve.h%""
-		alias
-			"stream_eretrieve"	
+		do
+			check
+				not_implemented: False
+			end
 		end
 	
 	c_malloc (size: INTEGER): POINTER is
-		external
-			"C | %"eif_store.h%""
-		alias
-			"stream_malloc"
+		do
+			check
+				not_implemented: False
+			end
 		end
 
 	c_free (buf: POINTER) is
-		external
-			"C | %"eif_store.h%""
-		alias
-			"stream_free"
+		do
+			check
+				not_implemented: False
+			end
 		end
 
 feature -- Status report

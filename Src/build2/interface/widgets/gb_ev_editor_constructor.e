@@ -109,7 +109,7 @@ feature {GB_OBJECT, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 		deferred
 		end
 		
-	parent_window (widget: EV_WIDGET): EV_WINDOW is
+	parent_window (widget: EV_ANY): EV_WINDOW is
 			-- `Result' is window parent of `widget'.
 			-- `Void' if none.
 		deferred

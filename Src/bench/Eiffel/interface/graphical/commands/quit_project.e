@@ -12,6 +12,8 @@ inherit
 	PROJECT_CONTEXT;
 	SHARED_APPLICATION_EXECUTION;
 	PIXMAP_COMMAND
+		rename
+			init as make
 		redefine
 			licence_checked
 		end;
@@ -23,17 +25,8 @@ inherit
 		end
 
 creation
-
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command.
-		do
-			init (a_text_window)
-		end;
-
 feature -- Callbacks
 
 	exit_anyway is

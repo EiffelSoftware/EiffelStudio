@@ -13,20 +13,12 @@ inherit
 	SHARED_EIFFEL_PROJECT;
 	SAVE_AS_FILE
 		redefine
-			make, update_more
+			update_more
 		end
 
 creation
 
 	make
-
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command.
-		do
-			init (a_text_window)
-		end;
 
 feature -- Updating
 

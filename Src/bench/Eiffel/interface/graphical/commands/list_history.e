@@ -10,20 +10,14 @@ class LIST_HISTORY
 
 inherit
 	PIXMAP_COMMAND
+		rename
+			init as make
 		redefine
 			execute
 		end
 
 creation
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command.
-		do
-			init (a_text_window);
-		end;
 
 feature -- Properties
 

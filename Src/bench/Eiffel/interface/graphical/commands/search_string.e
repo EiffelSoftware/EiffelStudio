@@ -11,7 +11,7 @@ inherit
 
 	PIXMAP_COMMAND
 		rename
-			init_from_tool as make
+			init as make
 		end
 
 creation

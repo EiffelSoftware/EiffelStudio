@@ -8,15 +8,12 @@ indexing
 
 deferred class DISPLAY_DEBUGGER_PORTION
 
-inherit PIXMAP_COMMAND
+inherit 
 
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialze Current with `a_text_window'.
-		do
-			init (a_text_window);
-		end;
+	PIXMAP_COMMAND
+		rename
+			init as make
+		end
 
 feature -- Properties
 

@@ -7,7 +7,10 @@ indexing
 class EXEC_FINALIZED
 
 inherit
-	PIXMAP_COMMAND;
+	PIXMAP_COMMAND
+		rename
+			init as make
+		end;
 	PROJECT_CONTEXT
 		export
 			{NONE} all
@@ -16,14 +19,6 @@ inherit
 
 creation
 	make
-
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize Current with `a_text_window'.
-		do
-			init (a_text_window)
-		end;
 
 feature -- Properties
 

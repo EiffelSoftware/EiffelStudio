@@ -61,11 +61,6 @@ inherit
 			{NONE} all
 		end
 
-	MATH_CONST
-		export
-			{NONE} all
-		end
-
 	EXCEPTIONS
 		rename
 			raise as exception_raise,
@@ -322,14 +317,14 @@ feature -- Drawing operations
 			dc.polyline (flat_points)
 		end
 
-	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
+	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
 			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
 			-- and that has the orientation `orientation'.
 		do
 			draw_any_rectangle (pt, w, h, orientation, false)
 		end
 
-	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
 			-- Draw an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.
@@ -384,14 +379,14 @@ feature -- Filling operations
 			dc.polygon (flat_points)
 		end
 
-	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
+	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
 			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
 			-- with an orientation `orientation'.
 		do
 			draw_any_rectangle (pt, w, h, orientation, true)
 		end 
 
-	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
 			-- Fill an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.
@@ -558,15 +553,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Basic operations
 
-	draw_any_rectangle (center: EV_COORDINATES; rw, rh: INTEGER; an_orientation: REAL; filled: BOOLEAN) is
+	draw_any_rectangle (center: EV_COORDINATES; rw, rh: INTEGER; an_orientation: EV_ANGLE; filled: BOOLEAN) is
 			-- Draw a rectangle whose center is `center' and
 			-- whose size is `rwidth' and `rheight', it may be `filled'.
 		require
 			center_exists: center /= Void
 			width_positive: rw >= 0;
 			height_positive: rh >= 0;
-			an_orientation_positive: an_orientation >= 0;
-			an_orientation_less_than_360: an_orientation < 360
 			dc_not_void: dc /= Void
 			dc_exists: dc.exists
 		local
@@ -574,6 +567,7 @@ feature {NONE} -- Basic operations
 			cos, sin: REAL
 			points: ARRAY [INTEGER]
 			null_brush: WEL_NULL_BRUSH
+			dan_orientation: DOUBLE
 		do
 			if not filled then
 				if dc.brush /= Void then
@@ -584,13 +578,14 @@ feature {NONE} -- Basic operations
 			else
 				offset := 1
 			end
-			if an_orientation = 0.0 or an_orientation = 180.0 then
+			dan_orientation := an_orientation.degrees
+			if dan_orientation = 0.0 or dan_orientation = 180.0 then
 				dc.rectangle (center.x - (rw // 2), center.y + (rh // 2),
 					center.x + (rw // 2) + offset, center.y - (rh // 2) + offset)
 			else
 				!! points.make (1, 10)
-				sin := sine (an_orientation * deg_to_rad)
-				cos := cosine (an_orientation * deg_to_rad)
+				sin := sine (dan_orientation * deg_to_rad)
+				cos := cosine (dan_orientation * deg_to_rad)
 				x := ((rh * sin + rw * cos) / 2).rounded
 				y := ((rh * cos - rw * sin) / 2).rounded
 				points.put (center.x + x, 1)
@@ -612,7 +607,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	draw_any_arc (center: EV_COORDINATES; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER; filled: BOOLEAN) is
+	draw_any_arc (center: EV_COORDINATES; radius1, radius2: INTEGER; angle1, angle2, orientation: EV_ANGLE; arc_style: INTEGER; filled: BOOLEAN) is
 			-- Draw an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -621,11 +616,6 @@ feature {NONE} -- Basic operations
 			center_exists: center /= Void
 			positive_radius1: radius1 >= 0;
 			positive_radius2: radius2 >= 0;
-			positive_angle1: angle1 >= 0;
-			positive_angle2: angle2 >= 0;
-			valid_total_angle: angle1+angle2 <= 360;
-			positive_orientation: orientation >= 0;
-			orientation_small_enough: orientation < 360;
 			valid_arc_style: arc_style >= -1 and arc_style <= 1
 			dc_not_void: dc /= Void
 			dc_exists: dc.exists
@@ -634,16 +624,25 @@ feature {NONE} -- Basic operations
 			x_end_arc, y_end_arc: INTEGER
 			null_brush: WEL_NULL_BRUSH
 			local_arc_points: ARRAY [INTEGER]
+			ang1, ang2, orient: DOUBLE
 		do
-			if orientation = 0.0 then
+			ang1 := angle1.radians
+			ang2 := angle2.radians
+			orient := orientation.radians
+			if orient = 0.0 then
+				--| FIXME
+				--| If orientation is 0.0 then the drawing does not start from the same
+				--| place as if not.
+				--| Julan Rogers 09301999
+				
 				left := center.x - radius1
 				right := center.x + radius1
 				top := center.y - radius2
 				bottom := center.y + radius2
-				x_start_arc := center.x + (radius1 * cosine (angle1 * Pi / 180)).rounded
-				y_start_arc := center.y - (radius2 * sine (angle1 * Pi / 180)).rounded
-				x_end_arc := center.x + (radius1 * cosine ((angle1 + angle2) * Pi / 180)).rounded
-				y_end_arc := center.y - (radius2 * sine ((angle1 + angle2) * Pi / 180)).rounded
+				x_start_arc := center.x + (radius1 * cosine (ang1)).rounded
+				y_start_arc := center.y - (radius2 * sine (ang1)).rounded
+				x_end_arc := center.x + (radius1 * cosine ((ang1 + ang2))).rounded
+				y_end_arc := center.y - (radius2 * sine ((ang1 + ang2))).rounded
 				if not filled then
 					dc.arc (left, top, right, bottom, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
 				else
@@ -669,20 +668,20 @@ feature {NONE} -- Basic operations
 		end
 
 	arc_points (center: EV_COORDINATES; radius1, radius2: INTEGER; 
-				angle1, angle2, orientation: REAL): ARRAY [INTEGER] is
+				angle1, angle2, orientation: EV_ANGLE): ARRAY [INTEGER] is
 			-- Returns the list of an arbitrary number of ordonated points composing the arc
 		local
 			nb_fracs, loop_angle, angle_inc, sino, coso, ell_x, ell_y, rot_x, rot_y: DOUBLE
 			segment_count, i, center_x, center_y: INTEGER
 		do
-			coso := cosine (orientation * deg_to_rad)
-			sino := sine (orientation * deg_to_rad)
+			coso := cosine (orientation.radians)
+			sino := sine (orientation.radians)
 			center_x := center.x
 			center_y := center.y
-			nb_fracs := 4 * radius1.max(radius2) * angle2 * deg_to_rad
+			nb_fracs := 4 * radius1.max(radius2) * angle2.radians
 			segment_count := nb_fracs.rounded
-			angle_inc := angle2 * deg_to_rad / segment_count
-			loop_angle := angle1
+			angle_inc := angle2.radians / segment_count
+			loop_angle := angle1.degrees
 			!!Result.make (1, 2 * (segment_count + 1))
 			from
 				i := 0

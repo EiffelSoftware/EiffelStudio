@@ -24,7 +24,6 @@ feature -- Basic operations
 			valid_visitor: a_visitor /= Void
 		local
 			pointed_visitor: WIZARD_DATA_TYPE_VISITOR
-			pointed_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 			a_type: INTEGER
 			local_counter: INTEGER
 			tmp_string: STRING
@@ -83,7 +82,7 @@ feature -- Basic operations
 
 				ec_function_return_type := clone (c_type)
 
-				ec_function_body := ec_function_wrapper (eiffel_type, c_type)
+				ec_function_body := ec_function_wrapper (eiffel_type, c_type, False)
 
 				can_free := True
 				writable := False
@@ -107,7 +106,8 @@ feature -- Basic operations
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_interface_pointer")
 
-				ce_function_body := ce_function_body_interface (eiffel_type)
+				ce_function_body := ce_function_body_interface 
+						(a_descriptor.interface_descriptor.implemented_interface.impl_eiffel_class_name (True))
 				ce_function_return_type := clone (Eif_reference)
 
 				create ec_function_signature.make (100)
@@ -117,7 +117,7 @@ feature -- Basic operations
 
 				ec_function_return_type := clone (c_type)
 
-				ec_function_body := ec_function_wrapper (eiffel_type, c_type)
+				ec_function_body := ec_function_wrapper (eiffel_type, c_type, True)
 
 				can_free := True
 				writable := False
@@ -151,7 +151,7 @@ feature -- Basic operations
 
 				ec_function_return_type := clone (c_type)
 
-				ec_function_body := ec_function_wrapper (eiffel_type, c_type)
+				ec_function_body := ec_function_wrapper (eiffel_type, c_type, True)
 
 				can_free := True
 				writable := False
@@ -159,7 +159,6 @@ feature -- Basic operations
 			elseif pointed_visitor.is_basic_type or pointed_visitor.vt_type = Vt_bool  
 			then
 				is_basic_type_ref := True
-				pointed_descriptor := a_descriptor.pointed_data_type_descriptor
 				a_type := pointed_visitor.vt_type
 				create eiffel_type.make (100)
 				create ce_function_name.make (100)
@@ -835,7 +834,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.empty
 		end
 
-	ec_function_wrapper (eiffel_type_name, c_type_name: STRING): STRING is
+	ec_function_wrapper (eiffel_type_name, c_type_name: STRING; is_interface_wrapper: BOOLEAN): STRING is
 			-- Eiffel to C function for wrappers.
 		require
 			non_void_eiffel_name: eiffel_type_name /= Void
@@ -905,6 +904,10 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
+			
+			if is_interface_wrapper then
+				Result.append (addition_for_interface (c_type_name))
+			end
 
 			-- eif_wean (eif_object);
 
@@ -934,6 +937,119 @@ feature {NONE} -- Implementation
 		end
 
 
+	addition_for_interface (c_type_name: STRING): STRING is
+			-- Addition for interface in EC function wrapper.
+		require
+			non_void_c_type: c_type_name /= Void
+			valid_c_type: not c_type_name.empty
+		do
+			create Result.make (1000)
+			Result.append (Tab)
+			
+			-- if (a_pointer == NULL)
+			
+			Result.append (If_keyword)
+			Result.append (Space_open_parenthesis)
+			Result.append (A_pointer)
+			Result.append (Space)
+			Result.append (C_equal)
+			Result.append (Null)
+			Result.append (Close_parenthesis)
+			Result.append (New_line_tab)
+			
+			-- {
+			
+			Result.append (Open_curly_brace)
+			Result.append (New_line_tab_tab)
+			
+			-- 	EIF_PROCEDURE create_item = 0;
+			
+			Result.append (Eif_procedure)
+			Result.append (Space)
+			Result.append ("create_item")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+			
+			-- 	EIF_TYPE_ID type_id = eif_type (eif_object);
+			
+			Result.append (Eif_type_id)
+			Result.append (Space)
+			Result.append ("type_id")
+			Result.append (Space_equal_space)
+			Result.append ("eif_type")
+			Result.append (Space_open_parenthesis)
+			Result.append ("eif_object")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+			
+			-- 	create_item = eif_procedure ("create_item", type_id);
+			
+			Result.append ("create_item")
+			Result.append (Space_equal_space)
+			Result.append (Eif_procedure_name)
+			Result.append (Space_open_parenthesis)
+			Result.append (Double_quote)
+			Result.append ("create_item")
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append ("type_id")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+			
+			-- 	(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
+			
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));")
+			Result.append (New_line_tab_tab)
+			
+			-- 	a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+			
+			Result.append (A_pointer)
+			Result.append (Space_equal_space)
+			Result.append (Open_parenthesis)
+			Result.append (Eif_pointer)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (Eif_field)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_access)
+			Result.append (Space_open_parenthesis)
+			Result.append ("eif_object")
+			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append (Double_quote)
+			Result.append (item_clause)
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Eif_pointer)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			
+			-- }
+			
+			Result.append (Close_curly_brace)
+			Result.append (New_line_tab)
+			
+			-- ((`c_type_name') a_pointer)->AddRef ();
+			
+			Result.append (Open_parenthesis)
+			Result.append (Open_parenthesis)
+			Result.append (c_type_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (A_pointer)
+			Result.append (Close_parenthesis)
+			Result.append (Add_reference_function)
+			Result.append (New_line_tab)
+		ensure
+			non_void_addition: Result /= Void
+			valid_addition: not Result.empty
+		end
+		
 end -- class WIZARD_POINTED_DATA_TYPE_GENERATOR
 
 --|----------------------------------------------------------------

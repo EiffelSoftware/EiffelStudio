@@ -231,7 +231,6 @@ feature -- Processing
 				ce_function_name.append ("ccom_ce_pointed_dispatch")
 				ec_function_name.append ("ccom_ec_dispatch")
 			else
---				eiffel_type := clone (impl_interface.eiffel_class_name)
 				eiffel_type := clone (interface_descriptor.eiffel_class_name)
 
 				need_generate_ce := True
@@ -246,7 +245,8 @@ feature -- Processing
 				ce_function_signature.append (" * a_interface")
 
 				create ce_function_body.make (10000)
-				ce_function_body.append (ce_function_body_interface (impl_interface.eiffel_class_name))
+				ce_function_body.append (ce_function_body_interface 
+						(impl_interface.impl_eiffel_class_name (True)))
 
 				create ce_function_return_type.make (100)
 				ce_function_return_type.append (Eif_reference)

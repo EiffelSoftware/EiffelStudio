@@ -129,7 +129,10 @@ feature -- Element change
 				-- True reading the file as a xpm format.
 				-- If this fails then try to read it as bitmap format.
 			!! attr.make;
-			attr.set_valuemask (XpmSize+XpmInfos);
+			attr.set_valuemask (XpmSize+XpmInfos+XpmRGBCloseness);
+			attr.set_red_closeness(65535);
+			attr.set_blue_closeness(65535);
+			attr.set_green_closeness(65535);
 			!! xpm_format.make_from_file (def_screen, a_file_name, attr);
 			if xpm_format.is_valid then
 				is_allocated := True;

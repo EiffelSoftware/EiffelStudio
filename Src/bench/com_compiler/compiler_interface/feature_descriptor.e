@@ -42,8 +42,11 @@ inherit
 			is_obsolete,
 			has_precondition,
 			has_postcondition,
-			feature_location
+			feature_location,
+			is_feature
 		end
+
+	COMPLETION_ENTRY
 
 	SHARED_EIFFEL_PROJECT
 		export {NONE}
@@ -450,6 +453,12 @@ feature -- Access
 			Result := compiler_feature.has_postcondition
 		end
 
+	is_feature (return_value: BOOLEAN_REF) is
+			-- Is a feature (from COMPLETION_ENTRY)
+		once
+			return_value.set_item (True)
+		end
+
 feature -- Basic Operations
 
 	feature_location (file_path: CELL [STRING]; line_number: INTEGER_REF) is
@@ -474,7 +483,7 @@ feature {FEATURE_DESCRIPTOR} -- Implementation
 			-- Callers of `compiler_feature'.
 		local
 			client, current_class: CLASS_C
-			clients: LINKED_LIST [CLASS_C]
+			clients: LIST [CLASS_C]
 			list: SORTED_LIST [STRING]
 			feat: FEATURE_I
 			feat_desc: FEATURE_DESCRIPTOR
@@ -526,7 +535,7 @@ feature {NONE} -- Implementation
 			valid_classes: classes /= Void
 			valid_e_class: e_class /= Void
 		local
-			descendants: LINKED_LIST [CLASS_C]
+			descendants: LIST [CLASS_C]
 			desc_c: CLASS_C
 		do
 			descendants := e_class.descendants

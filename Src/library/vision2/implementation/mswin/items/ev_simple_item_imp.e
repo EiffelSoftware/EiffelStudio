@@ -27,7 +27,7 @@ feature {NONE} -- Access for implementation
 	id: INTEGER
 		-- Id of the item in the menu_item_container
 
-	parent_imp: EV_ITEM_CONTAINER_IMP
+	parent: EV_ITEM_CONTAINER_IMP
 		-- The current container of the item
 
 feature -- Status report

@@ -22,7 +22,7 @@ inherit
 			id,
 			set_id
 		redefine
-			parent_imp
+			parent
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -45,13 +45,13 @@ feature {NONE} -- Initialization
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
 			-- Create and add a menu_item with `txt' as label.
 		do
-			parent_imp ?= par.implementation
+			parent ?= par.implementation
 			check
-				parent_not_void: parent_imp /= Void
+				parent_not_void: parent /= Void
 			end
 			text := txt
 			initialize_list (item_command_count)
-			ev_children := parent_imp.ev_children
+			ev_children := parent.ev_children
 		end
 
 feature -- Access
@@ -61,7 +61,7 @@ feature -- Access
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
 	
-	parent_imp: EV_MENU_ITEM_CONTAINER_IMP
+	parent: EV_MENU_ITEM_CONTAINER_IMP
 			-- The vision parent of the current item.
 
 	parent_menu: WEL_MENU is
@@ -69,9 +69,9 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
 		local
 			item: EV_MENU_ITEM_IMP
 		do
-			Result ?= parent_imp
+			Result ?= parent
 			if Result = Void then
-				item ?= parent_imp
+				item ?= parent
 				Result := item.submenu
 			end
 		end
@@ -103,7 +103,7 @@ feature -- Status setting
 	destroy is
 			-- Destroy the current item.
 		do
-			parent_imp.remove_item (id)
+			parent.remove_item (id)
 		end
 
 	set_insensitive (flag: BOOLEAN) is
@@ -134,9 +134,9 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 			-- First, we transform the item into a menu.
 			if submenu = Void then
 				!! submenu.make
-				ev_children := parent_imp.ev_children
+				ev_children := parent.ev_children
 				parent_menu.delete_item (id)
-				parent_imp.insert_item (submenu, position, text)
+				parent.insert_item (submenu, position, text)
 			end
 			{EV_MENU_ITEM_CONTAINER_IMP} Precursor (an_item)
 		end

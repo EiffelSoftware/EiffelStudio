@@ -8,14 +8,21 @@ exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
 remtrace Compile C code of the libraries
 remtrace "A tout seigneur tout honneur", let's start with the run-time
 cd C
+sed -e s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g config.msh >> new_config.msh
+move new_config.msh config.msh
 alias pause echo
 call configure win32 m >>& %INSTALL_LOG
 unalias pause
 cd %EIFFEL_SRC
 
+remtrace Compile com_il_generation
+cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\Core\clib
+default_make
+
 remtrace Then the C libraries
 remtrace expat
 cd C_library\expat
+safe_md lib
 msdev expat.dsw /make ALL - RELEASE >>& %INSTALL_LOG
 iff not exist bin\xmlparse.dll .or. not exist bin\xmltok.dll then
 	echo Couldn't recompile xmlparse.dll or xmltok.dll
@@ -23,12 +30,16 @@ iff not exist bin\xmlparse.dll .or. not exist bin\xmltok.dll then
 endiff
 copy bin\xmlparse.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 copy bin\xmltok.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy xmlparse\Release\*.lib lib
+copy xmltok\Release\*.lib lib
+
 remtrace libpng
 cd %EIFFEL_SRC\C_library\libpng
 default_make
 remtrace zlib
 cd %EIFFEL_SRC\C_library\zlib
 default_make
+copy %ISE_EIFFEL\library\vision2\spec\msc\lib\*lib*.lib %EIFFEL_SRC\library\vision2\spec\msc\lib
 
 REM These directories should already have been created by make_delivery. Whatever...
 safe_md %INSTALL_DIR\studio\spec

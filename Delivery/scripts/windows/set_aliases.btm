@@ -1,17 +1,19 @@
 REM Define some user parameters here
 
 REM The file where all output is stored
-set INSTALL_LOG="D:\install.log"
+set INSTALL_LOG=D:\install.log
 REM NB: The following directory must contain a finalization Ace for ec.exe called finalizedbench.ace
-set FINALIZATION_DIR="D:\Compils\newbench"
+set FINALIZATION_DIR=D:\Compils\newbench
 REM NB: The following directory must contain document.exe
-set DOCUMENT_DIR="D:\Delivery"
+set DOCUMENT_DIR=D:\Delivery
 REM Tag to export files in CVS
 set DEFAULT_CVS_TAG=HEAD
 REM NB: The following directory will be erased!
-set TMP_EIFFEL_SRC="D:\tmpdev"
+set TMP_EIFFEL_SRC=D:\tmpdev
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
-set INSTALL_DIR="D:\InstalledEiffel50"
+set INSTALL_DIR=D:\InstalledEiffel50
+REM Where Visual C++ is installed (to recompile the run-time)
+set C_COMPILER_PATH=C:\apps\VC98
 REM Get where hhc and wfwi are located, to be able to compile the documentation and the delivery.
 set PATH=%PATH;"C:\Program Files\HTML Help Workshop";"C:\apps\Wise for Windows Installer Evaluation\WfWI.exe"
 

@@ -78,9 +78,17 @@ typedef struct dump Dump;	/* Structure returned by dumps */
  *  DEAD		18		Application is dead
  *  LOAD		19		Load byte code information
  *  BYTECODE	20		A byte code transfer
+ *	KILL		21		Kill application asynchronously
  *	ADOPT		22		Adopt object
  *	ACCESS		23		Access object through hector
  *	WEAN		24		Wean adopted object
+ *	ONCE		25		Once routines inspection
+ *	EWB_INTERRUPT	26	Debugger asking interruption of application
+ *	APP_INTERRUPT	27	Application wondering if it has to stop
+ *	INTERRUPT_OK	28	Application must stop its execution
+ *	INTERRUPT_NO	29	Application can resume execution
+ *	SP_LOWER	30		Bounds for special objects inspection
+ *	SP_UPPER	31		Bounds for special objects inspection
  */
 
 typedef struct {			/* General client request format */

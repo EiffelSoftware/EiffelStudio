@@ -1,0 +1,248 @@
+system es4
+
+root
+	ewb_windows (main): "make"
+
+default
+	assertion (no);
+--	exception_trace (yes);
+	dead_code_removal (yes);
+--	inlining_size ("16");
+	inlining (yes);
+
+	--trace(yes)
+	--trace ("SERVER");
+	--debug ("DOCUMENT");
+	--debug ("DRAWING")
+	--debug ("PARSE")
+	--debug ("FLAT_SHORT");
+	--debug ("LOCAL_FEAT_ADAPTATION");
+	--debug ("ACTIVITY")
+	--debug ("DEBUG_RECV")
+	--debug ("PASS3")
+	--array_optimization (no);
+
+cluster
+
+-- EiffelBase:
+	base:				"$EIFFEL41_SRC\library\base";
+	structures(base):		"$\structures";
+
+	kernel(base):		"$\kernel";
+	support(base):		"$\support";
+	access(structures):	"$\access";
+	cursors(structures):	"$\cursors";
+	dispenser(structures):	"$\dispenser";
+	list(structures):		"$\list";
+	set(structures):		"$\set";
+	sort(structures):		"$\sort";
+	storage(structures):	"$\storage";
+	table(structures):	"$\table_eiffel3";
+	traversing(structures):	"$\traversing";
+	tree(structures):		"$\tree";
+
+-- Wel:
+	wel:					"$EIFFEL41_SRC\library\wel";
+
+	wel_constants(wel):		"$\consts";
+	wel_controls(wel):		"$\controls";
+	wel_gdi(wel):			"$\gdi";
+	wel_gdi_stocks(wel):		"$\gdistock";
+	wel_standard_dialogs(wel):	"$\stddlgs";
+	wel_structures(wel):		"$\structs";
+	wel_support(wel):			"$\support";
+	wel_windows(wel):			"$\windows";
+	wel_messages(wel):		"$\messages";
+
+-- Vision
+	vision:				"$EIFFEL41_SRC\library\vision";
+	oui(vision):			"$\oui";
+	implement(vision):		"$\implement";
+
+	graph_context_data(oui):	"$\context_data";
+	graph_kernel(oui):		"$\kernel";
+	graph_oui(oui):			"$\widgets";
+	graph_toolkit(implement):	"$\toolkit";
+	graph_widgets(implement):	"$\mswin\widgets";
+	graph_command(implement):	"$\mswin\commands";
+
+-- ES4 SPECIFIC CLUSTERS
+	liman:				"$EIFFEL41_SRC\Eiffel\limand";
+
+	liman_bench(liman):		"$\bench";
+	liman_bench_graphical(liman):	"$\bench_graphical";
+	liman_abstract(liman):		"$\abstract";
+	liman_graphical(liman):		"$\graphical";
+	time_lock(liman):        	"$\time_lock";
+	--liman_shared(liman):		"$\shared";
+	--liman_client(liman):		"$\client";
+
+	beurk:			"$EIFFEL41_SRC\Eiffel\beurk";
+	compiler_support:		"$EIFFEL41_SRC\Eiffel\support";
+	replication:		"$EIFFEL41_SRC\Eiffel\eiffel\replication";
+
+-- General compilation:
+	flat_short:			"$EIFFEL41_SRC\Eiffel\flat_short\abstract";
+--		default
+--			profile (yes);
+--		end;
+
+	flat_short_b:		"$EIFFEL41_SRC\Eiffel\flat_short\bench";
+--		default
+--			profile (yes);
+--		end;
+
+	yacc:				"$EIFFEL41_SRC\Eiffel\yacc";
+	const:			"$EIFFEL41_SRC\Eiffel\const";
+
+-- Lace compilation:
+	env:				"$EIFFEL41_SRC\Eiffel\lace\env";
+	lace_compile:		"$EIFFEL41_SRC\Eiffel\lace\lace_compile";
+	lace_shared:		"$EIFFEL41_SRC\Eiffel\lace\shared";
+
+-- Eiffel compilation:
+	eiffel_comp:		"$EIFFEL41_SRC\Eiffel\eiffel";
+
+	instructions_b(eiffel_comp):		"$\AST\instructions";
+	expressions_b(eiffel_comp):		"$\AST\expressions";
+	ast_skeleton_b(eiffel_comp):		"$\AST\skeleton";
+	ast_clickable_b(eiffel_comp):		"$\AST\clickable";
+
+	byte_code(eiffel_comp):			"$\byte_code";
+	cecil(eiffel_comp):			"$\cecil";
+	compiler(eiffel_comp):			"$\compiler";
+	eiffel_const(eiffel_comp):		"$\const";
+	generation(eiffel_comp):		"$\generation";
+	genericity(eiffel_comp):		"$\genericity";
+	compiler_ids(eiffel_comp):		"$\ids\compiler";
+	routine_ids(eiffel_comp):		"$\ids\routine";
+	class_ids(eiffel_comp):			"$\ids\class";
+	type_ids(eiffel_comp):			"$\ids\type";
+	body_ids(eiffel_comp):			"$\ids\body_id";
+	body_indexes(eiffel_comp):		"$\ids\body_index";
+	real_body_ids(eiffel_comp):		"$\ids\real_body_id";
+	real_body_indexes(eiffel_comp):	"$\ids\real_body_index";
+	file_ids(eiffel_comp):			"$\ids\file";
+	pattern_ids(eiffel_comp):		"$\ids\pattern";
+	feature_as_ids(eiffel_comp): 		"$\ids\feature_as";
+	inheritance(eiffel_comp):		"$\inheritance";
+	eiffel_interface(eiffel_comp):	"$\interface";
+--		option
+--			profile (yes): CLASS_C, SYSTEM_I
+--		end;
+
+	polymorphism(eiffel_comp):		"$\polymorphism";
+	server(eiffel_comp): 			"$\server";
+	eiffel_shared(eiffel_comp):		"$\shared";
+	skeleton(eiffel_comp):			"$\skeleton";
+	eiffel_structures(eiffel_comp):	"$\structures";
+	tables(eiffel_comp): 			"$\tables";
+	descriptor(eiffel_comp):		"$\descriptor";
+
+
+-- API cluster
+	api:				"$EIFFEL41_SRC\Eiffel\API";
+
+	api_constants(api):	"$\constants"; 
+	api_shared(api):		"$\shared";
+	api_ids(api):		"$\ids";
+	api_queries(api):		"$\queries";
+	api_interface(api):	"$\interface";
+	api_common(api):		"$\common";
+	communication(api):	"$\communication";
+	output(api):		"$\output";
+	evaluated_type(api):	"$\evaluated_type";
+
+		-- Error processing
+	error_common(api):	"$\error\common";
+	lace_error(api):		"$\error\lace";
+	feature_error(api):	"$\error\eiffel\feature";
+	parents_error(api):	"$\error\eiffel\parents";
+	redefined_error(api):	"$\error\eiffel\redefined";
+	unredefined_error(api):	"$\error\eiffel\unredefined";
+
+		-- Resources
+	resources(api):		"$\resources\common";
+
+		-- Profiling
+	converter(api):		"$\profiler\converter";
+	profiling(api):		"$\profiler\profiling";
+	querying(api):		"$\profiler\querying";
+	filters(api):		"$\profiler\filters";
+	matching(api):		"$\profiler\matching";
+	struct_text(api):		"$\structured_text";
+
+		-- AST structures
+	lace_AST(api):		"$\AST\lace";
+	instructions(api):	"$\AST\eiffel\instructions";
+	expressions(api):		"$\AST\eiffel\expressions";
+	ast_skeleton(api):	"$\AST\eiffel\skeleton";
+	ast_stonables(api):	"$\AST\eiffel\clickable";
+
+-- SWITCH clusters (chose one cluster per directory in switch directory)
+	switch:			"$EIFFEL41_SRC\Eiffel\switch";
+
+	dle_switch(switch):		"$\dle\dle";
+	generation_switch(switch):	"$\generation\professional";
+	interface_switch(switch):	"$\interface\graphical";
+	tty_switch(switch): 		"$\tty\professional";
+	--licence(switch): 		"$\license\no_license";	
+
+-- INTERFACE CLUSTERS
+	interface:			"$EIFFEL41_SRC\Eiffel\interface";
+
+	interface_shared(interface):	"$\shared";
+
+		-- tty interace
+	tty(interface): 			"$\tty";
+
+		-- graphical interface (bench):
+	bench_common(interface):	"$\graphical\common";
+	commands(interface):		"$\graphical\commands";
+	--	default
+	--		profile (yes);
+	--	end;
+
+	debugging(interface):		"$\graphical\debugging";
+	drag_and_drop(interface):	"$\graphical\drag_and_drop";
+	formatters(interface):		"$\graphical\formatters";
+	main(interface):			"$\graphical\main";
+	graphical_shared(interface):	"$\graphical\shared";
+	stones(interface):		"$\graphical\stones";
+	text_window(interface):		"$\graphical\text_window";
+	windows(interface):		"$\graphical\windows";
+	preference_tool(interface):	"$\graphical\preference_tool";
+	profile_tool(interface):	"$\graphical\profile_tool";
+	wizard_common(interface):	"$\graphical\wizard\common";
+	wizard_bench(interface):	"$\graphical\wizard\bench";
+
+	platform_common(interface):		"$\graphical\spec\widgets\common";
+	platform_mswin(interface):		"$\graphical\spec\widgets\win32";
+	win_graphical_window(interface):	"$\graphical\spec\graphical_window\win32";
+
+-- Communications
+	ipc:				"$EIFFEL41_SRC\Eiffel\ipc";
+	debugclas:			"$EIFFEL41_SRC\Eiffel\debug";
+
+-- Case
+	case_common:		"$EIFFEL41_SRC\Eiffel\case_storage\common";
+	case_bench:			"$EIFFEL41_SRC\Eiffel\case_storage\bench";
+
+external
+	include_path: 	
+		"e:\apps\tl20lite\include",
+		"$(EIFFEL41_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL41_SRC)\C\parsing\shared";
+
+	object:
+		"e:\apps\tl20lite\lib\tl32v20.lib",
+		"$(EIFFEL41_SRC)\library\wel\spec\$(PLATFORM)\lib\wel.lib",
+		"$(EIFFEL41_SRC)\C\ipc\shared\ipc.lib",
+		"$(EIFFEL41_SRC)\C\ipc\ewb\ewb.lib",
+		"$(EIFFEL41_SRC)\C\idrs\idr.lib",
+		"$(EIFFEL41_SRC)\C\parsing\eiffel\weiffel.lib",
+		"$(EIFFEL41_SRC)\C\parsing\lace\lace.lib",
+		"$(EIFFEL41_SRC)\C\parsing\shared\parsing.lib",
+		"$(EIFFEL41_SRC)\C\platform\platform.lib"
+		
+end

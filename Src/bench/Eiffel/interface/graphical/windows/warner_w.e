@@ -11,7 +11,16 @@ inherit
 	NAMER;
 	WARNING_D
 		rename
+			make as warning_create,
+			popup as warning_popup
+		end;
+	WARNING_D
+		rename
 			make as warning_create
+		redefine
+			popup
+		select
+			popup
 		end
 
 creation
@@ -20,17 +29,34 @@ creation
 	
 feature 
 
-	make (a_composite: COMPOSITE) is
-			-- Create a file selection dialog
-		local
-			void_argument: ANY
+	make (a_parent: COMPOSITE) is
+			-- Create a warning window.
 		do
-			warning_create (l_Warning, a_composite);
+			warning_create (l_Warning, a_parent);
 			set_title (l_Warning);
 			hide_help_button;
 			add_ok_action (Current, Current);
-			add_cancel_action (Current, void_argument);
-			add_help_action (Current,1);
+			add_cancel_action (Current, Void);
+			add_help_action (Current, 1);
+			allow_resize;
+			parent.hide
+		end;
+
+	popup is
+			-- Popup warning window.
+		do
+			if window /= Void then
+				parent.set_x_y (window.real_x, window.real_y);
+				parent.set_size (window.width, window.height);
+				window := Void
+			else
+				parent.set_x_y (0, 0);
+				parent.set_size (screen.width, screen.height);
+			end;
+			parent.hide;
+			if is_popped_up then popdown end;
+			warning_popup;
+			raise
 		end;
 
 	call (a_command: COMMAND_W; a_message: STRING) is
@@ -54,6 +80,11 @@ feature
 	set_last_caller (cmd: COMMAND_W) is
 		do
 			last_caller := cmd
+		end;
+
+	set_window (wind: TEXT_WINDOW) is
+		do
+			window ?= wind.tool
 		end;
 
 	gotcha_call (a_message: STRING) is
@@ -125,6 +156,9 @@ feature {NONE}
 
 	last_caller: COMMAND_W
 			-- Last command which popped up current
+
+	window: WIDGET;
+			-- Window to which the warning will apply
 
 feature {NONE} -- Clickable features
 

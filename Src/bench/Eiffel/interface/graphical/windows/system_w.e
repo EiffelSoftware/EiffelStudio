@@ -33,8 +33,9 @@ feature {NONE}
 		-- System window is editable
 
 	set_default_position is
+			-- Display the window at the cursor position.
 		do
-			set_x_y (400, 190)	
+			set_x_y (screen.x, screen.y)	
 		end
 
 feature 
@@ -46,7 +47,7 @@ feature
 			if not realized then
 				realize
 			elseif not shown then
-				--set_default_position;
+				set_default_position;
 				show
 			end;
 			raise;

@@ -1141,6 +1141,10 @@ feature -- Graphical Interface
 				-- Edit Menu
 			build_edit_menu (project_toolbar)
 
+			!! sep.make (Interface_names.t_Empty, edit_menu)
+			!! show_pref_cmd.make (Project_resources)
+			!! show_pref_menu_entry.make_default (show_pref_cmd, edit_menu)
+
 				-- Close all command
 			!! tool_action.make_close_all
 			!! tool_action_menu_entry.make_default (tool_action, menus @ window_menu)
@@ -1220,10 +1224,6 @@ feature -- Graphical Interface
 
 			!! show_prof_cmd
 			!! show_prof_menu_entry.make_default (show_prof_cmd, menus @ window_menu)
-
-			!! sep.make (Interface_names.t_Empty, menus @ window_menu)
-			!! show_pref_cmd.make (Project_resources)
-			!! show_pref_menu_entry.make_default (show_pref_cmd, menus @ window_menu)
 
 			!! display_feature_cmd.make (Current)
 			!! display_feature_button.make (display_feature_cmd, project_toolbar)

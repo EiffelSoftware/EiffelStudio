@@ -421,14 +421,14 @@ feature {NONE} -- Implementation
 									if menu_bar_object /= Void then
 										add_build ("set_menu_bar (" + element_info.data + ")")
 									else
-										if not parent_type.is_equal ("EV_TABLE") then
+										if not parent_type.is_equal (Ev_table_string) then
 											add_build (new_object.extend_xml_representation (element_info.data))						
 										end
 									end
 								else
 										-- Tables need to use put, but this is done in conjunction with the placement.
 										-- So here, we do not add the children of the table, as it will be done later.
-									if not parent_type.is_equal ("EV_TABLE") then
+									if not parent_type.is_equal (Ev_table_string) then
 										add_build (parent_name + "." + new_object.extend_xml_representation (element_info.data))
 									end
 										-- Store the parent and child attribute names in `parent_child'.									

@@ -303,22 +303,22 @@ feature -- Basic operation
 		do	
 			text := a_text
 			current_type := dynamic_type_from_string (text)		
-			if type_conforms_to (current_type, dynamic_type_from_string ("EV_CELL")) then
-				if type_conforms_to (current_type, dynamic_type_from_string ("EV_TITLED_WINDOW")) then
+			if type_conforms_to (current_type, dynamic_type_from_string (Ev_cell_string)) then
+				if type_conforms_to (current_type, dynamic_type_from_string (Ev_titled_window_string)) then
 					create titled_window_object.make_with_type (text)
 					Result ?= titled_window_object
 				else
 					create cell_object.make_with_type (text)
 					Result ?= cell_object
 				end
-			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_CONTAINER")) then
-				if type_conforms_to (current_type, dynamic_type_from_string ("EV_WIDGET_LIST")) then
+			elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_container_string)) then
+				if type_conforms_to (current_type, dynamic_type_from_string (Ev_widget_list_string)) then
 					create widget_list_object.make_with_type (text)
 					Result ?= widget_list_object
-				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_TABLE")) then
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_table_string)) then
 					create table_object.make_with_type (text)
 					Result ?= table_object
-				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_SPLIT_AREA")) then
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_split_area_string)) then
 					create split_area_object.make_with_type (text)
 					Result ?= split_area_object
 				else
@@ -326,40 +326,40 @@ feature -- Basic operation
 						invalid_type_conformance: False
 					end
 				end
-			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_PRIMITIVE")) then
-				if type_conforms_to (current_type, dynamic_type_from_string ("EV_TOOL_BAR")) then
+			elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_primitive_string)) then
+				if type_conforms_to (current_type, dynamic_type_from_string (Ev_tool_bar_string)) then
 					create tool_bar_object.make_with_type (text)
 					Result := tool_bar_object
-				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_LIST")) then
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_list_string)) then
 					create list_object.make_with_type (text)
 					Result := list_object
-				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_COMBO_BOX")) then
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_combo_box_string)) then
 					create combo_box_object.make_with_type (text)
 					Result := combo_box_object
-				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_TREE")) then
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_tree_string)) then
 					create tree_object.make_with_type (text)
 					Result := tree_object
 				else
 					create primitive_object.make_with_type (text)
 					Result ?= primitive_object
 				end
-			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU_BAR")) then
+			elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_bar_string)) then
 				create menu_bar_object.make_with_type (text)
 				Result ?= menu_bar_object
-			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU")) then
+			elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_string)) then
 				create menu_object.make_with_type (text)
 				Result ?= menu_object
-			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU_ITEM")) then
+			elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_item_string)) then
 				create menu_item_object.make_with_type (text)
 				Result ?= menu_item_object
-			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_ITEM")) then
-				if type_conforms_to (current_type, dynamic_type_from_string ("EV_TOOL_BAR_ITEM")) then
+			elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_item_string)) then
+				if type_conforms_to (current_type, dynamic_type_from_string (Ev_tool_bar_item_string)) then
 					create tool_bar_item_object.make_with_type (text)
 					Result ?= tool_bar_item_object
-				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_LIST_ITEM")) then
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_list_item_string)) then
 					create list_item_object.make_with_type (text)
 					Result ?= list_item_object
-				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_TREE_ITEM")) then
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_tree_item_string)) then
 					create tree_item_object.make_with_type (text)
 					Result ?= tree_item_object					
 				else

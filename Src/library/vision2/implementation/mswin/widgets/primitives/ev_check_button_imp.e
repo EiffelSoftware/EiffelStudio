@@ -20,7 +20,8 @@ inherit
 			interface as toggle_button_imp_interface
 		undefine
 			default_process_message,
-			default_style
+			default_style,
+			wel_parent
 		redefine
 			make,
 			state,
@@ -31,7 +32,7 @@ inherit
 	WEL_CHECK_BOX
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -74,7 +75,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create the label with an empty label.
+			-- Create the check button with no label.
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
@@ -82,9 +83,23 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--| Also remove the undefinition of wel_parent from EV_TOGGLE_BUTTON_IMP
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
 	
 	state: BOOLEAN is
-			-- Is toggle pressed
+			-- Is checked?
 		do
 			Result := checked
 		end 
@@ -92,8 +107,7 @@ feature -- Status report
 feature -- Status setting
 
 	set_state (flag: BOOLEAN) is
-			-- Set Current toggle on and set
-			-- pressed to True.
+			-- Set checked state to `flag'.
 		do
 			if flag then
 				set_checked
@@ -103,8 +117,7 @@ feature -- Status setting
 		end
 
 	toggle is
-			-- Change the state of the toggle button to
-			-- opposite
+			-- NOT checked state.
 		do
 			set_state (not state)
 		end
@@ -141,6 +154,9 @@ end -- class EV_CHECK_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/23 20:35:01  rogers
+--| improved comments. Added wel parenting compiler fix.
+--|
 --| Revision 1.22  2000/02/19 05:45:01  oconnor
 --| released
 --|

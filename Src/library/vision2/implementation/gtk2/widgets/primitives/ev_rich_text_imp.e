@@ -9,6 +9,8 @@ class
 	
 inherit
 	EV_RICH_TEXT_I
+		undefine
+			text_length
 		redefine
 			interface
 		end
@@ -28,32 +30,99 @@ feature {NONE} -- Initialization
 			-- Set up `Current'
 		do
 			create tab_positions
-			tab_positions.add_actions.extend (agent update_tab_positions)
-			tab_positions.remove_actions.extend (agent update_tab_positions)
+			tab_positions.internal_add_actions.extend (agent update_tab_positions)
+			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
+			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
 			Precursor {EV_TEXT_IMP}
 		end
 
 	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
 			-- Create a caret move action sequence.
 		do
+			create Result
 		end
 			
 	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a selection change action sequence.
 		do
+			create Result
 		end
 
 feature -- Status Report
 
-	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes:EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+			--  Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
+		local
+			format_imp: EV_PARAGRAPH_FORMAT_IMP
+		do
+			format_imp ?= format.implementation
+			modify_paragraph_internal (start_line, end_line, format_imp, format_imp.dummy_paragraph_format_range_information)
+		end
+
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
+			--`end_index' and `False' otherwise.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		do
+			--create Result.make_with_values (family: BOOLEAN; weight: BOOLEAN; shape: BOOLEAN; height: BOOLEAN; a_color: BOOLEAN; a_background_color: BOOLEAN; striked_out: BOOLEAN; underlined: BOOLEAN; vertical_offset: BOOLEAN)
+			--create Result.make_with_values (True, True, True, True, True, True, True, True, True)
+		end
+
+	paragraph_format_range_information (start_line, end_line: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from lines `start_line' to `end_line'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_line' to
+			--`end_line' and `False' otherwise.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		do
+		end
+
+	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
+		do
+			Result := False
+		end
+
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+		do
+			Result := character_format (start_index).is_equal (character_format (end_index))
+		end
+
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph format of current selection.
+			-- If more than one format is contained in the selection, `Result'
+			-- is the first of these formats.
+		do
+			create Result
+		end
+
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
+		local
+			a_format_imp: EV_CHARACTER_FORMAT_IMP
 		do
+			a_format_imp ?= format.implementation
+			modify_region_internal (text_buffer, start_position, end_position, a_format_imp, applicable_attributes)
+		end
+
+	modify_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Modify paragraph formatting from lines `start_line' to `end_line' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others.
+		local
+			format_imp: EV_PARAGRAPH_FORMAT_IMP
+		do
+			format_imp ?= format.implementation
+			modify_paragraph_internal (start_line, end_line, format_imp, applicable_attributes)
 		end
 
 	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		do
+			Result := False
 		end
 		
 	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
@@ -61,6 +130,44 @@ feature -- Status Report
 			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
 			-- are subsequently changed.
 		do
+			--create Result
+		end
+
+	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph_format at caret position `caret_index'.
+		local
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_text_attributes: POINTER
+			a_justification: INTEGER
+		do
+			create Result
+			create a_text_iter.make
+			feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, caret_index - 1)
+			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
+			gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
+			
+			Result.set_bottom_spacing (gtk_text_attributes_struct_pixels_below_lines (a_text_attributes))
+			Result.set_top_spacing (gtk_text_attributes_struct_pixels_above_lines (a_text_attributes))
+			Result.set_left_margin (gtk_text_attributes_struct_left_margin (a_text_attributes))
+			Result.set_right_margin (gtk_text_attributes_struct_right_margin (a_text_attributes))
+			
+			a_justification :=  gtk_text_attributes_struct_justification (a_text_attributes)
+			if a_justification = feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum then
+				Result.enable_left_alignment
+			elseif a_justification = feature {EV_GTK_EXTERNALS}.gtk_justify_center_enum then
+					Result.enable_center_alignment
+			elseif a_justification = feature {EV_GTK_EXTERNALS}.gtk_justify_right_enum then
+					Result.enable_right_alignment
+			elseif a_justification = feature {EV_GTK_EXTERNALS}.gtk_justify_fill_enum then
+					Result.enable_justification
+			end
+			gtk_text_attributes_free (a_text_attributes)
+		end
+
+	selected_character_format: EV_CHARACTER_FORMAT is
+			--
+		do
+			Result := character_format (selection_start)
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
@@ -129,7 +236,7 @@ feature -- Status report
 			font_size, font_weight, font_style: INTEGER
 			a_effects: EV_CHARACTER_FORMAT_EFFECTS
 			a_red, a_blue, a_green: INTEGER
-			a_family: EV_GTK_C_UTF8_STRING
+			a_family: EV_GTK_C_STRING
 		do
 			create Result
 			create a_text_iter.make
@@ -141,7 +248,7 @@ feature -- Status report
 			
 
 			a_font_description := gtk_text_attributes_struct_font_description (a_text_attributes)
-			create a_family.make_from_utf8_pointer (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
+			create a_family.make_from_pointer (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
 			font_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (a_font_description)
 			font_weight := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_weight (a_font_description)
 			font_size := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_size (a_font_description) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
@@ -153,7 +260,7 @@ feature -- Status report
 			end
 			a_font_imp ?= a_font.implementation
 			a_font_imp.set_weight_from_pango_weight (font_weight)
-			
+	
 			a_font.preferred_families.extend (a_family.string)
 			
 			Result.set_font (a_font)
@@ -164,6 +271,12 @@ feature -- Status report
 			a_green := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256
 			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (a_red, a_green, a_blue))
 			
+			a_color := gtk_text_appearance_struct_bg_color (a_text_appearance)
+			a_red := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256
+			a_blue := feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256
+			a_green := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256
+			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (a_red, a_green, a_blue))
+			
 			create a_effects
 			if gtk_text_appearance_struct_strikethrough (a_text_appearance) > 0 then
 				a_effects.enable_striked_out
@@ -171,7 +284,7 @@ feature -- Status report
 			if gtk_text_appearance_struct_underline (a_text_appearance) > 0 then
 				a_effects.enable_underlined
 			end
-			
+			a_effects.set_vertical_offset (gtk_text_appearance_struct_rise (a_text_appearance))
 			Result.set_effects (a_effects)
 	
 			gtk_text_attributes_free (a_text_attributes)
@@ -188,8 +301,11 @@ feature -- Status setting
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
+		local
+			a_format_imp: EV_CHARACTER_FORMAT_IMP
 		do
-			format_region_internal (text_buffer, start_position, end_position, format)
+			a_format_imp ?= format.implementation
+			modify_region_internal (text_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
 
 	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
@@ -211,16 +327,17 @@ feature -- Status setting
 		local
 			text_tag_table: POINTER
 			buffer_length: INTEGER
+			a_format_imp: EV_CHARACTER_FORMAT_IMP
 		do
 			if not buffer_locked_in_append_mode then
 				text_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (text_buffer)
 				append_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (text_tag_table)
 				buffer_locked_in_append_mode := True
 			end
-			
+			a_format_imp ?= format.implementation
 			buffer_length := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer) + 1
 			append_text_internal (append_buffer, a_text)
-			format_region_internal (append_buffer, buffer_length, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer) + 1,format)
+			modify_region_internal (append_buffer, buffer_length, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer) + 1, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
 		
 	flush_buffer is
@@ -264,9 +381,7 @@ feature -- Status setting
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, text_buffer_end_iter.item, end_position - 1)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (append_buffer, append_buffer_start_iter.item)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (append_buffer, append_buffer_end_iter.item)
-			
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete (text_buffer, text_buffer_start_iter.item, text_buffer_end_iter.item)
-			
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert_range (text_buffer, text_buffer_start_iter.item, append_buffer_start_iter.item, append_buffer_end_iter.item)
 			
 			dispose_append_buffer
@@ -281,8 +396,39 @@ feature -- Status setting
 	tab_width: INTEGER is
 			-- Default width in pixels of each tab in `Current'.
 		do
+			Result := 40
 		end
-		
+
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	on_text_mark_changed (a_text_iter, a_text_mark: POINTER) is
+			-- Called when a text mark within `text_buffer' has been set.
+		local
+			a_caret_position: INTEGER
+			a_selection_start, a_selection_end: INTEGER
+		do
+			if not (a_text_mark = feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)) then
+				a_selection_start := selection_start_internal
+				a_selection_end := selection_end_internal
+				if selection_change_actions_internal /= Void and then (previous_selection_start /= a_selection_start or else previous_selection_end /= a_selection_end) then
+				--	selection_change_actions_internal.call (Void)
+				end
+				previous_selection_start := a_selection_start
+				previous_selection_end := a_selection_end
+			else
+				a_caret_position := caret_position
+				if a_caret_position /= previous_caret_position and then caret_move_actions_internal /= Void then
+					caret_move_actions_internal.call ([a_caret_position])
+				end
+				previous_caret_position := a_caret_position
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	previous_caret_position, previous_selection_start, previous_selection_end: INTEGER
+		-- Values used for determining whether either the selection or caret_position has changed inorder to fire appropriate event
+
 feature {NONE} -- Implementation
 
 	gtk_text_view_set_tabs (a_text_view, a_pango_tab_array: POINTER) is
@@ -305,6 +451,36 @@ feature {NONE} -- Implementation
 	gtk_text_attributes_struct_text_appearance (a_text_attributes: POINTER): POINTER is
 			external
 				"C struct GtkTextAttributes access &appearance use <gtk/gtk.h>"
+			end
+
+	gtk_text_attributes_struct_justification (a_text_attributes: POINTER): INTEGER is
+			external
+				"C struct GtkTextAttributes access justification use <gtk/gtk.h>"
+			end
+
+	gtk_text_attributes_struct_left_margin (a_text_attributes: POINTER): INTEGER is
+			external
+				"C struct GtkTextAttributes access left_margin use <gtk/gtk.h>"
+			end
+
+	gtk_text_attributes_struct_right_margin (a_text_attributes: POINTER): INTEGER is
+			external
+				"C struct GtkTextAttributes access right_margin use <gtk/gtk.h>"
+			end
+
+	gtk_text_attributes_struct_pixels_above_lines (a_text_attributes: POINTER): INTEGER is
+			external
+				"C struct GtkTextAttributes access pixels_above_lines use <gtk/gtk.h>"
+			end
+
+	gtk_text_attributes_struct_pixels_below_lines (a_text_attributes: POINTER): INTEGER is
+			external
+				"C struct GtkTextAttributes access pixels_below_lines use <gtk/gtk.h>"
+			end
+
+	gtk_text_appearance_struct_rise (a_text_appearance: POINTER): INTEGER is
+			external
+				"C struct GtkTextAppearance access rise use <gtk/gtk.h>"
 			end
 
 	gtk_text_appearance_struct_bg_color (a_text_appearance: POINTER): POINTER is
@@ -369,30 +545,54 @@ feature {NONE} -- Implementation
 				"gtk_text_view_buffer_to_window_coords ((GtkTextView*) $a_text_view, GTK_TEXT_WINDOW_TEXT, (gint) $buffer_x, (gint) $buffer_y, (gint *) $window_x, (gint *) $window_y)"
 			end
 
-	format_region_internal (a_text_buffer: POINTER; start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	modify_region_internal (a_text_buffer: POINTER; start_position, end_position: INTEGER; format_imp: EV_CHARACTER_FORMAT_IMP; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
 		local
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_format_imp: EV_CHARACTER_FORMAT_IMP
 			a_tag_table, text_tag: POINTER
 		do
-			a_format_imp ?= format.implementation
 			create a_start_iter.make
 			create a_end_iter.make
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (a_text_buffer, a_start_iter.item, start_position - 1)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (a_text_buffer, a_end_iter.item, end_position - 1)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_remove_all_tags (a_text_buffer, a_start_iter.item, a_end_iter.item)
-	
-			if a_format_imp.last_text_tag /= default_pointer then
-				text_tag := a_format_imp.last_text_tag
-			else
-				text_tag := a_format_imp.new_text_tag
-				a_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, text_tag)
-			end
+		
+			text_tag := format_imp.new_text_tag_from_applicable_attributes (applicable_attributes)
+			a_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, text_tag)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, text_tag, a_start_iter.item, a_end_iter.item)
 		end
+
+	modify_paragraph_internal (start_line, end_line: INTEGER; format_imp: EV_PARAGRAPH_FORMAT_IMP; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Apply paragraph formatting `format' to lines `start_line', `end_line' based on `applicable_attributes'
+		local
+			a_start_position, a_end_position: INTEGER
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_tag_table, text_tag: POINTER
+			a_start_line: INTEGER
+		do
+			a_start_position := first_position_from_line_number (start_line)
+			a_end_position := last_position_from_line_number (end_line)
+			
+			create a_start_iter.make
+			create a_end_iter.make
+
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, a_start_position - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, a_end_position - 1)
+			
+			a_start_line := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_line (a_start_iter.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_set_line (a_start_iter.item, a_start_line)
+			
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_forward_to_line_end (a_end_iter.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_forward_char (a_end_iter.item)
+
+			text_tag := format_imp.new_paragraph_tag_from_applicable_attributes (applicable_attributes)
+			a_tag_table := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (text_buffer)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, text_tag)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (text_buffer, text_tag, a_start_iter.item, a_end_iter.item)
+
+		end
+
 
 	update_tab_positions (value: INTEGER) is
 			-- Update tab widths based on contents of `tab_positions'.

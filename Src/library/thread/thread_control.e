@@ -70,30 +70,29 @@ feature {NONE} -- Externals
 			"eif_thr_join"
 		end
 
-    get_current_id: POINTER is
-            -- Returns a pointer to the thread-id of the thread.
-        external
-            "C | %"eif_threads.h%""
-        alias
-            "eif_thr_thread_id"
-        end
-
-    last_created_thread: POINTER is
-            -- Returns a pointer to the thread-id of the last created thread.
-        external
-            "C | %"eif_threads.h%""
-        alias
-            "eif_thr_last_thread"
+	get_current_id: POINTER is
+			-- Returns a pointer to the thread-id of the thread.
+		external
+			"C | %"eif_threads.h%""
+		alias
+			"eif_thr_thread_id"
 		end
 
-    exit is
-            -- Exit calling thread. Must be called from the thread itself.
-        external
-            "C | %"eif_threads.h%""
-        alias
-            "eif_thr_exit"
-        end
-	
+	last_created_thread: POINTER is
+			-- Returns a pointer to the thread-id of the last created thread.
+		external
+			"C | %"eif_threads.h%""
+		alias
+			"eif_thr_last_thread"
+		end
+
+	exit is
+			-- Exit calling thread. Must be called from the thread itself.
+		external
+			"C | %"eif_threads.h%""
+		alias
+			"eif_thr_exit"
+		end
 
 end -- class THREAD_CONTROL
 

@@ -116,9 +116,6 @@ feature
 				new_units.after
 			loop
 				new_set := new_units.item_for_iteration;
-					-- We need to sort the data so we can work with them later
-					-- either at degree 4 or degree 5.
-				new_set.sort
 				id := new_set.rout_id;
 				if Tmp_poly_server.has (id) then
 					server_set := Tmp_poly_server.item (id);
@@ -127,6 +124,9 @@ feature
 				else
 					server_set := new_set;
 				end;
+					-- We need to sort the data so we can work with them later
+					-- either at degree 4 or degree 5.
+				server_set.sort
 				Tmp_poly_server.put (server_set);
 				new_units.forth;
 			end;

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Window holding a class tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 	make_top_level is
 			-- same as make but with no parent
 		local
+			cmd: EV_ROUTINE_COMMAND
 		do
 			Precursor
 			create tool.make (Current)
@@ -47,6 +48,9 @@ feature {NONE} -- Initialization
 			initialize_main_menu
 			add_close_command (tool.close_cmd, Void)
 			tool.update
+
+			create cmd.make (tool~take_focus)
+			add_enter_notify_command (cmd, Void)
 
 		ensure then
 			created: not destroyed

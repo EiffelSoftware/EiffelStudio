@@ -208,9 +208,7 @@ rt_public SMART_STRING ex_string = {	/* Container of the exception trace */ /* %
 
 #endif /* EIF_THREADS */
 
-/* Pre-defined exception tags (29 chars max please, otherwise truncated).
- * A final point is added at the end. Here is a 29 chars string template:
- *	"It is a 29 characters string."
+/* Pre-defined exception tags. No restriction on size.
  */
 rt_private char *ex_tag[] = {
 	(char *) 0,							/* Nothing */
@@ -2053,7 +2051,7 @@ rt_private void dump_trace_stack(void)
 rt_private void dump_stack(void (*append_trace)(char *))
 {
 	EIF_GET_CONTEXT
-	char buffer[256];
+	char buffer[1024];
 	/* Dump the Eiffel exception trace stack once a system failure has occurred.
 	 * Due to the upside-down nature of this stack, we need to use the 'st_bot'
 	 * field of the xstack structure.
@@ -2113,7 +2111,7 @@ rt_private void recursive_dump(void (*append_trace)(char *), register1 int level
 	 */
 	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* Call on top of the stack */
-	char buffer[256];
+	char buffer[1024];
 
 	for (
 		find_call(), trace = eif_trace.st_bot;
@@ -2180,6 +2178,142 @@ rt_private void recursive_dump(void (*append_trace)(char *), register1 int level
 	}
 }
 
+rt_private void print_class_feature_tag (
+		void (*append_trace) (char *),
+		char *a_class_name,
+		char *a_feature_name,
+		char *a_tag_name
+)
+	/* Prints first line of exception which contains `a_class_name', `a_feature_name'
+	 * and `a_tag_name' using `append_trace'. */
+{
+	static char buffer[256];
+	int l_class_count, l_feature_count, l_tag_count;
+
+	REQUIRE("tracing_feature_not_null", append_trace);
+	REQUIRE("class_name_not_null", a_class_name);
+	REQUIRE("feature_name_not_null", a_feature_name);
+	REQUIRE("tag_name_not_null", a_tag_name);
+
+		/* We are trying to provide the best format possible so that we can see all the usefull
+		 * information about the location and the reason of the crash.
+		 * Note that the C format `%width[.precision]s' means that we will display `width'
+		 * characters on the screen and only `precision' characters from `s' will be displayed,
+		 * meaning that if `precision' is smaller than `width' the text is right aligned.
+		 * 
+		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
+		 * writting more than `buffer' can hold.
+		 */
+	l_class_count = strlen(a_class_name);
+	l_feature_count = strlen(a_feature_name);
+	l_tag_count = strlen(a_tag_name);
+
+		/* 1 - precision of 212 = 255 - 43, 43 being number of characters written
+		 *      for `a_class_name' and `a_feature_name'. */
+		/* 2 - precision of 235 = 255 - 20, 20 being number of characters written
+		 *      for `a_class_name'.*/
+	if (l_class_count > 19) {
+		sprintf(buffer, "%*.255s\n", l_class_count, a_class_name);
+		append_trace(buffer);
+		if (l_feature_count > 22) {
+			sprintf(buffer, "%*.235s\n", 20 + l_feature_count, a_feature_name);
+			append_trace(buffer);
+			if (l_tag_count > 0) {
+				sprintf(buffer, "%*.212s\n", 43 + l_tag_count, a_tag_name);
+				append_trace(buffer);
+			}
+		} else {
+			sprintf(buffer, "%*.22s %*.212s\n", 20 + l_feature_count, a_feature_name,
+					43 + l_tag_count - (20 + l_feature_count + 1), a_tag_name);
+			append_trace(buffer);
+		}
+	} else {
+		if (l_feature_count > 22) {
+			sprintf(buffer, "%-19.19s %*.212s\n", a_class_name,
+					l_feature_count, a_feature_name);
+			append_trace(buffer);
+			if (l_tag_count > 0) {
+				sprintf(buffer, "%*.212s\n", 43 + l_tag_count, a_tag_name);
+				append_trace(buffer);
+			}
+		} else {
+			sprintf(buffer, "%-19.19s %-22.22s %-29.212s\n",	
+				a_class_name, a_feature_name, a_tag_name);
+			append_trace(buffer);
+		}
+	}
+}
+
+rt_private void print_object_location_reason_effect (
+		void (*append_trace) (char *),
+		EIF_POINTER a_object_addr,
+		char *a_location,
+		char *a_reason,
+		char *a_effect
+)
+	/* Prints second line of exception which contains `a_object_addr', `a_location',
+	 * `a_reason' and `a_effect' using `append_trace'. */
+{
+	static char buffer[256];
+	int l_location_count, l_reason_count, l_effect_count;
+
+	REQUIRE("tracing_feature_not_null", append_trace);
+	REQUIRE("object_addr_not_null", a_object_addr);
+	REQUIRE("location_not_null", a_location);
+	REQUIRE("reason_not_null", a_reason);
+	REQUIRE("effect_not_null", a_effect);
+
+		/* We are trying to provide the best format possible so that we can see all the usefull
+		 * information about the location and the reason of the crash.
+		 * Note that the C format `%width[.precision]s' means that we will display `width'
+		 * characters on the screen and only `precision' characters from `s' will be displayed,
+		 * meaning that if `precision' is smaller than `width' the text is right aligned.
+		 * 
+		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
+		 * writting more than `buffer' can hold.
+		 */
+
+	l_location_count = strlen(a_location);
+	l_reason_count = strlen(a_reason);
+	l_effect_count = strlen(a_effect);
+
+		/* 1 - precision of 212 = 255 - 43, 43 being number of characters written
+		 *      for `a_object_addr' and `a_location'. */
+		/* 2 - precision of 182 = 255 - 73, 73 being number of characters written
+		 *      for `a_object_addr', `a_location' and `a_reason'.*/
+
+		/* Print object address with 16 digits to be ready when pointers
+		 * will be on 64 bits on all platform. */
+	sprintf(buffer, "<%016lX>  ", a_object_addr);
+	append_trace(buffer);
+
+	if (l_location_count > 19) {
+		sprintf(buffer, "%*.255s\n", l_location_count, a_location);
+		append_trace(buffer);
+		if (l_reason_count > 22) {
+			sprintf(buffer, "%*.212s\n", 43 + l_reason_count, a_reason);
+			append_trace(buffer);
+			sprintf(buffer, "%*.182s", 73 + l_effect_count, a_effect);
+			append_trace(buffer);
+		} else {
+			sprintf(buffer, "%*.22s %*.182s", 43 + l_reason_count, a_reason,
+						73 + l_effect_count - (43 + l_reason_count + 1), a_effect);
+			append_trace(buffer);
+		}
+	} else {
+		if (l_reason_count > 22) {
+			sprintf(buffer,"%-22.22s %*.212s\n", a_location, l_reason_count, a_reason);
+			append_trace(buffer);
+			sprintf(buffer, "%*.182s", 73 + l_effect_count, a_effect);
+			append_trace(buffer);
+		} else {
+			sprintf(buffer,"%-22.22s %-29.29s %*.182s\n", a_location, a_reason, l_effect_count,
+				a_effect);
+			append_trace(buffer);
+		}
+	}
+}
+
 rt_private void print_top(void (*append_trace)(char *))
 {
 	/* Prints the exception trace described by the top frame of the exception
@@ -2188,10 +2322,11 @@ rt_private void print_top(void (*append_trace)(char *))
 	 * the routine name to 22 characters. These should be #defined--RAM, FIXME.
 	 */
 	EIF_GET_CONTEXT
-	char			buf[32];				/* To pre-compute the (From orig) string */
-	char			buffer[256];
+	char			buf[256];				/* To pre-compute the (From orig) string */
+	char			buffer[1024];
 	char			rout_name_buffer[256];	/* To add line number at end of routine name */
 	int				line_number;
+	int				finished = 0;
 	char			code = eif_except.code;	/* Exception's code */
 	struct ex_vect	*top;					/* Top of stack */
 
@@ -2234,7 +2369,7 @@ rt_private void print_top(void (*append_trace)(char *))
 		sprintf(rout_name_buffer, "%s", eif_except.rname);
 
 	if (eif_except.tag)
-		sprintf(buf, "%.28s:", eif_except.tag);
+		sprintf(buf, "%.255s:", eif_except.tag);
 	else
 		buf[0] = '\0';
 
@@ -2243,23 +2378,15 @@ rt_private void print_top(void (*append_trace)(char *))
 			int obj_dtype = Dtype(eif_except.obj_id);
 
 			if (obj_dtype>=0 && obj_dtype < scount) {
-				sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",	
-						Class(eif_except.obj_id), rout_name_buffer, buf);
-				append_trace(buffer);
+				print_class_feature_tag (append_trace, Class(eif_except.obj_id), rout_name_buffer, buf);
 			} else {
-				sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",	
-						"Invalid object", rout_name_buffer, buf);
-				append_trace(buffer);
+				print_class_feature_tag (append_trace, "Invalid_object", rout_name_buffer, buf);
 			}
 		} else {
-			sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",	
-					"Invalid object", rout_name_buffer, buf);
-			append_trace(buffer);
+			print_class_feature_tag (append_trace, "Invalid_object", rout_name_buffer, buf);
 		}
 	} else {
-		sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
-			"RUN-TIME", rout_name_buffer, buf);
-		append_trace(buffer);
+		print_class_feature_tag (append_trace, "RUN-TIME", rout_name_buffer, buf);
 	}
 
 	/* There is no need to compute the origin of a routine if it is the same
@@ -2275,14 +2402,10 @@ rt_private void print_top(void (*append_trace)(char *))
 	if (eif_except.from >= 0) {
 		if (eif_except.obj_id) {
 			if (eif_except.from != (int)Dtype(eif_except.obj_id))
-				sprintf(buf, "         (From %.15s)", Origin(eif_except.from));
+				sprintf(buf, "(From %s)", Origin(eif_except.from));
 		} else
-			sprintf(buf, "         (From %.15s)", Origin(eif_except.from));
+			sprintf(buf, "(From %s)", Origin(eif_except.from));
 	}
-
-	sprintf(buffer, "<%08lX> %-31.31s %-29.29s ", 
-			(unsigned long) eif_except.obj_id, buf, exception_string(code));
-	append_trace(buffer);
 
 	/* Start panic effect when we reach the EN_BYE record */
 	if (code == EN_BYE)
@@ -2293,6 +2416,8 @@ rt_private void print_top(void (*append_trace)(char *))
 		echval = EN_FATAL;
 
 	(void) exnext();			/* Can safely be removed */
+
+	buffer[0] = '\0';
 
 	/* Here is an informal discussion about the "Effect" keywords which may
 	 * appear in the stack trace: "Retry" is the last exception that occurred
@@ -2306,65 +2431,59 @@ rt_private void print_top(void (*append_trace)(char *))
 	if (echval == EN_BYE) {		/* A run-time panic was raised */
 		if (eif_except.last) {
 			sprintf(buffer, "Bye\n%s\n", failed);	/* Good bye! */
-			append_trace(buffer);
 		} else {
 			sprintf(buffer, "Panic\n%s\n", failed);	/* Panic propagation */
-			append_trace(buffer);
 		}
-		return;
+		finished = 1;
 	} else if (echval == EN_FATAL) {
 		if (eif_except.last) {
 			sprintf(buffer, "Bye\n%s\n", failed);	/* Good bye! */
-			append_trace(buffer);
 		} else {
 			sprintf(buffer, "Fatal\n%s\n", failed);	/* Fatal propagation */
-			append_trace(buffer);
 		}
-		return;
+		finished = 1;
 	} else if (eif_except.last) {						/* Last record => exit */
 		sprintf(buffer, "Exit\n%s\n", failed);
-		append_trace(buffer);
-		return;
+		finished = 1;
 	} else if (code == EN_FAIL || code == EN_RES) {
 		if (eif_except.retried) {
 			sprintf(buffer, "Retry\n%s\n", retried);
-			append_trace(buffer);
 		} else
 			if (eif_except.rescued) {
 				sprintf(buffer, "Rescue\n%s\n", failed);
-				append_trace(buffer);
 			} else {
 				sprintf(buffer, "Fail\n%s\n", failed);
-				append_trace(buffer);
 			}
 
-		return;
+		finished = 1;
 	}
 
-	/* We need some lookhead to exactely print retry or rescue once. We want
-	 * to print a "retry" or "rescue" if and only if the next record in the
-	 * stack (pointed at by 'top') is a retry or routine record.
-	 */
+	if (finished == 0) {
+		/* We need some lookhead to exactely print retry or rescue once. We want
+		 * to print a "retry" or "rescue" if and only if the next record in the
+		 * stack (pointed at by 'top') is a retry or routine record.
+		 */
 
-	top = eif_trace.st_bot;		/* Look ahead */
-	code = top->ex_type;
+		top = eif_trace.st_bot;		/* Look ahead */
+		code = top->ex_type;
 
 #ifdef DEBUG
-	dump_vector("\nprint_top: followed by", top);
+		dump_vector("\nprint_top: followed by", top);
 #endif
 
-	if (code == EN_FAIL || code == EN_RES) {
-		if (eif_except.retried) {
-			sprintf(buffer, "Retry\n%s\n", retried);
-			append_trace(buffer);
+		if (code == EN_FAIL || code == EN_RES) {
+			if (eif_except.retried) {
+				sprintf(buffer, "Retry\n%s\n", retried);
+			} else {
+				sprintf(buffer, "Fail\n%s\n", failed);
+			}
 		} else {
-			sprintf(buffer, "Fail\n%s\n", failed);
-			append_trace(buffer);
+			sprintf(buffer, "Pass\n%s\n", failed);
 		}
-	} else {
-		sprintf(buffer, "Pass\n%s\n", failed);
-		append_trace(buffer);
 	}
+
+	print_object_location_reason_effect(append_trace, (EIF_POINTER) eif_except.obj_id,
+			buf, exception_string(code), buffer);
 }
 
 /* Stack handling routine. The following code has been cut/paste from the one
@@ -3026,7 +3145,7 @@ rt_private void cur_print_top(void)
 	 * the routine name to 22 characters. These should be #defined--RAM, FIXME.
 	 */
 
-	char cur_buf[200];
+	char cur_buf[1024];
 	char rout_name_buffer[256];		/* To add line number at end of routine name */
 	int line_number;
 	char code = eif_except.code;	/* Exception's code */

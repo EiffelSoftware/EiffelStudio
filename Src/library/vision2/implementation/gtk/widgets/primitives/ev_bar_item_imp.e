@@ -7,7 +7,9 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class
+--XXdeferred class
+class
+	
 	EV_BAR_ITEM_IMP
 	
 inherit

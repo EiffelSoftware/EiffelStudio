@@ -21,10 +21,10 @@ inherit
 
 feature -- Status report
 
-	realized: BOOLEAN is
-			-- Is screen window realized?
+	destroyed: BOOLEAN is
+			-- Is screen window destroyed?
                 do
-                        Result := c_gtk_widget_realized (widget)
+                        Result := widget = default_pointer
  		end
 
 	insensitive: BOOLEAN is
@@ -60,20 +60,6 @@ feature -- Status setting
 			c_gtk_widget_show_children (widget)
 		end
 
-	realize is
-			-- Realize the widget
-		do
-			gtk_widget_realize (widget)
-			show
-		end
-
-	unrealize is
-		do
-                        check
-                                not_yet_implemented: False
-                        end		
-		end
-	
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
 			-- `flag'. This means that any events with an
@@ -116,7 +102,15 @@ feature -- Measurement
                 do
                         Result := c_gtk_widget_height (widget)
 		end
-
+	
+	minimum_width: INTEGER is 0
+			-- Minimum width of the widget specified by 
+			-- the underlying toolkit
+	
+	minimum_height: INTEGER is 0
+			-- Minimum height of the widget specified by 
+			-- the underlying toolkit
+	
 feature -- Resizing
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is

@@ -7,7 +7,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class
+--XX deferred class
+class
 	
 	EV_CONTAINER_IMP
 	
@@ -24,7 +25,23 @@ feature {EV_CONTAINER}
 		end
 	
 
-
+feature -- Access
+	
+	client_width: INTEGER is
+			-- Width of the client area of container
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+	
+	client_height: INTEGER is
+			-- Height of the client area of container
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
 
 
 

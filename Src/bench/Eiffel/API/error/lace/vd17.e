@@ -5,6 +5,9 @@ class VD17
 inherit
 
 	ERROR
+		redefine
+			build_explain
+		end
 
 feature
 
@@ -28,5 +31,10 @@ feature
 
 	code: STRING is "VD17";
 			-- Error code
+
+	build_explain (a_clickable: CLICK_WINDOW) is
+		do
+not in the system ?????
+		end;
 
 end

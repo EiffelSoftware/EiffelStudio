@@ -36,12 +36,18 @@ feature {NONE}
 			project_dir: PROJECT_DIR;
 			help_window: EXPLAIN_W;
 			help_file_name: STRING;
+			last_char: CHARACTER;
+			dir_name: STRING
 		do
 
 			if not project_tool.initialized then
-
 				if argument = name_chooser then
-					!!project_dir.make (name_chooser.selected_file);
+					dir_name := name_chooser.selected_file.duplicate;
+					last_char := dir_name.item (dir_name.count); 
+					if last_char = '/' then
+						dir_name.remove (dir_name.count)
+					end;
+					!!project_dir.make (dir_name);
 					if project_dir.valid then
 						make_project (project_dir)
 					else
@@ -126,7 +132,7 @@ feature
 					System.server_controler.init;
 				end;
 	
-				project_tool.set_title (name_chooser.selected_file);
+				project_tool.set_title (project_dir.name);
 				project_tool.set_initialized
 			else
 				io.error.putstring ("EiffelBench: could not retrieve project%N");

@@ -230,10 +230,16 @@ feature
 			-- Do nothing if none
 		
 		local
+			c_pos: INTEGER;
 			start_position: INTEGER
 		do
-			start_position := text_window_search_str_after (text.to_c, s.to_c);
+			c_pos := cursor_position;
+			start_position := text.search_substring (s, c_pos);
+			if start_position = c_pos then
+				start_position := text.search_substring (s, c_pos+1);
+			end;
 			if start_position >= 0 then
+				start_position := start_position - 1;
 				set_cursor_position (start_position);
 				highlight_selected (start_position, start_position + s.count);
 				found := true

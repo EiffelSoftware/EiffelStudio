@@ -60,7 +60,7 @@ feature -- dragging
 			-- Yes. (FIXME?)
 		do
 			--if not Error_handler.has_error then
-				Result := true
+				Result := class_c.clickable
 			--end
 		end
 

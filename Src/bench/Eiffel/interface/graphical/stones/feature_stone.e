@@ -34,7 +34,9 @@ feature -- dragging
 			-- Text of the feature
 		do
 			Result := normal_origin_text;
-			Result := Result.substring (start_position, end_position)
+			if (Result /= Void) then
+				Result := Result.substring (start_position, end_position)
+			end;
 		end;
 
 	click_list: ARRAY [CLICK_STONE] is do end;
@@ -43,7 +45,9 @@ feature -- dragging
 	file_name: STRING is
 			-- The one from class origin of `feature_i'
 		do
-			Result := feature_i.written_class.file_name
+			if feature_i /= Void then
+				Result := feature_i.written_class.file_name
+			end;
 		end;
  
 	set_file_name (s: STRING) is do end;

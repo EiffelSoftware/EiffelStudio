@@ -66,19 +66,18 @@ feature -- Basic operations
 			if not bit_set (internal_changes, 4) then
 				changed := internal_minimum_width /= value
 				internal_minimum_width := value
-				if not bit_set (internal_changes, 1) then
-					-- If this bit is set, it means the widget
-					-- doesn't know its minimum size, then nothing need to
-					-- be done because the parent must be already awared of it.
-					if managed then 
-						if changed and parent_imp /= Void then
+				if managed then
+					if changed then
+						if not bit_set (internal_changes, 1) and parent_imp /= Void then
 							parent_imp.notify_change (1)
-						elseif displayed then 
+						elseif displayed then
 							move_and_resize (x, y, width, height, True)
 						end
-					else
-						move_and_resize (x, y, width.max (value), height, True)
+					elseif displayed then
+						move_and_resize (x, y, width, height, True)
 					end
+				else
+					move_and_resize (x, y, width.max (value), height, True)
 				end
 			elseif displayed then
 				move_and_resize (x, y, width, height, True)
@@ -95,19 +94,18 @@ feature -- Basic operations
 			if not bit_set (internal_changes, 8) then
 				changed := internal_minimum_height /= value
 				internal_minimum_height := value
-				if not bit_set (internal_changes, 2) then
-					-- If this bit is set, it means the widget
-					-- doesn't know its minimum size, then nothing need to
-					-- be done because the parent must be already awared of it.
-					if managed then 
-						if changed and parent_imp /= Void then
+				if managed then
+					if changed then
+						if not bit_set (internal_changes, 2) and parent_imp /= Void then
 							parent_imp.notify_change (2)
 						elseif displayed then
 							move_and_resize (x, y, width, height, True)
 						end
-					else
-						move_and_resize (x, y, value, height.max (value), True)
+					elseif displayed then
+						move_and_resize (x, y, width, height, True)
 					end
+				else
+					move_and_resize (x, y, width, height.max (value), True)
 				end
 			elseif displayed then
 				move_and_resize (x, y, width, height, True)
@@ -122,77 +120,92 @@ feature -- Basic operations
 		local
 			w_cd, h_cd: BOOLEAN
 			w_ok, h_ok: BOOLEAN
-			w_ns, h_ns: BOOLEAN
 		do
-			w_ok := not bit_set (internal_changes, 4)
-			h_ok := not bit_set (internal_changes, 8)
+			-- First, we set some local variable
+ 			w_ok := not bit_set (internal_changes, 4)
+ 			h_ok := not bit_set (internal_changes, 8)
+ 
+			-- We check that we are in a coherent status.
+			check
+				-- If we come here, both of the bits are necessarily set
+				-- therefore, we chack only one.
+				same_value: bit_set (internal_changes, 1) = bit_set (internal_changes, 2)
+			end
 
-			if w_ok and h_ok then
-				w_cd := internal_minimum_width /= mw
-				h_cd := internal_minimum_height /= mh
-				internal_minimum_width := mw
-				internal_minimum_height := mh
-				w_ns := not bit_set (internal_changes, 1)
-				h_ns := not bit_set (internal_changes, 2)
-				if w_ns and h_ns then
-					if managed then
-						if parent_imp /= Void then
-							if w_cd and h_cd then
-								parent_imp.notify_change (3)
-							elseif w_cd then
-								parent_imp.notify_change (1)
-							elseif h_cd then
-								parent_imp.notify_change (2)
-							else
-								move_and_resize (x, y, width, height, True)
-							end
+			-- Then, we properly set the values and propagate the
+			-- change if necessary.
+			-- The user didn't set the minimum_width nor the minimum_height.
+ 			if w_ok and h_ok then
+ 				w_cd := internal_minimum_width /= mw
+ 				h_cd := internal_minimum_height /= mh
+ 				internal_minimum_width := mw
+ 				internal_minimum_height := mh
+ 				if managed then
+					if w_cd and h_cd then
+						if not bit_set (internal_changes, 1) and parent_imp /= Void then
+							parent_imp.notify_change (3)
 						elseif displayed then
 							move_and_resize (x, y, width, height, True)
 						end
-					else
-						move_and_resize (x, y, width.max (mw), height.max (mh), True)
-					end
-				end
-
-			elseif w_ok then
-				w_cd := internal_minimum_width /= mw
-				internal_minimum_width := mw
-				if not bit_set (internal_changes, 1) then 
-					-- If this bit is set, it means the widget
-					-- doesn't know its minimum size, then nothing need to
-					-- be done because the parent must be already awared of it.
-					if managed then
-						if w_cd and parent_imp /= Void then
+					elseif w_cd then
+						if not bit_set (internal_changes, 1) and parent_imp /= Void then
 							parent_imp.notify_change (1)
-						elseif displayed then 
+						elseif displayed then
 							move_and_resize (x, y, width, height, True)
 						end
-					else
-						move_and_resize (x, y, width.max (mw), height, True)
-					end
-				end
-
-			elseif h_ok then
-				h_cd := internal_minimum_height /= mh
-				internal_minimum_height := mh
-				if not bit_set (internal_changes, 2) then 
-					-- If this bit is set, it means the widget
-					-- doesn't know its minimum size, then nothing need to
-					-- be done because the parent must be already awared of it.
-					if managed then
-						if h_cd and parent_imp /= Void then
+					elseif h_cd then
+						if not bit_set (internal_changes, 1) and parent_imp /= Void then
 							parent_imp.notify_change (2)
 						elseif displayed then
 							move_and_resize (x, y, width, height, True)
 						end
-					else
-						move_and_resize (x, y, width, height.max (mh), True)
+					elseif displayed then
+						move_and_resize (x, y, width, height, True)
 					end
+				else
+					move_and_resize (x, y, width.max (mw), height.max (mh), True)
 				end
 
-			elseif displayed then
-				move_and_resize (x, y, width, height, True)
-			end
+			-- The user did set the minimum_height already.
+			elseif w_ok then
+				w_cd := internal_minimum_width /= mw
+				internal_minimum_width := mw
+				if managed then
+					if w_cd then
+						if not bit_set (internal_changes, 1) and parent_imp /= Void then
+							parent_imp.notify_change (1)
+						elseif displayed then
+							move_and_resize (x, y, width, height, True)
+						end
+					elseif displayed then
+						move_and_resize (x, y, width, height, True)
+					end
+				else
+					move_and_resize (x, y, width.max (mw), height, True)
+				end
+
+			-- The user did set the minimum_height already.
+			elseif h_ok then
+				h_cd := internal_minimum_height /= mh
+				internal_minimum_height := mh
+				if managed then
+					if h_cd then
+						if not bit_set (internal_changes, 2) and parent_imp /= Void then
+							parent_imp.notify_change (2)
+						elseif displayed then
+							move_and_resize (x, y, width, height, True)
+						end
+					elseif displayed then
+						move_and_resize (x, y, width, height, True)
+					end
+				else
+					move_and_resize (x, y, width, height.max (mh), True)
+				end
+
+			-- The user did set everything already.
+ 			elseif displayed then
+ 				move_and_resize (x, y, width, height, True)
+ 			end
 		end
 
 	notify_change (type: INTEGER) is
@@ -206,31 +219,41 @@ feature -- Basic operations
 		do
 			inspect type
 			when 1 then
-				if displayed then
-					compute_minimum_width
-				elseif not bit_set (internal_changes, 1) then
+				if not bit_set (internal_changes, 1) then
 					internal_changes := set_bit (internal_changes, 1, True)
-					if parent_imp /= Void then
-						parent_imp.notify_change (1)
+					if displayed then
+						compute_minimum_width
+						internal_changes := set_bit (internal_changes, 1, False)
+					else
+						if parent_imp /= Void then
+							parent_imp.notify_change (1)
+						end
 					end
 				end
 			when 2 then
-				if displayed then
-					compute_minimum_height
-				elseif not bit_set (internal_changes, 2) then
+				if not bit_set (internal_changes, 2) then
 					internal_changes := set_bit (internal_changes, 2, True)
-					if parent_imp /= Void then
-						parent_imp.notify_change (2)
+					if displayed then
+						compute_minimum_height
+						internal_changes := set_bit (internal_changes, 2, False)
+					else
+						if parent_imp /= Void then
+							parent_imp.notify_change (2)
+						end
 					end
 				end
 			when 3 then
-				if displayed then
-					compute_minimum_size
-				elseif not (bit_set (internal_changes, 1) and bit_set (internal_changes, 2)) then
+				if not (bit_set (internal_changes, 1) and bit_set (internal_changes, 2)) then
 					internal_changes := set_bit (internal_changes, 1, True)
 					internal_changes := set_bit (internal_changes, 2, True)
-					if parent_imp /= Void then
-						parent_imp.notify_change (3)
+					if displayed then
+						compute_minimum_size
+						internal_changes := set_bit (internal_changes, 1, False)
+						internal_changes := set_bit (internal_changes, 2, False)
+					else
+						if parent_imp /= Void then
+							parent_imp.notify_change (3)
+						end
 					end
 				end
 			end

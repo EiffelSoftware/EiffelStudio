@@ -14,7 +14,8 @@ inherit
 		redefine
 			lace, system, universe
 		end;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	WINDOWS
 
 feature -- Attributes
 
@@ -377,6 +378,12 @@ feature -- Automatic backup
 			!! file.make_open_write (backup_info_file_name)
 			file.putstring ("new session: ")
 			file.putbool (new_session)
+			file.new_line
+			file.putstring ("batch mode: ")
+			file.putbool (batch_mode)
+			file.new_line
+			file.putstring ("successful: ")
+			file.putbool (successfull)
 			file.new_line
 			file.putstring ("Cluster table:")
 			file.new_line

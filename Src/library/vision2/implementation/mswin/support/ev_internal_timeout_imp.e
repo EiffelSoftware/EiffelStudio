@@ -55,9 +55,11 @@ feature -- Removal
 			-- be executed.
 		do
 			kill_timer (id)
-			timeouts.remove (id)
-			if timeouts.is_empty then
-				timeouts := Void
+			if not (timeouts = Void) then
+				timeouts.remove (id)
+				if timeouts.is_empty then
+					timeouts := Void
+				end
 			end
 		end
 

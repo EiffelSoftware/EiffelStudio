@@ -154,12 +154,6 @@ feature -- Basic operations
 			Result.append (Tab_tab)
 			if an_argument_count > 0 then
 				Result.append ("CoTaskMemFree (tmp_value);%N%T%T%T%T%T")
-				Result.append ("for (i = 0; i < " + 
-								an_argument_count.out + "; i++)%N%T%T%T%T%T%
-								%{%N%T%T%T%T%T%T%
-									%VariantClear (&(tmp2_value [i]));%N%T%T%T%T%T%
-								%}%N%T%T%T%T%T")
-				Result.append ("CoTaskMemFree (tmp2_value);%N%T%T%T%T%T")
 			end
 			Result.append (an_additional_string)
 			Result.append (New_line_tab_tab_tab)
@@ -231,7 +225,7 @@ feature -- Basic operations
 				Result.append (a_variable_name)
 				Result.append (Space_equal_space)
 				Result.append (a_variant_name)
-				Result.append (Dot)
+				Result.append ("->")
 				Result.append (variant_field_name)
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
@@ -295,7 +289,7 @@ feature -- Basic operations
 				Result.append (a_variable_name)
 				Result.append (Space_equal_space)
 				Result.append (a_variant_name)
-				Result.append (Dot)
+				Result.append ("->")
 				Result.append (variant_field_name)
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
@@ -359,11 +353,11 @@ feature -- Basic operations
 			create Result.make (1000)
 
 			Result.append ("if (" + a_variant_name + 
-						".vt != " + visitor.vt_type.out + ")%N%T%T%T%T{%N%T%T%T%T%T")
+						"->vt != " + visitor.vt_type.out + ")%N%T%T%T%T{%N%T%T%T%T%T")
 			
-			Result.append ("hr = VariantChangeType (&(" + 
-							a_variant_name +"), " +
-							"&(" + a_variant_name + "), " +
+			Result.append ("hr = VariantChangeType (" + 
+							a_variant_name +", " +
+							"" + a_variant_name + ", " +
 							"VARIANT_NOUSEROVERRIDE, " + 
 							visitor.vt_type.out + ");%N%T%T%T%T%T")
 
@@ -399,11 +393,11 @@ feature -- Basic operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 				
-				Result.append ("if (" + a_variant_name + ".vt = VT_UNKNOWN)")
+				Result.append ("if (" + a_variant_name + "->vt = VT_UNKNOWN)")
 				Result.append (get_interface_pointer 
 					(Iunknown, a_variable_name, a_variant_name, Variant_punkval, counter))
 				
-				Result.append ("else if (" + a_variant_name + ".vt = VT_DISPATCH)")
+				Result.append ("else if (" + a_variant_name + "->vt = VT_DISPATCH)")
 				Result.append (get_interface_pointer 
 					(Idispatch, a_variable_name, a_variant_name, Variant_pdispval, counter))
 				
@@ -449,11 +443,11 @@ feature -- Basic operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
-				Result.append ("if (" + a_variant_name + ".vt = (VT_UNKNOWN |VT_BYREF))")
+				Result.append ("if (" + a_variant_name + "->vt = (VT_UNKNOWN |VT_BYREF))")
 				Result.append (get_interface_pointer_pointer 
 					(Iunknown, a_variable_name, a_variant_name, Variant_ppunkval, counter))
 				
-				Result.append ("else if (" + a_variant_name + ".vt = (VT_DISPATCH |VT_BYREF))")
+				Result.append ("else if (" + a_variant_name + "->t = (VT_DISPATCH |VT_BYREF))")
 				Result.append (get_interface_pointer_pointer 
 					(Idispatch, a_variable_name, a_variant_name, Variant_ppdispval, counter))
 				
@@ -487,7 +481,7 @@ feature -- Basic operations
 					Result.append (Open_parenthesis)
 				end
 				Result.append (a_variant_name)
-				Result.append (Dot)
+				Result.append ("->")
 				Result.append (vartype_namer.variant_field_name (visitor))
 				if not (visitor.vt_type = Vt_variant) then
 					Result.append (Close_parenthesis)
@@ -508,7 +502,7 @@ feature -- Basic operations
 				Result.append (a_variable_name)
 				Result.append (Space_equal_space)
 				Result.append (a_variant_name)
-				Result.append (Dot)
+				Result.append ("->")
 				Result.append (vartype_namer.variant_field_name (visitor))
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)

@@ -63,10 +63,7 @@ feature
 			-- Check Result and argument types 
 		local
 			actual_type: TYPE_A;	
-			actual_class_type: CL_TYPE_A;
 			good_constant_type: BOOLEAN;
-			vqmc: VQMC;
---			vqmc: VQMC;
 			vqmc2: VQMC2;
 		do
 			old_check_types (feat_tbl);

@@ -7,7 +7,7 @@ inherit
 
 	CLUSTER_ERROR
 		redefine
-			trace
+			build_explain
 		end
 
 feature
@@ -29,16 +29,15 @@ feature
 			root_class_name := s;
 		end;
 
-	trace is
-			-- Debug purpose
+	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			io.error.putstring ("code VD29: the root class ");
-			io.error.putstring (root_class_name);
-			io.error.putstring (" is in two different clusters: ");
-			io.error.putstring (cluster.cluster_name);
-			io.error.putstring (" and ");
-			io.error.putstring (second_cluster_name);
-			io.error.new_line;
+			a_clickable.put_string ("%Tthe root class ");
+			a_clickable.put_string (root_class_name);
+			a_clickable.put_string (" is in two different clusters: ");
+			a_clickable.put_string (cluster.cluster_name);
+			a_clickable.put_string (" and ");
+			a_clickable.put_string (second_cluster_name);
+			a_clickable.new_line;
 		end;
 
 end

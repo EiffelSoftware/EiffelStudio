@@ -442,6 +442,8 @@ feature -- Check
 		require
 			in_pass3
 		local
+			type_a: TYPE_A;
+			a_class: CLASS_C;
 			body: FEATURE_AS;
 				-- Body of the feature
 		do
@@ -449,6 +451,27 @@ feature -- Check
 			body := Body_server.item (body_id);
 				-- make the type check
 			body.type_check;
+			type_a ?= type;
+			if type_a /= Void then
+				a_class := type_a.associated_class;
+				if a_class /= Void then
+					context.supplier_ids.add_supplier (a_class.id);
+				end;
+			end;
+			if has_arguments then
+				from
+					arguments.start
+				until
+					arguments.offright
+				loop
+					type_a ?= arguments.item;
+					a_class := type_a.associated_class;
+					if a_class /= Void then
+						context.supplier_ids.add_supplier (a_class.id);
+					end;
+					arguments.forth;
+				end;
+			end;
 		end;
 
 	in_pass3: BOOLEAN is
@@ -669,7 +692,7 @@ feature -- Signature checking
 					vrfa.set_class_id (written_in);
 					vrfa.set_body_id (body_id);
 					vrfa.set_argument_name (arg_id);
-					Error_handler.insert_error (vrfa);
+					Error_handler.insert_warning (vrfa);
 				end;
 				arg_names.forth
 			end;
@@ -983,7 +1006,7 @@ feature -- Signature checking
 			-- Has `other' the same signature than Current ?
 		require
 			good_argument: other /= Void;
-			smae_feature_names: feature_name.is_equal (other.feature_name);
+			same_feature_names: feature_name.is_equal (other.feature_name);
 		local
 			i, nb: INTEGER;
 		do

@@ -7,7 +7,7 @@ inherit
 
 	CLUSTER_ERROR
 		redefine
-			trace
+			build_explain
 		end
 
 feature
@@ -15,12 +15,11 @@ feature
 	code: STRING is "VDCN";
 			-- Error code
 
-	trace is
-			-- Debug purpose
+	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			io.error.putstring ("code VDCN: cluster ");
-			io.error.putstring (cluster.cluster_name);
-			io.error.new_line;
+			a_clickable.put_string ("%TCluster ");
+			a_clickable.put_string (cluster.cluster_name);
+			a_clickable.new_line;
 		end;
 
 end

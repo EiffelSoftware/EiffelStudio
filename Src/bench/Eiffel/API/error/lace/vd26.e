@@ -6,13 +6,13 @@ inherit
 
 	CLUSTER_ERROR
 		rename
-			trace as basic_trace
+			build_explain as basic_build_explain
 		end;
 	CLUSTER_ERROR
 		redefine
-			trace
+			build_explain
 		select
-			trace
+			build_explain
 		end
 
 feature
@@ -29,12 +29,12 @@ feature
 	code: STRING is "VD26";
 			-- Error code
 
-	trace is
+	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			basic_trace;
-			io.error.putstring ("\tclass name: ");
-			io.error.putstring (class_name);
-			io.error.new_line;
+			basic_build_explain (a_clickable);
+			a_clickable.put_string ("%Tclass name: ");
+			a_clickable.put_string (class_name);
+			a_clickable.new_line;
 		end;
 
 end

@@ -32,10 +32,14 @@ feature
 			-- Set of server file ids under the control of the
 			-- current server
 
+	removed_ids: LINKED_SET [INTEGER];
+			-- Set of item ids removed from the server
+
 	make is
 			-- Initialization
 		do
 			!!file_ids.make;
+			!!removed_ids.make;
 			set_current_id;
 			tbl_make (Chunk);
 		end;
@@ -122,19 +126,36 @@ feature
 
 	remove (an_id: INTEGER) is
 			-- Remove information of id `an_id'.
+			-- Actually, just put it in a list
+		do
+			removed_ids.add (an_id);
+		end;
+
+	remove_from_disk is
+			-- Perform the real remove on disk
 		local
+			an_id: INTEGER;
 			old_info: SERVER_INFO;
 			old_server_file: SERVER_FILE;
 		do
-			old_info := tbl_item (an_id);
-			if old_info /= Void then
-				old_server_file := Server_controler.file_of_id (old_info.id);
-				old_server_file.remove_occurence;
-				if old_server_file.occurence = 0 then
-					file_ids.remove_item (old_server_file.id);
+			from
+				removed_ids.start
+			until
+				removed_ids.after
+			loop
+				an_id := removed_ids.item;
+				old_info := tbl_item (an_id);
+				if old_info /= Void then
+					old_server_file := Server_controler.file_of_id (old_info.id);
+					old_server_file.remove_occurence;
+					if old_server_file.occurence = 0 then
+						file_ids.remove_item (old_server_file.id);
+					end;
+					tbl_remove (an_id);
 				end;
-				tbl_remove (an_id);
+				removed_ids.forth
 			end;
+			removed_ids.wipe_out;
 		end;
 
 	item (an_id: INTEGER): T is
@@ -231,6 +252,9 @@ feature
 			other_cache: CACHE [T];
 			old_server_file: SERVER_FILE;
 		do
+			removed_ids.merge (other.removed_ids);
+			remove_from_disk;
+			other.remove_from_disk;
 			other.flush;
 			from
 				other.start

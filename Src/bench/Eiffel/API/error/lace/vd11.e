@@ -6,15 +6,15 @@ inherit
 
 	VD10
 		rename
-			trace as vd10_trace
+			build_explain as vd10_build_explain
 		redefine
 			code
 		end;
 	VD10
 		redefine
-			code, trace
+			code, build_explain
 		select
-			trace
+			build_explain
 		end;
 
 feature
@@ -31,13 +31,12 @@ feature
 	code: STRING is "VSCN";
 			-- Error code
 
-	trace is
-			-- Debug purpose
+	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			vd10_trace;
-			io.error.putstring ("\tclass: ");
-			io.error.putstring (a_class.class_name);
-			io.error.new_line;
+			vd10_build_explain (a_clickable);
+			a_clickable.put_string ("%Tclass: ");
+			a_clickable.put_string (a_class.class_name);
+			a_clickable.new_line;
 		end;
 
 end

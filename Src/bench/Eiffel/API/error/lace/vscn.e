@@ -7,7 +7,7 @@ inherit
 
 	CLUSTER_ERROR
 		redefine
-			trace
+			build_explain
 		end
 
 feature
@@ -33,20 +33,19 @@ feature
 	code: STRING is "VSCN";
 			-- Error code
 
-	trace is
-			-- Debug purpose
+	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			io.error.putstring ("code VSCN: cluster ");
-			io.error.putstring (cluster.path);
-			io.error.putstring ("%N%Tfirst class ");
-			io.error.putstring (first.class_name);
-			io.error.putstring (" in ");
-			io.error.putstring (first.cluster.path);
-			io.error.putstring ("%N%Tsecond class ");
-			io.error.putstring (second.class_name);
-			io.error.putstring (" in ");
-			io.error.putstring (second.cluster.path);
-			io.error.new_line;
+			a_clickable.put_string ("%TCluster ");
+			a_clickable.put_string (cluster.path);
+			a_clickable.put_string ("%N%Tfirst class ");
+			a_clickable.put_string (first.class_name);
+			a_clickable.put_string (" in ");
+			a_clickable.put_string (first.cluster.path);
+			a_clickable.put_string ("%N%Tsecond class ");
+			a_clickable.put_string (second.class_name);
+			a_clickable.put_string (" in ");
+			a_clickable.put_string (second.cluster.path);
+			a_clickable.new_line;
 		end;
 
 end

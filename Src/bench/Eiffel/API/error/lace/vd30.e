@@ -6,7 +6,7 @@ inherit
 
 	ERROR
 		redefine
-			trace
+			build_explain
 		end;
 
 feature
@@ -23,13 +23,12 @@ feature
 	code: STRING is "VD30";
 			-- Error code
 
-	trace is
-		-- Debug purpose
+	build_explain (a_clickable: CLICK_WINDOW) is
 		do
-			io.error.putstring ("code VD30: the root class ");
-			io.error.putstring (root_class_name);
-			io.error.putstring (" cannot be found in the system");
-			io.error.new_line;
+			a_clickable.put_string ("%TThe root class ");
+			a_clickable.put_string (root_class_name);
+			a_clickable.put_string (" cannot be found in the system");
+			a_clickable.new_line;
 		end;
 
 end

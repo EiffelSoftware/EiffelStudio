@@ -1067,6 +1067,7 @@ feature -- Class initialization
 			parent_c: PARENT_C;
 			ve04: VE04;
 			old_is_expanded: BOOLEAN;
+			old_is_deferred: BOOLEAN;
 		do
 				-- Check if obsolete clause was present.
 				-- (Void if none was present)

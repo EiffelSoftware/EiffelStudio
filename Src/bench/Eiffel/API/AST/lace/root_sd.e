@@ -111,8 +111,9 @@ feature -- Initialization
 					if creation_procedure_name /= Void then
 						creation_name := creation_procedure_name.duplicate;
 						creation_name.to_lower;
-						System.set_creation_name (creation_name);
 					end;
+						-- Void string if no creation routine
+					System.set_creation_name (creation_name);
 				end;
 			end;
 				-- Check sum error

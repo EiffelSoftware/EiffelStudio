@@ -1088,7 +1088,7 @@
 					<File Id="estudio.exe" Name="estudio.exe" KeyPath="yes" />
 					<ProgId Id="estudio.project" Description="EiffelStudio project">
 						<Extension Id="epr">
-							<Verb Id="epr" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\windows\bin\estudio.exe&quot;" />
+							<Verb Id="epr" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
 						</Extension>
 					</ProgId>
                   <Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="EIFFEL~1.2" LongName="EiffelStudio 5.6" Target="[#estudio.exe]" Description="EiffelStudio development environment" Hotkey="0"  Show="normal" />

@@ -5,190 +5,185 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>Multi-threading for O-O development</title>
+<title>Multithreading for O-O development</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
 <link rel="stylesheet" href="../styles/tech.css" type="text/css">
 <meta name="Microsoft Border" content="t, default">
 </head>
 
-<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr>
-    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
-      Software Engineering</font></b></td>
-    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Multi-threading for O-O development</font></b></td>
-  </tr>
-  <tr>
-    <td colspan="2" valign="top" width="100%">
-<p align="center"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
-<hr>
-
-    </td>
-  </tr>
-</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="5" cellspacing="0" border="0">
+<body><table cols="1" cellpadding="5" cellspacing="0" border="0">
 <tr><td>
-<pre> 1  INTRODUCTION
+<pre><a name="index"></a> 1  <a href="#INTRODUCTION">INTRODUCTION</a></pre>
+<pre> 2  <a href="#MANIFEST">MANIFEST</a>
 
- 2  SPECIFICATION
+ 3  <a href="#OVERVIEW">OVERVIEW OF THE CLASSES IN EIFFEL-THREAD</a></pre>
+<pre> 4  <a href="#COMPILING">COMPILING MULTITHREADED APPLICATION IN EIFFEL</a></pre>
+<pre>	4.1 <a href="#SETTINGS">SETTINGS</a>
 
- 3  OVERVIEW OF THE CLASSES IN EIFFEL-THREAD:
+	4.2 <a href="#COMPILATION">COMPILATION</a>
 
-	3.1 SETTINGS
+  	4.3 <a href="#EXTERNAL">EXTERNAL C FILES</a>
 
-	3.2 COMPILATION
+ 5  <a href="#HOW_TO">HOW TO USE THE EIFFELTHREAD LIBRARY</a>&nbsp;
 
-  	3.3  EXTERNAL C FILES:
+	5.1  <a href="#THREAD">Creating and launching threads: the CLASS THREAD (deferred</a>)
 
- 4  HOW TO USE THE EIFFEL-THREAD LIBRARY&nbsp;
+	5.2  <a href="#PROXY">Sharing objects between threads: the class PROXY</a>
 
-	4.1  Creating and launching threads: the CLASS THREAD (deferred)
+	5.3  <a href="#MUTEX">The class MUTEX</a>
 
-	4.2  Sharing objects between threads: the class PROXY
+	5.4  <a href="#SEMAPHORE">The class SEMAPHORE</a>
 
-	4.3  The class MUTEX
+	5.5  <a href="#CONDITION_VARIABLE">The class CONDITION_VARIABLE</a>
 
-	4.4  The class SEMAPHORE
+	5.6  <a href="#OBJECT_OWNER">The class OBJECT_OWNER</a>
 
-	4.5  The class CONDITION_VARIABLE
+	5.7  <a href="#miscellaneous">Miscellaneous classes</a>
 
-	4.6  Disposing C-thread object: class OBJECT_OWNER
+	5.8  <a href="#THREAD_CONTROL">Controlling execution: THREAD_CONTROL</a>
 
-	4.7  Miscellaneous classes
+ 6  <a href="#ONCE_FEATURE">ONCE FEATURE IN MULTI-THREADED MODE</a>
 
-	4.8  Controlling execution: THREAD_CONTROL
+	6.1  <a href="#manipulating_once_features">Manipulating Once features in multithreaded mode</a>
 
- 5  ONCE FEATURE IN MULTI-THREADED MODE
+	6.2  <a href="#once_per_process_thread">Once per Process/Thread</a>
 
-	5.1  Manipulating Once features in multi-threaded mode
+	6.3  <a href="#using_once_per_process_thread">Using Once per process/thread features in EIFFEL</a>&nbsp;
 
-	5.2  Once per Process/Thread
-
-	5.3  Using Once per process/thread features in EIFFEL&nbsp;
-
-	5.4  Limitations
-</pre>
+	6.4  <a href="#limitations">Limitations</a>
+ <a href="#FAQ">FAQ</a></pre>
 <p>
 
 &nbsp;
 
-<h1>1  INTRODUCTION</h1>
+<h1>1<a name="INTRODUCTION">&nbsp; INTRODUCTION</a></h1>
 <p>
 
-	Multi-threaded applications provide a flexible, exciting way of utilizing the power of modern
-computer systems. ISE Eiffel supports a powerful multi-threaded model, simple and easy to use.&nbsp;
+	Multithreaded applications provide a flexible, exciting way of utilizing the power of modern
+computer systems. ISE Eiffel supports a powerful multithreaded model, fast and easy to
+    use. The EiffelThread library is mapped to the C thread standard libraries:
+    it supports Windows, POSIX-like and Unix International Threads.
 <p>
 
-This document describes the EiffelThread library. EiffelThread is included in all current versions of EiffelBench, the Eiffel
-development environment, for Windows, Unix and Linux.&nbsp;
+This document describes the EiffelThread library. EiffelThread is supported by the ISE compiler and run-time on Windows, Linux, Solaris, SGI, VxWorks, LynxOS, CRAY and Unixware.
 <p>
 
-&nbsp;
+<a href="#index">Back to index</a>
 <h1>
 
-2  SPECIFICATION</h1>
+2 <a name="MANIFEST">MANIFEST</a></h1>
 <p>
 
-The Eiffel implementation of thread is located in $EIFFEL4/library/thread. It contains the classes :
+The EiffelThread library is located in $EIFFEL4/library/thread. It contains the classes :
 <p>
 
-	- object.owner.e&nbsp;<br>
-	- condition_variable.e&nbsp;<br>
-	- mutex.e&nbsp;<br>
-	- object_control.e&nbsp;<br>
-	- thread.e&nbsp;<br>
+	- <a href="#OBJECT_OWNER"> object.owner.e</a>&nbsp;<br>
+	- <a href="#CONDITION_VARIABLE"> condition_variable.e</a>&nbsp;<br>
+	- <a href="#MUTEX"> mutex.e</a>&nbsp;<br>
+	- <a href="#OBJECT_CONTROL"> object_control.e</a>&nbsp;<br>
+	- <a href="#THREAD"> thread.e</a>&nbsp;<br>
 	- precomp.e&nbsp;<br>
-	- proxy.e&nbsp;<br>
-	- semaphore.e&nbsp;<br>
-	- thread_attributes.e&nbsp;<br>
-	- thread_control.e&nbsp;
+	- <a href="#PROXY"> proxy.e</a>&nbsp;<br>
+	- <a href="#SEMAPHORE"> semaphore.e</a>&nbsp;<br>
+	- <a href="#THREAD_ATTRIBUTES"> thread_attributes.e</a>&nbsp;<br>
+	- <a href="#THREAD_CONTROL"> thread_control.e</a>&nbsp;
 <p>
 
-The thread standard interfaces supported for each platforms are:
-<p>
-
-	- Windows: Windows threads&nbsp;<br>
-	- Solaris: Solaris threads (threads not supported on sparc) ~POSIX threads&nbsp;<br>
-	- Linux: Linuxthreads (POSIX threads)&nbsp;<br>
-	- SGI/HP-UX: POSIX threads (not implemented on hp9000 yet)&nbsp;<br>
-	- VXWORKS: VXworks threads&nbsp;<br>
-	- Cray unicos: POSIX thread&nbsp;
-<p>
-
-&nbsp;
+<a href="#index">Back to index</a>
 <h1>
 
-3  OVERVIEW OF THE CLASSES IN EIFFEL-THREAD:</h1>
+3 <a name="OVERVIEW">  OVERVIEW OF THE CLASSES IN EIFFELTHREAD</a></h1>
 <p>
 
-	THREAD (deferred)
+    <a href="#THREAD">
+
+	THREAD</a> (deferred)
 <p>
 
 	  - Description : class defining an Eiffel thread.<br>
-          - Features    : thread_id, launch, launch_with_attributes, exit.
+          - Features    :make,&nbsp; launch, launch_with_attributes, exit.
 <p>
 
-	THREAD_ATTRIBUTES
+    <a href="#THREAD_ATTRIBUTES">
+
+	THREAD_ATTRIBUTES</a>
 <p>
 
 	  - Description : class defining thread attributes. Allows the user to set priority, scheduling policy and detach state of the
 thread upon creation.<br>
-	  - Features    : set_priority, set_policy, set_detached.
+	  - Features    : make, set_priority, set_policy, set_detached.
 <p>
 
-	THREAD_CONTROL
+    <a href="#THREAD_CONTROL">
+
+	THREAD_CONTROL</a>
 <p>
 
 	  - Description : control over thread execution.<br>
-	  - Features    : yield, join_all, join, native_join.
+	  - Features    :&nbsp; make, yield, join_all, join, native_join, exit,
+last_created_thread, get_current_id.
 <p>
 
-	SEMAPHORE
+    <a href="#SEMAPHORE">
+
+	SEMAPHORE</a>
 <p>
 
 	  - Description : semaphore synchronization object, allows threads to access global data through critical sections.<br>
-	  - Features    : post, wait, trywait.
+	  - Features    : make, post, wait, trywait, is_set, destroy
 <p>
 
-	CONDITION_VARIABLE
+    <a href="#CONDITION_VARIABLE">
+
+	CONDITION_VARIABLE</a>
 <p>
 
 	  - Description : class describing a condition variable.<br>
 	  - Features    : wait, signal, broadcast.
 <p>
 
-	MUTEX<br>
+    <a href="#MUTEX">
+
+	MUTEX</a><br>
 	  - Description : mutex synchronization object, allows threads to access global data through critical sections.<br>
-	  - Features    : is_set, trylock, has_locked, lock, unlock, destroy.
+	  - Features    : make, is_set, trylock, has_locked, lock, unlock, destroy.
 <p>
 
-	PROXY
+    <a href="#PROXY">
+
+	PROXY</a>
 <p>
 
 	  - Description : indirection proxy allowing share of objects between threads, without having the garbage collectors intercollect
 each-other.<br>
-	  - Features    : make, put, item, is_set.
+	  - Features    : make, item, is_set.
 <p>
 
-	OBJECT_OWNER
+    <a href="#OBJECT_OWNER">
+
+	OBJECT_OWNER</a>
 <p>
 
 	  - Description : class meant to record which thread has created a certain object so that another thread can't call its dispose routine.<br>
 	  - Features    : record_owner, has_owner, thread_is_owner.
 <p>
 
-OBJECT_CONTROL
+<a href="#OBJECT_CONTROL">
+
+OBJECT_CONTROL</a>
 <p>
 
 	  - Description : control over objects meant to be used within different threads.<br>
 	  - Features    : freeze, unfreeze.
 <p>
 
-&nbsp;
+<a href="#index">Back to index</a>
 <h1>
 
-3  COMPILING MULTITHREADED APPLICATION IN EIFFEL</h1>
+4 <a name="COMPILING">COMPILING MULTITHREADED APPLICATION IN EIFFEL</a></h1>
 <h2>
 
-   3.1 SETTINGS</h2>
+   4.1 <a name="SETTINGS"> SETTINGS</a></h2>
 <p>
 
 	- Add the option multithreaded(yes) in your ace file.
@@ -200,30 +195,27 @@ OBJECT_CONTROL
 	- If you have no multithreaded precompiled library, check that&nbsp;the cluster thread is in your ace file:<br>
 		$EIFFEL4/library/thread
 <p>
+	- When using external C libraries, be sure that there are MT-safe: on the platform where the Eiffel Threads 
+	are available, the Mel, Wel and Net multithreaded libraries can be recognized with their `mt' prefix.
+<p>
 
-	+ Note that you have to put it systematically in your ace file in case you would like to freeze or finalized your system.
+    <a href="#index">Back to index</a>
 <h2>
 
-   3.2 COMPILATION</h2>
+   4.2 <a name="COMPILATION"> COMPILATION</a></h2>
+<p>
+	Just launch the compilation: the ISE compiler will generate and link the multithreaded executable.
+	
 <p>
 
-	The compilation of the generated C-code should be done with the multithreaded flags: mtflags&nbsp;
-<p>
-
-	- On windows : -D_REENTRANT -MT -DEIF_THREADS<br>
-	- On solaris : -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS
-<p>
-
-	  And the link with -lthread.
-<p>
-
-	(the flags -D_REENTRANT is not required, but it defines a new entry for stdout and errno).&nbsp;
+    <a href="#index">Back to index</a>
 <h2>
 
-   3.3  EXTERNAL C FILES:</h2>
+   4.3 <a name="EXTERNAL">  EXTERNAL C FILES</a></h2>
 <p>
 
-	- The C files you link with a multithreaded Eiffel application are bound to BE COMPILED IN MULTI-THREADED MODE either. Particularly, you should
+	- The C files that you link against a multithreaded Eiffel application must
+    ALSO&nbsp; BE COMPILED IN MULTI-THREADED MODE. Particularly, you should
 follow some basic guidelines.
 <p>
 
@@ -231,32 +223,33 @@ follow some basic guidelines.
 <p>
 
 	- Check what you are importing is safe or not: you cannot arbitrarily enter non-threaded code in a threaded program. Check your include files,
-and libraries you use for the linking, if they could be used in mt mode.
-<p>
+and libraries you use for the linking, if they could be used in
+    multithreaded&nbsp; mode.<p>
 
-	- Please compile your files with the flag -D_REENTRANT (it defines a new entry for stdout and errno). Program using TLI or libnsl are bound to
-be compiled with this flag (redefines _t_errno). Either be sure -D_REENTRANT is defined before any header file is included.
+	- If you are using CECIL in multithreaded mode, you must compile your C
+files with the same defined symbols as those used to compile the generated
+    C-code in multithreaded mode
 <p>
 
 	- Threaded code can safely refer to unsafe code ONLY from the initial thread.
 <p>
 
-	Note: if you use the libraries net and MEL in mt mode, you should use libmtnet.a
-and libmtmel.a. When using MEL, you have to be aware that Motif1.2 is not threaded-safe
-(i.e not reentrant). Motif2.0 is mt-safe.
+	Note: if you use the libraries Net and MEL in multithreaded mode, you should use libmtnet.a
+and libmtmel.a. When using MEL, you have to be aware that Motif 1.2 is not threaded-safe
+(i.e not reentrant). Motif 2.x is threaded-safe.
 <p>
 
-&nbsp;
+<a href="#index">Back to index</a>
 <h1>
 
-4   HOW TO USE THE EIFFEL-THREAD LIBRARY&nbsp;</h1>
+5 <a name="HOW_TO">HOW TO USE THE EIFFELTHREAD LIBRARY</a>&nbsp;</h1>
 <h2>
 
-   4.1  Creating and launching threads: the CLASS THREAD (deferred)</h2>
+   5.1 <a name="THREAD">  Creating and launching threads: the CLASS THREAD (deferred)</a></h2>
 <p>
 
 	- The class of the thread object you want to create should inherit&nbsp;from the THREAD class.<br>
-	- Your thread is represented by a class which inherit from THREAD (deferred class).<pre>	class
+	- Your thread is represented by a class which inherits from THREAD (deferred class).<pre>	class
 		MY_THREAD
 	inherit
 		THREAD
@@ -272,10 +265,10 @@ and libmtmel.a. When using MEL, you have to be aware that Motif1.2 is not thread
 	end --class MY_THREAD
 </pre>
 
-  	- Creating a thread, it is like creating an Eiffel object:<pre>	my_thread: MY_THREAD
-		-- MY_THREAD inherit from THREAD and define
+  	- Creating a thread is like creating an Eiffel object:<pre>	my_thread: MY_THREAD
+		-- MY_THREAD inherits from THREAD and defines
 		-- the deferred procedure `execute'
-	!! my_thread (or my_thread.make if there is a creation feature).</pre>
+	create my_thread (or my_thread.make if there is a creation feature).</pre>
 
 	- Note: - you have created a thread object but not yet launched it.<br>
   		- to run the thread, use the feature `launch' from THREAD.<pre>	my_thread.launch</pre>
@@ -284,163 +277,173 @@ and libmtmel.a. When using MEL, you have to be aware that Motif1.2 is not thread
 it in MY_THREAD.&nbsp;
 <p>
 
-  	- On the C side, a C-thread will be created and launched.
+  	- On the C side, a C thread will be created and launched.
 <p>
 
-   	IMPORTANT: Do not forget to put join_all and the end of the object that created the threads if you do not want
-the father to die before its children threads, otherwise the execution of the children will be stopped too.
+   	IMPORTANT: you may call `join_all' and the end of the exceution of the creator thread if you do not want
+it to die before its child threads, otherwise they may prematurily terminate.
+<p>
+
+    <a href="#index">Back to index</a>
 <h2>
 
-   4.2  Sharing objects between threads: the class PROXY</h2>
+   5.2 <a name="PROXY">  Sharing objects between threads: the class PROXY</a></h2>
 <p>
 
-	- A critical problem in programming multithreaded application is the management of objects shared between several threads: the threads&nbsp;cannot access to these objects at the same time.
-    CONDITION_VARIABLE, MUTEX, SEMAPHORE have been implemented in this purpose.&nbsp;
+	- A recurrent problem while programming multithreaded application is the management of objects shared between several threads: the threads&nbsp;cannot access to these objects at the same time.
+    the synchronization tools <a href="#CONDITION_VARIABLE">CONDITION_VARIABLE</a>,
+    <a href="#MUTEX">MUTEX</a>, <a href="#SEMAPHORE"> SEMAPHORE</a> are implemented in this purpose.&nbsp;
 <p>
 
-	- An other problem specific to Eiffel lies on the Eiffel GC.&nbsp;When a thread dies, its objects are reclaimed by the run-time,
-    and we do not want it to collect the shared objects which are likely to<br>
-	  be used by other threads. Hence, we need an object called proxy to encapsulate the shared object so that the proxy  will be
-    collected instead. A proxy must not be shared and is specific to a thread. The PROXY class was expanded before 4.2, it is not any longer.&nbsp;
+	- An other problem specific to Eiffel lies on the Eiffel Garbage Collector (GC).&nbsp; Eiffel has one GC per thread: the Eiffel Threads do not interact during allocation and collection. This implies that an Eiffel object cannot be shared easily between thread, since each Eiffel GC moves and collect asynchronously the objects. To share an object between thread, you must create a proxy object, which encapsulates it. Then, you can share the object by passing the proxy to the other thread and access it with the function `item'. 
 <p>
 
 	- To declare a proxy of object SHARED_TYPE:<pre>	my_proxy: PROXY [SHARED_TYPE]</pre>
 
-	- To create it: ( be sure your object `my_item' is already created. )<pre>	!! my_proxy.put (my_item)</pre>
+	- To create it: (be sure your object `my_item' is already created. )<pre>	create my_proxy.put (my_item)</pre>
 
 	- During the execution of your thread (take it literally: it means when&nbsp;the procedure execute is running), you will access the shared object
     throughout the proxy:<pre>	`my_proxy.item' corresponds to the encapsulated shared object.</pre>
 
-  	NOTE:
-<p>
-
-	  a direct consequence of this mechanism is that encapsulating a pointer to a C object is not systematically necessary because the thread
-    duplicates the pointer to this C object and not the C object itself.&nbsp;
-<p>
-
-    That's to say we do not manipulate a copy but the original itself.&nbsp;Note that when reclaiming the thread we have to be sure that the&nbsp;C object will be reclaimed only once. This is the reason why the class&nbsp;OBJECT_OWNER has been implemented.&nbsp;
+  	NOTE:<p>When a THREAD object is launched, it is duplicated. The new thread
+uses this copy as the root object for&nbsp; its execution. The THREAD object in
+the father thread and in the child thread are two different objects.&nbsp;
 <p>
 
   	- What kind of object can we put into a PROXY?
 <p>
 
-	  For the moment only references. If you want to put an expanded object, you have to pass its reference (integer_ref, boolean_ref...). If you
-    want to pass a special object (instanced by a generic class you are not allowed to resized it after putting it into a proxy (pb with freeze).
+	  For the moment only flat Eiffel objects, i.e any Eiffel objects which do not
+contain any sub-references. You cannot put any expanded object. If you want to share an object of basic type, use INTEGER_REF, BOOLEAN_REF, POINTER_REF, CHARACTER_REF, BIT_REF, DOUBLE_REF, or REAL_REF instead. 
 <p>
 
-	  There is no need to use proxy to shared a MUTEX, a CONDITION_VARIABLE&nbsp;or a SEMAPHORE.
+	  There is no need to use a proxy to share an instance of <a href="#MUTEX">MUTEX</a>,  <a href="#CONDITION_VARIABLE"> CONDITION_VARIABLE</a>&nbsp;or 
+      <a href="#SEMAPHORE">SEMAPHORE</a>.
+<p>
+
+      <a href="#index">Back to index</a>
 <h2>
 
-   4.3  The class MUTEX</h2>
+   5.3 <a name="MUTEX">  The class MUTEX</a></h2>
 <p>
 
-	- The implementation of mutex is based like most of the Eiffelthread&nbsp;object on the C-thread library provided on each platforms that allow
-    this.&nbsp;<br>
-	- Then, `lock' `unlock' `make' ... call the C-functions implemented in the C-threads library.
+    The implementation of the class MUTEX is mapped on the C standard thread
+    library.&nbsp;An instance of class MUTEX can be shared between different
+    thread without putting it into a PROXY object.
 <p>
 
-	- my_mutex.pointer is the pointer to the C-corresponding mutex of my_mutex.
+	- my_mutex.pointer is the pointer to the nested C mutex of my_mutex.
 <p>
 
-	- declaration of the mutex :<pre>	my_mutex: MUTEX</pre>
+	- Declaration of the mutex :<pre>	my_mutex: MUTEX</pre>
 
 	- Creation of mutex :<pre>	create my_mutex.make</pre>
-    	- Locking mutex :&nbsp;<pre>	my_mutex.lock</pre>
+    	- Locking&nbsp; the mutex :&nbsp;<pre>	my_mutex.lock</pre>
 
-    	- unlocking mutex :<pre>	my_mutex.unlock</pre>
+    	- Unlocking the mutex :<pre>	my_mutex.unlock</pre>
 
-    	- Has client been successful in locking the mutex without waiting?<pre>	my_mutex.try_lock</pre>
+    	- try_lock: if it is not locked yet, lock the mutex and return True,
+otherwise it returns False.<pre>	my_mutex.try_lock</pre>
 
     	- Is my mutex initialized?<pre>	my_mutex.is_set</pre>
 
-	NOTE: on Windows:
+	NOTE: on Windows:<p>The MUTEX objects on Windows are recursive while they
+are not on Unix. A recursive mutex can be locked twice by the same thread.&nbsp;
 <p>
 
-	  While a thread has ownership of a mutex, it can specify the same mutex in additional wait-function calls without blocking its execution. This prevents a
-    thread from deadlocking itself while waiting for a mutex that it already owns.
-    However, to release its ownership, the thread must call ReleaseMutex<br>
-      once for each time that the mutex satisfied a wait.&nbsp;
+      IMPORTANT: be sure that a mutex is unlocked when it is disposed.
+<p>
+
+      <a href="#index">Back to index</a>
 <h2>
 
-   4.4  The class SEMAPHORE</h2>
+   5.4 <a name="SEMAPHORE">  The class SEMAPHORE</a></h2>
 <p>
 
-	Like MUTEX, the features of this class call the C-thread corresponding function.
+	Like MUTEX, the features of this class are mapped on the C thread library.
+    An instance of class SEMAPHORE can be shared between thread without putting
+    into a PROXY object.
 <p>
 
-	- Declaration of the semaphore :<pre>	my_sem: SEMAPHORE</pre>
+    - Declaration of the semaphore :<pre>	my_sem: SEMAPHORE</pre>
 
-	- Creation of semaphore: initialize semaphore with nb_tokens, it require
-	 nb_tokens >= 0<pre>	!!my_sem.make (nb_tokens)&nbsp;</pre>
+	- Creation of semaphore: initialize semaphore with nb_tokens, it requires
+	 nb_tokens >= 0<pre>	create my_sem.make (nb_tokens)&nbsp;</pre>
 <p>
-	- Wait for an available token:<pre>	my_sem.wait</pre>
+	- Wait for a token:<pre>	my_sem.wait</pre>
 
 	- Give back a token:<pre>	my_sem.post</pre>
 
-	- try_wait : similar to try_lock from MUTEX<pre>	my_sem.try_wait</pre>
+	- try_wait, similar to try_lock from MUTEX, if a token&nbsp; is available,
+take it and return True, otherwise&nbsp; return False.<pre>	my_sem.try_wait</pre>
+<p>IMPORTANT: be sure that a semaphore does not wait for a token when it is
+disposed</p>
 <p>
-&nbsp;
+<a href="#index">Back to index</a>
 <h2>
 
-   4.5  The class CONDITION_VARIABLE</h2>
+   5.5 <a name="CONDITION_VARIABLE">  The class CONDITION_VARIABLE</a></h2>
 <p>
 
-  	This class allows to use condition variables in Eiffel.<br>
+  	This class allows to use condition variables in Eiffel. An instance of class
+    CONDITION_VARIABLE can be shared between threads without putting into a
+    PROXY object.<br>
 <br>
-	-- Declaration of the condition variable<pre>	my_cond: CONDITION_VARIABLE</pre>
-	-- Creation:<pre>	!! my_cond.make</pre>
-	-- Wait for a signal (send by `signal'). You need to use a mutex, because when we call the `wait' feature
-    the number of waiters on this condition variable is incremented.&nbsp;<pre>	my_mutex: MUTEX
-	!! my_mutex.make</pre>
+    - Declaration of the condition variable<pre>	my_cond: CONDITION_VARIABLE</pre>
+- Creation:<pre>	create my_cond.make</pre>
+- Wait for a signal (send by `signal'). You need to use a mutex.&nbsp;<pre>	my_mutex: MUTEX
+	create my_mutex.make</pre>
 
-<p>my_mutex must be locked by the calling thread so as `wait' can be called.<pre>	my_mutex.lock
-	...
+<p>`my_mutex' must be locked by the calling thread so as `wait' can be called.
+`wait'&nbsp; atomically unlocks `my_mutex' and waits for the condition variable `my_cond'
+to receive a signal. As soon as it received a signal, `my_cond' locks `my_mutex;<pre>	my_mutex.lock
+		-- You must lock `my_mutex' before calling `wait'.
 	my_cond.wait (my_mutex)
-	...
-	my_mutex.unlock</pre>
+		-- Here the critical code to execute when `my_cond' received a signal.
+	my_mutex.unlock
+		-- Unlock the mutex at the end of the critical section.
+	</pre>
 
-    	-- Unblock one thread blocked on the current condition variable.<pre>	my_cond.signal</pre>
-    	-- Unblock all the threads blocked on the current condition variable.<pre>	my_cond.broadcast</pre>
+
+
+&nbsp;Send a signal one thread blocked on the condition variable `my_cond'.<pre>	my_cond.signal</pre>
+- Send a signal to all the threads blocked on the condition variable `my_cond'.<pre>	my_cond.broadcast</pre>
+
+<p>IMPORTANT: be sure that a condition variable is unblocked when it is
+disposed.</p>
 
 <p>
-&nbsp;
+<a href="#index">Back to index</a>
 <h2>
 
-   4.6  Disposing C-thread object: class OBJECT_OWNER</h2>
+   5.6 <a name="OBJECT_OWNER">The class OBJECT_OWNER</a></h2>
+<p>Used by <a href="#MUTEX">MUTEX</a>, <a href="#SEMAPHORE">SEMAPHORE</a>, <a href="#PROXY">PROXY</a>, and
+<a href="#CONDITION_VARIABLE">CONDITION_VARIABLE</a>, this class prevents an
+object from being disposed by a thread, which is not its creator thread. 
 <p>
 
-    	- Used by MUTEX, SEMAPHORE, PROXY, and CONDITION_VARIABLE.&nbsp;By inheriting from OBJECT_OWNER, only the thread that has created the
-    object_owner object could remove it. This was at first implemented for PROXY (since it was no longer expanded), but we finally used it
-    for MUTEX, SEMAPHORE, and CONDITION_VARIABLE. This way, we do not have to put it in a proxy (pointer, see the note on mutex above).
+    	- You do not need to know how to use it.
 <p>
 
-    	- You do not need to know how to use it (as a user).<br>
-<br>
-	- So, if you want to have a more readable code (and a faster execution): No need to put the MUTEX, SEMAPHORE, CONDITION_VARIABLE in a PROXY.
+	- Only the thread which has created an instance of OBJECT_OWNER can dispose it. 
 <p>
 
-	- However, we assume that only the thread which has created these objects can removed it. Hence, if this thread dies, the objects
-        will be removed with it.&nbsp;
-<p>
-
-        &nbsp;
+        <a href="#index">Back to index</a>
 <h2>
 
-   4.7  Miscellaneous classes</h2>
+   5.7 <a name="miscellaneous">  Miscellaneous classes</a></h2>
 <p>
 
-	- class THREAD_ATTRIBUTES : defines the attributes of thread.<br>
-	- class OBJECT_CONTROL    : control over objects meant to be used&nbsp;within different threads. Not bound to be called by the common user.&nbsp;<br>
-	- class THREAD_CONTROL    : control over thread execution&nbsp;
+	- class <a name="THREAD_ATTRIBUTES"> THREAD_ATTRIBUTES</a> : defines the attributes of an Eiffel Thread.<br>
+	- class <a name="OBJECT_CONTROL"> OBJECT_CONTROL</a>    : control over objects meant to be used&nbsp;within different threads.
+    To use with care: it can allow to share non falt objects between thread.&nbsp;<br>
+    (refer to the implementation and comments in the code of these classes)
 <p>
 
-	(see comments in the class).
-<p>
-
-        &nbsp;
+        <a href="#index">Back to index</a>
 <h2>
 
-   4.8  Controlling execution: THREAD_CONTROL</h2>
+   5.8 <a name="THREAD_CONTROL">  Controlling execution: THREAD_CONTROL</a></h2>
 <p>
 
 	- yield: the calling thread yields its execution in favor of&nbsp;an other thread of same priority.
@@ -457,45 +460,40 @@ the father to die before its children threads, otherwise the execution of the ch
 	...
 	thr.join</pre>
 
-	The implementation uses condition variables. For platforms that don't support them, an alternative implementation is used, but
-        much costly in terms of CPU (active loops). If the platform supports<br>
-	a thread_yield function, then it's almost as good as the implementation with condition variables.<br>
 <br>
-	-> A parent thread can wait for the termination of all its child processes through the feature `join_all' of THREAD_CONTROL. It
-        used to be supported only on Solaris, but it is now supported<br>
-	   by every platform. As with `join', it works better with platforms supporting condition variables.<br>
-<br>
-	-> For platforms that support a thread_join function, an Eiffel interface to it is `native_join' (in case anybody wants to use it).
-<p>
 
 
-&nbsp;
+<a href="#index">Back to index</a>
 
 
 <h1>
 
-5   ONCE FEATURE IN MULTI-THREADED MODE</h1>
+6 <a name="ONCE_FEATURE">ONCE FEATURE IN MULTI-THREADED MODE</a></h1>
 <h2>
 
-   5.1  Manipulating Once features in multi-threaded mode</h2>
+   6.1 <a name="manipulating_once_features">  Manipulating Once features in multithreaded mode</a></h2>
 <p>
 
 	Eiffel introduced the powerful mechanism of once routines. A once routine has a body that will be executed only once, for the first call;
         subsequent calls will have no further effect and, in the case of a function, will return the same result as the first. This provides a&nbsp;simple way of sharing objects in an object-oriented context.&nbsp;
 <p>
 
-	For multi-threaded applications, the appropriate semantics is that once routines must be called once per thread (rather than once per
+	For multithreaded applications, the appropriate semantics is that once routines must be called once per thread (rather than once per
         process). This is the semantics supported by EiffelThread.&nbsp;
 <p>
 
-	Then the once feature is not initialized once per process but once&nbsp;per thread. Your once feature will be reinitialized in any new thread execution.&nbsp;
-<h2>
-
-   5.2  Once per Process/Thread</h2>
+	Then the once feature is not initialized once per process but once&nbsp;per thread. Your once feature will be recalled in any new thread execution.&nbsp;
 <p>
 
-   - Current once features in Eiffel have within once per thread&nbsp;implementation. This means that when a once feature is called&nbsp;in a thread, Eiffel run-time will check whether it has been already&nbsp;computed IN this thread. If not, the once feature will be initialized&nbsp;and computed. This seems to be a relevant way of managing once features
-   in multithreaded mode: most of time, a once called in a thread&nbsp;is not bound to share its result.&nbsp;
+    <a href="#index">Back to index</a>
+<h2>
+
+   6.2 <a name="once_per_process_thread">  Once per Process/Thread</a></h2>
+<p>
+
+   - Current once features in Eiffel are once per thread. This means that when a once feature is called&nbsp;in a thread, Eiffel run-time will check whether it has been already&nbsp;computed IN this thread. If not, the once feature will be initialized&nbsp;and computed. This seems to be a relevant way of managing once features
+   in multithreaded mode: most of time, a once called in a thread&nbsp;is not
+   likely to share its result.&nbsp;
 <p>
 
 	- Besides, for reasons we do not want to detail here, current&nbsp;implementation of threads with a non once per thread implementation&nbsp;would require to encapsulate each once feature, which could&nbsp;be called by several threads, in a proxy.&nbsp;
@@ -505,9 +503,12 @@ the father to die before its children threads, otherwise the execution of the ch
 <p>
 
 	- Moreover, an Eiffel programmer should be able to have an alternative&nbsp;between a once per thread or per process implementation.&nbsp;
+<p>
+
+    <a href="#index">Back to index</a>
 <h2>
 
-   5.3  Using Once per process/thread features in EIFFEL</h2>
+   6.3 <a name="using_once_per_process_thread">  Using Once per process/thread features in EIFFEL</a></h2>
 <p>
 
 	- Keeping the default management of the once features in EIFFEL,&nbsp;a once per process could be implemented by calling the external&nbsp;C function 'eif_global_function' as described below:<pre>	class
@@ -585,12 +586,16 @@ the father to die before its children threads, otherwise the execution of the ch
  	...
 </pre>
 <p>
-&nbsp;
-<h2>5.4  Limitations:</h2>
+<a href="#index">Back to index</a>
+<h2>6.4 <a name="limitations">Limitations</a></h2>
 <p>
 
 	At the moment, we have to call the once_per_process for the first&nbsp;time in the process in the
     root_thread. If we did it in a thread,&nbsp;it will work until this thread dies (because it will reclaim&nbsp;the once_per_process object that belongs to its private memory).&nbsp;
+<p>
+
+    Such as the proxy objects, your once per process function must return a flat
+    Eiffel object (no subreferences in it).
 <p>
 
 	Using interwoven once per process functions could cause a deadlock (the once per process table is protected by a
@@ -628,29 +633,33 @@ the father to die before its children threads, otherwise the execution of the ch
     process function  and vice versa since  they do not lock the same once&nbsp;per process table.
 <p>
 
-    &nbsp;
+    <a href="#index">Back to index</a>
 <h1>
 
-    FAQ</h1>
+    <a name="FAQ">
+
+    FAQ</a></h1>
 
 <h3>I've launched several threads and they do not seem to be executed:</h3>
 <blockquote>
-<p>The calling thread/root thread that has launched the threads may be dead before its children. On the platform which support condition variable,
-you can prevent it by putting a `join_all' in the calling thread: this way, it will wait for the death of its children threads.</p>
+<p>The thread that has launched the several threads may be dead before its child threads. 
+</p>
 </blockquote>
-<p>&nbsp;</p>
+<p><a href="#index">Back to index</a></p>
 <h3>Two threads can lock the same mutex, however none of them unlock it:</h3>
 <blockquote>
 <p>Same problem as above. May be the first thread that locked the shared mutex died before the second has tried to lock it: then, the 1rst one has
-automatically unlock it when dying. You should put a join_all or a infinite loop.</p>
+automatically unlock it when dying. You should put a join_all or a infinite loop
+in the father thread.</p>
 </blockquote>
 <p>&nbsp;</p>
 <h3>I've added the option multithreaded (yes) in my ace file and it crashes:</h3>
 <blockquote>
-<p>If you have already compiled your system in non-MT mode, you cannot change the mode of compilation in your ace file and relaunch your compilation
-(the generated C-code would be incompatible). Delete all your object files in your W_code or F_code directory and freeze the system again.</p>
+<p>If you have already compiled your system in non-MT mode, you cannot change the mode of compilation in your ace file and simply relaunch your compilation
+(the generated C-code would be incompatible). Delete all your object files in your W_code or F_code directory and freeze or finalize the system again.</p>
+
 </blockquote>
-<p>&nbsp;</p>
+<p><a href="#index">Back to index</a></p>
 <h3>My once function changed during my MT-Eiffel-program:</h3>
 <blockquote>
 <p>The once functions are once per thread in Multithreaded mode. Hence, each once function is thread specific and is initialized the first
@@ -658,12 +667,14 @@ time it is called in a thread.</p>
 <p>You can create a once per process functions by two ways:</p>
 <ul>
   <li>Using the external functions provided in ONCE_CONTROL. (MT-safe)</li>
-  <li>Putting the once function in a proxy, the threads other than its creator will have to access to it through `item'. (not MT-safe: you should call the  once in mutual exclusion).<br>
+  <li>Putting the once function in a proxy, the threads other than its creator will have to access to it through `item'. (not MT-safe: you should call the  once in mutual exclusion).
   </li>
 </ul>
 
 </blockquote>
 
-  </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+<p><a href="#index">Back to index</a>
+
+  </td></tr></table>&nbsp;</body>
 
 </html>

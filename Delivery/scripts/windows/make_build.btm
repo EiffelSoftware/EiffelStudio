@@ -3,9 +3,6 @@ REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d build2 Src/build2
 
-cdd %EIFFEL_SRC\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib
-nmake /f makefile.win.msc
-
 remtrace Enterprise version of EiffelBuild
 cdd %EIFFEL_SRC/build2
 clean_project

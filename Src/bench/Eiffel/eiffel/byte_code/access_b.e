@@ -568,7 +568,9 @@ feature -- IL code generation
 			if target_type.is_reference and then source_type.is_expanded then
 				generate_il_metamorphose (source_type, target_type, True)
 			elseif target_type.is_numeric then
-				target_type.il_convert_from (source_type)
+				if not target_type.same_as (source_type) then
+					target_type.il_convert_from (source_type)
+				end
 			end
 
 					-- Generate cast if we have to generate verifiable code

@@ -2883,7 +2883,7 @@ feature -- Dispose routine
 					ftab.after or (Result /= Void)
 				loop
 					item := ftab.item_for_iteration;
-					if (item.rout_id_set.first = System.memory_dispose_id) then
+					if equal (item.rout_id_set.first, System.memory_dispose_id) then
 						Result := item
 					end;
 					ftab.forth

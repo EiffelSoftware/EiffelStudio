@@ -78,6 +78,15 @@ feature -- Access
 			exists: Result /= Void
 		end
 		
+	window_selector: GB_WINDOW_SELECTOR is
+			-- Tool for selecting windows.
+		once
+			create Result
+		ensure
+			exists: Result /= Void
+		end
+		
+		
 	project_settings_window: GB_SYSTEM_WINDOW is
 			-- Window which displays current project properties.
 		once

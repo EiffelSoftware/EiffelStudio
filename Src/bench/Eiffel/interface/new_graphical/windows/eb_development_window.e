@@ -603,6 +603,20 @@ feature -- Access
 			end
 		end
 			
+feature -- Status setting
+
+	disable_sensitive is
+			-- Disable sensitivity of all widgets.
+		do
+			window.disable_sensitive
+		end
+
+	enable_sensitive is
+			-- Enable sensitivity of all widgets.
+		do
+			window.enable_sensitive
+		end
+
 feature -- Window Settings
 
 	set_initialized is
@@ -1584,6 +1598,16 @@ feature -- Menu Building
 			command_menu_item := Show_preferences_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			tools_menu.extend (command_menu_item)
+
+					-- External commands editor
+			command_menu_item := Edit_external_commands_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			tools_menu.extend (command_menu_item)
+
+				-- Separator -------------------------------------------------
+			tools_menu.extend (create {EV_MENU_SEPARATOR})
+
+			rebuild_tools_menu
 		end
 	
 feature -- Stone process
@@ -1854,6 +1878,31 @@ feature -- Resource Update
 --| FIXME ARNAUD, multiformat not yet implemented.
 --			format_list.enable_imp_formats_sensitive
 --| END FIXME
+		end
+
+	rebuild_tools_menu is
+			-- Refresh the list of external commands.
+		local
+			ms: LIST [EV_MENU_ITEM]
+		do
+				-- Remove all the external commands, which are at the end of the menu.
+			from
+				tools_menu.go_i_th (tools_menu.count + 1 - number_of_displayed_external_commands)
+			until
+				tools_menu.after
+			loop
+				tools_menu.remove
+			end
+			ms := Edit_external_commands_cmd.menus
+			number_of_displayed_external_commands := ms.count
+			from
+				ms.start
+			until
+				ms.after
+			loop
+				tools_menu.extend (ms.item)
+				ms.forth
+			end
 		end
 
 	syntax_is_correct: BOOLEAN is
@@ -2845,6 +2894,9 @@ feature {NONE} -- Implementation: Editor commands
 
 feature {NONE} -- Implementation / Menus
 
+	number_of_displayed_external_commands: INTEGER
+			-- Number of external commands in the tools menu.
+
 	old_cur: EV_CURSOR
 			-- Cursor saved while displaying the hourglass cursor.
 
@@ -2931,6 +2983,13 @@ feature {EB_TOOL} -- Implementation / Commands
 	
 	save_as_cmd: EB_SAVE_FILE_AS_COMMAND
 			-- Command to save a class with a different file name.
+
+	Edit_external_commands_cmd: EB_EXTERNAL_COMMANDS_EDITOR is
+			-- Command that lets the user add new external commands to the tools menu.
+		once
+			create Result.make
+			Result.enable_sensitive
+		end
 
 	system_info_cmd: EB_STANDARD_CMD is
 			-- Command to display information about the system (root class,...)

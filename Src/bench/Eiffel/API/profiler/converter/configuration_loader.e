@@ -24,7 +24,9 @@ feature -- Initialization
 			profiler_type := prof;
 			prof.to_lower;
 			read_config_file (prof);
-			shared_prof_config.set_config_name (prof)
+			if not error_occured then
+				shared_prof_config.set_config_name (prof)
+			end
 		end
 
 feature {NONE} -- Implementation

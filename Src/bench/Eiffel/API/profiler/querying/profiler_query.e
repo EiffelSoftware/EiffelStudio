@@ -86,6 +86,14 @@ feature -- Status setting
 			append_subquery_operators (other.subquery_operators)
 		end
 
+	extend_subquery_operator (new_operator: SUBQUERY_OPERATOR) is
+			-- Add only one operator to subquery_operators
+		do
+			if new_operator.is_active then
+					subquery_operators.extend (new_operator)
+			end
+		end
+
 feature -- Status report
 
 	image: STRING is
@@ -102,11 +110,7 @@ feature -- Status report
 				i > subqueries.count
 			loop
 				sq := subquery_at (i);
-				Result.append (sq.column);
-				Result.extend (' ');
-				Result.append (sq.operator);
-				Result.extend (' ');
-				Result.append (sq.value);
+				Result.append (sq.image);
 				if i < subquery_operators.count then
 					Result.extend (' ');
 					so := operator_at (i);

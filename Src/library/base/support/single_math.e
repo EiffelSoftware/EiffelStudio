@@ -1,7 +1,7 @@
 indexing 
 
 	description:
-		"Basic mathematical operations, double-precision. %
+		"Basic mathematical operations, single-precision. %
 		%This class may be used as ancestor by classes needing its facilities.";
 
 	status: "See notice at end of class"

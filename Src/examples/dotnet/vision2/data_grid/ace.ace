@@ -35,7 +35,7 @@ cluster
 
 	all vision2:		"$ISE_EIFFEL\library\vision2"
 		exclude
-			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; 
+			"Clib"; "gtk"; "ev_pixmap_imp_loader.e"; 
 		end
 
 	all vision2_net:		"$ISE_EIFFEL\library.net\vision2"

@@ -71,6 +71,7 @@ feature -- Basic operation
 			-- Add creation clause,.
 		do
 			eiffel_writer.add_creation_routine (Make_word)
+			eiffel_writer.add_creation_routine ("make_from_pointer")
 		end
 
 	add_default_features (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
@@ -78,6 +79,7 @@ feature -- Basic operation
 			-- e.g. make, constructor etc.
 		do
 			eiffel_writer.add_feature (make_feature, Initialization)
+			eiffel_writer.add_feature (make_from_pointer_feature, Initialization)
 			eiffel_writer.add_feature (create_item_feature, Basic_operations)
 			eiffel_writer.add_feature (ccom_create_item_feature (a_component), Externals)
 		end

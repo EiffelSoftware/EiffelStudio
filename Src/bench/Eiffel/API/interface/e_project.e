@@ -59,7 +59,7 @@ feature -- Initialization
 	) is
 			-- Create an Eiffel Project. 
 			-- Also create, if needed, the sub-directories (EIFGEN, W_code ...)
-			-- (If a read-write error occured you must exit from
+			-- (If a read-write error occurred you must exit from
 			-- application.).
 			--
 			-- Arguments:
@@ -775,7 +775,7 @@ feature {NONE} -- Retrieval
 
 	retrieve is
 			-- Retrieve an existing Eiffel Project from `file.
-			-- (If a read-write error occured you must exit from
+			-- (If a read-write error occurred you must exit from
 			-- application).
 		require
 			non_void_project_dir: project_directory /= Void

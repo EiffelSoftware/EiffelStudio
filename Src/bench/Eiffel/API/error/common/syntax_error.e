@@ -96,7 +96,7 @@ feature -- Properties
 			-- Specify the syntax error message.
 
 	is_in_use_file: BOOLEAN
-			-- Did error occured when parsing `Use' clause of an Ace file.
+			-- Did error occurred when parsing `Use' clause of an Ace file.
 
 feature -- Output
 

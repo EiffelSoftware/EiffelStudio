@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	class_c: CLASS_C
-			-- Class in which error occured.
+			-- Class in which error occurred.
 
 	parent_class: CLASS_C
 			-- Class from which user tries to inherit from in `class_c'.

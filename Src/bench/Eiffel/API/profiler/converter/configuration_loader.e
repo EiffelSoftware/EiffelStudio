@@ -24,7 +24,7 @@ feature -- Initialization
 			profiler_type := prof;
 			prof.to_lower;
 			read_config_file (prof);
-			if not error_occured then
+			if not error_occurred then
 				shared_prof_config.set_config_name (prof)
 			end
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 				file_name.extend (prof);
 
 				if not file_name.is_valid then
-					error_occured := true;
+					error_occurred := true;
 					error_code := Invalid_profiler_type
 				else
 					!! config_file.make_open_read (file_name);
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 					get_leading_underscore;
 				end;
 			else
-				error_occured := true;
+				error_occurred := true;
 			end;
 		rescue
 			retried := true;
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (NOC_string);
 			if i = -1 then
-				error_occured := true;
+				error_occurred := true;
 			else
 				shared_prof_config.set_number_of_columns (i);
 			end;
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (IC_string);
 			if i = -1 then
-				error_occured := true;
+				error_occurred := true;
 			else
 				shared_prof_config.set_index_column (i);
 			end;
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (FTC_string);
 			if i = -1 then
-				error_occured := true;
+				error_occurred := true;
 			else
 				shared_prof_config.set_function_time_column (i);
 			end;
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (DTC_string);
 			if i = -1 then
-				error_occured := true;
+				error_occurred := true;
 			else
 				shared_prof_config.set_descendant_time_column (i);
 			end;
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (NOCC_string);
 			if i = -1 then
-				error_occured := true;
+				error_occurred := true;
 			else
 				shared_prof_config.set_number_of_calls_column (i);
 			end;
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (FNC_string);
 			if i = -1 then
-				error_occured := true;
+				error_occurred := true;
 			else
 				shared_prof_config.set_function_name_column (i);
 			end;
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (PC_string);
 			if i = -1 then
-				error_occured := true;
+				error_occurred := true;
 			else
 				shared_prof_config.set_percentage_column (i);
 			end;
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		do
 			s := get_string_value (GLU_string);
 			if s = Void then
-				error_occured := true;
+				error_occurred := true;
 			else
 				s.to_lower;
 				if s.is_equal ("yes") then
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 				elseif s.is_equal ("no") then
 					shared_prof_config.set_leading_underscore (false);
 				else
-					error_occured := true;
+					error_occurred := true;
 				end;
 			end;
 		end
@@ -278,7 +278,7 @@ feature {NONE} -- Constants
 
 feature {EWB_GENERATE, GENERATE_PROFILE_INFO_CMD, EB_GENERATE_PROFILE_INFO_CMD, EB_PROFILER_WIZARD_GENERATOR} -- Error handling
 
-	error_occured: BOOLEAN
+	error_occurred: BOOLEAN
 		-- Was there an error during the load of the config file?
 
 	error_code: INTEGER

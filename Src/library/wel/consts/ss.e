@@ -1,5 +1,5 @@
 indexing
-	description: "Statis style (SS) constants."
+	description: "Static style (SS) constants."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -164,9 +164,9 @@ feature
 			gen_type: GEN_TYPE_I
 			table_name, internal_name: STRING
 			skeleton: SKELETON
-			table: POLY_TABLE [ENTRY]
 			rout_id: ROUTINE_ID
 			rout_info: ROUT_INFO
+			array_index: INTEGER
 		do
 			generate_header (buffer)
 			skeleton := class_type.skeleton
@@ -187,13 +187,13 @@ feature
 			buffer.putstring ("(Current")
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
-				table := Eiffel_table.poly_table (rout_id)
-				if table.is_polymorphic (class_type.type_id) then
+				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False)
+				if array_index >= 0 then
 					table_name := rout_id.table_name
 					buffer.putstring ("+ (")
 					buffer.putstring (table_name)
 					buffer.putchar ('-')
-					buffer.putint (table.min_type_id - 1)
+					buffer.putint (array_index)
 					buffer.putstring (")[Dtype(Current)]")
 						-- Mark attribute offset table used.
 					Eiffel_table.mark_used (rout_id)

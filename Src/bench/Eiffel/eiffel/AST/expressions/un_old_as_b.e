@@ -75,19 +75,11 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute text
 		do
 			ctxt.begin;
-			ctxt.set_insertion_point;
-			expr.format (ctxt);
-			if not ctxt.last_was_printed then
-				ctxt.rollback
+			simple_format (ctxt);
+			if ctxt.last_was_printed then
+				ctxt.commit;
 			else
-				ctxt.need_dot;
-				ctxt.prepare_for_prefix ("_prefix_old");
-				ctxt.put_current_feature;
-				if ctxt.last_was_printed then
-					ctxt.commit;
-				else
-					ctxt.rollback;
-				end;
+				ctxt.rollback;
 			end;
 		end; 
 			

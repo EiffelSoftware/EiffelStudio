@@ -45,7 +45,7 @@ feature -- Basic operations
 			app: EV_APPLICATION
 		do
 			app := (create {EV_ENVIRONMENT}).application
-			from until not is_show_requested loop
+			from until is_destroyed or else not is_show_requested loop
 				app.sleep (100)
 				app.process_events
 			end
@@ -97,6 +97,9 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/20 18:27:50  brendel
+--| Block now also ends when window is destroyed.
+--|
 --| Revision 1.12  2000/04/20 16:29:15  brendel
 --| Uncommented imp of show_modal.
 --|

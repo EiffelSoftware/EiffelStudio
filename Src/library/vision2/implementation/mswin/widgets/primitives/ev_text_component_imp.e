@@ -19,7 +19,8 @@ inherit
 			interface,
 			initialize,
 			wel_background_color,
-			wel_foreground_color
+			wel_foreground_color,
+			background_color
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
@@ -309,6 +310,18 @@ feature {NONE} -- Deferred features
 			Result := foreground_color_imp
 			if Result = Void then
 				create Result.make_rgb (0, 0, 0)
+			end
+		end
+		
+	background_color: EV_COLOR is
+			-- Color used for the background of `Current'.
+			-- This has been redefined as the background color of
+			-- text components is white, or `Color_read_write' by default.
+		do
+			if background_color_imp /= Void then
+				Result ?= background_color_imp.interface
+			else
+				Result := (create {EV_STOCK_COLORS}).Color_read_write
 			end
 		end
 

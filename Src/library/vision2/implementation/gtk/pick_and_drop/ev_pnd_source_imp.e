@@ -427,6 +427,7 @@ feature -- Implementation
 			gdkwin: POINTER
 			x, y: INTEGER
 		do
+			--| Previous target optimization will not work with mclist.
 			gdkwin := C.gdk_window_at_pointer ($x, $y)
 			create env
 			app_imp ?= env.application.implementation
@@ -514,6 +515,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/07 17:39:42  king
+--| Added imp comment to pointed_target
+--|
 --| Revision 1.22  2000/04/05 17:05:28  king
 --| Abstracted start/end transport for easier integration with mc list
 --|

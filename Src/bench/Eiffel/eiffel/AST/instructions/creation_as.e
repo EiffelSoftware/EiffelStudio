@@ -428,21 +428,7 @@ feature -- Type check, byte code and dead code removal
 			access := target.byte_node
 			Result.set_target (access)
 		
-				-- Register information for generation of the final Eiffel
-				-- executable.
-			create_feat ?= create_info
-			if create_feat /= Void then
-				rout_id := context.a_class.feature_table.item_id
-					(create_feat.feature_name_id).rout_id_set.first
-				type_set := System.type_set
-				if not type_set.has (rout_id) then
-						-- Found a new routine id having a type table
-					type_set.force (rout_id)
-				end
-			end
-
-			if default_call = Void or else 
-						default_call.feature_name.is_empty then
+			if default_call = Void or else default_call.feature_name.is_empty then
 				the_call := call
 			else
 				the_call := default_call
@@ -462,6 +448,20 @@ feature -- Type check, byte code and dead code removal
 			create_info := Creation_types.item;	
 			Result.set_info (create_info)
 			Creation_types.forth
+
+				-- Register information for generation of the final Eiffel
+				-- executable.
+			create_feat ?= create_info
+			if create_feat /= Void then
+				rout_id := context.a_class.feature_table.item_id
+					(create_feat.feature_name_id).rout_id_set.first
+				type_set := System.type_set
+				if not type_set.has (rout_id) then
+						-- Found a new routine id having a type table
+					type_set.force (rout_id)
+				end
+			end
+
 		end
 
 feature -- Replication

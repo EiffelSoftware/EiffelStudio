@@ -130,7 +130,7 @@ feature {NONE} -- Initialization
 			temp_int ?= int.item (1)
 			a_position := temp_int.item + 1
 
-			an_item := interface.i_th (a_position)
+			an_item := (ev_children @ a_position).interface
 			an_item.select_actions.call ([])
 			interface.select_actions.call ([an_item])
 		end
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			temp_int ?= int.item (1)
 			a_position := temp_int.item + 1
 			
-			an_item := interface.i_th (a_position)
+			an_item := (ev_children @ a_position).interface
 			an_item.deselect_actions.call ([])
 			interface.deselect_actions.call ([an_item])
 		end
@@ -175,7 +175,7 @@ feature -- Access
 
 	item: EV_MULTI_COLUMN_LIST_ROW is
 		do
-			Result ?= (ev_children @ (index)).interface
+			Result := (ev_children @ (index)).interface
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
@@ -578,6 +578,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/14 00:13:04  king
+--| Optimised item retrieval from position
+--|
 --| Revision 1.39  2000/03/09 01:17:59  king
 --| Corrected spacing of interface attribute in class
 --|

@@ -340,7 +340,7 @@ feature -- Metric constituents.
 			a_name := name_field.text
 			a_unit := unit_field.text
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "Linear")
-			Result.put_last (xml_node (Result, "FORMULA", displayed_metric))
+			Result.put_last (Xml_routines.xml_node (Result, "FORMULA", displayed_metric))
 			create l_namespace.make ("", "")
 			create metric_definition.make_child (Result, "DEFINITION", l_namespace)
 				-- Fill metric_definition with convinient xml element in polish syntax.
@@ -355,7 +355,7 @@ feature -- Metric constituents.
 			end
 			if valid_metric_definition then
 				Result.put_last (metric_definition)
-				add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
+				Xml_routines.add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
 			end
 		end
 
@@ -454,22 +454,22 @@ feature -- Metric constituents.
 						sub_formula.forth
 					end
 					Result.append (translate_formula_to_polish_syntax (sub_list, a_metric_definition))
-					Result.extend (xml_node (a_metric_definition, "OPERATOR", operator))
+					Result.extend (Xml_routines.xml_node (a_metric_definition, "OPERATOR", operator))
 				elseif equal (sub_formula.item, multiply) then
 					operator := clone (sub_formula.item)
 					sub_formula.forth
 				elseif sub_formula.item.is_double then
-					Result.extend (xml_node (a_metric_definition, "PARAMETER", sub_formula.item))
+					Result.extend (Xml_routines.xml_node (a_metric_definition, "PARAMETER", sub_formula.item))
 					sub_formula.forth
 					if not equal (operator, "") then
-						Result.extend (xml_node (a_metric_definition, "OPERATOR", operator))
+						Result.extend (Xml_routines.xml_node (a_metric_definition, "OPERATOR", operator))
 						operator := ""
 					end
 				elseif interface.tool.metric (sub_formula.item) /= Void then
-					Result.extend (xml_node (a_metric_definition, "METRIC", sub_formula.item))
+					Result.extend (Xml_routines.xml_node (a_metric_definition, "METRIC", sub_formula.item))
 					sub_formula.forth
 					if not equal (operator, "") then
-						Result.extend (xml_node (a_metric_definition, "OPERATOR", operator))
+						Result.extend (Xml_routines.xml_node (a_metric_definition, "OPERATOR", operator))
 						operator := ""
 					end
 				end
@@ -501,7 +501,7 @@ feature -- Linear action
 			else
 				key := interface.tool.metrics.index_of (other_metric, 1) - interface.tool.nb_basic_metrics
 				xml_location ?= interface.tool.user_metrics_xml_list.i_th (key)
-				corresponding_formula := xml_string (xml_location, "FORMULA")
+				corresponding_formula := Xml_routines.xml_string (xml_location, "FORMULA")
 				unit_field.set_text (other_metric.unit)
 			end
 			a_definition_field.set_text (corresponding_formula)

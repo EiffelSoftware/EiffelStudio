@@ -73,13 +73,13 @@ feature -- Displayed messages in text form.
 
 			index_current_metric := tool.metrics.index_of (current_metric, 1)
 			current_xml := tool.user_metrics_xml_list.i_th (index_current_metric - tool.nb_basic_metrics)
-			current_formula := xml_string (current_xml, "FORMULA")
+			current_formula := Xml_routines.xml_string (current_xml, "FORMULA")
 			from
 				archived_xml.start
 			until
 				archived_xml.after or defined_metric/= Void
 			loop
-				defined_formula := xml_string (archived_xml.item, "FORMULA")
+				defined_formula := Xml_routines.xml_string (archived_xml.item, "FORMULA")
 				if equal (defined_formula, current_formula) then
 					Result := True
 				end
@@ -102,7 +102,7 @@ feature -- Displayed messages in text form.
 			basic_metric: EB_METRIC_BASIC
 		do
 			if not retried then
-				l_deserialized_document := deserialize_document (f.name)
+				l_deserialized_document := Xml_routines.deserialize_document (f.name)
 				if l_deserialized_document /= Void then
 					if tool.archive.archive_syntax (l_deserialized_document.root_element) then
 						basic_metric ?= current_metric
@@ -113,7 +113,7 @@ feature -- Displayed messages in text form.
 							if l_deserialized_document.root_element.has_attribute_by_name ("System") then
 								archive_name := l_deserialized_document.root_element.attribute_by_name ("System").value						
 							end
-							measure_element := element_by_name (l_deserialized_document.root_element, "RECORDED_MEASURES")
+							measure_element := Xml_routines.element_by_name (l_deserialized_document.root_element, "RECORDED_MEASURES")
 							a_cursor := measure_element.new_cursor
 							Result := "Metric: " + current_metric.name + "      " + "Scope: Archive"
 							from

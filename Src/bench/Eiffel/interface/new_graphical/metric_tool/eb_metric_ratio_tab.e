@@ -357,8 +357,8 @@ feature -- Metric constituents
 			a_name := name_field.text
 			a_unit := unit_field.text
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "MRatio")
-			add_attribute ("Percentage", l_namespace, percentage.out, Result)
-			Result.put_last (xml_node (Result, "FORMULA", displayed_metric))
+			Xml_routines.add_attribute ("Percentage", l_namespace, percentage.out, Result)
+			Result.put_last (Xml_routines.xml_node (Result, "FORMULA", displayed_metric))
 			create metric_definition.make_child (Result, "DEFINITION", l_namespace)
 				-- Fill metric_definition with convinient xml element in polish syntax.
 			xml_elements_def_list := translate_formula_to_polish_syntax (formula, metric_definition)
@@ -373,7 +373,7 @@ feature -- Metric constituents
 
 			if valid_metric_definition then
 				Result.put_last (metric_definition)
-				add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
+				Xml_routines.add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
 			end		
 		end
 
@@ -405,15 +405,15 @@ feature -- Metric constituents
 					Result := Result and metric_definition.count = 3
 					inspect i 
 						when 1 then
-							Result := Result and equal (a_name, "METRIC") and not (element_by_name (metric_definition, "METRIC")).is_empty
+							Result := Result and equal (a_name, "METRIC") and not (Xml_routines.element_by_name (metric_definition, "METRIC")).is_empty
 							metric := interface.tool.metric (sub_node.text)
 							Result := Result and metric /= Void
 						when 2 then
-							Result := Result and equal (a_name, "METRIC") and not (element_by_name (metric_definition, "METRIC")).is_empty
+							Result := Result and equal (a_name, "METRIC") and not (Xml_routines.element_by_name (metric_definition, "METRIC")).is_empty
 							metric := interface.tool.metric (sub_node.text)
 							Result := Result and metric /= Void
 						when 3 then
-							Result := Result and equal (a_name, "OPERATOR") and not (element_by_name (metric_definition, "OPERATOR")).is_empty
+							Result := Result and equal (a_name, "OPERATOR") and not (Xml_routines.element_by_name (metric_definition, "OPERATOR")).is_empty
 							op := sub_node.text
 							Result := Result and op.is_equal (" / ")
 					end
@@ -447,10 +447,10 @@ feature -- Metric constituents
 						-- Retrieve min_scope of metric_object.
 					metric_object := interface.tool.metric (sub_formula.item)
 					min_scope := min_scope.max (metric_object.min_scope)
-					Result.extend (xml_node (a_metric_definition, "METRIC", sub_formula.item))
+					Result.extend (Xml_routines.xml_node (a_metric_definition, "METRIC", sub_formula.item))
 					sub_formula.forth
 					if not equal (operator, "") then
-						Result.extend (xml_node (a_metric_definition, "OPERATOR", operator))
+						Result.extend (Xml_routines.xml_node (a_metric_definition, "OPERATOR", operator))
 						operator := ""
 					end
 				end
@@ -514,7 +514,7 @@ feature -- Ratio action.
 			else
 				key := interface.tool.metrics.index_of (other_metric, 1) - interface.tool.nb_basic_metrics
 				xml_location ?= interface.tool.user_metrics_xml_list.i_th (key)
-				corresponding_formula := xml_string (xml_location, "FORMULA")
+				corresponding_formula := Xml_routines.xml_string (xml_location, "FORMULA")
 			end
 			a_definition_field.set_text (corresponding_formula)
 			enable_save

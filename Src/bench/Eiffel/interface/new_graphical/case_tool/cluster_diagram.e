@@ -21,8 +21,8 @@ inherit
 			include_new_dropped_class, remove_dropped_class,
 			synchronize, remove_view, remove_view_from_file,
 			prepare_synchronize, remove_unneeded_classes,
-			recycle, remove_included_figures, load_from_file,
-			save_xml_document
+			recycle, remove_included_figures, load_from_file--,
+--			save_xml_document
 		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			drop_actions.extend (~on_class_drop)
 			drop_actions.extend (~on_new_class_drop)
 			drop_actions.extend (~on_cluster_drop)
-			reset_valid_tags
+			Xml_routines.reset_valid_tags
 		end
 
 feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Initialization
@@ -401,7 +401,7 @@ feature -- View management
 			node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
-			diagram_output := deserialize_document (ptf.name)
+			diagram_output := Xml_routines.deserialize_document (ptf.name)
 			if diagram_output /= Void then
 				check
 					valid_xml: diagram_output.root_element.name.is_equal ("CLUSTER_DIAGRAM")
@@ -410,7 +410,7 @@ feature -- View management
 				if node /= Void and then node.has_attribute_by_name ("NAME") then
 					node.remove_attribute_by_name ("NAME")
 				end
-				save_xml_document (ptf.name, diagram_output)
+				Xml_routines.save_xml_document (ptf.name, diagram_output)
 			end
 		end
 
@@ -735,7 +735,7 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 		do
 			if not rescued then
 				if ptf.is_open_read then
-					diagram_output := deserialize_document (ptf.name)
+					diagram_output := Xml_routines.deserialize_document (ptf.name)
 					if diagram_output /= Void then
 						a_cursor := diagram_output.root_element.new_cursor
 						from
@@ -758,31 +758,21 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 						view_output := xml_element
 						view_output.set_parent (diagram_output)
 						diagram_output.root_element.force_first (view_output)
-						save_xml_document (ptf.name, diagram_output)
+						Xml_routines.save_xml_document (ptf.name, diagram_output)
 					end
 				else
 					create l_namespace.make ("", "")
 					create node.make_root ("CLUSTER_DIAGRAM", l_namespace)
 					create diagram_output.make
 					diagram_output.force_first (node)
-					save_xml_document (ptf.name, diagram_output)
+					Xml_routines.save_xml_document (ptf.name, diagram_output)
 				end
 			end
 		rescue
 			rescued := True
 			Error_handler.error_list.wipe_out
-			display_warning_message ("File " + center_class.name + ".ead is corrupted.")
+			Xml_routines.display_warning_message ("File " + center_class.name + ".ead is corrupted.")
 			retry
-		end
-
-	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT) is
-			-- Save `a_doc' in `ptf'
-		require else
-			file_not_void: a_file_name /= Void
-			file_exists: a_file_name /= Void and then not a_file_name.is_empty
-			valid_document: a_doc /= Void and then a_doc.root_element.name.is_equal ("CONTEXT_DIAGRAM")
-		do
-			Precursor {CONTEXT_DIAGRAM} (a_file_name, a_doc)
 		end
 
 	load_from_file (f: RAW_FILE) is
@@ -840,7 +830,7 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
 			if not cancelled then
-				diagram_input := deserialize_document (f.name)
+				diagram_input := Xml_routines.deserialize_document (f.name)
 				if diagram_input /= Void then
 					check
 						valid_xml: diagram_input.root_element.name.is_equal ("CLUSTER_DIAGRAM")
@@ -902,14 +892,14 @@ feature {NONE} -- XML
 		do
 			create l_namespace.make ("", "")
 			create Result.make_root ("VIEW", l_namespace)
-			add_attribute ("NAME", l_namespace, current_view, Result)
-			Result.put_last (xml_node (Result, "SUPERCLUSTER_DEPTH", supercluster_depth.out))
-			Result.put_last (xml_node (Result, "SUBCLUSTER_DEPTH", subcluster_depth.out))
-			Result.put_last (xml_node (Result, "INHERITANCE_LINKS_DISPLAYED", inheritance_links_displayed.out))
-			Result.put_last (xml_node (Result, "CLIENT_LINKS_DISPLAYED", client_links_displayed.out))
-			Result.put_last (xml_node (Result, "LABELS_SHOWN", labels_shown.out))
-			Result.put_last (xml_node (Result, "X_POS", ((point.x / scale_x)).rounded.out))
-			Result.put_last (xml_node (Result, "Y_POS", ((point.y / scale_y)).rounded.out))
+			Xml_routines.add_attribute ("NAME", l_namespace, current_view, Result)
+			Result.put_last (Xml_routines.xml_node (Result, "SUPERCLUSTER_DEPTH", supercluster_depth.out))
+			Result.put_last (Xml_routines.xml_node (Result, "SUBCLUSTER_DEPTH", subcluster_depth.out))
+			Result.put_last (Xml_routines.xml_node (Result, "INHERITANCE_LINKS_DISPLAYED", inheritance_links_displayed.out))
+			Result.put_last (Xml_routines.xml_node (Result, "CLIENT_LINKS_DISPLAYED", client_links_displayed.out))
+			Result.put_last (Xml_routines.xml_node (Result, "LABELS_SHOWN", labels_shown.out))
+			Result.put_last (Xml_routines.xml_node (Result, "X_POS", ((point.x / scale_x)).rounded.out))
+			Result.put_last (Xml_routines.xml_node (Result, "Y_POS", ((point.y / scale_y)).rounded.out))
 			create include_element.make_child (Result, "INCLUDED_FIGURES", l_namespace)
 
 				-- Save included cluster figures.
@@ -921,7 +911,7 @@ feature {NONE} -- XML
 				clf ?= included_figures.item
 				if clf /= Void then
 					create include_xe.make_child (include_element, "CLUSTER", l_namespace)
-					add_attribute ("NAME", l_namespace, clf.name, include_xe)
+					Xml_routines.add_attribute ("NAME", l_namespace, clf.name, include_xe)
 					include_element.put_last (include_xe)
 				end
 				included_figures.forth
@@ -936,7 +926,7 @@ feature {NONE} -- XML
 				cf ?= included_figures.item
 				if cf /= Void then
 					create include_xe.make_child (include_element, "CLASS", l_namespace)
-					add_attribute ("NAME", l_namespace, cf.name, include_xe)
+					Xml_routines.add_attribute ("NAME", l_namespace, cf.name, include_xe)
 					include_element.put_last (include_xe)
 				end
 				included_figures.forth
@@ -954,10 +944,10 @@ feature {NONE} -- XML
 				clf ?= excluded_figures.item
 				if cf /= Void then
 					create  exclude_xe.make_child (exclude_element, "CLASS", l_namespace)
-					add_attribute ("NAME", l_namespace, cf.name, exclude_xe)
+					Xml_routines.add_attribute ("NAME", l_namespace, cf.name, exclude_xe)
 				elseif clf /= Void then
 					create exclude_xe.make_child (exclude_element, "CLUSTER", l_namespace)
-					add_attribute ("NAME", l_namespace, clf.name, exclude_xe)
+					Xml_routines.add_attribute ("NAME", l_namespace, clf.name, exclude_xe)
 				end
 				exclude_element.put_last (exclude_xe)
 				excluded_figures.forth
@@ -1024,11 +1014,11 @@ feature {NONE} -- XML
 		do
 			reset_links
 			reset_colors
-			reset_valid_tags
+			Xml_routines.reset_valid_tags
 			included_figures.wipe_out
 			excluded_figures.wipe_out
-			new_supercluster_depth := xml_integer (an_element, "SUPERCLUSTER_DEPTH")
-			new_subcluster_depth := xml_integer (an_element, "SUBCLUSTER_DEPTH")
+			new_supercluster_depth := Xml_routines.xml_integer (an_element, "SUPERCLUSTER_DEPTH")
+			new_subcluster_depth := Xml_routines.xml_integer (an_element, "SUBCLUSTER_DEPTH")
 			if new_supercluster_depth /= supercluster_depth or else
 				new_subcluster_depth /= subcluster_depth then
 					set_supercluster_depth (new_supercluster_depth)
@@ -1039,19 +1029,19 @@ feature {NONE} -- XML
 						synchronize (False, Void)
 					end
 			end
-			labels_shown := xml_boolean (an_element, "LABELS_SHOWN")
-			inheritance_links_displayed := xml_boolean (an_element, "INHERITANCE_LINKS_DISPLAYED")
-			client_links_displayed := xml_boolean (an_element, "CLIENT_LINKS_DISPLAYED")
+			labels_shown := Xml_routines.xml_boolean (an_element, "LABELS_SHOWN")
+			inheritance_links_displayed := Xml_routines.xml_boolean (an_element, "INHERITANCE_LINKS_DISPLAYED")
+			client_links_displayed := Xml_routines.xml_boolean (an_element, "CLIENT_LINKS_DISPLAYED")
 			if labels_shown then
 				show_labels
 			else
 				hide_labels
 			end
-			point.set_x (xml_integer (an_element, "X_POS"))
-			point.set_y (xml_integer (an_element, "Y_POS"))
+			point.set_x (Xml_routines.xml_integer (an_element, "X_POS"))
+			point.set_y (Xml_routines.xml_integer (an_element, "Y_POS"))
 			a_cursor := an_element.new_cursor
 			from
-				a_cursor.go_i_th (valid_tags + 1)
+				a_cursor.go_i_th (Xml_routines.valid_tags + 1)
 			until
 				a_cursor.after
 			loop
@@ -1066,7 +1056,7 @@ feature {NONE} -- XML
 								clf.set_with_xml_element (node)
 							end
 						else
-							display_warning_message ("File " + center_cluster.name + ".ead: Cluster name expected")
+							Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Cluster name expected")
 						end
 					elseif node.name.is_equal ("CLASS_FIGURE") then
 						if node.has_attribute_by_name ("NAME") then
@@ -1077,7 +1067,7 @@ feature {NONE} -- XML
 								cf.set_with_xml_element (node)
 							end
 						else
-							display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
+							Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
 						end
 					elseif node.name.is_equal ("INHERITANCE_FIGURE") then
 						if
@@ -1095,7 +1085,7 @@ feature {NONE} -- XML
 								hf.set_with_xml_element (node)
 							end
 						else
-							display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
+							Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
 						end		
 					elseif node.name.is_equal ("CLIENT_SUPPLIER_FIGURE") then
 						if
@@ -1113,7 +1103,7 @@ feature {NONE} -- XML
 								csf.set_with_xml_element (node)
 							end
 						else
-							display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
+							Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
 						end		
 					elseif node.name.is_equal ("INCLUDED_FIGURES") then
 						include_cursor := node.new_cursor
@@ -1134,11 +1124,11 @@ feature {NONE} -- XML
 											if Eiffel_universe.has_cluster_of_name (cluster_name) then 
 												include_cluster (Eiffel_universe.cluster_of_name (cluster_name), False) 
 											else	
-												display_warning_message ("Cluster " + cluster_name + " not in the system")
+												Xml_routines.display_warning_message ("Cluster " + cluster_name + " not in the system")
 											end 
 										 end 
 									 else 
-										display_warning_message ("File " + center_cluster.name + ".ead: Cluster name expected") 
+										Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Cluster name expected") 
 									 end 
 								elseif child_node.name.is_equal ("CLASS") then
 									if child_node.has_attribute_by_name ("NAME") then
@@ -1152,14 +1142,14 @@ feature {NONE} -- XML
 													--| FIXME: What to do if classes_found.count > 1?
 												include_class (classes_found.first) 
 											else
-												display_warning_message ("Class " + class_name + " not in the system")
+												Xml_routines.display_warning_message ("Class " + class_name + " not in the system")
 											end 
 										end
 									else
-										display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
+										Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
 									end
 								else
-									display_warning_message ("File " + center_cluster.name + ".ead: Tag " + node.name + " unknown")
+									Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Tag " + node.name + " unknown")
 								end
 							end
 							include_cursor.forth
@@ -1182,7 +1172,7 @@ feature {NONE} -- XML
 											clf.recursive_remove_from_diagram (True)
 										 end 
 									 else 
-										display_warning_message ("File " + center_cluster.name + ".ead: Cluster name expected") 
+										Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Cluster name expected") 
 									 end 
 								elseif child_node.name.is_equal ("CLASS") then
 									if child_node.has_attribute_by_name ("NAME") then
@@ -1193,10 +1183,10 @@ feature {NONE} -- XML
 											cf.remove_from_diagram (True)
 										end
 									else
-										display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
+										Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Class name expected")
 									end
 								else
-									display_warning_message ("File " + center_cluster.name + ".ead: Tag " + node.name + " unknown")
+									Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Tag " + node.name + " unknown")
 								end
 							end
 							exclude_cursor.forth
@@ -1212,7 +1202,7 @@ feature {NONE} -- XML
 								not node.name.is_equal ("X_POS") and
 								not node.name.is_equal ("Y_POS")
 							then
-								display_warning_message ("File " + center_cluster.name + ".ead: Tag " + node.name + " unknown")
+								Xml_routines.display_warning_message ("File " + center_cluster.name + ".ead: Tag " + node.name + " unknown")
 							end
 						end
 					end

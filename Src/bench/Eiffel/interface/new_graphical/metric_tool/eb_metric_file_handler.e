@@ -117,9 +117,9 @@ feature -- Metrics loading
 		do
 			if not retried then
 				tool.set_min_scope_available (tool.scope (interface_names.metric_this_system).index)
-				l_deserialized_document := deserialize_document (f.name)
+				l_deserialized_document := Xml_routines.deserialize_document (f.name)
 				if l_deserialized_document /= Void then
-					metric_element := element_by_name (l_deserialized_document.root_element, "METRIC_DEFINITIONS")
+					metric_element := Xml_routines.element_by_name (l_deserialized_document.root_element, "METRIC_DEFINITIONS")
 					a_cursor := metric_element.new_cursor
 					from
 						a_cursor.start
@@ -133,8 +133,8 @@ feature -- Metrics loading
 											(not node.has_attribute_by_name ("Unit") or else node.attribute_by_name ("Unit").value.is_empty) or
 											(not node.has_attribute_by_name ("Type") or else node.attribute_by_name ("Type").value.is_empty) or
 											(not node.has_attribute_by_name ("Min_scope") or else node.attribute_by_name ("Min_scope").value.is_empty) or
-											(not node.has (element_by_name (node, "DEFINITION"))
-											or else (element_by_name (node, "DEFINITION")).is_empty)
+											(not node.has (Xml_routines.element_by_name (node, "DEFINITION"))
+											or else (Xml_routines.element_by_name (node, "DEFINITION")).is_empty)
 
 							if not info_missing then
 								metric_name := node.attribute_by_name ("Name").value
@@ -145,13 +145,13 @@ feature -- Metrics loading
 								is_linear := equal ("Linear", type)
 								is_metric_ratio := equal ("MRatio", type)
 								is_scope_ratio := equal ("SRatio", type)
-								definition := element_by_name (node, "DEFINITION")
+								definition := Xml_routines.element_by_name (node, "DEFINITION")
 								if is_derived then
 									create bf
 									agent_array := build_agent_array (definition, bf)
-									parent_name := xml_string (definition, "Raw_metric")
-									op := xml_boolean (definition, "And")
-									self := xml_boolean (definition, "Self")
+									parent_name := Xml_routines.xml_string (definition, "Raw_metric")
+									op := Xml_routines.xml_boolean (definition, "And")
+									self := Xml_routines.xml_boolean (definition, "Self")
 								else
 									tree := build_operator (definition, is_linear, is_metric_ratio, is_scope_ratio, True)
 								end
@@ -270,7 +270,7 @@ feature -- Metric operators
 						a_cursor.forth
 					end
 				else
-					node_item := xml_string (a_metric_definition, "METRIC")
+					node_item := Xml_routines.xml_string (a_metric_definition, "METRIC")
 					create met_measure.make (node_item, tool)
 					stack.put (met_measure)
 				end
@@ -292,7 +292,7 @@ feature -- Metric operators
 		local
 			raw_metric_name: STRING
 		do
-			raw_metric_name := xml_string (a_definition, "Raw_metric")
+			raw_metric_name := Xml_routines.xml_string (a_definition, "Raw_metric")
 			if equal (raw_metric_name, interface_names.metric_classes) then
 				Result := agent_array_for_classes (a_definition, bf)
 			elseif equal (raw_metric_name, interface_names.metric_dependents) then
@@ -314,24 +314,24 @@ feature -- Metric operators
 			bool: BOOLEAN
 		do
 			create Result.make (1, 3)
-			if element_by_name (a_definition, "Deferred_class") /= Void then
-				bool := xml_boolean (a_definition, "Deferred_class")
+			if Xml_routines.element_by_name (a_definition, "Deferred_class") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Deferred_class")
 				if bool then
 					Result.put (bf~is_class_deferred, 1)
 				else
 					Result.put (bf~is_class_effective, 1)
 				end
 			end
-			if element_by_name (a_definition, "Invariant") /= Void then
-				bool := xml_boolean (a_definition, "Invariant")
+			if Xml_routines.element_by_name (a_definition, "Invariant") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Invariant")
 				if bool then
 					Result.put (bf~is_class_invariant_equipped, 2)
 				else
 					Result.put (bf~is_class_invariant_equipped_less, 2)
 				end
 			end
-			if element_by_name (a_definition, "Obsolete") /= Void then
-				bool := xml_boolean (a_definition, "Obsolete")
+			if Xml_routines.element_by_name (a_definition, "Obsolete") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Obsolete")
 				if bool then
 					Result.put (bf~is_class_obsolete, 3)
 				else
@@ -352,32 +352,32 @@ feature -- Metric operators
 			bool: BOOLEAN
 		do
 			create Result.make (1, 4)
-			if element_by_name (a_definition, "D_or_i_clients") /= Void then
-				bool := xml_boolean (a_definition, "D_or_i_clients")
+			if Xml_routines.element_by_name (a_definition, "D_or_i_clients") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "D_or_i_clients")
 				if bool then
 					Result.put (bf~is_class_direct_client, 1)
 				else
 					Result.put (bf~is_class_client, 1)
 				end
 			end
-			if element_by_name (a_definition, "D_or_i_suppliers") /= Void then
-				bool := xml_boolean (a_definition, "D_or_i_suppliers")
+			if Xml_routines.element_by_name (a_definition, "D_or_i_suppliers") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "D_or_i_suppliers")
 				if bool then
 					Result.put (bf~is_class_direct_supplier, 2)
 				else
 					Result.put (bf~is_class_supplier, 2)
 				end
 			end
-			if element_by_name (a_definition, "D_or_i_heirs") /= Void then
-				bool := xml_boolean (a_definition, "D_or_i_heirs")
+			if Xml_routines.element_by_name (a_definition, "D_or_i_heirs") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "D_or_i_heirs")
 				if bool then
 					Result.put (bf~is_class_direct_heir, 3)
 				else
 					Result.put (bf~is_class_heir, 3)
 				end
 			end
-			if element_by_name (a_definition, "D_or_i_parents") /= Void then
-				bool := xml_boolean (a_definition, "D_or_i_parents")
+			if Xml_routines.element_by_name (a_definition, "D_or_i_parents") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "D_or_i_parents")
 				if bool then
 					Result.put (bf~is_class_direct_parent, 4)
 				else
@@ -398,64 +398,64 @@ feature -- Metric operators
 			bool: BOOLEAN
 		do
 			create Result.make (1, 7)
-			if element_by_name (a_definition, "Attr_or_rout") /= Void then
-				bool := xml_boolean (a_definition, "Attr_or_rout")
+			if Xml_routines.element_by_name (a_definition, "Attr_or_rout") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Attr_or_rout")
 				if bool then
 					Result.put (bf~is_feature_attribute, 1)
 				else
 					Result.put (bf~is_feature_routine, 1)
 				end
 			end
-			if element_by_name (a_definition, "Quer_or_comm") /= Void then
-				bool := xml_boolean (a_definition, "Quer_or_comm")
+			if Xml_routines.element_by_name (a_definition, "Quer_or_comm") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Quer_or_comm")
 				if bool then
 					Result.put (bf~is_feature_querie, 2)
 				else
 					Result.put (bf~is_feature_command, 2)
 				end
 			end
-			if element_by_name (a_definition, "Function") /= Void then
-				bool := xml_boolean (a_definition, "Function")
+			if Xml_routines.element_by_name (a_definition, "Function") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Function")
 				if bool then
 					Result.put (bf~is_feature_function, 2)
 				else
 					Result.put (bf~is_feature_not_function, 2)
 				end
 			end
-			if element_by_name (a_definition, "Deferred_feat") /= Void then
-				bool := xml_boolean (a_definition, "Deferred_feat")
+			if Xml_routines.element_by_name (a_definition, "Deferred_feat") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Deferred_feat")
 				if bool then
 					Result.put (bf~is_feature_deferred, 3)
 				else
 					Result.put (bf~is_feature_effective, 3)
 				end
 			end
-			if element_by_name (a_definition, "Exported") /= Void then
-				bool := xml_boolean (a_definition, "Exported")
+			if Xml_routines.element_by_name (a_definition, "Exported") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Exported")
 				if bool then
 					Result.put (bf~is_feature_exported, 4)
 				else
 					Result.put (bf~is_feature_not_exported, 4)
 				end
 			end
-			if element_by_name (a_definition, "Inherited") /= Void then
-				bool := xml_boolean (a_definition, "Inherited")
+			if Xml_routines.element_by_name (a_definition, "Inherited") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Inherited")
 				if bool then
 					Result.put (bf~is_feature_inherited, 5)
 				else
 					Result.put (bf~is_feature_not_inherited, 5)
 				end
 			end
-			if element_by_name (a_definition, "Pre_equi") /= Void then
-				bool := xml_boolean (a_definition, "Pre_equi")
+			if Xml_routines.element_by_name (a_definition, "Pre_equi") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Pre_equi")
 				if bool then
 					Result.put (bf~is_feature_precondition_equipped, 6)
 				else
 					Result.put (bf~is_feature_precondition_equipped_less, 6)
 				end
 			end
-			if element_by_name (a_definition, "Post_equi") /= Void then
-				bool := xml_boolean (a_definition, "Post_equi")
+			if Xml_routines.element_by_name (a_definition, "Post_equi") /= Void then
+				bool := Xml_routines.xml_boolean (a_definition, "Post_equi")
 				if bool then
 					Result.put (bf~is_feature_postcondition_equipped, 7)
 				else
@@ -500,9 +500,9 @@ feature -- Measures
 			a_result: DOUBLE
 		do
 			if not retried then
-				l_deserialized_document := deserialize_document (f.name)
+				l_deserialized_document := Xml_routines.deserialize_document (f.name)
 				if l_deserialized_document /= Void then
-					metric_element := element_by_name (l_deserialized_document.root_element, "RECORDED_MEASURES")
+					metric_element := Xml_routines.element_by_name (l_deserialized_document.root_element, "RECORDED_MEASURES")
 					a_cursor := metric_element.new_cursor
 					from
 						a_cursor.start
@@ -512,24 +512,24 @@ feature -- Measures
 						create row_array.make (1, 6)
 						node ?= a_cursor.item
 						if node /= Void then
-							info_missing := (not node.has (element_by_name (node, "MEASURE_NAME"))
-											 or else (element_by_name (node, "MEASURE_NAME")).is_empty) or
-											 (not node.has (element_by_name (node, "SCOPE_TYPE"))
-											 or else (element_by_name (node, "SCOPE_TYPE")).is_empty) or
-											 (not node.has (element_by_name (node, "SCOPE_NAME"))
-											 or else (element_by_name (node, "SCOPE_NAME")).is_empty) or
-											 (not node.has (element_by_name (node, "METRIC"))
-											 or else (element_by_name (node, "METRIC")).is_empty) or
-											 (not node.has (element_by_name (node, "RESULT"))
-											 or else (element_by_name (node, "RESULT")).is_empty)
+							info_missing := (not node.has (Xml_routines.element_by_name (node, "MEASURE_NAME"))
+											 or else (Xml_routines.element_by_name (node, "MEASURE_NAME")).is_empty) or
+											 (not node.has (Xml_routines.element_by_name (node, "SCOPE_TYPE"))
+											 or else (Xml_routines.element_by_name (node, "SCOPE_TYPE")).is_empty) or
+											 (not node.has (Xml_routines.element_by_name (node, "SCOPE_NAME"))
+											 or else (Xml_routines.element_by_name (node, "SCOPE_NAME")).is_empty) or
+											 (not node.has (Xml_routines.element_by_name (node, "METRIC"))
+											 or else (Xml_routines.element_by_name (node, "METRIC")).is_empty) or
+											 (not node.has (Xml_routines.element_by_name (node, "RESULT"))
+											 or else (Xml_routines.element_by_name (node, "RESULT")).is_empty)
 							if not info_missing then
-								row_array.put (xml_string (node,"MEASURE_NAME"), 1)
-								row_array.put (xml_string (node,"SCOPE_TYPE"), 2)
-								row_array.put (xml_string (node,"SCOPE_NAME"), 3)
-								row_array.put (xml_string (node,"METRIC"), 4)
-								a_metric := tool.metric (xml_string (node,"METRIC"))
+								row_array.put (Xml_routines.xml_string (node,"MEASURE_NAME"), 1)
+								row_array.put (Xml_routines.xml_string (node,"SCOPE_TYPE"), 2)
+								row_array.put (Xml_routines.xml_string (node,"SCOPE_NAME"), 3)
+								row_array.put (Xml_routines.xml_string (node,"METRIC"), 4)
+								a_metric := tool.metric (Xml_routines.xml_string (node,"METRIC"))
 								a_percentage := a_metric.percentage
-								a_result := xml_double (node,"RESULT")
+								a_result := Xml_routines.xml_double (node,"RESULT")
 								row_array.put (tool.fix_decimals_and_percentage (a_result, a_percentage), 5)
 								tool.scope (interface_names.metric_this_system).set_system_i (tool.System)
 								a_composite_metric ?= a_metric
@@ -538,7 +538,7 @@ feature -- Measures
 									create row
 									row.fill (row_array)
 										-- `recorded_measures_manager' needs a DOUBLE value.
-									row.put_i_th ((xml_double (node, "RESULT")).out, 5)
+									row.put_i_th ((Xml_routines.xml_double (node, "RESULT")).out, 5)
 
 										-- Each observer updates measure_header. To avoid redunduncies, other observers must
 										-- not update measure_header just if they are alone.
@@ -556,7 +556,7 @@ feature -- Measures
 									end
 
 										-- `multi_column_list' needn't a DOUBLE value.
-									row.put_i_th (tool.fix_decimals_and_percentage (xml_double (node, "RESULT"), a_percentage), 5)
+									row.put_i_th (tool.fix_decimals_and_percentage (Xml_routines.xml_double (node, "RESULT"), a_percentage), 5)
 									tool.multi_column_list.extend (row)
 								end
 							else

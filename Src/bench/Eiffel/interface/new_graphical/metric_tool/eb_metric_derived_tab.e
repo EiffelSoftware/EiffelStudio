@@ -648,68 +648,68 @@ feature -- Initialization
 			a_unit := unit_field.text
 			create l_namespace.make ("", "")
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "Derived")
-			add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
+			Xml_routines.add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
 			create metric_definition.make_child (Result, "DEFINITION", l_namespace)
 			raw_metric_name := raw_metric_combobox.text
-			metric_definition.put_last (xml_node (metric_definition, "Raw_metric", raw_metric_name))
-			metric_definition.put_last (xml_node (metric_definition, "And", and_button.is_selected.out))
+			metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Raw_metric", raw_metric_name))
+			metric_definition.put_last (Xml_routines.xml_node (metric_definition, "And", and_button.is_selected.out))
 
 			if equal (raw_metric_name, interface_names.metric_classes) then
 				if not ignore_deferred_class.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Deferred_class", deferred_class.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Deferred_class", deferred_class.is_selected.out))
 				end
 				if not ignore_invariant.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Invariant", invariant_equi.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Invariant", invariant_equi.is_selected.out))
 				end
 				if not ignore_obsolete.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Obsolete", obsolete_class.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Obsolete", obsolete_class.is_selected.out))
 				end
 
 			elseif equal (raw_metric_name, interface_names.metric_dependents) then
-				metric_definition.put_last (xml_node (metric_definition, "Self", self.is_selected.out))
+				metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Self", self.is_selected.out))
 				if not ignore_clients.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "D_or_i_clients", direct_clients.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "D_or_i_clients", direct_clients.is_selected.out))
 				end
 				if not ignore_suppliers.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "D_or_i_suppliers", direct_suppliers.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "D_or_i_suppliers", direct_suppliers.is_selected.out))
 				end
 				if not ignore_heirs.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "D_or_i_heirs", direct_heirs.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "D_or_i_heirs", direct_heirs.is_selected.out))
 				end
 				if not ignore_parents.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "D_or_i_parents", direct_parents.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "D_or_i_parents", direct_parents.is_selected.out))
 				end
 
 			elseif equal (raw_metric_name, interface_names.metric_features) then
 				if not ignore_attr_rout.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Attr_or_rout", attr.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Attr_or_rout", attr.is_selected.out))
 				end
 				if not ignore_quer_comm.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Quer_or_comm", quer.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Quer_or_comm", quer.is_selected.out))
 				end
 				if not ignore_func.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Function", func.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Function", func.is_selected.out))
 				end
 				if not ignore_deferred_feat.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Deferred_feat", deferred_feat.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Deferred_feat", deferred_feat.is_selected.out))
 				end
 				if not ignore_exported.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Exported", exported.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Exported", exported.is_selected.out))
 				end
 				if not ignore_inherited.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Inherited", inherited.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Inherited", inherited.is_selected.out))
 				end
 				if not ignore_pre_equi.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Pre_equi", pre_equi.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Pre_equi", pre_equi.is_selected.out))
 				end
 				if not ignore_post_equi.is_selected then
-					metric_definition.put_last (xml_node (metric_definition, "Post_equi", post_equi.is_selected.out))
+					metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Post_equi", post_equi.is_selected.out))
 				end
 			end
 
 			Result.put_last (metric_definition)
 			formula := criteria
-			Result.put_last (xml_node (Result, "FORMULA", formula))
+			Result.put_last (Xml_routines.xml_node (Result, "FORMULA", formula))
 		end
 
 	criteria: STRING is

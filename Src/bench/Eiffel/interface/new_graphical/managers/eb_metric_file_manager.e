@@ -113,7 +113,7 @@ feature -- File creation
 				end
 				metric_file.wipe_out
 				metric_file.open_read_write
-				save_xml_document (metric_file.name, file_header)
+				Xml_routines.save_xml_document (metric_file.name, file_header)
 			end
 		rescue
 			retried := True
@@ -137,9 +137,9 @@ feature -- Metric definitions
 			create l_namespace.make ("", "")
 			create Result.make_root ("METRIC", l_namespace)
 
-			add_attribute ("Name", l_namespace, name, Result)
-			add_attribute ("Unit", l_namespace, unit, Result)
-			add_attribute ("Type", l_namespace, type, Result)
+			Xml_routines.add_attribute ("Name", l_namespace, name, Result)
+			Xml_routines.add_attribute ("Unit", l_namespace, unit, Result)
+			Xml_routines.add_attribute ("Type", l_namespace, type, Result)
 		end
 
 	add_metric (metric: XM_ELEMENT; index: INTEGER) is
@@ -238,12 +238,12 @@ feature -- Recorded_measures
 		do
 			create l_namespace.make ("", "")
 			create Result.make_root ("MEASURE", l_namespace)
-			add_attribute ("STATUS", l_namespace, status, Result)
-			Result.put_last (xml_node (Result, "MEASURE_NAME", row.i_th (1)))
-			Result.put_last (xml_node (Result, "SCOPE_TYPE", row.i_th (2)))
-			Result.put_last (xml_node (Result, "SCOPE_NAME", row.i_th (3)))
-			Result.put_last (xml_node (Result, "METRIC", row.i_th (4)))
-			Result.put_last (xml_node (Result, "RESULT", row.i_th (5)))
+			Xml_routines.add_attribute ("STATUS", l_namespace, status, Result)
+			Result.put_last (Xml_routines.xml_node (Result, "MEASURE_NAME", row.i_th (1)))
+			Result.put_last (Xml_routines.xml_node (Result, "SCOPE_TYPE", row.i_th (2)))
+			Result.put_last (Xml_routines.xml_node (Result, "SCOPE_NAME", row.i_th (3)))
+			Result.put_last (Xml_routines.xml_node (Result, "METRIC", row.i_th (4)))
+			Result.put_last (Xml_routines.xml_node (Result, "RESULT", row.i_th (5)))
 		end
 
 	add_row (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING) is

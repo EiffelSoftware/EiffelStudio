@@ -114,9 +114,13 @@ gboolean mouse_enter_set_cursor (GtkWidget *widget, GdkEventCrossing *event, gpo
 
 gint c_gtk_widget_set_cursor (GtkWidget *widget, gpointer cursor)
 {
+	if (c_gtk_widget_displayed (widget)) {gdk_window_set_cursor (widget->window, cursor);}
+
 	return gtk_signal_connect (GTK_OBJECT (widget), "enter-notify-event",
 	GTK_SIGNAL_FUNC (mouse_enter_set_cursor), cursor);
 }
+
+
 
 gint timeout_callback (gpointer data){
 	//Callback called when a GtkTimeout is set
@@ -1606,6 +1610,38 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname)
 					 fname);
     return (gtk_pixmap_new (pixmap, mask));
 }
+
+GdkCursor *c_gtk_create_cursor_with_pixmap (char *fname, gint X, gint Y)
+{
+
+	GtkWidget *create_window;
+	GdkCursor *cursor;
+	GdkBitmap *pixmap;
+	GdkBitmap *mask;
+	//GdkColor fg = { 0, 0, 0, 0 }; /* Red. */
+	//GdkColor bg = { 0, 65535, 65535, 65535 }; /* Blue. */
+	int  this_function_needs_implementing;
+
+	create_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	gtk_widget_realize (create_window);
+
+  	pixmap = gdk_pixmap_create_from_xpm (create_window->window,
+					&mask,
+					&create_window->style->bg[GTK_STATE_NORMAL],
+					fname);
+
+	//cursor = gdk_cursor_new_from_pixmap (pixmap, mask, &fg, &bg, X, Y);
+	//This line of code is incorrect
+
+	cursor = gdk_cursor_new (54);
+	
+
+	//gdk_pixmap_unref (pixmap);
+	//gdk_pixmap_unref (mask);
+
+	return cursor;
+}
+
 
 /*********************************
  *

@@ -27,6 +27,7 @@ feature
 			-- Show universe: clusters in class lists.
 		local
 			clusters: LINKED_LIST [CLUSTER_I];
+			cursor: CURSOR;
 		do
 			clusters := Universe.clusters;
 			if not clusters.empty then
@@ -43,7 +44,9 @@ feature
 				until
 					clusters.after
 				loop
-					display_a_cluster (clusters.item)
+					cursor := clusters.cursor;
+					display_a_cluster (clusters.item);
+					clusters.go_to (cursor);
 					clusters.forth
 				end
 				from
@@ -52,7 +55,9 @@ feature
 				until
 					clusters.after or else not (clusters.item.is_precompiled)
 				loop
+					cursor := clusters.cursor;
 					display_a_cluster (clusters.item)
+					clusters.go_to (cursor);
 					clusters.forth
 				end
 			end

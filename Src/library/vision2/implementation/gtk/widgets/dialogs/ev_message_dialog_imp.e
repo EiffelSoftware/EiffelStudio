@@ -10,14 +10,9 @@ deferred class
 inherit
 	EV_MESSAGE_DIALOG_I
 
-	EV_DIALOG_IMP
-		rename
-			make as old_make,
-			interface as old_interface,
-			set_interface as old_set_interface
-		redefine
-			build
-		end
+	EV_STANDARD_DIALOG_IMP
+
+	EV_DEFAULT_COLORS
 
 feature {NONE} -- Initialization
 
@@ -26,7 +21,7 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 			initialize
-			plateform_build (par.implementation)
+			parent_imp ?= par.implementation
 		end
 
 	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
@@ -35,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 			initialize
-			plateform_build (par.implementation)
+			parent_imp ?= par.implementation
 			set_message (a_msg)
 			set_title (a_title)
 		end
@@ -43,8 +38,8 @@ feature {NONE} -- Initialization
 	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+			parent_imp ?= par.implementation
 			initialize
-			plateform_build (par.implementation)
 			show
 		end
 

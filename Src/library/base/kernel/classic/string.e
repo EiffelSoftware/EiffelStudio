@@ -1282,6 +1282,7 @@ feature -- Conversion
 		local
 			i: INTEGER
 			a: like area
+			c: CHARACTER
 		do
 			from
 				i := count - 1
@@ -1289,7 +1290,8 @@ feature -- Conversion
 			until
 				i < 0
 			loop
-				a.put (a.item (i).lower, i)
+				c := a.item (i)
+				a.put (c.lower, i)
 				i := i - 1
 			end
 		end
@@ -1299,6 +1301,7 @@ feature -- Conversion
 		local
 			i: INTEGER
 			a: like area
+			c: CHARACTER
 		do
 			from
 				i := count - 1
@@ -1306,7 +1309,8 @@ feature -- Conversion
 			until
 				i < 0
 			loop
-				a.put (a.item (i).upper, i)
+				c := a.item (i)
+				a.put (c.upper, i)
 				i := i - 1
 			end
 		end

@@ -15,7 +15,8 @@ inherit
 	EV_PRIMITIVE
 		redefine
 			implementation,
-			create_action_sequences
+			create_action_sequences,
+			make_for_test
 		end
 
 	EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW]
@@ -39,6 +40,32 @@ feature {NONE} -- Initialization
 			set_columns (n_columns)
 		ensure
 			columns_assigned: columns = n_columns
+		end
+
+	make_for_test is
+		local
+			i, j: INTEGER
+		do
+			make_with_columns (4)
+			set_column_titles (<<"Title 1", "Title 2", "Title 3", "Title 4">>)
+			from
+				i := 1
+			until
+				i > 9
+			loop
+				extend (create {EV_MULTI_COLUMN_LIST_ROW})
+				from
+					j := 1
+				until
+					j > 4
+				loop
+					last.set_cell_text (j, "Row" + i.out + " Col" + j.out)
+					last.select_actions.extend (~prune (last))
+					last.select_actions.extend (~put_front (last))
+					j := j + 1
+				end
+				i := i + 1
+			end
 		end
 
 feature -- Access
@@ -341,6 +368,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/21 20:17:29  king
+--| Implemented basic make_for_test
+--|
 --| Revision 1.41  2000/03/21 02:42:34  oconnor
 --| naming problem fixed
 --|

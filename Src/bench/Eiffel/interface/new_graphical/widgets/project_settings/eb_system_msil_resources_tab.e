@@ -145,8 +145,6 @@ feature {NONE} -- Initialization
 			
 			create resource_file_list.make_with_parent (top.window)
 			resource_file_list.set_browse_for_file ("*.resx")
-			resource_file_list.set_is_entry_valid (agent is_resource_name_valid)
-			resource_file_list.set_display_error_message (agent display_error_message)
 			create l_frame.make_with_text ("Resources")
 			l_frame.extend (resource_file_list)
 			
@@ -161,40 +159,6 @@ feature {NONE} -- Initialization
 			resource_file_list.reset
 		ensure then
 			resource_file_list_empty: resource_file_list.is_empty
-		end
-
-feature {NONE} -- Implementation: actions
-
-	is_resource_name_valid (n: STRING): BOOLEAN is
-			-- Is `n' valid as a resource name? It can only accept files with
-			-- extensions `.resX, .txt, or .resources'.
-		require
-			n_not_void: n /= Void
-		do
-			Result := (n.count > 5) and n.substring (n.count - 4, n.count).as_lower.is_equal (".resx")
-			if not Result then
-				Result := (n.count > 4) and n.substring (n.count - 3, n.count).as_lower.is_equal (".txt")
-				if not Result then
-					Result := (n.count > 10) and n.substring (n.count - 9, n.count).as_lower.is_equal (".resources")
-				end
-			end
-		end
-
-	display_error_message (n: STRING) is
-			-- Display error message associated with incorrect resource file name `n'.
-		require
-			n_not_void: n /= Void
-		local
-			l_error: EV_ERROR_DIALOG
-			l_text: STRING
-		do
-			l_text := "Invalid resource file name %"" + n + "%".%N%N"
-			l_text.append ("Make sure it has either the extension `.resX', `.txt' or `.resources'.")
-			create l_error.make_with_text (l_text)
-			l_error.set_buttons (<<ev_ok>>)
-			l_error.set_default_push_button(l_error.button (ev_ok))
-			l_error.set_default_cancel_button(l_error.button (ev_ok))
-			l_error.show_modal_to_window (system_window.window)
 		end
 
 invariant

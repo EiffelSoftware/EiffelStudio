@@ -13,4 +13,16 @@ inherit
 creation
 	make, make_unmanaged
 
+feature -- Status
+
+	active: BOOLEAN
+			-- Is button active?
+		do
+		end
+
+	set_active (flag: BOOLEAN) is
+			-- Set `active' to `flag'.
+		do
+		end
+
 end -- class ACTIVE_PICT_COLOR_B

@@ -235,8 +235,8 @@ feature {NONE} -- Implementation for automatic size compute
 						lchild.after
 					loop
 						litem := lchild.item
-						childvisible_nb := childvisible_nb + 1
 						if litem.shown then
+							childvisible_nb := childvisible_nb + 1
 							if litem.minimum_width > value then
 								value := litem.minimum_width
 							end
@@ -255,8 +255,8 @@ feature {NONE} -- Implementation for automatic size compute
 					loop
 						litem := lchild.item
 						if litem.shown then
-							value := value + litem.minimum_width
 							childvisible_nb := childvisible_nb + 1
+							value := value + litem.minimum_width
 							if litem.expandable then
 								childexpand_nb := childexpand_nb + 1
 							end
@@ -338,13 +338,8 @@ feature {NONE} -- WEL Implementation
 			-- This feature must be redefine by the containers to readjust its
 			-- children too.
 		do
---			if a_width /= width then
-				{EV_BOX_IMP} Precursor (a_x, a_y, width, a_height, repaint)
-				set_local_width (a_width)
---			else
---				move (a_x, a_y)
---				set_local_height (a_height)
---			end
+			{EV_BOX_IMP} Precursor (a_x, a_y, width, a_height, repaint)
+			set_local_width (a_width)
 		end
 
 end -- class EV_VERTICAL_BOX_IMP

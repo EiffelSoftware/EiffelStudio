@@ -148,7 +148,7 @@ feature {NONE} -- Basic operation
 							litem.set_move_and_size (bwidth, mark, cwidth, localint)
 							mark := mark + space + localint
 						end
-					lchild.forth
+						lchild.forth
 					end -- loop
 
 				mark := mark - space
@@ -234,8 +234,8 @@ feature {NONE} -- Implementation for automatic size compute
 						lchild.after
 					loop
 						litem := lchild.item
-						childvisible_nb := childvisible_nb + 1
 						if litem.shown then
+							childvisible_nb := childvisible_nb + 1
 							if litem.minimum_height > value then
 								value := litem.minimum_height
 							end
@@ -311,11 +311,11 @@ feature {NONE} -- Implementation for automatic size compute
 					loop
 						litem := lchild.item
 						if litem.shown then
+							childvisible_nb := childvisible_nb + 1
 							if litem.minimum_width > wvalue then
 								wvalue := litem.minimum_width
 							end
 							hvalue := hvalue + litem.minimum_height
-							childvisible_nb := childvisible_nb + 1
 							if litem.expandable then
 								childexpand_nb := childexpand_nb + 1
 							end
@@ -337,13 +337,8 @@ feature {NONE} -- WEL Implementation
 			-- This feature must be redefine by the containers to readjust its
 			-- children too.
 		do
---			if a_height /= height then
-				{EV_BOX_IMP} Precursor (a_x, a_y, a_width, height, repaint)
-				set_local_height (a_height)
---			else
---				move (a_x, a_y)
---				set_local_width (a_width)
---			end
+			{EV_BOX_IMP} Precursor (a_x, a_y, a_width, height, repaint)
+			set_local_height (a_height)
 		end
 
 end -- class EV_VERTICAL_BOX_IMP

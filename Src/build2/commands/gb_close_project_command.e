@@ -107,8 +107,8 @@ feature -- Basic operations
 				end
 				
 					-- Hide the history window.
-				if not command_handler.show_history_command.executable then
-					history.dialog.hide
+				if history.dialog.is_show_requested then
+					command_handler.show_hide_history_command.execute
 				end
 					-- Remove the history.
 				history.wipe_out

@@ -44,7 +44,7 @@ feature -- Execution
 		local
 			creator: WEL_MESSAGE_INFORMATION_CREATOR
 		do
-			!! creator.make (window, message, wparam, lparam)
+			create creator.make (window, message, wparam, lparam)
 			command.set_message_information (creator.message_information)
 			command.execute (argument)
 		end

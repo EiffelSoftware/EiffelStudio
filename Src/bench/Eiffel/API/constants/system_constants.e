@@ -8,6 +8,8 @@ feature {NONE}
 
 	Copy_cmd: STRING is "cp"
 
+	Default_Ace_file: STRING is "/bench/help/defaults/Ace.default"
+
 	Default_precompiled_location: STRING is "$EIFFEL3/precompiled/spec/$PLATFORM/base"
 
 	Descriptor_suffix: STRING is "D"

@@ -1381,7 +1381,7 @@ end:
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 0;						/* Invariant check turned off */
-		if (icall(offset, code, is_extern))
+		if (icall((int)offset, code, is_extern))
 			sync_registers(scur, stop);
 		is_extern = 0;
 		break;
@@ -1411,7 +1411,7 @@ end:
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 1;					/* Invariant check turned on */
-		if (icall(offset, code, is_extern))
+		if (icall((int)offset, code, is_extern))
 			sync_registers(scur, stop);
 		is_extern = 0;						/* No side effect */
 		break;
@@ -1429,7 +1429,7 @@ end:
 			offset = get_long();				/* Get feature id */
 			code = get_short();					/* Get static type */
 			type = get_uint32();				/* Get attribute meta-type */
-			access(offset, code, type);
+			access((int)offset, code, type);
 		}
 		break;
 
@@ -1450,7 +1450,7 @@ end:
 			offset = get_long();			/* Get feature id */
 			code = get_short();				/* Get static type */
 			type = get_uint32();			/* Get attribute meta-type */
-			access(offset, code, type);
+			access((int)offset, code, type);
 		}
 		break;
 			
@@ -1752,7 +1752,7 @@ end:
 #endif
 		offset = get_long();			/* Get the feature id */
 		code = get_short();				/* Get the static type */
-		address(offset, code);
+		address((int32)offset, code);
 		break;
 	/*
 	 * Manifest array

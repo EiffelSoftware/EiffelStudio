@@ -112,7 +112,7 @@ feature
 					class_i.set_class_name (class_name);
 					!!fname.make(0);
 					fname.append (cluster.path);
-					fname.append ("/");
+					fname.append_character (Directory_separator);
 					fname.append (class_name);
 					fname.append (".e");
 					base_name := class_name.duplicate;

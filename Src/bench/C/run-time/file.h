@@ -70,6 +70,10 @@
 #define S_IFSOCK 0140000
 #endif
 
+#ifndef PATH_MAX
+#define PATH_MAX 512	/* Maximum length of full path name */
+#endif
+
 /* The following access constants seems to be universally accepeted. And
  * anyway, it's only after BSD 4.1 that the symbolic constants appeared.
  */

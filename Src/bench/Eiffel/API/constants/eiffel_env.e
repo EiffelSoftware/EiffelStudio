@@ -22,6 +22,13 @@ feature {NONE}
 			Result.append (Finish_freezing_script);
 		end;
 
+	Default_ace_name: STRING is
+		once
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append_character (Directory_separator);
+			Result.append (Default_ace_file);
+		end;
+
 	help_path: STRING is
 		once
 			!!Result.make (50); Result.append (Eiffel3_dir_name);

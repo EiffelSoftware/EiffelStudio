@@ -85,7 +85,9 @@ feature
 			inspect
 				valid_options.item (option_name)
 			when dead_code then
-				if value.is_no then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
 					System.set_remover_off (True)
 				elseif value.is_yes then
 					System.set_remover_off (False)
@@ -93,7 +95,9 @@ feature
 					error_found := True;
 				end;
 			when check_vape then
-				if value.is_no then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
 					System.set_do_not_check_vape (True)
 				elseif value.is_yes then
 					System.set_do_not_check_vape (False)
@@ -104,7 +108,9 @@ feature
 				!!vd37;
 				Error_handler.insert_warning (vd37);
 			when exception_stack_managed then
-				if value.is_no then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
 					System.set_exception_stack_managed (False)
 				elseif value.is_yes then
 					System.set_exception_stack_managed (True)
@@ -112,7 +118,9 @@ feature
 					error_found := True;
 				end;
 			when fail_on_rescue then
-				if value.is_no then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
 					Rescue_status.set_fail_on_rescue (False);
 				elseif value.is_yes then
 					Rescue_status.set_fail_on_rescue (True);
@@ -120,7 +128,9 @@ feature
 					error_found := True;
 				end;
 			when code_replication then
-				if value.is_no then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
 					System.set_code_replication_off (True);
 				elseif value.is_yes then
 					System.set_code_replication_off (False);
@@ -129,7 +139,7 @@ feature
 				end;
 			when precompilation then
 					-- Do nothing: the normal case has already been solved
-				if not value.is_name then
+				if value = Void or else not value.is_name then
 					error_found := True;
 				end;
 			else

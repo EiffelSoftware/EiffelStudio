@@ -51,6 +51,8 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font
 		undefine
+			on_hide,
+			on_show,
 			on_size,
 			on_move,
 			on_right_button_up,
@@ -85,7 +87,7 @@ feature -- Access
 
 	granularity: INTEGER
 
-	minimum , maximum: INTEGER
+	minimum, maximum: INTEGER
 
 	position: INTEGER
 
@@ -129,20 +131,16 @@ feature -- Status setting
 	realize is
 			-- Create a scrollbar and display it
 		local
-			a_style: INTEGER
 			wc: WEL_COMPOSITE_WINDOW
 		do
 			if not realized then
 				wc ?= parent
 				resize_for_shell
-				a_style := Ws_child + Ws_tabstop + Ws_visible
 				if is_horizontal then
-					a_style := a_style + Sbs_horz
 					if not has_height then set_height (20) end
 					if not has_width then set_width (100) end
 					make_horizontal (wc, x, y, width, height, id_default);
 				else
-					a_style := a_style + Sbs_vert
 					if not has_height then set_height (100) end
 					if not has_width then set_width (20) end
 					make_vertical (wc, x, y, width, height, id_default)

@@ -100,7 +100,11 @@ feature -- Basic Operations
 				progress_report.set_title (Idl_compilation_title)
 				progress_report.start
 
-				if shared_wizard_environment.use_universal_marshaller then
+				if 
+					shared_wizard_environment.use_universal_marshaller or
+					shared_wizard_environment.automation or
+					shared_wizard_environment.new_eiffel_project
+				then
 					progress_report.set_range (1)
 				else
 					progress_report.set_range (6)
@@ -114,6 +118,8 @@ feature -- Basic Operations
 				-- Create Proxy/Stub
 				if 
 					not shared_wizard_environment.use_universal_marshaller and 
+					not shared_wizard_environment.automation and
+					not shared_wizard_environment.new_eiffel_project and
 					Shared_wizard_environment.server and 
 					not shared_wizard_environment.abort
 				then
@@ -245,17 +251,19 @@ feature {NONE} -- Implementation
 			end
 			
 			-- Compiling Eiffel
-			message_output.add_title (Current, Compilation_title_eiffel)
 			if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
 	--			message_output.set_forced_display
+				message_output.add_title (Current, Compilation_title_eiffel)
 				if Shared_wizard_environment.client then
 					progress_report.set_title (Eiffel_compilation_title)
 					progress_report.set_range (1)
 					progress_report.start
 					compiler.compile_eiffel (Client)
 					progress_report.step
-				end
-				if not Shared_wizard_environment.abort and Shared_wizard_environment.server then
+				
+				elseif 
+					Shared_wizard_environment.server 
+				then
 					progress_report.set_title (Eiffel_compilation_title)
 					progress_report.set_range (1)
 					progress_report.start

@@ -98,7 +98,6 @@ feature {NONE} -- Initialization
 					post_launch_actions.extend (agent open_with_name (command_line.argument_array @ 1))
 					launch
 				else
-					system_status.set_current_project (project_settings)
 					system_status.enable_wizard_system
 					create wizard_manager.make_and_launch_as_modify_wizard (visual_studio_information.Visual_studio_pixmap_location)
 				end

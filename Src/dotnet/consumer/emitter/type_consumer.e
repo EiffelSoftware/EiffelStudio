@@ -11,6 +11,8 @@ inherit
 
 	SHARED_ASSEMBLY_MAPPING
 
+	NAME_SOLVER
+
 create
 	make
 
@@ -73,26 +75,28 @@ feature -- Status Report
 feature -- Basic Operation
 
 	initialize is
-			-- Initialize `consumed_type.functions', `consumed_type.methods',
+			-- Initialize `consumed_type.functions', `consumed_type.procedures',
 			-- `consumed_type.fields' and `consumed_type.constructors'.
 		require
 			not_initialized: not initialized
 		local
 			i, arg_count, index: INTEGER
-			fields: ARRAY [CONSUMED_FIELD]
+			fields: ARRAYED_LIST [CONSUMED_FIELD]
 			cf: CONSUMED_FIELD
 			cons: CONSTRUCTOR_INFO
 			field: FIELD_INFO
 			meth: METHOD_INFO
 			member: MEMBER_INFO	
-			field_list, constructor_list: ARRAY_LIST
 			overload_solver: OVERLOAD_SOLVER
+			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
 		do
 			check
 				non_void_internal_features: internal_features /= Void
 			end
-			create constructor_list.make
-			create field_list.make
+			create tc.make
+			create fields.make (0)
+			create {SORTED_TWO_WAY_LIST [STRING]} reserved_names.make
+			reserved_names.compare_objects
 			create overload_solver.make
 			from
 				i := 0
@@ -100,71 +104,43 @@ feature -- Basic Operation
 				i = internal_features.get_length
 			loop
 				member := internal_features.item (i)
-				cons ?= member
-				if cons /= Void and then is_consumed_method (cons) then
-					index := constructor_list.add (cons)
-				else
-					field ?= member
-					if field /= Void then
-						index := field_list.add (field)
-					else
-						meth ?= member
-						if meth /= Void and then is_consumed_method (meth) then
-							overload_solver.add_method (meth)
-						end
-					end
-				end
-				i := i + 1
-			end
-			create type_constructors.make
-			from
-				i := 0
-			until
-				i = constructor_list.get_count
-			loop
-				from
-					cons ?= constructor_list.get_item (i)
+				if member.get_member_type = feature {MEMBER_TYPES}.constructor then
+					cons ?= member
 					check
-						valid_constructor_array: cons /= Void
+						is_constructor: cons /= Void
 					end
-					arg_count := cons.get_parameters.get_length
-					type_constructors.start
-				until
-					type_constructors.after
-				loop
-					if cons.get_parameters.get_length > arg_count then
-						type_constructors.put_left (create {CLI_CELL [CONSTRUCTOR_INFO]}.put (cons))
-						type_constructors.finish
+					if is_consumed_method (cons) then
+						tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))					
 					end
-					type_constructors.forth
+				elseif member.get_member_type = feature {MEMBER_TYPES}.field then
+					field ?= member
+					check
+						is_field: field /= Void
+					end
+					fields.extend (consumed_field (field))
+				elseif member.get_member_type = feature {MEMBER_TYPES}.method then
+					meth ?= member
+					check
+						is_method: meth /= Void
+					end
+					if is_consumed_method (meth) then
+						overload_solver.add_method (meth)
+					end
 				end
-				i := i + 1
-			end	
-			create fields.make (1, field_list.get_count)
-			from
-				i := 0
-			until
-				i = field_list.get_count
-			loop
-				field ?= field_list.get_item (i)
-				check
-					valid_field_list: field /= Void
-				end
-				cf := consumed_field (field)
-				fields.put (cf, i + 1)
-				overload_solver.add_reserved_name (cf.eiffel_name)
 				i := i + 1
 			end
-			overload_solver.solve
-			consumed_type.set_constructors (constructors)
+			consumed_type.set_constructors (solved_constructors (tc))
 			consumed_type.set_fields (fields)
-			consumed_type.set_methods (overload_solver.methods)
+			overload_solver.set_reserved_names (reserved_names)
+			overload_solver.solve
+			consumed_type.set_procedures (overload_solver.procedures)
 			consumed_type.set_functions (overload_solver.functions)
+			initialized := True
 		ensure
 			initialized: initialized
 			non_void_constructors: consumed_type.constructors /= Void
 			non_void_fields: consumed_type.fields /= Void
-			non_void_methods: consumed_type.methods /= Void
+			non_void_procedures: consumed_type.procedures /= Void
 			non_void_functions: consumed_type.functions /= Void
 		end
 
@@ -181,7 +157,7 @@ feature {NONE} -- Implementation
 			create dotnet_name.make_from_cil (info.get_name)
 			field_type := info.get_field_type
 			create Result.make (
-								format_feature_name (dotnet_name),
+								unique_feature_name (dotnet_name),
 								dotnet_name,
 								create {CONSUMED_REFERENCED_TYPE}.make (
 										create {STRING}.make_from_cil (field_type.get_full_name),
@@ -189,87 +165,67 @@ feature {NONE} -- Implementation
 								info.get_is_static)
 		end
 
-	constructors: ARRAY [CONSUMED_CONSTRUCTOR] is
-			-- Eiffel creation routines
+	solved_constructors (tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAY [CONSUMED_CONSTRUCTOR] is
+			-- Initialize `constructors' from `tc'.
 		require
-			non_void_constructors: type_constructors /= Void
+			non_void_constructors: tc /= Void
 		local
-			name: STRING
-			sname: SYSTEM_STRING
-			params: NATIVE_ARRAY [PARAMETER_INFO]
-			i, counter: INTEGER
- 		do
- 			if type_constructors.is_empty then
- 				create Result.make (1, 0)
- 			else
-	 			create Result.make (1, type_constructors.count)
- 				type_constructors.start
-	 			Result.put (create {CONSUMED_CONSTRUCTOR}.make (Default_creation_routine_name, arguments (type_constructors.item.item)), 1)
- 				counter := 2
-	 			from
-	 				type_constructors.forth
-	 			until
-	 				type_constructors.after
-	 			loop
-	 				check
-	 					at_least_one_argument: type_constructors.item.item.get_parameters.get_length > 0
-	 				end
-	 				name := Default_creation_routine_name + "_from_"
-	 				from
-	 					i := 0
-	 					params := type_constructors.item.item.get_parameters
-	 				until
-	 					i > params.get_length
-	 				loop
-	 					sname := params.item (i).get_name
-	 					if sname /= Void then
-	 						name := name + create {STRING}.make_from_cil (sname)
-	 					else
-		 					name := name + "arg_" + (i + 1).out
-		 				end
-		 				Result.put (create {CONSUMED_CONSTRUCTOR}.make (name, arguments (type_constructors.item.item)), counter)
-	 				end
-	 				counter := counter + 1
-	 			end
-	 		end
-		ensure
-			non_void_feature: Result /= Void
-		end
-
-	arguments (info: METHOD_BASE): ARRAY [CONSUMED_ARGUMENT] is
-			-- Argument of `info'
-		require
-			non_void_method: info /= Void
-		local
-			i, count: INTEGER
-			en, dn: STRING
-			params: NATIVE_ARRAY [PARAMETER_INFO]
-			p: PARAMETER_INFO
+			arg, name: STRING
+			i: INTEGER
+			args: ARRAY [CONSUMED_ARGUMENT]
 		do
-			create Result.make (1, info.get_parameters.get_length)
-			params := info.get_parameters
-			from
-				i := 0
-				count := params.get_length
-			until
-				i >= count
-			loop
-				p := params.item (i)
-				create dn.make_from_cil (p.get_name)
-				en := format_variable_name (dn)
-				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en, referenced_type_from_type (p.get_parameter_type), p.get_is_out), i + 1)
-				i := i + 1
+			create Result.make (1, tc.count)
+			if tc.count > 0 then
+				tc.start
+				tc.item.set_name (unique_feature_name (Default_creation_routine_name))
+				from
+					tc.forth
+				until
+					tc.after
+				loop
+					args := tc.item.arguments
+					arg := args.item (1).eiffel_name
+					create name.make (arg.count + Creation_routine_name_prefix.count)
+					name.append (Creation_routine_name_prefix)
+					name.append (arg)
+					from
+						i := 2
+					until
+						not reserved_names.has (name) or i > args.count
+					loop
+						name.append ("_and_")
+						name.append (args.item (i).eiffel_name)
+						i := i + 1
+					end
+					reserved_names.extend (name)
+					tc.item.set_name (name)
+					tc.forth
+				end
+				from
+					tc.start
+					i := 1
+				until
+					tc.after
+				loop
+					Result.put (tc.item.consumed_constructor, i)
+					i := i + 1
+					tc.forth
+				end
 			end
+		ensure
+			non_void_constructors: Result /= Void
 		end
-
-	type_constructors: LINKED_LIST [CLI_CELL [CONSTRUCTOR_INFO]]
-			-- Type constructors sorted by parameters count
-			--| Need to process constructors together
-
+		
 	internal_features: NATIVE_ARRAY [MEMBER_INFO]
 			-- Type members used to initialize `features'
 
 	Default_creation_routine_name: STRING is "make"
 			-- Default Eiffel creation routine name
+
+	Argument_prefix: STRING is "arg_"
+			-- Argument names prefix
+	
+	Creation_routine_name_prefix: STRING is "make_from_"
+			-- Creation routine name prefix
 
 end -- class TYPE_CONSUMER

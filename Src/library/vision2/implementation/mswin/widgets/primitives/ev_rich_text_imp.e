@@ -437,6 +437,7 @@ feature -- Status report
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
 		do
+			set_selection (pos - 1, pos - 1)
 			Result := internal_selected_character_format
 		end
 		
@@ -450,6 +451,9 @@ feature -- Status report
 			if selection_change_actions_internal /= Void then
 				selection_change_actions_internal.block
 			end
+			if caret_move_actions_internal /= Void then
+				caret_move_actions_internal.block
+			end
 		end
 		
 	complete_saving is
@@ -458,6 +462,9 @@ feature -- Status report
 		do
 			if selection_change_actions_internal /= Void then
 				selection_change_actions_internal.resume
+			end
+			if caret_move_actions_internal /= Void then
+				caret_move_actions_internal.resume
 			end
 			enable_redraw
 		end

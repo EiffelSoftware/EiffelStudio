@@ -18,7 +18,7 @@ feature -- Command execution
 		local
 			dialog: EV_WARNING_DIALOG
 		do
-			!! dialog.make_default(arg.first, "Be carefull?", "Question box")
+			!! dialog.make_default(arg.first, "Warning box", "Be carefull?")
 		end
 
 end -- class QUESTION_DIALOG_COMMAND

@@ -305,10 +305,7 @@ feature -- Generation constants
 			-- generated local variables are of the form
 			-- `Result' + short type + number.
 			-- i.e. l_button1
-			
-	Generation_directory: STRING is "generated"
-		-- Directory name to hold the generated files.
-		
+
 	pixmap_name: STRING is "internal_pixmap"
 		-- Name of temporary pixmap used during generation
 		-- of pixmap setting code.

@@ -227,7 +227,7 @@ end;
 				chg3a := associated_class.changed3a
 				desc.start
 			until
-				desc.off
+				desc.after
 			loop
 				descendant := desc.item;
 					-- Insert the descendant in the changed classes list

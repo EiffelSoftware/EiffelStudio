@@ -84,7 +84,7 @@ feature -- Initialization
 					end;
 					succ.start
 				until
-					succ.off
+					succ.after
 				loop
 					succ_id := succ.item.topological_id;
 					k := precursor_count.item (succ_id);
@@ -128,7 +128,7 @@ feature -- Initialization
 					succ := successors.item (item.topological_id);
 					succ.start
 				until
-					succ.off
+					succ.after
 				loop
 					succ_item := succ.item;
 					succ_id := succ_item.topological_id;

@@ -1676,8 +1676,10 @@ feature -- Byte code access
 		local
 			feature_b: FEATURE_B;
 			feature_bs: FEATURE_BS;
+			last_constrained_type: TYPE_A;
 		do
-			if (context.last_constrained_type /= Void and then context.last_constrained_type.is_separate) then
+			last_constrained_type := context.last_constrained_type;
+			if (last_constrained_type /= Void and then last_constrained_type.is_separate) then
 				!!feature_bs;
 				feature_bs.init (Current);
 				feature_bs.set_type (access_type);

@@ -26,8 +26,8 @@ feature -- Basic operations
 			until
 				dialog_children.off
 			loop
-				unregister_window (dialog_children.item)
 				dialog_children.item.set_exists (False)
+				unregister_window (dialog_children.item)
 				dialog_children.item.set_item (default_pointer)
 				dialog_children.forth
 			end

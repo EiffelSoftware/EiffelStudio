@@ -198,84 +198,6 @@ feature {EV_ANY_I} -- Implementation
 			parent_void: parent = Void
 		end
 
-feature -- Obsolete
-
-	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-		-- Check if the dimensions of the widget are set to 
-		-- the values given or the minimum values possible 
-		-- for that widget.
-		obsolete "don't use it"
-		deferred
-		end		
-
-	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-		-- Check if the dimensions of the widget are set to 
-		-- the values given or the minimum values possible 
-		-- for that widget.
-		-- When the widget is not shown, the result is 0
-		obsolete "don't use it"
-		deferred
-		end		
-
-	minimum_width_set (value: INTEGER): BOOLEAN is
-			-- Send -1 not to test the height
-		obsolete "don't use it"
-		do
-			Result := minimum_dimensions_set (value, -1)
-		end
-
-	minimum_height_set (value: INTEGER): BOOLEAN is
-			-- Send -1 not to test width.
-		obsolete "don't use it"
-		do
-			Result := minimum_dimensions_set (-1, value)
-		end
-
-	position_set (new_x, new_y: INTEGER): BOOLEAN is
-		-- Check if the dimensions of the widget are set to 
-		-- the values given or the minimum values possible 
-		-- for that widget.
-		-- When the widget is not shown, the result is -1
-		obsolete "don't use it"
-		do
-			check false end
-		end
-
-	x_set (value: INTEGER): BOOLEAN is
-		obsolete "don't use it"
-		do
-			Result := position_set (value, -1)
-		end
-
-	y_set (value: INTEGER): BOOLEAN is
-		obsolete "don't use it"
-		do
-			Result := position_set (-1, value)
-		end
-
-	has_parent: BOOLEAN is
-			-- True if the widget has a parent, False otherwise
-		obsolete "use parent /= Void"
-		do
-			Result := parent.implementation /= void
-		end
-
-	parent_set (par: EV_CONTAINER): BOOLEAN is
-		obsolete "don't use it"
-		do
-			check false end
-		end
-
-	application: CELL [EV_APPLICATION_IMP] is
-			-- The current application.
-			--| Needed for the accelerators.
-		obsolete
-			"see EV_ENVIRONMENT"
-		once
-			--| FIXME Why Void?
-			create Result.put (Void)
-		end
-
 invariant
 	pointer_position_not_void: is_useable implies pointer_position /= Void
 
@@ -315,6 +237,9 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2000/06/07 20:08:05  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.68  2000/06/07 17:27:47  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

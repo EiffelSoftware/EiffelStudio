@@ -35,7 +35,6 @@ feature -- Initialization
 	initialize is
 			-- Create main box and separator.
 		do
-			create {EV_VERTICAL_BOX} split_box
 			create {EV_HORIZONTAL_SEPARATOR} sep
 			sep.set_pointer_style (Default_pixmaps.Sizens_cursor)
 			Precursor
@@ -50,19 +49,7 @@ feature {NONE} -- Implementation
 			Result := a_vert
 		end
 
-	set_first_cell_dimension (a_size: INTEGER) is
-			-- Set height of first_cell.
-		do
-			first_cell.set_minimum_height (a_size)
-		end
-
-	set_second_cell_dimension (a_size: INTEGER) is
-			-- Set height of second_cell.
-		do
-			second_cell.set_minimum_height (a_size)
-		end
-
-end -- class EV_VERTICAL_SPLIT_AREA
+end -- class EV_VERTICAL_SPLIT_AREA 
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -85,11 +72,8 @@ end -- class EV_VERTICAL_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.16  2000/06/07 17:28:12  oconnor
+--| Revision 1.17  2000/06/07 20:07:07  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.15  2000/05/03 21:44:10  brendel
---| Reverted to old version not using EV_FIXED.
 --|
 --| Revision 1.4.4.3  2000/05/05 23:39:39  brendel
 --| Normal separator again.

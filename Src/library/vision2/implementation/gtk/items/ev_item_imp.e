@@ -22,17 +22,13 @@ inherit
 			-- Inheriting from widget,
 			-- because items are widget in gtk
 		rename
-			parent_set as widget_parent_set,
 			interface as widget_interface,
 			parent as widget_parent,
 			initialize as widget_initialize
 		export {NONE}
-			widget_parent_set,
 			widget_interface,
 			widget_parent,
 			widget_initialize
-		undefine
-			has_parent
 		redefine
 			button_press_switch
 		end
@@ -169,6 +165,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/06/07 20:08:02  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.30  2000/06/07 17:27:29  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

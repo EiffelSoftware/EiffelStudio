@@ -1,79 +1,135 @@
 <!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
 <HTML>
 	<HEAD>
-		<TITLE>ENViSioN! Samples</TITLE>
+		<TITLE>Eiffel ENViSioN! Samples and Tutorials</TITLE>
 		<LINK REL="StyleSheet" HREF="./default.css">
 	</HEAD>
 	<BODY>
-		<H1>ENViSioN! Samples</H1>
-		<p>Here are all the samples for ENViSioN! that will permit to you to
-			understand the bases of programming with Eiffel.
+		<H1>Eiffel ENViSioN! Samples and Tutorials</H1>
+		<p>The Eiffel ENViSioN! samples and tutorials demonstrate various aspects of the Eiffel for
+		.NET technology. They are divided into two categories:
 		</p>
-		<p>However, you should be familiar with Object-Oriented programming model.</p>
-		<h2>Console sample</h2>
+		<p>
+		The first set of samples focus on demonstrating the use of the Eiffel language and libraries.
+		They rely solely on Eiffel libraries and as such could be compiled on other platforms using
+		Eiffel Software's EiffelStudio development environment.
+		</p>
+		<UL>
+			<li>The <a href="#console">calculator</a> sample is the most basic sample of all, start
+			with this sample if you are a first time user of the Eiffel language.</li>
+            <li>The <a href="#wel">WEL tutorial</a> was designed to help you 
+            learn the basics of Windows Eiffel Library (WEL) programming.</li>
+			<li>The <a href ="#xcell">xCell</a> sample shows how to use WEL to develop graphical applications.</li>
+            <li>The <a href="#vision2">EiffelVision2</a> samples demonstrates the use of various EiffelVision2 widgets.</li>
+        </UL>
+        <p>
+        The second set of samples uses different aspects of the .NET Framework and demonstrate how to
+        reuse .NET types from Eiffel.
+        </p>
+        <UL>
+        	<li>Several <a href="#forms">Windows Forms</a> samples illustrate 
+            how to build application with Microsoft's library. These samples are 
+            listed in order of increasing complexity.</li>
+        	<li>The <a href="#threads">threads</a> samples demonstrates the use 
+            of .NET threads.</li>
+        	<li>The <a href="#ado">ADO .NET</a> sample </li>
+       	</UL>
+       	<p>
+       	The full list of Eiffel ENViSioN! samples appears below.</P>
+       	<p>
+       	Click on <b>start</b> to load the corresponding project in Visual Studio 
+        .NET.</P>
+       	<p>
+       	Click on the name of the sample to access to its documentation.</P>
+            <a name="console"></a><h2>Console sample</h2>
 			<UL>
-				<li>
-                <a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/console/calculator.html">Calculator</a></li>
+				<li><a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/console/calculator.html">Calculator</a> 
+                - <b><a href="calculator/calculator.eifp">start</a></b></li>
 			</UL>
-		<h2>Threads Samples</h2>
-			<ul>
-				<li>Monitor</li>
-				<li><a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/threads/pools.html">Pools</a></li>
-				<li><a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/threads/timers.html">Timers</a></li>
-			</ul>
-		<h2>ADO.NET sample</h2>
-			<ul>
-				<li><a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/ado/ado.html">ADO.NET</a></li>
-			</ul>
-		<h2>Windows Form samples</h2>
-		<p>The following samples are classified from the easiest to the most complex
-        ones.
-			Therefore, some concepts introduced in the earlier samples will not be
-			explained again in the later samples!</p>
+		<h2>Windows Eiffel Library (WEL) sample and tutorial</h2>
 		<UL>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/simple_hello_world.html">Hello world form</a></LI>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/message_box.html">Message box</a></LI>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/date_time_picker.html">Calendar and dates</a></LI>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/progress_bar.html">Progress bar</a></LI>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/menu/index.html">Adding Menu to a Form</a></LI>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/mdi/index.html">Writing MDI Applications</a></LI>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/tree_view.html">Tree view</a></LI>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/calculator.html">Calculator</a></LI>
-			<LI>
-				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/gdi_plus_text.html">Text (gdi plus)</a></LI>
+			<li><a name="wel"></a><a href="../Docs/html/Wel/tutorial/index.html">WEL tutorial</a> 
+            - <b><a href="wel/step1/step1.eifp">step 1</a></b>,<b>
+            <a href="wel/step2/step2.eifp">step 2</a></b>,<b>
+            <a href="wel/step3/step3.eifp">step 3</a></b>,<b>
+            <a href="wel/step4/step4.eifp">step 4</a></b>,<b>
+            <a href="wel/step5/step5.eifp">step 5</a></b>,<b>
+            <a href="wel/step6/step6.eifp">step 6</a></b>,<b>
+            <a href="wel/step7/step7.eifp">step 7</a></b>, <b>
+            <a href="wel/step8/step8.eifp">step 8</a></b></li>
+			<LI><a name="xcell"></a><a href="../Docs/html/Wel/xcell.html">xCell</a> 
+            - <b><a href="wel/xcell/xcell.eifp">start</a></b></LI>
 		</UL>
-		<h2>Vision2 samples</h2>
-		<p>The following samples use the Vision2 library.</p>
+		<a name="vision2"></a><h2>EiffelVision2 samples</h2>
 		<UL>
 			<LI>
-				<a href="../Docs/html/Vision2/accelerator.html">Accelerator</a></LI>
+				<a href="../Docs/html/Vision2/accelerator.html">Accelerator</a> 
+                - <b><a href="vision2/accelerator/accelerator.eifp">start</a></b></LI>
 			<LI>
-				<a href="../Docs/html/Vision2/cursor.html">Cursor</a></LI>
+				<a href="../Docs/html/Vision2/cursor.html">Cursor</a> - <b>
+                <a href="vision2/cursor/cursor.eifp">start</a></b></LI>
 			<LI>
-				<a href="../Docs/html/Vision2/gauges.html">Gauges</a></LI>
+				<a href="../Docs/html/Vision2/gauges.html">Gauges</a> - <b>
+                <a href="vision2/gauges/gauges.eifp">start</a></b></LI>
 			<LI>
 				<a href="../Docs/html/Vision2/standard_dialogs.html">Standard
-                dialogs</a></LI>
+                dialogs</a> - <b>
+                <a href="vision2/standard_dialogs/standard_dialogs.eifp">start</a></b></LI>
 			<LI>
-				<a href="../Docs/html/Vision2/viewport.html">Viewport</a></LI>
+				<a href="../Docs/html/Vision2/viewport.html">Viewport</a> - <b>
+                <a href="vision2/viewport/viewport.eifp">start</a></b></LI>
 			<LI>
-				<a href="../Docs/html/Vision2/widgets.html">Widgets</a></LI>
+				<a href="../Docs/html/Vision2/widgets.html">Widgets</a> - <b>
+                <a href="vision2/widgets/widgets.eifp">start</a></b></LI>
 		</UL>
-		<h2>Wel samples</h2>
+		<a name="forms"></a><h2>Windows Form samples</h2>
 		<UL>
-			<li><a href="../Docs/html/Wel/tutorial/index.html">Well tutorial</a></li>
 			<LI>
-				<a href="../Docs/html/Wel/xcell.html">xCell</a></LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/simple_hello_world.html">Hello world form</a> 
+                - <b>
+                <a href="winforms/hello_world_window/hello_world_window.eifp">
+                start</a></b></LI>
+			<LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/message_box.html">
+                Hello word dialog</a> - <b>
+                <a href="winforms/hello_world_dialog/hello_world_dialog.eifp">
+                start</a></b></LI>
+			<LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/date_time_picker.html">Calendar and dates</a> 
+                - <b><a href="winforms/date_time_picker/date_time_picker.eifp">
+                start</a></b></LI>
+			<LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/progress_bar.html">Progress bar</a> 
+                - <b><a href="winforms/progress_bar/progress_bar.eifp">start</a></b></LI>
+			<LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/menu/index.html">Adding Menu to a Form</a> 
+                - <b><a href="winforms/menu/menu.eifp">start</a></b></LI>
+			<LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/mdi/index.html">Writing MDI Applications</a> 
+                - <b><a href="winforms/mdi/mdi.eifp">start</a></b></LI>
+			<LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/tree_view.html">Tree view</a> 
+                - <b><a href="winforms/tree_view/tree_view.eifp">start</a></b></LI>
+			<LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/calculator.html">Calculator</a> 
+                - <b>
+                <a href="winforms/window_calculator/window_calculator.eifp">
+                start</a></b></LI>
+			<LI>
+				<a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/winform/gdi_plus_text.html">Text (gdi plus)</a> 
+                - <b><a href="winforms/gdi/gdi.eifp">start</a></b></LI>
 		</UL>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-	</BODY>
+		<a name="threads"></a><h2>Threads Samples</h2>
+			<ul>
+				<li><a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/threads/pools.html">Pools</a> 
+                - <b><a href="threading/pools/pools.eifp">start</a></b></li>
+				<li><a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/threads/timers.html">Timers</a> 
+                - <b><a href="threading/timers/timers.eifp">start</a></b></li>
+			</ul>
+		<a name="ado"></a><h2>ADO .NET sample</h2>
+			<ul>
+				<li><a href="ms-help://es.ENViSioN!/Envision/Delivery/newdocs/technologies/dotnet/samples/ado/ado.html">ADO .NET</a> 
+                - <b><a href="ado/ado.eifp">start</a></b></li>
+			</ul>
+		</BODY>
 </HTML>

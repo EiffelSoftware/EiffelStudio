@@ -238,50 +238,50 @@ feature {NONE} -- Attributes
 	flat_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
 			-- Table of the last flat formats
 		once
-			!!Result.make (History_size)
+			!! Result.make (History_size)
 		end
 
 	flatshort_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
 			-- Table of the last flatshort formats
 		once
-			!!Result.make (History_size)
+			!! Result.make (History_size)
 		end
 
 	short_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
 			-- Table of the last short formats
 		once
-			!!Result.make (History_size)
+			!! Result.make (History_size)
 		end
 
 	clickable_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
 			-- Table of the last clickable formats
 		once
-			!!Result.make (History_size)
+			!! Result.make (History_size)
 		end
 
 	rout_flat_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
 			-- Table of the last flat formats
 		once
-			!!Result.make (History_size)
+			!! Result.make (History_size)
 		end
 
 	debug_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
 			-- Table of the last debug formats
 		once
-			!!Result.make (History_size)
+			!! Result.make (History_size)
 		end
 
 	simple_debug_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
 			-- Table of the last debug formats
 		once
-			!!Result.make (History_size)
+			!! Result.make (History_size)
 		end
 
 	history_list: LINKED_LIST [CELL2 [HASHABLE_STONE,
 						HASH_TABLE [STRUCTURED_TEXT, HASHABLE_STONE]]] is
 			-- History list. Only `History_size' contexts are kept in memory
 		once
-			!!Result.make
+			!! Result.make
 		end
 
 feature {NONE} -- Implementation
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			stone_and_table: CELL2 [HASHABLE_STONE, 
 							HASH_TABLE [STRUCTURED_TEXT, HASHABLE_STONE]]
 		do
-			!!stone_and_table.make (stone, table)
+			!! stone_and_table.make (stone, table)
 			history_list.extend (stone_and_table)
 			if history_list.count > History_size then
 				history_list.start

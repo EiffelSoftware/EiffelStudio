@@ -12,6 +12,9 @@ inherit
 	EV_FILE_DIALOG_I
 
 	EV_STANDARD_DIALOG_IMP
+		redefine
+			show_modal_to_window
+		end
 
 feature {NONE} -- Initialization
 
@@ -22,6 +25,7 @@ feature {NONE} -- Initialization
 			wel_make
 			set_filter ("*.*")
 			start_directory := "."
+			create filters.make (1)
 		end
 
 	initialize is
@@ -138,6 +142,41 @@ feature {NONE} -- Implementation
 		do
 			Result := valid_file_name (a_title) and not (a_title.has ('/') or a_title.has ('\') or  a_title.has (':'))
 		end
+		
+	show_modal_to_window (a_window: EV_WINDOW) is
+			-- Show the window and wait until the user closed it.
+		local
+			filter_name: STRING
+			filter_pattern: STRING
+			filter_names: ARRAY [STRING]
+			filter_patterns: ARRAY [STRING]
+			filter_info: TUPLE [STRING, STRING]
+		do
+				-- Filters are now connected before showing the window based
+				-- on the current contents of `filters', as they do not need
+				-- to be updated dynamically.
+			create filter_names.make (1, filters.count)
+			create filter_patterns.make (1, filters.count)
+			from
+				filters.start
+			until
+				filters.off
+			loop
+				filter_info := filters.item
+				filter_pattern ?= filter_info.item (1)
+				filter_name ?= filter_info.item (2)
+				
+				filter_patterns.put (filter_pattern, filters.index)
+				filter_names.put (filter_name, filters.index)
+				filters.forth
+			end
+			wel_set_filter (filter_names, filter_patterns)
+			wel_set_filter_index (0)
+			
+				-- Now show the dialog in the standard fashion.
+			Precursor {EV_STANDARD_DIALOG_IMP} (a_window)	
+		end
+		
 
 feature -- Deferred
 

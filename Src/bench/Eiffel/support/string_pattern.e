@@ -118,7 +118,8 @@ feature -- Comparison
 				until
 					automaton_index >= automaton_count or else
 					input_index >= input_count or else
-					not Result
+					not Result or else
+					(automaton_index + 1 = automaton_count and next_automaton = s_r)
 				loop
 					automaton_char := automaton_area.item(automaton_index);
 					input_char := input_area.item(input_index);

@@ -4,49 +4,25 @@
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
-		<code>
-			<bold>#include "eif_cecil. h"</bold>
-			<bold>EIF_REFERENCE_FUNCTION eif_reference_function (char *</bold> 
-			<italic>name</italic>
-			<bold>, int *</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-			<bold>EIF_INTEGER_FUNCTION eif_integer_function (char *</bold> 
-			<italic>name</italic>
-			<bold>, int *</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-			<bold>EIF_CHARACTER_FUNCTION eif_character_function (char *</bold> 
-			<italic>name</italic>
-			<bold>, int *</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-			<bold>EIF_REAL_FUNCTION eif_real_function (char *</bold> 
-			<italic>name</italic>
-			<bold>, int *</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-			<bold>EIF_DOUBLE_FUNCTION eif_double_function (char *</bold> 
-			<italic>name</italic>
-			<bold>, int *</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-			<bold>EIF_BOOLEAN_FUNCTION eif_boolean_function (char *</bold> 
-			<italic>name</italic>
-			<bold>, int *</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-			<bold>EIF_POINTER_FUNCTION eif_pointer_function (char *</bold> 
-			<italic>name</italic>
-			<bold>, int *</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-			<bold>EIF_BIT_FUNCTION eif_bit_function (char *</bold> 
-			<italic>name</italic>
-			<bold>, int *</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-		</code>
+		<code_block>
+	<bold>#include "eif_cecil.h"
+
+	EIF_REFERENCE_FUNCTION eif_reference_function (char *</bold> <italic>name</italic><bold>, int *</bold> <italic>tid</italic><bold>);</bold>
+
+	<bold>EIF_INTEGER_FUNCTION eif_integer_function (char *</bold> <italic>name</italic><bold>, int *</bold> <italic>tid</italic><bold>);</bold>
+
+	<bold>EIF_CHARACTER_FUNCTION eif_character_function (char *</bold> <italic>name</italic><bold>, int *</bold> <italic>tid</italic><bold>);</bold>
+
+	<bold>EIF_REAL_FUNCTION eif_real_function (char *</bold> <italic>name</italic><bold>, int * </bold><italic>tid</italic><bold>);</bold>
+
+	<bold>EIF_DOUBLE_FUNCTION eif_double_function (char *</bold> <italic>name</italic><bold>, int *</bold> <italic>tid</italic><bold>);</bold>
+
+	<bold>EIF_BOOLEAN_FUNCTION eif_boolean_function (char *</bold> <italic>name</italic><bold>, int *</bold> <italic>tid</italic><bold>);</bold>
+
+	<bold>EIF_POINTER_FUNCTION eif_pointer_function (char *</bold> <italic>name</italic><bold>, int *</bold><italic> tid</italic><bold>);</bold>
+
+	<bold>EIF_BIT_FUNCTION eif_bit_function (char *</bold> <italic>name</italic><bold>, int *</bold> <italic>tid</italic><bold>);</bold>
+		</code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>These functions return the address of the Eiffel function of name 

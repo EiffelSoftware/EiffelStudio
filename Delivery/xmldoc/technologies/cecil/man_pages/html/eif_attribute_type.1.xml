@@ -4,15 +4,11 @@
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
-		<code>
-			<bold>#include "eif_cecil. h"</bold>
-			<bold/>
-			<bold>int eif_attribute_type (char *</bold> 
-			<italic>attr</italic>
-			<bold>, EIF_TYPE_ID</bold> 
-			<italic>tid</italic>
-			<bold>); </bold>
-		</code>
+		<code_block>
+	<bold>#include "eif_cecil.h"
+
+	int eif_attribute_type (char *</bold> <italic>attr</italic><bold>, EIF_TYPE_ID</bold> <italic>tid</italic><bold>);</bold> 
+		</code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

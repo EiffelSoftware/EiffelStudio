@@ -5,12 +5,11 @@
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
-		<code>
-			<bold>#include "eif_plug. h"</bold>
-			<bold>EIF_REFERENCE eif_string (char *</bold>
-			<italic>string</italic>
-			<bold>);</bold>
-		</code>
+		<code_block>
+	<bold>#include "eif_plug.h"
+
+	EIF_REFERENCE eif_string (char *</bold> <italic>string</italic><bold>);</bold>
+		</code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

@@ -4,12 +4,11 @@
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
-		<code>
-			<bold>#include "eif_gen_conf. h"</bold>
-			<bold>EIF_TYPE_ID eif_type_by_name (char *</bold>
-			<italic>type</italic>
-			<bold>);</bold>
-		</code>
+		<code_block>
+	<bold>#include "eif_gen_conf.h"
+
+	EIF_TYPE_ID eif_type_by_name (char *</bold> <italic>type</italic><bold>);</bold>
+		</code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

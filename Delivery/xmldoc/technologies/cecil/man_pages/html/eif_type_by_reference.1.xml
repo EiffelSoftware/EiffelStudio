@@ -4,12 +4,11 @@
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
-		<code>
-			<bold>#include "eif_cecil. h"</bold>
-			<bold>EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE</bold>
-			<italic>reference</italic>
-			<bold>);</bold>
-		</code>
+		<code_block>
+	<bold>#include "eif_cecil.h"
+
+	EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE</bold> <italic>reference</italic><bold>);</bold>
+		</code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

@@ -1551,9 +1551,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			break;
 		case BC_GEN_PARAM_CREATE:
 			{
-			int32 current_type, formal_position;
+			short current_type;
+			int32 formal_position;
 
-			current_type = get_long ();		/* Get static type of caller */
+			current_type = get_short ();		/* Get static type of caller */
 			formal_position = get_long ();	/* Get position of formal generic
 											   we want to create */
 			type = (int) RTGPTID(current_type, icurrent->it_ref, formal_position);

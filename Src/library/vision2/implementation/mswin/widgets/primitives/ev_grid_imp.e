@@ -11,12 +11,14 @@ class
 	
 inherit
 
-	EV_DRAWING_AREA_IMP
+	EV_CELL_IMP
 		rename
+			item as cell_item,
 			set_item as wel_set_item,
 			interface as drawing_area_interface
 		redefine
-			initialize
+			initialize,
+			destroy
 		end
 	
 	EV_GRID_I
@@ -34,9 +36,19 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			initialize_grid	
+			Precursor {EV_CELL_IMP}
+			initialize_grid
+			is_initialized := True
 		end
+		
+feature {NONE} -- Implementation
 
+	destroy is
+			-- Destroy `Current'.
+		do
+			Precursor {EV_CELL_IMP}
+		end
+		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GRID

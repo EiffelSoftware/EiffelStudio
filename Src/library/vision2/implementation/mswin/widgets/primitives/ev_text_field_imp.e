@@ -47,7 +47,8 @@ inherit
 	WEL_VK_CONSTANTS
 
 creation
-	make, make_with_text
+	make,
+	make_with_text
 
 feature -- Initialization
 
@@ -71,9 +72,12 @@ feature -- Initialization
 
 feature -- Event - command association
 	
-	add_activate_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
 		do
-			add_command (Cmd_activate, a_command, arguments)
+			add_command (Cmd_activate, cmd, arg)
 		end
 
 feature {NONE} -- Implementation

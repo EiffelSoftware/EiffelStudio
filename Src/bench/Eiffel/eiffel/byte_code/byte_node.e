@@ -59,7 +59,7 @@ feature -- Eiffel source line information
 				l_buffer.putstring ("%N#line ")
 				l_buffer.putint (line_number)
 				l_buffer.putstring (" %"")
-				l_buffer.escape_string (l_buffer, Context.associated_class.lace_class.base_name)
+				l_buffer.escape_string (Context.associated_class.lace_class.base_name)
 				l_buffer.putstring ("%"")
 				l_buffer.new_line
 			end

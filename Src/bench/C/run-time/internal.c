@@ -183,11 +183,48 @@ rt_public long ei_size(EIF_REFERENCE object)
 		return (long) EIF_Size(Dtype(object));
 }
 
-rt_public char ei_special(EIF_REFERENCE object)
-{
+rt_public EIF_BOOLEAN ei_special(EIF_REFERENCE object)
 	/* Is `object' a special one ? */
-	
-	return ((HEADER(object)->ov_flags) & EO_SPEC) ? (char) 1 : (char) 0;
+{
+	return EIF_TEST((HEADER(object)->ov_flags) & EO_SPEC);
+}
+
+rt_public EIF_BOOLEAN eif_special_any_type (EIF_INTEGER dftype)
+	/* Does `dtype' represent a SPECIAL [ANY]? */
+{
+	uint32 dtype = Deif_bid(dftype);
+	return EIF_TEST(dtype == (uint32) egc_sp_ref);
+}
+
+rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
+	/* Does `dtype' represent a SPECIAL [XX] where XX can be a basic type
+	 * or a reference type? */
+{
+	uint32 dtype = Deif_bid(dftype);
+	return EIF_TEST(
+		(dtype == egc_sp_bool) ||
+		(dtype == egc_sp_char) ||
+		(dtype == egc_sp_wchar) ||
+		(dtype == egc_sp_int8) ||
+		(dtype == egc_sp_int16) ||
+		(dtype == egc_sp_int32) ||
+		(dtype == egc_sp_int64) ||
+		(dtype == egc_sp_real) ||
+		(dtype == egc_sp_double) ||
+		(dtype == egc_sp_pointer) ||
+		(dtype == egc_sp_ref)
+		);
+}
+
+rt_public void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dtype)
+	/* Set object type to be `dtype'. To be used very carefully as one might
+	 * mess up object structure.
+	 */
+{
+	uint32 flags;
+	flags = HEADER(object)->ov_flags;
+	flags = (flags & 0xFFFF0000) | (dtype & 0x0000FFFF);
+	HEADER(object)->ov_flags = flags;
 }
 
 rt_public void * ei_oref(long i, EIF_REFERENCE object)

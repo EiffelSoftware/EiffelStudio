@@ -241,6 +241,7 @@ feature {NONE} -- Initialization
 												call.set_routine (
 													l_chain,
 													l_frame,
+													l_frame_il,
 													False, 			-- is_melted (No since this is a dotnet system)
 													l_hexaddress,
 													l_class_type, 	-- dynmic class type
@@ -249,7 +250,6 @@ feature {NONE} -- Initialization
 													l_frame_il.get_ip,
 													l_line_number 	-- break_index / line number
 													)
-												l_frame_il.clean_on_dispose --| l_frame_il : Not needed anymore
 												extend (call)
 												level := level + 1
 											end

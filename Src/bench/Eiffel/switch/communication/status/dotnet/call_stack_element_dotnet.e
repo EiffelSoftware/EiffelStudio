@@ -64,15 +64,21 @@ feature {NONE} -- Initialization
 
 feature -- Filling
 
-	set_routine (a_chain: ICOR_DEBUG_CHAIN; a_frame: ICOR_DEBUG_FRAME; melted: BOOLEAN; a_address: STRING; 
+	set_routine (a_chain: ICOR_DEBUG_CHAIN; 
+			a_frame: ICOR_DEBUG_FRAME; a_il_frame: ICOR_DEBUG_IL_FRAME;
+			melted: BOOLEAN; a_address: STRING; 
 			a_dyn_type: CLASS_TYPE; a_org_class: CLASS_C; 
-			a_feature: FEATURE_I; a_il_offset: INTEGER; a_line_number: INTEGER) is
+			a_feature: FEATURE_I; 
+			a_il_offset: INTEGER; a_line_number: INTEGER) is
 		do
 			icd_chain := a_chain
 			icd_chain.add_ref
 			
 			icd_frame := a_frame
 			icd_frame.add_ref
+
+			icd_il_frame := a_il_frame
+			icd_il_frame.add_ref
 			
 			il_offset := a_il_offset
 			
@@ -108,12 +114,15 @@ feature -- Cleaning
 -- so for now we remove it, but please check deeper how to better handle ICorDebugFrame and so on
 --					--| FIXME JFIAT: please check if it is safe ...
 			icd_frame := Void
-			icd_chain := Void				
+			icd_il_frame := Void
+			icd_chain := Void
 		end
 
 feature -- Dotnet Properties
 
 	icd_frame: ICOR_DEBUG_FRAME
+
+	icd_il_frame: ICOR_DEBUG_IL_FRAME
 	
 	icd_chain: ICOR_DEBUG_CHAIN
 	
@@ -224,13 +233,18 @@ feature {NONE} -- Implementation
 -- FIXME jfiat 2004-07-08: maybe optimize by calling directly external on pointer
 --			l_function := icd_il_frame.get_function
 			
-			l_function := icd_frame.get_function
-			if not icd_frame.last_call_succeed then
+			icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
+			if icd_il_frame /= Void then
+				l_function := icd_il_frame.get_function
+				icd_il_frame.clean_on_dispose
+			end
+
+			if l_function = Void then
 					--| FIXME jfiat: Nasty fix, since we use the top level stack frame
 				l_icd := application.imp_dotnet.eifnet_debugger.icor_debug_thread
 				icd_frame := l_icd.get_active_frame
-				l_function := icd_frame.get_function
-				io.put_string ("BUEARK !!!!%N")
+				icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
+				l_function := icd_il_frame.get_function
 			end
 
 			private_dotnet_feature_token := l_function.get_token		
@@ -299,7 +313,8 @@ feature {NONE} -- Implementation
 --						check
 --							l_list.count = l_count
 --						end
-						if l_count > 0 then
+						if l_count > 0 and not l_list.is_empty then
+--| FIXME jfiat [2004/08/24] : check why l_list could be empty at this point 
 							create args_list.make_filled (l_count)	
 							arg_names := rout.argument_names
 							from
@@ -471,7 +486,7 @@ feature {NONE} -- Implementation
 				else
 					create {LINKED_LIST[EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
 				end
-				l_il_frame.clean_on_dispose				
+				l_il_frame.clean_on_dispose
 			end
 --		ensure
 --			local_list_not_void: Result /= Void

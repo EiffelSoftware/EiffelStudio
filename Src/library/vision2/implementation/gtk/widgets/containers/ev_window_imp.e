@@ -69,6 +69,12 @@ feature  -- Access
 			Result := "Sorry, not yet implemented."
 		end
 
+--| FIXME
+--| Christophe, PR-2186
+--| This is the sole non crashing icon-related feature.
+--| Althrough they are not critical at all for developping, they should be
+--| implemented for releasing V2-based applications.
+
         icon_mask: EV_PIXMAP is
                         -- Bitmap that could be used by window manager
                         -- to clip `icon_pixmap' bitmap to make the

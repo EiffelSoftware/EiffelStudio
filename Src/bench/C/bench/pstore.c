@@ -117,7 +117,7 @@ private long pst_store(object, object_count)
 char *object;
 long object_count;
 {
-	/* Second pass of the store mecahnism: writing on the disk.
+	/* Second pass of the store mechanism: writing on the disk.
 	 */
 
 	char *o_ref;
@@ -126,11 +126,13 @@ long object_count;
 	union overhead *zone = HEADER(object);
 	uint32 flags;
 	int is_expanded;
-	long saved_file_pos = lseek(fides, 0, SEEK_CUR)+current_position;
+	long saved_file_pos = lseek(fides, 0, SEEK_CUR);
 
 	long saved_object_count = object_count;
 
 	if (saved_file_pos==-1) esys();
+
+	saved_file_pos += current_position;
 
 	flags = zone->ov_flags;
 	is_expanded = (flags & EO_EXP) != (uint32) 0;

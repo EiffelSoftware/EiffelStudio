@@ -242,7 +242,7 @@ feature -- Element change
 
 feature -- Event - command association
 
-	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the window is closed.
 		require
@@ -251,7 +251,7 @@ feature -- Event - command association
 		deferred
 		end
 
-	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the window is resized.
 		require
@@ -260,7 +260,7 @@ feature -- Event - command association
 		deferred
 		end
 
-	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the widget is moved.
 		require

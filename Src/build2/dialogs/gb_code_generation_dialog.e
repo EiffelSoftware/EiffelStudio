@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			widget_holder.set_border_width (20)
 			extend (widget_holder)
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
+			show_actions.extend (agent start_generation)
 		end
 		
 feature {GB_GENERATION_COMMAND} -- Basic operation
@@ -69,6 +70,7 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 			temp_label: EV_LABEL
 			temp_file_name: FILE_NAME
 		do
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 			progress_bar.set_proportion (1)
 			label.set_text ("Generation completed")
 			create temp_file_name.make_from_string (system_status.current_project_settings.project_location)
@@ -78,23 +80,24 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 			widget_holder.extend (ok_button)
 			ok_button.select_actions.extend (agent destroy)
 		end
-		
-		
+
 	start_generation is
-			--
+			-- Begin generation and set generation
+			-- output progress bar to `progress_bar'.
 		local
 			code_generator: GB_CODE_GENERATOR
 		do
 			create code_generator
 			code_generator.set_progress_bar (progress_bar)
 			code_generator.generate
+			show_completion
 		end
 		
 		
 feature {NONE} -- Implementation
 
 	widget_holder: EV_VERTICAL_BOX
-		--
+		-- Main container to hold all widgets.
 		
 	label: EV_LABEL
 		
@@ -103,6 +106,8 @@ feature {NONE} -- Implementation
 		-- generation.
 		
 	ok_button: EV_BUTTON
+		-- Used to get user confirmation after generation
+		-- is complete.
 
 end -- class GB_CODE_GENERATION_DIALOG
 

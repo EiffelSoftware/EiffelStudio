@@ -61,8 +61,8 @@ feature -- Status report
 feature -- Implementation
 
 	update_radio_states is
-			-- Unselect all members of `radio_group'
-			-- and assign True to `checked'.
+			-- Unselect all members of `radio_group' except `Current',
+			-- and assign True to `is_selected'.
 		local
 			cur: CURSOR
 		do
@@ -73,7 +73,9 @@ feature -- Implementation
 				until
 					radio_group.off
 				loop
-					radio_group.item.disable_select
+					if radio_group.item /= Current then
+						radio_group.item.disable_select
+					end
 					radio_group.forth
 				end
 				radio_group.go_to (cur)

@@ -32,7 +32,7 @@ inherit
 			is_eiffel_library,
 			subclusters,
 			has_children,
-			--set_cluster_namespace,
+			set_cluster_namespace,
 			set_cluster_path,
 			set_override,
 			set_is_library,
@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 		do
 			id_sd := new_id_sd (a_name, False)
 			cluster_sd := new_cluster_sd (id_sd, Void, Void, Void, False, False)
+			create ace_dictionary
 		ensure
 			non_void_cluster_sd: cluster_sd /= Void
 		end
@@ -71,6 +72,7 @@ feature {NONE} -- Initialization
 		do
 			cluster_sd := a_cluster
 			ace := an_ace
+			create ace_dictionary
 		ensure
 			non_void_cluster_sd: cluster_sd /= Void
 		end
@@ -88,9 +90,35 @@ feature -- Access
 
 	cluster_namespace: STRING is 
 			-- namespace of the cluster
+		local
+			cl_prop: CLUST_PROP_SD
+			defaults: LACE_LIST [D_OPTION_SD]
+			free_opt: FREE_OPTION_SD
 		do
-			--Result := cluster_sd.namespace
-			Result := name.clone(name)
+			cl_prop ?= cluster_sd.cluster_properties
+			if cl_prop /= Void then
+				defaults ?= cl_prop.default_option
+				if defaults /= Void then
+					from
+						defaults.start
+					until
+						defaults.after
+					loop
+						if defaults.item.option.is_free_option then
+							free_opt ?= defaults.item.option
+							if free_opt.code = free_opt.Namespace then
+								Result := defaults.item.value.value
+							end
+						end
+						defaults.forth
+					end
+				end				
+			end
+			if Result = Void then
+				Result := ""
+			end
+		ensure
+			non_void_result: Result /= Void
 		end
 
 	cluster_path: STRING is
@@ -446,16 +474,57 @@ feature -- Element change
 			end
 		end
 
-	set_cluster_namspace (a_namespace: STRING) is
+	set_cluster_namespace (namespace: STRING) is
 			-- Set the namespace for the cluster
+		require else
+			namespace_exists: namespace /= Void
 		local
-			id_sd: ID_SD
-			free_option_sd: FREE_OPTION_SD
+			cl_prop: CLUST_PROP_SD
+			defaults: LACE_LIST [D_OPTION_SD]
+			free_opt: FREE_OPTION_SD
+			is_item_removable: BOOLEAN
+			v: OPT_VAL_SD
 		do
---			free_option_sd := new_free_option_sd(new_id_sd(, false))
---			free_option_sd.
-			--free_option_sd := new_free_option_sd ()
-		end
+			cl_prop ?= cluster_sd.cluster_properties
+
+			if cl_prop = Void then
+				cl_prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void)
+				cluster_sd.set_cluster_properties (cl_prop)
+			end
+			
+			defaults ?= cl_prop.default_option
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					is_item_removable := False
+					if defaults.item.option.is_free_option then
+						free_opt ?= defaults.item.option
+						if free_opt.code = free_opt.Namespace then
+							is_item_removable := True
+						end
+					end
+					if is_item_removable then
+						defaults.remove
+					else
+						defaults.forth
+					end
+				end
+			else
+				defaults := new_lace_list_d_option_sd(0);
+				cluster_sd.cluster_properties.set_default_option (defaults)
+			end
+
+			-- only add the namespace if it not empty.
+			-- if namespace exists then it is removed
+			if not namespace.is_empty then
+				free_opt := new_free_option_sd (new_id_sd (ace_dictionary.namespace_keyword, False))
+				v := new_name_sd (new_id_sd (namespace, True))
+				defaults.extend (new_d_option_sd (free_opt, v))
+			end
+	end
 		
 
 	set_cluster_path (path: STRING) is
@@ -725,6 +794,9 @@ feature {NONE} -- Implementation
 
 	ace: ACE_FILE_ACCESSER
 			-- Access to the ace file.
+			
+	ace_dictionary: ACE_FILE_DICTIONARY
+			-- Keyword of the ace file
 			
 	subclusters_impl: ARRAYED_LIST [like Current]
 			-- Subclusters.

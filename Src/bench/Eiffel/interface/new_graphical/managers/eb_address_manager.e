@@ -26,11 +26,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_EIFFEL_PROJECT
-		export
-			{NONE} all
-		end
-
 	EB_HISTORY_MANAGER_OBSERVER
 		redefine
 			on_update,
@@ -149,11 +144,6 @@ feature {NONE} -- Initialization
 			feature_address.select_actions.extend (~change_hist_to_feature)
 			feature_address.change_actions.extend (~type_feature)
 			feature_address.focus_in_actions.extend (~update_current_typed_class)
-
-			if not Eiffel_project.manager.is_created then
-					-- Project is not yet loaded, disable controls.
-				on_project_unloaded
-			end
 		end
 
 feature -- Access
@@ -1070,6 +1060,7 @@ feature {NONE} -- open new class
 			fname: STRING
 			sorted_features: SORTED_TWO_WAY_LIST [E_FEATURE]
 			ft: E_FEATURE_TABLE
+			fl: LIST [E_FEATURE]
 			matcher: KMP_WILD
 		do
 			current_feature := Void
@@ -1089,7 +1080,9 @@ feature {NONE} -- open new class
 				create matcher.make_empty
 				matcher.set_pattern (fname)
 				if not matcher.has_wild_cards then
-					current_feature := get_feature_named (fname)
+					if current_class.has_feature_table then
+						current_feature := get_feature_named (fname)
+					end
 					if choosing_class then
 						process_class_feature
 					else
@@ -1098,17 +1091,34 @@ feature {NONE} -- open new class
 				else
 					create sorted_features.make
 					if current_class.has_feature_table then
-						from
-							ft := current_class.api_feature_table
-							ft.start
-						until
-							ft.after
-						loop
-							matcher.set_text (ft.item_for_iteration.name) 
-							if matcher.pattern_matches then
-								sorted_features.put_front (ft.item_for_iteration)
+						if mode or not choosing_class then
+							from
+								ft := current_class.api_feature_table
+								ft.start
+							until
+								ft.after
+							loop
+								matcher.set_text (ft.item_for_iteration.name) 
+								if matcher.pattern_matches then
+									sorted_features.put_front (ft.item_for_iteration)
+								end
+								ft.forth
 							end
-							ft.forth
+						else
+								-- In the editor we only propose the written-in features
+								-- if the user pressed enter in the class address.
+							fl := current_class.written_in_features
+							from
+								fl.start
+							until
+								fl.after
+							loop
+								matcher.set_text (fl.item.name) 
+								if matcher.pattern_matches then
+									sorted_features.put_front (fl.item)
+								end
+								fl.forth
+							end
 						end
 					end
 					sorted_features.sort

@@ -9,7 +9,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	WEL_COMBO_BOX_EX
 
 inherit
@@ -18,13 +18,10 @@ inherit
 			process_notification_info,
 			insert_string_at,
 			default_style,
-			text_length,
 			find_string,
 			add_string,
 			class_name,
-			add_files,
-			set_text,
-			text
+			add_files
 		end
 
 	WEL_CBS_CONSTANTS
@@ -52,67 +49,6 @@ inherit
 			{NONE} all
 		end
 
-creation
-	make
-
-feature -- Status report
-
-	text_length: INTEGER is
-			-- Text length
-		do
-			Result := cwin_get_window_text_length (edit_item)
-		end
-
-	text: STRING is
-			-- Window text
-		local
-			length: INTEGER
-			a_wel_string: WEL_STRING
-			nb: INTEGER
-		do
-			length := text_length
-			if length > 0 then
-				length := length + 1
-				!! Result.make (length)
-				Result.fill_blank
-				!! a_wel_string.make (Result)
-				nb := cwin_get_window_text (edit_item, a_wel_string.item, length)
-				Result := a_wel_string.string
-				Result.head (nb)
-			else
-				!! Result.make (0)
-			end
-		end
-
-feature -- Status settings
-
-	set_text (a_text: STRING) is
-			-- Set the window text
-		local
-			a_wel_string: WEL_STRING
-		do
-			!! a_wel_string.make (a_text)
-			cwin_set_window_text (edit_item, a_wel_string.item)
-		end
-
-feature -- Element change
-
-	add_string (a_string: STRING) is
-			-- Add `a_string' in the combo box.
-		do
-			insert_string_at (a_string, count)
-		end
-
-	insert_string_at (a_string: STRING; index: INTEGER) is
-			-- Add `a_string' at the zero-based `index'.
-		local
-			citem: WEL_COMBO_BOX_EX_ITEM
-		do
-			!! citem.make_with_index (index)
-			citem.set_text (a_string)
-			insert_item (citem)
-		end
-
 feature -- Status report
 
 	get_item_info (index: INTEGER): WEL_COMBO_BOX_EX_ITEM is
@@ -136,6 +72,15 @@ feature -- Status report
 			cwin_send_message (item, Cbem_getitem, 0, Result.to_integer)
 		end
 
+	list_shown: BOOLEAN is
+			-- Is the drop down list shown?
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item,
+				Cb_getdroppedstate, 0, 0) = 1
+		end
+
 feature -- Status setting
 
 	set_item_info (index: INTEGER; an_item: WEL_COMBO_BOX_EX_ITEM) is
@@ -149,7 +94,43 @@ feature -- Status setting
 			cwin_send_message (item, Cbem_setitem, 0, an_item.to_integer)
 		end
 
+	show_list is
+			-- Show the drop down list.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Cb_showdropdown, 1, 0)
+		ensure
+			list_shown: list_shown
+		end
+
+	hide_list is
+			-- Hide the drop down list.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Cb_showdropdown, 0, 0)
+		ensure
+			list_not_shown: not list_shown
+		end
+
 feature -- Element change
+
+	add_string (a_string: STRING) is
+			-- Add `a_string' in the combo box.
+		do
+			insert_string_at (a_string, count)
+		end
+
+	insert_string_at (a_string: STRING; index: INTEGER) is
+			-- Add `a_string' at the zero-based `index'.
+		local
+			citem: WEL_COMBO_BOX_EX_ITEM
+		do
+			!! citem.make_with_index (index)
+			citem.set_text (a_string)
+			insert_item (citem)
+		end
 
 	insert_item (an_item: WEL_COMBO_BOX_EX_ITEM) is
 			-- Insert `an_item' in the combo-box.
@@ -256,15 +237,6 @@ feature {NONE} -- Implementation
 	buffer_size: INTEGER is 30
 			-- Windows text retrieval buffer size
 
-	edit_item: POINTER is
-			-- Return the child edit control that composes the
-			-- current control. Corresponds to a WEL_EDIT.
-		require
-			exists: exists
-		do
-			Result := cwel_integer_to_pointer (cwin_send_message_result (item, Cbem_geteditcontrol, 0, 0))
-		end
-
 	combo_item: POINTER is
 			-- Return the child combo-box that composes the
 			-- current control. Corresponds to a WEL_COMBO_BOX.
@@ -279,13 +251,6 @@ feature {NONE} -- Implementation
 		once
 			!! Result.make (0)
 			Result.from_c (cwin_comboex_class)
-		end
-
-	default_style: INTEGER is
-			-- Default style used to create the control
-		once
-			Result := Ws_visible + Ws_child + Ws_border
-				+ Cbs_dropdown
 		end
 
 feature {NONE} -- Externals

@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			Precursor (a_tool)
 			
 			Create {EB_TEXT_FORMATTER} f.make (tool)
+				-- should be EB_HTML_TEXT_FORMATTER
 			add_formatter (f)
 			Create {EB_CLICKABLE_TEXT_FORMATTER} f.make (tool)
 			add_formatter (f)

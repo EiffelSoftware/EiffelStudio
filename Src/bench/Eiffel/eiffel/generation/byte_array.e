@@ -23,6 +23,11 @@ inherit
 			{NONE} all
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} fixme
+		end
+
 create
 	make
 
@@ -157,6 +162,62 @@ feature -- Element change
 			end
 		end
 
+	append_natural_8 (i: INTEGER_8) is
+			-- Append natural `i' in the array
+		local
+			new_position: INTEGER
+		do
+			fixme ("Use NATURAL_XX types after compiler bootstrap")
+			new_position := position + natural_8_bytes
+			if new_position >= count then
+				resize (count + Chunk)
+			end
+			($area + position).memory_copy ($i, natural_8_bytes)
+			position := new_position
+		end
+
+	append_natural_16 (i: INTEGER_16) is
+			-- Append natural `i' in the array
+		local
+			new_position: INTEGER
+		do
+			fixme ("Use NATURAL_XX types after compiler bootstrap")
+			new_position := position + natural_16_bytes
+			if new_position >= count then
+				resize (count + Chunk)
+			end
+			($area + position).memory_copy ($i, natural_16_bytes)
+			position := new_position
+		end
+
+	append_natural_32 (i: INTEGER) is
+			-- Append unsigned 32 bits natural in the array
+		local
+			new_position: INTEGER
+		do
+			fixme ("Use NATURAL_XX types after compiler bootstrap")
+			new_position := position + natural_32_bytes
+			if new_position >= count then
+				resize (count + Chunk)
+			end
+			($area + position).memory_copy ($i, natural_32_bytes)
+			position := new_position
+		end
+
+	append_natural_64 (i: INTEGER_64) is
+			-- Append long natural `i' in the array
+		local
+			new_position: INTEGER
+		do
+			fixme ("Use NATURAL_XX types after compiler bootstrap")
+			new_position := position + natural_64_bytes
+			if new_position >= count then
+				resize (count + Chunk)
+			end
+			($area + position).memory_copy ($i, natural_64_bytes)
+			position := new_position
+		end
+
 	append_integer_8 (i: INTEGER_8) is
 			-- Append integer `i' in the array
 		local
@@ -184,28 +245,14 @@ feature -- Element change
 		end
 
 	append_integer (i: INTEGER) is
+			-- Append `i' in the array
+		do
+			fixme ("Should we update callers to use `append_integer_32' ?")
+			append_integer_32 (i)
+		end
+		
+	append_integer_32 (i: INTEGER) is
 			-- Append long integer `i' in the array
-		do
-			append_int32_integer (i)
-		end
-
-	append_short_integer (i: INTEGER) is
-			-- Append short integer `i' in the array
-		require
-			valid_short_integer: i >= feature {INTEGER_16}.Min_value and
-				i <= feature {INTEGER_16}.Max_value
-		do
-			append_integer_16 (i.to_integer_16)
-		end
-
-	append_uint32_integer (i: INTEGER) is
-			-- Append unsigned 32 bits integer in the array
-		do
-			append_int32_integer (i)
-		end
-
-	append_int32_integer (i: INTEGER) is
-			-- Append signed 32 bits integer in the array
 		local
 			new_position: INTEGER
 		do
@@ -228,6 +275,31 @@ feature -- Element change
 			end
 			($area + position).memory_copy ($i, integer_64_bytes)
 			position := new_position
+		end
+
+	append_short_integer (i: INTEGER) is
+			-- Append short integer `i' in the array
+		require
+			valid_short_integer: i >= feature {INTEGER_16}.Min_value and
+				i <= feature {INTEGER_16}.Max_value
+		do
+			fixme ("[
+				Callers should verify that they actually don't mean to
+				use `append_natural_16' use NATURAL_16.
+				]")
+			append_integer_16 (i.to_integer_16)
+		end
+
+	append_uint32_integer (i: INTEGER) is
+			-- Append integer `i' in the array
+		require
+			valid_uint32_integer: i >= 0
+		do
+			fixme ("[
+				Callers should verify that they actually don't mean to
+				use `append_natural_32' use NATURAL_32.
+				]")
+			append_integer_32 (i)
 		end
 
 	append_double (d: DOUBLE) is
@@ -317,6 +389,14 @@ feature -- Element change
 				t.c_type.level
 			when C_char then
 				new_position := position + character_bytes
+			when c_uint8 then
+				new_position := position + natural_8_bytes
+			when c_uint16 then
+				new_position := position + natural_16_bytes
+			when c_uint32 then
+				new_position := position + natural_32_bytes
+			when c_uint64 then
+				new_position := position + natural_64_bytes
 			when C_int8 then
 				new_position := position + integer_8_bytes
 			when C_int16, C_wide_char then
@@ -350,7 +430,7 @@ feature -- Forward and backward jump managment
 			-- Mark a forward offset
 		do
 			forward_marks.put (position)
-			append_integer (0)
+			append_integer_32 (0)
 		end
 
 	write_forward is
@@ -361,7 +441,7 @@ feature -- Forward and backward jump managment
 			pos := position
 			position := forward_marks.item
 			forward_marks.remove
-			append_integer (pos - position - integer_32_bytes)
+			append_integer_32 (pos - position - integer_32_bytes)
 			position := pos
 		end
 
@@ -372,7 +452,7 @@ feature -- Forward and backward jump managment
 			-- Mark a forward offset
 		do
 			forward_marks2.put (position)
-			append_integer (0)
+			append_integer_32 (0)
 		end
 
 	write_forward2 is
@@ -383,7 +463,7 @@ feature -- Forward and backward jump managment
 			pos := position
 			position := forward_marks2.item
 			forward_marks2.remove
-			append_integer (pos - position - integer_32_bytes)
+			append_integer_32 (pos - position - integer_32_bytes)
 			position := pos
 		end
 
@@ -394,7 +474,7 @@ feature -- Forward and backward jump managment
 			-- Mark a forward offset
 		do
 			forward_marks3.put (position)
-			append_integer (0)
+			append_integer_32 (0)
 		end
 
 	write_forward3 is
@@ -405,7 +485,7 @@ feature -- Forward and backward jump managment
 			pos := position
 			position := forward_marks3.item
 			forward_marks3.remove
-			append_integer (pos - position - integer_32_bytes)
+			append_integer_32 (pos - position - integer_32_bytes)
 			position := pos
 		end
 
@@ -416,7 +496,7 @@ feature -- Forward and backward jump managment
 			-- Mark a forward offset
 		do
 			forward_marks4.put (position)
-			append_integer (0)
+			append_integer_32 (0)
 		end
 
 	write_forward4 is
@@ -427,7 +507,7 @@ feature -- Forward and backward jump managment
 			pos := position
 			position := forward_marks4.item
 			forward_marks4.remove
-			append_integer (pos - position - integer_32_bytes)
+			append_integer_32 (pos - position - integer_32_bytes)
 			position := pos
 		end
 
@@ -443,7 +523,7 @@ feature -- Forward and backward jump managment
 	write_backward is
 			-- Write a backward jump
 		do
-			append_integer (- position - integer_32_bytes + backward_marks.item)
+			append_integer_32 (- position - integer_32_bytes + backward_marks.item)
 			backward_marks.remove
 		end
 
@@ -459,7 +539,7 @@ feature -- Forward and backward jump managment
 	write_retry is
 			-- Write a retry offset
 		do
-			append_integer (- position - integer_32_bytes + retry_position)
+			append_integer_32 (- position - integer_32_bytes + retry_position)
 		end
 
 	prepend (other: BYTE_ARRAY) is
@@ -500,7 +580,7 @@ feature -- Debugger
 			-- lnr is the current breakable line number index.
 		do
 			append (Bc_hook)
-			append_integer (lnr)
+			append_integer_32 (lnr)
 		end
 
 	generate_melted_debugger_hook_nested(lnr: INTEGER) is
@@ -508,7 +588,7 @@ feature -- Debugger
 			-- lnr is the current breakable line number index (nested call).
 		do
 			append (Bc_nhook)
-			append_integer (lnr)
+			append_integer_32 (lnr)
 		end
 
 feature {BYTE_ARRAY} -- Access
@@ -517,14 +597,6 @@ feature {BYTE_ARRAY} -- Access
 			-- Position of the cursor in the array
 
 feature {NONE} -- Externals
-
-	natural_32_bytes: INTEGER is
-			-- Size of uint32 type
-		external
-			"C [macro %"eif_eiffel.h%"]"
-		alias
-			"sizeof(EIF_NATURAL_32)"
-		end
 
 	ca_bsize (bit_count: INTEGER): INTEGER is
 			-- Number of uint32 fields for encoding a bit of length `bit_count'

@@ -39,6 +39,7 @@ feature -- Basic operations
 			name := clone (a_documentation.name)
 			description := clone (a_documentation.doc_string)
 			type_kind := a_type_info.type_attr.type_kind
+			flags := a_type_info.type_attr.flags
 
 			create_interface_descriptors (a_type_info)
 			tmp_type_attr := a_type_info.type_attr
@@ -48,6 +49,9 @@ feature -- Basic operations
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid
 			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
+
+			add_type_lib_description (type_library_descriptor)
+
 			if name = Void or else name.empty then
 				create name.make (100)
 				name.append ("coclass_")
@@ -208,6 +212,7 @@ feature -- Basic operations
 				then
 					a_descriptor.set_source_interface_descriptors (source_interface_descriptors)
 				end
+				a_descriptor.set_flags (flags)
 			end
 
 feature {NONE} -- Implementation
@@ -230,6 +235,9 @@ feature {NONE} -- Implementation
 
 	default_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			-- Descriptor of default interface.
+
+	flags: INTEGER
+			-- See ECOM_TYPE_FLAGS for values.
 
 end -- class WIZARD_COCLASS_DESCRIPTOR_CREATOR
 

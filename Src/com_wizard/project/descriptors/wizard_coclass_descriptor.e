@@ -53,6 +53,9 @@ feature -- Access
 	default_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			-- Descriptor of default interface.
 
+	flags: INTEGER
+			-- See ECOM_TYPE_FLAGS for values.
+
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
@@ -121,6 +124,14 @@ feature -- Element Change
 			default_interface_descriptor := a_interface
 		ensure
 			non_void_default_interface: default_interface_descriptor /= Void
+		end
+
+	set_flags (some_flags: INTEGER) is
+			-- Set `flags' with `some_flags'
+		do
+			flags := some_flags
+		ensure
+			valid_flags: flags = some_flags
 		end
 
 feature -- Basic operations

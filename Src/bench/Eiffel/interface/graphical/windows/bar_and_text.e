@@ -24,22 +24,26 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_shell (a_shell: EB_SHELL) is
-			-- Create an assembly tool.
+	make_shell (a_screen: SCREEN) is
+			-- Create an assembly tool with `a_screen'.
 		require
-			a_shell_not_void: a_shell /= Void
+			a_screen_not_void: a_screen /= Void
+		local
+			ts: EB_TOP_SHELL
 		do
-			make_form (a_shell.associated_form);
-			eb_shell := a_shell;
-			a_shell.set_action ("<Configure>", Current, remapped);
-			a_shell.set_action ("<Visible>", Current, remapped);
+			!! ts.make (icon_id, a_screen);
+			ts.set_title (tool_name);
+			make_form (ts.associated_form);
+			eb_shell := ts;
+			ts.set_action ("<Configure>", Current, remapped);
+			ts.set_action ("<Visible>", Current, remapped);
 			if hole.icon_symbol.is_valid then
 				eb_shell.set_icon_pixmap (hole.icon_symbol);
 			end;
 			set_icon_name (tool_name);
 			eb_shell.set_delete_command (quit.associated_command);
 			set_font_to_default;
-			set_composite_attributes (a_shell)
+			set_composite_attributes (ts)
 		end;
 
 	make_form (a_form: FORM) is

@@ -136,6 +136,17 @@ feature -- Access
 				Result := True
 			end
 		end
+		
+	update_objects is
+			-- Reset `object' and `display_object' to be up to
+			-- date with `display_window' and `builder_window'.
+		do
+			set_display_window (create {GB_DISPLAY_WINDOW})
+			set_builder_window (create {GB_BUILDER_WINDOW})
+			object := display_window
+			display_object.set_child (Builder_window)
+		end
+		
 
 	build_display_object is
 			-- Build `display_object' from type of `Current'

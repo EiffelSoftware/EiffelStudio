@@ -488,7 +488,7 @@ end;				-- Check if the path is valid
 					and then
 						(file_name.item (i - 1) = Dot
 						and
-						eif_valid_class_file_extension (file_name.item (i)))
+						valid_class_file_extension (file_name.item (i)))
 					then
 						found := False;
 						if exclude_list /= Void then
@@ -1245,6 +1245,14 @@ feature {NONE} -- Document processing
 	private_document_path: STRING
 			-- Path specified in Ace for the documents directory
 
+feature {NONE} -- Implementation
+
+	valid_class_file_extension (c: CHARACTER): BOOLEAN is
+			-- Is `c' a valid class file extension?
+		do
+			Result := c = 'e' or c = 'E'
+		end
+
 feature {NONE} -- Externals
 
 	c_clname (file_pointer: POINTER): STRING is
@@ -1261,12 +1269,6 @@ feature {NONE} -- Externals
 
 	eif_file_has_changed (cluster_path: POINTER; old_date: INTEGER): BOOLEAN is
 			-- Does the directory have new entries?
-		external
-			"C"
-		end;
-
-	eif_valid_class_file_extension (c: CHARACTER): BOOLEAN is
-			-- Is `c' a valid class file extension?
 		external
 			"C"
 		end;

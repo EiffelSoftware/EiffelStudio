@@ -993,6 +993,7 @@ rt_public void drecord_bc(int body_idx, int body_id, char *addr)
             		/* ID of byte code (index in melt table) */
            			/* Address where byte code is stored */
 {
+	EIF_GET_CONTEXT
 	/* Update the dispatch table and the melting table by introducing the
 	 * new debuggable byte code into the system. We know the byte code has
 	 * to be recorded in the melting table, which means body_id > zeroc.

@@ -285,6 +285,7 @@
 												<File Id="gelint.ace1899" Name="gelint.ace" />
 												<File Id="bb.e1901" Name="bb.e" />
 												<File Id="aa.e1902" Name="aa.e" />
+												<File Id="cc.e1902" Name="cc.e" />
 											</Component>
 										</Directory>
 									</Directory>
@@ -320,6 +321,7 @@
 												<File Id="aa.e1060" Name="aa.e" />
 												<File Id="output.hact1780" Name="OUTPUT~Z.HAC" LongName="output.hact" />
 												<File Id="loadpath.se1781" Name="loadpath.se" />
+												<File Id="Readme_txt" Name="Readme.txt" />
 											</Component>
 										</Directory>
 									</Directory>
@@ -2606,6 +2608,7 @@
 									<File Id="gepp_parser.y" Name="GEPP_P~1.Y" LongName="gepp_parser.y" />
 									<File Id="build.eant633" Name="BUILD~T.EAN" LongName="build.eant" />
 									<File Id="ise.ace1225" Name="ise.ace" />
+									<File Id="ve_esd" Name="ve.esd" />
 									<File Id="gepp.e" Name="gepp.e" />
 									<File Id="system.xace1351" Name="SYSTEM~Z.XAC" LongName="system.xace" />
 									<File Id="se.ace1595" Name="se.ace" />
@@ -2896,6 +2899,7 @@
 								<Directory Id="exec" Name="exec">
 									<Component Id="exec1.eant" Guid="53454C99-90E0-4B83-B337-B3B759783D58">
 										<File Id="exec1.eant" Name="EXEC1~1.EAN" LongName="exec1.eant" KeyPath="yes" />
+										<File Id="dir.eant" Name="DIR~1.EAN" LongName="dir.eant" />
 										<File Id="dir2.eant" Name="DIR2~1.EAN" LongName="dir2.eant" />
 										<File Id="build.eant1120" Name="BUILD~Z.EAN" LongName="build.eant" />
 										<File Id="ls.eant" Name="LSEDD5~1.EAN" LongName="ls.eant" />
@@ -3302,6 +3306,7 @@
 									<File Id="gepp.html" Name="GEPP~1.HTM" LongName="gepp.html" />
 									<File Id="client.html" Name="CLIENT~1.HTM" LongName="client.html" />
 									<File Id="index.html1981" Name="INDEX~C.HTM" LongName="index.html" />
+									<File Id="inheritance_html" Name="INHER~1.HTM" LongName="inheritance.html" />
 								</Component>
 							</Directory>
 							<Directory Id="xml103" Name="xml">
@@ -4005,6 +4010,7 @@
 												<File Id="et_qualified_feature_name.e" Name="ET_QUA~8.E" LongName="et_qualified_feature_name.e" />
 												<File Id="et_class_name_tester.e" Name="ET3839~1.E" LongName="et_class_name_tester.e" />
 												<File Id="et_class_name.e" Name="ET_CLA~6.E" LongName="et_class_name.e" />
+												<File Id="et_operator.e" Name="ET_OPE~1.E" LongName="et_operator.e" />
 											</Component>
 										</Directory>
 										<Directory Id="type" Name="type">
@@ -4169,6 +4175,7 @@
 											<File Id="kl_array_routines.e1843" Name="KL_ARR~4.E" LongName="kl_array_routines.e" />
 											<File Id="ki_file_system.e1844" Name="KI_FIL~4.E" LongName="ki_file_system.e" />
 											<File Id="kl_unix_input_file.e1975" Name="KL_UNI~6.E" LongName="kl_unix_input_file.e" />
+											<File Id="kl_stderr_file_e1974" Name="KL_STD~C.E" LongName="kl_stderr_file.e" />
 										</Component>
 									</Directory>
 									<Directory Id="ise65" Name="ise">
@@ -4633,7 +4640,8 @@
 								<Component Id="Readme.txt295" Guid="C33A4D91-29D1-4388-B4F7-471637483FE3">
 									<File Id="Readme.txt295" Name="Readme.txt" KeyPath="yes" />
 									<File Id="build.eant640" Name="BUILD~X.EAN" LongName="build.eant" />
-									<File Id="library_skl.xace1829" Name="LIBRAR~D.XAC" LongName="library_skl.xace" />
+									<File Id="library_xace1830" Name="LIBRAR~1.XAC" LongName="library.xace" />
+									<File Id="library_skl.xace1829" Name="LIBRAR~2.XAC" LongName="library_skl.xace" />
 								</Component>
 								<Directory Id="lex" Name="lex">
 									<Component Id="lx_lex_parser.e" Guid="C8A101F3-6C8B-4714-BEC7-6A7291FF2D8B">
@@ -4762,6 +4770,7 @@
 										<File Id="yy_scanner.e" Name="YY_SCA~1.E" LongName="yy_scanner.e" />
 										<File Id="yy_buffer.e" Name="YY_BUF~1.E" LongName="yy_buffer.e" />
 										<File Id="yy_compressed_scanner_skeleton.e" Name="YY_COM~1.E" LongName="yy_compressed_scanner_skeleton.e" />
+										<File Id="yy_interactive_scanner_skeleton_e" Name="YY_INT~1.E" LongName="yy_interactive_scanner_skeleton.e" />
 									</Component>
 								</Directory>
 							</Directory>

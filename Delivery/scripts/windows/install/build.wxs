@@ -148,12 +148,21 @@
 								<File Id="icon_preference_window.png" Name="ICON_P~1.PNG" LongName="icon_preference_window.png" />
 								<File Id="icon_preferences_root.png" Name="ICON_P~3.PNG" LongName="icon_preferences_root.png" />
 								<File Id="icon_preferences_folder.png" Name="ICON_P~2.PNG" LongName="icon_preferences_folder.png" />
-								<File Id="icon_format_onces_color.png" Name="ICON_F~1.PNG" LongName="icon_format_onces_color.png" />
+								<File Id="icon_format_onces_color.png" Name="ICON_F~2.PNG" LongName="icon_format_onces_color.png" />
 								<File Id="icon_string_small_color.png" Name="ICON_S~3.PNG" LongName="icon_string_small_color.png" />
 								<File Id="icon_missing_pixmap_small_color.png" Name="ICON_M~3.PNG" LongName="icon_missing_pixmap_small_color.png" />
 								<File Id="icon_integer_small_color.png" Name="ICON_I~2.PNG" LongName="icon_integer_small_color.png" />
 								<File Id="lightbulb.png" Name="LIGHTB~1.PNG" LongName="lightbulb.png" />
 								<File Id="ev_rich_text.png" Name="EV_RIC~1.PNG" LongName="ev_rich_text.png" />
+								<File Id="directory_search_small_png" Name="DIRECT~1.PNG" LongName="directory_search_small.png" />
+								<File Id="ev_checkable_tree.png" Name="EV_CHE~4.PNG" LongName="ev_checkable_tree.png" />
+								<File Id="icon_cluster_symbol_gray.png" Name="ICON_C~7.PNG" LongName="icon_cluster_symbol_gray.png" />
+								<File Id="icon_format_clients_color.png" Name="ICON_F~1.PNG" LongName="icon_format_clients_color.png" />
+								<File Id="icon_locked_color.png" Name="ICON_L~1.PNG" LongName="icon_locked_color.png" />
+								<File Id="icon_open_file_color.png" Name="ICON_O~4.PNG" LongName="icon_open_file_color.png" />
+								<File Id="icon_recycle_bin_color.png" Name="ICON_R~3.PNG" LongName="icon_recycle_bin_color.png" />
+								<File Id="icon_show_hide_directory_color.png" Name="ICON_S~4.PNG" LongName="icon_show_hide_directory_color.png" />
+								<File Id="propagate.png" Name="PROPAG~1.PNG" LongName="propagate.png" />
 							</Component>
 						</Directory>
 						<Directory Id="ico" Name="ico" />

@@ -34,6 +34,7 @@
 							<File Id="V5" Name="EV_VER~4.RTF" LongName="ev_vertical_scroll_bar_flatshort.rtf" />
 							<File Id="ev_tool_bar_flatshort.rtf" Name="EV_TOO~1.RTF" LongName="ev_tool_bar_flatshort.rtf" />
 							<File Id="ev_checkable_list_flatshort.rtf" Name="EV_CHE~1.RTF" LongName="ev_checkable_list_flatshort.rtf" />
+							<File Id="ev_checkable_tree_flatshort.rtf" Name="EV_CHE~3.RTF" LongName="ev_checkable_tree_flatshort.rtf" />
 							<File Id="ev_scrollable_area_flatshort.rtf" Name="EV_SCR~1.RTF" LongName="ev_scrollable_area_flatshort.rtf" />
 							<File Id="V7" Name="EV8524~1.RTF" LongName="ev_horizontal_separator_flatshort.rtf" />
 							<File Id="ev_text_field_flatshort.rtf" Name="EV_TEX~1.RTF" LongName="ev_text_field_flatshort.rtf" />
@@ -190,16 +191,36 @@
 								<File Id="icon_preferences_root.png" Name="ICON_P~2.PNG" LongName="icon_preferences_root.png" />
 								<File Id="icon_preferences_folder.png" Name="ICON_P~1.PNG" LongName="icon_preferences_folder.png" />
 								<File Id="icon_missing_pixmap_small_color.png" Name="ICON_M~3.PNG" LongName="icon_missing_pixmap_small_color.png" />
-								<File Id="icon_format_onces_color.png" Name="ICON_F~1.PNG" LongName="icon_format_onces_color.png" />
+								<File Id="icon_format_onces_color.png" Name="ICON_F~2.PNG" LongName="icon_format_onces_color.png" />
 								<File Id="lightbulb.png" Name="LIGHTB~1.PNG" LongName="lightbulb.png" />
 								<File Id="icon_string_small_color.png" Name="ICON_S~3.PNG" LongName="icon_string_small_color.png" />
 								<File Id="icon_integer_small_color.png" Name="ICON_I~1.PNG" LongName="icon_integer_small_color.png" />
 								<File Id="ev_rich_text.png" Name="EV_RIC~1.PNG" LongName="ev_rich_text.png" />
+								<File Id="directory_search_small_png" Name="DIRECT~1.PNG" LongName="directory_search_small.png" />
+								<File Id="ev_checkable_tree.png" Name="EV_CHE~4.PNG" LongName="ev_checkable_tree.png" />
+								<File Id="icon_clipboard_color.png" Name="ICON_C~6.PNG" LongName="icon_clipboard_color.png" />
+								<File Id="icon_cluster_symbol_gray.png" Name="ICON_C~7.PNG" LongName="icon_cluster_symbol_gray.png" />
+								<File Id="icon_copy_color.png" Name="IC2FAE~1.PNG" LongName="icon_copy_color.png" />
+								<File Id="icon_cut_color.png" Name="IC0D42~1.PNG" LongName="icon_cut_color.png" />
+								<File Id="icon_format_clients_color.png" Name="ICON_F~1.PNG" LongName="icon_format_clients_color.png" />
+								<File Id="icon_icon_view_color.png" Name="ICON_I~2.PNG" LongName="icon_icon_view_color.png" />
+								<File Id="icon_locked_color.png" Name="ICON_L~1.PNG" LongName="icon_locked_color.png" />
+								<File Id="icon_open_file_color.png" Name="ICON_O~4.PNG" LongName="icon_open_file_color.png" />
+								<File Id="icon_past_color.png" Name="ICON_P~4.PNG" LongName="icon_past_color.png" />
+								<File Id="icon_recycle_bin_color.png" Name="ICON_R~3.PNG" LongName="icon_recycle_bin_color.png" />
+								<File Id="icon_show_hide_directory_color.png" Name="ICON_S~4.PNG" LongName="icon_show_hide_directory_color.png" />
+								<File Id="propagate.png" Name="PROPAG~1.PNG" LongName="propagate.png" />
 							</Component>
 						</Directory>
 						<Directory Id="ico" Name="ico" />
 					</Directory>
 					<Directory Id="tests" Name="tests">
+						<Directory Id="checkable_tree" Name="CHECKA~2" LongName="checkable_tree">
+							<Component Id="checkable_tree" Guid="13B2F135-6ED8-4eb4-BE25-A64CBC4D5E78">
+								<File Id="checkable_tree_advanced_test_e" Name="CHECKA~1.E" LongName="checkable_tree_advanced_test.e" />
+								<File Id="checkable_tree_basic_test_e" Name="CHECKA~2.E" LongName="checkable_tree_basic_test.e" />
+							</Component>
+						</Directory>
 						<Directory Id="viewport" Name="viewport">
 							<Component Id="viewport" Guid="7EAF0ECB-92C7-41B2-BCC5-A14B1BE27AB0">
 								<File Id="viewport_offset_test.e" Name="VIEWPO~2.E" LongName="viewport_offset_test.e" KeyPath="yes" />

@@ -619,7 +619,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	column_offsets: ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each column in pixels.
 		-- For example, if there are 5 columns, each with a width of 80 pixels,
-		-- `column_offsets' contains 0, 80, 160, 240, 320
+		-- `column_offsets' contains 0, 80, 160, 240, 320, 400 (Note this is 6 items)
 
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
@@ -716,17 +716,18 @@ feature {NONE} -- Drawing implementation
 			i: INTEGER
 		do
 			create column_offsets.make (column_count)
+			column_offsets.extend (0)
 			from
 				grid_columns.start
 			until
 				grid_columns.off
 			loop
-				column_offsets.extend (i)
 				i := i + grid_columns.item.width
+				column_offsets.extend (i)
 				grid_columns.forth
 			end
 		ensure
-			counts_equal: column_offsets.count = column_count
+			counts_equal: column_offsets.count = column_count + 1
 		end
 		
 	header_item_resizing (header_item: EV_HEADER_ITEM) is

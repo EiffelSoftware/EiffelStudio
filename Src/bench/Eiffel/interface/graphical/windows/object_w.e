@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 				format_m /= Void and then special_m /= Void
 		do
 			is_in_project_tool := True
+			set_default_sp_bounds
 			file_menu := file_m
 			edit_menu := edit_m
 			format_menu := format_m
@@ -52,7 +53,6 @@ feature {NONE} -- Initialization
 			set_composite_attributes (edit_m)
 			set_composite_attributes (format_m)
 			set_composite_attributes (special_m)
---			init_text_window
 		end
 
 feature -- Window Properties

@@ -140,6 +140,14 @@ feature -- Status report
 			Result := item /= 0
 		end
 
+	is_valid_character_code: BOOLEAN is
+			-- Does current object represent a character?
+		local
+			ch: CHARACTER
+		do
+			Result := item >= ch.Min_value and item <= ch.Max_value
+		end
+
 feature -- Basic operations
 
 	abs: INTEGER_8 is
@@ -243,13 +251,19 @@ feature -- Basic operations
 
 feature -- Conversion
 
+	to_integer_8: INTEGER_8 is
+			-- Return `item'.
+		do
+			Result := item
+		end
+		
 	to_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		do
 			Result := item.to_integer_16
 		end
 
-	to_integer: INTEGER is
+	to_integer, to_integer_32: INTEGER is
 			-- Convert `item' into an INTEGER_32 value.
 		do
 			Result := item.to_integer
@@ -259,6 +273,39 @@ feature -- Conversion
 			-- Convert `item' into an INTEGER_64 value.
 		do
 			Result := item.to_integer_64
+		end
+
+	to_hex_string: STRING is
+			-- Convert `item' into an hexadecimal string.
+		local
+			tmp: INTEGER
+		do
+			tmp := item
+			Result := tmp.to_hex_string
+		ensure
+			Result_not_void: Result /= Void
+			Result_valid_count: Result.count = 2
+		end
+
+	to_hex_character: CHARACTER is
+			-- Convert `item' into an hexadecimal character.
+		require
+			in_bounds: 0 <= item and item <= 15
+		local
+			tmp: INTEGER
+		do
+			tmp := item
+			Result := tmp.to_hex_character
+		ensure
+			valid_character: ("0123456789ABCDEF").has (Result)
+		end
+
+	to_character: CHARACTER is
+			-- Returns corresponding ASCII character to `item' value.
+		require
+			valid_character: is_valid_character_code
+		do
+			Result := c_ascii_char (item) 
 		end
 
 feature -- Bit operations

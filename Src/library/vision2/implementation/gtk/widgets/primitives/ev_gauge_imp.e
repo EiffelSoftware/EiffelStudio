@@ -58,23 +58,23 @@ feature -- Access
 	value: INTEGER is
 			-- Current value of the gauge.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (adjustment).rounded
+			Result := ({EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (adjustment) + 0.5).truncated_to_integer
 		end
 
 	step: INTEGER is
 			-- Value by which `value' is increased after `step_forward'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (
+			Result := ({EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (
 				adjustment
-			).rounded
+			) + 0.5).truncated_to_integer
 		end
 
 	leap: INTEGER is
 			-- Value by which `value' is increased after `leap_forward'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_increment (
+			Result := ({EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_increment (
 				adjustment
-			).rounded
+			) + 0.5).truncated_to_integer
 		end
 
 	page_size: INTEGER is
@@ -82,7 +82,7 @@ feature -- Access
 			--| We define it here to add to the internal maximum. 
 			--| Value should be zero for ranges but not for scrollbars.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_size (adjustment).rounded
+			Result := ({EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_size (adjustment) + 0.5).truncated_to_integer
 		end
 
 feature -- Status setting
@@ -195,16 +195,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	value_changed_handler is
 			-- Called when `value' changes.
-			--| We need this intermediate step because internally
-			--| GtkAdjustment uses real values and therefore the rounded
-			--| value may not have changed.
 		do
-			if value /= old_value then
 				if change_actions_internal /= Void then
 					change_actions_internal.call ([value])
 				end
-				old_value := value
-			end
 		end
 
 invariant

@@ -47,13 +47,11 @@ feature {GB_XML_STORE} -- Output
 			-- Update all items in `objects' based on information held in `element'.
 		local
 			element_info: ELEMENT_INFORMATION
-			stripped_text: STRING
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Tooltip_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				stripped_text := strip_cdata (element_info.data)
-				for_all_objects (agent {EV_TOOLTIPABLE}.set_tooltip (retrieve_and_set_string_value (Tooltip_string)))
+				for_all_objects (agent {EV_TOOLTIPABLE}.set_tooltip (strip_cdata (retrieve_and_set_string_value (Tooltip_string))))
 			end
 		end
 

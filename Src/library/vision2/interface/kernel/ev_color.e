@@ -101,6 +101,75 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.name)
 		end
 
+	lightness: REAL is
+			-- Lightness of the color
+		local
+			max_color	: REAL
+			min_color	: REAL
+			R,G,B		: REAL
+		do
+			R := red
+			G := green
+			B := blue
+			max_color := red.max(green).max(blue)
+			min_color := red.min(green).min(blue)
+			Result := (max_color + min_color) / 2
+		end
+
+	saturation: REAL is
+			-- Saturation of the color
+		local
+			diff_color	: REAL
+			sum_color	: REAL
+			max_color	: REAL
+			min_color	: REAL
+			R,G,B		: REAL
+		do
+			R := red
+			G := green
+			B := blue
+			max_color := R.max(G).max(B)
+			min_color := R.min(G).min(B)
+			diff_color := max_color - min_color
+			if diff_color = 0.0 then
+				Result := 0.0
+			else
+				sum_color := max_color + min_color
+				if sum_color < 1 then
+					Result := diff_color / sum_color
+				else
+					Result := diff_color / (2.0 - sum_color)	
+				end
+			end
+		end
+
+	hue: REAL is
+			-- Hue of the color
+		local
+			diff_color	: REAL
+			max_color	: REAL
+			min_color	: REAL
+			R,G,B		: REAL
+		do
+			R := red
+			G := green
+			B := blue
+			max_color := R.max(G).max(B)
+			min_color := R.min(G).min(B)
+			diff_color := max_color - min_color
+			if diff_color = 0.0 then
+				Result := 0.0
+			else
+				if max_color = R then
+					Result := (G - B) / diff_color
+				elseif max_color = G then
+					Result := 2.0 + ((B - R) / diff_color)
+				elseif max_color = B then
+					Result := 4.0 + ((R - G) / diff_color)
+				end
+			end
+		end
+
 feature -- Element change
 
 	set_rgb (a_red, a_green, a_blue: REAL) is
@@ -611,6 +680,10 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/05/12 20:59:54  pichery
+--| Added feature `Lightness', `Hue' and `Saturation'.
+--| the "set" features will follow soon.
+--|
 --| Revision 1.17  2000/05/02 18:26:12  oconnor
 --| Optimised copy
 --|

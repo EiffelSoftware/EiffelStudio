@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
+        make_with_text (par: EV_CONTAINER; txt: STRING) is
                         -- Create a label implementation.
 		deferred
                 end	

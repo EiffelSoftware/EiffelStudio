@@ -18,6 +18,20 @@ inherit
 			implementation
 		end
 	
+feature {NONE} -- Initialization
+
+        make (par: EV_CONTAINER) is
+                        -- Create a text container with, `par' as
+                        -- parent
+		do
+			make_with_text (par, "")
+		end
+	
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Button with 'par' as parent and 'txt' as 
+			-- text label
+		deferred
+		end
 
 feature -- Access
 

@@ -43,7 +43,9 @@ feature --{NONE} -- Initialization
 		end
 	
 	make_by_pointer (a_ptr: POINTER) is
-			-- 
+			-- Make a copy of unicode string pointed by `a_ptr'.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
 		local
 			lth: INTEGER
 		do
@@ -51,7 +53,6 @@ feature --{NONE} -- Initialization
 			create managed_data.make (4 * (lth + 1))
 			managed_data.item.memory_copy (a_ptr, lth * 2)
 		end
-		
 	
 feature -- Access
 
@@ -62,10 +63,10 @@ feature -- Access
 			nb: INTEGER
 		do
 			create u_string.make_empty (length)
-			nb := cwel_wide_char_to_multi_byte (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0, item, length, u_string.item, u_string.capacity, default_pointer, default_pointer)
+			nb := cwel_wide_char_to_multi_byte (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0, item,
+				length, u_string.item, u_string.capacity, default_pointer, default_pointer)
 			create Result.make_from_c (u_string.item)
 		end
-		
 
 	item: POINTER is
 			-- Get pointer to allocated area.
@@ -89,7 +90,6 @@ feature -- Access
 			Result := cwel_string_length (item)
 		end
 		
-
 feature -- Element change
 
 	set_string (a_string: STRING) is

@@ -397,8 +397,9 @@ feature {NONE} -- Implementation
 					name_field.set_text (name_field.text.substring (2, name_field.text.count))	
 					name_field.set_caret_position (1)
 				else
+						--| FIXME, this still allows us to enter invalid names.
 					name_field.set_text (name_field.text.substring (1, current_caret_position - 2) + name_field.text.substring (current_caret_position, name_field.text.count))
-					name_field.set_caret_position (current_caret_position - 1)
+					name_field.set_caret_position (current_caret_position)
 				end
 				name_field.change_actions.resume
 			end

@@ -78,6 +78,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+			-- Help documentation generator
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	retrieve_project (a_project_file_name: STRING) is

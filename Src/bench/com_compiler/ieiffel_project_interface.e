@@ -101,6 +101,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	html_doc_generator_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `html_doc_generator'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	retrieve_project (a_project_file_name: STRING) is
@@ -206,6 +213,14 @@ feature -- Basic Operations
 			-- Completion information
 		require
 			completion_information_user_precondition: completion_information_user_precondition
+		deferred
+
+		end
+
+	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+			-- Help documentation generator
+		require
+			html_doc_generator_user_precondition: html_doc_generator_user_precondition
 		deferred
 
 		end

@@ -41,7 +41,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	ccom_create_item (eif_object: IEIFFEL_COMPLETION_ENTRY_IMPL_STUB): POINTER is
+	ccom_create_item (eif_object: ANY): POINTER is
 			-- Initialize `item'
 		external
 			"C++ [new ecom_eiffel_compiler::IEiffelCompletionEntry_impl_stub %"ecom_eiffel_compiler_IEiffelCompletionEntry_impl_stub_s.h%"](EIF_OBJECT)"

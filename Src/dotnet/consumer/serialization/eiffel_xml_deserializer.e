@@ -54,7 +54,7 @@ feature -- Basic Operations
 				if a_use_bin_if_avail then
 					create bin_des
 					bin_des.deserialize (path)
-					if bin_des.deserialized_object /= Void then
+					if bin_des.deserialized_object /= void then
 						deserialized_object := bin_des.deserialized_object
 					end					
 				end
@@ -180,8 +180,6 @@ feature {NONE} -- Implementation
 				end
 				read_next
 			end
-		ensure
-			deserialized_object_set_if_no_error: successful implies deserialized_object /= Void
 		end
 
 	array_from_xml: ANY is

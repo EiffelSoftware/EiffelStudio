@@ -13,9 +13,6 @@ indexing
 		%| |%N%
 		%+-+"
 	status: "See notice at end of class"
-	description:
-		"EiffelVision vertical range."
-	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -67,6 +64,9 @@ end -- class EV_VERTICAL_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/21 19:21:17  oconnor
+--| indexing error fixed
+--|
 --| Revision 1.9  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

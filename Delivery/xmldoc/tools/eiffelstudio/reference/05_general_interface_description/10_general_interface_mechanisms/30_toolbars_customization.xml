@@ -22,7 +22,7 @@
 		<bold>Customize project toolbar...</bold> in the same sub-menu.
 		<paragraph>In both cases, a toolbar customization window will appear. Two lists of icons are displayed in the window. The list on the right shows the icons that are in the toolbar. The list on the left gathers the icons that are currently not in the toolbar and that may be added. It also contains a separator that may be used to organize icons.</paragraph>
 		<paragraph> </paragraph>
-		<paragraph>
+		<paragraph><alignment>center</alignment>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/toolbar_customization_dialog.png</url>
 			</image>
@@ -47,27 +47,27 @@
 			<bold>OK</bold>. You can also go back to the initial toolbar layout by clicking on 
 			<bold>C		ancel</bold>.
 		</paragraph>
-		<table>
-			<row><cell>Icon without text</cell><cell>Icon with text</cell></row>
-			<row><cell><image>/images/eiffelstudio/icons/icon_cluster_tool_color.gif</image></cell><cell><image>../../images/eiffelstudio/icons/icon_cluster_tool_text_color.gif</image></cell></row>
-			<row><cell><image>/images/eiffelstudio/icons/icon_features_color.gif</image></cell><cell><image>/images/eiffelstudio/icons/icon_features_text_color.gif</image></cell></row>
-			<row><cell><image>/images/eiffelstudio/icons/icon_search_color.gif</image></cell><cell><image>/images/eiffelstudio/icons/icon_search_text_color.gif</image></cell></row>
-			<row><cell><image>/images/eiffelstudio/icons/icon_context_tool_color.gif</image></cell><cell><image>/images/eiffelstudio/icons/icon_context_tool_text_color.gif</image></cell></row>
-			<row><cell><image>/images/eiffelstudio/icons/icon_favorites_folder_color.gif</image></cell><cell><image>/images/eiffelstudio/icons/icon_favorites_folder_text_color.gif</image></cell></row>
-			<row><cell><image>/images/eiffelstudio/icons/icon_windows_color.gif</image></cell><cell><image>/images/eiffelstudio/icons/icon_windows_text_color.gif</image></cell></row>
-		</table>
-		<div><alignment>center</alignment>
-			<paragraph>Standard toolbar icons with text.</paragraph>
-		</div>
+		<paragraph><alignment>center</alignment>
+			<table>
+				<row><cell>Icon without text</cell><cell>Icon with text</cell></row>
+				<row><cell><image><url>/images/eiffelstudio/icons/icon_cluster_tool_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_cluster_tool_text_color.gif</url></image></cell></row>
+				<row><cell><image><url>/images/eiffelstudio/icons/icon_features_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_features_text_color.gif</url></image></cell></row>
+				<row><cell><image><url>/images/eiffelstudio/icons/icon_search_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_search_text_color.gif</url></image></cell></row>
+				<row><cell><image><url>/images/eiffelstudio/icons/icon_context_tool_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_context_tool_text_color.gif</url></image></cell></row>
+				<row><cell><image><url>/images/eiffelstudio/icons/icon_favorites_folder_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_favorites_text_color.gif</url></image></cell></row>
+				<row><cell><image><url>/images/eiffelstudio/icons/icon_windows_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_windows_text_color.gif</url></image></cell></row>
+			</table>
+			Standard toolbar icons.
+		</paragraph>
 		<line_break/>
-		<table>
-			<row><cell>Icon without text</cell><cell>Icon with text</cell></row>
-			<row><cell><image>/images/eiffelstudio/icons/icon_compile_color.gif</image></cell><cell><image>/images/eiffelstudio/icons/icon_compile_text_color.gif</image></cell></row>
-			<row><cell><image>/images/eiffelstudio/icons/icon_debug_run_color.gif</image></cell><cell><image>/images/eiffelstudio/icons/icon_debug_run_text_color.gif</image></cell></row>
-		</table>
-		<div><alignment>center</alignment>
-			<paragraph>Project toolbar icons with text.</paragraph>
-		</div>
+		<paragraph><alignment>center</alignment>
+			<table>
+				<row><cell>Icon without text</cell><cell>Icon with text</cell></row>
+				<row><cell><image><url>/images/eiffelstudio/icons/icon_compile_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_compile_text_color.gif</url></image></cell></row>
+				<row><cell><image><url>/images/eiffelstudio/icons/icon_debug_run_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_debug_run_text_color.gif</url></image></cell></row>
+			</table>
+			Project toolbar icons.
+		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

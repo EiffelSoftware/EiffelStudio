@@ -11,10 +11,11 @@ class
 
 inherit
 
-	OVERRIDE_S
+	FORM_D
 		rename
-			make as os_make,
-			popup as os_popup
+			make as fd_make,
+			popup as fd_popup,
+			popdown as fd_popdown
 		end;
 
 	COMMAND_W
@@ -24,7 +25,7 @@ inherit
 
 	NAMER;
 
-	SET_WINDOW_ATTRIBUTES
+	WINDOW_ATTRIBUTES
 
 creation
 
@@ -35,14 +36,26 @@ feature -- Initialization
 	make (a_parent: COMPOSITE) is
 			-- Make a choice window.
 		do
-			os_make ("Choice Window", a_parent);
+			fd_make ("Choice Window", a_parent);
+			set_title ("Choice Window");
 			!! list.make (new_name, Current);
-			list.set_single_selection;
+			!! exit_b.make ("Exit", Current);
+			set_fraction_base (3);
+			attach_top (list, 0);
+			attach_left (list, 0);
+			attach_right (list, 0);
+			attach_bottom_widget (exit_b, list, 5);
+			attach_left_position (exit_b, 1);
+			attach_right_position (exit_b, 2);
+			attach_bottom (exit_b, 5);
 			allow_resize;
-			set_exclusive_grab;
+			--set_exclusive_grab;
 			list.add_click_action (Current, Void);
-			set_composite_attributes (Current)
-			map_widget := a_parent;
+			exit_b.add_activate_action (Current, exit_b);
+			set_composite_attributes (Current);
+			set_default_position (False);
+				-- When user closes via the window manager close button
+			set_parent_action ("<Unmap>,<Prop>", Current, exit_b);
 		end;
 
 	make_with_widget (a_parent: COMPOSITE; a_widget: WIDGET) is
@@ -75,9 +88,6 @@ feature
 			caller := command;
 			list.wipe_out;
 			!! str.make (0);
-			str.append ("-- cancel --");
-			list.extend (str);
-			list.forth;
 			from
 				name_list.start
 			until
@@ -90,10 +100,17 @@ feature
 			end
 			if list.count >= 15 then
 				list.set_visible_item_count (15);
-			else
+			elseif list.count > 0 then
 				list.set_visible_item_count (list.count);
 			end;
 			display
+		end;
+
+	popdown is
+			-- Popdown the window.
+		do
+			caller := Void;
+			fd_popdown
 		end;
 
 	update_position is
@@ -106,14 +123,18 @@ feature
 	execute (argument: ANY) is
 			-- Recall the caller command.
 		do
-			popdown;
-			caller.execute (Current)
+			if caller /= Void then
+				if argument = exit_b then
+					list.deselect_all;
+				end;
+				caller.execute (Current)
+			end
 		end;
 
 	select_i_th (i: INTEGER) is
 			-- Select item at the `i'-th position.
 		do
-			if i >= 1 and then i <= list.count then
+			if i <= list.count then
 				list.select_i_th (i)
 			end
 		end;
@@ -121,6 +142,9 @@ feature
 feature {NONE} -- Properties
 
 	list: SCROLLABLE_LIST;
+
+	exit_b: PUSH_B;	
+			-- Exit button
 
 	caller: COMMAND_W;
 			-- Command who calls `Current'
@@ -137,22 +161,31 @@ feature {NONE} -- Implementation
 	display is
 			-- Display the choice window in order to be seen 
 			-- on the screen.
+		local
+			x1, y1: INTEGER;
+			a_widget: WIDGET
 		do
-			set_x_y (map_widget.real_x, map_widget.real_y);
+			realize;
+			if map_widget /= Void then
+				x1 := map_widget.real_x;
+				y1 := map_widget.real_y;
+			else
+				a_widget := parent;
+                x1 := a_widget.real_x + (a_widget.width - width) // 2;
+                y1 := a_widget.real_y + (height // 2)
+			end;
+			set_x_y (x1, y1);
+			fd_popup;
 			if real_x + width > screen.width then
 				set_x (screen.width - width)
-			end;
-			if real_x < 0 then
+			elseif real_x < 0 then
 				set_x (0)
 			end;
 			if real_y + height > screen.height then
 				set_y (screen.height - height)
-			end;
-			if real_y < 0 then
+			elseif real_y < 0 then
 				set_y (0)
 			end;
-			os_popup;
-			raise
 		end;
 
 invariant

@@ -32,7 +32,7 @@ feature -- Initialization
 		do
 			text_field_make (name, a_parent);
 			add_activate_action (Current, Void);
-			init_from_tool (a_tool)
+			init (a_tool)
 		end;
 
 feature -- Updating
@@ -108,8 +108,8 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 					class_list /= Void
 				end;
 				choice_position := choice.position;
-				if choice_position /= 1 then
-					class_i := class_list.i_th (choice_position - 1);
+				if choice_position /= 0 then
+					class_i := class_list.i_th (choice_position);
 					class_list := Void;
 					cname := clone (class_i.class_name);
 					cname.to_upper;
@@ -118,6 +118,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 				else
 					close_choice_window
 				end
+				class_list := Void;
 			else
 				class_i ?= arg;
 				if class_i = Void then

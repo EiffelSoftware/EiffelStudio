@@ -13,48 +13,41 @@ inherit
 		rename
 			workarea_width as width,
 			make as list_make,
-			widget as scrolled_window,
+			widget as parent,
 			hole_target as source
 		export
 			{NONE} list_make
 		redefine
 			clear_window, is_graphical, disable_clicking,
-			is_editable, display, scrolled_window, update_before_transport,
+			is_editable, display, update_before_transport,
 			update_after_transport, initial_x, initial_y
 		end;
-	DRAWING_AREA
+	SCROLLED_DRAWING_AREA
 		rename
 			make as old_make,
-			hide as d_area_hide,
-			show as d_area_show,
-			shown as d_area_shown,
 			lower as area_lower,
 			cursor as area_cursor,
-			set_background_color as old_set_background_color
+			set_background_color as old_set_background_color,
+			execute as old_execute,
+			total_width as maximum_width,
+			total_height as current_y
 		undefine
 			copy, setup
 		end;
-	DRAWING_AREA
+	SCROLLED_DRAWING_AREA
 		rename
 			make as old_make,
-			hide as d_area_hide,
-			show as d_area_show,
-			shown as d_area_shown,
 			lower as area_lower,
-			cursor as area_cursor
+			cursor as area_cursor,
+			total_width as maximum_width,
+			total_height as current_y
 		undefine
 			copy, setup
 		redefine
-			set_background_color
+			set_background_color, execute
 		select
-			set_background_color
+			set_background_color, execute
 		end;
-	COMMAND
-		undefine
-			copy, setup
-		redefine
-			context_data_useful
-		end
 
 creation
 
@@ -64,33 +57,20 @@ feature {NONE}
 
 	make (a_name: STRING; a_tool: TOOL_W) is
 		do
-			!! scrolled_window.make (a_name, a_tool.global_form);
-			old_make (a_name, scrolled_window);
-			scrolled_window.set_working_area (Current);
+			old_make (a_name, a_tool.global_form);
 			tool := a_tool;
-			drawing ?= implementation;
 			initialize_transport;
 			list_make (30);
 			set_action ("!c<Btn3Down>", Current, new_tooler)
-			set_size (1000, 1000);
 			highlighted_line := Void;
 			selected_clickable_text := Void;
 			!! text.make (0);
 			init_values (false);
-			!! to_refresh.make;
 			clear_window;
-			add_expose_action (Current, Void);
-			old_set_background_color (g_Bg_color)
+			old_set_background_color (g_Bg_color);
 		end;
 
 feature -- Properties
-
-	scrolled_window: SCROLLED_W;
-			-- Scrolled window with drawing area
-
-	x_offset, y_offset: INTEGER
-			-- X and Y offset of drawing area relative
-			-- to the window shown
 
 	text: STRING;
 			-- Textual text 
@@ -124,20 +104,20 @@ feature -- Properties
 	cursor: CURSOR is
 			-- Current cursor position in text window
 		do
-			!GRAPHICAL_WINDOW_CURSOR! Result.make (x, y)
+			!GRAPHICAL_WINDOW_CURSOR! Result.make (x_offset, y_offset)
 		end;
 
 	initial_x: INTEGER is
 			-- Initial x position for drag
 		do
-			Result := real_x + selected_clickable_text.base_left_x
+			Result := real_x + selected_clickable_text.base_left_x - x_offset
 		end;
 
 	initial_y: INTEGER is
 			-- Initial y position for drag
 		do
 			if selected_clickable_text /= Void then
-				Result := real_y + selected_clickable_text.base_left_y
+				Result := real_y + selected_clickable_text.base_left_y - y_offset
 			end
 		end;
 
@@ -158,13 +138,10 @@ feature -- Status setting
 
 	set_background_color (a_color: COLOR) is
 			-- Set `background_color' to `a_color'.
-		local
-			mel_sw: MEL_SCROLLED_WINDOW;
-			mel_color: MEL_PIXEL
 		do
-			mel_sw ?= scrolled_window.implementation;
-			mel_color ?= g_Bg_color.implementation;
-			mel_sw.clip_window.set_background_color (mel_color);
+			vertical_scrollbar.set_background_color (a_color);
+			horizontal_scrollbar.set_background_color (a_color);
+			parent.set_background_color (a_color);
 			old_set_background_color (g_Bg_color)
 		end;
 
@@ -220,7 +197,14 @@ feature -- Output
 			!! current_line.make (Current);
 			text_position := 0;
 			current_x := initial_x_position;
+			x_offset := 0;
+			y_offset := 0;
 			clear;
+			update_scroll_position (vertical_scrollbar, 0);
+			update_scroll_position (horizontal_scrollbar, 0);
+			horizontal_scrollbar.set_value (0);
+			set_scroll_slider_size (vertical_scrollbar, 1, 1)
+			set_scroll_slider_size (horizontal_scrollbar, 1, 1)
 			text.wipe_out;
 			wipe_out;
 				-- Reset the values for output window to default
@@ -229,30 +213,21 @@ feature -- Output
 			empty_text: text.empty;
 		end;
 
-	show is
-			-- Show the scrolled window.
-		do
-			shown_called := True;
-			scrolled_window.show;
-		end;
-
-	hide is
-			-- Hide the scrolled window.
-		do
-			scrolled_window.hide
-		end;
-
-	shown: BOOLEAN is
-			-- Is the scrolled window shown?
-		do
-			Result := scrolled_window.shown
-		end;
-
 	display is
 			-- Display text to the workarea.
+		local
+			w, h: INTEGER
 		do
-			set_size (maximum_width + 8, current_y);
 			if drawing.is_drawable then
+				h := current_y;
+				w := maximum_width;
+				if h = 0 then
+					h := 10
+				end;
+				if w = 0 then
+					w := 10
+				end;
+				set_size (w, h);
 				drawing.clear_area (0, 0, 0, 0, True)
 			end
 debug ("DRAWING")
@@ -279,6 +254,11 @@ end
 			if selected_clickable_text /= Void then
 				selected_clickable_text.unselect_clickable 
 					(drawing, x_offset, y_offset)
+				if highlighted_line /= Void and then 
+					highlighted_line.has (selected_clickable_text) 
+				then
+					highlighted_line.draw (drawing, x_offset, y_offset)
+				end;
 				selected_clickable_text := Void
 			end
 		end;
@@ -300,11 +280,11 @@ end
 			-- Highlight text line text with `button_data' coordinates.
 		do
 			if highlighted_line /= Void then
-				highlighted_line.update_debug_line (drawing, False, x_offset, y_offset)
+				highlighted_line.update_highlighted_line (drawing, False, x_offset, y_offset)
 			end;
 			find_line (button_data);
 			if highlighted_line /= Void then
-				highlighted_line.update_debug_line (drawing, True, x_offset, y_offset)
+				highlighted_line.update_highlighted_line (drawing, True, x_offset, y_offset)
 			end;
 		end;
 
@@ -351,12 +331,19 @@ feature -- Cursor movement
 	go_to (a_cursor: CURSOR) is
 			-- Go to cursor position 
 		local
-			cur: GRAPHICAL_WINDOW_CURSOR
+			cur: GRAPHICAL_WINDOW_CURSOR;
+			value, new_x, new_y: INTEGER
 		do
 			cur ?= a_cursor;	
-			unmanage;
-			set_x_y (cur.x, cur.y);
-			manage
+			new_x := cur.x;
+			new_y := cur.y;
+			update_scroll_position (horizontal_scrollbar, new_x);
+			update_scroll_position (vertical_scrollbar, new_y);
+			if x_offset /= horizontal_scrollbar.value or else
+				y_offset /= vertical_scrollbar.value
+			then	
+				update_text
+			end
 		end
 
 feature -- Output
@@ -378,7 +365,7 @@ end
 			a := area;
 			c := count;
 			from
-				y_coord := to_refresh.up_left_y;
+				y_coord := to_refresh.up_left_y + y_offset;
 				i := 0
 			until
 				stopped or else i = c
@@ -393,7 +380,7 @@ end
 			if stopped then
 				from
 					stopped := False;
-					y_coord := to_refresh.down_right_y + max_h;
+					y_coord := to_refresh.down_right_y + max_h + y_offset;
 				until
 					stopped or else i = c
 				loop
@@ -423,13 +410,10 @@ end
 
 feature -- Execution
 
-	context_data_useful: BOOLEAN is True;
-
 	execute (arg: ANY) is
 		local
 			but_data: BUTTON_DATA;
 			st: STONE;
-			expose_data: EXPOSE_DATA
 		do
 			if arg = new_tooler then
 				but_data ?= context_data;
@@ -439,19 +423,8 @@ feature -- Execution
 					Project_tool.receive (st);
 					deselect_all
 				end
-			elseif not shown_called then
-				expose_data ?= context_data;
-debug ("DRAWING")
-	io.error.putstring ("Expose number ");
-	io.error.putint (expose_data.exposes_to_come);
-	io.error.new_line
-end
-				to_refresh.merge_clip (expose_data.clip);
-				if expose_data.exposes_to_come = 0 then
-					draw_text
-				end
 			else
-				shown_called := False;
+				old_execute (arg)
 			end
 		end;
 
@@ -462,10 +435,12 @@ feature {TOOL_W} -- Updating
 		local
 			bs: BREAKABLE_STONE;
 			b_fig: BREAKABLE_FIGURE;	
-			old_clickable_text: like selected_clickable_text
+			old_clickable_text: like selected_clickable_text;
+			y_pos: INTEGER;
+			b_l_y: INTEGER
 		do
 			if highlighted_line /= Void then
-				highlighted_line.update_debug_line (drawing, false,
+				highlighted_line.update_highlighted_line (drawing, false,
 						x_offset, y_offset);
 				highlighted_line := Void
 			end;
@@ -476,9 +451,19 @@ feature {TOOL_W} -- Updating
 				b_fig ?= selected_clickable_text;
 				update_breakable_figure (b_fig);
 				!! current_line.make (Current);
-				if highlighted_line /= Void then
+				b_l_y := selected_clickable_text.base_left_y;
+				if ((b_l_y - maximum_height_per_line) < y_offset) then
+					y_pos := b_l_y - height + maximum_height_per_line
+					update_scroll_position (vertical_scrollbar, y_pos);
+					update_text
+				elseif (b_l_y - y_offset > height) then
+					y_pos := b_l_y - height + 4;
+					update_scroll_position (vertical_scrollbar, y_pos);
+					update_text -- This will highlight the line
+				elseif highlighted_line /= Void then
 					highlighted_line.draw (drawing, x_offset, y_offset)
-				elseif selected_clickable_text /= Void then
+				end;
+				if selected_clickable_text /= Void then
 					selected_clickable_text.draw 
 						(drawing, False, x_offset, y_offset)
 				end;
@@ -531,14 +516,6 @@ feature {TOOL_W, OBJECT_W} -- Implementation
 				list.forth
 			end;
 		end;
-
-feature {NONE} -- Implementation
-
-	to_refresh: REFRESH_AREA;
-			-- Refresh area for expose events
-
-	shown_called: BOOLEAN
-			-- Is shown called?
 
 feature {NONE} -- Implementation
 

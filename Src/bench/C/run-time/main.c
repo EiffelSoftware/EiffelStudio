@@ -54,6 +54,10 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_boehm.h"
 #endif
 
+#ifdef EIF_ASSERTIONS
+#include <stdarg.h>
+#endif
+
 #ifdef WORKBENCH
 extern void dbreak_create_table(void); /* defined in debug.c */
 #else

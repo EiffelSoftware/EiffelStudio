@@ -46,6 +46,10 @@
 #define EWB		"/bin/ec -bench"	/* Ewb process within Eiffel dir */
 #endif
 
+#ifdef EIF_ASSERTIONS
+#include <stdarg.h>
+#endif
+
 /* Function declaration */
 rt_public void dexit(int code);		/* Daemon's exit */
 rt_private Signal_t handler(int sig);	/* Signal handler */

@@ -118,10 +118,10 @@ feature -- Execution
 	run_make is
 			-- run the make utility on the generated Makefile
 		local
-			command: STRING -- the command to execute the make utility on this platform
+			command: STRING
 		do
+				-- the command to execute the make utility on this platform
 			command := options.get_string ("make", Void)
-
 			env.system (command)
 		end
 
@@ -584,7 +584,7 @@ feature {NONE} -- Translation
 				makefile.putstring (" ")
 				makefile.putstring (dir)
 				makefile.putstring (options.get_string ("subcommand_separator", " && "))
-				makefile.putstring (options.get_string ("make", Void))
+				makefile.putstring ("$(MAKE)")
 				makefile.putstring (" ")
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then

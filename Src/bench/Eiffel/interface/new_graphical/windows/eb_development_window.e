@@ -1126,7 +1126,7 @@ feature -- Menu Building
 
 				-- Search
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_Search + "%T" + Editor_preferences.shorcut_name_for_action (2))
+			cmd.set_menu_name (Interface_names.m_Search + "%T" + Editor_preferences.shorcut_name_for_action (3))
 			cmd.add_agent (editor~search)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
@@ -1135,7 +1135,7 @@ feature -- Menu Building
 
 				-- Replace
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_Replace + "%T" + Editor_preferences.shorcut_name_for_action (3))
+			cmd.set_menu_name (Interface_names.m_Replace + "%T" + Editor_preferences.shorcut_name_for_action (4))
 			cmd.add_agent (editor~replace)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
@@ -1148,7 +1148,7 @@ feature -- Menu Building
 
 				-- Find next
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_Find_next + "%T" + Editor_preferences.shorcut_name_for_action (5))
+			cmd.set_menu_name (Interface_names.m_Find_next + "%T" + Editor_preferences.shorcut_name_for_action (6))
 			cmd.add_agent (editor~find_next)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
@@ -1157,7 +1157,7 @@ feature -- Menu Building
 
 				-- Find previous
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_Find_previous + "%T" + Editor_preferences.shorcut_name_for_action (6))
+			cmd.set_menu_name (Interface_names.m_Find_previous + "%T" + Editor_preferences.shorcut_name_for_action (7))
 			cmd.add_agent (editor~find_previous)
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
@@ -1166,7 +1166,7 @@ feature -- Menu Building
 
 				-- Find selection
 			create os_cmd.make (Current)
-			os_cmd.set_menu_name (Interface_names.m_Find_selection + "%T" + Editor_preferences.shorcut_name_for_action (4))
+			os_cmd.set_menu_name (Interface_names.m_Find_selection + "%T" + Editor_preferences.shorcut_name_for_action (5))
 			os_cmd.add_agent (editor~find_selection)
 			command_menu_item := os_cmd.new_menu_item
 			editor_tool.text_area.add_selection_observer(os_cmd)
@@ -1257,6 +1257,16 @@ feature -- Menu Building
 				-- Complete word
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Complete_word + "%T" + Editor_preferences.shorcut_name_for_action (1))
+			command_menu_item := cmd.new_menu_item
+			editor_tool.text_area.add_edition_observer(cmd)
+			cmd.add_agent (editor~complete_feature_name)
+
+			add_recyclable (command_menu_item)
+			sub_menu.extend (command_menu_item)
+
+				-- Complete class name
+			create cmd.make
+			cmd.set_menu_name (Interface_names.m_Complete_class_name + "%T" + Editor_preferences.shorcut_name_for_action (2))
 			command_menu_item := cmd.new_menu_item
 			editor_tool.text_area.add_edition_observer(cmd)
 			cmd.add_agent (editor~complete_feature_name)

@@ -22,6 +22,7 @@ XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\conta
 
 XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primitives\ev_button_flatshort.txt .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primitives\ev_check_button_flatshort.txt .\flatshort
+XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primitives\ev_checkable_list_flatshort.txt .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primitives\ev_combo_box_flatshort.txt .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primitives\ev_drawing_area_flatshort.txt .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primitives\ev_horizontal_progress_bar_flatshort.txt .\flatshort

@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		"Format detail for format output.";
+	description: "Format detail for format output.";
 	date: "$Date$";
 	revision: "$Revision $"
 

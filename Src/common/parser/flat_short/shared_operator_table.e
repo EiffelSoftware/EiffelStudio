@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		"Shared operator table.";
+	description: "Shared operator table.";
 	date: "$Date$";
 	revision: "$Revision $"
 

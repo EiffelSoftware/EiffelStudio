@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"Content of an eiffel file made up of a list of eiffel_lines. %
 		%Store the next feature_clause_as and feature_as structures%
@@ -11,14 +10,12 @@ indexing
 class EIFFEL_FILE
 
 inherit
-
 	ARRAYED_LIST [EIFFEL_LINE]
 		rename
 			make as list_make
 		end
 
 creation
-
 	make, make_with_positions
 
 feature -- Initialization
@@ -30,18 +27,14 @@ feature -- Initialization
 			valid_file_name: a_file_name /= Void;
 			positive_end_f_pos: end_f_pos > 0
 		local
-			--file: PLAIN_TEXT_FILE;
-			file: RAW_FILE; -- Windows hack
+			file: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			line: EIFFEL_LINE;
 			start_pos: INTEGER;
 			end_pos: INTEGER
 		do
 			list_make (100);
 			!! file.make (a_file_name);
-			if file.exists and then 
-				file.is_readable and then
-				not file.empty 
-			then
+			if file.exists and then file.is_readable and then not file.empty then
 				from
 					file.open_read;
 					file.readline;
@@ -80,10 +73,7 @@ end
 		do
 			list_make (30);
 			!! file.make (a_file_name);
-			if file.exists and then 
-				file.is_readable and then
-				not file.empty 
-			then
+			if file.exists and then file.is_readable and then not file.empty then
 				from
 					file.open_read;
 					file.readline;
@@ -237,8 +227,9 @@ end
 					end;
 				end
 			end;
-			!! Result.make;
+
 			from
+				!! Result.make;
 			until
 				after or finished
 			loop
@@ -257,6 +248,7 @@ end
 					forth
 				end;
 			end;
+
 			if Result.empty then
 				Result := Void
 			end

@@ -57,6 +57,32 @@ feature
 					a_menu.implementation.screen_object)
 		end;
 
+feature
+
+	add_activate_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	add_release_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	add_arm_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	remove_activate_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	remove_release_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	remove_arm_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
 feature {NONE} -- External features
 
 	xm_attach_menu (scr_obj1, scr_obj2: POINTER) is

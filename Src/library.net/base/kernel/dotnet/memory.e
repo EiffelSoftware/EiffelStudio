@@ -157,12 +157,10 @@ feature -- Status report
 
 	referers (an_object: ANY): ARRAY [ANY] is
 			-- Objects that refer to `an_object'.
-		local
-			a: ANY
 		do
-			create Result.make (0, 200)
-			a := Result.area
-			find_referers ($an_object, $a, Result.count)
+			check
+				False
+			end
 		end
 
 feature -- Status setting
@@ -287,7 +285,9 @@ feature -- Removal
 			-- Erratic behavior will result if the object is still
 			-- referenced.
 		do
-			mem_free ($object)
+			check
+				False
+			end
 		end
 
 	mem_free (addr: POINTER) is

@@ -1,5 +1,7 @@
 indexing
 
+	description:
+		"EiffelVision Implementation of global cursor.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -14,16 +16,15 @@ inherit
 		end;
 
 	G_ANY_I
-		export
-			{NONE} all
-		end
-	
+
 feature -- Access
 
 	global_cursor: SCREEN_CURSOR;
 			-- Global cursor for the whole application.
 			-- Void if no global cursor has been defined
 			-- with `set_global_cursor'.
+
+feature -- Element change
 
 	restore_cursors is
 			-- Restore the cursors as they were before `set_global_cursors'.
@@ -42,7 +43,7 @@ feature -- Access
 				widget_m ?= area.item (i).implementation;
 				widget_m.undefine_cursor_if_shell;
 				if widget_m.cursor /= Void then
-					widget_m.update_cursor
+					widget_m.update_cursor;
 				end;
 				i := i + 1
 			end;
@@ -79,8 +80,7 @@ feature -- Access
 			correctly_set: global_cursor = cursor
 		end
 
-end 
-
+end -- class ALL_CURS_X
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

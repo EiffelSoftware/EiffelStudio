@@ -233,11 +233,11 @@ feature {NONE} -- Implementation
 			-- Run all expressions in list sequentially
 		do
 			if all_project then
-				run_expressions_on_directory (create {DIRECTORY}.make (Shared_project.preferences.root_directory))
+				run_expressions_on_directory (create {DIRECTORY}.make (Shared_project.root_directory))
 			elseif all_documents then
-				run_expressions_on_documents (Shared_document_manager.documents)
+				run_expressions_on_documents (Shared_document_editor.documents)
 			else
-				run_expressions_on_document (Shared_document_manager.current_document)
+				run_expressions_on_document (Shared_document_editor.current_document)
 			end
 		end
 		
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 					else
 						create l_file.make (l_dir.name)
 						if l_file /= void and then l_file.exists and then filetypes.has (file_type (a_dir.lastentry)) then
-							create l_doc.make_from_file (l_file, Void)
+							create l_doc.make_from_file (l_file)
 							run_expressions_on_document (l_doc)
 						end
 					end
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			l_file.close
 			
 			if overwrite_documents then
-				if Shared_document_manager.is_document_open (a_doc.name) then
+				if Shared_document_editor.is_document_open (a_doc.name) then
 					a_doc.set_text (l_final_string)
 					a_doc.save
 				elseif all_project then

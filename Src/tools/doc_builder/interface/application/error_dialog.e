@@ -140,12 +140,12 @@ feature {NONE} -- Implementation
 	highlight_error (a_item: EV_LIST_ITEM) is
 			-- Highlight error in editor
 		local
-			curr_doc: DOCUMENT
+			curr_doc: DOCUMENT_TEXT_WIDGET
 			l_no, l_pos: INTEGER
 		do
-			curr_doc := Shared_document_manager.current_document
-			l_no ?= line_data (a_item.text).integer_32_item (1)
-			l_pos ?= line_data (a_item.text).integer_32_item (2)
+--			curr_doc := Shared_document_manager.current_document
+			l_no := line_data (a_item.text).integer_32_item (1)
+			l_pos := line_data (a_item.text).integer_32_item (2)
 			a_item.pointer_double_press_actions.force_extend 
 				(agent curr_doc.highlight_error (l_no, l_pos))
 		end

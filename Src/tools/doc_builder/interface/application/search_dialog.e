@@ -22,7 +22,7 @@ create
 	
 feature -- Initialization
 
-	make (a_document: DOCUMENT) is
+	make (a_document: DOCUMENT_TEXT_WIDGET) is
 			-- Create for searching within `a_document'
 		require
 			a_document_not_void: a_document /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		
 feature -- Status Setting
 
-	set_document (a_document: DOCUMENT) is
+	set_document (a_document: DOCUMENT_TEXT_WIDGET) is
 			-- Set `document' to `a_document'
 		require
 			document_nt_void: a_document /= Void
@@ -56,7 +56,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	document: DOCUMENT
+	document: DOCUMENT_TEXT_WIDGET
 			-- Document
 
 	search is

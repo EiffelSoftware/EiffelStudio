@@ -40,7 +40,7 @@ feature -- Creation
 		do
 			default_create
 			document := a_doc
-			xm_document := deserialize_document (create {FILE_NAME}.make_from_string (document.name))
+			xm_document := a_doc.xml
 			populate_widgets	
 		end		
 
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 				toc_title_text.set_text (document.title)
 			end
 			if xm_document /= Void then
-				l_toc_element := xm_document.root_element.element_by_name ("help").element_by_name ("toc")
+				l_toc_element := xm_document.root_element.element_by_name ("meta_data").element_by_name ("help").element_by_name ("toc")
 				if l_toc_element /= Void then
 					l_element := l_toc_element.element_by_name ("studio_title")
 					if l_element /= Void then

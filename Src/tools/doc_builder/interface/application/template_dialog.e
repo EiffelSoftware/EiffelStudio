@@ -75,15 +75,15 @@ feature {NONE} -- Implementation
 		do
 			inspect label_number
 			when empty_val then
-				Shared_document_editor.open_new_document
+				Shared_document_manager.create_document
 			when sample_val then
-				Shared_document_editor.open_new_document
+				Shared_document_manager.create_document
 			when tutorial_val then
-				Shared_document_editor.open_new_document
+				Shared_document_manager.create_document
 			when howto_val then
-				Shared_document_editor.open_new_document
+				Shared_document_manager.create_document
 			when project_val then
-				Shared_project.open_new	
+				Shared_project.create_new ()
 			end
 			hide
 		end

@@ -57,9 +57,8 @@ feature {NONE} -- Implementation
 					l_question_dialog.destroy
 				end
 			else
-				Shared_project.preferences.set_name (name_field.text)
-				Shared_project.preferences.set_root_directory (path_field.text)
-				Shared_project.preferences.write
+				Shared_project.set_name (name_field.text)
+				Shared_project.set_root_directory (path_field.text)
 			end
 			hide
 		end

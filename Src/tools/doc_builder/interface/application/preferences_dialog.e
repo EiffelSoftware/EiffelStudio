@@ -49,44 +49,16 @@ feature {NONE} -- Commands
 			prefs: DOCUMENT_PROJECT_FILE
 		do
 			prefs := Shared_project.preferences
-			name_text.set_text (prefs.name)
-			if prefs.has_schema then
-				schema_loc_text.set_text (prefs.schema_file)
+			name_text.set_text (Shared_project.name)
+			if Shared_document_manager.has_schema then
+				schema_loc_text.set_text (Shared_document_manager.schema.name)
 			end
-			if prefs.has_transform_file then
-				xsl_loc_text.set_text (prefs.transform_file)
+			if Shared_document_manager.has_xsl then
+				xsl_loc_text.set_text (Shared_document_manager.xsl.name)
 			end
 			if prefs.has_stylesheet_file then
 				css_loc_text.set_text (prefs.stylesheet_file)
-			end
-			if prefs.has_index_file_name then
-				index_filename_text.set_text (prefs.index_filename)
-			end
-			if prefs.is_index_root then
-				index_root_check.enable_select
-			else
-				index_root_check.disable_select
-			end
-			if prefs.include_empty_directories then
-				include_empty_dirs_check.enable_select
-			else
-				include_empty_dirs_check.disable_select
-			end
-			if prefs.include_directories_no_index then
-				include_no_index_check.enable_select
-			else
-				include_no_index_check.disable_select
-			end
-			if prefs.include_skipped_sub_directories then
-				include_skipped_sub_dirs_check.enable_select
-			else
-				include_skipped_sub_dirs_check.disable_select
-			end
-			if prefs.order_alphabetically then
-				order_alphabetical_check.enable_select
-			else
-				order_alphabetical_check.disable_select
-			end
+			end			
 		end
 
 	set_settings is
@@ -97,36 +69,23 @@ feature {NONE} -- Commands
 			prefs: DOCUMENT_PROJECT_FILE
 		do
 			prefs := Shared_project.preferences
-			prefs.set_name (name_text.text)
+			Shared_project.set_name (name_text.text)
 			if schema_loc_text.text.is_empty then
-				prefs.remove_schema_file
+				Shared_document_manager.remove_schema
 			else
-				prefs.set_schema_file (schema_loc_text.text)			
+				Shared_document_manager.initialize_schema (schema_loc_text.text)			
 			end
 			if xsl_loc_text.text.is_empty then
-				prefs.remove_xsl_file
+				Shared_document_manager.remove_xsl
 			else
-				prefs.set_xsl_file (xsl_loc_text.text)
+				Shared_document_manager.initialize_xslt (xsl_loc_text.text)
 			end
 			if css_loc_text.text.is_empty then
 				prefs.remove_css_file
 			else
 				prefs.set_css_file (css_loc_text.text)
-			end
-			if index_filename_text.text.is_empty then
-				prefs.remove_index_file_name
-			else
-				prefs.set_index_file_name (index_filename_text.text)
-				Shared_constants.Application_constants.set_index_file_name (index_filename_text.text)
-			end
-			prefs.set_index_root (index_root_check.is_selected)
-			Shared_constants.Application_constants.set_make_index_root (index_root_check.is_selected)
-			prefs.set_include_empty_directories (include_empty_dirs_check.is_selected)
-			Shared_constants.Application_constants.set_include_empty_directories (include_empty_dirs_check.is_selected)
-			prefs.set_include_directories_no_index (include_no_index_check.is_selected)
-			Shared_constants.Application_constants.set_include_directories_no_index (include_no_index_check.is_selected)
-			prefs.set_include_skipped_sub_directories (include_skipped_sub_dirs_check.is_selected)
-			Shared_constants.Application_constants.set_include_skipped_sub_directories (include_skipped_sub_dirs_check.is_selected)
+			end		
+			
 			prefs.write
 		end		
 
@@ -187,9 +146,7 @@ feature {NONE} -- Implementation
 		end
 		
 	browse_stylesheet is
-			-- Attempt to load a stylesheet for the `xslt' to apply formatting against.
-		require else
-			has_xslt: Shared_document_manager.xsl /= Void
+			-- Attempt to load a stylesheet for the `xslt' to apply formatting against.		
 		local
 			l_open_dialog: EV_FILE_OPEN_DIALOG
 		do
@@ -208,10 +165,10 @@ feature {NONE} -- Initialization
 		do
 			Shared_document_manager.initialize_schema (a_filename)
 			if Shared_document_manager.has_schema then
-				Shared_project.preferences.set_schema_file (a_filename)
+				schema_loc_text.set_text (a_filename)
+						-- Update project
 				Shared_project.preferences.write
-				Shared_project.update
-				schema_loc_text.set_text (Shared_project.preferences.schema_file)
+				Shared_project.update				
 			end
 		end
 
@@ -219,26 +176,20 @@ feature {NONE} -- Initialization
 			-- Initialize XSL from `a_filename'
 		do
 			Shared_document_manager.initialize_xslt (a_filename)
-			if Shared_document_manager.has_xsl then
-				Shared_project.preferences.set_xsl_file (a_filename)
-				Shared_project.preferences.write
-				xsl_loc_text.set_text (Shared_project.preferences.transform_file)
+			if Shared_document_manager.has_xsl then				
+				xsl_loc_text.set_text (a_filename)
 				css_loc_text.enable_sensitive
 				browse_css_bt.enable_sensitive
+				Shared_project.preferences.write
 			end
 		end
 		
 	initialize_stylesheet (a_filename: STRING) is
 			-- Initialize Stylesheet from `a_filename'
-		require
-			xsl_loaded: Shared_document_manager.has_xsl
 		do
-			Shared_document_manager.xsl.set_stylesheet (a_filename)
-			if Shared_document_manager.xsl.has_stylesheet then
-				Shared_project.preferences.set_css_file (a_filename)
-				Shared_project.preferences.write
-				css_loc_text.set_text (Shared_project.preferences.stylesheet_file)
-			end			
+			Shared_project.preferences.set_css_file (a_filename)
+			Shared_project.preferences.write
+			css_loc_text.set_text (Shared_project.preferences.stylesheet_file)		
 		end
 	
 feature {NONE} -- Query
@@ -253,12 +204,7 @@ feature {NONE} -- Query
 			if name_text.text.is_empty then
 				show_error ("Name field empty.  You must%Nchoose a name for the project.")
 				Result := False
-			end
-			
-			if not index_filename_text.text.is_empty and then not is_alpha_numeric_string (index_filename_text.text) then
-				show_error ("Index filename can contain only alpha or numeric characters.")
-				Result := False
-			end
+			end		
 			
 			if Result = True and then not schema_loc_text.text.is_empty then
 				create l_file.make (schema_loc_text.text)

@@ -1,7 +1,7 @@
 indexing
 	description:
-		"Eiffel Vision spin button. Text fields with up and down buttons %N%
-		%located on the right."
+		"Displays `value' and two buttons that allow it to be adjusted up and%
+		%down within `range'."
 	status: "See notice at end of class"
 	keywords: "gauge, edit, text, number, up, down"
 	date: "$Date$"
@@ -39,18 +39,21 @@ create
 
 feature {NONE} -- Implementation
 
+	implementation: EV_SPIN_BUTTON_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_SPIN_BUTTON_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_TEXT_FIELD} Precursor
 			{EV_GAUGE} Precursor
 		end
-
-	implementation: EV_SPIN_BUTTON_I
 
 feature {EV_ANY} -- Contract support
 
@@ -84,6 +87,9 @@ end -- class EV_SPIN_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.6  2000/03/01 03:27:53  oconnor
 --| added make_for_test
 --|
@@ -110,7 +116,6 @@ end -- class EV_SPIN_BUTTON
 --|
 --| Revision 1.2.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

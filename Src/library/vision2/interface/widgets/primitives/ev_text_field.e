@@ -1,6 +1,6 @@
 indexing
 	description: 
-		"Eiffel Vision text field. Input fields for single lines of text."
+		"Input field for a single line of `text'."
 	status: "See notice at end of class"
 	keywords: "input, text, field, query"
 	date: "$Date$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	capacity: INTEGER is
-			-- Maximum number of characters field can hold.
+			-- Number of characters field can hold.
 		do
 			Result := implementation.capacity
 		end
@@ -53,22 +53,21 @@ feature -- Element change
 feature -- Events
 
 	return_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when return key is pressed.
+			-- Actions to be performed when return key is pressed.
 
 feature {NONE} -- Implementation
 
 	implementation: EV_TEXT_FIELD_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 	create_implementation is
-			-- Create implementation of text field.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TEXT_FIELD_IMP} implementation.make (Current)
 		end
 			
 	create_action_sequences is
-			-- Create action sequence objects.
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_TEXT_COMPONENT} Precursor
 			create return_actions
@@ -101,6 +100,9 @@ end -- class EV_TEXT_FIELD
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.21  2000/03/01 03:27:30  oconnor
 --| added make_for_test
 --|

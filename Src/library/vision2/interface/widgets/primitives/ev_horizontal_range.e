@@ -7,6 +7,7 @@ indexing
 		%|  |#|        |%N%
 		%+-------------+"
 	status: "See notice at end of class"
+	keywords: "range, slide, adjust"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -58,6 +59,9 @@ end -- class EV_HORIZONTAL_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.8  2000/03/21 16:36:25  oconnor
 --| syntax tweaks
 --|

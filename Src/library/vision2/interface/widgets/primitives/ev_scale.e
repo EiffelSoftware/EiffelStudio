@@ -37,6 +37,9 @@ end -- class EV_SCALE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.7  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|
@@ -61,7 +64,6 @@ end -- class EV_SCALE
 --|
 --| Revision 1.4.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

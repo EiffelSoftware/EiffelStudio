@@ -1,7 +1,7 @@
 indexing
 	description:
-		"Eiffel Vision gauge. Widgets that describe a range, like %N%
-		%spin buttons and progress bars."
+		"Base class for widgets that display a `value' within a `range'.%N%
+		%See EV_RANGE, EV_SCROLL_BAR, EV_SPIN_BUTTON and EV_PROGRESS_BAR."
 	status: "See notice at end of class."
 	keywords: "value, step, increment, range"
 	date: "$Date$"
@@ -22,8 +22,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_with_range (a_range: INTEGER_INTERVAL) is
-			-- Initialize with `a_maximum' and `a_minimum'.
-			-- Initialize `value' with `a_minimum'.
+			-- Create with `a_range'.
 		require
 			a_range_not_void: a_range /= Void
 			a_range_upper_greater_than_or_equal_to_a_range_lower:
@@ -33,7 +32,217 @@ feature {NONE} -- Initialization
 			reset_with_range (a_range)
 		end
 
+feature -- Access
+
+	value: INTEGER is
+			-- Current position within `range'.
+		do
+			Result := implementation.value
+		ensure
+			bridge_ok: Result = implementation.value
+		end
+
+	step: INTEGER is
+			-- Size of change made by `step_forward' or `step_backward'.
+		do
+			Result := implementation.step
+		ensure
+			bridge_ok: Result = implementation.step
+		end
+
+	leap: INTEGER is
+			-- Size of change made by `leap_forward' or `leap_backward'.
+		do
+			Result := implementation.leap
+		ensure
+			bridge_ok: Result = implementation.leap
+		end
+
+	maximum: INTEGER is
+			-- Top of `range'.
+		do
+			Result := implementation.maximum
+		ensure
+			bridge_ok: Result = implementation.maximum
+		end
+
+	minimum: INTEGER is
+			-- Bottom of `range'.
+		do
+			Result := implementation.minimum
+		ensure
+			bridge_ok: Result = implementation.minimum
+		end
+
+	range: INTEGER_INTERVAL is
+			-- Allowed values of `value'.
+		do
+			Result := implementation.range
+		ensure
+			bridge_ok: Result /= Void and then
+				Result.is_equal (implementation.range)
+		end
+
+feature -- Status setting
+
+	step_forward is
+			-- Increment `value' by `step' if within `range'.
+		do
+			implementation.step_forward
+		ensure
+			incremented: value = maximum.min (old value + step)
+		end
+
+	step_backward is
+			-- Decrement `value' by `step' if withing `range'.
+		do
+			implementation.step_backward
+		ensure
+			decremented: value = minimum.max (old value - step)
+		end
+
+	leap_forward is
+			-- Increment `value' by `leap' if withing `range'.
+		do
+			implementation.leap_forward
+		ensure
+			incremented: value = maximum.min (old value + leap)
+		end
+
+	leap_backward is
+			-- Decrement `value' by `leap' if withing `range'.
+		do
+			implementation.leap_backward
+		ensure
+			decremented: value = minimum.max (old value - leap)
+		end
+
+feature -- Element change
+
+	set_value (a_value: INTEGER) is
+			-- Assign `a_value' to `value'.
+		require
+			--|FIXME this should use `range'.
+			a_value_within_bounds: a_value >= minimum
+				and then a_value <= maximum
+		do
+			implementation.set_value (a_value)
+		ensure
+			a_value_assigned: value = a_value
+		end
+
+	set_step (a_step: INTEGER) is
+			-- Assign `a_step' to `step'.
+		require
+			a_step_positive: a_step > 0
+		do
+			implementation.set_step (a_step)
+		ensure
+			a_step_assigned: step = a_step
+		end
+
+	set_leap (a_leap: INTEGER) is
+			-- Assign `a_leap' to `leap'.
+		require
+			a_leap_positive: a_leap > 0
+		do
+			implementation.set_leap (a_leap)
+		ensure
+			a_leap_ssigned: leap = a_leap
+		end
+
+	set_minimum (a_minimum: INTEGER) is
+			-- Assign `a_minimum' to `minimum'.
+			-- Bring `value' within `range' if necisary.
+		require
+			a_minimum_not_greater_than_maximum:
+				a_minimum <= maximum
+			a_minimum_not_smaller_than_value:
+				a_minimum <= value			
+		do
+			implementation.set_minimum (a_minimum)
+		ensure
+			a_minimum_assigned: minimum = a_minimum
+		end
+
+	set_maximum (a_maximum: INTEGER) is
+			-- Assign `a_maximum' to `maximum'.
+			-- Bring `value' within `range' if necisary.
+		require
+			a_maximum_not_smaller_than_minimum:
+				a_maximum >= minimum
+			a_maximum_not_smaller_than_value:
+				a_maximum >= value			
+		do
+			implementation.set_maximum (a_maximum)
+		ensure
+			a_maximium_assigned: maximum = a_maximum
+		end
+
+	set_range (a_range: INTEGER_INTERVAL) is
+			-- Assign `a_range' to `range'.
+			-- Bring `value' within `range' if necisary.
+		require
+			a_range_not_void: a_range /= Void
+			a_range_not_empty: not a_range.empty
+			a_range_has_value: a_range.has (value)
+		do
+			implementation.set_range (a_range)
+		ensure
+			a_range_assigned: range.is_equal (a_range)
+			minimum_consistent: minimum = a_range.lower
+			maximum_consistent: maximum = a_range.upper
+		end
+
+	reset_with_range (a_range: INTEGER_INTERVAL) is
+			-- Assign `a_range' to `range'.
+			-- Set `value' to `a_range'.lower.
+		require
+			a_range_not_void: a_range /= Void
+			a_range_not_empty: not a_range.empty
+		do
+			implementation.reset_with_range (a_range)
+		ensure
+			a_range_assigned: range.is_equal (a_range)
+			value_assigned: value = a_range.lower
+			minimum_consistent: minimum = a_range.lower
+			maximum_consistent: maximum = a_range.upper
+		end
+
+feature -- Event handling
+
+	change_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be performed when `value' changes.
+
+feature {NONE} -- Implementation
+
+	implementation: EV_GAUGE_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
+		do
+			Precursor
+			create change_actions
+		end
+
+feature {EV_ANY} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
+		do
+			--|FIXME feature comments should mention these values.
+			--|FIXME Why is minimum 1 and not 0??
+			Result := Precursor and then
+				maximum = 100 and then
+				minimum = 1 and then
+				value = 1 and then
+				step = 1 and then
+				leap = 10
+		end
+
 	make_for_test is
+			-- Create with update timer for testing.
 		local
 			step_timer: EV_TIMEOUT
 			reset_timer: EV_TIMEOUT
@@ -48,213 +257,12 @@ feature {NONE} -- Initialization
 			reset_timer.actions.extend (~set_value (0))
 		end
 
-feature -- Events
-
-	change_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when `value' changes.
-
-feature -- Access
-
-	value: INTEGER is
-			-- Current value of the gauge.
-		do
-			Result := implementation.value
-		ensure
-			bridge_ok: Result = implementation.value
-		end
-
-	step: INTEGER is
-			-- Value by which `value' changes.
-		do
-			Result := implementation.step
-		ensure
-			bridge_ok: Result = implementation.step
-		end
-
-	leap: INTEGER is
-			-- Size of page.
-		do
-			Result := implementation.leap
-		ensure
-			bridge_ok: Result = implementation.leap
-		end
-
-	minimum: INTEGER is
-			-- Lowest value of the gauge.
-		do
-			Result := implementation.minimum
-		ensure
-			bridge_ok: Result = implementation.minimum
-		end
-
-	maximum: INTEGER is
-			-- Highest value of the gauge.
-		do
-			Result := implementation.maximum
-		ensure
-			bridge_ok: Result = implementation.maximum
-		end
-
-	range: INTEGER_INTERVAL is
-			-- Get `minimum' and `maximum' as interval.
-		do
-			Result := implementation.range
-		ensure
-			bridge_ok: Result /= Void and then
-				Result.is_equal (implementation.range)
-		end
-
-feature -- Status setting
-
-	step_forward is
-			-- Increment `value' by `step' if possible.
-		do
-			implementation.step_forward
-		ensure
-			incremented: value = maximum.min (old value + step)
-		end
-
-	step_backward is
-			-- Decrement `value' by `step' if possible.
-		do
-			implementation.step_backward
-		ensure
-			decremented: value = minimum.max (old value - step)
-		end
-
-	leap_forward is
-			-- Increment `value' by `leap' if possible.
-		do
-			implementation.leap_forward
-		ensure
-			incremented: value = maximum.min (old value + leap)
-		end
-
-	leap_backward is
-			-- Decrement `value' by `leap' if possible.
-		do
-			implementation.leap_backward
-		ensure
-			decremented: value = minimum.max (old value - leap)
-		end
-
-feature -- Element change
-
-	set_value (a_value: INTEGER) is
-			-- Set `value' to `a_value'.
-		require
-			a_value_within_bounds: a_value >= minimum
-				and then a_value <= maximum
-		do
-			implementation.set_value (a_value)
-		ensure
-			assigned: value = a_value
-		end
-
-	set_step (a_step: INTEGER) is
-			-- Set `step' to `a_step'.
-		require
-			a_step_positive: a_step > 0
-		do
-			implementation.set_step (a_step)
-		ensure
-			assigned: step = a_step
-		end
-
-	set_leap (a_leap: INTEGER) is
-			-- Set `leap' to `a_leap'.
-		require
-			a_leap_positive: a_leap > 0
-		do
-			implementation.set_leap (a_leap)
-		ensure
-			assigned: leap = a_leap
-		end
-
-	set_minimum (a_minimum: INTEGER) is
-			-- Set `minimum' to `a_minimum'.
-		require
-			a_minimum_not_greater_than_maximum:
-				a_minimum <= maximum
-			a_minimum_not_smaller_than_value:
-				a_minimum <= value			
-		do
-			implementation.set_minimum (a_minimum)
-		ensure
-			assigned: minimum = a_minimum
-		end
-
-	set_maximum (a_maximum: INTEGER) is
-			-- Set `maximum' to `a_maximum'.
-		require
-			a_maximum_not_smaller_than_minimum:
-				a_maximum >= minimum
-			a_maximum_not_smaller_than_value:
-				a_maximum >= value			
-		do
-			implementation.set_maximum (a_maximum)
-		ensure
-			assigned: maximum = a_maximum
-		end
-
-	set_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-		require
-			a_range_not_void: a_range /= Void
-			a_range_not_empty: not a_range.empty
-			a_range_has_value: a_range.has (value)
-		do
-			implementation.set_range (a_range)
-		ensure
-			minimum_assigned: minimum = a_range.lower
-			maximum_assigned: maximum = a_range.upper
-			assigned: range.is_equal (a_range)
-		end
-
-	reset_with_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-			-- Set `value' to `a_range.lower'.
-		require
-			a_range_not_void: a_range /= Void
-			a_range_not_empty: not a_range.empty
-		do
-			implementation.reset_with_range (a_range)
-		ensure
-			value_assigned: value = a_range.lower
-			minimum_assigned: minimum = a_range.lower
-			maximum_assigned: maximum = a_range.upper
-			assigned: range.is_equal (a_range)
-		end
-
-
-
-feature {EV_ANY} -- Contract support
-
-	is_in_default_state: BOOLEAN is
-			-- Is `Current' in its default state.
-		do
-			Result := Precursor and then
-				maximum = 100 and then
-				minimum = 1 and then
-				value = 1 and then
-				step = 1 and then
-				leap = 10
-		end
-
-feature {NONE} -- Implementation
-
-	create_action_sequences is
-		do
-			Precursor
-			create change_actions
-		end
-
-	implementation: EV_GAUGE_I
-
 invariant
 	range_not_void: is_useable implies range /= Void
-	maximum_greater_than_or_equal_to_minimum: is_useable implies maximum >= minimum
-	value_within_bounds: is_useable implies value >= minimum and then value <= maximum
+	maximum_greater_than_or_equal_to_minimum: is_useable implies
+		maximum >= minimum
+	value_within_bounds: is_useable implies
+		value >= minimum and then value <= maximum
 	step_positive: is_useable implies step > 0
 	leap_positive: is_useable implies leap > 0
 	change_actions_not_void: is_useable implies change_actions /= Void
@@ -289,6 +297,9 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.12  2000/03/01 20:07:36  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -323,12 +334,13 @@ end -- class EV_GAUGE
 --| added is_useable to invariant
 --|
 --| Revision 1.2.6.10  2000/02/10 19:39:54  rogers
---| The comment on ev_gauge now corerctly reads: Actions performed when `value' changes.
+--| The comment on ev_gauge now corerctly reads: Actions performed when `value'
+--| changes.
 --|
 --| Revision 1.2.6.9  2000/02/02 00:55:29  brendel
 --| Added features for leaping (or scrolling by page), since they were first
---| defined in scrollbar and range, but could as well be defined for spinbutton and
---| progress bar. If not, they can be undefined there.
+--| defined in scrollbar and range, but could as well be defined for spinbutton
+--| and progress bar. If not, they can be undefined there.
 --|
 --| Revision 1.2.6.8  2000/02/01 01:30:26  brendel
 --| Fixed bug in `make_with_range'.

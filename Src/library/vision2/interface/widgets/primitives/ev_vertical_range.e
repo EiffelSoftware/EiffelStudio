@@ -1,5 +1,18 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
+	description:
+		"Interactive vertical range widget. A sliding thumb displays the%N%
+		%current `value' and allows it to be adjusted"
+	appearance:
+		"+-+%N%
+		%| |%N%
+		%| |%N%
+		%| |%N%
+		%|_|%N%
+		%|#|%N%
+		%|-|%N%
+		%| |%N%
+		%+-+"
+	status: "See notice at end of class"
 	description:
 		"EiffelVision vertical range."
 	status: "See notice at end of class"
@@ -22,14 +35,14 @@ create
 
 feature {NONE}-- Implementation
 
+	implementation: EV_VERTICAL_RANGE_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
-			-- Create implementation of vertical range.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_VERTICAL_RANGE_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_VERTICAL_RANGE_I
-			-- Platform dependent access.
 
 end -- class EV_VERTICAL_RANGE
 
@@ -54,6 +67,9 @@ end -- class EV_VERTICAL_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.8  2000/03/01 20:07:36  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -82,14 +98,14 @@ end -- class EV_VERTICAL_RANGE
 --| added --| FIXME Not for release
 --|
 --| Revision 1.2.6.2  2000/01/11 16:54:12  rogers
---| Altered to comply with the major Vision2 changes. Make with range no longer takes a parent. Added create implementation.
+--| Altered to comply with the major Vision2 changes. Make with range no longer
+--| takes a parent. Added create implementation.
 --|
 --| Revision 1.2.6.1  1999/11/24 17:30:56  oconnor
 --| merged with DEVEL branch
 --|
 --| Revision 1.2.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -1,6 +1,6 @@
 indexing
 	description: 
-		"Eiffel Vision select button. Buttons that have a state."
+		"Base class for buttons that have two states (See `is_selected')."
 	status: "See notice at end of class"
 	keywords: "state, toggle, button"
 	date: "$Date$"
@@ -39,8 +39,7 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	implementation: EV_SELECT_BUTTON_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_STATE_BUTTON
 
@@ -65,6 +64,9 @@ end -- class EV_STATE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.2  2000/02/25 21:28:16  brendel
 --| Formatting.
 --|

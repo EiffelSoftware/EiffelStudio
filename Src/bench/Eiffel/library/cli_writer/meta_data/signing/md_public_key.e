@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
+			key_signing_facility_available: (create {MD_STRONG_NAME}).present
 		local
 			l_key_size: INTEGER
 			l_result: INTEGER

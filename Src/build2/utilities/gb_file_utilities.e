@@ -27,5 +27,21 @@ feature -- Basic operations
 				file.change_name (new_file_name.string)
 			end
 		end
+		
+	move_file_between_directories (original, new: FILE_NAME; file_name: STRING) is
+			-- Move file named `file_name' from `original' directory to `new_directory'.
+		local
+			file: RAW_FILE
+			new_file_name, old_file_name: FILE_NAME
+		do
+			create new_file_name.make_from_string (new)
+			create old_file_name.make_from_string (original)
+			new_file_name.extend (file_name)
+			old_file_name.extend (file_name)
+			create file.make (old_file_name)
+			if file.exists then
+				file.change_name (new_file_name.string)
+			end
+		end
 
 end -- class GB_FILE_UTILITIES

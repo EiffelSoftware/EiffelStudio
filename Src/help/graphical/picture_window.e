@@ -20,8 +20,8 @@ feature -- Initialization
 		do
 			make(par)
 			create v.make(Current)
-			img_area.make(v)
-			caption_area.make(v)
+			create img_area.make(v)
+			create caption_area.make(v)
 			set_size(200,200)
 			set_title("Picture")
 			show

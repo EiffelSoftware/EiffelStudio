@@ -10,19 +10,19 @@ default
 	dead_code_removal (no);
 
 cluster
-	help_base:				"c:\viewer"
+	help_base:				"."
 	graphical(help_base): 		"$\graphical"
 	kernel(help_base):	 	"$\kernel"
 	xml_specific(help_base):	"$\xml_specific"
 
 	-- eXML
-	exml:				 	"c:\eiffel45\library\exml"
+	exml:				 	"$EIFFEL4\library\exml"
 	eXML_main(exml):			"$\main"
 	eXML_tree_parser(exml):	"$\main\tree_parser"
 	eXML_ise(exml): 	 		"$\compiler_specific\ise"
 
 	-- Gobo Eiffel Kernel Library
-	gobo:					"c:\eiffel45\library\gobo"
+	gobo:					"$EIFFEL4\library\gobo"
 	kl_kernel(gobo):			"$\library\kernel"
 	kl_kernel_spec(gobo):		"$\library\kernel\spec\ise"
 	all ds_structure(gobo):	"$\library\structure"

@@ -40,10 +40,10 @@ feature -- Initialization
 			color: EV_COLOR
 		do
 			create head_format.make
-			create font.make_by_name("Arial")
-			font.set_height(16)
+			--create font.make_by_name("Arial")
+			--font.set_height(16)
 			create color.make_rgb(0,0,0)
-			head_format.set_font(font)
+			--head_format.set_font(font)
 			head_format.set_color(color)
 			head_format.set_bold(true)
 			head_format.set_italic(false)
@@ -74,9 +74,9 @@ feature -- Status setting
 			font: EV_FONT
 			color: EV_COLOR
 		do
-			create font.make_by_name("Times New Roman")
-			font.set_height(12)
-			text_format.set_font(font)
+			--create font.make_by_name("Times New Roman")
+			--font.set_height(12)
+			--text_format.set_font(font)
 			text_format.set_bold(false)
 			text_format.set_italic(false)
 			create color.make_rgb(0,0,0)

@@ -31,7 +31,7 @@ feature -- Initialization
 				help_file := default_file
 			end
 			first_window.update
-			install_timer
+			--install_timer
 		
 		end
 

@@ -1,0 +1,115 @@
+system
+	help 
+
+root
+	viewer(graphical):"make" 
+
+default
+	assertion(all);
+	exception_trace (no); 
+	dead_code_removal (no);
+
+cluster
+	help_base:				"."
+	graphical(help_base): 		"$/graphical"
+	kernel(help_base):	 	"$/kernel"
+	xml_specific(help_base):	"$/xml_specific"
+
+	library:			"/home/brendel/local/library"
+
+	-- eXML
+	exml(library):		 	"$/exml"
+	eXML_main(exml):		"$/main"
+	eXML_tree_parser(exml):		"$/main/tree_parser"
+	eXML_ise(exml): 	 	"$/compiler_specific/ise"
+
+	-- Gobo Eiffel Kernel Library
+	gobo:				"$EIFFEL4/library/gobo"
+	kl_kernel(gobo):		"$/library/kernel"
+	kl_kernel_spec(gobo):		"$/library/kernel/spec/ise"
+	all ds_structure(gobo):	"$/library/structure"
+		exclude
+			"hact"
+			"se"
+			"ve"
+		end
+
+	libraries:	"$EIFFEL4/library"
+
+	-- EiffelBase
+	all base:	"$EIFFEL4/library/base"
+		exclude
+			"table_eiffel3"
+		end
+-- EiffelVision
+
+vision:					"/home/brendel/local/library/vision2"
+
+all components(vision):				"$/components";
+
+	-- Interface
+vision_i(vision):				"$/interface";
+vision_support (vision_i):			"$/support";
+vision_kernel (vision_i): 	       		"$/kernel";
+vision_properties (vision_i):			"$/properties";
+vision_items (vision_i):			"$/items";
+vision_pnd (vision_i):				"$/pick_and_drop";
+vision_figure (vision_i):			"$/figures";
+vision_widgets (vision_i):        		"$/widgets";
+vision_primitives (vision_widgets):     	"$/primitives";
+vision_containers (vision_widgets):     	"$/containers";
+vision_common_dialog (vision_widgets):		"$/common_dialogs";
+vision_uncommon_widgets (vision_widgets):	"$/uncommon_widgets";
+
+	-- Implementation Interface
+vision_ii(vision):				"$/implementation/implementation_interface";
+vision_ii_kernel (vision_ii):			"$/kernel";
+vision_ii_support (vision_ii):			"$/support";
+vision_ii_properties (vision_ii):   		"$/properties";
+vision_ii_items (vision_ii):			"$/items";
+vision_ii_pnd (vision_ii):			"$/pick_and_drop";
+vision_ii_widgets (vision_ii):			"$/widgets";
+vision_ii_primitives (vision_ii_widgets):	"$/primitives";
+vision_ii_containers (vision_ii_widgets):	"$/containers";
+vision_ii_common_dialog (vision_ii_widgets):    "$/common_dialogs";   
+vision_ii_uncommon_widgets (vision_ii_widgets): "$/uncommon_widgets";
+
+
+	-- Implementation clusters for x/GTK
+vision_imp(vision):				"$/implementation/gtk";
+vision_imp_kernel (vision_imp): 	       	"$/kernel";
+vision_imp_support (vision_imp):		"$/support";
+vision_imp_properties (vision_imp):		"$/properties";
+vision_imp_items (vision_imp):			"$/items";
+vision_imp_pnd (vision_imp):			"$/pick_and_drop";
+vision_imp_widgets (vision_imp):        	"$/widgets";
+vision_imp_primitives (vision_imp_widgets):     "$/primitives";
+vision_imp_containers (vision_imp_widgets):     "$/containers";
+vision_imp_common_dialog (vision_imp_widgets):	"$/common_dialogs";
+vision_imp_uncommon_widgets (vision_imp_widgets):"$/uncommon_widgets";
+                        
+	-- EiffelVision
+--	all vision2(libraries):	"$/vision2"
+--		exclude
+--			"mswin"
+--		end
+
+	--eiffel4:	"/home/king/local
+
+external
+
+    include_path:
+	"/home/brendel/local/library/vision2/implementation/gtk/Clib",
+	"`gtk-config --cflags`",
+	"/home/brendel/local/library/exml/expat/xmlparse",
+	"/home/brendel/local/library/exml/expat/xmltok",
+	"/home/brendel/local/library/exml/compiler_specific/ise/clib";
+    object: 
+	"/home/brendel/local/library/exml/compiler_specific/ise/clib/exml_parser.o",
+	"/home/brendel/local/library/exml/expat/xmlparse/xmlparse.o",
+	"/home/brendel/local/library/exml/expat/xmlparse/hashtable.o",
+	"/home/brendel/local/library/exml/expat/xmltok/xmlrole.o",
+	"/home/brendel/local/library/exml/expat/xmltok/xmltok.o",
+	"/home/brendel/local/library/vision2/implementation/gtk/Clib/gtk_eiffel.o",
+	"`gtk-config --libs`";
+end

@@ -5,6 +5,9 @@ indexing
 class
 	E_INSPECTOR
 
+inherit
+	STORABLE
+
 creation
 	make
 
@@ -110,16 +113,6 @@ feature -- Initialization
 				stwl.extend(topic_id)
 				keys.extend(stwl, word)
 			end
-		end
-
-	load_from_file is
-			-- Load the data from a file.
-		do
-		end
-
-	save_to_file is
-			-- Save the data to a file.
-		do
 		end
 
 feature -- Status report

@@ -17,6 +17,11 @@ inherit
 			is_in_default_state
 		end
 
+	EV_TESTABLE_NON_WIDGET
+		undefine
+			default_create
+		end
+
 create
 	default_create,
 	make_with_interval
@@ -78,6 +83,48 @@ feature -- Status setting
 			count_is_zero: count = 0
 		end
 
+feature -- Miscellaneous
+
+	test_widget: EV_WIDGET is
+			-- Controls that let the user control the timer.
+		local
+			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
+			interval_gauge: EV_HORIZONTAL_RANGE
+			reset_button: EV_BUTTON
+			count_label: EV_LABEL
+		do
+			create vb
+			create hb
+			vb.extend (hb)
+			hb.extend (create {EV_LABEL}.make_with_text ("Interval: "))
+			hb.disable_item_expand (hb.last)
+			create interval_gauge.make_with_range (0 |..| 1000)
+			hb.extend (interval_gauge)
+			interval_gauge.set_value (500)
+			interval_gauge.change_actions.extend (
+				~on_value_change (interval_gauge))
+			create hb
+			create reset_button.make_with_text ("Reset count")
+			reset_button.select_actions.extend (~reset_count)
+			hb.extend (reset_button)
+			create count_label
+			actions.extend (~on_timer (count_label))
+			hb.extend (count_label)	
+			Result := vb
+		end
+
+	on_value_change (a_gauge: EV_GAUGE) is
+			-- `interval_gauge.value' changed.
+		do
+			set_interval (a_gauge.value)
+		end
+
+	on_timer (a_label: EV_LABEL) is
+			-- `Current' fired `actions'.
+		do
+			a_label.set_text ("Count: " + count.out)
+		end
 
 feature {NONE} -- Contract support
 
@@ -138,6 +185,9 @@ end -- class EV_TIMEOUT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/05/01 18:38:20  brendel
+--| Added test_widget.
+--|
 --| Revision 1.6  2000/03/16 01:18:48  oconnor
 --| formatting
 --|

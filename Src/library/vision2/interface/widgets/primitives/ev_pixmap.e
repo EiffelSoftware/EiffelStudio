@@ -100,7 +100,6 @@ feature -- Status setting
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
 			-- exceptions.
-			--|FIXME do this!
 		require
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.empty
@@ -142,8 +141,6 @@ feature -- Duplication
 			-- (So as to satisfy `is_equal'.)
 		do
 			implementation.copy_pixmap(other)
---			set_size (other.width, other.height)
---			draw_pixmap (0, 0, other)
 		end
 
 feature -- Events
@@ -204,6 +201,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/13 18:48:38  pichery
+--| cosmetics
+--|
 --| Revision 1.28  2000/04/12 01:42:03  pichery
 --| added expose_action and their initialization.
 --|

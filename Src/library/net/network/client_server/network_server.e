@@ -27,7 +27,7 @@ feature -- Access
 		require 
 			valid_port: a_port >= 0
 		do
-			!!in.make_server_by_port (a_port);
+			create in.make_server_by_port (a_port);
 			if queued = 0 then
 				in.listen (5)
 			else

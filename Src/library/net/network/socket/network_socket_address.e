@@ -52,7 +52,7 @@ feature -- Initialization
 			an_host_address: HOST_ADDRESS
 		do
 			make;
-			!! an_host_address.make_local;
+			create an_host_address.make_local;
 			set_host_address (an_host_address);
 			set_port (a_port)
 		end;
@@ -64,7 +64,7 @@ feature -- Initialization
 			an_host_address: HOST_ADDRESS
 		do
 			make;
-			!! an_host_address.make_from_name (a_hostname);
+			create an_host_address.make_from_name (a_hostname);
 			set_host_address (an_host_address);
 			set_port (a_port)
 		end;
@@ -76,7 +76,7 @@ feature -- Initialization
 			an_host_address: HOST_ADDRESS
 		do
 			make;
-			!! an_host_address.make_from_ip_number (an_ip_number);
+			create an_host_address.make_from_ip_number (an_ip_number);
 			set_host_address (an_host_address);
 			set_port (a_port)
 		end
@@ -93,7 +93,7 @@ feature -- Status report
 	host_address: HOST_ADDRESS is
 			-- Host address of address
 		do
-			!!Result.make;
+			create Result.make;
 			Result.from_c (get_sock_addr_in ($socket_address))
 		end
 

@@ -28,7 +28,7 @@ feature -- Access
 			a_valid_port: a_peer_port > 0;
 			a_valid_name: a_peer_name /= Void and then not a_peer_name.empty
 		do
-			!!in_out.make_client_by_port (a_peer_port, a_peer_name);
+			create in_out.make_client_by_port (a_peer_port, a_peer_name);
 			in_out.connect
 		end;
 

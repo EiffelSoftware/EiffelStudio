@@ -64,13 +64,13 @@ feature -- Initialization
 				is_hostname := (code /= 46 and then (code < 48 or else code > 57));
 				i := i + 1
 			end;
-			!!h_address.make;
+			create h_address.make;
 			if is_hostname then
 				h_address.set_address_from_name (a_peer_host)
 			else
 				h_address.set_host_address (a_peer_host)
 			end;
-			!!peer_address.make;
+			create peer_address.make;
 			peer_address.set_host_address (h_address);
 			peer_address.set_port (a_peer_port)
 		end;
@@ -82,9 +82,9 @@ feature -- Initialization
 			h_address: HOST_ADDRESS
 		do
 			make;
-			!!h_address.make;
+			create h_address.make;
 			h_address.set_in_address_any;
-			!!address.make;
+			create address.make;
 			address.set_host_address (h_address);
 			address.set_port (a_port);
 			bind

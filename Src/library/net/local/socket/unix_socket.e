@@ -41,7 +41,7 @@ feature -- Status Report
 		require else
 			valid_address: address /= Void
 		do
-			!! Result.make (10);
+			create Result.make (10);
 			Result.append (address.path)
 		end
 

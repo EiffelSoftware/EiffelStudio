@@ -30,7 +30,7 @@ feature -- Initialization
 		require
 			a_valid_name: a /= Void and then not a.empty
 		do
-			!!in_out.make_client (a);
+			create in_out.make_client (a);
 			in_out.connect
 		end
 

@@ -198,19 +198,19 @@ feature -- medium masks
 	except_mask: POLL_MASK is
 			-- Exception mask used by medium select
 		once
-			!!Result.make
+			create Result.make
 		end;
 
 	read_mask: POLL_MASK is
 			-- Read mask used by medium select
 		once
-			!!Result.make
+			create Result.make
 		end;
 
 	write_mask: POLL_MASK is
 			-- Write mask used by medium select.
 		once
-			!!Result.make
+			create Result.make
 		end
 
 feature -- booleans to decide whether to include each mask in the select call
@@ -278,7 +278,7 @@ feature -- commands to be executed
 			-- List of poll commands to be called
 			-- when their medium is selected for read event.
 		once
-			!!Result.make (0, 10)
+			create Result.make (0, 10)
 		end;
 
 	put_read_command (a_command: POLL_COMMAND) is
@@ -323,7 +323,7 @@ feature -- commands to be executed
 			-- List of poll commands to be called
 			-- when their medium is selected for write event.
 		once
-			!!Result.make (0, 10)
+			create Result.make (0, 10)
 		end;
 
 	put_write_command (a_command: POLL_COMMAND) is
@@ -366,7 +366,7 @@ feature -- commands to be executed
 			-- List of poll commands to be called
 			-- when their medium is selected for exception event.
 		once
-			!!Result.make (0, 10)
+			create Result.make (0, 10)
 		end;
 
 	put_exception_command (a_command: POLL_COMMAND) is

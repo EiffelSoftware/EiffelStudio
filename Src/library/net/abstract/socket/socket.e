@@ -91,7 +91,7 @@ feature
 			ext: ANY
 		do
 			descriptor := fd;
-			!!address.make;
+			create address.make;
 			ext := address.socket_address;
 			c_sock_name (descriptor, $ext, address.count);
 			family := address.family;
@@ -220,7 +220,7 @@ feature -- Misc.
 		require else
 			socket_exists: exists
 		do
-			!!Result.make (0)
+			create Result.make (0)
 		end
 
 feature -- Ouput
@@ -317,7 +317,7 @@ feature -- Ouput
 					amount_sent := amount_sent + return_val;
 					if amount_sent < a_packet.count then
 						if send_packet = Void then
-							!!send_packet.make (a_packet.count - amount_sent);
+							create send_packet.make (a_packet.count - amount_sent);
 							ext_data := send_packet.data
 						end;
 						from
@@ -356,7 +356,7 @@ feature -- Ouput
 					amount_sent := amount_sent + return_val;
 					if amount_sent < a_packet.count then
 						if send_packet = Void then
-							!!send_packet.make (a_packet.count - amount_sent)
+							create send_packet.make (a_packet.count - amount_sent)
 							ext_data := send_packet.data
 						end;
 						from
@@ -485,7 +485,7 @@ feature -- Input
 			return_val: INTEGER
 		do
 			if last_string = Void or else last_string.capacity <= nb_char then
-				!!last_string.make (nb_char + 1)
+				create last_string.make (nb_char + 1)
 			end;
 			ext := last_string.to_c;
 			return_val := c_read_stream (descriptor, nb_char, $ext);
@@ -504,7 +504,7 @@ feature -- Input
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		do
-			!!last_string.make (512);
+			create last_string.make (512);
 			read_character;
 			from
 			until
@@ -527,8 +527,8 @@ feature -- Input
 			ext_data: ANY;
 			count: INTEGER
 		do
-			!!Result.make (size);
-			!!recv_packet.make (size);
+			create Result.make (size);
+			create recv_packet.make (size);
 			ext_data := recv_packet.data;
 			from
 				amount_read := 0
@@ -566,8 +566,8 @@ feature -- Input
 			ext_data: ANY;
 			count: INTEGER
 		do
-			!!Result.make (size);
-			!!recv_packet.make (size);
+			create Result.make (size);
+			create recv_packet.make (size);
 			ext_data := recv_packet.data;
 			from
 				amount_read := 0

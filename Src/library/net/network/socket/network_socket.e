@@ -35,7 +35,7 @@ feature -- Status Report
 			ext: ANY;
 			temp_addr: like address
 		do
-			!!temp_addr.make;
+			create temp_addr.make;
 			ext := temp_addr.socket_address;
 			c_sock_name (descriptor, $ext, temp_addr.count);
 			Result := temp_addr.port

@@ -54,7 +54,7 @@ feature
 			ext := pass_address.socket_address;
 			return := c_accept (descriptor, $ext, address.count);
 			if return > 0 then
-				!! accepted.create_from_descriptor (return);
+				create accepted.create_from_descriptor (return);
 				accepted.set_peer_address (pass_address)
 			else
 				accepted := Void

@@ -11,6 +11,8 @@ class
 inherit
 	EV_FRAME
 	
+	GB_CONSTANTS
+	
 create
 	make_with_tool
 	
@@ -44,10 +46,12 @@ feature {NONE} -- Initialization
 			create minimize_button
 			minimize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
 			minimize_button.select_actions.extend (agent minimize)
+			minimize_button.set_tooltip (minimize_tooltip)
 			tool_bar.extend (minimize_button)
 			create maximize_button
 			maximize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
 			maximize_button.select_actions.extend (agent maximize)
+			maximize_button.set_tooltip (maximize_tooltip)
 			tool_bar.extend (maximize_button)
 			horizontal_box.extend (tool_bar)
 			horizontal_box.disable_item_expand (tool_bar)
@@ -99,9 +103,11 @@ feature {NONE} -- Implementation
 			tool_holder_parent.minimize_tool (Current)
 			minimized := not minimized
 			if minimized then
-				minimize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)	
+				minimize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)
+				minimize_button.set_tooltip (restore_tooltip)
 			else
 				minimize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)	
+				minimize_button.set_tooltip (minimize_tooltip)
 			end
 		end
 		
@@ -113,8 +119,10 @@ feature {NONE} -- Implementation
 			maximized := not maximized
 			if maximized then
 				maximize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)	
+				maximize_button.set_tooltip (restore_tooltip)
 			else
 				maximize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)	
+				maximize_button.set_tooltip (maximize_tooltip)
 			end
 		end
 		

@@ -8,22 +8,38 @@ indexing
 class
 	EV_DEFAULT_COLORS_IMP 
 
-inherit
-	WEL_COLOR_CONSTANTS
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
-	Color_dialog: EV_COLOR is
+	Color_dialog, Color_3d_face: EV_COLOR is
 			-- Color usually used for the background of dialogs.
 		local
 			color_imp: EV_COLOR_IMP
 		do
 			create Result
 			color_imp ?= Result.implementation
-			color_imp.set_with_system_id (Color_btnface)
+			color_imp.set_with_system_id (Wel_color_constants.Color_btnface)
+		end
+
+	Color_3d_highlight: EV_COLOR is
+			-- Used for 3D-effects (light color)
+			-- Name "color highlight"
+		local
+			color_imp: EV_COLOR_IMP
+		do
+			create Result
+			color_imp ?= Result.implementation
+			color_imp.set_with_system_id (Wel_color_constants.Color_btnhighlight)
+		end
+
+	Color_3d_shadow: EV_COLOR is
+			-- Used for 3D-effects (dark color)
+			-- Name "color shadow"
+		local
+			color_imp: EV_COLOR_IMP
+		do
+			create Result
+			color_imp ?= Result.implementation
+			color_imp.set_with_system_id (Wel_color_constants.Color_btnshadow)
 		end
 
 	Color_read_only: EV_COLOR is
@@ -34,14 +50,14 @@ feature -- Access
 		do
 			create Result
 			color_imp ?= Result.implementation
-			color_imp.set_with_system_id (Color_inactiveborder)
+			color_imp.set_with_system_id (Wel_color_constants.Color_inactiveborder)
 		end
 
 	Color_read_write: EV_COLOR is
 			-- Color usely used for the background of editable
 			-- widgets when they are in read / write mode.
 		do
-			!! Result.make_with_rgb (1, 1, 1)
+			create Result.make_with_rgb (1, 1, 1)
 		end
 
 	default_background_color: EV_COLOR is
@@ -53,9 +69,15 @@ feature -- Access
 	default_foreground_color: EV_COLOR is
 			-- Default foreground color for most widgets.
 		do
-			!! Result.make_with_rgb (0, 0, 0)
+			create Result.make_with_rgb (0, 0, 0)
 		end
 
+feature {NONE} -- Constants
+
+	wel_color_constants: WEL_COLOR_CONSTANTS is
+		once
+			create Result
+		end
 end -- class EV_DEFAULT_COLORS_IMP
 
 --|-----------------------------------------------------------------------------
@@ -79,6 +101,13 @@ end -- class EV_DEFAULT_COLORS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/05/12 19:27:45  pichery
+--| Added colors `Color_3d_face', `Color_3d_highlight',
+--| `Color_3d_shadow'.
+--|
+--| Revision 1.4.8.1  2000/05/03 19:09:17  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/04/24 16:04:29  rogers
 --| Improved comments.
 --|

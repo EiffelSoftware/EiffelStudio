@@ -126,16 +126,32 @@ feature -- Access
 
 feature -- Access
 
-	Color_dialog: EV_COLOR is
+	Color_dialog, Color_3d_face: EV_COLOR is
 			-- Used for dialog box background.
 			-- Name: "color dialog".
 		do
-			Result := default_color_imp.Color_dialog
+			Result := default_color_imp.Color_3d_face
 			Result.set_name ("color dialog")
 		end
 
+	Color_3d_highlight: EV_COLOR is
+			-- Used for 3D-effects (light color)
+			-- Name "color highlight"
+		do
+			Result := default_color_imp.Color_3d_highlight
+			Result.set_name ("color highlight")
+		end
+
+	Color_3d_shadow: EV_COLOR is
+			-- Used for 3D-effects (dark color)
+			-- Name "color shadow"
+		do
+			Result := default_color_imp.Color_3d_shadow
+			Result.set_name ("color shadow")
+		end
+
 	Color_read_only: EV_COLOR is
-			-- Used background of editable when read-only.
+			-- Used for background of editable when read-only.
 			-- Name: "color read only".
 		do
 			Result := default_color_imp.Color_read_only
@@ -250,6 +266,13 @@ end -- class EV_DEFAULT_COLORS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/05/12 19:27:28  pichery
+--| Added colors `Color_3d_face', `Color_3d_highlight',
+--| `Color_3d_shadow'.
+--|
+--| Revision 1.6.4.1  2000/05/03 19:10:04  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

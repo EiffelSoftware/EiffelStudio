@@ -49,24 +49,24 @@ feature -- Basic operation
 			test_successful := True
 
 			create test_list.make
-		--	test_list.extend (["extend", ~test_extend])
-		--	test_list.extend (["put", ~test_put])
-		--	test_list.extend (["replace", ~test_replace])
+			test_list.extend (["extend", ~test_extend])
+			test_list.extend (["put", ~test_put])
+			test_list.extend (["replace", ~test_replace])
 			test_list.extend (["put_left", ~test_put_left])
-		--	test_list.extend (["put_right", ~test_put_right])
-		--	test_list.extend (["put_i_th", ~test_put_i_th])
-		--	test_list.extend (["force", ~test_force])
-		--	test_list.extend (["put_front", ~test_put_front])
+			test_list.extend (["put_right", ~test_put_right])
+			test_list.extend (["put_i_th", ~test_put_i_th])
+			test_list.extend (["force", ~test_force])
+			test_list.extend (["put_front", ~test_put_front])
 		--	test_list.extend (["prune", ~test_prune])
-		--	test_list.extend (["prune_all", ~test_prune_all])
-		--	test_list.extend (["remove", ~test_remove])
-		--	test_list.extend (["remove_left", ~test_remove_left])
-		--	test_list.extend (["remove_right", ~test_remove_right])
-		--	test_list.extend (["append", ~test_append])
-		--	test_list.extend (["fill", ~test_fill])
-		--	test_list.extend (["append", ~test_append])
+			test_list.extend (["prune_all", ~test_prune_all])
+			test_list.extend (["remove", ~test_remove])
+			test_list.extend (["remove_left", ~test_remove_left])
+			test_list.extend (["remove_right", ~test_remove_right])
+			test_list.extend (["append", ~test_append])
+			test_list.extend (["fill", ~test_fill])
+			test_list.extend (["append", ~test_append])
 			test_list.extend (["merge_left", ~test_merge_left])
-		--	test_list.extend (["merge_right", ~test_merge_right])
+			test_list.extend (["merge_right", ~test_merge_right])
 
 			append_result ("-", "initial")
 
@@ -698,6 +698,11 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/09 01:45:17  brendel
+--| Uncommented all tests except the test for prune, which is known to fail,
+--| but is actually correct: the test is wrong, because it is compared to
+--| the one in LINKED_LIST.
+--|
 --| Revision 1.18  2000/03/03 20:03:29  brendel
 --| Better output to description.
 --|

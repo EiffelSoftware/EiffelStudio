@@ -1,5 +1,5 @@
 system
-	test
+	build
 
 root
 	GB: execute
@@ -46,28 +46,24 @@ cluster
 
 	dev:		"D:\work\library"
 
+
 	all wel (dev):		"$\wel"
-		default
-			assertion(no)
-		end
+
 
 	all vision2 (dev):		"$\vision2"
 		include
 			"ev_button"; 
 		exclude
 			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; 
-		default
-			assertion(no)
 		end
 
 	all base:		"d:\work\library\base"
 		exclude
 			"table_eiffel3"; 
-		default
-			assertion(no)
 		end
 
 	exml_interface:		"D:\work\library\exml_02_cvs_anon\exml\exml\lib\interface"
+
 
 	exml_general_interface (exml_interface):		"$/general"
 
@@ -84,6 +80,7 @@ cluster
 	exml_source_interface (exml_interface):		"$\source"
 
 	exml_implementation:		"D:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation"
+
 
 	exml_implementation_interface (exml_implementation):		"$\implementation_interface"
 

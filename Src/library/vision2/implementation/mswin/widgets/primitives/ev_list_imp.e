@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			-- selection list.
 		do
 			wel_make (default_parent.item, 0, 0, 0, 0, 0)
-			!! ev_children.make
+			!! ev_children.make (2)
 			is_multiple_selection := False
 		end	
 

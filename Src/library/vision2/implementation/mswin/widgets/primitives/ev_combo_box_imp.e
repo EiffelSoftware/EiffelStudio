@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			internal_window_make (default_parent.item, void, default_style + Cbs_dropdown,
 				0, 0, 0, 90, 0, default_pointer)
  			id := 0
-			!! ev_children.make
+			!! ev_children.make (2)
 		end
 
 feature -- Measurement
@@ -89,12 +89,6 @@ feature -- Measurement
 			-- height of the combo-box when the list is shown
 		do
 			Result := dropped_rect.height
-		end
-
-	set_extended_height (value: INTEGER) is
-			-- Make `value' the new extended-height of the box.
-		do
-			move_and_resize (x, y, width, value, True)
 		end
 
 feature -- Status report
@@ -179,6 +173,12 @@ feature -- Element change
 		do
 			reset_content
 			clear_ev_children
+		end
+
+	set_extended_height (value: INTEGER) is
+			-- Make `value' the new extended-height of the box.
+		do
+			move_and_resize (x, y, width, value, True)
 		end
 
 feature -- Basic operation

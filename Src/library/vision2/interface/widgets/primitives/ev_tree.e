@@ -66,24 +66,42 @@ feature -- Status report
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
+	add_select_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
-			-- when an item is selected.
+			-- when an item has been selected.
 		require
 			exists: not destroyed
 		do
-			implementation.add_selection_command (a_command, arguments)
+			implementation.add_select_command (a_command, arguments)
+		end
+
+	add_unselect_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
+			-- Add `cmd' to the list of commands to be executed
+			-- when an item has been unselected.
+		require
+			exists: not destroyed
+		do
+			implementation.add_unselect_command (a_command, arguments)
 		end
 
 feature -- Event -- removing command association
 
-	remove_selection_commands is	
+	remove_select_commands is	
 			-- Empty the list of commands to be executed
-			-- when the selection has changed.
+			-- when an item has been selected.
 		require
 			exists: not destroyed
 		do
-			implementation.remove_selection_commands
+			implementation.remove_select_commands
+		end
+
+	remove_unselect_commands is	
+			-- Empty the list of commands to be executed
+			-- when an item has been unselected.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_unselect_commands
 		end
 
 feature -- Implementation

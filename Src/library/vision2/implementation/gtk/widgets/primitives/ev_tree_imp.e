@@ -121,7 +121,7 @@ feature -- Status setting
 	destroy is
 			-- Destroy screen widget implementation and EV_LIST_ITEM objects
 		do
--- clear_items
+			clear_items
 			if not destroyed then
 	                        gtk_widget_destroy (tree_widget)
 	                        gtk_widget_destroy (widget)
@@ -132,28 +132,36 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
+	add_select_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Make `command' executed when an item is
-			-- selected or unselected.
---		local
---			ev_data: EV_EVENT_DATA
+			-- selected.
 		do
---			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
---			add_command_with_event_data (tree_widget, "tree_select_row", a_command, arguments, ev_data, 0, False, default_pointer)
---			add_command_with_event_data (tree_widget, "tree_unselect_row", a_command, arguments, ev_data, 0, False, default_pointer)
 			add_command (tree_widget, "tree_select_row", a_command, arguments, default_pointer)
+		end
+
+	add_unselect_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
+			-- Make `command' executed when an item is
+			-- unselected.
+		do
 			add_command (tree_widget, "tree_unselect_row", a_command, arguments, default_pointer)
 		end
 
 feature -- Event -- removing command association
 
-	remove_selection_commands is	
+	remove_select_commands is	
 			-- Empty the list of commands to be executed
-			-- when the selection has changed.
+			-- when an item has been selected.
 		do
 			remove_commands (tree_widget, tree_select_row_id)
+		end
+
+	remove_unselect_commands is	
+			-- Empty the list of commands to be executed
+			-- when an item has been unselected.
+		do
 			remove_commands (tree_widget, tree_unselect_row_id)
 		end
+
 feature -- Basic operations
 
 	has_tree_item (item: EV_TREE_ITEM_IMP): BOOLEAN is

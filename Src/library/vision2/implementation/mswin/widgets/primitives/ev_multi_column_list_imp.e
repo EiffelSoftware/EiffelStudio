@@ -328,11 +328,24 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
-			-- when the selection has changed.
+			-- when a row has been selected.
 		do
-			add_command (Cmd_selection, cmd, arg)
+			check
+					To_be_implemented: False
+			end
+--			add_command (Cmd_selection, cmd, arg)
+		end
+
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+			-- Add `cmd' to the list of commands to be executed
+			-- when a row has been unselected.
+		do
+			check
+					To_be_implemented: False
+			end
+--			add_command (Cmd_selection, cmd, arg)
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -344,11 +357,24 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_selection_commands is	
+	remove_select_commands is	
 			-- Empty the list of commands to be executed
-			-- when the selection has changed.
+			-- when a row has been selected.
 		do
-			remove_command (Cmd_selection)
+			check
+					To_be_implemented: False
+			end
+--			remove_command (Cmd_selection)
+		end
+
+	remove_unselect_commands is	
+			-- Empty the list of commands to be executed
+			-- when a row has been unselected.
+		do
+			check
+					To_be_implemented: False
+			end
+--			remove_command (Cmd_selection)
 		end
 
 	remove_column_click_commands is

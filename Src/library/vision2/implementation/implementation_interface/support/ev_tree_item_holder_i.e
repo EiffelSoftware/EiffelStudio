@@ -10,13 +10,19 @@ deferred class
 inherit
 	EV_ANY_I
 
-feature {EV_TREE_ITEM} -- Implementation
+feature -- Element change
 
-	add_item (an_item: EV_TREE_ITEM) is
+	add_item (an_item: EV_TREE_ITEM_IMP) is
 			-- Add `item' to the list
 		require
 			exists: not destroyed
-			valid_item: is_valid (an_item)
+		deferred
+		end
+
+	remove_item (an_item: EV_TREE_ITEM_IMP) is
+			-- Add `item' to the list
+		require
+			exists: not destroyed
 		deferred
 		end
 

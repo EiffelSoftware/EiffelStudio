@@ -10,7 +10,7 @@ class LIKE_ARGUMENT
 inherit
 	LIKE_TYPE_A
 		redefine
-			is_basic, conformance_type, is_like_argument
+			conformance_type, is_like_argument
 		end
 
 	SHARED_ARG_TYPES
@@ -19,12 +19,6 @@ feature -- Properties
 
 	is_like_argument: BOOLEAN is True
 			-- Is Current a like argument? (True)
-
-	is_basic: BOOLEAN is
-			-- Is the current actual type a basic one ?
-		do
-			Result := actual_type.is_basic
-		end
 
 feature -- Comparison
 

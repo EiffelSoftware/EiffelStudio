@@ -18,30 +18,30 @@ feature -- Initialization
 			size: DRAWING_SIZE
 			handler: EVENT_HANDLER
 		do
-			create main_win.make_winforms_form
+			create main_win.make
 			main_win.set_text (("Hello World!").to_cil)
 			
-			create button.make_winforms_button
+			create button.make
 			button.set_parent (main_win)
-			point.make_drawing_point (80, 65)
-			size.make_drawing_size_1 (75, 24)
+			point.make_from_x_and_y (80, 65)
+			size.make_from_width_and_height (75, 24)
 			button.set_size (size)
 			button.set_location (point)
 			button.set_text (("Message").to_cil)
 			
-			create label.make_winforms_label
-			point.make_drawing_point (20, 20)
-			size.make_drawing_size_1 (200, 30)
+			create label.make
+			point.make_from_x_and_y (20, 20)
+			size.make_from_width_and_height (200, 30)
 			label.set_location (point)
 			label.set_size (size)
 			label.set_text (("Welcome to an Eiffel example on how to use Winforms.").to_cil)
 			label.set_parent (main_win)
 			
-			create handler.make_event_handler (Current, $on_close)
+			create handler.make (Current, $on_close)
 			button.add_click (handler)
 			
-			size.make_drawing_size_1 (240, 130)
-			main_win.set_size (size)
+			size.make_from_width_and_height (240, 130)
+			main_win.set_size_size_2 (size)
 			
 			main_win.show
 			

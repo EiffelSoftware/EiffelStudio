@@ -107,7 +107,11 @@ feature -- Merging
 		do
 			old_cursor := other.cursor;
 			!! common_classes.make (other.ht_count);
-			from other.start until other.after loop
+			from
+				other.start
+			until
+				other.after
+			loop
 				precomp_id := other.key_for_iteration;
 				class_array := other.item_for_iteration
 				if ht_has (precomp_id) then

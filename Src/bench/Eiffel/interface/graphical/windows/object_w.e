@@ -419,11 +419,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! slice_button.make (slice_cmd, command_bar);
 			slice_button.add_button_press_action (3, slice_cmd, Void);
 			if show_menus then
-				!! slice_menu_entry.make (slice_cmd, special_menu);
-					-- This is a little hack, since we want the slice window to come up.
-					-- The appropriate argument for command is than Void instead of
-					-- the `text_window'.
-				slice_menu_entry.remove_activate_action (slice_cmd, slice_cmd.text_window);
+				!! slice_menu_entry.make_button_only (slice_cmd, special_menu);
 				slice_menu_entry.add_activate_action (slice_cmd, Void);
 				!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
 			else

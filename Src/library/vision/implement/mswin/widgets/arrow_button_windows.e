@@ -135,13 +135,13 @@ feature {NONE} -- Implementation
 			if button_is_down then
 				r.set_left (r.left + 6)
 				r.set_top (r.top + 6)
-				r.set_right (r.right - 4)
-				r.set_bottom (r.bottom - 4)
+				r.set_right ((r.right - 4).max (r.left))
+				r.set_bottom ((r.bottom - 4).max (r.top))
 			else
 				r.set_left (r.left + 4)
 				r.set_top (r.top + 4)
-				r.set_right (r.right - 6)
-				r.set_bottom (r.bottom - 6)
+				r.set_right ((r.right - 6).max (r.left))
+				r.set_bottom ((r.bottom - 6).max (r.top))
 			end
 			!! Result.make (1, 8)
 			Result.put (r.left ,1)

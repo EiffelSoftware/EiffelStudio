@@ -1,7 +1,6 @@
 indexing
 	description: "EiffelVision event data. Information given by% 
-	%EiffelVision when a callback is triggered. Type of event is% 
-	%determined byt the C pointer 'p' in the creation routine.%
+	%EiffelVision when a callback is triggered.%
 	%This is the base class for representing event data";
 	status: "See notice at end of class";
 	id: "$Id$";

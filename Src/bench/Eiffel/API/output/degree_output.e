@@ -80,7 +80,6 @@ feature -- Start output features
 	put_end_dead_code_removal_message  is
 			-- Put message indicating the start of dead code removal.
 		do
-			io.new_line
 		end;
 
 	finish_degree_output is
@@ -276,11 +275,12 @@ feature -- Output on per class
 	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER) is
 			-- Put message progress the start of dead code removal.
 		do
-			processed := processed + 1;
-			io.error.putchar ('.');
-			if processed \\ dots_per_line = 0 then
-				io.error.new_line
-			end
+			processed := processed + total_nbr
+			io.error.putstring ("Features done: ")
+			io.putint (processed)
+			io.error.putstring ("%TFeatures to go: ")
+			io.error.putint (nbr_to_go)
+			io.error.new_line
 		end;
 
 	put_case_cluster_message (a_name: STRING) is
@@ -394,8 +394,6 @@ feature
 		end;
 
 feature {NONE} -- Constants
-
-	dots_per_line: INTEGER is 79;
 
 	degree_6_message: STRING is "Degree 6 cluster ";
 	degree_5_message: STRING is "Degree 5 class ";

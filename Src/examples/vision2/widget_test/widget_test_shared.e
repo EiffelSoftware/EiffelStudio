@@ -11,6 +11,8 @@ inherit
 	INTERNAL
 	
 	INSTALLATION_LOCATOR
+	
+	EV_ANY_HANDLER
 
 feature -- Access
 		

@@ -9,6 +9,9 @@ deferred class
 	
 inherit
 	INSTALLATION_LOCATOR
+		export
+			{TEST_CONTROLLER} default_create
+		end
 		
 feature -- Access
 

@@ -14,8 +14,8 @@ inherit
 	BULLETIN_I;
 
 	MANAGER_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		end;
@@ -32,7 +32,7 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
-            is_shown as shown
+			is_shown as shown
 		end
 
 creation
@@ -44,12 +44,11 @@ feature {NONE} -- Creation
 	make (a_bulletin: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif bulletin.
 		local
-			ext_name_bull: ANY
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			bulletin_make (a_bulletin.identifier,
-					mel_parent (a_bulletin, widget_index),
-					man);
+			bulletin_make (a_bulletin.identifier, mc, man);
 			set_margin_width (0);
 			set_margin_height (0);
 		end;
@@ -81,14 +80,14 @@ feature -- Element change
 	circulate_down is
 			-- Circulate the children of this widget down.
 		do
-			x_circulate_down (mel_screen.display.handle, window)
+			x_circulate_down (display.handle, window)
 		end;
 
 	restack_children (s_child_list: ARRAY [STACKABLE]) is
 			-- The stackable's in the array have to have the
 			-- same parent.
 		local
-			warray: ARRAY [INTEGER];
+			warray: ARRAY [POINTER];
 			ind: INTEGER;
 			arg1: ANY;
 		do
@@ -98,7 +97,8 @@ feature -- Element change
 			until 
 				ind > s_child_list.upper
 			loop
-				warray.put (Xt_window(s_child_list.item(ind).screen_object), ind);
+				warray.put (xt_window 
+					(s_child_list.item (ind).screen_object), ind);
 				ind := ind + 1;
 			end;
 			arg1 := warray.to_c;

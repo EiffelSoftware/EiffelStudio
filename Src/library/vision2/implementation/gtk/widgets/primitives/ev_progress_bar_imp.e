@@ -30,44 +30,34 @@ feature {NONE} -- Implementation
 			-- Parameters are:
 			-- value, lower, upper, step_increment, page_increment.
 			widget := c_gtk_progress_bar_new_with_adjustment (min, min, max, 1, 5)
-
-			adjustment_widget := c_gtk_progress_bar_adjustment (widget)
 			gtk_object_ref (widget)
 		end
 
 feature -- Access
 
 	value: INTEGER is
-			-- Current value of the gauge
+			-- Current value of the gauge.
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := gtk_progress_get_value (widget).rounded
 		end
 
 	step: INTEGER is
 			-- Step of the scrolling
 			-- ie : the user clicks on an arrow
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := c_gtk_progressbar_get_step (widget).rounded
 		end
 
 	minimum: INTEGER is
 			-- Minimum value
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := c_gtk_progressbar_get_minimum (widget).rounded
 		end
 
 	maximum: INTEGER is
 			-- Maximum value
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := c_gtk_progressbar_get_maximum (widget).rounded
 		end
 
 feature -- Status report
@@ -112,33 +102,25 @@ feature -- Element change
 	set_value (val: INTEGER) is
 			-- Make `val' the new current value.
 		do
-			check
-				not_yet_implemented: False
-			end
+			gtk_progress_set_value (widget, val.out.to_real)
 		end
 
 	set_step (val: INTEGER) is
 			-- Make `val' the new step.
 		do
-			check
-				not_yet_implemented: False
-			end
+			c_gtk_progressbar_set_step (val.out.to_real)
 		end
 
 	set_minimum (val: INTEGER) is
 			-- Make `val' the new minimum.
 		do
-			check
-				not_yet_implemented: False
-			end
+			c_gtk_progressbar_set_minimum (val.out.to_real)
 		end
 
 	set_maximum (val: INTEGER) is
 			-- Make `val' the new maximum.
 		do
-			check
-				not_yet_implemented: False
-			end
+			c_gtk_progressbar_set_maximum (val.out.to_real)
 		end
 
 end -- class EV_PROGRESS_BAR_IMP

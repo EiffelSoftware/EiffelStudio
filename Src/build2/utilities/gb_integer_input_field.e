@@ -64,6 +64,15 @@ feature -- Basic operations
 		do
 			text_field.set_text (a_text)
 		end
+		
+feature -- Access
+
+	text: STRING is
+			-- `Result' is text of `text_field'.
+		do
+			Result := text_field.text
+		end
+		
 
 feature {NONE} -- Implementation
 

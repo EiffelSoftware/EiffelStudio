@@ -1,0 +1,35 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>IDENTIFIED</title>
+</head>
+
+<body>
+<h1>IDENTIFIED</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>WEAKREFERENCE
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>None
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>None
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>None
+</ul>
+<h2>Other notes</h2>
+<p>Instead of a C stack of references to the identified objects, we use a list of
+weakreferences referencing the identified objects.
+<p>It doesn't seem to me that the Eiffel run-time reallocates the same id's twice, even after 
+objects have been collected. The behavior is identical here. It means there is a slow memory leak:
+the stack/list keeps increasing when new id's are allocated. Fortunately items are only 4-byte big.
+
+</body>
+
+</html>

@@ -9,6 +9,7 @@ indexing
 class LIST_HISTORY
 
 inherit
+	
 	TOOL_COMMAND
 		rename
 			init as make
@@ -65,13 +66,13 @@ feature {NONE} -- Implementation
 		local
 			a_list: TWO_WAY_LIST [STRING]
 		do
-			if choices /= Void then
+			if choices = Void then
 				!! choices.make_with_widget (a_button.parent, a_button);
-				!! a_list.make;
 			end;
+			!! a_list.make;
 			fill_list (a_list);
 			choices.popup (Current, a_list);
-			choices.select_i_th (tool.history.index + 1)
+			choices.select_i_th (tool.history.index)
 		end;
 
 	fill_list (list: TWO_WAY_LIST [STRING]) is
@@ -100,21 +101,21 @@ feature {NONE} -- Implementation
 			-- Retarget `text_window' with the chosen item.
 		local
 			history: STONE_HISTORY;
-			pos: INTEGER
+			pos, i: INTEGER
 		do
 			pos := choices.position;
 			if pos = 0 then
 				choices.popdown
 			else
-				pos := pos - 1;
 				history := tool.history;
 				from
+					i := 1;
 					history.start
 				until
-					pos = 1
+					i = pos
 				loop
 					history.forth;
-					pos := pos - 1
+					i := i + 1
 				end;
 				tool.last_format.execute (history.item)
 			end

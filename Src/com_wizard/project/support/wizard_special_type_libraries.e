@@ -20,8 +20,6 @@ feature -- Access
 			Result.put (a_guid, 1)
 --			create a_guid.make_from_string (vba_tlb)
 --			Result.put (a_guid, 2)
-			create a_guid.make_from_string (mscorlib)
-			Result.put (a_guid, 3)
 
 			Result.compare_objects
 		end
@@ -46,9 +44,6 @@ feature {NONE} -- Implementation
 
 	vba_tlb: STRING is "{000204EF-0000-0000-C000-000000000046}"
 			-- MSVBVM60.DLL type library guid.
-
-	mscorlib: STRING is "{00020430-0000-0000-C000-000000000046}"
-			-- Com Runtime Library
 
 end -- class WIZARD_SPECIAL_TYPE_LIBRARIES
 

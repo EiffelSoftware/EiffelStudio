@@ -1,0 +1,18 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=resource_bench.chm
+Contents file=eiffel.hhc
+Default topic=new_htmls\index.html
+Display compile progress=No
+Language=0x409 English (United States)
+
+
+[FILES]
+new_htmls\features.htm
+new_htmls\resource.htm
+new_htmls\support.htm
+new_htmls\troubles.htm
+new_htmls\index.html
+
+[INFOTYPES]
+

@@ -73,6 +73,11 @@ feature
 				old_x := eb_screen.x + 10;
 				old_y := eb_screen.y + 10;
 				set_x_y (old_x, old_y);
+				if toolkit.name.is_equal ("MS_WINDOWS") then
+					configure_count := 0
+					-- Setting x, y under MS Windows does not cause
+					-- a configure event before realization.
+				end
 			end;
 			--widget.top_shell.set_action ("<Map>,<Prop>", Current, Current)
 			add_to_window_list;

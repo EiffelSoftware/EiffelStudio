@@ -329,6 +329,12 @@ extern int fcount;
 #define RTCI(x) if (~in_assertion) chkinv(x,1)
 #endif
 
+/* Macros for basic conversions
+ * RTID(x) is the identity macro
+ */
+
+#define RTID(x) (x)
+
 /*
  * Macros for workbench
  */

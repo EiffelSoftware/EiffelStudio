@@ -15,9 +15,9 @@ creation
 
 feature -- Basic Operations
 
-	swith_to_file (name: STRING) is
+	swith_to_file (a_name: STRING) is
 			-- Copy current file associated with storage object 
-			-- to new file `name'. New file is then used for storage 
+			-- to new file `a_name'. New file is then used for storage 
 			-- object and any uncommitted changes.
 		require
 			non_void_name: a_name /= Void
@@ -25,7 +25,7 @@ feature -- Basic Operations
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (name)
+			!! wide_string.make_from_string (a_name)
 			ccom_switch_to_file (initializer, wide_string.item)
 		end
 

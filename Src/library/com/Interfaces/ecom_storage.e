@@ -186,7 +186,7 @@ feature -- Access
 		require
 			valid_name: a_name /= Void
 		do
-			Result := enum_elements.is_valid_name (a_name)
+			Result := elements.is_valid_name (a_name)
 		end
 
 	name: STRING is
@@ -237,7 +237,7 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		do
-			Result := enum_elements.element_creation_time (a_name)
+			Result := elements.creation_time (a_name)
 		ensure
 			non_void_creation_time: Result /= Void
 		end
@@ -248,7 +248,7 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		do
-			Result := enum_elements.element_access_time (a_name)
+			Result := elements.access_time (a_name)
 		ensure
 			non_void_access_time: Result /= Void
 		end
@@ -259,7 +259,7 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		do
-			Result := enum_elements.element_modification_time (a_name)
+			Result := elements.modification_time (a_name)
 		ensure
 			non_void_modification_time: Result /= Void
 		end

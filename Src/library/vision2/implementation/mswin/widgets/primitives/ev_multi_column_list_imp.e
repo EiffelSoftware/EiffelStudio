@@ -13,6 +13,14 @@ inherit
 	EV_MULTI_COLUMN_LIST_I
 
 	EV_PRIMITIVE_IMP
+		redefine
+			on_left_button_down,
+			on_middle_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_middle_button_up,
+			on_right_button_up
+		end
 
 	EV_ITEM_HOLDER_IMP
 
@@ -58,7 +66,12 @@ inherit
 			on_lvn_itemchanged,
 			default_style
 		end
-		
+
+	WEL_LVHT_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make_with_size,
 	make_with_text
@@ -428,6 +441,20 @@ feature {NONE} -- WEL Implementation
 				+ Lvs_report + Lvs_showselalways
 		end
 
+	internal_propagate_event (event_id, x_pos, y_pos: INTEGER) is
+			-- Propagate `event_id' to the goood item.
+		local
+			pt: WEL_POINT
+			info: WEL_LV_HITTESTINFO
+		do
+			create pt.make (x_pos, y_pos)
+			create info.make_with_point (pt)
+			cwin_send_message (item, Lvm_hittest, 0, info.to_integer)
+			if flag_set (info.flags, Lvht_onitemlabel) or else flag_set (info.flags, Lvht_onitemicon) then
+				(ev_children @ (info.iitem + 1)).execute_command (event_id, Void)
+			end
+		end
+
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
 			-- A column was tapped.
 		do
@@ -452,6 +479,55 @@ feature {NONE} -- WEL Implementation
 					item_imp.execute_command (Cmd_item_deactivate, Void)
 				end
 			end
+		end
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos)
+		end
+
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos)
+		end
+
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos)
+			disable_default_processing
+		end
+
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos)
+		end
+
+	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos)
+		end
+
+	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos)
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

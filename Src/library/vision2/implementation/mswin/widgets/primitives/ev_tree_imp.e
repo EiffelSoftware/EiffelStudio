@@ -13,6 +13,14 @@ inherit
 	EV_TREE_I
 
 	EV_PRIMITIVE_IMP
+		redefine
+			on_left_button_down,
+			on_middle_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_middle_button_up,
+			on_right_button_up
+		end
 
 	EV_TREE_ITEM_HOLDER_IMP
 
@@ -45,8 +53,12 @@ inherit
 		redefine
 			default_style,
 			on_tvn_selchanged,
-			on_tvn_itemexpanded,
-			on_tvn_beginrdrag
+			on_tvn_itemexpanded
+		end
+
+	WEL_TVHT_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
@@ -126,7 +138,25 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_group
 				+ Ws_tabstop + Ws_border + Tvs_haslines
-				+ Tvs_hasbuttons + Tvs_linesatroot
+				+ Tvs_hasbuttons
+		end
+
+	internal_propagate_event (event_id, x_pos, y_pos: INTEGER) is
+			-- Propagate `event_id' to the goood item.
+		local
+			pt: WEL_POINT
+			handle: INTEGER
+			info: WEL_TV_HITTESTINFO
+		do
+			create pt.make (x_pos, y_pos)
+			create info.make_with_point (pt)
+			cwin_send_message (item, Tvm_hittest, 0, info.to_integer)
+			if flag_set (info.flags, Tvht_onitemlabel) or flag_set (info.flags, Tvht_onitemicon) then
+				handle := cwel_pointer_to_integer (info.hitem)
+				if ev_children.has (handle) then
+					(ev_children @ handle).execute_command (event_id, Void)
+				end
+			end
 		end
 
 	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
@@ -154,10 +184,53 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_tvn_beginrdrag (info: WEL_NM_TREE_VIEW) is
-			-- A drag-and-drop operation involving the right mouse
-			-- button is being initiated.
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos)
+		end
+
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos)
+		end
+
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos)
+			disable_default_processing
+		end
+
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos)
+		end
+
+	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos)
+		end
+
+	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos)
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

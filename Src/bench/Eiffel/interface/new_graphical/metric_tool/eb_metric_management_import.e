@@ -444,8 +444,6 @@ feature -- Importation
 			derived_homonym: EB_METRIC_DERIVED
 			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			new_name: STRING
-			name_attribute: XM_ATTRIBUTE
-			l_att_list: DS_LIST [XM_ATTRIBUTE]
 			l_namespace: XM_NAMESPACE
 		do
 			if importable_metric_list.selected_item /= Void then

@@ -11,7 +11,7 @@ class
 	EV_TOOL_BAR_TOGGLE_BUTTON
 
 inherit
-	EV_TOOL_BAR_BUTTON
+	EV_TOOL_BAR_SELECT_BUTTON
 		redefine
 			implementation,
 			create_implementation
@@ -21,23 +21,7 @@ create
 	default_create,
 	make_with_text
 
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is the button selected?
-		do
-			Result := implementation.is_selected
-		end
-
 feature -- Status setting
-
-	enable_select is
-			-- Set `is_selected' `True'.
-		do
-			implementation.enable_select
-		ensure
-			selected: is_selected
-		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
@@ -95,6 +79,10 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/04 17:00:09  rogers
+--| Now inherits EV_TOOL_BAR_SELECT_BUTTON. Removed is_selected and
+--| enable_select.
+--|
 --| Revision 1.8  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

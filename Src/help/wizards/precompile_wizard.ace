@@ -5,10 +5,8 @@ root
 	WIZARD_MANAGER (precompile_wizard): "make_and_launch"
 
 default
-	assertion (no)
---	assertion (require)
---	assertion (ensure)
---	assertion (check)
+	assertion (require)
+	assertion (ensure)
 	multithreaded (no)
 	console_application (no)
 	dynamic_runtime (no)
@@ -20,17 +18,14 @@ default
 	inlining (no)
 	inlining_size ("4")
 	exception_trace (yes)
-	arguments ("E:\Eiffel50\bench\wizards\precompile")
+	arguments ("C:\Eiffel50\bench\wizards\precompile")
 
 cluster
 		-- Root cluster
 	root_cluster: "$EIFFEL_SRC\help\wizards"
 	
-		-- Precompile Wizard
-	precompile_wizard (root_cluster): "$\eprecompile\src"
-	
-		-- Bench Common
---	bench_common (root_cluster): "$\bench_common"
+		-- Precompilation Wizard
+	precompile_wizard (root_cluster): "$\eprecompile"
 	
 		-- EiffelBase
 	all base: "$EIFFEL_SRC\library\base"
@@ -38,6 +33,7 @@ cluster
 			"desc";"table_eiffel3";"CVS"
 		end
 
+		-- Wel
 	all wel: "$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"
@@ -45,7 +41,7 @@ cluster
 			assertion (ensure)
 		end
 
-		-- EiffelVision
+		-- EiffelVision2
 	all vision2: "$EIFFEL_SRC\library\vision2"
 		exclude
 			"gtk";"EIFGEN";"tmp";"temp";"release";"obsolete";"CVS"

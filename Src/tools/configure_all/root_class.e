@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			exec_env.change_working_directory (short_path)
 			precompile_libraries
 			exec_env.change_working_directory (short_path)
-			install_dotnet
 			update_registry
 		ensure
 			initialized: initialized
@@ -102,17 +101,6 @@ feature -- Actions
 		rescue
 			retried := True
 			retry
-		end
-
-	install_dotnet is
-			-- Invoke the batch file that configures .NET.
-		require
-			initialized: initialized
-		do
-			if dotnet_cmd_line.is_equal ("InstallDotNet") then
-				io.putstring ("Registering the .NET components%N")
-				exec_env.launch (shell_name + " /c call " + short_path + "\dotnet_install.bat")
-			end
 		end
 
 	precompile_libraries is

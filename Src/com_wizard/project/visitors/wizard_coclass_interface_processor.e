@@ -15,10 +15,19 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_COCLASS_GENERATOR_HELPER
+		export
+			{NONE} all
+		end
+
+	
 feature -- Access
 
 	coclass: WIZARD_COCLASS_DESCRIPTOR
 			-- Coclass descriptor.
+
+	source: BOOLEAN
+			-- Is coclass source of events?
 
 feature -- Basic operations
 
@@ -32,17 +41,21 @@ feature -- Basic operations
 			until
 				coclass.interface_descriptors.off
 			loop
-				generate_interface_features (coclass.interface_descriptors.item)
+				if not has_descendants_in_coclass (coclass, coclass.interface_descriptors.item) then
+					generate_interface_features (coclass.interface_descriptors.item)
+				end
 				coclass.interface_descriptors.forth
 			end
 
 			if coclass.source_interface_descriptors /= Void then
+				source := not coclass.source_interface_descriptors.empty
 				from
 					coclass.source_interface_descriptors.start
 				until
 					coclass.source_interface_descriptors.off
 				loop
 					remove_from_system_interfaces (coclass.source_interface_descriptors.item.implemented_interface)
+					coclass.source_interface_descriptors.item.implemented_interface.set_source (True)
 					generate_source_interface_features (coclass.source_interface_descriptors.item)
 					coclass.source_interface_descriptors.forth
 				end

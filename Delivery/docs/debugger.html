@@ -91,49 +91,54 @@ tools, which will reflect the state of the execution. By default, on screen
 on, the routine remains stoppable.</p>
 <p>
    Stoppable routines are important because the Single-Step  and To End of Routine  execution formats apply to these routines. For
-example if you resume execution in Single-Step format it will single-step through the instructions of the first stoppable routine that it encounters.</p>
+example if you resume execution in Single-Step format it will single-step through the instructions of the first stoppable routine that it encounters.
+A stoppable routine is show as below when clicking on <img border="0" src="images/debugg7.gif" width="22" height="19">:</p>
+<p align="center">
+   <img border="0" src="images/debugg10.gif" width="502" height="317"></p>
 <p>&nbsp;</p>
 <h2><a name="interrupting">
 5  INTERRUPTING AND TERMINATING EXECUTION</a></h2>
 <p>
-   You can click the Interrupt button (the little bomb) to interrupt execution&nbsp;at the first applicable instruction of the first stoppable routine to be&nbsp;encountered.<br>
+   You can click the Interrupt button <img border="0" src="images/debugg11.gif" width="22" height="20">
+   to interrupt execution&nbsp;at the first applicable instruction of the first stoppable routine to
+   be encountered.<br>
 <br>
    To terminate execution rather than just interrupting it, control-click the Interrupt button.</p>
 <p>&nbsp;</p>
 <h2><a name="managing">
 6  SETTING AND REMOVING STOP POINTS</a></h2>
 <p>
-   You set a stop point by drag-and-dropping an appropriate element to a Stop Point hole . The elements that can be drag-and-dropped in this
+   You set a stop point by drag-and-dropping an appropriate element to a Stop Point hole.
+   The elements that can be drag-and-dropped in this
 manner are:</p>
+<ul>
+  <li>Entire routines.</li>
+  <li>Individual instructions of a routine, which you obtain by targeting a Feature Tool to the routine and selecting the Stop Points format.&nbsp;The clickable element in that case is the three consecutive dots ...&nbsp;that appear to the left of the instruction.&nbsp;</li>
+</ul>
 <p>
-	-Entire routines.
-<br>
-	-Individual instructions of a routine, which you obtain by targeting a Feature Tool to the routine and selecting the Stop Points format.&nbsp;The clickable element in that case is the three consecutive dots ...&nbsp;that appear to the left of the instruction.&nbsp;</p>
-<p>
-   If a stop point has already been set on instruction, the three dots ... are replaced by three vertical bars |||, as illustrated by the last
+   If a stop point has already been set on instruction, the three dots <img border="0" src="images/debugg12.gif" width="30" height="15">
+   are replaced by three vertical bars <img border="0" src="images/debugg13.gif" width="27" height="15">, as illustrated by the last
 instruction above.</p>
 <p>
    When you set or remove a stop point, the Project Tool display reflects the current Stop Point situation.</p>
 <p>
    The Stop Point hole (which you find in both the Project Tool and Feature Tools) acts as a toggle: to remove a stop point, drag-and-drop
-it again to the hole. The source of the drag-and-drop can be in a Class Tool (for a routine), a stop point marker (... or |||) in a Feature Tool,
+it again to the hole. The source of the drag-and-drop can be in a Class Tool (for a routine), a stop point marker
+   (<img border="0" src="images/debugg14.gif" width="30" height="15"> or <img border="0" src="images/debugg15.gif" width="27" height="15">) in a Feature Tool,
 or a stop point indicator appearing in the Project Tool as shown in the last figure.</p>
 <p>&nbsp;</p>
 <h2><a name="execution">7 EXECUTION INFORMATION</a></h2>
 <p>
    When you click the Run button, execution starts or, if previously&nbsp;interrupted, restarts. If it proceeds with interruption and terminates,&nbsp;the message `System terminated' will appear in the Project Tool. But any&nbsp;of the following events may cause execution to stop before
 termination:</p>
-<p>
-	-You click Interrupt .
-<br>
-	-An exception occurs. (In this case the execution will be interrupted just before the exception, so that you can use the environment's<br>
-	 mechanisms to browse classes, features and objects. If you click Run once more the exception will be triggered for good.)
-<br>
-	-Execution reaches a stop point (except in Ignore Stop Points format).
-<br>
-	-The next instruction is executed (in Step-by-step  format).
-<br>
-	-The end of the routine is reached (in To End of Routine  format).</p>
+<ul>
+  <li>You click Interrupt .</li>
+  <li>An exception occurs. (In this case the execution will be interrupted just before the exception, so that you can use the environment's<br>
+	 mechanisms to browse classes, features and objects. If you click Run once more the exception will be triggered for good.)</li>
+  <li>Execution reaches a stop point (except in Ignore Stop Points format).</li>
+  <li>The next instruction is executed (in Step-by-step  format).</li>
+  <li>The end of the routine is reached (in To End of Routine  format).</li>
+</ul>
 <p>
    In any case, the display will show the execution status and the call stack.</p>
 <p>
@@ -143,7 +148,7 @@ stack, use Up and Down buttons.</p>
 <h2><a name="multithreaded">
 8  LIMITATION IN MULTITHREADED MODE</a></h2>
 <p>
-   For now the EIFFEL debugger is not fully multithreaded safe.&nbsp;it is possible to put a break-point in any class which doesn't inherit
+   For now the Eiffel debugger is not fully multithreaded safe.&nbsp;it is possible to put a break-point in any class which doesn't inherit
 from the class THREAD, if it is not called in the execution of a thread.</p>
 <p>&nbsp;</p>
 <h2><a name="info">

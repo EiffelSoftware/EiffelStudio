@@ -113,6 +113,7 @@ feature {NONE} -- Implementation
 			from n := 1 until n > point_count loop
 				get_point_by_index (n).set_x (random_from_range (3, 297))
 				get_point_by_index (n).set_y (random_from_range (3, 97))
+				n := n + 1
 			end
 		end
 

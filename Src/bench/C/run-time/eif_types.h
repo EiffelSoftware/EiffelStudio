@@ -1,23 +1,26 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
- ######     #    ######
- #          #    #
- #####      #    #####
- #          #    #
- #          #    #
- ######     #    #      #######
-
- #####   #   #  #####   ######   ####           #    #
-   #      # #   #    #  #       #               #    #
-   #       #    #    #  #####    ####           ######
-   #       #    #####   #            #   ###    #    #
-   #       #    #       #       #    #   ###    #    #
-   #       #    #       ######   ####    ###    #    #
-
+/*
 	Structures and types defining global variables.
 	All type definitions are concentrates here because we need
 	to put them in a context when running multithreaded apps.
-
 */
 
 #ifndef _eif_types_h_
@@ -155,9 +158,9 @@ struct exprint {
  * for the exception trace string 
  */
 typedef struct _smart_string {
-	char *area;		/* Pointer to zone where data is stored */
-	long used;		/* Number of bytes actually used */
-	long size;		/* Length of the area */
+	char *area;			/* Pointer to zone where data is stored */
+	size_t used;		/* Number of bytes actually used */
+	size_t size;		/* Length of the area */
 } SMART_STRING;
 
 /* Structure used to record general flags. These are the value to take into
@@ -189,18 +192,18 @@ struct eif_exception {
 struct gacinfo {
 	unsigned long nb_full;		/* Number of full GC collections */
 	unsigned long nb_partial;	/* Number of partial collections */
-	unsigned long mem_used;		/* State of memory after previous run */
-	unsigned long mem_copied;	/* Amount of memory copied by the scavenging */
-	unsigned long mem_move;		/* Size of the 'from' spaces */
+	rt_uint_ptr mem_used;		/* State of memory after previous run */
+	rt_uint_ptr mem_copied;	/* Amount of memory copied by the scavenging */
+	rt_uint_ptr mem_move;		/* Size of the 'from' spaces */
 	int gc_to;					/* Number of 'to' zone allocated for plsc */
 	char status;				/* Describes the collecting status */
 };
 
 struct gacstat {
 	long count;				/* Number of full or partial collection so far. */
-	long mem_used;			/* State of memory after previous run */
-	long mem_collect;		/* Memory collected during previous run */
-	long mem_avg;			/* Average memory collected in a cycle */
+	rt_uint_ptr mem_used;			/* State of memory after previous run */
+	rt_uint_ptr mem_collect;		/* Memory collected during previous run */
+	rt_uint_ptr mem_avg;			/* Average memory collected in a cycle */
 	long real_avg;			/* Average amount of real cs used by plsc() */
 	long real_time;			/* Amount of real cs used by last plsc() */
 	long real_iavg;			/* Average real time between two collections */
@@ -314,9 +317,9 @@ union overhead {
  */
 struct emallinfo {
 	int ml_chunk;			/* Number of chunks */
-	long ml_total;			/* Total space used by malloc */
-	long ml_used;			/* Real space used, in bytes */
-	long ml_over;			/* Overhead space, in bytes */
+	rt_uint_ptr ml_total;			/* Total space used by malloc */
+	rt_uint_ptr ml_used;			/* Real space used, in bytes */
+	rt_uint_ptr ml_over;			/* Overhead space, in bytes */
 };
 
 /*
@@ -330,7 +333,7 @@ struct chunk {
 	struct chunk *ck_prev;	/* Previous chunk in list */
 	struct chunk *ck_lnext;	/* Next chunk of same type */
 	struct chunk *ck_lprev;	/* Previous chunk of same type */
-	int32 ck_length;		/* Length of block (w/o size of this struct) */
+	size_t ck_length;		/* Length of block (w/o size of this struct) */
 							/* int's are split around the chunk pointers */
 							/*to provide correct padding for 64 bit machines*/
 #if MEM_ALIGNBYTES > 8
@@ -355,7 +358,7 @@ struct ck_list {
 
 /* Description of a scavenging space */
 struct sc_zone {
-	int sc_size;				/* Space's size (in bytes) */
+	size_t sc_size;				/* Space's size (in bytes) */
 	char *sc_arena;				/* Base address of zone */
 	char *sc_top;				/* Pointer to first free location */
 	char *sc_mark;				/* Water-mark level */
@@ -372,8 +375,8 @@ struct sc_zone {
  * Search table declarations.
  */
 struct s_table {
-	uint32 s_size;		/* Search table size */
-	uint32 s_count;		/* Count of inserted keys */
+	size_t s_size;		/* Search table size */
+	size_t s_count;		/* Count of inserted keys */
 	char **s_keys;		/* Search table keys */
 };
 

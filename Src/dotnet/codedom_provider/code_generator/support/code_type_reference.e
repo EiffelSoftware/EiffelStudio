@@ -160,11 +160,7 @@ feature -- Access
 					end
 				end
 
-				if Result = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_dotnet_member, [a_name, name])
-				else
-					internal_type := Result
-				end
+				internal_type := Result
 				search_for_type := False
 			else
 				Result := internal_type

@@ -38,6 +38,29 @@ feature {ICOR_EXPORTER} -- Properties
 	
 	address_as_string: STRING
 	
+feature -- helpers
+
+	is_valid_object: BOOLEAN is
+			-- Is current a valid object, ie not collected ?
+		local
+			ref_value: like query_interface_icor_debug_reference_value
+			deref_value: ICOR_DEBUG_VALUE
+			heap_value: like query_interface_icor_debug_heap_value
+		do
+			ref_value := query_interface_icor_debug_reference_value
+			if ref_value /= Void then
+				deref_value := ref_value.dereference
+				if deref_value /= Void then
+					heap_value := deref_value.query_interface_icor_debug_heap_value
+					if heap_value /= Void then
+						Result := heap_value.is_valid
+					end
+				else
+					Result := False
+				end
+			end
+		end
+	
 feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_generic_value: ICOR_DEBUG_GENERIC_VALUE is
@@ -243,23 +266,46 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 feature -- only for test purpose (evaluation in debugger)
 
 	query: TUPLE [STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE] is
-			-- To be removed.
+			-- Debug purpose only, will be removed soon
 		local
 			i_obj: like query_interface_icor_debug_object_value
 			i_ref: like query_interface_icor_debug_reference_value
 			i_str: like query_interface_icor_debug_string_value
 			i_gen: like query_interface_icor_debug_generic_value
 			i_arr: like query_interface_icor_debug_array_value
-
+			i_hea: like query_interface_icor_debug_heap_value
 		do
 			i_obj := query_interface_icor_debug_object_value
 			i_ref := query_interface_icor_debug_reference_value
 			i_str := query_interface_icor_debug_string_value			
 			i_gen := query_interface_icor_debug_generic_value			
-			i_arr := query_interface_icor_debug_array_value			
+			i_arr := query_interface_icor_debug_array_value	
+			i_hea := query_interface_icor_debug_heap_value			
 
-			Result := ["Object", i_obj, "Reference", i_ref, "String", i_str, "Generic", i_gen, "Array", i_arr ]
+			Result := [
+						"Object", i_obj, 
+						"Reference", i_ref, 
+						"String", i_str, 
+						"Generic", i_gen, 
+						"Array", i_arr ,
+						"Heap", i_hea						
+						]
 			
+		end
+		
+	to_string: STRING is
+			-- Debug purpose only, will be removed soon
+		local
+			vi: EIFNET_DEBUG_VALUE_INFO
+		do
+			create vi.make (Current)
+			Result := vi.value_to_string --   "test"
+			if vi.value_module_file_name /= Void then
+				Result.append ("%N module=" + vi.value_module_file_name)
+			end
+			if vi.value_class_type /= Void then
+				Result.append ("%N class_type=" + vi.value_class_type.full_il_implementation_type_name)
+			end			
 		end
 
 end -- class ICOR_DEBUG_VALUE

@@ -135,16 +135,44 @@ feature -- Lace compilation
 			root.adapt;
 				-- Process external clause
 
-				-- Incrementality on external clause
-			System.reset_external_clause;
-			if Externals /= Void then
-				Externals.adapt;
-			end;
+			process_external_clause;
 			System.reset_generate_clause;
 			if Generation /= Void then
 				Generation.adapt
 			end;
 		end;
+
+	process_external_clause is
+		local
+			c_file_names, include_paths: FIXED_LIST [STRING]
+			object_file_names, makefile_names: FIXED_LIST [STRING]
+			no_change: BOOLEAN
+		do
+				-- Incrementality on external clause
+			c_file_names := System.c_file_names
+			include_paths := System.include_paths
+			object_file_names := System.object_file_names
+			makefile_names := System.makefile_names
+
+			System.reset_external_clause;
+			if Externals /= Void then
+				Externals.adapt;
+			end;
+
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME: incrementality with precompiled (object clause not duplicated)
+
+			no_change := deep_equal (c_file_names, System.c_file_names) and
+							deep_equal (include_paths, System.include_paths) and
+							deep_equal (object_file_names, System.object_file_names) and
+							deep_equal (makefile_names, System.makefile_names)
+			if not no_change then
+				System.set_freeze (True)
+			end
+		end
 
 	process_defaults_and_options is
 		do
@@ -261,9 +289,7 @@ feature -- Lace compilation
 			loop
 				old_cluster := old_clusters.item;
 				if old_cluster.is_precompiled then
-					!!cluster.make (old_cluster.dollar_path);
-					cluster.copy_old_cluster (old_cluster);
-					cluster.set_cluster_name (old_cluster.cluster_name);
+					!!cluster.make_from_old_cluster (old_cluster);
 					Universe.insert_cluster (cluster);
 				end;
 				old_clusters.forth
@@ -423,9 +449,7 @@ feature -- DLE
 			loop
 				old_cluster := old_clusters.item;
 				if old_cluster.is_static then
-					!! cluster.make (old_cluster.dollar_path);
-					cluster.copy_old_cluster (old_cluster);
-					cluster.set_cluster_name (old_cluster.cluster_name);
+					!! cluster.make_from_old_cluster (old_cluster);
 					Universe.insert_cluster (cluster)
 				end;
 				old_clusters.forth
@@ -600,6 +624,7 @@ feature -- DLE
 					Error_handler.raise_error
 				end
 			end
+			system_i.set_extendible (extendible)
 		end;
 			
 end

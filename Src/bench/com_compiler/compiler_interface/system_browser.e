@@ -21,7 +21,8 @@ inherit
 			search_classes,
 			search_features,
 			description_from_dotnet_type,
-			description_from_dotnet_feature
+			description_from_dotnet_feature,
+			assemblies
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -107,6 +108,37 @@ feature -- Access
 						create cluster_desc.make_with_cluster_i (list.item)
 						if not cluster_desc.is_external_cluster then
 							res.extend (cluster_desc)
+						end
+						
+					end
+					list.forth
+				end
+				create Result.make (res)
+			end
+		end
+		
+	assemblies: ASSEMBLY_ENUMERATOR is
+			-- List of system's assemblies.
+		local
+			list: LIST [CLUSTER_I]
+			res: ARRAYED_LIST [ASSEMBLY_PROPERTIES]
+			assembly_i: ASSEMBLY_I
+			ass_prop: ASSEMBLY_PROPERTIES
+		do
+			if Eiffel_project.initialized then
+				list := Eiffel_universe.clusters
+				create res.make (list.count)
+				from
+					list.start
+				until
+					list.after
+				loop
+					if list.item.parent_cluster = Void then
+						assembly_i ?= list.item
+						if assembly_i /= Void then
+							create ass_prop.make (assembly_i.cluster_name, assembly_i.assembly_name, assembly_i.prefix_name,
+														assembly_i.version, assembly_i.culture, assembly_i.public_key_token)
+							res.extend (ass_prop)
 						end
 						
 					end
@@ -395,7 +427,7 @@ feature -- Basic Operations
 				until
 					a_member_info.parameters.off
 				loop
-					a_description_string := a_description_string + "%N" + a_member_info.parameters.item.name + ":" + a_member_info.parameters.item.description
+					a_description_string := a_description_string + a_member_info.parameters.item.name + ":" + a_member_info.parameters.item.description + "%N"
 					a_member_info.parameters.forth
 				end
 				

@@ -47,6 +47,16 @@ class IEnumCluster;
 
 
 
+#ifndef __ecom_eiffel_compiler_IEnumAssembly_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumAssembly_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumAssembly;
+}
+#endif
+
+
+
 #ifndef __ecom_eiffel_compiler_IEiffelClusterDescriptor_FWD_DEFINED__
 #define __ecom_eiffel_compiler_IEiffelClusterDescriptor_FWD_DEFINED__
 namespace ecom_eiffel_compiler
@@ -124,6 +134,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Returns all of the assemblies in an enumerator
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumAssembly * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value ) = 0;
@@ -163,6 +179,18 @@ public:
 	Search feature with names matching `a_string'.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP search_features(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Retrieve description from dotnet type
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP description_from_dotnet_type(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Retrieve description from dotnet feature
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP description_from_dotnet_feature(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [in] */ BSTR a_feature_signature, /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 

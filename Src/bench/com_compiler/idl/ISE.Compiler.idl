@@ -584,6 +584,9 @@ interface IEiffelSystemBrowser: IUnknown
   [helpstring ("List of system's external clusters.")]
   HRESULT external_clusters ([out, retval] IEnumCluster ** some_clusters);
 
+  [propget, helpstring ("Returns all of the assemblies in an enumerator")]
+  HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
+
   [helpstring ("Number of top-level clusters in system.")]
   HRESULT cluster_count ([out, retval] ULONG * return_value);
 

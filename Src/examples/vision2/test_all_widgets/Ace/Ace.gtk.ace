@@ -26,6 +26,7 @@ cluster
 
         kernel(base):                   "$/kernel";
         support(base):                  "$/support";
+--	routines(base):			"$/routines";
 
         access(structures):             "$/access";
         cursors(structures):            "$/cursors";
@@ -45,7 +46,7 @@ cluster
 
 	-- Interface
         -- Vision:                 	"$EIFFEL4/library/vision";
-        vision:                 			"/boston/samik/Leila/vision2";
+        vision:                 			"/boston/aitkaci/vision2";
 	vision_kernel (vision):        			"$/interface/kernel";
 	vision_support (vision):       			"$/interface/support";
 	vision_properties (vision):			"$/interface/properties";
@@ -90,14 +91,11 @@ cluster
 external
 
 include_path:
-	        " `gtk-config --cflags`",		
- 		"/boston/samik/Leila/vision2/implementation/gtk/Clib";
--- 		"$(EIFFEL4)/library/vision/implementation/gtk/Clib";
+
+ 		"/boston/aitkaci/vision2/implementation/gtk/Clib `gtk-config --cflags`";
 
         object:
- 		"/boston/samik/Leila/vision2/implementation/gtk/Clib/gtk_eiffel.o",
---		"$(EIFFEL4)/library/vision/implementation/gtk/Clib/gtk_eiffel.o",
+ 		"/boston/aitkaci/vision2/implementation/gtk/Clib/gtk_eiffel.o",
 		"`gtk-config --libs`"
-
 
 end

@@ -25,6 +25,9 @@ feature -- Event handling
 
 	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when user clicks OK.
+			-- Note: This is renamed in some descendents
+			-- i.e. in EV_PRINT_DIALOG it is renamed to print_actions
+			-- and is performed when the user clicks "print".
 		do
 			Result := implementation.ok_actions
 		ensure

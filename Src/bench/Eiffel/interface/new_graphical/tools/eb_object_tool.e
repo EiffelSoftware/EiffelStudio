@@ -594,6 +594,7 @@ feature {NONE} -- Implementation
 						l_exception_to_string := Application.imp_dotnet.exception_to_string
 						if l_exception_to_string /= Void then
 							create item
+							item.set_data (l_exception_to_string)
 							item.set_text ("Double click to see Exception")-- + l_exception_to_string)
 							item.set_tooltip (l_exception_to_string)
 							item.set_pixmap (Pixmaps.Icon_exception)
@@ -602,7 +603,7 @@ feature {NONE} -- Implementation
 						end						
 
 						create item
-						item.set_text ("Class = " + l_exception_class_detail)
+						item.set_text (l_exception_class_detail)
 						item.set_pixmap (Pixmaps.Icon_exception)
 						exception_item.extend (item)
 
@@ -610,7 +611,6 @@ feature {NONE} -- Implementation
 						item.set_text ("Module " + l_exception_module_detail)
 						item.set_pixmap (Pixmaps.Icon_exception)
 						exception_item.extend (item)
-
 
 						exception_item.expand
 					end

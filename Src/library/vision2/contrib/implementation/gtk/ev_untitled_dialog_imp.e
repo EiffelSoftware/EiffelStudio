@@ -28,10 +28,9 @@ feature {NONE} -- Initialization
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.Gtk_window_dialog_enum))
 				-- Cannot use popup window as Window manager cannot give focus to it.
 			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 1, 0)
-			enable_closeable
 		end
+
+feature -- Status setting	
 		
 	set_size (a_width, a_height: INTEGER) is
 			-- Set the horizontal size to `a_width'.

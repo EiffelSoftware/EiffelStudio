@@ -1506,7 +1506,6 @@ feature -- Features info
 					l_field_sig)
 
 				insert_attribute (l_meth_token, a_type_id, l_feat.feature_id)
-				insert_signature (l_signature, a_type_id, l_feat.feature_id)
 			else
 					-- Normal method
 				l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
@@ -1689,7 +1688,6 @@ feature -- Features info
 					l_field_attr, l_field_sig)
 
 				insert_attribute (l_meth_token, current_type_id, feat.feature_id)
-				insert_signature (l_signature, current_type_id, feat.feature_id)
 			else
 				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
 					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature
@@ -4693,22 +4691,19 @@ feature {NONE} -- Implementation: generation
 			l_type_i := a_type_feature.type.actual_type.type_i
 
 				-- We are now evaluation `l_type_i' in the context of current CLASS_TYPE
-				-- generation. So if it is a formal, we have to make sure that call to
-				-- `byte_context.real_type (l_type_i)' keeps its formal status, by default
-				-- it translates a FORMAL_I into a REFERENCE_I.
-			if l_type_i.has_formal then
-				if l_type_i.is_formal then
-					l_formal_type ?= l_type_i
-					l_type_i := byte_context.real_type (l_type_i)
-					if not l_type_i.is_expanded then
-						l_type_i := l_formal_type
-					end
-				else
-					l_type_i := byte_context.real_type (l_type_i)
+				-- generation.
+			if l_type_i.has_true_formal then
+				l_gen_type ?= current_class_type.type
+				check
+						-- If we have some formals, we are clearly in a generic class.
+					is_generic_type: l_gen_type /= Void
 				end
+				l_type_i := l_type_i.complete_instantiation_in (l_gen_type)
+				l_gen_type := Void
 			end
 
 			if l_type_i.is_formal then
+				l_formal_type ?= l_type_i
 				l_type_id := formal_type_id
 			elseif l_type_i.is_none then
 				l_type_id := none_type_id

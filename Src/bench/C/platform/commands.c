@@ -21,7 +21,7 @@
 #include "eif_dir.h"
 #include "eif_file.h"	/* for PATH_MAX */
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 #include <windows.h>
 #include "..\ipc\shared\stream.h"
 #endif

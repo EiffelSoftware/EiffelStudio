@@ -144,6 +144,10 @@ end;
 							Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 					else
 						mp.restore;
+						if Application.is_ignoring_stop_points then	
+							warner (popup_parent).gotcha_call
+								(Warning_messages.w_Ignoring_all_stop_points)
+						end
 						debug_window.clear_window;
 						Project_tool.save_current_cursor_position;
 						debug_window.put_string ("Launching system...");

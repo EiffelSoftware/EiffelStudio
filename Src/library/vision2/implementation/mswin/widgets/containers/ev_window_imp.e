@@ -57,7 +57,8 @@ inherit
 			on_draw_item,
 			on_accelerator_command,
 			on_set_cursor,
-			window_process_message
+			window_process_message,
+			on_color_control
 		redefine
 			default_ex_style,
 			default_style,
@@ -67,7 +68,13 @@ inherit
 			on_destroy,
 			on_show,
 			on_move,
-			closeable
+			closeable,
+			default_process_message
+		end
+
+	WEL_MA_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
@@ -169,10 +176,13 @@ feature -- Status setting
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			set_minimum_width (system_metrics.window_minimum_width)
-			set_minimum_height (system_metrics.window_minimum_height)
+			internal_set_minimum_width (system_metrics.window_minimum_width)
+			internal_set_minimum_height (system_metrics.window_minimum_height)
 			set_maximum_width (system_metrics.screen_width)
 			set_maximum_height (system_metrics.screen_height)
+			if parent_imp /= Void then
+				notify_change (1 + 2)
+			end
 		end
 
 --	set_horizontal_resize (flag: BOOLEAN) is
@@ -315,8 +325,8 @@ feature -- Element change
 			-- Make Current part of the group of `widget'.
 		do
 			check
-                not_yet_implemented: False
-            end
+				not_yet_implemented: False
+			end
 		end
 
 	set_status_bar (a_bar: EV_STATUS_BAR_IMP) is
@@ -389,117 +399,6 @@ feature -- Assertion features
 		do
 			Result := (width = new_width or else width = minimum_width.max (system_metrics.window_minimum_width)) and then
 				  (height = new_height or else height = minimum_height.max (system_metrics.window_minimum_height))
-		end
-
-feature {NONE} -- Implementation
-
-	default_style: INTEGER is
-		-- Set with the option `Ws_clipchildren' to avoid flashing.
-		do
-			Result := Ws_popup + Ws_thickframe + Ws_dlgframe + Ws_overlapped
-					+ Ws_clipchildren + Ws_clipsiblings
-		end
-
-	default_ex_style: INTEGER is
-		do
-			Result := Ws_ex_controlparent
-		end
-
-
-	on_show is
-			-- When the window receive the on_show message,
-			-- it resizes the window at the size of the child.
-			-- And it send the message to the child because wel
-			-- don't
-		do
-			if child /= Void and (bit_set (internal_changes, 1) or bit_set (internal_changes, 2)) then
-				internal_resize (x, y, child.minimum_width + 2*system_metrics.window_frame_width,
-						child.minimum_height + system_metrics.title_bar_height
-						+ system_metrics.window_border_height + 2 * system_metrics.window_frame_height)
-				internal_changes := set_bit (internal_changes, 1, False)
-				internal_changes := set_bit (internal_changes, 2, False)
-			else
-				move_and_resize (x, y, minimum_width, minimum_height, True)
-			end
-			if has_menu then
-				draw_menu
-			end
-		end
-
-	on_size (size_type, a_width, a_height: INTEGER) is
-			-- Called when the window is resized.
-			-- Resize the child if it exists.
-		do
-			execute_command (Cmd_size, Void)
-			if child /= Void then
-				child.parent_ask_resize (client_width, client_height)
-			end
-			if status_bar /= Void then
-				status_bar.reposition
-			end
-		end
-
-   	on_move (x_pos, y_pos: INTEGER) is
-   			-- Wm_move message.
-   			-- This message is sent after a window has been moved.
-   			-- `x_pos' specifies the x-coordinate of the upper-left
-   			-- corner of the client area of the window.
-   			-- `y_pos' specifies the y-coordinate of the upper-left
-   			-- corner of the client area of the window.
-   		do
-			execute_command (Cmd_move, Void)
- 		end
-
-	closeable: BOOLEAN is
-			-- Can the user close the window?
-			-- Yes by default.
-		do
-			if (command_list = Void) or else 
-					(command_list @ Cmd_close) = Void then
-				Result := True
-				interface.remove_implementation
-			else
-				execute_command (Cmd_close, Void)
-				Result := False
-			end
-		end
-
-	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
-		local
-			min_track, max_track: WEL_POINT
-		do
-			inspect resize_type
-			when 0 then
-				!! min_track.make (width, height)
-				!! max_track.make (width, height)
-			when 1 then
-				!! min_track.make (minimum_width, height)
-				!! max_track.make (maximum_width, height)
-			when 2 then
-				!! min_track.make (width, minimum_height)
-				!! max_track.make (width, maximum_height)
-			when 3 then
-				!! min_track.make (minimum_width, minimum_height)
-				!! max_track.make (maximum_width, maximum_height)
-			end
-			min_max_info.set_min_track_size (min_track)
-			min_max_info.set_max_track_size (max_track)
-		end
-
-	on_destroy is
-			-- Called when the window is destroy.
-			-- Set the parent sensitive if it exists.
-		do
-			if parent_imp /= Void and not parent_imp.destroyed and then parent_imp.insensitive then
-				parent_imp.set_insensitive (False)
-			end
-		end
-
-	system_metrics: WEL_SYSTEM_METRICS is
-			-- System metrics to query things like
-			-- window_frame_width
-		once
-			!!Result
 		end
 
 feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
@@ -592,6 +491,137 @@ feature {NONE} -- Inapplicable
 		do
 			check
 				Inapplicable: True
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	default_style: INTEGER is
+		-- Set with the option `Ws_clipchildren' to avoid flashing.
+		do
+			Result := Ws_popup + Ws_thickframe + Ws_dlgframe + Ws_overlapped
+					+ Ws_clipchildren + Ws_clipsiblings
+		end
+
+	default_ex_style: INTEGER is
+		do
+			Result := Ws_ex_controlparent
+		end
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		do
+			if msg = Wm_mouseactivate then
+				on_wm_mouseactivate (wparam, lparam)
+			end
+		end
+
+	on_show is
+			-- When the window receive the on_show message,
+			-- it resizes the window at the size of the child.
+			-- And it send the message to the child because wel
+			-- don't
+		do
+			if child /= Void and (bit_set (internal_changes, 1) or bit_set (internal_changes, 2)) then
+				internal_resize (x, y, (child.minimum_width + 2*system_metrics.window_frame_width).max (minimum_width),
+						(child.minimum_height + 2 * system_metrics.window_frame_height).max (minimum_height))
+				internal_changes := set_bit (internal_changes, 1, False)
+				internal_changes := set_bit (internal_changes, 2, False)
+			else
+				move_and_resize (x, y, minimum_width, minimum_height, True)
+			end
+			if has_menu then
+				draw_menu
+			end
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Called when the window is resized.
+			-- Resize the child if it exists.
+		do
+			execute_command (Cmd_size, Void)
+			if child /= Void then
+				child.parent_ask_resize (client_width, client_height)
+			end
+			if status_bar /= Void then
+				status_bar.reposition
+			end
+		end
+
+   	on_move (x_pos, y_pos: INTEGER) is
+   			-- Wm_move message.
+   			-- This message is sent after a window has been moved.
+   			-- `x_pos' specifies the x-coordinate of the upper-left
+   			-- corner of the client area of the window.
+   			-- `y_pos' specifies the y-coordinate of the upper-left
+   			-- corner of the client area of the window.
+   		do
+			execute_command (Cmd_move, Void)
+ 		end
+
+	closeable: BOOLEAN is
+			-- Can the user close the window?
+			-- Yes by default.
+		do
+			if (command_list = Void) or else 
+					(command_list @ Cmd_close) = Void then
+				Result := True
+				interface.remove_implementation
+			else
+				execute_command (Cmd_close, Void)
+				Result := False
+			end
+		end
+
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+		local
+			min_track, max_track: WEL_POINT
+		do
+			inspect resize_type
+			when 0 then
+				!! min_track.make (width, height)
+				!! max_track.make (width, height)
+			when 1 then
+				!! min_track.make (internal_minimum_width, height)
+				!! max_track.make (maximum_width, height)
+			when 2 then
+				!! min_track.make (width, internal_minimum_height)
+				!! max_track.make (width, maximum_height)
+			when 3 then
+				!! min_track.make (internal_minimum_width, internal_minimum_height)
+				!! max_track.make (maximum_width, maximum_height)
+			end
+			min_max_info.set_min_track_size (min_track)
+			min_max_info.set_max_track_size (max_track)
+		end
+
+	on_destroy is
+			-- Called when the window is destroy.
+			-- Set the parent sensitive if it exists.
+		do
+			if parent_imp /= Void and not parent_imp.destroyed and then parent_imp.insensitive then
+				parent_imp.set_insensitive (False)
+			end
+		end
+
+	system_metrics: WEL_SYSTEM_METRICS is
+			-- System metrics to query things like
+			-- window_frame_width
+		once
+			!!Result
+		end
+
+	on_wm_mouseactivate (wparam, lparam: INTEGER) is
+			-- The window have been activated thanks to the click of a window.
+			-- If it was a right click, we do not raise the window to the front of
+			-- the screen because of the pick-and-drop.
+		local
+			msg: INTEGER
+		do
+			msg := cwin_hi_word (lparam)
+			if msg = Wm_rbuttondown then
+				set_message_return_value (Ma_noactivate)
 			end
 		end
 

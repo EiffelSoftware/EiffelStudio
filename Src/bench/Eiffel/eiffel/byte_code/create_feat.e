@@ -179,20 +179,31 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for an anchored creation type.
+
+		do
+				-- Generate call to feature that will give the type we want to create.
+			generate_il_type
+
+				-- Evaluate the computed type and create a corresponding object type.
+			il_generator.generate_current
+			il_generator.create_type
+		end
+
+	generate_il_type is
+			-- Generate IL code to load type of anchored creation type.
 		local
 			l_decl_type: CL_TYPE_I
 			l_type_feature: TYPE_FEATURE_I
 		do
 				-- Generate call to feature that will give the type we want to create.
-			l_type_feature := context.class_type.associated_class.anchored_features.item (routine_id)
+			l_type_feature := context.class_type.
+				associated_class.anchored_features.item (routine_id)
+
 			il_generator.generate_current
 			l_decl_type := il_generator.implemented_type (l_type_feature.origin_class_id,
 				context.current_type)
-			il_generator.generate_feature_access (l_decl_type, l_type_feature.origin_feature_id, True)
-
-				-- Evaluate the computed type and create a corresponding object type.
-			il_generator.generate_current
-			il_generator.create_type
+			il_generator.generate_feature_access (l_decl_type,
+				l_type_feature.origin_feature_id, True)
 		end
 
 feature -- Byte code generation

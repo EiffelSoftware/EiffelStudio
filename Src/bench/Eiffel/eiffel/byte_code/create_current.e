@@ -54,6 +54,13 @@ feature -- Il code generation
 			il_generator.create_like_object
 		end
 
+	generate_il_type is
+			-- Load type of Current object.
+		do
+			il_generator.generate_current
+			il_generator.load_type
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is

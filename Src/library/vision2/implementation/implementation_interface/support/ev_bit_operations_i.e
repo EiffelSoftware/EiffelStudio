@@ -17,13 +17,13 @@ feature -- Basic operations
 			Result := (flags // mask) \\ 2 = 1
 		end
 
-	set_bit (flags, mask: INTEGER; boo: BOOLEAN): INTEGER is
+	set_bit (flags, mask: INTEGER; state: BOOLEAN): INTEGER is
 			-- Return flags with `boo' as the new state of the
 			-- bit `mask' in flags.
 		do
-			if bit_set (flags, mask) and not boo then
+			if bit_set (flags, mask) and not state then
 				Result := flags - mask
-			elseif not bit_set (flags, mask) and boo then
+			elseif not bit_set (flags, mask) and state then
 				Result := flags + mask
 			else
 				Result := flags

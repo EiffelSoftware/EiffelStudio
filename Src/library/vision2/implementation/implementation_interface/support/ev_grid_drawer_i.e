@@ -47,28 +47,15 @@ feature -- Basic operations
 			vertical_buffer_offset: INTEGER
 			horizontal_buffer_offset: INTEGER
 			column_widths: ARRAYED_LIST [INTEGER]
-			
-			current_row: SPECIAL [EV_GRID_ITEM_I]
+
 			visible_physical_column_indexes: SPECIAL [INTEGER]
 			first_column_index, first_row_index: INTEGER
-			last_column_index, last_row_index: INTEGER
-			first_column_index_set, last_column_index_set, first_row_index_set, last_row_index_set: BOOLEAN
-			grid_item: EV_GRID_ITEM_I
-			grid_item_interface: EV_GRID_ITEM
-			current_index_in_row, current_index_in_column: INTEGER
-			column_counter, row_counter: INTEGER
-			bool: BOOLEAN
+			first_column_index_set, first_row_index_set: BOOLEAN
 			printing_values: BOOLEAN
 			column_offsets, row_offsets: ARRAYED_LIST [INTEGER]
-			invalid_x_start, invalid_x_end, invalid_y_start, invalid_y_end: INTEGER
-			current_column_width, current_row_height: INTEGER
-			rectangle_width, rectangle_height: INTEGER
+			invalid_x_start, invalid_y_start: INTEGER
 			i: INTEGER
-			grid_item_exists: BOOLEAN
-			current_item_y_position, current_item_x_position: INTEGER
-			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 		do
-			dynamic_content_function := grid.dynamic_content_function
 			printing_values := False
 			
 			create column_widths.make (8)
@@ -104,24 +91,16 @@ feature -- Basic operations
 					column_offsets.start
 						-- Compute the virtual positions of the invalidated area.
 					invalid_x_start := internal_client_x + an_x - horizontal_buffer_offset
---					invalid_x_end := internal_client_x + an_x - horizontal_buffer_offset + a_width		
 				until
-					last_column_index_set or column_offsets.off
+					first_column_index_set or column_offsets.off
 				loop
 					i := column_offsets.item
 					if not first_column_index_set and then i > invalid_x_start then
 						first_column_index := column_offsets.index - 1
 						first_column_index_set := True
 					end
---					if not last_column_index_set and then invalid_x_end < column_offsets.item then
---						last_column_index := column_offsets.index - 1
---						last_column_index_set := True
---					end
 					column_offsets.forth
 				end
---				if last_column_index = 0 then
---					last_column_index := grid.column_count
---				end
 				if first_column_index = 0 then
 					first_column_index := grid.column_count
 				end
@@ -129,33 +108,24 @@ feature -- Basic operations
 					-- Calculate the rows that must be displayed.
 					-- Compute the virtual positions of the invalidated area.
 				invalid_y_start := internal_client_y + a_y - vertical_buffer_offset
---				invalid_y_end := internal_client_y + a_y - vertical_buffer_offset + a_height
 				if grid.is_row_height_fixed then
 						-- If row heights are fixed we can calculate instead of searching.
 					first_row_index := ((invalid_y_start) // grid.row_height) + 1
---					last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid.row_count)
 				else
 					fixme ("implement using a binary search")
 					from
 						row_offsets.start
 					until
-						last_row_index_set or row_offsets.off
+						first_row_index_set or row_offsets.off
 					loop
 						i := row_offsets.item
 						if not first_row_index_set and then i > invalid_y_start then
 							first_row_index := row_offsets.index - 1
 							first_row_index_set := True
 						end
---						if not last_row_index_set and then invalid_y_end < row_offsets.item then
---							last_row_index := row_offsets.index - 1
---							last_row_index_set := True
---						end
 						row_offsets.forth
 					end
 				end
---				if last_row_index = 0 then
---					last_row_index := grid.row_count
---				end
 				if first_row_index = 0 then
 					first_row_index := grid.row_count
 				end

@@ -31,20 +31,6 @@ feature {NONE} -- Implementation
 			C.gtk_container_add (c_object, gtk_progress_bar)
 		end
 
-feature -- Access
-
-	proportion: REAL is
-			-- Proportion of bar filled. Range: [0,1].
-		do
-			if maximum = minimum then
-				Result := 1.0
-			else
-				if not is_destroyed then
-					Result := C.gtk_progress_get_current_percentage (gtk_progress_bar)
-				end	
-			end
-		end
-
 feature -- Status report
 
 	is_segmented: BOOLEAN is
@@ -66,12 +52,6 @@ feature -- Status setting
 			-- Display bar without segments.
 		do
 			C.gtk_progress_bar_set_bar_style (gtk_progress_bar, C.Gtk_progress_continuous_enum)
-		end
-
-	set_proportion (a_proportion: REAL) is
-			-- Display bar with `a_proportion' filled.
-		do
-			C.gtk_progress_set_percentage (gtk_progress_bar, a_proportion)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -103,6 +83,9 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/13 18:45:28  brendel
+--| removed set_proportion and proportion.
+--|
 --| Revision 1.13  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

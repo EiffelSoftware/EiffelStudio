@@ -325,11 +325,15 @@ feature -- Status setting
 			fs: FEATURE_STONE
 		do
 			fs ?= a_stone
-			if fs /= Void and then
-				(class_stone = Void or
-					class_stone /= Void and then class_stone.class_i /= fs.class_i) or
-				fs = Void then
-
+			if 
+				fs = Void 
+					or else
+				(
+					class_stone = Void
+						or else
+					class_stone.class_i /= fs.class_i
+				)
+			then
 				if is_building then
 					last_build_cancelled := True
 					Progress_dialog.hide
@@ -510,6 +514,7 @@ feature -- Status setting
 				if l_cluster_view /= Void then
 					cluster_view := l_cluster_view
 				end
+				reset_scrollbars
 				last_build_cancelled := False
 			else
 				clear_area
@@ -741,7 +746,7 @@ feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND, DIAGRAM_COMPONENT} -- Stat
 			-- Scrollable area and drawable area need to be resized because of diagram resizing.
 		local
 			t: EB_DIMENSIONS
-			leap_x, leap_y: INTEGER
+			leap_x, leap_y, old_value: INTEGER
 		do
 			if cd /= Void then
 				t := cd.minimum_size
@@ -753,19 +758,29 @@ feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND, DIAGRAM_COMPONENT} -- Stat
 			leap_x := area.width
 			leap_y := area.height
 
+			old_value := horizontal_scrollbar.value
 			horizontal_scrollbar.value_range.resize_exactly (
 				0,		
 				(visible_width - 1 - leap_x).max (1)
 			)
 			horizontal_scrollbar.set_leap (leap_x)
-			horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower)
+			if horizontal_scrollbar.value_range.has (old_value) then
+				horizontal_scrollbar.set_value (old_value)
+			else
+				horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower)
+			end
 
+			old_value := vertical_scrollbar.value
 			vertical_scrollbar.value_range.resize_exactly (
 				0,
 				(visible_height	- 1 - leap_y).max (1)
 			)
 			vertical_scrollbar.set_leap (leap_y)
-			vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower)
+			if vertical_scrollbar.value_range.has (old_value) then
+				vertical_scrollbar.set_value (old_value)
+			else
+				vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower)
+			end
 		end
 
 	update_toggles (cd: CONTEXT_DIAGRAM)  is	

@@ -25,9 +25,6 @@ static int eif_char();
 /* Global variables */
 extern int start_position, end_position;
 extern char token_str[];
-extern int string_mode;
-extern char string_input();
-extern void string_unput();
 
 /* For gperf */
 struct token {
@@ -36,13 +33,6 @@ struct token {
 };
 
 extern struct token *in_word_set2();
-
-#undef input
-#undef unput
-#define input() (string_mode?string_input():(((yytchar=yysptr>yysbuf?U(*--yysptr):getc(yyin))==10?(yylineno++,yytchar):yytchar)==EOF?0:yytchar))
-
-#define unput(c)  {yytchar= (c);if(!string_mode){if(yytchar=='\n')yylineno--;*yysptr++=yytchar;}else string_unput(yytchar) ;}
-
 
 %}
 
@@ -227,4 +217,14 @@ char c;
 		}
 		/* NOTREACHED */
 	}
+}
+
+void reset_lace_lex_parser()
+{
+#ifdef FLEX_SCANNER
+	yyrestart (xxin);
+#else
+	/* Reset lex parser */
+	xxsptr = xxsbuf;
+#endif
 }

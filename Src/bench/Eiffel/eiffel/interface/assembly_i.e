@@ -38,9 +38,7 @@ feature {NONE} -- Initialization
 			a_not_void: a /= Void
 		local
 			l_assembly_location: PATH_NAME
-			l_env: EIFFEL_ENV
 			l_emitter: IL_EMITTER
-			l_vd64: VD64
 		do
 				-- Initialize assembly info.
 			cluster_name := a.cluster_name
@@ -49,18 +47,13 @@ feature {NONE} -- Initialization
 				set_version (a.version)
 				set_culture (a.culture)
 				set_public_key_token (a.public_key_token)
-				create l_emitter.make (system.clr_runtime_version)
-				if l_emitter.exists then
-					consumed_folder_name := l_emitter.
-						relative_folder_name (assembly_name, version, culture, public_key_token)
-				else
-						-- IL_EMITTER component could not be loaded.
-					create l_vd64
-					Error_handler.insert_error (l_vd64)
+				l_emitter := new_il_emitter
+				if l_emitter /= Void then
+					consumed_folder_name := l_emitter.relative_folder_name (assembly_name, version, culture, public_key_token)
 				end
 			else
 				is_local := True
-				initialize_from_local_assembly (a.assembly_name)
+				initialize_from_assembly_path (a.assembly_name)
 			end
 
 			prefix_name := a.prefix_name
@@ -74,13 +67,10 @@ feature {NONE} -- Initialization
 			
 				-- Initialize location of XML files representing classes
 				-- of current assembly.
-			create l_env
 		
-				-- If either `initialize_from_local_assembly' or if we failed to initialize
-				-- the emitter we do not initialize the assembly as we cannot do it, it is
-				-- ok because an error has been inserted.
+			l_assembly_location := versioned_assembly_cache_folder.twin
+
 			if consumed_folder_name /= Void then
-				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
 				l_assembly_location.extend (consumed_folder_name)
 				create dollar_path.make_from_string (l_assembly_location)
 				update_path
@@ -102,14 +92,13 @@ feature {NONE} -- Initialization
 			-- Create Current from data in `l_ass'.
 		local
 			l_assembly_location: PATH_NAME
-			l_env: EIFFEL_ENV
 		do
 				-- Initialize assembly info.
 			cluster_name := l_ass.out
 			assembly_info_make (l_ass.location)
 			
 			is_local := True
-			initialize_from_local_assembly (l_ass.location)
+			initialize_from_assembly_path (l_ass.location)
 
 			prefix_name := l_ass.name + "_"
 			prefix_name.replace_substring_all (".", "_")
@@ -121,12 +110,13 @@ feature {NONE} -- Initialization
 			
 				-- Initialize location of XML files representing classes
 				-- of current assembly.
-			create l_env
-			l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
-			l_assembly_location.extend (l_ass.folder_name)
-			create dollar_path.make_from_string (l_assembly_location)
-			update_path
-
+			if consumed_folder_name /= Void then
+				l_assembly_location := versioned_assembly_cache_folder.twin
+				l_assembly_location.extend (l_ass.folder_name)
+				create dollar_path.make_from_string (l_assembly_location)
+				update_path
+			end
+			
 				-- Necessary initialization to preserve inherited invariants.
 			create sub_clusters.make (0)
 			create classes.make (0)
@@ -240,7 +230,7 @@ feature -- Initialization
 					Error_handler.raise_error
 				else
 						-- Let's try to import it and see if it works this time
-					initialize_from_gac_assembly
+					initialize_from_assembly
 					l_types ?= l_reader.new_object_from_file (l_types_file)
 					l_referenced_assemblies ?= l_reader.new_object_from_file (l_reference_file)
 					if l_types = Void or l_referenced_assemblies = Void then
@@ -288,7 +278,7 @@ feature -- Initialization
 				i > nb
 			loop
 				l_cons_assembly := l_referenced_assemblies.assemblies.item (i)
-				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
+				l_assembly_location := versioned_assembly_cache_folder.twin
 				l_assembly_location.extend (l_cons_assembly.folder_name)
 				l_path := environ.interpreted_string (l_assembly_location)
 					
@@ -322,16 +312,11 @@ feature -- Initialization
 --			are_locals: l_assemblies.for_all (agent is_local)
 		local
 			l_emitter: IL_EMITTER
-			l_vd64: VD64
 			l_dir: DIRECTORY
 			l_names: STRING
 		do
-			create l_emitter.make (System.clr_runtime_version)
-			if not l_emitter.exists then
-					-- IL_EMITTER component could not be loaded.
-				create l_vd64
-				Error_handler.insert_error (l_vd64)
-			else			
+			l_emitter := new_il_emitter
+			if l_emitter /= Void then			
 					-- And call emitter to generate XML file if needed.
 				create l_dir.make (Local_assembly_path)
 				if not l_dir.exists then
@@ -357,25 +342,20 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	initialize_from_gac_assembly is
+	initialize_from_assembly is
 			-- Try to generate associated XML file of current assembly.
 		require
 			not_is_local: not is_local
 		local
-			l_vd64: VD64
 			l_emitter: IL_EMITTER
 		do
-			create l_emitter.make (System.clr_runtime_version)
-			if not l_emitter.exists then
-					-- IL_EMITTER component could not be loaded.
-				create l_vd64
-				Error_handler.insert_error (l_vd64)
-			else
+				l_emitter := new_il_emitter
+				if l_emitter /= Void then
 				l_emitter.consume_assembly (assembly_name, version, culture, public_key_token)
 			end
 		end
 		
-	initialize_from_local_assembly (an_assembly: STRING) is
+	initialize_from_assembly_path (an_assembly: STRING) is
 			-- Given a local assembly `an_assembly' initializes Current with info
 			-- we can retrieved from assembly file.
 		require
@@ -384,7 +364,6 @@ feature {NONE} -- Implementation
 		local
 			l_file: RAW_FILE
 			l_vd63: VD63
-			l_vd64: VD64
 			l_vd65: VD65
 			l_emitter: IL_EMITTER
 		do
@@ -395,12 +374,8 @@ feature {NONE} -- Implementation
 				create l_vd63.make (an_assembly)
 				Error_handler.insert_error (l_vd63)
 			else
-				create l_emitter.make (System.clr_runtime_version)
-				if not l_emitter.exists then
-						-- IL_EMITTER component could not be loaded.
-					create l_vd64
-					Error_handler.insert_error (l_vd64)
-				else
+				l_emitter := new_il_emitter
+				if l_emitter /= Void then
 					l_emitter.retrieve_assembly_info (environ.interpreted_string (an_assembly))
 					if not l_emitter.assembly_found then
 							-- Looks like it is not a valid assembly file.
@@ -424,6 +399,59 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+	
+	assembly_cache_folder: DIRECTORY_NAME is
+			-- Absolute path to path of EAC
+		once
+			if system.metadata_cache_path /= Void and then not system.metadata_cache_path.is_empty then
+				create Result.make_from_string (environ.interpreted_string (system.metadata_cache_path))
+			else
+				create Result.make_from_string (environ.interpreted_string ((create {EIFFEL_ENV}).assemblies_path))
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
+		end
+
+	versioned_assembly_cache_folder: DIRECTORY_NAME is
+			-- Absolute path to versioned path of EAC
+		once
+			Result := assembly_cache_folder.twin
+			Result.extend (system.clr_runtime_version)
+		end
+		
+	new_il_emitter: IL_EMITTER is
+			-- Creates a new IL_EMITTER
+		local
+			l_dir: DIRECTORY
+			l_vd64: VD64
+			l_vd67: VD67
+		do
+			create l_dir.make (assembly_cache_folder)
+			if l_dir.exists then
+				create Result.make (versioned_assembly_cache_folder, system.clr_runtime_version)
+				if not Result.exists then
+						-- IL_EMITTER component could not be loaded.
+					create l_vd64
+					Error_handler.insert_error (l_vd64)
+					Result := Void
+				else
+					if not Result.is_initialized then
+							-- Path to cache is not valid
+						create l_vd67.make (assembly_cache_folder)
+						Error_handler.insert_error (l_vd67)
+						Result := Void	
+					end
+				end
+			else
+					-- Path to cache is not valid
+				create l_vd67.make (assembly_cache_folder)
+				Error_handler.insert_error (l_vd67)
+				Result := Void					
+			end
+		ensure
+			valid_result: Result /= Void implies Result.exists and then Result.is_initialized
+		end
 
 feature {NONE} -- Constants
 
@@ -433,7 +461,6 @@ feature {NONE} -- Constants
 	null_key_string: STRING is "null"
 	referenced_assemblies_file_name: STRING is "referenced_assemblies.xml"
 			-- String constants specific to layout of EAC.
-
 
 invariant
 	cluster_name_not_void: cluster_name /= Void

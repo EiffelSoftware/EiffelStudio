@@ -34,6 +34,7 @@ feature -- Basic operations
 			create a_func_generator.generate (component, a_function)
 			add_feature_rename (a_func_generator)
 			add_feature_to_class (a_func_generator.feature_writer)
+			eiffel_writer.add_feature (a_func_generator.external_feature_writer, Externals)
 		end
 
 end -- class WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR

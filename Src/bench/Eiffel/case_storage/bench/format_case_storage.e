@@ -53,13 +53,13 @@ feature -- Execution
 	local
 		f : PLAIN_TEXT_FILE
 		fn : FILE_NAME
-		dir : DIRECTORY	
-		dirn : DIRECTORY_NAME	
+		dir : DIRECTORY		
 	do
 		-- check the path and set the correponding variables if correct
-		!! dirn.make
-		dirn.extend(path)
-		!! dir.make ( dirn)
+		if path.count>0 and then (path.item(path.count).is_equal('/') or path.item(path.count).is_equal('\')) then
+			path.remove(path.count)
+		end
+		!! dir.make ( path)
 		if dir.exists then
 			-- we set the variables
 			Case_storage_path.wipe_out
@@ -72,14 +72,16 @@ feature -- Execution
 
 		-- create if needed the system.ecr file	
 		if dir.exists then
-			!! fn.make_from_string ( path )
-			fn.extend("system")
-			fn.add_extension("ecr")
-			!! f.make(fn)
-			if not f.exists then
-				f.create_read_write
-				f.close
-			end
+			!! fn.make_from_string (path)
+		else
+			!! fn.make_from_string(Project_directory_name)
+		end
+		fn.extend("system")
+		fn.add_extension("ecr")
+		!! f.make(fn)
+		if not f.exists then
+			f.create_read_write
+			f.close
 		end
 	end
 

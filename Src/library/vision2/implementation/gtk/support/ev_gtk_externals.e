@@ -45,7 +45,7 @@ feature {NONE} -- GTK C functions for label
 		external "C | <gtk/gtk.h>"
 		end
 	
-	gtk_label_set (l: POINTER; text: POINTER) is
+	gtk_label_set_text (l: POINTER; text: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
 	

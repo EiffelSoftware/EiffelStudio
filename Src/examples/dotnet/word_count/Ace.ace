@@ -1,0 +1,19 @@
+system
+	word_count
+
+root
+	APPLICATION: "make"
+
+default
+	assertion (no)
+	il_generation ("exe")
+	line_generation (no)
+
+cluster
+	
+	root_cluster: ".";
+
+		-- EiffelBase
+	all base:						"$EIFFEL_SRC\library\base.net"
+
+end

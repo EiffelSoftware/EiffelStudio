@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that create controls to extend a certain widget type."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text_control (an_any_item: like current_type) is
+	make_with_text_control (an_any_item: like current_type; editor: GB_OBJECT_EDITOR) is
 			-- Create `Current' with an EV_TEXT for input.
 		do
 			default_create
@@ -30,9 +29,10 @@ feature {NONE} -- Initialization
 			text_control.set_text (initial_text)
 			text_control.change_actions.extend (agent update_extend_button)
 			input_control_holder.extend (text_control)
+			object_editor := editor
 		end
 		
-	make_with_combo_control (an_any_item: like current_type; types: ARRAY [STRING]) is
+	make_with_combo_control (an_any_item: like current_type; editor: GB_OBJECT_EDITOR; types: ARRAY [STRING];) is
 			-- Create `Current' with a combo box for input, corresponding to `types'.
 		local
 			list_item: EV_LIST_ITEM
@@ -52,11 +52,12 @@ feature {NONE} -- Initialization
 			end
 			input_control_holder.extend (combo_control)
 			combo_control.change_actions.extend (agent extend_item)
+			object_editor := editor
 		end
 		
 		
 	initialize is
-			--
+			-- Initialize `Current' and build interface.
 		local
 			horizontal_box: EV_HORIZONTAL_BOX
 		do	
@@ -69,6 +70,7 @@ feature {NONE} -- Initialization
 			create input_control_holder
 			horizontal_box.extend (input_control_holder)
 			create help_control.make_with_text ("?")
+			help_control.set_tooltip (help)
 			help_control.select_actions.extend (agent show_help)
 			horizontal_box.extend (help_control)
 			horizontal_box.disable_item_expand (help_control)
@@ -83,10 +85,6 @@ feature {NONE} -- Initialization
 			extend (internal_vertical_box)
 			is_initialized := True
 		end
-
-feature -- Access
-
-feature -- Measurement
 
 feature -- Status report
 
@@ -107,28 +105,6 @@ feature -- Status setting
 			-- Wipe_out `any_item'.
 		deferred
 		end
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Contract support
 
@@ -191,6 +167,10 @@ feature {NONE} -- Implementation
 		
 	internal_vertical_box: EV_VERTICAL_BOX
 		-- A box inside `Current' into which controls are placed.
+		
+	object_editor: GB_OBJECT_EDITOR
+		-- An object editor currently holding `current_type'. This
+		-- must be updated to account for any changes.
 
 invariant
 	current_type_not_void: current_type /= Void

@@ -144,7 +144,9 @@ feature  -- Output
 			-- Print error message `s'.
 		do  
 			error_message.wipe_out;
-			error_message.append (file_name); 
+			if file_name /= Void then
+				error_message.append (file_name); 
+			end
 			error_message.append (" (line "); 
 			error_message.append (token.line_number.out);
 			error_message.append ("): "); 

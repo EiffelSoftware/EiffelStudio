@@ -23,6 +23,12 @@ feature -- ScrollInfo
 				(i = Sif_disablenoscroll) or else
 				(i = Sif_trackpos)
 		end
+		
+	valid_sif_mask (i: INTEGER): BOOLEAN is
+			-- is `i' a valid sif mask?
+		do
+			Result := i = i & (Sif_range | Sif_page | Sif_pos | Sif_disablenoscroll | Sif_trackpos)
+		end
 
 	Sif_all: INTEGER is 23
 		-- 	Combination of SIF_PAGE, SIF_POS, SIF_RANGE, and SIF_TRACKPOS.

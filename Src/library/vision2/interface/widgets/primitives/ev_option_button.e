@@ -8,6 +8,8 @@ indexing
 
 class
 	EV_OPTION_BUTTON
+	
+obsolete "Very limited. Just call show on an EV_MENU when an EV_BUTTON is selected and add custom behaviour."
 
 inherit
 	EV_BUTTON 
@@ -50,14 +52,14 @@ feature -- Status setting
 
 	remove_selection is
 			-- Make `selected_item' `Void'.
-			-- Assign `menu'.text to `text' if avalible,
+			-- Assign `menu' text to `text' if available,
 			-- otherwise assign `menu'.first.text to `text'.
 		require
 			not_destroyed: not is_destroyed
 		do
-			if menu.text /= Void then
+			if not menu.text.is_empty then
 				implementation.set_text (menu.text)
-			elseif menu.first /= Void and then menu.first.text /= Void then
+			elseif menu.first /= Void and then not menu.first.text.is_empty then
 				implementation.set_text (menu.first.text)
 			else
 				remove_text
@@ -66,9 +68,9 @@ feature -- Status setting
 		ensure
 			selected_item_void: selected_item = Void
 			menu_text_used_first:
-				menu.text /= Void implies text.is_equal (menu.text)
+				not menu.text.is_empty implies text.is_equal (menu.text)
 			menu_first_text_used_otherwise:
-				menu.text = Void and menu.first /= Void and menu.first.text /= Void
+				menu.text = Void and menu.first /= Void and not menu.first.text.is_empty
 				implies text.is_equal (menu.first.text)
 		end
 
@@ -95,11 +97,7 @@ feature {NONE} -- Implementation
 			an_item_not_void: an_item /= Void
 		do
 			selected_item := an_item
-			if an_item.text = Void then
-				remove_text
-			else
-				implementation.set_text (an_item.text)
-			end
+			implementation.set_text (an_item.text)
 		ensure	
 			selected_item_assigned: selected_item = an_item
 			text_assigned: an_item.text = Void and text = Void

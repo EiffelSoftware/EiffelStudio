@@ -1,0 +1,43 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Printer</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Printer">
+	</HEAD>
+
+	<BODY>
+		<H1>Printer Sample</H1>
+		<CENTER><IMG SRC="printer.png" ALT="printer" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\printer\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>After launching the program, a window will be displayed as illustrated above. Selecting "Print" from the "File" menu will open a print dialog which will
+		allow you to specify a printer and additional print information before printing the contents of the window.
+		</P>
+
+		<H2>Under the Hood</H2>
+		</P> <A CLASS="eclass" HREF="/libraries/wel/samples/printer/root_cluster/main_window_chart.html">MAIN_WINDOW</A> inherits <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> and
+		the feature `on_paint' has been redefined to display the ouptut in the client area. A <A CLASS="eclass" HREF="/libraries/wel/reference/stddlgs/wel_print_dialog_chart.html">WEL_PRINT_DIALOG</A> is used to retrieve the print options before the printing occurs
+		through the interface provided by a <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_printer_dc_chart.html">WEL_PRINTER_DC</A>.
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/printer/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/printer/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/printer/root_cluster/printer_demo_chart.html">PRINTER_DEMO</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/content/stddlgs/wel_print_dialog.html">WEL_PRINT_DIALOG</A></P>
+	</BODY>
+</HTML>

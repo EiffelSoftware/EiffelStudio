@@ -22,6 +22,8 @@ inherit
 	
 	GB_SHARED_DEFERRED_BUILDER
 	
+	GB_LAYOUT_CONSTRUCTOR_STATE_HANDLER
+	
 create
 	initialize
 
@@ -795,6 +797,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 			old_builder_window, new_builder_window: EV_TITLED_WINDOW
 			old_builder_contents: EV_WIDGET
 		do
+			store_layout_constructor
 			titled_window_object ?= an_object
 				-- We must handle windows as a special case,
 				-- as they are built by Build and are not completely dynamic
@@ -923,6 +926,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				end
 				old_builder_window.destroy
 			end
+			restore_layout_constructor
 		end
 		
 		

@@ -48,11 +48,17 @@
 			</item>
 			<item>
 				<bold>EV_SCREEN</bold> - Added `horizontal_resolution' and `vertical_resolution' which return the number of pixels per inch.
-			</item><item><bold>EV_FILE_DIALOG</bold> - Added support for multiple file extensions through the addition of `filters' which provides support for setting both a filter and an associated comment. The existing features `filter' and `set_filter' have been made obsolete.</item>
-<item><bold>EV_FONT</bold><list ordered="false"><item>Modified return type of `string_size' from TUPLE [INTEGER, INTEGER] to TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]. This does not break any existing code, but provides additional `left_offset' and `right_offset' queries (items 3, 4). Items 1, 2 still return the width and height of the string, but this is only the dimensions to be used when placing multiple strings next to each other. Some characters on more exotic fonts may still extend past this boundary, and the rectangle that fully encloses the string is given by adding the left and right offsets to the width.</item>
-			<item>Added `height_in_points' and `set_height_in_points' for setting the height of a font in points (1/72 of an inch). This may be used to ensure that your fonts occupy the same height on screens with varying resolutions.</item>
-		</list>
-		</item>
+			</item>
+			<item>
+				<bold>EV_FILE_DIALOG</bold> - Added support for multiple file extensions through the addition of `filters' which provides support for setting both a filter and an associated comment. The existing features `filter' and `set_filter' have been made obsolete.
+			</item>
+			<item>
+				<bold>EV_FONT</bold>
+				<list ordered="false">
+					<item>Modified return type of `string_size' from TUPLE [INTEGER, INTEGER] to TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]. This does not break any existing code, but provides additional `left_offset' and `right_offset' queries (items 3, 4). Items 1, 2 still return the width and height of the string, but this is only the dimensions to be used when placing multiple strings next to each other. Some characters on more exotic fonts may still extend past this boundary, and the rectangle that fully encloses the string is given by adding the left and right offsets to the width.</item>
+					<item>Added `height_in_points' and `set_height_in_points' for setting the height of a font in points (1/72 of an inch). This may be used to ensure that your fonts occupy the same height on screens with varying resolutions.</item>
+				</list>
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -73,26 +79,32 @@
 					<item>
 						<bold>EV_TREE</bold> - Fixed bug in `has_recursively' which failed if there were one or more dynamic tree items contained.
 					</item>
-<item><bold>EV_MULTI_COLUMN_LIST</bold> - Fixed bug in `set_column_alignments' which crashed if you called it with an empty list after having previously called it with a non empty list.
+					<item>
+						<bold>EV_MULTI_COLUMN_LIST</bold> - Fixed bug in `set_column_alignments' which crashed if you called it with an empty list after having previously called it with a non empty list.
 					</item>
-					<item><bold>EV_FIGURE_TEXT</bold> - Fixed bounding size issues which would cause the `width' and `height' to be returned incorrectly, causing them to be not correctly cleared when moved in a figure world.</item>
-					<item><bold>EV_FIGURE_GROUP</bold> - Fixed both `append' and `make_from_array' which were not setting the `group' of each item inserted.</item>
+					<item>
+						<bold>EV_FIGURE_TEXT</bold> - Fixed bounding size issues which would cause the `width' and `height' to be returned incorrectly, causing them to be not correctly cleared when moved in a figure world.
+					</item>
+					<item>
+						<bold>EV_FIGURE_GROUP</bold> - Fixed both `append' and `make_from_array' which were not setting the `group' of each item inserted.
+					</item>
 				</list>
 			</item>
 			<item>
 				<bold>Windows</bold>
 				<list ordered="false">
 					<item>
-						<bold>EV_WINDOW</bold>
-						 <list ordered="false"><item>`move_actions' was always passing positive values for the x and y coordinates of the window, even if they should have been negative.</item>
-						<item>Showing two or more dialogs relative to a window and then hiding the focused relative dialog could cause the window to move behing the next window in the Z order. This has now been fixed.</item>
+						<bold>EV_WINDOW</bold> 
+						<list ordered="false">
+							<item>`move_actions' was always passing positive values for the x and y coordinates of the window, even if they should have been negative.</item>
+							<item>Showing two or more dialogs relative to a window and then hiding the focused relative dialog could cause the window to move behing the next window in the Z order. This has now been fixed.</item>
 						</list>
 					</item>
 					<item>
 						<bold>EV_FONT</bold>
-						<list ordered = "false">
-						<item>Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.</item>
-						<item>Fixed bug in `copy' which in certain cases could lead to a copied font not exhibiting the typeface as the original, even though no assertions were violated.</item>
+						<list ordered="false">
+							<item>Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.</item>
+							<item>Fixed bug in `copy' which in certain cases could lead to a copied font not exhibiting the typeface as the original, even though no assertions were violated.</item>
 						</list>
 					</item>
 					<item> 
@@ -106,7 +118,8 @@
 							<item>Corrected handling of selection for caret positions greater than 64,000 characters. The following features were broken when using caret positions greater than 64,000: `caret_position', `has_selection', `selection_start' and `selection_end'</item>
 						</list>
 					</item>
-					<item><bold>EV_SPIN_BUTTON</bold>
+					<item>
+						<bold>EV_SPIN_BUTTON</bold>
 						<list ordered="false"> 
 							<item>Corrected positioning in parent container. In many situations, the spin button mis-behaved and would be moved to the 0x0 pixel position in the parent.</item>
 							<item>Fixed tooltips which were never displayed.</item>
@@ -115,10 +128,12 @@
 					<item>
 						<bold>EV_LIST_ITEM</bold> - Setting a pixmap to an item that was already displayed in a list and had a text would cause the end of the text to be cut off. This is now fixed.
 					</item>
-<item>
+					<item>
 						<bold>EV_COMBO_BOX</bold> - Fixed tooltips which were  never displayed.
 					</item>
-					<item><bold>EV_TOOL_BAR</bold> - Fixed resizing issue which caused it to overdraw its parent container. For example, placing an EV_TOOL_BAR directly inside a frame caused the bottom of the frame to be hidden.</item>
+					<item>
+						<bold>EV_TOOL_BAR</bold> - Fixed a number of serious GDI leaks, the worst of which occurred when items that had a pixmap were removed from a tool bar.
+					</item>
 				</list>
 			</item>
 			<item>
@@ -1037,5 +1052,4 @@
 				</list>
 			</paragraph>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

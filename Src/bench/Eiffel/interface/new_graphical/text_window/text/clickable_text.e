@@ -20,8 +20,7 @@ inherit
 			process_text as load_structured_text
 		export
 			{NONE} all
-			{ANY} enable_has_breakable_slots, disable_has_breakable_slots,
-				load_structured_text, has_breakable_slots,
+			{ANY} load_structured_text,
 				current_text, put_string, put_new_line,
 				put_char
 		redefine
@@ -30,12 +29,21 @@ inherit
 
 	EDITABLE_TEXT
 		redefine
-			make, finish_reading_agent,
-			reset_text, on_text_loaded,
-			load_string
+			make, 			
+			reset_text, 
+			on_text_loaded,
+			load_string,
+			editor_preferences,
+			abort_idle_processing,
+			after_reading_idle_action
 		end
 
 	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+		
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -51,6 +59,7 @@ feature {NONE} -- Initialization
 			Precursor {EDITABLE_TEXT}
 			make_translator
 			reading_text_finished := True
+			finish_reading_text_agent := agent finish_reading_text
 		end
 
 feature -- Access
@@ -60,10 +69,12 @@ feature -- Access
 		local
 			ln: EDITOR_LINE
 			tok: EDITOR_TOKEN
+			visitor: EIFFEL_TOKEN_VISITOR
 		do
 			create Result.make
 			if not is_empty then
 				from
+					create visitor
 					ln := first_line
 				until
 					ln = Void
@@ -73,7 +84,8 @@ feature -- Access
 					until
 						tok = Void
 					loop
-						Result.extend (tok.corresponding_text_item)
+						tok.process (visitor)						
+						Result.extend (visitor.last_structured_text_item)
 						tok := tok.next
 					end
 					ln := ln.next
@@ -123,7 +135,7 @@ feature -- Pick and drop
 				if feature_click_enabled and then feature_click_tool.is_ready then
 					Result := feature_click_tool.stone_at_position (cursr)
 				elseif cursr.token /= Void then
-					Result := cursr.token.pebble
+					Result ?= cursr.token.pebble
 				end
 			end
 		end
@@ -152,11 +164,7 @@ feature -- Load Text handling
 			
 				-- First abort our previous actions.
 			Precursor {EDITABLE_TEXT}
-
-				-- Reset the editor state.
-			disable_has_breakable_slots
 		end
-
 
 feature -- Initialization
 
@@ -167,8 +175,6 @@ feature -- Initialization
 			load_type := from_string
 			Precursor {EDITABLE_TEXT} (a_string)
 		end
-
-
 
 	load_structured_text (str_text: STRUCTURED_TEXT) is
 			-- scan `a_string' and fill the object with resulting
@@ -229,7 +235,7 @@ feature {NONE} -- Load Text handling
 				reading_text_finished := True
 				on_text_loaded
 			end
-			ev_application.idle_actions.extend (Finish_reading_agent)
+			ev_application.idle_actions.extend (finish_reading_text_agent)
 		end
 
 	finish_reading_text is
@@ -265,15 +271,6 @@ feature {NONE} -- Load Text handling
 			end
 		end
 
-	Finish_reading_agent: PROCEDURE[like Current, TUPLE] is
-			-- Agent for function `finish_reading_text'
-		do
-			if internal_Finish_reading_agent = Void then
-				internal_Finish_reading_agent := agent finish_reading
-			end
-			Result := internal_Finish_reading_agent
-		end
-
 	finish_reading is
 		do
 			if load_type = from_text then
@@ -281,7 +278,6 @@ feature {NONE} -- Load Text handling
 			else
 				finish_reading_string
 			end
-
 		end
 
 	on_text_loaded is
@@ -294,7 +290,19 @@ feature {NONE} -- Load Text handling
 			end
 		end
 
+	abort_idle_processing is
+			-- Stop text processing done during idle actions.
+		do
+			Precursor {EDITABLE_TEXT}
+			ev_application.idle_actions.prune_all (finish_reading_text_agent)
+		end
 
+	after_reading_idle_action is
+			-- action performed on idle when text reading is finished.
+		do
+			Precursor {EDITABLE_TEXT}
+			ev_application.idle_actions.prune_all (finish_reading_text_agent)
+		end
 
 feature {NONE} -- Implementation
 
@@ -304,8 +312,17 @@ feature {NONE} -- Implementation
 	current_cursor: CURSOR
 			-- Cursor pointing position where to resume current structured loading.
 
-	last_processed_line: EDITOR_LINE
+	last_processed_line: EIFFEL_EDITOR_LINE
 			-- last line processed while reading a STRUCTURED_TEXT
+
+	editor_preferences: EB_EDITOR_DATA is
+			-- Eiffel editor preferences
+		once
+			Result := preferences.editor_data
+		end
+		
+	finish_reading_text_agent: PROCEDURE [like Current, TUPLE]
+			-- Agent for function `finish_reading_text'
 
 feature {NONE} -- Private status
 

@@ -2,14 +2,15 @@
 <html>
 <head>
 		<TITLE>Key shortcuts</TITLE>
-		<META NAME="MS-HKWD" CONTENT="keu shortcuts">
+		<META NAME="MS-HKWD" CONTENT="key shortcuts">
 		<link REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 </head>
 <body>
 		<H1>Key shortcuts</H1>
 		<P>Many operations in EiffelStudio do not require the use of the mouse. The same effect can be achieved through the keyboard only.</P>
-<P>This page gathers all the keyboard shortcuts available in the environment. They are sorted in several categories, depending on when or where they apply. </P>
+<P>This page gathers all the keyboard shortcuts available in the environment. They are sorted in several categories, depending on
+their domain of application. </P>
 
 <h2>Editor shortcuts</h2>
 <table>
@@ -157,11 +158,155 @@
 <tr>
 <td>Ctrl+Space</td>
 
-<td>Auto-complete current word.<BR>This shortcut mau be customized.</td>
+<td>Auto-complete current word.<BR>This shortcut may be customized.</td>
 </tr>
 
 </table>
-<P CLASS="Note"><b>Note</b>: Most of these shortcuts can be used in the class view and the feature view of the class tool too.<BR> In fact, all the operations that do not imply changes in the text are possible.</P>
+<P CLASS="Note"><b>Note</b>: These shortcuts are not available everywhere. All operations that do not imply changes in the text are
+available both in the editor and in the class and feature views inside the
+context tool. Other operations are available only in the editor.</P>
+
+        <h2>Compiler</h2>
+<table>
+<tr>
+<td><B>Key shortcut</B></td>
+
+<td><B>Purpose</B></td>
+</tr>
+
+<tr>
+<td>F7</td>
+
+<td>Melt the system. This is the standard way to compile a
+  debuggable system.</td>
+</tr>
+
+<tr>
+<td>Ctrl+F7</td>
+
+<td>Freeze the system. This melts the system and recompile the
+  generated C code.</td>
+</tr>
+
+<tr>
+<td>Ctrl+Shift+F7</td>
+
+<td>Finalize the system. This generates an optimized executable
+  which is not debuggable.</td>
+</tr>
+
+</table>
+        <h2>Debugger</h2>
+<table>
+<tr>
+<td><B>Key shortcut</B></td>
+
+<td><B>Purpose</B></td>
+</tr>
+
+<tr>
+<td>F5</td>
+
+<td>Run. This is the standard way to run a system and debug it.</td>
+</tr>
+
+<tr>
+<td>Ctrl+F5</td>
+
+<td>Run without breakpoint. Same as run except that breakpoints are ignored.</td>
+</tr>
+
+<tr>
+<td>Shift+F5</td>
+
+<td>Kill the debugged application</td>
+</tr>
+
+<tr>
+<td>Ctrl+Shift+F5</td>
+
+<td>Pause the debugged application.</td>
+</tr>
+
+<tr>
+<td>F11</td>
+
+<td>Step into.</td>
+</tr>
+
+<tr>
+<td>F10</td>
+
+<td>Step by step.</td>
+</tr>
+
+<tr>
+<td>Shift+F11</td>
+
+<td>Step out.</td>
+</tr>
+
+</table>
+        <h2>Miscellaneous</h2>
+<table>
+<tr>
+<td><B>Key shortcut</B></td>
+
+<td><B>Purpose</B></td>
+</tr>
+
+<tr>
+<td colspan=2 align=center><i>- File shortcuts -</i></td>
+</tr>
+
+<tr>
+<td>Ctrl+S</td>
+
+<td>Save the file currently edited in the editor.</td>
+</tr>
+
+<tr>
+<td>Ctrl+O</td>
+
+<td>Open a class file.</td>
+</tr>
+
+<tr>
+<td>Ctrl+N</td>
+
+<td>Open a new window.</td>
+</tr>
+
+<tr>
+<td colspan=2 align=center><i>- Editor format shortcuts -</i></td>
+</tr>
+<tr>
+<td>Ctrl+Shift+T</td>
+
+<td>Display the text form in the editor.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+C</td>
+
+<td>Display the clickable form in the editor.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+F</td>
+
+<td>Display the flat form in the editor.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+O</td>
+
+<td>Display the contract form in the editor.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+I</td>
+
+<td>Display the interface form in the editor.</td>
+</tr>
+
+</table>
 
 </body>
 </html>

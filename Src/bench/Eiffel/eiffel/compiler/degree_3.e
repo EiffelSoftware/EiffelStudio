@@ -31,13 +31,11 @@ feature -- Processing
 			i, nb, j: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
-			mem: MEMORY
 			l_conv_checker: CONVERTIBILITY_CHECKER
 		do
 			nb := count
 			Degree_output.put_start_degree (Degree_number, nb)
 			classes := System.classes.sorted_classes
-			create mem
 
 				-- Check convertibility validity, there should be only one way
 				-- to convert one type to the other.
@@ -56,10 +54,6 @@ feature -- Processing
 					nb := nb - 1
 
 					j := j + 1
-					if (j \\ 700) = 0 then
-						mem.full_collect
-						mem.full_coalesce
-					end
 				end
 				i := i + 1
 			end

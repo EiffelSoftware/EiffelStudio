@@ -296,7 +296,7 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 			end;
 		end;
 
-feature {NONE} -- Implemenation
+feature {NONE} -- Implementation
 
 	initialize_stack is
 		require

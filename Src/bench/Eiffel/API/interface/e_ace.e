@@ -79,7 +79,7 @@ feature -- Setting
 	set_file_name (f_name: STRING) is
 			-- Set lace_file_name to `f_name'.
 		require
-			valid_f_name_if_not_void: f_name /= Void implies 
+			valid_f_name_if_not_void: f_name /= Void implies
 						valid_file_name (f_name)
 		do
 			Lace.set_file_name (f_name)

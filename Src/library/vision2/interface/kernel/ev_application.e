@@ -132,6 +132,10 @@ feature -- Event handling
 	idle_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions be performed take when the application is otherwise idle.
 
+	once_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions be performed take when the application is otherwise idle.
+			-- Wiped out after being called.
+
 feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_PICK_AND_DROPABLE_I}
 		-- Implementation
 	
@@ -145,6 +149,7 @@ feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_PICK_AND_DROPABLE_I}
 			create pick_actions
 			create drop_actions
 			create idle_actions
+			create once_idle_actions
 		end
 
 	create_implementation is
@@ -166,6 +171,7 @@ invariant
 	pick_actions_not_void: pick_actions /= Void
 	drop_actions_not_void: drop_actions /= Void
 	idle_actions_not_void: idle_actions /= Void
+	once_idle_actions_not_void: once_idle_actions /= Void
 	first_window_not_void: is_initialized implies first_window /= Void
 	tooltip_delay_non_negative: tooltip_delay >= 0
 
@@ -192,6 +198,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/23 17:44:05  brendel
+--| Added `once_idle_actions'.
+--|
 --| Revision 1.15  2000/03/21 19:57:40  brendel
 --| Added dummy variable to `launch' that accesses `first_window', which
 --| should now resolve the problem that users have to use `first_window' in

@@ -185,13 +185,16 @@ feature {GB_WINDOW_SELECTOR, GB_OBJECT} -- Implementation
 
 feature {GB_OBJECT} -- Implementation
 
-	highlight_object (an_object: GB_OBJECT) is
+	highlight_object (object_stone: GB_STANDARD_OBJECT_STONE) is
 			-- Ensure `an_object' is highlighted object in `Current'.
 			-- Only if `an_object' is contained in the structure of `Current', and
 			-- is not a titled window.
 		require
-			an_object_not_void: an_object /= Void
+			object_stone_not_void: object_stone /= Void
+		local
+			an_object: GB_OBJECT
 		do
+			an_object := object_stone.object
 			if an_object.layout_item.is_selectable then
 				an_object.layout_item.enable_select
 				ensure_item_visible (an_object.layout_item)
@@ -200,14 +203,16 @@ feature {GB_OBJECT} -- Implementation
 
 feature {NONE} -- Implementation	
 
-	object_higlightable (an_object: GB_OBJECT): BOOLEAN is
+	object_higlightable (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN is
 			-- Is `an_object' a valid object for highlighting via
 			-- `highlight_object'.
 		require
-			an_object_not_void: an_object /= Void
+			object_stone_not_void: object_stone /= Void
 		local
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			an_object: GB_OBJECT
 		do
+			an_object := object_stone.object
 			titled_window_object ?= an_object
 			Result := titled_window_object = Void and an_object.layout_item /= Void
 		end

@@ -20,7 +20,7 @@ LIBIPC = $(TOP)/ipc/shared
 LIBIPCNAME = libipc.a
 LIBIPCARCH = $(LIBIPC)/$(LIBIPCNAME)
 LIBIDR = $(TOP)/idrs
-LIBIDRNAME = libidr.a
+LIBIDRNAME = idrs.o
 LIBIDRARCH = $(LIBIDR)/$(LIBIDRNAME)
 
 /* The following are understood by jmake to alter built-in commands */

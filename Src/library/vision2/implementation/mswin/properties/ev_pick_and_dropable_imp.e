@@ -145,6 +145,7 @@ feature -- Implementation
 					pick_y := a_screen_y
 				end
 
+				set_capture_type (Capture_heavy)
 				enable_capture
 	
 				press_action := Ev_pnd_end_transport
@@ -170,6 +171,7 @@ feature -- Implementation
 			erase_rubber_band
 
 			disable_capture
+			set_capture_type (Capture_normal)
 
 			if
 				(a_button = 3 and is_pnd_in_transport) or
@@ -467,15 +469,15 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Public constants
 
-	Capture_heavy: INTEGER is 0
+	Capture_heavy: INTEGER is 1
 			-- The mouse [has been/should be] captured through
 			-- a call to `set_heavy_capture'
-			--
-			-- Default value.
 
-	Capture_normal: INTEGER is 1
+	Capture_normal: INTEGER is 0
 			-- The mouse [has been/should be] captured through
 			-- a call to `set_capture'
+			--
+			-- Default value.
 
 end -- class EV_PICK_AND_DROPABLE_IMP
 
@@ -500,6 +502,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/07 22:41:43  rogers
+--| set normal capture as default.
+--|
 --| Revision 1.23  2000/04/03 18:19:02  rogers
 --| Added checks for toolbar items to pointed_target.
 --|

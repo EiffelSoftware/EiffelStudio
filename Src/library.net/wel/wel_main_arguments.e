@@ -10,15 +10,24 @@ class
 feature -- Access
 
 	current_instance: WEL_INSTANCE is
-			-- Current instance argument received in WinMain
+					-- Current instance argument received in WinMain
+		once
+			create Result.make (default_pointer)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	resource_instance: WEL_INSTANCE is
+			-- Resource instance argument received in WinMain.
+			-- Because resources are linked with the associated shared
+			-- library and not to the assembly, we need to look up the resources
+			-- into the associated shared library and not in the current application.
 		local
 			l_str: WEL_STRING
 			l_name: STRING
 			l_pos: INTEGER
 		once
-				-- Note: Because resources are linked with the associated shared
-				-- library and not to the assembly, we need to look up the resources
-				-- into the associated shared library and not in the current application.
+				-- Note: 
 			create Result.make (cwel_get_module_handle (default_pointer))
 			l_name := Result.name
 			l_pos := l_name.last_index_of (feature {PATH}.Directory_separator_char, l_name.count)

@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		require
 			valid_id: id > 0
 		do
-			load_item (main_args.current_instance.item,
+			load_item (main_args.resource_instance.item,
 				cwin_make_int_resource (id))
 		ensure
 			not_shared: not shared
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (name)
-			load_item (main_args.current_instance.item, a_wel_string.item)
+			load_item (main_args.resource_instance.item, a_wel_string.item)
 		ensure
 			not_shared: not shared
 		end

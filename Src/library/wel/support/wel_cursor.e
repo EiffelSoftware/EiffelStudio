@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			create a1.make (and_plane)
 			create a2.make (xor_plane)
 			item := cwin_create_cursor (
-				main_args.current_instance.item,
+				main_args.resource_instance.item,
 				x_hot_spot, y_hot_spot, cursor_width,
 				cursor_height, a1.item, a2.item)
 			gdi_make

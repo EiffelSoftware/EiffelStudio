@@ -16,7 +16,7 @@ creation
 feature
 	execute ( a: ANY ) is 
 	local
-		aa : DEGREE_OUTPUT
+		aa : GRAPHICAL_DEGREE_OUTPUT
 		bb : WARNER_W
 		format_case: FORMAT_CASE_STORAGE
 	do

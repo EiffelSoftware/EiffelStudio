@@ -1,3 +1,7 @@
+indexing
+	description : "This class support the GUI for CASGEN generation"
+	author : pascalf
+
 class CASE_INTERFACE
 
 inherit
@@ -35,6 +39,8 @@ feature
 	label5: LABEL;
 			-- System clusters:
 
+	launch_ecase_b : TOGGLE_B
+
 	browsw_b: PUSH_B;
 			-- Browse
 
@@ -55,6 +61,8 @@ feature
 	reverse_w: DEGREE_OUTPUT
 
 	make (output_w : OUTPUT_WINDOW;rev_w : DEGREE_OUTPUT) is
+		local
+			exit_com : EXIT_REVERSE
 		do
 			old_make ( "Reverse engineering", project_tool.screen )
 			output_window := output_w
@@ -73,11 +81,14 @@ feature
 			!! generate_selec_b.make ("generate_selec_b", associated_form);
 			!! exit_b.make ("exit_b", associated_form);
 			!! label6.make ("label6", associated_form);
+			!! launch_ecase_b.make ("launch ecase after generation", associated_form)
 			initialize_lists
 			set_values
 			set_commands
 			display
 			set_composite_attributes (Current)
+			!! exit_com.make ( Current )
+			set_delete_command ( exit_com )
 		end;
 
 	set_commands is 
@@ -117,14 +128,14 @@ feature
 	set_values is
 		do
 			scroll_list1.set_x_y (10, 58);
-			scroll_list1.set_size (220, 250);
+			scroll_list1.set_size (220, 290);
 			label1.set_text ("Reverse Engineering");
 			label1.forbid_recompute_size;
 			label1.set_font_name ("-adobe-helvetica-bold-r-normal--18-180-75-75-p-103-iso8859-1");
 			label1.set_x_y (172, 1);
 			label1.set_size (220, 36);
 			scroll_list2.set_x_y (294, 58);
-			scroll_list2.set_size (220, 250);
+			scroll_list2.set_size (220, 290);
 			text_field1.set_x_y (114, 319);
 			text_field1.set_size (276, 33);
 			label4.set_text ("Generation path :");
@@ -142,6 +153,7 @@ feature
 			label5.forbid_recompute_size;
 			label5.set_x_y (10, 29);
 			label5.set_size (100, 27);
+			launch_ecase_b.set_x_y (13, 280 )
 			browsw_b.set_text ("Browse");
 			browsw_b.forbid_recompute_size;
 			browsw_b.set_x_y (413, 319);

@@ -16,13 +16,15 @@ creation
 feature
 	execute ( a: ANY ) is 
 	local
-		aa : DEGREE_OUTPUT
+		aa : GRAPHICAL_DEGREE_OUTPUT
 		bb : WARNER_W
 		format_case : FORMAT_CASE_STORAGE
 		l : LINKED_LIST [ CLUSTER_I ]
 		e : SCROLLABLE_LIST_CLUSTERS
 	do
 		!!aa
+		aa.put_case_message("Starting Reverse Process")
+	--	aa.put_start_reverse_engineering (300)
 		!! bb.make (case_window)
 		!! format_case.make (bb,
 			aa,FALSE)
@@ -40,6 +42,7 @@ feature
 
 		format_case.execute
 		case_window.unrealize
+		aa.destroy
 	end
 
 end -- class GENERATE_SELEC_REVERSE

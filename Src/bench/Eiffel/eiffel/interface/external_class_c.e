@@ -522,7 +522,8 @@ feature {NONE} -- Initialization
 						k := l_args.upper
 						if not l_member.is_artificially_added and (l_member.is_infix or l_member.is_prefix) then
 							check
-								l_args_big_enough: l_args.lower + 1 <= l_args.upper
+								l_args_big_enough: l_member.is_infix implies l_args.lower + 1 <= l_args.upper
+								l_args_big_enough2: l_member.is_prefix implies l_args.count = 1
 							end
 							l_record_pos := j + 1
 						else

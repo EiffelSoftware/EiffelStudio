@@ -151,7 +151,7 @@ feature -- Display
 			not_created: destroyed;
 			list_not_empty: not category_list.empty
 		do
-			top_shell_make (t_Empty, a_screen);
+			top_shell_make (t_Tool_name, a_screen);
 			!! global_form.make (t_Empty, Current);
 
 			initialize_menu_form;
@@ -402,6 +402,11 @@ feature {PREFERENCE_CATEGORY} -- Execution
 feature {NONE} -- Implementation (UI Constants)
 
 	t_Empty: STRING is		"";
+
+	t_Tool_name: STRING is
+			-- Name of the tool for X resources
+		deferred
+		end;
 	
 	m_File, m_Category, m_Help: STRING is
 			-- Menu names

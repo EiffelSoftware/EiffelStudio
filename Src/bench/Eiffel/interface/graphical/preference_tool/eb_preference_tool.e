@@ -65,6 +65,7 @@ feature -- Output
 			p_display;
 			if not already_realized then
 				set_title (Interface_names.t_Preference_tool);
+				set_icon_name (Interface_names.t_Preference_tool);
 				Focus_label.initialize_focusables (Current)
 			end
 		end;
@@ -80,6 +81,11 @@ feature {NONE} -- Initialization
 		end;
 
 feature {NONE} -- Constants
+
+	t_Tool_name: STRING is
+		do
+			Result := Interface_names.n_X_resource_name
+		end;
 
 	m_File: STRING is
 		do

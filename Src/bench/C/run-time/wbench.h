@@ -14,6 +14,8 @@
 #ifndef _wbench_h_
 #define _wbench_h_
 
+#include "debug.h"			/* for onceadd() */
+#include "update.h"			/* for update() */
 #include "eif_globals.h"
 
 #ifdef __cplusplus
@@ -21,7 +23,6 @@ extern "C" {
 #endif
 
 extern fnptr **eif_address_table;		/* Table of $ operator encapsulation functions */
-extern uint32 *onceadd(uint32 id);				/* Add once-routine body_id in a list */
 extern char *(*wfeat(int static_type, int32 feature_id, int dyn_type))(/* ??? */);				/* Feature call */
 extern char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(/* ??? */);				/* Precompiled feature call */
 extern char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char *object))(/* ??? */);			/* Nested feature call */
@@ -36,7 +37,6 @@ extern long wpattr_inv(int32 origin, int32 offset, char *name, char *object);			
 extern int wtype(int static_type, int32 feature_id, int dyn_type);						/* Creation type */
 extern int wptype(int32 origin, int32 offset, int dyn_type);					/* Creation type of a precomp feature */
 
-extern void update(char ignore_updt);					/* Dynamic byte code loading */
 
 extern void init_desc(void);				/* Call structure initialization */
 extern void put_desc(struct desc_info *desc_ptr, int org, int dtype);					/* Call structure insertion */

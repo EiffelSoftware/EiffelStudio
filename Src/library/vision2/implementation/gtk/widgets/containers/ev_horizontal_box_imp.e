@@ -45,6 +45,7 @@ feature {EV_BOX} -- Implementation
 			-- to allow vertical resizing options.
 			vbox_wid := gtk_vbox_new (False, 0)
 			gtk_object_ref (vbox_wid)
+				-- setting the number of references to 1
 
 			child_imp.set_box_widget (vbox_wid)
 			gtk_widget_show (child_imp.box_widget)
@@ -57,7 +58,10 @@ feature {EV_BOX} -- Implementation
 			    child_imp.expandable,
 			    child_imp.vertical_resizable, 0)
 
---			gtk_object_unref (child_imp.widget)
+			gtk_object_unref (child_imp.widget)
+				-- After putting child_imp.widget in child_imp.box_widget
+				-- its number of references reached 2, so we have to
+				-- decrease it to 1.
 		end
 
 feature {EV_HORIZONTAL_BOX_IMP} -- Implementation
@@ -67,30 +71,32 @@ feature {EV_HORIZONTAL_BOX_IMP} -- Implementation
 			-- Redefined because the child is in a vbox to allow
 			-- vertical resize options.
 		do
-			if (not the_child.expandable) then
-				c_gtk_box_set_child_options (widget, the_child.box_widget, the_child.expandable, False)
+			inspect
+				the_child.resize_type
+			when 0 then
+				-- 0 : no horizontal nor vertical resizing, the widget moves
+				c_gtk_box_set_child_options (widget, the_child.box_widget, The_child.expandable, False)
+					-- To forbid horizontal resizing
+				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, False)
+					-- To forbid vertical resizing
+			when 1 then
+				-- 1 : horizontal resizing but no vertical resizing, only the width changes
+				c_gtk_box_set_child_options (widget, the_child.box_widget, The_child.expandable, True)
+					-- To allow horizontal resizing
+				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, False)
+					-- To forbid vertical resizing
+			when 2 then
+				-- 2 : no horizontal resizing but vertical resizing, only the height changes
+				c_gtk_box_set_child_options (widget, the_child.box_widget, The_child.expandable, False)
+					-- To forbid horizontal resizing
 				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
-			else
-				-- Here, the_child.expandable = True
-				inspect
-					the_child.resize_type
-				when 0 then
-					-- 0 : no resizing, the widget move
-					c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, False)
-					c_gtk_box_set_child_options (widget, the_child.box_widget, True, False)
-				when 1 then
-					-- 1 : only the width changes
-					c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, False)
-					c_gtk_box_set_child_options (widget, the_child.box_widget, True, True)
-				when 2 then
-					-- 2 : only the height changes
-					c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
-					c_gtk_box_set_child_options (widget, the_child.box_widget, True, False)
-				when 3 then
-					-- 3 : both width and height change
-					c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
-					c_gtk_box_set_child_options (widget, the_child.box_widget, True, True)
-				end
+					-- To allow vertical resizing
+			when 3 then
+				-- 3 : horizontal resizing and vertical resizing, both width and height change
+				c_gtk_box_set_child_options (widget, the_child.box_widget, The_child.expandable, True)
+					-- To allow horizontal resizing
+				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
+					-- To allow vertical resizing
 			end
 		end
 

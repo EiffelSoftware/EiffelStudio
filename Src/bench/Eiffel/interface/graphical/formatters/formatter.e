@@ -201,7 +201,7 @@ feature {FORMAT_BUTTON} -- Properties
 			Result.to_lower;
 				--| remove the SHOW_
 				--| Maximum length is 3. (Portability)
-			Result := Result.substring (6, Result.count.min (9))
+			Result := Result.substring (6, Result.count.min (8))
 		ensure
 			Result_not_void: Result /= Void;
 			valid_extension: Result.count <= 3

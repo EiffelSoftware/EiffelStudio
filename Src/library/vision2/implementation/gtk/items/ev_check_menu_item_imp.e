@@ -17,7 +17,7 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		redefine
-			make_with_text,
+			make,
 			parent_imp,
 			set_selected,
 			is_selected
@@ -28,19 +28,25 @@ creation
 	make_with_text
 
 feature {NONE} -- Initialization
-	
-	make_with_text (txt: STRING) is
-			-- Create menu item
+
+	make is
+			-- Create an item with an empty name.
 		do
+			-- Create the gtk object.
 			widget := gtk_check_menu_item_new
 			gtk_object_ref (widget)
-
 			gtk_check_menu_item_set_show_toggle (widget, True)
+
+			-- Create the `box'.
 			initialize
-			create_text_label (txt)
-			gtk_misc_set_alignment (label_widget, 0.0, 0.5)
+
+			-- Create a label with a null text.
+			create_text_label ("")
+
+			-- left-align and middle-vertical align
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
 			gtk_misc_set_padding (label_widget, 21, 0)
-		end		
+		end
 
 feature -- Access
 
@@ -82,7 +88,7 @@ feature -- Event : command association
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		do
-			add_command (widget, "deselect", cmd, arg)
+			add_command (widget, "deselect", cmd, arg, default_pointer)
 		end	
 
 feature -- Event -- removing command association

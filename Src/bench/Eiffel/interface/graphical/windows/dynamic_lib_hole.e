@@ -38,7 +38,7 @@ feature -- Callbacks
 			f: PLAIN_TEXT_FILE
 			fc: PLAIN_TEXT_FILE
 		do
-			if Eiffel_dynamic_lib.modified then
+			if Eiffel_dynamic_lib /= Void  and then Eiffel_dynamic_lib.modified then
 				!! fc.make_open_read (eiffel_dynamic_lib.file_name)
 				if eiffel_dynamic_lib.parse_exports_from_file(fc) then
 					dynamic_lib_tool.synchronize
@@ -46,6 +46,8 @@ feature -- Callbacks
 				fc.close
 				eiffel_dynamic_lib.set_modified(false)
 			else
+					-- First creation of the dynamic library
+				Eiffel_project.create_dynamic_lib
 				fn := clone(eiffel_system.name)
 				fn.append_string(".def")
 				!! f.make_create_read_write(fn)
@@ -70,7 +72,7 @@ feature -- Callbacks
 			chooser: NAME_CHOOSER_W
 			fc: PLAIN_TEXT_FILE
 		do
-			if Eiffel_dynamic_lib.modified then
+			if Eiffel_dynamic_lib /= Void and then Eiffel_dynamic_lib.modified then
 				if tool.save_cmd_holder /= Void then
 					tool.save_cmd_holder.associated_command.execute (Void)
 				end
@@ -197,7 +199,9 @@ feature {NONE} -- Execution
 				if is_dynamic_lib_tool_created and then tool = dynamic_lib_tool then
 					tool.synchronize
 				end
-				if Eiffel_dynamic_lib.file_name = Void then
+				if Eiffel_dynamic_lib = Void then
+						-- No dynamic lib has been created, we request the creation
+						-- of one.
 					if argument /= Void and then argument = last_name_chooser then
 						fn := clone (last_name_chooser.selected_file);
 						if not fn.empty then
@@ -207,6 +211,8 @@ feature {NONE} -- Execution
 								f.is_readable and then 
 								f.is_plain
 							then
+									-- First creation of the dynamic library
+								Eiffel_project.create_dynamic_lib
 								Eiffel_dynamic_lib.set_file_name (fn);
 								work (Current);
 							elseif f.exists and then not f.is_plain then

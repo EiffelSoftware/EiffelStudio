@@ -8,8 +8,11 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
-//-- Revision 1.1  1998/01/15 23:32:14  raphaels
-//-- Initial revision
+//-- Revision 1.2  1998/01/20 00:25:57  raphaels
+//-- Modified sources to be compatible with Borland compiler.
+//--
+//-- Revision 1.1.1.1  1998/01/15 23:32:14  raphaels
+//-- First version of EiffelCOM
 //--
 //---------------------------------------------------------------------------
 
@@ -160,7 +163,7 @@ extern "C" EIF_OBJ eole2_enum_connection_points_next (EIF_POINTER ptr, EIF_INTEG
 	rgpcn = (IConnectionPoint **)malloc (MaxArraySize * sizeof (IConnectionPoint *));
 	pcFetched = (ULONG*)malloc (sizeof (ULONG));
 	enum_connection_points_next_eiffel_called = 0;
-	g_hrStatusCode = E_IEnumConnectionPoints_Next ((void *)ptr, false, (ULONG)count, rgpcn, pcFetched);
+	g_hrStatusCode = E_IEnumConnectionPoints_Next ((void *)ptr, FALSE, (ULONG)count, rgpcn, pcFetched);
 
 	if (enum_connection_points_next_eiffel_called)
 		result = (EIF_OBJ)*rgpcn;
@@ -188,9 +191,9 @@ extern "C" EIF_OBJ eole2_enum_connection_points_next (EIF_POINTER ptr, EIF_INTEG
 
 
 extern "C" void eole2_enum_connection_points_skip (EIF_POINTER ptr, EIF_INTEGER count) {
-	g_hrStatusCode = E_IEnumConnectionPoints_Skip ((void *)ptr, false, (ULONG)count);
+	g_hrStatusCode = E_IEnumConnectionPoints_Skip ((void *)ptr, FALSE, (ULONG)count);
 	}
 	
 extern "C" void eole2_enum_connection_points_reset (EIF_POINTER ptr) {
-	g_hrStatusCode = E_IEnumConnectionPoints_Reset ((void *)ptr, false);
+	g_hrStatusCode = E_IEnumConnectionPoints_Reset ((void *)ptr, FALSE);
 	}

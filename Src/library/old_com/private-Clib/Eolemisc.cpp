@@ -9,8 +9,11 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
-// Revision 1.1  1998/01/15 23:32:14  raphaels
-// Initial revision
+// Revision 1.2  1998/01/20 00:25:55  raphaels
+// Modified sources to be compatible with Borland compiler.
+//
+// Revision 1.1.1.1  1998/01/15 23:32:14  raphaels
+// First version of EiffelCOM
 //
 //---------------------------------------------------------------------------
 
@@ -389,8 +392,13 @@ extern "C" EIF_POINTER eole2_create_ole_font (EIF_INTEGER hWnd) {
    int ppi = GetDeviceCaps (dc, LOGPIXELSY);
    ReleaseDC ((HWND)hWnd, dc);
 
+#ifdef EIF_BORLAND
+   fd.cySize.s.Lo = lfHeight * 720000 / ppi;
+   fd.cySize.s.Hi = 0;
+#else
    fd.cySize.Lo = lfHeight * 720000 / ppi;
    fd.cySize.Hi = 0;
+#endif /* EIF_BORLAND */
 
    //RELEASE(m_pOleFont); ?????
 

@@ -9,8 +9,11 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
-// Revision 1.1  1998/01/15 23:32:14  raphaels
-// Initial revision
+// Revision 1.2  1998/01/20 00:25:54  raphaels
+// Modified sources to be compatible with Borland compiler.
+//
+// Revision 1.1.1.1  1998/01/15 23:32:14  raphaels
+// First version of EiffelCOM
 //
 //---------------------------------------------------------------------------
 
@@ -390,6 +393,8 @@ extern "C" EIF_INTEGER eole2_typelib_find_name (EIF_POINTER pTypeLib, BSTR *szNa
 	ITypeInfo FAR* FAR* ppTInfo;
 	MEMBERID FAR* rgMemId;
 	unsigned short FAR* pcFound;
+	
+	pcFound = (unsigned short FAR*)malloc (sizeof (unsigned short));
 	*pcFound = (unsigned short)count;
 	g_hrStatusCode = E_ITypeLib_FindName (pTypeLib, szNameBuf, ppTInfo, rgMemId, pcFound);
 	return (EIF_INTEGER) *pcFound;
@@ -789,7 +794,7 @@ extern "C" HRESULT E_ITypeInfo_GetIDsOfNames(
 		eif_put = eif_proc ("put", eif_array_id);
 		(eif_make) (eif_array, 0, cNames - 1);
 		while (i < cNames,i++) {
-			Ole2CString ((const unsigned short*)rglpszNames [i], &name);
+			Ole2CString ((LPCOLESTR)rglpszNames [i], &name);
 			(eif_put) (eif_array, makestr (name, strlen (name)), i);
 		}
 		result = Ocxdisp_DispatchGetIdsOfNames (eif_access (eoleOcxDisp), eif_access (ptr), eif_array);
@@ -1299,7 +1304,7 @@ extern "C" EIF_POINTER eole2_tinfo_get_var_desc(
 
 //---------------------------------------------------------------------------
 
-extern "C" EIF_INTEGER eole2_tinfo_invoke(
+extern "C" void eole2_tinfo_invoke(
       EIF_POINTER ptInfo,
       EIF_INTEGER dispid,
       EIF_INTEGER flags,
@@ -1307,7 +1312,6 @@ extern "C" EIF_INTEGER eole2_tinfo_invoke(
       EIF_POINTER variant_result,
       EIF_POINTER exception )
 {
-    HRESULT result;
     UINT argErr;
 
     g_hrStatusCode = E_ITypeInfo_Invoke( ptInfo, FALSE,
@@ -1319,8 +1323,6 @@ extern "C" EIF_INTEGER eole2_tinfo_invoke(
             (VARIANT*)variant_result,
             (EXCEPINFO*)exception,
             &argErr );
-
-    return result;
 }
 
 //---------------------------------------------------------------------------

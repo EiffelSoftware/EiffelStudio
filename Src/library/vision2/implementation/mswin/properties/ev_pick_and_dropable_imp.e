@@ -160,6 +160,7 @@ feature -- Implementation
 				create standard_cursor.make_with_code (cursor_code.standard)
 				set_pointer_style (standard_cursor)
 			end
+			press_action := Ev_pnd_start_transport
 		end
 
 	pointed_target: EV_PICK_AND_DROPABLE is
@@ -172,6 +173,12 @@ feature -- Implementation
 			list: EV_LIST
 			list_imp: EV_LIST_IMP
 			list_item: EV_LIST_ITEM_IMP
+			tree: EV_TREE			
+			tree_imp: EV_TREE_IMP
+			tree_item: EV_TREE_ITEM_IMP
+			mcl: EV_MULTI_COLUMN_LIST
+			mcl_imp: EV_MULTI_COLUMN_LIST_IMP
+			mcl_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 			current_target_object_id: INTEGER
 		do
 			create wel_point.make (0, 0)
@@ -218,6 +225,52 @@ feature -- Implementation
 						end
 					end
 				end
+				
+				tree ?= current_target
+				if tree /= Void then
+					tree_imp ?= tree.implementation
+							-- Retrieve implementation of tree.
+					check	
+						tree_imp /= Void
+					end
+					tree_item := tree_imp.find_item_at_position (
+					wel_point.x - tree.screen_x, wel_point.y - tree.screen_y)
+							-- Return list item at cursor position.
+					if tree_item /= Void then
+						if not tree_item.interface.drop_actions.empty then
+								-- If the cursor is over an item and the item is a
+								-- pick and drop target then we set the target id to that of the
+								-- item, as the items are conceptually 'above' the list and so
+								-- if a list and one of its items are pnd targets then the 
+								-- item should recieve.
+							current_target_object_id := tree_item.interface.object_id
+						end
+					end
+				end
+
+
+				mcl ?= current_target
+				if mcl /= Void then
+					mcl_imp ?= mcl.implementation
+							-- Retrieve implementation of tree.
+					check	
+						mcl_imp /= Void
+					end
+					mcl_item := mcl_imp.find_item_at_position (
+					wel_point.x - mcl.screen_x, wel_point.y - mcl.screen_y)
+							-- Return list item at cursor position.
+					if mcl_item /= Void then
+						if not mcl_item.interface.drop_actions.empty then
+								-- If the cursor is over an item and the item is a
+								-- pick and drop target then we set the target id to that of the
+								-- item, as the items are conceptually 'above' the list and so
+								-- if a list and one of its items are pnd targets then the 
+								-- item should recieve.
+							current_target_object_id := mcl_item.interface.object_id
+						end
+					end
+				end
+
 					
 				global_pnd_targets.start
 				global_pnd_targets.search (current_target_object_id)
@@ -348,6 +401,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/22 20:26:57  rogers
+--| Added support for tree_items and multi_column_list_rows in pointed_target. This implementation is not comlete and needs to be reduced.
+--|
 --| Revision 1.18  2000/03/21 01:27:45  rogers
 --| End transport now returns the cursor to the previous state before PND.
 --|

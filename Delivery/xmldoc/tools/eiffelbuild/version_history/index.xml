@@ -1,0 +1,25 @@
+<document output="studio" title="Version History">
+	<meta_data/>
+	<paragraph>
+			EiffelBuild
+			<line_break/>
+			Platform: Any
+			<line_break/>
+			Availability: Student and Enterprise versions.
+			<line_break/>
+		<heading><size>2</size>5.4 Release</heading>
+		<list ordered="false">
+			<item>Added support for multiple windows, including dialogs.</item>
+			<item>Added support for constants of type Integer, String, Directory and Pixmap.</item>
+			<item>New tool, "Window Selector" added to handle organization of windows, including the ability to define subdirectories in a project, and group windows accordingly.</item>
+			<item>Tip of the day dialog added.</item>
+			<item>Recent projects are now available from the "File" menu.</item>
+			<item>The contents of EiffelBuild projects may now be imported.</item>
+			<item>The ability to reset the minimum dimensions of widgets have been added. In the previous version, it was not possible to complete undo the effects of setting a widgets minimum size.</item>
+			<item>Preferences added, which allow you to customize the default behavior of EiffelBuild. For example, dialogs may be displayed or hidden as desired.</item>
+			<item>The layout of EiffelBuild and its tools is now maintained between sessions.</item>
+			<item>Docking added, permitting the re-ordering of particular tools within the interface, including making them "float" externally.</item>
+			<item>Smarter code generation options, permitting only named attributes to be exported.</item>
+		</list>
+	</paragraph>
+</document>

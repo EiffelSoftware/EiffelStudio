@@ -4,7 +4,36 @@ indexing
 class
 	NAME_FORMATTER
 
-feature -- Basic Operations
+feature -- Status Report
+
+	has_special_type_name (a_full_name: STRING): BOOLEAN is
+			-- Does .NET type with full name `a_full_name' has a special
+			-- name in Eiffel?
+		do
+			full_name_type_mapping_table.search (a_full_name)
+			Result := full_name_type_mapping_table.found
+			was_special := Result
+		ensure
+			was_special_set: Result = was_special
+		end
+
+feature -- Access
+
+	special_type_name: STRING is
+			-- Eiffel name of .NET type whose full name was given to
+			-- `has_special_type_name' last
+		require
+			was_special: was_special
+		do
+			Result := full_name_type_mapping_table.found_item
+		ensure
+			non_void_name: Result /= Void
+		end
+
+	was_special: BOOLEAN
+			-- Did last .NET type whose full name was given to
+			-- `has_special_type_name' have a special Eiffel name?
+			-- False if `has_special_type_name' was not called.
 
 	formatted_type_name (name: STRING; used_names: HASH_TABLE [STRING, STRING]): STRING is
 			-- Format `name' to Eiffel conventions.
@@ -304,8 +333,6 @@ feature -- Basic Operations
 
 	is_valid_variable_name (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid variable name?
-		obsolete
-			"Marked for removal for no detectable clients found"
 		require
 			non_void_a_name: a_name /= Void
 		local
@@ -323,7 +350,6 @@ feature -- Basic Operations
 			end
 		end
 		
-
 feature {NONE} -- Implementation
 
 	escaped_character (a_character: CHARACTER): STRING is
@@ -436,42 +462,64 @@ feature {NONE} -- Implementation
 		
 	type_mapping_table: HASH_TABLE [STRING, STRING] is
 			-- Special types
+		local
+			l_index: INTEGER
+			l_name: STRING
 		once
-			create Result.make (100)
-			Result.put ("INTEGER", "Int32")
-			Result.put ("INTEGER_64", "Int64")
-			Result.put ("INTEGER_16", "Int16")
-			Result.put ("INTEGER_8", "Byte")
-			Result.put ("CHARACTER", "Char")
-			Result.put ("DOUBLE", "Double")
-			Result.put ("REAL", "Single")
-			Result.put ("BOOLEAN", "Boolean")
-			Result.put ("POINTER", "UIntPtr")
-			Result.put ("POINTER", "IntPtr")
-			Result.put ("VALUE_TYPE", "ValueType")
-			Result.put ("ENUM", "Enum")
-			Result.put ("SYSTEM_OBJECT", "Object")
-			Result.put ("SYSTEM_STRING", "String")
-			Result.put ("SYSTEM_ARRAY", "Array")
-			Result.put ("SYSTEM_QUEUE", "Queue")
-			Result.put ("SYSTEM_CONSOLE", "Console")
-			Result.put ("SYSTEM_STREAM", "Stream")
-			Result.put ("SYSTEM_MEMORY_STREAM", "MemoryStream")
-			Result.put ("SYSTEM_STACK", "Stack")
-			Result.put ("SYSTEM_DIRECTORY", "Directory")
-			Result.put ("SYSTEM_FILE", "File")
-			Result.put ("SYSTEM_DATE_TIME", "DateTime")
-			Result.put ("SYSTEM_SORTED_LIST", "SortedList")
-			Result.put ("SYSTEM_RANDOM", "Random")
-			Result.put ("SYSTEM_CONTAINER", "Container")
-			Result.put ("SYSTEM_CONVERT", "Convert")
+			create Result.make (full_name_type_mapping_table.count)
+			from
+				full_name_type_mapping_table.start
+			until
+				full_name_type_mapping_table.after
+			loop
+				l_name := full_name_type_mapping_table.key_for_iteration
+				l_index := l_name.last_index_of ('.', l_name.count)
+				if l_index > 0 then
+					l_name := l_name.substring (l_index + 1, l_name.count)
+				end
+				Result.put (full_name_type_mapping_table.item_for_iteration, l_name)
+				full_name_type_mapping_table.forth
+			end
+		end
+		
+	full_name_type_mapping_table: HASH_TABLE [STRING, STRING] is
+			-- Special types indexed by .NET full name (including namespace)
+		once
+			create Result.make (40)
+			Result.put ("INTEGER", "System.Int32")
+			Result.put ("INTEGER_64", "System.Int64")
+			Result.put ("INTEGER_16", "System.Int16")
+			Result.put ("INTEGER_8", "System.Byte")
+			Result.put ("CHARACTER", "System.Char")
+			Result.put ("DOUBLE", "System.Double")
+			Result.put ("REAL", "System.Single")
+			Result.put ("BOOLEAN", "System.Boolean")
+			Result.put ("POINTER", "System.UIntPtr")
+			Result.put ("POINTER", "System.IntPtr")
+			Result.put ("VALUE_TYPE", "System.ValueType")
+			Result.put ("ENUM", "System.Enum")
+			Result.put ("SYSTEM_OBJECT", "System.Object")
+			Result.put ("SYSTEM_STRING", "System.String")
+			Result.put ("SYSTEM_ARRAY", "System.Array")
+			Result.put ("SYSTEM_QUEUE", "System.Collections.Queue")
+			Result.put ("SYSTEM_CONSOLE", "System.Console")
+			Result.put ("SYSTEM_STREAM", "System.IO.Stream")
+			Result.put ("SYSTEM_MEMORY_STREAM", "System.IO.MemoryStream")
+			Result.put ("SYSTEM_STACK", "System.Collections.Stack")
+			Result.put ("SYSTEM_DIRECTORY", "System.IO.Directory")
+			Result.put ("SYSTEM_FILE", "System.IO.File")
+			Result.put ("SYSTEM_DATE_TIME", "System.DateTime")
+			Result.put ("SYSTEM_SORTED_LIST", "System.Collections.SortedList")
+			Result.put ("SYSTEM_RANDOM", "System.Random")
+			Result.put ("SYSTEM_CONTAINER", "System.ComponentModel.Container")
+			Result.put ("SYSTEM_CONVERT", "System.Convert")
 			
 				-- Threading conflicts
-			Result.put ("SYSTEM_THREAD", "Thread")
-			Result.put ("SYSTEM_MUTEX", "Mutex")
+			Result.put ("SYSTEM_THREAD", "System.Threading.Thread")
+			Result.put ("SYSTEM_MUTEX", "System.Threading.Mutex")
 
 				-- Zone
-			Result.put ("SYSTEM_ZONE", "Zone")
+			Result.put ("SYSTEM_ZONE", "System.Security.Policy.Zone")
 		end
 
 	variable_mapping_table: HASH_TABLE [STRING, STRING] is

@@ -33,6 +33,7 @@ inherit
 			set_font as wel_set_font,
 			destroy as wel_destroy,
 			selected_item as wel_selected_item,
+			select_item as wel_select_item,
 			height as wel_height
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
@@ -69,6 +70,7 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy,
+			select_item as wel_select_item,
 			selected_item as wel_selected_item,
 			height as wel_height
 		undefine
@@ -115,7 +117,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	get_item (index: INTEGER): EV_COMBO_BOX_ITEM is
-			-- Text at the zero-based `index'
+			-- Text at the one-based `index'
 		do
 			Result ?= (ev_children.i_th (index)).interface
 		end
@@ -150,6 +152,17 @@ feature -- Measurement
 			-- Make `value' the new extended-height of the box.
 		do
 			move_and_resize (x, y, width, value, True)
+		end
+
+feature -- Status setting
+
+	select_item (index: INTEGER) is
+			-- Select an item of the `index'-th item of the list.
+			-- We cannot redefine this feature because then a
+			-- postcondition is violated because of the change
+			-- of index.
+		do
+			wel_select_item (index - 1)
 		end
 
 feature -- Element change
@@ -210,9 +223,6 @@ feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
 			ev_children.extend (item_imp)
 			add_string (name_item)
 			item_imp.set_id (ev_children.count - 1)
---			if ev_children.count <= 5 then
---				set_extended_height ((height + ev_children.count * item_height).max(extended_height))
---			end
 		end
 
 	remove_item (an_id: INTEGER) is

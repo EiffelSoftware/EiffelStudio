@@ -66,7 +66,7 @@ char *obj;
 
 char exported_obj_to_processor_before(oid, hostn, port)
 EIF_INTEGER oid;
-char *hostn;
+EIF_INTEGER hostn;
 EIF_INTEGER port;
 {
 /* decide if a local object identified by "oid" has been exported to
@@ -76,7 +76,7 @@ EIF_INTEGER port;
 	REF_LIST_NODE *obj_ref_list;
 	REF_TABLE_NODE *ref_table_ptr;
 
-	for(ref_table_ptr=_concur_ref_table; ref_table_ptr && (ref_table_ptr->pid!=port || memcmp(hostn, ref_table_ptr->hostname, strlen(hostn))); ref_table_ptr=ref_table_ptr->next);
+	for(ref_table_ptr=_concur_ref_table; ref_table_ptr && (ref_table_ptr->pid!=port || hostn != ref_table_ptr->hostaddr); ref_table_ptr=ref_table_ptr->next);
 	/* search the exported object table */
 
 	if (ref_table_ptr) {
@@ -94,8 +94,8 @@ EIF_INTEGER port;
 }
 
 
-EIF_INTEGER get_proxy_oid_of_inported_object(host, port, oid)
-char *host;
+EIF_INTEGER get_proxy_oid_of_imported_object(host, port, oid)
+EIF_INTEGER host;
 EIF_INTEGER port;
 EIF_INTEGER oid;
 {
@@ -109,7 +109,7 @@ EIF_INTEGER oid;
 	PROXY_LIST_NODE *tmp_list_ptr;
 	EIF_BOOLEAN stop;
 
-	for(tmp_tab_ptr=_concur_imported_obj_tab; tmp_tab_ptr && (memcmp(tmp_tab_ptr->hostname, host, strlen(host)) || tmp_tab_ptr->pid!=port); tmp_tab_ptr=tmp_tab_ptr->next);
+	for(tmp_tab_ptr=_concur_imported_obj_tab; tmp_tab_ptr && (tmp_tab_ptr->hostaddr != host || tmp_tab_ptr->pid!=port); tmp_tab_ptr=tmp_tab_ptr->next);
 	/* search the imported object table */
 
 	if (tmp_tab_ptr) {
@@ -140,7 +140,7 @@ EIF_INTEGER oid;
 
 
 void insert_into_imported_object_table(host, port, oid, proxy_id)
-char *host;
+EIF_INTEGER host;
 EIF_INTEGER port;
 EIF_INTEGER oid;
 EIF_INTEGER proxy_id;
@@ -151,7 +151,7 @@ EIF_INTEGER proxy_id;
 	IMPORTED_OBJ_TABLE_NODE *tmp_tab_ptr;
 	PROXY_LIST_NODE *tmp_list_ptr;
 
-	for(tmp_tab_ptr=_concur_imported_obj_tab; tmp_tab_ptr && (memcmp(tmp_tab_ptr->hostname, host, strlen(host)) || tmp_tab_ptr->pid!=port); tmp_tab_ptr=tmp_tab_ptr->next);
+	for(tmp_tab_ptr=_concur_imported_obj_tab; tmp_tab_ptr && (tmp_tab_ptr->hostaddr != host || tmp_tab_ptr->pid!=port); tmp_tab_ptr=tmp_tab_ptr->next);
 	/* search the exported object table */
 
 	if (tmp_tab_ptr) {
@@ -173,7 +173,7 @@ EIF_INTEGER proxy_id;
 
 		tmp_tab_ptr = (IMPORTED_OBJ_TABLE_NODE *)malloc(sizeof(IMPORTED_OBJ_TABLE_NODE));
 		valid_memory(tmp_tab_ptr);
-		strcpy(tmp_tab_ptr->hostname, host);
+		tmp_tab_ptr->hostaddr = host;
 		tmp_tab_ptr->pid = port;
 		tmp_tab_ptr->list_root = tmp_list_ptr;
 		tmp_tab_ptr->next = _concur_imported_obj_tab;
@@ -183,30 +183,8 @@ EIF_INTEGER proxy_id;
 }
 
 
-
-void cleanup_proxy(hostn, port, oid, proxy_id)
-EIF_REFERENCE hostn;
-EIF_INTEGER port;
-EIF_INTEGER oid;
-EIF_INTEGER proxy_id;
-{
-/* called by the "dispose" of SEP_OBJ(proxy) to clear the proxy from 
- * object_id_stack and from imported_object_table.
-*/
-	char host[constant_max_host_name_len+1];
-
-	strcpy(host, (eif_strtoc)(eif_access(hostn)));
-	c_cleanup_proxy(host, port,  oid, proxy_id);
-#ifdef DEBUG
-printf("%d(%s)$$$$$ after cleanup proxy id=%d for <%s, %d, %d>\n", _concur_pid, _concur_class_name_of_root_obj, proxy_id, host, port,  oid);
-#endif
-
-	return;
-}
-
-
-void c_cleanup_proxy(host, port, oid, proxy_id)
-char *host;
+void cleanup_proxy(host, port, oid, proxy_id)
+EIF_INTEGER host;
 EIF_INTEGER port;
 EIF_INTEGER oid;
 EIF_INTEGER proxy_id;
@@ -215,7 +193,7 @@ EIF_INTEGER proxy_id;
 	IMPORTED_OBJ_TABLE_NODE *tmp_tab_ptr1, *tmp_tab_ptr2;
 	PROXY_LIST_NODE *tmp_list_ptr1, *tmp_list_ptr2;
 
-	for(tmp_tab_ptr1=NULL, tmp_tab_ptr2=_concur_imported_obj_tab; tmp_tab_ptr2 && (memcmp(tmp_tab_ptr2->hostname, host, strlen(host)) || tmp_tab_ptr2->pid!=port); tmp_tab_ptr1=tmp_tab_ptr2, tmp_tab_ptr2=tmp_tab_ptr2->next);
+	for(tmp_tab_ptr1=NULL, tmp_tab_ptr2=_concur_imported_obj_tab; tmp_tab_ptr2 && (tmp_tab_ptr2->hostaddr != host || tmp_tab_ptr2->pid!=port); tmp_tab_ptr1=tmp_tab_ptr2, tmp_tab_ptr2=tmp_tab_ptr2->next);
 	/* search the imported object list for the processor */
 
 	if (tmp_tab_ptr2) {
@@ -255,7 +233,7 @@ EIF_INTEGER proxy_id;
 
 
 void change_ref_table_and_exported_obj_list(cli_host, cli_pid, cli_oid, flag)
-char *cli_host;
+EIF_INTEGER cli_host;
 EIF_INTEGER cli_pid;
 EIF_INTEGER cli_oid;
 EIF_INTEGER flag;
@@ -266,7 +244,7 @@ EIF_INTEGER flag;
 	REF_TABLE_NODE *ref_table_ptr, *tmp_tab_ptr;
 	EXPORTED_OBJ_LIST_NODE *exported_obj, *tmp_ptr;
 
-	for(tmp_tab_ptr=NULL, ref_table_ptr=_concur_ref_table; ref_table_ptr && (ref_table_ptr->pid!=cli_pid || memcmp(cli_host, ref_table_ptr->hostname, strlen(cli_host))); tmp_tab_ptr=ref_table_ptr, ref_table_ptr=ref_table_ptr->next);
+	for(tmp_tab_ptr=NULL, ref_table_ptr=_concur_ref_table; ref_table_ptr && (ref_table_ptr->pid!=cli_pid || cli_host != ref_table_ptr->hostaddr); tmp_tab_ptr=ref_table_ptr, ref_table_ptr=ref_table_ptr->next);
 	/* search the exported object table */
 
 	if (ref_table_ptr)
@@ -355,7 +333,7 @@ EIF_INTEGER flag;
 
 				tmp_tab_ptr = (REF_TABLE_NODE *)malloc(sizeof(REF_TABLE_NODE));
 				valid_memory(tmp_tab_ptr);
-				strcpy(tmp_tab_ptr->hostname, cli_host);
+				tmp_tab_ptr->hostaddr = cli_host;
 				tmp_tab_ptr->pid = cli_pid;
 				tmp_tab_ptr->ref_list = obj_ref_list;
 				tmp_tab_ptr->next =  _concur_ref_table ;
@@ -383,12 +361,6 @@ EIF_INTEGER flag;
 			}
 			break;
 		case -1:
-#ifdef DEBUG
-if (cli_host)
-printf("*************%d(%s) Got UNREGISTER from <%s, %d, %d(oid)>\n", _concur_pid, _concur_class_name_of_root_obj, cli_host, cli_pid, cli_oid);
-else
-printf("************%d(%s) Got UNREGISTER from <NULL, %d, %d(oid)>\n", _concur_pid, _concur_class_name_of_root_obj, cli_pid, cli_oid);
-#endif
 			if (obj_ref_list) {
 				for(tmp_ref_ptr1=NULL, tmp_ref_ptr=obj_ref_list; tmp_ref_ptr && tmp_ref_ptr->oid!=cli_oid; tmp_ref_ptr1=tmp_ref_ptr, tmp_ref_ptr=tmp_ref_ptr->next);
 				/* first, found the exported object in the exported object list to the processor */
@@ -419,9 +391,6 @@ printf("************%d(%s) Got UNREGISTER from <NULL, %d, %d(oid)>\n", _concur_p
 					}
 				}
 				else {
-/*
-printf("%d @@@@@@@@@@@@@@@@There is no object <%d> in EXPORTED LIST of  <%s, %d> \n", _concur_pid, cli_oid, cli_host, cli_pid);
-*/
 					add_nl;
 					strcat(_concur_crash_info, CURIMPERR8);
 					c_raise_concur_exception(exception_implementation_error);
@@ -429,9 +398,6 @@ printf("%d @@@@@@@@@@@@@@@@There is no object <%d> in EXPORTED LIST of  <%s, %d>
 				
 			}
 			else {
-/*
-printf("%d @@@@@@@@@@@@@@@@EXPORTED LIST for <%s, %d, %d> is NULL\n", _concur_pid, cli_host, cli_pid, cli_oid);
-*/
 				add_nl;
 				strcat(_concur_crash_info, CURIMPERR8);
 				c_raise_concur_exception(exception_implementation_error);
@@ -460,7 +426,7 @@ printf("%d @@@@@@@@@@@@@@@@EXPORTED LIST for <%s, %d, %d> is NULL\n", _concur_pi
 			}
 			else {
 /*
-printf("%d @@@@@@@@@@@@@@@@@@Can't find the exported object in the local processor's EXPORTED LIST <%s, %d, %d> is NULL\n", _concur_pid, cli_host, cli_pid, cli_oid);
+printf("%d @@@@@@@@@@@@@@@@@@Can't find the exported object in the local processor's EXPORTED LIST <%s, %d, %d> is NULL\n", _concur_pid, c_get_name_from_addr(cli_host), cli_pid, cli_oid);
 */
 				add_nl;
 				strcat(_concur_crash_info, CURIMPERR8);
@@ -471,7 +437,7 @@ printf("%d @@@@@@@@@@@@@@@@@@Can't find the exported object in the local process
 }
 
 void adjust_exported_objects(hostn, port)
-char *hostn;
+EIF_INTEGER hostn;
 EIF_INTEGER port;
 {
 /* the reason that we have this procedure is:
@@ -489,7 +455,7 @@ EIF_INTEGER port;
 	REF_TABLE_NODE *ref_table_ptr, *tmp_tab_ptr;
 	EXPORTED_OBJ_LIST_NODE *exported_obj, *tmp_ptr;
 
-	for(tmp_tab_ptr=NULL, ref_table_ptr=_concur_ref_table; ref_table_ptr && (ref_table_ptr->pid!=port || memcmp(hostn, ref_table_ptr->hostname, strlen(hostn))); tmp_tab_ptr=ref_table_ptr, ref_table_ptr=ref_table_ptr->next);
+	for(tmp_tab_ptr=NULL, ref_table_ptr=_concur_ref_table; ref_table_ptr && (ref_table_ptr->pid!=port || hostn != ref_table_ptr->hostaddr); tmp_tab_ptr=ref_table_ptr, ref_table_ptr=ref_table_ptr->next);
 	/* search the exported object table */
 
 	if (ref_table_ptr) {

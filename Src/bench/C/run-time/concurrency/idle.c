@@ -1,7 +1,7 @@
 #include "net.h"
 #include "curextern.h"
 
-#define tWITH_REJECT
+#define WITH_REJECT
 /* if we want that a processor can release all resources(separate objects)
  * currently held by itself when it can't get another resource, we should
  * define `WITH_REJECT', otherwise, we just undefine it.
@@ -47,11 +47,6 @@ EIF_BOOLEAN assign_current; /* Assign the first client with application
 		if (FD_ISSET(cur_client->sock, read_mask) && (cur_client->req_buf).command == constant_not_defined) {
 			directly_get_command(cur_client->sock);
 
-/*
-printf("%d Process request %s from <%s, %d, %d>\n", _concur_pid, command_text(_concur_command), cur_client->hostname, cur_client->pid, cur_client->sock);
-*/
-
-
 			if (_concur_command == constant_register) {
 #ifdef DISP_MSG
 printf("%d/%d Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, cur_client->sock, command_text(_concur_command), _concur_para_num);
@@ -64,7 +59,7 @@ printf("%d/%d Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, cur_clie
 				(cur_client->count)++;
 				if (_concur_command == constant_register)
 					send_register_ack(cur_client->sock);
-				change_ref_table_and_exported_obj_list(cur_client->hostname, cur_client->pid, _concur_paras[2].uval.int_val, 1);
+				change_ref_table_and_exported_obj_list(cur_client->hostaddr, cur_client->pid, _concur_paras[2].uval.int_val, 1);
 #ifdef DISP_LIST
                 printf("%d After %s(on %s)\n", _concur_pid, command_text(_concur_command), _concur_class_name_of_root_obj);
                 print_ref_table_and_exported_object();
@@ -74,16 +69,16 @@ printf("%d/%d Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, cur_clie
 
 			if (_concur_command == constant_unregister) {
 #ifdef DISP_MSG
-printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, cur_client->sock, cur_client->hostname, cur_client->pid, command_text(_concur_command), _concur_para_num);
+printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, cur_client->sock, c_get_name_from_addr(cur_client->hostaddr), cur_client->pid, command_text(_concur_command), _concur_para_num);
 #endif
 				get_data(cur_client->sock);
 #ifdef DISP_LIST
-                printf("%d Before %s(on %s from <%s, %d, %d>):\n", _concur_pid, command_text(_concur_command), _concur_class_name_of_root_obj, cur_client->hostname, cur_client->pid, CURGI(0));
+                printf("%d Before %s(on %s from <%s, %d, %d>):\n", _concur_pid, command_text(_concur_command), _concur_class_name_of_root_obj, c_get_name_from_addr(cur_client->hostaddr), cur_client->pid, CURGI(0));
                 print_ref_table_and_exported_object();
 #endif
 				tmp_reserved = _concur_current_client_reserved;
 				_concur_current_client_reserved = 0;
-				change_ref_table_and_exported_obj_list(cur_client->hostname, cur_client->pid, _concur_paras[0].uval.int_val, -1);
+				change_ref_table_and_exported_obj_list(cur_client->hostaddr, cur_client->pid, _concur_paras[0].uval.int_val, -1);
 				_concur_current_client_reserved = tmp_reserved;
 				(cur_client->count)--;
 				if (cur_client->count == 0) {
@@ -117,14 +112,14 @@ printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, c
 
 			if (_concur_command == constant_release) {
 #ifdef DISP_MSG
-printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, cur_client->sock, cur_client->hostname, cur_client->pid, command_text(_concur_command), _concur_para_num);
+printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, cur_client->sock, c_get_name_from_addr(cur_client->hostaddr), cur_client->pid, command_text(_concur_command), _concur_para_num);
 #endif
 				get_data(cur_client->sock);
 #ifdef DISP_LIST
-                printf("%d Before %s(on %s from <%s, %d>):\n", _concur_pid, command_text(_concur_command), _concur_class_name_of_root_obj, cur_client->hostname, cur_client->pid);
+                printf("%d Before %s(on %s from <%s, %d>):\n", _concur_pid, command_text(_concur_command), _concur_class_name_of_root_obj, c_get_name_from_addr(cur_client->hostaddr), cur_client->pid);
                 print_ref_table_and_exported_object();
 #endif
-				change_ref_table_and_exported_obj_list(cur_client->hostname, cur_client->pid, constant_not_defined, constant_release_all);
+				change_ref_table_and_exported_obj_list(cur_client->hostaddr, cur_client->pid, constant_not_defined, constant_release_all);
 				unset_mask(cur_client->sock);
 				/* clear the socket from the socket mask */
 				c_concur_close_socket(cur_client->sock);
@@ -176,7 +171,7 @@ printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, c
 					get_data(_concur_current_client->sock);
 					/* Now, we answer the RESERVE_SEP_OBJ request. */
 #ifdef DISP_LIST
-            printf("%d Before Reserve(on %s from <%s, %d>):\n", _concur_pid, _concur_class_name_of_root_obj, _concur_current_client->hostname, _concur_current_client->pid);
+            printf("%d Before Reserve(on %s from <%s, %d>):\n", _concur_pid, _concur_class_name_of_root_obj, c_get_name_from_addr(_concur_current_client->hostaddr), _concur_current_client->pid);
             print_ref_table_and_exported_object();
 #endif
 		            _concur_current_client_reserved = 1;
@@ -185,7 +180,7 @@ printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, c
 		            send_command(_concur_current_client->sock);
 		            (_concur_current_client->reservation)++;
 #ifdef DISP_LIST
-            printf("%d After Reserve(on %s from <%s, %d>):\n", _concur_pid, _concur_class_name_of_root_obj, _concur_current_client->hostname, _concur_current_client->pid);
+            printf("%d After Reserve(on %s from <%s, %d>):\n", _concur_pid, _concur_class_name_of_root_obj, c_get_name_from_addr(_concur_current_client->hostaddr), _concur_current_client->pid);
             print_ref_table_and_exported_object();
 #endif
 					/* and last, we prevent another client as the

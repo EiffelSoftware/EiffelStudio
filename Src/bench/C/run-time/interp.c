@@ -361,17 +361,15 @@ int where;			/* Are we checking invariant before or after compound? */
 	char has_called_sep_feature =0;	/* Has the current feature called separate
 									* feature in its pre-condition?
 									*/
-	EIF_TYPE_ID sep_obj_id;			/* The data type id of the special class
-									* for separate object proxy.
-									*/
 	char has_reserved_new_born_sep = 0;	/* Is the new created separate object
 										 * created with a creation procedure?
 										*/
-	char debug_info[100];			/* the variable is just used to store the
-									 * debuging info, can be removed afterward.
+#ifdef SEP_DEBUG
+	EIF_TYPE_ID sep_obj_id;			/* The data type id of the special class
+									* for separate object proxy.
 									*/
-
 	sep_obj_id = eif_type_id ("SEP_OBJ");
+#endif
 #endif
 
 
@@ -2669,7 +2667,8 @@ end:
 		{
 			short nb_of_paras;
 			short tyc_tmp;
-			struct item *tyc_current, *tyc_last;
+			struct item *tyc_last;
+			EIF_REFERENCE tyc_current;
 			uint32 ret_type;
 			char need_ack;
 			char *feature_name;
@@ -2717,6 +2716,12 @@ end:
 
 			if (on_local_processor(otop()->it_ref)) {
 			/* execute the feature on the local processor */
+ 			/* In the current implementation, it's impossible for this part
+			 * to be executed, because BC_SEP_FEXTURE, BC_SEP_PFEATURE, BC_SEP_EXTERN
+			 * and BC_SEP_PEXTERN are possible only for the creation of a separate
+			 * object, but the created separate object will never be on the local
+			 * processor. 
+			 */
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
@@ -2752,9 +2757,18 @@ end:
 						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_without_ack, class_name, feature_name, nb_of_paras);
 					}
 				}
-				tyc_current = opop();
+				tyc_current = henter(opop()->it_ref);
 				for (tyc_tmp=nb_of_paras-1; tyc_tmp>=0; tyc_tmp--) {
 					tyc_last = otop();
+					/* The reason that I use the above statement and the following
+					 * statement:
+					 *	tyc_last = opop()
+					 * instead of using
+					 * 	tyc_last = opop(0)
+					 * directly is that GC may move the corresponding object stored
+					 * in the stack element but not change the information of the 
+					 * stack element.
+					 */
 #ifdef SEP_DEBUG
 	fprintf(stdout, "	Put %dth parameter with type %lx into %dth cell\n", tyc_tmp+1, tyc_last->type, tyc_tmp);
 #endif
@@ -2771,17 +2785,19 @@ end:
 							CURPD(tyc_last->it_double, tyc_tmp); break;
 						case SK_REF:
 							CURPSO(tyc_last->it_ref, tyc_tmp); break;
+						case SK_POINTER:
+							CURPP(tyc_last->it_ptr, tyc_tmp); break; 
 						case SK_BIT:
 						case SK_EXP:
-						case SK_POINTER:
 						default:	
-							sprintf(debug_info, "1.Invalid Type %lx(%d)\n", tyc_last->type, tyc_tmp);
-							panic(debug_info);
-							panic("Not implemented type in separate feature call");
+							add_nl;
+							sprintf(crash_info, "    Not implemented type(0x%x) of separate feature.", tyc_last->type);
+							c_raise_concur_exception(exception_implementation_error);
 					}
 					tyc_last = opop();
 				}
-				CURSG(tyc_current->it_ref);
+				CURSG(eif_access(tyc_current));
+				tyc_current = eif_wean(tyc_current);
 				if ((ret_type & SK_HEAD) != SK_VOID) {
 					last = iget();
 					last->type = ret_type;
@@ -2792,13 +2808,13 @@ end:
 						case SK_FLOAT: 	last->it_float = CURGR(0); break;
 						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
-						case SK_POINTER: 
+						case SK_POINTER: last->it_ptr = CURGP(0); break;
 						case SK_BIT: 
 						case SK_EXP: 
 						default:	
-							sprintf(debug_info, "2.Invalid Type %lx\n", ret_type);
-							panic(debug_info);
-							panic("Not implemented type in separate feature call");
+							add_nl;
+							sprintf(crash_info, "    Not implemented type(0x%x) of separate feature.", ret_type);
+							c_raise_concur_exception(exception_implementation_error);
 					}
 				}
 			}
@@ -2819,7 +2835,8 @@ end:
 		{
 			short nb_of_paras;
 			short tyc_tmp;
-			struct item *tyc_current, *tyc_last;
+			struct item *tyc_last;
+			EIF_REFERENCE tyc_current;
 			uint32 ret_type;
 			char need_ack;
 			char *feature_name;
@@ -2866,7 +2883,7 @@ end:
 			dprintf(2)("	origin=%d, offset=%d\n", origin, offset);
 #endif
 			}
-			nstcall = 1;        		/* Invariant check turned off */
+			nstcall = 1;        		/* Invariant check turned on */
 
 			if (on_local_processor(otop()->it_ref)) {
 			/* execute the feature on the local processor */
@@ -2905,9 +2922,18 @@ end:
 						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_without_ack, class_name, feature_name, nb_of_paras);
 					}
 				}
-				tyc_current = opop();
+				tyc_current = henter(opop()->it_ref);
 				for (tyc_tmp=nb_of_paras-1; tyc_tmp>=0; tyc_tmp--) {
 					tyc_last = otop();
+					/* The reason that I use the above statement and the following
+					 * statement:
+					 *	tyc_last = opop()
+					 * instead of using
+					 * 	tyc_last = opop(0)
+					 * directly is that GC may move the corresponding object stored
+					 * in the stack element but not change the information of the 
+					 * stack element.
+					 */
 #ifdef SEP_DEBUG
 	fprintf(stdout, "	Put %dth parameter with type %lx into %dth cell\n", tyc_tmp+1, tyc_last->type, tyc_tmp);
 #endif
@@ -2924,17 +2950,19 @@ end:
 							CURPD(tyc_last->it_double, tyc_tmp); break;
 						case SK_REF:
 							CURPSO(tyc_last->it_ref, tyc_tmp); break;
+						case SK_POINTER:
+							CURPP(tyc_last->it_ptr, tyc_tmp); break;
 						case SK_BIT:
 						case SK_EXP:
-						case SK_POINTER:
 						default:	
-							sprintf(debug_info, "4.Invalid Type %lx\n", tyc_last->type);
-							panic(debug_info);
-							panic("Not implemented type in separate feature call");
+							add_nl;
+							sprintf(crash_info, "    Not implemented type(0x%x) of separate feature.", tyc_last->type);
+							c_raise_concur_exception(exception_implementation_error);
 					}
 					tyc_last = opop();
 				}
-				CURSG(tyc_current->it_ref);
+				CURSG(eif_access(tyc_current));
+				tyc_current = eif_wean(tyc_current);
 				if ((ret_type & SK_HEAD) != SK_VOID) {
 					last = iget();
 					last->type = ret_type;
@@ -2945,13 +2973,13 @@ end:
 						case SK_FLOAT: 	last->it_float = CURGR(0); break;
 						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
-						case SK_POINTER: 
+						case SK_POINTER:last->it_ptr = CURGP(0); break; 
 						case SK_BIT: 
 						case SK_EXP: 
 						default:	
-							sprintf(debug_info, "5.Invalid Type %lx\n", ret_type);
-							panic(debug_info);
-							panic("Not implemented type in separate feature call");
+							add_nl;
+							sprintf(crash_info, "    Not implemented type(0x%x) of separate feature.", ret_type);
+							c_raise_concur_exception(exception_implementation_error);
 					}
 				}
 			}
@@ -2967,6 +2995,7 @@ end:
 			char *feature_name;
 			char *class_name;
 			char tyc_command = *(IC-1);
+			struct item *tyc_current;
 
 			int32 origin, ooffset;
 
@@ -3031,8 +3060,10 @@ end:
 			}
 			else {
 			/* send a request to the remote processor */
-				CURSARI(constant_execute_query, oid_of_sep_obj(otop()->it_ref), constant_query, class_name, feature_name, 0);
-				CURSG(opop()->it_ref);
+				CURSARI(constant_execute_query, oid_of_sep_obj(otop()->it_ref), constant_attribute, class_name, feature_name, 0);
+				tyc_current = otop();
+				CURSG(tyc_current->it_ref);
+				tyc_current = opop();
 				if ((ret_type & SK_HEAD) != SK_VOID) {
 					last = iget();
 					last->type = ret_type;
@@ -3043,13 +3074,13 @@ end:
 						case SK_FLOAT: 	last->it_float = CURGR(0); break;
 						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
-						case SK_POINTER: 
+						case SK_POINTER:last->it_ptr = CURGP(0); break; 
 						case SK_BIT: 
 						case SK_EXP: 
 						default:	
-							sprintf(debug_info, "6.Invalid Type %lx\n", ret_type);
-							panic(debug_info);
-							panic("Not implemented type in separate attribute call");
+							add_nl;
+							sprintf(crash_info, "    Not implemented type(0x%x) of separate attribute.", ret_type);
+							c_raise_concur_exception(exception_implementation_error);
 					}
 				}
 			}
@@ -3092,6 +3123,9 @@ end:
 					CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
 
 				}
+				/* wait some time */
+				if (constant_waiting_time_in_precondition)
+					cur_usleep(constant_waiting_time_in_precondition);
 				/* reserve the separate parameters */
 				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
 					if (CURRSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
@@ -3105,6 +3139,9 @@ end:
 					}
 				}
 				IC += offset;
+				/* "has_called_sep_feature" will be unset by the next statement, 
+				 * i.e, the instruction to which we will jump must be "BC_SEP_UNSET"
+				 */
 			}
 		}	
 		break;
@@ -3132,6 +3169,10 @@ fprintf(stdout, "$$$$$$$$$$ Before CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop());
 fprintf(stdout, "$$$$$$$$$$Created separate obj <%s, %d, %d> on <%s, %d>\n", hostname_of_sep_obj(last->it_ref), pid_of_sep_obj(last->it_ref), oid_of_sep_obj(last->it_ref), _concur_hostname, _concur_pid); 
 #endif
 			if (strlen(feature_name)) {
+			/* make a copy of the reference to the new-born separate object, because
+			 * in the case, we have to release the reservation to the new-born 
+			 * separate object later(after its creation feature is performed).
+			 */
 				tyc_last = last;
 				last = iget();
 				last->type = SK_REF;
@@ -3156,6 +3197,8 @@ fprintf(stdout, "$$$$$$$$$$Created separate obj <%s, %d, %d> on <%s, %d>\n", hos
 fprintf(stdout, "$$$$$$$$$$  After CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop()); 
 #endif
 		break;
+
+/* end of inserted instructions for Concurrent Eiffel */
 #endif
 
 
@@ -6577,7 +6620,6 @@ char *start;
 		{
 			short nb_of_paras;
 			short tyc_tmp;
-			struct item *tyc_current, *tyc_last;
 			uint32 ret_type;
 			char need_ack;
 			char *feature_name;
@@ -6628,7 +6670,6 @@ char *start;
 		{
 			short nb_of_paras;
 			short tyc_tmp;
-			struct item *tyc_current, *tyc_last;
 			uint32 ret_type;
 			char need_ack;
 			char *feature_name;
@@ -6737,7 +6778,6 @@ char *start;
 	case BC_SEP_CREATE:
 		{
 			char *class_name, *feature_name;
-			struct item *tyc_last;
 			class_name = IC;
 			IC += strlen(IC) + 1;
 			feature_name = IC;

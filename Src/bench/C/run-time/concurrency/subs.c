@@ -1,7 +1,7 @@
 
 
 /*****************************************************************
-    In the C-programs, we use EIF_OBJ and char * to indicate
+	In the C-programs, we use EIF_OBJ and char * to indicate
 direct(also called raw or unprotected) address; use EIF_REFERENCE
 to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
@@ -231,22 +231,66 @@ int c_constant_sizeofdouble() {
 	
 void c_get_host_name() {
 	int tmp;
-    struct hostent *host;
+	struct hostent *host;
 #ifdef EIF_WIN32
 	do_init();
 #endif
 	tmp = gethostname(_concur_hostname, constant_max_host_name_len);
 	if (tmp == -1) {
-		strcpy(_concur_crash_info, CURIMPERR9);
+		sprintf(_concur_crash_info, CURIMPERR9, error_info());
 		c_raise_concur_exception(exception_implementation_error);
 	}
-    host=gethostbyname(_concur_hostname);
-	if (!host || (int)strlen(host->h_name)>=constant_max_host_name_len) {
+	host=gethostbyname(_concur_hostname);
+	if (!host) {
+		sprintf(_concur_crash_info, CURIMPERR21, _concur_hostname, error_info());
+		c_raise_concur_exception(exception_implementation_error);
+	}
+	if ((int)strlen(host->h_name)>=constant_max_host_name_len) {
 		strcpy(_concur_crash_info, CURIMPERR18);
 		c_raise_concur_exception(exception_implementation_error);
 	}
-    strcpy(_concur_hostname, host->h_name);
+	strcpy(_concur_hostname, host->h_name);
+	_concur_hostaddr = ((struct in_addr *)(host->h_addr))->s_addr;
+	return;
 }
+
+char *c_get_name_from_addr(addr)
+EIF_INTEGER addr;
+{
+	struct hostent *host;
+	host=gethostbyaddr((char *)&addr, sizeof(EIF_INTEGER), AF_INET);
+	if (!host) {
+		sprintf(_concur_crash_info, CURIMPERR19, addr, error_info());
+		c_raise_concur_exception(exception_implementation_error);
+	}
+	return  host->h_name;
+}
+
+EIF_INTEGER c_get_addr_from_name(name)
+char *name;
+{
+	struct hostent *host;
+	int i, len;
+	int is_hostname;
+
+	len = strlen(name);
+	for(i=1, is_hostname = 0; i < len && ! is_hostname; i++)	
+		if (name[i] != 46) {	
+			is_hostname = name[i] < 48 || name[i] > 57; 
+		}   
+	if (is_hostname) {  
+		host=gethostbyname(name);
+		if (!host) {
+			sprintf(_concur_crash_info, CURIMPERR20, name, error_info());
+			c_raise_concur_exception(exception_implementation_error);
+		}
+		return ((struct in_addr *)(host->h_addr))->s_addr;
+	}
+	else 
+		return c_concur_net_host_addr(name);
+
+}
+
 
 char *c_get_current_directory() {
 #ifndef EIF_WIN32
@@ -254,7 +298,7 @@ char *c_get_current_directory() {
 	
 	tmp = (char *)getcwd(_concur_current_dir, constant_max_directory_len);
 	if (tmp == NULL ) {
-		strcpy(_concur_crash_info, CURIMPERR10);
+		sprintf(_concur_crash_info, CURIMPERR10, error_info());
 		c_raise_concur_exception(exception_implementation_error);
 	}
 	return tmp;
@@ -263,7 +307,7 @@ char *c_get_current_directory() {
 
 	tmp = GetCurrentDirectory((DWORD)constant_max_directory_len,  _concur_current_dir);
 	if (tmp == 0) {
-		strcpy(_concur_crash_info, CURIMPERR10);
+		sprintf(_concur_crash_info, CURIMPERR10, error_info());
 		c_raise_concur_exception(exception_implementation_error);
 	}
 	return _concur_current_dir;
@@ -283,9 +327,9 @@ void set_block(m_sock)
 int m_sock;
 {
 #ifndef EIF_WIN32
-    int m_tmp, m_rc; 
-    m_tmp = 0; 
-    m_rc = ioctl(m_sock,FIONBIO,(char *)&m_tmp);
+	int m_tmp, m_rc; 
+	m_tmp = 0; 
+	m_rc = ioctl(m_sock,FIONBIO,(char *)&m_tmp);
 #else
 	u_long arg = 0;
 	ioctlsocket (m_sock, FIONBIO, &arg);
@@ -297,9 +341,9 @@ void set_non_block(m_sock)
 int m_sock;
 {
 #ifndef EIF_WIN32
-    int m_tmp, m_rc; 
-    m_tmp = 1; 
-    m_rc = ioctl(m_sock,FIONBIO,(char *)&m_tmp);
+	int m_tmp, m_rc; 
+	m_tmp = 1; 
+	m_rc = ioctl(m_sock,FIONBIO,(char *)&m_tmp);
 #else
 	u_long arg = 1;
 	ioctlsocket (m_sock, FIONBIO, &arg);
@@ -394,11 +438,6 @@ long sock;
  			set_non_block(sock);
 			strcpy(_concur_crash_info, CURERR6);
 			c_raise_concur_exception(exception_network_connection_crash);
-/*
-			printf("ERROR in c_try_to_get_command: want %d bytes but got %d, COMMAND=%d\n", sizeof(EIF_INTEGER), tmp, c_cmd);
-			perror("ERROR in c_try_to_get_command - REASON");
-			return -2;
-*/
 		}
 		c_ack = ntohl(c_ack);
 #else
@@ -487,9 +526,9 @@ void c_get_usrname() {
 #else
 	DWORD len = constant_max_user_name_len;
 	BOOL ret;
-	ret = GetUserName(_concur_user_name, &len);     
+	ret = GetUserName(_concur_user_name, &len);	 
 	if (!ret) {
-		strcpy(_concur_crash_info, CURIMPERR11);
+		sprintf(_concur_crash_info, CURIMPERR11, error_info());
 		c_raise_concur_exception(exception_implementation_error);
 	}
 	_concur_user_name[len] = '\0';
@@ -504,10 +543,10 @@ int pid;
 #ifndef EIF_WIN32
 	int tmp;
 	if ((tmp = kill(pid, SIGUSR2)) < 0) {
-		strcpy(_concur_crash_info, CURIMPERR12);
+		sprintf(_concur_crash_info, CURIMPERR12, error_info());
 		_concur_root_of_the_application = 1;
 		c_raise_concur_exception(exception_implementation_error);
-    }
+	}
 #endif
 }
 
@@ -554,31 +593,33 @@ EIF_BOOLEAN val;
 
 	
 
-EIF_INTEGER c_concur_make_client(port, name)
+EIF_INTEGER c_concur_make_client(port, addr)
 EIF_INTEGER port;
-EIF_POINTER name;
+EIF_INTEGER addr;
 {
 	int fd;
 	struct hostent *hp;
-	int is_hostname;
 	int i, len;
 	
-	fd = c_concur_socket(AF_INET, SOCK_STREAM, 0);
+#if defined EIF_WIN32 || defined EIF_OS2
+	do_init();
+#endif
+	fd = socket(AF_INET, SOCK_STREAM, 0);
+#if defined EIF_WIN32 || defined EIF_OS2
+	if fd == INVALID_SOCKET) {
+#else
 	if (fd < 0) {
-		perror("Can't create socket in c_concur_make_client");
-	 	/*c_stop_execution()*/;
-		exit(1);
+#endif
+		if (_concur_exception_has_happened) 
+			return -1;
+		else {
+			add_nl;
+			sprintf(crash_info, CURIMPERR22, error_info()); 
+			c_raise_concur_exception(exception_implementation_error);
+		}
 	}
 	my_bzero((char*)&_concur_caddr, sizeof(struct sockaddr_in));
-	len = strlen(name);
-	for(i=1, is_hostname = 0; i < len && ! is_hostname; i++) 
-		if (name[i] != 46) {
-			is_hostname = name[i] < 48 || name[i] > 57;
-		}
-	if (is_hostname) 
-		c_concur_host_address_from_name((EIF_POINTER)&(_concur_caddr.sin_addr), name);
-	else
-		c_concur_set_host_addr((EIF_POINTER)&(_concur_caddr.sin_addr), c_concur_net_host_addr(name));
+	c_concur_set_host_addr((EIF_POINTER)&(_concur_caddr.sin_addr), addr);
 	_concur_caddr.sin_family = AF_INET;
 	_concur_caddr.sin_port = htons((short)port); 
 	
@@ -590,36 +631,40 @@ EIF_POINTER name;
 #ifndef EIF_WIN32
 		i = connect ((int) fd, (struct sockaddr *) &_concur_caddr, sizeof(struct sockaddr_in));
 		if (i < 0 )
-	        if (errno != EINPROGRESS && errno != ETIMEDOUT) {
+			if (errno != EINPROGRESS && errno != ETIMEDOUT) {
 				len = 1;
 			}
-	    if (errno == EINPROGRESS) {
+		if (errno == EINPROGRESS) {
 				len = 1;
 		}
 #else
-	    do_init();
+		do_init();
 		i = connect ((int) fd, (struct sockaddr *) &_concur_caddr, sizeof(struct sockaddr_in));
-	    if (i == SOCKET_ERROR) {
-	        if (WSAGetLastError() == EINPROGRESS || WSAGetLastError() == ETIMEDOUT) {
+		if (i == SOCKET_ERROR) {
+			if (WSAGetLastError() == EINPROGRESS || WSAGetLastError() == ETIMEDOUT) {
 				len = 1;
 			}
 		}
 #endif
 	}
 	
-	if (i < 0) {
-		if (errno && errno != ETIMEDOUT) {
-			sprintf(crash_info, CURIMPERR13, name, port, error_info());
-		}
-		else
-			if (port == constant_scoop_dog_port)
-				sprintf(_concur_crash_info, CURERR10, name, port, constant_retry_times_for_client);
+	if (i < 0 ) {
+		if (_concur_exception_has_happened)
+			return -1;
+		else {
+			if (errno && errno != ETIMEDOUT) {
+				sprintf(crash_info, CURIMPERR13, c_get_name_from_addr(addr), port, error_info());
+			}
 			else
-				sprintf(_concur_crash_info, CURIMPERR14, name, port, constant_retry_times_for_client);
+				if (port == constant_scoop_dog_port)
+					sprintf(_concur_crash_info, CURERR10, c_get_name_from_addr(addr), port, constant_retry_times_for_client);
+				else
+					sprintf(_concur_crash_info, CURIMPERR14, c_get_name_from_addr(addr), port, constant_retry_times_for_client, error_info());
 #ifdef EIF_WIN32
-		sprintf(crash_info, "\nWSAError = %d.", WSAGetLastError());
+			sprintf(crash_info, "\nWSAError = %d.", WSAGetLastError());
 #endif
-		c_raise_concur_exception(exception_cant_set_up_connection);
+			c_raise_concur_exception(exception_cant_set_up_connection);
+		}
 	}
 	else {
 		c_concur_set_blocking(fd);
@@ -635,8 +680,9 @@ EIF_INTEGER port;
 
 	fd = c_concur_socket(AF_INET, SOCK_STREAM, 0);
 	if (fd < 0) {
-		perror("Can't create socket in c_concur_make_client");
-		exit(1);
+		add_nl;
+		sprintf(crash_info, CURIMPERR23, error_info()); 
+		c_raise_concur_exception(exception_implementation_error);
 	}
 	my_bzero((char*)&_concur_saddr, sizeof(struct sockaddr_in));
 	_concur_saddr.sin_family = AF_INET;
@@ -653,9 +699,44 @@ EIF_INTEGER c_concur_accept(s)
 EIF_INTEGER s;
 {
 	int fd;
+	int a_length;
 	
 
+/*
 	fd = c_concur_my_accept(s, (EIF_POINTER)&_concur_caddr, sizeof(_concur_caddr));
+*/
+	a_length = sizeof(_concur_caddr);
+#if defined EIF_WIN32 || defined EIF_OS2
+    do_init();
+#endif
+	fd = accept ((int)s, (struct sockaddr *)(&_concur_caddr), &a_length);
+
+#ifdef EIF_WIN32
+    if (fd == SOCKET_ERROR)
+        if (WSAGetLastError() != EWOULDBLOCK !_concur_exception_has_happened) {
+			add_nl;
+			sprintf(crash_info, "    Error happened when accepts from network(%s).", error_info());
+			c_raise_concur_exception(exception_implementation_error);
+		}
+		else
+			return -1;
+#elif defined EIF_OS2
+    if (fd == -1)
+        if (sock_errno() != SOCEWOULDBLOCK && !_concur_exception_has_happened) {
+			add_nl;
+			sprintf(crash_info, "    Error happened when accepts from network(%s).", error_info());
+			c_raise_concur_exception(exception_implementation_error);
+		} else
+			return -1;
+#else
+    if (fd < 0)
+        if (errno != EWOULDBLOCK && !_concur_exception_has_happened) {
+			add_nl;
+			sprintf(crash_info, "    Error happened when accepts from network(%s).", error_info());
+			c_raise_concur_exception(exception_implementation_error);
+		} else
+			return -1;
+#endif
 
 	return (EIF_INTEGER) fd;
 }
@@ -688,15 +769,6 @@ EIF_INTEGER len;
 
 
 
-
-void c_stop_execution() {
-
-	EIF_PROC eif_stop_execution;
-
-	EIF_INTEGER server_id;
-
-	exit(1);
-}
 
 EIF_POINTER c_get_crash_info() {
 	return _concur_crash_info;
@@ -755,7 +827,7 @@ void c_reset_timer() {
 
 EIF_DOUBLE c_wait_time() {
 /* return the length of CPU time/absolute time between last call 
- * of "c_reset_timer" and present in macro-seconds.
+ * of "c_reset_timer" and present in macro-seconds(0.001 second).
 */
 #ifdef GC_ON_CPU_TIME
 	double systimes;
@@ -770,8 +842,8 @@ EIF_DOUBLE c_wait_time() {
 #endif
 }
 
-void c_process_ser_list_from_sep_obj(hostn, pid, sock)
-EIF_REFERENCE hostn;
+void c_process_ser_list_from_sep_obj(hosta, pid, sock)
+EIF_INTEGER hosta;
 EIF_INTEGER pid;
 EIF_INTEGER sock;
 {
@@ -779,10 +851,7 @@ EIF_INTEGER sock;
  * so that the SERVER_LIST is adjusted.
 */
 	SERVER *ser, *tmp;
-	char hostname[constant_max_host_name_len+1];
 	
-
-	strcpy(hostname, (eif_strtoc)(eif_access(hostn)));
 
 	for(tmp=NULL, ser=_concur_ser_list; ser && ser->sock!=sock; tmp=ser, ser=ser->next);
 	if (ser) {
@@ -794,15 +863,18 @@ EIF_INTEGER sock;
 				tmp->next = ser->next;
 			else
 				_concur_ser_list = ser->next;	
+			if (_concur_end_of_ser_list == ser)
+				_concur_end_of_ser_list = tmp;
+			free(ser);
 			(_concur_ser_list_count)--;
 		}
 /*
 		else
-			printf("$$$$ After c_p_ser_list_from_sep(%s, %d, %d) count=%d\n", hostname, pid, sock, ser->count);
+			printf("$$$$ After c_p_ser_list_from_sep(%s, %d, %d) count=%d\n", c_get_name_from_addr(hosta), pid, sock, ser->count);
 */
 	}
 	else
-		printf("$$$$ Error Happened in  c_p_ser_list_from_sep(%s, %d, %d)\n", hostname, pid, sock);
+		printf("!!!! Error Happened in  c_p_ser_list_from_sep(%s, %d, %d)\n", c_get_name_from_addr(hosta), pid, sock);
 	
 /*
 	printf("$$$$ After c_p_ser_list_from_sep(%s, %d, %d) server_count=%d, cli_list_count=%d\n", hostname, pid, sock, _concur_ser_list_count, _concur_cli_list_count);
@@ -820,15 +892,15 @@ EIF_INTEGER tmp;
 #ifndef EIF_WIN32
 if (l>2000)
 printf("%d To Send %d bytes(%d).\n", _concur_pid, l, errno);
-    if (tmp=write ((int)fd, (char *)s, (int)l) < 0)
-        if (errno != EWOULDBLOCK)
-            eio();
+	if (tmp=write ((int)fd, (char *)s, (int)l) < 0)
+		if (errno != EWOULDBLOCK)
+			eio();
 if (l>2000)
 printf("%d Just Sent %d bytes(%d). err=%d\n", _concur_pid, tmp, l, errno);
 #else
-    if (send (fd, s, l, 0) == SOCKET_ERROR)
-        if (WSAGetLastError() != EWOULDBLOCK)
-            eio();
+	if (send (fd, s, l, 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
 #endif
 }
 */
@@ -847,3 +919,5 @@ EIF_INTEGER tout;
 void cur_print_info() {
 	printf("%d(%s) I'm printed from concurrent run-time\n", _concur_pid, _concur_class_name_of_root_obj);
 }
+
+

@@ -580,7 +580,7 @@ errno = 0;
 				if (wait_sig_from_child==2) { 
 					j = dog_send_command(csock, REPORT_ERROR, 1);
 					int_val = c_get_host_name(hostname, HOSTNAME_LEN); 
-					sprintf(message, "Daemon Detected Crash Happened: separate object `%s' on host <%s> \nError Message:\n    Child separate object crashed.", descriptor[index][4], hostname);
+					sprintf(message, "DAEMON Detected Crash Happened: separate object `%s' on host <%s> \nError Message:\n    Child separate object crashed\n-- sometime the short of system resources would cause the error.", descriptor[index][4], hostname);
 					p_len  = strlen(message);
 					p_type = STRING_TYPE;
 					j = dog_send_data(csock, &p_type, message, &p_len);

@@ -158,7 +158,7 @@ rt_private int old_run_idr_read (IDR *bu)
 	register int part_read = 0, total_read = 0;
 
 	if ((char_read_func ((char *)(&read_size), sizeof (short))) < sizeof (short))
-		eio();
+		eise_io("Independent retrieve: unable to read buffer size.");
 
 	read_size = ntohs (read_size);
 #ifdef DEBUG
@@ -186,7 +186,7 @@ rt_private int run_idr_read (IDR *bu)
 	register int part_read = 0, total_read = 0;
 
 	if ((char_read_func ((char *)(&read_size), sizeof (long))) < sizeof (long))
-		eio();
+		eise_io("Independent retrieve: unable to read buffer size.");
 
 	read_size = ntohl (read_size);
 #ifdef DEBUG
@@ -221,7 +221,7 @@ rt_private void run_idr_write (IDR *bu)
 	host_send = htonl (send_size);
 
 	if ((char_write_func ((char *)&host_send, sizeof (long))) < sizeof (long))
-		eio();
+		eise_io("Independent retrieve: unable to write buffer size.");
 
 	while (send_size > 0) {
 		if ((number_writen = char_write_func (ptr, (int) send_size)) <= 0)

@@ -197,7 +197,7 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 
 	/* Read the kind of stored hierachy */
 	if (char_read_function(&rt_type, sizeof (char)) < sizeof (char))
-		eio();
+		eise_io("Retrieve: unable to read type of storable.");
 
 	/* set rt_kind depending on the type to be retrieved */
 
@@ -603,7 +603,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 						if (dgen & SK_BIT) 
 							spec_size = BITOFF(dgen & SK_DTYPE);
 						else
-							eio();
+							eise_io("General retrieve: not an Eiffel object.");
 				}
 			} else {
 				spec_size = Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
@@ -797,7 +797,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 						if (dgen & SK_BIT) 
 							spec_size = BITOFF(dgen & SK_DTYPE);
 						else
-							eio();
+							eise_io("Independent retrieve: not an Eiffel object.");
 				}
 			} else {
 				spec_size = Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
@@ -1159,9 +1159,9 @@ rt_private void read_header(EIF_CONTEXT char rt_type)
 
 	/* Read the old maximum dyn type */
 	if (readline(r_buffer, &bsize) <= 0)
-		eio();
+		eise_io("General retrieve: unable to read number of different Eiffel types.");
 	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
-		eio();
+		eise_io("General retrieve: unable to read number of different Eiffel types.");
 	/* create a correspondance table */
 	dtypes = (int *) xmalloc(old_count * sizeof(int), C_T, GC_OFF);
 	if (dtypes == (int *) 0)
@@ -1181,20 +1181,18 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 
 	/* Read the number of lines */
 	if (readline(r_buffer, &bsize) <= 0)
-		eio();
+		eise_io("General retrieve: unable to read number of header lines.");
 	if (sscanf(r_buffer,"%d\n", &nb_lines) != 1)
-		eio();
+		eise_io("General retrieve: unable to read number of header lines.");
 
 	for(i=0; i<nb_lines; i++) {
 		if (readline(r_buffer, &bsize) <= 0)
-			eio();
+			eise_io("General retrieve: unable to read current header line.");
 
 		temp_buf = r_buffer;
 
-		if (
-			4 != sscanf(r_buffer, "%d %s %ld %d",&dtype,vis_name,&size,&nb_gen)
-		)
-			eio();
+		if (4 != sscanf(r_buffer, "%d %s %ld %d",&dtype,vis_name,&size,&nb_gen))
+			eise_io("General retrieve: unable to read type description.");
 
 		for (k = 1 ; k <= 4 ; k++)
 			temp_buf = next_item (temp_buf);
@@ -1218,7 +1216,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 
 			for (j=0; j<nb_gen; j++) {		/* Read meta-types */
 				if (sscanf(temp_buf," %ld", &gtype[j]) != 1)
-					eio();
+					eise_io("General retrieve: unable to read generic information.");
 				temp_buf = next_item (temp_buf);
 					
 			}
@@ -1300,9 +1298,9 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 
 	/* Read the old maximum dyn type */
 	if (idr_read_line(r_buffer, bsize) <= 0)
-		eio();
+		eise_io("Independent retrieve: unable to read number of different Eiffel types.");
 	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
-		eio();
+		eise_io("Independent retrieve: unable to read number of different Eiffel types.");
 	/* create a correspondance table */
 	dtypes = (int *) xmalloc(old_count * sizeof(int), C_T, GC_OFF);
 	if (dtypes == (int *)0)
@@ -1311,26 +1309,26 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	if (spec_elm_size == (uint32 *)0)
 		xraise (EN_MEM);
 	if (idr_read_line(r_buffer, bsize) <= 0)
-		eio();
+		eise_io("Independent retrieve: unable to read OVERHEAD size.");
 	if (sscanf(r_buffer,"%d\n", &old_overhead) != 1)
-		eio();
+		eise_io("Independent retrieve: unable to read OVERHEAD size.");
 	if (dtypes == (int *) 0)
 		xraise(EN_MEM);
 
 	/* Read the number of lines */
 	if (idr_read_line(r_buffer, bsize) <= 0)
-		eio();
+		eise_io("Independent retrieve: unable to read number of header lines.");
 	if (sscanf(r_buffer,"%d\n", &nb_lines) != 1)
-		eio();
+		eise_io("Independent retrieve: unable to read number of header lines.");
 
 	for(i=0; i<nb_lines; i++) {
 		if (idr_read_line(r_buffer, bsize) <= 0)
-			eio();
+			eise_io("Independent retrieve: unable to read current header line.");
 
 		temp_buf = r_buffer;
 
 		if (3 != sscanf(r_buffer, "%d %s %d",&dtype,vis_name,&nb_gen))
-			eio();
+			eise_io("Indenpendent retrieve: unable to read type description.");
 
 		for (k = 1 ; k <= 3 ; k++)
 			temp_buf = next_item (temp_buf);
@@ -1354,7 +1352,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 
 			for (j=0; j<nb_gen; j++) {		/* Read meta-types */
 				if (sscanf(temp_buf," %ld", &gtype[j]) != 1)
-					eio();
+					eise_io("Independent retrieve: unable to read generic information.");
 				temp_buf = next_item (temp_buf);
 					
 			}
@@ -1394,7 +1392,8 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 								 * int the object 
 								 */
 		if (sscanf(temp_buf," %d", &num_attrib) != 1)
-			eio();					/* error no value in buffer */
+				/* error no value in buffer */
+			eise_io("Independent retrieve: unable to read number of attributes.");
 
 
 								/* Check the number of attributes
@@ -1415,11 +1414,11 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 				for (; num_attrib > 0;) {
 					if (idr_read_line(r_buffer, bsize) <= 0) {
 						xfree ((char *) attrib_order);
-						eio();
+						eise_io("Independent retrieve: unable to read attribute description.");
 					}
 					if (sscanf(r_buffer," %lu %s", &read_attrib, att_name) != 2) {
 						xfree ((char *) attrib_order);
-						eio();
+						eise_io("Independent retrieve: unable to read attribute description.");
 					}
 
 								/* check attribute types */
@@ -1613,7 +1612,7 @@ rt_public int old_retrieve_read_with_compression (void)
 	  int total_read = 0;
 
 	  if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
-			eio();
+			eise_io("Retrieve: compression header mismatch.");
 	  pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
 	  eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
 
@@ -1627,7 +1626,7 @@ rt_public int old_retrieve_read_with_compression (void)
 			  if (part_read <= 0)
 				/* If we read 0 bytes, it means that we reached the end of file,
 				 * so we are missing something, instead of going further we stop */
-					  eio();
+					eio();
 			  read_size -= part_read;
 			  ptr += part_read;
 	  }
@@ -1654,7 +1653,7 @@ rt_public int retrieve_read (void)
 	int part_read = 0, total_read = 0;
 
 	if ((char_read_func ((char *)&read_size, sizeof (short))) < sizeof (short))
-		eio();
+		eise_io("Retrieve: unable to read buffer size.");
 	end_of_buffer = read_size;
 
 	while (read_size > 0) {
@@ -1686,7 +1685,7 @@ rt_public int retrieve_read_with_compression (void)
 	int total_read = 0;
 	
 	if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
-		eio();
+		eise_io("Retrieve: compression header mismatch.");
 	pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
 	eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
 
@@ -1767,7 +1766,7 @@ rt_private void gen_object_read (char *object, char *parent)
 
 							buffer_read((char *) bptr, bptr->b_length);
 							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
-								eio();
+								eise_io("General retrieve: mismatch size for BIT object.");
 						}
 
 					break;
@@ -1792,7 +1791,7 @@ rt_private void gen_object_read (char *object, char *parent)
 					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
 					break;
 				default:
-					eio();
+					eise_io("General retrieve: not an Eiffel object.");
 			}
 		} 
 	} else {
@@ -1867,7 +1866,7 @@ rt_private void gen_object_read (char *object, char *parent)
 						buffer_read(object, count*sizeof(EIF_POINTER));
 						break;
 					default:
-   	   			  		eio();
+   	   			  		eise_io("General retrieve: not an Eiffel object.");
 						break;
 				}
 			} else {
@@ -1961,7 +1960,7 @@ rt_private void object_read (char *object, char *parent)
 
 							ridr_multi_bit (bptr, 1, 0);
 							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
-								eio();
+								eise_io("Basic retrieve: mismatch size for BIT object.");
 #if DEBUG & 1
 							printf (" %x", (bptr->b_length));
 							printf (" %x", old_flags);
@@ -2002,7 +2001,7 @@ rt_private void object_read (char *object, char *parent)
 					break;
 
 				default:
-					eio();
+					eise_io("Basic retrieve: not an Eiffel object.");
 			}
 		} 
 	} else {
@@ -2140,7 +2139,7 @@ rt_private void object_read (char *object, char *parent)
 						break;
 
 					default:
-						eio();
+						eise_io("Basic retrieve: not an Eiffel object.");
 						break;
 				}
 			} else {
@@ -2226,7 +2225,7 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 				bit_size += (OVERHEAD + BITOFF(types_cn & SK_DTYPE));
 				break;
 			default:
-				eio();
+				eise_io("Retrieve: incorrect expanded object.");
 		}
 	}
 #ifdef SYMANTEC_CPP

@@ -361,7 +361,7 @@ rt_public void file_pi(FILE *f, EIF_INTEGER number)
 
 	errno = 0;
 	if (0 > fprintf(f, "%ld", number))
-		eio();
+		eise_io("FILE: unable to write INTEGER value.");
 }
 
 rt_public void file_pr(FILE *f, EIF_REAL number)
@@ -370,7 +370,7 @@ rt_public void file_pr(FILE *f, EIF_REAL number)
 
 	errno = 0;
     if (0 > fprintf (f, "%g", number))
-		eio();
+		eise_io("FILE: unable to write REAL value.");
 }
 
 rt_public void file_pib(FILE *f, EIF_INTEGER number)
@@ -379,7 +379,7 @@ rt_public void file_pib(FILE *f, EIF_INTEGER number)
 
 	errno = 0;
 	if (1 != fwrite(&number, sizeof(EIF_INTEGER),1, f))
-		eio();
+		eise_io("FILE: unable to write INTEGER value.");
 }
 
 rt_public void file_prb(FILE *f, EIF_REAL number)
@@ -388,7 +388,7 @@ rt_public void file_prb(FILE *f, EIF_REAL number)
 
 	errno = 0;
     if (1 != fwrite(&number, sizeof(EIF_REAL),1, f))
-		eio();
+		eise_io("FILE: unable to write REAL value.");
 }
 
 rt_public void file_ps(FILE *f, char *str, EIF_INTEGER len)
@@ -400,7 +400,7 @@ rt_public void file_ps(FILE *f, char *str, EIF_INTEGER len)
 
 	errno = 0;
 	if (1 != fwrite(str, sizeof (char) * len, 1, f))
-		eio();
+		eise_io("FILE: unable to write STRING object.");
 }
 
 rt_public void file_pc(FILE *f, char c)
@@ -409,7 +409,7 @@ rt_public void file_pc(FILE *f, char c)
 
 	errno = 0;
 	if (EOF == putc(c, f))
-		eio();
+		eise_io("FILE: unable to write CHARACTER value.");
 }
 
 rt_public void file_pd(FILE *f, EIF_DOUBLE val)
@@ -418,7 +418,7 @@ rt_public void file_pd(FILE *f, EIF_DOUBLE val)
 
 	errno = 0;
 	if (0 > fprintf(f, "%.17g", val))
-		eio();
+		eise_io("FILE: unable to write DOUBLE value.");
 }
 
 rt_public void file_pdb(FILE *f, EIF_DOUBLE val)
@@ -427,7 +427,7 @@ rt_public void file_pdb(FILE *f, EIF_DOUBLE val)
 
 	errno = 0;
 	if (1 != fwrite (&val, sizeof(double), 1, f))
-		eio();
+		eise_io("FILE: unable to write DOUBLE value.");
 }
 
 rt_public void file_tnwl(FILE *f)
@@ -436,7 +436,7 @@ rt_public void file_tnwl(FILE *f)
 
 	errno = 0;
 	if (EOF == putc('\n', f))
-		eio();
+		eise_io("FILE: unable to write new line.");
 }
 
 rt_public void file_append(FILE *f, FILE *other, EIF_INTEGER l)
@@ -462,10 +462,10 @@ rt_public void file_append(FILE *f, FILE *other, EIF_INTEGER l)
 		else
 			amount = BUFSIZ;
 		if (amount != fread(buffer, sizeof(char), amount, other))
-			eio();
+			eise_io("FILE: unable to read appended file.");
 		l -= amount;
 		if (amount != fwrite(buffer, sizeof(char), amount, f))
-			eio();
+			eise_io("FILE: unable to write appended file.");
 	}
 }
 
@@ -487,10 +487,10 @@ rt_private void swallow_nl(FILE *f)
 		errno = 0;
 		c = getc(f);
 		if (c == EOF && ferror(f))
-			eio();
+			eise_io("FILE: error during reading the end of the file.");
 
 		if (c != '\n' && EOF == ungetc(c, f))
-			eio();
+			eise_io("FILE: End of file.");
 	}
 }
 			
@@ -504,7 +504,7 @@ rt_public void file_tnil(FILE *f)
 	while ((c = getc(f)) != '\n' && c != EOF)
 		;
 	if (c == EOF && ferror(f))
-		eio();
+		eise_io("FILE: error during reading the end of the file.");
 }
 
 rt_public EIF_INTEGER file_gi(FILE *f)
@@ -515,7 +515,7 @@ rt_public EIF_INTEGER file_gi(FILE *f)
 
 	errno = 0;
 	if (0 > fscanf(f, "%ld", &i))
-		eio();
+		eise_io("FILE: unable to read INTEGER value.");
 	swallow_nl(f);
 
 	return i;
@@ -529,7 +529,7 @@ rt_public EIF_REAL file_gr(FILE *f)
 
 	errno = 0;
 	if (0 > fscanf(f, "%f", &r))
-		eio();
+		eise_io("FILE: unable to read REAL value.");
 	swallow_nl(f);
 
 	return r;
@@ -543,7 +543,7 @@ rt_public EIF_DOUBLE file_gd(FILE *f)
 
 	errno = 0;
 	if (0 > fscanf(f, "%lf", &d))
-		eio();
+		eise_io("FILE: unable to read DOUBLE value.");
 	swallow_nl(f);
 
 	return d;
@@ -556,7 +556,7 @@ rt_public EIF_INTEGER file_gib(FILE *f)
 
 	errno = 0;
 	if (1 != fread (&i, sizeof (EIF_INTEGER), 1, f))
-		eio();
+		eise_io("FILE: unable to read INTEGER value.");
 
 	return i;
 }
@@ -569,7 +569,7 @@ rt_public EIF_REAL file_grb(FILE *f)
 
 	errno = 0;
 	if (1 != fread (&r, sizeof (EIF_REAL), 1, f))
-		eio();
+		eise_io("FILE: unable to read REAL value.");
 
 	return r;
 }
@@ -582,7 +582,7 @@ rt_public EIF_DOUBLE file_gdb(FILE *f)
 
 	errno = 0;
 	if (1 != fread (&d, sizeof(EIF_DOUBLE), 1, f))
-		eio();
+		eise_io("FILE: unable to read DOUBLE value.");
 
 	return d;
 }
@@ -596,7 +596,7 @@ rt_public EIF_CHARACTER file_gc(FILE *f)
 	errno = 0;
 	c = getc(f);
 	if (c == EOF && ferror(f))
-		eio();
+		eise_io("FILE: unable to read CHARACTER value.");
 
 	return (EIF_CHARACTER) c;
 }
@@ -629,7 +629,7 @@ rt_public EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER s
 	}
 	
 	if (c == EOF && ferror(f))	/* An I/O error occurred */
-		eio();					/* Raise exception */
+		eise_io("FILE: unable to read current line.");					/* Raise exception */
 
 	/* If we managed to get the whole string, return the number of characters
 	 * read. Otherwise, return (bound - start + 1) to indicate an error
@@ -671,7 +671,7 @@ rt_public EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound)
 	}
 
 	if (c == EOF && ferror(f))	/* An I/O error occurred */
-		eio();					/* Raise exception */
+		eise_io("FILE: unable to read stream.");					/* Raise exception */
 
 	return bound - amount - 1;	/* Number of characters read */
 }
@@ -700,11 +700,11 @@ rt_public EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER s
 			if (!isspace(c))
 				break;
 		if (c == EOF && ferror(f))	/* An I/O error occurred */
-			eio();					/* Raise exception */
+			eise_io("FILE: unable to read word.");					/* Raise exception */
 		if (c == EOF)
 			return (EIF_INTEGER) 0;				/* Reached EOF before word */
 		else if (EOF == ungetc(c, f))
-			eio();
+			eise_io("FILE: unable to read word.");
 	}
 
 	while (amount-- > 0) {
@@ -713,14 +713,14 @@ rt_public EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER s
 			break;
 		if (isspace(c)) {
 			if (EOF == ungetc(c, f))
-				eio();
+				eise_io("FILE: unable to read word.");
 			break;
 		}
 		*s++ = c;
 	}
 	
 	if (c == EOF && ferror(f))	/* An I/O error occurred */
-		eio();					/* Raise exception */
+		eise_io("FILE: unable to read word.");					/* Raise exception */
 
 	/* If we managed to get the whole string, return the number of characters
 	 * read. Otherwise, return (bound - start + 1) to indicate an error
@@ -742,10 +742,10 @@ rt_public EIF_CHARACTER file_lh(FILE *f)
 	errno = 0;
 	c = getc(f);
 	if (c == EOF && ferror(f))
-		eio();
+		eise_io("FILE: error when reading a character ahead.");
 
 	if (c != EOF && EOF == ungetc(c, f))
-		eio();
+		eise_io("FILE: error when reading a character ahead.");
 
 	return (EIF_CHARACTER) (c == EOF ? (char) 0 : (char) c);
 }
@@ -1548,7 +1548,7 @@ rt_public EIF_BOOLEAN eif_group_in_list(int gid)
 	int i, nb_groups;
 
 	if ((nb_groups = getgroups(NGROUPS_MAX, group_list)) == -1)
-		eio();
+		xraise(EN_IO);
 
 	for (i=0; i< nb_groups; i++)
 		if (group_list[i] == gid)

@@ -32,6 +32,7 @@ feature -- Access
 			Result.extend ("gb_ev_gauge")
 			Result.extend ("gb_ev_text_component")
 			Result.extend ("gb_ev_text_alignable")
+			Result.extend ("gb_ev_pixmapable")
 		end
 	
 	--| FIXME This version has been commented, so that we do not need to have

@@ -53,9 +53,9 @@ feature -- Access
 	msil_assembly_compatibility: STRING
 			-- Compatibility of current assembly with other assemblies.
 
-	cls_compliant, cls_compliant_name: BOOLEAN
+	cls_compliant, dotnet_naming_convention: BOOLEAN
 			-- Let the compiler generates CLS compliant metadata along with or
-			-- without having CLS compliant name.
+			-- without using .NET naming convention.
 			--| Used for IL generation.
 
 	line_generation: BOOLEAN
@@ -85,6 +85,48 @@ feature -- Access
 
 	generate_eac_metadata: BOOLEAN
 			-- Will Eiffel Assembly Cache metadata be generated?
+
+feature -- Checking
+
+	valid_version (vers: STRING): BOOLEAN is
+			-- Is `vers' a valid version number?
+			-- I.e. a sequence of four integers separated by colon.
+		local
+			state: INTEGER
+			i, nb, nb_colons: INTEGER
+		do
+				-- State:
+				-- 1 means that we should read a sequence of digits
+				-- 2 means that we should read a colon or a digit
+
+			state := 1	
+			from
+				i := 1
+				nb := vers.count
+			until
+				i > nb or not Result
+			loop
+				inspect state
+				when 1 then
+					Result := vers.item (i).is_digit
+					state := 2
+				when 2 then
+					if vers.item (i) = ':' then
+						state := 1
+						nb_colons := nb_colons + 1
+					else
+						Result := vers.item (i).is_digit
+					end
+				end
+				i := i + 1
+			end
+			if Result then
+					-- It is a valid version number if there was 3 colons
+					-- and that we were waiting for a colon or a digit for
+					-- the last input.
+				Result := nb_colons = 3 and then state = 2
+			end
+		end
 
 feature -- Update
 
@@ -152,6 +194,7 @@ feature -- Update
 		require
 			vers_not_void: vers /= Void
 			vers_not_empty: not vers.is_empty
+			valid_version: valid_version (vers)
 		do
 			msil_version := vers
 		ensure
@@ -191,15 +234,15 @@ feature -- Update
 				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else cls_compliant = v
 		end
 
-	set_cls_compliant_name (v: BOOLEAN) is
-			-- Set `cls_compliant_name' to `v' if project is not already compiled.
+	set_dotnet_naming_convention (v: BOOLEAN) is
+			-- Set `dotnet_naming_convention' to `v' if project is not already compiled.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.is_already_compiled then
-				cls_compliant_name := v
+				dotnet_naming_convention := v
 			end
 		ensure
-			cls_compliant_name_set:
-				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else cls_compliant_name = v
+			dotnet_naming_convention_set:
+				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else dotnet_naming_convention = v
 		end
 
 	set_generate_eac_metadata (b: BOOLEAN) is

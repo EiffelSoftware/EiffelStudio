@@ -61,17 +61,20 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!!Result.make (1, 4);
+			!!Result.make (1, 5);
 			Result.set_is_main;
 
 			!EWB_STRING! ewb_cmd.make (class_cmd_name, class_help, class_abb, class_menu);
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (ewb_cmd);
 			!EWB_STRING! ewb_cmd.make (compile_cmd_name, compile_help, compile_abb, compile_menu);
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (ewb_cmd);
 			!EWB_STRING! ewb_cmd.make (feature_cmd_name, feature_help, feature_abb, feature_menu);
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (ewb_cmd);
 			!EWB_STRING! ewb_cmd.make (system_cmd_name, system_help, system_abb, system_menu);
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (ewb_cmd);
+			!EWB_STRING! ewb_cmd.make (profile_cmd_name, profile_help, profile_abb, profile_menu);
+			Result.add_entry (ewb_cmd);
+
 		end;
 
 	System_menu: EWB_MENU is
@@ -80,6 +83,7 @@ feature -- Initialization
 			ewb_cmd: EWB_CMD;
 		once
 			!!Result.make (1, 8)
+			Result.set_parent (Main_menu);
 
 			!EWB_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
@@ -99,13 +103,38 @@ feature -- Initialization
 			Result.add_entry (ewb_cmd)
 		end;
 
+	profile_menu: EWB_MENU is
+			-- Profile menu options.
+		local
+			ewb_cmd: EWB_CMD;
+		once
+			!! Result.make (1, 7);
+			Result.set_parent (Main_menu);
+
+			!EWB_SWITCHES_CMD! ewb_cmd.make_without_help (switches_cmd_name, switches_abb, switches_menu);
+			Result.add_entry (ewb_cmd);
+			!EWB_STRING! ewb_cmd.make (queries_cmd_name, queries_help, queries_abb, queries_menu);
+			Result.add_entry (ewb_cmd);
+			!EWB_INPUT! ewb_cmd.make_loop;
+			Result.add_entry (ewb_cmd);
+			!EWB_LANGUAGE! ewb_cmd.make_loop;
+			Result.add_entry (ewb_cmd);
+			!EWB_RUN_PROF! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_GENERATE! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_DEFAULTS! ewb_cmd.make_loop (Current);
+			Result.add_entry (ewb_cmd);
+		end;
+
 	class_menu: EWB_MENU is
 			-- Class menu options
 		local
 			ewb_cmd: EWB_CMD;
 		once
 			!!Result.make (1, 15)
-			
+			Result.set_parent (Main_menu);
+
 			!EWB_ANCESTORS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
 			!EWB_ATTRIBUTES! ewb_cmd.do_nothing;
@@ -144,6 +173,7 @@ feature -- Initialization
 			ewb_cmd: EWB_CMD;
 		once
 			!!Result.make (1, 7)
+			Result.set_parent (Main_menu);
 			!EWB_PAST! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd);
 			!EWB_SENDERS! ewb_cmd.do_nothing;
@@ -172,6 +202,7 @@ feature -- Initialization
 			ewb_cmd: EWB_CMD;
 		do
 			!!Result.make (1, 3);
+			Result.set_parent (Main_menu);
 
 			!EWB_ARGS! ewb_cmd;
 			Result.add_entry (ewb_cmd);
@@ -184,13 +215,57 @@ feature -- Initialization
 	menu_commands: ARRAY [EWB_MENU] is
 			-- Menu commands
 		once
-			!!Result.make (1, 5);
+			!!Result.make (1, 7);
 			Result.put (main_menu, 1);
 			Result.put (system_menu, 2);
 			Result.put (class_menu, 3)
 			Result.put (feature_menu, 4);
 			Result.put (compile_menu, 5);
+			Result.put (profile_menu, 6);
+			Result.put (switches_menu, 7);
 		end
+
+	switches_menu: EWB_MENU is
+			-- Menu containing output switches
+		local
+			ewb_cmd: EWB_CMD
+		once
+			!! Result.make (1, 6);
+			Result.set_parent (profile_menu);
+
+			!EWB_NUMBER_OF_CALLS! ewb_cmd.make_loop;
+			Result.add_entry (ewb_cmd);
+			!EWB_FEATURENAME! ewb_cmd.make_loop;
+			Result.add_entry (ewb_cmd);
+			!EWB_TOTAL_SEC! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_SELF_SEC! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_DESCENDENTS_SEC! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_PERCENTAGE! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+		end
+			
+	queries_menu: EWB_MENU is
+			-- Sub-menu containing commands to manipulate queries.
+		local
+			ewb_cmd: EWB_CMD
+		once
+			!! Result.make (1,5);
+			Result.set_parent (profile_menu);
+
+			!EWB_ADD_SUBQUERY! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_INACTIVATE_SUBQUERY! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_REACTIVATE_SUBQUERY! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_CHANGE_OPERATOR! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+			!EWB_SHOW_SUBQUERIES! ewb_cmd;
+			Result.add_entry (ewb_cmd);
+		end;
 
 feature -- Execution
 
@@ -280,7 +355,7 @@ feature -- Update
 			dot_place: INTEGER
 			main_menu_option: EWB_STRING
 			menu_abb : CHARACTER
-			prev: like menu_command_list;
+			prev: like menu_command_list
 		do
 			last_request_cmd := Void
 			if req.has ('.') then
@@ -321,6 +396,14 @@ feature -- Update
 						if not option.empty then
 							process_request (option)
 						end					
+					elseif menu.is_equal (parent_cmd_name) or menu_abb = parent_abb then
+						if not menu_command_list.is_main then
+							prev := menu_command_list;
+							menu_command_list := menu_command_list.parent;
+						end;
+						if not option.empty then
+							process_request (option);
+						end;
 					else
 						io.putstring ("Unknown menu ")
 						io.putstring (menu)
@@ -333,9 +416,9 @@ feature -- Update
 					menu_abb := req.item(1)
 				end
 				if next_cmd /= Void then
-					if menu_command_list = Main_menu then
+					main_menu_option ?= next_cmd
+					if main_menu_option /= Void then
 						prev := menu_command_list
-						main_menu_option ?= next_cmd
 						menu_command_list := main_menu_option.sub_menu
 						display_commands
 					else
@@ -353,6 +436,12 @@ feature -- Update
 						prev := menu_command_list
 						menu_command_list := Main_menu
 						display_commands
+					elseif req.is_equal (parent_cmd_name) or menu_abb = parent_abb then
+						if not menu_command_list.is_main then
+							prev := menu_command_list;
+							menu_command_list := menu_command_list.parent;
+						end;
+						display_commands;
 					else
 						io.putstring ("Unknown option ")
 						io.putstring (req)

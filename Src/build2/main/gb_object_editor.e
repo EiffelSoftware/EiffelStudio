@@ -162,7 +162,6 @@ feature -- Initialization
 			vertical_box1.set_minimum_height (100)
 			
 			create item_parent
-			item_parent.set_padding_width (2)
 			control_holder.extend (item_parent)
 			control_holder.disable_item_expand (item_parent)
 			is_initialized := True
@@ -554,7 +553,6 @@ feature {NONE} -- Implementation
 				not object.type.is_equal ("EV_MENU_SEPARATOR") then
 					create event_selection_button
 					create tool_bar
-					tool_bar.disable_vertical_button_style
 					tool_bar.extend (event_selection_button)
 					update_event_selection_button_text
 					create horizontal_box

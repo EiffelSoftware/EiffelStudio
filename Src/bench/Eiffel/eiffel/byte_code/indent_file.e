@@ -281,7 +281,8 @@ feature {INDENT_FILE} -- prototype code generation
 				end
 				arg_type := arg_types @ i
 				if arg_type.is_equal ("EIF_REAL") then
-					putstring ("EIF_DOUBLE")
+					putstring ("EIF_REAL") -- ss for ANSI rt
+					--putstring ("EIF_DOUBLE")
 				else
 					putstring (arg_type)
 				end
@@ -386,7 +387,8 @@ feature -- prototype code generation
 			loop
 				arg_type := arg_types @ i
 				if arg_type.is_equal ("EIF_REAL") then
-					putstring ("EIF_DOUBLE argd")
+					putstring ("EIF_REAL argd") -- ss for ANSI rt
+					--putstring ("EIF_DOUBLE argd")
 					putint (i-1)
 				else
 					putstring (arg_type)

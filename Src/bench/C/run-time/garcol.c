@@ -5528,25 +5528,20 @@ rt_private int update_special_rem_set(void)
 	 * has to be remembered or `| ~EO_REM' if it does not references a young 
 	 * item any longer. This way, if at least one remembered reference has to
 	 * be remembered the enclosing special will remain remembered. This is 
-	 * necessary since a special remembered objects can be recorded several times
-	 * in the "special-rem_set".
-	 * We only do it during partial collection.
+	 * necessary since a special remembered objects can be recorded several 
+	 * times in the "special-rem_set".
 	 */
 
-	if (generational)
-		/* We take care of the EO_REM flag only during a partial collection. */
-	{
 
-		for (i = 0 ; i < count; i++)
-		{
-			assert (!(HEADER (hvalues [i])->ov_size & B_FWD));
-												/* Must be udpdated earlier. */
-			HEADER (hvalues [i])->ov_flags &= ~EO_REM;	
-												/* Remove remembered flag. */
-			assert (!(HEADER(hvalues [i])->ov_flags & EO_REM));	
-												/* This flag must be unset. */
-		}	/* for ... */
-	}	/* if ... */
+	for (i = 0 ; i < count; i++)
+	{
+		assert (!(HEADER (hvalues [i])->ov_size & B_FWD));
+											/* Must be udpdated earlier. */
+		HEADER (hvalues [i])->ov_flags &= ~EO_REM;	
+											/* Remove remembered flag. */
+		assert (!(HEADER(hvalues [i])->ov_flags & EO_REM));	
+											/* This flag must be unset. */
+	}	/* for ... */
 
 
 	/* We check whether the special object references any new objects. 
@@ -5762,7 +5757,7 @@ rt_private int update_special_rem_set(void)
 	 * by the full sweep operation.
 	 */
 
-	if (generational)				/* Is this a partial collection? */
+	if (generational)				/* Is this a generational collection? */
 	{
 		for (i = 0; i < new_table->old_count; i ++)
 		{

@@ -1,5 +1,5 @@
 3.0.0.507
-1048
+1049
 1033,release_notes.html,0,Release Notes,0,942281138,1
 vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
@@ -15,6 +15,7 @@ vti_globalpage:BW|true
 1028,papers/lace.html,0,Lace Specification,1018,942203403,0
 1026,papers/eiffelbuild.html,0,EiffelBuild,1018,942202015,0
 1025,papers/eiffel2java.html,0,Eiffel to Java Interface,1018,942203218,0
+1048,papers/wel.html,0,WEL,1018,942291547,0
 1024,papers/dll.html,0,Shared library generation,1018,942203184,0
 1023,papers/debugger.html,0,Debugging Facilities,1018,942203152,0
 1022,papers/command_line_tools.html,0,Command-line Tools,1018,942203116,0

@@ -1,3 +1,0 @@
-Error: type of manifest constant does not match CHARACTER declaration.
-What to do: use manifest character constant (in single quotes) as value,
-  or change declared type to match value.

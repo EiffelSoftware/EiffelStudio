@@ -1,0 +1,3 @@
+Error: type of manifest constant does not match declaration.
+What to do: use appropriate manifest constant type as value,
+  or change declared type to match value.

@@ -46,6 +46,14 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	replace_include_path (new_include_path: STRING; old_include_path: STRING) is
+			-- Replace an include path in the project.
+			-- `new_include_path' [in].  
+			-- `old_include_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	add_object_file (object_file: STRING) is
 			-- Add a object file to the project.
 			-- `object_file' [in].  
@@ -56,6 +64,14 @@ feature -- Basic Operations
 	remove_object_file (object_file: STRING) is
 			-- Remove a object file from the project.
 			-- `object_file' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	replace_object_file (new_include_path: STRING; old_object_file: STRING) is
+			-- Replace an object file in the project.
+			-- `new_include_path' [in].  
+			-- `old_object_file' [in].  
 		do
 			-- Put Implementation here.
 		end

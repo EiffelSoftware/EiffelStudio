@@ -1,0 +1,121 @@
+#!/bin/sh
+ 
+# Set up the environment
+. set_aliases
+LASTTIME=`date +%s`
+LASTTIME_TOT=`date +%s`
+OLD_PATH=$PATH
+INIT_DIR=`pwd`
+EIFFEL_SRC=$EXPORT_DIR; export EIFFEL_SRC
+ISE_EIFFEL=$FINAL_INSTALL_DIR; export ISE_EIFFEL
+INSTALL_DIR=$FINAL_INSTALL_DIR
+
+echo > $COMPILE_LOG
+
+if [ -z "$ISE_PLATFORM" ]; then
+	remtrace Couldnt find environment variable ISE_PLATFORM
+	CANCEL
+fi
+
+# Check everything's fine
+if [ ! -d $EXPORT_DIR ]; then
+	remtrace Couldnt find the directory with the tgzs.
+	CANCEL
+fi
+
+if [ -e pro_rt ]; then
+	MULTIPLE_EDITIONS="True"
+else
+	MULTIPLE_EDITIONS=""
+fi
+
+cd $EXPORT_DIR
+
+if [ ! -e cdrom ]; then
+	mkdir cdrom
+fi
+
+if [ ! -f Eiffel51_deliv.tgz ]; then
+	remtrace Saving empty delivery in Eiffel51_deliv.tgz
+	tar -c Eiffel51 | gzip -c > Eiffel51_deliv.tgz
+fi
+
+if [ ! -e Eiffel51 ]; then
+	remtrace Extracting current delivery
+	gunzip -c Eiffel51_deliv.tgz | tar -xf -
+fi
+
+if [ -f build_deliv.tgz ]; then
+	remtrace copying EiffelBuild delivery
+	cd $INSTALL_DIR
+	gunzip -c $EXPORT_DIR/build_deliv.tgz | tar -xf -
+	cd $EXPORT_DIR
+fi
+
+
+if [ -z "$MULTIPLE_EDITIONS" ]; then
+	remtrace Preparing normal Enterprise delivery
+	mv Eiffel51 cdrom
+	cp cdrom/Eiffel51/INSTALL cdrom	
+	make_cd_image Eiffel51 Eiffel51.iso cdrom
+	mv cdrom/Eiffel51 Eiffel51
+else
+	remtrace Preparing Enterprise version
+	cp -r pro_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+	gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	remtrace Building Enterprise CD image
+	mv Eiffel51 cdrom
+	cp cdrom/Eiffel51/INSTALL cdrom	
+	make_cd_image Eiffel51_enterprise Eiffel51_enterprise.iso cdrom
+	mv cdrom/Eiffel51 Eiffel51
+
+
+	remtrace Preparing Professional version
+	cp -r pro_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+	gunzip -c $EXPORT_DIR/ecs/ec_pro.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	remtrace Building Professional CD image
+	mv Eiffel51 cdrom
+	cp cdrom/Eiffel51/INSTALL cdrom	
+	make_cd_image Eiffel51_pro Eiffel51_pro.iso cdrom
+	mv cdrom/Eiffel51 Eiffel51
+
+
+	remtrace Preparing Home version
+	cp -r home_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+	gunzip -c $EXPORT_DIR/ecs/ec_home.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	remtrace Building Home CD image
+	mv Eiffel51 cdrom
+	cp cdrom/Eiffel51/INSTALL cdrom	
+	make_cd_image Eiffel51_home Eiffel51_home.iso cdrom
+	mv cdrom/Eiffel51 Eiffel51
+
+
+	remtrace Preparing Student version
+	cp -r home_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+	gunzip -c $EXPORT_DIR/ecs/ec_student.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	remtrace Building Student CD image
+	mv Eiffel51 cdrom
+	cp cdrom/Eiffel51/INSTALL cdrom	
+	make_cd_image Eiffel51_student Eiffel51_student.iso cdrom
+	mv cdrom/Eiffel51 Eiffel51
+
+
+	remtrace Preparing Evaluation version
+	cp -r home_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+	gunzip -c $EXPORT_DIR/ecs/ec_evaluation.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	remtrace Building Evaluation CD image
+	mv Eiffel51 cdrom
+	cp cdrom/Eiffel51/INSTALL cdrom	
+	make_cd_image Eiffel51_eval Eiffel51_eval.iso cdrom
+	mv cdrom/Eiffel51 Eiffel51
+fi

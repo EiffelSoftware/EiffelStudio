@@ -116,7 +116,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	length: INTEGER is
+	length, count: INTEGER is
 			-- String length
 		do
 			Result := cwel_string_length (item)

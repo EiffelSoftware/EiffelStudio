@@ -59,6 +59,14 @@ feature -- Status report
 			Result := implementation.shown
 		end
 
+	
+	managed: BOOLEAN 
+			-- Is the geometry of current widget managed by its 
+			-- container? This is the case always unless 
+			-- parent.manager = False (Always true except 
+			-- when the container is EV_FIXED). This is 
+			-- set in the procedure set_default
+		
 
 feature -- Status setting
 
@@ -146,6 +154,7 @@ feature -- Measurement
 			-- Horizontal position relative to parent
 		require
 			exists: not destroyed
+			unmanaged: not managed
 		do
 			Result := implementation.x
 		end
@@ -154,6 +163,7 @@ feature -- Measurement
 			-- Vertical position relative to parent
 		require
 			exists: not destroyed
+			unmanaged: not managed
 		do
 			Result := implementation.y
 		end
@@ -178,24 +188,46 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end 
 	
+	maximum_height: INTEGER is
+                        -- Maximum height that application wishes widget
+                        -- instance to have
+                require
+                        exists: not destroyed
+                do
+                        Result := implementation.maximum_height
+                ensure
+                        Result >= 0
+                end
+
+        maximum_width: INTEGER is
+                        -- Maximum width that application wishes widget
+                        -- instance to have
+                require
+                        exists: not destroyed
+                do
+                        Result := implementation.maximum_width
+                ensure
+                        Result >= 0
+                end
+
 	minimum_width: INTEGER is
-			-- Minimum width of the widget specified by 
-			-- the underlying toolkit
+                        -- Minimum width that application wishes widget
+                        -- instance to have
 		require
 			exists: not destroyed
 		do
-			Result := implementation.height
+			Result := implementation.minimum_width
 		ensure
 			Positive_height: Result >= 0
 		end 
 	
 	minimum_height: INTEGER is
-			-- Minimum height of the widget specified by 
-			-- the underlying toolkit
+                        -- Minimum height that application wishes widget
+                        -- instance to have
 		require
 			exists: not destroyed
 		do
-			Result := implementation.height
+			Result := implementation.minimum_height
 		ensure
 			Positive_height: Result >= 0
 		end 
@@ -257,12 +289,59 @@ feature -- Resizing
 		ensure					
 			dimensions_set: implementation.dimensions_set (width, new_height)
 		end
+	
+	set_maximum_height (max_height: INTEGER) is
+                        -- Set `maximum_height' to `max_height'.
+                require
+                        exists: not destroyed
+                        large_enough: max_height >= 0
+                do
+                        implementation.set_maximum_height (max_height)
+                ensure
+                        max_height = max_height
+                end
 
+        set_maximum_width (max_width: INTEGER) is
+                        -- Set `maximum_width' to `max_width'.
+                require
+                        exists: not destroyed
+                        large_enough: max_width >= 0
+                do
+                        implementation.set_maximum_width (max_width)
+                ensure
+                        max_width = max_width
+                end 
+
+
+        set_minimum_height (min_height: INTEGER) is
+                        -- Set `minimum__height' to `min_height'.
+                require
+                        exists: not destroyed
+                        large_enough: min_height >= 0
+                do
+                        implementation.set_minimum_height (min_height)
+                ensure
+                        min_height = min_height
+                end
+
+        set_minimum_width (min_width: INTEGER) is
+                        -- Set `minimum_width' to `min_width'.
+                require
+                        exists: not destroyed
+                        large_enough: min_width >= 0
+                do
+                        implementation.set_minimum_width (min_width)
+                ensure
+                        min_width = min_width
+                end
+	
 	set_x (new_x: INTEGER) is
 			-- Set  horizontal position relative
 			-- to parent to `new_x'.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
+								   
 		do
 			implementation.set_x (new_x)
 		ensure
@@ -275,11 +354,13 @@ feature -- Resizing
 			-- to `new_x' and `new_y'.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
+								   
 		do
 			implementation.set_x_y (new_x, new_y)
 		ensure
-			x_set: x = new_x	
-			y_set: y = new_y	
+	--XX		x_set: x = new_x	
+	--XX		y_set: y = new_y	
 		end
 
 	set_y (new_y: INTEGER) is
@@ -287,6 +368,8 @@ feature -- Resizing
 			-- to parent to `new_y'.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
+								   
 		do
 			implementation.set_y (new_y)
 		ensure
@@ -370,6 +453,7 @@ feature {NONE} -- Implementation
                 do
                         implementation.build
 			parent.add_child (Current)
+			managed := parent.manager
                 end
 
 invariant

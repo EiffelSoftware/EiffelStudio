@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			world.extend (move_handle)
 			move_handle.extend (figure_text)
 			
-			create font.make_with_values (feature {EV_FONT_CONSTANTS}.family_roman, feature {EV_FONT_CONSTANTS}.weight_regular, feature {EV_FONT_CONSTANTS}.shape_regular, 24)
+			create font.make_with_values ({EV_FONT_CONSTANTS}.family_roman, {EV_FONT_CONSTANTS}.weight_regular, {EV_FONT_CONSTANTS}.shape_regular, 24)
 			figure_text.set_font (font)
 			
 			create string_right_offset

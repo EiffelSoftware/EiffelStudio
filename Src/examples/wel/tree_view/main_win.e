@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- The window do not redraw the children.
 		once
-			Result := {WEL_FRAME_WINDOW} Precursor
+			Result := Precursor {WEL_FRAME_WINDOW}
 				+ Ws_clipchildren + Ws_clipsiblings
 		end
 

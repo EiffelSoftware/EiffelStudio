@@ -149,9 +149,9 @@ feature {NONE} -- Implementation
 					-- we must protect it, as if anybody else was to put a file in one of these directories,
 					-- then it would crash the system.
 				if common_test /= Void then
-					temp := feature {ISE_RUNTIME}.check_assert (False)
+					temp := {ISE_RUNTIME}.check_assert (False)
 					common_test.default_create
-					temp := feature {ISE_RUNTIME}.check_assert (True)
+					temp := {ISE_RUNTIME}.check_assert (True)
 					check
 						common_test_not_void: common_test /= Void
 					end

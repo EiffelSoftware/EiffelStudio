@@ -58,9 +58,9 @@ feature {NONE} -- Initialization
 
 				-- Set the minimum form size to the client size + the height of the title bar
 			set_minimum_size (create {DRAWING_SIZE}.make (368, (413 +
-				feature {WINFORMS_SYSTEM_INFORMATION}.caption_height)))
+				{WINFORMS_SYSTEM_INFORMATION}.caption_height)))
 
-			feature {WINFORMS_APPLICATION}.run (Current)
+			{WINFORMS_APPLICATION}.run (Current)
 		end
 
 feature -- Access
@@ -150,8 +150,8 @@ feature -- Implementation
 			text_box_first_name.set_location (create {DRAWING_POINT}.make (88, 112))
 			text_box_first_name.set_tab_index (6)
 			text_box_first_name.set_anchor 
-				(feature {WINFORMS_ANCHOR_STYLES}.Top | feature {WINFORMS_ANCHOR_STYLES}.left |
-				feature {WINFORMS_ANCHOR_STYLES}.right)
+				({WINFORMS_ANCHOR_STYLES}.Top | {WINFORMS_ANCHOR_STYLES}.left |
+				{WINFORMS_ANCHOR_STYLES}.right)
 			text_box_first_name.set_size (create {DRAWING_SIZE}.make (243, 20))
 			
 			label_last_name.set_location (create {DRAWING_POINT}.make (8, 154))
@@ -161,8 +161,8 @@ feature -- Implementation
 			text_box_last_name.set_location (create {DRAWING_POINT}.make (88, 152))
 			text_box_last_name.set_tab_index (8)
 			text_box_last_name.set_anchor (
-				feature {WINFORMS_ANCHOR_STYLES}.Top | feature {WINFORMS_ANCHOR_STYLES}.left |
-				feature {WINFORMS_ANCHOR_STYLES}.right)
+				{WINFORMS_ANCHOR_STYLES}.Top | {WINFORMS_ANCHOR_STYLES}.left |
+				{WINFORMS_ANCHOR_STYLES}.right)
 			text_box_last_name.set_size (create {DRAWING_SIZE}.make (243, 20))
 
 			label_dob.set_location (create {DRAWING_POINT}.make (8, 194))
@@ -172,8 +172,8 @@ feature -- Implementation
 			text_box_dob.set_location (create {DRAWING_POINT}.make (88, 192))
 			text_box_dob.set_tab_index (10)
 			text_box_dob.set_anchor (
-				feature {WINFORMS_ANCHOR_STYLES}.top | feature {WINFORMS_ANCHOR_STYLES}.left |
-				feature {WINFORMS_ANCHOR_STYLES}.right)
+				{WINFORMS_ANCHOR_STYLES}.top | {WINFORMS_ANCHOR_STYLES}.left |
+				{WINFORMS_ANCHOR_STYLES}.right)
 			text_box_dob.set_size (create {DRAWING_SIZE}.make (243, 20))
 
 			label_address.set_location (create {DRAWING_POINT}.make (8, 232))
@@ -185,22 +185,22 @@ feature -- Implementation
 			text_box_address.set_accepts_return (True)
 			text_box_address.set_tab_index (12)
 			text_box_address.set_anchor (
-				feature {WINFORMS_ANCHOR_STYLES}.Top |
-				feature {WINFORMS_ANCHOR_STYLES}.Bottom |
-				feature {WINFORMS_ANCHOR_STYLES}.right | feature {WINFORMS_ANCHOR_STYLES}.left)
+				{WINFORMS_ANCHOR_STYLES}.Top |
+				{WINFORMS_ANCHOR_STYLES}.Bottom |
+				{WINFORMS_ANCHOR_STYLES}.right | {WINFORMS_ANCHOR_STYLES}.left)
 			text_box_address.set_size (create {DRAWING_SIZE}.make (264, 88))
 
 			button_move_next.set_location (create {DRAWING_POINT}.make (184, 8))
-			button_move_next.set_flat_style (feature {WINFORMS_FLAT_STYLE}.flat)
+			button_move_next.set_flat_style ({WINFORMS_FLAT_STYLE}.flat)
 			button_move_next.set_size (create {DRAWING_SIZE}.make (32, 32))
 			button_move_next.set_tab_index (33)
-			button_move_next.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.top)
+			button_move_next.set_anchor ({WINFORMS_ANCHOR_STYLES}.top)
 			button_move_next.set_text (">")
 			button_move_next.add_click (
 				create {EVENT_HANDLER}.make (Current, $button_move_next_click))
 
 			button_move_prev.set_location (create {DRAWING_POINT}.make (48, 8))
-			button_move_prev.set_flat_style (feature {WINFORMS_FLAT_STYLE}.flat)
+			button_move_prev.set_flat_style ({WINFORMS_FLAT_STYLE}.flat)
 			button_move_prev.set_size (create {DRAWING_SIZE}.make (32, 32))
 			button_move_prev.set_tab_index (31)
 			button_move_prev.set_text ("<")
@@ -209,21 +209,21 @@ feature -- Implementation
 
 			text_box_position.set_location (create {DRAWING_POINT}.make (88, 14))
 			text_box_position.set_read_only (True)
-			text_box_position.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_single)
+			text_box_position.set_border_style ({WINFORMS_BORDER_STYLE}.fixed_single)
 			text_box_position.set_enabled (False)
 			text_box_position.set_tab_stop (False)
-			text_box_position.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.left)
+			text_box_position.set_anchor ({WINFORMS_ANCHOR_STYLES}.left)
 			text_box_position.set_size (create {DRAWING_SIZE}.make (88, 20))
 
-			panel_vcr_control.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_single)
+			panel_vcr_control.set_border_style ({WINFORMS_BORDER_STYLE}.fixed_single)
 			panel_vcr_control.set_location (create {DRAWING_POINT}.make (88, 344))
 			panel_vcr_control.set_size (create {DRAWING_SIZE}.make (264, 48))
 			panel_vcr_control.set_tab_index (32)
-			panel_vcr_control.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Bottom)
+			panel_vcr_control.set_anchor ({WINFORMS_ANCHOR_STYLES}.Bottom)
 			panel_vcr_control.set_text ("panel1")
 
 			button_move_first.set_location (create {DRAWING_POINT}.make (8, 8))
-			button_move_first.set_flat_style (feature {WINFORMS_FLAT_STYLE}.flat)
+			button_move_first.set_flat_style ({WINFORMS_FLAT_STYLE}.flat)
 			button_move_first.set_size (create {DRAWING_SIZE}.make (32, 32))
 			button_move_first.set_tab_index (30)
 			button_move_first.set_text ("|<")
@@ -231,10 +231,10 @@ feature -- Implementation
 				create {EVENT_HANDLER}.make (Current, $button_move_first_click))
 
 			button_move_last.set_location (create {DRAWING_POINT}.make (224, 8))
-			button_move_last.set_flat_style (feature {WINFORMS_FLAT_STYLE}.flat)
+			button_move_last.set_flat_style ({WINFORMS_FLAT_STYLE}.flat)
 			button_move_last.set_size (create {DRAWING_SIZE}.make (32, 32))
 			button_move_last.set_tab_index (34)
-			button_move_last.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Top)
+			button_move_last.set_anchor ({WINFORMS_ANCHOR_STYLES}.Top)
 			button_move_last.set_text (">|")
 			button_move_last.add_click (
 				create {EVENT_HANDLER}.make (Current, $button_move_last_click))
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 				l_string ?= e.desired_type
 				l_date ?= e.value
 				if l_string /= Void and l_date /= Void then
-					e.set_value (feature {SYSTEM_DATE_TIME}.parse (l_string))
+					e.set_value ({SYSTEM_DATE_TIME}.parse (l_string))
 				end
 			end
 		rescue
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 	customers_position_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- Position has changed - update the DATA VCR panel
 		do
-			text_box_position.set_text (feature {SYSTEM_STRING}.Format(
+			text_box_position.set_text ({SYSTEM_STRING}.Format(
 				"Record {0} of {1}",
 				binding_context.item (cust_list).position + 1,
 				cust_list.count))

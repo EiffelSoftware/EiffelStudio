@@ -37,7 +37,7 @@ feature -- Basic operations
 			dc.get
 			dc.select_brush (brush)
 			dc.ellipse (r_left, r_top, r_right, r_bottom)
- 			dc.draw_text (count.out, l_rect, feature {WEL_DT_CONSTANTS}.Dt_bottom)
+ 			dc.draw_text (count.out, l_rect, {WEL_DT_CONSTANTS}.Dt_bottom)
  			dc.release
 
 				-- Clean

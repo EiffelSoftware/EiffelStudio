@@ -55,9 +55,9 @@ feature -- Basic operation
 			temp: BOOLEAN
 		do
 			new_widget ?= new_instance_of (dynamic_type_from_string (a_type))
-			temp := feature {ISE_RUNTIME}.check_assert (False)
+			temp := {ISE_RUNTIME}.check_assert (False)
 			new_widget.default_create
-			temp := feature {ISE_RUNTIME}.check_assert (temp)
+			temp := {ISE_RUNTIME}.check_assert (temp)
 			test_widget_holder.set_widget (new_widget)
 			widget_type_changed
 		ensure

@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			-- Dialog box to choose a directory.
 		once
 			create Result.make
-			Result.set_flags (feature {WEL_BIF_CONSTANTS}.Bif_usenewui)
+			Result.set_flags ({WEL_BIF_CONSTANTS}.Bif_usenewui)
 		ensure
 			result_not_void: Result /= Void
 		end

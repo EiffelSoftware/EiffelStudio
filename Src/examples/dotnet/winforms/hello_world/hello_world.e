@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Entry point.
 		do
 			set_text ("Hello world")
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			{WINFORMS_APPLICATION}.run_form (Current)
 		end	
 
 end -- class HELLO_WORLD

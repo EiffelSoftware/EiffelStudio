@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			i_sleep_time := 100 
 			cmd_step.set_selected_index (0)
 			prog_bar.set_step (1)	
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			{WINFORMS_APPLICATION}.run_form (Current)
 		ensure
 			i_sleep_time_positive: i_sleep_time > 0
 		end
@@ -88,7 +88,7 @@ feature -- Implementation
 			set_auto_scale_base_size (l_size)
 			l_size.make (506, 175)
 			set_client_size (l_size)
-			set_form_border_style (feature {WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
+			set_form_border_style ({WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
 			set_maximize_box (False)
 			set_minimize_box (False)
 
@@ -129,7 +129,7 @@ feature -- Implementation
 			cmd_step.set_location (l_point)
 			l_size.make (96, 21)
 			cmd_step.set_size (l_size)
-			cmd_step.set_drop_down_style (feature {WINFORMS_COMBO_BOX_STYLE}.drop_down_list)
+			cmd_step.set_drop_down_style ({WINFORMS_COMBO_BOX_STYLE}.drop_down_list)
 			cmd_step.set_tab_index (7)
 			cmd_step.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $on_cmb_step_selected_index_changed))
 			create l_array.make (4)
@@ -139,7 +139,7 @@ feature -- Implementation
 			l_array.put (3, "20")
 			cmd_step.items.add_range (l_array)
 
-			prog_bar.set_back_color (feature {DRAWING_SYSTEM_COLORS}.control)
+			prog_bar.set_back_color ({DRAWING_SYSTEM_COLORS}.control)
 			l_point.make (24, 24)
 			prog_bar.set_location (l_point)
 			prog_bar.set_tab_index (0)
@@ -148,7 +148,7 @@ feature -- Implementation
 			prog_bar.set_step (1)
 			prog_bar.set_text ("prog_bar")
 
-			sldr_speed.set_back_color (feature {DRAWING_SYSTEM_COLORS}.control)
+			sldr_speed.set_back_color ({DRAWING_SYSTEM_COLORS}.control)
 			sldr_speed.set_tick_frequency (10)
 			l_point.make (16, 96)
 			sldr_speed.set_location (l_point)
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 				loop
 					res := invoke (l_mi)
 					sleep_time := 100
-					feature {SYSTEM_THREAD}.sleep_integer (i_sleep_time)
+					{SYSTEM_THREAD}.sleep_integer (i_sleep_time)
 				end
 			end
 		rescue

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			-- Entry point.
 		do
 			initialize_components
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			{WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
@@ -50,7 +50,7 @@ feature -- Implementation
 				-- Initialize window.
 			set_text ("Hello world")
 			set_auto_scale_base_size (create {DRAWING_SIZE}.make (5, 13))
-			set_accessible_role (feature {WINFORMS_ACCESSIBLE_ROLE}.window)
+			set_accessible_role ({WINFORMS_ACCESSIBLE_ROLE}.window)
 			set_accessible_name ("AccessibleForm")
 			set_accept_button (my_button)
 			set_accessible_description ("Simple Form that demonstrates accessibility")
@@ -60,7 +60,7 @@ feature -- Implementation
 			my_button.set_accessible_description ("Once you've entered some text push this my_button")
 			my_button.set_size (create {DRAWING_SIZE}.make (120, 40))
 			my_button.set_tab_index (1)
-			my_button.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.bottom | feature {WINFORMS_ANCHOR_STYLES}.right)
+			my_button.set_anchor ({WINFORMS_ANCHOR_STYLES}.bottom | {WINFORMS_ANCHOR_STYLES}.right)
 			my_button.set_location (create {DRAWING_POINT}.make (256, 64))
 			my_button.set_text ("Click Me!")
 			my_button.set_accessible_name ("DefaultAction")
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				res := feature {WINFORMS_MESSAGE_BOX}.show ("Disposed !")
+				res := {WINFORMS_MESSAGE_BOX}.show ("Disposed !")
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
 		rescue
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			msg := "Text is : '"
 			msg.append (my_text_box.text)
 			msg.append ("'")
-			res := feature {WINFORMS_MESSAGE_BOX}.show (msg)
+			res := {WINFORMS_MESSAGE_BOX}.show (msg)
 		end
 
 invariant

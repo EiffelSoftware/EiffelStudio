@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			io.put_string ("Main thread: Queuing an asynchronous operation.%N")
 
 			create l_async_operation_done.make (False)
-			return := feature {THREAD_POOL}.queue_user_work_item (create {WAIT_CALLBACK}.make (Current, $async_operation), l_async_operation_done)
+			return := {THREAD_POOL}.queue_user_work_item (create {WAIT_CALLBACK}.make (Current, $async_operation), l_async_operation_done)
 			
 			io.put_string ("Main thread: Performing other operations.%N")
 			-- ...
@@ -49,7 +49,7 @@ feature -- Basic Operation
 			io.put_string ("WorkItem thread: Performing asynchronous operation.%N")
 			-- ...
 
-			feature {SYSTEM_THREAD}.sleep_integer (5000) -- Sleep for 5 seconds to simulate doing work
+			{SYSTEM_THREAD}.sleep_integer (5000) -- Sleep for 5 seconds to simulate doing work
 
 			-- Signal that the async operation is now complete.
 			l_state ?= a_state

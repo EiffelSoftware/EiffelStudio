@@ -159,29 +159,29 @@ feature {NONE} -- Implementation
 			conv_mode := imm.input_method_editor.conversion_mode					
 			inspect menu_id
 			when Idsoftkeyboard_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_softkbd
+				wel_const := {WEL_IME_CONSTANTS}.Ime_cmode_softkbd
 				if (conv_mode.bit_and (wel_const) = wel_const) then
 					imm.input_method_editor.set_conversion_status (conv_mode.bit_and (wel_const.bit_not))
 				else
 					imm.input_method_editor.set_conversion_status (conv_mode.bit_or (wel_const))
 				end
 			when Idshapefull_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_fullshape
+				wel_const := {WEL_IME_CONSTANTS}.Ime_cmode_fullshape
 				if not (conv_mode.bit_and (wel_const) = wel_const) then
 					imm.input_method_editor.set_conversion_status (conv_mode.bit_or (wel_const))
 				end
 			when Idshapehalf_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_fullshape
+				wel_const := {WEL_IME_CONSTANTS}.Ime_cmode_fullshape
 				if (conv_mode.bit_and (wel_const) = wel_const) then
 					imm.input_method_editor.set_conversion_status (conv_mode.bit_and (wel_const.bit_not))
 				end
 			when Idnative_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_native
+				wel_const := {WEL_IME_CONSTANTS}.Ime_cmode_native
 				if not (conv_mode.bit_and (wel_const) = wel_const) then
 					imm.input_method_editor.set_conversion_status (conv_mode.bit_or (wel_const))
 				end
 			when Idalphanumeric_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_native
+				wel_const := {WEL_IME_CONSTANTS}.Ime_cmode_native
 				if (conv_mode.bit_and (wel_const) = wel_const) then
 					imm.input_method_editor.set_conversion_status (conv_mode.bit_and (wel_const.bit_not))
 				end
@@ -474,32 +474,32 @@ feature {NONE} -- Implementation
 			tmp_string: STRING
 		do
 			create tmp_string.make (0)
-			tmp_prop := imm.ime_property (feature {WEL_IME_CONSTANTS}.Igp_property)
-			if (tmp_prop.bit_and (feature {WEL_IME_CONSTANTS}.Ime_prop_unicode) = feature {WEL_IME_CONSTANTS}.Ime_prop_unicode) then
+			tmp_prop := imm.ime_property ({WEL_IME_CONSTANTS}.Igp_property)
+			if (tmp_prop.bit_and ({WEL_IME_CONSTANTS}.Ime_prop_unicode) = {WEL_IME_CONSTANTS}.Ime_prop_unicode) then
 				tmp_string.append ("- Unicode IME%N")
 			else
 				tmp_string.append ("- ANSI IME%N")
 			end
-			tmp_prop := imm.ime_property (feature {WEL_IME_CONSTANTS}.Igp_getimeversion)
-			if (tmp_prop.bit_and (feature {WEL_IME_CONSTANTS}.Imever_0310) = feature {WEL_IME_CONSTANTS}.Imever_0310) then
+			tmp_prop := imm.ime_property ({WEL_IME_CONSTANTS}.Igp_getimeversion)
+			if (tmp_prop.bit_and ({WEL_IME_CONSTANTS}.Imever_0310) = {WEL_IME_CONSTANTS}.Imever_0310) then
 				tmp_string.append ("- Windows 3.1 IME%N")
 			else
 				tmp_string.append ("- Windows 9x/Me IME%N")
 			end	
-			tmp_prop := imm.ime_property (feature {WEL_IME_CONSTANTS}.Igp_setcompstr)
-			if (tmp_prop.bit_and (feature {WEL_IME_CONSTANTS}.Scs_cap_compstr) = feature {WEL_IME_CONSTANTS}.Scs_cap_compstr) then
+			tmp_prop := imm.ime_property ({WEL_IME_CONSTANTS}.Igp_setcompstr)
+			if (tmp_prop.bit_and ({WEL_IME_CONSTANTS}.Scs_cap_compstr) = {WEL_IME_CONSTANTS}.Scs_cap_compstr) then
 				tmp_string.append ("- Can set composition string%N")
 			else
 				tmp_string.append ("- Cannot set composition string%N")
 			end	
-			tmp_prop := imm.ime_property (feature {WEL_IME_CONSTANTS}.Scs_cap_makeread)
-			if (tmp_prop.bit_and (feature {WEL_IME_CONSTANTS}.Scs_cap_makeread) = feature {WEL_IME_CONSTANTS}.Scs_cap_makeread) then
+			tmp_prop := imm.ime_property ({WEL_IME_CONSTANTS}.Scs_cap_makeread)
+			if (tmp_prop.bit_and ({WEL_IME_CONSTANTS}.Scs_cap_makeread) = {WEL_IME_CONSTANTS}.Scs_cap_makeread) then
 				tmp_string.append ("- Can create reading string%N")
 			else
 				tmp_string.append ("- Cannot create reading string%N")
 			end	
-			tmp_prop := imm.ime_property (feature {WEL_IME_CONSTANTS}.Scs_cap_setreconvertstring)
-			if (tmp_prop.bit_and (feature {WEL_IME_CONSTANTS}.Scs_cap_setreconvertstring) = feature {WEL_IME_CONSTANTS}.Scs_cap_setreconvertstring) then
+			tmp_prop := imm.ime_property ({WEL_IME_CONSTANTS}.Scs_cap_setreconvertstring)
+			if (tmp_prop.bit_and ({WEL_IME_CONSTANTS}.Scs_cap_setreconvertstring) = {WEL_IME_CONSTANTS}.Scs_cap_setreconvertstring) then
 				tmp_string.append ("- Supports reconversion%N")
 			else
 				tmp_string.append ("- Does not support reconversion%N")
@@ -519,13 +519,13 @@ feature {NONE} -- Implementation
 			conv_mode := imm.input_method_editor.conversion_mode
 			sent_mode := imm.input_method_editor.sentence_mode
 
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_eudc) = feature {WEL_IME_CONSTANTS}.Ime_cmode_eudc ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_eudc) = {WEL_IME_CONSTANTS}.Ime_cmode_eudc ) then
 				tmp_string.append ("- EUDC Conversion%N")
 			end
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_fixed) = feature {WEL_IME_CONSTANTS}.Ime_cmode_fixed ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_fixed) = {WEL_IME_CONSTANTS}.Ime_cmode_fixed ) then
 				tmp_string.append ("- Fixed Conversion%N")
 			end
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_fullshape) = feature {WEL_IME_CONSTANTS}.Ime_cmode_fullshape ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_fullshape) = {WEL_IME_CONSTANTS}.Ime_cmode_fullshape ) then
 				tmp_string.append ("- Full shape mode%N")
 				main_menu.check_item (Idshapefull_constant)
 				main_menu.uncheck_item (Idshapehalf_constant)
@@ -534,15 +534,15 @@ feature {NONE} -- Implementation
 				main_menu.check_item (Idshapehalf_constant)
 				main_menu.uncheck_item (Idshapefull_constant)
 			end
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_hanjaconvert) = feature {WEL_IME_CONSTANTS}.Ime_cmode_hanjaconvert ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_hanjaconvert) = {WEL_IME_CONSTANTS}.Ime_cmode_hanjaconvert ) then
 				tmp_string.append ("- Hanja convert%N")
 			end
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_katakana) = feature {WEL_IME_CONSTANTS}.Ime_cmode_katakana ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_katakana) = {WEL_IME_CONSTANTS}.Ime_cmode_katakana ) then
 				tmp_string.append ("- Katakana%N")
 			else
 				tmp_string.append ("- Hiragana%N")
 			end
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_native) = feature {WEL_IME_CONSTANTS}.Ime_cmode_native ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_native) = {WEL_IME_CONSTANTS}.Ime_cmode_native ) then
 				tmp_string.append ("- Native mode%N")
 				main_menu.check_item (Idnative_constant)
 				main_menu.uncheck_item (Idalphanumeric_constant)
@@ -551,34 +551,34 @@ feature {NONE} -- Implementation
 				main_menu.check_item (Idalphanumeric_constant)
 				main_menu.uncheck_item (Idnative_constant)
 			end
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_noconversion) = feature {WEL_IME_CONSTANTS}.Ime_cmode_noconversion ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_noconversion) = {WEL_IME_CONSTANTS}.Ime_cmode_noconversion ) then
 				tmp_string.append ("- No conversion%N")
 			end
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_roman) = feature {WEL_IME_CONSTANTS}.Ime_cmode_roman ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_roman) = {WEL_IME_CONSTANTS}.Ime_cmode_roman ) then
 				tmp_string.append ("- Roman%N")
 			end
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_softkbd) = feature {WEL_IME_CONSTANTS}.Ime_cmode_softkbd ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_softkbd) = {WEL_IME_CONSTANTS}.Ime_cmode_softkbd ) then
 				tmp_string.append ("- Soft Keyboard%N")
 				main_menu.check_item (Idsoftkeyboard_constant)
 			else
 				main_menu.uncheck_item (Idsoftkeyboard_constant)	
 			end	
-			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_symbol) = feature {WEL_IME_CONSTANTS}.Ime_cmode_symbol ) then
+			if (conv_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_cmode_symbol) = {WEL_IME_CONSTANTS}.Ime_cmode_symbol ) then
 				tmp_string.append ("- Symbol conversion%N")
 			end
-			if (sent_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_smode_automatic) = feature {WEL_IME_CONSTANTS}.Ime_smode_automatic ) then
+			if (sent_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_smode_automatic) = {WEL_IME_CONSTANTS}.Ime_smode_automatic ) then
 				tmp_string.append ("- Automatic conversion%N")
 			end
-			if (sent_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_smode_none) = feature {WEL_IME_CONSTANTS}.Ime_smode_none ) then
+			if (sent_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_smode_none) = {WEL_IME_CONSTANTS}.Ime_smode_none ) then
 				tmp_string.append ("- Using phrase information%N")
 			end
-			if (sent_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_smode_pluralclause) = feature {WEL_IME_CONSTANTS}.Ime_smode_pluralclause ) then
+			if (sent_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_smode_pluralclause) = {WEL_IME_CONSTANTS}.Ime_smode_pluralclause ) then
 				tmp_string.append ("- Using plural clause information%N")
 			end
-			if (sent_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_smode_singleconvert) = feature {WEL_IME_CONSTANTS}.Ime_smode_singleconvert ) then
+			if (sent_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_smode_singleconvert) = {WEL_IME_CONSTANTS}.Ime_smode_singleconvert ) then
 				tmp_string.append ("- Single-character conversion%N")
 			end
-			if (sent_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_smode_conversation) = feature {WEL_IME_CONSTANTS}.Ime_smode_conversation ) then
+			if (sent_mode.bit_and ({WEL_IME_CONSTANTS}.Ime_smode_conversation) = {WEL_IME_CONSTANTS}.Ime_smode_conversation ) then
 				tmp_string.append ("- Conversation mode%N")
 			end
 			imm.release_input_context (lang_edit.item)

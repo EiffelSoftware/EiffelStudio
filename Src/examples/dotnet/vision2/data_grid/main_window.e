@@ -290,7 +290,7 @@ feature -- Database code
 	process_key (a_key: EV_KEY) is
 			-- 
 		do
-			if a_key.code = feature {EV_KEY_CONSTANTS}.Key_enter then
+			if a_key.code = {EV_KEY_CONSTANTS}.Key_enter then
 				populate_grid
 			end
 		end
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			northwind_connection.open
 			create command_on_suppliers.make ("SELECT * FROM Suppliers", northwind_connection)
 
-			command_on_suppliers.set_command_type (feature {DATA_COMMAND_TYPE}.Text)
+			command_on_suppliers.set_command_type ({DATA_COMMAND_TYPE}.Text)
 			suppliers_adapter.set_select_command (command_on_suppliers)
 
 			create data_set.make ("Customers")

@@ -35,6 +35,7 @@ feature -- Initialization
 			temp: STRING
 			new_resources: EB_RESOURCES
 			compiler: ES
+			eifgen_init: INIT_SERVERS
 		do
 			if not retried then
 					-- Check that environment variables
@@ -49,6 +50,13 @@ feature -- Initialization
 					io.error.putstring ("ISE Eiffel4: the environment variable $PLATFORM is not set%N")
 					die (-1)
 				end
+
+					--| Initialization of the run-time, so that at the end of a store/retrieve
+					--| operation (like retrieving or storing the project, creating the CASEGEN
+					--| directory, generating the profile information, ...) the run-time is initialized
+					--| back to the values which permits the compiler to access correctly the EIFGEN
+					--| directory
+				!! eifgen_init.make
 
 					-- Read the resource files
 				if argument_count > 0 and then

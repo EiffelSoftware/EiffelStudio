@@ -57,7 +57,11 @@ feature -- Status setting
 				until
 					list.after
 				loop
-					list.item.disable_sensitive
+					if flag then
+						list.item.disable_sensitive
+					else
+						list.item.enable_sensitive
+					end
 					list.forth
 				end
 			end
@@ -140,6 +144,9 @@ end -- class EV_INVISIBLE_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/28 17:32:55  rogers
+--| Fixed set_insensitve, which was always diasbling the children, even if `flag' was False.
+--|
 --| Revision 1.23  2000/02/19 05:45:00  oconnor
 --| released
 --|

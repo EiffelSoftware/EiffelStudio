@@ -258,7 +258,7 @@ end;
 
 					rout_table.goto_used (typ.type_id);
 
-					if not rout_table.item.written_type_id.is_equal (Context.class_type.type_id) then
+					if not rout_table.item.written_type_id.is_equal (Context.original_class_type.type_id) then
 							-- Remember extern routine declaration
 						Extern_declarations.add_routine
 								(type_c, internal_name);

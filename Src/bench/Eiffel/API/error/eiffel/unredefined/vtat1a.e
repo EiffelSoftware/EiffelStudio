@@ -23,7 +23,7 @@ feature -- Output
 			st.add_string ("Anchor name: ")
 			st.add_string (argument_name)
 			st.add_new_line
-			{VTAT1} precursor (st)
+			{VTAT1} Precursor (st)
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -71,18 +71,15 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			if System.is_dynamic then
 					-- First re-insert the static clusters into the
 					-- universe (when compiling a dynamic class set).
-				build_static;
-					-- Then build the clusters with the files *.e found
-					-- in the clusters
-				build_dle_clusters
+				build_static
 			else
 					-- First re-insert the precompiled clusters into the
 					-- universe.
-				build_precompiled;
-					-- Then build the clusters with the files *.e found
-					-- in the clusters
-				build_clusters
+				build_precompiled
 			end;
+				-- Then build the clusters with the files *.e found
+				-- in the clusters
+			build_clusters;
 				-- Reset the options of the CLASS_I
 			reset_options;
 
@@ -527,27 +524,6 @@ feature {COMPILER_EXPORTER} -- DLE
 					end
 				end;
 				old_clusters.forth
-			end
-		end;
-
-	build_dle_clusters is
-			-- Analysis of the AS description of the SDF in order to 
-			-- build the clusters.
-		require
-			dynamic_system: System.is_dynamic
-		do
-			if clusters /= Void then
-				Degree_output.put_start_degree_6 (clusters.count);
-				from
-					clusters.start
-				until
-					clusters.after
-				loop
-					clusters.item.build_dle;
-					clusters.forth
-				end
-			else
-				Degree_output.put_start_degree_6 (0)
 			end
 		end;
 

@@ -216,7 +216,7 @@ feature {NONE} -- Implementation: access
 			put ("is_equal") check found_item = is_equal_name_id end
 			put ("standard_is_equal") check found_item = standard_is_equal_name_id end
 			put ("deep_equal") check found_item = deep_equal_name_id end
-			put ("standard_deep_equal") check found_item = standard_deep_equal_name_id end
+			put ("deep_twin") check found_item = deep_twin_name_id end
 			put ("out") check found_item = out_name_id end
 			put ("hash_code") check found_item = hash_code_name_id end
 			put ("max") check found_item = max_name_id end
@@ -279,6 +279,21 @@ feature {NONE} -- Implementation: access
 			put ("item_address") check found_item = item_address_name_id end
 			put ("to_double") check found_item = to_double_name_id end
 			put ("to_real") check found_item = to_real_name_id end
+			put ("conforms_to") check found_item = conforms_to_name_id end
+			put ("deep_clone") check found_item = deep_clone_name_id end
+			put ("default_pointer") check found_item = default_pointer_name_id end
+			put ("do_nothing") check found_item = do_nothing_name_id end
+			put ("io") check found_item = io_name_id end
+			put ("operating_environment") check found_item = operating_environment_name_id end
+			put ("print") check found_item = print_name_id end
+			put ("same_type") check found_item = same_type_name_id end
+			put ("standard_equal") check found_item = standard_equal_name_id end
+			put ("tagged_out") check found_item = tagged_out_name_id end
+			put ("to_dotnet") check found_item = to_dotnet_name_id end
+			put ("twin") check found_item = twin_name_id end
+			put ("System.String") check found_item = system_string_name_id end
+			put ("System.Object") check found_item = system_object_name_id end
+			put ("System.Boolean") check found_item = system_boolean_name_id end
 		end
 		
 invariant

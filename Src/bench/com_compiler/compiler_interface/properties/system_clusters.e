@@ -154,8 +154,7 @@ feature -- Access
 	                else
 	                	Result.prepend (get_cluster_full_namespace (cluster.parent_name))
 	                end
-                end
-                if ace_accesser.default_namespace /= Void and not ace_accesser.default_namespace.is_empty then
+                elseif ace_accesser.default_namespace /= Void and then not ace_accesser.default_namespace.is_empty then
 					Result.prepend_character('.')
 					if ace_accesser.dot_net_naming_convention then
 						Result.prepend (namespace_casing (True, ace_accesser.default_namespace.as_lower))

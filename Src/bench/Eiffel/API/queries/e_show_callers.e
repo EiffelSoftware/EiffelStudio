@@ -11,7 +11,7 @@ inherit
 
 	E_FEATURE_CMD;
 
-creation
+create
 
 	make, do_nothing
 
@@ -58,8 +58,8 @@ feature -- Execution
 			invariant_name := "_invariant";
 			st := structured_text;
 			clients := current_class.clients;
-			!! table.make (20);
-			!! classes.make;
+			create table.make (20);
+			create classes.make;
 			from
 				clients.start
 			until
@@ -125,10 +125,10 @@ feature {NONE} -- Implementation
 			st: like structured_text
 		do
 			rid := current_feature.rout_id_set.item (1);
-			!! descendants.make; 
+			create descendants.make; 
 			record_descendants (descendants, current_class);
 			from
-				!! a_list.make_filled (descendants.count);
+				create a_list.make_filled (descendants.count);
 				a_list.start;
 				descendants.start
 			until
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			loop
 				a_class := descendants.item;
 				a_feat := a_class.feature_with_rout_id (rid);
-				!! cell.make (a_class, a_feat);
+				create cell.make (a_class, a_feat);
 				a_list.replace (cell);
 				a_list.forth;
 				descendants.forth

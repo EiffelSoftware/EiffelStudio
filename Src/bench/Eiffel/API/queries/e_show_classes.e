@@ -12,7 +12,7 @@ inherit
 	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make, do_nothing
 
 feature -- Execution
@@ -29,7 +29,7 @@ feature -- Execution
 		do
 			clusters := Eiffel_universe.clusters;
 			if not clusters.is_empty then
-				!! sorted_classes.make;
+				create sorted_classes.make;
 				from 
 					clusters.start 
 				until 

@@ -21,7 +21,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 
 feature 
@@ -35,9 +35,9 @@ feature
 	make is
 			-- Initialization
 		do
-			{LINKED_SET} Precursor
+			Precursor {LINKED_SET}
 			compare_objects
-			!!arguments.make
+			create arguments.make
 		end
 
 	on is
@@ -55,7 +55,7 @@ feature
 	wipe_out is
 			-- Reset controller
 		do
-			{LINKED_SET} Precursor
+			Precursor {LINKED_SET}
 			arguments.wipe_out
 			is_on := False
 		ensure then 

@@ -255,7 +255,7 @@ feature -- Access
 			assert_id_set := f.assert_id_set;
 			if assert_id_set /= Void then
 				nb := assert_id_set.count;
-				!! Result.make (nb);
+				create Result.make (nb);
 				from
 					i := 1
 				until
@@ -309,7 +309,7 @@ feature -- Access
 				body_as := ast;
 				start_position := body_as.start_position;
 				end_position := body_as.end_position;
-				!! Result.make;
+				create Result.make;
 				Result.add_string ("-- Version from class: ");
 				Result.add_classi (c.lace_class, c.name_in_upper);
 				Result.add_new_line;

@@ -87,7 +87,7 @@ feature -- Output
 		local
 			feature_name: FEAT_NAME_ID_AS
 		do
-			!! Result.make (50)
+			create Result.make (50)
 			Result.append (formal_name)
 			if has_constraint then
 				Result.append (" -> ")

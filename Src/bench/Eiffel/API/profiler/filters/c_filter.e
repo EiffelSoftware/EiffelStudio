@@ -11,7 +11,7 @@ class C_FILTER
 inherit
 	LANGUAGE_FILTER
 
-creation
+create
 	make
 
 feature -- Creation

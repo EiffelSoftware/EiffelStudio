@@ -7,7 +7,7 @@ indexing
 
 class OPERATOR_TABLE
 
-creation
+create
 
 	make
 
@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			-- Names of standard operator, when not immediately
 			-- extracted from internal name
 		do
-			!! operator_table.make (14);
+			create operator_table.make (14);
 			operator_table.put ("^", "power");
 			operator_table.put ("^", "shift");
 			operator_table.put ("*", "star");

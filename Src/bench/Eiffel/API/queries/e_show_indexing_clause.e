@@ -15,7 +15,7 @@ inherit
 			{NONE} all 
 		end
 
-creation
+create
 
 	make, do_nothing
 
@@ -47,7 +47,7 @@ feature -- Execution
 			a_classi: CLASS_I;
 			a_class: CLASS_C;
 		do
-			!! sorted_class_names.make;
+			create sorted_class_names.make;
 			classes := cluster.classes;
 			from 
 				classes.start 

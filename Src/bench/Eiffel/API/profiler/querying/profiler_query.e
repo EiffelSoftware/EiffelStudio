@@ -13,7 +13,7 @@ feature -- Status setting
 			-- Set `subqueries' to `new_queries'.
 		do
 			from
-				!! subqueries.make;
+				create subqueries.make;
 				new_queries.start;
 			until
 				new_queries.after
@@ -46,7 +46,7 @@ feature -- Status setting
 			-- Set `subquery_operators' to `new_operators'.
 		do
 			from
-				!! subquery_operators.make;
+				create subquery_operators.make;
 				new_operators.start;
 			until
 				new_operators.after

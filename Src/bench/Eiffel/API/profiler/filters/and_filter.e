@@ -10,7 +10,7 @@ class AND_FILTER
 inherit
 	BOOLEAN_FILTER
 
-creation
+create
 	make
 
 feature -- Checking
@@ -32,7 +32,7 @@ feature -- Checking
 	filter (input_set: PROFILE_SET): PROFILE_SET is
 		do
 			from
-				!! Result.make
+				create Result.make
 				input_set.start
 			until
 				input_set.after

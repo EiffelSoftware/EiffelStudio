@@ -44,7 +44,7 @@ feature
 		do
 			from
 				i := meta_generic.count
-				!!array.make (1, i)
+				create array.make (1, i)
 			until
 				i = 0
 			loop

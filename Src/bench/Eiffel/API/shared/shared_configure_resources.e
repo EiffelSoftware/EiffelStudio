@@ -13,7 +13,7 @@ feature -- Resources
 			-- (Calls `init_resources'. To include your own
 			-- resource files redefine `init_resources'.)
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		end
 
 feature -- Resource names

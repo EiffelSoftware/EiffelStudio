@@ -11,7 +11,7 @@ inherit
 
 	TEXT_ITEM
 
-creation
+create
 
 	make
 
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			!! Result.make (indent_depth);
+			create Result.make (indent_depth);
 			from 
 				i := 1
 			until

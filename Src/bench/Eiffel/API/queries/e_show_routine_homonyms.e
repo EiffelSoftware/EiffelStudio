@@ -15,7 +15,7 @@ inherit
 		end;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 
 	make, do_nothing
 

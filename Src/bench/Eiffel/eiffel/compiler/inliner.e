@@ -8,7 +8,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature
@@ -20,8 +20,8 @@ feature
 			inlining_on := System.inlining_on
 
 			nb := System.body_index_counter.count
-			!! processed_features.make (1, nb)
-			!! to_be_inlined.make (1, nb)
+			create processed_features.make (1, nb)
+			create to_be_inlined.make (1, nb)
 
 			min_inlining_threshold := System.inlining_size
 		end

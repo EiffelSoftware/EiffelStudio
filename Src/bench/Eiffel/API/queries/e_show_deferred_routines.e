@@ -11,7 +11,7 @@ inherit
 
 	E_CLASS_FORMAT_CMD
 
-creation
+create
 
 	make, do_nothing
 

@@ -15,7 +15,7 @@ inherit
 
 	PLATFORM_CONSTANTS
 
-creation
+create
 
 	make
 

@@ -125,7 +125,7 @@ feature
 
 	type_a: TYPE_A is
 		do
-			!VOID_A!Result
+			create {VOID_A} Result
 		end
 
 end

@@ -12,7 +12,7 @@ inherit
 	E_CLASS_CMD;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 
 	make, do_nothing
 
@@ -20,7 +20,7 @@ feature -- Execution
 
 	work is
 		do
-			!! displayed.make;
+			create displayed.make;
 			current_class.append_signature (structured_text);
 			structured_text.add_new_line;
 			rec_display (1, current_class, structured_text);

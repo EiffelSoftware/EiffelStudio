@@ -12,7 +12,7 @@ inherit
 	SHARED_WORKBENCH;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make_and_load
 
 feature -- Initialization
@@ -20,7 +20,7 @@ feature -- Initialization
 	make_and_load (prof: STRING) is
 			-- Load the specific profiler-configuration file.
 		do
-			!! shared_prof_config;
+			create shared_prof_config;
 			profiler_type := prof;
 			prof.to_lower;
 			read_config_file (prof);
@@ -38,14 +38,14 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				!! file_name.make_from_string (profile_path);
+				create file_name.make_from_string (profile_path);
 				file_name.extend (prof);
 
 				if not file_name.is_valid then
 					error_occurred := true;
 					error_code := Invalid_profiler_type
 				else
-					!! config_file.make_open_read (file_name);
+					create config_file.make_open_read (file_name);
 					config_file.read_stream (config_file.count);
 					file_contents := config_file.last_string;
 					config_file.close;
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			str_idx: INTEGER;
 			result_str: STRING
 		do
-			!! result_str.make (0);
+			create result_str.make (0);
 			str_idx := file_contents.substring_index (s, 1);
 			if str_idx = 0 then
 				Result := -1;
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 				end
 
 				from
-					!! Result.make (0);
+					create Result.make (0);
 				until
 					not file_contents.item(str_idx).is_alpha
 				loop

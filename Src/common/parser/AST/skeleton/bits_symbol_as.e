@@ -53,7 +53,7 @@ feature -- Output
 	dump: STRING is
 			-- Debug purpose
 		do
-			!!Result.make (5 + bits_symbol.count);
+			create Result.make (5 + bits_symbol.count);
 			Result.append ("BIT ");
 			Result.append (bits_symbol);
    		end

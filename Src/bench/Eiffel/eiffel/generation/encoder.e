@@ -52,7 +52,7 @@ feature -- Name generation
 			-- Name of the descriptors Init function associated
 			-- with current type
 		do
-			!! Result.make (10);
+			create Result.make (10);
 			Result.append ("Init");
 			Result.append (type_id.out)
 		end
@@ -61,7 +61,7 @@ feature -- Name generation
 			-- Name of the init procedure of the C module 
 			-- associated with current type
 		do
-			!! Result.make (15);
+			create Result.make (15);
 			Result.append ("EIF_Minit");
 			Result.append (type_id.out)
 		end

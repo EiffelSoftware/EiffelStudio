@@ -62,7 +62,7 @@ feature
 	description: BITS_DESC is
 			-- Type description for skeleton
 		do
-			!!Result
+			create Result
 			Result.set_value (size)
 		end
 

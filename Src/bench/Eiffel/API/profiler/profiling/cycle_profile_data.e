@@ -15,7 +15,7 @@ inherit
 			function, copy, int_function
 		end
 
-creation
+create
 	make
 
 feature -- Creation
@@ -25,7 +25,7 @@ feature -- Creation
 		do
 			p_d_make (num_calls, time, self_s, descen);
 			int_function := new_function;
-			!! functions.make;
+			create functions.make;
 		end;
 
 feature -- Copy features

@@ -11,7 +11,7 @@ inherit
 		end;
 	ANY
 
-creation
+create
 
 	make
 

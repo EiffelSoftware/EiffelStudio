@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature
@@ -36,11 +36,11 @@ feature
 			create optimized_features.make (300)
 
 			nb := System.body_index_counter.count
-			!!unsafe_body_indexes.make (1, nb)
+			create unsafe_body_indexes.make (1, nb)
 
-			{FEAT_ITERATOR} Precursor
+			Precursor {FEAT_ITERATOR}
 
-			!! context_stack.make
+			create context_stack.make
 		end
 
 feature
@@ -65,15 +65,15 @@ feature
 			lower_rout_id := ftable.item_id (l_names_heap.lower_name_id).rout_id_set.first
 			area_rout_id := ftable.item_id (l_names_heap.area_name_id).rout_id_set.first
 			
-			!!array_descendants.make (10)
+			create array_descendants.make (10)
 
-			!! special_features.make
+			create special_features.make
 			special_features.compare_objects
 
-			!!unsafe_features.make
+			create unsafe_features.make
 			unsafe_features.compare_objects
 
-			!!lower_and_area_features.make
+			create lower_and_area_features.make
 			lower_and_area_features.compare_objects
 
 				-- Record descendants of ARRAY and some of the special features
@@ -191,7 +191,7 @@ debug ("OPTIMIZATION")
 	io.error.putstring (a_class.name)
 	io.error.new_line
 end
-						!!dep.make (a_class.class_id, a_feature)
+						create dep.make (a_class.class_id, a_feature)
 						unsafe_features.extend (dep)
 						mark_alive (a_feature.body_index)
 					end
@@ -204,7 +204,7 @@ end
 				-- Does it work?
 			a_class := System.any_class.compiled_class
 			a_feature := a_class.feature_table.item_id (Names_heap.clone_name_id)
-			!!dep.make (a_class.class_id, a_feature)
+			create dep.make (a_class.class_id, a_feature)
 			unsafe_features.extend (dep)
 			unsafe_body_indexes.put (True, a_feature.body_index)
 			mark_alive (a_feature.body_index)
@@ -231,23 +231,23 @@ end
 				ftable := a_class.feature_table
 				select_table := ftable.origin_table
 
-				!! dep.make (an_id, select_table.item (put_rout_id))
+				create dep.make (an_id, select_table.item (put_rout_id))
 				special_features.extend (dep)
-				!! dep.make (an_id, select_table.item (item_rout_id))
+				create dep.make (an_id, select_table.item (item_rout_id))
 				special_features.extend (dep)
-				!! dep.make (an_id, select_table.item (infix_at_rout_id))
+				create dep.make (an_id, select_table.item (infix_at_rout_id))
 				special_features.extend (dep)
 
 					-- Record `lower' and `area'
-				!! dep.make (an_id, select_table.item (lower_rout_id))
+				create dep.make (an_id, select_table.item (lower_rout_id))
 				lower_and_area_features.extend (dep)
-				!! dep.make (an_id, select_table.item (area_rout_id))
+				create dep.make (an_id, select_table.item (area_rout_id))
 				lower_and_area_features.extend (dep)
 
 					-- Record unsafe features
-				!! dep.make (an_id, select_table.item (make_area_rout_id))
+				create dep.make (an_id, select_table.item (make_area_rout_id))
 				unsafe_features.extend (dep)
-				!! dep.make (an_id, select_table.item (set_area_rout_id))
+				create dep.make (an_id, select_table.item (set_area_rout_id))
 				unsafe_features.extend (dep)
 				from
 					d := a_class.descendants
@@ -269,7 +269,7 @@ feature
 			byte_code: BYTE_CODE
 		do
 			if array_optimization_on then
-				!! opt_unit.make (a_class.class_id, body_index)
+				create opt_unit.make (a_class.class_id, body_index)
 				if
 						-- The feature was marked during the type check
 						-- and hasn't been processed yet

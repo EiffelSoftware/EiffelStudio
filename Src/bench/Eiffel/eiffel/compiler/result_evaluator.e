@@ -11,7 +11,7 @@ feature
 	new_error: VTAT1R is
 			-- New error message
 		do
-			!! Result
+			create Result
 		end
 
 	update (error_msg: VTAT1) is

@@ -195,7 +195,7 @@ feature
 		do
 			tmp := marked_table.item (body_index)
 			if tmp = Void then
-				!! tmp.make
+				create tmp.make
 				marked_table.put (tmp, body_index)
 			end
 			tmp.force (rout_id)

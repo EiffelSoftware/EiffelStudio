@@ -12,7 +12,7 @@ inherit
 			is_constant, type
 		end
 
-creation
+create
 
 	make
 

@@ -13,7 +13,7 @@ inherit
 	E_CLUSTER_CMD
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 
 	make, do_nothing
 

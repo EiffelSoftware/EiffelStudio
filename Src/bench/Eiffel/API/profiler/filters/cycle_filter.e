@@ -11,7 +11,7 @@ class CYCLE_FILTER
 inherit
 	LANGUAGE_FILTER
 
-creation
+create
 	make
 
 feature -- Creation

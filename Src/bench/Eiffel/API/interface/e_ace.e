@@ -53,7 +53,7 @@ feature -- Access
 		local
 			a_file: RAW_FILE
 		do
-			!! a_file.make (file_name)
+			create a_file.make (file_name)
 			if a_file.exists and then a_file.is_readable then
 				a_file.open_read
 				a_file.readstream (a_file.count)
@@ -82,7 +82,7 @@ feature -- Access
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			!! f.make (f_name);
+			create f.make (f_name);
 			Result := f.exists and then f.is_readable
 		end
 

@@ -22,7 +22,7 @@ inherit
 			make, make_filled
 		end
 
-creation {ARRAY_AS, TUPLE_AS, PARENT_AS, UN_STRIP_AS, FEATURE_CLAUSE_AS, AST_FACTORY, INDEXING_CLAUSE_AS, ROUTINE_AS}
+create {ARRAY_AS, TUPLE_AS, PARENT_AS, UN_STRIP_AS, FEATURE_CLAUSE_AS, AST_FACTORY, INDEXING_CLAUSE_AS, ROUTINE_AS}
 	make, make_filled
 
 feature {NONE} -- Initialization
@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 	make (n: INTEGER) is
 			-- Creation of the list with the comparison set on object
 		do
-			{CONSTRUCT_LIST} Precursor (n)
+			Precursor {CONSTRUCT_LIST} (n)
 			compare_objects
 		end
 
 	make_filled (n: INTEGER) is
 			-- Creation of the list with the comparison set on object
 		do
-			{CONSTRUCT_LIST} Precursor (n)
+			Precursor {CONSTRUCT_LIST} (n)
 			compare_objects
 		end
 

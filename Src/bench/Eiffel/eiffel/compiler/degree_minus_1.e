@@ -12,7 +12,7 @@ inherit
 	DEGREE
 	SHARED_SERVER
 
-creation
+create
 
 	make
 

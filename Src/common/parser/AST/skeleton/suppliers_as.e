@@ -11,7 +11,7 @@ class
 inherit
 	AST_EIFFEL
 
-creation
+create
 	make, initialize
 
 feature {AST_FACTORY} -- Initialization

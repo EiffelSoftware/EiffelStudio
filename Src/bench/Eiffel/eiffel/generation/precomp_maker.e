@@ -9,7 +9,7 @@ inherit
 			generate_additional_rules
 		end
 		
-creation
+create
 	make
 
 feature
@@ -75,14 +75,14 @@ feature
 							if (not cl_type.is_precompiled) then
 									-- C code
 								object_name := cl_type.base_file_name;
-								!!file_name.make (16);
+								create file_name.make (16);
 								file_name.append (object_name);
 								file_name.append (".o");
 								object_baskets.item
 									(cl_type.packet_number).extend (file_name);
 
 									-- Descriptor file
-								!!file_name.make (16);
+								create file_name.make (16);
 								file_name.append (object_name);
 								file_name.append_character (Descriptor_file_suffix);
 								file_name.append (".o");

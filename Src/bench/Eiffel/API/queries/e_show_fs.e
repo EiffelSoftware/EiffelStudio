@@ -15,7 +15,7 @@ inherit
 			execute
 		end
 
-creation
+create
 	make, do_nothing
 
 feature -- Status report
@@ -40,14 +40,14 @@ feature -- Output
 		local
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			!! ctxt;
+			create ctxt;
 			ctxt.set_is_short;
 			ctxt.set_feature_clause_order (feature_clause_order);
 			ctxt.format (current_class);
 			if not ctxt.error then
 				structured_text := ctxt.text
 			else
-				!! structured_text.make;
+				create structured_text.make;
 			end
 		end;
 

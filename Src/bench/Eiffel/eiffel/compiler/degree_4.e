@@ -24,7 +24,7 @@ inherit
 			Inherit_table as analyzer
 		end
 
-creation
+create
 
 	make
 
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new Degree 4.
 		do
-			!! changed_status.make
+			create changed_status.make
 		end
 
 feature -- Access
@@ -578,7 +578,7 @@ feature {NONE} -- Generic checking
 					if not constraint_error_list.is_empty then
 							-- The feature listed in the creation constraint have
 							-- not been declared in the constraint class.
-						!! vtcg7
+						create vtcg7
 						vtcg7.set_class (constraint_info.context_class)
 						vtcg7.set_error_list (constraint_error_list)
 						vtcg7.set_parent_type (constraint_info.gen_type_a)

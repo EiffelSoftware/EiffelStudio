@@ -31,7 +31,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 	
 feature -- Attributes
@@ -179,7 +179,7 @@ end;
 			-- Set of all the processed derivations
 			-- Avoid recursive loop in process
 		once
-			!!Result.make (40);
+			create Result.make (40);
 		end;
 
 feature {NONE}
@@ -328,10 +328,10 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 			any_type_a : TYPE_A
 		do
 				--- Not once because array_id can change
-			!!ref;
-			!!meta_gen.make (1);
+			create ref;
+			create meta_gen.make (1);
 			meta_gen.put (ref, 1);
-			!!true_gen.make (1, 1);
+			create true_gen.make (1, 1);
 			any_type_a := ref.type_a;
 
 			if any_type_a /= Void then

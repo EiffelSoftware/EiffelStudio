@@ -146,7 +146,7 @@ feature -- Access
 			ref: REFERENCE_DESC
 		do
 			if is_true_expanded then
-				!! exp
+				create exp
 				is_true_expanded := False
 				exp.set_class_type (base_class.types.search_item (Current))
 				is_true_expanded := True

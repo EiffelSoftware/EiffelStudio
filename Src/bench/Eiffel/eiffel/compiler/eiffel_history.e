@@ -12,7 +12,7 @@ inherit
 
 	COMPILER_EXPORTER
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

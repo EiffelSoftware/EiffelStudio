@@ -14,7 +14,7 @@ inherit
 			Empty_string as image
 		end
 
-creation
+create
 	make 
 
 feature {NONE} -- Initialization

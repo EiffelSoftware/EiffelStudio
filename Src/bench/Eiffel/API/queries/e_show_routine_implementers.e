@@ -12,7 +12,7 @@ inherit
 	E_FEATURE_CMD;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 
 	make, do_nothing
 
@@ -33,7 +33,7 @@ feature -- Execution
         do
 			written_cl := current_feature.written_class;
 			precursors := current_feature.precursors;
-			!! classes.make;
+			create classes.make;
 			record_descendants (classes, current_class);
 			if not classes.has (current_class) then
 				classes.extend (current_class)

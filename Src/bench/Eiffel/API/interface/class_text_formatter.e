@@ -121,7 +121,7 @@ feature -- Output
 			old_cluster: CLUSTER_I;
 			old_class, class_c: CLASS_C;
 		do
-			!! f.make (e_class);
+			create f.make (e_class);
 			if is_clickable then
 				f.set_in_bench_mode
 			end;

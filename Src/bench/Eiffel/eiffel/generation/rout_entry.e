@@ -103,7 +103,7 @@ feature -- update
 
 	update (class_type: CLASS_TYPE) is
 		do
-			{ENTRY} Precursor (class_type)
+			Precursor {ENTRY} (class_type)
 			set_written_type_id (written_class.meta_type (class_type.type).type_id)
 		end
 

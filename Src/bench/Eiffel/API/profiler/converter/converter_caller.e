@@ -10,7 +10,7 @@ class CONVERTER_CALLER
 inherit
 	PROJECT_CONTEXT
 
-creation
+create
 	make
 
 feature {EWB_GENERATE} -- Initialization
@@ -68,14 +68,14 @@ feature {PROF_CONVERTER} -- Implementation
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			!! profile_out_file.make_from_string (Eiffel_gen_path);
+			create profile_out_file.make_from_string (Eiffel_gen_path);
 			if comp_type.is_equal ("workbench") then
 				profile_out_file.extend (W_code);
 			else
 				profile_out_file.extend (F_code);
 			end;
 			profile_out_file.set_file_name (profile_name);
-			!! file.make (profile_out_file);
+			create file.make (profile_out_file);
 			exists := file.exists
 		end -- check_profile_file
 
@@ -84,21 +84,21 @@ feature {PROF_CONVERTER} -- Implementation
 		local
 			file: PLAIN_TEXT_FILE;
 		do
-			!! translat_file.make_from_string (Eiffel_gen_path);
+			create translat_file.make_from_string (Eiffel_gen_path);
 			if comp_type.is_equal ("workbench") then
 				translat_file.extend (W_code);
 			else
 				translat_file.extend (F_code);
 			end;
 			translat_file.set_file_name (Translation_log_file_name);
-			!! file.make (translat_file);
+			create file.make (translat_file);
 			exists := file.exists
 		end -- check_project_directory
 
 	do_conversion is
 			-- Creates both files and initiates conversion.
 		do
-			!! profile_converter.make (profile_out_file, translat_file, config);
+			create profile_converter.make (profile_out_file, translat_file, config);
 			profile_converter.convert_profile_listing
 			is_last_conversion_ok := profile_converter.is_conversion_ok
 		end;

@@ -5,7 +5,7 @@ class FINAL_MAKER
 inherit
 	MAKEFILE_GENERATOR
 
-creation
+create
 
 	make
 
@@ -56,7 +56,7 @@ feature
 			until
 				i > nb
 			loop
-				!!file_name.make (16);
+				create file_name.make (16);
 				file_name.append (Epoly);
 				file_name.append_integer (i);
 				add_in_system_basket(file_name, i // System_packet_number + 2);
@@ -205,7 +205,7 @@ feature
 								-- precompiled libraries.
 								if not empty_class_types.has (cl_type.static_type_id) then
 										-- C code
-									!!file_name.make (16);
+									create file_name.make (16);
 									file_name.append (cl_type.base_file_name);
 									file_name.append (".o");
 									string_list := object_baskets.item (cl_type.packet_number)

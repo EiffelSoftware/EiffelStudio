@@ -15,7 +15,7 @@ inherit
 			make as list_make
 		end
 
-creation
+create
 	make, make_with_positions
 
 feature -- Initialization

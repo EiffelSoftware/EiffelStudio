@@ -56,7 +56,7 @@ feature -- Output
 	dump: STRING is
 			-- Dump string
 		do
-			!!Result.make (5 + anchor.count);
+			create Result.make (5 + anchor.count);
 			Result.append ("like ");
 			Result.append (anchor);
 		end

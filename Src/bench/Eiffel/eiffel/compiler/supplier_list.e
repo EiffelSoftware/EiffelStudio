@@ -15,7 +15,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -77,7 +77,7 @@ debug ("ACTIVITY");
 end;
 				suppl_info := info (class_id);
 				if suppl_info = Void then
-					!! suppl_info.make (class_id);
+					create suppl_info.make (class_id);
 					put_front (suppl_info);
 				else
 					suppl_info.add_occurrence;
@@ -92,7 +92,7 @@ end;
 	same_suppliers: SUPPLIER_LIST is
 			-- Duplicated list
 		do
-			!!Result.make;
+			create Result.make;
 			from
 				start
 			until

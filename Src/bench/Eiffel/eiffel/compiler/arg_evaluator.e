@@ -20,7 +20,7 @@ feature
 	new_error: VTAT1A is
 			-- New error message
 		do
-			!! Result
+			create Result
 		end
 
 	update (error_msg: VTAT1A) is

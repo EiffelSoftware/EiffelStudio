@@ -10,7 +10,7 @@ class SUBQUERY_OPERATOR
 inherit
 	ACTIVATABLE
 
-creation
+create
 	make
 
 feature -- Initialization

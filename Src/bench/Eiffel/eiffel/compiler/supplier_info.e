@@ -6,7 +6,7 @@ class
 inherit
 	SHARED_WORKBENCH
 
-creation
+create
 
 	make
 

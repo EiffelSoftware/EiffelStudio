@@ -21,7 +21,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -50,11 +50,11 @@ feature
 			-- Table creation
 		do
 			search_table_make (Chunk)
-			!! patterns.make (Chunk)
-			!! info_array.make (Chunk)
-			!! c_pattern_id_counter
-			!! pattern_id_counter.make
-			!! c_patterns.make (Chunk)
+			create patterns.make (Chunk)
+			create info_array.make (Chunk)
+			create c_pattern_id_counter
+			create pattern_id_counter.make
+			create c_patterns.make (Chunk)
 		end
 
 	Chunk: INTEGER is 100
@@ -221,7 +221,7 @@ feature -- Generation
 			end
 			buffer.end_c_specific_code
 
-			!! pattern_file.make_c_code_file (workbench_file_name (Epattern));
+			create pattern_file.make_c_code_file (workbench_file_name (Epattern));
 			pattern_file.put_string (buffer)
 			pattern_file.close
 		end
@@ -313,7 +313,7 @@ feature -- Concurrent Eiffel
 			buffer.putstring ("};%N%N")
 			buffer.end_c_specific_code
 
-			!! final_pattern_file.make_c_code_file (gen_file_name (True, Epattern))
+			create final_pattern_file.make_c_code_file (gen_file_name (True, Epattern))
 			final_pattern_file.put_string (buffer)
 			final_pattern_file.close
 		end
@@ -325,7 +325,7 @@ feature -- Concurrent Eiffel
 			other_pattern: PATTERN
 			info, other_info: PATTERN_INFO
 		do
-			!!info.make (written_in, pattern)
+			create info.make (written_in, pattern)
 			other_info := item (info)
 			if other_info = Void then
 				other_pattern := patterns.item (pattern)

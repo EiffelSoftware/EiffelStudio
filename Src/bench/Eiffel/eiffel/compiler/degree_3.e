@@ -13,7 +13,7 @@ inherit
 	COMPILER_EXPORTER
 	SHARED_ERROR_HANDLER
 
-creation
+create
 
 	make
 

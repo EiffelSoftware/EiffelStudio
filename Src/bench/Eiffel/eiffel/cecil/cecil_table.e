@@ -27,7 +27,7 @@ inherit
             copy, is_equal
         end;
 
-creation
+create
 	init
 	
 feature
@@ -44,13 +44,13 @@ feature
 		do
 			i := hash_size - 1;
 			make (0, i);
-			!! values.make (0, i);
+			create values.make (0, i);
 		end;
 
 	primes: PRIMES is
 			-- Prime number testor
 		once
-			!!Result;
+			create Result;
 		end; -- primes
 
 	wipe_out is

@@ -14,7 +14,7 @@ inherit
 			display_feature
 		end
 
-creation
+create
 
 	make, do_nothing
 

@@ -14,7 +14,7 @@ inherit
 			is_attribute, type
 		end
 
-creation
+create
 
 	make
 

@@ -32,7 +32,7 @@ feature -- Output
 	out : STRING is
 			-- Representation for output.
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append_string ("|%T")
 			Result.append_string (calls.out)
 			Result.append_string ("%T|%T")

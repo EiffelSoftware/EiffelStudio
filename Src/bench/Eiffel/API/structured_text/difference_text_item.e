@@ -12,7 +12,7 @@ inherit
 	TEXT_ITEM
 	SHARED_TEXT_ITEMS
 
-creation
+create
 
 	make
 

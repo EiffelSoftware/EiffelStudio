@@ -18,7 +18,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make,
 	make_compilation_stat
 

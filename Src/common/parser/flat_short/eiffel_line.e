@@ -5,7 +5,7 @@ indexing
 
 class EIFFEL_LINE
 
-creation
+create
 	make
 	
 feature -- Initialization
@@ -61,7 +61,7 @@ feature -- Properites
 						comment_string.right_adjust;
 					else
 							-- Empty comment line.
-						!! comment_string.make (0)
+						create comment_string.make (0)
 					end;
 					Result.make (comment_string, start_position + comment_pos);
 				end
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 
 	comment_line: CELL2 [STRING, INTEGER] is
 		once
-			!! Result.make (Void, 0)
+			create Result.make (Void, 0)
 		end;
 				
 feature -- Debug

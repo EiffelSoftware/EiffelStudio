@@ -14,7 +14,7 @@ inherit
 
 	COMPILER_EXPORTER
 
-creation
+create
 	make, make_for_case
 
 feature -- Initialization
@@ -27,7 +27,7 @@ feature -- Initialization
 			valid_ast: ast /= Void;
 		do
 			make_for_case;
-			!! eiffel_file.make (file_name, ast.end_position);
+			create eiffel_file.make (file_name, ast.end_position);
 			class_ast := ast;
 			ast.simple_format (Current)
 		ensure
@@ -39,9 +39,9 @@ feature -- Initialization
 			-- format for eiffelcase (to get
 			-- image of precondition and postcondition).
 		do
-			!! format_stack.make;
-			!! text.make;
-			!! format;
+			create format_stack.make;
+			create text.make;
+			create format;
 			format_stack.extend (format);
 		end;
 
@@ -449,9 +449,9 @@ feature -- Output
 			end;
 			name := name_of_current_feature;
 			if name.item (1).is_alpha then
-				!KEYWORD_TEXT! item.make (name)
+				create {KEYWORD_TEXT} item.make (name)
 			else
-				!SYMBOL_TEXT! item.make (name)
+				create {SYMBOL_TEXT} item.make (name)
 			end
 			text.add (item)
 		end;
@@ -465,9 +465,9 @@ feature -- Output
 		do
 			name := name_of_current_feature;
 			if name.item (1).is_alpha then
-				!KEYWORD_TEXT! item.make (name)
+				create {KEYWORD_TEXT} item.make (name)
 			else
-				!SYMBOL_TEXT! item.make (name)
+				create {SYMBOL_TEXT} item.make (name)
 			end
 			text.add_space;
 			text.add (item);
@@ -521,7 +521,7 @@ feature -- Output
 			s: STRING
 		do
 			from
-				!! s.make (0);
+				create s.make (0);
 				c_count := c.count;
 				c_area := c.area
 			until
@@ -530,13 +530,13 @@ feature -- Output
 				if between_quotes and c_area.item (i) = '%'' then
 					if not s.is_empty then
 						text.add_quoted_text (s);
-						!! s.make (0)
+						create s.make (0)
 					end;
 					between_quotes := false
 				elseif not between_quotes and c_area.item (i) = '`' then
 					if not s.is_empty then
 						text.add_comment_text (s)
-						!! s.make (0)
+						create s.make (0)
 					end;
 					between_quotes := true
 				else
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 			positive_i: i > 0
 		do
 			if i > 5 then
-				!! Result.make (i)
+				create Result.make (i)
 			else
 				Result := tabs_array @ i
 			end

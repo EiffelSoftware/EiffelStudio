@@ -30,7 +30,7 @@ feature -- Initialization
 			compiled_class: a_class.has_feature_table
 		do
 			current_class := a_class;	
-			!! structured_text.make
+			create structured_text.make
 		ensure
 			class_set: current_class = a_class;
 			structured_text_not_void: structured_text /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 		require
 			valid_list: list /= Void
 		do
-			!! Result.make
+			create Result.make
 			from
 				list.start
 			until

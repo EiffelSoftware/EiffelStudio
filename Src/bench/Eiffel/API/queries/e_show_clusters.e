@@ -12,7 +12,7 @@ inherit
 	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 
 	make, do_nothing
 
@@ -97,7 +97,7 @@ feature -- Execution
 			a_classe: CLASS_C;
 			nb_of_classes: INTEGER;
 		do
-			!! sorted_class_names.make;
+			create sorted_class_names.make;
 			classes := cluster.classes;
 
 			structured_text.add_string ("Cluster: ");

@@ -11,7 +11,7 @@ inherit
 
 	TEXT_ITEM
 
-creation
+create
 
 	make
 

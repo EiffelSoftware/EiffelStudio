@@ -18,7 +18,7 @@ inherit
 			is_equal
 		end;
 
-creation
+create
 
 	make
 
@@ -94,7 +94,7 @@ feature
 	duplicate: like Current is
 			-- Duplication
 		do
-			!!Result.make (result_type);
+			create Result.make (result_type);
 			if argument_count > 0 then
 				Result.set_argument_types (clone (argument_types));
 			end;
@@ -112,12 +112,12 @@ feature
 			new_arguments: like argument_types;
 			type: TYPE_I;
 		do
-			!!Result.make (result_type.instantiation_in (gen_type));
+			create Result.make (result_type.instantiation_in (gen_type));
 			n := argument_count;
 			if n > 0 then
 				from
 					i := 1;
-					!!new_arguments.make (1, n);
+					create new_arguments.make (1, n);
 					Result.set_argument_types (new_arguments);
 				until
 					i > n
@@ -139,10 +139,10 @@ feature
 			new_arguments: ARRAY [TYPE_C];
 			i, arg_count: INTEGER;
 		do
-			!!Result.make (result_type.c_type);
+			create Result.make (result_type.c_type);
 			arg_count := argument_count;
 			if arg_count > 0 then
-				!!new_arguments.make (1, arg_count);
+				create new_arguments.make (1, arg_count);
 				from
 					i := 1;
 				until

@@ -3,7 +3,7 @@
 class PASS_CONTROL 
 
 
-creation
+create
 
 	make
 
@@ -29,10 +29,10 @@ feature
 	make is
 			-- Initialization
 		do
-			!!removed_features.make (5);
-			!!propagators.make;
+			create removed_features.make (5);
+			create propagators.make;
 			propagators.compare_objects
-			!!melted_propagators.make;
+			create melted_propagators.make;
 			melted_propagators.compare_objects
 		end;
 

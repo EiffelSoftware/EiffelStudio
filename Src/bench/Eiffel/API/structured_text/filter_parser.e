@@ -32,7 +32,7 @@ feature {NONE} -- Formats
 			escape_char: CHARACTER;
 			escape: STRING
 		do
-			!!filter_file.make (filename);
+			create filter_file.make (filename);
 			if filter_file.exists and then filter_file.is_readable then
 				filter_file.open_read;
 				if filter_file.readable then
@@ -44,8 +44,8 @@ feature {NONE} -- Formats
 						from
 							in_construct := true;
 							in_before := false;
-							!! construct.make (10);
-							!! construct_list.make;
+							create construct.make (10);
+							create construct_list.make;
 							before := Void;
 							after := Void;
 							get_next_character
@@ -59,11 +59,11 @@ feature {NONE} -- Formats
  								elseif last_char_read = ',' then
 									construct_list.extend (construct);
 										-- synoymn constructs i.e c1, c2
-									!! construct.make (0)
+									create construct.make (0)
  								elseif last_char_read = '|' then
 									in_construct := false;
 									in_before := true;
-									!!before.make (5)
+									create before.make (5)
 								else
 									syntax_error ("%"|%" expected");
 									read_error := true
@@ -73,7 +73,7 @@ feature {NONE} -- Formats
 									before.extend (last_char_read)
  								elseif last_char_read = '*' then
 									in_before := false;
-									!!after.make (5)
+									create after.make (5)
 								else
 									syntax_error ("%"*%" expected");
 									read_error := true
@@ -128,7 +128,7 @@ feature {NONE} -- Formats
 										not construct.is_empty and then 
 										before /= Void 
 									then
-										!!new_format.make (before, after);
+										create new_format.make (before, after);
 										format_table.force (new_format, construct)
 debug ("FILTERS")
 	io.error.putstring (construct);

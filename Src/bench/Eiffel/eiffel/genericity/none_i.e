@@ -140,7 +140,7 @@ feature
 	
 	type_a: NONE_A is
 		do
-			!! Result
+			create Result
 		end
 
 	c_type: TYPE_C is

@@ -10,7 +10,7 @@ feature
 	operator_table: OPERATOR_TABLE is
 			-- Operator table
 		once
-			!! Result.make
+			create Result.make
 		end
 
 end

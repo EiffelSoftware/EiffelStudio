@@ -14,7 +14,7 @@ inherit
 			wipe_out
 		end
 
-creation
+create
 	make
 	
 

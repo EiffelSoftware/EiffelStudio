@@ -21,7 +21,7 @@ inherit
 			is_integer as string_is_integer
 		end
 
-creation
+create
 	make, initialize
 
 feature {AST_FACTORY} -- Initialization

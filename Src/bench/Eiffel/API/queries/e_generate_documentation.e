@@ -24,7 +24,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_flat, 
 	make_flat_short, 
 	make_short, 
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			processed: LINKED_LIST [CLASS_C];
 			c: CLASS_C;
 		do
-			!! processed.make;
+			create processed.make;
 			processed.put_front (Eiffel_system.any_class.compiled_class)
 			parents := e_class.parents;
 			from
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			end;
 			f_name := clone (file_name);
 			f_name.add_extension (ext)
-			!! file_window.make (f_name);
+			create file_window.make (f_name);
 			file_window.open_file;
 			if not file_window.exists then
 				error_window.put_string ("Cannot create file: ");

@@ -15,7 +15,7 @@ inherit
 			function, copy, int_function
 		end
 
-creation
+create
 	make
 
 feature -- Creation feature

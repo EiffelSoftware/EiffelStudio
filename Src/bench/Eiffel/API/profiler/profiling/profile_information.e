@@ -7,15 +7,15 @@ indexing
 
 class PROFILE_INFORMATION
 
-creation
+create
 	make
 
 feature -- Creation
 
 	make is
 		do
-			!! profile_data.make
-			!! cyclic_functions.make
+			create profile_data.make
+			create cyclic_functions.make
 		end
 
 feature -- Adding information

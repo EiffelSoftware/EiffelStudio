@@ -44,7 +44,7 @@ feature
 	description: BOOLEAN_DESC is
 			-- Type description for skeleton
 		do
-			!! Result
+			create Result
 		end
 
 	dump (buffer: GENERATION_BUFFER) is
@@ -96,7 +96,7 @@ feature
 
 	type_a: BOOLEAN_A is
 		do
-			!! Result
+			create Result
 		end
 
 	separate_get_macro: STRING is "CURGB"

@@ -14,7 +14,7 @@ inherit
 			image
 		end
 
-creation
+create
 
 	make
 

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.warning_d (Current, a_parent);
+			!WARNING_D_IMP!implementation.make (Current, a_parent);
 			set_default
 		ensure
 			parent = a_parent;

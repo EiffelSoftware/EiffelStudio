@@ -14,7 +14,7 @@ inherit
 
 	LIST_MAN_I;
 
-	PRIMITIVE_M
+	PRIMITIVE_IMP
 		undefine
 			create_callback_struct
 		end;

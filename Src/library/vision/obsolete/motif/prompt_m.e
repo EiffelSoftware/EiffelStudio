@@ -13,7 +13,7 @@ inherit
  
 	PROMPT_I;
 
-	SELECTION_M
+	SELECTION_IMP
 
 creation
 	make

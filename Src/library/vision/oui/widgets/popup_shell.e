@@ -105,7 +105,7 @@ feature -- Status setting
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
-	implementation: POPUP_S_I;
+	implementation: POPUP_SHELL_I;
 			-- Implementation of popup shell
 	
 invariant

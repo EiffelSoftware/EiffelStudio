@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			valid_name: a_name /= Void;
 			valid_parent: a_parent /= Void
 		do
-			create_ev_widget (a_name, a_parent, True)
+			create_ev_widget (a_name, a_parent, False)
 		ensure
 			parent_set: parent = a_parent;
 			identifer_set: identifier.is_equal (a_name);
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.menu_pull (Current, man, a_parent);
+			!MENU_PULL_IMP!implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;

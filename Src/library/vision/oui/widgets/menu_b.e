@@ -59,7 +59,7 @@ feature {NONE} -- Initialziation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.menu_b (Current, man, a_parent);
+			!MENU_B_IMP!implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;

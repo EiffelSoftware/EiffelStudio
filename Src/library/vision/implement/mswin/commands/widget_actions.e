@@ -16,7 +16,7 @@ creation
 
 feature {NONE} -- Implementation
 
-	make (w: WIDGET_WINDOWS) is
+	make (w: WIDGET_IMP) is
 		require
 			w_exists: w /= Void
 		do
@@ -37,7 +37,7 @@ feature -- Access
 	translations: LINKED_LIST [TRANSLATION_COMMAND]
 			-- Translation commands for this widget
 
-	widget: WIDGET_WINDOWS
+	widget: WIDGET_IMP
 			-- Widget for actions to be performed on
 
 feature -- Element change

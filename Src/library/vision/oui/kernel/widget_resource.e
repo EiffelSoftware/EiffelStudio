@@ -21,7 +21,7 @@ feature -- Initalization
 	make is
 			-- Create object
 		do
-			implementation := toolkit.widget_resource;;
+			!WIDGET_RESOURCE_IMP!implementation.make
 		end;
 
 feature -- Status report

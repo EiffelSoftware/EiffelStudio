@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add (widget: WIDGET_WINDOWS; c: COMMAND; arg: ANY) is
+	add (widget: WIDGET_IMP; c: COMMAND; arg: ANY) is
 		local
 			action: ACTION_WINDOWS
 			wa: WIDGET_ACTIONS
@@ -43,7 +43,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete (widget: WIDGET_WINDOWS) is
+	delete (widget: WIDGET_IMP) is
 			-- Delete all actions for `widget'
 		do
 			if widget_actions_table.has (widget) then
@@ -51,7 +51,7 @@ feature -- Removal
 			end
 		end
 
-	remove (widget: WIDGET_WINDOWS; c: COMMAND; arg: ANY) is
+	remove (widget: WIDGET_IMP; c: COMMAND; arg: ANY) is
 		local
 			e: WIDGET_ACTIONS
 			act: LINKED_LIST [ACTION_WINDOWS]
@@ -64,7 +64,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	execute (w: WIDGET_WINDOWS; context_data: CONTEXT_DATA) is
+	execute (w: WIDGET_IMP; context_data: CONTEXT_DATA) is
 			-- Execute the actions on widget with `context_data'
 		local
 			wa: WIDGET_ACTIONS
@@ -77,13 +77,13 @@ feature -- Basic operations
 
 feature -- Implementation
 
-	widget_actions (widget: WIDGET_WINDOWS): WIDGET_ACTIONS is
+	widget_actions (widget: WIDGET_IMP): WIDGET_ACTIONS is
 			-- Actions for `widget'
 		do
 			Result := widget_actions_table.item (widget)
 		end
 
-	widget_actions_table: HASH_TABLE [WIDGET_ACTIONS, WIDGET_WINDOWS]
+	widget_actions_table: HASH_TABLE [WIDGET_ACTIONS, WIDGET_IMP]
 			-- Table of Widget actions for a Widget
 
 end -- class ACTIONS_MANAGER

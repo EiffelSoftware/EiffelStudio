@@ -14,9 +14,9 @@ inherit
 
 	SCROLL_L_I;
 
-	FONTABLE_M;
+	FONTABLE_IMP;
 
-	PRIMITIVE_COMPOSITE_M
+	PRIMITIVE_COMPOSITE_IMP
 		undefine
 			set_no_event_propagation
 		redefine
@@ -172,7 +172,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_background_color_from_imp (color_imp: COLOR_X) is
+	set_background_color_from_imp (color_imp: COLOR_IMP) is
 			-- Set the background color from implementation `color_imp'.
 		local
 			w: MEL_WIDGET

@@ -29,7 +29,7 @@ feature -- Initialization
 	make is
 			-- Create a timer.
 		do
-			implementation := toolkit.timer (Current)
+			!TIMER_IMP!implementation.make
 		end;
 
 feature -- Status report

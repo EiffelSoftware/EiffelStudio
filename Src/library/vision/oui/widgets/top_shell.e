@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			screen := a_screen;
 			identifier := clone (a_name);
 			widget_manager.new (Current, Void);
-			implementation := toolkit.top_shell (Current);
+			!TOP_SHELL_IMP!implementation.make (Current);
 			set_default
 		end;
 	

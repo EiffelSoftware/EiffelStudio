@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.dialog_shell (current, a_parent);
+			!DIALOG_SHELL_IMP!implementation.make (current, a_parent);
 			set_default
 		ensure
 			parent_set: parent = a_parent;
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 	
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
-	implementation: DIALOG_S_I
+	implementation: DIALOG_SHELL_I
 			-- Implementation of dialog shell
 
 feature {NONE} -- Implementation

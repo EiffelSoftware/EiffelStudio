@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 				identifier:= clone (a_name);
 			end;	
 			screen := a_screen;
-			implementation:= toolkit.base (Current);
+			!BASE_IMP!implementation.make (Current);
 			set_default
 		end;
 

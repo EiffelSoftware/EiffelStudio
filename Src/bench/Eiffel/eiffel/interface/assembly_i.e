@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 			l_vd64: VD64
 			l_vd67: VD67
-		do
+		once
 			create l_dir.make (assembly_cache_folder)
 			if l_dir.exists then
 				create Result.make (versioned_assembly_cache_folder, system.clr_runtime_version)
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 							-- Path to cache is not valid
 						create l_vd67.make (assembly_cache_folder)
 						Error_handler.insert_error (l_vd67)
-						Result := Void	
+						Result := Void
 					end
 				end
 			else

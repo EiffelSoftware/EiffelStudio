@@ -24,25 +24,25 @@ feature -- Access
 			create Result.make (0)
 		end
 		
-	display_agent (name: STRING; textable: EV_TEXTABLE): PROCEDURE [ANY, TUPLE []] is
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE []] is
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
-			-- outputs to `textable'.
+			-- outputs to `string_handler'.
 		require
-			textable_not_void: textable /= Void
+			string_handler_not_void: string_handler /= Void
 			name_not_void_or_empty: name /= Void and not name.is_empty
 		do
-			Result := agent output_agent2 (name, textable)
+			Result := agent output_agent2 (name, string_handler)
 		ensure
 			Result_not_void: Result /= Void
 		end
 		
 feature {NONE} -- Implementation
 
-	output_agent2 (name: STRING; textable: EV_TEXTABLE) is
+	output_agent2 (name: STRING; string_handler: ORDERED_STRING_HANDLER) is
 			--
 		do
-			textable.set_text (name + " fired.")
+			string_handler.record_string (name + " fired.")
 		end
 
 end -- class GB_EV_NOTIFY_ACTION_SEQUENCE

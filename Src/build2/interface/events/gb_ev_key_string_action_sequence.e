@@ -27,30 +27,30 @@ feature -- Access
 			Result.extend ("a_keystring")
 		end
 		
-	display_agent (name: STRING; textable: EV_TEXTABLE): PROCEDURE [ANY, TUPLE [STRING]] is
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [STRING]] is
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
-			-- outputs to `textable'.
+			-- outputs to `string_handler'.
 		require
-			textable_not_void: textable /= Void
+			string_handler_not_void: string_handler /= Void
 			name_not_void_or_empty: name /= Void and not name.is_empty
 		do
-			Result := agent internal_display_agent (?, name, textable)
+			Result := agent internal_display_agent (?, name, string_handler)
 		ensure
 			Result_not_void: Result /= Void
 		end
 		
 feature {NONE} -- Implementation
 
-	internal_display_agent (a_keystring: STRING; name: STRING; textable: EV_TEXTABLE) is
-			-- Display all other arguments of `Current' on `textable', prepended
+	internal_display_agent (a_keystring: STRING; name: STRING; string_handler: ORDERED_STRING_HANDLER) is
+			-- Display all other arguments of `Current' on `string_handler', prepended
 			-- with `name' fired.
 		do
 				-- You are not allowed to add a return character to a text field.
 			if a_keystring /= "%R" then
-				textable.set_text (name + " fired.%Nkeystring : " + a_keystring.out)
+				string_handler.record_string (name + " fired.%Nkeystring : " + a_keystring.out)
 			else
-				textable.set_text (name + " fired.")
+				string_handler.record_string (name + " fired.")
 			end
 		end
 

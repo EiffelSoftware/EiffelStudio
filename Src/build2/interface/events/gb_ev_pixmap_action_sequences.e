@@ -35,9 +35,9 @@ feature -- Access
 			Result.extend ("-- Actions to be performed when an area needs to be redrawn.")
 		end
 		
-	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
+	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
 			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
-			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+			-- action sequence and all arguments in `string_handler'. If no `adding' then `wipe_out' `action_sequence'.
 		local
 			geometry_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE
 			pixmap: EV_PIXMAP
@@ -49,7 +49,7 @@ feature -- Access
 			if action_sequence.is_equal ("expose_actions") then
 				if adding then
 					geometry_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_GEOMETRY_ACTION_SEQUENCE"))
-					pixmap.expose_actions.extend (geometry_sequence.display_agent (action_sequence, textable))
+					pixmap.expose_actions.extend (geometry_sequence.display_agent (action_sequence, string_handler))
 				else
 					pixmap.expose_actions.wipe_out
 				end

@@ -16,16 +16,16 @@
 		<paragraph>You can create an MDI application by following these steps:</paragraph>
 		<list ordered="true">
 			<item>Create a 
-				<bold>Form</bold> ( 
+				<bold>Form</bold> (
 				<bold>MainForm</bold>) that represents the MDI parent window and set its 
 				<bold>IsMdiContainer</bold> property to 
-				<bold>true</bold>. The following code demonstrates how to set this property.
-				<code_block>set_is_mdi_container (True)</code_block>
+				<bold>True</bold>. The following code demonstrates how to set this property.
+				<code_block><feature_name>set_is_mdi_container</feature_name> <symbol>(</symbol><reserved_word>True</reserved_word><symbol>)</symbol></code_block>
 			</item>
 			<item>Create child forms and set the 
 				<bold>MdiParent</bold> property of each form to reference the parent form. The following code demonstrates setting the MDI parent for an instance of a child form.
 				<line_break/>
-				<code_block>doc.set_mdi_parent (Current)</code_block>
+				<code_block><feature_name>doc</feature_name>.<feature_name>set_mdi_parent</feature_name> <symbol>(</symbol><reserved_word>Current</reserved_word><symbol>)</symbol></code_block>
 			</item>
 		</list>
 		<paragraph>If you have different types of data to display, you can have multiple types of child forms. To display a child form, create an instance of the child form and call its 
@@ -41,17 +41,17 @@
 			<bold>Windows</bold> menu, add the menu items for tiling and cascading to a 
 			<bold>Windows</bold> menu in your parent form and set the 
 			<bold>MdiList</bold> property to 
-			<bold>true</bold>for the top-level 
-			<bold>Windows</bold> menu. The following codedemonstrates how to create a 
+			<bold>True</bold> for the top-level 
+			<bold>Windows</bold> menu. The following code demonstrates how to create a 
 			<bold>Windows</bold> menu in an MDIapplication.
 		</paragraph>
-		<code_block>mi_window: WINFORMS_MENU_ITEM</code_block>
+		<code_block><feature_name>mi_window</feature_name><symbol>:</symbol> <class_name>WINFORMS_MENU_ITEM</class_name></code_block>
 		<code_block>
-mi_window := main_menu.get_menu_items.add (("&amp;Window").to_cil)
-dummy := mi_window.get_menu_items.add_string_event_handler (("&amp;Cascade").to_cil, create {EVENT_HANDLER}.make (Current, $window_cascade_clicked))
-dummy := mi_window.get_menu_items.add_string_event_handler (("Tile &amp;Horizontal").to_cil, create {EVENT_HANDLER}.make (Current, $window_tile_h_clicked))
-dummy := mi_window.get_menu_items.add_string_event_handler (("Tile &amp;Vertical").to_cil, create {EVENT_HANDLER}.make (Current, $window_tile_v_clicked))
-mi_window.set_mdi_list (True) -- Adds the MDI Window List to the bottom of the menu
+<feature_name>mi_window</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>main_menu</feature_name>.<feature_name>get_menu_items</feature_name>.<feature_name>add</feature_name> <symbol>(</symbol><symbol>(</symbol>"<string>&amp;Window</string>"<symbol>)</symbol><feature_name></feature_name>.<feature_name>to_cil</feature_name><symbol>)</symbol>
+<feature_name>dummy</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>mi_window</feature_name>.<feature_name>get_menu_items</feature_name>.<feature_name>add_string_event_handler</feature_name> <symbol>(</symbol><symbol>(</symbol>"<string>&amp;Cascade</string>"<symbol>)</symbol><feature_name></feature_name>.<feature_name>to_cil</feature_name>, <keyword>create</keyword> <symbol>{</symbol><class_name>EVENT_HANDLER</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><keyword>Current</keyword>, <symbol>$</symbol><feature_name>window_cascade_clicked</feature_name><symbol>)</symbol><symbol>)</symbol>
+<feature_name>dummy</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>mi_window</feature_name>.<feature_name>get_menu_items</feature_name>.<feature_name>add_string_event_handler</feature_name> <symbol>(</symbol><symbol>(</symbol>"<string>Tile &amp;Horizontal</string>"<symbol>)</symbol><feature_name></feature_name>.<feature_name>to_cil</feature_name>, <keyword>create</keyword> <symbol>{</symbol><class_name>EVENT_HANDLER</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><keyword>Current</keyword>, <symbol>$</symbol><feature_name>window_tile_h_clicked</feature_name><symbol>)</symbol><symbol>)</symbol>
+<feature_name>dummy</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>mi_window</feature_name>.<feature_name>get_menu_items</feature_name>.<feature_name>add_string_event_handler</feature_name> <symbol>(</symbol><symbol>(</symbol>"<string>Tile &amp;Vertica</string>l"<symbol>)</symbol><feature_name></feature_name>.<feature_name>to_cil</feature_name>, <keyword>create</keyword> <symbol>{</symbol><class_name>EVENT_HANDLER</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><keyword>Current</keyword>, <symbol>$</symbol><feature_name>window_tile_v_clicked</feature_name><symbol>)</symbol><symbol>)</symbol>
+<feature_name>mi_window</feature_name>.<feature_name>set_mdi_list</feature_name> <symbol>(</symbol>True<symbol>)</symbol> <comment>-- Adds the MDI Window List to the bottom of the menu</comment>
 </code_block>
 		<paragraph/>
 		<paragraph/>
@@ -66,12 +66,12 @@ mi_window.set_mdi_list (True) -- Adds the MDI Window List to the bottom of the m
 		</paragraph>
 		<code_block>
 ...
-add_mdi_child_activate (create {EVENT_HANDLER}.make (Current, $mdi_child_activated))
+<feature_name>add_mdi_child_activate</feature_name> <symbol>(</symbol><keyword>create</keyword> <symbol>{</symbol><class_name>EVENT_HANDLER</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><keyword>Current</keyword>, <symbol>$</symbol><feature_name>mdi_child_activated</feature_name><symbol>)</symbol><symbol>)</symbol>
 ...
-mdi_child_activated (sender: SYSTEM_OBJECT; e: EVENT_ARGS) is
-	do
-		status_bar.set_text (active_mdi_child.get_text)
-	end
+<feature_name>mdi_child_activated</feature_name> <symbol>(</symbol>sender<symbol>:</symbol> <class_name>SYSTEM_OBJECT</class_name>; e<symbol>:</symbol> <class_name>EVENT_ARGS</class_name><symbol>)</symbol> <keyword>is</keyword>
+	<keyword>do</keyword>
+		<feature_name>status_bar</feature_name>.<feature_name>set_text</feature_name> <symbol>(</symbol><feature_name>active_mdi_child</feature_name>.<feature_name>get_text</feature_name><symbol>)</symbol>
+	<keyword>end</keyword>
 ...
 </code_block>
 	</paragraph></document>

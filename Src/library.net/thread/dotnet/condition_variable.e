@@ -126,6 +126,7 @@ feature -- Status setting
 		require
 			is_set: is_set
 			a_mutex_not_void: a_mutex /= Void
+			timeout_positive: a_timeout >= 0
 		local
 			l_set_signal_succeed: BOOLEAN
 			l_wait_with_timeout_succeed: BOOLEAN

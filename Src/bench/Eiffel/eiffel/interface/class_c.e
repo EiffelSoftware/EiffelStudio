@@ -1218,6 +1218,8 @@ end
 				Tmp_ast_server.cache.wipe_out
 				Tmp_body_server.cache.wipe_out
 				Tmp_inv_ast_server.cache.wipe_out
+				Tmp_byte_server.wipe_out
+				Tmp_inv_byte_server.wipe_out
 			end
 		end
 

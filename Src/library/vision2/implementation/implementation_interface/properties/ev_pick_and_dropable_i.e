@@ -250,7 +250,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := Default_pixmaps.No_cursor
 		end
 	
-	execute (
+execute (
 			a_x, a_y: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
@@ -265,14 +265,16 @@ feature {EV_ANY_I} -- Implementation
 			pointer_y := a_screen_y
 			
 			target := pointed_target
-			if target /= last_pointed_target then
-				update_pointer_style (target)
-			end						
+			--| FIXME we should only need to call update_pointer_style
+			--| if `target' /= `last_pointed_target'. However, on windows, 
+			--| this leasds to problems. (Try picking from a tree item).
+			update_pointer_style (target)
 		end
 
 	update_pointer_style (target: EV_ABSTRACT_PICK_AND_DROPABLE) is
 			-- Assign correct cursor for transport to `Current'.  
 		do
+			io.putstring ("update_pointer_style called%N")
 			if
 				target /= Void and then (
 					target.drop_actions.accepts_pebble (pebble)
@@ -424,6 +426,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/07/11 20:45:06  rogers
+--| Reverted `execute' back to previous implementation as it was causing problems.
+--|
 --| Revision 1.5  2001/06/20 23:32:09  manus
 --| Removed non-used local variable.
 --|

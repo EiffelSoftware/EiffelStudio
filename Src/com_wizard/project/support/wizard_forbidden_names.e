@@ -68,6 +68,7 @@ feature -- Access
 			Result.force (Or_keyword, Or_keyword)
 			Result.force (Prefix_keyword, Prefix_keyword)
 			Result.force (Redefine_keyword, Redefine_keyword)
+			Result.force (Reference_keyword, Reference_keyword)
 			Result.force (Rename_keyword, Rename_keyword)
 			Result.force (Require_keyword, Require_keyword)
 			Result.force (Rescue_keyword, Rescue_keyword)

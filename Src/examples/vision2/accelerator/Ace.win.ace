@@ -39,7 +39,7 @@ default
 -- accelerator example
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\vision2\accel"
+	root_cluster:		"$ISE_EIFFEL\examples\vision2\accelerator"
 
 
 	all base:		"$ISE_EIFFEL\library\base"

@@ -16,8 +16,6 @@ inherit
 		end
 
 	EV_MENU_ITEM_IMP
-		undefine
-			escape_pnd
 		redefine
 			interface,
 			make,
@@ -31,9 +29,6 @@ inherit
 		end
 
 	EV_MENU_ITEM_LIST_IMP
-		undefine
-			pnd_press,
-			check_drag_and_drop_release
 		redefine
 			interface,
 			make,
@@ -313,7 +308,7 @@ feature {NONE} -- Implementation
 			-- Vertical offset of `Current' relative to screen.
 		do
 		end
-	
+		
 	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.

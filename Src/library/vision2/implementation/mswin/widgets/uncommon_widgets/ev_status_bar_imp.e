@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			-- Create a status bar with one part.
 		do 
 			wel_make (default_parent, 0)
-			!! ev_children.make (1)
+			!! ev_children.make (0)
 			set_parent (par)
 		end
 

@@ -25,7 +25,7 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
 			set_width,
@@ -152,8 +152,8 @@ feature {NONE} -- Implementation : WEL features
 			-- By default there is no background
 		do
 			if background_color /= Void then
-				!! Result.make_solid (background_color)
-				disable_default_processing
+				!! Result.make_solid (background_color_imp)
+--				disable_default_processing
 			end
 		end
 
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation : WEL features
 			top: INTEGER
 		do
 			paint_dc.select_font (private_font)
-			paint_dc.set_background_color (background_color)
+			paint_dc.set_background_color (background_color_imp)
 			paint_dc.text_out (10, 0, text)
 			if text.empty then
 				top := 0

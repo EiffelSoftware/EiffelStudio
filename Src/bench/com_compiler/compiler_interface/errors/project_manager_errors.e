@@ -30,9 +30,9 @@ feature {NONE} -- Error Messages
 			Result.put ("Project file is incomplete", eif_exceptions_project_incomplete)
 			Result.put ("Read/Write error - could not read project file", eif_exceptions_ioerror)
 			Result.put ("Project file has not been compiled for .NET", eif_exceptions_non_dotnet_project)
+			Result.put ("Unable to initialize project directory", eif_exceptions_unable_to_initialize_project)
 		ensure
 			non_void_result: Result /= Void
 		end
-		
 
 end -- class PROJECT_MANAGER_ERRORS

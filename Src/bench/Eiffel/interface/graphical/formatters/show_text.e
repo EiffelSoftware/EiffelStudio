@@ -79,7 +79,9 @@ feature
 			stone_text, temp, class_name: STRING;
 			filed_stone: FILED_STONE;
 			classc_stone: CLASSC_STONE;
-			modified_class: BOOLEAN
+			class_text: CLASS_TEXT;
+			modified_class: BOOLEAN;
+			last_cursor_position: INTEGER
 		do
 			classc_stone ?= stone;
 			if 
@@ -134,9 +136,21 @@ feature
 							end
 						end
 					end;
+					class_text ?= text_window;
+					if 
+						class_text /= Void and then 
+						class_text.last_format = class_text.tool.showclick_command
+					then
+						last_cursor_position := class_text.cursor_position
+					end;
 					text_window.set_editable;
 					text_window.show_image;
 					text_window.set_mode_for_editing;
+					if last_cursor_position <= text_window.size then
+						text_window.set_cursor_position (last_cursor_position)
+					elseif last_cursor_position /= 0 then
+						text_window.set_cursor_position (text_window.size)
+					end;
 					text_window.set_last_format (Current)
 				end
 			end

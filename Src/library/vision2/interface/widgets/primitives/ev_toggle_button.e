@@ -2,8 +2,10 @@ indexing
 
 	description: 
 		"EiffelVision toggle button. It looks and acts like   %
-		% a button. But the button looks raised when it isn't %
-		% checked, and sunken when it is checked."
+		% a button, but is always in one of two states,%
+                %alternated by a click. Toggle button may be%
+                %depressed, and when clicked again, it will pop back%
+                %up. Click again, and it will pop back down."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -42,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 	
 	pressed: BOOLEAN is
-                        -- Is toggel pressed
+                        -- Is toggle pressed
                 require
                         exists: not destroyed
                 do

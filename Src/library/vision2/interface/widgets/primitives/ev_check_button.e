@@ -2,9 +2,9 @@ indexing
 	description: "EiffelVision Check button. Widget that has a check box %
 				% and a text."
 	status: "See notice at end of class"
-	id: "$$"
-	date: "$$"
-	revision: "$$"
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 	
 class 
 	EV_CHECK_BUTTON

@@ -48,20 +48,23 @@ feature -- Status setting
 			file: PLAIN_TEXT_FILE
 		do
 			application.idle_actions.prune (application.idle_actions.first)
+			file_name := class_name (widget)
+			file_name.to_lower
+			file_name.append ("_flatshort.txt")
 			if installation_location /= Void then
-				file_name := class_name (widget)
-				file_name.to_lower
-				file_name.append ("_flatshort.txt")
 				create directory_name.make_from_string (installation_location)
 				directory_name.extend ("flatshort")
 				create full_filename.make_from_string (directory_name.out)
 				full_filename.extend (file_name)
-				create file.make_open_read (full_filename)
+				create file.make (full_filename)
+			end
+			if installation_location /= Void and then file.exists then
+				file.open_read
 				file.readstream (file.count)
 				text.set_text (file.last_string)
 				file.close
 			else
-				text.set_text ("Unable to locate the tests for " + test_widget_type + ".%N%N" + location_error_message)
+				text.set_text ("Unable to locate the documentation for " + test_widget_type + ".%N%N" + location_error_message)
 			end
 		end
 

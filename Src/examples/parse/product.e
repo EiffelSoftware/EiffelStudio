@@ -1,13 +1,14 @@
 -- Products: Term "*" Term "*" ... "*" Term
 
-class PRODUCT 
+class
+	PRODUCT 
 
 inherit
 
-	AGGREGATE
+	REPETITION
 		redefine
 			 post_action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -15,7 +16,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature 
@@ -33,13 +33,13 @@ feature
 
 	production: LINKED_LIST [CONSTRUCT] is
 		local
-			base: TERM;
+			base: TERM
 		once
-			create Result.make;
-			Result.forth;
-			create base.make;
+			create Result.make
+			Result.forth
+			create base.make
 			put (base)
-		end; -- production
+		end -- production
 
 	post_action is
 		local
@@ -47,15 +47,15 @@ feature
 		do
 			if not no_components then
 				from
-					child_start;
+					child_start
 					if not child_after then
 						int_value := 1
 					end
 				until
 					child_after
 				loop
-					child.post_action;
-					int_value := int_value * info.child_value;
+					child.post_action
+					int_value := int_value * info.child_value
 					child_forth
 				end;
 				info.set_child_value (int_value)

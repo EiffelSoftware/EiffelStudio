@@ -116,13 +116,13 @@ rt_public struct eif_except exdata = {		/* %%zmt */
 /* Array of ignored exceptions, from the debugger's point of view. Normally
  * an exception stops the program to allow user inspection of the objects.
  */
-rt_public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt */
+rt_public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 #endif
 
 /* Structure used to store routine information during exception stack dumps
  * (gathered thanks to stack look-ahead).
  */
-rt_private struct exprint except;		/* Where exception has been raised */ /* %%zmt */
+rt_private struct exprint eif_except;		/* Where exception has been raised */
 
 #endif /* EIF_THREADS */
 
@@ -1734,8 +1734,8 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 #endif
 
 	/* Reset the exception structure to its default state */
-	except.rescued = 0;				/* Not rescued */
-	except.retried = 0;				/* Nor retried */
+	eif_except.rescued = 0;				/* Not rescued */
+	eif_except.retried = 0;				/* Nor retried */
 
 	/* Start scanning the stack. Note that the current "top" (i.e. last item)
 	 * is skipped. It should have been processed by the caller to make sure it
@@ -1758,11 +1758,11 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 			 * occurred) will have its effect set to "Rescue".
 			 */
 
-			except.rname = item->ex_rout;	/* Routine name */
-			except.from = item->ex_orig;	/* Where it comes from */
-			except.obj_id = item->ex_id;	/* Object's ID */
+			eif_except.rname = item->ex_rout;	/* Routine name */
+			eif_except.from = item->ex_orig;	/* Where it comes from */
+			eif_except.obj_id = item->ex_id;	/* Object's ID */
 			if (item->ex_retry)				/* Function has been retried */
-				except.retried = 1;			/* Resumption has been attempted */
+				eif_except.retried = 1;			/* Resumption has been attempted */
 
 			/* We want to signal an entry in a rescue clause even if it has not
 			 * led to an exception. If the end of the rescue clause is reached,
@@ -1770,7 +1770,7 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 			 */
 
 			if (item->ex_rescue)
-				except.rescued = 1;			/* Led to a (failed) rescue */
+				eif_except.rescued = 1;			/* Led to a (failed) rescue */
 			break;
 
 		} else if (item->ex_type == EN_PRE) {
@@ -1780,9 +1780,9 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 			 * ID is held in the vector.
 			 */
 
-			except.rname = item->ex_where;	/* Where precondition was */
-			except.from = item->ex_from;	/* Where it was written */
-			except.obj_id = item->ex_oid;	/* Object's ID */
+			eif_except.rname = item->ex_where;	/* Where precondition was */
+			eif_except.from = item->ex_from;	/* Where it was written */
+			eif_except.obj_id = item->ex_oid;	/* Object's ID */
 			break;
 		}
 	}
@@ -1797,16 +1797,16 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 	 * the process (i.e. root_obj is a null pointer), use safe values.
 	 */
 
-	if (except.rname == (char *) 0) {		/* Was created by main() */
+	if (eif_except.rname == (char *) 0) {		/* Was created by main() */
 		if (root_obj != (char *) 0) {
-			except.rname = "root's creation";
-			except.from = Dtype(root_obj);
+			eif_except.rname = "root's creation";
+			eif_except.from = Dtype(root_obj);
 		} else {
-			except.rname = "root's set-up";	/* Root object not created */
-			except.from = -1;				/* Signals: no valid object */
+			eif_except.rname = "root's set-up";	/* Root object not created */
+			eif_except.from = -1;				/* Signals: no valid object */
 		}
-		except.obj_id = root_obj;			/* Null address if early */
-		except.last = 1;					/* Must be the last record */
+		eif_except.obj_id = root_obj;			/* Null address if early */
+		eif_except.last = 1;					/* Must be the last record */
 	}
 
 #ifdef USE_STRUCT_COPY
@@ -1918,7 +1918,7 @@ rt_private void dump_stack(EIF_CONTEXT void (*append_trace)(char *))
 	 * to give meaningful routine names and effects (retried, rescued, failed).
 	 */
 
-	except.previous = 0;		/* Previous exception code */
+	eif_except.previous = 0;		/* Previous exception code */
 	recursive_dump(MTC append_trace, 0);	/* Recursive dump, starting at level 0 */
 
 	EIF_END_GET_CONTEXT
@@ -1941,8 +1941,8 @@ rt_private void recursive_dump(EIF_CONTEXT void (*append_trace)(char *), registe
 		trace != eif_trace.st_top;
 		trace = eif_trace.st_bot
 	) {
-		except.code = trace->ex_type;	/* Record exception code */
-		except.tag = (char *) 0;		/* No tag by default */
+		eif_except.code = trace->ex_type;	/* Record exception code */
+		eif_except.tag = (char *) 0;		/* No tag by default */
 		switch (trace->ex_type) {
 		case EN_ILVL:					/* Entering new level */
 			/* The stack may end with such a beast, so detect this and return
@@ -1973,29 +1973,29 @@ rt_private void recursive_dump(EIF_CONTEXT void (*append_trace)(char *), registe
 			find_call(MTC_NOARG);				/* Look for new enclosing call */
 			break;
 		case EN_SIG:					/* Signal received */
-			except.tag = signame(trace->ex_sig);
+			eif_except.tag = signame(trace->ex_sig);
 			print_top(MTC append_trace);
 			break;
 		case EN_SYS:					/* Operating system error */
 		case EN_IO:						/* I/O error */
-			except.tag = error_tag(trace->ex_errno);
+			eif_except.tag = error_tag(trace->ex_errno);
 			print_top(MTC append_trace);
 			break;
 		case EN_CINV:					/* Class invariant violated */
-			except.obj_id = trace->ex_oid;	/* Do we need this? */
+			eif_except.obj_id = trace->ex_oid;	/* Do we need this? */
 			/* Fall through */
 		case EN_PRE:					/* Precondition violated */
-			except.tag = trace->ex_name;
+			eif_except.tag = trace->ex_name;
 			print_top(MTC append_trace);
 			find_call(MTC_NOARG);				/* Restore correct object ID */
 			break;
 		case EN_BYE:
 		case EN_FATAL:
-			except.tag = echtg;			/* Tag for panic or fatal error */
+			eif_except.tag = echtg;			/* Tag for panic or fatal error */
 			print_top(MTC append_trace);
 			break;
 		default:
-			except.tag = trace->ex_name;
+			eif_except.tag = trace->ex_name;
 			print_top(MTC append_trace);
 		}
 	}
@@ -2012,15 +2012,15 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 	EIF_GET_CONTEXT
 	char buf[30];				/* To pre-compute the (From orig) string */
 	char buffer[256];
-	char code = except.code;	/* Exception's code */
+	char code = eif_except.code;	/* Exception's code */
 	struct ex_vect *top;		/* Top of stack */
 
 #ifdef DEBUG
 	dump_vector("print_top: top of trace is", eif_trace.st_bot);
 	dprintf(1)("print_top: code = %d (previous %d) %s%s%s\n",
-		code, except.previous, except.retried ? "was retried" : "",
-		(except.retried && except.rescued) ? " and " : "",
-		except.rescued ? "was rescued" : "");
+		code, eif_except.previous, eif_except.retried ? "was retried" : "",
+		(eif_except.retried && eif_except.rescued) ? " and " : "",
+		eif_except.rescued ? "was rescued" : "");
 #endif
 
 	/* Do not print anything if the retry flag is on and the previous exception
@@ -2031,42 +2031,42 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 	 * of the rescue clause.
 	 */
 	if (
-		except.retried &&			/* Call has been retried */
-		except.previous != 0 &&		/* Something has been already printed */
-		except.previous != EN_FAIL && except.previous != EN_RES
+		eif_except.retried &&			/* Call has been retried */
+		eif_except.previous != 0 &&		/* Something has been already printed */
+		eif_except.previous != EN_FAIL && eif_except.previous != EN_RES
 	) {
 		(void) exnext(MTC_NOARG);		/* Remove the top */
 		return;					/* We already printed the retry line */
 	}
 
-	except.previous = code;		/* Update previous exception code */
+	eif_except.previous = code;		/* Update previous exception code */
 
-	if (except.tag)
-		sprintf(buf, "%.28s:", except.tag);
+	if (eif_except.tag)
+		sprintf(buf, "%.28s:", eif_except.tag);
 	else
 		buf[0] = '\0';
 
-	if (except.from >= 0) {
-		if (except.obj_id) {
-			int obj_dtype = Dtype(except.obj_id);
+	if (eif_except.from >= 0) {
+		if (eif_except.obj_id) {
+			int obj_dtype = Dtype(eif_except.obj_id);
 
 			if (obj_dtype>=0 && obj_dtype < scount) {
 				sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
-					Class(except.obj_id), except.rname, buf);
+					Class(eif_except.obj_id), eif_except.rname, buf);
 				append_trace(buffer);
 			} else {
 				sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
-					"Invalid object", except.rname, buf);
+					"Invalid object", eif_except.rname, buf);
 				append_trace(buffer);
 			}
 		} else {
 			sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
-				"Invalid object", except.rname, buf);
+				"Invalid object", eif_except.rname, buf);
 			append_trace(buffer);
 		}
 	} else {
 		sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
-			"RUN-TIME", except.rname, buf);
+			"RUN-TIME", eif_except.rname, buf);
 		append_trace(buffer);
 	}
 
@@ -2080,15 +2080,15 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 
 	buf[0] = '\0';
 
-	if (except.from >= 0)
-		if (except.obj_id) {
-			if (except.from != (int)Dtype(except.obj_id))
-				sprintf(buf, "(From %.15s)", Origin(except.from));
+	if (eif_except.from >= 0)
+		if (eif_except.obj_id) {
+			if (eif_except.from != (int)Dtype(eif_except.obj_id))
+				sprintf(buf, "(From %.15s)", Origin(eif_except.from));
 		} else
-			sprintf(buf, "(From %.15s)", Origin(except.from));
+			sprintf(buf, "(From %.15s)", Origin(eif_except.from));
 
 	sprintf(buffer, "<%08X>		  %-22.22s %-29.29s ",
-		except.obj_id, buf, exception_string(code));
+		eif_except.obj_id, buf, exception_string(code));
 	append_trace(buffer);
 
 	/* Start panic effect when we reach the EN_BYE record */
@@ -2111,7 +2111,7 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 	 */
 
 	if (echval == EN_BYE) {		/* A run-time panic was raised */
-		if (except.last) {
+		if (eif_except.last) {
 			sprintf(buffer, "Bye\n%s\n", failed);	/* Good bye! */
 			append_trace(buffer);
 		} else {
@@ -2120,7 +2120,7 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 		}
 		return;
 	} else if (echval == EN_FATAL) {
-		if (except.last) {
+		if (eif_except.last) {
 			sprintf(buffer, "Bye\n%s\n", failed);	/* Good bye! */
 			append_trace(buffer);
 		} else {
@@ -2128,16 +2128,16 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 			append_trace(buffer);
 		}
 		return;
-	} else if (except.last) {						/* Last record => exit */
+	} else if (eif_except.last) {						/* Last record => exit */
 		sprintf(buffer, "Exit\n%s\n", failed);
 		append_trace(buffer);
 		return;
 	} else if (code == EN_FAIL || code == EN_RES) {
-		if (except.retried) {
+		if (eif_except.retried) {
 			sprintf(buffer, "Retry\n%s\n", retried);
 			append_trace(buffer);
 		} else
-			if (except.rescued) {
+			if (eif_except.rescued) {
 				sprintf(buffer, "Rescue\n%s\n", failed);
 				append_trace(buffer);
 			} else {
@@ -2161,7 +2161,7 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 #endif
 
 	if (code == EN_FAIL || code == EN_RES) {
-		if (except.retried) {
+		if (eif_except.retried) {
 			sprintf(buffer, "Retry\n%s\n", retried);
 			append_trace(buffer);
 		} else {
@@ -2963,7 +2963,7 @@ void get_call_stack(void) {
 	 * to give meaningful routine names and effects (retried, rescued, cur_failed).
 	 */
 
-	except.previous = 0;		/* Previous exception code */
+	eif_except.previous = 0;		/* Previous exception code */
 	cur_recursive_dump(0);		  /* Recursive dump, starting at level 0 */
 
 }
@@ -2985,8 +2985,8 @@ cur_recursive_dump(register1 int level)
 		trace != eif_trace.st_top;
 		trace = eif_trace.st_bot
 	) {
-		except.code = trace->ex_type;   /* Record exception code */
-		except.tag = (char *) 0;		/* No tag by default */
+		eif_except.code = trace->ex_type;   /* Record exception code */
+		eif_except.tag = (char *) 0;		/* No tag by default */
 
 		switch (trace->ex_type) {
 		case EN_ILVL:				   /* Entering new level */
@@ -3016,29 +3016,29 @@ cur_recursive_dump(register1 int level)
 			find_call();				/* Look for new enclosing call */
 			break;
 		case EN_SIG:					/* Signal received */
-			except.tag = signame(trace->ex_sig);
+			eif_except.tag = signame(trace->ex_sig);
 			cur_print_top();
 			break;
 		case EN_SYS:					/* Operating system error */
 		case EN_IO:					 /* I/O error */
-			except.tag = error_tag(trace->ex_errno);
+			eif_except.tag = error_tag(trace->ex_errno);
 			cur_print_top();
 			break;
 		case EN_CINV:				   /* Class invariant violated */
-			except.obj_id = trace->ex_oid;  /* Do we need this? */
+			eif_except.obj_id = trace->ex_oid;  /* Do we need this? */
 			/* Fall through */
 		case EN_PRE:					/* Precondition violated */
-			except.tag = trace->ex_name;
+			eif_except.tag = trace->ex_name;
 			cur_print_top();
 			find_call();				/* Restore correct object ID */
 			break;
 		case EN_BYE:
 		case EN_FATAL:
-			except.tag = echtg;		 /* Tag for panic or fatal error */
+			eif_except.tag = echtg;		 /* Tag for panic or fatal error */
 			cur_print_top();
 			break;
 		default:
-			except.tag = trace->ex_name;
+			eif_except.tag = trace->ex_name;
 			cur_print_top();
 		}
 	}
@@ -3053,8 +3053,7 @@ rt_private void cur_print_top(void)
 	 */
 
 	char cur_buf[200];
-	char buf[30];			   /* To pre-compute the (From orig) string */
-	char code = except.code;	/* Exception's code */
+	char code = eif_except.code;	/* Exception's code */
 	struct ex_vect *top;		/* Top of stack */
 
 	/* Do not print anything if the retry flag is on and the previous exception
@@ -3065,44 +3064,44 @@ rt_private void cur_print_top(void)
 	 * of the rescue clause.
 	 */
 	if (
-		except.retried &&		   /* Call has been retried */
-		except.previous != 0 &&	 /* Something has been already printed */
-		except.previous != EN_FAIL && except.previous != EN_RES
+		eif_except.retried &&		   /* Call has been retried */
+		eif_except.previous != 0 &&	 /* Something has been already printed */
+		eif_except.previous != EN_FAIL && eif_except.previous != EN_RES
 	) {
 		(void) exnext();		/* Remove the top */
 		return;				 /* We already printed the retry line */
 	}
 
-	except.previous = code;	 /* Update previous exception code */
+	eif_except.previous = code;	 /* Update previous exception code */
 
-	if (except.tag)
-		sprintf(buf, "%.28s:", except.tag);
+	if (eif_except.tag)
+		sprintf(buf, "%.28s:", eif_except.tag);
 	else
 		buf[0] = '\0';
 
-	if (except.from >= 0)
-		if (except.obj_id) {
-			int obj_dtype = Dtype(except.obj_id);
+	if (eif_except.from >= 0)
+		if (eif_except.obj_id) {
+			int obj_dtype = Dtype(eif_except.obj_id);
 
 			if (obj_dtype>=0 && obj_dtype < scount) {
 				sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
-					Class(except.obj_id), except.rname, buf);
+					Class(eif_except.obj_id), eif_except.rname, buf);
 				extend_string(&_concur_call_stack, cur_buf);
 			}
 			else {
 				sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
-					"Invalid object", except.rname, buf);
+					"Invalid object", eif_except.rname, buf);
 				extend_string(&_concur_call_stack, cur_buf);
 			}
 		}
 		else {
 			sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
-				"Invalid object", except.rname, buf);
+				"Invalid object", eif_except.rname, buf);
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 	else {
 		sprintf(cur_buf, "\n%-19.19s %-22.22s %-29.29s",
-			"RUN-TIME", except.rname, buf);
+			"RUN-TIME", eif_except.rname, buf);
 		extend_string(&_concur_call_stack, cur_buf);
 	}
 
@@ -3116,15 +3115,15 @@ rt_private void cur_print_top(void)
 
 	buf[0] = '\0';
 
-	if (except.from >= 0)
-		if (except.obj_id) {
-			if (except.from != Dtype(except.obj_id))
-				sprintf(buf, "(From %.15s)", Origin(except.from));
+	if (eif_except.from >= 0)
+		if (eif_except.obj_id) {
+			if (eif_except.from != Dtype(eif_except.obj_id))
+				sprintf(buf, "(From %.15s)", Origin(eif_except.from));
 		} else
-			sprintf(buf, "(From %.15s)", Origin(except.from));
+			sprintf(buf, "(From %.15s)", Origin(eif_except.from));
 
 	sprintf(cur_buf, "\n<%08X>		  %-22.22s %-29.29s ",
-		except.obj_id, buf, exception_string(code));
+		eif_except.obj_id, buf, exception_string(code));
 	extend_string(&_concur_call_stack, cur_buf);
 
 	/* Start panic effect when we reach the EN_BYE record */
@@ -3148,7 +3147,7 @@ rt_private void cur_print_top(void)
 	 */
 
 	if (echval == EN_BYE) {	 /* A run-time panic was raised */
-		if (except.last)
+		if (eif_except.last)
 			extend_string(&_concur_call_stack, cur_failed); /* Good bye! */
 		else {
 			sprintf(cur_buf, "Panic%s", cur_failed);   /* Panic propagation */
@@ -3156,7 +3155,7 @@ rt_private void cur_print_top(void)
 		}
 		return;
 	} else if (echval == EN_FATAL) {
-		if (except.last) {
+		if (eif_except.last) {
 			sprintf(cur_buf, "Bye%s", cur_failed); /* Good bye! */
 			extend_string(&_concur_call_stack, cur_buf);
 		}
@@ -3165,16 +3164,16 @@ rt_private void cur_print_top(void)
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 		return;
-	} else if (except.last) {					   /* Last record => exit */
+	} else if (eif_except.last) {					   /* Last record => exit */
 		sprintf(cur_buf, "Exit%s", cur_failed);
 		extend_string(&_concur_call_stack, cur_buf);
 		return;
 	} else if (code == EN_FAIL || code == EN_RES) {
-		if (except.retried) {
+		if (eif_except.retried) {
 			sprintf(cur_buf, "Retry%s", cur_retried);
 			extend_string(&_concur_call_stack, cur_buf);
 		}
-		else if (except.rescued) {
+		else if (eif_except.rescued) {
 			sprintf(cur_buf, "Rescue%s", cur_failed);
 			extend_string(&_concur_call_stack, cur_buf);
 		}
@@ -3195,7 +3194,7 @@ rt_private void cur_print_top(void)
 
 
 	if (code == EN_FAIL || code == EN_RES) {
-		if (except.retried) {
+		if (eif_except.retried) {
 			sprintf(cur_buf, "Retry%s", cur_retried);
 			extend_string(&_concur_call_stack, cur_buf);
 		}

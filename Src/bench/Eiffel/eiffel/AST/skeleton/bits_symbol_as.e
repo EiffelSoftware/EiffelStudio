@@ -47,7 +47,7 @@ feature
 			constant: CONSTANT_I
 			bits_value: INTEGER
 			error: BOOLEAN
-			int_value: INT_VALUE_I
+			int_value: INTEGER_CONSTANT
 			depend_unit: DEPEND_UNIT
 		do
 			if not feat_table.has (bits_symbol) then
@@ -64,7 +64,7 @@ feature
 				int_value ?= constant.value
 				error := int_value = Void
 				if not error then
-					bits_value := int_value.int_val
+					bits_value := int_value.value
 					error := bits_value <= 0
 				end
 			end

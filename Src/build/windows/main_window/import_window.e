@@ -32,11 +32,12 @@ feature
 
 	make (a_parent: COMPOSITE) is
 		local
-			separator: SEPARATOR;
+			separator: THREE_D_SEPARATOR;
 			import_cmd: IMPORT_CMD;
 			set_win_att: SET_WINDOW_ATTRIBUTES_COM;
 			del_window: DELETE_WINDOW;
 			mp: MOUSE_PTR
+			form: FORM
 		do
 			!! mp;
 			mp.set_watch_shape;
@@ -44,12 +45,13 @@ feature
 			set_title (Widget_names.import_window);
 			!!file_selec.make ("box", Current);
 
-			!!entire_application.make (Widget_names.entire_application_label, Current);
-			!!interface.make (Widget_names.interface_label, Current);
-			!!groups.make (Widget_names.groups_label, Current);
-			!!commands.make (Widget_names.commands_label, Current);
-			!!translations.make (Widget_names.translations_label, Current);
-
+			!! form.make (Widget_names.form, Current)
+			!!entire_application.make (Widget_names.entire_application_label, form)
+			!!interface.make (Widget_names.interface_label, form)
+			!!groups.make (Widget_names.groups_label, form)
+			!!commands.make (Widget_names.commands_label, form)
+			!!translations.make (Widget_names.translations_label, form)
+			
 			!!import_cmd;
 
 			file_selec.hide_help_button;
@@ -70,25 +72,36 @@ feature
 			commands.add_release_action (Current, commands);
 			translations.add_release_action (Current, translations);
 
-			attach_top (file_selec, 0);
-			attach_top (entire_application, 30);
-			attach_top_widget (entire_application, interface, 20);
-			attach_top_widget (interface, groups, 10);
-			attach_top_widget (groups, commands, 10);
-			attach_top_widget (commands, translations, 10);
+			attach_top (file_selec, 0)
+			attach_bottom (file_selec, 0)
 
-			attach_top (separator, 3);
-			attach_bottom (separator, 3);
+			attach_top (separator, 3)
+			attach_bottom (separator, 3)
 
-			attach_bottom (file_selec, 0);
+			attach_top (form, 0)
+			attach_bottom (form, 0)
 
-			attach_left (file_selec, 0);
-			attach_left_widget (file_selec, separator, 5);
-			attach_left_widget (separator, entire_application, 5);
-			attach_left_widget (separator, interface, 5);
-			attach_left_widget (separator, groups, 5);
-			attach_left_widget (separator, commands, 5);
-			attach_left_widget (separator, translations, 5);
+			attach_left (file_selec, 0)
+			attach_right_widget (separator, file_selec, 5)
+			attach_right_widget (form, separator, 5)
+			attach_right (form, 0)
+
+			form.attach_top (entire_application, 30)
+			form.attach_top_widget (entire_application, interface, 20)
+			form.attach_top_widget (interface, groups, 10)
+			form.attach_top_widget (groups, commands, 10)
+			form.attach_top_widget (commands, translations, 10)
+
+			form.attach_left (entire_application, 5)
+			form.attach_left (interface, 5)
+			form.attach_left (groups, 5)
+			form.attach_left (commands, 5)
+			form.attach_left (translations, 5)
+			form.attach_right (entire_application, 5)
+			form.attach_right (interface, 5)
+			form.attach_right (groups, 5)
+			form.attach_right (commands, 5)
+			form.attach_right (translations, 5)
 			!! set_win_att;
 			set_win_att.execute (Current);
 			!! del_window.make (Current);

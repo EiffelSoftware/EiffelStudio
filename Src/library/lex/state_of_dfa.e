@@ -21,7 +21,7 @@ class STATE_OF_DFA inherit
 			{NONE} to_c
 		end
 
-creation
+create
 
 	make
 
@@ -56,7 +56,6 @@ feature -- Cursor movement
 		end 
 
 end -- class STATE_OF_DFA
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

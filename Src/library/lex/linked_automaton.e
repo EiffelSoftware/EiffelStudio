@@ -8,12 +8,12 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LINKED_AUTOMATON [S -> STATE]
+class LINKED_AUTOMATON [S -> STATE] inherit
 
-inherit
 	LINKED_LIST [S]
 
-creation
+create
+
 	make
 
 feature -- Status setting
@@ -34,7 +34,6 @@ feature -- Status setting
 		end 
 
 end -- class LINKED_AUTOMATON
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

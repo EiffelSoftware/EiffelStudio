@@ -11,7 +11,7 @@ class LEXICAL inherit
 
 	TEXT_FILLER
 
-creation
+create
 
 	make, make_new
 
@@ -20,13 +20,13 @@ feature -- Initialization
 	make is
 			-- Set up lexical analyzer for retrieval.
 		do
-			!! last_token
+			create last_token
 		end;
 
 	make_new is
 			-- Set up a new lexical analyzer
 		do
-			!! last_token;
+			create last_token;
 			initialize
 		end
 
@@ -186,7 +186,7 @@ feature -- Input
 			--| track of its type, but goes on analyzing, until the
 			--| current state has a void successor.
 		require
-			dfa_not_Void: dfa /= Void;
+			dfa_not_void: dfa /= Void;
 			not_end_of_text: not end_of_text;
 			buffers_created: buffer /= Void
 		local
@@ -202,7 +202,7 @@ feature -- Input
 			if
 				buffer_item_code (read_index) = -1
 			then
-				end_of_text := true;
+				end_of_text := True;
 				token_type := -1;
 				token_start := token_end;
 				other_possible_tokens := Void
@@ -212,7 +212,7 @@ feature -- Input
 			end;
 			if read_index > buffer_size then
 				if token_start = 1 then
-					buffer_resized := true;
+					buffer_resized := True;
 					resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
 				else
 					fill_buffer (token_start - 1);
@@ -234,7 +234,7 @@ feature -- Input
 					end;
 					read_index := read_index + 1;
 					if read_index > buffer_size then
-						too_big := true
+						too_big := True
 					else
 						state := state.item (categories_table.item
 								(buffer_item_code (read_index)))
@@ -242,7 +242,7 @@ feature -- Input
 				end;
 				if too_big then
 					if token_start = 1 then
-						buffer_resized := true;
+						buffer_resized := True;
 						resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
 					else
 						fill_buffer (token_start - 1);
@@ -278,7 +278,7 @@ feature -- Input
 			-- Read shortest token that matches one of the
 			-- lexical grammar's regular expressions.
 		require
-			dfa_not_Void: dfa /= Void;
+			dfa_not_void: dfa /= Void;
 			not_end_of_text: not end_of_text;
 			buffers_created: buffer /= Void
 		local
@@ -292,7 +292,7 @@ feature -- Input
 			end;
 			read_index := token_end + 1;
 			if buffer_item_code (read_index) = -1 then
-				end_of_text := true;
+				end_of_text := True;
 				token_type := -1;
 				token_start := token_end;
 				other_possible_tokens := Void
@@ -302,7 +302,7 @@ feature -- Input
 			end;
 			if read_index > buffer_size then
 				if token_start = 1 then
-					buffer_resized := true;
+					buffer_resized := True;
 					resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
 				else
 					fill_buffer (token_start - 1);
@@ -321,11 +321,11 @@ feature -- Input
 						token_type := state.final;
 						other_possible_tokens := state.final_array;
 						token_end := read_index;
-						recognized := true
+						recognized := True
 					end;
 					read_index := read_index + 1;
 					if read_index > buffer_size then
-						too_big := true
+						too_big := True
 					else
 						state := state.item (categories_table.item
 									(buffer_item_code (read_index)))
@@ -333,7 +333,7 @@ feature -- Input
 				end;
 				if too_big then
 					if token_start = 1 then
-						buffer_resized := true;
+						buffer_resized := True;
 						resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
 					else
 						fill_buffer (token_start - 1);
@@ -365,7 +365,7 @@ feature -- Input
 			-- Recognize longest possible string with
 			-- length less than or equal to `l'.
 		require
-			dfa_not_Void: dfa /= Void;
+			dfa_not_void: dfa /= Void;
 			not_end_of_text: not end_of_text;
 			buffers_created: buffer /= Void
 		local
@@ -379,7 +379,7 @@ feature -- Input
 			end;
 			read_index := token_end + 1;
 			if buffer_item_code (read_index) = -1 then
-				end_of_text := true;
+				end_of_text := True;
 				token_type := -1;
 				token_start := token_end;
 				other_possible_tokens := Void
@@ -389,7 +389,7 @@ feature -- Input
 			end;
 			if read_index > buffer_size then
 				if token_start = 1 then
-					buffer_resized := true;
+					buffer_resized := True;
 					resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
 				else
 					fill_buffer (token_start - 1);
@@ -411,7 +411,7 @@ feature -- Input
 					end;
 					read_index := read_index + 1;
 					if read_index > buffer_size then
-						too_big := true
+						too_big := True
 					else
 						state := state.item (categories_table.item
 								(buffer_item_code (read_index)))
@@ -419,7 +419,7 @@ feature -- Input
 				end;
 				if too_big then
 					if token_start = 1 then
-						buffer_resized := true;
+						buffer_resized := True;
 						resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
 					else
 						fill_buffer (token_start - 1);
@@ -451,7 +451,7 @@ feature -- Output
 			-- Output information about the analyzer's
 			-- current status.
 		local
-			i, ol_d: INTEGER
+			i: INTEGER
 		do
 			from
 				i := categories_table.lower;
@@ -501,9 +501,9 @@ feature {LEXICAL} -- Implementation
 		do
 			create_buffers (Standard_buffer_size, Standard_line_length);
 			if keyword_h_table = Void then
-				!! keyword_h_table.make (1)
+				create keyword_h_table.make (1)
 			end;
-			end_of_text := false
+			end_of_text := False
 		end;
 
 feature {LEXICAL, LEX_BUILDER} -- Implementation

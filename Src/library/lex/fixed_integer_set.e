@@ -18,7 +18,7 @@ class FIXED_INTEGER_SET inherit
 			{NDFA} is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -31,7 +31,7 @@ feature -- Initialization
 		do
 			boolean_set_make (n);
 		ensure
-			set_empty: empty
+			set_empty: is_empty
 		end;
 
 feature -- Access
@@ -45,7 +45,7 @@ feature -- Access
 			Result := item (i)
 		end;
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is current set empty?
 		local
 			i, nb: INTEGER
@@ -133,7 +133,7 @@ feature -- Element change
 			index_large_enough: 1 <= i;
 			index_small_enough: i <= count
 		do
-			bool_string_put (true, i)
+			bool_string_put (True, i)
 		ensure
 			is_in_set: has (i)
 		end;
@@ -146,7 +146,7 @@ feature -- Removal
 			index_large_enough: 1 <= i;
 			index_small_enough: i <= count
 		do
-			bool_string_put (false, i)
+			bool_string_put (False, i)
 		ensure
 			is_not_in_set: not has (i)
 		end;

@@ -143,7 +143,7 @@ feature -- Status setting
 			!! file.make_open_read (f_name);
 			reset;
 			char_buffered_number := 0;
-			source_is_file := true;
+			source_is_file := True;
 			source_size := file.count;
 			initialize;
 			reset_data
@@ -158,7 +158,7 @@ feature -- Status setting
 			string := s;
 			reset;
 			char_buffered_number := 0;
-			source_is_file := false;
+			source_is_file := False;
 			source_size := string.capacity;
 			initialize;
 			reset_data
@@ -470,7 +470,6 @@ feature {NONE} -- Implementation
 -- Do not forget to create the buffers before using this class.
 
 end -- class TEXT_FILLER
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

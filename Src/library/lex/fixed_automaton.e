@@ -16,7 +16,8 @@ class FIXED_AUTOMATON [S->STATE] inherit
 			{ANY} lower, upper, item, put
 		end
 
-creation
+create
+
 	make
 
 feature -- Initialization
@@ -58,7 +59,6 @@ feature -- Element change
 		end; 
 
 end -- class FIXED_AUTOMATON
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

@@ -28,7 +28,7 @@ class PDFA inherit
 			consistent, copy, setup, is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -39,10 +39,10 @@ feature -- Initialization
 		do
 			nb_states := n;
 			greatest_input := i;
-			!! input_array.make (0, greatest_input);
-			!! final_array.make (1, nb_states);
+			create input_array.make (0, greatest_input);
+			create final_array.make (1, nb_states);
 			array_make (1, nb_states);
-			!! keywords_list.make
+			create keywords_list.make
 		end; 
 
 feature -- Access
@@ -66,7 +66,7 @@ feature -- Status setting
 	set_letters is
 			-- Direct the active transitions to include letters.
 		do
-			has_letters := true
+			has_letters := True
 		end; 
 
 	set_final (s, r: INTEGER) is
@@ -86,7 +86,7 @@ feature -- Status setting
 			set: FIXED_INTEGER_SET
 		do
 			if input_array.item (input_doc) = Void then
-				!! set.make (nb_states);
+				create set.make (nb_states);
 				input_array.put (set, input_doc)
 			end;
 			input_array.item (input_doc).put (source)
@@ -98,7 +98,7 @@ feature -- Status setting
 			list: LINKED_LIST [INTEGER]
 		do
 			if item (source) = Void then
-				!! list.make;
+				create list.make;
 				put (list, source)
 			end;
 			item (source).put_right (target);
@@ -109,8 +109,6 @@ feature -- Element change
 
 	add_keyword (word: STRING) is
 			-- Insert `word' in the keyword list.
-		local
-			already_in: BOOLEAN
 		do
 			keywords_list.finish;
 			keywords_list.put_right (word)
@@ -149,7 +147,7 @@ feature -- Element change
 				end
 			end;
 			if fa.has_letters then
-				has_letters := true
+				has_letters := True
 			end
 		end; 
 
@@ -228,7 +226,7 @@ feature -- Output
 					from
 						epsilon_list.start
 					until
-						epsilon_list.after or epsilon_list.empty
+						epsilon_list.after or epsilon_list.is_empty
 					loop
 						io.put_integer (epsilon_list.item);
 						io.put_string (" ");
@@ -265,13 +263,13 @@ feature {NONE} -- Implementation
 			top, int: INTEGER;
 			e_successors_list: LINKED_LIST [INTEGER]
 		do
-			!! stack.make;
-			!! Result.make (nb_states);
+			create stack.make;
+			create Result.make (nb_states);
 			Result.put (state);
 			from
 				stack.put (state)
 			until
-				stack.empty
+				stack.is_empty
 			loop
 				top := stack.item;
 				stack.remove;
@@ -280,7 +278,7 @@ feature {NONE} -- Implementation
 						e_successors_list := item (top);
 						e_successors_list.start
 					until
-						e_successors_list.after or e_successors_list.empty
+						e_successors_list.after or e_successors_list.is_empty
 					loop
 						int := e_successors_list.item;
 						if not Result.has (int) then
@@ -301,11 +299,11 @@ feature {NONE} -- Implementation
 			-- Void if the set if empty.
 		require else
 			possible_input: i >= 0 and i <= greatest_input;
-			set_not_Void: initial_set /= Void
+			set_not_void: initial_set /= Void
 		do
 			if input_array.item (i) /= Void then
 				Result := initial_set and (input_array.item (i));
-				if not Result.empty then
+				if not Result.is_empty then
 					Result := Result.right_shifted (1)
 				else
 					Result := Void
@@ -331,7 +329,7 @@ feature {NONE} -- Implementation
 					from
 						sets_list.start
 					until
-						sets_list.after or sets_list.empty
+						sets_list.after or sets_list.is_empty
 					loop
 						if sets_list.item.has (index) then
 							dfa_set_final (sets_list.index,
@@ -370,7 +368,7 @@ feature {NONE} -- Implementation
 					from
 						list.start
 					until
-						list.after or list.empty
+						list.after or list.is_empty
 					loop
 						set_e_transition (index + shift, list.item + shift);
 						list.forth
@@ -387,7 +385,7 @@ feature {NONE} -- Implementation
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		do
 			if input_array.item (input_doc).has (source) then
-				!! Result.make;
+				create Result.make;
 				Result.put_right (source + 1)
 			end
 		end; 
@@ -407,8 +405,6 @@ feature {NONE} -- Implementation
 		do
 		end 
 
-end -- class PDFA
-
 -- These PDFA have a very special structure.
 -- They are NDFA but for each state, only one successor is
 -- possible, if the input is different of epsilon,
@@ -423,8 +419,7 @@ end -- class PDFA
 -- For the use in a regular expression context, keywords
 -- can be associated with Current.
 
-
- 
+end -- class PDFA
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

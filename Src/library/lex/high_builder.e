@@ -22,7 +22,7 @@ class HIGH_BUILDER inherit
 			setup, consistent, copy, is_equal
 		end
 
-creation
+create
 
 	make, make_extended
 
@@ -579,11 +579,11 @@ feature {NONE} -- Implementation
 					else
 						raise_error (cursor, '%U', "Unexpected character.")
 					end;
-					back_slashed := false
+					back_slashed := False
 				elseif current_char = '\' then
-					back_slashed := true
+					back_slashed := True
 				elseif current_char = '"' then
-					endword := true
+					endword := True
 				elseif current_char = '%/001/' then
 					raise_error (cursor, '"', "")
 				else
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 			good_preceding_characters:
 				description.item(cursor-1)='\' and description.item(cursor-2)='%''
 		local
-			octal1, octal2, octal3, current_code: INTEGER
+			octal1, octal2, octal3: INTEGER
 		do
 			if description_length < cursor + 3 then
 				raise_error (description_length, '%U',
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 			if i >= Zero and i <= Nine then
 				Result := i - Zero
 			elseif i >= Upper_a and i <= Upper_f then
-				Result := i - Upper_A + 10
+				Result := i - Upper_a + 10
 			elseif i >= Lower_a and i <= Lower_f then
 				Result := i - Lower_a + 10
 			else
@@ -793,7 +793,7 @@ feature {NONE} -- Implementation
 			end;
 			message.extend ('%N');
 			error_list.add_message (message);
-			parsing_stopped := true
+			parsing_stopped := True
 		end 
 
 invariant

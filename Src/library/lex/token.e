@@ -53,14 +53,13 @@ feature -- Status setting
 
 feature -- Obsolete
 
-	position_in_line:INTEGER is
+	position_in_line: INTEGER is
 		obsolete "Use ``column_number'' instead"
 	do
 		Result := column_number
 	end
 
 end -- class TOKEN
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

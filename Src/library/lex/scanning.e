@@ -12,7 +12,7 @@ class SCANNING inherit
 
 	METALEX
 
-creation
+create
 
 	make, make_extended
 
@@ -29,7 +29,7 @@ feature -- Initialization
 		local
 			store_file: RAW_FILE
 		do
-			!! store_file.make (store_file_name);
+			create store_file.make (store_file_name);
 			if not store_file.exists then
 				build_from_grammar (store_file_name, grammar_file_name)
 			end;
@@ -123,7 +123,6 @@ feature {NONE} -- Implementation
 		end 
 
 end -- class SCANNING
- 
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel.

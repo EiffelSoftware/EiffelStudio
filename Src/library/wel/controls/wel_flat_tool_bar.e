@@ -205,21 +205,21 @@ feature -- Element change
 
 			if use_image_list then
 					-- Create the ImageList if not already created
-				setup_image_list(False)
+				setup_image_list (False)
 
 					-- Insert the bitmap into the image list.
-				default_image_list.add_icon(a_icon)
+				default_image_list.add_icon (a_icon)
 
 				last_bitmap_index := default_image_list.last_position
 			else
 					-- We retrieve the bitmap from the icon.
 				a_bitmap := a_icon.get_icon_info.color_bitmap
-				create a_toolbar_bitmap.make_from_bitmap(a_bitmap)
+				create a_toolbar_bitmap.make_from_bitmap (a_bitmap)
 				last_bitmap_index := cwin_send_message_result (item, Tb_addbitmap, 1, a_toolbar_bitmap.to_integer)
 			end
 		end
 
-	add_disabled_icon(an_icon: WEL_GRAPHICAL_RESOURCE) is
+	add_disabled_icon (an_icon: WEL_GRAPHICAL_RESOURCE) is
 			-- Add an icon to the disabled image list.
 			--
 			-- The feature is only supported under Windows95+IE3

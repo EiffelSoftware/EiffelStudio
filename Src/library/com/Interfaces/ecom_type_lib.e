@@ -1,7 +1,6 @@
 indexing
 	description: "ITypeLib wrapper"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,9 +25,10 @@ creation
 feature {NONE} -- Initialization
 
 	make_from_name (file_name: FILE_NAME) is
-			-- Load type library with `file_name'	
+			-- Load type library with `file_name'.
 		require
-			file_name /= Void
+			non_void_file_name: file_name /= Void
+			valid_file_name: not file_name.empty
 		local 
 			wide_string: ECOM_WIDE_STRING
 		do
@@ -43,32 +43,32 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	find_name (a_name: STRING; count: INTEGER): ECOM_TYPE_LIB_FIND_NAME_RESULT is
-			-- Finds occurences of type description in type library.
-			-- `a_name' is name to search for
-			-- `count' indicates number of instances to look for
+			-- Finds occurences of type description `a_name' in type library.
+			-- `count' indicates number of instances to look for.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!!wide_string.make_from_string (a_name)
+			!! wide_string.make_from_string (a_name)
 			Result := ccom_find_name (initializer, wide_string.item, count)
-		ensure
-			Result /= Void
 		end
 
 	documentation (an_index: INTEGER): ECOM_DOCUMENTATION is
-			-- Documentation of library, 
-			-- if `an_index' is equal to -1,
+			-- Documentation of library if `an_index' is equal to -1,
 			-- or type description, if `an_index' is equal 
 			-- to index of type description
+		require
+			valid_index: an_index >= -1 and an_index < type_info_count
 		do
 			Result := ccom_get_documentation (initializer, an_index)
 		ensure
-			Result /= Void
+			non_void_documentation: Result /= Void
 		end
 
 	library_attributes: ECOM_TLIB_ATTR is
 			-- Library's attributes
-			-- Should be released with `release_tlib_attr'
 		do
 			if not are_attributes_valid then
 				type_attr_pointer := ccom_get_lib_attr (initializer)
@@ -77,15 +77,16 @@ feature -- Access
 			end
 			Result := library_attributes_impl
 		ensure
-			Result /= Void and then Result.exists
+			non_void_attributes: Result /= Void
+			valid_attributes: Result.exists
 		end
 
 	type_comp: ECOM_TYPE_COMP is
 			-- ITypeComp interface
 		do
-			!!Result.make_from_pointer (ccom_get_type_comp (initializer))
+			!! Result.make_from_pointer (ccom_get_type_comp (initializer))
 		ensure
-			Result /= Void 
+			non_void_type_comp_interface: Result /= Void 
 		end
 
 	type_info (an_index: INTEGER): ECOM_TYPE_INFO is
@@ -93,25 +94,29 @@ feature -- Access
 		require
 			valid_index: an_index >= 0 and an_index < type_info_count
 		do
-			!!Result.make_from_pointer (ccom_get_type_info (initializer, an_index))
+			!! Result.make_from_pointer (ccom_get_type_info (initializer, an_index))
 		ensure
-			Result /= Void 
+			non_void_type_info: Result /= Void 
+			valid_type_info: Result.exists
 		end
 
 	type_info_count: INTEGER is
 			-- Number of type descriptions in type library
 		do
 			Result := ccom_get_type_info_count (initializer)
+		ensure
+			valid_count: Result >= 0
 		end
 
 	type_info_of_guid (a_guid: ECOM_GUID): ECOM_TYPE_INFO is
 			-- ITypeInfo interface
 		require
-			a_guid /= Void and then a_guid.exists
+			non_void_guid: a_guid /= Void
+			valid_guid: a_guid.exists
 		do
-			!!Result.make_from_pointer (ccom_get_type_info_of_guid (initializer, a_guid.item))
+			!! Result.make_from_pointer (ccom_get_type_info_of_guid (initializer, a_guid.item))
 		ensure
-			Result /= Void 
+			non_void_type_info: Result /= Void 
 		end
 
 	type_info_type (an_index: INTEGER): INTEGER is
@@ -122,29 +127,33 @@ feature -- Access
 		do
 			Result := ccom_get_type_info_type (initializer, an_index)
 		ensure
-			is_valid_type_kind (Result)
+			valid_type: is_valid_type_kind (Result)
 		end
 
 feature -- Status report
 
 	is_name (a_name: STRING): BOOLEAN is
 			-- Is name described in library?
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!!wide_string.make_from_string (a_name)
+			!! wide_string.make_from_string (a_name)
 			Result := ccom_is_name (initializer, wide_string.item)
 		end
 
 feature {NONE} -- Implementation
 
 	create_wrapper (a_pointer: POINTER): POINTER is
+			-- Initialize wrapper according to `a_pointer'.
 		do
 			Result := ccom_create_c_type_lib_from_pointer (a_pointer)
 		end
 
 	delete_wrapper is
-			-- Delete structure
+			-- Delete structure.
 		do
 			ccom_delete_c_type_lib (initializer);
 		end

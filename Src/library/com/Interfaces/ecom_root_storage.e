@@ -8,23 +8,24 @@ class
 	ECOM_ROOT_STORAGE
 
 inherit
-
 	ECOM_WRAPPER
 
 creation
 	make_from_pointer
 
-
 feature -- Basic Operations
 
 	swith_to_file (name: STRING) is
-			-- Copies the current file associated with the storage object 
-			-- to a new file. The new file is then used for the storage 
-			-- object and any uncommitted changes
+			-- Copy current file associated with storage object 
+			-- to new file `name'. New file is then used for storage 
+			-- object and any uncommitted changes.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!!wide_string.make_from_string (name)
+			!! wide_string.make_from_string (name)
 			ccom_switch_to_file (initializer, wide_string.item)
 		end
 
@@ -40,9 +41,6 @@ feature {NONE} -- Implementation
 		do
 			ccom_delete_c_iroot_storage (initializer);
 		end
-
-
-feature {ECOM_ROOT_STORAGE}
 
 feature {NONE} -- Externals
 

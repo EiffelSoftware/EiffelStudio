@@ -13,25 +13,19 @@ inherit
 feature -- Basic Operations
 
 	is_compound_file (a_name: STRING): BOOLEAN is
-			-- Indicates whether a particular disk file contains 
-			-- storage object
+			-- Does file `a_name' contain a storage object?
 		local
 			wide_string: ECOM_WIDE_STRING
-			i: INTEGER
 		do
-			!!wide_string.make_from_string (a_name)
-			i := ccom_is_compound_file (initializer_routines, wide_string.item)
-			if (i = 1) then
-				Result := true
-			end
-			
+			!! wide_string.make_from_string (a_name)
+			Result := ccom_is_compound_file (initializer_routines, wide_string.item) = 1
 		end
 
 feature {NONE} -- Externals
 
 	ccom_is_compound_file (cpp_obj: POINTER; a_name: POINTER): INTEGER is
 		external
-			"C++ [E_Routines %"E_Routines.h%"] (WCHAR *):EIF_INTEGER"
+			"C++ [E_Routines %"E_Routines.h%"] (WCHAR *): EIF_INTEGER"
 		end
 
 end -- class ECOM_STORAGE_ROUTINES

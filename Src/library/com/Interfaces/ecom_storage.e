@@ -8,7 +8,6 @@ class
 	ECOM_STORAGE
 
 inherit
-
 	ECOM_WRAPPER
 
 	ECOM_STORAGE_ROUTINES
@@ -35,71 +34,71 @@ feature {NONE} -- Initialization
 			-- See class ECOM_STGM for `mode' values.
 		require
 			valid_filename: filename /= Void
-			-- valid_mode: is_valid_stgm (a_mode)
+			valid_mode: is_valid_stgm (a_mode)
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
 			initializer := ccom_create_c_storage;
-			!! wide_string.make_from_string (filename);
-			ccom_create_doc_file(initializer, wide_string.item, a_mode);
-			item := ccom_storage(initializer)
+			!! wide_string.make_from_string (filename)
+			ccom_create_doc_file (initializer, wide_string.item, a_mode)
+			item := ccom_storage (initializer)
 		ensure
-			compound_file_created: item /= Default_pointer
+			compound_file_created: item /= default_pointer
 		end
 
 	make_temporary_doc_file (a_mode: INTEGER) is
 			-- Create temporary compound file with mode `mode'
 			-- See class ECOM_STGM for `a_mode' values.
 		require
-			-- valid_mode: is_valid_stgm (a_mode)
+			valid_mode: is_valid_stgm (a_mode)
 		do
 			initializer := ccom_create_c_storage;
-			ccom_create_doc_file(initializer, Default_pointer, a_mode);
-			item := ccom_storage(initializer)
+			ccom_create_doc_file (initializer, default_pointer, a_mode)
+			item := ccom_storage (initializer)
 		ensure
-			compound_file_created: item /= Default_pointer
+			compound_file_created: item /= default_pointer
 		end
 
 	make_open_file (filename: FILE_NAME; a_mode: INTEGER) is
 			-- Open existing root compound file with path `filename' 
 			-- and mode `mode' in file system.
-			-- excluding block pointed by `exclude' (can be Default_pointer)
+			-- excluding block pointed by `exclude' (can be default_pointer)
 			-- See class ECOM_STGM for `a_mode' values.
 		require
 			valid_file: filename /= Void and then is_compound_file (filename)
-			-- valid_mode: is_valid_stgm (a_mode)
+			valid_mode: is_valid_stgm (a_mode)
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
 			initializer := ccom_create_c_storage;				
-			!! wide_string.make_from_string (filename);
-			ccom_open_root_storage(initializer, wide_string.item, a_mode);	
-			item := ccom_storage(initializer)
+			!! wide_string.make_from_string (filename)
+			ccom_open_root_storage (initializer, wide_string.item, a_mode)	
+			item := ccom_storage (initializer)
 		ensure
-			compound_file_open: item /= Default_pointer			
+			compound_file_open: item /= default_pointer			
 		end
 
 feature -- Access
 
 	new_stream (a_name: STRING; a_mode: INTEGER) : ECOM_STREAM is
 			-- Newly created stream with name `a_name'
-			-- and mode `a_mode'
-			-- nested within Current storage
+			-- and mode `a_mode' nested within Current storage
 			-- Opening the same stream more than once from the 
 			-- same storage is not supported. 
 			-- STGM_SHARE_EXCLUSIVE flag must be specified. 
 		require
-			valid_storagename: a_name /= Void
-			-- valid_mode: is_valid_stgm (a_mode)
+			non_void_storage_name: a_name /= Void
+			valid_storage_name: not a_name.empty
+			valid_mode: is_valid_stgm (a_mode)
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name);
-			!!Result.make_from_pointer (ccom_create_stream (initializer, 
-					wide_string.item, a_mode));
+			!! wide_string.make_from_string (a_name)
+			!! Result.make_from_pointer (ccom_create_stream (initializer, 
+					wide_string.item, a_mode))
 		ensure
-			stream_created: Result /= Void and then
-					Result.item /= Default_pointer;			
+			non_void_stream: Result /= Void
+			valid_stream: Result.item /= default_pointer
 		end
 
 	retrieved_stream (a_name: STRING; a_mode: INTEGER): ECOM_STREAM is
@@ -108,17 +107,18 @@ feature -- Access
 			-- same storage is not supported. 
 			-- STGM_SHARE_EXCLUSIVE flag must be specified.
 		require
-			valid_name: a_name /= Void and is_valid_name (a_name)
-			-- valid_mode: is_valid_stgm (a_mode)
+			non_void_name: a_name /= Void
+			valid_name: is_valid_name (a_name)
+			valid_mode: is_valid_stgm (a_mode)
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name);
-			!!Result.make_from_pointer(ccom_open_stream (initializer, 
-					wide_string.item, a_mode));
+			!! wide_string.make_from_string (a_name)
+			!! Result.make_from_pointer (ccom_open_stream (initializer, 
+					wide_string.item, a_mode))
 		ensure
-			stream_created: Result /= Void and then
-					Result.item /= Default_pointer;
+			non_void_stream: Result /= Void
+			valid_stream: Result.item /= default_pointer
 		end
 
 	new_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
@@ -126,56 +126,56 @@ feature -- Access
 			-- and mode `a_mode'
 			-- nested within Current storage 
 		require
-			valid_storagename: a_name /= Void
-			-- valid_mode: is_valid_stgm (a_mode)
+			non_void_storage_name: a_name /= Void
+			valid_storage_name: not a_name.empty
+			valid_mode: is_valid_stgm (a_mode)
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name);
-			!!Result.make_from_pointer(ccom_create_storage (initializer, 
-					wide_string.item, a_mode));
+			!! wide_string.make_from_string (a_name)
+			!! Result.make_from_pointer (ccom_create_storage (initializer, 
+					wide_string.item, a_mode))
 		ensure
-			storage_created: Result /= Void and then
-					Result.item /= Default_pointer;
+			non_void_storage: Result /= Void
+			valid_storage: Result.item /= default_pointer
 		end
 
 	retrieved_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
-			-- Retrieved storage with name `a_name' 
-			-- and mode `a_mode' 
+			-- Retrieved storage with name `a_name' and mode `a_mode' 
 			-- nested within Current storage
 			-- Opening the same storage object more than once from the same 
 			-- parent storage is not supported. 
 			-- STGM_SHARE_EXCLUSIVE flag must be specified. 
 		require
-			valid_storage: (a_name /= Void and is_valid_name (a_name))
-			-- valid_mode: is_valid_stgm (a_mode)
+			non_void_name: a_name /= Void
+			valid_name: is_valid_name (a_name)
+			valid_mode: is_valid_stgm (a_mode)
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name);
-			!!Result.make_from_pointer(ccom_open_storage (initializer, 
-					wide_string.item, a_mode));
+			!! wide_string.make_from_string (a_name)
+			!! Result.make_from_pointer (ccom_open_storage (initializer, 
+					wide_string.item, a_mode))
 		ensure
-			storage_created: Result /= Void and then
-					Result.item /= Default_pointer;
+			non_void_storage: Result /= Void
+			valid_storage: Result.item /= default_pointer
 		end
 
 	root_storage: ECOM_ROOT_STORAGE is
 			-- IRootStorage interface
-			-- needed in low memory conditions
 		local
 			ptr: POINTER
 		do
-			ptr := ccom_root_storage(initializer)
-			if (ptr /= Default_pointer) then
-				!!Result.make_from_pointer(ptr)
+			ptr := ccom_root_storage (initializer)
+			if (ptr /= default_pointer) then
+				!! Result.make_from_pointer (ptr)
 			end
 		end 
 
-	enum_elements: ECOM_ENUM_STATSTG is
+	elements: ECOM_ENUM_STATSTG is
 			-- Substorages and substreams enumerator		
 		do
-			!!Result.make_from_pointer (ccom_enum_elements (initializer));
+			!! Result.make_from_pointer (ccom_enum_elements (initializer))
 		ensure
 			Result /= Void
 		end
@@ -192,115 +192,116 @@ feature -- Access
 	name: STRING is
 			-- Name
 		do
-			Result := description(Statflag_default).name
+			Result := description (Statflag_default).name
 		end
 
-	is_same_name(a_name: STRING): BOOLEAN is
+	is_same_name (a_name: STRING): BOOLEAN is
 			-- is `a_name' equal to name of Current storage
 		do
-			Result := description(Statflag_default).is_same_name(a_name)
+			Result := description (Statflag_default).is_same_name (a_name)
 		end
 
 	modification_time: WEL_FILE_TIME is
 			-- Modufication time
 		do
-			Result := description(Statflag_noname).modification_time
+			Result := description (Statflag_noname).modification_time
 		end
 
 	creation_time: WEL_FILE_TIME is
 			-- Creation time
 		do
-			Result := description(Statflag_noname).creation_time
+			Result := description (Statflag_noname).creation_time
 		end
 
 	access_time: WEL_FILE_TIME is
 			-- Access time
 		do
-			Result := description(Statflag_noname).access_time
+			Result := description (Statflag_noname).access_time
 		end
 
 	mode: INTEGER is
 			-- Access mode
 		do
-			Result := description(Statflag_noname).mode
+			Result := description (Statflag_noname).mode
 		end
 
 	class_id: POINTER is
-			-- Class identifier for Current storage
+			-- Class identifier
 		do
-			Result := description(Statflag_noname).clsid
+			Result := description (Statflag_noname).clsid
 		end
 
 	element_creation_time (a_name: STRING): WEL_FILE_TIME is
 			-- Creation time of element `a_name'
 		require 
-			valid_name: a_name /= Void and then is_valid_name (a_name)
+			non_void_name: a_name /= Void
+			valid_name: is_valid_name (a_name)
 		do
 			Result := enum_elements.element_creation_time (a_name)
 		ensure
-			valid_result: Result /= Void
+			non_void_creation_time: Result /= Void
 		end
 
 	element_access_time (a_name: STRING): WEL_FILE_TIME is
 			-- Access time of element `a_name'
 		require 
-			valid_name: a_name /= Void and then is_valid_name (a_name)
+			non_void_name: a_name /= Void
+			valid_name: is_valid_name (a_name)
 		do
 			Result := enum_elements.element_access_time (a_name)
 		ensure
-			valid_result: Result /= Void
+			non_void_access_time: Result /= Void
 		end
 
 	element_modification_time (a_name: STRING): WEL_FILE_TIME is
 			-- Modification time of element `a_name'
 		require 
-			valid_name: a_name /= Void and then is_valid_name (a_name)
+			non_void_name: a_name /= Void
+			valid_name: is_valid_name (a_name)
 		do
 			Result := enum_elements.element_modification_time (a_name)
 		ensure
-			valid_result: Result /= Void
+			non_void_modification_time: Result /= Void
 		end
 
 feature -- Basic Operations
 
 	copy_all_to (dest_storage: ECOM_STORAGE) is
-			-- Copy entire contents to `dest_storage'
+			-- Copy entire contents to `dest_storage'.
 		require
-			dest_exist: dest_storage /= Void and then
-						dest_storage.item /= Default_pointer;
+			non_void_destination: dest_storage /= Void
+			valid_destination: dest_storage.item /= default_pointer
 		do
-			ccom_copy_to (initializer, 0, Default_pointer, 
-					dest_storage.item);
+			ccom_copy_to (initializer, 0, default_pointer, 
+					dest_storage.item)
 		end
 
 	commit (a_flags: INTEGER) is
-			-- Commit any changes made to Current 
-			-- notify parent storage
+			-- Commit any changes.
+			-- Notify parent storage.
 		require
-			valid_flags: is_valid_stgc (a_flags);
-			open_in_transacted_mode: ;
+			valid_flags: is_valid_stgc (a_flags)
 		do
-			ccom_commit (initializer, a_flags);
-		ensure
-			-- 
+			ccom_commit (initializer, a_flags)
 		end
 
 	revert is
-			-- Discard all changes made to the storage object 
+			-- Discard all changes made to storage object 
 			-- since the last commit
 		do 
-			ccom_revert (initializer);
+			ccom_revert (initializer)
 		end
 
 	destroy_element (a_name: STRING) is
 			-- Remove element with name `a_name' from storage. 
 		require
-			valid_element_name: a_name /= Void and then is_valid_name (a_name)
+			non_void_name: a_name /= Void
+			valid_name: is_valid_name (a_name)
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name);	
-			ccom_destroy_element (initializer, wide_string.item);
+			!! wide_string.make_from_string (a_name)	
+			ccom_destroy_element (initializer, wide_string.item)
 		ensure
 			element_removed: not is_valid_name (a_name)
 		end
@@ -308,15 +309,17 @@ feature -- Basic Operations
 	rename_element (old_name: STRING; new_name:STRING) is
 			-- Rename element `old_name' into `new_name'
 		require
-			valid_old_name: old_name /= Void and then is_valid_name (old_name)
-			valid_new_name: new_name /= Void and then not is_valid_name (new_name)
+			non_void_old_name: old_name /= Void
+			valid_old_name: is_valid_name (old_name)
+			non_void_new_name: new_name /= Void
+			valid_new_name: is_valid_name (new_name)
 		local
 			wide_string1, wide_string2: ECOM_WIDE_STRING
 		do
-			!! wide_string1.make_from_string (old_name);
-			!! wide_string2.make_from_string (new_name);
+			!! wide_string1.make_from_string (old_name)
+			!! wide_string2.make_from_string (new_name)
 			ccom_rename_element (initializer, wide_string1.item, 
-						wide_string2.item);
+						wide_string2.item)
 		ensure
 			not_valid_old_name: not is_valid_name (old_name)
 			valid_new_name: is_valid_name (new_name)
@@ -333,99 +336,101 @@ feature -- Element Change
 			-- Before calling this method, the element to be moved must 
 			-- be closed, and the destination storage must be open. 
 		require
-			valid_element_name: a_element_name /= Void and then is_valid_name (a_element_name);
-			valid_dest_storage: dest_storage /= Void and then
-					dest_storage.item /= Default_pointer;
-			valid_new_name: new_name /= Void;
+			non_void_element_name: a_element_name /= Void
+			valid_element_name: is_valid_name (a_element_name)
+			non_void_dest_storage: dest_storage /= Void
+			valid_dest_storage: dest_storage.item /= default_pointer
+			non_void_new_name: new_name /= Void
+			valid_new_name: not new_name.empty
 			valid_mode: is_valid_stgmove (a_mode)
 		local
 			wide_string1, wide_string2: ECOM_WIDE_STRING
 		do
-			!! wide_string1.make_from_string (a_element_name);
-			!! wide_string2.make_from_string (new_name);
+			!! wide_string1.make_from_string (a_element_name)
+			!! wide_string2.make_from_string (new_name)
 			ccom_move_element_to (initializer, wide_string1.item, dest_storage.item, 
-							wide_string2.item, a_mode);
+							wide_string2.item, a_mode)
 		ensure
-			element_moved: dest_storage.is_valid_name(new_name)
+			element_moved: dest_storage.is_valid_name (new_name)
 		end
 
 	set_element_creation_time (a_element_name:STRING; a_creation_time: WEL_FILE_TIME) is
-			-- set creation time 
-			-- of element `a_element_name' with `a_creation_time'
+			-- Set creation time of element `a_element_name' with `a_creation_time'.
 		require
-			valid_element_name: a_element_name /= Void and then is_valid_name (a_element_name)
+			non_void_element_name: a_element_name /= Void
+			valid_element_name: is_valid_name (a_element_name)
 			valid_creation_time: a_creation_time /= Void
 		local
 			wide_string: ECOM_WIDE_STRING	
 		do
-			!!wide_string.make_from_string (a_element_name);
+			!! wide_string.make_from_string (a_element_name)
 			ccom_set_element_times (initializer, wide_string.item, a_creation_time.item,
-						Default_pointer, Default_pointer);
+						default_pointer, default_pointer)
 		ensure
-			element_creation_time_set: element_creation_time(a_element_name).is_equal (a_creation_time)
+			element_creation_time_set: element_creation_time (a_element_name).is_equal (a_creation_time)
 		end
 
 	set_element_access_time (a_element_name:STRING; an_access_time: WEL_FILE_TIME) is
-			-- set access time
-			-- of element `a_element_name' with `an_access_time'
+			-- Set access time of element `a_element_name' with `an_access_time'.
 		require
-			valid_element_name: a_element_name /= Void and then is_valid_name (a_element_name)
+			non_void_element_name: a_element_name /= Void
+			valid_element_name: is_valid_name (a_element_name)
 			valid_access_time: an_access_time /= Void
 		local
 			wide_string: ECOM_WIDE_STRING	
 		do
-			!!wide_string.make_from_string (a_element_name);
-			ccom_set_element_times (initializer, wide_string.item, Default_pointer,
-						an_access_time.item, Default_pointer);
+			!! wide_string.make_from_string (a_element_name)
+			ccom_set_element_times (initializer, wide_string.item, default_pointer,
+						an_access_time.item, default_pointer)
 		ensure
-			element_access_time_set: element_access_time(a_element_name).is_equal (an_access_time)
+			element_access_time_set: element_access_time (a_element_name).is_equal (an_access_time)
 		end
 
 	set_element_modification_time (a_element_name:STRING; a_modification_time: WEL_FILE_TIME) is
-			-- set modification time
-			-- of element `a_element_name' with `a_modification_time'
+			-- Set modification time of element `a_element_name' with `a_modification_time'.
 		require
-			valid_element_name: a_element_name /= Void and then is_valid_name (a_element_name)
+			non_void_element_name: a_element_name /= Void
+			valid_element_name: is_valid_name (a_element_name)
 			valid_modification_time: a_modification_time /= Void
 		local
 			wide_string: ECOM_WIDE_STRING	
 		do
-			!!wide_string.make_from_string (a_element_name);
-			ccom_set_element_times (initializer, wide_string.item, Default_pointer,
-						Default_pointer, a_modification_time.item);
+			!! wide_string.make_from_string (a_element_name)
+			ccom_set_element_times (initializer, wide_string.item, default_pointer,
+						default_pointer, a_modification_time.item)
 		ensure
-			element_access_time_set: element_modification_time(a_element_name).is_equal (a_modification_time)
+			element_access_time_set: element_modification_time (a_element_name).is_equal (a_modification_time)
 		end
 
-	set_access_time ( an_access_time: WEL_FILE_TIME) is
-			-- set access time with `an_access_time'
+	set_access_time (an_access_time: WEL_FILE_TIME) is
+			-- Set access time with `an_access_time'.
 		require
-			an_access_time /= Void
+			non_void_access_time: an_access_time /= Void
 		do
-			ccom_set_element_times (initializer, Default_pointer, Default_pointer,
-						an_access_time.item, Default_pointer);
+			ccom_set_element_times (initializer, default_pointer, default_pointer,
+						an_access_time.item, default_pointer)
 		ensure
 			access_time_set: access_time.is_equal (an_access_time)
 		end
 
 	set_modification_time (a_modification_time: WEL_FILE_TIME) is
-			-- set modification time with `a_modification_time'
+			-- Set modification time with `a_modification_time'.
 		require
-			a_modification_time /= Void
+			non_void_modification_time: a_modification_time /= Void
 		do
-			ccom_set_element_times (initializer, Default_pointer, Default_pointer,
-						Default_pointer, a_modification_time.item);
+			ccom_set_element_times (initializer, default_pointer, default_pointer,
+						default_pointer, a_modification_time.item)
 		ensure
 			modification_time_set: modification_time.is_equal (a_modification_time)
 		end
 
 	set_creation_time (a_creation_time: WEL_FILE_TIME) is
-			-- set creation time with `creation_time'
+			-- Set creation time with `creation_time'.
 		require
-			a_creation_time /= Void
+			non_void_creation_time: a_creation_time /= Void
 		do
-			ccom_set_element_times (initializer, Default_pointer, a_creation_time.item,
-						Default_pointer, Default_pointer);
+			ccom_set_element_times (initializer, default_pointer, a_creation_time.item,
+						default_pointer, default_pointer)
 		ensure
 			creation_time_set: creation_time.is_equal (a_creation_time)
 		end
@@ -434,52 +439,51 @@ feature -- Element Change
 	set_class (a_class_id: POINTER) is
 			-- Associate storage with COM component with class id `a_class-id'
 		require
-			valid_clsid: a_class_id /= Default_pointer;
+			valid_clsid: a_class_id /= default_pointer;
 		do 
-			ccom_set_class (initializer, a_class_id);
+			ccom_set_class (initializer, a_class_id)
 		end
-
-feature {ECOM_STORAGE}
 
 feature {NONE} -- Implementation
 
 	create_wrapper (a_pointer: POINTER): POINTER is
+			-- Create structure.
 		do
 			Result := ccom_create_c_storage_from_pointer (a_pointer)
 		end
 
 	delete_wrapper is
-			-- Delete structure
+			-- Delete structure.
 		do
-			ccom_delete_c_storage (initializer);
+			ccom_delete_c_storage (initializer)
 		end
 
 	description (a_flag: INTEGER): ECOM_STATSTG is
 			-- STATSTG structure
 			-- This structure contains statistical information. 
 		require
-			valid_flag: is_valid_stat_flag (a_flag);
+			valid_flag: is_valid_stat_flag (a_flag)
 		do
-			!!Result.make_from_pointer (ccom_stat(initializer, a_flag));
+			!! Result.make_from_pointer (ccom_stat (initializer, a_flag))
 		ensure
-			Result /= Void
+			valid_description: Result /= Void
 		end
 
 feature {NONE} -- Externals
 
 	ccom_create_c_storage: POINTER is
 		external
-			"C++ [new E_IStorage %"E_IStorage.h%"]()"
+			"C++ [new E_IStorage %"E_IStorage.h%"] ()"
 		end
 
 	ccom_create_c_storage_from_pointer (a_pointer: POINTER): POINTER is
 		external
-			"C++ [new E_IStorage %"E_IStorage.h%"](IStorage *)"
+			"C++ [new E_IStorage %"E_IStorage.h%"] (IStorage *)"
 		end
 
 	ccom_delete_c_storage (cpp_obj: POINTER) is
 		external
-			"C++ [delete E_IStorage %"E_IStorage.h%"]()"
+			"C++ [delete E_IStorage %"E_IStorage.h%"] ()"
 		end
 
 	ccom_create_doc_file (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER) is
@@ -582,7 +586,6 @@ feature {NONE} -- Externals
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] ():EIF_POINTER"
 		end
-
 	
 end -- class ECOM_STORAGE
 

@@ -1,7 +1,6 @@
 indexing
 	description: "Encapsulation of standard implementation of IStream interface"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +8,6 @@ class
 	ECOM_STREAM
 
 inherit
-	
 	ECOM_WRAPPER
 	
 	ECOM_STAT_FLAGS
@@ -23,22 +21,93 @@ inherit
 	EXCEPTIONS
 
 creation
-
 	make_from_pointer
+
+feature -- Access
+
+	end_of_stream: BOOLEAN
+			-- Is current seek pointer at end of stream?
+			-- Valid only after `read' ,`update_end_of_stream', `start', or `finish'.
+
+	last_character: CHARACTER
+			-- last read CHARACTER 
+
+	last_integer: INTEGER
+			-- last read INTEGER
+
+	last_real: REAL
+			-- last read REAL
+
+	last_boolean: BOOLEAN
+			-- last read BOOLEAN
+
+	last_string: STRING
+			-- last read STRING
+
+	description (stat_flag: INTEGER): ECOM_STATSTG is
+			-- STATSTG structure
+			-- See class ECOM_STAT_FLAGS for `stat_flag' values.
+		require
+			valid_stat_flag: is_valid_stat_flag (stat_flag)
+		local
+			ptr: POINTER
+		do
+			ptr := ccom_stat (initializer, stat_flag)
+			!! Result.make_from_pointer (ptr)
+		ensure
+			Result /= Void
+		end
+
+	name: STRING is
+			-- Name
+		do
+			Result := description (Statflag_default).name
+		end
+
+	size: ECOM_ULARGE_INTEGER is
+			-- Size in bytes
+		do
+			Result := description (Statflag_noname).size
+		end
+
+	modification_time: WEL_FILE_TIME is
+			-- Modification time
+		do
+			Result := description (Statflag_noname).modification_time
+		end
+
+	creation_time: WEL_FILE_TIME is
+			-- Creation time
+		do
+			Result := description (Statflag_noname).creation_time
+		end
+
+	access_time: WEL_FILE_TIME is
+			-- Access time
+		do
+			Result := description (Statflag_noname).access_time
+		end
+
+	locks_supported: INTEGER is
+			-- Types of region locking supported by stream
+		do
+			Result := description (Statflag_noname).locks_supported
+		end
 
 feature -- Basic Operations
 
 	update_end_of_stream is
-			-- update value of `end_of_stream'
+			-- Update value of `end_of_stream'.
 		do
 			end_of_stream := (ccom_end_of_stream_reached (initializer) = 1)
 		end
 
 	read (buffer: POINTER; bytes: INTEGER) is
 			-- Reads `bytes' number of bytes from stream 
-			-- into memory starting at current seek pointer.
+			-- into `buffer' starting at current seek pointer.
 		require
 			valid_buffer: buffer /= default_pointer
+			valid_bytes: bytes >= 0
 		local
 			tried: BOOLEAN
 		do
@@ -182,7 +251,7 @@ feature -- Basic Operations
 		local
 			wel_string: WEL_STRING
 		do
-			!!wel_string.make (string)
+			!! wel_string.make (string)
 			ccom_write_string (initializer, wel_string.item)
 		end
 
@@ -191,8 +260,8 @@ feature -- Basic Operations
 			-- relative to `origin'.
 			-- See class ECOM_STREAM_SEEK for `origin' values.
 		require
-			valid_displacement: displacement /= Void and then
-					displacement.item /= Default_pointer;
+			non_void_displacement: displacement /= Void
+			valid_displacement: displacement.item /= default_pointer
 			valid_seek_origin: is_valid_seek(origin)
 		do
 			ccom_seek (initializer, displacement.item, origin)	
@@ -203,7 +272,7 @@ feature -- Basic Operations
 		local
 			large_integer: ECOM_LARGE_INTEGER
 		do
-			!!large_integer.make_from_integer (0)
+			!! large_integer.make_from_integer (0)
 			seek (large_integer, Stream_seek_set)
 			end_of_stream := False
 		ensure
@@ -215,7 +284,7 @@ feature -- Basic Operations
 		local
 			large_integer: ECOM_LARGE_INTEGER
 		do
-			!!large_integer.make_from_integer (0)
+			!! large_integer.make_from_integer (0)
 			seek (large_integer, Stream_seek_end)
 			end_of_stream := True
 		ensure
@@ -226,7 +295,7 @@ feature -- Basic Operations
 			-- Change size of stream to `new_size'.
 		require
 			valid_new_size: new_size /= Void and then
-				new_size.item /= Default_pointer;
+				new_size.item /= default_pointer;
 		do
 			ccom_set_size (initializer, new_size.item)
 		ensure
@@ -239,9 +308,9 @@ feature -- Basic Operations
 			-- `destination'.
 		require
 			valid_destination: destination /= Void 
-					and then destination.item /= Default_pointer
+					and then destination.item /= default_pointer
 			valid_bytes_number: bytes /= Void and then
-					bytes.item /= Default_pointer
+					bytes.item /= default_pointer
 		do
 			ccom_copy_to (initializer, destination.item, bytes.item)
 		end
@@ -250,8 +319,8 @@ feature -- Basic Operations
 			-- Restricts access to range of bytes defined by
 			-- `offset' and `count'.
 		require
-			valid_offset: offset /= Void and then offset.item /= Default_pointer
-			valid_count: count /= Void and then count.item /= Default_pointer
+			valid_offset: offset /= Void and then offset.item /= default_pointer
+			valid_count: count /= Void and then count.item /= default_pointer
 			valid_lock: is_valid_lock (lock)
 		do
 			ccom_lock_region (initializer, offset.item, count.item, lock)
@@ -261,8 +330,8 @@ feature -- Basic Operations
 			-- Removes access restriction to range of bytes defined by
 			-- `offset' and `count'.
 		require
-			valid_offset: offset /= Void and then offset.item /= Default_pointer
-			valid_count: count /= Void and then count.item /= Default_pointer
+			valid_offset: offset /= Void and then offset.item /= default_pointer
+			valid_count: count /= Void and then count.item /= default_pointer
 			valid_lock: is_valid_lock (lock)
 		do
 			ccom_unlock_region (initializer, offset.item, count.item, lock)
@@ -273,96 +342,23 @@ feature -- Basic Operations
 			-- the same bytes as Current
 			-- Seek pointer is also cloned
 		do
-			!!Result.make_from_pointer(ccom_clone(initializer))
+			!! Result.make_from_pointer(ccom_clone(initializer))
 		ensure
-			clone_created: Result /= Void and then Result.item /= Default_pointer
+			clone_created: Result /= Void and then Result.item /= default_pointer
 		end
-
-feature -- Access
-
-	end_of_stream: BOOLEAN
-			-- Is current seek pointer at end of stream?
-			-- Valid only after `read' ,`update_end_of_stream', `start', or `finish'.
-
-	last_character: CHARACTER
-			-- last read CHARACTER 
-
-	last_integer: INTEGER
-			-- last read INTEGER
-
-	last_real: REAL
-			-- last read REAL
-
-	last_boolean: BOOLEAN
-			-- last read BOOLEAN
-
-	last_string: STRING
-			-- last read STRING
-
-	description (stat_flag: INTEGER): ECOM_STATSTG is
-			-- STATSTG structure
-			-- See class ECOM_STAT_FLAGS for `stat_flag' values.
-		require
-			valid_stat_flag: is_valid_stat_flag (stat_flag)
-		local
-			ptr: POINTER
-		do
-			ptr := ccom_stat (initializer, stat_flag);
-			!!Result.make_from_pointer (ptr);
-		ensure
-			Result /= Void
-		end
-
-	name: STRING is
-			-- Name
-		do
-			Result := description(Statflag_default).name
-		end
-
-	size: ECOM_ULARGE_INTEGER is
-			-- Size in bytes
-		do
-			Result := description(Statflag_noname).size
-		end
-
-	modification_time: WEL_FILE_TIME is
-			-- Modification time
-		do
-			Result := description(Statflag_noname).modification_time
-		end
-
-	creation_time: WEL_FILE_TIME is
-			-- Creation time
-		do
-			Result := description(Statflag_noname).creation_time
-		end
-
-	access_time: WEL_FILE_TIME is
-			-- Access time
-		do
-			Result := description(Statflag_noname).access_time
-		end
-
-	locks_supported: INTEGER is
-			-- Types of region locking supported by stream
-		do
-			Result := description(Statflag_noname).locks_supported
-		end
-	
-feature {ECOM_STREAM, ECOM_STORAGE}
-
 
 feature {NONE} -- Implementation
 
 	create_wrapper (a_pointer: POINTER): POINTER is
+			-- Create root file.
 		do
 			Result := ccom_create_c_istream (a_pointer)
 		end
 
 	delete_wrapper is
-			-- Close root compound file
+			-- Close root compound file.
 		do
-			ccom_delete_c_stream (initializer);
+			ccom_delete_c_stream (initializer)
 		end
 
 

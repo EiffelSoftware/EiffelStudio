@@ -29,6 +29,7 @@ feature -- Access
 
 	selected_items: DYNAMIC_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
+			-- `is_empty' if no item selected.
 		require
 			not_destroyed: not is_destroyed
 		do

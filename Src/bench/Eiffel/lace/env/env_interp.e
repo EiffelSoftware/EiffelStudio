@@ -53,8 +53,8 @@ feature
 						loop
 							current_character := Result.item (j);
 							stop := 	(not c_isalnum (current_character))
-										or else
-										current_character = '_';
+										and
+										(current_character /= '_');
 							if not stop then
 								j := j + 1;
 							end;

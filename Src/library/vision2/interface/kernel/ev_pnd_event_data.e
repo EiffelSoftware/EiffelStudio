@@ -28,22 +28,28 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 	
-	data: EV_PND_DATA
+	data: EV_PND_DATA is
 			-- Transported data
+		do
+			Result := implementation.data
+		end
 
-	data_type: EV_PND_TYPE
+	data_type: EV_PND_TYPE is
 			-- Transported data type
+		do
+			Result := implementation.data_type
+		end
 
 feature {EV_PND_TARGET_I} -- Element change
 	
 	set_data (new_data: EV_PND_DATA) is
 		do
-			data := new_data
+			implementation.set_data (new_data)
 		end
 	
 	set_data_type (new_type: EV_PND_TYPE) is
 		do
-			data_type := new_type
+			implementation.set_data_type (new_type)
 		end
 
 feature {EV_PND_TARGET_I} -- Implementation

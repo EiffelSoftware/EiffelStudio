@@ -72,6 +72,17 @@ feature -- Access
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Type library descriptor
 
+	inherit_from_dispatch: BOOLEAN is
+			-- Does interface inherit from IDispatch?
+		do
+			if inherited_interface /= Void then
+				if not inherited_interface.name.is_equal (Iunknown_type) then
+					Result := inherited_interface.name.is_equal (Idispatch_type) or else
+						inherited_interface.inherit_from_dispatch
+				end
+			end
+		end
+
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do

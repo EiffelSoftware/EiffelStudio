@@ -184,7 +184,7 @@ feature -- Access
 			-- `Result' is directory_constant named `directory_constant_name',
 			-- or `Void' if none.
 		local
-			constant_as_lower, name_as_lower: STRING
+			name_as_lower: STRING
 			directory_constant: GB_DIRECTORY_CONSTANT
 		do
 			name_as_lower := directory_constant_name.as_lower
@@ -329,8 +329,6 @@ feature -- Element change
 	build_constant_from_xml (element: XM_ELEMENT) is
 			-- Add a constant based on information in `element'.
 		local
-			current_element, constant_element: XM_ELEMENT
-			current_name: STRING
 			name, type, value: STRING
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION

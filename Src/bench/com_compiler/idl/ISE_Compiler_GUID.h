@@ -45,9 +45,7 @@
 #define UUID_IEnumCluster                       7a252ad5-c033-4f33-98a2-551d8451b8c4
 #define UUID_IEnumFeature                       dc003e49-6c17-4be2-bd81-3d3540b738b1
 #define UUID_IEnumClusterProp                   c5b13566-8a44-40e1-a090-3e5cc36ca72d
-#define UUID_IEnumClusterExcludes               3ec7ebb4-bb85-42fe-adc1-b301a8a0b79c
-#define UUID_IEnumIncludePaths                  95f826bf-331d-4f84-8053-e1b4ded312d8
-#define UUID_IEnumObjectFiles                   99ec369f-3cc2-4b78-a9a3-cba25388f182
+#define UUID_IEiffelEnumString                  8832571e-43e6-4654-a436-b5fa1997ea5b
 #define UUID_IEnumAssembly                      b8a7d9f4-b23b-45a9-b3b1-2e0e004ffb8d
 #define UUID_IEnumCompletionEntry               7081edbd-9335-48d5-b75f-401f525afb76
 #define UUID_IEnumParameter                     e3ab1afb-730c-498f-a168-418ee482a2d7

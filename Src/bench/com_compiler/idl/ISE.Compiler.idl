@@ -51,10 +51,8 @@ library EiffelComCompiler
     interface IEiffelSystemClusters;
     interface IEnumClusterProp;
     interface IEiffelClusterProperties;
-    interface IEnumClusterExcludes;
     interface IEiffelSystemExternals;
-    interface IEnumIncludePaths;
-    interface IEnumObjectFiles;
+    interface IEiffelEnumString;
     interface IEiffelSystemAssemblies;
     interface IEnumAssembly;
     interface IEiffelAssemblyProperties;
@@ -128,13 +126,13 @@ library EiffelComCompiler
 
     //---------------------------------------------------------------------
     // Location types for completion
-	// i.e. are we building a completion list for a target inside a feature
-	// or as part of an inheritance clause
+    // i.e. are we building a completion list for a target inside a feature
+    // or as part of an inheritance clause
     //---------------------------------------------------------------------
     [
         uuid (UUID_EnumEIF_COMPLETION_LOCATION),
 
-		helpstring ("Location types for completion")
+        helpstring ("Location types for completion")
     ]
     typedef enum EIF_COMPLETION_LOCATION
     {
@@ -1227,7 +1225,7 @@ library EiffelComCompiler
         HRESULT SetAssertions ([in] VARIANT_BOOL vbCheck, [in] VARIANT_BOOL vbRequire, [in] VARIANT_BOOL vbEnsure, [in] VARIANT_BOOL vbLoop, [in] VARIANT_BOOL vbInvariant);
 
         [id (DISPID_EiffelComCompiler_Excluded), helpstring ("List of excluded directories.")]
-        HRESULT Excluded ([out, retval] IEnumClusterExcludes** ppIEnumClusterExcludes);
+        HRESULT Excluded ([out, retval] IEiffelEnumString** ppIEiffelEnumString);
 
         [id (DISPID_EiffelComCompiler_AddExclude), helpstring ("Add a item to exclude.")]
         HRESULT AddExclude ([in] BSTR bstrName);
@@ -1264,36 +1262,6 @@ library EiffelComCompiler
     };
 
     //---------------------------------------------------------------------
-    // IEnumClusterExcludes
-    //---------------------------------------------------------------------
-    [
-        dual,
-        oleautomation,
-        uuid(CA8DB208-5E92-426e-953D-2660C131C618),
-        helpstring ("Eiffel Cluster Exluded Directories Enumeration.")
-    ]
-    interface IEnumClusterExcludes: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] BSTR *pbstrExclude, [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumClusterExcludes** ppIEnumClusterExcludes);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrExclude);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG *pulCount);
-    };
-
-    //---------------------------------------------------------------------
     // IEiffelSystemExternals
     //---------------------------------------------------------------------
     [
@@ -1314,7 +1282,7 @@ library EiffelComCompiler
         HRESULT ReplaceIncludePath ([in] BSTR bstrPath, [in] BSTR bstrOldPath);
 
         [id (DISPID_EiffelComCompiler_IncludePaths), helpstring ("Include paths.")]
-        HRESULT IncludePaths ([out, retval] IEnumIncludePaths** ppIEnumIncludePaths);
+        HRESULT IncludePaths ([out, retval] IEiffelEnumString** ppIEiffelEnumString);
 
         [id (DISPID_EiffelComCompiler_AddObjectFile), helpstring ("Add a object file to the project.")]
         HRESULT AddObjectFile ([in] BSTR bstrFileName);
@@ -1326,25 +1294,25 @@ library EiffelComCompiler
         HRESULT ReplaceObjectFile ([in] BSTR bstrFileName, [in] BSTR bstrOldFileName);
 
         [id (DISPID_EiffelComCompiler_ObjectFiles), helpstring ("Object files.")]
-        HRESULT ObjectFiles ([out, retval] IEnumObjectFiles** ppIEnumObjectFiles);
+        HRESULT ObjectFiles ([out, retval] IEiffelEnumString** ppIEiffelEnumString);
 
         [id (DISPID_EiffelComCompiler_Store), helpstring ("Save changes.")]
         HRESULT Store ();
     }; 
 
     //---------------------------------------------------------------------
-    // IEnumIncludePaths
+    // IEiffelEnumString
     //---------------------------------------------------------------------
     [
         dual,
         oleautomation,
-        uuid(UUID_IEnumIncludePaths),
-        helpstring ("Include Path Enumeration.")
+        uuid(UUID_IEiffelEnumString),
+        helpstring ("Eiffel String Enumeration.")
     ]
-    interface IEnumIncludePaths: IDispatch
+    interface IEiffelEnumString: IDispatch
     {
         [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] BSTR *pbstrIncludePath, [out] ULONG *pulFetched);
+        HRESULT Next([out] BSTR *pbstrString, [out] ULONG *pulFetched);
 
         [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
         HRESULT Skip([in] ULONG ulCount);
@@ -1353,40 +1321,10 @@ library EiffelComCompiler
         HRESULT Reset();
 
         [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumIncludePaths** ppIEnumIncludePaths);
+        HRESULT Clone([out] IEiffelEnumString** ppIEiffelEnumString);
 
         [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrIncludePath);
-
-        [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
-        HRESULT Count ([out, retval] ULONG* pulCount);
-    };
-
-    //---------------------------------------------------------------------
-    // IEnumObjectFiles
-    //---------------------------------------------------------------------
-    [
-        dual,
-        oleautomation,
-        uuid(UUID_IEnumObjectFiles),
-        helpstring ("Object File Enumeration.")
-    ]
-    interface IEnumObjectFiles: IDispatch
-    {
-        [id (DISPID_EiffelComCompiler_Next), helpstring ("Go to next item in enumerator")]
-        HRESULT Next([out] BSTR *pbstrObjectFile, [out] ULONG *pulFetched);
-
-        [id (DISPID_EiffelComCompiler_Skip), helpstring ("Skip `ulCount' items.")]
-        HRESULT Skip([in] ULONG ulCount);
-
-        [id (DISPID_EiffelComCompiler_Reset), helpstring ("Reset enumerator.")]
-        HRESULT Reset();
-
-        [id (DISPID_EiffelComCompiler_Clone), helpstring ("Clone enumerator.")]
-        HRESULT Clone([out] IEnumObjectFiles** ppIEnumObjectFiles);
-
-        [id (DISPID_EiffelComCompiler_IthItem), helpstring ("Retrieve enumerators ith item at `ulIndex'.")]
-        HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrObjectFile);
+        HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrString);
 
         [id (DISPID_EiffelComCompiler_Count), helpstring("Retrieve enumerator item count."), propget]
         HRESULT Count ([out, retval] ULONG* pulCount);

@@ -66,7 +66,7 @@ interface IEiffelCompiler: IUnknown
 interface IEiffelCompilerEvents: IUnknown
 {
   [helpstring ("Should compilation continue.")]
-  HRESULT continue ([in, out] VARIANT_BOOL * a_boolean);
+  HRESULT should_continue ([in, out] VARIANT_BOOL * a_boolean);
     
   [helpstring ("Output string.")]
   HRESULT output_string ([in] BSTR a_string);

@@ -64,7 +64,7 @@ cluster
 
 	estore_db_support:		"$ISE_EIFFEL\library\store\dbms\support"
 
-	estore_rdbms:		"$ISE_EIFFEL\library\store\dbms\rdbms\oracle"
+	estore_rdbms:		"$ISE_EIFFEL\library\store\dbms\rdbms\odbc"
 
 	all estore_generation:		"$ISE_EIFFEL\library\store\generation"
 

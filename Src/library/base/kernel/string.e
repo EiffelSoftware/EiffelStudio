@@ -257,21 +257,16 @@ feature -- Comparison
 				o_area := other.area;
 				i := str_cmp ($area, $o_area, count, other.count);
 				Result := (i = 0);
-			else
-				Result := false;
 			end;
 		end;
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is string lexicographically lower than `other'?
-			-- (False if `other' is void)
 		local
 			other_area: like area
 		do
-			if other /= Void then
-				other_area := other.area;
-				Result := str_cmp ($other_area, $area, other.count, count)>0
-			end;
+			other_area := other.area;
+			Result := str_cmp ($other_area, $area, other.count, count)>0
 		end;
 
 feature -- Status report	
@@ -326,6 +321,8 @@ feature -- Status report
 		do
 			s := clone (Current);
 			s.to_lower;
+			s.right_adjust;
+			s.left_adjust;
 			Result := s.is_equal (True_constant) or else s.is_equal (False_constant)
 		end;
 

@@ -16,7 +16,7 @@ feature -- Conformance
 			-- Is `object' an instance of type `type_id'?
 		require
 			object_not_void: object /= Void
-			type_id_positive: type_id > 0
+			type_id_nonnegative: type_id >= 0
 		do
 			Result := c_is_instance_of (type_id, $object)
 		end
@@ -24,8 +24,8 @@ feature -- Conformance
 	type_conforms_to (type1, type2: INTEGER): BOOLEAN is
 			-- Does `type1' conform to `type2'?
 		require
-			type1_positive: type1 > 0
-			type2_positive: type2 > 0
+			type1_nonnegative: type1 >= 0
+			type2_nonnegative: type2 >= 0
 		do
 			Result := c_type_conforms_to (type1, type2)
 		end
@@ -43,7 +43,7 @@ feature -- Creation
 			a := class_type.to_c
 			Result := feature {ISE_RUNTIME}.type_id_from_name ($a)
 		ensure
-			valid_result: Result = -1 or else Result >= 0
+			dynamic_type_from_string_valid: Result = -1 or else Result >= 0
 		end
 
 	new_instance_of (type_id: INTEGER): ANY is
@@ -53,7 +53,7 @@ feature -- Creation
 			-- `type_id' cannot represent a SPECIAL type, use
 			-- `new_special_any_instance' instead.
 		require
-			type_id_positive: type_id > 0
+			type_id_nonnegative: type_id >= 0
 			not_special_type: not is_special_type (type_id)
 		do
 			Result := c_new_instance_of (type_id)
@@ -68,7 +68,7 @@ feature -- Creation
 			-- basic type, use `TO_SPECIAL'.
 		require
 			count_valid: count >= 0
-			type_id_positive: type_id > 0
+			type_id_nonnegative: type_id >= 0
 			special_type: is_special_any_type (type_id)
 		local
 			l_sp: TO_SPECIAL [ANY]
@@ -88,7 +88,7 @@ feature -- Status report
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type.
 		require
-			type_id_valid: type_id > 0
+			type_id_nonnegative: type_id >= 0
 		do
 			Result := c_eif_special_any_type (type_id)
 		end
@@ -98,7 +98,7 @@ feature -- Status report
 			-- a SPECIAL [XX] where XX is a reference type
 			-- or a basic type.
 		require
-			type_id_valid: type_id > 0
+			type_id_nonnegative: type_id >= 0
 		do
 			Result := c_eif_is_special_type (type_id)
 		end
@@ -187,6 +187,8 @@ feature -- Access
 			object_not_void: object /= Void
 		do
 			Result := feature {ISE_RUNTIME}.dynamic_type ($object)
+		ensure
+			dynamic_type_nonnegative: Result >= 0
 		end
 
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
@@ -194,6 +196,8 @@ feature -- Access
 			-- position `i'.
 		do
 			Result := eif_gen_param_id (- 1, $object, i)
+		ensure
+			dynamic_type_nonnegative: Result >= 0
 		end
 		
 	field (i: INTEGER; object: ANY): ANY is
@@ -249,6 +253,8 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 		do
 			Result := c_field_type_of_type (i - 1, feature {ISE_RUNTIME}.dynamic_type ($object))
+		ensure
+			field_type_nonnegative: Result >= 0
 		end
 
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
@@ -258,6 +264,8 @@ feature -- Access
 			index_small_enough: i <= field_count_of_type (type_id)
 		do
 			Result := c_field_type_of_type (i - 1, type_id)
+		ensure
+			field_type_nonnegative: Result >= 0
 		end
 
 	field_static_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
@@ -267,6 +275,8 @@ feature -- Access
 			index_small_enough: i <= field_count_of_type (type_id)
 		do
 			Result := c_field_static_type_of_type (i - 1, type_id)
+		ensure
+			field_type_nonnegative: Result >= 0
 		end
 		
 	expanded_field_type (i: INTEGER; object: ANY): STRING is

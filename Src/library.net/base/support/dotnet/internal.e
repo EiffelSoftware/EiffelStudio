@@ -16,6 +16,7 @@ feature -- Conformance
 			-- Is `object' an instance of type `type_id'?
 		require
 			object_not_void: object /= Void
+			type_id_nonnegative: type_id >= 0
 		local
 			l_types: like known_types
 		do
@@ -28,6 +29,9 @@ feature -- Conformance
 
 	type_conforms_to (type1, type2: INTEGER): BOOLEAN is
 			-- Does `type1' conform to `type2'?
+		require
+			type1_nonnegative: type1 >= 0
+			type2_nonnegative: type2 >= 0
 		local
 			child: TYPE
 			l_types: like known_types
@@ -58,13 +62,16 @@ feature -- Creation
 			t := feature {TYPE}.get_type_string (l_class_type)
 			Result := get_type_index (t)
 		ensure
-			valid_result: Result = -1 or else Result >= 0
+			dynamic_type_from_string_valid: Result = -1 or else Result >= 0
 		end
 
 	new_instance_of (type_id: INTEGER): ANY is
 			-- New instance of dynamic `type_id'.
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
+		require
+			type_id_nonnegative: type_id >= 0
+			not_special_type: not is_special_type (type_id)
 		local
 			c: CONSTRUCTOR_INFO
 			l_types: like known_types
@@ -77,6 +84,9 @@ feature -- Creation
 					Result ?= c.invoke (Void)
 				end
 			end
+		ensure
+			not_special_type: not is_special (Result)
+			dynamic_type_set: dynamic_type (Result) = type_id
 		end
 
 	new_special_any_instance (type_id, count: INTEGER): SPECIAL [ANY] is
@@ -85,7 +95,7 @@ feature -- Creation
 			-- basic type, use `TO_SPECIAL'.
 		require
 			count_valid: count >= 0
-			type_id_positive: type_id > 0
+			type_id_nonnegative: type_id >= 0
 			special_type: is_special_any_type (type_id)
 		do
 			check
@@ -103,7 +113,7 @@ feature -- Status report
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type.
 		require
-			type_id_valid: type_id > 0
+			type_id_nonnegative: type_id >= 0
 		do
 			check
 				False
@@ -115,7 +125,7 @@ feature -- Status report
 			-- a SPECIAL [XX] where XX is a reference type
 			-- or a basic type.
 		require
-			type_id_valid: type_id > 0
+			type_id_nonnegative: type_id >= 0
 		do
 			check
 				False
@@ -216,6 +226,8 @@ feature -- Access
 		do
 			l_obj := object
 			Result := get_type_index (l_obj.get_type)
+		ensure
+			dynamic_type_nonnegative: Result >= 0
 		end
 
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
@@ -225,6 +237,8 @@ feature -- Access
 			check
 				False
 			end
+		ensure
+			dynamic_type_nonnegative: Result >= 0
 		end
 	
 	field (i: INTEGER; object: ANY): ANY is
@@ -341,6 +355,8 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 		do
 			Result := field_type_of_type (i, dynamic_type (object))
+		ensure
+			field_type_nonnegative: Result >= 0
 		end
 
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
@@ -371,7 +387,8 @@ feature -- Access
 					end
 				end
 			end
-				
+		ensure
+			field_type_nonnegative: Result >= 0
 		end
 
 	field_static_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
@@ -383,6 +400,8 @@ feature -- Access
 			check
 				False
 			end
+		ensure
+			field_type_nonnegative: Result >= 0
 		end
 
 	expanded_field_type (i: INTEGER; object: ANY): STRING is

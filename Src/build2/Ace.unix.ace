@@ -52,7 +52,7 @@ cluster
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "mswin"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e";
+			"new_figures"; "mswin"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_imp.e";
 		default
 			assertion (require)
 		end

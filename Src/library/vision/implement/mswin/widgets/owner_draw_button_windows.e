@@ -40,6 +40,8 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font
 		undefine
+			on_hide,
+			on_show,
 			on_size,
 			on_move,
 			on_right_button_up, on_left_button_down,
@@ -186,8 +188,6 @@ feature -- Basic operations
 			brush: WEL_BRUSH
 		do
 			dc := a_draw_item_struct.dc
---			dc.set_bk_color (wel_background_color)
---			dc.set_text_color (wel_foreground_color)
 			!! brush.make_solid (wel_background_color)
 			dc.select_brush (brush)
 			dc.rectangle (0, 0, width, height)

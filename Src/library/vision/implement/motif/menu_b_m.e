@@ -32,9 +32,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_menu_b: MENU_B) is
+	make (a_menu_b: MENU_B; man: BOOLEAN) is
 			-- Create a motif menu button.
 		local
 			ext_name: ANY
@@ -42,7 +42,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_menu_b.identifier.to_c;
 			screen_object := create_menu_b ($ext_name,
-					parent_screen_object (a_menu_b, widget_index));
+					parent_screen_object (a_menu_b, widget_index),
+					man);
 			a_menu_b.set_font_imp (Current)
 		end
 
@@ -90,7 +91,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_menu_b (m_name: ANY; scr_obj: POINTER): POINTER is
+	create_menu_b (m_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end

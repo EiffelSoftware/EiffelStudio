@@ -43,9 +43,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_text_field: TEXT_FIELD) is
+	make (a_text_field: TEXT_FIELD; man: BOOLEAN) is
 			-- Create a motif text_field.
 		local
 			ext_name: ANY
@@ -53,7 +53,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_text_field.identifier.to_c;
 			screen_object := create_text_field ($ext_name,
-					parent_screen_object (a_text_field, widget_index));
+					parent_screen_object (a_text_field, widget_index),
+					man);
 			a_text_field.set_font_imp (Current)
 		end;
 
@@ -225,7 +226,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_text_field (t_name: ANY; scr_obj: POINTER): POINTER is
+	create_text_field (t_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

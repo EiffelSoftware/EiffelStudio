@@ -27,9 +27,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_frame: FRAME) is
+	make (a_frame: FRAME; man: BOOLEAN) is
 			-- Create a motif frame.
 		local
 			ext_name_frame: ANY
@@ -37,12 +37,14 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name_frame := a_frame.identifier.to_c;
 			screen_object := create_frame ($ext_name_frame,
-					parent_screen_object (a_frame, widget_index));
+					parent_screen_object (a_frame, widget_index),
+					man);
 		end
 
 feature {NONE} -- External features
 
-	create_frame (f_name: ANY; scr_obj: POINTER): POINTER is
+	create_frame (f_name: ANY; scr_obj: POINTER;
+					man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

@@ -42,9 +42,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_push_b: PUSH_B) is
+	make (a_push_b: PUSH_B; man: BOOLEAN) is
 			-- Create a motif push button.
 		local
 			ext_name: ANY
@@ -52,7 +52,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_push_b.identifier.to_c;
 			screen_object := create_push_b ($ext_name, 
-				parent_screen_object (a_push_b, widget_index));
+				parent_screen_object (a_push_b, widget_index),
+				man);
 			a_push_b.set_font_imp (Current)
 		end;
 
@@ -156,7 +157,8 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_push_b (p_name: ANY; scr_obj: POINTER): POINTER is
+	create_push_b (p_name: ANY; scr_obj: POINTER; 
+				man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

@@ -27,9 +27,9 @@ creation
 
     make
 
-feature
+feature {NONE} -- Creation
 
-    make (a_separator: SEPARATOR) is
+    make (a_separator: SEPARATOR; man: BOOLEAN) is
             -- Create a motif separator.
         local
             ext_name: ANY
@@ -37,9 +37,10 @@ feature
 			widget_index := widget_manager.last_inserted_position;
             ext_name := a_separator.identifier.to_c;
             screen_object := create_separator ($ext_name,
-					parent_screen_object (a_separator, widget_index));
+				parent_screen_object (a_separator, widget_index),
+				man);
         ensure
-            is_horizontal: is_horizontal
+            --default_orientation: is_horizontal
         end
 
 feature 
@@ -95,7 +96,8 @@ feature
 
 feature {NONE} -- External features
 
-    create_separator (s_name: ANY; scr_obj: POINTER): POINTER is
+    create_separator (s_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
         external
             "C"
         end;

@@ -26,9 +26,9 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
-	make (a_radio_box: RADIO_BOX) is
+	make (a_radio_box: RADIO_BOX; man: BOOLEAN) is
 			-- Create a motif radio_box.
 		local
 			ext_name: ANY
@@ -36,9 +36,12 @@ feature
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_radio_box.identifier.to_c;
 			screen_object := create_radio_box ($ext_name,
-					parent_screen_object (a_radio_box, widget_index));
+					parent_screen_object (a_radio_box, widget_index),
+					man);
 		end;
+
 feature
+
 	set_always_one (flag: BOOLEAN) is
 		do
 			set_xt_boolean (screen_object, flag, MradioAlwaysOne);
@@ -47,7 +50,8 @@ feature
 
 feature {NONE} -- External features
 
-	create_radio_box (b_name: ANY; scr_obj: POINTER): POINTER is
+	create_radio_box (b_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

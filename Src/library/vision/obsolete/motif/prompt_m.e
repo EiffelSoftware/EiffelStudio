@@ -40,9 +40,9 @@ creation
 
 	make
 
-feature
+feature {NONE} -- Creation
 
-	make (a_prompt: PROMPT) is
+	make (a_prompt: PROMPT; man: BOOLEAN) is
 			-- Create a motif prompt.
 		local
 			ext_name: ANY
@@ -50,7 +50,8 @@ feature
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_prompt.identifier.to_c;
 			screen_object := create_prompt ($ext_name,
-				parent_screen_object (a_prompt, widget_index));
+				parent_screen_object (a_prompt, widget_index),
+				man);
 		end;
 
 feature 
@@ -328,7 +329,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_prompt (p_name: ANY; scr_obj: POINTER): POINTER is
+	create_prompt (p_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

@@ -27,9 +27,9 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
-	make (a_row_column: ROW_COLUMN) is
+	make (a_row_column: ROW_COLUMN; man: BOOLEAN) is
 			-- Create a motif row_column.
 		local
 			ext_name: ANY
@@ -37,8 +37,11 @@ feature
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_row_column.identifier.to_c;
 			screen_object := create_row_column ($ext_name, 
-				parent_screen_object (a_row_column, widget_index));
+				parent_screen_object (a_row_column, widget_index),
+				man);
 		end;
+
+feature
 
 	is_row_layout: BOOLEAN is
 			-- Is current row column layout items preferably in row ?
@@ -150,7 +153,8 @@ feature
 
 feature {NONE} -- External features
 
-	create_row_column (r_name: ANY; scr_obj: POINTER): POINTER is
+	create_row_column (r_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

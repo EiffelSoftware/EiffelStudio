@@ -27,7 +27,21 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
+
+	make (a_scrollbar: SCROLLBAR; man: BOOLEAN) is
+			-- Create a motif scrollbar.
+		local
+			ext_name: ANY
+		do
+			widget_index := widget_manager.last_inserted_position;
+			ext_name := a_scrollbar.identifier.to_c;
+			screen_object := create_scrollbar ($ext_name, 
+					parent_screen_object (a_scrollbar, widget_index),
+					man);
+		end;
+
+feature
 
 	add_move_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when slide
@@ -51,17 +65,6 @@ feature
 				!! value_changed_actions.make (screen_object, MvalueChanged, widget_oui)
 			end;
 			value_changed_actions.add (a_command, argument)
-		end;
-
-	make (a_scrollbar: SCROLLBAR) is
-			-- Create a motif scrollbar.
-		local
-			ext_name: ANY
-		do
-			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_scrollbar.identifier.to_c;
-			screen_object := create_scrollbar ($ext_name, 
-						parent_screen_object (a_scrollbar, widget_index));
 		end;
 
 	granularity: INTEGER is
@@ -284,7 +287,8 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_scrollbar (s_name: ANY; scr_obj: POINTER): POINTER is
+	create_scrollbar (s_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

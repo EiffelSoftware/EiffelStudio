@@ -26,13 +26,15 @@ feature {NONE} -- Initialization
 		do
 			consumed_t := a_consumed
 			set_assembly_name
-			if not cached_xml.has (assembly_name) then
+--			if not cached_xml.has (assembly_name) then
 				create assembly_info.make
-				assembly_info.initialize (dotnet_framework_path + assembly_name + ".xml")
-				cached_xml.put (assembly_info, assembly_name)
-			else
-				assembly_info := cached_xml.item (assembly_name)
-			end
+--				if is_dotnet_installed then
+--					assembly_info.initialize (dotnet_framework_path + assembly_name + ".xml")
+--					cached_xml.put (assembly_info, assembly_name)
+--				end	
+--			else
+--				assembly_info := cached_xml.item (assembly_name)
+--			end
 		ensure
 			has_dotnet_type: consumed_t /= Void
 			assembly_name_not_void: assembly_name /= Void

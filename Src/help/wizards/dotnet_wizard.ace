@@ -17,7 +17,7 @@ default
 	inlining(no)
 	multithreaded(no)
 	check_vape(yes)
-	arguments("D:\Eiffel50\bench\wizards\new_projects\dotnet -callback c:\test.txt")
+	arguments("F:\Eiffel50\bench\wizards\new_projects\dotnet")
 	disabled_debug(yes)
 	disabled_debug("win_dispatcher")
 	disabled_debug("wel")
@@ -35,13 +35,22 @@ default
 cluster
 	root_cluster:		"$EIFFEL_SRC\help\wizards"
 
-	dotnet_wizard (root_cluster):		"$\edotnet"
+	all dotnet_wizard (root_cluster):		"$\edotnet"
 
-	bench_common (root_cluster):		"$\bench_common"
+	bench_common (root_cluster):		"$\bench_common"			
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"desc"; "table_eiffel3"; "CVS"; 
+		visible
+			INTEGER_REF;
+			CHARACTER_REF;
+			BOOLEAN_REF;
+			REAL_REF;
+			DOUBLE_REF;
+			CELL;
+			STRING;
+			ARRAY;
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
@@ -60,19 +69,61 @@ cluster
 		end
 
 	ise_utils:	"$EIFFEL_SRC\Eiffel\interface\new_graphical\to_be_moved"
+	
+	all com: 	"$EIFFEL_SRC\library\com"
+		exclude
+			"CVS";
+		visible
+			ECOM_DECIMAL;
+			ECOM_CURRENCY;
+			ECOM_ARRAY;
+			ECOM_VARIANT;
+			ECOM_GUID;
+			ECOM_EXCEP_INFO;
+			ECOM_DISP_PARAMS;
+			ECOM_STATSTG;
+			ECOM_STREAM;
+			ECOM_STORAGE;
+			ECOM_ROOT_STORAGE;
+			ECOM_ENUM_STATSTG;
+			ECOM_HRESULT;
+			ECOM_WIDE_STRING;
+			ECOM_LARGE_INTEGER;
+			ECOM_ULARGE_INTEGER;
+			ECOM_UNKNOWN_INTERFACE;
+			ECOM_AUTOMATION_INTERFACE;
+			ECOM_STUB;
+			ECOM_QUERIABLE;
+		end
 
+	all time: 	"$EIFFEL_SRC\library\time"
+		exclude
+			"french"; "german"; "Clib"; "CVS";
+		visible
+			date_time
+				end
+		end
+		
 external
 
 	include_path:
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
-		"$(EIFFEL_SRC)\help\wizards\edotnet\Clib"
+		"$(EIFFEL_SRC)\help\wizards\edotnet\Clib",
+		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Clib",
+		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Include",
+		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Common\Include",
+		"$(EIFFEL_SRC)\library\com\spec\windows\include",
+		"$(EIFFEL_SRC)\library\time\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\C_library\zlib\zlib.lib",
 		"$(EIFFEL_SRC)\C_library\libpng\libpng.lib",
-		"$(EIFFEL_SRC)\help\wizards\edotnet\Clib\assembly_helper.obj"
+		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Clib\ecom.lib",
+		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com.lib",
+		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com_runtime.lib",
+		"$(EIFFEL_SRC)\library\time\spec\msc\lib\datetime.lib"
 
 end

@@ -73,8 +73,18 @@ feature -- Output
 				st.add_string (".");
 				if class_c /= Void then
 					feature_i := class_c.feature_table.item (feature_name)
-					e_feature := feature_i.api_feature (class_id)
-					st.add_feature (e_feature, feature_name);
+					if feature_i /= Void then
+						e_feature := feature_i.api_feature (class_id)
+						st.add_feature (e_feature, feature_name);
+					else
+							--| FIXME: It means that this feature has been renamed and
+							--| its definition is not in `feature_table' from `class_c'.
+							--| The only solution is to explicitely declare this feature
+							--| as a renamed one in the profile tool
+						st.add_string ("Renamed feature `")
+						st.add_string (feature_name)
+						st.add_string ("'")
+					end
 				else
 					st.add_feature_name (feature_name, e_class);
 				end

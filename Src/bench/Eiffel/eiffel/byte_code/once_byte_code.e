@@ -5,9 +5,18 @@ class ONCE_BYTE_CODE
 inherit
 
 	STD_BYTE_CODE
+		rename
+			inlined_byte_code as std_inlined_byte_code
 		redefine
 			is_once, generate_once, generate_result_declaration,
 			pre_inlined_code
+		end
+	STD_BYTE_CODE
+		redefine
+			is_once, generate_once, generate_result_declaration,
+			pre_inlined_code, inlined_byte_code
+		select
+			inlined_byte_code
 		end
 
 feature
@@ -46,7 +55,7 @@ feature
 				-- cannot be recorded and 'done' will not be set to 1.
 			if context.result_used and real_type(result_type).c_type.is_pointer
 			then
-				generated_file.putstring("RTOC;");
+				generated_file.putstring ("RTOC;");
 				generated_file.new_line;
 			end;
 			if context.workbench_mode then
@@ -56,7 +65,7 @@ feature
 					-- result)) and to allow result inspection.
 				generated_file.putstring ("RTWO(");
 				generated_file.putint (real_body_id - 1);
-				generated_file.putstring (");");
+				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line
 			end;
 			generated_file.putstring ("done = 1;");
@@ -83,6 +92,18 @@ feature -- Inlining
 	pre_inlined_code: like Current is
 			-- Never called!!! (a once function cannot be inlined)
 		do
+		end
+
+	inlined_byte_code: STD_BYTE_CODE is
+		local
+			inlined_once_byte_code: INLINED_ONCE_BYTE_CODE
+		do
+			Result := std_inlined_byte_code;
+			if Result.has_inlined_code then
+				!!inlined_once_byte_code
+				inlined_once_byte_code.fill_from (Result)
+				Result := inlined_once_byte_code
+			end;
 		end
 
 end

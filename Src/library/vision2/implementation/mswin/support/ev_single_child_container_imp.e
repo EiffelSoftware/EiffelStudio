@@ -88,8 +88,6 @@ feature -- Element change
 			end
 			item := v
 			v_imp.set_parent (interface)
-			--| FIXME Was:
-			--| child_imp.parent_ask_resize (client_width, client_height)
 			notify_change (2 + 1)
 			
 			new_item_actions.call ([item])
@@ -99,7 +97,7 @@ feature -- Element change
 			-- Replace `item' with `v'.
 		do
 			remove
-			extend (v)
+			insert (v)
 		end
 
 feature -- Basic operations
@@ -176,6 +174,9 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/26 22:16:50  rogers
+--| Rplace now calls insert instead of extend.
+--|
 --| Revision 1.10  2000/04/26 21:51:06  brendel
 --| Revised.
 --|

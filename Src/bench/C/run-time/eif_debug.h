@@ -131,9 +131,7 @@ RT_LNK void 		insert_local_var (uint32 type, void *ptr);
 #define PG_BREAK			3		/* Break point */
 #define PG_INTERRUPT		4		/* Application interrupted */
 #define PG_NEWBREAKPOINT	5		/* New breakpoint(s) added while running */
-#define PG_STEPINTO			6		/* Step into - not used so far */
-#define PG_STEPOUT			7		/* Step out - not used so far */
-#define PG_STEPSTEP			8		/* Step by step - not used so far */
+#define PG_STEP			6		/* Step completed */
 
 
 /**************/

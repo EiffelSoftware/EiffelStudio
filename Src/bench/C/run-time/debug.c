@@ -441,6 +441,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	/* args: ex_vect, current execution vector     */
 	/*       break_index, current offset (i.e. line number in stoppoints mode) within feature */
 {
+	int was_breakpoint = 0;
 	/* update execution stack with current line number, i.e. offset */
 	exvect->ex_linenum = break_index;
 			
@@ -454,26 +455,31 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 									
 		if (!d_globaldata.db_discard_breakpoints) { /* test the 'discard_breakpoint' flag */
 			int bodyid = exvect->ex_bodyid;
-			
-			if
+			if (should_be_interrupted() && dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
+					/* update previous value for next call */
+				previous_bodyid = bodyid;
+				previous_break_index = break_index;
+			}
+	
+			else if
 				(d_data.db_stepinto_mode /* test stepinto flag */
 				|| d_data.db_callstack_depth<d_data.db_callstack_depth_stop /* test the stack depth */
-				|| is_dbreak_set(bodyid, break_index))	/* test the presence of a breakpoint */
+				|| (was_breakpoint = is_dbreak_set(bodyid, break_index)))	/* test the presence of a breakpoint */
+					/* Note XR: the affectation is wanted *
+					 * This works fine even if step onto a breakpoint because C or's are sequential *
+					 * `was_breakpoint' is therefore set iff we were not stepping (priority is given to steps) */
 			{
 				d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
 				d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
-				dbreak(PG_BREAK);		 			/* stop the application */
+				if (was_breakpoint)
+					dbreak(PG_BREAK);		 			/* stop the application because we encountered a breakpoint */
+				else
+					dbreak(PG_STEP);				/* Stop the application because we stepped */
 
 				/* update previous value for next call (if it's a nested call) */
 				previous_bodyid = bodyid;
 				previous_break_index = break_index;
-			} else if (should_be_interrupted()) {
-				if (dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
-						/* update previous value for next call */
-					previous_bodyid = bodyid;
-					previous_break_index = break_index;
-				}
-			}
+			} 
 		}
 		DBGMTX_UNLOCK; /* Leave critical section */
 	}
@@ -515,7 +521,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 			d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not
 												   already cleared */
 			d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
-			dbreak(PG_BREAK);		 			/* stop the application */
+			dbreak(PG_STEP);		 			/* stop the application */
 		}
 
 		/* we don't test the other case: breakpoint & interruption to avoid

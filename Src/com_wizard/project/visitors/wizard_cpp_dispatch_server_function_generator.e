@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 					visitor := func_desc.arguments.item.type.visitor
 
 					if is_paramflag_fout (func_desc.arguments.item.flags) then
-						variables.append (out_variable_set_up (func_desc.arguments.item.name, visitor))
+						variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
 						out_value.append (out_value_set_up (func_desc.arguments.item.name, visitor))
 						out_value.append (New_line_tab)
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 							arguments.append (Close_parenthesis)
 						end
 					else
-						variables.append (in_variable_set_up (func_desc.arguments.item.name, visitor))
+						variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
 						if visitor.is_basic_type or visitor.is_enumeration then
 							arguments.append (Comma_space)

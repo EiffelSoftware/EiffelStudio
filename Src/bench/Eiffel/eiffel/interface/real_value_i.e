@@ -24,8 +24,10 @@ feature
 
 	set_real_val (i: STRING) is
 			-- Assign `i' to `real_val'.
+			-- Remove the '_' signs in the real number.
 		do
 			real_val := i;
+			real_val.replace_substring_all ("_","")
 		end;
 
 	is_double: BOOLEAN is

@@ -1,4 +1,9 @@
--- Internal representation of a compiled class.
+indexing
+
+	description: 
+		"Stone representing an eiffel class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLASSC_STONE
 
@@ -8,32 +13,30 @@ inherit
 		rename
 			is_valid as fs_valid
 		redefine
-			synchronized_stone
+			synchronized_stone, invalid_stone_message
 		end;
-
 	FILED_STONE
 		redefine
-			is_valid, synchronized_stone
+			is_valid, synchronized_stone, invalid_stone_message
 		select
 			is_valid
 		end;
-
 	SHARED_EIFFEL_PROJECT;
-	
 	HASHABLE_STONE
 		undefine
 			header
 		redefine
-			is_valid, synchronized_stone
+			is_valid, synchronized_stone, invalid_stone_message
 		end;
-
-	INTERFACE_W
+	INTERFACE_W;
+	WARNING_MESSAGES;
+	WINDOWS
 
 creation
 
 	make
 	
-feature -- making
+feature {NONE} -- Initialization
 
 	make (a_class: E_CLASS) is
 			-- Copy all information from argument
@@ -42,9 +45,18 @@ feature -- making
 			e_class := a_class
 		end;
 
+feature -- Properties
+
 	e_class: E_CLASS;
 
-feature -- dragging
+feature -- Access
+
+	stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with
+			-- Current stone during transport.
+		do
+			Result := cur_Class
+		end;
 
 	signature: STRING is
 		do
@@ -70,9 +82,15 @@ feature -- dragging
 			end
 		end;
 
-	stone_type: INTEGER is do Result := Class_type end;
+	stone_type: INTEGER is 
+		do 
+			Result := Class_type 
+		end;
 
-	stone_name: STRING is do Result := l_Class end;
+	stone_name: STRING is 
+		do 
+			Result := l_Class 
+		end;
  
 	click_list: CLICK_STONE_ARRAY is
 		do
@@ -87,7 +105,9 @@ feature -- dragging
 			end
 		end;
 
-	set_file_name (s: STRING) is do end;
+	set_file_name (s: STRING) is 
+		do 	
+		end;
 
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
@@ -102,6 +122,12 @@ feature -- Status report
 			-- Is `Current' a valid stone?
 		do
 			Result :=  fs_valid and then e_class /= Void
+		end;
+
+	invalid_stone_message: STRING is
+			-- Message displayed for an invalid_stone
+		do
+			Result := w_Class_not_in_universe
 		end;
 
 feature -- Synchronization
@@ -137,4 +163,16 @@ feature -- Hashable
 			Result := e_class.name.hash_code
 		end;
 
-end
+feature -- Update
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			if is_valid then
+				hole.process_class (Current)
+			else
+				warner (hole.target).gotcha_call (invalid_stone_message)
+			end	
+		end;
+
+end -- class CLASSC_STONE

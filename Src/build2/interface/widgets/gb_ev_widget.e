@@ -28,8 +28,11 @@ feature -- Access
 
 	ev_type: EV_WIDGET
 	
-	type: STRING is "EV_WIDGET"
-		-- String representation of object_type modifyable by `Current'.
+	type: STRING is
+			-- String representation of object_type modifyable by `Current'.
+		once
+			Result := Ev_widget_string
+		end
 
 
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is

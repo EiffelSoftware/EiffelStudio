@@ -296,7 +296,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Access
 			current_type: INTEGER
 		do
 			current_type := dynamic_type_from_string (a_type)
-			if type_conforms_to (current_type, dynamic_type_from_string ("EV_WIDGET")) then
+			if type_conforms_to (current_type, dynamic_type_from_string (Ev_widget_string)) then
 				Result := True
 			end
 		end

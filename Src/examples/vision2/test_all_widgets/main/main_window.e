@@ -42,6 +42,7 @@ feature -- Initialization
 --			c4: NOTEBOOK_DEMO_WINDOW
 			c5: TEXT_FIELD_DEMO_WINDOW
 			c6: TEXT_AREA_DEMO_WINDOW
+			c7: MENU_DEMO_WINDOW
 		do
 			Precursor
 			!!container.make (Current)
@@ -52,6 +53,7 @@ feature -- Initialization
 --			!!c4.make (Current)
 			!!c5.make (Current)
 			!!c6.make (Current)
+			!!c7.make (Current)
 			
 			!!b.make_button (Current, "Label", c1)
 			!!b.make_button (Current, "Fixed", c2)
@@ -59,6 +61,7 @@ feature -- Initialization
 --			!!b.make_button (Current, "Notebook", c4)
 			!!b.make_button (Current, "Text field", c5)
 			!!b.make_button (Current, "Text area", c6)
+			!!b.make_button (Current, "Menu", c7)
 			
 			set_values
 		end

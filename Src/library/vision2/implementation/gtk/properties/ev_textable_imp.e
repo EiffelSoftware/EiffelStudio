@@ -16,7 +16,18 @@ inherit
 	EV_FONTABLE_IMP
 	
 	EV_GTK_EXTERNALS
+	
+feature {NONE} -- Initialization
+	
+	make (par: EV_CONTAINER) is
+ 		do
+ 			make_with_text (par, "")
+ 		end
 
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+		deferred
+		end
+	
 feature -- Access
 
 	text: STRING is

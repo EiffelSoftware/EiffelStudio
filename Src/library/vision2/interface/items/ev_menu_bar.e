@@ -1,13 +1,13 @@
 indexing
 
 	description: 
-		"EiffelVision menu. Menu contains menu items several menu items and shows them when the menu is opened."
+		"EiffelVision menu bar. Menu bar is a vertical the screen or in the window containing menu items."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_MENU
+class EV_MENU_BAR
 
 inherit
 
@@ -15,6 +15,7 @@ inherit
 		redefine
 			implementation
 		end
+
 creation
 	
 	make
@@ -25,12 +26,12 @@ feature {NONE} -- Initialization
 			-- Create a menu widget with `par' as
                         -- parent
 		do
-			!EV_MENU_IMP!implementation.make (par)
+			!EV_MENU_BAR_IMP!implementation.make (par)
 			widget_make (par)
 		end	
 	
-feature {EV_MENU_ITEM} -- Implementation
+feature {NONE} -- Implementation
 	
-	implementation: EV_MENU_I	
+	implementation: EV_MENU_BAR_I	
 
-end -- class EV_MENU
+end -- class EV_MENU BAR

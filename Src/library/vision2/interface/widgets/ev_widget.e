@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 		deferred
 		end
 		
-    widget_make (par: EV_CONTAINER) is
+	widget_make (par: EV_CONTAINER) is
 			-- Create a widget with `par' as parent and
 			-- call `set_default'. 
 			-- This is a general initialization for 
@@ -75,14 +75,15 @@ feature -- Status report
 			-- set in the procedure set_default
 		
 	automatic_resize: BOOLEAN
-			-- Is the widget resized automatically when the parent resize ?
-			-- In this case, automatic_position has no effect.
-			-- True by default
+			-- Is the widget resized automatically when
+			-- the parent resize ?  In this case,
+			-- automatic_position has no effect.  True by
+			-- default
 
 	automatic_position: BOOLEAN
-			-- Does the widget take a new position when the parent resize ?
-			-- (If it does, its size doesn't changed).
-			-- False by default
+			-- Does the widget take a new position when
+			-- the parent resize ?  (If it does, its size
+			-- doesn't changed).  False by default
 
 feature -- Status setting
 

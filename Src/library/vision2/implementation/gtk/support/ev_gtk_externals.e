@@ -23,6 +23,26 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_EDITABLE"
 		end
 	
+	gtk_menu_item (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_MENU_ITEM"
+		end
+	
+	gtk_menu_bar (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_MENU_BAR"
+		end
+	
+	gtk_menu (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_MENU"
+		end
 	
 feature {NONE} -- GTK C functions
 
@@ -211,10 +231,6 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
-	gtk_menu_item_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
 
 	gtk_label_set (l: POINTER; text: POINTER) is
 		external "C | <gtk/gtk.h>"
@@ -380,7 +396,37 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
-
+	-- menu 
+	gtk_menu_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end	
+	
+	gtk_menu_append (menu: POINTER; menu_item: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end		
+	
+	-- menu item
+	gtk_menu_item_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_menu_item_new_with_label (label_text: POINTER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_menu_item_set_submenu (menu_item: POINTER; submenu: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end	
+	
+	-- menu bar
+	gtk_menu_bar_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_menu_bar_append (menu: POINTER; menu_item: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end	
+	
 	--notebook
 	gtk_notebook_new: POINTER is
 		external "C | <gtk/gtk.h>"

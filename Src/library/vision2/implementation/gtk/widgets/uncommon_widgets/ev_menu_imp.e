@@ -1,22 +1,42 @@
 indexing
 
 	description: 
-		"EiffelVision invisible container, gtk implementation."
+		"EiffelVision menu box, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class
+class
 	
-	EV_INVISIBLE_CONTAINER_IMP
+	EV_MENU_IMP
 	
 inherit
 	
-	EV_INVISIBLE_CONTAINER_I
+	EV_MENU_I
 		
-	EV_CONTAINER_IMP
+	EV_MENU_ITEM_CONTAINER_IMP
 	
+creation
+	
+	make
+
+feature {NONE} -- Initialization
+	
+        make (par: EV_CONTAINER) is
+                        -- Create a fixed widget. 
+		do
+			widget := gtk_menu_new ()
+		end	
+	
+feature {EV_MENU_ITEM_CONTAINER} -- Element change
+	
+	add_menu_item (child_imp: EV_MENU_ITEM_IMP) is
+			-- Add menu item into container
+		do
+			gtk_menu_append ( gtk_menu (widget), 
+					  child_imp.widget )
+		end		
 end
 
 --|----------------------------------------------------------------

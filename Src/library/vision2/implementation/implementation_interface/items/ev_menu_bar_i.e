@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"EiffelVision invisible container, gtk implementation."
+		"EiffelVision menu bar, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -9,14 +9,10 @@ indexing
 	
 deferred class
 	
-	EV_INVISIBLE_CONTAINER_IMP
+	EV_MENU_BAR_I
 	
 inherit
-	
-	EV_INVISIBLE_CONTAINER_I
-		
-	EV_CONTAINER_IMP
-	
+	EV_MENU_ITEM_CONTAINER_I
 end
 
 --|----------------------------------------------------------------

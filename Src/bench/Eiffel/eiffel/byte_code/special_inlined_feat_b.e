@@ -109,11 +109,11 @@ feature -- Generation
 				buf.new_line
 				buf.putstring ("/* END INLINED CODE */")
 				buf.new_line
-			when feature {PREDEFINED_NAMES}.element_address_name_id then
+			when feature {PREDEFINED_NAMES}.item_address_name_id then
 				parameters.generate
 				buf := buffer
 
-				buf.putstring ("/* INLINED CODE (SPECIAL.element_address) */")
+				buf.putstring ("/* INLINED CODE (SPECIAL.item_address) */")
 				buf.new_line
 				result_reg.print_register
 				buf.putstring (" = ")

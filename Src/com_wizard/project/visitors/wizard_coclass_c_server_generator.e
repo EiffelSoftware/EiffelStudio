@@ -37,6 +37,9 @@ feature -- Access
 			end
 		end
 
+	source: BOOLEAN
+			-- Is coclass source of events?
+
 feature -- Basic operations
 
 	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
@@ -65,6 +68,11 @@ feature -- Basic operations
 
 			if dispatch_interface then
 				dispatch_interface_features (a_coclass)
+			end
+
+			if source then
+				cpp_class_writer.add_parent ("IConnectionPointContainer", Void, Public)
+				add_source_functions
 			end
 
 			standard_functions (a_coclass)
@@ -104,6 +112,7 @@ feature {NONE} -- Implementation
 			end
 			interface_processor.process_interfaces
 			dispatch_interface := interface_processor.dispatch_interface
+			source := interface_processor.source
 		end
 
 
@@ -164,63 +173,25 @@ feature {NONE} -- Implementation
 			create func_writer.make
 
 			func_writer.set_name (Query_interface)
-			func_writer.set_comment ("Query Interface")
+			func_writer.set_comment ("Query Interface.")
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature (Query_interface_signature)
 
 			create tmp_body.make (10000)
 			tmp_body.append (Tab)
 
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Riid)
-			tmp_body.append (C_equal)
-			tmp_body.append (Iunknown_clsid)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Static_cast)
-			tmp_body.append (Less)
-			if 
-				a_coclass_descriptor.interface_descriptors.first.namespace /= Void and then
-				not a_coclass_descriptor.interface_descriptors.first.namespace.empty
-			then
-				tmp_body.append (a_coclass_descriptor.interface_descriptors.first.namespace)
-				tmp_body.append ("::")
-			end
-			tmp_body.append (a_coclass_descriptor.interface_descriptors.first.c_type_name)
-			tmp_body.append (Asterisk)
-			tmp_body.append (More)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (This)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Else_keyword)
+			tmp_body.append (case_body_in_query_interface 
+				(a_coclass_descriptor.interface_descriptors.first.c_type_name,
+				a_coclass_descriptor.interface_descriptors.first.namespace,
+				Iunknown_clsid))
+
 
 			if dispatch_interface then
 				tmp_body.append (Space)
-				tmp_body.append (If_keyword)
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (Riid)
-				tmp_body.append (C_equal)
-				tmp_body.append (iid_name (Idispatch_type))
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (New_line_tab_tab)
-				tmp_body.append (Star_ppv)
-				tmp_body.append (Space_equal_space)
-				tmp_body.append (Static_cast)
-				tmp_body.append (Less)
-				tmp_body.append (default_dispinterface_name (a_coclass_descriptor))
-				tmp_body.append (Asterisk)
-				tmp_body.append (More)
-				tmp_body.append (Open_parenthesis)
-				tmp_body.append (This)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Semicolon)
-				tmp_body.append (New_line_tab)
-				tmp_body.append (Else_keyword)
+				tmp_body.append (case_body_in_query_interface 
+						(default_dispinterface_name (a_coclass_descriptor),
+						Void, iid_name (Idispatch_type)))
+
 			end
 
 			from
@@ -229,34 +200,19 @@ feature {NONE} -- Implementation
 				a_coclass_descriptor.interface_descriptors.off
 			loop
 				tmp_body.append (Space)
-				tmp_body.append (If_keyword)
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (Riid)
-				tmp_body.append (C_equal)
-				tmp_body.append (iid_name (a_coclass_descriptor.interface_descriptors.item.c_type_name))
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (New_line_tab_tab)
-				tmp_body.append (Star_ppv)
-				tmp_body.append (Space_equal_space)
-				tmp_body.append (Static_cast)
-				tmp_body.append (Less)
-				if 
-					a_coclass_descriptor.interface_descriptors.item.namespace /= Void and then
-					not a_coclass_descriptor.interface_descriptors.item.namespace.empty
-				then
-					tmp_body.append (a_coclass_descriptor.interface_descriptors.item.namespace)
-					tmp_body.append ("::")
-				end
-				tmp_body.append (a_coclass_descriptor.interface_descriptors.item.c_type_name)
-				tmp_body.append (Asterisk)
-				tmp_body.append (More)
-				tmp_body.append (Open_parenthesis)
-				tmp_body.append (This)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Semicolon)
-				tmp_body.append (New_line_tab)
-				tmp_body.append (Else_keyword)
+				tmp_body.append (case_body_in_query_interface 
+						(a_coclass_descriptor.interface_descriptors.item.c_type_name,
+						a_coclass_descriptor.interface_descriptors.item.namespace,
+						iid_name (a_coclass_descriptor.interface_descriptors.item.c_type_name)))
+
 				a_coclass_descriptor.interface_descriptors.forth
+			end
+			
+			if source then
+				tmp_body.append (Space)
+				tmp_body.append (case_body_in_query_interface 
+						("IConnectionPointContainer",
+						Void, iid_name ("IConnectionPointContainer")))				
 			end
 
 			tmp_body.append (New_line_tab_tab)
@@ -295,7 +251,98 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
+	case_body_in_query_interface (interface_name, interface_namespace, interface_id: STRING): STRING is
+			-- Case body in QueryInterface function implemenatation.
+		require
+			non_void_interface_name: interface_name /= Void
+			valid_interface_name: not interface_name.empty
+			non_void_interface_id: interface_id /= Void
+			valid_interface_id: not interface_id.empty
+		do
+			create Result.make (200)
+			Result.append (If_keyword)
+			Result.append (Space_open_parenthesis)
+			Result.append (Riid)
+			Result.append (C_equal)
+			Result.append (interface_id)
+			Result.append (Close_parenthesis)
+			Result.append (New_line_tab_tab)
+			Result.append (Star_ppv)
+			Result.append (Space_equal_space)
+			Result.append (Static_cast)
+			Result.append (Less)
+			if 
+				interface_namespace /= Void and then
+				not interface_namespace.empty
+			then
+				Result.append (interface_namespace)
+				Result.append ("::")
+			end
+			Result.append (interface_name)
+			Result.append (Asterisk)
+			Result.append (More)
+			Result.append (Open_parenthesis)
+			Result.append (This)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			Result.append (Else_keyword)
+		ensure
+			non_void_body: Result /= Void
+			valid_body: not Result.empty
+		end
+	
+	add_source_functions is
+			-- Add source functions.
+		require
+			source: source
+		do
+			cpp_class_writer.add_function (enum_connection_points_function, Public)
+			cpp_class_writer.add_function (find_connection_point_function, Public)
+		end
+		
+	enum_connection_points_function: WIZARD_WRITER_C_FUNCTION is
+			-- EnumConnectionPoints
+		require
+			source: source
+		local
+			body: STRING
+		do
+			create Result.make
+			Result.set_name ("EnumConnectionPoints")
+			Result.set_comment ("EnumConnectionPoints of IConnectionPointContainer.")
+			Result.set_result_type (Std_method_imp)
+			Result.set_signature ("/* [out] */ IEnumConnectionPoints ** ppEnum")
+			
+			create body.make (100)
+			body.append ("%Treturn E_NOTIMPL;")
+			Result.set_body (body)
+		ensure
+			non_void_function: Result /= Void
+			can_generate: Result.can_generate
+		end
+	
+	find_connection_point_function: WIZARD_WRITER_C_FUNCTION is
+			-- FindConnectionPoin
+		require
+			source: source
+		local
+			body: STRING
+		do
+			create Result.make
+			Result.set_name ("FindConnectionPoint")
+			Result.set_comment ("FindConnectionPoint of IConnectionPointContainer.")
+			Result.set_result_type (Std_method_imp)
+			Result.set_signature ("/* [in] */ REFIID riid, /* [out] */ IConnectionPoint ** ppCP")
+			
+			create body.make (100)
+			body.append ("%Treturn E_NOTIMPL;")
+			Result.set_body (body)
+		ensure
+			non_void_function: Result /= Void
+			can_generate: Result.can_generate
+		end
+		
 end -- class WIZARD_COCLASS_C_SERVER_GENERATOR
 
 --|----------------------------------------------------------------

@@ -9,10 +9,10 @@ RM = del
 SOURCES =  $(LSRCS)
 OBJECTS =  $(OBJS) $(WOBJS)
 
-all:: mtnet.lib
+all:: clean mtnet.lib
 
-.c.obb:
-	$(CC) -o $@ -c $(CFLAGS) $<
+.c.obj:
+	$(CC) -c $(CFLAGS) $<
 
 SMODE = network.c network_r.c hostname.c syncpoll.c storable.c
 
@@ -25,18 +25,14 @@ OBJS = \
 	syncpoll.obj \
 	storable.obj
 
-local_clean:: remove
-
-all:: mtnet.lib
-
-local_realclean::
-	$(RM) mtnet.lib
+clean:
+	del *.obj
 
 mtnet.lib: $(OBJS)
 	$(RM) $@
-	$(AR) $@ /c +networkr.obj +network.obj +storable.obj
+	$(AR) $@ /c +networkr.obj +network.obj +hostname.obj +syncpoll.obj +storable.obj
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\bcc mkdir ..\spec\bcc
 	if not exist ..\spec\bcc\lib mkdir ..\spec\bcc\lib
-	copy mtnet.lib ..\spec\bcc\lib\net.lib
+	copy mtnet.lib ..\spec\bcc\lib\mtnet.lib

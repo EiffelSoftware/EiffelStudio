@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 							line_pos := syn_warn.line_number
 							short_error := "Warning: " + syn_warn.warning_message
 						else
-							short_error := clone (full_error)
+							short_error := "Warning: " + clone (full_error)
 						end
 					end
 				end
@@ -211,8 +211,7 @@ feature {NONE} -- Implementation
 			end
 			compiler_coclass.event_output_warning (full_error, short_error, warn.code, file_name, line_pos, 0)
 		end
-		
-		
+
 	trace_error (err: ERROR) is
 			-- Send formatted `err' to output
 		require
@@ -231,15 +230,15 @@ feature {NONE} -- Implementation
 			sf: STRING_FORMATTER
 			st: STRUCTURED_TEXT
 		do
-			if err.error_string.is_empty or err.error_string.is_equal ("Error") then
-				-- load help file and add text to begining of error definition
-				load_error_help_file (err)
-				if last_help_file_text /= Void then
-					full_error := last_help_file_text
-				else
-					create full_error.make_empty
-				end
+			load_error_help_file (err)
+			if last_help_file_text /= Void then
+				full_error := last_help_file_text
+			else
+				create full_error.make_empty
+			end
 				
+			if err.error_string.is_empty or err.error_string.is_equal ("Error") then
+				-- load help file and add text to begining of error definition			
 				special_err ?= err
 				if special_err /= Void then
 					full_error.append (special_err.error_case)
@@ -251,7 +250,7 @@ feature {NONE} -- Implementation
 					full_error.append (sf.output)
 				end
 			else
-				full_error := err.error_string
+				full_error.append (err.error_string)
 			end
 			
 			eif_err ?= err
@@ -280,7 +279,7 @@ feature {NONE} -- Implementation
 						line_pos := syn_err.line_number
 						short_error := "Error: " + syn_err.error_message
 					else
-						short_error := clone (full_error)
+						short_error := "Error: " + clone (full_error)
 					end
 				end
 			end

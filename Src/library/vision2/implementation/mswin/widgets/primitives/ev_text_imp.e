@@ -30,7 +30,8 @@ inherit
 			selection_start,
 			selection_end,
 			set_caret_position,
-			caret_position
+			caret_position,
+			insert_text
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -211,6 +212,29 @@ feature -- Access
 		do
 			new_lines_to_caret_position := wel_text.substring (1, internal_caret_position).occurrences ('%R')
 			Result := internal_caret_position + 1 - new_lines_to_caret_position
+		end
+		
+	insert_text (txt: STRING) is
+			-- Insert `txt' at `caret_position'.
+		local
+			temp_text: STRING
+			previous_caret_position: INTEGER
+			a_string: STRING
+			sel_start, sel_end: INTEGER
+		do
+			if has_selection then
+				sel_start := selection_start
+				sel_end := selection_end
+				set_selection (caret_position - 1, caret_position - 1)
+			end
+			previous_caret_position := internal_caret_position
+			a_string := txt
+			convert_string (a_string)
+			replace_selection (a_string)
+			if has_selection then
+				set_selection (sel_start - 1, sel_end - 1)
+			end
+			internal_set_caret_position (previous_caret_position)
 		end
 
 feature -- Status Report

@@ -22,6 +22,13 @@ extern "C" {
 
 extern EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, int (*ret_func) (void));
 
+extern struct htable *rt_table;	/* Table used for solving references */
+extern int32 nb_recorded;		/* Number of items recorded in Hector */
+extern char rt_kind;
+extern char rt_kind_version;
+
+extern int (*retrieve_read_func)(void);
+
 #ifdef __cplusplus
 }
 #endif

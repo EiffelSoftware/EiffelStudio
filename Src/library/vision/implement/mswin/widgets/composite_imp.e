@@ -264,6 +264,7 @@ feature {NONE} -- Implementation
 			c: ARRAYED_LIST [WIDGET_IMP]
 			i, maxxw, maxyh, tmp, w, h: INTEGER
 			current_item: WIDGET_IMP
+			a_dialog: DIALOG_IMP
 		do
 			from 
 				c := children_list
@@ -272,7 +273,12 @@ feature {NONE} -- Implementation
 				c.after
 			loop
 				current_item := c.item
-				if current_item /= Void and then current_item.managed then
+				a_dialog ?= c.item
+				if current_item /= Void and then current_item.managed 
+										and then a_dialog = Void then
+						--| If the child is a dialog, its size should not
+						--| be taken into account while computing the eclosing
+						--| size.
 					tmp := current_item.x + current_item.width
 					if tmp > maxxw then
 						maxxw := tmp

@@ -18,12 +18,12 @@ creation
 
 feature -- Initialization
 
-	make (f: FEATURE_TABLE; client: CLASS_C) is
+	make (count: INTEGER) is
 			-- Initialize Current assertion server with
 			-- features from feature_table `f' that is exported to 
 			-- `client'.
 		do
-			!! feature_adapter_table.make (f.count);
+			!! feature_adapter_table.make (count);
 		end;			
 
 	make_for_class_only is 

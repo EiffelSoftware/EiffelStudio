@@ -223,15 +223,6 @@ feature
 		do
 			!! Result.make
 
-				-- Cannot be Void since the only thing that we put is of type CREATION_TYPE
-				-- for a CREATION_EXPR_B
-			create_type ?= context.creation_types.item
-			context.creation_types.forth
-			check
-				create_type_not_void: create_type /= Void
-			end
-			
-			Result.set_info (create_type)
 
 
 			if call /= Void then
@@ -246,6 +237,17 @@ feature
 				creation_feature_call.fill_from (call_access)
 				Result.set_call (creation_feature_call)
 			end
+
+				-- Cannot be Void since the only thing that we put is of type CREATION_TYPE
+				-- for a CREATION_EXPR_B
+			create_type ?= context.creation_types.item
+			context.creation_types.forth
+			check
+				create_type_not_void: create_type /= Void
+			end
+			
+			Result.set_info (create_type)
+
 		end
 
 feature -- Comparison

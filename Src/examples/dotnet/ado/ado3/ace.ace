@@ -1,8 +1,8 @@
 system
-	"app"
+	"ado"
 
 root
-	ADO_OVERVIEW3 : make
+	ADO : make
 
 default
 	assertion (no)

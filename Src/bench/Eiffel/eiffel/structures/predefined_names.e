@@ -52,7 +52,7 @@ feature -- Constants
 	is_equal_name_id: INTEGER is 42
 	standard_is_equal_name_id: INTEGER is 43
 	deep_equal_name_id: INTEGER is 44
-	standard_deep_equal_name_id: INTEGER is 45
+	deep_twin_name_id: INTEGER is 45
 	out_name_id: INTEGER is 46
 	hash_code_name_id: INTEGER is 47
 	max_name_id: INTEGER is 48
@@ -115,6 +115,21 @@ feature -- Constants
 	item_address_name_id: INTEGER is 105
 	to_double_name_id: INTEGER is 106
 	to_real_name_id: INTEGER is 107
+	conforms_to_name_id: INTEGER is 108
+	deep_clone_name_id: INTEGER is 109
+	default_pointer_name_id: INTEGER is 110
+	do_nothing_name_id: INTEGER is 111
+	io_name_id: INTEGER is 112
+	operating_environment_name_id: INTEGER is 113
+	print_name_id: INTEGER is 114
+	same_type_name_id: INTEGER is 115
+	standard_equal_name_id: INTEGER is 116
+	tagged_out_name_id: INTEGER is 117
+	to_dotnet_name_id: INTEGER is 118
+	twin_name_id: INTEGER is 119
+	system_string_name_id: INTEGER is 120
+	system_object_name_id: INTEGER is 121
+	system_boolean_name_id: INTEGER is 122
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

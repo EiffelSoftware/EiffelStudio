@@ -7,12 +7,25 @@ indexing
 class
 	SHARED_RESOURCES
 
+inherit
+	SHARED_PLATFORM_CONSTANTS
+
 feature -- Access
 
 	resources: RESOURCE_STRUCTURE is
 			-- Resources specified by the user
+		local
+			file_name: FILE_NAME
+			environment: EXECUTION_ENVIRONMENT
 		once
-			create Result.make
+			if Platform_constants.is_windows then
+				create Result.make_from_location ("D:\46dev\bench.xml","HKEY_CURRENT_USER\Software\ISE\Eiffel46")
+			else
+				create environment
+				create file_name.make_from_string (environment.home_directory_name)
+				file_name.set_file_name (".es4rc")
+				create Result.make_from_location ("/home/bonnard/bench.xml", file_name)
+			end
 		end
 
 feature -- Access

@@ -1,7 +1,6 @@
 indexing
 	description: "ITypeInfo wrapper"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,9 +29,10 @@ creation
 feature -- Access
 
 	address_of_member (memid: INTEGER; invkind: INTEGER): POINTER is
-			-- Address of static function or variable
+			-- Address of static function or variable defined by
+			-- `memid' and `invkind'
 		require
-			is_valid_invoke_kind (invkind)
+			valid_invke_kind: is_valid_invoke_kind (invkind)
 		do
 			Result := ccom_address_of_member (initializer, memid, invkind)
 		end
@@ -40,7 +40,7 @@ feature -- Access
 	new_instance (outer: POINTER; a_refiid: ECOM_GUID): POINTER is
 			-- New instance of coclass
 		require
-			is_com_class
+			com_class: is_com_class
 			can_create: is_typeflag_fcancreate (type_attr.flags)
 		do
 			Result := ccom_create_instance (initializer, outer, a_refiid.item)
@@ -54,7 +54,7 @@ feature -- Access
 			end
 			Result := containing_type_lib_impl
 		ensure
-			Result /= Void
+			non_void_containing_library: Result /= Void
 		end
 
 	index_in_type_lib: INTEGER is
@@ -73,7 +73,7 @@ feature -- Access
 		do
 			Result := ccom_get_dll_entry (initializer, memid, invkind)
 		ensure
-			Result /= Void
+			non_void_dll_entry: Result /= Void
 		end
 
 	documentation (memid: INTEGER): ECOM_DOCUMENTATION is
@@ -81,7 +81,7 @@ feature -- Access
 		do
 			Result := ccom_get_documentation (initializer, memid)
 		ensure
-			Result /= Void
+			non_void_documentation: Result /= Void
 		end
 
 	func_desc (an_index: INTEGER): ECOM_FUNC_DESC is
@@ -99,7 +99,8 @@ feature -- Access
 			Result.set_parent (Current)
 			func_desc_pointers.extend (tmp_pointer)
 		ensure
-			Result /= Void and then Result.is_parent_valid
+			non_void_description: Result /= Void
+			valid_description: Result.is_parent_valid
 		end
 
 	ids_of_names (some_names: ARRAY[STRING]): ARRAY[INTEGER] is
@@ -124,7 +125,7 @@ feature -- Access
 			any := a_p.to_c
 			Result := ccom_get_ids_of_names (initializer, $any, some_names.count)
 		ensure
-			result /= Void
+			non_void_ids: Result /= Void
 		end
 
 	impl_type_flag (an_index: INTEGER): INTEGER is
@@ -132,7 +133,7 @@ feature -- Access
 		do
 			Result := ccom_get_impl_type_flags (initializer, an_index)
 		ensure
-			is_valid_impltypeflag (Result)
+			valid_flag: is_valid_impltypeflag (Result)
 		end
 
 	mops (memid: INTEGER): STRING is
@@ -140,13 +141,12 @@ feature -- Access
 		do
 			Result := ccom_get_mops (initializer, memid)
 		ensure
-			Result /= Void
+			non_void_mops: Result /= Void
 		end
 
 	names (id: INTEGER; max_names: INTEGER): ARRAY[STRING] is
-			-- variable name 
-			-- or method name and its parameters
-			-- that correspond to specified `id'
+			-- Variable name or method name and its parameters
+			-- that correspond to specified `id'.
 			-- `max_names' maximal number of names to be returned
 		do
 			Result := ccom_get_names (initializer, id, max_names)
@@ -182,13 +182,16 @@ feature -- Access
 			end
 			Result := type_attr_impl
 		ensure
-			Result /= Void and then Result.exists
+			non_void_attributes: Result /= Void
+			valid_attributes: Result.exists
 		end
 
 	type_comp: ECOM_TYPE_COMP is
 			-- ITypeComp inteface
 		do
 			create Result.make_from_pointer (ccom_get_type_comp (initializer))
+		ensure
+			non_void_interface: type_comp /= Void
 		end
 
 	var_desc (an_index: INTEGER): ECOM_VAR_DESC is
@@ -206,12 +209,14 @@ feature -- Access
 			Result.set_parent (Current)
 			var_desc_pointers.extend (tmp_pointer)
 		ensure
-			Result /= Void and then Result.is_parent_valid
+			non_void_description: Result /= Void
+			valid_description: Result.is_parent_valid
 		end
 
 feature -- Status report
 
 	is_type_lib_valid: BOOLEAN
+			-- Was containing type library accessed?
 
 	is_com_class: BOOLEAN is
 			-- Is described type COM class?
@@ -251,6 +256,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	create_wrapper (a_pointer: POINTER): POINTER is
+			- Create interface
 		do
 			Result := ccom_create_c_type_info_from_pointer (a_pointer)
 		end
@@ -274,7 +280,7 @@ feature {NONE} -- Implementation
 			-- Is TYPEATTR structure initialized?
 
 	release_type_attr is
-			-- release TYPEATTR structure
+			-- Release TYPEATTR structure
 		do
 			if is_type_attr_set then
 				ccom_release_type_attr (initializer, type_attr_pointer)
@@ -282,21 +288,21 @@ feature {NONE} -- Implementation
 		end
 
 	release_func_desc (a_func_desc_ptr: POINTER) is
-			-- release FUNCDESC structure
+			-- Release FUNCDESC structure
 		do
 			ccom_release_func_desc (initializer, a_func_desc_ptr)
 		end
 
 	release_var_desc (a_var_desc_ptr: POINTER) is
-			-- release VARDESC structure
+			-- Release VARDESC structure
 		do
 			ccom_release_var_desc (initializer, a_var_desc_ptr)
 		end
 
 	release_func_desc_pointers is
-			-- release pointers
+			-- Release pointers.
 		require
-			func_desc_pointers /= Void
+			non_void_description: func_desc_pointers /= Void
 		do
 			from
 				func_desc_pointers.start
@@ -309,9 +315,9 @@ feature {NONE} -- Implementation
 		end
 
 	release_var_desc_pointers is
-			-- release pointers
+			-- Release pointers.
 		require
-			var_desc_pointers /= Void
+			non_void_description: var_desc_pointers /= Void
 		do
 			from
 				var_desc_pointers.start
@@ -324,6 +330,7 @@ feature {NONE} -- Implementation
 		end
 
 	dispose is
+			-- Release descriptions.
 		do
 			release_type_attr
 			if func_desc_pointers /= Void then
@@ -463,9 +470,6 @@ feature {NONE} -- Externals
 		external
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): (VARDESC *)"
 		end
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class ECOM_TYPE_INFO
 

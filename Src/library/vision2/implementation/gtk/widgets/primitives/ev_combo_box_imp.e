@@ -59,7 +59,8 @@ inherit
 			on_key_event,
 			set_focus,
 			default_key_processing_blocked,
-			on_focus_changed
+			on_focus_changed,
+			selected_item
 		end
 
 	EV_KEY_CONSTANTS
@@ -147,9 +148,36 @@ feature -- Status report
 	selected: BOOLEAN is
 			-- Is at least one item selected?
 		do
-			Result := feature {EV_GTK_EXTERNALS}.g_list_length (
-				feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (list_widget)
-			).to_boolean
+			Result := selected_item /= Void
+		end
+		
+	selected_item: EV_LIST_ITEM is
+			-- Currently selected item if any.
+		local
+			item_pointer: POINTER
+			cur: EV_DYNAMIC_LIST_CURSOR [EV_ITEM]
+		do
+			item_pointer := feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (list_widget)
+			if item_pointer /= NULL then
+				item_pointer := feature {EV_GTK_EXTERNALS}.gslist_struct_data (item_pointer)
+				if item_pointer /= NULL then
+					Result ?= eif_object_from_c (item_pointer).interface
+					check Result_not_void: Result /= Void end
+				end
+			elseif not is_editable then
+					from
+						cur := interface.cursor
+						interface.start
+					until
+						index > count or else Result /= Void
+					loop
+						if item.text.is_equal (text) then
+							Result := item
+						end
+						interface.forth
+					end
+					interface.go_to (cur)
+			end		
 		end
 
 feature -- Status setting

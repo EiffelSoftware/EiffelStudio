@@ -1,32 +1,28 @@
-class BIN_AND_AS
+class BIN_AND_AS_B
 
 inherit
 
-	BINARY_AS
+	BIN_AND_AS
+		rename
+			left as old_left,
+			right as old_right
+		end;
+
+	BINARY_AS_B
+		undefine
+			bit_balanced
 		redefine
 			bit_balanced, byte_anchor
+		select
+			left, right
 		end
 
 feature
 
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-			Result := "_infix_and";
-		end;
-
-	bit_balanced: BOOLEAN is
-			-- Is the current binary operation subject to the
-			-- balancing rule proper to bit types ?
-		do
-			Result := True;
-		end;
-
 	byte_anchor: BIN_AND_B is
-            -- Byte code type
-        do
-            !!Result;
-        end;
+			-- Byte code type
+		do
+			!!Result;
+		end;
 
-end
+end -- class BIN_AND_AS_B

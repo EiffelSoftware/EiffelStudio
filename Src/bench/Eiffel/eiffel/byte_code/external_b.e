@@ -9,7 +9,9 @@ inherit
 			same, is_external, set_parameters, parameters, enlarged,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
-			pre_inlined_code, inlined_byte_code
+			pre_inlined_code, inlined_byte_code,
+			has_separate_call, reset_added_gc_hooks,
+			make_end_byte_code, make_end_precomp_byte_code
 		end;
 	SHARED_INCLUDE
 
@@ -200,26 +202,56 @@ feature -- Byte code generation
 
 	code_first: CHARACTER is
 			-- Code when external call is first (no invariant)
+		local
+			class_type: CL_TYPE_I;
 		do
-			Result := Bc_extern
+			class_type ?= context_type;
+			if class_type /= Void and then class_type.is_separate then
+					-- It's only possible for creation feature call.
+				Result := Bc_sep_extern;
+			else
+				Result := Bc_extern;
+			end;
 		end;
 
 	code_next: CHARACTER is
 			-- Code when external call is nested (invariant)
+		local
+			class_type: CL_TYPE_I;
 		do
-			Result := Bc_extern_inv
+			class_type ?= context_type;
+			if class_type /= Void and then class_type.is_separate then
+				Result := Bc_sep_extern_inv;
+			else
+				Result := Bc_extern_inv;
+			end;
 		end;
 
 	precomp_code_first: CHARACTER is
 			-- Code when external precompiled call is first (no invariant)
+		local
+			class_type: CL_TYPE_I;
 		do
-			Result := Bc_pextern
+			class_type ?= context_type;
+			if class_type /= Void and then class_type.is_separate then
+					-- It's only possible for creation feature call.
+				Result := Bc_sep_pextern;
+			else
+				Result := Bc_pextern;
+			end;
 		end;
 
 	precomp_code_next: CHARACTER is
 			-- Code when external precompiled call is nested (invariant)
+		local
+			class_type: CL_TYPE_I;
 		do
-			Result := Bc_pextern_inv
+			class_type ?= context_type;
+			if class_type /= Void and then class_type.is_separate then
+				Result := Bc_sep_pextern_inv;
+			else
+				Result := Bc_pextern_inv;
+			end;
 		end;
 
 feature -- Array optimization
@@ -290,4 +322,178 @@ feature -- Inlining
 			end
 		end
 
+feature -- Concurrent Eiffel
+
+	attach_loc_to_sep: BOOLEAN is
+		-- Does the feature call attach a local object to separate formal
+		-- parameter?
+		local
+			p: PARAMETER_B;
+		do
+			Result := false;
+			if parameters /= Void then
+				from
+					parameters.start
+				until
+					Result or parameters.after
+				loop
+					p ?= parameters.item;
+					if real_type(p.attachment_type).is_separate and
+						not real_type(p.expression.type).is_separate then
+						Result := True;
+					end;
+					parameters.forth;
+				end;
+			end;
+		end
+																	  
+	has_separate_call: BOOLEAN is
+			-- Is there separate feature call in the assertion?
+		local
+			p: PARAMETER_B;
+			class_type: CL_TYPE_I;
+		do
+			class_type ?= context_type;
+			if class_type /= Void then
+				Result := class_type.is_separate;
+			end;
+			if not Result and parameters /= Void  then
+				from
+					parameters.start
+				until
+					Result or parameters.after
+				loop
+					p ?= parameters.item;
+					-- can't fail but it failed for class RESOURCE_STRING_LEX
+					if p /= Void and then p.expression /= Void then
+						Result := p.expression.has_separate_call;
+					end;
+					parameters.forth;
+				end;
+			end;
+		end
+																	
+	reset_added_gc_hooks is
+		local
+			expr: PARAMETER_B;
+			para_type: TYPE_I;
+			loc_idx: INTEGER
+		do
+			if system.has_separate and  parameters /= Void then
+				from
+					parameters.start;
+				until
+					parameters.after
+				loop
+					expr ?= parameters.item;	-- Cannot fail
+					if expr /= Void then
+						para_type := real_type(expr.attachment_type);
+						if para_type.is_separate then
+							if expr.stored_register.register_name /= Void then
+								loc_idx := context.local_index (expr.stored_register.register_name);
+							else
+								loc_idx := -1;
+							end;
+							if loc_idx /= -1 then
+								generated_file.putstring ("l[");
+								generated_file.putint (context.ref_var_used + loc_idx);
+								generated_file.putstring ("] = (char *)0;");
+								generated_file.new_line;
+							end
+						end
+					end
+					parameters.forth;
+				end;
+			end
+		end
+
+
+		make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
+					real_feat_id: INTEGER; static_type: INTEGER) is
+			-- Make final portion of the standard byte code.
+		local
+			my_code: CHARACTER;
+			class_type: CL_TYPE_I;
+		do
+			if  is_first or flag then
+				my_code := code_first;
+			else
+				my_code := code_next;
+			end;
+			ba.append (my_code);
+			if my_code = Bc_sep_feature or my_code = Bc_sep_feature_inv then
+			-- "Bc_sep_feature" is impossible, delete it later.
+					-- keep parameter number
+				if parameters /= Void then
+					ba.append_short_integer (parameters.count);
+				else
+					ba.append_short_integer (0);
+				end;
+					-- keep the class name of the target of the feature call
+				class_type ?= context_type; -- Can't fail
+				ba.append_raw_string (class_type.base_class.e_class.name_in_upper);
+					-- keep the feature name of the feature call
+				ba.append_raw_string (feature_name);
+					-- keep the return value's type;
+				ba.append_uint32_integer (Context.real_type (type).sk_value);
+					-- keep if the acknowledgement for the proc. is necessary
+				if attach_loc_to_sep then
+					ba.append ('%/001/');
+				else
+					ba.append ('%/000/');
+				end;
+			end
+			if  my_code = Bc_feature_inv then
+					-- Generate feature name for test of void reference
+				ba.append_raw_string (feature_name);
+			end;
+				-- Generate feature id
+			ba.append_integer (real_feat_id);
+			ba.append_short_integer (static_type);
+		end;
+
+	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
+					origin: INTEGER; offset: INTEGER) is
+			-- Make final portion of the standard byte code
+			-- for a precompiled call.
+		local
+			my_code: CHARACTER;
+			class_type: CL_TYPE_I;
+		do
+			if  is_first or flag then
+				my_code := precomp_code_first;
+			else
+				my_code := precomp_code_next;
+			end;
+			ba.append (my_code);
+			if my_code = Bc_sep_pfeature or my_code = Bc_sep_pfeature_inv then
+			-- Bc_sep_pfeature is impossible, delete it later.
+					-- keep parameter number
+				if parameters /= Void then
+					ba.append_short_integer (parameters.count);
+				else
+					ba.append_short_integer (0);
+				end;
+					-- keep the class name of the target of the feature call
+				class_type ?= context_type; -- Can't fail
+				ba.append_raw_string (class_type.base_class.e_class.name_in_upper);
+					-- keep the feature name of the feature call
+				ba.append_raw_string (feature_name);
+					-- keep the return value's type;
+				ba.append_uint32_integer (Context.real_type (type).sk_value);
+					-- keep if the acknowledgement for the proc. is necessary
+				if attach_loc_to_sep then
+					ba.append ('%/001/');
+				else
+					ba.append ('%/000/');
+				end;
+			end
+			if  my_code = Bc_pfeature_inv  then
+					-- Generate feature name for test of void reference
+				ba.append_raw_string (feature_name);
+			end;
+			ba.append_integer (origin);
+			ba.append_integer (offset);
+		end;
+																	  
 end

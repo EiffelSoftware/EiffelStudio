@@ -41,7 +41,6 @@ feature
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.
 		do
---			file.putstring ("(float) ");
 			file.putstring (real_val);
 		end;
 

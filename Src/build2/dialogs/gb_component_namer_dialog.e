@@ -29,9 +29,20 @@ inherit
 		end
 
 create
-	default_create
+	default_create,
+	make_with_names
 
 feature -- Initialization
+
+	make_with_names (names: ARRAYED_LIST [STRING]) is
+			-- Create `Current' and assign `names' to `all_exisiting_names'.
+		do
+			default_create
+			all_existing_names := names
+			all_existing_names.compare_objects
+			name_field.set_text (unique_name (names, "Component"))
+		end
+	
 
 	initialize is
 			-- Initialize `Current'.
@@ -81,19 +92,32 @@ feature {NONE} -- Implementation
 			-- Hide `Current' and set `name'.
 		local
 			warning: EV_WARNING_DIALOG
+			temp_string: STRING
 		do
 				-- Components use the same naming convention
 				-- as class names.
 			if valid_class_name (name_field.text) then
-				hide
-				name := name_field.text
+				temp_string := name_field.text
+				temp_string.to_lower
+				if all_existing_names.has (temp_string) then
+					create warning.make_with_text ("'" + name_field.text + "'" + Component_identical_name_warning)
+					warning.show_modal_to_window (Current)
+				else
+					hide
+					name := name_field.text
+				end
 			else
-				create warning.make_with_text ("`" + name_field.text + "'" + Component_name_warning)
+				create warning.make_with_text ("'" + name_field.text + "'" + Component_invalid_name_warning)
 				warning.show_modal_to_window (Current)
 			end
 		end
 		
 	name_field: EV_TEXT_FIELD
 		-- The entry field for new name.
+		
+	all_existing_names: ARRAYED_LIST [STRING]
+		-- All named components currently in the system.
+		-- We must ensure that a new name entered by the user
+		-- is not identical to a member of this list.
 	
 end -- class GB_NAMER_DIALOG

@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Creation of a formal generic parameter."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +11,7 @@ inherit
 		redefine
 			generate, generate_gen_type_conversion,
 			generate_cid, type_to_create, make_byte_code,
-			analyze
+			analyze, generate_il
 		end
 
 creation
@@ -33,7 +32,7 @@ feature -- Initialization
 feature -- Access
 
 	formal_position: INTEGER
-				-- Position of the formal in the current type.
+				-- Position of the formal in current type.
 
 feature -- C code generation
 
@@ -41,13 +40,12 @@ feature -- C code generation
 		do
 				-- Current is always used to generate the correct generic parameter.
 			context.mark_current_used
-		end;
-	
+		end
 
 	generate is
-			-- Generate the creation type
+			-- Generate formal creation type
 		local
-			buffer: GENERATION_BUFFER;
+			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
 
@@ -57,18 +55,28 @@ feature -- C code generation
 			context.current_register.print_register
 			buffer.putchar (',')
 			buffer.putint (formal_position)
-			buffer.putchar (')');
-		end;
+			buffer.putchar (')')
+		end
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for a formal creation type.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+		
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a hardcoded creation type
+			-- Generate byte code for a formal creation type.
 		do
 			ba.append (Bc_gen_param_create)
 			ba.append_short_integer (context.current_type.generated_id (False))
 			ba.append_integer (formal_position)
-		end;
+		end
 
 feature -- Generic conformance
 
@@ -82,6 +90,6 @@ feature -- Generic conformance
 
 	type_to_create : CL_TYPE_I is
 		do
-		end;
+		end
 
 end -- class CREATE_FORMAL_TYPE

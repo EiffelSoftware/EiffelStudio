@@ -7,7 +7,7 @@ indexing
 
 class EV_GTK_EXTERNALS
 
-feature {NONE} -- GTK C functions for objects
+feature -- GTK C functions for objects
 
 	gtk_object_ref (w: POINTER) is
 		external "C | <gtk/gtk.h>"
@@ -520,26 +520,53 @@ feature {NONE} -- GTK C functions for multi-column list
 
 feature {NONE} -- GTK C functions for tree
 
-	gtk_tree_new: POINTER is
-		external "C | <gtk/gtk.h>"
+--	gtk_tree_new: POINTER is
+--		external "C | <gtk/gtk.h>"
+--		end
+
+--	gtk_tree_append (tree: POINTER; item: POINTER) is
+--		external "C | <gtk/gtk.h>"
+--		end
+
+--	gtk_tree_remove_item (tree: POINTER; item: POINTER) is
+--		external "C | <gtk/gtk.h>"
+--		end
+
+ --   c_gtk_tree_set_single_selection_mode (tree: POINTER) is
+  --      external "C | %"gtk_eiffel.h%""
+   --     end
+
+    --c_gtk_tree_selected_item (tree: POINTER): POINTER is
+     --   external "C | %"gtk_eiffel.h%""
+      --  end
+
+feature {NONE} -- GTK C functions for ctree
+
+	gtk_ctree_new (col, tree_col: INTEGER): POINTER is
+		external "C (gint, gint): EIF_POINTER| <gtk/gtk.h>"
 		end
 
-	gtk_tree_append (tree: POINTER; item: POINTER) is
-		external "C | <gtk/gtk.h>"
+	c_gtk_ctree_insert_node (ctree, parent, sibling, text: POINTER; spacing: INTEGER; pix, mask: POINTER; is_leaf, expand: BOOLEAN): POINTER is
+		external
+			"C (GtkCTree *,	GtkCTreeNode*, GtkCTreeNode*, gchar *, guint8, GdkPixmap*, GdkBitmap*, gboolean, gboolean): EIF_POINTER | %"gtk_eiffel.h%""
 		end
 
-	gtk_tree_remove_item (tree: POINTER; item: POINTER) is
-		external "C | <gtk/gtk.h>"
+	gtk_ctree_remove_node (ctree: POINTER; node: POINTER) is
+		external "C (GtkCTree *, GtkCTreeNode *) | <gtk/gtk.h>"
 		end
 
-    c_gtk_tree_set_single_selection_mode (tree: POINTER) is
-        external "C | %"gtk_eiffel.h%""
-        end
+    	c_gtk_ctree_set_single_selection_mode (tree: POINTER) is
+    	    	external "C (GtkCTree *) | %"gtk_eiffel.h%""
+     	   	end
 
-    c_gtk_tree_selected_item (tree: POINTER): POINTER is
-        external "C | %"gtk_eiffel.h%""
-        end
+    	c_gtk_ctree_selected_item (ctree: POINTER): POINTER is
+        	external "C (GtkCTree *): EIF_POINTER | %"gtk_eiffel.h%""
+     		end
 
+--   	 c_gtk_ctree_index_of_node (ctree, node: POINTER): INTEGER is
+--		external "C (GtkCTree *, GtkCTreeNode *): EIF_INTEGER | %"gtk_eiffel.h%""
+--      		end
+	
 feature {NONE} -- GTK C functions for pixmaps
 
 	c_gtk_pixmap_width (pixmap: POINTER): INTEGER is

@@ -28,6 +28,19 @@
 #define ID_REPLACESTATIC                3018
 #define Txt_percentage                  3019
 
+#define Project_icon					1
+Project_icon ICON "es4.ico"
+#define Object_icon						2
+Object_icon ICON "es4.ico"
+#define Feature_icon					3
+Feature_icon ICON "es4.ico"
+#define Explain_icon					4
+Explain_icon ICON "es4.ico"
+#define Class_icon						5
+Class_icon ICON "es4.ico"
+#define System_icon						6
+System_icon ICON "es4.ico"
+
 DLG_SELECTDIR DIALOG DISCARDABLE  20, 20, 173, 188
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Select directory"

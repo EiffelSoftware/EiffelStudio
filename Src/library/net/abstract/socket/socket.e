@@ -357,7 +357,7 @@ feature
 		end
 
 	is_open_write: BOOLEAN
-			-- Is socket opened for writting?
+			-- Is socket opened for writing?
 
 	is_open_read: BOOLEAN
 			-- Is socket opened for reading?
@@ -381,7 +381,7 @@ feature
 		end
 
 	readable: BOOLEAN is
-			-- is socket a readable medium
+			-- Is socket a readable medium?
 		do
 			Result := True
 		end

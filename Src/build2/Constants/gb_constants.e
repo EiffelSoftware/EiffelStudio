@@ -51,7 +51,12 @@ feature -- Miscellaneous
 	
 feature -- Directories
 
-	gb_ev_directory: STRING is "D:\work\build2\interface"
+	gb_ev_directory: FILE_NAME is
+		do
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+			Result.extend ("build")
+			Result.extend ("interface")
+		end
 	
 feature -- Default values
 
@@ -61,11 +66,14 @@ feature -- Default values
 
 feature -- Generation constants
 
-	template_file_name: STRING is
+	template_file_name: FILE_NAME is
 			-- `Result' is location of build template file,
 			-- including the name.
-		once
-			Result := "D:\work\build2\templates\build_template.e"
+		do
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
+			Result.extend ("build")
+			Result.extend ("templates")
+			Result.extend ("build_template.e")
 		end
 		
 	class_name_tag: STRING is

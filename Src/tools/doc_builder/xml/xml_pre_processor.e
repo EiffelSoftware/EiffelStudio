@@ -291,7 +291,7 @@ feature {NONE} -- Processing
 		do
 			l_script_text := "doc = window.location.href;if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
 				%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);%
-				%setCookie (%"redirecturl%", doc, expdate);window.location.replace (%"/index.html%");}"
+				%setCookie ('redirecturl', doc, expdate);window.location.replace ('/index.html');}"
 			l_parent := internal_xml.element_by_name ("document")
 			if l_parent /= Void then
 					-- Insert script in header

@@ -84,7 +84,7 @@ feature -- Type check, byte code and dead code removal
 			ctxt.begin;
 			ctxt.prepare_for_feature (feature_name.internal_name, void);
 			if ctxt.is_feature_visible then
-				ctxt.put_special("$");
+				ctxt.put_text_item (ti_Dollar);
 				ctxt.put_current_feature; 	-- treat infix and prefix
 				ctxt.commit;
 			else

@@ -10,7 +10,7 @@
 <DIV>
 <p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
 
-<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel" width="109" height="226"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
 
 <p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-06.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-08.html"><area shape="default" nohref></MAP>
 </DIV>
@@ -63,11 +63,11 @@ fields</SPAN>
 value</SPAN>
 . A value can be either an object or an object reference:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514241"></A>When a field is an object, it will in most cases be an atomic object, as on the figure where the first field from the top is an integer and the third a character. But a field can also be a composite object, in which case it is called a <SPAN CLASS="ff-bold">
 subobject</SPAN>
 .
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-526726"></A>A <SPAN CLASS="ff-bold">
 reference</SPAN>
  is either void or uniquely identifies an object, to which it is said to be <SPAN CLASS="ff-bold">
@@ -96,19 +96,19 @@ routine</SPAN>
 right</SPAN>
  on the figure above, is based on implementation considerations:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514286"></A>An attribute is a feature implemented through memory: it describes a field that will be found in all instances of the class. For example class <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
  may have an attribute <SPAN CLASS="ee-text">
 balance</SPAN>
 ; then all instances of the class will have a corresponding field containing each account's current balance.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514287"></A>A routine describes a computation applicable to all instances of the class. <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
  may have a routine <SPAN CLASS="ee-text">
 withdraw</SPAN>
 .
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514288"></A>Routines are further classified into <SPAN CLASS="ff-bold">
 functions</SPAN>
 , which will return a result, and <SPAN CLASS="ff-bold">
@@ -126,11 +126,11 @@ clients</SPAN>
 left</SPAN>
  on the figure:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514290"></A><SPAN CLASS="ff-bold">
 Commands</SPAN>
  have no result, and may modify an object. They may only be procedures.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514291"></A><SPAN CLASS="ff-bold">
 Queries</SPAN>
  have a result: they return information about an object. You may implement a query as either an attribute (by reserving space for the corresponding information in each instance of the class, a memory-based solution) or a function (a computation-based solution). An attribute is only possible for a query without argument, such as <SPAN CLASS="ee-text">
@@ -323,7 +323,7 @@ DEPOSIT_LIST</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-514335"></A>It's easy to deduce, from a feature's syntactic appearance, the category to which it belongs. Here:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-526812"></A>Only <SPAN CLASS="ee-text">
 deposit</SPAN>
  and <SPAN CLASS="ee-text">
@@ -331,13 +331,13 @@ deposit_count</SPAN>
 , which include a <SPAN CLASS="ee-keyword">
 do</SPAN>
  &#8230; clause, are routines.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-526816"></A><SPAN CLASS="ee-text">
 balance</SPAN>
  and <SPAN CLASS="ee-text">
 all_deposits</SPAN>
 , which are simply declared with a type, are attributes. Note that even for attributes it is recommended to have a header comment.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514336"></A>Routine <SPAN CLASS="ee-text">
 deposit_count</SPAN>
  is declared as returning a result (of type <SPAN CLASS="ee-text">
@@ -648,13 +648,13 @@ is an example of <SPAN CLASS="ff-bold">
 entity</SPAN>
 , a notion generalizing the well-known concept of variable. An entity is a name that appears in a class text to represent possible run-time values (a value being, as defined earlier, an object or a reference). An entity is one of the following:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514410"></A>An attribute of the enclosing class, such as <SPAN CLASS="ee-text">
 balance</SPAN>
  and <SPAN CLASS="ee-text">
 all_deposits</SPAN>
 .
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514411"></A>A formal argument of a routine, such as <SPAN CLASS="ee-text">
 sum</SPAN>
  for <SPAN CLASS="ee-text">
@@ -662,9 +662,9 @@ deposit</SPAN>
  and <SPAN CLASS="ee-text">
 make</SPAN>
 .
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514412"></A>A local entity declared for the internal needs of a routine.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514413"></A>The special entity <SPAN CLASS="ee-text">
 Result</SPAN>
  in a function.
@@ -1361,7 +1361,7 @@ x</SPAN>
 y</SPAN>
 . This means that:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514558"></A>For entities of reference types, the value of <SPAN CLASS="ee-text">
 x</SPAN>
  will be a void reference if the value of <SPAN CLASS="ee-text">
@@ -1382,7 +1382,7 @@ y</SPAN>
 <p>
 </DIV>
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514585"></A>For entities of expanded types, the values are objects; the object attached to <SPAN CLASS="ee-text">
 x</SPAN>
  will be overwritten with the contents of the object attached to <SPAN CLASS="ee-text">
@@ -1764,11 +1764,11 @@ dispose</SPAN>
 free</SPAN>
 ). The arguments for this view are:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514630"></A><SPAN CLASS="ff-bold">
 Simplicity</SPAN>
 : handling memory reclamation manually can add enormous complication to the software, especially when -- as is often the case in object-oriented development -- the system manipulates complex run-time data structures with many links and cycles.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514631"></A><SPAN CLASS="ff-bold">
 Reliability</SPAN>
 : memory management errors, such as the incorrect reclamation of an object that is still referenced by a distant part of the structure, are a notorious source of dangerous and hard-to-correct bugs.
@@ -2168,11 +2168,11 @@ end</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-514694"></A>With these notions it is not hard to define precisely the overall scenario of a system execution by defining which object and routine will, at each instant, be the current object and the current routine:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514695"></A>Starting a system execution, as we have seen, consists in creating an instance of the root class, the root object, and executing a designated creation procedure, the root procedure, with the root object as its target. The root object is the initial current object, and the root procedure is the initial current procedure.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514696"></A>From then on only two events can change the current object and current procedure: a qualified routine call; and the termination of a routine.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-527642"></A>In a call of the form <SPAN CLASS="ee-text">
 target</SPAN>
 <SPAN CLASS="ee-dot">
@@ -2190,9 +2190,9 @@ routine</SPAN>
 . As the call starts, TC becomes the new current object and <SPAN CLASS="ee-text">
 routine</SPAN>
  becomes the new current routine.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-514698"></A>When a routine execution terminates, the target object and routine of the most recent non-terminated call -- which, just before just before the terminated call, were the current object and the current routine -- assume again the role of current object and current routine. 
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-527665"></A>The only exception to the last rule is termination of the original root procedure call; in this case the entire execution terminates.
 </UL>
 </DIV>
@@ -2298,17 +2298,17 @@ end</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-527775"></A>The levels of privilege available to the class author include, for any field:
 <UL>
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-527711"></A>Hide the field completely from clients, by exporting the corresponding attribute to <SPAN CLASS="ee-text">
 NONE</SPAN>
 .
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-527706"></A>Export it, but in read-only mode, by not exporting any procedure that modifies it.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-527726"></A>Export it for free read and write by any client, by also exporting a procedure of the <SPAN CLASS="ee-text">
 set_attribute</SPAN>
  kind.
-<p class="nn-first"><img src="greenball.gif" alt="+">
+<p class="nn-first"><img src="greenball.gif" alt="+" width="6" height="6">
 <A NAME="pgfId-527801"></A>Export it in <SPAN CLASS="ff-bold">
 restricted-write</SPAN>
  mode, by exporting a procedure such as <SPAN CLASS="ee-text">

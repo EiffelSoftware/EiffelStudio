@@ -97,7 +97,7 @@
 				<A HREF="../../reference/structures/table/hash_table_chart.html">HASH_TABLE</A> attempts to
 				address the first concern; for the second, client developers will be responsible for choosing
 				the proper hashing function, although Base provides a few predefined functions, in particular
-				for class <A HREF="../../reference/structures/table/string_chart.html">STRING</A>.
+				for class <A HREF="../../reference/kernel/string_chart.html">STRING</A>.
 			<H2>When hash tables are appropriate</H2>
 			<P>
 				You may keep objects in a hash table if for each one of these objects you can find a key
@@ -126,12 +126,12 @@
 				What this practically means is that in all cases you will need, in the generating class
 				of the objects to be stored, a query (attribute or function) that gives the key. The type of
 				the key is highly variable but must in all cases be a descendant of
-				<A HREF="../../reference/structures/kernel/hashable_chart.html">HASHABLE</A>. This is
+				<A HREF="../../../../../../../libraries/base/reference/kernel/hashable_chart.html">HASHABLE</A>. This is
 				true of both
 				<A HREF="../../reference/structures/kernel/integer_chart.html">INTEGER</A> (case <B>H1</B>)
 				and <A HREF="../../reference/structures/kernel/string_chart.html">STRING</A> (case <B>H2</B>).
 				The requirements for being a
-				<A HREF="../../reference/structures/kernel/hashable_chart.html">HASHABLE</A> are not harsh:
+				<A HREF="../../../../../../../libraries/base/reference/kernel/hashable_chart.html">HASHABLE</A> are not harsh:
 				all you need is a function hash_code that returns a non-negative integer.
 			<H2>Using hash tables</H2>
 			<P>

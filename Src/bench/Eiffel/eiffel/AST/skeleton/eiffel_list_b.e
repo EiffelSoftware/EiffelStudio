@@ -7,8 +7,7 @@ indexing
 class EIFFEL_LIST_B [T->AST_EIFFEL_B]
 
 inherit
-
-	EIFFEL_LIST [T];
+	EIFFEL_LIST [T]
 
 	AST_EIFFEL_B
 		rename
@@ -23,7 +22,6 @@ inherit
 		end;
 
 creation
-
 	make
 
 feature -- Type check, byte code and dead code removal

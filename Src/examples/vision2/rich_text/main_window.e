@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 
 			format_toolbar.disable_vertical_button_style
 			
+			tab_width_entry.set_value (rich_text.tab_width)
+			
 				-- Connect events.
 			rich_text.caret_move_actions.extend (agent caret_moved)
 			rich_text.selection_change_actions.extend (agent selection_changed)
@@ -539,6 +541,12 @@ feature {NONE} -- Implementation
 			pixmap.draw_rectangle (1, 1 + ((16 - text_height) // 2), text_height - 2, text_height - 2)
 			color_button.set_pixmap (pixmap)
 			color_undefined := True
+		end
+		
+	tab_width_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `l_ev_spin_button_1'.
+		do
+			rich_text.set_tab_width (a_value)
 		end
 		
 feature {NONE} -- Implementation

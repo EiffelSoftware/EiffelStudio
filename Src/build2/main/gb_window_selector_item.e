@@ -95,6 +95,12 @@ feature -- Access
 				file_name.extend (object.name + ".e")
 				create file.make (file_name)
 				Result := file.exists
+			else
+					-- In this case, we are not contained in a sub-directory so simply take the root location.
+				create file_name.make_from_string (system_status.current_project_settings.project_location)
+				file_name.extend (object.name + ".e")
+				create file.make (file_name)
+				Result := file.exists
 			end			
 		end
 		

@@ -794,6 +794,9 @@ feature -- Class info
 					end
 
 					class_mapping.put (l_type_token, class_type.implementation_id)
+					if class_c.is_frozen then
+						class_mapping.put (l_type_token, class_type.static_type_id)
+					end
 					external_class_mapping.put (class_type.type, impl_name)
 					external_token_mapping.put (l_type_token, impl_name)
 				end
@@ -1091,11 +1094,13 @@ feature -- Features info
 		require
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
+			class_c_is_frozen: class_c.is_frozen
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
 		do
+			is_frozen_class := True
 			from
 				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
@@ -1107,6 +1112,7 @@ feature -- Features info
 				generate_feature (feat, False, False, False)
 				features.forth
 			end
+			is_frozen_class := False
 		end
 
 	generate_feature (feat: FEATURE_I; in_interface, is_static, is_override: BOOLEAN) is
@@ -1140,7 +1146,7 @@ feature -- Features info
 				l_signature.compare_references
 			
 				l_return_type := argument_actual_type (feat.type.actual_type.type_i)
-				if not in_interface and is_static and l_is_attribute then
+				if (is_frozen_class or (not in_interface and is_static)) and l_is_attribute then
 					l_field_sig := field_sig
 					l_field_sig.reset
 					set_signature_type (l_field_sig, l_return_type)
@@ -1212,7 +1218,7 @@ feature -- Features info
 				
 				uni_string.set_string (l_name)
 
-				if not in_interface and is_static and l_is_attribute then
+				if (is_frozen_class or (not in_interface and is_static)) and l_is_attribute then
 					l_field_attr := feature {MD_FIELD_ATTRIBUTES}.Public
 					
 					l_meth_token := md_emit.define_field (uni_string, current_class_token,
@@ -1313,14 +1319,23 @@ feature -- Features info
 					end
 
 					if not is_override then
-						if is_static then
+						if is_frozen_class then
 							insert_implementation_feature (l_meth_token, current_type_id,
 								feat.feature_id)
 							insert_implementation_signature (l_signature, current_type_id,
 								feat.feature_id)
-						else
 							insert_feature (l_meth_token, current_type_id, feat.feature_id)
 							insert_signature (l_signature, current_type_id, feat.feature_id)
+						else
+							if is_static then
+								insert_implementation_feature (l_meth_token, current_type_id,
+									feat.feature_id)
+								insert_implementation_signature (l_signature, current_type_id,
+									feat.feature_id)
+							else
+								insert_feature (l_meth_token, current_type_id, feat.feature_id)
+								insert_signature (l_signature, current_type_id, feat.feature_id)
+							end
 						end
 					else
 						last_override_token := l_meth_token
@@ -1594,7 +1609,10 @@ feature -- IL Generation
 
 				l_is_c_external := feat.is_c_external
 
-				if not l_is_c_external and then l_cur_sig.is_equal (l_impl_sig) then
+				if
+					not l_is_c_external and then
+					(l_cur_sig = Void or else l_cur_sig.is_equal (l_impl_sig))
+				then
 					if is_debug_info_enabled then
 						dbg_writer.open_method (l_meth_token)
 						l_sequence_point := method_sequence_points.item (l_token)
@@ -2302,7 +2320,7 @@ feature -- Variables access
 			positive_feature_id: a_feature_id > 0
 		do
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
-				feature_token (type_i.implementation_id, a_feature_id))
+				attribute_token (type_i.implementation_id, a_feature_id))
 		end
 
 	generate_attribute (type_i: TYPE_I; a_feature_id: INTEGER) is
@@ -2310,9 +2328,17 @@ feature -- Variables access
 		require
 			type_i_not_void: type_i /= Void
 			positive_feature_id: a_feature_id > 0
+		local
+			cl_type: CL_TYPE_I
 		do
-				-- Attribute are accessed through their feature encapsulation.
-			internal_generate_feature_access (type_i.static_type_id, a_feature_id, 0, True, True)
+			cl_type ?= type_i
+			if cl_type /= Void and then cl_type.base_class.is_frozen then
+				generate_attribute_access (cl_type, a_feature_id)
+			else
+					-- Attribute are accessed through their feature encapsulation.
+				internal_generate_feature_access (type_i.static_type_id, a_feature_id,
+					0, True, True)
+			end
 		end
 
 	generate_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
@@ -2578,9 +2604,17 @@ feature -- Assignments
 		require
 			type_i_not_void: type_i /= Void
 			positive_feature_id: a_feature_id > 0
+		local
+			cl_type: CL_TYPE_I
 		do
-			method_body.put_call (feature {MD_OPCODES}.Callvirt,
-				setter_token (type_i.static_type_id, a_feature_id), 1, False) 
+			cl_type ?= type_i
+			if cl_type /= Void and then cl_type.base_class.is_frozen then
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld,
+					attribute_token (type_i.static_type_id, a_feature_id))
+			else
+				method_body.put_call (feature {MD_OPCODES}.Callvirt,
+					setter_token (type_i.static_type_id, a_feature_id), 1, False)
+			end
 		end
 
 	generate_local_assignment (n: INTEGER) is

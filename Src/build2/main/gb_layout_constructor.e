@@ -95,6 +95,7 @@ feature -- Basic operation
 		require
 			not_destroyed: not is_destroyed
 			is_displayed: is_displayed
+			an_object_not_void: an_object /= Void
 			object_contained: has_recursively (an_object.layout_item)
 		do
 			ensure_item_visible (an_object.layout_item)	
@@ -124,6 +125,8 @@ feature -- Access
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_view_small_color"))
 			Result.set_tooltip ("Show object")
+		ensure
+			Result_not_void: Result /= Void
 		end
 		
 	tool_bar: EV_TOOL_BAR is
@@ -178,6 +181,8 @@ feature {GB_OBJECT} -- Implementation
 			-- Ensure `an_object' is highlighted object in `Current'.
 			-- Only if `an_object' is contained in the structure of `Current', and
 			-- is not a titled window.
+		require
+			an_object_not_void: an_object /= Void
 		do
 			if an_object.layout_item.is_selectable then
 				an_object.layout_item.enable_select
@@ -190,6 +195,8 @@ feature {NONE} -- Implementation
 	object_higlightable (an_object: GB_OBJECT): BOOLEAN is
 			-- Is `an_object' a valid object for highlighting via
 			-- `highlight_object'.
+		require
+			an_object_not_void: an_object /= Void
 		local
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do

@@ -1226,6 +1226,7 @@ feature -- Skeleton generation
 				skeleton.generate_type_array
 
 					-- Generate expanded generic type arrays
+				Byte_context.set_class_type (Current)
 				skeleton.generate_generic_type_arrays (type_id)
 
 				if byte_context.final_mode then	

@@ -5,7 +5,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EV_LIST_EXAMPLE
+	EV_MULTI_COLUMN_LIST_EXAMPLE
 
 inherit
 	EV_APPLICATION
@@ -224,4 +224,4 @@ feature {NONE} -- Implementation
 			Create Result
 		end
 
-end -- class EV_LIST_EXAMPLE
+end -- class EV_MULTI_COLUMN_LIST_EXAMPLE

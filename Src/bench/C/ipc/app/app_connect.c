@@ -14,7 +14,7 @@
 #include "eif_portable.h"
 #include "eif_err_msg.h"
 #include <sys/types.h>
-#include "logfile.h"
+#include "eif_logfile.h"
 #include <errno.h>
 #include <stdio.h>
 

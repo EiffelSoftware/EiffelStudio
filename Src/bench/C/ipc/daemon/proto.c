@@ -14,7 +14,7 @@
 #include "eif_portable.h"
 
 #ifdef EIF_WIN32
-#include <file.h>
+#include "eif_file.h"
 #define print_err_msg fprintf
 #else
 #include "eif_err_msg.h"
@@ -30,7 +30,7 @@
 #include "select.h"
 #include "com.h"
 #include "stream.h"
-#include "logfile.h"
+#include "eif_logfile.h"
 #include "idrf.h"
 #include "rqst_idrs.h"
 #include <stdio.h>		/* For BUFSIZ */

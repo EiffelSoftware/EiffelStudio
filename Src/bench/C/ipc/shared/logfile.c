@@ -44,7 +44,7 @@
 #endif
 
 #ifdef USE_ADD_LOG
-#include "logfile.h"
+#include "eif_logfile.h"
 
 #define MAX_STRING	1024			/* Maximum length for logging string */
 

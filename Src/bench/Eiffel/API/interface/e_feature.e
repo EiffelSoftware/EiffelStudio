@@ -406,8 +406,8 @@ feature -- Access
 		local
 			dep: CLASS_DEPENDANCE;
 			fdep: FEATURE_DEPENDANCE;
-			cfeat: STRING;
 			current_d: DEPEND_UNIT;
+			l_found: BOOLEAN
 		do
 			create Result.make
 			dep := Depend_server.item (cl_class.class_id)
@@ -420,10 +420,17 @@ feature -- Access
 				dep.after
 			loop
 				fdep := dep.item_for_iteration
-				if fdep.has (current_d) then
-					--cfeat := dep.key_for_iteration
-					cfeat := fdep.feature_name
-					Result.put_front (cfeat)
+				from
+					l_found := False
+					fdep.start
+				until
+					l_found or fdep.after
+				loop
+					l_found := fdep.item.same_as (current_d)
+					fdep.forth
+				end
+				if l_found then
+					Result.put_front (fdep.feature_name)
 				end
 				dep.forth
 			end

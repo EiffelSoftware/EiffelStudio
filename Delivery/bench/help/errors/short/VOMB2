@@ -1,3 +1,0 @@
-Error: invalid inspect constant: non-constant, or wrong type.
-What to do: make sure that each inspect constant is constant attribute,
-  of the same type as the inspect expression. 

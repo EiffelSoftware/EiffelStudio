@@ -1,3 +1,0 @@
-Error: two features inherited from different parents have same name.
-What to do: if both features are needed and no effecting or redefinition
-  is intended, rename one or both.

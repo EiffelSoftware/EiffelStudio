@@ -1,7 +1,0 @@
-VDCN, chapter 5 (Specifying systems in Lace), page 518
-
-     A consistency condition applies to names used  in  an
-     Ace:  the  Cluster_name  must  be  different for each
-     cluster. It  is  valid,  however,  to  use  the  same
-     identifier   in   two   or   more  of  the  roles  of
-     Cluster_name, System_name, Class_name.

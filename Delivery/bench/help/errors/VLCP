@@ -1,5 +1,0 @@
-VLCP, chapter 7 (Clients and exports), page 101
-
-     A  Clients  part  is  valid  if  and  only  if  every
-     Class_name appearing in its Class_list is the name of
-     a class in the surrounding universe.

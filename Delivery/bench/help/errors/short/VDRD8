@@ -1,3 +1,0 @@
-Error: redeclaration changes expansion status.
-What to do: make sure that the redeclaration does not change
-  the expansion status of any argument or result.

@@ -1,4 +1,0 @@
-Error: class redefines feature but does not list it in Redefine subclause.
-What to do: if the redefinition is indeed needed, list the feature
-  in the appropriate Parent clause. (In case of repeated inheritance
-  from a parent, list it in all clauses for that parent).

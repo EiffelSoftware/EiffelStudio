@@ -1,5 +1,0 @@
-VQUI, chapter 16 (Attributes), page 266
-
-     A declaration of a feature `f' introducing  a  Unique
-     constant  is  valid  if  and  only  if  the  type `T'
-     declared for `f' is `INTEGER'.

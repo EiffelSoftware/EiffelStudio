@@ -1,4 +1,0 @@
-Lace error: Visible clause lists class name present in two clusters.
-What to do: this is not acceptable for externally visible classes.
-  If both classes are needed, change name one of them, and make sure that
-  Visible clause lists the name of the desired one, or lists both names.

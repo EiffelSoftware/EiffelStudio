@@ -1,3 +1,0 @@
-Error: creation procedure of system's root has improper arguments.
-What to do: make sure that any creation procedure of the root class has
-   either no argument or a single argument of type ARRAY [STRING].

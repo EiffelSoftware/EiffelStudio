@@ -1,2 +1,0 @@
-Error: external routine has local entity declarations.
-What to do: remove these declarations, or make the routine non-external. 

@@ -1,7 +1,0 @@
-VLEC, chapter 7 (Clients and exports), page 94
-
-     Expanded Client rule
-
-     It is valid for a class `C' to be an expanded  client
-     of  a  class `SC' if and only if `SC' is not a direct
-     or indirect expanded client of `C'.

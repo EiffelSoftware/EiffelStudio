@@ -1,3 +1,0 @@
-Error: cycle in expanded client relation.
-What to do: make sure that class is not expanded client of any class
-  which is its direct or indirect expanded client. 

@@ -1,4 +1,0 @@
-Error: illegal use of Result.
-What to do: Remove use of Result, or make sure that context is
-  body, postcondition or rescue clause of a function (not procedure,
-  class invariant or precondition).

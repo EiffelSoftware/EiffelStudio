@@ -1,4 +1,0 @@
-Lace error: Option clause lists identifier which is not name of a
-  class in corresponding cluster.
-What to do: Check syntax of Option clause (see ETL, D.11, p. 524); where
-  needed, use name of a class in the corresponding cluster. 

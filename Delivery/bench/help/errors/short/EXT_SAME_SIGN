@@ -1,3 +1,0 @@
-Error: The signature of the C function does not match the Eiffel definition.
-What to do: make sure that number of arguments in the signature matches
-	number of arguments in the Eiffel definition.

@@ -1,5 +1,0 @@
-VWCA, chapter 23 (Expressions and constants), page 387
-
-     A Constant_attribute appearing  in  a  class  `C'  is
-     valid  if and only if its Entity is the final name of
-     a constant attribute of `C'.

@@ -1,4 +1,0 @@
-Error: dynamically bound call to a feature that has been statically bound
-  in the DR-system.
-What to do: make sure that the feature appears in a `dynamic' clause
-  in the Ace file.

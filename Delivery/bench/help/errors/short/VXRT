@@ -1,2 +1,0 @@
-Error: Retry instruction is not in Rescue clause.
-What to do: move instruction to a Rescue clause, or remove it. 

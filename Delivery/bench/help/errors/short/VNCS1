@@ -1,3 +1,0 @@
-Type error: signatures have different number of elements.
-What to do: to obtain conformance, make sure that signatures have same
-  number of arguments, and that if one has a result the other does too. 

@@ -1,4 +1,0 @@
-Error: assertion in redeclaration uses just `require' or `ensure'.
-What to do: make sure that new assertion clause, if needed, begins
-  with `require else' (not just `require') for a precondition,
-  or `ensure then' (not just `ensure') for a postcondition. 

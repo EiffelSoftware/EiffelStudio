@@ -1,2 +1,0 @@
-Error: illegal continuation for multi-line Manifest_string.
-What to do: make sure that only blanks and tabs appear before percent sign.

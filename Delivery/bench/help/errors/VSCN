@@ -1,6 +1,0 @@
-VSCN, chapter 3 (The  architecture  of  Eiffel  software),
-  page 38
-
-
-No two classes in a given cluster may have the same  class
-name.

@@ -1,5 +1,0 @@
-VXRC, chapter 15 (Exceptions), page 256
-
-     It is valid for a Routine to include a Rescue  clause
-     if  and  only  if its Routine_body is of the Internal
-     form.

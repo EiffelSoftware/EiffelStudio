@@ -1,3 +1,0 @@
-Error: conflict between Unique and non-Unique inspect constants.
-What to do: if Unique values are required, make sure that any other
-  inspect constant is an integer with negative or zero value. 

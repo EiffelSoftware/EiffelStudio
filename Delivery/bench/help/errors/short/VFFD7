@@ -1,3 +1,0 @@
-Error: once function has generic or anchored result. 
-What to do: if you do want a `once' function, make sure that its
-  result is neither a Formal_generic_name nor an Anchored type.

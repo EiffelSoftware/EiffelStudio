@@ -1,4 +1,0 @@
-VXRT, chapter 15 (Exceptions), page 256
-
-     A Retry instruction  is  valid  if  and  only  if  it
-     appears in a Rescue clause.

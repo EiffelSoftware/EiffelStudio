@@ -1,4 +1,0 @@
-Lace error: cannot change the `extendible' property of a system between
-  two compilations.
-What to do: make sure to specify an `extendible' clause in the Ace file or
-  recompile your system from scratch.

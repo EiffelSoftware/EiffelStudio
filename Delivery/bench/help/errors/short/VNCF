@@ -1,4 +1,0 @@
-Error: wrong conformance involving formal generic parameter.
-What to do: check conformance uses; no other type conforms to formal
-  generic parameter, and it conforms directly to no other type except
-  ANY and, if generically constrained, its constraining type.

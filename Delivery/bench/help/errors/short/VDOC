@@ -1,4 +1,0 @@
-Lace error: target_list not in Options paragraph. This error should not occur
-  (handled by syntax checks).
-What to do: make sure that target_list appears only in Options paragraph.
-  Notify your ISE Eiffel supplier.

@@ -1,2 +1,0 @@
-Type error: creation instruction applies to target of a deferred type.
-What to do: make sure that type of target is effective.  

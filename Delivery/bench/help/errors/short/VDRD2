@@ -1,3 +1,0 @@
-Type error: redeclaration has non-conforming signature. 
-What to do: make sure that redeclaration uses signature (number and
-  types of arguments and result) conforming to that of the original.

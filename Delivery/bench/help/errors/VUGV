@@ -1,6 +1,0 @@
-VUGV, chapter 22 (Type checking), page 367
-
-     Call rule
-
-     A call is valid if and only if it is both class-valid
-     and system-valid.

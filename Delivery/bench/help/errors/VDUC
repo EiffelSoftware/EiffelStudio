@@ -1,5 +1,0 @@
-VDUC, chapter 8 (Specifying systems in Lace), page 521
-
-     To keep things simple,  the  Cluster_properties  part
-     contained  in a Use file may not itself contain a Use
-     paragraph.

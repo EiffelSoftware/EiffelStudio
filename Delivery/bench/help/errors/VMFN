@@ -1,8 +1,0 @@
-VMFN, chapter 11 (Repeated inheritance), page 188
-
-     Feature Name rule
-
-     It is valid for a class `C' to  introduce  a  feature
-     with  the Feature_identifier `fname', or to inherit a
-     feature under the final name `fname', if and only  if
-     no other feature of `C' has that same name.

@@ -1,2 +1,0 @@
-Error: Unique constant declared of type other than INTEGER.
-What to do: change declared type to INTEGER, or make feature non-Unique. 

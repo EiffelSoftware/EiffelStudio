@@ -1,6 +1,0 @@
-VJAW, chapter 20, page 311
-
-     This is actually a consequence of the syntax rule
-     on page 311:  the target of an Assignment must be
-     a Writable,  defined  on  page  276  as either an
-	 attribute or a local entity (including Result).

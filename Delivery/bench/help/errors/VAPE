@@ -1,6 +1,0 @@
-VAPE, chapter 9 (Correctness), page 122
-
-     A Precondition of a routine `r' of  a  class  `C'  is
-     valid  if  and only if every feature whose final name
-     appears in any Assertion_clause is available to every
-     class to which `r' is available.

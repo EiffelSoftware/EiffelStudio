@@ -1,3 +1,0 @@
-Lace error: two clusters have the same path name. 
-What to do: remove one of the two clusters from Ace file, or change one
-  of the path names if they are meant to refer to different directories. 

@@ -1,3 +1,0 @@
-Error: Parent clause involves invalid type.
-What to do: make sure that all types appearing in the clause are
-  either class names or names of formal generic parameters of the class.

@@ -1,4 +1,0 @@
-Type error: target of creation is not writable.
-What to do: make sure that target (entity after second !) is
-  either an attribute of the class or a local entity of the
-  enclosing routine. (Local entities include Result for a function.)

@@ -1,2 +1,0 @@
-Error: no descendant class of `DYNAMIC' in the DC-set may be generic.
-What to do: make sure that the class has no generic parameter.

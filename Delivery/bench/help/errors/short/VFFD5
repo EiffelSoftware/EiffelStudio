@@ -1,3 +1,0 @@
-Error: incorrect signature for Prefix feature. 
-What to do: make sure that the Declaration_body describes an attribute
-  or a function with no argument, or choose a non-Prefix name.

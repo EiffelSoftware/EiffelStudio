@@ -1,4 +1,0 @@
-Error: Creation instruction on generic parameter uses call to
-       improper feature.
-What to do: make sure that feature of call is a creation feature
-            of the constraint class.

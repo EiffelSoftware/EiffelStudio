@@ -1,6 +1,0 @@
-VBAR, chapter 2 (Syntax, validity and semantics), page 27
-
-     Assignment rule
-
-     An Assignment is valid if  and  only  if  its  source
-     expression conforms to its target entity.

@@ -1,6 +1,0 @@
-Lace error: precompiled directory/file is unreadable.
-What to do: make sure that the directory/file exists and that appropriate
-  permissions are set ("read" for files, "read/execute" for directories).
-
-  You can also download a set of precompiled libraries from our web site
-  at http://eiffel.com/download.

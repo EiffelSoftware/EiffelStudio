@@ -1,8 +1,0 @@
-VDJR, chapter 10 (Feature adaptation), page 165
-
-     Join rule
-
-     It is valid for a class `C' to inherit two  different
-     features as deferred under the same final name if and
-     only if, after possible redeclaration  in  `C',  they
-     have identical signatures.

@@ -1,3 +1,0 @@
-Error: Routine has Rescue part, but is external or deferred.
-What to do: remove the Rescue part, or make the routine internal
-  (neither external nor deferred).

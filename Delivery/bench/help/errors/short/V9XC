@@ -1,3 +1,0 @@
-Lace error: an Ace file may not contain more that one `extending' clause.
-What to do: make sure to specify at most one `extendible' clause in
-  the Ace file.

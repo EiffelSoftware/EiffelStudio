@@ -1,2 +1,0 @@
-Error: Old expression is not valid (maybe it includes a local entity).
-What to do: make sure that expression could be used as function result.

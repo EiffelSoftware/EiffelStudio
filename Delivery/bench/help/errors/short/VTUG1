@@ -1,2 +1,0 @@
-Error: type has actual generic parameters, but base class is not generic.
-What to do: remove actual generic parameters, or make class generic. 

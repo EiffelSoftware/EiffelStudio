@@ -1,4 +1,0 @@
-Error: repeated inheritance violation
-  (this error should not occur as it is caught by other validity codes).
-What to do: check Repeated Inheritance Validity Constraint (ETL, chapter 11);
-  notify your ISE Eiffel supplier.  

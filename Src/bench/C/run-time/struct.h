@@ -156,7 +156,7 @@ typedef char *(*fnptr)();       /* The function pointer type */
 /* Predefined invariant routine id */
 #define INVARIANT_ID	1
 
-struct interface {
+struct p_interface {
 	void (*toc)();		/* Pattern from interpreter to C code */
 	fnptr toi;			/* Pattern from C code to interpreter */
 };
@@ -191,8 +191,8 @@ extern int *dle_fpatidtab;		/* Table of pattern id's indexed by body id's */
 /*
  * Pattern table for interface between C code and the interpreter
  */
-extern struct interface *pattern;
-extern struct interface fpattern[];
+extern struct p_interface *pattern;
+extern struct p_interface fpattern[];
 
 #endif
 #endif

@@ -74,11 +74,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				path := Environ.interpreted_string (use_name);
 				!!use_file_path.make_from_string (cluster.path);
 				use_file_path.set_file_name (path);
-				!!use_file.make_open_read (use_file_path);
-				if 
-					(not use_file.exists) or else
-					use_file.is_directory
-				then
+				!! use_file.make (use_file_path);
+				if (not use_file.exists) or else use_file.is_directory then
 					!!vd02;
 					vd02.set_cluster (cluster);
 					vd02.set_use_name (use_file_path);
@@ -90,6 +87,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					vd21.set_cluster (cluster);
 					Error_handler.insert_error (vd21);
 				else
+					use_file.open_read
 						-- Parse local ace file
 					Parser.parse_file (use_file_path);
 					cluster_prop ?= Parser.ast;

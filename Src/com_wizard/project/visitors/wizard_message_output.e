@@ -60,7 +60,7 @@ feature -- Basic operations
 	add_message (origin: ANY; reason: STRING) is
 			-- Display message `reason' from `origin'.
 		do
-			if Shared_wizard_environment.output_level = Output_all then
+			if Shared_wizard_environment.output_level = Output_all or forced_display then
 				output_window.add_message (reason)
 			end
 			add_log (Message, origin, reason)
@@ -70,7 +70,7 @@ feature -- Basic operations
 			-- Display message `reason' from `origin' without adding a new line.
 			-- Do not log (to avoid multiple logs for the same event).
 		do
-			if Shared_wizard_environment.output_level = Output_all then
+			if Shared_wizard_environment.output_level = Output_all or forced_display then
 				output_window.add_continuous_message (reason)
 			end
 		end
@@ -79,7 +79,7 @@ feature -- Basic operations
 			-- Display warning.
 		do
 			if Shared_wizard_environment.output_level = Output_warnings or 
-					Shared_wizard_environment.output_level = Output_all 
+					Shared_wizard_environment.output_level = Output_all or forced_display
 			then
 				output_window.add_warning (reason)
 			end
@@ -92,6 +92,29 @@ feature -- Basic operations
 			output_window.add_error (reason)
 			add_log (Error, origin, reason)
 		end
+
+	refresh is
+			-- Refresh message output.
+		do
+			output_window.refresh
+		end
+
+	set_forced_display is
+			-- Force display of output (independently of `output_level').
+		do
+			forced_display := True
+		end
+
+	set_normal_display is
+			-- Normal display of output (according to `output_level').
+		do
+			forced_display := False
+		end
+
+feature {NONE} -- Implementation
+
+	forced_display: BOOLEAN
+			-- Should next output be displayed indifferently of `output_level'?
 
 end -- class WIZARD_MESSAGE_OUTPUT
 

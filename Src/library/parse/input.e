@@ -9,16 +9,23 @@ indexing
 
 class INPUT inherit
 
-	LINKED_LIST [TOKEN]
+	ARRAYED_LIST [TOKEN]
 		rename 
-			item as token
-		export
-			{ANY} token
+			item as token,
+			make as arrayed_list_make
 		end
 
 creation
 
 	make
+
+feature -- Initialisation
+
+	make is
+			-- Create an empty document
+		do
+			arrayed_list_make (0)
+		end
 
 feature  -- Access
 

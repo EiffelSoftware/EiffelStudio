@@ -8,6 +8,7 @@ inherit
 		redefine
 			is_reference,
 			is_expanded,
+			is_separate,
 			is_valid,
 			same_as,
 			c_type,
@@ -23,6 +24,9 @@ feature
 	is_expanded: BOOLEAN;
 			-- Is the type expanded ?
 
+	is_separate: BOOLEAN;
+			-- Is the type separate ?
+
 	set_base_id (c: CLASS_ID) is
 			-- Assign `c' to `base_id'.
 		do
@@ -33,6 +37,12 @@ feature
 			-- Assign `b' to `is_expanded'.
 		do
 			is_expanded := b;
+		end;
+
+	set_is_separate (b: BOOLEAN) is
+			-- Assign `b' to `is_separate'.
+		do
+			is_separate := b;
 		end;
 
 	meta_generic: META_GENERIC is
@@ -71,6 +81,8 @@ feature
 						and then
 						other_cl_type.is_expanded = is_expanded
 						and then
+						other_cl_type.is_separate = is_separate
+						and then
 						other_cl_type.meta_generic = Void
 		end;
 
@@ -102,6 +114,9 @@ feature
 
 				is_expanded := True;
 				Result := exp;
+			elseif is_separate then
+				-- FIXME
+				Result := c_type.description
 			else
 				Result := c_type.description;
 			end;
@@ -117,6 +132,8 @@ feature
 		do
 			if is_expanded then
 				st.add_string ("expanded ");
+			elseif is_separate then
+				st.add_string ("separate ");
 			end;
 			base_class.e_class.append_signature (st)
 		end;
@@ -127,6 +144,8 @@ feature
 		do
 			if is_expanded then
 				file.putstring ("expanded ");
+			elseif is_separate then
+				file.putstring ("separate ");
 			end;
 			s := clone (base_class.class_name);
 			s.to_upper;
@@ -141,6 +160,8 @@ feature
 		do
 			if is_expanded then
 				Result := associated_expanded_class_type
+			elseif is_separate then
+				Result := associated_separate_class_type
 			else
 				types := base_class.types;
 				pos := types.index;
@@ -161,6 +182,16 @@ feature
 			is_expanded := true;
 		end;
 
+	associated_separate_class_type: CLASS_TYPE is
+			-- Associated separate class type
+		require
+			is_separate: is_separate
+		do
+			is_separate := false;
+			Result := associated_class_type;
+			is_separate := true;
+		end;
+
 	type_id: INTEGER is
 			-- Type id of the correponding class type
 		do
@@ -176,6 +207,7 @@ feature
 	generate_cecil_value (file: INDENT_FILE) is
 			-- Generate cecil value
 		do
+				-- FIXME????: separate
 			if not is_expanded then
 				file.putstring ("SK_DTYPE");
 			else
@@ -193,6 +225,7 @@ feature
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		do
+				-- FIXME????: separate
 			if not is_expanded then
 				Result := Sk_ref + (type_id - 1);
 			else
@@ -204,6 +237,7 @@ feature
 
 	cecil_value: INTEGER is
 		do
+				-- FIXME????: separate
 			if not is_expanded then
 				Result := Sk_dtype
 			else
@@ -231,6 +265,7 @@ feature
 		do
 			!!Result
 			Result.set_is_expanded (is_expanded);
+			Result.set_is_separate (is_separate);
 			Result.set_base_class_id (base_id)
 		end
 

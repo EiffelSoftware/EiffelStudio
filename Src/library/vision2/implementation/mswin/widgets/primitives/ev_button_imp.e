@@ -29,7 +29,7 @@ inherit
 		undefine
 			pixmap_size_ok
 		redefine
-			add_pixmap
+			set_pixmap
 		end
 
 	EV_FONTABLE_IMP
@@ -134,6 +134,20 @@ feature -- Status setting
 			set_minimum_height (h)
 		end
 
+feature -- Element change
+
+	set_pixmap (pix: EV_PIXMAP) is
+			-- Make `pix' the new pixmap of the widget.
+		local
+			local_style: INTEGER
+		do
+			{EV_PIXMAPABLE_IMP} Precursor (pix)
+--			local_style := clear_flag (style, Bs_pushbutton)
+--			local_style := set_flag (style, Bs_ownerdraw)
+--			set_style (local_style)
+			set_default_minimum_size
+		end
+
 feature -- Event - command association
 
 	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -168,18 +182,6 @@ feature {NONE} -- WEL Implementation
 				disable_default_processing
 			end
  		end
-
-	add_pixmap (pixmap: EV_PIXMAP) is
-			-- Add a pixmap in the container
-		local
-			local_style: INTEGER
-		do
-			{EV_PIXMAPABLE_IMP} Precursor (pixmap)
---			local_style := clear_flag (style, Bs_pushbutton)
---			local_style := set_flag (style, Bs_ownerdraw)
---			set_style (local_style)
-			set_default_minimum_size
-		end
 
 	background_brush: WEL_BRUSH is
 		do
@@ -282,11 +284,11 @@ feature {NONE} -- Basic operation
 			-- If sensitive, we draw everything normaly.
 			if not insensitive then
 				if pixmap_imp /= Void and text /= "" then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 					inrect.set_left (pixmap_imp.width + 5)
 					dc.draw_centered_text (text, inrect)
 				elseif pixmap_imp /= Void then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 				elseif text /= "" then
 					dc.draw_centered_text (text, inrect)
 				end
@@ -295,13 +297,13 @@ feature {NONE} -- Basic operation
 			-- We don't set the pixmap gray, because the quality is bad.
 			else
 				if pixmap_imp /= Void and text /= "" then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 					inrect.set_left (pixmap_imp.width + 5)
 					tx := inrect.left + (inrect.width - dc.string_width (text)) // 2
 					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2) 
 					draw_insensitive_text (dc, text, tx, ty)
 				elseif pixmap_imp /= Void then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 				elseif text /= "" then
 					tx := inrect.left + (inrect.width - dc.string_width (text)) // 2
 					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2)

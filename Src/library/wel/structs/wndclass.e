@@ -10,8 +10,7 @@ class
 inherit
 	WEL_STRUCTURE
 		rename
-			make as structure_make,
-			class_name as exception_class_name
+			make as structure_make
 		end
 
 creation
@@ -403,7 +402,7 @@ feature -- Basic operations
 			no_registered: not registered
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

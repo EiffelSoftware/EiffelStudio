@@ -36,8 +36,78 @@ feature -- Access
 			retry
 		end
 
+	pretty_xml (a_xml: STRING): STRING is
+			-- Pretty formatted XML of `a_xml'
+		require
+			xml_not_void: a_xml /= Void
+		local
+			retried: BOOLEAN
+			l_parser: XM_EIFFEL_PARSER
+		do
+			if not retried then		
+				create Result.make_empty
+				create l_parser.make
+				pretty_formatter.format (Result)
+				l_parser.set_callbacks (standard_callbacks_pipe (<<pretty_formatter>>))
+				l_parser.parse_from_string (a_xml)
+				check
+					ok_parsing: l_parser.is_correct
+				end
+				if not l_parser.is_correct then
+					Result := l_parser.last_error_extended_description
+				else
+					Result := pretty_formatter.last_output
+				end
+			end		
+		rescue
+			retried := True
+			retry
+		end	
+
+	output_escaped (a_string: STRING): STRING is
+			-- Escape and output content string.  The string "<>&" will become
+			-- "&gt;&lt;&amp;"
+		require
+			a_string_not_void: a_string /= Void
+		local
+			last_escaped: INTEGER
+			i: INTEGER
+			cnt: INTEGER
+			a_char: INTEGER
+		do
+			create Result.make_empty
+			from
+				last_escaped := 0
+				i := 1
+				cnt := a_string.count
+			invariant
+				last_escaped <= i
+			until
+				i > cnt
+			loop
+				a_char := a_string.item_code (i)
+				if is_escaped (a_char) then
+					if last_escaped < i - 1 then
+						Result := Result + (a_string.substring (last_escaped + 1, i - 1))
+					end
+					Result := Result + (escaped_char (a_char))
+					last_escaped := i
+				end
+				i := i + 1
+			end
+				-- At exit.
+			if last_escaped = 0 then
+				Result := Result + (a_string)
+			elseif last_escaped < i - 1 then
+				Result := Result + (a_string.substring (last_escaped + 1, i - 1))
+			end
+		end
+
 	error_description: STRING
 			-- Error string
+
+	element_renamed: BOOLEAN
+			-- Indicates if an element was renamed through last call to `set_element_name'
 
 feature -- Status Setting
 
@@ -166,6 +236,91 @@ feature -- Status Setting
 			end
 		end
 
+	set_element_name (composite: XM_COMPOSITE; old_element: ARRAYED_LIST [STRING]; new_name: STRING; start_index: INTEGER) is
+			-- Rename all elements in `composite' conforming to `old_name' to `new_name'.  `start_index' indicates
+			-- index to begin matching in `old_element'.  If an element was renamed set `element_renamed' to true.
+			-- Result indicates if indeed an element in `composite' was renamed.
+		require
+			composite_not: composite /= Void			
+			valid_index: start_index > 0
+		local
+			l_elem: XM_ELEMENT
+			l_temp_bool: BOOLEAN
+		do
+			from
+				composite.start
+			until
+				composite.after
+			loop
+				l_elem ?= composite.item_for_iteration				
+				if l_elem /= Void then
+					if l_elem.name.is_equal (old_element.i_th (start_index)) then
+						if start_index = old_element.count then
+								-- Match found
+							l_elem.set_name (new_name)
+							set_element_renamed (True)
+						else
+							set_element_name (l_elem, old_element, new_name, start_index + 1)							
+						end
+					end				
+					if not l_elem.elements.is_empty then
+							-- Begin search with `l_elem' as root element
+						set_element_name (l_elem, old_element, new_name, 1)
+					end
+				end
+				composite.forth				
+			end
+		end
+
+	wipe_out_elements (a_el: XM_ELEMENT) is
+			-- Remove all elements from `a_el'.  Required because a simple `wipe_out'
+			-- will remove attributes also in GOBO.
+		require
+			element_not_void: a_el /= Void
+		local
+			l_el: like a_el
+		do
+			from
+				a_el.start
+			until
+				a_el.after
+			loop
+				l_el ?= a_el.item_for_iteration
+				if l_el /= Void then
+					a_el.delete (l_el)
+				end
+				a_el.forth
+			end
+		end		
+
+	wipe_out_text (a_el: XM_ELEMENT) is
+			-- Remove all text from `a_el'.
+		require
+			element_not_void: a_el /= Void
+		local
+			l_el: XM_CHARACTER_DATA
+		do
+			from
+				a_el.start
+			until
+				a_el.after
+			loop
+				l_el ?= a_el.item_for_iteration
+				if l_el /= Void then
+					a_el.delete (l_el)
+					wipe_out_text (a_el)
+				else					
+					a_el.forth	
+				end
+			end
+		end	
+
+	set_element_renamed (a_flag: BOOLEAN) is
+			-- Set to indicate if element has been renamed through call to `set_element_name'
+		do
+			element_renamed := a_flag
+		end		
+
 feature -- Commands
 
 	deserialize_text (a_text: STRING): XM_DOCUMENT is
@@ -179,9 +334,10 @@ feature -- Commands
 			l_xm_concatenator: DOCUMENT_XML_READER
 		do
 			create l_parser.make
+			l_parser.set_string_mode_mixed
 			create l_tree_pipe.make
 			create l_xm_concatenator.make_null
-			l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+			l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))			
 			l_parser.parse_from_string (a_text)
 			if l_parser.is_correct then 
 				if not l_tree_pipe.error.has_error then
@@ -198,7 +354,7 @@ feature -- Commands
 	deserialize_document (a_doc_name: STRING): XM_DOCUMENT is
 			-- Retrieve xml document associated to file with
 			-- name 'a_doc_name'.  If deserialization fails, return Void and
-			-- put error in `error_descirption'.
+			-- put error in `error_description'.
 		require
 			doc_name_not_void: a_doc_name /= Void
 		local
@@ -225,37 +381,6 @@ feature -- Query
 			l_xm_doc := deserialize_text (xml)
 			Result := l_xm_doc /= Void
 		end		
-
-feature -- Access
-
-	pretty_xml (a_xml: STRING): STRING is
-			-- Pretty formatted XML of `a_xml'
-		require
-			xml_not_void: a_xml /= Void
-		local
-			retried: BOOLEAN
-			l_parser: XM_EIFFEL_PARSER
-			l_filter: XM_PRETTY_FORMATTER
-		do
-			if not retried then		
-				create Result.make_empty
-				create l_parser.make
-				create l_filter.make (Result)
-				l_parser.set_callbacks (standard_callbacks_pipe (<<l_filter>>))
-				l_parser.parse_from_string (a_xml)
-				check
-					ok_parsing: l_parser.is_correct
-				end
-				if not l_parser.is_correct then
-					Result := l_parser.last_error_extended_description
-				else
-					Result := l_filter.last_output
-				end
-			end		
-		rescue
-			retried := True
-			retry
-		end	
 
 feature -- Storage
 
@@ -289,53 +414,12 @@ feature -- Storage
 			retry
 		end
 
-feature -- Escaping
+feature {NONE} -- Implementation
 
 	is_escaped (a_char: INTEGER): BOOLEAN is
 			-- Is this an escapable character? (<, >, &)
 		do
-			Result := a_char = Lt_char.code
-				or a_char = Gt_char.code
-				or a_char = Amp_char.code
-		end
-
-	output_escaped (a_string: STRING): STRING is
-			-- Escape and output content string.  The string "<>&" will become
-			-- "&gt;&lt;&amp;"
-		require
-			a_string_not_void: a_string /= Void
-		local
-			last_escaped: INTEGER
-			i: INTEGER
-			cnt: INTEGER
-			a_char: INTEGER
-		do
-			create Result.make_empty
-			from
-				last_escaped := 0
-				i := 1
-				cnt := a_string.count
-			invariant
-				last_escaped <= i
-			until
-				i > cnt
-			loop
-				a_char := a_string.item_code (i)
-				if is_escaped (a_char) then
-					if last_escaped < i - 1 then
-						Result := Result + (a_string.substring (last_escaped + 1, i - 1))
-					end
-					Result := Result + (escaped_char (a_char))
-					last_escaped := i
-				end
-				i := i + 1
-			end
-				-- At exit.
-			if last_escaped = 0 then
-				Result := Result + (a_string)
-			elseif last_escaped < i - 1 then
-				Result := Result + (a_string.substring (last_escaped + 1, i - 1))
-			end
+			Result := a_char = Lt_char.code or a_char = Gt_char.code or a_char = Amp_char.code
 		end
 
 	escaped_char (a_char: INTEGER): STRING is
@@ -354,6 +438,12 @@ feature -- Escaping
 			else
 				Result := "&#" + a_char.out + ";"
 			end
+		end
+
+	pretty_formatter: XM_PRETTY_FORMATTER is
+			-- Formatter for pretty XML
+		once
+			create Result
 		end
 
 end -- class XML_ROUTINES

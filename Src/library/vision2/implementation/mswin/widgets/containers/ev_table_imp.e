@@ -126,7 +126,7 @@ feature -- Status settings
 			rows_value.first.put_i_th (value, 3)
 			if not ev_children.empty then
 				initialize_at_minimum
-			end			
+			end
 		end
 
 	set_column_spacing (value: INTEGER) is
@@ -170,12 +170,7 @@ feature -- Status settings
 
 			-- We show the child and resize the container
 			child_imp.show
-			-- XX Normally the feature set_parent is called for all the
-			-- children then it should call on_first_display
---			if already_displayed then
---				child_imp.on_first_display
-				update_display
---			end
+			update_display
 		end
 
 feature -- Element change
@@ -314,7 +309,7 @@ feature {NONE} -- Implementation attributes
 			--      In the second field of the 0 index, there is the homogeneous value
 			--      of the rows.
 			-- 3 -> Did the current row received any rest already (0 or 1)?
-			--		In the thired field of the 0 indes, there is the row_spacing
+			--		In the thired field of the 0 index, there is the row_spacing
 			--		value stored.
 			-- 4 -> What is the current height of the row?
 			--		In the forth field of the 0 index, there is the value of the border.
@@ -322,7 +317,7 @@ feature {NONE} -- Implementation attributes
 feature {NONE} -- Basic operation
 
 	expand_line (line: ARRAYED_LIST [FIXED_LIST [INTEGER]]; last: INTEGER; childexpand: BOOLEAN) is
-				-- Expand a list to have `last' for last index.
+				-- Expand a list to have `last' number of items in it.
 		local
 			index: INTEGER
 			fix: FIXED_LIST [INTEGER]
@@ -583,7 +578,7 @@ feature {NONE} -- Resize Implementation
 feature {NONE} -- Implementation to resize the table when it comes from the bottom.
 
 	first_body_loop (line: ARRAYED_LIST [FIXED_LIST [INTEGER]]; value, last: INTEGER) is
-			-- Loop on the one-cell widget, to check there minimum parameter.
+			-- Loop on the one-cell widget, to check their minimum parameter.
 			-- If `value' is bigger than the biggest element of the current line (`last'),
 			-- we set this new value for the line. Then, if it is bigger than the homogeneous
 			-- value, we set a new homogeneous value.
@@ -762,10 +757,14 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 			last: INTEGER
 			cm: ARRAYED_LIST [FIXED_LIST [INTEGER]]
 			rw: ARRAYED_LIST [FIXED_LIST [INTEGER]]
+			homogeneous_value: INTEGER
+			cspace, rspace: INTEGER
 		do
 			-- We use local variables to gain some speed
 			cm := columns_value
 			rw := rows_value
+			cspace := column_spacing
+			rspace := row_spacing
 
 			-- When the table is homogeneous, we don't care about the `expand'
 			-- parameter of the rows and columns.
@@ -773,19 +772,21 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 				-- We prepare the columns :
 				from
 					cm.start
+					homogeneous_value := cm.first @ 2 + cspace
 				until
 					cm.after
 				loop
-					cm.item.put_i_th ((cm.first @ 2 + column_spacing) * (cm.index - 1), 4)
+					cm.item.put_i_th (homogeneous_value * (cm.index - 1), 4)
 					cm.forth
 				end
 				-- the rows :
 				from
 					rw.start
+					homogeneous_value := rw.first @ 2 + rspace
 				until
 					rw.after
 				loop
-					rw.item.put_i_th ((rw.first @ 2 + row_spacing) * (rw.index - 1), 4)
+					rw.item.put_i_th (homogeneous_value * (rw.index - 1), 4)
 					rw.forth
 				end
 			-- In the non-homogeneous mode, the `expand' attribute has his
@@ -800,7 +801,7 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 				until
 					cm.after
 				loop
-					last := last + cm.item @ 2 + column_spacing 
+					last := last + cm.item @ 2 + cspace 
 					cm.item.put_i_th (last, 4)
 					cm.forth
 				end
@@ -813,14 +814,16 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 				until
 					rw.after
 				loop
-					last := last + rw.item @ 2 + row_spacing
+					last := last + rw.item @ 2 + rspace
 					rw.item.put_i_th (last, 4)
 					rw.forth
 				end
 			end
+
 			-- We initialize the rest to 0 to be sure the proportion won't change
 			initialize_rest (cm, 0)
 			initialize_rest (rw, 0)
+
 			-- We resize the window and the children
 			set_minimum_width (cm.last.last - column_spacing)
 			set_minimum_height (rw.last.last - row_spacing)
@@ -850,6 +853,7 @@ feature {NONE} -- EiffelVision implementation
 			child_minwidth_changed (0, Void)
 			child_minheight_changed (0, Void)
 			initialize_at_minimum
+			parent_ask_resize (child_cell.width, child_cell.height)
   		end
 
 	update_display is
@@ -862,7 +866,6 @@ feature {NONE} -- EiffelVision implementation
 				child_minwidth_changed (0, Void)
 				child_minheight_changed (0, Void)
 				initialize_at_minimum
---				initialize_at_minimum
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
 		end

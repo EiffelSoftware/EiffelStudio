@@ -5,7 +5,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	EV_DYNAMIC_TABLE_IMP
 
@@ -16,6 +15,7 @@ inherit
 		redefine
 			make,
 			add_child,
+			remove_child,
 			child_added,
 			set_child_position,
 			child_minwidth_changed,
@@ -64,10 +64,12 @@ feature -- Status settings
 			table_child.set_attachment (top + 1, left + 1, bottom + 1, right + 1)
 
 			-- If it was already_displayed, we need to propagate the change
-			if already_displayed then
-				child_minwidth_changed (child_imp.minimum_width, child_imp)
-				child_minheight_changed (child_imp.minimum_height, child_imp)
-			end
+			update_display
+--			if already_displayed then
+--				child_minwidth_changed (child_imp.minimum_width, child_imp)
+--				child_minheight_changed (child_imp.minimum_height, child_imp)
+--				parent_ask_resize (child_cell.width, child_cell.height)
+--			end
 		end
 
 feature -- Element change
@@ -75,8 +77,11 @@ feature -- Element change
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. Several children
 			-- possible.
+		local
+			wid: EV_WIDGET
 		do
-			set_child_position (child_imp.interface, row_index, column_index, row_index + 1, column_index + 1)
+			wid ?= child_imp.interface
+			set_child_position (wid, row_index, column_index, row_index + 1, column_index + 1)
 			if is_row_layout then
 				if column_index + 1 >= finite_dimension then
 					row_index := row_index + 1
@@ -91,7 +96,17 @@ feature -- Element change
 				else
 					row_index := row_index + 1
 				end
-			end			
+			end
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+			-- When we remove a child, we replace the others
+		local
+			tchild: EV_TABLE_CHILD_IMP
+		do
+
 		end
 
 feature -- Assertion

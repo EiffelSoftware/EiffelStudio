@@ -145,6 +145,7 @@ feature
 			result_used: BOOLEAN;
 			source_type: TYPE_I;
 			target_type: TYPE_I;
+			saved_context: like context
 		do
 				-- The target is always expanded in-line for de-referencing.
 			context.init_propagation;
@@ -161,7 +162,7 @@ feature
 			if not last_in_result then
 				analyze_simple_assignment;
 			end;
-			context.save;
+			!!saved_context.make_from_context (context);
 			if simple_op_assignment = No_simple_op then
 				source_type := context.real_type (source.type);
 				target_type := context.real_type (target.type);
@@ -270,7 +271,7 @@ feature
 				-- needed).
 			if last_in_result and target.is_result and not source_has_gcable
 			then
-				context.restore;
+				context.restore (saved_context);
 				source.unanalyze;
 				context.init_propagation;
 				source.propagate (No_register);

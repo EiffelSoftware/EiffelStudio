@@ -81,7 +81,10 @@ feature -- basic Operations
 		local
 			li: LINKED_LIST[CLASS_NAME]
 			dir: DIRECTORY
+			fi: PLAIN_TEXT_FILE
 			b: BOOLEAN
+			f_name: FILE_NAME
+			class_number: INTEGER
 		do
 			if not b then
 				if wizard_information.compile_project then
@@ -107,14 +110,20 @@ feature -- basic Operations
 				total := total + 2
 			end
 			create repositories.make
+			create class_generator
+			template_db_table_content := retrieve_resource_file_content (Template_db_table_name)
+			template_db_table_descr_content := retrieve_resource_file_content (Template_db_table_descr_name)
 			from
-				progress.set_proportion(0)
+				progress.set_proportion (0)
 				iteration := 0
 				li.start
+				class_number := 1
 			until
 				li.after
 			loop
-				generate_class(li.item.table_name)
+				generate_class (li.item.table_name, class_number, template_db_table_content, Db_table_suffix)
+				generate_class (li.item.table_name, class_number, template_db_table_descr_content, Db_table_descr_suffix)
+				class_number := class_number + 1
 				li.forth
 			end
 				-- Modified by Cedric R.
@@ -147,60 +156,79 @@ feature -- basic Operations
 		end
 
 
-feature -- Processing
+feature {NONE} -- Processing
 
-	generate_class(s: STRING) is
-			-- Generate class according to class whose name is 's'.
+	generate_class (s: STRING; class_number: INTEGER; template, suffix: STRING) is
+			-- Generate class according to class whose name is `s'.
 		require
 			s /= Void
 		local
 			rep: DB_REPOSITORY
-			f: PLAIN_TEXT_FILE
+			fi: PLAIN_TEXT_FILE
 			f_name: FILE_NAME
-			s1: STRING
-			s_f: STRING
+			filename: STRING
+			generated_class_content: STRING
 		do
-			s1 := clone(s)
 			s.replace_substring_all (" ","_")
-			notify_user ("generating class "+s)
+			notify_user ("generating class " + s)
 			create rep.make (s)
 			rep.load
 			repositories.extend (rep)
-			create f_name.make_from_string (wizard_information.location)
-			s1 := clone (s)
-			s1.to_lower
-			normalize (s1)
-			f_name.extend (s1)
-			f_name.add_extension ("e")
-			create f.make_open_write (f_name)
-			rep.generate_class (f)
-			f.close
-			create f.make_open_read_write (f_name)
-			f.read_stream (f.count)
-			s_f:= clone (f.last_string)
-			specific_code (s_f)
-			f.close
-			f.wipe_out
-
-			create f.make_open_read_write (f_name)
-			f.put_string (s_f)
-			f.close
-			
-				-- Added by Cedric R 
-			if wizard_information.new_project and wizard_information.vision_example then
-				create f.make_open_read_write (f_name)
-				f.read_stream (f.count)
-				s_f:= clone (f.last_string)
-					-- Add the inheritance from 'queryable' containing tags.
-				add_get_feature (s_f)
-					-- Replace tags (for inheritance) owing to rep.
-				replace_tags (s_f, rep)
-				f.close
-				f.wipe_out
-				create f.make_open_read_write (f_name)
-				f.put_string (s_f)
-				f.close
+			class_generator.set_template_content (template)
+			class_generator.set_table_description (rep)
+			class_generator.generate_file
+			if class_generator.is_ok then
+				generated_class_content := class_generator.generated_file_content
+				generated_class_content.replace_substring_all (Class_number_tag, class_number.out)
+				create f_name.make_from_string (wizard_information.location)
+				filename := rep.repository_name
+				filename.to_lower
+				filename.append (suffix)
+				f_name.set_file_name (filename)
+				create fi.make (f_name)
+				if fi.exists then
+					fi.wipe_out
+					fi.open_write
+				else
+					fi.open_append
+				end
+				fi.putstring (generated_class_content)
+				fi.close
 			end
+--			s1 := clone (s)
+--			s1.to_lower
+--			normalize (s1)
+--			f_name.extend (s1)
+--			f_name.add_extension ("e")
+--			create f.make_open_write (f_name)
+--			rep.generate_class (f)
+--			f.close
+--			create f.make_open_read_write (f_name)
+--			f.read_stream (f.count)
+--			s_f:= clone (f.last_string)
+--			specific_code (s_f)
+--			f.close
+--			f.wipe_out
+--
+--			create f.make_open_read_write (f_name)
+--			f.put_string (s_f)
+--			f.close
+--			
+--				-- Added by Cedric R 
+--			if wizard_information.new_project and wizard_information.vision_example then
+--				create f.make_open_read_write (f_name)
+--				f.read_stream (f.count)
+--				s_f:= clone (f.last_string)
+--					-- Add the inheritance from 'queryable' containing tags.
+--				add_get_feature (s_f)
+--					-- Replace tags (for inheritance) owing to rep.
+--				replace_tags (s_f, rep)
+--				f.close
+--				f.wipe_out
+--				create f.make_open_read_write (f_name)
+--				f.put_string (s_f)
+--				f.close
+--			end
 		end
 
 	specific_code (s: STRING) is
@@ -686,7 +714,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-feature  -- Implementation
+feature {NONE} -- Implementation
 
 	repositories: LINKED_LIST [DB_REPOSITORY]
 		-- Repositories relative to Current DB.
@@ -694,4 +722,56 @@ feature  -- Implementation
 	to_compile: BOOLEAN
 		-- Is the project to be compiled ?
 
+	Template_db_table_name: STRING is "template_db_table.e"
+		-- Name of the resource template for the class storing information
+		-- on a table row (of a specific database table).
+
+	Template_db_table_descr_name: STRING is "template_db_table_descr.e"
+		-- Name of the resource template for the class containing information
+		-- on a specific database table.
+
+	template_db_table_content: STRING
+		-- Content of the resource template for the class storing information
+		-- on a table row (of a specific database table).
+
+	template_db_table_descr_content: STRING
+		-- Content of the resource template for the class containing information
+		-- on a specific database table.
+
+	Db_table_suffix: STRING is ".e"
+		-- Suffix for the class storing information
+		-- on a table row (of a specific database table).
+
+	Db_table_descr_suffix: STRING is "_description.e"
+		-- Suffix for the class containing information
+		-- on a specific database table.
+
+	Class_number_tag: STRING is "<CI>"	
+		-- Tag representing class number.
+
+	class_generator: DB_CLASS_GENERATOR
+		-- Tool used to generate classes related to a specific database table.
+
+	retrieve_resource_file_content (file_name: STRING): STRING is
+			-- Return content of resource file named `file_name'.
+		local
+			f_name: FILE_NAME
+			fi: PLAIN_TEXT_FILE
+		do
+			create f_name.make_from_string (wizard_resources_path)
+			f_name.set_file_name (Template_db_table_name)
+			create fi.make (f_name)
+			if fi.exists and then fi.is_readable then
+				fi.open_read
+				fi.read_stream (fi.count)
+				Result := clone (fi.last_string)
+				fi.close
+			else
+			 	-- Add error handling.
+			 	Result := ""
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
 end -- class DB_FINISH

@@ -44,8 +44,6 @@ feature
 	popup is
 			-- Popup a popup shell with no grab on it.
 		deferred
-		ensure
-			is_popped_up
 		end;
 
 	set_cascade_grab is

@@ -19,7 +19,8 @@ inherit
 			child_added,
 			set_child_position,
 			compute_minimum_width,
-			compute_minimum_height
+			compute_minimum_height,
+			compute_minimum_size
 		end
 
 creation
@@ -53,17 +54,22 @@ feature -- Status settings
 			end
 
 			-- First, we change the number of cells of the table if it is too small.
-			expand_line (columns_value, right, True)
-			expand_line (rows_value, bottom, True)
+			if right > columns then
+				initialize_columns (right)
+			end
+			if bottom > rows then
+				initialize_rows (bottom)
+			end
 
 			-- Then, we add the children by creating a table child with
 			-- the given information.
-			!! table_child.make (child_imp, Current)
+			create table_child.make (child_imp, Current)
 			ev_children.extend (table_child)
-			-- The list start at one, then we change the attachment
-			table_child.set_attachment (top + 1, left + 1, bottom + 1, right + 1)
 
-			-- If it was already_displayed, we need to propagate the change
+			-- The list start at one, then we change the attachment
+			table_child.set_attachment (top, left, bottom, right)
+
+			-- We show the child and resize the container
 			notify_change (1 + 2)
 		end
 
@@ -101,7 +107,9 @@ feature -- Element change
 		local
 			tchild: EV_TABLE_CHILD_IMP
 		do
-
+			tchild := find_widget_child (child_imp)
+			ev_children.prune_all (tchild)
+			notify_change (2 + 1)
 		end
 
 feature -- Assertion
@@ -119,25 +127,34 @@ feature {NONE} -- Implementation
 			-- No need for the second loop.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			minimums: ARRAYED_LIST [INTEGER]
 			tchild: EV_TABLE_CHILD_IMP
+			right, mw: INTEGER
 			cur: CURSOR
 		do
 			list := ev_children
-			clear_line (columns_value)
+			columns_minimum.make_filled (columns)
+
 			-- A first loop for the children that take only one cell
 			from
 				cur := list.cursor
+				minimums := columns_minimum
 				list.start
 			until
 				list.after
 			loop
 				tchild := list.item
-				if (tchild.right_attachment - tchild.left_attachment = 1) then
-					first_body_loop (columns_value, tchild.widget.minimum_width, tchild.right_attachment)	
+				right := tchild.right_attachment
+				if (right - tchild.left_attachment = 1) then
+					mw := tchild.widget.minimum_width
+					if mw > minimums.i_th (right) then
+						minimums.put_i_th (mw + column_spacing, right)
+					end	
 				end
 				list.forth
 			end
 			list.go_to (cur)
+			internal_set_minimum_width (columns_sum)
 		end
 
 	compute_minimum_height is
@@ -145,25 +162,79 @@ feature {NONE} -- Implementation
 			-- No need for the second loop.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			minimums: ARRAYED_LIST [INTEGER]
 			tchild: EV_TABLE_CHILD_IMP
+			bottom, mh: INTEGER
 			cur: CURSOR
 		do
 			list := ev_children
-			clear_line (rows_value)
+			rows_minimum.make_filled (rows)
+
 			-- A first loop for the children that take only one cell
 			from
 				cur := list.cursor
+				minimums := rows_minimum
 				list.start
 			until
 				list.after
 			loop
 				tchild := list.item
-				if (tchild.bottom_attachment - tchild.top_attachment = 1) then
-					first_body_loop (rows_value, tchild.widget.minimum_height, tchild.bottom_attachment)
+				bottom := tchild.bottom_attachment
+				if (bottom - tchild.top_attachment = 1) then
+					mh := tchild.widget.minimum_height
+					if mh > minimums.i_th (bottom) then
+						minimums.put_i_th (mh + row_spacing, bottom)
+					end	
 				end
 				list.forth
 			end
 			list.go_to (cur)
+			internal_set_minimum_height (rows_sum)
+		end
+
+	compute_minimum_size is
+			-- Recompute the minimum size of the object.
+		local
+			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			minrow, mincol: ARRAYED_LIST [INTEGER]
+			tchild: EV_TABLE_CHILD_IMP
+			bottom, mh: INTEGER
+			right, mw: INTEGER
+			cur: CURSOR
+		do
+			list := ev_children
+			initialize_rows (rows)
+
+			-- A first loop for the children that take only one cell
+			from
+				cur := list.cursor
+				minrow := rows_minimum
+				mincol := columns_minimum
+				list.start
+			until
+				list.after
+			loop
+				tchild := list.item
+				bottom := tchild.bottom_attachment
+				right := tchild.right_attachment
+				if (bottom - tchild.top_attachment = 1) then
+					mh := tchild.widget.minimum_height
+					if mh > minrow.i_th (bottom) then
+						minrow.put_i_th (mh + row_spacing, bottom)
+					end	
+				end
+				if (right - tchild.left_attachment = 1) then
+					mw := tchild.widget.minimum_width
+					if mw > mincol.i_th (right) then
+						mincol.put_i_th (mw + column_spacing, right)
+					end	
+				end
+				list.forth
+			end
+			list.go_to (cur)
+			sum_rows_minimums
+			sum_columns_minimums
+			internal_set_minimum_size (columns_sum, rows_sum)
 		end
 
 end -- class EV_DYNAMIC_TABLE_IMP

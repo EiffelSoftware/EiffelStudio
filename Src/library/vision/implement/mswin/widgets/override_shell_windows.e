@@ -96,6 +96,7 @@ feature -- Status setting
 		do
 			if exists then
 				wel_show
+				shown := True
 			else
 				realize		
 			end
@@ -113,6 +114,7 @@ feature -- Status setting
 			end
 			if exists then 
 				wel_hide
+				shown := False
 			end
 		end
 

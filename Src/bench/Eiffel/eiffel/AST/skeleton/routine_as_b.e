@@ -248,6 +248,8 @@ feature -- Type check, byte code and dead code removal
 						vrle2.set_local_name (local_name);
 						Error_handler.insert_error (vrle2);
 					elseif
+						context.feature_table.has (local_name)
+					then
 							-- The local name is a feature name of the
 							-- current analyzed class.
 						!!vrle1;

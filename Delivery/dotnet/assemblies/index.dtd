@@ -1,0 +1,12 @@
+<!-- index.dtd - Index Document Type Definition for XML -->
+
+
+<!ELEMENT assemblies (assembly_folder_name+)>
+
+<!-- Assembly folder name-->
+<!ELEMENT assembly_folder_name (#PCDATA)>
+
+
+<!-- 
+End of Document Type Definition
+-->

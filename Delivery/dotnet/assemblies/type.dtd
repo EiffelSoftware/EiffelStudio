@@ -1,0 +1,253 @@
+<!-- type.dtd - Reflection interface Document Type Definition for XML -->
+
+
+<!-- 
+An Eiffel class contains three parts: header, body and footer. 
+There may be no footer (if there are no invariants). 
+-->
+<!ELEMENT class (header, body, footer*)>
+
+<!--
+Eiffel class header begins with indexing clauses and ends with list of creation routine names.
+There may be no inherit clauses (if class is not inherited).
+There may be no creation routines (if class is deferred).
+-->
+<!ELEMENT header (modified*, frozen, expanded, deferred, generic, generic_derivations*, constraints*, class_name, alias, inherit*, create_none)>
+
+<!-- Has class been modified? -->
+<!ELEMENT modified (#PCDATA)>
+
+<!-- Is class frozen? -->
+<!ELEMENT frozen (#PCDATA)>
+
+<!-- Is class expanded? -->
+<!ELEMENT expanded (#PCDATA)>
+
+<!-- Is class deferred? -->
+<!ELEMENT deferred (#PCDATA)>
+
+<!-- Is class generic? -->
+<!ELEMENT generic (#PCDATA)>
+
+<!-- Class generic derivations -->
+<!ELEMENT generic_derivations (generic_derivation+)>
+
+<!-- Generic derivations -->
+<!ELEMENT generic_derivation (derivation_types_count, generic_type+)>
+
+<!-- Derivation types count -->
+<!ELEMENT derivation_types_count (#PCDATA)>
+
+<!-- Generic type -->
+<!ELEMENT generic_type (generic_type_eiffel_name, generic_type_external_name)>
+
+<!-- Generic type Eiffel name -->
+<!ELEMENT generic_type_eiffel_name (#PCDATA)>
+
+<!-- Generic type .NET name -->
+<!ELEMENT generic_type_external_name (#PCDATA)>
+
+<!-- Generic type constraints -->
+<!ELEMENT constraints (constraint+)>
+
+<!-- Generic type constraint -->
+<!ELEMENT constraint (#PCDATA)>
+
+<!-- Eiffel class name -->
+<!ELEMENT class_name (#PCDATA)>
+
+<!-- 
+Alias contains .NET strong name. 
+There may be no public key (if assembly is not shared). 
+-->
+<!ELEMENT alias (simple_name, namespace*)>
+
+<!-- .NET simple type name-->
+<!ELEMENT simple_name (#PCDATA)>
+
+<!-- Namespace defining .NET type -->
+<!ELEMENT namespace (#PCDATA)>
+
+
+<!-- 
+Inherit clause contains class parents and possible inherit clauses 
+(i.e. undefine, rename, redefine, select and export clauses).
+-->
+<!ELEMENT inherit (parent+)>
+
+<!-- Inheritance clauses are related to one parent -->
+<!ELEMENT parent (parent_name, undefine*, rename*, redefine*, select*, export*)>
+
+<!-- Parent Eiffel name -->
+<!ELEMENT parent_name (#PCDATA)>
+
+<!-- List of undefine clauses -->
+<!ELEMENT undefine (#PCDATA)>
+
+<!-- List of rename clauses -->
+<!ELEMENT rename (#PCDATA)>
+
+<!-- List of redefine clauses -->
+<!ELEMENT redefine (#PCDATA)>
+
+<!-- List of select clauses -->
+<!ELEMENT select (#PCDATA)>
+
+<!-- List of export clauses -->
+<!ELEMENT export (#PCDATA)>
+
+
+<!-- Has class `create {NONE}' creation declaration -->
+<!ELEMENT create_none (#PCDATA)>
+
+<!--
+Class body includes all features, listed by feature clauses. 
+It includes neither class invariants nor end class declaration.
+-->
+<!ELEMENT body (initialization*, access*, element_change*, basic_operations*, unary_operators*, binary_operators*, specials*, implementation*, bit_or_infix)> 
+
+<!-- List of features in initialization feature clause -->
+<!ELEMENT initialization (feature+)>
+
+<!-- Eiffel feature: may have arguments or not, return type or not, assertions or not. -->
+<!ELEMENT feature (modified_feature*, frozen_feature, static, abstract, method, field, creation_routine, prefix, infix, new_slot, feature_eiffel_name, feature_external_name*, arguments*, return_type*, return_type_full_name*, return_type_generic_parameter_index*, comments*, preconditions*, postconditions*)>
+
+<!-- Has feature been modified? -->
+<!ELEMENT modified_feature (#PCDATA)>
+
+<!-- Is feature frozen? -->
+<!ELEMENT frozen_feature (#PCDATA)>
+
+<!-- Is feature static? -->
+<!ELEMENT static (#PCDATA)>
+
+<!-- Is feature abstract? -->
+<!ELEMENT abstract (#PCDATA)>
+
+<!-- Is feature a method? -->
+<!ELEMENT method (#PCDATA)>
+
+<!-- Is feature a field? -->
+<!ELEMENT field (#PCDATA)>
+
+<!-- Is feature a creation routine? -->
+<!ELEMENT creation_routine (#PCDATA)>
+
+<!-- Is feature a prefix? -->
+<!ELEMENT prefix (#PCDATA)>
+
+<!-- Is feature an infix? -->
+<!ELEMENT infix (#PCDATA)>
+
+<!-- Is feature a new slot (i.e. not inherited)? -->
+<!ELEMENT new_slot (#PCDATA)>
+
+<!-- Feature Eiffel name -->
+<!ELEMENT feature_eiffel_name (#PCDATA)>
+
+<!-- Feature .NET name -->
+<!ELEMENT feature_external_name (#PCDATA)>
+
+<!-- Feature arguments. May be null. -->
+<!ELEMENT arguments (argument+)>
+
+<!-- An argument contains Eiffel name and .NET name, as well as argument type -->
+<!ELEMENT argument (argument_eiffel_name*, argument_external_name*, argument_type*, argument_type_full_name*, generic_parameter_index*)>
+
+<!-- Eiffel name of argument -->
+<!ELEMENT argument_eiffel_name (#PCDATA)>
+
+<!-- .NET name of argument -->
+<!ELEMENT argument_external_name (#PCDATA)>
+
+<!-- Eiffel name of argument type -->
+<!ELEMENT argument_type (#PCDATA)>
+
+<!-- Full name of argument type -->
+<!ELEMENT argument_type_full_name (#PCDATA)>
+
+<!-- Generic parameter index (in case the argument is generic) -->
+<!ELEMENT generic_parameter_index (#PCDATA)>
+
+<!-- Eiffel name of feature return type -->
+<!ELEMENT return_type (#PCDATA)>
+
+<!-- Full name of feature return type -->
+<!ELEMENT return_type_full_name (#PCDATA)>
+
+<!-- Return type generic parameter index (in case the return type is generic) -->
+<!ELEMENT return_type_generic_parameter_index (#PCDATA)>
+
+<!-- Feature comments -->
+<!ELEMENT comments (#PCDATA)>
+
+<!-- List of feature preconditions -->
+<!ELEMENT preconditions (precondition+)>
+
+<!-- A feature precondition contains a tag and a text -->
+<!ELEMENT precondition (precondition_tag*, precondition_text)>
+
+<!-- Precondition tag -->
+<!ELEMENT precondition_tag (#PCDATA)>
+
+<!-- Precondition text -->
+<!ELEMENT precondition_text (#PCDATA)>
+
+<!-- List of feature postconditions -->
+<!ELEMENT postconditions (postcondition+)>
+
+<!-- A feature postcondition contains a tag and a text -->
+<!ELEMENT postcondition (postcondition_tag*, postcondition_text)>
+
+<!-- Postcondition tag -->
+<!ELEMENT postcondition_tag (#PCDATA)>
+
+<!-- Postcondition text -->
+<!ELEMENT postcondition_text (#PCDATA)>
+
+<!-- List of features in access feature clause -->
+<!ELEMENT access (feature+)>
+
+<!-- List of features in element change feature clause -->
+<!ELEMENT element_change (feature+)>
+
+<!-- List of features in basic operations feature clause -->
+<!ELEMENT basic_operations (feature+)>
+
+<!-- List of features in unary operators feature clause -->
+<!ELEMENT unary_operators (feature+)>
+
+<!-- List of features in basic operations feature clause -->
+<!ELEMENT binary_operators (feature+)>
+
+<!-- List of features in specials feature clause -->
+<!ELEMENT specials (feature+)>
+
+<!-- List of features in implementation feature clause -->
+<!ELEMENT implementation (feature+)>
+
+<!-- Must a `bit_or' infix be generated? -->
+<!ELEMENT bit_or_infix (#PCDATA)>
+
+<!--
+Class footer includes class invariants and end of class declaration.
+May be null if no invariant.
+-->
+<!ELEMENT footer (invariants*)>
+
+<!-- List of class invariants -->
+<!ELEMENT invariants (invariant+)>
+
+<!-- A class invariant contains a tag and a text -->
+<!ELEMENT invariant (invariant_tag*, invariant_text)>
+
+<!-- Invariant tag -->
+<!ELEMENT invariant_tag (#PCDATA)>
+
+<!-- Invariant text -->
+<!ELEMENT invariant_text (#PCDATA)>
+
+
+<!-- 
+End of Document Type Definition
+-->

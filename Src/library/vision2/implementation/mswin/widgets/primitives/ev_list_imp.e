@@ -257,18 +257,22 @@ feature {NONE} -- Implementation
 					else
 						item_imp.execute_command (Cmd_item_deactivate, Void)
 					end
+					execute_command (Cmd_selection, Void)
 				else
 					item_imp := ev_children @ (single_selected_item + 1)
-					item_imp.execute_command (Cmd_item_activate, Void)
-					if last_selected_item /= Void then
-						last_selected_item.execute_command (Cmd_item_deactivate, Void)
+					if last_selected_item /= item_imp then
+						item_imp.execute_command (Cmd_item_activate, Void)
+						if last_selected_item /= Void then
+							last_selected_item.execute_command (Cmd_item_deactivate, Void)
+						end
+						last_selected_item := item_imp
+						execute_command (Cmd_selection, Void)
 					end
-					last_selected_item := item_imp
 				end
 			else
 				last_selected_item := Void
+				execute_command (Cmd_selection, Void)
 			end
-			execute_command (Cmd_selection, Void)
 		end
 
 	on_lbn_dblclk is

@@ -265,6 +265,7 @@ d_safebcpy=''
 d_safemcpy=''
 d_sbrk=''
 d_select=''
+d_sigaltstack=''
 d_siglist=''
 d_sigsetmk=''
 d_sigaction=''
@@ -4219,6 +4220,18 @@ fi
 set d_siglist
 eval $setvar
 
+: see if sigaltstack exists
+echo " "
+if set sigaltstack val -f d_sigaltstack; eval $csym; $val; then
+	echo 'sigaltstack() found.' >&4
+	val="$define"
+else
+	echo "sigaltstack() not found." >&4
+	val="$undef"
+fi
+set d_sigaltstack
+eval $setvar
+
 : see if sigsetmask exists
 echo " "
 if set sigsetmask val -f d_sigsetmk; eval $csym; $val; then
@@ -6577,6 +6590,7 @@ d_bsdjmp='$d_bsdjmp'
 #Check value for next 1
 d_bsdsig='undef'
 d_keepsig='$d_keepsig'
+d_sigaltstack='$d_sigaltstack'
 d_siglist='$d_siglist'
 d_sigsetmk='$d_sigsetmk'
 d_sigvec='$d_sigvec'

@@ -344,7 +344,19 @@ feature -- IL Generation
 							end
 						end
  					end
-					generate_feature_code (feat)
+					if feat.is_c_external then
+						if not is_replicated then
+							generate_feature (feat, False, True, True)
+							generate_external_il (feat)
+						else
+							generate_feature_il (feat,
+								implemented_type (feat.written_in,
+								current_class_type.type).associated_class_type.implementation_id,
+								feat.written_feature_id)
+						end
+					else
+						generate_feature_code (feat)
+					end
 				end
 				if l_is_method_impl_generated then
 						-- We need a MethodImpl here for mapping

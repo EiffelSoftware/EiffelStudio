@@ -562,6 +562,7 @@ feature -- Store/Retrive
 					a_cursor.forth
 				end
 				if view_input /= Void then
+					current_view := view_input.attribute_by_name ("NAME").value
 					if view_input.attribute_by_name ("IS_UML").value.is_equal ("True") then
 						if not is_uml then
 							set_factory (create {UML_FACTORY})

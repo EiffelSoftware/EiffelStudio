@@ -89,14 +89,14 @@ feature -- For DATABASE_FORMAT
 			-- String representation in SQL of `object'.
 		do
 			Result := clone (object)
-			if not is_binary (object) then
-				if Result.empty then
-					Result := "NULL"
-				else
+			if Result /= Void and then not Result.is_empty then
+				if not is_binary (object) then
 					Result.replace_substring_all ("'", "''")
 					Result.precede ('%'')
 					Result.extend ('%'')
 				end
+			else
+				Result := "NULL"
 			end
 		end
 

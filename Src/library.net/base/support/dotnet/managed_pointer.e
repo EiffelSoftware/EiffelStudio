@@ -119,8 +119,6 @@ feature -- Duplication
 			-- to `other', so as to yield equal objects. If `is_shared'
 			-- and current is not large enough to hold `other' create
 			-- a new pointer area and `is_shared' is set to `False'.
-		local
-			l_ptr: POINTER
 		do
 			if count >= other.count then
 					-- No need to reallocate, it is safe to just copy.

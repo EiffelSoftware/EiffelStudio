@@ -41,6 +41,7 @@ feature -- Access
 			bridge_ok: equal (Result, implementation.text)
 			not_void: Result /= Void
 			cloned: Result /= implementation.text
+			no_carriage_returns: not Result.has ('%R')
 		end
 
 feature -- Element change

@@ -3396,7 +3396,7 @@ feature -- Pattern table generation
 			if creation_name /= Void then
 				if final_mode then
 					rout_table ?= Eiffel_table.poly_table (rout_id)
-					rout_table.goto_implemented (cl_type.static_type_id)
+					rout_table.goto_implemented (cl_type.type_id)
 					check
 						is_implemented: rout_table.is_implemented
 					end
@@ -3459,7 +3459,7 @@ feature -- Pattern table generation
 
 			if final_mode then
 				if creation_name /= Void then
-					buffer.putstring ("%T%T")
+					buffer.putstring ("%T")
 					buffer.putstring (c_name)
 					buffer.putstring ("(root_obj")
 					if root_feat.has_arguments then

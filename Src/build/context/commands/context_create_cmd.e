@@ -32,6 +32,11 @@ feature
 	work (argument: CONTEXT) is
 		do
 			context := argument;
+			if context.parent /= Void and then
+				context.parent.tree_element.selected 
+			then
+				context.tree_element.select_figure
+			end;
 		end;
 
 	

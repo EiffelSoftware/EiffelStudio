@@ -125,14 +125,14 @@ feature -- Element change
 	set_x_position (a_x: INTEGER) is
 			-- Set `x_position' with `a_x'
 		do
-			Precursor (a_x)
+			Precursor {EV_TITLED_WINDOW_IMP} (a_x)
 			apply_center_dialog := False
 		end
 
 	set_y_position (a_y: INTEGER) is
 			-- Set `y_position' with `a_y'
 		do
-			Precursor (a_y)
+			Precursor {EV_TITLED_WINDOW_IMP} (a_y)
 			apply_center_dialog := False
 		end
 
@@ -140,7 +140,7 @@ feature -- Element change
 			-- Put at horizontal position `new_x_position' and at
 			-- vertical position `new_y_position' relative to parent.
 		do
-			Precursor (new_x_position, new_y_position)
+			Precursor {EV_TITLED_WINDOW_IMP} (new_x_position, new_y_position)
 			apply_center_dialog := False
 		end		
 
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 			-- Executed when a key is pressed.
 		do
 			on_dialog_key_down (virtual_key)
-			Precursor (virtual_key, key_data)
+			Precursor {EV_TITLED_WINDOW_IMP} (virtual_key, key_data)
 		end
 
 	promote_to_modal_dialog is
@@ -418,7 +418,6 @@ feature {NONE} -- Implementation
 			remove_item_actions := other_imp.remove_item_actions
 			resize_actions_internal := other_imp.resize_actions_internal
 			rubber_band_is_drawn := other_imp.rubber_band_is_drawn
-			scroller := other_imp.scroller
 			shared := other_imp.shared
 			show_actions_internal := other_imp.show_actions_internal
 			upper_bar := other_imp.upper_bar
@@ -426,7 +425,7 @@ feature {NONE} -- Implementation
 			user_interface_mode := other_imp.user_interface_mode
 			apply_center_dialog := other_imp.apply_center_dialog
 			call_show_actions := other_imp.call_show_actions
-
+			scroller := other_imp.scroller
 			set_position (other_imp.x_position, other_imp.y_position)
 		end
 

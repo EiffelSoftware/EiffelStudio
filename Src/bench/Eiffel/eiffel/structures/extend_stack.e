@@ -30,6 +30,8 @@ feature
 
 	put (v: like item) is
 			-- Put `v' onto the stack.
+		require else
+			True
 		do
 			if count >= max_size then
 				resize (lower, upper + Chunk)

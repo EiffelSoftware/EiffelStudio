@@ -29,7 +29,7 @@ feature
 	build_explain (a_clickable: CLICK_WINDOW) is
 		do
 			a_clickable.put_string ("%T%T");
-			a_clickable.put_string (associated_class.class_name);
+			associated_class.append_clickable_signature (a_clickable);
 			a_clickable.put_string (" is obsolete: ");
 			a_clickable.put_string (associated_class.obsolete_message);
 			a_clickable.new_line;

@@ -44,9 +44,9 @@ feature
 			-- in `a_clickable'.
 		do
 			old_build_explain (a_clickable);
-			io.error.putstring ("%Tfeature ");
-			io.error.putstring (a_feature.feature_name);
-			io.error.new_line
+			a_clickable.put_string ("%Tfeature ");
+			a_feature.append_clickable_signature (a_clickable);
+			a_clickable.new_line
 		end
 
 end

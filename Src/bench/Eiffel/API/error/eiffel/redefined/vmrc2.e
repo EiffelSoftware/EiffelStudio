@@ -59,18 +59,18 @@ feature
             -- Build specific explanation explain for current error
             -- in `a_clickable'.
         do
+-- FIXME clickable feature_i instead of names
+
             old_build_explain (a_clickable);
-			io.error.putstring ("%Tunvalid selection: ");
-			io.error.putstring (unvalid_name);
-			io.error.putstring (" [ written in ");
-			io.error.putstring
-				(System.class_of_id (unvalid_written_in).class_name);
-			io.error.putstring ("]%N%Tfeature ");
-			io.error.putstring (selection_name);
-			io.error.putstring (" written in ");
-			io.error.putstring
-				(System.class_of_id (selection_written_in).class_name);
-			io.error.putstring (" is already selected.%N");
+			a_clickable.put_string ("%Tunvalid selection: ");
+			a_clickable.put_string (unvalid_name);
+			a_clickable.put_string (" [ written in ");
+			System.class_of_id (unvalid_written_in).append_clickable_name (a_clickable);
+			a_clickable.put_string ("]%N%Tfeature ");
+			a_clickable.put_string (selection_name);
+			a_clickable.put_string (" written in ");
+			System.class_of_id (selection_written_in).append_clickable_name (a_clickable);
+			a_clickable.put_string (" is already selected.%N");
 		end;
 
 end

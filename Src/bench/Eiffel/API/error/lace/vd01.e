@@ -6,6 +6,9 @@ class VD01
 inherit
 
 	ERROR
+		redefine
+			build_explain
+		end;
 
 feature
 
@@ -20,5 +23,11 @@ feature
 
 	code: STRING is "VD01";	
 			-- Error code
+
+	build_explain (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string (path);
+			a_clickable.put_string (" is not a valid path%N");
+		end;
 
 end

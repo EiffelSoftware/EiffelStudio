@@ -29,13 +29,13 @@ feature
             -- in `a_clickable'.
         do
             old_build_explain (a_clickable);
-			io.error.putstring ("%Tfeature ");
-			io.error.putstring (a_feature.feature_name);
-			io.error.putstring ("%N%Tand feature ");
-			io.error.putstring (inherited_feature.feature_name);
-			io.error.putstring (" inherited from ");
-			io.error.putstring (System.class_of_id (parent_id).class_name);
-			io.error.new_line;
+			a_clickable.put_string ("%Tfeature ");
+			a_feature.append_clickable_signature (a_clickable);
+			a_clickable.put_string ("%N%Tand feature ");
+			inherited_feature.append_clickable_signature (a_clickable);
+			a_clickable.put_string (" inherited from ");
+			System.class_of_id (parent_id).append_clickable_name (a_clickable);
+			a_clickable.new_line;
 		end;
 
 end

@@ -37,6 +37,8 @@ feature
 
 	associated_class: CLASS_C is
 			-- Class POINTER
+		require else
+			pointer_compiled: System.pointer_class.compiled
 		once
 			Result := System.pointer_class.compiled_class;
 		end;

@@ -176,6 +176,10 @@ feature
 		do
 			Result := (byte_code.precondition /= Void
 					or else inherited_assertion.has_precondition)
+				and then
+					(	workbench_mode
+						or else
+						assertion_level.check_precond)
 		end;
 
 	has_rescue: BOOLEAN is

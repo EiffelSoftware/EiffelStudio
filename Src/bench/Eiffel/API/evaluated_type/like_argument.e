@@ -97,6 +97,8 @@ feature -- Primitives
 
 	associated_class: CLASS_C is
 			-- Associated class
+		require else
+			actual_type_not_void: actual_type /= Void
 		do
 			Result := actual_type.associated_class;
 		end;

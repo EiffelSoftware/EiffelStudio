@@ -41,8 +41,20 @@ feature {NONE}
 						file.open_write;
 						workbench.basic_store (file);
 						file.close;
+							-- The project is saved before the finalization
+							-- so that it can be reused after the finalization.
 						System.finalized_generation;
 						finish_freezing;
+-- FIX ME
+-- FIX ME
+-- FIX ME
+
+-- Exit from the application or retrieve the workbench from disk
+
+-- Retrieving from disk implies a `reset' on all the windows to synchronize the
+-- various stones.
+
+-- Exiting: Popup window
 					end;
 					restore_cursors;
 				elseif argument = warner then

@@ -65,6 +65,8 @@ feature
 
 	associated_class: CLASS_C is
 			-- Class REAL
+		require else
+			real_class_compiled: System.real_class.compiled
 		once
 			Result := System.real_class.compiled_class;
 		end;

@@ -28,6 +28,8 @@ feature
 		end;
 
 	associated_class: CLASS_C is
+		require else
+			True
 		do
 			-- No associated class
 		end;

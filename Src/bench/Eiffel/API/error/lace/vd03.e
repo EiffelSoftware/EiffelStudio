@@ -5,6 +5,9 @@ class VD03
 inherit
 
 	ERROR
+		redefine
+			build_explain
+		end
 
 feature
 
@@ -21,6 +24,12 @@ feature
 			-- Error code
 		do
 			Result := "VD03";
+		end;
+
+	build_explain (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string (cluster_name);
+			a_clickable.put_string (" is invalid%N");
 		end;
 
 end

@@ -2382,7 +2382,7 @@ feature {NONE} -- External features
 feature -- PS
 
 	signature: STRING is
-		obsolete "Use append_clickable_signature"
+		obsolete "Use append_clickable_signature or append_clickable_name"
 		local
 			formal_dec: FORMAL_DEC_AS;
 			constraint_type: TYPE_A;
@@ -2416,16 +2416,16 @@ feature -- PS
 			end;
 			Result.to_upper;
 			end;
-		rescue
-			-- FIX ME ?
-			!!Result.make (50);
-			Result.append (class_name);
-			if generics /= Void then
-				Result.append (" [ ... ]");
-			end;
-			Result.to_upper;
-			error := True;
-			retry;
+--		rescue
+--			-- FIX ME ?
+--			!!Result.make (50);
+--			Result.append (class_name);
+--			if generics /= Void then
+--				Result.append (" [ ... ]");
+--			end;
+--			Result.to_upper;
+--			error := True;
+--			retry;
 		end;
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
@@ -2492,13 +2492,10 @@ io.error.putstring ("Clickable signature change dump%N");
 		local
 			ast_clicks: CLICK_LIST
 		do
-			--if Error_handler.has_error then
-				--ast_clicks := Tmp_ast_server.item (id).click_list
-			--else
-			if not Tmp_ast_server.has (id) then
-				ast_clicks := Ast_server.item (id).click_list
-			else
+			if Error_handler.has_error then
 				ast_clicks := Tmp_ast_server.item (id).click_list
+			else
+				ast_clicks := Ast_server.item (id).click_list
 			end;
 			Result := ast_clicks.clickable_stones (Current)
 		end;

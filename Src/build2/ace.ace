@@ -81,7 +81,7 @@ cluster
 			"xml_implementation"; 
 		end
 		
-	all eifp_reader: "$EIFFEL_SRC\dotnet\visualstudio\tools\eifp_reader"
+	all eifp_reader: "$EIFFEL_SRC\dotnet\VisualStudio\tools\eifp_reader"
 		exclude
 			"cvs"
 		end

@@ -78,6 +78,11 @@ cluster
 			"registry"; 
 		end
 		
+	all eifp_reader: "$EIFFEL_SRC/dotnet/VisualStudio/tools/eifp_reader"
+		exclude
+			"CVS"
+		end
+
 	all patterns: "$EIFFEL_SRC/library/patterns"
 
 	all ast:		"$EIFFEL_SRC/Eiffel/common/parser/AST"

@@ -146,8 +146,7 @@ feature -- Element change
 	set_top is
 			-- Place the window at the top of the Z order.
 		do
-			cwel_windowpos_set_hwndinsertafter (item,
-				cwel_integer_to_pointer (Hwnd_top))
+			cwel_windowpos_set_hwndinsertafter (item, Hwnd_top)
 		end
 
 	set_bottom is
@@ -156,8 +155,7 @@ feature -- Element change
 			-- loses its topmost status and is placed at the bottom
 			-- of all other windows.
 		do
-			cwel_windowpos_set_hwndinsertafter (item,
-				cwel_integer_to_pointer (Hwnd_bottom))
+			cwel_windowpos_set_hwndinsertafter (item, Hwnd_bottom)
 		end
 
 	set_topmost is
@@ -165,8 +163,7 @@ feature -- Element change
 			-- The window maintains its topmost position even when
 			-- it is deactivated.
 		do
-			cwel_windowpos_set_hwndinsertafter (item,
-				cwel_integer_to_pointer (Hwnd_topmost))
+			cwel_windowpos_set_hwndinsertafter (item, Hwnd_topmost)
 		end
 
 	set_no_topmost is
@@ -174,8 +171,7 @@ feature -- Element change
 			-- (that is, behind all topmost windows). No effect
 			-- if the window is already a non-topmost window.
 		do
-			cwel_windowpos_set_hwndinsertafter (item,
-				cwel_integer_to_pointer (Hwnd_notopmost))
+			cwel_windowpos_set_hwndinsertafter (item, Hwnd_notopmost)
 		end
 
 feature -- Measurement

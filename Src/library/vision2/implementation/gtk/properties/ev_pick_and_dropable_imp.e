@@ -45,7 +45,7 @@ feature -- Implementation
 			pointer_y := a_screen_y
 			
 			target := pointed_target
-			if target /= last_pointed_target or target = Void then
+			if target /= last_pointed_target then
 				update_pointer_style (target)
 			end
 		end
@@ -117,30 +117,11 @@ feature -- Implementation
 
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
-		local
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 		do
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_imp_not_void: app_imp /= Void
-			end
-
-			app_imp.on_pick (pebble)
+			app_implementation.on_pick (pebble)
 			if pick_actions_internal /= Void then
 				pick_actions_internal.call ([a_x, a_y])
 			end
-
-			
-			if accept_cursor = Void then
-				--| FIXME IEK
-				create accept_cursor--.make_with_code (curs_code.standard)
-			end
-			if deny_cursor = Void then
-				create deny_cursor--.make_with_code (curs_code.no)
-			end
-
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
 			if pick_x = 0 and pick_y = 0 then
@@ -206,7 +187,22 @@ feature -- Implementation
 					grab_callback_connection_id := last_signal_connection_id
 
 					enable_capture
-	--FIXME this line for testing only		env.application.process_events
+					
+					if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
+						-- Set correct accept cursor
+						if accept_cursor /= Void then
+							internal_set_pointer_style (accept_cursor)
+						else
+							internal_set_pointer_style (default_accept_cursor)
+						end
+					else
+						-- Set correct deny cursor
+						if deny_cursor /= Void then
+							internal_set_pointer_style (deny_cursor)
+						else
+							internal_set_pointer_style (default_deny_cursor)
+						end
+					end
 
 					signal_disconnect (button_press_connection_id)
 					signal_connect (
@@ -300,6 +296,7 @@ feature -- Implementation
 				enter_notify_connected: enter_notify_connection_id > 0
 				leave_notify_connected: leave_notify_connection_id > 0
 			end
+			target := pointed_target
 			erase_rubber_band
 			disable_capture
 			if button_release_connection_id > 0 then
@@ -322,13 +319,16 @@ feature -- Implementation
 				signal_disconnect (grab_callback_connection_id)
 				grab_callback_connection_id := 0
 			end
+			target := pointed_target
 			if
 				able_to_transport (a_button)
 			then
-				target := pointed_target
 				if target /= Void then
 					target.drop_actions.call ([pebble])
 				end
+			end
+			if pick_ended_actions_internal /= Void then
+				pick_ended_actions_internal.call ([target])
 			end
 			enable_transport
 			interface.pointer_motion_actions.resume
@@ -379,19 +379,11 @@ feature -- Implementation
 
 	post_drop_steps is
 			-- Steps to perform once an attempted drop has happened.
-		local
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 		do
 			if mode_is_pick_and_drop then
 				signal_emit_stop (visual_widget, "button-press-event")
 			end
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_imp_not_void: app_imp /= Void
-			end
-			app_imp.on_drop (pebble)
+			app_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
 			last_pointed_target := Void
@@ -413,37 +405,32 @@ feature -- Implementation
 
 	draw_rubber_band is
 			-- Draw a segment between initial pick point and `destination'.
+		local
+			l_invert_gc, l_root_parent: POINTER
+			l_C: EV_C_EXTERNALS
 		do
 			if
-				pointer_x /= old_pointer_x or
-				pointer_y /= old_pointer_y
+				C.gtk_events_pending = 0
 			then
-				if
-					C.gtk_events_pending = 0 or
-					draw_rubber_band_calls_ignored > Max_draw_ignore
-				then
-					if rubber_band_is_drawn then
-						real_draw_rubber_band
-					end
-					old_pointer_x := pointer_x
-					old_pointer_y := pointer_y
-					target_highlight_is_drawn := over_valid_target
-					real_draw_rubber_band
-					rubber_band_is_drawn := True
-					draw_rubber_band_calls_ignored := 0
-				else
-					draw_rubber_band_calls_ignored
-						 := draw_rubber_band_calls_ignored + 1
+				l_invert_gc := invert_gc
+				l_root_parent := root_parent
+				l_C := C
+				if rubber_band_is_drawn then
+					l_C.gdk_draw_line (l_root_parent, l_invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
+					rubber_band_is_drawn := False
 				end
+				old_pointer_x := pointer_x
+				old_pointer_y := pointer_y
+				l_C.gdk_draw_line (l_root_parent, l_invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
+				rubber_band_is_drawn := True
 			end
 		end
-		Max_draw_ignore: INTEGER is 2
 
 	erase_rubber_band is
 			-- Erase previously drawn rubber band.
 		do
 			if rubber_band_is_drawn then
-				real_draw_rubber_band
+				C.gdk_draw_line (root_parent, invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
 				rubber_band_is_drawn := False
 			end
 		end
@@ -456,55 +443,16 @@ feature -- Implementation
 
 	real_draw_rubber_band is
 			-- Implementation of draw_rubber_band.
-		local
-			ang, a, head: REAL
-			gc: POINTER
 		do
-		--	gc := invert_gc
-			C.gdk_draw_line (root_parent, invert_gc,
-				x_origin, y_origin, old_pointer_x, old_pointer_y)
-			--| FIXME IEK  Implement cursor functionality.
---			if target_highlight_is_drawn then
---				C.gdk_draw_arc (C.gdk_root_parent, gc,
---					1, old_pointer_x - Pebble_size, old_pointer_y - Pebble_size,
---					Pebble_size*2, Pebble_size*2, 0, Full_circle)
---			else
---				head:= Head_size
---				if x_origin = old_pointer_x then
---					ang := pi/2
---					if y_origin < old_pointer_y then
---						head := - head
---					end
---				else
---					ang := arc_tangent ((y_origin - old_pointer_y)
---						/ (x_origin - old_pointer_x))
---				end
---				a := 0.3
---				if old_pointer_x <= x_origin then
---					head := - head
---				end
---				C.gdk_draw_line (C.gdk_root_parent, gc,
---					old_pointer_x, old_pointer_y,
---					old_pointer_x + (cosine (ang - a) * head).rounded,
---					old_pointer_y + (sine (ang - a) * head).rounded)
---				C.gdk_draw_line (C.gdk_root_parent, gc,
---					old_pointer_x, old_pointer_y,
---					old_pointer_x + (cosine (ang + a) * head).rounded,
---					old_pointer_y + (sine (ang + a) * head).rounded)
---				C.gdk_draw_arc (C.gdk_root_parent, gc,
---					1, x_origin - Pebble_size, y_origin - Pebble_size,
---					Pebble_size*2, Pebble_size*2, 0, Full_circle)
--- FIXME Signature for pebble has changed.
---			end
+			C.gdk_draw_line (root_parent, invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
 		end
-		Head_size: INTEGER is -15
-		Pebble_size: INTEGER is 4
-		Full_circle: INTEGER is 23040
 
 	invert_gc: POINTER is
 		local
 			col: POINTER
+			max_16_bit: INTEGER
 		once
+			max_16_bit := 65535
 			Result := C.gdk_gc_new (C.gdk_root_parent)
 			col := C.c_gdk_color_struct_allocate
 			C.set_gdk_color_struct_red (col, Max_16_bit)
@@ -516,25 +464,33 @@ feature -- Implementation
 			C.c_gdk_color_struct_free (col)
 		end
 
-	Max_16_bit: INTEGER is 65535
-
 	real_pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
 		local
 			gdkwin: POINTER
 			x, y: INTEGER
+			pnd_wid: EV_PICK_AND_DROPABLE
 			widget_target_imp: EV_PICK_AND_DROPABLE_IMP
 		do
 			gdkwin := C.gdk_window_at_pointer ($x, $y)
 			if gdkwin /= NULL then
-				widget_target_imp ?= last_pointed_target
+				pnd_wid ?= last_pointed_target
+				if pnd_wid /= Void then
+					widget_target_imp ?= pnd_wid.implementation
+				end		
 				if widget_target_imp /= Void and then widget_target_imp.pointer_over_widget (gdkwin, x, y) then
-						Result ?= last_pointed_target
-				else
+						Result := widget_target_imp.interface
+				elseif gdkwin = last_gdkwin then
+					--	Result := Void
+				else	
 					Result := app_implementation.pnd_target_from_gdk_window (gdkwin, x, y)
 				end			
 			end
+			last_gdkwin := gdkwin
 		end
+		
+	last_gdkwin: POINTER
+		-- Last gdkwindow the mouse was over during PND motion.
 
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
 		do
@@ -565,20 +521,26 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
 	enable_pnd_prelight_state is
 			-- 
 		do
-			pre_pnd_state := C.gtk_widget_struct_state (c_object)
-			C.gtk_widget_set_state (c_object, C.Gtk_state_prelight_enum)
-			C.gtk_widget_draw (c_object, NULL)
+--			pre_pnd_state := C.gtk_widget_struct_state (c_object)
+--			C.gtk_widget_set_state (c_object, C.Gtk_state_prelight_enum)
+--			C.gtk_widget_draw (c_object, NULL)
 		end
 		
 	disable_pnd_prelight_state is
 		do
-			if C.gtk_widget_struct_state (c_object) = C.Gtk_state_prelight_enum then
-				C.gtk_widget_set_state (c_object, pre_pnd_state)
-				C.gtk_widget_draw (c_object, NULL)
-			end	
+--			if C.gtk_widget_struct_state (c_object) = C.Gtk_state_prelight_enum then
+--				C.gtk_widget_set_state (c_object, pre_pnd_state)
+--				C.gtk_widget_draw (c_object, NULL)
+--			end	
 		end
 	
 	pre_pnd_state: INTEGER
+	
+	internal_non_sensitive: BOOLEAN is
+			-- 
+		deferred
+		end
+		
 	
 feature {NONE} -- Implementation
 
@@ -593,9 +555,6 @@ feature {NONE} -- Implementation
 
 	draw_rubber_band_calls_ignored: INTEGER
 			-- Number of `draw_rubber_band' calls ignored.
-
-	target_highlight_is_drawn: BOOLEAN
-			-- Is a highlight drawn on a target?
 
 	grab_callback_connection_id: INTEGER
 			-- GTK signal connection id for motion-notify-event.

@@ -141,7 +141,7 @@ feature -- process set commands
 					a_command := read_command_list.item (counter1);
 					if a_command /= Void then
 						if last_read_mask.is_medium_ready (a_command.active_medium) then
-							a_command.execute;
+							a_command.execute (Void);
 							counter := counter + 1
 						end
 					end;
@@ -158,7 +158,7 @@ feature -- process set commands
 					a_command := write_command_list.item (counter1);
 					if a_command /= Void then
 						if last_write_mask.is_medium_ready (a_command.active_medium) then
-							a_command.execute;
+							a_command.execute (Void);
 							counter := counter + 1
 						end
 					end;
@@ -175,7 +175,7 @@ feature -- process set commands
 					a_command := exception_command_list.item (counter1);
 					if a_command /= Void then
 						if last_except_mask.is_medium_ready (a_command.active_medium) then
-							a_command.execute;
+							a_command.execute (Void);
 							counter := counter + 1
 						end
 					end;

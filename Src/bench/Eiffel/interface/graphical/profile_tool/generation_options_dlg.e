@@ -64,7 +64,9 @@ feature -- Access
 			-- The profiler that's been used to
 			-- generate `profinfo_file'.
 		do
-			Result := (profiler_list @ last_selected_position).value
+			if last_selected_position /= 0 then
+				Result := (profiler_list @ last_selected_position).value
+			end
 		end
 
 feature {NONE} -- User Interface
@@ -268,8 +270,10 @@ feature {NONE} -- Implementation
 					to_be_selected := to_be_selected + 1
 				end
 			end;
-			profiler_list.select_i_th (to_be_selected);
-			last_selected_position := to_be_selected
+			if not profiler_list.empty then
+				profiler_list.select_i_th (to_be_selected);
+				last_selected_position := to_be_selected
+			end
 		end
 
 feature {NONE} -- Execution arguments
@@ -295,7 +299,9 @@ feature {NONE} -- Execution
 			-- Execute Current.
 		do
 			if arg = ok_it then
-				last_caller.execute (Current)
+				if profiler_list.selected_position /= 0 then
+					last_caller.execute (Current)
+				end
 			elseif arg = cancel_it then
 				last_caller.execute (Void)
 			elseif arg = click_it then

@@ -65,6 +65,8 @@ feature -- Access
 			-- of items held in `objects'.
 		local
 			label: EV_LABEL
+			editor_item: GB_OBJECT_EDITOR_ITEM
+			hbox1, hbox2: EV_HORIZONTAL_BOX
 		do
 			Result := Precursor {GB_EV_ANY}
 			create label.make_with_text ("Merged radio button groups")
@@ -74,13 +76,30 @@ feature -- Access
 			merged_list.drop_actions.extend (agent new_merge)
 			merged_list.drop_actions.set_veto_pebble_function (agent veto_merge (?))
 			Result.extend (merged_list)
-			create propagate_foreground_color.make_with_text ("Propagate foreground color")
-			create propagate_background_color.make_with_text ("Propagate background color")
---			Result.extend (propagate_foreground_color)
+			create propagate_foreground_color.make_with_text ("Propagate")
+			create propagate_background_color.make_with_text ("Propagate")
 			propagate_foreground_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_foreground_color))
 			propagate_background_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_background_color))
---			Result.extend (propagate_background_color)
-	
+				-- We now modify the editor item corresponding to
+				-- GB_EV_COLORIZABLE. It is much nicer, if the
+				-- propagate buttons are placed here, along with the color
+				-- selection.
+			editor_item := parent_editor.editor_item_by_type ("GB_EV_COLORIZABLE")
+			check
+				colorizable_controls_not_changed: editor_item /= Void
+			end
+			hbox1 ?= editor_item @ 2
+			hbox2 ?= editor_item @ 4
+			check
+				colorizable_controls_not_changed: hbox1 /= Void and hbox2 /= Void
+			end
+				-- Remove the cells contained in the interface,
+				-- and replace with the new buttons.
+			hbox1.prune (hbox1.i_th (hbox1.count))
+			hbox1.extend (propagate_background_color)
+			hbox2.prune (hbox2.i_th (hbox2.count))
+			hbox2.extend (propagate_foreground_color)
+			
 			update_attribute_editor
 			disable_all_items (Result)
 			align_labels_left (Result)

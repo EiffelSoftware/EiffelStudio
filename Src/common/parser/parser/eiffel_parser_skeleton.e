@@ -86,9 +86,6 @@ feature -- Status report
 	type_parser: BOOLEAN
 			-- Is current Eiffel parser a type parser?
 
-	has_syntax_warning: BOOLEAN
-			-- Do we create SYNTAX_WARNING instances for obsolte syntactical constructs?
-
 	has_externals: BOOLEAN
 			-- Did last parse find external declarations?
 
@@ -175,14 +172,6 @@ feature -- Setting
 		do
 			yacc_position := l.start_position
 			yacc_line_number := l.line_number
-		end
-
-	set_has_syntax_warning (b: BOOLEAN) is
-			-- Set `has_syntax_warning' to `b'
-		do
-			has_syntax_warning := b
-		ensure
-			has_syntax_warning_set: has_syntax_warning = b
 		end
 
 feature -- Removal

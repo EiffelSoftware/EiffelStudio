@@ -374,9 +374,17 @@ feature -- Generation
 		do
 			file_name := full_file_name (Class_suffix);
 			if byte_context.final_mode then
-				file_name.append (Dot_x)
+				if class_has_cpp_externals then
+					file_name.append (Dot_xpp)
+				else
+					file_name.append (Dot_x)
+				end
 			else
-				file_name.append (Dot_c);
+				if class_has_cpp_externals then
+					file_name.append (Dot_cpp)
+				else
+					file_name.append (Dot_c)
+				end
 			end;
 			!!Result.make (file_name);
 		end;
@@ -969,6 +977,43 @@ feature -- Cecil generation
 					("{(int32) 0, (int) 0, (char **) 0, (char *) 0}");
 			end;
 		end;
+
+	class_has_cpp_externals: BOOLEAN is
+			-- Are there any external C++ features in this class?
+		local
+			current_class: CLASS_C
+			external_i: EXTERNAL_I
+			feature_i: FEATURE_I
+			feature_table: FEATURE_TABLE
+			type_list: TYPE_LIST
+		do
+			current_class := associated_class;
+			type_list := current_class.types;
+			type_list.search (type);
+			if type_list.item = Current then
+				feature_table := current_class.feature_table;
+				from
+					feature_table.start
+				until
+					feature_table.after or else Result
+				loop
+					feature_i := feature_table.item_for_iteration;
+					if
+						(
+							byte_context.final_mode and then
+							feature_i.to_generate_in (current_class)
+						) or else
+						is_modifiable
+					then
+						external_i ?= feature_i;
+						if external_i /= Void then
+							Result := external_i.is_cpp
+						end
+					end;
+					feature_table.forth
+				end
+			end
+		end
 
 feature -- Conformance table generation
 

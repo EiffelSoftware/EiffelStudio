@@ -1,6 +1,8 @@
 indexing
-	description: "EiffelVision event data. Information given by EiffelVision when a callback is triggered. Base class for representing%
-	%event data";
+	description: "EiffelVision event data. Information given by% 
+	%EiffelVision when a callback is triggered. Type of event is% 
+	%determined byt the C pointer 'p' in the creation routine.%
+	%This is the base class for representing event data";
 	status: "See notice at end of class";
 	id: "$Id$";
 	date: "$Date$";
@@ -10,15 +12,28 @@ class
 	EV_EVENT_DATA
 	
 creation
-	make
+	make, make_and_initialize
 	
 feature {NONE}  -- Initialization
 	
 	make (p: POINTER) is
 		do
-			-- Initialize widget XX
+			-- Initialize implementation
+			!EV_EVENT_DATA_IMP!implementation.make
 		end
 	
+	make_and_initialize (p: POINTER) is
+		do
+			!EV_EVENT_DATA_IMP!implementation.make_and_initialize (Current, p)
+		end
+	
+feature -- Metamorphosis
+	
+	metamorphosis (p: POINTER): EV_EVENT_DATA is
+		do
+			Result := implementation.metamorphosis (p)
+		end
+		
 feature -- Access
 	
 	widget: EV_WIDGET
@@ -33,6 +48,10 @@ feature -- Debug
 			print (widget)
 			io.put_string ("%N")
 		end
+	
+feature {NONE} -- Implementation
+	
+	implementation: EV_EVENT_DATA_I
 	
 end
 			

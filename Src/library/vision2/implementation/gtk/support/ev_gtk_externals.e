@@ -16,14 +16,6 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_EDITABLE"
 		end
 	
-	-- GDK
-	c_gdk_event_type (event: POINTER): INTEGER is
-		external 
-			"C [macro %"gtk_eiffel.h%"]"
-		alias
-			"GDK_EVENT_TYPE"
-		end
-	
 	
 feature {NONE} -- GTK C functions
 

@@ -190,7 +190,10 @@ feature -- Status setting
 
 feature -- Execution
 
-	context_data_useful: BOOLEAN is True;
+	context_data_useful: BOOLEAN is 
+		do
+			Result := True
+		end
 
 	task: TASK;
 

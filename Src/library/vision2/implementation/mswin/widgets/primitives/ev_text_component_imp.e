@@ -193,11 +193,6 @@ feature {NONE} -- Deferred features
 		deferred
 		end
 
-	set_text (txt: STRING) is
-			-- Make `txt' the new text of the component.
-		deferred
-		end
-
 	set_text_limit (value: INTEGER) is
 			-- Make `value' the new maximal length of the text.
 		deferred

@@ -12,7 +12,7 @@ OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
-	lib /OUT:$@ -DEBUGTYPE:BOTH $(OBJ)
+	lib /OUT:$@ $(OBJ)
 	if not exist $(EIFFEL_SRC)\library\wel\spec\msc mkdir $(EIFFEL_SRC)\library\wel\spec\msc
 	if not exist $(EIFFEL_SRC)\library\wel\spec\msc\lib mkdir $(EIFFEL_SRC)\library\wel\spec\msc\lib
 	copy $@ $(EIFFEL_SRC)\library\wel\spec\msc\lib

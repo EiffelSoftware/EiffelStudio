@@ -414,7 +414,8 @@ extern int fcount;
  *  RTWA(x,y,z) is the access to an attribute
  *  RTVA(x,y,z,t) is a nested access to an attribute (dot expression)
  *  RTWT(x,y,z) fetches the creation type
- *  RTWP(x,y,z) returns the feature address ($ operator)
+ *  RTWPP(x,y) returns the feature address ($ operator)
+ *  RTWP(x,y,z) returns the feature address ($ operator) for a specific type
  *  RTWO(x) stores in a list the body id of the just called once routine
  */
 #define RTWF(x,y,z) wfeat(x,y,z)
@@ -422,6 +423,7 @@ extern int fcount;
 #define RTWA(x,y,z) wattr(x,y,z)
 #define RTVA(x,y,z,t) wattr_inv(x,y,z,t)
 #define RTWT(x,y,z) wtype(x,y,z)
+#define RTWPP(x,y) ((eif_address_table[x])[y])
 #define RTWP(x,y,z) wpointer(x,y,z)
 #define RTWO(x) onceadd(x)
 

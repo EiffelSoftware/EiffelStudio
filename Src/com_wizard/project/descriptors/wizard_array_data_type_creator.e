@@ -23,7 +23,7 @@ feature -- Basic operations
 		local
 			descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 			array_desc: ECOM_ARRAY_DESC
-			i, count, an_element: INTEGER
+			i, an_element: INTEGER
 			int_array: ARRAY [INTEGER]
 		do
 			type := a_type_desc.var_type

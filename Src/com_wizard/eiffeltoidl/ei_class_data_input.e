@@ -33,7 +33,6 @@ feature -- Basic operations
 			raw_features: LINKED_LIST[STRING]
 			l_name, l_description: STRING
 			feature_parser: EI_FEATURE_PARSER
-			parameter_list: LINKED_LIST[EI_PARAMETER]
 		do
 			if input_file.is_closed then
 				input_file.open_read

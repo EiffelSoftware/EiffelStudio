@@ -202,8 +202,6 @@ feature {NONE} -- Behavior
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
-		local
-			new_height: INTEGER
 		do
 			if scroller /= Void then
 				scroller.set_vertical_page (height)
@@ -223,8 +221,6 @@ feature {NONE} -- Implementation
 
 	setup_output_edit is
 			-- Initialize output edit.
-		local
-			a_style: INTEGER
 		do
 			create output_edit.make (Current, Output_edit_name, 0, 0, width, height, -1)
 			output_edit.set_character_format_all (Text_format)

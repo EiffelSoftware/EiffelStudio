@@ -24,6 +24,11 @@ inherit
 
 	SHARED_EVALUATOR
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 feature {AST_FACTORY} -- Initialization
 
 	initialize (o: like obsolete_message; pr: like precondition;
@@ -324,10 +329,10 @@ feature -- Type check, byte code and dead code removal
 	check_local_names is
 			-- Check conflicts between local names and feature names
 		local
-			id_list: EIFFEL_LIST [ID_AS]
+			id_list: ARRAYED_LIST [INTEGER]
 			f_table: FEATURE_TABLE
 			vrle1: VRLE1
-			local_name: ID_AS
+			local_name_id: INTEGER
 		do
 			if locals /= Void then
 				from
@@ -342,13 +347,13 @@ feature -- Type check, byte code and dead code removal
 					until
 						id_list.after
 					loop
-						local_name := id_list.item
-						if f_table.has (local_name) then
+						local_name_id := id_list.item
+						if f_table.has_id (local_name_id) then
 								-- The local name is a feature name of the
 								-- current analyzed class.
 							!!vrle1
 							context.init_error (vrle1)
-							vrle1.set_local_name (local_name)
+							vrle1.set_local_name (local_name_id)
 							Error_handler.insert_error (vrle1)
 						end
 						id_list.forth
@@ -365,10 +370,11 @@ feature -- Type check, byte code and dead code removal
 			-- Also an external or a deferred routine cannot have
 			-- locals.
 		local
-			id_list: EIFFEL_LIST [ID_AS]
+			id_list: ARRAYED_LIST [INTEGER]
 			local_type: TYPE
 			local_class_c: CLASS_C
-			local_name: ID_AS
+			local_name_id: INTEGER
+			local_name: STRING
 			solved_type: TYPE_A
 			context_class: CLASS_C
 			gen_type: GEN_TYPE_A
@@ -422,22 +428,23 @@ feature -- Type check, byte code and dead code removal
 					until
 						id_list.after
 					loop
-						local_name := id_list.item
-						if curr_feat.has_argument_name (local_name) then
+						local_name_id := id_list.item
+						local_name := Names_heap.item (local_name_id)
+						if curr_feat.has_argument_name (local_name_id) then
 								-- The local name is an argument name of the
 								-- current analyzed feature
 							create vrle2
 							context.init_error (vrle2)
-							vrle2.set_local_name (local_name)
+							vrle2.set_local_name (local_name_id)
 							Error_handler.insert_error (vrle2)
 						elseif
-							context.feature_table.has (local_name)
+							context.feature_table.has_id (local_name_id)
 						then
 								-- The local name is a feature name of the
 								-- current analyzed class.
 							create vrle1
 							context.init_error (vrle1)
-							vrle1.set_local_name (local_name)
+							vrle1.set_local_name (local_name_id)
 							Error_handler.insert_error (vrle1)
 						end
 							-- Build the local table in the context
@@ -522,10 +529,10 @@ feature -- Type check, byte code and dead code removal
 			-- Local table for dead code removal
 		local
 			feat_tbl: FEATURE_TABLE
-			id_list: EIFFEL_LIST [ID_AS]
+			id_list: ARRAYED_LIST [INTEGER]
 			solved_type: TYPE_A
 			local_info: LOCAL_INFO
-			local_name: STRING
+			local_name_id: INTEGER
 			local_type: TYPE
 		do
 			if locals /= Void then
@@ -546,10 +553,10 @@ feature -- Type check, byte code and dead code removal
 					until
 						id_list.after
 					loop
-						local_name := id_list.item
+						local_name_id := id_list.item
 						create local_info
 						local_info.set_type (solved_type)
-						Result.put (local_info, local_name)
+						Result.put (local_info, Names_heap.item (local_name_id))
 						id_list.forth
 					end
 					locals.forth
@@ -571,10 +578,10 @@ feature -- Format Context
 			-- Local table for format context
 		local
 			feat_tbl: FEATURE_TABLE
-			id_list: EIFFEL_LIST [ID_AS]
+			id_list: ARRAYED_LIST [INTEGER]
 			solved_type: TYPE_A
 			local_info: LOCAL_INFO
-			local_name: STRING
+			local_name_id: INTEGER
 			local_type: TYPE
 		do
 			if locals /= Void then
@@ -602,8 +609,8 @@ feature -- Format Context
 						until
 							id_list.after
 						loop
-							local_name := id_list.item
-							Result.put (Void, local_name)
+							local_name_id := id_list.item
+							Result.put (Void, Names_heap.item (local_name_id))
 							id_list.forth
 						end
 					else
@@ -612,10 +619,10 @@ feature -- Format Context
 						until
 							id_list.after
 						loop
-							local_name := id_list.item
+							local_name_id := id_list.item
 							!!local_info
 							local_info.set_type (solved_type)
-							Result.put (local_info, local_name)
+							Result.put (local_info, Names_heap.item (local_name_id))
 							id_list.forth
 						end
 					end

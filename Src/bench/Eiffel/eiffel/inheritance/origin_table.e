@@ -117,20 +117,20 @@ feature
 			-- Origin table for instance of FEATURE_TABLE resulting
 			-- of an analysis of possible repeated inheritance
 		local
-			rout_id: INTEGER;
 			selected: FEATURE_I;
 			vmrc3: VMRC3;
 		do
-	--io.error.putstring ("========= START TRACE, class ");
-	--io.error.putstring (new_t.associated_class.class_name);
-	--io.error.putstring (" ============%N");
+debug
+	io.error.putstring ("========= START TRACE, class ");
+	io.error.putstring (new_t.associated_class.class_name);
+	io.error.putstring (" ============%N");
+end
 			from
 				!!computed.make (count);
 				start;
 			until
 				after
 			loop
-				rout_id := key_for_iteration;
 				selected := item_for_iteration.selection
 												(parents, old_t, new_t);
 				if selected = Void then
@@ -144,7 +144,9 @@ feature
 				end;
 				forth;
 			end;
---io.error.putstring ("========= END TRACE ==========%N");
+debug
+	io.error.putstring ("========= END TRACE ==========%N");
+end;
 		end;
 
 	computed: SELECT_TABLE;

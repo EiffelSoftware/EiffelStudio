@@ -212,7 +212,7 @@ feature -- Access
 			array_offset, array_size: INTEGER
 			array_area: SPECIAL [CHARACTER]
 			color_struct_size: INTEGER
-			local_c: EV_C_EXTERNALS
+			local_c: EV_GTK_EXTERNALS
 			character_result, n_character: INTEGER
 		do
 			local_c := C
@@ -282,7 +282,7 @@ feature -- Access
 			color_struct_size: INTEGER
 			temp_alpha: CHARACTER
 			temp_alpha_int: INTEGER
-			local_c: EV_C_EXTERNALS
+			local_c: EV_GTK_EXTERNALS
 		do
 			local_c := C
 			create Result.make_with_alpha_zero (width, height)

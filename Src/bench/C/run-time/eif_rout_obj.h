@@ -11,7 +11,7 @@ extern "C" {
    argument tuple `args', open map `omap' and closed map `cmap'
 */
 
-extern EIF_REFERENCE rout_obj_create (int16 dftype, EIF_POINTER rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap, EIF_REFERENCE cmap);
+RT_LNK EIF_REFERENCE rout_obj_create (int16 dftype, EIF_POINTER rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap, EIF_REFERENCE cmap);
 
 /* Union structure for arguments */
 
@@ -27,12 +27,12 @@ typedef union {
 
 /* Argument structure (alloc/free) */
 
-extern EIF_POINTER rout_obj_new_args (EIF_INTEGER count);
-extern void rout_obj_free_args (EIF_POINTER);
+RT_LNK EIF_POINTER rout_obj_new_args (EIF_INTEGER count);
+RT_LNK void rout_obj_free_args (EIF_POINTER);
 
 /* Calls */
 
-extern void rout_obj_call_function (EIF_REFERENCE cur, EIF_REFERENCE res, EIF_POINTER rout, EIF_POINTER args);
+RT_LNK void rout_obj_call_function (EIF_REFERENCE cur, EIF_REFERENCE res, EIF_POINTER rout, EIF_POINTER args);
 
 /* Macros */
 

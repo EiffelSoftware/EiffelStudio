@@ -105,7 +105,7 @@ extern void st_truncate(register struct stack *stk);			/* Truncate stack if nece
 extern void st_wipe_out(register struct stchunk *chunk);			/* Remove unneeded chunk from stack */
 RT_LNK void eremb(EIF_REFERENCE obj);				/* Remembers old object */
 RT_LNK void erembq(EIF_REFERENCE obj);				/* Quick veersion (no GC call) of eremb */
-extern void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
+RT_LNK void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
 							/* Quick version (no GC call) of eremb for
 							 *special objects full of references.*/
 #ifdef EIF_REM_SET_OPTIMIZATION

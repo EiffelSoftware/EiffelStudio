@@ -50,15 +50,15 @@ extern Signal_t exfpe(int sig);		/* Routine trapped for floating point exception
 #define SIGRESUME	if (--esigblk == 0 && signal_pending) esdpch(MTC_NOARG)
 
 /* Eiffel interface with class UNIX_SIGNALS */
-extern long esigmap(long int idx);		/* Mapping between constants and signal numbers */
-extern char *esigname(long int sig);	/* Signal description */
-extern long esignum(EIF_CONTEXT_NOARG);		/* Signal number */
-extern void esigcatch(long int sig);	/* Catch signal */
-extern void esigignore(long int sig);	/* Ignore signal */
-extern char esigiscaught(long int sig);	/* Is signal caught? */
-extern char esigdefined(long int sig);	/* Is signal defined? */
-extern void esigresall(void);	/* Reset all signal to their default handling */
-extern void esigresdef(long int sig);	/* Reset a signal to its default handling */
+RT_LNK long esigmap(long int idx);		/* Mapping between constants and signal numbers */
+RT_LNK char *esigname(long int sig);	/* Signal description */
+RT_LNK long esignum(EIF_CONTEXT_NOARG);		/* Signal number */
+RT_LNK void esigcatch(long int sig);	/* Catch signal */
+RT_LNK void esigignore(long int sig);	/* Ignore signal */
+RT_LNK char esigiscaught(long int sig);	/* Is signal caught? */
+RT_LNK char esigdefined(long int sig);	/* Is signal defined? */
+RT_LNK void esigresall(void);	/* Reset all signal to their default handling */
+RT_LNK void esigresdef(long int sig);	/* Reset a signal to its default handling */
 
 #ifdef HAS_SYS_SIGLIST
 	extern char *sys_siglist[];

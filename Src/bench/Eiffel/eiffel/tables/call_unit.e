@@ -86,7 +86,7 @@ feature -- Hash coding
 			Result := class_type_id * Mask + id;
 		end;
 
-	is_equal (other: CALL_UNIT): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
 			Result := 	class_type_id = other.class_type_id

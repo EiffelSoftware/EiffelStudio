@@ -227,7 +227,7 @@ feature -- Pngs
 					pixmaps_by_name.put (Result, a_name)
 				else
 					update_warning_dialog_text (pixmap_file_name (a_name))
-					warning_dialog.show
+					pixmap_warning_dialog.show
 					Result := icon_delete_small @ 1
 				end
 			end
@@ -341,7 +341,7 @@ feature {NONE} -- Update
 				Result.set_file_name (file)
 				Result.add_extension ("ico")
 			else
-				if Eiffel_platform.as_lower.is_equal ("windows") then
+				if False and Eiffel_platform.as_lower.is_equal ("windows") then
 					create Result.make_from_string (Icon_path)
 					Result.set_file_name (file)
 					Result.add_extension ("ico")
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 		
-	warning_dialog: EV_WARNING_DIALOG is
+	pixmap_warning_dialog: EV_WARNING_DIALOG is
 			-- Dialog to be displayed, when a pixmap is
 			-- missing from the installation.
 		once
@@ -378,12 +378,14 @@ feature {NONE} -- Implementation
 	update_warning_dialog_text (new_text: STRING) is
 			-- Add `new_text' to text of warning dialog, one
 			-- line before the end.
+		require
+			new_text_not_void: new_text /= Void
 		local
 			new_line_index: INTEGER 
 		do
-			new_line_index := warning_dialog.text.last_index_of ('%N', warning_dialog.text.count)
-			warning_dialog.set_text (warning_dialog.text.substring (1, new_line_index - 1) + "%N" +
-				new_text + warning_dialog.text.substring (new_line_index, warning_dialog.text.count))
+			new_line_index := pixmap_warning_dialog.text.last_index_of ('%N', pixmap_warning_dialog.text.count)
+			pixmap_warning_dialog.set_text (pixmap_warning_dialog.text.substring (1, new_line_index - 1) + "%N" +
+				new_text + pixmap_warning_dialog.text.substring (new_line_index, pixmap_warning_dialog.text.count))
 		end
 		
 

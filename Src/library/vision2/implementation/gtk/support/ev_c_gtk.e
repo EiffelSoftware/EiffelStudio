@@ -9,6 +9,12 @@ class
 
 feature -- Externals
 
+	c_gtk_menu_popup (menu: POINTER; x, y: INTEGER) is
+			-- Show `menu' on (`x', `y').
+		external
+			"C | %"ev_menu_imp.h%""
+		end
+
 	c_match_font_name (pattern: POINTER): POINTER is
 			-- Match to first in list or return NULL.
 			-- `pattern' and `Result': char *

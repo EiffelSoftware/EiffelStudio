@@ -55,8 +55,6 @@ feature -- Element change
 	
 	change_area_position (a_x, a_y: INTEGER) is
 			-- `area' has moved to (`a_x', `a_y') of `drawable'.
-		local
-			u: EV_RECTANGLE
 		do
 			area_x := a_x
 			area_y := a_y

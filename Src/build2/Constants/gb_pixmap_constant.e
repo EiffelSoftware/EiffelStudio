@@ -101,9 +101,6 @@ feature -- Access
 
 	pixmap: EV_PIXMAP
 		-- Pixmap represented by `Current'.
-		
-	small_pixmap: EV_PIXMAP
-		-- Small version of `pixmap'.
 
 	is_absolute: BOOLEAN
 			-- Does `Current' reference an absolute constant or a relative constant?

@@ -29,14 +29,12 @@ feature {NONE} -- Implementation
 	
 	text_color: EV_COLOR is
 		do
-			--| FIXME Should be a preference
-			create Result.make_with_rgb (0.0, 0.0, 0.0)
+			Result := editor_preferences.generic_text_color
 		end
 
 	background_color: EV_COLOR is
 		do
-			--| FIXME Should be a preference
-			create Result.make_with_rgb (1.0, 1.0, 1.0)
+			Result := editor_preferences.generic_background_color
 		end
 
 end -- class EDITOR_TOKEN_GENERIC

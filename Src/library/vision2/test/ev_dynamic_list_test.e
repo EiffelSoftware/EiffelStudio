@@ -37,18 +37,18 @@ feature -- Initialization
 			create sb_test.make ("EV_STATUS_BAR", ~sb_list_generator, ~sb_item_generator)
 			create mcl_test.make ("EV_MULTI_COLUMN_LIST", ~mcl_list_generator, ~mcl_item_generator)
 			hbox_test.execute
-			vbox_test.execute
-			nb_test.execute
-			list_test.execute
-			tb_test.execute
-			sb_test.execute
-			mcl_test.execute
 			print (hbox_test.description + "%N")
+			vbox_test.execute
 			print (vbox_test.description + "%N")
+			nb_test.execute
 			print (nb_test.description + "%N")
+			list_test.execute
 			print (list_test.description + "%N")
+			tb_test.execute
 			print (tb_test.description + "%N")
+			sb_test.execute
 			print (sb_test.description + "%N")
+			mcl_test.execute
 			print (mcl_test.description + "%N")
 			if
 				hbox_test.test_successful and

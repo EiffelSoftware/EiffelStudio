@@ -26,21 +26,31 @@ feature -- Debugging (stop points)
 		require
 			routine_exists: routine /= Void
 		local
-			rout_text: ROUTINE_TEXT
+			rout_text: ROUTINE_TEXT;
+			rout_window: ROUTINE_W
 		do
 			from
 				active_editors.start
 			until
 				active_editors.after
 			loop
-				rout_text := active_editors.item.text_window;
+				rout_window := active_editors.item;
+				rout_text := rout_window.text_window;
 				if 
-					rout_text.in_debug_format and then
 					rout_text.root_stone /= Void and then
 					rout_text.root_stone.feature_i /= Void and then
 					rout_text.root_stone.feature_i.body_id = routine.body_id
 				then
-					rout_text.redisplay_breakable_mark (index)
+					if rout_text.in_debug_format then
+						rout_text.redisplay_breakable_mark (index)
+					elseif 
+						rout_text.last_format = rout_window.showtext_command 
+					then
+							-- Update the title bar of the feature tool.
+							-- "(stop)" if the routine has a stop point set.
+						rout_window.showtext_command.display_header 
+													(rout_text.root_stone)
+					end
 				end;
 				active_editors.forth
 			end

@@ -218,7 +218,7 @@ feature -- Access
 	clients: CLASS_ENUMERATOR is
 			-- List of class clients.
 		local
-			client_list: LINKED_LIST [CLASS_C]
+			client_list: LIST [CLASS_C]
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			client: CLASS_DESCRIPTOR
 		do
@@ -253,7 +253,7 @@ feature -- Access
 	suppliers: CLASS_ENUMERATOR is
 			-- List of class suppliers.
 		local
-			supplier_list: LINKED_LIST [CLASS_C]
+			supplier_list: LIST [CLASS_C]
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			supplier: CLASS_DESCRIPTOR
 		do
@@ -321,7 +321,7 @@ feature -- Access
 	descendants: CLASS_ENUMERATOR is
 			-- List of class direct descendants.
 		local
-			descendant_list: LINKED_LIST [CLASS_C]
+			descendant_list: LIST [CLASS_C]
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			descendant: CLASS_DESCRIPTOR
 		do

@@ -92,6 +92,33 @@ rt_private EIF_DOUBLE eif_min_double (EIF_DOUBLE i, EIF_DOUBLE j) {
 	return (i < j ? i : j);
 }
 
+/* Three way comparison computation */
+rt_private EIF_INTEGER_8 eif_twc_int8 (EIF_INTEGER_8 i, EIF_INTEGER_8 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_INTEGER_16 eif_twc_int16 (EIF_INTEGER_16 i, EIF_INTEGER_16 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_INTEGER_32 eif_twc_int32 (EIF_INTEGER_32 i, EIF_INTEGER_32 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_INTEGER_64 eif_twc_int64 (EIF_INTEGER_64 i, EIF_INTEGER_64 j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_CHARACTER eif_twc_char (EIF_CHARACTER i, EIF_CHARACTER j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_WIDE_CHAR eif_twc_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_REAL eif_twc_real (EIF_REAL i, EIF_REAL j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+rt_private EIF_DOUBLE eif_twc_double (EIF_DOUBLE i, EIF_DOUBLE j) {
+	return (i < j ? -1 : (j < i) ? 1 : 0);
+}
+
+
 
 #ifdef __cplusplus
 }

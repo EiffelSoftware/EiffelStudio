@@ -151,7 +151,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 		NULL,
 		NULL,
 		TRUE,
-		CREATE_NEW_CONSOLE,
+		DETACHED_PROCESS,
 		NULL,
 		current_dir,
 		&siStartInfo,

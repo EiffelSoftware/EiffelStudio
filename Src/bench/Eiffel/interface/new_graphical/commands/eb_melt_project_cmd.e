@@ -408,7 +408,7 @@ feature {NONE} -- Execution
 						wd.show
 					elseif Eiffel_ace.file_name /= Void then
 						confirm_and_compile (Void, Void)
-						if Project_resources.raise_on_error.actual_value then
+						if raise_on_error then
 							tool.raise
 						end
 					else

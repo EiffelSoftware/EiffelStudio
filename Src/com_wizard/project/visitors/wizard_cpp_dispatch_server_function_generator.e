@@ -22,7 +22,21 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			pointed_data_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
-			Result := clone (Ecatch)
+			Result := clone (Tab)
+			Result.append (Ecatch_auto)
+			Result.append (Open_parenthesis)
+			create visitor
+
+			visitor.visit (func_desc.return_type)
+			if not is_void (visitor.vt_type) then
+				Result.append (Open_parenthesis)
+				Result.append (visitor.c_type)
+				Result.append (Close_parenthesis)
+				Result.append (Zero)
+			end
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
 
 			if func_desc.argument_count > 0 then
 				arguments := clone (Space_open_parenthesis)
@@ -104,13 +118,7 @@ feature {NONE} -- Implementation
 
 			create visitor
 
-			pointed_data_type_descriptor ?= func_desc.return_type
-
-			if pointed_data_type_descriptor /= Void then
-				visitor.visit (pointed_data_type_descriptor.pointed_data_type_descriptor)
-			else
-				visitor.visit (func_desc.return_type)
-			end
+			visitor.visit (func_desc.return_type)
 
 			if func_desc.argument_count > 0 then
 				if visitor.c_type.is_equal (Hresult) then
@@ -196,9 +204,9 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 		do
-			Result := clone (Return)
-
-			if visitor.c_type.is_equal (Hresult) then
+			Result := clone (End_ecatch)
+			Result.append (Return)
+			if is_hresult (visitor.vt_type) then
 				Result.append (Space)
 				Result.append (S_ok)
 			elseif visitor.is_basic_type or else visitor.is_basic_type_ref then

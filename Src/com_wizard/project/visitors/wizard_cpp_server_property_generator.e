@@ -44,7 +44,7 @@ feature -- Basic operations
 			visitor.visit (a_descriptor.data_type)
 
 			-- Set result type.
-			c_access_feature.set_result_type (Hresult)
+			c_access_feature.set_result_type (Std_method_imp)
 
 			-- Set comment
 			c_access_feature.set_comment (a_descriptor.description)
@@ -75,7 +75,7 @@ feature -- Basic operations
 			c_setting_feature.set_body (setting_body (tmp_string, visitor))
 
 			--  Set result type
-			c_setting_feature.set_result_type (Hresult)
+			c_setting_feature.set_result_type (Std_method_imp)
 
 			-- Set comment
 			c_setting_feature.set_comment (a_descriptor.description)

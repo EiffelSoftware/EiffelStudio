@@ -20,7 +20,7 @@ feature -- Basic operations
 			valid_coclass_name: not a_coclass_name.empty
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
-			tmp_signature: STRING
+			tmp_signature, tmp_string: STRING
 		do
 			func_desc := a_descriptor
 			coclass_name := a_coclass_name
@@ -36,10 +36,15 @@ feature -- Basic operations
 				create visitor
 				visitor.visit (func_desc.return_type)
 
-				if visitor.c_type.is_equal (Hresult) then
+				if is_hresult (visitor.vt_type) then
 					ccom_feature_writer.set_result_type (Std_method_imp)
 				else
-					ccom_feature_writer.set_result_type (visitor.c_type)
+					tmp_string := clone (Std_method_imp)
+					tmp_string.append (Underscore)
+					tmp_string.append (Open_parenthesis)
+					tmp_string.append (visitor.c_type)
+					tmp_string.append (Close_parenthesis)
+					ccom_feature_writer.set_result_type (tmp_string)
 				end
 			end
 
@@ -202,6 +207,7 @@ feature {NONE} -- Implementation
 				Result.append (free_object)
 			end
 			Result.append (New_line_tab)
+			Result.append (End_ecatch)
 			Result.append (Return)
 			Result.append (Space)
 			Result.append (S_ok)

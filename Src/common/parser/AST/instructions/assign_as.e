@@ -60,9 +60,9 @@ feature {AST_EIFFEL} -- Output
 feature {ASSIGN_AS} -- Formatter
 
 	assign_symbol: TEXT_ITEM is
-		do
+		once
 			Result := ti_Assign
-		end;
+		end
 		
 feature {ASSIGN_AS}	-- Replication
 		

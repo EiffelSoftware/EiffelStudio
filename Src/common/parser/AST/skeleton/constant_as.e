@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"AST representation of a the content of an Eiffel constant.";
-	date: "$Date$";
+	description: "AST representation of a the content of an Eiffel constant."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class CONSTANT_AS
+class
+	CONSTANT_AS
 
 inherit
-
 	CONTENT_AS
 		redefine
 			is_unique, is_constant, is_equivalent
@@ -29,11 +27,8 @@ feature -- Properties
 	value: EXPR_AS;
 			-- Constant value
 
-	is_constant: BOOLEAN is
+	is_constant: BOOLEAN is True
 			-- Is the current content a constant one ?
-		do
-			Result := True;
-		end;
 
 	is_unique: BOOLEAN is
 			-- Is the content a unique ?

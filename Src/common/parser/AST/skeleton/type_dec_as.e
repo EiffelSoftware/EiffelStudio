@@ -45,25 +45,24 @@ feature -- Comparison
 
 feature -- Status report
 
-        has_id (i: ID_AS): BOOLEAN is
-                        -- Does current type declaration contain
-                        -- id `i'?
-                local
-                        cur: CURSOR
-                do
-                        cur := id_list.cursor
-                        from
-                                id_list.start
-                        until
-                                id_list.after or else Result
-                        loop
-                                Result := id_list.item.is_equal (i)
-                                id_list.forth
-                        end;
+	has_id (i: ID_AS): BOOLEAN is
+			-- Does current type declaration contain
+			-- id `i'?
+		local
+			cur: CURSOR
+		do
+			cur := id_list.cursor
+			from
+				id_list.start
+			until
+				id_list.after or else Result
+			loop
+				Result := id_list.item.is_equal (i)
+				id_list.forth
+			end;
 
-                        id_list.go_to (cur)
-                end;
-
+			id_list.go_to (cur)
+		end;
 
 feature {AST_EIFFEL} -- Output
 

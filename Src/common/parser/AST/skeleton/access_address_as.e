@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"AST representation of an access for the address operator.";
+	description: "AST representation of an access for the address operator.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class ACCESS_ADDRESS_AS
+class
+	ACCESS_ADDRESS_AS
 
 inherit
-
 	ACCESS_ID_AS
 		redefine
 			simple_format

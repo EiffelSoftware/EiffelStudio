@@ -79,9 +79,9 @@ feature -- Access
 
 	Fix_notation: STRING is
 			-- Infix notation prefix for the compiler
-		do
-			Result := "_infix_";
-		end;
+		once
+			Result := "_infix_"
+		end
 
 	is_valid: BOOLEAN is
 			-- Is the fix notation valid ?

@@ -17,8 +17,8 @@ inherit
 feature {NONE} -- Formatter
 	
 	assign_symbol: TEXT_ITEM is 
-		do
+		once
 			Result := ti_Reverse_assign
-		end;
+		end
 
 end -- class REVERSE_AS

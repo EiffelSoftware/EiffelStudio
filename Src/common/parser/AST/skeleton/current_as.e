@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"AST representation to access to `Current'.";
-	date: "$Date$";
+	description: "AST representation to access to `Current'."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class CURRENT_AS
+class
+	CURRENT_AS
 
 inherit
-
 	ACCESS_AS
 		redefine
 			is_equivalent
@@ -20,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Yacc initialization
 		do
 			-- Do nothing
-		end;
+		end
 
 feature -- Comparison
 
@@ -32,10 +30,7 @@ feature -- Comparison
 
 feature -- Properties
 
-	access_name: STRING is
-		once
-			Result := "Current"
-		end;
+	access_name: STRING is "Current"
 
 feature {AST_EIFFEL} -- Output
 

@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 		end;
 
 	code_table: HASH_TABLE [STRING, STRING] is
-			-- Corepondance table for infix/prefix notation
+			-- Corrsepondance table for infix/prefix notation
 		once
 			!!Result.make (20);
 			Result.put ("plus", "+");

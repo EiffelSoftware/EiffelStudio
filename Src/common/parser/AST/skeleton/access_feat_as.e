@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"AST representation of an access to an Eiffel feature (note %
 		%that this access cannot be the first call of a nested %
@@ -10,7 +9,6 @@ indexing
 class ACCESS_FEAT_AS
 
 inherit
-
 	ACCESS_AS
 		redefine
 			is_equivalent

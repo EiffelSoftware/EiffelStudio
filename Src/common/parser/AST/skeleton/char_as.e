@@ -1,8 +1,6 @@
 indexing
-
-	description: 
-		"AST representation of character constant.";
-	date: "$Date$";
+	description: "AST representation of character constant."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class CHAR_AS
@@ -28,17 +26,11 @@ feature -- Properties
 	value: CHARACTER;
 			-- Character value
 
-	is_character: BOOLEAN is
+	is_character: BOOLEAN is True
 			-- Is the current value a character value ?
-		do
-			Result := True;
-		end;
 
-	good_character: BOOLEAN is
+	good_character: BOOLEAN is True
 			-- Is the current atomic a good character?
-		do
-			Result := True;
-		end;
 
 feature -- Comparison
 

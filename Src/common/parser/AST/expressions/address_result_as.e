@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"AST representation of an Eiffel function pointer for Result types.";
+	description: "AST representation of an Eiffel function pointer for Result types.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class ADDRESS_RESULT_AS
+class
+	ADDRESS_RESULT_AS
 
 inherit
-
 	EXPR_AS
 
 feature {NONE} -- Initialization

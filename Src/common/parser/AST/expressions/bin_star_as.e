@@ -1,23 +1,18 @@
 indexing
-
-	description: 
-		"AST representation of binary `*' operation.";
-	date: "$Date$";
+	description: "AST representation of binary `*' operation."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class BIN_STAR_AS
+class
+	BIN_STAR_AS
 
 inherit
-
 	ARITHMETIC_AS
 
 feature -- Properties
 
-	infix_function_name: STRING is
+	infix_function_name: STRING is "_infix_star"
 			-- Internal name of the infixed feature associated to the
 			-- binary expression
-		once
-			Result := "_infix_star";
-		end;
 
 end -- class BIN_STAR_AS

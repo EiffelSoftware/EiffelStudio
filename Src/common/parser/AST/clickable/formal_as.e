@@ -39,11 +39,8 @@ feature -- Properties
 			-- Position of the formal parameter in the declaration
 			-- array
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
-		do
-			Result := True
-		end;
 
 feature -- Comparison
 

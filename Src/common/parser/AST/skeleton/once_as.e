@@ -16,11 +16,8 @@ inherit
 
 feature -- Properties
 
-	is_once: BOOLEAN is
+	is_once: BOOLEAN is True
 			-- Is the current routine body a once one ?
-		do
-			Result := true;
-		end;
 
 feature {NONE}
 

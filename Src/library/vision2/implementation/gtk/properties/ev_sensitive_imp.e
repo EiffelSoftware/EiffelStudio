@@ -26,12 +26,10 @@ feature -- Status report
 			-- Is the object sensitive to user input.
 		do
 			-- Shift to put bit in least significant place then take mod 2
-			if not is_destroyed then
-				Result := (
-					(C.gtk_object_struct_flags (c_object)
-					// C.GTK_SENSITIVE_ENUM) \\ 2
-				) = 1
-			end
+			Result := (
+				(C.gtk_object_struct_flags (c_object)
+				// C.GTK_SENSITIVE_ENUM) \\ 2
+			) = 1
 		end
 
 feature -- Status setting
@@ -39,18 +37,18 @@ feature -- Status setting
 	enable_sensitive is
 			-- Allow the object to be sensitive to user input.
 		do
-			if not is_destroyed then
-				C.gtk_widget_set_sensitive (c_object, True)
-			end
+			C.gtk_widget_set_sensitive (c_object, True)
 		end
 
 	disable_sensitive is
 			-- Set the object to ignore all user input.
 		do
-			if not is_destroyed then
-				C.gtk_widget_set_sensitive (c_object, False)
-			end
+			C.gtk_widget_set_sensitive (c_object, False)
 		end
+		
+feature {NONE} -- Implementation
+
+	disable_sensitive_called: BOOLEAN
 
 feature {EV_ANY_I} -- Implementation
 

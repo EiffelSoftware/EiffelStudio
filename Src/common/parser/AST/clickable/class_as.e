@@ -28,6 +28,7 @@ feature {AST_FACTORY} -- Initialization
 		g: like generics;
 		p: like parents;
 		c: like creators;
+		co: like convertors;
 		f: like features;
 		inv: like invariant_part;
 		s: like suppliers;
@@ -51,6 +52,7 @@ feature {AST_FACTORY} -- Initialization
 			generics := g
 			parents := p
 			creators := c
+			convertors := co
 			features := f
 			invariant_part := inv
 			if
@@ -80,6 +82,7 @@ feature {AST_FACTORY} -- Initialization
 			generics_set: generics = g
 			parents_set: parents = p
 			creators_set: creators = c
+			convertors_set: convertors = co
 			features_set: features = f
 			empty_invariant_part: invariant_part = Void implies inv = Void or else inv.assertion_list = Void
 			invariant_part_set: invariant_part /= Void implies invariant_part = inv
@@ -122,6 +125,9 @@ feature -- Attributes
 
 	creators: EIFFEL_LIST [CREATE_AS]
 			-- Creators
+
+	convertors: EIFFEL_LIST [CONVERT_FEAT_AS]
+			-- Convertors
 
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			-- Feature list

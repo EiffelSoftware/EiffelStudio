@@ -132,7 +132,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 fi
 fullrf $EXPORT_DIR/commercial_rt/libebench.a
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
-cp C/run-time/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
+cp C/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
 
 remtrace "Put x2c in the new delivery"

@@ -16,7 +16,7 @@ inherit
 
 	TEXT_GEN
 		redefine
-			select, deselect
+			select_figure, deselect
 		end;
 
 	FOREGROUND;

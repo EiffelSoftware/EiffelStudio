@@ -70,7 +70,7 @@ feature -- Access
 	cursor_position: INTEGER;
 			-- Cursor position
  
-	drawing: DRAWING_X is
+	drawing: DRAWING_IMP is
 			-- Drawing implementation
 		deferred
 		end;

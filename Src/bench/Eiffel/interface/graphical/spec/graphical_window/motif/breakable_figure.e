@@ -63,7 +63,7 @@ feature -- Status setting
 
 feature -- Output
 
-	draw (d: DRAWING_X; 
+	draw (d: DRAWING_IMP; 
 		values: GRAPHICAL_VALUES;
 		is_in_hightlighted_line: BOOLEAN; 
 			x_offset, y_offset: INTEGER) is
@@ -86,7 +86,7 @@ feature -- Output
 			end
 		end;
 
-	select_clickable (d: DRAWING_X;
+	select_clickable (d: DRAWING_IMP;
 			values: GRAPHICAL_VALUES;
 			x_offset, y_offset: INTEGER) is
 			-- Select clickable.
@@ -108,7 +108,7 @@ feature -- Output
 			end
 		end;
  
-	unselect_clickable (d: DRAWING_X;
+	unselect_clickable (d: DRAWING_IMP;
 			values: GRAPHICAL_VALUES;
 			x_offset, y_offset: INTEGER) is
 			-- Unselect clickable.

@@ -168,7 +168,7 @@ feature -- Setting
 
 feature -- Output
 
-	draw (d: DRAWING_X; 
+	draw (d: DRAWING_IMP; 
 			values: GRAPHICAL_VALUES;
 			is_in_highlighted_line: BOOLEAN;
 			x_offset, y_offset: INTEGER) is
@@ -188,7 +188,7 @@ feature -- Output
 					text);
 		end;
 
-	select_clickable (d: DRAWING_X;
+	select_clickable (d: DRAWING_IMP;
 			values: GRAPHICAL_VALUES;
 			x_offset, y_offset: INTEGER) is
 			-- Select current figure.
@@ -204,7 +204,7 @@ feature -- Output
 					text);
 		end;
  
-	unselect_clickable (d: DRAWING_X;
+	unselect_clickable (d: DRAWING_IMP;
 			values: GRAPHICAL_VALUES;
 			x_offset, y_offset: INTEGER) is
 			-- Un select current figure.

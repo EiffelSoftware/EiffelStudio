@@ -268,7 +268,7 @@ feature -- Setting
 
 feature -- Output
 
-	update_highlighted_line (d: DRAWING_X; 
+	update_highlighted_line (d: DRAWING_IMP; 
 			values: GRAPHICAL_VALUES; 
 			b: BOOLEAN; x_offset, y_offset: INTEGER) is
 			-- Select line if `b' is True. Otherwize, deselect it.
@@ -280,7 +280,7 @@ feature -- Output
 			end;
 		end;
 
-	draw (d: DRAWING_X; 
+	draw (d: DRAWING_IMP; 
 			values: GRAPHICAL_VALUES; 
 			x_offset, y_offset: INTEGER) is
 			-- Draw all the text in Current line.
@@ -288,7 +288,7 @@ feature -- Output
 			a: like area;
 			i, c: INTEGER;
 			b: BOOLEAN;
-			drawing: DRAWING_X;
+			drawing: DRAWING_IMP;
 		do
 			b := is_in_highlighted_line;
 			if b then
@@ -334,7 +334,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	highlight_line (d: DRAWING_X; 
+	highlight_line (d: DRAWING_IMP; 
 			values: GRAPHICAL_VALUES;
 			is_highlighted: BOOLEAN; x_offset, y_offset: INTEGER) is
 			-- Draw the current highlighted text line.

@@ -58,13 +58,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_from_tool (a_name: STRING; a_tool: TOOL_W) is
+	make_from_tool (a_name: STRING; form: COMPOSITE; a_tool: TOOL_W) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
 		require
 			valid_tool: a_tool /= Void and then a_tool.global_form /= Void
 		do
-			make (a_name, a_tool.global_form);
+			make (a_name, form);
 		end;
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -104,6 +104,8 @@ feature -- Properties
 
 	selected_clickable_text: TEXT_FIGURE;
 			-- Clickable text selected
+
+	tab_length: INTEGER
 
 	text_count: INTEGER is
 			-- Number of characters in `text'
@@ -278,6 +280,7 @@ feature -- Status setting
 			last_format: FORMAT_HOLDER;
 			cur: like cursor
 		do
+			tab_length := i
 			!! tab_spaces.make (0);
 			tab_spaces.extend (' ');
 			tab_spaces.multiply (i);

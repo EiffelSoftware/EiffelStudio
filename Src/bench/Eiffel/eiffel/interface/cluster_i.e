@@ -8,17 +8,21 @@ inherit
 	SHARED_WORKBENCH;
 	SHARED_ENV;
 	SHARED_RESCUE_STATUS;
-	SYSTEM_CONSTANTS;
+	PROJECT_CONTEXT;
 	COMPARABLE
 		undefine
 			is_equal
 		end
+	IDABLE
 
 creation
 
-	make
+	make, make_from_old_cluster
 
 feature -- Attributes
+
+	id: INTEGER;
+			-- Unique identifier of the cluster
 
 	date: INTEGER;
 			-- Date for time stamp
@@ -57,6 +61,18 @@ feature -- Attributes
 			-- List of files to include
 
 feature -- Conveniences
+
+	set_id (i: INTEGER) is
+			-- Assign `i` to `id'.
+		do
+			id := i
+		end;
+
+	set_new_id is
+			-- Assign the next integer value available to `id'
+		do
+			id := System.cluster_counter.next
+		end
 
 	set_date (i: INTEGER) is
 			-- Assign `i' to `date'.
@@ -107,6 +123,21 @@ feature -- Creation feature
 			!!ignore.make;
 			is_dynamic := System.is_dynamic
 		end;
+
+	make_from_old_cluster (old_cluster_i: CLUSTER_I) is
+		require
+			valid_arg: old_cluster_i /= Void
+		do
+			make (old_cluster_i.dollar_path)
+
+			id := old_cluster_i.id
+
+			copy_old_cluster (old_cluster_i)
+
+			cluster_name := old_cluster_i.cluster_name
+		end
+
+feature
 
 	clear is
 			-- Empty the structure
@@ -220,9 +251,7 @@ end;
 
 	duplicate: CLUSTER_I is
 		do
-			!!Result.make (dollar_path);
-			Result.set_cluster_name (cluster_name);
-			Result.copy_old_cluster (Current);
+			!!Result.make_from_old_cluster (Current);
 		end;
 
 	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD]): CLUSTER_I is
@@ -230,20 +259,22 @@ end;
 			changed_classes: LINKED_LIST [CLASS_I];
 			unchanged_classes: LINKED_LIST [CLASS_I];
 		do
-			!!Result.make (dollar_path);
-			Result.set_cluster_name (name);
-			Universe.insert_cluster (Result);
-
 				-- If the cluster has changed,
 				-- do a degree 6
 			if changed (ex_l, inc_l) then
+				!! Result.make (dollar_path);
+				Result.set_cluster_name (name);
+				Universe.insert_cluster (Result);
+
 				Result.set_old_cluster (duplicate);
+				Result.set_id (id);
 debug ("REMOVE_CLASS")
 	io.error.putstring ("New cluster calling fill%N");
 end;
 				Result.fill (ex_l, inc_l);
 			else
-				Result.copy_old_cluster (Current)
+				!! Result.make_from_old_cluster (Current)
+				Universe.insert_cluster (Result);
 			end;
 		end;
 
@@ -929,6 +960,29 @@ feature
 		do
 			Result := path < other.path
 		end;
+
+feature -- Automatic backup
+
+	backup_directory: DIRECTORY_NAME is
+			-- Full directory path where the changes in Current will be stored
+		local
+			d: DIRECTORY
+		do
+			!! Result.make_from_string (Workbench.backup_subdirectory)
+			Result.extend (backup_subdirectory)
+
+			!! d.make (Result)
+			if not d.exists then
+				d.create
+			end
+		end
+
+	backup_subdirectory: STRING is
+			-- Translation of the `clusteR_name' in something machine independent
+		do
+			Result := cluster_name.substring (1, (5).min (cluster_name.count))
+			Result.append_integer (id)
+		end
 
 feature -- DLE
 

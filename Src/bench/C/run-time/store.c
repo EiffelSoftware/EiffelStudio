@@ -23,14 +23,17 @@
 #include "struct.h"
 #include "bits.h"
 #include "plug.h"
+#include "run_idr.h"
 
-/*#define DEBUG;    /**/
+/*#define DEBUG 1    /**/
 
 public int fides;
 public char * general_buffer = (char *) 0;
 public int current_position = 0;
 public int buffer_size = 1024;
 public int end_of_buffer = 0;
+private char *bufer = (char *) 0;
+extern char *idr_temp_buf; 			/*temporary buffer for idr floats and doubles*/
 
 
 /*
@@ -40,17 +43,20 @@ private void internal_store();
 private void st_store();				/* Second pass of the store */
 private void ist_write();
 private void make_header();				/* Make header */
+private void imake_header();				/* Make header */
 private int store_buffer ();
 private void object_write ();
 public long get_offset ();
-
+public void allocate_gen_buffer();
+private void store_write();
+private void st_clean();
 
 /*
  * Shared data declarations
  */
-shared char *account;					/* Array of traversed dyn types */
+shared char *account = (char *) 0;			/* Array of traversed dyn types */
 
-extern int scount;						/* Maximum dtype */
+extern int scount;					/* Maximum dtype */
 
 private int accounting = 0;
 
@@ -58,6 +64,12 @@ private int accounting = 0;
 private char *rcsid =
 	"$Id$";
 #endif
+
+/*function pointers to save on if statements*/
+
+void (*make_header_func)() = make_header;
+void (*st_write_func)() = st_write;
+void (*flush_buffer_func)() = flush_st_buffer;
 
 /*
  * Functions definitions
@@ -73,6 +85,7 @@ char *object;
 
 	fides = (int) file_desc;
 	accounting = TR_ACCOUNT;
+	allocate_gen_buffer();
 	internal_store(object);
 	accounting = 0;
 }
@@ -84,6 +97,7 @@ char *object;
 	/* Store object hierarchy of root `object' without header. */
 	fides = (int) file_desc;
 	accounting = 0;
+	allocate_gen_buffer();
 	internal_store(object);
 }
 
@@ -95,12 +109,25 @@ char * object;
 	 * Store object hierarchy of root `object' and produce a header
      * so it can be retrieved by other systems.
      */
+	extern void run_idr_init();
+	extern void run_idr_destroy();
+	extern void idr_flush();
 
-    fides = (int) fd;
+	fides = (int) fd;
 	accounting = INDEPEND_ACCOUNT;
-    internal_store(object);
+	make_header_func = imake_header;
+	flush_buffer_func = idr_flush;
+	st_write_func = ist_write;
+	run_idr_init ();
+	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+	internal_store(object);
 	accounting = 0;
-
+	run_idr_destroy ();
+	make_header_func = make_header;
+	flush_buffer_func = flush_st_buffer;
+	st_write_func = st_write;
+	xfree (idr_temp_buf);
+	idr_temp_buf = (char *)0;
 }
 
 public void allocate_gen_buffer ()
@@ -126,7 +153,6 @@ char *object;
 	 */
 	char c;
 
-	allocate_gen_buffer();
 
 	if (accounting) {		/* Prepare character array */
 		account = (char *) xmalloc(scount * sizeof(char), C_T, GC_OFF);
@@ -134,16 +160,17 @@ char *object;
 			xraise(EN_MEM);
 		bzero(account, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT)
-			c = '\02';
+			c = '\04';
 		else
-			c = '\01';
+			c = '\03';
 	} else
-		c = '\0';
+		c = '\02';
 
 	/* Write the kind of store */
-	buffer_write(&c, sizeof(char));
+	if (write(fides, &c, sizeof(char)) < 0)
+		eio();
 
-#ifdef DEBUG
+#if DEBUG & 3
 		printf ("\n %d", c);
 #endif
 
@@ -152,21 +179,25 @@ char *object;
 	traversal(object,accounting);
 
 	if (accounting) {
-		make_header();			/* Make header */
+		make_header_func();			/* Make header */
 		xfree(account);			/* Free accouting character array */
+		account = (char *) 0;
 	}
 	/* Write in file `fides' the count of stored objects */
-	buffer_write(&obj_nb, sizeof(long));
+	if (accounting == INDEPEND_ACCOUNT)
+		widr_multi_int (&obj_nb, 1);
+	else
+		buffer_write(&obj_nb, sizeof(long));
 
-#ifdef DEBUG
+#if DEBUG & 3
 		printf (" %lx", obj_nb);
 #endif
 
 	st_store(object);			/* Write objects to be stored in `fides' */
 
-    if (current_position != 0)
-        store_write ();
-#ifdef DEBUG
+						/* flush the buffer */
+        flush_buffer_func ();
+#if DEBUG & 3
 		printf ("\n");
 #endif
 }
@@ -230,10 +261,7 @@ char *object;
 	}
 
 	if (!is_expanded)
-		if (accounting == INDEPEND_ACCOUNT)
-			ist_write(object);
-		else
-			st_write(object);		/* Write the object on the disk */
+		st_write_func(object);		/* write the object */
 
 }
 
@@ -251,10 +279,10 @@ char *object;
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 	/* Write address */
+
 	buffer_write(&object, sizeof(char *));
 	buffer_write(&flags, sizeof(uint32));
-
-#ifdef DEBUG
+#if DEBUG & 2
 		printf ("\n %lx", object);
 		printf (" %lx", flags);
 #endif
@@ -263,7 +291,7 @@ char *object;
 		/* We have to save the size of the special object */
 		buffer_write(&zone->ov_size, sizeof(uint32));
 
-#ifdef DEBUG
+#if DEBUG & 2
 		printf (" %lx", zone->ov_size);
 #endif
 
@@ -275,11 +303,13 @@ char *object;
 	/* Write the body of the object */
 	buffer_write(object, (sizeof(char) * nb_char));
 
-#ifdef DEBUG
+#if DEBUG & 2
 {
 	int i;
 	for (i = 0; i < nb_char ; i++) {
 		printf (" %x", *(object + i));
+		if (!(i % 40))
+			printf ("\n");
 	}
 }
 #endif
@@ -298,22 +328,14 @@ char *object;
 	uint32 flags;
 	register1 uint32 nb_char;
 
-#if PTRSIZ > 4
-	unsigned int trunc_ptr;
-#endif
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 	/* Write address */
-#if PTRSIZ > 4
- 
-	trunc_ptr = (unsigned int)object & 0xffff;
-	buffer_write (&trunc_ptr, sizeof (unsigned int));
-#else
-	buffer_write(&object, sizeof(char *));
-#endif
-	buffer_write(&flags, sizeof(uint32));
 
-#ifdef DEBUG
+	widr_multi_any (&object, 1);
+	widr_norm_int (&flags);
+
+#if DEBUG & 1
 		printf ("\n %lx", object);
 		printf (" %lx", flags);
 #endif
@@ -327,11 +349,11 @@ char *object;
 
 		/* We have to save the number of objects in the special object */
 
-		buffer_write(&count, sizeof(uint32));
-		buffer_write(&elm_size, sizeof(uint32));
+		widr_norm_int(&count);
+		widr_norm_int(&elm_size);
 
-#ifdef DEBUG
-		printf (" %x", count);
+#if DEBUG & 1
+		printf ("\ncount  %x", count);
 		printf (" %x", elm_size);
 #endif
 
@@ -378,51 +400,50 @@ char * object;
 			attrib_offset = get_offset(o_type, --num_attrib);
 			switch (*(System(o_type).cn_types + num_attrib) & SK_HEAD) {
 				case SK_INT:
-#ifdef DEBUG
+#if DEBUG &1
 					printf (" %lx", *((long *)(object + attrib_offset)));
 #endif
-					buffer_write(object + attrib_offset, sizeof(long));
+					widr_multi_int (object + attrib_offset, 1);
 
 					break;
 				case SK_BOOL:
 				case SK_CHAR:
-#ifdef DEBUG
+#if DEBUG &1
 					printf (" %lx", *((char *)(object + attrib_offset)));
 #endif
-					buffer_write(object + attrib_offset, sizeof(char));
+					widr_multi_char (object + attrib_offset, 1);
 
 					break;
 				case SK_FLOAT:
-#ifdef DEBUG
+#if DEBUG &1
 					printf (" %f", *((float *)(object + attrib_offset)));
 #endif
-					buffer_write(object + attrib_offset, sizeof(float));
+					widr_multi_float (object + attrib_offset, 1);
 
 					break;
 				case SK_DOUBLE:
-#ifdef DEBUG
+#if DEBUG &1
 					printf (" %lf", *((double *)(object + attrib_offset)));
 #endif
-					buffer_write(object + attrib_offset, sizeof(double));
+					widr_multi_double (object + attrib_offset, 1);
 
 					break;
 				case SK_BIT:
-						{
-							int q;
-							struct bit *bptr = (struct bit *)(object + attrib_offset);
-#ifdef DEBUG
-							printf (" %x", bptr->b_length);
-							printf (" %x", HEADER(bptr)->ov_flags);
-#endif
-							buffer_write (&(bptr->b_length), sizeof (uint32));
-							buffer_write (&(HEADER(bptr)->ov_flags), sizeof (uint32));
-							for (q = 0; q < BIT_NBPACK(LENGTH(bptr)) ; q++) {
-#ifdef DEBUG
-								printf (" %lx", *((uint32 *)(bptr->b_value + q)));
-#endif
-								buffer_write (bptr->b_value + q, sizeof (uint32));
-							}
+					{
+						int q;
+						struct bit *bptr = (struct bit *)(object + attrib_offset);
+#if DEBUG &1
+						printf (" %x", bptr->b_length);
+						printf (" %x", HEADER(bptr)->ov_flags);
+						for (q = 0; q < BIT_NBPACK(LENGTH(bptr)) ; q++) {
+							printf (" %lx", *((uint32 *)(bptr->b_value + q)));
+							if (!(q % 40))
+								printf ("\n");
 						}
+#endif
+						widr_norm_int (&(HEADER(bptr)->ov_flags), 1);
+						widr_multi_bit (bptr, 1, bptr->b_length, NULL);
+					}
 
 					break;
 				case SK_EXP:
@@ -430,15 +451,15 @@ char * object;
 					break;
 				case SK_REF:
 				case SK_POINTER:
-#ifdef DEBUG
+#if DEBUG &1
 					printf (" %lx", *((long *)(object + attrib_offset)));
 #endif
-					buffer_write(object + attrib_offset, sizeof(char *));
+					widr_multi_any (object + attrib_offset, 1);
 
 					break;
 
 				default:
-   	             eio();
+					eio();
 			}
 		} 
 	} else {
@@ -464,7 +485,7 @@ char * object;
 				int nb_gen = info->gt_param;
 	
 				for (;;) {
-#ifdef DEBUG
+#if DEBUG &1
 					if (*gt_type == SK_INVALID)
 						panic("corrupted cecil table");
 #endif
@@ -476,78 +497,84 @@ char * object;
 				dgen = *gt_gen;
 			}
 	
-			if (!(flags & EO_REF)) {			/* Special of simple types */
+			if (!(flags & EO_REF)) {		/* Special of simple types */
 				switch (dgen & SK_HEAD) {
 					case SK_INT:
+#if DEBUG &1
 						for (z = 0; z < count; z++) {
-#ifdef DEBUG
 							printf (" %lx", *(((long *)object) + z));
-#endif
-							buffer_write(((long *)object) + z, sizeof(long));
+							if (!(z % 40))
+								printf("\n");
 						}
-
+#endif
+						widr_multi_int (((long *)object), count);
 						break;
 					case SK_BOOL:
 					case SK_CHAR:
-#ifdef DEBUG
+#if DEBUG &1
 						for (z = 0; z < count; z++) {
 							printf (" %lx", *((char *)(object + z)));
+							if (!(z % 40))
+								printf("\n");
 						}
 #endif
-						buffer_write(object, (int)(sizeof(char) * count));
-
+						widr_multi_char (object, count);
 						break;
 					case SK_FLOAT:
+#if DEBUG &1
 						for (z = 0; z < count; z++) {
-#ifdef DEBUG
 							printf (" %f", *(((float *)object) + z));
-#endif
-							buffer_write(((float *)object) + z, sizeof(float));
+							if (!(z % 40))
+								printf("\n");
 						}
-
+#endif
+						widr_multi_float ((float *)object, count);
 						break;
 					case SK_DOUBLE:
+#if DEBUG &1
 						for (z = 0; z < count; z++) {
-#ifdef DEBUG
 							printf (" %lf", *(((double *)object) + z));
-#endif
-							buffer_write(((double *)object) + z, sizeof(double));
+							if (!(z % 40))
+								printf("\n");
 						}
+#endif
+						widr_multi_double ((double *)object, count);
 						break;
 					case SK_BIT:
 						dgen_typ = dgen & SK_DTYPE;
 						elem_size = *(long *) (o_ptr + sizeof(long));
-#ifdef DEBUG
+#if DEBUG &1
 						printf (" %x", dgen_typ);
-#endif
-						buffer_write (&dgen_typ, sizeof (uint32));
 						for (ref = object; count > 0; count--, 
 								ref += elem_size) {
 							int q;
 							for (q = 0; q < BIT_NBPACK(dgen & SK_DTYPE ) ; q++) {
-#ifdef DEBUG
 								printf (" %lx", *((uint32 *)(((struct bit *)ref)->b_value + q)));
-#endif
-								buffer_write (((struct bit *)object)->b_value + q, sizeof (uint32));
+								if (!(q % 40))
+									printf("\n");
 							}
+							printf ("\n");
 						}
+#endif
+						widr_multi_bit ((struct bit *)object, count, dgen_typ, elem_size);
 						break;
 					case SK_EXP:
 						elem_size = *(long *) (o_ptr + sizeof(long));
+						widr_norm_int (&(HEADER (object + OVERHEAD)->ov_flags), 1);
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
-							buffer_write (&(HEADER (ref)->ov_flags), sizeof (uint32));
 							object_write(ref);
 						}
 						break;
 					case SK_POINTER:
+#if DEBUG &1
 						for (z = 0; z < count; z++) {
-#ifdef DEBUG
 							printf (" %lx", (((char *)object) + z));
-#endif
-							buffer_write(object + z, sizeof(char *));
+							if (!(z % 40))
+								printf("\n");
 						}
-
+#endif
+						widr_multi_any (object, count);
 						break;
 
 					default:
@@ -555,26 +582,21 @@ char * object;
 						break;
 				}
 			} else {
-				if (!(flags & EO_COMP)) {		/* Special of references */
+				if (!(flags & EO_COMP)) {	/* Special of references */
+					widr_multi_any (object, count);
+#if DEBUG &1
 					for (ref = object; count > 0; count--,
 							ref = (char *) ((char **) ref + 1)) {
-#if PTRSIZ > 4
-						unsigned int trunc_ptr;
-
-						trunc_ptr = (unsigned int)((*(long *)ref) & 0xffff);
-						buffer_write (&trunc_ptr, sizeof (unsigned int));
-#else
-						buffer_write(ref, sizeof(char *));
-#endif
-#ifdef DEBUG
 						printf (" %lx", *(long *)(ref));
-#endif
+						if (!(count % 40))
+							printf ("\n");
 					}
-				} else {						/* Special of composites */
+#endif
+				} else {			/* Special of composites */
 					elem_size = *(long *) (o_ptr + sizeof(long));
+					widr_norm_int (&(HEADER (object)->ov_flags), 1);
 					for (ref = object + OVERHEAD; count > 0;
-						count --, ref += elem_size) {
-						buffer_write (&(HEADER (ref)->ov_flags), sizeof (uint32));
+							count --, ref += elem_size) {
 						object_write(ref);
 					}
 				}
@@ -590,30 +612,33 @@ private void make_header()
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	int i;
 	char *vis_name;			/* Visible name of a class */
-	char *bufer;
 	struct gt_info *info;
 	int nb_line = 0;
 	int bsize = 80;
 
+        jmp_buf exenv;
+
+        excatch((char *) exenv);        /* Record pseudo execution vector */
+        if (setjmp(exenv)) {
+                st_clean();                            /* Clean data structure */
+                ereturn();                              /* Propagate exception */
+        }
+
 	bufer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
-	if (0 > sprintf(bufer,"%d\n", scount))
+	if (0 > sprintf(bufer,"%d\n", scount)) {
 		eio();
+	}
 	buffer_write(bufer, (strlen (bufer)));
 	
-	if (accounting == INDEPEND_ACCOUNT) {
-		if (0 > sprintf(bufer,"%d\n", OVERHEAD))
-			eio();
-		buffer_write(bufer, (strlen (bufer)));
-		
-	}
 
 	for (i=0; i<scount; i++)
 		if (account[i])
 			nb_line++;
 	/* Write number of header lines */
-	if (0 > sprintf(bufer,"%d\n", nb_line))
+	if (0 > sprintf(bufer,"%d\n", nb_line)) {
 		eio();
+	}
 	buffer_write(bufer, (strlen (bufer)));
 
 	for (i=0; i<scount; i++) {
@@ -625,7 +650,7 @@ private void make_header()
 		if (bsize < (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6))
 			{
 				bsize = (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6);
-				bufer = (char *) realloc ( bufer, bsize);
+				bufer = (char *) xrealloc (bufer, bsize, GC_OFF);
 		}
 
 		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
@@ -638,15 +663,14 @@ private void make_header()
 			int nb_gen = info->gt_param;
 			int j;
 
-			if (0 > 
-				sprintf(bufer, "%d %s %ld %d", i, vis_name, Size(i), nb_gen)
-			)
+			if (0 > sprintf(bufer, "%d %s %ld %d", i, vis_name, Size(i), nb_gen)) {
 				eio();
+			}
 
 			buffer_write(bufer, (strlen (bufer)));
 
 			for (;;) {
-#ifdef DEBUG
+#if DEBUG &1
 				if (*gt_type == SK_INVALID)
 					panic("corrupted cecil table");
 #endif
@@ -659,41 +683,171 @@ private void make_header()
 				long dgen;
 
 				dgen = (long) *(gt_gen++);
-				if (0 > sprintf(bufer, " %lu", dgen))
+				if (0 > sprintf(bufer, " %lu", dgen)) {
 					eio();
+				}
 				buffer_write(bufer, (strlen (bufer)));
 			}
 		} else {
 			/* Non-generic type, write in file:
 			 *    "dtype visible_name size 0"
 			 */
-			if (0 > sprintf(bufer, "%d %s %ld 0", i, vis_name, Size(i)))
+			if (0 > sprintf(bufer, "%d %s %ld 0", i, vis_name, Size(i))) {
 				eio();
+			}
 			buffer_write(bufer, (strlen (bufer)));
 		}
-		if (accounting == INDEPEND_ACCOUNT) {
+		if (0 > sprintf(bufer,"\n")) {
+			eio();
+		}
+		buffer_write(bufer, (strlen (bufer)));
+	}
+	xfree (bufer);
+	bufer = (char *) 0;
+}
+
+
+private void imake_header()
+{
+	/* Generate header for stored hiearchy retrivable by other systems. */
+	int i;
+	char *vis_name;			/* Visible name of a class */
+	struct gt_info *info;
+	int nb_line = 0;
+	int bsize = 600;
+	uint32 num_attrib;
+        jmp_buf exenv;
+
+        excatch((char *) exenv);        /* Record pseudo execution vector */
+        if (setjmp(exenv)) {
+                st_clean();                             /* Clean data structure */
+                ereturn();                              /* Propagate exception */
+        }
+
+	bufer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
+	/* Write maximum dynamic type */
+	if (0 > sprintf(bufer,"%d\n", scount)) {
+		eio();
+	}
+	widr_multi_char (bufer, (strlen (bufer)));
+	
+	if (0 > sprintf(bufer,"%d\n", OVERHEAD)) {
+		eio();
+	}
+	widr_multi_char (bufer, (strlen (bufer)));
+
+	for (i=0; i<scount; i++)
+		if (account[i])
+			nb_line++;
+	/* Write number of header lines */
+	if (0 > sprintf(bufer,"%d\n", nb_line)) {
+		eio();
+	}
+	widr_multi_char (bufer, (strlen (bufer)));
+
+	for (i=0; i<scount; i++) {
+		if (!account[i])
+			continue;				/* No object of dyn. type `i'.
+		/* vis_name = Visible(i) */;/* Visible name of the dyn. type */
+		vis_name = System(i).cn_generator;
+
+		if (bsize < (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6))
+			{
+				bsize = (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6);
+				bufer = (char *) xrealloc (bufer, bsize, GC_OFF);
+		}
+
+		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+		if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			/* Generic type, write in file:
+			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 */
+			int16 *gt_type = info->gt_type;
+			int32 *gt_gen;
+			int nb_gen = info->gt_param;
+			int j;
+
+			if (0 > sprintf(bufer, "%d %s %d", i, vis_name, nb_gen)) {
+				eio();
+			}
+
+			widr_multi_char (bufer, (strlen (bufer)));
+
+			for (;;) {
+#if DEBUG &1
+				if (*gt_type == SK_INVALID)
+					panic("corrupted cecil table");
+#endif
+				if ((*gt_type++ & SK_DTYPE) == (int16) i)
+					break;
+			}
+			gt_type--;
+			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+			for (j=0; j<nb_gen; j++) {
+				long dgen;
+
+				dgen = (long) *(gt_gen++);
+				if (0 > sprintf(bufer, " %lu", dgen)) {
+					eio();
+				}
+				widr_multi_char (bufer, (strlen (bufer)));
+			}
+		} else {
+			/* Non-generic type, write in file:
+			 *    "dtype visible_name size 0"
+			 */
+			if (0 > sprintf(bufer, "%d %s 0", i, vis_name)) {
+				eio();
+			}
+			widr_multi_char (bufer, (strlen (bufer)));
+		}
+		
 				/* also add 
 				 * "num_attributes attib_type +"
 				 */
 
-			uint32 num_attrib = System(i).cn_nbattr;
-			if (0 > sprintf(bufer, " %d", num_attrib))
-				eio();
-			buffer_write(bufer, (strlen (bufer)));
-			for (; num_attrib > 0;) {
-				if (0 > sprintf(bufer, " %lu", *(System(i).cn_types + --num_attrib) & SK_HEAD))
-					eio();
-				buffer_write(bufer, (strlen (bufer)));
-			}	
-		}	
-		if (0 > sprintf(bufer,"\n"))
+		num_attrib = System(i).cn_nbattr;
+		if (0 > sprintf(bufer, " %d", num_attrib)) {
 			eio();
-		buffer_write(bufer, (strlen (bufer)));
+		}
+		widr_multi_char (bufer, (strlen (bufer)));
+		for (; num_attrib-- > 0;) {
+			if (0 > sprintf(bufer, "\n%lu %s", (*(System(i).cn_types + num_attrib) & SK_HEAD), 
+					*(System(i).cn_names + num_attrib))) {
+				eio();
+			}
+			widr_multi_char (bufer, (strlen (bufer)));
+		}	
+		if (0 > sprintf(bufer,"\n")) {
+			eio();
+		}
+		widr_multi_char (bufer, (strlen (bufer)));
 	}
 	xfree (bufer);
+	bufer = (char *) 0;
 }
 
 
+private void st_clean ()
+{
+	/* clean up memory allocation and reset function pointers */
+
+	make_header_func = make_header;
+	flush_buffer_func = flush_st_buffer;
+	st_write_func = st_write;
+	if (bufer != (char *) 0) {
+		xfree (bufer);
+		bufer = (char *) 0;
+	}
+	if (account != (char *)0) {
+		xfree (account);
+		account = (char *) 0;
+	}
+	if (!(idr_temp_buf == (char *)0)) {
+		xfree (idr_temp_buf);
+		idr_temp_buf = (char *)0;
+	}
+}
 
 public void buffer_write(data, size)
 register char * data;
@@ -705,7 +859,7 @@ int size;
     	for (i = 0; i < size; i++) {
         	*(general_buffer + current_position) = *(data++);
         	if (++current_position >= buffer_size)
-            	store_write();
+			store_write();
     	}
 	} else {
     	for (i = 0; i < size; i++) {
@@ -715,23 +869,31 @@ int size;
 
 }
 
+public void flush_st_buffer ()
+{
+	if (current_position != 0)
+		store_write ();
+}
 
 
-public void store_write()
+private void store_write()
 {
 	register char * ptr = general_buffer;
 	register int number_left = current_position;
+	short send_size = (short) current_position;
 
-    int number_writen;
+	int number_writen;
 
-    while (number_left > 0) {
-        number_writen = write (fides, ptr, number_left);
-        if (number_writen <= 0)
-            eio();
-        number_left -= number_writen;
-        ptr += number_writen;
-    }
-    if (ptr - general_buffer == current_position)
+	if ((write (fides, &send_size, sizeof (short))) < sizeof (short))
+		eio();
+	while (number_left > 0) {
+		number_writen = write (fides, ptr, number_left);
+		if (number_writen <= 0)
+			eio();
+		number_left -= number_writen;
+		ptr += number_writen;
+	}
+	if (ptr - general_buffer == current_position)
 		current_position = 0;
 	else
 		eio();

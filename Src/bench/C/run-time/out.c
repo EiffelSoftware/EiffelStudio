@@ -337,9 +337,8 @@ int tab;
 					sprintf(buffer, "POINTER = C pointer 0x%lX\n", *(fnptr *)o_ref);
 				else {
 					/* Must be bit */
-					reference = *(char **) o_ref;
 					sprintf(buffer, "BIT %d = %s\n", 
-							LENGTH(reference), b_out(reference));
+							LENGTH(o_ref), b_out(o_ref));
 				}
 				write_out();
 			}

@@ -34,8 +34,8 @@ extern int fides;			/* File descriptor used by `store_write' */
 extern void st_write();			/* Write an object in file */
 extern char *account;			/* Array of traversed dyn types */
 
-extern void store_write();
 extern void buffer_write();
+extern void flush_st_buffer();
 
 extern int current_position;
 extern char * general_buffer;

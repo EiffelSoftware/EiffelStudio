@@ -26,7 +26,6 @@ inherit
 			cell_item,
 			cell_extend,
 			has_recursive,
-			cell_linear_representation,
 			merge_radio_button_groups,
 			propagate_background_color,
 			propagate_foreground_color,

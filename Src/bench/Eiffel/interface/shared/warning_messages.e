@@ -434,6 +434,14 @@ feature -- Debug warnings
 			Result := "%'" + expr + "%' is an invalid or not supported syntax."
 		end
 
+	w_Not_a_condition (expr: STRING): STRING is
+			-- Message when an expression is not a condition.
+		require
+			expr_not_void: expr /= Void
+		do
+			Result := "%'" + expr + "%' is not a condition."
+		end
+
 	w_Invalid_address (addr: STRING): STRING is
 			-- Message when an address does not correspond to an object.
 		require

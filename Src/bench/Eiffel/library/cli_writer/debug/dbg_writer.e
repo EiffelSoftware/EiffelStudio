@@ -44,6 +44,47 @@ feature -- Update
 			is_closed: is_closed
 		end
 
+	close_method is
+			-- Close current method.
+		require
+			not_is_closed: not is_closed
+		do
+			last_call_success := c_close_method (item)
+		ensure
+			success: last_call_success = 0
+		end
+
+	open_method (a_meth_token: INTEGER) is
+			-- Open method `a_meth_token'.
+		require
+			not_is_closed: not is_closed
+			valid_token: a_meth_token /= 0
+		do
+			last_call_success := c_open_method (item, a_meth_token)
+		ensure
+			success: last_call_success = 0
+		end
+		
+feature -- PE file data
+
+	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER is
+			-- Retrieve debug info required to be inserted in PE file.
+		require
+			not_is_closed: not is_closed
+			a_dbg_directory_not_void: a_dbg_directory /= Void
+		local
+			l_count: INTEGER
+			l_data: MANAGED_POINTER
+		do
+			create l_data.make (1024)
+			last_call_success := c_debug_info (item, a_dbg_directory.item, l_data.count, $l_count, l_data.item)
+			
+			create Result.make (l_count)
+			Result.item.memory_copy (l_data.item, l_count)
+		ensure
+			success: last_call_success = 0
+		end
+
 feature -- Status report
 
 	is_closed: BOOLEAN
@@ -69,8 +110,8 @@ feature -- Definition
 			success: last_call_success = 0
 		end
 
-	define_sequence_points (document: DBG_DOCUMENT_WRITER; offsets, start_lines, start_columns,
-			end_lines, end_columns: MANAGED_POINTER)
+	define_sequence_points (document: DBG_DOCUMENT_WRITER; count: INTEGER; offsets, start_lines,
+			start_columns, end_lines, end_columns: ARRAY [INTEGER])
 		is
 			-- Set sequence points for `document'
 		require
@@ -78,13 +119,38 @@ feature -- Definition
 			document_not_void: document /= Void
 			offsets_not_void: offsets /= Void
 			start_lines_not_void: start_lines /= Void
-			valid_count: offsets.count = start_lines.count
+			valid_start_lines_count: count <= start_lines.count
+			start_columns_not_void: start_columns /= Void
+			valid_start_columns_count: count <= start_columns.count
+			end_lines_not_void: end_lines /= Void
+			valid_end_lines_count: count <= end_lines.count
+			end_columns_not_void: end_columns /= Void
+			valid_end_columns_count: count <= end_columns.count
+		local
+			l_offsets, l_start_lines, l_start_columns, l_end_lines, l_end_columns: ANY
 		do
-			last_call_success := c_define_sequence_points (item, document.item, offsets.count,
-				offsets.item, start_lines.item, start_columns.item, end_lines.item,
-				end_columns.item)
+			l_offsets := offsets.to_c
+			l_start_lines := start_lines.to_c
+			l_start_columns := start_columns.to_c
+			l_end_lines := end_lines.to_c
+			l_end_columns := end_columns.to_c
+			last_call_success := c_define_sequence_points (item, document.item, count,
+				$l_offsets, $l_start_lines, $l_start_columns, $l_end_lines, $l_end_columns)
 		ensure
 			success: last_call_success = 0
+		end
+		
+feature -- Settings
+
+	set_user_entry_point (entry_point_token: INTEGER) is
+			-- Set `entry_point_token' as entry point.
+		require
+			not_is_closed: not is_closed
+			valid_token: entry_point_token & 0xFF000000 = feature {MD_TOKEN_TYPES}.method_def
+		do
+			last_call_success := c_set_user_entry_point (item, entry_point_token)
+		ensure
+			success: last_call_success  = 0
 		end
 		
 feature {NONE} -- Implementation
@@ -121,6 +187,20 @@ feature {NONE} -- Implementation
 			"CloseScope"
 		end
 
+	c_debug_info (an_item: POINTER; debug_directory: POINTER; input_data_size: INTEGER;
+			output_data_size: POINTER; data: POINTER): INTEGER
+		is
+			-- Call `ISymUnmanagedWriter->GetDebugInfo'.
+		external
+			"[
+				C++ ISymUnmanagedWriter signature
+					(IMAGE_DEBUG_DIRECTORY *, DWORD, DWORD *, BYTE *): EIF_INTEGER
+				use "cli_headers.h"
+			]"
+		alias
+			"GetDebugInfo"
+		end
+			
 	c_define_document (an_item: POINTER; name: POINTER;
 			lang_guid, lang_vendor, doc_type: POINTER; sym_writer: POINTER): INTEGER
 		is
@@ -182,6 +262,18 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"OpenScope"
+		end
+
+	c_set_user_entry_point (an_item: POINTER; token: INTEGER): INTEGER
+		is
+				-- Call `ISymUnmanagedWriter->SetUserEntryPoint'.
+		external
+			"[
+				C++ ISymUnmanagedWriter signature (ULONG32): EIF_INTEGER
+				use "cli_headers.h"
+			]"
+		alias
+			"SetUserEntryPoint"
 		end
 
 end -- class DBG_WRITER

@@ -22,8 +22,6 @@ feature {NONE} -- Initialization
 			create interval.make (0, 255)
 			back_color := colorizable.background_color
 			fore_color := colorizable.foreground_color
-			initial_fore_color := clone (fore_color)
-			initial_back_color := clone (back_color)
 			default_create
 			set_text ("EV_COLORIZABLE")
 			create vertical_box
@@ -64,14 +62,7 @@ feature {NONE} -- Implementation
 	reset_colors (colorizable: EV_COLORIZABLE) is
 			-- Rest colors and spin buttons.
 		do
-			colorizable.set_foreground_color (initial_fore_color)
-			colorizable.set_background_color (initial_back_color)
-			bspinr.set_value (initial_back_color.red_8_bit)
-			bsping.set_value (initial_back_color.green_8_bit)
-			bspinb.set_value (initial_back_color.blue_8_bit)
-			fspinr.set_value (initial_fore_color.red_8_bit)
-			fsping.set_value (initial_fore_color.green_8_bit)
-			fspinb.set_value (initial_fore_color.blue_8_bit)
+			colorizable.set_default_colors
 		end
 		
 	colorizable_set_background (colorizable: EV_COLORIZABLE) is
@@ -95,7 +86,6 @@ feature {NONE} -- Implementation
 		-- Widgets used to create controls.
 	interval: INTEGER_INTERVAL
 	back_color, fore_color: EV_COLOR
-	initial_back_color, initial_fore_color: EV_COLOR
 	horizontal_box: EV_HORIZONTAL_BOX
 	vertical_box: EV_VERTICAL_BOX
 	button: EV_BUTTON

@@ -27,6 +27,7 @@ mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS"
 cppflags: "-c -g0 -w- -P -DNONAMELESSUNION"
 mtcppflags: "-c -g0 -w- -P -DNONAMELESSUNION -tWM -DEIF_THREADS"
 shared_flags: "-DEIF_USE_DLL"
+il_flags: "-DEIF_IL_DLL"
 
 large: ""
 

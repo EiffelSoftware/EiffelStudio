@@ -27,6 +27,7 @@ mtccflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS
 cppflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
 mtcppflags: "-w -YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
 shared_flags: "-DEIF_USE_DLL"
+il_flags: "-DEIF_IL_DLL"
 
 large: ""
 

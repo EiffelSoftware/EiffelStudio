@@ -8,11 +8,9 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_MENU_ITEM_I
 	
 inherit
-
 	EV_ITEM_I
 
 	EV_MENU_ITEM_CONTAINER_I
@@ -25,6 +23,9 @@ inherit
 feature {NONE} -- Initialization
 	
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+		require
+			valid_parent: par.is_valid
+			valid_string: txt /= Void
 		deferred
 		end
 

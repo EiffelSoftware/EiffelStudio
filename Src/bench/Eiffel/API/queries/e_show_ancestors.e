@@ -10,7 +10,7 @@ class E_SHOW_ANCESTORS
 inherit
 
 	E_CLASS_CMD;
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -20,7 +20,7 @@ feature -- Execution
 
 	execute is
 		do
-			!!displayed.make;
+			!! displayed.make;
 			current_class.append_clickable_signature (output_window);
 			output_window.new_line;
 			rec_display (1, current_class);
@@ -61,14 +61,14 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	rec_display (i: INTEGER; c: CLASS_C) is
+	rec_display (i: INTEGER; c: E_CLASS) is
 			-- Display parents of `c' in tree form.
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
-			parent_class: CLASS_C;
+			parent_class: E_CLASS;
 		do
 			if 
-				(c.id /= System.any_id) or else
+				(c.id /= Eiffel_system.any_id) or else
 				(c = current_class)
 			then
 				parents := c.parents;
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 					until
 						parents.after
 					loop
-						parent_class := parents.item.associated_class;
+						parent_class := parents.item.associated_eclass;
 						output_window.put_string (tabs (i));
 						parent_class.append_clickable_signature (output_window);
 						if already_processed (parents.item) then

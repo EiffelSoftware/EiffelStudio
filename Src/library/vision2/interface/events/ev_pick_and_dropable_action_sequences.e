@@ -30,7 +30,14 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
+		
+	pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE is
+			-- Actions to be performed when a transport from `Current' ends.
+		do
+			Result := implementation.transport_finished_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 	conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when a pebble that fits here is picked.

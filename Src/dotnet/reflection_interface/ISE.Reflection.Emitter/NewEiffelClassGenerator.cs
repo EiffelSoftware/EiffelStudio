@@ -4,12 +4,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.IO;
 using ISE.Reflection;
+using System.Runtime.InteropServices;
 
-#if BETA2
-	using System.Runtime.InteropServices;
-	
-	[ClassInterfaceAttribute (ClassInterfaceType.AutoDual)]
-#endif
+[ClassInterfaceAttribute (ClassInterfaceType.AutoDual)]
 
 public class EiffelClassGenerator: Globals
 {
@@ -346,6 +343,8 @@ public class EiffelClassGenerator: Globals
 			{
 				anAssembly = ( Assembly )Dependancies [i];
 				Path = String.Concat( PathName, "\\", anAssembly.GetName().Name );
+				if( Path.IndexOf( String.Concat( reflectionSupport.EiffelDeliveryPath(), "\\library.net" ) ) > -1 )
+					Path = Path.Replace( reflectionSupport.EiffelDeliveryPath(), reflectionSupport.EiffelKey() );
 
 				if( !EiffelPathsTable.ContainsValue( Path ) )
 					EiffelPathsTable.Add( anAssembly, Path );
@@ -891,7 +890,7 @@ public class EiffelClassGenerator: Globals
 		}
 		
 		if( Postconditions.Length > 0 )
-			GeneratedEiffelFeature.set_postcondition( true );
+			GeneratedEiffelFeature.SetPostcondition( true );
 			
 		return GeneratedEiffelFeature;	
 	}

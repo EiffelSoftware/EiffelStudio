@@ -49,8 +49,12 @@ feature -- Access
 			create Result.make
 		end
 		
-		
-		
+	delete_object_command: GB_DELETE_OBJECT_COMMAND is
+			-- Command representing delete.
+		once
+			create Result.make
+		end
+
 feature -- Basic operation
 
 	update is
@@ -90,6 +94,7 @@ feature {NONE} -- Implementation
 			Result.extend (open_project_command)
 			Result.extend (close_project_command)
 			Result.extend (show_history_command)
+			Result.extend (delete_object_command)
 		end
 		
 

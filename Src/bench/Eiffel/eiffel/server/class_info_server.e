@@ -7,15 +7,16 @@ inherit
 	SERVER [CLASS_INFO]
 		rename
 			item as server_item,
-			has as server_has
+			has as server_has,
+			disk_item as disk_server_item
 		export
 			{ANY} server_item
 		end;
 	SERVER [CLASS_INFO]
 		redefine
-			has, item
+			has, item, disk_item
 		select
-			has, item
+			has, item, disk_item
 		end
 
 creation
@@ -50,6 +51,17 @@ feature
 			else
 				Result := server_item (an_id);
 			end; 
+		end;
+
+	disk_item (an_id: INTEGER): CLASS_INFO is
+			-- Byte code of body id `and_id'. Look first in the temporary
+			-- byte code server
+		do
+			if Tmp_class_info_server.has (an_id) then
+				Result := Tmp_class_info_server.disk_item (an_id);
+			else
+				Result := disk_server_item (an_id);
+			end;
 		end;
 
 	Size_limit: INTEGER is 10;

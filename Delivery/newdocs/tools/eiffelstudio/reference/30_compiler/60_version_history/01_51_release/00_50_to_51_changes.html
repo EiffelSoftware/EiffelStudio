@@ -1,0 +1,147 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+
+
+
+<HEAD>
+
+<TITLE>Changes between 4.5 and 5.0</TITLE>
+
+<LINK REL=StyleSheet HREF="../../../../../../default.css">
+
+</HEAD>
+
+
+
+<BODY>
+
+
+
+<H1>Major changes between ISE Eiffel 5.0 and ISE Eiffel 5.1:</H1>
+
+
+
+<p>&nbsp;</p>
+
+
+
+        <H2>What's new</H2>
+        
+        <p>&nbsp; </p>
+        
+        <UL>
+        
+        <LI>MSIL generation that supports multiple inheritance with the 
+        following support:<UL>
+        
+        <li>Support for multiple inheritance</li>
+        
+        <li>Support for 
+        generics.</li>
+        
+        <li>Partial implementation of generic conformance (same as what was 
+        supported up to and including ISE Eiffel 4.2).</li>
+        
+        <li>Support for tuples and 
+        agents.</li>
+        
+        <li>Will compile any existing Eiffel code that does not use any C 
+        externals.</li>
+        
+        <li>Partial support for compiling Eiffel libraries using C 
+        externals (e.g. WEL)
+        </li>
+        </UL>
+        
+        <p>And the following limitations:<UL>
+        
+        <li>Eiffel classes cannot inherit from non-Eiffel .NET classes (but they 
+        can be clients).</li>
+        <li>The compiler performances are rather poor now (both in terms of 
+        memory usage and speed)</li>
+        </UL>
+        
+        <p>Those limitation should disappear with 5.2 which will be our official 
+        release that fully supports .NET<br>
+&nbsp;<li>Support for INTEGER_64 constants. Now an manifest integer value that 
+        is written in decimal or hexadecimal format that can't fit into an 
+        INTEGER 32 will be automatically promoted to an INTEGER_64 constant 
+        value.</li>
+        <li>New feature access syntax for accessing constants, C/C++ externals 
+        and IL static externals.
+        <a href="../../10_ise_eiffel_specific/10_language_specificity.html">
+        Check out more here</a>.</li>
+        </UL>
+        
+        <H2>Improvements</H2>
+        
+        
+        <p>&nbsp;</p>
+        
+        <UL>
+        
+        <LI>Compiler that is about 20% faster than 5.0.</UL>
+        
+        
+        <h2>Bug fixes</h2>
+        
+        
+        <p>&nbsp;</p>
+        
+        <ul>
+          <li>Fixed VAPE errors that were not previously reported. Now VAPE 
+          errors are checked against arguments of a feature used in a 
+          precondition and are also checked for a qualified call.</li>
+          <li>Fixed a conformance bug that made a manifest array not to conform 
+          to ANY.</li>
+          <li>Fixed a generic conformance bug where an assignment attempt would 
+          change the behavior of the execution.</li>
+          <li>Fixed a wrongly reported error by the compiler in the following 
+          case<p>In a system that has a generic class CLIENT with constraint `G 
+          -&gt; SUPPLIER create make end', where the creation procedure of SUPPLIER 
+          is exported to {CLIENT}. If another class has an attribute `x: CLIENT 
+          [SUPPLIER]' the compiler reports a VTCG error, though it should accept 
+          the classes.</li>
+          <li>Fixed a crash when one of the following command line was used in a 
+          directory with no existing project that contains a file named &quot;Ace&quot;:<br>
+<pre>ec -flat      -all
+ec -short     -all
+ec -flatshort -all
+ec -flat      -all_and_parents
+ec -short     -all_and_parents
+ec -flatshort -all_and_parents
+</pre>
+</li>
+          <li>Fixed a bug in output display between standard output and error 
+          output. Doing the following:<br>
+          <pre>io.put_string (&quot;toto%N&quot;)
+io.error.put_string (&quot;titi%N&quot;)          </pre>
+          <p>you get the following output when simply launched from the command 
+          line:<br>
+          </p>
+<pre>toto
+titi</pre>
+          <p>however if you do:<br>
+          </p>
+<pre>my_program &gt;&amp; RESULT</pre>
+          <p>to redirect both standard and error outputs to RESULT you get in the 
+          RESULT file this incorrect content:<br>
+          </p>
+          <pre>titi
+toto</pre>
+          </li>
+          <li>Fixed a non reported VTEC or VTCG error when an invalid type used 
+          as actual generic parameters in an explicit type in a creation 
+          instruction.</li>
+        </ul>
+        
+        
+        <p>&nbsp;</p>
+
+
+</BODY>
+
+
+
+</HTML>

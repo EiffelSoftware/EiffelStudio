@@ -53,12 +53,10 @@ feature -- Creation
 					pos1 := pos2 + 1
 				end
 			end
-			base_century := (create {C_DATE}).year_now // 100 * -100
-				-- A negative value of `base_century' indicates that it has
-				-- been calculated automatically, therefore '* -100'.
+			base_century := ((create {C_DATE}).year_now // 100) * 100
 		ensure
 			value_set: value /= Void
-			base_century_set: base_century < 0 and (base_century \\ 100 = 0)
+			base_century_set: base_century >= 0 and (base_century \\ 100 = 0)
 		end
 
 feature -- Attributes

@@ -186,9 +186,9 @@ feature -- Element change
 		do
 			implementation.put_front (v)
 		ensure
-			item_inserted: has (v)
-			new_count: count = old count + 1
 			item_inserted: first = v
+			new_count: count = old count + 1
+			new_index: index = old index + 1
 			item_parent_is_current: v.parent = Current
 		end
 
@@ -204,7 +204,7 @@ feature -- Element change
 		do
 			implementation.put_right (v)
 		ensure
-			item_inserted: has (v)
+			item_inserted: i_th (index + 1) = v
 	 		new_count: count = old count + 1
 	 		same_index: index = old index
 			item_parent_is_current: v.parent = Current
@@ -430,6 +430,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/15 00:58:44  king
+--| Revised post-conditions for insertions
+--|
 --| Revision 1.7  2000/03/14 23:48:45  brendel
 --| Added features `finish', `merge_left', `merge_right'.
 --|

@@ -199,7 +199,7 @@ feature -- Status report
 				Lb_getcaretindex, 0, 0)
 		end
 
-feature {NON} -- Implementation
+feature {NONE} -- Implementation
 
 	default_style: INTEGER is
 			-- Default style used to create the control.

@@ -143,6 +143,7 @@ feature -- Basic Operations
 	browse_for_ace_file is
 			-- Browse for Ace file
 		do
+			ace_file_selection_dialog.set_initial_directory ("c:\")
 			ace_file_selection_dialog.activate (Current)
 			if ace_file_selection_dialog.selected then
 				ace_file_name_edit.set_text (ace_file_selection_dialog.file_name)
@@ -152,6 +153,7 @@ feature -- Basic Operations
 	browse_for_project_file is
 			-- Browse for Eiffel file.
 		do
+			File_selection_dialog.set_initial_directory ("c:\")
 			File_selection_dialog.activate (Current)
 			if File_selection_dialog.selected then
 				project_file_edit.set_text (file_selection_dialog.file_name)

@@ -130,6 +130,7 @@ feature -- Basic Operations
 	browse_for_definition_file is
 			-- Browse for definition file.
 		do
+			File_selection_dialog.set_initial_directory ("c:\")
 			File_selection_dialog.activate (Current)
 			if File_selection_dialog.selected then
 				definition_file_edit.set_text (file_selection_dialog.file_name)

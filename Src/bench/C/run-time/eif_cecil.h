@@ -64,6 +64,13 @@ typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 #define eif_attribute_type    eifattrtype           /* Get the type of an attribute, returns EIF_NO_TYPE if fails */
 #define eif_locate  eiflocate   /* Return index of a given attribute in a given object */
 
+/*
+ * Aliases
+ */
+
+#define eif_type_by_name	eif_type_id
+#define eif_name_by_tid		eif_name
+
 /* 
  * Cecil exception settings
  */
@@ -108,8 +115,13 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
  * Attention! It returns an EIF_REFERENCE, which might be obsolete after a
  * GC collection.
  */
+#define attribute_exists(object,name) \
+	(eif_locate (object, name) == -1)? EIF_FALSE : EIF_TRUE
+#define eif_field(object,name,type) *(type *)(eifaddr(object,name))
+#define eif_attribute(object,name,type,ret) *(type *)(eifaddr(object,name,ret))
 
-#define eif_field(object,name,type)	*(type *)(eifaddr(object,name))
+#define eif_attribute_safe(object,name,type_int,ret) eif_field_safe(object, name, type_int, ret)
+
 
 /* Accessing bits is done via special macros, because they have no counterpart
  * in C. We provide macros for reading and writing bit fields in an Eiffel
@@ -129,6 +141,10 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define EIF_NO_TYPE			(-1)			/* No type associated to a name */
 #define EIF_NO_BIT_FIELD		((EIF_BIT) 0)	/* No bit field associated */
 #define EIF_NO_BIT			2				/* Indexing a bit out of range */
+#define EIF_NO_ATTRIBUTE	(-1)			/* No attribute found */
+#define EIF_WRONG_TYPE	(-2)			/* Wrong type */
+#define EIF_CECIL_OK	(1)			/* Function returned successfully. */
+#define EIF_CECIL_ERROR	(0)			/* Function returned unsuccessfully. */
 
 /*
  * Structures used by Cecil (aka private informations)
@@ -226,9 +242,11 @@ RT_LNK EIF_BOOLEAN_FUNCTION eifbool(char *routine, EIF_TYPE_ID cid);			/* Eiffel
 RT_LNK EIF_POINTER_FUNCTION eifptr(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning POINTER */
 RT_LNK EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
 
-RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);					/* Give dynamic type of EIF_OBJECT */
+RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);					/* Give dynamic type of EIF_OBJECT. Obsoletem, use "eif_type_by_object". */
+RT_LNK EIF_TYPE_ID eif_type_by_object (EIF_REFERENCE object);					/* Give dynamic type of EIF_OBJECT */
 RT_LNK char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
-RT_LNK char *eifaddr(char *object, char *name);					/* Compute address of attribute */
+RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validity */
+RT_LNK void *eifaddr(EIF_REFERENCE object, char *name, int * const ret);					/* Compute address of attribute */
 RT_LNK EIF_BIT eifgbit(char *object, char *name);				/* Get a bit field structure */
 RT_LNK void eifsbit(char *object, char *name, EIF_BIT bit);					/* Set a bit field structure */
 RT_LNK char eifibit(EIF_BIT bit, int i);					/* Access ith bit in bit field */

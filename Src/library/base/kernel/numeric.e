@@ -12,6 +12,12 @@ deferred class
 
 	NUMERIC
 
+inherit
+	DEBUG_OUTPUT
+		rename
+			debug_output as out
+		end
+
 feature -- Access
 
 	one: like Current is

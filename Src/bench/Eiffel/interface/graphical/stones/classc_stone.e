@@ -112,8 +112,7 @@ feature -- Access
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
 		do
-			Result := e_class.has_feature_table or else
-					e_class.has_ast
+			Result := e_class.has_ast
 		end
 
 feature -- Status report
@@ -171,7 +170,7 @@ feature -- Update
 			if is_valid then
 				hole.process_class (Current)
 			else
-				warner (hole.target).gotcha_call (invalid_stone_message)
+				warner (hole.target.top).gotcha_call (invalid_stone_message)
 			end	
 		end;
 

@@ -1,14 +1,14 @@
 <document title="Locate command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>The locate command ( 
+		<paragraph>The locate command (
 			<image>
 				<url>/images/eiffelstudio/icons/icon_view_small_color.gif</url>
-			</image> ), located in the 
+			</image>), located in the 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>cluster tool</label>
-			</link>,provides an easy way to find a class or a cluster in the 
+			</link>, provides an easy way to find a class or a cluster in the 
 			<link>
 				<url>10_cluster_tree.xml</url>
 				<label>cluster tree</label>

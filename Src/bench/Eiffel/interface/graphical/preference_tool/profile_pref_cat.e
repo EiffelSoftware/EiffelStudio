@@ -28,10 +28,12 @@ feature {NONE} -- Initialization
 			-- Update `resources'.
 		do
 			!! tool_width.make (associated_category.tool_width);
+			!! tool_height.make (associated_category.tool_height);
 			!! query_tool_width.make (associated_category.query_tool_width);
 			!! query_tool_height.make (associated_category.query_tool_height);
 
 			resources.extend (tool_width);
+			resources.extend (tool_height);
 			resources.extend (query_tool_width);
 			resources.extend (query_tool_height);
 		end;
@@ -71,6 +73,6 @@ feature -- Properties
 
 feature {NONE} -- Resources
 
-	tool_width, query_tool_height, query_tool_width: INTEGER_PREF_RES;
+	tool_width, tool_height, query_tool_height, query_tool_width: INTEGER_PREF_RES;
 
 end -- class PROFILE_PREF_CAT

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"A resource value for integer resouorces.";
+		"A resource value for integer resources.";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -22,9 +22,13 @@ inherit
 feature {NONE} -- Initialization
 
  	make_with_text (par: EV_CONTAINER; txt: STRING) is
- 			-- Create a label implementation.
+			-- Create a widget with `par' as parent and `txt'
+			-- as text.
+		require
+			valid_parent: par.is_valid
+			valid_string: txt /= Void
 		deferred
-		end	
+        end	
 	
 end --class EV_LABEL_I
 

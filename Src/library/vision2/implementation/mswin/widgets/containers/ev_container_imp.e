@@ -141,7 +141,7 @@ feature -- Element change
 	set_background_pixmap (pix: EV_PIXMAP) is
 			-- Set the background pixmap and redraw the container.
 		local
-			pixmap: EV_PIXMAP
+			pixmap: like pix
 		do
 			if pix /= Void then
 				create pixmap

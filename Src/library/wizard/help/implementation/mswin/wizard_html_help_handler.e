@@ -4,6 +4,9 @@ indexing
 class
 	WIZARD_HTML_HELP_HANDLER
 
+inherit
+	WEL_SW_CONSTANTS
+
 feature -- Access
 
 	help_window_handle: INTEGER
@@ -29,16 +32,35 @@ feature -- Basic Operations
 			-- Display help page page with url `a_chm_url'.
 		require
 			valid_chm_url: is_valid_chm_url (a_chm_url)
-		do
-			help_window_handle := cwin_html_help (default_pointer, (create {WEL_STRING}.make (a_chm_url)).item, Hh_display_topic, default_pointer)
+		local
+			returned_value: INTEGER
+		do	
+			returned_value := cwin_shell_execute (cwin_desktop_window, (create {WEL_STRING}.make ("open")).item, (create {WEL_STRING}.make ("F:\Eiffel50\bench\wizards\new_projects\dotnet\wizard.chm")).item, default_pointer, default_pointer, sw_shownormal)
+			--help_window_handle := cwin_html_help (cwin_desktop_window, (create {WEL_STRING}.make (a_chm_url)).item, Hh_display_topic, 0)
 		end
-
+		
 feature {NONE} -- Externals
 
-	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: POINTER): INTEGER is
+	cwin_desktop_window: POINTER is
 			-- Help Workshop `HtmlHelp' API.
 		external
-			"C [macro %"Htmlhelp.h%"] (HWND, LPCSTR, UINT, DWORD): EIF_INTEGER"
+			"C [macro <Htmlhelp.h>]: HWND"
+		alias
+			"GetDesktopWindow()"
+		end
+	
+	cwin_shell_execute (hwnd, verb, file, parameters, directory: POINTER; show_cmd:INTEGER): INTEGER is
+			-- Shell API `ShellExecute' function
+		external
+			"C [macro <shellapi.h>] (HWND, LPCTSTR, LPCTSTR, LPCTSTR, LPCTSTR, INT): EIF_INTEGER"
+		alias
+			"ShellExecute"
+		end
+		
+	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: INTEGER): INTEGER is
+			-- Help Workshop `HtmlHelp' API.
+		external
+			"C [macro <Htmlhelp.h>] (HWND, LPCSTR, UINT, DWORD): EIF_INTEGER"
 		alias
 			"HtmlHelp"
 		end
@@ -46,7 +68,7 @@ feature {NONE} -- Externals
 	Hh_display_topic: INTEGER is
 			-- Help Workshop HH_DISPLAY_TOPIC constant
 		external
-			"C [macro %"Htmlhelp.h%"]: EIF_INTEGER"
+			"C [macro <Htmlhelp.h>]: EIF_INTEGER"
 		alias
 			"HH_DISPLAY_TOPIC"
 		end

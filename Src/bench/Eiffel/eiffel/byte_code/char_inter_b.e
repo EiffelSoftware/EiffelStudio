@@ -35,7 +35,7 @@ feature -- C generation
 				low := lower.generation_value;
 				up := upper.generation_value;
 				buf.putstring ("case (EIF_CHARACTER) '");
-				buf.escape_char (buf,low);
+				buf.escape_char (low);
 				buf.putstring ("':");
 				buf.new_line;
 			until
@@ -43,7 +43,7 @@ feature -- C generation
 			loop
 				low := low + 1;
 				buf.putstring ("case (EIF_CHARACTER) '");
-				buf.escape_char (buf,low);
+				buf.escape_char (low);
 				buf.putstring ("':");
 				buf.new_line;
 			end;

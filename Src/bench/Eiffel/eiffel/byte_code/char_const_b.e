@@ -56,7 +56,7 @@ feature -- C code generation
 		do
 			buf := buffer
 			buf.putstring ("(EIF_CHARACTER) %'")
-			buf.escape_char (buf, value)
+			buf.escape_char (value)
 			buf.putchar ('%'')
 		end
 

@@ -154,9 +154,11 @@ feature -- Execution
 				if font_name /= Void then	
 					text.set_text (font_name)
 				end;
-				font_box.popdown
+				font_box.popdown;
+				font_box.remove_ok_action (Current, fb_ok_action)
 			elseif arg = fb_cancel_action then
-				font_box.popdown
+				font_box.popdown;
+				font_box.remove_ok_action (Current, fb_ok_action)
 			else
 				pref_execute (arg)
 			end
@@ -183,7 +185,6 @@ feature {NONE} -- Implementation
 			!! mp.set_watch_cursor;
 			!! Result.make ("Font Box", text.top);
 			Result.hide_apply_button;
-			Result.add_ok_action (Current, fb_ok_action);
 			Result.add_cancel_action (Current, fb_cancel_action);
 			Result.set_default_position (False);
 			Result.set_exclusive_grab;
@@ -210,7 +211,8 @@ feature {NONE} -- Implementation
 				new_y := 0
 			end;
 			font_box.set_x_y (new_x, new_y);
-			font_box.popup
+			font_box.add_ok_action (Current, fb_ok_action);
+			font_box.popup;
 		end
 
 end -- class FONT_PREF_RES

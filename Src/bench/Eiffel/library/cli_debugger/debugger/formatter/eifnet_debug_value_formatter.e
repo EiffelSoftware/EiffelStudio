@@ -27,6 +27,28 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+	icor_debug_string_value (a_data: ICOR_DEBUG_VALUE): ICOR_DEBUG_STRING_VALUE is
+			-- Prepare `a_data' and return ICorDebugStringValue from `a_data'
+		local
+			l_icdv: ICOR_DEBUG_VALUE
+		do
+			l_icdv := prepared_debug_value (a_data)
+			Result := prepared_icor_debug_value_as_icd_string_value (l_icdv)
+		end
+
+feature -- Transforming
+
+	icor_debug_string_value_to_sub_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE; 
+					min, max: INTEGER): STRING is
+		do
+			Result := get_sub_string_value (a_icd_string_value, min, max)			
+		end
+
+	icor_debug_string_value_to_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE): STRING is
+		do
+			Result := get_string_value (a_icd_string_value)
+		end
 		
 	icor_debug_value_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
 		local
@@ -51,12 +73,17 @@ feature -- Access
 
 feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_VALUE_EXPORTER} -- Dereferenced to Specialized Value
 
+	prepared_icor_debug_value_as_icd_string_value (a_data: ICOR_DEBUG_VALUE): ICOR_DEBUG_STRING_VALUE is
+		do
+			Result := a_data.query_interface_icor_debug_string_value
+		end
+
 	prepared_icor_debug_value_as_string (a_data: ICOR_DEBUG_VALUE): STRING is
 		local
 			l_string: ICOR_DEBUG_STRING_VALUE
 		do
-			l_string := a_data.query_interface_icor_debug_string_value
-			if a_data.last_call_succeed then
+			l_string := prepared_icor_debug_value_as_icd_string_value (a_data)
+			if l_string /= Void then
 				Result := get_string_value (l_string)
 			end
 		end
@@ -452,6 +479,16 @@ feature {NONE} -- Implementation
 				Result := icd.get_string (l_length)
 			end
 		end
+		
+	get_sub_string_value (icd: ICOR_DEBUG_STRING_VALUE; min,max: INTEGER): STRING is
+		local
+			l_length: INTEGER
+		do
+			l_length := icd.get_length
+			if icd.last_call_succeed then
+				Result := icd.get_string (l_length)
+			end
+		end		
 
 	any_or_void_to_string (a_data: ANY): STRING is
 		do

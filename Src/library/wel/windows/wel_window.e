@@ -775,15 +775,14 @@ feature -- Basic operations
 				Swp_nomove + Swp_nozorder + Swp_noactivate)
 		end
 
-	set_z_order (z_order: INTEGER) is
+	set_z_order (z_order: POINTER) is
 			-- Set the z-order of the window.
 			-- See class WEL_HWND_CONSTANTS for `z_order' values.
 		require
 			exists: exists
 			valid_hwnd_constant: valid_hwnd_constant (z_order)
 		do
-			cwin_set_window_pos (item,
-				cwel_integer_to_pointer (z_order),
+			cwin_set_window_pos (item, z_order,
 				0, 0, 0, 0, Swp_nosize + Swp_nomove +
 				Swp_noactivate)
 		end

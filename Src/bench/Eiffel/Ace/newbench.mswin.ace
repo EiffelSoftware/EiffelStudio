@@ -1,5 +1,5 @@
 system
-	ec
+	"ec"
 
 root
 	EB_KERNEL: make
@@ -12,6 +12,7 @@ default
 	disabled_debug (yes)
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
+	disabled_debug ("anchored_features")
 	disabled_debug ("assertion")
 	disabled_debug ("assertions")
 	disabled_debug ("byte_code")
@@ -44,21 +45,12 @@ default
 	disabled_debug ("filters")
 	disabled_debug ("flat_short")
 	disabled_debug ("flush_file")
-	disabled_debug ("gdi_count")
+	disabled_debug ("formal_generic")
 	disabled_debug ("gelex")
 	disabled_debug ("genericity")
 	disabled_debug ("geyacc")
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
-	disabled_debug ("hide_option")
-	disabled_debug ("jvm_agen")
-	disabled_debug ("jvm_dbc")
-	disabled_debug ("jvm_gen")
-	disabled_debug ("jvm_gen [ ]")
-	disabled_debug ("jvm_gen2")
-	disabled_debug ("jvm_once")
-	disabled_debug ("jvm_stack")
-	disabled_debug ("jvmgen")
 	disabled_debug ("liman")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("once")
@@ -85,32 +77,17 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
-	il_verifiable (yes)
-	msil_generation_type ("exe")
 	check_vape (yes)
 	console_application (yes)
-	address_expression (no)
 	array_optimization (no)
 	dead_code_removal (yes)
-	dynamic_runtime (no)
 	exception_trace (yes)
 	inlining (no)
-	multithreaded (no)
-
 
 cluster
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "desc"; "CVS"; 
-		default
-			assertion(check)
-			assertion(require)
-			assertion(ensure)
-		visible
-			array
-				end
-			string
-				end
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
@@ -121,14 +98,6 @@ cluster
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
 			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
-		end
-
-	all com:		"$EIFFEL_SRC\library\com"
-		exclude
-			"CVS"; 
-		visible
-			ecom_array
-				end
 		end
 
 	all net:		"$EIFFEL_SRC\library\net"
@@ -197,9 +166,6 @@ cluster
 	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
 		exclude
 			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
-		option
-			assertion (no): com_il_code_generator, il_code_generator, il_code_generator_i, il_generator, il_label, il_label_factory, il_meta_data_generator
-			assertion (check): com_il_code_generator, il_code_generator, il_code_generator_i, il_generator, il_label, il_label_factory, il_meta_data_generator
 		end
 
 	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
@@ -207,14 +173,14 @@ cluster
 			"CVS"; 
 		end
 
-	all helpers:			"$EIFFEL_SRC\library\helpers"
+	all helpers:		"$EIFFEL_SRC\library\helpers"
 		exclude
-			"CVS";
+			"CVS"; 
 		end
 
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
-			"CVS"; "xml_implementation"
+			"CVS"; "xml_implementation"; 
 		end
 
 	encryption:		"$EIFFEL_SRC\library\encryption"
@@ -239,7 +205,7 @@ cluster
 
 	all interface:		"$EIFFEL_SRC\Eiffel\interface"
 		exclude
-			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "new_tty"; "xml_implementation"; "preferences"
+			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "new_tty"; "xml_implementation"; "preferences"; 
 		end
 
 	tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
@@ -249,22 +215,22 @@ cluster
 
 	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
 
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+
 external
 
 	include_path:
 		"$(EIFFEL_SRC)\library\encryption\Clib",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
 		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
-		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
 		"$(EIFFEL_SRC)\C\bench",
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
 		"$(EIFFEL_SRC)\C_library\zlib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
 		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -280,11 +246,9 @@ external
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
 		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",
-		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
-		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\ecom.lib"
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"corguids.lib"
 
 end

@@ -13,19 +13,10 @@ using System.Reflection;
 
 namespace ISE.Runtime {
 
-	public abstract class ANY {
-		public object c_standard_clone () {
-			return MemberwiseClone();
-		}
-
-		~ANY () {
-		}
-	}
-
-	public delegate int WEL_DISPATCHER_DELEGATE (IntPtr hwnd, int msg, int wparam, int lparam);
-	public delegate void WEL_ENUM_FONT_DELEGATE (IntPtr lpelf, IntPtr lpntm, int font_type, IntPtr lparam);
-	public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int pixmap_width,
-		int pixmap_height, IntPtr rgb_data, IntPtr alpha_data);
+public delegate int WEL_DISPATCHER_DELEGATE (IntPtr hwnd, int msg, int wparam, int lparam);
+public delegate void WEL_ENUM_FONT_DELEGATE (IntPtr lpelf, IntPtr lpntm, int font_type, IntPtr lparam);
+public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int pixmap_width,
+	int pixmap_height, IntPtr rgb_data, IntPtr alpha_data);
 
 public class RUN_TIME
 {
@@ -180,7 +171,13 @@ feature -- Status report
 			eiffel_special_type = special.GetType();
 			native_info = eiffel_special_type.GetField ("$$native_array");
 			if (native_info == null) {
-				native_info = eiffel_special_type.GetField ("$$nativeArray");
+				native_info = eiffel_special_type.GetField ("native_array");
+				if (native_info == null) {
+					native_info = eiffel_special_type.GetField ("$$nativeArray");
+					if (native_info == null) {
+						native_info = eiffel_special_type.GetField ("nativeArray");
+					}
+				}
 			}
 			Result = (Array) native_info.GetValue (special);
 		}
@@ -236,6 +233,17 @@ feature -- Equality
 		return Result;
 	}
 
+/*
+feature -- Type creation
+*/
+
+	public static EIFFEL_DERIVATION eiffel_type_of (string class_type_name)
+		// Given `class_type_name' representing a generic class, we create its
+		// associated EIFFEL_DERIVATION instance.
+	{
+		return null;
+	}
+	
 /*
 feature -- Duplication
 */

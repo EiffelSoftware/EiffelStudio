@@ -344,7 +344,8 @@ feature -- Generation Structure
 		end
 
 	define_entry_point
-			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER)
+			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
+			a_has_arguments: BOOLEAN)
 		is
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_type_id'.

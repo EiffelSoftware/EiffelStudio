@@ -759,7 +759,7 @@ feature {NONE} -- Type description
 				il_generator.define_entry_point (
 					a_class.types.first.implementation_id,
 					l_decl_type.associated_class_type,
-					root_feat.origin_feature_id)
+					root_feat.origin_feature_id, root_feat.has_arguments)
 			end
 		end
 		

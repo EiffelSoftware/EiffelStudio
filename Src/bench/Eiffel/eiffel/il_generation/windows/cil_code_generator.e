@@ -597,7 +597,8 @@ feature -- Generation Structure
 		end
 
 	define_entry_point
-			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER)
+			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
+			a_has_arguments: BOOLEAN)
 		is
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_type_id'.
@@ -611,7 +612,8 @@ feature -- Generation Structure
 			l_cur_mod := current_module
 			current_module := main_module
 			current_class_type := a_class_type
-			main_module.define_entry_point (creation_type_id, a_class_type, a_feature_id)
+			main_module.define_entry_point (creation_type_id, a_class_type,
+				a_feature_id, a_has_arguments)
 			current_module := l_cur_mod
 		end
 

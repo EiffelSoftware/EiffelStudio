@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 				-- Create image list with all images 16 by 16 pixels
 			set_image_list(image_list)
 				-- Associate the image list with the tree.
-			create current_image_list_images.make (4)
+			create current_image_list_info.make (4)
 			is_initialized := True
 		end
 
@@ -357,10 +357,10 @@ feature {EV_ANY_I} -- WEL Implementation
 	image_list: WEL_IMAGE_LIST
 			-- WEL image list to store all images required by items.
 
-	current_image_list_images: HASH_TABLE [INTEGER, INTEGER]
-			-- A list of all individual images in `image_list'
-			-- [Position in image list, windows pointer]
-
+	current_image_list_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
+			-- A list of all items in the image list and their positions.
+			-- [[position in image list, number of items pointing to this image], windows pointer].
+	
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		local
@@ -583,6 +583,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/03/27 17:35:03  rogers
+--| Renamed current_image_list_images -> current_image_list_info, which now stores a tuple which contains the position in the image list and the number of items referencing this image in the tree.
+--|
 --| Revision 1.54  2000/03/24 19:14:11  rogers
 --| Redefined initialize from EV_ARRAYED_LIST_ITEM_HOLDER_IMP.
 --|

@@ -200,7 +200,17 @@ feature -- Status setting
 		do
 			cwin_send_message (item, Cb_setcursel, index, 0)
 		ensure
-			selected_item: selected_item = index
+			selected_item: selected and then selected_item = index
+		end
+
+	unselect is
+			-- Clear the selection.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Cb_setcursel, -1, 0)
+		ensure
+			selection_cleared: not selected
 		end
 
 feature -- Status report

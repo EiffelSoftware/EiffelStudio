@@ -74,6 +74,9 @@ feature -- Button texts
 	b_Total_time: STRING is						"Total time"
 	b_Up_text: STRING is 						"Up"
 	b_Update: STRING is 						"Update"
+	b_Compile: STRING is						"Compile"
+	b_Launch: STRING is							"Launch"
+	b_Continue: STRING is						"Continue"
 	
 feature -- Graphical degree output
 

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			dc_exits: dc.exists
 		do
 			cwel_set_enum_font_fam_procedure_address ($convert)
-			cwel_set_font_family_enumerator_object ($Current)
+			cwel_set_font_family_enumerator_object (Current)
 			enumerate (dc, family)
 			cwel_set_enum_font_fam_procedure_address (default_pointer)
 			cwel_set_font_family_enumerator_object (default_pointer)

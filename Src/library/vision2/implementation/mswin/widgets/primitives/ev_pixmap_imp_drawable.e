@@ -317,7 +317,9 @@ feature -- Status setting
 			resized_bitmap: WEL_BITMAP
 		do
 				-- Resize the bitmap
-			dc.unselect_bitmap
+			if dc.bitmap_selected then
+				dc.unselect_bitmap	
+			end
 			resized_bitmap := resize_wel_bitmap (
 				internal_bitmap,
 				new_width,
@@ -403,12 +405,14 @@ feature {
 		do
 				-- Turn off invariant checking.
 			is_initialized := False
+			dc.unselect_all
 			dc.decrement_reference
 			dc := Void
 			internal_bitmap.decrement_reference
 			internal_bitmap := Void
 
 			if has_mask then
+				mask_dc.unselect_all
 				mask_dc.decrement_reference
 				mask_dc := Void
 				internal_mask_bitmap.decrement_reference

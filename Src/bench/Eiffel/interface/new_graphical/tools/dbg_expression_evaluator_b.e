@@ -1446,14 +1446,19 @@ feature {NONE} -- compiler helpers
 	associated_reference_class_type (cl: CLASS_C): CLASS_TYPE is
 			-- Associated _REF classtype for type `cl'
 			--| for instance return INTEGER_REF for INTEGER
+		require
+			cl_not_void: cl /= Void
+			cl_is_basic: cl.is_basic
 		local
-			l_ref_type: CL_TYPE_I
-			l_class_c: CLASS_C
+			l_basic: BASIC_I
 		do
-				-- FIXME JFIAT: find better way to handle _REF basic types ..
-			l_class_c := cl.parents_classes.first
-			create l_ref_type.make (l_class_c.class_id)
-			Result := l_ref_type.associated_class_type
-		end
+			l_basic ?= cl.actual_type.type_i
+			check
+				l_basic_not_void: l_basic /= Void
+			end
+			Result := l_basic.associated_reference_class_type
+		ensure
+			associated_reference_class_type_not_void: Result /= Void
+		end		
 
 end -- class DBG_EXPRESSION_EVALUATOR_B

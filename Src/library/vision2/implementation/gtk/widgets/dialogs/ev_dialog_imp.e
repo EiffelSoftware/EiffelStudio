@@ -45,9 +45,8 @@ feature -- Status Report
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4)
 		do
-			check
-				To_be_implemented: False
-			end
+			Result := is_dialog_closeable
+--| FIXME To_be_implemented
 		end
 
 feature -- Status Setting
@@ -57,17 +56,15 @@ feature -- Status Setting
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4)
 		do
-			check
-				To_be_implemented: False
-			end
+			is_dialog_closeable := True
+--| FIXME To_be_implemented
 		end
 
 	disable_closeable is
 			-- Set the window not to be closeable by the user
 		do
-			check
-				To_be_implemented: False
-			end
+			is_dialog_closeable := False
+--| FIXME To_be_implemented
 		end
 
 feature -- Basic operations
@@ -95,6 +92,13 @@ feature {NONE} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
+
+	is_dialog_closeable: BOOLEAN
+			-- Temporary flag whose only use is to enable functions
+			-- `is_closeable', `enable_closeable' and `disable_closeable'
+			-- to be executed without raising zillions of assertion violations.
+			--| FIXME implement cited function, then remove me.
+
 end -- class EV_DIALOG_IMP
 
 --!-----------------------------------------------------------------------------
@@ -118,6 +122,10 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/05/03 02:26:27  bonnard
+--| Fixed "closable" features so they do not trigger assertion violations.
+--| Features still have to be implemented.
+--|
 --| Revision 1.12  2000/04/29 03:01:35  pichery
 --| Added feature `is_closeable', `enable/disable_closeable'.
 --| They need to be implemented.

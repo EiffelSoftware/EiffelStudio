@@ -51,7 +51,7 @@ feature -- Commands
 		local
 			l_nav_el: XM_ELEMENT
 		do			
-			l_nav_el := element_by_name ("table").elements.item (2).elements.item (2)
+			l_nav_el := element_by_name ("span").element_by_name ("table").elements.item (2).elements.item (2)
 			wipe_out_text (l_nav_el)
 			l_nav_el.put_last (create {XM_CHARACTER_DATA}.make (l_nav_el, a_string))
 		end		
@@ -63,7 +63,7 @@ feature -- Commands
 		local
 			l_title_el: XM_ELEMENT
 		do			
-			l_title_el := element_by_name ("table").elements.item (2).element_by_name ("cell")
+			l_title_el := element_by_name ("span").element_by_name ("table").elements.item (2).element_by_name ("cell")
 			wipe_out_text (l_title_el)
 			l_title_el.put_last (create {XM_CHARACTER_DATA}.make (l_title_el, a_title))
 		end
@@ -75,7 +75,7 @@ feature -- Commands
 		local
 			l_prod_el: XM_ELEMENT
 		do			
-			l_prod_el := element_by_name ("table").element_by_name ("row").element_by_name ("cell")
+			l_prod_el := element_by_name ("span").element_by_name ("table").element_by_name ("row").element_by_name ("cell")
 			wipe_out_text (l_prod_el)
 			l_prod_el.put_last (create {XM_CHARACTER_DATA}.make (l_prod_el, a_product))			
 		end		

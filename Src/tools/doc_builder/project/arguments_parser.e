@@ -174,99 +174,107 @@ feature -- Commands
 			l_help_project: HELP_PROJECT
 			l_root_dir,
 			l_html_directory,
-			l_help_directory: DIRECTORY
-			l_output_file: PLAIN_TEXT_FILE
-			l_toc: TABLE_OF_CONTENTS
-			
-			l_toc_file: PLAIN_TEXT_FILE
-			
+			l_help_directory: DIRECTORY			
+			l_toc: TABLE_OF_CONTENTS		
+			l_filter: DOCUMENT_FILTER
 		do
-			l_constants := Shared_constants.Application_constants					
-			
-				-- Create output report file
-			l_output_file := l_constants.Script_output
-			l_output_file.open_append
+			l_constants := Shared_constants.Application_constants								
+				
+			output_file.open_append
+			output_file.put_string ("Starting generation for project with the following options:%N")
+			if file_generation then
+				output_file.put_string ("%TFile generation type: " + file_generation_type + "%N")
+			end
+			if help_generation then
+				output_file.put_string ("%THelp generation type: " + help_generation_type + "%N")
+			end
+			if output_filtered then
+				output_file.put_string ("%TFiltered for: " + output_filter_type + "%N")
+			end
 			
 				-- Load project
 			l_project := Shared_project
-			l_output_file.putstring ("Loading project " + project_file + "...")
+			report ("Loading project " + project_file + "...")
 			l_project.load (project_file)
-			l_output_file.putstring ("success%N")			
+			report ("success%N")			
 			create l_root_dir.make (l_project.root_directory)
 			if not Shared_document_manager.has_schema then
 				print (Message_constants.missing_schema)
-				l_output_file.put_string (Message_constants.missing_schema)
+				output_file.put_string (Message_constants.missing_schema)
 			end
 			
 				-- Set content output filter
 			if output_filtered then
 				if output_filter_type.is_equal (shared_constants.output_constants.studio_flag) then
-					l_project.filter_manager.set_studio_filtered	
+					l_filter := l_project.filter_manager.filter_by_description (shared_constants.output_constants.studio_desc)						
+					l_project.filter_manager.set_filter (l_filter)
 				elseif output_filter_type.is_equal (shared_constants.output_constants.envision_flag) then
-					l_project.filter_manager.set_envision_filtered
+					l_filter := l_project.filter_manager.filter_by_description (shared_constants.output_constants.envision_desc)
+					l_project.filter_manager.set_filter (l_filter)
 				end
 			end
 			
 					-- Create HTML output directory
-			l_output_file.putstring ("Creating directory for storage of temporary HTML...")
+			report ("Creating directory for storage of temporary HTML...")
 			create l_html_directory.make (l_constants.temporary_html_directory)
 			if l_html_directory.exists then
 				l_html_directory.recursive_delete
 			end
 			l_html_directory.create_dir
-			l_output_file.putstring ("success%N")
+			report ("success%N")
 		
 					-- Conversion from XML to HTML
 			if file_generation_type.is_equal ("xml2html") or file_generation_type.is_equal ("xml2help") then				
 				
 						-- Create TOC
-				l_output_file.putstring ("Creating TOC from directory " + l_root_dir.name + "...")
+				report ("Creating TOC from directory " + l_root_dir.name + "...")
 				create l_toc.make_from_directory (l_root_dir)								
-				l_output_file.putstring ("success%N")
+				report ("success%N")
 
 						-- Filter TOC
 				if output_filter_type.is_equal (shared_constants.output_constants.studio_flag) then
+						-- Studio Options
 					l_toc.set_filter_alphabetically (False)
 					l_toc.set_filter_nodes_no_index (True)
 					l_toc.set_filter_empty_nodes (True)
 					l_toc.set_filter_skipped_sub_nodes (False)
 					l_toc.set_make_index_root (True)
 				elseif output_filter_type.is_equal (shared_constants.output_constants.envision_flag) then
+						-- ENViSioN! Options
 					l_toc.set_filter_alphabetically (True)
 					l_toc.set_filter_nodes_no_index (True)
 					l_toc.set_filter_empty_nodes (True)
 					l_toc.set_filter_skipped_sub_nodes (False)
 					l_toc.set_make_index_root (True)
 				end
-				l_output_file.putstring ("Sorting Table of Contents...")
+				report ("Sorting Table of Contents...")
 				l_toc.sort
-				l_output_file.putstring ("success%N")
+				report ("success%N")
 		
 					-- Generate HTML from written documentation files
-				l_output_file.putstring ("Generating HTML written documentation...")
+				report ("Generating HTML written documentation...")
 				create l_html_generator.make (l_toc.files (True), create {DIRECTORY_NAME}.make_from_string (l_html_directory.name))
 				l_html_generator.generate
-				l_output_file.putstring ("success%N")
+				report ("success%N")
 				
 					-- Generate HTML for libraries
-				l_output_file.putstring ("Generating HTML libraries documentation...")
+				report ("Generating HTML libraries documentation...")
 				generate_code_html
-				l_output_file.putstring ("success%N")
+				report ("success%N")
 			end
 			
 					-- Help generation
 			if help_generation then
 				create l_help_directory.make (l_constants.Temporary_help_directory)	
-				l_output_file.putstring ("Creating directory for storage of temporary Help Project Files...")
-				l_output_file.close
+				report ("Creating directory for storage of temporary Help Project Files...")
 				if l_help_directory.exists then
 					l_help_directory.recursive_delete
 				end
 				l_help_directory.create_dir
-				l_output_file.put_string ("success%N")
+				output_file.put_string ("success%N")
 				
 						-- Generate Help project from TOC						
-				l_output_file.putstring ("Creating help project in " + l_constants.Temporary_help_directory + "...")
+				report ("Creating help project in " + l_constants.Temporary_help_directory + "...")
 				if help_generation_type.is_equal ("mshtml") then
 					l_help_project := create {HTML_HELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
 				elseif help_generation_type.is_equal ("vsip") then
@@ -276,14 +284,20 @@ feature -- Commands
 				end
 				create l_help_generator.make (l_help_project)
 				l_help_generator.generate
-				l_output_file.put_string ("success%N")
+				output_file.put_string ("success%N")
 			end
 			
-			l_output_file.putstring ("%NGeneration completed.  Review information above in case of errors.")
-			l_output_file.close
+			report ("%NGeneration completed.  Review information above in case of errors.")
+			output_file.close
 		end
 
 feature {NONE} -- Implementation
+			
+	output_file: PLAIN_TEXT_FILE is
+			-- Output report file
+		once
+			Result :=  Shared_constants.Application_constants.Script_output
+		end		
 			
 	file_generation: BOOLEAN
 			-- Should generate files
@@ -367,28 +381,20 @@ feature {NONE} -- Implementation
 				l_cnt := l_cnt + 1
 			end	
 		end	
-
-	load_toc (a_name: STRING): TABLE_OF_CONTENTS is
-			-- Load a toc from `a_name'
-		require
-			filename_not_void: a_name /= Void
-		local
-			xml: XM_DOCUMENT
-			xml_toc_converter: XML_TABLE_OF_CONTENTS_CONVERTER
-		do			
-			xml ?= deserialize_document (create {FILE_NAME}.make_from_string (a_name))
-			if xml /= Void then
-				create xml_toc_converter.make
-				xml_toc_converter.process_document (xml)
-				Result := xml_toc_converter.toc
-				Result.set_name (a_name)
-			end
-		end
 	
 	message_constants: MESSAGE_CONSTANTS is
 			-- Message constants
 		once
 			Result := Shared_constants.Message_constants
 		end	
+
+	report (a_message: STRING) is
+			-- Report `a_message' to outputs
+		do
+			output_file.put_string (a_message)
+			debug ("console_output")
+				print (a_message)
+			end
+		end		
 
 end -- class ARGUMENTS_PARSER

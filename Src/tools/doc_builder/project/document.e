@@ -97,7 +97,7 @@ feature --Validation
 				Result := schema_validator.is_valid
 				if not Result then
 					error_report := schema_validator.error_report	
-				end
+				end			
 			end
 		end
 
@@ -105,6 +105,10 @@ feature --Validation
 			-- Valid XML?		
 		do
 			Result := xml /= Void			
+			if not Result then
+				create error_report.make ("Invalid Document")
+				error_report.append_error (create {ERROR}.make ("Document is not valid XML"))
+			end
 		end		
 		
 feature -- XML

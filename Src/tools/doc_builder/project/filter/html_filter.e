@@ -60,6 +60,12 @@ feature -- Tag
 			-- End of tag.
 		do
 			if conc_content /= Void then
+				if 
+					a_local_part.is_equal ("url") and then 
+					not Previous_elements.linear_representation.i_th (2).has_substring ("image")
+				then
+					conc_content := link_convert (conc_content)
+				end
 				if in_attribute then
 					output_string.insert_string ("%"" + conc_content + "%"", content_write_position)
 				else
@@ -119,20 +125,15 @@ feature -- Tag
 					l_content := "<" + l_tag + ">"
 					if not l_tag.is_empty then
 						Buffered_tags.extend ("</" + l_tag + ">")
-					end					
-				elseif 
-					l_prev.is_equal ("url") and then 
-					not Previous_elements.linear_representation.i_th (2).has_substring ("image")
-				then
-					l_content := link_convert (a_content)
+					end									
 				elseif Conc_content_elements.has (l_prev) then
 					if conc_content = Void then
 						conc_content := ""
 					end
 					conc_content.append (a_content)
 					write := False
-				end
-				if not l_content.is_equal (Empty_tag) and not l_content.is_empty and write then
+				end				
+				if not l_content.is_equal (Empty_tag) and not l_content.is_empty and write then					
 					if in_attribute then
 						output_string.insert_string ("%"" + l_content + "%"", content_write_position)
 					else
@@ -479,6 +480,7 @@ feature {NONE} -- Implementation
 				Result.prune_all_leading ('%N')
 				Result.prune_all_leading ('%T')
 				Result.prune_all_trailing ('%T')
+				Result.replace_substring_all ("amp;", "")
 			end
 		end
 

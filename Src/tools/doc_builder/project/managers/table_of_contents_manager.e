@@ -23,7 +23,7 @@ feature -- Creation
 		do
 			create loaded_tocs.make (0)
 			create loaded_widgets.make (0)
-			counter := 1
+			counter := 0
 		end
 		
 feature -- TOC Management
@@ -128,7 +128,7 @@ feature -- Commands
 	sort_toc (index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN) is
 			-- Sort `loaded toc'
 		do	
-			--loaded_toc := clone (loaded_toc)
+			loaded_toc := clone (loaded_toc)
 			synchronize
 			loaded_toc.set_name (next_toc_name)
 			loaded_toc.set_make_index_root (index_root)

@@ -76,7 +76,7 @@ feature {PREFERENCES_DIALOG} -- Status setting
 		require
 			filter_not_void: a_filter /= Void
 		do
-			filters.extend (a_filter, a_filter.description)
+			filters.extend (a_filter, a_filter.description.twin)
 		end	
 
 feature -- Conversion

@@ -80,7 +80,6 @@ feature -- Access
 	
 	html_navigation_token: STRING is "[!Navigation!]"
 			-- Token to replace with document navigation
-		
 	
 	chart_suffix: STRING is "_chart"
 			-- Suffix for code chart view files

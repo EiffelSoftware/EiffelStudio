@@ -1091,7 +1091,7 @@ feature {NONE}-- Implementation
 				end
 			end
 		end
-		
+
 	type_of_local_entity_named (name: STRING): TYPE_A is
 			-- return type of argument or local variable named `name' found in `current_feature_as'
 			-- Void if there is none
@@ -1100,40 +1100,43 @@ feature {NONE}-- Implementation
 			current_class_i_compiled: current_class_i.is_compiled
 		local
 			current_feature: E_FEATURE
-			locals_list: EIFFEL_LIST [TYPE_DEC_AS]
+			entities_list: EIFFEL_LIST [TYPE_DEC_AS]
 			id_list: ARRAYED_LIST [INTEGER]
 			stop: BOOLEAN
 			index, count, name_id: INTEGER
 			retried: BOOLEAN
-			ent_list: LINKED_LIST [STRING]
+			name_list: LINKED_LIST [STRING]
 			tst, lower_name: STRING
 			class_i: CLASS_I
 			formal: FORMAL_A
 			l_current_class_c: CLASS_C
+			l_parser: EIFFEL_PARSER			
 		do
 			if retried then
 				Result := Void
 			else
-				if current_feature_as /= Void then 
-							-- it is maybe a local variable
+				if current_feature_as /= Void then
 					l_current_class_c := current_class_i.compiled_class
 					if l_current_class_c.has_feature_table then
 						current_feature := l_current_class_c.feature_with_name (current_feature_as.feature_name)
 					end
-					if current_feature /= Void then
-						if current_feature.locals /= Void then
-							locals_list := current_feature.locals
+					
+					if current_feature /= Void then								
+						if current_token /= Void and then current_line /= Void then
+							Local_analyzer.build_entities_list (current_line, current_token)
+							entities_list := local_analyzer.found_locals													
+							
 							name_id := Names_heap.id_of (name)
-							if name_id > 0 then
+							if name_id > 0 and not entities_list.is_empty then
 									-- There is a `name_id' corresponding to `name' so let's
 									-- look further.
 								from
-									locals_list.start
+									entities_list.start
 								until
-									locals_list.after or stop
+									entities_list.after or stop
 								loop
 									from
-										id_list := locals_list.item.id_list
+										id_list := entities_list.item.id_list
 										id_list.start
 									until
 										id_list.after or stop
@@ -1142,58 +1145,15 @@ feature {NONE}-- Implementation
 											stop := True
 												-- Compute actual type for local
 											Result := local_evaluated_type (name_id,
-												locals_list.item.type, l_current_class_c,
+												entities_list.item.type, l_current_class_c,
 												current_feature_as.feature_name)
 										end
 										id_list.forth
 									end
-									locals_list.forth
+									entities_list.forth
 								end
 							end
-						end
-						if Result = Void then
-							-- if it is neither local variable nor a feature of the class, it may be an argument of the feature
-							if current_feature.argument_count > 0 then
-								current_feature.arguments.argument_names.compare_objects
-								index := current_feature.arguments.argument_names.index_of (name, 1)
-								if index > 0 then
-									Result := current_feature.arguments.i_th (index)
-									if Result.is_formal then
-										formal ?= Result
-										Result := l_current_class_c.constraint (formal.position)
-									end
-								end
-							end
-						end
-						if Result = Void then
-							-- Last hope : newly added argument or local
-							if current_token /= Void and then current_line /= Void then
-								Local_analyzer.build_entities_list (current_line, current_token, True)
-								ent_list := Local_analyzer.found_names
-								from
-									ent_list.start
-									lower_name := name.as_lower
-									count := name.count
-								until
-									ent_list.after
-								loop
-									if ent_list.item.count = count then
-										tst := ent_list.item.as_lower
-										if tst.is_equal (lower_name) then
-											tst := Local_analyzer.found_class_names.i_th (ent_list.index)
-											if Universe /= Void then
-												class_i  := Universe.class_named (tst, Universe.cluster_of_name (cluster_name))
-												if class_i /= Void and then class_i.compiled then
-													Result := class_i.compiled_class.actual_type
-												end
-											end
-											stop := True
-										end
-									end
-									ent_list.forth
-								end
-							end
-						end
+						end					
 					end
 				end
 			end

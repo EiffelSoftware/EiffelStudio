@@ -16,44 +16,59 @@ inherit
 
 feature
 
-	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN): ARROW_B_I is
+	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): ARROW_B_I is
 			-- Toolkit implementation of `an_arrow_button'
 		deferred
-		end; -- arrow_b
+		ensure
+			widget_exists: Result /= Void
+		end;
 
 	base (a_base: BASE): BASE_I is
 			-- Toolkit implementation of `a_base'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
 	color (a_color: COLOR): COLOR_I is
 			-- Toolkit implementation of `a_color'
 		deferred
-		end; -- color
+		end;
 
-	dialog_shell (a_dialog_shell: DIALOG_SHELL): DIALOG_S_I is
+	dialog_shell (a_dialog_shell: DIALOG_SHELL; 
+		oui_parent: COMPOSITE): DIALOG_S_I is
 			-- Toolkit implementation of `a_dialog_shell'
 		deferred
-		end; -- dialog_shell
+		ensure
+			widget_exists: Result /= Void
+		end;
 
 	exit is
 			-- Exit from the application
 		deferred
-		end; -- exit
+		end;
 
 	font (a_font: FONT): FONT_I is
 			-- Toolkit implementation of `a_font'
 		deferred
-		end; -- font
+		ensure
+			font_exists: Result /= Void
+		end;
 
-	font_box (a_font_box: FONT_BOX; managed: BOOLEAN): FONT_BOX_I is
+	font_box (a_font_box: FONT_BOX; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): FONT_BOX_I is
 			-- Toolkit implementation of `a_font_box'
 		deferred
-		end; -- font_box
+		ensure
+			font_exists: Result /= Void
+		end;
 
-	font_box_d (a_font_box_d: FONT_BOX_D): FONT_B_D_I is
+	font_box_d (a_font_box_d: FONT_BOX_D; oui_parent: COMPOSITE): FONT_B_D_I is
 			-- Toolkit implementation of `a_font_box_d'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
 	global_cursor: SCREEN_CURSOR is
@@ -61,41 +76,47 @@ feature
 			-- Void if no global cursor has been defined
 			-- with `set_global_cursor'.
 		deferred
-		end; -- global_cursor
+		end;
 
 	io_handler (an_io_handler: IO_HANDLER): IO_HANDLER_I is
 			-- Toolkit implementation of `an_io_handler'
 		deferred
-		end; -- io_handler
+		ensure
+			widget_exists: Result /= Void
+		end;
 
 	iterate is
 			-- Loop the application.
 		deferred
-		end; -- iterate
+		end;
 
 	name: STRING is
 			-- Toolkit implementation name
 		deferred
 		end
 
-	override_s (an_override_shell: OVERRIDE_S): OVERRIDE_S_I is
+	override_s (an_override_shell: OVERRIDE_S; 
+		oui_parent: COMPOSITE): OVERRIDE_S_I is
 			-- Toolkit implementation of `an_override_shell'
 		deferred
-		end; -- override_s
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	pict_color_b (a_picture_color_button: PICT_COLOR_B; managed: BOOLEAN): PICT_COL_B_I is
+	pict_color_b (a_picture_color_button: PICT_COLOR_B; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): PICT_COL_B_I is
 			-- Toolkit implementation of `a_picture_color_button'
 		deferred
-		end; -- pict_color_b
+		ensure
+			widget_exists: Result /= Void
+		end;
 
 	pixmap (a_pixmap: PIXMAP): PIXMAP_I is
 			-- Toolkit implementation of `a_pixmap'
 		deferred
+		ensure
+			pixmap_exists: Result /= Void
 		end;
-
-	--pointer (a_pointer: MOUSE_POINTER): MOUSE_POINTER_I is
-	--	deferred
-	--	end;
 
 	restore_cursors is
 			-- Restore the cursors as they were before `set_global_cursor'.
@@ -104,16 +125,20 @@ feature
 		deferred
 		ensure
 			no_global_cursor_anymore: (global_cursor = Void)
-		end; -- restore_global_cursors
+		end;
 
 	screen (a_screen: SCREEN): SCREEN_I is
 			-- Toolkit implementation of `a_screen'
 		deferred
-		end; -- screen
+		ensure
+			screen_exists: Result /= Void
+		end;
 
 	screen_cursor (a_cursor: SCREEN_CURSOR): SCREEN_CURSOR_I is
 			-- Toolkit implementation of `a_cursor'
 		deferred
+		ensure
+			screen_cursor_exists: Result /= Void
 		end;
 
 	set_global_cursor (a_cursor: SCREEN_CURSOR) is
@@ -127,247 +152,409 @@ feature
 		deferred
 		ensure
 			correctly_set: global_cursor = a_cursor
-		end; -- set_global_cursor
+		end;
 
 	task (a_task: TASK): TASK_I is
 			-- Toolkit implementation of `a_task'
 		deferred
-		end; -- task
+		ensure
+			task_exists: Result /= Void
+		end;
 
 	timer (a_timer: TIMER): TIMER_I is
 			-- Toolkit implementation of `a_timer'
 		deferred
+		ensure
+			timer_exists: Result /= Void
 		end;
 
 	top_shell (a_top_shell: TOP_SHELL): TOP_SHELL_I is
 			-- Toolkit implementation of `a_top_shell'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	bar (a_bar: BAR; managed: BOOLEAN): BAR_I is
+	bar (a_bar: BAR; managed: BOOLEAN; oui_parent: COMPOSITE): BAR_I is
 			-- Toolkit implementation of `a_bar'
 		deferred
-		end; -- bar
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	bulletin (a_bulletin: BULLETIN; managed: BOOLEAN): BULLETIN_I is
+	bulletin (a_bulletin: BULLETIN; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): BULLETIN_I is
 			-- Toolkit implementation of `a_bulletin'
 		deferred
-		end; -- bulletin
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	bulletin_d (a_bulletin_d: BULLETIN_D): BULLETIN_D_I is
+	bulletin_d (a_bulletin_d: BULLETIN_D; 
+		oui_parent: COMPOSITE): BULLETIN_D_I is
 			-- Toolkit implementation of `a_bulletin_d'
 		deferred
-		end; -- bulletin_d
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	check_box (a_check_box: CHECK_BOX; managed: BOOLEAN): CHECK_BOX_I is
+	check_box (a_check_box: CHECK_BOX; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): CHECK_BOX_I is
 			-- Toolkit implementation of `a_check_box'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	draw_b (a_draw_b: DRAW_B; managed: BOOLEAN): DRAW_B_I is
+	draw_b (a_draw_b: DRAW_B; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): DRAW_B_I is
 			-- Toolkit implementation of `a_draw_b'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	drawing_area (a_drawing_area: DRAWING_AREA; managed: BOOLEAN): D_AREA_I is
+	drawing_area (a_drawing_area: DRAWING_AREA; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): D_AREA_I is
 			-- Toolkit implementation of `a_drawing_area'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	error_d (an_error_dialog: ERROR_D): ERROR_D_I is
+	error_d (an_error_dialog: ERROR_D; oui_parent: COMPOSITE): ERROR_D_I is
 			-- Toolkit implementation of `an_error_dialog'
 		deferred
-		end; -- error_d
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	file_sel_d (a_file_selec_dialog: FILE_SEL_D): FILE_SEL_D_I is
+	file_sel_d (a_file_selec_dialog: FILE_SEL_D; 
+		oui_parent: COMPOSITE): FILE_SEL_D_I is
 			-- Toolkit implementation of `a_file_selec_dialog'
 		deferred
-		end; -- file_sel_d
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	file_selec (a_file_selection: FILE_SELEC; managed: BOOLEAN): FILE_SELEC_I is
+	file_selec (a_file_selection: FILE_SELEC; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): FILE_SELEC_I is
 			-- Toolkit implementation of `a_file_selection'
 		deferred
-		end; -- file_selec
+		ensure
+			widget_exists: Result /= Void
+		end;
 
 	font_list (a_font_list: FONT_LIST): FONT_LIST_I is
 			-- Toolkit implementation of `a_font_list'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	form (a_form: FORM; managed: BOOLEAN): FORM_I is
+	form (a_form: FORM; managed: BOOLEAN; oui_parent: COMPOSITE): FORM_I is
 			-- Toolkit implementation of `a_form'
 		deferred
-		end; -- form
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	form_d (a_form_dialog: FORM_D): FORM_D_I is
+	form_d (a_form_dialog: FORM_D; oui_parent: COMPOSITE): FORM_D_I is
 			-- Toolkit implementation of `a_form_dialog'
 		deferred
-		end; -- form_d
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	frame (a_frame: FRAME; managed: BOOLEAN): FRAME_I is
+	frame (a_frame: FRAME; managed: BOOLEAN; oui_parent: COMPOSITE): FRAME_I is
 			-- Toolkit implementation of `a_frame'
 		deferred
-		end; -- frame
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	info_d (an_information_dialog: INFO_D): INFO_D_I is
+	info_d (an_information_dialog: INFO_D; oui_parent: COMPOSITE): INFO_D_I is
 			-- Toolkit implementation of `an_information_dialog'
 		deferred
-		end; -- info_d
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	label (a_label: LABEL; managed: BOOLEAN): LABEL_I is
+	label (a_label: LABEL; managed: BOOLEAN; oui_parent: COMPOSITE): LABEL_I is
 			-- Toolkit implementation of `a_label'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	label_g (a_label_gadget: LABEL; managed: BOOLEAN): LABEL_G_I is
+	label_g (a_label_gadget: LABEL; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): LABEL_G_I is
 			-- Toolkit implementation of `a_label_gadget'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	menu_b (a_menu_b: MENU_B; managed: BOOLEAN): MENU_B_I is
+	menu_b (a_menu_b: MENU_B; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): MENU_B_I is
 			-- Toolkit implementation of `a_menu_b'
 		deferred
-		end; -- menu_b
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	message (a_message: MESSAGE; managed: BOOLEAN): MESSAGE_I is
+	message (a_message: MESSAGE; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): MESSAGE_I is
 			-- Toolkit implementation of `a_message'
 		deferred
-		end; -- message
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	message_d (a_message_dialog: MESSAGE_D): MESSAGE_D_I is
+	message_d (a_message_dialog: MESSAGE_D; 
+		oui_parent: COMPOSITE): MESSAGE_D_I is
 			-- Toolkit implementation of `a_message_dialog'
 		deferred
-		end; -- message_d
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	option_b (an_option_button: OPTION_B; managed: BOOLEAN): OPTION_B_I is
+	option_b (an_option_button: OPTION_B; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): OPTION_B_I is
 			-- Toolkit implementation of `an_option_button'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	popup (a_popup: POPUP): POPUP_I is
+	popup (a_popup: POPUP; oui_parent: COMPOSITE): POPUP_I is
 			-- Toolkit implementation of `a_popup'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	prompt (a_prompt: PROMPT; managed: BOOLEAN): PROMPT_I is
+	prompt (a_prompt: PROMPT; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): PROMPT_I is
 			-- Toolkit implementation of `a_prompt'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	prompt_d (a_prompt_dialog: PROMPT_D): PROMPT_D_I is
+	prompt_d (a_prompt_dialog: PROMPT_D; 
+		oui_parent: COMPOSITE): PROMPT_D_I is
 			-- Toolkit implementation of `a_prompt_dialog`
 		deferred
-		end; -- prompt_d
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	menu_pull (a_new_pull: MENU_PULL; managed: BOOLEAN): MENU_PULL_I is
+	menu_pull (a_new_pull: MENU_PULL; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): MENU_PULL_I is
 			-- Toolkit implementation of `a_new_pull'
 		deferred
-		end; -- menu_pull
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	opt_pull (an_opt_pull: OPT_PULL; managed: BOOLEAN): OPT_PULL_I is
+	opt_pull (an_opt_pull: OPT_PULL; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): OPT_PULL_I is
 			-- Toolkit implementation of `an_opt_pull'
 		deferred
-		end; -- opt_pull
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	push_b (a_push_b: PUSH_B; managed: BOOLEAN): PUSH_B_I is
+	push_b (a_push_b: PUSH_B; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): PUSH_B_I is
 			-- Toolkit implementation of `a_push_b'
 		deferred
-		end; -- push_b
+		ensure
+			widget_exists: Result /= Void
+		end;
 
-	push_bg (a_push_b_gadget: PUSH_BG; managed: BOOLEAN): PUSH_BG_I is
+	push_bg (a_push_b_gadget: PUSH_BG; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): PUSH_BG_I is
 			-- Toolkit implementation of `a_push_b_gadget'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	question_d (a_question_dialog: QUESTION_D): QUESTION_D_I is
+	question_d (a_question_dialog: QUESTION_D; 
+		oui_parent: COMPOSITE): QUESTION_D_I is
 			-- Toolkit implementation of `a_question_dialog'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	radio_box (a_radio_box: RADIO_BOX; managed: BOOLEAN): RADIO_BOX_I is
+	radio_box (a_radio_box: RADIO_BOX; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): RADIO_BOX_I is
 			-- Toolkit implementation of `a_radio_box'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	row_column (a_row_column: ROW_COLUMN; managed: BOOLEAN): ROW_COLUMN_I is
+	row_column (a_row_column: ROW_COLUMN; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): ROW_COLUMN_I is
 			-- Toolkit implementation of `a_row_column'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	scale (a_scale: SCALE; managed: BOOLEAN): SCALE_I is
+	scale (a_scale: SCALE; managed: BOOLEAN; oui_parent: COMPOSITE): SCALE_I is
 			-- Toolkit implementation of `a_scale'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN): SCROLL_L_I is
+	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN; 
+		oui_parent: COMPOSITE): SCROLL_L_I is
 			-- Toolkit implementation of `a_list'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
+	
+	scrollable_list (a_scrollable_list: SCROLLABLE_LIST; managed, 
+		is_fixed: BOOLEAN; oui_parent: COMPOSITE): SCROLLABLE_LIST_I is
+			-- Toolkit implementation of `a_scrollable_list'
+		deferred
+		ensure
+			widget_exists: Result /= Void
+		end
 
-	scrollbar (a_scrollbar: SCROLLBAR; managed: BOOLEAN): SCROLLBAR_I is
+	scrollbar (a_scrollbar: SCROLLBAR; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): SCROLLBAR_I is
 			-- Toolkit implementation of `a_scrollbar'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	scrolled_t (a_scrolled_text: SCROLLED_T; managed: BOOLEAN): SCROLLED_T_I is
+	scrolled_t (a_scrolled_text: SCROLLED_T; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): SCROLLED_T_I is
 			-- Toolkit implementation of `a_scrolled_text'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	scrolled_t_word_wrapped (a_scrolled_text: SCROLLED_T; managed: BOOLEAN): SCROLLED_T_I is
+	scrolled_t_word_wrapped (a_scrolled_text: SCROLLED_T; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): SCROLLED_T_I is
 			-- Toolkit implementation of `a_scrolled_text'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	scrolled_w (a_scrolled_window: SCROLLED_W; managed: BOOLEAN): SCROLLED_W_I is
+	scrolled_w (a_scrolled_window: SCROLLED_W; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): SCROLLED_W_I is
 			-- Toolkit implementation of `a_scrolled_window'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
+	
+	search_replace_dialog (a_search_replace_dialog: SEARCH_REPLACE_DIALOG; 
+		oui_parent: COMPOSITE): SEARCH_REPLACE_DIALOG_I is
+			-- Toolkit implementation of `a_search_replace_dialog'
+		deferred
+		ensure
+			widget_exists: Result /= Void
+		end
 
-	separator (a_separator: SEPARATOR; managed: BOOLEAN): SEPARATOR_I is
+	separator (a_separator: SEPARATOR; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): SEPARATOR_I is
 			-- Toolkit implementation of `a_separator'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	separator_g (a_separator_gadget: SEPARATOR_G; managed: BOOLEAN): SEPARATO_G_I is
+	separator_g (a_separator_gadget: SEPARATOR_G; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): SEPARATO_G_I is
 			-- Toolkit implementation of `a_separator_gadget'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	text (a_text: TEXT; managed: BOOLEAN): TEXT_I is
+	tabbed_text (a_text: TABBED_TEXT; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): TABBED_TEXT_I is
 			-- Toolkit implementation of `a_text'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	text_word_wrapped (a_text: TEXT; managed: BOOLEAN): TEXT_I is
+	tabbed_text_word_wrapped (a_text: TABBED_TEXT; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): TABBED_TEXT_I is
 			-- Toolkit implementation of `a_text'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	text_field (a_text_field: TEXT_FIELD; managed: BOOLEAN): TEXT_FIELD_I is
+	text (a_text: TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TEXT_I is
+			-- Toolkit implementation of `a_text'
+		deferred
+		ensure
+			widget_exists: Result /= Void
+		end;
+
+	text_word_wrapped (a_text: TEXT; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): TEXT_I is
+			-- Toolkit implementation of `a_text'
+		deferred
+		ensure
+			widget_exists: Result /= Void
+		end;
+
+	text_field (a_text_field: TEXT_FIELD; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): TEXT_FIELD_I is
 			-- Toolkit implementation of `a_text_field'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	toggle_b (a_toggle_b: TOGGLE_B; managed: BOOLEAN): TOGGLE_B_I is
+	toggle_b (a_toggle_b: TOGGLE_B; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): TOGGLE_B_I is
 			-- Toolkit implementation of `a_toggle_b'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	toggle_bg (a_toggle_b_gadget: TOGGLE_BG; managed: BOOLEAN): TOGGLE_BG_I is
+	toggle_bg (a_toggle_b_gadget: TOGGLE_BG; managed: BOOLEAN; 
+		oui_parent: COMPOSITE): TOGGLE_BG_I is
 			-- Toolkit implementation of `a_toggle_b_gadget'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	warning_d (a_warning_dialog: WARNING_D): WARNING_D_I is
+	warning_d (a_warning_dialog: WARNING_D; 
+		oui_parent: COMPOSITE): WARNING_D_I is
 			-- Toolkit implementation of `a_warning_dialog'
 		deferred
+		ensure
+			widget_exists: Result /= Void
 		end;
 
-	working_d (a_working_dialog: WORKING_D): WORKING_D_I is
+	working_d (a_working_dialog: WORKING_D; 
+		oui_parent: COMPOSITE): WORKING_D_I is
 			-- Toolkit implementation of `a_working_dialog'
 		deferred
-		end
+		ensure
+			widget_exists: Result /= Void
+		end;
 
 	set_default_resources (a_list: ARRAY[WIDGET_RESOURCE]) is
 			-- Set the default resources of the application
@@ -378,8 +565,7 @@ feature
 		deferred
 		end;
 
-
-end
+end -- class TOOLKIT
 
 
 --|----------------------------------------------------------------

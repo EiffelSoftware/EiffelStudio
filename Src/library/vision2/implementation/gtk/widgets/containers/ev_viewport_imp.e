@@ -13,9 +13,7 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface,
-			set_item_width,
-			set_item_height
+			interface
 		end
 		
 	EV_CELL_IMP
@@ -48,26 +46,31 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Add a fixed to the viewport to get rid of default blackness.
 		do
-			container_widget := C.gtk_fixed_new
+			fixed_widget := C.gtk_fixed_new
+			C.gtk_widget_show (fixed_widget)
+			container_widget := C.gtk_vbox_new (False, 0)
+			C.gtk_container_add (viewport, fixed_widget)
 			C.gtk_widget_show (container_widget)
-			C.gtk_container_add (viewport, container_widget)
+			C.gtk_container_add (fixed_widget, container_widget)
 			Precursor {EV_CELL_IMP}
 		end
 
 	container_widget: POINTER
 			-- Pointer to the event box
+			
+	fixed_widget: POINTER
 	
 	visual_widget: POINTER is
 			-- 
 		do
-			Result := container_widget
+			Result := fixed_widget
 		end
 		
 	fixed_width: INTEGER is
 			-- Fixed Horizontal size measured in pixels.
 		do
 			Result := C.gtk_allocation_struct_width (
-				C.gtk_widget_struct_allocation (container_widget)
+				C.gtk_widget_struct_allocation (fixed_widget)
 			).max (0)
 		end
 
@@ -75,7 +78,7 @@ feature {NONE} -- Initialization
 			-- Fixed Vertical size measured in pixels.
 		do
 			Result := C.gtk_allocation_struct_height (
-				C.gtk_widget_struct_allocation (container_widget)
+				C.gtk_widget_struct_allocation (fixed_widget)
 			).max (0)
 		end
 
@@ -111,27 +114,49 @@ feature -- Access
 
 feature -- Element change
 
-	set_x_offset (a_x: INTEGER) is
-			-- Set `x_offset' to `a_x'.
+	block_resize_actions is
+			-- Block any resize actions that may occur.
 		local
 			item_imp: EV_WIDGET_IMP
 		do
-			item_imp ?= item.implementation
-			-- The blocking of resize actions is due to set uposition causing temporary resizing.
-			if item_imp.resize_actions_internal /= Void then
-				item_imp.resize_actions_internal.block	
-			end	
+			if item /= Void then
+				item_imp ?= item.implementation
+				-- The blocking of resize actions is due to set uposition causing temporary resizing.
+				if item_imp.resize_actions_internal /= Void then
+					item_imp.resize_actions_internal.block	
+				end				
+			end
+		end
+			
+	unblock_resize_actions is
+			-- Unblock all resize actions.
+		local
+			item_imp: EV_WIDGET_IMP
+		do
+			if item /= Void then
+				item_imp ?= item.implementation
+				if item_imp.resize_actions_internal /= Void then
+					item_imp.resize_actions_internal.resume
+				end	
+			end
+		end
+
+	set_x_offset (a_x: INTEGER) is
+			-- Set `x_offset' to `a_x'.
+		do
+			block_resize_actions
 			if a_x < 0 then
-				C.gtk_widget_set_uposition (item_imp.c_object, -a_x, -1)
+				C.gtk_widget_set_uposition (container_widget, -a_x, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, 0)
 			else
-				C.gtk_widget_set_uposition (item_imp.c_object, 0, -1)
+				C.gtk_widget_set_uposition (container_widget, 0, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
 			end
 			if item_imp.resize_actions_internal /= Void then
 				item_imp.resize_actions_internal.resume
 			end
 			internal_x_offset := a_x
+			unblock_resize_actions
 		end
 
 	set_y_offset (a_y: INTEGER) is
@@ -139,35 +164,16 @@ feature -- Element change
 		local
 			item_imp: EV_WIDGET_IMP
 		do
-			item_imp ?= item.implementation
-			
-			-- The blocking of resize actions is due to set uposition causing temporary resizing.
-			if item_imp.resize_actions_internal /= Void then
-				item_imp.resize_actions_internal.block	
-			end	
+			block_resize_actions
 			if a_y < 0 then
-				C.gtk_widget_set_uposition (item_imp.c_object, -1, -a_y)
+				C.gtk_widget_set_uposition (container_widget, -1, -a_y)
 				internal_set_value_from_adjustment (vertical_adjustment, 0)
 			else	
-				C.gtk_widget_set_uposition (item_imp.c_object, -1, 0)
+				C.gtk_widget_set_uposition (container_widget, -1, 0)
 				internal_set_value_from_adjustment (vertical_adjustment, a_y)
 			end
 			internal_y_offset := a_y
-			if item_imp.resize_actions_internal /= Void then
-				item_imp.resize_actions_internal.resume
-			end
-		end
-		
-	set_item_width (a_width: INTEGER) is
-			-- Set `a_widget.width' to `a_width'.
-		do
-			internal_set_item_size (a_width, -1)
-		end
-		
-	set_item_height (a_height: INTEGER) is
-			-- Set `a_widget.height' to `a_height'.
-		do
-			internal_set_item_size (-1, a_height)	
+			unblock_resize_actions
 		end
 		
 	set_item_size (a_width, a_height: INTEGER) is
@@ -184,15 +190,23 @@ feature {NONE} -- Implementation
 			-- Set `a_widget.height' to `a_height'.
 		local
 			w_imp: EV_WIDGET_IMP
+			temp_width, temp_height: INTEGER
 		do
-			if internal_minimum_width = -1 then
-				internal_minimum_width := minimum_width
+			if a_width > 0 then
+				temp_width := a_width
+			else
+				temp_width := -1
 			end
-			if internal_minimum_height = -1 then
-				internal_minimum_height := minimum_height
+			
+			if a_height > 0 then
+				temp_height := a_height
+			else
+				temp_height := -1
 			end
 			w_imp ?= item.implementation
-			C.gtk_widget_set_usize (w_imp.c_object, a_width, a_height)
+			w_imp.store_minimum_size
+			--| FIXME IEK This needs to be thought out some more.
+			--C.gtk_widget_set_usize (container_widget, temp_width, temp_height)
 		end
 
 	on_removed_item (an_item: EV_WIDGET) is
@@ -203,6 +217,8 @@ feature {NONE} -- Implementation
 			Precursor (an_item)
 			item_imp ?= an_item.implementation
 			item_imp.reset_minimum_size
+			set_x_offset (0)
+			set_y_offset (0)
 		end
 
 	internal_x_offset, internal_y_offset: INTEGER

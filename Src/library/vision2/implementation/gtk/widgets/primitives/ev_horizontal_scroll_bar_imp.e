@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Create the horizontal scroll bar.
 		do
 			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (1, 1, 100 + 10, 1, 10, 10)
+			adjustment := C.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
 			set_c_object (C.gtk_hscrollbar_new (adjustment))
 		end
 
@@ -59,6 +59,9 @@ end -- class EV_HORIZONTAL_SCROLL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/13 18:46:51  brendel
+--| Changed default value.
+--|
 --| Revision 1.7  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

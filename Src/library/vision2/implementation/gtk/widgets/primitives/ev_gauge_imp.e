@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Create the horizontal scroll bar.
 		do
 			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 0)
+			adjustment := C.gtk_adjustment_new (0, 0, 100, 1, 10, 0)
 		end
 
 	initialize is
@@ -281,6 +281,9 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/13 18:46:51  brendel
+--| Changed default value.
+--|
 --| Revision 1.12  2000/04/04 20:54:08  oconnor
 --| updated signal connection for new marshaling scheme
 --|

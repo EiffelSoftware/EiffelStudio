@@ -480,7 +480,7 @@ feature -- Inapplicable
 	drag_cursor: EV_CURSOR is
 			--
 		local
-			pixmap: EV_PIXMAP
+			--pixmap: EV_PIXMAP
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).sizeall_cursor
 			--create pixmap

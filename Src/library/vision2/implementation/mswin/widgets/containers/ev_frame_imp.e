@@ -154,8 +154,6 @@ feature -- Element change
 
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
-		local
-			t: TUPLE [INTEGER, INTEGER]
 		do
 			if a_text.is_empty then
 				text_width := 0

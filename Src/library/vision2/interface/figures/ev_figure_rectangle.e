@@ -33,7 +33,6 @@ feature -- Events
 			w, h: INTEGER
 			xa, ya: INTEGER
 			c: EV_COORDINATE
-			counter: INTEGER
 		do
 			sin_a := sine (point_a.angle_abs)
 			cos_a := cosine (point_a.angle_abs)
@@ -139,9 +138,6 @@ feature -- Status report
 	bounding_box: EV_RECTANGLE is
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
-			first, second: EV_RELATIVE_POINT
-			point1: EV_RELATIVE_POINT
-			point2: EV_RELATIVE_POINT
 			parray: ARRAY [EV_COORDINATE]
 			coor: EV_COORDINATE
 		do

@@ -18,14 +18,14 @@ SRC = proto.c eproto.c eif_in.c eif_out.c init.c dumped.c
 
 # Derived object file names
 OBJECTS = \
-	dumped.obj \
-	proto.obj \
-	eproto.obj \
-	eif_in.obj \
-	eif_out.obj \
-	init.obj
+	dumped.$obj \
+	proto.$obj \
+	eproto.$obj \
+	eif_in.$obj \
+	eif_out.$obj \
+	init.$obj
 
-.c.obj:
+.c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
 all:: ewb.lib

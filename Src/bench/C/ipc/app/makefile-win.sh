@@ -7,14 +7,14 @@ MAKE = $make
 MV = copy
 RM = del
 
-.c.obj:
+.c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
 # Derived library object file names
 OBJECTS = \
-	listen.obj \
-	proto.obj \
-	server.obj \
+	listen.$obj \
+	proto.$obj \
+	server.$obj \
 	$(LIBDIR)\$(LIBNAME)
 
 # Where shared archive is located (path and name)

@@ -15,7 +15,7 @@ DLLFLAGS = $dllflags
 CFLAGS = -I. -I$(TOP) -I$(TOP)\run-time $ccflags $optimize
 
 
-OBJECTS = special_tables.obj
+OBJECTS = special_tables.$obj
 
-all:: special_tables.obj
+all:: special_tables.$obj
 

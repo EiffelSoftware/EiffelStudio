@@ -9,9 +9,9 @@ MAKE = $make
 MV = copy
 RM = del
 
-OBJECTS = lace_y.obj keyword.obj lac_err.obj lace_c.obj lace_l.obj eif_l.obj
+OBJECTS = lace_y.$obj keyword.$obj lac_err.$obj lace_c.$obj lace_l.$obj eif_l.$obj
 
-.c.obj:
+.c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
 all:: lace.lib
@@ -25,6 +25,6 @@ lace_y.c: lace_y.cwn
 lace_y.h: lace_y.hwn
 	copy lace_y.hwn lace_y.h
 
-lace_c.obj: $(TOP)\eif_config.h
-lace_y.obj: lace_y.h
-lac_err.obj: ..\shared\yacc.h
+lace_c.$obj: $(TOP)\eif_config.h
+lace_y.$obj: lace_y.h
+lac_err.$obj: ..\shared\yacc.h

@@ -6,6 +6,8 @@ include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\make'
 #
+obj='obj'
+#
 #-- MT debug
 #-----------
 #optimize='-O2'

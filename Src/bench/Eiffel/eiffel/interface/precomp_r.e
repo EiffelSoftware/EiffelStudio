@@ -62,21 +62,17 @@ feature
 					sys := project.saved_workbench.system
 					if sys /= Void and then sys.is_precompiled then
 						workb := project.saved_workbench;
-						Workbench.set_precompiled_directories 
-								(workb.precompiled_directories);
+						Workbench.set_precompiled_directories (workb.precompiled_directories);
 						Universe.copy (workb.universe);
 						precompiled_options.item (project_dir.dollar_name).rename_clusters (Universe);
 						Workbench.set_system (sys);
 		
 						Eiffel_project.set_system (project.system);
-						project_dir.set_has_precompiled_preobj
-							(sys.has_precompiled_preobj);
+						project_dir.set_has_precompiled_preobj (sys.has_precompiled_preobj);
 						sys.set_precompilation (False);
 						sys.set_has_precompiled_preobj (False);
-						Workbench.precompiled_directories.force
-							(project_dir, sys.compilation_id);
-						Workbench.set_precompiled_driver
-							(project_dir.precompiled_driver);
+						Workbench.precompiled_directories.force (project_dir, sys.compilation_id);
+						Workbench.set_precompiled_driver (project_dir.precompiled_driver);
 						set_precomp_dir;
 						sys.init_counters;
 						if merge_project_names /= Void then
@@ -306,8 +302,7 @@ feature {NONE} -- Implementation
 							-- Must be incompatible version
 						!! vd52;	
 						vd52.set_path (project_dir.name);
-						vd52.set_precompiled_version 
-							(project_eif.project_version_number);
+						vd52.set_precompiled_version (project_eif.project_version_number);
 						vd52.set_compiler_version (version_number);
 						Error_handler.insert_error (vd52);
 						Error_handler.raise_error
@@ -315,12 +310,10 @@ feature {NONE} -- Implementation
 				else
 					sys := project.saved_workbench.system
 					if sys /= Void and then sys.is_precompiled then
-						project_dir.set_has_precompiled_preobj
-							(sys.has_precompiled_preobj);
+						project_dir.set_has_precompiled_preobj (sys.has_precompiled_preobj);
 						project_dir.set_licensed (sys.licensed_precompilation)
 						project_dir.set_system_name (sys.system_name)
-						Workbench.precompiled_directories.force
-							(project_dir, sys.compilation_id);
+						Workbench.precompiled_directories.force (project_dir, sys.compilation_id);
 						precompiled_options.item (precomp_name).rename_clusters (project.saved_workbench.universe)
 						Workbench.merge (project.saved_workbench)
 					else

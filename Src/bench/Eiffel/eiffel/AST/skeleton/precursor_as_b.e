@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"Abstract description of an access to the precursor of%
 		%an Eiffel feature. Version for Bench.";
@@ -9,17 +8,17 @@ indexing
 class PRECURSOR_AS_B
 
 inherit
-
 	PRECURSOR_AS
 		redefine
 			parent_name, parameters
-		end;
+		end
 
 	ACCESS_AS_B
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
 		end
+
 	SHARED_CONFIGURE_RESOURCES
 
 feature -- Attributes
@@ -35,18 +34,18 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check a precursor call
 		local
-			vupr1       : VUPR1
-			vupr2       : VUPR2
-			vupr3       : VUPR3
-			vupr4       : VUPR4
-			vupr5       : VUPR5
-			pre_table   : EXTEND_TABLE [CL_TYPE_A, ROUTINE_ID]
-			pname       : STRING
-			feature_i   : FEATURE_I
-			e_feature   : E_FEATURE
-			parent_type : CL_TYPE_A
-			parent_c    : CLASS_C
-			feat_ast    : FEATURE_AS
+			vupr1: VUPR1
+			vupr2: VUPR2
+			vupr3: VUPR3
+			vupr4: VUPR4
+			vupr5: VUPR5
+			pre_table: EXTEND_TABLE [CL_TYPE_A, ROUTINE_ID]
+			pname: STRING
+			feature_i: FEATURE_I
+			e_feature: E_FEATURE
+			parent_type: CL_TYPE_A
+			parent_c: CLASS_C
+			feat_ast: FEATURE_AS
 		do
 			-- Check that we're in the body of a routine (vupr1).
 
@@ -63,9 +62,7 @@ feature -- Type check, byte code and dead code removal
 
 			--  Check that feature has a unique name (vupr2)
 
-			feat_ast := context.a_class.feature_with_name (
-									context.a_feature.feature_name
-														  ).ast
+			feat_ast := context.a_class.feature_with_name (context.a_feature.feature_name).ast
 
 			if feat_ast.feature_names.count > 1 then
 				-- feature has multiple names.
@@ -76,13 +73,11 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error;
 			end
 
-			-- Create table of routine ids of all parents which have 
-			-- an effective precursor of the current feature.
-
+				-- Create table of routine ids of all parents which have 
+				-- an effective precursor of the current feature.
 			pre_table := precursor_table
 
-			-- Check that current feature is a redefinition.
-
+				-- Check that current feature is a redefinition.
 			if pre_table.count = 0 then
 				if parent_name /= Void then
 					-- The specified parent does not have
@@ -103,9 +98,8 @@ feature -- Type check, byte code and dead code removal
 				end
 			end
 
-			-- Check that an unqualified precursor construct
-			-- is not ambiguous.
-
+				-- Check that an unqualified precursor construct
+				-- is not ambiguous.
 			if parent_name = Void and then pre_table.count > 1 then
 				-- Ambiguous construct
 				!!vupr4;
@@ -115,7 +109,7 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error;
 			end
 
-			-- Table has exactly one entry.
+				-- Table has exactly one entry.
 			pre_table.start
 			parent_type := pre_table.item_for_iteration
 			parent_c    := parent_type.associated_class
@@ -124,7 +118,7 @@ feature -- Type check, byte code and dead code removal
 														 )
 			feature_i   := e_feature.associated_feature_i
 
-			-- Update type stack.
+				-- Update type stack.
 			context.replace (access_type (parent_type, feature_i))
 		end;
 
@@ -157,8 +151,8 @@ feature -- Type check, byte code and dead code removal
 			like_argument_detected : BOOLEAN;
 			formal_type: FORMAL_A
 		do
-			-- Replace type on top of the stack
-			-- with parent type.
+				-- Replace type on top of the stack
+				-- with parent type.
 			context.replace (p_type)
  
 			last_type := context.item;
@@ -201,8 +195,7 @@ feature -- Type check, byte code and dead code removal
 						-- argument declaration
 					if arg_type.is_like_argument then
 						arg_type := arg_type.conformance_type;
-						arg_type := arg_type.instantiation_in
-										(last_type, last_id).actual_type;
+						arg_type := arg_type.instantiation_in (last_type, last_id).actual_type;
 						if metamorphosis_disabled then
 							like_argument_detected := arg_type.is_basic
 						else
@@ -211,8 +204,7 @@ feature -- Type check, byte code and dead code removal
 					else
 							-- Instantiation of it in the context of
 							-- the context of the target
-						arg_type := arg_type.instantiation_in
-										(last_type, last_id).actual_type;
+						arg_type := arg_type.instantiation_in (last_type, last_id).actual_type;
 					end;
 						-- Conformance: take care of constrained
 						-- genericity
@@ -399,21 +391,21 @@ feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
 			-- find calls to Current
-		local
-			new_list: like l
+--		local
+--			new_list: like l
 		do
 			-- GAP : should be similar to version in ACCESS_FEAT_AS_B
 			-- which is reproduced below:
 
---            if l.is_new then
---                l.add (feature_name)
---            end
+--			if l.is_new then
+--				l.add (feature_name)
+--			end
 --
---            if parameters /= void then
---                !!new_list.make
---                parameters.fill_calls_list (new_list)
---                l.merge (new_list)
---            end
+--			if parameters /= void then
+--				!!new_list.make
+--				parameters.fill_calls_list (new_list)
+--				l.merge (new_list)
+--			end
 		end;
 
 	replicate (ctxt: REP_CONTEXT): like Current is
@@ -433,18 +425,18 @@ feature {NONE}  -- precursor table
 				-- precursor of current feature. Indexed by
 				-- routine ids.
 		local
-			rout_id_set : ROUT_ID_SET;
-			rout_id     : ROUTINE_ID;
-			parents     : FIXED_LIST [CL_TYPE_A];
-			a_parent    : CLASS_C;
-			a_feature   : E_FEATURE;
-			p_name      : STRING;
-			spec_p_name : STRING;
-			p_list      : HASH_TABLE [STRING, STRING];
-			i, rc       : INTEGER
+			rout_id_set: ROUT_ID_SET;
+			rout_id: ROUTINE_ID;
+			parents: FIXED_LIST [CL_TYPE_A];
+			a_parent: CLASS_C;
+			a_feature: E_FEATURE;
+			p_name: STRING;
+			spec_p_name: STRING;
+			p_list: HASH_TABLE [STRING, STRING];
+			i, rc: INTEGER
 		do
 			rout_id_set := context.a_feature.rout_id_set
-			rc          := rout_id_set.count
+			rc := rout_id_set.count
 
 			if parent_name /= Void then
 				spec_p_name := Clone (parent_name.string_value)
@@ -453,14 +445,14 @@ feature {NONE}  -- precursor table
 
 			from
 				parents := context.a_class.parents
-				!!Result.make (parents.count)
-				!!p_list.make (parents.count)
+				!! Result.make (parents.count)
+				!! p_list.make (parents.count)
 				parents.start
 			until
 				parents.after
 			loop
 				a_parent := parents.item.associated_class
-				p_name   := a_parent.name_in_upper
+				p_name := a_parent.name_in_upper
 
 				-- Don't check the same parent twice.
 				-- If construct is qualified, check
@@ -469,7 +461,7 @@ feature {NONE}  -- precursor table
 				if not p_list.has (p_name) and then
 					(spec_p_name = Void or else spec_p_name.is_equal (p_name)) then
 
-					-- Check if parent has an effective precursor
+						-- Check if parent has an effective precursor
 					from
 						i := 1
 					until
@@ -478,9 +470,8 @@ feature {NONE}  -- precursor table
 						rout_id   := rout_id_set.item (i)
 						a_feature := a_parent.feature_with_rout_id (rout_id)
 						   
-						if a_feature /= Void and then 
-										not a_feature.is_deferred then
-							-- Ok, add parent.
+						if a_feature /= Void and then not a_feature.is_deferred then
+								-- Ok, add parent.
 							Result.put (parents.item, rout_id)
 							p_list.put (p_name, p_name)
 							i := rc -- terminate loop
@@ -489,9 +480,7 @@ feature {NONE}  -- precursor table
 						i := i + 1
 					end
 				end
-
 				parents.forth
-
 			end
 		end
 

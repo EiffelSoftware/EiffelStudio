@@ -138,14 +138,12 @@ feature -- File name data From compiler world
 				l_is_single_module := True
 				l_module_name := precompilation_module_name (a_class_type.assembly_info.assembly_name)
 			else
-				l_assembly_name := System.name
-
 				if l_is_single_module then
 					l_type_id := 1
 				else
 					l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
 				end
-				l_module_name := l_assembly_name + "_module_" + l_type_id.out + ".dll"
+				l_module_name := "module_" + l_type_id.out + ".dll"
 			end
 
 			Result := l_module_name

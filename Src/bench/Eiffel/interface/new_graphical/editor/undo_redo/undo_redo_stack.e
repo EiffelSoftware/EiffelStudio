@@ -64,13 +64,35 @@ feature -- Element change
 	record_insert (c: CHARACTER) is
 		local
 			uic: UNDO_INSERT_COMMAND
+			urc: UNDO_REPLACE_COMMAND
+			udc: UNDO_DELETE_COMMAND
 		do
-			if current_status = insert_char then
+			inspect current_status
+
+			when insert_char then
 				uic ?= item
 				check
 					uic /= Void
 				end
 				uic.extend (c)
+
+			when back_delete then
+				udc ?= item
+				check
+					udc /= Void
+				end
+				create urc.make_from_strings (chwin.cursor, udc.message, c.out, chwin)
+				undo_list.start
+				undo_list.replace (urc)
+				current_status := back_delete_combo
+
+			when back_delete_combo then
+				urc ?= item
+				check
+					urc /= Void
+				end
+				urc.extend_new (c)
+
 			else
 				create uic.make_from_string	(chwin.cursor, c.out, chwin)
 				put (uic)
@@ -79,8 +101,23 @@ feature -- Element change
 		end
 
 	record_insert_eol is
+		local
+			uic: UNDO_INSERT_COMMAND
 		do
-			record_insert ('%N')
+			inspect current_status
+
+			when insert_char then
+				uic ?= item
+				check
+					uic /= Void
+				end
+				uic.extend ('%N')
+
+			else
+				create uic.make_from_string	(chwin.cursor, "%N", chwin)
+				put (uic)
+				current_status := insert_eol
+			end
 		end
 
 	record_paste (s: STRING) is
@@ -118,6 +155,48 @@ feature -- Element change
 			current_status := cut_selection
 		end
 
+	record_replace (c1, c2: CHARACTER) is
+		local
+			urc: UNDO_REPLACE_COMMAND
+		do
+			if current_status = replace then
+				urc ?= item
+				check
+					urc /= Void
+				end
+				if c1 = '%N' then
+					urc.extend_new (c2)
+				else
+					urc.extend_both (c1, c2)
+				end
+			else
+				if c1 = '%N' then
+					create urc.make_from_strings (chwin.cursor, "", c2.out, chwin)
+				else
+					create urc.make_from_strings	 (chwin.cursor, c1.out, c2.out, chwin)
+				end
+				put (urc)
+				current_status := replace
+			end
+		end
+
+	record_back_delete (c: CHARACTER) is
+		local
+			udc: UNDO_DELETE_COMMAND
+		do
+			if current_status = back_delete then
+				udc ?= item
+				check
+					udc /= Void
+				end
+				udc.prepend (chwin.cursor, c)
+			else
+				create udc.make_from_string (chwin.cursor, c.out, chwin)
+				put (udc)
+				current_status := back_delete
+			end
+		end
+
 feature -- Removal
 
 feature -- Resizing
@@ -130,8 +209,8 @@ feature -- Duplication
 
 feature -- Constants
 
-	move, insert_char, delete_char, insert_eol, back_delete, replace,
-		cut_selection, paste, replace_selection : INTEGER is unique
+	move, insert_char, delete_char, insert_eol, replace, back_delete,
+		back_delete_combo, cut_selection, paste : INTEGER is unique
 
 feature -- Basic operations
 

@@ -70,10 +70,9 @@ feature -- Access
 
 	pebble_x_position: INTEGER is
 			-- Initial x position for pick and drop relative to `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
-			check
-				not_destroyed: not is_destroyed
-			end
 			Result := implementation.pebble_x_position
 		ensure then
 			bridge_ok: Result = implementation.pebble_x_position
@@ -81,10 +80,9 @@ feature -- Access
 
 	pebble_y_position: INTEGER is
 			-- Initial y position for pick and drop relative to `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
-			check
-				not_destroyed: not is_destroyed
-			end
 			Result := implementation.pebble_y_position
 		ensure then
 			bridge_ok: Result = implementation.pebble_y_position

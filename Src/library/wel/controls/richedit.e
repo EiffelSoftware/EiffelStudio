@@ -139,13 +139,14 @@ feature -- Status report
 			exists: exists
 			has_selection: has_selection
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
 			!! Result.make (selection_end - selection_start)
-			a := Result.to_c
 			Result.fill_blank
+			!! a_wel_string.make (Result)
 			cwin_send_message (item, Em_getseltext, 0,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
+			Result := a_wel_string.string
 		ensure
 			valid_length: Result.count =
 				selection_end - selection_start

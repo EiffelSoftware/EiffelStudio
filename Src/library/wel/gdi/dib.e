@@ -30,21 +30,21 @@ feature {NONE} -- Initialization
 		local
 			bitmap_file_header: WEL_BITMAP_FILE_HEADER						
 			s: STRING
-			a: ANY
+			a_wel_string1, a_wel_string2: WEL_STRING
 		do
 			!! bitmap_file_header.make
 			!! info_header.make
 			file.read_stream (bitmap_file_header.structure_size)
 			s := file.last_string
-			a := s.to_c
-			bitmap_file_header.memory_copy ($a,
+			!! a_wel_string1.make (s)
+			bitmap_file_header.memory_copy (a_wel_string1.item,
 				bitmap_file_header.structure_size)
 			structure_size := bitmap_file_header.size
 			structure_make
 			file.read_stream (structure_size)
 			s := file.last_string
-			a := s.to_c
-			memory_copy ($a, structure_size)
+			!! a_wel_string2.make (s)
+			memory_copy (a_wel_string2.item, structure_size)
 			info_header.memory_copy (item, info_header.structure_size)
 			calculate_palette
 			file.close

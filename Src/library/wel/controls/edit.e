@@ -113,11 +113,11 @@ feature -- Basic operations
 			exists: exists
 			new_text_not_void: new_text /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := new_text.to_c
+			!! a_wel_string.make (new_text)
 			cwin_send_message (item, Em_replacesel, 0,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		end
 
 feature -- Status setting

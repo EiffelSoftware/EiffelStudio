@@ -51,13 +51,14 @@ feature -- Access
 			i_large_enough: i >= 0
 			i_small_enough: i < count
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
 			!! Result.make (i_th_text_length (i))
 			Result.fill_blank
-			a := Result.to_c
+			!! a_wel_string.make (Result)
 			cwin_send_message (item, Cb_getlbtext, i,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
+			Result := a_wel_string.string
 		ensure
 			result_exists: Result /= Void
 		end
@@ -90,12 +91,12 @@ feature -- Basic operations
 			index_small_enough: index < count
 			a_string_not_void: a_string /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_string.to_c
+			!! a_wel_string.make (a_string)
 			Result := cwin_send_message_result (item,
 				Cb_findstring, index,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		end
 
 	find_string_exact (index: INTEGER; a_string: STRING): INTEGER is
@@ -109,12 +110,12 @@ feature -- Basic operations
 			index_small_enough: index < count
 			a_string_not_void: a_string /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_string.to_c
+			!! a_wel_string.make (a_string)
 			Result := cwin_send_message_result (item,
 				Cb_findstringexact, index,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		end
 
 feature -- Element change
@@ -125,11 +126,11 @@ feature -- Element change
 			exists: exists
 			a_string_not_void: a_string /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_string.to_c
+			!! a_wel_string.make (a_string)
 			cwin_send_message (item, Cb_addstring, 0,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		ensure
 			new_count: count = old count + 1
 		end
@@ -142,11 +143,11 @@ feature -- Element change
 			index_small_enough: index <= count
 			index_large_enough: index >= 0
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_string.to_c
+			!! a_wel_string.make (a_string)
 			cwin_send_message (item, Cb_insertstring, index,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		ensure
 			new_count: count = old count + 1
 		end
@@ -171,11 +172,11 @@ feature -- Element change
 			exists: exists
 			files_not_void: files /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := files.to_c
+			!! a_wel_string.make (files)
 			cwin_send_message (item, Cb_dir, attribut,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a_wel_string.item))
 		end
 
 	reset_content is

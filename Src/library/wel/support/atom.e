@@ -22,10 +22,10 @@ feature {NONE} -- Initialization
 			a_name_not_empty: not a_name.empty
 			a_name_not_too_long: a_name.count <= Max_name_length
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_name.to_c
-			item := cwin_add_atom ($a)
+			!! a_wel_string.make (a_name)
+			item := cwin_add_atom (a_wel_string.item)
 		ensure
 			name_is_equal: exists implies name.is_equal (a_name)
 		end
@@ -37,13 +37,16 @@ feature -- Access
 		require
 			exists: exists
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (Max_name_length + 1)
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_get_atom_name (item, $a,
-				Max_name_length + 1))
+			!! a_wel_string.make (Result)
+			nb := cwin_get_atom_name (item, a_wel_string.item,
+				Max_name_length + 1)
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.empty

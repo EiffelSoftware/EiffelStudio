@@ -88,11 +88,11 @@ feature -- Status setting
 			tab_not_void: tab /= Void
 			tab_large_enough: tab.count > 1
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
-			a := tab.to_c
+			!! a.make (tab)
 			cwin_send_message (item, Em_settabstops, tab.count,
-				cwel_pointer_to_integer ($a))
+				cwel_pointer_to_integer (a.item))
 		end
 
 	set_default_tab_stops is
@@ -198,13 +198,16 @@ feature -- Status report
 			i_large_enough: i >= 0
 			i_small_enough: i < line_count
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (line_length (i))
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_send_message_result (item,
-				Em_getline, i, cwel_pointer_to_integer ($a)))
+			!! a_wel_string.make (Result)
+			nb := cwin_send_message_result (item,
+				Em_getline, i, cwel_pointer_to_integer (a_wel_string.item))
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_exists: Result /= Void
 			count_ok: Result.count = line_length (i)

@@ -112,7 +112,7 @@ feature -- Status Setting
 				par_ptr := C.gtk_widget_struct_parent (par_ptr)
 			end
 			if par_ptr /= NULL then
-				C.gtk_window_set_default (par_ptr, visual_widget)
+				C.set_gtk_window_struct_default_widget (par_ptr, visual_widget)
 			end	
 		end
 
@@ -133,7 +133,7 @@ feature -- Status Setting
 			end
 
 			if par_ptr /= NULL then
-				C.gtk_window_set_default (par_ptr, NULL)
+				C.set_gtk_window_struct_default_widget (par_ptr, NULL)
 			end			
 		end
 

@@ -331,7 +331,6 @@ feature -- Grahpical Interface
 			build_menus;
 			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
 			build_bar;
-			!! toolbar_separator.make (new_name, toolbar_parent);
 			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;

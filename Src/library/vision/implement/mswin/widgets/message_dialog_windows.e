@@ -408,8 +408,6 @@ feature {NONE} -- Inapplicable
 
 end -- MESSAGE_DIALOG_WINDOWS
  
-
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1997 Interactive Software Engineering Inc.

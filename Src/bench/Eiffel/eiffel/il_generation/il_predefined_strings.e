@@ -27,8 +27,8 @@ feature -- Access
 	eiffel_class_name_attribute: STRING is "ISE.Runtime.CA.EIFFEL_CLASS_NAME_ATTRIBUTE"
 	assertion_level_class_name_attribute: STRING is "ISE.Runtime.CA.ASSERTION_LEVEL_ATTRIBUTE"
 	assertion_level_enum_class_name: STRING is "ISE.Runtime.Enums.ASSERTION_LEVEL_ENUM"
-	exception_manager_class_name: STRING is "ISE.Runtime.EXCEPTION_MANAGER"
 	eiffel_derivation_class_name: STRING is "ISE.Runtime.EIFFEL_DERIVATION"
+	eiffel_exception_class_name: STRING is "ISE.Runtime.EIFFEL_EXCEPTION"
 			-- Type used by code generation.
 
 	override_prefix: STRING is "__"

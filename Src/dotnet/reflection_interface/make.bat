@@ -219,6 +219,7 @@ copy folderdialog.netmodule ..\..\..\bin
 
 cd ..
 cd Clib
+del *.lib
 call make_finalize.bat
 cd ..
 

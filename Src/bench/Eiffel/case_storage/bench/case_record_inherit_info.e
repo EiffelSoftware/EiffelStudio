@@ -46,7 +46,9 @@ feature {NONE} -- Recording information for eiffelcase
 				parents.after
 			loop
 				parent_id := parents.item.parent_id;
-				no_repeated_parents.extend (parent_id)
+				if parent_id /= System.any_id then
+					no_repeated_parents.extend (parent_id)
+				end;
 				parents.forth
 			end;
 			!! p_l.make (no_repeated_parents.count);
@@ -160,7 +162,7 @@ end;
 														(renaming.key_for_iteration);
 							if feature_i /= Void then
 								feature_ast := Body_server.item (feature_i.body_id);
-								feature_ast.store_information (classc, feature_data);
+								feature_ast.store_information (feature_data);
 								feature_i.store_case_information (feature_data);
 								s_class_data.add_feature (feature_data, 
 									parent_c.new_export_for (temp))

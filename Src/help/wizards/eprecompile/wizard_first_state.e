@@ -239,8 +239,9 @@ feature {NONE} -- Tools
 			create path_name.make_from_string (path_lib)
 			path_name.set_file_name (ace_name)
 			it := Void
-			create int_dir.make_open_read (path_lib)
+			create int_dir.make (path_lib)
 			if int_dir.exists then
+				int_dir.open_read
 				list_of_file:= int_dir.linear_representation
 				list_of_file.compare_objects
 				if has__case_insensitive_comparison (list_of_file, ace_name) then

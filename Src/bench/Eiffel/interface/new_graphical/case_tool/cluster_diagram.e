@@ -399,15 +399,30 @@ feature -- View management
 		local
 			diagram_output: XM_DOCUMENT
 			node: XM_ELEMENT
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
 			diagram_output := Xml_routines.deserialize_document (ptf.name)
 			if diagram_output /= Void then
 				check
 					valid_xml: diagram_output.root_element.name.is_equal ("CLUSTER_DIAGRAM")
 				end
-				node := diagram_output.root_element.element_by_name ("VIEW")
-				if node /= Void and then node.has_attribute_by_name ("NAME") then
-					node.remove_attribute_by_name ("NAME")
+				a_cursor := diagram_output.root_element.new_cursor
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
+					node ?= a_cursor.item
+					if
+						node /= Void and then
+						node.name.is_equal ("VIEW") and then
+						equal (node.attribute_by_name ("NAME").value, a_name)
+					then
+						diagram_output.root_element.remove_at_cursor (a_cursor)
+					end
+					if not a_cursor.after then
+						a_cursor.forth
+					end
 				end
 				Xml_routines.save_xml_document (ptf.name, diagram_output)
 			end
@@ -729,49 +744,39 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 			diagram_output: XM_DOCUMENT
 			view_output, node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_namespace: XM_NAMESPACE
-			rescued: BOOLEAN
 		do
-			if not rescued then
-				if ptf.is_open_read then
-					diagram_output := Xml_routines.deserialize_document (ptf.name)
-					if diagram_output /= Void then
-						a_cursor := diagram_output.root_element.new_cursor
-						from
-							a_cursor.start
-						until
-							a_cursor.after
-						loop
-							node ?= a_cursor.item
-							if node /= Void then
-								if node.name.is_equal ("VIEW") then
-									if node.attribute_by_name ("NAME").value.is_equal (current_view) then
-										diagram_output.root_element.remove_at_cursor (a_cursor)
-									end
-								end
-							end
-							if not a_cursor.after then
-								a_cursor.forth
-							end
-						end
-						view_output := xml_element
-						view_output.set_parent (diagram_output)
-						diagram_output.root_element.force_first (view_output)
-						Xml_routines.save_xml_document (ptf.name, diagram_output)
-					end
-				else
-					create l_namespace.make ("", "")
-					create node.make_root ("CLUSTER_DIAGRAM", l_namespace)
-					create diagram_output.make
-					diagram_output.force_first (node)
-					Xml_routines.save_xml_document (ptf.name, diagram_output)
-				end
+			if ptf.is_open_read then
+					-- Remove any previous save of `current_view'.
+				diagram_output := Xml_routines.deserialize_document (ptf.name)
+			else
+					-- Create a new view.
+				create diagram_output.make
+				create node.make_root (diagram_output, "CLUSTER_DIAGRAM",
+					create {XM_NAMESPACE}.make_default)
 			end
-		rescue
-			rescued := True
-			Error_handler.error_list.wipe_out
-			Xml_routines.display_warning_message ("File " + center_class.name + ".ead is corrupted.")
-			retry
+			if diagram_output /= Void then
+				a_cursor := diagram_output.root_element.new_cursor
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
+					node ?= a_cursor.item
+					if
+						node /= Void and then
+						node.name.is_equal ("VIEW") and then
+						node.attribute_by_name ("NAME").value.is_equal (current_view)
+					then
+						diagram_output.root_element.remove_at_cursor (a_cursor)
+					end
+					if not a_cursor.after then
+						a_cursor.forth
+					end
+				end
+				view_output := xml_element
+				diagram_output.root_element.force_first (view_output)
+				Xml_routines.save_xml_document (ptf.name, diagram_output)
+			end
 		end
 
 	load_from_file (f: RAW_FILE) is
@@ -889,8 +894,8 @@ feature {NONE} -- XML
 			include_element, exclude_element: XM_ELEMENT
 			l_namespace: XM_NAMESPACE
 		do
-			create l_namespace.make ("", "")
-			create Result.make_root ("VIEW", l_namespace)
+			create l_namespace.make_default
+			create Result.make_root (create {XM_DOCUMENT}.make, "VIEW", l_namespace)
 			Xml_routines.add_attribute ("NAME", l_namespace, current_view, Result)
 			Result.put_last (Xml_routines.xml_node (Result, "SUPERCLUSTER_DEPTH", supercluster_depth.out))
 			Result.put_last (Xml_routines.xml_node (Result, "SUBCLUSTER_DEPTH", subcluster_depth.out))
@@ -899,7 +904,7 @@ feature {NONE} -- XML
 			Result.put_last (Xml_routines.xml_node (Result, "LABELS_SHOWN", labels_shown.out))
 			Result.put_last (Xml_routines.xml_node (Result, "X_POS", ((point.x / scale_x)).rounded.out))
 			Result.put_last (Xml_routines.xml_node (Result, "Y_POS", ((point.y / scale_y)).rounded.out))
-			create include_element.make_child (Result, "INCLUDED_FIGURES", l_namespace)
+			create include_element.make (Result, "INCLUDED_FIGURES", l_namespace)
 
 				-- Save included cluster figures.
 			from
@@ -909,7 +914,7 @@ feature {NONE} -- XML
 			loop
 				clf ?= included_figures.item
 				if clf /= Void then
-					create include_xe.make_child (include_element, "CLUSTER", l_namespace)
+					create include_xe.make (include_element, "CLUSTER", l_namespace)
 					Xml_routines.add_attribute ("NAME", l_namespace, clf.name, include_xe)
 					include_element.put_last (include_xe)
 				end
@@ -924,7 +929,7 @@ feature {NONE} -- XML
 			loop
 				cf ?= included_figures.item
 				if cf /= Void then
-					create include_xe.make_child (include_element, "CLASS", l_namespace)
+					create include_xe.make (include_element, "CLASS", l_namespace)
 					Xml_routines.add_attribute ("NAME", l_namespace, cf.name, include_xe)
 					include_element.put_last (include_xe)
 				end
@@ -933,7 +938,7 @@ feature {NONE} -- XML
 			Result.put_last (include_element)
 
 					-- Save excluded figures.
-			create exclude_element.make_child (Result, "EXCLUDED_FIGURES", l_namespace)
+			create exclude_element.make (Result, "EXCLUDED_FIGURES", l_namespace)
 			from
 				excluded_figures.start
 			until
@@ -942,10 +947,10 @@ feature {NONE} -- XML
 				cf ?= excluded_figures.item
 				clf ?= excluded_figures.item
 				if cf /= Void then
-					create  exclude_xe.make_child (exclude_element, "CLASS", l_namespace)
+					create  exclude_xe.make (exclude_element, "CLASS", l_namespace)
 					Xml_routines.add_attribute ("NAME", l_namespace, cf.name, exclude_xe)
 				elseif clf /= Void then
-					create exclude_xe.make_child (exclude_element, "CLUSTER", l_namespace)
+					create exclude_xe.make (exclude_element, "CLUSTER", l_namespace)
 					Xml_routines.add_attribute ("NAME", l_namespace, clf.name, exclude_xe)
 				end
 				exclude_element.put_last (exclude_xe)

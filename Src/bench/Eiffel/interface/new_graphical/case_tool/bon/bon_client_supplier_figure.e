@@ -213,11 +213,11 @@ feature {CONTEXT_DIAGRAM} -- XML
 			vertice_xml_element, label_xml_element: XM_ELEMENT
 			l_namespace: XM_NAMESPACE
 		do
-			create l_namespace.make ("", "")
-			create Result.make_child (a_parent, "CLIENT_SUPPLIER_FIGURE", l_namespace)
+			create l_namespace.make_default
+			create Result.make (a_parent, "CLIENT_SUPPLIER_FIGURE", l_namespace)
 			Xml_routines.add_attribute ("SRC", l_namespace, client.name, Result)
 			Xml_routines.add_attribute ("TRG", l_namespace, supplier.name, Result)
-			create label_xml_element.make_child (Result, "LABEL", l_namespace)
+			create label_xml_element.make (Result, "LABEL", l_namespace)
 			label_xml_element.put_last (
 				Xml_routines.xml_node (
 					label_xml_element,
@@ -240,7 +240,7 @@ feature {CONTEXT_DIAGRAM} -- XML
 				until	
 					vertices.islast
 				loop
-					create vertice_xml_element.make_child (Result, "MIDPOINT", l_namespace)
+					create vertice_xml_element.make (Result, "MIDPOINT", l_namespace)
 					vertice_xml_element.put_last (
 						Xml_routines.xml_node (
 							vertice_xml_element,

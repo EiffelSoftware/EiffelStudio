@@ -765,8 +765,8 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 		local
 			l_namespace: XM_NAMESPACE
 		do
-			create l_namespace.make ("", "")
-			create Result.make_child (a_parent, "CLUSTER_FIGURE", l_namespace)
+			create l_namespace.make_default
+			create Result.make (a_parent, "CLUSTER_FIGURE", l_namespace)
 			Xml_routines.add_attribute ("NAME", l_namespace, cluster_i.cluster_name, Result)
 			Result.put_last (Xml_routines.xml_node (Result, "ICONIFIED", iconified.out))
 			Result.put_last (Xml_routines.xml_node (Result, "X_POS", point.x.out))

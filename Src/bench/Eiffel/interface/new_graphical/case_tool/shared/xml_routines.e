@@ -195,8 +195,8 @@ feature {SHARED_XML_ROUTINES} -- Processing
 		local
 			l_namespace: XM_NAMESPACE
 		do
-			create l_namespace.make ("", "")
-			create Result.make_child (a_parent, tag_name, l_namespace)
+			create l_namespace.make_default
+			create Result.make (a_parent, tag_name, l_namespace)
 			Result.put_last (xml_string_node (Result, content))
 		end
 
@@ -214,12 +214,12 @@ feature -- Saving
 		do
 			if not retried then
 					-- Write document
-				create l_formatter.make
-				l_formatter.process_document (a_doc)
 				create l_output_file.make (a_file_name)
 				l_output_file.open_write
 				if l_output_file.is_open_write then
-					l_output_file.put_string (l_formatter.last_string)
+					create l_formatter.make
+					l_formatter.set_output (l_output_file)
+					l_formatter.process_document (a_doc)
 					l_output_file.flush
 					l_output_file.close
 				else

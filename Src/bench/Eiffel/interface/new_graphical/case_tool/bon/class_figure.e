@@ -439,8 +439,8 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 		do
 			name_in_lower := clone (class_i.name)
 			name_in_lower.to_lower
-			create l_namespace.make ("", "")
-			create Result.make_child (a_parent, "CLASS_FIGURE", l_namespace)
+			create l_namespace.make_default
+			create Result.make (a_parent, "CLASS_FIGURE", l_namespace)
 			Xml_routines.add_attribute ("NAME", l_namespace, name_in_lower, Result)
 			Result.put_last (Xml_routines.xml_node (Result, "X_POS", point.x.out))
 			Result.put_last (Xml_routines.xml_node (Result, "Y_POS", point.y.out))

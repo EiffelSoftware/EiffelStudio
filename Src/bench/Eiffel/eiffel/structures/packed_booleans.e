@@ -9,6 +9,12 @@ class
 
 inherit
 	TO_SPECIAL [INTEGER]
+		rename
+			item as area_item,
+			put as area_put,
+			infix "@" as area_infix_at,
+			valid_index as area_valid_index
+		end
 
 create
 	make

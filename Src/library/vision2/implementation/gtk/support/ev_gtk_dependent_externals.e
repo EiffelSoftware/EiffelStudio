@@ -8,6 +8,13 @@ class
 
 feature -- Externals
 
+	frozen gtk_window_dialog_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WINDOW_DIALOG"
+		end
+
 	frozen gtk_entry_set_max_length (a_entry: POINTER; a_max: INTEGER) is
 			-- void       gtk_entry_set_max_length 		(GtkEntry      *entry,
 			-- 						 guint16        max);

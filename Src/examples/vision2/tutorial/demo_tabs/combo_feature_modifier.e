@@ -16,7 +16,7 @@ creation
 feature -- Initialization
 
 	make (par: EV_CONTAINER; title: STRING; cmd1: EV_COMMAND; cmd2: EV_COMMAND) is
-			-- Create combo_box betwwen the label and the button.
+			-- Create combo_box between the label and the button.
 		require
 			valid_commands: cmd1 /= Void and cmd2 /= Void
 			valid_title: title /= Void

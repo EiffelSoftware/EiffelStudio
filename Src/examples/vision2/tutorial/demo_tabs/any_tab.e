@@ -7,10 +7,11 @@ inherit
 
 feature -- Element change
 
-	set_current_widget (wid: like current_widget) is
+	set_current_widget (value: like current_widget) is
+
 			-- Make `wid' the new widget.
 		do
-			current_widget ?= wid
+			current_widget ?= value
 		end
 
 	name:STRING is
@@ -20,7 +21,6 @@ feature -- Element change
 
 feature -- Access
 
-	current_widget: EV_WIDGET
-			-- Current widget we are working on.
+	current_widget: EV_ANY
 
 end -- class ANY_TAB

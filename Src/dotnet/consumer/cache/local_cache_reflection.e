@@ -208,6 +208,140 @@ feature -- Access
 			end
   		end
 
+	entity (entities_list: LINKED_LIST [CONSUMED_ENTITY]; args: NATIVE_ARRAY [TYPE]): CONSUMED_ENTITY is
+			-- return `consumed_entity' corresponding to parameters.
+			-- `entities_list' is given by `entities'.
+		require
+			valid_entities: entities_list /= Void
+			valid_args: args /= Void implies args.count >= 0
+		local
+			cargs: ARRAY [CONSUMED_ARGUMENT]
+			crt: CONSUMED_REFERENCED_TYPE
+			found: BOOLEAN
+			i: INTEGER
+--			am: ARRAY [CONSUMED_ASSEMBLY]
+		do
+--			am := assembly_mapping_array (t.assembly.get_name)
+			from
+				entities_list.start
+			until
+				entities_list.after or Result /= Void
+			loop
+				cargs := entities_list.item.arguments
+				if cargs.count = args.count then
+					-- compare arguments
+					from
+						i := 1
+						found := True
+					until
+						i > cargs.count or not found									
+					loop
+						crt := cargs.item (i).type
+						found := crt.name.to_cil.equals (args.item (i - 1).full_name) 
+--							and then am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (i - 1).assembly))
+						i := i + 1
+					end
+					if found then
+						Result := entities_list.item
+					end
+				end
+				
+				entities_list.forth
+			end
+		end
+
+	entities (t: TYPE; dotnet_feature_name: STRING): LINKED_LIST [CONSUMED_ENTITY] is
+			-- Return list of Eiffel Eiffel entities associated to `dotnet_feature_name'.
+		require
+			non_void_t: t /= Void
+			non_void_dotnet_feature_name: dotnet_feature_name /= Void
+			not_empty_dotnet_feature_name: not dotnet_feature_name.is_empty
+		local
+			ct: CONSUMED_TYPE
+			fields: ARRAY [CONSUMED_FIELD] 
+			procedures: ARRAY [CONSUMED_PROCEDURE]
+			functions: ARRAY [CONSUMED_FUNCTION]
+			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
+			properties: ARRAY [CONSUMED_PROPERTY]
+			events: ARRAY [CONSUMED_EVENT]
+			i: INTEGER
+			ca: CONSUMED_ASSEMBLY
+			local_cache_reader: LOCAL_CACHE_READER
+		do
+			create Result.make
+
+			i := t.get_hash_code
+			types_cache.search (i)
+			if types_cache.found then
+				ct := types_cache.found_item
+			else
+				ct := consumed_type (t)
+				if ct /= Void then
+					types_cache.put (ct, i)
+				end
+			end
+			if ct /= Void then
+				ca := Consumed_assembly_factory.consumed_assembly (t.assembly)
+				if dotnet_feature_name.is_equal (Constructor_name) then
+					constructors := ct.constructors
+					if constructors /= Void then
+						from
+							i := 1
+						until
+							i > constructors.count
+						loop
+							Result.extend (constructors.item (i))
+							i := i + 1
+						end
+					end
+				else
+					functions := ct.functions
+					if functions /= Void then
+						from
+							i := 1
+						until
+							i > functions.count
+						loop
+							if functions.item (i).dotnet_name.is_equal (dotnet_feature_name) then
+								Result.extend (functions.item (i))
+							end
+							i := i + 1
+						end
+					end
+
+					procedures := ct.procedures
+					if procedures /= Void then
+						from
+							i := 1
+						until
+							i > procedures.count
+						loop
+							if procedures.item (i).dotnet_name.is_equal (dotnet_feature_name) then
+								Result.extend (procedures.item (i))
+							end
+							i := i + 1
+						end
+					end
+
+					fields := ct.fields
+					if fields /= Void then
+						from
+							i := 1
+						until
+							i > fields.count
+						loop
+							if fields.item (i).dotnet_name.is_equal (dotnet_feature_name) then
+								Result.extend (fields.item (i))
+							end
+							i := i + 1
+						end						
+					end
+				end
+			end
+		ensure
+			non_void_feature_names: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	Constructor_name: STRING is ".ctor"

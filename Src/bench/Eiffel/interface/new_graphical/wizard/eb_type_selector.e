@@ -108,18 +108,6 @@ feature -- Status report
 			Result := t /= Void and then not t.is_empty
 		end
 
-	is_tuple: BOOLEAN is
-			-- Is the selected type TUPLE?
-			-- If yes, need to create dynamic length
-			-- `generic_selectors'-list.
-		local
-			s: STRING
-		do
-			s := selector.text
-			s.to_lower
-			Result := s.is_equal ("tuple")
-		end
-
 	expanded_needed: BOOLEAN
 			-- Does return type have to be expanded?
 
@@ -172,6 +160,9 @@ feature {NONE} -- Implementation
 
 	generic_count: INTEGER
 			-- Current number of generic parameters.
+	
+	is_tuple: BOOLEAN
+			-- Is current a tuple?
 
 	add_generic_button: EV_BUTTON
 			-- Visible when `is_tuple'.
@@ -180,21 +171,39 @@ feature {NONE} -- Implementation
 			-- User selected something in `selector'.
 		local
 			gen_count: INTEGER
+			s: STRING
+			l_was_tuple: BOOLEAN
 		do
+				-- Special treatment here because when we enter `tuple' in lower case,
+				-- then the combo box select automatically the `TUPLE' item and thus
+				-- causing the `on_selection_change' to be called twice. To avoid
+				-- useless wipeout and creation of the generics part, we check the previous
+				-- state for `is_tuple'.
+			l_was_tuple := is_tuple
+
+				-- Find what the user entered
+			s := selector.text
+			s.to_lower
+			is_tuple := s.is_equal ("tuple")
+
 			if is_tuple then
-				generic_box.wipe_out
-				generic_type_selectors.wipe_out
-				generic_box.extend (new_label (" ["))
-				generic_box.disable_item_expand (generic_box.last)
-				add_generic_button := new_create_button
-				add_generic_button.select_actions.extend (agent on_add_generic)
-				generic_box.extend (add_generic_button)
-				generic_box.extend (new_label ("]"))
-				generic_box.disable_item_expand (generic_box.last)
+				if not l_was_tuple then
+					generic_box.wipe_out
+					generic_type_selectors.wipe_out
+					generic_box.extend (new_label (" ["))
+					generic_box.disable_item_expand (generic_box.last)
+					add_generic_button := new_create_button
+					add_generic_button.select_actions.extend (agent on_add_generic)
+					generic_box.extend (add_generic_button)
+					generic_box.extend (new_label ("]"))
+					generic_box.disable_item_expand (generic_box.last)
+				end
 			else
 				gen_count := generics_count (selector.text.as_upper)
-				if generic_count /= gen_count 
-					or (generic_count = 0 and not generic_box.is_empty) then
+				if
+					generic_count /= gen_count or
+					(generic_count = 0 and not generic_box.is_empty)
+				then
 						generic_count := gen_count
 						generic_box.wipe_out
 						generic_type_selectors.wipe_out
@@ -264,6 +273,7 @@ feature {NONE} -- Implementation
 				create ts
 				generic_type_selectors.extend (ts)
 				generic_box.put_left (ts)
+				ts.selector.set_focus
 			end
 		end
 

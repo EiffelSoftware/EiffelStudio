@@ -161,6 +161,7 @@ feature -- Initialization
 			vertical_box1.set_minimum_height (100)
 			
 			create item_parent
+			item_parent.set_padding_width (2)
 			control_holder.extend (item_parent)
 			control_holder.disable_item_expand (item_parent)
 			is_initialized := True

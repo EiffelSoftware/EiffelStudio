@@ -363,9 +363,6 @@ end;
 		end;
 
 	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD]): CLUSTER_I is
-		local
-			changed_classes: LINKED_LIST [CLASS_I];
-			unchanged_classes: LINKED_LIST [CLASS_I];
 		do
 				-- If the cluster has changed,
 				-- do a degree 6
@@ -614,6 +611,7 @@ end;
 				if Workbench.automatic_backup then
 					record_class (class_name)
 				end
+
 				classes.put (a_class, class_name);
 			end;
 		end;
@@ -757,6 +755,36 @@ end;
 			end;
 		end;
 
+	process_overrides (ovc : CLUSTER_I) is
+			-- Check if some classes have been overriden
+			-- and remove them from the system
+		require
+			override_cluster_exists : ovc /= Void
+			not_same                : Current /= ovc
+		local
+			a_class, ov_class : CLASS_I;
+			ovcc              : like classes
+		do
+			-- precompiled classes cannot be overriden.
+
+			if not is_precompiled and then ovc.classes /= Void then
+				from
+					ovcc := ovc.classes
+					ovcc.start
+				until
+					ovcc.after
+				loop
+					ov_class := ovcc.item_for_iteration;
+					if classes.has (ov_class.name) then
+						-- the class is overridden; remove it
+						a_class := classes.item (ov_class.name)
+						remove_class (a_class);
+					end
+					ovcc.forth;
+				end;
+			end;
+		end;
+
 	cluster_of_path (list: like ignore; pathname: STRING): CLUSTER_I is
 		local
 			found: BOOLEAN;
@@ -836,21 +864,14 @@ end;
 			end;
 		end;
 
-	is_kernel_cluster: BOOLEAN is
-			-- Is the current cluster the kernel cluster
-		do
-			if classes.has ("any") then
-				Result := True
-			end;
-		end;
-
 	remove_cluster is
 			-- Remove all the classes from the current cluster
 			-- i.e. the cluster has been removed from the system
 		local
 			vd40: VD40;
 		do
-			if is_kernel_cluster then
+			if classes.has ("any") then
+					-- It means that it is the kernel cluster.
 				!!vd40;
 				vd40.set_cluster (Current);
 				Error_handler.insert_error (vd40);
@@ -958,64 +979,76 @@ end;
 		end;
 
 	changed (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]): BOOLEAN is
-			-- Is the cluster directory changed ?
+			-- Has the cluster directory changed?
 		local
 			i: INTEGER;
 			ptr: ANY
 		do
 			ptr := path.to_c;
 			Result := eif_directory_has_changed ($ptr, date);
-			if Not Result then
+			
+			if not Result and then Platform_constants.is_windows then
+					-- We need to check on Windows FAT file systems the content of a non-changed
+					-- directory since it can have been changed anyway (FAT is not a good file
+					-- system).
+					-- Problem: NTFS does not have this problem but there is no easy way to
+					-- know if we are on NTFS or not, that's why we are doing this check
+					--
+					-- FIXME: when the only file system will be NTFS or equivalent, we should remove
+					-- this test since the value returned by `eif_directory_has_changed' will
+					-- be coherent
+					-- %%MANU
 				from
 					classes.start
 				until
-					classes.after or else Result
+					Result or else classes.after
 				loop
 					Result := classes.item_for_iteration.date_has_changed;
 					classes.forth
 				end;
-				if not Result then
-					if inc_l = Void then
-						Result := include_list /= Void
-					elseif include_list = Void or else
-						inc_l.count /= include_list.count
-					then
-						Result := True
-					else
-						from
-							i := 1;
-						until
-							i > inc_l.count or else result
-						loop
-							include_list.start;
-							include_list.compare_references
-							include_list.search (inc_l.i_th (i).file__name);
-							Result := include_list.after
-							i := i + 1;
-						end
-					end;
-				end;
-				if not Result then
-					if ex_l = Void then
-						Result := exclude_list /= Void
-					elseif exclude_list = Void or else
-						ex_l.count /= exclude_list.count
-					then
-						Result := True
-					else
-						from
-							i := 1;
-						until
-							i > ex_l.count or else result
-						loop
-							exclude_list.start
-							exclude_list.compare_references
-							exclude_list.search (ex_l.i_th (i).file__name)
-							Result := exclude_list.after
-							i := i + 1
-						end
-					end;
-				end;
+
+--				if not Result then
+--					if inc_l = Void then
+--						Result := include_list /= Void
+--					elseif include_list = Void or else
+--						inc_l.count /= include_list.count
+--					then
+--						Result := True
+--					else
+--						from
+--							i := 1;
+--						until
+--							i > inc_l.count or else result
+--						loop
+--							include_list.start;
+--							include_list.compare_references
+--							include_list.search (inc_l.i_th (i).file__name);
+--							Result := include_list.after
+--							i := i + 1;
+--						end
+--					end;
+--				end;
+--				if not Result then
+--					if ex_l = Void then
+--						Result := exclude_list /= Void
+--					elseif exclude_list = Void or else
+--						ex_l.count /= exclude_list.count
+--					then
+--						Result := True
+--					else
+--						from
+--							i := 1;
+--						until
+--							i > ex_l.count or else result
+--						loop
+--							exclude_list.start
+--							exclude_list.compare_references
+--							exclude_list.search (ex_l.i_th (i).file__name)
+--							Result := exclude_list.after
+--							i := i + 1
+--						end
+--					end;
+--				end;
 			end;
 		end;
 
@@ -1047,8 +1080,7 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			!! Result.make_from_string (Workbench.backup_subdirectory)
 			!! d.make (Result)
 			if not d.exists then
-				-- Create the backup directory again just in
-				-- case the user removes it.
+					-- Create the backup directory again just in case the user removes it.
 				d.create
 			end
 			Result.extend (backup_subdirectory)
@@ -1060,13 +1092,8 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 		end
 
 	backup_subdirectory: STRING is
-			-- Translation of the `cluster_name' in something machine independent
 		do
-			if Platform_constants.is_windows_3_1 then
-				Result := cluster_name.substring (1, (8).min (cluster_name.count))
-			else
-				Result := cluster_name
-			end
+			Result := cluster_name
 		end
 
 	backup_log_file: PLAIN_TEXT_FILE is
@@ -1137,10 +1164,7 @@ feature {COMPILER_EXPORTER} -- DLE
 				class_i := classes.item_for_iteration;
 				if class_i.compiled then
 					class_c := class_i.compiled_class;
-					if
-						class_c.is_dynamic and
-						class_c.conform_to (dynamic_class)
-					then
+					if class_c.is_dynamic and then class_c.conform_to (dynamic_class) then
 						class_c.check_dynamic_not_generic;
 						class_c.check_dynamic_creators
 					end

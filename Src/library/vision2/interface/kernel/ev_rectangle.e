@@ -1,23 +1,25 @@
 indexing
-
 	description: "EiffelVision rectangle. Rectangular area.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-
 	EV_RECTANGLE
 
 inherit
-	GENERAL
-		rename
-			do_nothing as make_empty
-		end
+	ANY
 	
 creation
-	make_empty,
+	make,
 	set
+
+feature {NONE} -- Initialization
+
+	make is
+			-- A feature to be consistant, but nothing to do.
+		do
+		end
 
 feature -- Access
 

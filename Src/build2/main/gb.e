@@ -59,6 +59,16 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+	
+	GB_SHARED_PREFERENCES
+		undefine
+			copy, default_create
+		end
+		
+	MEMORY
+		undefine
+			copy, default_create
+		end
 
 create
 	execute
@@ -76,6 +86,7 @@ feature {NONE} -- Initialization
 			file_handler: GB_SIMPLE_XML_FILE_HANDLER
 			shared_preferences: GB_SHARED_PREFERENCES
 		do
+			collection_off
 			create shared_preferences
 			shared_preferences.preferences.initialize_preferences
 			if command_line.argument_array.count = 1 then
@@ -87,6 +98,7 @@ feature {NONE} -- Initialization
 				xml_handler.load_components
 				main_window.build_interface
 				main_window.show
+				post_launch_actions.extend (agent display_tip_of_the_day)
 				launch
 			elseif command_line.argument_array.count = 2 then
 				-- There are two command line options in the case where we double click on a .bpr
@@ -103,6 +115,7 @@ feature {NONE} -- Initialization
 					main_window.build_interface
 					main_window.show
 					post_launch_actions.extend (agent open_with_name (command_line.argument_array @ 1))
+					post_launch_actions.extend (agent display_tip_of_the_day)
 					launch
 				end
 			end
@@ -164,6 +177,17 @@ feature {NONE} -- Initialization
 		end
 		
 feature {NONE} -- Implementation
+
+	display_tip_of_the_day is
+			-- Display a tip of the day dialog.
+		local
+			tip_dialog: GB_TIP_OF_THE_DAY_DIALOG
+		do
+			if Preferences.boolean_resource_value (preferences.show_tip_of_the_day, True) then
+				create tip_dialog
+				tip_dialog.show_modal_to_window (main_window)
+			end
+		end
 
 	open_with_name (f: STRING) is
 			-- Use the open project command to open

@@ -147,46 +147,6 @@ feature -- Element change
 			end
 		end
 
---|	set_minimum (a_minimum: INTEGER) is
---|			-- Set `minimum' to `a_minimum'.
---|		do
---|			if minimum /= a_minimum then
---|				if minimum = maximum then
---|					--| VB 02/15/2000 Bug/feature in GTK:
---|					--| When lower equals upper, and minimum is decreased
---|					--| value is decreased as well. This is evil, but
---|					--| can be worked around by temporarily increasing
---|					--| the maximum.
---|					C.set_gtk_adjustment_struct_upper (
---|						adjustment,
---|						maximum + page_size + 1
---|					)
---|					C.gtk_adjustment_changed (adjustment)
---|					C.set_gtk_adjustment_struct_upper (
---|						adjustment,
---|						maximum + page_size - 1
---|					)
---|				end
---|				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
---|				C.gtk_adjustment_changed (adjustment)
---|			end
---|		ensure then
---|			value_same: value = old value
---|			maximum_same: maximum = old maximum
---|		end
---|
---|	set_maximum (a_maximum: INTEGER) is
---|			-- Set `maximum' to `a_maximum'.
---|		do
---|			if maximum /= a_maximum then
---|				C.set_gtk_adjustment_struct_upper (
---|					adjustment,
---|					a_maximum + page_size
---|				)
---|				C.gtk_adjustment_changed (adjustment)
---|			end
---|		end
-
 	set_range is
 			-- Update widget range from `value_range'
 			--| FIXME this should be an inline agent.

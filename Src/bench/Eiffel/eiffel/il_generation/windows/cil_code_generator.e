@@ -4155,8 +4155,6 @@ feature -- Once management
 			if not feat.is_process_relative then
 				current_module.define_thread_static_attribute (done_token)
 			end
-			fixme ("Generate debug info for readiness flag of once routine as required")
-			-- Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, done_token, 0)
 
 			if not feat.type.is_void then
 					-- Generate field for result
@@ -4171,9 +4169,9 @@ feature -- Once management
 				if not feat.is_process_relative then
 					current_module.define_thread_static_attribute (result_token)
 				end
-				fixme ("Generate debug info for result of once function as required")
-				-- Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, 0, result_token)
 			end
+
+			Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, feat, current_class)
 
 			if feat.is_process_relative then
 					-- Generate field to synchronize access to other data fields

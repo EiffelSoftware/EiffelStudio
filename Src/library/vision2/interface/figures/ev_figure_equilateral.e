@@ -78,8 +78,8 @@ feature -- Implementation
 			loop
 				ang := ang + ang_step
 				create crd.set (
-					center_point.x - delta_x (ang, radius),
-					center_point.y + delta_y (ang, radius))
+					center_point.x_abs - delta_x (ang, radius),
+					center_point.y_abs + delta_y (ang, radius))
 				Result.put (crd, n)
 				n := n + 1
 			end
@@ -88,7 +88,7 @@ feature -- Implementation
 		end
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 		do
 			Result := point_on_polygon (x, y, polygon_array)
 		end

@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_stub::~IEiffelParameterD
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_stub::name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_stub::Name(  /* [out, retval] */ BSTR * pbstr_name )
 
 /*-----------------------------------------------------------
 	Parameter name
@@ -54,18 +54,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_stub::name(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_stub::display(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_stub::Display(  /* [out, retval] */ BSTR * pbstr_display )
 
 /*-----------------------------------------------------------
 	Parameter display
@@ -84,11 +84,11 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_stub::displ
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_display = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_display = NULL;
 	
 	END_ECATCH;
 	return S_OK;

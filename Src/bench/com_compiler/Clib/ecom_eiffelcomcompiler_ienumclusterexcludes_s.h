@@ -52,13 +52,13 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Next(  /* [out] */ BSTR * rgelt, /* [out] */ ULONG * pcelt_fetched ) = 0;
+	virtual STDMETHODIMP Next(  /* [out] */ BSTR * pbstr_exclude, /* [out] */ ULONG * pul_fetched ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Skip(  /* [in] */ ULONG celt ) = 0;
+	virtual STDMETHODIMP Skip(  /* [in] */ ULONG ul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -70,19 +70,19 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumClusterExcludes * * ppenum ) = 0;
+	virtual STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumClusterExcludes * * pp_ienum_cluster_excludes ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ith_item(  /* [in] */ ULONG an_index, /* [out] */ BSTR * rgelt ) = 0;
+	virtual STDMETHODIMP IthItem(  /* [in] */ ULONG ul_index, /* [out] */ BSTR * pbstr_exclude ) = 0;
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP Count(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 

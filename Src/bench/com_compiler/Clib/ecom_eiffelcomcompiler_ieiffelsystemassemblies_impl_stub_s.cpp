@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::~IEiffelSystemAssembl
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::wipe_out( void )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::FlushAssemblies( void )
 
 /*-----------------------------------------------------------
 	Wipe out current list of assemblies
@@ -43,7 +43,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::wipe_out
 {
 	ECATCH;
 EIF_PROCEDURE eiffel_procedure;
-	eiffel_procedure = eif_procedure ("wipe_out", type_id);
+	eiffel_procedure = eif_procedure ("flush_assemblies", type_id);
 
 	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
 	
@@ -52,7 +52,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::add_assembly(  /* [in] */ BSTR a_prefix, /* [in] */ BSTR a_cluster_name, /* [in] */ BSTR a_path, /* [in] */ VARIANT_BOOL a_copy )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::AddAssembly(  /* [in] */ BSTR bstr_prefix, /* [in] */ BSTR bstr_cluster_name, /* [in] */ BSTR bstr_file_name, /* [in] */ VARIANT_BOOL vb_copy_locally )
 
 /*-----------------------------------------------------------
 	Add an assembly to the project.
@@ -60,40 +60,40 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::add_asse
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_a_prefix = NULL;
-	if (a_prefix != NULL)
+	EIF_OBJECT tmp_bstr_prefix = NULL;
+	if (bstr_prefix != NULL)
 	{
-		tmp_a_prefix = eif_protect (rt_ce.ccom_ce_bstr (a_prefix));
+		tmp_bstr_prefix = eif_protect (rt_ce.ccom_ce_bstr (bstr_prefix));
 	}
-	EIF_OBJECT tmp_a_cluster_name = NULL;
-	if (a_cluster_name != NULL)
+	EIF_OBJECT tmp_bstr_cluster_name = NULL;
+	if (bstr_cluster_name != NULL)
 	{
-		tmp_a_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (a_cluster_name));
+		tmp_bstr_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_cluster_name));
 	}
-	EIF_OBJECT tmp_a_path = NULL;
-	if (a_path != NULL)
+	EIF_OBJECT tmp_bstr_file_name = NULL;
+	if (bstr_file_name != NULL)
 	{
-		tmp_a_path = eif_protect (rt_ce.ccom_ce_bstr (a_path));
+		tmp_bstr_file_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_file_name));
 	}
-	EIF_BOOLEAN tmp_a_copy = rt_ce.ccom_ce_boolean (a_copy);
+	EIF_BOOLEAN tmp_vb_copy_locally = rt_ce.ccom_ce_boolean (vb_copy_locally);
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("add_assembly", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), ((tmp_a_prefix != NULL) ? eif_access (tmp_a_prefix) : NULL), ((tmp_a_cluster_name != NULL) ? eif_access (tmp_a_cluster_name) : NULL), ((tmp_a_path != NULL) ? eif_access (tmp_a_path) : NULL), (EIF_BOOLEAN)tmp_a_copy);
-	if (tmp_a_prefix != NULL)
-		eif_wean (tmp_a_prefix);
-	if (tmp_a_cluster_name != NULL)
-		eif_wean (tmp_a_cluster_name);
-	if (tmp_a_path != NULL)
-		eif_wean (tmp_a_path);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_prefix != NULL) ? eif_access (tmp_bstr_prefix) : NULL), ((tmp_bstr_cluster_name != NULL) ? eif_access (tmp_bstr_cluster_name) : NULL), ((tmp_bstr_file_name != NULL) ? eif_access (tmp_bstr_file_name) : NULL), (EIF_BOOLEAN)tmp_vb_copy_locally);
+	if (tmp_bstr_prefix != NULL)
+		eif_wean (tmp_bstr_prefix);
+	if (tmp_bstr_cluster_name != NULL)
+		eif_wean (tmp_bstr_cluster_name);
+	if (tmp_bstr_file_name != NULL)
+		eif_wean (tmp_bstr_file_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::last_exception(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * p_exception )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::LastException(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * p_exception )
 
 /*-----------------------------------------------------------
 	Last execption to occur
@@ -245,7 +245,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::Invoke( 
 					return DISP_E_BADPARAMCOUNT;
 
 				
-				hr = wipe_out ();
+				hr = FlushAssemblies ();
 				
 				if (FAILED (hr))
 				{
@@ -340,7 +340,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::Invoke( 
 				}
 				VARIANT_BOOL arg_3 = (VARIANT_BOOL)tmp_value [3]->boolVal;
 				
-				hr = add_assembly ( arg_0, arg_1, arg_2, arg_3);
+				hr = AddAssembly ( arg_0, arg_1, arg_2, arg_3);
 				
 				if (FAILED (hr))
 				{
@@ -361,42 +361,6 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::Invoke( 
 					return DISP_E_EXCEPTION;
 				}
 				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 10024:
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				ecom_EiffelComCompiler::IEiffelException * result = 0;
-				
-				hr = last_exception (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 9;
-					pVarResult->pdispVal = result;
-				}
-					
 			}
 			break;
 
@@ -425,6 +389,43 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::Invoke( 
 					}
 					return DISP_E_EXCEPTION;
 				}
+			}
+			break;
+
+		case 10024:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				ecom_EiffelComCompiler::IEiffelException * result = 0;
+				
+				hr = LastException (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
+				}
+					
 			}
 			break;
 

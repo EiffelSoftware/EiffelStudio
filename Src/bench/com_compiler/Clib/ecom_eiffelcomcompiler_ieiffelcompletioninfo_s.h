@@ -52,37 +52,37 @@ public:
 	/*-----------------------------------------------------------
 	Add a local variable used for solving member completion list
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_local(  /* [in] */ BSTR name, /* [in] */ BSTR type ) = 0;
+	virtual STDMETHODIMP AddLocal(  /* [in] */ BSTR bstr_name, /* [in] */ BSTR bstr_type ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Add an argument used for solving member completion list
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_argument(  /* [in] */ BSTR name, /* [in] */ BSTR type ) = 0;
+	virtual STDMETHODIMP AddArgument(  /* [in] */ BSTR bstr_name, /* [in] */ BSTR bstr_type ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Features accessible from target.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP target_features(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out] */ VARIANT * return_names, /* [out] */ VARIANT * return_signatures, /* [out] */ VARIANT * return_image_indexes ) = 0;
+	virtual STDMETHODIMP TargetFeatures(  /* [in] */ BSTR bstr_target, /* [in] */ BSTR bstr_feature_name, /* [in] */ BSTR bstr_file_name, /* [out] */ VARIANT * pvar_names, /* [out] */ VARIANT * pvar_signatures, /* [out] */ VARIANT * pvar_image_indexes ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Feature information
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP target_feature(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * return_value ) = 0;
+	virtual STDMETHODIMP TargetFeature(  /* [in] */ BSTR bstr_target, /* [in] */ BSTR bstr_feature_name, /* [in] */ BSTR bstr_file_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * pp_ieiffel_feature_descriptor ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Flush temporary completion features for a specifi file
+	Flush temporary completion features for a specific file
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP flush_completion_features(  /* [in] */ BSTR a_file_name ) = 0;
+	virtual STDMETHODIMP FlushCompletionFeatures(  /* [in] */ BSTR bstr_file_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Initialize a feature for completion without compiltation
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP initialize_feature(  /* [in] */ BSTR a_name, /* [in] */ VARIANT a_arguments, /* [in] */ VARIANT a_argument_types, /* [in] */ BSTR a_return_type, /* [in] */ ULONG a_feature_type, /* [in] */ BSTR a_file_name ) = 0;
+	virtual STDMETHODIMP InitializeFeature(  /* [in] */ BSTR bstr_name, /* [in] */ VARIANT var_arguments, /* [in] */ VARIANT var_argument_types, /* [in] */ BSTR bstr_return_type, /* [in] */ ULONG ul_feature_type, /* [in] */ BSTR bstr_file_name ) = 0;
 
 
 

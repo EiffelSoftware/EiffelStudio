@@ -47,7 +47,7 @@ ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::~IEnumObjectFiles_impl_prox
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_next(  /* [out] */ EIF_OBJECT rgelt,  /* [out] */ EIF_OBJECT pcelt_fetched )
+void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_next(  /* [out] */ EIF_OBJECT pbstr_object_file,  /* [out] */ EIF_OBJECT pul_fetched )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -64,28 +64,28 @@ void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_next(  /* [out] *
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR * tmp_rgelt = 0;
-	tmp_rgelt = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_228 (eif_access (rgelt), NULL);
-	ULONG * tmp_pcelt_fetched = 0;
-	tmp_pcelt_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pcelt_fetched), NULL);
+	BSTR * tmp_pbstr_object_file = 0;
+	tmp_pbstr_object_file = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_227 (eif_access (pbstr_object_file), NULL);
+	ULONG * tmp_pul_fetched = 0;
+	tmp_pul_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pul_fetched), NULL);
 	
-	hr = p_IEnumObjectFiles->Next(tmp_rgelt,tmp_pcelt_fetched);
+	hr = p_IEnumObjectFiles->Next(tmp_pbstr_object_file,tmp_pul_fetched);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_228 ((BSTR *)tmp_rgelt, rgelt);
-	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pcelt_fetched, pcelt_fetched);
+	grt_ce_ISE.ccom_ce_pointed_cell_227 ((BSTR *)tmp_pbstr_object_file, pbstr_object_file);
+	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pul_fetched, pul_fetched);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_228 (tmp_rgelt);
-grt_ce_ISE.ccom_free_memory_pointed_229 (tmp_pcelt_fetched);
+	grt_ce_ISE.ccom_free_memory_pointed_227 (tmp_pbstr_object_file);
+grt_ce_ISE.ccom_free_memory_pointed_228 (tmp_pul_fetched);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_skip(  /* [in] */ EIF_INTEGER celt )
+void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_skip(  /* [in] */ EIF_INTEGER ul_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -102,10 +102,10 @@ void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_skip(  /* [in] */
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ULONG tmp_celt = 0;
-	tmp_celt = (ULONG)celt;
+	ULONG tmp_ul_count = 0;
+	tmp_ul_count = (ULONG)ul_count;
 	
-	hr = p_IEnumObjectFiles->Skip(tmp_celt);
+	hr = p_IEnumObjectFiles->Skip(tmp_ul_count);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -144,7 +144,7 @@ void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_reset()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_clone1(  /* [out] */ EIF_OBJECT ppenum )
+void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_clone1(  /* [out] */ EIF_OBJECT pp_ienum_object_files )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -161,24 +161,24 @@ void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_clone1(  /* [out]
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_EiffelComCompiler::IEnumObjectFiles * * tmp_ppenum = 0;
-	tmp_ppenum = (ecom_EiffelComCompiler::IEnumObjectFiles * *)grt_ec_ISE.ccom_ec_pointed_cell_223 (eif_access (ppenum), NULL);
+	ecom_EiffelComCompiler::IEnumObjectFiles * * tmp_pp_ienum_object_files = 0;
+	tmp_pp_ienum_object_files = (ecom_EiffelComCompiler::IEnumObjectFiles * *)grt_ec_ISE.ccom_ec_pointed_cell_222 (eif_access (pp_ienum_object_files), NULL);
 	
-	hr = p_IEnumObjectFiles->Clone(tmp_ppenum);
+	hr = p_IEnumObjectFiles->Clone(tmp_pp_ienum_object_files);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_223 ((ecom_EiffelComCompiler::IEnumObjectFiles * *)tmp_ppenum, ppenum);
+	grt_ce_ISE.ccom_ce_pointed_cell_222 ((ecom_EiffelComCompiler::IEnumObjectFiles * *)tmp_pp_ienum_object_files, pp_ienum_object_files);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_223 (tmp_ppenum);
+	grt_ce_ISE.ccom_free_memory_pointed_222 (tmp_pp_ienum_object_files);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_ith_item(  /* [in] */ EIF_INTEGER an_index,  /* [out] */ EIF_OBJECT rgelt )
+void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_ith_item(  /* [in] */ EIF_INTEGER ul_index,  /* [out] */ EIF_OBJECT pbstr_object_file )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -195,21 +195,21 @@ void ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_ith_item(  /* [in
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ULONG tmp_an_index = 0;
-	tmp_an_index = (ULONG)an_index;
-	BSTR * tmp_rgelt = 0;
-	tmp_rgelt = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_230 (eif_access (rgelt), NULL);
+	ULONG tmp_ul_index = 0;
+	tmp_ul_index = (ULONG)ul_index;
+	BSTR * tmp_pbstr_object_file = 0;
+	tmp_pbstr_object_file = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_229 (eif_access (pbstr_object_file), NULL);
 	
-	hr = p_IEnumObjectFiles->ith_item(tmp_an_index,tmp_rgelt);
+	hr = p_IEnumObjectFiles->IthItem(tmp_ul_index,tmp_pbstr_object_file);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_230 ((BSTR *)tmp_rgelt, rgelt);
+	grt_ce_ISE.ccom_ce_pointed_cell_229 ((BSTR *)tmp_pbstr_object_file, pbstr_object_file);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_230 (tmp_rgelt);
+	grt_ce_ISE.ccom_free_memory_pointed_229 (tmp_pbstr_object_file);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -233,7 +233,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEnumObjectFiles_impl_proxy::ccom_count(  )
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEnumObjectFiles->count( &ret_value);
+	hr = p_IEnumObjectFiles->Count( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

@@ -43,259 +43,259 @@ public:
 	/*-----------------------------------------------------------
 	System name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP system_name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP SystemName(  /* [out, retval] */ BSTR * pbstr_name );
 
 
 	/*-----------------------------------------------------------
 	System name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_system_name(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_SystemName(  /* [in] */ BSTR pbstr_name );
 
 
 	/*-----------------------------------------------------------
 	Root class name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP root_class_name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP RootClassName(  /* [out, retval] */ BSTR * pbstr_class_name );
 
 
 	/*-----------------------------------------------------------
 	Root class name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_root_class_name(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_RootClassName(  /* [in] */ BSTR pbstr_class_name );
 
 
 	/*-----------------------------------------------------------
 	Creation routine name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP creation_routine(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP CreationRoutine(  /* [out, retval] */ BSTR * pbstr_routine_name );
 
 
 	/*-----------------------------------------------------------
 	Creation routine name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_creation_routine(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_CreationRoutine(  /* [in] */ BSTR pbstr_routine_name );
 
 
 	/*-----------------------------------------------------------
 	Namespace generation for cluster
 	-----------------------------------------------------------*/
-	STDMETHODIMP namespace_generation(  /* [out, retval] */ long * penu_cluster_namespace_generation );
+	STDMETHODIMP NamespaceGeneration(  /* [out, retval] */ long * penum_cluster_namespace_generation );
 
 
 	/*-----------------------------------------------------------
 	Namespace generation for cluster
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_namespace_generation(  /* [in] */ long penu_cluster_namespace_generation );
+	STDMETHODIMP set_NamespaceGeneration(  /* [in] */ long penum_cluster_namespace_generation );
 
 
 	/*-----------------------------------------------------------
 	Default namespace.
 	-----------------------------------------------------------*/
-	STDMETHODIMP default_namespace(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP DefaultNamespace(  /* [out, retval] */ BSTR * pbstr_namespace );
 
 
 	/*-----------------------------------------------------------
 	Default namespace.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_default_namespace(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_DefaultNamespace(  /* [in] */ BSTR pbstr_namespace );
 
 
 	/*-----------------------------------------------------------
 	Project type
 	-----------------------------------------------------------*/
-	STDMETHODIMP project_type(  /* [out, retval] */ long * penum_project_type );
+	STDMETHODIMP ProjectType(  /* [out, retval] */ long * penum_project_type );
 
 
 	/*-----------------------------------------------------------
 	Project type
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_project_type(  /* [in] */ long penum_project_type );
+	STDMETHODIMP set_ProjectType(  /* [in] */ long penum_project_type );
 
 
 	/*-----------------------------------------------------------
 	.NET Naming convention
 	-----------------------------------------------------------*/
-	STDMETHODIMP dot_net_naming_convention(  /* [out, retval] */ VARIANT_BOOL * pvb_naming_convention );
+	STDMETHODIMP DotNetNamingConvention(  /* [out, retval] */ VARIANT_BOOL * pvb_naming_convention );
 
 
 	/*-----------------------------------------------------------
 	.NET Naming convention
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_dot_net_naming_convention(  /* [in] */ VARIANT_BOOL pvb_naming_convention );
+	STDMETHODIMP set_DotNetNamingConvention(  /* [in] */ VARIANT_BOOL pvb_naming_convention );
 
 
 	/*-----------------------------------------------------------
 	Generate debug info?
 	-----------------------------------------------------------*/
-	STDMETHODIMP generate_debug_info(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP GenerateDebugInfo(  /* [out, retval] */ VARIANT_BOOL * pvb_generate );
 
 
 	/*-----------------------------------------------------------
 	Generate debug info?
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_generate_debug_info(  /* [in] */ VARIANT_BOOL return_value );
+	STDMETHODIMP set_GenerateDebugInfo(  /* [in] */ VARIANT_BOOL pvb_generate );
 
 
 	/*-----------------------------------------------------------
 	Precompiled file.
 	-----------------------------------------------------------*/
-	STDMETHODIMP precompiled_library(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP PrecompiledLibrary(  /* [out, retval] */ BSTR * pbstr_path );
 
 
 	/*-----------------------------------------------------------
 	Precompiled file.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_precompiled_library(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_PrecompiledLibrary(  /* [in] */ BSTR pbstr_path );
 
 
 	/*-----------------------------------------------------------
 	Project assertions
 	-----------------------------------------------------------*/
-	STDMETHODIMP assertions(  /* [out, retval] */ ULONG * p_assertions );
+	STDMETHODIMP Assertions(  /* [out, retval] */ ULONG * pul_assertions );
 
 
 	/*-----------------------------------------------------------
 	Project assertions
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_assertions(  /* [in] */ ULONG p_assertions );
+	STDMETHODIMP set_Assertions(  /* [in] */ ULONG pul_assertions );
 
 
 	/*-----------------------------------------------------------
 	Project Clusters.
 	-----------------------------------------------------------*/
-	STDMETHODIMP clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemClusters * * return_value );
+	STDMETHODIMP Clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemClusters * * pp_ieiffel_system_clusters );
 
 
 	/*-----------------------------------------------------------
 	Externals.
 	-----------------------------------------------------------*/
-	STDMETHODIMP externals(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemExternals * * return_value );
+	STDMETHODIMP Externals(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemExternals * * pp_ieiffel_system_externals );
 
 
 	/*-----------------------------------------------------------
 	Assemblies.
 	-----------------------------------------------------------*/
-	STDMETHODIMP assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemAssemblies * * return_value );
+	STDMETHODIMP Assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemAssemblies * * pp_ieiffel_system_assemblies );
 
 
 	/*-----------------------------------------------------------
 	Project title.
 	-----------------------------------------------------------*/
-	STDMETHODIMP title(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Title(  /* [out, retval] */ BSTR * pbstr_title );
 
 
 	/*-----------------------------------------------------------
 	Project title.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_title(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_Title(  /* [in] */ BSTR pbstr_title );
 
 
 	/*-----------------------------------------------------------
 	Project description.
 	-----------------------------------------------------------*/
-	STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Description(  /* [out, retval] */ BSTR * pbstr_description );
 
 
 	/*-----------------------------------------------------------
 	Project description.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_description(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_Description(  /* [in] */ BSTR pbstr_description );
 
 
 	/*-----------------------------------------------------------
 	Project company.
 	-----------------------------------------------------------*/
-	STDMETHODIMP company(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Company(  /* [out, retval] */ BSTR * pbstr_company );
 
 
 	/*-----------------------------------------------------------
 	Project company.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_company(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_Company(  /* [in] */ BSTR pbstr_company );
 
 
 	/*-----------------------------------------------------------
 	Product.
 	-----------------------------------------------------------*/
-	STDMETHODIMP product(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Product(  /* [out, retval] */ BSTR * ppbstr_product );
 
 
 	/*-----------------------------------------------------------
 	Product.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_product(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_Product(  /* [in] */ BSTR ppbstr_product );
 
 
 	/*-----------------------------------------------------------
 	Project version.
 	-----------------------------------------------------------*/
-	STDMETHODIMP version(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Version(  /* [out, retval] */ BSTR * pbstr_version );
 
 
 	/*-----------------------------------------------------------
 	Project version.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_version(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_Version(  /* [in] */ BSTR pbstr_version );
 
 
 	/*-----------------------------------------------------------
 	Project trademark.
 	-----------------------------------------------------------*/
-	STDMETHODIMP trademark(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Trademark(  /* [out, retval] */ BSTR * pbstr_trademark );
 
 
 	/*-----------------------------------------------------------
 	Project trademark.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_trademark(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_Trademark(  /* [in] */ BSTR pbstr_trademark );
 
 
 	/*-----------------------------------------------------------
 	Project copyright.
 	-----------------------------------------------------------*/
-	STDMETHODIMP copyright(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Copyright(  /* [out, retval] */ BSTR * pbstr_copyright );
 
 
 	/*-----------------------------------------------------------
 	Project copyright.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_copyright(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_Copyright(  /* [in] */ BSTR pbstr_copyright );
 
 
 	/*-----------------------------------------------------------
 	Asembly culture.
 	-----------------------------------------------------------*/
-	STDMETHODIMP culture(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Culture(  /* [out, retval] */ BSTR * pbstr_cultre );
 
 
 	/*-----------------------------------------------------------
 	Asembly culture.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_culture(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_Culture(  /* [in] */ BSTR pbstr_cultre );
 
 
 	/*-----------------------------------------------------------
 	Asembly signing key file name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP key_file_name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP KeyFileName(  /* [out, retval] */ BSTR * pbstr_file_name );
 
 
 	/*-----------------------------------------------------------
 	Asembly signing key file name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_key_file_name(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_KeyFileName(  /* [in] */ BSTR pbstr_file_name );
 
 
 	/*-----------------------------------------------------------
 	Project working directory
 	-----------------------------------------------------------*/
-	STDMETHODIMP working_directory(  /* [out, retval] */ BSTR * pbstr_working_directory );
+	STDMETHODIMP WorkingDirectory(  /* [out, retval] */ BSTR * pbstr_working_directory );
 
 
 	/*-----------------------------------------------------------
 	Project working directory
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_working_directory(  /* [in] */ BSTR pbstr_working_directory );
+	STDMETHODIMP set_WorkingDirectory(  /* [in] */ BSTR pbstr_working_directory );
 
 
 	/*-----------------------------------------------------------

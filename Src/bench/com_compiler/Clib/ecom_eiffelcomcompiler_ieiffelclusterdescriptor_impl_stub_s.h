@@ -43,67 +43,67 @@ public:
 	/*-----------------------------------------------------------
 	Cluster name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name );
 
 
 	/*-----------------------------------------------------------
 	Cluster description.
 	-----------------------------------------------------------*/
-	STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Description(  /* [out, retval] */ BSTR * pbstr_description );
 
 
 	/*-----------------------------------------------------------
 	Cluster Tool Tip.
 	-----------------------------------------------------------*/
-	STDMETHODIMP tool_tip(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP ToolTip(  /* [out, retval] */ BSTR * pbstr_tool_top );
 
 
 	/*-----------------------------------------------------------
 	List of classes in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP classes(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes );
+	STDMETHODIMP Classes(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class );
 
 
 	/*-----------------------------------------------------------
 	Number of classes in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP ClassCount(  /* [out, retval] */ ULONG * pul_class_count );
 
 
 	/*-----------------------------------------------------------
 	List of subclusters in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters );
+	STDMETHODIMP Clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster );
 
 
 	/*-----------------------------------------------------------
 	Number of subclusters in cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP ClusterCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	Full path to cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_path(  /* [out, retval] */ BSTR * path );
+	STDMETHODIMP ClusterPath(  /* [out, retval] */ BSTR * pbstr_path );
 
 
 	/*-----------------------------------------------------------
 	Relative path to cluster.
 	-----------------------------------------------------------*/
-	STDMETHODIMP relative_path(  /* [out, retval] */ BSTR * path );
+	STDMETHODIMP RelativePath(  /* [out, retval] */ BSTR * pbstr_path );
 
 
 	/*-----------------------------------------------------------
 	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_override_cluster(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsOverrideCluster(  /* [out, retval] */ VARIANT_BOOL * pvb_override );
 
 
 	/*-----------------------------------------------------------
 	Should this cluster be treated as library?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * path );
+	STDMETHODIMP IsLibrary(  /* [out, retval] */ VARIANT_BOOL * pvb_library );
 
 
 	/*-----------------------------------------------------------

@@ -35,24 +35,7 @@ ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::~IEiffelSystemExternal
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Store( void )
-
-/*-----------------------------------------------------------
-	Save changes.
------------------------------------------------------------*/
-{
-	ECATCH;
-EIF_PROCEDURE eiffel_procedure;
-	eiffel_procedure = eif_procedure ("store", type_id);
-
-	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::add_include_path(  /* [in] */ BSTR include_path )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::AddIncludePath(  /* [in] */ BSTR bstr_path )
 
 /*-----------------------------------------------------------
 	Add a include path to the project.
@@ -60,25 +43,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::add_inclu
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_include_path = NULL;
-	if (include_path != NULL)
+	EIF_OBJECT tmp_bstr_path = NULL;
+	if (bstr_path != NULL)
 	{
-		tmp_include_path = eif_protect (rt_ce.ccom_ce_bstr (include_path));
+		tmp_bstr_path = eif_protect (rt_ce.ccom_ce_bstr (bstr_path));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("add_include_path", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_include_path != NULL) ? eif_access (tmp_include_path) : NULL));
-	if (tmp_include_path != NULL)
-		eif_wean (tmp_include_path);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_path != NULL) ? eif_access (tmp_bstr_path) : NULL));
+	if (tmp_bstr_path != NULL)
+		eif_wean (tmp_bstr_path);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::remove_include_path(  /* [in] */ BSTR include_path )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::RemoveIncludePath(  /* [in] */ BSTR bstr_path )
 
 /*-----------------------------------------------------------
 	Remove a include path from the project.
@@ -86,25 +69,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::remove_in
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_include_path = NULL;
-	if (include_path != NULL)
+	EIF_OBJECT tmp_bstr_path = NULL;
+	if (bstr_path != NULL)
 	{
-		tmp_include_path = eif_protect (rt_ce.ccom_ce_bstr (include_path));
+		tmp_bstr_path = eif_protect (rt_ce.ccom_ce_bstr (bstr_path));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("remove_include_path", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_include_path != NULL) ? eif_access (tmp_include_path) : NULL));
-	if (tmp_include_path != NULL)
-		eif_wean (tmp_include_path);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_path != NULL) ? eif_access (tmp_bstr_path) : NULL));
+	if (tmp_bstr_path != NULL)
+		eif_wean (tmp_bstr_path);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::replace_include_path(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_include_path )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::ReplaceIncludePath(  /* [in] */ BSTR bstr_path, /* [in] */ BSTR bstr_old_path )
 
 /*-----------------------------------------------------------
 	Replace an include path in the project.
@@ -112,32 +95,32 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::replace_i
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_new_include_path = NULL;
-	if (new_include_path != NULL)
+	EIF_OBJECT tmp_bstr_path = NULL;
+	if (bstr_path != NULL)
 	{
-		tmp_new_include_path = eif_protect (rt_ce.ccom_ce_bstr (new_include_path));
+		tmp_bstr_path = eif_protect (rt_ce.ccom_ce_bstr (bstr_path));
 	}
-	EIF_OBJECT tmp_old_include_path = NULL;
-	if (old_include_path != NULL)
+	EIF_OBJECT tmp_bstr_old_path = NULL;
+	if (bstr_old_path != NULL)
 	{
-		tmp_old_include_path = eif_protect (rt_ce.ccom_ce_bstr (old_include_path));
+		tmp_bstr_old_path = eif_protect (rt_ce.ccom_ce_bstr (bstr_old_path));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("replace_include_path", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_new_include_path != NULL) ? eif_access (tmp_new_include_path) : NULL), ((tmp_old_include_path != NULL) ? eif_access (tmp_old_include_path) : NULL));
-	if (tmp_new_include_path != NULL)
-		eif_wean (tmp_new_include_path);
-	if (tmp_old_include_path != NULL)
-		eif_wean (tmp_old_include_path);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_path != NULL) ? eif_access (tmp_bstr_path) : NULL), ((tmp_bstr_old_path != NULL) ? eif_access (tmp_bstr_old_path) : NULL));
+	if (tmp_bstr_path != NULL)
+		eif_wean (tmp_bstr_path);
+	if (tmp_bstr_old_path != NULL)
+		eif_wean (tmp_bstr_old_path);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::include_paths(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumIncludePaths * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::IncludePaths(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumIncludePaths * * pp_ienum_include_paths )
 
 /*-----------------------------------------------------------
 	Include paths.
@@ -156,18 +139,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::include_p
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_219 (eif_access (tmp_object));
+		*pp_ienum_include_paths = grt_ec_ISE.ccom_ec_pointed_interface_218 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ienum_include_paths = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::add_object_file(  /* [in] */ BSTR object_file )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::AddObjectFile(  /* [in] */ BSTR bstr_file_name )
 
 /*-----------------------------------------------------------
 	Add a object file to the project.
@@ -175,25 +158,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::add_objec
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_object_file = NULL;
-	if (object_file != NULL)
+	EIF_OBJECT tmp_bstr_file_name = NULL;
+	if (bstr_file_name != NULL)
 	{
-		tmp_object_file = eif_protect (rt_ce.ccom_ce_bstr (object_file));
+		tmp_bstr_file_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_file_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("add_object_file", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_object_file != NULL) ? eif_access (tmp_object_file) : NULL));
-	if (tmp_object_file != NULL)
-		eif_wean (tmp_object_file);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_file_name != NULL) ? eif_access (tmp_bstr_file_name) : NULL));
+	if (tmp_bstr_file_name != NULL)
+		eif_wean (tmp_bstr_file_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::remove_object_file(  /* [in] */ BSTR object_file )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::RemoveObjectFile(  /* [in] */ BSTR bstr_file_name )
 
 /*-----------------------------------------------------------
 	Remove a object file from the project.
@@ -201,25 +184,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::remove_ob
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_object_file = NULL;
-	if (object_file != NULL)
+	EIF_OBJECT tmp_bstr_file_name = NULL;
+	if (bstr_file_name != NULL)
 	{
-		tmp_object_file = eif_protect (rt_ce.ccom_ce_bstr (object_file));
+		tmp_bstr_file_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_file_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("remove_object_file", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_object_file != NULL) ? eif_access (tmp_object_file) : NULL));
-	if (tmp_object_file != NULL)
-		eif_wean (tmp_object_file);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_file_name != NULL) ? eif_access (tmp_bstr_file_name) : NULL));
+	if (tmp_bstr_file_name != NULL)
+		eif_wean (tmp_bstr_file_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::replace_object_file(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_object_file )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::ReplaceObjectFile(  /* [in] */ BSTR bstr_file_name, /* [in] */ BSTR bstr_old_file_name )
 
 /*-----------------------------------------------------------
 	Replace an object file in the project.
@@ -227,32 +210,32 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::replace_o
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_new_include_path = NULL;
-	if (new_include_path != NULL)
+	EIF_OBJECT tmp_bstr_file_name = NULL;
+	if (bstr_file_name != NULL)
 	{
-		tmp_new_include_path = eif_protect (rt_ce.ccom_ce_bstr (new_include_path));
+		tmp_bstr_file_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_file_name));
 	}
-	EIF_OBJECT tmp_old_object_file = NULL;
-	if (old_object_file != NULL)
+	EIF_OBJECT tmp_bstr_old_file_name = NULL;
+	if (bstr_old_file_name != NULL)
 	{
-		tmp_old_object_file = eif_protect (rt_ce.ccom_ce_bstr (old_object_file));
+		tmp_bstr_old_file_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_old_file_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("replace_object_file", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_new_include_path != NULL) ? eif_access (tmp_new_include_path) : NULL), ((tmp_old_object_file != NULL) ? eif_access (tmp_old_object_file) : NULL));
-	if (tmp_new_include_path != NULL)
-		eif_wean (tmp_new_include_path);
-	if (tmp_old_object_file != NULL)
-		eif_wean (tmp_old_object_file);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_file_name != NULL) ? eif_access (tmp_bstr_file_name) : NULL), ((tmp_bstr_old_file_name != NULL) ? eif_access (tmp_bstr_old_file_name) : NULL));
+	if (tmp_bstr_file_name != NULL)
+		eif_wean (tmp_bstr_file_name);
+	if (tmp_bstr_old_file_name != NULL)
+		eif_wean (tmp_bstr_old_file_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::object_files(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumObjectFiles * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::ObjectFiles(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumObjectFiles * * pp_ienum_object_files )
 
 /*-----------------------------------------------------------
 	Object files.
@@ -271,11 +254,28 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::object_fi
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_222 (eif_access (tmp_object));
+		*pp_ienum_object_files = grt_ec_ISE.ccom_ec_pointed_interface_221 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ienum_object_files = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Store( void )
+
+/*-----------------------------------------------------------
+	Save changes.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure ("store", type_id);
+
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
 	
 	END_ECATCH;
 	return S_OK;
@@ -381,34 +381,6 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 	switch (dispID)
 	{
 		
-		case 10036:
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				
-				hr = Store ();
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-			}
-			break;
-
 		case 10070:
 			{
 				if (pDispParams->cArgs != 1)
@@ -443,7 +415,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = add_include_path ( arg_0);
+				hr = AddIncludePath ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -501,7 +473,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = remove_include_path ( arg_0);
+				hr = RemoveIncludePath ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -572,7 +544,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 				}
 				BSTR arg_1 = (BSTR)tmp_value [1]->bstrVal;
 				
-				hr = replace_include_path ( arg_0, arg_1);
+				hr = ReplaceIncludePath ( arg_0, arg_1);
 				
 				if (FAILED (hr))
 				{
@@ -603,7 +575,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 
 				ecom_EiffelComCompiler::IEnumIncludePaths * result = 0;
 				
-				hr = include_paths (&result);
+				hr = IncludePaths (&result);
 				
 				if (FAILED (hr))
 				{
@@ -666,7 +638,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = add_object_file ( arg_0);
+				hr = AddObjectFile ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -724,7 +696,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = remove_object_file ( arg_0);
+				hr = RemoveObjectFile ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -795,7 +767,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 				}
 				BSTR arg_1 = (BSTR)tmp_value [1]->bstrVal;
 				
-				hr = replace_object_file ( arg_0, arg_1);
+				hr = ReplaceObjectFile ( arg_0, arg_1);
 				
 				if (FAILED (hr))
 				{
@@ -826,7 +798,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 
 				ecom_EiffelComCompiler::IEnumObjectFiles * result = 0;
 				
-				hr = object_files (&result);
+				hr = ObjectFiles (&result);
 				
 				if (FAILED (hr))
 				{
@@ -852,6 +824,34 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemExternals_impl_stub::Invoke( D
 					pVarResult->pdispVal = result;
 				}
 					
+			}
+			break;
+
+		case 10036:
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				
+				hr = Store ();
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
 			}
 			break;
 

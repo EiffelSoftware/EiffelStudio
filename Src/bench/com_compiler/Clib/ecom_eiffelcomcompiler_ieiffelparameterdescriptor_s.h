@@ -42,13 +42,13 @@ public:
 	/*-----------------------------------------------------------
 	Parameter name
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Parameter display
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP display(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Display(  /* [out, retval] */ BSTR * pbstr_display ) = 0;
 
 
 

@@ -66,7 +66,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->name( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->Name( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -100,7 +100,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->external_name( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->ExternalName( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -134,7 +134,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->written_class( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->WrittenClass( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -168,7 +168,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->evaluated_class( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->EvaluatedClass( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -202,7 +202,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->signature( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->Signature( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -236,7 +236,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->description( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->Description( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -270,7 +270,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumParameter * ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->parameters( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->Parameters( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -279,7 +279,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_94 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_93 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -303,7 +303,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->return_type( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->ReturnType( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -318,7 +318,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_location(  /* [out] */ EIF_OBJECT file_path,  /* [out] */ EIF_OBJECT line_number )
+void ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_location(  /* [out] */ EIF_OBJECT pbstr_path,  /* [out] */ EIF_OBJECT pul_line )
 
 /*-----------------------------------------------------------
 	Feature location, full path to file and line number
@@ -335,23 +335,23 @@ void ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_l
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR * tmp_file_path = 0;
-	tmp_file_path = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_97 (eif_access (file_path), NULL);
-	ULONG * tmp_line_number = 0;
-	tmp_line_number = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (line_number), NULL);
+	BSTR * tmp_pbstr_path = 0;
+	tmp_pbstr_path = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_96 (eif_access (pbstr_path), NULL);
+	ULONG * tmp_pul_line = 0;
+	tmp_pul_line = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pul_line), NULL);
 	
-	hr = p_IEiffelFeatureDescriptor->feature_location(tmp_file_path,tmp_line_number);
+	hr = p_IEiffelFeatureDescriptor->FeatureLocation(tmp_pbstr_path,tmp_pul_line);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_97 ((BSTR *)tmp_file_path, file_path);
-	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_line_number, line_number);
+	grt_ce_ISE.ccom_ce_pointed_cell_96 ((BSTR *)tmp_pbstr_path, pbstr_path);
+	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pul_line, pul_line);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_97 (tmp_file_path);
-grt_ce_ISE.ccom_free_memory_pointed_98 (tmp_line_number);
+	grt_ce_ISE.ccom_free_memory_pointed_96 (tmp_pbstr_path);
+grt_ce_ISE.ccom_free_memory_pointed_97 (tmp_pul_line);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -375,7 +375,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumFeature * ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->all_callers( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->AllCallers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -384,7 +384,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_58 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -408,7 +408,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_al
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->all_callers_count( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->AllCallersCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -441,7 +441,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumFeature * ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->local_callers( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->LocalCallers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -450,7 +450,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_58 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -474,7 +474,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_lo
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->local_callers_count( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->LocalCallersCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -507,7 +507,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumFeature * ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->descendant_callers( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->DescendantCallers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -516,7 +516,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_58 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -540,7 +540,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_de
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->descendant_callers_count( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->DescendantCallersCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -573,7 +573,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumFeature * ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->implementers( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->Implementers( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -582,12 +582,12 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_58 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_implementer_count(  )
+EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_implementers_count(  )
 
 /*-----------------------------------------------------------
 	Number of feature implementers.
@@ -606,7 +606,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_im
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->implementer_count( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->ImplementersCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -639,7 +639,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumFeature * ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->ancestor_versions( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->AncestorVersions( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -648,12 +648,12 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_58 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ancestor_version_count(  )
+EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ancestor_versions_count(  )
 
 /*-----------------------------------------------------------
 	Number of ancestor versions.
@@ -672,7 +672,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_an
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->ancestor_version_count( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->AncestorVersionsCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -705,7 +705,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumFeature * ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->descendant_versions( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->DescendantVersions( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -714,12 +714,12 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_58 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_descendant_version_count(  )
+EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_descendant_versions_count(  )
 
 /*-----------------------------------------------------------
 	Number of descendant versions.
@@ -738,7 +738,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_de
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->descendant_version_count( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->DescendantVersionsCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -771,7 +771,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ex
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->exported_to_all( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->ExportedToAll( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -804,7 +804,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_once( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsOnce( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -837,7 +837,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_external( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsExternal( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -870,7 +870,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_deferred( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsDeferred( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -903,7 +903,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_constant( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsConstant( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -936,7 +936,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_frozen( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsFrozen( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -969,7 +969,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_infix( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsInfix( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1002,7 +1002,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_prefix( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsPrefix( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1035,7 +1035,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_attribute( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsAttribute( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1068,7 +1068,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_procedure( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsProcedure( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1101,7 +1101,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_function( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsFunction( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1134,7 +1134,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_unique( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsUnique( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1167,7 +1167,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->is_obsolete( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->IsObsolete( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1200,7 +1200,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ha
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->has_precondition( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->HasPrecondition( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1233,7 +1233,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ha
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->has_postcondition( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->HasPostcondition( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

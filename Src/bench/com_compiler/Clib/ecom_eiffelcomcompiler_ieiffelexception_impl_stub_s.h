@@ -43,19 +43,19 @@ public:
 	/*-----------------------------------------------------------
 	Get inner exception
 	-----------------------------------------------------------*/
-	STDMETHODIMP inner_exception(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * a_result );
+	STDMETHODIMP InnerException(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * pp_ieiffel_exception );
 
 
 	/*-----------------------------------------------------------
 	Get exception message
 	-----------------------------------------------------------*/
-	STDMETHODIMP message(  /* [out, retval] */ BSTR * a_result );
+	STDMETHODIMP Message(  /* [out, retval] */ BSTR * pbstr_message );
 
 
 	/*-----------------------------------------------------------
 	Retrieve exception type
 	-----------------------------------------------------------*/
-	STDMETHODIMP exception_code(  /* [out, retval] */ long * a_result );
+	STDMETHODIMP ExceptionCode(  /* [out, retval] */ long * p_eif_exceptions );
 
 
 	/*-----------------------------------------------------------

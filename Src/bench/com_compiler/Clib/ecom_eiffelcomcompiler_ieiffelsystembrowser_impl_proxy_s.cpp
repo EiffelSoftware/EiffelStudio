@@ -66,7 +66,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_syst
 	};
 	ecom_EiffelComCompiler::IEnumEiffelClass * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->system_classes( &ret_value);
+	hr = p_IEiffelSystemBrowser->SystemClasses( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -75,7 +75,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_syst
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_39 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_38 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_class_
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->class_count( &ret_value);
+	hr = p_IEiffelSystemBrowser->ClassCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -132,7 +132,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_syst
 	};
 	ecom_EiffelComCompiler::IEnumCluster * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->system_clusters( &ret_value);
+	hr = p_IEiffelSystemBrowser->SystemClusters( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -141,7 +141,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_syst
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_43 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_42 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -165,7 +165,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_exte
 	};
 	ecom_EiffelComCompiler::IEnumCluster * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->external_clusters( &ret_value);
+	hr = p_IEiffelSystemBrowser->ExternalClusters( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -174,7 +174,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_exte
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_43 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_42 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -198,7 +198,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_asse
 	};
 	ecom_EiffelComCompiler::IEnumAssembly * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->assemblies( &ret_value);
+	hr = p_IEiffelSystemBrowser->Assemblies( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -207,7 +207,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_asse
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_46 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_45 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -231,7 +231,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_cluste
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->cluster_count( &ret_value);
+	hr = p_IEiffelSystemBrowser->ClusterCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -264,7 +264,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_root
 	};
 	ecom_EiffelComCompiler::IEiffelClusterDescriptor * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->root_cluster( &ret_value);
+	hr = p_IEiffelSystemBrowser->RootCluster( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -273,12 +273,12 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_root
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_50 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_49 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_cluster_descriptor(  /* [in] */ EIF_OBJECT cluster_name )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_cluster_descriptor(  /* [in] */ EIF_OBJECT bstr_class_name )
 
 /*-----------------------------------------------------------
 	Cluster descriptor.
@@ -295,11 +295,11 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_clus
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_cluster_name = 0;
-	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
+	BSTR tmp_bstr_class_name = 0;
+	tmp_bstr_class_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_class_name));
 	ecom_EiffelComCompiler::IEiffelClusterDescriptor * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->cluster_descriptor(tmp_cluster_name, &ret_value);
+	hr = p_IEiffelSystemBrowser->ClusterDescriptor(tmp_bstr_class_name, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -307,14 +307,14 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_clus
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_cluster_name);
+	rt_ce.free_memory_bstr (tmp_bstr_class_name);
 
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_50 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_49 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_class_descriptor(  /* [in] */ EIF_OBJECT class_name1 )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_class_descriptor(  /* [in] */ EIF_OBJECT bstr_cluster_name )
 
 /*-----------------------------------------------------------
 	Class descriptor.
@@ -331,11 +331,11 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_clas
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_class_name1 = 0;
-	tmp_class_name1 = (BSTR)rt_ec.ccom_ec_bstr (eif_access (class_name1));
+	BSTR tmp_bstr_cluster_name = 0;
+	tmp_bstr_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_cluster_name));
 	ecom_EiffelComCompiler::IEiffelClassDescriptor * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->class_descriptor(tmp_class_name1, &ret_value);
+	hr = p_IEiffelSystemBrowser->ClassDescriptor(tmp_bstr_cluster_name, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -343,14 +343,14 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_clas
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_class_name1);
+	rt_ce.free_memory_bstr (tmp_bstr_cluster_name);
 
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_53 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_52 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_feature_descriptor(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_OBJECT feature_name )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_feature_descriptor(  /* [in] */ EIF_OBJECT bstr_class_name,  /* [in] */ EIF_OBJECT bstr_feature_name )
 
 /*-----------------------------------------------------------
 	Feature descriptor.
@@ -367,13 +367,13 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_feat
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_class_name1 = 0;
-	tmp_class_name1 = (BSTR)rt_ec.ccom_ec_bstr (eif_access (class_name1));
-	BSTR tmp_feature_name = 0;
-	tmp_feature_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (feature_name));
+	BSTR tmp_bstr_class_name = 0;
+	tmp_bstr_class_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_class_name));
+	BSTR tmp_bstr_feature_name = 0;
+	tmp_bstr_feature_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_feature_name));
 	ecom_EiffelComCompiler::IEiffelFeatureDescriptor * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->feature_descriptor(tmp_class_name1,tmp_feature_name, &ret_value);
+	hr = p_IEiffelSystemBrowser->FeatureDescriptor(tmp_bstr_class_name,tmp_bstr_feature_name, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -381,15 +381,15 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_feat
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_class_name1);
-rt_ce.free_memory_bstr (tmp_feature_name);
+	rt_ce.free_memory_bstr (tmp_bstr_class_name);
+rt_ce.free_memory_bstr (tmp_bstr_feature_name);
 
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_56 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_55 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_search_classes(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_search_classes(  /* [in] */ EIF_OBJECT bstr_search_str,  /* [in] */ EIF_BOOLEAN vb_is_substring )
 
 /*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
@@ -406,13 +406,13 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_sear
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_a_string = 0;
-	tmp_a_string = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_string));
-	VARIANT_BOOL tmp_is_substring = 0;
-	tmp_is_substring = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_substring);
+	BSTR tmp_bstr_search_str = 0;
+	tmp_bstr_search_str = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_search_str));
+	VARIANT_BOOL tmp_vb_is_substring = 0;
+	tmp_vb_is_substring = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (vb_is_substring);
 	ecom_EiffelComCompiler::IEnumEiffelClass * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->search_classes(tmp_a_string,tmp_is_substring, &ret_value);
+	hr = p_IEiffelSystemBrowser->SearchClasses(tmp_bstr_search_str,tmp_vb_is_substring, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -420,14 +420,14 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_sear
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_a_string);
+	rt_ce.free_memory_bstr (tmp_bstr_search_str);
 
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_39 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_38 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_search_features(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_search_features(  /* [in] */ EIF_OBJECT bstr_search_str,  /* [in] */ EIF_BOOLEAN vb_is_substring )
 
 /*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
@@ -444,13 +444,13 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_sear
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_a_string = 0;
-	tmp_a_string = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_string));
-	VARIANT_BOOL tmp_is_substring = 0;
-	tmp_is_substring = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_substring);
+	BSTR tmp_bstr_search_str = 0;
+	tmp_bstr_search_str = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_search_str));
+	VARIANT_BOOL tmp_vb_is_substring = 0;
+	tmp_vb_is_substring = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (vb_is_substring);
 	ecom_EiffelComCompiler::IEnumFeature * ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->search_features(tmp_a_string,tmp_is_substring, &ret_value);
+	hr = p_IEiffelSystemBrowser->SearchFeatures(tmp_bstr_search_str,tmp_vb_is_substring, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -458,14 +458,14 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_sear
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_a_string);
+	rt_ce.free_memory_bstr (tmp_bstr_search_str);
 
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_58 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_description_from_dotnet_type(  /* [in] */ EIF_OBJECT a_assembly_name,  /* [in] */ EIF_OBJECT a_full_dotnet_type )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_description_from_dotnet_type(  /* [in] */ EIF_OBJECT bstr_assembly_name,  /* [in] */ EIF_OBJECT bstr_full_dotnet_name )
 
 /*-----------------------------------------------------------
 	Retrieve description from dotnet type
@@ -482,13 +482,13 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_desc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_a_assembly_name = 0;
-	tmp_a_assembly_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_assembly_name));
-	BSTR tmp_a_full_dotnet_type = 0;
-	tmp_a_full_dotnet_type = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_full_dotnet_type));
+	BSTR tmp_bstr_assembly_name = 0;
+	tmp_bstr_assembly_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_assembly_name));
+	BSTR tmp_bstr_full_dotnet_name = 0;
+	tmp_bstr_full_dotnet_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_full_dotnet_name));
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->description_from_dotnet_type(tmp_a_assembly_name,tmp_a_full_dotnet_type, &ret_value);
+	hr = p_IEiffelSystemBrowser->DescriptionFromDotnetType(tmp_bstr_assembly_name,tmp_bstr_full_dotnet_name, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -496,8 +496,8 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_desc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_a_assembly_name);
-rt_ce.free_memory_bstr (tmp_a_full_dotnet_type);
+	rt_ce.free_memory_bstr (tmp_bstr_assembly_name);
+rt_ce.free_memory_bstr (tmp_bstr_full_dotnet_name);
 
 	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
@@ -505,7 +505,7 @@ rt_ce.free_memory_bstr (tmp_a_full_dotnet_type);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_description_from_dotnet_feature(  /* [in] */ EIF_OBJECT a_assembly_name,  /* [in] */ EIF_OBJECT a_full_dotnet_type,  /* [in] */ EIF_OBJECT a_feature_signature )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_description_from_dotnet_feature(  /* [in] */ EIF_OBJECT bstr_assembly_name,  /* [in] */ EIF_OBJECT bstr_full_dotnet_name,  /* [in] */ EIF_OBJECT bstr_feature_signature )
 
 /*-----------------------------------------------------------
 	Retrieve description from dotnet feature
@@ -522,15 +522,15 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_desc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_a_assembly_name = 0;
-	tmp_a_assembly_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_assembly_name));
-	BSTR tmp_a_full_dotnet_type = 0;
-	tmp_a_full_dotnet_type = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_full_dotnet_type));
-	BSTR tmp_a_feature_signature = 0;
-	tmp_a_feature_signature = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_feature_signature));
+	BSTR tmp_bstr_assembly_name = 0;
+	tmp_bstr_assembly_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_assembly_name));
+	BSTR tmp_bstr_full_dotnet_name = 0;
+	tmp_bstr_full_dotnet_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_full_dotnet_name));
+	BSTR tmp_bstr_feature_signature = 0;
+	tmp_bstr_feature_signature = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_feature_signature));
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelSystemBrowser->description_from_dotnet_feature(tmp_a_assembly_name,tmp_a_full_dotnet_type,tmp_a_feature_signature, &ret_value);
+	hr = p_IEiffelSystemBrowser->DescriptionFromDotnetFeature(tmp_bstr_assembly_name,tmp_bstr_full_dotnet_name,tmp_bstr_feature_signature, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -538,9 +538,9 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy::ccom_desc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_a_assembly_name);
-rt_ce.free_memory_bstr (tmp_a_full_dotnet_type);
-rt_ce.free_memory_bstr (tmp_a_feature_signature);
+	rt_ce.free_memory_bstr (tmp_bstr_assembly_name);
+rt_ce.free_memory_bstr (tmp_bstr_full_dotnet_name);
+rt_ce.free_memory_bstr (tmp_bstr_feature_signature);
 
 	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);

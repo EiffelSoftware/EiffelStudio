@@ -66,7 +66,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->name( &ret_value);
+	hr = p_IEiffelClusterDescriptor->Name( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -100,7 +100,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->description( &ret_value);
+	hr = p_IEiffelClusterDescriptor->Description( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -134,7 +134,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->tool_tip( &ret_value);
+	hr = p_IEiffelClusterDescriptor->ToolTip( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -168,7 +168,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumEiffelClass * ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->classes( &ret_value);
+	hr = p_IEiffelClusterDescriptor->Classes( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -177,7 +177,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_39 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_38 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -201,7 +201,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->class_count( &ret_value);
+	hr = p_IEiffelClusterDescriptor->ClassCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -234,7 +234,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	ecom_EiffelComCompiler::IEnumCluster * ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->clusters( &ret_value);
+	hr = p_IEiffelClusterDescriptor->Clusters( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -243,7 +243,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_43 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_42 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -267,7 +267,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->cluster_count( &ret_value);
+	hr = p_IEiffelClusterDescriptor->ClusterCount( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -300,7 +300,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->cluster_path( &ret_value);
+	hr = p_IEiffelClusterDescriptor->ClusterPath( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -334,7 +334,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->relative_path( &ret_value);
+	hr = p_IEiffelClusterDescriptor->RelativePath( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -368,7 +368,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->is_override_cluster( &ret_value);
+	hr = p_IEiffelClusterDescriptor->IsOverrideCluster( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -401,7 +401,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy::ccom_is
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelClusterDescriptor->is_library( &ret_value);
+	hr = p_IEiffelClusterDescriptor->IsLibrary( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

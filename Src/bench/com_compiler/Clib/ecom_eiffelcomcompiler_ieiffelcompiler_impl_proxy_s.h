@@ -37,69 +37,45 @@ public:
 	virtual ~IEiffelCompiler_impl_proxy ();
 
 	/*-----------------------------------------------------------
-	Compile.
-	-----------------------------------------------------------*/
-	void ccom_compile();
-
-
-	/*-----------------------------------------------------------
-	Finalize.
-	-----------------------------------------------------------*/
-	void ccom_finalize();
-
-
-	/*-----------------------------------------------------------
-	Precompile.
-	-----------------------------------------------------------*/
-	void ccom_precompile();
-
-
-	/*-----------------------------------------------------------
-	Compile with piped output.
-	-----------------------------------------------------------*/
-	void ccom_compile_to_pipe();
-
-
-	/*-----------------------------------------------------------
-	Finalize with piped output.
-	-----------------------------------------------------------*/
-	void ccom_finalize_to_pipe();
-
-
-	/*-----------------------------------------------------------
-	Precompile with piped output.
-	-----------------------------------------------------------*/
-	void ccom_precompile_to_pipe();
-
-
-	/*-----------------------------------------------------------
-	Was last compilation successful?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_is_successful(  );
-
-
-	/*-----------------------------------------------------------
-	Did last compile warrant a call to finish_freezing?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_freezing_occurred(  );
-
-
-	/*-----------------------------------------------------------
 	Compiler version.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_compiler_version(  );
 
 
 	/*-----------------------------------------------------------
-	Takes a path and expands it using the env vars.
+	Is the compiler a trial version.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_expand_path(  /* [in] */ EIF_OBJECT a_path );
+	EIF_BOOLEAN ccom_has_signable_generation(  );
 
 
 	/*-----------------------------------------------------------
-	Generate a cyrptographic key filename.
+	Can product be run? (i.e. is it activated or was run less than 10 times)
 	-----------------------------------------------------------*/
-	void ccom_generate_msil_keyfile(  /* [in] */ EIF_OBJECT filename );
+	EIF_BOOLEAN ccom_can_run(  );
+
+
+	/*-----------------------------------------------------------
+	Compile.
+	-----------------------------------------------------------*/
+	void ccom_compile(  /* [in] */ EIF_INTEGER mode );
+
+
+	/*-----------------------------------------------------------
+	Compile to an already established named pipe.
+	-----------------------------------------------------------*/
+	void ccom_compile_to_pipe(  /* [in] */ EIF_INTEGER mode,  /* [in] */ EIF_OBJECT bstr_pipe_name );
+
+
+	/*-----------------------------------------------------------
+	Was last compilation successful?
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_was_compilation_successful(  );
+
+
+	/*-----------------------------------------------------------
+	Did last compile warrant a call to finish_freezing?
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_freezing_occurred(  );
 
 
 	/*-----------------------------------------------------------
@@ -115,45 +91,27 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Is the compiler a trial version.
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_has_signable_generation(  );
-
-
-	/*-----------------------------------------------------------
 	Remove file locks
 	-----------------------------------------------------------*/
 	void ccom_remove_file_locks();
 
 
 	/*-----------------------------------------------------------
-	Output pipe's name
+	Should warning events be raised when compilation raises a warning?
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_output_pipe_name(  );
+	void ccom_set_display_warnings(  /* [in] */ EIF_BOOLEAN arg_1 );
 
 
 	/*-----------------------------------------------------------
-	Set output pipe's name
+	Takes a path and expands it using the env vars.
 	-----------------------------------------------------------*/
-	void ccom_set_output_pipe_name(  /* [in] */ EIF_OBJECT return_value );
+	EIF_REFERENCE ccom_expand_path(  /* [in] */ EIF_OBJECT bstr_path );
 
 
 	/*-----------------------------------------------------------
-	Is compiler output sent to pipe `output_pipe_name'
+	Generate a cyrptographic key filename.
 	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_is_output_piped(  );
-
-
-	/*-----------------------------------------------------------
-	Can product be run? (i.e. is it activated or was run less than 10 times)
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_can_run(  );
-
-
-	/*-----------------------------------------------------------
-	Set state indicating if compiler warnings should be displayed
-	-----------------------------------------------------------*/
-	void ccom_set_display_warnings(  /* [in] */ EIF_BOOLEAN vb_show );
+	void ccom_generate_msil_key_file_name(  /* [in] */ EIF_OBJECT bstr_file_name );
 
 
 	/*-----------------------------------------------------------

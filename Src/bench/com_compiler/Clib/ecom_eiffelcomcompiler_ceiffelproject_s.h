@@ -48,85 +48,91 @@ public:
 	/*-----------------------------------------------------------
 	Retrieve Eiffel Project
 	-----------------------------------------------------------*/
-	STDMETHODIMP retrieve_eiffel_project(  /* [in] */ BSTR a_project_file_name );
+	STDMETHODIMP RetrieveEiffelProject(  /* [in] */ BSTR bstr_project_file_name );
 
 
 	/*-----------------------------------------------------------
-	Create new Eiffel project.
+	Create new Eiffel project from an existing ace file.
 	-----------------------------------------------------------*/
-	STDMETHODIMP create_eiffel_project(  /* [in] */ BSTR a_ace_file_name, /* [in] */ BSTR a_project_directory_path );
+	STDMETHODIMP CreateEiffelProject(  /* [in] */ BSTR bstr_ace_file_name, /* [in] */ BSTR bstr_project_directory );
+
+
+	/*-----------------------------------------------------------
+	Create new Eiffel project from scratch.
+	-----------------------------------------------------------*/
+	STDMETHODIMP GenerateNewEiffelProject(  /* [in] */ BSTR bstr_project_name, /* [in] */ BSTR bstr_ace_file_name, /* [in] */ BSTR bstr_root_class_name, /* [in] */ BSTR bstr_creation_routine, /* [in] */ BSTR bstr_project_directory );
 
 
 	/*-----------------------------------------------------------
 	Full path to .epr file.
 	-----------------------------------------------------------*/
-	STDMETHODIMP project_file_name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP ProjectFileName(  /* [out, retval] */ BSTR * pbstr_project_file_name );
 
 
 	/*-----------------------------------------------------------
 	Full path to Ace file.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ace_file_name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP AceFileName(  /* [out, retval] */ BSTR * pbstr_ace_file_name );
 
 
 	/*-----------------------------------------------------------
 	Project directory.
 	-----------------------------------------------------------*/
-	STDMETHODIMP project_directory(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP ProjectDirectory(  /* [out, retval] */ BSTR * pbstr_project_directory );
 
 
 	/*-----------------------------------------------------------
 	Is project valid?
 	-----------------------------------------------------------*/
-	STDMETHODIMP valid_project(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsValidProject(  /* [out, retval] */ VARIANT_BOOL * pvb_valid );
 
 
 	/*-----------------------------------------------------------
 	Last exception raised
 	-----------------------------------------------------------*/
-	STDMETHODIMP last_exception(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * a_result );
+	STDMETHODIMP LastException(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * pp_ieiffel_exception );
 
 
 	/*-----------------------------------------------------------
 	Compiler.
 	-----------------------------------------------------------*/
-	STDMETHODIMP compiler(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompiler * * return_value );
+	STDMETHODIMP Compiler(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompiler * * pp_ieiffel_compiler );
 
 
 	/*-----------------------------------------------------------
 	Has system been compiled?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_compiled(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsCompiled(  /* [out, retval] */ VARIANT_BOOL * pvb_compiled );
 
 
 	/*-----------------------------------------------------------
 	Has the project updated since last compilation?
 	-----------------------------------------------------------*/
-	STDMETHODIMP project_has_updated(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP ProjectHasUpdated(  /* [out, retval] */ VARIANT_BOOL * pvb_updated );
 
 
 	/*-----------------------------------------------------------
 	System Browser.
 	-----------------------------------------------------------*/
-	STDMETHODIMP system_browser(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemBrowser * * return_value );
+	STDMETHODIMP SystemBrowser(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemBrowser * * pp_eiffel_system_browser );
 
 
 	/*-----------------------------------------------------------
 	Project Properties.
 	-----------------------------------------------------------*/
-	STDMETHODIMP project_properties(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelProjectProperties * * return_value );
+	STDMETHODIMP ProjectProperties(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelProjectProperties * * pp_ieiffel_project_properties );
 
 
 	/*-----------------------------------------------------------
 	Completion information
 	-----------------------------------------------------------*/
-	STDMETHODIMP completion_information(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompletionInfo * * return_value );
+	STDMETHODIMP CompletionInformation(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompletionInfo * * pp_ieiffel_completion_info );
 
 
 	/*-----------------------------------------------------------
 	Help documentation generator
 	-----------------------------------------------------------*/
-	STDMETHODIMP html_doc_generator(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * * return_value );
+	STDMETHODIMP HtmlDocumentationGenerator(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelHtmlDocumentationGenerator * * pp_ieiffel_html_documentation_generator );
 
 
 	/*-----------------------------------------------------------

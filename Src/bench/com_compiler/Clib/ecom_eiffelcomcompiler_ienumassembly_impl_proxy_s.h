@@ -41,13 +41,13 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_next(  /* [out] */ EIF_OBJECT rgelt,  /* [out] */ EIF_OBJECT pcelt_fetched );
+	void ccom_next(  /* [out] */ EIF_OBJECT pp_ieiffel_assembly_properties,  /* [out] */ EIF_OBJECT pul_fetched );
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_skip(  /* [in] */ EIF_INTEGER celt );
+	void ccom_skip(  /* [in] */ EIF_INTEGER ul_count );
 
 
 	/*-----------------------------------------------------------
@@ -59,13 +59,13 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_clone1(  /* [out] */ EIF_OBJECT ppenum );
+	void ccom_clone1(  /* [out] */ EIF_OBJECT pp_ienum_assembly );
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_ith_item(  /* [in] */ EIF_INTEGER an_index,  /* [out] */ EIF_OBJECT rgelt );
+	void ccom_ith_item(  /* [in] */ EIF_INTEGER ul_count,  /* [out] */ EIF_OBJECT pp_ieiffel_assembly_properties );
 
 
 	/*-----------------------------------------------------------

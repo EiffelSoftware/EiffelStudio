@@ -91,7 +91,7 @@ public:
 	/*-----------------------------------------------------------
 	Feature location, full path to file and line number
 	-----------------------------------------------------------*/
-	void ccom_feature_location(  /* [out] */ EIF_OBJECT file_path,  /* [out] */ EIF_OBJECT line_number );
+	void ccom_feature_location(  /* [out] */ EIF_OBJECT pbstr_path,  /* [out] */ EIF_OBJECT pul_line );
 
 
 	/*-----------------------------------------------------------
@@ -139,7 +139,7 @@ public:
 	/*-----------------------------------------------------------
 	Number of feature implementers.
 	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_implementer_count(  );
+	EIF_INTEGER ccom_implementers_count(  );
 
 
 	/*-----------------------------------------------------------
@@ -151,7 +151,7 @@ public:
 	/*-----------------------------------------------------------
 	Number of ancestor versions.
 	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_ancestor_version_count(  );
+	EIF_INTEGER ccom_ancestor_versions_count(  );
 
 
 	/*-----------------------------------------------------------
@@ -163,7 +163,7 @@ public:
 	/*-----------------------------------------------------------
 	Number of descendant versions.
 	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_descendant_version_count(  );
+	EIF_INTEGER ccom_descendant_versions_count(  );
 
 
 	/*-----------------------------------------------------------

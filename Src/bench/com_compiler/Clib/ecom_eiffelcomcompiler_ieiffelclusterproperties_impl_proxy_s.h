@@ -79,7 +79,7 @@ public:
 	/*-----------------------------------------------------------
 	Full path to cluster.
 	-----------------------------------------------------------*/
-	void ccom_set_cluster_path(  /* [in] */ EIF_OBJECT path );
+	void ccom_set_cluster_path(  /* [in] */ EIF_OBJECT pbstr_path );
 
 
 	/*-----------------------------------------------------------
@@ -91,7 +91,7 @@ public:
 	/*-----------------------------------------------------------
 	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
-	void ccom_set_override(  /* [in] */ EIF_BOOLEAN return_value );
+	void ccom_set_override(  /* [in] */ EIF_BOOLEAN pvb_override );
 
 
 	/*-----------------------------------------------------------
@@ -103,7 +103,7 @@ public:
 	/*-----------------------------------------------------------
 	Should this cluster be treated as library?
 	-----------------------------------------------------------*/
-	void ccom_set_is_library(  /* [in] */ EIF_BOOLEAN return_value );
+	void ccom_set_is_library(  /* [in] */ EIF_BOOLEAN pvb_library );
 
 
 	/*-----------------------------------------------------------
@@ -115,7 +115,7 @@ public:
 	/*-----------------------------------------------------------
 	Should all subclusters be included?
 	-----------------------------------------------------------*/
-	void ccom_set_all(  /* [in] */ EIF_BOOLEAN return_value );
+	void ccom_set_all(  /* [in] */ EIF_BOOLEAN pvb_all );
 
 
 	/*-----------------------------------------------------------
@@ -127,7 +127,7 @@ public:
 	/*-----------------------------------------------------------
 	Should use system default?
 	-----------------------------------------------------------*/
-	void ccom_set_use_system_default(  /* [in] */ EIF_BOOLEAN return_value );
+	void ccom_set_use_system_default(  /* [in] */ EIF_BOOLEAN pvb_use_defaults );
 
 
 	/*-----------------------------------------------------------
@@ -163,7 +163,7 @@ public:
 	/*-----------------------------------------------------------
 	Set assertions for cluster.
 	-----------------------------------------------------------*/
-	void ccom_set_assertions(  /* [in] */ EIF_BOOLEAN evaluate_check,  /* [in] */ EIF_BOOLEAN evaluate_require,  /* [in] */ EIF_BOOLEAN evaluate_ensure,  /* [in] */ EIF_BOOLEAN evaluate_loop,  /* [in] */ EIF_BOOLEAN evaluate_invariant );
+	void ccom_set_assertions(  /* [in] */ EIF_BOOLEAN vb_check,  /* [in] */ EIF_BOOLEAN vb_require,  /* [in] */ EIF_BOOLEAN vb_ensure,  /* [in] */ EIF_BOOLEAN vb_loop,  /* [in] */ EIF_BOOLEAN vb_invariant );
 
 
 	/*-----------------------------------------------------------
@@ -173,15 +173,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Add a directory to exclude.
+	Add a item to exclude.
 	-----------------------------------------------------------*/
-	void ccom_add_exclude(  /* [in] */ EIF_OBJECT dir_name );
+	void ccom_add_exclude(  /* [in] */ EIF_OBJECT bstr_name );
 
 
 	/*-----------------------------------------------------------
-	Remove a directory to exclude.
+	Remove a item from being excluded.
 	-----------------------------------------------------------*/
-	void ccom_remove_exclude(  /* [in] */ EIF_OBJECT dir_name );
+	void ccom_remove_exclude(  /* [in] */ EIF_OBJECT bstr_name );
 
 
 	/*-----------------------------------------------------------
@@ -235,7 +235,7 @@ public:
 	/*-----------------------------------------------------------
 	Cluster namespace.
 	-----------------------------------------------------------*/
-	void ccom_set_cluster_namespace(  /* [in] */ EIF_OBJECT a_namespace );
+	void ccom_set_cluster_namespace(  /* [in] */ EIF_OBJECT pbstr_namespace );
 
 
 	/*-----------------------------------------------------------

@@ -62,175 +62,175 @@ public:
 	/*-----------------------------------------------------------
 	Cluster name.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Full path to cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_path(  /* [out, retval] */ BSTR * path ) = 0;
+	virtual STDMETHODIMP ClusterPath(  /* [out, retval] */ BSTR * pbstr_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Full path to cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_cluster_path(  /* [in] */ BSTR path ) = 0;
+	virtual STDMETHODIMP set_ClusterPath(  /* [in] */ BSTR pbstr_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP override(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP Override(  /* [out, retval] */ VARIANT_BOOL * pvb_override ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_override(  /* [in] */ VARIANT_BOOL return_value ) = 0;
+	virtual STDMETHODIMP set_Override(  /* [in] */ VARIANT_BOOL pvb_override ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should this cluster be treated as library?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsLibrary(  /* [out, retval] */ VARIANT_BOOL * pvb_library ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should this cluster be treated as library?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_is_library(  /* [in] */ VARIANT_BOOL return_value ) = 0;
+	virtual STDMETHODIMP set_IsLibrary(  /* [in] */ VARIANT_BOOL pvb_library ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should all subclusters be included?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP all(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP All(  /* [out, retval] */ VARIANT_BOOL * pvb_all ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should all subclusters be included?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_all(  /* [in] */ VARIANT_BOOL return_value ) = 0;
+	virtual STDMETHODIMP set_All(  /* [in] */ VARIANT_BOOL pvb_all ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should use system default?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP use_system_default(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP UseSystemDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_use_defaults ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should use system default?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_use_system_default(  /* [in] */ VARIANT_BOOL return_value ) = 0;
+	virtual STDMETHODIMP set_UseSystemDefault(  /* [in] */ VARIANT_BOOL pvb_use_defaults ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should preconditions be evaluated by default?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP evaluate_require_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP EvaluateRequireByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_require ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should postconditions be evaluated by default?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP evaluate_ensure_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP EvaluateEnsureByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_ensure ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should check assertions be evaluated by default?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP evaluate_check_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP EvaluateCheckByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_check ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should loop assertions be evaluated by default?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP evaluate_loop_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP EvaluateLoopByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_loop ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should class invariants be evaluated by default?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP evaluate_invariant_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP EvaluateInvariantByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_invariant ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Set assertions for cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_assertions(  /* [in] */ VARIANT_BOOL evaluate_check, /* [in] */ VARIANT_BOOL evaluate_require, /* [in] */ VARIANT_BOOL evaluate_ensure, /* [in] */ VARIANT_BOOL evaluate_loop, /* [in] */ VARIANT_BOOL evaluate_invariant ) = 0;
+	virtual STDMETHODIMP SetAssertions(  /* [in] */ VARIANT_BOOL vb_check, /* [in] */ VARIANT_BOOL vb_require, /* [in] */ VARIANT_BOOL vb_ensure, /* [in] */ VARIANT_BOOL vb_loop, /* [in] */ VARIANT_BOOL vb_invariant ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of excluded directories.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP excluded(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumClusterExcludes * * return_value ) = 0;
+	virtual STDMETHODIMP Excluded(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumClusterExcludes * * pp_ienum_cluster_excludes ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Add a directory to exclude.
+	Add a item to exclude.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_exclude(  /* [in] */ BSTR dir_name ) = 0;
+	virtual STDMETHODIMP AddExclude(  /* [in] */ BSTR bstr_name ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Remove a directory to exclude.
+	Remove a item from being excluded.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP remove_exclude(  /* [in] */ BSTR dir_name ) = 0;
+	virtual STDMETHODIMP RemoveExclude(  /* [in] */ BSTR bstr_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Name of the parent cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP parent_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP ParentName(  /* [out, retval] */ BSTR * pbstr_parent_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Does the current cluster have a parent cluster?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP has_parent(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP HasParent(  /* [out, retval] */ VARIANT_BOOL * pvb_has_parent ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List subclusters (list of IEiffelClusterProperties*).
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP subclusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumClusterProp * * return_value ) = 0;
+	virtual STDMETHODIMP Subclusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumClusterProp * * pp_ienum_cluster_prop ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Does the current cluster have children?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP has_children(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP HasChildren(  /* [out, retval] */ VARIANT_BOOL * pvb_has_children ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Cluster identifier.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_id(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP ClusterId(  /* [out, retval] */ ULONG * pul_id ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is the cluster in the Eiffel library
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_eiffel_library(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsEiffelLibrary(  /* [out, retval] */ VARIANT_BOOL * pvb_eiffel_library ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Full path to cluster with ISE_EIFFEL env var expanded.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP expanded_cluster_path(  /* [out, retval] */ BSTR * path ) = 0;
+	virtual STDMETHODIMP ExpandedClusterPath(  /* [out, retval] */ BSTR * pbstr_expanded_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Cluster namespace.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_namespace(  /* [out, retval] */ BSTR * a_namespace ) = 0;
+	virtual STDMETHODIMP ClusterNamespace(  /* [out, retval] */ BSTR * pbstr_namespace ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Cluster namespace.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_cluster_namespace(  /* [in] */ BSTR a_namespace ) = 0;
+	virtual STDMETHODIMP set_ClusterNamespace(  /* [in] */ BSTR pbstr_namespace ) = 0;
 
 
 

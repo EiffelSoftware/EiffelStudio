@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::~IEiffelClusterPrope
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Name(  /* [out, retval] */ BSTR * pbstr_name )
 
 /*-----------------------------------------------------------
 	Cluster name.
@@ -54,18 +54,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::name(  
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::cluster_path(  /* [out, retval] */ BSTR * path )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::ClusterPath(  /* [out, retval] */ BSTR * pbstr_path )
 
 /*-----------------------------------------------------------
 	Full path to cluster.
@@ -84,18 +84,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::cluster
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*path = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_path = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*path = NULL;
+		*pbstr_path = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_cluster_path(  /* [in] */ BSTR path )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_ClusterPath(  /* [in] */ BSTR pbstr_path )
 
 /*-----------------------------------------------------------
 	Full path to cluster.
@@ -103,25 +103,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_clu
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_path = NULL;
-	if (path != NULL)
+	EIF_OBJECT tmp_pbstr_path = NULL;
+	if (pbstr_path != NULL)
 	{
-		tmp_path = eif_protect (rt_ce.ccom_ce_bstr (path));
+		tmp_pbstr_path = eif_protect (rt_ce.ccom_ce_bstr (pbstr_path));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_cluster_path", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_path != NULL) ? eif_access (tmp_path) : NULL));
-	if (tmp_path != NULL)
-		eif_wean (tmp_path);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_path != NULL) ? eif_access (tmp_pbstr_path) : NULL));
+	if (tmp_pbstr_path != NULL)
+		eif_wean (tmp_pbstr_path);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::override(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Override(  /* [out, retval] */ VARIANT_BOOL * pvb_override )
 
 /*-----------------------------------------------------------
 	Should this cluster classes take priority over other classes with same name?
@@ -137,14 +137,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::overrid
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "override", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_override = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_override(  /* [in] */ VARIANT_BOOL return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_Override(  /* [in] */ VARIANT_BOOL pvb_override )
 
 /*-----------------------------------------------------------
 	Should this cluster classes take priority over other classes with same name?
@@ -152,19 +152,19 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_ove
 {
 	ECATCH;
 
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
+	EIF_BOOLEAN tmp_pvb_override = rt_ce.ccom_ce_boolean (pvb_override);
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_override", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_pvb_override);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::is_library(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::IsLibrary(  /* [out, retval] */ VARIANT_BOOL * pvb_library )
 
 /*-----------------------------------------------------------
 	Should this cluster be treated as library?
@@ -180,14 +180,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::is_libr
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_library", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_library = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_is_library(  /* [in] */ VARIANT_BOOL return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_IsLibrary(  /* [in] */ VARIANT_BOOL pvb_library )
 
 /*-----------------------------------------------------------
 	Should this cluster be treated as library?
@@ -195,19 +195,19 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_is_
 {
 	ECATCH;
 
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
+	EIF_BOOLEAN tmp_pvb_library = rt_ce.ccom_ce_boolean (pvb_library);
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_is_library", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_pvb_library);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::all(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::All(  /* [out, retval] */ VARIANT_BOOL * pvb_all )
 
 /*-----------------------------------------------------------
 	Should all subclusters be included?
@@ -223,14 +223,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::all(  /
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "all1", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_all = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_all(  /* [in] */ VARIANT_BOOL return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_All(  /* [in] */ VARIANT_BOOL pvb_all )
 
 /*-----------------------------------------------------------
 	Should all subclusters be included?
@@ -238,19 +238,19 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_all
 {
 	ECATCH;
 
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
+	EIF_BOOLEAN tmp_pvb_all = rt_ce.ccom_ce_boolean (pvb_all);
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_all", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_pvb_all);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::use_system_default(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::UseSystemDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_use_defaults )
 
 /*-----------------------------------------------------------
 	Should use system default?
@@ -266,14 +266,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::use_sys
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "use_system_default", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_use_defaults = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_use_system_default(  /* [in] */ VARIANT_BOOL return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_UseSystemDefault(  /* [in] */ VARIANT_BOOL pvb_use_defaults )
 
 /*-----------------------------------------------------------
 	Should use system default?
@@ -281,19 +281,19 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_use
 {
 	ECATCH;
 
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
+	EIF_BOOLEAN tmp_pvb_use_defaults = rt_ce.ccom_ce_boolean (pvb_use_defaults);
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_use_system_default", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_pvb_use_defaults);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluate_require_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::EvaluateRequireByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_require )
 
 /*-----------------------------------------------------------
 	Should preconditions be evaluated by default?
@@ -309,14 +309,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluat
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_require_by_default", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_require = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluate_ensure_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::EvaluateEnsureByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_ensure )
 
 /*-----------------------------------------------------------
 	Should postconditions be evaluated by default?
@@ -332,14 +332,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluat
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_ensure_by_default", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_ensure = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluate_check_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::EvaluateCheckByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_check )
 
 /*-----------------------------------------------------------
 	Should check assertions be evaluated by default?
@@ -355,14 +355,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluat
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_check_by_default", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_check = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluate_loop_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::EvaluateLoopByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_loop )
 
 /*-----------------------------------------------------------
 	Should loop assertions be evaluated by default?
@@ -378,14 +378,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluat
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_loop_by_default", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_loop = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluate_invariant_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::EvaluateInvariantByDefault(  /* [out, retval] */ VARIANT_BOOL * pvb_invariant )
 
 /*-----------------------------------------------------------
 	Should class invariants be evaluated by default?
@@ -401,14 +401,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::evaluat
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "evaluate_invariant_by_default", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_invariant = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_assertions(  /* [in] */ VARIANT_BOOL evaluate_check, /* [in] */ VARIANT_BOOL evaluate_require, /* [in] */ VARIANT_BOOL evaluate_ensure, /* [in] */ VARIANT_BOOL evaluate_loop, /* [in] */ VARIANT_BOOL evaluate_invariant )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::SetAssertions(  /* [in] */ VARIANT_BOOL vb_check, /* [in] */ VARIANT_BOOL vb_require, /* [in] */ VARIANT_BOOL vb_ensure, /* [in] */ VARIANT_BOOL vb_loop, /* [in] */ VARIANT_BOOL vb_invariant )
 
 /*-----------------------------------------------------------
 	Set assertions for cluster.
@@ -416,23 +416,23 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_ass
 {
 	ECATCH;
 
-	EIF_BOOLEAN tmp_evaluate_check = rt_ce.ccom_ce_boolean (evaluate_check);
-	EIF_BOOLEAN tmp_evaluate_require = rt_ce.ccom_ce_boolean (evaluate_require);
-	EIF_BOOLEAN tmp_evaluate_ensure = rt_ce.ccom_ce_boolean (evaluate_ensure);
-	EIF_BOOLEAN tmp_evaluate_loop = rt_ce.ccom_ce_boolean (evaluate_loop);
-	EIF_BOOLEAN tmp_evaluate_invariant = rt_ce.ccom_ce_boolean (evaluate_invariant);
+	EIF_BOOLEAN tmp_vb_check = rt_ce.ccom_ce_boolean (vb_check);
+	EIF_BOOLEAN tmp_vb_require = rt_ce.ccom_ce_boolean (vb_require);
+	EIF_BOOLEAN tmp_vb_ensure = rt_ce.ccom_ce_boolean (vb_ensure);
+	EIF_BOOLEAN tmp_vb_loop = rt_ce.ccom_ce_boolean (vb_loop);
+	EIF_BOOLEAN tmp_vb_invariant = rt_ce.ccom_ce_boolean (vb_invariant);
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_assertions", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_evaluate_check, (EIF_BOOLEAN)tmp_evaluate_require, (EIF_BOOLEAN)tmp_evaluate_ensure, (EIF_BOOLEAN)tmp_evaluate_loop, (EIF_BOOLEAN)tmp_evaluate_invariant);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_vb_check, (EIF_BOOLEAN)tmp_vb_require, (EIF_BOOLEAN)tmp_vb_ensure, (EIF_BOOLEAN)tmp_vb_loop, (EIF_BOOLEAN)tmp_vb_invariant);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::excluded(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumClusterExcludes * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Excluded(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumClusterExcludes * * pp_ienum_cluster_excludes )
 
 /*-----------------------------------------------------------
 	List of excluded directories.
@@ -451,70 +451,70 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::exclude
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_205 (eif_access (tmp_object));
+		*pp_ienum_cluster_excludes = grt_ec_ISE.ccom_ec_pointed_interface_204 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ienum_cluster_excludes = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::add_exclude(  /* [in] */ BSTR dir_name )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::AddExclude(  /* [in] */ BSTR bstr_name )
 
 /*-----------------------------------------------------------
-	Add a directory to exclude.
+	Add a item to exclude.
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_dir_name = NULL;
-	if (dir_name != NULL)
+	EIF_OBJECT tmp_bstr_name = NULL;
+	if (bstr_name != NULL)
 	{
-		tmp_dir_name = eif_protect (rt_ce.ccom_ce_bstr (dir_name));
+		tmp_bstr_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("add_exclude", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_dir_name != NULL) ? eif_access (tmp_dir_name) : NULL));
-	if (tmp_dir_name != NULL)
-		eif_wean (tmp_dir_name);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_name != NULL) ? eif_access (tmp_bstr_name) : NULL));
+	if (tmp_bstr_name != NULL)
+		eif_wean (tmp_bstr_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::remove_exclude(  /* [in] */ BSTR dir_name )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::RemoveExclude(  /* [in] */ BSTR bstr_name )
 
 /*-----------------------------------------------------------
-	Remove a directory to exclude.
+	Remove a item from being excluded.
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_dir_name = NULL;
-	if (dir_name != NULL)
+	EIF_OBJECT tmp_bstr_name = NULL;
+	if (bstr_name != NULL)
 	{
-		tmp_dir_name = eif_protect (rt_ce.ccom_ce_bstr (dir_name));
+		tmp_bstr_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("remove_exclude", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_dir_name != NULL) ? eif_access (tmp_dir_name) : NULL));
-	if (tmp_dir_name != NULL)
-		eif_wean (tmp_dir_name);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_name != NULL) ? eif_access (tmp_bstr_name) : NULL));
+	if (tmp_bstr_name != NULL)
+		eif_wean (tmp_bstr_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::parent_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::ParentName(  /* [out, retval] */ BSTR * pbstr_parent_name )
 
 /*-----------------------------------------------------------
 	Name of the parent cluster.
@@ -533,18 +533,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::parent_
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_parent_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_parent_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::has_parent(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::HasParent(  /* [out, retval] */ VARIANT_BOOL * pvb_has_parent )
 
 /*-----------------------------------------------------------
 	Does the current cluster have a parent cluster?
@@ -560,14 +560,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::has_par
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "has_parent", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_has_parent = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::subclusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumClusterProp * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Subclusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumClusterProp * * pp_ienum_cluster_prop )
 
 /*-----------------------------------------------------------
 	List subclusters (list of IEiffelClusterProperties*).
@@ -586,18 +586,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::subclus
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_183 (eif_access (tmp_object));
+		*pp_ienum_cluster_prop = grt_ec_ISE.ccom_ec_pointed_interface_182 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ienum_cluster_prop = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::has_children(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::HasChildren(  /* [out, retval] */ VARIANT_BOOL * pvb_has_children )
 
 /*-----------------------------------------------------------
 	Does the current cluster have children?
@@ -613,14 +613,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::has_chi
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "has_children", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_has_children = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::cluster_id(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::ClusterId(  /* [out, retval] */ ULONG * pul_id )
 
 /*-----------------------------------------------------------
 	Cluster identifier.
@@ -636,14 +636,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::cluster
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "cluster_id", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+	*pul_id = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::is_eiffel_library(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::IsEiffelLibrary(  /* [out, retval] */ VARIANT_BOOL * pvb_eiffel_library )
 
 /*-----------------------------------------------------------
 	Is the cluster in the Eiffel library
@@ -659,14 +659,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::is_eiff
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_eiffel_library", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_eiffel_library = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::expanded_cluster_path(  /* [out, retval] */ BSTR * path )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::ExpandedClusterPath(  /* [out, retval] */ BSTR * pbstr_expanded_path )
 
 /*-----------------------------------------------------------
 	Full path to cluster with ISE_EIFFEL env var expanded.
@@ -685,18 +685,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::expande
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*path = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_expanded_path = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*path = NULL;
+		*pbstr_expanded_path = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::cluster_namespace(  /* [out, retval] */ BSTR * a_namespace )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::ClusterNamespace(  /* [out, retval] */ BSTR * pbstr_namespace )
 
 /*-----------------------------------------------------------
 	Cluster namespace.
@@ -715,18 +715,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::cluster
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*a_namespace = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_namespace = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*a_namespace = NULL;
+		*pbstr_namespace = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_cluster_namespace(  /* [in] */ BSTR a_namespace )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_ClusterNamespace(  /* [in] */ BSTR pbstr_namespace )
 
 /*-----------------------------------------------------------
 	Cluster namespace.
@@ -734,18 +734,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::set_clu
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_a_namespace = NULL;
-	if (a_namespace != NULL)
+	EIF_OBJECT tmp_pbstr_namespace = NULL;
+	if (pbstr_namespace != NULL)
 	{
-		tmp_a_namespace = eif_protect (rt_ce.ccom_ce_bstr (a_namespace));
+		tmp_pbstr_namespace = eif_protect (rt_ce.ccom_ce_bstr (pbstr_namespace));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_cluster_namespace", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_a_namespace != NULL) ? eif_access (tmp_a_namespace) : NULL));
-	if (tmp_a_namespace != NULL)
-		eif_wean (tmp_a_namespace);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_namespace != NULL) ? eif_access (tmp_pbstr_namespace) : NULL));
+	if (tmp_pbstr_namespace != NULL)
+		eif_wean (tmp_pbstr_namespace);
 	
 	END_ECATCH;
 	return S_OK;
@@ -937,7 +937,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				VARIANT_BOOL arg_4 = (VARIANT_BOOL)tmp_value [4]->boolVal;
 				
-				hr = set_assertions ( arg_0, arg_1, arg_2, arg_3, arg_4);
+				hr = SetAssertions ( arg_0, arg_1, arg_2, arg_3, arg_4);
 				
 				if (FAILED (hr))
 				{
@@ -968,7 +968,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				ecom_EiffelComCompiler::IEnumClusterExcludes * result = 0;
 				
-				hr = excluded (&result);
+				hr = Excluded (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1031,7 +1031,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = add_exclude ( arg_0);
+				hr = AddExclude ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1089,7 +1089,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = remove_exclude ( arg_0);
+				hr = RemoveExclude ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1120,7 +1120,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = is_eiffel_library (&result);
+				hr = IsEiffelLibrary (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1157,7 +1157,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = name (&result);
+				hr = Name (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1194,7 +1194,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = cluster_path (&result);
+				hr = ClusterPath (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1255,7 +1255,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_cluster_path ( arg_0);
+				hr = set_ClusterPath ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1287,7 +1287,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = override (&result);
+				hr = Override (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1348,7 +1348,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
 				
-				hr = set_override ( arg_0);
+				hr = set_Override ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1380,7 +1380,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = is_library (&result);
+				hr = IsLibrary (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1441,7 +1441,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
 				
-				hr = set_is_library ( arg_0);
+				hr = set_IsLibrary ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1473,7 +1473,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = all (&result);
+				hr = All (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1534,7 +1534,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
 				
-				hr = set_all ( arg_0);
+				hr = set_All ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1566,7 +1566,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = use_system_default (&result);
+				hr = UseSystemDefault (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1627,7 +1627,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
 				
-				hr = set_use_system_default ( arg_0);
+				hr = set_UseSystemDefault ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1659,7 +1659,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_require_by_default (&result);
+				hr = EvaluateRequireByDefault (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1696,7 +1696,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_ensure_by_default (&result);
+				hr = EvaluateEnsureByDefault (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1733,7 +1733,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_check_by_default (&result);
+				hr = EvaluateCheckByDefault (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1770,7 +1770,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_loop_by_default (&result);
+				hr = EvaluateLoopByDefault (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1807,7 +1807,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_invariant_by_default (&result);
+				hr = EvaluateInvariantByDefault (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1844,7 +1844,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = parent_name (&result);
+				hr = ParentName (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1881,7 +1881,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = has_parent (&result);
+				hr = HasParent (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1918,7 +1918,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				ecom_EiffelComCompiler::IEnumClusterProp * result = 0;
 				
-				hr = subclusters (&result);
+				hr = Subclusters (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1955,7 +1955,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = has_children (&result);
+				hr = HasChildren (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1992,7 +1992,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				ULONG result = 0;
 				
-				hr = cluster_id (&result);
+				hr = ClusterId (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2029,7 +2029,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = expanded_cluster_path (&result);
+				hr = ExpandedClusterPath (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2066,7 +2066,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = cluster_namespace (&result);
+				hr = ClusterNamespace (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2127,7 +2127,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_cluster_namespace ( arg_0);
+				hr = set_ClusterNamespace ( arg_0);
 				
 				if (FAILED (hr))
 				{

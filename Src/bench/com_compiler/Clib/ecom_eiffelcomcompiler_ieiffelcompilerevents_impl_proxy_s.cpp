@@ -167,7 +167,7 @@ void ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy::ccom_should_conti
 	};
 	rt_ce.ccom_ce_pointed_boolean ((VARIANT_BOOL *)tmp_pvb_continue, pvb_continue);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_240 (tmp_pvb_continue);
+	grt_ce_ISE.ccom_free_memory_pointed_237 (tmp_pvb_continue);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

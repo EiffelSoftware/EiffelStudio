@@ -32,7 +32,7 @@ class IEiffelProject_impl_proxy;
 
 #include "ecom_EiffelComCompiler_IEiffelCompletionInfo_s.h"
 
-#include "ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_s.h"
+#include "ecom_EiffelComCompiler_IEiffelHtmlDocumentationGenerator_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,13 +51,19 @@ public:
 	/*-----------------------------------------------------------
 	Retrieve Eiffel Project
 	-----------------------------------------------------------*/
-	void ccom_retrieve_eiffel_project(  /* [in] */ EIF_OBJECT a_project_file_name );
+	void ccom_retrieve_eiffel_project(  /* [in] */ EIF_OBJECT bstr_project_file_name );
 
 
 	/*-----------------------------------------------------------
-	Create new Eiffel project.
+	Create new Eiffel project from an existing ace file.
 	-----------------------------------------------------------*/
-	void ccom_create_eiffel_project(  /* [in] */ EIF_OBJECT a_ace_file_name,  /* [in] */ EIF_OBJECT a_project_directory_path );
+	void ccom_create_eiffel_project(  /* [in] */ EIF_OBJECT bstr_ace_file_name,  /* [in] */ EIF_OBJECT bstr_project_directory );
+
+
+	/*-----------------------------------------------------------
+	Create new Eiffel project from scratch.
+	-----------------------------------------------------------*/
+	void ccom_generate_new_eiffel_project(  /* [in] */ EIF_OBJECT bstr_project_name,  /* [in] */ EIF_OBJECT bstr_ace_file_name,  /* [in] */ EIF_OBJECT bstr_root_class_name,  /* [in] */ EIF_OBJECT bstr_creation_routine,  /* [in] */ EIF_OBJECT bstr_project_directory );
 
 
 	/*-----------------------------------------------------------
@@ -81,7 +87,7 @@ public:
 	/*-----------------------------------------------------------
 	Is project valid?
 	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_valid_project(  );
+	EIF_BOOLEAN ccom_is_valid_project(  );
 
 
 	/*-----------------------------------------------------------
@@ -129,7 +135,7 @@ public:
 	/*-----------------------------------------------------------
 	Help documentation generator
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_html_doc_generator(  );
+	EIF_REFERENCE ccom_html_documentation_generator(  );
 
 
 	/*-----------------------------------------------------------

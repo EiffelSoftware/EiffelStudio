@@ -52,19 +52,19 @@ public:
 	/*-----------------------------------------------------------
 	Wipe out current list of assemblies
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP wipe_out( void ) = 0;
+	virtual STDMETHODIMP FlushAssemblies( void ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Add an assembly to the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_assembly(  /* [in] */ BSTR a_prefix, /* [in] */ BSTR a_cluster_name, /* [in] */ BSTR a_path, /* [in] */ VARIANT_BOOL a_copy ) = 0;
+	virtual STDMETHODIMP AddAssembly(  /* [in] */ BSTR bstr_prefix, /* [in] */ BSTR bstr_cluster_name, /* [in] */ BSTR bstr_file_name, /* [in] */ VARIANT_BOOL vb_copy_locally ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Last execption to occur
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP last_exception(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * p_exception ) = 0;
+	virtual STDMETHODIMP LastException(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * p_exception ) = 0;
 
 
 	/*-----------------------------------------------------------

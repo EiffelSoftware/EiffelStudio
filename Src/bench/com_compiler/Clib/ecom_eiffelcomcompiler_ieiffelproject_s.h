@@ -77,11 +77,11 @@ class IEiffelCompletionInfo;
 
 
 
-#ifndef __ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_FWD_DEFINED__
-#define __ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_FWD_DEFINED__
+#ifndef __ecom_EiffelComCompiler_IEiffelHtmlDocumentationGenerator_FWD_DEFINED__
+#define __ecom_EiffelComCompiler_IEiffelHtmlDocumentationGenerator_FWD_DEFINED__
 namespace ecom_EiffelComCompiler
 {
-class IEiffelHTMLDocGenerator;
+class IEiffelHtmlDocumentationGenerator;
 }
 #endif
 
@@ -102,85 +102,91 @@ public:
 	/*-----------------------------------------------------------
 	Retrieve Eiffel Project
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP retrieve_eiffel_project(  /* [in] */ BSTR a_project_file_name ) = 0;
+	virtual STDMETHODIMP RetrieveEiffelProject(  /* [in] */ BSTR bstr_project_file_name ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Create new Eiffel project.
+	Create new Eiffel project from an existing ace file.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP create_eiffel_project(  /* [in] */ BSTR a_ace_file_name, /* [in] */ BSTR a_project_directory_path ) = 0;
+	virtual STDMETHODIMP CreateEiffelProject(  /* [in] */ BSTR bstr_ace_file_name, /* [in] */ BSTR bstr_project_directory ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Create new Eiffel project from scratch.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateNewEiffelProject(  /* [in] */ BSTR bstr_project_name, /* [in] */ BSTR bstr_ace_file_name, /* [in] */ BSTR bstr_root_class_name, /* [in] */ BSTR bstr_creation_routine, /* [in] */ BSTR bstr_project_directory ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Full path to .epr file.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP project_file_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP ProjectFileName(  /* [out, retval] */ BSTR * pbstr_project_file_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Full path to Ace file.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ace_file_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP AceFileName(  /* [out, retval] */ BSTR * pbstr_ace_file_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Project directory.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP project_directory(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP ProjectDirectory(  /* [out, retval] */ BSTR * pbstr_project_directory ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is project valid?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP valid_project(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsValidProject(  /* [out, retval] */ VARIANT_BOOL * pvb_valid ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Last exception raised
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP last_exception(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * a_result ) = 0;
+	virtual STDMETHODIMP LastException(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * pp_ieiffel_exception ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Compiler.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP compiler(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompiler * * return_value ) = 0;
+	virtual STDMETHODIMP Compiler(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompiler * * pp_ieiffel_compiler ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Has system been compiled?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_compiled(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsCompiled(  /* [out, retval] */ VARIANT_BOOL * pvb_compiled ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Has the project updated since last compilation?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP project_has_updated(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP ProjectHasUpdated(  /* [out, retval] */ VARIANT_BOOL * pvb_updated ) = 0;
 
 
 	/*-----------------------------------------------------------
 	System Browser.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP system_browser(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemBrowser * * return_value ) = 0;
+	virtual STDMETHODIMP SystemBrowser(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemBrowser * * pp_eiffel_system_browser ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Project Properties.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP project_properties(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelProjectProperties * * return_value ) = 0;
+	virtual STDMETHODIMP ProjectProperties(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelProjectProperties * * pp_ieiffel_project_properties ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Completion information
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP completion_information(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompletionInfo * * return_value ) = 0;
+	virtual STDMETHODIMP CompletionInformation(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompletionInfo * * pp_ieiffel_completion_info ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Help documentation generator
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP html_doc_generator(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * * return_value ) = 0;
+	virtual STDMETHODIMP HtmlDocumentationGenerator(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelHtmlDocumentationGenerator * * pp_ieiffel_html_documentation_generator ) = 0;
 
 
 

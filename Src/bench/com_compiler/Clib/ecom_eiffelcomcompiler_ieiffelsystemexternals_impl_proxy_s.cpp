@@ -92,6 +92,276 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_la
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_add_include_path(  /* [in] */ EIF_OBJECT bstr_path )
+
+/*-----------------------------------------------------------
+	Add a include path to the project.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemExternals == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_bstr_path = 0;
+	tmp_bstr_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_path));
+	
+	hr = p_IEiffelSystemExternals->AddIncludePath(tmp_bstr_path);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_bstr_path);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_remove_include_path(  /* [in] */ EIF_OBJECT bstr_path )
+
+/*-----------------------------------------------------------
+	Remove a include path from the project.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemExternals == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_bstr_path = 0;
+	tmp_bstr_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_path));
+	
+	hr = p_IEiffelSystemExternals->RemoveIncludePath(tmp_bstr_path);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_bstr_path);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_replace_include_path(  /* [in] */ EIF_OBJECT bstr_path,  /* [in] */ EIF_OBJECT bstr_old_path )
+
+/*-----------------------------------------------------------
+	Replace an include path in the project.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemExternals == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_bstr_path = 0;
+	tmp_bstr_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_path));
+	BSTR tmp_bstr_old_path = 0;
+	tmp_bstr_old_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_old_path));
+	
+	hr = p_IEiffelSystemExternals->ReplaceIncludePath(tmp_bstr_path,tmp_bstr_old_path);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_bstr_path);
+rt_ce.free_memory_bstr (tmp_bstr_old_path);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_include_paths(  )
+
+/*-----------------------------------------------------------
+	Include paths.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemExternals == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	ecom_EiffelComCompiler::IEnumIncludePaths * ret_value = 0;
+	
+	hr = p_IEiffelSystemExternals->IncludePaths( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_218 (ret_value));
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_add_object_file(  /* [in] */ EIF_OBJECT bstr_file_name )
+
+/*-----------------------------------------------------------
+	Add a object file to the project.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemExternals == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_bstr_file_name = 0;
+	tmp_bstr_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_file_name));
+	
+	hr = p_IEiffelSystemExternals->AddObjectFile(tmp_bstr_file_name);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_bstr_file_name);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_remove_object_file(  /* [in] */ EIF_OBJECT bstr_file_name )
+
+/*-----------------------------------------------------------
+	Remove a object file from the project.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemExternals == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_bstr_file_name = 0;
+	tmp_bstr_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_file_name));
+	
+	hr = p_IEiffelSystemExternals->RemoveObjectFile(tmp_bstr_file_name);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_bstr_file_name);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_replace_object_file(  /* [in] */ EIF_OBJECT bstr_file_name,  /* [in] */ EIF_OBJECT bstr_old_file_name )
+
+/*-----------------------------------------------------------
+	Replace an object file in the project.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemExternals == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_bstr_file_name = 0;
+	tmp_bstr_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_file_name));
+	BSTR tmp_bstr_old_file_name = 0;
+	tmp_bstr_old_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_old_file_name));
+	
+	hr = p_IEiffelSystemExternals->ReplaceObjectFile(tmp_bstr_file_name,tmp_bstr_old_file_name);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_bstr_file_name);
+rt_ce.free_memory_bstr (tmp_bstr_old_file_name);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_object_files(  )
+
+/*-----------------------------------------------------------
+	Object files.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemExternals == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	ecom_EiffelComCompiler::IEnumObjectFiles * ret_value = 0;
+	
+	hr = p_IEiffelSystemExternals->ObjectFiles( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_221 (ret_value));
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_store()
 
 /*-----------------------------------------------------------
@@ -116,276 +386,6 @@ void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_store()
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_add_include_path(  /* [in] */ EIF_OBJECT include_path )
-
-/*-----------------------------------------------------------
-	Add a include path to the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemExternals == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_include_path = 0;
-	tmp_include_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (include_path));
-	
-	hr = p_IEiffelSystemExternals->add_include_path(tmp_include_path);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_include_path);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_remove_include_path(  /* [in] */ EIF_OBJECT include_path )
-
-/*-----------------------------------------------------------
-	Remove a include path from the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemExternals == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_include_path = 0;
-	tmp_include_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (include_path));
-	
-	hr = p_IEiffelSystemExternals->remove_include_path(tmp_include_path);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_include_path);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_replace_include_path(  /* [in] */ EIF_OBJECT new_include_path,  /* [in] */ EIF_OBJECT old_include_path )
-
-/*-----------------------------------------------------------
-	Replace an include path in the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemExternals == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_new_include_path = 0;
-	tmp_new_include_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (new_include_path));
-	BSTR tmp_old_include_path = 0;
-	tmp_old_include_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (old_include_path));
-	
-	hr = p_IEiffelSystemExternals->replace_include_path(tmp_new_include_path,tmp_old_include_path);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_new_include_path);
-rt_ce.free_memory_bstr (tmp_old_include_path);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_include_paths(  )
-
-/*-----------------------------------------------------------
-	Include paths.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemExternals == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	ecom_EiffelComCompiler::IEnumIncludePaths * ret_value = 0;
-	
-	hr = p_IEiffelSystemExternals->include_paths( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_219 (ret_value));
-	return eif_wean (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_add_object_file(  /* [in] */ EIF_OBJECT object_file )
-
-/*-----------------------------------------------------------
-	Add a object file to the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemExternals == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_object_file = 0;
-	tmp_object_file = (BSTR)rt_ec.ccom_ec_bstr (eif_access (object_file));
-	
-	hr = p_IEiffelSystemExternals->add_object_file(tmp_object_file);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_object_file);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_remove_object_file(  /* [in] */ EIF_OBJECT object_file )
-
-/*-----------------------------------------------------------
-	Remove a object file from the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemExternals == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_object_file = 0;
-	tmp_object_file = (BSTR)rt_ec.ccom_ec_bstr (eif_access (object_file));
-	
-	hr = p_IEiffelSystemExternals->remove_object_file(tmp_object_file);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_object_file);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_replace_object_file(  /* [in] */ EIF_OBJECT new_include_path,  /* [in] */ EIF_OBJECT old_object_file )
-
-/*-----------------------------------------------------------
-	Replace an object file in the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemExternals == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_new_include_path = 0;
-	tmp_new_include_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (new_include_path));
-	BSTR tmp_old_object_file = 0;
-	tmp_old_object_file = (BSTR)rt_ec.ccom_ec_bstr (eif_access (old_object_file));
-	
-	hr = p_IEiffelSystemExternals->replace_object_file(tmp_new_include_path,tmp_old_object_file);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_new_include_path);
-rt_ce.free_memory_bstr (tmp_old_object_file);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy::ccom_object_files(  )
-
-/*-----------------------------------------------------------
-	Object files.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemExternals == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemExternals_, (void **)&p_IEiffelSystemExternals);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	ecom_EiffelComCompiler::IEnumObjectFiles * ret_value = 0;
-	
-	hr = p_IEiffelSystemExternals->object_files( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_222 (ret_value));
-	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

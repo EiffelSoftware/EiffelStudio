@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::~IEnumIncludePaths_impl_stu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Next(  /* [out] */ BSTR * rgelt, /* [out] */ ULONG * pcelt_fetched )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Next(  /* [out] */ BSTR * pbstr_include_path, /* [out] */ ULONG * pul_fetched )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -43,33 +43,33 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Next(  /* [out
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_rgelt = NULL;
-	if (rgelt != NULL)
+	EIF_OBJECT tmp_pbstr_include_path = NULL;
+	if (pbstr_include_path != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_224 (rgelt, NULL));
+		tmp_pbstr_include_path = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_223 (pbstr_include_path, NULL));
 	}
-	EIF_OBJECT tmp_pcelt_fetched = NULL;
-	if (pcelt_fetched != NULL)
+	EIF_OBJECT tmp_pul_fetched = NULL;
+	if (pul_fetched != NULL)
 	{
-		tmp_pcelt_fetched = eif_protect (rt_ce.ccom_ce_pointed_unsigned_long (pcelt_fetched, NULL));
+		tmp_pul_fetched = eif_protect (rt_ce.ccom_ce_pointed_unsigned_long (pul_fetched, NULL));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("next", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_rgelt != NULL) ? eif_access (tmp_rgelt) : NULL), ((tmp_pcelt_fetched != NULL) ? eif_access (tmp_pcelt_fetched) : NULL));
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_include_path != NULL) ? eif_access (tmp_pbstr_include_path) : NULL), ((tmp_pul_fetched != NULL) ? eif_access (tmp_pul_fetched) : NULL));
 	
-	if (*rgelt != NULL)
-		rt_ce.free_memory_bstr (*rgelt);
-	grt_ec_ISE.ccom_ec_pointed_cell_224 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
-	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
+	if (*pbstr_include_path != NULL)
+		rt_ce.free_memory_bstr (*pbstr_include_path);
+	grt_ec_ISE.ccom_ec_pointed_cell_223 (((tmp_pbstr_include_path != NULL) ? eif_wean (tmp_pbstr_include_path) : NULL), pbstr_include_path);
+	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pul_fetched != NULL) ? eif_wean (tmp_pul_fetched) : NULL), pul_fetched);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Skip(  /* [in] */ ULONG celt )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Skip(  /* [in] */ ULONG ul_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -77,12 +77,12 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Skip(  /* [in]
 {
 	ECATCH;
 
-	EIF_INTEGER tmp_celt = (EIF_INTEGER)celt;
+	EIF_INTEGER tmp_ul_count = (EIF_INTEGER)ul_count;
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("skip", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_celt);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_ul_count);
 	
 	END_ECATCH;
 	return S_OK;
@@ -106,7 +106,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumIncludePaths * * ppenum )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumIncludePaths * * pp_ienum_include_paths )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -114,29 +114,29 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Clone(  /* [ou
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_ppenum = NULL;
-	if (ppenum != NULL)
+	EIF_OBJECT tmp_pp_ienum_include_paths = NULL;
+	if (pp_ienum_include_paths != NULL)
 	{
-		tmp_ppenum = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_220 (ppenum, NULL));
-		if (*ppenum != NULL)
-			(*ppenum)->AddRef ();
+		tmp_pp_ienum_include_paths = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_219 (pp_ienum_include_paths, NULL));
+		if (*pp_ienum_include_paths != NULL)
+			(*pp_ienum_include_paths)->AddRef ();
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("clone1", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_ppenum != NULL) ? eif_access (tmp_ppenum) : NULL));
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pp_ienum_include_paths != NULL) ? eif_access (tmp_pp_ienum_include_paths) : NULL));
 	
-	if (*ppenum != NULL)
-		(*ppenum)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_220 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
+	if (*pp_ienum_include_paths != NULL)
+		(*pp_ienum_include_paths)->Release ();
+	grt_ec_ISE.ccom_ec_pointed_cell_219 (((tmp_pp_ienum_include_paths != NULL) ? eif_wean (tmp_pp_ienum_include_paths) : NULL), pp_ienum_include_paths);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::ith_item(  /* [in] */ ULONG an_index, /* [out] */ BSTR * rgelt )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::IthItem(  /* [in] */ ULONG ul_index, /* [out] */ BSTR * pbstr_include_path )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -144,28 +144,28 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::ith_item(  /* 
 {
 	ECATCH;
 
-	EIF_INTEGER tmp_an_index = (EIF_INTEGER)an_index;
-	EIF_OBJECT tmp_rgelt = NULL;
-	if (rgelt != NULL)
+	EIF_INTEGER tmp_ul_index = (EIF_INTEGER)ul_index;
+	EIF_OBJECT tmp_pbstr_include_path = NULL;
+	if (pbstr_include_path != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_226 (rgelt, NULL));
+		tmp_pbstr_include_path = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_225 (pbstr_include_path, NULL));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("ith_item", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_an_index, ((tmp_rgelt != NULL) ? eif_access (tmp_rgelt) : NULL));
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_ul_index, ((tmp_pbstr_include_path != NULL) ? eif_access (tmp_pbstr_include_path) : NULL));
 	
-	if (*rgelt != NULL)
-		rt_ce.free_memory_bstr (*rgelt);
-	grt_ec_ISE.ccom_ec_pointed_cell_226 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	if (*pbstr_include_path != NULL)
+		rt_ce.free_memory_bstr (*pbstr_include_path);
+	grt_ec_ISE.ccom_ec_pointed_cell_225 (((tmp_pbstr_include_path != NULL) ? eif_wean (tmp_pbstr_include_path) : NULL), pbstr_include_path);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::Count(  /* [out, retval] */ ULONG * pul_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -181,7 +181,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumIncludePaths_impl_stub::count(  /* [ou
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+	*pul_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;

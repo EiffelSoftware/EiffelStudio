@@ -119,7 +119,7 @@ struct ctable {
 /* Information on generic types. The structure records the number of generic
  * parameters and an array which gives the type ids for every possible meta-
  * type as defined in the compiler (i.e. simple types plus expandeds).
- * The array gt_gen holds patterns like [INTERGER, REFERENCE] in an unstructured
+ * The array gt_gen holds patterns like [INTEGER, REFERENCE] in an unstructured
  * way (i.e. they are simply gathered in a whole array, for static intialization
  * purposes). The end of the array is signaled by a *single* SK_INVALID marker.
  * All the types are skeleton types as declared in eif_struct.h. For references,

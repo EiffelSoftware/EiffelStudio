@@ -44,17 +44,17 @@ feature {NONE} -- Shared tools access
 				(not select_tool.destroyed)
 		end
 
---	system_tool: EB_SYSTEM_TOOL is
---			-- Unique assembly tool
---		do
---			Result := System_tool_cell.item
---		end
+	system_tool: EB_SYSTEM_TOOL is
+			-- Unique assembly tool
+		do
+			Result := System_tool_cell.item
+		end
 
---	system_tool_is_valid: BOOLEAN is
---		do
---			Result := (system_tool /= Void) and then
---				(not system_tool.destroyed)
---		end
+	system_tool_is_valid: BOOLEAN is
+		do
+			Result := (system_tool /= Void) and then
+				(not system_tool.destroyed)
+		end
 
 	preference_tool: EB_PREFERENCE_TOOL is
 			-- The preference tool
@@ -112,11 +112,11 @@ feature {NONE} -- Shared tools change
 			Select_tool_cell.put (tool)
 		end
 
---	set_system_tool (tool: EB_SYSTEM_TOOL) is
---			-- Unique assembly tool
---		do
---			System_tool_cell.put (tool)
---		end
+	set_system_tool (tool: EB_SYSTEM_TOOL) is
+			-- Unique assembly tool
+		do
+			System_tool_cell.put (tool)
+		end
 
 	set_preference_tool (tool: EB_PREFERENCE_TOOL) is
 			-- makes `tool' the shared preference tool
@@ -214,11 +214,11 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
---	System_tool_cell: CELL [EB_SYSTEM_TOOL] is
---			-- Cell for the profile tool
---		once
---			create Result.put (Void)
---		end
+	System_tool_cell: CELL [EB_SYSTEM_TOOL] is
+			-- Cell for the profile tool
+		once
+			create Result.put (Void)
+		end
 
 	Preference_tool_cell: CELL [EB_PREFERENCE_TOOL] is
 			-- Cell for the preference tool

@@ -734,18 +734,6 @@ feature -- Update
 
 feature -- Output
 
-	save_upon_exiting is
-			-- When quitting, we need to clear all the unused files
-			-- and then if the project has not yet been saved upon a 
-			-- successful compilation we save it.
-		do
-				-- Purge uselss files
-			Comp_system.prepare_before_saving (True)
-			Comp_system.tmp_purge
-
-			save_project
-		end
-
 	save_project is
 			-- Clear the servers and save the system structures
 			-- to disk.

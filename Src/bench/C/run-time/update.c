@@ -712,7 +712,7 @@ rt_public void option_updt(void)
 		case BCAS_INVARIANT:	as_level = AS_INVARIANT;	break;
 		case BCAS_LOOP:			as_level = AS_LOOP;			break;
 		case BCAS_CHECK:		as_level = AS_CHECK;		break;
-		default:				eiffel_panic(MTC "invalid assertion level");
+		default:				eif_panic(MTC "invalid assertion level");
 		}
 		current->assert_level = as_level;
 
@@ -743,7 +743,7 @@ rt_public void option_updt(void)
 							keys[i] = debug_tag;
 						}
 						break;
-		default:		eiffel_panic(MTC "invalid debug level");
+		default:		eif_panic(MTC "invalid debug level");
 		}
 		debug_opt->debug_level = debug_level;
 		wread(&c, 1);		   /* Assertion level byte code */
@@ -753,7 +753,7 @@ rt_public void option_updt(void)
 	break;
 		case BC_YES:			o_level = OPT_ALL;
 	break;
-		default:			eiffel_panic(MTC "invalid trace level");
+		default:			eif_panic(MTC "invalid trace level");
 		}
 		current->trace_level = o_level;
 
@@ -764,7 +764,7 @@ rt_public void option_updt(void)
 	break;
 		case BC_YES:		    o_level = OPT_ALL;
 	break;
-		default:			eiffel_panic(MTC "invalid profile level");
+		default:			eif_panic(MTC "invalid profile level");
 		}
 		current->profile_level = o_level;
 	}

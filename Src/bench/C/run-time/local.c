@@ -107,11 +107,11 @@ rt_public void epop(register struct stack *stk, register int nb_items)
 
 #ifdef MAY_PANIC
 	/* Now either 's' is NULL and we made a mistake because we asked for
-	 * more items than there actually were held in the stack. So eiffel_panic.
+	 * more items than there actually were held in the stack. So eif_panic.
 	 * Otherwise 'top' is correctly set and 's' is the new current chunk.
 	 */
 	if (s == (struct stchunk *) 0)
-		eiffel_panic("run-time stack botched");
+		eif_panic("run-time stack botched");
 #endif
 
 	/* Update stack structure */
@@ -270,7 +270,7 @@ rt_public char **eget(register int num)
 			enomem(MTC_NOARG);							/* Critical exception */
 
 		if (num > (loc_set.st_end - top))	/* Not enough room in chunk */
-			eiffel_panic(MTC "out of locals");			/* Panic, that's all we can do */
+			eif_panic(MTC "out of locals");			/* Panic, that's all we can do */
 
 		loc_set.st_top += num;				/* Reserve room for variables */
 
@@ -290,7 +290,7 @@ rt_public char **eget(register int num)
 	/* Fill in the end of the current chunk with zeros and advance to the the
 	 * next chunk if there is one. Otherwise, extend the stack. Anyway, make
 	 * sure there is enough room (in case we had to get an urgent chunk, this
-	 * is likely). In that case however, we do not eiffel_panic, we raise an "Out of
+	 * is likely). In that case however, we do not eif_panic, we raise an "Out of
 	 * memory" exception.
 	 */
 
@@ -319,7 +319,7 @@ rt_public char **eget(register int num)
 
 	if (num > (loc_set.st_end - top)) {	/* Not enough room in chunk */
 		if (num > STACK_CHUNK)			/* Too many locals requested */
-			eiffel_panic(MTC "out of locals");		/* Panic, that's all we can do */
+			eif_panic(MTC "out of locals");		/* Panic, that's all we can do */
 		else {							/* The chunk is too small */
 			eback(saved_top);			/* Restore original stack context */
 			enomem(MTC_NOARG);					/* This is an exception */
@@ -359,14 +359,14 @@ rt_public void eback(register char **top)
 
 #ifdef MAY_PANIC
 	if (loc_set.st_cur == (struct stchunk *) 0)	/* No previous chunk ? */
-		eiffel_panic("local stack underflow");			/* That's a critical event */
+		eif_panic("local stack underflow");			/* That's a critical event */
 #endif
 
 	loc_set.st_end = loc_set.st_cur->sk_end;	/* Update the end of chunk */
 
 #ifdef MAY_PANIC
 	if (top < loc_set.st_cur->sk_arena || top > loc_set.st_end)
-		eiffel_panic("local stack inconsistency");
+		eif_panic("local stack inconsistency");
 #endif
 
 	SIGRESUME;		/* Leaving critical section */
@@ -442,7 +442,7 @@ rt_shared void initstk(void)
 		top = st_alloc(&hec_stack, STACK_CHUNK);
 
 	if (top == (char **) 0)
-		eiffel_panic(MTC "can't create runtime stacks");
+		eif_panic(MTC "can't create runtime stacks");
 
 #ifdef WORKBENCH
 	initdb();				/* Initialize debugger stack */
@@ -467,7 +467,7 @@ rt_shared void initstk(void)
 
 #define DEBUG 0			/* So that we get debugging routines/tests */
 #define lint			/* Avoid definition of rcsid */
-#include "eiffel_malloc.c"
+#include "eif_malloc.c"
 #include "garcol.c"
 #include "timer.c"
 #include "urgent.c"
@@ -554,13 +554,13 @@ rt_private void stack_stats(void)
 }
 
 /* Functions not provided here */
-rt_public void eiffel_panic(char *s)
+rt_public void eif_panic(char *s)
 {
 	printf("PANIC: %s\n", s);
 	exit(1);
 }
 
-rt_public void eraise(int val, char *tag)		/* %%zs incoherent with other definitions (see bits.c:964, except.c:132, garcol.c:3901, eiffel_malloc.c:3495 */
+rt_public void eraise(int val, char *tag)		/* %%zs incoherent with other definitions (see bits.c:964, except.c:132, garcol.c:3901, eif_malloc.c:3495 */
 {
 	xraise(val);
 }

@@ -203,7 +203,7 @@
 /*--------------------------------------------------------*/
 
 /* The following are implementation error messages */
-#define CURIMPERR15	"    Fail in eiffel_malloc memory(%s)!"
+#define CURIMPERR15	"    Fail in eif_malloc memory(%s)!"
 #define CURIMPERR16	"    Expect ACK_FOR_PROCEDURE/QUERY_RESULT but got %s!"
 
 /* The following are application error messages */

@@ -201,11 +201,11 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	GetModuleFileName (NULL, modulename, MAX_PATH);
 	appl_len = rindex (modulename, '.') - rindex (modulename, '\\') -1;
 	key_len = strlen (eif_access(k));
-	if ((key = (char *) eiffel_calloc (appl_len + 46+key_len, 1)) == NULL)
+	if ((key = (char *) eif_calloc (appl_len + 46+key_len, 1)) == NULL)
 		return (EIF_INTEGER) -1;
 
-	if ((lower_k = (char *) eiffel_calloc (key_len+1, 1)) == NULL) {
-		eiffel_free (key);
+	if ((lower_k = (char *) eif_calloc (key_len+1, 1)) == NULL) {
+		eif_free (key);
 		return (EIF_INTEGER) -1;
 	}
 
@@ -216,19 +216,19 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
 	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
-		eiffel_free (key);
-		eiffel_free (lower_k);
+		eif_free (key);
+		eif_free (lower_k);
 		return (EIF_INTEGER) -1;
 	}
 	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, eif_access(v), strlen(eif_access(v))+1) != ERROR_SUCCESS) {
-		eiffel_free (key);
-		eiffel_free (lower_k);
+		eif_free (key);
+		eif_free (lower_k);
 		RegCloseKey (hkey);
 		return (EIF_INTEGER) -1;
 	}
 
-	eiffel_free (key);
-	eiffel_free (lower_k);
+	eif_free (key);
+	eif_free (lower_k);
 	if ((disp = RegFlushKey (hkey)) != ERROR_SUCCESS)
 		return 0;
 	if ((disp = RegCloseKey (hkey)) != ERROR_SUCCESS)
@@ -242,7 +242,7 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	l1 = strlen(eif_access(k));
 	l2 = strlen(eif_access(v));
 
-	if ((new_string = (char*)eiffel_malloc (l1+l2+2)) == (char*)0)
+	if ((new_string = (char*)eif_malloc (l1+l2+2)) == (char*)0)
 		return (EIF_INTEGER)-1;
 
 	strcpy (new_string, eif_access(k));
@@ -267,11 +267,11 @@ rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 	GetModuleFileName (NULL, modulename, MAX_PATH);
 	appl_len = rindex (modulename, '.') - rindex (modulename, '\\') -1;
 	key_len = strlen (k);
-	if ((key = (char *) eiffel_calloc (appl_len + 46 +key_len, 1)) == NULL)
+	if ((key = (char *) eif_calloc (appl_len + 46 +key_len, 1)) == NULL)
 		return (EIF_OBJ) 0;
 
-	if ((lower_k = (char *) eiffel_calloc (key_len+1, 1)) == NULL) {
-		eiffel_free (key);
+	if ((lower_k = (char *) eif_calloc (key_len+1, 1)) == NULL) {
+		eif_free (key);
 		return (EIF_OBJ) 0;
 	}
 
@@ -282,21 +282,21 @@ rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
 	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
-		eiffel_free (key);
-		eiffel_free (lower_k);
+		eif_free (key);
+		eif_free (lower_k);
 		return (EIF_OBJ) 0;
 	}
 
 	bsize = 1024;
 	if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
-		eiffel_free (key);
-		eiffel_free (lower_k);
+		eif_free (key);
+		eif_free (lower_k);
 		RegCloseKey (hkey);
 		return (EIF_OBJ) getenv (k);
 	}
 
-	eiffel_free (key);
-	eiffel_free (lower_k);
+	eif_free (key);
+	eif_free (lower_k);
 	RegCloseKey (hkey);
 	return (EIF_OBJ) buf;
 #else
@@ -357,7 +357,7 @@ rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 
 #ifdef MAY_PANIC
 	if ((char *(*)()) 0 == init)		/* There MUST be a routine */
-		eiffel_panic("init routine lost");
+		eif_panic("init routine lost");
 #endif
 	
 	/* Initialize expanded objects from 0 to (j - 1) */
@@ -495,7 +495,7 @@ HANDLE eif_load_dll(char *module_name)
 	int i;
 
 	if (eif_dll_table == (struct eif_dll_info *) 0) {
-		eif_dll_table = eiffel_malloc(sizeof(struct eif_dll_info) * eif_dll_capacity);
+		eif_dll_table = eif_malloc(sizeof(struct eif_dll_info) * eif_dll_capacity);
 		if (eif_dll_table == (struct eif_dll_info *) 0)
 			enomem(MTC_NOARG);
 	}
@@ -508,13 +508,13 @@ HANDLE eif_load_dll(char *module_name)
 
 	if (eif_dll_count == eif_dll_capacity) {
 		eif_dll_capacity += EIF_DLL_CHUNK;
-		eif_dll_table = eiffel_realloc(eif_dll_table, sizeof(struct eif_dll_info) * eif_dll_capacity);
+		eif_dll_table = eif_realloc(eif_dll_table, sizeof(struct eif_dll_info) * eif_dll_capacity);
 
 		if (eif_dll_table == (struct eif_dll_info *) 0)
 			enomem(MTC_NOARG);
 	}
 
-	if ((m_name = (char *) eiffel_malloc(strlen(module_name)+1)) == (char *) 0)
+	if ((m_name = (char *) eif_malloc(strlen(module_name)+1)) == (char *) 0)
 		enomem(MTC_NOARG);
 	strcpy (m_name, module_name);
 
@@ -535,13 +535,13 @@ void eif_free_dlls(void)
 
 	if (eif_dll_table) {
 		for (i=0; i< eif_dll_count; i++) {
-			eiffel_free(eif_dll_table[i].dll_name);
+			eif_free(eif_dll_table[i].dll_name);
 
 			module_ptr = eif_dll_table[i].dll_module_ptr;
 			if (module_ptr != NULL)
 				(void) FreeLibrary(module_ptr);
 		}
-		eiffel_free(eif_dll_table);
+		eif_free(eif_dll_table);
 	}
 }
 

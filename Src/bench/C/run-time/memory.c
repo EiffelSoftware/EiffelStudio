@@ -106,7 +106,7 @@ rt_public void mem_tiny(void)
 
 #ifdef MAY_PANIC
 	if (gen_scavenge != GS_OFF)
-		eiffel_panic("memory flags corrupted");
+		eif_panic("memory flags corrupted");
 #endif
 	EIF_END_GET_CONTEXT
 }

@@ -61,15 +61,15 @@
 /*#define DEBUG 63		/* Activate debugging code */
 
 #ifdef MEMPANIC
-#define mempanic	eiffel_panic("memory inconsistency")
+#define mempanic	eif_panic("memory inconsistency")
 #else
 #define mempanic	fflush(stdout);
 #endif
 
 /* ALIGNMAX is the maximum between MEM_ALIGNBYTES and OVERHEAD. This is important
- * because eiffel_malloc always allocates a multiple of MEM_ALIGNBYTES but we are sure
+ * because eif_malloc always allocates a multiple of MEM_ALIGNBYTES but we are sure
  * there will always be room to split a block, even if we have to create a
- * null size one (i.e. only an header). Although eiffel_malloc used to work without
+ * null size one (i.e. only an header). Although eif_malloc used to work without
  * this feature, it appears to be essential for the scavenging process. The
  * reason is too long to be explained here, though--RAM.
  */
@@ -89,7 +89,7 @@
 #define ZONE_T      1           /* Scanning a generation scavenging zone */
 
 #ifndef EIF_THREADS
-/* The main data-structures for eiffel_malloc are filled-in statically at
+/* The main data-structures for eif_malloc are filled-in statically at
  * compiled time, so that no special initialization routine is
  * necessary. (Except in MT mode --ZS)
  */
@@ -458,7 +458,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 
 #ifdef MAY_PANIC
 		if ((char *(*)()) 0 == init)		/* There MUST be a routine */
-			eiffel_panic("init routine lost");
+			eif_panic("init routine lost");
 #endif
 
 		for (
@@ -697,7 +697,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 		if ((char *) 0 != result)
 			return result;				/* We must have it */
 
-		eiffel_panic(MTC inconsistency);
+		eif_panic(MTC inconsistency);
 	} /* end if cc_for_speed */
 
 	/* Call garbage collector if it is not turned off and restart our
@@ -716,7 +716,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 	 * There is a special case for nbytes = 0, because full_coalesc will return
 	 * 0 if no coalescing occurred by the test cannot be nbytes < full_coalesc
 	 * because there might be just the room for 'nbytes'. So in that case,
-	 * there is no inconsistency of we cannot allocate from the eiffel_free list after
+	 * there is no inconsistency of we cannot allocate from the eif_free list after
 	 * the coalescing process was run--RAM.
 	 */
 		
@@ -727,7 +727,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 				if ((char *) 0 != result)
 					return result;					/* We must have it */
 				if (nbytes)
-					eiffel_panic(MTC inconsistency);
+					eif_panic(MTC inconsistency);
 			}
 #ifdef HAS_SMART_MMAP
 			else {
@@ -742,7 +742,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 				if ((char *) 0 != result)
 					return result;					/* We must have it */
 				if (nbytes)
-					eiffel_panic(MTC inconsistency);
+					eif_panic(MTC inconsistency);
 			}
 #ifdef HAS_SMART_MMAP
 			else {
@@ -908,7 +908,7 @@ rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist,
 	/* Add_core() returns a pointer of the info zone of the sole block
 	 * currently in the new born chunk. We have to set the "type" of the
 	 * chunk correctly, along with the type of the block held in it (so that
-	 * a free can put the block back into the right eiffel_free list. Note that an
+	 * a free can put the block back into the right eif_free list. Note that an
 	 * Eiffel object may well be in a C chunk.
 	 */
 	chkbase = ((struct chunk *) selected) - 1;	/* Chunk info zone */
@@ -1066,7 +1066,7 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 			break;							/* OK, we got it */
 #else /* !HAS_SBRK */
 
-		oldbrk = (union overhead *) eiffel_malloc (asked); /* Use malloc() */
+		oldbrk = (union overhead *) eif_malloc (asked); /* Use malloc() */
 
 #ifdef DEBUG
 		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
@@ -1326,7 +1326,7 @@ rt_private int free_last_chunk(void)
 		return -1;						/* Propagate failure */
 	}
 #else
-    eiffel_free (last_chk);
+    eif_free (last_chk);
 #endif
 #endif
 
@@ -1777,7 +1777,7 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 		zone, nbytes);
 	if (zone->ov_flags & EO_SPEC) {
 		long *pointer = (long *) (ptr + (zone->ov_size & B_SIZE) - LNGPAD(2));
-		dprintf(16)("eiffel_realloc: special has count = %d, elemsize = %d\n",
+		dprintf(16)("eif_realloc: special has count = %d, elemsize = %d\n",
 			*pointer, *(pointer + 1));
 		if (zone->ov_flags & EO_REF)
 			dprintf(16)("realloc: special has object references\n");
@@ -2290,7 +2290,7 @@ rt_private void disconnect_free_list(register union overhead *next, register uin
 			for (p = hlist[i]; p; p = p->ov_next)
 				printf("\t0x%lx\n", p);
 #endif
-			eiffel_panic("free-list botched");
+			eif_panic("free-list botched");
 		}
 #endif
 
@@ -2568,7 +2568,7 @@ rt_private char *malloc_from_zone(unsigned int nbytes)
 	}
 
 	SIGBLOCK;								/* Block signals */
-	object = sc_from.sc_top;				/* First eiffel_free location */
+	object = sc_from.sc_top;				/* First eif_free location */
 	sc_from.sc_top += nbytes + ALIGNMAX;	/* Update free-location pointer */
 	((union overhead *) object)->ov_size = nbytes;	/* All flags cleared */
 	SIGRESUME;								/* Restore signal handling */
@@ -2691,7 +2691,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 #ifdef MAY_PANIC
 	/* Consitency check. We must have reached the top of the zone */
 	if ((char *) zone != top)
-		eiffel_panic("scavenge zone botched");
+		eif_panic("scavenge zone botched");
 #endif
 
 	/* If we did not reach the end of the scavenge zone, then there is at
@@ -2755,7 +2755,7 @@ rt_public void sc_stop(void)
 	EIF_GET_CONTEXT
 
 	gen_scavenge = GS_OFF;				/* Generation scavenging is off */
-	xfree(sc_to.sc_arena);				/* This one is completely eiffel_free */
+	xfree(sc_to.sc_arena);				/* This one is completely eif_free */
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
 
 	EIF_END_GET_CONTEXT
@@ -2858,7 +2858,7 @@ rt_shared char *eif_spset(char *object, unsigned int nbytes)
  * scan the memory and report inconsistencies on the standard output descriptor.
  * Messages referring to "block" give zone addresses whereas messages referring
  * to "object" give actual object addresses (i.e. the user pointer we got from
- * eiffel_malloc).
+ * eif_malloc).
  */
 
 #include <stdio.h>
@@ -3862,7 +3862,7 @@ rt_public void enomem(void)
 	eraise("Out of memory", 0);
 }
 
-rt_public void eiffel_panic(char *s)
+rt_public void eif_panic(char *s)
 {
 	printf("PANIC: %s\n", s);
 	exit(1);

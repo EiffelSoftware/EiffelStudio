@@ -903,7 +903,7 @@ rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 	case 19: /* Is file a socket */
 		return (EIF_INTEGER) (buf->st_mode & S_IFSOCK);
 	default:
-		eiffel_panic(MTC "illegal stat request");
+		eif_panic(MTC "illegal stat request");
     }
 	/* NOTREACHED */
 	return 0; /* to avoid a warning */
@@ -1017,7 +1017,7 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 		return (EIF_BOOLEAN) '\01';
 #endif
 	default:
-		eiffel_panic(MTC "illegal access request");
+		eif_panic(MTC "illegal access request");
 	}
 	/* NOTREACHED */
 	return 0;
@@ -1044,7 +1044,7 @@ rt_public EIF_BOOLEAN file_access(char *name, EIF_INTEGER op)
 	case 3: /* Test for read permission */
 		return (EIF_BOOLEAN) ((-1 != access(name, R_OK)) ? '\01' : '\0');
 	default:
-		eiffel_panic(MTC "illegal access request");
+		eif_panic(MTC "illegal access request");
 	}
 #endif
 }

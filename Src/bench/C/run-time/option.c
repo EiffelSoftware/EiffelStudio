@@ -619,7 +619,7 @@ void stop_profile(void)
 			update_class_table(item);		/* Record times */
 		} else {
 				/* Bad Luck! (Profile stack corrupted) */
-			eiffel_panic(MTC "Profile stack corrupted");
+			eif_panic(MTC "Profile stack corrupted");
 		}
 	}
 	EIF_END_GET_CONTEXT
@@ -722,7 +722,7 @@ struct prof_info* prof_stack_top(void)
 	if(prof_recording) {
 		char **top;
 
-		top = prof_stack->st_top;	/* Next eiffel_free location */
+		top = prof_stack->st_top;	/* Next eif_free location */
 		top -= 1;
 		if(top < prof_stack->st_cur->sk_arena) {
 				/* Oops, stack chunk ends here. Let's see if there is
@@ -790,7 +790,7 @@ void prof_stack_push(struct prof_info *new_item)
 	if(prof_recording) {
 		if(epush(prof_stack, (char *) new_item) == -1) {
 				/* Bad Luck! */
-			eiffel_panic(MTC "Push profile info failed.");
+			eif_panic(MTC "Push profile info failed.");
 		}
 	}
 }

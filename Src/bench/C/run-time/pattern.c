@@ -49,7 +49,7 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int p
 	 * the pattern. A 0 means an exact match. For efficiency reasons, I use a
 	 * special version of the algorithm for perfect matches, although the fuzzy
 	 * one is a generalization--RAM.
-	 * NB: as the fuzzy pattern matching uses eiffel_malloc(), the Eiffel side must
+	 * NB: as the fuzzy pattern matching uses eif_malloc(), the Eiffel side must
 	 * give us protected addresses.
 	 */
 

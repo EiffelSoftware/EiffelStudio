@@ -133,7 +133,7 @@ rt_public void exasrt(EIF_CONTEXT char *tag, int type);			/* Assertion record */
 rt_public void eraise(EIF_CONTEXT char *tag, long num);			/* Raises an Eiffel exception */
 rt_public void eviol(EIF_CONTEXT_NOARG);			/* Signals assertion violation */
 rt_public void exfail(EIF_CONTEXT_NOARG);			/* Signals: reached end of a rescue clause */
-rt_public void eiffel_panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
+rt_public void eif_panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
 rt_public void fatal_error(EIF_CONTEXT char *msg);			/* Run-time raised fatal errors */
 rt_shared void xraise(int code);			/* Raises an exception with no tag */
 rt_public struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object);	/* Set execution stack on routine entrance */
@@ -423,7 +423,7 @@ rt_public struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect)
 
 #ifdef MAY_PANIC
 	if (last_item->ex_type != EX_RESC)
-		eiffel_panic(botched);
+		eif_panic(botched);
 #endif
 
 	SIGBLOCK;				/* Critical section, protected against signals */
@@ -447,7 +447,7 @@ rt_public struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect)
 
 #ifdef MAY_PANIC
 	if (rout_vect->ex_type != EN_ILVL)
-		eiffel_panic(botched);
+		eif_panic(botched);
 #endif
 
 	expop(&eif_trace);					/* Remove EN_ILVL */
@@ -461,7 +461,7 @@ rt_public struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect)
 		rout_vect->ex_retry = 1;		/* Function has been retried */
 		break;							/* Ok for these two */
 	default:
-		eiffel_panic(botched);
+		eif_panic(botched);
 	}
 #else
 	rout_vect->ex_retry = 1;		/* Function has been retried */
@@ -747,7 +747,7 @@ rt_public void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect)
 		trace->ex_rescue = 1;		/* Signals entry in rescue clause */
 		break;
 	default:
-		eiffel_panic(botched);
+		eif_panic(botched);
 	}
 #else
 	trace->ex_rescue = 1;		/* Signals entry in rescue clause */
@@ -807,7 +807,7 @@ rt_public void eraise(EIF_CONTEXT char *tag, long num)
 		return;
 
 	if (echmem & MEM_FATAL)		/* In fatal error mode, panic! */
-		eiffel_panic(MTC "exception in fatal mode");
+		eif_panic(MTC "exception in fatal mode");
 
 	/* Excepted for EN_OMEM, check whether the user wants to ignore the
 	 * exception or not. If so, return immediately.
@@ -1035,7 +1035,7 @@ rt_public void ereturn(EIF_CONTEXT_NOARG)
 		longjmp(*rescue, echval);	/* Setjmp will return the exception code */ /* %%zs was longjmp(rescue,echval) */
 #endif
 
-	eiffel_panic(MTC vanished);				/* main() should have created a vector */
+	eif_panic(MTC vanished);				/* main() should have created a vector */
 	/* NOTREACHED */
 	EIF_END_GET_CONTEXT
 }
@@ -1154,7 +1154,7 @@ rt_private char *backtrack(EIF_CONTEXT_NOARG)
 				if (!(echmem & MEM_SPEC))	/* Not in panic mode */
 					return top->ex_jbuf;	/* Address of env buffer */
 			} else
-				eiffel_panic(botched);				/* There has to be a buffer */
+				eif_panic(botched);				/* There has to be a buffer */
 #else
 			if (!(echmem & MEM_SPEC))		/* Not in panic mode */
 				return top->ex_jbuf;		/* Address of env buffer */
@@ -1170,7 +1170,7 @@ rt_private char *backtrack(EIF_CONTEXT_NOARG)
 			top = extop(&eif_stack);
 #ifdef MAY_PANIC
 			if (top == (struct ex_vect *) 0)
-				eiffel_panic(botched);
+				eif_panic(botched);
 #endif
 #ifdef WORKBENCH
 			/* In workbench mode, it is possible to have a precondition melted,
@@ -1199,7 +1199,7 @@ rt_private char *backtrack(EIF_CONTEXT_NOARG)
 				expop(&eif_stack);				/* Exception raised in caller */
 				break;
 			default:
-				eiffel_panic(botched);
+				eif_panic(botched);
 				/* NOTREACHED */
 			}
 #else
@@ -1348,7 +1348,7 @@ rt_private void excur(EIF_CONTEXT_NOARG)
 
 #ifdef MAY_PANIC
 	if (echlvl < 1)				/* There has to be at least one nesting level */
-		eiffel_panic(botched);
+		eif_panic(botched);
 #endif
 
 #ifdef USE_STRUCT_COPY
@@ -1390,7 +1390,7 @@ rt_private void exorig(EIF_CONTEXT_NOARG)
 
 #ifdef MAY_PANIC
 	if (echlvl < 1)				/* There has to be at least one nesting level */
-		eiffel_panic(botched);
+		eif_panic(botched);
 #endif
 
 	/* If there is only one nesting level, then the exception which started it
@@ -1462,7 +1462,7 @@ rt_private void exorig(EIF_CONTEXT_NOARG)
 	 */
 
 	if (!(echmem & MEM_FSTK) && echorg == 0)
-		eiffel_panic(botched);
+		eif_panic(botched);
 	else if (echorg == 0) {
 		echorg = EN_OMEM;				/* Default exception */
 		echotag = (char *) 0;			/* No known tag */
@@ -1537,7 +1537,7 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 		return;
 
 #ifdef EIF_WIN32
-	exception_trace_string = eiffel_malloc (32000);
+	exception_trace_string = eif_malloc (32000);
 	if (exception_trace_string != NULL)
 		*exception_trace_string = '\0';
 #endif
@@ -1612,7 +1612,7 @@ rt_private void exception(int how)
 }
 #endif
 
-rt_public void eiffel_panic(EIF_CONTEXT char *msg)
+rt_public void eif_panic(EIF_CONTEXT char *msg)
 {
 	/* In case of run-time panic, print the final message 'msg' and dumps
 	 * an execution stack if possible. This exception cannot be trapped.
@@ -1873,7 +1873,7 @@ rt_private void extend_trace_string(EIF_CONTEXT char *line)
 #ifdef DEBUG
 		printf ("extend_trace_string: Going to do a realloc...\n");
 #endif
-		ex_string.area = (char *) eiffel_realloc(ex_string.area, ex_string.size);
+		ex_string.area = (char *) eif_realloc(ex_string.area, ex_string.size);
 		if(ex_string.area) {
 			strcpy (ex_string.area + ex_string.used, line);
 			ex_string.used += strlen(line);
@@ -1892,7 +1892,7 @@ rt_public EIF_REFERENCE stack_trace_string (EIF_CONTEXT_NOARG)
 
     /* Clean the area from a previous call. */
     if (ex_string.area)
-        eiffel_free(ex_string.area);
+        eif_free(ex_string.area);
 
     /* Prepare the structure for a new trace */
     ex_string.area = NULL;
@@ -2388,7 +2388,7 @@ rt_public void expop(register1 struct xstack *stk)
 
 #ifdef MAY_PANIC
 	if (s == (struct stxchunk *) 0)				/* Panic if none */
-		eiffel_panic("Eiffel stack underflow");
+		eif_panic("Eiffel stack underflow");
 #endif
 
 	top = stk->st_end = s->sk_end;				/* Set new end */

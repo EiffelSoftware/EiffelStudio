@@ -1660,7 +1660,7 @@ rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint3
 {
 	EIF_REFERENCE result;
 	long nb_byte;
-	uint32 spec_size;
+	uint32 spec_size = 0;
 	uint32 dgen = special_generic_type (new_type);
 
 	if ((dgen & SK_HEAD) == SK_EXP)
@@ -1898,7 +1898,7 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 	long offset;
 	struct rt_struct *rt_info, *rt_solved;
 	struct rt_cell *rt_unsolved, *next;
-	EIF_REFERENCE  client, supplier;
+	EIF_REFERENCE  client = NULL, supplier = NULL;
 	
 
 	rt_info = (struct rt_struct *) ht_first(rt_table, key);

@@ -50,9 +50,11 @@ feature -- Access
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_itemnew (item))
 			tree ?= hdr.window_from
-			Result := tree.get_item_with_data (Result)
-		ensure
-			result_not_void: Result /= Void
+			if tree.has_item (Result) then
+				Result := tree.get_item_with_data (Result)
+			else
+				Result := Void
+			end
 		end
 
 	old_item: WEL_TREE_VIEW_ITEM is

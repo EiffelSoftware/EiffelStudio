@@ -28,28 +28,28 @@ cluster
 	root_cluster: "<FL_LOCATION>"
 
 		-- EiffelBase
-	all base: "$EIFFEL5\library\base"
+	all base: "$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"; "desc"
 		end
 
 		-- WEL
-	all wel: "$EIFFEL5\library\wel"
+	all wel: "$ISE_EIFFEL\library\wel"
 
 		-- EiffelVision2
-	all vision2: "$EIFFEL5\library\vision2"
+	all vision2: "$ISE_EIFFEL\library\vision2"
 		exclude
 			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"
 		end
 
 external
 	include_path:
-		"$(EIFFEL5)\library\wel\spec\windows\include",
-		"$(EIFFEL5)\library\vision2\spec\include"
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\library\vision2\spec\include"
 
 	object:
-		"$(EIFFEL5)\library\wel\spec\$(COMPILER)\lib\wel.lib",
-		"$(EIFFEL5)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
-		"$(EIFFEL5)\C_library\zlib\zlib.lib",
-		"$(EIFFEL5)\C_library\libpng\libpng.lib"
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib",
+		"$(ISE_EIFFEL)\C_library\zlib\zlib.lib",
+		"$(ISE_EIFFEL)\C_library\libpng\libpng.lib"
 end

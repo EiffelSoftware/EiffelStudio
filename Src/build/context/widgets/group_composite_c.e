@@ -8,13 +8,14 @@ inherit
 			create_context as old_create_context
 		redefine
 			is_group_composite, set_size, 
-			retrieve_oui_widget, import_oui_widget
+			retrieve_oui_widget, import_oui_widget,
+			is_resizable
 		end;
 
 	COMPOSITE_C
 		redefine
 			create_context, is_group_composite, set_size, 
-			retrieve_oui_widget, import_oui_widget
+			retrieve_oui_widget, import_oui_widget, is_resizable
 		select
 			create_context
 		end
@@ -30,6 +31,11 @@ feature
 	is_group_composite: BOOLEAN is
 		do
 			Result := True
+		end;
+
+	is_resizable: BOOLEAN is
+		do
+			Result := False
 		end;
 
 	create_new_child: CONTEXT is

@@ -1,15 +1,13 @@
+indexing
+	description: "Hole which can receive command stones. %
+				% Output of behavior function."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
---=========================== class COMMAND_HOLE ====================
---
--- Author: Deramat
--- Last revision: 03/30/92
---
--- Hole which can receive command stones.
--- Output of behavior function.
---
---===================================================================
+class 
 
-class COMMAND_HOLE 
+	COMMAND_HOLE 
 
 inherit
 
@@ -26,38 +24,36 @@ inherit
 creation
 
 	make
-
 	
 feature 
 
 	make (a_parent: COMPOSITE; func: BEHAVIOR_EDITOR) is
 		do
-			elmt_hole_make (a_parent, func);
-		end;
+			elmt_hole_make (a_parent, func)
+		end
 
 	stone_type: INTEGER is
 		do
---			Result := Stone_types.instance_type	
 			Result := Stone_types.command_type	
-		end;
+		end
 
 feature {NONE}
 
-	associated_function: BEHAVIOR_EDITOR;
+	associated_function: BEHAVIOR_EDITOR
 
 	associated_symbol: PIXMAP is
 		do
 			Result := Pixmaps.command_instance_pixmap
-		end;
+		end
 
 	associated_label: STRING is
 		do
 			Result := Widget_names.command_label
-		end;
+		end
 
 	process_instance (cmd_instance: CMD_INST_STONE) is
         do
-            associated_function.update_output_hole (cmd_instance);
-        end;
+			associated_function.update_output_hole (cmd_instance)
+        end
 
 end

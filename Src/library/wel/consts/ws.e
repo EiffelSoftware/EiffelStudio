@@ -1,0 +1,243 @@
+indexing
+	description: "Window style (WS) constants."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	WEL_WS_CONSTANTS
+
+feature -- Basic window types
+
+	Ws_overlapped: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_OVERLAPPED"
+		end
+
+	Ws_popup: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_POPUP"
+		end
+
+	Ws_child: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_CHILD"
+		end
+
+feature -- Clipping styles
+
+	Ws_clipsiblings: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_CLIPSIBLINGS"
+		end
+
+	Ws_clipchildren: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_CLIPCHILDREN"
+		end
+
+feature -- Generic window states
+
+	Ws_visible: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_VISIBLE"
+		end
+
+	Ws_disabled: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_DISABLED"
+		end
+
+feature -- Main window states
+
+	Ws_minimize: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_MINIMIZE"
+		end
+
+	Ws_maximize: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_MAXIMIZE"
+		end
+
+feature -- Main window styles
+
+	Ws_caption: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_CAPTION"
+		end
+
+	Ws_border: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_BORDER"
+		end
+
+	Ws_dlgframe: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_DLGFRAME"
+		end
+
+	Ws_vscroll: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_VSCROLL"
+		end
+
+	Ws_hscroll: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_HSCROLL"
+		end
+
+	Ws_sysmenu: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_SYSMENU"
+		end
+
+	Ws_thickframe: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_THICKFRAME"
+		end
+
+	Ws_minimizebox: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_MINIMIZEBOX"
+		end
+
+	Ws_maximizebox: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_MAXIMIZEBOX"
+		end
+
+feature -- Control window styles
+
+	Ws_group: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_GROUP"
+		end
+
+	Ws_tabstop: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_TABSTOP"
+		end
+
+feature -- Common window styles
+
+	Ws_overlappedwindow: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_OVERLAPPEDWINDOW"
+		end
+
+	Ws_popupwindow: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_POPUPWINDOW"
+		end
+
+	Ws_childwindow: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_CHILDWINDOW"
+		end
+
+feature -- Extended window styles
+
+	Ws_ex_dlgmodalframe: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_DLGMODALFRAME"
+		end
+
+	Ws_ex_noparentnotify: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_NOPARENTNOTIFY"
+		end
+
+	Ws_ex_topmost: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_TOPMOST"
+		end
+
+	Ws_ex_acceptfiles: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_ACCEPTFILES"
+		end
+
+	Ws_ex_transparent: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_TRANSPARENT"
+		end
+
+feature -- Miscellaneous
+
+	Cw_usedefault: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"CW_USEDEFAULT"
+		end
+
+end -- class WEL_WS_CONSTANTS
+
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

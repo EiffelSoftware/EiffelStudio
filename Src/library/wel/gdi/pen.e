@@ -1,0 +1,120 @@
+indexing
+	description: "Drawing object used to draw lines and borders."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	WEL_PEN
+
+inherit
+	WEL_GDI_ANY
+
+creation
+	make,
+	make_indirect,
+	make_by_pointer
+
+feature {NONE} -- Initialization
+
+	make (a_style, a_width: INTEGER; a_color: WEL_COLOR_REF) is
+			-- Make a pen using the `pen_style',
+			-- `width' and `color'.
+			-- See class WEL_PS_CONSTANTS for `pen_style' values.
+		require
+			positive_width: a_width >= 0
+			color_not_void: a_color /= Void
+			color_exists: a_color.exists
+		do
+			item := cwin_create_pen (a_style, a_width, a_color.item)
+		ensure
+			exists: exists
+			style_set: style = a_style
+			width_set: width = a_width
+			color_set: color.item = a_color.item
+		end
+
+	make_indirect (a_log_pen: WEL_LOG_PEN) is
+			-- Make a pen using `a_log_pen'.
+		require
+			a_log_pen_not_void: a_log_pen /= Void
+			a_log_pen_exists: a_log_pen.exists
+		do
+			item := cwin_create_pen_indirect (a_log_pen.item)
+		ensure
+			exist: exists
+		end
+
+feature -- Access
+
+	style: INTEGER is
+			-- Pen style
+		require
+			exists: exists
+		do
+			Result := log_pen.style
+		end
+
+	width: INTEGER is
+			-- Pen width
+		require
+			exists: exists
+		do
+			Result := log_pen.width
+		ensure
+			positive_result: Result >= 0
+		end
+
+	color: WEL_COLOR_REF is
+			-- Pen color
+		require
+			exists: exists
+		do
+			Result := log_pen.color
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+		end
+
+	log_pen: WEL_LOG_PEN is
+			-- Create a log pen structure for `Current'
+		require
+			exists: exists
+		do
+			!! Result.make_by_pen (Current)
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+		end
+
+feature {NONE} -- Externals
+
+	cwin_create_pen (a_style, a_width: INTEGER; a_color: POINTER): POINTER is
+			-- SDK CreatePen
+		external
+			"C [macro <wel.h>] (int, int, COLORREF): EIF_POINTER"
+		alias
+			"CreatePen"
+		end
+
+	cwin_create_pen_indirect (a_log_pen: POINTER): POINTER is
+			-- SDK CreatePenIndirect
+		external
+			"C [macro <wel.h>] (LOGPEN *): EIF_POINTER"
+		alias
+			"CreatePenIndirect"
+		end
+
+end -- class WEL_PEN
+
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

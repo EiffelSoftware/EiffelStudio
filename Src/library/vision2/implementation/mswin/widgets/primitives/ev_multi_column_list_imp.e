@@ -30,9 +30,6 @@ inherit
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
 			interface,
-			extend,
-			put_front,
-			put_right,
 			initialize
 		end
 
@@ -301,10 +298,24 @@ feature {NONE} -- Implementation
 			-- Append new column at end.
 		local
 			wel_column: WEL_LIST_VIEW_COLUMN
+			col_width: INTEGER
+			col_text: STRING
 		do
+			if column_widths.count > column_count then
+				col_width := column_widths @ (column_count + 1)
+			else
+				col_width := Default_column_width
+			end
+
+			if column_titles.count > column_count then
+				col_text := column_titles @ (column_count + 1)
+			else
+				col_text := ""
+			end
+
 			create wel_column.make
-			wel_column.set_cx (80)
-			wel_column.set_text ("")
+			wel_column.set_cx (col_width)
+			wel_column.set_text (col_text)
 			append_column (wel_column)
 		end
 
@@ -439,68 +450,6 @@ feature -- Status report
 		do
 			Result := not flag_set (style, Lvs_nocolumnheader)
 		end
-
-feature -- Status setting
-
-	extend (v: like item) is
-			-- If `v' not already in list add to end.
-			-- Do not move cursor.
-		do
-			if not first_addition then
-				first_addition := True
-	--| FIXME			set_column_count (v.count)
-			end
-			{EV_ITEM_LIST_IMP} Precursor (v)
-		end
-
-	put_right (v: like item) is
-			-- Add `v' to the right of cursor position.
-			-- Do not move cursor.
-		do
-			if not first_addition then
-				first_addition := True
-	--| FIXME			set_column_count (v.count)
-			end
-			{EV_ITEM_LIST_IMP} Precursor (v)
-		end
-		
-	put_front (v: like item) is
-			-- Add `v' to front.
-			-- Do not move cursor.
-		local
-			original_index: INTEGER
-		do
-			if not first_addition then
-				first_addition := True
-	--| FIXME			set_column_count (v.count)
-			end
-			{EV_ITEM_LIST_IMP} Precursor (v)
-		end
-
-
-	first_addition: Boolean
-		-- Is this the first addition?
-		-- We need this, as if set_column_count has not already been called then
-		-- we must set the number of columns before adding the row.
-
-	--set_column_alignment (type: INTEGER; column: INTEGER) is
-			-- Align the text of the column.
-			-- 0: Left, 
-			-- 1: Right,
-			-- 2: Center,
-			-- 3: Justify
-	--	do
-	--		inspect type
-	--		when 0 then
-	--			set_column_format (column - 1, Lvcfmt_left)
-	--		when 1 then
-	--			set_column_format (column - 1, Lvcfmt_right)
-	--		when 2 then
-	--			set_column_format (column - 1, Lvcfmt_center)
-	--		when 3 then
-	--			set_column_format (column - 1, Lvcfmt_justifymask)
-	--		end
-	--	end
 
 feature -- Element change
 
@@ -911,6 +860,10 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2000/03/27 18:09:50  brendel
+--| Improved implementation of `add_column'.
+--| Clean-up.
+--|
 --| Revision 1.68  2000/03/27 17:20:38  brendel
 --| columns -> column_count
 --|

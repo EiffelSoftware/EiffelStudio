@@ -32,13 +32,13 @@ feature {NONE} -- Initialization
 			end
 			from
 				l_count := 1
-				project_name := Default_project_name
-				create l_dir.make (project_location + "\" + project_name)
+				project_name := Default_project_name + "_" + l_count.out
+				create l_dir.make (project_path)
 			until
 				not l_dir.exists or else
 				l_count = 100
 			loop
-				create l_dir.make (project_location + "\" + project_name)
+				create l_dir.make (project_path)
 				if l_dir.exists then
 					project_name := default_project_name + "_" + l_count.out 
 				end
@@ -98,7 +98,18 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EXECUTION_ENVIRONMENT}).get ("HOME")
 		end
-		
+
+	project_path: STRING is
+			-- project path
+		do
+			create Result.make (project_location.count + project_name.count + 2)
+			Result.append (project_location)
+			Result.append_character ((create {OPERATING_ENVIRONMENT}.default_create).Directory_separator)
+			Result.append (project_name)
+		ensure
+			non_void_project_path: Result /= Void
+		end
+
 	Default_project_name: STRING is
 			-- Default project name
 		deferred

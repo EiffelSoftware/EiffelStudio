@@ -98,7 +98,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- information about the item to be drawn and the type
 			-- of drawing required.
 		local
-			pixcon: EV_PIXMAP_CONTAINER_IMP
+			pixcon: EV_PIXMAPABLE_IMP
 			itemcon: EV_ITEM_CONTAINER_IMP
 		do
 			pixcon ?= draw_item.window_item

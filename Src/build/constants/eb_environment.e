@@ -28,7 +28,7 @@ feature -- Directory name constants
 	Help_name: STRING is "help";
 	Library_name: STRING is "library";
 	Platform_variable_name: STRING is "PLATFORM";
-	Resources_name: STRING is "resources";
+	Resource_name: STRING is "resource";
 	Restore_name: STRING is "restore";
 	Spec_name: STRING is "spec";
 	State_name: STRING is "state";
@@ -91,13 +91,13 @@ feature -- File names for EiffelBuild
 
 	Color_names_file: FILE_NAME is
 		once
-			!! Result.make_from_string (Resources_directory);
+			!! Result.make_from_string (Resource_directory);
 			Result.set_file_name (Color_names_file_name)
 		end;
 
 	Toolkits_file: FILE_NAME is
 		once
-			!! Result.make_from_string (Resources_directory);
+			!! Result.make_from_string (Resource_directory);
 			Result.set_file_name (select_toolkit_file_name)
 		end;
 
@@ -160,11 +160,11 @@ feature -- Directory names for EiffelBuild
 			Result.extend_from_array (<< Library_name, Command_name >>);
 		end;
 
-	Resources_directory: DIRECTORY_NAME is
+	Resource_directory: DIRECTORY_NAME is
 			-- Directory containing resources
 		once
 			!! Result.make_from_string (EiffelBuild_directory);
-			Result.extend (Resources_name);
+			Result.extend (Resource_name);
 		end;
 
 feature -- Directory names for projects

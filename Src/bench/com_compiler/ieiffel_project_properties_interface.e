@@ -199,6 +199,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	precompiled_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `precompiled'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_precompiled_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_precompiled'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	title_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `title'.
 			-- Redefine in descendants if needed.
@@ -559,6 +573,23 @@ feature -- Basic Operations
 			-- Assemblies.
 		require
 			assemblies_user_precondition: assemblies_user_precondition
+		deferred
+
+		end
+
+	precompiled: STRING is
+			-- Precompiled file.
+		require
+			precompiled_user_precondition: precompiled_user_precondition
+		deferred
+
+		end
+
+	set_precompiled (return_value: STRING) is
+			-- Precompiled file.
+			-- `return_value' [in].  
+		require
+			set_precompiled_user_precondition: set_precompiled_user_precondition (return_value)
 		deferred
 
 		end

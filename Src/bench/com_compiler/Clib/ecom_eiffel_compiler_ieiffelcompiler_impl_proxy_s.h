@@ -79,6 +79,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Generate a cyrptographic key filename.
+	-----------------------------------------------------------*/
+	void ccom_generate_msil_keyfile(  /* [in] */ EIF_OBJECT filename );
+
+
+	/*-----------------------------------------------------------
 	Eiffel Freeze command name
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_freeze_command_name(  );

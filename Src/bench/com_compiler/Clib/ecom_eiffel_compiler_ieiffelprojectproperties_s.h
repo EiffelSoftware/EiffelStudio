@@ -232,6 +232,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Precompiled file.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP precompiled(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Precompiled file.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_precompiled(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Project title.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP title(  /* [out, retval] */ BSTR * return_value ) = 0;

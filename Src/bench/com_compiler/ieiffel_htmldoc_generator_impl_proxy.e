@@ -23,80 +23,27 @@ feature {NONE}  -- Initialization
 			item := ccom_item (initializer)
 		end
 
-feature -- Access
-
-	is_incompatible: BOOLEAN is
-			-- is the project incompatible?
-		do
-			Result := ccom_is_incompatible (initializer)
-		end
-
-	is_corrupted: BOOLEAN is
-			-- is the project corrupted?
-		do
-			Result := ccom_is_corrupted (initializer)
-		end
-
-	last_error: STRING is
-			-- the last error
-		do
-			Result := ccom_last_error (initializer)
-		end
-
-feature -- Status Report
-
-	last_error_code: INTEGER is
-			-- Last error code.
-		do
-			Result := ccom_last_error_code (initializer)
-		end
-
-	last_error_description: STRING is
-			-- Last error description.
-		do
-			Result := ccom_last_error_description (initializer)
-		end
-
-	last_error_help_file: STRING is
-			-- Last error help file.
-		do
-			Result := ccom_last_error_help_file (initializer)
-		end
-
-	last_source_of_exception: STRING is
-			-- Last source of exception.
-		do
-			Result := ccom_last_source_of_exception (initializer)
-		end
-
 feature -- Basic Operations
 
-	add_excluded_cluster (cluster_to_exclude: STRING) is
-			-- Add excluded cluster
-			-- `cluster_to_exclude' [in].  
+	add_excluded_cluster (cluster_full_name: STRING) is
+			-- Exclude a cluster from being generated.
+			-- `cluster_full_name' [in].  
 		do
-			ccom_add_excluded_cluster (initializer, cluster_to_exclude)
+			ccom_add_excluded_cluster (initializer, cluster_full_name)
 		end
 
-	remove_excluded_cluster (excluded_cluster: STRING) is
-			-- Remove excluded cluster
-			-- `excluded_cluster' [in].  
+	remove_excluded_cluster (cluster_full_name: STRING) is
+			-- Exclude a cluster from being generated.
+			-- `cluster_full_name' [in].  
 		do
-			ccom_remove_excluded_cluster (initializer, excluded_cluster)
+			ccom_remove_excluded_cluster (initializer, cluster_full_name)
 		end
 
-	load_project (project_dir: STRING): BOOLEAN is
-			-- Load a compiled project
-			-- `project_dir' [in].  
+	generate (path: STRING) is
+			-- Exclude a cluster from being generated.
+			-- `path' [in].  
 		do
-			Result := ccom_load_project (initializer, project_dir)
-		end
-
-	generate (generation_dir: STRING) is
-			-- Generate the documentation.
-			-- `generation_dir' [in].  
-		do
-			ccom_generate (initializer, generation_dir)
+			ccom_generate (initializer, path)
 		end
 
 feature {NONE}  -- Implementation
@@ -109,44 +56,20 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_add_excluded_cluster (cpp_obj: POINTER; cluster_to_exclude: STRING) is
-			-- Add excluded cluster
+	ccom_add_excluded_cluster (cpp_obj: POINTER; cluster_full_name: STRING) is
+			-- Exclude a cluster from being generated.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_remove_excluded_cluster (cpp_obj: POINTER; excluded_cluster: STRING) is
-			-- Remove excluded cluster
+	ccom_remove_excluded_cluster (cpp_obj: POINTER; cluster_full_name: STRING) is
+			-- Exclude a cluster from being generated.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_is_incompatible (cpp_obj: POINTER): BOOLEAN is
-			-- is the project incompatible?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_is_corrupted (cpp_obj: POINTER): BOOLEAN is
-			-- is the project corrupted?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_last_error (cpp_obj: POINTER): STRING is
-			-- the last error
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_load_project (cpp_obj: POINTER; project_dir: STRING): BOOLEAN is
-			-- Load a compiled project
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
-		end
-
-	ccom_generate (cpp_obj: POINTER; generation_dir: STRING) is
-			-- Generate the documentation.
+	ccom_generate (cpp_obj: POINTER; path: STRING) is
+			-- Exclude a cluster from being generated.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
@@ -167,30 +90,6 @@ feature {NONE}  -- Externals
 			-- Item
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]():EIF_POINTER"
-		end
-
-	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
-			-- Last error code
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]():EIF_INTEGER"
-		end
-
-	ccom_last_error_description (cpp_obj: POINTER): STRING is
-			-- Last error description
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]():EIF_REFERENCE"
-		end
-
-	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
-			-- Last error help file
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]():EIF_REFERENCE"
-		end
-
-	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
-			-- Last source of exception
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocGenerator_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 end -- IEIFFEL_HTMLDOC_GENERATOR_IMPL_PROXY

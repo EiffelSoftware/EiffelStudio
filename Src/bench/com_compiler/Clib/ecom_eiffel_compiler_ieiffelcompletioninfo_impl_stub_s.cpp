@@ -64,7 +64,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::target_featu
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_218 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_219 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

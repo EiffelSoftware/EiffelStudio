@@ -37,69 +37,21 @@ public:
 	virtual ~IEiffelHTMLDocGenerator_impl_proxy ();
 
 	/*-----------------------------------------------------------
-	Last error code
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_last_error_code();
+	void ccom_add_excluded_cluster(  /* [in] */ EIF_OBJECT cluster_full_name );
 
 
 	/*-----------------------------------------------------------
-	Last source of exception
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_last_source_of_exception();
+	void ccom_remove_excluded_cluster(  /* [in] */ EIF_OBJECT cluster_full_name );
 
 
 	/*-----------------------------------------------------------
-	Last error description
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_last_error_description();
-
-
-	/*-----------------------------------------------------------
-	Last error help file
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_last_error_help_file();
-
-
-	/*-----------------------------------------------------------
-	Add excluded cluster
-	-----------------------------------------------------------*/
-	void ccom_add_excluded_cluster(  /* [in] */ EIF_OBJECT cluster_to_exclude );
-
-
-	/*-----------------------------------------------------------
-	Remove excluded cluster
-	-----------------------------------------------------------*/
-	void ccom_remove_excluded_cluster(  /* [in] */ EIF_OBJECT excluded_cluster );
-
-
-	/*-----------------------------------------------------------
-	is the project incompatible?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_is_incompatible(  );
-
-
-	/*-----------------------------------------------------------
-	is the project corrupted?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_is_corrupted(  );
-
-
-	/*-----------------------------------------------------------
-	the last error
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_last_error(  );
-
-
-	/*-----------------------------------------------------------
-	Load a compiled project
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_load_project(  /* [in] */ EIF_OBJECT project_dir );
-
-
-	/*-----------------------------------------------------------
-	Generate the documentation.
-	-----------------------------------------------------------*/
-	void ccom_generate(  /* [in] */ EIF_OBJECT generation_dir );
+	void ccom_generate(  /* [in] */ EIF_OBJECT path );
 
 
 	/*-----------------------------------------------------------
@@ -123,12 +75,6 @@ private:
 	Default IUnknown interface pointer
 	-----------------------------------------------------------*/
 	IUnknown * p_unknown;
-
-
-	/*-----------------------------------------------------------
-	Exception information
-	-----------------------------------------------------------*/
-	EXCEPINFO * excepinfo;
 
 
 

@@ -59,6 +59,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	generate_msil_keyfile_user_precondition (filename: STRING): BOOLEAN is
+			-- User-defined preconditions for `generate_msil_keyfile'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	freeze_command_name_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `freeze_command_name'.
 			-- Redefine in descendants if needed.
@@ -141,6 +148,15 @@ feature -- Basic Operations
 			-- Return ISE_EIFFEL environment var.
 		require
 			ise_eiffel_user_precondition: ise_eiffel_user_precondition
+		deferred
+
+		end
+
+	generate_msil_keyfile (filename: STRING) is
+			-- Generate a cyrptographic key filename.
+			-- `filename' [in].  
+		require
+			generate_msil_keyfile_user_precondition: generate_msil_keyfile_user_precondition (filename)
 		deferred
 
 		end

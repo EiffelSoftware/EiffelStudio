@@ -10,18 +10,32 @@ deferred class
 feature -- Access
 
 	image: STRING
-		-- String representation of the token
+			-- String representation of the token
 
 	length: INTEGER
-		-- Number of characters represented by the token.
+			-- Number of characters represented by the token.
 
 feature -- Linkable functions
 
 	previous: EDITOR_TOKEN
-		-- Previous token in the line. Void if none
+			-- Previous token in the line. Void if none
 
 	next: EDITOR_TOKEN
-		-- Next token in the line. Void if none.
+			-- Next token in the line. Void if none.
+
+	set_next_token(next_token: EDITOR_TOKEN) is
+			-- set `next' to `next_token'. `next' can
+			-- be Void if there are no next token.
+		do
+			next := next_token
+		end
+
+	set_previous_token(previous_token: EDITOR_TOKEN) is
+			-- set `next' to `next_token'. `next' can
+			-- be Void if there are no next token.
+		do
+			previous := previous_token
+		end
 
 feature -- Miscellaneous
 

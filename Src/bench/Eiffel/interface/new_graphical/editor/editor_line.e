@@ -32,9 +32,8 @@ feature -- Access
 	first_token: EDITOR_TOKEN
 		-- First token in the
 	
-	end_token: EDITOR_TOKEN
-		-- Last token of the line. It is ALWAYS
-		-- of type EDITOR_TOKEN_EOL
+	end_token: EDITOR_TOKEN_EOL
+		-- Last token of the line.
 
 feature -- Element change
 

@@ -1,12 +1,7 @@
 %{
 indexing
-
-	description:
-
-		"Scanners for Eiffel parsers"
-
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	description:"Scanners for Eiffel parsers"
+	author:     "Arnaud PICHERY from an Eric Bezault model"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -50,13 +45,19 @@ creation
 [\r]+				-- Ignore carriage return
 [ ]+				{
 					create {EDITOR_TOKEN_SPACE} curr_token.make(text_count)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 [\t]+				{
 					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
-\n+					-- Do nothing. It's an error since we are only analysing lines
+\n+					{
+					from i := 1 until i > text_count loop
+						create {EDITOR_TOKEN_EOL} curr_token.make
+						update_token_list
+						i := i + 1
+					end
+					}
 
 
 ----------/** Eiffel comments **/-----------------------------------------------
@@ -64,7 +65,7 @@ creation
 "--".*				{ 
 						-- comments
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 
 ----------/** Eiffel symbols **/------------------------------------------------
@@ -83,25 +84,38 @@ creation
 "$"					{
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 
-"//"|"\\\\"|"/="|">="|"<="|"->"|".."|"<<"|">>"|"?="|":="|"-"|"+"|"*"|"/"|"^"|"="|">"|"<"	{ 
+"//"				|
+"\\\\"				|
+"/="				|
+">="				|
+"<="				|
+"->"				|
+".."				|
+"<<"				|
+">>"				|
+"?="				|
+":="				|
+"-"					|
+"+"					|
+"*"					|
+"/"					|
+"^"					|
+"="					|
+">"					|
+"<"					{ 
 						-- Operator Symbol 
 					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 
 ----------/** Reserved words **/------------------------------------------------
 
 "!!"									|
 [cC][rR][eE][aA][tT][iI][oO][nN]		|
-[cC][rR][eE][aA][tT][eE]				{
-										-- Create/Creation keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										}
-
+[cC][rR][eE][aA][tT][eE]				|
 [aA][lL][iI][aA][sS]					|
 [aA][lL][lL]|[aA][nN][dD]				|
 [aA][sS]|[bB][iI][tT]					|
@@ -124,18 +138,7 @@ creation
 [fF][rR][oO][zZ][eE][nN]				|
 [iI][fF]								|
 [iI][mM][pP][lL][iI][eE][sS]			|
-[iI][nN][dD][eE][xX][iI][nN][gG]		{
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										}
-						
-[iI][nN][fF][iI][xX]					{
-										is_operator := True
-										-- infix Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										}
+[iI][nN][dD][eE][xX][iI][nN][gG]		|
 [iI][nN][hH][eE][rR][iI][tT]			|
 [iI][nN][sS][pP][eE][cC][tT]			|
 [iI][nN][vV][aA][rR][iI][aA][nN][tT]	|
@@ -148,18 +151,7 @@ creation
 [oO][lL][dD]							|
 [oO][nN][cC][eE]						|
 [oO][rR]								|
-[pP][rR][eE][cC][uU][rR][sS][oO][rR]	{
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										}
-
-[pP][rR][eE][fF][iI][xX]				{
-										is_operator := True
-										-- Prefix Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
-										}
+[pP][rR][eE][cC][uU][rR][sS][oO][rR]	|
 [rR][eE][dD][eE][fF][iI][nN][eE]		|
 [rR][eE][nN][aA][mM][eE]				|
 [rR][eE][qQ][uU][iI][rR][eE]			|
@@ -179,7 +171,7 @@ creation
 [xX][oO][rR]							{
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										}
 
 
@@ -187,7 +179,7 @@ creation
 
 [a-zA-Z][a-zA-Z0-9_]*					{
 										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										}
 
 
@@ -195,7 +187,7 @@ creation
 
 [@#|&][^%" \t\r\n]*						{
 										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-										analysed_tokens.extend(curr_token)
+										update_token_list
 										}
 	-- Note: Accepts non-printable characters as well,
 	-- provided that they are not break characters.
@@ -226,7 +218,7 @@ creation
 \'%<\'				|
 \'%>\'				{
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 
 \'%\/[0-9]+\/\'		{
@@ -237,14 +229,14 @@ creation
 					else
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					end
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 
 \'.{1,2}			|
 \'%\/[0-9]+(\/)?	{
 					-- Character error. Catch-all rules (no backing up)
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 
 
@@ -255,7 +247,7 @@ creation
 \".*\%				{
 					-- Eiffel String
 					create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 
 ----------/** Eiffel bits **/---------------------------------------------------
@@ -263,7 +255,7 @@ creation
 [0-1]+[bB]			{
 					-- Eiffel Bit
 					create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-					analysed_tokens.extend(curr_token)
+					update_token_list
 					}
 						
 ----------/** Eiffel integers **/-----------------------------------------------
@@ -272,12 +264,12 @@ creation
 [0-9]{1,3}(_[0-9]{3})+	{
 						-- Eiffel Integer
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						}
 [0-9_]+					{
 						-- Eiffel Integer Error (considered as text)
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						}
 
 ---------/** Eiffel reals **/---------------------------------------------------
@@ -290,7 +282,7 @@ creation
 ([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?	{
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						analysed_tokens.extend(curr_token)
+						update_token_list
 						}
 
 		-- The first and fourth expressions use a trailing context
@@ -303,7 +295,7 @@ creation
 .				{
 					-- Error (considered as text)
 				create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-				analysed_tokens.extend(curr_token)
+				update_token_list
 				}
 
 --------------------------------------------------------------------------------
@@ -323,7 +315,6 @@ feature {NONE} -- Initialization
 		do
 			make_with_buffer (Empty_buffer)
 			eif_buffer := STRING_.make (Init_buffer_size)
-			eif_lineno := 1
 		end
 
 feature -- Start Job / Reinitialization 
@@ -340,17 +331,19 @@ feature -- Start Job / Reinitialization
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
-			eif_lineno := 1
 			eif_buffer.wipe_out
 			create analysed_tokens.make	-- create a new one, the old one
 										-- is still "usable"
+			last_token := Void
 		end
 
 feature -- Access
 
 	curr_token: EDITOR_TOKEN
+			-- Current token analysed
 
-	analysed_tokens: EDITOR_LINE
+	last_token: EDITOR_TOKEN
+			-- Last token analysed.
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
@@ -358,27 +351,14 @@ feature -- Access
 	eif_buffer: STRING
 			-- Buffer for lexial tokens
 
-	eif_lineno: INTEGER
-			-- Current line number
-
-	is_operator: BOOLEAN
-			-- Parsing an operator declaration?
-
 feature {NONE} -- Processing
 
-	process_operator (op: INTEGER): INTEGER is
-			-- Process current token as operator `op' or as
-			-- an Eiffel string depending on the context
-		require
-			text_count_large_enough: text_count > 2
+	update_token_list is
+			-- Link the current token to the last one.
 		do
-			if is_operator then
-				is_operator := False
-				Result := op
-			else
-				Result := E_STRING
-				last_value := text_substring (2, text_count - 1)
-			end
+			last_token.set_previous_token(curr_token)
+			curr_token.set_next_token(last_token)
+			last_token := curr_token
 		end
 
 feature {NONE} -- Constants

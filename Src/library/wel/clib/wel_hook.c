@@ -36,20 +36,18 @@ HINSTANCE hDllInstance = 0;
 /* processes and threads are initialized and terminated, or upon calls to    */
 /* the LoadLibrary and FreeLibrary functions.                                */
 /*---------------------------------------------------------------------------*/
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
-	{
-	if (fdwReason == DLL_PROCESS_ATTACH)
-		{
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
+	if (fdwReason == DLL_PROCESS_ATTACH) {
 			// We don't need thread notifications for what we're doing.  Thus, get
 			// rid of them, thereby eliminating some of the overhead of this DLL,
 			// which will end up in nearly every GUI process anyhow.
 		DisableThreadLibraryCalls(hinstDLL);
 
 		hDllInstance = hinstDLL;
-		}
+	}
 
 	return TRUE;
-	}
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: MouseProc                                                           */
@@ -66,13 +64,14 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 /* is a placeholder for the application-defined or library-defined function  */
 /* name.                                                                     */
 /*---------------------------------------------------------------------------*/
-__declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
-	{
+__declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	UINT Msg = (UINT)wParam;
 	DWORD dwMousePos;
 	MOUSEHOOKSTRUCT *pInfo = (MOUSEHOOKSTRUCT *) lParam;
 	RECT rect;
-	LRESULT retValue;						// Regular case: forward message to window.
+
+	if (nCode < 0)					// Windows tell us not to handle this msg
+		return CallNextHookEx(hMouseHook, nCode, wParam, lParam);
 
 	if (hMouseHook == NULL) 				// We do not know our hook handle
 		return 0;
@@ -81,15 +80,9 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 		UnhookWindowsHookEx(hMouseHook);	// We don't have any window target
 											// So we stop the hook.
 
-	// I am a good citizen and I call the other hooks
-	retValue = CallNextHookEx(hMouseHook, nCode, wParam, lParam);
-
-	// We should not handle this message because...
 	if (hHookWindow == NULL)		// No window has requested a hook
-		return retValue;
+		return CallNextHookEx(hMouseHook, nCode, wParam, lParam);
 
-	if (nCode < 0)					// Windows tell us not to handle this msg
-		return retValue;
 
 	//===================================
 	// We will handle this mouse message
@@ -101,8 +94,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 	dwMousePos = MAKELONG(pInfo->pt.x - rect.left, pInfo->pt.y - rect.top);
 
 	// Transform & redirect the mouse message to the target window.
-	switch (Msg)
-		{
+	switch (Msg) {
 		case WM_MOUSEMOVE:
 		case WM_LBUTTONDOWN:
 		case WM_MBUTTONDOWN:
@@ -114,8 +106,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 		case WM_MBUTTONDBLCLK:
 		case WM_RBUTTONDBLCLK:
 		case WM_NCHITTEST:
-			if (pInfo->hwnd != hHookWindow)
-				{
+			if (pInfo->hwnd != hHookWindow) {
 				/* The current window is not the target
 				 * window, so we prevent the system to
 				 * forward the message to the current window
@@ -123,13 +114,13 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 				 * message to the target window. */
 				SendMessage(hHookWindow, Msg, 0, dwMousePos);
 				return 1;
-				}
+			}
 			/* The current window IS the window that
 			 * has requested the hook, we do not want
 			 * to duplicate the mouse message So we
 			 * ignore this message & tell the system
 			 * to pass it to the target window. */
-			return retValue;
+			break;
 
 		case WM_NCMOUSEMOVE:
 			SendMessage(hHookWindow, WM_MOUSEMOVE, 0, dwMousePos);
@@ -161,11 +152,11 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 		case WM_NCRBUTTONDBLCLK:
 			SendMessage(hHookWindow, WM_RBUTTONDBLCLK, 0, dwMousePos);
 			return 1;
-		}
-	
-	// We don't care about this message...do nothing.
-	return retValue;
 	}
+	
+	// We don't care about this message so we pass it to other processes.
+	return CallNextHookEx(hMouseHook, nCode, wParam, lParam);
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: get_hook_window                                                     */
@@ -173,10 +164,9 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 /* Returns the handle of the window that has started the hook, NULL if no    */
 /* hook is currently under process                                           */
 /*---------------------------------------------------------------------------*/
-__declspec(dllexport) HWND WINAPI get_hook_window()
-	{
+__declspec(dllexport) HWND WINAPI get_hook_window() {
 	return hHookWindow;
-	}
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: hook_mouse                                                          */
@@ -187,15 +177,13 @@ __declspec(dllexport) HWND WINAPI get_hook_window()
 /*                                                                           */
 /* Returns FALSE (0) when something wrong happened, TRUE (1) otherwise       */
 /*---------------------------------------------------------------------------*/
-__declspec(dllexport) int WINAPI hook_mouse(HWND hWnd)
-	{
+__declspec(dllexport) int WINAPI hook_mouse(HWND hWnd) {
 	HOOKPROC hkprcMouse;
 
-	if (hWnd == NULL)
-		{
+	if ((hWnd == NULL) || (!IsWindow(hWnd))) {
 		MessageBox (NULL, "Invalid hWnd", "wel_hook.dll error", MB_OK | MB_ICONSTOP);
 		return 0;	// Invalid handle to a window, exit.
-		}
+	}
 
 	hkprcMouse = (HOOKPROC)GetProcAddress(hDllInstance, "MouseProc"); 
 
@@ -208,17 +196,16 @@ __declspec(dllexport) int WINAPI hook_mouse(HWND hWnd)
 		);
 
 	// Set the HookWindow if SetWindowsHookEx succeeded
-	if (hMouseHook == NULL)
-		{
+	if (hMouseHook == NULL) {
 		hHookWindow = NULL;
 		MessageBox (NULL, "hMouseHook==NULL", "wel_hook.dll error", MB_OK | MB_ICONSTOP);
 		return 0;
-		}
+	}
 	
 	// Everything went fine 
 	hHookWindow = hWnd;
 	return 1;
-	}
+}
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: unhook_mouse                                                        */
@@ -228,17 +215,16 @@ __declspec(dllexport) int WINAPI hook_mouse(HWND hWnd)
 /*                                                                           */
 /* Returns FALSE (0) when something wrong happened, TRUE (1) otherwise       */
 /*---------------------------------------------------------------------------*/
-__declspec(dllexport) int WINAPI unhook_mouse()
-	{
-	if (UnhookWindowsHookEx(hMouseHook) == 0)
-		{
+__declspec(dllexport) int WINAPI unhook_mouse() {
+	if (UnhookWindowsHookEx(hMouseHook) == 0) {
 		// DWORD nErrorCode = GetLastError();
 		// FIXME: Insert code here to deal with the error */
+		MessageBox (NULL, "Unable to unhook", "wel_hook.dll error", MB_OK | MB_ICONSTOP);
 		return 0;
-		}
+	}
 
 		/* Unhook succeeded, we reset the hook handles */
 	hMouseHook = NULL;
 	hHookWindow = NULL;
 	return 1;
-	}
+}

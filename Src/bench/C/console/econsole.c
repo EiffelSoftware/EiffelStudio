@@ -164,17 +164,46 @@ long eif_console_readstream(char *s, long bound)
 
 	EIF_GET_CONTEXT
 	EIF_INTEGER amount = bound;	/* Number of characters to be read */
-	int c;					/* Last char read */
+	char c;						/* Last char read */
 	long i = 0;					/* Counter */
+	long to_be_read = 0;		/* Number of characters that will be read by ReadConsole */
+	long read = 0;				/* Number of characters remainings for ReadConsole */
 	DWORD buffer_length = (DWORD) 0;
+	char done = (char) 0;
 	
-	if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+	eif_show_console();
+
+	to_be_read = min (bound, BUFFER_SIZE);
+	read = bound - to_be_read;
+	if (!ReadConsole(eif_coninfile, eif_console_buffer, to_be_read, &buffer_length, NULL))
 		eio();
 
-	while (amount-- > 0) {
+	if ((long) buffer_length < to_be_read)
+		read = 0;	/* It seems that the request to read `bound' characters was too big
+					   We need to stop any calls to ReadConsole to avoid a blocking situation
+					   where we are waiting for more characters */
+
+	while ((amount-- > 0) && (done == (char) 0)) {
 		c = eif_console_buffer [i];
-		if (i++ == (long) buffer_length)
-			break;
+		if (i++ == (long) (buffer_length - 1)) {
+			if (read == 0)
+				done = (char) 1;	/* No more reading requested, we can stop now, we have
+									   read so far bound - amount ­ 1 characters */
+			else {
+				to_be_read = min (read, BUFFER_SIZE);
+				read = read - to_be_read;
+				if (!ReadConsole(eif_coninfile, eif_console_buffer,
+							to_be_read, &buffer_length, NULL))
+					eio();
+	
+				if ((long) buffer_length < to_be_read)
+					read = 0;	/* It seems that the request to read `bound' characters
+								   was too big. We need to stop any calls to ReadConsole
+								   to avoid a blocking situation where we are waiting
+								   for more characters */
+				i = 0;
+			}
+		}
 		*s++ = c;
 	}
 
@@ -382,29 +411,26 @@ void eif_show_console()
 {
 	EIF_GET_CONTEXT
 	if (!eif_console_allocated) {
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+	   	BOOL bLaunched;
 		BOOL bSuccess;
 
 		bSuccess = AllocConsole();
 
 		if (bSuccess) {
-			SECURITY_ATTRIBUTES sa;
-
-			sa.nLength = sizeof (sa);
-			sa.lpSecurityDescriptor = NULL;
-			sa.bInheritHandle = TRUE;
-
 			eif_conoutfile = CreateFile ("CONOUT$", GENERIC_WRITE | GENERIC_READ,
-				FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, 0);
+				FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, 0, 0);
 
 			if (eif_conoutfile == INVALID_HANDLE_VALUE)
 				eio();
 
 			eif_coninfile = CreateFile ("CONIN$", GENERIC_READ | GENERIC_WRITE,
-				FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, 0);
+				FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, 0, 0);
 
 			if (eif_coninfile == INVALID_HANDLE_VALUE)
 				eio();
 
+			eif_register_cleanup (eif_console_cleanup);
 		} else {
 			eif_conoutfile = GetStdHandle (STD_OUTPUT_HANDLE);
 
@@ -417,7 +443,14 @@ void eif_show_console()
 				eio();
 		}
 
-		eif_register_cleanup (eif_console_cleanup);
+		GetConsoleScreenBufferInfo(eif_conoutfile, &csbi);
+		bLaunched = ((csbi.dwCursorPosition.X == 0) && (csbi.dwCursorPosition.Y == 0));
+		if ((csbi.dwSize.X <= 0) || (csbi.dwSize.Y <= 0))
+			bLaunched = FALSE;
+
+		if (bLaunched == TRUE)
+			eif_register_cleanup (eif_console_cleanup);
+
 		eif_console_allocated = TRUE;
 	}
 	EIF_END_GET_CONTEXT

@@ -107,7 +107,6 @@ void separate_call() {
 	int32 pat_id;
 	int is_extern = 0;
 
-	int static_type; 	/* Can be removed */
 	int dyn_type;
 	int32 *feature_ptr;
 	int32 rout_id;
@@ -199,9 +198,8 @@ void separate_call() {
 			}
 			sprintf(_concur_crash_info, CURERR14, _concur_command_feature, _concur_command_class);
 			dyn_type = Dtype(CUROBJ);
-			static_type = eif_type_id(_concur_command_class); 	/* Can be removed */
 #ifdef DEBUG
-dprintf(4)("%d(%s) Got feature <%s> on class <%s>, with static_type %d, dyn_type %d\n", _concur_pid, _concur_class_name_of_root_obj, _concur_command_feature, _concur_command_class, static_type, dyn_type);
+dprintf(4)("%d(%s) Got feature <%s> on class <%s>, with dyn_type %d\n", _concur_pid, _concur_class_name_of_root_obj, _concur_command_feature, _concur_command_class, dyn_type);
 #endif
 			is_extern = 0; /* It should be determined by the info transferred from caller, 
 							* or in some other way. 

@@ -3076,15 +3076,16 @@ elif com="$sed -n -e 's/^[-0-9a-f ]*_\(.*\)=.*/\1/p'";\
 	eval $xscan;\
 	$contains '^fprintf$' libc.list >/dev/null 2>&1; then
 		eval $xrun
+elif com="$sed -n -e 's/^.*| //p'";\
+	eval $xscan;\
+	$contains '^fprintf$' libc.list >/dev/null 2>&1; then
+		eval $xrun
 else
 	nm -p $* 2>/dev/null >libc.tmp
 	$grep fprintf libc.tmp > libc.ptf
 	if com="$sed -n -e 's/^.* [ADTSIW]  *_[_.]*//p' -e 's/^.* [ADTSIW] //p'";\
 		eval $xscan; $contains '^fprintf$' libc.list >/dev/null 2>&1
 	then
-echo Manu
-echo $nm_opt
-
 		nm_opt='-p'
 		eval $xrun
 	else

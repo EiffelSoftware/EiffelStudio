@@ -68,6 +68,8 @@ feature -- Basic operations
 				l_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), False)
 				format (l_ctxt.text)
 			end
+			extracted_description.replace_substring_all ("%T%T-- ", "")
+			extracted_description.replace_substring_all ("%T", "  ")
 		end
 
 	features_list_from_table (table: FEATURE_TABLE; class_i: CLASS_I; use_overloading: BOOLEAN): SORTABLE_ARRAY [FEATURE_DESCRIPTOR] is
@@ -157,7 +159,7 @@ feature -- Basic operations
 			end
 		end
 
-	recursive_lookup (target_type: TYPE; targets: LIST [STRING]; feature_table: FEATURE_TABLE): FEATURE_TABLE is
+	recursive_lookup (target_type: TYPE; targets: LIST [STRING]; feature_table: FEATURE_TABLE; exact_match: BOOLEAN): FEATURE_TABLE is
 			-- Available features after resolution of `targets' in `target_type'
 		require
 			non_void_target_type : target_type /= Void
@@ -176,11 +178,16 @@ feature -- Basic operations
 					l_feature_table.search (targets.first)
 					if l_feature_table.found then
 						l_type := l_feature_table.found_item.type
+					elseif not exact_match then
+						-- We are looking at something like `s.ada' where `s' is a string and
+						-- `ada' the beginning but non-complete name of a feature and should return 
+						-- the feature table of STRING if not `exact_match'
+						Result := l_feature_table
 					end
 					if l_type /= Void and then not l_type.is_void then 
 						targets.start
 						targets.remove
-						Result := recursive_lookup (l_type, targets, l_feature_table)
+						Result := recursive_lookup (l_type, targets, l_feature_table, exact_match)
 					end					
 				end
 			end
@@ -234,7 +241,6 @@ feature -- Basic operations
 		local
 			c: CHARACTER
 		do
-			target.to_lower
 			if target.substring (1, Agent_keyword_length).is_equal (Agent_keyword) then
 				-- Agent
 				set_agent_call

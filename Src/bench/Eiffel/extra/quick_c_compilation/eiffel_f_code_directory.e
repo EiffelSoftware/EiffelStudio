@@ -100,31 +100,29 @@ feature
 					elseif (l_files.item.is_equal ("Makefile.SH")) then
 						create makefile_sh.make (l_fname)
 					else
-						if not has_finished_file then
-							l_fname := l_files.item
-							l_count := l_fname.count
-								-- If the name is not greater than 3 and does not contain ".",
-								-- it means that we are not handling with Eiffel generated files
-								-- which have always the following format: "eaxxxx.c".
-							if
-								not l_fname.is_equal ("edynlib.c") and then
-								not l_fname.is_equal ("egc_dynlib.c") and then
-								not l_fname.is_equal ("emain.c") and then
-								l_count > 3 and then l_fname.substring_index (".", 1) /= 0
-							then
-								if l_fname.substring_index (".c",1) = l_count - 1 then
-									c_files.extend (l_file)
-									c_files.forth
-								elseif l_fname.substring_index (".cpp",1) = l_count - 3 then
-									cpp_files.extend (l_file)
-									cpp_files.forth
-								elseif l_fname.substring_index (".x",1) = l_count - 1 then
-									x_files.extend (l_file)
-									x_files.forth
-								elseif l_fname.substring_index (".xpp",1) = l_count - 3 then
-									xpp_files.extend (l_file)
-									xpp_files.forth
-								end
+						l_fname := l_files.item
+						l_count := l_fname.count
+							-- If the name is not greater than 3 and does not contain ".",
+							-- it means that we are not handling with Eiffel generated files
+							-- which have always the following format: "eaxxxx.c".
+						if
+							not l_fname.is_equal ("edynlib.c") and then
+							not l_fname.is_equal ("egc_dynlib.c") and then
+							not l_fname.is_equal ("emain.c") and then
+							l_count > 3 and then l_fname.substring_index (".", 1) /= 0
+						then
+							if l_fname.substring_index (".c",1) = l_count - 1 then
+								c_files.extend (l_file)
+								c_files.forth
+							elseif l_fname.substring_index (".cpp",1) = l_count - 3 then
+								cpp_files.extend (l_file)
+								cpp_files.forth
+							elseif l_fname.substring_index (".x",1) = l_count - 1 then
+								x_files.extend (l_file)
+								x_files.forth
+							elseif l_fname.substring_index (".xpp",1) = l_count - 3 then
+								xpp_files.extend (l_file)
+								xpp_files.forth
 							end
 						end
 					end
@@ -156,19 +154,27 @@ feature
 			elseif makefile_sh /= Void then
 				if not c_files.is_empty then
 					l_has_c_file := True
-					concat_files (c_files, big_file_name (False, True, False))
+					if not has_finished_file then
+						concat_files (c_files, big_file_name (False, True, False))
+					end
 				end
 				if not cpp_files.is_empty then
 					l_has_cpp_file := True
-					concat_files (cpp_files, big_file_name (False, True, True))
+					if not has_finished_file then
+						concat_files (cpp_files, big_file_name (False, True, True))
+					end
 				end
 				if not x_files.is_empty then
 					l_has_x_file := True
-					concat_files (x_files, big_file_name (False, False, False))
+					if not has_finished_file then
+						concat_files (x_files, big_file_name (False, False, False))
+					end
 				end
 				if not xpp_files.is_empty then
 					l_has_xpp_file := True
-					concat_files (xpp_files, big_file_name (False, False, True))
+					if not has_finished_file then
+						concat_files (xpp_files, big_file_name (False, False, True))
+					end
 				end
 				
 				makefile_sh.open_read

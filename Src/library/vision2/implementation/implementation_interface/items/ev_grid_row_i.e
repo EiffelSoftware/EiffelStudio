@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			is_initialized := True
+			internal_height := 16
 		end
 
 feature {EV_GRID_I} -- Initialization
@@ -123,11 +124,13 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			Result := 16
+			Result := internal_height
 			fixme ("Needs to be properly computed")
 		ensure
 			result_not_negative: Result >= 0
 		end
+		
+	internal_height: INTEGER
 		
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
@@ -197,6 +200,8 @@ feature -- Status setting
 		require
 			is_parented: parent /= Void
 		do
+			internal_height := a_height
+			parent_grid_i.recompute_row_offsets (index)
 			to_implement ("EV_GRID_ROW.set_height")
 		ensure
 			height_set: height = a_height

@@ -39,7 +39,7 @@ feature -- Constants
 		deferred
 		end
 
-	tool: EB_EDITOR
+	tool: EB_TEXT_TOOL
  
 feature -- Adding a formatter
 

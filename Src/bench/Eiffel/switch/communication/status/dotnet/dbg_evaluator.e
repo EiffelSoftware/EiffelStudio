@@ -52,7 +52,7 @@ feature -- Bridge
 			Result := eifnet_debugger.active_frame
 		end
 		
-	icor_debug_Class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
+	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
 			-- ICorDebugClass related to `a_class_type'
 		do		
 			Result := eifnet_debugger.icor_debug_class (a_class_type)
@@ -72,8 +72,8 @@ feature -- Bridge
 
 feature -- Access
 
-	dotnet_metamorphose_basic_to_ref (dmp: DUMP_VALUE): DUMP_VALUE is
-			-- Metamorphose basic type into corresponding _REF type
+	dotnet_metamorphose_basic_to_reference_value (dmp: DUMP_VALUE): DUMP_VALUE is
+			-- Metamorphose basic type into corresponding "reference TYPE" type
 		local
 			icdv: ICOR_DEBUG_VALUE
 			dv: EIFNET_ABSTRACT_DEBUG_VALUE
@@ -86,6 +86,21 @@ feature -- Access
 				Result := dmp
 			end
 		end
+
+	dotnet_metamorphose_basic_to_value (dmp: DUMP_VALUE): DUMP_VALUE is
+			-- Metamorphose basic type into corresponding dotnet value type
+		local
+			icdv: ICOR_DEBUG_VALUE
+			dv: EIFNET_ABSTRACT_DEBUG_VALUE
+		do
+			icdv := dump_value_to_icdv (dmp)
+			if icdv /= Void then
+				dv := debug_value_from_icdv (icdv)
+				Result := dv.dump_value
+			else
+				Result := dmp
+			end
+		end		
 
 	dotnet_evaluate_once_function (f: E_FEATURE): DUMP_VALUE is
 			-- Evaluation of once function
@@ -115,10 +130,7 @@ feature -- Access
 		local
 			l_d_value: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_icdv_obj: ICOR_DEBUG_VALUE
-			l_feature_token: INTEGER
 			l_icd_function: ICOR_DEBUG_FUNCTION
-			l_module_name: STRING
-			l_icd_module: ICOR_DEBUG_MODULE
 			l_result: ICOR_DEBUG_VALUE
 			l_adv: ABSTRACT_DEBUG_VALUE
 			l_icd_frame: ICOR_DEBUG_FRAME
@@ -135,11 +147,7 @@ feature -- Access
 			l_ctype := adapted_class_type (ctype, f)
 			
 				--| and now the other data
-			l_module_name := il_debug_info_recorder.module_file_name_for_class (l_ctype)
-			l_icd_module := icor_debug_module (l_module_name)
-			l_feature_token := il_debug_info_recorder.feature_token_for_feat_and_class_type (f, l_ctype)
-			l_icd_function := l_icd_module.get_function_from_token (l_feature_token)
-
+			l_icd_function := eifnet_debugger.icd_function_by_name (l_ctype, f.feature_name)
 			if l_icd_function /= Void then
 
 				debug ("debugger_trace_eval")
@@ -148,10 +156,15 @@ feature -- Access
 
 				if dvalue = Void then
 					l_d_value ?= Application.imp_dotnet.kept_object_item (addr)
-					l_icdv_obj := l_d_value.icd_referenced_value
+					if l_d_value /= Void then
+						l_icdv_obj := l_d_value.icd_referenced_value
+					else
+						--| FIXME jfiat [2004/02/19] : how can this happens ???!!!
+					end
 				else
+						-- FIXME JFIAT: basic type, how do we handle this now ???
 					if dvalue.is_basic then
-						l_icdv_obj := dotnet_metamorphose_basic_to_ref (dvalue).value_dotnet
+						l_icdv_obj := dotnet_metamorphose_basic_to_reference_value (dvalue).value_dotnet				
 					else
 						l_icdv_obj := dvalue.value_dotnet
 					end
@@ -288,24 +301,28 @@ feature {NONE} -- Implementation
 				error_occured := (eifnet_evaluator.last_call_success /= 0)
 			end
 		end
-		
+
 	dump_value_to_icdv_ref (dmv: DUMP_VALUE): ICOR_DEBUG_VALUE is
 			-- DUMP_VALUE converted into ICOR_DEBUG_VALUE for _REF Objects
 		do
 			Result := dmv.value_dotnet	
 		
-			if dmv.is_basic  then
+			if dmv.is_basic or dmv.is_type_string then
 				if Result /= Void then
 						--| we have a basic type as dotnet value
 						
 						--| typically result of previous expression
 					inspect dmv.type 
 					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
-						Result := eifnet_evaluator.icdv_integer_ref_from_icdv_integer (active_icd_frame, Result)
+						Result := eifnet_evaluator.icdv_reference_integer_from_icdv_integer (active_icd_frame, Result)
+					when feature {DUMP_VALUE_CONSTANTS}.type_real then
+						Result := eifnet_evaluator.icdv_reference_real_from_icdv_real (active_icd_frame, Result)							
+					when feature {DUMP_VALUE_CONSTANTS}.type_double then
+						Result := eifnet_evaluator.icdv_reference_double_from_icdv_double (active_icd_frame, Result)	
 					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
-						Result := eifnet_evaluator.icdv_boolean_ref_from_icdv_boolean (active_icd_frame, Result)
+						Result := eifnet_evaluator.icdv_reference_boolean_from_icdv_boolean (active_icd_frame, Result)
 					when feature {DUMP_VALUE_CONSTANTS}.type_character then
-						Result := eifnet_evaluator.icdv_character_ref_from_icdv_character (active_icd_frame, Result)
+						Result := eifnet_evaluator.icdv_reference_character_from_icdv_character (active_icd_frame, Result)
 					when feature {DUMP_VALUE_CONSTANTS}.type_string then
 						Result := eifnet_evaluator.icdv_string_from_icdv_system_string (active_icd_frame, Result)
 					else					
@@ -317,17 +334,21 @@ feature {NONE} -- Implementation
 						--| We need to build the corresponding ICorDebugValue object.
 					inspect dmv.type 
 					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
-						Result := eifnet_evaluator.new_i4_ref_evaluation (active_icd_frame, dmv.value_integer)
+						Result := eifnet_evaluator.new_reference_i4_evaluation (active_icd_frame, dmv.value_integer)
+					when feature {DUMP_VALUE_CONSTANTS}.type_real then
+						Result := eifnet_evaluator.new_reference_real_evaluation (active_icd_frame, dmv.value_real )
+					when feature {DUMP_VALUE_CONSTANTS}.type_double then
+						Result := eifnet_evaluator.new_reference_double_evaluation (active_icd_frame, dmv.value_double )
 					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
-						Result := eifnet_evaluator.new_boolean_ref_evaluation (active_icd_frame, dmv.value_boolean )
+						Result := eifnet_evaluator.new_reference_boolean_evaluation (active_icd_frame, dmv.value_boolean )
 					when feature {DUMP_VALUE_CONSTANTS}.type_character then
-						Result := eifnet_evaluator.new_character_ref_evaluation (active_icd_frame, dmv.value_character )
+						Result := eifnet_evaluator.new_reference_character_evaluation (active_icd_frame, dmv.value_character )
 					when feature {DUMP_VALUE_CONSTANTS}.type_string then
 						Result := eifnet_evaluator.new_eiffel_string_evaluation (active_icd_frame, dmv.value_string )
 					else					
 					end
 				end
-				error_occured := (eifnet_evaluator.last_call_success /= 0)				
+				error_occured := (eifnet_evaluator.last_call_success /= 0)
 			end
 		end
 
@@ -337,26 +358,30 @@ feature {NONE} -- Implementation
 			l_f_class_c: CLASS_C
 			l_cl_type_a: CL_TYPE_A
 		do
-				--| Get the real class_type
-			l_f_class_c := f.written_class
-			if ctype.associated_class.is_equal (l_f_class_c) then
-					--| The feature is not inherited
+			if ctype.associated_class.is_basic then
 				Result := ctype
 			else
-				if l_f_class_c.types.count = 1 then
-					Result := l_f_class_c.types.first
+					--| Get the real class_type
+				l_f_class_c := f.written_class
+				if ctype.associated_class.is_equal (l_f_class_c) then
+						--| The feature is not inherited
+					Result := ctype
 				else
-					--| The feature is inherited
-	
-					--| let's search and find the correct CLASS_TYPE among the parents
-					--| this will solve the problem of inherited once and generic class
-					--| the level on inheritance is represented by the CLASS_C
-					--| then the derivation of the GENERIC by the CLASS_TYPE
-					--| among the parent we know the right CLASS_TYPE
-					--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
-					l_cl_type_a := ctype.type.type_a
-					Result := l_cl_type_a.find_class_type (l_f_class_c).type_i.associated_class_type
-				end
+					if l_f_class_c.types.count = 1 then
+						Result := l_f_class_c.types.first
+					else
+						--| The feature is inherited
+		
+						--| let's search and find the correct CLASS_TYPE among the parents
+						--| this will solve the problem of inherited once and generic class
+						--| the level on inheritance is represented by the CLASS_C
+						--| then the derivation of the GENERIC by the CLASS_TYPE
+						--| among the parent we know the right CLASS_TYPE
+						--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
+						l_cl_type_a := ctype.type.type_a
+						Result := l_cl_type_a.find_class_type (l_f_class_c).type_i.associated_class_type
+					end
+				end				
 			end
 		end
 

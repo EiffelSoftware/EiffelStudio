@@ -1,36 +1,23 @@
 indexing
-
-	description: 
-		"Formatting context for class ast (produces image for class_ast).";
+	description: "Formatting context for class ast (produces image for class_ast).";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class FORMAT_CONTEXT
 
 inherit
+	SHARED_ERROR_HANDLER
 
-	SHARED_ERROR_HANDLER;
-	SHARED_OPERATOR_TABLE;
-	SHARED_TEXT_ITEMS;
+	SHARED_OPERATOR_TABLE
+
+	SHARED_TEXT_ITEMS
+
 	COMPILER_EXPORTER
 
 creation
-
 	make, make_for_case
 
 feature -- Initialization
-
-	make_for_case is
-			-- Initialize current for simple
-			-- format for eiffelcase (to get
-			-- image of precondition and postcondition).
-		do
-			!! format_stack.make;
-			!! text.make;
-			format_stack.extend (format);
-			!! format;
-			format_stack.extend (format);
-		end;
 
 	make (ast: CLASS_AS; file_name: STRING) is
 			-- Initialize current for simple format with 
@@ -47,6 +34,17 @@ feature -- Initialization
 			ast.simple_format (Current)
 		ensure
 			set: class_ast = ast
+		end;
+
+	make_for_case is
+			-- Initialize current for simple
+			-- format for eiffelcase (to get
+			-- image of precondition and postcondition).
+		do
+			!! format_stack.make;
+			!! text.make;
+			!! format;
+			format_stack.extend (format);
 		end;
 
 feature -- Properties
@@ -128,12 +126,9 @@ feature -- Local format setting details
 
 	set_new_line_between_tokens is
 			-- Use a new line between tokens.
-		local
-			f: like format
 		do
-			f := format;
-			f.set_new_line_between_tokens (True);
-			f.set_space_between_tokens (False)
+			format.set_new_line_between_tokens (True);
+			format.set_space_between_tokens (False)
 		ensure
 			format.new_line_between_tokens;
 			not format.space_between_tokens;
@@ -141,12 +136,9 @@ feature -- Local format setting details
 
 	set_space_between_tokens is
 			-- Add a space character after the separator.
-		local
-			f: like format
 		do
-			f := format;
-			f.set_new_line_between_tokens (false);
-			f.set_space_between_tokens (true)
+			format.set_new_line_between_tokens (false);
+			format.set_space_between_tokens (true)
 		ensure
 			not format.new_line_between_tokens;
 			format.space_between_tokens
@@ -154,12 +146,9 @@ feature -- Local format setting details
 
 	set_no_new_line_between_tokens is
 			-- Neither new line nor space between tokens.
-		local
-			f: like format
 		do
-			f := format;
-			f.set_new_line_between_tokens (false);
-			f.set_space_between_tokens (false)
+			format.set_new_line_between_tokens (false);
+			format.set_space_between_tokens (false)
 		ensure
 			not format.new_line_between_tokens;
 			not format.space_between_tokens
@@ -361,16 +350,13 @@ feature -- Output
 
 	put_separator is
 			-- Append the current separator to `text'.
-		local
-			f: like format
 		do
-			f := format;
-			if f.separator /= Void then
-				text.add (f.separator)
+			if format.separator /= Void then
+				text.add (format.separator)
 			end;
-			if f.space_between_tokens then
+			if format.space_between_tokens then
 				text.add_space
-			elseif f.new_line_between_tokens then
+			elseif format.new_line_between_tokens then
 				new_line
 			end;
 		end;

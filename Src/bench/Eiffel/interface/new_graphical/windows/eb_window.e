@@ -254,22 +254,20 @@ feature -- Window management / Status Setting
 			cd: EV_CONFIRMATION_DIALOG
 		do
 			if not destroyed then
+				Exit_application_cmd.set_already_confirmed (False)
 				if debugger_manager.debugging_window = Current then
-					Exit_application_cmd.set_already_save_confirmed (True)
-					Exit_application_cmd.set_already_kill_confirmed (True)
+					Exit_application_cmd.set_already_confirmed (True)
 					if Window_manager.development_windows_count > 1 then
 						create cd.make_with_text (Warning_messages.w_Closing_stops_debugger)
 					else
 						create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
 					end
-					cd.button ("OK").select_actions.extend (window_manager~destroy_window (Current))
+					cd.button ("OK").select_actions.extend (window_manager~try_to_destroy_window (Current))
 					cd.show_modal_to_window (window)
 				else
-					window_manager.destroy_window (Current)
+					window_manager.try_to_destroy_window (Current)
 				end
 			end
-			Exit_application_cmd.set_already_save_confirmed (False)
-			Exit_application_cmd.set_already_kill_confirmed (False)
 		end
 
 	refresh is

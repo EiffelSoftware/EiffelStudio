@@ -410,43 +410,22 @@ feature -- Actions on a given window
 
 	destroy_window (a_window: EB_WINDOW) is
 			-- Destroy the window.
-		local
-			loc_development_window: EB_DEVELOPMENT_WINDOW
 		do
-				-- If this is the last development window open, execute the "exit command"
-				-- (which may ask the user if he really want to close)
-			loc_development_window ?= a_window
-			if development_windows_count = 1 and then loc_development_window /= Void and (not exiting_application) then
-				exiting_application := True
-				Exit_application_cmd.execute
-				exiting_application := False
-			else
-					-- If we are going to kill the application, we'd better warn project observers that the project will
-					-- soon be unloaded before EiffelStudio is destroyed.
-				if Eiffel_project.initialized and development_windows_count = 1 and loc_development_window /= Void then
-					Eiffel_project.manager.on_project_close;
-				end
-					-- Remove this window from managed windows.
-				managed_windows.start
-				managed_windows.prune_all (a_window)
-				focused_windows.start
-				focused_windows.prune_all (a_window)
-	
-				if last_created_window = a_window then
-					last_created_window := Void
-				end
-				
-					-- Notify the observers
-				notify_observers (a_window, Notify_removed_window)
+				-- Remove this window from managed windows.
+			managed_windows.start
+			managed_windows.prune_all (a_window)
+			focused_windows.start
+			focused_windows.prune_all (a_window)
 
-					-- Destroy the window, this will call the close command from
-					-- the window.
-				a_window.destroy_imp
-
-				if development_windows_count = 0 then
-					stop_ev_application
-				end
+			if last_created_window = a_window then
+				last_created_window := Void
 			end
+			
+				-- Notify the observers
+			notify_observers (a_window, Notify_removed_window)
+
+				-- Destroy the window.
+			a_window.destroy_imp
 		end
 
 	record_window_change (a_window: EB_WINDOW) is
@@ -574,6 +553,67 @@ feature {EB_WINDOW} -- Events
 			focused_windows.start
 			focused_windows.prune_all (w)
 			focused_windows.extend (w)
+		end
+
+	try_to_destroy_window (a_window: EB_WINDOW) is
+			-- Destroy the window if it is possible.
+			-- The window-level checks should be performed in EB_WINDOW::destroy.
+			-- This method only takes into account the cases when closing the
+			-- window means exiting the application.
+		local
+			loc_development_window: EB_DEVELOPMENT_WINDOW
+		do
+			loc_development_window ?= a_window
+			if development_windows_count = 1 and then loc_development_window /= Void then
+				confirm_and_quit
+			else
+				destroy_window (a_window)
+			end
+		end
+
+feature {NONE} -- Exit implementation
+
+	confirm_and_quit is
+			-- If a compilation is under way, do not exit.
+		local
+			wd: EV_WARNING_DIALOG
+			qd: EV_QUESTION_DIALOG
+			evcsts: EV_DIALOG_CONSTANTS
+		do
+			if Eiffel_project.initialized and then Eiffel_project.is_compiling then
+				Exit_application_cmd.set_already_confirmed (True)
+				create wd.make_with_text (Warning_messages.W_exiting_stops_compilation)
+				wd.show_modal_to_window (last_focused_development_window.window)
+			elseif has_modified_windows then
+				Exit_application_cmd.set_already_confirmed (True)
+				create qd.make_with_text (Interface_names.L_exit_warning)
+				create evcsts
+				qd.button (evcsts.ev_yes).select_actions.extend (~save_and_quit)
+				qd.button (evcsts.ev_no).select_actions.extend (~quit)
+				qd.show_modal_to_window (last_focused_development_window.window)
+			else
+				quit
+			end
+		end
+
+	save_and_quit is
+			-- Save all windows and destroy the last development window.
+		local
+			cv_dev: EB_DEVELOPMENT_WINDOW
+			w: EB_WINDOW
+		do
+			save_all
+			if has_modified_windows then
+					-- Some windows couldn't be saved, do not exit.
+			else
+				quit
+			end
+		end
+
+	quit is
+			-- Destroy the last development window.
+		do
+			Exit_application_cmd.ask_confirmation
 		end
 
 feature -- Events

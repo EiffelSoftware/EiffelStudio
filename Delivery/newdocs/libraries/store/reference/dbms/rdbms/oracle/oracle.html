@@ -1,0 +1,771 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>ORACLE Flat contracts</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Oracle specification"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html">ORACLE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_database_handle_name"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_database_handle_name">Database_handle_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"ORACLE"</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_boolean.html">DATABASE_BOOLEAN</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_name_boolean"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_name_boolean">Sql_name_boolean</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"CHAR"</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_character.html">DATABASE_CHARACTER</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_name_character"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_name_character">Sql_name_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"CHAR"</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_datetime.html">DATABASE_DATETIME</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_name_datetime"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_name_datetime">Sql_name_datetime</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"DATE"</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_double.html">DATABASE_DOUBLE</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_name_double"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_name_double">Sql_name_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"FLOAT"</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_integer.html">DATABASE_INTEGER</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_name_integer"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_name_integer">Sql_name_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"NUMBER"</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_real.html">DATABASE_REAL</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_name_real"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_name_real">Sql_name_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"FLOAT"</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_string.html">DATABASE_STRING</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_name_string"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_name_string">sql_name_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> External features</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_begin"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_begin">begin</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_c_boolean_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_c_boolean_type">c_boolean_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_c_character_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_c_character_type">c_character_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_c_date_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_c_date_type">c_date_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_c_float_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_c_float_type">c_float_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_c_integer_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_c_integer_type">c_integer_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_c_real_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_c_real_type">c_real_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_c_string_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_c_string_type">c_string_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_close_cursor"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_close_cursor">close_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do nothing, for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"> prepared statement</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_commit"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_commit">commit</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_connect"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_connect">connect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">user_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">user_passwd</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">data_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">application</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">hostname</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">roleid</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">rolepasswd</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">groupid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_conv_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_conv_type">conv_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">indicator</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_database_make"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_database_make">database_make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_disconnect"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_disconnect">disconnect</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_exec_immediate"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_exec_immediate">exec_immediate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_boolean_data"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_boolean_data">get_boolean_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_col_len"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_col_len">get_col_len</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_col_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_col_type">get_col_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_count"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_count">get_count</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_data_len"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_data_len">get_data_len</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_date_data"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_date_data">get_date_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_day"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_day">get_day</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_error_code"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_error_code">get_error_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_error_message"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_error_message">get_error_message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/pointer.html">POINTER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_float_data"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_float_data">get_float_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_hour"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_hour">get_hour</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_integer_data"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_integer_data">get_integer_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_min"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_min">get_min</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_month"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_month">get_month</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_real_data"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_real_data">get_real_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/real.html">REAL</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_sec"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_sec">get_sec</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_warn_message"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_warn_message">get_warn_message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/pointer.html">POINTER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_get_year"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_get_year">get_year</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_identifier_quoter"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_identifier_quoter">identifier_quoter</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Return the string used to quote identifiers in SQL command,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for example, if the quoter is `, and we want to select on</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> table "my table", we should express the query as:</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> select * from `My table`</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_init_order"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_init_order">init_order</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_null_data"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_is_null_data">is_null_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is last retrieved data null?</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_new_descriptor"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_new_descriptor">new_descriptor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_next_row"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_next_row">next_row</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_put_col_name"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_put_col_name">put_col_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ar</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/special.html">SPECIAL</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">max_len</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_put_data"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_put_data">put_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ar</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/special.html">SPECIAL</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">max_len</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_qualifier_seperator"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_qualifier_seperator">qualifier_seperator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When "qualifier" and "owner" are used to identifier</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> a database object, they should be seperated by a string called</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> "qualifier seperator"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_rollback"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_rollback">rollback</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sensitive_mixed"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_sensitive_mixed">sensitive_mixed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the database sensitive to lower or</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> upper case?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment">, Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_start_order"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_start_order">start_order</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_terminate_order"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_terminate_order">terminate_order</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_trancount"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_trancount">trancount</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_change.html">DATABASE_CHANGE</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_descriptor_is_available"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_descriptor_is_available">descriptor_is_available</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_hide_qualifier"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_hide_qualifier">hide_qualifier</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_temp</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/pointer.html">POINTER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When "qualifier" is used to identify an database object,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> we have to hide ":" in the qualifier first, otherwise, it</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> will be misinterpreted by feature SQL_SCAN::parse</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_pre_immediate"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_pre_immediate">pre_immediate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">descriptor</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> In IMMEDIATE EXECUTE mode, if the performed SQL statement is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> a call to a stored procedure, allocate some area used by the</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> stored procedure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_results_order"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_results_order">results_order</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fetch all the rows resulting from the sql query</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default value zero</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for Sybase</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For DATABASE_DYN_STORE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_unset_catalog_flag"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_unset_catalog_flag">unset_catalog_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">desc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default value zero</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_format.html">DATABASE_FORMAT</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_date_to_str"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_date_to_str">date_to_str</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/time/reference/date_time.html">DATE_TIME</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> String representation in SQL of </SPAN><SPAN CLASS="equoted">object</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_false_representation"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_false_representation">False_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"'F'"</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_string_format"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_string_format">string_format</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> String representation in SQL of </SPAN><SPAN CLASS="equoted">object</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> WARNING: use "IS NULL" if object is empty instead of</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> "= NULL" which does not work.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_true_representation"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_true_representation">True_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"'T'"</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_proc.html">DATABASE_PROC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_drop_proc_not_supported"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_drop_proc_not_supported">drop_proc_not_supported</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Display the text saying that the database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> does not support stored procedure dropping</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_exec_proc_not_supported"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_exec_proc_not_supported">exec_proc_not_supported</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Display the text saying that the database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> does not support stored procedure executing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_has_row_number"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_has_row_number">has_row_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May the database store the text of a stored procedure in more than one</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> row?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default value False</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_map_var_after"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_map_var_after">map_var_after</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for Sybase</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_map_var_before"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_map_var_before">map_var_before</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for Sybase</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_map_var_between"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_map_var_between">Map_var_between</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">""</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_map_var_between_2"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_map_var_between_2">map_var_between_2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Equal type</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_name_proc_lower"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_name_proc_lower">Name_proc_lower</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">False</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_proc_args"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_proc_args">proc_args</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> True if the execution of the stored procedure is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> "execute procedure_name (argument1='sireude')"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> False if "execute procedure_name ('sireude')"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default value False</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> True for Sybase</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_select_exists"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_select_exists">select_exists</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_select_text"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_select_text">Select_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"select text from all_source where Name = :name and Type = 'PROCEDURE'"</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_adapt_db"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_sql_adapt_db">sql_adapt_db</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sql</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Adapt the SQL string for the database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for Sybase and </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_after_exec"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_after_exec">Sql_after_exec</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"; END;"</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_as"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_as">Sql_as</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">" AS BEGIN "</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_creation"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_creation">Sql_creation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"create procedure "</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_end"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_end">Sql_end</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"; END;"</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_execution"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_execution">Sql_execution</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"BEGIN "</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_store_proc_not_supported"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_store_proc_not_supported">store_proc_not_supported</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Display the text saying that the database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> does not support stored procedure creating</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_support_drop_proc"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_support_drop_proc">Support_drop_proc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">True</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_support_proc"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_support_proc">support_proc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does the database support stored procedure?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 1 if True, 0 if False</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_support_sql_of_proc"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_support_sql_of_proc">Support_sql_of_proc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">True</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_support_stored_proc"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_support_stored_proc">support_stored_proc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_text_not_supported"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_text_not_supported">text_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Display the text saying that the database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> does not support stored procedure text retrieving</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_repository.html">DATABASE_REPOSITORY</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_max_char_size"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_max_char_size">max_char_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Limit size before being a text</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Except for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_selection_string"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_selection_string">selection_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">rep_qualifier</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">rep_owner</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">rep_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_string"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_string">Sql_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"VARCHAR2 ("</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sql_string2"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_sql_string2">sql_string2</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">int</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_selection.html">DATABASE_SELECTION</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_change.html">DATABASE_CHANGE</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_bind_args_value"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_bind_args_value">bind_args_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">uht</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/table/hash_table.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">sql</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Append map variables name from to </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Map variables are used for set input arguments.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">uht</SPAN><SPAN CLASS="ecomment"> can be empty (for stored procedures).</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_bind_parameter"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_bind_parameter">bind_parameter</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">parameters</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">sql</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_normal_parse"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_normal_parse">normal_parse</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_parse"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_parse">parse</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">uht</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/table/hash_table.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">uhandle</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/store/reference/support/handle.html">HANDLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">sql</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_result_order"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_result_order">result_order</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fetch one row resulting from the sql query</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default value zero</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For Sybase</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_status.html">DATABASE_STATUS</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_clear_error"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_clear_error">clear_error</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Reset database error status.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_found"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there any record matching the last</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> selection condition used ?</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_error_updated"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_is_error_updated">is_error_updated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has an Oracle function been called since last update which may have</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> updated error code, error message or warning message?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_store.html">DATABASE_STORE</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_dim_rep_diff"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_dim_rep_diff">dim_rep_diff</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">repository_dimension</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">db_field_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the dimension of the repository different to the field count of the object to insert?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If yes, make a default map_table</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default value False</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Only for Sybase</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_put_column_name"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_put_column_name">put_column_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">repository</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_repository.html">DATABASE_REPOSITORY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">map_table</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add the columns names to sql_string in the feature put</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Redefined for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_update_map_table_error"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_update_map_table_error">update_map_table_error</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">uhandle</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/store/reference/support/handle.html">HANDLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">map_table</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">ind</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> For database types</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_convert_string_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_convert_string_type">convert_string_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r_any</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">field_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">class_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert </SPAN><SPAN CLASS="equoted">r_any</SPAN><SPAN CLASS="ecomment"> to the expected object.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> By default returns </SPAN><SPAN CLASS="equoted">r_any</SPAN><SPAN CLASS="ecomment">, redefined in </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html">ORACLE</A><SPAN CLASS="ecomment"> to return</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> an </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer_ref.html">INTEGER_REF</A><SPAN CLASS="ecomment"> when </SPAN><SPAN CLASS="equoted">field_name</SPAN><SPAN CLASS="ecomment"> is "data_type".</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">r_any_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">r_any</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">field_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">field_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">class_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">class_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/login.html">LOGIN</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database_appl.html">DATABASE_APPL</A><SPAN CLASS="ecomment"> only for password_ok</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_password_ensure"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_password_ensure">password_ensure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">passwd</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">uname</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">upasswd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_password_ok"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/rdbms/oracle/oracle.html#f_password_ok">password_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">upasswd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_user_name_ok"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/dbms/support/database.html#f_user_name_ok">user_name_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">uname</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can the user name be Void?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Yes only for </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>ORACLE<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

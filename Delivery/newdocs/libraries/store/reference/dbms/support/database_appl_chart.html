@@ -1,0 +1,73 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>DATABASE_APPL Chart</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database_appl_chart.html">DATABASE_APPL</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database_chart.html">DATABASE</A> <SPAN CLASS="ekeyword">create</SPAN> default_create <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../../libraries/store/reference/dbms/support/index.html">eiffelstore.dbms.support</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"General application"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_login_and_connect">login_and_connect</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_login">login</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_default_create">default_create</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../libraries/store/reference/support/db_constant_chart.html">DB_CONSTANT</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../libraries/store/reference/support/general_appl_chart.html">GENERAL_APPL</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/handle_spec_chart.html">HANDLE_SPEC</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database_chart.html">DATABASE</A> <SPAN CLASS="ekeyword">create</SPAN> default_create <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../libraries/store/reference/support/handle_use_chart.html">HANDLE_USE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`db_spec' was declared in HANDLE_SPEC"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/handle_spec.html#f_db_spec">db_spec</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database_chart.html">DATABASE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_logged_to_base' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_is_logged_to_base">is_logged_to_base</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`login' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_login">login</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">user_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">password</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`login_and_connect' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_login_and_connect">login_and_connect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">user_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">password</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_application' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_set_application">set_application</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">application_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_base' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_set_base">set_base</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_data_source' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_set_data_source">set_data_source</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dsn</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_group' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_set_group">set_group</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">groupid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_hostname' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_set_hostname">set_hostname</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_role' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_appl.html#f_set_role">set_role</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">roleid</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">rolepasswd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

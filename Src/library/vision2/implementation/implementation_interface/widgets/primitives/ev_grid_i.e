@@ -1055,7 +1055,7 @@ feature {NONE} -- Drawing implementation
 			-- Draw a resizing line at horizontal position relative to `drawable'.
 			-- Clip line to drawable width.
 		do
-			if (position - viewport.x_offset > viewport.width) or
+			if (position - viewport.x_offset > internal_client_width) or
 				(position - viewport.x_offset < 0) then
 				remove_resizing_line
 			else
@@ -1106,7 +1106,7 @@ feature {NONE} -- Drawing implementation
 				-- Retrieve the 
 			l_total_header_width := total_header_width
 			
-			l_client_width := viewport.width
+			l_client_width := internal_client_width
 				-- Note that `width' was not used as we want it to represent only the width of
 				-- the "client area" which is `viewport'.
 			
@@ -1152,14 +1152,14 @@ feature {NONE} -- Drawing implementation
 				end
 			end
 			
-			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < viewport.width) then
+			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < internal_client_width) then
 					-- If `header' and `drawable' currently have a position that starts before the client area of
 					-- `viewport' and the total header width is small enough so that at the current position, `header' and
 					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
 					-- so that they do reach the very left-hand edge of `viewport'
 				horizontal_scroll_bar.change_actions.block
-				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
-				header_viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+				viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
+				header_viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
 				
 				horizontal_scroll_bar.change_actions.resume
 			end
@@ -1288,7 +1288,7 @@ feature {NONE} -- Drawing implementation
 				internal_client_x := a_value
 			end
 			
-			buffer_space := (buffered_drawable_size - viewport.width)
+			buffer_space := (buffered_drawable_size - internal_client_width)
 			current_buffer_position := viewport.x_offset
 			
 			if (internal_client_x > last_horizontal_scroll_bar_value) and ((internal_client_x - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
@@ -1336,6 +1336,12 @@ feature {NONE} -- Drawing implementation
 			a_width_non_negative: a_width >= 0
 			a_height_non_negative: a_height >= 0
 		do
+				-- Set the internal client dimensions for
+				-- quick retrieval later. This reduces the dependncies on
+				-- `viewport' within other code.
+			internal_client_width := a_width
+			internal_client_height := a_height
+			
 			if not header.is_empty then
 					-- Update horizontal scroll bar size and position.
 				recompute_horizontal_scroll_bar
@@ -1344,8 +1350,9 @@ feature {NONE} -- Drawing implementation
 				recompute_vertical_scroll_bar
 			end
 		ensure
-			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= viewport.width and
-				viewport.item.height >= viewport.height
+			client_dimensions_set: internal_client_width = viewport.width and internal_client_height = viewport.height
+			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= internal_client_width and
+				viewport.item.height >= internal_client_height
 		end
 		
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR

@@ -5,10 +5,10 @@ indexing
 	attribute:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end
 	class_attribute:
-		create {CLASS_INTERFACE_ATTRIBUTE}.make_from_class_interface_type_2 (feature {CLASS_INTERFACE_TYPE}.none) end,
-		create {GUID_ATTRIBUTE}.make (("E1FFE16A-FB59-4f0c-9D85-ADDD9366E359").to_cil) end
+		create {CLASS_INTERFACE_ATTRIBUTE}.make (feature {CLASS_INTERFACE_TYPE}.none) end,
+		create {GUID_ATTRIBUTE}.make ("E1FFE16A-FB59-4f0c-9D85-ADDD9366E359") end
 	interface_attribute:
-		create {GUID_ATTRIBUTE}.make (("E1FFE157-2182-4c1b-8D26-AC4BB334A7C8").to_cil) end
+		create {GUID_ATTRIBUTE}.make ("E1FFE157-2182-4c1b-8D26-AC4BB334A7C8") end
 
 class
 	COM_ISE_CACHE_MANAGER
@@ -165,6 +165,9 @@ feature -- Basic Oprtations
 feature {NONE} -- Implementation
 
 	impl: ISE_CACHE_MANAGER
-		-- impl to the cache manager
+			-- impl to the cache manager
+		indexing
+			attribute: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+		end
 
 end -- class COM_ISE_CACHE_MANAGER

@@ -54,11 +54,12 @@ feature -- Iteration
 
 feature -- IL code generation
 
-	generate_il_branch_on_greater (is_included: BOOLEAN; label: IL_LABEL) is
+	generate_il_branch_on_greater (is_included: BOOLEAN; label: IL_LABEL; instruction: INSPECT_B) is
 			-- Generate branch to `label' if value on IL stack it greater than this value.
 			-- Assume that current value is included in lower interval if `is_included' is true.
 		require
 			label_not_void: label /= Void
+			instruction_not_void: instruction /= Void
 		deferred
 		end
 

@@ -693,8 +693,7 @@ feature -- Setting
 				-- If there are some pre/post conditions to check, we choose
 				-- to be safe by encapsulating even when not needed if the checks
 				-- are generated.
-			tmp := System.has_multithreaded or has_rescue or
-				byte_code.has_inlined_code or has_assertions_checking_enabled
+			tmp := has_rescue or byte_code.has_inlined_code or has_assertions_checking_enabled
 
 			if not tmp and then assertion_type /= In_invariant then
 				tmp := True	

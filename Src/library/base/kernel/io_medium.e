@@ -96,6 +96,7 @@ feature -- Status report
 		end;
 
 	readable: BOOLEAN is
+			-- Is there a current item that may be read?
 		require
 			handle_exists: exists
 		deferred

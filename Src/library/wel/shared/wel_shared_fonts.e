@@ -16,4 +16,12 @@ feature -- Access
 			font_created: Result /= Void
 		end
 
+	system_font: WEL_SYSTEM_FONT is
+			-- Default system font.
+		once
+			create Result.make
+		ensure
+			font_created: Result /= Void
+		end
+
 end -- class WEL_SHARED_FONTS

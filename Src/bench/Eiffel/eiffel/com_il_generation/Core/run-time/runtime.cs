@@ -286,6 +286,7 @@ feature -- Status report
 		INTERFACE_TYPE_ATTRIBUTE generic_type;
 		EIFFEL_DERIVATION der;
 		CLASS_TYPE cl_type;
+		Type Result = null;
 
 		if (l_object != null) {
 			#if ASSERTIONS
@@ -296,13 +297,16 @@ feature -- Status report
 
 			der = l_object.____type ();
 			cl_type = der.generics_type [pos - 1];
-			generic_type = (INTERFACE_TYPE_ATTRIBUTE)
-				Type.GetTypeFromHandle (cl_type.type).
-					GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
-			return generic_type.class_type;
-		} else {
-			return null;
+			if (!cl_type.is_basic ()) {
+				generic_type = (INTERFACE_TYPE_ATTRIBUTE)
+					Type.GetTypeFromHandle (cl_type.type).
+						GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
+				Result = generic_type.class_type;
+			} else {
+				Result = Type.GetTypeFromHandle (cl_type.type);
+			}
 		}
+		return Result;
 	}
 
 	public static Boolean is_eiffel_string (object o)

@@ -20,11 +20,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen exportation_list: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen ExportationList: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.ExportClause"
 		alias
-			"exportation_list"
+			"ExportationList"
 		end
 
 feature -- Basic Operations

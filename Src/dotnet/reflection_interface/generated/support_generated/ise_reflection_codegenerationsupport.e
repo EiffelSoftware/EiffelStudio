@@ -27,11 +27,11 @@ feature -- Access
 			"EiffelFeature"
 		end
 
-	frozen ErrorMessages: ISE_REFLECTION_CODEGENERATIONSUPPORTERRORMESSAGES is
+	frozen XmlElements: ISE_REFLECTION_XMLELEMENTS is
 		external
-			"IL field signature :ISE.Reflection.CodeGenerationSupportErrorMessages use ISE.Reflection.CodeGenerationSupport"
+			"IL field signature :ISE.Reflection.XmlElements use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"ErrorMessages"
+			"XmlElements"
 		end
 
 	frozen EiffelClass: ISE_REFLECTION_EIFFELCLASS is
@@ -48,11 +48,11 @@ feature -- Access
 			"TypeDescription"
 		end
 
-	frozen XmlElements: ISE_REFLECTION_XMLELEMENTS is
+	frozen ErrorMessages: ISE_REFLECTION_CODEGENERATIONSUPPORTERRORMESSAGES is
 		external
-			"IL field signature :ISE.Reflection.XmlElements use ISE.Reflection.CodeGenerationSupport"
+			"IL field signature :ISE.Reflection.CodeGenerationSupportErrorMessages use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"XmlElements"
+			"ErrorMessages"
 		end
 
 feature -- Basic Operations

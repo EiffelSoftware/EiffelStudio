@@ -17,20 +17,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen PublicKey: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
-		alias
-			"PublicKey"
-		end
-
-	frozen Name: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
-		alias
-			"Name"
-		end
-
 	frozen Culture: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
@@ -43,6 +29,20 @@ feature -- Access
 			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
 		alias
 			"Version"
+		end
+
+	frozen PublicKey: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"PublicKey"
+		end
+
+	frozen Name: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"Name"
 		end
 
 feature -- Basic Operations

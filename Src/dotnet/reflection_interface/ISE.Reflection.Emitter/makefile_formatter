@@ -5,5 +5,7 @@ SRCLIST = formatter.cs
 .cs.dll:
 	csc $*.cs
 
-ISE.Reflection.Formatter.dll : $(SRCLIST) makefile
-	csc /t:library /out:ISE.Reflection.Formatter.dll $(SRCLIST) 
+ISE.Reflection.Formatter.dll : $(SRCLIST) makefile_formatter
+	csc /t:module $(SRCLIST) 
+	sn -k Key
+	al formatter.netmodule /keyfile:Key /t:lib /out:ISE.Reflection.Formatter.dll

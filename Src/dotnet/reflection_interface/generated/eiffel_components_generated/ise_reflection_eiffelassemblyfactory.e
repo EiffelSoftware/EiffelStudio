@@ -17,6 +17,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	frozen EmitterVersionNumber: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
+		alias
+			"EmitterVersionNumber"
+		end
+
 	frozen AssemblyName: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
@@ -38,11 +45,11 @@ feature -- Access
 			"AssemblyVersion"
 		end
 
-	frozen EiffelClusterPath: STRING is
+	frozen Types: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"EiffelClusterPath"
+			"Types"
 		end
 
 	frozen AssemblyPublicKey: STRING is
@@ -52,18 +59,11 @@ feature -- Access
 			"AssemblyPublicKey"
 		end
 
-	frozen EmitterVersionNumber: STRING is
+	frozen EiffelClusterPath: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"EmitterVersionNumber"
-		end
-
-	frozen Types: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelAssemblyFactory"
-		alias
-			"Types"
+			"EiffelClusterPath"
 		end
 
 feature -- Basic Operations
@@ -75,11 +75,11 @@ feature -- Basic Operations
 			"Make"
 		end
 
-	SetAssemblyCulture (a_culture: STRING) is
+	a_invariant is
 		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
+			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"SetAssemblyCulture"
+			"_invariant"
 		end
 
 	SetAssemblyPublicKey (a_public_key: STRING) is
@@ -117,11 +117,11 @@ feature -- Basic Operations
 			"SetAssemblyVersion"
 		end
 
-	a_invariant is
+	SetAssemblyCulture (a_culture: STRING) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyFactory"
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssemblyFactory"
 		alias
-			"_invariant"
+			"SetAssemblyCulture"
 		end
 
 	SetEiffelClusterPath (a_path: STRING) is

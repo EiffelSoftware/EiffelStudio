@@ -139,6 +139,8 @@ feature {NONE} -- Array optimization
 							b_id := a_feature.body_id;
 							byte_code := Byte_server.item (b_id);
 							if lower = Void then
+									-- Optimization: get the FEATURE_Is only
+									-- if the sets are not disjoint
 								lower := select_table.item (lower_rout_id);
 								area := select_table.item (area_rout_id);
 							end;
@@ -153,6 +155,9 @@ feature {NONE} -- Array optimization
 					end;
 					ftable.forth
 				end;
+					-- Reset the `unsafe' FEATURE_Is
+				lower := Void;
+				area := Void;
 				array_descendants.forth
 			end;
 
@@ -180,7 +185,7 @@ debug ("OPTIMIZATION")
 end
 						!!dep.make (a_class.id, a_feature.feature_id)
 						unsafe_features.extend (dep);
-						mark_alive (a_feature);
+						mark_alive (a_feature, a_feature.rout_id_set.first);
 					end;
 					ftable.forth
 				end
@@ -194,7 +199,7 @@ end
 			!!dep.make (a_class.id, a_feature.feature_id);
 			unsafe_features.extend (dep);
 			unsafe_body_ids.extend (a_feature.body_id)
-			mark_alive (a_feature);
+			mark_alive (a_feature, a_feature.rout_id_set.first);
 		end;
 
 	record_descendants (a_class: CLASS_C) is
@@ -296,7 +301,7 @@ feature
 								optimized_features.extend (opt_unit);
 									-- Store the new byte code
 								tmp_opt_byte_server.put (byte_code);
-debug ("RECORD")
+debug ("OPTIMIZATION", "RECORD")
 	io.error.new_line;
 	io.error.putstring (a_class.class_name);
 	io.error.putstring (" ");
@@ -424,14 +429,51 @@ feature -- Detection of safe/unsafe features
 			good_class: a_class /= Void
 		do
 			if not (a_feature.is_attribute or else is_marked (a_feature)) then
-				mark (a_feature, a_class);
+				mark (a_feature, a_class, a_feature.rout_id_set.first);
 			end;
 		end;
 
 	is_safe (f: FEATURE_I): BOOLEAN is
 			-- Can the feature be safely called within an optimized loop?
+		local
+			table: ROUT_UNIT_TABLE;
+			rout_id_val: INTEGER;
+			unit: ROUT_UNIT;
+			written_class, descendant_class: CLASS_C;
+			body_table: BODY_INDEX_TABLE;
+			other_body_id: INTEGER
 		do
-			Result := not unsafe_body_ids.has (f.body_id)
+			rout_id_val := f.rout_id_set.first;
+
+			if Tmp_poly_server.has (rout_id_val) then
+				written_class := f.written_class;
+				table ?= Tmp_poly_server.item (rout_id_val);
+				from
+					Result := True;
+					body_table := System.body_index_table;
+					table.start
+				until
+					table.after or else not Result
+				loop
+					unit := table.item;
+					descendant_class := System.class_of_id (unit.id);
+					if descendant_class.conform_to (written_class) then
+						other_body_id := body_table.item (unit.body_index);
+						Result := not unsafe_body_ids.has (other_body_id);
+					end
+					table.forth
+				end
+			else
+				Result := not unsafe_body_ids.has (f.body_id)
+			end
+
+debug ("OPTIMIZATION")
+	io.error.putstring ("ARRAY_OPTIMIZER: ")
+    io.error.putstring (f.written_class.class_name);
+    io.error.putstring (" ");
+    io.error.putstring (f.feature_name);
+    io.error.putstring (" is safe%N");
+end
 		end
 
 feature {NONE} -- Detection of safe/unsafe features
@@ -464,10 +506,10 @@ debug ("OPTIMIZATION")
 	io.error.putstring (static_class.class_name);
 	io.error.new_line;
 end;
-						mark (depend_feature, static_class);
+						mark (depend_feature, static_class, depend_feature.rout_id_set.first);
 					end;
 						-- get the status ...
-					if unsafe_body_ids.has (depend_feature.body_id) then
+					if not is_safe (depend_feature) then
 						unsafe := True;
 						unsafe_body_ids.extend (original_feature.body_id);
 debug ("OPTIMIZATION")

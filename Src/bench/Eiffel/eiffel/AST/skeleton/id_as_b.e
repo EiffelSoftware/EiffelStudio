@@ -17,18 +17,12 @@ inherit
 	ATOMIC_AS_B
 		undefine
 			copy, out, is_equal, setup, consistent,
-			pass_address, is_id, string_value
+			pass_address, is_id
 		redefine
 			good_integer, good_character,
 			make_integer, make_character,
 			record_dependances
 		end;
-
-	STRING
-		rename
-			set as string_set,
-			is_integer as string_is_integer
-		end
 
 creation
 

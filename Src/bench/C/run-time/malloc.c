@@ -17,6 +17,8 @@
 /*#define MEM_STAT /**/
 
 #include "eif_config.h"
+#include "eif_portable.h"	/* must come before <errno.h> for VMS */
+#include "eif_lmalloc.h"	/* for eif_calloc, eif_malloc, eif_free */
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
 

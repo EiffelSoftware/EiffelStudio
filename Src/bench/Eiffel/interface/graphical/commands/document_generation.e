@@ -133,14 +133,17 @@ feature -- Execution
 	work (argument: ANY) is
 			-- Perform edit operations.
 		do
-			if argument = Void then
+			if argument = tool then
 				filter_window.call (Current)
 			elseif argument = Current then
 					-- Comes from filter window
 				filter_name := filter_window.selected_filter
 				if filter_name /= Void then
 					warner (Project_tool).custom_call 
-						(Current, Warning_messages.w_Include_parents, " Yes ", " No ", Void)
+						(Current, Warning_messages.w_Include_parents, 
+							Interface_names.b_Yes, 	
+							Interface_names.b_No,
+							Void)
 				end
 			end
 		end;

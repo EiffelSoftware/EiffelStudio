@@ -1,36 +1,30 @@
 <TITLE>Eiffel-C++ interface and Legacy++</TITLE>
 
 <HTML>
-<HEAD>
- 
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Legacy++ and the C++ interface</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="/styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css">
+</head>
 
-<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
-
-
-    <META NAME="GENERATOR" Content="Visual Page 1.0 for Windows">
-    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
-</HEAD>
-
-<BODY BGCOLOR="#F9EFE9">
-
-<P>
+<BODY>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
       <TR>
-              <TD><IMG SRC="/images/headers/ise-left.gif" WIDTH="200" HEIGHT="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="/images/headers/tech-right.gif" WIDTH="225" HEIGHT="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
+              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
+                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
                       BORDER="0"></TD>
       </TR>
 </TABLE>
 
-
-<p>
-<table cols="1" cellpadding="0" cellspacing="0" border="0"><tr><td>
-
+<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<tr><td>
 
 <H1>Eiffel-C++ interface and Legacy++</H1>
-<IMG SRC="/images/logos/power.gif" ALT="Eiffel Power (TM) from ISE" VSPACE="2"
+<IMG SRC="images/power.gif" ALT="Eiffel Power (TM) from ISE" VSPACE="2"
 ALIGN=RIGHT>
 <P>
 This document is appendix F to the manual
@@ -48,19 +42,15 @@ to incorporate C++ classes in your Eiffel software.
 <P>
 The C++ interface offers the following mechanisms:
 <UL>
+<p><li> You can create instances of C++ classes from Eiffel, using the C++ "constructor" of
+your choice.  </li>
 
-<P><IMG SRC="/icons/greenball.gif">
-You can create instances of C++ classes from Eiffel, using the C++ "constructor" of
-your choice.
+<p><li> You can apply to these objects all the corresponding operations from the C++ class:
+executing functions ("methods"), accessing data members, executing destructors.</li>
 
-<P><IMG SRC="/icons/greenball.gif">
-You can apply to these objects all the corresponding operations from the C++ class:
-executing functions ("methods"), accessing data members, executing destructors.
-
-<P><IMG SRC="/icons/greenball.gif">
-You can use the Legacy++ tool to produce an Eiffel "wrapper class" encapsulating all
+<p><li>You can use the Legacy++ tool to produce an Eiffel "wrapper class" encapsulating all
 the features of a C++ class, so that the result will look to the rest of the Eiffel software
-as if it had been written in Eiffel.
+as if it had been written in Eiffel.</li>
 </UL>
 <P>
 

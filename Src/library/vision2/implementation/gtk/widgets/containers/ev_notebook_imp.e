@@ -20,7 +20,7 @@ inherit
 		redefine
 			add_child
 		end
-	
+	  
 creation
 	
 	make
@@ -66,6 +66,7 @@ feature -- Element change
 		do
 			a ?= label.to_c
 			p := gtk_label_new ($a)
+			c.show
 			gtk_notebook_append_page (widget, 
 						  c.widget, 
 						  p)

@@ -5,8 +5,8 @@
 				<envision_location>Eiffel\Getting Started</envision_location>
 				<envision_pseudo_name>92</envision_pseudo_name>
 				<envision_title>Agents</envision_title>
-				<studio_location/>
-				<studio_title/>
+				<studio_location></studio_location>
+				<studio_title></studio_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -19,7 +19,7 @@
 		<paragraph>Operations are not objects; in fact, object technology starts from the decision to separate these two aspects, and to choose object types, rather than the operations, as the basis for modular organization of a system, attaching each operation to the resulting modules -- the classes.  </paragraph>
 		<paragraph>In a number of applications, however, we may need objects that 
 			represent operations, so that we can include them in object structures that some other piece of the software will later traverse to uncover the operations and, usually, execute them.  Such "operation wrapper" objects, called agents, are useful in a number of application areas such as:
-		<line_break/>
+		<line_break></line_break>
 		<list ordered="false">
 			<item> GUI (Graphical User Interface) programming, where we may associate an agent with a certain event of the interface, such as a mouse click at a certain place on the screen, to prescribe that if the event occurs -- a user clicks there -- it must cause execution of the agent's associated operation.  </item>
 			<item> Iteration on data structures, where we may define a general-purpose routine that can apply an arbitrary operation to all the elements of a structure such as a list; to specify a particular operation to iterate, we will pass to the iteration mechanism an agent representing that operation.  </item>
@@ -319,8 +319,8 @@
 		<paragraph>Assume for example that a cartographical application lets a user record the location of a city by clicking on the corresponding position on the map.  The application may do this through a procedure</paragraph>
 		<code_block>
 <feature_name>record_city</feature_name> <symbol>(</symbol><local_variable>cn</local_variable><symbol>:</symbol> <class_name>STRING</class_name>; <local_variable>pop</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name>; <local_variable>x</local_variable>, <local_variable>y</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol>
-	<comment>-- Record that the city of name is at coordinates</comment>
-	<comment>-- x and y with population pop.</comment>
+	<comment>-- Record that the city of name `cn' is at coordinates</comment>
+	<comment>-- `x' and `y' with population `pop'.</comment>
 </code_block>
 		<paragraph>Then you can associate it with the GUI through a call such as</paragraph>
 <code_block>
@@ -503,7 +503,7 @@
 			<code>
 				<feature_name>do_all</feature_name>
 			</code>, for both purposes:
-		<line_break/>
+		<line_break></line_break>
 		<list ordered="false">
 			<item> Depositing money on every account in a list of accounts.</item>
 			<item> Adding all the integers in a list of integers.</item>

@@ -265,11 +265,6 @@ feature -- Access
 	session_control: DB_CONTROL
 			-- Session control.
 
-feature {NONE} -- Implementation
-
-	database_appl: DATABASE_APPL [G]
-			-- Database application.
-
 	db_selection: DB_SELECTION is
 			-- Performs a selection in the database (i.e. a query).
 		once
@@ -281,6 +276,11 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 		end
+
+feature {NONE} -- Implementation
+
+	database_appl: DATABASE_APPL [G]
+			-- Database application.
 
 	unexpected_error (action: STRING): STRING is
 			-- Unexpected error message.

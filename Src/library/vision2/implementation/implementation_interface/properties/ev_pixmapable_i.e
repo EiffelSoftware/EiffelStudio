@@ -12,16 +12,19 @@ deferred class
 	
 feature {EV_PIXMAP} -- status settings
 	
---	make_from_primitive (primitive: EV_PRIMITIVE) is
-			-- Create pixmap container inside of 'primitive'
---		deferred
---		end
-
 	add_pixmap (pixmap: EV_PIXMAP) is
 			-- Add a pixmap in the container
 		require
 			pixmap_not_void: pixmap /= Void
+			pixmap_size_ok: pixmap_size_ok (pixmap)
 		deferred
+		end
+
+	pixmap_size_ok (pixmap: EV_PIXMAP): BOOLEAN is
+			-- Check if the size of the pixmap is ok for
+			-- the container.
+		do
+			Result := True
 		end
 
 end -- class EV_PIXMAP_CONTAINER_I

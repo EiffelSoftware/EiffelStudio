@@ -111,18 +111,21 @@ feature -- Access
 			Result := (int /= variant_false)
 		end
 
-	date: DOUBLE is
+	date: DATE_TIME is
 			-- Date value
 		require
 			is_date: is_date (variable_type)
+		local
+			tmp_double: DOUBLE
 		do
 			if 
 				binary_and (variable_type, Vt_byref) = Vt_byref 
 			then
-				Result := ccom_variant_date_byref (item)
+				tmp_double := ccom_variant_date_byref (item)
 			else
-				Result := ccom_variant_date (item)
+				tmp_double := ccom_variant_date (item)
 			end
+			Result := ccom_ce_date (ecom_rt_ptr, tmp_double)
 		end
 
 	error: INTEGER is
@@ -153,8 +156,8 @@ feature -- Access
 			Result /= Void
 		end
 
-	integer_safearray: ECOM_SAFEARRAY [ECOM_SAFEARRAY_INTEGER_ELEMENT] is
-			-- Integer SAFEARRAY
+	integer_array: ECOM_ARRAY [INTEGER] is
+			-- Integer ARRAY
 		require
 			is_integer4: is_integer4 (variable_type)
 			is_array: is_array (variable_type)
@@ -168,11 +171,11 @@ feature -- Access
 			else
 				ptr := ccom_variant_safearray (item)
 			end
-			create Result.make_from_pointer (ptr)
+			Result := ccom_ce_safearray_long (ecom_rt_ptr, ptr)
 		end
 
-	short_safearray: ECOM_SAFEARRAY [ECOM_SAFEARRAY_SHORT_ELEMENT] is
-			-- Integer SAFEARRAY
+	short_array: ECOM_ARRAY [INTEGER] is
+			-- Integer ARRAY
 		require
 			is_integer2: is_integer2 (variable_type)
 			is_array: is_array (variable_type)
@@ -186,11 +189,11 @@ feature -- Access
 			else
 				ptr := ccom_variant_safearray (item)
 			end
-			create Result.make_from_pointer (ptr)
+			Result := ccom_ce_safearray_short (ecom_rt_ptr, ptr)
 		end
 
-	real_safearray: ECOM_SAFEARRAY [ECOM_SAFEARRAY_REAL_ELEMENT] is
-			-- Integer SAFEARRAY
+	real_array: ECOM_ARRAY [REAL] is
+			-- ARRAY of reals
 		require
 			is_real4: is_real4 (variable_type)
 			is_array: is_array (variable_type)
@@ -204,11 +207,11 @@ feature -- Access
 			else
 				ptr := ccom_variant_safearray (item)
 			end
-			create Result.make_from_pointer (ptr)
+			Result := ccom_ce_safearray_float (ecom_rt_ptr, ptr)
 		end
 
-	double_safearray: ECOM_SAFEARRAY [ECOM_SAFEARRAY_DOUBLE_ELEMENT] is
-			-- Integer SAFEARRAY
+	double_array: ECOM_ARRAY [DOUBLE] is
+			-- ARRAY of doubles
 		require
 			is_real8: is_real8 (variable_type)
 			is_array: is_array (variable_type)
@@ -222,11 +225,11 @@ feature -- Access
 			else
 				ptr := ccom_variant_safearray (item)
 			end
-			create Result.make_from_pointer (ptr)
+			Result := ccom_ce_safearray_double (ecom_rt_ptr, ptr)
 		end
 
-	char_safearray: ECOM_SAFEARRAY [ECOM_SAFEARRAY_CHARACTER_ELEMENT] is
-			-- Integer SAFEARRAY
+	char_array: ECOM_ARRAY [CHARACTER] is
+			-- ARRAY of characters
 		require
 			is_character: is_character (variable_type)
 			is_array: is_array (variable_type)
@@ -240,11 +243,11 @@ feature -- Access
 			else
 				ptr := ccom_variant_safearray (item)
 			end
-			create Result.make_from_pointer (ptr)
+			Result := ccom_ce_safearray_char (ecom_rt_ptr, ptr)
 		end
 
-	error_safearray: ECOM_SAFEARRAY [ECOM_SAFEARRAY_ERROR_ELEMENT] is
-			-- Integer SAFEARRAY
+	error_array: ECOM_ARRAY [ECOM_HRESULT] is
+			-- ARRAY of HRESULTs
 		require
 			is_error: is_error (variable_type)
 			is_array: is_array (variable_type)
@@ -258,7 +261,151 @@ feature -- Access
 			else
 				ptr := ccom_variant_safearray (item)
 			end
-			create Result.make_from_pointer (ptr)
+			Result := ccom_ce_safearray_hresult (ecom_rt_ptr, ptr)
+		end
+
+	currency_array: ECOM_ARRAY [ECOM_CURRENCY] is
+			-- ARRAY of CURRENCY.
+		require
+			is_currency: is_currency (variable_type)
+			is_array: is_array (variable_type)
+		local
+			ptr: POINTER
+		do
+			if 
+				binary_and (variable_type, Vt_byref) = Vt_byref 
+			then
+				ptr := ccom_variant_safearray_byref (item)
+			else
+				ptr := ccom_variant_safearray (item)
+			end
+			Result := ccom_ce_safearray_currency (ecom_rt_ptr, ptr)
+		end
+
+	date_array: ECOM_ARRAY [DATE_TIME] is
+			-- ARRAY of DATE.
+		require
+			is_date: is_date (variable_type)
+			is_array: is_array (variable_type)
+		local
+			ptr: POINTER
+		do
+			if 
+				binary_and (variable_type, Vt_byref) = Vt_byref 
+			then
+				ptr := ccom_variant_safearray_byref (item)
+			else
+				ptr := ccom_variant_safearray (item)
+			end
+			Result := ccom_ce_safearray_date (ecom_rt_ptr, ptr)
+		end
+
+	string_array: ECOM_ARRAY [STRING] is
+			-- ARRAY of STRING.
+		require
+			is_bstr: is_bstr (variable_type)
+			is_array: is_array (variable_type)
+		local
+			ptr: POINTER
+		do
+			if 
+				binary_and (variable_type, Vt_byref) = Vt_byref 
+			then
+				ptr := ccom_variant_safearray_byref (item)
+			else
+				ptr := ccom_variant_safearray (item)
+			end
+			Result := ccom_ce_safearray_bstr (ecom_rt_ptr, ptr)
+		end
+
+	boolean_array: ECOM_ARRAY [BOOLEAN] is
+			-- ARRAY of BOOLEAN.
+		require
+			is_boolean: is_boolean (variable_type)
+			is_array: is_array (variable_type)
+		local
+			ptr: POINTER
+		do
+			if 
+				binary_and (variable_type, Vt_byref) = Vt_byref 
+			then
+				ptr := ccom_variant_safearray_byref (item)
+			else
+				ptr := ccom_variant_safearray (item)
+			end
+			Result := ccom_ce_safearray_boolean (ecom_rt_ptr, ptr)
+		end
+
+	variant_array: ECOM_ARRAY [ECOM_VARIANT] is
+			-- ARRAY of ECOM_VARIANTs.
+		require
+			is_variant: is_variant (variable_type)
+			is_array: is_array (variable_type)
+		local
+			ptr: POINTER
+		do
+			if 
+				binary_and (variable_type, Vt_byref) = Vt_byref 
+			then
+				ptr := ccom_variant_safearray_byref (item)
+			else
+				ptr := ccom_variant_safearray (item)
+			end
+			Result := ccom_ce_safearray_variant (ecom_rt_ptr, ptr)
+		end
+
+	decimal_array: ECOM_ARRAY [ECOM_DECIMAL] is
+			-- ARRAY of ECOM_DECIMALs.
+		require
+			is_decimal: is_decimal (variable_type)
+			is_array: is_array (variable_type)
+		local
+			ptr: POINTER
+		do
+			if 
+				binary_and (variable_type, Vt_byref) = Vt_byref 
+			then
+				ptr := ccom_variant_safearray_byref (item)
+			else
+				ptr := ccom_variant_safearray (item)
+			end
+			Result := ccom_ce_safearray_decimal (ecom_rt_ptr, ptr)
+		end
+
+	dispatch_array: ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE] is
+			-- ARRAY of ECOM_GENERIC_DISPINTERFACEs.
+		require
+			is_dispatch: is_dispatch (variable_type)
+			is_array: is_array (variable_type)
+		local
+			ptr: POINTER
+		do
+			if 
+				binary_and (variable_type, Vt_byref) = Vt_byref 
+			then
+				ptr := ccom_variant_safearray_byref (item)
+			else
+				ptr := ccom_variant_safearray (item)
+			end
+			Result := ccom_ce_safearray_dispatch (ecom_rt_ptr, ptr)
+		end
+
+	unknown_array: ECOM_ARRAY [ECOM_GENERIC_INTERFACE] is
+			-- ARRAY of ECOM_GENERIC_INTERFACEs.
+		require
+			is_unknown: is_unknown (variable_type)
+			is_array: is_array (variable_type)
+		local
+			ptr: POINTER
+		do
+			if 
+				binary_and (variable_type, Vt_byref) = Vt_byref 
+			then
+				ptr := ccom_variant_safearray_byref (item)
+			else
+				ptr := ccom_variant_safearray (item)
+			end
+			Result := ccom_ce_safearray_unknown (ecom_rt_ptr, ptr)
 		end
 
 feature -- Measurement
@@ -269,30 +416,8 @@ feature -- Measurement
 			Result := c_size_of_variant
 		end
 
-
-feature -- Status setting
-
-feature -- Cursor movement
-
 feature -- Element change
 
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
@@ -412,9 +537,87 @@ feature {NONE} -- Externals
 			"C [macro %"E_variant.h%"](EIF_POINTER): EIF_POINTER"
 		end
 
+	ecom_rt_ptr: POINTER is
+		external
+			"C [macro %"ecom_rt_globals.h%"]: EIF_POINTER"
+		alias
+			"&rt_ce"
+		end
 
-invariant
-	invariant_clause: -- Your invariant here
+	ccom_ce_date (cpp_obj: POINTER; a_date: DOUBLE): DATE_TIME is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (DATE): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_short (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [INTEGER] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_long (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [INTEGER] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_float (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [REAL] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_double (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [DOUBLE] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_currency (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_CURRENCY] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_date (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [DATE_TIME] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_bstr (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [STRING] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_hresult (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_HRESULT] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_boolean (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [BOOLEAN] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_variant (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_VARIANT] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_decimal (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_DECIMAL] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_char (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [CHARACTER] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_dispatch (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_GENERIC_DISPINTERFACE] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
+
+	ccom_ce_safearray_unknown (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_GENERIC_INTERFACE] is
+		external
+			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
+		end
 
 end -- class ECOM_VARIANT
 

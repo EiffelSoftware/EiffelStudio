@@ -18,8 +18,6 @@ inherit
 			client_width,
 			client_height,
 			parent_ask_resize,
-			child_width_changed,
-			child_height_changed,
 			child_minwidth_changed,
 			child_minheight_changed
 		end
@@ -44,6 +42,7 @@ inherit
 			on_key_up
 		redefine
 			default_style,
+			default_ex_style,
 			on_paint,
 			background_brush
 		end
@@ -108,23 +107,11 @@ feature {EV_WIDGET_IMP} -- Implementation
 				move ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y)
 			end
 			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height + box_height, a_width - 2 * box_width,
-										a_height - box_text_height - 2 * box_height)
+				child.set_move_and_size (box_width, box_text_height + box_height, 
+										client_width, client_height)
 			end
 		end
 	
-	child_width_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the size of the container because of the child.
-		do
-			Precursor (value + 2 * box_width, the_child)
-		end
-
-	child_height_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the size of the container because of the child.
-		do
-			Precursor (value + box_text_height + 2 * box_height, the_child)
-		end
-
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
@@ -151,6 +138,11 @@ feature {NONE} -- Implementation : WEL features
 		do
 			Result := {WEL_CONTROL_WINDOW} Precursor + Ws_clipchildren
 					+ Ws_clipsiblings
+		end
+
+	default_ex_style: INTEGER is
+		do
+			Result := Ws_ex_controlparent
 		end
 
 	background_brush: WEL_BRUSH is
@@ -203,7 +195,7 @@ feature {NONE} -- Implementation : WEL features
 			-- Pen with the shadow color
 		local
 			color: WEL_COLOR_REF
-		do
+		once
 			!! color.make_system (Color_btnshadow)
 			!! Result.make (ps_solid, 1, color)
 		ensure
@@ -215,7 +207,7 @@ feature {NONE} -- Implementation : WEL features
 			-- Pen with the highlight color
 		local
 			color: WEL_COLOR_REF
-		do
+		once
 			!! color.make_system (Color_btnhighlight)
 			!! Result.make (ps_solid, 1, color)
 		ensure

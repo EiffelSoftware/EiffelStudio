@@ -86,6 +86,8 @@ feature -- Evaluation
 			-- Compute the value of the last message of `Current'.
 		local
 			obj: DEBUGGED_OBJECT
+			cse: CALL_STACK_ELEMENT
+			l_error_occurred: BOOLEAN
 		do
 			reset_error
 			
@@ -108,12 +110,16 @@ feature -- Evaluation
 				--| Compute and get `expression_byte_node'
 			get_expression_byte_node
 
-			if not error_occurred then
-					--| prepare target's context
-				if on_context then
-					context_address := application.status.current_call_stack_element.object_address
+			l_error_occurred := error_occurred
+				--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
+				-- and if this is handle later or not
+			if on_context then
+				if context_address = Void then
+					l_error_occurred := True
 				end
+			end
 
+			if not l_error_occurred then
 					--| Initializing
 				clean_temp_data
 				
@@ -1180,6 +1186,7 @@ feature -- Change Context
 			else
 				cf := cse.routine
 				set_context_data (cf, cse.dynamic_class, cse.dynamic_type)
+				context_address := cse.object_address
 			end
 		end
 		

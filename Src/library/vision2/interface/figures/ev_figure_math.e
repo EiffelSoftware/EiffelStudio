@@ -129,10 +129,11 @@ feature -- Implementation
 			-- Is (`x', `y') on specified ellipse border?
 			--| With orientation 0.0.
 		local
---			tmp: INTEGER
+			tmp, semi_width_ratio: DOUBLE
 		do
---			tmp := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2
---			Result := tmp <= (1 - semi_width_ratio) and 
+			tmp := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2
+			semi_width_ratio := width / 100
+			Result := tmp <= (1 + semi_width_ratio) and tmp >= (1 - semi_width_ratio)
 		end
 
 	point_on_rectangle (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN is

@@ -100,6 +100,23 @@ feature -- Status report
 			Result := c_gtk_tree_item_expanded (widget)
 		end
 
+	is_parent: BOOLEAN is
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+feature -- Status setting
+
+	set_selected (flag: BOOLEAN) is
+			-- Select the item if `flag', unselect it otherwise.
+		do
+			check
+				not_yet_implemented: False
+			end	
+		end
+	
 feature -- Element change
 
 	set_parent (par: EV_TREE_ITEM_HOLDER) is

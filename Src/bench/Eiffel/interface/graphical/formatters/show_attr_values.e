@@ -78,7 +78,7 @@ feature {NONE}
 					is_special and then (attributes.empty or else 
 					attributes.first.name.to_integer > 0) 
 				then
-					text_window.put_string ("  ... Items skipped ...");
+					text_window.put_string ("%T... Items skipped ...");
 					text_window.new_line
 				end;
 				from
@@ -93,7 +93,7 @@ feature {NONE}
 					is_special and then (attributes.empty or else 
 					attributes.last.name.to_integer < attr_request.capacity - 1)
 				then
-					text_window.put_string ("  ... More items ...");
+					text_window.put_string ("%T... More items ...");
 					text_window.new_line
 				end
 			end

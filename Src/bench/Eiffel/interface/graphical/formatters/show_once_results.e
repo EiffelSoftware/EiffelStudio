@@ -86,7 +86,7 @@ feature {NONE}
 				until
 					once_func_list.after
 				loop
-					text_window.put_string (tabs (1));
+					text_window.put_string ("%T");
 					feature_i := once_func_list.item;
 					feature_i.append_clickable_name (text_window, dynamic_class);
 					arguments := feature_i.arguments;

@@ -438,9 +438,7 @@ feature {NONE} -- Implementation
 				pixmap_constant: GB_PIXMAP_CONSTANT
 				directory_constant: GB_DIRECTORY_CONSTANT
 				l_string: STRING
-			do
-				--| FIXME handle visual studio wizard.
-				
+			do	
 					--Firstly read the contents of the file.
 				if system_status.is_wizard_system then
 					create constants_file_name.make_from_string (visual_studio_information.wizard_installation_path)
@@ -919,7 +917,7 @@ feature {NONE} -- Implementation
 			-- Replace `tag' in `class_text' with `new'.
 			-- If `new' is Void then add "".
 		require
-			strings_not_void: a_class_text /= Void and new /= Void and tag /= Void
+			strings_not_void: a_class_text /= Void and tag /= Void
 			tag_contained: a_class_text.has_substring (tag)
 		local
 			temp_index: INTEGER

@@ -82,7 +82,7 @@ feature -- Access
 			Result.add_constructor (a_constructor)
 			Result.add_import (Ecom_rt_globals_header_file_name)
 			Result.add_import_after (Ecom_generated_rt_globals_header_file_name)
-			create an_other_source.make (0)
+			create an_other_source.make (100)
 			an_other_source.append (Generated_ce_class_name)
 			an_other_source.append (Space)
 			an_other_source.append (Generated_ce_mapper)
@@ -111,7 +111,7 @@ feature -- Access
 			Result.add_constructor (a_constructor)
 			Result.add_import (Ecom_rt_globals_header_file_name)
 			Result.add_import_after (Ecom_generated_rt_globals_header_file_name)
-			create an_other_source.make (0)
+			create an_other_source.make (100)
 			an_other_source.append (Generated_ec_class_name)
 			an_other_source.append (Space)
 			an_other_source.append (Generated_ec_mapper)
@@ -759,7 +759,7 @@ feature -- Access
 		local
 			a_file: PLAIN_TEXT_FILE
 			a_directory: DIRECTORY
-			eiffel4, tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
+			tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
 			a_count, i: INTEGER
 			a_name, a_file_protector: BOOLEAN
 			a_structure: WIZARD_WINDOWS_STRUCTURE
@@ -767,10 +767,9 @@ feature -- Access
 			create Result.make (500)
 			Result.compare_objects
 
-			eiffel4 := clone (execution_environment.get ("EIFFEL4"))
-			tmp_path := eiffel4 + "\wizards\com\config\wizard_struct.cfg"
+			tmp_path := eiffel4_location + "\wizards\com\config\wizard_struct.cfg"
 
-			create a_directory.make_open_read (eiffel4 + "\wizards\com\config")
+			create a_directory.make_open_read (eiffel4_location + "\wizards\com\config")
 			if a_directory.has_entry ("wizard_struct.cfg") then
 				create a_file.make_open_read (tmp_path)
 
@@ -794,16 +793,15 @@ feature -- Access
 		local
 			a_file: PLAIN_TEXT_FILE
 			a_directory: DIRECTORY
-			eiffel4, tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
+			tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
 			a_count, i: INTEGER
 		once
 			create Result.make (500)
 			Result.compare_objects
 
-			eiffel4 := clone (execution_environment.get ("EIFFEL4"))
-			tmp_path := eiffel4 + "\wizards\com\config\wizard_winapi_names.cfg"
+			tmp_path := eiffel4_location + "\wizards\com\config\wizard_winapi_names.cfg"
 
-			create a_directory.make_open_read (eiffel4 + "\wizards\com\config")
+			create a_directory.make_open_read (eiffel4_location + "\wizards\com\config")
 			if a_directory.has_entry ("wizard_winapi_names.cfg") then
 				create a_file.make_open_read (tmp_path)
 
@@ -863,10 +861,12 @@ feature -- Basic Operations
 		local
 			a_name, a_title: STRING	
 		do
-			a_name := clone (a_file_dialog.file_name)
-			a_title := a_file_dialog.file_title
-			a_name.head (a_name.count - a_title.count)
-			set_browse_directory (a_name)
+			if a_file_dialog.selected then
+				a_name := clone (a_file_dialog.file_name)
+				a_title := a_file_dialog.file_title
+				a_name.head (a_name.count - a_title.count)
+				set_browse_directory (a_name)
+			end
 		end
 
 feature {WIZARD_MANAGER} -- Element Change

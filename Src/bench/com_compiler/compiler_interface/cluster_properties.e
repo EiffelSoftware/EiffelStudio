@@ -14,6 +14,7 @@ inherit
 			override,
 			is_library,
 			all1,
+			use_system_default,
 			evaluate_require_by_default,
 			evaluate_ensure_by_default,
 			evaluate_check_by_default,
@@ -25,6 +26,7 @@ inherit
 			set_override,
 			set_is_library,
 			set_all,
+			set_use_system_default,
 			set_evaluate_require_by_default,
 			set_evaluate_ensure_by_default,
 			set_evaluate_check_by_default,
@@ -93,6 +95,14 @@ feature -- Access
 			end
 		end
 
+	use_system_default: BOOLEAN is
+			-- Should use system default?
+		do
+			if ace.is_valid then
+				Result := ace.system_defaults_used (internal_name)
+			end
+		end
+		
 	evaluate_require_by_default: BOOLEAN is
 			-- Should preconditions be evaluated by default?
 		do
@@ -135,6 +145,7 @@ feature -- Access
 
 	excluded: ECOM_ARRAY [STRING] is
 			-- List of excluded directories.
+			-- Void if none.
 		local
 			res: ARRAY [STRING]
 			ace_res: LINKED_LIST [STRING]
@@ -155,7 +166,9 @@ feature -- Access
 						ace_res.forth
 					end
 				end
-				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+				if res /= Void then
+					create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+				end
 			end
 		end
 
@@ -208,13 +221,21 @@ feature -- Element change
 			end
 		end
 
+	set_use_system_default (return_value: BOOLEAN) is
+			-- Should use system default?
+		do
+			if ace.is_valid then
+				ace.set_system_defaults_used (internal_name, return_value)
+			end
+		end
+		
 	set_evaluate_require_by_default (return_value: BOOLEAN) is
 			-- Should preconditions be evaluated by default?
 		do
 			if ace.is_valid then
 				ace.set_assertions_for_cluster (
 					internal_name,
-					True,
+					return_value,
 					evaluate_ensure_by_default,
 					evaluate_check_by_default,
 					evaluate_loop_by_default,
@@ -230,7 +251,7 @@ feature -- Element change
 				ace.set_assertions_for_cluster (
 					internal_name,
 					evaluate_require_by_default,
-					True,
+					return_value,
 					evaluate_check_by_default,
 					evaluate_loop_by_default,
 					evaluate_invariant_by_default
@@ -246,7 +267,7 @@ feature -- Element change
 					internal_name,
 					evaluate_require_by_default,
 					evaluate_ensure_by_default,
-					True,
+					return_value,
 					evaluate_loop_by_default,
 					evaluate_invariant_by_default
 				)
@@ -262,7 +283,7 @@ feature -- Element change
 					evaluate_require_by_default,
 					evaluate_ensure_by_default,
 					evaluate_check_by_default,
-					True,
+					return_value,
 					evaluate_invariant_by_default
 				)
 			end
@@ -278,7 +299,7 @@ feature -- Element change
 					evaluate_ensure_by_default,
 					evaluate_check_by_default,
 					evaluate_loop_by_default,
-					True
+					return_value
 				)
 			end
 		end		

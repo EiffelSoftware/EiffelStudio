@@ -408,7 +408,7 @@ feature {NONE}
 					if (i /= 0) or else (j /= 0) then
 						if not real_mode then
 							draw_rectangle (rect_x+i*x_inc, rect_y+j*y_inc, rect_w, rect_h, 0.0);
-						else
+						elseif not context.is_in_a_group then
 							-- Create new context
 							new_context := context.create_context (parent);
 							new_context.set_position (context.real_x+i*x_inc, context.real_y+j*y_inc);

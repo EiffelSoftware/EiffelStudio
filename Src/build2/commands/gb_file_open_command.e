@@ -96,6 +96,8 @@ feature -- Basic operations
 							xml_handler.load
 							main_window.show_tools
 							command_handler.update
+								-- Compress all used ids.
+							id_compressor.compress_all_id
 						end	
 					end
 				end
@@ -114,6 +116,13 @@ feature {NONE} -- Implementation
 				create file.make (file_name)
 				Result := file.exists
 			end
+		end
+		
+	id_compressor: GB_ID_COMPRESSOR is
+			-- Once instance of GB_ID_COMPRESSOR
+			-- for compressing saved Ids.
+		once
+			create Result
 		end
 
 end -- class GB_FILE_OPEN_COMMAND

@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			loop
 				n := s.index_of ('&', n)
 				if n > 0 then
-					s.insert ("&", n)
+					s.insert_string ("&", n)
 					n := n + 2
 				else
 					n := s.count + 1

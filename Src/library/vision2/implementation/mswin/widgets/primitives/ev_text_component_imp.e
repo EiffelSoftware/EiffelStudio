@@ -138,7 +138,7 @@ feature {EV_ANY_I}-- element change
 			if caret_position > temp_text.count then
 				temp_text.append (txt)
 			else
-				temp_text.insert (txt, caret_position)
+				temp_text.insert_string (txt, caret_position)
 			end
 			set_text (temp_text)
 			set_caret_position (previous_caret_position)

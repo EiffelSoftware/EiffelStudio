@@ -177,6 +177,13 @@ feature -- Status report
 			Result := not flag_set (style, Lvs_nocolumnheader)
 		end
 
+	title_shown: BOOLEAN is
+			-- True if the title row is shown.
+			-- False if the title row is not shown.
+		do
+			Result := not flag_set (style, Lvs_nocolumnheader)
+		end
+
 feature -- Status setting
 
 	select_item (index: INTEGER) is

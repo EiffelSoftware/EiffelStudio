@@ -9,7 +9,7 @@ class
 inherit
 	MT_MULTI_RELATIONSHIP
 		redefine
-			get_container_type_id,
+			get_container_type,
 			empty_container_for
 		end
 
@@ -18,12 +18,9 @@ creation
 
 feature
 
-	get_container_type_id: INTEGER is
-		local
-			c_string: ANY
+	get_container_type: STRING is
 		do
-			c_string := ("MT_HASH_TABLE").to_c
-			Result := c_generic_type_id ($c_string)
+			Result := "MT_HASH_TABLE"
 		end
 
 feature {MT_STORABLE} -- Container
@@ -32,8 +29,11 @@ feature {MT_STORABLE} -- Container
 			-- Return an empty container object (HASH_TABLE).
 			-- The container is initialized so that it can load successors later.
 			-- ('predecessor' and 'relationship' is set to `a_predecessor' and `Current'.)
+		local
+			a: ANY
 		do
-			Result := c_create_empty_rs_container (container_type_id, a_predecessor.oid, oid)
+			a := container_type.to_c
+			Result := c_create_empty_rs_container ($a, a_predecessor.oid, oid)
 			if Result /= Void then
 				Result.set_predecessor (a_predecessor)
 				Result.set_relationship (Current)

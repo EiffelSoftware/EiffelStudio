@@ -365,6 +365,34 @@ feature  -- Access
 			a_stream.close
 		end
 
+	n_first_instances (n: INTEGER): ARRAY [MT_STORABLE] is
+			-- array of `n' first instances of Current class
+			-- or all if `n' > `instance_count'
+		local
+			a_stream: MT_CLASS_STREAM
+			i: INTEGER
+			number: INTEGER
+		do
+			if n >= instances_count then
+				Result := all_instances
+			else
+				!! Result.make (0, n - 1)
+				!! a_stream.make (oid)
+				from
+					a_stream.start
+					i := 0
+				until
+					a_stream.exhausted or i > n - 1
+				loop
+					Result.put (a_stream.item, i)
+					a_stream.forth
+					i := i + 1
+				end
+				a_stream.close
+			end
+		end
+
+
 	all_index_names: ARRAYED_LIST [STRING] is
 			-- List of all index names for this class and its all ancesters.
 		local

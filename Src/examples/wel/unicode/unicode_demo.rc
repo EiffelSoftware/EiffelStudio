@@ -26,31 +26,25 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Menu
 //
 
-Idmainmenu MENU DISCARDABLE 
+IDR_MENU1 MENU DISCARDABLE 
 BEGIN
     POPUP "IME Options"
     BEGIN
-        MENUITEM "Soft Keyboard",               Idsoftkeyboard
+        MENUITEM "Soft Keyboard",               Idsoftkeyboard_constant
+        , GRAYED
         POPUP "Shape"
         BEGIN
-            MENUITEM "Full Shape",                  Idshapefull
-            MENUITEM "Half Shape",                  Idshapehalf
+            MENUITEM "Half Shape",                  Idshapehalf_constant
+            , GRAYED
+            MENUITEM "Full Shape",                  Idshapefull_constant
+            , GRAYED
         END
-        POPUP "Input Type"
+        POPUP "Mode"
         BEGIN
-            MENUITEM "Native",                      Idnative
-            MENUITEM "Alphanumeric",                Idalphanumeric
-        END
-        POPUP "Conversion Mode"
-        BEGIN
-            MENUITEM "EUDC",                        ID_IMEOPTIONS_CONVERSIONMODE_EUDC
-
-            MENUITEM "Symbol",                      ID_IMEOPTIONS_CONVERSIONMODE_SYMBOL
-
-            MENUITEM "Hanja",                       ID_IMEOPTIONS_CONVERSIONMODE_HANJA
-
-            MENUITEM "No Conversion",               ID_IMEOPTIONS_CONVERSIONMODE_NOCONVERSION
-
+            MENUITEM "Native",                      Idnative_constant
+            , GRAYED
+            MENUITEM "Alphanumeric",                Idalphanumeric_constant
+            , GRAYED
         END
     END
 END

@@ -666,10 +666,6 @@ feature -- Status setting
 				all_holders.forth
 			end
 			desired_height := desired_height + (non_minimized_count - 1) * splitter_width
-			if not platform_is_windows and then height <= minimum_height + 1 then
-						-- This is a hack to retrieve correct height for gtk
-				(create {EV_ENVIRONMENT}).application.process_events
-			end
 			excess_space := desired_height - height
 			if top_widget_resizing then
 					from
@@ -1145,9 +1141,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	restore_stored_positions is
 			-- Restore all positions of splitters from `store_positions'.
 		do	
-			if not platform_is_windows then
-				application.process_events
-			end
 			if top_widget_resizing then
 				from
 					all_split_areas.start
@@ -2033,9 +2026,6 @@ feature {NONE} -- Implementation
 				-- `simulate_minimum_height' which will restore the widget back to its proper height.
 				-- If we did not make all split areas as small as possible, then the hieght simulation
 				-- would not be able to reduce the height of an item as necessary.
-			if not platform_is_windows then
-				application.process_events
-			end
 			if top_widget_resizing then
 				from
 					all_split_areas.start

@@ -20,6 +20,7 @@ inherit
 		redefine
 			on_wm_vscroll,
 			on_wm_hscroll,
+			on_draw_item,
 			default_style,
 			on_wm_notify
 		end
@@ -133,6 +134,18 @@ feature {NONE} -- Implementation
 						ww.decrement_level
 					end
 				end
+			end
+		end
+
+	on_draw_item (id: INTEGER; struct: WEL_DRAW_ITEM_STRUCT) is
+			-- If wm_draw is recieved for a status bar then
+			-- Re-draw `bar'.
+		local
+			bar: EV_STATUS_BAR_IMP
+		do
+			bar ?= struct.window_item
+			if bar /= Void then
+				bar.draw_item (id, struct)		
 			end
 		end
 		 		

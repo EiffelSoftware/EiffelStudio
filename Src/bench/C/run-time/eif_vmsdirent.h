@@ -19,7 +19,7 @@ struct dirent {
     /* Handle returned by opendir(), used by the other routines.  You
      * are not supposed to care what's inside this structure. */
 typedef struct _dirdesc {
-    long			context;
+    unsigned int		context;
     int				vms_wantversions;
     char			*pattern;
     struct dirent		entry;

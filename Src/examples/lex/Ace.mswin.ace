@@ -1,0 +1,28 @@
+system
+	eiffel_scan
+
+root
+	eiffel_scan (ROOT_CLUSTER): "make"
+
+default
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
+
+cluster
+
+	ROOT_CLUSTER: 		"$EIFFEL4\examples\lex";
+				-- If you intend to modify any of the examples,
+				-- copy all the files of $EIFFEL4\examples\lex
+				-- into one of your directories, and replace
+				-- $EIFFEL4\examples\lex by the name of that directory
+				-- on the above line.
+
+		-- EiffelLex
+	lex:				"$EIFFEL4\library\lex";
+
+		-- EiffelBase:
+	all base:		"$EIFFEL4\library\base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+end

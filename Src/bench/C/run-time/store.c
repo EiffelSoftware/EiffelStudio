@@ -1263,7 +1263,10 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-							hfflags = eif_gen_param_id(-1, (int16) o_type, 1);
+								/* Built `hfflags' contains the full dynamic type and the
+								 * fact it is an expanded, so that it can be correctly
+								 * processed at retrieval time. */
+							hfflags = eif_gen_param_id(-1, (int16) o_type, 1) | EO_EXP;
 							hflags = Mapped_flags(hfflags);
 							buffer_write((char *) (&hflags), sizeof(uint32));
 							st_write_cid (hfflags & EO_TYPE);
@@ -1287,7 +1290,10 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 					if (!(flags & EO_COMP)) {	/* Special of references */
 						buffer_write(object, count*sizeof(EIF_REFERENCE));
 					} else {			/* Special of composites */
-						hfflags = eif_gen_param_id(-1, (int16) o_type, 1);
+							/* Built `hfflags' contains the full dynamic type and the
+							 * fact it is an expanded, so that it can be correctly
+							 * processed at retrieval time. */
+						hfflags = eif_gen_param_id(-1, (int16) o_type, 1) | EO_EXP;
 						hflags = Mapped_flags(hfflags);
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						buffer_write((char *)(&hflags), sizeof(uint32));
@@ -1481,7 +1487,10 @@ rt_private void object_write(char * object, uint32 fflags)
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-							hfflags = eif_gen_param_id(-1, (int16) o_type, 1);
+								/* Built `hfflags' contains the full dynamic type and the
+								 * fact it is an expanded, so that it can be correctly
+								 * processed at retrieval time. */
+							hfflags = eif_gen_param_id(-1, (int16) o_type, 1) | EO_EXP;
 							hflags = Mapped_flags(hfflags);
 							widr_norm_int (&hflags);
 							ist_write_cid (hfflags & EO_TYPE);
@@ -1507,7 +1516,10 @@ rt_private void object_write(char * object, uint32 fflags)
 						widr_multi_any (object, count);
 					} else {			/* Special of composites */
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-						hfflags = eif_gen_param_id(-1, (int16) o_type, 1);
+							/* Built `hfflags' contains the full dynamic type and the
+							 * fact it is an expanded, so that it can be correctly
+							 * processed at retrieval time. */
+						hfflags = eif_gen_param_id(-1, (int16) o_type, 1) | EO_EXP;
 						hflags = Mapped_flags(hfflags);
 						widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */
 						ist_write_cid (hflags & EO_TYPE);

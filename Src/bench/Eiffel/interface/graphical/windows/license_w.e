@@ -103,7 +103,8 @@ feature -- Widgets
 	popup is
 		local
 			temp: STRING;
-			i: INTEGER
+			i: INTEGER;
+			toto: BOOLEAN
 		do
 			if licence.daemon_alive then
 					-- Total number of licenses
@@ -120,7 +121,14 @@ feature -- Widgets
 				label7.set_text (licence.licence_host);
 	
 					-- Usage information
+				toto := licence.registered;
+				if not toto then
+					licence.register;
+				end;
 				scrolled_text1.set_text (licence.usage_info);
+				if not toto then
+					licence.unregister;
+				end;
 				Label1.set_text ("EiffelBench users:");
 			else
 				!! temp.make (0);

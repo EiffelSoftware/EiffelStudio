@@ -20,7 +20,7 @@ inherit
 			compatible, set_mode_for_editing, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window, process_feature_error,
-			able_to_edit,
+			able_to_edit, display,
 			help_index, icon_id,
 			close, set_title, parse_file, history_window_title,
 			set_default_format
@@ -117,6 +117,13 @@ feature -- Access
 		end
 
 feature -- Status setting
+
+	display is
+			-- Show Current
+		do
+			{BAR_AND_TEXT} Precursor
+			class_text_field.set_focus
+		end
 
 	set_title (s: STRING) is
 			-- Set `title' to `s'.

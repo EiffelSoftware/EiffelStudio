@@ -19,7 +19,7 @@ inherit
 			close, editable_text_window, set_editable_text_window, 
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource, create_toolbar, build_toolbar_menu,
-			set_title, set_mode_for_editing, parse_file,
+			set_title, set_mode_for_editing, parse_file, display,
 			history_window_title, has_editable_text, help_index, icon_id
 		end
 
@@ -256,6 +256,12 @@ feature -- Update
 		end
 
 feature -- Status setting
+
+	display is
+		do
+			{BAR_AND_TEXT} Precursor
+			routine_text_field.set_focus
+		end
 
 	set_title (s: STRING) is
 			-- Set `title' to `s'.

@@ -188,6 +188,20 @@ feature -- Access: file name
 			Result.extend_from_array (<<"studio", "wizards", "new_projects">>)
 		end
 
+	precompilation_wizard_command_name: FILE_NAME is
+			-- Command to be executed to launch the precompilation wizard.
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<"studio", "wizards", "precompile", "spec", Eiffel_platform>>)
+			Result.set_file_name ("wizard")
+		end
+
+	precompilation_wizard_resources_directory: DIRECTORY_NAME is
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<"studio", "wizards", "precompile">>)
+		end
+
 	last_opened_projects_resource_name: STRING is "studio_recent_files"
 
 	default_file_name: FILE_NAME is

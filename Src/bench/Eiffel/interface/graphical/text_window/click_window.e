@@ -64,7 +64,7 @@ feature -- Input
 		local
 			class_stone: CLASSC_STONE
 		do
-			put_string (" -- class ");
+			put_normal_string (" -- class ");
 			!! class_stone.make (e_class);
 			put_stone (class_stone, e_class.name_in_upper);
 			new_line
@@ -76,12 +76,6 @@ feature -- Input
 		do
 			put_feature (e_feature, str)
 		end;
-
-	put_breakpoint_stone (a_stone: BREAKABLE_STONE; stone_string: STRING) is
-			-- Add breakpoint stone `a_stone' with image `stone_string'.
-		do
-			put_stone (a_stone, stone_string)
-		end
 
 	put_string (s: STRING) is
 			-- Add `s' to the text image, don't record it in internal structure.
@@ -205,7 +199,7 @@ feature -- Processing for text_struct
 				last_click_break.set_end_focus (text_position);
 				last_click_break := Void
 			end;
-			put_string ("   ");
+			put_normal_string ("   ");
 		end;
 
 	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
@@ -214,18 +208,23 @@ feature -- Processing for text_struct
 			breakable_stone: BREAKABLE_STONE;
 			debug_mark: STRING
 		do
-			if last_click_break /= Void then
-				last_click_break.set_end_focus (text_position);
-				last_click_break := Void
-			end;
-			put_string (" ");
 			!! breakable_stone.make (a_bp.e_feature, a_bp.index);
-			image.append (breakable_stone.sign);
-			!! last_click_break.make (breakable_stone,
-					text_position, text_position + 3);
-			add_click_stone (last_click_break);
-			text_position := text_position + 3;
-			put_string (" ")
+			if a_bp.display_number then
+				put_stone (breakable_stone, a_bp.index.out)
+			else
+				if last_click_break /= Void then
+					last_click_break.set_end_focus (text_position);
+					last_click_break := Void
+				end;
+				put_normal_string (" ");
+				!! breakable_stone.make (a_bp.e_feature, a_bp.index);
+				!! last_click_break.make (breakable_stone,
+						text_position, text_position + 3);
+				add_click_stone (last_click_break);
+				text_position := text_position + 3;
+				image.append (breakable_stone.sign);
+				put_normal_string (" ")
+			end
 		end;
 
 	process_column_text (t: COLUMN_TEXT) is
@@ -237,7 +236,7 @@ feature -- Processing for text_struct
 			last_pos := text_position - current_line_pos.item;
 			!! str.make (t.number_of_blanks (last_pos));
 			str.fill_blank;
-			put_string (str)
+			put_normal_string (str)
 		end;
 
 	process_call_stack_item (t: CALL_STACK_ITEM) is
@@ -251,7 +250,7 @@ feature -- Processing for text_struct
 				!! stone.make (ln);
 				put_stone (stone, t.image)
 			else
-				put_string (t.image)
+				put_normal_string (t.image)
 			end;
 			current_line_pos.set_item (text_position);
 		end;
@@ -360,6 +359,18 @@ feature {NONE} -- Implementation
 			!!p.make (a_stone, text_position, text_position + length);
 			add_click_stone (p);
 			text_position := text_position + length;
+		end;
+
+	put_normal_string (s: STRING) is
+			-- Add non processed text `s' to the text image.
+			-- Note: `put_string' is called as a result from the processing
+			-- of TEXT_ITEMS whereas `put_normal_string' is not. The reason
+			-- this was done so that the descendent class GRAPHICAL_TEXT_WINDOWS
+			-- for windows can redefine `put_string' to set a specific 
+			-- character format where `put_normal_string' does not.
+		do
+			image.append (s);
+			text_position := text_position + s.count
 		end;
 
 	current_line_pos: INTEGER_REF is

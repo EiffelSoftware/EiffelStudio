@@ -63,10 +63,10 @@ typedef struct idrs {	/* An encoding/decoding IDR filter */
  * IDR entry points
  */
 
-extern int idrf_create(IDRF *idrf, size_t size);
-extern void idrf_destroy(IDRF *idrf);
-extern void idrf_reset_pos(IDRF *idrf);
-extern bool_t idr_setpos(IDR *idrs, size_t pos);
+RT_LNK int idrf_create(IDRF *idrf, size_t size);
+RT_LNK void idrf_destroy(IDRF *idrf);
+RT_LNK void idrf_reset_pos(IDRF *idrf);
+RT_LNK bool_t idr_setpos(IDR *idrs, size_t pos);
 
 #ifdef __cplusplus
 }

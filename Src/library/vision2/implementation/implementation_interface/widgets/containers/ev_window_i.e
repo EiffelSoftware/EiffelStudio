@@ -11,48 +11,25 @@ deferred class
 	
 inherit
 	EV_CONTAINER_I
-		redefine
-			build
-		end
-	
-	EV_DEFAULT_COLORS
 		export
-			{NONE} all
+			{NONE} set_expand
+			{NONE} set_parent
+		redefine
+			set_default_colors
 		end
-
-feature {NONE} -- Initialization
 	
-	make_top_level is
-			-- Create a top level window (a Window 
-			-- without a parent).
-		deferred
-		end
-
-	make (par: EV_WINDOW) is
-			-- Create a window with a parent. Current
-			-- window will be closed when the parent is
-			-- closed. The parent of window is a window 
-			-- (and not any EV_CONTAINER).
-		deferred
-		end
-
 feature {EV_WINDOW} -- Initialization
 
-	build is
-			-- Common initializations for Gtk and Windows.
-		require else
-			exists: not destroyed
+	set_default_colors is
+			-- Initialize the colors of the widget
 		local
+			default_colors: EV_DEFAULT_COLORS
 			color: EV_COLOR
 		do
---			if parent_imp /= Void then
---				set_background_color (parent_imp.background_color)
---				set_foreground_color (parent_imp.foreground_color)
---			else
-				set_background_color (Color_dialog)
-				!! color.make_rgb (0, 0, 0)
-				set_foreground_color (color)
---			end
+			!! default_colors
+			set_background_color (default_colors.Color_dialog)
+			!! color.make_rgb (0, 0, 0)
+			set_foreground_color (color)
 		end
 
 feature  -- Access

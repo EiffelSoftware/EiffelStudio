@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision composite, implementation interface."
 	status: "See notice at end of class"
@@ -33,9 +32,6 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	child: EV_WIDGET_IMP
-			-- The child of the current container
-
 feature -- Element change
 
 	add_child (child_imp: EV_WIDGET_IMP) is
@@ -43,10 +39,40 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_child: child_imp /= Void
+			not_already_child: not is_child (child_imp)
 			add_child_ok: add_child_ok
 		deferred
 		ensure
-			child_add_successful: child_add_successful (child_imp)
+			child_added: child_added (child_imp)
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+		require
+			exitst: not destroyed
+			valid_child: is_child (child_imp)
+		deferred
+		ensure
+			child_removed: not is_child (child_imp)
+		end
+
+feature -- Basic operations
+
+	propagate_background_color is
+			-- Propagate the current background color of the
+			-- container to the children.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the
+			-- container to the children.
+		require
+			exists: not destroyed
+		deferred
 		end
 
 feature -- Assertion test
@@ -54,22 +80,20 @@ feature -- Assertion test
 	add_child_ok: BOOLEAN is
 			-- Used in the precondition of
 			-- 'add_child'. True, if it is ok to add a
-			-- child to container. Normal container have
-			-- only one child, but this feature can be
-			-- redefined in decendants.
-		do
-			Result := child = Void
+			-- child to container.
+		deferred
 		end
 
-	child_add_successful (new_child: EV_WIDGET_I): BOOLEAN is
-			-- Used in the postcondition of 'add_child'
-		local
-			child_imp: EV_WIDGET_IMP
-		do
-			child_imp ?= new_child
-			Result := child = child_imp
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+		deferred
 		end
-	
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		deferred
+		end
+
 end -- class EV_CONTAINER_I
 
 --|----------------------------------------------------------------

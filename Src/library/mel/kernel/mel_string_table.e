@@ -92,7 +92,7 @@ feature -- Element change
 			i_large_enough: i > 0
 			i_small_enough: i <= count;
 		local
-			ms: MEL_STRING
+			ms: MEL_SHARED_STRING
 		do
 			!! ms.make_localized (str);
 			xm_list_put (handle, ms.handle, i);

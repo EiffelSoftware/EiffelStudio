@@ -39,7 +39,7 @@ feature
 
 				if project_dir.is_valid then
 					!! project_eif.make_open_read (project_dir.project_eif);
-					project ?= Eiffel_project.retrieved (project_eif);
+					project ?= project_eif.retrieved;
 					project_eif.close;
 
 						-- Check that it is a dynamically extendible system.

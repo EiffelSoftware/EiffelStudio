@@ -1543,6 +1543,11 @@ feature {NONE} -- Messages
 		do
 		end
 
+	on_getdlgcode is
+			-- Called when window receives WM_GETDLGCODE message.
+		do
+		end
+
 feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
 
 	default_window_procedure: POINTER
@@ -1800,6 +1805,8 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_wm_erase_background (wparam)
 			when Wm_activate then
 				on_wm_activate (wparam)
+			when wm_getdlgcode then
+				on_getdlgcode
 			else
 				default_process_message (msg, wparam, lparam)
 			end

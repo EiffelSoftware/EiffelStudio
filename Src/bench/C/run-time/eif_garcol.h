@@ -32,11 +32,11 @@ extern "C" {
 #define STACK_CHUNK		1000	/* Size of a stack chunk */
 #endif
 #define MIN_FREE		100		/* Below that, chunk is nearly full */
-#define TH_ALLOC		50000	/* Allocation threshold */
+#define TH_ALLOC		65536	/* Allocation threshold */
 #define OBJ_MAX			1500	/* Maximum # of young objects in moved_set */
 #define TO_MAX			7		/* Maximum number of allocable 'to' */
 #define CHUNK_MIN		5		/* Minimum Eiffel chunk # to activate plsc() */
-#define PLSC_PER		6		/* Period of plsc in acollect */
+#define PLSC_PER		8		/* Period of plsc in acollect */
 #define SPOILT_TBL		3		/* Size of spoilt chunks recording table */
 
 /*
@@ -82,6 +82,12 @@ extern "C" {
 #define GS_ON		0x00000002		/* Generation scavenging is set */
 #define GS_OFF		0x00000001		/* Generation scavenging is off */
 
+#ifndef EIF_THREADS
+extern struct stack memory_set;	/* Memory set stack.	*/
+#endif	/* !EIF_THREADS */
+
+extern int is_in_rem_set (char *obj);	/* Is obj in rem-set? */
+extern int is_in_special_rem_set (char *obj);	/* Is obj in special_rem_set? */
 /* General-purpose exported functions */
 RT_LNK void plsc(void);					/* Partial scavenging */
 extern void urgent_plsc(char **object);			/* Partial scavenge with given local root */
@@ -98,6 +104,15 @@ extern void st_truncate(register struct stack *stk);			/* Truncate stack if nece
 extern void st_wipe_out(register struct stchunk *chunk);			/* Remove unneeded chunk from stack */
 RT_LNK void eremb(char *obj);				/* Remembers old object */
 RT_LNK void erembq(char *obj);				/* Quick veersion (no GC call) of eremb */
+extern void special_erembq(char *obj, EIF_INTEGER offst);				
+							/* Quick version (no GC call) of eremb for
+							 *special objects full of references.*/
+extern int special_erembq_replace(char *old, char *val);				
+							/* Replace `old' by `val' in special_rem_set. */
+extern int eif_promote_special (register char *object);		
+							/* Does an special refers to young ones ? */
+extern int is_in_special_rem_set (register char *object);
+
 RT_LNK char *onceset(void);				/* Recording of once function result */
 extern EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
 	/* Get stack address of "once" from "once_set". */

@@ -55,7 +55,9 @@ feature -- Basic operations
 				display_object_is_a_widget: widget /= Void
 			end
 			display_object.child.extend (widget)
-			layout_item.extend (an_object.layout_item)
+			if layout_item.data = Void then
+				layout_item.extend (an_object.layout_item)
+			end
 			add_child (an_object, 1)
 		ensure then
 				-- If we are adding a menu bar, then the normal rule does not apply.

@@ -50,9 +50,10 @@ feature -- Basic operation
 				child_is_a_table: table /= Void
 			end
 			table.extend (widget)
-
-			layout_item.go_i_th (position)
-			layout_item.put_left (an_object.layout_item)			
+			if layout_item.data = Void then
+				layout_item.go_i_th (position)
+				layout_item.put_left (an_object.layout_item)
+			end
 			add_child (an_object, position)
 		end
 		

@@ -909,7 +909,7 @@ EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_write(EIF_INTEGER fd, EIF_INTEGER l, EIF_OBJ buf)
+EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER l)
 	/*x write at most l bytes from buffer buf into socket fd
 	    return number of actually sent bytes */
 {

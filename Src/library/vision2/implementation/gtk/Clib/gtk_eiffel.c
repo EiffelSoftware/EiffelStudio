@@ -91,8 +91,7 @@ c_gdk_colormap_query_color (GdkColormap *a_colormap,
 	case GDK_VISUAL_DIRECT_COLOR:
 	case GDK_VISUAL_TRUE_COLOR:
 
-	result->red = 65535.
- * (double)((a_pixel & visual->red_mask) >> visual->red_shift)
+	result->red = 65535. * (double)((a_pixel & visual->red_mask) >> visual->red_shift) 
 / ((1 << visual->red_prec) - 1);
 	result->green = 65535. * (double)((a_pixel & visual->green_mask) >> visual->green_shift)
 / ((1 << visual->green_prec) - 1);

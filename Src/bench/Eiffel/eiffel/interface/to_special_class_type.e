@@ -75,7 +75,7 @@ feature
 
 			System.used_features_log_file.add (Current, "make_area", encoded_name);
 
-			file.generate_function_signature ("void", encoded_name, "", file,
+			file.generate_function_signature ("void", encoded_name, True, file,
 				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>)
 
 			file.putstring ("%

@@ -68,7 +68,7 @@ feature
 				(System.class_type_of_id (context.current_type.type_id).id);
 
 			generated_file.generate_function_signature ("void", internal_name,
-					"", Context.extern_declaration_file,
+					True, Context.extern_declaration_file,
 					<<"Current", "where">>, <<"EIF_REFERENCE", "int">>);
 
 			generated_file.putchar ('{');

@@ -137,7 +137,7 @@ feature -- C code generation
 				add_in_log (class_type, internal_name);
 					-- Generation of function's header
 				file.generate_function_signature ( type_i.c_type.c_string,
-						internal_name, "", byte_context.extern_declaration_file,
+						internal_name, True, byte_context.extern_declaration_file,
 						<<"Current">>, <<"EIF_REFERENCE">>)
 
 					-- Function's body

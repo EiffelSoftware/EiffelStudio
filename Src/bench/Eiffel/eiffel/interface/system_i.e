@@ -3354,7 +3354,7 @@ feature -- Main file generation
 				Main_file.putstring ("#include %"curserver.h%"%N")
 			end
 
-			Main_file.generate_function_signature ("void", "main", "", Main_file,
+			Main_file.generate_function_signature ("void", "main", True, Main_file,
 						<<"argc", "argv", "envp">>, <<"int", "char **", "char **" >>);
 
 			Main_file.putstring ("%
@@ -3481,22 +3481,26 @@ feature -- Main file generation
 				Initialization_file.putstring ("%N");
 			end
 
-			Initialization_file.generate_function_signature ("void", "emain", "", Initialization_file,
+			if  creation_name /= Void then
+                if final_mode then
+					rout_table ?= Eiffel_table.poly_table (rout_id);
+                    c_name := rout_table.feature_name (cl_type.id.id);
+					if root_feat.has_arguments then
+						Initialization_file.generate_protected_extern_declaration
+							("void", c_name, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
+					else
+						Initialization_file.generate_protected_extern_declaration
+							("void", c_name, <<"EIF_REFERENCE">>)
+					end
+				end
+			end
+
+			Initialization_file.generate_function_signature ("void", "emain", True, Initialization_file,
 						<<"argc", "argv">>, <<"int", "char **">>);
 
 			Initialization_file.putstring ("%
 				%{%N%
 				%%Textern char *root_obj;%N");
-
-			if 	creation_name /= Void then
-				if final_mode then
-					rout_table ?= Eiffel_table.poly_table (rout_id);
-					c_name := rout_table.feature_name (cl_type.id.id);
-					Initialization_file.putstring ("%Textern void ");
-					Initialization_file.putstring (c_name);
-					Initialization_file.putstring ("();%N%N");
-				end;
-			end;
 
 			if final_mode then
 					-- Set C variable `scount'.
@@ -3602,7 +3606,7 @@ feature -- Main file generation
 			if not final_mode then
 					-- Prototypes
 				Initialization_file.generate_cpp_wrapper_start;
-				Initialization_file.generate_extern_declaration ("void", "tabinit", "");
+				Initialization_file.generate_extern_declaration ("void", "tabinit", <<>>);
 				from
 					i := 1;
 					nb := type_id_counter.value
@@ -3611,7 +3615,7 @@ feature -- Main file generation
 				loop
 					cl_type := class_types.item (i);
 					if cl_type /= Void then
-						Initialization_file.generate_extern_declaration ("void", cl_type.id.init_name, "")
+						Initialization_file.generate_extern_declaration ("void", cl_type.id.init_name, <<>>)
 					end
 					i := i + 1
 				end
@@ -3638,7 +3642,7 @@ feature -- Main file generation
 				end;
 				Initialization_file.putstring ("}%N%N");
 
-				Initialization_file.generate_function_signature ("void", "einit", "", Initialization_file, <<>>, <<>>);
+				Initialization_file.generate_function_signature ("void", "einit", True, Initialization_file, <<>>, <<>>);
 
 				Initialization_file.putstring ("{%N");
 

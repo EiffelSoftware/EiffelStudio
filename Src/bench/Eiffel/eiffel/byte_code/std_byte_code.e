@@ -197,7 +197,7 @@ feature
 
 				-- Generate function signature
 			generated_file.generate_function_signature
-				(type_i.c_type.c_string, internal_name, "",
+				(type_i.c_type.c_string, internal_name, True,
 				 Context.extern_declaration_file, argument_names, argument_types)
 
 				-- Starting body of C routine

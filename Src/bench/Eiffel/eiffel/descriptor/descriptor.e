@@ -67,6 +67,9 @@ feature -- Generation
 			if Compilation_modes.is_precompiling then
 				Real_body_index_counter.generate_extern_offsets (f);
 				f.new_line;
+
+				f.generate_protected_static_declaration ("void", "build_desc", <<>>);
+
 				f.putstring (precomp_C_string)
 			else
 				f.new_line;

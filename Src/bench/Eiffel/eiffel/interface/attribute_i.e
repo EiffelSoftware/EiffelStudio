@@ -193,7 +193,7 @@ feature
 			add_in_log (class_type, internal_name);
 
 			file.generate_function_signature (result_type.c_type.c_string,
-				internal_name, "", Byte_context.extern_declaration_file,
+				internal_name, True, Byte_context.extern_declaration_file,
 				<<"Current">>, <<"EIF_REFERENCE">>);
 			file.putchar ('{');
 			file.new_line;

@@ -209,7 +209,7 @@ feature -- Generation
 			until
 				i > nb
 			loop
-				Pattern_file.putstring ("{toc");
+				Pattern_file.putstring ("{(void (*)()) toc");
 				Pattern_file.putint (i);
 				Pattern_file.putstring (", (fnptr) toi");
 				Pattern_file.putint (i);

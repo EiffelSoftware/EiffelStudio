@@ -69,7 +69,7 @@ feature
 
 			System.used_features_log_file.add (Current, "put", encoded_name);
 
-			file.generate_function_signature ("void", encoded_name, "",
+			file.generate_function_signature ("void", encoded_name, True,
 				Byte_context.extern_declaration_file, <<"Current", "arg1", "arg2">>,
 				<<"EIF_REFERENCE", type_c.c_string, "EIF_INTEGER">>);
 
@@ -195,7 +195,7 @@ feature
 
 			System.used_features_log_file.add (Current, "item", encoded_name);
 
-			file.generate_function_signature (type_c.c_string, encoded_name, "",
+			file.generate_function_signature (type_c.c_string, encoded_name, True,
 				Byte_context.extern_declaration_file,
 				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>);
 			file.putstring ("{%N");

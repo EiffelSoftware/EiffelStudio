@@ -30,6 +30,9 @@
 #include "eif_malloc.h"
 #include "eif_lmalloc.h"		/* for eif_malloc() */
 #include "eif_macros.h"
+#ifdef EIF_REM_SET_OPTIMIZATION
+#include "eif_special_table.h"
+#endif
 #include "x2c.header"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
@@ -279,6 +282,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 
 	assert (HEADER (new_area)->ov_flags & EO_SPEC);	/* Must be special. */
 
+#ifdef EIF_REM_SET_OPTIMIZATION
 	if ((HEADER (new_area)->ov_flags & (EO_REF | EO_REM)) 
 			== (EO_REF | EO_REM)) {
 				/* Is object is special table? */
@@ -286,6 +290,8 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 		eif_promote_special (new_area);	
 									
 	}
+	
+#endif
 	
 	
 	if (!(HEADER(new_area)->ov_flags & EO_COMP))

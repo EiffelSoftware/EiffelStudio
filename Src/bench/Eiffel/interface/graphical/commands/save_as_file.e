@@ -21,7 +21,7 @@ inherit
 			execute_warner_ok as save_it
 		end
 
-creation
+create
 
 	make
 	
@@ -43,7 +43,7 @@ feature -- Callbacks
 		do
 			fn := clone (last_name_chooser.selected_file);
 			if not fn.is_empty then
-				!!new_file.make (fn);
+				create new_file.make (fn);
 				aok := True;
 				if (new_file.exists) and then (not new_file.is_plain) then
 					aok := False;

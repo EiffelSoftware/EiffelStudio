@@ -49,13 +49,13 @@ feature -- Initialization
 			mel_vb: MEL_SCROLL_BAR;
 			mel_frame: MEL_FRAME
 		do
-			!! parent.make (Interface_names.t_Empty, a_parent);
-			!! frame.make (Interface_names.t_Empty, parent);
+			create parent.make (Interface_names.t_Empty, a_parent);
+			create frame.make (Interface_names.t_Empty, parent);
 			drawing_area_make (Interface_names.t_Empty, frame);
-			!! vertical_scrollbar.make (Interface_names.t_Empty, parent);
+			create vertical_scrollbar.make (Interface_names.t_Empty, parent);
 			vertical_scrollbar.set_horizontal (False);
-			!! horizontal_scrollbar.make (Interface_names.t_Empty, parent);
-			!! highlight_points.make (0);
+			create horizontal_scrollbar.make (Interface_names.t_Empty, parent);
+			create highlight_points.make (0);
 
 			horizontal_scrollbar.set_horizontal (True);
 			size := vertical_scrollbar.width;
@@ -80,7 +80,7 @@ feature -- Initialization
 			add_button_press_action (1, Current, Press_action);
 			add_button_motion_action (1, Current, Motion_action);
 			add_button_release_action (1, Current, Release_action);
-			!! to_refresh.make;
+			create to_refresh.make;
 			mel_frame ?= frame.implementation;
 			mel_frame.set_shadow_in;
 			vertical_scrollbar.set_minimum (0);
@@ -250,9 +250,9 @@ end
 			elseif arg = Graphic_expose_action then
 					-- Expose action when area was obscured by another window
 				g_expose_data ?= last_callback_struct.event;
-				!! coord;
+				create coord;
 				coord.set (g_expose_data.x - 15, g_expose_data.y - 15);
-				!! clip;
+				create clip;
 				clip.set (coord, g_expose_data.width + 30, g_expose_data.height + 30);
 				to_refresh.merge_clip (clip);
 				if g_expose_data.count = 0 then
@@ -287,7 +287,7 @@ end
 				process_mouse_press_action
 			elseif arg = Motion_action then
 				if task = Void then
-					!! task.make;
+					create task.make;
 					task.add_action (Current, Mouse_action);
 				end;
 				motnot_data ?= context_data;
@@ -449,13 +449,13 @@ feature {NONE} -- Implementation
 	Key_action, Resize_action, Expose_action, Graphic_expose_action: ANY is
 			-- Actions constants
 		once
-			!! Result
+			create Result
 		end;
 
 	Mouse_action, Press_action, Motion_action, Release_action, Value_changed_action: ANY is
 			-- Actions constants
 		once
-			!! Result
+			create Result
 		end;
 
 	set_scroll_slider_size (sb: SCROLLBAR; new_max, new_size: INTEGER) is
@@ -499,7 +499,7 @@ feature {NONE} -- Selection implementation
 	selected_text: STRING is
 			-- Text selected from the drawing area
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		end;
 		
 	nbr_of_clicks: INTEGER;
@@ -628,8 +628,8 @@ feature {NONE} -- Selection implementation
 				elseif key_event /= Void then
 					t := key_event.time
 				end;
-				!! atom.make_string;
-				!! selection.make_own_selection
+				create atom.make_string;
+				create selection.make_own_selection
 					(drawing, atom, t, a_text, Current, Void,
 					Void, Void)
 			end
@@ -644,7 +644,7 @@ feature {NONE} -- Selection implementation
 		local
 			pt: MEL_POINT
 		do
-			!! pt.make (x1, y1);
+			create pt.make (x1, y1);
 			highlight_points.extend (pt)
 		end;
 		
@@ -679,8 +679,8 @@ feature {NONE} -- Selection implementation
 			clip: CLIP;
 			end_highlight_pos: INTEGER
 		do
-			!! coord;
-			!! clip;
+			create coord;
+			create clip;
 			if relative_y >= prev_motion_y then
 				coord.set (0, prev_motion_y - 2*maximum_height_per_line);
 				if coord.y > height then

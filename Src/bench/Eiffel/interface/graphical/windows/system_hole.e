@@ -26,7 +26,7 @@ inherit
 
 	CREATE_ACE_CALLER
 
-creation
+create
 	make
 
 feature -- Callbacks
@@ -101,7 +101,7 @@ feature {NONE} -- Execution
 					if argument /= Void and then argument = last_name_chooser then
 						fn := clone (last_name_chooser.selected_file);
 						if not fn.is_empty then
-							!! f.make (fn);
+							create f.make (fn);
 							if 
 								f.exists and then 
 								f.is_readable and then 
@@ -129,7 +129,7 @@ feature {NONE} -- Execution
 							Interface_names.b_Build, Interface_names.b_Cancel);
 					end;	
 				else
-					!! system_stone;
+					create system_stone;
 					system_tool.force_raise
 					system_tool.display;
 					system_tool.process_system (system_stone);
@@ -144,8 +144,8 @@ feature {NONE} -- Implementation
 			ace_b: ACE_BUILDER;
 			wizard: WIZARD
 		do
-			!! ace_b.make (Current);
-			!! wizard.make (Project_tool, wiz_dlg, ace_b);
+			create ace_b.make (Current);
+			create wizard.make (Project_tool, wiz_dlg, ace_b);
 			wizard.execute_action;
 		end;
 
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 		local
 			file_name: STRING
 		do
-			!! file_name.make (0);
+			create file_name.make (0);
 			file_name.append ("Ace.ace");
 			Eiffel_ace.set_file_name (file_name);
 			system_tool.display;
@@ -165,7 +165,7 @@ feature {NONE} -- Properties
 	wiz_dlg: WIZARD_DIALOG is
 			-- Dialog for the wizard.
 		do
-			!! Result.make (Interface_names.t_Ace_builder, Project_tool);
+			create Result.make (Interface_names.t_Ace_builder, Project_tool);
 		end
 
 end -- class SYSTEM_HOLE

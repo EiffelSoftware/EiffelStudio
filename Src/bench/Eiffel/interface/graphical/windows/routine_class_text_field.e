@@ -19,7 +19,7 @@ inherit
 		end;
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 
 	make
 
@@ -32,7 +32,7 @@ feature -- Initialization
 			debug_tip_cmd: DEBUG_TOOLTIP_CMD
 		do
 			text_field_make ("", a_parent);
-			!! debug_tip_cmd.make (implementation)
+			create debug_tip_cmd.make (implementation)
 			add_activate_action (Current, Void);
 			tool := a_tool
 		end;
@@ -45,7 +45,7 @@ feature -- Properties
 			navigate_tab_cmd: NAVIGATE_CMD
 		do
 			if not toolkit.name.is_equal ("MS_WINDOWS") then
-				!! navigate_tab_cmd.make (previous_tab)
+				create navigate_tab_cmd.make (previous_tab)
 				set_action ("<Key>Tab", navigate_tab_cmd, Void)
 				set_action ("Shift<Key>Tab", navigate_tab_cmd, Void)
 			end
@@ -146,7 +146,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 						create matcher.make_empty
 						matcher.set_pattern (cname);
 						if not matcher.has_wild_cards then
-							!! mp.set_watch_cursor;
+							create mp.set_watch_cursor;
 							at_pos := cname.index_of ('@', 1);
 							if at_pos = 0 then
 								class_list := Eiffel_universe.compiled_classes_with_name (cname);
@@ -186,8 +186,8 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 								end
 							end
 						else
-							!! mp.set_watch_cursor;
-							!! sorted_classes.make;
+							create mp.set_watch_cursor;
+							create sorted_classes.make;
 							from
 								classes := Eiffel_system.system.classes
 								i := classes.lower
@@ -217,7 +217,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 					check
 						class_i.compiled
 					end
-					!! stone.make (class_i.compiled_class);
+					create stone.make (class_i.compiled_class);
 					tool.routine_text_field.execute (stone);
 				end
 			end
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			cname, last_name: STRING
 			first_ambiguous: BOOLEAN
 		do
-			!! class_names.make (class_list.count);
+			create class_names.make (class_list.count);
 			from class_list.start until class_list.after loop
 				class_i := class_list.item;
 				cname := clone (class_i.name);
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 				class_list.forth
 			end;
 			if choice = Void then
-				!! choice.make_with_widget (parent, Current)
+				create choice.make_with_widget (parent, Current)
 			end;
 			choice.popup (Current, class_names, Interface_names.t_Select_class)
 		end

@@ -34,7 +34,7 @@ inherit
 
 	EXEC_MODES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -43,7 +43,7 @@ feature -- Initialization
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
-			{HOLE_COMMAND} Precursor (a_tool)
+			Precursor {HOLE_COMMAND} (a_tool)
 			create run_request.make (Rqst_application)
 			create cont_request.make (Rqst_cont)
 		end

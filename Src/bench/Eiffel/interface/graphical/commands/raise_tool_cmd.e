@@ -10,7 +10,7 @@ class RAISE_TOOL_CMD
 inherit
 	TOOL_COMMAND
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

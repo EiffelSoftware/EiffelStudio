@@ -290,27 +290,27 @@ feature {NONE} -- Command arguments
 	new_tooler_action: ANY is
 			-- Callback value to indicate that a new tool should come up.
 		once
-			!! Result
+			create Result
 		end
 
 	retarget_tooler_action: ANY is
 			-- Callback value to indicate that a tool need to change its
 			-- content with the one selected by the user.
 		once
-			!! Result
+			create Result
 		end
 
 	insert_breakpoint_action: ANY is
 			-- Callback value to indicate that a breakpoint will be put at
 			-- the first call of the routine.
 		once
-			!! Result
+			create Result
 		end
 
 	modify_event_action: ANY is
 			-- Callback value to indicate that the text has modified.
 		once
-			!! Result
+			create Result
 		end
 
 	process_action (arg: ANY) is

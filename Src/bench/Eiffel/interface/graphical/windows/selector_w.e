@@ -23,7 +23,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 	EB_CONSTANTS
 
-creation
+create
 	make
 
 feature --Initialization
@@ -131,7 +131,7 @@ feature -- User interface
 		local
 			tmp: SCROLLABLE_LIST_SELECTOR_ELEMENT
 		do
-			!! tmp.make (t_w)
+			create tmp.make (t_w)
 			extend(tmp)
 		end
 
@@ -141,7 +141,7 @@ feature -- User interface
   			t_name:STRING
 		do
 			t_name := clone (t_w.eb_shell.icon_name)
-			!! tmp.make (t_w)
+			create tmp.make (t_w)
 
 				-- If two classes are opened on the same class, the new opened class
 				-- is marked as read-only

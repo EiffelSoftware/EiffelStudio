@@ -17,7 +17,7 @@ inherit
 			set_value, value, has_changed
 		end;
 
-creation
+create
 	make, make_with_values
 
 feature {NONE} -- Initialization
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			not_first_time: BOOLEAN
 			c: INTEGER
 		do
-			!! value.make (0);
+			create value.make (0);
 			c := actual_value.count
 			if c > 0 then
 				from
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 		local
 			start_pos, end_pos: INTEGER
 		do
-			!! actual_value.make (1, 0);
+			create actual_value.make (1, 0);
 			if not value.is_empty then
 				from
 					start_pos := 1;

@@ -17,7 +17,7 @@ inherit
 			process, x_stone_cursor
 		end
 
-creation
+create
 
 	make
 

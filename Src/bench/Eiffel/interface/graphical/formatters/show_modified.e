@@ -14,7 +14,7 @@ inherit
 			display_temp_header, post_fix, make
 		end
 
-creation
+create
 
 	make
 	
@@ -65,7 +65,7 @@ feature {NONE} -- Attributes
 		local
 			cmd: E_SHOW_MODIFIED_CLASSES
 		do
-			!! cmd.make;
+			create cmd.make;
 			cmd.execute;
 			Result := cmd.structured_text
 		end;

@@ -24,7 +24,7 @@ inherit
 	CUSTOM_CALLER;
 	EB_CONSTANTS
 
-creation
+create
 
 	make
 	
@@ -141,7 +141,7 @@ feature {NONE} -- Properties
 		local
 			cmd: E_SHOW_CALLERS
 		do
-			!! cmd.make (f.e_feature);
+			create cmd.make (f.e_feature);
 			if to_show_all_callers then
 				cmd.set_all_callers;
 			end;

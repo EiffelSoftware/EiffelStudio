@@ -15,7 +15,7 @@ inherit
 			init as make
 		end
 
-creation
+create
 	make
 
 feature -- Properties
@@ -67,9 +67,9 @@ feature {NONE} -- Implementation
 			a_list: TWO_WAY_LIST [STRING]
 		do
 			if choices = Void then
-				!! choices.make_with_widget (a_button.parent, a_button)
+				create choices.make_with_widget (a_button.parent, a_button)
 			end
-			!! a_list.make
+			create a_list.make
 			fill_list (a_list)
 			choices.popup (Current, a_list, tool.history_window_title)
 			choices.select_i_th (tool.history.index)

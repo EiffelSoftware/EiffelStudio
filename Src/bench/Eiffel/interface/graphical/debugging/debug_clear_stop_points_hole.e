@@ -16,7 +16,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 	WARNER_CALLBACKS
 
-creation
+create
 	make
 
 feature -- Properties
@@ -47,7 +47,7 @@ feature -- Properties
 	clear_it_action: ANY is
 			-- Action to signify imediate clearing of breakpoints
 		once
-			!! Result
+			create Result
 		end
 
 	stone_type: INTEGER is

@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			f_w: FONT_IMP
 			l_font: WEL_LOG_FONT
 		do
-			!! Result.make;
+			create Result.make;
 			c_ref ?= a_color.implementation;
 			Result.set_text_color (c_ref)	
 			f_w ?= a_font.implementation;

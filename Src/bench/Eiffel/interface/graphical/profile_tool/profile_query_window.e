@@ -23,7 +23,7 @@ inherit
 
 	WINDOWS
 
-creation
+create
 	make
 	
 
@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			form_d_make (Interface_names.n_X_resource_name, a_tool)
 			set_title (Interface_names.t_Profile_query_window)
 
-			!! all_subqueries.make
-			!! all_operators.make
+			create all_subqueries.make
+			create all_operators.make
 
 			build_interface
 			set_composite_attributes (Current)
@@ -59,7 +59,7 @@ feature -- Access
 			ptf: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			aok: BOOLEAN
 		do
-			!! ptf.make (fn)
+			create ptf.make (fn)
 			aok := True
 			if ptf.exists and then not ptf.is_plain then
 				aok := False
@@ -78,7 +78,7 @@ feature -- Access
 			end
 
 			if aok then
-				!! ptf.make_create_read_write (fn);
+				create ptf.make_create_read_write (fn);
 				ptf.putstring ("Options:%N========%N%N");
 				ptf.putstring (profiler_options.image);
 				ptf.putstring ("%NQuery:%N======%N%N");
@@ -147,7 +147,7 @@ feature -- Update
 			inactive_subqueries_window.wipe_out
 			if all_subqueries.count > 0 then
 				all_subqueries.start
-				!! scrollable_subquery.make_first (all_subqueries.item.image)
+				create scrollable_subquery.make_first (all_subqueries.item.image)
 				if all_subqueries.item.is_active then
 					active_query_window.force (scrollable_subquery)
 				else
@@ -161,10 +161,10 @@ feature -- Update
 					until
 						all_subqueries.after or else all_operators.after
 					loop
-						!! scrollable_subquery.make (all_operators.item.actual_operator, all_subqueries.item.image, i )
+						create scrollable_subquery.make (all_operators.item.actual_operator, all_subqueries.item.image, i )
 						if all_subqueries.item.is_active then
 							if active_query_window.is_empty then
-								!! scrollable_subquery.make ("", all_subqueries.item.image, i) 
+								create scrollable_subquery.make ("", all_subqueries.item.image, i) 
 							end
 							active_query_window.force (scrollable_subquery)
 						else
@@ -190,70 +190,70 @@ feature {NONE} -- Graphical User Interface
 			-- Build the user interface.
 		do
 				--| Build forms
-			!! query_form.make (Interface_names.t_Empty, Current);
-			!! text_form.make (Interface_names.t_Empty, Current);
-			!! subquery_form.make (Interface_names.t_Empty, Current);
-			!! button_form.make (Interface_names.t_Empty, Current);
+			create query_form.make (Interface_names.t_Empty, Current);
+			create text_form.make (Interface_names.t_Empty, Current);
+			create subquery_form.make (Interface_names.t_Empty, Current);
+			create button_form.make (Interface_names.t_Empty, Current);
 
 				--| Build widgets
-			!! query_sep.make (Interface_names.t_Empty, Current);
-			!! text_sep.make (Interface_names.t_Empty, Current);
-			!! subquery_sep.make (Interface_names.t_Empty, Current);
+			create query_sep.make (Interface_names.t_Empty, Current);
+			create text_sep.make (Interface_names.t_Empty, Current);
+			create subquery_sep.make (Interface_names.t_Empty, Current);
 
-			!! active_query_form.make (Interface_names.t_empty, query_form)
-			!! query_button_form.make (Interface_names.t_empty, query_form)
-			!! inactive_subqueries_form.make (Interface_names.t_empty, query_form)
+			create active_query_form.make (Interface_names.t_empty, query_form)
+			create query_button_form.make (Interface_names.t_empty, query_form)
+			create inactive_subqueries_form.make (Interface_names.t_empty, query_form)
 
-			!! active_query_label.make (Interface_names.l_Active_query, active_query_form)
-			!! active_query_window.make (Interface_names.t_empty, active_query_form)
+			create active_query_label.make (Interface_names.l_Active_query, active_query_form)
+			create active_query_window.make (Interface_names.t_empty, active_query_form)
 			active_query_window.set_multiple_selection
 
-			!! reactivate_label.make (Interface_names.l_Reactivate, query_button_form)
-			!! inactivate_label.make (Interface_names.l_Inactivate, query_button_form)
-			!! reactivate_button.make (Interface_names.t_empty, query_button_form)
+			create reactivate_label.make (Interface_names.l_Reactivate, query_button_form)
+			create inactivate_label.make (Interface_names.l_Inactivate, query_button_form)
+			create reactivate_button.make (Interface_names.t_empty, query_button_form)
 			reactivate_button.set_left
-			!! inactivate_button.make (Interface_names.t_empty, query_button_form)
+			create inactivate_button.make (Interface_names.t_empty, query_button_form)
 			inactivate_button.set_right
 			reactivate_button.add_activate_action (Current, reactivate_subqueries)
 			inactivate_button.add_activate_action (Current, inactivate_subqueries)
-			!! change_operator_label.make (Interface_names.l_Change_operator, query_button_form) 
-			!! set_or_operator_button.make (Interface_names.b_Or, query_button_form)
-			!! set_and_operator_button.make (Interface_names.b_And, query_button_form)
-			!! change_operator_cmd.make (Current)
+			create change_operator_label.make (Interface_names.l_Change_operator, query_button_form) 
+			create set_or_operator_button.make (Interface_names.b_Or, query_button_form)
+			create set_and_operator_button.make (Interface_names.b_And, query_button_form)
+			create change_operator_cmd.make (Current)
 			set_or_operator_button.add_activate_action (change_operator_cmd, "or")
 			set_and_operator_button.add_activate_action (change_operator_cmd, "and")
 
-			!! inactive_subqueries_label.make (Interface_names.l_Inactive_subqueries, inactive_subqueries_form)
-			!! inactive_subqueries_window.make (Interface_names.t_empty, inactive_subqueries_form)
+			create inactive_subqueries_label.make (Interface_names.l_Inactive_subqueries, inactive_subqueries_form)
+			create inactive_subqueries_window.make (Interface_names.t_empty, inactive_subqueries_form)
 			inactive_subqueries_window.set_multiple_selection
 
-			!! text_label.make (Interface_names.l_Results, text_form);
+			create text_label.make (Interface_names.l_Results, text_form);
 			if is_graphics_disabled then
-				!SCROLLED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
+				create {SCROLLED_TEXT_WINDOW} text_window.make (Interface_names.t_Empty, text_form)
 			else
-				!GRAPHICAL_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
+				create {GRAPHICAL_TEXT_WINDOW} text_window.make (Interface_names.t_Empty, text_form)
 			end;
 
 			text_window.init_resource_values;
 
-			!! subquery_label.make (Interface_names.l_Subquery, subquery_form);
-			!! subquery_text.make (Interface_names.t_Empty, subquery_form);
-			!! add_label.make (Interface_names.l_Add, subquery_form)
+			create subquery_label.make (Interface_names.l_Subquery, subquery_form);
+			create subquery_text.make (Interface_names.t_Empty, subquery_form);
+			create add_label.make (Interface_names.l_Add, subquery_form)
 			add_label.set_left_alignment
-			!! add_subquery_cmd.make(Current)
-			!! add_and_operator_button.make (Interface_names.b_And, subquery_form);
+			create add_subquery_cmd.make(Current)
+			create add_and_operator_button.make (Interface_names.b_And, subquery_form);
 			add_and_operator_button.add_activate_action (add_subquery_cmd, "and")
-			!! add_or_operator_button.make (Interface_names.b_Or, subquery_form); 
+			create add_or_operator_button.make (Interface_names.b_Or, subquery_form); 
 			add_or_operator_button.add_activate_action (add_subquery_cmd, "or")
 
-			!! run_button.make (Interface_names.b_Run, button_form);
-			!! run_query_cmd.make (Current);
+			create run_button.make (Interface_names.b_Run, button_form);
+			create run_query_cmd.make (Current);
 			run_button.add_activate_action (run_query_cmd, Void);
-			!! save_as_button.make (Interface_names.b_Save, button_form);
-			!! save_result_cmd.make (Current);
+			create save_as_button.make (Interface_names.b_Save, button_form);
+			create save_result_cmd.make (Current);
 			save_as_button.add_activate_action (save_result_cmd, Void);
-			!! close_button.make (Interface_names.b_Close, button_form);
-			!! close_cmd.make (Current);
+			create close_button.make (Interface_names.b_Close, button_form);
+			create close_cmd.make (Current);
 			close_button.add_activate_action (close_cmd, Void);
 
 				--| Attach all
@@ -580,7 +580,7 @@ feature {NONE} -- Implementation
 			inactive_element, active_element: SCROLLABLE_SUBQUERY
 		do
 			if active_query_window.selected_count > 0 then
-				!! selected_positions.make
+				create selected_positions.make
 				selected_positions.fill ( active_query_window.selected_positions )
 				from
 					selected_positions.sort
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 			inactive_element, active_element: SCROLLABLE_SUBQUERY
 		do
 			if inactive_subqueries_window.selected_count > 0 then
-				!! selected_positions.make
+				create selected_positions.make
 				selected_positions.fill ( inactive_subqueries_window.selected_positions )
 				from
 					selected_positions.sort
@@ -664,9 +664,9 @@ feature {NONE} -- Implementation
 					i := selected_positions.item
 					inactive_subqueries_window.go_i_th ( i )
 					active_query_window.start
-					!! active_element.make ("", "", 0)
+					create active_element.make ("", "", 0)
 					active_element ?= active_query_window.item
-					!! inactive_element.make ("", "", 0)
+					create inactive_element.make ("", "", 0)
 					inactive_element ?= inactive_subqueries_window.item
 				until
 					i > selected_positions.last
@@ -722,12 +722,12 @@ feature {NONE} -- Execution arguments
 
 	reactivate_subqueries: ANY is
 		once
-			!! Result
+			create Result
 		end
 		
 	inactivate_subqueries: ANY is
 		once
-			!! Result
+			create Result
 		end
 		
 feature {NONE} -- execution

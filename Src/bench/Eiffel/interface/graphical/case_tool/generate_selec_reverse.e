@@ -9,7 +9,7 @@ inherit
 
 	CASE_COMMAND2
 
-creation
+create
 
 	make
 
@@ -24,12 +24,12 @@ feature
 			e : SCROLLABLE_LIST_CLUSTERS
 		do
 			case_window.hide
-			!!aa
+			create aa
 			aa.set_parent_window (case_window.Project_tool.implementation)
 			aa.put_case_message("Starting Reverse Process")
-			!! bb.make (Project_tool)
-			!! format_case.make (bb, aa,FALSE)
-			!! l.make
+			create bb.make (Project_tool)
+			create format_case.make (bb, aa,FALSE)
+			create l.make
 			from
 				case_window.scroll_list2.start
 			until

@@ -14,7 +14,7 @@ inherit
 			init as make
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -46,7 +46,7 @@ feature -- Execution
 		do
 			if Project_tool.initialized then
 				if print_window = Void then
-					!! print_window;
+					create print_window;
 				end;
 				print_window.popup (Current)
 			end

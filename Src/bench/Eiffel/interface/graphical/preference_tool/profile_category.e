@@ -10,7 +10,7 @@ class PROFILE_CATEGORY
 inherit
 	RESOURCE_CATEGORY
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -18,8 +18,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current
 		do
-			!! users.make;
-			!! modified_resources.make
+			create users.make;
+			create modified_resources.make
 		end
 
 feature {TTY_RESOURCES} -- Initialization
@@ -27,10 +27,10 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all resources valid for Current.
 		do
-			!! tool_width.make ("profile_tool_width", rt, 450);
-			!! tool_height.make ("profile_tool_height", rt, 490);
-			!! query_tool_width.make ("profile_query_tool_width", rt, 500);
-			!! query_tool_height.make ("profile_query_tool_height", rt, 500);
+			create tool_width.make ("profile_tool_width", rt, 450);
+			create tool_height.make ("profile_tool_height", rt, 490);
+			create query_tool_width.make ("profile_query_tool_width", rt, 500);
+			create query_tool_height.make ("profile_query_tool_height", rt, 500);
 		end
 
 feature -- Validation

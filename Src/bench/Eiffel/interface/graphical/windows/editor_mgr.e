@@ -26,8 +26,8 @@ feature -- Initialization
 			-- with `a_screen' as the parent.
 		do
 			screen := a_screen
-			!!active_editors.make
-			!!free_list.make
+			create active_editors.make
+			create free_list.make
 		end
 
 feature -- Resource Update
@@ -195,7 +195,7 @@ feature {WINDOW_MGR} -- Properties
 				Result := free_list.item
 				free_list.remove
 			else
-				!! mp.set_watch_cursor
+				create mp.set_watch_cursor
 				Result := create_editor
 				mp.restore
 			end

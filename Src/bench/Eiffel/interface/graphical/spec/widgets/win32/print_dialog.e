@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 	dialog: WEL_PRINT_DIALOG is
 			-- Printer dialog for windows
 		once
-			!! Result.make
+			create Result.make
 		end;
 
 end -- class PRINT_DIALOG

@@ -96,7 +96,7 @@ feature -- Access
 			n: INTEGER
 		do
 			n := pix // tab_pixel_length;
-			!! Result.make (n);
+			create Result.make (n);
 			if n > 0 then
 				Result.extend ('%T');
 				Result.multiply (n)
@@ -164,7 +164,7 @@ feature -- Access
 			if line /= Void then
 				if line.empty then
 					-- Must only be a new line
-					!! Result;
+					create Result;
 					Result.set (workarea_width, line.base_left_y)
 				else
 					fig := line.text_with_position (char_pos);
@@ -176,7 +176,7 @@ feature -- Access
 			if Result = Void then
 				line := i_th (count);
 				-- Must be after end of document
-				!! Result;
+				create Result;
 				Result.set (workarea_width, line.base_left_y)
 			end
 		end;
@@ -192,7 +192,7 @@ feature -- Update
 			current_text := Void;
 			find_line (relative_y);
 			if current_line /= Void then
-				!! p;
+				create p;
 				p.set (relative_x + x_offset, relative_y);
 				current_text := current_line.text_figure (p);
 			end;
@@ -268,7 +268,7 @@ feature -- Update
 			found: BOOLEAN;
 			line: like current_line
 		do
-			!! p;
+			create p;
 			p.set (relative_x + x_offset, relative_y + y_offset);
 			find_line (relative_y);
 			if current_line /= Void then
@@ -308,11 +308,11 @@ feature -- Input
 			stone: FEATURE_STONE;
 			fig: TEXT_FIGURE
 		do
-			!! stone.make (e_feature);
+			create stone.make (e_feature);
 			if is_keyword then
-				!KEYWORD_TEXT_IMAGE! fig
+				create {KEYWORD_TEXT_IMAGE} fig
 			else
-				!SYMBOL_TEXT_IMAGE! fig
+				create {SYMBOL_TEXT_IMAGE} fig
 			end;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
@@ -323,7 +323,7 @@ feature -- Input
 		local
 			fig: STRING_TEXT_IMAGE
 		do
-			!! fig;
+			create fig;
 			add_text_figure (fig, s);
 		end;
 
@@ -356,7 +356,7 @@ debug ("DRAWING")
 	end
 end
 			text_position := text_position + 1;
-			!! current_line.make (Current);
+			create current_line.make (Current);
 			maximum_width := maximum_width.max (current_x);
 			current_x := initial_x_position;
 			current_y := current_y + maximum_height_per_line;
@@ -370,8 +370,8 @@ end
 			fig: CLASS_TEXT_IMAGE;
 			stone: CLASSI_STONE
 		do
-			!! stone.make (e_class);
-			!! fig;
+			create stone.make (e_class);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
 		end;
@@ -382,7 +382,7 @@ end
 		local
 			fig: CLUSTER_TEXT_IMAGE
 		do
-			!! fig;
+			create fig;
 			add_text_figure (fig, str)
 		end;
 
@@ -393,8 +393,8 @@ end
 			fig: CLASS_TEXT_IMAGE;
 			stone: CLASSC_STONE
 		do
-			!! stone.make (e_class);
-			!! fig;
+			create stone.make (e_class);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
 		end;
@@ -405,8 +405,8 @@ end
 			fig: CLASS_TEXT_IMAGE;
 			stone: CL_SYNTAX_STONE
 		do
-			!! stone.make (syn, e_class);
-			!! fig;
+			create stone.make (syn, e_class);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
 		end;
@@ -417,8 +417,8 @@ end
 			fig: DEFAULT_TEXT_IMAGE;
 			stone: ACE_SYNTAX_STONE
 		do
-			!! stone.make (syn);
-			!! fig;
+			create stone.make (syn);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
 		end;
@@ -430,8 +430,8 @@ end
 			fig: ERROR_TEXT_IMAGE;
 			stone: ERROR_STONE
 		do
-			!! stone.make (error);
-			!! fig;
+			create stone.make (error);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
 		end;
@@ -443,8 +443,8 @@ end
 			fig: FEATURE_TEXT_IMAGE;
 			stone: FEATURE_ERROR_STONE
 		do
-			!! stone.make (feat, a_pos);
-			!! fig;
+			create stone.make (feat, a_pos);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
 		end;
@@ -456,8 +456,8 @@ end
 			fig: FEATURE_TEXT_IMAGE;
 			stone: FEATURE_STONE
 		do
-			!! stone.make (feat);
-			!! fig;
+			create stone.make (feat);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
 		end;
@@ -468,8 +468,8 @@ end
 			fig: FEATURE_TEXT_IMAGE;
 			stone: FEATURE_NAME_STONE
 		do
-			!! stone.make (f_name, e_class);
-			!! fig;
+			create stone.make (f_name, e_class);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, f_name)
 		end;
@@ -480,8 +480,8 @@ end
 			fig: OBJECT_TEXT_IMAGE;
 			stone: OBJECT_STONE
 		do
-			!! stone.make (address, a_name, e_class);
-			!! fig;
+			create stone.make (address, a_name, e_class);
+			create fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, address)
 		end;
@@ -491,7 +491,7 @@ end
 		local
 			fig: COMMENT_TEXT_IMAGE
 		do
-			!! fig;
+			create fig;
 			add_text_figure (fig, s);
 		end;
 
@@ -500,7 +500,7 @@ end
 		local
 			fig: SYMBOL_TEXT_IMAGE
 		do
-			!! fig;
+			create fig;
 			add_text_figure (fig, s);
 		end;
 
@@ -509,7 +509,7 @@ end
 		local
 			fig: KEYWORD_TEXT_IMAGE
 		do
-			!! fig;
+			create fig;
 			add_text_figure (fig, s);
 		end;
 
@@ -521,7 +521,7 @@ end
 			str: STRING
 		do
 			str := t.image;
-			!! fig;
+			create fig;
 			fig.set_is_tab;
 			w := tab_pixel_length * t.indent_depth;
 			fig.set_width (w);
@@ -540,7 +540,7 @@ end
 			str: STRING;
 			t: INDENT_TEXT
 		do
-			!! t.make (depth);
+			create t.make (depth);
 			process_indentation (t)
 		end;
 
@@ -549,7 +549,7 @@ end
 		local
 			fig: FEATURE_TEXT_IMAGE
 		do
-			!! fig;
+			create fig;
 			add_text_figure (fig, s);
 		end;
 
@@ -560,7 +560,7 @@ feature -- Text formatting
 		local
 			fig: DEFAULT_TEXT_IMAGE
 		do
-			!! fig;
+			create fig;
 			add_text_figure (fig, s.image);
 		end;
 
@@ -576,14 +576,14 @@ feature -- Text formatting
 			fig: BREAKABLE_FIGURE;
 			breakable_stone: BREAKABLE_STONE
 		do
-			!! breakable_stone.make (a_bp.e_feature, a_bp.index);
-			!! fig;
+			create breakable_stone.make (a_bp.e_feature, a_bp.index);
+			create fig;
 			fig.set_stone (breakable_stone);
 			if a_bp.display_number then
 				fig.set_foreground_color (stop_color);
 				add_text_figure (fig, a_bp.index.out)
 			else
-				!! fig;
+				create fig;
 				fig.set_stone (breakable_stone);
 				fig.set_text_info ("", text_position);
 				fig.set_base_left (0, current_y);
@@ -622,10 +622,10 @@ feature -- Text formatting
 			stone: CALL_STACK_STONE;
 			ln: INTEGER
 		do
-			!! fig;
+			create fig;
 			ln := t.level_number;
 			if ln > 0 then
-				!! stone.make (ln);
+				create stone.make (ln);
 				fig.set_stone (stone)
 			end;
 			add_text_figure (fig, t.image);
@@ -710,7 +710,7 @@ feature {NONE} -- Implementation
 			current_y := maximum_height_per_line + 5;
 			text_position := 0;
 			cursor_position := 0;
-			!! current_line.make (Current)
+			create current_line.make (Current)
 		end;
 
 	update_breakable_figure (fig: BREAKABLE_FIGURE) is

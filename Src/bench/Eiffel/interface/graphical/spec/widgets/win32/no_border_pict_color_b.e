@@ -12,7 +12,7 @@ inherit
 			create_ev_widget
 		end
 
-creation
+create
 	make, make_unmanaged
 
 feature
@@ -26,7 +26,7 @@ feature
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!! windows_b.make (Current, a_parent, man);
+			create windows_b.make (Current, a_parent, man);
 			implementation := windows_b;
 			implementation.set_widget_default;
 			set_default

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Initialize Current.
 		do
 			tool := a_tool;
-			!! resources.make;
+			create resources.make;
 			update_resources 
 		end
 

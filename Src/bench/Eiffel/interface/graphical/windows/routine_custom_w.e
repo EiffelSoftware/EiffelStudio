@@ -10,7 +10,7 @@ inherit
 
 	CUSTOM_W
 
-creation
+create
 	make 
 
 feature {NONE} -- Initialization
@@ -26,14 +26,14 @@ feature {NONE} -- Initialization
 		do
 			create_interface (a_parent)
 			set_title (Interface_names.t_Routine_custom_tool)
-			!! rbox.make (Interface_names.t_Empty, Current)
+			create rbox.make (Interface_names.t_Empty, Current)
 			rbox.set_always_one (True)
 			attach_top (rbox, 0)
 			attach_left (rbox, 0)
 			attach_right (rbox, 0)
 			attach_bottom_widget (buttons, rbox, 0)
-			!! option_one_b.make ("", rbox)
-			!! option_two_b.make ("", rbox)
+			create option_one_b.make ("", rbox)
+			create option_two_b.make ("", rbox)
 			set_composite_attributes (Current)
 		end
 

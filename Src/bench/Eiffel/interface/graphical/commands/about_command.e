@@ -13,7 +13,7 @@ inherit
 	SYSTEM_CONSTANTS
 
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

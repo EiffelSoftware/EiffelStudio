@@ -12,7 +12,7 @@ inherit
 	TOOL_COMMAND;
 	SYSTEM_CONSTANTS
 
-creation
+create
 	make_paste, 
 	make_copy, 
 	make_cut

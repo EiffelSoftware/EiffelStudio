@@ -27,7 +27,7 @@ feature -- Command execution
 			if arg = Void and then dlg = Void then
 					--| Create the dialog
 
-				!! dlg.make (Profile_tool)
+				create dlg.make (Profile_tool)
 				dlg.call (Current);
 			elseif arg = dlg then
 					--| Get info from the dialog
@@ -41,21 +41,21 @@ feature -- Command execution
 					--| Destroy the dialog's interface
 				dlg.destroy;
 
-				!! conf_load.make_and_load (profiler);
+				create conf_load.make_and_load (profiler);
 				if conf_load.error_occurred then
 					raise_config_error;
 				else
-					!! prof_invoker.make (profiler, current_cmd_line_argument, profinfo, compile);
+					create prof_invoker.make (profiler, current_cmd_line_argument, profinfo, compile);
 					if prof_invoker.must_invoke_profiler then
 						prof_invoker.invoke_profiler;
 					end;
-					!! prof_converter.make (<<profinfo, compile>>, conf_load.shared_prof_config);
+					create prof_converter.make (<<profinfo, compile>>, conf_load.shared_prof_config);
 					if prof_converter.conf_load_error then
 						profinfo.append (": file does not exist")
-						!! error_dlg.make (profile_tool)
+						create error_dlg.make (profile_tool)
 						error_dlg.gotcha_call (profinfo)
 					elseif prof_converter.is_last_conversion_ok then
-						!! ok_dlg.make ("Ready for queries", profile_tool)
+						create ok_dlg.make ("Ready for queries", profile_tool)
 						ok_dlg.hide_cancel_button
 						ok_dlg.hide_help_button
 						ok_dlg.set_message ("Ready for queries") 
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		local
 			error_dlg: ERROR_WINDOW
 		do
-			!! error_dlg.make (Interface_names.t_Configuration_error, profile_tool)
+			create error_dlg.make (Interface_names.t_Configuration_error, profile_tool)
 			error_dlg.set_message (Warning_messages.w_Load_configuration)
 			error_dlg.popup
 		end

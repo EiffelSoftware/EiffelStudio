@@ -26,7 +26,7 @@ inherit
 			work
 		end
 
-creation
+create
 
 	make
 
@@ -74,7 +74,7 @@ feature -- Properties
 		do
 			fs := tool.stone;
 			if fs /= Void then
-				!CLASSC_STONE! Result.make (fs.e_class)
+				create {CLASSC_STONE} Result.make (fs.e_class)
 			end
 		end;
 

@@ -16,7 +16,7 @@ inherit
 			check_validity, history_name, feature_name
 		end 
 
-creation 
+create 
 		
 	make
 
@@ -40,7 +40,7 @@ feature -- Properties
 	history_name: STRING is
 			-- Name used in the history list
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append (feature_name);
 			Result.append (" from ");
 			Result.append (e_class.name_in_upper)
@@ -66,7 +66,7 @@ feature -- Update
 							e_feature := feat;
 							if start_position = -1 then
 									-- calculate positions
-								{FEATURE_STONE} Precursor	
+								Precursor {FEATURE_STONE}	
 							end
 						end
 					end

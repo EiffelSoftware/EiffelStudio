@@ -12,23 +12,23 @@ class
 inherit
 	SCROLLABLE_LIST_ELEMENT
 
-creation
+create
 	make, make_first
 
 feature -- Creation
 
 	make_first ( a_subquery: STRING ) is
 		do
-			!! subquery.make(0)
+			create subquery.make(0)
 			subquery := a_subquery
-			!! operator.make(0)
+			create operator.make(0)
 			index := 1
 		end
 
 	make ( an_operator, a_subquery: STRING; i: INTEGER ) is
 		do
-			!! subquery.make(0)
-			!! operator.make(0)
+			create subquery.make(0)
+			create operator.make(0)
 			subquery := a_subquery
 			operator := an_operator
 			index := i
@@ -38,7 +38,7 @@ feature -- Access
 
 	value : STRING is
 		do
-			!! Result.make(0)
+			create Result.make(0)
 			Result.append( operator )
 			if operator /= "" then
 				Result.extend(' ')

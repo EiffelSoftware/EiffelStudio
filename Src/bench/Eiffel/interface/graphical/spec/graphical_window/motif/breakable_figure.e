@@ -77,7 +77,7 @@ feature -- Output
 				end;
 				draw_text (d, values, is_in_hightlighted_line, x_offset, y_offset)
 			else
-				!! ul;
+				create ul;
 				ul.set (base_left_x - x_offset, 
 						base_left_y - pixmap.height - y_offset);
 				d.set_foreground_gc_color (actual_foreground_color);
@@ -99,7 +99,7 @@ feature -- Output
 				end;
 				select_clickable_text (d, values, x_offset, y_offset)
 			else
-				!! ul;
+				create ul;
 				ul.set (base_left_x - x_offset,
 						base_left_y - pixmap.height - y_offset);
 				d.set_foreground_gc_color (values.selected_clickable_fg_color);
@@ -121,7 +121,7 @@ feature -- Output
 				end;
 				unselect_clickable_text (d, values, x_offset, y_offset)
 			else
-				!! ul;
+				create ul;
 				ul.set (base_left_x - x_offset,
 						base_left_y - pixmap.height - y_offset);
 				d.set_foreground_gc_color (actual_foreground_color);

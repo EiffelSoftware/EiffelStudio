@@ -19,7 +19,7 @@ inherit
 			close, set_title, help_index, icon_id
 		end
 
-creation
+create
 	make
 
 feature -- Properties
@@ -73,15 +73,15 @@ feature -- Graphical Interface
 		local
 			sep: THREE_D_SEPARATOR
 		do
-			!! toolbar_parent.make (new_name, a_parent)
-			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			create toolbar_parent.make (new_name, a_parent)
+			create sep.make (Interface_names.t_Empty, toolbar_parent)
 			toolbar_parent.set_column_layout
 			toolbar_parent.set_free_size	
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
-			!! explain_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
+			create explain_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
 			if not Platform_constants.is_windows then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+				create sep.make (Interface_names.t_Empty, toolbar_parent)
 			else
 				explain_toolbar.set_height (22)
 			end
@@ -90,11 +90,11 @@ feature -- Graphical Interface
 	build_menus is
 			-- Create the menus.
 		do
-			!! menu_bar.make (new_name, global_form)
-			!! file_menu.make (Interface_names.m_File, menu_bar)
-			!! edit_menu.make (Interface_names.m_Edit, menu_bar)
-			!! special_menu.make (Interface_names.m_Special, menu_bar)
-			!! window_menu.make (Interface_names.m_window, menu_bar)
+			create menu_bar.make (new_name, global_form)
+			create file_menu.make (Interface_names.m_File, menu_bar)
+			create edit_menu.make (Interface_names.m_Edit, menu_bar)
+			create special_menu.make (Interface_names.m_Special, menu_bar)
+			create window_menu.make (Interface_names.m_window, menu_bar)
 			build_help_menu
 			fill_menus
 		end
@@ -104,8 +104,8 @@ feature -- Graphical Interface
 		local
 			showtext_cmd: SHOW_HTML_TEXT;
 		do
-			!! showtext_cmd.make (Current)
-			!! showtext_frmt_holder.make_plain (showtext_cmd)
+			create showtext_cmd.make (Current)
+			create showtext_frmt_holder.make_plain (showtext_cmd)
 
 			if resources.command_bar.actual_value = False then
 				explain_toolbar.remove
@@ -117,7 +117,7 @@ feature -- Graphical Interface
 		local
 			toolbar_t: TOGGLE_B
 		do
-			!! toolbar_t.make (explain_toolbar.identifier, special_menu)
+			create toolbar_t.make (explain_toolbar.identifier, special_menu)
 			explain_toolbar.init_toggle (toolbar_t)
 		end
 

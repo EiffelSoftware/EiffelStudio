@@ -11,7 +11,7 @@ class SAVE_RESULT_CMD
 inherit
 	COMMAND_W
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

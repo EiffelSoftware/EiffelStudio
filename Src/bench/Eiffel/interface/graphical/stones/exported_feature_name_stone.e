@@ -14,7 +14,7 @@ inherit
 			{NONE} feature_make
 		end 
 
-creation 
+create 
 	make
 
 feature {NONE} -- Initialization

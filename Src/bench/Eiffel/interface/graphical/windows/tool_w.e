@@ -389,13 +389,13 @@ feature -- Text window creation
 			ro_text_window, ed_text_window: TEXT_WINDOW
 		do
 			if is_graphics_disabled then
-				!SCROLLED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, parent_form, Current)
+				create {SCROLLED_TEXT_WINDOW} ro_text_window.make_from_tool (new_name, parent_form, Current)
 			else
-				!GRAPHICAL_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, parent_form, Current)
+				create {GRAPHICAL_TEXT_WINDOW} ro_text_window.make_from_tool (new_name, parent_form, Current)
 			end
 			set_read_only_text_window (ro_text_window)
 			if has_editable_text and then not ro_text_window.is_editable then
-				!SCROLLED_TEXT_WINDOW! ed_text_window.make_from_tool (new_name, parent_form, Current)
+				create {SCROLLED_TEXT_WINDOW} ed_text_window.make_from_tool (new_name, parent_form, Current)
 				set_editable_text_window (ed_text_window)
 				text_window := ed_text_window
 			else
@@ -684,17 +684,17 @@ feature {NONE} -- Implementation
 		local
 			sep: THREE_D_SEPARATOR
 		do
-			!! toolbar_parent.make (new_name, a_parent)
-			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			create toolbar_parent.make (new_name, a_parent)
+			create sep.make (Interface_names.t_Empty, toolbar_parent)
 			toolbar_parent.set_column_layout
 			toolbar_parent.set_free_size	
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
-			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent)
-			!! sep.make (Interface_names.t_Empty, toolbar_parent)
-			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent)
+			create edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+			create sep.make (Interface_names.t_Empty, toolbar_parent)
+			create format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent)
 			if not Platform_constants.is_windows then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+				create sep.make (Interface_names.t_Empty, toolbar_parent)
 			else
 				edit_bar.set_height (22)
 				format_bar.set_height (22)
@@ -720,19 +720,19 @@ feature {PROJECT_W} -- Implementation
 			search_cmd: SEARCH_STRING
 			search_menu_entry: EB_MENU_ENTRY
 		do
-			!! cut_cmd.make_cut (Current)
-			!! cut_button.make (cut_cmd, edit_menu)
-			!! copy_com.make_copy (Current)
-			!! copy_button.make (copy_com, edit_menu)
-			!! paste_cmd.make_paste (Current)
-			!! paste_button.make (paste_cmd, edit_menu)
+			create cut_cmd.make_cut (Current)
+			create cut_button.make (cut_cmd, edit_menu)
+			create copy_com.make_copy (Current)
+			create copy_button.make (copy_com, edit_menu)
+			create paste_cmd.make_paste (Current)
+			create paste_button.make (paste_cmd, edit_menu)
 
-			!! sep.make (Interface_names.t_Empty, edit_menu)
+			create sep.make (Interface_names.t_Empty, edit_menu)
 
-			!! search_cmd.make (Current)
-			!! search_button.make (search_cmd, search_button_parent)
-			!! search_menu_entry.make (search_cmd, edit_menu)
-			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry)
+			create search_cmd.make (Current)
+			create search_button.make (search_cmd, search_button_parent)
+			create search_menu_entry.make (search_cmd, edit_menu)
+			create search_cmd_holder.make (search_cmd, search_button, search_menu_entry)
 		end
 
 	build_help_menu is
@@ -743,9 +743,9 @@ feature {PROJECT_W} -- Implementation
 			help_cmd: HELP_COMMAND
 			help_menu_entry: EB_MENU_ENTRY
 		do
-			!! help_menu.make (Interface_names.m_Help, menu_bar)
-			!! help_cmd.make (Current)
-			!! help_menu_entry.make_default (help_cmd, help_menu)
+			create help_menu.make (Interface_names.m_Help, menu_bar)
+			create help_cmd.make (Current)
+			create help_menu_entry.make_default (help_cmd, help_menu)
 			menu_bar.set_help_button (help_menu.menu_button)
 		end
 
@@ -758,11 +758,11 @@ feature {PROJECT_W} -- Implementation
 			print_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
 		do
-			!! sep.make (Interface_names.t_Empty, file_menu)
-			!! print_cmd.make (Current)
-			!! print_menu_entry.make (print_cmd, file_menu)
-			!! print_cmd_holder.make_plain (print_cmd)
-			!! sep.make (Interface_names.t_Empty, file_menu)
+			create sep.make (Interface_names.t_Empty, file_menu)
+			create print_cmd.make (Current)
+			create print_menu_entry.make (print_cmd, file_menu)
+			create print_cmd_holder.make_plain (print_cmd)
+			create sep.make (Interface_names.t_Empty, file_menu)
 		end
 
 	build_save_as_menu_entry is
@@ -773,8 +773,8 @@ feature {PROJECT_W} -- Implementation
 			save_as_cmd: SAVE_AS_FILE
 			save_as_menu_entry: EB_MENU_ENTRY
 		do
-			!! save_as_cmd.make (Current)
-			!! save_as_menu_entry.make (save_as_cmd, file_menu)
+			create save_as_cmd.make (Current)
+			create save_as_menu_entry.make (save_as_cmd, file_menu)
 		end
 
 	init_text_window is

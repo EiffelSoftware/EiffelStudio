@@ -10,7 +10,7 @@ class STRING_RESOURCE
 inherit
 	RESOURCE
 
-creation
+create
 	make,
 	make_with_values
 
@@ -66,7 +66,7 @@ feature -- Access
 		do
 			if not a_value.is_empty then
 				if a_value @ 1 /= '%"' then
-					!! str.make (0);
+					create str.make (0);
 					str.extend ('%"');
 					str.append (a_value)
 				else
@@ -75,7 +75,7 @@ feature -- Access
 				if str @ str.count /= '%"' then
 					str.extend ('%"')
 				end;
-				!! lexer;
+				create lexer;
 				Result := lexer.is_value_valid (str)
 			else
 				Result := True

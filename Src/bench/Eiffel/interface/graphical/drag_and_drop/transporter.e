@@ -16,7 +16,7 @@ inherit
 	PAINTER;
 	EB_CONSTANTS
 
-creation
+create
 
 	make
 
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			set_drawing (wid.screen);
 			set_logical_mode (10); 
 			set_subwindow_mode (1);
-			!! holes.make;
+			create holes.make;
 			wid.add_pointer_motion_action (Current, Mouse_pointer_action);
 			wid.add_button_press_action (3, Current, Drop_action);
 			wid.add_button_release_action (1, Current, Abort_action);
@@ -259,17 +259,17 @@ feature {NONE} -- Implementation
 
 	Mouse_pointer_action: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 	Drop_action: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 	Abort_action: ANY is
 		once
-			!! Result
+			create Result
 		end;
 
 	is_compatible_target: BOOLEAN

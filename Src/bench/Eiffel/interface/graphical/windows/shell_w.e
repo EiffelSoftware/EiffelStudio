@@ -16,7 +16,7 @@ inherit
 			make as prompt_dialog_create
 		end;
 
-creation
+create
 
 	make
 	
@@ -90,7 +90,7 @@ feature {NONE} -- Properties
 	ok_it, cancel_it: ANY is
 			-- Arguments for the command
 		once
-			!! Result
+			create Result
 		end
 
 end -- class SHELL_W

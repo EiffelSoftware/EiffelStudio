@@ -14,7 +14,7 @@ inherit
 
 	SCROLLABLE_LIST_ELEMENT
 
-creation
+create
 	make
 
 
@@ -23,7 +23,7 @@ feature -- Initialization
 	make (t_w:TOOL_W) is
 		do
 			tool:= t_w
-			!! tag.make(0)
+			create tag.make(0)
 		end
 
 feature {SELECTOR_W} -- Attribute

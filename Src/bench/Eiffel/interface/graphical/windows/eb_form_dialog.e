@@ -21,7 +21,7 @@ inherit
 		end
 	WINDOWS
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Create Current with `name' `a_name', and
 			-- `screen' `a_screen'.
 		do
-			!! category_list.make;
+			create category_list.make;
 			last_selected := Void
 		end;
 
@@ -32,44 +32,44 @@ feature {NONE} -- Initialization
 		local
 			menu_entry: PREFERENCE_MENU_ENTRY;
 		do
-			!! menu_form.make (t_Empty, global_form);
+			create menu_form.make (t_Empty, global_form);
 
-			!! menu_bar.make (t_Empty, menu_form);
+			create menu_bar.make (t_Empty, menu_form);
 
 			menu_form.attach_top (menu_bar, 0);
 			menu_form.attach_left (menu_bar, 0);
 			menu_form.attach_right (menu_bar, 0);
 
-			!! file_menu.make (m_File, menu_bar);
-			!! category_menu.make (m_Category, menu_bar);
-			!! help_menu.make (m_Help, menu_bar);
+			create file_menu.make (m_File, menu_bar);
+			create category_menu.make (m_Category, menu_bar);
+			create help_menu.make (m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 
-			!! validate_cmd.make (Current);
-			!! menu_entry.make (validate_cmd, file_menu);
+			create validate_cmd.make (Current);
+			create menu_entry.make (validate_cmd, file_menu);
 			menu_entry.set_menu_text (m_Validate, Void);
 
-			!! save_cmd.make (Current);
-			!! menu_entry.make (save_cmd, file_menu);
+			create save_cmd.make (Current);
+			create menu_entry.make (save_cmd, file_menu);
 			menu_entry.set_menu_text (m_Save, a_Save);
 
-			!! ok_cmd.make (Current);
-			!! menu_entry.make (ok_cmd, file_menu);
+			create ok_cmd.make (Current);
+			create menu_entry.make (ok_cmd, file_menu);
 			menu_entry.set_menu_text (m_Ok, Void);
 
-			!! apply_cmd.make (Current);
-			!! menu_entry.make (apply_cmd, file_menu);
+			create apply_cmd.make (Current);
+			create menu_entry.make (apply_cmd, file_menu);
 			menu_entry.set_menu_text (m_Apply, Void);
 
-			!! exit_cmd.make (Current);
-			!! menu_entry.make (exit_cmd, file_menu);
+			create exit_cmd.make (Current);
+			create menu_entry.make (exit_cmd, file_menu);
 			menu_entry.set_menu_text (m_Exit, Void);
 		end;
 
 	initialize_category_button_rc is
 			-- Create and initialize `category_button_rc'.
 		do
-			!! category_button_rc.make (t_Empty, global_form);
+			create category_button_rc.make (t_Empty, global_form);
 			category_button_rc.set_spacing (0);
 			category_button_rc.set_row_layout;
 		end;
@@ -77,10 +77,10 @@ feature {NONE} -- Initialization
 	initialize_category_form is
 			-- Create and initialize `category_form'.
 		do
-			!! category_form.make (t_Empty, global_form);
+			create category_form.make (t_Empty, global_form);
 
-			!! scrolled_window.make (t_Empty, category_form);
-			!! selected_label.make (t_Empty, category_form);
+			create scrolled_window.make (t_Empty, category_form);
+			create selected_label.make (t_Empty, category_form);
 			selected_label.set_left_alignment;
 
 			category_form.attach_top (selected_label, 0);
@@ -95,14 +95,14 @@ feature {NONE} -- Initialization
 	initialize_button_form is
 			-- Create and initialize `button_form'.
 		do
-			!! button_form.make (t_Empty, global_form);
+			create button_form.make (t_Empty, global_form);
 			button_form.set_fraction_base (19);
 
-			!! ok_button.make (b_Ok, button_form);
+			create ok_button.make (b_Ok, button_form);
 			ok_button.add_activate_action (ok_cmd, Void);
-			!! apply_button.make (b_Apply, button_form);
+			create apply_button.make (b_Apply, button_form);
 			apply_button.add_activate_action (apply_cmd, Void);
-			!! exit_button.make (b_exit, button_form);
+			create exit_button.make (b_exit, button_form);
 			exit_button.add_activate_action (exit_cmd, Current);
 
 			button_form.attach_top (ok_button, 0);
@@ -129,14 +129,14 @@ feature {NONE} -- Initialization
 			global_form.attach_left (menu_form, 0);
 			global_form.attach_right (menu_form, 0);
 
-			!! sep.make ("", global_form);
+			create sep.make ("", global_form);
 			global_form.attach_top_widget (menu_form, sep, 0);
 			global_form.attach_top_widget (sep, category_button_rc, 1);
 			global_form.attach_left (category_button_rc, 0);
 			global_form.attach_left (sep, 0);
 			global_form.attach_right (sep, 0);
 
-			!! sep.make ("", global_form);
+			create sep.make ("", global_form);
 			global_form.attach_top_widget (category_button_rc, sep, 1);
 			global_form.attach_top_widget (sep, category_form, 1);
 			global_form.attach_left (sep, 0);
@@ -166,7 +166,7 @@ feature -- Display
 			list_not_empty: not category_list.is_empty
 		do
 			top_shell_make (t_Tool_name, a_screen);
-			!! global_form.make (t_Empty, Current);
+			create global_form.make (t_Empty, Current);
 
 			initialize_menu_form;
 			initialize_category_form;
@@ -316,7 +316,7 @@ feature -- Access
 			cats := category_list;
 			if not cats.is_empty then
 				from
-					!! mp.set_watch_cursor;
+					create mp.set_watch_cursor;
 					cats.start
 				until
 					cats.after
@@ -405,7 +405,7 @@ feature {PREFERENCE_CATEGORY} -- Execution
 			else
 				cat ?= arg;
 				if cat /= Void then
-					!! mp.set_watch_cursor;
+					create mp.set_watch_cursor;
 					display_category (cat);
 					mp.restore
 				end

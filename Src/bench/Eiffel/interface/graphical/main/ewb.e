@@ -58,7 +58,7 @@ feature -- Initialization
 					--| directory, generating the profile information, ...) the run-time is initialized
 					--| back to the values which permits the compiler to access correctly the EIFGEN
 					--| directory
-				!! eifgen_init.make
+				create eifgen_init.make
 
 					-- Read the resource files
 				if argument_count > 0 and then
@@ -72,29 +72,29 @@ feature -- Initialization
 					end
 					if toolkit = Void then end
 					init_windowing
-					!! memory
+					create memory
 					memory.set_collection_period (Configure_resources.get_integer (r_collection_period, memory.collection_period))
 					project_index := index_of_word_option ("project")
 					if project_index /= 0 then
 							-- Project open by `ebench name_of_project.epr'
-						!! open_project.make_from_project_file (Project_tool, argument (project_index + 1))
+						create open_project.make_from_project_file (Project_tool, argument (project_index + 1))
 						open_project.open_from_ebench
 					else
 							-- Project create by `ebench -create my_path'
 						create_project_index := index_of_word_option ("create")
 						if create_project_index /= 0 then
-							!! new_project.make_from_ebench (Project_tool, argument (create_project_index + 1))
+							create new_project.make_from_ebench (Project_tool, argument (create_project_index + 1))
 						end
 					end
 					iterate
 					exit
 				else
 					Eiffel_project.set_batch_mode (True)
-					!! new_resources.initialize	
-					!! memory
+					create new_resources.initialize	
+					create memory
 					memory.set_collection_period (Configure_resources.get_integer (r_collection_period, memory.collection_period))
 						-- Start the compilation in batch mode from the bench executable.
-					!!compiler.make_unlicensed
+					create compiler.make_unlicensed
 					discard_licenses
 				end
 			end
@@ -128,9 +128,9 @@ feature {NONE} -- Implementation
 			msg_d.set_cancel_label ("Display Trace!")
 			msg_d.set_help_label ("Restart now!")
 
-			msg_d.add_ok_action (create {ROUTINE_CMD}.make (Current~execute_die) , Void)
-			msg_d.add_cancel_action (create {ROUTINE_CMD}. make (Current~crash (trace)), Void)
-			msg_d.add_help_action (create {ROUTINE_CMD}. make (Current~restart), Void)
+			msg_d.add_ok_action (create {ROUTINE_CMD}.make (agent Current.execute_die) , Void)
+			msg_d.add_cancel_action (create {ROUTINE_CMD}. make (agent Current.crash (trace)), Void)
+			msg_d.add_help_action (create {ROUTINE_CMD}. make (agent Current.restart), Void)
 
 			msg_d.set_exclusive_grab
 			msg_d.popup

@@ -18,7 +18,7 @@ inherit
 		end;
 	SHARED_FORMAT_TABLES
 
-creation
+create
 
 	make
 	
@@ -49,7 +49,7 @@ feature -- Formatting
 				if not retried then
 					tool.close_search_window;
 					display_temp_header (d_stone);
-					!! mp.set_watch_cursor;
+					create mp.set_watch_cursor;
 					cur := text_window.cursor;
 	
 					if cur /= Void then
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 		local
 			new_title: STRING
 		do
-			!!new_title.make (50);
+			create new_title.make (50);
 			new_title.append ("Clickable form ");
 			new_title.append (stone.stone_signature);
 			tool.set_title (new_title)

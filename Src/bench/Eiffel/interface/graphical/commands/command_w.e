@@ -21,7 +21,7 @@ feature -- Execution
 		local
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor;
+			create mp.set_watch_cursor;
 			work (argument);
 			mp.restore;
 		end;

@@ -27,7 +27,7 @@ inherit
 			update_integer_resource
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -35,7 +35,7 @@ feature -- Initialization
 	make is
 			-- Initialze Current
 		do
-			{TWO_WAY_LIST} Precursor
+			Precursor {TWO_WAY_LIST}
 			General_resources.add_user (Current)
 		end
 
@@ -72,7 +72,7 @@ feature -- Resource Update
 		do
 			if old_res = General_resources.history_size then
 				if new_res.actual_value >= 1 and new_res.actual_value <= 100 then
-					{RESOURCE_USER} Precursor (old_res, new_res)
+					Precursor {RESOURCE_USER} (old_res, new_res)
 					rearrange_history
 				end
 			end

@@ -15,7 +15,7 @@ inherit
 			make as old_make
 		end;
 
-creation
+create
 
 	make
 
@@ -147,14 +147,14 @@ feature {NONE} -- Implementation
 			color_x ?= 
 				Graphical_resources.progress_bar_color.actual_value.implementation;
 			color_x.allocate_pixel;
-			!! array.make (1, Total_units);
+			create array.make (1, Total_units);
 			from
 				i := 1;
 				t := Total_units;
 			until
 				i > t
 			loop
-				!! mel_label.make ("", Current, True);
+				create mel_label.make ("", Current, True);
 				mel_label.set_margin_height (0);
 				mel_label.set_margin_width (0);
 				mel_label.set_background_color (color_x);

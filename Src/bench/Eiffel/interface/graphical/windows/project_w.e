@@ -53,7 +53,7 @@ inherit
 
 	WIDGET_ROUTINES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -121,7 +121,7 @@ feature -- Resource Update
 				if new_res.actual_value then	
 					create progress_output
 				else
-					!GRAPHICAL_DEGREE_OUTPUT! progress_output
+					create {GRAPHICAL_DEGREE_OUTPUT} progress_output
 				end
 				set_progress_dialog (progress_output)
 			elseif old_res = pr.format_bar then

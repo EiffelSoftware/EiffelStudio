@@ -15,7 +15,7 @@ inherit
 			change_state, associated_command
 		end
 
-creation
+create
 	make, make_plain
 
 feature -- State Changing

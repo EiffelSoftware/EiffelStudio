@@ -14,7 +14,7 @@ inherit
 			associated_command
 		end;
 
-creation
+create
 	make, make_plain
 
 feature -- Properties

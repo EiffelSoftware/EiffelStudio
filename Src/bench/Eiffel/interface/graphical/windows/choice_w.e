@@ -26,7 +26,7 @@ inherit
 
 	WINDOW_ATTRIBUTES
 
-creation
+create
 
 	make, make_with_widget
 
@@ -37,8 +37,8 @@ feature -- Initialization
 		do
 			fd_make ("Choice Window", a_parent);
 			set_title ("Choice Window");
-			!! list.make (new_name, Current);
-			!! exit_b.make (Interface_names.b_Cancel, Current);
+			create list.make (new_name, Current);
+			create exit_b.make (Interface_names.b_Cancel, Current);
 			set_fraction_base (3);
 			attach_top (list, 0);
 			attach_left (list, 0);
@@ -92,13 +92,13 @@ feature
 		do
 			caller := command;
 			list.wipe_out;
-			!! str.make (0);
+			create str.make (0);
 			from
 				name_list.start
 			until
 				name_list.after
 			loop
-				!! str.make (0);
+				create str.make (0);
 				str.append (name_list.item);
 				new_width := new_width.max (name_list.item.count)
 				list.extend (str);

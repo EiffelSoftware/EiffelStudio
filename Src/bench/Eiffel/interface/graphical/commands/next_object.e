@@ -16,7 +16,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -33,7 +33,7 @@ feature -- Execution
 			elseif not status.is_stopped then
 				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
-				{NEXT_TARGET} Precursor (argument)
+				Precursor {NEXT_TARGET} (argument)
 			end
 		end;
 

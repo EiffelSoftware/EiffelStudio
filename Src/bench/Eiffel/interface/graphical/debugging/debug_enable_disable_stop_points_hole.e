@@ -16,7 +16,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make_enabled, 
 	make_disabled 
 

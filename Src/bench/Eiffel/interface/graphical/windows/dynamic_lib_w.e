@@ -34,7 +34,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 	COMPILER_EXPORTER
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -42,8 +42,8 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 		do
 			resources.add_user (Current)
-			{BAR_AND_TEXT} Precursor (a_screen)
- 			!! stone
+			Precursor {BAR_AND_TEXT} (a_screen)
+ 			create stone
 			set_default_size
 			set_default_format
 			set_default_position
@@ -272,7 +272,7 @@ feature -- Stone process
 			st:STRUCTURED_TEXT
 		do
 
-			!! st.make
+			create st.make
 			st.add_string ("%N-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY %N-- SYSTEM : " )
 
 			st.add_string( eiffel_system.name )
@@ -378,7 +378,7 @@ feature -- Update
 	reset is
 			-- Reset the window contents
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 			reset_format_buttons
 		end
 
@@ -409,7 +409,7 @@ feature -- Window Settings
 	close_windows is
 			-- Close sub-windows.
 		do
-			{BAR_AND_TEXT} Precursor
+			Precursor {BAR_AND_TEXT}
 		end
 
 
@@ -469,8 +469,8 @@ feature -- Graphical Interface
 			sep: SEPARATOR
 			toolbar_t: TOGGLE_B
 		do
-			!! sep.make (Interface_names.t_Empty, special_menu)
-			!! toolbar_t.make (dynamic_lib_toolbar.identifier, special_menu)
+			create sep.make (Interface_names.t_Empty, special_menu)
+			create toolbar_t.make (dynamic_lib_toolbar.identifier, special_menu)
 			dynamic_lib_toolbar.init_toggle (toolbar_t)
 		end
 
@@ -479,15 +479,15 @@ feature -- Graphical Interface
 		local
 			sep: THREE_D_SEPARATOR
 		do
-			!! toolbar_parent.make (new_name, a_parent)
-			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			create toolbar_parent.make (new_name, a_parent)
+			create sep.make (Interface_names.t_Empty, toolbar_parent)
 			toolbar_parent.set_column_layout
 			toolbar_parent.set_free_size	
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
-			!! dynamic_lib_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
+			create dynamic_lib_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
 			if not Platform_constants.is_windows then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+				create sep.make (Interface_names.t_Empty, toolbar_parent)
 			else
 				dynamic_lib_toolbar.set_height (22)
 			end
@@ -564,24 +564,24 @@ feature {NONE} -- Implementation Graphical Interface
 			save_button: EB_BUTTON
 			save_menu_entry: EB_MENU_ENTRY
 		do
-			!! open_cmd.make (Current)
-			!! open_button.make (open_cmd, dynamic_lib_toolbar)
-			!! open_menu_entry.make (open_cmd, file_menu)
-			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
-			!! save_cmd.make (Current)
-			!! save_button.make (save_cmd, dynamic_lib_toolbar)
-			!! save_menu_entry.make (save_cmd, file_menu)
-			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
+			create open_cmd.make (Current)
+			create open_button.make (open_cmd, dynamic_lib_toolbar)
+			create open_menu_entry.make (open_cmd, file_menu)
+			create open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
+			create save_cmd.make (Current)
+			create save_button.make (save_cmd, dynamic_lib_toolbar)
+			create save_menu_entry.make (save_cmd, file_menu)
+			create save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
 			build_save_as_menu_entry
 			build_print_menu_entry
-			!! quit_cmd.make (Current)
-			!! quit_menu_entry.make (quit_cmd, file_menu)
+			create quit_cmd.make (Current)
+			create quit_menu_entry.make (quit_cmd, file_menu)
 			if General_resources.close_button.actual_value then
-				!! quit_button.make (quit_cmd, dynamic_lib_toolbar)
+				create quit_button.make (quit_cmd, dynamic_lib_toolbar)
 			end
-			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
-			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
-			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+			create quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+			create exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
+			create exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
 			build_edit_menu (dynamic_lib_toolbar)
 		end
@@ -601,43 +601,43 @@ feature {NONE} -- Implementation Graphical Interface
 			sep: SEPARATOR
 			sep1, sep2, sep3: THREE_D_SEPARATOR
 		do
-			!! shell_cmd.make (Current)
-			!! shell_button.make (shell_cmd, dynamic_lib_toolbar)
+			create shell_cmd.make (Current)
+			create shell_button.make (shell_cmd, dynamic_lib_toolbar)
 			shell_button.add_third_button_action
-			!! shell_menu_entry.make (shell_cmd, special_menu)
-			!! shell.make (shell_cmd, shell_button, shell_menu_entry)
+			create shell_menu_entry.make (shell_cmd, special_menu)
+			create shell.make (shell_cmd, shell_button, shell_menu_entry)
 
 			build_filter_menu_entry
 
-			!! sep.make (new_name, special_menu)
+			create sep.make (new_name, special_menu)
 
 				-- First we create all objects.
-			!! tex_cmd.make (Current)
-			!! tex_button.make (tex_cmd, dynamic_lib_toolbar)
-			!! tex_menu_entry.make (tex_cmd, format_menu)
-			!! showtext_frmt_holder.make (tex_cmd, tex_button, tex_menu_entry)
+			create tex_cmd.make (Current)
+			create tex_button.make (tex_cmd, dynamic_lib_toolbar)
+			create tex_menu_entry.make (tex_cmd, format_menu)
+			create showtext_frmt_holder.make (tex_cmd, tex_button, tex_menu_entry)
 
-			!! click_cmd.make (Current)
-			!! click_button.make (click_cmd, dynamic_lib_toolbar)
-			!! click_menu_entry.make (click_cmd, format_menu)
-			!! showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry)
+			create click_cmd.make (Current)
+			create click_button.make (click_cmd, dynamic_lib_toolbar)
+			create click_menu_entry.make (click_cmd, format_menu)
+			create showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry)
 
-			!! hole.make (Current)
-			!! hole_button.make (hole, dynamic_lib_toolbar)
-			!! hole_holder.make_plain (hole)
+			create hole.make (Current)
+			create hole_button.make (hole, dynamic_lib_toolbar)
+			create hole_holder.make_plain (hole)
 			hole_holder.set_button (hole_button)
 
 			create_edit_buttons
 
-			!! sep1.make (interface_names.t_empty, dynamic_lib_toolbar)
+			create sep1.make (interface_names.t_empty, dynamic_lib_toolbar)
 			sep1.set_height (20)
 			sep1.set_horizontal (False)
 
-			!! sep2.make (interface_names.t_empty, dynamic_lib_toolbar)
+			create sep2.make (interface_names.t_empty, dynamic_lib_toolbar)
 			sep2.set_height (20)
 			sep2.set_horizontal (False)
 
-			!! sep3.make (interface_names.t_empty, dynamic_lib_toolbar)
+			create sep3.make (interface_names.t_empty, dynamic_lib_toolbar)
 			sep3.set_height (20)
 			sep3.set_horizontal (False)
 

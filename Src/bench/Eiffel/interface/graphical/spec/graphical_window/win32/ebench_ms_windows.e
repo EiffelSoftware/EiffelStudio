@@ -14,7 +14,7 @@ inherit
 
 	WEL_WINDOW_MANAGER
 		
-creation
+create
 	make
 
 feature -- Process message event
@@ -33,7 +33,7 @@ feature -- Process message event
 			from
 				accel := accelerators
 				main_w := application_main_window
-				!! msg.make
+				create msg.make
 			until
 				done
 			loop

@@ -10,7 +10,7 @@ class INTEGER_RESOURCE
 inherit
 	RESOURCE
 
-creation
+create
 	make,
 	make_with_values
 

@@ -16,7 +16,7 @@ inherit
 			Out_of_routine as execution_mode
 		end
 
-creation
+create
 	make
 
 feature -- Properties

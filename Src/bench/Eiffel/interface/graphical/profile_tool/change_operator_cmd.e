@@ -10,7 +10,7 @@ class CHANGE_OPERATOR_CMD
 inherit
 	COMMAND;
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -32,7 +32,7 @@ feature -- Command Execution
 			selected_subqueries: LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
 			selected_subquery: SCROLLABLE_SUBQUERY
 		do
-			!! string_arg.make(0)
+			create string_arg.make(0)
 			string_arg ?= arg
 			if tool.active_query_window.selected_count > 0 then
 				from

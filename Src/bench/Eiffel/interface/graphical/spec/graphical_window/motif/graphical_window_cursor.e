@@ -11,7 +11,7 @@ inherit
 
 	CURSOR
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

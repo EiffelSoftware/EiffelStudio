@@ -15,7 +15,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 	make, do_nothing
 
 feature -- Access
@@ -60,16 +60,16 @@ feature -- Execution
 			end;
 			f_stone ?= stone;
 			c_stone ?= stone;
-			!! disp_bp.do_nothing;
+			create disp_bp.do_nothing;
 			if f_stone /= Void then
 				if f_stone.is_valid and then f_stone.e_feature.is_debuggable then
-					!! mp.set_watch_cursor;
+					create mp.set_watch_cursor;
 					Application.super_melt_feature (f_stone.e_feature, insert_breakpoint);
 					disp_bp.work (Void);
 					mp.restore
 				end
 			elseif c_stone /= Void and then c_stone.is_valid then
-				!! mp.set_watch_cursor;
+				create mp.set_watch_cursor;
 				Application.super_melt_class (c_stone.e_class, insert_breakpoint);
 				disp_bp.work (Void);
 				mp.restore

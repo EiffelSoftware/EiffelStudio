@@ -15,7 +15,7 @@ inherit
 	WINDOWS;
 	WIDGET_ROUTINES
 
-creation
+create
 	make,
 	make_without_action
 

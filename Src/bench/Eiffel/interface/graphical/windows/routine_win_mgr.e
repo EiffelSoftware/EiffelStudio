@@ -11,7 +11,7 @@ inherit
 			editor_type, make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -19,7 +19,7 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		do
-			{EDITOR_MGR} precursor (a_screen)
+			precursor {EDITOR_MGR} (a_screen)
 			Feature_resources.add_user (Current)
 		end
 
@@ -76,7 +76,7 @@ feature {NONE} -- Properties
 	create_editor: ROUTINE_W is
 			-- Create an object tool
 		do
-			!! Result.make (screen)
+			create Result.make (screen)
 		end
 
 end -- class ROUTINE_WIN_MGR

@@ -17,7 +17,7 @@ feature {NONE} -- Properties
 	counter: INTEGER_REF is
 			-- Shared container of tool identification numbers
 		once
-			!! Result
+			create Result
 		end
 
 end -- class NAMER

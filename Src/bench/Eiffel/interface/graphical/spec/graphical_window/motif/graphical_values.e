@@ -213,13 +213,13 @@ feature -- Color access
 
 	selected_clickable_fg_color: COLOR is
 		once
-			!! Result.make;
+			create Result.make;
 			Result.set_name ("white")
 		end;
 
 	selected_clickable_bg_color: COLOR is
 		once
-			!! Result.make;
+			create Result.make;
 			Result.set_name ("black")
 		end;
 

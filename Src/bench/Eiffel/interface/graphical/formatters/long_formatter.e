@@ -40,7 +40,7 @@ feature -- Properties
 	control_click: ANY is
 			-- No confirmation required
 		once
-			!! Result
+			create Result
 		end;
 
 feature -- Execution
@@ -66,7 +66,7 @@ feature -- Execution
 					-- No confirmation required.
 				formatted ?= tool.stone;
 				if not text_window.changed then
-					!! mp.set_watch_cursor;
+					create mp.set_watch_cursor;
 					execute_licensed (formatted);
 					mp.restore
 				else

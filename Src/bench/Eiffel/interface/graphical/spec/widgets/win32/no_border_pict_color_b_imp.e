@@ -16,7 +16,7 @@ inherit
 			set_background_pixmap
 		end
 
-creation
+create
 	make
 
 feature
@@ -74,7 +74,7 @@ feature
 				check
 					dib_exists: dib /= Void
 				end
-				!! bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
+				create bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
 				a_dc.draw_bitmap (bitmap, 0, 0, pixmap.width, pixmap.height)
 			end
 		end

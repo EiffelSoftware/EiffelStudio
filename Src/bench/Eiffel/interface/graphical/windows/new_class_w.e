@@ -28,7 +28,7 @@ inherit
 	WINDOW_ATTRIBUTES
 	COMPILER_EXPORTER
 	
-creation
+create
 
 	make
 
@@ -41,18 +41,18 @@ feature -- Initialization
 			tool := a_tool;
 			form_d_make (Interface_names.t_Empty, a_tool.popup_parent);
 			set_title (Interface_names.t_New_class);
-			!! class_l.make (Interface_names.t_Empty, Current);
-			!! cluster_form.make (Interface_names.t_Empty, Current);
-			!! cluster_name.make (Interface_names.t_Empty, cluster_form);
-			!! cluster_list.make (Interface_names.t_Empty, cluster_form);
-			!! file_form.make (Interface_names.t_Empty, Current);
-			!! file_label.make (Interface_names.t_Empty, file_form);
-			!! file_entry.make (Interface_names.t_Empty, file_form);
-			!! form.make (Interface_names.t_Empty, Current);
-			!! separator.make (Interface_names.t_Empty, Current);
+			create class_l.make (Interface_names.t_Empty, Current);
+			create cluster_form.make (Interface_names.t_Empty, Current);
+			create cluster_name.make (Interface_names.t_Empty, cluster_form);
+			create cluster_list.make (Interface_names.t_Empty, cluster_form);
+			create file_form.make (Interface_names.t_Empty, Current);
+			create file_label.make (Interface_names.t_Empty, file_form);
+			create file_entry.make (Interface_names.t_Empty, file_form);
+			create form.make (Interface_names.t_Empty, Current);
+			create separator.make (Interface_names.t_Empty, Current);
 			form.set_fraction_base (2);
-			!! create_b.make (Interface_names.b_Create, form);
-			!! cancel_b.make (Interface_names.b_Cancel, form);
+			create create_b.make (Interface_names.b_Create, form);
+			create cancel_b.make (Interface_names.b_Cancel, form);
 			cluster_form.attach_top (cluster_list, 0);
 			cluster_form.attach_left (cluster_name, 0);
 			cluster_form.attach_right (cluster_list, 0);
@@ -129,12 +129,12 @@ feature -- Properties
 
 	create_new_class: ANY is
 		once
-			!!Result
+			create Result
 		end;
 
 	cancel: ANY is
 		once
-			!!Result
+			create Result
 		end;
 
 	cluster: CLUSTER_I;
@@ -177,7 +177,7 @@ feature -- Access
 			str2 :=  clone (class_n);
 			str2.to_upper;
 			class_name.to_lower;
-			!! str.make (0);
+			create str.make (0);
 			str.append ("Class name: ");
 			str.append (str2);
 			class_l.set_text (str);	
@@ -194,7 +194,7 @@ feature -- Access
 				loop
 					clus := clus_list.item;
 					if not (clus.is_precompiled or clus.is_library) then
-						!! str_el.make (0);
+						create str_el.make (0);
 						str_el.append (clus.cluster_name);
 						cluster_list.extend (str_el);
 						new_width := new_width.max (str_el.count)
@@ -209,7 +209,7 @@ feature -- Access
 					else
 						cluster_list.start;
 						cluster_list.compare_objects;
-						!! str_el.make (0);
+						create str_el.make (0);
 						str_el.append (cl.cluster_name);
 						cluster_list.search (str_el);
 						if cluster_list.after then
@@ -270,11 +270,11 @@ feature -- Execution
 				change_cluster;
 				file_name := file_entry.text;
 				if aok then
-					!! f_name.make_from_string (cluster.path);
+					create f_name.make_from_string (cluster.path);
 					f_name.set_file_name (file_name);
 					base_name := file_name;
-					!! file.make (f_name);
-					!! class_i.make (class_name)
+					create file.make (f_name);
+					create class_i.make (class_name)
 					class_i.set_cluster (cluster);
 					class_i.set_file_details (class_name, base_name);
 					if cluster.has_base_name (base_name) then
@@ -285,7 +285,7 @@ feature -- Execution
 					then
 						warner (tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_create_file (f_name))
 					else 
-						!! stone.make (class_i);
+						create stone.make (class_i);
 						if not file.exists then
 							load_default_class_text (file);
 							popdown;
@@ -319,7 +319,7 @@ feature -- Execution
 			input: RAW_FILE;
 			in_buf: STRING
 		do
-			!! input.make (Default_class_file);
+			create input.make (Default_class_file);
 			if input.exists and then input.is_readable then
 				input.open_read;
 				input.read_stream (input.count)
@@ -330,7 +330,7 @@ feature -- Execution
 				output.close
 			end;
 			cluster.add_new_classs (class_i);
-			!! stone.make (class_i);
+			create stone.make (class_i);
 			tool.process_classi (stone)
 		end;
 

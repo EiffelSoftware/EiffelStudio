@@ -18,7 +18,7 @@ inherit
 	WINDOW_ATTRIBUTES;
 	EIFFEL_ENV	
 
-creation
+create
 
 	make
 	
@@ -34,14 +34,14 @@ feature -- Initialization
 			form_dialog_create (Interface_names.n_X_resource_name, cmd.popup_parent);
 			set_title (Interface_names.t_Filter_w);
 
-			!!filter_label.make (new_name, Current);
+			create filter_label.make (new_name, Current);
 			filter_label.set_text ("Select a filter");
 			filter_label.set_left_alignment;
 			attach_top (filter_label, 10);
 			attach_left (filter_label, 10);
 			attach_right (filter_label, 10);
 
-			!!list.make (new_name, Current);
+			create list.make (new_name, Current);
 			list.compare_objects;
 			list.set_visible_item_count (9);
 			list.add_click_action (Current, list);
@@ -50,18 +50,18 @@ feature -- Initialization
 			attach_right (list, 10);
 			
 
-			!!button_form.make (new_name, Current);
+			create button_form.make (new_name, Current);
 			attach_left (button_form, 10);
 			attach_bottom (button_form, 10);
 			attach_right (button_form, 10);
 
 			filter_command ?= cmd;
 			if filter_command /= Void then
-				!!shell_label.make (new_name, Current);
-				!!text_field.make (new_name, Current);
-				!!display_button.make (Interface_names.b_Display, button_form);
-				!!execute_button.make (Interface_names.b_Execute, button_form);
-				!!cancel_button.make (Interface_names.b_Cancel, button_form);
+				create shell_label.make (new_name, Current);
+				create text_field.make (new_name, Current);
+				create display_button.make (Interface_names.b_Display, button_form);
+				create execute_button.make (Interface_names.b_Execute, button_form);
+				create cancel_button.make (Interface_names.b_Cancel, button_form);
 
 				shell_label.set_text ("Command to be executed");
 				shell_label.set_left_alignment;
@@ -84,8 +84,8 @@ feature -- Initialization
 				button_form.attach_left_position (cancel_button, 12);
 				display_button.add_activate_action (Current, display_it);
 			else
-				!!execute_button.make (Interface_names.b_Ok, button_form);
-				!!cancel_button.make (Interface_names.b_Cancel, button_form);
+				create execute_button.make (Interface_names.b_Ok, button_form);
+				create cancel_button.make (Interface_names.b_Cancel, button_form);
 
 				attach_bottom_widget (button_form, list, 10);
 				button_form.set_fraction_base (20);
@@ -123,11 +123,11 @@ feature -- Execution; Implementation
 			warning_message := Void;
 			fill_list;
 			if filter_command = Void then
-				!! str_element.make (0);
+				create str_element.make (0);
 				str_element.append (filter_name);
 				index := list.index_of (str_element, 1);
 			else
-				!! str_element.make (0);
+				create str_element.make (0);
 				str_element.append (filter_command.filter_name);
 				index := list.index_of (str_element, 1);
 				text_field.set_text (General_resources.filter_command.value);
@@ -155,19 +155,19 @@ feature {NONE} -- Properties
 	display_it: ANY is
 			-- Argument for the command.
 		once
-			!!Result
+			create Result
 		end;
 
 	execute_it: ANY is
 			-- Argument for the command.
 		once
-			!!Result
+			create Result
 		end;
 
 	cancel_it: ANY is
 			-- Argument for the command.
 		once
-			!!Result
+			create Result
 		end;
 
 	filter_command: FILTER_COMMAND;
@@ -232,21 +232,21 @@ feature {NONE} -- Implementation
 			filter_names: SORTED_TWO_WAY_LIST [STRING];
 			str_element: SCROLLABLE_LIST_STRING_ELEMENT
 		do
-			!!filter_dir.make (filter_path);
+			create filter_dir.make (filter_path);
 			if not filter_dir.exists then
 				warning_message := Warning_messages.w_Directory_not_exist (filter_path);
 				list.wipe_out;
-				!! str_element.make (0);
+				create str_element.make (0);
 				str_element.append ("");
 				list.put_right (str_element)
 			elseif not filter_dir.is_readable then
 				warning_message := Warning_messages.w_Cannot_read_directory (filter_path);
 				list.wipe_out;
-				!! str_element.make (0);
+				create str_element.make (0);
 				str_element.append ("");
 				list.put_right (str_element)
 			else
-				!!filter_names.make;
+				create filter_names.make;
 				filter_dir.open_read;
 				from
 					filter_dir.start;
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 				filter_dir.close;
 				list.wipe_out;
 				if filter_names.is_empty then
-					!! str_element.make (0);
+					create str_element.make (0);
 					str_element.append ("");
 					list.put_right (str_element)
 				else
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 					until
 						filter_names.after
 					loop
-						!! str_element.make (0);
+						create str_element.make (0);
 						str_element.append (filter_names.item);
 						list.extend (str_element)
 						list.forth;

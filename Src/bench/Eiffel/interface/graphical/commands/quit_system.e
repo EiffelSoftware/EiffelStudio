@@ -13,7 +13,7 @@ inherit
 			loose_changes
 		end
 
-creation
+create
 	make
 	
 feature -- Callbacks

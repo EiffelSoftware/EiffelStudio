@@ -9,7 +9,7 @@ class
 inherit
 	CASE_COMMAND2
 
-creation
+create
 
 	make
 

@@ -21,9 +21,9 @@ feature {NONE} -- Execution
 			p_tool: like profile_tool
 		do
 			if Project_tool.initialized then
-				!! mp.set_watch_cursor;
+				create mp.set_watch_cursor;
 				if profile_tool = Void then
-					!! p_tool.make (Current);
+					create p_tool.make (Current);
 					profile_tool_cell.put (p_tool);
 				end;	
 				profile_tool.display;

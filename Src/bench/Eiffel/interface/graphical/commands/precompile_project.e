@@ -33,7 +33,7 @@ inherit
 			precompile_now
 		end
  
-creation
+create
 
 	make
 
@@ -54,7 +54,7 @@ feature -- Callbacks
 		do
 			if Eiffel_ace.file_name = Void then
 					-- We choose "Build".
-				{UPDATE_PROJECT} Precursor
+				Precursor {UPDATE_PROJECT}
 			else
 				start_c_compilation := False
 				compile (last_warner)

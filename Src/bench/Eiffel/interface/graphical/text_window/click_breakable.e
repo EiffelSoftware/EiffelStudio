@@ -14,7 +14,7 @@ inherit
 			breakable
 		end
 
-creation
+create
 	make
 
 feature -- Access

@@ -12,7 +12,7 @@ inherit
 
 	COMMAND_W
 
-creation
+create
 	make
 
 feature -- Initialization

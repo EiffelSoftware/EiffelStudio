@@ -17,7 +17,7 @@ inherit
 			update_string_resource, finish_update
 		end
 
-creation
+create
 
 	make
 
@@ -28,10 +28,10 @@ feature -- Initialization
 			-- using `a_screen' as the parent. Allow `i' amount for
 			-- the free list.
 		do
-			!!routine_win_mgr.make (a_screen)
-			!!class_win_mgr.make (a_screen)
-			!!object_win_mgr.make (a_screen)
-			!!explain_win_mgr.make (a_screen)
+			create routine_win_mgr.make (a_screen)
+			create class_win_mgr.make (a_screen)
+			create object_win_mgr.make (a_screen)
+			create explain_win_mgr.make (a_screen)
 			Graphical_resources.add_user (Current)	
 		end
 
@@ -269,7 +269,7 @@ feature -- Update
 			widget: WIDGET
 		do
 			if need_to_update_attributes then
-				!! att
+				create att
 				from
 					widget_manager.start
 				until

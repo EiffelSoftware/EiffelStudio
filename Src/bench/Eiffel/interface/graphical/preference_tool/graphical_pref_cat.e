@@ -23,7 +23,7 @@ inherit
 		end;
 	SYSTEM_CONSTANTS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -31,43 +31,43 @@ feature {NONE} -- Initialization
 	update_resources is
 			-- Update `resources'.
 		do
-			!! font.make (associated_category.font);
-			!! text_font.make (associated_category.text_font);
-			!! default_text_font.make (associated_category.default_text_font);
-			!! comment_font.make (associated_category.comment_font);
-			!! string_text_font.make (associated_category.string_text_font);
-			!! class_font.make (associated_category.class_font);
-			!! cluster_font.make (associated_category.cluster_font);
-			!! feature_font.make (associated_category.feature_font);
-			!! object_font.make (associated_category.object_font);
-			!! error_font.make (associated_category.error_font);
-			!! breakable_font.make (associated_category.breakable_font);
-			!! keyword_font.make (associated_category.keyword_font);
-			!! symbol_font.make (associated_category.symbol_font);
-			!! html_font.make (associated_category.html_font);
+			create font.make (associated_category.font);
+			create text_font.make (associated_category.text_font);
+			create default_text_font.make (associated_category.default_text_font);
+			create comment_font.make (associated_category.comment_font);
+			create string_text_font.make (associated_category.string_text_font);
+			create class_font.make (associated_category.class_font);
+			create cluster_font.make (associated_category.cluster_font);
+			create feature_font.make (associated_category.feature_font);
+			create object_font.make (associated_category.object_font);
+			create error_font.make (associated_category.error_font);
+			create breakable_font.make (associated_category.breakable_font);
+			create keyword_font.make (associated_category.keyword_font);
+			create symbol_font.make (associated_category.symbol_font);
+			create html_font.make (associated_category.html_font);
 
-			!! text_background_color.make (associated_category.text_background_color);
-			!! text_foreground_color.make (associated_category.text_foreground_color);
+			create text_background_color.make (associated_category.text_background_color);
+			create text_foreground_color.make (associated_category.text_foreground_color);
 			if not Platform_constants.is_windows then
-				!! focus_label_color.make (associated_category.focus_label_color)
-				!! progress_bar_color.make (associated_category.progress_bar_color);
-				!! highlight_line_background_color.make (associated_category.highlight_line_background_color);
-				!! highlight_line_foreground_color.make (associated_category.highlight_line_foreground_color);
+				create focus_label_color.make (associated_category.focus_label_color)
+				create progress_bar_color.make (associated_category.progress_bar_color);
+				create highlight_line_background_color.make (associated_category.highlight_line_background_color);
+				create highlight_line_foreground_color.make (associated_category.highlight_line_foreground_color);
 			end;
-			!! foreground_color.make (associated_category.foreground_color);
-			!! string_text_color.make (associated_category.string_text_color);
-			!! default_text_color.make (associated_category.default_text_color);
-			!! stop_color.make (associated_category.stop_color);
-			!! breakable_color.make (associated_category.breakable_color);
-			!! symbol_color.make (associated_category.symbol_color);
-			!! html_color.make (associated_category.html_color);
-			!! class_color.make (associated_category.class_color);
-			!! cluster_color.make (associated_category.cluster_color);
-			!! feature_color.make (associated_category.feature_color);
-			!! error_color.make (associated_category.error_color);
-			!! object_color.make (associated_category.object_color);
-			!! comment_color.make (associated_category.comment_color);
-			!! keyword_color.make (associated_category.keyword_color);
+			create foreground_color.make (associated_category.foreground_color);
+			create string_text_color.make (associated_category.string_text_color);
+			create default_text_color.make (associated_category.default_text_color);
+			create stop_color.make (associated_category.stop_color);
+			create breakable_color.make (associated_category.breakable_color);
+			create symbol_color.make (associated_category.symbol_color);
+			create html_color.make (associated_category.html_color);
+			create class_color.make (associated_category.class_color);
+			create cluster_color.make (associated_category.cluster_color);
+			create feature_color.make (associated_category.feature_color);
+			create error_color.make (associated_category.error_color);
+			create object_color.make (associated_category.object_color);
+			create comment_color.make (associated_category.comment_color);
+			create keyword_color.make (associated_category.keyword_color);
 
 			resources.extend (font);
 			resources.extend (text_font);
@@ -117,9 +117,9 @@ feature {PREFERENCE_TOOL} -- Initialization
 			button: EB_PREFERENCE_BUTTON;
 			menu_entry: PREFERENCE_TICKABLE_MENU_ENTRY
 		do
-			!! button.make (Current, a_button_parent);
-			!! menu_entry.make (Current, a_menu);
-			!! holder.make (button, menu_entry);
+			create button.make (Current, a_button_parent);
+			create menu_entry.make (Current, a_menu);
+			create holder.make (button, menu_entry);
 
 			make_row_column (name, a_parent)
 		end;
@@ -129,7 +129,7 @@ feature {PREFERENCE_TOOL} -- Initialization
 		local
 			att: WINDOW_ATTRIBUTES
 		do
-			!! att;
+			create att;
 			att.set_composite_attributes (Current)
 		end
 

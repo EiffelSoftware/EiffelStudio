@@ -13,7 +13,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION;
 	WINDOWS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

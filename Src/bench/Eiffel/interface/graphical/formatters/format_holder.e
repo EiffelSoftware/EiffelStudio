@@ -17,7 +17,7 @@ inherit
 			make_plain
 		end
 
-creation
+create
 	make, 
 	make_plain
 

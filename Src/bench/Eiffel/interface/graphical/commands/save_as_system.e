@@ -16,7 +16,7 @@ inherit
 			update_more
 		end
 
-creation
+create
 
 	make
 

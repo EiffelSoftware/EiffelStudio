@@ -14,7 +14,7 @@ inherit
 			display_temp_header, post_fix
 		end
 
-creation
+create
 
 	make
 
@@ -57,7 +57,7 @@ feature {NONE} -- Attributes
 		local
 			cmd: E_SHOW_DESCENDANTS;
 		do
-			!! cmd.make (c.e_class);
+			create cmd.make (c.e_class);
 			cmd.execute;
 			Result := cmd.structured_text
 		end;

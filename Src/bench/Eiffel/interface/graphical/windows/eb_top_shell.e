@@ -27,7 +27,7 @@ inherit
 	EB_CONSTANTS;
 	SYSTEM_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -46,7 +46,7 @@ feature -- Initialization
 			end
 
 			tooltip_initialize (Current)
-			!! associated_form.make ("", Current)
+			create associated_form.make ("", Current)
 		ensure
 			screen_set: equal (screen, a_screen)
 		end

@@ -19,7 +19,7 @@ inherit
 			init_colors
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -27,12 +27,12 @@ feature {NONE} -- Initialization
 	update_resources is
 			-- Update `resources'.
 		do
-			!! tool_width.make (associated_category.tool_width);
-			!! tool_height.make (associated_category.tool_height);
-			!! keep_toolbar.make (associated_category.keep_toolbar)
-			!! double_line_toolbar.make (associated_category.double_line_toolbar)
-			!! private_show_all_callers.make (associated_category.show_all_callers);
-			!! do_flat_in_breakpoints.make (associated_category.do_flat_in_breakpoints);
+			create tool_width.make (associated_category.tool_width);
+			create tool_height.make (associated_category.tool_height);
+			create keep_toolbar.make (associated_category.keep_toolbar)
+			create double_line_toolbar.make (associated_category.double_line_toolbar)
+			create private_show_all_callers.make (associated_category.show_all_callers);
+			create do_flat_in_breakpoints.make (associated_category.do_flat_in_breakpoints);
 
 			resources.extend (tool_width);
 			resources.extend (tool_height);
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		local
 			att: WINDOW_ATTRIBUTES
 		do
-			!! att;
+			create att;
 			att.set_composite_attributes (Current)
 		end
 
@@ -59,9 +59,9 @@ feature {PREFERENCE_TOOL} -- Initialization
 			button: EB_PREFERENCE_BUTTON;
 			menu_entry: PREFERENCE_TICKABLE_MENU_ENTRY
 		do
-			!! button.make (Current, a_button_parent);
-			!! menu_entry.make (Current, a_menu);
-			!! holder.make (button, menu_entry);
+			create button.make (Current, a_button_parent);
+			create menu_entry.make (Current, a_menu);
+			create holder.make (button, menu_entry);
 			make_row_column (name, a_parent)
 		end
 

@@ -24,7 +24,7 @@ inherit
 		end
 	EB_SHARED_INTERFACE_TOOLS
 
-creation
+create
 	make
 
 feature -- Properties

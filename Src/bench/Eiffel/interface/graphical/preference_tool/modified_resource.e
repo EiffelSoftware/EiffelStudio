@@ -7,7 +7,7 @@ indexing
 
 class MODIFIED_RESOURCE
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -79,7 +79,7 @@ feature -- Access
 			from
 				curr_x := base_left_x;
 				c := text.count;
-				!! str.make (0);
+				create str.make (0);
 					-- Text should not be empty
 				i := 0
 			until
@@ -102,7 +102,7 @@ feature -- Access
 			pos: INTEGER;
 			str: STRING
 		do
-			!! Result;
+			create Result;
 			pos := char_pos - text_position;
 			-- Extract the string
 			if pos = 0 then

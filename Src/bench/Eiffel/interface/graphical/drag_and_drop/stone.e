@@ -59,7 +59,7 @@ feature  -- Access
 			-- Explaination of what current element means,
 			-- "No help available" by default
 		once
-			!! Result.make;
+			create Result.make;
 			Result.put_front (Interface_names.h_No_help_available)
 		end;
 

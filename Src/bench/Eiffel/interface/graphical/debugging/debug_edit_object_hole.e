@@ -11,7 +11,7 @@ inherit
 			compatible, process_object
 		end
 
-creation
+create
 	make
 
 feature -- Properties

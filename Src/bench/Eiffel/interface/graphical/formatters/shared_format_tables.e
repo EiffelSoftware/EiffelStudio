@@ -25,7 +25,7 @@ feature -- Properties
 			if flat_table.has (stone) then
 				Result := flat_table.found_item
 			else
-				!! ctxt;
+				create ctxt;
 				ctxt.set_clickable;
 				ctxt.set_feature_clause_order (Class_resources.feature_clause_order.actual_value);
 				ctxt.format (stone.e_class);
@@ -49,7 +49,7 @@ feature -- Properties
 				Result := flatshort_table.found_item
 			else
 				set_is_without_breakable
-				!! ctxt;
+				create ctxt;
 				ctxt.set_clickable;
 				ctxt.set_feature_clause_order (Class_resources.feature_clause_order.actual_value);
 				ctxt.set_is_short;
@@ -74,7 +74,7 @@ feature -- Properties
 				Result := short_table.found_item
 			else
 				set_is_without_breakable
-				!! ctxt;
+				create ctxt;
 				ctxt.set_clickable;
 				ctxt.set_is_short;
 				ctxt.set_one_class_only;
@@ -100,7 +100,7 @@ feature -- Properties
 				Result := clickable_table.found_item
 			else
 				set_is_without_breakable
-				!! ctxt;
+				create ctxt;
 				ctxt.set_clickable;
 				ctxt.set_one_class_only;
 				ctxt.set_order_same_as_text;
@@ -125,7 +125,7 @@ feature -- Properties
 				Result := rout_flat_table.found_item
 			else
 				set_is_without_breakable
-				!! ctxt;
+				create ctxt;
 				ctxt.set_clickable;
 					--| Show flat form of the routine (False)
 				ctxt.format (stone.e_feature, False);
@@ -149,7 +149,7 @@ feature -- Properties
 				Result := debug_table.found_item
 			else
 				set_is_with_breakable
-				!! ctxt;
+				create ctxt;
 				ctxt.set_clickable;
 					--| Show flat form with debug point (True)
 				ctxt.format (stone.e_feature, True);
@@ -173,7 +173,7 @@ feature -- Properties
 			if debug_table.has (stone) then
 				Result := debug_table.found_item
 			else
-				!! ctxt;
+				create ctxt;
 				set_is_with_breakable
 				ctxt.simple_format_debuggable (stone.e_feature);
 				if not ctxt.error then
@@ -245,50 +245,50 @@ feature {NONE} -- Attributes
 	flat_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
 			-- Table of the last flat formats
 		once
-			!!Result.make (History_size)
+			create Result.make (History_size)
 		end;
 
 	flatshort_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
 			-- Table of the last flatshort formats
 		once
-			!!Result.make (History_size)
+			create Result.make (History_size)
 		end;
 
 	short_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
 			-- Table of the last short formats
 		once
-			!!Result.make (History_size)
+			create Result.make (History_size)
 		end;
 
 	clickable_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
 			-- Table of the last clickable formats
 		once
-			!!Result.make (History_size)
+			create Result.make (History_size)
 		end;
 
 	rout_flat_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
 			-- Table of the last flat formats
 		once
-			!!Result.make (History_size)
+			create Result.make (History_size)
 		end;
 
 	debug_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
 			-- Table of the last debug formats
 		once
-			!!Result.make (History_size)
+			create Result.make (History_size)
 		end;
 
 	simple_debug_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
 			-- Table of the last debug formats
 		once
-			!!Result.make (History_size)
+			create Result.make (History_size)
 		end;
 
 	history_list: LINKED_LIST [CELL2 [HASHABLE_STONE,
 						HASH_TABLE [STRUCTURED_TEXT, HASHABLE_STONE]]] is
 			-- History list. Only `History_size' contexts are kept in memory
 		once
-			!!Result.make
+			create Result.make
 		end;
 
 feature {NONE} -- Implementation
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			stone_and_table: CELL2 [HASHABLE_STONE, 
 							HASH_TABLE [STRUCTURED_TEXT, HASHABLE_STONE]]
 		do
-			!!stone_and_table.make (stone, table);
+			create stone_and_table.make (stone, table);
 			history_list.extend (stone_and_table);
 			if history_list.count > History_size then
 				history_list.start;

@@ -14,7 +14,7 @@ inherit
 			make as list_make
 		end
 
-creation
+create
 
 	make
 
@@ -313,7 +313,7 @@ feature -- Output
 			i, c: INTEGER;
 			txt: STRING
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			c := count;
 			a := area;
 			if c > 0 then

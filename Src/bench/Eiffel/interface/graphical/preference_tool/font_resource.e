@@ -13,7 +13,7 @@ inherit
 			make, set_value, is_valid, make_with_values
 		end
 
-creation
+create
 	make,
 	make_with_values
 
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			default_value := def_value;
 			value := rt.get_string (a_name, def_value);
 			if value /= Void and then not value.is_empty then
-				!! actual_value.make
+				create actual_value.make
 				actual_value.set_name (value);
 				if not actual_value.is_font_valid then
 					io.error.putstring ("Warning: Could not allocate font ")
@@ -70,7 +70,7 @@ feature -- Access
 			font: FONT
 		do
 			if not a_value.is_empty then
-				!! font.make;
+				create font.make;
 				font.set_name (a_value);
 				Result := font.is_font_valid
 			else
@@ -81,7 +81,7 @@ feature -- Access
 	default_font: FONT is
 			-- Default value if resource not found in a resource file
 		once
-			!! Result.make
+			create Result.make
 			Result.set_name ("fixed")
 		end
 
@@ -91,7 +91,7 @@ feature -- Setting
 			-- Set `value' to `new_value'.
 		do
 			if not new_value.is_empty then	
-				!! actual_value.make;
+				create actual_value.make;
 				actual_value.set_name (new_value)
 			else
 				actual_value := Void

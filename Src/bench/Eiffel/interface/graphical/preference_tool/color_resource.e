@@ -13,7 +13,7 @@ inherit
 			set_value, make, make_with_values
 		end
  
-creation
+create
 	make,
 	make_with_values
 
@@ -55,7 +55,7 @@ feature -- Access
 	default_color: COLOR is
 			-- Default color
 		once
-			!! Result.make
+			create Result.make
 			Result.set_name ("black")
 		end;
 
@@ -68,7 +68,7 @@ feature -- Status setting
 			if new_value.is_empty then
 				actual_value := Void
 			else
-				!! actual_value.make;
+				create actual_value.make;
 				actual_value.set_name (new_value)
 			end
 		end;

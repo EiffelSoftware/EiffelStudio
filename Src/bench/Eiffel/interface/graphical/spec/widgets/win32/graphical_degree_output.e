@@ -73,7 +73,7 @@ feature -- Start output
 			current_nbr_to_go_text.set_text (total_nbr.out)
 			percentage_text.set_text (Zero_percent)
 
-			!! tmp.make (0)
+			create tmp.make (0)
 			tmp.append (Interface_names.d_Degree)
 			tmp.append (current_degree.out)
 			set_project_icon_name (tmp)
@@ -104,7 +104,7 @@ feature -- Start output
 
 			percentage_text.set_text (Zero_percent)
 			progress_bar.set_position (0)
-			!! tmp.make (0) 
+			create tmp.make (0) 
 			tmp.append (Interface_names.d_Degree)
 			tmp.append (current_degree.out)
 			set_project_icon_name (tmp)
@@ -409,15 +409,15 @@ feature {NONE} -- Implementation
 		do
 			icon_name := Project_tool.icon_name
 			make_by_id (parent, Dlg_graphical_degree_output)
-			!! progress_bar.make_by_id (Current, Prg_compilation_progress)
-			!! degree_text.make_by_id (Current, Txt_degree)
-			!! entity_text.make_by_id (Current, Txt_entity)
-			!! cancel_b.make_by_id (Current, Idcancel)
-			!! nbr_to_go_text.make_by_id (Current, Txt_nbr_to_go)
-			!! current_degree_text.make_by_id (Current, Txt_current_degree)
-			!! current_entity_text.make_by_id (Current, Txt_current_entity)
-			!! current_nbr_to_go_text.make_by_id (Current, Txt_current_nbr_to_go)
-			!! percentage_text.make_by_id (Current, Txt_percentage)
+			create progress_bar.make_by_id (Current, Prg_compilation_progress)
+			create degree_text.make_by_id (Current, Txt_degree)
+			create entity_text.make_by_id (Current, Txt_entity)
+			create cancel_b.make_by_id (Current, Idcancel)
+			create nbr_to_go_text.make_by_id (Current, Txt_nbr_to_go)
+			create current_degree_text.make_by_id (Current, Txt_current_degree)
+			create current_entity_text.make_by_id (Current, Txt_current_entity)
+			create current_nbr_to_go_text.make_by_id (Current, Txt_current_nbr_to_go)
+			create percentage_text.make_by_id (Current, Txt_percentage)
 
 			activate
 			set_text (Interface_names.d_Compilation_progress)
@@ -534,7 +534,7 @@ feature {NONE} -- Properties
 	win_msg: WEL_MSG is
 			-- Used by `process_messages'
 		once
-			!! Result.make
+			create Result.make
 		end
 
 feature {NONE} -- Windows Message Handlers

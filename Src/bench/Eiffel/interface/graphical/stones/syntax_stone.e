@@ -17,7 +17,7 @@ inherit
 			code, file_name, help_text
 		end
 
-creation
+create
 
 	make
 
@@ -42,7 +42,7 @@ feature -- Access
 
 	help_text: LINKED_LIST [STRING] is
 		do
-			!! Result.make;
+			create Result.make;
 			Result.put_front (Interface_names.h_No_help_available)
 		end;
 

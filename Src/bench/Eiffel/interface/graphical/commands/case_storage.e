@@ -19,7 +19,7 @@ feature -- Properties
 	control_click: ANY is
 			-- No confirmation required, used in work
 		once
-			!!Result
+			create Result
 		end;
 
 feature {NONE} -- Attributes
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 				if license.demo_mode then
 					license.get_license
 				end
-				!! mp.set_watch_cursor;
+				create mp.set_watch_cursor;
 				format_storage.execute;
 				mp.restore
 			end
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	format_storage: E_STORE_CASE_INFO is
 			-- Storage info
 		once
-			!! Result.make (Error_window, Project_tool.progress_dialog);
+			create Result.make (Error_window, Project_tool.progress_dialog);
 		end
 	
 end -- class CASE_STORAGE

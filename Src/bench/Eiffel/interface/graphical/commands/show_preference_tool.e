@@ -12,7 +12,7 @@ inherit
 	EB_CONSTANTS;
 	ISE_COMMAND
 
-creation
+create
 	make
 
 feature {NONE} -- Initalization
@@ -44,18 +44,18 @@ feature {NONE} -- Execution
 			mp: MOUSE_PTR;
 			p_tool: EB_PREFERENCE_TOOL
 		do
-			!! mp.set_watch_cursor;
+			create mp.set_watch_cursor;
 			if preference_tool = Void then
-				!! p_tool.make;
-				!! gpc.make (p_tool);
-				!! pwpc.make (p_tool);
-				!! ewpc.make (p_tool);
-				!! swpc.make (p_tool);
-				!! cwpc.make (p_tool);
-				!! rwpc.make (p_tool);
-				!! owpc.make (p_tool);
-				!! prpc.make (p_tool);
-				!! grpc.make (p_tool);
+				create p_tool.make;
+				create gpc.make (p_tool);
+				create pwpc.make (p_tool);
+				create ewpc.make (p_tool);
+				create swpc.make (p_tool);
+				create cwpc.make (p_tool);
+				create rwpc.make (p_tool);
+				create owpc.make (p_tool);
+				create prpc.make (p_tool);
+				create grpc.make (p_tool);
 				p_tool.add_preference_category (gpc);
 				p_tool.add_preference_category (pwpc);
 				p_tool.add_preference_category (ewpc);

@@ -14,7 +14,7 @@ inherit
 			work, save_changes, loose_changes, tool
 		end
 
-creation
+create
 
 	make
 	
@@ -26,7 +26,7 @@ feature -- Callbacks
 			res: BOOLEAN
 		do
 			if tool.Eiffel_dynamic_lib.file_name /= Void then
-				!! f.make_open_read (tool.Eiffel_dynamic_lib.file_name)
+				create f.make_open_read (tool.Eiffel_dynamic_lib.file_name)
 
 				Res:= tool.Eiffel_dynamic_lib.parse_exports_from_file(f)
 				tool.Eiffel_dynamic_lib.set_modified(False)

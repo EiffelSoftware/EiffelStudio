@@ -8,7 +8,7 @@ indexing
 
 class WIZARD
 
-creation
+create
 	make
 
 feature -- Initialization

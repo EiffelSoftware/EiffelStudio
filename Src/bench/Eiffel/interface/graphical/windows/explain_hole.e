@@ -7,7 +7,7 @@ inherit
 			menu_name, accelerator
 		end
 
-creation
+create
 	make
 
 feature -- Properties

@@ -7,7 +7,7 @@ indexing
 
 class REFRESH_AREA 
 
-creation
+create
 
 	make
 
@@ -38,7 +38,7 @@ feature -- Properties
 
 	up_left: COORD_XY is
 		do
-			!! Result;
+			create Result;
 			Result.set (up_left_x, up_left_y)
 		end
 
@@ -47,7 +47,7 @@ feature -- Access
 	to_clip: CLIP is
 			-- Covert coordinates to a Clip rectangle
 		do
-			!! Result;
+			create Result;
 			Result.set (up_left, down_right_x - up_left_x, 
 				down_right_y - up_left_y)			
 		end
@@ -99,7 +99,7 @@ feature -- Element change
 		local
 			clos: REFRESH_AREA
 		do
-			!! clos.make;
+			create clos.make;
 			clos.set (clip.upper_left.x, clip.upper_left.y,
 						clip.width, clip.height);
 			merge (clos);

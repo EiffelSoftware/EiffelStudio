@@ -20,7 +20,7 @@ inherit
 
 	SHARED_BENCH_LICENSES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -30,15 +30,15 @@ feature -- Initialization
 			top_shell_make (interface_names.i_project_id.out, a_screen)
 			set_delete_command (Current)
 
-			!! form.make ("Bulletin", Current)
-			!! form_t.make ("Bulletin2", form)
+			create form.make ("Bulletin", Current)
+			create form_t.make ("Bulletin2", form)
 
-			!! logo.make ("logo", form)
+			create logo.make ("logo", form)
 			logo.set_pixmap (bm_ISE_power)
 
-			!! label.make (t_info, form_t)
+			create label.make (t_info, form_t)
 
-			!! button.make (t_button, form_t)
+			create button.make (t_button, form_t)
 			button.add_activate_action (Current, Void)
 
 			set_values
@@ -104,7 +104,7 @@ feature -- Attachements
 		local
 			intro_color: COLOR
 		do
-			!!intro_color.make
+			create intro_color.make
 			intro_color.set_name ("white")
 			label.set_left_alignment
 			set_title ("About ISE EiffelBench...")

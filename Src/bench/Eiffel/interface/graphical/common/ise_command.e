@@ -36,7 +36,7 @@ feature -- Execution
 		local
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor;
+			create mp.set_watch_cursor;
 			work (argument);
 			mp.restore;
 		end;
@@ -50,7 +50,7 @@ feature {ISE_BUTTON, ISE_MENU_ENTRY} -- Implementation
 	button_three_action: ANY is
 			-- Action to specify that the third button was pressed
 		once
-			!! Result
+			create Result
 		end;
 
 end -- class ISE_COMMAND

@@ -10,7 +10,7 @@ class VALIDATE_PREF_CMD
 inherit
 	PREFERENCE_COMMAND
 
-creation
+create
 	make
 
 feature {PREFERENCE_COMMAND} -- Execution

@@ -9,7 +9,7 @@ class
 inherit
 	PICT_COLOR_B
 
-creation
+create
 	make, make_unmanaged
 
 end -- class NO_BORDER_PICT_COLOR_B

@@ -15,7 +15,7 @@ inherit
 	WINDOW_ATTRIBUTES;
 	EB_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -44,32 +44,32 @@ feature -- Graphical User Interface
 			default_option_box: CHECK_BOX;
 			assertion_radio: RADIO_BOX;
 		do
-			!! system_edit.make ("system_edit", dialog.action_form);
-			!! root_class_edit.make ("root_class_edit", dialog.action_form);
-			!! creation_procedure_edit.make ("creation_procedure_edit", dialog.action_form);
+			create system_edit.make ("system_edit", dialog.action_form);
+			create root_class_edit.make ("root_class_edit", dialog.action_form);
+			create creation_procedure_edit.make ("creation_procedure_edit", dialog.action_form);
 
-			!! dir_label.make ("project_directory", dialog.action_form);
-			!! system_label.make ("system_label", dialog.action_form);
-			!! root_class_label.make ("root_class_label", dialog.action_form);
-			!! creation_procedure_label.make ("creation_procedure_label", dialog.action_form);
+			create dir_label.make ("project_directory", dialog.action_form);
+			create system_label.make ("system_label", dialog.action_form);
+			create root_class_label.make ("root_class_label", dialog.action_form);
+			create creation_procedure_label.make ("creation_procedure_label", dialog.action_form);
 
 			twl := precompiles;
 			if twl.count > 0 then
-				!! sep1.make (Interface_names.t_Empty, dialog.action_form)
-				!! precomp_label.make ("precomp_label", dialog.action_form);
+				create sep1.make (Interface_names.t_Empty, dialog.action_form)
+				create precomp_label.make ("precomp_label", dialog.action_form);
 			end
 
 			if twl.count > 0 then
 				from
 					twl.start;
-					!! precomp_box.make ("precomp_box", dialog.action_form);
+					create precomp_box.make ("precomp_box", dialog.action_form);
 					first := True;
-					!! standard_precompiles_reverse.make (3)
+					create standard_precompiles_reverse.make (3)
 				until
 					twl.after
 				loop
-					!! toggle.make ("toggle", precomp_box);
-					!! subdir.make_from_string (twl.item);
+					create toggle.make ("toggle", precomp_box);
+					create subdir.make_from_string (twl.item);
 					l_s_d := last_sub_dir (subdir);
 					l_s_d_lower := clone (l_s_d);
 					l_s_d_lower.to_lower;
@@ -92,22 +92,22 @@ feature -- Graphical User Interface
 				standard_precompiles_reverse.compare_objects;
 			end
 
-			!! sep2.make (Interface_names.t_Empty, dialog.action_form)
-			!! option_form.make ("Enclosing default option form", dialog.action_form)
-			!! check_form.make ("Check form", option_form)
+			create sep2.make (Interface_names.t_Empty, dialog.action_form)
+			create option_form.make ("Enclosing default option form", dialog.action_form)
+			create check_form.make ("Check form", option_form)
 
-			!! default_option_label.make ("default_option_label", check_form);
-			!! default_option_box.make ("default_option_box", check_form)
-			!! multithreaded_toggle.make ("multithreaded", default_option_box)
-			!! console_application_toggle.make ("console application", default_option_box)
-			!! array_optimization_toggle.make ("array optimization", default_option_box)
-			!! dynamic_runtime_toggle.make ("dynamic runtime", default_option_box)
-			!! dead_code_removal_toggle.make ("dead_code_removal", default_option_box)
-			!! profiler_toggle.make ("profiler", default_option_box)
-			!! debug_toggle.make ("debug", default_option_box)
-			!! line_generation_toggle.make ("line generation", default_option_box)
-			!! inlining_toggle.make ("inlining", default_option_box)
-			!! inlining_size_edit.make ("inlining_size_edit", check_form)
+			create default_option_label.make ("default_option_label", check_form);
+			create default_option_box.make ("default_option_box", check_form)
+			create multithreaded_toggle.make ("multithreaded", default_option_box)
+			create console_application_toggle.make ("console application", default_option_box)
+			create array_optimization_toggle.make ("array optimization", default_option_box)
+			create dynamic_runtime_toggle.make ("dynamic runtime", default_option_box)
+			create dead_code_removal_toggle.make ("dead_code_removal", default_option_box)
+			create profiler_toggle.make ("profiler", default_option_box)
+			create debug_toggle.make ("debug", default_option_box)
+			create line_generation_toggle.make ("line generation", default_option_box)
+			create inlining_toggle.make ("inlining", default_option_box)
+			create inlining_size_edit.make ("inlining_size_edit", check_form)
 
 			inlining_toggle.set_toggle_off
 			inlining_size_edit.set_text ("4")
@@ -115,25 +115,25 @@ feature -- Graphical User Interface
 				-- Command associates to `inlining_toggle': when we are selecting the
 				-- check box, inlining_size will be enabled, otherwise it will be
 				-- disabled.
-			!! inlining_cmd.make (inlining_toggle, inlining_size_edit)
+			create inlining_cmd.make (inlining_toggle, inlining_size_edit)
 			inlining_toggle.add_value_changed_action (inlining_cmd, Void)
 
 				-- We put "4" by default, since it is the standard inlining default value.
 
-			!! sep3.make (Interface_names.t_Empty, option_form)
+			create sep3.make (Interface_names.t_Empty, option_form)
 			sep3.set_horizontal (False)
 
-			!! radio_form.make ("Radio form", option_form)
+			create radio_form.make ("Radio form", option_form)
 
-			!! assertion_label.make ("assertion_label", radio_form);
-			!! assertion_radio.make ("assertion_radio", radio_form);
-			!! no_ass.make ("ass_no", assertion_radio);
-			!! require_ass.make ("ass_require", assertion_radio);
-			!! ensure_ass.make ("ass_ensure", assertion_radio);
-			!! invariant_ass.make ("ass_invariant", assertion_radio);
-			!! loop_ass.make ("ass_loop", assertion_radio);
-			!! check_ass.make ("ass_check", assertion_radio);
-			!! all_ass.make ("all_ass", assertion_radio);
+			create assertion_label.make ("assertion_label", radio_form);
+			create assertion_radio.make ("assertion_radio", radio_form);
+			create no_ass.make ("ass_no", assertion_radio);
+			create require_ass.make ("ass_require", assertion_radio);
+			create ensure_ass.make ("ass_ensure", assertion_radio);
+			create invariant_ass.make ("ass_invariant", assertion_radio);
+			create loop_ass.make ("ass_loop", assertion_radio);
+			create check_ass.make ("ass_check", assertion_radio);
+			create all_ass.make ("all_ass", assertion_radio);
 
 			project_name := "Project_directory:   "
 			project_name.append (Project_directory_name)
@@ -275,8 +275,8 @@ feature -- Information Handling
 			contents, c_name: STRING;
 			new_ace: PLAIN_TEXT_FILE
 		do
-			!! new_ace.make ("Ace.ace");
-			!! id.make (0);
+			create new_ace.make ("Ace.ace");
+			create id.make (0);
 			id.append (system_edit.text);
 			if 
 				(new_ace.exists and then not new_ace.is_writable) or else
@@ -288,17 +288,17 @@ feature -- Information Handling
 				warner (dialog).gotcha_call (Warning_messages.w_Invalid_system_name (id))
 				processed := False;
 			else
-				!! id.make (0);
+				create id.make (0);
 				id.append (root_class_edit.text);
 				id.to_upper;
-				!! c_name.make (0);
+				create c_name.make (0);
 				c_name.append (id);
 				if not id.is_valid then
 					warner (dialog).gotcha_call 
 						(Warning_messages.w_Invalid_root_class_name (id))
 					processed := False;
 				else
-					!! id.make (0);
+					create id.make (0);
 					id.append (creation_procedure_edit.text);
 					id.to_lower;
 					if
@@ -445,8 +445,8 @@ feature {NONE} -- Properties
 			file_name: FILE_NAME;
 			file: RAW_FILE
 		once
-			!! Result.make;
-			!! dir.make (Default_precompiled_location);
+			create Result.make;
+			create dir.make (Default_precompiled_location);
 			if dir.exists and then dir.is_readable then
 				from
 					dir.open_read;
@@ -455,11 +455,11 @@ feature {NONE} -- Properties
 				until
 					dir.lastentry = Void
 				loop
-					!! file_name.make_from_string (dir.name);
+					create file_name.make_from_string (dir.name);
 					file_name.extend_from_array 
 						(<<dir.lastentry, Eiffelgen>>);
 					file_name.set_file_name (Dot_workbench);
-					!! file.make (file_name);
+					create file.make (file_name);
 
 					if file.exists then
 						Result.extend (file_name)
@@ -478,7 +478,7 @@ feature -- Standard precompiles
 			-- A hash table of standard precompiles (base, lex, vision, etc.)
 			-- against their qualified names (EiffelBase, EiffelLex, EiffelVision, etc.)
 		once
-			!! Result.make (15);
+			create Result.make (15);
 			Result.put ("EiffelBase", "base");
 			Result.put ("Multithreaded EiffelBase", "base-mt")
 			Result.put ("EiffelVision", "vision");
@@ -509,7 +509,7 @@ feature -- Subdirs from a directory name
 			d: STRING
 		do
 			from
-				!! Result.make (1, 0);
+				create Result.make (1, 0);
 				d ?= dir
 				first_sep := d.index_of (Operating_environment.Directory_separator, 1);
 				second_sep := d.index_of (Operating_environment.Directory_separator, first_sep + 1);
@@ -562,7 +562,7 @@ feature {NONE} -- Implementation
 			end;
 			contents.replace_substring_all ("$root_class_line", root_class_line);	
 
-			!! default_options.make (0);
+			create default_options.make (0);
 
 			generate_option (default_options, multithreaded_toggle, "multithreaded")
 			generate_option (default_options, console_application_toggle, "console_application")
@@ -580,7 +580,7 @@ feature {NONE} -- Implementation
 
 			contents.replace_substring_all ("$default_options", default_options);	
 
-			!! precomp_lines.make (0);
+			create precomp_lines.make (0);
 			if precomp_box /= Void then
 					-- There is some precompiled libraries available.
 				child := precomp_box.children;
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 						toggle ?= child.item
 						if toggle.state then
 							precomp_lines.append ("%Tprecompiled (%"");
-							!! d_name.make;
+							create d_name.make;
 							d_name.extend_from_array (
 								<<"$ISE_EIFFEL", "precomp", "spec", "$ISE_PLATFORM">>);
 							d_name.extend (standard_precompiles_reverse.item (toggle.text));
@@ -623,7 +623,7 @@ feature {NONE} -- Implementation
 				assert := "all"
 			end;
 			contents.replace_substring_all ("$assertion_value", assert);	
-			!! root_cluster_line.make (0);
+			create root_cluster_line.make (0);
 			if not creation_procedure_edit.text.is_empty then
 				root_cluster_line.append ("%N%Troot_cluster: %"");
 				root_cluster_line.append (Project_directory_name);
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			rc := clone (root_class_edit.text);
 			rc.append (".e");
 			rc.to_lower;
-			!! new_class.make (rc);
+			create new_class.make (rc);
 			if not new_class.exists then
 				new_class.open_write;
 				new_class.putstring ("indexing%N%
@@ -683,10 +683,10 @@ feature {NONE} -- Implementation
 			fname: FILE_NAME;
 			char: CHARACTER
 		do
-			!! fname.make_from_string (Project_directory_name);
+			create fname.make_from_string (Project_directory_name);
 			fname.set_file_name ("Ace.ace");
 
-			!! new_file.make (fname);
+			create new_file.make (fname);
 			new_file.open_write;
 			if not contents.is_empty then
 				contents.replace_substring_all ("%R", "")
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 		local
 			a_file: RAW_FILE
 		do
-			!! a_file.make (Default_ace_name);
+			create a_file.make (Default_ace_name);
 			if a_file.exists and then a_file.is_readable then
 				a_file.open_read;
 				a_file.readstream (a_file.count);

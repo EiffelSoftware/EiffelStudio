@@ -6,7 +6,7 @@ indexing
 class
 	CLICK_STONE 
 
-creation
+create
 	make
 
 feature -- Initialization

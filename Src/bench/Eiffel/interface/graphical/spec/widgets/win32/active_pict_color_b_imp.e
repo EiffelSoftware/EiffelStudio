@@ -16,7 +16,7 @@ inherit
 			total_offset
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -40,7 +40,7 @@ feature {NONE}
 
 	on_mouse_enter is
 		do
-			{PICT_COLOR_B_IMP} Precursor
+			Precursor {PICT_COLOR_B_IMP}
 			if active then
 				mouse_in := True
 				if exists then
@@ -51,7 +51,7 @@ feature {NONE}
 
 	on_mouse_leave is
 		do
-			{PICT_COLOR_B_IMP} Precursor
+			Precursor {PICT_COLOR_B_IMP}
 			if active then
 				mouse_in := False
 				if exists then
@@ -79,7 +79,7 @@ feature {NONE}
 					draw_unselected_no_border (a_dc)
 				end
 			else
-				{PICT_COLOR_B_IMP} Precursor (a_dc)
+				Precursor {PICT_COLOR_B_IMP} (a_dc)
 			end
 		end
 
@@ -89,8 +89,8 @@ feature {NONE}
 			pen: WEL_PEN;
 			color: WEL_COLOR_REF
 		do
-			!! color.make_system (Color_btnface);
-			!! pen.make (ps_solid, 1, color);
+			create color.make_system (Color_btnface);
+			create pen.make (ps_solid, 1, color);
 			a_dc.select_pen (pen);
 			a_dc.line (width - 1, 0, width - 1, height);
 			a_dc.line (0, height - 1, width, height - 1);
@@ -106,16 +106,16 @@ feature {NONE}
 			pen: WEL_PEN
 			color: WEL_COLOR_REF
 		do
-			!! color.make_system (color_btnhighlight)
-			!! pen.make (ps_solid, 1, color);
+			create color.make_system (color_btnhighlight)
+			create pen.make (ps_solid, 1, color);
 			a_dc.select_pen (pen);
 			a_dc.line (0, 0, width - 1, 0);
 			a_dc.line (0, 0, 0, height - 1);
 			a_dc.unselect_pen
 			pen.delete
 
-			!! color.make_system (color_btnshadow)
-			!! pen.make (ps_solid, 1, color);
+			create color.make_system (color_btnshadow)
+			create pen.make (ps_solid, 1, color);
 			a_dc.select_pen (pen);
 			a_dc.line (width - 1, 0, width - 1, height);
 			a_dc.line (0, height - 1, width, height - 1)
@@ -130,18 +130,18 @@ feature {NONE}
 			color: WEL_COLOR_REF
 		do
 			if not active then
-				{PICT_COLOR_B_IMP} Precursor (a_dc)
+				Precursor {PICT_COLOR_B_IMP} (a_dc)
 			else
-				!! color.make_system (color_btnshadow)
-				!! pen.make (ps_solid, 1, color)
+				create color.make_system (color_btnshadow)
+				create pen.make (ps_solid, 1, color)
 				a_dc.select_pen (pen)
 				a_dc.line (0, 0, width, 0);
 				a_dc.line (0, 0, 0, height);
 				a_dc.unselect_pen
 				pen.delete
 
-				!! color.make_system (color_btnhighlight)
-				!! pen.make (ps_solid, 1, color);
+				create color.make_system (color_btnhighlight)
+				create pen.make (ps_solid, 1, color);
 				a_dc.select_pen (pen);
 				a_dc.line (width - 1, 1, width - 1, height);
 				a_dc.line (1, height - 1, width, height - 1)

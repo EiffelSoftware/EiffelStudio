@@ -10,7 +10,7 @@ class
 inherit
 	PICT_COLOR_B
 
-creation
+create
 	make, make_unmanaged
 
 feature -- Status

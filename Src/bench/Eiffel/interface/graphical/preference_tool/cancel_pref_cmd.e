@@ -10,7 +10,7 @@ class CANCEL_PREF_CMD
 inherit
 	PREFERENCE_COMMAND
 
-creation
+create
 	make
 
 feature {PREEFERENCE_COMMAND} -- Execution

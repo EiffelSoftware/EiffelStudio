@@ -50,11 +50,11 @@ feature {NONE} -- Interface initialization
 		do
 			form_d_make ("", a_parent);
 			set_exclusive_grab;
-			!! buttons.make ("", Current);
-			!! ok_b.make (Interface_names.b_Ok, buttons);
-			!! apply_b.make (Interface_names.b_Apply, buttons);
-			!! cancel_b.make (Interface_names.b_Cancel, buttons);
-			!! sep.make (Interface_names.t_Empty, buttons);
+			create buttons.make ("", Current);
+			create ok_b.make (Interface_names.b_Ok, buttons);
+			create apply_b.make (Interface_names.b_Apply, buttons);
+			create cancel_b.make (Interface_names.b_Cancel, buttons);
+			create sep.make (Interface_names.t_Empty, buttons);
 			buttons.set_fraction_base (17);
 			attach_left (buttons, 5);
 			attach_right (buttons, 5);
@@ -82,7 +82,7 @@ feature {NONE} -- Interface initialization
 	ok_action, apply_action: ANY is
 			-- Action constants
 		once
-			!! Result;
+			create Result;
 		end
 
 feature -- Execution

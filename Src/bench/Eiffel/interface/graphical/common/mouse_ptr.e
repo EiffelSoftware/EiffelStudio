@@ -12,7 +12,7 @@ inherit
 	
 	GRAPHICS
 
-creation
+create
 
 	set_watch_cursor, do_nothing
 
@@ -23,8 +23,8 @@ feature -- Access
 		local
 			ct: CURSOR_TYPE;
 		once
-			!! ct;
-			!! Result.make;
+			create ct;
+			create Result.make;
 			Result.set_type (ct.watch)
 		end;
 	
@@ -57,7 +57,7 @@ feature {NONE}
 	watch_shaped: BOOLEAN_REF is
 			-- Is the mouse pointer a watch shape?
 		once
-			!! Result
+			create Result
 		end;
 
 end -- class MOUSE_PTR

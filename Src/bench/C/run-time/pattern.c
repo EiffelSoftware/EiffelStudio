@@ -34,6 +34,40 @@ rt_private void free_structures(int n);	/* Free fuzzy shifting tables */
 rt_private char *qsearch(char *text, int tlen, char *pattern, int plen);		/* Sunday's Quick Search algorithm */
 rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy);	/* Fuzzy version of Quick Search */
 
+rt_public int substr_search (char *text, char *pattern, int start, int size_of_text)
+					/* The text string */
+					/* The pattern we are looking for */
+					/* Index within text where search starts */
+					/* Size of the text string */
+{
+	/* Forward search of 'pattern' within 'text' starting at 'start'. Return
+	 * the index within 'text' where the pattern was located, 0 if not found
+	 * (this is an Eiffel index, starting at 1).
+	 */
+	
+	EIF_GET_CONTEXT
+	char *t;
+	char *p;
+	char *r;
+
+	if (start > (size_of_text + 1))
+		return 0;
+
+	t = (char *) (text + start);
+	p = (char *) pattern;
+	
+	r = (char *) strstr (t, p);
+	
+	if (r != NULL)
+		return ((int)(r - t + 1 + start));
+	else
+		return 0;
+	
+	EIF_END_GET_CONTEXT
+}
+	
+
+
 rt_public int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen, int plen, int start, int fuzzy)
              		/* The text string */
                 	/* The pattern we are looking for */

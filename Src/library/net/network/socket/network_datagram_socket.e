@@ -43,7 +43,8 @@ feature -- Initialization
 			family := af_inet;
 			type := sock_dgrm;
 			make_socket;
-			is_open_write := True
+			is_open_write := True;
+			is_open_read := True
 		end;
 
 	make_bound (a_port: INTEGER) is

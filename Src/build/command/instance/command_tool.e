@@ -324,7 +324,9 @@ feature
 	close is
 			-- Close Current Editor
 		do
-			edited_command.reset
+			if edited_command /= Void then
+				edited_command.reset
+			end
 			clear
 			window_mgr.close (Current)
 		end

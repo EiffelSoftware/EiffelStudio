@@ -84,17 +84,56 @@ feature -- Implementation
 			end
 		end
 
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+			-- Steps to perform before transport initiated.
+		local
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+			curs_code: EV_CURSOR_CODE
+		do
+			create env
+			app_imp ?= env.application.implementation
+			check
+				app_imp_not_void: app_imp /= Void
+			end
+
+			if pebble_function /= Void then
+				pebble_function.call ([a_x, a_y]);
+				pebble := pebble_function.last_result
+			end
+
+			app_imp.on_pick (pebble)
+			interface.pick_actions.call ([a_x, a_y])
+
+			if mode_is_pick_and_drop then
+				is_pnd_in_transport := True
+			else
+				is_dnd_in_transport := True
+			end
+
+			create curs_code
+			if accept_cursor = Void then
+				create accept_cursor.make_with_code (curs_code.standard)
+			end
+			if deny_cursor = Void then
+				create deny_cursor.make_with_code (curs_code.no)
+			end
+
+			pointer_x := a_screen_x
+			pointer_y := a_screen_y
+			if pick_x = 0 and pick_y = 0 then
+				pick_x := a_screen_x
+				pick_y := a_screen_y
+			end
+		end
+
 	start_transport (
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
 		is
 			-- Initialize a pick and drop transport.
-		local
-			env: EV_ENVIRONMENT
-			curs_code: EV_CURSOR_CODE
-			app_imp: EV_APPLICATION_IMP
-		do	
+		do		
 			if
 				(mode_is_drag_and_drop and a_button = 1 or
 				mode_is_pick_and_drop and a_button = 3)
@@ -108,24 +147,10 @@ feature -- Implementation
 					enter_notify_not_connected: enter_notify_connection_id = 0
 					leave_notify_not_connected: leave_notify_connection_id = 0
 				end
-				interface.pointer_motion_actions.block
-				create env
-				app_imp ?= env.application.implementation
-				check
-					app_imp_not_void: app_imp /= Void
-				end
-				if pebble_function /= Void then
-					pebble_function.call ([a_x, a_y]);
-					pebble := pebble_function.last_result
-				end
-				app_imp.on_pick (pebble)
-				interface.pick_actions.call ([a_x, a_y])
 
-				if mode_is_pick_and_drop then
-					is_pnd_in_transport := True
-				else
-					is_dnd_in_transport := True
-				end
+				interface.pointer_motion_actions.block
+
+				pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
 
 				if not gdk_widget_no_window (c_object) then
 						--| see gtkwidget.c: line 3864 (gtk_widget_add_events):
@@ -141,20 +166,6 @@ feature -- Implementation
 					default_translate
 				)
 				grab_callback_connection_id := last_signal_connection_id
-				create curs_code
-				if accept_cursor = Void then
-					create accept_cursor.make_with_code (curs_code.standard)
-				end
-				if deny_cursor = Void then
-					create deny_cursor.make_with_code (curs_code.no)
-				end
-
-				pointer_x := a_screen_x
-				pointer_y := a_screen_y
-				if pick_x = 0 and pick_y = 0 then
-					pick_x := a_screen_x
-					pick_y := a_screen_y
-				end
 
 				enable_capture
 --FIXME this line for testing only		env.application.process_events
@@ -224,8 +235,6 @@ feature -- Implementation
 			-- End a pick and drop transport.
 		local
 			target: EV_PICK_AND_DROPABLE
-			app_imp: EV_APPLICATION_IMP
-			env: EV_ENVIRONMENT
 		do
 			check
 				motion_notify_connected: motion_notify_connection_id > 0
@@ -262,26 +271,38 @@ feature -- Implementation
 			if not is_dnd_in_transport then
 				signal_emit_stop (c_object, "button-press-event")
 			end
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_imp_not_void: app_imp /= Void
-			end
-			app_imp.on_drop (pebble)
+
 			is_dnd_in_transport := False
 			is_pnd_in_transport := False
-			pick_x := 0
-			pick_y := 0
-			last_pointed_target := Void
-			if pebble_function /= Void then
-				pebble := Void
-			end
+
+			post_drop_steps
+
 			check
 				motion_notify_not_connected: motion_notify_connection_id = 0
 				enter_notify_not_connected: enter_notify_connection_id = 0
 				leave_notify_not_connected: leave_notify_connection_id = 0
 				grab_callback_not_connected: grab_callback_connection_id = 0
 				button_release_not_connected: button_release_connection_id = 0
+			end
+		end
+
+	post_drop_steps is
+			-- Steps to perform once an attempted drop has happened.
+		local
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+		do
+			create env
+			app_imp ?= env.application.implementation
+			check
+				app_imp_not_void: app_imp /= Void
+			end
+			app_imp.on_drop (pebble)
+			pick_x := 0 --| FIXME IEK This wipes out user setting of pick position
+			pick_y := 0
+			last_pointed_target := Void
+			if pebble_function /= Void then
+				pebble := Void
 			end
 		end
 
@@ -493,6 +514,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/05 17:05:28  king
+--| Abstracted start/end transport for easier integration with mc list
+--|
 --| Revision 1.21  2000/04/04 21:00:34  oconnor
 --| updated signal connection for new marshaling scheme
 --|

@@ -46,4 +46,13 @@ typedef unsigned int uint32;
 #define private static		/* static outside a block means private */
 #define shared				/* data shared between modules, but not public */
 
+/* Maps an Eiffel type on a C type */
+typedef long            EIF_INTEGER;
+typedef unsigned char   EIF_CHARACTER;
+typedef float           EIF_REAL;
+typedef double          EIF_DOUBLE;
+typedef char *          EIF_REFERENCE;
+typedef char *          EIF_POINTER;
+typedef unsigned char   EIF_BOOLEAN;
+
 #endif

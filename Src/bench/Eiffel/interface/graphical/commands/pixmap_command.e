@@ -57,6 +57,12 @@ feature -- Properties
 			Result := symbol
 		end;
 
+	grey_symbol: PIXMAP is
+			-- Insensitive version of `symbol'.
+		do
+			Result := symbol
+		end;
+
 	full_symbol: PIXMAP is
 			-- Symbol representing a targeted tool.
 		do
@@ -88,12 +94,20 @@ feature -- Execute
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into
 			-- watch shape.
+		local
+			f: FOCUSABLE
 		do
 			if is_sensitive then
+				if holder /= Void then
+					f ?= holder.associated_button
+				end;
+				if f /= Void then
+					f.popdown
+				end;
 				if last_warner /= Void then
 					last_warner.popdown
 				end;
-				execute_licenced (argument)
+				execute_licenced (argument);
 			end
 		end;
 	

@@ -47,14 +47,42 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Set up action sequence connection and `Precursor' initialization,
 			-- create item box to hold label and pixmap.
+		local
+			temp_c_object: POINTER
 		do
 			--{EV_PRIMITIVE_IMP} Precursor
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_item_box
-			--connect_signal_to_actions ("clicked", interface.press_actions)
+			connect_signal_to_actions ("collapse", interface.collapse_actions)
+			connect_signal_to_actions ("expand", interface.expand_actions)
 			is_initialized := True
 			align_text_left
+
+				-- Connect events to items own tree.
+			temp_c_object := c_object
+			c_object := list_widget
+			signal_connect ("select_child", ~select_callback)
+			signal_connect ("unselect_child", ~deselect_callback)
+			c_object := temp_c_object
+		end
+
+	select_callback (a_tree_item: POINTER) is
+			-- Called when a tree item is selected.
+		local
+			t_item: EV_TREE_ITEM
+		do
+		 	t_item ?= eif_object_from_c (a_tree_item).interface
+			interface.select_actions.call ([])
+		end
+
+	deselect_callback (a_tree_item: POINTER) is
+			-- Called when a tree item is deselected.
+		local
+			t_item: EV_TREE_ITEM
+		do
+		 	t_item ?= eif_object_from_c (a_tree_item).interface
+			interface.deselect_actions.call ([])	
 		end
 
 	initialize_item_box is
@@ -85,7 +113,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected?
 		do
-			--| FIXME IEK Implement
+			Result := (parent_tree.selected_item = interface)
 		end
 
 	is_expanded: BOOLEAN is
@@ -210,6 +238,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/02/24 01:42:14  king
+--| Implemented event handling
+--|
 --| Revision 1.32  2000/02/22 23:57:11  king
 --| Added subtree_set boolean
 --|

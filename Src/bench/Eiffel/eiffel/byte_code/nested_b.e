@@ -49,7 +49,8 @@ feature
 	is_single: BOOLEAN is
 			-- Is call a single one ?
 		do
-			if message.target = message and
+			if
+				message.target = message and
 					-- First condition: must have a depth of 1.
 				target.is_predefined
 					-- Second condition: target has to be predefined.

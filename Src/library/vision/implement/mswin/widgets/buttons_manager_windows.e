@@ -1,0 +1,79 @@
+indexing
+	description: "This class is a MS_WINDOWS mouse button manager"
+	status: "See notice at end of class"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	BUTTONS_MANAGER_WINDOWS
+
+feature {NONE} -- Implementation
+
+	left_button_down_implementation: CELL [BOOLEAN] is
+			-- Implementation for left_button_down
+		once
+			!! Result.put (false)
+		ensure
+			result_exists: Result /= Void
+		end
+
+	left_button_down: BOOLEAN is
+			-- Is the left button down?
+		do
+			Result := left_button_down_implementation.item
+		end
+
+	middle_button_down_implementation: CELL [BOOLEAN] is
+			-- Implementation for the middle_button_down
+		once
+			!! Result.put (false)
+		ensure
+			result_exists: Result /= Void
+		end
+
+	middle_button_down: BOOLEAN is
+			-- Is the middle button down?
+		do
+			Result := middle_button_down_implementation.item
+		end
+
+	right_button_down_implementation: CELL [BOOLEAN] is
+			-- Implementation for right_button_down
+		once
+			!! Result.put (false)
+		ensure
+			result_exists: Result /= Void
+		end
+
+	right_button_down: BOOLEAN is
+			-- Is the right button down?
+		do
+			Result := right_button_down_implementation.item
+		end
+
+	buttons_state, buttons: BUTTONS is
+			-- State of the mouse buttons
+		do
+			!! Result.make (5)
+			Result.put (left_button_down, 1)
+			Result.put (middle_button_down, 2)
+			Result.put (right_button_down, 3)
+			Result.put (False, 4)
+			Result.put (False, 5)
+		end
+
+end -- class BUTTONS_MANAGER_WINDOWS
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|----------------------------------------------------------------
+

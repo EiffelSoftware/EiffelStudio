@@ -1,0 +1,145 @@
+indexing
+	description: "button in a menu"
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	MENU_BUTTON_WINDOWS
+
+inherit
+
+	MENU_B_I
+
+	BUTTON_WINDOWS
+		redefine
+			realized,
+			set_text,
+			text,
+			unrealize
+		end
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+		do
+			!! private_attributes
+			text := a_menu_b.identifier
+			parent ?= oui_parent.implementation
+			managed := man
+		end
+
+feature -- Access
+
+	associated_menu: MENU_PULL
+
+	text: STRING
+
+feature -- Status setting
+
+	set_text (new_text: STRING) is
+		do
+			text := new_text
+		end
+
+feature -- Element change
+
+	wel_set_text (a_text: STRING) is
+		do
+		end;
+
+	wel_disabled: BOOLEAN is
+		do
+		end;
+
+	realize is
+		do
+			realized := True			
+		end
+
+	unrealize is 
+		do
+			realized := false
+		end
+
+	wel_enable is
+			-- Enable current button.
+		do
+		end;
+
+	wel_disable is
+			-- Disable current button.
+		do
+		end;
+
+
+	wel_destroy is
+		do
+		end
+
+	realized: BOOLEAN 
+	
+feature {NONE} -- Inapplicable
+
+	default_style: INTEGER is
+		do
+		end
+
+	class_name: STRING is
+		do
+		end
+
+	process_notification (notification_code: INTEGER) is
+		do
+		end
+		
+	attach_menu (a_menu: MENU_PULL) is
+		do
+			associated_menu := a_menu
+		end
+
+	wel_hide, wel_set_focus, enable, disable, invalidate, 
+	wel_release_capture, wel_set_capture, wel_show  is
+		do
+		end
+
+	wel_set_menu (wel_menu: WEL_MENU) is
+		do
+		end
+
+	wel_parent: WEL_COMPOSITE_WINDOW
+
+	client_rect: WEL_RECT
+	wel_shown, exists, enabled: BOOLEAN
+	wel_children: LINKED_LIST [WEL_WINDOW]
+	wel_set_width, wel_set_height, wel_set_x, wel_set_y (i:INTEGER) is do end
+	absolute_x, absolute_y, wel_width, wel_height, wel_x, wel_y: INTEGER
+	wel_text: STRING
+	resize, wel_move (new_width, new_height: INTEGER) is
+		do
+		end
+	set_z_order (flags: INTEGER) is
+		do
+		end
+
+	wel_item: POINTER
+	wel_font: WEL_FONT
+	wel_set_font (f:WEL_FONT) is
+		do
+		end
+end
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|----------------------------------------------------------------

@@ -30,8 +30,8 @@ inherit
 		rename
 			raise as raise_exception
 		end;
-	SHARED_WORKBENCH;
-	SET_WINDOW_ATTRIBUTES
+	SET_WINDOW_ATTRIBUTES;
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -64,6 +64,7 @@ feature
 			-- Create a project application.
 		local
 			a_screen: SCREEN;
+			app_stopped_cmd: APPLICATION_STOPPED_CMD
 		do
 			a_screen := display;
 			base_make (tool_name, a_screen);
@@ -82,7 +83,10 @@ feature
 			set_action ("<Visible>", Current, remapped);
 			set_delete_command (quit_command);
 			set_composite_attributes (Current);
-			text_window.set_font_to_default
+			text_window.set_font_to_default;
+			!! app_stopped_cmd;
+			Application.set_before_stopped_command (app_stopped_cmd);
+			Application.set_after_stopped_command (app_stopped_cmd);
 		end;
 
 	set_default_size is do end;

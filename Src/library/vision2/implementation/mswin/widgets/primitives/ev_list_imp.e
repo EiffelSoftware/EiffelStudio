@@ -14,9 +14,6 @@ class
 
 inherit
 	EV_LIST_I
-		undefine
-			count
-		end
 
 	EV_LIST_ITEM_HOLDER_IMP
 
@@ -28,7 +25,7 @@ inherit
 			on_key_down
 		end
 
-   WEL_LIST_BOX
+ 	WEL_LIST_BOX
 		rename
 			make as wel_make,
 			parent as wel_parent,

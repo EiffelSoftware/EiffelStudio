@@ -96,7 +96,7 @@ feature {NONE} -- Execution
 							%%Tnot use precompilation.%N%N");
 						end;
 						print_tail;
-						prompt_finish_freezing (True);
+						process_finish_freezing (True);
 					end
 				end;
 			end

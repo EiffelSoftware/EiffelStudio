@@ -53,7 +53,7 @@ public int r_fides;			/* File descriptor use for retrieve */
  */
 public char *irt_make();			/* Do the independant retrieve */
 public char *irt_nmake();			/* Retrieve n objects  independent form*/
-private void iread_header();			/* Read independent header */
+private void iread_header();		/* Read independent header */
 private void rt_clean();			/* Clean data structure */
 private void rt_update1();			/* Reference correspondance update */
 private void rt_update2();			/* Fields updating */
@@ -61,9 +61,11 @@ public char *rt_make();				/* Do the retrieve */
 public char *rt_nmake();			/* Retrieve n objects */
 private void read_header();			/* Read  general header */
 extern long get_offset ();			/* get offset of attrib in object*/
-private void object_read ();			/* read the individual attributes of the object*/
+private void object_read ();		/* read the individual attributes of the object*/
 private long get_expanded_pos ();
 
+private int readline ();
+private int buffer_read ();
 
 
 #define GEN_MAX	4		/* Maximum number of generic parameters */

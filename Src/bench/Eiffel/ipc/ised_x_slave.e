@@ -27,9 +27,10 @@ feature
 					-- Pass adresses of RQST_HANDLER objects to 
 					-- C, so they can be called when the
 					-- the workbench is in server mode.
-			end;
 
-			enable_server_mode
+				enable_server_mode
+					-- Enable the server mode
+			end;
 		end;
 
 	create_handler is

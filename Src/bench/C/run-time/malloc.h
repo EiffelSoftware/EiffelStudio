@@ -122,6 +122,11 @@ union overhead {
 #define ALL_T		2				/* Any chunk, used by full_coalesc() */
 #define CHUNK		65536			/* Number of bytes in standard chunk */
 
+/* Memory block types (for allocate_from_core)
+ */
+#define MB_EO		0				/* Memory block for regular Eiffel object */
+#define MB_CHUNK	1				/* Memory block for big memory chunk */
+
 /*
  * Private macros used by low-level routines.
  */
@@ -156,6 +161,7 @@ extern char *gmalloc(unsigned int nbytes);				/* Garbage collector's allocation 
 extern char *xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
 extern char *xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */
 extern void xfree(register char *ptr);				/* Free */
+extern void xfreechunk(char *ptr);					/* Free memory chunks */
 extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C object */
 extern char *xrealloc(register char *ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
 extern char *sprealloc(char *ptr, long int nbitems);			/* Reallocate an Eiffel special object */

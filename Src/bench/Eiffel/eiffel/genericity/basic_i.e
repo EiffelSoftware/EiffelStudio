@@ -77,14 +77,26 @@ feature
 			else
 				file.putint (associated_dtype)
 			end
-			file.putchar (')')
-			file.putchar (',')
-			file.putchar (' ')
-			file.putchar ('*')
+			file.putstring ("), *")
 			generate_access_cast (file)
 			reg.print_register
 			file.putstring (" = ")
 			value.print_register
+		end
+
+	end_of_metamorphose (reg, value: REGISTRABLE; file: INDENT_FILE) is
+			-- After the metamorphosis, we need to put back the new value computed
+			-- in `reg' into `value' otherwise the metamorphosis has no effect.
+		require
+			valid_reg: reg /= Void
+			valid_value: value /= Void
+			valid_file: file /= Void
+		do
+--			value.print_register
+--			file.putstring (" = ")
+--			file.putchar ('*')
+--			generate_access_cast (file)
+--			reg.print_register
 		end
 
 	cecil_value: INTEGER is

@@ -13,8 +13,10 @@ class
 inherit
 
 	DEMO_WINDOW
+		redefine
+			actions_window
+		end
 	
-
 creation
 
 	make
@@ -27,6 +29,8 @@ feature -- Access
 		end
 	
 feature -- Access
+	
+	actions_window: BOX_ACTIONS_WINDOW
 
 	button1: EV_BUTTON
 	button2: EV_BUTTON
@@ -47,8 +51,9 @@ feature -- Status setting
 		do
 			set_title ("Box demo")
 			button1.set_text ("Press me")
-			button2.set_text ("Me too!")
-			button3.set_text ("Me too!")
+			button2.set_text ("Button with a very long label")
+			button3.set_text ("Button3")
+			main_widget.set_homogeneous (False)
 		end
 
 

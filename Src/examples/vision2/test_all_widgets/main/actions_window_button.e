@@ -26,8 +26,7 @@ feature {NONE} --Initialization
 
 			e: EV_EVENT
 		do
-			make (par)
-			set_text (button_name)
+			make_with_label (par, button_name)
 			
 			!!e.make ("clicked")
 			add_command (e, cmd, args)

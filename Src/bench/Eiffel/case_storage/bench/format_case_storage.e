@@ -21,16 +21,14 @@ feature
 			-- Format storage structures
 			-- so it can be read in from EiffelCase.
 		local
-			file_name: STRING;
-			file: PLAIN_TEXT_FILE
+			d: DIRECTORY
 		do
 			if not rescued then
 				if workbench.successfull then
 					Error_handler.wipe_out;
 					Create_case_storage_directory;
-					file_name := Case_storage_path;
-					!! file.make (file_name);
-					if not file.exists or else not file.is_readable then
+					!! d.make (Case_storage_path);
+					if not d.exists or else not d.is_readable then
 						error_window.put_string ("Directory ");
 						error_window.put_string (case_storage_path);
 						error_window.put_string ("%Nis not readable. Please check permission.%N")
@@ -122,14 +120,13 @@ feature {NONE}
 			-- name with the corresponding view_id.
 		local
 			s_system_data: S_SYSTEM_DATA;
-			path: STRING;
+			path: FILE_NAME;
 			old_system_file: RAW_FILE
 		do
 			if not rescued then
-				path := clone (Case_storage_path);
-				path.extend (Directory_separator);
-				path.append (System_name);
-				!! old_system_file.make (path);
+				!!path.make_from_string (Case_storage_path);
+				path.set_file_name (System_name);
+				!! old_system_file.make (path.path);
 				if old_system_file.exists then
 					if old_system_file.is_readable then
 						old_system_file.open_read;

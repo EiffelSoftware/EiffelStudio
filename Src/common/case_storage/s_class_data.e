@@ -242,6 +242,36 @@ feature
 
 feature -- Storing
 
+	directory_path (p: STRING; i: INTEGER): STRING is
+		local
+			d_name: DIRECTORY_NAME
+			temp: STRING
+		do
+			!!d_name.make_from_string (p);
+			!!temp.make (0);
+			temp.append_integer (directory_number (view_id))
+			d_name.extend (temp)
+			Result := d_name.path
+		end
+
+	file_path (p: STRING; i: INTEGER; tmp: BOOLEAN): STRING is
+		local
+			temp: STRING;
+			f_name: FILE_NAME
+		do
+			!!f_name.make_from_string (p);
+			!!temp.make (0);
+			temp.append_integer (directory_number (view_id));
+			f_name.extend (temp);
+			!!temp.make (0);
+			temp.append_integer (i);
+			if tmp then
+				temp.append (Tmp_file_name_ext)
+			end;
+			f_name.set_file_name (temp);
+			Result := f_name.path
+		end
+
 	save_information (storage_path: STRING) is
 			-- Save information to disk.
 			--| (Rename tmp file to normal file name);
@@ -249,17 +279,9 @@ feature -- Storing
 			valid_path: storage_path /= Void;
 		local
 			internal_file: RAW_FILE;
-			old_name, new_name: STRING
 		do
-			new_name := clone (storage_path);
-			new_name.extend (Operating_environment.directory_separator);
-			new_name.append_integer (directory_number (view_id));
-			new_name.extend (Operating_environment.directory_separator);
-			new_name.append_integer (view_id);
-			old_name := clone (new_name);
-			old_name.append (Tmp_file_name_ext);
-			!! internal_file.make (old_name);
-			internal_file.change_name (new_name);
+			!! internal_file.make (file_path (storage_path, view_id, True));
+			internal_file.change_name (file_path (storage_path, view_id, False));
 		end;
 
 	tmp_store_to_disk (storage_path: STRING) is
@@ -269,20 +291,14 @@ feature -- Storing
 			valid_view_id: view_id > 0
 		local
 			internal_file: RAW_FILE;
-			path: STRING;
-			dir: DIRECTORY
+			dir: DIRECTORY;
 		do
-			path := clone (storage_path);
-			path.extend (Operating_environment.directory_separator);
-			path.append_integer (directory_number (view_id));
-			!! dir.make (path);
+			!! dir.make (directory_path (storage_path, view_id));
 			if not dir.exists then
 				dir.create
 			end;
-			path.extend (Operating_environment.directory_separator);
-			path.append_integer (view_id);
-			path.append (Tmp_file_name_ext) 
-			!! internal_file.make_open_write (path);
+
+			!! internal_file.make_open_write (file_path (storage_path, view_id, True));
 			disk_content.independent_store (internal_file);
 			internal_file.close;
 			disk_content := Void;
@@ -296,15 +312,8 @@ feature -- Storing
 			valid_storage_path: storage_path /= Void
 		local
 			internal_file: RAW_FILE;
-			path: STRING
 		do
-			path := clone (storage_path);
-			path.extend (Operating_environment.directory_separator);
-			path.append_integer (directory_number (view_id));
-			path.extend (Operating_environment.directory_separator);
-			path.append_integer (view_id);
-			path.append (Tmp_file_name_ext) ;
-			!! internal_file.make (path);
+			!! internal_file.make (file_path (storage_path, view_id, True));
 			if internal_file.exists then
 				internal_file.delete
 			end
@@ -321,15 +330,7 @@ feature -- Storing
 			path: STRING;
 			storable: STORABLE
 		do
-			path := clone (p);
-			path.extend (Operating_environment.directory_separator);
-			path.append_integer (directory_number (view_id));
-			path.extend (Operating_environment.directory_separator);
-			path.append_integer (view_id);
-			if is_tmp then
-				path.append (Tmp_file_name_ext);
-			end;
-			!! internal_file.make (path);
+			!! internal_file.make (file_path (p, view_id, is_tmp));
 			if internal_file.exists and then internal_file.is_readable then
 				internal_file.open_read;
 				!! storable;	

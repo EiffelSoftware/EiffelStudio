@@ -226,7 +226,7 @@ feature -- Basic operation
 		do
 			internal_set_caret_position (end_pos.max (start_pos) + 1)
 			select_region_internal (start_pos, end_pos)
-				-- Hack to ensure text field is selected 
+				-- Hack to ensure text field is selected
 			app_implementation.do_once_on_idle (agent select_region_internal (start_pos, end_pos))
 		end	
 
@@ -287,7 +287,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			real_signal_connect_after (entry_widget, "changed", agent  (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
+			real_signal_connect_after  (entry_widget, "changed", agent  (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
 
 	stored_text: STRING
@@ -298,15 +298,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- A change action has occurred.
 		do
 			in_change_action := True
-			if stored_text /= Void then
-				if not text.is_equal (stored_text) then
-						-- The text has actually changed
-					stored_text := text
-					if change_actions_internal /= Void then
-						change_actions_internal.call (Void)
-					end	
-				end
-			else
+			if (stored_text /= Void and then not text.is_equal (stored_text)) or else stored_text = Void then
+					-- The text has actually changed
 				stored_text := text
 				if change_actions_internal /= Void then
 					change_actions_internal.call (Void)
@@ -323,6 +316,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- A key event has occurred
 		do
+			Precursor {EV_TEXT_COMPONENT_IMP} (a_key, a_key_string, a_key_press)
 			if a_key_press then
 				if a_key /= Void then
 					if a_key.code = feature {EV_KEY_CONSTANTS}.key_back_space then
@@ -332,7 +326,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					end
 				end
 			end
-			Precursor {EV_TEXT_COMPONENT_IMP} (a_key, a_key_string, a_key_press)
 		end
 	
 feature {NONE} -- Implementation

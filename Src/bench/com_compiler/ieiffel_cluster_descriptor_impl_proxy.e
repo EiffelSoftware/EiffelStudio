@@ -91,12 +91,6 @@ feature -- Access
 			Result := ccom_is_library (initializer)
 		end
 
-	is_recursive: BOOLEAN is
-			-- Should subclusters be included recursively?
-		do
-			Result := ccom_is_recursive (initializer)
-		end
-
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -169,12 +163,6 @@ feature {NONE}  -- Externals
 
 	ccom_is_library (cpp_obj: POINTER): BOOLEAN is
 			-- Should this cluster be treated as library?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_is_recursive (cpp_obj: POINTER): BOOLEAN is
-			-- Should subclusters be included recursively?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end

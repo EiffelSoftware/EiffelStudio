@@ -19,8 +19,7 @@ inherit
 			cluster_path,
 			relative_path,
 			is_override_cluster,
-			is_library,
-			is_recursive
+			is_library
 		end
 		
 create
@@ -184,12 +183,6 @@ feature -- Access
 			-- Should this cluster be treated as library?
 		do
 			Result := compiler_cluster.is_library
-		end
-
-	is_recursive: BOOLEAN is
-			-- Should subclusters be included recursively?
-		do
-			Result := compiler_cluster.is_recursive
 		end
 		
 feature {NONE} -- Implementation

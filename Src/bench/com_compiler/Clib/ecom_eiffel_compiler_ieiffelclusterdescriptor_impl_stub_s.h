@@ -107,12 +107,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should subclusters be included recursively?
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_recursive(  /* [out, retval] */ VARIANT_BOOL * path );
-
-
-	/*-----------------------------------------------------------
 	Decrement reference count
 	-----------------------------------------------------------*/
 	STDMETHODIMP_(ULONG) Release();

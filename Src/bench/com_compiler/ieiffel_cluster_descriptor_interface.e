@@ -87,13 +87,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	is_recursive_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `is_recursive'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 feature -- Basic Operations
 
 	name: STRING is
@@ -180,14 +173,6 @@ feature -- Basic Operations
 			-- Should this cluster be treated as library?
 		require
 			is_library_user_precondition: is_library_user_precondition
-		deferred
-
-		end
-
-	is_recursive: BOOLEAN is
-			-- Should subclusters be included recursively?
-		require
-			is_recursive_user_precondition: is_recursive_user_precondition
 		deferred
 
 		end

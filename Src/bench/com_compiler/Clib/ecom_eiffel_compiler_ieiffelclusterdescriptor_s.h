@@ -125,12 +125,6 @@ public:
 	virtual STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * path ) = 0;
 
 
-	/*-----------------------------------------------------------
-	Should subclusters be included recursively?
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_recursive(  /* [out, retval] */ VARIANT_BOOL * path ) = 0;
-
-
 
 protected:
 

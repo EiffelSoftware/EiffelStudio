@@ -14,31 +14,31 @@ feature -- Default pixmaps
 	Information_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a piece of information.
 		once
-			Result := default_pixmaps_imp.Information_pixmap
+			Result := Implementation.Information_pixmap
 		end
 
 	Error_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing an error.
 		once
-			Result := default_pixmaps_imp.Error_pixmap
+			Result := Implementation.Error_pixmap
 		end
 
 	Warning_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a warning.
 		once
-			Result := default_pixmaps_imp.Warning_pixmap
+			Result := Implementation.Warning_pixmap
 		end
 
 	Question_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a question.
 		once
-			Result := default_pixmaps_imp.Question_pixmap
+			Result := Implementation.Question_pixmap
 		end
 
 	Default_window_icon: EV_PIXMAP is
 			-- Pixmap used as default icon for new windows.
 		once
-			Result := default_pixmaps_imp.Default_window_icon
+			Result := Implementation.Default_window_icon
 		end
 
 feature -- Default cursors
@@ -46,84 +46,84 @@ feature -- Default cursors
 	Busy_cursor: EV_CURSOR is
 			-- Standard arrow and small hourglass
 		once
-			Result := default_pixmaps_imp.Busy_cursor
+			Result := Implementation.Busy_cursor
 		end
 
 	Standard_cursor: EV_CURSOR is
 			-- Standard arrow
 		once
-			Result := default_pixmaps_imp.Standard_cursor
+			Result := Implementation.Standard_cursor
 		end
 
 	Crosshair_cursor: EV_CURSOR is
 			-- Crosshair
 		once
-			Result := default_pixmaps_imp.Crosshair_cursor
+			Result := Implementation.Crosshair_cursor
 		end
 
 	Help_cursor: EV_CURSOR is
 			-- Arrow and question mark
 		once
-			Result := default_pixmaps_imp.Help_cursor
+			Result := Implementation.Help_cursor
 		end
 
 	Ibeam_cursor: EV_CURSOR is
 			-- I-beam
 		once
-			Result := default_pixmaps_imp.Ibeam_cursor
+			Result := Implementation.Ibeam_cursor
 		end
 
 	No_cursor: EV_CURSOR is
 			-- Slashed_circle
 		once
-			Result := default_pixmaps_imp.No_cursor
+			Result := Implementation.No_cursor
 		end
 
 	Sizeall_cursor: EV_CURSOR is
 			-- Four-pointed arrow pointing north, south, east and west
 		once
-			Result := default_pixmaps_imp.Sizeall_cursor
+			Result := Implementation.Sizeall_cursor
 		end
 
 	Sizens_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing north and south
 		once
-			Result := default_pixmaps_imp.Sizens_cursor
+			Result := Implementation.Sizens_cursor
 		end
 
 	Sizenwse_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing north-west and south-east
 		once
-			Result := default_pixmaps_imp.Sizenwse_cursor
+			Result := Implementation.Sizenwse_cursor
 		end
 
 	Sizenesw_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing north-east and south-west
 		once
-			Result := default_pixmaps_imp.Sizenesw_cursor
+			Result := Implementation.Sizenesw_cursor
 		end
 
 	Sizewe_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing west and east
 		once
-			Result := default_pixmaps_imp.Sizewe_cursor
+			Result := Implementation.Sizewe_cursor
 		end
 
 	Uparrow_cursor: EV_CURSOR is
 			-- Vertical arrow
 		once
-			Result := default_pixmaps_imp.Uparrow_cursor
+			Result := Implementation.Uparrow_cursor
 		end
 
 	Wait_cursor: EV_CURSOR is
 			-- Hourglass
 		once
-			Result := default_pixmaps_imp.Wait_cursor
+			Result := Implementation.Wait_cursor
 		end
 
 feature {NONE} -- Implementation
 
-	Default_pixmaps_imp: EV_STOCK_PIXMAPS_IMP is
+	Implementation: EV_STOCK_PIXMAPS_IMP is
 			-- Responsible for interaction with native graphics toolkit.
 		once
 			create Result

@@ -22,11 +22,11 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---			-- Pixmap for the button.
---		once 
---			Result := Pixmaps.bm_Clickable 
---		end
+	symbol: EV_PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := Pixmaps.bm_Clickable 
+		end
  
 	tool: EB_CLASS_TOOL
 			-- Tool of edited class

@@ -17,10 +17,10 @@ creation
 
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showclusters 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showclusters 
+		end
  
 feature {NONE} -- Properties
 

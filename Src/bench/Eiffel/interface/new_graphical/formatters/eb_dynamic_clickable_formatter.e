@@ -23,11 +23,11 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---			-- Pixmap for the button.
---		once 
---			Result := Pixmaps.bm_Clickable 
---		end
+	symbol: EV_PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := Pixmaps.bm_Clickable 
+		end
  
 	tool: EB_DYNAMIC_LIB_TOOL
 			-- Tool of edited dynamic_lib file

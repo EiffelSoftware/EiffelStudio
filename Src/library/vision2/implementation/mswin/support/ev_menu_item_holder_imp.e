@@ -13,26 +13,108 @@ deferred class
 inherit
 	EV_MENU_ITEM_HOLDER_I
 
-	EV_ITEM_HOLDER_IMP
+	EV_HASH_TABLE_ITEM_HOLDER_IMP
+		redefine
+			add_item
+		end
+
+feature {NONE} -- Initialization
+
+	initialize_children is
+			-- Create the children list.
+		do
+			create children.make (1)
+		end
+
+	remove_children is
+			-- Remove the children list.
+		do
+			children := Void
+		end
 
 feature -- Access
 
-	ev_children: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
+	children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			-- Ids of the children of the menu
+			-- We need them in memory because we cannot
+			-- get them from the system
 
-	position: INTEGER
-		-- Position of the item in the menu.
-
-	submenu: WEL_MENU is
+	menu: WEL_MENU is
 			-- Wel menu used when the item is a sub-menu.
+		deferred
+		end
+
+	item_handler: EV_MENU_ITEM_HANDLER_IMP is
+			-- The handler of the item.
 		deferred
 		end
 
 feature -- Element change
 
-	set_position (pos: INTEGER) is
-			-- Make `pos' the new position of the item.
+	add_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Add `item_imp' into container.
+		local
+			iid: INTEGER
+			c: ARRAYED_LIST [EV_MENU_ITEM_IMP]
 		do
-			position := pos
+			-- We set the item in the list and set it a position
+			if children = Void then
+				initialize_children
+			end
+			children.extend (item_imp)
+			menu.append_string (item_imp.text, item_imp.new_id)
+
+			-- Then, we add it in the top menu if there is one.
+			if item_handler /= Void then
+				item_handler.register_item (item_imp)
+			end
+		end
+
+	insert_item (item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+			-- Insert `item_imp' at the position `pos'
+		do
+			-- We set the item in the list and set it a position
+			children.go_i_th (pos)
+			children.put_left (item_imp)
+			menu.insert_string (item_imp.text, pos - 1, item_imp.new_id)
+
+			-- Then, we add it in the top menu if there is one.
+			if item_handler /= Void then
+				item_handler.register_item (item_imp)
+			end
+		end
+
+	remove_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Remove `item_imp' from the menu,
+		do
+			-- First, we remove it from the children.
+			children.prune_all (item_imp)
+			menu.delete_item (item_imp.id)
+			if children.empty then
+				remove_children
+			end
+
+			-- Then, we remove it from the top menu if there is one.
+			if item_handler /= Void then
+				item_handler.unregister_item (item_imp)
+			end
+		end
+
+	clear_items is
+			-- Clear all the items of the list.
+		local
+			cc: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+		do
+			cc := children
+			if not cc.empty then
+				from
+					cc.start
+				until
+					cc.empty
+				loop
+					remove_item (cc.first)
+				end
+			end
 		end
 
 feature -- Event association
@@ -42,45 +124,80 @@ feature -- Event association
 		deferred
 		end
 
-feature {EV_MENU_ITEM_I} -- Implementation
+feature -- Basic operation
 
-	add_item (item_imp: EV_MENU_ITEM_IMP) is
-			-- Add `item_imp' into container.
+	internal_get_index (item_imp: EV_MENU_ITEM_IMP): INTEGER is
+			-- Return the index of `item' in the list.
 		do
-			ev_children.force (item_imp, item_imp.id)
-			submenu.append_string (item_imp.text, item_imp.id)
-			item_imp.set_position (submenu.count - 1)
+			Result := children.index_of (item_imp, 1)
 		end
 
-	insert_item (item_imp: EV_MENU_ITEM_IMP; value: INTEGER) is
-			-- Insert `item_imp' at the position `value'
-		local
-			iid: INTEGER
+	internal_get_id (item_imp: EV_MENU_ITEM_IMP): INTEGER is
+			-- Return the `id' of the given item.
 		do
-			ev_children.force (item_imp, item_imp.id)
-			submenu.insert_string (item_imp.text, value - 1, item_imp.id)
-			item_imp.set_position (submenu.count - 1)
+			Result := menu.position_to_item_id (internal_get_index (item_imp) - 1)
 		end
 
-	move_item (item_imp: EV_MENU_ITEM_IMP; value: INTEGER) is
-			-- Move `item_imp' to the position `value'
+	internal_insensitive (item_imp: EV_MENU_ITEM_IMP): BOOLEAN is
+			-- Is `item' enabled.
 		do
-			submenu.delete_item (item_imp.id)
-			ev_children.remove (item_imp.id)
+			Result := not menu.position_enabled (internal_get_index (item_imp) - 1)
 		end
 
-	remove_item (item_imp: EV_MENU_ITEM_IMP) is
-			-- Remove `item_imp' from the menu,
+	internal_set_insensitive (item_imp: EV_MENU_ITEM_IMP; flag: BOOLEAN) is
+   			-- Set `item' in insensitive mode if `flag', in
+			-- sensitive mode otherwise.
 		do
-			submenu.delete_item (item_imp.id)
-			ev_children.remove (item_imp.id)
+			if flag then
+				menu.disable_position (internal_get_index (item_imp) - 1)
+			else
+				menu.enable_position (internal_get_index (item_imp) - 1)
+			end
 		end
 
-	insert_menu (wel_menu: WEL_MENU; pos: INTEGER; label: STRING) is
-			-- Insert a new menu-item which is a menu into
+	internal_selected (item_imp: EV_MENU_ITEM_IMP): BOOLEAN is
+			-- Is `item' selected?
+		do
+			Result := menu.item_checked (internal_get_id (item_imp))
+		end
+
+	internal_set_selected (item_imp: EV_MENU_ITEM_IMP; flag: BOOLEAN) is
+   			-- Select `item' if `flag', unselect it otherwise.
+		do
+			if flag then
+				menu.check_item (internal_get_id (item_imp))
+			else
+				menu.uncheck_item (internal_get_id (item_imp))
+			end
+		end
+
+	internal_insert_menu (item_imp: EV_MENU_ITEM_IMP) is
+			-- Graphical insert of a sub-menu.
 			-- container.
 		do
-			submenu.insert_popup (wel_menu, pos, label)
+			menu.insert_popup (item_imp.menu, item_imp.index, item_imp.text)
+		end
+
+	internal_insert_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Graphical insert of a menu item.
+		do
+			menu.insert_string (item_imp.text, item_imp.index, item_imp.id)
+		end
+
+	internal_delete_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Graphically delete an item. Keep it in the list.
+		do
+			menu.delete_position (internal_get_index (item_imp) - 1)
+		end
+
+feature {NONE} -- Implementation
+
+	item_type: EV_MENU_ITEM_IMP is
+			-- An empty feature to give a type.
+			-- We don't use the genericity because it is
+			-- too complicated with the multi-platform design.
+			-- Need to be redefined.
+		do
 		end
 
 end -- class EV_MENU_ITEM_HOLDER_IMP

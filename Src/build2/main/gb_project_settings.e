@@ -12,8 +12,14 @@ inherit
 	ANY
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 
 create
 	default_create,

@@ -19,7 +19,10 @@ inherit
 feature -- Access
 	
 	pebble: ANY
-		-- Data to be transported by pick and drop mechanism.
+			-- Data to be transported by pick and drop mechanism.
+
+	pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+			-- Returns data to be transported by pick and drop mechanism.
 
 	pick_x,
 	pick_y: INTEGER
@@ -45,10 +48,25 @@ feature -- Status setting
 		require
 			a_pebble_not_void: a_pebble /= Void
 		do
+			pebble_function := Void
 			pebble := a_pebble
 			enable_transport
+			-- Data to be transported by pick and drop mechanism.
 		ensure
 			pebble_assigned: pebble = a_pebble
+			is_transport_enabled: is_transport_enabled
+		end
+
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE [], ANY]) is
+			-- Assign `a_funtion' to `pebble_funtion'.
+		require
+			a_function_not_void: a_function /= Void
+		do
+			pebble := Void
+			pebble_function := a_function
+			enable_transport
+		ensure
+			pebble_funtion_assigned: pebble_function = a_function
 			is_transport_enabled: is_transport_enabled
 		end
 
@@ -56,16 +74,17 @@ feature -- Status setting
 			-- Remove `pebble'
 		do
 			pebble := Void
+			pebble_function := Void
 			disable_transport
 		ensure
-			pebble_removed: pebble = Void
+			pebble_removed: pebble = Void and pebble_function = Void
 			is_transport_disabled: not is_transport_enabled
 		end
 
 	enable_transport is
             -- Activate pick/drag and drop mechanism.
 		require
-			pebble_not_void: pebble /= Void
+			pebble_not_void: pebble /= Void or pebble_function /= Void
 		deferred
 		ensure
 			is_transport_enabled: is_transport_enabled
@@ -279,7 +298,9 @@ invariant
 	user_interface_modes_mutually_exclusive:
 		mode_is_pick_and_drop /= mode_is_drag_and_drop
 	is_transport_enabled_implies_pebble_not_void:
-		is_transport_enabled implies pebble /= Void
+		is_transport_enabled implies pebble /= Void or pebble_function /= Void
+	pebble_function_takes_two_integer_open_operands:
+		pebble_function /= Void implies pebble_function.valid_operands ([1,1])
 
 end -- class EV_PICK_AND_DROPABLE_I
 
@@ -304,6 +325,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/27 19:47:17  oconnor
+--| added pebble_function support
+--|
 --| Revision 1.21  2000/03/21 18:45:00  rogers
 --| Fixed pre-conditions on execute.
 --|

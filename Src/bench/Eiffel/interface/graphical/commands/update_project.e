@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 					reset_debugger
 					error_window.clear_window
 					!! mp.set_watch_cursor
-					tool.update_compile_menu (is_precompiling)
+					tool.update_compile_menu (is_precompiling or Compilation_modes.is_precompiling)
 					perform_compilation (argument)
 
 					if Eiffel_project.successful then

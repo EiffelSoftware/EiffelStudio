@@ -120,7 +120,7 @@ feature {NONE} -- GUI
 				until
 					l_filters.after
 				loop
-					create l_list_item.make_with_text (l_filters.key_for_iteration)
+					create l_list_item.make_with_text (l_filters.key_for_iteration.twin)
 					filter_option_combo.extend (l_list_item)
 					l_filters.forth
 				end

@@ -46,17 +46,22 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do				
 					-- Setup pixmaps (has to be done for MULTIPLE_SPLIT_AREA to work properly)
-			set_minimize_pixmap (Icon_minimize_color_png)
-			set_maximize_pixmap (Icon_maximize_color_png)
-			set_close_pixmap (Icon_close_color_ico)
-			set_restore_pixmap (Icon_restore_color_png)
+--			set_minimize_pixmap (Icon_minimize_color_png)
+--			set_maximize_pixmap (Icon_maximize_color_png)
+--			set_close_pixmap (Icon_close_color_ico)
+--			set_restore_pixmap (Icon_restore_color_png)
 			
 					-- Extend controls
-			create internal_edit_widget.make (document)	
-			internal_html_widget := Shared_web_browser
-			extend (internal_edit_widget, "Editor")
-			extend (internal_html_widget, "HTML")
-			update
+--			create internal_edit_widget.make (document)	
+--			internal_html_widget := Shared_web_browser
+--			extend (internal_edit_widget, "Editor")
+--			extend (internal_html_widget, "HTML")
+			
+			create internal_edit_widget.make (document)
+			internal_html_widget.set_document (document)
+			set_first (internal_edit_widget)
+			set_second (internal_html_widget)
+			internal_edit_widget.resize_actions.force_extend (agent editor_resized)
 		end
 
 feature -- Access
@@ -71,12 +76,12 @@ feature -- Commands
 	
 	update is
 			-- Update
-		do				
-			if linear_representation.has (internal_html_widget) then
-				remove (internal_html_widget)				
-			end
-			extend (internal_html_widget, "HTML")
+		do
+			internal_edit_widget.resize_actions.block
+			set_second (internal_html_widget)
+			internal_edit_widget.resize_actions.resume
 			internal_html_widget.set_document (document)
+			set_split_position (shared_document_editor.split_position)
 		end
 
 feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW, ERROR_ACTIONS, DOCUMENT_EDITOR_PREFERENCES} -- Implementation
@@ -90,7 +95,16 @@ feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW, ERROR_ACTIONS, DOCUMENT_EDITOR_PRE
 	internal_xml_widget: DOCUMENT_BROWSER
 			-- Internal XML widget
 			
-	internal_html_widget: DOCUMENT_BROWSER
+	internal_html_widget: DOCUMENT_BROWSER is
 			-- Internal HTML Browser widget
+		once
+			Result := Shared_web_browser			
+		end
+
+	editor_resized is
+			-- Editor was resized
+		do
+			shared_document_editor.set_split_position (split_position)
+		end		
 
 end -- class WIDGET_BUILDER_NOT_FOR_SYSTEM

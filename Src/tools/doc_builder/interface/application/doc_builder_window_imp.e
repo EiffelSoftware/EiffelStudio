@@ -87,10 +87,12 @@ feature {NONE}-- Initialization
 			create toolbar_paste
 			create l_ev_tool_bar_separator_2
 			create toolbar_xml_format
+			create toolbar_code_format
 			create l_ev_tool_bar_separator_3
 			create toolbar_validate
 			create toolbar_properties
 			create l_ev_tool_bar_separator_4
+			create testing_button
 			create l_ev_label_1
 			create output_combo
 			create l_ev_cell_1
@@ -236,10 +238,12 @@ feature {NONE}-- Initialization
 			main_toolbar.extend (toolbar_paste)
 			main_toolbar.extend (l_ev_tool_bar_separator_2)
 			main_toolbar.extend (toolbar_xml_format)
+			main_toolbar.extend (toolbar_code_format)
 			main_toolbar.extend (l_ev_tool_bar_separator_3)
 			main_toolbar.extend (toolbar_validate)
 			main_toolbar.extend (toolbar_properties)
 			main_toolbar.extend (l_ev_tool_bar_separator_4)
+			main_toolbar.extend (testing_button)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_horizontal_box_1.extend (output_combo)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
@@ -412,6 +416,9 @@ feature {NONE}-- Initialization
 			toolbar_xml_format.set_tooltip ("Pretty XML")
 			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico")
 			toolbar_xml_format.set_pixmap (internal_pixmap)
+			toolbar_code_format.disable_sensitive
+			toolbar_code_format.set_tooltip ("Pretty code format")
+			toolbar_code_format.set_pixmap (icon_code_format_ico)
 			toolbar_validate.disable_sensitive
 			toolbar_validate.set_tooltip ("Validate document against schema")
 			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_validate.ico")
@@ -420,6 +427,7 @@ feature {NONE}-- Initialization
 			toolbar_properties.set_tooltip ("Document Properties")
 			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_info.ico")
 			toolbar_properties.set_pixmap (internal_pixmap)
+			testing_button.set_pixmap (icon_toc_exclude_ico)
 			l_ev_label_1.set_text ("Filter ")
 			l_ev_label_1.align_text_left
 			output_combo.set_tooltip ("Output filter transformation")
@@ -567,8 +575,9 @@ feature -- Access
 	main_toolbar, l_ev_tool_bar_5, l_ev_tool_bar_6, l_ev_tool_bar_7, l_ev_tool_bar_8, 
 	l_ev_tool_bar_9: EV_TOOL_BAR
 	toolbar_new, toolbar_open, toolbar_save, toolbar_cut, toolbar_copy, toolbar_paste, 
-	toolbar_xml_format, toolbar_validate, toolbar_properties, main_close, node_properties_close, 
-	attribute_list_close, sub_element_close, editor_close: EV_TOOL_BAR_BUTTON
+	toolbar_xml_format, toolbar_code_format, toolbar_validate, toolbar_properties, 
+	testing_button, main_close, node_properties_close, attribute_list_close, sub_element_close, 
+	editor_close: EV_TOOL_BAR_BUTTON
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3, 
 	l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
 	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, title_label, l_ev_label_5, 

@@ -9,10 +9,15 @@ deferred class
 	DOCUMENT_WIDGET_IMP
 
 inherit
-	MULTIPLE_SPLIT_AREA
---		rename
---			border_width as border_width_box,
---			padding_width as padding_width_box
+--	MULTIPLE_SPLIT_AREA
+----		rename
+----			border_width as border_width_box,
+----			padding_width as padding_width_box
+--		redefine
+--			initialize, is_in_default_state
+--		end
+
+	EV_VERTICAL_SPLIT_AREA
 		redefine
 			initialize, is_in_default_state
 		end
@@ -31,7 +36,8 @@ feature {NONE}-- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			Precursor {MULTIPLE_SPLIT_AREA}
+			--Precursor {MULTIPLE_SPLIT_AREA}
+			Precursor {EV_VERTICAL_SPLIT_AREA}
 			initialize_constants
 
 				-- Call `user_initialization'.

@@ -51,6 +51,12 @@ feature -- Initialization
 			create accelerator.make_with_key_combination (key, True, False, False)
 			accelerator.actions.extend (agent cut_text)
 			Application_window.accelerators.extend (accelerator)			
+			
+				-- Ctrl-F
+			create key.make_with_code (key_constants.Key_f)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent open_search_dialog)
+			Application_window.accelerators.extend (accelerator)
 		end
 		
 feature -- Editing		
@@ -75,12 +81,16 @@ feature -- Editing
 		
 	paste_text is
 			-- Paste
+		local
+			l_line: INTEGER
 		do
 			if not clipboard_empty then
+				l_line := current_widget.internal_edit_widget.current_line_number
 				if current_widget.internal_edit_widget.has_selection then
 					current_widget.internal_edit_widget.delete_selection
 				end
 				current_widget.internal_edit_widget.insert_text (Clipboard.text)
+				current_widget.internal_edit_widget.scroll_to_line (l_line)
 			end
 		end		
 	
@@ -91,18 +101,14 @@ feature -- Editing
 		end	
 		
 	pretty_print_text is
-			-- Pretty XML format the selected text
+			-- Pretty XML format the current document
 		local
-			init_caret: INTEGER
 			l_text: STRING
 			l_widget: DOCUMENT_TEXT_WIDGET
 		do
 			l_widget := current_widget.internal_edit_widget
-			if l_widget /= Void then
-				init_caret := l_widget.caret_position
-				if not l_widget.has_selection then					
-					l_widget.select_all
-				end
+			if l_widget /= Void then							
+				l_widget.select_all
 				l_text := l_widget.selected_text
 				if l_widget.can_insert (l_text) then					
 					l_widget.set_text ("")
@@ -114,6 +120,28 @@ feature -- Editing
 			end
 		end
 
+	pretty_format_code_text is
+			-- Pretty format the selected text as Eiffel code
+		local
+			l_widget: DOCUMENT_TEXT_WIDGET
+			l_code_formatter: CODE_FORMATTER
+			l_old_text: STRING
+		do
+			l_widget := current_widget.internal_edit_widget
+			if l_widget /= Void and l_widget.has_selection then					
+				create l_code_formatter
+				l_code_formatter.format (l_widget.selected_text.twin)												
+				if not clipboard_empty then
+					l_old_text := clipboard.text
+				end
+				Clipboard.set_text (l_code_formatter.text)
+				paste_text
+				if l_old_text /= Void then
+					clipboard.set_text (l_old_text)
+				end
+			end
+		end
+
 	toggle_word_wrap is
 			-- Toggle word wrap
 		do
@@ -121,7 +149,8 @@ feature -- Editing
 				current_widget.internal_edit_widget.enable_word_wrapping
 			else
 				current_widget.internal_edit_widget.disable_word_wrapping
-			end	
+			end
+			current_widget.internal_edit_widget.set_font (preferences.font)
 		end		
 
 feature -- GUI Commands			
@@ -142,7 +171,7 @@ feature -- GUI Commands
 			-- Hide widget of `current_document'
 		do
 			notebook.prune (current_document.widget)			
-		end	
+		end		
 
 feature -- Commands
 	
@@ -176,7 +205,7 @@ feature -- Commands
 		local
 			l_constants: EV_DIALOG_CONSTANTS
 			l_question_dialog: EV_MESSAGE_DIALOG
-		do
+		do			
 			if current_document.is_modified then
 				create l_constants
 				create l_question_dialog.make_with_text ((create {MESSAGE_CONSTANTS}).file_save_prompt)
@@ -185,19 +214,19 @@ feature -- Commands
 				l_question_dialog.show_modal_to_window (parent_window)
 				if l_question_dialog.selected_button.is_equal (l_constants.ev_yes) then
 					save_document
-				else
-					Shared_document_manager.remove_document (current_document)
 				end
-			end
-			Documents.prune (current_document)
-			close_widget		
+			end								
+			shared_document_manager.remove_document (current_document)
+			documents.prune (current_document)
+			close_widget
+			refresh
 		end	
 
 	save_document is
 			-- Called by `select_actions' of `save_xml_menu_item'.
 		do
 			current_document.save
-		end		
+		end			
 		
 	format_tags is
 			-- Called by `select actions' of `menu_uppercase_tags'
@@ -239,8 +268,10 @@ feature -- Commands
 	open_search_dialog is
 			-- Open the search dialog for text searching
 		do
-			Shared_dialogs.search_dialog.set_widget (current_widget.internal_edit_widget)
-			Shared_dialogs.search_dialog.show_relative_to_window (Application_window)
+			if has_open_document then
+				Shared_dialogs.search_dialog.set_widget (current_widget.internal_edit_widget)
+				Shared_dialogs.search_dialog.show_relative_to_window (application_window)
+			end			
 		end
 
 feature -- Query	
@@ -284,6 +315,12 @@ feature -- Status Setting
 			is_current_document: a_doc = current_document
 		end			
 
+	set_split_position (a_split_position: INTEGER) is
+			-- Set split_position
+		do
+			split_position := a_split_position
+		end		
+
 feature -- Access
 
 	documents: ARRAYED_LIST [DOCUMENT] is
@@ -310,27 +347,40 @@ feature -- Access
 			create Result.make (Current)
 		end		
 
+	clipboard: EV_CLIPBOARD is
+			-- Clipboard
+		once
+			Result := (create {EV_ENVIRONMENT}).application.clipboard
+		end	
+
 feature -- Events				
 		
-	document_changed is
+	refresh is
 			-- User selected another open document in notebook
 		local
 			l_widget: like current_widget
 		do
-			if current_widget /= Void then
-				l_widget ?= notebook.selected_item		
+			l_widget ?= notebook.selected_item
+			if l_widget /= Void then
+				shared_dialogs.search_dialog.set_widget (l_widget.internal_edit_widget)
 				set_current_document (l_widget.document)
+				l_widget.internal_edit_widget.set_font (preferences.font)				
 				l_widget.update
-				parent_window.update
+			else
+				set_current_document (Void)
 			end			
+			parent_window.update
 		end					
 		
 feature -- Access
 	
 	parent_window: DOC_BUILDER_WINDOW
 			-- Parent window		
+			
+	split_position: INTEGER
+			-- Split position in pixels
 		
-feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW, ERROR_ACTIONS} -- Implementation
+feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW, ERROR_ACTIONS, DOCUMENT_WIDGET} -- Implementation
 
 	notebook: EV_NOTEBOOK
 			-- Notebook
@@ -345,12 +395,18 @@ feature {NONE} -- Implementation
 			if not documents.has (a_doc) then
 				documents.extend (a_doc)
 			end			
-		end	
-
-	clipboard: EV_CLIPBOARD is
-			-- Clipboard
-		once
-			Result := (create {EV_ENVIRONMENT}).application.clipboard
 		end		
+
+feature -- Temporary
+
+	do_document_test is
+			-- Do testing on current document
+		local
+			l_xml: XML_ROUTINES
+		do
+			create l_xml
+			l_xml.format_document (l_xml.deserialize_text (current_document.text), current_document.name)
+			current_document.set_text (l_xml.last_ostring)
+		end	
 
 end -- class DOCUMENT_EDITOR

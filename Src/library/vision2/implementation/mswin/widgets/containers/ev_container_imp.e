@@ -139,12 +139,13 @@ feature {NONE} -- WEL Implementation
 			-- information about the item to be drawn and the type
 			-- of drawing required.
 		local
-			pixcon: EV_OPTION_BUTTON_IMP
+--|FIXME Option button is now platform independant.
+--|FIXME 			pixcon: EV_OPTION_BUTTON_IMP
 		do
-			pixcon ?= draw_item.window_item
-			if pixcon /= Void then
-				pixcon.on_draw (draw_item)
-			end
+--|FIXME 			pixcon ?= draw_item.window_item
+--|FIXME 			if pixcon /= Void then
+--|FIXME 				pixcon.on_draw (draw_item)
+--|FIXME 			end
 		end
 
 	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
@@ -471,6 +472,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/21 17:36:12  oconnor
+--| commented out option button _IMP reference
+--|
 --| Revision 1.44  2000/03/20 23:24:46  pichery
 --| - Added `on_contained' notion. A container now notify its widget when it
 --|   put them into itself (usefull for pixmap)

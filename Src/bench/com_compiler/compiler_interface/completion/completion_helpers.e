@@ -85,6 +85,8 @@ feature -- Basic operations
 							else
 								feature_name := fi.feature_name
 							end	
+						else
+							feature_name := fi.feature_name
 						end
 						descriptors.search (feature_name)
 						if descriptors.found then

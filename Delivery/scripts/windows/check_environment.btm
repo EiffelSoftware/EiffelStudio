@@ -54,10 +54,6 @@ iff not defined NO_DOCUMENTATION then
 		echo Cannot find document.exe in %DOCUMENT_DIR
 		CANCEL
 	endiff
-	iff not exist %DOCUMENT_DIR\default.css then
-		echo Cannot find default.css in %DOCUMENT_DIR
-		CANCEL
-	endiff
 	iff not isdir %DOCUMENT_DIR\newdocs then
 		echo Warning: Documentation will be checked out in %DOCUMENT_DIR\newdocs
 	endiff

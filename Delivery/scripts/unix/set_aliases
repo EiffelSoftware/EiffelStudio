@@ -10,7 +10,7 @@ INSTALL_DIR=`pwd`/Eiffel51
 # Where the final delivery is set up (local machine). Warning: directory erased too!
 FINAL_INSTALL_DIR=`pwd`/Eiffel51
 # Where all.tar.gz files should be stored
-EXPORT_DIR=`pwd`/PorterPackage_51_6
+EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
 DEFAULT_CVS_TAG=HEAD
 

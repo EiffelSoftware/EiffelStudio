@@ -107,7 +107,9 @@ feature -- IL Generation
 			processed_tbl.wipe_out
 			
 				-- Clean useless data
-			clean_implementation_class_data
+			if not is_frozen_class then
+				clean_implementation_class_data
+			end
 		end
 
 	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
@@ -373,28 +375,26 @@ feature -- IL Generation
 			dup_feat: FEATURE_I
 			proc: PROCEDURE_I
 		do
-			if not is_frozen_class then 
-				if inh_feat /= Void then
-					l_is_method_impl_generated := feat.feature_name_id /= inh_feat.feature_name_id
-					if not l_is_method_impl_generated then
-							-- Generate local definition signature using the parent
-							-- signature. We do not do it on the parent itself because
-							-- its `feature_id' is not appropriate in `current_class_type'.
-						Byte_context.set_class_type (class_type)
-						dup_feat := feat.duplicate
-						if dup_feat.is_procedure then
-							proc ?= dup_feat
-							proc.set_arguments (inh_feat.arguments)
-						end
-						dup_feat.set_type (inh_feat.type)
-						generate_feature (dup_feat, False, False, False)
-						Byte_context.set_class_type (current_class_type)
-					else
-						generate_feature (feat, False, False, False)
+			if inh_feat /= Void then
+				l_is_method_impl_generated := feat.feature_name_id /= inh_feat.feature_name_id
+				if not l_is_method_impl_generated then
+						-- Generate local definition signature using the parent
+						-- signature. We do not do it on the parent itself because
+						-- its `feature_id' is not appropriate in `current_class_type'.
+					Byte_context.set_class_type (class_type)
+					dup_feat := feat.duplicate
+					if dup_feat.is_procedure then
+						proc ?= dup_feat
+						proc.set_arguments (inh_feat.arguments)
 					end
+					dup_feat.set_type (inh_feat.type)
+					generate_feature (dup_feat, False, False, False)
+					Byte_context.set_class_type (current_class_type)
 				else
 					generate_feature (feat, False, False, False)
 				end
+			else
+				generate_feature (feat, False, False, False)
 			end
 
 			if feat.feature_name_id = feature {PREDEFINED_NAMES}.Internal_duplicate_name_id then

@@ -229,11 +229,20 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 		/* it is not the first call of feature once in process*/
 		EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex\n");
 
+		/* if the thread that created the global once dies,
+		 * it will remove the once object when reclaiming. 
+		 * In this case, it raises either a segmentation fault,
+		 * call to void feature exception or the following exception
+		 * (if first call in the thread, i think)
+		 */
+
+		if (!(list->val)) eif_thr_panic ("Global once removed with creator thread death\n");
 			/* do not return the original because it can 
 			 * be NULL if the creator of the object thread
 			 * has been removed 
 			 */
 
+			
 		return list->val;
 	}
 

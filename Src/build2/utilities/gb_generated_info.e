@@ -62,7 +62,7 @@ feature -- Access
  	events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
  		-- All events of `Current'.
  		
- 	supported_type_elements: ARRAYED_LIST [XML_ELEMENT]
+ 	supported_type_elements: ARRAYED_LIST [XM_ELEMENT]
  		-- All xml elements matching `supported_types'.
  		
  	names_by_id: HASH_TABLE [STRING, INTEGER] is
@@ -101,7 +101,7 @@ feature -- Access
 	name: STRING
 		-- Name associated with object.
 	
-	element: XML_ELEMENT
+	element: XM_ELEMENT
 		-- XML element that was representing object.
 	
 	child_names: ARRAYED_LIST [STRING] is
@@ -148,7 +148,7 @@ feature -- Status setting
 		end
 		
 	
-	set_element (an_element: XML_ELEMENT) is
+	set_element (an_element: XM_ELEMENT) is
 			-- Assign `an_element' to `element'.
 		do
 			element := an_element
@@ -160,7 +160,7 @@ feature -- Status setting
 			supported_types.extend (a_type)
 		end
 		
-	add_new_type_element (an_element: XML_ELEMENT) is
+	add_new_type_element (an_element: XM_ELEMENT) is
 			-- Add `an_element' to `supported_type_elements'.
 		do
 			supported_type_elements.extend (an_element)

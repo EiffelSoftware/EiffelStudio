@@ -202,7 +202,15 @@ feature {NONE} -- Implementation
 							-- Checking the type of special part
 						pos := special_part.index_of (' ', 1)
 						if pos = 0 then
+								-- Case where the is no spaces, possibly just tabs.
 							pos := special_part.index_of ('%T', 1)
+						else
+								-- Case where we might have both spaces and tabs, find out
+								-- which one comes first.
+							index_pos := special_part.index_of ('%T', 1)
+							if index_pos /= 0 then
+								pos := index_pos.min (pos)
+							end
 						end
 						if pos = 0 then
 								-- Only one word in brackets

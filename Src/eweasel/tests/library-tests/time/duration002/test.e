@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 		do
 			if not retried then
 				create d1.make (2001, 1, 15)
-				d2 := clone (d1)
+				create d2.make (1991, 1, 15)
 			end
 			from
 			until

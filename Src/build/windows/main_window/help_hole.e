@@ -1,59 +1,39 @@
--- General help hole.
+indexing
+	description: "General help hole."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
+
 class HELP_HOLE 
 
 inherit
 
 	EDIT_BUTTON
-		rename
-			make as parent_make
-		redefine
-			process_any
-		end
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Initialysation
 
-	make (a_parent: COMPOSITE) is
-        do
-            parent_make (a_parent)
-        end
+--	create_focus_label is 
+--		do
+--			set_focus_string (Focus_labels.help_label)
+--		end
 
-
-	create_focus_label is 
-		do
-			set_focus_string (Focus_labels.help_label)
-		end;
-
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.help_pixmap
-		end;
-	
-feature {NONE}
+		end
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.any_type
-		end;
-
-	process_any (dropped: STONE) is
-		local
-			hw: HELP_WINDOW
-		do
-			!! hw.make (eb_screen);
-			hw.update_text (dropped.data);
-			hw.realize
-		end;
+feature {NONE} -- Command
 
 	create_empty_editor is
 		local
 			hw: HELP_WINDOW
 		do
-			!! hw.make (eb_screen);
-			hw.realize;
-		end;	
+			create hw.make (main_window)
+			hw.show
+		end	
 
-end
+end -- class HELP_HOLE
+

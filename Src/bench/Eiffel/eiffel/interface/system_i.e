@@ -3731,11 +3731,11 @@ feature -- Pattern table generation
 					buffer.put_string (");%N")
 				end
 			else
-				buffer.put_string ("%Tif (egc_rcorigin != -1)%N%
-					%%T%Tif (egc_rcarg)%N%
+				buffer.put_string ("%Tif (egc_rcorigin != -1) {%N%
+					%%T%Tif (egc_rcarg) {%N%
 					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc, argv));%N%
-					%%T%Telse%N%
-					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
+					%%T%T} else {%N%
+					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N%T%T}%N%T}%N")
 			end
 
 			buffer.put_string ("%N}%N")

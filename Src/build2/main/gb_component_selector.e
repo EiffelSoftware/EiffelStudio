@@ -57,7 +57,7 @@ feature -- Basic operation
 			dialog: GB_COMPONENT_NAMER_DIALOG
 			new_component_name: STRING
 		do
-			create dialog.make_with_names (all_component_names)
+			create dialog.make_with_names_and_prompts (all_component_names, "component", "New component namer", Component_invalid_name_warning)
 			dialog.show_modal_to_window (parent_window (Current))
 			new_component_name := dialog.name
 			
@@ -118,8 +118,6 @@ feature -- Basic operation
 			end
 		end
 
-
-		
 feature {GB_XML_HANDLER} -- Basic operation
 
 	add_components (list: ARRAYED_LIST [STRING]) is

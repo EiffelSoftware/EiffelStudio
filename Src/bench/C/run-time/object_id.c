@@ -8,7 +8,8 @@
 #include "eif_garcol.h"
 #include "eif_except.h"
 #include "eif_hector.h"
-
+#include "eif_sig.h"
+#include "eif_garcol.h"
 #include "eif_object_id.h"
 
 
@@ -20,18 +21,23 @@ rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *a_s
 rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct stack *a_set, EIF_INTEGER *max_value_ptr, EIF_BOOLEAN reuse_free);
 rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *a_set, EIF_INTEGER max_value);
 rt_private void private_object_id_free(EIF_INTEGER id, struct stack *a_set, EIF_INTEGER max_value);
+/* Class IDENTIFIED_CONTROLLER */
+rt_private EIF_INTEGER eif_private_object_id_stack_size (struct stack *a_set);
+rt_private void eif_private_extend_object_id (EIF_INTEGER nb_chunks, struct stack *a_set);
+rt_private void p_print_object_id_stack (struct stack *a_set) ;
 
 /* The following stack records the addresses of objects for which
  * `object_id' has been called.
  */
 
 rt_public struct stack object_id_stack = {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+        (struct stchunk *) 0,   /* st_hd */
+        (struct stchunk *) 0,   /* st_tl */
+        (struct stchunk *) 0,   /* st_cur */
+        (char **) 0,                    /* st_top */
+        (char **) 0,                    /* st_end */
 };
+
 
 rt_private EIF_INTEGER max_object_id = 0;	/* Max object_id allocated */
 /* This needs to be done as the chunks of memory are not cleared after
@@ -59,6 +65,75 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 {
 	private_object_id_free(id, &object_id_stack, max_object_id);
 }
+
+
+/* Externals for class IDENTIFIED_CONTROLLER */
+
+rt_public EIF_INTEGER eif_object_id_stack_size (void)
+	/* returns the number of chunks allocated in `object_id_stack' */
+{
+	return eif_private_object_id_stack_size (&object_id_stack);
+}
+
+rt_private EIF_INTEGER eif_private_object_id_stack_size (struct stack *a_set)
+	/* returns the number of chunks allocated in `object_id_stack' */
+{
+	EIF_INTEGER result = 0;
+	struct stchunk *c, *cn;
+	for (c = a_set->st_hd; c != (struct stchunk *) 0; c = cn) {
+		/* count the number of chunks in stack */
+		cn = c->sk_next;
+		result++;
+		}
+	return result;
+} /* eif_private_object_id_stack_size */
+
+
+rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
+{
+	eif_private_extend_object_id (nb_chunks, &object_id_stack);
+}
+
+rt_private void eif_private_extend_object_id (EIF_INTEGER nb_chunks, struct stack *a_set)
+	/* extends of `nb_chunks the size of `object_id_stack' */
+{
+	
+	EIF_GET_CONTEXT
+
+	register3 char **top;
+	
+
+	if (a_set->st_top == (char **) 0) {
+		top = st_alloc(a_set, STACK_CHUNK);	/* Create stack */
+		if (top == (char **) 0)
+			eraise ("Couldn't allocate object id stack", EN_MEM);
+				/* No memory */
+		a_set->st_top = top; /* Update new top */
+	} 
+	 /* extend an existing stack */
+	{
+		register4 struct stchunk * current;
+		register3 char **end;
+		current = a_set->st_cur;	/* save previous current stchunk */
+		top = a_set->st_top;		/* save previous top of stack */
+		end = a_set->st_end;		/*save previous st_end of stack */ 
+		SIGBLOCK;		/* Critical section */
+			while (--nb_chunks) {
+			if (-1 == st_extend(a_set, STACK_CHUNK))
+			eraise ("Couldn't allocate object id stack", EN_MEM);
+					/* No memory */
+			}	
+		a_set->st_cur = current;	/* keep previous Current */
+		a_set->st_top = top;		/* keep previous top */
+		a_set->st_end = end;
+		
+		SIGRESUME;		/* End of critical section */
+	
+	}
+
+
+	EIF_END_GET_CONTEXT
+} /* eif_private_extend_object_id */
 
 #ifdef CONCURRENT_EIFFEL
 
@@ -118,7 +193,8 @@ rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *a_s
 		stack_number++)
 		end = end->sk_next;
 
-	Result = (EIF_INTEGER) stack_number*STACK_SIZE+1-(a_set->st_cur->sk_arena-(char **)address);
+	Result = (EIF_INTEGER)
+		stack_number*STACK_SIZE+1-(a_set->st_cur->sk_arena-(char **)address);
 
 	if (Result>*max_value_ptr)
 		*max_value_ptr = Result;

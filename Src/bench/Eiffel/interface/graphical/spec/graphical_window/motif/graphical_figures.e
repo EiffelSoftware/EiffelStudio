@@ -46,13 +46,16 @@ inherit
 			copy, setup
 		end
 
-feature -- Properties
+feature -- Access
+
+	current_line: TEXT_LINE;
+			-- Current line
 
 	highlighted_line: TEXT_LINE;
-			-- Hightlighted line
+			-- Current line
 
-	selected_clickable_text: TEXT_FIGURE
-			-- Select text figure
+	current_text: TEXT_FIGURE
+			-- Current text figure
 
 	maximum_height_per_line: INTEGER;
 			-- Maximum height of line
@@ -76,9 +79,37 @@ feature -- Properties
 	x_offset, y_offset: INTEGER is
 			-- X and Y offset
 		deferred
+		end;
+
+	tabs_from_pixel (pix: INTEGER): STRING is
+			-- Tabulation string from number of `pix'
+		local
+			n: INTEGER
+		do
+			n := pix // tab_pixel_length;
+			!! Result.make (n);
+			if n > 0 then
+				Result.extend ('%T');
+				Result.multiply (n)
+			end
 		end
 
 feature -- Update
+
+	find_text (button_data: BUTTON_DATA) is
+			-- Find clickable text from `button_data' coordinates.
+		local
+			fig: TEXT_FIGURE;
+			p: COORD_XY
+		do
+			current_text := Void;
+			find_line (button_data);
+			if current_line /= Void then
+				!! p;
+				p.set (button_data.relative_x, button_data.relative_y);
+				current_text := current_line.text_figure (p);
+			end;
+		end;
 
 	find_line (button_data: BUTTON_DATA) is
 			-- Find text line text from `button_data' coordinates.	
@@ -103,7 +134,7 @@ feature -- Update
 				found or else i >= c
 			loop
 				line := a.item (i);
-				if line.bottom_left_y + desc > rel_y then
+				if line.base_left_y + desc > rel_y then
 					found := True;
 					index := i + 1
 				else
@@ -111,19 +142,17 @@ feature -- Update
 				end;
 			end;
 			if found then
-				highlighted_line := line
+				current_line := line
 			else
-				highlighted_line := Void
+				current_line := Void
 			end
 		ensure
-			ok: highlighted_line /= Void implies 
-					i_th (index) = highlighted_line
+			ok: current_line /= Void implies 
+					i_th (index) = current_line
 		end;
 
 	find_clickable_figure_with_stone (stone: STONE) is
 			-- Find clickable text from `button_data' coordinates.	
-		require
-			no_selected_clickable_text: selected_clickable_text = Void
 		local
 			a: like area;
 			i, c: INTEGER;
@@ -141,7 +170,7 @@ feature -- Update
 				fig := line.clickable_figure_with_stone (stone);
 				i := i + 1
 			end;
-			selected_clickable_text := fig;
+			current_text := fig;
 		end;
 
 	find_clickable (button_data: BUTTON_DATA) is
@@ -152,15 +181,13 @@ feature -- Update
 			fig: TEXT_FIGURE;
 			p: COORD_XY;
 			found: BOOLEAN;
-			old_line: like highlighted_line;
-			line: like highlighted_line
+			line: like current_line
 		do
 			!! p;
 			p.set (button_data.relative_x + x_offset, button_data.relative_y + y_offset);
-			old_line := highlighted_line;
 			find_line (button_data);
-			if highlighted_line /= Void then
-				fig := highlighted_line.clickable_figure (p);
+			if current_line /= Void then
+				fig := current_line.clickable_figure (p);
 				if fig = Void then
 						-- Go back until one is found
 					from
@@ -175,8 +202,7 @@ feature -- Update
 					end
 				end;
 			end;
-			selected_clickable_text := fig;
-			highlighted_line := old_line
+			current_text := fig;
 		end;
 
 feature -- Input
@@ -224,10 +250,12 @@ feature -- Input
 
 	new_line is
 			-- Add a new line to text.
+		require else
+			valid_current_line: current_line /= Void
 		local
 			text_fig: TEXT_FIGURE;
 		do
-			current_line.set_bottom_left_y (current_y);
+			current_line.set_base_left_y (current_y);
 			extend (current_line);
 debug ("DRAWING")
 	if not current_line.empty then
@@ -397,11 +425,14 @@ end
 			add_text_figure (fig, s);
 		end;
 
-    process_indentation (text: INDENT_TEXT) is
+    process_indentation (t: INDENT_TEXT) is
             -- Process indentation `t'.
+		local
+			str: STRING
 		do
-			current_x := (tab_pixel_length * text.depth) + current_x
-			text.append (text.str);
+			current_x := (tab_pixel_length * t.indent_depth) + current_x
+			str := t.image;
+			text.append (str);
 			text_position := text_position + str.count
         end;
 
@@ -412,7 +443,7 @@ end
 		do
 			str := "%T";
 			if depth > 1 then	
-				str.multiple (depth)
+				str.multiply (depth)
 			end;
 			current_x := (tab_pixel_length * depth) + current_x
 			text.append (str);
@@ -456,7 +487,7 @@ feature -- Text formatting
 			fig.set_stone (breakable_stone);
 			if a_bp.display_number then
 				fig.set_foreground_color (stop_color);
-				add_text_figure (fig, stone_string)
+				add_text_figure (fig, a_bp.index.out)
 			else
 				!! fig;
 				fig.set_stone (breakable_stone);
@@ -516,16 +547,16 @@ feature -- Removal
 
 	wipe_out is
 		do
-			highlighted_line := Void;
-			selected_clickable_text := Void
+			current_text := Void;
+			current_line := Void
 			arrayed_list_wipe_out;
 			maximum_width := 0;
 			maximum_height_per_line := 0
 		ensure then
 			reset_size: maximum_width = 0 and then 
 					maximum_height_per_line = 0;
-			reset: highlighted_line = Void and then
-				selected_clickable_text = Void
+			reset: current_text = Void and then
+				current_line = Void
 		end
 
 feature {TEXT_LINE} -- Implementation
@@ -550,21 +581,21 @@ feature {NONE} -- Implementation
 	initial_x_position: INTEGER is 5;
 			-- Initial x position
 
-	current_line: TEXT_LINE;
-			-- Current line in text
-
 	add_text_figure (fig: TEXT_FIGURE; s: STRING) is
 			-- Add figure `fig' to world. Make sure to
 			-- set_text to figure before adding.
 		require
 			valid_fig: fig /= Void;
-			non_void_s: s /= Void
+			non_void_s: s /= Void;
+			valid_current_line: current_line /= Void
 		local
-			w: INTEGER
+			w: INTEGER;
+			tp: INTEGER
 		do
 			text.append (s);
-			text_position := text_position + s.count;
-			fig.set_text (s);
+			tp := tp + s.count;
+			text_position := tp;
+			fig.set_text_info (s, tp);
 			fig.set_base_left (current_x, current_y);
 			w := fig.font (Current).width_of_string (s);
 			fig.set_width (w);
@@ -580,7 +611,8 @@ feature {NONE} -- Implementation
 					font_max_height;
 			maximum_descent_per_line :=
 					font_max_descent;
-			current_y := maximum_height_per_line + 5
+			current_y := maximum_height_per_line + 5;
+			!! current_line.make (Current)
 		end;
 
 	update_breakable_figure (fig: BREAKABLE_FIGURE) is
@@ -619,10 +651,5 @@ feature {NONE} -- Implementation
 				fig.set_pixmap (Pixmaps.bm_graphical_Breakablepoint)
 			end
 		end;
-
-invariant
-
-	valid_selected_clickable_text: selected_clickable_text /= Void 
-			implies selected_clickable_text.is_clickable
 
 end -- class GRAPHICAL_FIGURES

@@ -40,6 +40,8 @@ feature {NONE} -- Initialization
 
 			text_background_color :=
 				Graphical_resources.text_background_color.valid_actual_value
+			text_foreground_color :=
+				Graphical_resources.text_foreground_color.valid_actual_value
 			progress_bar_color :=
 				Graphical_resources.progress_bar_color.valid_actual_value
 			string_text_color :=
@@ -154,7 +156,10 @@ feature -- Font access
 feature -- Color access
 
 	text_background_color: COLOR
-			-- Color for the progress bar
+			-- Color for the text window
+
+	text_foreground_color: COLOR
+			-- Color for the text window
 
 	progress_bar_color: COLOR
 			-- Color for the progress bar

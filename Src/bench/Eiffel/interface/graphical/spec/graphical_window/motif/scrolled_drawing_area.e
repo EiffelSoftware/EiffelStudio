@@ -33,6 +33,11 @@ inherit
 		export
 			{NONE} all
 		end;
+	MEL_DRAWING_CONSTANTS;
+	MEL_COMMAND
+		rename
+			execute as process_lose_selection
+		end
 
 feature -- Initialization
 
@@ -50,6 +55,8 @@ feature -- Initialization
 			!! vertical_scrollbar.make (Interface_names.t_Empty, parent);
 			vertical_scrollbar.set_horizontal (False);
 			!! horizontal_scrollbar.make (Interface_names.t_Empty, parent);
+			!! highlight_points.make (0);
+
 			horizontal_scrollbar.set_horizontal (True);
 			size := vertical_scrollbar.width;
 			parent.attach_left (horizontal_scrollbar, 0);
@@ -70,7 +77,8 @@ feature -- Initialization
 			add_resize_action (Current, Resize_action);
 			set_action ("<GraphicsExpose>", Current, Graphic_expose_action);
 			add_key_press_action (Current, Key_action);
-			add_button_motion_action (1, Current, Press_action);
+			add_button_press_action (1, Current, Press_action);
+			add_button_motion_action (1, Current, Motion_action);
 			add_button_release_action (1, Current, Release_action);
 			!! to_refresh.make;
 			mel_frame ?= frame.implementation;
@@ -86,21 +94,27 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: FORM
+	parent: FORM;
 			-- Parent of drawing area
 
 	drawing: D_AREA_M;
 			-- Drawing implementation of drawing area
 
-	vertical_scrollbar: SCROLLBAR
+	vertical_scrollbar: SCROLLBAR;
 			-- Vertical scrollbar
 
-	horizontal_scrollbar: SCROLLBAR
+	horizontal_scrollbar: SCROLLBAR;
 			-- Horizontal scrollbar
 
-	x_offset, y_offset: INTEGER
+	x_offset, y_offset: INTEGER;
 			-- X and Y offset of drawing area relative
 			-- to the window shown
+
+	is_select_all: BOOLEAN
+			-- Is the whole document selected?
+
+	selection: MEL_SELECTION;
+			-- Xt selection mechanism
 
 	maximum_height_per_line: INTEGER is
 			-- Maximum height per line
@@ -205,7 +219,6 @@ feature -- Execution
 			keysym: INTEGER;
 			key_event: MEL_KEY_EVENT;
 			mel_sb: MEL_SCROLL_BAR;
-			button_data: MOTNOT_DATA;
 			x_incr, y_incr, value: INTEGER;
 			rel_x, rel_y: INTEGER;
 			coord: COORD_XY;
@@ -260,6 +273,8 @@ end
 			elseif arg = value_changed_action then
 				update_text
 			elseif arg = Press_action then
+				process_mouse_press_action
+			elseif arg = Motion_action then
 				if task = Void then
 					!! task.make;
 					task.add_action (Current, Mouse_action);
@@ -335,7 +350,8 @@ feature -- Output
 			y_diff, x_diff: INTEGER;
 			w_clr, h_clr: INTEGER;
 			redraw_window, update: BOOLEAN;
-			d: like drawing
+			d: like drawing;
+			mp: MEL_POINT
 		do
 			new_x_offset := horizontal_scrollbar.value;
 			new_y_offset := vertical_scrollbar.value;
@@ -355,6 +371,10 @@ feature -- Output
 				w_clr := x_diff
 			elseif new_y_offset /= y_offset then
 					-- Y position changed
+				if not is_select_all and then not highlight_points.empty then
+					mp := highlight_points.i_th (1);
+					mp.set_y (mp.y + y_offset - new_y_offset)
+				end;
 				update := True;
 				y_diff := (y_offset - new_y_offset).abs;
 				if new_y_offset > y_offset then
@@ -385,6 +405,13 @@ feature -- Output
 				y_offset := new_y_offset;
 				draw_text
 			end
+		end;
+
+	clear_text is
+			-- Clear the text area.
+		do
+			clear;
+			highlight_points.wipe_out
 		end
 
 feature {NONE} -- Implementation
@@ -401,7 +428,7 @@ feature {NONE} -- Implementation
 			!! Result
 		end;
 
-	Mouse_action, Press_action, Release_action, Value_changed_action: ANY is
+	Mouse_action, Press_action, Motion_action, Release_action, Value_changed_action: ANY is
 			-- Actions constants
 		once
 			!! Result
@@ -438,6 +465,155 @@ feature {NONE} -- Implementation
 				end
 			end	
 			sb.set_value (value);
+		end;
+
+feature {NONE} -- Selection implementation
+
+	selected_text: STRING is
+		-- Text selected from the drawing area
+		once
+			!! Result.make (0)
+		end;
+		
+	nbr_of_clicks: INTEGER;
+		-- Number of clicks for the mouse at a given location
+		
+	prev_time: INTEGER;
+		-- Saved time of last mouse click
+		
+	prev_x, prev_y: INTEGER
+		-- Saved x and y coordinate
+		
+	highlight_points: ARRAYED_LIST [MEL_POINT];
+		-- Polygon coordinates to highlight area of text
+		
+	process_mouse_press_action is
+		-- Process the mouse event action.
+		local
+			button_event: MEL_BUTTON_EVENT;
+			button_data: BUTTON_DATA;
+			curr_x, curr_y: INTEGER
+		do
+			button_event ?= last_callback_struct.event;
+			if prev_time + 400 > button_event.time then
+				curr_x := button_event.x;
+				curr_x := button_event.y;
+				-- 200 milliseconds for a double click
+				-- then check to see if it is in the same region
+				if
+					(curr_x < prev_x + 10 or else curr_x > prev_x + 10) and then
+					(curr_y < prev_y + 10 or else curr_y > prev_y + 10)
+				then
+					-- Is within range
+					nbr_of_clicks := nbr_of_clicks + 1;
+					prev_x := curr_x;
+					prev_y := curr_y;
+				else
+					nbr_of_clicks := 1
+				end
+			else
+				nbr_of_clicks := 1;
+				-- Reset it
+			end;
+			prev_time := button_event.time;
+			clear_selection;
+			inspect nbr_of_clicks
+				when 2 then
+					button_data ?= context_data;
+					select_word (button_data);
+				when 3 then
+					button_data ?= context_data;
+					select_line (button_data);
+				when 4 then
+					select_all;
+				else
+					-- Reset number of clicks
+					nbr_of_clicks := 1;
+			end
+		end;
+		
+	select_word (button_data: BUTTON_DATA) is
+			-- Select a word.
+		require
+			valid_button_data: button_data /= Void
+		deferred
+		end;
+		
+	select_line (button_data: BUTTON_DATA) is
+			-- Select a line.
+		require
+			valid_button_data: button_data /= Void
+		deferred
+		end;
+		
+	select_all is
+			-- Select all the text.
+		deferred
+		end;
+		
+	clear_selection is
+			-- Clear the current selections.
+		do
+			is_select_all := True;
+			drawing.set_logical_mode (6); -- Xor
+			drawing.set_foreground_gc_color (foreground_color);
+			drawing.mel_fill_polygon (drawing, highlight_points, NonConvex, False);
+			drawing.set_logical_mode (3); -- Copy
+			highlight_points.wipe_out
+			selection := Void
+		end;
+		
+	highlight_selection is
+			-- Highlight the text area area specified by `highlight_points'.
+		require
+			has_something_to_highlight: highlight_points.count >= 4
+		do
+			drawing.set_logical_mode (6); -- Xor
+			drawing.set_foreground_gc_color (foreground_color);
+			drawing.mel_fill_polygon (drawing, highlight_points, NonConvex, False);
+			drawing.set_logical_mode (3); -- Copy
+		end;
+		
+	update_selected_text (a_text: like selected_text) is
+			-- Update the selected text to `a_text.
+		require
+			valid_text: a_text /= Void;
+			selection_is_void: selection = Void
+		local
+			atom: MEL_ATOM;
+			button_event: MEL_BUTTON_EVENT
+		do
+			if not a_text.empty then
+				button_event ?= last_callback_struct.event;
+				!! atom.make_string;
+				!! selection.make_own_selection
+					(drawing, atom, button_event.time, a_text, Current, Void,
+					Void, Void)
+			end
+			selected_text.wipe_out;
+			selected_text.append (a_text)
+		ensure
+			set: selected_text.is_equal (a_text)
+		end;
+
+	add_highlight_point (x1, y1: INTEGER) is
+			-- Add point `x1' and `y2' to `highlight_points'
+		local
+			pt: MEL_POINT
+		do
+			!! pt.make (x1, y1);
+			highlight_points.extend (pt)
+		end;
+		
+	process_lose_selection (arg: ANY) is
+			-- Process the copy/paste Xt selection mechanism.
+		do
+			clear_selection
+		end;
+
+	highlight_text (a_text: TEXT_FIGURE) is
+			-- Highlight a_text.
+		deferred
 		end;
 
 end -- class SCROLLED_DRAWING_AREA

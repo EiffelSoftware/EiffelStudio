@@ -107,7 +107,7 @@ feature -- Type check, byte code and dead code removal
 	access_type: TYPE_A is
 			-- Type check an the access to an id
 		local
-			arg_type: TYPE_A
+			arg_type, l_like_arg_type: TYPE_A
 			a_feature: FEATURE_I
 			i, count, arg_count: INTEGER
 				-- Id of the class type on the stack
@@ -121,13 +121,11 @@ feature -- Type check, byte code and dead code removal
 			depend_unit: DEPEND_UNIT
 			access_b: ACCESS_B
 			vuar1: VUAR1
-			vuar2: VUAR2
 			vuex: VUEX
 			vkcn3: VKCN3
 			obs_warn: OBS_FEAT_WARN
 			context_export: EXPORT_I
 			feature_export: EXPORT_I
-			like_argument_detected: BOOLEAN
 			vape: VAPE
 			formal_type: FORMAL_A
 			operand: OPERAND_AS
@@ -135,7 +133,6 @@ feature -- Type check, byte code and dead code removal
 			is_in_creation_expression: BOOLEAN
 			multi: MULTI_TYPE_A
 			was_overloaded: BOOLEAN
-			l_source_type, l_target_type: CL_TYPE_A
 			l_feature_name: like feature_name
 		do
 			last_type := context_last_type
@@ -234,21 +231,27 @@ feature -- Type check, byte code and dead code removal
 					until
 						i < 1
 					loop
-						arg_type ?= a_feature.arguments.i_th (i)
-						if arg_type.is_like_argument then
-							arg_type := feature_arg_type (a_feature, i, last_type, last_id)
-							if metamorphosis_disabled then
-								like_argument_detected := arg_type.is_basic
-							else
-								like_argument_detected := True
-							end
-						else
-							arg_type := feature_arg_type (a_feature, i, last_type, last_id)
-						end
-
-							-- Conformance: take care of constrained
-							-- genericity
+							-- Extract expression type
 						current_item := context.i_th (context_count + i); 
+							-- Extract feature argument type
+						arg_type ?= a_feature.arguments.i_th (i)
+
+							-- Take care of anchoring to argument
+						if arg_type.is_like_argument then
+							l_like_arg_type := arg_type.conformance_type
+							l_like_arg_type :=
+								l_like_arg_type.instantiation_in (last_type, last_id).actual_type
+								-- Check that `current_item' does conform to its `like argument'.
+								-- Once this is done, then type checking is done on the real
+								-- type of the routine, not the anchor.
+							if not current_item.conform_to (l_like_arg_type) then
+								insert_vuar2_error (a_feature, last_id, i, current_item, l_like_arg_type)
+							end
+						end
+							-- Actual type of feature argument
+						arg_type := arg_type.instantiation_in (last_type, last_id).actual_type
+
+							-- Conformance: take care of constrained genericity
 							-- We must generate an error when `arg_type' becomes
 							-- an OPEN_TYPE_A, for example "~equal (?, b)" will
 							-- check that the type of `b' conforms to type of `?'
@@ -266,29 +269,40 @@ feature -- Type check, byte code and dead code removal
 								if parameters_convert_info = Void then
 									create parameters_convert_info.make (1, count)
 								end
-								l_source_type ?= current_item
-								l_target_type ?= arg_type
-								parameters_convert_info.put (
-									create {PAIR [CL_TYPE_A, CL_TYPE_A]}.make (l_source_type,
-										l_target_type), i)
+								parameters_convert_info.put (context.last_conversion_info, i)
+								context.supplier_ids.extend (context.last_conversion_info.depend_unit)
+							elseif
+								current_item.is_expanded and then arg_type.is_external and then
+								current_item.reference_actual_type.conform_to (arg_type)
+							then
+									-- No need for conversion, this is currently done at the code
+									-- generation level to properly handle the generic case.
+									-- If not done at the code generation, we would need the following
+									-- lines.
+--								if parameters_convert_info = Void then
+--									create parameters_convert_info.make (1, count)
+--								end
+--								parameters_convert_info.put (
+--									create {BOX_CONVERSION_INFO}.make (current_item), i)	
+							elseif
+								current_item.is_expanded and then
+								current_item.convert_to (context.current_class,
+									current_item.reference_actual_type) and then
+								current_item.reference_actual_type.conform_to (arg_type)
+							then
+								if parameters_convert_info = Void then
+									create parameters_convert_info.make (1, count)
+								end
+								parameters_convert_info.put (context.last_conversion_info, i)
+								context.supplier_ids.extend (context.last_conversion_info.depend_unit)
 							else
-								create vuar2
-								context.init_error (vuar2)
-								vuar2.set_called_feature (a_feature, last_id)
-								vuar2.set_argument_position (i)
-								vuar2.set_argument_name (a_feature.arguments.item_name (i))
-								vuar2.set_formal_type (arg_type)
-								vuar2.set_actual_type (current_item)
-								Error_handler.insert_error (vuar2)
+								insert_vuar2_error (a_feature, last_id, i, current_item, arg_type)
 							end
 						end
 							-- Insert the attachment type in the
 							-- parameters line for byte code
 						Attachments.insert (arg_type)
 						i := i - 1
-					end
-					if like_argument_detected then
-						update_argument_type (a_feature)
 					end
 				end
 
@@ -392,10 +406,7 @@ feature -- Type check, byte code and dead code removal
 						feature_export.trace
 						io.error.new_line
 					end
-					if 
-						a_feature.feature_name_id /= feature {PREDEFINED_NAMES}.void_name_id
-						and then not context_export.is_subset (feature_export) 
-					then
+					if not context_export.is_subset (feature_export) then
 						create vape
 						context.init_error (vape)
 						vape.set_exported_feature (a_feature)
@@ -479,7 +490,7 @@ feature -- Type check, byte code and dead code removal
 			params: BYTE_LIST [PARAMETER_B]
 			p: PARAMETER_B
 			i, nb: INTEGER
-			l_info: PAIR [CL_TYPE_A, CL_TYPE_A]
+			l_info: CONVERSION_INFO
 			l_convert_info: like parameters_convert_info
 		do
 			if parameters /= Void then
@@ -497,10 +508,8 @@ feature -- Type check, byte code and dead code removal
 					end
 					if l_info /= Void then
 							-- Process conversion if any
-						p.set_expression (Byte_code_factory.convert_byte_node (
-							parameters.i_th (i).byte_node, l_info.first, l_info.second,
-							line_number)
-						)
+						p.set_expression (l_info.byte_node (
+							parameters.i_th (i).byte_node))
 					else
 						p.set_expression (parameters.i_th (i).byte_node)
 					end
@@ -528,51 +537,6 @@ feature -- Type check, byte code and dead code removal
 			access_line.forth
 		end
 
-	update_argument_type (feat: FEATURE_I) is
-			-- Update the argument types for like_argument.
-			-- Retrieve the corresponding argument type for the like
-			-- argument and update the like_argument type
-		local
-			args: FEAT_ARG
-			arg_pos, i, nbr: INTEGER
-			type_a: TYPE_A
-			like_arg: LIKE_ARGUMENT
-			pos: INTEGER
-		do
-			args := feat.arguments
-				-- Attachment types are inserted in the reversal
-				-- order in `Attachments' during type check
-			pos := Attachments.cursor
-			from
-				i := 1
-				nbr := args.count; 
-			until
-				i > nbr
-			loop
-				like_arg ?= args.i_th (i)
-				if like_arg /= Void then
-					arg_pos := pos - like_arg.position + 1
-						--| Retrieve type in which like_argument is
-						--| referring to.
-					Attachments.go_i_th (arg_pos)
-					type_a := Attachments.item
-						--| Replace item in like argument
-					Attachments.go_i_th (pos - i + 1)
-					if metamorphosis_disabled then
-						if Attachments.item.is_basic then
-								--| Replace item in like argument
-							Attachments.change_item (type_a)
-						end
-					else
-							--| Replace item in like argument
-						Attachments.change_item (type_a)
-					end
-				end
-				i := i + 1
-			end;	
-			Attachments.go_i_th (pos)
-		end
-		
 	Attachments: LINE [TYPE_A] is
 			-- Atachement types line
 		once
@@ -617,15 +581,9 @@ feature {COMPILER_EXPORTER} -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}
 
 feature {NONE} -- Implementation: convertibility
 
-	parameters_convert_info: ARRAY [PAIR [CL_TYPE_A, CL_TYPE_A]]
+	parameters_convert_info: ARRAY [CONVERSION_INFO]
 			-- For each parameters that need a conversion call, we store info used in `byte_node'
-			-- to generate conversion call.
-
-	Byte_code_factory: BYTE_CODE_FACTORY is
-			-- Factory to create conversion byte node.
-		once
-			create Result
-		end
+			-- to generate conversion call
 
 feature {NONE} -- Implementation: overloading
 
@@ -977,8 +935,8 @@ feature {NONE} -- Implementation: overloading
 					Result := target2
 				else
 						-- Conformance failed, so let's check conversion.
-					convert1 := source_type.convert_to (Context.current_class, target1)
-					convert2 := source_type.convert_to (Context.current_class, target2)
+					convert1 := source_type.convert_to (context.current_class, target1)
+					convert2 := source_type.convert_to (context.current_class, target2)
 					if convert1 and not convert2 then
 						Result := target1
 					elseif convert2 and not convert1 then

@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature  -- Access
  
-	parent: like Current is
+	parent: EV_UNTITLED_WINDOW is
 			-- The parent of the Current window: a window
 			-- If the widget is an EV_UNTITLED_WINDOW without parent,
 			-- this attribute will be `Void'

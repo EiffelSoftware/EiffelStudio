@@ -156,7 +156,9 @@ feature -- Basic operations
 				can_free := True
 				writable := False
 
-			elseif pointed_visitor.is_basic_type or pointed_visitor.vt_type = Vt_bool  
+			elseif 
+				pointed_visitor.is_basic_type or 
+				pointed_visitor.vt_type = Vt_bool 
 			then
 				is_basic_type_ref := True
 				a_type := pointed_visitor.vt_type

@@ -17,8 +17,6 @@ feature -- Status setting
 	
 	set_default_position (flag: BOOLEAN) is
 			-- Set default position.
-		require
-			valid_flag: flag /= Void;
 		deferred
 		end;
 

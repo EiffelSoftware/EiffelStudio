@@ -37,7 +37,7 @@ feature -- Access
 	
 	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
 			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
-			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+			-- action sequence and all arguments in `textable'. If no `adding' then `remove_only_added' `action_sequence'.
 		local
 			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
 			notebook: EV_NOTEBOOK
@@ -51,7 +51,7 @@ feature -- Access
 					create notify_sequence
 					notebook.selection_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))
 				else
-					notebook.selection_actions.wipe_out
+					remove_only_added (notebook.selection_actions)
 				end
 			end	
 		end

@@ -46,3 +46,5 @@ XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primi
 XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primitives\ev_vertical_scroll_bar_flatshort.txt .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\Documentation\vision2\interface\widgets\primitives\ev_vertical_separator_flatshort.txt .\flatshort
 
+REM remove vision2_precompile directory.
+deltree %TEMP%\vision2_precompile

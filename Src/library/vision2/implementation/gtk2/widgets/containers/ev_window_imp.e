@@ -53,7 +53,8 @@ inherit
 		redefine
 			interface,
 			on_key_event,
-			has_focus
+			has_focus,
+			set_size
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -206,6 +207,15 @@ feature -- Element change
 				on_new_item (w)
 			end
 			item := v
+		end
+
+	set_size (a_width, a_height: INTEGER) is
+			-- Set the horizontal size to `a_width'.
+			-- Set the vertical size to `a_height'.
+		do
+			default_width := a_width
+			default_height := a_height
+			feature {EV_GTK_EXTERNALS}.gtk_window_resize (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 
 	set_maximum_width (max_width: INTEGER) is

@@ -70,24 +70,42 @@ feature -- Output
 	format_precondition (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
 			-- Format the precondition. Do not display the breakable mark
 			-- (i.e.: breakpoint slots) if `hide_breakable_marks' is set.
+		local
+			l_old_is_with_breakable: BOOLEAN
 		do
 			ctxt.set_source_feature_for_assertion (origin)
+			l_old_is_with_breakable := ctxt.is_with_breakable
 			if hide_breakable_marks then
-				precondition.format_without_breakable_marks (ctxt)
+				ctxt.set_is_without_breakable
 			else
-				precondition.format (ctxt)
+				ctxt.set_is_with_breakable
+			end
+			ctxt.format_ast (precondition)
+			if l_old_is_with_breakable then
+				ctxt.set_is_with_breakable
+			else
+				ctxt.set_is_without_breakable
 			end
 		end
 
 	format_postcondition (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
 			-- Format the precondition. Do not display the breakable mark
 			-- (i.e.: breakpoint slots) if `hide_breakable_marks' is set.
+		local
+			l_old_is_with_breakable: BOOLEAN
 		do
 			ctxt.set_source_feature_for_assertion (origin)
+			l_old_is_with_breakable := ctxt.is_with_breakable
 			if hide_breakable_marks then
-				postcondition.format_without_breakable_marks (ctxt)
+				ctxt.set_is_without_breakable
 			else
-				postcondition.format (ctxt)
+				ctxt.set_is_with_breakable
+			end
+			ctxt.format_ast (postcondition)
+			if l_old_is_with_breakable then
+				ctxt.set_is_with_breakable
+			else
+				ctxt.set_is_without_breakable
 			end
 		end
 

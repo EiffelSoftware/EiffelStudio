@@ -30,7 +30,7 @@ inherit
 create
 	make, make_for_case, make_for_appending
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (c: CLASS_C) is
 			-- Initialize Current for bench.
@@ -55,22 +55,29 @@ feature -- Initialization
 			-- image of precondition and postcondition).
 		do
 			is_for_case := True
-			create format_stack.make
-			create text.make
-			create format
-			format_stack.extend (format)
+			initialize
 		end
 
 	make_for_appending (a_text: like text) is
 			-- Create context for appending an AST item to `a_text'.
 		do
-			text := a_text
 			reset_format_booleans
 			last_was_printed := True
+			initialize
+			text := a_text
+		end
+
+	initialize is
+			-- Initialize structures for Current.
+		do
 			create format_stack.make
+			create text.make
 			create format
 			format_stack.extend (format)
+			create formatter.make (Current)
 		end
+
+feature -- Initialization
 
 	init_uncompiled_feature_context (source_class: CLASS_C; feature_as: FEATURE_AS) is
 			-- Initialize Current context to analyze
@@ -530,7 +537,7 @@ feature -- Setting local format details
 			in_indexing_clause := b
 		end
 
-feature {STRING_AS} -- Access
+feature -- Access
 
 	in_indexing_clause: BOOLEAN
 			-- Should strings be formatted over multiple lines?
@@ -568,7 +575,7 @@ feature -- Execution
 
 				if format_registration.target_ast /= Void then
 					Inst_context.set_cluster (class_c.cluster)
-					format_registration.target_ast.format (Current)
+					formatter.format (format_registration.target_ast)
 					Inst_context.set_cluster (Void)
 				else
 					execution_error := True
@@ -599,15 +606,6 @@ feature -- Setting
 		end
 
 feature -- Update
-
-	initialize is
-			-- Initialize structures for Current.
-		do
-			create format_stack.make
-			create text.make
-			create format
-			format_stack.extend (format)
-		end
 
 	begin is
 			-- Save current format before a change.
@@ -845,12 +843,10 @@ feature -- Output
 
 	format_ast (ast: AST_EIFFEL) is
 			-- Call simple_for on `ast'.
+		require
+			ast_not_void: ast /= Void
 		do
-			if is_for_case then
-				ast.simple_format (Current)
-			else
-				ast.format (Current)
-			end
+			formatter.format (ast)
 		end
 
 	put_separator is
@@ -986,7 +982,7 @@ feature -- Output
 					set_space_between_tokens
 					text.add_space
 					text.add (ti_L_parenthesis)
-					arg.simple_format (Current)
+					formatter.format (arg)
 					text.add (ti_R_parenthesis)
 					commit
 					arg.start
@@ -1085,7 +1081,7 @@ feature -- Implementation
 					text.add_space
 					text.add (ti_L_parenthesis)
 					abort_on_failure
-					args.format (Current)
+					formatter.format (args)
 					text.add (ti_R_parenthesis)
 					if last_was_printed then
 						commit
@@ -1118,7 +1114,7 @@ feature -- Implementation
 			end
 		end
 
-feature {UNARY_AS} -- Implementation
+feature {UNARY_AS, AST_FORMATTER_VISITOR} -- Implementation
 
 	put_prefix_space is
 			-- Append extra space after prefix feature.
@@ -1149,7 +1145,7 @@ feature -- Implementation
 				if arg /= Void then
 					begin
 					new_expression
-					arg.simple_format (Current)
+					formatter.format (arg)
 					commit
 				end
 			else
@@ -1161,7 +1157,7 @@ feature -- Implementation
 				if args /= Void then
 					begin
 					new_expression
-					args.format (Current)
+					formatter.format (args)
 					if last_was_printed then
 						commit
 					else
@@ -1217,5 +1213,8 @@ feature {NONE} -- Implementation
 		ensure
 			valid_result: Result /= Void
 		end
+
+	formatter: AST_FORMATTER_VISITOR
+			-- Formatter of AST_EIFFEL nodes
 				
 end	 -- class FORMAT_CONTEXT

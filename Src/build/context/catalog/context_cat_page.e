@@ -57,10 +57,16 @@ feature
 feature {NONE}
 
 	make (a_parent: COMPOSITE; button_parent: ROW_COLUMN) is
-		do
+		local
+			bg_color: COLOR
+		do	
 			make_visible (Widget_names.form, a_parent);
 			!! button.make (Current, button_parent);
-						
+		
+			!! bg_color.make
+			bg_color.set_rgb (background_color.red - 65 * 256, background_color.green - 65 * 256, background_color.blue - 65 * 256)	
+			set_background_color (bg_color)
+			
 			build_interface
 			-- build_interface sets the focus string for the button so 
 			-- that call button.initialize_focus is legal

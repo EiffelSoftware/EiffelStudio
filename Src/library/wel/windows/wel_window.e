@@ -1865,6 +1865,17 @@ feature {NONE} -- Externals
 			"LockWindowUpdate"
 		end
 
+feature {NONE} -- External
+
+	c_ev_hook_mouse(hwnd: POINTER) is
+		external
+			"C | %"mouse_hook.h%""
+		end
+
+	c_ev_unhook_mouse is
+		external
+			"C | %"mouse_hook.h%""
+		end
 
 end -- class WEL_WINDOW
 

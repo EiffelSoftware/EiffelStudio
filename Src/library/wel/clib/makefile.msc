@@ -10,7 +10,14 @@ CFLAGS = -c -Ox -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\includ
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj diskspace.obj dynload.obj
+OBJ = 	disptchr.obj \
+		enumfont.obj \
+		estream.obj \
+		msgboxpa.obj \
+		registry.obj \
+		diskspace.obj \
+		dynload.obj \
+		mousehook.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@

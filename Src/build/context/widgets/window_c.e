@@ -21,7 +21,7 @@ inherit
 			set_x_y, set_size, set_visual_name,
 			raise, x, y, set_real_x_y, is_window,
 			add_to_window_list, retrieve_set_visual_name, 
-			shown, is_able_to_be_grouped, realize
+			shown, is_able_to_be_grouped, realize, is_movable
 		end;
 	COMPOSITE_C
 		rename
@@ -37,13 +37,15 @@ inherit
 			raise, x, y, set_real_x_y, is_window,
 			add_to_window_list, retrieve_set_visual_name, 
 			shown, is_able_to_be_grouped, title_label,
-			show, hide, realize
+			show, hide, realize, is_movable
 		select
 			reset_modified_flags, undo_cut, title_label, hide, show
 		end;
 	G_ANY
 	
 feature -- Specification
+
+	is_movable: BOOLEAN is False;
 
 	group_name: STRING is do end
 
@@ -228,11 +230,7 @@ feature
 			old_y := new_y;
 			x := old_x;
 			y := old_y;
-			if ("MOTIF").is_equal (toolkit.name) and then
-				widget.realized 
-			then	
-				configure_count := configure_count + 1
-			end
+			configure_count := configure_count + 1
 		end
 
 	set_size (new_w, new_h: INTEGER) is
@@ -375,7 +373,6 @@ feature
 	execute (argument: ANY) is
 		local
 			win_cmd: WIN_CONFIG_CMD
-			top: PERM_WIND_C
 		do
 			if configure_count = 0 and then 
 					-- This is just in case that the event
@@ -423,13 +420,17 @@ feature -- Hack for motif
 			-- the top shell and the returned value is inner
 			-- coordinate.
 		once
-			Result := widget.real_x - old_x
+			if toolkit.name.is_equal ("MOTIF") then
+				Result := widget.real_x - old_x
+			end
 		end;
 
 	y_offset: INTEGER is	
 			-- See above comments
 		once
-			Result := widget.real_y - old_y
+			if toolkit.name.is_equal ("MOTIF") then
+				Result := widget.real_y - old_y
+			end
 		end;
 
 feature {NONE} -- Code generation

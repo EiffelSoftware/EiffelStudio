@@ -18,7 +18,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_modify_action
+		end;
 
 	add_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute before insert
@@ -26,13 +26,13 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_motion_action
+		end;
 
 	allow_action is
 			-- Allow the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		deferred
-		end; -- allow_action
+		end;
 
 	begin_of_selection: INTEGER is
 			-- Position of the beginning of the current selection highlightened
@@ -43,7 +43,7 @@ feature
 		ensure
 			Result >= 0;
 			Result < count
-		end; -- begin_of_selection
+		end;
 
 	clear_selection is
 			-- Clear a selection
@@ -53,7 +53,7 @@ feature
 		deferred
 		ensure
 			not is_selection_active
-		end; -- clear_selection
+		end;
 
 	cursor_position: INTEGER is
 			-- Current position of the text cursor (it indicates the position
@@ -62,25 +62,25 @@ feature
 		ensure
 			Result >= 0;
 			Result <= count
-		end; -- cursor_position
+		end;
 
 	disable_resize is
 			-- Disable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		deferred
-		end; -- disable_resize
+		end;
 
 	disable_resize_height is
 			-- Disable that current text widget attempts to resize its height
 			-- to accommodate all the text contained.
 		deferred
-		end; -- disable_resize_height
+		end;
 
 	disable_resize_width is
 			-- Disable that current text widget attempts to resize its width
 			-- to accommodate all the text contained.
 		deferred
-		end; -- disable_resize_width
+		end;
 
 	disable_verify_bell is
 			-- Disable the bell when an action is forbidden
@@ -91,19 +91,19 @@ feature
 			-- Enable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		deferred
-		end; -- enable_resize
+		end;
 
 	enable_resize_height is
 			-- Enable that current text widget attempts to resize its height to
 			-- accomodate all the text contained.
 		deferred
-		end; -- enable_resize_height
+		end;
 
 	enable_resize_width is
 			-- Enable that current text widget attempts to resize its width to
 			-- accommodate all the text contained.
 		deferred
-		end; -- enable_resize_width
+		end;
 
 	enable_verify_bell is
 			-- Enable the bell when an action is forbidden
@@ -119,20 +119,20 @@ feature
 		ensure
 			Result > 0;
 			Result <= count
-		end; -- end_of_selection
+		end;
 
 	forbid_action is
 			-- Forbid the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		deferred
-		end; -- forbid_action
+		end;
 
 	is_any_resizable: BOOLEAN is
 			-- Is width and height of current text resizable?
 		deferred
 		ensure
 			Result implies is_width_resizable and is_height_resizable
-		end; -- is_any_resizable
+		end;
 
 	is_bell_enabled: BOOLEAN is
 			-- Is the bell enabled when an action is forbidden
@@ -142,41 +142,41 @@ feature
 	is_height_resizable: BOOLEAN is
 			-- Is height of current text resizable?
 		deferred
-		end; -- is_height_resizable
+		end;
 
 	is_read_only: BOOLEAN is
 			-- Is current text in read only mode?
 		deferred
-		end; -- is_read_only
+		end;
 
 	is_selection_active: BOOLEAN is
 			-- Is there a selection currently active ?
 		require
 			realized: realized
 		deferred
-		end; -- is_selection_active
+		end;
 
 	is_width_resizable: BOOLEAN is
 			-- Is width of current text resizable?
 		deferred
-		end; -- is_width_resizable
+		end;
 
 	is_word_wrap_mode: BOOLEAN is
 			-- Is specified that lines are to be broken at word breaks?
 		deferred
-		end; -- is_word_wrap_mode
+		end;
 
 	margin_height: INTEGER is
 			-- Distance between top edge of text window and current text,
 			-- and between bottom edge of text window and current text.
 		deferred
-		end; -- margin_height
+		end;
 
 	margin_width: INTEGER is
 			-- Distance between left edge of text window and current text,
 			-- and between right edge of text window and current text.
 		deferred
-		end; -- margin_width
+		end;
 
 	remove_modify_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute before
@@ -184,7 +184,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_modify_action
+		end;
 
 	remove_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute before
@@ -192,7 +192,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_motion_action
+		end;
 
 	set_cursor_position (a_position: INTEGER) is
 			-- Set `cursor_position' to `a_position'.
@@ -202,31 +202,31 @@ feature
 		deferred
 		ensure
 			cursor_position = a_position
-		end; -- set_cursor_position
+		end;
 
 	set_editable is
 			-- Set current text to be editable.
 		deferred
-		end; -- set_editable
+		end;
 
 	set_margin_height (new_height: INTEGER) is
 			-- Set `margin_height' to `new_height'.
 		require
 			new_height_large_enough: new_height >= 0
 		deferred
-		end; -- set_margin_height
+		end;
 
 	set_margin_width (new_width: INTEGER) is
 			-- Set `margin_width' to `new_width'.
 		require
 			new_width_large_enough: new_width >= 0
 		deferred
-		end; -- set_margin_width
+		end;
 
 	set_read_only is
 			-- Set current text to be read only.
 		deferred
-		end; -- set_read_only
+		end;
 
 	set_selection (first, last: INTEGER) is
 			-- Select the text between `first' and `last'.
@@ -238,10 +238,10 @@ feature
 			realized: realized
 		deferred
 		ensure
-			is_selection_active;
-			begin_of_selection = first;
-			end_of_selection = last
-		end -- set_selection
+			selection_set: first /= last implies is_selection_active;
+			begin_set: begin_of_selection = first;
+			end_set: end_of_selection = last
+		end
 
 	x_coordinate (char_pos: INTEGER): INTEGER is
 			-- X coordinate relative to the upper left corner

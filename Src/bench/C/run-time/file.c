@@ -311,8 +311,7 @@ rt_public void file_flush(FILE *fp)
 		esys();				/* Flush failed, raise exception */
 }
 
-rt_public  EIF_INTEGER file_size (fp)
-FILE *fp;
+rt_public  EIF_INTEGER file_size (FILE *fp)
 {
 	struct stat buf;
 	int current_pos;

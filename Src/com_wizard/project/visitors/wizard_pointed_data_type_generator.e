@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- set_item = eif_procedure ("set_item", type_id);
+			-- set_item = eif_procedure ("put", type_id);
 			-- 
 
 			Result.append ("set_item")
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 			Result.append (Open_parenthesis)
 			Result.append (Double_quote)
-			Result.append ("set_item")
+			Result.append ("put")
 			Result.append (Double_quote)
 			Result.append (Comma)
 			Result.append (space)

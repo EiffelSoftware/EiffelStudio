@@ -1,14 +1,21 @@
 indexing
 
 	description: 
-		".";
+		"Horrible trick to keep backward compatibility and low disk %
+		%occupancy without using Eiffel BIT N, reportedly bugged....";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class FEATURE_STATUS_HANDLER
+class 
+	FEATURE_STATUS_HANDLER
 
 
 feature -- Properties
+
+	is_constant (status: INTEGER): BOOLEAN is
+		do
+			Result := has_property (status, Status_is_constant)
+		end
 
 	is_deleted_since_last_re (status: INTEGER): BOOLEAN is
 		do
@@ -20,7 +27,17 @@ feature -- Properties
 			Result := has_property (status, Status_new_since_last_re)
 		end
 
+	is_once (status: INTEGER): BOOLEAN is
+		do
+			Result := has_property (status, Status_is_once)
+		end
+
 feature -- Settings
+
+	set_is_constant (status: INTEGER): INTEGER is
+		do
+			Result := set_property (status, Status_is_constant)
+		end
 
 	set_is_deleted_since_last_re (status: INTEGER): INTEGER is
 		do
@@ -32,10 +49,18 @@ feature -- Settings
 			Result := set_property (status, Status_new_since_last_re)
 		end
 
+	set_is_once (status: INTEGER): INTEGER is
+		do
+			Result := set_property (status, Status_is_once)
+		end
+
 feature {NONE} -- Property numbers (= bit numbers)
+				-- NB: Not possible to use `unique' (see ETL, p267)
 
 	Status_deleted_since_last_re: INTEGER is 1;
 	Status_new_since_last_re: INTEGER is 2;
+	Status_is_once: INTEGER is 3;
+	Status_is_constant: INTEGER is 4;
 
 feature {NONE} -- Implementation
 

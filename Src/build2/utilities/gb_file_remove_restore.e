@@ -39,9 +39,16 @@ feature -- Access
 				-- Now actually destroy the physical files.
 			create file_location.make_from_string (generated_path)
 			if parent_directory /= Void then
-				file_location.extend (parent_directory)
-			end
+				from
+					parent_directory.start
+				until
+					parent_directory.off
+				loop
+					file_location.extend (parent_directory.item)
+					parent_directory.forth
+				end
 				
+			end
 				-- Store the _IMP file.
 			create full_file_name.make_from_string (file_location.string)
 			full_file_name.extend ((object.name + Class_implementation_extension).as_lower + ".e")
@@ -73,7 +80,14 @@ feature -- Access
 				-- Now actually restore the physical files.
 			create file_name.make_from_string (generated_path)
 			if parent_directory /= Void then
-				file_name.extend (parent_directory)				
+				from
+					parent_directory.start
+				until
+					parent_directory.off
+				loop
+					file_name.extend (parent_directory.item)
+					parent_directory.forth
+				end
 			end
 				-- Restore the implementation file.
 			if implementation_file_contents /= Void then
@@ -99,7 +113,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
-	parent_directory: STRING is
+	parent_directory: ARRAYED_LIST [STRING] is
 			-- Parent directory of object associated with `original_id' before removal.
 		deferred
 		end

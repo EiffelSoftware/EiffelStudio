@@ -31,7 +31,9 @@ inherit
 			interface,
 			initialize,
 			make,
-			wel_text_length
+			wel_text_length,
+			enable_word_wrapping,
+			disable_word_wrapping
 		select
 			wel_line_index,
 			wel_item,
@@ -544,7 +546,67 @@ feature -- Status setting
 			internal_text.append (internal_text_twin)
 			internal_text.append ("}")
 		end
-
+		
+	enable_word_wrapping is
+			-- Ensure `has_word_wrap' is True.
+		local
+			stream_in: WEL_RICH_EDIT_BUFFER_LOADER
+			stream_out: WEL_RICH_EDIT_BUFFER_SAVER
+			old_text_as_rtf: STRING
+		do
+				-- Store contents of `Current' as RTF.
+			create stream_out.make
+			rtf_stream_out (stream_out)
+			stream_out.release_stream
+			old_text_as_rtf := stream_out.text
+			
+			wel_destroy
+			internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
+			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
+			show_vertical_scroll_bar
+			set_text_limit (2560000)
+			set_default_font
+			cwin_send_message (wel_item, Em_limittext, 0, 0)
+			if parent_imp /= Void then
+				parent_imp.notify_change (2 + 1, Current)
+			end
+			
+				-- Restore contents of `Current' from stored RTF.
+			create stream_in.make (old_text_as_rtf)
+			insert_rtf_stream_in (stream_in)
+			stream_in.release_stream
+		end
+		
+	disable_word_wrapping is
+			-- Ensure `has_word_wrap' is False.
+		local
+			stream_in: WEL_RICH_EDIT_BUFFER_LOADER
+			stream_out: WEL_RICH_EDIT_BUFFER_SAVER
+			old_text_as_rtf: STRING
+		do
+				-- Store contents of `Current' as RTF.
+			create stream_out.make
+			rtf_stream_out (stream_out)
+			stream_out.release_stream
+			old_text_as_rtf := stream_out.text
+			
+			wel_destroy
+			internal_window_make (wel_parent, "", default_style + Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
+			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
+			set_text_limit (2560000)
+			set_default_font
+			cwin_send_message (wel_item, Em_limittext, 0, 0)
+			show_scroll_bars
+			if parent_imp /= Void then
+				parent_imp.notify_change (2 + 1, Current)
+			end
+			
+				-- Restore contents of `Current' from stored RTF.
+			create stream_in.make (old_text_as_rtf)
+			insert_rtf_stream_in (stream_in)
+			stream_in.release_stream
+		end
+		
 feature {NONE} -- Implementation
 
 	default_string_size: INTEGER is 50000

@@ -56,6 +56,7 @@ feature -- Basic Operations
 			if uncomplete_file_contents /= Void then
 				l_file.put_string (uncomplete_file_contents)	
 			end
+			l_file.close
 		ensure
 			non_completed: not is_completed
 		end

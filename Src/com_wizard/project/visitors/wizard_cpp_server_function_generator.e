@@ -306,16 +306,6 @@ feature {NONE} -- Implementation
 			Result.append (visitor.ce_function_name)
 			Result.append (Space_open_parenthesis)
 
-			if is_unsigned_long (visitor.vt_type) then
-				Result.append ("(long *)")
-			elseif is_unsigned_int (visitor.vt_type) then
-				Result.append ("(int *)")
-			elseif is_unsigned_short (visitor.vt_type) then
-				Result.append ("(short *)")
-			elseif is_unsigned_char (visitor.vt_type) then
-				Result.append ("(char *)")
-			end
-
 			Result.append (arg_name)
 
 			if visitor.writable then
@@ -351,16 +341,6 @@ feature {NONE} -- Implementation
 				Result.append (arg_name)
 				Result.append (Close_parenthesis)
 				Result.append (Comma_space)
-
-				if is_unsigned_long (visitor.vt_type) then
-					Result.append ("(long *)")
-				elseif is_unsigned_short (visitor.vt_type) then
-					Result.append ("(short *)")
-				elseif is_unsigned_char (visitor.vt_type) then
-					Result.append ("(char *)")
-				elseif is_unsigned_int (visitor.vt_type) then
-					Result.append ("(int *)")
-				end
 
 				Result.append (arg_name)
 				Result.append (Close_parenthesis)

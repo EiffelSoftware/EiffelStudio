@@ -214,7 +214,6 @@ feature -- Status setting
 						if toggle_b.has_accelerator then
 							toggle_b.new_accelerator_id (associated_root.value)
 						end
-
 					end
 				end
 			else

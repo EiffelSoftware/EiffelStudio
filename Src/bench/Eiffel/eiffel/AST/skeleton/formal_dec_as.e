@@ -318,8 +318,7 @@ feature -- Output
 			c_name: STRING
 			eiffel_name: STRING
 		do
-			c_name := clone (formal_name)
-			c_name.to_upper
+			c_name := formal_name.as_upper
 			st.add (create {GENERIC_TEXT}.make (c_name))
 			if has_constraint then
 				st.add_space
@@ -362,8 +361,7 @@ feature -- Output
 			end
 
 			if new_type = Void then
-				s := clone (formal_name)
-				s.to_upper
+				s := formal_name.as_upper
 				ctxt.put_text_item (create {GENERIC_TEXT}.make (s))
 				if has_constraint then
 					ctxt.put_space
@@ -405,8 +403,7 @@ feature {AST_EIFFEL} -- Output
 			s: STRING
 			feature_name: FEAT_NAME_ID_AS
 		do
-			s := clone (formal_name)
-			s.to_upper
+			s := formal_name.as_upper
 			ctxt.put_string (s)
 			if has_constraint then
 				ctxt.put_space

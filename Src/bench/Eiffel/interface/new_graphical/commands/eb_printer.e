@@ -215,7 +215,7 @@ feature -- Basic operations
 				file.putstring (sent_txt)
 				file.close
 					-- Generate the actual command line.
-				cmd := clone (external_command)
+				cmd := external_command.twin
 				cmd.replace_substring_all ("$target", file_name)
 					-- Send the command.
 				(create {EXECUTION_ENVIRONMENT}).launch (cmd)

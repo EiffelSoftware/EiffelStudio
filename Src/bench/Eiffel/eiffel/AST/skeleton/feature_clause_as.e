@@ -23,7 +23,7 @@ feature {AST_FACTORY} -- Initialization
 		do
 			clients := c
 			features := f
-			location := clone (l)
+			location := l.twin
 		ensure
 			clients_set: clients = c
 			features_set: features = f

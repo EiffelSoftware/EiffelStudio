@@ -130,13 +130,12 @@ feature -- Initialization
 				until
 					clients.after
 				loop
-					temp := clone (clients.item)
+					temp := clients.item
 					client_classi := Universe.class_named (temp, cluster)
 					if client_classi /= Void then
 						ctxt.put_classi (client_classi)
 					else
-						temp.to_upper
-						ctxt.put_string (temp)
+						ctxt.put_string (temp.as_upper)
 					end
 					clients.forth
 					if not clients.after then
@@ -179,8 +178,6 @@ feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
-		local
-			temp: STRING
 		do
 			ctxt.put_text_item (ti_L_curly)
 			ctxt.set_separator (ti_Comma)
@@ -191,9 +188,7 @@ feature {AST_EIFFEL} -- Output
 				until
 					clients.after
 				loop
-					temp := clone (clients.item)
-					temp.to_upper
-					ctxt.put_class_name (temp)
+					ctxt.put_class_name (clients.item.as_upper)
 					clients.forth
 					if not clients.after then
 						ctxt.put_text_item_without_tabs (ti_Comma)

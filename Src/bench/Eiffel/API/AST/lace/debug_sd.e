@@ -61,8 +61,7 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes or value.is_all then
 						v := Yes_debug
 					elseif value.is_name then
-						tag_value := clone (value.value)
-						tag_value.to_lower
+						tag_value := value.value.as_lower
 						create debug_tag.make
 						debug_tag.tags.put (tag_value)
 						v := debug_tag
@@ -88,8 +87,7 @@ feature {COMPILER_EXPORTER}
 						until
 							list.after
 						loop
-							class_name := clone (list.item)
-							class_name.to_lower
+							class_name := list.item.as_lower
 							classes.item (class_name).set_debug_level (v)
 							list.forth
 						end

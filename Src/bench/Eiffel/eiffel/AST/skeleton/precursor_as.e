@@ -464,8 +464,7 @@ feature {NONE}  -- precursor table
 				r_class_i := Universe.class_named (parent_name, a_cluster)
 
 				if r_class_i /= Void then
-					spec_p_name := Clone (r_class_i.name)
-					spec_p_name.to_upper
+					spec_p_name := r_class_i.name_in_upper
 				else
 					-- A class of name `parent_name' does not exist
 					-- in the universe. Use an empty name to trigger
@@ -572,8 +571,7 @@ feature {AST_EIFFEL} -- Output
 
 			if parent_name /= Void then
 				ctxt.put_text_item (ti_space)
-				p_name := Clone (parent_name.string_value)
-				p_name.to_upper
+				p_name := parent_name.string_value.as_upper
 				ctxt.put_text_item (ti_L_curly)
 				ctxt.put_class_name (p_name)
 				ctxt.put_text_item (ti_R_curly)

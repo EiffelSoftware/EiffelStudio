@@ -138,7 +138,7 @@ feature {AST_EIFFEL} -- Output
 
 	string_value: STRING is
 		do
-			Result := clone (Current)
+			Result := twin
 		end
 
 end -- class ID_AS

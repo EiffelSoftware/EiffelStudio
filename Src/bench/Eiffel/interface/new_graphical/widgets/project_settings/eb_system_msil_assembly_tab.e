@@ -198,13 +198,13 @@ feature -- Actions
 					assembly_interface_exists: assembly_interface.exists
 				end
 				assembly_interface.go_i_th (assembly_list.index_of (selected_item, 1) - 1)
-				l_ass_name := clone (selected_item @ 1)
+				l_ass_name := selected_item.i_th (1).twin
 				create list_row
 				list_row.extend (unique_assembly_cluster_name ("GAC",
 									l_ass_name,
-									clone (selected_item @ 2),
-									clone (selected_item @ 3),
-									clone (selected_item @ 4)))
+									selected_item.i_th (2).twin,
+									selected_item.i_th (3).twin,
+									selected_item.i_th (4).twin))
 				list_row.extend (assembly_prefix (l_ass_name))	
 				list_row.extend (selected_item @ 1)
 				list_row.extend (selected_item @ 2)

@@ -117,8 +117,7 @@ feature {COMPILER_EXPORTER}
 			until
 				target_list.after
 			loop
-				class_name := clone (target_list.item)
-				class_name.to_lower;
+				class_name := target_list.item.as_lower
 
 				if not classes.has (class_name) then
 					create vd16;

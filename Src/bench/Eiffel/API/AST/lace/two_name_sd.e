@@ -40,7 +40,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object.
 		do
-			create Result.initialize (clone (old_name), clone (new_name))
+			create Result.initialize (old_name.twin, new_name.twin)
 		end
 
 feature -- Comparison
@@ -61,5 +61,9 @@ feature -- Saving
 			st.putstring (" as ")
 			new_name.save (st)
 		end
+
+invariant
+	old_name_not_void: old_name /= Void
+	new_name_not_void: new_name /= Void
 
 end -- class TWO_NAME_SD

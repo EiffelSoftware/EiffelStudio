@@ -529,10 +529,10 @@ feature {CLUSTER_SD} -- Implementation
 						end
 						if not found then
 								-- Dupplicate existing cluster
-							new_cluster := clone (Current)
+							new_cluster := twin
 
 								-- New name of cluster which is `cluster_name.file_name'.
-							clus_name := clone (cluster_name)
+							clus_name := cluster_name.twin
 							clus_name.append_character ('.')
 							clus_name.append (file_name)
 							new_cluster.set_cluster_name (clus_name)

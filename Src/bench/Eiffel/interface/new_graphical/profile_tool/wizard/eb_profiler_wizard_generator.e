@@ -109,9 +109,9 @@ feature -- Basic operations
 					profiler_query.set_subquery_operators (subquery_operators)
 	
 					create profiler_options
-					profiler_options.set_output_names (clone (output_names))
-					profiler_options.set_filenames (clone (filenames))
-					profiler_options.set_language_names (clone (language_names))
+					profiler_options.set_output_names (output_names.twin)
+					profiler_options.set_filenames (filenames.twin)
+					profiler_options.set_language_names (language_names.twin)
 	
 					create st.make
 					create executer.make (st, profiler_query, profiler_options)
@@ -159,7 +159,10 @@ feature {NONE} -- Implementation
 					file_name.set_file_name ("profinfo.pfi")
 					filename := file_name
 				else
-					filename := clone (information.existing_profile)
+					filename := information.existing_profile
+					if filename /= Void then
+						filename := filename.twin
+					end
 				end
 				shared_values.filenames.force (filename, shared_values.filenames.lower)
 	

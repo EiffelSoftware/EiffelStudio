@@ -297,8 +297,7 @@ feature -- Access
 	formal_name (pos: INTEGER): ID_AS is
 			-- Formal name of class_c generics at position `pos.
 		do
-			Result := clone (class_c.generics.i_th (pos).formal_name)
-			Result.to_upper
+			Result := class_c.generics.i_th (pos).formal_name.as_upper
 		end
 
 feature -- Setting
@@ -445,7 +444,7 @@ feature -- Setting
 		require
 			valid_source: source /= Void
 		do
-			global_adapt := clone (global_adapt)
+			global_adapt := global_adapt.twin
 			global_adapt.update_new_source_in_assertion (source)
 			create unnested_local_adapt
 			unnested_local_adapt.update_from_global (global_adapt)
@@ -549,8 +548,7 @@ feature -- Execution
 				prev_class := System.current_class
 				prev_cluster := Inst_context.cluster
 				execution_error := false
-				class_name := clone (class_c.name)
-				class_name.to_upper
+				class_name := class_c.name_in_upper
 
 				if is_short then
 					client := system.any_class.compiled_class
@@ -617,7 +615,7 @@ feature -- Update
 		local
 			new_format: like format
 		do
-			new_format := clone (format)
+			new_format := format.twin
 			new_format.set_position (text.cursor)
 			format_stack.extend (new_format)
 			format := new_format
@@ -662,8 +660,7 @@ feature -- Element change
 			if is_for_case then
 				text.add_default_string (s)
 			else
-				tmp := clone (s)
-				tmp.to_lower
+				tmp := s.as_lower
 				classi := Universe.class_named (tmp, class_c.cluster)
 				if classi = Void then
 					text.add_default_string (s)
@@ -681,8 +678,7 @@ feature -- Element change
 			if not tabs_emitted then
 				emit_tabs
 			end
-			s := clone (c.name)
-			s.to_upper
+			s := c.name_in_upper
 			text.add_classi (c, s)
 		end
 
@@ -730,12 +726,14 @@ feature -- Element change
 	
 	prepare_for_feature (name: STRING; args: EIFFEL_LIST [EXPR_AS]) is
 			-- Prepare for features within main features.
+		require
+			name_not_void: name /= Void
 		local
 			adapt: like local_adapt
 			type: TYPE_A
 		do
 			if is_for_case then
-				name_of_current_feature := clone (name)
+				name_of_current_feature := name.twin
 				arguments := args
 			else
 				if format.dot_needed then
@@ -788,7 +786,7 @@ feature -- Element change
 						-- Clone result adaptation.
 						-- Need to update type in result for
 						-- ! TYPE ! Result.make 
-					adapt := clone (adapt)
+					adapt := adapt.twin
 					adapt.set_source_type (type)
 					adapt.set_target_type (type)
 					adapt.set_evaluated_type

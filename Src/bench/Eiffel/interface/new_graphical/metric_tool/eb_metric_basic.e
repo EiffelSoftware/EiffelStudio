@@ -156,7 +156,7 @@ feature -- Default agents
 		do
 				-- Do not work directly on `s' since other metrics rely on it, otherwise, further 
 				-- calculations will be done on a wrong scope (`s' changes during recursive features).
-			scope := clone (s)
+			scope := s.twin
 			if scope.index > min_scope then
 				a_class_scope := tool.scope (interface_names.metric_this_class)
 				classes := scope.cluster_i.classes

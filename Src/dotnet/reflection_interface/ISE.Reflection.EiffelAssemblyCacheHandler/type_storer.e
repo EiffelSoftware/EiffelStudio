@@ -126,7 +126,7 @@ feature -- Basic Operations
 						-- XML generation
 
 						-- Write <!DOCTYPE reflection_interface SYSTEM "reflection_interface.dtd">
-					DTD_path := "..\"
+					DTD_path := "../"
 					text_writer.Write_Doc_Type (Dtd_Type_Filename, public_string, DTD_path.Concat_String_String_String (DTD_path, Dtd_Type_Filename, Dtd_Extension), subset)
 
 						-- <class>
@@ -164,7 +164,7 @@ feature -- Basic Operations
 		end
 
 	commit is
-			-- | Delete write lock.
+			-- | Update `assembly_description.xml'.
 		indexing
 			description: "Commit changes."
 			external_name: "Commit"
@@ -172,16 +172,19 @@ feature -- Basic Operations
 			not_committed: not committed
 		local
 			file: SYSTEM_IO_FILE
+			write_lock_filename: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
-				update_assembly_description
-				if support.Has_Write_Lock (assembly_folder_name) then
-					file.Delete (assembly_folder_name.Concat_String_String_String (assembly_folder_name, "\", support.Write_Lock_Filename))
+				update_assembly_description		
+				write_lock_filename ?= assembly_folder_name.clone
+				write_lock_filename := write_lock_filename.Concat_String_String_String (write_lock_filename, "\", support.Write_Lock_Filename)
+				if file.exists (write_lock_filename) then
+					file.delete (write_lock_filename)
 				end
+				create types.make
+				committed := True
 			end
-			create types.make
-			committed := True
 		ensure
 			committed: committed
 			empty_types: types.get_count = 0
@@ -281,6 +284,18 @@ feature {NONE} -- Implementation
 					text_writer.write_element_string (Deferred_Element, false_string)
 				end	
 
+					-- <generic>
+				if eiffel_class.get_is_generic then
+					text_writer.write_element_string (Generic_element, True_string)
+				else
+					text_writer.write_element_string (Generic_element, False_string)
+				end
+				
+					-- <generic_derivations>
+				if eiffel_class.get_generic_derivations /= Void and then eiffel_class.get_generic_derivations.get_count > 0 then
+					generate_generic_derivations
+				end
+					
 					-- <class_eiffel_name>
 				text_writer.write_element_string (Class_Eiffel_Name_Element, eiffel_class.get_eiffel_name)
 
@@ -292,12 +307,6 @@ feature {NONE} -- Implementation
 				if parents.get_count > 0 then
 					generate_xml_inherit_element
 				end
-
-					-- <create>
-			--	creation_routines := eiffel_class.get_Creation_Routines
-			--	if creation_routines.get_count > 0 then
-			--		generate_xml_element_from_list (Create_Element, creation_routines)
-			--	end
 
 					-- <create_none>
 				if eiffel_class.get_Create_None then
@@ -316,6 +325,81 @@ feature {NONE} -- Implementation
 			retry
 		end
 	
+	generate_generic_derivations is
+		indexing
+			description: "Generate XML <generic_derivations> element from `eiffel_class'."
+			external_name: "GenerateGenericDerivations"
+		require
+			is_generic: eiffel_class.get_is_generic
+			non_void_generic_derivations: eiffel_class.get_generic_derivations /= Void
+			not_empty_generic_derivations: eiffel_class.get_generic_derivations.get_count > 0
+		local
+			generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST
+			a_generic_derivation: ISE_REFLECTION_GENERICDERIVATION
+			i: INTEGER
+			generic_types: ARRAY [ANY]
+			constraints: ARRAY [ANY]
+			a_constraint: STRING
+			j: INTEGER
+			a_generic_type: ISE_REFLECTION_SIGNATURETYPE
+			retried: BOOLEAN
+		do
+			if not retried then
+				generic_derivations := eiffel_class.get_generic_derivations
+					-- <generic_derivations>
+				text_writer.write_start_element (Generic_derivations_element)
+				
+				from
+				until
+					i = generic_derivations.get_count
+				loop
+					a_generic_derivation ?= generic_derivations.get_item (i)
+					if a_generic_derivation /= Void then
+							-- <generic_derivation>
+						text_writer.write_start_element (Generic_derivation_element)
+						generic_types := a_generic_derivation.get_generic_types
+						constraints := a_generic_derivation.get_constraints
+						if generic_types /= Void and then constraints /= Void and then generic_types.count = constraints.count then
+								-- <derivation_count>
+							text_writer.write_element_string (Derivation_count_element, generic_types.count.to_string)
+							from
+								j := 0
+							until
+								j = generic_types.count
+							loop
+								a_generic_type ?= generic_types.item (j)
+								if a_generic_type /= Void then
+										-- <derivation>
+									text_writer.write_start_element (Derivation_element)
+										-- <generic_type_eiffel_name>
+									text_writer.write_element_string (Generic_type_eiffel_name_element, a_generic_type.type_eiffel_name)
+										-- <generic_type_external_name>
+									text_writer.write_element_string (Generic_type_external_name_element, a_generic_type.type_full_external_name)
+										-- <constraint>
+									a_constraint ?= constraints.item (j)
+									if a_constraint /= Void then
+										text_writer.write_element_string (Constraint_element, a_constraint)
+									end								
+										-- </derivation>
+									text_writer.write_end_element
+								end
+								j := j + 1
+							end
+						end
+							-- </generic_derivation>
+						text_writer.write_end_element
+					end
+					i := i + 1
+				end
+				
+					-- </generic_derivations>
+				text_writer.write_end_element
+			end
+		rescue		
+			retried := True
+			retry
+		end
+		
 	generate_xml_alias_element is
 		indexing
 			description: "Generate XML alias element from `eiffel_class'."
@@ -681,7 +765,7 @@ feature {NONE} -- Implementation
 			preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
 			postconditions: SYSTEM_COLLECTIONS_ARRAYLIST
 			comments: SYSTEM_COLLECTIONS_ARRAYLIST
-			return_type: STRING
+			formal_signature_type: ISE_REFLECTION_FORMALSIGNATURETYPE
 			retried: BOOLEAN
 			literal_value: STRING		
 		do
@@ -789,9 +873,14 @@ feature {NONE} -- Implementation
 	
 				if a_feature.get_Return_Type /= Void then 
 						-- <return_type>
-					text_writer.write_element_string (Return_Type_Element, a_feature.get_Return_Type.get_Type_Eiffel_Name)
+					text_writer.write_element_string (Return_Type_Element, a_feature.get_Return_Type.type_Eiffel_Name)
 						-- <return_type_full_name>
-					text_writer.write_element_string (Return_Type_Full_Name_Element, a_feature.get_Return_Type.get_Type_Full_External_Name)
+					text_writer.write_element_string (Return_Type_Full_Name_Element, a_feature.get_Return_Type.Type_Full_External_Name)
+						-- <return_type_generic_parameter_index>
+					formal_signature_type ?= a_feature.get_return_type
+					if formal_signature_type /= Void then
+						text_writer.write_element_string (Return_type_generic_parameter_index_element, formal_signature_type.get_generic_parameter_index.to_string)
+					end
 				end
 	
 					-- <comments>
@@ -832,7 +921,8 @@ feature {NONE} -- Implementation
 			not_empty_arguments: arguments.get_count > 0 
 		local
 			i: INTEGER
-			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
+			an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE
+			formal_argument: ISE_REFLECTION_FORMALNAMEDSIGNATURETYPE
 			an_argument_name: STRING
 			an_argument_external_name: STRING
 			an_argument_type: STRING
@@ -852,29 +942,36 @@ feature {NONE} -- Implementation
 							-- <argument>
 						text_writer.write_start_element (Argument_Element)
 
-						an_argument_name := an_argument.get_eiffel_name
+						an_argument_name := an_argument.eiffel_name
 						if an_argument_name /= Void and then an_argument_name.get_length > 0 then
 								-- <argument_eiffel_name>
 							text_writer.write_element_string (Argument_Eiffel_Name_Element, an_argument_name)
 						end
 
-						an_argument_external_name := an_argument.get_external_name
+						an_argument_external_name := an_argument.external_name
 						if an_argument_external_name /= Void and then an_argument_external_name.get_length > 0 then
 								-- <argument_external_name>
 							text_writer.write_element_string (Argument_External_Name_Element, an_argument_external_name)
 						end
 
-						an_argument_type := an_argument.get_type_eiffel_name
+						an_argument_type := an_argument.type_eiffel_name
 						if an_argument_type /= Void and then an_argument_type.get_length > 0 then
 								-- <argument_type>
 							text_writer.write_element_string (Argument_Type_Element, an_argument_type)
 						end
 
-						an_argument_type_full_name := an_argument.get_type_full_external_name
+						an_argument_type_full_name := an_argument.type_full_external_name
 						if an_argument_type_full_name /= Void and then an_argument_type_full_name.get_length > 0 then
 								-- <argument_type_full_name>
 							text_writer.write_element_string (Argument_Type_Full_Name_Element, an_argument_type_full_name)	
 						end
+						
+						formal_argument ?= arguments.get_item (i)
+						if formal_argument /= Void then
+								-- <generic_parameter_index>
+							text_writer.write_element_string (Generic_parameter_index_element, formal_argument.get_generic_parameter_index.to_string)
+						end
+						
 							-- </argument>
 						text_writer.write_end_element
 					end
@@ -1066,7 +1163,7 @@ feature {NONE} -- Implementation
 					a_text_writer.set_Quote_Char ('%"')
 
 						-- Write `<!DOCTYPE ...>
-					Dtd_path := "..\"
+					Dtd_path := "../"
 					a_text_writer.Write_Doc_Type (Dtd_assembly_filename, public_string, Dtd_path.Concat_String_String_string (Dtd_path, Dtd_assembly_filename, Dtd_Extension), subset)
 					
 						-- <assembly>

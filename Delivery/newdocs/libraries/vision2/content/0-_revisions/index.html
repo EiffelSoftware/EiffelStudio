@@ -97,6 +97,7 @@
 					<li>Fixed `first_position_from_line_number' and `last_position_from_line_number' which were returning incorrect values when the text was wrapped.</li>
 					<li>Fixed `caret_position' and `set_caret_position' which were incorrect when the text spanned multiple lines, and the caret was not on the first line.</li>
 					<li>`line_count' now returns the number of lines actually displayed, and not simply the number of newline characters. To query the number of new line characters do :- text.occurrences ('%N')</li>
+					<li>Fixed bug in `search' which was returning -1 instead of 0 when the text was not found.</li>
 						</ul>
 					<li>
 						<b>EV_DRAWABLE</b>

@@ -27,6 +27,7 @@ rt_public EIF_POINTER console_def (EIF_INTEGER file)
 	  	setvbuf(stdout, NULL, _IOLBF, 0);
 		return (EIF_POINTER) stdout;
 	case 2:
+		setvbuf (stderr, NULL, _IONBF, 0);
 		return (EIF_POINTER) stderr;
 	default:
 		CHECK ("Invalid File Request", EIF_FALSE);

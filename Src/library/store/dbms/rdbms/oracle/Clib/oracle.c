@@ -364,7 +364,7 @@ sword describe_define(Cda_Def *tmp)
 			break;
 			default:
 			if (desc[col].dbtype == D_TYPE)
-				desc[col].dbsize = 14;
+				desc[col].dbsize = 19;
 			if (desc[col].dbtype == ROWID_TYPE)
 				desc[col].dbsize = 18;
 			defptr = def[col].buf;
@@ -865,7 +865,7 @@ int ora_get_boolean_data (int no_desc, int i)
 	return (int) def[i-1].int_buf;
 }
 
-char date[14];
+char date[19];
 char d[2];
 char y[4];
 
@@ -885,7 +885,7 @@ int ora_get_date_data (int no_des, int i)
 
 char ora_get_year(void)
 {
-	strncpy (&y, &date[4], 4);
+	strncpy (&y, &date[6], 4);
 	return y;
 }
 
@@ -897,25 +897,25 @@ char ora_get_month(void)
 
 char ora_get_day(void)
 {
-	strncpy (&d, &date[2], 2);
+	strncpy (&d, &date[3], 2);
 	return d;
 }
 
 char ora_get_hour(void)
 {
-	strncpy (&d, &date[8], 2);
+	strncpy (&d, &date[11], 2);
 	return d;
 }
 
 char ora_get_min(void)
 {
-	strncpy (&d, &date[10], 2);
+	strncpy (&d, &date[14], 2);
 	return d;
 }
 
 char ora_get_sec(void)
 {
-	strncpy (&d, &date[12], 2);
+	strncpy (&d, &date[17], 2);
 	return d;
 }
 

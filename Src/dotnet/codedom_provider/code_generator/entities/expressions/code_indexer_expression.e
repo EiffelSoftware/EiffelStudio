@@ -69,31 +69,43 @@ feature -- Status Report
 			i, j, l_count, l_par_count: INTEGER
 			l_parameters: ARRAY [PARAMETER_INFO]
 			l_method: METHOD_INFO
+			l_property: PROPERTY_INFO
 			l_not_conform: BOOLEAN
 		do
 			l_type := target.type.dotnet_type
 			if l_type /= Void then
 				l_members := l_type.get_default_members
 				from
+					l_type := Void
 					l_count := l_members.count
+					i := 1
 				until
-					i = l_count or Result /= Void
+					i > l_count or Result /= Void
 				loop
-					l_method ?= l_members.item (i)
-					if l_method /= Void and then l_method.return_type /= Void then
-						l_parameters := l_method.get_parameters
+					l_property ?= l_members.item (i)
+					if l_property /= Void and then l_property.property_type /= Void then
+						l_parameters := l_property.get_index_parameters
+						l_type := l_property.property_type
+					else
+						l_method ?= l_members.item (i)
+						if l_method /= Void and then l_method.return_type /= Void then
+							l_parameters := l_method.get_parameters
+							l_type := l_method.return_type
+						end
+					end
+					if l_type /= Void then
 						l_par_count := l_parameters.count
 						if l_par_count = indices.count then
 							from
-								j := 0
+								j := 1
 							until
-								j = l_par_count or l_not_conform
+								j > l_par_count or l_not_conform
 							loop
-								l_not_conform := not Type_reference_factory.type_reference_from_type (l_parameters.item (j).parameter_type).conforms_to (indices.i_th (j + 1).type)
+								l_not_conform := not Type_reference_factory.type_reference_from_type (l_parameters.item (j).parameter_type).conforms_to (indices.i_th (j).type)
 								j := j + 1
 							end
 							if not l_not_conform then
-								Result := Type_reference_factory.type_reference_from_type (l_method.return_type)
+								Result := Type_reference_factory.type_reference_from_type (l_type)
 							end
 						end						
 					end

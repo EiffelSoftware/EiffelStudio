@@ -26,6 +26,7 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
+			{ANY} Ev_titled_window_string
 		end
 
 	GB_WIDGET_UTILITIES

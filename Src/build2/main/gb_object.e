@@ -12,6 +12,7 @@ inherit
 	INTERNAL
 		export
 			{NONE} all
+			{GB_OBJECT_HANDLER} dynamic_type_from_string, is_instance_of
 		end
 	
 	GB_SHARED_TOOLS
@@ -22,6 +23,7 @@ inherit
 	GB_SHARED_OBJECT_HANDLER
 		export
 			{NONE} all
+			{ANY} object_handler
 		end
 	
 	GB_SHARED_OBJECT_EDITORS

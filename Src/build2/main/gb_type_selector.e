@@ -11,7 +11,7 @@ inherit
 
 	EV_TREE
 		export
-			{ANY} parent
+			{ANY} parent, is_displayed
 			{NONE} all
 		undefine
 			is_in_default_state

@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			{WEL_TREE_VIEW} Precursor (a_parent, a_x, a_y, a_width, a_height, an_id)
 
 				-- create the image list
-			create image_list.make(16, 16, Ilc_color32)
+			create image_list.make(16, 16, Ilc_color32, False)
 
 				-- First match the background color of the imagelist with
 				-- the background color of the tree view.

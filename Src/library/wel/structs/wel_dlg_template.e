@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make_with_global_alloc is
 			-- Allocate `item' with call to `GlobalAlloc' instead of `malloc'
 		do
-			item := cwin_global_alloc (Gmem_zeroinit, structure_size)
+			item := cwin_global_alloc (Gptr, structure_size)
 			memory_allocated_with_global_alloc := True
 			if item = default_pointer then
 				-- Memory allocation problem
@@ -223,11 +223,11 @@ feature {NONE} -- Removal
 		do
 			if memory_allocated_with_global_alloc then
 				if item /= default_pointer then
-						cwin_global_free (item)
+					item := cwin_global_free (item)
 				end
 				item := default_pointer
 			else
-				Precursor
+				Precursor {WEL_STRUCTURE}
 			end
 		end
 
@@ -236,6 +236,8 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)
 		once
+				-- An extra 1024 because a dialog template contains things after
+				-- the end of structure.
 			Result := c_size_of_dlgtemplate + 1024
 		end
 
@@ -254,10 +256,10 @@ feature {NONE} -- Externals
 			"GlobalAlloc"
 		end
 
-	cwin_global_free (a_pointer: POINTER) is
+	cwin_global_free (a_pointer: POINTER): POINTER is
 			-- GlobalFree
 		external
-			"C [macro <windows.h>] (HGLOBAL)"
+			"C [macro <windows.h>] (HGLOBAL): EIF_POINTER"
 		alias
 			"GlobalFree"
 		end
@@ -275,7 +277,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro <windows.h>] (HGLOBAL)"
 		alias
-			"GlobalUnlock"
+			"(void) GlobalUnlock"
 		end
 
 	c_size_of_dlgtemplate: INTEGER is
@@ -383,11 +385,24 @@ feature {NONE} -- Externals
 			"cx"
 		end
 
-	Gmem_zeroinit: INTEGER is
-		external
-			"C [macro <windows.h>]"
-		alias
-			"GMEM_ZEROINIT"
-		end
+	Gmem_fixed: INTEGER is 0
+			-- Allocates fixed memory. The return value is a pointer.
+
+	Gmem_moveable: INTEGER is 2
+			-- Allocates movable memory. In Win32, memory blocks are
+			-- never moved in physical memory, but they can be moved
+			-- within the default heap. 
+			-- The return value is a handle to the memory object. To
+			-- translate the handle into a pointer, use the GlobalLock
+			-- function. 
+
+	Gmem_zeroinit: INTEGER is 64
+			-- Initializes memory contents to zero.
+
+	Gptr: INTEGER is 64
+			-- Defined as (Gmem_fixed | Gmem_zeroinit)
+
+	Ghnd: INTEGER is 66
+			-- Defined as (Gmem_moveable | Gmem_zeroinit)
 
 end -- class WEL_DLGTEMPLATE

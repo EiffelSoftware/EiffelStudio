@@ -100,13 +100,11 @@ feature
 				restore_cursors
 			end
 		rescue
-			if not Rescue_status.fail_on_rescue then
-				if original_exception = Io_exception then
-						-- We probably don't have the read permissions
-						-- on the server files.
-					retried := true;
-					retry
-				end
+			if original_exception = Io_exception then
+					-- We probably don't have the read permissions
+					-- on the server files.
+				retried := true;
+				retry
 			end
 		end;
 

@@ -131,7 +131,7 @@ feature {EV_ANY_I}-- element change
 			temp_text: STRING
 			previous_caret_position: INTEGER
 		do
-			previous_caret_position := caret_position
+			previous_caret_position := internal_caret_position
 			temp_text := text
 			if caret_position > temp_text.count then
 				temp_text.append (txt)
@@ -139,7 +139,7 @@ feature {EV_ANY_I}-- element change
 				temp_text.insert_string (txt, caret_position)
 			end
 			set_text (temp_text)
-			set_caret_position (previous_caret_position)
+			internal_set_caret_position (previous_caret_position)
 		end
 
 	append_text (txt:STRING) is
@@ -148,11 +148,11 @@ feature {EV_ANY_I}-- element change
 			temp_text: STRING
 			previous_caret_position: INTEGER
 		do
-			previous_caret_position := caret_position
+			previous_caret_position := internal_caret_position
 			temp_text := text
 			temp_text.append (txt)
 			set_text (temp_text)
-			set_caret_position (previous_caret_position)
+			internal_set_caret_position (previous_caret_position)
 		end
 
 	prepend_text (txt: STRING) is
@@ -161,11 +161,11 @@ feature {EV_ANY_I}-- element change
 			temp_text: STRING
 			previous_caret_position: INTEGER
 		do
-			previous_caret_position := caret_position
-			temp_text := text
+			previous_caret_position := internal_caret_position
+			temp_text :=  text
 			temp_text.prepend (txt)
 			set_text (temp_text)
-			set_caret_position (previous_caret_position)
+			internal_set_caret_position (previous_caret_position)
 		end
 
 	maximum_character_width: INTEGER is

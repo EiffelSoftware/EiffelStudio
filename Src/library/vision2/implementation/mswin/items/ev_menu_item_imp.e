@@ -598,10 +598,10 @@ feature {NONE} -- WEL Implementation
 			disabled_state := (draw_item_state & Wel_ownerdraw_constants.Ods_disabled /= 0)
 			desired_width := plain_text_position -- We have used this variable to store the desired width in `on_measure_menu_bar_item'.
 			left_pos_start := (right_pos - left_pos - desired_width) // 2
-			flat_menu_enabled := has_flat_menu
+			flat_menu_enabled := is_windows_xp_compatible and then has_flat_menu
 
 				-- First erase the background
-			if is_windows_xp_compatible and flat_menu_enabled then
+			if flat_menu_enabled then
 				if selected_state then
 					background_color := system_color_menuhilight
 					text_color := system_color_highlighttext
@@ -616,7 +616,7 @@ feature {NONE} -- WEL Implementation
 			erase_background (draw_dc, draw_item_struct_rect, background_color)
 
 					-- Draw a border around the item for top menu when menus are not flat.
-			if not (is_windows_xp_compatible and flat_menu_enabled) then
+			if not (flat_menu_enabled) then
 				if selected_state then
 					draw_dc.draw_edge (draw_item_struct_rect, Wel_drawing_constants.Bdr_sunkenouter, Wel_drawing_constants.Bf_rect)
 				elseif draw_item_state & Wel_ownerdraw_constants.Ods_hotlight /= 0 then

@@ -18,11 +18,24 @@ feature -- Access
 
 	selected, pressed, released: BOOLEAN
 
-	on_select is do selected := True end
-	on_press is do pressed := True end
-	on_release is do released := True end
+	on_select is
+		do
+			selected := True
+			print ("select")
+		end
 
-	
+	on_press is
+		do
+			pressed := True
+			print ("press")
+		end
+
+	on_release is
+		do
+			released := True
+			print ("release")
+		end
+
 	do_test (wgt: EV_WIDGET) is
 		local
 			s: EV_SCREEN

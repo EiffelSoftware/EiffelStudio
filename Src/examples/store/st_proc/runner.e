@@ -72,14 +72,11 @@ feature {NONE}
 		local
 			author: STRING
 			price: REAL
-			pub_date: ABSOLUTE_DATE
+			pub_date: DATE_TIME
 		do
 			!! author.make (10)
 			price := 51
-			!! pub_date.make
-			pub_date.change_date (01, 01, 1984)
-			pub_date.change_time (00, 00, 00)
-
+			!! pub_date.make (1984, 01, 01, 00, 00, 00)
 			!! proc.make (Proc_name)
 			proc.load
 

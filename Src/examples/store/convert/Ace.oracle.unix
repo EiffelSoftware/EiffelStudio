@@ -1,19 +1,20 @@
-system mapper
+system parser
 
 root
 	
-	mapper (root_cluster): "make"
+	parser (root_cluster): "make"
 
 default
 
-	assertion (require);
+	assertion (all);
 	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 
-	root_cluster:	".";
-	estore_examples_objects:"$EIFFEL4/library/store/examples/Utilities";
-	oracle_handle: "$EIFFEL4/library/store/examples/Utilities/oracle";
+	root_cluster:		"$EIFFEL4/examples/store/convert";
+
+	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
+	oracle_handle:		"$EIFFEL4/examples/store/Utilities/oracle";
 
 -- EiffelStore
 
@@ -25,7 +26,7 @@ cluster
 
 external
 
-	Object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
+	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
 		"-lsupport";
 		"-loracle";
 		"-lsys_time";

@@ -1,8 +1,8 @@
-system selector
+system parser
 
 root
 	
-	selector (root_cluster): "make"
+	parser (root_cluster): "make"
 
 default
 
@@ -11,9 +11,10 @@ default
 
 cluster
 
-	root_cluster:		".";
-	estore_examples_objects:"$EIFFEL4/library/store/examples/Utilities";
- 	oracle_handle:		"$EIFFEL4/library/store/examples/Utilities/oracle";
+	root_cluster:		"$EIFFEL4/examples/store/convert";
+
+	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
+	oracle_handle:		"$EIFFEL4/examples/store/Utilities/oracle";
 
 -- EiffelStore
 

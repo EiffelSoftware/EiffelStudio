@@ -40,7 +40,7 @@ feature
 			-- and pop it up at the pointer position.
 		do
 			fill (l)
-			update_position (eb_screen.x, eb_screen.y)
+			update_position (eb_screen.x - 20, eb_screen.y - 10)
 			old_popup
 		end
 
@@ -55,12 +55,6 @@ feature
         end
 
 feature {NONE}
-
-	first_line: STRING_SCROLLABLE_ELEMENT is
-		once
-			!! Result.make (6)
-			Result.append ("Cancel")
-		end
 
 	no_item_line: STRING_SCROLLABLE_ELEMENT is
 		once
@@ -78,19 +72,14 @@ feature {NONE}
 				list.set_visible_item_count (1)
 			else
 				from
-					list.start
 					l.start
-					list.force (first_line)
-					list.forth
 				until
 					l.after
 				loop
 					!! a_string_scrollable_element.make (0)
 					a_string_scrollable_element.append (l.item)
---					list.force (a_string_scrollable_element)
 					list.extend (a_string_scrollable_element)
 					l.forth
---					list.forth
 				end
 				if list.count >= 10 then
 					list.set_visible_item_count (10)
@@ -106,14 +95,17 @@ feature -- EiffelVision
 			-- Create choice window.
 		local
 			set_win_att: SET_WINDOW_ATTRIBUTES_COM
+			lx: INTEGER
+			ly: INTEGER
 		do
 			dialog_create (Widget_names.base, a_parent)
 			!! list.make (Widget_names.list, Current)
 			allow_resize
 			list.add_selection_action (Current, Void)
+			list.add_leave_action (Current, list)
 			!! set_win_att
 			set_win_att.execute (Current)
-			set_exclusive_grab
+--			set_exclusive_grab
 		end
 
 feature {NONE}
@@ -123,7 +115,9 @@ feature {NONE}
 	execute (argument: ANY) is
 		do
 			popdown
-			continue_after_popdown
+			if argument = Void then 
+				continue_after_popdown
+			end
 		end
 
 	continue_after_popdown is

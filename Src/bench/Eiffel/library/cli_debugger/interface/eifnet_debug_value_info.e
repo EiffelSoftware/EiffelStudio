@@ -61,12 +61,14 @@ feature {NONE} -- Initialisation
 				when 
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_class,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_object,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype,
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_byref
 				then
 					is_reference_type := True
 					is_class := (type = feature {MD_SIGNATURE_CONSTANTS}.element_type_class)
 					is_object := (type = feature {MD_SIGNATURE_CONSTANTS}.element_type_class)
 					is_valuetype := (type =	feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype)
+					is_byref := (type =	feature {MD_SIGNATURE_CONSTANTS}.element_type_byref)
 					if interface_debug_reference_value /= Void then
 						is_null := interface_debug_reference_value.is_null
 					end
@@ -118,6 +120,8 @@ feature -- Nature Reference
 
 	is_valuetype: BOOLEAN
 
+	is_byref: BOOLEAN
+
 	is_string: BOOLEAN
 
 	is_object_interface: BOOLEAN
@@ -130,20 +134,10 @@ feature -- Type nature
 		
 feature -- Queries
 
---	address_as_string: STRING is
---		do
---			Result := address.out
---		end
-
 	address_as_hex_string: STRING is
 		do
 			Result := "0x" + address.to_integer.to_hex_string
 		end
-
---	type_as_string: STRING is
---		do
---			Result := Debug_value_formatter.cor_element_type_to_string (type)
---		end
 
 	value_to_string: STRING is
 			-- 	
@@ -154,12 +148,6 @@ feature -- Queries
 				Result := Debug_value_formatter.prepared_icor_debug_value_to_string (prepared_icor_debug_value)
 			end
 		end
-		
---	value_to_any: ANY is
---			-- 	
---		do
---			Result := Debug_value_formatter.prepared_icor_debug_value (prepared_icor_debug_value)
---		end		
 	
 feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 

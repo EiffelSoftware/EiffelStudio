@@ -248,17 +248,20 @@ feature -- Status setting
 		local
 			ww: WIDGET_IMP
 		do
-			if exists then
-				wel_destroy
-			end
 			from
 				wid_list.start
 			until
 				wid_list.after
 			loop
 				ww ?= wid_list.item.implementation
-				actions_manager_list.deregister (ww)
+				if ww /= Void then
+					actions_manager_list.deregister (ww)
+				end
 				wid_list.forth
+			end
+
+			if exists then
+				wel_destroy
 			end
 		end;
 

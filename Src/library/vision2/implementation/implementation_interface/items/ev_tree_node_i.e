@@ -46,7 +46,7 @@ inherit
 
 feature -- Access
 
-	parent: EV_TREE_NODE_CONTAINER is
+	parent: EV_TREE_NODE_LIST is
 			-- Parent of `Current'.
 		do
 			if parent_imp /= Void then

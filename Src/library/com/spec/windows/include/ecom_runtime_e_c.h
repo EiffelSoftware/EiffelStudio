@@ -73,6 +73,8 @@ class ecom_runtime_ec
 		void ** ccom_ec_pointed_c_pointer (void * a_pointer);
 		IEnumVARIANT * * ccom_ec_pointed_pointed_enum_variant( EIF_REFERENCE eif_ref, IEnumVARIANT * * old );
 		IFont * * ccom_ec_pointed_pointed_ifont( EIF_REFERENCE eif_ref, IFont * * old );
+		IUnknown * * ccom_ec_pointed_pointed_unknown ( EIF_REFERENCE eif_ref, IUnknown * * old );
+		IDispatch * * ccom_ec_pointed_pointed_dispatch ( EIF_REFERENCE eif_ref, IDispatch * * old );
 
 		// ARRAY
 		char * ccom_ec_array_character (EIF_REFERENCE a_ref, int dimension, char * old);

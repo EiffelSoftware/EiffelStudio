@@ -588,12 +588,13 @@ void ccom_set_unknown_interface (VARIANT * variant, IUnknown *a_value)
 //-------------------------------------------------------------------
 
 
-void ccom_set_unknown_interface_reference (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_unknown_interface_reference (VARIANT * variant, IUnknown *a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_UNKNOWN|VT_BYREF;
-	V_UNKNOWNREF(variant) = (IUnknown **)rt_ec.ccom_ec_pointed_c_pointer(
-				(void *)rt_ec.ccom_ec_unknown (eif_access (a_value)));
+	V_UNKNOWNREF(variant) = (IUnknown **)rt_ec.ccom_ec_pointed_c_pointer((void *)a_value);
+	if (a_value != NULL)
+		a_value->AddRef ();
 };
 //-------------------------------------------------------------------
 
@@ -627,12 +628,13 @@ void ccom_set_dispatch_interface (VARIANT * variant, IDispatch * a_value)
 //-------------------------------------------------------------------
 
 
-void ccom_set_dispatch_interface_reference (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_dispatch_interface_reference (VARIANT * variant, IDispatch *a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_DISPATCH|VT_BYREF;
-	V_DISPATCHREF(variant) = (IDispatch **)rt_ec.ccom_ec_pointed_c_pointer(
-			(void *)rt_ec.ccom_ec_dispatch (eif_access (a_value)));
+	V_DISPATCHREF(variant) = (IDispatch **)rt_ec.ccom_ec_pointed_c_pointer((void *)a_value);
+	if (a_value != NULL)
+		a_value->AddRef ();
 };
 //-------------------------------------------------------------------
 

@@ -142,14 +142,14 @@ EIF_POINTER ccom_unknown_interface (VARIANT * variant);
 EIF_POINTER ccom_unknown_interface_reference (VARIANT * variant);
 
 void ccom_set_unknown_interface (VARIANT * variant, IUnknown *a_value);
-void ccom_set_unknown_interface_reference (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_unknown_interface_reference (VARIANT * variant, IUnknown *a_value);
 
 // IDispatch
 EIF_POINTER ccom_dispatch_interface (VARIANT * variant);
 EIF_POINTER ccom_dispatch_interface_reference (VARIANT * variant);
 
 void ccom_set_dispatch_interface (VARIANT * variant, IDispatch * a_value);
-void ccom_set_dispatch_interface_reference (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_dispatch_interface_reference (VARIANT * variant, IDispatch * a_value);
 
 // safearray
 EIF_REFERENCE ccom_safearray_unsigned_integer (VARIANT * variant);

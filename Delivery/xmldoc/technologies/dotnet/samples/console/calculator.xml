@@ -19,7 +19,27 @@
 				<heading>
 					<size>2</size>Compiling
 				</heading>
-				<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+				<paragraph>To compile the example:
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<output output="envision">ENViSioN! root directory</output>
+					<output output="studio">Eiffel54</output>\examples\dotnet\calculator\.
+					<italic/>
+				</item>
+				<item>Choose
+					<italic/>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+		</paragraph>
 				<paragraph>
 					<heading>
 						<size>2</size>Running
@@ -108,18 +128,18 @@ Next operation?
 					<heading>
 						<size>2</size>Under the Hood
 					</heading>
-					<paragraph>This sample shows how to leverage EiffelBase data structures in a simple Eiffel system. The root class CALCULATOR first instantiates all 
-						<italic>state</italic> objects, each corresponding to one possible operation. The state classes all inherit from STATE. They are:
+					<paragraph>This sample shows how to leverage EiffelBase data structures in a simple Eiffel system. The root class <code><class_name>CALCULATOR</class_name></code> first instantiates all 
+						<italic>state</italic> objects, each corresponding to one possible operation. The state classes all inherit from <code><class_name>STATE</class_name></code>. They are:
 					</paragraph>
 					<list ordered="false">
-						<item>PLUS: Add stack's two top numbers.</item>
-						<item>MINUS: Substract stack's two top numbers.</item>
-						<item>MULTIPLY: Multiply stack's two top numbers.</item>
-						<item>DIVIDE: Divide stack's two top numbers.</item>
-						<item>EMPTY: Empty stack.</item>
-						<item>HELP: Prints available commands.</item>
-						<item>QUESTION: Get number from user.</item>
-						<item>QUIT: Close application.</item>
+						<item><code><class_name>PLUS</class_name></code>: Add stack's two top numbers.</item>
+						<item><code><class_name>MINUS</class_name></code>: Substract stack's two top numbers.</item>
+						<item><code><class_name>MULTIPLY</class_name></code>: Multiply stack's two top numbers.</item>
+						<item><code><class_name>DIVIDE</class_name></code>: Divide stack's two top numbers.</item>
+						<item><code><class_name>EMPTY</class_name></code>: Empty stack.</item>
+						<item><code><class_name>HELP</class_name></code>: Prints available commands.</item>
+						<item><code><class_name>QUESTION</class_name></code>: Get number from user.</item>
+						<item><code><class_name>QUIT</class_name></code>: Close application.</item>
 					</list>Each of these classes implement the feature 
 					<code>
 						<feature_name>do_one_state</feature_name>

@@ -32,7 +32,7 @@ feature -- Status report
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := c_gtk_editable_position (widget)
+			Result := c_gtk_editable_position (widget) + 1
 		end
 
 	has_selection: BOOLEAN is
@@ -65,16 +65,8 @@ feature -- status settings
 	set_position (pos: INTEGER) is
 			-- set current insertion position
 		do
-			gtk_editable_set_position (widget, pos)
+			gtk_editable_set_position (widget, pos - 1)
 		end
-
---	set_maximum_text_lenght (lenght: INTEGER) is
---			-- Maximum number of characters on text
---		do
---			check
---				not_yet_implemented: False
---			end
---		end
 
 feature -- Resizing
 

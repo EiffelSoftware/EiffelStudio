@@ -19,11 +19,10 @@ feature -- Initialization
 			-- Load the specific profiler-configuration file.
 		do
 			!! shared_prof_config;
-			io.putstring ("Which profile-tool did you use? ");
-			io.readword;
-			io.next_line;
+			io.putstring ("--> Which profile-tool did you use (default: `eiffel'): ");
+			io.readline;
 			profiler := io.laststring;
-			if profiler = Void then
+			if profiler = Void or else profiler.empty then
 				profiler := "eiffel"
 			end;
 			profiler.to_lower;

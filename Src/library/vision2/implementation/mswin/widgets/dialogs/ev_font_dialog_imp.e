@@ -69,7 +69,7 @@ feature -- Access
 				create dc.make
 				dc.select_font (wel_font)
 				create text_metric.make (dc)
-				log_font.set_char_set (text_metric.character_set)--dc.text_character_set)
+				log_font.set_char_set (text_metric.character_set)
 				dc.unselect_all
 				dc.release		
 				

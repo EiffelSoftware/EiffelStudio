@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using ISE.Reflection;
+
 using System.Runtime.InteropServices;
 
 	[ClassInterfaceAttribute (ClassInterfaceType.None)]
@@ -75,6 +76,51 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 			return "";		
 	}
 	
+	// Location of the assembly with `Name', `Version', `Culture' and `PublicKey'
+	public String [] AssemblyDependencies( String Name, String Version, String Culture, String PublicKey )
+	{
+		AssemblyDescriptor Descriptor, ADescriptor;
+		ISE.AssemblyManager.Support support;
+		AssemblyName [] Dependencies;	
+		AssemblyName AName;
+		ConversionSupport convert;
+		int i, j;
+		String [] assemblyDependencies;	
+		EiffelAssembly anEiffelAssembly;
+		ReflectionInterface reflectionInterface;
+		
+		Descriptor = new AssemblyDescriptor();
+		Descriptor.Make( Name, Version, Culture, PublicKey );
+		support = new ISE.AssemblyManager.Support();
+		Dependencies = support.DependanciesFromInfo( Descriptor );
+		
+		assemblyDependencies = new String [Dependencies.Length * 5];
+		convert = new ConversionSupport();
+		reflectionInterface = new ReflectionInterface();
+		reflectionInterface.MakeReflectionInterface();
+		
+		j = 0;
+		for( i = 0; i < Dependencies.Length; i++ )
+		{
+			AName = Dependencies [i];
+			ADescriptor = convert.AssemblyDescriptorFromName( AName );
+			reflectionInterface.Search( ADescriptor );
+			if( reflectionInterface.Found )
+			{
+				anEiffelAssembly = reflectionInterface.SearchResult;
+				if( anEiffelAssembly != null )
+				{
+					assemblyDependencies [j] = ADescriptor.Name;
+					assemblyDependencies [j + 1] = ADescriptor.Version;
+					assemblyDependencies [j + 2] = ADescriptor.Culture;
+					assemblyDependencies [j + 3] = ADescriptor.PublicKey;				
+					assemblyDependencies [j + 4] = anEiffelAssembly.EiffelClusterPath;
+					j = j + 5;
+				}
+			}
+		}
+		return assemblyDependencies;
+	}
 	
 	// Reflection interface	
 	protected ReflectionInterface RInterface;

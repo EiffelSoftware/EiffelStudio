@@ -29,7 +29,9 @@ feature -- Basic operations
 				not a_name.is_equal ("IDispatch") and
 				not a_name.is_equal ("IUnknown") and
 				not a_name.is_equal ("IConnectionPointContainer") and
-				not a_name.is_equal ("IConnectionPoint")
+				not a_name.is_equal ("IConnectionPoint")  and
+				not a_name.is_equal ("IProvideClassInfo") and
+				not a_name.is_equal ("IProvideClassInfo2")
 			then
 				Result.append ("_")
 			end

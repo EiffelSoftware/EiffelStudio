@@ -425,11 +425,11 @@ feature -- Dialogs
 	
 feature -- Miscellaneous
 
-	Event_selection_text: STRING is "Select events"
+	Event_selection_text: STRING is "Select events..."
 		-- Displayed on button in object editor which pops
 		-- up event dialog.
 	
-	Event_modification_text: STRING is "Modify events"
+	Event_modification_text: STRING is "Modify events..."
 		-- Displayed on button in object editor which pops
 		-- up event dialog.
 		

@@ -67,14 +67,18 @@ feature -- Access
 			-- Default graphic context for current screen
 		do
 			!! Result.make_from_existing
-					(default_gc_of_screen (handle), display)
+					(display, default_gc_of_screen (handle))
 		end;
 
 	white_pixel: MEL_PIXEL is
 			-- White pixel of this screen
 		do
 			!! Result.make_from_existing
-					(display, white_pixel_of_screen (handle))
+					(display, white_pixel_of_screen (handle));
+		ensure
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	black_pixel: MEL_PIXEL is
@@ -82,6 +86,10 @@ feature -- Access
 		do
 			!! Result.make_from_existing
 					(display, black_pixel_of_screen (handle))
+		ensure
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	default_colormap: MEL_COLORMAP is

@@ -271,8 +271,6 @@ feature -- Element change
 
 	set_name (str: STRING) is
 			-- sets the name of the current font
-		require else
-			valid_name: str /= Void and not str.empty and str.occurrences (',') = 0
 		local
 			h: INTEGER
 		do

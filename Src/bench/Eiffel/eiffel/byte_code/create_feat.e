@@ -87,7 +87,9 @@ feature
 					if context.dt_current > 1 then
 						gen_file.putstring (gc_dtype);
 					else
-						gen_file.putstring (gc_dtype_current);
+						gen_file.putstring (gc_upper_dtype_lparan);
+						context.Current_register.print_register_by_name;
+						gen_file.putchar (')');
 					end;
 					gen_file.putchar (']');
 						-- Remember extern declaration
@@ -103,7 +105,9 @@ feature
 				if context.dt_current > 1 then
 					gen_file.putstring (gc_dtype);
 				else
-					gen_file.putstring (gc_dtype_current);
+					gen_file.putstring (gc_upper_dtype_lparan);
+					context.Current_register.print_register_by_name;
+					gen_file.putchar (')');
 				end;
 				gen_file.putchar (')');
 			end;

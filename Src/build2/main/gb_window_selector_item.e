@@ -143,7 +143,6 @@ feature {GB_OBJECT} -- Implementation
 			object := Void
 			Precursor {GB_WINDOW_SELECTOR_COMMON_ITEM}
 		end
-		
 
 invariant
 	object_not_void: not is_destroyed implies object /= Void

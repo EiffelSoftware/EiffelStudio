@@ -543,7 +543,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				if elem /= Void then
 						-- Call the deselect actions on `elem'.
 					elem.deselect_actions.call (Void)
-					deselect_actions.call ([elem.interface])
+					deselect_actions.call (Void)
 				end
 			end
 
@@ -554,7 +554,7 @@ feature {EV_ANY_I} -- WEL Implementation
 					if elem /= Void then
 							-- Call the select_actions on `elem'.
 						elem.select_actions.call (Void)
-						select_actions.call ([elem.interface])
+						select_actions.call (Void)
 					end
 				end
 			end

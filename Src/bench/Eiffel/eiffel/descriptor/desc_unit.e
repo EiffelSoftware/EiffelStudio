@@ -81,16 +81,17 @@ feature -- Generation
 						buffer.putint (re.static_feature_type_id - 1)
 					else
 						ae ?= entry_item
-						if ae /= Void then
-								-- The entry corresponds to an attribute.
-								-- Write the offset of the attribute in the 
-								-- run-time structure (object) and the type of
-								-- the feature.
-							buffer.putstring (uint16)
-							buffer.putint (ae.workbench_offset)
-							buffer.putstring (int16)
-							buffer.putint (ae.static_feature_type_id - 1)
+						check
+							ae_not_void: ae /= Void
 						end
+							-- The entry corresponds to an attribute.
+							-- Write the offset of the attribute in the 
+							-- run-time structure (object) and the type of
+							-- the feature.
+						buffer.putstring (uint16)
+						buffer.putint (ae.workbench_offset)
+						buffer.putstring (int16)
+						buffer.putint (ae.static_feature_type_id - 1)
 					end
 
 					if entry_item.is_generic then
@@ -172,23 +173,24 @@ feature -- Generation
 						buffer.putstring (gen_type)
 					else
 						ae ?= entry_item
-						if ae /= Void then
-								-- The entry corresponds to an attribute.
-								-- Write the offset of the attribute in the 
-								-- run-time structure (object) and the type of
-								-- the feature.
-							buffer.putstring (desc1)
-							buffer.putint (nb)
-							buffer.putstring (info)
-							buffer.putint (ae.workbench_offset)
-							buffer.putstring (desc2)
-							buffer.putint (nb)
-							buffer.putstring (type)
-							ae.generated_static_feature_type_id (buffer)
-							buffer.putstring (desc2)
-							buffer.putint (nb)
-							buffer.putstring (gen_type)
+						check
+							ae_not_void: ae /= Void
 						end
+							-- The entry corresponds to an attribute.
+							-- Write the offset of the attribute in the 
+							-- run-time structure (object) and the type of
+							-- the feature.
+						buffer.putstring (desc1)
+						buffer.putint (nb)
+						buffer.putstring (info)
+						buffer.putint (ae.workbench_offset)
+						buffer.putstring (desc2)
+						buffer.putint (nb)
+						buffer.putstring (type)
+						ae.generated_static_feature_type_id (buffer)
+						buffer.putstring (desc2)
+						buffer.putint (nb)
+						buffer.putstring (gen_type)
 					end
 
 					if entry_item.is_generic then
@@ -278,7 +280,7 @@ feature -- Melting
 			l_count := count
 
 				-- Append the size of the descriptor unit
-			ba.append_short_integer (l_count + 1)
+			ba.append_short_integer (l_count)
 
 				-- Append the descriptor entries
 			from
@@ -299,19 +301,20 @@ feature -- Melting
 						ba.append_short_integer (re.static_feature_type_id -1)
 					else
 						ae ?= entry_item
-						if ae /= Void then
-								-- The entry corresponds to an attribute.
-								-- Write the offset of the attribute in the 
-								-- run-time structure (object) and the type of
-								-- the feature.
-							ba.append_short_integer (ae.workbench_offset)
-							ba.append_short_integer (ae.static_feature_type_id - 1)
+						check
+							ae_not_void: ae /= Void
 						end
+							-- The entry corresponds to an attribute.
+							-- Write the offset of the attribute in the 
+							-- run-time structure (object) and the type of
+							-- the feature.
+						ba.append_short_integer (ae.workbench_offset)
+						ba.append_short_integer (ae.static_feature_type_id - 1)
 					end
 
 					if entry_item.is_generic then
 						ba.append_short_integer (0)
-						re.make_gen_type_byte_code (ba)
+						entry_item.make_gen_type_byte_code (ba)
 					end
 
 					ba.append_short_integer (-1)

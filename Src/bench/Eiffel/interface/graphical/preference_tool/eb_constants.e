@@ -7,6 +7,9 @@ indexing
 
 class EB_CONSTANTS
 
+inherit
+	TTY_CONSTANTS
+
 feature {NONE} -- Resources
 
 	Graphical_resources: GRAPHICAL_CATEGORY is
@@ -15,44 +18,32 @@ feature {NONE} -- Resources
 			!! Result.make
 		end;
 
-	System_resources: SYSTEM_CATEGORY is
-			-- General resources
-		once
-			!! Result.make
-		end;
-
-	Project_tool_resources: PROJECT_CATEGORY is
+	Project_resources: PROJECT_CATEGORY is
 			-- Resources for the project tool
 		once
 			!! Result.make
 		end;
 
-	System_tool_resources: SYSTEM_W_CATEGORY is
+	System_resources: SYSTEM_CATEGORY is
 			-- Resources for the system tool
 		once
 			!! Result.make
 		end;
 
-	Class_tool_resources: CLASS_W_CATEGORY is
-			-- Resources for the class tool
-		once
-			!! Result.make
-		end;
-
-	Feature_tool_resources: ROUTINE_W_CATEGORY is
+	Object_resources: OBJECT_CATEGORY is
 			-- Resources for the feature tool
 		once
 			!! Result.make
 		end;
 
-	Object_tool_resources: OBJECT_W_CATEGORY is
+	Explain_resources: EXPLAIN_CATEGORY is
 			-- Resources for the feature tool
 		once
 			!! Result.make
 		end;
 
-	Explain_tool_resources: EXPLAIN_W_CATEGORY is
-			-- Resources for the feature tool
+	Profiler_resources: PROFILE_CATEGORY is
+			-- Resources for the profiler tool
 		once
 			!! Result.make
 		end;

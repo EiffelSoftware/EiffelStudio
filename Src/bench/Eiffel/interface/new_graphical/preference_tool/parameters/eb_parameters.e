@@ -6,11 +6,6 @@ indexing
 deferred class
 	EB_PARAMETERS
 
-inherit
-	EB_CONSTANTS
-		-- necessary during migration.
-		-- to be deleted after.
-
 feature -- Initialization
 
 	make is

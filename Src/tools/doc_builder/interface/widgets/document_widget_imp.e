@@ -9,10 +9,10 @@ deferred class
 	DOCUMENT_WIDGET_IMP
 
 inherit
-	EV_VERTICAL_BOX
-		rename
-			border_width as border_width_box,
-			padding_width as padding_width_box
+	MULTIPLE_SPLIT_AREA
+--		rename
+--			border_width as border_width_box,
+--			padding_width as padding_width_box
 		redefine
 			initialize, is_in_default_state
 		end
@@ -30,80 +30,13 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			internal_pixmap: EV_PIXMAP
-			l_file_name: FILE_NAME
 		do
-			Precursor {EV_VERTICAL_BOX}
+			Precursor {MULTIPLE_SPLIT_AREA}
 			initialize_constants
-			
-				-- Create all widgets.
-			create l_ev_vertical_box_1
-			create document_widget
-			create main_box
-			create view_box
-			create button_box
-			create edit_button
-			create xml_button
-			create html_button
-			create l_ev_cell_1
-			create internal_pixmap
-			
-				-- Build_widget_structure.
-			extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (document_widget)
-			document_widget.extend (main_box)
-			main_box.extend (view_box)
-			main_box.extend (button_box)
-			button_box.extend (edit_button)
-			button_box.extend (xml_button)
-			button_box.extend (html_button)
-			button_box.extend (l_ev_cell_1)
-			
-			main_box.set_padding_width (5)
-			main_box.set_border_width (2)
-			main_box.disable_item_expand (button_box)
-			view_box.set_padding_width (5)
-			view_box.set_border_width (2)
-			button_box.set_padding_width (5)
-			button_box.set_border_width (2)
-			button_box.disable_item_expand (edit_button)
-			button_box.disable_item_expand (xml_button)
-			button_box.disable_item_expand (html_button)
-			edit_button.set_text ("Edit")
-			edit_button.align_text_left
-			create l_file_name.make_from_string (Pixmap_directory)
-			l_file_name.extend ("icon_format_text_color.ico")
-			internal_pixmap.set_with_named_file (l_file_name)
-			edit_button.set_pixmap (internal_pixmap)
-			xml_button.set_text ("XML")
-			xml_button.align_text_left
-			create l_file_name.make_from_string (Pixmap_directory)
-			l_file_name.extend ("icon_cut_color.ico")
-			internal_pixmap.set_with_named_file (l_file_name)
-			xml_button.set_pixmap (internal_pixmap)
-			html_button.set_text ("HTML")
-			html_button.align_text_left
-			create l_file_name.make_from_string (Pixmap_directory)
-			l_file_name.extend ("icon_copy_color.ico")
-			internal_pixmap.set_with_named_file (l_file_name)
-			html_button.set_pixmap (internal_pixmap)
-			
-				--Connect events.
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization
 		end
-
-feature -- Access
-
-	l_ev_vertical_box_1, main_box, view_box: EV_VERTICAL_BOX
-	document_widget: EV_FRAME
-	button_box: EV_HORIZONTAL_BOX
-	edit_button, xml_button, html_button: EV_BUTTON
-	l_ev_cell_1: EV_CELL
 
 feature {NONE} -- Implementation
 

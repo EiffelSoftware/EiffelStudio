@@ -8,8 +8,8 @@ class
 
 inherit	
 	EV_TEXT
-		rename
-			initialize as initialize_widget
+		redefine
+			initialize
 		end
 
 	OBSERVER
@@ -39,21 +39,21 @@ feature -- Creation
 
 	make (a_document: DOCUMENT) is
 			-- Make Current with `text'
-		do
-			default_create
+		do			
 			document := a_document
 			document.attach (Current)
-			if document.text /= Void then		
-				append_text (document.text)	
-			end
-			initialize
+			default_create
 		end
 
 feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialization
-		do			
+		do	
+			Precursor {EV_TEXT}
+			if document.text /= Void then				
+				append_text (document.text)
+			end
 			should_update := True
 			create schema_validator
 			change_actions.extend (agent update_subject)
@@ -61,7 +61,36 @@ feature {NONE} -- Initialization
 			pointer_button_release_actions.force_extend (agent update_subject)
 			pointer_button_release_actions.force_extend (agent pointer_released)
 			pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))
+			initialize_accelerators
+			enable_word_wrapping			
+			
 		end
+
+	initialize_accelerators is
+			-- Initialize accelerators
+		local
+			key: EV_KEY
+			key_constants: EV_KEY_CONSTANTS
+			accelerator: EV_ACCELERATOR
+		do		
+				-- Ctrl-B
+			create key.make_with_code (key_constants.Key_b)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent tag_selection ("bold"))
+			Application_window.accelerators.extend (accelerator)
+			
+				-- Ctrl-I
+			create key.make_with_code (key_constants.Key_i)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent tag_selection ("italic"))
+			Application_window.accelerators.extend (accelerator)	
+			
+				-- Ctrl-S
+			create key.make_with_code (key_constants.Key_s)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent save)
+			Application_window.accelerators.extend (accelerator)
+		end		
 
 feature -- Query
 			
@@ -69,7 +98,10 @@ feature -- Query
 			-- Is `text' valid xml?
 		do
 			if not text.is_empty then					
-				Result := is_valid_xml_text (text)				
+				Result := is_valid_xml_text (text)
+				if not Result then
+					create error_report.make_from_gobo_error (error_description)
+				end
 			end
 		end		
 
@@ -158,7 +190,12 @@ feature -- Status report
 			end	
 		end		
 
-	highlight_error (l_no, l_pos: INTEGER) is
+	highlight_error is
+			-- Highlight error.		
+		do			
+		end	
+
+	highlight_error_pos (l_no, l_pos: INTEGER) is
 			-- Highlight line at `l_no' and position `l_pos'.  Since `l_no' denoted a file
 			-- line number this must be converted to the relevant poistion in Current.
 		local
@@ -376,6 +413,7 @@ feature -- Status Setting
 		do
 			should_update := False
 			document.set_text (text)
+			update_line_display
 			should_update := True
 		end 
 

@@ -147,7 +147,7 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 
 	while (nbr_attr--) {
 		found = (char) NULL;
-		for (i=0; i<nbr & (!found); i++) {
+		for (i=0; (i < nbr) && (!found); i++) {
 			attr = items[i];
 			if (!(strcmp (attr, attr_names[nbr_attr])))
 				found = 't';

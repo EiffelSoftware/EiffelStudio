@@ -26,6 +26,10 @@ inherit
 	GB_ACCESSIBLE_COMMAND_HANDLER
 	
 	GB_PICK_AND_DROP_SHIFT_MODIFIER
+	
+	GB_XML_OBJECT_BUILDER
+	
+	GB_ACCESSIBLE_XML_HANDLER
 
 feature {NONE} -- Initialization
 	
@@ -322,6 +326,13 @@ feature -- Basic operations
 			history.cut_off_at_current_position
 			command_add.execute
 		end
+		
+	add_new_component (a_component: GB_COMPONENT) is
+			-- Add object representation of `a_component' to `Current'.
+		do
+			add_new_object (new_object (xml_handler.xml_element_representing_named_component (a_component.name)))
+		end
+		
 		
 	add_new_object (an_object: GB_OBJECT) is
 			-- Add `an_object' to `Current'.

@@ -18,7 +18,26 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
-		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<paragraph>
+			<output output="envision">
+				<list ordered="true">
+					<item>Start Visual Studio .NET</item>
+					<item>Choose Open Project from the File menu.</item>
+					<item>Navigate to <italic><Eiffel_ENViSioN!_installation_path>\compiler\examples\(.net version)\vision2\gauges\</italic> and select <italic>gauges.eifp</italic></item>
+					<item>Clicking open loads the selected project</item>
+				</list>
+			</output>
+			<output output="studio">
+				<list ordered="true">
+					<item>Launch EiffelStudio.</item>
+					<item>Select <bold>Use existing Ace (control file)</bold> and click <bold>OK</bold></item>
+					<item>Browse to <italic>Eiffel54\examples\vision2\gauges\</italic></item>
+					<item>Choose the Ace file</item>
+					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+					<item>Click bold>OK</bold>.</item>
+				</list>
+			</output>		
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>

@@ -4,13 +4,44 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EV_PROGRESS_BAR
 
 inherit
 	EV_PRIMITIVE
 		redefine
 			implementation
+		end
+
+creation
+	make
+
+feature -- Initialization
+
+	make (par: EV_CONTAINER) is
+			-- Create the gtk progress bar.
+		do
+			!EV_PROGRESS_BAR_IMP!implementation.make
+			widget_make (par)
+		end
+
+
+feature -- Status report
+
+	mode_is_segmented: BOOLEAN is
+			-- Is the mode in segmented mode?
+		require
+			exist: not destroyed
+		do
+			Result := implementation.mode_is_segmented
+		end
+
+	mode_is_continuous: BOOLEAN is
+			-- Is the mode in continuous mode?
+		require
+			exist: not destroyed
+		do
+			Result := not mode_is_segmented
 		end
 
 feature -- Status setting

@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Name of the class entered by the user.
 		do
-			Result := class_entry.text.as_lower
+			Result := class_entry.text.as_upper
 		end
 
 	file_name: FILE_NAME is
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 		local
 			input: RAW_FILE
 			in_buf: STRING
-			cn, cr: STRING
+			cr: STRING
 			wd: EV_WARNING_DIALOG
 			retried: BOOLEAN
 			writing: BOOLEAN
@@ -526,9 +526,7 @@ feature {NONE} -- Implementation
 					input.open_read
 					input.read_stream (input.count)
 					in_buf := input.last_string
-					cn := class_name
-					cn.to_upper
-					in_buf.replace_substring_all ("$classname", cn)
+					in_buf.replace_substring_all ("$classname", class_name)
 					if deferred_check.is_selected then
 						in_buf.replace_substring_all ("$class_type", "deferred ")
 					elseif expanded_check.is_selected then

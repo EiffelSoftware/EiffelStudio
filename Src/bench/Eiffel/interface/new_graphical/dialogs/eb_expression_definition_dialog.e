@@ -305,7 +305,7 @@ feature {NONE} -- Event handling
 			if modified_expression = Void then
 				if class_radio.is_selected then
 						-- We try to create an expression related to a class.
-					t := class_field.text
+					t := class_field.text.as_upper
 						--| First find the class given in `class_field'.
 					cl_i := Eiffel_universe.classes_with_name (t)
 					if not cl_i.is_empty then

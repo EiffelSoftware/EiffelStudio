@@ -116,8 +116,8 @@ feature {NONE} -- Vision2 events
 		local
 			loclist: LIST [CLASS_I]
 		do
-			selected_class_name := class_name_entry.text
-			selected := (selected_class_name /= Void) and then (not selected_class_name.is_empty)
+			selected_class_name := class_name_entry.text.as_upper
+			selected := not selected_class_name.is_empty
 			if selected then -- User typed a class name.
 				loclist := Eiffel_universe.classes_with_name (selected_class_name)
 				if loclist.is_empty then -- No class has such a name.

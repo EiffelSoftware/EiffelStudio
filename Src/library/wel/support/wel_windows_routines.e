@@ -341,9 +341,9 @@ feature {NONE} -- Externals
 	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): POINTER is
 			-- SDK GetWindowLong
 		external
-			"C [macro %"wel.h%"] (HWND, int): EIF_INTEGER"
+			"C [macro %"wel.h%"] (HWND, int): EIF_POINTER"
 		alias
-			"GetWindowLongPtr"
+			"GetWindowLong"
 		end
 
 	cwin_redraw_window (hwnd, update_rectangle, update_region: POINTER; flags: INTEGER) is

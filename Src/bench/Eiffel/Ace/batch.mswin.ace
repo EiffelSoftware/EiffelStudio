@@ -114,8 +114,6 @@ cluster
 
 	yacc:		"$EIFFEL_SRC\Eiffel\yacc"
 
-	const:		"$EIFFEL_SRC\Eiffel\const"
-
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "xm_formatter.e"; "xm_named_node.e"; 

@@ -137,8 +137,6 @@ cluster
 
 	yacc:		"$EIFFEL_SRC/Eiffel/yacc"
 
-	const:		"$EIFFEL_SRC/Eiffel/const"
-
 	observer:		"$EIFFEL_SRC/library/patterns/observer"
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"

@@ -16,13 +16,19 @@ inherit
 			enable_sensitive,
 			disable_sensitive,
 			propagate_foreground_color,
-			propagate_background_color
+			propagate_background_color,
+			extend
 		end
 
 feature -- Access
 
-	child: EV_WIDGET_IMP
-			-- The child of the container. obsolete.
+	child: EV_WIDGET_IMP is
+			-- The child of the container.
+		obsolete
+			"Use: item.implementation"
+		do
+			Result ?= item.implementation
+		end
 
 	item: EV_WIDGET
 			-- The child of the container.
@@ -51,69 +57,66 @@ feature -- Status report
 
 feature -- Element change
 
-	put (new_child: like item) is
-			-- Put `new_child' into `Current'
+	remove is
+			-- Remove `item' from `Current'.
 		local
-			child_imp: EV_WIDGET_IMP
+			item_imp: EV_WIDGET_IMP
 		do
-			if new_child = Void then
-
-				--| FIXME VB I presume this is the right place for this:
-				remove_item_actions.call ([item])
-
-				child_imp ?= item.implementation
-				check
-					item_implementation_not_void: child_imp /= Void
-				end	
-				child_imp.set_parent (Void)
-				item := Void
-				notify_change (2 + 1)
-			else
-				new_child.implementation.on_parented
-				child_imp ?= new_child.implementation
-				check
-					new_child_implementation_not_void: child_imp /= Void
-				end
-				item := new_child
-				child_imp.set_parent (interface)
-				--|The line below has been changed from
-				--|notify_change (2 + 1) to combat a re-sizing problem
-				--|when you set the size of a parent before adding a child.
-				--|Julian Rogers 02/01/2000.
-				--|No problems have shown up on testing.
-				child_imp.parent_ask_resize (client_width, client_height)
-
-				--| FIXME VB I presume this is the right place for this:
-				new_item_actions.call ([item])
+			check
+				has_item: item /= Void
 			end
+			remove_item_actions.call ([item])
+			item_imp ?= item.implementation
+			check
+				item_imp_not_void: item_imp /= Void
+			end	
+			item_imp.set_parent (Void)
+			item_imp.on_orphaned
+			item := Void
+			notify_change (2 + 1)
 		end
 
-	replace (v: like item) is
-			-- Replace `item' with `v'
+	insert (v: like item) is
+			-- Insert `v' in `Current'.
 		local
-			child_imp: EV_WIDGET_IMP
+			item_imp: EV_WIDGET_IMP
 		do
-			if item /= Void then
-				child_imp ?= item.implementation
-				remove_child (child_imp)
+			check
+				has_no_item: item = Void
 			end
-			put (v)
+			v.implementation.on_parented
+			item_imp ?= v.implementation
+			check
+				item_imp_not_void: item_imp /= Void
+			end
+			item := v
+			item_imp.set_parent (interface)
+			--| FIXME Was:
+			--| child_imp.parent_ask_resize (client_width, client_height)
+			notify_change (2 + 1)
+			
+			new_item_actions.call ([item])
+		end
+
+	put, replace (v: like item) is
+			-- Replace `item' with `v'.
+		do
+			remove
+			extend (v)
 		end
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		obsolete "Use put instead."
 		do
-			child := child_imp
-			notify_change (2 + 1)
+			put (child_imp.interface)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
 			-- Remove the given child from the children of
 			-- the container.
 		do
-			child := Void
-			notify_change (2 + 1)
+			remove
 		end
 
 feature -- Basic operations
@@ -175,6 +178,9 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/26 18:36:48  brendel
+--| First attempt to fix cell.
+--|
 --| Revision 1.8  2000/04/14 21:41:18  brendel
 --| Fixed put for PIXMAP's.
 --|

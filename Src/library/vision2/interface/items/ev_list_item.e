@@ -10,9 +10,14 @@ class
 	EV_LIST_ITEM
 
 inherit
-	EV_SIMPLE_ITEM
+	EV_ITEM
 		redefine
 			create_action_sequences,
+			implementation
+		end
+
+	EV_TEXTABLE
+		redefine
 			implementation
 		end
 
@@ -140,6 +145,9 @@ end -- class EV_LIST_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/07 22:15:40  brendel
+--| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
+--|
 --| Revision 1.30  2000/03/29 20:26:04  brendel
 --| Removed implementation of obsolete features is_last and is_first.
 --|

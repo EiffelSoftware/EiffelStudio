@@ -18,11 +18,16 @@ class
 	EV_MENU_ITEM
 
 inherit
-	EV_SIMPLE_ITEM
+	EV_ITEM
 		redefine
 			implementation,
 			create_implementation,
 			create_action_sequences
+		end
+
+	EV_TEXTABLE
+		redefine
+			implementation
 		end
 
 create
@@ -115,6 +120,9 @@ end -- class EV_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/04/07 22:15:40  brendel
+--| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
+--|
 --| Revision 1.35  2000/03/27 18:02:48  brendel
 --| Added note about ampersands in `text'.
 --| Replaced press_actions with select_actions.

@@ -10,10 +10,25 @@ deferred class
 	EV_ITEM
 
 inherit
-	EV_ANY
+	EV_PICK_AND_DROPABLE
 		redefine
 			implementation,
 			create_action_sequences
+		end
+
+	EV_PIXMAPABLE
+		redefine
+			implementation
+		end
+
+feature {NONE} -- Initialization
+
+	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
+		do
+			{EV_PICK_AND_DROPABLE} Precursor
+			create pointer_button_press_actions
+			create pointer_motion_actions
 		end
 
 feature -- Access
@@ -47,19 +62,10 @@ feature -- Event handling
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 
-feature {EV_ANY_I, EV_RADIO} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_ITEM_I
 			-- Responsible for interaction with the native graphics toolkit.
-
-feature {EV_ITEM, EV_ANY_I, EV_RADIO} -- Implementation
-
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			create pointer_button_press_actions
-			create pointer_motion_actions
-		end
 
 end -- class EV_ITEM
 
@@ -84,6 +90,9 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/07 22:15:40  brendel
+--| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
+--|
 --| Revision 1.13  2000/03/22 23:49:37  oconnor
 --| comments
 --|

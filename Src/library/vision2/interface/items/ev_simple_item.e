@@ -1,5 +1,5 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
---| FIXME Needs a name change, simple means, well, not very much at all.
 indexing	
 	description: 
 		"Base class for items that are EV_TEXTABLE, EV_PIXMAPABLEa and%
@@ -11,44 +11,6 @@ indexing
 
 deferred class 
 	EV_SIMPLE_ITEM
-
-inherit
-	EV_ITEM
-		redefine
-			implementation,
-			create_action_sequences
-		end
-
-	--| FIXME Menu items and separators are not PND-able
-	EV_PICK_AND_DROPABLE
-		redefine
-			implementation,
-			create_action_sequences
-		end
-
-	EV_PIXMAPABLE
-		redefine
-			implementation
-		end
-
-	EV_TEXTABLE
-		redefine
-			implementation
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_SIMPLE_ITEM_I
-			-- Responsible for interaction with the native graphics toolkit.
-
-feature {NONE} -- Implementation
-
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			{EV_ITEM} Precursor
-			{EV_PICK_AND_DROPABLE} Precursor
-		end
 
 end -- class EV_ITEM
 
@@ -73,6 +35,9 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/07 22:15:40  brendel
+--| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
+--|
 --| Revision 1.24  2000/03/27 23:52:50  brendel
 --| Added FIXME that menu items are not PND-able.
 --|

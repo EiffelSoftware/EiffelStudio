@@ -9,7 +9,6 @@ class
 	EV_TOOL_BAR_BUTTON
 
 inherit
-
 	EV_TOOL_BAR_ITEM
 		redefine
 			implementation,
@@ -17,7 +16,7 @@ inherit
 			parent
 		end
 
-	EV_SIMPLE_ITEM
+	EV_ITEM
 		redefine
 			implementation,
 			create_action_sequences,
@@ -28,6 +27,11 @@ inherit
 		redefine
 			implementation,
 			create_action_sequences
+		end
+
+	EV_TEXTABLE
+		redefine
+			implementation
 		end
 
 create
@@ -154,6 +158,9 @@ end -- class EV_TOOL_BAR_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/07 22:15:41  brendel
+--| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
+--|
 --| Revision 1.12  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

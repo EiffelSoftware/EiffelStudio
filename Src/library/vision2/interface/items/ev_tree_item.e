@@ -15,11 +15,15 @@ class
 	EV_TREE_ITEM
 
 inherit
-	EV_SIMPLE_ITEM
+	EV_ITEM
 		redefine
 			implementation,
 			create_action_sequences
+		end
 
+	EV_TEXTABLE
+		redefine
+			implementation
 		end
 
 	EV_TREE_ITEM_LIST
@@ -182,6 +186,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/04/07 22:15:41  brendel
+--| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
+--|
 --| Revision 1.41  2000/04/05 21:16:13  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -13,6 +13,10 @@
 #ifndef _hector_h_
 #define _hector_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "cecil.h"
 #include "garcol.h"		/* For struct stack */
 
@@ -43,6 +47,10 @@ extern char *spfreeze();			/* Freeze special object's address */
 extern void spufreeze();			/* Put frozen spec obj back to GC control */
 
 #define spfrozen(object)	(HEADER(object)->ov_size & B_C) /* Is special object frozen */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

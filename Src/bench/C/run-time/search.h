@@ -13,6 +13,10 @@
 #ifndef _search_h_
 #define _search_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+ 
 /*
  * Search table declarations.
  */
@@ -35,6 +39,10 @@ extern struct s_table *s_create();	/* Creates search table */
 extern int s_put();					/* Insertion in search table */
 extern int32 s_search();			/* Search in table */
 extern void s_resize();				/* Search table resizing */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

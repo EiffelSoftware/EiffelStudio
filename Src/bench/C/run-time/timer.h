@@ -13,6 +13,10 @@
 #ifndef _timer_h_
 #define _timer_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "config.h"
 #include <sys/types.h>
 
@@ -61,6 +65,10 @@ typedef Time_t Timeval;
 extern void gettime();			/* Save current time (timestamp) */
 extern unsigned long elapsed();	/* Give elapsed time between two timestamps */
 extern void getcputime();		/* Get CPU usage (user time and sys time) */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

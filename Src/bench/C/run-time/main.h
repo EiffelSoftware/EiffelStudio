@@ -9,6 +9,10 @@
 
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void dinterrupt();
 extern void dserver();
 extern int in_assertion;
@@ -20,5 +24,9 @@ extern int scount;				/* Maximum dtype */
 #ifdef EIF_WIN_31
 extern int _argc;
 extern char **_argv;
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 

@@ -6,6 +6,10 @@
 #ifndef _err_msg_h
 #define _err_msg_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 
 #ifdef EIF_WINDOWS
@@ -15,6 +19,10 @@ extern char *exception_trace_string;
 extern void show_trace();
 #else
 #define print_err_msg fprintf
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

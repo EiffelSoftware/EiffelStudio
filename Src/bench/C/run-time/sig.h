@@ -17,6 +17,10 @@
 #ifndef _signal_h_
 #define _signal_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SIGSTACK	200		/* Size of FIFO stack for signal buffering */
 
 /* Structure used as FIFO stack for signal buffering. I really do not expect
@@ -68,9 +72,13 @@ extern char esigdefined();	/* Is signal defined? */
 extern void esigresall();	/* Reset all signal to their default handling */
 extern void esigresdef();	/* Reset a signal to its default handling */
 
-#endif
-
 #ifdef HAS_SYS_SIGLIST
 	extern char *sys_siglist[];
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 

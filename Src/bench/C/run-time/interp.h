@@ -13,6 +13,10 @@
 #ifndef _interp_h_
 #define _interp_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable.h"
 #include "struct.h"
 
@@ -221,5 +225,9 @@ extern void idump();
 #define BC_OBJECT_EXPR_ADDR	(char) 129
 #define BC_RESERVE			(char) 130
 #define BC_POP				(char) 131
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

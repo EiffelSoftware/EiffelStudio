@@ -13,6 +13,11 @@
 #ifndef _update_h_
 #define _update_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /*
  * Byte code for assertion/debug level.
  * These values have to match with Eiffel values in classes AS_CONST/DB_CONST
@@ -48,5 +53,9 @@ extern long wlong();
 extern int32 wint32();
 extern uint32 wuint32();
 extern void wread();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

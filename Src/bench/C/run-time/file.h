@@ -13,6 +13,11 @@
 
 #ifndef _file_h_
 #define _file_h_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "limits.h"							/* For PATH_MAX */
 #include "macros.h"
 
@@ -148,4 +153,9 @@ extern int rmdir();
 #endif
 
 extern EIF_BOOLEAN eif_group_in_list();
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

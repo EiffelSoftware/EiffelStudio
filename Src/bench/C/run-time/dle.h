@@ -13,6 +13,9 @@
 #ifndef _dle_h_
 #define _dle_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Status codes of the last dynamic class retrievement
  */
@@ -45,5 +48,9 @@ extern void dle_reclaim();		/* Free resources introduced by the DC-set */
 extern EIF_INTEGER dle_retrieve();	/* Load the Dynamic Class Set */
 extern EIF_INTEGER dle_search();	/* Search for a class in the DC-Set */
 extern void c_pass_dle_routines();	/* Pass eiffel routine addr to C */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

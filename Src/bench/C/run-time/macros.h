@@ -13,6 +13,10 @@
 #ifndef _macros_h_
 #define _macros_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "config.h"
 #include "malloc.h"
 #include "garcol.h"
@@ -499,5 +503,9 @@ extern int fcount;
 
 #define RTPS		prof_stack_rewind(saved_prof_top)		/* Clean up profiler stack */
 #define RTTS		trace_call_level = current_call_level	/* Clean up trace levels */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -13,6 +13,10 @@
 #ifndef _except_h
 #define _except_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable.h"
 #include "malloc.h"
 #include "garcol.h"
@@ -241,5 +245,9 @@ extern void eecatch();			/* Catch exception */
 extern void eeignore();			/* Ignore exception */
 extern char *eename();			/* Exception description */
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -39,8 +39,6 @@ feature {ICOR_EXPORTER} -- Access
 	skip (a_nb: INTEGER) is
 		do
 			last_call_success := cpp_skip (item, a_nb)
-		ensure
-			success: last_call_success = 0
 		end
 
 	reset is

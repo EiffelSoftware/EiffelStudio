@@ -30,10 +30,12 @@ all base(dev):					"$/base"
 external
 
 	include_path:
+	"$VISION_PRERELEASE/vision2/spec/include/",
 	"$VISION_PRERELEASE/vision2/implementation/gtk/Clib `gtk-config --cflags`";
 
 	object:
+	"$(VISION_PRERELEASE)/vision2/Clib/load_pixmap.o",
 	"$(VISION_PRERELEASE)/vision2/implementation/gtk/Clib/gtk_eiffel.o",
-	"`gtk-config --libs`"
+	"`gtk-config --libs` -lpng -lz -lXtst"
 
 end

@@ -183,13 +183,13 @@ feature -- Comparison
 				end
 			end
 			debug ("ASSERTION")
-				io.putstring ("same as: ")
-				io.putbool (Result)
-				io.new_line
+				io.put_string ("same as: ")
+				io.put_boolean (Result)
+				io.put_new_line
 				if other = Void then
-					io.putstring ("other is void%N")
+					io.put_string ("other is void%N")
 				elseif count /= other.count then
-					io.putstring ("count is not same%N")
+					io.put_string ("count is not same%N")
 				end
 			end
 		end

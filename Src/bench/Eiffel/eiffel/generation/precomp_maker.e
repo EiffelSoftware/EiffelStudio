@@ -29,9 +29,9 @@ feature
 					-- `object_baskets' may be empty when
 					-- merging several precompilations.
 				System.set_has_precompiled_preobj (True);
-				Make_file.putstring ("%Tld -r -o preobj.o ");
+				Make_file.put_string ("%Tld -r -o preobj.o ");
 				generate_objects_macros;
-				Make_file.new_line
+				Make_file.put_new_line
 			else
 				System.set_has_precompiled_preobj (False)
 			end;

@@ -179,50 +179,50 @@ feature -- Cecil
 			generate_macro ("RCECIL", cecil_rt_basket)
 
 				-- Cecil library prodcution rule
-			make_file.putstring ("STATIC_CECIL = lib")
-			make_file.putstring (system_name)
-			make_file.putstring (".a%N")
+			make_file.put_string ("STATIC_CECIL = lib")
+			make_file.put_string (system_name)
+			make_file.put_string (".a%N")
 
-			make_file.putstring ("cecil: $(STATIC_CECIL)%N")
-			make_file.putstring ("$(STATIC_CECIL): ")
-			make_file.putchar (' ')
-			make_file.putstring ("$(OBJECTS) %N")
-			make_file.putstring ("%T$(AR) x ")
-			make_file.putstring ("$(EIFLIB)")
-			make_file.new_line
-			make_file.putstring ("%T$(AR) cr ")
-			make_file.putstring ("$(STATIC_CECIL)")
-			make_file.putchar (' ')
-			make_file.putstring ("$(OBJECTS) ")
-			make_file.putchar (continuation)
-			make_file.new_line
+			make_file.put_string ("cecil: $(STATIC_CECIL)%N")
+			make_file.put_string ("$(STATIC_CECIL): ")
+			make_file.put_character (' ')
+			make_file.put_string ("$(OBJECTS) %N")
+			make_file.put_string ("%T$(AR) x ")
+			make_file.put_string ("$(EIFLIB)")
+			make_file.put_new_line
+			make_file.put_string ("%T$(AR) cr ")
+			make_file.put_string ("$(STATIC_CECIL)")
+			make_file.put_character (' ')
+			make_file.put_string ("$(OBJECTS) ")
+			make_file.put_character (continuation)
+			make_file.put_new_line
 			generate_other_objects
-			make_file.putstring ("%T%T$(RCECIL)")
-			make_file.new_line
-			make_file.putstring ("%T$(RANLIB) ")
-			make_file.putstring ("$(STATIC_CECIL)%N")
-			make_file.putstring ("%T$(RM) $(RCECIL) ")
-			make_file.new_line
-			make_file.new_line
+			make_file.put_string ("%T%T$(RCECIL)")
+			make_file.put_new_line
+			make_file.put_string ("%T$(RANLIB) ")
+			make_file.put_string ("$(STATIC_CECIL)%N")
+			make_file.put_string ("%T$(RM) $(RCECIL) ")
+			make_file.put_new_line
+			make_file.put_new_line
 
 				-- SHARED_CECIL
-			make_file.putstring ("SHARED_CECIL = lib")
-			make_file.putstring (system_name)
-			make_file.putstring ("$(SHARED_SUFFIX)%N")
-			make_file.putstring ("dynamic_cecil: $(SHARED_CECIL) %N")
-			make_file.putstring ("SHARED_CECIL_OBJECT = $(OBJECTS) $(EXTERNALS) $(EIFLIB)")
-			make_file.putchar (continuation)
-			make_file.new_line
+			make_file.put_string ("SHARED_CECIL = lib")
+			make_file.put_string (system_name)
+			make_file.put_string ("$(SHARED_SUFFIX)%N")
+			make_file.put_string ("dynamic_cecil: $(SHARED_CECIL) %N")
+			make_file.put_string ("SHARED_CECIL_OBJECT = $(OBJECTS) $(EXTERNALS) $(EIFLIB)")
+			make_file.put_character (continuation)
+			make_file.put_new_line
 			generate_other_objects
-			make_file.putstring ("%T%TE1/emain.o")
-			make_file.new_line
-			make_file.putstring ("SHAREDFLAGS = $(LDSHAREDFLAGS) $(SHARED_CECIL) %N");
-			make_file.putstring ("$(SHARED_CECIL): $(SHARED_CECIL_OBJECT) %N")
-			make_file.putstring ("%T$(RM) $(SHARED_CECIL) %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
+			make_file.put_string ("%T%TE1/emain.o")
+			make_file.put_new_line
+			make_file.put_string ("SHAREDFLAGS = $(LDSHAREDFLAGS) $(SHARED_CECIL) %N");
+			make_file.put_string ("$(SHARED_CECIL): $(SHARED_CECIL_OBJECT) %N")
+			make_file.put_string ("%T$(RM) $(SHARED_CECIL) %N")
+			make_file.put_string ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
 			
-			make_file.new_line
-			make_file.new_line
+			make_file.put_new_line
+			make_file.put_new_line
 		end
 
 feature -- Generate Dynamic Library
@@ -235,54 +235,54 @@ feature -- Generate Dynamic Library
 			egc_dynlib_file := "egc_dynlib.template"
 
 			-- Generate SYSTEM_IN_DYNAMIC_LIB...
-			make_file.putstring ("%Ndynlib: $(SYSTEM_IN_DYNAMIC_LIB) ")
+			make_file.put_string ("%Ndynlib: $(SYSTEM_IN_DYNAMIC_LIB) ")
 
 			-- Generate "E1/egc_dynlib.o"
-			make_file.putstring ("%N")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/egc_dynlib.o: Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
-			make_file.putstring (egc_dynlib_file)
-			make_file.putstring ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
-			make_file.putstring (egc_dynlib_file)
-			make_file.putstring (" ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/egc_dynlib.c") 
+			make_file.put_string ("%N")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/egc_dynlib.o: Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
+			make_file.put_string (egc_dynlib_file)
+			make_file.put_string ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
+			make_file.put_string (egc_dynlib_file)
+			make_file.put_string (" ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/egc_dynlib.c") 
 
-			make_file.putstring ("%N%Tcd ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring (" ; $(MAKE) egc_dynlib.o")
-			make_file.putstring (" ; cd ..")
+			make_file.put_string ("%N%Tcd ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string (" ; $(MAKE) egc_dynlib.o")
+			make_file.put_string (" ; cd ..")
 
 			-- Generate "E1/edynlib.o"
-			make_file.putstring ("%N")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/edynlib.o: Makefile ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/edynlib.c ")
-			make_file.putstring ("%N%Tcd ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring (" ; $(MAKE) edynlib.o")
-			make_file.putstring (" ; cd ..%N")
+			make_file.put_string ("%N")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/edynlib.o: Makefile ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/edynlib.c ")
+			make_file.put_string ("%N%Tcd ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string (" ; $(MAKE) edynlib.o")
+			make_file.put_string (" ; cd ..%N")
 
 			-- Continue the declaration for the SYSTEM_IN_DYNAMIC_LIB
-			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ = $(EIFLIB) ")
-			make_file.putchar (continuation)
-			make_file.new_line
+			make_file.put_string ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ = $(EIFLIB) ")
+			make_file.put_character (continuation)
+			make_file.put_new_line
 			generate_other_objects
-			make_file.putstring ("%T%T$(OBJECTS) $(EXTERNALS) E1/edynlib.o E1/egc_dynlib.o ")
-			make_file.putstring ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB) %N");
-			make_file.putstring ("$(SYSTEM_IN_DYNAMIC_LIB): $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
-			make_file.putstring ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
+			make_file.put_string ("%T%T$(OBJECTS) $(EXTERNALS) E1/edynlib.o E1/egc_dynlib.o ")
+			make_file.put_string ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB) %N");
+			make_file.put_string ("$(SYSTEM_IN_DYNAMIC_LIB): $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
+			make_file.put_string ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
+			make_file.put_string ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
 			
-			make_file.new_line
-			make_file.new_line
+			make_file.put_new_line
+			make_file.put_new_line
 		end
 
 feature -- Actual generation
@@ -426,13 +426,13 @@ feature -- Sub makefile generation
 						-- Generate object list.
 					generate_macro ("OBJECTS", basket)
 						-- Generate partial object.
-					make_file.putstring ("all: ")
-					make_file.putchar (sub_dir)
-					make_file.putstring ("obj")
-					make_file.putint (i)
-					make_file.putstring (".o")
-					make_file.new_line
-					make_file.new_line
+					make_file.put_string ("all: ")
+					make_file.put_character (sub_dir)
+					make_file.put_string ("obj")
+					make_file.put_integer (i)
+					make_file.put_string (".o")
+					make_file.put_new_line
+					make_file.put_new_line
 					generate_partial_objects_linking (sub_dir, i)
 						-- Generate cleaning rules
 					generate_sub_cleaning
@@ -461,19 +461,19 @@ feature -- Generation, Header
 	generate_preamble is
 			-- Generate leading part (directions to /bin/sh)
 		do
-			make_file.putstring ("case $CONFIG in%N'')%N")
-			make_file.putstring ("%
+			make_file.put_string ("case $CONFIG in%N'')%N")
+			make_file.put_string ("%
 				%%Tif test ! -f config.sh; then%N%
 				%%T%T(echo %"Can't find config.sh.%"; exit 1)%N%
 				%%Tfi 2>/dev/null%N%
 				%%T. ./config.sh%N%
 				%%T;;%N%
 				%esac%N")
-			make_file.putstring ("%
+			make_file.put_string ("%
 				%case %"$O%" in%N%
 				%*/*) cd `expr X$0 : 'X\(.*\)/'` ;;%N%
 				%esac%N")
-			make_file.putstring ("%
+			make_file.put_string ("%
 				%echo %"Extracting %".%"/Makefile%
 								% (with variable substitutions)%"%N%
 				%$spitshell >Makefile <<!GROK!THIS!%N")
@@ -483,19 +483,19 @@ feature -- Generation, Header
 			-- Generate leading part (directions to /bin/sh)
 			-- for subdirectory Makefiles.
 		do
-			make_file.putstring ("case $CONFIG in%N'')%N")
-			make_file.putstring ("%
+			make_file.put_string ("case $CONFIG in%N'')%N")
+			make_file.put_string ("%
 				%%Tif test ! -f ../config.sh; then%N%
 				%%T%T(echo %"Can't find ../config.sh.%"; exit 1)%N%
 				%%Tfi 2>/dev/null%N%
 				%%T. ../config.sh%N%
 				%%T;;%N%
 				%esac%N")
-			make_file.putstring ("%
+			make_file.put_string ("%
 				%case %"$O%" in%N%
 				%*/*) cd `expr X$0 : 'X\(.*\)/'` ;;%N%
 				%esac%N")
-			make_file.putstring ("%
+			make_file.put_string ("%
 				%echo %"Extracting %".%"/Makefile%
 								% (with variable substitutions)%"%N%
 				%$spitshell >Makefile <<!GROK!THIS!%N")
@@ -505,93 +505,93 @@ feature -- Generation, Header
 			-- Customize generic Makefile
 		do
 			generate_include_path
-			make_file.putstring ("%
+			make_file.put_string ("%
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
 				%CPP = $cpp%N")
 
 			if System.in_final_mode then
-				make_file.putstring ("CFLAGS = $optimize ")
+				make_file.put_string ("CFLAGS = $optimize ")
 			else
-				make_file.putstring ("CFLAGS = $wkoptimize ")
+				make_file.put_string ("CFLAGS = $wkoptimize ")
 			end
 
 			if System.il_generation then
-				make_file.putstring ("$il_flags ")
+				make_file.put_string ("$il_flags ")
 			end
 
 			if System.has_multithreaded then
-				make_file.putstring ("$mtccflags $large ")
+				make_file.put_string ("$mtccflags $large ")
 			else
-				make_file.putstring ("$ccflags $large ")
+				make_file.put_string ("$ccflags $large ")
 			end
 
 			if System.has_dynamic_runtime then
-				make_file.putstring ("$shared_flags ")
+				make_file.put_string ("$shared_flags ")
 			end
 
 			if not System.uses_ise_gc_runtime then
-				make_file.putstring ("-DNO_ISE_GC ")
+				make_file.put_string ("-DNO_ISE_GC ")
 			end
 
 			generate_specific_defines
-			make_file.putstring ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
+			make_file.put_string ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
 			if System.in_final_mode then
-				make_file.putstring ("CPPFLAGS = $optimize ")
+				make_file.put_string ("CPPFLAGS = $optimize ")
 			else
-				make_file.putstring ("CPPFLAGS = $wkoptimize ")
+				make_file.put_string ("CPPFLAGS = $wkoptimize ")
 			end
 
 			if System.il_generation then
-				make_file.putstring ("$il_flags ")
+				make_file.put_string ("$il_flags ")
 			end
 
 			if System.has_multithreaded then
-				make_file.putstring ("$mtcppflags $large ")
+				make_file.put_string ("$mtcppflags $large ")
 			else
-				make_file.putstring ("$cppflags $large ")
+				make_file.put_string ("$cppflags $large ")
 			end
 
 			if not System.uses_ise_gc_runtime then
-				make_file.putstring ("-DNO_ISE_GC ")
+				make_file.put_string ("-DNO_ISE_GC ")
 			end
 
 			generate_specific_defines
-			make_file.putstring ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
+			make_file.put_string ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
-			make_file.putstring ("LDFLAGS = ")
+			make_file.put_string ("LDFLAGS = ")
 
 			if System.is_console_application then
-				make_file.putstring (" $console_flags")
+				make_file.put_string (" $console_flags")
 			else
-				make_file.putstring (" $windows_flags")
+				make_file.put_string (" $windows_flags")
 			end
 
 			if System.has_multithreaded then
-				make_file.putstring (" $mtldflags")
+				make_file.put_string (" $mtldflags")
 			else
-				make_file.putstring (" $ldflags")
+				make_file.put_string (" $ldflags")
 			end
 
-			make_file.new_line
-			make_file.putstring ("LDSHAREDFLAGS = ")
+			make_file.put_new_line
+			make_file.put_string ("LDSHAREDFLAGS = ")
 			if System.has_multithreaded then
-				make_file.putstring (" $mtldsharedflags")
+				make_file.put_string (" $mtldsharedflags")
 			else
-				make_file.putstring (" $ldsharedflags")
+				make_file.put_string (" $ldsharedflags")
 			end
 
-			make_file.putstring ("%NEIFLIB = ")
-			make_file.putstring (run_time)
+			make_file.put_string ("%NEIFLIB = ")
+			make_file.put_string (run_time)
 
 			if System.has_multithreaded then
-				make_file.putstring ("%NLIBS = $mtlibs")
+				make_file.put_string ("%NLIBS = $mtlibs")
 			else
-				make_file.putstring ("%NLIBS = $libs")
+				make_file.put_string ("%NLIBS = $libs")
 			end
 
-			make_file.putstring ("%NMAKE = $make%N%
+			make_file.put_string ("%NMAKE = $make%N%
 				%AR = $ar%N%
 				%LD = $ld%N%
 				%MKDEP = $mkdep %H$(DPFLAGS) --%N%
@@ -602,36 +602,36 @@ feature -- Generation, Header
 				%FILE_EXIST = $file_exist%N%
 				%RMDIR = $rmdir%N")
 
-			make_file.putstring ("X2C = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/x2c%N")
-			make_file.putstring ("SHAREDLINK = $sharedlink%N")
-			make_file.putstring ("SHAREDLIBS = $sharedlibs%N")
-			make_file.putstring ("SHARED_SUFFIX = $shared_suffix%N")
+			make_file.put_string ("X2C = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/x2c%N")
+			make_file.put_string ("SHAREDLINK = $sharedlink%N")
+			make_file.put_string ("SHAREDLIBS = $sharedlibs%N")
+			make_file.put_string ("SHARED_SUFFIX = $shared_suffix%N")
 
 			if System.makefile_names /= Void then
 				generate_makefile_names -- EXTERNAL_MAKEFILES = ...
-				make_file.putstring ("COMMAND_MAKEFILE = $command_makefile%N")
+				make_file.put_string ("COMMAND_MAKEFILE = $command_makefile%N")
 			else
-				make_file.putstring ("COMMAND_MAKEFILE = %N")
+				make_file.put_string ("COMMAND_MAKEFILE = %N")
 			end
 
-			make_file.putstring ("START_TEST = $start_test %N")
-			make_file.putstring ("END_TEST = $end_test %N")
-			make_file.putstring ("CREATE_TEST = $create_test %N")
+			make_file.put_string ("START_TEST = $start_test %N")
+			make_file.put_string ("END_TEST = $end_test %N")
+			make_file.put_string ("CREATE_TEST = $create_test %N")
 
-			make_file.putstring ("SYSTEM_IN_DYNAMIC_LIB = ")
-			make_file.putstring (system_name)
-			make_file.putstring ("$shared_suffix %N")
+			make_file.put_string ("SYSTEM_IN_DYNAMIC_LIB = ")
+			make_file.put_string (system_name)
+			make_file.put_string ("$shared_suffix %N")
 
 			if System.il_generation then
-				make_file.putstring ("IL_SYSTEM = lib")
-				make_file.putstring (system_name)
-				make_file.putstring ("$shared_suffix %N")
-				make_file.putstring ("IL_RESOURCE = ")
-				make_file.putstring (system_name)
-				make_file.new_line
+				make_file.put_string ("IL_SYSTEM = lib")
+				make_file.put_string (system_name)
+				make_file.put_string ("$shared_suffix %N")
+				make_file.put_string ("IL_RESOURCE = ")
+				make_file.put_string (system_name)
+				make_file.put_new_line
 			end
 
-			make_file.putstring ("%
+			make_file.put_string ("%
 				%!GROK!THIS!%N%
 				%$spitshell >>Makefile <<'!NO!SUBS!'%N")
 		end
@@ -644,8 +644,8 @@ feature -- Generation, Object list(s)
 			size: INTEGER
 			file_name: STRING
 		do
-			make_file.putstring (mname)
-			make_file.putstring (" = ")
+			make_file.put_string (mname)
+			make_file.put_string (" = ")
 			from
 				basket.start
 				size := mname.count + 3
@@ -655,19 +655,19 @@ feature -- Generation, Object list(s)
 				file_name := basket.item
 				size := size + file_name.count + 1
 				if size > 78 then
-					make_file.putchar (Continuation)
-					make_file.new_line
-					make_file.putchar ('%T')
+					make_file.put_character (Continuation)
+					make_file.put_new_line
+					make_file.put_character ('%T')
 					size := 8 + file_name.count + 1
-					make_file.putstring (file_name)
+					make_file.put_string (file_name)
 				else
-					make_file.putstring (file_name)
+					make_file.put_string (file_name)
 				end
-				make_file.putchar (' ')
+				make_file.put_character (' ')
 				basket.forth
 			end
-			make_file.new_line
-			make_file.new_line
+			make_file.put_new_line
+			make_file.put_new_line
 		end
 
 feature -- Generation, External archives and object files.
@@ -680,21 +680,21 @@ feature -- Generation, External archives and object files.
 		do
 			object_file_names := System.object_file_names
 			if object_file_names /= Void then
-				make_file.putstring ("EXTERNALS = ")
+				make_file.put_string ("EXTERNALS = ")
 				from
 					i := 1
 					nb := object_file_names.count
 				until
 					i > nb
 				loop
-					make_file.putchar (' ')
-					make_file.putchar (Continuation)
-					make_file.putstring ("%N%T")
-					make_file.putstring (object_file_names.i_th (i))
+					make_file.put_character (' ')
+					make_file.put_character (Continuation)
+					make_file.put_string ("%N%T")
+					make_file.put_string (object_file_names.i_th (i))
 					i := i + 1
 				end
-				make_file.new_line
-				make_file.new_line
+				make_file.put_new_line
+				make_file.put_new_line
 			end
 		end
 
@@ -706,21 +706,21 @@ feature -- Generation, External archives and object files.
 		do
 			include_paths := System.include_paths
 			if include_paths /= Void then
-				make_file.putstring ("INCLUDE_PATH = ")
+				make_file.put_string ("INCLUDE_PATH = ")
 				from
 					i := 1
 					nb := include_paths.count
 				until
 					i > nb
 				loop
-					make_file.putstring ("-I")
-					make_file.putstring (include_paths.i_th (i))
+					make_file.put_string ("-I")
+					make_file.put_string (include_paths.i_th (i))
 					if i /= nb then
-						make_file.putchar (' ')
+						make_file.put_character (' ')
 					end
 					i := i + 1
 				end
-				make_file.new_line
+				make_file.put_new_line
 			end
 		end
 
@@ -733,17 +733,17 @@ feature -- Generation, External archives and object files.
 		do
 			makefile_names := System.makefile_names
 			from
-				make_file.putstring ("EXTERNAL_MAKEFILES = ")
+				make_file.put_string ("EXTERNAL_MAKEFILES = ")
 				i := 1
 				nb := makefile_names.count
 			until
 				i > nb
 			loop
-				make_file.putstring (" ")
-				make_file.putstring (makefile_names.i_th (i))
+				make_file.put_string (" ")
+				make_file.put_string (makefile_names.i_th (i))
 				i := i + 1
 			end
-			make_file.new_line
+			make_file.put_new_line
 		end
 
 feature -- Generation (Linking rules)
@@ -752,37 +752,37 @@ feature -- Generation (Linking rules)
 			-- Generate rules to produce DLL for IL code generation.
 			--| So far this is a Windows specific code generation.
 		do
-			make_file.putstring ("all: $(IL_SYSTEM)")
-			make_file.new_line
+			make_file.put_string ("all: $(IL_SYSTEM)")
+			make_file.put_new_line
 
-			make_file.putstring ("OBJECTS= lib")
-			make_file.putstring (system_name)
-			make_file.putstring (".obj")
-			make_file.new_line
+			make_file.put_string ("OBJECTS= lib")
+			make_file.put_string (system_name)
+			make_file.put_string (".obj")
+			make_file.put_new_line
 			
 				-- Continue the declaration for the IL_SYSTEM
-			make_file.putstring ("$il_system_compilation_line")
-			make_file.new_line
+			make_file.put_string ("$il_system_compilation_line")
+			make_file.put_new_line
 
-			make_file.new_line
+			make_file.put_new_line
 		end
 
 	generate_executable is
 			-- Generate rules to produce executable
 		do
-			make_file.putstring ("all: ")
-			make_file.putstring (system_name)
+			make_file.put_string ("all: ")
+			make_file.put_string (system_name)
 				-- At this stage `update' on `Eiffel_dynamic_lib' was called by AUXILIARY_FILES.generate_dynamic_lib
 				-- and therefore `is_content_valid' is still meaningful.
 			if
 				Eiffel_dynamic_lib /= Void and then Eiffel_dynamic_lib.is_content_valid and then
 				not Eiffel_dynamic_lib.is_empty
 			then
-				make_file.putstring (" $(SYSTEM_IN_DYNAMIC_LIB)")
+				make_file.put_string (" $(SYSTEM_IN_DYNAMIC_LIB)")
 			end
 
-			make_file.new_line
-			make_file.new_line
+			make_file.put_new_line
+			make_file.put_new_line
 			generate_partial_objects_dependencies
 			generate_partial_system_objects_dependencies
 			generate_simple_executable
@@ -792,54 +792,54 @@ feature -- Generation (Linking rules)
 			-- Generate rule to produce simple executable, linked in
 			-- with `run_time' archive.
 		do
-			make_file.putstring ("OBJECTS= ")
+			make_file.put_string ("OBJECTS= ")
 			generate_objects_macros
-			make_file.putchar (' ')
+			make_file.put_character (' ')
 			generate_system_objects_macros
-			make_file.putstring ("%N") 
+			make_file.put_string ("%N") 
 
-			make_file.new_line
-			make_file.putstring (system_name)
-			make_file.putstring (": ")
-			make_file.putstring ("$(OBJECTS) ")
-			make_file.putchar (' ')
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/emain.o Makefile%N%T$(RM) ") 
-			make_file.putstring (system_name)
-			make_file.new_line
+			make_file.put_new_line
+			make_file.put_string (system_name)
+			make_file.put_string (": ")
+			make_file.put_string ("$(OBJECTS) ")
+			make_file.put_character (' ')
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/emain.o Makefile%N%T$(RM) ") 
+			make_file.put_string (system_name)
+			make_file.put_new_line
 			if System.makefile_names /= Void then
-				make_file.putstring ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
+				make_file.put_string ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
 			end
 			if System.has_cpp_externals then
-				make_file.putstring ("%T$(CPP")
+				make_file.put_string ("%T$(CPP")
 			else
-				make_file.putstring ("%T$(CC")
+				make_file.put_string ("%T$(CC")
 			end
-			make_file.putstring (") -o ")
-			make_file.putstring (system_name)
-			make_file.putstring ("%
+			make_file.put_string (") -o ")
+			make_file.put_string (system_name)
+			make_file.put_string ("%
 				% $(C")
 			if System.has_cpp_externals then
-				make_file.putstring ("PP")
+				make_file.put_string ("PP")
 			end
-			make_file.putstring ("FLAGS) $(LDFLAGS) ")
-			make_file.putstring (" $(OBJECTS) ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/emain.o ") 
-			make_file.putchar (Continuation)
-			make_file.new_line
+			make_file.put_string ("FLAGS) $(LDFLAGS) ")
+			make_file.put_string (" $(OBJECTS) ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/emain.o ") 
+			make_file.put_character (Continuation)
+			make_file.put_new_line
 			generate_other_objects
-			make_file.putstring ("%T%T")
+			make_file.put_string ("%T%T")
 			if System.object_file_names /= Void then
-				make_file.putstring ("$(EXTERNALS) ")
+				make_file.put_string ("$(EXTERNALS) ")
 			end
-			make_file.putstring ("$(EIFLIB)")
-			make_file.putstring (" $(LIBS)%N")
+			make_file.put_string ("$(EIFLIB)")
+			make_file.put_string (" $(LIBS)%N")
 
 			generate_additional_rules
-			make_file.new_line
+			make_file.put_new_line
 		end
 
 	generate_additional_rules is
@@ -871,10 +871,10 @@ feature -- Generation (Linking rules)
 			i, nb: INTEGER
 			not_first: BOOLEAN
 		do
-			make_file.putstring ("SUBDIRS = ")
+			make_file.put_string ("SUBDIRS = ")
 
 			if not_first then
-				make_file.putchar (' ')
+				make_file.put_character (' ')
 				not_first := False
 			end
 
@@ -887,12 +887,12 @@ feature -- Generation (Linking rules)
 			loop
 				if not object_baskets.item (i).is_empty then
 					if not_first then
-						make_file.putchar (' ')
+						make_file.put_character (' ')
 					else
 						not_first := True
 					end
-					make_file.putchar (C_prefix)
-					make_file.putint (i)
+					make_file.put_character (C_prefix)
+					make_file.put_integer (i)
 				end
 				i := i + 1
 			end
@@ -904,39 +904,39 @@ feature -- Generation (Linking rules)
 				i > nb
 			loop
 				if not system_baskets.item (i).is_empty then
-					make_file.putchar (' ')
-					make_file.putchar (System_object_prefix)
-					make_file.putint (i)
+					make_file.put_character (' ')
+					make_file.put_character (System_object_prefix)
+					make_file.put_integer (i)
 				end
 				i := i + 1
 			end
 
-			make_file.new_line
-			make_file.new_line
+			make_file.put_new_line
+			make_file.put_new_line
 		end
 
 	generate_partial_objects_linking (dir_prefix: CHARACTER; index: INTEGER) is
 			-- Generate rules to produce partial linking and the
 			-- final executable linked in with `run_time'.
 		do
-			make_file.putchar (dir_prefix)
-			make_file.putstring ("obj")
-			make_file.putint (index)
-			make_file.putstring (".o: $(OBJECTS) Makefile")
-			make_file.new_line
+			make_file.put_character (dir_prefix)
+			make_file.put_string ("obj")
+			make_file.put_integer (index)
+			make_file.put_string (".o: $(OBJECTS) Makefile")
+			make_file.put_new_line
 				-- The following is not portable (if people want to use
 				-- their own linker).
 				-- FIXME
-			make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ")
-			make_file.putchar (dir_prefix)
-			make_file.putstring ("obj")
-			make_file.putint (index)
-			make_file.putstring (".o $(OBJECTS)")
+			make_file.put_string ("%T$(LD) $(LDFLAGS) -r -o ")
+			make_file.put_character (dir_prefix)
+			make_file.put_string ("obj")
+			make_file.put_integer (index)
+			make_file.put_string (".o $(OBJECTS)")
 
-			make_file.putstring ("%N%T$(CREATE_TEST)")
+			make_file.put_string ("%N%T$(CREATE_TEST)")
 
-			make_file.new_line
-			make_file.new_line
+			make_file.put_new_line
+			make_file.put_new_line
 		end
 
 	generate_partial_system_objects_dependencies is
@@ -948,35 +948,35 @@ feature -- Generation (Linking rules)
 			emain_file := "emain.template"
 
 				-- Generate the dependence rule for E1/Makefile
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/Makefile: ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/Makefile.SH")
-			make_file.putstring ("%N%Tcd ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring (" ; $(SHELL) Makefile.SH%N%N")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/Makefile: ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/Makefile.SH")
+			make_file.put_string ("%N%Tcd ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string (" ; $(SHELL) Makefile.SH%N%N")
 
 				-- Generate the dependence rule for E1/emain.o
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/emain.o: Makefile ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
-			make_file.putstring (emain_file)
-			make_file.putstring ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
-			make_file.putstring (emain_file)
-			make_file.putchar (' ')
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring ("/emain.c")
-			make_file.putstring ("%N%Tcd ")
-			make_file.putchar (System_object_prefix)
-			make_file.putint (1)
-			make_file.putstring (" ; $(MAKE) emain.o ; $(RM) emain.c%N%N")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/emain.o: Makefile ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
+			make_file.put_string (emain_file)
+			make_file.put_string ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
+			make_file.put_string (emain_file)
+			make_file.put_character (' ')
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string ("/emain.c")
+			make_file.put_string ("%N%Tcd ")
+			make_file.put_character (System_object_prefix)
+			make_file.put_integer (1)
+			make_file.put_string (" ; $(MAKE) emain.o ; $(RM) emain.c%N%N")
 
 			from
 				i := 1
@@ -984,31 +984,31 @@ feature -- Generation (Linking rules)
 			until
 				i > nb
 			loop
-				make_file.putchar (System_object_prefix)
-				make_file.putint (i)
-				make_file.putchar ('/')
-				make_file.putchar (System_object_prefix)
-				make_file.putstring ("obj")
-				make_file.putint (i)
+				make_file.put_character (System_object_prefix)
+				make_file.put_integer (i)
+				make_file.put_character ('/')
+				make_file.put_character (System_object_prefix)
+				make_file.put_string ("obj")
+				make_file.put_integer (i)
 				if i = 1 then
-					make_file.putstring (".o: Makefile ")
-					make_file.putchar (System_object_prefix)
-					make_file.putint (i)
-					make_file.putstring ("/Makefile%N%Tcd ")
+					make_file.put_string (".o: Makefile ")
+					make_file.put_character (System_object_prefix)
+					make_file.put_integer (i)
+					make_file.put_string ("/Makefile%N%Tcd ")
 				else
-					make_file.putstring (".o: Makefile%N%Tcd ")
+					make_file.put_string (".o: Makefile%N%Tcd ")
 				end
-				make_file.putchar (System_object_prefix)
-				make_file.putint (i)
+				make_file.put_character (System_object_prefix)
+				make_file.put_integer (i)
 				if i = 1 then
-					make_file.putstring (" ; $(START_TEST) $(MAKE) ")
+					make_file.put_string (" ; $(START_TEST) $(MAKE) ")
 				else
-					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
+					make_file.put_string (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
 				end
-				make_file.putchar (System_object_prefix)
-				make_file.putstring ("obj")
-				make_file.putint (i)
-				make_file.putstring (".o $(END_TEST)%N%N")
+				make_file.put_character (System_object_prefix)
+				make_file.put_string ("obj")
+				make_file.put_integer (i)
+				make_file.put_string (".o $(END_TEST)%N%N")
 				i := i + 1
 			end
 		end
@@ -1026,18 +1026,18 @@ feature -- Generation (Linking rules)
 				i > nb
 			loop
 				if not object_baskets.item (i).is_empty then
-					make_file.putchar (C_prefix)
-					make_file.putint (i)
-					make_file.putchar ('/')
-					make_file.putchar (C_prefix)
-					make_file.putstring ("obj")
-					make_file.putint (i)
-					make_file.putstring (".o: Makefile%N%Tcd ")
-					make_file.putchar (C_prefix)
-					make_file.putint (i)
-					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
-					make_file.new_line
-					make_file.new_line
+					make_file.put_character (C_prefix)
+					make_file.put_integer (i)
+					make_file.put_character ('/')
+					make_file.put_character (C_prefix)
+					make_file.put_string ("obj")
+					make_file.put_integer (i)
+					make_file.put_string (".o: Makefile%N%Tcd ")
+					make_file.put_character (C_prefix)
+					make_file.put_integer (i)
+					make_file.put_string (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
+					make_file.put_new_line
+					make_file.put_new_line
 				end
 				i := i + 1
 			end
@@ -1048,37 +1048,37 @@ feature -- Cleaning rules
 	generate_main_cleaning is
 			-- Generate "make clean" and "make clobber" in the main Makefile.
 		do
-			make_file.putstring ("clean: sub_clean local_clean%N")
-			make_file.putstring ("clobber: sub_clobber local_clobber%N%N")
-			make_file.putstring ("local_clean::%N")
-			make_file.putstring ("%T$(RM) core finished *.o *.so *.a%N%N")
-			make_file.putstring ("local_clobber:: local_clean%N%T")
-			make_file.putstring ("$(RM) Makefile config.sh finish_freezing%N")
-			make_file.putstring ("%Nsub_clean::%N")
-			make_file.putstring ("%Tfor i in $(SUBDIRS); \%N")
-			make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i")
-			make_file.putchar ('/')
-			make_file.putstring ("Makefile ]; then \%N%T%T%T")
-			make_file.putstring ("(cd $$i ; $(MAKE) clean); \")
-			make_file.putstring ("%N%T%Tfi; \%N%Tdone%N%N")
-			make_file.putstring ("sub_clobber::%N")
-			make_file.putstring ("%Tfor i in $(SUBDIRS); \%N")
-			make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i")
-			make_file.putchar ('/')
-			make_file.putstring ("Makefile ]; then \%N%T%T%T")
-			make_file.putstring ("(cd $$i ; $(MAKE) clobber); \")
-			make_file.putstring ("%N%T%Tfi; \%N%Tdone%N%N")
+			make_file.put_string ("clean: sub_clean local_clean%N")
+			make_file.put_string ("clobber: sub_clobber local_clobber%N%N")
+			make_file.put_string ("local_clean::%N")
+			make_file.put_string ("%T$(RM) core finished *.o *.so *.a%N%N")
+			make_file.put_string ("local_clobber:: local_clean%N%T")
+			make_file.put_string ("$(RM) Makefile config.sh finish_freezing%N")
+			make_file.put_string ("%Nsub_clean::%N")
+			make_file.put_string ("%Tfor i in $(SUBDIRS); \%N")
+			make_file.put_string ("%Tdo \%N%T%Tif [ -r $$i")
+			make_file.put_character ('/')
+			make_file.put_string ("Makefile ]; then \%N%T%T%T")
+			make_file.put_string ("(cd $$i ; $(MAKE) clean); \")
+			make_file.put_string ("%N%T%Tfi; \%N%Tdone%N%N")
+			make_file.put_string ("sub_clobber::%N")
+			make_file.put_string ("%Tfor i in $(SUBDIRS); \%N")
+			make_file.put_string ("%Tdo \%N%T%Tif [ -r $$i")
+			make_file.put_character ('/')
+			make_file.put_string ("Makefile ]; then \%N%T%T%T")
+			make_file.put_string ("(cd $$i ; $(MAKE) clobber); \")
+			make_file.put_string ("%N%T%Tfi; \%N%Tdone%N%N")
 		end
 
 	generate_sub_cleaning is
 			-- Generate "make clean" and "make clobber" in the sub directories.
 		do
-			make_file.putstring ("clean: local_clean%N")
-			make_file.putstring ("clobber: local_clobber%N%N")
-			make_file.putstring ("local_clean::%N")
-			make_file.putstring ("%T$(RM) core finished *.o%N%N")
-			make_file.putstring ("local_clobber:: local_clean%N")
-			make_file.putstring ("%T$(RM) Makefile%N%N")
+			make_file.put_string ("clean: local_clean%N")
+			make_file.put_string ("clobber: local_clobber%N%N")
+			make_file.put_string ("local_clean::%N")
+			make_file.put_string ("%T$(RM) core finished *.o%N%N")
+			make_file.put_string ("local_clobber:: local_clean%N")
+			make_file.put_string ("%T$(RM) Makefile%N%N")
 		end
 
 feature -- Generation, Tail
@@ -1086,7 +1086,7 @@ feature -- Generation, Tail
 	generate_ending is
 			-- Ends Makefile wrapping scheme
 		do
-			make_file.putstring ("%
+			make_file.put_string ("%
 				%!NO!SUBS!%N%
 				%chmod 644 Makefile%N%
 				%$eunicefix Makefile%N")
@@ -1119,17 +1119,17 @@ feature {NONE} -- Implementation
 			loop
 				if not baskets.item (i).is_empty then
 					if not_first then
-						make_file.putchar (' ')
+						make_file.put_character (' ')
 					else
 						not_first := True
 					end
-					make_file.putchar (dir_prefix)
-					make_file.putint (i)
-					make_file.putchar ('/')
-					make_file.putchar (dir_prefix)
-					make_file.putstring ("obj")
-					make_file.putint (i)
-					make_file.putstring (".o")
+					make_file.put_character (dir_prefix)
+					make_file.put_integer (i)
+					make_file.put_character ('/')
+					make_file.put_character (dir_prefix)
+					make_file.put_string ("obj")
+					make_file.put_integer (i)
+					make_file.put_string (".o")
 				end
 				i := i - 1
 			end

@@ -58,9 +58,9 @@ feature -- C code generation
 			-- Print boolean constant
 		do
 			if value then
-				buffer.putstring ("(EIF_BOOLEAN) 1")
+				buffer.put_string ("(EIF_BOOLEAN) 1")
 			else
-				buffer.putstring ("(EIF_BOOLEAN) 0")
+				buffer.put_string ("(EIF_BOOLEAN) 0")
 			end
 		end
 

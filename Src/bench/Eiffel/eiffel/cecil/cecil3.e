@@ -140,9 +140,9 @@ feature {NONE} -- C code generation
 
 				-- Generate the keys
 			if for_expanded then
-				buffer.putstring ("static char * exp_type_key [] = {%N")
+				buffer.put_string ("static char * exp_type_key [] = {%N")
 			else
-				buffer.putstring ("static char * type_key [] = {%N")
+				buffer.put_string ("static char * type_key [] = {%N")
 			end			
 			from
 				i := 0
@@ -152,16 +152,16 @@ feature {NONE} -- C code generation
 			loop
 				cl_name := l_keys.item (i)
 				if cl_name = Void then
-					buffer.putstring ("(char *) 0")
+					buffer.put_string ("(char *) 0")
 				else
-					buffer.putchar ('"')
-					buffer.putstring (cl_name)
-					buffer.putchar ('"')
+					buffer.put_character ('"')
+					buffer.put_string (cl_name)
+					buffer.put_character ('"')
 				end
-				buffer.putstring (",%N")
+				buffer.put_string (",%N")
 				i := i + 1
 			end
-			buffer.putstring ("};%N%N")
+			buffer.put_string ("};%N%N")
 			
 				-- Generate the subvalues needed to fill the values
 			from
@@ -174,12 +174,12 @@ feature {NONE} -- C code generation
 					l_is_generic := l_class.is_generic
 					if l_is_generic then
 						if for_expanded then
-							buffer.putstring ("static int32 exp_patterns")
+							buffer.put_string ("static int32 exp_patterns")
 						else
-							buffer.putstring ("static int32 patterns")
+							buffer.put_string ("static int32 patterns")
 						end
-						buffer.putint (l_class.class_id)
-						buffer.putstring (" [] = {%N")
+						buffer.put_integer (l_class.class_id)
+						buffer.put_string (" [] = {%N")
 						from
 							l_types := l_class.types
 							l_types.start
@@ -198,20 +198,20 @@ feature {NONE} -- C code generation
 									gen_type.meta_generic.generate_cecil_values (buffer)
 								else
 									l_types.item.type.generate_cecil_value (buffer)
-									buffer.putstring (",%N")
+									buffer.put_string (",%N")
 								end
 							end
 							l_types.forth
 						end
-						buffer.putstring ("SK_INVALID%N};%N%N")
+						buffer.put_string ("SK_INVALID%N};%N%N")
 						
 						if for_expanded then
-							buffer.putstring ("static int16 exp_dyn_types")
+							buffer.put_string ("static int16 exp_dyn_types")
 						else
-							buffer.putstring ("static int16 dyn_types")
+							buffer.put_string ("static int16 dyn_types")
 						end
-						buffer.putint (l_class.class_id)
-						buffer.putstring (" [] = {%N")
+						buffer.put_integer (l_class.class_id)
+						buffer.put_string (" [] = {%N")
 						from
 							l_types.start
 						until
@@ -221,12 +221,12 @@ feature {NONE} -- C code generation
 								(for_expanded and l_types.item.is_expanded) or
 								(not for_expanded and not l_types.item.is_expanded)
 							then
-								buffer.putint (l_types.item.type_id - 1)
-								buffer.putstring (",%N")
+								buffer.put_type_id (l_types.item.type_id)
+								buffer.put_string (",%N")
 							end
 							l_types.forth
 						end
-						buffer.putstring ("};%N%N")
+						buffer.put_string ("};%N%N")
 					end
 				end
 				i := i + 1
@@ -234,9 +234,9 @@ feature {NONE} -- C code generation
 
 				-- Generate the values using above subvalues.
 			if for_expanded then
-				buffer.putstring ("static struct cecil_info exp_type_val[] = {%N")
+				buffer.put_string ("static struct cecil_info exp_type_val[] = {%N")
 			else
-				buffer.putstring ("static struct cecil_info type_val[] = {%N")
+				buffer.put_string ("static struct cecil_info type_val[] = {%N")
 			end
 			from
 				i := 0
@@ -245,24 +245,24 @@ feature {NONE} -- C code generation
 			loop
 				l_class := l_values.item (i)
 				if l_class = Void then
-					buffer.putstring ("{(int) 0, (int16) 0, NULL, NULL}")
+					buffer.put_string ("{(int) 0, (int16) 0, NULL, NULL}")
 				else
-					buffer.putstring ("{(int) ")
+					buffer.put_string ("{(int) ")
 					if l_class.is_generic then
-						buffer.putint (l_class.generics.count)
+						buffer.put_integer (l_class.generics.count)
 						if for_expanded then
-							buffer.putstring (", (int16) 0, exp_patterns")
-							buffer.putint (l_class.class_id)
-							buffer.putstring (", exp_dyn_types")
-							buffer.putint (l_class.class_id)
+							buffer.put_string (", (int16) 0, exp_patterns")
+							buffer.put_integer (l_class.class_id)
+							buffer.put_string (", exp_dyn_types")
+							buffer.put_integer (l_class.class_id)
 						else
-							buffer.putstring (", (int16) 0, patterns")
-							buffer.putint (l_class.class_id)
-							buffer.putstring (", dyn_types")
-							buffer.putint (l_class.class_id)
+							buffer.put_string (", (int16) 0, patterns")
+							buffer.put_integer (l_class.class_id)
+							buffer.put_string (", dyn_types")
+							buffer.put_integer (l_class.class_id)
 						end
 					else
-						buffer.putstring ("0, (int16) ")
+						buffer.put_string ("0, (int16) ")
 							-- Although it is a loop, only one iteration of it will produce
 							-- an ID because we are in a non generic class and it can only
 							-- have at most 2 types: a non-expanded one and an expanded one.
@@ -276,31 +276,31 @@ feature {NONE} -- C code generation
 								(for_expanded and l_types.item.is_expanded) or
 								(not for_expanded and not l_types.item.is_expanded)
 							then
-								buffer.putint (l_types.item.type_id - 1)
+								buffer.put_type_id (l_types.item.type_id)
 							end
 							l_types.forth
 						end
-						buffer.putstring (", NULL, NULL")
+						buffer.put_string (", NULL, NULL")
 					end
-					buffer.putchar ('}')
+					buffer.put_character ('}')
 				end
-				buffer.putstring (",%N")
+				buffer.put_string (",%N")
 				i := i + 1
 			end
-			buffer.putstring ("};%N%N")
+			buffer.put_string ("};%N%N")
 
 				-- Generate table
 			if for_expanded then
-				buffer.putstring ("struct ctable egc_ce_exp_type_init = {(int32) ")
+				buffer.put_string ("struct ctable egc_ce_exp_type_init = {(int32) ")
 			else
-				buffer.putstring ("struct ctable egc_ce_type_init = {(int32) ")
+				buffer.put_string ("struct ctable egc_ce_type_init = {(int32) ")
 			end
-			buffer.putint (capacity)
-			buffer.putstring (", sizeof(struct cecil_info),")
+			buffer.put_integer (capacity)
+			buffer.put_string (", sizeof(struct cecil_info),")
 			if for_expanded then
-				buffer.putstring ("exp_type_key, (char *) exp_type_val};%N%N")
+				buffer.put_string ("exp_type_key, (char *) exp_type_val};%N%N")
 			else
-				buffer.putstring ("type_key, (char *) type_val};%N%N")
+				buffer.put_string ("type_key, (char *) type_val};%N%N")
 			end
 		end
 

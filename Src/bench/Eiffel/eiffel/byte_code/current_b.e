@@ -50,7 +50,7 @@ feature
 	print_register is
 			-- Print "Current" register
 		do
-			context.buffer.putstring (register_name)
+			context.buffer.put_string (register_name)
 		end
 
 feature -- IL code generation

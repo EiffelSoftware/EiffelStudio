@@ -115,9 +115,9 @@ feature {NONE}
 			if features = features_per_message then
 				Degree_output.put_dead_code_removal_message (features, control.count)
 debug ("COUNT")
-	io.error.putstring ("[")
-	io.error.putint (control.count)
-	io.error.putstring ("]%N")
+	io.error.put_string ("[")
+	io.error.put_integer (control.count)
+	io.error.put_string ("]%N")
 end
 				features := 0
 			end
@@ -130,46 +130,46 @@ feature -- for debug purpose
 			a_class: CLASS_C
 		do
 			a_class := System.class_of_id (dep.class_id)
-			io.putstring (a_class.feature_table.feature_of_body_index (dep.body_index).feature_name)
-			io.putstring (" (bid: ")
-			io.putint (dep.body_index)
-			io.putstring ("; rid: ")
-			io.putint (dep.rout_id)
-			io.putstring (") of ")
-			io.putstring (a_class.lace_class.name)
-			io.putstring (" (")
-			io.putint (a_class.class_id)
-			io.putstring (") originally in ")
+			io.put_string (a_class.feature_table.feature_of_body_index (dep.body_index).feature_name)
+			io.put_string (" (bid: ")
+			io.put_integer (dep.body_index)
+			io.put_string ("; rid: ")
+			io.put_integer (dep.rout_id)
+			io.put_string (") of ")
+			io.put_string (a_class.lace_class.name)
+			io.put_string (" (")
+			io.put_integer (a_class.class_id)
+			io.put_string (") originally in ")
 			a_class := System.class_of_id (dep.written_in)
-			io.putstring (a_class.lace_class.name)
-			io.putstring (" (")
-			io.putint (a_class.class_id)
-			io.putstring (")%N")
+			io.put_string (a_class.lace_class.name)
+			io.put_string (" (")
+			io.put_integer (a_class.class_id)
+			io.put_string (")%N")
 		end
 			
 	dump_alive is
 		local
 			i, j: INTEGER
 		do
-			io.putstring ("Used Table:%N")
+			io.put_string ("Used Table:%N")
 			from
 				i := 1
 			until
 				i = used_table.upper
 			loop
-				io.putint (i)
-				io.putstring (" : ")
-				io.putbool (used_table.item (i))
+				io.put_integer (i)
+				io.put_string (" : ")
+				io.put_boolean (used_table.item (i))
 				if used_table.item (i) then
 					j := j + 1
 				end
-				io.putstring ("%N")
+				io.put_string ("%N")
 				i := i + 1
 			end
-			io.putstring ("END OF USED TABLE%N")
-			io.putstring ("nb of body_index alive: ")
-			io.putint (j)
-			io.putstring ("%N")
+			io.put_string ("END OF USED TABLE%N")
+			io.put_string ("nb of body_index alive: ")
+			io.put_integer (j)
+			io.put_string ("%N")
 		end
 
 	dump_marked is
@@ -177,26 +177,26 @@ feature -- for debug purpose
 			i, j: INTEGER
 			marked: BOOLEAN
 		do
-			io.putstring ("Marked Table:%N")
+			io.put_string ("Marked Table:%N")
 			from
 				i := 1
 			until
 				i = used_table.upper
 			loop
-				io.putint (i)
-				io.putstring (" : ")
+				io.put_integer (i)
+				io.put_string (" : ")
 				marked := marked_table.item (i) /= Void
-				io.putbool (marked)
+				io.put_boolean (marked)
 				if marked then
 					j := j + 1
 				end
-				io.putstring ("%N")
+				io.put_string ("%N")
 				i := i + 1
 			end
-			io.putstring ("END OF Marked TABLE%N")
-			io.putstring ("nb of body_index marked: ")
-			io.putint (j)
-			io.putstring ("%N%N%N")
+			io.put_string ("END OF Marked TABLE%N")
+			io.put_string ("nb of body_index marked: ")
+			io.put_integer (j)
+			io.put_string ("%N%N%N")
 		end		
 
 end

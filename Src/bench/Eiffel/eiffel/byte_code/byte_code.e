@@ -293,11 +293,11 @@ feature -- Settings
 			-- Value of the dynamic type where the feature is written
 		do
 			if Context.workbench_mode then
-				buf.putstring ("RTUD(")
-				buf.generate_type_id (context.class_type.static_type_id)
-				buf.putchar (')')
+				buf.put_string ("RTUD(")
+				buf.put_static_type_id (context.class_type.static_type_id)
+				buf.put_character (')')
 			else
-				buf.putint (context.class_type.type_id - 1)
+				buf.put_type_id (context.class_type.type_id)
 			end
 		end
 
@@ -349,14 +349,14 @@ feature -- Settings
 				count := a.count
 				buf := buffer
 				if i <= count then
-					buf.putstring (a @ i)
+					buf.put_string (a @ i)
 					i := i + 1
 				end
 			until
 				i > count
 			loop
-				buf.putstring (gc_comma)
-				buf.putstring (a @ i)
+				buf.put_string (gc_comma)
+				buf.put_string (a @ i)
 				i := i + 1
 			end
 		end
@@ -415,20 +415,20 @@ feature -- Settings
 				count := argument_names.count
 				buf := buffer
 				if i <= count then
-					buf.putstring (argument_types @ i)
-					buf.putchar (' ')
-					buf.putstring (argument_names @ i)
-					buf.putchar (';')
+					buf.put_string (argument_types @ i)
+					buf.put_character (' ')
+					buf.put_string (argument_names @ i)
+					buf.put_character (';')
 					i := i + 1
 				end
 			until
 				i > count
 			loop
-				buf.putstring (gc_comma)
-				buf.putstring (argument_types @ i)
-				buf.putchar (' ')
-				buf.putstring (argument_names @ i)
-				buf.putchar (';')
+				buf.put_string (gc_comma)
+				buf.put_string (argument_types @ i)
+				buf.put_character (' ')
+				buf.put_string (argument_names @ i)
+				buf.put_character (';')
 				i := i + 1
 			end
 		end
@@ -453,16 +453,16 @@ feature -- Settings
 			then
 				buf := buffer
 				if Context.workbench_mode then
-					buf.putstring ("if (RTAL & CK_ENSURE) {")
-					buf.new_line
+					buf.put_string ("if (RTAL & CK_ENSURE) {")
+					buf.put_new_line
 					buf.indent
 				else
-					buf.putstring ("if (~in_assertion) {");					
-					buf.new_line
+					buf.put_string ("if (~in_assertion) {");					
+					buf.put_new_line
 					buf.indent
 				end
-				buf.putstring ("in_assertion = ~0;")
-				buf.new_line
+				buf.put_string ("in_assertion = ~0;")
+				buf.put_new_line
 				if old_expressions /= Void then
 					from
 						old_expressions.start
@@ -479,12 +479,12 @@ feature -- Settings
 					inh_assert.generate_old_variables
 				end
 
-				buf.putstring ("in_assertion = 0;")
-				buf.new_line
+				buf.put_string ("in_assertion = 0;")
+				buf.put_new_line
 				
 				buf.exdent
-				buf.putchar ('}')
-				buf.new_line
+				buf.put_character ('}')
+				buf.put_new_line
 			end
 		end
 
@@ -1006,9 +1006,9 @@ feature -- Byte code generation
 debug ("DEBBUGGER_HOOK")
 		-- ASSERTION TO CHECK THAT `number_of_breakpoint_slots' is correct
 	if context.get_breakpoint_slot + 1 /= context.current_feature.number_of_breakpoint_slots then
-		io.putstring ("STD_BYTE_CODE: Error in breakable line number computation for: %N")
-		io.putstring ("{"+context.original_class_type.associated_class.lace_class.name+"}")
-		io.putstring ("."+context.current_feature.feature_name+"%N%N")
+		io.put_string ("STD_BYTE_CODE: Error in breakable line number computation for: %N")
+		io.put_string ("{"+context.original_class_type.associated_class.lace_class.name+"}")
+		io.put_string ("."+context.current_feature.feature_name+"%N%N")
 	end
 end
 		end

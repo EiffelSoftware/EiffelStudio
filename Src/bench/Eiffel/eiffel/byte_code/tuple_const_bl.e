@@ -117,17 +117,17 @@ feature {NONE} -- C code generation
 			generate_block_open
 			generate_gen_type_conversion (real_ty)
 			print_register
-			buf.putstring (" = ")
-			buf.putstring ("RTLNTS(typres, ");
-			buf.putint (real_ty.true_generics.count + 1)
-			buf.putstring (", ")
+			buf.put_string (" = ")
+			buf.put_string ("RTLNTS(typres, ");
+			buf.put_integer (real_ty.true_generics.count + 1)
+			buf.put_string (", ")
 			if real_ty.is_basic_uniform then
-				buf.putint (1)
+				buf.put_integer (1)
 			else
-				buf.putint (0)
+				buf.put_integer (0)
 			end
-			buf.putstring (");");
-			buf.new_line;
+			buf.put_string (");");
+			buf.put_new_line;
 			generate_block_close
 		end
 
@@ -157,43 +157,43 @@ feature {NONE} -- C code generation
 					if actual_type.is_true_expanded then
 						expr.generate
 						metamorphose_reg.print_register
-						buf.putstring (" = RTCL(")
+						buf.put_string (" = RTCL(")
 						expr.print_register
-						buf.putstring (");")
-						buf.new_line
+						buf.put_string (");")
+						buf.put_new_line
 						metamorphosed := True
 					else
 						expr.generate
 					end
 					-- Generate initializations of values.
-					buf.putstring ("((EIF_TYPED_ELEMENT *)")
+					buf.put_string ("((EIF_TYPED_ELEMENT *)")
 					print_register
-					buf.putchar('+');
-					buf.putint (i)
-					buf.putstring (")->element.")
-					buf.putstring (actual_type.c_type.union_tag)
-					buf.putstring (" = ")
+					buf.put_character('+');
+					buf.put_integer (i)
+					buf.put_string (")->element.")
+					buf.put_string (actual_type.c_type.union_tag)
+					buf.put_string (" = ")
 					if metamorphosed then
 						metamorphose_reg.print_register
 					else
 						expr.print_register
 					end
-					buf.putchar (';')
-					buf.new_line
+					buf.put_character (';')
+					buf.put_new_line
 						-- Generation of the RTAR protection
 						-- since the array contains references
 					if not actual_type.is_basic then
-						buf.putstring ("RTAR(")
+						buf.put_string ("RTAR(")
 						print_register
-						buf.putchar (',')
+						buf.put_character (',')
 						if metamorphosed then
 							metamorphose_reg.print_register
 						else
 							expr.print_register
 						end
-						buf.putchar (')')
-						buf.putchar (';')
-						buf.new_line
+						buf.put_character (')')
+						buf.put_character (';')
+						buf.put_new_line
 					end
 				end
 				expressions.forth

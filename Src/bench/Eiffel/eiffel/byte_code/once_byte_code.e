@@ -107,12 +107,12 @@ feature -- C code generation
 			if is_global_once then
 					-- Generate static mutex used to initialize global once
 				buf := Context.buffer
-				buf.putstring ("EIF_MUTEX_TYPE *")
-				buf.putchar (' ')
-				buf.putstring (mutex_name (name))
-				buf.putstring (" = NULL;")
-				buf.new_line
-				buf.new_line
+				buf.put_string ("EIF_MUTEX_TYPE *")
+				buf.put_character (' ')
+				buf.put_string (mutex_name (name))
+				buf.put_string (" = NULL;")
+				buf.put_new_line
+				buf.put_new_line
 					-- Insert current global once in `context' so that
 					-- mutex initialization call can be generated in the `EIF_MinitXX'
 					-- routine of the type defining the global once.
@@ -128,36 +128,36 @@ feature -- C code generation
 				head_buf := Context.header_buffer
 				if not is_procedure then
 					l_res_name := result_name (name)
-					head_buf.new_line
-					head_buf.putstring ("extern ")
-					head_buf.putstring (type)
-					head_buf.putchar (' ')
-					head_buf.putstring (l_res_name)
-					head_buf.putchar (';')
+					head_buf.put_new_line
+					head_buf.put_string ("extern ")
+					head_buf.put_string (type)
+					head_buf.put_character (' ')
+					head_buf.put_string (l_res_name)
+					head_buf.put_character (';')
 				end
-				head_buf.new_line
+				head_buf.put_new_line
 				l_done_name := done_name (name)
-				head_buf.putstring ("extern EIF_BOOLEAN ")
-				head_buf.putstring (l_done_name)
-				head_buf.putchar (';')
-				head_buf.new_line
-				head_buf.new_line
+				head_buf.put_string ("extern EIF_BOOLEAN ")
+				head_buf.put_string (l_done_name)
+				head_buf.put_character (';')
+				head_buf.put_new_line
+				head_buf.put_new_line
 
 				buf := Context.buffer
 				if not is_procedure then
-					buf.putstring (type)
-					buf.putchar (' ')
-					buf.putstring (l_res_name)
-					buf.putstring (" = (")
-					buf.putstring (type)
-					buf.putstring (") 0;")
+					buf.put_string (type)
+					buf.put_character (' ')
+					buf.put_string (l_res_name)
+					buf.put_string (" = (")
+					buf.put_string (type)
+					buf.put_string (") 0;")
 				end
-				buf.new_line
-				buf.putstring ("EIF_BOOLEAN ")
-				buf.putstring (l_done_name)
-				buf.putstring (" = EIF_FALSE;")
-				buf.new_line
-				buf.new_line
+				buf.put_new_line
+				buf.put_string ("EIF_BOOLEAN ")
+				buf.put_string (l_done_name)
+				buf.put_string (" = EIF_FALSE;")
+				buf.put_new_line
+				buf.put_new_line
 			end
 		end
 
@@ -170,41 +170,41 @@ feature -- C code generation
 			l_mutex_name := mutex_name (a_name)
 			l_buf := context.buffer
 			l_buf.exdent
-			l_buf.putchar ('}')
-			l_buf.new_line
-			l_buf.putstring ("finished = EIF_TRUE;")
-			l_buf.new_line
-			l_buf.putstring ("eif_thr_mutex_unlock (")
-			l_buf.putstring (l_mutex_name)
-			l_buf.putstring (");")
-			l_buf.new_line
+			l_buf.put_character ('}')
+			l_buf.put_new_line
+			l_buf.put_string ("finished = EIF_TRUE;")
+			l_buf.put_new_line
+			l_buf.put_string ("eif_thr_mutex_unlock (")
+			l_buf.put_string (l_mutex_name)
+			l_buf.put_string (");")
+			l_buf.put_new_line
 			l_buf.exdent
-			l_buf.putstring ("} else {")
-			l_buf.new_line
+			l_buf.put_string ("} else {")
+			l_buf.put_new_line
 			l_buf.indent
-			l_buf.putstring ("if (!finished) {")
-			l_buf.new_line
+			l_buf.put_string ("if (!finished) {")
+			l_buf.put_new_line
 			l_buf.indent
-			l_buf.putstring ("if (thread_id != eif_thr_thread_id()) {")
-			l_buf.new_line
+			l_buf.put_string ("if (thread_id != eif_thr_thread_id()) {")
+			l_buf.put_new_line
 			l_buf.indent
-			l_buf.putstring ("eif_thr_mutex_lock (")
-			l_buf.putstring (l_mutex_name)
-			l_buf.putstring (");")
-			l_buf.new_line
-			l_buf.putstring ("eif_thr_mutex_unlock (")
-			l_buf.putstring (l_mutex_name)
-			l_buf.putstring (");")
+			l_buf.put_string ("eif_thr_mutex_lock (")
+			l_buf.put_string (l_mutex_name)
+			l_buf.put_string (");")
+			l_buf.put_new_line
+			l_buf.put_string ("eif_thr_mutex_unlock (")
+			l_buf.put_string (l_mutex_name)
+			l_buf.put_string (");")
 			l_buf.exdent
-			l_buf.new_line
-			l_buf.putchar ('}')
+			l_buf.put_new_line
+			l_buf.put_character ('}')
 			l_buf.exdent
-			l_buf.new_line
-			l_buf.putchar ('}')
+			l_buf.put_new_line
+			l_buf.put_character ('}')
 			l_buf.exdent
-			l_buf.new_line
-			l_buf.putchar ('}')
-			l_buf.new_line
+			l_buf.put_new_line
+			l_buf.put_character ('}')
+			l_buf.put_new_line
 		end
 		
 feature -- Inlining
@@ -243,32 +243,32 @@ feature {NONE} -- Implementation
 			l_mutex_name := mutex_name (name)
 
 			buf := buffer
-			buf.putstring ("if (!done) {")
-			buf.new_line
+			buf.put_string ("if (!done) {")
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("eif_thr_mutex_lock (")
-			buf.putstring (l_mutex_name)
-			buf.putstring (");")
-			buf.new_line
+			buf.put_string ("eif_thr_mutex_lock (")
+			buf.put_string (l_mutex_name)
+			buf.put_string (");")
+			buf.put_new_line
 				-- Double-Checked Locking on `done' is safe, because
 				-- `done' is marked volatile.
-			buf.putstring ("if (!done) {")
-			buf.new_line
+			buf.put_string ("if (!done) {")
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("thread_id = eif_thr_thread_id();")
-			buf.new_line
-			buf.putstring ("done = EIF_TRUE;")
+			buf.put_string ("thread_id = eif_thr_thread_id();")
+			buf.put_new_line
+			buf.put_string ("done = EIF_TRUE;")
 
 			if context.result_used then
 				if real_type(result_type).c_type.is_pointer then
-					buf.new_line
-					buf.putstring ("RTOC_GLOBAL(")
-					buf.putstring ("Result")
-					buf.putstring (");")
+					buf.put_new_line
+					buf.put_string ("RTOC_GLOBAL(")
+					buf.put_string ("Result")
+					buf.put_string (");")
 				end
 			end
 
-			buf.new_line
+			buf.put_new_line
 			init_dftype
 			init_dtype
 		end
@@ -286,32 +286,32 @@ feature {NONE} -- Implementation
 
 			type_i := real_type (result_type)
 
-			buf.putstring ("if (")
-			buf.putstring (l_done_name)
-			buf.putstring (") return")
+			buf.put_string ("if (")
+			buf.put_string (l_done_name)
+			buf.put_string (") return")
 			if result_type /= Void and then not result_type.is_void then
-				buf.putchar (' ')
-				buf.putstring (l_res_name)
+				buf.put_character (' ')
+				buf.put_string (l_res_name)
 			end
-			buf.putchar (';')
+			buf.put_character (';')
 
-			buf.new_line
-			buf.putstring (l_done_name)
-			buf.putstring (" = EIF_TRUE;")
+			buf.put_new_line
+			buf.put_string (l_done_name)
+			buf.put_string (" = EIF_TRUE;")
 
 			if context.result_used then
 				if real_type(result_type).c_type.is_pointer then
-					buf.new_line
-					buf.putstring ("RTOC_NEW(")
-					buf.putstring (l_res_name)
-					buf.putstring (");")
+					buf.put_new_line
+					buf.put_string ("RTOC_NEW(")
+					buf.put_string (l_res_name)
+					buf.put_string (");")
 				end
 			end
 
-			buf.new_line
-			buf.putstring ("%N#define Result ")
-			buf.putstring (l_res_name)
-			buf.new_line
+			buf.put_new_line
+			buf.put_string ("%N#define Result ")
+			buf.put_string (l_res_name)
+			buf.put_new_line
 			init_dftype
 			init_dtype
 		end;
@@ -324,36 +324,36 @@ feature {NONE} -- Implementation
 			class_id: INTEGER
 		do
 			buf := buffer
-			buf.putstring ("%N#define Result *PResult")
-			buf.new_line
+			buf.put_string ("%N#define Result *PResult")
+			buf.put_new_line
 			type_i := real_type (result_type);
 			class_id := context.original_class_type.static_type_id
-			buf.putstring ("if (MTOG((");
+			buf.put_string ("if (MTOG((");
 			type_i.c_type.generate (buf);
-			buf.putstring ("*),*(EIF_once_values + EIF_oidx_off")
-			buf.putint (class_id)
-			buf.putstring (" + ");
-			buf.putint (context.once_index);
-			buf.putstring ("),PResult))");
-			buf.new_line;
+			buf.put_string ("*),*(EIF_once_values + EIF_oidx_off")
+			buf.put_integer (class_id)
+			buf.put_string (" + ");
+			buf.put_integer (context.once_index);
+			buf.put_string ("),PResult))");
+			buf.put_new_line;
 			buf.indent;
 				-- Full generation for a once function, but a single
 				-- return for procedures.
-			buf.putstring ("return");
+			buf.put_string ("return");
 			if result_type /= Void and then not result_type.is_void then
-				buf.putchar (' ');
+				buf.put_character (' ');
 				if context.result_used then
-					buf.putstring ("*PResult");
+					buf.put_string ("*PResult");
 				else
 					type_i.c_type.generate_cast (buf);
-					buf.putchar ('0');
+					buf.put_character ('0');
 				end;
 			end;
-			buf.putstring (";%N");
+			buf.put_string (";%N");
 			buf.exdent;
 				-- Detach this block
-			buf.new_line;
-			buf.putstring ("PResult = (");
+			buf.put_new_line;
+			buf.put_string ("PResult = (");
 			type_i.c_type.generate (buf);
 			if
 				result_type /= Void and then not result_type.is_void and then
@@ -365,38 +365,38 @@ feature {NONE} -- Implementation
 						-- only if it is a reference. This will raise an
 						-- exception if the address cannot be recorded and
 						-- 'PResult' won't be set via the key.
-					buf.putstring ("*) RTOC(0);");
+					buf.put_string ("*) RTOC(0);");
 				else
 						-- If not a reference, we need to allocate some place
 						-- where to store the Result (We can't store Result
 						-- directly, since it might be 0...)
-					buf.putstring ("*) cmalloc(sizeof(");
+					buf.put_string ("*) cmalloc(sizeof(");
 					type_i.c_type.generate (buf);
-					buf.putstring ("*));");
-					buf.new_line
-					buf.putstring ("Result = ")
+					buf.put_string ("*));");
+					buf.put_new_line
+					buf.put_string ("Result = ")
 					type_i.c_type.generate_cast (buf);
-					buf.putstring ("0;");
+					buf.put_string ("0;");
 				end;
 			else
-				buf.putstring ("*) 1;");
+				buf.put_string ("*) 1;");
 			end;
-			buf.new_line;
-			buf.putstring ("MTOS(*(EIF_once_values + EIF_oidx_off")
-			buf.putint (class_id)
-			buf.putstring (" + ");
-			buf.putint (context.once_index);
-			buf.putstring ("),PResult);");
-			buf.new_line;
+			buf.put_new_line;
+			buf.put_string ("MTOS(*(EIF_once_values + EIF_oidx_off")
+			buf.put_integer (class_id)
+			buf.put_string (" + ");
+			buf.put_integer (context.once_index);
+			buf.put_string ("),PResult);");
+			buf.put_new_line;
 			if context.workbench_mode then
 					-- Real body id to be stored in the id list of already
 					-- called once routines to prevent supermelting them
 					-- (losing in that case their memory (already called and
 					-- result)) and to allow result inspection.
-				buf.putstring ("RTWO(");
-				buf.generate_real_body_id (real_body_id)
-				buf.putstring (gc_rparan_semi_c);
-				buf.new_line
+				buf.put_string ("RTWO(");
+				buf.put_real_body_id (real_body_id)
+				buf.put_string (gc_rparan_semi_c);
+				buf.put_new_line
 			end;
 			init_dftype
 			init_dtype;

@@ -77,7 +77,7 @@ feature
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-			buffer.putstring ("SK_BOOL")
+			buffer.put_string ("SK_BOOL")
 		end
 
 	type_a: BOOLEAN_A is
@@ -89,7 +89,7 @@ feature
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.
 		do
-			buffer.putstring ("it_char")
+			buffer.put_string ("it_char")
 		end
 
 feature

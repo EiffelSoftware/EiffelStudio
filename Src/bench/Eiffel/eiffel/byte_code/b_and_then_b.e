@@ -85,7 +85,7 @@ feature -- Enlarging
 	generate_operator is
 			-- Generate the operator
 		do
-			buffer.putstring (" && ");
+			buffer.put_string (" && ");
 		end;
 
 	

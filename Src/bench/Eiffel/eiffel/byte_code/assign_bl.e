@@ -356,12 +356,12 @@ feature
 			target_type := context.real_type (target.type)
 			source_type := context.real_type (source.type)
 			if target_type.is_basic and source_type.is_none then
-				buf.putstring ("RTEC(EN_VEXP);")
-				buf.new_line
+				buf.put_string ("RTEC(EN_VEXP);")
+				buf.put_new_line
 			elseif target_type.is_true_expanded then
 				if source_type.is_none then
-					buf.putstring ("RTEC(EN_VEXP);")
-					buf.new_line
+					buf.put_string ("RTEC(EN_VEXP);")
+					buf.put_new_line
 				else
 					generate_regular_assignment (Copy_assignment)
 				end
@@ -404,15 +404,15 @@ feature
 				basic_source_type ?= context.real_type (source.type)
 				basic_source_type.metamorphose
 					(register, source, buf, context.workbench_mode)
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (';')
+				buf.put_new_line
 			elseif how = Clone_assignment then
 				print_register
-				buf.putstring (" = ")
-				buf.putstring ("RTCL(")
+				buf.put_string (" = ")
+				buf.put_string ("RTCL(")
 				source.print_register
-				buf.putstring (gc_rparan_semi_c)
-				buf.new_line
+				buf.put_string (gc_rparan_semi_c)
+				buf.put_new_line
 			end
 		end
 
@@ -442,25 +442,25 @@ feature
 					-- handle it (it evaluates its arguments more than once).
 				if register /= Void and not register_for_metamorphosis then
 					print_register
-					buf.putstring (" = ")
+					buf.put_string (" = ")
 					source.print_register
-					buf.putchar (';')
-					buf.new_line
-					buf.putstring ("RTAR(")
+					buf.put_character (';')
+					buf.put_new_line
+					buf.put_string ("RTAR(")
 					context.Current_register.print_register
-					buf.putstring (gc_comma)
+					buf.put_string (gc_comma)
 					print_register
-					buf.putchar (')')
-					buf.putchar (';')
-					buf.new_line
+					buf.put_character (')')
+					buf.put_character (';')
+					buf.put_new_line
 				else
-					buf.putstring ("RTAR(")
+					buf.put_string ("RTAR(")
 					context.Current_register.print_register
-					buf.putstring (gc_comma)
+					buf.put_string (gc_comma)
 					source_print_register
-					buf.putchar (')')
-					buf.putchar (';')
-					buf.new_line
+					buf.put_character (')')
+					buf.put_character (';')
+					buf.put_new_line
 				end
 			end
 			if how /= Copy_assignment then
@@ -468,11 +468,11 @@ feature
 					if is_bit_assignment then
 						-- Otherwize, copy bit since I know that
 						-- bits have a default value.
-						buf.putstring ("RTXB(")
+						buf.put_string ("RTXB(")
 						source_print_register
 					else
 						target.print_register
-						buf.putstring (" = ")
+						buf.put_string (" = ")
 							-- Always ensure that we perform a cast to type of target.
 							-- Cast in case of basic type will never loose information
 							-- as it has been validated by the Eiffel compiler.
@@ -480,7 +480,7 @@ feature
 					end
 				end
 			else
-				buf.putstring ("RTXA(")
+				buf.put_string ("RTXA(")
 			end
 			if how /= Copy_assignment then
 				if need_aging_tests then
@@ -488,42 +488,42 @@ feature
 						print_register
 					else
 						if is_bit_assignment then
-							buf.putstring (gc_comma)
+							buf.put_string (gc_comma)
 							target.print_register
-							buf.putchar (')')
+							buf.put_character (')')
 						else
 							source_print_register
 						end
 					end
-					buf.putchar (';')
-					buf.new_line
+					buf.put_character (';')
+					buf.put_new_line
 				else
 					if how = Simple_assignment or need_aging_tests then
 						if is_bit_assignment then
-							buf.putstring (gc_comma)
+							buf.put_string (gc_comma)
 							target.print_register
-							buf.putchar (')')
+							buf.put_character (')')
 						else
 							source_print_register
 						end
-						buf.putchar (';')
-						buf.new_line
+						buf.put_character (';')
+						buf.put_new_line
 					end
 				end
 			else
 					-- Assignment into expanded target
 				if register /= Void then
 					print_register
-					buf.putstring (" = ")
+					buf.put_string (" = ")
 					source.print_register
 				else
 					source.print_register
 				end
-				buf.putstring (gc_comma)
+				buf.put_string (gc_comma)
 				target.print_register
-				buf.putchar (')')
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
 			end
 		end
 
@@ -542,8 +542,8 @@ feature
 				-- Target (Result) cannot be expanded
 			if target_type.is_basic and source_type.is_none then
 				buf := buffer
-				buf.putstring ("RTEC(EN_VEXP);")
-				buf.new_line
+				buf.put_string ("RTEC(EN_VEXP);")
+				buf.put_new_line
 			elseif target_type.is_basic then
 				generate_last_assignment (Simple_assignment)
 			else
@@ -570,16 +570,16 @@ feature
 				-- is the last instruction.
 			if last_instruction and context.byte_code.compound.count > 1
 			then
-				buf.new_line
+				buf.put_new_line
 			end
-			buf.putstring ("return ")
+			buf.put_string ("return ")
 				-- Always ensure that we perform a cast to type of target.
 				-- Cast in case of basic type will never loose information
 				-- as it has been validated by the Eiffel compiler.
 			target.c_type.generate_cast (buf)
 			source_print_register
-			buf.putchar (';')
-			buf.new_line
+			buf.put_character (';')
+			buf.put_new_line
 		end
 
 	generate_simple_assignment is
@@ -605,9 +605,9 @@ feature
 				-- Generate the other side of the expression
 			other.generate
 			if not target.is_predefined then
-				buf.putchar ('(')
+				buf.put_character ('(')
 				target.print_register
-				buf.putchar (')')
+				buf.put_character (')')
 			else
 				target.print_register
 			end
@@ -622,8 +622,8 @@ feature
 				binary.generate_simple
 				other.print_register
 			end
-			buf.putchar (';')
-			buf.new_line
+			buf.put_character (';')
+			buf.put_new_line
 		end
 
 end

@@ -232,9 +232,9 @@ feature -- Comparison
 						end
 						if not f1.equiv (f2) then
 	debug ("ACTIVITY")
-		io.error.putstring ("%Tfeature ")
-		io.error.putstring (f2.feature_name)
-		io.error.putstring (" is not equiv.%N")
+		io.error.put_string ("%Tfeature ")
+		io.error.put_string (f2.feature_name)
+		io.error.put_string (" is not equiv.%N")
 	end
 							if f1.is_external then
 									-- `f1' and `f2' can be "not equiv" because of the
@@ -261,7 +261,7 @@ feature -- Comparison
 					Result := origin_table.equiv (other.origin_table)
 debug ("ACTIVITY")
 	if not Result then
-		io.error.putstring ("%TOrigin table is not equivalent%N")
+		io.error.put_string ("%TOrigin table is not equivalent%N")
 	end
 end
 				end
@@ -355,9 +355,9 @@ end
 				if 	old_feature_i.written_in = feat_tbl_id then
 					if old_feature_i.is_c_external then
 						debug ("ACTIVITY")
-							io.error.putstring ("Remove external: ")
-							io.error.putstring (old_feature_i.feature_name)
-							io.error.new_line
+							io.error.put_string ("Remove external: ")
+							io.error.put_string (old_feature_i.feature_name)
+							io.error.put_new_line
 						end
 							-- Delete one occurrence of an external feature. Freeze is taken
 							-- care by EXTERNALS.is_equivalent queried by SYSTEM_I.
@@ -370,9 +370,9 @@ end
 							-- A feature written in the associated class
 							-- disapear
 debug ("ACTIVITY")
-	io.error.putstring ("Removed feature: ")
-	io.error.putstring (old_feature_i.feature_name)
-	io.error.new_line
+	io.error.put_string ("Removed feature: ")
+	io.error.put_string (old_feature_i.feature_name)
+	io.error.put_new_line
 end
 						removed_features.put (old_feature_i)
 						propagate_feature := True
@@ -385,9 +385,9 @@ end
 					-- class test2 moved from one cluster to another
 				if propagate_feature then
 debug ("ACTIVITY")
-	io.error.putstring ("%Tfeature ")
-	io.error.putstring (old_feature_i.feature_name)
-	io.error.putstring (" is propagated to clients%N")
+	io.error.put_string ("%Tfeature ")
+	io.error.put_string (old_feature_i.feature_name)
+	io.error.put_string (" is propagated to clients%N")
 end
 					create depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.rout_id_set.first)
 					propagators.put (depend_unit)
@@ -404,9 +404,9 @@ end
 						create depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.rout_id_set.first)
 					end
 debug ("ACTIVITY")
-	io.error.putstring ("Melted propagators: ")
-	io.error.putstring (old_feature_i.feature_name)
-	io.error.new_line
+	io.error.put_string ("Melted propagators: ")
+	io.error.put_string (old_feature_i.feature_name)
+	io.error.put_new_line
 end
 					melted_propagators.put (depend_unit)
 				end
@@ -428,9 +428,9 @@ end
 					removed_feature_ids.after
 				loop
 	debug ("ACTIVITY")
-		io.error.putstring ("%Tfeature of id ")
-		io.error.putint (removed_feature_ids.item)
-		io.error.putstring (" (removed by `update_table' is propagated to clients%N")
+		io.error.put_string ("%Tfeature of id ")
+		io.error.put_integer (removed_feature_ids.item)
+		io.error.put_string (" (removed by `update_table' is propagated to clients%N")
 	end
 					create depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item)
 					propagators.put (depend_unit)
@@ -464,9 +464,9 @@ end
 						then
 							stop := True
 debug ("ASSERTION")
-	io.putstring ("inserting feature for pass 4:%N")
-	io.putstring (item_for_iteration.feature_name)
-	io.new_line
+	io.put_string ("inserting feature for pass 4:%N")
+	io.put_string (item_for_iteration.feature_name)
+	io.put_new_line
 end
 							associated_class.insert_changed_assertion
 								(item_for_iteration)
@@ -496,9 +496,9 @@ feature -- Check
 				if not f.is_valid then
 						-- The result type or one of the arguments type is not valid
 debug ("ACTIVITY")
-	io.error.putstring ("Update table: ")
-	io.error.putstring (Names_heap.item (key_for_iteration))
-	io.error.putstring (" removed%N")
+	io.error.put_string ("Update table: ")
+	io.error.put_string (Names_heap.item (key_for_iteration))
+	io.error.put_string (" removed%N")
 end
 					Tmp_body_server.desactive (f.body_index)
 						
@@ -555,9 +555,9 @@ end
 			arguments: FEAT_ARG
 		do
 debug
-io.error.putstring ("Check feature: ")
-io.error.putstring (f.feature_name)
-io.error.new_line
+io.error.put_string ("Check feature: ")
+io.error.put_string (f.feature_name)
+io.error.put_new_line
 end
 			if f.written_in = feat_tbl_id then
 					-- Take a feature written in the class associated
@@ -792,10 +792,10 @@ end
 			rout_id: INTEGER
 		do
 			tab := routine_id_array
-			buffer.putstring ("int32 ra")
-			buffer.putint (feat_tbl_id)
-			buffer.putstring ("[] = {")
-			buffer.new_line
+			buffer.put_string ("int32 ra")
+			buffer.put_integer (feat_tbl_id)
+			buffer.put_string ("[] = {")
+			buffer.put_new_line
 			from
 				i := 0
 				nb := tab.upper
@@ -803,22 +803,22 @@ end
 				i > nb
 			loop
 				feat := tab.item (i)
-				buffer.putstring ("(int32) ")
+				buffer.put_string ("(int32) ")
 				if feat = Void then
-					buffer.putint (0)
+					buffer.put_integer (0)
 				else
 					rout_id := feat.rout_id_set.first
-					buffer.putint (rout_id)
+					buffer.put_integer (rout_id)
 debug
-buffer.putstring (" /* `")
-buffer.putstring (feat.feature_name)
-buffer.putstring ("' */")
+buffer.put_string (" /* `")
+buffer.put_string (feat.feature_name)
+buffer.put_string ("' */")
 end
 				end
-				buffer.putstring (",%N")
+				buffer.put_string (",%N")
 				i := i + 1
 			end
-			buffer.putstring ("};%N%N")
+			buffer.put_string ("};%N%N")
 		end
 
 	routine_id_array: ARRAY [FEATURE_I] is
@@ -947,16 +947,16 @@ feature -- Debugging
 	trace is
 			-- Debug purpose
 		do
-			io.error.putstring ("%N%NFeature table for ")
-			io.error.putstring (associated_class.name)
+			io.error.put_string ("%N%NFeature table for ")
+			io.error.put_string (associated_class.name)
 			from
 				start
 			until
 				after
 			loop
-				io.error.putchar ('%N')
+				io.error.put_character ('%N')
 				print (item_for_iteration.generator)
-				io.error.putchar (' ')
+				io.error.put_character (' ')
 				print (item_for_iteration.feature_name)
 --				item_for_iteration.trace
 				forth
@@ -968,9 +968,9 @@ feature -- Debugging
 		local
 			it: FEATURE_I
 		do
-			io.error.putstring ("Feature table for ")
-			io.error.putstring (associated_class.name)
-			io.error.new_line
+			io.error.put_string ("Feature table for ")
+			io.error.put_string (associated_class.name)
+			io.error.put_new_line
 			from
 				start
 			until
@@ -979,11 +979,11 @@ feature -- Debugging
 				it := item_for_iteration
 if it.written_class > System.any_class.compiled_class then
 				it.trace
-				io.error.putstring ("code id: ")
-				io.error.putint (it.code_id)
-				io.error.putstring (" DT: ")
-				io.error.putstring (it.generator)
-				io.error.new_line
+				io.error.put_string ("code id: ")
+				io.error.put_integer (it.code_id)
+				io.error.put_string (" DT: ")
+				io.error.put_string (it.generator)
+				io.error.put_new_line
 end
 				forth
 			end

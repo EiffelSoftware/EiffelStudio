@@ -43,7 +43,7 @@ feature
 	print_register is
 			-- Generates the C representation of `register'
 		do
-			context.buffer.putstring (register_name)
+			context.buffer.put_string (register_name)
 		end;
 
 	propagate (r: REGISTRABLE) is

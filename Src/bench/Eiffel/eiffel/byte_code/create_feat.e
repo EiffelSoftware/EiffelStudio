@@ -99,7 +99,7 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
-			buffer.putstring ("RTLNSMART(")
+			buffer.put_string ("RTLNSMART(")
 
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -110,33 +110,33 @@ feature -- C code generation
 					-- version anywhere.
 					-- Create anything - cannot be called anyway
 
-					buffer.putint (0)
+					buffer.put_integer (0)
 				else
 					if table.has_one_type then
 							-- There is a table, but with only one type
 						gen_type ?= table.first.type
 
 						if gen_type /= Void then
-							buffer.putstring ("typres")
+							buffer.put_string ("typres")
 						else
-							buffer.putint (table.first.feature_type_id - 1)
+							buffer.put_type_id (table.first.feature_type_id)
 						end
 					else
 							-- Attribute is polymorphic
 						table_name := Encoder.type_table_name (routine_id)
 
-						buffer.putstring ("RTFCID2(")
-						buffer.putint (context.current_type.generated_id (context.final_mode))
-						buffer.putchar (',')
-						buffer.putstring (table_name)
-						buffer.putstring (", ")
-						buffer.putstring (table_name)
-						buffer.putstring ("_gen_type")
-						buffer.putstring (", ")
+						buffer.put_string ("RTFCID2(")
+						buffer.put_integer (context.current_type.generated_id (context.final_mode))
+						buffer.put_character (',')
+						buffer.put_string (table_name)
+						buffer.put_string (", ")
+						buffer.put_string (table_name)
+						buffer.put_string ("_gen_type")
+						buffer.put_string (", ")
 						context.generate_current_dftype
-						buffer.putstring (", ")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putchar (')')
+						buffer.put_string (", ")
+						buffer.put_type_id (table.min_type_id)
+						buffer.put_character (')')
 
 							-- Side effect. This is not nice but
 							-- unavoidable.
@@ -151,25 +151,25 @@ feature -- C code generation
 					Compilation_modes.is_precompiling or
 					context.current_type.base_class.is_precompiled
 				then
-					buffer.putstring ("RTWPCT(")
-					buffer.generate_type_id (context.class_type.static_type_id)
-					buffer.putstring (gc_comma)
+					buffer.put_string ("RTWPCT(")
+					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_string (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
-					buffer.generate_class_id (rout_info.origin)
-					buffer.putstring (gc_comma)
-					buffer.putint (rout_info.offset)
+					buffer.put_class_id (rout_info.origin)
+					buffer.put_string (gc_comma)
+					buffer.put_integer (rout_info.offset)
 				else
-					buffer.putstring ("RTWCT(")
-					buffer.putint (context.current_type.associated_class_type.static_type_id - 1)
-					buffer.putstring (gc_comma)
-					buffer.putint (feature_id)
+					buffer.put_string ("RTWCT(")
+					buffer.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+					buffer.put_string (gc_comma)
+					buffer.put_integer (feature_id)
 				end
 
-				buffer.putstring (gc_comma)
+				buffer.put_string (gc_comma)
 				context.Current_register.print_register
-				buffer.putchar (')')
+				buffer.put_character (')')
 			end
-			buffer.putchar (')')
+			buffer.put_character (')')
 		end
 
 feature -- IL code generation
@@ -284,10 +284,10 @@ feature -- Genericity
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
-					buffer.putint (terminator_type)
-					buffer.putchar (',')
-					buffer.putint (terminator_type)
-					buffer.putchar (',')
+					buffer.put_integer (terminator_type)
+					buffer.put_character (',')
+					buffer.put_integer (terminator_type)
+					buffer.put_character (',')
 				else
 					-- Feature has at least one effective version
 					if table.has_one_type then
@@ -297,25 +297,25 @@ feature -- Genericity
 						if gen_type /= Void then
 							gen_type.generate_cid (buffer, final_mode, True)
 						else
-							buffer.putint (table.first.feature_type_id - 1)
-							buffer.putchar (',')
+							buffer.put_type_id (table.first.feature_type_id)
+							buffer.put_character (',')
 						end
 					else
 							-- Attribute is polymorphic
 						table_name := Encoder.type_table_name (routine_id)
 
-						buffer.putstring ("RTFCID2(")
-						buffer.putint (context.current_type.generated_id (context.final_mode))
-						buffer.putchar (',')
-						buffer.putstring (table_name)
-						buffer.putstring (", ")
-						buffer.putstring (table_name)
-						buffer.putstring ("_gen_type")
-						buffer.putstring (", ")
+						buffer.put_string ("RTFCID2(")
+						buffer.put_integer (context.current_type.generated_id (context.final_mode))
+						buffer.put_character (',')
+						buffer.put_string (table_name)
+						buffer.put_string (", ")
+						buffer.put_string (table_name)
+						buffer.put_string ("_gen_type")
+						buffer.put_string (", ")
 						context.generate_current_dftype
-						buffer.putstring (", ")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), ")
+						buffer.put_string (", ")
+						buffer.put_type_id (table.min_type_id)
+						buffer.put_string ("), ")
 
 							-- Side effect. This is not nice but
 							-- unavoidable.
@@ -330,23 +330,23 @@ feature -- Genericity
 					Compilation_modes.is_precompiling or
 					context.current_type.base_class.is_precompiled
 				then
-					buffer.putstring ("RTWPCT(")
-					buffer.generate_type_id (context.class_type.static_type_id)
-					buffer.putstring (gc_comma)
+					buffer.put_string ("RTWPCT(")
+					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_string (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
-					buffer.generate_class_id (rout_info.origin)
-					buffer.putstring (gc_comma)
-					buffer.putint (rout_info.offset)
+					buffer.put_class_id (rout_info.origin)
+					buffer.put_string (gc_comma)
+					buffer.put_integer (rout_info.offset)
 				else
-					buffer.putstring ("RTWCT(")
-					buffer.putint (context.current_type.associated_class_type.static_type_id - 1)
-					buffer.putstring (gc_comma)
-					buffer.putint (feature_id)
+					buffer.put_string ("RTWCT(")
+					buffer.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+					buffer.put_string (gc_comma)
+					buffer.put_integer (feature_id)
 				end
 
-				buffer.putstring (gc_comma)
+				buffer.put_string (gc_comma)
 				context.Current_register.print_register
-				buffer.putstring ("), ")
+				buffer.put_string ("), ")
 			end
 		end
 
@@ -364,10 +364,10 @@ feature -- Genericity
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
-					buffer.putint (terminator_type)
-					buffer.putchar (',')
-					buffer.putint (terminator_type)
-					buffer.putchar (',')
+					buffer.put_integer (terminator_type)
+					buffer.put_character (',')
+					buffer.put_integer (terminator_type)
+					buffer.put_character (',')
 					dummy := idx_cnt.next
 					dummy := idx_cnt.next
 				else
@@ -380,17 +380,17 @@ feature -- Genericity
 							gen_type.generate_cid_array (buffer, 
 													final_mode, True, idx_cnt)
 						else
-							buffer.putint (table.first.feature_type_id - 1)
-							buffer.putchar (',')
+							buffer.put_type_id (table.first.feature_type_id)
+							buffer.put_character (',')
 							dummy := idx_cnt.next
 						end
 					else
-						buffer.putstring ("0, ")
+						buffer.put_string ("0, ")
 						dummy := idx_cnt.next
 					end
 				end
 			else
-				buffer.putstring ("0, ")
+				buffer.put_string ("0, ")
 				dummy := idx_cnt.next
 			end
 		end
@@ -428,21 +428,21 @@ feature -- Genericity
 							-- Attribute is polymorphic
 						table_name := Encoder.type_table_name (routine_id)
 
-						buffer.putstring ("typarr[")
-						buffer.putint (idx_cnt.value)
-						buffer.putstring ("] = RTFCID2(")
-						buffer.putint (context.current_type.generated_id (context.final_mode))
-						buffer.putchar (',')
-						buffer.putstring (table_name)
-						buffer.putstring (", ")
-						buffer.putstring (table_name)
-						buffer.putstring ("_gen_type")
-						buffer.putstring (", ")
+						buffer.put_string ("typarr[")
+						buffer.put_integer (idx_cnt.value)
+						buffer.put_string ("] = RTFCID2(")
+						buffer.put_integer (context.current_type.generated_id (context.final_mode))
+						buffer.put_character (',')
+						buffer.put_string (table_name)
+						buffer.put_string (", ")
+						buffer.put_string (table_name)
+						buffer.put_string ("_gen_type")
+						buffer.put_string (", ")
 						context.generate_current_dftype
-						buffer.putstring (", ")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring (");")
-						buffer.new_line
+						buffer.put_string (", ")
+						buffer.put_type_id (table.min_type_id)
+						buffer.put_string (");")
+						buffer.put_new_line
 						dummy := idx_cnt.next
 						
 							-- Side effect. This is not nice but
@@ -458,28 +458,28 @@ feature -- Genericity
 					Compilation_modes.is_precompiling or
 					context.current_type.base_class.is_precompiled
 				then
-					buffer.putstring ("typarr[")
-					buffer.putint (idx_cnt.value)
-					buffer.putstring ("] = RTID(RTWPCT(")
-					buffer.generate_type_id (context.class_type.static_type_id)
-					buffer.putstring (gc_comma)
+					buffer.put_string ("typarr[")
+					buffer.put_integer (idx_cnt.value)
+					buffer.put_string ("] = RTID(RTWPCT(")
+					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_string (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
-					buffer.generate_class_id (rout_info.origin)
-					buffer.putstring (gc_comma)
-					buffer.putint (rout_info.offset)
+					buffer.put_class_id (rout_info.origin)
+					buffer.put_string (gc_comma)
+					buffer.put_integer (rout_info.offset)
 				else
-					buffer.putstring ("typarr[")
-					buffer.putint (idx_cnt.value)
-					buffer.putstring ("] = RTID(RTWCT(")
-					buffer.putint (context.current_type.associated_class_type.static_type_id - 1)
-					buffer.putstring (gc_comma)
-					buffer.putint (feature_id)
+					buffer.put_string ("typarr[")
+					buffer.put_integer (idx_cnt.value)
+					buffer.put_string ("] = RTID(RTWCT(")
+					buffer.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+					buffer.put_string (gc_comma)
+					buffer.put_integer (feature_id)
 				end
 
-				buffer.putstring (gc_comma)
+				buffer.put_string (gc_comma)
 				context.Current_register.print_register
-				buffer.putstring ("));")
-				buffer.new_line
+				buffer.put_string ("));")
+				buffer.put_new_line
 				dummy := idx_cnt.next
 			end
 		end
@@ -533,29 +533,29 @@ feature -- Genericity
 					-- version anywhere.
 					-- Create anything - cannot be called anyway
 
-					buffer.putstring ("0")
+					buffer.put_string ("0")
 				else
 					-- Feature has at least one effective version
 					if table.has_one_type then
 							-- There is a table, but with only one type
 
-						buffer.putint (table.first.feature_type_id - 1)
+						buffer.put_type_id (table.first.feature_type_id)
 					else
 							-- Attribute is polymorphic
 						table_name := Encoder.type_table_name (routine_id)
 
-						buffer.putstring ("RTFCID2(")
-						buffer.putint (context.current_type.generated_id (context.final_mode))
-						buffer.putchar (',')
-						buffer.putstring (table_name)
-						buffer.putstring (", ")
-						buffer.putstring (table_name)
-						buffer.putstring ("_gen_type")
-						buffer.putstring (", ")
+						buffer.put_string ("RTFCID2(")
+						buffer.put_integer (context.current_type.generated_id (context.final_mode))
+						buffer.put_character (',')
+						buffer.put_string (table_name)
+						buffer.put_string (", ")
+						buffer.put_string (table_name)
+						buffer.put_string ("_gen_type")
+						buffer.put_string (", ")
 						context.generate_current_dftype
-						buffer.putstring (", ")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putchar (')')
+						buffer.put_string (", ")
+						buffer.put_type_id (table.min_type_id)
+						buffer.put_character (')')
 
 							-- Side effect. This is not nice but
 							-- unavoidable.
@@ -570,23 +570,23 @@ feature -- Genericity
 					Compilation_modes.is_precompiling or
 					context.current_type.base_class.is_precompiled
 				then
-					buffer.putstring ("RTWPCT(")
-					buffer.generate_type_id (context.class_type.static_type_id)
-					buffer.putstring (gc_comma)
+					buffer.put_string ("RTWPCT(")
+					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_string (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
-					buffer.generate_class_id (rout_info.origin)
-					buffer.putstring (gc_comma)
-					buffer.putint (rout_info.offset)
+					buffer.put_class_id (rout_info.origin)
+					buffer.put_string (gc_comma)
+					buffer.put_integer (rout_info.offset)
 				else
-					buffer.putstring ("RTWCT(")
-					buffer.putint (context.current_type.associated_class_type.static_type_id - 1)
-					buffer.putstring (gc_comma)
-					buffer.putint (feature_id)
+					buffer.put_string ("RTWCT(")
+					buffer.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+					buffer.put_string (gc_comma)
+					buffer.put_integer (feature_id)
 				end
 
-				buffer.putstring (gc_comma)
+				buffer.put_string (gc_comma)
 				context.Current_register.print_register
-				buffer.putstring (")")
+				buffer.put_string (")")
 			end
 		end
 

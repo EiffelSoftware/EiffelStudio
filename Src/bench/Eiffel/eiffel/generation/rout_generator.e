@@ -23,12 +23,12 @@ feature
 				-- Let's finish C code generation of current block.
 			current_buffer.end_c_specific_code
 
-			file.putstring ("#include %"eif_macros.h%"%N");
-			file.putstring ("#include %"");
-			file.putstring (Epoly);
-			file.putint (file_counter);
-			file.putstring (Dot_h);
-			file.putstring ("%"%N%N");
+			file.put_string ("#include %"eif_macros.h%"%N");
+			file.put_string ("#include %"");
+			file.put_string (Epoly);
+			file.put_integer (file_counter);
+			file.put_string (Dot_h);
+			file.put_string ("%"%N%N");
 		end;
 
 	finish_file is

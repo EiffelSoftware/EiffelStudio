@@ -111,11 +111,11 @@ feature -- C code generation
 		do
 			buf := buffer
 			if context.workbench_mode then
-				buf.putstring ("(EIF_POINTER) RTWPP(")
-				buf.generate_type_id (context.current_type.associated_class_type.static_type_id)
-				buf.putstring (gc_comma)
-				buf.putint (feature_id)
-				buf.putchar (')')
+				buf.put_string ("(EIF_POINTER) RTWPP(")
+				buf.put_static_type_id (context.current_type.associated_class_type.static_type_id)
+				buf.put_string (gc_comma)
+				buf.put_integer (feature_id)
+				buf.put_character (')')
 			else
 				l_rout_id := routine_id
 				class_type := context.current_type
@@ -124,14 +124,14 @@ feature -- C code generation
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-					buf.putstring ("NULL")
+					buf.put_string ("NULL")
 				elseif array_index >= 0 then
 					table_name := "f"
 					table_name.append (Encoder.address_table_name (feature_id,
 								class_type.associated_class_type.static_type_id))
 
-					buf.putstring ("(EIF_POINTER) ")
-					buf.putstring (table_name)
+					buf.put_string ("(EIF_POINTER) ")
+					buf.put_string (table_name)
 
 						-- Mark table used
 					Eiffel_table.mark_used (l_rout_id)
@@ -143,14 +143,14 @@ feature -- C code generation
 					rout_table.goto_implemented (class_type_id)
 					if rout_table.is_implemented then
 						internal_name := rout_table.feature_name
-						buf.putstring ("(EIF_POINTER) ")
-						buf.putstring (internal_name)
+						buf.put_string ("(EIF_POINTER) ")
+						buf.put_string (internal_name)
 
 						shared_include_queue.put (
 							System.class_type_of_id (rout_table.item.written_type_id).header_filename)
 					else
 							-- Call to a deferred feature without implementation
-						buf.putstring ("NULL")
+						buf.put_string ("NULL")
 					end
 				end
 			end

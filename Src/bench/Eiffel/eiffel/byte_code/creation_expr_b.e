@@ -264,15 +264,15 @@ feature -- Generation
 			end
 			register.print_register
 			buf := buffer
-			buf.putstring (" = ")
+			buf.put_string (" = ")
 			if l_basic_type /= Void then
 				l_basic_type.generate_default_value (buf)
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (';')
+				buf.put_new_line
 			else
 				info.generate
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (';')
+				buf.put_new_line
 				info.generate_end (Current)
 	
 				if call /= Void then
@@ -280,18 +280,18 @@ feature -- Generation
 					call.generate_parameters (register)
 					call.generate_on (register)
 					call.set_parent (Void)
-					buf.putchar (';')
-					buf.new_line				
+					buf.put_character (';')
+					buf.put_new_line				
 					generate_frozen_debugger_hook_nested
 				end
 				if
 					context.workbench_mode
 					or else context.assertion_level.check_invariant
 				then
-					buf.putstring ("RTCI(")
+					buf.put_string ("RTCI(")
 					register.print_register
-					buf.putstring (gc_rparan_semi_c)
-					buf.new_line
+					buf.put_string (gc_rparan_semi_c)
+					buf.put_new_line
 				end
 			end
 		end

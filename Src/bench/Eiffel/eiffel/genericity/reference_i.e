@@ -98,13 +98,13 @@ feature
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.
 		do
-			buffer.putstring ("it_ref")
+			buffer.put_string ("it_ref")
 		end
 
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-			buffer.putstring ("SK_REF")
+			buffer.put_string ("SK_REF")
 		end
 
 	type_a: TYPE_A is

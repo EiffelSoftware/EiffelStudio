@@ -129,17 +129,17 @@ feature {NONE} -- C code generation
 			generate_gen_type_conversion (real_ty);
 			print_register;
 			buf := buffer
-			buf.putstring (" = ");
+			buf.put_string (" = ");
 			if workbench_mode then
-				buf.putstring ("RTLN(typres");
+				buf.put_string ("RTLN(typres");
 			else
-				buf.putstring ("RTLNS(typres, ");
-				buf.putint (real_ty.type_id - 1)
-				buf.putstring (", ")
+				buf.put_string ("RTLNS(typres, ");
+				buf.put_type_id (real_ty.type_id)
+				buf.put_string (", ")
 				real_ty.associated_class_type.skeleton.generate_size (buf)
 			end
-			buf.putstring (");");
-			buf.new_line;
+			buf.put_string (");");
+			buf.put_new_line;
 			generate_block_close;
 		end;
 
@@ -158,22 +158,22 @@ feature {NONE} -- C code generation
 			is_expanded := target_type.is_true_expanded;
 			array_area_reg.print_register;
 			buf := buffer
-			buf.putstring (" = * (EIF_REFERENCE *) ");
+			buf.put_string (" = * (EIF_REFERENCE *) ");
 			print_register;
-			buf.putchar (';');
-			buf.new_line;
+			buf.put_character (';');
+			buf.put_new_line;
 			if (is_expanded and then expressions.count > 0) then
-				buf.putchar ('{');
-				buf.new_line;
+				buf.put_character ('{');
+				buf.put_new_line;
 				buf.indent;
-				buf.putstring ("EIF_INTEGER elem_size;");
-				buf.new_line;
-				buf.putstring ("elem_size = *(EIF_INTEGER *) (");
+				buf.put_string ("EIF_INTEGER elem_size;");
+				buf.put_new_line;
+				buf.put_string ("elem_size = *(EIF_INTEGER *) (");
 				array_area_reg.print_register;
-				buf.putstring (" + (HEADER(");
+				buf.put_string (" + (HEADER(");
 				array_area_reg.print_register;
-				buf.putstring (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(EIF_INTEGER));");
-				buf.new_line;
+				buf.put_string (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(EIF_INTEGER));");
+				buf.put_new_line;
 			end;
 			from
 				expressions.start;
@@ -189,29 +189,29 @@ feature {NONE} -- C code generation
 					expr.generate;
 					basic_i.metamorphose 
 						(metamorphose_reg, expr, buf, context.workbench_mode);
-					buf.putchar (';');
-					buf.new_line;
+					buf.put_character (';');
+					buf.put_new_line;
 					metamorphosed := True
 				else
 					expr.generate;
 				end;
 				if is_expanded then
-					buf.putstring ("ecopy(");
+					buf.put_string ("ecopy(");
 					expr.print_register;
-					buf.putstring (gc_comma);
+					buf.put_string (gc_comma);
 					array_area_reg.print_register;
-					buf.putstring (" + OVERHEAD + elem_size * ");
-					buf.putint (position);
-					buf.putchar (')');
+					buf.put_string (" + OVERHEAD + elem_size * ");
+					buf.put_integer (position);
+					buf.put_character (')');
 				else
-					buf.putchar ('*');
-					buf.putchar ('(');
+					buf.put_character ('*');
+					buf.put_character ('(');
 					target_type.c_type.generate_access_cast (buf);
 					array_area_reg.print_register;
-					buf.putchar('+');
-					buf.putint (position);
-					buf.putchar (')');
-					buf.putstring (" = ");
+					buf.put_character('+');
+					buf.put_integer (position);
+					buf.put_character (')');
+					buf.put_string (" = ");
 					if metamorphosed then
 						metamorphose_reg.print_register
 					else
@@ -221,28 +221,28 @@ feature {NONE} -- C code generation
 						-- Generation of the RTAR protection
 						-- if the array contains references
 					if target_type.is_reference or target_type.is_bit then
-						buf.putchar (';');
-						buf.new_line
-						buf.putstring ("RTAR(");
+						buf.put_character (';');
+						buf.put_new_line
+						buf.put_string ("RTAR(");
 						array_area_reg.print_register;
-						buf.putchar (',');
+						buf.put_character (',');
 						if metamorphosed then
 							metamorphose_reg.print_register
 						else
 							expr.print_register;
 						end;
-						buf.putchar (')');
+						buf.put_character (')');
 					end
 				end
-				buf.putchar (';')
-				buf.new_line
+				buf.put_character (';')
+				buf.put_new_line
 				expressions.forth
 				position := position + 1
 			end
 			if (is_expanded and expressions.count > 0) then
 				buf.exdent
-				buf.putchar ('}')
-				buf.new_line
+				buf.put_character ('}')
+				buf.put_new_line
 			end
 		end
 
@@ -263,9 +263,9 @@ feature {NONE} -- C code generation
 				is_implemented: rout_table.is_implemented
 			end
 			internal_name := rout_table.feature_name.twin
-			buffer.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))")
-			buffer.putstring (internal_name);
-			buffer.putstring (")")
+			buffer.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))")
+			buffer.put_string (internal_name);
+			buffer.put_string (")")
 
 				-- Generate the arguments
 			generate_array_make_arguments;
@@ -293,27 +293,27 @@ feature {NONE} -- C code generation
 			f_table := base_class.feature_table;
 			feat_i := f_table.item_id (make_name_id);
 			buf := buffer
-			buf.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))");
+			buf.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))");
 			if 
 				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
 			then
-				buf.putstring ("RTWPF(");
+				buf.put_string ("RTWPF(");
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				buf.generate_class_id (rout_info.origin);
-				buf.putstring (gc_comma);
-				buf.putint (rout_info.offset);
+				buf.put_class_id (rout_info.origin);
+				buf.put_string (gc_comma);
+				buf.put_integer (rout_info.offset);
 			else
-				buf.putstring (" RTWF(");
-				buf.putint (real_ty.associated_class_type.static_type_id - 1);
-				buf.putstring (gc_comma);
-				buf.putint (feat_i.feature_id);
+				buf.put_string (" RTWF(");
+				buf.put_static_type_id (real_ty.associated_class_type.static_type_id);
+				buf.put_string (gc_comma);
+				buf.put_integer (feat_i.feature_id);
 			end;
-			buf.putstring (gc_comma);
-			buf.putstring (gc_upper_dtype_lparan);
+			buf.put_string (gc_comma);
+			buf.put_string (gc_upper_dtype_lparan);
 			print_register;
-			buf.putstring (")))");
+			buf.put_string (")))");
 			generate_array_make_arguments;
 		end;
 
@@ -323,13 +323,13 @@ feature {NONE} -- C code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.putchar ('(');
+			buf.put_character ('(');
 			print_register;
-			buf.putstring (gc_comma);
-			buf.putstring ("1L, ");
-			buf.putint (expressions.count);
-			buf.putstring ("L);");
-			buf.new_line;
+			buf.put_string (gc_comma);
+			buf.put_string ("1L, ");
+			buf.put_integer (expressions.count);
+			buf.put_string ("L);");
+			buf.put_new_line;
 		end;
 
 end

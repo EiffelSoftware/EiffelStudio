@@ -87,9 +87,9 @@ end
 						old_position := table.position;
 						if not is_alive (unit.body_index) then
 DEBUG ("DEAD_CODE")
-	io.putstring ("marking for rout_id: ")
-	io.putint (rout_id_val)
-	io.putstring ("%N")
+	io.put_string ("marking for rout_id: ")
+	io.put_integer (rout_id_val)
+	io.put_string ("%N")
 end
 								mark (unit.body_index, unit.class_id, unit.written_in, rout_id_val);
 						end;
@@ -125,21 +125,21 @@ DEBUG("DEAD_CODE")
 	------------------------------------------
 	--		DEBUG			--
 	
-	io.putstring ("MARKING: ")			
+	io.put_string ("MARKING: ")			
 	a_class := System.class_of_id (actual_class_id)
-	io.putstring (a_class.feature_table.feature_of_body_index (body_index).feature_name)
-	io.putstring (" (bid: ")
-	io.putint (body_index)
-	io.putstring (") of ")
-	io.putstring (a_class.lace_class.name)
-	io.putstring (" (")
-	io.putint (a_class.class_id)
-	io.putstring (") originally in ")
+	io.put_string (a_class.feature_table.feature_of_body_index (body_index).feature_name)
+	io.put_string (" (bid: ")
+	io.put_integer (body_index)
+	io.put_string (") of ")
+	io.put_string (a_class.lace_class.name)
+	io.put_string (" (")
+	io.put_integer (a_class.class_id)
+	io.put_string (") originally in ")
 	a_class := System.class_of_id (written_class_id)
-	io.putstring (a_class.lace_class.name)
-	io.putstring (" (")
-	io.putint (a_class.class_id)
-	io.putstring (")%N")
+	io.put_string (a_class.lace_class.name)
+	io.put_string (" (")
+	io.put_integer (a_class.class_id)
+	io.put_string (")%N")
 	------------------------------------------
 end
 
@@ -153,19 +153,19 @@ end
 					propagate_feature (written_class_id, body_index, depend_list);
 				end;
 DEBUG ("DEAD_CODE")
-	io.putstring ("La depend_list contient ")
+	io.put_string ("La depend_list contient ")
 	if depend_list /= Void then
-		io.putint (depend_list.count)
+		io.put_integer (depend_list.count)
 	else
-		io.putstring ("aucun")
+		io.put_string ("aucun")
 	end
-	io.putstring (" elements.%N")
-	io.putstring ("-----------------------------------------------------%N%N%N")
+	io.put_string (" elements.%N")
+	io.put_string ("-----------------------------------------------------%N%N%N")
 end
 			end
 DEBUG ("DEAD_CODE")
 	if not just_born then
-		io.putstring ("already alive%N")
+		io.put_string ("already alive%N")
 	end
 end
 		end

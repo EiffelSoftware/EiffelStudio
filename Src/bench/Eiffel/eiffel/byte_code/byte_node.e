@@ -56,12 +56,12 @@ feature -- Eiffel source line information
 		do
 			if System.line_generation and then line_number > 0 then
 				l_buffer := buffer
-				l_buffer.putstring ("%N#line ")
-				l_buffer.putint (line_number)
-				l_buffer.putstring (" %"")
+				l_buffer.put_string ("%N#line ")
+				l_buffer.put_integer (line_number)
+				l_buffer.put_string (" %"")
 				l_buffer.escape_string (Context.associated_class.lace_class.base_name)
-				l_buffer.putstring ("%"")
-				l_buffer.new_line
+				l_buffer.put_string ("%"")
+				l_buffer.put_new_line
 			end
 		end
 
@@ -107,10 +107,10 @@ feature -- Eiffel source line information
 					lnr > 0
 				end
 				l_buffer := buffer
-				l_buffer.putstring("RTHOOK(")
-				l_buffer.putint(lnr)
-				l_buffer.putstring(");")
-				l_buffer.new_line
+				l_buffer.put_string("RTHOOK(")
+				l_buffer.put_integer(lnr)
+				l_buffer.put_string(");")
+				l_buffer.put_new_line
 			end
 		end
 
@@ -122,10 +122,10 @@ feature -- Eiffel source line information
 		do
 			if not context.final_mode or else System.exception_stack_managed then
 				l_buffer := buffer
-				l_buffer.putstring("RTHOOK(")
-				l_buffer.putint(context.current_feature.number_of_breakpoint_slots)
-				l_buffer.putstring(");")
-				l_buffer.new_line
+				l_buffer.put_string("RTHOOK(")
+				l_buffer.put_integer(context.current_feature.number_of_breakpoint_slots)
+				l_buffer.put_string(");")
+				l_buffer.put_new_line
 			end
 		end
 
@@ -164,10 +164,10 @@ feature -- Eiffel source line information
 					-- if lnr = 0 or -1 then we do nothing.
 				if lnr > 0 then
 					l_buffer := buffer
-					l_buffer.putstring("RTNHOOK(")
-					l_buffer.putint(lnr)
-					l_buffer.putstring(");")
-					l_buffer.new_line
+					l_buffer.put_string("RTNHOOK(")
+					l_buffer.put_integer(lnr)
+					l_buffer.put_string(");")
+					l_buffer.put_new_line
 				end
 			end
 		end
@@ -354,8 +354,8 @@ feature -- Generic conformance
 			l_buffer: like buffer
 		do
 			l_buffer := buffer
-			l_buffer.putchar ('{')
-			l_buffer.new_line
+			l_buffer.put_character ('{')
+			l_buffer.put_new_line
 			l_buffer.indent
 		end
 
@@ -365,10 +365,10 @@ feature -- Generic conformance
 			l_buffer: like buffer
 		do
 			l_buffer := buffer
-			l_buffer.new_line
+			l_buffer.put_new_line
 			l_buffer.exdent
-			l_buffer.putchar ('}')
-			l_buffer.new_line
+			l_buffer.put_character ('}')
+			l_buffer.put_new_line
 		end
 
 	generate_gen_type_conversion (gtype : GEN_TYPE_I) is
@@ -389,12 +389,12 @@ feature -- Generic conformance
 				-- It is safe in monothreaded code as we are guaranteed that
 				-- only one thread of execution will use the modified `typarr'.
 			if not System.has_multithreaded or else not use_init then
-				l_buffer.putstring ("static ")
+				l_buffer.put_string ("static ")
 			end
-			l_buffer.putstring ("int16 typarr [] = {")
+			l_buffer.put_string ("int16 typarr [] = {")
 
-			l_buffer.putint (context.current_type.generated_id (context.final_mode))
-			l_buffer.putstring (", ")
+			l_buffer.put_integer (context.current_type.generated_id (context.final_mode))
+			l_buffer.put_string (", ")
 
 			if use_init then
 				create idx_cnt
@@ -403,15 +403,15 @@ feature -- Generic conformance
 			else
 				gtype.generate_cid (l_buffer, context.final_mode, True)
 			end
-			l_buffer.putstring ("-1};")
-			l_buffer.new_line
-			l_buffer.putstring ("int16 typres;")
-			l_buffer.new_line
+			l_buffer.put_string ("-1};")
+			l_buffer.put_new_line
+			l_buffer.put_string ("int16 typres;")
+			l_buffer.put_new_line
 			if not use_init then
-				l_buffer.putstring ("static int16 typcache = -1;")
-				l_buffer.new_line
+				l_buffer.put_string ("static int16 typcache = -1;")
+				l_buffer.put_new_line
 			end
-			l_buffer.new_line
+			l_buffer.put_new_line
 
 			if use_init then
 				-- Reset counter
@@ -420,15 +420,15 @@ feature -- Generic conformance
 			end
 
 			if not use_init then
-				l_buffer.putstring ("typres = RTCID2(&typcache, ")
+				l_buffer.put_string ("typres = RTCID2(&typcache, ")
 			else
-				l_buffer.putstring ("typres = RTCID2(NULL, ")
+				l_buffer.put_string ("typres = RTCID2(NULL, ")
 			end
 			context.generate_current_dftype
-			l_buffer.putstring (", ")
-			l_buffer.putint (gtype.generated_id (context.final_mode))
-			l_buffer.putstring (", typarr);")
-			l_buffer.new_line
-			l_buffer.new_line
+			l_buffer.put_string (", ")
+			l_buffer.put_integer (gtype.generated_id (context.final_mode))
+			l_buffer.put_string (", typarr);")
+			l_buffer.put_new_line
+			l_buffer.put_new_line
 		end
 end

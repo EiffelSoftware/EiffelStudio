@@ -74,7 +74,7 @@ feature
 			i, j, n : INTEGER;
 			l_type_id: INTEGER
 		do
-			buffer.putstring ("static int16 ptf");
+			buffer.put_string ("static int16 ptf");
 
 			l_type_id := type_id
 			if l_type_id <= -256 then
@@ -82,9 +82,9 @@ feature
 				l_type_id := -256 - l_type_id
 			end
 
-			buffer.putint (l_type_id);
+			buffer.put_integer (l_type_id);
 
-			buffer.putstring ("[] = {%N");
+			buffer.put_string ("[] = {%N");
 
 			from
 				i := 1;
@@ -99,32 +99,32 @@ feature
 				j := j + 1;
 
 				if (j \\ 16) = 0 then
-					buffer.new_line
+					buffer.put_new_line
 				end
 			end;
 
-			buffer.putint (-1);
-			buffer.putstring ("};%N%Nstatic struct eif_par_types par");
+			buffer.put_integer (-1);
+			buffer.put_string ("};%N%Nstatic struct eif_par_types par");
 
-			buffer.putint (l_type_id);
+			buffer.put_integer (l_type_id);
 
-			buffer.putstring (" = {%"")
-			buffer.putstring (classname)
-			buffer.putstring ("%", ptf")
+			buffer.put_string (" = {%"")
+			buffer.put_string (classname)
+			buffer.put_string ("%", ptf")
 
-			buffer.putint (l_type_id);
+			buffer.put_integer (l_type_id);
 
-			buffer.putstring (", (int16) ")
-			buffer.putint (generic_count)
-			buffer.putstring (", (char) ")
+			buffer.put_string (", (int16) ")
+			buffer.put_integer (generic_count)
+			buffer.put_string (", (char) ")
 
 			if is_expanded then
-				buffer.putstring ("1")
+				buffer.put_string ("1")
 			else
-				buffer.putstring ("0")
+				buffer.put_string ("0")
 			end
 
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

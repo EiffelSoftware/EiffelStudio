@@ -543,9 +543,9 @@ feature -- Debugging
 			until
 				i < 1
 			loop
-				io.error.putchar ('%T');
+				io.error.put_character ('%T');
 				i_th (i).trace;
-				io.error.new_line;
+				io.error.put_new_line;
 				i := i - 1;
 			end;
 		end;

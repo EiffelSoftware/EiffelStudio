@@ -45,11 +45,11 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.putstring ("((");
+			buf.put_string ("((");
 			left.print_register;
-			buf.putstring (") != (");
+			buf.put_string (") != (");
 			right.print_register;
-			buf.putstring ("))");
+			buf.put_string ("))");
 		end;
 
 end

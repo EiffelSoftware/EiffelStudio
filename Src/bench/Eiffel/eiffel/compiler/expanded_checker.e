@@ -48,9 +48,9 @@ feature -- Checking
 			current_type_exists: current_type /= Void
 		do
 			debug
-				io.error.putstring ("Check expanded%N")
-				io.error.putstring (current_type.associated_class.class_signature)
-				io.error.new_line
+				io.error.put_string ("Check expanded%N")
+				io.error.put_string (current_type.associated_class.class_signature)
+				io.error.put_new_line
 			end
 			recursive_check (current_type)
 			id_set.wipe_out
@@ -93,9 +93,9 @@ feature {NONE} -- Implementation
 			from
 				current_skeleton := class_type.skeleton
 				debug
-					io.error.putstring ("Recursive check%N")
-					io.error.putbool (stop_recursion)
-					io.error.new_line
+					io.error.put_string ("Recursive check%N")
+					io.error.put_boolean (stop_recursion)
+					io.error.put_new_line
 					current_skeleton.trace
 				end
 				current_skeleton.go_expanded

@@ -125,50 +125,50 @@ feature
 				and not register_for_metamorphosis
 			then
 				print_register;
-				buf.putstring (" = ");
+				buf.put_string (" = ");
 				source.print_register;
-				buf.putchar (';');
-				buf.new_line;
+				buf.put_character (';');
+				buf.put_new_line;
 			end;
 				-- If last is in result, generate a return instruction.
 			if last_in_result then
 				context.byte_code.finish_compound;
 				if last_instruction then
-					buf.new_line;
+					buf.put_new_line;
 				end;
-				buf.putstring ("return ");
+				buf.put_string ("return ");
 			else
 				target.print_register;
-				buf.putstring (" = ");
+				buf.put_string (" = ");
 			end;
 			if context.real_type (target.type).is_none then
 					-- Assignment on something of type NONE always fails.
-				buf.putstring ("(EIF_REFERENCE) 0");
+				buf.put_string ("(EIF_REFERENCE) 0");
 			else
-				buf.putstring ("RTRV(");
+				buf.put_string ("RTRV(");
 
 				if gen_type = Void then
 					info.generate_reverse (buf, context.final_mode)
 				else
-					buf.putstring ("typres");
+					buf.put_string ("typres");
 				end;
 
-				buf.putstring (gc_comma);
+				buf.put_string (gc_comma);
 				source_print_register;
-				buf.putchar (')')
+				buf.put_character (')')
 					-- Perform aging tests when necessary
 				if not target.is_predefined then
-					buf.putchar (';')
-					buf.new_line
-					buf.putstring ("RTAR(")
+					buf.put_character (';')
+					buf.put_new_line
+					buf.put_string ("RTAR(")
 					context.Current_register.print_register
-					buf.putstring (gc_comma)
+					buf.put_string (gc_comma)
 					source_print_register
-					buf.putchar (')')
+					buf.put_character (')')
 				end
 			end;
-			buf.putchar (';');
-			buf.new_line;
+			buf.put_character (';');
+			buf.put_new_line;
 
 			if gen_type /= Void then
 				-- We need to close the C block.

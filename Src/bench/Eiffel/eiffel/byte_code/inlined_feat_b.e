@@ -199,13 +199,13 @@ feature -- Generation
 			local_inliner.set_inlined_feature (Current);
 
 			buf := buffer
-			buf.putchar ('{');
-			buf.new_line;
+			buf.put_character ('{');
+			buf.put_new_line;
 
-			buf.putstring ("/* INLINED CODE (");
-			buf.putstring (escaped_feature_name);
-			buf.putstring (") */");
-			buf.new_line;
+			buf.put_string ("/* INLINED CODE (");
+			buf.put_string (escaped_feature_name);
+			buf.put_string (") */");
+			buf.put_new_line;
 
 			if parameters /= Void then
 					-- Assign the parameter values to the registers
@@ -221,10 +221,10 @@ feature -- Generation
 					if (not b_area.item (i)) then
 						expr := l_area.item (i)
 						argument_regs.item (i + 1).print_register;
-						buf.putstring (" = ");
+						buf.put_string (" = ");
 						expr.print_register;
-						buf.putchar (';');
-						buf.new_line
+						buf.put_character (';');
+						buf.put_new_line
 					end;
 					i := i + 1
 				end
@@ -256,7 +256,7 @@ feature -- Generation
 			if not is_current_temporary then
 
 				current_register.print_register;
-				buf.putstring (" = ");
+				buf.put_string (" = ");
 
 				-- `print_register' on `gen_reg' must be generated
 				-- with the old context
@@ -265,10 +265,10 @@ feature -- Generation
 				Context.set_inlined_current_register (Void);
 				
 				gen_reg.print_register;
-				buf.putchar (';');
-				buf.new_line
+				buf.put_character (';');
+				buf.put_new_line
 				
-				buf.new_line
+				buf.put_new_line
 				
 				Context.set_current_type (current_t);
 				Context.set_inlined_current_register (current_reg);
@@ -276,24 +276,24 @@ feature -- Generation
 			end;
 
 			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
-				buf.putchar ('{')
+				buf.put_character ('{')
 				if inlined_dftype_current > 1 then
 					context.set_inlined_dftype_current (inlined_dftype_current)
-					buf.new_line
-					buf.putstring ("int inlined_dftype = ")
-					buf.putstring (gc_upper_dftype_lparan)
+					buf.put_new_line
+					buf.put_string ("int inlined_dftype = ")
+					buf.put_string (gc_upper_dftype_lparan)
 					current_reg.print_register
-					buf.putstring (");")
+					buf.put_string (");")
 				end
 				if inlined_dt_current > 1 then
 					context.set_inlined_dt_current (inlined_dt_current)
-					buf.new_line
-					buf.putstring ("int inlined_dtype = ")
-					buf.putstring (gc_upper_dtype_lparan)
+					buf.put_new_line
+					buf.put_string ("int inlined_dtype = ")
+					buf.put_string (gc_upper_dtype_lparan)
 					current_reg.print_register
-					buf.putstring (");")
+					buf.put_string (");")
 				end
-				buf.new_line
+				buf.put_new_line
 			end
 			
 			if compound /= Void then
@@ -301,8 +301,8 @@ feature -- Generation
 			end
 
 			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
-				buf.putchar ('}');
-				buf.new_line
+				buf.put_character ('}');
+				buf.put_new_line
 				if inlined_dt_current > 1 then
 					context.set_inlined_dt_current (0);
 				end
@@ -313,11 +313,11 @@ feature -- Generation
 
 			Context.set_inlined_current_register (Void);
 
-			buf.putstring ("/* END INLINED CODE */");
-			buf.new_line;
+			buf.put_string ("/* END INLINED CODE */");
+			buf.put_new_line;
 
-			buf.putchar ('}');
-			buf.new_line;
+			buf.put_character ('}');
+			buf.put_new_line;
 
 			Context.set_current_type (caller_type);
 			caller_type := Void;
@@ -530,13 +530,13 @@ feature {NONE} -- Registers
 		do
 			reg.print_register;
 			buf := buffer
-			buf.putstring (" = ");
+			buf.put_string (" = ");
 			reg.c_type.generate_cast (buf);
-			buf.putstring (" 0;");
-			buf.new_line
+			buf.put_string (" 0;");
+			buf.put_new_line
 			if a_type.is_true_expanded then
 				a_type.generate_expanded_creation (byte_code, reg, False)
-				buf.new_line;
+				buf.put_new_line;
 			end
 		end
 

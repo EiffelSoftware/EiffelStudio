@@ -29,19 +29,19 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			buffer.putstring (gc_plus)
+			buffer.put_string (gc_plus)
 		end
 
 	generate_simple is
 			-- Generate a simple assignment operation
 		do
-			buffer.putstring (" += ")
+			buffer.put_string (" += ")
 		end
 
 	generate_plus_plus is
 			-- Generate a ++ operation
 		do
-			buffer.putstring ("++")
+			buffer.put_string ("++")
 		end
 
 end

@@ -172,25 +172,25 @@ feature
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.table_name (routine_id)
 
-				buf.putchar ('(');
+				buf.put_character ('(');
 				type_c.generate_function_cast (buf, argument_types)
 
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
-				buf.putstring (table_name);
-				buf.putchar ('[');
+				buf.put_string (table_name);
+				buf.put_character ('[');
 				if reg.is_current then
 					context.generate_current_dtype;
 				else
-					buf.putstring (gc_upper_dtype_lparan);
+					buf.put_string (gc_upper_dtype_lparan);
 					reg.print_register;
-					buf.putchar (')');
+					buf.put_character (')');
 				end;
-				buf.putchar ('-');
-				buf.putint (array_index);
-				buf.putchar (']');
+				buf.put_character ('-');
+				buf.put_integer (array_index);
+				buf.put_character (']');
 				
-				buf.putchar (')');
+				buf.put_character (')');
 
 					-- Mark routine table used.
 				Eiffel_table.mark_used (routine_id);
@@ -227,10 +227,10 @@ feature
 								internal_name, local_argument_types)
 					end
 
-					buf.putchar ('(')
+					buf.put_character ('(')
 					type_c.generate_function_cast (buf, local_argument_types)
-					buf.putstring (internal_name)
-					buf.putchar (')')
+					buf.put_string (internal_name)
+					buf.put_character (')')
 				else
 					if not l_type_i.is_void then
 						type_c.generate_cast (buf);
@@ -293,17 +293,17 @@ feature
 					end
 				else
 						-- Call is done like a normal Eiffel routine call.
-					buf.putchar ('(')
+					buf.put_character ('(')
 					gen_reg.print_register
 					generate_parameters_list
-					buf.putchar (')')
+					buf.put_character (')')
 				end
 			else
 					-- Call is done like a normal Eiffel routine call.
-				buf.putchar ('(')
+				buf.put_character ('(')
 				gen_reg.print_register
 				generate_parameters_list
-				buf.putchar (')')
+				buf.put_character (')')
 			end
 		end
 
@@ -319,7 +319,7 @@ feature
 				until
 					parameters.after
 				loop
-					buf.putstring (gc_comma)
+					buf.put_string (gc_comma)
 					parameters.item.print_register
 					parameters.forth
 				end

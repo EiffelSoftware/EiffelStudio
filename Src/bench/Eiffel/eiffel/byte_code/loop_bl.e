@@ -82,7 +82,7 @@ feature -- Access
 				generate_invariant := invariant_part /= Void
 			end
 				-- Outstand loop structure
-			buffer.new_line
+			buffer.put_new_line
 
 				-- Generate the "from" part
 			if from_part /= Void then
@@ -151,10 +151,10 @@ feature -- Access
 				-- the end of the while body.
 				-- FIXME: maybe if the expression is too complex, we should
 				-- use the old mechanism (pre 3.2.5) with label and goto
-			buf.putstring ("while (!(")
+			buf.put_string ("while (!(")
 			stop.print_register
-			buf.putstring (")) {")
-			buf.new_line
+			buf.put_string (")) {")
+			buf.put_new_line
 			buf.indent
 			if compound /= Void then
 				compound.generate
@@ -197,7 +197,7 @@ feature -- Access
 
 			debug ("DEBUGGER_HOOK")
 				if get_current_frozen_debugger_hook /= check_slot then
-					io.putstring ("LOOP_BL: Error in breakpoint slots generation for loop.%N")
+					io.put_string ("LOOP_BL: Error in breakpoint slots generation for loop.%N")
 				end
 			end
 
@@ -208,13 +208,13 @@ feature -- Access
 				-- Restore the hook number
 			set_current_frozen_debugger_hook (body_breakpoint_slot)
 
-			buf.putchar (';')
-			buf.new_line
+			buf.put_character (';')
+			buf.put_new_line
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 				-- Outstand loop structure
-			buf.new_line
+			buf.put_new_line
 		end
 
 	generate_workbench_test is
@@ -225,8 +225,8 @@ feature -- Access
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.putstring ("if (RTAL & CK_LOOP) {")
-			buf.new_line
+			buf.put_string ("if (RTAL & CK_LOOP) {")
+			buf.put_new_line
 			buf.indent
 		end
 
@@ -239,8 +239,8 @@ feature -- Access
 		do
 			buf := buffer
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 		end
 
 	generate_final_mode_test is
@@ -248,8 +248,8 @@ feature -- Access
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.putstring ("if (~in_assertion) {")
-			buf.new_line
+			buf.put_string ("if (~in_assertion) {")
+			buf.put_new_line
 			buf.indent
 		end
 
@@ -259,8 +259,8 @@ feature -- Access
 		do
 			buf := buffer
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 		end
 
 	fill_from (l: LOOP_B) is

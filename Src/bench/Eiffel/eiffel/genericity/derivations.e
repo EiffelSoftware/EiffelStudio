@@ -32,11 +32,11 @@ feature
 			tuple_i: TUPLE_TYPE_I
 		do
 debug
-	io.error.putstring ("Inserting a new derivation ");
-	io.error.putint (an_id)
-	io.error.new_line;
+	io.error.put_string ("Inserting a new derivation ");
+	io.error.put_integer (an_id)
+	io.error.put_new_line;
 	a_type.trace
-	io.error.new_line;
+	io.error.put_new_line;
 end;
 			derivations := item (an_id);
 			if derivations = Void then

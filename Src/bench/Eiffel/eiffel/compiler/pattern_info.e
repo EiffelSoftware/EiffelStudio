@@ -104,9 +104,9 @@ feature
 			-- Debug purpose
 		do
 			pattern.trace;
-			io.error.putstring (" --> written in ");
-			io.error.putstring (associated_class.name);
-			io.error.new_line;
+			io.error.put_string (" --> written in ");
+			io.error.put_string (associated_class.name);
+			io.error.put_new_line;
 		end;
 
 end

@@ -15,13 +15,13 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			buffer.putstring (" == ");
+			buffer.put_string (" == ");
 		end;
 
 	generate_boolean_constant is
 			-- Generate false constant
 		do
-			buffer.putstring ("EIF_FALSE");
+			buffer.put_string ("EIF_FALSE");
 		end;
 
 	enlarged: EXPR_B is

@@ -143,17 +143,17 @@ feature -- C code generation
 			buf.indent
 			if not l_ret_type.is_void then
 				l_ret_type.c_type.generate (buf)
-				buf.putstring ("Result;")
-				buf.new_line
+				buf.put_string ("Result;")
+				buf.put_new_line
 			end
 			generate_compound
 			if not result_type.is_void then
-				buf.putstring ("return Result;")
-				buf.new_line
+				buf.put_string ("return Result;")
+				buf.put_new_line
 			end
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 			context.inherited_assertion.wipe_out
 		end
 		
@@ -187,18 +187,18 @@ feature -- C code generation
 
 				-- Now we want the body
 			if l_ext.is_blocking_call then
-				buf.putstring ("EIF_ENTER_C;")
-				buf.new_line
+				buf.put_string ("EIF_ENTER_C;")
+				buf.put_new_line
 			end
 			
 				-- Generate call to external.
 			l_ext.generate_body (Current, l_result)
 			
 			if l_ext.is_blocking_call then
-				buf.putstring ("EIF_EXIT_C;")
-				buf.new_line
-				buf.putstring ("RTGC;")
-				buf.new_line
+				buf.put_string ("EIF_EXIT_C;")
+				buf.put_new_line
+				buf.put_string ("RTGC;")
+				buf.put_new_line
 			end
 			
 			if l_need_protection then
@@ -260,8 +260,8 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			l_buf := context.buffer
-			l_buf.putchar ('{')
-			l_buf.new_line
+			l_buf.put_character ('{')
+			l_buf.put_new_line
 			l_buf.indent
 
 			from
@@ -271,21 +271,21 @@ feature {NONE} -- Implementation
 				i > nb
 			loop
 				if real_type (arguments.item (i)).c_type.is_pointer then
-					l_buf.putstring ("EIF_OBJECT larg")
-					l_buf.putint (i)
-					l_buf.putstring (" = RTHP(")
-					l_buf.putstring ("arg")
-					l_buf.putint (i)
-					l_buf.putstring (");")
+					l_buf.put_string ("EIF_OBJECT larg")
+					l_buf.put_integer (i)
+					l_buf.put_string (" = RTHP(")
+					l_buf.put_string ("arg")
+					l_buf.put_integer (i)
+					l_buf.put_string (");")
 				else
-					l_buf.putstring (argument_types.item (i))
-					l_buf.putstring (" larg")
-					l_buf.putint (i)
-					l_buf.putstring (" = arg")
-					l_buf.putint (i)
-					l_buf.putchar (';')
+					l_buf.put_string (argument_types.item (i))
+					l_buf.put_string (" larg")
+					l_buf.put_integer (i)
+					l_buf.put_string (" = arg")
+					l_buf.put_integer (i)
+					l_buf.put_character (';')
 				end
-				l_buf.new_line
+				l_buf.put_new_line
 				i := i + 1
 			end
 			
@@ -297,13 +297,13 @@ feature {NONE} -- Implementation
 			l_buf: GENERATION_BUFFER
 		do
 			l_buf := context.buffer
-			l_buf.putstring ("RTHF(")
-			l_buf.putint (number_of_hector_variables)
-			l_buf.putstring (");")
-			l_buf.new_line
+			l_buf.put_string ("RTHF(")
+			l_buf.put_integer (number_of_hector_variables)
+			l_buf.put_string (");")
+			l_buf.put_new_line
 			l_buf.exdent
-			l_buf.putchar ('}')
-			l_buf.new_line
+			l_buf.put_character ('}')
+			l_buf.put_new_line
 		end
 		
 	number_of_hector_variables: INTEGER is

@@ -82,8 +82,8 @@ feature
 			target_type := real_type (attachment_type);
 			source_type := real_type (expression.type);
 			if source_type.is_none and target_type.is_basic then
-				buf.putstring ("RTEC(EN_VEXP);");
-				buf.new_line;
+				buf.put_string ("RTEC(EN_VEXP);");
+				buf.put_new_line;
 			else
 				expression.generate;
 				if need_metamorphosis then
@@ -104,18 +104,18 @@ feature
 			if source_type.is_true_expanded then
 					-- Expanded objects are cloned
 				register.print_register;
-				buf.putstring (" = ");
-				buf.putstring ("RTCL(");
+				buf.put_string (" = ");
+				buf.put_string ("RTCL(");
 				expression.print_register;
-				buf.putchar(')');
+				buf.put_character(')');
 			else
 					-- Simple type objects are metamorphosed
 				basic_i ?= source_type;		-- Cannot fail
 				basic_i.metamorphose
 					(register, expression, buf, context.workbench_mode);
 			end;
-			buf.putchar(';');
-			buf.new_line;
+			buf.put_character(';');
+			buf.put_new_line;
 		end;
 			
 	print_register is
@@ -131,7 +131,7 @@ feature
 			target_type := real_type (attachment_type);
 			source_type := real_type (expression.type);
 			if target_type.is_none then
-				buf.putstring ("(EIF_REFERENCE) 0");
+				buf.put_string ("(EIF_REFERENCE) 0");
 			elseif target_type.is_true_expanded then
 					-- The callee is responsible for cloning the reference.
 				expression.print_register;
@@ -152,11 +152,11 @@ feature
 					if source_ctype.level /= target_ctype.level then
 						cast_generated := True;
 						target_ctype.generate_cast (buf);
-						buf.putchar('(');
+						buf.put_character('(');
 					end;
 					expression.print_register;
 					if cast_generated then
-						buf.putchar(')');
+						buf.put_character(')');
 					end;
 				end
 			else

@@ -65,10 +65,10 @@ feature
 			if register /= Void then
 				register.print_register;
 				buf := buffer
-				buf.putstring (" = ");
+				buf.put_string (" = ");
 				expr.print_register;
-				buf.putchar (';');
-				buf.new_line
+				buf.put_character (';');
+				buf.put_new_line
 			end
 		end;
  
@@ -85,9 +85,9 @@ feature
 			end
 			if expr.type.is_basic then
 				buf := buffer
-				buf.putstring ("(char *)&(");
+				buf.put_string ("(char *)&(");
 				r.print_register;
-				buf.putchar (')');
+				buf.put_character (')');
 			else
 				r.print_register;
 			end

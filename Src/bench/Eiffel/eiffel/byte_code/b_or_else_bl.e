@@ -92,37 +92,37 @@ feature
 					-- Initialize value to true
 				register.print_register;
 				buf := buffer
-				buf.putstring (" = '\01';");
-				buf.new_line;
+				buf.put_string (" = '\01';");
+				buf.put_new_line;
 					-- Test first value. If it is true, then the whole
 					-- expression is true and the right handside is not evaled.
 				left.generate;
-				buf.putstring ("if (!");
+				buf.put_string ("if (!");
 					-- If the register for left is void. then we need to
 					-- enclose in parenthesis.
 				if (left.register = Void or left.register = No_register) and
 					not left.is_simple_expr
 				then
-					buf.putchar ('(');
+					buf.put_character ('(');
 					left.print_register;
-					buf.putchar (')');
+					buf.put_character (')');
 				else
 					left.print_register;
 				end;
-				buf.putstring (") {");
-				buf.new_line;
+				buf.put_string (") {");
+				buf.put_new_line;
 					-- Left handside was false. Value of the expression is the
 					-- value of the right handside.
 				buf.indent;
 				right.generate;
 				register.print_register;
-				buf.putstring (" = ");
+				buf.put_string (" = ");
 				right.print_register;
-				buf.putchar (';');
-				buf.new_line;
+				buf.put_character (';');
+				buf.put_new_line;
 				buf.exdent;
-				buf.putchar ('}');
-				buf.new_line;
+				buf.put_character ('}');
+				buf.put_new_line;
 			else
 				Precursor {B_OR_ELSE_B};
 			end;

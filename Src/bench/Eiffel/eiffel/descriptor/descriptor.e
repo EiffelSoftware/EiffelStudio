@@ -74,25 +74,25 @@ feature -- Generation
 			class_id_string.prepend ("_")
 
 			is_precompiling := Compilation_modes.is_precompiling
-			buffer.append ("/*%N * Class ")
+			buffer.put_string ("/*%N * Class ")
 			class_type.type.dump (buffer)
-			buffer.append ("%N */%N%N")
-			buffer.append ("#include %"eif_macros.h%"%N");
+			buffer.put_string ("%N */%N%N")
+			buffer.put_string ("#include %"eif_macros.h%"%N");
 			if is_precompiling then
-				buffer.append ("#include %"eif_wbench.h%"%N%N")	
+				buffer.put_string ("#include %"eif_wbench.h%"%N%N")	
 			end
 			buffer.start_c_specific_code
 			if is_precompiling then
-				buffer.new_line
+				buffer.put_new_line
 				buffer.generate_static_declaration ("void", "build_desc" + class_id_string, <<>>);
-				buffer.new_line
+				buffer.put_new_line
 				descriptor_generate_generic (buffer, class_id_string)
-				buffer.new_line
+				buffer.put_new_line
 				descriptor_generate_precomp (buffer, class_id_string)
 			else
-				buffer.new_line
+				buffer.put_new_line
 				descriptor_generate_generic (buffer, class_id_string)
-				buffer.new_line
+				buffer.put_new_line
 				descriptor_generate (buffer, class_id_string)
 			end;
 
@@ -112,18 +112,18 @@ feature -- Generation
 		local
 			cnt : COUNTER
 		do
-			buffer.putstring ("static struct desc_info desc")
-			buffer.putstring (id_string)
-			buffer.putstring ("[] = {%N");
+			buffer.put_string ("static struct desc_info desc")
+			buffer.put_string (id_string)
+			buffer.put_string ("[] = {%N");
 
 			if (invariant_entry = Void) then
-				buffer.putstring ("%T{(BODY_INDEX) ");
-				buffer.putint (Invalid_index);
-				buffer.putstring (", (int16) -1, (int16 *) 0},%N")
+				buffer.put_string ("%T{(BODY_INDEX) ");
+				buffer.put_integer (Invalid_index);
+				buffer.put_string (", (int16) -1, (int16 *) 0},%N")
 			else
-				buffer.putstring ("%T{(BODY_INDEX) ");
-				buffer.putint (invariant_entry.real_body_index - 1);
-				buffer.putstring (", (int16) -1, (int16 *) 0},%N")
+				buffer.put_string ("%T{(BODY_INDEX) ");
+				buffer.put_real_body_index (invariant_entry.real_body_index);
+				buffer.put_string (", (int16) -1, (int16 *) 0},%N")
 			end;
 
 			from
@@ -136,7 +136,7 @@ feature -- Generation
 				forth
 			end
 
-			buffer.putstring ("%N};%N")
+			buffer.put_string ("%N};%N")
 		end;
 
 	descriptor_generate_generic (buffer : GENERATION_BUFFER; id_string: STRING) is
@@ -155,7 +155,7 @@ feature -- Generation
 				item_for_iteration.generate_generic (buffer, cnt, id_string);
 				forth
 			end;
-			buffer.putstring ("%N")
+			buffer.put_string ("%N")
 		end;
 
 	descriptor_generate_precomp (buffer: GENERATION_BUFFER; id_string: STRING) is
@@ -169,32 +169,32 @@ feature -- Generation
 			entry_name: STRING
 		do
 			entry_name := "desc" + id_string
-			buffer.putstring ("static struct desc_info ")
-			buffer.putstring (entry_name);
-			buffer.putstring ("[")
-			buffer.putint (table_size)
-			buffer.putstring ("];%N%Nstatic void build_")
-			buffer.putstring (entry_name)
-			buffer.putstring ("(void) {%N%T")
+			buffer.put_string ("static struct desc_info ")
+			buffer.put_string (entry_name);
+			buffer.put_string ("[")
+			buffer.put_integer (table_size)
+			buffer.put_string ("];%N%Nstatic void build_")
+			buffer.put_string (entry_name)
+			buffer.put_string ("(void) {%N%T")
 
 			if (invariant_entry = Void) then
-				buffer.putstring (entry_name)
-				buffer.putstring ("[0].info = (BODY_INDEX) ")
-				buffer.putint (Invalid_index)
-				buffer.putstring (";%N%T")
-				buffer.putstring (entry_name)
-				buffer.putstring ("[0].type = (int16) -1;%N%T")
-				buffer.putstring (entry_name)
-				buffer.putstring ("[0].gen_type = (int16 *) 0;%N")
+				buffer.put_string (entry_name)
+				buffer.put_string ("[0].info = (BODY_INDEX) ")
+				buffer.put_integer (Invalid_index)
+				buffer.put_string (";%N%T")
+				buffer.put_string (entry_name)
+				buffer.put_string ("[0].type = (int16) -1;%N%T")
+				buffer.put_string (entry_name)
+				buffer.put_string ("[0].gen_type = (int16 *) 0;%N")
 			else
-				buffer.putstring (entry_name)
-				buffer.putstring ("[0].info = (BODY_INDEX) (")
-				buffer.generate_real_body_index (invariant_entry.real_body_index)
-				buffer.putstring (");%N%T")
-				buffer.putstring (entry_name)
-				buffer.putstring ("[0].type = (int16) -1;%N%T")
-				buffer.putstring (entry_name)
-				buffer.putstring ("[0].gen_type = (int16 *) 0;%N")
+				buffer.put_string (entry_name)
+				buffer.put_string ("[0].info = (BODY_INDEX) (")
+				buffer.put_real_body_index (invariant_entry.real_body_index)
+				buffer.put_string (");%N%T")
+				buffer.put_string (entry_name)
+				buffer.put_string ("[0].type = (int16) -1;%N%T")
+				buffer.put_string (entry_name)
+				buffer.put_string ("[0].gen_type = (int16 *) 0;%N")
 			end;
 
 			from
@@ -208,7 +208,7 @@ feature -- Generation
 				i := i + item_for_iteration.count
 				forth
 			end;
-			buffer.putstring ("}%N");
+			buffer.put_string ("}%N");
 		end;
 
 	generate_init_function (buffer: GENERATION_BUFFER; id_string: STRING) is
@@ -230,22 +230,22 @@ feature -- Generation
 
 			buffer.generate_extern_declaration ("void", init_name, <<>>);
 
-			buffer.putstring ("void ");
-			buffer.putstring (init_name);
-			buffer.putstring ("(void)%N{%N");
+			buffer.put_string ("void ");
+			buffer.put_string (init_name);
+			buffer.put_string ("(void)%N{%N");
 			if Compilation_modes.is_precompiling then
-				buffer.putstring ("%Tif (desc_fill != 0)%N%T%Tbuild_desc")
-				buffer.putstring (id_string)
-				buffer.putstring ("();%N")
+				buffer.put_string ("%Tif (desc_fill != 0)%N%T%Tbuild_desc")
+				buffer.put_string (id_string)
+				buffer.put_string ("();%N")
 			end;
 
 			desc := "desc" + id_string;
 
 				-- Special descriptor unit (invariant)
-			buffer.putstring (init_macro);
-			buffer.putstring (desc)
-			buffer.putstring (", 0")
-			buffer.putstring (rtud)
+			buffer.put_string (init_macro);
+			buffer.put_string (desc)
+			buffer.put_string (", 0")
+			buffer.put_string (rtud)
 
 				-- Descriptor units for origin classes
 			from
@@ -256,17 +256,17 @@ feature -- Generation
 			until
 				after
 			loop
-				buffer.putstring (init_macro);
-				buffer.putstring (desc);
-				buffer.putstring (plus);
-				buffer.putint (i);
-				buffer.putstring (sep);
-				buffer.generate_class_id (key_for_iteration);
-				buffer.putstring (rtud);
+				buffer.put_string (init_macro);
+				buffer.put_string (desc);
+				buffer.put_string (plus);
+				buffer.put_integer (i);
+				buffer.put_string (sep);
+				buffer.put_class_id (key_for_iteration);
+				buffer.put_string (rtud);
 				i := i + item_for_iteration.count;
 				forth
 			end;
-			buffer.putstring ("}%N")
+			buffer.put_string ("}%N")
 		end;
 
 	table_size: INTEGER is

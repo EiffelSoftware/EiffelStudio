@@ -87,28 +87,28 @@ feature
 			generate_block_open
 			generate_gen_type_conversion (gen_type)
 			print_register
-			buf.putstring (" = ")
-			buf.putstring ("RTLNR2(typres, ")
+			buf.put_string (" = ")
+			buf.put_string ("RTLNR2(typres, ")
 			generate_routine_address
-			buf.putstring (", ")
+			buf.put_string (", ")
 			generate_true_routine_address
-			buf.putstring (", ")
+			buf.put_string (", ")
 
 			if arguments /= Void then
 				arguments.print_register
-				buf.putstring (", ")
+				buf.put_string (", ")
 			else
-				buf.putstring ("NULL, ")
+				buf.put_string ("NULL, ")
 			end
 
 			if open_positions /= Void then
 				open_positions.print_register
 			else
-				buf.putstring ("NULL")
+				buf.put_string ("NULL")
 			end
 
-			buf.putstring (");")
-			buf.new_line
+			buf.put_string (");")
+			buf.put_new_line
 			generate_block_close
 		end
 
@@ -122,27 +122,27 @@ feature
 		do
 			buf := buffer
 			if context.workbench_mode then
-				buf.putstring ("(EIF_POINTER) RTWPPR(")
+				buf.put_string ("(EIF_POINTER) RTWPPR(")
 				cl_type ?= context.real_type (class_type)
-				buf.generate_type_id (cl_type.associated_class_type.static_type_id)
-				buf.putstring (gc_comma)
-				buf.putint (feature_id)
-				buf.putchar (')')
+				buf.put_static_type_id (cl_type.associated_class_type.static_type_id)
+				buf.put_string (gc_comma)
+				buf.put_integer (feature_id)
+				buf.put_character (')')
 			else
 				cl_type ?= context.real_type (class_type)
 				array_index := Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True)
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature without
 						-- any implementation
-					buf.putstring ("NULL")
+					buf.put_string ("NULL")
 				else
 					table_name := "_f"
 					cl_type ?= context.real_type (class_type)
 					table_name.append (Encoder.address_table_name (feature_id,
 							cl_type.associated_class_type.static_type_id))
 
-					buf.putstring ("(EIF_POINTER) ")
-					buf.putstring (table_name)
+					buf.put_string ("(EIF_POINTER) ")
+					buf.put_string (table_name)
 
 						-- Remember extern declarations
 					Extern_declarations.add_routine (type.c_type, table_name)
@@ -169,12 +169,12 @@ feature
 		do
 			buf := buffer
 			if context.workbench_mode then
-				buf.putstring ("(EIF_POINTER) RTWPP(")
+				buf.put_string ("(EIF_POINTER) RTWPP(")
 				cl_type ?= context.real_type (class_type)
-				buf.generate_type_id (cl_type.associated_class_type.static_type_id)
-				buf.putstring (gc_comma)
-				buf.putint (feature_id)
-				buf.putchar (')')
+				buf.put_static_type_id (cl_type.associated_class_type.static_type_id)
+				buf.put_string (gc_comma)
+				buf.put_integer (feature_id)
+				buf.put_character (')')
 			else
 				cl_type ?= context.real_type (class_type)
 				class_type_id := cl_type.type_id
@@ -182,7 +182,7 @@ feature
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-					buf.putstring ("NULL")
+					buf.put_string ("NULL")
 				elseif array_index >= 0 then
 						-- Mark table used
 					Eiffel_table.mark_used (rout_id)
@@ -191,8 +191,8 @@ feature
 					table_name.append (Encoder.address_table_name (feature_id,
 								cl_type.associated_class_type.static_type_id))
 
-					buf.putstring ("(EIF_POINTER) ")
-					buf.putstring (table_name)
+					buf.put_string ("(EIF_POINTER) ")
+					buf.put_string (table_name)
 
 						-- Remember extern declarations
 					Extern_declarations.add_routine (type.c_type, table_name)
@@ -201,15 +201,15 @@ feature
 					rout_table.goto_implemented (class_type_id)
 					if rout_table.is_implemented then
 						internal_name := rout_table.feature_name
-						buf.putstring ("(EIF_POINTER) ")
-						buf.putstring (internal_name)
+						buf.put_string ("(EIF_POINTER) ")
+						buf.put_string (internal_name)
 
 						shared_include_queue.put (
 							System.class_type_of_id (
 								rout_table.item.written_type_id).header_filename)
 					else
 							-- Call to a deferred feature without implementation
-						buf.putstring ("NULL")
+						buf.put_string ("NULL")
 					end
 				end
 			end

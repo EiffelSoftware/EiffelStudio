@@ -144,25 +144,25 @@ feature -- C special code generation
 			when is_equal_type then
 				generate_equal (buffer, target, parameter)
 			when to_character_type then
-				buffer.putstring ("(EIF_CHARACTER) ")
+				buffer.put_string ("(EIF_CHARACTER) ")
 				target.print_register
 			when to_integer_8_type then
-				buffer.putstring ("(EIF_INTEGER_8) ")
+				buffer.put_string ("(EIF_INTEGER_8) ")
 				target.print_register
 			when to_integer_16_type then
-				buffer.putstring ("(EIF_INTEGER_16) ")
+				buffer.put_string ("(EIF_INTEGER_16) ")
 				target.print_register
 			when to_integer_32_type then
-				buffer.putstring ("(EIF_INTEGER_32) ")
+				buffer.put_string ("(EIF_INTEGER_32) ")
 				target.print_register
 			when to_integer_64_type then
-				buffer.putstring ("(EIF_INTEGER_64) ")
+				buffer.put_string ("(EIF_INTEGER_64) ")
 				target.print_register
 			when to_double_type then
-				buffer.putstring ("(EIF_DOUBLE) ")
+				buffer.put_string ("(EIF_DOUBLE) ")
 				target.print_register
 			when to_real_type then
-				buffer.putstring ("(EIF_REAL) ")
+				buffer.put_string ("(EIF_REAL) ")
 				target.print_register
 			when offset_type then
 				generate_offset (buffer, type_of (basic_type), target, parameter)
@@ -375,12 +375,12 @@ feature {NONE} -- C code generation
 			valid_function_type: f_type = lower_type or f_type = upper_type
 		do
 			if function_type = lower_type then
-				buffer.putstring ("chlower(")
+				buffer.put_string ("chlower(")
 			else
-				buffer.putstring ("chupper(")
+				buffer.put_string ("chupper(")
 			end
 			target.print_register
-			buffer.putchar (')')
+			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where `chlower' and `chupper' are declared.
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
@@ -395,9 +395,9 @@ feature {NONE} -- C code generation
 			target_not_void: target /= Void
 			character_type: type_of (basic_type) = character_type
 		do
-			buffer.putstring ("chis_digit(")
+			buffer.put_string ("chis_digit(")
 			target.print_register
-			buffer.putchar (')')
+			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where `chlower' and `chupper' are declared.
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
@@ -412,10 +412,10 @@ feature {NONE} -- C code generation
 			parameter_not_void: parameter /= Void
 		do
 			target.print_register
-			buffer.putchar (' ')
-			buffer.putchar ('=')
-			buffer.putchar ('=')
-			buffer.putchar (' ')
+			buffer.put_character (' ')
+			buffer.put_character ('=')
+			buffer.put_character ('=')
+			buffer.put_character (' ')
 			parameter.print_register
 		end
 
@@ -431,27 +431,27 @@ feature {NONE} -- C code generation
 			inspect
 				type_of_basic
 			when pointer_type then
-				buffer.putstring ("RTPOF(")
+				buffer.put_string ("RTPOF(")
 				target.print_register
-				buffer.putchar (',')
+				buffer.put_character (',')
 				parameter.print_register
-				buffer.putchar (')')
+				buffer.put_character (')')
 			when character_type then
 				if is_wide then
-					buffer.putstring ("(EIF_WIDE_CHAR) (((EIF_INTEGER_32) ")
+					buffer.put_string ("(EIF_WIDE_CHAR) (((EIF_INTEGER_32) ")
 				else
-					buffer.putstring ("(EIF_CHARACTER) (((EIF_INTEGER_32) ")
+					buffer.put_string ("(EIF_CHARACTER) (((EIF_INTEGER_32) ")
 				end
 				target.print_register
-				buffer.putstring (") + ")
+				buffer.put_string (") + ")
 				parameter.print_register
-				buffer.putchar (')')
+				buffer.put_character (')')
 			else
-				buffer.putchar ('(')
+				buffer.put_character ('(')
 				target.print_register
-				buffer.putstring (" + ")
+				buffer.put_string (" + ")
 				parameter.print_register
-				buffer.putchar (')')
+				buffer.put_character (')')
 			end
 		end
 
@@ -463,9 +463,9 @@ feature {NONE} -- C code generation
 			target_not_void: target /= Void
 		do
 			if type_of_basic = boolean_type then
-				buffer.putchar ('(');
+				buffer.put_character ('(');
 				target.print_register
-				buffer.putstring (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
+				buffer.put_string (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
 
 					-- Add `eif_plug.h' for C compilation where `makestr' is -- declared
 				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_plug_header_name_id)
@@ -476,22 +476,22 @@ feature {NONE} -- C code generation
 					check
 						not_is_wide: not is_wide
 					end
-					buffer.putstring ("c_outc(")
+					buffer.put_string ("c_outc(")
 				when integer_type then
 					inspect
 						integer_size
-					when 8, 16, 32 then buffer.putstring ("c_outi(")
-					when 64 then buffer.putstring ("c_outi64(")
+					when 8, 16, 32 then buffer.put_string ("c_outi(")
+					when 64 then buffer.put_string ("c_outi64(")
 					end
 				when pointer_type then
-					buffer.putstring ("c_outp(")
+					buffer.put_string ("c_outp(")
 				when real_type then
-					buffer.putstring ("c_outr(")
+					buffer.put_string ("c_outr(")
 				when double_type then
-					buffer.putstring ("c_outd(")
+					buffer.put_string ("c_outd(")
 				end
 				target.print_register
-				buffer.putchar (')')
+				buffer.put_character (')')
 
 					-- Add `eif_out.h' for C compilation where all output functions are declared.
 				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_out_header_name_id)
@@ -508,15 +508,15 @@ feature {NONE} -- C code generation
 			inspect
 				type_of_basic
 			when boolean_type then
-				buffer.putstring ("1L")
+				buffer.put_string ("1L")
 			when character_type then
-				buffer.putstring ("(EIF_INTEGER_32) (")
+				buffer.put_string ("(EIF_INTEGER_32) (")
 				target.print_register
-				buffer.putchar(')')
+				buffer.put_character(')')
 			else
-				buffer.putstring ("(EIF_INTEGER_32) (0x7FFFFFFF & (EIF_INTEGER_32) (")
+				buffer.put_string ("(EIF_INTEGER_32) (0x7FFFFFFF & (EIF_INTEGER_32) (")
 				target.print_register
-				buffer.putstring ("))")
+				buffer.put_string ("))")
 			end
 		end
 
@@ -529,28 +529,28 @@ feature {NONE} -- C code generation
 			inspect
 				type_of_basic
 			when boolean_type then
-				buffer.putstring (" RTMS_EX(%"BOOLEAN%", 7)")
+				buffer.put_string (" RTMS_EX(%"BOOLEAN%", 7)")
 			when character_type then
 				if is_wide then
-					buffer.putstring (" RTMS_EX(%"WIDE_CHARACTER%", 14)")
+					buffer.put_string (" RTMS_EX(%"WIDE_CHARACTER%", 14)")
 				else
-					buffer.putstring (" RTMS_EX(%"CHARACTER%", 9)")
+					buffer.put_string (" RTMS_EX(%"CHARACTER%", 9)")
 				end
 			when integer_type then
-				buffer.putstring (" RTMS_EX(%"INTEGER")
+				buffer.put_string (" RTMS_EX(%"INTEGER")
 				inspect
 					integer_size
-				when 8 then buffer.putstring ("_8%", 9)")
-				when 16 then buffer.putstring ("_16%", 10)")
-				when 32 then buffer.putstring ("%", 7)")
-				when 64 then buffer.putstring ("_64%", 10)")
+				when 8 then buffer.put_string ("_8%", 9)")
+				when 16 then buffer.put_string ("_16%", 10)")
+				when 32 then buffer.put_string ("%", 7)")
+				when 64 then buffer.put_string ("_64%", 10)")
 				end
 			when pointer_type then
-				buffer.putstring (" RTMS_EX(%"POINTER%", 7)")
+				buffer.put_string (" RTMS_EX(%"POINTER%", 7)")
 			when real_type then
-				buffer.putstring (" RTMS_EX(%"REAL%", 4)")
+				buffer.put_string (" RTMS_EX(%"REAL%", 4)")
 			when double_type then
-				buffer.putstring (" RTMS_EX(%"DOUBLE%", 6)")
+				buffer.put_string (" RTMS_EX(%"DOUBLE%", 6)")
 			end
 		end
 
@@ -566,27 +566,27 @@ feature {NONE} -- C code generation
 				type_of_basic
 			when character_type then
 				if is_wide then
-					buffer.putstring ("eif_max_wide_char (")
+					buffer.put_string ("eif_max_wide_char (")
 				else
-					buffer.putstring ("eif_max_char (")
+					buffer.put_string ("eif_max_char (")
 				end
 			when integer_type then
 				inspect integer_size
-				when 8 then buffer.putstring ("eif_max_int8 (")
-				when 16 then buffer.putstring ("eif_max_int16 (")
-				when 32 then buffer.putstring ("eif_max_int32 (")					
-				when 64 then buffer.putstring ("eif_max_int64 (")
+				when 8 then buffer.put_string ("eif_max_int8 (")
+				when 16 then buffer.put_string ("eif_max_int16 (")
+				when 32 then buffer.put_string ("eif_max_int32 (")					
+				when 64 then buffer.put_string ("eif_max_int64 (")
 				end
 			when real_type then
-				buffer.putstring ("eif_max_real (")
+				buffer.put_string ("eif_max_real (")
 			when Double_type then
-				buffer.putstring ("eif_max_double (")
+				buffer.put_string ("eif_max_double (")
 			end
 			
 			target.print_register
-			buffer.putchar (',')
+			buffer.put_character (',')
 			parameter.print_register
-			buffer.putchar (')')
+			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
@@ -604,27 +604,27 @@ feature {NONE} -- C code generation
 				type_of_basic
 			when character_type then
 				if is_wide then
-					buffer.putstring ("eif_min_wide_char (")
+					buffer.put_string ("eif_min_wide_char (")
 				else
-					buffer.putstring ("eif_min_char (")
+					buffer.put_string ("eif_min_char (")
 				end
 			when integer_type then
 				inspect integer_size
-				when 8 then buffer.putstring ("eif_min_int8 (")
-				when 16 then buffer.putstring ("eif_min_int16 (")
-				when 32 then buffer.putstring ("eif_min_int32 (")					
-				when 64 then buffer.putstring ("eif_min_int64 (")
+				when 8 then buffer.put_string ("eif_min_int8 (")
+				when 16 then buffer.put_string ("eif_min_int16 (")
+				when 32 then buffer.put_string ("eif_min_int32 (")					
+				when 64 then buffer.put_string ("eif_min_int64 (")
 				end
 			when real_type then
-				buffer.putstring ("eif_min_real (")
+				buffer.put_string ("eif_min_real (")
 			when Double_type then
-				buffer.putstring ("eif_min_double (")
+				buffer.put_string ("eif_min_double (")
 			end
 			
 			target.print_register
-			buffer.putchar (',')
+			buffer.put_character (',')
 			parameter.print_register
-			buffer.putchar (')')
+			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
@@ -641,19 +641,19 @@ feature {NONE} -- C code generation
 				type_of_basic
 			when integer_type then
 				inspect integer_size
-				when 8 then buffer.putstring ("eif_abs_int8 (")
-				when 16 then buffer.putstring ("eif_abs_int16 (")
-				when 32 then buffer.putstring ("eif_abs_int32 (")					
-				when 64 then buffer.putstring ("eif_abs_int64 (")
+				when 8 then buffer.put_string ("eif_abs_int8 (")
+				when 16 then buffer.put_string ("eif_abs_int16 (")
+				when 32 then buffer.put_string ("eif_abs_int32 (")					
+				when 64 then buffer.put_string ("eif_abs_int64 (")
 				end
 			when real_type then
-				buffer.putstring ("eif_abs_real (")
+				buffer.put_string ("eif_abs_real (")
 			when Double_type then
-				buffer.putstring ("eif_abs_double (")
+				buffer.put_string ("eif_abs_double (")
 			end
 			
 			target.print_register
-			buffer.putchar (')')
+			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
@@ -676,17 +676,17 @@ feature {NONE} -- C code generation
 			inspect
 				f_type
 			when memory_move then
-				buffer.putstring ("memmove((void *)")
+				buffer.put_string ("memmove((void *)")
 			when memory_copy then
-				buffer.putstring ("memcpy((void *)")
+				buffer.put_string ("memcpy((void *)")
 			when memory_set then
-				buffer.putstring ("memset((void *)")
+				buffer.put_string ("memset((void *)")
 			when memory_alloc then
-				buffer.putstring ("malloc((size_t)")
+				buffer.put_string ("malloc((size_t)")
 			when memory_calloc then
-				buffer.putstring ("calloc((size_t)")
+				buffer.put_string ("calloc((size_t)")
 			when memory_free then
-				buffer.putstring ("free(")
+				buffer.put_string ("free(")
 			end
 			
 			if f_type /= memory_alloc and f_type /= memory_calloc then
@@ -697,9 +697,9 @@ feature {NONE} -- C code generation
 				f_type
 			when memory_free, memory_alloc, memory_calloc then
 			when memory_set then
-				buffer.putstring (", (int) ")
+				buffer.put_string (", (int) ")
 			else
-				buffer.putstring (", (const void *) ")
+				buffer.put_string (", (const void *) ")
 			end
 
 			inspect
@@ -709,7 +709,7 @@ feature {NONE} -- C code generation
 					valid_parameters: parameters.count = 2
 				end
 				parameters.i_th (1).print_register
-				buffer.putstring (", (size_t) ")
+				buffer.put_string (", (size_t) ")
 				parameters.i_th (2).print_register
 			when memory_alloc then
 				check
@@ -719,7 +719,7 @@ feature {NONE} -- C code generation
 			else
 			end
 
-			buffer.putstring (")")
+			buffer.put_string (")")
 		end
 
 	generate_bit_operation (buffer: GENERATION_BUFFER; op: INTEGER; target, parameter: REGISTRABLE) is
@@ -731,29 +731,29 @@ feature {NONE} -- C code generation
 			parameter_not_void:  (op /= bit_not_type) implies parameter /= Void
 		do
 			if op = bit_not_type then
-				buffer.putstring ("eif_bit_not(")
+				buffer.put_string ("eif_bit_not(")
 				target.print_register
 			else
 				inspect
 					op
 				when bit_and_type then
-					buffer.putstring ("eif_bit_and(")
+					buffer.put_string ("eif_bit_and(")
 				when bit_or_type then
-					buffer.putstring ("eif_bit_or(")
+					buffer.put_string ("eif_bit_or(")
 				when bit_xor_type then
-					buffer.putstring ("eif_bit_xor(")
+					buffer.put_string ("eif_bit_xor(")
 				when bit_shift_left_type then
-					buffer.putstring ("eif_bit_shift_left(")
+					buffer.put_string ("eif_bit_shift_left(")
 				when bit_shift_right_type then
-					buffer.putstring ("eif_bit_shift_right(")
+					buffer.put_string ("eif_bit_shift_right(")
 				when bit_test_type then
-					buffer.putstring ("eif_bit_test(")
+					buffer.put_string ("eif_bit_test(")
 				end
 				target.print_register
-				buffer.putchar (',')
+				buffer.put_character (',')
 				parameter.print_register
 			end
-			buffer.putchar (')')
+			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
@@ -768,18 +768,18 @@ feature {NONE} -- C code generation
 			parameters_not_void: parameters /= Void
 			valid_parameters: parameters.count = 2
 		do
-			buffer.putchar ('(')
+			buffer.put_character ('(')
 			parameters.i_th (1).print_register
-			buffer.putchar ('?')
+			buffer.put_character ('?')
 			generate_bit_operation (buffer, bit_or_type, target, parameters.i_th (2))	
-			buffer.putchar (':')
-			buffer.putstring ("eif_bit_and(")
+			buffer.put_character (':')
+			buffer.put_string ("eif_bit_and(")
 			target.print_register
-			buffer.putstring (", eif_bit_not(")
+			buffer.put_string (", eif_bit_not(")
 			parameters.i_th (2).print_register
-			buffer.putchar (')')
-			buffer.putchar (')')
-			buffer.putchar (')')
+			buffer.put_character (')')
+			buffer.put_character (')')
+			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
@@ -797,9 +797,9 @@ feature {NONE} -- C code generation
 			inspect
 				type_of_basic
 			when integer_type then
-				buffer.putstring ("0")
+				buffer.put_string ("0")
 			when real_type, double_type then
-				buffer.putstring ("0.0")
+				buffer.put_string ("0.0")
 			end
 		end
 
@@ -815,9 +815,9 @@ feature {NONE} -- C code generation
 			inspect
 				type_of_basic
 			when integer_type then
-				buffer.putstring ("1")
+				buffer.put_string ("1")
 			when real_type, double_type then
-				buffer.putstring ("1.0")
+				buffer.put_string ("1.0")
 			end
 		end
 

@@ -255,11 +255,11 @@ feature -- C code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.putchar ('(')
+			buf.put_character ('(')
 			left.print_register
 			generate_operator
 			right.print_register
-			buf.putchar (')')
+			buf.put_character (')')
 		end
 
 	generate_operator is

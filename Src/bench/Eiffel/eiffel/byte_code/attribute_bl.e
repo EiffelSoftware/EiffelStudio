@@ -53,14 +53,14 @@ feature
 			-- Analyze attribute
 		do
 debug
-io.error.putstring ("In attribute_bl%N")
-io.error.putstring (attribute_name)
-io.error.new_line
+io.error.put_string ("In attribute_bl%N")
+io.error.put_string (attribute_name)
+io.error.put_new_line
 end
 			analyze_on (Current_register)
 			get_register
 debug
-io.error.putstring ("Out attribute_bl%N")
+io.error.put_string ("Out attribute_bl%N")
 end
 		end
 	
@@ -70,9 +70,9 @@ end
 			tmp_register: REGISTER
 		do
 debug
-io.error.putstring ("In attribute_bl [analyze_on]: ")
-io.error.putstring (attribute_name)
-io.error.new_line
+io.error.put_string ("In attribute_bl [analyze_on]: ")
+io.error.put_string (attribute_name)
+io.error.put_new_line
 end
 			if reg.is_current then
 				context.mark_current_used
@@ -89,9 +89,9 @@ end
 				basic_register := tmp_register
 			end
 debug
-io.error.putstring ("Out attribute_bl [analyze_on]: ")
-io.error.putstring (attribute_name)
-io.error.new_line
+io.error.put_string ("Out attribute_bl [analyze_on]: ")
+io.error.put_string (attribute_name)
+io.error.put_new_line
 end
 		end
 
@@ -155,17 +155,17 @@ end
 				-- or if it is a bit.
 			if not type_i.is_true_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
-				buf.putchar ('*')
+				buf.put_character ('*')
 					-- ...followed by the appropriate access cast
 				type_c.generate_access_cast (buf)
 			end
-			buf.putchar ('(')
+			buf.put_character ('(')
 			reg.print_register
 --			if reg.is_predefined or reg.register /= No_register then
---				buf.putstring (gc_plus)
+--				buf.put_string (gc_plus)
 --			else
---				buf.putstring (" +")
---				buf.new_line
+--				buf.put_string (" +")
+--				buf.put_new_line
 --				buf.indent
 --			end
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, False)
@@ -176,19 +176,19 @@ end
 				
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
-				buf.putstring (" + ")
-				buf.putstring (table_name)
-				buf.putchar ('[')
+				buf.put_string (" + ")
+				buf.put_string (table_name)
+				buf.put_character ('[')
 				if reg.is_current then
 					context.generate_current_dtype
 				else
-					buf.putstring (gc_upper_dtype_lparan)
+					buf.put_string (gc_upper_dtype_lparan)
 					reg.print_register
-					buf.putchar (')')
+					buf.put_character (')')
 				end
-				buf.putchar ('-')
-				buf.putint (array_index)
-				buf.putchar (']')
+				buf.put_character ('-')
+				buf.put_integer (array_index)
+				buf.put_character (']')
 				
 					-- Mark attribute offset table used.
 				Eiffel_table.mark_used (routine_id)
@@ -203,7 +203,7 @@ end
 					--| table in Final mode.
 				offset_class_type.skeleton.generate_offset (buf, attribute_id, False)
 			end
-			buf.putchar (')')
+			buf.put_character (')')
 --			if not (reg.is_predefined or reg.register /= No_register) then
 --				buf.exdent
 --			end

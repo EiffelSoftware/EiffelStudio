@@ -83,46 +83,46 @@ feature -- Line number setting
 
 				-- Generate the recording of the assertion
 			if tag /= Void then
-				buf.putstring ("RTCT(")
-				buf.putchar ('"')
-				buf.putstring (tag)
-				buf.putchar ('"')
-				buf.putstring (gc_comma)
+				buf.put_string ("RTCT(")
+				buf.put_character ('"')
+				buf.put_string (tag)
+				buf.put_character ('"')
+				buf.put_string (gc_comma)
 			else
-				buf.putstring ("RTCS(")
+				buf.put_string ("RTCS(")
 			end
 			generate_assertion_code (context.assertion_type)
-			buf.putstring (gc_rparan_semi_c)
-			buf.new_line
+			buf.put_string (gc_rparan_semi_c)
+			buf.put_new_line
 				-- Now evaluate the expression
 			expr.generate
-			buf.putstring (gc_if_l_paran)
+			buf.put_string (gc_if_l_paran)
 			expr.print_register
-			buf.putstring (") {")
+			buf.put_string (") {")
 			generate_success (buf)
-			buf.putstring (gc_lacc_else_r_acc)
+			buf.put_string (gc_lacc_else_r_acc)
 			generate_failure (buf)
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 		end
 
 	generate_success (buf: like buffer) is
 			-- Generate a success in assertion
 		do
-			buf.new_line
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("RTCK;")
-			buf.new_line
+			buf.put_string ("RTCK;")
+			buf.put_new_line
 			buf.exdent
 		end
 
 	generate_failure (buf: like buffer) is
 			-- Generate a failure in assertion
 		do
-			buf.new_line
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("RTCF;")
-			buf.new_line
+			buf.put_string ("RTCF;")
+			buf.put_new_line
 			buf.exdent
 		end
 	

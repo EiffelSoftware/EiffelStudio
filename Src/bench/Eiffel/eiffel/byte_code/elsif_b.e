@@ -103,23 +103,23 @@ feature -- Basic Operations
 		do
 			buf := buffer
 			generate_line_info
-			buf.putstring (" else {")
-			buf.new_line
+			buf.put_string (" else {")
+			buf.put_new_line
 			buf.indent
 				-- Generate a hook for the evaluation/test of the condition.
 			generate_frozen_debugger_hook
 			expr.generate
 			buf.exdent
-			buf.putstring (gc_if_l_paran)
+			buf.put_string (gc_if_l_paran)
 			expr.print_register
-			buf.putstring (") {")
-			buf.new_line
+			buf.put_string (") {")
+			buf.put_new_line
 			if compound /= Void then
 				buf.indent
 				compound.generate
 				buf.exdent
 			end
-			buf.putchar ('}')
+			buf.put_character ('}')
 		end
 
 feature -- Array optimization

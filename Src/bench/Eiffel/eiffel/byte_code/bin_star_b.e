@@ -24,13 +24,13 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			buffer.putstring (gc_star);
+			buffer.put_string (gc_star);
 		end;
 
 	generate_simple is
 			-- Generate a simple assignment operation
 		do
-			buffer.putstring (" *= ");
+			buffer.put_string (" *= ");
 		end; -- generate_simple
 
 end

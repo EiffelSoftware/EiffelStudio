@@ -88,7 +88,7 @@ feature -- C code generation
 				i > upper
 			loop
 				item (i).generate_cecil_value (buffer)
-				buffer.putstring (",%N")
+				buffer.put_string (",%N")
 				i := i + 1
 			end
 		end

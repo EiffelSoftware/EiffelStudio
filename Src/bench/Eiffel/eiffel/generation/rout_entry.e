@@ -95,12 +95,12 @@ feature -- previously in ROUT_UNIT
 			Result.set_type (feature_type (class_type))
 			Result.set_body_index (body_index)
 debug
-io.error.putstring ("arg = ")
-io.error.putstring (class_type.type.base_class.name)
-io.error.putstring ("   ")
-io.error.putstring ("cur = ")
-io.error.putstring (written_class.name)
-io.error.new_line
+io.error.put_string ("arg = ")
+io.error.put_string (class_type.type.base_class.name)
+io.error.put_string ("   ")
+io.error.put_string ("cur = ")
+io.error.put_string (written_class.name)
+io.error.put_new_line
 end
 			written_type := written_class.meta_type (class_type.type)
 			Result.set_written_type_id (written_type.type_id)

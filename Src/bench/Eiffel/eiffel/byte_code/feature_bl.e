@@ -54,13 +54,13 @@ feature
 			-- Build a proper context for code generation.
 		do
 debug
-io.error.putstring ("In feature_bl%N")
+io.error.put_string ("In feature_bl%N")
 end
 			analyze_on (Current_register)
 				-- Get a register if none were already propagated
 			get_register
 debug
-io.error.putstring ("Out feature_bl%N")
+io.error.put_string ("Out feature_bl%N")
 end
 		end
 	
@@ -72,9 +72,9 @@ end
 			basic_i: BASIC_I
 		do
 debug
-io.error.putstring ("In feature_bl [analyze_on]: ")
-io.error.putstring (feature_name)
-io.error.new_line
+io.error.put_string ("In feature_bl [analyze_on]: ")
+io.error.put_string (feature_name)
+io.error.put_new_line
 end
 			basic_i ?= context_type
 			if
@@ -116,9 +116,9 @@ end
 				context.mark_current_used
 			end
 debug
-io.error.putstring ("Out feature_bl [analyze_on]: ")
-io.error.putstring (feature_name)
-io.error.new_line
+io.error.put_string ("Out feature_bl [analyze_on]: ")
+io.error.put_string (feature_name)
+io.error.put_new_line
 end
 		end
 
@@ -198,21 +198,21 @@ end
 				not System.has_multithreaded and then
 				not is_polymorphic_once.item
 			then
-				buf.putchar (',')
-				buf.putchar ('(')
+				buf.put_character (',')
+				buf.put_character ('(')
 				gen_reg.print_register
 				if parameters /= Void then
 					generate_parameters_list
 				end
-				buf.putchar (')')
+				buf.put_character (')')
 			else
-				buf.putchar ('(')
+				buf.put_character ('(')
 				gen_reg.print_register
 				if parameters /= Void then
 					generate_parameters_list
 				end;
 			end
-			buf.putchar (')')
+			buf.put_character (')')
 		end
 		
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
@@ -232,31 +232,31 @@ end
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
 				is_deferred := True
-				buf.putchar ('(')
+				buf.put_character ('(')
 				real_type (type).c_type.generate_function_cast (buf, <<"EIF_REFERENCE">>)
-				buf.putstring (" RTNR)")
+				buf.put_string (" RTNR)")
 			elseif precursor_type = Void and then array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.table_name (routine_id)
-				buf.putchar ('(')
+				buf.put_character ('(')
 				real_type (type).c_type.generate_function_cast (buf, argument_types)
 				
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
-				buf.putstring (table_name)
-				buf.putchar ('[')
+				buf.put_string (table_name)
+				buf.put_character ('[')
 				if reg.is_current then
 					context.generate_current_dtype
 				else
-					buf.putstring (gc_upper_dtype_lparan)
+					buf.put_string (gc_upper_dtype_lparan)
 					reg.print_register
-					buf.putchar (')')
+					buf.put_character (')')
 				end
-				buf.putchar ('-')
-				buf.putint (array_index)
-				buf.putstring ("])")
+				buf.put_character ('-')
+				buf.put_integer (array_index)
+				buf.put_string ("])")
 
 					-- Mark routine id used
 				Eiffel_table.mark_used (routine_id)
@@ -280,13 +280,13 @@ end
 						if not System.has_multithreaded then
 							if type_c.is_void then
 									-- It is a once procedure
-								buf.putstring ("RTOVP(")
+								buf.put_string ("RTOVP(")
 							else
 									-- It is a once function
-								buf.putstring ("RTOVF(")
+								buf.put_string ("RTOVF(")
 							end
-							buf.putstring (internal_name)
-							buf.putchar (',')
+							buf.put_string (internal_name)
+							buf.put_character (',')
 						end
 					end
 
@@ -302,16 +302,16 @@ end
 						end
 					end
 
-					buf.putchar ('(')
+					buf.put_character ('(')
 					type_c.generate_function_cast (buf, local_argument_types)
-					buf.putstring (internal_name)
-					buf.putchar (')')
+					buf.put_string (internal_name)
+					buf.put_character (')')
 				else
 						-- Call to a deferred feature without implementation
 					is_deferred := True
-					buf.putchar ('(')
+					buf.put_character ('(')
 					real_type (type).c_type.generate_function_cast (buf, <<"EIF_REFERENCE">>)
-					buf.putstring (" RTNR)")
+					buf.put_string (" RTNR)")
 				end
 			end
 		end
@@ -336,7 +336,7 @@ end
 					until
 						i = nb
 					loop
-						buf.putstring (gc_comma)
+						buf.put_string (gc_comma)
 						expr := l_area.item (i);	-- Cannot fail
 						expr.print_register
 						i := i + 1

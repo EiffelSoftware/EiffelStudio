@@ -1,0 +1,43 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Menus</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Menus">
+	</HEAD>
+
+	<BODY>
+		<H1>Menus Sample</H1>
+		<CENTER><IMG SRC="menus.png" ALT="menus" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\menus\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the program, you will see a window displayed with a similar appearance to the one displayed above. If you right click in the client
+		area of the window, a menu will pop up at the cursor position. The same menu is also accessible from the "File" menu. Selecting any of the menu options will
+		display a notification of which option was selected.
+
+		<H2>Under the Hood</H2>
+		A <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_menu_chart.html">WEL_MENU</A> is used for the menu's in this sample. The feature <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_menu_chart.html#f_show_track">show_track</A> is used to display the
+		menu at the cursor position and a <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A> is used to display the notification when a menu selection has occured.
+ 
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/menus/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/menus/root_cluster/menus_demo_chart.html">MENUS_DEMO</A>
+				
+			</UL>
+		</P>
+	</BODY>
+</HTML>

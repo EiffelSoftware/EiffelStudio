@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
+			C.gtk_scrolled_window_set_placement (c_object, C.gtk_corner_top_left_enum)
 
 			list_widget := C.gtk_ctree_new (1, 0)
 			a_event_box := C.gtk_event_box_new
@@ -128,7 +129,6 @@ feature {NONE} -- Initialization
 		do
 			Result := [gtk_value_pointer (args)]
 		end
-
 
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
 		local
@@ -548,6 +548,25 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
+	ensure_item_visible (an_item: EV_TREE_ITEM) is
+			-- Ensure `an_item' is visible in `Current'.
+			-- Tree nodes may be expanded to achieve this.
+		local
+			item_alloc_y: INTEGER
+			v_adjustment: POINTER
+		do
+--			-- Move down in to ev_list_imp or refactor a scrolled window pointer.
+--			item_alloc_y := C.gtk_allocation_struct_y (
+--				C.gtk_widget_struct_allocation (l_item.c_object)
+--			)
+--			if item_alloc_y /= -1 then
+--				--print ("Scroll window to " + item_alloc_y.out + "%N")
+--				v_adjustment := C.gtk_scrolled_window_get_vadjustment (c_object)
+--				C.set_gtk_adjustment_struct_value (v_adjustment, item_alloc_y)
+--				C.gtk_scrolled_window_set_vadjustment (c_object, v_adjustment)
+--			end
+		end
+
 	spacing: INTEGER is 5
 		-- Spacing between pixmap and text.
 
@@ -709,6 +728,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2001/06/29 22:37:41  king
+--| Added unimplemented ensure_item_visible
+--|
 --| Revision 1.45  2001/06/15 19:30:52  king
 --| Removed unnecessary freezing and thawing
 --|

@@ -358,8 +358,14 @@ feature {NONE} -- Implementation
 				window_template_file.read_stream (window_template_file.count)
 				class_text := window_template_file.last_string
 				window_template_file.close
+				
+					-- Now that we have loaded the class file template, we must
+					-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
+					-- if we are generating a dialog.
+				if document_info.type.is_equal ("EV_DIALOG") then
+					class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
+				end
 
-			
 					-- We must now perform the generation into `class_text'.
 					-- First replace the name of the class
 				set_class_name (a_class_name)
@@ -502,8 +508,15 @@ feature {NONE} -- Implementation
 			create class_text.make (window_template_file.count)
 			window_template_file.start
 			window_template_file.read_stream (window_template_file.count)
-			class_text := window_template_file.last_string
+			class_text := window_template_file.last_string				
 			window_template_file.close
+			
+				-- Now that we have loaded the class file template, we must
+				-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
+				-- if we are generating a dialog.
+			if document_info.type.is_equal ("EV_DIALOG") then
+				class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
+			end
 		
 				-- We must now perform the generation into `class_text'.
 				-- First replace the name of the class

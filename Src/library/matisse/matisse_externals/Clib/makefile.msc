@@ -1,0 +1,14 @@
+# wel.lib - Makefile for Microsoft C
+
+CC = cl
+CFLAGS = -c -Zi -I"e:\Eiffel43\library\matisse\matisse_externals\c sources" -IE:\eiffel43\bench\spec\windows\include -Ic:\matisse4.0\include -DWORKBENCH
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+OBJ = dynamic_creation.obj globals.obj mt_exceptions.obj mt_sql_support.obj \
+	  mt_support.obj mt_support_addition.obj
+
+mt_support.lib: $(OBJ)
+	if exist $@ del $@
+	lib /DEBUGTYPE:BOTH /OUT:$@ $(OBJ)

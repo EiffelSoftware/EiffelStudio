@@ -21,6 +21,7 @@ inherit
 			type_check, byte_node, format,
 			fill_calls_list, replicate
 		end
+	SHARED_CONFIGURE_RESOURCES
 
 feature -- Attributes
 
@@ -163,9 +164,11 @@ feature -- Type check, byte code and dead code removal
 							arg_type := arg_type.conformance_type;
 							arg_type := arg_type.instantiation_in
 											(last_type, last_id).actual_type;
-							if arg_type.is_basic then
-								like_argument_detected := True;
-							end;
+							if metamorphosis_disabled then
+								like_argument_detected := arg_type.is_basic
+							else
+								like_argument_detected := True
+							end
 						else
 								-- Instantiation of it in the context of
 								-- the context of the target
@@ -259,8 +262,11 @@ feature -- Type check, byte code and dead code removal
 					obs_warn.set_feature (context.a_feature);
 					Error_handler.insert_warning (obs_warn);
 				end;
-if not System.do_not_check_vape then
-				if context.level4 and then context.check_for_vape then
+				if
+					not System.do_not_check_vape and then
+					context.level4 and then
+					context.check_for_vape
+				then
 					-- In precondition and checking for vape
 					context_export := context.a_feature.export_status;
 					feature_export := a_feature.export_status;
@@ -279,7 +285,7 @@ debug
 	io.error.new_line;
 end;
 					if 
-						not a_feature.feature_name.is_equal ("void") and then
+						not a_feature.feature_name.is_equal (Void_feature_name) and then
 						not context_export.is_subset (feature_export) 
 					then
 						!!vape;
@@ -289,14 +295,13 @@ end;
 						Error_handler.raise_error;
 					end;
 				end;
-end; -- System.do_not_check_vape
 
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);
 				context.access_line.insert (access_b);
 			end;
 		end;
-			
+
 	byte_node: ACCESS_B is
 			-- Associated byte code
 		local
@@ -369,10 +374,15 @@ end; -- System.do_not_check_vape
 					type_a := Attachments.item;
 						--| Replace item in like argument
 					Attachments.go_i_th (pos - i + 1);
-					if Attachments.item.is_basic then
+					if metamorphosis_disabled then
+						if Attachments.item.is_basic then
+								--| Replace item in like argument
+							Attachments.change_item (type_a);
+						end;
+					else
 							--| Replace item in like argument
 						Attachments.change_item (type_a);
-					end;
+					end
 				end;
 				i := i + 1
 			end;	
@@ -435,5 +445,9 @@ end;
 					parameters.replicate (ctxt.new_ctxt))
 			end
 		end;
+
+feature {NONE} -- Implementation
+
+	Void_feature_name: STRING is "void"
 
 end -- class ACCESS_FEAT_AS_B

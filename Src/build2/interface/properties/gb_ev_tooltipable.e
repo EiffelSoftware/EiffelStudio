@@ -37,9 +37,11 @@ feature -- Access
 			label: EV_LABEL
 		do
 			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text ("Tooltip")
+			create label.make_with_text (gb_ev_tooltipable_tooltip)
 			Result.extend (label)
+			label.set_tooltip (gb_ev_tooltipable_tooltip_tooltip)
 			create tooltip_entry
+			tooltip_entry.set_tooltip (gb_ev_tooltipable_tooltip_tooltip)
 			Result.extend (tooltip_entry)
 			tooltip_entry.change_actions.extend (agent set_tooltip)
 			tooltip_entry.change_actions.extend (agent update_editors)

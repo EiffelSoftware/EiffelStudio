@@ -62,7 +62,7 @@ feature -- Access
 			frame_box.extend (horizontal_box)
 			create pixmap_container
 			frame_box.extend (pixmap_container)
-			create frame.make_with_text ("Pixmap")
+			create frame.make_with_text (gb_ev_pixmapable_pixmap)
 			frame.extend (frame_box)
 			Result.extend (frame)
 			update_attribute_editor
@@ -80,7 +80,7 @@ feature -- Access
 				modify_button.set_tooltip (Remove_tooltip)
 			else
 				pixmap_container.wipe_out
-				modify_button.set_text (Select_string)
+				modify_button.set_text (Select_button_text)
 				modify_button.set_tooltip (Select_tooltip)
 					-- Remove tooltip from `filler_label',
 					-- no need to remove it from the pixmap
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 				for_all_objects (agent {EV_PIXMAPABLE}.remove_pixmap)
 				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (Void))
 				pixmap_container.wipe_out
-				modify_button.set_text (Select_string)
+				modify_button.set_text (Select_button_text)
 				modify_button.set_tooltip (Select_tooltip)
 					-- Remove tooltip from `filler_label',
 					-- no need to remove it from the pixmap
@@ -275,10 +275,7 @@ feature {NONE} -- Implementation
 	
 	Remove_string: STRING is "Remove"
 		-- String on `modify_button' when able to remove pixmap.
-		
-	Select_string: STRING is "Select..."
-		-- String on `modify_button' when able to select pixmap.
-		
+
 	Remove_tooltip: STRING is "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 		

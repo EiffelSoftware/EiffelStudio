@@ -45,9 +45,11 @@ feature -- Access
 			-- of items held in `objects'.
 		do	
 			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text ("Text alignment")
+			create label.make_with_text (gb_ev_text_alignable)
+			label.set_tooltip (gb_ev_text_alignable_tooltip)
 			Result.extend (label)
 			create combo_box
+			combo_box.set_tooltip (gb_ev_text_alignable_tooltip)
 			Result.extend (combo_box)
 			combo_box.disable_edit
 			create item_left.make_with_text (Ev_textable_left_string)

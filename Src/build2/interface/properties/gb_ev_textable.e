@@ -45,9 +45,11 @@ feature -- Access
 			-- of items held in `objects'.
 		do
 			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text (text_string)
+			create label.make_with_text (gb_ev_textable_text)
+			label.set_tooltip (gb_ev_textable_text_tooltip)
 			Result.extend (label)
 			create text_entry
+			text_entry.set_tooltip (gb_ev_textable_text_tooltip)
 			Result.extend (text_entry)
 			text_entry.change_actions.extend (agent set_text)
 			text_entry.change_actions.extend (agent update_editors)

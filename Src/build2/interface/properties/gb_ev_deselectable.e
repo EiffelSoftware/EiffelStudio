@@ -45,7 +45,8 @@ feature -- Access
 		do
 			Result := Precursor {GB_EV_ANY}
 			first_object := objects.first
-			create check_button.make_with_text (is_selected_string)
+			create check_button.make_with_text (gb_ev_deselectable_is_selected)
+			check_button.set_tooltip (gb_ev_deselectable_is_selected_tooltip)
 			Result.extend (check_button)
 			check_button.select_actions.extend (agent toggle_selected)
 			check_button.select_actions.extend (agent update_editors)

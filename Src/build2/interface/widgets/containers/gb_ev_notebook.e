@@ -43,9 +43,11 @@ feature -- Access
 			name_field: EV_TEXT_FIELD
 		do
 			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text ("Tab position")
+			create label.make_with_text (gb_ev_notebook_tab_position)
+			label.set_tooltip (gb_ev_notebook_tab_position_tooltip)
 			Result.extend (label)
 			create combo_box
+			combo_box.set_tooltip (gb_ev_notebook_tab_position_tooltip)
 			Result.extend (combo_box)
 			combo_box.disable_edit
 			create top_item.make_with_text (Ev_tab_top_string)

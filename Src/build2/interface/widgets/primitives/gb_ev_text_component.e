@@ -43,7 +43,8 @@ feature -- Access
 		do
 			Result := Precursor {GB_EV_ANY}
 			
-			create editable_button.make_with_text ("Is editable?")
+			create editable_button.make_with_text (gb_ev_text_component_is_editable)
+			editable_button.set_tooltip (gb_ev_text_component_is_editable)
 			Result.extend (editable_button)
 			editable_button.select_actions.extend (agent set_is_editable)
 			editable_button.select_actions.extend (agent update_editors)

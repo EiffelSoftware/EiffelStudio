@@ -20,7 +20,9 @@ inherit
 			{NONE} all
 		end
 
-feature {NONE} -- Initialization
+	ANY
+
+feature -- Initialization
 
 	make_from_pointer (a_pointer: POINTER) is
 			-- Initialize

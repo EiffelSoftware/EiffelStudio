@@ -15,7 +15,15 @@ inherit
 
 	ECOM_TYPE_KIND
 
-feature -- Basic operations
+feature -- Access
+
+	registration_class_name: STRING is
+			-- Registration class name
+		do
+			Result := Ecom_prefix
+			Result.append (Shared_wizard_environment.system_name)
+			Result.append (Registration_suffix)
+		end
 
 	name_for_class (a_name: STRING; a_type: INTEGER; is_client: BOOLEAN): STRING is
 			-- Convert to Eiffel class name.
@@ -127,6 +135,14 @@ feature -- Basic operations
 			non_void_feature_name: Result /= Void
 			valid_feature_name: not Result.empty
 		end
+
+feature {NONE} -- Implementation
+
+	Ecom_prefix: STRING is "ECOM_"
+			-- Prefix for registration class
+
+	Registration_suffix: STRING is "_REGISTRATION"
+			-- Registration class suffix
 
 end -- class WIZARD_VARIABLE_NAME_MAPPER
 

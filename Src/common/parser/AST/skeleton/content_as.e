@@ -67,6 +67,8 @@ feature -- Access
 
 	is_body_equiv (other: like Current): BOOLEAN is
 		-- Is the current feature equivalent to `other' ?
+		require
+			valid_other: other /= Void
 		deferred
 		end;
 

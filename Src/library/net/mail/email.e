@@ -11,50 +11,27 @@ inherit
 	MEMORY_RESOURCE
 
 create
-	make_with_header, make_with_recipient, make_with_recipients
+	make, make_with_entry
 
-feature -- Initialization.
+feature -- Initialization
 
-	make_with_header (header_from: HEADER; header_to: HEADER) is
-			-- Create an email for one recipient.
+	make is
+			-- Initialize the headers table.
+		do
+			create headers.make (3)
+		end
+
+	make_with_entry (header_from, header_to: STRING) is
+			-- Create an email with the 'header_from' and the 'header_to'.
 		require
 			needed_info: header_from /= Void
 						 and then header_to /= Void 
-		do
-			create headers.make (3)
-
-			headers.put (header_from, H_from)
-			headers.put (header_to, H_to)
-
-			set_subject ("")
-		end
-
-	make_with_recipient (sender: STRING; recipient: STRING) is
-			-- Create an email for multiple recipients
 		local
-			m_header: HEADER
+			a_header: HEADER
 		do
 			create headers.make (3)
-
-			create m_header.make_with_entry (sender)
-			headers.put (m_header, H_from)
-			create m_header.make_with_entry (recipient)
-			headers.put (m_header, H_to)
-
-			set_subject ("")
-		end
-
-	make_with_recipients (sender: STRING; recipients: ARRAY [STRING]) is
-			-- Create an email for multiple recipients
-		local
-			m_header: HEADER
-		do
-			create headers.make (3)
-
-			create m_header.make_with_entry (sender)
-			headers.put (m_header, H_from)
-			create m_header.make_with_entries (recipients)
-			headers.put (m_header, H_to)
+			add_header_entry (header_from, H_from)
+			add_header_entry (header_to, H_to)
 		end
 
 feature {NONE} -- Basic operations.
@@ -66,6 +43,60 @@ feature {NONE} -- Basic operations.
 		end
 
 feature -- Basic operations
+
+	add_header_entry (header_key, header_entry: STRING) is
+			-- Add 'header_entry' to header 'header_key'.
+			-- If no such header exists, create it.
+		require
+			not_void: header_entry /= Void and then header_key /= Void
+		local
+			a_header: HEADER
+		do
+			if headers.has (header_key) then
+				a_header:= headers.item (header_key)
+				a_header.add_entry (header_entry)
+			else
+				create a_header.make (header_entry)
+				headers.put (a_header, header_key)
+				if Default_headers.has (header_key) then
+					a_header.enable_contains_addresses
+				end
+			end
+		end
+
+	add_header_entries (header_key: STRING; header_entries: ARRAY [STRING]) is
+			-- Add multiple 'header_entries' at once  to 'header_key'.
+			-- If not such header exists. create it.
+		local
+			a_header: HEADER
+		do
+			if headers.has (header_key) then
+				a_header:= headers.item (header_key)
+				a_header.add_entries (header_entries)
+			else
+				create a_header.make_with_entries (header_entries)
+				headers.put (a_header, header_key)
+				if Default_headers.has (header_key) then
+					a_header.enable_contains_addresses
+				end
+			end		
+		end
+
+	remove_header_entry (header_key, header_entry: STRING) is
+			-- Remove 'header_entry' from header 'header_key'.
+		require
+			header_exists: headers.has (header_key)
+			header_entry_exists: 
+					(headers.item (header_key)). entries.has (header_entry)
+		local
+			a_header: HEADER			
+		do
+			a_header:= headers.item (header_key)
+			a_header.entries.prune (header_entry)
+		ensure
+			header_entry_no_longer_exists: 
+					not (headers.item (header_key)). entries.has (header_entry)
+		end
 
 	send is
 			-- Send email.

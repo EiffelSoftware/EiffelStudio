@@ -11,24 +11,16 @@ inherit
 	SENDING_PROTOCOL
 
 create
-	make_smtp, make_smtp_connect_and_initiate
+	make
 
 feature -- Initialization
 
-	make_smtp (a_hostname:STRING; a_username: STRING) is
-			-- Create an smtp protocol with 'a_hostname, 'a_port' and 'a_username'.
+	make (host:STRING; user: STRING) is
+			-- Create an smtp protocol with 'host, 'user' and default port.
 		do
-			username:= a_username
-			make (a_hostname, default_port)
-		end
-
-	make_smtp_connect_and_initiate (a_hostname:STRING; a_username: STRING) is
-			-- Create an smtp protocol with 'a_hostname, 'a_port' and 'a_username'.
-		do
-			username:= a_username
-			make (a_hostname, default_port)
-			connect
-			initiate_protocol
+			hostname:= host
+			username:= user
+			port:= default_port
 		end
 
 feature -- Access
@@ -84,6 +76,7 @@ feature -- Implementation (EMAIL_PROTOCOL).
 			connection_initiated: is_initiated
 		do
 			memory_resource := resource
+			recipients:= Void
 			send_mail
 		end
 
@@ -92,9 +85,8 @@ feature -- Basic operations.
 	initiate_protocol is
 			-- Initiate the smtp connection
 			-- It can be a helo or a ehlo connection.
-		local
-			stop_waiting: BOOLEAN
 		do
+			connect
 			if pipelining then
 				send_command (ehlo + username, Ok)
 			else
@@ -124,6 +116,12 @@ feature -- Implementation (EMAIL_RESOURCE)
 	can_receive: BOOLEAN is False
 		-- Smtp protocol can not receive.
 
+	initialize is
+			-- Initialize the protocol to send a new email.
+		do
+
+		end
+
 feature {NONE} -- Implementation
 
 	username: STRING
@@ -147,12 +145,14 @@ feature {NONE} -- Basic operations
 		local
 			response: STRING
 		do
-			socket.put_string (s + "%N")
-			socket.read_line
-			response:= socket.last_string
-			smtp_code_number := decode (response)
-			if (smtp_code_number /= expected_code) then
-				enable_transfer_error
+			if not transfer_error then
+				socket.put_string (s + "%N")
+				socket.read_line
+				response:= socket.last_string
+				smtp_code_number := decode (response)
+				if (smtp_code_number /= expected_code) then
+					enable_transfer_error
+				end
 			end
 		end
 
@@ -164,125 +164,130 @@ feature {NONE} -- Basic operations
 			connection_exists: is_connected
 			connection_initiated: is_initiated		
 		do
-			retrieve_header_and_message
-			set_from
-			set_to
-			set_cc
-			set_bcc
-			set_subject
-			set_message
-			set_signature
+			send_mails
+			if memory_resource.headers.has (H_bcc) then
+				enable_bcc_mode
+				send_mails
+				disable_bcc_mode
+			end
+		end
+
+	send_mails	is
+		do
+			header_from:= memory_resource.header (H_from).unique_entry
+			sub_header:= ""
+			set_recipients
+			build_sub_header
 			send_all
 		end
 
-	retrieve_header_and_message is
+	set_recipients is
+			-- Fill 'recipients' to know who will receive the resource,
+			-- and fill 'header_from'
+		require
+			header_to_exists: memory_resource.headers.has (H_to)
+		local
+			a_header: HEADER
 		do
-			header_to:= memory_resource.header (H_to)
-			header_from:= memory_resource.header (H_from)
-			header_cc:= memory_resource.header (H_cc)
-			header_bcc:= memory_resource.header (H_bcc)
-			mail_subject:= memory_resource.mail_subject
-			mail_message:= memory_resource.mail_message
-			mail_signature:= memory_resource.mail_signature
-		ensure
-			valid_email: mail_to /= Void and then mail_message /= Void
-		end
-
---	decompose (addresses: STRING): LINKED_LIST [STRING] is
---			-- Create a linked list of addresses from 'addresses'
---		do
---			create Result.make
---			if addresses /= Void then
---				Result.extend (addresses)
---			end
---		end
-
-	set_from is
-		do
-			if not header_from.multiple_entries then
-				send_command (Mail_from + header_from.first_entry, Ok)
-			end
-		end
-
-	set_to is
-		do
-			if not transfer_error then
-				if not header_to.multiple_entries then
-					send_command (Mail_to + header_to.first_entry, Ok)
+			if not bcc_mode then
+				a_header:= memory_resource.header (H_to)
+				recipients:= a_header.entries
+				a_header:= memory_resource.header (H_cc)
+				if a_header /= Void then
+					from 
+						a_header.entries.start
+					until
+						a_header.entries.after
+					loop
+						recipients.extend (a_header.entries.item)
+						a_header.entries.forth
+					end
 				end
+			else
+				recipients:= memory_resource.header (H_bcc).entries
 			end
 		end
 
-	set_cc is
+	build_sub_header is
+			-- Build the header of the message in 'sub_header'.
 		do
-			if header_cc /= Void then
-				if not transfer_error then
-					if not header_cc.multiple_entries then
-						send_command (Mail_cc + header_cc.first_entry, Ok)
-					end	
+			from 
+				memory_resource.headers.start
+			until
+				memory_resource.headers.after
+			loop
+				add_sub_header (memory_resource.headers.key_for_iteration)
+				memory_resource.headers.forth
+			end
+		end
+
+	add_sub_header (sub_header_key: STRING) is
+			-- Add new header line 'sub_header_key',
+			-- A distinction is done in case the mail is bcc or not.
+		require
+			key_exists: memory_resource.headers.has (sub_header_key)
+			sub_header_exists: sub_header /= Void
+		local
+			a_header: HEADER
+		do
+			a_header:= memory_resource.header (sub_header_key)
+			from 
+				a_header.entries.start
+			until
+				a_header.entries.after
+			loop
+				if bcc_mode then
+					if sub_header_key.is_equal (H_bcc) then
+						sub_header.append (H_to + a_header.entries.item + "%N")
+					end
+					if not (sub_header_key.is_equal (H_to) or sub_header_key.is_equal (H_cc)) then
+						sub_header.append (sub_header_key + a_header.entries.item + "%N")
+					end
+				else
+					sub_header.append (sub_header_key + a_header.entries.item + "%N")
 				end
-			end
-		end
-
-	set_bcc is
-		do
-			if header_bcc /= Void then
-				if not transfer_error then
-					if not header_bcc.multiple_entries then
-						send_command (Mail_bcc + header_bcc.first_entry, Ok)
-					end	
-				end
-			end
-		end
-
-	set_subject is
-		do
-			if not transfer_error then
-				mail_message.prepend (Subject + mail_subject + "%N")
-			end
-		end
-
-	set_message is
-		do
-			if not transfer_error then
-				send_command (Data, Data_code)
-				mail_message.replace_substring_all ("%N.", ".%N")
-			end
-		end
-
-	set_signature is
-		do
-			if not transfer_error then
-				if mail_signature /= Void then
-					mail_message.append ("%N" + mail_signature)
-				end
+				a_header.entries.forth
 			end
 		end
 
 	send_all is
+		-- Send the mail considering the correct information.
 		do
-			if not transfer_error then
-				mail_message.append ("%N.")
-				send_command (mail_message, Ok)
+			mail_message:= clone (memory_resource.mail_message)
+			mail_signature:= memory_resource.mail_signature
+
+			send_command (Mail_from + header_from, Ok)
+			from 
+				recipients.start
+			until
+				recipients.after
+			loop
+				send_command (Mail_to + recipients.item, Ok)
+				recipients.forth
 			end
+
+			send_command (Data, Data_code)
+			mail_message.prepend (sub_header)
+			if mail_signature /= Void then
+				mail_message.append (mail_signature)
+			end
+			mail_message.replace_substring_all ("%N.", ".%N")
+			mail_message.append ("%N.")
+
+			send_command (mail_message, Ok)
 		end
+
 
 feature {NONE} -- Access
 
-	header_to: HEADER
-		-- To.
+	recipients: ARRAYED_LIST [STRING]
+		-- Header to use with the command 'Mail_to'
 
-	header_from: HEADER
-		-- From.
+	header_from: STRING
+		-- Header to use with the command 'Mail_from'.
 
-	header_cc: HEADER
-		-- Cc.
-
-	header_bcc: HEADER
-		-- Bcc.
-
-	mail_subject: STRING
-		-- Subject.
+	sub_header: STRING
+		-- Sub_header: data before the message.
 
 	mail_message: STRING
 		-- Message.
@@ -290,6 +295,19 @@ feature {NONE} -- Access
 	mail_signature: STRING
 		-- Signature.
 
-	list_of_addresses: LINKED_LIST [STRING]
+	bcc_mode: BOOLEAN
+		-- Is bcc mode activated?
+
+feature {NONE} -- Implementation
+
+	enable_bcc_mode is
+		do
+			bcc_mode:= True
+		end
+
+	disable_bcc_mode is
+		do
+			bcc_mode:= False
+		end
 
 end -- class SMTP_PROTOCOL

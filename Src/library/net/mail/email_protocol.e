@@ -10,19 +10,7 @@ deferred class
 inherit
 	PROTOCOL_RESOURCE
 
-feature -- Initialization
-
-	make (host:STRING; port_number: INTEGER) is
-			-- Create the protocol with 'a_hostname' and 'a_port'
-		do
-			hostname:= host
-			port:= port_number
-		end
-
 feature -- Access
-
-	socket: NETWORK_STREAM_SOCKET
-		-- Socket use to communicate.
 
 	hostname: STRING
 		-- hostname .. ex: smtp.
@@ -42,6 +30,14 @@ feature -- Status report
 
 
 feature -- Basic operations
+
+	initiate_protocol is
+		deferred
+		end
+
+	close_protocol is
+		deferred
+		end
 
 	connect is
 			-- Connect to the host machine.
@@ -83,6 +79,8 @@ feature {NONE} -- Implementation
 	port: INTEGER
 		-- port number.
 
+	socket: NETWORK_STREAM_SOCKET
+		-- Socket use to communicate.
 
 feature {NONE} -- Miscellaneous
 

@@ -187,12 +187,6 @@ feature -- Status report
 			Result := a_start.max (feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
 		end
 
-	maximum_character_width: INTEGER is
-			-- Maximum width of a single character in `Current'.
-		do
-			Result := font.string_width ("W")
-		end
-
 	clipboard_content: STRING is
 			-- `Result' is current clipboard content.
 		do
@@ -218,15 +212,6 @@ feature -- status settings
 			-- Set the position of the caret to `pos'.
 		do
 			internal_set_caret_position (pos)
-		end
-
-feature -- Resizing
-
-	set_minimum_width_in_characters (nb: INTEGER) is
-			-- Make `nb' characters visible on one line.
-		do
-			set_minimum_width (nb * maximum_character_width + 10)
-				-- 10 = size of handle
 		end
 
 feature -- Basic operation

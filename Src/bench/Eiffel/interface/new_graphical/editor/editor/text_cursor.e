@@ -10,6 +10,8 @@ class
 inherit
 	CURSOR
 
+	COMPARABLE
+
 	WEL_SB_CONSTANTS
 		export
 			{NONE} all
@@ -179,6 +181,14 @@ feature -- Cursor movement
 			-- Move to end of line.
 		do
 			set_current_char (line.end_token, line.end_token.length)
+		end
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is current object less than `other'?
+		do
+			Result := (y_in_lines < other.y_in_lines) or else (x_in_pixels < other.x_in_pixels)
 		end
 
 feature -- Transformation

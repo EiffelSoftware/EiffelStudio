@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			end
 			if y_ratio > 1 and x_ratio < 1 then
 				new_y := minimum_width_of_object_editor
-				new_x := (pixmap.width / x_ratio).truncated_to_integer
+				new_x := (pixmap.width / y_ratio).truncated_to_integer
 			end
 			if y_ratio > 1 and x_ratio > 1 then
 				biggest_ratio := x_ratio.max (y_ratio)

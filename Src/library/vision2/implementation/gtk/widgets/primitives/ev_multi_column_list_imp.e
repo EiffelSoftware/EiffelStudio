@@ -569,16 +569,11 @@ feature -- Implementation
 
 			if a_row_index > 0 then
 				pnd_row_imp := ev_children.i_th (a_row_index)
-				if pnd_row_imp.is_transport_enabled then
-					print (" Start PND for ROW "+ a_row_index.out + "%N")
-				else
+				if not pnd_row_imp.is_transport_enabled then
 					pnd_row_imp := Void
 				end
-			elseif pebble /= Void then
-				print ("Start PND for MC LIST%N")
 			end
 			
-
 			if pnd_row_imp /= Void or else pebble /= Void then
 				Precursor (
 				a_type,
@@ -612,9 +607,13 @@ feature -- Implementation
 				app_imp_not_void: app_imp /= Void
 			end
 
+			temp_pebble := pebble
+			temp_pebble_function := pebble_function
+			temp_accept_cursor := accept_cursor
+			temp_deny_cursor := deny_cursor
+
 			if pnd_row_imp /= Void then
-				temp_pebble := pebble
-				temp_pebble_function := pebble_function
+
 				pebble := pnd_row_imp.pebble
 				pebble_function := pnd_row_imp.pebble_function
 			end
@@ -631,14 +630,8 @@ feature -- Implementation
 			if pnd_row_imp /= Void then
 				pnd_row_imp.interface.pick_actions.call ([a_x, a_y])
 				pnd_mode := pnd_row_imp.mode_is_pick_and_drop
-				if pnd_row_imp.accept_cursor /= Void then
-					temp_accept_cursor := accept_cursor
-					accept_cursor := pnd_row_imp.accept_cursor
-				end
-				if pnd_row_imp.deny_cursor /= Void then
-					temp_deny_cursor := deny_cursor
-					deny_cursor := pnd_row_imp.deny_cursor
-				end
+				accept_cursor := pnd_row_imp.accept_cursor
+				deny_cursor := pnd_row_imp.deny_cursor
 			else
 				interface.pick_actions.call ([a_x, a_y])
 				pnd_mode := mode_is_pick_and_drop
@@ -650,7 +643,6 @@ feature -- Implementation
 				is_dnd_in_transport := True
 			end
 
-			
 			if accept_cursor = Void then
 				create accept_cursor.make_with_code (curs_code.standard)
 			end
@@ -677,21 +669,30 @@ feature -- Implementation
 			check
 				app_imp_not_void: app_imp /= Void
 			end
+
 			app_imp.on_drop (pebble)
 			pick_x := 0 --| FIXME IEK This wipes out user setting of pick position
 			pick_y := 0
-			last_pointed_target := Void
+			last_pointed_target := Void	
 
 			if pebble_function /= Void then
-				temp_pebble := Void
-				--| FIXME Wipeout pebble for row.
+				if pnd_row_imp /= Void then
+					--| FIXME IEK Make row pebble void.
+				else
+					temp_pebble := Void
+				end
 			end
 
+			accept_cursor := temp_accept_cursor
+			deny_cursor := temp_deny_cursor
 			pebble := temp_pebble
 			pebble_function := temp_pebble_function
 
 			temp_pebble := Void
 			temp_pebble_function := Void
+			temp_accept_cursor := Void
+			temp_deny_cursor := Void
+
 			pnd_row_imp := Void
 		end
 
@@ -883,6 +884,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.63  2000/04/07 17:40:50  king
+--| Implemented resetting of mclist pnd attributes
+--|
 --| Revision 1.62  2000/04/06 23:27:42  brendel
 --| Added list_widget.
 --|

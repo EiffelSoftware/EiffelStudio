@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class LABEL_M
+class 
+	LABEL_M
 
 inherit
 
@@ -22,6 +23,9 @@ inherit
 	FONTABLE_M;
 
 	BUTTON_M
+		redefine
+			is_label
+		end
 
 creation
 
@@ -31,12 +35,22 @@ feature {NONE} -- Initialization
 
 	make (a_label: LABEL; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif label.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_label_make (a_label.identifier,
-					mel_parent (a_label, widget_index),
-					man);
+			mel_label_make (a_label.identifier, mc, man);
 			a_label.set_font_imp (Current)
+		end;
+
+feature -- Access
+
+	is_label: BOOLEAN is
+			-- Is current button a label?
+			-- (False by default)
+		do
+			Result := True
 		end;
 
 feature -- Status Setting

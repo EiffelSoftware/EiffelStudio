@@ -15,7 +15,9 @@ inherit
 			cluster_count,
 			class_descriptor,
 			feature_descriptor,
-			cluster_descriptor
+			cluster_descriptor,
+			substring_search_classes,
+			substring_search_features
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -142,6 +144,20 @@ feature -- Basic Operations
 					Result := class_desc.feature_with_name (feature_name)
 				end
 			end
+		end
+
+	substring_search_classes (a_string: STRING): IENUM_CLASS_INTERFACE is
+			-- Search classes with names matching `a_string'.
+			-- `a_string' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	substring_search_features (a_string: STRING): IENUM_FEATURE_INTERFACE is
+			-- Search feature with names matching `a_string'.
+			-- `a_string' [in].  
+		do
+			-- Put Implementation here.
 		end
 		
 end -- class SYSTEM_BROWSER

@@ -23,7 +23,8 @@ inherit
 			on_mouse_move,
 			on_key_down,
 			interface,
-			pnd_press
+			pnd_press,
+			set_default_minimum_size
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -109,6 +110,7 @@ feature {NONE} -- Initialization
 			--|FIXME This is only required as column title does not correctly
 			--|Work at the moment.
 			create column_titles.make (1,1)
+			update_children_agent := ~update_children
 		end
 
 	make_with_size (col_nb: INTEGER) is         
@@ -134,6 +136,27 @@ feature {NONE} -- Initialization
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- implementation
+
+	update_children is
+			-- Update all children with `update_needed' True.
+			--| We are on an idle action now. At least one item has marked
+			--| itself `update_needed'.
+		local
+			cur: INTEGER
+		do
+			cur := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				ev_children.forth
+			end
+			ev_children.go_i_th (index)
+		end
+
+	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_IMP, TUPLE []]
+			-- Agent object for `update_children'.
 
 		list_is_pnd_source : BOOLEAN
 
@@ -523,6 +546,14 @@ feature -- Element change
 			end
 		end
 
+	row_height: INTEGER is
+			-- Height in pixels of each row.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
 	clear_items is
 			-- Clear all the items of the list.
 		local
@@ -584,20 +615,25 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		end
 
 	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
-			-- Insert `item_imp' in the list at the index `index'.
+			-- Insert `item_imp' at `index'.
 		local
-			list: ARRAYED_LIST [STRING]
+			list: LINKED_LIST [STRING]
 			litem: WEL_LIST_VIEW_ITEM
 			rw: INTEGER
+			first_string: STRING
 		do
-			-- First, we insert the graphical object.
---| FIXME			list := item_imp.internal_text
+			list := item_imp.interface
 			from
 				list.start
+				if list.after then
+					first_string := ""
+				else
+					first_string := list.item
+					list.forth
+				end
 				create litem.make_with_attributes (
-					Lvif_text, an_index - 1, 0, 0, list.item)
+					Lvif_text, an_index - 1, 0, 0, first_string)
 				wel_insert_item (litem)
-				list.forth
 			until
 				list.after
 			loop
@@ -607,8 +643,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 					litem.to_integer)
 				list.forth
 			end
-
-			-- Then, we update ev_children
 			ev_children.go_i_th (an_index - 1)
 			ev_children.put_right (item_imp)
 		end
@@ -682,6 +716,13 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			litem.set_statemask (Lvis_selected)	
 			cwin_send_message (wel_item, Lvm_setitemstate, i,
 				litem.to_integer)
+		end
+
+	set_default_minimum_size is
+			-- Initialize the size of the widget.
+		do
+			--| FIXME We need nice values.
+			internal_set_minimum_size (1, 2 * row_height)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -927,6 +968,12 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/03/24 01:38:01  brendel
+--| Added set_default_minimum_size to some value other than zero. Needs fixing.
+--| Added `row_height'.
+--| Added `update_children' called on idle when one ore more children need
+--| to be updated.
+--|
 --| Revision 1.58  2000/03/23 23:26:23  brendel
 --| Replaced obsolete call.
 --|

@@ -11,6 +11,9 @@ class
 	
 inherit
 	EV_APPLICATION_I
+		rename
+			root_window as main_window
+		end
 
 	EV_ACCELERATOR_HANDLER_IMP
 		rename
@@ -23,10 +26,8 @@ inherit
 
  	WEL_APPLICATION
  		rename
- 			make as wel_make,
-			application_main_window as main_window
+ 			make as wel_make
 		redefine
-			main_window,
 			init_application,
 			message_loop
  		end
@@ -52,21 +53,24 @@ feature {NONE} -- Initialization
 
 	launch (interface: EV_APPLICATION) is
 			-- Launch the main window and the application.
+		local
+			w: EV_UNTITLED_WINDOW_IMP
 		do
-			main_window ?= interface.main_window.implementation
-			main_window.application.put (Current)
-			set_application_main_window (main_window)
-			interface.init_accelerators
+			w ?= interface.first_window.implementation
+			if root_windows.empty then
+				add_root_window (w)
+			elseif root_windows.first /= w then
+				root_windows.start
+				root_windows.prune (w)
+				root_windows.put_front (w)
+			end
+			set_root_window
+			interface.initialize
 			if runable then
 				run
 			end
 			destroy_application
 		end
-
-feature -- Access
-
-	main_window: EV_WINDOW_IMP
-			-- Main window of the application
 
 feature -- Status setting
 
@@ -102,6 +106,15 @@ feature -- Basic operation
 			main_window.destroy
 		end
 
+	splash_pixmap (pix: EV_PIXMAP) is
+			-- Show the splash screen pixmap `pix'.
+		do
+			create splash_screen.make
+			splash_screen.set_background_pixmap (pix)
+			splash_screen.set_minimum_size (pix.width, pix.height)
+			splash_screen.show
+		end
+
 feature -- Implementation
 
 	accelerator_table: EV_ACCELERATOR_TABLE_IMP is
@@ -133,6 +146,17 @@ feature -- Implementation
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	set_root_window is
+		do
+			main_window.application.put (Current)
+			set_application_main_window (main_window)
+		end
+
+	splash_screen: EV_UNTITLED_WINDOW_IMP
+			-- Splash screen of the application
+
 feature {NONE} -- WEL Implemenation
 
 	controls_dll: WEL_INIT_COMMCTRL_EX
@@ -150,10 +174,10 @@ feature {NONE} -- WEL Implemenation
 	init_application is
 			-- Load the dll needed sometimes
 		do
-			!! controls_dll.make_with_flags (Icc_userex_classes
+			create controls_dll.make_with_flags (Icc_userex_classes
 					+ Icc_win95_classes + Icc_cool_classes
 					+ Icc_bar_classes)
-			!! rich_edit_dll.make
+			create rich_edit_dll.make
 		end
 
 feature {NONE} -- Message loop, we redefine it because the user
@@ -168,6 +192,10 @@ feature {NONE} -- Message loop, we redefine it because the user
 			done: BOOLEAN
 			dlg: POINTER
 		do
+			-- Destroy the spash screen
+			splash_screen.destroy
+			splash_screen := Void
+
 			-- `accel' and `main_w' are declared
 			-- locally to get a faster access.
 			accel := accelerator_table
@@ -175,7 +203,7 @@ feature {NONE} -- Message loop, we redefine it because the user
 
 			-- Process the messages
 			from
-				!! msg.make
+				create msg.make
 			until
 				done
 			loop

@@ -188,8 +188,10 @@ extern EIF_INTEGER _concur_blk_cli_list_count;
 /* The following are external variables                    */
 /*---------------------------------------------------------*/
 
-extern EIF_FN_POINTER eif_strtoc;
 extern char *root_obj;
+#ifndef WORKBENCH
+extern struct ctable *ce_sep_pat;
+#endif
 
 /*---------------------------------------------------------*/
 /* The following are functions in the concurrent C-library */
@@ -341,7 +343,13 @@ extern void cur_set_with_rejection();
 extern void cur_unset_with_rejection();
 extern void cur_set_daemon_port();
 
-
+#ifdef DELETE_SEP_OBJ
+/* From "sep_obj.c" */
+extern EIF_REFERENCE sep_obj_create();
+extern void sep_obj_make(EIF_REFERENCE s_obj, EIF_INTEGER haddr, EIF_INTEGER port, EIF_INTEGER oid);
+extern void sep_obj_make_without_connection(EIF_REFERENCE sep_obj, EIF_INTEGER oid);
+extern void sep_obj_dispose(char *obj);
+#endif
 
 
 extern char *error_info();
@@ -349,6 +357,8 @@ extern void print_server_list() ;
 extern void print_ref_table_and_exported_object();
 
 extern void get_call_stack();
+
+extern EIF_INTEGER get_pattern_id(struct ctable *ct, char *key);
 
 #ifdef EIF_WIN32
 /* For debuging */

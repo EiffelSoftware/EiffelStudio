@@ -217,8 +217,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
 #else
 		/* garcol.c and retrieve.c */
-	int r_fides_cx;					/* File descriptor use for retrieve */
-	int s_fides_cx;					/* File descriptor use for store */
+	int r_fides_cx;					/* File descriptor used for retrieving */
+	int s_fides_cx;					/* File descriptor used for storing */
 #endif
 
 	/* Thread management variables */

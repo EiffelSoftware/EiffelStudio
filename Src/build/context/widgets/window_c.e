@@ -278,7 +278,7 @@ feature
 			!!create_command
 			create_command.execute (Result)
 		ensure then
-			in_window_list: Shared_window_list.has (Current)
+			in_window_list: Shared_window_list.has (Result)
 		end
 
 	deleted: BOOLEAN is

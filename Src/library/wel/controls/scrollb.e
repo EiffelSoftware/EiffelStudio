@@ -17,7 +17,8 @@ inherit
 
 creation
 	make_vertical,
-	make_horizontal
+	make_horizontal,
+	make_by_id
 
 feature {NONE} -- Initialization
 

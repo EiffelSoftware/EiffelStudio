@@ -284,6 +284,28 @@ feature -- Status report
 				safe_restore_caret
 			end
 		end
+		
+	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		local
+			mask: INTEGER
+			wel_character_format: WEL_CHARACTER_FORMAT
+			range_already_selected: BOOLEAN
+		do
+			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
+				range_already_selected := True
+			else
+				safe_store_caret
+			end
+			wel_character_format := current_selection_character_format
+			mask := wel_character_format.mask
+			create Result.make_with_values (start_index, end_index, flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic), flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_strikeout), flag_set (mask, cfm_underline))
+			if not range_already_selected then
+				safe_restore_caret
+			end
+		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
 			-- Index of character closest to position `x_position', `y_position'. 

@@ -35,6 +35,7 @@ extern "C" {
 #define chcode(c) ((EIF_INTEGER) (c))
 #define conv_pi(p) ((EIF_INTEGER) (p))
 #define conv_ri(v) ((EIF_INTEGER) (v))
+#define conv_ri64(v) ((EIF_INTEGER_64) (v))
 #define conv_dr(d) ((EIF_REAL) (d))
 #define conv_di(d) ((EIF_INTEGER) (d))
 #define conv_di64(d) ((EIF_INTEGER_64) (d))

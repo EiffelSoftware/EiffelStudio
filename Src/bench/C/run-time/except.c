@@ -13,10 +13,10 @@
 	executable.
 */
 
+#include "config.h"
 #ifdef CONCURRENT_EIFFEL
 #include "curextern.h"
 #endif
-#include "config.h"
 #include <stdio.h>
 #include <signal.h>
 #include "except.h"

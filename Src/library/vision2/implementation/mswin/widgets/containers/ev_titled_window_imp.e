@@ -244,8 +244,8 @@ feature {NONE} -- Implementation
 				end
 				if status_bar /= Void then
 					mh := mh + status_bar.minimum_height
+					mw := mw.max (status_bar.minimum_width)
 				end
-				mw := mw.max (status_bar.minimum_width)
 
 				-- Finaly, we set the value
 				internal_set_minimum_size (mw, mh)
@@ -346,6 +346,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/04/29 03:29:34  pichery
+--| Fixed bug.
+--|
 --| Revision 1.67  2000/04/29 03:27:57  pichery
 --| Protected `compute_minimum_size' with
 --| test on `exists'.

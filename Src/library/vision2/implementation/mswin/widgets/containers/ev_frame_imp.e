@@ -244,7 +244,7 @@ feature {NONE} -- WEL Implementation
 			if is_sensitive then
 				paint_dc.text_out (10, 0, wel_text)
 			else
-				draw_insensitive_text (paint_dc, 10, 0, wel_text)
+				draw_insensitive_text (paint_dc, wel_text, 10, 0)
 			end
 		end
 
@@ -354,6 +354,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/27 18:30:22  brendel
+--| Corrected order of arguments.
+--|
 --| Revision 1.29  2000/04/27 18:13:08  brendel
 --| Improved `on_paint'.
 --|

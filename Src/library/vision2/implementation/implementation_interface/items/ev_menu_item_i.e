@@ -18,18 +18,12 @@ inherit
 
 	EV_MENU_ITEM_CONTAINER_I
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make (par: EV_MENU_ITEM_CONTAINER) is
+	parent: EV_MENU_ITEM_CONTAINER is
+			-- Parent of the current item.
 		require
-			valid_parent: is_valid (par)
-		deferred
-		end
-
-	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
-		require
-			valid_parent: is_valid (par)
-			valid_string: txt /= Void
+			exists: not destroyed
 		deferred
 		end
 
@@ -49,6 +43,18 @@ feature -- Status setting
    			-- `flag'. 
    		deferred
    		end
+
+feature -- Element change
+
+	set_parent (par: EV_MENU_ITEM_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			parent_set: parent = par
+		end
 
 feature {NONE} -- Implementation
 

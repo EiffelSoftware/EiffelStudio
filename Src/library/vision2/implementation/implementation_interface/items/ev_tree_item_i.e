@@ -12,11 +12,12 @@ inherit
 
 	EV_TREE_ITEM_CONTAINER_I
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
-			-- Create a tree-item with `txt' as label and
-			-- `par' as parent.
+	parent: EV_TREE_ITEM_CONTAINER is
+			-- Parent of the current item.
+		require
+			exists: not destroyed
 		deferred
 		end
 
@@ -34,6 +35,18 @@ feature -- Status report
 		require
 			exists: not destroyed
 		deferred
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_TREE_ITEM_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			parent_set: parent = par
 		end
 
 feature -- Event : command association

@@ -1,5 +1,4 @@
 indexing
-
 	description: "EiffelVision list_item, implementation interface."
 	status: "See notice at end of class"
 	id: "$$"
@@ -7,25 +6,17 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_LIST_ITEM_I
 	
 inherit
 	EV_ITEM_I
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make (par: EV_LIST) is
+	parent: EV_LIST is
+			-- Parent of the current item.
 		require
-			valid_parent: is_valid (par)
-
-		deferred
-		end
-	
-	make_with_text (par: EV_LIST; txt: STRING) is
-		require
-			valid_parent: is_valid (par)
-			valid_string: txt /= Void
+			exists: not destroyed
 		deferred
 		end
 
@@ -74,6 +65,18 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		deferred
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_LIST) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			parent_set: parent = par
 		end
 
 feature -- Event : command association

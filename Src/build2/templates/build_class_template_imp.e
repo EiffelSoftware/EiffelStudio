@@ -28,6 +28,9 @@ feature {NONE} -- Initialization
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
+
+				-- Call `user_initialization'.
+			user_initialization
 		end
 
 

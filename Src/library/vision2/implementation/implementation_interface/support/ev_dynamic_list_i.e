@@ -404,21 +404,31 @@ feature {EV_ANY_I} -- Implementation
 		require
 			imp_not_void: imp /= Void
 		do
-			if g_converter = Void then
-				create g_converter
-			end
-			Result := g_converter.attempt (imp.interface)
+			Result := attempt (imp.interface)
 		ensure
 			not_void: Result /= Void
 		end
 
+feature {NONE} -- Implementation
+
+	attempt (an_object: ANY): G is
+		-- Attempt to return an object of type `G' from `an_object'
+		do
+			Result := generize ($an_object)
+		end
+
+feature {NONE} -- External
+
+	generize (an_object: POINTER): G is
+		external
+			"C macro signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_eiffel.h%""
+		alias
+			" "
+		end
+		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DYNAMIC_LIST [G]
-
-feature {NONE} -- Implementation
-
-	g_converter: ASSIGN_ATTEMPT [G]
 
 invariant
 	index_within_bounds: is_usable implies (index >= 0 and then

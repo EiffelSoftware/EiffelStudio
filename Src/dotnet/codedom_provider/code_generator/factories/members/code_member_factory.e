@@ -82,16 +82,8 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		do
 			l_text := a_source.text
 			if l_text /= Void then
-				l_ok :=  l_text.as_lower.substring_index ("inherit", 1) > 0
-				from
-					i := 1
-				until
-					not l_ok or else l_text.item (i).as_lower = 'i'
-				loop
-					l_ok := l_text.item (i) = '%T' or l_text.item (i) = '%N' or l_text.item (i) = '%R' or l_text.item (i) = ' '
-					i := i + 1
-				end
-				if l_ok then
+				l_text.left_justify
+				if l_text.as_lower.substring (1, 7).is_equal ("inherit") then
 					current_type.set_snippet_inherit_clause (l_text)
 					set_last_feature (Empty_snippet_feature)
 				else
@@ -111,7 +103,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						l_name.append (i.out)
 						i := i + 1
 					end
-					create l_snippet_feature.make (l_name, l_text)
+					create l_snippet_feature.make (l_name, a_source.text)
 					current_type.add_feature (l_snippet_feature)
 					set_last_feature (l_snippet_feature)
 				end

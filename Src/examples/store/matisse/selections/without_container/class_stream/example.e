@@ -10,7 +10,7 @@ inherit
 
 	SHARED_CURSOR
 
-Creation 
+create 
     make
 
 feature {NONE}

@@ -1,6 +1,6 @@
 Class STORE_OBJECTS 
 
-Creation {ANY} -- Creation procedure
+create {ANY} -- Creation procedure
 
 	make
 

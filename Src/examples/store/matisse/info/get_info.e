@@ -4,7 +4,7 @@ inherit
 
 	MATISSE_CONST
 
-Creation
+create
  
     make
 

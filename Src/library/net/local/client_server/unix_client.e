@@ -10,6 +10,7 @@ indexing
 class UNIX_CLIENT
 
 inherit
+
 	CLIENT
 		redefine
 			in_out
@@ -17,31 +18,33 @@ inherit
 
 feature -- Access
 
-	in_out: UNIX_SOCKET_STREAM
-		-- Receive and send sockets.
+	in_out: UNIX_STREAM_SOCKET
+			-- Receive and send sockets.
 
-feature 	-- Initialization
+feature -- Initialization
 
-	make (a : SOCKET_ADDRESS_UNIX) is
+	make (a : STRING) is
+		require
+			a_valid_name: a /= Void and then not a.empty
 		do
-			!!in_out.make 
-			in_out.set_peer_address (clone (a))
-			in_out.connect;
+			!!in_out.make_client (a)
+			in_out.connect
 		end
 
-feature 	-- Status setting
-	close is
+feature -- Status setting
+
+	cleanup is
 		do
 			in_out.close
 			if in_out.address /= void then
 				in_out.unlink
-			end;
+			end
 		end
 
 end -- class UNIX_CLIENT
 
 --|----------------------------------------------------------------
---| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.

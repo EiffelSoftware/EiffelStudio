@@ -41,7 +41,7 @@ feature -- Access bytes size
 			Result := feature {MARSHAL}.size_of_object ((16).to_integer_16)
 		end
 
-	Integer_bytes: INTEGER is
+	Integer_bytes, Integer_32_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER'
 		do
 			Result := feature {MARSHAL}.size_of_object (32)

@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			make_by_id (a_parent, Wizard_final_dialog_constant)
 			create warnings_check.make_by_id (Current, Warnings_check_constant)
 			create information_check.make_by_id (Current, Information_check_constant)
+			create stop_check.make_by_id (Current, Stop_check_constant)
 			create id_ok.make_by_id (Current, Idok)
 			create id_back.make_by_id (Current, id_back_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
@@ -63,6 +64,7 @@ feature -- Behavior
 			else
 				Shared_wizard_environment.set_no_output
 			end
+			Shared_wizard_environment.set_stop_on_error (not stop_check.checked)
 			Precursor {WIZARD_DIALOG}
 		end
 
@@ -83,6 +85,9 @@ feature -- Access
 			
 	information_check: WEL_CHECK_BOX
 			-- Information messages check box
+
+	stop_check: WEL_CHECK_BOX
+			-- Do not stop on compilation check box
 
 end -- class WIZARD_FINAL_DIALOG
 

@@ -149,7 +149,9 @@ feature {NONE} -- Implementation
 			-- Display error message and stops execution if last system call failed
 		do
 			if last_process_result /= 0 or not last_launch_successful then
-				shared_wizard_environment.set_abort (last_process_result)
+				if Shared_wizard_environment.stop_on_error then
+					shared_wizard_environment.set_abort (last_process_result)
+				end
 			end
 		end
 

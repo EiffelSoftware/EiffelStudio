@@ -38,6 +38,7 @@
 #define Proxy_Stub_Input_Edit           1030
 #define Output_Static                   1032
 #define Output_Question_Static          1033
+#define Output2_Static                  1034
 #define Output_Info_Static              1038
 #define ID_BACK                         1040
 #define Definition_File_Static          1043
@@ -64,6 +65,7 @@
 #define Marshallin_Description_Static   1059
 #define Warnings_Check                  1060
 #define Information_Check               1061
+#define Stop_check                      1062
 
 // Next default values for new objects
 // 

@@ -84,6 +84,9 @@ feature -- Access
 	compile_c: BOOLEAN
 			-- Should generated c code be compiled?
 
+	stop_on_error: BOOLEAN
+			-- Should wizard stop on compilation error?
+
 feature -- Element Change
 
 	set_in_process_server (a_boolean: BOOLEAN) is
@@ -260,6 +263,14 @@ feature -- Element Change
 			compile_c := a_boolean
 		ensure
 			compile_c_set: compile_c = a_boolean
+		end
+
+	set_stop_on_error (a_boolean: like stop_on_error) is
+			-- Set `stop_on_error' to `a_boolean'.
+		do
+			stop_on_error := a_boolean
+		ensure
+			stop_on_error_set: stop_on_error = a_boolean
 		end
 
 invariant

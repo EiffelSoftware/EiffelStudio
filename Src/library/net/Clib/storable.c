@@ -6,6 +6,7 @@
 #ifdef EIF_WIN32
 #include "winsock.h"
 #define GET_SOCKET_ERROR WSAGetLastError()
+#define EWOULDBLOCK WSAEWOULDBLOCK
 #else
 #include <sys/types.h>		/* select */
 #include <sys/time.h>		/* select */
@@ -15,6 +16,7 @@
 
 #define SOCKET_UNAVAILLABLE_FOR_WRITING "Socket unavaillable for writing"
 #define SOCKET_UNAVAILLABLE_FOR_READING "Socket unavaillable for reading"
+
 
 /* Returns nonzero if the socket is ready for, zero otherwise */
 /* read = 0, check the socket to be rrready for writing */
@@ -36,6 +38,7 @@ int net_socket_ready (int read)
 	{
 		FD_ZERO (&fdset);
 		FD_SET (fides, &fdset);
+
 		if (read) {
 			/* Wait until the socket is ready for reading*/
 			num_active = select (fides + 1, &fdset, NULL, NULL,
@@ -65,7 +68,7 @@ int net_char_read(char *pointer, int size)
 #else
 	i = read(r_fides, pointer, size);
 #endif
-	if (i == SOCKET_ERROR)
+	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EWOULDBLOCK)
 	{
 		if (!net_socket_ready(1))
 		{
@@ -88,7 +91,7 @@ int net_char_write(char *pointer, int size)
 #else
 	i = write(fides, pointer, size);
 #endif
-	if (i == SOCKET_ERROR)
+	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EWOULDBLOCK)
 	{
 	 	if (!net_socket_ready(0))
 		{

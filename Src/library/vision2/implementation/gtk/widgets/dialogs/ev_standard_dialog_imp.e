@@ -51,8 +51,6 @@ feature -- Initialization
 			-- Initialize 'Current'
 		do
 			Precursor {EV_WINDOW_IMP}
-			disable_user_resize
-				-- We do not want standard dialogs to be resized by the user
 		end
 
 	initialize_client_area is

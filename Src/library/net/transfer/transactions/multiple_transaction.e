@@ -37,7 +37,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Create agent.
+			-- Create transaction list.
 		do
 			list_make (1)
 			stop_on_error

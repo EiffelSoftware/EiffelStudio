@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -125,6 +124,9 @@ end -- class EV_COMPOSED_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/19 00:01:24  oconnor
+--| released
+--|
 --| Revision 1.5  2000/02/16 20:22:56  king
 --| Removed inheritence from ev_item_imp, added parent setting feature
 --|

@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description:
@@ -198,6 +197,9 @@ end -- class EV_COMPOSED_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/19 00:01:24  oconnor
+--| released
+--|
 --| Revision 1.9  2000/02/17 21:49:33  king
 --| Put has_no_parent precond back
 --|

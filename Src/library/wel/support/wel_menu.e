@@ -20,6 +20,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_id,
@@ -429,8 +434,8 @@ feature -- Status report
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			Result := cwin_get_menu_state (item, an_id,
-				Mf_checked + Mf_bycommand) = Mf_checked
+			Result := flag_set (cwin_get_menu_state (item, an_id,
+				Mf_bycommand), Mf_checked)
 		end
 
 	item_enabled (an_id: INTEGER): BOOLEAN is
@@ -439,9 +444,13 @@ feature -- Status report
 			exists: exists
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
+		local
+			flags:INTEGER
 		do
-			Result := cwin_get_menu_state (item, an_id,
-				Mf_enabled + Mf_bycommand) = Mf_enabled
+			flags := cwin_get_menu_state (item, an_id,
+				Mf_bycommand)
+			Result := not flag_set (flags, Mf_grayed) and
+						not flag_set (flags, Mf_disabled)
 		end
 
 	position_enabled (position: INTEGER): BOOLEAN is
@@ -450,9 +459,11 @@ feature -- Status report
 			exists: exists
 			position_large_enough: position >= 0
 			position_small_enough: position < count
+		local
+			flags:INTEGER
 		do
-			Result := cwin_get_menu_state (item, position,
-				Mf_enabled + Mf_byposition) = Mf_enabled
+			flags := cwin_get_menu_state (item, position,
+				Mf_byposition)
 		end
 
 	id_string (an_id: INTEGER): STRING is

@@ -93,16 +93,27 @@ feature -- Update
 						loop
 							txt ?= des_cursor.item
 							if txt /= Void then
-								description.append (txt.string)
+								create description.make_from_string (txt.string)
 							end
 							des_cursor.forth
 						end
 					elseif node.name.is_equal ("TEXT") then
 						create res_xml.make (node)
 						resource := res_xml.value
+						resource_list.compare_objects
+						resource_list.search(resource)
+						if not resource_list.exhausted then
+							resource_list.remove
+						end
 						resource_list.extend (resource)
 						structure.replace_resource (resource)
 					elseif node.name.is_equal ("TOPIC") then
+						node.attributes.search("TOPIC_ID")
+						if node.attributes.found then
+							child := child_of_name(node.attributes.found_item.value)
+						else
+							child := Void
+						end
 						if child /= Void then
 							child.update_attributes (node)
 						end

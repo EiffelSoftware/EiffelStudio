@@ -14,7 +14,9 @@ inherit
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, hash_code,
-			generate_byte_code_cast, heaviest, tuple_code
+			generate_byte_code_cast, heaviest, tuple_code,
+			maximum_interval_value,
+			minimum_interval_value
 		end
 
 	BYTE_CONST
@@ -219,6 +221,20 @@ feature -- Access
 	type_a: INTEGER_A is
 		do
 			create Result.make (size)
+		end
+
+feature -- Code generation
+
+	minimum_interval_value: INT_VAL_B is
+			-- Minimum value in inspect interval for current type
+		do
+			create Result.make ((-1) |<< (size - 1))
+		end
+
+	maximum_interval_value: INT_VAL_B is
+			-- Maximum value in inspect interval for current type
+		do
+			create Result.make ((1 |<< (size - 1)) - 1)
 		end
 
 feature -- IL code generation

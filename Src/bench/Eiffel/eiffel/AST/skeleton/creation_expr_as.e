@@ -180,6 +180,7 @@ feature -- Type check
 					end
 				end
 			else
+				context.replace (creation_type)
 				creators := creation_class.creators
 				if (creators = Void) then
 				elseif creators.empty then

@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 	parse_special_part is
 			-- Parse the special part clause.
 		local
-			word, special: STRING
+			word, lower_word, special: STRING
 			parse_class_name, is_static: BOOLEAN
 			end_keyword: INTEGER
 		do
@@ -49,38 +49,40 @@ end
 			end
 
 			word := special.substring (1, end_keyword - 1)
-			word.to_lower
+			lower_word := clone (word)
+			lower_word.to_lower
 
 			special := special.substring (end_keyword, special.count)
 			special.left_adjust
 
-			if word.is_equal (static_keyword) then
+			if lower_word.is_equal (static_keyword) then
 				is_static := True
 				end_keyword := next_white_space (special, 1)
 				if end_keyword = 0 then
 					raise_error ("Header file is missing in C++ specific part")
 				end
 				word := special.substring (1, end_keyword - 1)
-				word.to_lower
+				lower_word := clone (word)
+				lower_word.to_lower
 
 				special := special.substring (end_keyword, special.count)
 				special.left_adjust
 			end
 
 			parse_class_name := True
-			if word.is_equal (new_keyword) then
+			if lower_word.is_equal (new_keyword) then
 				type := new
 				if is_static then
 					 raise_error ("`static' cannot be used with `new'")
 				end
-			elseif word.is_equal (delete_keyword) then
+			elseif lower_word.is_equal (delete_keyword) then
 				type := delete
 				if is_static then
 					raise_error ("`static' cannot be used with `delete'")
 				end
-			elseif word.is_equal (static_keyword) then
+			elseif lower_word.is_equal (static_keyword) then
 				raise_error ("`static' cannot appear twice in C++ specific part")
-			elseif word.is_equal (data_member_keyword) then
+			elseif lower_word.is_equal (data_member_keyword) then
 				if is_static then
 					type := static_data_member
 				else
@@ -91,7 +93,7 @@ end
 				if is_static then
 					type := static
 				else
-					type := normal
+					type := standard
 				end
 			end
 
@@ -101,7 +103,6 @@ end
 					raise_error ("Header file is missing in C++ specific part")
 				end
 				word := special.substring (1, end_keyword - 1)
-				word.to_lower
 				special := special.substring (end_keyword, special.count)
 				special.left_adjust
 			end

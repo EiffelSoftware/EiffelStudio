@@ -1,6 +1,6 @@
 .TH CECIL 1  "November 10, 1999" "ISE" "CECIL Programmer's Manual"
 .SH NAME
-eif_procedure	\- return address of an Eiffel procedure. 
+eif_procedure	\- return the address of an Eiffel procedure. 
 .SH SYNOPSYS
 .nf
 \fB#include "eif_cecil.h"\fB
@@ -14,7 +14,7 @@ procedure of name \fIname\fP from the class, which type identifier is \fItid\fP.
 If the visible exception is enabled, it raises an visible exception
 upon failure.
 .SH RETURN VALUE
-It returns NULL when it fails (procedure does not exist or is not visible). Otherwise, the address of the procedure
+It returns NULL when it fails ( the procedure does not exist or is not visible). Otherwise, the address of the procedure
 is returned. 
 .SH NOTES
 The Eiffel procedure cannot be a C external. In this case, you must directly 

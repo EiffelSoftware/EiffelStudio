@@ -40,8 +40,8 @@ feature -- Initialization
 			project_directory := project_dir
 			Workbench.make
 			Workbench.init
-			set_is_initialized
  			Execution_environment.change_working_directory (project_directory.name)
+			retrieve
 		ensure
 			initialized: initialized
 		end
@@ -76,91 +76,6 @@ feature -- Initialization
  			Execution_environment.change_working_directory (project_directory.name)
 		ensure
 			initialized: initialized
-		end
-
-	retrieve is
-			-- Retrieve an existing Eiffel Project from `file.
-			-- (If a read-write error occured you must exit from
-			-- application).
-		require
-			non_void_project_dir: project_directory /= Void
-			project_dir_exists: project_directory.exists
-			file_readable: project_directory.is_readable
-			not_initialized: not initialized
-			project_eif_ok: project_directory.valid_project_eif
-			prev_read_write_error: not read_write_error
-		local
-			precomp_r: PRECOMP_R
-			temp: STRING
-			e_project: like Current
-			retried: BOOLEAN
-			p_eif: PROJECT_EIFFEL_FILE
-			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
-			remote_dir: REMOTE_PROJECT_DIRECTORY
-		do
-			set_error_status (Ok_status)
-
-			check_existence
-
-			if not error_occurred then
-
-				p_eif := project_directory.project_eif_file
-				e_project := p_eif.retrieved_project
-				if p_eif.error then
-					if p_eif.is_corrupted then
-						set_error_status (Retrieve_corrupt_error_status)
-					elseif p_eif.is_interrupted then
-						set_error_status (Retrieve_interrupt_error_status)
-					else
-						set_error_status (Retrieve_incompatible_error_status)
-						incompatible_version_number.append (p_eif.project_version_number)
-					end
-				else
---!! FIXME: check Concurrent_Eiffel license
-					Project_directory_name.make_from_string (project_directory.name)
-					system := e_project.system
-					dynamic_lib := e_project.dynamic_lib
-					Workbench.copy (e_project.saved_workbench)
-					Workbench.init
-					if Comp_system.is_precompiled then
-						precomp_dirs := Workbench.precompiled_directories
-						from
-							precomp_dirs.start
-						until
-							precomp_dirs.after
-						loop
-							precomp_dirs.item_for_iteration.update_path
-							precomp_dirs.forth
-						end
-						Precompilation_directories.copy (precomp_dirs)
-						!! remote_dir.make (project_directory.name)
-						remote_dir.set_licensed (Comp_system.licensed_precompilation)
-						remote_dir.set_system_name (Comp_system.system_name)
-						Precompilation_directories.force
-							(remote_dir, Comp_system.compilation_id)
-					else
-						if Comp_system.uses_precompiled then
-							!! precomp_r
-							precomp_r.set_precomp_dir
-						end
-					end
-
-					Comp_system.server_controler.init
-					Universe.update_cluster_paths
-					
-					check_permissions
-
-					if not error_occurred then
-						set_is_initialized
-						Execution_environment.change_working_directory (project_directory.name)
-					end
-				end
-			end
-		ensure
-			initialized_if_no_error: not error_occurred implies initialized
-			error_implies_ret_or_rw: error_occurred implies 
-								retrieval_error or else
-								read_write_error
 		end
 
 	create_dynamic_lib is
@@ -785,6 +700,93 @@ feature {APPLICATION_EXECUTION}
 	compilation_counter: INTEGER is
 		do
 			Result := Workbench.compilation_counter
+		end
+
+feature {NONE} -- Retrieval
+
+	retrieve is
+			-- Retrieve an existing Eiffel Project from `file.
+			-- (If a read-write error occured you must exit from
+			-- application).
+		require
+			non_void_project_dir: project_directory /= Void
+			project_dir_exists: project_directory.exists
+			file_readable: project_directory.is_readable
+			not_initialized: not initialized
+			project_eif_ok: project_directory.valid_project_eif
+			prev_read_write_error: not read_write_error
+		local
+			precomp_r: PRECOMP_R
+			temp: STRING
+			e_project: like Current
+			retried: BOOLEAN
+			p_eif: PROJECT_EIFFEL_FILE
+			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+			remote_dir: REMOTE_PROJECT_DIRECTORY
+		do
+			set_error_status (Ok_status)
+
+			check_existence
+
+			if not error_occurred then
+
+				p_eif := project_directory.project_eif_file
+				e_project := p_eif.retrieved_project
+				if p_eif.error then
+					if p_eif.is_corrupted then
+						set_error_status (Retrieve_corrupt_error_status)
+					elseif p_eif.is_interrupted then
+						set_error_status (Retrieve_interrupt_error_status)
+					else
+						set_error_status (Retrieve_incompatible_error_status)
+						incompatible_version_number.append (p_eif.project_version_number)
+					end
+				else
+--!! FIXME: check Concurrent_Eiffel license
+					Project_directory_name.make_from_string (project_directory.name)
+					system := e_project.system
+					dynamic_lib := e_project.dynamic_lib
+					Workbench.copy (e_project.saved_workbench)
+					Workbench.init
+					if Comp_system.is_precompiled then
+						precomp_dirs := Workbench.precompiled_directories
+						from
+							precomp_dirs.start
+						until
+							precomp_dirs.after
+						loop
+							precomp_dirs.item_for_iteration.update_path
+							precomp_dirs.forth
+						end
+						Precompilation_directories.copy (precomp_dirs)
+						!! remote_dir.make (project_directory.name)
+						remote_dir.set_licensed (Comp_system.licensed_precompilation)
+						remote_dir.set_system_name (Comp_system.system_name)
+						Precompilation_directories.force
+							(remote_dir, Comp_system.compilation_id)
+					else
+						if Comp_system.uses_precompiled then
+							!! precomp_r
+							precomp_r.set_precomp_dir
+						end
+					end
+
+					Comp_system.server_controler.init
+					Universe.update_cluster_paths
+					
+					check_permissions
+
+					if not error_occurred then
+						set_is_initialized
+						Execution_environment.change_working_directory (project_directory.name)
+					end
+				end
+			end
+		ensure
+			initialized_if_no_error: not error_occurred implies initialized
+			error_implies_ret_or_rw: error_occurred implies 
+								retrieval_error or else
+								read_write_error
 		end
 
 feature {NONE} -- Implementation

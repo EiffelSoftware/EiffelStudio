@@ -168,7 +168,7 @@ extern "C" {
 #define BC_GEN_PARAM_CREATE	(unsigned char) 134
 
 /* Byte code for expression creation */
-#define BC_CREATE_EXP		(unsigned char) 135
+#define BC_NOTUSED_135		(unsigned char) 135
 #define BC_NULL_POINTER		(unsigned char) 136
 #define BC_BASIC_OPERATIONS	(unsigned char) 137
 #define BC_MAX				(unsigned char) 1

@@ -18,6 +18,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		redefine
+			pebble_over_widget,
 			interface,
 			destroy,
 			set_foreground_color,
@@ -477,6 +478,22 @@ feature -- Element change
 			--end
 		end
 
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	pebble_over_widget (a_gdkwin: POINTER): BOOLEAN is
+		local
+			gdkwin_parent, gdkwin_parent_parent: POINTER
+			clist_parent: POINTER
+		do
+			gdkwin_parent := C.gdk_window_get_parent (a_gdkwin)
+			gdkwin_parent_parent := C.gdk_window_get_parent (gdkwin_parent)
+			clist_parent := C.gdk_window_get_parent (
+				C.gtk_clist_struct_clist_window (list_widget)
+			)
+			Result := gdkwin_parent = clist_parent or
+				gdkwin_parent_parent = clist_parent
+		end 
+
 feature {NONE} -- Implementation
 
 	scroll_window: POINTER
@@ -614,6 +631,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/22 22:02:52  king
+--| Implemented pebble_over_widget to deal with mclist and title windows
+--|
 --| Revision 1.43  2000/03/21 22:40:16  king
 --| Made c_object an event box
 --|

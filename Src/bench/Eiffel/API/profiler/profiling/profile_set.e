@@ -238,19 +238,6 @@ end;
 			end;
 		end;
 
-	compute_percentages (max_total: REAL) is
-			-- Compute the percentages for Eiffel features
-		do
-			from
-				eiffel_profiling_list.start
-			until
-				eiffel_profiling_list.after
-			loop
-				eiffel_profiling_list.item.compute_percentage (max_total)
-				eiffel_profiling_list.forth
-			end
-		end
-
 feature -- Status report
 
 	number_of_feature_calls: INTEGER is

@@ -126,9 +126,6 @@ end;
 			a: ANY
 		do
 			redo_cyclics;
-			if is_eiffel then
-				profile_information.compute_percentages;
-			end;
 
 debug("PROFILE_CONVERT")
 	io.error.putstring ("Ready with analysis.%N%N");
@@ -424,9 +421,6 @@ end;
 			if is_eiffel then
 				!! e_data.make (number_of_calls, percentage, function_time, descendant_time, e_function);
 				profile_information.insert_eiffel_profiling_data (e_data)
-				if function_time > profile_information.total_execution_time then
-					profile_information.set_total_execution_time (function_time)
-				end
 
 			elseif is_c then
 				!! c_data.make (number_of_calls, percentage, function_time, descendant_time, c_function);
@@ -666,9 +660,7 @@ feature {NONE} -- Commands
 						-- ***** FIXME *****
 
 				!! file.make (filename);
---				!! table_name.make_from_string (Profiler_path);
 				!! table_name.make_from_string (filename);
---				table_name.set_file_name (filename);
 				table_name.add_extension (Table_extension);
 				!! table_file.make (table_name);
 

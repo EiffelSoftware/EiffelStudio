@@ -1,5 +1,5 @@
 indexing
-	description: "Tests ace external properties"
+	description: "Tests IEIFFEL_SYSTEM_EXTERNALS_INTERFACE"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,9 +14,12 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make (a_interface: like system_externals_interface) is
 			-- create tester for completion info
+		require
+			non_void_interface: a_interface /= Void
 		do
+			system_externals_interface := a_interface
 			create menu.make ("External Properties")
 			add_menu_items
 			menu.show
@@ -24,444 +27,176 @@ feature {NONE} -- Initialization
 
 feature -- Agent Handlers
 		
-	on_add_external_object_selected (args: ARRAYED_LIST [STRING]) is
+	on_add_object_file_selected (args: ARRAYED_LIST [STRING]) is
 			-- perform safe addition of object file external 
 		do
 			-- reset failure count
 			test_failure_count := 0
 			-- call test(s)
-			call_test (agent add_external_object_test, args, False, True)
+			call_test (agent test_add_object_file, args, False, True)
 			-- display number of failures
 			display_failure_count
 		end
 
-	add_external_object_test (args: ARRAYED_LIST [STRING]) is
+	test_add_object_file (args: ARRAYED_LIST [STRING]) is
 			-- perform addition of object file external
-		require
-			non_void_project_manager: project_manager /= Void
-			non_void_project_properties: project_manager.project_properties /= Void
-		local
-			l_system_externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
-			l_enum_object_files: IENUM_OBJECT_FILES_INTERFACE
-			l_object_file: CELL[STRING]
-			l_string: STRING
 		do
-			put_string ("%NTesting Object File Addition%N")
-			l_system_externals := project_manager.project_properties.externals
-			display_object_files (l_system_externals)
-			
-			if args.count >=1 then
-				l_string := args.i_th (1)
-			else
-				put_string ("%N  Please enter the external file name:")
-				io.read_line
-				l_string := io.last_string				
-			end
-			add_object_file (l_string, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Adding last external file name again:")
-			add_object_file (l_string, l_system_externals)
-			display_object_files (l_system_externals)
-
-			put_string ("%N  Adding duplicate external file name:")
-			l_enum_object_files := l_system_externals.object_files
-			if l_enum_object_files.count > 0 then
-				create l_object_file.put (Void)
-				l_enum_object_files.ith_item (1, l_object_file)
-				add_object_file (l_object_file.item, l_system_externals)
-				display_object_files (l_system_externals)				
-			else
-				test_failure_count := test_failure_count + 1
-				put_string ("%N# Failed to added duplicated because enum is empty%N")
-			end
-			
-			put_string ("%N  Adding empty object file:")
-			add_object_file ("", l_system_externals)
-			display_object_files (l_system_externals)
-
-			put_string ("%N  Adding Void object file:")
-			add_object_file (Void, l_system_externals)
-			display_object_files (l_system_externals)
+			put_string ("%NTesting 'add_object_file'%N")
+			display_include_paths
+			put_string ("%N  Enter object file to add: ")
+			read_line
+			add_object_file (last_string)
+			display_object_files
 		end
 		
-	on_remove_external_object_selected (args: ARRAYED_LIST [STRING]) is
+	on_remove_object_file_selected (args: ARRAYED_LIST [STRING]) is
 			-- perform safe removal of object file external
 		do
 			-- reset failure count
 			test_failure_count := 0
 			-- call test(s)
-			call_test (agent remove_external_object, args, False, True)
+			call_test (agent test_remove_object_file, args, False, True)
 			-- display number of failures
 			display_failure_count
 		end
 
-	remove_external_object (args: ARRAYED_LIST [STRING]) is
+	test_remove_object_file (args: ARRAYED_LIST [STRING]) is
 			-- perform removal of object file external 
-		require
-			non_void_project_manager: project_manager /= Void
-			non_void_project_properties: project_manager.project_properties /= Void
-		local
-			l_system_externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
-			l_enum_object_files: IENUM_OBJECT_FILES_INTERFACE
-			l_object_file: CELL[STRING]
 		do
-			put_string ("%NTesting Removal of Object File%N")
-			l_system_externals := project_manager.project_properties.externals
-			if l_system_externals.object_files.count = 0 then
-				put_string ("%N  No externals in ace - Adding some")
-				add_object_file ("object_file1", l_system_externals)
-				add_object_file ("object_file2", l_system_externals)
-				add_object_file ("object_file3", l_system_externals)
-				put_string ("%N")
-				display_object_files (l_system_externals)
-			end
-			put_string ("%N  Removing known object file:")
-			l_enum_object_files := l_system_externals.object_files
-			create l_object_file.put (Void)
-			l_enum_object_files.ith_item (1, l_object_file)
-			remove_object_file (l_object_file.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Attempt to removing same object file:")
-			remove_object_file (l_object_file.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Attempt to removing empty object file:")
-			remove_object_file ("", l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Attempt to removing Void object file:")
-			remove_object_file (Void, l_system_externals)
-			display_object_files (l_system_externals)
+			put_string ("%NTesting 'remove_object_file'%N")
+			display_include_paths
+			put_string ("%N  Enter object file to remove: ")
+			read_line
+			remove_object_file (last_string)
+			display_object_files
 		end
 
-	on_replace_external_object_selected (args: ARRAYED_LIST [STRING]) is
+	on_replace_object_file_selected (args: ARRAYED_LIST [STRING]) is
 			-- perform safe replace of object file external
 		do
 			-- reset failure count
 			test_failure_count := 0
 			-- call test(s)
-			call_test (agent replace_external_object, args, False, True)
+			call_test (agent test_replace_object_file, args, False, True)
 			-- display number of failures
 			display_failure_count
 		end
 		
-	replace_external_object (args: ARRAYED_LIST [STRING]) is
+	test_replace_object_file (args: ARRAYED_LIST [STRING]) is
 			-- perform replace of object file external 
-		require
-			non_void_project_manager: project_manager /= Void
-			non_void_project_properties: project_manager.project_properties /= Void
 		local
-			l_system_externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
-			l_enum_object_files: IENUM_OBJECT_FILES_INTERFACE
-			l_object_file_old: CELL[STRING]
+			l_new_object_files: STRING
+			l_old_object_files: STRING
 		do
-			put_string ("%NTesting Removal of Object File%N")
-			l_system_externals := project_manager.project_properties.externals
-			if l_system_externals.object_files.count < 3 then
-				put_string ("%N  Less than 3 object files - Adding some")
-				add_object_file ("object_file1", l_system_externals)
-				add_object_file ("object_file2", l_system_externals)
-				add_object_file ("object_file3", l_system_externals)
-				put_string ("%N")
-				display_object_files (l_system_externals)
-			end
-			l_enum_object_files := l_system_externals.object_files
-			check
-				enough_object_files: l_enum_object_files.count >= 3
-			end
-			put_string ("%N  Replacing first object file:")
-			create l_object_file_old.put (Void)
-			l_enum_object_files.ith_item (1, l_object_file_old)
-			replace_object_file ("replaced_object_file1", l_object_file_old.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Replacing last object file:")
-			create l_object_file_old.put (Void)
-			l_enum_object_files.ith_item (l_enum_object_files.count, l_object_file_old)
-			replace_object_file ("replaced_object_file3", l_object_file_old.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Replacing intermediate object file:")
-			create l_object_file_old.put (Void)
-			l_enum_object_files.ith_item (2, l_object_file_old)
-			replace_object_file ("replaced_object_file2", l_object_file_old.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			l_enum_object_files := l_system_externals.object_files
-			check
-				enough_object_files: l_enum_object_files.count > 0
-			end
-			put_string ("%N  Replacing object file with same value:")
-			create l_object_file_old.put (Void)
-			l_enum_object_files.ith_item (1, l_object_file_old)
-			replace_object_file (l_object_file_old.item, l_object_file_old.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Replacing object file using uppercase value with any value:")
-			create l_object_file_old.put (Void)
-			l_enum_object_files.ith_item (1, l_object_file_old)
-			l_object_file_old.item.to_upper
-			replace_object_file ("upper_cased_object_file", l_object_file_old.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			l_enum_object_files := l_system_externals.object_files
-			check
-				enough_object_files: l_enum_object_files.count > 0
-			end
-			put_string ("%N  Replacing non existent object file with any value:")
-			create l_object_file_old.put (Void)
-			l_enum_object_files.ith_item (1, l_object_file_old)
-			replace_object_file ("object_file3", "object_file1", l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Replacing object file with empty value:")
-			create l_object_file_old.put (Void)
-			l_enum_object_files.ith_item (1, l_object_file_old)
-			replace_object_file ("", l_object_file_old.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Replacing object file with void same value:")
-			create l_object_file_old.put (Void)
-			l_enum_object_files.ith_item (1, l_object_file_old)
-			replace_object_file (Void, l_object_file_old.item, l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Replacing empty object file with empty value:")
-			replace_object_file ("", "", l_system_externals)
-			display_object_files (l_system_externals)
-			
-			put_string ("%N  Replacing void object file with void value:")
-			replace_object_file (Void, Void, l_system_externals)
-			display_object_files (l_system_externals)
+			put_string ("%NTesting 'replace_object_file'%N")
+			display_include_paths
+			put_string ("%N  Enter old object file: ")
+			read_line
+			l_old_object_files := last_string
+			put_string ("%N  Enter new object_file: ")
+			read_line
+			l_new_object_files := last_string
+			replace_object_file (l_new_object_files, l_old_object_files)
+			display_include_paths
 		end
 
-	on_add_external_include_selected (args: ARRAYED_LIST [STRING]) is
+	on_add_include_path_selected (args: ARRAYED_LIST [STRING]) is
 			-- perform safe addition of include path external 
 		do
 			-- reset failure count
 			test_failure_count := 0
 			-- call test(s)
-			call_test (agent add_external_include_test, args, False, True)
+			call_test (agent test_add_include_path, args, False, True)
 			-- display number of failures
 			display_failure_count
 		end
 
-	add_external_include_test (args: ARRAYED_LIST [STRING]) is
+	test_add_include_path (args: ARRAYED_LIST [STRING]) is
 			-- perform addition of include path external
-		require
-			non_void_project_manager: project_manager /= Void
-			non_void_project_properties: project_manager.project_properties /= Void
-		local
-			l_system_externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
-			l_enum_include_paths: IENUM_INCLUDE_PATHS_INTERFACE
-			l_include_path: CELL[STRING]
-			l_string: STRING
 		do
-			put_string ("%NTesting Include Path Addition%N")
-			l_system_externals := project_manager.project_properties.externals
-			display_include_paths (l_system_externals)
-			
-			if args.count >=1 then
-				l_string := args.i_th (1)
-			else
-				put_string ("%N  Please enter the external file name:")
-				io.read_line
-				l_string := io.last_string				
-			end
-			add_include_path (l_string, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Adding last external file name again:")
-			add_include_path (l_string, l_system_externals)
-			display_include_paths (l_system_externals)
-
-			put_string ("%N  Adding duplicate external file name:")
-			l_enum_include_paths := l_system_externals.include_paths
-			if l_enum_include_paths.count > 0 then
-				create l_include_path.put (Void)
-				l_enum_include_paths.ith_item (1, l_include_path)
-				add_include_path (l_include_path.item, l_system_externals)
-				display_include_paths (l_system_externals)				
-			else
-				test_failure_count := test_failure_count + 1
-				put_string ("%N# Failed to added duplicated because enum is empty%N")
-			end
-			
-			put_string ("%N  Adding empty include path:")
-			add_include_path ("", l_system_externals)
-			display_include_paths (l_system_externals)
-
-			put_string ("%N  Adding Void include path:")
-			add_include_path (Void, l_system_externals)
-			display_include_paths (l_system_externals)
+			put_string ("%NTesting 'add_include_path'%N")
+			display_include_paths
+			put_string ("%N  Enter include path to add: ")
+			read_line
+			add_include_path (last_string)
+			display_include_paths
 		end
 		
-	on_remove_external_include_selected (args: ARRAYED_LIST [STRING]) is
+	on_remove_include_path_selected (args: ARRAYED_LIST [STRING]) is
 			-- perform safe removal of include path external
 		do
 			-- reset failure count
 			test_failure_count := 0
 			-- call test(s)
-			call_test (agent remove_external_include, args, False, True)
+			call_test (agent test_remove_include_path, args, False, True)
 			-- display number of failures
 			display_failure_count
 		end
 
-	remove_external_include (args: ARRAYED_LIST [STRING]) is
+	test_remove_include_path (args: ARRAYED_LIST [STRING]) is
 			-- perform removal of include path external 
-		require
-			non_void_project_manager: project_manager /= Void
-			non_void_project_properties: project_manager.project_properties /= Void
-		local
-			l_system_externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
-			l_enum_include_paths: IENUM_INCLUDE_PATHS_INTERFACE
-			l_include_path: CELL[STRING]
 		do
-			put_string ("%NTesting Removal of Include Path%N")
-			l_system_externals := project_manager.project_properties.externals
-			if l_system_externals.include_paths.count = 0 then
-				put_string ("%N  No externals in ace - Adding some")
-				add_include_path ("include_path1", l_system_externals)
-				add_include_path ("include_path2", l_system_externals)
-				add_include_path ("include_path3", l_system_externals)
-				put_string ("%N")
-				display_include_paths (l_system_externals)
-			end
-			put_string ("%N  Removing known include path:")
-			l_enum_include_paths := l_system_externals.include_paths
-			create l_include_path.put (Void)
-			l_enum_include_paths.ith_item (1, l_include_path)
-			remove_include_path (l_include_path.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Attempt to removing same include path:")
-			remove_include_path (l_include_path.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Attempt to removing empty include path:")
-			remove_include_path ("", l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Attempt to removing Void include path:")
-			remove_include_path (Void, l_system_externals)
-			display_include_paths (l_system_externals)
+			put_string ("%NTesting 'remove_include_path'%N")
+			display_include_paths
+			put_string ("%N  Enter include path to remove: ")
+			read_line
+			remove_include_path (last_string)
+			display_include_paths
 		end
 		
-	on_replace_external_include_selected (args: ARRAYED_LIST [STRING]) is
+	on_replace_include_path_selected (args: ARRAYED_LIST [STRING]) is
 			-- perform safe removal of include path external
 		do
 			-- reset failure count
 			test_failure_count := 0
 			-- call test(s)
-			call_test (agent replace_external_include, args, False, True)
+			call_test (agent test_replace_include_path, args, False, True)
 			-- display number of failures
 			display_failure_count
 		end
 		
-	replace_external_include (args: ARRAYED_LIST [STRING]) is
+	test_replace_include_path (args: ARRAYED_LIST [STRING]) is
 			-- perform removal of include path external 
-		require
-			non_void_project_manager: project_manager /= Void
-			non_void_project_properties: project_manager.project_properties /= Void
 		local
-			l_system_externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
-			l_enum_include_paths: IENUM_INCLUDE_PATHS_INTERFACE
-			l_include_path_old: CELL[STRING]
+			l_new_include_path: STRING
+			l_old_include_path: STRING
 		do
-			put_string ("%NTesting Removal of Include Path%N")
-			l_system_externals := project_manager.project_properties.externals
-			if l_system_externals.include_paths.count < 3 then
-				put_string ("%N  Less than 3 include paths - Adding some")
-				add_include_path ("include_path1", l_system_externals)
-				add_include_path ("include_path2", l_system_externals)
-				add_include_path ("include_path3", l_system_externals)
-				put_string ("%N")
-				display_include_paths (l_system_externals)
-			end
-			l_enum_include_paths := l_system_externals.include_paths
-			check
-				enough_include_paths: l_enum_include_paths.count >= 3
-			end
-			put_string ("%N  Replacing first include path:")
-			create l_include_path_old.put (Void)
-			l_enum_include_paths.ith_item (1, l_include_path_old)
-			replace_include_path ("replaced_include_path1", l_include_path_old.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Replacing last include path:")
-			create l_include_path_old.put (Void)
-			l_enum_include_paths.ith_item (l_enum_include_paths.count, l_include_path_old)
-			replace_include_path ("replaced_include_path3", l_include_path_old.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Replacing intermediate include path:")
-			create l_include_path_old.put (Void)
-			l_enum_include_paths.ith_item (2, l_include_path_old)
-			replace_include_path ("replaced_include_path2", l_include_path_old.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			l_enum_include_paths := l_system_externals.include_paths
-			check
-				enough_include_paths: l_enum_include_paths.count > 0
-			end
-			put_string ("%N  Replacing include path with same value:")
-			create l_include_path_old.put (Void)
-			l_enum_include_paths.ith_item (1, l_include_path_old)
-			replace_include_path (l_include_path_old.item, l_include_path_old.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Replacing include path using uppercase value with any value:")
-			create l_include_path_old.put (Void)
-			l_enum_include_paths.ith_item (1, l_include_path_old)
-			l_include_path_old.item.to_upper
-			replace_include_path ("upper_cased_include_path", l_include_path_old.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			l_enum_include_paths := l_system_externals.include_paths
-			check
-				enough_include_paths: l_enum_include_paths.count > 0
-			end
-			put_string ("%N  Replacing non existent include path with any value:")
-			create l_include_path_old.put (Void)
-			l_enum_include_paths.ith_item (1, l_include_path_old)
-			replace_include_path ("include_path3", "include_path1", l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Replacing include path with empty value:")
-			create l_include_path_old.put (Void)
-			l_enum_include_paths.ith_item (1, l_include_path_old)
-			replace_include_path ("", l_include_path_old.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Replacing include path with void same value:")
-			create l_include_path_old.put (Void)
-			l_enum_include_paths.ith_item (1, l_include_path_old)
-			replace_include_path (Void, l_include_path_old.item, l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Replacing empty include path with empty value:")
-			replace_include_path ("", "", l_system_externals)
-			display_include_paths (l_system_externals)
-			
-			put_string ("%N  Replacing void include path with void value:")
-			replace_include_path (Void, Void, l_system_externals)
-			display_include_paths (l_system_externals)
+			put_string ("%NTesting 'replace_include_path'%N")
+			display_include_paths
+			put_string ("%N  Enter old include path: ")
+			read_line
+			l_old_include_path := last_string
+			put_string ("%N  Enter new include path: ")
+			read_line
+			l_new_include_path := last_string
+			replace_include_path (l_new_include_path, l_old_include_path)
+			display_include_paths
+		end
+		
+	on_store_selected (args: ARRAYED_LIST [STRING]) is
+			-- test apply
+		do
+			test_failure_count := 0
+			call_test (agent test_store, args, False, True)
+			display_failure_count
+		end
+
+	test_store (args: ARRAYED_LIST [STRING]) is
+			--
+		do
+			system_externals_interface.store
 		end
 
 feature {NONE} -- Implementation
 
-	display_object_files (a_interface: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE) is
+	display_object_files is
 			-- display current object files
-		require
-			non_void_interface: a_interface /= Void
 		local
 			l_enum_object_files: IENUM_OBJECT_FILES_INTERFACE
 			l_index: INTEGER
 			l_object_file: CELL[STRING]
 		do
-			l_enum_object_files := a_interface.object_files
+			l_enum_object_files := system_externals_interface.object_files
 			
 			put_string ("%N  Current object files: Count (")
 			put_int (l_enum_object_files.count)
@@ -483,10 +218,8 @@ feature {NONE} -- Implementation
 			put_string ("%N")
 		end
 		
-	add_object_file (a_object_file: STRING; a_interface: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE) is
+	add_object_file (a_object_file: STRING) is
 			-- attempt to add an object file
-		require
-			non_void_interface: a_interface /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -494,7 +227,7 @@ feature {NONE} -- Implementation
 				put_string ("%N    Adding Object File: '")
 				put_string (a_object_file)
 				put_string ("'")
-				a_interface.add_object_file (a_object_file)
+				system_externals_interface.add_object_file (a_object_file)
 			else
 				put_string ("%N%N#   Failed to add object file: '")
 				put_string (a_object_file)
@@ -506,10 +239,8 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	remove_object_file (a_object_file: STRING; a_interface: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE) is
+	remove_object_file (a_object_file: STRING) is
 			-- attempt to remove an object file
-		require
-			non_void_interface: a_interface /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -517,7 +248,7 @@ feature {NONE} -- Implementation
 				put_string ("%N    Removing Object File: '")
 				put_string (a_object_file)
 				put_string ("'")
-				a_interface.remove_object_file (a_object_file)
+				system_externals_interface.remove_object_file (a_object_file)
 			else
 				put_string ("%N%N#   Failed to remove object file: '")
 				put_string (a_object_file)
@@ -529,16 +260,14 @@ feature {NONE} -- Implementation
 			retry
 		end
 			
-	display_include_paths (a_interface: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE) is
+	display_include_paths is
 			-- display current include paths
-		require
-			non_void_interface: a_interface /= Void
 		local
 			l_enum_include_paths: IENUM_INCLUDE_PATHS_INTERFACE
 			l_index: INTEGER
 			l_include_path: CELL[STRING]
 		do
-			l_enum_include_paths := a_interface.include_paths
+			l_enum_include_paths := system_externals_interface.include_paths
 			
 			put_string ("%N  Current include paths: Count (")
 			put_int (l_enum_include_paths.count)
@@ -560,10 +289,8 @@ feature {NONE} -- Implementation
 			put_string ("%N")
 		end
 		
-	replace_object_file (new_value, old_value: STRING; a_interface: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE) is
+	replace_object_file (new_value, old_value: STRING) is
 			-- replace an object file 'old_value' with a 'new_value'
-		require
-			non_void_interface: a_interface /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -573,7 +300,7 @@ feature {NONE} -- Implementation
 				put_string ("' with '")
 				put_string (new_value)
 				put_string ("'")
-				a_interface.replace_object_file (new_value, old_value)
+				system_externals_interface.replace_object_file (new_value, old_value)
 			else
 				put_string ("%N%N#   Failed to replace object file: '")
 				put_string (old_value)
@@ -587,10 +314,8 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	add_include_path (a_include_path: STRING; a_interface: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE) is
+	add_include_path (a_include_path: STRING) is
 			-- attempt to add an include path
-		require
-			non_void_interface: a_interface /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -598,7 +323,7 @@ feature {NONE} -- Implementation
 				put_string ("%N    Adding Include Path: '")
 				put_string (a_include_path)
 				put_string ("'")
-				a_interface.add_include_path (a_include_path)
+				system_externals_interface.add_include_path (a_include_path)
 			else
 				put_string ("%N%N#   Failed to add include path: '")
 				put_string (a_include_path)
@@ -610,10 +335,8 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-	remove_include_path (a_include_path: STRING; a_interface: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE) is
+	remove_include_path (a_include_path: STRING) is
 			-- attempt to remove an include path
-		require
-			non_void_interface: a_interface /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -621,7 +344,7 @@ feature {NONE} -- Implementation
 				put_string ("%N    Removing Include Path: '")
 				put_string (a_include_path)
 				put_string ("'")
-				a_interface.remove_include_path (a_include_path)
+				system_externals_interface.remove_include_path (a_include_path)
 			else
 				put_string ("%N%N#   Failed to remove include path: '")
 				put_string (a_include_path)
@@ -633,10 +356,8 @@ feature {NONE} -- Implementation
 			retry
 		end	
 		
-	replace_include_path (new_value, old_value: STRING; a_interface: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE) is
+	replace_include_path (new_value, old_value: STRING) is
 			-- replace an include path 'old_value' with a 'new_value'
-		require
-			non_void_interface: a_interface /= Void
 		local
 			retried: BOOLEAN
 		do
@@ -646,7 +367,7 @@ feature {NONE} -- Implementation
 				put_string ("' with '")
 				put_string (new_value)
 				put_string ("'")
-				a_interface.replace_include_path (new_value, old_value)
+				system_externals_interface.replace_include_path (new_value, old_value)
 			else
 				put_string ("%N%N#   Failed to replace include path: '")
 				put_string (old_value)
@@ -660,24 +381,28 @@ feature {NONE} -- Implementation
 			retry
 		end
 		
-		
-
 	add_menu_items is
 			-- add menu items to menu
 		do
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "Add external object file [object_file]", agent on_add_external_object_selected))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Remove external object file", agent on_remove_external_object_selected))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "Replace external object file", agent on_replace_external_object_selected))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "Add external object file [object_file]", agent on_add_external_include_selected))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("5", "Remove external object file", agent on_remove_external_include_selected))
-			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("6", "Replace external include path", agent on_replace_external_include_selected))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "Test add_object_file", agent on_add_object_file_selected))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Test remove_object_file", agent on_remove_object_file_selected))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "Test replace_object_file", agent on_replace_object_file_selected))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "Test add_include_path", agent on_add_include_path_selected))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("5", "Test remove_include_path", agent on_remove_include_path_selected))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("6", "Test replace_include_path", agent on_replace_include_path_selected))
+			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("s", "Test store", agent on_store_selected))
 			menu.add_item (create {CONSOLE_MENU_ITEM}.make ("x", "Exit Menu", Void))
 			menu.set_return_item (menu.items.last)
 		end
 		
 	menu: CONSOLE_MENU
+			-- menu
+			
+	system_externals_interface:IEIFFEL_SYSTEM_EXTERNALS_INTERFACE
+			-- test interface
 		
 invariant
 	non_void_menu: menu /= Void
+	non_void_interface: system_externals_interface /= Void
 	
 end -- class EXTERNAL_PROPERTIES_TESTER

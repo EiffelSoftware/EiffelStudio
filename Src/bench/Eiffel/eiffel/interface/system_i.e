@@ -2597,7 +2597,7 @@ end
 				nb := type_id_counter.value
 				file.open_write
 				file.putstring ("#include %"eif_macros.h%"%N%N%
-								%long fsize[] = {%N")
+								%long egc_fsize_init[] = {%N")
 			until
 				i > nb
 			loop
@@ -2629,7 +2629,7 @@ end
 				i := 1
 				nb := type_id_counter.value
 				Reference_file.open_write
-				Reference_file.putstring ("long fnbref[] = {%N")
+				Reference_file.putstring ("long egc_fnbref_init[] = {%N")
 			until
 				i > nb
 			loop
@@ -2939,7 +2939,7 @@ end
 					i := i + 1
 				end
 				Cecil_file.putstring ("};%N")
-				Cecil_file.putstring ("struct ctable *ce_rname = fce_rname;%N%N")
+				Cecil_file.putstring ("struct ctable *egc_ce_rname_init = fce_rname;%N%N")
 
 				if System.has_separate then
 						-- Now, generate for Concurrent Eiffel

@@ -363,7 +363,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	conformance_type: GEN_TYPE_A is
+	conformance_type: like Current is
 
 		local
 			i, count: INTEGER

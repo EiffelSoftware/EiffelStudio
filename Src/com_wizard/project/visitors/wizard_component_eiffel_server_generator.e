@@ -29,7 +29,11 @@ feature {NONE} -- Implementation
 			Result.set_name ("make")
 			Result.set_comment ("Creation")
 
-			create feature_body.make (0)
+			Result.add_argument ("cpp_obj: POINTER")
+
+			create feature_body.make (100)
+			feature_body.append (Tab_tab_tab)
+			feature_body.append ("set_item (cpp_obj)")
 
 			Result.set_effective
 			Result.set_body (feature_body)
@@ -39,8 +43,28 @@ feature {NONE} -- Implementation
 			non_void_feature_body: Result.body /= Void
 		end
 
-invariant
-	invariant_clause: -- Your invariant here
+
+	create_item_feature: WIZARD_WRITER_FEATURE is
+			-- `create_item' feature.
+		local
+			feature_body: STRING
+		do
+			create Result.make
+			Result.set_name ("create_item")
+			Result.set_comment ("Initialize %Qitem%'")
+
+			Result.add_local_variable ("a_ptr: POINTER")
+			create feature_body.make (100)
+			feature_body.append (Tab_tab_tab)
+			feature_body.append ("a_ptr := ccom_create_item (Current)")
+
+			Result.set_effective
+			Result.set_body (feature_body)
+		ensure
+			non_void_feature: Result /= Void
+			non_void_feature_name: Result.name /= Void
+			non_void_feature_body: Result.body /= Void
+		end
 
 end -- class WIZARD_COMPONENT_EIFFEL_SERVER_GENERATOR
 

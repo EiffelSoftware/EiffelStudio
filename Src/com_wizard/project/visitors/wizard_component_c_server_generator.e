@@ -32,89 +32,189 @@ feature -- Access
 	dispatch_interface: BOOLEAN
 			-- Is coclass contained dispatch interface?
 
+	default_dispinterface (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
+			-- Default dispinterface.
+		require
+			non_void_component: a_component /= Void
+			dispatch_interface: dispatch_interface
+--			non_void_default_dispinterface: default_dispinterface_name (a_component) /= Void
+--			valid_default_dispinterface: not default_dispinterface_name (a_component).empty
+		deferred
+		ensure
+			non_void_dispinterface: Result /= Void
+		end
+
 feature -- Basic Operations
 
-	add_constructor is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+			-- Generate C server for component.
+		local
+			member_writer: WIZARD_WRITER_C_MEMBER
+		do
+			create cpp_class_writer.make
+			cpp_class_writer.set_name (a_component.c_type_name)
+			cpp_class_writer.set_header (a_component.description)
+			cpp_class_writer.set_header_file_name (a_component.c_header_file_name)
+			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
+
+			-- Add jmp_buf variable and integer value
+			cpp_class_writer.add_other_source ("static int return_hr_value;")
+
+			-- member (LONG Ref_count)
+			create member_writer.make
+			member_writer.set_name (Ref_count)
+			member_writer.set_result_type (Long_macro)
+			member_writer.set_comment ("Reference counter")
+			cpp_class_writer.add_member (member_writer, Private)
+
+			-- member (EIF_OBJECT eiffel_object)
+			create member_writer.make
+			member_writer.set_name (Eiffel_object)
+			member_writer.set_result_type (Eif_object)
+			member_writer.set_comment ("Corresponding Eiffel object")
+			cpp_class_writer.add_member (member_writer, Private)
+
+			-- member (EIF_TYPE_ID type_id)
+			create member_writer.make
+			member_writer.set_name (Type_id)
+			member_writer.set_result_type (Eif_type_id)
+			member_writer.set_comment ("Eiffel type id")
+			cpp_class_writer.add_member (member_writer, Private)
+		end
+
+	standard_functions (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+			-- Standard functions.
+		require
+			non_void_component: a_component /= Void
+			non_void_cpp_class_writer: cpp_class_writer /= Void	
+		do
+			add_constructor (a_component)
+			add_constructor_from_object
+			add_destructor
+
+			-- Implement IUnknown interface
+			add_release_function
+			add_addref_function
+			add_query_interface (a_component)
+		end
+
+	dispatch_interface_features (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+			-- Dispatch interface features.
+		require
+			dispatch_interface: dispatch_interface
+			non_void_component: a_component /= Void
+			non_void_cpp_class_writer: cpp_class_writer /= Void
+		local
+			member_writer: WIZARD_WRITER_C_MEMBER
+		do
+			-- Add type library id
+			cpp_class_writer.add_other_source (libid_definition (a_component.type_library_descriptor.name, a_component.type_library_descriptor.guid))
+
+			-- member (ITypeInfo * pTypeInfo)
+			create member_writer.make
+			member_writer.set_name (Type_info_variable_name)
+			member_writer.set_result_type (Type_info)
+			member_writer.set_comment ("Type information")
+			cpp_class_writer.add_member (member_writer, Private)
+
+			add_get_type_info_function (a_component)
+			add_get_type_info_count_function 
+			add_get_ids_of_names_function (a_component)
+			dispatch_invoke_function (a_component)
+		end
+
+	constructor_from_object_body: STRING is
+			-- Body of constructor from Eiffel object.
+		do
+			create Result.make (1000)
+			Result.append (Tab)
+			Result.append (Eiffel_object)
+			Result.append (Space_equal_space)
+			Result.append (Eif_adopt)
+			Result.append (Space_open_parenthesis)
+			Result.append ("eif_obj")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			Result.append (Type_id)
+			Result.append (Space_equal_space)
+			Result.append ("eif_type ")
+			Result.append (Space_open_parenthesis)
+			Result.append (Eiffel_object)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			Result.append (Eif_procedure)
+			Result.append (Space)
+			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			-- eiffel_procedure = eif_procedure ("set_item", tid)
+			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Space_equal_space)
+			Result.append (Eif_procedure_name)
+			Result.append (Space_open_parenthesis)
+			Result.append (Double_quote)
+			Result.append ("set_item")
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Type_id)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line)
+			Result.append (New_line_tab)
+
+			Result.append ("(FUNCTION_CAST (")
+			Result.append (Void_c_keyword)
+			Result.append (Comma)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_reference)
+			Result.append (Comma_space)
+			Result.append (Eif_pointer)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_access)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eiffel_object)
+			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append (Open_parenthesis)
+			Result.append (Eif_pointer)
+			Result.append (Close_parenthesis)
+			Result.append ("this")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+	
+			if dispatch_interface then
+				Result.append (New_line_tab)
+				Result.append (Type_info_variable_name)
+				Result.append (Space_equal_space)
+				Result.append (Zero)
+				Result.append (Semicolon)
+			end
+		end
+
+	add_constructor_from_object is
+			-- Add constructor from Eiffel object.
 		local
 			constructor_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
-			tmp_string: STRING
+			a_signature: STRING
 		do
 			create constructor_writer.make
 
-			tmp_string := clone (Eif_type_id)
-			tmp_string.append (Space)
-			tmp_string.append (Type_id_variable_name)
+			create a_signature.make (100)
+			a_signature.append (Eif_object)
+			a_signature.append (Space)
+			a_signature.append ("eif_obj")
+			constructor_writer.set_signature (a_signature)
 
-			constructor_writer.set_signature (tmp_string)
-
-			tmp_string:= clone (Tab)
-			tmp_string.append (Type_id)
-			tmp_string.append (Space_equal_space)
-			tmp_string.append (Type_id_variable_name)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line_tab)
-			tmp_string.append (Eiffel_object)
-			tmp_string.append (Space_equal_space)
-			tmp_string.append (Eif_create)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Type_id)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line_tab)
-
-			tmp_string.append (Eif_procedure)
-			tmp_string.append (Space)
-			tmp_string.append (Eiffel_procedure_variable_name)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line_tab)
-
-			-- eiffel_procedure = eif_procedure ("make", tid)
-			tmp_string.append (Eiffel_procedure_variable_name)
-			tmp_string.append (Space_equal_space)
-			tmp_string.append (Eif_procedure_name)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Double_quote)
-			tmp_string.append (make_word)
-			tmp_string.append (Double_quote)
-			tmp_string.append (Comma_space)
-			tmp_string.append (Type_id)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line)
-			tmp_string.append (New_line_tab)
-
-			tmp_string.append ("(FUNCTION_CAST (")
-			tmp_string.append (Void_c_keyword)
-			tmp_string.append (Comma)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Eif_reference)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Eiffel_procedure_variable_name)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Eif_access)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Eiffel_object)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Semicolon)
-
-			if dispatch_interface then
-				tmp_string.append (New_line_tab)
-				tmp_string.append (Type_info_variable_name)
-				tmp_string.append (Space_equal_space)
-				tmp_string.append (Zero)
-				tmp_string.append (Semicolon)
-			end
-
-			if shared_wizard_environment.out_of_process_server then
-				tmp_string.append (New_line_tab)
-				tmp_string.append ("LockModule ();")
-			end
-
-			constructor_writer.set_body (tmp_string)
-		
+			constructor_writer.set_body (constructor_from_object_body)
 			check
 				valid_constructor_writer: constructor_writer.can_generate
 			end
@@ -126,11 +226,94 @@ feature -- Basic Operations
 			end
 		end
 
+	constructor_body: STRING is
+			-- Body of constructor.
+		do
+			create Result.make (1000)
+			Result.append (New_line_tab)
+			Result.append (Eiffel_object)
+			Result.append (Space_equal_space)
+			Result.append (Eif_create)
+			Result.append (Space_open_parenthesis)
+			Result.append (Type_id)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			Result.append (Eif_procedure)
+			Result.append (Space)
+			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			-- eiffel_procedure = eif_procedure ("make", tid)
+			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Space_equal_space)
+			Result.append (Eif_procedure_name)
+			Result.append (Space_open_parenthesis)
+			Result.append (Double_quote)
+			Result.append (make_word)
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Type_id)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line)
+			Result.append (New_line_tab)
+
+			Result.append ("(FUNCTION_CAST (")
+			Result.append (Void_c_keyword)
+			Result.append (Comma)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_reference)
+			Result.append (Comma_space)
+			Result.append (Eif_pointer)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Close_parenthesis)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_access)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eiffel_object)
+			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append (Open_parenthesis)
+			Result.append (Eif_pointer)
+			Result.append (Close_parenthesis)
+			Result.append ("this")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			if dispatch_interface then
+				Result.append (New_line_tab)
+				Result.append (Type_info_variable_name)
+				Result.append (Space_equal_space)
+				Result.append (Zero)
+				Result.append (Semicolon)
+			end
+
+			if shared_wizard_environment.out_of_process_server then
+				Result.append (New_line_tab)
+				Result.append ("LockModule ();")
+			end
+
+		ensure
+			non_void_body: Result /= Void
+			valid_body: not Result.empty
+		end
+
+	add_constructor (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
+			-- Add constructor.
+		deferred
+		end
+
 	add_destructor is
 		local
 			tmp_body: STRING
 		do
-			tmp_body := clone (Tab)
+			create tmp_body.make (10000)
+			tmp_body.append (Tab)
 			tmp_body.append (Eif_wean)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Eiffel_object)
@@ -155,10 +338,10 @@ feature -- Basic Operations
 			cpp_class_writer.set_destructor (tmp_body)
 		end
 
-	add_get_type_info_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	add_get_type_info_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add GetTypeInfo function.
 		require
-			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+			non_void_component: a_component /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			tmp_body: STRING
@@ -174,7 +357,7 @@ feature -- Basic Operations
 			tmp_body.append ("*pptinfo = NULL;")
 			tmp_body.append (New_line)
 
-			tmp_body.append (check_type_info (a_coclass_descriptor))
+			tmp_body.append (check_type_info (a_component))
 
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append ("*pptinfo")
@@ -202,17 +385,16 @@ feature -- Basic Operations
 			end
 		end
 		
-	add_get_type_info_count_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	add_get_type_info_count_function is
 			-- Add GetTypeInfoCount function.
-		require
-			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			tmp_body: STRING
 		do
 			create func_writer.make
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (10000)
+			tmp_body.append (Tab)
 			tmp_body.append ("if (pctinfo == NULL)")
 			tmp_body.append (New_line_tab_tab)
 			tmp_body.append (Return)
@@ -245,17 +427,17 @@ feature -- Basic Operations
 			end
 		end
 
-	add_get_ids_of_names_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	add_get_ids_of_names_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add GetIDsOfNames function
 		require
-			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+			non_void_coclass_descriptor: a_component /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			tmp_body: STRING
 		do
 			create func_writer.make
 
-			tmp_body := check_type_info (a_coclass_descriptor)
+			tmp_body := check_type_info (a_component)
 
 			tmp_body.append (Return)
 			tmp_body.append (Space)
@@ -284,10 +466,10 @@ feature -- Basic Operations
 			end
 		end
 
-	dispatch_invoke_function (cocls_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	dispatch_invoke_function (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add Invoke function for pure dispatch interface
 		require
-			non_void_coclass_descriptor: cocls_descriptor /= Void
+			non_void_component: a_component /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
 			body_code: STRING
@@ -377,20 +559,7 @@ feature -- Basic Operations
 			body_code.append (Open_curly_brace)
 			body_code.append (New_line_tab_tab)
 
-			check 
-				non_void_default_dispinterface: default_dispinterface_name (cocls_descriptor) /= Void
-				valid_default_dispinterface: not default_dispinterface_name (cocls_descriptor).empty
-			end
-			from
-				cocls_descriptor.interface_descriptors.start
-			until
-				cocls_descriptor.interface_descriptors.after
-			loop
-				if cocls_descriptor.interface_descriptors.item.c_type_name.is_equal (default_dispinterface_name (cocls_descriptor)) then
-					body_code.append (invoke_function_case_item (cocls_descriptor.interface_descriptors.item))
-				end
-				cocls_descriptor.interface_descriptors.forth
-			end
+			body_code.append (invoke_function_case_item (default_dispinterface (a_component)))
 			body_code.append (New_line_tab_tab)
 			body_code.append ("default:")
 			body_code.append (New_line_tab_tab_tab)
@@ -526,7 +695,8 @@ feature -- Basic Operations
 			local_buffer := clone (prop_desc.name)
 			local_buffer.to_lower
 
-			Result := clone (New_line_tab_tab)
+			create Result.make (10000)
+			Result.append (New_line_tab_tab)
 			Result.append (Case)
 			Result.append (Space)
 			Result.append_integer (prop_desc.member_id)
@@ -946,7 +1116,7 @@ feature -- Basic Operations
 						Result.append ("IID tmp_iid_")
 						Result.append_integer (counter)
 						Result.append (Space_equal_space)
-						Result.append (interface_descriptor (func_desc.arguments.item.type, visitor).guid.to_definition_string)
+						Result.append (interface_descriptor_guid (func_desc.arguments.item.type, visitor).to_definition_string)
 						Result.append (Semicolon)
 						Result.append (New_line_tab_tab_tab)
 						Result.append (Tab)
@@ -990,12 +1160,12 @@ feature -- Basic Operations
 						Result.append ("IID tmp_iid_")
 						Result.append_integer (counter)
 						Result.append (Space_equal_space)
-						Result.append (interface_descriptor (func_desc.arguments.item.type, visitor).guid.to_definition_string)
+						Result.append (interface_descriptor_guid (func_desc.arguments.item.type, visitor).to_definition_string)
 						Result.append (Semicolon)
 						Result.append (New_line_tab_tab_tab)
 						Result.append (Tab)
 
-						Result.append (interface_descriptor (func_desc.arguments.item.type, visitor).c_type_name)
+						Result.append (interface_descriptor_c_type_name (func_desc.arguments.item.type, visitor))
 						Result.append (Space)
 						Result.append (Asterisk)
 						Result.append (Space)
@@ -1345,7 +1515,8 @@ feature -- Basic Operations
 		require
 			non_void_descriptor: func_desc /= Void
 		do
-			Result := clone (New_line_tab_tab)
+			create Result.make (1000)
+			Result.append (New_line_tab_tab)
 			Result.append (Case)
 			Result.append (Space)
 			Result.append_integer (func_desc.member_id)
@@ -1357,7 +1528,7 @@ feature -- Basic Operations
 			Result.append (New_line)
 		end
 
-	add_query_interface (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	add_query_interface (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add function 'QueryInterface'
 		deferred
 		end
@@ -1370,7 +1541,8 @@ feature -- Basic Operations
 		do
 			create func_writer.make
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (500)
+			tmp_body.append (Tab)
 			tmp_body.append (Return)
 			tmp_body.append (Space)
 			tmp_body.append (Interlocked_increment)
@@ -1396,18 +1568,20 @@ feature -- Basic Operations
 			end
 		end
 
-	check_type_info (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
+	check_type_info (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
 			-- Code to check whether type info exist
 		require
-			non_void_coclass_descriptor: a_coclass_descriptor /= Void
-			non_void_defualt_interface: default_dispinterface_name (a_coclass_descriptor) /= Void
+			non_void_component: a_component /= Void
+			non_void_defualt_interface: default_dispinterface_name (a_component) /= Void
 		local
 			tmp_path: STRING
 			counter: INTEGER
 			type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
-			type_lib := a_coclass_descriptor.type_library_descriptor
-			Result := clone (Tab)
+			type_lib := a_component.type_library_descriptor
+			
+			create Result.make (10000)
+			Result.append (Tab)
 
 			-- if ( pTypeInfo == 0)
 			Result.append (If_keyword)
@@ -1487,7 +1661,7 @@ feature -- Basic Operations
 			Result.append (Struct_selection_operator)
 			Result.append (Get_type_info_of_guid)
 			Result.append (Space_open_parenthesis)
-			Result.append (iid_name (default_dispinterface_name (a_coclass_descriptor)))
+			Result.append (iid_name (default_dispinterface_name (a_component)))
 			Result.append (Comma_space)
 			Result.append (Ampersand)
 			Result.append (Type_info_variable_name)
@@ -1525,7 +1699,9 @@ feature -- Basic Operations
 			func_writer: WIZARD_WRITER_C_FUNCTION
 		do
 			create func_writer.make
-			tmp_body := clone (Tab)
+			
+			create tmp_body.make (10000)
+			tmp_body.append (Tab)
 			tmp_body.append (Long_macro)
 			tmp_body.append (Space)
 			tmp_body.append ("res")
@@ -1586,12 +1762,59 @@ feature -- Basic Operations
 			end
 		end
 
+	interface_descriptor_c_type_name (a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
+					a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+			-- Interface's name.
+		require
+			non_void_descriptor: a_data_type_descriptor /= Void
+			non_void_visitor: a_visitor /= void
+		do
+			if a_visitor.c_type.substring_index (iunknown_type, 1) /= 0 then
+				Result := clone (iunknown_type)
+			elseif a_visitor.c_type.substring_index (idispatch_type, 1) /= 0 then
+				Result := clone (idispatch_type)
+			else
+				check 
+					interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
+						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer					
+				end
+				Result := interface_descriptor (a_data_type_descriptor, a_visitor).c_type_name
+			end
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.empty
+		end
+
+	interface_descriptor_guid (a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
+					a_visitor: WIZARD_DATA_TYPE_VISITOR): ECOM_GUID is
+			-- Interface's GUID.
+		require
+			non_void_descriptor: a_data_type_descriptor /= Void
+			non_void_visitor: a_visitor /= void
+		do
+			if a_visitor.c_type.substring_index (iunknown_type, 1) /= 0 then
+				create Result.make_from_string (iunknown_guid_string)
+			elseif a_visitor.c_type.substring_index (idispatch_type, 1) /= 0 then
+				create Result.make_from_string (idispatch_guid_string)
+			else
+				check 
+					interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
+						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer					
+				end
+				Result := interface_descriptor (a_data_type_descriptor, a_visitor).guid
+			end
+		ensure
+			non_void_guid: Result /= Void
+		end
+
 	interface_descriptor (a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
 					a_visitor: WIZARD_DATA_TYPE_VISITOR): WIZARD_INTERFACE_DESCRIPTOR is
 			-- Interface descriptor.
 		require
 			interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
 						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer
+			non_unknown: a_visitor.c_type.substring_index (iunknown_type, 1) = 0
+			non_dispatch: a_visitor.c_type.substring_index (idispatch_type, 1) = 0
 		local
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			user_defined: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
@@ -1601,7 +1824,8 @@ feature -- Basic Operations
 			an_index: INTEGER
 		do
 			pointed_descriptor ?= a_data_type_descriptor
-			if (pointed_descriptor /= Void) then				if a_visitor.is_interface_pointer_pointer or a_visitor.is_coclass_pointer_pointer then
+			if (pointed_descriptor /= Void) then
+				if a_visitor.is_interface_pointer_pointer or a_visitor.is_coclass_pointer_pointer then
 					pointed_descriptor ?= pointed_descriptor.pointed_data_type_descriptor
 					check
 						non_void_pointed_descriptor: pointed_descriptor /= Void
@@ -1626,10 +1850,10 @@ feature -- Basic Operations
 			non_void_interface_descriptor: Result /= Void
 		end
 
-	default_dispinterface_name (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
+	default_dispinterface_name (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING is
 			-- Name of default dispinterface.
 		require
-			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+			non_void_component_descriptor: a_component_descriptor /= Void
 		deferred
 		end
 

@@ -251,7 +251,7 @@ feature -- Storing
 			!!temp.make (0);
 			temp.append_integer (directory_number (view_id))
 			d_name.extend (temp)
-			Result := d_name.path
+			Result := d_name
 		end
 
 	file_path (p: STRING; i: INTEGER; tmp: BOOLEAN): STRING is
@@ -269,7 +269,7 @@ feature -- Storing
 				temp.append (Tmp_file_name_ext)
 			end;
 			f_name.set_file_name (temp);
-			Result := f_name.path
+			Result := f_name
 		end
 
 	save_information (storage_path: STRING) is

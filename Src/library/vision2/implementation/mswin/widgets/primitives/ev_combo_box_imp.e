@@ -27,7 +27,8 @@ inherit
 		
 	EV_FONTABLE_IMP
 		redefine
-			interface
+			interface,
+			set_font
 		end
 
 	EV_TEXT_COMPONENT_IMP
@@ -718,6 +719,13 @@ feature {NONE} -- Implementation
 				text_field.invalidate
 				combo.invalidate
 			end
+		end
+		
+	set_font (ft: EV_FONT) is
+			-- Make `ft' new font of `Current'.
+		do
+			Precursor {EV_FONTABLE_IMP} (ft)
+			set_default_minimum_size
 		end
 		
 	tooltip_window: WEL_WINDOW is

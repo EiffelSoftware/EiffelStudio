@@ -25,7 +25,8 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			set_font
 		end
 
 	WEL_SINGLE_LINE_EDIT
@@ -195,6 +196,13 @@ feature {NONE} -- WEL Implementation
 			create default_colors
 			cwin_enable_window (wel_item, False)
 			set_background_color (default_colors.Color_read_only)
+		end
+		
+	set_font (ft: EV_FONT) is
+			-- Make `ft' new font of `Current'.
+		do
+			Precursor {EV_FONTABLE_IMP} (ft)
+			set_default_minimum_size
 		end
 
 feature {EV_SPIN_BUTTON_IMP} -- Feature that should be directly

@@ -490,7 +490,7 @@ feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 			all_constant_names.wipe_out
 			pixmap_constants.wipe_out
 			directory_constants.wipe_out
-			Constants_dialog.reset_list
+			Constants_dialog.reset_contents
 			all_constants.clear_all
 		end
 

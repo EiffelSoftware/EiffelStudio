@@ -26,7 +26,7 @@ feature -- Status report
 				Result := implementation.is_selected
 			end
 		ensure
-			bridge_ok: Result = implementation.is_selected
+			bridge_ok: is_selectable implies Result = implementation.is_selected
 		end
 
 	is_selectable: BOOLEAN is

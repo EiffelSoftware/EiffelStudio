@@ -12,8 +12,6 @@ inherit
 			is_external
 		end
 
-	EXTERNAL_CONSTANTS
-
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all

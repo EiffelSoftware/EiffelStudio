@@ -33,13 +33,13 @@ feature -- Display
 			end
 			if not resource.color_is_void then
 				val := resource.actual_value
-				color_b.set_background_color (val)
-				color_b.set_foreground_color (val)
+				color_label.set_background_color (val)
+				color_label.set_foreground_color (val)
 			else
 				create defcol
-				color_b.set_text ("Auto")
-				color_b.set_background_color (defcol.Default_background_color)
-				color_b.set_foreground_color (defcol.Default_foreground_color)
+				color_label.set_text ("Auto")
+				color_label.set_background_color (defcol.Default_background_color)
+				color_label.set_foreground_color (defcol.Default_foreground_color)
 			end
 		end
 
@@ -65,7 +65,7 @@ feature {NONE} -- Commands
 			color: EV_COLOR
 		do
 			color := color_tool.color
-			color_b.set_background_color (color)
+			color_label.set_background_color (color)
 			resource.set_value_with_color (color.red_8_bit, color.green_8_bit, color.blue_8_bit)
 			update_resource
 			caller.update (resource)
@@ -80,23 +80,23 @@ feature {NONE} -- Implementation
 			color_frame: EV_FRAME
 			a_frame: EV_FRAME
 		do
-			create color_b
-			color_b.set_text ("Auto")
+			create color_label
+			color_label.set_text ("Auto")
 
 			create change_b.make_with_text_and_action ("Change...", agent change)
 
 			create reset_b.make_with_text_and_action ("Auto", agent set_as_auto)
 
 			create color_frame
-			color_frame.extend (color_b)
+			color_frame.extend (color_label)
 			
 			create h2
 			h2.set_padding (Layout_constants.Dialog_unit_to_pixels (3))
 			h2.extend (color_frame)
-			h2.disable_item_expand (color_frame)
 			h2.extend (change_b)
 			h2.disable_item_expand (change_b)
 			h2.extend (reset_b)
+			h2.disable_item_expand (reset_b)
 
 			create a_frame
 			a_frame.extend (h2)
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 	resource: COLOR_RESOURCE
 			-- Resource.
 
-	color_b: EV_LABEL
+	color_label: EV_LABEL
 			-- Label to display the selected color.
 
 	reset_b: EV_BUTTON

@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<title>Reflection system specification</title>
+	</head>
+
+	<body>
+		<body background="#ffffff" text="#000000" link="#555ccc" vlink="#555ccc" alink="#555ccc">
+
+		<br><br>
+		<h2>4. ISE.CodeGenerator.dll</h2>
+
+				<p>`ISE.CodeGenerator.dll' provides basically three kinds of services. You can:</p>
+						<ul>
+								<li>Generate Eiffel classes with `EiffelCodeGenerator'.</li>
+								<li>Generate Xml files with `XmlAssemblyCodeGenerator' and `XmlTypeCodeGenerator'.</li>
+								<li>Generate Eiffel classes from Xml files with `EiffelCodeGeneratorFromXml'.</li>
+						</ul>
+				<br>
+
+				<a name = eiffel_generator>
+				<h3>4.1 EiffelCodeGenerator</h3>
+
+						<p>
+								To create an `EiffelCodeGenerator', you must call `make_from_info (eiffel_class: EIFFEL_CLASS; eiffel_assembly: EIFFEL_ASSEMBLY)'. <br>
+								See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.EiffelComponents</a> for more information about `EIFFEL_ASSEMBLY' and `EIFFEL_CLASS' classes.<br>
+								The main service provided by this class is to generate the Eiffel class by using information of `eiffel_class' and `eiffel_assembly' given as parameters to the creation routine.<br>
+								EiffelCodeGenerator will use `eiffel_class' and `eiffel_assembly' to find the filename of class to be generated. More precisely, generated class filename will be of the form: filename = eiffel_assembly.eiffel_cluster_path + "\" + eiffel_class.dot_net_full_name + ".e"
+						</p>
+						<p>
+								When you call `GenerateEiffelClasses' from `Emitter.exe', it calls `generate_eiffel_class' of `EiffelCodeGenerator' for each type of the assembly. See <a href = "./emitter.html" target = "_parent">5. Emitter.exe</a> for more information.
+						</p>
+				<br>
+
+				<a name = xml_assembly_generator>
+				<h3>4.2 XmlAssemblyCodeGenerator</h3>
+
+						<p>
+								To create an instance of `XmlAssemblyCodeGenerator', you have to call `make_from_assembly (eiffel_assembly: EIFFEL_ASSEMBLY). See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.EiffelComponents</a> for more information about `EIFFEL_ASSEMBLY' class.<br>
+								`XmlAssemblyCodeGenerator' provides a feature called `generate_xml_file', which takes no argument. It generates Xml description file from `eiffel_assembly' given as parameter to creation routine.<br>
+								To find the right folder in which to generate Xml file, `XmlAssemblyCodeGenerator' uses assembly version, culture and public key (retrieved from `eiffel_assembly') and calls `hash_value' (from `ISE.ReflectionInterface.dll').
+						</p>
+						<p>
+								When you call `GenerateXmlFiles' from `Emitter.exe', it calls `generate_xml_file' of `XmlAssemblyCodeGenerator' for the first type of the assembly. See <a href = "./emitter.html" target = "_parent">5. Emitter.exe</a> for more information.
+						</p>
+				<br>
+
+				<a name = xml_type_generator>
+				<h3>4.3 XmlTypeCodeGenerator</h3>
+
+						<p>
+								In the same way you have to give an instance of `EIFFEL_CLASS' and one of `EIFFEL_ASSEMBLY' to create an `EiffelCodeGenerator', you have to give it the creation routine of `XmlTypeCodeGenerator', whose signature is:<br>
+								`make_from_info (eiffel_class: EIFFEL_CLASS; eiffel_assembly: EIFFEL_ASSEMBLY). <br>
+								See <a href = "./Eiffel_components.html" target = "_parent">2. ISE.EiffelComponents</a> for more information about `EIFFEL_ASSEMBLY' and `EIFFEL_CLASS' classes.<br>
+								`XmlTypeCodeGenerator' provides a feature called `generate_xml_file', which takes no argument. It generates Xml description file from `eiffel_class' given as parameter to creation routine.<br>
+								You may wonder why you also have to give an instance of `EIFFEL_ASSEMBLY'. In fact, this is used to find the right folder in which to generate Xml file: `XmlTypeCodeGenerator' uses assembly version, culture and public key (retrieved from `eiffel_assembly') and calls `hash_value' (from `ISE.ReflectionInterface.dll').
+						</p>
+						<p>
+								When you call `GenerateXmlFiles' from `Emitter.exe', it calls `generate_xml_file' of `XmlTypeCodeGenerator' for each type of the assembly. See <a href = "./emitter.html" target = "_parent">5. Emitter.exe</a> for more information.
+						</p>
+				<br>
+
+				<a name = eiffel_generator_from_xml>
+				<h3>4.4 EiffelCodeGeneratorFromXml</h3>
+
+				<p>
+						The first aim of `EiffelCodeGeneratorFromXml' is to generate Eiffel classes from Xml description files. Therefore it provides a feature called `generate_eiffel_code_from_xml', which takes no argument. To be allowed to call this feature, you first have to call the creation routine `make_from_info (xml_type_filename, xml_assembly_filename: STRING)'. <br>
+						`EiffelCodeGeneratorFromXml' provides another creation routine called `make_from_assembly_description', which only takes one Xml filename (corresponding to the assembly description) as argument. But this will not be sufficient to generate Eiffel code, since class information is basically contained by the type description Xml file. Thus, if you create an instance`EiffelCodeGeneratorFromXml' by using `make_from_assembly', you have to call `set_type_description_filename' before calling `generate_eiffel_code_from_xml'. This is suggested by the precondition `non_void_type_description_filename: type_description_filename /= Void'.
+				</p>
+				<p>
+						You may wonder why this class provides two creation routines. In fact, `EiffelCodeGeneratorFromXml' provides two services derived from the first one.<br>
+						<ul>
+								<li>
+										First, you may want to generate an instance of `EIFFEL_ASSEMBLY' from an assembly description Xml file. So you can find feature `generate_eiffel_assembly_from_xml'. Now you may understand the aim of the second creation routine. In fact, `generate_eiffel_assembly_from_xml' takes no argument, but needs an Xml file to generate the `EIFFEL_ASSEMBLY'. It will find the required information from the creation routine. But it does not need any type description file. That is the reason why you can find the second creation routine `make_from_assembly'. In fact, it should only be used in that case. Otherwise, `make_from_info' is required.
+								</li>
+								<br><br>
+								<li>
+										`EiffelCodeGeneratorFomXml' also provides a feature `generate_eiffel_class_from_xml', which generates an instance of `EIFFEL_CLASS'  from the xml type description filename given as parameter.
+								</li>
+						</ul>
+						<p>
+								These two features are used internally by `generate_eiffel_code_from_xml'. But there are also used by the reflection interface when user wants to retrieve information (cf. <a href = "./reflection_interface.html" target = "_parent">3. ISE.ReflectionInterface</a>).
+						</p>
+				</p>
+				<br>
+
+				<a name = diagram>
+				<h3>4.5 Classes diagram</h3>
+
+						<p>
+								Up to now, we have only mentionned four classes of assembly `ISE.CodeGenerator.dll' (`EiffelCodeGenerator', `XmlAssemblyCodeGenerator', `XmlTypeCodeGenerator' and `EiffelCodeGeneratorFromXml') because these are providing services. Nevetheless, the design of `ISE.CodeGenerator.dll' is a little more complicated in the sense that it includes other classes, which links these three base classes. <br>
+								The following diagram should help you understand the design of code generator assembly provided by ISE.
+						</p>
+						<center><img src = "./code_generator_diagram.gif" no border></center>
+
+		<br><br>
+	</body>
+</html>

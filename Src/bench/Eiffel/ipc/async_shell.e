@@ -37,9 +37,21 @@ feature
 			command_name = s
 		end;
 
+	pass_address is
+			-- Send the addresse of `send' and `set_command_name' to
+			-- C so that C can send a request
+		once
+			async_shell_pass_address ($send, $set_command_name);
+		end;
+
 feature {NONE} -- External
 
 	async_shell (cmd: POINTER): INTEGER is
+		external
+			"C"
+		end;
+
+	async_shell_pass_address (send_address, set_address: POINTER) is
 		external
 			"C"
 		end;

@@ -62,19 +62,24 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		
 		Descriptor = new AssemblyDescriptor();
 		Descriptor.Make( Name, Version, Culture, PublicKey );
-		Support = new ConversionSupport();
-		AName = Support.AssemblyNameFromDescriptor( Descriptor );
-		if( AName != null )
+		if( !( ( Descriptor.Name.Equals( "Microsoft.VisualC" ) )&&( Descriptor.Version.Equals( "7.0.9249.59748" ) ) ) )
 		{
-			assembly = Assembly.Load( AName );
-			Location = assembly.Location;
-			if( Location != null )
-				return Location;
+			Support = new ConversionSupport();
+			AName = Support.AssemblyNameFromDescriptor( Descriptor );
+			if( AName != null )
+			{
+				assembly = Assembly.Load( AName );
+				Location = assembly.Location;
+				if( Location != null )
+					return Location;
+				else
+					return "";
+			}
 			else
-				return "";
+				return "";	
 		}
 		else
-			return "";		
+			return "";
 	}
 	
 	// Location of the assembly with `Name', `Version', `Culture' and `PublicKey'
@@ -93,6 +98,7 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		Descriptor = new AssemblyDescriptor();
 		Descriptor.Make( Name, Version, Culture, PublicKey );
 		support = new ISE.AssemblyManager.Support();
+		support.Make();
 		Dependencies = support.DependanciesFromInfo( Descriptor );
 		
 		assemblyDependencies = new String [Dependencies.Length * 5];

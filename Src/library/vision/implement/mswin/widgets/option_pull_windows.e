@@ -268,16 +268,18 @@ feature {NONE} -- Implementation
 			-- Number of unmanaged buttons in the list before `b'.
 			-- Including `b' itself
 		do
-			from
-				button_list.start
-				button_list.search (b)
-			until
-				button_list.before
-			loop
-				if not button_list.item.managed then
-					Result := Result + 1
+			button_list.search (b)
+			if not button_list.exhausted then
+				from
+					button_list.start
+				until
+					button_list.before
+				loop
+					if not button_list.item.managed then
+						Result := Result + 1
+					end
+					button_list.back
 				end
-				button_list.back
 			end
 		end
 

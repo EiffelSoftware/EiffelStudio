@@ -285,10 +285,12 @@ feature -- Element change
 				current_token := line.first_token
 				remaining_ch := x_in_visible_characters
 			until
-				current_token = Void or else remaining_ch <= token_length (current_token, x_in_visible_characters - remaining_ch)
+				current_token = Void or else
+				remaining_ch <= token_length (current_token, x_in_visible_characters - remaining_ch)
 			loop
 					-- Compute where we are in characters.
-				remaining_ch := remaining_ch - token_length (current_token, x_in_visible_characters - remaining_ch)
+				remaining_ch := remaining_ch -
+					token_length (current_token, x_in_visible_characters - remaining_ch)
 
 					-- Prepare next iteration.
 				current_token := current_token.next
@@ -304,7 +306,8 @@ feature -- Element change
 					from
 						i := 1
 					until
-						remaining_ch <= equivalent_length (x_in_visible_characters - remaining_ch, i)
+						remaining_ch <=
+							equivalent_length (x_in_visible_characters - remaining_ch, i)
 					loop
 						i := i + 1
 					end

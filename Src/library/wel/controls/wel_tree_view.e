@@ -357,8 +357,6 @@ feature -- Status setting
 		require
 			exists: exists
 			valid_item: has_item (an_item)
-		local
-			mask: INTEGER
 		do
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_caret, cwel_pointer_to_integer (default_pointer))

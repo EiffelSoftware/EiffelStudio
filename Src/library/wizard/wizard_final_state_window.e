@@ -117,8 +117,6 @@ feature -- Access
 
 	is_final_state: BOOLEAN is TRUE
 
-	choice_box: EV_VERTICAL_BOX	
-
 	final_message: STRING is 
 		deferred
 		end

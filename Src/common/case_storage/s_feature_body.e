@@ -11,16 +11,24 @@ inherit
 	S_FREE_TEXT_DATA
 
 creation
-	make
+	make, make_filled
 
 feature -- settings
 
-	set_text ( st : STRING ) is
+	set_text ( li_st : LINKED_LIST [STRING] ) is
 		do
 			if count >0 then
 				wipe_out
 			end
-			extend(st)
+			from
+				start
+				li_st.start
+			until
+				li_st.after
+			loop
+				extend(li_st.item)
+				li_st.forth
+			end
 		end
 	
 end -- class S_FEATURE_BODY

@@ -275,6 +275,10 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
+	gtk_editable_get_chars (widget: POINTER; start_pos, end_pos: INTEGER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+	
 	-- gtkentry
 	gtk_entry_new: POINTER is
 		external "C | <gtk/gtk.h>"
@@ -328,7 +332,24 @@ feature {NONE} -- GTK C functions
 	gtk_text_set_editable (text: POINTER; editable: BOOLEAN) is
 		external "C | <gtk/gtk.h>"
 		end
+
+	gtk_text_set_point (text: POINTER; pos: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
 	
+	gtk_text_get_point (text: POINTER): INTEGER is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_text_get_length (text: POINTER): INTEGER is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_text_insert (text, font, fore_color, back_color, txt: POINTER; len: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+
 	--notebook
 	gtk_notebook_new: POINTER is
 		external "C | <gtk/gtk.h>"

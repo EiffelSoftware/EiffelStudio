@@ -36,6 +36,7 @@ feature -- Initialization
 		do
 			Precursor
 			set_widgets
+			set_values
 		end
 	
 feature -- Status setting
@@ -44,9 +45,9 @@ feature -- Status setting
                 deferred
                 end
 	
-	-- set_values is
--- 		deferred
--- 		end
+	set_values is
+ 		deferred
+ 		end
 
 -- 	set_commands is
 -- 		deferred

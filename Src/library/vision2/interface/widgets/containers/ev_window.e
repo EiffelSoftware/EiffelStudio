@@ -13,9 +13,9 @@ inherit
 	
 	EV_CONTAINER
 		rename
-			make as widget_make
+			make as old_make
 		export
-			{NONE} widget_make
+			{NONE} old_make
 		redefine
 			implementation
 		end
@@ -27,6 +27,10 @@ creation
 	
 feature {NONE} -- Initialization
 	
+	old_make (par: EV_CONTAINER) is
+		do
+		end
+
         make is
                         -- Create a window. Window does not have any
                         -- parents

@@ -8,19 +8,20 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
---XX deferred class EV_WIDGET
-class EV_WIDGET
-
+deferred class EV_WIDGET
 
 feature {NONE} -- Initialization
-
-        make (par: EV_CONTAINER) is
+	
+	make (par: EV_CONTAINER) is
+		deferred
+		end
+		
+        widget_make (par: EV_CONTAINER) is
                         -- Create a widget with `par' as parent and
                         -- call `set_default'. 
 			-- This is a general initialization for 
 			-- widgets and has to be called by all the 
-			-- widgets with parents (Put call to 
-			-- Precursor at the end of creation routine).
+			-- widgets with parents.
                 require
                         valid_parent: par /= Void
 		do
@@ -96,7 +97,7 @@ feature -- Status setting
 		do
 			implementation.hide
 		ensure
-			not shown
+			not_shown: not shown
 		end
 
 	show is
@@ -107,7 +108,7 @@ feature -- Status setting
 		do
 			implementation.show
 		ensure
-			shown
+			shown: shown
 		end
 	
 

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
                         -- parent
 		do
 			!EV_LABEL_IMP!implementation.make (par)
-			Precursor (par)
+			widget_make (par)
 		end
 		
 

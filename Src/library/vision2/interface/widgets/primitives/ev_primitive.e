@@ -1,5 +1,5 @@
---XX deferred class 
-class 
+deferred class 
+
 	EV_PRIMITIVE
 
 inherit

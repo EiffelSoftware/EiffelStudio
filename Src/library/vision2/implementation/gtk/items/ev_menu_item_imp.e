@@ -114,7 +114,7 @@ feature -- Element change
 				check
 					parent_not_void: par_imp /= Void
 				end
-				parent_imp ?= par_imp
+				parent_imp := par_imp
 				par_imp.add_item (Current)
 				show
 				gtk_object_unref (widget)

@@ -1,6 +1,16 @@
 class
 	MEMBER_INFORMATION
 
+--inherit
+--	IMEMBER_INFO_IMPL_STUB
+----		rename
+----			parameters as enum_parameters
+--		redefine
+--			name,
+--			summary,
+--			parameters,
+--			returns
+--		end
 
 creation
 	make
@@ -8,11 +18,12 @@ creation
 feature -- Initialization
 	
 	make is
-			-- Initialization
+			-- Initialization.
 		do
 			create name.make_empty
 			create summary.make_empty
-			create parameters.make
+			create parameters.make (10)
+--			create enum_parameters.make (parameters)
 			create returns.make_empty
 		ensure
 			non_void_name: name /= Void
@@ -27,9 +38,10 @@ feature -- Access
 	
 	summary: STRING
 	
-	parameters: LINKED_LIST [PARAMETER_INFORMATION]
+	parameters: ARRAYED_LIST [PARAMETER_INFORMATION]
 	
 	returns: STRING
+	
 
 feature -- Status Setting
 
@@ -63,6 +75,7 @@ feature -- Status Setting
 			returns_set: returns = a_returns
 		end
 
+
 feature -- Basic Operations
 	
 	add_parameter (a_parameter: PARAMETER_INFORMATION) is
@@ -75,6 +88,20 @@ feature -- Basic Operations
 			a_parameter_added: parameters.has (a_parameter)
 		end
 
+	reset is
+			-- reinitialize object.
+		do
+			name.wipe_out
+			summary.wipe_out
+			parameters.wipe_out
+			returns.wipe_out
+		ensure
+			empty_name: name.is_empty
+			empty_summary: summary.is_empty
+			empty_parameters: parameters.count = 0
+			empty_returns: returns.is_empty
+		end
+		
 invariant
 	non_void_name: name /= Void
 	non_void_summary: summary /= Void

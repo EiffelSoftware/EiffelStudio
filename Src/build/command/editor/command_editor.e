@@ -90,7 +90,10 @@ feature -- Creation
 			observers.set_row_layout
 			observers.set_spacing (5)
 			new_command_button.set_command_editor (Current)
-			list_form.set_height (75)
+			label_scrolled_w.set_height (75)
+			label_form.set_height (75)
+			observers_scrolled_w.set_height (75)
+			observer_form.set_height (75)
 		end
 
 	attach_all is

@@ -23,7 +23,7 @@ feature -- Type data
 --			Result := Pixmaps.toolbar_toggle_pixmap
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.toolbar_page.toolbar_toggle_type
 		end

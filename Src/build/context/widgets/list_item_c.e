@@ -21,9 +21,14 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.text_page.list_item_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.list_item_type
 		end
 
 feature -- Context creation

@@ -20,9 +20,14 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.menu_page.popup_menu_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.widget_type
 		end
 
 feature -- GUI object creation
@@ -34,10 +39,12 @@ feature -- GUI object creation
 
 	add_gui_callbacks is
 		do
+			add_pnd_callbacks
 		end
 
 	remove_gui_callbacks is
 		do
+			remove_pnd_callbacks
 		end
 
 	copy_attributes (other: like Current) is

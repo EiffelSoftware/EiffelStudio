@@ -20,9 +20,14 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.menu_page.static_bar_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.window_child_type
 		end
 
 feature -- GUI object creation
@@ -44,13 +49,7 @@ feature {NONE} -- Callbacks
 	add_gui_callbacks is
 			-- Define the general behavior of the GUI object.
 		do
-		end
-
-	initialize_transport is
-			-- Initialize the mechanism through which
-			-- the current context may be dragged and
-			-- dropped.
-		do
+			add_pnd_callbacks
 		end
 
 	remove_gui_callbacks is
@@ -58,6 +57,7 @@ feature {NONE} -- Callbacks
 			-- (Need to only remove callbacks part of a list
 			-- since set_action will overwrite previous callbacks).
 		do
+			remove_pnd_callbacks
 		end
 
 feature -- Status report

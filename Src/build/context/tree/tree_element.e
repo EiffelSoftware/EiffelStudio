@@ -173,7 +173,7 @@ feature {TREE_ELEMENT} -- Routine commands
 	process_type (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
 		-- Process stone in current hole
 		local
-			context_type: CONTEXT_TYPE
+			context_type: CONTEXT_TYPE [CONTEXT]
 			wind_c: WINDOW_C
 			holder_c: HOLDER_C
 --X			group_stone: GROUP_ICON_STONE

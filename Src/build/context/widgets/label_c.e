@@ -19,7 +19,7 @@ feature -- Type data
 			Result := Pixmaps.ev_label_pixmap
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.primitive_page.label_type
 		end

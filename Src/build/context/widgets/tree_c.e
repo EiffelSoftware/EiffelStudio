@@ -11,12 +11,15 @@ inherit
 	PRIMITIVE_C
 		redefine
 			gui_object,
-			initialize_transport
+			add_pnd_callbacks,
+			remove_pnd_callbacks
 		end
 
 	TREE_ITEM_HOLDER_C
 		redefine
-			gui_object
+			gui_object,
+			add_pnd_callbacks,
+			remove_pnd_callbacks
 		end
 
 feature -- Type data
@@ -26,7 +29,7 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.text_page.tree_type
 		end
@@ -40,13 +43,21 @@ feature -- GUI object creation
 
 feature {NONE} -- Pick and drop
 
-	initialize_transport is
+	add_pnd_callbacks is
 		local
-			routine_cmd: EV_ROUTINE_COMMAND
+			rcmd: EV_ROUTINE_COMMAND
 		do
 			{PRIMITIVE_C} Precursor
-			create routine_cmd.make (~process_context)
-			gui_object.add_pnd_command (Pnd_types.context_type, routine_cmd, Void)
+			{TREE_ITEM_HOLDER_C} Precursor
+			create rcmd.make (~process_type)
+			gui_object.add_pnd_command (Pnd_types.tree_item_type, rcmd, Void)
+		end
+
+	remove_pnd_callbacks is
+		do
+			gui_object.remove_pnd_commands (Pnd_types.tree_item_type)
+			{PRIMITIVE_C} Precursor
+			{TREE_ITEM_HOLDER_C} Precursor
 		end
 
 feature {NONE} -- Internal namer

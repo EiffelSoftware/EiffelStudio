@@ -22,7 +22,7 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.primitive_page.radio_b_type
 		end

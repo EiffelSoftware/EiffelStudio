@@ -7,9 +7,6 @@ indexing
 deferred class CONTEXT  
 
 inherit
-
---	SHARED_EVENTS
-
 	EB_TREE [EV_ANY]
 		rename
 			item as gui_object,
@@ -23,6 +20,8 @@ inherit
 	WINDOWS
 
 	CONSTANTS
+
+	SHARED_EVENTS
 
 	TYPE_DATA
 
@@ -229,11 +228,7 @@ feature -- EB Tree
 			Result := parent.root
 		end
 
-	-- *************************
-	-- * Context tree features *
-	-- *************************
-
-feature
+feature -- Context tree
 
 	hide_tree_elements is
 			-- Remove the tree_elements from the context tree
@@ -265,6 +260,16 @@ feature
 					child_forth
 				end
 --			end
+		end
+
+	select_tree_element_if_parent_selected is
+		do
+			if parent /= Void and then
+				parent.tree_element.selected and then
+				not tree_element.selected
+			then
+				tree_element.select_figure
+			end
 		end
 
 feature {GROUP_CMD}
@@ -364,20 +369,8 @@ feature {CONTEXT_EDITOR} -- Choices in the context editor
 --		deferred
 --		end
 
-feature
-
-	select_tree_element_if_parent_selected is
-		do
-			if parent /= Void and then
-				parent.tree_element.selected and then
-				not tree_element.selected
-			then
-				tree_element.select_figure
-			end
-		end
-
--- feature {NONE} -- Hole
--- 
+feature {NONE} -- Hole
+ 
 -- 	compatible (st: STONE): BOOLEAN is
 -- 		do
 -- 			Result := st.stone_type = Stone_types.attribute_type
@@ -528,9 +521,10 @@ feature -- Type data
 			end
 		end
 
---	type: CONTEXT_TYPE is
---		deferred
---		end
+	data_type: EV_PND_TYPE is
+			-- Pick and Drop type
+		deferred
+		end
 
 feature -- Status report
 
@@ -538,7 +532,6 @@ feature -- Status report
 			-- Is `gui_object' a container ?
 		do
 		end
-
 
 	is_invisible_container: BOOLEAN is
 			-- Is `gui_object' an invisible container ?
@@ -687,8 +680,8 @@ feature -- GUI object creation
 			-- Create the GUI object and
 			-- its representative in the context tree.
 		do
-			retrieve_oui_create (a_parent)
 			create tree_element.make (Current)
+			retrieve_oui_create (a_parent)
 		end
 
 	create_gui_object (a_parent: EV_ANY) is
@@ -756,7 +749,7 @@ feature -- GUI object creation
 feature {NONE} -- GUI object callbacks
 
 	add_gui_callbacks is
-			-- Define the general behavior of the `gui_object'
+			-- Define the general behavior of the `gui_object'.
 		deferred
 		end
 
@@ -769,6 +762,16 @@ feature {NONE} -- GUI object callbacks
 			-- Remove callbacks.
 			-- (Need to only remove callbacks part of a list
 			-- since set_action will overwrite previous callbacks).
+		deferred
+		end
+
+	add_pnd_callbacks is
+			-- Define the pick and drop behavior of the `gui_object'.
+		deferred
+		end
+
+	remove_pnd_callbacks is
+			-- Remove pick and drop callbacks.
 		deferred
 		end
 

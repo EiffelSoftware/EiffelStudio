@@ -26,6 +26,33 @@ feature -- EB Tree access
 
 feature {HOLDER_C}-- Pick and drop target
 
+	process_type (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+			-- Create a new child context for the current container.
+		local
+--			group_stone: GROUP_ICON_STONE
+--			type_data: TYPE_DATA
+			ctxt_type: CONTEXT_TYPE [CONTEXT]
+			ctxt: CONTEXT
+		do
+			if not is_in_a_group and then not is_a_group then
+--				type_stone ?= dropped
+--				group_stone ?= type_stone
+--				if group_stone /= Void then
+--					type_stone := group_stone.data
+--				end
+				ctxt_type ?= ev_data.data
+				check
+					valid_context_type: ctxt_type /= Void
+				end
+				if ctxt_type.is_valid_parent (Current) then
+					ctxt := ctxt_type.create_context (Current)
+					if ctxt /= Void then
+						ctxt.show
+					end
+				end
+			end
+		end
+
 	process_created_context (a_context: CONTEXT; lx, ly: INTEGER) is
 		do
 			if a_context /= Void then

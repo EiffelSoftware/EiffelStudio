@@ -9,6 +9,9 @@ class
 
 inherit
 	SIMPLE_ITEM_C
+		undefine
+			add_pnd_callbacks,
+			remove_pnd_callbacks
 		redefine
 			gui_object,
 			create_context
@@ -16,7 +19,9 @@ inherit
 
 	TREE_ITEM_HOLDER_C
 		redefine
-			gui_object
+			gui_object,
+			add_pnd_callbacks,
+			remove_pnd_callbacks
 		end
 
 feature -- Type data
@@ -26,9 +31,14 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.text_page.tree_item_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.tree_item_type
 		end
 
 feature -- Context creation
@@ -44,7 +54,27 @@ feature -- GUI object creation
 
 	create_gui_object (a_parent: EV_TREE_ITEM_HOLDER) is
 		do
-			create gui_object.make (a_parent)
+			create gui_object.make_with_text (a_parent, visual_name)
+		end
+
+feature {NONE} -- Pick and drop
+
+	add_pnd_callbacks is
+		local
+			rcmd: EV_ROUTINE_COMMAND
+		do
+			{TREE_ITEM_HOLDER_C} Precursor
+			create rcmd.make (~process_type)
+			gui_object.add_pnd_command (Pnd_types.tree_item_type, rcmd, Void)
+--			create rcmd.make (~process_context)
+--			gui_object.add_pnd_command (Pnd_types.context_type, rcmd, Void)
+		end
+
+	remove_pnd_callbacks is
+		do
+			{TREE_ITEM_HOLDER_C} Precursor
+			gui_object.remove_pnd_commands (Pnd_types.tree_item_type)
+--			gui_object.remove_pnd_commands (Pnd_types.context_type)
 		end
 
 feature -- Status report

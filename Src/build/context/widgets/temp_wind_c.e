@@ -13,7 +13,9 @@ inherit
 			create_context,
 			context_initialization, 
 			position_initialization,
-			description_text, creation_procedure_text
+			description_text,
+			creation_procedure_text,
+			data_type
 		end
 
 feature -- Type data
@@ -23,9 +25,14 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.container_page.temp_wind_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.window_child_type
 		end
 
 feature -- Context creation

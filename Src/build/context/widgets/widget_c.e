@@ -34,6 +34,13 @@ feature -- Context creation
 			end
 		end
 
+feature -- Data type
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.widget_type
+		end
+
 feature {NONE} 
 
 	copy_attributes (other_context: like Current) is
@@ -107,6 +114,7 @@ feature {NONE} -- Callbacks
 -- 			end
 			add_common_callbacks (gui_object)
 			initialize_transport
+			add_pnd_callbacks
 		end
 
 	add_common_callbacks (an_object: like gui_object) is
@@ -138,16 +146,10 @@ feature {NONE} -- Callbacks
 			-- Initialize the mechanism through which
 			-- the current context may be dragged and
 			-- dropped.
-		local
-			routine_cmd: EV_ROUTINE_COMMAND
 		do
 			gui_object.activate_pick_and_drop (Void, Void)
 			gui_object.set_data_type (Pnd_types.context_type)
 			gui_object.set_transported_data (Current)
---			create routine_cmd.make (~process_attribute)
---			gui_object.add_pnd_command (Pnd_types.attribute_type, routine_cmd, Void)
---			create routine_cmd.make (~process_instance)
---			gui_object.add_pnd_command (Pnd_types.command_type, routine_cmd, Void)
 		end
 
 	remove_gui_callbacks is
@@ -158,6 +160,24 @@ feature {NONE} -- Callbacks
 --			gui_object.remove_pointer_motion_action (Eb_selection_mgr, 
 --					first_arg)
 --			gui_object.remove_enter_action (Eb_selection_mgr, Current)
+		end
+
+	add_pnd_callbacks is
+			-- Add the pick and drop callbacks.
+--		local
+--			routine_cmd: EV_ROUTINE_COMMAND
+		do
+--			create routine_cmd.make (~process_attribute)
+--			gui_object.add_pnd_command (Pnd_types.attribute_type, routine_cmd, Void)
+--			create routine_cmd.make (~process_instance)
+--			gui_object.add_pnd_command (Pnd_types.command_type, routine_cmd, Void)
+		end
+
+	remove_pnd_callbacks is
+			-- Remove the pick and drop callbacks.
+		do
+--			gui_object.remove_pnd_commands (Pnd_types.attribute_type)
+--			gui_object.remove_pnd_commands (Pnd_types.command_type)
 		end
 
 feature -- Status report

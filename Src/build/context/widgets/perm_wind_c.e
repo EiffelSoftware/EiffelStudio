@@ -17,7 +17,8 @@ inherit
 			cut, undo_cut, deleted,
 			is_perm_window,
 			show, hide,
-			description_text
+			description_text,
+			data_type
 		end
 
 	SHARED_CONTEXT
@@ -29,9 +30,14 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.container_page.perm_wind_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.perm_wind_type
 		end
 
 feature -- Context creation

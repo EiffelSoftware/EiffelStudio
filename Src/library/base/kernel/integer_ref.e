@@ -113,7 +113,7 @@ feature -- Comparison
 			end
 		end;
 
-	max (other: INTEGER_REF): INTEGER is
+	max (other: like Current): INTEGER is
 			-- The greater of current object and `other'
 		require
 			other_exists: other /= Void
@@ -121,7 +121,7 @@ feature -- Comparison
 			Result := max_ref (other).item
 		end;
 
-	min (other: INTEGER_REF): INTEGER is
+	min (other: like Current): INTEGER is
 			-- The smaller of current object and `other'
 		require
 			other_exists: other /= Void

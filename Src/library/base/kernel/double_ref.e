@@ -97,7 +97,7 @@ feature -- Comparison
 			end
 		end;
 
-	max (other: DOUBLE_REF): DOUBLE is
+	max (other: like Current): DOUBLE is
 			-- The greater of current object and `other'
 		require
 			other_exists: other /= Void
@@ -105,7 +105,7 @@ feature -- Comparison
 			Result := max_ref (other).item
 		end;
 
-	min (other: DOUBLE_REF): DOUBLE is
+	min (other: like Current): DOUBLE is
 			-- The smaller of current object and `other'
 		require
 			other_exists: other /= Void

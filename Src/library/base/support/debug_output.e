@@ -6,7 +6,7 @@ indexing
 deferred class
 	DEBUG_OUTPUT
 
-feature {NONE} -- Status report
+feature -- Status report
 
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'.

@@ -51,4 +51,20 @@ feature -- Setting
 			mel_widget.paste_text
 		end;
 
+	init_button (a_button: BUTTON_I) is
+			-- Initialize the button.
+		local
+			mel_primitive: MEL_PRIMITIVE
+		do
+			mel_primitive ?= a_button;	
+			mel_primitive.set_highlight_thickness (0);
+			--mel_primitive.set_shadow_thickness (3)
+		end;
+
+	real_project_height (a_widget: WIDGET_I): INTEGER is
+			-- Height of `a_widget'
+		do
+			Result := a_widget.height
+		end
+ 
 end -- class WIDGET_ROUTINES

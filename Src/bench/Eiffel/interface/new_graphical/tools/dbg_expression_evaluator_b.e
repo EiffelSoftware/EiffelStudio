@@ -86,7 +86,6 @@ feature -- Evaluation
 			-- Compute the value of the last message of `Current'.
 		local
 			obj: DEBUGGED_OBJECT
-			cse: CALL_STACK_ELEMENT
 			l_error_occurred: BOOLEAN
 		do
 			reset_error

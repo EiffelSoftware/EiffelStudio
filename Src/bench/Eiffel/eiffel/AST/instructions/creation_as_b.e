@@ -213,11 +213,6 @@ feature -- Type check, byte code and dead code removal
 				else
 					creators := creation_class.creators;
 					if (creators = Void) then
-							-- Insert the creation without creation routine
-							-- (feature id = -1) in the dependance of the
-							-- current feature
-						!!depend_unit.make_creation_unit (creation_class.id);
-						context.supplier_ids.extend (depend_unit);
 					elseif creators.empty then
 						!!vgcc5;
 						context.init_error (vgcc5);
@@ -235,6 +230,13 @@ feature -- Type check, byte code and dead code removal
 				end;
 			end;
 			Error_handler.checksum;
+
+				-- Insert the creation without creation routine
+				-- (feature id = -1) in the dependance of the
+				-- current feature
+			!!depend_unit.make_creation_unit (creation_class.id);
+			context.supplier_ids.extend (depend_unit);
+
 				-- Compute creation information
 			if type /= Void then
 				!!create_type;

@@ -330,7 +330,8 @@ feature -- Translation editor
 	translation_name: STRING is "Translation"
 	negate_name: STRING is "negate"
 	only_name: STRING is "only"
-	Save_name: STRING is "Save"
+	Save_name: STRING is "OK"
+	Cancel_name: STRING is "Cancel"
 
 feature -- Application editor
 

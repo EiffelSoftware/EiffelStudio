@@ -3569,6 +3569,10 @@ feature -- Properties
 			-- attempt in current or in an inherited class.
 			-- Indexed by `rout_id' of feature on which anchor is done.
 			-- Updated before each IL code generation.
+	
+	type_set: SEARCH_TABLE [INTEGER]
+			-- Set of routine IDs used for anchored type in current class.
+			-- It does not take into accounts inherited one.
 
 	topological_id: INTEGER
 			-- Unique number for a class. Could change during a topological
@@ -4412,13 +4416,16 @@ feature -- Anchored types
 				create l_anchored_features.make (10)
 				l_feat_tbl := feature_table
 				l_select := l_feat_tbl.origin_table
-				l_type_set := System.type_set
+				l_type_set := type_set
 				l_select.start
 			until
 				l_select.after
 			loop
 				l_rout_id := l_select.key_for_iteration
-				if l_type_set.has (l_rout_id) then
+				if
+					(l_type_set /= Void and then l_type_set.has (l_rout_id)) or
+					l_inherited_features.has (l_rout_id)
+				then
 					l_feat := l_select.item_for_iteration
 
 					create l_anchor
@@ -4445,9 +4452,7 @@ feature -- Anchored types
 						l_anchor.set_is_origin (True)
 						l_anchor.set_origin_class_id (class_id)
 						l_anchor.set_origin_feature_id (l_anchor.feature_id)
-						l_anchor.set_feature_name ("_" +
-							System.class_of_id (l_feat.origin_class_id).name_in_upper +
-							"_" + l_rout_id.out)
+						l_anchor.set_feature_name ("_type_" + l_rout_id.out)
 					end
 
 					l_anchored_features.put (l_anchor, l_rout_id)
@@ -4465,6 +4470,25 @@ feature -- Anchored types
 					print (" local + inherited generic parameters%N")
 				end
  			end
+		end
+
+	extend_type_set (r_id: INTEGER) is
+			-- Extend `type_set' with `r_id'. If `type_set' is
+			-- not yet created, creates it.
+		require
+			valid_routine_id: r_id > 0
+			il_generation: System.il_generation
+		local
+			l_type_set: like type_set
+		do
+			l_type_set := type_set
+			if l_type_set = Void then
+				create l_type_set.make (10)
+				type_set := l_type_set
+			end
+			l_type_set.force (r_id)
+		ensure
+			inserted: type_set.has (r_id)
 		end
 
 feature {NONE} -- Anchored features

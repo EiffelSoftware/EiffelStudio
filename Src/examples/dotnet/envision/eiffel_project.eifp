@@ -6,16 +6,16 @@
 {
     "Debug|.NET"
     {
-    "AceFile" = ".\\ace.ace"
-    "ProjectFileName" = ".\\debug\\app.epr"
+    "AceFile" = ".\\debug\\ace.ace"
+    "ProjectFileName" = ""
     "OptimizeCode" = "0"
     "RequiresCleanCompile" = "0"
     "UseGeneratedCyrptogrpahicKey" = "0"
     }
     "Release|.NET"
     {
-    "AceFile" = ".\\ace.ace"
-    "ProjectFileName" = ".\\release\\noth.epr"
+    "AceFile" = ".\\release\\ace.ace"
+    "ProjectFileName" = ""
     "OptimizeCode" = "0"
     "RequiresCleanCompile" = "0"
     "UseGeneratedCyrptogrpahicKey" = "0"

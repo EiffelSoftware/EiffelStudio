@@ -118,9 +118,7 @@ feature -- C code generation
 			end;
 
 			if (not final_mode) or else assertion_level.check_precond then
-				if not final_mode then
-					buffer.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
-				else
+				if final_mode then
 					buffer.putstring ("%Tif (~in_assertion) {%N");
 				end;
 				buffer.putstring ("%
@@ -139,7 +137,9 @@ feature -- C code generation
 					%%T} else {%N%
 					%%T%TRTCF;%N%T}%N");
 
-				buffer.putstring ("%T}%N");
+				if final_mode then
+					buffer.putstring ("%T}%N");
+				end
 			end;
 
 			if is_expanded then
@@ -231,9 +231,7 @@ feature -- C code generation
 			end;
 
 			if (not final_mode) or else assertion_level.check_precond then
-				if not final_mode then
-					buffer.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
-				else
+				if final_mode then
 					buffer.putstring ("%Tif (~in_assertion) {%N");
 				end;
 				buffer.putstring ("%
@@ -252,7 +250,9 @@ feature -- C code generation
 					%%T } else {%N%
 					%%T%TRTCF;%N%T}%N");
 
-				buffer.putstring ("%T}%N");
+				if final_mode then
+					buffer.putstring ("%T}%N");
+				end
 			end;
 
 			if is_expanded then

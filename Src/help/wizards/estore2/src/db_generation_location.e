@@ -132,7 +132,7 @@ feature -- basic Operations
 		do
 			Create dir_selector
 			dir_selector.ok_actions.extend (~directory_selected(dir_selector))
-			dir_selector.show_modal
+			dir_selector.show_modal_to_window (first_window)
 		end
 
 	directory_selected (dir_selector: EV_DIRECTORY_DIALOG) is

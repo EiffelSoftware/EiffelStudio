@@ -5,9 +5,10 @@ root
 	EB_KERNEL: make
 
 default
-	assertion (check)
 	assertion (require)
+	assertion(check)
 	assertion (ensure)
+	arguments ("-from_bench")
 	disabled_debug (yes)
 	disabled_debug ("_jfiat")
 	disabled_debug ("activity")
@@ -80,6 +81,7 @@ default
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
 	disabled_debug ("il_info_trace")
+	disabled_debug ("lex_output")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("md out-of-order")
 	disabled_debug ("memory")
@@ -163,6 +165,11 @@ cluster
 		end
 
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+
+	all editor:		"$EIFFEL_SRC\library\editor"
+		exclude
+			"eiffel"; "text_formatter.e"; "structured_text.e"; 
+		end
 
 	all compiler_support:		"$EIFFEL_SRC\Eiffel\support"
 
@@ -248,14 +255,16 @@ cluster
 
 	io_watcher (communications):		"$\spec\mswin"
 
+	all lex:		"$ISE_EIFFEL\library\lex"
+
 	all interface:		"$EIFFEL_SRC\Eiffel\interface"
 		exclude
 			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "new_tty"; "xml_implementation"; "preferences"; "no_dotnet"; 
 		end
 
-	tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
+	all tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
 		exclude
-			"output_window.e"; "tty_resources.e"; "eb_diagram_html_generator.e"; 
+			"output_window.e"; "tty_resources.e"; "eb_diagram_html_generator.e"; "eb_gui_preferences.e"; 
 		end
 
 	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"

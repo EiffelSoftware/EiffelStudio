@@ -52,7 +52,7 @@ feature -- Basic Operation
 		require
 			list_exists: selected_files /= Void
 		local
-			li: LINKED_LIST[EV_LIST_ITEM]
+			li: DYNAMIC_LIST[EV_LIST_ITEM]
 		do
 			li := selected_files.selected_items
 			from
@@ -80,6 +80,7 @@ feature -- Basic Operation
 		do
 			dialog.ok_actions.extend(~add_files(dialog))
 			dialog.show_modal
+			dialog.ok_actions.wipe_out
 		end
 
 	add_files(dialog: EV_STANDARD_DIALOG) is
@@ -181,11 +182,11 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap_location: STRING is "small_essai.bmp"
-
-	title: STRING is "HTML Forms selection"
-
-	message: STRING is "Please select the HTML files you wish to add%N%
-						%to your repository."
+	display_state_text is
+		do
+			title.set_text ("HTML Forms selection")
+			message.set_text ("Please select the HTML files you wish to add%N%
+						%to your repository.")
+		end
 
 end -- class HTML_FILES_SELECTION_STATE

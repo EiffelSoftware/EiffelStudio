@@ -30,10 +30,10 @@ feature -- basic Operations
 
 				choice_box.extend(Create {EV_HORIZONTAL_BOX})
 				choice_box.extend(new_project_b)
-				choice_box.extend(Create {EV_HORIZONTAL_BOX})
+--				choice_box.extend(Create {EV_HORIZONTAL_BOX})
 				choice_box.extend(existing_project_b)
 				choice_box.extend(Create {EV_HORIZONTAL_BOX})
-				set_updatable_entries(<<new_project_b.press_actions, existing_project_b.press_actions>>)
+				set_updatable_entries(<<new_project_b.select_actions, existing_project_b.select_actions>>)
 		end
 
 	proceed_with_current_info is 
@@ -56,11 +56,11 @@ feature -- Implementation
 
 	new_project_b, existing_project_b: EV_RADIO_BUTTON
 
-	pixmap_location: STRING is "small_essai.bmp"
-
-	message: STRING is "The wizard can either build a project from scratch or%N%
-						%help you to add classes to an existing project. "
-	
-	title: STRING is "Generation Type"
+	display_state_text is
+		do
+			message.set_text ("The wizard can either build a project from scratch or%N%
+						%help you to add classes to an existing project. ")
+			title.set_text ("Generation Type")
+		end
 
 end -- class GENERATION_SELECTION_STATE

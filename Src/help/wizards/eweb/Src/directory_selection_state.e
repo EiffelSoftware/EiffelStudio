@@ -28,9 +28,9 @@ feature -- Basic Operation
 		do 
 			Create h1
 			Create location.make("Choose a Directory",
-							 wizard_information.project_location, 10, 30, Current)
+							 wizard_information.project_location, 10, 30, Current, FALSE)
 			Create browse_b.make_with_text("Browse...")
-			browse_b.press_actions.extend(~Browse)
+			browse_b.select_actions.extend(~Browse)
 
 			choice_box.extend(Create {EV_HORIZONTAL_BOX})
 			choice_box.extend(h1)
@@ -41,7 +41,7 @@ feature -- Basic Operation
 			h1.disable_item_expand(browse_b)
 			choice_box.disable_item_expand(h1)
 
-			set_updatable_entries(<<browse_b.press_actions, location.change_actions>>)
+			set_updatable_entries(<<browse_b.select_actions, location.change_actions>>)
 		end
 
 	proceed_with_current_info is 
@@ -92,18 +92,15 @@ feature {NONE} -- Implementation
 
 	location: WIZARD_SMART_TEXT_FIELD
 
-	pixmap_location: STRING is "small_essai.bmp"
-
-	title: STRING is 
-			-- Title of Current state.
+	display_state_text is
 		do
 			if wizard_information.is_new_project then
-				Result := "Building new project ..."
+				title.set_text ("Building new project ...")
+				message.set_text ("Please choose the directory in which you want %Nto have your Eiffel sources.")
 			else
-				Result := "Adding new classes ..."
+				title.set_text ("Adding new classes ...")
+				message.set_text ("Please choose the directory in which you want %Nto have your Eiffel sources.")
 			end
 		end
-
-	message: STRING is "Please choose the directory in which you want %Nto have your Eiffel sources."
 
 end -- class DIRECTORY_SELECTION_STATE

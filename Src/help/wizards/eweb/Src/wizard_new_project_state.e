@@ -8,7 +8,7 @@ class
 	WIZARD_NEW_PROJECT_STATE
 
 inherit
-	WIZARD_STATE_WINDOW
+	INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info

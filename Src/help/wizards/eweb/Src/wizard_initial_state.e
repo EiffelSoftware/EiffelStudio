@@ -23,12 +23,18 @@ feature -- basic Operations
 			proceed_with_new_state(Create {GENERATION_SELECTION_STATE}.make(wizard_information))
 		end
 
+	display_state_text is
+		do
+			title.set_text ("Eiffel Web wizard")
+			message.set_text ("Welcome.%NThis wizard will help you to build your first Eiffel Web %N Application.")
+		end
+	
 feature -- Implementation
 
-	pixmap_location: STRING is "small_essai.bmp"
+--	pixmap_location: STRING is "small_essai.bmp"
 
-	message: STRING is "Welcome.%NThis wizard will help you to build your first Eiffel Web %N Application."
+--	message: STRING is "Welcome.%NThis wizard will help you to build your first Eiffel Web %N Application."
 
-	title: STRING is "Eiffel Web wizard"
+--	title: STRING is "Eiffel Web wizard"
 
 end -- class WIZARD_INITIAL_STATE

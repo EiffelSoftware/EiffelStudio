@@ -643,7 +643,7 @@ rt_public EIF_REFERENCE tuple_malloc (uint32 ftype) {
 	return tuple_malloc_specific(ftype, count, is_atomic);
 }
 
-RT_LNK EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic)
+rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic)
 	/* Allocate memory for a TUPLE instance. TUPLE are allocated through `spmalloc'
 	 * but the element size is the one of TUPLE element, i.e. sizeof (EIF_TYPED_ELEMENT).
 	 */

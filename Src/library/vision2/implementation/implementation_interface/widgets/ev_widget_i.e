@@ -100,14 +100,14 @@ feature -- Status setting
 			-- Enable sensitivity to user input events.
 		deferred
 		ensure
-			is_sensitive: is_sensitive
+			is_sensitive: interface.is_sensitive
 		end
 
 	disable_sensitive is
 			-- Disable sensitivity to user input events.
 		deferred
 		ensure
-			not_is_sensitive: not is_sensitive
+			not_is_sensitive: not interface.is_sensitive
 		end
 
 	set_default_colors is
@@ -139,7 +139,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			background_color_assigned: background_color.is_equal (a_color)
+			background_color_assigned: 
+				interface.background_color.is_equal (a_color)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -148,7 +149,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			foreground_color_assigned: foreground_color.is_equal (a_color)
+			foreground_color_assigned: 
+				interface.foreground_color.is_equal (a_color)
 		end
 
 	set_minimum_width (a_minimum_width: INTEGER) is
@@ -157,7 +159,7 @@ feature -- Element change
 			a_minimum_width_positive: a_minimum_width > 0
 		deferred
 		ensure
-			minimum_width_assigned: minimum_width = a_minimum_width
+			minimum_width_assigned: interface.minimum_width = a_minimum_width
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
@@ -166,7 +168,7 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height > 0
 		deferred
 		ensure
-			minimum_height_assigned: minimum_height = a_minimum_height
+			minimum_height_assigned: interface.minimum_height = a_minimum_height
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
@@ -177,18 +179,18 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height > 0
 		deferred
 		ensure
-			minimum_width_assigned: minimum_width = a_minimum_width
-			minimum_height_assigned: minimum_height = a_minimum_height
+			minimum_width_assigned: interface.minimum_width = a_minimum_width
+			minimum_height_assigned: interface.minimum_height = a_minimum_height
 		end
 
 	set_tooltip (a_text: STRING) is
 			-- Set `tooltip' to `a_text'.
-	        deferred
+        deferred
 		end
 
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
-	        deferred
+        deferred
 		end
 
 feature -- Measurement
@@ -306,31 +308,8 @@ feature -- Obsolete
 		local
 			wid_imp: EV_CONTAINER_I
 		do
-		--	if parent_imp /= Void then
-		--		wid_imp := par.implementation
-		--		Result := wid_imp = parent_imp
-		--	else
-		--		Result := par = Void
-		--	end
 			check false end
 		end
-
-
-	--|FIXME I believe this is no longer required.
-	--|Will be removed completely when reviewing. Julian
-	--managed: BOOLEAN is
-	--		-- Is the current widget managed ?
-	--	obsolete "needs more work"
-	--	local
-	--		wid: EV_WIDGET
-	--	do
-		--	wid ?= interface
-		--	if wid = Void then
-		--		Result := False
-		--	else
-		--		Result := wid.managed
-		--	end
-	--	end
 
 	application: CELL [EV_APPLICATION_IMP] is
 			-- The current application.
@@ -354,8 +333,9 @@ invariant
 
 
 	--|FIXME These two assertions have been commented out due to problems with
-	--|The windows implementation. The problem is due to the fact that until the widgets
-	--| have been re-sized then the width, which is returned by wel will by 0. However,
+	--|The windows implementation. The problem is due to the fact that until
+	--| the widgets have been re-sized then the width, which is returned by
+	--| wel will by 0. However,
 	--| the minimum width of the widget will be greater than 0.
 	--| This violates these pre-conditions and needs to be fixed.
 	--|width_not_less_than_minimum_width:
@@ -390,17 +370,23 @@ end -- class EV_WIDGET_I
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
 
-
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/04/11 18:13:15  oconnor
+--| Changed postconditions to check results through interface.
+--| ie      set_foo (a_foo: FOO) is do ... ensure foo = a_foo end
+--| becomes set_foo (a_foo: FOO) is do ... ensure interface.foo = a_foo end
+--|
 --| Revision 1.61  2000/03/17 23:06:32  rogers
---| Set pointer style has been made deferred. Inherited from EV_PICK_AND_DROPABLE_IMP now.
+--| Set pointer style has been made deferred. Inherited from
+--| EV_PICK_AND_DROPABLE_IMP now.
 --|
 --| Revision 1.60  2000/03/17 18:17:26  rogers
---| screen_x and screen_y are now implemented platform dependendently and have been made deferred.
+--| screen_x and screen_y are now implemented platform dependendently and have
+--| been made deferred.
 --|
 --| Revision 1.59  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
@@ -412,7 +398,8 @@ end -- class EV_WIDGET_I
 --| released
 --|
 --| Revision 1.57.6.32  2000/02/02 00:50:26  king
---| Commented parent_contains_current invariant as it does not hold for items that are widgets only on the implementation side such as tool bar buttons
+--| Commented parent_contains_current invariant as it does not hold for items
+--| that are widgets only on the implementation side such as tool bar buttons
 --|
 --| Revision 1.57.6.31  2000/01/29 00:59:03  brendel
 --| Removed set_default_minimum_size.
@@ -424,7 +411,8 @@ end -- class EV_WIDGET_I
 --| added --| FIXME Not for release
 --|
 --| Revision 1.57.6.28  2000/01/26 19:17:01  rogers
---| width_not_less_than_minimum_width and height_not_less_than_minimum_height have been commented out with a FIXME and a detailed description of why.
+--| width_not_less_than_minimum_width and height_not_less_than_minimum_height
+--| have been commented out with a FIXME and a detailed description of why.
 --|
 --| Revision 1.57.6.27  2000/01/25 17:12:47  king
 --| Added absolute coord functions, can be optimized with platform dependancy
@@ -433,13 +421,15 @@ end -- class EV_WIDGET_I
 --| changed >= 1 to > 0
 --|
 --| Revision 1.57.6.25  2000/01/21 19:13:34  king
---| Changed min hgt/wid invariants back to zero as they didn't hold for an empty container
+--| Changed min hgt/wid invariants back to zero as they didn't hold for an
+--| empty container
 --|
 --| Revision 1.57.6.24  2000/01/20 23:50:41  king
 --| Changed minimum size assertions to be >= 1 instead of 0
 --|
 --| Revision 1.57.6.23  2000/01/19 00:22:51  rogers
---| Removed managed. This is now only required for windows and is implemented in EV_WIDGET_IMP.
+--| Removed managed. This is now only required for windows and is implemented
+--|in EV_WIDGET_IMP.
 --|
 --| Revision 1.57.6.22  1999/12/17 18:16:10  rogers
 --| Removed set_parent.
@@ -518,7 +508,6 @@ end -- class EV_WIDGET_I
 --|
 --| Revision 1.57.2.2  1999/11/02 17:20:06  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

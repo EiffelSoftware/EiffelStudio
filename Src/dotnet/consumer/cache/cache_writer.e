@@ -143,9 +143,9 @@ feature -- Basic Operations
 						-- unconsume stale assembly
 					unconsume_assembly (l_lower_path)
 					l_name := l_assembly.get_name
-					l_ca.set_culture (l_name.culture_info.to_string)
+					l_ca.set_culture (culture_from_info (l_name.culture_info))
 					l_ca.set_version (l_name.version.to_string)
-					l_ca.set_key (encoded_key (l_name.get_public_key_token))
+					l_ca.set_key (public_key_token_from_array (l_name.get_public_key_token))
 				end
 					
 					-- Reset update (for optimizations)
@@ -531,17 +531,8 @@ feature {NONE} -- Implementation
 			l_assembly := load_from_gac_or_path (a_path)
 			if l_assembly /= Void then
 				l_name := l_assembly.get_name
-				
-				if l_name.get_public_key_token = Void or else l_name.get_public_key_token.length = 0 then
-					l_key := "null"
-				else
-					l_key := encoded_key (l_name.get_public_key_token)
-				end
-				l_culture := l_name.culture_info.to_string
-				if l_culture.is_empty then
-					l_culture := "neutral"				
-				end
-				
+				l_key := public_key_token_from_array (l_name.get_public_key_token)
+				l_culture := culture_from_info (l_name.culture_info)
 				l_is_in_gac := l_assembly.global_assembly_cache
 				if not l_is_in_gac and then is_mscorlib (l_assembly) then
 					l_is_in_gac := True
@@ -618,6 +609,39 @@ feature {NONE} -- Implementation
 		
 	cache_reader: CACHE_READER
 			-- associated cache reader
+			
+ 	culture_from_info (a_info: CULTURE_INFO): STRING is
+ 			-- Returns culture string from `a_info'
+ 		require
+ 			a_info_not_void: a_info /= Void
+ 		do
+ 			Result := a_info.to_string
+ 			if Result.is_empty then
+ 				Result := neutral_culture
+ 			end
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+ 		end
+			
+	neutral_culture: STRING is "neutral"
+			-- neutral culture
+			
+ 	public_key_token_from_array (a_array: NATIVE_ARRAY [NATURAL_8]): STRING is
+ 			-- Returns culture string from `a_info'
+ 		do
+			if a_array = Void or else a_array.length = 0 then
+				Result := null_public_key_token
+			else
+				Result := encoded_key (a_array)
+			end
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+ 		end
+			
+	null_public_key_token: STRING is "null"
+			-- Null public key tokens
 
 invariant
 	non_void_cache_reader: cache_reader /= Void

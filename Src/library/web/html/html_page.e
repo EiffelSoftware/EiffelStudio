@@ -32,13 +32,21 @@ feature -- Initialization
 			path_not_void: fi_n /= Void
 		local
 			fi: PLAIN_TEXT_FILE
+			retried: BOOLEAN
 		do
-			create fi.make_open_read (fi_n)
-			fi.read_stream (fi.count)
-			image := clone (fi.last_string)
-			fi.close
+			if not retried then
+				create fi.make_open_read (fi_n)
+				fi.read_stream (fi.count)
+				image := clone (fi.last_string)
+				fi.close
+			else
+				image := "<HTML>Could not read file " + fi_n + ".</HTML>"
+			end
 		ensure
 			image_exists: image /= Void
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Basic Operations

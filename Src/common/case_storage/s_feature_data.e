@@ -37,6 +37,10 @@ feature -- Properties
 		do
 		end
 
+	constant_value: STRING
+		-- Value of Feature if constant
+		-- If not, Void ...
+
 	is_deferred: BOOLEAN;
 			-- Is Current feature deferred?
 
@@ -86,6 +90,15 @@ feature -- Setting
 		ensure
 			name_set: name = s;
 		end;
+
+	set_constant_value(s: STRING) is
+		require
+			s_exists: s/= Void
+		do
+			constant_value := clone(s)
+		ensure
+			constant_value_set: constant_value.is_equal(s)
+		end
 
 	set_is_attribute is
 			-- Set is_attribute to `True'.
@@ -235,7 +248,7 @@ invariant
 			(postconditions = Void or else postconditions.empty) 
 	attribute_no_argument: is_attribute implies 
 			(arguments = Void or else arguments.empty) 
-	constant_is_attribute: is_constant implies is_attribute
+	--constant_is_attribute: is_constant implies is_attribute
 	deferred_is_routine: is_deferred implies (not is_attribute)
 	once_is_routine: is_once implies (not is_attribute)
 	effective_not_deferred: is_effective implies (not is_deferred)

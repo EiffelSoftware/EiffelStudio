@@ -134,7 +134,7 @@ feature -- Access
 			index_small_enough: i <= count;
 			index_large_enough: i > 0;
 		do
-			Result := str_code ($area, i)
+			Result := area.item (i).code
 		end;
 
 	hash_code: INTEGER is
@@ -1076,12 +1076,6 @@ feature {STRING, IO_MEDIUM} -- Implementation
 		end;
 
 feature {STRING} -- Implementation
-
-	str_code (c_string: POINTER; i: INTEGER): INTEGER is
-			-- Numeric code of `i'-th character in `c_string'
-		external
-			"C [macro %"eif_str.h%"]"
-		end;
 
 	hashcode (c_string: POINTER; len: INTEGER): INTEGER is
 			-- Hash code value of `c_string'

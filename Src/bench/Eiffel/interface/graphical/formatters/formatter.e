@@ -133,6 +133,7 @@ feature -- Formatting
 							display_header (stone);
 							mp.restore
 						else
+							holder.set_selected (False);
 							bar_and_text_tool ?= tool;
 							if bar_and_text_tool /= Void then
 								bar_and_text_tool.showtext_frmt_holder.execute (stone)

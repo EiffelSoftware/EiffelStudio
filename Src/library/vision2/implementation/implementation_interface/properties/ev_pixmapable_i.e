@@ -47,7 +47,7 @@ feature -- Assertion features
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do
-			Result := True --(pixmap.width <= 16) and (pixmap.height <= 16)
+			Result := (pix.width <= 16) and (pix.height <= 16)
 		end
 
 end -- class EV_PIXMAP_CONTAINER_I

@@ -73,12 +73,12 @@ feature -- Show the window
 		local
 			arg1: EV_ARGUMENT1[DEMO_WINDOW]
 		do
-			show
 			!! actions_window.make_with_main_widget (Current, main_widget)
 			actions_window.show
 			win.set_insensitive (True)
 			!! arg1.make (Current)
 			add_close_command (win, arg1)
+			show
 		end
 
 end -- class DEMO_WINDOW

@@ -171,7 +171,7 @@ feature -- Access
 			l_ctype := adapted_class_type (ctype, f)
 			
 				--| and now the other data
-			l_icd_function := eifnet_debugger.icd_function_by_name (l_ctype, f.feature_name)
+			l_icd_function := eifnet_debugger.icd_function_by_feature (l_ctype, f)
 			if l_icd_function /= Void then
 
 				debug ("debugger_trace_eval_data")

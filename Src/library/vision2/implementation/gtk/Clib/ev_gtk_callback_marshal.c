@@ -310,9 +310,9 @@ guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT agent)
     // do
             connection_id = gtk_idle_add_full (
 				GTK_PRIORITY_DEFAULT,      // Priority.
-				NULL,                      // Function pointer to attach.
-				(GtkCallbackMarshal)
-				c_ev_gtk_callback_marshal, // Function marshal.
+				(GtkFunction)               // Function pointer to attach.
+				c_ev_gtk_callback_marshal_true_callback,
+				NULL,                      // Function marshal.
 				eif_adopt (agent),         // User data for function.
 				(GtkDestroyNotify)
 				eif_wean                   // To call on hook disconnect.
@@ -383,6 +383,10 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.10  2000/04/14 18:26:58  oconnor
+// Make sure that idle callback returns TRUE so that GTK dose not
+// disconnect it after it is called.
+//
 // Revision 1.9  2000/04/04 20:33:51  oconnor
 // syntax
 //

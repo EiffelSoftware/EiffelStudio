@@ -1020,6 +1020,24 @@ feature -- Basic operations
 			cwin_draw_icon (item, x, y, icon.item)
 		end
 
+	draw_icon_ex (icon: WEL_ICON; x, y, icon_width, icon_height, frame_index: INTEGER; flicker_free_background: WEL_BRUSH; di_flags: INTEGER) is
+			-- Draw `icon' at the `x', `y' position.
+		require
+			exists: exists
+			icon_not_void: icon /= Void
+			icon_exists: icon.exists
+		local
+			ffdraw: POINTER
+		do
+			if flicker_free_background = Void then 
+				ffdraw := Default_pointer
+			else
+				ffdraw := flicker_free_background.item
+			end
+
+			cwin_draw_icon_ex (item, x, y, icon.item, icon_width, icon_height, frame_index, ffdraw, di_flags)
+		end
+
 	draw_cursor (cursor: WEL_CURSOR; x, y: INTEGER) is
 			-- Draw `cursor' at the `x', `y' position.
 		require
@@ -1592,6 +1610,14 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>] (HDC, int, int, HICON)"
 		alias
 			"DrawIcon"
+		end
+
+	cwin_draw_icon_ex (hdc: POINTER; x, y: INTEGER; hicon: POINTER; icon_width, icon_height, frame_index: INTEGER; ffdraw: POINTER; di_flags: INTEGER) is
+			-- SDK DrawIcon
+		external
+			"C [macro <windows.h>] (HDC, int, int, HICON, int, int, UINT, HBRUSH, UINT)"
+		alias
+			"DrawIconEx"
 		end
 
 	cwin_set_pixel (hdc: POINTER; x, y: INTEGER; color: INTEGER) is

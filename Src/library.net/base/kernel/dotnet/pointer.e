@@ -18,6 +18,10 @@ inherit
 	ISERIALIZABLE
 		rename
 			get_object_data as system_runtime_serialization_iserializable_get_object_data
+		undefine
+			get_hash_code,
+			equals,
+			to_string
 		end
 
 	POINTER_REF

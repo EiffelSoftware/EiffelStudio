@@ -17,8 +17,18 @@ inherit
 		end
 
 	ICOMPARABLE
+		undefine
+			get_hash_code,
+			equals,
+			to_string
+		end
 
 	IFORMATTABLE
+		undefine
+			get_hash_code,
+			equals,
+			to_string
+		end
 
 	INTEGER_16_REF
 

@@ -333,7 +333,7 @@ when 69 then
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
 
-				yyval1 := Void
+				create {INLINE_EXTENSION_AS} yyval1.initialize (False, yytype7 (yyvs.item (yyvsp)))
 			
 			yyval := yyval1
 		end
@@ -379,7 +379,7 @@ when 69 then
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
 
-				yyval1 := Void
+				create {INLINE_EXTENSION_AS} yyval1.initialize (True, yytype7 (yyvs.item (yyvsp)))
 			
 			yyval := yyval1
 		end

@@ -193,18 +193,18 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
     CONTROL         124,Wizard0_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
-    CONTROL         "Open an existing project",Open_Project_Check,"Button",
+    CONTROL         "Open an existing project.",Open_Project_Check,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,125,45,140,10
-    CONTROL         "Create a new project from COM definition",
+    CONTROL         "Create a new project from a COM definition.",
                     Create_Project_From_COM_Check,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,125,60,145,10
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,125,60,182,10
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
     PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14,WS_DISABLED
     CTEXT           "Welcome to the EiffelCOM Wizard!",Title_Static,110,5,
                     225,10
     LTEXT           "What would you like to do?",Title_Question_Static,115,
                     25,220,10
-    CONTROL         "Create a new project from existing Eiffel project",
+    CONTROL         "Create a new project from an existing Eiffel project.",
                     Create_Project_From_Eiffel_Check,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,125,76,182,10
 END

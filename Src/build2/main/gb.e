@@ -72,6 +72,13 @@ inherit
 			copy, default_create
 		end
 		
+	EIFFEL_ENV
+		export
+			{NONE} all
+		undefine
+			copy, default_create
+		end
+		
 create
 	execute
 
@@ -88,46 +95,62 @@ feature {NONE} -- Initialization
 			file_handler: GB_SIMPLE_XML_FILE_HANDLER
 			shared_preferences: GB_SHARED_PREFERENCES
 			preferences_initialized: BOOLEAN
+			environment_dialog: INVALID_ENVIRONMENT_DIALOG
 		do
-			
 				-- Ensure that the preferences are initialized correctly.
 			if command_line.argument_array.count = 4 or command_line.argument_array.count = 7 then
 				system_status.enable_wizard_system
 			end
-			create shared_preferences
-			preferences_initialized := preferences.initialized
-
-			if command_line.argument_array.count = 1 then
-					-- If `argument_array' has one element,
-					-- then no argument was specified, only the
-					-- name of the executable.
-				default_create
-				build_non_once_windows
-				xml_handler.load_components
-				main_window.build_interface
-				main_window.show
-				post_launch_actions.extend (agent display_tip_of_the_day)
-				launch
-			elseif command_line.argument_array.count = 2 then
-				-- There are two command line options in the case where we double click on a .bpr
-				-- file, and open build this way. We must look inside the .bpr file, and determine
-				-- how to open build. i.e. Visual studio wizard, or regular file.
-				create project_settings
-				create file_handler
-				project_settings.load (command_line.argument_array @ 1, file_handler)
-					-- Question `project_settings' to see how to open the file.
-				if project_settings.is_stand_alone_project then
+			if not system_status.is_wizard_system then
+				if environment_variables_warning = Void then
+						-- Only launch EiffelBuild if the required environment variables are
+						-- available, otherwise we must display a fatal error message.
+						-- Note that EiffelBuild may be launched in Visualstudio mode without these
+						-- variables.
+					create shared_preferences
+					preferences_initialized := preferences.initialized
+					if command_line.argument_array.count = 1 then
+							-- If `argument_array' has one element,
+							-- then no argument was specified, only the
+							-- name of the executable.
+						default_create
+						build_non_once_windows
+						xml_handler.load_components
+						main_window.build_interface
+						main_window.show
+						post_launch_actions.extend (agent display_tip_of_the_day)
+						launch
+					elseif command_line.argument_array.count = 2 then
+						-- There are two command line options in the case where we double click on a .bpr
+						-- file, and open build this way. We must look inside the .bpr file, and determine
+						-- how to open build. i.e. Visual studio wizard, or regular file.
+						create project_settings
+						create file_handler
+						project_settings.load (command_line.argument_array @ 1, file_handler)
+							-- Question `project_settings' to see how to open the file.
+						if project_settings.is_stand_alone_project then
+							default_create
+							build_non_once_windows
+							xml_handler.load_components
+							main_window.build_interface
+							main_window.show
+							post_launch_actions.extend (agent open_with_name (command_line.argument_array @ 1))
+							post_launch_actions.extend (agent display_tip_of_the_day)
+							launch
+						end
+					end
+				else
+						-- The necessary environment variables are not present, so
+						-- display a warning dialog instead of launching EiffelBuild.
 					default_create
-					build_non_once_windows
-					xml_handler.load_components
-					main_window.build_interface
-					main_window.show
-					post_launch_actions.extend (agent open_with_name (command_line.argument_array @ 1))
-					post_launch_actions.extend (agent display_tip_of_the_day)
+					create environment_dialog
+					environment_dialog.warning_label.set_text ("EiffelBuild was unable to launch for the following reasons: %N%N" + environment_variables_warning + "%N%NPlease check your installation.")
+					environment_dialog.show
 					launch
 				end
 			end
-		
+
+
 			if command_line.argument_array.count = 4 then
 				-- In this situation, Build is being loaded by a double click from the VisualStudio explorer.
 				-- The arguments are as follows:
@@ -172,6 +195,29 @@ feature {NONE} -- Initialization
 					system_status.set_current_project (project_settings)
 					create wizard_manager.make_and_launch ((command_line.argument_array @ 4).to_integer)
 				end
+			end
+		end
+		
+	environment_variables_warning: STRING is
+			-- `Result' is warning message indicating missing environment
+			-- variables, or `Void' if none are missing.
+		local
+			temp: STRING
+		once
+			Result := ""
+			temp := eiffel_installation_dir_name
+			if temp = Void or else temp.is_empty then
+				Result.append ("The Environment variable $ISE_EIFFEL is not set.")
+			end
+			temp := eiffel_platform
+			if temp = Void or else temp.is_empty then
+				if not result.is_empty then
+					Result.append ("%N")
+				end
+				Result.append ("The Environment variable $ISE_PLATFORM is not set.")
+			end
+			if Result.is_empty then
+				Result := Void
 			end
 		end
 		

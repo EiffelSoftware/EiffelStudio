@@ -131,14 +131,6 @@ feature -- Implementation
 			"XmNcursorPositionVisible"
 		end;
 
-	XmNfontList: POINTER is
-			-- Motif resource
-		external
-			"C [macro <Xm/TextF.h>]: EIF_POINTER"
-		alias
-			"XmNfontList"
-		end;
-
 	XmNresizeWidth: POINTER is
 			-- Motif resource
 		external

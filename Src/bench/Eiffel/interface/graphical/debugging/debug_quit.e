@@ -3,7 +3,8 @@ class DEBUG_QUIT
 inherit
 
 	ICONED_COMMAND;
-	IPC_SHARED
+	IPC_SHARED;
+	SHARED_DEBUG
 
 creation
 
@@ -21,8 +22,17 @@ feature {NONE}
 
 	work (argument: ANY) is
 			-- Continue execution.
+		local
+			kill_request: EWB_REQUEST
 		do
-			request.send
+			if Run_info.is_running then
+				if Run_info.is_stopped then
+					request.send;
+				else
+					!! kill_request.make (Rqst_kill);
+					kill_request.send
+				end;
+			end;
 		end;
 
 	

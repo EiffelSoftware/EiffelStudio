@@ -48,11 +48,53 @@ feature {NONE} -- For workbench requests.
 		-- #define DT_REMOVE   1
 		-- /* Remove breakpoint */
 
+	Rqst_dump: INTEGER is 7;
+		-- #define DUMP		7
+		-- /* A general stack dump request */
+
+	Rqst_inspect: INTEGER is 6;
+		-- #define INSPECT         6
+		-- /* Object inspection */
+
+	Rqst_move: INTEGER is 9;
+		-- #define MOVE                       9
+		-- /* Change active routine pointer */
+
+	In_address: INTEGER is 0;
+		-- #define IN_ADDRESS      0
+		-- /* Local variable by number */
+
+	Pg_raise: INTEGER is 1;
+		-- Explicitely raised exception
+
+	Pg_viol: INTEGER is 2;
+		-- Implicitely raised exception
+
+	Pg_break: INTEGER is 3;
+		-- Breakpoint reached
+
+	Rqst_quit: INTEGER is 12;
+		-- #define QUIT            12
+		-- /* Application must die immediately */
+
+	Rqst_kill: INTEGER is 21;
+		-- #define KILL            21
+		-- /* Kill application asynchronously */
+
+		-- stack request code: same as in ipc/shared/stack.h
+	Exceptions_stack: INTEGER is 0;
+	Calls_stack: INTEGER is 1;
+	Full_stack: INTEGER is 2;
+	Locals_stack: INTEGER is 3;
+	Args_stack: INTEGER is 4;
+	Vars_stack: INTEGER is 5;
+	Once_stack: INTEGER is 6;
+	
+	
 -- Need to be updated.
 	Rqst_cont: INTEGER is 2;
 	Rqst_step: INTEGER is 3;
 	Rqst_next: INTEGER is 4;
-	Rqst_quit: INTEGER is 5;
 
 feature {NONE} -- For workbench responses.
 
@@ -62,6 +104,8 @@ feature {NONE} -- For workbench responses.
 	Rep_job_done: INTEGER is 2;
 	Rep_failure: INTEGER is 3;
 	Rep_melt: INTEGER is 4;
+	Rep_dead: INTEGER is 5;
+	Rep_stopped: INTEGER is 6;
 
 feature
 

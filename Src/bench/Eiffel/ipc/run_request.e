@@ -3,7 +3,7 @@
 class RUN_REQUEST 
 
 inherit
-
+	
 	EWB_REQUEST
 		redefine
 			send
@@ -28,16 +28,19 @@ feature
 		local
 			status: BOOLEAN
 		do
-			status := start_application (application_name);
-			if status then
-				status := send_byte_code
-			end;
-			if status then
-				send_breakpoints
-			end;
-			debug_info.tenure;
-			if status then
-				send_rqst_1 (Rqst_resume, Resume_cont);
+			if not run_info.is_running then
+				status := start_application (application_name);
+				if status then
+					status := send_byte_code
+				end;
+				if status then
+					send_breakpoints
+				end;
+				debug_info.tenure;
+				if status then
+					send_rqst_1 (Rqst_resume, Resume_cont);
+				end;
+				run_info.set_is_running (true);
 			end;
 		end;
 

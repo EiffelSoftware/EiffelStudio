@@ -19,14 +19,16 @@ creation
 
 feature -- making
 
-	make (a_featurei: FEATURE_I; s, e: INTEGER) is
+	make (a_featurei: FEATURE_I; a_class: CLASS_C; s, e: INTEGER) is
 		do
 			feature_i := a_featurei;
 			start_position := s;
-			end_position := e
+			end_position := e;
+			class_c := a_class
 		end;
  
 	feature_i: FEATURE_I;
+	class_c: CLASS_C;
  
 feature -- dragging
 

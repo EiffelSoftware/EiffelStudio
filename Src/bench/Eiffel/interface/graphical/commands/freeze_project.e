@@ -7,7 +7,8 @@ inherit
  
 	SHARED_WORKBENCH;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND
+	ICONED_COMMAND;
+	SHARED_DEBUG
  
 creation
 
@@ -31,6 +32,7 @@ feature {NONE}
 			project_dir: PROJECT_DIR;
 			file: UNIX_FILE;
 		do
+			debug_info.wipe_out;	
 			if project_tool.initialized then
 				bench_error_window.clean;
 				bench_error_window.show_image;

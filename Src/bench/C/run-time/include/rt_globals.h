@@ -31,6 +31,8 @@
 extern "C" {
 #endif
 
+#define CIDARR_SIZE		256		/* size of statically allocated `cidarr'. */
+
 #ifndef EIF_THREADS
 
 /******************************************
@@ -164,7 +166,7 @@ typedef struct tag_rt_globals
 	char *stream_buffer_cx;
 	int stream_buffer_position_cx;
 	long stream_buffer_size_cx;
-	int16 cidarr_cx[256];
+	int16 cidarr_cx[CIDARR_SIZE];
 	EIF_PROCEDURE mismatch_information_initialize_cx;
 	EIF_PROCEDURE mismatch_information_add_cx;
 	EIF_OBJECT mismatch_information_object_cx;
@@ -188,13 +190,13 @@ typedef struct tag_rt_globals
 	int s_fides_cx;
 	void (*store_write_func_cx)(void);
 	void (*flush_buffer_func_cx)(void);
-	void (*st_write_func_cx)(EIF_REFERENCE);
+	void (*st_write_func_cx)(EIF_REFERENCE, uint32);
 	void (*make_header_func_cx)(void);
 	int (*char_write_func_cx)(char *, int);
 	void (*old_store_write_func_cx)(void);
 	int (*old_char_write_func_cx)(char *, int);
 	void (*old_flush_buffer_func_cx)(void);
-	void (*old_st_write_func_cx)(EIF_REFERENCE);
+	void (*old_st_write_func_cx)(EIF_REFERENCE, uint32);
 	void (*old_make_header_func_cx)(void);
 	int accounting_cx;
 	int old_accounting_cx;

@@ -617,4 +617,37 @@ feature -- Byte code generation
 			!!Result.make
 		end;
 
+feature -- Array optimization
+
+	has_array_as_argument: BOOLEAN is
+			-- Is ARRAY or one of its descendants used as an argument
+		do
+			Result := has_array_as_item (arguments);
+		end;
+
+	has_array_as_local: BOOLEAN is
+			-- Is ARRAY or one of its descendants used as an local
+		do
+			Result := has_array_as_item (locals);
+		end;
+
+feature {NONE} -- Array optimization
+
+	has_array_as_item (a: ARRAY [TYPE_I]): BOOLEAN is
+		local
+			i, n: INTEGER;
+		do
+			if a /= Void then
+				from
+					n := a.count;
+					i := 1
+				until
+					Result or else i > n
+				loop
+					Result := a.item (i).conforms_to_array;
+					i := i + 1
+				end;
+			end;
+		end;
+
 end

@@ -166,4 +166,10 @@ feature
 		deferred
 		end;
 
+feature -- Array optimization
+
+	conforms_to_array: BOOLEAN is
+		do
+		end;
+
 end

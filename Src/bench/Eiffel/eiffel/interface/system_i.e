@@ -324,6 +324,10 @@ feature
 			-- consists of saving the name the very first time it
 			-- is computed.
 
+	optimization_tables: OPTIMIZATION_TABLES;
+			-- Tables keeping track of flags for optimization
+			-- Based on the body_index of a feature
+
 	make is
 			-- Create the system.
 		do
@@ -382,6 +386,7 @@ feature
 			!!melted_set.make;
 			!!rout_info_table.make;
 			!!onbidt.make (50);
+			!!optimization_tables.make
 		end;
 
 	init is
@@ -1963,6 +1968,11 @@ feature -- Dead code removal
 		do
 			!!remover.make;
 
+				-- record the descendants of ARRAY;
+			if array_optimization_level > 0 then
+				remover.record_array_descendants
+			end;
+
 				-- First, inspection of the Eiffel code
 			if creation_name /= Void then
 				a_class := root_class.compiled_class;
@@ -2033,13 +2043,17 @@ feature -- Dead code removal
 
 feature -- In-lining optimization
 
-	optimization: BOOLEAN;
-			-- Is in-lining done?
+	array_optimization_level: INTEGER;
+			-- Level of array optimization
 
-	set_optimization (b: BOOLEAN) is
+	set_array_optimization_level (i: INTEGER) is
 		do
-			optimization := b;
+			array_optimization_level := i;
 		end;
+
+	optimizer: OPTIMIZER is
+		once
+		end
 
 feature
 
@@ -3366,7 +3380,7 @@ feature -- Conveniences
 	reset_system_level_options is
 		do
 			remover_off := False;
-			optimization := False;
+			array_optimization_level := 0;
 			code_replication_off := True;
 			exception_stack_managed := False; 
 			Rescue_status.set_fail_on_rescue (False)

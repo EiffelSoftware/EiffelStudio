@@ -5,7 +5,8 @@ class REMOVER
 
 inherit
 
-	SHARED_SERVER
+	SHARED_SERVER;
+	SHARED_OPTIMIZATION_TABLES
 
 creation
 
@@ -21,6 +22,8 @@ feature
 		do
 			!!control.make;
 			!!used_table.make (1, System.body_id_counter.value);
+
+			array_optimization_level := System.array_optimization_level
 		end;
 
 feature
@@ -30,6 +33,72 @@ feature
 			-- static type `in_class'.
 		do
 			iterate (feat, in_class)
+		end;
+
+feature -- Array optimization
+
+	array_optimization_level: INTEGER
+
+	record_array_descendants is
+		local
+			array_class: CLASS_C;
+		do
+			array_class := System.array_class.compiled_class;
+			!!array_descendants.make;
+			!!array_descendant_ids.make;
+			array_descendant_ids.compare_objects;
+			!!put_feat_ids.make (10);
+			!!item_feat_ids.make (10);
+
+			record_descendants (array_class);
+		end;
+
+feature {NONE} -- Array optimization
+
+	array_descendants: LINKED_LIST [CLASS_C];
+			-- Descendants of ARRAY
+
+	array_descendant_ids: TWO_WAY_SORTED_SET [INTEGER];
+			-- `id' of all the descendants of ARRAY
+
+	put_feat_ids: HASH_TABLE [INTEGER, INTEGER];
+			-- `feature_id' of `put' for all the descendants of ARRAY
+
+	item_feat_ids: HASH_TABLE [INTEGER, INTEGER];
+			-- `feature_id' of `item' for all the descendants of ARRAY
+
+	record_descendants (a_class: CLASS_C) is
+			-- Recursively records `a_class' and its descendants in `descendants'
+		local
+			d: LINKED_LIST [CLASS_C];
+			an_id: INTEGER;
+			ftable: FEATURE_TABLE;
+			put, item: FEATURE_I;
+		do
+			if not array_descendants.has (a_class) then
+debug ("OPTIMIZATION")
+	io.error.putstring ("Adding ");
+	io.error.putstring (a_class.class_name);
+	io.error.putstring (" as a descendant of ARRAY%N");
+end;
+				array_descendants.extend (a_class);
+				an_id := a_class.id;
+				array_descendant_ids.force (an_id);
+				ftable := a_class.feature_table;
+				put := ftable.item ("put");
+				put_feat_ids.force (put.feature_id, an_id);
+				item := ftable.item ("item");
+				item_feat_ids.force (item.feature_id, an_id);
+				from
+					d := a_class.descendants;
+					d.start
+				until
+					d.after
+				loop
+					record_descendants (d.item);
+					d.forth
+				end;
+			end;
 		end;
 
 feature {NONE}
@@ -180,6 +249,9 @@ feature {NONE}
 			static_class, written_class: CLASS_C;
 			feature_name: STRING;
 			just_born: BOOLEAN;
+			opt_unit: OPTIMIZE_UNIT;
+			body: FEATURE_AS;
+			byte_code: BYTE_CODE;
 		do
 			just_born := not is_alive (feat);
 				-- Mark feature alive
@@ -234,8 +306,48 @@ end;
 						end;
 						depend_list.forth
 					end;
+
+						-- Array optimization
+					if array_optimization_level > 0 then
+						!!opt_unit.make (written_class.id, original_feature.body_index);
+						if
+								-- The feature was marked during the type check
+								-- and hasn't been processed yet
+							optimization_tables.feature_set.has (opt_unit)
+						and then
+							not optimized_features.has (opt_unit)
+						then
+								-- See if the routine really has a loop
+								-- (incrementality can mess up everything) and
+								-- then if the routine has a descendant of ARRAY
+								-- as a local variable or an argument and then
+								-- calls put or item on this local/argument
+							byte_code := Byte_server.item (original_feature.body_id);
+							if
+								byte_code.has_loop
+							and then
+								(byte_code.has_array_as_argument or else
+								 byte_code.has_array_as_local)
+							then
+								io.error.putstring ("Check uses of `put' and `item'%N");
+								optimized_features.extend (opt_unit);
+debug ("OPTIMIZATION")
+	io.error.putstring (written_class.class_name);
+	io.error.putstring (" ");
+	io.error.putstring (original_feature.feature_name);
+	io.error.putstring (" is recorded%N");
+end
+							end;
+						end;
+					end;
 				end;
 			end;
+		end;
+
+	optimized_features: TWO_WAY_SORTED_SET [OPTIMIZE_UNIT] is
+		once
+			!!Result.make;
+			Result.compare_objects;
 		end;
 
 	dots: INTEGER;

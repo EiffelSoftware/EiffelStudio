@@ -4,6 +4,7 @@ class LOOP_AS
 
 inherit
 
+	SHARED_OPTIMIZATION_TABLES;
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
@@ -49,6 +50,8 @@ feature -- Type check, byte code and dead code removal
 		local
 			current_context: TYPE_A;
 			vwbe4: VWBE4;
+			body_index: INTEGER;
+			opt_unit: OPTIMIZE_UNIT
 		do
 			if from_part /= Void then
 					-- Type check the from part
@@ -80,6 +83,22 @@ feature -- Type check, byte code and dead code removal
 					-- Type check the loop compound
 				compound.type_check;
 			end;
+
+				-- Record the loop for optimizations in final mode
+			body_index := context.a_feature.body_index;
+debug ("OPTIMIZATION")
+	io.error.putstring ("Recording loop in class ");
+	io.error.putstring (context.a_class.class_name);
+	io.error.putstring (" (");
+	io.error.putint (context.a_class.id);
+	io.error.putstring ("), feature ");
+	io.error.putstring (context.a_feature.feature_name);
+	io.error.putstring (" (");
+	io.error.putint (body_index);
+	io.error.putstring (")%N");
+end;
+			!!opt_unit.make (context.a_class.id, body_index);
+			optimization_tables.feature_set.extend (opt_unit);
 		end;
 
 	byte_node: LOOP_B is

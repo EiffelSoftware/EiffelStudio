@@ -11,7 +11,8 @@ inherit
 			is_valid,
 			same_as,
 			c_type,
-			instantiation_in
+			instantiation_in,
+			conforms_to_array
 		end
 
 feature
@@ -204,6 +205,20 @@ feature
 			else
 				Result := Sk_exp + base_id
 			end;
+		end;
+
+feature -- Array optimization
+
+	conforms_to_array: BOOLEAN is
+		do
+			Result := base_class.conform_to (array_class_c)
+		end;
+
+feature {NONE} -- Array optimization
+
+	array_class_c: CLASS_C is
+		once
+			Result := System.array_class.compiled_class
 		end;
 
 end

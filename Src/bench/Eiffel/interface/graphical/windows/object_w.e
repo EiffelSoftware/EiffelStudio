@@ -202,7 +202,11 @@ feature -- Update
 			end
 
 			if status = Void then
-				warner (shell).gotcha_call (Warning_messages.w_System_not_running)
+				-- Do nothing.
+				--| There is no need to warn the user because, this simply means
+				--| that we need to refresh the content of the window and his
+				--| application is not running under EiffelBench. This case happens
+				--| mostly when doing `Apply' in the Preference dialg.
 			elseif not status.is_stopped then
 				warner (shell).gotcha_call (Warning_messages.w_System_not_stopped)
 			else

@@ -1369,7 +1369,10 @@ feature
 	packet_number: INTEGER is
 			-- Packet in which the file will be generated
 		do
-			if System.in_final_mode then
+			if System.is_dynamic then
+				Result := ((id - System.dle_max_dr_class_id)
+						// System.makefile_generator.Packet_number) + 1
+			elseif System.in_final_mode then
 				Result := id // System.makefile_generator.Packet_number + 1
 			else
 				Result := ((id - System.max_precompiled_id)
@@ -3378,8 +3381,296 @@ feature -- Precompilation
 			end;
 		end;
 
+feature -- DLE
+
+	is_static: BOOLEAN is
+			-- Is the current class static?
+			-- i.e. part of a Dynamic Class Set's base system
+		require
+			dynamic_system: System.is_dynamic
+		do
+			Result := id <= System.dle_max_dr_class_id
+		end;
+
+	is_dynamic: BOOLEAN is
+			-- Is the current class dynamic?
+			-- i.e. part of a Dynamic Class Set
+		require
+			dynamic_system: System.is_dynamic
+		do
+			Result := id > System.dle_max_dr_class_id
+		end;
+
+	nb_static_class_types: INTEGER is
+			-- Number of static types derived from the current class
+		require
+			dynamic_system: System.is_dynamic
+		do
+			from
+				types.start
+			until
+				types.after
+			loop
+				if types.item.is_static then
+					Result := Result + 1
+				end;
+				types.forth
+			end;
+		end;
+
+	has_dynamic: BOOLEAN is
+			-- Is there any dynamic types derived from the current class?
+		require
+			dynamic_system: System.is_dynamic
+		do
+			from
+				types.start
+			until
+				Result or types.after
+			loop
+				Result := types.item.is_dynamic;
+				types.forth
+			end;
+		end;
+
+	dle_generate_wkbench_code is
+			-- Generation of C files for each type associated to the current
+			-- class.
+		require
+			dynamic_system: System.is_dynamic;
+			workbench_mode: not System.in_final_mode
+		local
+			temp_index: INTEGER
+		do
+			Inst_context.set_cluster (cluster);
+			from
+				types.start
+			until
+				types.after
+			loop
+				temp_index := types.index;
+				types.item.dle_generate_wkbench_code;
+				types.go_i_th (temp_index);
+				types.forth
+			end
+		end;
+
+	dle_generate_final_code: BOOLEAN is
+			-- Generation of C files for each type associated to the current
+			-- class. Return true if something has been generated.
+		require
+			dynamic_system: System.is_dynamic;
+			final_mode: System.in_final_mode
+		local
+			temp_index: INTEGER
+		do
+			Inst_context.set_cluster (cluster);
+			from
+				types.start
+			until
+				types.after
+			loop
+				temp_index := types.index;
+				if types.item.dle_generate_final_code then
+					Result := true
+				end;
+				types.go_i_th (temp_index);
+				types.forth
+			end
+		end;
+
+	melt_dle_feature_table is
+			-- Melt feature table.
+		require
+			dynamic_system: System.is_dynamic;
+			good_context: System.melted_set.has (id)
+		do
+			if not types.empty then
+				from
+					Inst_context.set_cluster (cluster);
+					types.start
+				until
+					types.after
+				loop
+					if types.item.is_dynamic then
+						types.item.melt_feature_table
+					end;
+					types.forth
+				end
+			end
+		end;
+
+	melt_dle_descriptor_tables is
+			-- Melt descriptor tables of associated class types
+		require
+			dynamic_system: System.is_dynamic
+		local
+			sel_tbl: SELECT_TABLE
+		do
+			sel_tbl := feature_table.origin_table;
+			sel_tbl.melt_dle (Current)
+		end;
+
+	generate_dle_descriptor_tables is
+			-- Generation of workbench mode descriptor tables
+			-- of associated class types.
+			--|Note: when precompiling a system a class might
+			--|have no generic derivations
+		local
+			sel_tbl: SELECT_TABLE
+		do
+			if has_types then
+				sel_tbl := feature_table.origin_table;
+				sel_tbl.generate_dle (Current)
+			end;
+		end;
+
+	inherits_from_dynamic: BOOLEAN is
+			-- Is the current class a descendant of DYNAMIC?
+		require
+			dynamic_system: System.is_dynamic;
+			dynamic_compiled: System.dynamic_class.compiled
+		do
+			Result := conform_to (System.dynamic_class.compiled_class)
+		end;
+
+	syntactical_inherits_from_dynamic: BOOLEAN is
+			-- Is the current class a descendant of DYNAMIC?
+			-- This cann be called at the end of Degree 5, when
+			-- the conformance table is not built yet.
+		require
+			dynamic_system: System.is_dynamic;
+			dynamic_compiled: System.dynamic_class.compiled
+		local
+			dynamic_class, parent_class: CLASS_C;
+			old_cursor: CURSOR
+		do
+			dynamic_class := System.dynamic_class.compiled_class;
+			if Current = dynamic_class then
+				Result := true
+			else
+				from
+					old_cursor := parents.cursor;
+					parents.start
+				until
+					Result or parents.after
+				loop
+					parent_class := parents.item.associated_class;
+					if parent_class /= Void then
+						if parent_class = dynamic_class then
+							Result := true
+						else
+							Result :=
+								parent_class.syntactical_inherits_from_dynamic
+						end
+					end;
+					parents.forth
+				end;
+				parents.go_to (old_cursor)
+			end
+		end;
+
+	check_dynamic_not_generic is
+			-- Check that the class is not generic.
+		require
+			dynamic_system: System.is_dynamic;
+			dynamic_compiled: System.dynamic_class.compiled;
+			dynamic_class: is_dynamic;
+			descendant_of_dynamic:
+					conform_to (System.dynamic_class.compiled_class)
+		local
+			v9gc: V9GC
+		do
+			if generics /= Void then
+				!!v9gc;
+				v9gc.set_class (Current);
+				Error_handler.insert_error (v9gc);
+				Error_handler.checksum
+			end
+		end;
+
+	check_dynamic_creators is
+			-- Check that the creation clause includes a procedure called
+			-- `make' with exactly one argument of type ANY.
+			-- This procedure is kept in `creation_feature' normally
+			-- used for expanded types (but here, the class may not be
+			-- expanded since it has a creation procedure with one argument).
+		require
+			dynamic_system: System.is_dynamic;
+			dynamic_compiled: System.dynamic_class.compiled;
+			dynamic_class: is_dynamic;
+			descendant_of_dynamic:
+					conform_to (System.dynamic_class.compiled_class)
+		local
+			creation_proc: FEATURE_I;
+			creation_name: STRING;
+			arg_type: TYPE_A;
+			v9cp: V9CP
+		do
+			creation_name := "make";
+			if creators = Void or else not creators.has (creation_name) then
+				!!v9cp;
+				v9cp.set_class (Current);
+				Error_handler.insert_error (v9cp);
+				Error_handler.checksum
+			else
+				creation_proc := feature_table.item (creation_name);
+				if creation_proc.argument_count /= 1 then
+					!!v9cp;
+					v9cp.set_class (Current);
+					Error_handler.insert_error (v9cp);
+					Error_handler.checksum
+				else
+					arg_type ?= creation_proc.arguments.first;
+					if not Any_type.same_as (arg_type) then
+						!!v9cp;
+						v9cp.set_class (Current);
+						Error_handler.insert_error (v9cp);
+						Error_handler.checksum
+					else
+						creation_feature := creation_proc
+					end
+				end
+			end
+		end;
+
+	dle_is_polymorphic (rout_id: INTEGER): BOOLEAN is
+			-- Has the feature identified by `rout_id' been declared to be
+			-- polymorphic (i.e. dynamically bound calls) in the Ace file?
+		require
+			extendible_system: System.extendible
+		local
+			dynamic_class: CLASS_I;
+			feat: FEATURE_I;
+			feature_name: STRING
+		do
+			dynamic_class := System.dynamic_class;
+			if
+				dynamic_class /= Void and then
+				dynamic_class.compiled and
+				conform_to (dynamic_class.compiled_class)
+			then
+				Result := true
+			else
+				feat := feature_table.feature_of_rout_id (rout_id);
+				if feat /= Void then
+					feature_name := feat.feature_name;
+					Result := lace_class.dynamic_calls.is_dynamic (feature_name)
+				end
+			end
+		end;
+
+	dle_generate_cecil is
+			-- Generate cecil table for a class having visible features
+		require
+			has_visible: has_visible
+		do
+			visible_level.dle_generate_cecil_table (Current)
+		end;
+
 invariant
 
-	lace_class_exists: lace_class /= Void
+	lace_class_exists: lace_class /= Void;
+	dynamic_constraint: System.is_dynamic implies (is_dynamic xor is_static)
 
 end

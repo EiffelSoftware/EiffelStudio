@@ -10,7 +10,7 @@ inherit
 			body_index as kind,
 			set_body_index as set_kind
 		redefine
-			routine_name, used
+			routine_name, used, was_used
 		end
 
 feature
@@ -37,5 +37,19 @@ feature
 						remover.is_body_alive (kind)	-- Final mode
 		end;
 
-end
+feature -- DLE
 
+	was_used: BOOLEAN is
+			-- Was the entry used in the extendible system?
+		local
+			remover: REMOVER
+		do
+			if type_id <= System.dle_max_dr_type_id then
+				remover := System.dle_remover;
+				Result :=	remover = Void or else
+							kind = Initialization_id or else
+							remover.was_body_alive (kind)
+			end
+		end;
+
+end

@@ -117,4 +117,21 @@ feature
 			end;
 		end;
 
+feature -- DLE
+
+	generate_dle (file: INDENT_FILE; id: INTEGER) is
+			-- Generate assertion value in `file'.
+		do
+			file.putstring ("dle_dbg->debug_level = DB_ALL;");
+			file.new_line;
+			file.putstring ("dle_dbg->nb_keys = (int16) ");
+			file.putint (tags.count);
+			file.putchar (';');
+			file.new_line;
+			file.putstring ("dle_dbg->keys = keys");
+			file.putint (id);
+			file.putchar (';');
+			file.new_line
+		end;
+
 end

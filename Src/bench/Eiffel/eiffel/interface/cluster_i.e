@@ -105,6 +105,7 @@ feature -- Creation feature
 			!!classes.make (10);
 			!!renamings.make;
 			!!ignore.make;
+			is_dynamic := System.is_dynamic
 		end;
 
 	clear is
@@ -129,6 +130,7 @@ debug ("REMOVE_CLASS")
 end;
 			old_cluster := old_cluster_i;
 			is_precompiled := old_cluster_i.is_precompiled;
+			is_dynamic := old_cluster_i.is_dynamic;
 			set_date (old_cluster_i.date);
 			exclude_list := old_cluster_i.exclude_list;
 			include_list := old_cluster_i.include_list;
@@ -928,6 +930,52 @@ feature
 			Result := path < other.path
 		end;
 
+feature -- DLE
+
+	is_static: BOOLEAN is
+			-- Is the current cluster part of a Dynamic Class Set's base system?
+			-- It won't be removed even if it is  no more in the local Ace file
+		require
+			dynamic_system: System.is_dynamic
+		do
+			Result := not is_dynamic
+		end;
+
+	is_dynamic: BOOLEAN;
+			-- Does the current cluster contain dynamic classes?
+
+	check_descendants_of_dynamic is
+			-- Check each descendant of DYNAMIC in the DC-set is not
+			-- generic and include a `make' procedure with one argument
+			-- of type ANY in its creation clause.
+		require
+			dynamic_system: System.is_dynamic;
+			dynamic_class_compiled: System.dynamic_class.compiled
+		local
+			class_i: CLASS_I;
+			class_c, dynamic_class: CLASS_C
+		do
+			dynamic_class := System.dynamic_class.compiled_class;
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				class_i := classes.item_for_iteration;
+				if class_i.compiled then
+					class_c := class_i.compiled_class;
+					if
+						class_c.is_dynamic and
+						class_c.conform_to (dynamic_class)
+					then
+						class_c.check_dynamic_not_generic;
+						class_c.check_dynamic_creators
+					end
+				end;
+				classes.forth
+			end
+		end;
+		
 feature {NONE} -- Externals
 
 	c_clname (file_pointer: POINTER): STRING is
@@ -952,5 +1000,6 @@ invariant
 
 	path_exists: path /= Void;
 	classes_exists: classes /= Void;
+	dynamic_constraint: is_dynamic implies System.is_dynamic
 
 end

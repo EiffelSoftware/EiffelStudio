@@ -424,9 +424,38 @@ feature
 			Plug_file.putstring ("int doub_ref_dtype = ");
 			Plug_file.putint (double_ref_dtype - 1);
 			Plug_file.putstring (";%N");	
-			Plug_file.putstring ("int point_ref_dtype = ");
-			Plug_file.putint (pointer_ref_dtype - 1);
-			Plug_file.putstring (";%N");	
+			Plug_file.put_string ("int point_ref_dtype = ");
+			Plug_file.put_integer (pointer_ref_dtype - 1);
+			Plug_file.put_string (";%N");	
 		end;
+
+feature -- DLE
+
+	dynamic_class: CLASS_I;
+			-- Class DYNAMIC
+
+	set_dynamic_class (c: CLASS_I) is
+			-- Assign `c' to `dynamic_class'.
+		do
+			dynamic_class := c
+		end;
+
+	dynamic_id: INTEGER is
+			-- Id of class DYNAMIC
+		require
+			dynamic_class_exists: dynamic_class /= Void;
+			compiled: dynamic_class.compiled
+		do
+			Result := dynamic_class.compiled_class.id
+		end;
+
+	dynamic_dtype: INTEGER is
+			-- Dynamic type_id of class DYNAMIC
+		require
+			dynamic_class_exists: dynamic_class /= Void;
+			compiled: dynamic_class.compiled;
+		do
+			Result := dynamic_class.compiled_class.types.first.type_id
+		end; 
 
 end -- class BASIC_SYSTEM_I

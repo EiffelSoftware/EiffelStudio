@@ -204,7 +204,6 @@ feature {NONE}
 	build_bar is
 			-- Build top bar: editing commands.
 		local
-			quit_cmd: QUIT_FILE;
 			hole_form: FORM;
 			label: LABEL;
 		do
@@ -266,13 +265,13 @@ feature {NONE}
 			change_class_form.attach_bottom (change_class_command, 0);
 			change_class_form.attach_right (change_class_command, 0);
 
-			!!quit_cmd.make (edit_bar, text_window);
-			edit_bar.attach_top (quit_cmd, 0);
-			edit_bar.attach_right (quit_cmd, 0);
+			!!quit_command.make (edit_bar, text_window);
+			edit_bar.attach_top (quit_command, 0);
+			edit_bar.attach_right (quit_command, 0);
 
 			!!change_font_command.make (edit_bar, text_window);
 			edit_bar.attach_top (change_font_command, 0);
-			edit_bar.attach_right_widget (quit_cmd, change_font_command, 10);
+			edit_bar.attach_right_widget (quit_command, change_font_command, 10);
 
 			!!search_command.make (edit_bar, text_window);
 			edit_bar.attach_top (search_command, 0);

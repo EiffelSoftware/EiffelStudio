@@ -410,7 +410,9 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is string lexicographically lower than `other'?
 		do
-			Result := (feature {SYSTEM_STRING}.compare_ordinal (to_cil, other.to_cil)) < 0
+			if other /= Current then
+				Result := (feature {SYSTEM_STRING}.compare_ordinal (to_cil, other.to_cil)) < 0
+			end
 		end
 
 feature -- Status report
@@ -1467,6 +1469,15 @@ feature -- Conversion
 			Result := feature {CONVERT}.to_int_32_string (to_cil)
 		end
 
+	to_integer_64: INTEGER_64 is
+			-- Integer_64 value;
+			-- for example, when applied to "123", will yield 123
+		require
+			is_integer: is_integer
+		do
+			Result := feature {CONVERT}.to_int_64_string (to_cil)
+		end
+		
 	to_real: REAL is
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0

@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EB_MENUABLE_COMMAND} (a_menu_item)
 			if pixmap /= Void then
-				a_menu_item.set_pixmap (pixmap @ 1)	
+				a_menu_item.set_pixmap (pixmap @ 1)
 			end
 		end
 

@@ -88,23 +88,26 @@ feature -- Access
 			if not wizard_information.selected_assemblies.is_empty then
 				if not wizard_information.dependencies.is_empty then
 					if not wizard_information.local_assemblies.is_empty then
-						message_text_field.set_text (Common_message +
+						message_text := Common_message +
 							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
-							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies))-- + New_line + assemblies_string (wizard_information.local_dependencies))
+							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies) + New_line
+						message_text.append (local_dependencies_string)
 					else
-						message_text_field.set_text (Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies))
+						message_text := Common_message +
+							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies)
 					end
 				else
 					if not wizard_information.local_assemblies.is_empty then
-						message_text_field.set_text (Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string)-- + New_line +	
-						--	l_Dependencies + Space + New_line + assemblies_string (wizard_information.local_dependencies))
+						message_text := Common_message +
+							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
+							l_Dependencies + Space + New_line 
+						message_text.append (local_dependencies_string)
 					else
-						message_text_field.set_text (Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies))						
+						message_text := Common_message +
+							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies)					
 					end
 				end
+				message_text_field.set_text (message_text)
 			else
 				message_text_field.set_text (Common_message)			
 			end
@@ -136,6 +139,9 @@ feature {NONE} -- Widgets
 			
 feature {NONE} -- Implementation
 
+	message_text: STRING
+			-- Final message 
+			
 	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX) is
 			-- Fill `message_and_title_box' with needed widgets.
 		do
@@ -173,6 +179,33 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_text: Result /= Void
 			not_empty_text: not Result.is_empty
+		end
+
+	local_dependencies_string: STRING is
+			-- String from `wizard_information.local_dependencies'
+		local
+			local_dependencies: LINKED_LIST [STRING]
+			an_assembly_name: STRING
+		do
+			local_dependencies := wizard_information.local_dependencies
+			if local_dependencies /= Void then
+				from
+					create Result.make (1024)
+					local_dependencies.start
+				until
+					local_dependencies.after
+				loop
+					an_assembly_name := local_dependencies.item
+					if message_text.substring_index (an_assembly_name, 1) < 1 then
+						Result.append (Tab + an_assembly_name + New_line)
+					end
+					local_dependencies.forth
+					if not local_dependencies.after then
+						local_dependencies.forth
+					end
+				end
+				Result.right_adjust
+			end
 		end
 
 	local_assemblies_string: STRING is

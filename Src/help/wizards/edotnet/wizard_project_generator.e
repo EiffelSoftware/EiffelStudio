@@ -115,6 +115,9 @@ feature {NONE} -- Implementation
 			-- | Key: Assembly filename
 			-- | Value: Path to folder where Eiffel classes were generated
 	
+	local_dependencies: LINKED_LIST [STRING]
+			-- Dependencies of locally imported assemblies
+			-- | [assembly name, assembly location, assembly name, assembly location...]
 	external_classes: STRING is
 			-- List of directories where Eiffel classes are stored
 		require
@@ -129,8 +132,13 @@ feature {NONE} -- Implementation
 			a_path: STRING
 			i: INTEGER
 			a_name: STRING
+			a_local_dependency: STRING
+			dir: DIRECTORY
+			cluster_name: STRING
+			clusters: LINKED_LIST [STRING]
 		do
 			create Result.make (1024)
+			create clusters.make
 			Result.append (New_line + Tab + Tab + External_classes_comment + New_line)
 			selected_assemblies := wizard_information.selected_assemblies
 			from
@@ -145,7 +153,10 @@ feature {NONE} -- Implementation
 				a_path := clone (an_assembly.eiffel_cluster_path)
 				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index (Eiffel_installation_dir_name, 1) > 0 then
 					a_path.replace_substring_all (Eiffel_installation_dir_name, Eiffel_key)
-					Result.append (Tab + "all " + assembly_name + "_generated: " + Inverted_comma + a_path + Inverted_comma + New_line + New_line)
+					if not clusters.has (assembly_name) then
+						Result.append (Tab + "all " + assembly_name + "_generated: " + Inverted_comma + a_path + Inverted_comma + New_line + New_line)
+						clusters.extend (assembly_name)
+					end
 				end
 				selected_assemblies.forth
 			end
@@ -162,14 +173,17 @@ feature {NONE} -- Implementation
 				a_path := clone (a_dependency.eiffel_cluster_path)
 				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index (Eiffel_installation_dir_name, 1) > 0 then
 					a_path.replace_substring_all (Eiffel_installation_dir_name, Eiffel_key)
-					Result.append (Tab + "all " + a_dependency_name + "_generated: " + Inverted_comma + a_path + Inverted_comma + New_line + New_line)
+					if not clusters.has (a_dependency_name) then
+						Result.append (Tab + "all " + a_dependency_name + "_generated: " + Inverted_comma + a_path + Inverted_comma + New_line + New_line)
+						clusters.extend (a_dependency_name)
+					end
 				end
 				dependencies.forth
 			end		
 			local_assemblies := wizard_information.local_assemblies
 			from
 				local_assemblies.start
-				i := 1
+				--i := 1
 			until
 				local_assemblies.off
 			loop
@@ -179,11 +193,82 @@ feature {NONE} -- Implementation
 				a_name.to_lower
 				if a_local_assembly /= Void and then not a_local_assembly.is_empty and then a_local_assembly.substring_index (Eiffel_installation_dir_name, 1) > 0 then
 					a_local_assembly.replace_substring_all (Eiffel_installation_dir_name, Eiffel_key)
-					Result.append (Tab + "all local_assembly_" + i.out + "_generated: " + Inverted_comma + a_local_assembly.substring (1, a_local_assembly.count) + a_name + Inverted_comma + New_line + New_line)
-					i := i + 1
+					--Result.append (Tab + "all local_assembly_" + i.out + "_generated: " + Inverted_comma + a_local_assembly.substring (1, a_local_assembly.count) + a_name + Inverted_comma + New_line + New_line)
+					cluster_name := clone (a_name)
+					cluster_name.replace_substring_all (".", "_")
+					if not clusters.has (cluster_name) then
+						Result.append (Tab + "all " + cluster_name + "_generated: " + Inverted_comma + a_local_assembly.substring (1, a_local_assembly.count) + a_name + Inverted_comma + New_line + New_line)
+						clusters.extend (cluster_name)
+					else
+						from
+							i := 2
+							cluster_name.append ("_" + i.out)
+						until
+							not clusters.has (cluster_name) 
+						loop
+							cluster_name := cluster_name.substring (1, cluster_name.count -1)
+							cluster_name.append (i.out)
+							i := i + 1						
+						end
+						Result.append (Tab + "all " + cluster_name + "_generated: " + Inverted_comma + a_local_assembly.substring (1, a_local_assembly.count) + a_name + Inverted_comma + New_line + New_line)
+						clusters.extend (cluster_name)
+					end
+					--i := i + 1
 				end			
 				local_assemblies.forth
 			end		
+			if local_assemblies /= Void and then not local_assemblies.is_empty then
+				local_dependencies := wizard_information.local_dependencies
+				from
+					--i := 1
+					local_dependencies.start
+				until
+					local_dependencies.after
+				loop
+					a_dependency_name := clone (local_dependencies.item)
+					a_dependency_name.to_lower
+					local_dependencies.forth
+					if not local_dependencies.after then
+						a_local_dependency := local_dependencies.item
+						if not is_selected_assembly (a_local_dependency) and not is_dependency (a_local_dependency) and not local_assemblies.has (a_local_dependency) and a_dependency_name /= Void and then not a_dependency_name.is_empty then
+							create dir.make (Eiffel_installation_dir_name + "\library.net\" + a_dependency_name)
+							if dir.exists then
+							--	Result.append (Tab + "all local_dependency_" + i.out + "_generated: " + Inverted_comma + Eiffel_key + "\library.net\" + a_dependency_name + Inverted_comma + New_line + New_line)
+								cluster_name := clone (a_dependency_name)
+								cluster_name.replace_substring_all (".", "_")
+								if not clusters.has (cluster_name) then
+									Result.append (Tab + "all " + cluster_name + "_generated: " + Inverted_comma + Eiffel_key + "\library.net\" + a_dependency_name + Inverted_comma + New_line + New_line)
+									clusters.extend (cluster_name)
+								else
+									from
+										i := 2
+										cluster_name.append ("_" + i.out)
+									until
+										not clusters.has (cluster_name) 
+									loop
+										cluster_name := cluster_name.substring (1, cluster_name.count -1)
+										cluster_name.append (i.out)
+										i := i + 1						
+									end
+									Result.append (Tab + "all " + cluster_name + "_generated: " + Inverted_comma + a_local_assembly.substring (1, a_local_assembly.count) + a_name + Inverted_comma + New_line + New_line)
+									clusters.extend (cluster_name)
+								end
+							--	i := i + 1
+							end
+						end
+						local_dependencies.forth
+					end
+					
+				end
+			end
+			Result.right_adjust
+			if (Result @ Result.count) = '%N' then
+				Result.remove (Result.count)
+			end
+			if (Result @ Result.count ) = ',' then
+				Result.remove (Result.count)
+			end
+			Result.append (New_line)
 		ensure
 			non_void_text: Result /= Void
 			not_empty_text: not Result.is_empty
@@ -198,7 +283,6 @@ feature {NONE} -- Implementation
 			an_assembly: ASSEMBLY_INFORMATION
 			a_dependency: ASSEMBLY_INFORMATION
 			a_local_assembly: STRING
-			local_dependencies: LINKED_LIST [STRING]
 			a_local_dependency: STRING		
 		do
 			create Result.make (1024)
@@ -245,17 +329,22 @@ feature {NONE} -- Implementation
 			end	
 
 			if local_assemblies /= Void and then not local_assemblies.is_empty then
-				local_dependencies := wizard_information.local_dependencies
+				if local_dependencies = Void then
+					local_dependencies := wizard_information.local_dependencies
+				end
 				from
 					local_dependencies.start
 				until
 					local_dependencies.after
 				loop
-					a_local_dependency := local_dependencies.item
-					if not is_selected_assembly (a_local_dependency) and not is_dependency (a_local_dependency) and not local_assemblies.has (a_local_dependency) then
-						Result.append (Tab + Tab + Tab + Inverted_comma + a_local_dependency + Inverted_comma + Comma + New_line)
-					end
 					local_dependencies.forth
+					if not local_dependencies.after then
+						a_local_dependency := local_dependencies.item
+						if not is_selected_assembly (a_local_dependency) and not is_dependency (a_local_dependency) and not local_assemblies.has (a_local_dependency) then
+							Result.append (Tab + Tab + Tab + Inverted_comma + a_local_dependency + Inverted_comma + Comma + New_line)
+						end
+						local_dependencies.forth
+					end
 				end
 			end
 			

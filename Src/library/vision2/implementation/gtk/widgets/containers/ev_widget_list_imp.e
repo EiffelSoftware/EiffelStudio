@@ -26,11 +26,8 @@ inherit
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET]
-		undefine
-			destroy
 		redefine
 			interface,
-			list_widget,
 			initialize
 		end
 		
@@ -85,12 +82,16 @@ feature {NONE} -- Implementation
 			a_child := v_imp.c_object
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (a_child)
 			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, a_child)
-			feature {EV_GTK_EXTERNALS}.set_gtk_widget_struct_parent (a_child, NULL)
 			index := a_index
 				-- The call to gtk_container_remove might indirectly fire an event which changes the index so we reset just to make sure
 		end
 
 feature {NONE} -- Implementation
+
+	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+			-- Move `a_child' to `a_position' in `a_container'.
+		deferred
+		end
 
 	list_widget: POINTER is
 			-- Pointer to the actual widget list container.

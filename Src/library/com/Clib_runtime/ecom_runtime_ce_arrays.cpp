@@ -17,12 +17,12 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 
 // Create `dim_count' dimmensional array
 {
-	EIF_OBJECT eif_lower_indeces = 0, eif_element_count = 0, result = 0;
+	EIF_OBJECT eif_lower_indices = 0, eif_element_count = 0, result = 0;
 	EIF_TYPE_ID type_id = -1, int_array_id = -1;
 	EIF_PROCEDURE make = 0, put = 0;
 	char * array_name = 0;
 	int i = 0, element_name_lenth = 0;
-	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * lower_indices = 0;
 
 	if (dim_count <= 0)
 	{
@@ -47,21 +47,21 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 	}
 	else
 	{
-		// Create array of lower indeces
+		// Create array of lower indices
 		int_array_id = eif_type_id ("ARRAY [INTEGER]");
 		make = eif_procedure ("make", int_array_id);
-		eif_lower_indeces = eif_create (int_array_id);
+		eif_lower_indices = eif_create (int_array_id);
 
 		nstcall = 0;
 		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
-			(eif_access (eif_lower_indeces), 1, dim_count);
+			(eif_access (eif_lower_indices), 1, dim_count);
 
-		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
+		lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 		for ( i = 0; i < dim_count; i++)
-			lower_indeces [i] = 1;
+			lower_indices [i] = 1;
 
-		eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
-		free (lower_indeces);
+		eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);
+		free (lower_indices);
 
 		// Create array of element counts
 		eif_element_count = eif_create (int_array_id);
@@ -86,7 +86,7 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 
 		nstcall = 0;
 		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
-				(eif_access (result), dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+				(eif_access (result), dim_count, eif_access (eif_lower_indices), eif_access (eif_element_count));
 	}
 	return result;
 };
@@ -157,7 +157,7 @@ int ecom_runtime_ce::ccom_element_number (EIF_INTEGER dim_count, EIF_INTEGER * e
 //-----------------------------------------------------------------------------
 
 int ecom_runtime_ce::ccom_safearray_next_index (EIF_INTEGER dim_count,
-			EIF_INTEGER * lower_indeces, EIF_INTEGER * upper_indeces, EIF_INTEGER * index)
+			EIF_INTEGER * lower_indices, EIF_INTEGER * upper_indices, EIF_INTEGER * index)
 
 // Generate next index
 // Returns 0 if ther is no next index, i.e. array is traversed.
@@ -169,14 +169,14 @@ int ecom_runtime_ce::ccom_safearray_next_index (EIF_INTEGER dim_count,
 
 	while ((result == 0) && (i >= 0))
 	{
-		if (index[i] < upper_indeces[i])
+		if (index[i] < upper_indices[i])
 		{
 			index[i] = index[i] + 1;
 			result = 1;
 		}
 		else
 		{
-			index[i] = lower_indeces [i];
+			index[i] = lower_indices [i];
 			i = i - 1;
 		}
 	}

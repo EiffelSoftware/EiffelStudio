@@ -30,6 +30,12 @@ feature -- Access
 
 			if a_descriptor.inherited_interface /= Void then
 				cpp_class_writer.add_parent (a_descriptor.inherited_interface.c_type_name, Public)
+				if 
+					a_descriptor.inherited_interface.c_header_file_name /= Void and then
+					not a_descriptor.inherited_interface.c_header_file_name.empty
+				then
+					cpp_class_writer.add_import (a_descriptor.inherited_interface.c_header_file_name)
+				end
 			end
 
 			a_descriptor.functions.sort

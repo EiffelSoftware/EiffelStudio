@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			body.append (Space)
 			body.append ("an_alias")
 			body.append (Dot)
-			body.append ("lower_indeces")
+			body.append ("lower_indices")
 			body.append (Comma)
 			body.append (Space)
 			body.append ("an_alias")
@@ -309,8 +309,8 @@ feature {NONE} -- Implementation
 						"dimension_count = an_alias.dimension_count")
 			Result.add_postcondition (assertion)
 
-			create assertion.make ("valid_lower_indeces",
-						"lower_indeces.is_equal (an_alias.lower_indeces)")
+			create assertion.make ("valid_lower_indices",
+						"lower_indices.is_equal (an_alias.lower_indices)")
 			Result.add_postcondition (assertion)
 
 			create assertion.make ("valid_element_counts",

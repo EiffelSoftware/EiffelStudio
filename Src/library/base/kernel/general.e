@@ -52,8 +52,9 @@ feature -- Status report
 	consistent (other: like Current): BOOLEAN is
 			-- Is current object in a consistent state so that `other'
 			-- may be copied onto it? (Default answer: yes).
+		obsolete
+			"Not used anymore, please remove it from your inheritance clauses if it appears."
 		do
-			Result := true
 		end;
 
 feature -- Comparison
@@ -170,7 +171,6 @@ feature -- Duplication
 			if other /= Void then
 				temp := c_check_assert (False);
 				Result := other.c_standard_clone ($other);
-				Result.setup (other);
 				Result.copy (other);
 				temp := c_check_assert (temp);
 			end
@@ -225,9 +225,10 @@ feature -- Duplication
 			-- Assuming current object has just been created, perform
 			-- actions necessary to ensure that contents of `other'
 			-- can be safely copied onto it.
+		obsolete
+			"Not used anymore by `clone', please remove it from your inheritance clauses%N%
+			%if it appears."
 		do
-		ensure
-			consistent (other)
 		end;
 
 feature -- Output

@@ -32,10 +32,10 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, put,
-			prune, consistent, occurrences,
+			prune, occurrences,
 			extendible, has, is_equal
 		redefine
-			extend, setup, prune_all, full, valid_index, wipe_out
+			extend, prune_all, full, valid_index, wipe_out
 		end;
 
 	DYNAMIC_LIST [G]
@@ -46,7 +46,7 @@ class ARRAYED_LIST [G] inherit
 			first, last, swap, wipe_out,
 			go_i_th, move, prunable, start, finish,
 			count, prune, remove,
-			setup, copy, put_left, merge_left,
+			copy, put_left, merge_left,
 			merge_right, duplicate, prune_all
 		select
 			count, copy
@@ -514,28 +514,18 @@ feature -- Removal
 
 feature -- Duplication
 
-	setup (other: like Current) is
-			-- Prepare current object so that `other'
-			-- can be easily copied into it.
-			-- It is not necessary to call `setup'
-			-- (since `consistent' is always true)
-			-- but it will make copying quicker.
-		do
-			if other.empty then
-				wipe_out
-			else
-				resize (1, other.count)
-			end
-		end;
-
 	copy (other: like Current) is
 		do
 			if capacity < other.count then
 				make_area (other.count)
 				 	--lower for arrayed list always 1
+				lower := 1
 				upper := other.count
 			else
 				make_area (capacity)
+				 	--lower for arrayed list always 1
+				lower := 1
+				upper := capacity
 			end
 			count := other.count
 			object_comparison := other.object_comparison

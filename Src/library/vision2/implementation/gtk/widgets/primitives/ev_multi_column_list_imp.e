@@ -84,6 +84,7 @@ feature {NONE} -- Initialization
 
 				-- create a list with one column
 			create_list (1)
+			clear_selection
 		end
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is

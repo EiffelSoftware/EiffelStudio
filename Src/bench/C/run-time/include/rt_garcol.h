@@ -98,6 +98,16 @@ extern struct chunk *last_from;	/* Last 'from' chunk used by plsc() */
 extern long th_alloc;			/* Allocation threshold (in bytes) */
 extern int gc_monitor;			/* GC monitoring flag */
 
+/* Overflow stack limit: number of recursive call we authorized
+ * for each marking routine. As soon as we reach this number
+ * we stop the recursion and proceed to marking by storing
+ * objects that should be marked into `overflow_stack_set'
+ * so that they will be marked later in an iterative algorithm.
+ */
+#define OVERFLOW_STACK_LIMIT 2000
+extern uint32 overflow_stack_limit;
+
+
 #ifdef EIF_THREADS
 extern struct stack_list loc_stack_list;	/* List of all `loc_stack' allocated in each thread */
 extern struct stack_list loc_set_list;		/* List of all `loc_set' allocated in each thread */

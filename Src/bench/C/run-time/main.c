@@ -191,6 +191,7 @@ rt_public void eif_alloc_init(void)
 	static int c_per = 0;				/* Full coalesc period.*/
 	static int p_per = 0;				/* full collection period.*/
 	static int thd	= 0;				/* Threshold of allocation.*/
+	static uint32 stk_limit = 0;			/* Stack size limit for GC */
 
 	/* Special options. */
 	env_var = getenv ("EIF_NO_RECLAIM");
@@ -303,7 +304,19 @@ rt_public void eif_alloc_init(void)
 		else
 			thd = TH_ALLOC;	/* RT default setting. */
 	}
-	th_alloc = thd >= TH_ALLOC_MIN ? thd : TH_ALLOC_MIN;	
+	th_alloc = thd >= TH_ALLOC_MIN ? thd : TH_ALLOC_MIN;
+
+	/* Set stack overflow depth to a certain threshold */
+	if (!stk_limit) {	/* Is it set yet? */
+		env_var = getenv ("EIF_STACK_LIMIT");
+		if (env_var != NULL) {
+			stk_limit = (uint32) atoi (env_var);
+		} else {
+			stk_limit = OVERFLOW_STACK_LIMIT;
+		}
+	}
+	overflow_stack_limit = (stk_limit < 2 ? 2 : stk_limit);
+
 
 	/******************* Postconditions *******************/
 	ENSURE ("Chunk size must be over that", eif_chunk_size >= CHUNK_SZ_MIN);

@@ -25,22 +25,12 @@
 #ifndef index
 #define index strchr
 #endif
-#endif
-
-#ifndef HAS_INDEX
 #ifndef rindex
 #define rindex strrchr
 #endif
 #endif
 
-/* Define a certain kind of optimization */
-#define EIF_MEMORY_OPTIMIZATION
-#define EIF_GSZ_ALLOC_OPTIMIZATION
-#ifndef VXWORKS	/* VXWORKS use ITERATIVE_MARKING, which does not
-				 * support this optimization yet. */
-/*#define EIF_REM_SET_OPTIMIZATION */
-#endif
-
+/* Are we using ISE GC? By default, yes. */
 #ifndef NO_ISE_GC
 #define ISE_GC
 #endif

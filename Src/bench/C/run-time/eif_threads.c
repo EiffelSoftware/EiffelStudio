@@ -256,11 +256,6 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	loc_set.st_end = 		(EIF_REFERENCE *) 0;			
 #endif
 	
-#ifdef EIF_REM_SET_OPTIMIZATION
-	special_rem_set = (struct special_table *) 0; 
-					/* Remembered special table for special objects. */ 
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-
 	once_set.st_hd = 		(struct stchunk *) 0;	
 	once_set.st_tl = 		(struct stchunk *) 0;	
 	once_set.st_cur = 		(struct stchunk *) 0;	

@@ -18,22 +18,22 @@ feature -- Access
 			-- Position in the text after tabulation expansion
 			-- (By default, it is `pos'. This is used for TABBED_TEXT)
 		require
-			valid_pos: pos >= 0 and pos <= actual_count
+			valid_pos: pos >= 0 and pos <= count
 		do
 			Result := pos
 		ensure
-			valid_result: Result >= 0 and Result <= count
+			valid_result: Result >= 0 and Result <= actual_count
 		end	;
 
 	unexpanded_position (pos: INTEGER): INTEGER is
 			-- Position in the text before tabulation expansion
 			-- (By default, it is `pos'. This is used for TABBED_TEXT)
 		require
-			valid_pos: pos >= 0 and pos <= count
+			valid_pos: pos >= 0 and pos <= actual_count
 		do
 			Result := pos
 		ensure
-			valid_result: Result >= 0 and then Result <= actual_count
+			valid_result: Result >= 0 and then Result <= count
 		end;
 
 	actual_cursor_position: INTEGER is

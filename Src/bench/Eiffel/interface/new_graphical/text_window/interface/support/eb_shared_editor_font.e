@@ -38,6 +38,12 @@ feature {NONE} -- Implementation
 			create Result.put (editor_preferences.font)
 		end
 
+	keyword_font_cell: CELL [EDITOR_FONT] is
+			-- Cached version of `font' for keywords.
+		once
+			create Result.put (editor_preferences.keyword_font)
+		end
+		
 	font_width_cell: CELL [INTEGER] is
 			-- Cached version of `font_width'
 		local

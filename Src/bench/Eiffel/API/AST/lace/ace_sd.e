@@ -898,26 +898,7 @@ feature {NONE} -- Incrementality
 	reset_system_level_options is
 			-- Reset all system level options to their default value.
 		do
-			System.set_remover_off (False)
-			System.set_array_optimization_on (False)
-			System.set_inlining_on (False)
-			System.set_inlining_size (4)			
-			System.set_exception_stack_managed (False)
-			System.server_controler.set_block_size (1024)
-			System.set_do_not_check_vape (False)
-			System.allow_address_expression (False)			
-			System.set_dynamic_def_file (Void)
-			System.set_ise_gc_runtime (True)
-			System.set_il_verifiable (True)
-			System.set_system_namespace (Void)
-			System.set_msil_key_file_name (Void)
-			System.set_msil_generation_type ("exe")
-			system.set_dotnet_naming_convention (False)
-			System.set_use_cluster_as_namespace (True)
-			System.set_use_all_cluster_as_namespace (True)
-			System.set_check_generic_creation_constraint (True)
-			System.set_has_syntax_warning (False)
-			System.set_msil_use_optimized_precompile (False)
+			System.reset_lace_options
 		end
 
 end -- class ACE_SD

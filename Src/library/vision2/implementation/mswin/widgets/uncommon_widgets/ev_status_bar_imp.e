@@ -11,6 +11,8 @@ inherit
 	EV_STATUS_BAR_I
 
 	EV_PRIMITIVE_IMP
+		rename
+			make as wrong_make
 		redefine
 			parent_imp,
 			set_parent,
@@ -50,11 +52,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (par: EV_WINDOW) is
 			-- Create a status bar with one part.
-		do
+		do 
 			wel_make (default_parent.item, 0)
 			!! ev_children.make
+			set_parent (par)
 		end
 
 feature -- Access

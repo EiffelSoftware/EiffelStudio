@@ -1,0 +1,38 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<title>System tree representation</title>
+<META NAME="MS-HKWD" CONTENT="cluster tree">
+<META NAME="MS-HKWD" CONTENT="class tree">
+<LINK REL=StyleSheet HREF="/default.css">
+</head>
+
+<body>
+
+<h1>System tree representation</h1>
+<p>The cluster tool is mainly composed of a tree representation of the system.
+<p>SCREENSHOT(cluster tree)
+<p>Here is the meaning of the symbols of the cluster tree:</p>
+<ul>
+	<li><IMG SRC="/images/eiffelbench/icon_cluster_symbol_color.gif"> are clusters
+	<li><IMG SRC="/images/eiffelbench/icon_class_symbol_color.gif"> are compiled classes
+	<li><IMG SRC="/images/eiffelbench/icon_class_symbol_gray.gif"> are classes outside the system
+	<li>Classes and clusters that are part of a library are shown with brighter
+      icon than normal
+</ul>
+<p>Recursive clusters (ie clusters that have a `all' or `library' tag in the
+Ace) have a short name in the tree, but the full name is available as a tooltip.</p>
+<p>Left-clicking on any item will send it to the editor. It is also possible to
+HYPERLINK(pick and drop)pick items to send them to various components of the
+development window.</p>
+<p>Dropping a class in this tree representation moves it to a different cluster
+(either the cluster it is dropped on or the cluster containing the class it is
+dropped on, according to where it is dropped). This is only possible if the
+dropped class is not in a library cluster, if its source file is readable and
+writable, and if the destination cluster is not a library or precompiled cluster
+itself.</p>
+
+</body>
+
+</html>

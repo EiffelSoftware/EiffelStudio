@@ -3,29 +3,56 @@
 
 <head>
 <title>Introduction</title>
-<META NAME="MS-HKWD" CONTENT="debugger">
-<META NAME="MS-HKWD" CONTENT="application, debug">
+<META NAME="MS-HKWD" CONTENT="browsing tools">
+<META NAME="MS-HKWD" CONTENT="left tools">
+<META NAME="MS-HKWD" CONTENT="tools, left">
+<META NAME="MS-HKWD" CONTENT="navigation tools">
 <LINK REL=StyleSheet HREF="/default.css">
 </head>
 
 <body>
 
 <h1>Introduction</h1>
-<p>A debugger is a tool that allows you to <a HREF="10_execution/00_introduction.html">run</a> an application and view its state at any
-moment. This includes having information concerning the current <a HREF="30_call_stack_tool/00_introduction.html">call stack</a> and
-the <a HREF="40_object_tool/00_introduction.html">state of objects</a> of the system, ie the values of
-their attributes. This kind of
-information can be used to spot objects that have invalid states, to see the
-consequences of the execution of a feature over an object state, and so on.
-<p>The new features of the [BENCH] debugger include:
+<p>The browsing tools are all the tools that are in the left panel of the
+development windows as well as the address bars. They help find an item in the
+system, such as a class, a cluster, a feature, some text, ... They include the
+<A HREF="10_address_bars/introduction.html">address bars</a>,
+the <A HREF="20_cluster_tool/introduction.html">cluster tool</a>,
+the <A HREF="30_feature_tool/introduction.html">feature tool</a>,
+the <A HREF="40_favorites_tool/introduction.html">favorites tool</a>,
+the <A HREF="50_windows_tool/introduction.html">windows tool</a> and the
+<A HREF="60_search_tool.html">search tool</a>.
+<p>The main address bar may be shown or hidden
+by using the <b>View</b>/<b>Toolbars</b>/<b>Address Bar</b> menu, or by
+right-clicking on the right of the toolbar and clicking <b>Address bar</b> in
+the popped up context menu.<p>All left-hand tools can be hidden or shown
+using their associated toolbar button, or through the <b>View</b>/<b>Explorer
+Bar</b> menu. They also all have a common mini-toolbar that handles window-like
+features:
 <ul>
-  <li>Stopping the application in frozen features as well as in
-    melted features
-  <li> <a HREF="10_execution/40_step_into_a_feature.html">Stepping into</a> features, <a HREF="10_execution/50_step_by_step.html">executing them one line at a time</a>, or
-    <a HREF="10_execution/60_step_out.html">stepping out</a> of them
-  <li>Setting <a HREF="20_breakpoints/00_introduction.html">breakpoints</a> on-the-fly, while the execution is running
-  <li>A completely new interface, fully graphical and easier to use
+	<li>
+<b>
+Minimize</b> ( <IMG SRC="/images/eiffelbench/icon_minimize_color.gif"> ) iconifies the tool, and leaves only its toolbar
+visible at
+the bottom of the panel.
+	<li>
+<b>
+Maximize</b> ( <IMG SRC="/images/eiffelbench/icon_maximize_color.gif"> ) enlarges the tool so that it occupies the whole space of the
+development window.
+	<li>
+<b>
+Restore</b> ( <IMG SRC="/images/eiffelbench/icon_restore_color.gif"> ), available whenever a tool has been minimized or maximized,
+puts it back to its previous state.
+	<li>
+<b>
+Close</b> ( <IMG SRC="/images/eiffelbench/icon_close_color.gif"> ) discards the tool from the panel, as if its associated
+toolbar button
+had been pressed.
 </ul>
+
+<p><b>Note</b>: No more than three tools can be displayed at the same time in
+the left panel. Trying to add more will automatically minimize one of the
+displayed tools, in order to make room for the new tool.</p>
 
 </body>
 

@@ -148,11 +148,11 @@ feature -- Status setting
 			r ?= w.implementation
 			if r /= Void then
 				if radio_group /= NULL then
-					C.gtk_radio_button_set_group (r.button_widget, radio_group)
+					C.gtk_radio_button_set_group (r.visual_widget, radio_group)
 				else
-					C.gtk_toggle_button_set_active (r.button_widget, False)
+					C.gtk_toggle_button_set_active (r.visual_widget, False)
 				end
-				set_radio_group (C.gtk_radio_button_group (r.button_widget))
+				set_radio_group (C.gtk_radio_button_group (r.visual_widget))
 			end
 		end
 
@@ -170,7 +170,7 @@ feature -- Status setting
 			r ?= w.implementation
 			if r /= Void then
 				a_max_index := C.g_slist_length (radio_group) - 1
-				a_item_index := C.g_slist_index (radio_group, r.button_widget)
+				a_item_index := C.g_slist_index (radio_group, r.visual_widget)
 				
 				if a_max_index - a_item_index > 0 then
 					a_item_pointer := C.g_slist_nth_data (
@@ -184,7 +184,7 @@ feature -- Status setting
 							)
 				end				
 				
-				C.gtk_radio_button_set_group (r.button_widget, NULL)
+				C.gtk_radio_button_set_group (r.visual_widget, NULL)
 
 				if a_item_pointer /= NULL then
 					an_item_imp ?= eif_object_from_c (
@@ -205,7 +205,7 @@ feature -- Status setting
 						)
 					end
 				else
-					C.gtk_toggle_button_set_active (r.button_widget, True)
+					C.gtk_toggle_button_set_active (r.visual_widget, True)
 				end
 			end
 		end

@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 			a_row_number := (a_y // (row_height + 1)) + 1
-			if a_row_number <= count then
+			if a_row_number > 0 and then a_row_number <= count then
 				clicked_row := ev_children @ a_row_number
 			end
 			if a_type = C.GDK_BUTTON_PRESS_ENUM then

@@ -75,6 +75,7 @@ feature -- Start output features
 	put_end_dead_code_removal_message  is
 			-- Put message indicating the start of dead code removal.
 		do
+			io.new_line
 		end;
 
 	finish_degree_output is

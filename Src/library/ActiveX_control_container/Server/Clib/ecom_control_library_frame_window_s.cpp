@@ -65,6 +65,7 @@ STDMETHODIMP ecom_control_library::frame_window::GetWindow(  /* [out] */ HWND * 
   EIF_OBJECT tmp_phwnd = NULL;
   if (phwnd != NULL)
   {
+    * phwnd = NULL;
     tmp_phwnd = eif_protect (rt_ce.ccom_ce_pointed_pointer ((void **)phwnd, NULL));
   }
   
@@ -382,6 +383,7 @@ STDMETHODIMP ecom_control_library::frame_window::QueryInterface( REFIID riid, vo
   Query Interface.
 -----------------------------------------------------------*/
 {
+  *ppv = NULL;
   if (riid == IID_IUnknown)
     *ppv = static_cast<::IOleInPlaceFrame*>(this);
   else if (riid == IID_IOleInPlaceFrame_)

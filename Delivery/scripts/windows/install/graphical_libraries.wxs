@@ -1429,6 +1429,7 @@
                 <Component Id="V74" Guid="84A837D8-CA2B-4DD0-805C-16087257B979">
                   <File Id="V74" Name="EV_STA~1.E" LongName="ev_standard_dialog_action_sequences.e" KeyPath="yes" />
                   <File Id="ev_application_action_sequences.e" Name="EV_APP~1.E" LongName="ev_application_action_sequences.e" />
+                  <File Id="ev_combo_box_action_sequences.e" Name="EV_COM~1.E" LongName="ev_combo_box_action_sequences.e" />
                   <File Id="V75" Name="EV_LIS~2.E" LongName="ev_list_item_check_action_sequence.e" />
                   <File Id="ev_item_action_sequences.e" Name="EV_ITE~1.E" LongName="ev_item_action_sequences.e" />
                   <File Id="V76" Name="EV_COL~2.E" LongName="ev_column_title_click_action_sequence.e" />
@@ -1705,6 +1706,7 @@
                 </Directory>
                 <Directory Id="events24" Name="events">
                   <Component Id="ev_tree_node_action_sequences_imp.e" Guid="4EE9E07C-CBF9-4947-B4AF-DE4C89443CA1">
+                    <File Id="ev_combo_box_action_sequences_imp.e" Name="EV_COM~1.E" LongName="ev_combo_box_action_sequences_imp.e" />
                     <File Id="ev_tree_node_action_sequences_imp.e" Name="EV_TRE~3.E" LongName="ev_tree_node_action_sequences_imp.e" KeyPath="yes" />
                     <File Id="ev_tree_action_sequences_imp.e" Name="EV_TRE~1.E" LongName="ev_tree_action_sequences_imp.e" />
                     <File Id="ev_list_item_action_sequences_imp.e" Name="EV_LIS~1.E" LongName="ev_list_item_action_sequences_imp.e" />
@@ -1922,6 +1924,7 @@
                   <Component Id="ev_item_action_sequences_i.e" Guid="ABF859C0-2F16-4222-9779-86C1EA3FD95A">
                     <File Id="ev_application_action_sequences_i.e" Name="EV_APP~5.E" LongName="ev_application_action_sequences_i.e" />
                     <File Id="ev_button_action_sequences_i.e" Name="EV_BUT~1.E" LongName="ev_button_action_sequences_i.e" />
+                    <File Id="ev_combo_box_action_sequences_i.e" Name="EV_COM~1.E" LongName="ev_combo_box_action_sequences_i.e" />
                     <File Id="V119" Name="EV_CHE~1.E" LongName="ev_checkable_list_action_sequences_i.e" />
                     <File Id="V139" Name="EV_CHE~2.E" LongName="ev_checkable_tree_action_sequences_i.e" />
                     <File Id="ev_container_action_sequences_i.e" Name="EV_CON~5.E" LongName="ev_container_action_sequences_i.e" />

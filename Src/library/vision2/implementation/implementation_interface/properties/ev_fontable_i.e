@@ -25,7 +25,7 @@ feature -- Element change
 			-- Set font label to `font_name'.
 		require
 			exists: not destroyed
-			valid_font: a_font.is_valid
+			valid_font: is_valid (a_font)
 			a_font_specified: a_font.is_specified
 		deferred
 		end

@@ -70,9 +70,11 @@ feature -- Access
 			if first.pixmap /= Void then
 				add_pixmap_to_pixmap_container (first.pixmap)
 				modify_button.set_text (Remove_string)
+				modify_button.set_tooltip (Remove_tooltip)
 			else
 				pixmap_container.wipe_out
 				modify_button.set_text (Select_string)
+				modify_button.set_tooltip (Select_tooltip)
 					-- Remove tooltip from `filler_label',
 					-- no need to remove it from the pixmap
 					-- as the pixmap will no be no longer visible.
@@ -151,12 +153,14 @@ feature {NONE} -- Implementation
 					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (dialog.file_name))
 					add_pixmap_to_pixmap_container (new_pixmap)
 					modify_button.set_text (Remove_string)
+					modify_button.set_tooltip (Remove_tooltip)
 				end
 			else
 				for_all_objects (agent {EV_PIXMAPABLE}.remove_pixmap)
 				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (""))
 				pixmap_container.wipe_out
-				modify_button.set_text ("Select")
+				modify_button.set_text (Select_string)
+				modify_button.set_tooltip (Select_tooltip)
 					-- Remove tooltip from `filler_label',
 					-- no need to remove it from the pixmap
 					-- as the pixmap will no be no longer visible.
@@ -216,6 +220,12 @@ feature {NONE} -- Implementation
 		
 	Select_string: STRING is "Select"
 		-- String on `modify_button' ahen able to select pixmap.
+		
+	Remove_tooltip: STRING is "Remove pixmap"
+		-- Tooltip on `modify_button' when able to remove pixmap.
+		
+	Select_tooltip: STRING is "Select pixmap"
+		-- Tooltip on `modify_button' when able to remove pixmap.
 
 
 end -- class GB_EV_PIXMAPABLE

@@ -40,7 +40,7 @@ feature {EV_WIDGET_IMP, EV_WEL_COMMAND} -- Implementation
 	
 	implementation: EV_EVENT_DATA_I
 	
-end -- clasds EV_EVENT_DATA
+end -- class EV_EVENT_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -57,6 +57,3 @@ end -- clasds EV_EVENT_DATA
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-
-			
-	

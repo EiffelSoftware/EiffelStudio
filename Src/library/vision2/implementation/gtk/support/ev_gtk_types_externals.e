@@ -10,7 +10,6 @@ class
 
 feature {NONE} -- GTK macros for casting types
 
-
 	gtk_object (widget: POINTER): POINTER is
 		external 
 			"C [macro <gtk/gtk.h>]"
@@ -18,18 +17,43 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_OBJECT"
 		end
 	
-	gtk_container (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_CONTAINER"
-		end
-	
+feature {NONE} -- Primitives
+
 	gtk_editable (widget: POINTER): POINTER is
 		external 
 			"C [macro <gtk/gtk.h>]"
 		alias
 			"GTK_EDITABLE"
+		end
+
+	gtk_menu_bar (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_MENU_BAR"
+		end
+
+	gtk_tree (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_TREE"
+		end
+
+	gtk_tree_item (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_TREE_ITEM"
+		end
+
+feature {NONE} -- Containers
+
+	gtk_container (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_CONTAINER"
 		end
 	
 	gtk_box (widget: POINTER): POINTER is
@@ -39,25 +63,11 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_BOX"
 		end
 	
-	gtk_menu_item (widget: POINTER): POINTER is
-		external 
+	gtk_table (widget: POINTER): POINTER is
+		external
 			"C [macro <gtk/gtk.h>]"
 		alias
-			"GTK_MENU_ITEM"
-		end
-	
-	gtk_menu_bar (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_MENU_BAR"
-		end
-	
-	gtk_menu (widget: POINTER): POINTER is
-		external 
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_MENU"
+			"GTK_TABLE"
 		end
 	
 	gtk_scrolled_window (widget: POINTER): POINTER is
@@ -65,6 +75,22 @@ feature {NONE} -- GTK macros for casting types
 			"C [macro <gtk/gtk.h>]"
 		alias
 			"GTK_SCROLLED_WINDOW"
+		end
+
+feature {NONE} -- Items	
+	
+	gtk_menu_item (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_MENU_ITEM"
+		end
+	
+	gtk_menu (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_MENU"
 		end
 
 end -- class EV_GTK_TYPES_EXTERNALS

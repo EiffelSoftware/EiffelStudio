@@ -4,25 +4,60 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EV_PROGRESS_BAR_IMP
 
 inherit
 	EV_PROGRESS_BAR_I
+
 	EV_PRIMITIVE_IMP
 
-feature -- Status setting
+creation
+	make
 
-	set_continuous is
-			-- Set the bar in continuous mode.
-			-- Make the bar continuous.
+feature -- Implementation
+
+	make is
+			-- Create the progress bar.
 		do
+			widget := gtk_progress_bar_new
+			gtk_object_ref (widget)
 		end
+
+feature -- Status report
+
+	mode_is_segmented: BOOLEAN is
+			-- Is the mode in segmented mode?
+		local
+			mode: INTEGER
+		do
+			mode := c_gtk_progress_bar_style (widget)
+
+			if (mode = 0) then
+				Result := False
+			else
+				Result := True
+			end
+		end
+
+feature -- Status setting
 
 	set_percentage (value: INTEGER) is
 			-- Make `value' the new percentage filled by the
 			-- progress bar.
 		do
+			gtk_progress_bar_update (widget, value/100)
+		end
+
+	set_segmented (flag: BOOLEAN) is
+			-- Set the progress bar mode in
+			-- segmented or not.
+		do
+			if flag then
+				gtk_progress_bar_set_bar_style (widget, GTK_PROGRESS_DISCRETE)
+			else
+				gtk_progress_bar_set_bar_style (widget, GTK_PROGRESS_CONTINOUS)
+			end
 		end
 
 end -- class EV_PROGRESS_BAR_IMP

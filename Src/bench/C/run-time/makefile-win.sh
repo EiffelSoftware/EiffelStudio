@@ -277,7 +277,7 @@ finalized.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
 
 all:: $(OUTDIR)\ebench.$lib
 
-..\ipc\app\network.$lib: ..\ipc\app\proto.c
+..\ipc\app\network.$lib: ..\ipc\app\app_proto.c
 	cd ..\ipc\app
 	$(MAKE)
 	cd ..\..\run-time

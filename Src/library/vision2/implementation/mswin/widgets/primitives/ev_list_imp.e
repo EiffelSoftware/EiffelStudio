@@ -239,9 +239,21 @@ feature -- Delegated feature
 			current_list.move (a_x_position, a_y_position)
 		end
 
-	wel_move_and_resize (a_x_position: INTEGER; a_y_position: INTEGER; a_width: INTEGER; a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (
+			a_x_position: INTEGER
+			a_y_position: INTEGER
+			a_width: INTEGER
+			a_height: INTEGER
+			repaint: BOOLEAN
+			) is
 		do
-			current_list.move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
+			current_list.move_and_resize (
+				a_x_position, 
+				a_y_position, 
+				a_width, 
+				a_height, 
+				repaint
+				)
 		end
 
 	wel_resize (a_width: INTEGER; a_height: INTEGER) is
@@ -342,7 +354,8 @@ feature -- Status setting
 			if multiple_selection_enabled then
 				multiple_selection_list.unselect_item (index - 1)
 			else
-				if single_selection_list.selected and then single_selection_list.selected_item = an_index - 1 then
+				if single_selection_list.selected and then 
+				single_selection_list.selected_item = an_index - 1 then
 					single_selection_list.unselect
 				end
 			end
@@ -441,7 +454,9 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			pos := index_of_item_imp (li_imp)
 			if multiple_selection_enabled then
 				if multiple_selection_list.selected then
-					Result := multiple_selection_list.selected_items.has (pos - 1)
+					Result := multiple_selection_list.selected_items.has (
+						pos - 1
+						)
 				end
 			else
 				if single_selection_list.selected then
@@ -486,7 +501,8 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			insert_string_at (a_text, pos - 1)
 		ensure then
 			a_text_set:
-				a_text.is_equal (current_list.i_th_text (index_of_item_imp (li_imp) - 1))
+				a_text.is_equal
+					(current_list.i_th_text (index_of_item_imp (li_imp) - 1))
 		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
@@ -576,7 +592,8 @@ feature {EV_ANY_I} -- Implementation
 			li_imp: EV_LIST_ITEM_IMP
 		do
 			if multiple_selection_enabled then
-				li_imp := ev_children @ (multiple_selection_list.caret_index + 1)
+				li_imp := ev_children @ 
+					(multiple_selection_list.caret_index + 1)
 				if li_imp.is_selected then
 					notify_select (li_imp.interface)
 				else
@@ -584,7 +601,8 @@ feature {EV_ANY_I} -- Implementation
 				end
 			else
 				if single_selection_list.selected then
-					li_imp := ev_children @ (single_selection_list.selected_item + 1)
+					li_imp := ev_children @ 
+						(single_selection_list.selected_item + 1)
 					if last_selected_item /= Void and then li_imp /=
 							last_selected_item then
 						notify_deselect (last_selected_item.interface)
@@ -745,6 +763,11 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/04/18 02:34:07  pichery
+--| Formatting...
+--| I can commit file with more than 80 columns...
+--| he he he :O)
+--|
 --| Revision 1.67  2000/04/18 02:30:19  pichery
 --| Refactored class. Replaced Inheritance by Delegation.
 --| Inheriting from WEL_SINGLE_SELECTION_LIST_BOX

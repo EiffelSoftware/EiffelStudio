@@ -84,6 +84,7 @@ feature
 				local_info := context.locals.item (feature_name)
 				if local_info /= Void then
 						-- Local found
+					local_info.set_is_used (True)
 					error_found := parameters /= Void
 					Result := local_info.actual_type
 					Result := Result.actual_type.instantiation_in (last_type, last_id)

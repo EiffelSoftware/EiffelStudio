@@ -478,7 +478,7 @@ feature -- Status setting
 		require
 			exists: not is_destroyed;
 			a_value_large_enough: a_value > 0;
-			a_value_small_enogut: a_value <= item_count
+			a_value_small_enough: a_value <= item_count
 		do
 			xm_list_set_pos (screen_object, a_value)
 		end;
@@ -488,7 +488,7 @@ feature -- Status setting
 		require
 			exists: not is_destroyed;
 			a_value_large_enough: a_value > 0;
-			a_value_small_enogut: a_value < item_count
+			a_value_small_enough: a_value <= item_count
 		do
 			xm_list_set_bottom_pos (screen_object, a_value)
 		end;

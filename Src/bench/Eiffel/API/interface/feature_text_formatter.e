@@ -18,15 +18,20 @@ feature -- Properties
 
 feature -- Execution
 
-	format_debuggable (a_feature: E_FEATURE) is
+	format (a_feature: E_FEATURE; display_breakpoint: BOOLEAN) is
 			-- Format text for eiffel `a_feature' and take
 			-- into consideration renaming.
 		require
 			valid_feature: a_feature /= Void
 		local
-			f: DEBUG_CONTEXT
+			f: FORMAT_FEAT_CONTEXT
 		do
-			!! f.make (a_feature.associated_class);
+			if display_breakpoint then
+				!DEBUG_CONTEXT! f.make (a_feature.associated_class);
+			else
+				!! f.make (a_feature.associated_class);
+			end
+
 			if is_clickable then
 				f.set_in_bench_mode
 			end;
@@ -45,23 +50,6 @@ feature -- Execution
 			f: SIMPLE_DEBUG_CONTEXT
 		do
 			!! f.make (a_feature);
-			text := f.text;
-			error := f.execution_error
-		end;
-
-	format (a_feature: E_FEATURE) is
-			-- Format text for eiffel `a_feature' and take
-			-- into consideration renaming.
-		require
-			valid_feature: a_feature /= Void
-		local
-			f: FORMAT_FEAT_CONTEXT
-		do
-			!! f.make (a_feature.associated_class);
-			if is_clickable then
-				f.set_in_bench_mode
-			end;
-			f.execute (a_feature);
 			text := f.text;
 			error := f.execution_error
 		end;

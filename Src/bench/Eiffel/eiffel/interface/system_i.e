@@ -121,9 +121,6 @@ feature
 	successfull: BOOLEAN;
 			-- Was the last recompilation successfull ?
 
-	nb_classes: INTEGER;
-			-- Number of classes compiles within the system
-
 	freeze: BOOLEAN;
 			-- Has the system to be frozen again ?
 
@@ -151,8 +148,17 @@ feature
 	object_file_names: FIXED_LIST [STRING];
 			-- Object file names to link with the application
 
-	makefile_name: STRING;
-			-- Makefile name
+	makefile_names: FIXED_LIST [STRING];
+			-- Makefile names to execute before the linking
+
+	executable_directory: STRING;
+			-- Directory for the executable file
+
+	c_directory: STRING;
+			-- Directory for the generated c files
+
+	object_directory: STRING;
+			-- Directory for the object files
 
 	moved: BOOLEAN;
 			-- Has the system potentially moved in terms of classes ?
@@ -320,11 +326,11 @@ feature
 		local
 			old_pos: INTEGER;
 		do
---debug ("ACTIVITY")
+debug ("ACTIVITY")
 io.error.putstring ("%TChanged class ");
 io.error.putstring (cl.class_name);
 io.error.new_line;
---end;
+end;
 				-- An insertion in `changed_classes' could happen during
 				-- an iteration on it, so the position must be saved.
 			old_pos := changed_classes.position;
@@ -349,18 +355,18 @@ io.error.new_line;
 		local
 			new_id, id_array_count: INTEGER;
 		do
---debug ("ACTIVITY")
+debug ("ACTIVITY")
 io.error.putstring ("%TInserting class ");
 io.error.putstring (c.class_name);
 io.error.new_line;
---end;
+end;
 			new_id := class_counter.next;
 				-- Give a compiled class a frozen id
 			c.set_id (new_id);
 
 				-- Give a class id to class `c' which maybe changed 
 				-- during the topological sort of a recompilation.
-			c.set_class_id (new_id);
+			c.set_topological_id (new_id);
 				-- Insert the class
 			id_array_count := id_array.count;
 			if new_id > id_array_count then
@@ -411,11 +417,11 @@ io.error.new_line;
 			local_cursor: LINKABLE [SUPPLIER_CLASS];
 			c: CURSOR;
 		do
---debug ("ACTIVITY");
+debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving class ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
---end;
+end;
 				-- Update control flags of the topological sort
 			moved := True;
 
@@ -456,6 +462,13 @@ io.error.new_line;
 			depend_server.remove (id);
 			m_rout_id_server.remove (id);
 
+--			Tmp_ast_server.remove (id);
+--			Tmp_feat_tbl_server.remove (id);
+--			Tmp_class_info_server.remove (id);
+--			Tmp_inv_ast_server.remove (id);
+--			Tmp_depend_server.remove (id);
+--			Tmp_m_rout_id_server.remove (id);
+
 			freeze_set1.remove_item (id);
 			freeze_set2.remove_item (id);
 			melted_set.remove_item (id);
@@ -476,7 +489,13 @@ io.error.new_line;
 					not_after: not supplier_clients.after
 				end;
 				supplier_clients.remove;
-				if supplier_clients.empty then
+				if
+					supplier_clients.empty and then
+					supplier /= root_class.compiled_class
+						-- The root class is not removed
+						-- true only if the root class has changed and
+						-- was a client for a removed class
+				then
 					remove_old_class (supplier);
 				end;
 				local_cursor := local_cursor.right
@@ -528,6 +547,10 @@ io.error.new_line;
 				-- If first initialization, special initialization
 			if not general_class.compiled then
 				init;
+			elseif root_class.compiled_class = Void then
+				-- If root_class is not compiled (i.e. root class has changed since
+				-- last compilaton), insert it in the changed_classes
+				Workbench.change_class (root_class)
 			end;
 
 			freeze := freeze or else frozen_level = 0;
@@ -560,6 +583,8 @@ feature -- Recompilation
 
 	do_recompilation is
 			-- Incremetal recompilation of the system.
+		local
+			root_class_c: CLASS_C;
 		do
 				-- Recompilation initialization
 			init_recompilation;
@@ -570,6 +595,9 @@ feature -- Recompilation
 				-- Syntax analysis: This maybe add new classes to
 				-- the system
 			pass1;
+				-- The root class is not generic
+			root_class_c := root_class.compiled_class;
+			root_class_c.check_non_genericity_of_root_class;
 
 				-- Remove useless classes i.e classes without syntactical clients
 			remove_useless_classes;
@@ -618,6 +646,8 @@ end;
 				-- sorted by class ids so the parent come first the
 				-- heirs after
 			pass2;
+
+			root_class_c.check_root_class_creators;
 
 				-- Byte code production and type checking
 			pass3;
@@ -926,9 +956,9 @@ end;
 					changed_skeletons.after
 				loop
 					check
-						reverse_topo_order: 	a_class.class_id
+						reverse_topo_order: 	a_class.topological_id
 												>
-												changed_skeletons.item.class_id
+												changed_skeletons.item.topological_id
 					end;
 					if a_class.conform_to (changed_skeletons.item) then
 						changed_skeletons.remove;
@@ -1048,6 +1078,12 @@ end;
 			id_cursor: LINKABLE [INTEGER];
 			type_cursor: LINKABLE [CLASS_TYPE];
 			cl_type: CLASS_TYPE;
+
+			root_feat: FEATURE_I;
+			static_type: INTEGER;
+			dtype: INTEGER;
+			feature_id: INTEGER;
+			has_argument: INTEGER;
 		do
 --debug ("ACTIVITY")
 	io.error.putstring ("Updating .UPDT%N");
@@ -1057,6 +1093,22 @@ end;
 
 				-- There is something to update
 			Update_file.putchar ('%/001/');
+
+				-- Update the root class info
+			a_class := root_class.compiled_class;
+			dtype := a_class.types.first.type_id - 1;
+			static_type := a_class.types.first.id - 1;
+			if creation_name /= Void then
+				root_feat := a_class.feature_table.item (creation_name);
+				feature_id := root_feat.feature_id;
+				if root_feat.has_arguments then
+					has_argument := 1;
+				end;
+			end;
+			write_int (file_pointer, static_type);
+			write_int (file_pointer, dtype);
+			write_int (file_pointer, feature_id);
+			write_int (file_pointer, has_argument);
 
 				-- Write first the number of class types now available
 			write_int (file_pointer, type_id_counter.value);
@@ -1605,7 +1657,7 @@ feature -- Generation
 					-- Since classes can be removed from the system, test if
 					-- `a_class' is not Void
 				if a_class /= Void then
-					class_list.put (a_class, a_class.class_id);
+					class_list.put (a_class, a_class.topological_id);
 				end;
 				i := i + 1;
 			end;
@@ -2351,35 +2403,61 @@ feature -- Main file generation
 		local
 			root_cl: CLASS_C;
 			root_feat: FEATURE_I;
-			type_id: INTEGER;
 			c_name: STRING;
 			dtype: INTEGER;
 			final_mode: BOOLEAN;
 			cl_type: CLASS_TYPE;
+
+			static_type: INTEGER;
+			feature_id: INTEGER;
+			has_argument: BOOLEAN;
 		do
 
 			final_mode := byte_context.final_mode;
+
+			root_cl := root_class.compiled_class;
+			cl_type := root_cl.types.first;
+			dtype := cl_type.type_id - 1;
+
+			static_type := cl_type.id - 1;
+			if creation_name /= Void then
+				root_feat := root_cl.feature_table.item (creation_name);
+				feature_id := root_feat.feature_id;
+				if root_feat.has_arguments then
+					has_argument := True;
+				end;
+			end;
 
 			Main_file.open_write;
 
 			Main_file.putstring ("%
 				%#include <macros.h>%N%
 				%#include <struct.h>%N%N");
-			
+		
+			if not final_mode then
+				Main_file.putstring ("int root_class_static_type = ");
+				Main_file.putint (static_type);
+				Main_file.putstring (";%Nint root_class_dtype = ");
+				Main_file.putint (dtype);
+				Main_file.putstring (";%Nint32 root_class_feature_id = ");
+				Main_file.putint (feature_id);
+				Main_file.putstring (";%Nint root_class_has_argument = ");
+				if has_argument then
+					Main_file.putstring ("1");
+				else
+					Main_file.putstring ("0");
+				end;
+				Main_file.putstring (";%N%N");
+			end;
+	
 			Main_file.putstring ("%
 				%void emain(args)%N%
 				%char *args;%N%
 				%{%N%
 				%%Textern char *root_obj;%N");
 
-			root_cl := root_class.compiled_class;
-			cl_type := root_cl.types.first;
-			type_id := cl_type.type_id;
-			dtype := type_id - 1;
-
 			if 	creation_name /= Void then
-				root_feat := root_cl.feature_table.item (creation_name);
-				if byte_context.final_mode then
+				if final_mode then
 					c_name := Encoder.feature_name
 										(cl_type.id, root_feat.body_id);
 					Main_file.putstring ("%Textern void ");
@@ -2399,32 +2477,29 @@ feature -- Main file generation
 			if final_mode then
 	            Main_file.putint (dtype);
 			else
-				Main_file.putstring ("RTUD(");
-				Main_file.putint (cl_type.id - 1);
-				Main_file.putchar (')');
+				Main_file.putstring ("root_class_dtype");
 			end;
             Main_file.putstring (");%N");
 	
-			if creation_name /= Void then
-				Main_file.putchar ('%T');
-				if final_mode then
+			if final_mode then
+				if creation_name /= Void then
+					Main_file.putchar ('%T');
 					Main_file.putstring (c_name);
-				else
-					Main_file.putstring ("((void (*)()) RTWF(");
-					Main_file.putint (cl_type.id - 1);
-					Main_file.putchar (',');
-					Main_file.putint (root_feat.feature_id);
-					Main_file.putchar (',');
-					Main_file.putint (dtype);
-					Main_file.putstring ("))");
+					Main_file.putstring ("(root_obj");
+					if root_feat.has_arguments then
+						Main_file.putstring (", args");
+					end;
+					Main_file.putstring (");%N");
 				end;
-				Main_file.putstring ("(root_obj");
-
-				if root_feat.has_arguments then
-					Main_file.putstring (", args");
-				end;
-
-				Main_file.putstring (");%N");
+			else
+				Main_file.putstring ("%Tif (root_class_feature_id) {%N%
+					%%T%Tif (root_class_has_argument) {%N%
+					%%T%T%T((void (*)()) RTWF(root_class_static_type, root_class_feature_id,%N%
+							%%T%T%T%Troot_class_dtype))(root_obj, args);%N%
+					%%T%T} else {%N%
+					%%T%T%T((void (*)()) RTWF(root_class_static_type, root_class_feature_id,%N%
+							%%T%T%T%Troot_class_dtype))(root_obj);%N%
+					%%T}}%N");
 			end;
 
 			Main_file.putstring ("}%N");
@@ -2567,12 +2642,6 @@ feature -- Purge of compilation files
 	
 feature -- Conveniences
 
-	set_nb_classes (i: INTEGER) is
-			-- Assign `i' to `nb_classes'.
-		do
-			nb_classes := i;
-		end;
-
 	set_system_name (s: STRING) is
 			-- Assign `s' to `system_name'.
 		do
@@ -2609,10 +2678,46 @@ feature -- Conveniences
 			object_file_names := l;
 		end;
 
-	set_makefile_name (s: STRING) is
-			-- Assign `s' to `makefile_name'.
+	set_makefile_names (l: like makefile_names) is
+			-- Assign `l' to `makefile_names'.
 		do
-			makefile_name := s;
+			makefile_names := l;
+		end;
+
+	reset_external_clause is
+			-- Reset the external clause
+			-- Incrementality of the generated makefile
+		do
+			c_file_names := Void;
+			object_file_names := Void;
+			makefile_names := Void;
+		end;
+
+	set_executable_directory (d: STRING) is
+			-- Assign `d' to `executable_directory'.
+		do
+			executable_directory := d
+		end;
+
+	set_c_directory (d: STRING) is
+			-- Assign `d' to `c_directory'.
+		do
+			c_directory := d
+		end;
+
+	set_object_directory (d: STRING) is
+			-- Assign `d' to `object_directory'.
+		do
+			object_directory := d
+		end;
+
+	reset_generate_clause is
+			-- Reset the generate clause
+			-- Incrementality of the generated makefile
+		do
+			executable_directory := Void;
+			c_directory := Void;
+			object_directory := Void;
 		end;
 
 	set_id_array (a: like id_array) is

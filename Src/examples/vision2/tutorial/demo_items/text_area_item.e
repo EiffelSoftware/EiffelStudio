@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_TEXT_AREA")
+			set_example_path("demo_windows/text_area_window.e")
+			set_docs_path("documentation/text_area_documentation.txt")
+			set_class_path("ev_text_area")
 		end
 
 	create_demo is
@@ -30,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
 
 feature -- Access
 

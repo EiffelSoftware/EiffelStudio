@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_ERROR")
+			set_example_path("demo_windows/error_window.e")
+			set_docs_path("documentation/error_documentation.txt")
+			set_class_path("ev_error")
 		end
 
 	create_demo is
@@ -30,6 +33,10 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
+
+
+
 
 feature -- Access
 

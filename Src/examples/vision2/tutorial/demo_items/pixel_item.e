@@ -20,7 +20,11 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_PIXEL")
+			set_example_path("demo_items/pixel_item.e")
+			set_class_path("ev_pixel")
+	
 		end
+
 
 feature -- Access
 

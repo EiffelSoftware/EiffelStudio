@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_OPTION_BUTTON")
+			set_example_path("demo_windows/option_window.e")
+			set_docs_path("documentation/option_documentation.txt")
+			set_class_path("ev_option_button")
 		end
 
 	create_demo is
@@ -30,6 +33,9 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
+
+	
 
 feature -- Access
 

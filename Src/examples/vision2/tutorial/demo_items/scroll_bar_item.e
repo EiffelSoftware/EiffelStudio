@@ -22,6 +22,9 @@ feature {NONE} -- Initialization
 			-- Create the item and the demo that goes with it.
 		do
 			make_with_title (par, "EV_SCROLL_BAR")
+			set_example_path("demo_windows/scroll_bar_window.e")
+			set_docs_path("documentation/scroll_bar_documentation.txt")
+			set_class_path("ev_scroll_bar")
 		end
 
 

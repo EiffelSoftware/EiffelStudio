@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_TOOL_BAR")
+			set_example_path("demo_windows/toolbar_window.e")
+			set_docs_path("documentation/toolbar_documentation.txt")
+			set_class_path("ev_tool_bar")
 		end
 
 	create_demo is

@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_DRAWING_AREA")
+			set_example_path("demo_windows/drawing_window.e")
+			set_docs_path("documentation/drawing_documentation.txt")
+			set_class_path("ev_drawing_area")
 		end
 
 	create_demo is

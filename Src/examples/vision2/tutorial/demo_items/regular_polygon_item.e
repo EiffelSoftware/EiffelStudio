@@ -20,7 +20,14 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_REGULAR_POLYGON")
+			set_example_path("demo_items/regular_polygon_item.e")
+			set_class_path("ev_regular_polygon")
+
 		end
+
+
+
+		
 
 feature -- Access
 

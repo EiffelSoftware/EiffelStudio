@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_TEXT_FIELD")
+			set_example_path("demo_windows/text_field_window.e")
+			set_docs_path("documentation/text_field_documentation.txt")
+			set_class_path("ev_text_field")
 		end
 
 	create_demo is
@@ -30,6 +33,10 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
+
+
+
 
 feature -- Access
 

@@ -20,7 +20,14 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_EQUILATERAL_TRIANGLE")
+			set_example_path("demo_items/equilateral_triangle_item.e")
+			set_class_path("ev_equilateral_triangle")
+
 		end
+
+
+	
+
 
 feature -- Access
 

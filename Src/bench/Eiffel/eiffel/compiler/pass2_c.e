@@ -65,6 +65,7 @@ feature
 			io.error.putstring (temp);
 			io.error.new_line;
 
+			associated_class.set_reverse_engineered (False);
 			if associated_class.changed then
 				do_pass2 := True;
 					-- Incrementality: pass3 can be done successfully

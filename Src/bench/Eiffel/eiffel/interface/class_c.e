@@ -75,6 +75,10 @@ feature
 			-- Unique number for a class. Could change during a topological
 			-- sort on classes.
 
+	reverse_engineered: BOOLEAN;
+			-- Does the Storage mechanism for EiffelCase need
+			-- to regenerate the EiffelCase description for Current class?
+
 	changed2: BOOLEAN;
 			-- Has the compiler to apply the second pass to this class
 			-- again, even if the class didn't textually changed
@@ -3333,7 +3337,15 @@ end;
 			Tmp_rep_server.clear_index;
 		end;
 
-feature -- Dino stuff
+feature -- EiffelCase stuff
+
+	set_reverse_engineered (b: BOOLEAN) is
+			-- Set reversed_engineered to `b'.
+		do
+			reverse_engineered := b
+		ensure
+			reverse_engineered_set: reverse_engineered = b
+		end;
 
 	insert_changed_assertion (a_feature: FEATURE_I) is
 			-- Insert `a_feature' in the melted set

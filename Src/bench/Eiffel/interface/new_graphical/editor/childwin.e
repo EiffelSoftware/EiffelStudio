@@ -116,8 +116,8 @@ feature -- Initialization
 			loop
 				file.read_line
 				curr_string := clone(file.last_string)
-				lexer.execute(curr_string)
-				create line_item.make_from_lexer(lexer)
+				text_displayed.lexer.execute(curr_string)
+				create line_item.make_from_lexer(text_displayed.lexer)
 				text_displayed.extend(line_item)
 			end
 		end
@@ -317,12 +317,6 @@ feature {NONE} -- Implementation
 			-- Default style for this window.
 		do
 			Result := ws_overlappedwindow + ws_vscroll
-		end
-
-	lexer: EIFFEL_SCANNER is
-			-- Eiffel Lexer
-		once
-			create Result.make
 		end
 
 	cursor: TEXT_CURSOR

@@ -1,7 +1,15 @@
+indexing
+
+	description:
+		"Use this class as ansector of classes that are used to do a boolean %
+		%operation on the profile information.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 deferred class BOOLEAN_FILTER
 
 inherit
-	FILTER
+	PROFILE_FILTER
 
 feature -- Creation
 
@@ -10,9 +18,9 @@ feature -- Creation
 			!! filters.make
 		end
 
-feature -- Adding FILTERs
+feature -- Adding PROFILE_FILTERs
 
-	extend (new_filter: FILTER) is
+	extend (new_filter: PROFILE_FILTER) is
 			-- Extend filters to be checked with `new_filter'.
 		do
 			filters.extend (new_filter)
@@ -28,7 +36,7 @@ feature -- Checking
 
 feature {NONE} -- Attributes
 
-	filters: LINKED_LIST [FILTER]
+	filters: LINKED_LIST [PROFILE_FILTER]
 		-- Filters to checked by this filter
 
 feature {NONE} -- Hidden features

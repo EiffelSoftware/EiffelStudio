@@ -39,11 +39,6 @@ RT_LNK int16 eif_id_for_typarr (int16 x);
 /* Typecode for generic parameter */
 RT_LNK char eif_gen_typecode (EIF_REFERENCE obj, int pos);
 
-/* Uniform TUPLE? */
-
-RT_LNK char eif_gen_is_uniform (EIF_REFERENCE obj, char code);
-
-
 
 /* ROUTINEs */
 

@@ -430,23 +430,24 @@ feature -- Element change
 			original_exists: original /= Void
 			new_exists: new /= Void
 			original_not_empty: not original.empty
-			not_empty: not empty
 		local
 			change_pos :INTEGER
 		do
-			from
-				change_pos := substring_index (original, 1)
-			until
-				change_pos = 0
-			loop
-				replace_substring (new, change_pos, change_pos + original.count - 1)
-				if change_pos + new.count <= count then
-					change_pos := substring_index (original, change_pos + new.count)
-				else
-					change_pos := 0
+			if not empty then
+				from
+					change_pos := substring_index (original, 1)
+				until
+					change_pos = 0
+				loop
+					replace_substring (new, change_pos, change_pos + original.count - 1)
+					if change_pos + new.count <= count then
+						change_pos := substring_index (original, change_pos + new.count)
+					else
+						change_pos := 0
+					end
 				end
 			end
-		end;
+		end
 
 	replace_blank is
 			-- Replace all current characters with blanks.

@@ -32,18 +32,12 @@ feature -- Status setting
 
 	enable_select is
 			-- Set `is_selected' `True'.
-		do
-			set_checked
+		deferred
 		end
 
 feature {NONE} -- Implementation
 
 	checked: BOOLEAN is
-			-- To be effected by WEL class.
-		deferred
-		end
-
-	set_checked is
 			-- To be effected by WEL class.
 		deferred
 		end

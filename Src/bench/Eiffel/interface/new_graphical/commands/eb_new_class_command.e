@@ -35,13 +35,13 @@ feature -- Basic operations
 				then
 					create dial.make_default (target)
 					dial.set_stone_when_finished
-					dial.call ("New_class")
+					dial.call_default
 				else
-					create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (3))
+					create wd.make_with_text (Warning_messages.w_unsufficient_compilation (3))
 					wd.show_modal_to_window (target.window)
 				end
 			else
-				create wd.make_with_text (Warning_messages.w_Project_not_compiled)
+				create wd.make_with_text (Warning_messages.w_project_not_compiled)
 				wd.show_modal_to_window (target.window)
 			end
 		end
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 	menu_name: STRING is
 			-- Name as it appears in the menu (with & symbol).
 		do
-			Result := Interface_names.m_Create_new_class
+			Result := Interface_names.m_create_new_class
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is
@@ -72,19 +72,19 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := Interface_names.f_Create_new_class
+			Result := Interface_names.f_create_new_class
 		end
 
 	tooltext: STRING is
 			-- Text for the toolbar button.
 		do
-			Result := Interface_names.b_Create_new_class
+			Result := Interface_names.b_create_new_class
 		end
 
 	description: STRING is
 			-- Description for this command.
 		do
-			Result := Interface_names.f_Create_new_class
+			Result := Interface_names.f_create_new_class
 		end
 
 	name: STRING is "New_class"

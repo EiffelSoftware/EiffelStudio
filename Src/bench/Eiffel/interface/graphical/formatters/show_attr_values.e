@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		redefine
-			dark_symbol, text_window, display_temp_header
+			dark_symbol, tool, display_temp_header
 		end;
 	SHARED_APPLICATION_EXECUTION
 
@@ -21,17 +21,17 @@ creation
 
 feature -- Initialization
 
-	make (a_text_window: OBJECT_TEXT) is
+	make (a_tool: OBJECT_W) is
 			-- Intialize the command. Default indentation is 2.
 		do
-			init (a_text_window);
+			init_from_tool (a_tool);
 			indent := 2
 		end;
 
 feature -- Properties
 
-	text_window: OBJECT_TEXT;
-			-- Text of the object tool.
+	tool: OBJECT_W;
+			-- Tool of inspected object
 
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
@@ -69,16 +69,16 @@ feature {NONE} -- Properties
 		do
 			status := Application.status;
 			if status = Void then
-				warner (text_window).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (w_System_not_running)
 			elseif not status.is_stopped then
-				warner (text_window).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (w_System_not_stopped)
 			else
 				!! Result.make;
 				!! obj.make (object.object_address,
-					text_window.sp_lower, text_window.sp_upper);
+					tool.sp_lower, tool.sp_upper);
 				attributes := obj.attributes;
 				is_special := obj.is_special;
-				text_window.set_sp_capacity (obj.max_capacity);
+				tool.set_sp_capacity (obj.max_capacity);
 				dynamic_class := object.dynamic_class;
 				type_name := clone (dynamic_class.name);
 				type_name.to_upper;
@@ -92,7 +92,8 @@ feature {NONE} -- Properties
 					is_special and then (attributes.empty or else 
 					attributes.first.name.to_integer > 0) 
 				then
-					Result.add_string ("%T... Items skipped ...");
+					Result.add_indent;
+					Result.add_string ("... Items skipped ...");
 					Result.add_new_line
 				end;
 				from
@@ -107,7 +108,8 @@ feature {NONE} -- Properties
 					is_special and then (attributes.empty or else 
 					attributes.last.name.to_integer < obj.capacity - 1)
 				then
-					Result.add_string ("%T... More items ...");
+					Result.add_indent;
+					Result.add_string ("... More items ...");
 					Result.add_new_line
 				end
 			end
@@ -118,7 +120,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Looking up fields...")
+			tool.set_title ("Looking up fields...")
 		end;
 
 end -- class SHOW_ATTR_VALUES

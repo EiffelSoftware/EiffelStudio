@@ -219,6 +219,30 @@ feature -- Status report
 		return Result;
 	}
 
+	public static Type type_of_generic_parameter (object an_obj, int pos)
+		// Given an Eiffel object `an_obj', find the associated type of generic parameter
+		// at position `pos'.
+	{
+		if (an_obj is EIFFEL_TYPE_INFO) {
+			EIFFEL_TYPE_INFO l_obj = (EIFFEL_TYPE_INFO) an_obj;
+			#if ASSERTIONS
+				ASSERTIONS.REQUIRE ("Object not void", l_obj != null);
+				ASSERTIONS.REQUIRE ("There should be some generic info", l_obj.____type() != null);
+				ASSERTIONS.REQUIRE ("Valid position `pos'",
+					(pos > 0) && (pos < l_obj.____type().nb_generics));
+			#endif
+
+			EIFFEL_DERIVATION der;
+			CLASS_TYPE cl_type;
+			
+			der = l_obj.____type ();
+			cl_type = der.generics_type [pos - 1];
+			return Type.GetTypeFromHandle (cl_type.type);
+		} else {
+			return null;
+		}
+	}
+
 	public static Boolean is_eiffel_string (object o)
 		// Is `o' an instance of an Eiffel STRING.
 	{

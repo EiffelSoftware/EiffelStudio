@@ -464,7 +464,7 @@ feature -- Basic operations
 							visible_column_indexes.off
 						loop
 							check
-								lists_same_length: visible_column_indexes.count = visible_physical_column_indexes.count
+								lists_valid_lengths: visible_physical_column_indexes.count >= visible_column_indexes.count
 							end
 							current_column_index := visible_column_indexes.item
 							current_physical_column_index := visible_physical_column_indexes.item (visible_column_indexes.index - 1)

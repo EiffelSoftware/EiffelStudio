@@ -332,10 +332,10 @@ feature -- Warning Dialogs
 	Invalid_project_warning: STRING is "Invalid build project file. Please select a different file."
 		-- Warning displayed when a user attempts to open an invalid build project.
 
-	Duplicate_name_warning_part1: STRING is "An object exists with the name '"
+	Duplicate_name_warning_part1: STRING is "'"--"An object exists with the name '"
 		-- First part of warning used when a name that already exists is entered.
 		
-	Duplicate_name_warning_part2: STRING is "'. Object names must be unique.%N%NSelecting 'Modify' will allow editing of current invalid name%NSelecting 'Cancel' will restore old name."
+	Duplicate_name_warning_part2: STRING is "' Is not a valid object name.%N%NPossible causes include :-%N   Name already used as object name in system.%N   Name already used as feature name in system%N   Name is an Eiffel reserved word.%N%NSelecting 'Modify' will allow editing of current invalid name.%NSelecting 'Cancel' will restore old name."
 		-- Second part of warning used when a name that already exists is entered.
 
 	Delete_component_warning: STRING is "Are you sure you wish to delete the component from the system?"

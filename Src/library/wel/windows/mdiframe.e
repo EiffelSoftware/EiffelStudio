@@ -110,16 +110,6 @@ feature -- Basic operations
 			client_window.cascade_children
 		end
 
-feature -- Obsolete
-
-	tile_children is obsolete "Use ``tile_children_vertical''"
-			-- Tile the child windows.
-		require
-			exists: exists
-		do
-			tile_children_vertical
-		end
-
 feature {NONE} -- Implementation
 
 	call_default_window_procedure (msg, wparam, lparam: INTEGER): INTEGER is

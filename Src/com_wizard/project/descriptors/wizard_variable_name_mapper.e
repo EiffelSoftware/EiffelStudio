@@ -15,13 +15,15 @@ inherit
 
 	ECOM_TYPE_KIND
 
+	WIZARD_SHARED_DATA
+
 feature -- Basic operations
 
 	registration_class_name: STRING is
 			-- Registration class name
 		do
 			Result := Ecom_prefix
-			Result.append (Shared_wizard_environment.system_name)
+			Result.append (Shared_wizard_environment.project_name)
 			Result.append (Registration_suffix)
 			Result.to_upper
 		end

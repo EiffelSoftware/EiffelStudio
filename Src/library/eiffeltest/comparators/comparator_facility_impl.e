@@ -37,9 +37,9 @@ feature -- Basic operations
 
 end -- class COMPARATOR_FACILITY_IMPL
 
---|----------------------------------------------------------------
+--|----------------------------------------------------------------------
 --| EiffelTest: Reusable components for developing unit tests.
---| Copyright (C) 2000 Interactive Software Engineering Inc (ISE).
+--| Copyright (C) 2000-2001 Interactive Software Engineering Inc (ISE).
 --| EiffelTest may be used by anyone as FREE SOFTWARE to
 --| develop any product, public-domain or commercial, without
 --| payment to ISE, under the terms of the ISE Free Eiffel Library
@@ -52,4 +52,4 @@ end -- class COMPARATOR_FACILITY_IMPL
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|----------------------------------------------------------------------

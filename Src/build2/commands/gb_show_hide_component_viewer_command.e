@@ -8,9 +8,24 @@ class
 
 inherit
 
-	GB_TWO_STATE_COMMAND
+	GB_RESTORABLE_WINDOW_COMMAND
 	
 	GB_SHARED_COMPONENT_VIEWER
+		export
+			{NONE} all
+		end
+
+	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
+	
+	WIZARD_SHARED
+		rename
+			pixmap as wizard_pixmap
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -40,18 +55,12 @@ feature -- Access
 		do
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_component_viewer
 		end
-
-feature -- Execution
-
-	execute is
-			-- Execute command (toggle between show and hide).
+		
+	window: EV_DIALOG is
+			-- Result is window referenced by
+			-- `Current' command.
 		do
-			if is_selected then
-				component_viewer.show
-			else
-				component_viewer.hide
-			end
-			set_selected (not is_selected)
+			Result := component_viewer	
 		end
 
 end -- class GB_SHOW_HIDE_COMPONENT_VIEWER_COMMAND

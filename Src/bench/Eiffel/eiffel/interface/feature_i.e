@@ -1443,8 +1443,6 @@ end
 		local
 			old_type, new_type: TYPE_A
 			i, arg_count: INTEGER
-			new_ext, old_ext: EXTERNAL_I
-			new_extension, old_extension: CPP_EXTENSION_I
 			old_arguments: like arguments
 			current_class: CLASS_C
 			vdrd51: VDRD51
@@ -1452,8 +1450,6 @@ end
 			vdrd53: VDRD53
 			vdrd6: VDRD6
 			vdrd7: VDRD7
-			vdrd71: VDRD71
-			ve01: VE01
 			ve02: VE02
 			ve02a: VE02A
 		do
@@ -1469,45 +1465,6 @@ end
 				create vdrd6
 				vdrd6.init (old_feature, Current)
 				Error_handler.insert_error (vdrd6)
-			end
-
-
-			if not System.il_generation then
-					-- Check if an external (resp. non-external) feature is not
-					-- redefined into a non external (resp. external) one
-				if old_feature.is_external /= is_external then
-					create ve01
-					ve01.set_class (current_class)
-					ve01.set_feature (Current)
-					ve01.set_old_feature (old_feature)
-					Error_handler.insert_error (ve01)
-				elseif is_external then
-					old_ext ?= old_feature
-					new_ext ?= Current
-						-- This was the previous implementation:
-						-- new_ext.set_encapsulated
-						--			  (new_ext.encapsulated or else old_ext.encapsulated)
-						-- In the case where a class redefines a routine that 
-						-- requires encapsulation (is_special or has_signature is True)
-						-- into a `standard' external that doesn't need to be encapsulated
-						-- the previous implementation led this `standard' external to
-						-- be encapsulated. Bad. -- Fabrice.
-
-						-- C++ redeclaration
-					old_extension ?= old_ext.extension
-					new_extension ?= new_ext.extension
-
-					if
-						(old_extension /= Void) /= (new_extension /= Void)
-						or else
-						((new_extension /= Void) and then new_extension.type /= old_extension.type)
-					then
-							-- Error C++ => C or C => C++
-						create vdrd71
-						vdrd71.init (old_feature, Current)
-						Error_handler.insert_error (vdrd71)
-					end
-				end
 			end
 
 				-- Check if an effective feature is not redefined in a

@@ -104,8 +104,7 @@ feature -- Setting
 			body_exists: b /= Void;
 			body_not_empty: not b.empty;
 		do
-			--| Cannot do an assignment here, since `body' is not an 
-			--| attribute. But is ok in descendants.
+			
 		ensure
 			body_set: body = b
 		end;

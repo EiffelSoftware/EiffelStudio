@@ -40,4 +40,14 @@ feature -- Setting
 			generics := gg
 		end
 
+feature -- special for the reverse
+
+	handles_reverse : S_HANDLES_FOR_REVERSE
+
+	create_handles is 
+		do
+			!! handles_reverse.make
+		end
+
+
 end -- class S_RELATION_DATA

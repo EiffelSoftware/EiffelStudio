@@ -1061,6 +1061,7 @@ feature -- Features info
 			l_naming_convention: BOOLEAN
 			l_is_single_class: BOOLEAN
 			l_is_static: BOOLEAN
+			l_current_class_type: CLASS_TYPE
 		do
 			l_class_type := class_types.item (a_type_id)
 			l_class_token := class_type_token (a_type_id)
@@ -1069,6 +1070,7 @@ feature -- Features info
 				l_class_type.associated_class.is_single or
 				l_class_type.associated_class.is_external
 
+			l_current_class_type := byte_context.class_type
 			byte_context.set_class_type (l_class_type)
 
 			if l_feat.is_il_external then
@@ -1233,7 +1235,11 @@ feature -- Features info
 			end
 
 				-- Restore context.
-			byte_context.set_class_type (current_class_type)
+			if l_current_class_type /= Void then
+				byte_context.set_class_type (l_current_class_type)
+			else
+				byte_context.set_class_type (current_class_type)
+			end
 		end
 
 	define_external_feature_reference (a_feat: FEATURE_I; a_type_id: INTEGER) is

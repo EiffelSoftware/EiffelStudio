@@ -15,26 +15,11 @@ inherit
 			interface
 		end
 	
-	EV_TREE_ITEM_HOLDER_I
+	EV_ITEM_LIST_I [EV_TREE_ITEM]
 		redefine
 			interface
 		end
 
-feature -- Access
-
-	total_count: INTEGER is
-			-- Total number of items in the tree.
-		require
-		deferred
-		ensure
-			positive_result: Result >= 0
-		end
-
-	selected_item: EV_TREE_ITEM is
-			-- Item which is currently selected.
-		require
-		deferred
-		end
 
 feature -- Status report
 
@@ -44,39 +29,8 @@ feature -- Status report
 		deferred
 		end
 
-feature -- Event : command association
 
-	add_select_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when an item has been selected.
-		require
-		deferred
-		end
-
-	add_unselect_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when an item has been unselected.
-		require
-		deferred
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is	
-			-- Empty the list of commands to be executed
-			-- when an item has been selected.
-		require
-		deferred
-		end
-
-	remove_unselect_commands is	
-			-- Empty the list of commands to be executed
-			-- when an item has been unselected.
-		require
-		deferred
-		end
-
-feature {NONE}
+feature {EV_ANY_I}
 
 	interface: EV_TREE
 
@@ -103,6 +57,9 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/22 21:39:50  king
+--| Removed redundant command association features, inheriting from item_list
+--|
 --| Revision 1.15  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

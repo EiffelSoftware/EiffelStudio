@@ -36,9 +36,10 @@ feature -- Creation
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := an_error_dialog.identifier.to_c;
 			screen_object := create_error_d ($ext_name,
-					an_error_dialog.parent.implementation.screen_object);
+					parent_screen_object (an_error_dialog, widget_index));
 			an_error_dialog.set_dialog_imp (Current);
 			forbid_resize;
 			action_target := screen_object;

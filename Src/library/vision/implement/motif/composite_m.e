@@ -52,7 +52,10 @@ feature
 
 feature {NONE}
 	
-	null_pointer: POINTER;
+	null_pointer: POINTER is
+			-- Null pointer
+		do
+		end;
 
 feature {NONE} -- External features
 

@@ -35,9 +35,10 @@ feature -- Creation
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_file_select_dialog.identifier.to_c;
 			screen_object := create_file_select_d ($ext_name,
-					a_file_select_dialog.parent.implementation.screen_object);
+					parent_screen_object (a_file_select_dialog, widget_index));
 			a_file_select_dialog.set_dialog_imp (Current);
 			forbid_resize;
 			action_target := screen_object;

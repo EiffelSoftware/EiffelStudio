@@ -17,7 +17,8 @@ inherit
 			deleted, remove_yourself, group_name,
 			set_x_y, set_size, set_visual_name,
 			raise, x, y, set_real_x_y, is_window,
-			add_to_window_list, retrieve_set_visual_name
+			add_to_window_list, retrieve_set_visual_name, 
+			shown
 		end;
 	COMPOSITE_C
 		rename
@@ -31,7 +32,8 @@ inherit
 			set_x_y, set_size, set_visual_name,
 			reset_modified_flags,
 			raise, x, y, set_real_x_y, is_window,
-			add_to_window_list, retrieve_set_visual_name
+			add_to_window_list, retrieve_set_visual_name, 
+			shown
 		select
 			reset_modified_flags, undo_cut
 		end

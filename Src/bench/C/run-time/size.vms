@@ -9,8 +9,7 @@
   ####      #    ######  ######   ###    #    #
 
 	Size of basic types and access macros.
-	--- eif_size.h for VMS (size.vms)  ---
-
+	--- size.vms -- eif_size.h for VMS ---
     $Id$
 
 */
@@ -22,23 +21,26 @@
 
 #ifndef EIF_VMS
 CONFIGURATION ERROR EIF_VMS NOT DEFINED
-#else	/* this extends to the end of the file */
+#else	/* this extends almost to the end of the file */
 
 /* Basic sizes */
 #ifdef __alpha	/* Alpha hardware dependent values */
-#define ALIGN	8		/* Alignment restrictions */
-#define DBLSIZ	8		/* Size of double */
-#define FLTSIZ	4		/* Size of float */
-#define REFSIZ	4		/* Size of char * */
-#define LNGSIZ	4		/* Size of long */
-#define CHRSIZ	1		/* Size of char */
-#define PTRSIZ	4		/* Size of a function pointer: FIXME */
-#define BYTSIZ	8		/* Size of a byte, in bits */
+#define ALIGN		8		/* Alignment restrictions */
+#define DBLSIZ		8		/* Size of double */
+#define I64SIZ		8		/* Size of integer 64 bits */
+#define FLTSIZ		4		/* Size of float */
+#define REFSIZ		4		/* Size of char * */
+#define LNGSIZ		4		/* Size of long */
+#define I16SIZ		2		/* Size of wide char, integer 16 bits */
+#define CHRSIZ		1		/* Size of char, integer 8 bits */
+#define PTRSIZ		4		/* Size of a function pointer: FIXME */
 
 #else	/* VAX hardware dependent values */
 CONFIGURATION ERROR SIZE.VMS VAX SIZES NOT DEFINED
+#define ALIGN		8		/* Alignment restrictions */
 #endif	/* __alpha or vax */
 
+#define BYTSIZ		8		/* Size of a byte, in bits */
 #define BITLONG (BYTSIZ * LNGSIZ) /* Number of bits in a long */
 
 /* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
@@ -47,21 +49,33 @@ CONFIGURATION ERROR SIZE.VMS VAX SIZES NOT DEFINED
  * store a given amount of bits.
  */
 #define BIT_PACKSIZE    sizeof(uint32)	/* Size of a bit unit in bytes */
-#define BIT_UNIT		(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
+#define BIT_UNIT	(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
 #define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
-#define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
+#define BITACS(n)	((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
+#define BITOFF(n)	(((BITACS(n)/ALIGN)+((BITACS(n)%ALIGN)?1:0))*ALIGN)
 
 #define REFPAD(n) (((((n)*REFSIZ)/ALIGN)+((((n)*REFSIZ)%ALIGN)?1:0))*ALIGN)
 #define CHRPAD(n) (((((n)*CHRSIZ)/ALIGN)+((((n)*CHRSIZ)%ALIGN)?1:0))*ALIGN)
+#define I16PAD(n) (((((n)*I16SIZ)/ALIGN)+((((n)*I16SIZ)%ALIGN)?1:0))*ALIGN)
 #define LNGPAD(n) (((((n)*LNGSIZ)/ALIGN)+((((n)*LNGSIZ)%ALIGN)?1:0))*ALIGN)
 #define FLTPAD(n) (((((n)*FLTSIZ)/ALIGN)+((((n)*FLTSIZ)%ALIGN)?1:0))*ALIGN)
 #define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
+#define I64PAD(n) (((((n)*I64SIZ)/ALIGN)+((((n)*I64SIZ)%ALIGN)?1:0))*ALIGN)
 #define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
 
 
-#define LNGPAD_2 ( LNGPAD(2) )
+#define LNGPAD_2	8 	/* Computed version of LNGPAD (2) on VMS/Alpha (s.b. 1 on VMS/VAX) */
 
-#endif /* EIF_VMS */
+	/* Macros used to access fields in the object */
+#define REFACS(n) ((n)*REFSIZ)
+#define CHRACS(n) ((n)*CHRSIZ)
+#define I16ACS(n) ((n)*I16SIZ)
+#define LNGACS(n) ((n)*LNGSIZ)
+#define FLTACS(n) ((n)*FLTSIZ)
+#define DBLACS(n) ((n)*DBLSIZ)
+#define I64ACS(n) ((n)*I64SIZ)
+#define PTRACS(n) ((n)*PTRSIZ)
+
 
 
 #ifdef TEST
@@ -72,6 +86,8 @@ int main (int argc, char* argv[])
 {
     printf ("LNGPAD_2 == LNGPAD(2) == %d\n", LNGPAD(2));
 }
-#endif
+#endif  /* TEST */
+
+#endif /* EIF_VMS */
 
 #endif /* _size_h_ */

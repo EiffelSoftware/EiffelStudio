@@ -30,7 +30,12 @@ extern "C" {
 
 	RT_LNK EIF_INTEGER egc_prof_enabled;	  /* Is the Eiffel profiler on */
 	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);	/* STRING creation feature */
-	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER);	/* STRING `set_count' feature */
+#ifdef WORKBENCH
+	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER);
+#else
+	RT_LNK uint32 egc_str_count_offset;
+	RT_LNK uint32 egc_str_hash_offset;
+#endif
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */
 	RT_LNK void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE);		/* ROUTINE `set_rout_disp' feature */
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */

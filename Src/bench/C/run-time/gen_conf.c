@@ -1313,8 +1313,7 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 
 	nstcall = 0;
 	(egc_strmake)(ret, (EIF_INTEGER) len);
-	nstcall = 0;
-	(egc_strset)(ret, (EIF_INTEGER) len);
+	RT_STRING_SET_COUNT(ret, len);
 
 	/* We know the `area' is the very first reference
 	 * of the STRING object, hence the simple de-referencing.
@@ -1431,8 +1430,7 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 
 	nstcall = 0;
 	(egc_strmake)(ret, (EIF_INTEGER) len);
-	nstcall = 0;
-	(egc_strset)(ret, (EIF_INTEGER) len);
+	RT_STRING_SET_COUNT(ret, len);
 
 	/* We know the `area' is the very first reference
 	 * of the STRING object, hence the simple de-referencing.

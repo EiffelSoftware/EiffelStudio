@@ -24,7 +24,7 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 #include <sys/stat.h>
 #include <string.h>
 
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "eif_plug.h"
 #include "eif_eiffel.h"			/* For Windows and OS2 */
 #include "rt_lmalloc.h"
@@ -326,6 +326,8 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
 
+	EIF_GET_CONTEXT
+
 #ifdef EIF_VMS
 	if (strchr (p, '/')) {	/* probably non-VMS (unix) path spec */
 		strcat (strcat (p, "/"), v);
@@ -374,11 +376,13 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 
 #endif	/* EIF_VMS */
 
-	(egc_strset)(string, strlen ((char *)p));
+	RT_STRING_SET_COUNT(string, strlen((char *) p));
 }
 
 rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v)
 {
+	EIF_GET_CONTEXT
+
 		/* Set the absolute part of the path name p to directory name v */
 #ifdef EIF_VMS
 	/* VMS FIXME: this is not correct - what if path is relative? */
@@ -393,11 +397,13 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHA
 		strcat ((char *)p, "/");
 	strcat ((char *)p, (char *)v);
 #endif
-	(egc_strset)(string, strlen ((char *)p));
+	RT_STRING_SET_COUNT(string, strlen((char *) p));
 }
 
 rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v)
 {
+	EIF_GET_CONTEXT
+
 		/* Append the file name part in the path name */
 	if (*((char *)p) == '\0'){
 		strcat ((char *)p, (char *)v);
@@ -424,7 +430,7 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 		strcat ((char *)p, (char *)v);
 	}
 
-	(egc_strset)(string, strlen ((char *)p));
+	RT_STRING_SET_COUNT(string, strlen((char *) p));
 }
 
 rt_public EIF_BOOLEAN eif_case_sensitive_path_names(void)

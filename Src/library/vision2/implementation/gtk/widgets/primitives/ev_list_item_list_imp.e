@@ -49,7 +49,10 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
-			gtk_widget_set_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
+			gtk_widget_set_flags (
+				c_object,
+				C.GTK_CAN_FOCUS_ENUM
+			)
 			C.gtk_scrolled_window_set_policy (
 				c_object,
 				C.GTK_POLICY_AUTOMATIC_ENUM,
@@ -60,7 +63,10 @@ feature {NONE} -- Initialization
 			list_widget := C.gtk_list_new
 
 			C.gtk_widget_show (list_widget)
-			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
+			C.gtk_scrolled_window_add_with_viewport (
+				c_object,
+				list_widget
+			)
 			real_signal_connect (
 				list_widget,
 				"unselect_child",
@@ -105,7 +111,10 @@ feature {NONE} -- Initialization
 					eiffel_to_c ("button-press-event"),
 					~on_list_clicked
 			)
-			gtk_widget_set_flags (visual_widget, C.GTK_CAN_FOCUS_ENUM)
+			gtk_widget_set_flags (
+				visual_widget,
+				C.GTK_CAN_FOCUS_ENUM
+			)
 			selection_mode_is_single := True
 		end
 		
@@ -124,7 +133,9 @@ feature {NONE} -- Initialization
 			)
 
 			-- Move down in to ev_list_imp or refactor a scrolled window pointer.
-			--item_alloc_y := C.gtk_allocation_struct_y (C.gtk_widget_struct_allocation (l_item.c_object))
+			-- item_alloc_y := C.gtk_allocation_struct_y (
+			--	C.gtk_widget_struct_allocation (l_item.c_object)
+			-- )
 			--if item_alloc_y /= -1 then
 				--print ("Scroll window to " + item_alloc_y.out + "%N")
 			--	v_adjustment := C.gtk_scrolled_window_get_vadjustment (c_object)
@@ -454,7 +465,11 @@ feature {NONE} -- Implementation
 				index > count
 			loop
 				item_imp ?= item.implementation
-				if item_imp /= Void and then gtk_widget_has_focus (item_imp.c_object) then
+				if 
+					item_imp /= Void 
+						and then
+					gtk_widget_has_focus (item_imp.c_object)
+				then
 					Result := item
 				end
 				forth
@@ -471,8 +486,15 @@ feature {NONE} -- Implementation
 			button_pressed_mask: INTEGER
 			temp_ptr: POINTER
 		do
-			temp_ptr := C.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
-			button_pressed_mask := C.gdk_button1_mask_enum + C.gdk_button2_mask_enum + C.gdk_button3_mask_enum
+			temp_ptr := C.gdk_window_get_pointer (
+								default_pointer,
+								$temp_x,
+								$temp_y,
+								$temp_mask
+							)
+			button_pressed_mask := C.gdk_button1_mask_enum 
+						+ C.gdk_button2_mask_enum
+						+ C.gdk_button3_mask_enum
 			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
 		end	
 		
@@ -491,7 +513,8 @@ feature {NONE} -- Implementation
 		-- Are we between "item_clicked" and "list_clicked" event.
 		
 	arrow_used: BOOLEAN
-		-- Has the user just used up or down arrows to change the focused item?
+		-- Has the user just used up or down arrows
+		-- to change the focused item?
 		
 	selection_mode_is_single:BOOLEAN
 	
@@ -518,6 +541,9 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/13 16:44:13  etienne
+--| Cosmetics.
+--|
 --| Revision 1.5  2001/06/13 16:35:58  etienne
 --| Improved item selection in combo boxes and lists.
 --|

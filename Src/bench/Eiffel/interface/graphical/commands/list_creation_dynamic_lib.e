@@ -81,7 +81,7 @@ feature {NONE} -- Execution
 						end
 						list.forth
 					end
-					Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index)
+					dynamic_lib_tool.process (d_class, d_creation, d_routine, d_index)
 				end
 				dynamic_lib_tool.synchronize
 			end
@@ -134,13 +134,12 @@ feature {NONE} -- Implementation
 			end
 			list := valid_creation (d_class)
 
-			if list = Void then
-debug ("DLL")
-	io.put_string ("%NThere is no creation procedure.%N")
-end
-				Eiffel_dynamic_lib.add_export_feature (d_class, d_routine, d_routine, d_index)
+			if list = Void then				
+				dynamic_lib_tool.process (d_class, d_routine, d_routine, d_index)
+			elseif list.empty then
+				warner (dynamic_lib_tool.eb_shell).gotcha_call ("There is no valid creation for this feature.%N(ie: with no argument)")
 			elseif list.count =1 then
-				Eiffel_dynamic_lib.add_export_feature (d_class, list.first, d_routine, d_index)
+				dynamic_lib_tool.process (d_class, list.first, d_routine, d_index)
 			elseif list /= Void and then not list.empty then
 				!! a_list.make
 				from 

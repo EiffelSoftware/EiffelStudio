@@ -12,7 +12,6 @@ inherit
 	SHARED_EIFFEL_PROJECT
 	COMPILER_EXPORTER
 
-
 feature -- Properties
 
 	file_name: STRING 

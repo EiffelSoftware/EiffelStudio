@@ -8,6 +8,9 @@ class
 
 feature -- Access
 
+	eiffel_dir: STRING		
+			-- EIFFEL installation environment variable
+
 	Max_path_length: INTEGER is 1024
 			-- Maximum path length (in characters)
 			--| Windows limit.
@@ -32,6 +35,7 @@ feature -- Access
 				create Result.make_from_c (p)
 			else
 				Result := long_path
+
 			end
 		ensure
 			non_void_short_path: Result /= Void

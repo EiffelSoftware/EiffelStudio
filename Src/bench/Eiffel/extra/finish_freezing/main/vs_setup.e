@@ -13,6 +13,8 @@ inherit
 		export
 			{NONE} non_used_command_line
 		end
+		
+	PATH_CONVERTER
 
 create
 	make
@@ -46,7 +48,7 @@ feature -- Initialization
 				l_batch_file.new_line
 				l_batch_file.putstring ("set PATH=")
 				l_batch_file.new_line
-				l_batch_file.putstring ("call " + Vcvars32_bat_path_and_filename)
+				l_batch_file.putstring ("call " + short_path (Vcvars32_bat_path_and_filename))
 				l_batch_file.new_line
 				l_batch_file.putstring ("set > temp")
 				l_batch_file.new_line

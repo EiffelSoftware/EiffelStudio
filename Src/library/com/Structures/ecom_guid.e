@@ -26,6 +26,14 @@ creation
 	make_from_string,
 	make_from_guid
 
+feature -- Basic operation
+
+	generate is
+			-- Generate a new GUID
+		do
+			item := ccom_generate_guid
+		end
+
 feature {NONE} -- Initialization
 
 	make_from_string (string: STRING) is
@@ -114,6 +122,11 @@ feature {NONE} -- Externals
 	ccom_string_to_guid (wide_str: POINTER; a_guid: POINTER) is
 		external
 			"C [macro %"E_guid.h%"]"
+		end
+
+	ccom_generate_guid: POINTER is
+		external
+			"C ():EIF_POINTER | %"E_guid.h%""
 		end
 
 	ccom_guid_to_wide_string (a_guid: POINTER): POINTER is

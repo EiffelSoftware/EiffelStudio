@@ -357,8 +357,8 @@ feature -- Status setting
 			Parser.parse_file (file_name, False)
 			Result ?= Parser.ast
 			if Result /= Void then
-				update_ace_for_dotnet (Result)
 				update_ace_for_eweasel_on_dotnet (Result)
+				update_ace_for_dotnet (Result)
 				Result.set_comment_list (Parser.comment_list)
 			end
 		end
@@ -667,7 +667,6 @@ feature {NONE} -- Implementation
 			l_option: D_OPTION_SD
 			l_assemblies: LACE_LIST [ASSEMBLY_SD]
 			l_assembly: ASSEMBLY_SD
-			l_assembly_version: STRING
 			l_runtime_version: STRING
 		do
 			create l_shared
@@ -675,10 +674,8 @@ feature {NONE} -- Implementation
 				l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False)
 			then
 				l_runtime_version :=
-					l_shared.configure_resources.get_string ("clr_version", "v1.1.4322")
-				l_assembly_version :=
-					l_shared.configure_resources.get_string ("assembly_version", "1.0.5000.0")
-				
+					l_shared.configure_resources.get_string ("clr_version", Void)
+
 				l_defaults := a_root.defaults
 				if l_defaults = Void then
 					create l_defaults.make (1)
@@ -697,9 +694,11 @@ feature {NONE} -- Implementation
 						feature {FREE_OPTION_SD}.msil_generation_type, "exe", True)
 				end
 				l_defaults.extend (l_option)
-				l_option := l_factory.new_special_option_sd (
-					feature {FREE_OPTION_SD}.msil_clr_version, l_runtime_version, True)
-				l_defaults.extend (l_option)
+				if l_runtime_version /= Void then
+					l_option := l_factory.new_special_option_sd (
+						feature {FREE_OPTION_SD}.msil_clr_version, l_runtime_version, True)
+					l_defaults.extend (l_option)
+				end
 
 				l_option := l_factory.new_special_option_sd (
 					feature {FREE_OPTION_SD}.console_application, Void, True)
@@ -712,29 +711,20 @@ feature {NONE} -- Implementation
 				end
 				create l_assembly.initialize (
 					l_factory.new_id_sd ("mscorlib", True),
-					l_factory.new_id_sd ("mscorlib", True),
-					Void,
-					l_factory.new_id_sd (l_assembly_version, True),
-					l_factory.new_id_sd ("neutral", True),
-					l_factory.new_id_sd ("b77a5c561934e089", True))
+					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\mscorlib.dll", True),
+					Void, Void, Void, Void)
 				l_assemblies.extend (l_assembly)
 
 				create l_assembly.initialize (
 					l_factory.new_id_sd ("system", True),
-					l_factory.new_id_sd ("System", True),
-					l_factory.new_id_sd ("system_dll_", False),
-					l_factory.new_id_sd (l_assembly_version, True),
-					l_factory.new_id_sd ("neutral", True),
-					l_factory.new_id_sd ("b77a5c561934e089", True))
+					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\System.dll", True),
+					l_factory.new_id_sd ("system_dll_", False), Void, Void, Void)
 				l_assemblies.extend (l_assembly)
 
 				create l_assembly.initialize (
 					l_factory.new_id_sd ("system_xml", True),
-					l_factory.new_id_sd ("System.Xml", True),
-					l_factory.new_id_sd ("system_xml_", False),
-					l_factory.new_id_sd (l_assembly_version, True),
-					l_factory.new_id_sd ("neutral", True),
-					l_factory.new_id_sd ("b77a5c561934e089", True))
+					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\System.Xml.dll", True),
+					l_factory.new_id_sd ("system_xml_", False), Void, Void, Void)
 				l_assemblies.extend (l_assembly)
 			end
 		end

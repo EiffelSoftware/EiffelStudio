@@ -126,6 +126,7 @@ feature
 			cecil_rt_basket.extend ("search.o");
 			cecil_rt_basket.extend ("main.o");
 			cecil_rt_basket.extend ("run_idr.o");
+			cecil_rt_basket.extend ("compress.o");
 			cecil_rt_basket.extend ("console.o");
 			cecil_rt_basket.extend ("path_name.o");
 			cecil_rt_basket.extend ("object_id.o");

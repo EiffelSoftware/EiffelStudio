@@ -85,6 +85,7 @@ feature
 			cecil_rt_basket.extend ("update.o");
 			cecil_rt_basket.extend ("wbench.o");
 			cecil_rt_basket.extend ("wrun_idr.o");
+			cecil_rt_basket.extend ("compress.o");
 			cecil_rt_basket.extend ("console.o");
 			cecil_rt_basket.extend ("wpath_name.o");
 			cecil_rt_basket.extend ("wobject_id.o");

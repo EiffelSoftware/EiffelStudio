@@ -19,7 +19,7 @@
 			<item>If the 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml#details</url>
-					<label>details</label>
+					<label>details<image><url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url></image></label>
 				</link>
 				<link>
 					<url>40_viewing_measure_details.xml</url>
@@ -29,7 +29,7 @@
 			<item>To come back to the main interface click again on 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml#hide details</url>
-					<label>details</label>
+					<label>details<image><url>/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url></image></label>
 				</link>.
 			</item>
 		</list>

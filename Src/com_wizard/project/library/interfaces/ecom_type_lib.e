@@ -30,14 +30,13 @@ feature {NONE} -- Initialization
 			non_void_file_name: file_name /= Void
 			valid_file_name: not file_name.is_empty
 		local 
-			wide_string: ECOM_WIDE_STRING
+			l_wide_string: ECOM_WIDE_STRING
 		do
-			create wide_string.make_from_string (file_name)
-			initializer := ccom_create_c_type_lib_from_name (wide_string.item)
+			create l_wide_string.make_from_string (file_name)
+			initializer := ccom_create_c_type_lib_from_name (l_wide_string.item)
 			item := ccom_item (initializer)
 		ensure
-			interface_exist: initializer /= default_pointer and then
-					exists
+			interface_exist: initializer /= default_pointer and then exists
 		end
 
 feature -- Access
@@ -49,10 +48,12 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)
-			Result := ccom_find_name (initializer, wide_string.item, count)
+			if not disposed then
+				create l_wide_string.make_from_string (a_name)
+				Result := ccom_find_name (initializer, l_wide_string.item, count)
+			end
 		end
 
 	documentation (a_index: INTEGER): ECOM_DOCUMENTATION is
@@ -62,31 +63,37 @@ feature -- Access
 		require
 			valid_index: a_index >= -1 and a_index < type_info_count
 		do
-			Result := ccom_get_documentation (initializer, a_index)
+			if not disposed then
+				Result := ccom_get_documentation (initializer, a_index)
+			end
 		ensure
-			non_void_documentation: Result /= Void
+			non_void_documentation: not disposed implies Result /= Void
 		end
 
 	library_attributes: ECOM_TLIB_ATTR is
 			-- Library's attributes
 		do
-			if not are_attributes_valid then
-				type_attr_pointer := ccom_get_lib_attr (initializer)
-				create library_attributes_impl.make_from_pointer (type_attr_pointer)
-				are_attributes_valid := True
+			if not disposed then
+				if not are_attributes_valid then
+					type_attr_pointer := ccom_get_lib_attr (initializer)
+					create library_attributes_impl.make_from_pointer (type_attr_pointer)
+					are_attributes_valid := True
+				end
+				Result := library_attributes_impl
 			end
-			Result := library_attributes_impl
 		ensure
-			non_void_attributes: Result /= Void
-			valid_attributes: Result.exists
+			non_void_attributes: not disposed implies Result /= Void
+			valid_attributes: not disposed implies Result.exists
 		end
 
 	type_comp: ECOM_TYPE_COMP is
 			-- ITypeComp interface
 		do
-			!! Result.make_from_pointer (ccom_get_type_comp (initializer))
+			if not disposed then
+				create Result.make_from_pointer (ccom_get_type_comp (initializer))
+			end
 		ensure
-			non_void_type_comp_interface: Result /= Void 
+			non_void_type_comp_interface: not disposed implies Result /= Void 
 		end
 
 	type_info (a_index: INTEGER): ECOM_TYPE_INFO is
@@ -94,18 +101,22 @@ feature -- Access
 		require
 			valid_index: a_index >= 0 and a_index < type_info_count
 		do
-			!! Result.make_from_pointer (ccom_get_type_info (initializer, a_index))
+			if not disposed then
+				create Result.make_from_pointer (ccom_get_type_info (initializer, a_index))
+			end
 		ensure
-			non_void_type_info: Result /= Void 
-			valid_type_info: Result.exists
+			non_void_type_info: not disposed implies Result /= Void 
+			valid_type_info: not disposed implies Result.exists
 		end
 
 	type_info_count: INTEGER is
 			-- Number of type descriptions in type library
 		do
-			Result := ccom_get_type_info_count (initializer)
+			if not disposed then
+				Result := ccom_get_type_info_count (initializer)
+			end
 		ensure
-			valid_count: Result >= 0
+			valid_count: not disposed implies Result >= 0
 		end
 
 	type_info_of_guid (a_guid: ECOM_GUID): ECOM_TYPE_INFO is
@@ -114,9 +125,11 @@ feature -- Access
 			non_void_guid: a_guid /= Void
 			valid_guid: a_guid.exists
 		do
-			!! Result.make_from_pointer (ccom_get_type_info_of_guid (initializer, a_guid.item))
+			if not disposed then
+				create Result.make_from_pointer (ccom_get_type_info_of_guid (initializer, a_guid.item))
+			end
 		ensure
-			non_void_type_info: Result /= Void 
+			non_void_type_info: not disposed implies Result /= Void 
 		end
 
 	type_info_type (a_index: INTEGER): INTEGER is
@@ -125,9 +138,11 @@ feature -- Access
 		require
 			valid_index: a_index >= 0 and a_index < type_info_count
 		do
-			Result := ccom_get_type_info_type (initializer, a_index)
+			if not disposed then
+				Result := ccom_get_type_info_type (initializer, a_index)
+			end
 		ensure
-			valid_type: is_valid_type_kind (Result)
+			valid_type: not disposed implies is_valid_type_kind (Result)
 		end
 
 feature -- Status report
@@ -138,12 +153,23 @@ feature -- Status report
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)
-			Result := ccom_is_name (initializer, wide_string.item)
+			if not disposed then
+				create l_wide_string.make_from_string (a_name)
+				Result := ccom_is_name (initializer, l_wide_string.item)
+			end
 		end
 
+feature -- Basic Operations
+
+	release is
+			-- Release underlying ITypeLib interface pointer thereby releasing lock on file.
+			-- Do not call anything else on this instance after calling `release'.
+		do
+			dispose
+		end
+		
 feature {NONE} -- Implementation
 
 	create_wrapper (a_pointer: POINTER): POINTER is
@@ -175,12 +201,18 @@ feature {NONE} -- Implementation
 	dispose is
 			-- Release also TLIBATTR structure
 		do
-			release_tlib_attr
-			Precursor
+			if not disposed then
+				release_tlib_attr
+				Precursor
+			end
+			disposed := True
 		end
 
 	type_attr_pointer: POINTER
 			-- Pointer to TYPEATTR structure
+
+	disposed: BOOLEAN
+			-- Was structure released?
 
 feature {NONE} -- Externals
 

@@ -87,8 +87,8 @@ public EIF_REFERENCE eif_timeout_msg ()
 	int l;
 #else
 	char *eif_timeout;
-#endif
 	extern char *getenv();				/* Get environment variable value */
+#endif
 
 	char s[512];
 

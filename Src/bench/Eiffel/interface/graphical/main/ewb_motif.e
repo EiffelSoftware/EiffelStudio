@@ -13,13 +13,14 @@ inherit
 			init_toolkit
 		end;
 	MEL_CALLBACK;
+	INTERFACE_W
 	
 creation
 	make
 
 feature {NONE} -- Initialization
 
-	init_toolkit: MOTIF is once !!Result.make ("ebench") end;
+	init_toolkit: MOTIF is once !!Result.make (l_X_resourse_name) end;
 
 feature -- Communications
 

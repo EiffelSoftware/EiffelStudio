@@ -11,6 +11,7 @@ inherit
 
 	GRAPHICS;
 	WINDOWS;
+	INTERFACE_W;
 	RESOURCE_USER
 		redefine
 			update_boolean_resource,
@@ -201,7 +202,7 @@ feature {WINDOW_MGR} -- Properties
 			ts: EB_TOP_SHELL
 		do
 			!! mp.set_watch_cursor;
-			!! ts.make ("", Project_tool.screen);
+			!! ts.make (l_X_resourse_name, Project_tool.screen);
 			ed := shell_editor (ts);
 			ts.set_title (ed.tool_name);
 			Result ?= ed

@@ -3,6 +3,8 @@ class EXPANDED_DESC
 inherit
 
 	ATTR_DESC
+		rename
+			Expanded_level as level
 		redefine
 			is_expanded, same_as
 		end
@@ -37,12 +39,6 @@ feature
 		do
 			buffer.putstring ("SK_EXP + ");
 			buffer.putint (type_id - 1);
-		end;
-
-	level: INTEGER is
-			-- level comparison
-		once
-			Result := Expanded_level;
 		end;
 
 	same_as (other: ATTR_DESC): BOOLEAN is

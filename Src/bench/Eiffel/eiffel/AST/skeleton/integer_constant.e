@@ -39,7 +39,7 @@ inherit
 		end;
 
 create
-	make, make_default
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -49,16 +49,6 @@ feature {NONE} -- Initialization
 			size := 32
 		ensure
 			size_set: size = 32
-		end
-		
-	make (n: INTEGER) is
-			-- Create an integer constant value of size `n'.
-		require
-			valid_n: n = 32 or n = 64
-		do
-			size := n
-		ensure
-			size_set: size = n
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -135,7 +125,7 @@ feature -- Type checking
 			Result := t.is_integer 
 			if Result then
 				int_a ?= t
-				Result := size = 64 implies size = int_a.size
+				Result := int_a.size >= size
 			end
 		end
 
@@ -375,6 +365,7 @@ feature {NONE} -- Translation
 				end
 				i := i + 1
 			end
+			
 			lower := last_integer
 
 			if j > 9 then
@@ -406,9 +397,18 @@ feature {NONE} -- Translation
 					i := i + 1
 				end
 				upper := last_integer
-				size := 64
-			else
+			end
+
+				-- Force size of integer constant depending on number
+				-- of hexadecimal character in hex string.
+			if j <= 3 then
+				size := 8
+			elseif j <= 5 then
+				size := 16
+			elseif j <= 9 then
 				size := 32
+			else
+				size := 64
 			end
 		end
 
@@ -456,7 +456,16 @@ feature {NONE} -- Translation
 						last_integer := -last_integer
 					end
 					lower := last_integer
-					size := 32
+
+					if -128 <= lower and lower <= 127 then
+						size := 8
+					elseif -32768 <= lower and lower <= 32767 then
+						size := 16
+					elseif -2147483648 <= lower and lower <= 2147483647 then
+						size := 32
+					else
+						check False end
+					end	
 				else
 					from
 					until

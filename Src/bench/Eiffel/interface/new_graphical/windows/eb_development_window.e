@@ -165,6 +165,8 @@ feature {NONE} -- Initialization
 
 				-- Finish initializing the main editor formatters
 			end_build_formatters
+			
+			address_manager.disable_formatters
 
 			initialized := True
 			is_destroying := False
@@ -1214,7 +1216,7 @@ feature -- Menu Building
 				-- Find next
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Find_next + "%T" + Editor_preferences.shorcut_name_for_action (6))
-			cmd.add_agent (editor~find_next)
+			cmd.add_agent (~find_next)
 			command_menu_item := cmd.new_menu_item
 			add_edition_observer (cmd)
 			editor_commands.extend (cmd)
@@ -1224,7 +1226,7 @@ feature -- Menu Building
 				-- Find previous
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Find_previous + "%T" + Editor_preferences.shorcut_name_for_action (7))
-			cmd.add_agent (editor~find_previous)
+			cmd.add_agent (~find_previous)
 			command_menu_item := cmd.new_menu_item
 			add_edition_observer(cmd)
 			editor_commands.extend (cmd)
@@ -1234,7 +1236,7 @@ feature -- Menu Building
 				-- Find selection
 			create os_cmd.make (Current)
 			os_cmd.set_menu_name (Interface_names.m_Find_selection + "%T" + Editor_preferences.shorcut_name_for_action (5))
-			os_cmd.add_agent (editor~find_selection)
+			os_cmd.add_agent (~find_selection)
 			command_menu_item := os_cmd.new_menu_item
 			add_selection_observer(os_cmd)
 			selection_commands.extend (os_cmd)
@@ -2600,6 +2602,7 @@ feature {NONE} -- Implementation
 	update_formatters is
 			-- Give a correct sensitivity to formatters.
 		local
+			cist: CLASSI_STONE
 			cst: CLASSC_STONE
 			file: RAW_FILE
 		do
@@ -2611,11 +2614,18 @@ feature {NONE} -- Implementation
 					address_manager.enable_formatters
 					create file.make (cst.e_class.lace_class.file_name)
 					if not file.exists then
+						if managed_main_formatters.first.selected then
+							managed_main_formatters.i_th (2).execute
+						end
 						managed_main_formatters.first.disable_sensitive
 					end
 				end
 			else
 				address_manager.disable_formatters
+			end
+			cist ?= stone
+			if cist /= Void then
+				managed_main_formatters.first.execute
 			end
 		end
 
@@ -2858,6 +2868,47 @@ feature {NONE} -- Implementation: Editor commands
 			-- Select the whole text in the focused editor.
 		do
 			current_editor.select_all
+		end
+
+	find_next is
+			-- Find the next occurrence of the search text.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			if search_tool.currently_searched /= Void then
+				cv_ced ?= current_editor
+				if cv_ced /= Void then
+					cv_ced.find_next
+				end
+			else
+				search_tool.set_focus
+			end
+		end
+
+	find_previous is
+			-- Find the previous occurrence of the search text.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			if search_tool.currently_searched /= Void then
+				cv_ced ?= current_editor
+				if cv_ced /= Void then
+					cv_ced.find_previous
+				end
+			else
+				search_tool.set_focus
+			end
+		end
+
+	find_selection is
+			-- Find the next occurrence of the selection.
+		local
+			cv_ced: EB_CLICKABLE_EDITOR
+		do
+			cv_ced ?= current_editor
+			if cv_ced /= Void then
+				cv_ced.find_selection
+			end
 		end
 
 	toggle_formatting_marks is

@@ -56,7 +56,7 @@ feature {CACHE_READER} -- Access
 			non_void_assembly: ca /= Void
 			valid_assembly: ca.key /= Void
 		local
-			key, ca_culture, ca_version: STRING
+			ca_culture, ca_version: STRING
 		do
 			ca_culture := ca.culture
 			if ca_culture.is_equal ("neutral") then
@@ -64,7 +64,11 @@ feature {CACHE_READER} -- Access
 			end
 			create ca_version.make_from_cil (ca.version.to_cil.to_string.replace_character ('.', '_'))
 			create Result.make (ca.name.count + ca_version.count + ca_culture.count + ca.key.count + 4)
-			Result.append (ca.name + "-" + ca_version + "-" + ca_culture + "-" + ca.key)
+			Result.append (ca.name + "-" + ca_version + "-" + ca_culture)		
+			-- local unsigned assemblies have no key so we will not append to directory path.
+			if not ca.key.is_equal ("null") then
+				Result.append ("-" + ca.key)
+			end
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 		ensure
 			non_void_path: Result /= Void

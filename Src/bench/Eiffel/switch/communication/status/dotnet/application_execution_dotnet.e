@@ -95,7 +95,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 						eifnet_debugger.reset_data_changed
 						if Eifnet_debugger_info.last_managed_callback_is_exit_process then --| Exit Process |--	
 							notify_execution_on_exit_process
-						elseif Eifnet_debugger_info.debugger_error_occurred then
+						elseif Eifnet_debugger_info.debugger_error_occured then
 							notify_execution_on_debugger_error
 						else							
 							notify_execution_on_stopped
@@ -158,9 +158,9 @@ feature {APPLICATION_EXECUTION} -- Properties
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		do
-			Result := True
-		end -- FIXME: JFIAT
-
+			Result := know_about_kept_object (addr)
+		end
+		
 feature -- Bridge to Debugger
 
 	exit_process_occurred: BOOLEAN is

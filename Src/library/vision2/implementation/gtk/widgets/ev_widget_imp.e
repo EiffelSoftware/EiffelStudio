@@ -142,6 +142,12 @@ feature -- Status setting
 			gtk_widget_show (widget)
 		end
 
+	set_focus is
+			-- Set focus to Current
+		do
+			check not_implemented: False end
+		end
+
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
 			-- `flag'. This means that any events with an

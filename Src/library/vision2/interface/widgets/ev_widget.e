@@ -195,17 +195,6 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end 
 	
-	maximum_height: INTEGER is
-                        -- Maximum height that application wishes widget
-                        -- instance to have
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.maximum_height
-                ensure
-                        Result >= 0
-                end
-
         maximum_width: INTEGER is
                         -- Maximum width that application wishes widget
                         -- instance to have
@@ -213,6 +202,17 @@ feature -- Measurement
                         exists: not destroyed
                 do
                         Result := implementation.maximum_width
+                ensure
+                        Result >= 0
+                end
+
+	maximum_height: INTEGER is
+                        -- Maximum height that application wishes widget
+                        -- instance to have
+                require
+                        exists: not destroyed
+                do
+                        Result := implementation.maximum_height
                 ensure
                         Result >= 0
                 end
@@ -297,17 +297,6 @@ feature -- Resizing
 			dimensions_set: implementation.dimensions_set (width, new_height)
 		end
 	
-	set_maximum_height (max_height: INTEGER) is
-                        -- Set `maximum_height' to `max_height'.
-                require
-                        exists: not destroyed
-                        large_enough: max_height >= 0
-                do
-                        implementation.set_maximum_height (max_height)
-                ensure
-                        max_height = max_height
-                end
-
         set_maximum_width (max_width: INTEGER) is
                         -- Set `maximum_width' to `max_width'.
                 require
@@ -319,18 +308,29 @@ feature -- Resizing
                         max_width = max_width
                 end 
 
-
-        set_minimum_height (min_height: INTEGER) is
-                        -- Set `minimum__height' to `min_height'.
+	set_maximum_height (max_height: INTEGER) is
+                        -- Set `maximum_height' to `max_height'.
                 require
                         exists: not destroyed
-                        large_enough: min_height >= 0
+                        large_enough: max_height >= 0
                 do
-                        implementation.set_minimum_height (min_height)
+                        implementation.set_maximum_height (max_height)
                 ensure
-                        min_height = min_height
+                        max_height = max_height
                 end
 
+	set_minimum_size (min_width, min_height: INTEGER) is
+		require
+                        exists: not destroyed
+                        large_enough: min_height >= 0
+			large_enough: min_width >= 0  
+		do
+			implementation.set_minimum_size (min_width, min_height)
+		ensure
+			 min_width = min_width
+			 min_height = min_height
+		end
+		
         set_minimum_width (min_width: INTEGER) is
                         -- Set `minimum_width' to `min_width'.
                 require
@@ -341,7 +341,18 @@ feature -- Resizing
                 ensure
                         min_width = min_width
                 end
-	
+        
+	set_minimum_height (min_height: INTEGER) is
+                        -- Set `minimum__height' to `min_height'.
+                require
+                        exists: not destroyed
+                        large_enough: min_height >= 0
+                do
+                        implementation.set_minimum_height (min_height)
+                ensure
+                        min_height = min_height
+                end
+
 	set_x (new_x: INTEGER) is
 			-- Set  horizontal position relative
 			-- to parent to `new_x'.

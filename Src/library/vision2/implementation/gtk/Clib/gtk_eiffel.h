@@ -90,20 +90,33 @@ EIF_BOOLEAN c_gtk_widget_realized (GtkWidget *w);
 EIF_BOOLEAN c_gtk_widget_sensitive (GtkWidget *w); 
 
 /*  
-    c_gtk_widget_height  (GtkWidget *w) 
+    the width of widget
+    Author: samik
+*/
+EIF_INTEGER c_gtk_widget_width (GtkWidget *w);
 
+/*  
     the height of widget
     Author: samik
 */
 EIF_INTEGER c_gtk_widget_height (GtkWidget *w);
 
 /*  
-    c_gtk_widget_width  (GtkWidget *w) 
-
-    the width of widget
+    the minimum width of widget
     Author: samik
 */
-EIF_INTEGER c_gtk_widget_width (GtkWidget *w);
+EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *w); 
+
+/*  
+    the mimimum height of widget
+    Author: samik
+*/
+EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w); 
+
+/* Widget:
+   set size */
+void c_gtk_widget_set_size (GtkWidget *widget, int width, int height);
+
 
 /* Call back for toolbar buttons */
 void c_toolbar_callback (GtkObject *w, gpointer data);
@@ -169,3 +182,4 @@ int c_gtk_get_text_max_length (GtkWidget* text);
 
 /* Show the children of widget recursively */
 void c_gtk_widget_show_children (GtkWidget *widget);
+

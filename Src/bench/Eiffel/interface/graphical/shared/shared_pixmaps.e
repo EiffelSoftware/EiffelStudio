@@ -154,9 +154,9 @@ feature {NONE}
 			Result := pixmap_file_content ("dshowindexing.bm");
 		end;
 
-	bm_Dark_showmodifs: PIXMAP is
+	bm_Dark_showmodified: PIXMAP is
 		do
-			Result := pixmap_file_content ("dshowmodifs.bm");
+			Result := pixmap_file_content ("dshowmodified.bm");
 		end;
 
 	bm_Dark_showonces: PIXMAP is
@@ -179,9 +179,9 @@ feature {NONE}
 			Result := pixmap_file_content ("dshowsuppliers.bm");
 		end;
 
-	bm_Dark_showsynonyms: PIXMAP is
+	bm_Dark_showhomonyms: PIXMAP is
 		do
-			Result := pixmap_file_content ("dshowsynonyms.bm");
+			Result := pixmap_file_content ("dshowhomonyms.bm");
 		end;
 
 	bm_Dark_showtext: PIXMAP is
@@ -459,9 +459,9 @@ feature {NONE}
 			Result := pixmap_file_content ("showfs.bm");
 		end;
 
-	bm_Showmodifs: PIXMAP is
+	bm_Showmodified: PIXMAP is
 		do
-			Result := pixmap_file_content ("showmodifs.bm");
+			Result := pixmap_file_content ("showmodified.bm");
 		end;
 
 	bm_Showonces: PIXMAP is
@@ -489,9 +489,9 @@ feature {NONE}
 			Result := pixmap_file_content ("showsuppliers.bm");
 		end;
 
-	bm_Showsynonyms: PIXMAP is
+	bm_Showhomonyms: PIXMAP is
 		do
-			Result := pixmap_file_content ("showsynonyms.bm");
+			Result := pixmap_file_content ("showhomonyms.bm");
 		end;
 
 	bm_Showtext: PIXMAP is

@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			{EV_SIMPLE_ITEM} Precursor (par, value)
 		end
 
-	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
+	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
 			-- Create an item with `par' as parent, `txt' as text
 			-- and `value' as index.
 		do

@@ -15,7 +15,7 @@ inherit
 	EB_CLICKABLE_EDITOR
 		export
 			{ANY} highlight_selected, first_line_displayed
-			{EB_COMPLETION_CHOICE_WINDOW} Editor_preferences
+			{EB_COMPLETION_CHOICE_WINDOW} Editor_preferences, line_height, offset
 		redefine
 			handle_extended_key,
 			handle_extended_ctrled_key, 
@@ -31,8 +31,7 @@ inherit
 			file_loading_setup,
 			key_not_handled_action,
 			on_text_saved,
-			on_text_back_to_its_last_saved_state,
-			string_loading_setup
+			on_text_back_to_its_last_saved_state			
 		end	
 
 create
@@ -40,7 +39,7 @@ create
 	
 feature -- Content change
 
-	set_text (s: STRING) is
+	set_editor_text (s: STRING) is
 			-- load text represented by `s' in the editor
 			-- text is considered edited after load, i.e. save command
 			-- is sensitive.
@@ -52,7 +51,7 @@ feature -- Content change
 			f_n := file_name
 			f_d := date_of_file_when_loaded
 			f_d_c := date_when_checked
-			load_eiffel_text (s)
+			load_text (s)
 			text_displayed.set_changed (True, False)
 			file_name := f_n
 			date_of_file_when_loaded := f_d
@@ -77,6 +76,12 @@ feature -- Content change
 			load_without_save := True
 			Precursor {EB_CLICKABLE_EDITOR}
 		end
+		
+	strip_unwanted_indentation is
+			-- Strip unwanted indentation that was automatically added by the editor		
+		do
+			text_displayed.remove_auto_indentation
+		end		
 
 feature -- Status report
 
@@ -119,7 +124,7 @@ feature -- Search
 		do
 			text_displayed.find_feature_named (a_name)
 			if text_displayed.found_feature then
-				set_first_line_displayed (text_displayed.current_line_number.min (maximum_top_line_index), True)
+				set_first_line_displayed (text_displayed.current_line_number.min (maximum_top_line_index), True)				
 				refresh_now
 			end
 		end	
@@ -137,21 +142,19 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 		local
 			add_point: BOOLEAN
 		do
-			switch_auto_point := False
 			if click_and_complete_is_active and then not has_selection then
-				add_point := auto_point and then auto_point_token = text_displayed.cursor.token and then text_displayed.cursor.pos_in_token = 1
 				text_displayed.prepare_auto_complete (add_point)
 				if text_displayed.completion_possibilities /= Void then
 					completion_mode := completion_mode + 1
 					show_completion_list (True)
 				end
 			end
-			check_cursor_position			
+			check_cursor_position
 		end
 	
 	complete_class_name is
 			-- Autocomplete class name before cursor.
-		do
+		do					
 			if not has_selection then
 				text_displayed.prepare_class_name_complete
 				if text_displayed.class_completion_possibilities /= Void then
@@ -163,7 +166,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 		
 	embed_in_block (keyword: STRING; pos_in_keyword: INTEGER) is
 			-- Embed selection or current line in block formed by `keyword' and "end".
-			-- Cursor is positioned to the `pos_in_keyword'-th caracter of `keyword'.
+			-- Cursor is positioned to the `pos_in_keyword'-th character of `keyword'.
 		do
 			if is_editable then
 				text_displayed.embed_in_block (keyword, pos_in_keyword)
@@ -184,6 +187,21 @@ feature -- Autocomplete
 				process_click_tool_error
 			end
 		end
+
+	choices: EB_COMPLETION_CHOICE_WINDOW is
+			-- Completion choice window for show feature and class completion options.
+		once
+			create Result.make
+		end		
+
+	position_completion_choice_window is
+			-- Reposition the completion choice window
+		require
+			choices_not_void: choices /= Void
+		do
+			choices.set_size (calculate_completion_list_width, calculate_completion_list_height)				
+			choices.set_position (calculate_completion_list_x_position, calculate_completion_list_y_position)
+		end		
 
 feature {NONE} -- Text loading
 
@@ -212,8 +230,6 @@ feature {NONE} -- Text loading
 				text_displayed.clear_syntax_error
 			end
 		end
-		
-
 
 feature {NONE} -- Process Vision2 events
 
@@ -231,106 +247,9 @@ feature {NONE} -- Process Vision2 events
 			Precursor {EB_CLICKABLE_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 		end
 
-feature {NONE} -- Handle keystokes
+feature {EB_COMPLETION_CHOICE_WINDOW}-- Process Vision2 Events
 
-	handle_extended_key (ev_key: EV_KEY) is
- 			-- Process the push on an extended key.
-		local
-			t: EDITOR_TOKEN_KEYWORD
-			code: INTEGER
-			token: EDITOR_TOKEN
-			syntax_completed: BOOLEAN
-		do
-			code := ev_key.code
-			switch_auto_point := auto_point and then not (code = Key_shift or code = Key_left_meta or code = Key_right_meta)
-			if code = Key_tab and then completion_mode > 0 then
-					-- Tab action
-				run_if_editable (agent tab_action)
-
-			elseif code = Key_enter and then not has_selection then
-					-- Return/Enter key action
-				completion_mode := 0
-				if is_editable then
-					token := text_displayed.cursor.token
-					if token /= Void then 
-						if latest_typed_word_is_keyword then
-							t ?= token.previous
-							if t /= Void and then keyword_image (t).is_equal (previous_token_image) then
-								text_displayed.complete_syntax (previous_token_image, True, True)
-								syntax_completed := text_displayed.syntax_completed
-								latest_typed_word_is_keyword := false
-							end
-						else
-							t ?= token.previous
-							if t /= Void and then text_displayed.cursor.pos_in_token = 1 then
-								text_displayed.complete_syntax (keyword_image (t), False, True)
-								syntax_completed := text_displayed.syntax_completed
-							end
-						end
-					end
-
-					if syntax_completed then
-						check_cursor_position
-						refresh_now
-					else
-						Precursor {EB_CLICKABLE_EDITOR} (ev_key)
-					end
-				else
-					display_not_editable_warning_message
-				end
-			else
-				if completion_mode > 0 then
-					if code /= Key_back_space then
-						completion_bckp := completion_mode
-						completion_mode := 0
-					end
-					Precursor (ev_key)
-					completion_bckp := 0
-				else
-					Precursor (ev_key)
-					completion_mode := 0
-				end
-			end
-			auto_point := switch_auto_point xor auto_point
-		end
-
-	completion_bckp: INTEGER
-
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
- 			-- Process the push on Ctrl + an extended key.
-		local
-			code: INTEGER
-		do
-			code := ev_key.code
-			switch_auto_point := auto_point and then not (code = Key_ctrl or code = Key_shift or code = Key_left_meta or code = Key_right_meta)
-			if code = Key_i then
-				if not shifted_key then
-					if is_editable then
-						embed_in_block ("if  then", 3)
-					end
-				end
-			elseif code = Key_d then
-				if not shifted_key then
-					if is_editable then
-						embed_in_block ("debug", 5)
-					end
-				end
-			else
-				Precursor (ev_key)
-					-- if `auto_point' is true, user has called auto complete
-					-- we don't change the value. Else, its new value is set to False unless
-					-- only ctrl key was pressed
-			end
-			auto_point := auto_point xor switch_auto_point
-		end
-			
-	key_not_handled_action is
-			-- Apply default key processing.
-		do
-			completion_mode := completion_bckp
-		end
-
- 	handle_character (c: CHARACTER) is
+	handle_character (c: CHARACTER) is
  			-- Process the push on a character key.
 		local
 			t: EDITOR_TOKEN_KEYWORD
@@ -349,6 +268,7 @@ feature {NONE} -- Handle keystokes
 					look_for_keyword := True
 					if c = ' ' then
 						if latest_typed_word_is_keyword then
+								-- case: keyword (is, do, end, etc.)
 							cur := text_displayed.cursor.twin
 							cur.go_left_char
 							token := cur.token
@@ -410,6 +330,110 @@ feature {NONE} -- Handle keystokes
 			auto_point := switch_auto_point xor auto_point
 		end
 
+	handle_extended_key (ev_key: EV_KEY) is
+ 			-- Process the push on an extended key.
+		local
+			t: EDITOR_TOKEN_KEYWORD
+			code: INTEGER
+			token: EDITOR_TOKEN
+			syntax_completed: BOOLEAN
+		do
+			code := ev_key.code			
+			switch_auto_point := auto_point and then not (code = Key_shift or code = Key_left_meta or code = Key_right_meta)
+			if code = Key_tab and then completion_mode > 0 then
+					-- Tab action
+				run_if_editable (agent tab_action)
+			elseif code = Key_enter and then not has_selection then
+					-- Return/Enter key action
+				completion_mode := 0
+				if is_editable then
+					token := text_displayed.cursor.token
+					if token /= Void then 
+						if latest_typed_word_is_keyword then
+							t ?= token.previous
+							if t /= Void and then keyword_image (t).is_equal (previous_token_image) then
+								text_displayed.complete_syntax (previous_token_image, True, True)
+								syntax_completed := text_displayed.syntax_completed
+								latest_typed_word_is_keyword := false
+							end
+						else
+							t ?= token.previous
+							if t /= Void and then text_displayed.cursor.pos_in_token = 1 then
+								text_displayed.complete_syntax (keyword_image (t), False, True)
+								syntax_completed := text_displayed.syntax_completed
+							end
+						end
+					end
+
+					if syntax_completed then
+						check_cursor_position
+						refresh_now
+					else
+						Precursor {EB_CLICKABLE_EDITOR} (ev_key)
+					end
+				else
+					display_not_editable_warning_message
+				end
+			elseif code = key_period then
+					-- case: .
+				Precursor (ev_key)
+				if auto_complete_after_dot then				   	
+					complete_feature_name 
+				end
+			else
+				if completion_mode > 0 then
+					if code /= Key_back_space then
+						completion_bckp := completion_mode
+						completion_mode := 0
+					end
+					Precursor (ev_key)
+					completion_bckp := 0
+				else
+					Precursor (ev_key)
+					completion_mode := 0
+				end
+			end
+			auto_point := switch_auto_point xor auto_point
+		end
+
+feature {NONE} -- Handle keystrokes
+
+	completion_bckp: INTEGER
+
+	handle_extended_ctrled_key (ev_key: EV_KEY) is
+ 			-- Process the push on Ctrl + an extended key.
+		local
+			code: INTEGER
+		do
+			code := ev_key.code
+			switch_auto_point := auto_point and then not (code = Key_ctrl or code = Key_shift or code = Key_left_meta or code = Key_right_meta)
+			if code = Key_i then
+				if not shifted_key then
+					if is_editable then
+						embed_in_block ("if  then", 3)
+					end
+				end
+			elseif code = Key_d then
+				if not shifted_key then
+					if is_editable then
+						embed_in_block ("debug", 5)
+					end
+				end
+			else
+				Precursor (ev_key)
+					-- if `auto_point' is true, user has called auto complete
+					-- we don't change the value. Else, its new value is set to False unless
+					-- only ctrl key was pressed
+			end
+			auto_point := auto_point xor switch_auto_point
+		end
+			
+	key_not_handled_action is
+			-- Apply default key processing.
+		do
+			completion_mode := completion_bckp
+		end
+
 	basic_cursor_move (action: PROCEDURE[EDITOR_CURSOR,TUPLE]) is
 			-- Perform a basic cursor move such as go_left,
 			-- go_right, ... an example of agent `action' is
@@ -456,12 +480,20 @@ feature {NONE} -- Handle keystokes
 				cursor.set_x_in_characters (x)
 				if not has_selection and not cursor.is_equal (text_displayed.selection_cursor) then
 					text_displayed.enable_selection
+					show_selection (False)					
 				end
 			end
 			invalidate_cursor_rect (True)
+			check_cursor_position
 		end
 
 feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
+
+	auto_complete_after_dot: BOOLEAN is
+	        -- Should build autocomplete dialog after call on valid target?
+	  	do
+	  	   	Result := preferences.editor_data.auto_auto_complete 
+	  	end		
 
 	exit_complete_mode is
 			-- Set mode to normal (not completion mode).
@@ -499,7 +531,6 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 				text_displayed.complete_feature_call (completed, is_feature_signature, appended_character)
 				if is_feature_signature then
 					if completed.last_index_of (')',completed.count) = completed.count then
-			--			completion_mode := completion_mode + 1
 						tab_action
 					else
 						completion_mode := (completion_mode - 1).max (0)
@@ -530,41 +561,200 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			end
 			refresh
 		end
+		
+	insert_character_from_completion_dialog (a_character: CHARACTER) is
+			-- Insert `a_character' at current curosor position
+		do
+			text_displayed.insert_char (a_character)
+			invalidate_cursor_rect (True)
+		end		
+
+	calculate_completion_list_x_position: INTEGER is
+			-- Determine the x position to display the completion list
+		local
+			screen: EV_SCREEN
+			tok: EDITOR_TOKEN
+			cursor: EDITOR_CURSOR
+			right_space,
+			list_width: INTEGER
+		do
+			create screen
+				
+				-- Get current x position of cursor
+			cursor := text_displayed.cursor
+			tok := cursor.token
+			tok.update_position
+			Result := tok.position + tok.get_substring_width (cursor.pos_in_token) + widget.screen_x + left_margin_width - offset	
+					
+				-- Determine how much room there is free on the right of the screen from the cursor position
+			right_space := screen.width - Result - completion_border_size
+					
+			list_width := calculate_completion_list_width			
+					
+			if right_space < list_width then
+					-- Shift x pos back so it fits on the screen
+				Result := Result - (list_width - right_space)
+			end
+			
+				-- Add margin width if necessary
+			if line_numbers_visible then
+				Result := Result + margin.width
+			end				
+			
+			Result := Result - 20
+		end		
+		
+	calculate_completion_list_y_position: INTEGER is
+			-- Determine the y position to display the completion list
+		local
+			cursor: EDITOR_CURSOR
+			screen: EV_SCREEN
+			preferred_height,
+			upper_space,
+			lower_space: INTEGER
+			show_below: BOOLEAN
+		do
+				-- Get y pos of cursor
+			create screen
+			cursor := text_displayed.cursor			
+			show_below := True
+			Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)		
+			
+			if Result < ((screen.height / 3) * 2) then
+					-- Cursor in upper two thirds of screen
+				show_below := True
+			else
+					-- Cursor in lower third of screen
+				show_below := False
+			end	
+			
+			upper_space := Result - completion_border_size
+			lower_space := screen.height - Result - completion_border_size
+			
+			if preferences.development_window_data.remember_completion_list_size then
+				preferred_height := preferences.development_window_data.completion_list_height
+			
+				if show_below and then preferred_height > lower_space and then preferred_height <= upper_space then
+						-- Not enough room to show below, but is enough room to show above, so we will show above
+					show_below := False
+				elseif not show_below and then preferred_height <= lower_space then
+						-- Even though we are in the bottom 3rd of the screen we can actually show below because
+						-- the saved size fits
+					show_below := True
+				end
+			
+				if show_below and then preferred_height > lower_space then
+						-- Not enough room to show below so we must resize
+					preferred_height := lower_space
+				elseif not show_below and then preferred_height >= upper_space then
+						-- Not enough room to show above so we must resize
+					preferred_height := upper_space
+				end
+			else
+				if show_below then
+					preferred_height := lower_space
+				else
+					preferred_height := upper_space
+				end
+			end
+			
+			if show_below then
+				Result := Result + line_height + 5
+			else
+				Result := Result - preferred_height
+			end
+		end
+		
+	calculate_completion_list_height: INTEGER is
+			-- Determine the height the completion should list should have
+		local
+			upper_space,
+			lower_space,
+			y_pos: INTEGER
+			screen: EV_SCREEN
+			cursor: EDITOR_CURSOR
+			show_below: BOOLEAN
+			tok: EDITOR_TOKEN
+		do		
+				-- Get y pos of cursor
+			create screen
+			cursor := text_displayed.cursor
+			tok := cursor.token
+			tok.update_position	
+			show_below := True
+			y_pos := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)		
+			
+			if y_pos < ((screen.height / 3) * 2) then
+					-- Cursor in upper two thirds of screen
+				show_below := True
+			else
+					-- Cursor in lower third of screen
+				show_below := False
+			end	
+			
+			upper_space := y_pos - completion_border_size
+			lower_space := screen.height - y_pos - completion_border_size
+			
+			if preferences.development_window_data.remember_completion_list_size then
+				Result := preferences.development_window_data.completion_list_height				
+			
+				if show_below and then Result > lower_space and then Result <= upper_space then	
+						-- Not enough room to show below, but is enough room to show above, so we will show above
+					show_below := False
+				elseif not show_below and then Result <= lower_space then
+						-- Even though we are in the bottom 3rd of the screen we can actually show below because
+						-- the saved size fits
+					show_below := True
+				end
+			
+				if show_below and then Result > lower_space then
+						-- Not enough room to show below so we must resize
+					Result := lower_space
+				elseif not show_below and then Result >= upper_space then
+						-- Not enough room to show above so we must resize
+					Result := upper_space
+				end
+			else
+				if show_below then
+					Result := lower_space
+				else
+					Result := upper_space
+				end
+			end
+		end
+		
+	calculate_completion_list_width: INTEGER is
+			-- Determine the width the completion list should have			
+		do
+			if preferences.development_window_data.remember_completion_list_size then				
+				Result := preferences.development_window_data.completion_list_width				
+			else
+					-- Calculate correct size to fit
+				Result := choices.longest_text_width_in_pixels + completion_border_size
+			end
+		end
+
+	completion_border_size: INTEGER is 75
+			-- Size in pixels that the completion list can go to (virtual border)
 
 feature {NONE} -- Autocomplete implementation
 
 	show_completion_list (feature_completion: BOOLEAN) is
 			-- Show list of possible features after a point.
-		local
-			choices: EB_COMPLETION_CHOICE_WINDOW
-			w_height, w_width: INTEGER
-			y_pos: INTEGER
-			x_pos: INTEGER
-			tok: EDITOR_TOKEN
-			cursor: EDITOR_CURSOR
 		do
 			if feature_completion then
-				create choices.make_for_features (Current, text_displayed.feature_name_part_to_be_completed, text_displayed.completion_possibilities)
+				choices.initialize_for_features 
+					(Current, text_displayed.feature_name_part_to_be_completed, text_displayed.completion_possibilities)
 			else
-				create choices.make_for_classes (Current, text_displayed.feature_name_part_to_be_completed, text_displayed.class_completion_possibilities)
+				choices.initialize_for_classes 
+					(Current, text_displayed.feature_name_part_to_be_completed, text_displayed.class_completion_possibilities)
 			end
-			if choices.show_needed then
-				cursor := text_displayed.cursor
-				tok := cursor.token
-				tok.update_position
-				x_pos := tok.position + tok.get_substring_width (cursor.pos_in_token)
-				x_pos := widget.screen_x + x_pos + left_margin_width + 5 - offset
-				y_pos := widget.screen_y + (cursor.y_in_lines - first_line_displayed)*line_height
-				y_pos := y_pos + (line_height - choices.to_be_inserted.height) // 2
-				w_height := dev_window.window.height + dev_window.window.screen_y - y_pos - 20
-				w_width := dev_window.window.width + dev_window.window.screen_x - x_pos - 20
-				invalidate_cursor_rect (True)
-				choices.set_minimum_size (w_width, w_height)
-				choices.set_position (x_pos, y_pos)
+			choices.hide
+			if choices.show_needed then			
+				position_completion_choice_window
 				choices.show
-				choices.to_be_inserted.set_focus
 			end
-		end
+		end	
 
 	completion_mode: INTEGER
 			-- Are we in auto_complete mode?
@@ -639,9 +829,10 @@ feature {EB_EDITOR_TOOL} -- Implementation
 				syntax_error_dialog.destroy
 			end
 			syntax_error_dialog := Void
+			refresh
 		end
 
-feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_SEARCH_PERFORMER} -- Access
+feature -- Access
 
 	text_displayed: SMART_TEXT
 			-- Displayed text.
@@ -663,7 +854,7 @@ feature {NONE} -- Implementation
 			-- for an opening one for instance.
 		do
 			Result := '%U'
-			if Editor_preferences.autocomplete_brackets_and_parenthesis then
+			if preferences.editor_data.autocomplete_brackets_and_parenthesis then
 				inspect
 					c
 				when '%<' then
@@ -675,7 +866,7 @@ feature {NONE} -- Implementation
 				else
 				end
 			end
-			if Editor_preferences.autocomplete_quotes then
+			if preferences.editor_data.autocomplete_quotes then
 				inspect
 					c
 				when '%'' then
@@ -708,7 +899,7 @@ feature {NONE} -- Implementation
 	insert_customized_string (index: INTEGER) is
 			-- 
 		do
-			text_displayed.insert_customized_expression (Editor_preferences.customized_strings.item (index))
+			text_displayed.insert_customized_expression (preferences.editor_data.customized_strings.i_th (index).value)
 			refresh_now
 		end
 
@@ -728,7 +919,7 @@ feature {NONE} -- Implementation
 			if text_is_fully_loaded then
 				if retried then
 					show_warning_message (Warning_messages.w_Cannot_read_file (file_name))
-				else
+				else					
 					deselect_all
 					syn_error := text_displayed.last_syntax_error
 					text_displayed.clear_syntax_error
@@ -761,11 +952,13 @@ feature {NONE} -- Implementation
 		do
 			if syntax_error_dialog = Void or else syntax_error_dialog.is_destroyed then
 				create syntax_error_dialog.make_with_text (Warning_messages.w_Syntax_error)
-				syntax_error_dialog.show_relative_to_window (reference_window)
+				syntax_error_dialog.show_relative_to_window (internal_reference_window)
 			end
 		end
 		
 	syntax_error_dialog: EV_WARNING_DIALOG
+	
+feature -- Text Loading	
 	
 	load_file (a_file_name: FILE_NAME) is
 			-- Load file named `a_file_name' in the editor.
@@ -789,7 +982,7 @@ feature {NONE} -- Implementation
 				Precursor {EB_CLICKABLE_EDITOR} (s)
 			end
 			load_without_save := False
-		end
+		end		
 
 feature -- Memory management
 
@@ -800,9 +993,5 @@ feature -- Memory management
 			Precursor {EB_CLICKABLE_EDITOR}
 			dev_window := Void
 		end
-
-invariant
-
-	not is_editable implies not text_displayed.click_and_complete_is_active
 
 end -- class SMART_EDITOR

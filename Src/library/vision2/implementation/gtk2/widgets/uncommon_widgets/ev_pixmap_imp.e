@@ -25,8 +25,7 @@ inherit
 			destroy,
 			drawable,
 			draw_full_pixmap,
-			draw_point,
-			pixbuf_from_drawable
+			draw_point
 		end
 
 	EV_PRIMITIVE_IMP
@@ -56,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN is False
 
 	make (an_interface: like interface) is
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
@@ -77,7 +76,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
 			initialize_graphical_context
 			init_default_values
-			pixmap_filename := ""
 		end
 		
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
@@ -125,8 +123,8 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 			g_error: POINTER
+			filepixbuf: POINTER
 		do
-			pixmap_filename := file_name.twin
 			a_cs := file_name
 			filepixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
 			if g_error /= default_pointer then
@@ -319,23 +317,10 @@ feature -- Duplication
 		do
 			other_imp ?= other.implementation
 			copy_from_gdk_data (other_imp.drawable, other_imp.mask, other_imp.width, other_imp.height)
-			pixmap_filename := other_imp.pixmap_filename
-			filepixbuf := other_imp.filepixbuf
 			internal_xpm_data := other_imp.internal_xpm_data
 		end
 		
 feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
-
-	pixbuf_from_drawable: POINTER is
-			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
-		do
-			if filepixbuf /= default_pointer then
-				Result := filepixbuf
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (filepixbuf)
-			else
-				Result := Precursor {EV_DRAWABLE_IMP}
-			end
-		end
 
 	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
 			-- Construct `Current' from GdkPixbuf `a_pixbuf'
@@ -524,12 +509,6 @@ feature {NONE} -- Constants
 			-- Black and White color depth (for mask).
 
 feature {EV_ANY_I} -- Implementation
-
-	pixmap_filename: STRING
-		-- File name used to construct `Current' (if any)
-
-	filepixbuf: POINTER
-		-- GdkPixbuf created from `read_from_named_file'
 
 	interface: EV_PIXMAP
 

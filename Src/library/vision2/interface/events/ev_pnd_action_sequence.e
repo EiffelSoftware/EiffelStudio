@@ -99,19 +99,21 @@ feature -- Status report
 			a_pebble_not_void: a_pebble /= Void
 		local
 			cur: CURSOR
+			a_tuple: TUPLE [ANY]
 		do
 			from
 				cur := cursor
+				a_tuple := [a_pebble]
 				start
 			until 
 				after or Result
 			loop
-				Result := item.valid_operands ([a_pebble]) 
+				Result := item.valid_operands (a_tuple) 
 				if
 					veto_pebble_function /= Void and then
 					Result
 				then
-					veto_pebble_function.call ([a_pebble])
+					veto_pebble_function.call (a_tuple)
 					Result := Result and then veto_pebble_function.last_result
 				end
 				forth

@@ -52,6 +52,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_SHARED_OBJECT_HANDLER
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -127,8 +132,10 @@ feature {GB_XML_STORE} -- Output
 			temp_column_positions_string, temp_row_positions_string,
 			temp_widths_string, temp_heights_string: STRING
 			item_list: ARRAYED_LIST [EV_WIDGET]
-		do
-			
+			an_object: GB_OBJECT
+			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			current_table_widget: EV_WIDGET
+		do			
 			if first.columns /= 1 then
 				add_element_containing_integer (element, columns_string, first.columns)	
 			end
@@ -145,23 +152,26 @@ feature {GB_XML_STORE} -- Output
 			if first.border_width /= 0 then
 				add_element_containing_integer (element, border_width_string, first.border_width)
 			end
-			
+
+			an_object := object_handler.object_from_display_widget (first)
+			layout_item := an_object.layout_item
 			
 			temp_column_positions_string := ""
 			temp_row_positions_string := ""
 			temp_widths_string := ""
 			temp_heights_string := ""
-			item_list := first.item_list
 			from
-				item_list.start
+				layout_item.start
 			until
-				item_list.off
+				layout_item.off
 			loop
-				temp_column_positions_string := temp_column_positions_string + add_leading_zeros (first.item_column_position (item_list.item).out)
-				temp_row_positions_string := temp_row_positions_string + add_leading_zeros (first.item_row_position (item_list.item).out)
-				temp_widths_string := temp_widths_string + add_leading_zeros (first.item_column_span (item_list.item).out)
-				temp_heights_string := temp_heights_string + add_leading_zeros (first.item_row_span (item_list.item).out)
-				item_list.forth
+				current_layout_item ?= layout_item.item
+				current_table_widget ?= current_layout_item.object.object
+				temp_column_positions_string := temp_column_positions_string + add_leading_zeros (first.item_column_position (current_table_widget).out)--item_list.item).out)
+				temp_row_positions_string := temp_row_positions_string + add_leading_zeros (first.item_row_position (current_table_widget).out)
+				temp_widths_string := temp_widths_string + add_leading_zeros (first.item_column_span (current_table_widget).out)
+				temp_heights_string := temp_heights_string + add_leading_zeros (first.item_row_span (current_table_widget).out)
+				layout_item.forth
 			end
 			if not temp_column_positions_string.is_empty then
 				add_element_containing_string (element, column_positions_string, temp_column_positions_string)
@@ -235,7 +245,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -249,6 +259,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			current_child_name: STRING
 			rows, columns: STRING
 			column_position, row_position, column_span, row_span: STRING
+			children_names: ARRAYED_LIST [STRING]
 		do
 
 			Result := ""
@@ -266,21 +277,21 @@ feature {GB_CODE_GENERATOR} -- Output
 				rows := "1"
 			end
 			
-			Result := a_name + ".resize (" + columns + ", " + rows + ")"
+			Result := info.name + ".resize (" + columns + ", " + rows + ")"
 			
 			element_info := full_information @ (row_spacing_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_row_spacing (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_row_spacing (" + element_info.data + ")"
 			end
 			
 			element_info := full_information @ (column_spacing_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_column_spacing (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_column_spacing (" + element_info.data + ")"
 			end
 			
 			element_info := full_information @ (border_width_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_border_width (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_border_width (" + element_info.data + ")"
 			end
 
 			element_info := full_information @ (column_positions_string)
@@ -299,17 +310,20 @@ feature {GB_CODE_GENERATOR} -- Output
 			if element_info /= Void then
 				temp_row_spans_string := element_info.data
 			end
-			check
-				strings_equal_in_length: temp_column_positions_string.count = temp_row_positions_string.count and
-					temp_column_positions_string.count = temp_row_spans_string.count and
-					temp_column_positions_string.count = temp_column_spans_string.count
-				strings_divisible_by_4: temp_column_positions_string.count \\ 4 = 0
-					-- Cannot check this, as `Current' will have been built especially
-					-- for code generation purposes, and `objects' will be empty,
-					-- hence `first' will be Void.
-				--strings_correct_length: temp_x_position_string.count // 4 = first.count			
+			if temp_column_positions_string /= Void then
+				check
+					strings_equal_in_length: temp_column_positions_string.count = temp_row_positions_string.count and
+						temp_column_positions_string.count = temp_row_spans_string.count and
+						temp_column_positions_string.count = temp_column_spans_string.count
+					strings_divisible_by_4: temp_column_positions_string.count \\ 4 = 0
+						-- Cannot check this, as `Current' will have been built especially
+						-- for code generation purposes, and `objects' will be empty,
+						-- hence `first' will be Void.
+					--strings_correct_length: temp_x_position_string.count // 4 = first.count			
+				end
 			end
-			Result := Result + indent + "%T-- Insert and position all children of `" + a_name + "'."
+			Result := Result + indent + "%T-- Insert and position all children of `" + info.name + "'."
+			children_names := info.child_names 
 			from
 				counter := 1
 			until
@@ -328,12 +342,10 @@ feature {GB_CODE_GENERATOR} -- Output
 				row_position.prune_all_leading ('0')
 				column_span.prune_all_leading ('0')
 				row_span.prune_all_leading ('0')
-				Result := Result + indent + a_name + ".put (" + current_child_name + ", " + column_position + ", " +
+				Result := Result + indent + info.name + ".put (" + current_child_name + ", " + column_position + ", " +
 					row_position + ", " + column_span + ", " + row_span + ")"			
 				counter := counter + 1
 			end			
-
-
 			Result := strip_leading_indent (Result)
 		end
 		

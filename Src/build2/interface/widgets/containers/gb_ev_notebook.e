@@ -171,7 +171,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -179,15 +179,17 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			names: ARRAYED_LIST [STRING]
+			children_names: ARRAYED_LIST [STRING]
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (tab_position_string)
 			if element_info /= Void then
-				Result := a_name + ".set_tab_position (" + element_info.data + ")"
+				Result := info.name + ".set_tab_position (" + element_info.data + ")"
 			end
 			element_info := full_information @ (Item_text_string)
 			if element_info /= Void then
+				children_names := info.child_names
 				names := names_from_string (element_info.data)
 				check
 					consistent_counts: children_names.count = names.count
@@ -199,7 +201,7 @@ feature {GB_CODE_GENERATOR} -- Output
 				loop
 						-- If the current name is empty, then we do not generate a setting.
 					if not names.item.is_equal ("") then
-						Result := Result + indent + a_name + ".set_item_text (" + (children_names @ (names.index)) + ", %"" + names.item + "%")"
+						Result := Result + indent + info.name + ".set_item_text (" + (children_names @ (names.index)) + ", %"" + names.item + "%")"
 					end
 					names.forth
 				end

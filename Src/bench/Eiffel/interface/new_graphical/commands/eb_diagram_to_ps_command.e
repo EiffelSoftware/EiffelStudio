@@ -46,7 +46,7 @@ feature -- Basic operations
 					check cld /= Void end
 					cd := cld
 				end
-				set_dialog_filters_and_add_all (dial, <<png_files_description>>)
+				set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
 				if cld = Void then
 					dial.set_file_name (cd.center_class.name + ".png")
 				else

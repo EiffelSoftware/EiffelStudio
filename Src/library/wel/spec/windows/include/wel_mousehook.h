@@ -1,29 +1,26 @@
 /*****************************************************************************/
-/* wel_mousehook.h [ associated WEL class: WEL_WINDOW ]                      */
+/* wel_mousehook.h                                                           */
 /*****************************************************************************/
-/* Used to capture the mouse very efficiently                                */
+/* Used to monitor mouse messages for the pick and drop mechanism under      */
+/* Windows                                                                   */
 /*****************************************************************************/
-
-#ifndef __WEL_MOUSEHOOK_H_
-#define __WEL_MOUSEHOOK_H_
-
-#include "Windows.h"
-#include "eif_portable.h"
+#include <windows.h>
 
 /*---------------------------------------------------------------------------*/
-/* FUNC: c_ev_hook_mouse                                                     */
+/* FUNC: cwel_hook_mouse                                                     */
 /* ARGS: hHookWindow: Handle of the window registering the hook.             */
 /*---------------------------------------------------------------------------*/
-/*                                                                           */
+/* Capture all mouse messages and redirect them to `hWnd'.                   */
+/* Return TRUE if everything went fine, FALSE otherwise. If `wel_hook.dll'   */
+/* cannot be loaded an error box is displayed                                */
 /*---------------------------------------------------------------------------*/
-void cwel_hook_mouse(HWND hWnd);
+EIF_BOOLEAN cwel_hook_mouse(HWND hWnd);
 
 /*---------------------------------------------------------------------------*/
-/* FUNC: c_ev_unhook_mouse                                                   */
+/* FUNC: cwel_unhook_mouse                                                   */
 /* ARGS:                                                                     */
 /*---------------------------------------------------------------------------*/
-/*                                                                           */
+/* Stop capturing all mouse messages                                         */
+/* Return TRUE if everything went fine, FALSE otherwise.                     */
 /*---------------------------------------------------------------------------*/
-void cwel_unhook_mouse();
-
-#endif /* __WEL_MOUSEHOOK_H_ */
+EIF_BOOLEAN cwel_unhook_mouse();

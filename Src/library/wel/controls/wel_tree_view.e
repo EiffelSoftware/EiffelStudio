@@ -431,7 +431,7 @@ feature -- Element change
 			end
 		end
 
-	set_item (an_item: WEL_TREE_VIEW_ITEM) is
+	set_tree_item (an_item: WEL_TREE_VIEW_ITEM) is
 			-- Set some or all of a tree view item's attributes.
 		require
 			exists: exists

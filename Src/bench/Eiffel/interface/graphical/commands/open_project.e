@@ -170,7 +170,9 @@ feature {NONE} -- Implementation
 						!! environment_variable
 						new_name_chooser := name_chooser (Project_tool)
 						last_directory_opened := environment_variable.get (Bench_Directory_List)
-						new_name_chooser.set_last_directory_viewed(last_directory_opened.substring(1,last_directory_opened.index_of(';',1) -1 ))
+						if last_directory_opened /= Void then
+							new_name_chooser.set_last_directory_viewed(last_directory_opened.substring(1,last_directory_opened.index_of(';',1) -1 ))
+						end
 						new_name_chooser.set_file_selection
 
 						new_name_chooser.set_title (Interface_names.t_Select_a_file)

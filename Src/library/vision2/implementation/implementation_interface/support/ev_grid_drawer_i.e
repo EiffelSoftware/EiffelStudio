@@ -110,7 +110,6 @@ feature -- Basic operations
 			internal_client_y: INTEGER
 			vertical_buffer_offset: INTEGER
 			current_row: EV_GRID_ROW_I
---			visible_physical_row_indexes: SPECIAL [INTEGER]
 			first_row_index: INTEGER
 			last_row_index: INTEGER
 			first_row_index_set, last_row_index_set: BOOLEAN
@@ -126,8 +125,7 @@ feature -- Basic operations
 			fixme ("Implement the dynamic mode for items when in per item scrolling")
 			dynamic_content_function := grid.dynamic_content_function
 			create Result.make (20)
-			
-			--visible_physical_column_indexes := grid.visible_physical_column_indexes
+
 			row_offsets := grid.row_offsets
 
 			internal_client_y := grid.internal_client_y
@@ -476,7 +474,7 @@ feature -- Basic operations
 									-- as the current contents of the grid are never used. We also check that the current row and
 									-- current row position are valid.
 									
-								grid_item := current_row_list @ (current_column_index - 1)
+								grid_item := current_row_list @ (visible_physical_column_indexes.item (current_column_index - 1))
 									-- In this case, we have found the grid item so we flag this fact
 									-- so that the calculations for the partial dynamic content know that
 									-- a new item must not be retrieved.
@@ -570,11 +568,10 @@ feature -- Basic operations
 												l_x_start := current_item_x_position.max (parent_x_indent_position)
 												l_x_end := horizontal_node_pixmap_left_offset
 												if l_x_start < current_item_x_position + current_column_width then
-														fixme ("Clip this line correctly as required")
 													grid.drawable.set_foreground_color (black)
 													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end.min (current_item_x_position + current_column_width), row_vertical_center)
-													-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
-												 	-- if the node to which we are connected is within a different column.
+														-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
+													 	-- if the node to which we are connected is within a different column.
 												end	
 											end
 											 

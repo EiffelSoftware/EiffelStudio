@@ -21,7 +21,6 @@ feature {NONE} -- Initialization
 			default_create
 			prepare
 			launch
-			io.put_string (v)
 		end
 
 	prepare is

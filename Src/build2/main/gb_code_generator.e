@@ -57,9 +57,12 @@ feature -- Basic operation
 				build_application_file
 			end
 			
-				-- generate the window of the project.
+				-- Generate the window implementation for the project.
+			build_main_window_implementation
+			
+				-- Generate the window for the project.
 			build_main_window
-				
+
 		end
 		
 	
@@ -164,7 +167,7 @@ feature {NONE} -- Implementation
 			end
 			
 		
-		build_main_window is
+		build_main_window_implementation is
 				-- Generate a main window for the project.
 			local
 				store: GB_XML_STORE
@@ -184,7 +187,7 @@ feature {NONE} -- Implementation
 				
 				set_progress (0.6)
 					-- Retrieve the template for a class file to generate.
-				create window_template_file.make_open_read (window_template_file_name)
+				create window_template_file.make_open_read (window_template_imp_file_name)
 				create class_text.make (window_template_file.count)
 				window_template_file.start
 				window_template_file.read_stream (window_template_file.count)
@@ -193,7 +196,7 @@ feature {NONE} -- Implementation
 			
 					-- We must now perform the generation into `class_text'.
 					-- First replace the name of the class
-				set_class_name (system_status.current_project_settings.main_window_class_name)
+				set_class_name (system_status.current_project_settings.main_window_class_name + "_IMP")
 
 				
 				set_progress (0.7)
@@ -250,12 +253,48 @@ feature {NONE} -- Implementation
 					
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)
-				window_file_name.extend (system_status.current_project_settings.main_window_file_name)
+				window_file_name.extend ("main_window_imp.e")--system_status.current_project_settings.main_window_file_name)
 				create window_output_file.make_open_write (window_file_name)
 				window_output_file.start
 				window_output_file.putstring (class_text)
 				window_output_file.close
 			end
+			
+	build_main_window is
+			--
+		local
+			store: GB_XML_STORE
+			window_template_file, window_output_file: RAW_FILE
+			window_file_name: FILE_NAME
+			temp_index, local_tag_index, create_tag_index: INTEGER
+		do
+				-- Retrieve the template for a class file to generate.
+				create window_template_file.make_open_read (window_template_file_name)
+				create class_text.make (window_template_file.count)
+				window_template_file.start
+				window_template_file.read_stream (window_template_file.count)
+				class_text := window_template_file.last_string
+				window_template_file.close
+			
+					-- We must now perform the generation into `class_text'.
+					-- First replace the name of the class
+				set_class_name (system_status.current_project_settings.main_window_class_name)
+				
+				set_inherited_class_name (system_status.current_project_settings.main_window_class_name + "_IMP")
+				
+				temp_index := class_text.substring_index (event_declaration_tag, 1)				
+				class_text.replace_substring_all (event_declaration_tag, "")
+				class_text.insert_string (event_implementation_string, temp_index)				
+				
+			-- Store `class_text'.				
+				window_file_name := clone (generated_path)
+				window_file_name.extend ("main_window.e")--system_status.current_project_settings.main_window_file_name)
+				create window_output_file.make_open_write (window_file_name)
+				window_output_file.start
+				window_output_file.putstring (class_text)
+				window_output_file.close
+		end
+		
 
 	set_class_name (a_name: STRING) is
 			-- Replace all occurances of `class_name_tag' with
@@ -263,6 +302,14 @@ feature {NONE} -- Implementation
 		do
 			a_name.to_upper
 			class_text.replace_substring_all (class_name_tag, a_name)
+		end
+		
+	set_inherited_class_name (a_name: STRING) is
+			-- Replace all occurances of `inherited_class_name_tag' with
+			-- `a_name' within `class_text'.
+		do
+			a_name.to_upper
+			class_text.replace_substring_all (inherited_class_name_tag, a_name)
 		end
 
 	generate_declarations (element: XML_ELEMENT; depth: INTEGER) is
@@ -453,7 +500,8 @@ feature {NONE} -- Implementation
 			action_sequence_info: GB_ACTION_SEQUENCE_INFO
 			action_sequence: GB_EV_ACTION_SEQUENCE
 			local_name: STRING
-			comment_object_name: STRING
+			comment_object_name, parameters: STRING
+			feature_implementation: STRING
 		do
 			if element.has_attribute_by_name (type_string) then
 				stored_current_type := element.attribute_by_name (type_string).value.to_utf8
@@ -518,12 +566,23 @@ feature {NONE} -- Implementation
 										comment_object_name := last_name
 									end
 									
+										-- No parameters if zero arguments.
+									if action_sequence.count = 0 then
+										parameters := " is"
+									else
+										parameters := " (" +action_sequence.parameter_list + ") is"
+									end	
+									
+									feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%")" + indent_less_one
+									
 										-- Now we must generate the event declarations.
-									add_event_declaration (action_sequence_info.feature_name + " is" +
+									add_event_declaration (action_sequence_info.feature_name + parameters +
 									indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-									indent_less_one + "do" + indent_less_one + "end" + indent_less_two)
+									indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
 									
-									
+									add_event_implementation (action_sequence_info.feature_name + parameters +
+									indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+									indent_less_one + "do" + feature_implementation + "end" + indent_less_two)
 								end
 								another_element.forth
 							end
@@ -673,6 +732,14 @@ feature {NONE} -- Implementation
 			event_declaration_string := event_declaration_string + indent_less_two + event
 		end
 		
+	add_event_implementation (event: STRING) is
+			--
+		do
+			if event_implementation_string = Void then
+				event_implementation_string := ""
+			end
+			event_implementation_string := event_implementation_string + indent_less_two + event
+		end
 		
 	add_set (set: STRING) is
 			-- Add a setting represention, `set' to
@@ -793,6 +860,10 @@ feature {NONE} -- Implementation
 		
 	event_declaration_string: STRING
 		-- String representation of all event declaration statements built by
+		-- `Current'. This is inserted into the template when completed.
+		
+	event_implementation_string: STRING
+		-- String representation of all event implementation statements built by
 		-- `Current'. This is inserted into the template when completed.
 		
 	progress_bar: EV_PROGRESS_BAR

@@ -1,53 +1,72 @@
-<script src="../../../../technologies/dotnet/samples/instal.js"></script>
-
-<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
-<HTML>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<XML>
+		<MSHelp:Keyword Index="K" Term="Accelerator" />
+		<MSHelp:Keyword Index="K" Term="Samples, Accelerator" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
 	<HEAD>
 		<TITLE>Accelerator Sample</TITLE>
-		<LINK REL=StyleSheet HREF="/default.css">
-		<META NAME="MS-HKWD" CONTENT="Vision2 Samples, Accelerator">
+		<LINK HREF="../../../../default.css" TYPE="text/css" REL="STYLESHEET">
 	</HEAD>
+	<BODY LANGUAGE="vbscript" ONLOAD="onLoadHandler">
+		<TABLE CLASS="HEADER" ID="Table1">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">Accelerator Sample</TD>
+				<TD ALIGN=right>
+					<A CLASS="bold" HREF="#NONEXISTANT" OnClick="LoadSample()">Load in Eiffel ENViSioN! </A>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME">
+			<TR>
+				<TD>
+					<SCRIPT LANGUAGE=VBScript SRC="/technologies/dotnet/sample/sample.vbs"></SCRIPT>
+					<SCRIPT LANGUAGE=VBScript>
+						Sub onLoadHandler()
+							'Initialize global variables
+							SampleDir = "\vision2\accelerator"
+							SamplePrj = "accelerator.eifp"
+						End Sub							
+					</SCRIPT>
 
-	<BODY>
-		<H1>Accelerator sample</H1>
-		<CENTER>
-        <IMG SRC="accelerator.png" ALT="accelerator" width="400" height="300" /></CENTER><BR><BR>
-		<H2>Compiling</H2>
-<script language="JavaScript">
-<!--
-var path_to_ace_file = Eiffel_version + "\\examples\\vision2\\accelerator\\";
-var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\samples\\vision2\\accelerator\\"
-var eifp_name = "accelerator.eifp";
+					<IMG SRC="accelerator.png" ALT="accelerator" />
 
-if (eiffel_studio) {
-	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
-}
-else {
-	write_envision_compiling_instruction (path_eifp_file, eifp_name)
-}
--->
-        </script>
-<noscript>
-        <p>To see compiling instructions, you have to enable javascript.</p></noscript>
+					<H2>Running</H2>
+					
+					<P>After launching the application, you will see a window displayed with a similar appearance
+					to the one above. When the window has the focus, the key combination Ctrl + Q will exit
+					the application.</p>
 
-		<H2>Running</H2>
-		After launching the application, you will see a window displayed with a similar appearance to the one above. When the window has the focus, the key combination
-		Ctrl + Q will exit the application.
-		<P>
-		</P>
-		<H2>Under the Hood</H2>
-		An <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">EV_ACCELERATOR</A> is created and associated with the
-		<A CLAS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html">EV_TITLED_WINDOW</A> used for the main window of the application.
-		The association is made by adding the accelerator to the <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window.html#f_accelerators">accelerators</A> list of the window.
+					<H2>Under the Hood</H2>
 
-		<P>This sample contains the following class:
-			<UL>
-				<LI><A CLASS="eclass" HREF="/libraries/vision2/samples/accelerator/root_cluster/accelerator_chart.html">ACCELERATOR</A>
+					<P>An <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">EV_ACCELERATOR</A>
+					is created and associated with the
+					<A CLAS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window_chart.html">EV_TITLED_WINDOW</A> 
+					used for the main window of the application. The association is made by adding the accelerator to the 
+					<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_titled_window.html#f_accelerators">accelerators</A>
+					list of the window.</p>
 
-			</UL>
-		</P>
-		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/vision2/reference/interface/kernel/ev_accelerator.html">EV_ACCELERATOR</A><BR><A HREF="/libraries/vision2/reference/interface/kernel/ev_key.html">EV_KEY</A><BR></P>
+					<P>This sample contains the following class:
+						<UL>
+							<LI><A CLASS="eclass" HREF="/libraries/vision2/samples/accelerator/root_cluster/accelerator_chart.html">ACCELERATOR</A></li>
+						</UL>
+					</P>
+					
+					<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/vision2/reference/interface/kernel/ev_accelerator.html">EV_ACCELERATOR</A><BR>
+					<A HREF="/libraries/vision2/reference/interface/kernel/ev_key.html">EV_KEY</A><BR></P>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER" ID="Table3">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
 	</BODY>
 </HTML>

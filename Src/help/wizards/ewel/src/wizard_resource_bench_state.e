@@ -51,7 +51,7 @@ feature -- Basic Operation
 			cell: EV_CELL
 		do 
 			create h1
-			create project_name.make("Name of the project",
+			create project_name.make("Project name. (No space)",
 							 wizard_information.project_name, 20, 50, Current, False)
 			h1.extend (project_name)
 			create cell	
@@ -61,7 +61,7 @@ feature -- Basic Operation
 			choice_box.disable_item_expand (h1)
 
 			create h1
-			create rc_location.make("Choose the ressource file",
+			create rc_location.make("Resource file (Enter file name)",
 							 wizard_information.full_path_rc, 10, 200, Current, False)		
 			create browse_b.make_with_text("Browse...")
 			browse_b.select_actions.extend(~Browse)
@@ -87,7 +87,7 @@ feature -- Basic Operation
 				proceed_with_new_state (create {WIZARD_ERROR_PROJECT_NAME}.make (wizard_information))
 			else
 				Precursor
-				proceed_with_new_state(Create {WIZARD_RESOURCE_BENCH_SECOND_STATE}.make(wizard_information))
+				proceed_with_new_state(Create {WIZARD_RESOURCE_BENCH_STATE_INFO}.make(wizard_information))
 			end
 		end
 
@@ -113,14 +113,12 @@ feature {NONE} -- Implementation
 	display_state_text is
 		do
 			title.set_text ("PROVIDE RESOURCE FILE")
-			message.set_text ("As you want to create a dialog based application you must provide a%
-							  %%Nresource file and the name of your project.%
-							  %%NThe wizard will then analyse the file.%N%N%
-							  %Thus, during the next step you will have to specify some options for each of%
-							  %%Nyour dialogs.%
-							  %%N%TWhich class will your dialog will inherit.%
-							  %%N%TWhat feature will have to be redefine.%
-							  %%N%TWhich buttons will you want to integrate in the project.")
+			message.set_text ("You have chosen to build a Dialog-Based Application with your own resource file.%
+							  %%NYou must now provide:%
+							  %%N%T+ A project name.%
+							  %%N%T+ The name of the resource file.%
+							  %%N%N%NThe provided resource file will be parsed as soon as you will push the Next button.%
+							  %%N(This operation may take a few minutes for a first-time parsing.)")
 		end
 
 

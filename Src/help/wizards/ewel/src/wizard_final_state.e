@@ -55,7 +55,11 @@ feature -- Basic Operations
 		do
 			build_finish
 			if wizard_information.dialog_application then
-				generate_code_for_dialog
+				if wizard_information.dialog_with_no_rc then
+					generate_code_for_dialog_no_rc
+				else
+					generate_code_for_dialog
+				end
 			else
 				generate_code_for_frame
 			end
@@ -170,8 +174,33 @@ feature -- Process
 --			copy_file ("root_class", "e" , wizard_information.location)
 
 			copy_file ("application_ids", "e", wizard_information.location)
-			
 
+		end
+
+	generate_code_for_dialog_no_rc is
+		local
+			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
+			tuple: TUPLE [STRING, STRING]
+		do
+			create map_list.make
+			create tuple.make
+			tuple.put ("<FL_PROJECT_NAME>", 1)
+			tuple.put (wizard_information.project_name, 2)
+			map_list.extend (tuple)
+			create tuple.make
+			tuple.put ("<FL_LOCATION>", 1)
+			tuple.put (wizard_information.location, 2)
+			map_list.extend (tuple)
+			from_template_to_project (wizard_resources_path, "ace.ace", wizard_information.location, "ace.ace", map_list)
+
+			create map_list.make
+			create tuple.make
+			tuple.put ("<FL_MAIN_CLASS>", 1)
+			tuple.put ("DIALOG", 2)
+			map_list.extend (tuple)
+			from_template_to_project (wizard_resources_path, "root_template.e", wizard_information.location, "root_class.e", map_list)
+
+			copy_file ("dialog", "e", wizard_information.location)
 		end
 
 	copy_rc_file is
@@ -195,17 +224,11 @@ feature -- Process
 			fi: RAW_FILE
 			s: STRING
 		do
---			create f1.make_from_string (wizard_information.icon_location)
---			f_name := clone (f1)
---			f_name.extend (name)
---			f_name.add_extension (extension)
 			create fi.make_open_read (wizard_information.icon_location)
 			fi.read_stream (fi.count)
 			s := fi.last_string
 			fi.close
---			create f_name.make_from_string (wizard_information.location + "\" + wizard_information.project_name + ".ico")
---			f_name.extend (name)
---			f_name.add_extension (extension)
+
 			create fi.make_open_write (wizard_information.location + "\" + wizard_information.project_name + ".ico")
 			fi.put_string (s)
 			fi.close
@@ -307,5 +330,7 @@ feature -- Process
 
 		end
 
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+		-- Icon for the Eiffel Wel Wizard
 
 end -- class WIZARD_FINAL_STATE

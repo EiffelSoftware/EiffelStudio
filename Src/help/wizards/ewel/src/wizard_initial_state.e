@@ -30,5 +30,8 @@ feature -- basic Operations
 								%%N%NYou will have to provide a few information, and an Eiffel%
 								%%Nproject will be generated at the end of this wizard.")
 		end
+
+	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+		-- Icon for the Eiffel Wel Wizard
 	
 end -- class WIZARD_INITIAL_STATE

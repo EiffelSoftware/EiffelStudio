@@ -25,6 +25,7 @@ feature -- Initialization
 			h1, h3: EV_HORIZONTAL_BOX
 			fr1, fr2: EV_FRAME
 			cell: EV_CELL
+			vert: EV_VERTICAL_SEPARATOR
 		do
 			default_create
 
@@ -36,36 +37,36 @@ feature -- Initialization
 			create control_selection_list
 			control_selection_list.enable_multiple_selection
 
-			create idc_dialog_caption.make_with_text ("Select the controls you want to generate:")
+			create idc_dialog_caption.make_with_text ("Select controls...")
+			idc_dialog_caption.align_text_left
 
 			create idc_setup_dialog.make_with_text ("setup_dialog")
 			create idc_notify.make_with_text ("notify")
 			create idc_on_ok.make_with_text ("on_ok")
 			create idc_on_cancel.make_with_text ("on_cancel")
-			create idc_on_abort.make_with_text ("on_abord")
+			create idc_on_abort.make_with_text ("on_abort")
 			create idc_on_ignore.make_with_text ("on_ignore")
 			create idc_on_retry.make_with_text ("on_retry")
 			create idc_on_yes.make_with_text ("on_yes")
 			create idc_on_no.make_with_text ("on_no")
 
 			create inherit_combo
+			inherit_combo.set_minimum_width (160)
 			create idc_modal.make_with_text ("WEL_MODAL_DIALOG")
 			create idc_modeless.make_with_text ("WEL_MODELESS_DIALOG")
 			create idc_main_dialog.make_with_text ("WEL_MAIN_DIALOG")
-			inherit_combo.extend (idc_modal)
 			inherit_combo.extend (idc_modeless)
+			inherit_combo.extend (idc_modal)
 			inherit_combo.extend (idc_main_dialog)
 
-			create fr1.make_with_text ("Inherit from")
-			create fr2.make_with_text ("Redefined features")
+			create fr1.make_with_text ("Select inherited class...")
+			create fr2.make_with_text ("Select features...")
 
 			
 			create cell
 			cell.set_minimum_height (3)
 
 			create v1
---			v1.extend (check_code_generation)
---			v1.disable_item_expand (check_code_generation)
 			create h3
 			v1.extend (h3)
 			v1.disable_item_expand (h3)
@@ -82,14 +83,11 @@ feature -- Initialization
 			h3.extend (v5)
 			h3.disable_item_expand (v5)
 
+			create vert
+			vert.set_minimum_width (20)
+			h3.extend (vert)
 
 			create v2
---			v2.extend (idc_modal)
---			v2.disable_item_expand (idc_modal)
---			v2.extend (idc_modeless)
---			v2.disable_item_expand (idc_modeless)
---			v2.extend (idc_main_dialog)
---			v2.disable_item_expand (idc_main_dialog)
 			v2.extend (inherit_combo)
 			fr1.extend (v2)
 
@@ -97,7 +95,6 @@ feature -- Initialization
 			v5.extend (idc_dialog_caption)
 			v5.disable_item_expand (idc_dialog_caption)
 			v5.extend (control_selection_list)
---			v5.extend (v4)
 
 			create v2
 			v2.extend (idc_notify)
@@ -119,8 +116,11 @@ feature -- Initialization
 			fr2.extend (v2)
 			h3.extend (fr2)
 			h3.disable_item_expand (fr2)
-
-			extend (create {EV_VERTICAL_SEPARATOR})
+			
+			create vert
+			vert.set_minimum_width (20)
+			extend (vert)
+			disable_item_expand (vert)
 			extend (v1)
 			disable_item_expand (v1)
 			current_dialog := a_dialog

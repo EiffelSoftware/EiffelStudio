@@ -25,11 +25,9 @@ inherit
 		
 	GB_CONSTANTS
 	
-	EXECUTION_ENVIRONMENT
-		rename
-			put as execution_environment_put
+	INSTALLATION_LOCATOR
 		undefine
-			default_create, copy, is_equal
+			default_create, copy
 		end
 
 creation
@@ -52,20 +50,14 @@ feature -- Initialization
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
 			file_name: FILE_NAME
-			file_location: STRING
 		do
 			default_create
 			set_title ("EiffelVision2 Tour")
 			disable_user_resize
 
 				-- Create controls.
-				--| FIXME check for other locations/missing.
-			file_location := get ("ISE_VISION2_TOUR")
-			if file_location = Void then
-				file_location := get ("ISE_EIFFEL")
-			end
-			if file_location /= Void then
-				create file_name.make_from_string (file_location)
+			if location /= Void then
+				create file_name.make_from_string (location)
 				file_name.extend ("bitmaps")
 				file_name.extend ("png")
 				file_name.extend ("bm_about.png")

@@ -18,6 +18,10 @@ inherit
 
 feature -- Access
 
+	widget: EV_WIDGET
+			-- The mouse pointer was over this widget 
+			-- when event happened
+
 	keycode: INTEGER
 			-- Platform dependent code corresponding to the keystroke
 			-- For values, see class EV_KEY_CODE.
@@ -80,6 +84,12 @@ feature -- Element change
 			set_caps_lock_key (caps_lock)
 			set_num_lock_key (num_lock)
 			set_scroll_lock_key (scroll_lock)
+		end
+
+	set_widget (wid: EV_WIDGET) is
+			-- Make `wid' the new widget.
+		do
+			widget := wid
 		end
 
 	set_keycode (value: INTEGER) is

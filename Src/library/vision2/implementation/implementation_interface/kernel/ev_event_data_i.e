@@ -8,12 +8,6 @@ indexing
 deferred class
 	EV_EVENT_DATA_I
 
-feature -- Access
-
-	widget: EV_WIDGET
-			-- The mouse pointer was over this widget 
-			-- when event happened
-
 feature -- Status report
 
 	is_full: BOOLEAN
@@ -25,14 +19,6 @@ feature -- Status setting
 			-- Mark the data as full.
 		do
 			is_full := True
-		end
-
-feature -- Element change
-
-	set_widget (wid: EV_WIDGET) is
-			-- Make `wid' the new widget.
-		do
-			widget := wid
 		end
 
 end -- class EV_EVENT_DATA_I

@@ -42,12 +42,18 @@ feature
 			target_type: TYPE_I
 			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			expr.generate;
 			target_type := Context.real_type (type);
 			register.print_register;
-			buf := buffer
 			buf.putstring (" = ");
-			expr.print_register;
+			if target_type.is_true_expanded then
+				buf.putstring ("RTCL(")
+				expr.print_register
+				buf.putchar (')')
+			else
+				expr.print_register;
+			end
 			buf.putchar (';');
 			buf.new_line;
 		end;

@@ -223,6 +223,9 @@ feature -- Implementation
 				clist.after
 			loop
 				set_text_part (clist.index - 1, clist.item.text)
+				if clist.item.pixmap /= Void then
+					set_child_owner_draw (clist.item)
+				end
 				clist.forth
 			end
 			if number_of_parts > count then

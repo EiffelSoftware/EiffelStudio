@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class ICONED_COMMAND
+deferred class PIXMAP_COMMAND
 
 inherit
 
@@ -24,8 +24,9 @@ inherit
 feature -- Callbacks
 
 	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+			-- Useless here.
 		do
-		end;
+		end
 
 feature -- Properties
 
@@ -34,26 +35,8 @@ feature -- Properties
 		deferred
 		end;
 
-	dark_symbol: PIXMAP is
-			-- Darkened version of `symbol'.
-		do
-			Result := symbol
-		end;
-
 	grey_symbol: PIXMAP is
 			-- Insensitive version of `symbol'.
-		do
-			Result := symbol
-		end;
-
-	full_symbol: PIXMAP is
-			-- Symbol representing a targeted tool.
-		do
-			Result := symbol
-		end;
-
-	icon_symbol: PIXMAP is	
-			-- Symbol used for an iconified tool window.
 		do
 			Result := symbol
 		end;
@@ -98,22 +81,8 @@ feature -- Setting
 			holder := fh
 		end;
 
-	set_empty_symbol is
-		do
-			if holder.associated_button.pixmap /= symbol then
-				holder.associated_button.set_symbol (symbol)
-			end
-		end
-
-	set_full_symbol is
-		do
-			if holder.associated_button.pixmap /= full_symbol then
-				holder.associated_button.set_symbol (full_symbol)
-			end
-		end
-
 invariant
 
 	text_window_not_void: text_window /= Void
 
-end -- class ICONED_COMMAND
+end -- class PIXMAP_COMMAND

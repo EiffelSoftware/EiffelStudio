@@ -12,8 +12,11 @@ REM 	CANCEL
 REM endiff
 iff not defined NO_COMPILE then
 	iff not defined EIFFEL_SRC then
-		echo EIFFEL_SRC not defined. Cannot continue
+		echo TMP_EIFFEL_SRC not defined. Cannot continue
 		CANCEL
+	endiff
+	iff isdir %EIFFEL_SRC then
+		echo Warning: %EIFFEL_SRC will be erased by the script!
 	endiff
 	iff not defined FINALIZATION_DIR then
 		echo FINALIZED_DIR not defined. Cannot continue
@@ -22,12 +25,6 @@ iff not defined NO_COMPILE then
 	iff not exist %FINALIZATION_DIR\finalizedbench.ace then
 		echo No finalization ace available in %FINALIZATION_DIR. Cannot continue
 		CANCEL
-	endiff
-	iff not isdir %EIFFEL_SRC\library\wizard then
-		echo Warning: The Wizards will be checked out
-	endiff
-	iff not isdir %EIFFEL_SRC\help\wizards then
-		echo Warning: The Wizard library will be checked out
 	endiff
 	
 	iff "%@SEARCH[ec.exe]" == "" then

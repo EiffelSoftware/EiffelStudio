@@ -1,13 +1,14 @@
 @echo off
-REM Set up the environment
+remtrace Set up the environment
 on break goto broken
 TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
 set OLD_PATH=%PATH
+set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set INIT_DIR=%@EXECSTR[cd]
 iff %@INDEX[%@LOWER[%$],h] ge 0 then
 	echo Installation for ISE Eiffel 5 generation.
-	echo Parameters are no_compile, no_doc, no_new_ec and no_install (or nothing to fully regenerate the installation).
+	echo Parameters are no_compile, no_doc, no_new_ec, no_wizards and no_install (or nothing to fully regenerate the installation).
 	CANCEL
 endiff
 iff %@INDEX[%@LOWER[%$],no_compil] ge 0 then
@@ -37,6 +38,7 @@ else
 endiff
 
 call set_aliases.btm
+set EIFFEL_SRC=%TMP_EIFFEL_SRC
 cdd %INIT_DIR
 remtrace Approximative starting time:
 remtrace %_TIME
@@ -58,21 +60,21 @@ endiff
 md %INSTALL_DIR
 cdd %INSTALL_DIR
 remtrace studio
-export -r HEAD -d studio Delivery/studio
+exprt -r %DEFAULT_CVS_TAG -d studio Delivery/studio
 remtrace eifinit
-export -r HEAD -d eifinit Delivery/eifinit
+exprt -r %DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
 remtrace precomp
 safe_md %INSTALL_DIR\precomp
 safe_md %INSTALL_DIR\precomp\spec
 cd %INSTALL_DIR\precomp\spec
-export -r HEAD -d windows Delivery/precomp/spec/windows
+exprt -r %DEFAULT_CVS_TAG -d windows Delivery/precomp/spec/windows
 cdd %INSTALL_DIR
 remtrace wizards
-export -r HEAD -d wizards Delivery/wizards
+exprt -r %DEFAULT_CVS_TAG -d wizards Delivery/wizards
 remtrace C_library
-export -r HEAD -d C_library Src/C_library
+exprt -r %DEFAULT_CVS_TAG -d C_library Src/C_library
 remtrace root
-export -l -r HEAD Delivery/
+exprt -l -r %DEFAULT_CVS_TAG Delivery/
 move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
 
@@ -84,7 +86,7 @@ fullrf bcc55.tar
 md docs
 cd docs
 remtrace PDF's
-export -r HEAD -d PDF Delivery/newdocs/PDF
+exprt -r %DEFAULT_CVS_TAG -d PDF Delivery/newdocs/PDF
 cd ..
 
 remtrace Create directories
@@ -108,6 +110,10 @@ give_time_to organize the delivery and to start filling it
 REM Fill directories
 iff not defined NO_COMPILE then
 	remtrace Update all libraries
+	iff isdir %EIFFEL_SRC then
+		remtrace Delete %EIFFEL_SRC
+		fullrd %EIFFEL_SRC
+	endiff
 	call update_libraries.btm
 	copy %EIFFEL_SRC\library\wel\spec\%ISE_PLATFORM\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
 	cdd %INIT_DIR
@@ -182,9 +188,5 @@ remtrace %@TIMER[2]
 
 REM Error handling and normal ending
 :broken
-echo Exiting...
-set PATH=%OLD_PATH
-cdd %INIT_DIR
-
-quit
+CANCEL
 

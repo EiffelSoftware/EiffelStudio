@@ -3,31 +3,31 @@ cdd %INSTALL_DIR
 md library
 cd library
 remtrace base
-export -r HEAD -d base Src/library/base
+exprt -r %DEFAULT_CVS_TAG -d base "Src/library/base"
 remtrace com
-export -r HEAD -d com Src/library/com
+exprt -r %DEFAULT_CVS_TAG -d com "Src/library/com"
 remtrace Eiffel2Java
-export -r HEAD -d Eiffel2Java Src/library/Eiffel2Java
+exprt -r %DEFAULT_CVS_TAG -d "Eiffel2Java Src/library/Eiffel2Java"
 remtrace lex
-export -r HEAD -d lex Src/library/lex
+exprt -r %DEFAULT_CVS_TAG -d lex "Src/library/lex"
 remtrace net
-export -r HEAD -d net Src/library/net
+exprt -r %DEFAULT_CVS_TAG -d net "Src/library/net"
 remtrace parse
-export -r HEAD -d parse Src/library/parse
+exprt -r %DEFAULT_CVS_TAG -d parse "Src/library/parse"
 remtrace store
-export -r HEAD -d store Src/library/store
+exprt -r %DEFAULT_CVS_TAG -d store "Src/library/store"
 remtrace thread
-export -r HEAD -d thread Src/library/thread
+exprt -r %DEFAULT_CVS_TAG -d thread "Src/library/thread"
 remtrace time
-export -r HEAD -d time Src/library/time
+exprt -r %DEFAULT_CVS_TAG -d time "Src/library/time"
 remtrace vision
-export -r HEAD -d vision Src/library/vision
+exprt -r %DEFAULT_CVS_TAG -d vision "Src/library/vision"
 remtrace vision2
-export -r HEAD -d vision2 Src/library/vision2
+exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
 remtrace web
-export -r HEAD -d web Src/library/web
+exprt -r %DEFAULT_CVS_TAG -d web "Src/library/web"
 remtrace wel
-export -r HEAD -d wel Src/library/wel
+exprt -r %DEFAULT_CVS_TAG -d wel "Src/library/wel"
 
 iff not defined NO_COMPILE then
 	remtrace Compile the C code, and remove extra clib's

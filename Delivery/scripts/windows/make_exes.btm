@@ -1,9 +1,9 @@
 REM Clean up the files
 remtrace Update all source files.
 cdd %EIFFEL_SRC
-up eiffel
-up C
-up C_library
+exprt -r %DEFAULT_CVS_TAG -d Eiffel Eiffel
+exprt -r %DEFAULT_CVS_TAG -d C runtime
+exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
 
 remtrace Compile C code of the libraries
 remtrace "A tout seigneur tout honneur", let's start with the run-time
@@ -108,5 +108,19 @@ iff not exist h2e.exe then
 endiff
 move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
+remtrace Recompile Legacy++
+cdd %EIFFEL_SRC
+exprt -r %DEFAULT_CVS_TAG -d legacy "Src/tools/legacy"
+cd %EIFFEL_SRC\legacy\PCCTS
+nmake /f makefile.win
+cd ..
+cd legacy
+msdev legacy.dsw /make ALL - RELEASE >>& %INSTALL_LOG
+iff not exist legacy.exe then
+	remtrace Couldnt generate legacy.exe
+	CANCEL
+endiff
+move legacy.exe studio\spec\%ISE_PLATFORM\bin
+
 remtrace Put the last files into the bin directory
-quick_move studio\spec\%ISE_PLATFORM\bin\legacy.exe
+REM quick_move studio\spec\%ISE_PLATFORM\bin\legacy.exe

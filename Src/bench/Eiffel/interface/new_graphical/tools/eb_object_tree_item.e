@@ -110,7 +110,10 @@ feature -- Updating
 				inspect l_dmp.type 
 					when feature {DUMP_VALUE_CONSTANTS}.Type_integer then
 						l_text := text
-						l_pos := l_text.index_of ('=', 1)
+						l_pos := l_text.index_of ('=', 1) + 1
+						check
+							has_space: l_text.item (l_pos) = ' '
+						end
 						l_integer_value := l_dmp.value_integer
 						l_text :=  l_text.substring (1, l_pos)
 						if hexa_mode_enabled then
@@ -121,7 +124,10 @@ feature -- Updating
 						set_text (l_text)
 					when feature {DUMP_VALUE_CONSTANTS}.Type_integer_64 then
 						l_text := text
-						l_pos := l_text.index_of ('=', 1)
+						l_pos := l_text.index_of ('=', 1) + 1
+						check
+							has_space: l_text.item (l_pos) = ' '
+						end
 						l_integer64_value := l_dmp.value_integer_64
 						l_text :=  l_text.substring (1, l_pos)
 						if hexa_mode_enabled then

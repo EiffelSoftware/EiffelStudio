@@ -2,9 +2,10 @@ system
 	"ISE.Compiler"
 
 root
-	ECOM_ISE_REGISTRATION: make
+	ecom_ise_registration: make
 
 default
+	msil_assembly_compatibility ("None")
 	assertion (no)
 	arguments (" ")
 	arguments ("/regserver")
@@ -50,6 +51,7 @@ default
 	disabled_debug ("parse")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
+	disabled_debug ("resource_validate")
 	disabled_debug ("sep_debug")
 	disabled_debug ("server")
 	disabled_debug ("skeleton")
@@ -65,10 +67,13 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
+	override_cluster ("new_tty")
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
+	msil_culture ("n/a")
+	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)
 	array_optimization (no)
@@ -80,7 +85,7 @@ default
 cluster
 	all com_generated:		"$EIFFEL_SRC\com_compiler"
 		exclude
-			"EIFGEN"; "to_replace"; "generated"; 
+			"EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib"; "ace_file"; "idl"; "Client_Only"; "generated_client"; 
 		visible
 			ieiffel_compiler_events_impl_proxy
 				end
@@ -175,6 +180,12 @@ cluster
 			completion_information
 				end
 			completion_entry_enumerator
+				end
+			html_doc_generator
+				end
+			ieiffel_htmldoc_generator_impl_stub
+				end
+			ieiffel_htmldoc_generator_impl_proxy
 				end
 		end
 
@@ -307,9 +318,10 @@ cluster
 
 	liman_abstract (liman):		"$\abstract"
 
-	interface_shared:		"$EIFFEL_SRC\Eiffel\interface\shared"
-
 	documentation_main:		"$EIFFEL_SRC\Eiffel\case\documentation\main"
+		exclude
+			"case_tool"; 
+		end
 
 	all "compiler_support":		"$EIFFEL_SRC\Eiffel\support"
 
@@ -333,9 +345,9 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
-	all xml_deserializer: "$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
 
-	all eac_components: "$EIFFEL_SRC\dotnet\consumer\components"
+	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
 	xml:		"$EIFFEL_SRC\library\exml"
 
@@ -344,6 +356,16 @@ cluster
 	xml_tree_parser (xml_main):		"$\tree_parser"
 
 	xml_spec (xml):		"$\compiler_specific\ise"
+
+	interface:		"$EIFFEL_SRC\Eiffel\interface"
+
+	interface_shared (interface):		"$\shared"
+
+	tty (interface):		"$\tty"
+
+	preference_tool (interface):		"$\graphical\preference_tool"
+
+	profile_tool (interface):		"$\graphical\profile_tool"
 
 external
 

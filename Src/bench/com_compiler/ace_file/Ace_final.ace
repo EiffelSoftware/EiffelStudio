@@ -81,7 +81,7 @@ default
 cluster
 	all com_generated:		"$EIFFEL_SRC\com_compiler"
 		exclude
-			"EIFGEN"; "to_replace"; "generated"; 
+			"EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib"; "ace_file"; "idl"; "Client_Only"; "generated_client"; 
 		visible
 			ieiffel_compiler_events_impl_proxy
 				end
@@ -182,6 +182,12 @@ cluster
 			completion_information
 				end
 			completion_entry_enumerator
+				end
+			html_doc_generator
+				end
+			ieiffel_htmldoc_generator_impl_stub
+				end
+			ieiffel_htmldoc_generator_impl_proxy
 				end
 		end
 
@@ -314,9 +320,17 @@ cluster
 
 	liman_abstract (liman):		"$\abstract"
 
-	interface_shared:		"$EIFFEL_SRC\Eiffel\interface\shared"
-
 	documentation_main:		"$EIFFEL_SRC\Eiffel\case\documentation\main"
+
+ 	interface:		"$EIFFEL_SRC\Eiffel\interface"
+ 
+ 	interface_shared (interface):		"$\shared"
+ 
+ 	tty (interface):		"$\tty"
+ 
+ 	preference_tool (interface):		"$\graphical\preference_tool"
+ 
+ 	profile_tool (interface):		"$\graphical\profile_tool"
 
 	all "compiler_support":		"$EIFFEL_SRC\Eiffel\support"
 
@@ -382,6 +396,7 @@ external
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
 		"corguids.lib",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",

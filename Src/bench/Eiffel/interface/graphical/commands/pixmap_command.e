@@ -75,7 +75,7 @@ feature -- Properties
 			Result := symbol
 		end;
 
-	holder: HOLDER;
+	holder: EB_HOLDER;
 			-- Holder of Current.
 
 	name: STRING is
@@ -104,7 +104,8 @@ feature -- Execute
 				if f /= Void then
 					f.popdown
 				end;
-				if last_warner /= Void then
+				if last_warner /= Void and then
+						not last_warner.destroyed then
 					last_warner.popdown
 				end;
 				execute_licenced (argument);

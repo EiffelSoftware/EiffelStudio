@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Include Path Enumeration.  Help file: 
+Include Path Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMINCLUDEPATHS_H__
@@ -43,7 +43,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumIncludePaths_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumIncludePaths : public IUnknown
+class IEnumIncludePaths : public IDispatch
 {
 public:
 	IEnumIncludePaths () {};

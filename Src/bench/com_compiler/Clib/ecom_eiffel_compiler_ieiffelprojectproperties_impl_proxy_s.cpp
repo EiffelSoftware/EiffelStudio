@@ -120,7 +120,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_sy
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -187,7 +187,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_ro
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -254,7 +254,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_cr
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -386,7 +386,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_de
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -648,7 +648,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_pr
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -780,7 +780,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_cl
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_164 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_164 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -813,7 +813,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_ex
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_167 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_167 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -846,7 +846,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_as
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_170 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_170 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -879,7 +879,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_ti
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -946,7 +946,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_de
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -1013,7 +1013,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_co
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -1080,7 +1080,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_pr
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -1147,7 +1147,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_ve
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -1214,7 +1214,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_tr
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -1281,7 +1281,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_co
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -1348,7 +1348,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_cu
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -1415,7 +1415,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_ke
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -1482,7 +1482,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_wo
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };

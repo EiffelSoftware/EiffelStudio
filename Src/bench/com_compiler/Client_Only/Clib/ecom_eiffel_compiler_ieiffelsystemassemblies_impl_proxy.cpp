@@ -3,7 +3,7 @@ Implemented `IEiffelSystemAssemblies' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy.h"
-static const IID IID_IEiffelSystemAssemblies_ = {0x85662941,0x227e,0x42cb,{0xbc,0x91,0xf4,0xc1,0x7d,0x41,0x07,0xe2}};
+static const IID IID_IEiffelSystemAssemblies_ = {0x9cf82ea0,0xb5f9,0x4110,{0xa7,0x58,0x24,0x1a,0x3b,0xc9,0x5d,0x52}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -270,7 +270,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_ass
 	
 	rt_ce.free_memory_bstr (tmp_cluster_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_134 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_139 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -468,7 +468,7 @@ rt_ce.free_memory_bstr (tmp_a_version);
 rt_ce.free_memory_bstr (tmp_a_culture);
 rt_ce.free_memory_bstr (tmp_a_publickey);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -505,7 +505,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_clu
 	
 	rt_ce.free_memory_bstr (tmp_a_path);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -575,7 +575,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_ass
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_41 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_46 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Feature parameter info.  Help file: 
+Feature parameter info. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELPARAMETERDESCRIPTOR_H__
@@ -33,7 +33,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelParameterDescriptor_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelParameterDescriptor : public IUnknown
+class IEiffelParameterDescriptor : public IDispatch
 {
 public:
 	IEiffelParameterDescriptor () {};

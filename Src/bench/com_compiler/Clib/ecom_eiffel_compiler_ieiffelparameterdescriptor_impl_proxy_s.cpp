@@ -75,7 +75,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -109,7 +109,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_proxy::ccom_
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };

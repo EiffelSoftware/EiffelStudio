@@ -5,9 +5,9 @@ Implemented `IEiffelClusterProperties' Interface.
 #include "ecom_eiffel_compiler_IEiffelClusterProperties_impl_stub.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelClusterProperties_ = {0x5d0b0013,0xf831,0x4ff6,{0xa4,0x43,0x7b,0x30,0x88,0x2a,0x5e,0xb8}};
+static const IID IID_IEiffelClusterProperties_ = {0x64f0d395,0x2e13,0x4fdf,{0xb8,0x2a,0x09,0xbf,0xcb,0x46,0xbe,0xea}};
 
-static const IID LIBID_eiffel_compiler_ = {0xa81ca1a9,0x3eef,0x4e47,{0xbe,0xae,0xc1,0x63,0x25,0xee,0xfa,0x3f}};
+static const IID LIBID_eiffel_compiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -451,7 +451,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::excluded(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_200 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_204 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -570,7 +570,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::has_paren
 STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::subclusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterProp * * return_value )
 
 /*-----------------------------------------------------------
-	List of subclusters (list of IEiffelClusterProperties*).
+	List subclusters (list of IEiffelClusterProperties*).
 -----------------------------------------------------------*/
 {
 	ECATCH;
@@ -586,7 +586,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::subcluste
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_179 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_183 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -851,7 +851,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 	switch (dispID)
 	{
 		
-		case 1610743824:
+		case 10056:
 			{
 				if (pDispParams->cArgs != 5)
 					return DISP_E_BADPARAMCOUNT;
@@ -961,7 +961,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 1610743825:
+		case 10057:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -990,14 +990,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 13;
-					pVarResult->punkVal = result;
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
 				}
 					
 			}
 			break;
 
-		case 1610743826:
+		case 10058:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1055,7 +1055,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 213:
+		case 10059:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1113,7 +1113,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 24:
+		case 10065:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -1149,7 +1149,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 29:
+		case 10063:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1157,7 +1157,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_invariant_by_default (&result);
+				hr = has_children (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1186,15 +1186,15 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 30:
+		case 10064:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
 
-				VARIANT_BOOL result = 0;
+				ULONG result = 0;
 				
-				hr = evaluate_check_by_default (&result);
+				hr = cluster_id (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1216,534 +1216,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
+					pVarResult->vt = 19;
+					pVarResult->ulVal = result;
 				}
 					
 			}
 			break;
 
-		case 31:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_loop_by_default (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			break;
-
-		case 32:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_ensure_by_default (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			break;
-
-		case 33:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_require_by_default (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			break;
-
-		case 34:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = use_system_default (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_use_system_default ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 35:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = all (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_all ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 36:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = is_library (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_is_library ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 37:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = override (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {11};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 11)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
-				
-				hr = set_override ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 1610743830:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				ecom_eiffel_compiler::IEnumClusterProp * result = 0;
-				
-				hr = subclusters (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 13;
-					pVarResult->punkVal = result;
-				}
-					
-			}
-			break;
-
-		case 20:
+		case 10066:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1751,7 +1231,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				BSTR result = 0;
 				
-				hr = name (&result);
+				hr = expanded_cluster_path (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1780,100 +1260,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 21:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = cluster_path (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
-				}
-					
-			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				
-				hr = set_cluster_path ( arg_0);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 22:
+		case 10067:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1966,7 +1353,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 23:
+		case 10045:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1974,7 +1361,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				BSTR result = 0;
 				
-				hr = expanded_cluster_path (&result);
+				hr = name (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2003,15 +1390,15 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 25:
+		case 10046:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
 
-				ULONG result = 0;
+				BSTR result = 0;
 				
-				hr = cluster_id (&result);
+				hr = cluster_path (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2033,14 +1420,70 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 19;
-					pVarResult->ulVal = result;
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
 				}
 					
 			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				hr = set_cluster_path ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
 			break;
 
-		case 26:
+		case 10047:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -2048,7 +1491,379 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				VARIANT_BOOL result = 0;
 				
-				hr = has_children (&result);
+				hr = override (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {11};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
+				
+				hr = set_override ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 10048:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = is_library (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {11};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
+				
+				hr = set_is_library ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 10049:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = all (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {11};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
+				
+				hr = set_all ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 10050:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = use_system_default (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			{
+				if (pDispParams->cArgs != 1)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {11};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 11)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 11);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
+				
+				hr = set_use_system_default ( arg_0);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 10051:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = evaluate_require_by_default (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2077,7 +1892,192 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 27:
+		case 10052:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = evaluate_ensure_by_default (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			break;
+
+		case 10053:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = evaluate_check_by_default (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			break;
+
+		case 10054:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = evaluate_loop_by_default (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			break;
+
+		case 10055:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = evaluate_invariant_by_default (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			break;
+
+		case 10060:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = parent_name (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
+			break;
+
+		case 10061:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -2114,15 +2114,15 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 28:
+		case 10062:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
 
-				BSTR result = 0;
+				ecom_eiffel_compiler::IEnumClusterProp * result = 0;
 				
-				hr = parent_name (&result);
+				hr = subclusters (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2144,8 +2144,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
 				}
 					
 			}

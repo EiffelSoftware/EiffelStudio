@@ -5,9 +5,9 @@ Implemented `IEiffelSystemAssemblies' Interface.
 #include "ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_stub.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelSystemAssemblies_ = {0x85662941,0x227e,0x42cb,{0xbc,0x91,0xf4,0xc1,0x7d,0x41,0x07,0xe2}};
+static const IID IID_IEiffelSystemAssemblies_ = {0x9cf82ea0,0xb5f9,0x4110,{0xa7,0x58,0x24,0x1a,0x3b,0xc9,0x5d,0x52}};
 
-static const IID LIBID_eiffel_compiler_ = {0xa81ca1a9,0x3eef,0x4e47,{0xbe,0xae,0xc1,0x63,0x25,0xee,0xfa,0x3f}};
+static const IID LIBID_eiffel_compiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -203,7 +203,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assembly_p
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_134 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_139 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -501,7 +501,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assemblies
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_41 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_46 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -611,7 +611,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 	switch (dispID)
 	{
 		
-		case 1610743808:
+		case 10026:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -639,7 +639,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743809:
+		case 10034:
 			{
 				if (pDispParams->cArgs != 6)
 					return DISP_E_BADPARAMCOUNT;
@@ -762,7 +762,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743810:
+		case 10035:
 			{
 				if (pDispParams->cArgs != 3)
 					return DISP_E_BADPARAMCOUNT;
@@ -846,7 +846,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743811:
+		case 10036:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -904,7 +904,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743812:
+		case 10037:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -970,7 +970,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743813:
+		case 10038:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1036,7 +1036,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743814:
+		case 10039:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1102,7 +1102,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743815:
+		case 10040:
 			{
 				if (pDispParams->cArgs != 4)
 					return DISP_E_BADPARAMCOUNT;
@@ -1207,7 +1207,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743816:
+		case 10041:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1273,7 +1273,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743817:
+		case 10042:
 			{
 				if (pDispParams->cArgs != 4)
 					return DISP_E_BADPARAMCOUNT;
@@ -1378,7 +1378,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743818:
+		case 10043:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1444,7 +1444,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743819:
+		case 10044:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1510,7 +1510,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743820:
+		case 10012:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1540,8 +1540,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 13;
-					pVarResult->punkVal = result;
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
 				}
 					
 			}

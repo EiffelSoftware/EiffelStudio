@@ -12,6 +12,7 @@ ecom_eiffel_compiler_ieiffelclusterproperties_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelcompilerevents_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelcompiler_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.obj \
+ecom_eiffel_compiler_ieiffelexception_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub.obj \
@@ -39,6 +40,7 @@ wecom_eiffel_compiler_ieiffelclusterproperties_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelcompilerevents_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelcompiler_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.obj \
+wecom_eiffel_compiler_ieiffelexception_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub.obj \
@@ -99,6 +101,9 @@ wecom_eiffel_compiler_ieiffelcompiler_impl_stub.obj: ecom_eiffel_compiler_ieiffe
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.obj: ecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_eiffel_compiler_ieiffelexception_impl_stub.obj: ecom_eiffel_compiler_ieiffelexception_impl_stub.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub.obj: ecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub.cpp

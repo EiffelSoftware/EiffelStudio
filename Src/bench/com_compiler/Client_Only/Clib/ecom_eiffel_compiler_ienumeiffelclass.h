@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Class Enumeration.  Help file: 
+Eiffel Class Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMEIFFELCLASS_H__
@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumEiffelClass_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumEiffelClass : public IUnknown
+class IEnumEiffelClass : public IDispatch
 {
 public:
 	IEnumEiffelClass () {};

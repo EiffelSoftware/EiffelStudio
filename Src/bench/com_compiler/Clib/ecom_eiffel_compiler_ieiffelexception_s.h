@@ -43,7 +43,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelException_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelException : public IUnknown
+class IEiffelException : public IDispatch
 {
 public:
 	IEiffelException () {};

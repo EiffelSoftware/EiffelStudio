@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
- Help file: 
+Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_CEIFFELPROJECT_H__
@@ -21,6 +21,8 @@ class CEiffelProject;
 #include "eif_eiffel.h"
 
 #include "ecom_eiffel_compiler_IEiffelProject.h"
+
+#include "ecom_eiffel_compiler_IEiffelException.h"
 
 #include "ecom_eiffel_compiler_IEiffelCompiler.h"
 
@@ -50,15 +52,15 @@ public:
 	virtual ~CEiffelProject ();
 
 	/*-----------------------------------------------------------
-	Retrieve project.
+	Retrieve Eiffel Project
 	-----------------------------------------------------------*/
-	void ccom_retrieve_project(  /* [in] */ EIF_OBJECT a_project_file_name );
+	void ccom_retrieve_eiffel_project(  /* [in] */ EIF_OBJECT a_project_file_name );
 
 
 	/*-----------------------------------------------------------
-	Create new project.
+	Create new Eiffel project.
 	-----------------------------------------------------------*/
-	void ccom_create_project(  /* [in] */ EIF_OBJECT an_ace_file_name,  /* [in] */ EIF_OBJECT project_directory_path );
+	void ccom_create_eiffel_project(  /* [in] */ EIF_OBJECT a_ace_file_name,  /* [in] */ EIF_OBJECT a_project_directory_path );
 
 
 	/*-----------------------------------------------------------
@@ -86,9 +88,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Last error message.
+	Last exception raised
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_last_error_message(  );
+	EIF_REFERENCE ccom_last_exception(  );
 
 
 	/*-----------------------------------------------------------

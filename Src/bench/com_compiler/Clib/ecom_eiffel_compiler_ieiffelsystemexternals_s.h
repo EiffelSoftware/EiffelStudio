@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelSystemExternals_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelSystemExternals : public IUnknown
+class IEiffelSystemExternals : public IDispatch
 {
 public:
 	IEiffelSystemExternals () {};

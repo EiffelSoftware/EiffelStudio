@@ -24,6 +24,7 @@ ecom_eiffel_compiler::CEiffelCompletionInfo::CEiffelCompletionInfo( EIF_TYPE_ID 
 	eiffel_procedure = eif_procedure ("make_from_pointer", type_id);
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);
+	pTypeInfo = 0;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -33,6 +34,7 @@ ecom_eiffel_compiler::CEiffelCompletionInfo::CEiffelCompletionInfo( EIF_OBJECT e
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
+	pTypeInfo = 0;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -43,6 +45,8 @@ ecom_eiffel_compiler::CEiffelCompletionInfo::~CEiffelCompletionInfo()
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
+	if (pTypeInfo)
+		pTypeInfo->Release ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -138,17 +142,17 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_features(  /* [
 	EIF_OBJECT tmp_return_names = NULL;
 	if (return_names != NULL)
 	{
-		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_238 (return_names));
+		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_231 (return_names));
 	}
 	EIF_OBJECT tmp_return_signatures = NULL;
 	if (return_signatures != NULL)
 	{
-		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_239 (return_signatures));
+		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_232 (return_signatures));
 	}
 	EIF_OBJECT tmp_return_image_indexes = NULL;
 	if (return_image_indexes != NULL)
 	{
-		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_240 (return_image_indexes));
+		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_233 (return_image_indexes));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
@@ -296,6 +300,112 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::initialize_feature(  /
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo )
+
+/*-----------------------------------------------------------
+	Get type info
+-----------------------------------------------------------*/
+{
+	if ((itinfo != 0) || (pptinfo == NULL))
+		return E_INVALIDARG;
+	*pptinfo = NULL;
+	if (pTypeInfo == 0)
+	{
+		HRESULT tmp_hr = 0;
+		ITypeLib *pTypeLib = 0;
+		tmp_hr = LoadRegTypeLib (LIBID_eiffel_compiler_, 0, 0, 0, &pTypeLib);
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelCompletionInfo_, &pTypeInfo);
+		pTypeLib->Release ();
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+	}
+	(*pptinfo = pTypeInfo)->AddRef ();
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::GetTypeInfoCount( unsigned int * pctinfo )
+
+/*-----------------------------------------------------------
+	Get type info count
+-----------------------------------------------------------*/
+{
+	if (pctinfo == NULL)
+		return E_NOTIMPL;
+	*pctinfo = 1;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid )
+
+/*-----------------------------------------------------------
+	IDs of function names 'rgszNames'
+-----------------------------------------------------------*/
+{
+	if (pTypeInfo == 0)
+	{
+		HRESULT tmp_hr = 0;
+		ITypeLib *pTypeLib = 0;
+		tmp_hr = LoadRegTypeLib (LIBID_eiffel_compiler_, 0, 0, 0, &pTypeLib);
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelCompletionInfo_, &pTypeInfo);
+		pTypeLib->Release ();
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+	}
+	return pTypeInfo->GetIDsOfNames (rgszNames, cNames, rgdispid);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr )
+
+/*-----------------------------------------------------------
+	Invoke function.
+-----------------------------------------------------------*/
+{
+	HRESULT hr = 0;
+	int i = 0;
+
+	unsigned int uArgErr;
+	if (wFlags & ~(DISPATCH_METHOD | DISPATCH_PROPERTYGET | DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+		return ResultFromScode (E_INVALIDARG);
+
+	if (puArgErr == NULL)
+		puArgErr = &uArgErr;
+
+	VARIANTARG * rgvarg = pDispParams->rgvarg;
+	DISPID * rgdispidNamedArgs = pDispParams->rgdispidNamedArgs;
+	unsigned int cArgs = pDispParams->cArgs;
+	unsigned int cNamedArgs = pDispParams->cNamedArgs;
+	VARIANTARG ** tmp_value = NULL;
+
+	if (pExcepInfo != NULL)
+	{
+		pExcepInfo->wCode = 0;
+		pExcepInfo->wReserved = 0;
+		pExcepInfo->bstrSource = NULL;
+		pExcepInfo->bstrDescription = NULL;
+		pExcepInfo->bstrHelpFile = NULL;
+		pExcepInfo->dwHelpContext = 0;
+		pExcepInfo->pvReserved = NULL;
+		pExcepInfo->pfnDeferredFillIn = NULL;
+		pExcepInfo->scode = 0;
+	}
+	
+	switch (dispID)
+	{
+		
+		default:
+			return DISP_E_MEMBERNOTFOUND;
+	}
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP_(ULONG) ecom_eiffel_compiler::CEiffelCompletionInfo::Release()
 
 /*-----------------------------------------------------------
@@ -306,6 +416,11 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::CEiffelCompletionInfo::Release()
 	LONG res = InterlockedDecrement (&ref_count);
 	if (res  ==  0)
 	{
+		if (pTypeInfo !=NULL)
+		{
+			pTypeInfo->Release ();
+			pTypeInfo = NULL;
+		}
 		delete this;
 	}
 	return res;
@@ -335,6 +450,8 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::QueryInterface( REFIID
 		*ppv = static_cast<IProvideClassInfo2*>(this);
 	else if (riid == IID_IProvideClassInfo2)
 		*ppv = static_cast<IProvideClassInfo2*>(this);
+	else if (riid == IID_IDispatch)
+		*ppv = static_cast<ecom_eiffel_compiler::IEiffelCompletionInfo*>(this);
 	else if (riid == IID_IEiffelCompletionInfo_)
 		*ppv = static_cast<ecom_eiffel_compiler::IEiffelCompletionInfo*>(this);
 	else

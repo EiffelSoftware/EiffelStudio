@@ -103,111 +103,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Compilation type.
+	Namespace generation for cluster
 	-----------------------------------------------------------*/
-	EIF_INTEGER ccom_compilation_type(  );
+	EIF_INTEGER ccom_namespace_generation(  );
 
 
 	/*-----------------------------------------------------------
-	Compilation type.
+	Namespace generation for cluster
 	-----------------------------------------------------------*/
-	void ccom_set_compilation_type(  /* [in] */ EIF_INTEGER return_value );
-
-
-	/*-----------------------------------------------------------
-	Is console application?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_console_application(  );
-
-
-	/*-----------------------------------------------------------
-	Is console application?
-	-----------------------------------------------------------*/
-	void ccom_set_console_application(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
-	Should preconditions be evaluated?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_evaluate_require(  );
-
-
-	/*-----------------------------------------------------------
-	Should preconditions be evaluated?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_require(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
-	Should postconditions be evaluated?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_evaluate_ensure(  );
-
-
-	/*-----------------------------------------------------------
-	Should postconditions be evaluated?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_ensure(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
-	Should check assertions be evaluated?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_evaluate_check(  );
-
-
-	/*-----------------------------------------------------------
-	Should check assertions be evaluated?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_check(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
-	Should loop assertions be evaluated?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_evaluate_loop(  );
-
-
-	/*-----------------------------------------------------------
-	Should loop assertions be evaluated?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_loop(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
-	Should class invariants be evaluated?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_evaluate_invariant(  );
-
-
-	/*-----------------------------------------------------------
-	Should class invariants be evaluated?
-	-----------------------------------------------------------*/
-	void ccom_set_evaluate_invariant(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
-	Generate debug info?
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_debug_info(  );
-
-
-	/*-----------------------------------------------------------
-	Generate debug info?
-	-----------------------------------------------------------*/
-	void ccom_set_debug_info(  /* [in] */ EIF_BOOLEAN return_value );
-
-
-	/*-----------------------------------------------------------
-	Project Clusters.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_clusters(  );
-
-
-	/*-----------------------------------------------------------
-	Externals.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_externals(  );
+	void ccom_set_namespace_generation(  /* [in] */ EIF_INTEGER penu_cluster_namespace_generation );
 
 
 	/*-----------------------------------------------------------
@@ -223,21 +127,81 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Project type
+	-----------------------------------------------------------*/
+	EIF_INTEGER ccom_project_type(  );
+
+
+	/*-----------------------------------------------------------
+	Project type
+	-----------------------------------------------------------*/
+	void ccom_set_project_type(  /* [in] */ EIF_INTEGER penum_project_type );
+
+
+	/*-----------------------------------------------------------
+	.NET Naming convention
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_dot_net_naming_convention(  );
+
+
+	/*-----------------------------------------------------------
+	.NET Naming convention
+	-----------------------------------------------------------*/
+	void ccom_set_dot_net_naming_convention(  /* [in] */ EIF_BOOLEAN pvb_naming_convention );
+
+
+	/*-----------------------------------------------------------
+	Generate debug info?
+	-----------------------------------------------------------*/
+	EIF_BOOLEAN ccom_generate_debug_info(  );
+
+
+	/*-----------------------------------------------------------
+	Generate debug info?
+	-----------------------------------------------------------*/
+	void ccom_set_generate_debug_info(  /* [in] */ EIF_BOOLEAN return_value );
+
+
+	/*-----------------------------------------------------------
+	Precompiled file.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_precompiled_library(  );
+
+
+	/*-----------------------------------------------------------
+	Precompiled file.
+	-----------------------------------------------------------*/
+	void ccom_set_precompiled_library(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
+	Project assertions
+	-----------------------------------------------------------*/
+	EIF_INTEGER ccom_assertions(  );
+
+
+	/*-----------------------------------------------------------
+	Project assertions
+	-----------------------------------------------------------*/
+	void ccom_set_assertions(  /* [in] */ EIF_INTEGER p_assertions );
+
+
+	/*-----------------------------------------------------------
+	Project Clusters.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_clusters(  );
+
+
+	/*-----------------------------------------------------------
+	Externals.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_externals(  );
+
+
+	/*-----------------------------------------------------------
 	Assemblies.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_assemblies(  );
-
-
-	/*-----------------------------------------------------------
-	Precompiled file.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_precompiled(  );
-
-
-	/*-----------------------------------------------------------
-	Precompiled file.
-	-----------------------------------------------------------*/
-	void ccom_set_precompiled(  /* [in] */ EIF_OBJECT return_value );
 
 
 	/*-----------------------------------------------------------
@@ -325,6 +289,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_culture(  );
+
+
+	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	void ccom_set_culture(  /* [in] */ EIF_OBJECT return_value );
+
+
+	/*-----------------------------------------------------------
 	Asembly signing key file name.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_key_file_name(  );
@@ -337,15 +313,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Asembly culture.
+	Project working directory
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_culture(  );
+	EIF_REFERENCE ccom_working_directory(  );
 
 
 	/*-----------------------------------------------------------
-	Asembly culture.
+	Project working directory
 	-----------------------------------------------------------*/
-	void ccom_set_culture(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_working_directory(  /* [in] */ EIF_OBJECT pbstr_working_directory );
 
 
 	/*-----------------------------------------------------------

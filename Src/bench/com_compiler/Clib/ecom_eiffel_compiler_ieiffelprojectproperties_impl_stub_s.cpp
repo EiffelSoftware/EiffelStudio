@@ -1856,8 +1856,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 13;
-					pVarResult->punkVal = result;
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
 				}
 					
 			}

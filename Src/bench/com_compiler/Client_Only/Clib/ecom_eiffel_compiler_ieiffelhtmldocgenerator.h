@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Project HTML Documentation Generator.  Help file: 
+Eiffel Project HTML Documentation Generator. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELHTMLDOCGENERATOR_H__
@@ -43,7 +43,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelHTMLDocGenerator_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelHTMLDocGenerator : public IUnknown
+class IEiffelHTMLDocGenerator : public IDispatch
 {
 public:
 	IEiffelHTMLDocGenerator () {};

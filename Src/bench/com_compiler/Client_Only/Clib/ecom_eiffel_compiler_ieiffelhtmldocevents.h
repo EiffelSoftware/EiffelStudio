@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Callback interface for HTML Documentation Generator.  Help file: 
+Callback interface for HTML Documentation Generator. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELHTMLDOCEVENTS_H__
@@ -33,7 +33,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelHTMLDocEvents_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelHTMLDocEvents : public IUnknown
+class IEiffelHTMLDocEvents : public IDispatch
 {
 public:
 	IEiffelHTMLDocEvents () {};

@@ -103,7 +103,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelSystemBrowser_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelSystemBrowser : public IUnknown
+class IEiffelSystemBrowser : public IDispatch
 {
 public:
 	IEiffelSystemBrowser () {};

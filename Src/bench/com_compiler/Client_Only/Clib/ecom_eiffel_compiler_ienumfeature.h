@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Feature Enumeration.  Help file: 
+Eiffel Feature Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMFEATURE_H__
@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumFeature_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumFeature : public IUnknown
+class IEnumFeature : public IDispatch
 {
 public:
 	IEnumFeature () {};

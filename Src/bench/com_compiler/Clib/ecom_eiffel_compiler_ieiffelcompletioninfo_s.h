@@ -43,7 +43,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelCompletionInfo_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelCompletionInfo : public IUnknown
+class IEiffelCompletionInfo : public IDispatch
 {
 public:
 	IEiffelCompletionInfo () {};

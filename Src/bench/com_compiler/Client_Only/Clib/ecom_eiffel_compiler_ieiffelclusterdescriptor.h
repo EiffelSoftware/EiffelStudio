@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Cluster Descriptor.  Help file: 
+Eiffel Cluster Descriptor. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELCLUSTERDESCRIPTOR_H__
@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelClusterDescriptor_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelClusterDescriptor : public IUnknown
+class IEiffelClusterDescriptor : public IDispatch
 {
 public:
 	IEiffelClusterDescriptor () {};

@@ -43,7 +43,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelHTMLDocGenerator_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelHTMLDocGenerator : public IUnknown
+class IEiffelHTMLDocGenerator : public IDispatch
 {
 public:
 	IEiffelHTMLDocGenerator () {};

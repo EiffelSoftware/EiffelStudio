@@ -33,7 +33,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelHTMLDocEvents_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelHTMLDocEvents : public IUnknown
+class IEiffelHTMLDocEvents : public IDispatch
 {
 public:
 	IEiffelHTMLDocEvents () {};

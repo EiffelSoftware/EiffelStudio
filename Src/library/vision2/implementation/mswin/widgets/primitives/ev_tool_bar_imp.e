@@ -106,7 +106,11 @@ feature {NONE} -- Initialization
 			ctrl: EV_INTERNAL_TOOL_BAR_IMP
 		do
 			create ctrl.make_with_toolbar (default_parent, Current)
-			wel_make (ctrl, 0)	
+			wel_make (ctrl, 0)
+				-- For some reasons most of the time on Windows XP with a manifest file
+				-- Windows set the transparent flag, and since we don't want it, we need
+				-- to unset it.
+			set_style (style & tbstyle_transparent.bit_not)
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_ITEM_LIST_IMP}
 			create radio_group.make

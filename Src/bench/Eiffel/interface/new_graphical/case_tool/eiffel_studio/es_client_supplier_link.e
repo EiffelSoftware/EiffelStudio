@@ -90,41 +90,6 @@ feature -- Access
 	
 	supplier: ES_CLASS
 			-- Supplier of the link.
-	
---	full_name (a_feature: FEATURE_AS): STRING is
---			-- Full name of `a_feature' (i.e. "feature_name, another_name: LIST [FOO, BAR [FOO2]]")
---		local
---			l_body: BODY_AS
---			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
---			str: STRING
---		do
---			l_feature_names := a_feature.feature_names
---			if l_feature_names.count = 1 then
---				Result := a_feature.feature_name.twin
---			else
---				str := l_feature_names.first.visual_name.twin
---				from
---					l_feature_names.start
---					l_feature_names.forth
---				until
---					l_feature_names.after
---				loop
---					str.append (", " + l_feature_names.item.visual_name)
---					l_feature_names.forth
---				end
---				Result := str
---			end
---			
---			if a_feature.body.content /= Void and then a_feature.is_deferred then
---				Result.append ("*")
---			end
---			Result.append (": ")
---			l_body := a_feature.body
---			if l_body /= Void then
---				Result.append (suppliers_name (l_body.type))
---				Result.replace_substring_all ("[ ", "[")
---			end
---		end
 		
 feature -- Element change
 
@@ -159,56 +124,6 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-	
---	suppliers_name (a_type: TYPE_AS): STRING is
---			-- Try to extract as good as possible all supplier names
---			-- from `a_type'
---		local
---			ct: CLASS_TYPE_AS
---			bt: BASIC_TYPE
---			g: EIFFEL_LIST [TYPE_AS]
---		do
---			Result := ""
---			ct ?= a_type
---			if ct /= Void then
---				Result.append (supplier_name (class_i_by_name (ct.class_name)))
---				g := ct.generics
---				if g /= Void then
---					Result.append (" [ ")
---					from
---						g.start
---					until
---						g.after
---					loop
---						if not g.isfirst then
---							Result.append (", ")
---						end
---						Result.append (suppliers_name (g.item))
---						g.forth
---					end
---					Result.append ("]")
---				end
---			else
---				bt ?= a_type
---				if bt /= Void then
---					Result.append (supplier_name (bt.actual_type.associated_class.lace_class))
---				end
---			end
---		ensure
---			Result_not_void: Result /= Void
---		end
---			
---	supplier_name (sup: CLASS_I): STRING is
---			-- Name of `sup'.
---		do
---			if sup /= Void then
---				Result := sup.name.twin
---			else
---				Result := ""
---			end
---		ensure
---			Result_not_void: Result /= Void
---		end
 		
 	is_expanded (a_feature: FEATURE_AS): BOOLEAN is
 			-- Is `a_feature' declared `expanded'?

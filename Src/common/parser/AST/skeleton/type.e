@@ -56,6 +56,7 @@ feature
 
 	same_as (other: TYPE): BOOLEAN is
 			-- Is `other' the same as Current ?
+			--|Note: implemented only for descendants of TYPE_A
 		do
 			-- Do nothing: implemented only for descendants of TYPE_A
 		end;

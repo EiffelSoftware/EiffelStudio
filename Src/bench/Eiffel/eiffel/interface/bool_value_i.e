@@ -56,9 +56,9 @@ feature
 			!VQMC1!Result;
 		end;
 
-	trace is
+	dump: STRING is
 		do
-			io.error.putbool (bool_val);
+			Result := bool_val.out			
 		end;
 
 end

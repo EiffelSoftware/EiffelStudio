@@ -4,9 +4,18 @@ class EXPLAIN_W
 inherit
 
 	BAR_AND_TEXT
+		rename
+			make as normal_create
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, set_default_position
+		end;
+	BAR_AND_TEXT
+		redefine
+			text_window, build_format_bar, hole,
+			tool_name, set_default_position, make
+		select
+			make
 		end
 
 creation
@@ -14,6 +23,13 @@ creation
 	make
 
 feature {NONE}
+
+	make (a_screen: SCREEN) is
+			-- Create a explain window tool
+		do
+			normal_create (a_screen);
+			text_window.set_read_only
+		end;
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.

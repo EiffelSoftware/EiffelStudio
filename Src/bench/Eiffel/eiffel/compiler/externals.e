@@ -71,6 +71,12 @@ feature
 				put (info, external_name);
 			end;
 			info.add_occurence;
+debug
+	io.error.putstring ("After add_occurence (");
+	io.error.putstring (external_name);
+	io.error.putstring (")%N");
+	trace
+end;
 		end;
 
 	remove_occurence (external_name: STRING) is
@@ -86,6 +92,12 @@ feature
 			if info.occurence /= 0 then
 				info.remove_occurence;
 			end;
+debug
+	io.error.putstring ("After remove_occurence (");
+	io.error.putstring (external_name);
+	io.error.putstring (")%N");
+	trace
+end;
 		end;
 
 	freeze is
@@ -96,6 +108,10 @@ feature
 			external_name: STRING;
 			info: EXTERNAL_INFO;
 		do
+debug
+	io.error.putstring ("Freezing externals%N");
+	trace
+end;
 			from
 				available_keys := current_keys;
 				i := 1;

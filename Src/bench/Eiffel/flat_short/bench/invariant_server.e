@@ -14,6 +14,7 @@ feature
 			target_class: CLASS_C;
 		do
 			if not empty then
+				ctxt.set_in_assertion;
 				ctxt.begin;
 				ctxt.next_line;
 				ctxt.put_keyword ("invariant");
@@ -51,6 +52,7 @@ feature
 				else
 					ctxt.rollback
 				end
+				ctxt.set_not_in_assertion;
 			end;
 		end;
 

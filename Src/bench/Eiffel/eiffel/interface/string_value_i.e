@@ -56,9 +56,12 @@ feature
 			!VQMC5!Result;
 		end;
 
-	trace is
+	dump: STRING is
 		do
-			io.error.putstring (str_val);
+			!! Result.make (str_val.count + 2);
+			Result.append ("%"");
+			Result.append (str_val);
+			Result.append ("%"");
 		end;
 
 end

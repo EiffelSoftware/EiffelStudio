@@ -139,6 +139,16 @@ feature -- Syntax errors
 			raise_error;
 		end;
 
+	make_too_many_generics is
+			-- Build an error message for too many generics.
+		local
+			too_many_generics: TOO_MANY_GENERICS;
+		do
+			!!too_many_generics.init;
+			insert_error (too_many_generics);
+			raise_error;
+		end;
+
 	make_string_extension is
 			-- Build an error message for a bad string extension.
 		local
@@ -199,7 +209,8 @@ feature -- Syntax errors
 									$make_bad_character,
 									$make_string_empty,
 									$make_id_too_long,
-									$make_basic_generic_type);
+									$make_basic_generic_type,
+									$make_too_many_generics);
 		end;
 
 	wipe_out is
@@ -209,41 +220,89 @@ feature -- Syntax errors
 			warning_list.wipe_out;
 		end;
 
-feature -- Debug purpose
+feature -- Display
+
+	retried: BOOLEAN;
 
 	trace is
 		do
+			if not retried then
 debug
 error_window.put_string ("Error handler: trace%N")
 end;
-			from
-				error_list.start
-			until
-				error_list.after
-			loop
-				error_list.item.trace;
-				error_window.put_string ("%N------------------------------%N");
-				error_list.forth;
+				from
+					error_list.start
+				until
+					error_list.after
+				loop
+					display_separation_line;
+					error_window.new_line;
+					error_list.item.trace;
+					error_window.new_line;
+					error_list.forth;
+				end;
+				if not error_list.empty then
+					display_separation_line
+				end;
+			else
+				retried := False;
+				display_error_error
+			end;
+		rescue
+			if
+				Rescue_status.is_unexpected_exception
+			and then
+				not Rescue_status.fail_on_rescue
+			then
+				retried := True;
+				retry;
 			end;
 		end;
 
 	trace_warnings is
 		do
-			from
-				warning_list.start
-			until
-				warning_list.after
-			loop
-				warning_list.item.trace;
-				error_window.put_string ("%N------------------------------%N");
-				warning_list.forth;
+			if not retried then
+				from
+					warning_list.start
+				until
+					warning_list.after
+				loop
+					display_separation_line
+					error_window.new_line;
+					warning_list.item.trace;
+					error_window.new_line;
+					warning_list.forth;
+				end;
+				if not warning_list.empty and then error_list.empty then
+						-- There is no error in the list
+						-- put a separation before the next message
+					display_separation_line
+				end;
+				warning_list.wipe_out;
+			else
+				retried := False;
+				display_error_error
 			end;
-			warning_list.wipe_out;
+		rescue
+			if Rescue_status.is_unexpected_exception then
+				retried := True;
+				retry;
+			end;
+		end;
+
+	display_error_error is
+		do
+			error_window.put_string ("Exception occurred while displaying error message.%N");
+		end;
+
+	display_separation_line is
+		do
+			error_window.put_string ("-------------------------------------------------------------------------------%N");
 		end;
 
 feature {NONE} -- Externals
 
-	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8: POINTER) is
+	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8, ptr9: POINTER) is
 			-- Initialize syntac error handling C primitives.
 		external
 			"C"

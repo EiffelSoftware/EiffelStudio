@@ -39,13 +39,14 @@ feature -- Type check, byte code, dead code removal and formatter
 			end;
 		end;
 
-	format(ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		local
 			source_cl, target_cl: CLASS_C;
 		do
-			ctxt.begin;
 			if assertions /= void then
+				ctxt.begin;
+				ctxt.next_line;
 				ctxt.put_keyword (clause_name (ctxt));
 				if not ctxt.troff_format then
 					source_cl := ctxt.format.global_types.source_class;
@@ -60,17 +61,49 @@ feature -- Type check, byte code, dead code removal and formatter
 				ctxt.set_separator (";");
 				ctxt.new_line_between_tokens;
 				ctxt.continue_on_failure;
-				assertions.format (ctxt);
+				format_assertions (ctxt);
 				if ctxt.last_was_printed then
 					ctxt.set_first_assertion (false);
 					ctxt.commit;
 				else
 					ctxt.rollback;
 				end;
-			else
-				ctxt.rollback;
 			end 			
 		end;
+
+	format_assertions (ctxt: FORMAT_CONTEXT) is
+		local
+			i, l_count: INTEGER;
+			not_first: BOOLEAN
+		do
+			from
+				ctxt.begin;
+				i := 1;
+				l_count := assertions.count;
+			until
+				i > l_count 
+			loop
+				ctxt.begin;
+				if not_first then
+					ctxt.put_separator;
+				end;
+				ctxt.new_expression;
+				assertions.i_th(i).format(ctxt);
+				if ctxt.last_was_printed then
+					not_first := True
+					ctxt.commit;
+				else
+					ctxt.rollback;
+				end;
+				i := i + 1
+			end;
+			if not_first then
+				ctxt.indent_one_less;
+				ctxt.commit
+			else
+				ctxt.rollback
+			end
+		end
 
 feature	-- Replication
 

@@ -6,7 +6,7 @@ inherit
 
 	HOLE
 		redefine
-			symbol, stone_type, command_name
+			symbol, stone_type, command_name, icon_symbol
 		end
 
 creation
@@ -19,6 +19,12 @@ feature
 			-- Icon for the object tool
 		once
 			Result := bm_Object
+		end;
+
+	icon_symbol: PIXMAP is
+			-- Icon for the object tool
+		once
+			Result := bm_Object_icon
 		end;
 
 	

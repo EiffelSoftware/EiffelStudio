@@ -74,6 +74,7 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute text
 		do
 			ctxt.begin;
+			ctxt.set_insertion_point;
 			expr.format (ctxt);
 			if not ctxt.last_was_printed then
 				ctxt.rollback

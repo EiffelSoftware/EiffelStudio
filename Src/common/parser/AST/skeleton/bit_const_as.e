@@ -60,7 +60,7 @@ feature -- formatter
 		do
 			ctxt.always_succeed;
 			ctxt.put_string (value)
-				-- add B if necessary. to be checked
+			ctxt.put_string ("B");
 		end;
 
 end

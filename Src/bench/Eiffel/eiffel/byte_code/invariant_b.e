@@ -55,6 +55,8 @@ feature
 
 			byte_list.enlarge_tree;
 			byte_list.analyze;
+				--| Always mark current as used in all modes
+			context.mark_current_used;
 
 				-- Routine's name				
 			generated_file.putstring ("void ");

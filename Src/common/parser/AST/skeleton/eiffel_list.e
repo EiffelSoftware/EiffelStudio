@@ -95,7 +95,7 @@ feature -- Formatter
 			loop
 				ctxt.begin;
 				if not_first then
-					ctxt.put_separator
+					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
 				i_th(i).format(ctxt);

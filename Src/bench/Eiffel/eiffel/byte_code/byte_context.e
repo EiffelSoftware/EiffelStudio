@@ -417,9 +417,11 @@ feature
 
 	generate_body_label is
 			-- Generate label "body"
+			--|Note: the semi-colon is added, otherwise C compilers
+			--|complain when there are no instructions after the label.
 		do
 			generated_file.exdent;
-			generated_file.putstring ("body:");
+			generated_file.putstring ("body:;");
 			generated_file.new_line;
 			generated_file.indent;
 		end;

@@ -30,6 +30,7 @@ feature
 					compile;
 					terminate_project;
 					print_tail;
+					prompt_finish_freezing (False)
 				end;
 			end
 		end;

@@ -67,6 +67,14 @@ feature
 
 	signature: STRING is do Result := code end;
 
+	icon_name: STRING is
+		do
+			Result := code;
+			if Result = Void then
+				!!Result.make (0)
+			end;
+		end;
+
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
 			-- No

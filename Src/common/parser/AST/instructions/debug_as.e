@@ -101,6 +101,7 @@ feature -- Formatter
 			end;
 			if compound /= void then
 				ctxt.indent_one_more;
+				ctxt.next_line;
 				ctxt.set_separator(";");
 				ctxt.new_line_between_tokens;
 				compound.format (ctxt);

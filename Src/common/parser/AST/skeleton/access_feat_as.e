@@ -47,6 +47,7 @@ feature -- Type check, byte code and dead code removal
 			veen: VEEN;
 		do
 			id_type := access_type;
+			Error_handler.checksum;
 			if id_type = Void then
 					-- Undeclared identifier
 				!!veen;
@@ -356,7 +357,7 @@ feature -- Type check, byte code and dead code removal
 			loop
 				like_arg ?= args.i_th (i);
 				if like_arg /= Void then
-					arg_pos := pos - like_arg.argument_position + 1;
+					arg_pos := pos - like_arg.position + 1;
 						--| Retrieve type in which like_argument is
 						--| referring to.
 					Attachments.go_i_th (arg_pos);

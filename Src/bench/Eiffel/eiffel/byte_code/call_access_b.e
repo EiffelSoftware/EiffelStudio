@@ -84,6 +84,15 @@ feature
 					associated_class :=
 								basic_type.associated_reference.associated_class;
 					feat_tbl := associated_class.feature_table;
+debug ("BYTE_CODE");
+io.error.putstring ("Associated class: ");
+io.error.putstring (associated_class.class_name);
+io.error.putstring (", feature name: ");
+io.error.putstring (feature_name);
+io.error.putstring ("%NFEATURE_TABLE: ");
+feat_tbl.trace;
+io.error.new_line;
+end;
 					real_feat_id := feat_tbl.item (feature_name).feature_id;
 					if parameters /= Void then
 						ba.append (Bc_rotate);

@@ -258,7 +258,7 @@ feature {NONE} -- I/O
 		local
 			str: STRING
 		do
-			io.putstring ("%N%
+			io.error.putstring ("%N%
 				%Press <Return> to resume compilation or <Q> to quit%N");
 			wait_for_return;
 			str := io.laststring.duplicate;
@@ -317,6 +317,17 @@ feature {NONE} -- I/O
 			if last_input.empty then
 				get_feature_name
 			end;
+		end;
+
+	prompt_finish_freezing (finalized_dir: BOOLEAN) is
+		do
+			io.error.putstring ("You must now run %"finish_freezing%" in:%N%T");
+			if finalized_dir then
+				io.error.putstring (Final_generation_path)	
+			else
+				io.error.putstring (Workbench_generation_path)	
+			end;
+			io.error.new_line;
 		end;
 
 feature -- Termination
@@ -386,7 +397,7 @@ feature -- Input/Output
 
 	print_tail is
 		do
-			io.putstring ("System recompiled.%N")
+			io.error.putstring ("System recompiled.%N")
 		end;
 
 feature -- Execution
@@ -405,7 +416,7 @@ feature -- Execution
 			else
 				io.error.putstring ("File: ");
 				io.error.putstring (an);
-				io.error.putstring ("%Ncannot be read. Please check permissions%N");
+				io.error.putstring (" cannot be read%N");
 				lic_die (-1)
 			end
 		end;

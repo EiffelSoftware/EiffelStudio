@@ -89,14 +89,14 @@ feature -- Creation feature
 
 feature -- Commands
 
+	retried: BOOLEAN;
+
 	recompile is
 			-- Incremental recompilation
 		require
 			system_exists: system /= Void;
-		local
-			error_happened: BOOLEAN
 		do
-			if not error_happened then
+			if not retried then
 
 					-- Clear error handler
 				Error_handler.wipe_out;
@@ -105,11 +105,13 @@ feature -- Commands
 
 				System.recompile;
 
+			else
+				retried := False
 			end;
 		rescue
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
-				error_happened := True;
+				retried := True;
 				Error_handler.trace;
 				System.set_current_class (Void);
 				retry

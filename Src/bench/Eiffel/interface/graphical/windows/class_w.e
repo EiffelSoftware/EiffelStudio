@@ -16,24 +16,25 @@ inherit
 		rename
 			make as normal_create,
 			build_edit_bar as old_build_edit_bar,
-			reset as old_reset
+			reset as old_reset, 
+			execute as old_execute
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
-			create_edit_buttons, set_default_position
+			create_edit_buttons, set_default_position,
+			set_default_size
 		end;
 	BAR_AND_TEXT
-		rename
-			make as normal_create
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
 			build_edit_bar, create_edit_buttons, reset,
-			set_default_position
+			set_default_position, make, execute,
+			set_default_size
 		select
-			build_edit_bar, reset
+			build_edit_bar, reset, make, execute
 		end
 
 creation
@@ -45,7 +46,9 @@ feature
 	make (a_screen: SCREEN) is
 			-- Create a class tool.
 		do
-			normal_create (a_screen)
+			normal_create (a_screen);
+			if resize_action /= Void then end;
+			set_action ("<Configure>", Current, resize_action);
 		end;
 
 	text_window: CLASS_TEXT;
@@ -107,10 +110,29 @@ feature {NONE}
 			-- Hole caraterizing current
 			-- ha ha ha ha ha ha ha hahahaha ...
 
+	set_default_size is
+		do
+			set_size (475, 500)
+		end;
+
 	open_command: OPEN_FILE;
 	save_command: SAVE_FILE;
 	save_as_command: SAVE_AS_FILE;
 	quit_command: QUIT_FILE; 
+
+	resize_action: ANY is
+		once
+			!! Result
+		end;
+
+	execute (argument: ANY) is
+		do
+			if argument = resize_action then
+				change_class_command.update_text
+			else
+				old_execute (argument)
+			end
+		end;
 
 	create_edit_buttons is
 		do
@@ -128,6 +150,7 @@ feature {NONE}
 			!!showflat_command.make (format_bar, text_window);
 			!!showflatshort_command.make (format_bar, text_window);
 			!!showshort_command.make (format_bar, text_window);
+			!!showclick_command.make (format_bar, text_window);
 			!!showancestors_command.make (format_bar, text_window);
 			!!showdescendants_command.make (format_bar, text_window);
 			!!showclients_command.make (format_bar, text_window);
@@ -147,8 +170,10 @@ feature {NONE}
 				format_bar.attach_left_widget (showflat_command, showflatshort_command, 0);
 				format_bar.attach_top (showshort_command, 0);
 				format_bar.attach_left_widget (showflatshort_command, showshort_command, 0);
+				format_bar.attach_top (showclick_command, 0);
+				format_bar.attach_left_widget (showshort_command, showclick_command, 0);
 				format_bar.attach_top (showancestors_command, 0);
-				format_bar.attach_left_widget (showshort_command, showancestors_command, 15);
+				format_bar.attach_left_widget (showclick_command, showancestors_command, 15);
 				format_bar.attach_top (showdescendants_command, 0);
 				format_bar.attach_left_widget (showancestors_command, showdescendants_command, 0);
 				format_bar.attach_top (showclients_command, 0);
@@ -209,6 +234,7 @@ feature {NONE}
 	showattributes_command: SHOW_ATTRIBUTES;
 	showroutines_command: SHOW_ROUTINES;
 	showshort_command: SHOW_SHORT;
+	showclick_command: SHOW_CLICK_CL;
 	showdeferreds_command: SHOW_DEFERREDS;
 	showexternals_command: SHOW_EXTERNALS;
 	showonces_command: SHOW_ONCES;

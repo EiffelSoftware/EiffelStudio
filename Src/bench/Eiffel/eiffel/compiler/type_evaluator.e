@@ -36,6 +36,7 @@ feature
 				update (error_msg);
 				Error_handler.insert_error (error_msg);
 					-- Exception propagation now: cannot go on...
+				Rescue_status.set_is_error_exception (True)
 			end;
 		end;
 

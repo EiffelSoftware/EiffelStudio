@@ -6,7 +6,7 @@ class FEATURE_CLAUSE_EXPORT
 inherit
 
 	COMPARABLE
-
+	SPECIAL_AST
 
 creation
 
@@ -19,7 +19,7 @@ feature
 		do
 			reference := f.export_status;
 			!!features.make;
-			features.add (ast);
+			add (ast);
 		end;
 
 	features: SORTED_TWO_WAY_LIST [FEATURE_AS];
@@ -34,7 +34,12 @@ feature
 	
 	add (f: FEATURE_AS) is
 		do
-			features.add (f);
+			if not order_same_as_text then
+				features.add (f);
+			else
+				features.finish;
+				features.add_right (f)
+			end;
 		end;
 
 	empty: BOOLEAN is

@@ -41,11 +41,6 @@ feature
 
 	text_window: SYSTEM_TEXT;
 
-	set_quit_command (c: COMMAND; arg: ANY) is
-		do
-			quit_command.set_quit_command (c, arg);
-		end;
-
 	display is
 		do
 			if not realized then

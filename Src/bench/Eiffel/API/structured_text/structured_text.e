@@ -7,7 +7,8 @@ inherit
 			{NONE}
 				all;
 			{ANY}
-				cursor, start, forth, after, item
+				cursor, start, forth, after, item, last,
+				finish, off, go_i_th, index
 		redefine
 			add
 		select

@@ -32,6 +32,7 @@ feature
 			local_info: LOCAL_INFO;
 			a_feature: FEATURE_I;
 			vuar1: VUAR1;
+			veen2b: VEEN2B
 		do
 			a_feature := context.a_feature;
 				-- Look for an argument
@@ -52,10 +53,19 @@ feature
 				!!argument_b;
 				argument_b.set_position (argument_position);
 				context.access_line.insert (argument_b);
-
 			else
-					-- Look for a feature
-				Result := feature_access_type;
+					-- Look for a local if in a pre- or postcondition
+				local_info := context.locals.item (feature_name);
+				if local_info /= Void then
+						-- Local found
+					!!veen2B;
+					context.init_error (veen2B);
+					veen2B.set_identifier (feature_name);
+					Error_handler.insert_error (veen2B);
+				else
+						-- Look for a feature
+					Result := feature_access_type;
+				end;
 			end;
 		end;
 		

@@ -17,8 +17,6 @@ feature
 	text_window: TEXT_WINDOW;
 			-- Text window attached to Current
 
-feature {NONE}
-
 	tool_name: STRING is do end;
 			-- Name of the tool
 
@@ -35,6 +33,7 @@ feature -- Window features
 	hide is deferred end
 	set_default_position is deferred end;
 	set_default_size is deferred end;
+	set_icon_name (s: STRING) is deferred end;
 
 feature
 
@@ -56,6 +55,7 @@ feature
 			set_default_format;
 			set_default_size;
 			text_window.clear_window;
+			close_windows;
 		end;
 
 	set_default_format is
@@ -87,8 +87,8 @@ feature {NONE}
 			add_pointer_motion_action (Current, Current);
 --			add_button_click_action (3, Current, text_window);
 			add_button_press_action (3, Current, text_window);
-			add_button_press_action (1, Current, abort);
-			add_button_press_action (2, Current, abort);
+			add_button_release_action (1, Current, abort);
+			add_button_release_action (2, Current, abort);
 		end;
 
 	execute (argument: ANY) is
@@ -207,6 +207,7 @@ feature {NONE}
 	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is deferred end;
 	--add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
 	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
+	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
 	grab (cursor: SCREEN_CURSOR) is deferred end;
 	ungrab is deferred end;
 	

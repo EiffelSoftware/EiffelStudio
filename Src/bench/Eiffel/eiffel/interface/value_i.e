@@ -77,8 +77,13 @@ feature
 		deferred
 		end;
 
-	trace is
+	dump: STRING is
 		deferred
 		end;
+
+	trace is
+		do
+			io.error.putstring (dump)
+		end
 
 end

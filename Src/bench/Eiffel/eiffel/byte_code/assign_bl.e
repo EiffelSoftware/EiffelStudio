@@ -185,7 +185,7 @@ feature
 							register := target;
 						end;
 						register_for_metamorphosis := true;
-					elseif target_type.is_bit and source_type.is_bit then
+					elseif target_type.is_bit and then source_type.is_bit then
 						is_bit_assignment := true
 					else
 							-- Do not propagate something expanded as the
@@ -224,7 +224,7 @@ feature
 						source.propagate (No_register);
 						get_register;
 						register_for_metamorphosis := true;
-					elseif target_type.is_bit and source_type.is_bit then
+					elseif target_type.is_bit then
 						is_bit_assignment := true
 					else
 							-- I can't expand because of the aging tests.

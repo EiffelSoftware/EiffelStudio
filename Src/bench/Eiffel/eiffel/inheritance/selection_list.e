@@ -15,6 +15,13 @@ creation
 	
 feature 
 
+	merged_rout_id_set: ROUT_ID_SET is
+			-- Merged routine id set from features before
+			-- unselection.
+		once
+			!! Result.make (5)
+		end;
+
 	selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE): FEATURE_I is
 			-- Feautre selected in the list.
 		require
@@ -28,6 +35,7 @@ feature
 			stop: BOOLEAN;
 			id, first_body_id: INTEGER;
 		do
+			merged_rout_id_set.wipe_out;
 			if count > 1 then
 				detect_replication (parents, new_t);
 			end;
@@ -55,6 +63,8 @@ feature
 					loop
 						unselect (new_t, old_t, feat_table);
 					end;
+						--| Merge routine ids from unselected features
+					Result.rout_id_set.merge (merged_rout_id_set);
 					Result.set_is_selected (True);
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("Selected feature is: ");
@@ -62,6 +72,7 @@ debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring (Result.generator);
 	io.error.new_line;
 end;
+					merged_rout_id_set.wipe_out;
 				end;
 			end;
 		end;
@@ -193,6 +204,7 @@ end;
 			a_feature := info.a_feature;
 			first_body_id := a_feature.body_id;
 				-- New unselected feature
+			merged_rout_id_set.merge (a_feature.rout_id_set);
 			a_feature := a_feature.unselected (id);
 				-- Process new routine id set
 			!!rout_id_set.make (1);

@@ -51,10 +51,9 @@ feature
 			!VQMC4!Result;
 		end;
 
-	trace is
+	dump: STRING is
 		do
-			io.error.putstring (" (DOUBLE)");
-			io.error.putstring (real_val);
+			Result := real_val
 		end;
 
 end

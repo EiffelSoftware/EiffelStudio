@@ -23,7 +23,8 @@ feature {NONE}
 			to_write: STRING;
 			file_name: STRING;
 			aok: BOOLEAN;
-			temp: STRING
+			temp: STRING;
+			show_text: SHOW_TEXT
 		do
 			if text_window.file_name /= Void then
 				file_name := text_window.file_name;
@@ -78,7 +79,12 @@ feature {NONE}
 					new_file.putchar ('%N')
 				end; 
 				new_file.close;
-				Lace.set_file_name (file_name);
+				show_text ?= text_window.last_format;
+				if show_text /= Void then
+					--| Only set the file name if it is an Ace file
+					--| (and not the show_clusters file name).
+					Lace.set_file_name (file_name);
+				end;
 				text_window.set_changed (false)
 			end
 		end;

@@ -35,6 +35,7 @@ feature -- Type check, byte code and dead code removal
 			pos: INTEGER;
 			feature_table: FEATURE_TABLE;
 			attribute_i: ATTRIBUTE_I;
+			depend_unit: DEPEND_UNIT;
 			vwst1: VWST1;
 			vwst2: VWST2;
 		do
@@ -54,15 +55,20 @@ feature -- Type check, byte code and dead code removal
 					context.init_error (vwst2);
 					vwst2.set_attribute_name (an_id);
 					Error_handler.insert_error (vwst2);
+				else
+					attribute_i ?= feature_table.item (an_id);
+					if attribute_i = Void then
+						!!vwst1;
+						context.init_error (vwst1);
+						vwst1.set_attribute_name (an_id);
+						Error_handler.insert_error (vwst1);
+					else
+						!!depend_unit.make (context.a_class.id,
+											attribute_i.feature_id);
+						context.supplier_ids.add (depend_unit);
+					end;
 				end;
 				id_list.go (pos);
-				attribute_i ?= feature_table.item (an_id);
-				if attribute_i = Void then
-					!!vwst1;
-					context.init_error (vwst1);
-					vwst1.set_attribute_name (an_id);
-					Error_handler.insert_error (vwst1);
-				end;
 				id_list.forth;
 			end;
 			context.put (Strip_type);

@@ -174,6 +174,8 @@ feature
 			nested_b: NESTED_B;
 			a_access_expr: ACCESS_EXPR_B;
 			param: BYTE_LIST [EXPR_B];
+			--p: PARAMETER_B;
+			--param: BYTE_LIST [PARAMETER_B];
 		do
 			if not is_built_in then
 					-- Change this node into a nested call
@@ -184,6 +186,22 @@ feature
 				nested_b.set_target (a_access_expr);
 				!!param.make (1);
 				param.put_i_th (right, 1);
+
+-- FIXME PARAMETER_B takes care of the cast if needed
+--				!!p;
+--				p.set_expression (right);
+--debug
+--io.error.putstring (generator);
+--io.error.putstring (" BINARY ENLARGED:%NRight:");
+--io.error.putstring (right.out);
+--io.error.new_line;
+--io.error.putstring ("Expected type: ");
+--a_access_expr.context_type.trace;
+--io.error.putstring ("end display%N");
+--end;
+--				p.set_attachment_type (a_access_expr.context_type);
+--				param.put_i_th (p, 1);
+
 				access.set_parameters (param);
 				access.set_parent (nested_b);
 				nested_b.set_message (access);
@@ -231,6 +249,8 @@ feature -- Byte code generation
 			param: BYTE_LIST [EXPR_B];
 			Nested: NESTED_B;
 			Access_expr: ACCESS_EXPR_B
+			--p: PARAMETER_B;
+			--param: BYTE_LIST [PARAMETER_B];
 		do
 				-- Access on expression
 			!! Access_expr;
@@ -247,6 +267,10 @@ feature -- Byte code generation
 			Access_expr.set_expr (left);
 			!!param.make (1);
 			param.put_i_th (right, 1);
+			--!!p;
+			--p.set_expression (right);
+			--p.set_attachment_type (Access_expr.context_type);
+			--param.put_i_th (p, 1);
 			access.set_parameters (param);
 				-- Byte code generation on a nested call
 			Nested.make_byte_code (ba);

@@ -362,6 +362,10 @@ feature -- Type check, byte code and dead code removal
 						else
 							context_locals.put (local_info, local_name);
 						end;
+							-- We do NOT want to update the type in the instantiator
+							-- if there is an error!!!! (Xavier)
+						Error_handler.checksum;
+
 							-- Update instantiator for changed class
 						if track_local then
 							gen_type ?= solved_type.actual_type;

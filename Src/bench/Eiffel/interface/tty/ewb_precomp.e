@@ -23,7 +23,8 @@ feature
 						compile;
 						System.save_precompilation_info;
 						terminate_project;
-						print_tail
+						print_tail;
+						prompt_finish_freezing (False)
 					end;
 				else
 					io.error.putstring ("The project %"");

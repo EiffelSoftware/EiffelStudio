@@ -18,19 +18,10 @@ inherit
 
 feature -- Attributes
 
-	argument_position: INTEGER;
-			-- Argument position
-
 	actual_type: TYPE_A;
 			-- Actual type of the argument
 
 feature -- Primitives
-
-	set_argument_position (i: INTEGER) is
-			-- Assign `i' to `argument_position'.
-		do
-			argument_position := i;
-		end;
 
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `actual_type'.
@@ -99,7 +90,7 @@ feature -- Primitives
 			-- `actual_type' is the declared type and is the wrong one for
 			-- conformance validation.
 		do
-			Result := Argument_types.i_th (argument_position).actual_type;
+			Result := Argument_types.i_th (position).actual_type;
 		end;
 
 	associated_class: CLASS_C is
@@ -118,7 +109,7 @@ feature -- Primitives
 			actual_dump := actual_type.dump;
 			!!Result.make (16 + actual_dump.count);
 			Result.append ("(like arg #");
-			Result.append_integer (argument_position);
+			Result.append_integer (position);
 			Result.append (")");
 			Result.append (actual_dump);
 		end;
@@ -126,7 +117,7 @@ feature -- Primitives
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
 		do
 			a_clickable.put_string ("(like arg #");
-			a_clickable.put_int (argument_position);
+			a_clickable.put_int (position);
 			a_clickable.put_char (')');
 			actual_type.append_clickable_signature (a_clickable);
 		end;
@@ -163,7 +154,7 @@ feature -- Primitives
 			other_like_arg ?= other;
 			Result := 	other_like_arg /= Void
 						and then
-						other_like_arg.argument_position = argument_position
+						other_like_arg.position = position
 		end;
 
 	create_info: CREATE_ARG is

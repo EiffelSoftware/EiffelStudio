@@ -60,7 +60,9 @@ feature
 						io.error.putstring (" is not in the system%N");
 					else
 						!!ctxt.make (class_c);
-						ctxt.set_troff_format;
+						if troffed then
+							ctxt.set_troff_format;
+						end;
 						ctxt.set_is_short;
 						if only_current_class then
 							ctxt.set_current_class_only

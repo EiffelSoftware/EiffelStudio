@@ -50,9 +50,9 @@ feature
 			!VQMC2!Result;
 		end;
 
-	trace is
+	dump: STRING is
 		do
-			io.error.putchar (char_val);
+			Result := char_val.out;
 		end;
 
 end

@@ -149,6 +149,10 @@ feature
 			parent_table: FEATURE_TABLE;
 			vhrc1: VHRC1;
 			vhrc3: VHRC3;
+			vhrc4: VHRC4;
+			vhrc5: VHRC5;
+			old_name, new_name: STRING;
+			f: FEATURE_I;
 		do
 			if renaming /= Void then
 				from
@@ -157,21 +161,71 @@ feature
 				until
 					renaming.after
 				loop
-					if renaming.key_for_iteration.is_equal (renaming.item_for_iteration) then
+					old_name := renaming.key_for_iteration;
+					new_name := renaming.item_for_iteration;
+					if old_name.is_equal (new_name) then
 						!!vhrc3;
 						vhrc3.set_class (System.current_class);
 						vhrc3.set_parent (parent);
-						vhrc3.set_feature_name (renaming.key_for_iteration);
+						vhrc3.set_feature_name (old_name);
 						Error_handler.insert_error (vhrc3);
-					elseif not parent_table.has (renaming.key_for_iteration) then
+					elseif not parent_table.has (old_name) then
 						!!vhrc1;
 						vhrc1.set_class (System.current_class);
 						vhrc1.set_parent (parent);
-						vhrc1.set_feature_name (renaming.key_for_iteration);
+						vhrc1.set_feature_name (old_name);
 						Error_handler.insert_error (vhrc1);
+					elseif is_infix (new_name) then
+						f := parent_table.item (old_name);
+						if
+							(f.argument_count /= 1)
+						or else
+							(f.type.is_void)
+						then
+							!!vhrc5;
+							vhrc5.set_class (System.current_class);
+							vhrc5.set_parent (parent);
+							vhrc5.set_feature_name (old_name);
+							Error_handler.insert_error (vhrc5);
+						end;
+					elseif is_prefix (new_name) then
+						f := parent_table.item (old_name);
+						if
+							(f.argument_count /= 0)
+						or else
+							(f.type.is_void)
+						then
+							!!vhrc4;
+							vhrc4.set_class (System.current_class);
+							vhrc4.set_parent (parent);
+							vhrc4.set_feature_name (old_name);
+							Error_handler.insert_error (vhrc4);
+						end;
 					end;
 					renaming.forth
 				end;
+			end;
+		end;
+
+	is_infix (s: STRING): BOOLEAN is
+			-- Is `s' the internal name of an infix feature ?
+		local
+			pre: STRING;
+		do
+			if s.count > 7 then
+				pre := s.substring (1, 7);
+				Result := pre.is_equal ("_infix_")
+			end;
+		end;
+
+	is_prefix (s: STRING): BOOLEAN is
+			-- Is `s' the internal name of a prefix feature ?
+		local
+			pre: STRING;
+		do
+			if s.count > 8 then
+				pre := s.substring (1, 8);
+				Result := pre.is_equal ("_prefix_")
 			end;
 		end;
 

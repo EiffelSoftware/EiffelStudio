@@ -78,6 +78,22 @@ feature -- Type check, byte code production, dead_code_removal
 			target_type := context.item.actual_type;
 
 			source_type.check_conformance (target.access_name, target_type);
+			if
+				source_type.is_none
+			and then
+				(target_type.is_expanded or else target_type.is_bits)
+			then
+				if target_type.is_expanded then
+					!!vjar;
+				else
+					!VNCB!vjar;
+				end;
+				context.init_error (vjar);
+				vjar.set_source_type (source_type);
+				vjar.set_target_type (target_type);
+				vjar.set_target_name (target.access_name);
+				Error_handler.insert_error (vjar);
+			end;
 				-- Update type stack
 			context.pop (1);
 		end;

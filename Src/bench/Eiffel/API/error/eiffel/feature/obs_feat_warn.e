@@ -40,7 +40,7 @@ feature
 			associated_class.append_clickable_name (error_window);
 			if a_feature /= Void then
 				put_string ("%NFeature: ");
-				a_feature.append_clickable_signature (error_window, associated_class);
+				a_feature.append_clickable_name (error_window, associated_class);
 			else
 				put_string ("%NFeature: invariant")
 			end;

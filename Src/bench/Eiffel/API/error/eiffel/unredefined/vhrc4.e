@@ -1,7 +1,7 @@
 -- Error for a rename clause an infix is renamed as a prefix
 -- or the opposite
 
-class VHRC4 
+class VHRC4
 
 inherit
 

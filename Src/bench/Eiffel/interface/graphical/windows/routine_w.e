@@ -15,7 +15,8 @@ inherit
 		rename
 			attach_all as default_attach_all,
 			make as normal_create,
-			reset as old_reset
+			reset as old_reset,
+			execute as old_execute
 		redefine
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
@@ -24,15 +25,14 @@ inherit
 		end
 
 	BAR_AND_TEXT
-		rename
-			make as normal_create
 		redefine
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, attach_all, reset,
-			set_default_size, set_default_position
+			set_default_size, set_default_position,	
+			make, execute
 		select
-			attach_all, reset
+			attach_all, reset, make, execute
 		end
 
 creation
@@ -47,6 +47,8 @@ feature
 			-- Create an object tool.
 		do
 			normal_create (a_screen);
+			text_window.set_read_only;
+			set_action ("<Configure>" , Current, resize_action);
 		end;
 
 	reset is
@@ -90,15 +92,11 @@ feature
 			default_attach_all;
 
 			global_form.detach_right (text_window);
-			global_form.detach_right (format_bar);
-			global_form.detach_right (edit_bar);
 
 			global_form.attach_right (command_bar, 0);
 			global_form.attach_right_widget (command_bar, text_window, 0);
-			global_form.attach_right_widget (command_bar, format_bar, 0);
-			global_form.attach_right_widget (command_bar, edit_bar, 0);
-			global_form.attach_top (command_bar, 0);
-			global_form.attach_bottom (command_bar, 0);
+			global_form.attach_top_widget (edit_bar, command_bar, 0);
+			global_form.attach_bottom_widget (format_bar, command_bar, 0);
 		end
 
 	change_class_command: CHANGE_CL_ROUT;
@@ -106,8 +104,23 @@ feature
 
 feature {NONE}
 
+	resize_action: ANY is
+		once
+			!! Result
+		end
+
+	execute (argument: ANY) is
+		do
+			if argument = resize_action then
+				change_class_command.update_text;
+				change_routine_command.update_text;
+			else
+				old_execute (argument)
+			end
+		end;
+
 	set_default_size is
-        do
+		do
 			set_size (600, 450)
 		end;
 
@@ -235,7 +248,7 @@ feature {NONE}
 				edit_bar.attach_bottom (change_routine_command, 0);
 				edit_bar.attach_top (type_teller, 0);
 				edit_bar.attach_left_widget (class_hole, type_teller, 0);
-				edit_bar.attach_left (change_routine_command, 170);
+				edit_bar.attach_left (change_routine_command, 175);
 				edit_bar.attach_bottom (type_teller, 0);
 				edit_bar.attach_top (search_command, 0);
 				edit_bar.attach_left_position (form, 1);

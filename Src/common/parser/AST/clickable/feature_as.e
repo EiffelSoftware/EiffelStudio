@@ -49,9 +49,15 @@ feature -- Initialization
 			if body.is_unique then
 				set_unique_values
 			end;
+			set_start_position;
 		ensure then
 			feature_names /= Void;
 			body /= Void;
+		end;
+
+	set_start_position is
+		do
+			start_position := start_position - feature_names.first.offset
 		end;
 
 	set_unique_values is

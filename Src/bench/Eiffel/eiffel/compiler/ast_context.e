@@ -361,6 +361,7 @@ feature
 			level2 := False;
 			level3 := False;
 			level4 := False;
+			check_for_special_error := False;
 			supplier_ids.wipe_out;
 			wipe_out;
 		end;

@@ -78,6 +78,9 @@ feature -- Primitives
 		do
 			origin_table := feat_table.origin_table;
 			if System.current_class.id /= class_id then
+debug
+	io.error.putstring ("LIKE_FEATURE solved_type origin_table%N");
+end;
 				orig_feat := System.class_of_id (class_id).feature_table
 								.item (feature_name);
 				if orig_feat = Void then
@@ -88,7 +91,18 @@ feature -- Primitives
 					rout_id := - rout_id
 				end;
 				anchor_feature := origin_table.item (rout_id);
+debug
+	if anchor_feature = Void then
+		io.error.putstring ("Void feature%N");
+		feat_table.trace;
+		orig_feat.trace;
+		f.trace;
+	end;
+end;
 			else
+debug
+	io.error.putstring ("LIKE_FEATURE solved_type origin_table%N");
+end;
 				anchor_feature := feat_table.item (feature_name);
 				if anchor_feature = Void then
 					raise_veen (f);
@@ -97,6 +111,11 @@ feature -- Primitives
 				if rout_id < 0 then
 					rout_id := - rout_id
 				end;
+debug
+	if anchor_feature = Void then
+		io.error.putstring ("Void feature%N");
+	end;
+end;
 			end;
 			anchor_type := anchor_feature.type;
 			Like_control.on;

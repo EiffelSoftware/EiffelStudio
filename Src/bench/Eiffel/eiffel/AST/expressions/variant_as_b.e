@@ -6,10 +6,30 @@ inherit
 
 	TAGGED_AS
 		redefine
-			expression_type, make_error, byte_node
+			byte_node, type_check
 		end
 
 feature
+
+	type_check is
+			-- Type check on the expression
+		local
+			current_context: TYPE_A;
+			vave: VAVE;
+		do
+			expr.type_check;
+				-- Check if the type of the expression is boolean
+			current_context := context.item;
+			if not current_context.is_integer then
+				!!vave;
+				context.init_error (vave);
+				vave.set_type (current_context);
+				Error_handler.insert_error (vave);
+			end;
+   
+				-- Update the type stack
+			context.pop (1);
+		end;
 
 	byte_node: VARIANT_B is
 			-- Associated byte code
@@ -17,23 +37,6 @@ feature
 			!!Result;
 			Result.set_tag (tag);
 			Result.set_expr (expr.byte_node);
-		end;
-
-	expression_type: TYPE_A is
-			-- Type expression
-		once
-			Result := Integer_type;
-		end;
-
-	make_error (t: TYPE_A) is
-			-- Raise error
-		local
-			vave: VAVE;
-		do
-			!!vave;
-			context.init_error (vave);
-			vave.set_type (t);
-			Error_handler.insert_error (vave);
 		end;
 
 end

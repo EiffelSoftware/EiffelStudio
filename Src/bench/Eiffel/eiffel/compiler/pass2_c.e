@@ -59,11 +59,11 @@ feature
 			do_pass2: BOOLEAN;
 		do
 				-- Verbose
-			io.putstring ("Degree 4: class ");
+			io.error.putstring ("Degree 4: class ");
 				temp := associated_class.class_name.duplicate;
 				temp.to_upper;
-			io.putstring (temp);
-			io.new_line;
+			io.error.putstring (temp);
+			io.error.new_line;
 
 			if associated_class.changed then
 				do_pass2 := True;
@@ -90,10 +90,16 @@ feature
 				System.melted_set.put (associated_class.id);
 			elseif (assert_prop_list /= Void) then
 					-- Propagation of assertion modifications only.
+debug ("ACTIVITY")
+	io.error.putstring ("Propagation of assertions only%N");
+end;
 				propagate_pass2 (False);
 			end;
 
 			if assert_prop_list /= Void then
+debug ("ACTIVITY")
+	io.error.putstring ("FEATURE_TABLE.propagate_assertions%N");
+end;
 				associated_class.feature_table.propagate_assertions
 					(assert_prop_list);
 			end;
@@ -107,6 +113,38 @@ feature
 			real_pass2, do_pass2: BOOLEAN;
 			do_pass3: BOOLEAN;
 		do
+debug ("ACTIVITY")
+	io.error.putstring ("=============== PASS2_C.propagate ===============%N");
+	io.error.putstring ("Equivalent tables: ");
+	io.error.putbool (equivalent_table);
+	io.error.putstring ("%Nexpanded_modified: ");
+	io.error.putbool (expanded_modified);
+	io.error.putstring ("%Ndeferred_modified: ");
+	io.error.putbool (deferred_modified);
+	if assert_prop_list /= Void then
+		if assert_prop_list.empty then
+			io.error.putstring ("%Nassert_prop_list: empty");
+		else
+			io.error.putstring ("%Nassert_prop_list: not empty");
+		end;
+	else
+		io.error.putstring ("%Nassert_prop_list: Void");
+	end;
+	if l /= Void then
+		if l.empty then
+			io.error.putstring ("%Nl: empty");
+		else
+			io.error.putstring ("%Nl: not empty");
+		end;
+	else
+		io.error.putstring ("%Nl: Void");
+	end;
+	io.error.putstring ("%Npass2_control.propagate_pass3: ");
+	io.error.putbool (pass2_control.propagate_pass3);
+	io.error.putstring ("%Npass2_control: ");
+	pass2_control.trace;
+	io.error.new_line;
+end;
 					-- Propagation of the assertions
 			if assert_prop_list = Void then
 				assert_prop_list := l;
@@ -158,6 +196,11 @@ feature -- Propagation of second pass
 			local_cursor: LINKABLE [CLASS_C];
 			types: LINKED_LIST [CLASS_TYPE];
 		do
+debug ("ACTIVITY")
+	io.error.putstring ("Propagate_pass2. real_pass2: ");
+	io.error.putbool (real_pass2);
+	io.error.new_line;
+end;
 			from
 				associated_class.set_changed2 (True);
 				local_cursor := associated_class.descendants.first_element;
@@ -167,6 +210,11 @@ feature -- Propagation of second pass
 				descendant := local_cursor.item;
 					-- Insert the descendant in the changed classes list
 					-- of the system if not present.
+debug ("ACTIVITY")
+	io.error.putstring ("Propagating pass2 to: ");
+	io.error.putstring (descendant.class_name);
+	io.error.new_line;
+end;
 				pass2_controler.insert_new_class (descendant);
 				if real_pass2 then
 					-- Mark the descendant so if it is not syntactically
@@ -211,6 +259,9 @@ feature -- Propagation of third pass
 			client: CLASS_C;
 			local_cursor: LINKABLE [CLASS_C];
 		do
+debug ("ACTIVITY")
+	io.error.putstring ("Propagate pass3%N");
+end;
 			from
 				local_cursor := associated_class.clients.first_element
 			until
@@ -218,6 +269,11 @@ feature -- Propagation of third pass
 			loop
 				client := local_cursor.item;
 					-- Remember the cause for type checking `client'.
+debug ("ACTIVITY")
+	io.error.putstring ("Propagating pass3 to: ");
+	io.error.putstring (client.class_name);
+	io.error.new_line;
+end;
 				client.propagators.update (pass2_control);
 				if status_modified then
 					client.propagators.add_changed_status (associated_class.id);

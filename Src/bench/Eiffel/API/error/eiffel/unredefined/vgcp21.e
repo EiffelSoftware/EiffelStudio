@@ -16,19 +16,20 @@ feature
 			Result := 2;
 		end;
 
-	creation_feature: FEATURE_I;
+	creation_feature: STRING;
 			-- Feature involved
 
-	set_feature (f: FEATURE_I) is
+	set_feature_name (s: STRING) is
 			-- Assign `f' to `creation_feature'.
 		do
-			creation_feature := f;
+			creation_feature := s;
 		end;
 
 	build_explain is
 		do
 			put_string ("Creation procedure name: ");
-			creation_feature.append_clickable_signature (error_window, creation_feature.written_class);
+			put_string (creation_feature);
+			new_line;
 		end;
 
 end

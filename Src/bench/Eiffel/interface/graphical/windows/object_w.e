@@ -18,6 +18,13 @@ inherit
 			text_window, build_format_bar, hole,
 			tool_name, set_default_position
 		end
+	BAR_AND_TEXT
+		redefine
+			text_window, build_format_bar, hole,
+			tool_name, set_default_position, make
+		select
+			make
+		end
 
 creation
 

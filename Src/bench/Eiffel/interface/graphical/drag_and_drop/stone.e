@@ -43,4 +43,9 @@ feature
 		deferred
 		end
 
+	icon_name: STRING is
+			-- Icon name for tool when editing Current 
+		deferred
+		end
+
 end

@@ -14,7 +14,7 @@ feature
 			local_types := global_types;
 		end;
 
-	position_in_text : CURSOR;
+	position_in_text: CURSOR;
 		-- end of text at creation
 	
 	insertion_point: CURSOR;

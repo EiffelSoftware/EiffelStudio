@@ -14,8 +14,17 @@ class PROJECT_W
 inherit
 
 	TOOL_W
+		rename
+			execute as old_execute
 		redefine
-			text_window, work, tool_name
+			text_window, tool_name
+		end
+	TOOL_W
+		redefine
+			text_window, tool_name,
+			execute
+		select
+			execute
 		end;
 	BASE
 		rename
@@ -28,6 +37,16 @@ creation
 
 feature
 
+	popup: ANY is
+		once
+			!! Result;
+		end
+
+	popdown: ANY is
+		once
+			!! Result;
+		end
+
 	make is
 			-- Create a project application.
 		local
@@ -36,6 +55,8 @@ feature
 --xterm_name: STRING
 		do
 --xterm_name := "Tregastel vaincra";
+			if popup /= Void then end;
+			if popdown /= Void then end;
 			!!a_screen.make ("");
 			base_make (tool_name, a_screen);
 			forbid_resize;
@@ -44,15 +65,22 @@ feature
 			set_x_y (0,0);
 			realize;
 			transporter_init;
-			set_icon_pixmap (eiffel_symbol);
+			if eiffel_symbol.is_valid then
+				set_icon_pixmap (bm_Project_icon);
+			end;
 			set_icon_name (tool_name);
+			set_action ("<Unmap>,<Prop>", Current, popdown);
+			set_action ("<Map>,<Prop>", Current, popup);
 --get_xterm_in_xterminal (xterm_name);
 		end;
 
     set_default_position is do end;
     set_default_size is do end;
 
-	close_windows is do end;
+	close_windows is 
+		do 
+			change_font_command.close (text_window)
+		end;
 
 	popup_file_selection is
 		do
@@ -61,7 +89,7 @@ feature
 
 	eiffel_symbol: PIXMAP is
 		do
-			Result := bm_Tower
+			Result := bm_Project
 		end;
 
 	tool_name: STRING is do Result := l_Project end;
@@ -108,11 +136,31 @@ feature -- xterminal
 	xterminal: DRAWING_AREA;
 			-- Form where the xterminal is squeezed;
 
-	work (arg: ANY) is
+	execute (arg: ANY) is
 			-- Resize xterm window when drawing area is resized
 		do
-			resize_xterm (xt_display (implementation.screen_object), xterminal.width, xterminal.height)
+			--resize_xterm (xt_display (implementation.screen_object), xterminal.width, xterminal.height)
+			if arg = popup then
+				window_manager.show_all_editors
+				if hidden_system_window then
+					system_tool.display
+					hidden_system_window := False;
+				end
+			elseif arg = popdown then
+				window_manager.hide_all_editors;
+				if 	
+					system_tool.realized and then system_tool.shown 
+				then
+					system_tool.hide;
+					system_tool.close_windows;
+					hidden_system_window := True;
+				end
+			else
+				old_execute (arg)
+			end
 		end;
+
+	hidden_system_window: BOOLEAN;
 
 feature -- rest
 
@@ -144,7 +192,6 @@ feature -- rest
 			explain_hole: EXPLAIN_HOLE;
 			shell_hole: SHELL_HOLE;
 			dummy_rc: ROW_COLUMN;
-			change_font_command: CHANGE_FONT;	
 		do
 			!!open_command.make (text_window);
 			!!classic_bar.make (new_name, form_manager);
@@ -198,6 +245,8 @@ feature -- rest
 	special_command: SPECIAL_COMMAND;
 	freeze_command: FREEZE_PROJECT;
 	finalize_command: FINALIZE_PROJECT;
+
+	change_font_command: CHANGE_FONT;
 
 	build_icing is
 			-- Build icing area

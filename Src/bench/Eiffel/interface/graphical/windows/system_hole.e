@@ -88,6 +88,7 @@ feature {NONE}
 				file_name.append (Eiffel3_dir_name);
 				file_name.append ("/bench/help/defaults/Ace.default");
 				system_tool.text_window.show_file_content (file_name);
+				system_tool.text_window.set_changed (True)
 		end;
 
 end

@@ -318,9 +318,9 @@ feature -- Type check, byte code and dead code removal
 			if type /= void then
 				ctxt.put_special("!");
 				type.format (ctxt);
-				ctxt.put_special("!")
+				ctxt.put_special("! ")
 			else
-				ctxt.put_special ("!!")
+				ctxt.put_special ("!! ")
 			end;
 			target.format (ctxt);
 			if  call /= void then

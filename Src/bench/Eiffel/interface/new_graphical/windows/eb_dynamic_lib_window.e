@@ -956,7 +956,8 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 				if file_name /= Void then
 					create dynamic_library
 					create f.make_open_read (file_name)
-					if not (dynamic_library.parse_exports_from_file (f)) then
+					dynamic_library.parse_exports_from_file (f)
+					if not dynamic_library.is_content_valid then
 						create wd.make_with_text (Warning_messages.w_Error_parsing_the_library_file)
 						wd.show_modal_to_window (window)
 					end

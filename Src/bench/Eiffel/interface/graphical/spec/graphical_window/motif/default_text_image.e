@@ -11,8 +11,8 @@ inherit
 
 	TEXT_FIGURE
 		rename
-			g_Text_fg_color as foreground_color,
-			g_Text_font as font
+			g_Default_text_fg_color as foreground_color,
+			g_Default_text_font as font
 		end;
 
 end -- class DEFAULT_TEXT_IMAGE

@@ -509,6 +509,7 @@
 			<TEXT DESCRIPTION="Display confirmation dialog for assertions on finalize operation">confirm_finalize_assertions<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved">confirm_save_before_compile<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog on clearing breakpoints">confirm_clear_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints">confirm_ignore_all_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">

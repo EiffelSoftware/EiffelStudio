@@ -26,7 +26,14 @@ feature {EV_APPLICATION} -- Initialization
 			-- Create default help engine.
 		local
 			f1_key: EV_KEY
+			environment_imp: EV_ENVIRONMENT_IMP
 		do
+				-- We now set the application in EV_ENVIRONMENT.
+			environment_imp ?= (create {EV_ENVIRONMENT}).implementation
+			check
+				environment_imp_not_void: environment_imp /= Void
+			end
+			environment_imp.set_application (interface)
 			create f1_key.make_with_code ((create {EV_KEY_CONSTANTS}).Key_f1)
 			set_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, False))
 			set_contextual_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, True))
@@ -484,6 +491,9 @@ end -- class EV_APPLICATION_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2001/06/13 19:09:28  rogers
+--| `initialize' now sets the application within EV_ENVIROMENT_I.
+--|
 --| Revision 1.16  2001/06/07 23:08:08  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -138,7 +138,6 @@ feature -- Type check, byte code and dead code removal
 					-- Get the corresponding constraint type of the current class
 				formal_dec := context.current_class.generics.i_th (formal_type.position)
 				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
-					creation_type := formal_dec.constraint_type
 					is_formal_creation := True
 				else
 						-- An entity of type a formal generic parameter cannot be
@@ -167,13 +166,7 @@ feature -- Type check, byte code and dead code removal
 					new_creation_type := creation_evaluator.evaluated_type (
 						type, Context.feature_table, Context.current_feature)
 					if new_creation_type /= Void then
-						if is_formal_creation then
-							create vgcc3
-							context.init_error (vgcc3)
-							vgcc3.set_target_name (target.access_name)
-							vgcc3.set_type (creation_type)
-							Error_handler.insert_error (vgcc3)
-						elseif new_creation_type.has_expanded then
+						if new_creation_type.has_expanded then
 							if new_creation_type.expanded_deferred then
 								create vtec1
 								context.init_error (vtec1)
@@ -249,7 +242,11 @@ feature -- Type check, byte code and dead code removal
 				end
 				Error_handler.checksum
 
-				creation_class := creation_type.associated_class
+				if is_formal_creation then
+					creation_class := formal_dec.constraint_type.associated_class
+				else
+					creation_class := creation_type.associated_class
+				end
 				if creation_class.is_deferred and then not is_formal_creation then
 						-- Associated class cannot be deferred
 					create vgcc2

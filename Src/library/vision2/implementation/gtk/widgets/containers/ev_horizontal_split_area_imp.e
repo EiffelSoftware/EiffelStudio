@@ -30,9 +30,9 @@ feature -- initialization
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			base_make (an_interface)	
 			container_widget := feature {EV_GTK_EXTERNALS}.gtk_hpaned_new
+			set_c_object (container_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation

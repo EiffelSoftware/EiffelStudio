@@ -92,14 +92,10 @@ feature -- File name constants
 feature -- Template name constants
 
 	Config_init_file_name: STRING is "config.init"
--- 	App_template: STRING is "app.template"
--- 	App_name: STRING is "app.e"
--- 	Command_instantiator_template: STRING is "command_instantiator.template"
--- 	Command_instantiator_name: STRING is "command_instantiator.e"
--- 	Shared_control_template: STRING is "sh_contl.template"
--- 	Shared_control_name: STRING is "sh_contl.e"
--- 	States_template: STRING is "states.template"
--- 	States_name: STRING is "states.e"
+
+feature -- Description file
+
+	Description_file_name: STRING is "classes_description.txt"
 
 feature -- File names for EiffelBuild
 
@@ -233,7 +229,7 @@ feature -- Directory names for projects
 			-- Directory known by EiffelBench used to move 
 			-- information between both tools.
 		do
-			Result := Classes_directory
+			!! Result.make_from_string (Buildgen_directory)
 			Result.extend (common_name)
 		end
 
@@ -427,7 +423,7 @@ feature -- {NONE}
 		do
 			!!dir.make (dn)
 			if not dir.exists then
-				dir.create
+				dir.create_dir
 			end
 		end
 

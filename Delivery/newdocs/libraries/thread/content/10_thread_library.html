@@ -3,144 +3,141 @@
 	<HEAD>
 		<TITLE>Thread library overview</TITLE>
 		<META NAME="MS-HKWD" CONTENT="thread library overview">
-		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+		<LINK REL=Stylesheet HREF="../../../default.css" TYPE="text/css">
 	</HEAD>
 
 	<BODY>
 <H1>Thread library overview</H1>
 <p>This is only a quick overview of the <A HREF="/libraries/thread/reference/introduction.html">Thread library</a>. The reference of this
 library should give all its content.</p>
-<p>&nbsp;</p>
-<h2>Creating and launching threads: the class THREAD (deferred)</h2>
-<p>The class of the thread object you want to create should inherit the THREAD class.<br>
-Your thread is represented by a class which inherits from THREAD (deferred
-class).
-<pre>	class
-		MY_THREAD
+<h2>Creating and launching threads: the class <SPAN CLASS="eclass">THREAD</SPAN> (deferred)</h2>
+<p>The class of the thread object you want to create should inherit the <SPAN CLASS="eclass">THREAD</SPAN> class.<br>
+Your thread is represented by a class which inherits from <SPAN CLASS="eclass">THREAD</SPAN> (deferred
+class).<br>
+<pre>	<SPAN CLASS="ekeyword">class</SPAN>
+		<SPAN CLASS="eclass">MY_THREAD</SPAN>
 
-	inherit
-		THREAD
+	<SPAN CLASS="ekeyword">inherit</SPAN>
+		<SPAN CLASS="eclass">THREAD></SPAN>
 		...
 
-	feature
+	<SPAN CLASS="ekeyword">feature</SPAN>
 
-		execute is
-			-- define the deferred feature from THREAD.
-		do
+		<SPAN CLASS="efeature">execute</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">-- define the deferred feature from THREAD.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
 			...
-		end
+		<SPAN CLASS="ekeyword">end</SPAN>
 		...
 
-	end --class MY_THREAD
+	<SPAN CLASS="ekeyword">end</SPAN> <SPAN CLASS="ecomment">--class MY_THREAD</SPAN>
 
 </pre>
 Creating a thread is like creating an Eiffel object:
-<pre>	my_thread: MY_THREAD
-		-- MY_THREAD inherits from THREAD and defines
-		-- the deferred procedure `execute'
+<pre>	<SPAN CLASS="elocal">my_thread</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">MY_THREAD</SPAN>
+		<SPAN CLASS="ecomment">-- MY_THREAD inherits from THREAD and defines</SPAN>
+		<SPAN CLASS="ecomment">-- the deferred procedure `execute'</SPAN>
 
-	create my_thread</pre>
+	<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">my_thread</SPAN></pre>
 <p class="note"><b>Note</b>: You have created a thread object but have not started the thread itself yet.<br>
-To run the thread, use the feature `launch' from THREAD.</P>
-<pre>	my_thread.launch</pre>
-On the Eiffel side, the procedure `execute' will be launched. This procedure
-is deferred in class THREAD, you have to define it in MY_THREAD.&nbsp;
-<p>On the C side, a C thread will be created and launched.<p>IMPORTANT: you may call `join_all' and the end of the exceution of the
+To run the thread, use the feature <SPAN CLASS="efeature">launch</SPAN> from <SPAN CLASS="eclass">THREAD</SPAN>.</P>
+<pre>	<SPAN CLASS="elocal">my_thread</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">launch</SPAN></pre>
+On the Eiffel side, the procedure <SPAN CLASS="efeature">execute</SPAN> will be launched. This procedure
+is deferred in class <SPAN CLASS="eclass">THREAD</SPAN>, you have to define it in <SPAN CLASS="eclass">MY_THREAD</SPAN>.&nbsp;
+<p>On the C side, a C thread will be created and launched.<p class="warning"><B>Caution</B>: you may call <SPAN CLASS="efeature">join_all</SPAN> and the end of the exceution of the
 parent thread if you do not want it to die before its child, otherwise
 they may prematurily terminate.
-<p>&nbsp;</p>
-<h2>The class MUTEX</h2>
-<p>The implementation of the class MUTEX is mapped on the C standard thread
-library. An instance of class MUTEX can be shared between different thread
-without putting it into a PROXY object.
-<p>my_mutex.pointer is the pointer to the nested C mutex of my_mutex.
-<p>Declaration of the mutex :
-<pre>	my_mutex: MUTEX</pre>
-Creation of mutex :
-<pre>	create my_mutex.make</pre>
-Locking&nbsp; the mutex :&nbsp;
-<pre>	my_mutex.lock</pre>
-Unlocking the mutex :
-<pre>	my_mutex.unlock</pre>
-try_lock: if it is not locked yet, lock the mutex and return True, otherwise
+<h2>The class <SPAN CLASS="eclass">MUTEX</SPAN></h2>
+<p>The implementation of the class <SPAN CLASS="eclass">MUTEX</SPAN> is mapped on the C standard thread
+library. An instance of class <SPAN CLASS="eclass">MUTEX</SPAN> can be shared between different thread.
+<p><SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">pointer</SPAN> is the pointer to the nested C mutex of <SPAN CLASS="elocal">my_mutex</SPAN>.
+<UL>
+<LI>Declaration of the mutex:
+<pre>	<SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">MUTEX</SPAN></pre>
+<LI>Creation of mutex:
+<pre>	<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">make</SPAN></pre>
+<LI>Locking the mutex:
+<pre>	<SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">lock</SPAN></pre>
+<LI>Unlocking the mutex:
+<pre>	<SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">unlock</SPAN></pre>
+<LI><SPAN CLASS="efeature">try_lock</SPAN>: if it is not locked yet, lock the mutex and return True, otherwise
 it returns False.
-<pre>	my_mutex.try_lock</pre>
-Is my mutex initialized?
-<pre>	my_mutex.is_set</pre>
-NOTE: on Windows:
-<p>The MUTEX objects on Windows are recursive while they are not on Unix. A
-recursive mutex can be locked twice by the same thread.&nbsp;
-<p>IMPORTANT: be sure that a mutex is unlocked when it is disposed.
-<p>&nbsp;
-<h2>The class SEMAPHORE</h2>
-<p>Like MUTEX, the features of this class are mapped on the C thread library. An
-instance of class SEMAPHORE can be shared between thread without putting into a
-PROXY object.
-<p>Declaration of the semaphore :
-<pre>	my_sem: SEMAPHORE</pre>
+<pre>	<SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">try_lock</SPAN></pre>
+<LI>Is my mutex initialized?
+<pre>	<SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">is_set</SPAN></pre>
+</UL>
+<P CLASS="note"><B>Note</B>: on Windows: The <SPAN CLASS="eclass">MUTEX</SPAN> objects on Windows are recursive while they are not on Unix. A
+recursive mutex can be locked twice by the same thread.</P>
+<p CLASS="warning"><B>Caution</B>: be sure that a mutex is unlocked when it is disposed.</P>
+<h2>The class <SPAN CLASS="eclass">SEMAPHORE</SPAN></h2>
+<p>Like <SPAN CLASS="eclass">MUTEX</SPAN>, the features of this class are mapped on the C thread library. An
+instance of class <SPAN CLASS="eclass">SEMAPHORE</SPAN> can be shared between thread.
+<UL>
+<LI>Declaration of the semaphore :
+<pre>	<SPAN CLASS="elocal">my_sem</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">SEMAPHORE</SPAN></pre>
 Creation of semaphore: initialize semaphore with nb_tokens, it requires
 nb_tokens &gt;= 0
-<pre>	create my_sem.make (nb_tokens)</pre>
-<p>Wait for a token:
-<pre>	my_sem.wait</pre>
-Give back a token:
-<pre>	my_sem.post</pre>
-try_wait, similar to try_lock from MUTEX, if a token is available, take
-it and return True, otherwise return False.
-<pre>	my_sem.try_wait</pre>
-<p>IMPORTANT: be sure that a semaphore does not wait for a token when it is
+<pre>	<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">my_sem</SPAN><SPAN CLASS="esymbol">.</SPAN>make (nb_tokens)</pre>
+<LI>Wait for a token:
+<pre>	<SPAN CLASS="elocal">my_sem</SPAN><SPAN CLASS="esymbol">.</SPAN>wait</pre>
+<LI>Give back a token:
+<pre>	<SPAN CLASS="elocal">my_sem</SPAN><SPAN CLASS="esymbol">.</SPAN>post</pre>
+<LI><SPAN CLASS="efeature">try_wait</SPAN>, similar to try_lock from <SPAN CLASS="eclass">MUTEX</SPAN>, if a token is available, take
+it and return <SPAN CLASS="esymbol">True</SPAN>, otherwise return <SPAN CLASS="esymbol">False</SPAN>.
+<pre>	<SPAN CLASS="elocal">my_sem</SPAN><SPAN CLASS="esymbol">.</SPAN>try_wait</pre>
+</UL>
+<p class="warning"><B>Caution</B>: be sure that a semaphore does not wait for a token when it is
 disposed</p>
-<p>&nbsp;</p>
-<h2>The class CONDITION_VARIABLE</h2>
+<h2>The class <SPAN CLASS="eclass">CONDITION_VARIABLE</SPAN></h2>
 <p>This class allows to use condition variables in Eiffel. An instance of class
-CONDITION_VARIABLE can be shared between threads without putting into a PROXY
-object.<br>
-<br>
-Declaration of the condition variable
-<pre>	my_cond: CONDITION_VARIABLE</pre>
-Creation:
-<pre>	create my_cond.make</pre>
-Wait for a signal (send by `signal'). You need to use a mutex.
-<pre>	my_mutex: MUTEX
+<SPAN CLASS="eclass">CONDITION_VARIABLE</SPAN> can be shared between threads.<br>
+<UL>
+<LI>Declaration of the condition variable
+<pre>	<SPAN CLASS="elocal">my_cond</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">CONDITION_VARIABLE</SPAN></pre>
+<LI>Creation:
+<pre>	<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">my_cond</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">make</SPAN></pre>
+<LI>Wait for a signal (send by <SPAN CLASS="efeature">signal</SPAN>). You need to use a mutex.
+<pre>	<SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">MUTEX</SPAN>
 
-	create my_mutex.make</pre>
-<p>`my_mutex' must be locked by the calling thread so as `wait' can be called.
-`wait' atomically unlocks `my_mutex' and waits for the condition variable
-`my_cond' to receive a signal. As soon as it received a signal, `my_cond' locks
-`my_mutex;
-<pre>	my_mutex.lock
-		-- You must lock `my_mutex' before calling `wait'.
+	<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">make</SPAN></pre>
+<p><SPAN CLASS="elocal">my_mutex</SPAN> must be locked by the calling thread so as <SPAN CLASS="efeature">wait</SPAN> can be called.
+<SPAN CLASS="efeature">wait</SPAN> atomically unlocks <SPAN CLASS="elocal">my_mutex</SPAN> and waits for the condition variable
+<SPAN CLASS="elocal">my_mutex</SPAN> to receive a signal. As soon as it received a signal, <SPAN CLASS="elocal">my_cond</SPAN> locks
+<SPAN CLASS="elocal">my_mutex</SPAN>;
+<pre>	<SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">lock</SPAN>
+		<SPAN CLASS="ecomment">-- You must lock `my_mutex' before calling <SPAN CLASS="efeature">wait</SPAN>.</SPAN>
 
-	my_cond.wait (my_mutex)
-		-- Here the critical code to execute when `my_cond' received a signal.
+	<SPAN CLASS="elocal">my_cond</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">wait</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ecomment">-- Here the critical code to execute when `my_cond' received a signal.</SPAN>
 
-	my_mutex.unlock
-		-- Unlock the mutex at the end of the critical section.
+	<SPAN CLASS="elocal">my_mutex</SPAN><SPAN CLASS="esymbol">.</SPAN>unlock
+		<SPAN CLASS="ecomment">-- Unlock the mutex at the end of the critical section.</SPAN>
 
 	</pre>
-Send a signal one thread blocked on the condition variable `my_cond'.
-<pre>	my_cond.signal</pre>
-Send a signal to all the threads blocked on the condition variable `my_cond'.
-<pre>	my_cond.broadcast</pre>
-<p>IMPORTANT: be sure that a condition variable is unblocked when it is
+<LI>Send a signal one thread blocked on the condition variable `my_cond'.
+<pre>	<SPAN CLASS="elocal">my_cond</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">signal</SPAN></pre>
+<LI>Send a signal to all the threads blocked on the condition variable `my_cond'.
+<pre>	<SPAN CLASS="elocal">my_cond</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">broadcast</SPAN></pre>
+</UL>
+<p class="warning"><B>Caution</B>: be sure that a condition variable is unblocked when it is
 disposed.</p>
-<p>&nbsp;</p>
 <h2>Miscellaneous classes</h2>
-<p>class THREAD_ATTRIBUTES: defines the
+<p>class <SPAN CLASS="eclass">THREAD_ATTRIBUTES</SPAN>: defines the
 attributes of an Eiffel Thread regarding the thread scheduling policy and
 priority.<br>
-<h2>Controlling execution: THREAD_CONTROL</h2>
-<p>yield: the calling thread yields its execution in favor of&nbsp;an other
+<h2>Controlling execution: <SPAN CLASS="eclass">THREAD_CONTROL</SPAN></h2>
+<UL>
+<LI><SPAN CLASS="efeature">yield</SPAN>: the calling thread yields its execution in favor of an other
 thread of same priority.
-<p>join_all: the calling thread waits for all other threads to finished (all
+<LI><SPAN CLASS="efeature">join_all</SPAN>: the calling thread waits for all other threads to finished (all
 its children).
-<p>-&gt; A parent thread can wait for the termination of a child process through
-the feature `join' of class THREAD_CONTROL (inherited by THREAD):<br>
-<pre>	thr: MY_THREAD
-	...
-	thr.launch
-	...
-	thr.join</pre>
+<LI>A parent thread can wait for the termination of a child process through
+the feature <SPAN CLASS="efeature">join</SPAN> of class <SPAN CLASS="eclass">THREAD_CONTROL</SPAN> (inherited by <SPAN CLASS="eclass">THREAD</SPAN>):
+<pre>	<SPAN CLASS="elocal">thr</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">MY_THREAD</SPAN>
+	<SPAN CLASS="esymbol">...</sPAN>
+	<SPAN CLASS="elocal">thr</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">launch</SPAN>
+	<SPAN CLASS="esymbol">...</SPAN>
+	<SPAN CLASS="elocal">thr</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">join</SPAN></pre>
 
 </BODY>
 </HTML>

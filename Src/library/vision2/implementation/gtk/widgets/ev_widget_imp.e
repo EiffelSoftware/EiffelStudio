@@ -597,7 +597,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			parent_imp := a_container_imp
 		end
 		
-feature {NONE} -- Implementation
+feature {EV_ANY_IMP} -- Implementation
 
 	parent_imp: EV_CONTAINER_IMP
 			-- Container widget that contains `Current'.

@@ -44,7 +44,7 @@ feature -- Conversion
 		
 feature -- C externals
 
-	C: EV_C_EXTERNALS is
+	C: EV_GTK_EXTERNALS is
 			-- Access to external C functions.
 		once
 			create Result

@@ -20,7 +20,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	init_toolkit: MOTIF is
+	init_toolkit: TOOLKIT_IMP is
 		once
 			!!Result.make (Interface_names.n_X_resource_name)
 		end;

@@ -54,6 +54,7 @@ feature -- Button texts
 	b_Overwrite: STRING is				"Overwrite";
 	b_Percentage: STRING is				"Percentage";
 	b_Precompile_now: STRING is			"Precompile now";
+	b_Precompile_now_but_no_C: STRING is "Precompile (no C comp)";
 	b_Recursive_functions: STRING is	"Recursive functions";
 	b_Run: STRING is					"Run";
 	b_Run_query: STRING is				"Run query";

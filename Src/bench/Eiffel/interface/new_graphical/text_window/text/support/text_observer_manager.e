@@ -202,7 +202,6 @@ feature {NONE} -- Updates
 			not_in_loop: not is_notifying
 		do
 			is_notifying := True
-			changed := False
 			from 
 				cursor_observer_list.start
 			until

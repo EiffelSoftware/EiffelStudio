@@ -34,7 +34,7 @@ feature -- Access
 				c := interface.cursor
 				interface.start
 			until
-				interface.after or Result /= Void
+				interface.off or Result /= Void
 			loop
 				if interface.item.data.is_equal (data) then
 					Result := interface.item
@@ -74,6 +74,9 @@ end -- class EV_ITEM_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/18 21:30:06  bonnard
+--| Corrected `item_by_data' to deal with empty lists.
+--|
 --| Revision 1.5  2000/02/14 11:40:36  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <document title="Release notes of EiffelStudio 5.6" output="studio">
 	<meta_data>
 		<help></help>
@@ -32,7 +31,19 @@
 		<heading><size>2</size>Libraries</heading>
 		<heading><size>3</size>CECIL</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Due to renaming of EIF_REAL and EIF_DOUBLE into EIF_REAL_32 and EIF_REAL_64, we have also changed the names of some CECIL facilities. Although old names are still valid we may remove their definition in future releases of the compiler. Below is the list of old names and their corresponding new names:
+			<table>
+				<row><cell><bold>Old name</bold></cell><cell><bold>New name</bold></cell></row>
+				<row><cell>EIF_REAL_FUNCTION</cell><cell>EIF_REAL_32_FUNCTION</cell></row>
+				<row><cell>EIF_DOUBLE_FUNCTION</cell><cell>EIF_REAL_64_FUNCTION</cell></row>
+				<row><cell>eif_real_function</cell><cell>eif_real_32_function</cell></row>
+				<row><cell>eif_double_function</cell><cell>eif_real_64_function</cell></row>
+				<row><cell>EIF_REAL_TYPE</cell><cell>EIF_REAL_32_TYPE</cell></row>
+				<row><cell>EIF_DOUBLE_TYPE</cell><cell>EIF_REAL_64_TYPE</cell></row>
+				<row><cell>EIF_FN_FLOAT</cell><cell>EIF_FN_REAL_32</cell></row>
+				<row><cell>EIF_FN_DOUBLE</cell><cell>EIF_FN_REAL_64</cell></row>
+			</table>
+		</item>
 		</list>
 		<heading><size>3</size>EiffelBase</heading>
 		<list ordered="false">
@@ -59,6 +70,7 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 					<item>Added implementation query <code><feature_name>new_filled_list</feature_name></code> in <code><class_name>ARRAYED_LIST</class_name></code>. Descendants of <code><class_name>ARRAYED_LIST</class_name></code> may need to update their inheritance clause.</item>
 				</list>
 			</item>
+			<item>Added <code><feature_name>merge</feature_name></code> to <code><class_name>HASH_TABLE</class_name></code>.</item>
 			<item>Made implementations of <code><feature_name>cursor</feature_name></code> in descendants of <code><class_name>CURSOR_STRUCTURE</class_name></code> return a precise <code><class_name>CURSOR</class_name></code> type.</item>
 			<item>Reduced feature exportation of routines also used as creation procedures of <code><class_name>CURSOR</class_name></code> descendants to <code><class_name>NONE</class_name></code>.</item>
 			<item>Removed <code><feature_name>make_sublist</feature_name></code> from <code><class_name>TWO_WAY_LIST</class_name></code> public creation procedures.</item>

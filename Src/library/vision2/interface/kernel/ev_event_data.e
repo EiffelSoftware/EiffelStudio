@@ -9,12 +9,12 @@ indexing
 
 class
 	EV_EVENT_DATA
-	
+
 creation
 	make
-	
+
 feature {NONE}  -- Creation
-	
+
 	make is
 		do
 			!EV_EVENT_DATA_IMP! implementation
@@ -27,12 +27,23 @@ feature -- Access
 			-- when event happened
 		do
 			Result := implementation.widget
+		ensure
+			valid_result: Result /= Void
 		end
-	
+
+feature -- Debug
+
+	print_contents is
+		do
+			io.put_string ("EV_EVENT_DATA: ")
+			print (widget)
+			io.put_string ("%N")
+		end
+
 feature -- Implementation
-	
+
 	implementation: EV_EVENT_DATA_I
-	
+
 end -- class EV_EVENT_DATA
 
 --|----------------------------------------------------------------

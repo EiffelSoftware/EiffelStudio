@@ -13,35 +13,30 @@ inherit
 	EV_EVENT_DATA	
 		redefine
 			make,
-			implementation
+			implementation,
+			print_contents
 		end
-	
+
 creation
 	make
-	
+
 feature {NONE} -- Initialization
-	
+
 	make is
 		do
 			!EV_KEY_EVENT_DATA_IMP! implementation
 		end
 
 feature -- Access	
-	
-	state: INTEGER is
-			-- ??
-		do
-			Result := implementation.state
-		end
 
-	keyval: INTEGER is
-			-- ??
+	keycode: INTEGER is
+			-- Server-dependent code corresponding to the keystroke
 		do
-			Result := implementation.keyval
+			Result := implementation.keycode
 		end
 
 	length: INTEGER is
-			-- ??
+			-- length of the string returned by the system
 		do
 			Result := implementation.length
 		end
@@ -50,6 +45,61 @@ feature -- Access
 		-- String given the char equivalent of the key
 		do
 			Result := implementation.string
+		end
+
+	shift_key_pressed: BOOLEAN is
+			-- Is the shift key pressed during the event?
+		do
+			Result := implementation.shift_key_pressed
+		end
+
+	control_key_pressed: BOOLEAN is
+			-- Is the control key pressed during the event?
+		do
+			Result := implementation.control_key_pressed
+		end
+
+	caps_lock_key_pressed: BOOLEAN is
+			-- Is the caps-lock key locked during the event?
+		do
+			Result := implementation.caps_lock_key_pressed
+		end
+
+	num_lock_key_pressed: BOOLEAN is
+			-- Is the num-lock key locked during the event?
+		do
+			Result := implementation.num_lock_key_pressed
+		end
+
+	scroll_lock_key_pressed: BOOLEAN is
+			-- Is the scroll-lock key locked during the event?
+		do
+			Result := implementation.scroll_lock_key_pressed
+		end
+
+feature -- Debug
+	
+	print_contents is
+			-- print the contents of the object
+		do
+			io.put_string (" Keycode: ")
+			io.put_integer (keycode)
+			io.put_string (" Length: ")
+			io.put_integer (length)
+			io.put_string (" String: ")
+			io.put_string (string)
+			io.put_string ("%N")
+			io.put_string (" Shift: ")
+			io.put_boolean (shift_key_pressed)
+			io.put_string (" Control: ")
+			io.put_boolean (control_key_pressed)
+			io.put_string (" Caps lock: ")
+			io.put_boolean (caps_lock_key_pressed)
+			io.put_string ("%N")
+			io.put_string (" Num Lock: ")
+			io.put_boolean (num_lock_key_pressed)
+			io.put_string (" Scroll Lock: ")
+			io.put_boolean (scroll_lock_key_pressed)
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation

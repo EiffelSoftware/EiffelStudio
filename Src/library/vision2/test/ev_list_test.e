@@ -45,7 +45,7 @@ feature -- Basic operation
 			s: STRING
 			p: PROCEDURE [ANY, TUPLE []]
 		do
-			description := "Testing" + subject_name + "%N"
+			description := "--------------------------------------------------------------------------------%NTesting " + subject_name + "%N%N"
 			test_successful := True
 
 			create test_list.make
@@ -78,7 +78,7 @@ feature -- Basic operation
 				sub_test_successful := True
 				s ?= test_list.item.entry (1)
 				p ?= test_list.item.entry (2)
-				description.append (s + ":")
+				description.append ("  " + s + ":")
 				empty_and_test (p, s)
 				fill_start_and_test (p, s)
 				fill_go_middle_and_test (p, s)
@@ -93,7 +93,7 @@ feature -- Basic operation
 					test_successful := False
 				end
 			end
-			description.append ("%N" + subject_name)
+			description.append ("%N")
 			if test_successful then
 				description.append ("PASSED%N")
 			else
@@ -708,6 +708,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/16 16:50:03  oconnor
+--| tweaked output format
+--|
 --| Revision 1.21  2000/03/15 21:11:45  oconnor
 --| modified output for regression testing
 --|

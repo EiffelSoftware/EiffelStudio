@@ -39,24 +39,22 @@
 #include <io.h>
 #endif
 
- 
-#define IDRF_SIZE 4096 /* This is the size of the buffer to write to
-file or send to network.
-
-This cannot be larger than SHORT_MAX!!!
-
-This was previously 1024, but there was performance problems at least
-on Solaris 
-*/
-
-rt_private IDRF idrf;
 
 rt_shared char *idr_temp_buf;	/* This is shared so it can be freed
-							 * if an exception occurs.
-							 */
+							 * if an exception occurs. */
 
+/* Private Data */
 rt_private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
+rt_private long idrf_buffer_size = 262144L; /* Size of the IDRF buffer, set by `run_idr_init' */
+rt_private IDRF idrf;
 
+/* Private functions */
+rt_private int (*run_idr_read_func) (IDR *bu);	/* `run_idr_read' function. This can be different
+											 * depending on which version of INDEPENDENT_STORE
+											 * we are using. The old one is based on `short'
+											 * the new one on `long' */
+rt_private int old_run_idr_read (IDR *bu);
+rt_private int run_idr_read (IDR *bu);
 
 rt_public bool_t run_idr_setpos(IDR *idrs, int pos)
 {
@@ -70,7 +68,6 @@ rt_public bool_t run_idr_setpos(IDR *idrs, int pos)
 	idrs->i_ptr = idrs->i_buf + pos;
 	return TRUE;
 }
-
 
 rt_public void run_mem_destroy(IDR *idrs)
 {
@@ -128,9 +125,16 @@ rt_public int run_idrf_create(int size)
 }
 
 
-rt_public void run_idr_init (void)
+rt_public void run_idr_init (long idrf_size, EIF_BOOLEAN is_limited_by_short)
 {
-	if (-1 == run_idrf_create (IDRF_SIZE))
+	idrf_buffer_size = idrf_size;
+
+	if (is_limited_by_short) 
+		run_idr_read_func = old_run_idr_read;
+	else
+		run_idr_read_func = run_idr_read;
+
+	if (-1 == run_idrf_create (idrf_size))
 		eraise ("cannot allocate idrf", EN_MEM);
 
 		/* Reset amount_read */
@@ -143,16 +147,18 @@ rt_public void run_idr_destroy (void)
 	run_mem_destroy(&idrf.i_decode);
 }
 
-
-rt_private int run_idr_read (IDR *bu)
+/* Old run_idr_read function. It is based on buffer which are limited by
+ * SHORT_MAX, in order to retrieve storable done with version prior or
+ * equal to 4.2F */
+rt_private int old_run_idr_read (IDR *bu)
 {
 	EIF_GET_CONTEXT
-        register char * ptr = bu->i_buf;
-        short read_size, amount_left;
-        register int part_read = 0, total_read = 0;
+	register char * ptr = bu->i_buf;
+	short read_size, amount_left;
+	register int part_read = 0, total_read = 0;
 
-        if ((char_read_func ((char *)(&read_size), sizeof (short))) < sizeof (short))
-                eio();
+	if ((char_read_func ((char *)(&read_size), sizeof (short))) < sizeof (short))
+		eio();
 
 	read_size = ntohs (read_size);
 #ifdef DEBUG
@@ -172,20 +178,49 @@ rt_private int run_idr_read (IDR *bu)
 	EIF_END_GET_CONTEXT
 }
 
+rt_private int run_idr_read (IDR *bu)
+{
+	EIF_GET_CONTEXT
+	register char * ptr = bu->i_buf;
+	long read_size, amount_left;
+	register int part_read = 0, total_read = 0;
+
+	if ((char_read_func ((char *)(&read_size), sizeof (long))) < sizeof (long))
+		eio();
+
+	read_size = ntohl (read_size);
+#ifdef DEBUG
+	if (read_size > idrs_size (bu))
+		print_err_msg(stderr, "Too large %d info for %d buffer\n", read_size, idrs_size (bu));
+#endif
+
+	amount_left = read_size;
+	while (total_read < read_size) {
+		if ((part_read = char_read_func (ptr, amount_left)) < 0)
+			eio();
+		total_read += part_read;
+		ptr += part_read;
+		amount_left -= part_read;
+		}
+	return total_read;
+	EIF_END_GET_CONTEXT
+}
+
 rt_private void run_idr_write (IDR *bu)
 {
-        register char * ptr = idrs_buf (bu);
-        short host_send, send_size = (short) (bu->i_ptr - idrs_buf (bu));
-        register int number_writen;
+	EIF_GET_CONTEXT
+	register char * ptr = idrs_buf (bu);
+	long host_send, send_size = (long) (bu->i_ptr - ptr);
+	register int number_writen;
 
 #ifdef DEBUG
 	if (send_size == 0)
 		print_err_msg(stderr, "send size equal zero");
 #endif
 
-	host_send = htons (send_size);
+	host_send = htonl (send_size);
 
-	if ((char_write_func ((char *)&host_send, sizeof (short))) < sizeof (short))
+	if ((char_write_func ((char *)&host_send, sizeof (long))) < sizeof (long))
 		eio();
 
 	while (send_size > 0) {
@@ -194,14 +229,14 @@ rt_private void run_idr_write (IDR *bu)
 		send_size -= number_writen;
 		ptr += number_writen;
 		}
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void check_capacity (IDR *bu, int size)
 {
-
 	if (idrs_op (bu)) {
 		if ((bu->i_ptr + size) > (bu->i_buf + amount_read)) {
-			amount_read = run_idr_read (bu);
+			amount_read = run_idr_read_func (bu);
 			(void) run_idr_setpos (bu, 0);
 		}
 	} else {
@@ -214,7 +249,7 @@ rt_public void check_capacity (IDR *bu, int size)
 
 rt_public void idr_flush (void)
 {
-	check_capacity (&idrf.i_encode, IDRF_SIZE);
+	check_capacity (&idrf.i_encode, idrf_buffer_size);
 }
 
 rt_public bool_t run_long(IDR *idrs, long int *lp, int len, int size)
@@ -405,7 +440,7 @@ rt_public bool_t run_int(IDR *idrs, uint32 *ip, int len)
 
 rt_public void ridr_multi_char (char *obj, int num)
 {
-	int cap = IDRF_SIZE / sizeof (char);
+	int cap = idrf_buffer_size / sizeof (char);
 
 	if ((num - cap) <= 0) {
 		check_capacity (&idrf.i_decode, num);
@@ -417,21 +452,20 @@ rt_public void ridr_multi_char (char *obj, int num)
 
 		while (count) {
 			check_capacity (&idrf.i_decode, cap);
-                	bcopy (idrf.i_decode.i_ptr, obj, cap);
+            bcopy (idrf.i_decode.i_ptr, obj, cap);
 			obj += cap;
-                	idrf.i_decode.i_ptr += cap;
+            idrf.i_decode.i_ptr += cap;
 			count--;
 		}
 		check_capacity (&idrf.i_decode, left_over);
-                bcopy (idrf.i_decode.i_ptr, obj, left_over);
-                idrf.i_decode.i_ptr += left_over;
-
+		bcopy (idrf.i_decode.i_ptr, obj, left_over);
+		idrf.i_decode.i_ptr += left_over;
 	}
 }
 
 rt_public void widr_multi_char (char *obj, int num)
 {
-	int cap = IDRF_SIZE / sizeof (char);
+	int cap = idrf_buffer_size / sizeof (char);
 
 	if ((num - cap) <= 0) {
 		check_capacity (&idrf.i_encode, num);
@@ -465,7 +499,7 @@ rt_public void ridr_multi_any (char *obj, int num)
 	check_capacity (&idrf.i_decode, sizeof (char));
 	bcopy (idrf.i_decode.i_ptr, &s, sizeof (char));
 	idrf.i_decode.i_ptr += sizeof (char);
-	cap = IDRF_SIZE / s;
+	cap = idrf_buffer_size / s;
 
 	if ((num - cap) <= 0) {
 		run_ulong (&idrf.i_decode, (long unsigned int *) obj, num, s);
@@ -475,17 +509,17 @@ rt_public void ridr_multi_any (char *obj, int num)
 		long *lptr = (long *) obj;
 
 		while (count) {
-                	run_ulong (&idrf.i_decode, (long unsigned int *) lptr, cap, s);
+			run_ulong (&idrf.i_decode, (long unsigned int *) lptr, cap, s);
 			lptr += cap;
 			count--;
 		}
-                run_ulong (&idrf.i_decode, (long unsigned int *) lptr, left_over, s);
+		run_ulong (&idrf.i_decode, (long unsigned int *) lptr, left_over, s);
 	}
 }
 
 rt_public void widr_multi_any (char *obj, int num)
 {
-	int cap = IDRF_SIZE / sizeof (char *);
+	int cap = idrf_buffer_size / sizeof (char *);
 	char s = (char) sizeof (char *);
 
 	check_capacity (&idrf.i_encode, sizeof (char));
@@ -500,14 +534,13 @@ rt_public void widr_multi_any (char *obj, int num)
 		long *lptr = (long *) obj;
 
 		while (count) {
-                	run_ulong (&idrf.i_encode, (long unsigned int *) lptr, cap, sizeof (char *));
+			run_ulong (&idrf.i_encode, (long unsigned int *) lptr, cap, sizeof (char *));
 			lptr += cap;
 			count--;
 		}
-                run_ulong (&idrf.i_encode, (long unsigned int *) lptr, left_over, sizeof (char *));
+		run_ulong (&idrf.i_encode, (long unsigned int *) lptr, left_over, sizeof (char *));
 	}
 }
-
 
 rt_public void ridr_multi_int (long int *obj, int num)
 {
@@ -517,7 +550,7 @@ rt_public void ridr_multi_int (long int *obj, int num)
 	check_capacity (&idrf.i_decode, sizeof (char));
 	bcopy (idrf.i_decode.i_ptr, &s, sizeof (char));
 	idrf.i_decode.i_ptr += sizeof (char);
-	cap = IDRF_SIZE / s;
+	cap = idrf_buffer_size / s;
 
 	if ((num - cap) <= 0) {
 		run_ulong (&idrf.i_decode, (long unsigned int *) obj, num, s);
@@ -526,17 +559,17 @@ rt_public void ridr_multi_int (long int *obj, int num)
 		int left_over = num % cap;
 
 		while (count) {
-                	run_ulong (&idrf.i_decode, (long unsigned int *) obj, cap, s);
+			run_ulong (&idrf.i_decode, (long unsigned int *) obj, cap, s);
 			obj += cap;
 			count--;
 		}
-                run_ulong (&idrf.i_decode, (long unsigned int *) obj, left_over, s);
+		run_ulong (&idrf.i_decode, (long unsigned int *) obj, left_over, s);
 	}
 }
 
 rt_public void widr_multi_int (long int *obj, int num)
 {
-	int cap = IDRF_SIZE / sizeof (long);
+	int cap = idrf_buffer_size / sizeof (long);
 	char s = (char) sizeof (long);
 
 	check_capacity (&idrf.i_encode, sizeof (char));
@@ -550,11 +583,11 @@ rt_public void widr_multi_int (long int *obj, int num)
 		int left_over = num % cap;
 
 		while (count) {
-                	run_ulong (&idrf.i_encode, (long unsigned int *) obj, cap, sizeof (long));
+			run_ulong (&idrf.i_encode, (long unsigned int *) obj, cap, sizeof (long));
 			obj += cap;
 			count--;
 		}
-                run_ulong (&idrf.i_encode, (long unsigned int *) obj, left_over, sizeof (long));
+		run_ulong (&idrf.i_encode, (long unsigned int *) obj, left_over, sizeof (long));
 	}
 }
 
@@ -610,7 +643,7 @@ rt_public void ridr_multi_double (double *obj, int num)
 		bcopy (idrf.i_decode.i_ptr, idr_temp_buf, (int)temp_len);
 		idrf.i_decode.i_ptr += (int)temp_len;
 		*(idr_temp_buf + temp_len) = '\0';
-		sscanf (idr_temp_buf, "%lf", obj++);
+		sscanf (idr_temp_buf, "%G", obj++);
 	}
 }
 
@@ -620,7 +653,7 @@ rt_public void widr_multi_double (double *obj, int num)
 	char temp_len;
 
 	while (num > i++) {
-		sprintf (idr_temp_buf, "%lf", *(obj++));
+		sprintf (idr_temp_buf, "%G", *(obj++));
 		temp_len = (char) strlen (idr_temp_buf);
 		check_capacity (&idrf.i_encode, sizeof (char));
 		bcopy (&temp_len, idrf.i_encode.i_ptr, sizeof(char));
@@ -643,7 +676,7 @@ rt_public void ridr_multi_bit (struct bit *obj, int num, long int elm_siz)
 
 	run_int (&idrf.i_decode, (uint32 *) (&number_of_bits), 1);
 	siz = BIT_NBPACK (number_of_bits);
-	cap = IDRF_SIZE / (siz * sizeof (uint32));
+	cap = idrf_buffer_size / (siz * sizeof (uint32));
 
 
 	if (cap != 0) {
@@ -653,9 +686,9 @@ rt_public void ridr_multi_bit (struct bit *obj, int num, long int elm_siz)
 			iptr = ARENA ((((char *)obj) + (elm_siz * i)));
 		}
 	} else {
-		int loop_c, count = (siz * sizeof (uint32)) / IDRF_SIZE;
-		int left_over = (siz * sizeof (uint32))% IDRF_SIZE;
-		int write_size = IDRF_SIZE / sizeof (uint32);
+		int loop_c, count = (siz * sizeof (uint32)) / idrf_buffer_size;
+		int left_over = (siz * sizeof (uint32))% idrf_buffer_size;
+		int write_size = idrf_buffer_size / sizeof (uint32);
 
 		while (num > i++) {
 			loop_c = count;
@@ -678,7 +711,7 @@ rt_public void widr_multi_bit (struct bit *obj, int num, uint32 len, int elm_siz
 	int cap;
 	uint32 *iptr = ARENA (obj);
 
-	cap = IDRF_SIZE / (siz * sizeof (uint32));
+	cap = idrf_buffer_size / (siz * sizeof (uint32));
 
 	run_int (&idrf.i_encode, &len, 1);
 	if (cap != 0) {
@@ -687,9 +720,9 @@ rt_public void widr_multi_bit (struct bit *obj, int num, uint32 len, int elm_siz
 			iptr = ARENA ((((char *)obj) + (elm_siz * i)));
 		}
 	} else {
-		int loop_c, count = (siz * sizeof (uint32)) / IDRF_SIZE;
-		int left_over = (siz * sizeof (uint32)) % IDRF_SIZE;
-		int write_size = IDRF_SIZE / sizeof (uint32);
+		int loop_c, count = (siz * sizeof (uint32)) / idrf_buffer_size;
+		int left_over = (siz * sizeof (uint32)) % idrf_buffer_size;
+		int write_size = idrf_buffer_size / sizeof (uint32);
 
 		while (num > i++) {
 			loop_c = count;

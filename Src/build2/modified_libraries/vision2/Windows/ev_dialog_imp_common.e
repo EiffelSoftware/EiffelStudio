@@ -616,6 +616,9 @@ feature {EV_WIDGET_I} -- Implementation
 			Precursor {EV_DIALOG_I} (a_button)
 			if item /= Void then
 				widget_imp ?= item.implementation
+				check
+					widget_imp_not_void: widget_imp /= Void
+				end
 				widget_imp.redraw_current_push_button (a_button)
 			end
 		end
@@ -637,4 +640,3 @@ end -- class EV_DIALOG_IMP_COMMON
 --| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

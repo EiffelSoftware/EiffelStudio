@@ -79,6 +79,9 @@ feature {NONE} -- Implementation
 			if contents.has (Application_file_name) then
 				clashing_files := clashing_files + Application_file_name + "%N"
 			end
+			if contents.has (Common_test_file_name) then
+				clashing_files := clashing_files + Common_test_file_name + "%N"
+			end
 			if contents.has (Test_controller.selected_test_name + ".e") then
 				clashing_files := clashing_files + Test_controller.selected_test_name + ".e" + "%N"
 			end

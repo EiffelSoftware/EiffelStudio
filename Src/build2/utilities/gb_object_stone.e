@@ -27,5 +27,10 @@ feature -- Access
 	associated_top_level_object: INTEGER
 		-- The id of the top level object `Current' represents,
 		-- or `0' if NONE.
+		
+	all_contained_instances: HASH_TABLE [INTEGER, INTEGER]
 
+invariant
+	all_contained_instance_not_void: all_contained_instances /= Void
+	
 end -- class GB_OBJECT_STONE

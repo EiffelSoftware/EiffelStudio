@@ -29,19 +29,45 @@ inherit
 			effects as wel_effects,
 			set_effects as wel_set_effects,
 			set_background_color as wel_set_background_color,
-			background_color as wel_background_color
+			background_color as wel_background_color,
+			height as wel_height
 		undefine
-			default_create, copy, is_equal
+			default_create, copy, is_equal, out
 		end
 		
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
+		undefine
+			out
 		end
 		
 	EV_FONT_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			out
+		end
+		
+	WEL_FONT_FAMILY_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			out
+		end
+		
+	WEL_FONT_PITCH_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			out
+		end
+		
+	WEL_SHARED_FONTS
+		export
+			{NONE} all
+		undefine
+			out
 		end
 	
 create
@@ -50,11 +76,18 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			--
+			-- Create `Current' and assign `an_interface' to `interface'.
+		local
+			l_font: WEL_LOG_FONT
 		do
 			base_make (an_interface)
 			wel_make
 			set_default_format
+			set_text_color (create {WEL_COLOR_REF}.make_rgb (0, 0, 0))
+			wel_set_background_color (create {WEL_COLOR_REF}.make_rgb (255, 255, 255))
+				-- Retreive default font into `log_font' to ensure  `wel_screen_font_family'
+				-- is set correctly.
+			l_font := default_wel_log_font
 		end
 		
 	initialize is
@@ -64,79 +97,69 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	is_striked_out: BOOLEAN is
-			-- Is the character striked out?
-		do
-			Result := flag_set (wel_effects, Cfm_strikeout)
-		end
-			
-	is_underlined: BOOLEAN is
-			-- Is the character underlined?
-		do
-			Result := flag_set (wel_effects, Cfm_underline)
-		end
 		
 	color: EV_COLOR is
 			-- Color of the current format.
+		local
+			color_ref: WEL_COLOR_REF
 		do
-			if color_imp /= Void then
-				Result ?= color_imp.interface
-			else
-				Result := (create {EV_STOCK_COLORS}).black
-			end
+			color_ref := text_color
+			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.blue, color_ref.green)
 		end
 		
 	background_color: EV_COLOR is
 			-- Background color of the current format.
+		local
+			color_ref: WEL_COLOR_REF
 		do
-			if background_color_imp /= Void then
-				Result ?= background_color_imp.interface
-			else
-				Result := (create {EV_STOCK_COLORS}).white
-			end
+			color_ref := wel_background_color
+			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.blue, color_ref.green)
 		end
 		
 	font: EV_FONT is
 			-- Font of the current format.
 		local
-			a_font_imp: EV_FONT_IMP
+			font_imp: EV_FONT_IMP
+			a_wel_font: WEL_FONT
 		do
-			if font_imp /= Void then
-				Result := font_imp.interface
-			else
-				create Result
-				a_font_imp ?= Result.implementation
-				a_font_imp.set_by_wel_font ((create {WEL_SHARED_FONTS}).gui_font)
+			create Result
+			font_imp ?= Result.implementation
+			create a_wel_font.make_indirect (log_font)
+			font_imp.set_by_wel_font (a_wel_font)
+			if shape = shape_italic then
+				font_imp.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+			end
+			if is_bold then
+				font_imp.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
 			end
 		end
 		
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'.
+		local
+			effects_flag: INTEGER
+			screen_dc: WEL_SCREEN_DC
 		do
-			if internal_effects /= Void then
-				Result := internal_effects.twin
-			else
-				create Result
+			create screen_dc
+			screen_dc.get
+			create Result
+			effects_flag := wel_effects
+			if flag_set (effects_flag, cfm_strikeout) then
+				Result.enable_striked_out
 			end
+			if flag_set (effects_flag, Cfm_underline) then
+				Result.enable_underlined
+			end
+			Result.set_vertical_offset (point_to_pixel (screen_dc, vertical_offset, 20))
+			screen_dc.release
 		end
-
-	font_imp: EV_FONT_IMP
-		-- Font of `Current'. Void if not set by user.
-		
-	color_imp: EV_COLOR_IMP
-		-- Color applied to characters. Void if None.
-		
-	background_color_imp: EV_COLOR_IMP
-		-- Background color applied to characters. Void if None.
-		
-	internal_effects: EV_CHARACTER_FORMAT_EFFECTS
-		-- Internal effects applicable to `Current'.
 
 feature -- Status setting
 		
 	set_font (a_font: EV_FONT) is
 			-- Make `value' the new font.
+		local
+			font_imp: EV_FONT_IMP
 		do
 			font_imp ?= a_font.implementation
 			if font_imp.internal_face_name /= Void then
@@ -159,6 +182,8 @@ feature -- Status setting
 
 	set_color (a_color: EV_COLOR) is
 			-- Make `value' the new color.
+		local
+			color_imp: EV_COLOR_IMP
 		do
 			color_imp ?= a_color.implementation
 			set_text_color (color_imp)
@@ -166,10 +191,11 @@ feature -- Status setting
 		
 	set_background_color (a_color: EV_COLOR) is
 			-- Make `value' the new background color.
+		local
+			color_imp: EV_COLOR_IMP
 		do
-			background_color_imp ?= a_color.implementation
-			wel_set_background_color (background_color_imp)
-			
+			color_imp ?= a_color.implementation
+			wel_set_background_color (color_imp)
 		end
 		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
@@ -192,14 +218,118 @@ feature -- Status setting
 				disable_striked_out
 			end
 			set_offset (pixel_to_point (screen_dc, an_effect.vertical_offset) * 20)
-			internal_effects := an_effect.twin
 			
 			screen_dc.release
 		end
 		
-	set_vertical_offset (an_offset: INTEGER) is
-			-- Assign `an_offset' to `vertical_offset'.
+feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
+
+	name: STRING is
+			-- Face name used by `Current'.
 		do
+			Result := face_name
+		end
+		
+	family: INTEGER is
+			-- Family used by `Current'.
+		local
+			l_font: WEL_LOG_FONT
+			l_family: INTEGER
+			l_pitch: INTEGER
+		do
+			l_font := log_font
+			l_family := l_font.family
+			l_pitch := l_font.pitch
+			if l_family = wel_screen_font_family then
+				Result := family_screen
+			elseif l_family = ff_roman then
+				Result := family_roman
+			elseif l_family = ff_swiss then
+				Result := family_sanS
+			elseif l_family = ff_modern then
+				if l_pitch = variable_pitch then
+					Result := family_modern
+				else
+					Result := family_typewriter
+				end
+			else
+				Result := family_sans
+			end
+		end
+		
+	wel_screen_font_family: INTEGER
+		-- Font family of the wel screen font.
+		
+	Default_wel_log_font: WEL_LOG_FONT is
+			-- Structure used to initialize fonts.
+		once
+			create Result.make_by_font (gui_font)
+				
+				-- set the WEL family associated to Vision2 Screen fonts.
+			wel_screen_font_family := Result.family
+		end
+		
+	italic: BOOLEAN is
+			-- Is `Current' italic?
+		do
+			Result := flag_set (wel_effects, cfm_italic)
+		end
+		
+	is_bold: BOOLEAN is
+			-- Is `Current' bold?
+		do
+			Result := flag_set (wel_effects, cfm_bold)
+		end
+		
+	shape: INTEGER is
+			-- Shape of `Current'.
+		do
+			if flag_set (wel_effects, cfm_italic) then
+				Result := shape_italic	
+			else
+				Result := shape_regular
+			end
+		end
+		
+	vertical_offset: INTEGER is
+			-- Vertical offset of `Current'.
+		local
+			screen_dc: WEL_SCREEN_DC
+		do
+			create screen_dc
+			screen_dc.get
+			Result := point_to_pixel (screen_dc, offset, 20)
+			screen_dc.release
+		end
+		
+	height: INTEGER is
+			--  Height of `Current'.
+		do
+			Result := height_in_pixels
+		end
+		
+	fcolor: INTEGER is
+			-- foreground color RGB packed into 24 bit.
+		do
+			Result := text_color.item
+		end
+		
+	bcolor: INTEGER is
+			-- background color RGB packed into 24 bit.
+		do
+			Result := wel_background_color.item
+		end
+		
+	is_striked_out: BOOLEAN is
+			-- Is the character striked out?
+		do
+			Result := flag_set (wel_effects, Cfm_strikeout)
+		end
+			
+	is_underlined: BOOLEAN is
+			-- Is the character underlined?
+		do
+			Result := flag_set (wel_effects, Cfm_underline)
 		end
 
 feature {NONE} -- Implementation

@@ -3,6 +3,10 @@ class DEBUGGABLE
 
 feature -- Data
 
+	class_type: CLASS_TYPE;
+			-- Class type of debuggable feature.
+			-- (Varies for generic instantiations)
+
 	byte_code: CHARACTER_ARRAY;
 			-- Array of debuggable byte
 			-- code
@@ -70,6 +74,11 @@ feature -- Setting
 		do
 			was_frozen := True
 		end;
+
+	set_class_type (ct: CLASS_TYPE) is
+		do
+			class_type := ct
+		end
 
 feature -- Tracing
 

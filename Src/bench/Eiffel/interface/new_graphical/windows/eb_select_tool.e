@@ -217,6 +217,10 @@ feature -- Basic operations
 					local_tool ?= selection.tool
 					if local_tool /= Void and then not local_tool.destroyed then
 						local_tool.raise
+					else
+						check
+							local_tool_must_exist: False
+						end
 					end
 				end
 --			else

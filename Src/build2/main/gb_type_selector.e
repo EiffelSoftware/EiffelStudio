@@ -55,7 +55,7 @@ feature -- Initialization
 			recursive_do_all (agent strip_leading_ev (?))
 		end
 
-feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Basic operations
+feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_BOX} -- Basic operations
 
 	update_drop_actions_for_all_children  (an_object: GB_OBJECT) is
 			-- Generate correct drop_actions for every child in `Current' when
@@ -76,7 +76,7 @@ feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Basic operations
 			selector_item: GB_TYPE_SELECTOR_ITEM
 		do
 			selector_item ?= an_item
-				-- We check that the selctor item is not void, as not
+				-- We check that the selector item is not void, as not
 				-- all items in the selector tree are of type
 				-- GB_SELECTOR_ITEM. For example, "widgets" is just a basic
 				-- tree item, as you can do nothing with it.

@@ -1,11 +1,10 @@
 indexing
-
-        description: 
-                "EiffelVision push button. Mswindows implementation.";
-        status: "See notice at end of class";
-        id: "$Id$";
-        date: "$Date$";
-        revision: "$Revision$"
+        description: "EiffelVision push button.%
+					% Mswindows implementation."
+        status: "See notice at end of class"
+        id: "$$"
+        date: "$$"
+        revision: "$$"
         
 class
     EV_BUTTON_IMP
@@ -20,7 +19,8 @@ inherit
        
 	EV_BAR_ITEM_IMP
 		redefine
-			wel_window
+			wel_window,
+			set_insensitive
 		end
         
 	EV_TEXT_CONTAINER_IMP
@@ -31,15 +31,22 @@ inherit
 	EV_FONTABLE_IMP
 
 creation
-        make_with_text
+        make, make_with_text
 
 
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
+		local
+			par_imp: EV_CONTAINER_IMP
 		do
+			par_imp ?= par.implementation
+			check
+				valid_container: par_imp /= Void
+			end
+			!WEL_PUSH_BUTTON!wel_window.make (par_imp.wel_window, "", 0, 0, 0, 0, 0)
+			set_font (font)
 		end
-
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
         		-- Create a wel push button.
@@ -55,8 +62,16 @@ feature {NONE} -- Initialization
 			set_default_size
 		end
 
-feature -- Basic operation
-
+feature -- Event - command association
+	
+	add_click_command ( command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is	
+		do
+			add_button_press_command (1, command, arguments)
+		end
+		
+feature {NONE} -- Implementation	
+	
 	set_default_size is
 		-- Resize to a default size.
 		local
@@ -73,16 +88,8 @@ feature -- Basic operation
 
 	Extra_width: INTEGER is 10
 
-feature -- Event - command association
-	
-	add_click_command ( command: EV_COMMAND; 
-			    arguments: EV_ARGUMENTS) is	
-		do
-			add_button_press_command (1, command, arguments)
-		end
-		
-feature {NONE} -- Implementation	
-	
+feature {NONE} -- Implementation
+
 	wel_window: WEL_BUTTON
 			-- Current wel_window
 			-- We can't use directly a wel_push_button here,

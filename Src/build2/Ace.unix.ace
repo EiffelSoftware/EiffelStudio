@@ -1,0 +1,135 @@
+system
+	test
+
+root
+	GB: execute
+
+default
+	assertion(check)
+	assertion(require)
+	assertion(ensure)
+	arguments(" ")
+	disabled_debug(yes)
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(yes)
+	msil_generation_type("exe")
+	check_vape(no)
+	console_application(no)
+	address_expression(no)
+	array_optimization(yes)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(yes)
+	inlining(no)
+	multithreaded(no)
+
+
+-- Note that we exclude ev_widget, as we have a new version for build, which allows
+-- you to query whether the minimum_size and minimum_height were set by the user.
+
+cluster
+	all build2:		"$WS/build2"
+		exclude
+			"object_editor"; "eifgen"; 
+		end
+
+	dev:		"$EIFFEL_SRC/library"
+
+	all gel (dev):		"$/gel"
+		default
+			assertion(no)
+		end
+
+	all vision2 (dev):		"$/vision2"
+		include
+			"ev_button"; 
+		exclude
+			"new_figures"; "mswin"; "components"; "obsolete"; "release"; "ev_widget.e"; 
+		default
+			assertion(no)
+		end
+
+	all base:		"$EIFFEL_SRC/library/base"
+
+		exclude
+			"table_eiffel3"; 
+		default
+			assertion(no)
+		end
+
+	exml_interface:		"$WS/exml_02_cvs_anon/exml/exml/lib/interface"
+
+	exml_general_interface (exml_interface):		"$/general"
+
+	exml_event_interface (exml_interface):		"$/event"
+
+	exml_tree_interface (exml_interface):		"$/tree"
+
+	exml_factory_interface (exml_interface):		"$/factory"
+
+	exml_formater_interface (exml_interface):		"$/formater"
+
+	exml_position_interface (exml_interface):		"$/position"
+
+	exml_source_interface (exml_interface):		"$/source"
+
+	exml_implementation:		"$WS/exml_02_cvs_anon/exml/exml/lib/implementation"
+
+	exml_implementation_interface (exml_implementation):		"$/implementation_interface"
+
+	exml_general_implementatin_interface (exml_implementation_interface):		"$/general"
+
+	exml_event_implementation_interface (exml_implementation_interface):		"$/event"
+
+	exml_tree_implementation_interface (exml_implementation_interface):		"$/tree"
+
+	exml_expat_implementation (exml_implementation):		"$/expat"
+
+	exml_expat_general_implementation (exml_expat_implementation):		"$/general"
+
+	exml_expat_event_implementation (exml_expat_implementation):		"$/event"
+
+	exml_expat_ise_implementation (exml_expat_implementation):		"$/compiler_specific/ise"
+
+	exml_expat_factory_implementation (exml_expat_implementation):		"$/factory"
+
+	exml_expat_position_implementation (exml_expat_implementation):		"$/position"
+
+	exml_expat_source_implementation (exml_expat_implementation):		"$/source"
+
+	exml_tree_on_event_implementation (exml_implementation):		"$/tree_on_event"
+
+	exml_tree_on_event_tree_implementation (exml_tree_on_event_implementation):		"$/tree"
+
+	exml_tree_on_event_factory_implementation (exml_tree_on_event_implementation):		"$/factory"
+
+	all ucstring_library:		"$WS/exml_02_cvs_anon/ucstring/lib"
+
+	all_ucstring_spec:		"$WS/exml_02_cvs_anon/ucstring/spec/ise"
+
+	all gobo:		"$WS/gobo_16/library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; "test"; 
+		end
+
+external
+
+	include_path:
+		"D:\work\library\expat\xmlparse",
+		"d:\work\library\wel\spec\windows\include",
+		"d:\work\library\vision2\spec\include",
+		"d:\work\library\gobo_16\library\kernel\include",
+		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib"
+
+	object:
+		"d:\work\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib\msc\exml.lib",
+		"d:\work\library\expat\lib\xmlparse.lib"
+
+end

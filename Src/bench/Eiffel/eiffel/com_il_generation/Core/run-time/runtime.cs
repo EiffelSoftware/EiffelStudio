@@ -21,6 +21,9 @@ public delegate void WEL_ENUM_FONT_DELEGATE (IntPtr lpelf, IntPtr lpntm, int fon
 public delegate void WEL_ENUM_WINDOW_DELEGATE (IntPtr hwnd);
 public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int pixmap_width,
 	int pixmap_height, IntPtr rgb_data, IntPtr alpha_data);
+public delegate int WEL_RICH_EDIT_STREAM_IN_DELEGATE (IntPtr a_buffer, int a_buffer_length, IntPtr a_data_length);
+public delegate int WEL_RICH_EDIT_STREAM_OUT_DELEGATE (IntPtr a_buffer, int length);
+public delegate void WEL_DISK_SPACE_DELEGATE (int free_space, int total_space, int free_space_in_bytes, int total_space_in_bytes);
 
 [Serializable]
 public class RUN_TIME

@@ -18,28 +18,35 @@ inherit
 feature -- Windowing
 
 	is_cascade_grab: BOOLEAN is
-			-- Is the shell poped up with cascade grab (allowing the other
-			-- shells poped up with grab to receive events) ?
+			-- Is the shell popped up with cascade grab (allowing the other
+			-- shells popped up with grab to receive events) ?
 		do
 			Result := implementation.is_cascade_grab
 		end; 
 
 	is_exclusive_grab: BOOLEAN is
-			-- Is the shell poped up with exclusive grab ?
+			-- Is the shell popped up with exclusive grab ?
 		do
 			Result := implementation.is_exclusive_grab
 		end;
 
 	is_no_grab: BOOLEAN is
-			-- Is the shell poped up with no grab ?
+			-- Is the shell popped up with no grab ?
 		do
 			Result := implementation.is_no_grab
 		end;
 
 	is_poped_up: BOOLEAN is
-			-- Is the popup widget poped up on screen ?
+			-- Is the popup widget popped up on screen ?
+		obsolete "Use is_popped_up, corrected spelling for feature."
 		do
-			Result := implementation.is_poped_up
+			Result := implementation.is_popped_up
+		end;
+
+	is_popped_up: BOOLEAN is
+			-- Is the popup widget popped up on screen ?
+		do
+			Result := implementation.is_popped_up
 		end;
 
 	popdown is
@@ -47,7 +54,7 @@ feature -- Windowing
 		do
 			implementation.popdown
 		ensure
-			Not_poped_up: not is_poped_up
+			Not_popped_up: not is_popped_up
 		end;
 
 	popup is
@@ -55,12 +62,12 @@ feature -- Windowing
 		do
 			implementation.popup
 		ensure
-			Poped_up: is_poped_up
+			Poped_up: is_popped_up
 		end;
 
 	set_cascade_grab is
-			-- Specifies that the shell would be poped up with cascade grab.
-			-- (Allowing the other shells poped up with grab to receive events).
+			-- Specifies that the shell would be popped up with cascade grab.
+			-- (Allowing the other shells popped up with grab to receive events).
 		do
 			implementation.set_cascade_grab
 		ensure
@@ -68,7 +75,7 @@ feature -- Windowing
 		end;
 
 	set_exclusive_grab is
-			-- Specifies that the shell would be poped up with exclusive grab.
+			-- Specifies that the shell would be popped up with exclusive grab.
 			-- (Allowing only the current shell to receive events);
 		do
 			implementation.set_exclusive_grab
@@ -77,7 +84,7 @@ feature -- Windowing
 		end; 
 
 	set_no_grab is
-			-- Specifies that the shell would be poped up with no grab.
+			-- Specifies that the shell would be popped up with no grab.
 		do
 			implementation.set_no_grab
 		ensure

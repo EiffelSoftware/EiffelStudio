@@ -47,7 +47,7 @@ feature -- List
 			from
 				position := position+1
 			until
-				(position > count) or else (not (list.item (position) = Void))
+				(position > count) or else list.item (position) /= Void
 			loop
 				position := position+1
 			end
@@ -62,7 +62,7 @@ feature -- List
 		do
 			Result := list.item (position)
 		ensure
-			not (Result = Void)
+			Result /= Void
 		end;
 
 	start is
@@ -73,7 +73,7 @@ feature -- List
 				from
 					position := 1
 				until
-					not (list.item (position) = Void)
+					list.item (position) /= Void
 				loop
 					position := position+1
 				end
@@ -103,9 +103,9 @@ feature -- Widget
 	new (widget, a_parent: WIDGET) is
 			-- Add `widget' to the list as a child of `parent'.
 		require
-			widget_exists: not (widget = Void);
+			widget_exists: widget /= Void;
 			a_parent_exists_unless_depth_null: (a_parent = Void) implies (widget.depth = 0);
-			depth_not_null_unless_parent_exists: (widget.depth > 0) implies (not (a_parent = Void));
+			depth_not_null_unless_parent_exists: (widget.depth > 0) implies (a_parent /= Void);
 			list_has_parent: (a_parent /= Void) implies list.has (a_parent);
 		local
 			i, j: INTEGER
@@ -157,14 +157,14 @@ feature -- Widget
 			-- Object user interface widget associated with current
 			-- implementation
 		require
-			widget_i_exists: not (widget_i = Void)
+			widget_i_exists: widget_i /= Void
 		local
 			i: INTEGER
 		do
 			from
 				i := 1
 			until
-				(i > count) or else ((not (list.item (i) = Void)) and then (list.item (i).implementation = widget_i))
+				(i > count) or else ((list.item (i) /= Void) and then (list.item (i).implementation = widget_i))
 			loop
 				i := i+1
 			end;
@@ -172,14 +172,14 @@ feature -- Widget
 				Result := list.item (i)
 			end
 		ensure
-			not (Result = Void);
+			Result /= Void;
 			Result.implementation = widget_i
 		end; 
 
 	parent (widget: WIDGET): WIDGET is
 			-- Parent of `widget'
 		require
-			widget_exists: not (widget = Void)
+			widget_exists: widget /= Void
 		local
 			i: INTEGER
 		do
@@ -187,15 +187,15 @@ feature -- Widget
 				from
 					i := index_of (widget)-1
 				until
-					(not (list.item (i) = Void)) and then (list.item (i).depth+1 = widget.depth)
+					(list.item (i) /= Void) and then (list.item (i).depth+1 = widget.depth)
 				loop
 					i := i-1
 				end;
 				Result := list.item (i);
 			end;
 		ensure
-			(Result = Void) implies (widget.depth = 0);
-			(not (Result = Void)) implies (Result.depth+1 = widget.depth)
+			is_root: (Result = Void) implies (widget.depth = 0);
+			is_child: (Result /= Void) implies (Result.depth+1 = widget.depth)
 		end;
 
 	destroy (widget: WIDGET) is
@@ -206,24 +206,23 @@ feature -- Widget
 			Valid_widget: widget /= Void
 		local
 			i: INTEGER;
-			nothing: WIDGET
 		do
 			i := index_of (widget);
-			list.put (nothing, i);
+			list.put (Void, i);
 			from
 				i := i + 1
 			until
 				(i = count + 1) or else 
-				((not (list.item (i) = Void)) 
+				(list.item (i) /= Void 
 					and then (list.item (i).depth <= widget.depth))
 			loop
-				list.put (nothing, i);
+				list.put (Void, i);
 				i := i+1
 			end;
 			if i = count + 1 then
 				from
 				until
-					not (list.item (count) = Void)
+					count = 0 or else list.item (count) /= Void
 				loop
 					count := count - 1
 				end
@@ -233,11 +232,11 @@ feature -- Widget
 	screen (widget: WIDGET): SCREEN is
 			-- Screen of widget
 		require
-			widget_exists: not (widget = Void)
+			widget_exists: widget /= Void
 		do
 			Result := top (widget).screen
 		ensure
-			not (Result = Void)
+			Result /= Void
 		end;
 
 	screen_object_to_oui (screen_object: POINTER): WIDGET is
@@ -275,7 +274,7 @@ feature -- Widget
 			until
 				i > count
 			loop
-				if not (list.item (i) = Void) then
+				if list.item (i) /= Void then
 					from
 						j := list.item (i).depth
 					until
@@ -341,12 +340,12 @@ feature {NONE}
 	index_of (widget: WIDGET): INTEGER is
 			-- Index of `widget' in list
 		require
-			widget_exists: not (widget = Void)
+			widget_exists: widget /= Void
 		do
 			from
 				Result := 1
 			until
-				(not (list.item (Result) = Void)) 
+				(list.item (Result) /= Void) 
 					and then (widget.same (list.item (Result)))
 			loop
 				Result := Result + 1

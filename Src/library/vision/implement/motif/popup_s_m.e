@@ -43,26 +43,26 @@ feature {NONE}
             		bool_ref: BOOLEAN_REF
        	 	do
             		bool_ref ?= up;
-            		is_poped_up_ref := bool_ref;
+            		is_popped_up_ref := bool_ref;
         	end;
 
 
 feature 
 	is_cascade_grab: BOOLEAN is
-			-- Is the shell poped up with cascade grab (allowing the other
-			-- shells poped up with grab to receive events) ?
+			-- Is the shell popped up with cascade grab (allowing the other
+			-- shells popped up with grab to receive events) ?
 		do
 			Result := grab_type = 2
 		end; -- is_cascade_grab
 
 	is_exclusive_grab: BOOLEAN is
-			-- Is the shell poped up with exclusive grab ?
+			-- Is the shell popped up with exclusive grab ?
 		do
 			Result := grab_type = 1
 		end; -- is_no_grab
 
 	is_no_grab: BOOLEAN is
-			-- Is the shell poped up with no grab ?
+			-- Is the shell popped up with no grab ?
 		do
 			Result := grab_type = 0
 		end; -- is_no_grab
@@ -70,12 +70,26 @@ feature
 feature {NONE}
 
 	is_poped_up: BOOLEAN is
-			-- Is the popup widget poped up on screen ?
+			-- Is the popup widget popped up on screen ?
+		obsolete "Use is_popped_up instead, corrected feature spelling."
 		do
-			Result := is_poped_up_ref.item
+			Result := is_popped_up_ref.item
 		end;
 
-	is_poped_up_ref: BOOLEAN_REF;
+	is_popped_up: BOOLEAN is
+			-- Is the popup widget popped up on screen ?
+		do
+			Result := is_popped_up_ref.item
+		end;
+
+	is_popped_up_ref: BOOLEAN_REF;
+
+	is_poped_up_ref: BOOLEAN_REF is
+		obsolete "Use is_popped_up_ref instead, corrected feature
+spelling."
+		do
+			Result := is_popped_up-ref
+		end
 
 feature {NONE}
 
@@ -88,18 +102,18 @@ feature
 	popdown is
 			-- Popdown popup shell.
 		do
-			if is_poped_up then
+			if is_popped_up then
 				xt_popdown (screen_object);
 			end;
-                	is_poped_up_ref.set_item (False);
+                	is_popped_up_ref.set_item (False);
 		ensure
-			not is_poped_up
+			not is_popped_up
 		end; -- popdown
 
 	popup is
 			-- Popup a popup shell.
 		do
-			if not is_poped_up then
+			if not is_popped_up then
 				inspect	grab_type
                 		when 0 then
                     			xt_popup_none (screen_object)
@@ -108,16 +122,16 @@ feature
                 		when 2 then
                     			xt_popup_non_ex (screen_object)
                 		end;
-                		is_poped_up_ref.set_item (True)
+                		is_popped_up_ref.set_item (True)
 
 			end
 		ensure
-			is_poped_up
+			is_popped_up
 		end;
 
 	set_cascade_grab is
-			-- Specifies that the shell would be poped up with cascade grab
-			-- (allowing the other shells poped up with grab to receive events).
+			-- Specifies that the shell would be popped up with cascade grab
+			-- (allowing the other shells popped up with grab to receive events).
 		do
 			grab_type := 2
 		ensure
@@ -125,7 +139,7 @@ feature
 		end; -- set_cascade_grab
 
 	set_exclusive_grab is
-			-- Specifies that the shell would be poped up with exclusive grab.
+			-- Specifies that the shell would be popped up with exclusive grab.
 		do
 			grab_type := 1
 		ensure
@@ -133,7 +147,7 @@ feature
 		end; -- set_exclusive_grab
 
 	set_no_grab is
-			-- Specifies that the shell would be poped up with no grab.
+			-- Specifies that the shell would be popped up with no grab.
 		do
 			grab_type := 0
 		ensure

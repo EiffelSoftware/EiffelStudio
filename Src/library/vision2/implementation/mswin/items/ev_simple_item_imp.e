@@ -19,7 +19,7 @@ inherit
 
 	EV_EVENT_HANDLER_IMP
 		export
-			{EV_LIST_IMP} execute_command
+			{EV_ITEM_CONTAINER_IMP} execute_command
 		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP

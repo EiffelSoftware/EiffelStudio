@@ -298,7 +298,7 @@ public class EiffelClassGenerator: Globals
 				aPath = String.Concat( PathName, FolderPath ).ToLower();
 			else
 				aPath = String.Concat( PathName, "\\", FolderPath ).ToLower();
-			if( aPath.IndexOf( String.Concat( reflectionSupport.EiffelDeliveryPath().ToLower(), DotnetLibraryFolderName ) ) > -1 )
+			if( aPath.IndexOf( String.Concat( reflectionSupport.EiffelDeliveryPath().ToLower(), "\\", DotnetLibraryFolderName ) ) > -1 )
 				aPath = aPath.Replace( reflectionSupport.EiffelDeliveryPath().ToLower(), reflectionSupport.EiffelKey() );
 			return( aPath );
 		}

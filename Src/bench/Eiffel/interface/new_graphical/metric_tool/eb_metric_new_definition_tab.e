@@ -235,7 +235,7 @@ feature -- Existing name
 	existing_name: BOOLEAN is
 			-- Is current metric name previously used for another metric?
 		do
-			Result := name_field.text /= Void and then
+			Result := name_field.text /= Void and then not name_field.text.is_empty and then
 				interface.tool.metrics.has (interface.tool.metric (name_field.text))
 		end
 	

@@ -365,7 +365,7 @@ feature -- Element change
 			end
 			labels.item (current_degree_index).set_text (a_text)
 		ensure
-			assigned: a_text.is_empty and then current_degree = Void
+			assigned: a_text.is_empty and then current_degree.is_empty
 						or else current_degree.is_equal (a_text)
 		end
 

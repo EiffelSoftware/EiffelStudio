@@ -60,9 +60,6 @@ feature {NONE} -- Command
 			end
 			
 			widget_text := change_item_widget.text
-			if widget_text = Void then
-				widget_text := ""
-			end
 			
 			int ?= resource
 			str ?= resource

@@ -473,7 +473,7 @@ feature {NONE} -- Execution
 				end
 				if cluster_address.is_displayed then
 					cluster_address.set_focus
-					if cluster_address.text /= Void then
+					if not cluster_address.text.is_empty then
 						cluster_address.select_all
 					end
 				end
@@ -492,7 +492,7 @@ feature {NONE} -- Execution
 			if class_i = Void then
 				ctxt := class_address.text
 				if
-					ctxt /= Void and then
+					not ctxt.is_empty and then
 					not ctxt.has ('*') and then
 					not ctxt.has ('?')
 				then
@@ -512,7 +512,7 @@ feature {NONE} -- Execution
 					end
 					if class_address.is_displayed then
 						class_address.set_focus
-						if class_address.text /= Void then
+						if not class_address.text.is_empty then
 							class_address.select_all
 						end
 					end
@@ -548,7 +548,7 @@ feature {NONE} -- Execution
 							--| FIXME XR: How do we warn the user?
 						end
 						class_address.set_focus
-						if class_address.text /= Void then
+						if not class_address.text.is_empty then
 							class_address.select_all
 						end
 					end
@@ -556,7 +556,7 @@ feature {NONE} -- Execution
 					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
 				end
 			else
-				if feature_address.text /= Void then
+				if not feature_address.text.is_empty then
 					extract_feature_from_user_entry
 					if current_feature = Void then
 						if output_line /= Void then
@@ -567,7 +567,7 @@ feature {NONE} -- Execution
 						if feature_address.is_displayed then
 								-- The selected feature is not in the selected class.
 							feature_address.set_focus
-							if feature_address.text /= Void then
+							if not feature_address.text.is_empty then
 								feature_address.select_all
 							end
 						end
@@ -840,7 +840,7 @@ feature {NONE} -- open new class
 		do
 			current_cluster := Void
 			fname := clone (cluster_address.text)
-			if fname /= Void then
+			if not fname.is_empty then
 				fname.left_adjust
 				fname.right_adjust
 			end
@@ -897,7 +897,7 @@ feature {NONE} -- open new class
 		do
 			class_i := Void
 			cname := clone (class_address.text)
-			if cname /= Void then
+			if not cname.is_empty then
 				cname.left_adjust
 				cname.right_adjust
 			end
@@ -991,7 +991,7 @@ feature {NONE} -- open new class
 		do
 			current_feature := Void
 			fname := clone (feature_address.text)
-			if fname /= Void then
+			if not fname.is_empty then
 				fname.left_adjust
 				fname.right_adjust
 			end
@@ -1114,7 +1114,7 @@ feature {NONE} -- open new class
 				address_dialog.hide
 			else
 				str := clone (class_address.text)
-				if str /= Void then
+				if not str.is_empty then
 					str.left_adjust
 					str.right_adjust
 					str.to_lower

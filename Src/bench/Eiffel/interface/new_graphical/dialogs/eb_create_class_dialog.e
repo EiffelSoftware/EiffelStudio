@@ -297,9 +297,7 @@ feature {NONE} -- Implementation
 			-- Name of the class entered by the user.
 		do
 			Result := clone (class_entry.text)
-			if Result /= Void then
-				Result.to_lower
-			end
+			Result.to_lower
 		end
 
 	file_name: FILE_NAME is
@@ -309,18 +307,12 @@ feature {NONE} -- Implementation
 			dotpos: INTEGER
 		do
 			str2 := file_entry.text
-			if str2 /= Void then
-				str2.right_adjust
-				str2.left_adjust
-			end
-			if str2 = Void or else str2.count < 3 then
+			str2.right_adjust
+			str2.left_adjust
+				-- str2.count < 3 means there no extension to the file name.
+			if str2.is_empty or else str2.count < 3 then
 				update_file_entry
-				str := file_entry.text
-				if str /= Void then
-					create Result.make_from_string (file_entry.text)
-				else
-					create Result.make_from_string ("")
-				end
+				create Result.make_from_string (file_entry.text)
 			else
 				if
 					str2 @ (str2.count) /= 'e' or else
@@ -513,7 +505,7 @@ feature {NONE} -- Implementation
 						in_buf.replace_substring_all ("$inheritance_clause", "")
 					end
 					cr := creation_entry.text
-					if not deferred_check.is_selected and then cr /= Void then
+					if not deferred_check.is_selected and then not cr.is_empty then
 						in_buf.replace_substring_all ("$creation_clause", "%Ncreate%N%T" + cr + "%N")
 					else
 						in_buf.replace_substring_all ("$creation_clause", "")
@@ -613,11 +605,9 @@ feature {NONE} -- Implementation
 			str: STRING
 		do
 			str := class_entry.text
-			if str /= Void then
-				str.right_adjust
-				str.left_adjust
-			end
-			if str = Void or else str.is_empty then
+			str.right_adjust
+			str.left_adjust
+			if str.is_empty then
 				file_entry.remove_text
 			else
 				str.to_lower

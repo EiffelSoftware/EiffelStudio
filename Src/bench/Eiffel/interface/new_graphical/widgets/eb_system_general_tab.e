@@ -407,9 +407,9 @@ feature -- Initialization
 				enable_select (generation_combo.i_th (standard_code))
 			end
 		ensure then
-			app_name_field_voided: app_name_field.text = Void
-			root_class_field_voided: root_class_field.text = Void
-			root_creation_field_voided: root_creation_field.text = Void
+			app_name_field_voided: app_name_field.text.is_empty
+			root_class_field_voided: root_class_field.text.is_empty
+			root_creation_field_voided: root_creation_field.text.is_empty
 			check_check_not_selected: not check_check.is_selected
 			require_check_not_selected: not require_check.is_selected
 			ensure_check_not_selected: not ensure_check.is_selected

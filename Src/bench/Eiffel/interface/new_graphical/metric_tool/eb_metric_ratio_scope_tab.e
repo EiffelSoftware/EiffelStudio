@@ -280,14 +280,16 @@ feature -- Errors rescue
 			-- choosing a name previously used to define a metric.
 		local
 			basic_metric: EB_METRIC_BASIC
+			nm: STRING
 		do
-			error_name := name_field.text = Void or else name_field.text.is_empty
+			nm := name_field.text
+			error_name := nm = Void or else nm.is_empty
 			if not error_name then
-				error_name := name_field.text.has ('<') or name_field.text.has ('>')
+				error_name := nm.has ('<') or nm.has ('>')
 			end
 			empty_formula := text_field.text = Void or else text_field.text.is_empty
-			if name_field.text /= Void then
-				basic_metric ?= interface.tool.metric (name_field.text)
+			if nm /= Void then
+				basic_metric ?= interface.tool.metric (nm)
 				existing_basic_name := basic_metric /= Void
 			end
 
@@ -325,8 +327,8 @@ feature -- Errors rescue
 	something_to_save: BOOLEAN is
 			-- Did user start defining new ratio metric?
 		do
-			Result := (text_field.text /= Void and then not text_field.text.is_empty)
-					or (name_field.text /= Void and then not name_field.text.is_empty)
+			Result := (not text_field.text.is_empty)
+					or (not name_field.text.is_empty)
 		end
 
 feature -- Metric constituents
@@ -557,9 +559,7 @@ feature -- Action
 		require
 			metric_selected: not metric_combobox.text.is_empty
 		do
-			if metric_combobox.text /= Void then
-				formula.put_i_th (metric_combobox.text, 1)
-			end
+			formula.put_i_th (metric_combobox.text, 1)
 			fill_scope_combobox (first_scope_combobox)
 			fill_scope_combobox (second_scope_combobox)
 			add_num_action
@@ -573,7 +573,7 @@ feature -- Action
 		local
 			ind: INTEGER
 		do
-			if first_scope_combobox.text /= Void then
+			if not first_scope_combobox.text.is_empty then
 				ind := displayed_metric.index_of (')', 1)
 				displayed_metric.tail (displayed_metric.count - ind)
 				formula.put_i_th (first_scope_combobox.text, 2)
@@ -590,7 +590,7 @@ feature -- Action
 		local
 			ind: INTEGER
 		do
-			if second_scope_combobox.text /= Void then
+			if not second_scope_combobox.text.is_empty then
 				ind := displayed_metric.index_of ('/', 1) + 1
 				displayed_metric.head (ind)
 				formula.put_i_th (second_scope_combobox.text, 4)

@@ -263,7 +263,7 @@ feature -- Error rescue
 				error_name := name_field.text.has ('<') or name_field.text.has ('>')
 			end
 			empty_formula := text_field.text = Void or else text_field.text.is_empty
-			if name_field.text /= Void then
+			if not name_field.text.is_empty then
 				basic_metric ?= interface.tool.metric (name_field.text)
 				existing_basic_name := basic_metric /= Void
 			end
@@ -329,8 +329,8 @@ feature -- Metric constituents.
 	new_metric_element: XML_ELEMENT is
 			-- Build a storable definition for the metric being saved.
 		require else
-			entered_formula: text_field.text /= Void and then not not text_field.text.is_empty
-			displayed_metric_set: displayed_metric /= Void and then not not displayed_metric.is_empty
+			entered_formula: text_field.text /= Void and then not text_field.text.is_empty
+			displayed_metric_set: displayed_metric /= Void and then not displayed_metric.is_empty
 			formula_set: formula /= Void and then not formula.is_empty
 		local
 			a_name, a_unit: STRING
@@ -544,7 +544,7 @@ feature -- Linear action
 		do
 			coeff := coeff_field.text
 			selected_metric := metric_combobox.text
-			if text_field.text /= Void then
+			if not text_field.text.is_empty then
 				displayed_metric := text_field.text
 			end
 			a_metric := interface.tool.metric (selected_metric)

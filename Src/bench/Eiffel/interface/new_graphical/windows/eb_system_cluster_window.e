@@ -202,7 +202,7 @@ feature -- Action
 				elseif clusters_names.has (name_field.text) then
 					create error_dialog.make_with_text (Warning_messages.w_cluster_with_name_exists)
 					error_dialog.show_modal_to_window (Current)
-				elseif path_field.text = Void then
+				elseif path_field.text.is_empty then
 					create error_dialog.make_with_text (Warning_messages.w_cluster_path_not_valid)
 					error_dialog.show_modal_to_window (Current)
 				else

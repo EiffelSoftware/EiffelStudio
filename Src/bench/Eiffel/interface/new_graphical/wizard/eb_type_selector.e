@@ -61,8 +61,7 @@ feature -- Access
 			l: LINKED_LIST [CLASS_I]
 		do
 			Result := clone (selector.text)
-			if Result = Void then
-				create Result.make (0)
+			if Result.is_empty then
 			else
 				Result.to_upper
 				if expanded_needed then
@@ -120,10 +119,8 @@ feature -- Status report
 			s: STRING
 		do
 			s := selector.text
-			if s /= Void then
-				s.to_lower
-				Result := s.is_equal ("tuple")
-			end
+			s.to_lower
+			Result := s.is_equal ("tuple")
 		end
 
 	expanded_needed: BOOLEAN
@@ -198,11 +195,7 @@ feature {NONE} -- Implementation
 				generic_box.extend (new_label ("]"))
 				generic_box.disable_item_expand (generic_box.last)
 			else
-				if selector.text /= Void then
-					gen_count := generics_count (selector.text)
-				else
-					gen_count := 0
-				end
+				gen_count := generics_count (selector.text)
 				if generic_count /= gen_count 
 					or (generic_count = 0 and not generic_box.is_empty) then
 						generic_count := gen_count

@@ -39,7 +39,7 @@ feature -- Status report
 			t: STRING
 		do
 			t := text
-			Result := t /= Void and then not is_keyword (t)
+			Result := not t.is_empty and then not is_keyword (t)
 		end
 
 feature {NONE} -- Implementation
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			t: STRING
 		do
 			t := text
-			if t /= Void then
+			if not t.is_empty then
 				if is_keyword (t) then
 					set_foreground_color (Blue)
 				elseif is_defined (t) then

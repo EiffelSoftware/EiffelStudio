@@ -83,11 +83,7 @@ feature -- Access
 			-- Current text of the feature in the wizard.
 		do
 			create Result.make (100)
-			if feature_name_field.text /= Void then
-				Result.append ("%T" + feature_name_field.text + ": " + type_selector.code + "%N")
-			else
-				Result.append ("%T" + ": " + type_selector.code + "%N")
-			end	
+			Result.append ("%T" + feature_name_field.text + ": " + type_selector.code + "%N")
 			Result.append (comments_code)
 			Result.append ("%N")
 		end
@@ -182,7 +178,7 @@ feature {NONE} -- Implementation
 	on_declaration_change is
 			-- Update invariant when attribute declaration changes.
 		do
-			if feature_name_field.text /= Void then
+			if not feature_name_field.text.is_empty then
 				fill_with_assertions (invariant_field, False)
 			else
 				invariant_field.wipe_out

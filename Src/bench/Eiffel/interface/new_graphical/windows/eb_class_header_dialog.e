@@ -184,13 +184,9 @@ feature -- Element change
 		require
 			a_string_not_void: a_string /= Void
 		do
-			if a_string.is_empty then
-				generics_field.remove_text
-			else
-				generics_field.set_text (a_string)
-			end
+			generics_field.set_text (a_string)
 		ensure
-			assigned: generics /= Void implies generics.is_equal (a_string)
+			assigned: generics.is_equal (a_string)
 		end
 
 feature {NONE} -- Implementation

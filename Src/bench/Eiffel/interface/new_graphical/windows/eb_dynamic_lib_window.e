@@ -1390,7 +1390,7 @@ feature {NONE} -- Implementation: Properties dialog
 					create cd.make_with_text (Warning_messages.w_Feature_cannot_be_exported)
 				elseif not valid_creation_routine (cr, cl) then
 					create cd.make_with_text (Warning_messages.w_No_valid_creation_routine)
-				elseif al /= Void and then not valid_alias (al) then
+				elseif not al.is_empty and then not valid_alias (al) then
 					create cd.make_with_text (Warning_messages.w_Invalid_alias)
 				elseif is_windows and then ind /= 0 and then not valid_index (ind) then
 					create cd.make_with_text (Warning_messages.w_Invalid_index)
@@ -1401,7 +1401,7 @@ feature {NONE} -- Implementation: Properties dialog
 			else
 					-- Ah we can update the exported feature.
 				modified_exported_feature.set_creation_routine (cr)
-				if al /= Void then
+				if not al.is_empty then
 					modified_exported_feature.set_alias_name (al)
 				else
 					modified_exported_feature.remove_alias_name
@@ -1445,18 +1445,18 @@ feature {NONE} -- Implementation: Properties dialog
 			clist: LIST [CLASS_I]
 		do
 			tmp := class_field.text
-			if tmp /= Void then
+			if tmp /= Void and then not tmp.is_empty then
 				clist := Eiffel_universe.compiled_classes_with_name (tmp)
 				if not clist.is_empty then
 					cl := clist.first.compiled_class
 				end
 			end
 			tmp := feature_field.text
-			if cl /= Void and then cl.has_feature_table and then tmp /= Void then
+			if cl /= Void and then cl.has_feature_table and then not tmp.is_empty then
 				tmp.to_lower
 				f := cl.feature_with_name (tmp)
 				tmp := creation_combo.selected_item.text
-				if tmp /= Void then
+				if not tmp.is_empty then
 					tmp.to_lower
 					cr := cl.feature_with_name (tmp)
 				end
@@ -1486,7 +1486,7 @@ feature {NONE} -- Implementation: Properties dialog
 			else
 					-- Ah we can create a new exported feature.
 				create exp.make (cl, cr, f)
-				if al /= Void then
+				if not al.is_empty then
 					exp.set_alias_name (al)
 				end
 				if is_windows then
@@ -1520,7 +1520,7 @@ feature {NONE} -- Implementation: Properties dialog
 		do
 			creation_combo.wipe_out
 			tmp := class_field.text
-			if tmp /= Void then
+			if not tmp.is_empty then
 				tmp.to_lower
 				clist := Eiffel_universe.compiled_classes_with_name (tmp)
 				if not clist.is_empty then
@@ -1721,7 +1721,7 @@ feature {NONE} -- Implementation: checks
 			c: CHARACTER
 			i,j: INTEGER
 		do
-			Result := al /= Void
+			Result := al /= Void and not al.is_empty
 			if Result then
 				c := al @ 1
 				Result := c = '_' or c.is_alpha

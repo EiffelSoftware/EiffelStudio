@@ -283,7 +283,7 @@ feature -- Error rescue
 				error_name := name_field.text.has ('<') or name_field.text.has ('>')
 			end
 			empty_formula := text_field.text = Void or else text_field.text.is_empty
-			if name_field.text /= Void then
+			if name_field.text /= Void and then not name_field.text.is_empty then
 				basic_metric ?= interface.tool.metric (name_field.text)
 				existing_basic_name := basic_metric /= Void
 			end
@@ -472,7 +472,7 @@ feature -- Ratio action.
 		local
 			old_num: STRING
 		do
-			if first_metric_combobox.text /= Void then
+			if not first_metric_combobox.text.is_empty then
 				old_num := formula @ 1
 				displayed_metric.tail (displayed_metric.count - old_num.count)
 				formula.put_i_th (first_metric_combobox.text, 1)
@@ -489,7 +489,7 @@ feature -- Ratio action.
 		local
 			old_den: STRING
 		do
-			if second_metric_combobox.text /= Void then
+			if not second_metric_combobox.text.is_empty then
 				old_den := formula @ 3
 				displayed_metric.head (displayed_metric.count - old_den.count)
 				formula.put_i_th (second_metric_combobox.text, 3)

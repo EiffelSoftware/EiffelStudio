@@ -179,7 +179,7 @@ feature -- Initialization
 			selected_text: STRING
 		do
 			selected_text := raw_metric_combobox.text
-			if selected_text /= Void then
+			if not selected_text.is_empty then
 				if equal (selected_text, interface_names.metric_classes) then
 					unit_field.set_text (interface_names.metric_class_unit)
 					build_classes_panel
@@ -753,7 +753,7 @@ feature -- Initialization
 			if not error_name then
 				error_name := name_field.text.has ('<') or name_field.text.has ('>')
 			end
-			if name_field.text /= Void then
+			if not name_field.text.is_empty then
 				basic_metric ?= interface.tool.metric (name_field.text)
 				existing_basic_name := basic_metric /= Void
 			end

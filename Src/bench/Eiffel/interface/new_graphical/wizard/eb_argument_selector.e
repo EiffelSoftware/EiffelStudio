@@ -66,7 +66,7 @@ feature -- Access
 		do
 			t := name_field.text
 			create Result.make (10)
-			if t /= Void then
+			if not t.is_empty then
 				Result.append (t)
 				Result.append (": ")
 				Result.append (type_selector.code)

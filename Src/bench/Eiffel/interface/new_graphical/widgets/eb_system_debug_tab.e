@@ -591,7 +591,7 @@ feature {NONE} -- Action
 		do
 			if key /= Void and then key.code = (create {EV_KEY_CONSTANTS}).key_enter then
 				argument_text := arguments.text
-				if argument_text = Void or else argument_text.is_equal (" ") then
+				if argument_text.is_empty or else argument_text.is_equal (" ") then
 					argument_text := No_argument_string
 				end
 				
@@ -609,7 +609,7 @@ feature {NONE} -- Action
 			-- Turn `argument_text' into a string that can be safely added to
 			-- the ace file. Escape all special characters.
 		do
-			if argument_text = Void or else argument_text.is_equal (No_argument_string) then
+			if argument_text = Void or else argument_text.is_empty or else argument_text.is_equal (No_argument_string) then
 				Result := " "
 			else
 				Result := clone (argument_text)

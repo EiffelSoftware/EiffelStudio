@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			else
 				ace_filename_field.set_caret_position (1)
 			end
-			if directory_field.text /= Void then
+			if not directory_field.text.is_empty then
 				directory_field.set_caret_position (1)
 			end
 			directory_field.set_focus
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 		do
 			existing_path := directory_field.text
 			create fod
-			if existing_path /= Void then
+			if not existing_path.is_empty then
 				fod.set_start_directory (existing_path)
 			end
 			fod.set_title (Interface_names.t_Select_a_file)
@@ -556,7 +556,7 @@ feature {NONE} -- Callbacks
 		do
 			curr_project_location := directory_field.text
 			curr_project_name := system_name_field.text
-			if curr_project_location /= Void then
+			if not curr_project_location.is_empty then
 				sep_index := curr_project_location.last_index_of (Operating_environment.Directory_separator, curr_project_location.count)
 				curr_project_location.head (sep_index)
 				if curr_project_name /= Void then

@@ -113,13 +113,9 @@ feature -- Access
 			-- User selected export clause.
 		do
 			Result := feature_editor.feature_clause_selector.export_field.text
-			if Result = Void then
+			Result.to_lower
+			if Result.is_equal ("any") then
 				create Result.make (0)
-			else
-				Result.to_lower
-				if Result.is_equal ("any") then
-					create Result.make (0)
-				end
 			end
 		end
 
@@ -127,9 +123,6 @@ feature -- Access
 			-- User selected feature clause.
 		do
 			Result := feature_editor.feature_clause_selector.comment_field.text
-			if Result = Void then
-				create Result.make (0)
-			end
 		end
 
 	feature_name: STRING is

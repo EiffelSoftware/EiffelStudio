@@ -138,7 +138,7 @@ feature -- Store/Retrieve
 				-- Update last selected cluster info.
 			if cluster_tree.selected_item /= Void then
 				check
-					has_text: cluster_tree.selected_item.text /= Void
+					has_text: not cluster_tree.selected_item.text.is_empty
 					has_cluster_of_name: clusters.has (cluster_tree.selected_item.text)
 				end
 				store_cluster (cluster_tree.selected_item)
@@ -195,7 +195,7 @@ feature -- Store/Retrieve
 		do
 			if cluster_tree.selected_item /= Void then
 				check
-					has_text: cluster_tree.selected_item.text /= Void
+					has_text: not cluster_tree.selected_item.text.is_empty
 					has_cluster_of_name: clusters.has (cluster_tree.selected_item.text)
 				end
 				display_cluster (cluster_tree.selected_item)
@@ -311,7 +311,7 @@ feature {NONE} -- Cluster display and saving
 			-- Display data from cluster `cl_name'.
 		require
 			tree_item: tree_item /= Void
-			tree_item_has_text: tree_item.text /= Void
+			tree_item_has_text: not tree_item.text.is_empty
 			has_cluster_of_name: clusters.has (tree_item.text)
 		local
 			cl: CLUSTER_SD
@@ -469,7 +469,7 @@ feature {NONE} -- Cluster display and saving
 			-- Store displayed data from cluster represented by `tree_item'.
 		require
 			tree_item: tree_item /= Void
-			tree_item_has_text: tree_item.text /= Void
+			tree_item_has_text: not tree_item.text.is_empty
 			has_cluster_of_name: clusters.has (tree_item.text)
 		local
 			cl: CLUSTER_SD
@@ -484,7 +484,7 @@ feature {NONE} -- Cluster display and saving
 			cl_name := tree_item.text
 			cl := clusters.item (cl_name)
 
-			if cluster_name.text /= Void then
+			if not cluster_name.text.is_empty then
 				if not cluster_name.text.is_equal (cl_name) then
 						-- If name of cluster changed, we need to update the
 						-- tree view entry and our internal data.
@@ -497,7 +497,7 @@ feature {NONE} -- Cluster display and saving
 				cl.set_cluster_name (new_id_sd ("Invalid_name", False))
 			end
 
-			if cluster_path.text /= Void then
+			if not cluster_path.text.is_empty then
 				cl.set_directory_name (new_id_sd (cluster_path.text, True))
 			else
 				cl.set_directory_name (new_id_sd ("Invalid_path", True))
@@ -513,7 +513,7 @@ feature {NONE} -- Cluster display and saving
 				cl.set_cluster_properties (prop)
 			end
 
-			if use_field.text /= Void then
+			if not use_field.text.is_empty then
 				cl.cluster_properties.set_use_name (new_id_sd (use_field.text, True))
 			end
 
@@ -679,9 +679,9 @@ feature -- Initialization
 			profile_check_not_selected: not profile_check.is_selected
 			override_default_trace_not_selected: not override_default_trace.is_selected
 			trace_check_not_selected: not trace_check.is_selected
-			use_field_voided: use_field.text = Void
-			cluster_name_voided: cluster_name.text = Void
-			cluster_path_voided: cluster_path.text = Void
+			use_field_voided: use_field.text.is_empty
+			cluster_name_voided: cluster_name.text.is_empty
+			cluster_path_voided: cluster_path.text.is_empty
 		end
 
 feature {NONE} -- Initialization
@@ -960,7 +960,7 @@ feature {NONE} -- Actions
 			if l_item /= Void then
 				clus_name := cluster_tree.selected_item.text
 				check
-					has_text: clus_name /= Void
+					has_text: not clus_name.is_empty
 					has_cluster_of_name: clusters.has (cluster_tree.selected_item.text)
 				end
 				reset_cluster_info
@@ -1058,6 +1058,9 @@ feature {NONE} -- Actions
 							--| FIXME: We are changing the override cluster, we need
 							--| to display a warning.
 						override_cluster_name := cluster_name.text
+					end
+					if override_cluster_name.is_empty then
+						override_cluster_name := Void
 					end
 				else
 					has_override_cluster := False

@@ -42,6 +42,7 @@ feature -- Status setting
         
 	set_widgets is
 		do
+			main_widget.set_homogeneous (False)
 			!! b1.make_with_text (main_widget, "Button")
 			
 			!! pixmap.make_from_file (b1.pixmap_container, "../pixmaps/power_small.xpm")
@@ -49,6 +50,7 @@ feature -- Status setting
 			!! pixmap.make_from_file (b2.pixmap_container, "../pixmaps/power_small.xpm")
 			!! toggle_b.make_with_text (main_widget, "Toggle Button")
 			!! check_b.make_with_text (main_widget, "Check Button")
+			--!! pixmap.make_from_file (check_b.pixmap_container, "../pixmaps/power_small.xpm")
 			!! radio1_b.make_with_text (main_widget, "Radio 1")
 			!! radio2_b.make_with_text (main_widget, "Radio 2")
 			!! radio3_b.make_with_text (main_widget, "Radio 3")

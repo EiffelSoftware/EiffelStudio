@@ -4,7 +4,7 @@
 		<heading>
 			<size>1</size>EiffelStore Samples
 		</heading>
-		<paragraph>The following basic examples showcases the different EiffelStore        capabilities:</paragraph>
+		<paragraph>The following basic examples showcases the different EiffelStore capabilities:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -16,7 +16,7 @@
 				<link>
 					<url>20_select/index.xml</url>
 					<label>select</label>
-				</link>: A basic example to            perform smart database queries.
+				</link>: A basic example to perform smart database queries.
 			</item>
 			<item>
 				<link>

@@ -16,6 +16,7 @@ inherit
 	EV_SELECT_BUTTON_IMP
 		redefine
 			interface,
+			initialize,
 			make
 		end
 
@@ -35,6 +36,12 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_radio_button_new (NULL))
                 end
+
+	initialize is
+		do
+			Precursor
+			align_text_left
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -70,6 +77,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/05/03 18:20:07  king
+--| Made text left aligned
+--|
 --| Revision 1.20  2000/05/02 18:55:30  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

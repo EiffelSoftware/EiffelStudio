@@ -49,7 +49,6 @@
 		</paragraph>
 		<paragraph>This sample only contains one class, 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step1/root_cluster/tutorial_step1_chart.xml</url>
 				<label>TUTORIAL_STEP1</label>
 			</link> which inherits 
 			<link>

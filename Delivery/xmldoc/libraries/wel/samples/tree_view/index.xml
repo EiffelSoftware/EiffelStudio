@@ -23,7 +23,7 @@
 			<item>Choose 
 				<italic>Ace.ace</italic>
 			</item>
-			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy              images (*.bmp), icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. If you select another directory than the default one, please copy images (*.bmp), icons (*.ico) and resource files (*.rc) from the default directory (the one containing the Ace file) to the new one. </item>
 			<item>Click 
 				<bold>OK</bold>.
 			</item>
@@ -47,7 +47,7 @@
 					<bold>See Also</bold>
 					<line_break/>
 					<link>
-						<url>/libraries/wel/reference/controls/wel_tree_view.xml</url>
+						<url>/libraries/wel/reference/controls/WEL_TREE_VIEW_chart.xml</url>
 						<label>WEL_TREE_VIEW</label>
 					</link>
 				</seealso>

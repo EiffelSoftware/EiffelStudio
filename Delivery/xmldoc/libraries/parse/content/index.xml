@@ -73,14 +73,14 @@
 		</heading>
 		<paragraph>The Parse library contains a small number of classes which cover common document processing applications. The classes, whose inheritance structure was shown at the beginning of this chapter, are:</paragraph>
 		<list ordered="false">
-			<item><link><url>/libraries/parse/reference/CONSTRUCT_chart.html</url><label>CONSTRUCT</label></link>, describing the general notion of syntactical construct.</item>
-			<item><link><url>/libraries/parse/reference/AGGREGATE_chart.html</url><label>AGGREGATE</label></link>, describing constructs of the "aggregate" form.</item>
-			<item><link><url>/libraries/parse/reference/CHOICE_chart.html</url><label>CHOICE</label></link>, describing constructs of the "choice" form.</item>
-			<item><link><url>/libraries/parse/reference/REPETITION_chart.html</url><label>REPETITION</label></link>, describing constructs of the "repetition" form.</item>
-			<item><link><url>/libraries/parse/reference/TERMINAL_chart.html</url><label>TERMINAL</label></link>, describing "terminal" constructs with no further structure.</item>
-			<item><link><url>/libraries/parse/reference/KEYWORD_chart.html</url><label>KEYWORD</label></link>, describing how to handle keywords.</item>
-			<item><link><url>/libraries/lex/reference/L_INTERFACE_chart.html</url><label>L_INTERFACE</label></link>, providing a simple interface with the lexical analysis process and the Lex library.</item>
-			<item><link><url>/libraries/parse/reference/INPUT_chart.html</url><label>INPUT</label></link>, describing how to handle the input document.</item>
+			<item><link><url>/libraries/parse/reference/CONSTRUCT_chart.xml</url><label>CONSTRUCT</label></link>, describing the general notion of syntactical construct.</item>
+			<item><link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link>, describing constructs of the "aggregate" form.</item>
+			<item><link><url>/libraries/parse/reference/CHOICE_chart.xml</url><label>CHOICE</label></link>, describing constructs of the "choice" form.</item>
+			<item><link><url>/libraries/parse/reference/REPETITION_chart.xml</url><label>REPETITION</label></link>, describing constructs of the "repetition" form.</item>
+			<item><link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link>, describing "terminal" constructs with no further structure.</item>
+			<item><link><url>/libraries/parse/reference/KEYWORD_chart.xml</url><label>KEYWORD</label></link>, describing how to handle keywords.</item>
+			<item><link><url>/libraries/lex/reference/L_INTERFACE_chart.xml</url><label>L_INTERFACE</label></link>, providing a simple interface with the lexical analysis process and the Lex library.</item>
+			<item><link><url>/libraries/parse/reference/INPUT_chart.xml</url><label>INPUT</label></link>, describing how to handle the input document.</item>
 		</list>
 		<heading>
 			<size>2</size>EXAMPLES
@@ -117,10 +117,10 @@
 				</item>
 			</list>
 		</paragraph>
-		<paragraph>All specimens of terminal constructs are instances of class <link><url>/libraries/parse/reference/TERMINAL_chart.html</url><label>TERMINAL</label></link>. A special case is that of keyword constructs, which have a single specimen corresponding to a keyword of the language. For example, 
+		<paragraph>All specimens of terminal constructs are instances of class <link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link>. A special case is that of keyword constructs, which have a single specimen corresponding to a keyword of the language. For example, 
 			<code>
 				<keyword>if</keyword>
-			</code> is a keyword of Eiffel. Keywords are described by class <link><url>/libraries/parse/reference/KEYWORD_chart.html</url><label>KEYWORD</label></link>, an heir of <link><url>/libraries/parse/reference/TERMINAL_chart.html</url><label>TERMINAL</label></link>.
+			</code> is a keyword of Eiffel. Keywords are described by class <link><url>/libraries/parse/reference/KEYWORD_chart.xml</url><label>KEYWORD</label></link>, an heir of <link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link>.
 		</paragraph>
 		<paragraph>The rest of this section concentrates on the parsing-specific part: non-terminal constructs and productions. Terminals will be studied in the discussion of how to interface parsing with lexical analysis.</paragraph>
 		<heading>
@@ -139,7 +139,7 @@
 		<note>
 			<bold>Note</bold>: this notation for productions uses conventions similar to those of the book 
 			<link>
-				<url>http://vig.pearsoned.com/store/product/1,3498,store-3841_isbn-0132479257,00.html</url>
+				<url>http://vig.pearsoned.com/store/product/1,3498,store-3841_isbn-0132479257,00.xml</url>
 				<label>Eiffel: The Language</label>
 			</link>. Keywords are written in 
 			<bold>boldface italics</bold> and stand for themselves. Special symbols, such as the semicolon, are written in double quotes, as in ";". The [=] symbol means "is defined as" and is more accurate mathematically than plain =, which, however, is often used for this purpose (see "Introduction to the Theory of Programming Languages", Prentice Hall, 1991, for a more complete discussion of this issue).
@@ -180,10 +180,10 @@ Nested	[=] "(" Sum ")"
 		<heading>
 			<size>3</size>Class CONSTRUCT
 		</heading>
-		<paragraph>The deferred class <link><url>/libraries/parse/reference/CONSTRUCT_chart.html</url><label>CONSTRUCT</label></link> describes the general notion of construct; instances of this class and its descendants are specimens of the constructs of a grammar.
+		<paragraph>The deferred class <link><url>/libraries/parse/reference/CONSTRUCT_chart.xml</url><label>CONSTRUCT</label></link> describes the general notion of construct; instances of this class and its descendants are specimens of the constructs of a grammar.
 </paragraph>
 		<paragraph>
-Deferred though it may be, <link><url>/libraries/parse/reference/CONSTRUCT_chart.html</url><label>CONSTRUCT</label></link> defines some useful general patterns; for example, its procedure process appears as:
+Deferred though it may be, <link><url>/libraries/parse/reference/CONSTRUCT_chart.xml</url><label>CONSTRUCT</label></link> defines some useful general patterns; for example, its procedure process appears as:
 			<line_break/>
 <code_block>
 	<feature_name>parse</feature_name>
@@ -194,12 +194,12 @@ Deferred though it may be, <link><url>/libraries/parse/reference/CONSTRUCT_chart
 			<line_break/>
 where procedures parse and semantics are expressed in terms of some more specific procedures, which are deferred. This defines a general scheme while leaving the details to descendants of the class.
 		</paragraph>
-		<paragraph>Such descendants, given in the library, are classes <link><url>/libraries/parse/reference/AGGREGATE_chart.html</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.html</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/REPITITION_chart.html</url><label>REPETITION</label></link> and <link><url>/libraries/parse/reference/TERMINAL_chart.html</url><label>TERMINAL</label></link>. They describe the corresponding types of construct, with features providing the operations for parsing their specimens and applying the associated semantic actions.</paragraph>
+		<paragraph>Such descendants, given in the library, are classes <link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.xml</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/REPITITION_chart.xml</url><label>REPETITION</label></link> and <link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link>. They describe the corresponding types of construct, with features providing the operations for parsing their specimens and applying the associated semantic actions.</paragraph>
 		<heading>
 			<size>3</size>Building a processor
 		</heading>
 		<paragraph>To build a processor for a given grammar, you write a class, called a 
-			<bold>construct class</bold>, for every construct of the grammar, terminal or non-terminal. The class should inherit from <link><url>/libraries/parse/reference/AGGREGATE_chart.html</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.html</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/REPETITION_chart.html</url><label>REPETITION</label></link> or <link><url>/libraries/parse/reference/TERMINAL_chart.html</url><label>TERMINAL</label></link> depending on the nature of the construct. It describes the production for the construct and any associated semantic actions.
+			<bold>construct class</bold>, for every construct of the grammar, terminal or non-terminal. The class should inherit from <link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.xml</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/REPETITION_chart.xml</url><label>REPETITION</label></link> or <link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link> depending on the nature of the construct. It describes the production for the construct and any associated semantic actions.
 		</paragraph>
 		<paragraph>To complete the processor, you must choose a "top construct" for that particular processor, and write a root class. In accordance with the object-oriented method, which implies that "roots" and "tops" should be chosen last, these steps are explained at the end of this chapter.</paragraph>
 		<paragraph>The next sections explain how to write construct classes, how to handle semantics, and how to interface parsing with the lexical analysis process. All these tasks rely on a fundamental data abstraction, the notion of 
@@ -210,8 +210,8 @@ where procedures parse and semantics are expressed in terms of some more specifi
 		</heading>
 		<paragraph>The effect of processing a document with a processor built from a combination of construct classes is to build an abstract syntax tree for that document, and to apply any requested semantic actions to that tree.</paragraph>
 		<paragraph>The syntax tree is said to be abstract because it only includes important structural information and does not retain the concrete information such as keywords and separators. Such concrete information, sometimes called "syntactic sugar", serves only external purposes but is of no use for semantic processing.</paragraph>
-		<paragraph>The combination of Eiffel techniques and libraries yields a very simple approach to building and processing abstract syntax trees. Class <link><url>/libraries/parse/reference/CONSTRUCT_chart.html</url><label>CONSTRUCT</label></link> is a descendant of the Data Structure Library class <link><url>/libraries/base/reference/structures/tree/two_way_tree_chart.html</url><label>TWO_WAY_TREE</label></link>, describing a versatile implementation of trees; so, as a consequence, are <link><url>/libraries/parse/reference/CONSTRUCT_chart.html</url><label>CONSTRUCT's</label></link> own descendants. The effect of parsing any specimen of a construct is therefore to create an instance of the corresponding construct class. This instance is (among other things) a tree node, and is automatically inserted at its right place in the abstract syntax tree.</paragraph>
-		<paragraph>As noted in the discussion of trees, class <link><url>/libraries/base/reference/structures/tree/two_way_tree_chart.html</url><label>TWO_WAY_TREE</label></link> makes no formal distinction between the notions of tree and tree node. So you may identify the abstract syntax tree with the object (instance of <link><url>/libraries/parse/reference/CONSTRUCT_chart.html</url><label>CONSTRUCT</label></link>) representing the topmost construct specimen in the structure of the document being analyzed.</paragraph>
+		<paragraph>The combination of Eiffel techniques and libraries yields a very simple approach to building and processing abstract syntax trees. Class <link><url>/libraries/parse/reference/CONSTRUCT_chart.xml</url><label>CONSTRUCT</label></link> is a descendant of the Data Structure Library class <link><url>/libraries/base/reference/structures/tree/two_way_tree_chart.xml</url><label>TWO_WAY_TREE</label></link>, describing a versatile implementation of trees; so, as a consequence, are <link><url>/libraries/parse/reference/CONSTRUCT_chart.xml</url><label>CONSTRUCT's</label></link> own descendants. The effect of parsing any specimen of a construct is therefore to create an instance of the corresponding construct class. This instance is (among other things) a tree node, and is automatically inserted at its right place in the abstract syntax tree.</paragraph>
+		<paragraph>As noted in the discussion of trees, class <link><url>/libraries/base/reference/structures/tree/two_way_tree_chart.xml</url><label>TWO_WAY_TREE</label></link> makes no formal distinction between the notions of tree and tree node. So you may identify the abstract syntax tree with the object (instance of <link><url>/libraries/parse/reference/CONSTRUCT_chart.xml</url><label>CONSTRUCT</label></link>) representing the topmost construct specimen in the structure of the document being analyzed.</paragraph>
 		<heading>
 			<size>3</size>The production function
 		</heading>
@@ -222,8 +222,8 @@ where procedures parse and semantics are expressed in terms of some more specifi
 		<keyword>deferred</keyword>
 		<keyword>end</keyword>
 </code_block>
-		<paragraph>Function production remains deferred in classes <link><url>/libraries/parse/reference/AGGREGATE_chart.html</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.html</url><label>CHOICE</label></link> and <link><url>/libraries/parse/reference/REPETITION_chart.html</url><label>REPETITION</label></link>. Every effective construct class that you write must provide an effecting of that function. It is important for the efficiency of the parsing process that every effective version of production be a Once function. Several examples of such effectings are given below.</paragraph>
-		<paragraph>Classes <link><url>/libraries/parse/reference/AGGREGATE_chart.html</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.html</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/REPETITION_chart.html</url><label>REPETITION</label></link> and <link><url>/libraries/parse/reference/TERMINAL_chart.html</url><label>TERMINAL</label></link> also have a deferred function construct_name of type STRING, useful for tracing and debugging. This function should be effected in every construct class to return the string name of the construct, such as "INSTRUCTION" or "CLASS" for construct classes in a grammar of Eiffel. For efficiency reasons, the construct_name function should also be a Once function. The form of such a function will always be the same, as illustrated by the following example which may appear in the construct class 
+		<paragraph>Function production remains deferred in classes <link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.xml</url><label>CHOICE</label></link> and <link><url>/libraries/parse/reference/REPETITION_chart.xml</url><label>REPETITION</label></link>. Every effective construct class that you write must provide an effecting of that function. It is important for the efficiency of the parsing process that every effective version of production be a Once function. Several examples of such effectings are given below.</paragraph>
+		<paragraph>Classes <link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.xml</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/REPETITION_chart.xml</url><label>REPETITION</label></link> and <link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link> also have a deferred function construct_name of type STRING, useful for tracing and debugging. This function should be effected in every construct class to return the string name of the construct, such as "INSTRUCTION" or "CLASS" for construct classes in a grammar of Eiffel. For efficiency reasons, the construct_name function should also be a Once function. The form of such a function will always be the same, as illustrated by the following example which may appear in the construct class 
 			<code>
 				<class_name>INSTRUCTION</class_name>
 			</code> in a processor for Eiffel:
@@ -240,8 +240,8 @@ where procedures parse and semantics are expressed in terms of some more specifi
 			<size>2</size>PREPARING GRAMMARS
 		</heading>
 		<paragraph>Having studied the Parse library principles, let us see how to write grammar productions for various kinds of construct. The main task is to write the production function for each construct class.</paragraph>
-		<paragraph>The production function for a descendant of <link><url>/libraries/parse/reference/AGGREGATE_chart.html</url><label>AGGREGATE</label></link> will describe how to build a specimen of the corresponding function from a sequence of specimens of each of the constituent constructs. Writing this function from the corresponding production is straightforward.</paragraph>
-		<paragraph>As an example, consider the production function of class <link><url>/libraries/parse/reference/LINE_chart.html</url><label>LINE</label></link> for the Polynomial example language. The corresponding production is
+		<paragraph>The production function for a descendant of <link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link> will describe how to build a specimen of the corresponding function from a sequence of specimens of each of the constituent constructs. Writing this function from the corresponding production is straightforward.</paragraph>
+		<paragraph>As an example, consider the production function of class <link><url>/libraries/parse/reference/LINE_chart.xml</url><label>LINE</label></link> for the Polynomial example language. The corresponding production is
 			<line_break/>
 <code_block>
 Line [=] Variables ":" Sum
@@ -396,7 +396,7 @@ to create the object containing the result. Then for each non-keyword component,
 		<heading>
 			<size>3</size>Repetitions
 		</heading>
-		<paragraph>The production function for a descendant of <link><url>/libraries/parse/reference/REPETITION_chart.html</url><label>REPETITION</label></link> will describe how to build a specimen of the corresponding function as a sequence or zero or more (or, depending on the grammar, one or more) specimens of the base construct. The class must also effect a feature separator of type <code><class_name>STRING</class_name></code>, usually as a constant attribute. (This feature is introduced as deferred in class <link><url>/libraries/parse/reference/REPETITION_chart.html</url><label>REPETITION</label></link>.)</paragraph>
+		<paragraph>The production function for a descendant of <link><url>/libraries/parse/reference/REPETITION_chart.xml</url><label>REPETITION</label></link> will describe how to build a specimen of the corresponding function as a sequence or zero or more (or, depending on the grammar, one or more) specimens of the base construct. The class must also effect a feature separator of type <code><class_name>STRING</class_name></code>, usually as a constant attribute. (This feature is introduced as deferred in class <link><url>/libraries/parse/reference/REPETITION_chart.xml</url><label>REPETITION</label></link>.)</paragraph>
 		<paragraph>As an example, consider the construct Variables in the Polynomial example language. The right-hand side of the corresponding production is
 			<line_break/>
 			<code_block>Variables [=] {Identifier ";" ...}</code_block>
@@ -433,7 +433,7 @@ to create the object containing the result. Then for each non-keyword component,
 			<heading>
 				<size>3</size>Obtaining a lexical analyzer
 			</heading>
-			<paragraph>An effective descendant of <link><url>/libraries/parse/reference/L_INTERFACE_chart.html</url><label>L_INTERFACE</label></link> must define procedure obtain_analyzer so that it records into the lexical analyzer the regular expressions and keywords of the language at hand. In writing obtain_analyzer you may use any one of three different techniques, each of which may be the most convenient depending on the precise context, to obtain the required lexical analyzer: 
+			<paragraph>An effective descendant of <link><url>/libraries/parse/reference/L_INTERFACE_chart.xml</url><label>L_INTERFACE</label></link> must define procedure obtain_analyzer so that it records into the lexical analyzer the regular expressions and keywords of the language at hand. In writing obtain_analyzer you may use any one of three different techniques, each of which may be the most convenient depending on the precise context, to obtain the required lexical analyzer: 
 				<list ordered="false">
 					<item>You may build the lexical analyzer by defining its regular expressions one by one, using the procedures described in the presentation of METALEX, in particular put_expression and put_keyword.</item>
 					<item>You may use use procedure retrieve_analyzer from METALEX to retrieve an analyzer which a previous session saved into a file.</item>
@@ -750,11 +750,11 @@ You may go back to the next higher-level choice before C - or admit failure if t
 				</heading>
 				<paragraph>To achieve the effect of steps 
 					<link>
-						<url>#step_e1</url>
+						<anchor_name>step_e1</anchor_name>
 						<label>1</label>
 					</link> and 
 					<link>
-						<url>#step_e2</url>
+						<anchor_name>step_e2</anchor_name>
 						<label>2</label>
 					</link>, a simple call instruction suffices: just call the procedure build, inherited from <code><class_name>L_INTERFACE</class_name></code> using as argument document, a feature of type INPUT, obtained from <code><class_name>METALEX</class_name></code> (the lexical analyzer generator class) through <code><class_name>L_INTERFACE</class_name></code>. The call, then, is just:
 				</paragraph>
@@ -784,15 +784,15 @@ You may go back to the next higher-level choice before C - or admit failure if t
 						<symbol>(</symbol>
 					</code>document takes care of steps 
 					<link>
-						<url>#step_e1</url>
+						<anchor_name>step_e1</anchor_name>
 						<label>1</label>
 					</link> and 
 					<link>
-						<url>#step_e2</url>
+						<anchor_name>step_e2</anchor_name>
 						<label>2</label>
 					</link> of the root's creation procedure. Step 
 					<link>
-						<url>#step_e3</url>
+						<anchor_name>step_e3</anchor_name>
 						<label>3</label>
 					</link> selects the file containing the input document; this is achieved through the call
 					<line_break/>
@@ -803,9 +803,9 @@ You may go back to the next higher-level choice before C - or admit failure if t
 				</paragraph>
 				<paragraph>Finally, step 
 					<link>
-						<url>#step_e4</url>
+						<anchor_name>step_e4</anchor_name>
 						<label>4</label>
-					</link> (processing the document) is simply a call to procedure process, obtained from <link><url>/libraries/reference/parse/CONSTRUCT_chart.html</url><label>CONSTRUCT</label></link>. Recall that this procedure simply executes
+					</link> (processing the document) is simply a call to procedure process, obtained from <link><url>/libraries/reference/parse/CONSTRUCT_chart.xml</url><label>CONSTRUCT</label></link>. Recall that this procedure simply executes
 					<line_break/>
 <code_block>
 	<feature_name>parse</feature_name>	

@@ -39,7 +39,7 @@
 						<label>EV_CURSOR</label>
 					</link> for an
 					<link>
-						<url>/libraries/vision2/reference/interface/widgets/ev_widget.xml</url>
+						<url>/libraries/vision2/reference/interface/widgets/EV_WIDGET_chart.xml</url>
 						<label>EV_WIDGET</label>
 					</link>.
 				</item>

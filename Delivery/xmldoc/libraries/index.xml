@@ -1,80 +1,24 @@
-<document title="Class Libraries">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_pseudo_name>30</envision_pseudo_name>
-			</toc>
-		</help>
-	</meta_data>
-	<paragraph>
-		<paragraph> Eiffel Software Eiffel is all about reuse. Thousands of reusable components help you develop your applications by standing on the shoulders of previous developers. Here is the documentation on the principal libraries: 
-			<list ordered="false">
-				<item>
-					<link>
-						<url>base/index.xml</url>
-						<label>EiffelBase</label>
-					</link>: Eiffel Software's's acclaimed open-source library covering the fundamental algorithms and data structures of computing science.
-				</item>
-				<item output="studio">
-					<link>
-						<url>com/index.xml</url>
-						<label>EiffelCOM</label>
-					</link>: your tool of choice for building and using Microsoft COM components.
-				</item>
-				<item output="studio">
-					<link>
-						<url>eiffel2java/index.xml</url>
-						<label>Eiffel2Java</label>
-					</link>: Java interface library.
-				</item>
-				<item output="studio">
-					<link>
-						<url>lex/index.xml</url>
-						<label>Lex&amp;Parse</label>
-					</link>: lexical analysis and parsing libraries.
-				</item>
-				<item output="studio">
-					<link>
-						<url>net/index.xml</url>
-						<label>Net</label>
-					</link>: the client-server library for exchanging object structures across the network, between identical or different machine architectures.
-				</item>
-				<item output="studio">
-					<link>
-						<url>store/index.xml</url>
-						<label>Store</label>
-					</link>: object-relational database interface library.
-				</item>
-				<item output="studio">
-					<link>
-						<url>thread/index.xml</url>
-						<label>Thread</label>
-					</link>: multi-threading library.
-				</item>
-				<item output="studio">
-					<link>
-						<url>time/index.xml</url>
-						<label>Time</label>
-					</link>: time and date library.
-				</item>
-				<item>
-					<link>
-						<url>vision2/index.xml</url>
-						<label>Vision2</label>
-					</link>: the extensive multi-platform graphical library for producing modern GUI applications that will run on Windows as well as Unix, Linux, VMS and other X-based platforms.
-				</item>
-				<item output="studio">
-					<link>
-						<url>web/index.xml</url>
-						<label>Web</label>
-					</link>: Web interface library with support for easy development of CGI scripts in Eiffel.
-				</item>
-				<item>
-					<link>
-						<url>wel/index.xml</url>
-						<label>WEL</label>
-					</link>: powerful graphical library for Windows platforms.
-				</item>
-			</list>
-		</paragraph>
-	</paragraph></document>
+<system>
+<keyword>System</keyword>
+	<itag>name:     </itag>all_libs
+	<itag>location: </itag>D:\Src\tools\doc_builderfromscript\resources\xml
+	<itag>ace file: </itag>all_libs.ace
+
+<keyword>Root class</keyword>
+	<class><location>base/kernel/classic/ANY_chart.xml</location>ANY</class> <symbol>(</symbol><cluster><location>base/kernel/classic/index.xml</location><name>base.kernel.classic</name></cluster><symbol>)</symbol>
+
+<keyword>Top-level clusters</keyword>
+	<cluster><location>base/index.xml</location><name>base</name></cluster>
+	<cluster><location>wel/index.xml</location><name>wel</name></cluster>
+	<cluster><location>time/index.xml</location><name>time</name></cluster>
+	<cluster><location>com/index.xml</location><name>com</name></cluster>
+	<cluster><location>eiffel2java/index.xml</location><name>eiffel2java</name></cluster>
+	<cluster><location>lex/index.xml</location><name>lex</name></cluster>
+	<cluster><location>parse/index.xml</location><name>parse</name></cluster>
+	<cluster><location>store/index.xml</location><name>store</name></cluster>
+	<cluster><location>net/index.xml</location><name>net</name></cluster>
+	<cluster><location>thread/index.xml</location><name>thread</name></cluster>
+	<cluster><location>vision2/index.xml</location><name>vision2</name></cluster>
+	<cluster><location>web/index.xml</location><name>web</name></cluster>
+
+</system>

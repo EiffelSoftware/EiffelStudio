@@ -15,11 +15,11 @@
 		<paragraph>The EiffelStore wizard generates the database-specific classes from an EiffelStore generation system based on template files containing tags.</paragraph>
 		<paragraph>Let us see first 
 			<link>
-				<url>#generation_system</url>
+				<anchor_name>generation_system</anchor_name>
 				<label> how the EiffelStore generation system works</label>
 			</link>. Let us see then 
 			<link>
-				<url>#wizard_generation</url>
+				<anchor_name>wizard_generation</anchor_name>
 				<label> how the EiffelStore wizard uses this system</label>
 			</link> for the data structures generation.
 		</paragraph>
@@ -30,25 +30,25 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#capabilities</url>
+					<anchor_name>capabilities</anchor_name>
 					<label>Mapping system possibilities</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#mapping_system</url>
+					<anchor_name>mapping_system</anchor_name>
 					<label>General mapping system</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#tags_descr</url>
+					<anchor_name>tags_descr</anchor_name>
 					<label>Tags description</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#gen_impl_overview</url>
+					<anchor_name>gen_impl_overview</anchor_name>
 					<label>Implementation overview</label>
 				</link>
 			</item>
@@ -152,19 +152,19 @@
 				<list ordered="false">
 					<item>Tags corresponding to 
 						<link>
-							<url>#table_meta-data</url>
+							<anchor_name>table_meta-data</anchor_name>
 							<label>table  meta-data</label>
 						</link>
 					</item>
 					<item>Tags corresponding to 
 						<link>
-							<url>#attribute_meta-data</url>
+							<anchor_name>attribute_meta-data</anchor_name>
 							<label>attribute  meta-data</label>
 						</link>
 					</item>
 					<item>Tags to 
 						<link>
-							<url>#enclosing_tag</url>
+							<anchor_name>enclosing_tag</anchor_name>
 							<label>enclose attribute meta-data</label>
 						</link>
 					</item>
@@ -378,19 +378,19 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#system_meta-data_ext</url>
+					<anchor_name>system_meta-data_ext</anchor_name>
 					<label>System meta-data tags</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#table_meta-data_ext</url>
+					<anchor_name>table_meta-data_ext</anchor_name>
 					<label> Table meta-data tags</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#enclosing_tag_ext</url>
+					<anchor_name>enclosing_tag_ext</anchor_name>
 					<label> Enclosing tags</label>
 				</link>
 			</item>
@@ -512,7 +512,7 @@
 		</heading>
 		<paragraph>The EiffelStore wizard uses the 
 			<link>
-				<url>#generation_system</url>
+				<anchor_name>generation_system</anchor_name>
 				<label> EiffelStore generation system</label>
 			</link> described above to generate the data structures mapped to your database. 
 		</paragraph>
@@ -520,19 +520,19 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#wiz_table_classes</url>
+					<anchor_name>wiz_table_classes</anchor_name>
 					<label>Classes storing database table rows content</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#wiz_descr_classes</url>
+					<anchor_name>wiz_descr_classes</anchor_name>
 					<label>Classes describing a database table</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#wiz_access_class</url>
+					<anchor_name>wiz_access_class</anchor_name>
 					<label>A class describing the database and giving access to the  previous types of classes</label>
 				</link>
 			</item>

@@ -5,19 +5,19 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#errors</url>
+					<anchor_name>errors</anchor_name>
 					<label>Handling</label>
 				</link> database errors.
 			</item>
 			<item>
 				<link>
-					<url>#connection</url>
+					<anchor_name>connection</anchor_name>
 					<label>Connecting</label>
 				</link> to the database.
 			</item>
 			<item>
 				<link>
-					<url>#commit</url>
+					<anchor_name>commit</anchor_name>
 					<label>Committing</label>
 				</link> changes in the database. 
 			</item>

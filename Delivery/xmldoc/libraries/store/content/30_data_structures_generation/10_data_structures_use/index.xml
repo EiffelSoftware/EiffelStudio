@@ -20,11 +20,11 @@
 		</list>
 		<paragraph>Let us see first 
 			<link>
-				<url>#capabilities</url>
+				<anchor_name>capabilities</anchor_name>
 				<label>what you can do</label>
 			</link> with data structures and their context, then 
 			<link>
-				<url>#implementation</url>
+				<anchor_name>implementation</anchor_name>
 				<label>how it is implemented</label>
 			</link>.
 		</paragraph>
@@ -35,31 +35,31 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#cap_storage</url>
+					<anchor_name>cap_storage</anchor_name>
 					<label>Storing table/view rows content</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#cap_manipulation</url>
+					<anchor_name>cap_manipulation</anchor_name>
 					<label>Manipulating abstract table/view rows content</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#cap_objects_metadata</url>
+					<anchor_name>cap_objects_metadata</anchor_name>
 					<label>Getting objects metadata</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#cap_database_metadata</url>
+					<anchor_name>cap_database_metadata</anchor_name>
 					<label>Accessing database metadata</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#cap_more</url>
+					<anchor_name>cap_more</anchor_name>
 					<label>More interesting features</label>
 				</link>
 			</item>
@@ -157,11 +157,11 @@
 			</list>
 			<paragraph>One database table is hence associated to one table class and one description class. Both classes are closely 
 				<link>
-					<url>#table-descr_relationship</url>
+					<anchor_name>table-descr_relationship</anchor_name>
 					<label> interrelated</label>
 				</link> to provide what the  developer need. The 
 				<link>
-					<url>#table_access_classes</url>
+					<anchor_name>table_access_classes</anchor_name>
 					<label>table access classes</label>
 				</link>  describes the database tables and gives access to both table and description classes.
 			</paragraph>
@@ -197,24 +197,24 @@
 			<list ordered="false">
 				<item>
 					<link>
-						<url>#cap_objects_metadata</url>
+						<anchor_name>cap_objects_metadata</anchor_name>
 						<label>Getting meta-data</label>
 					</link> about the table represented at  run-time.
 				</item>
 				<item>
 					<link>
-						<url>#cap_manipulation</url>
+						<anchor_name>cap_manipulation</anchor_name>
 						<label>Getting table rows data</label>
 					</link> dynamically.
 				</item>
 				<item>
 					<link>
-						<url>#cap_more</url>
+						<anchor_name>cap_more</anchor_name>
 						<label>Facilitating data management</label>
 					</link>.
 				</item>
 			</list>
-			<paragraph>These descriptions inherit from <link><url>../../reference/generation/tables_access/abstract/DB_TABLE_DESCRIPTION_flatshort.xml</url><label>DB_TABLE_DESCRIPTION</label></link>.</paragraph>
+			<paragraph>These descriptions inherit from <link><url>../../../reference/generation/tables_access/abstract/DB_TABLE_DESCRIPTION_flatshort.xml</url><label>DB_TABLE_DESCRIPTION</label></link>.</paragraph>
 			<paragraph>Since they only describes a table and provide tools, description objects can be unique. EiffelStore ensures their unicity for resources optimization.</paragraph>
 			<paragraph>
 				<bold>Tip:</bold> Use description classes to 

@@ -8,13 +8,13 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#execute</url>
+					<anchor_name>execute</anchor_name>
 					<label>Execute</label>
 				</link> a stored procedure.
 			</item>
 			<item>
 				<link>
-					<url>#create</url>
+					<anchor_name>create</anchor_name>
 					<label>Create</label>
 				</link> a stored procedure. 
 			</item>

@@ -8,10 +8,10 @@ class
 	GB_EV_WINDOW
 	
 	-- The following properties from EV_WINDOW are manipulated by `Current'.
-	-- User_can_resize - Performed on the real object and the display_object.
-	-- Maximum_width - Performed on the real object and the display_object.
-	-- Maximum_height - Performed on the real object and the display_object.
-	-- Title_string - Performed on the real object and the display_object.
+	-- User_can_resize - Performed on the real object only. Not the display_object.
+	-- Maximum_width - Performed on the real object only. Not the display object.
+	-- Maximum_height - Performed on the real object only. Not the display object.
+	-- Title_string - Performed on the real object only. Not the display object.
 
 inherit
 	
@@ -129,19 +129,19 @@ feature {GB_XML_STORE} -- Output
 			
 			element_info := full_information @ (User_can_resize_string)
 			if element_info.data.is_equal (True_string) then
-				for_all_objects (agent {EV_WINDOW}.enable_user_resize)
+				for_first_object (agent {EV_WINDOW}.enable_user_resize)
 			else
-				for_all_objects (agent {EV_WINDOW}.disable_user_resize)
+				for_first_object (agent {EV_WINDOW}.disable_user_resize)
 			end
 			
 			element_info := full_information @ (Maximum_width_string)
-			for_all_objects (agent {EV_WINDOW}.set_maximum_width(element_info.data.to_integer))
+			for_first_object (agent {EV_WINDOW}.set_maximum_width(element_info.data.to_integer))
 			
 			element_info := full_information @ (Maximum_height_string)
-			for_all_objects (agent {EV_WINDOW}.set_maximum_height(element_info.data.to_integer))
+			for_first_object (agent {EV_WINDOW}.set_maximum_height(element_info.data.to_integer))
 			
 			element_info := full_information @ (title_string)
-			for_all_objects (agent {EV_WINDOW}.set_title (element_info.data))
+			for_first_object (agent {EV_WINDOW}.set_title (element_info.data))
 		end
 		
 	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
@@ -189,9 +189,9 @@ feature {NONE} -- Implementation
 			-- Update property `user_can_resize' on all items in `objects'.
 		do
 			if user_can_resize.is_selected then
-				for_all_objects (agent {EV_WINDOW}.enable_user_resize)
+				for_first_object (agent {EV_WINDOW}.enable_user_resize)
 			else
-				for_all_objects (agent {EV_WINDOW}.disable_user_resize)
+				for_first_object (agent {EV_WINDOW}.disable_user_resize)
 			end
 		end
 		
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			if maximum_height.text /= Void and then maximum_height.text.is_integer then
 				value := maximum_height.text.to_integer
 				if value > 0 and value >= first.minimum_height then
-					for_all_objects (agent {EV_WINDOW}.set_maximum_height (value))
+					for_first_object (agent {EV_WINDOW}.set_maximum_height (value))
 				end
 			end
 		end
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			if maximum_width.text /= Void and then maximum_width.text.is_integer then
 				value := maximum_width.text.to_integer
 				if value > 0 and value >= first.minimum_width then
-					for_all_objects (agent {EV_WINDOW}.set_maximum_width (value))
+					for_first_object (agent {EV_WINDOW}.set_maximum_width (value))
 				end
 			end
 		end
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			-- Update property `title' on all items in `objects'.
 		do
 			if title.text /= Void then
-				for_all_objects (agent {EV_WINDOW}.set_title (title.text))
+				for_first_object (agent {EV_WINDOW}.set_title (title.text))
 			end
 		end
 
@@ -238,8 +238,5 @@ feature {NONE} -- Implementation
 	Maximum_width_string: STRING is "Maximum_width"
 	Maximum_height_string: STRING is "Maximum_height"
 	Title_string: STRING is "Title"
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class GB_EV_WINDOW

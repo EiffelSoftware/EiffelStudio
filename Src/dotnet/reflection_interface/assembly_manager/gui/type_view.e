@@ -457,9 +457,7 @@ feature -- Event handling
 				else
 					close
 					eiffel_class := type_view_handler.eiffel_class
-					if type_modifications.features_modifications /= Void and then type_modifications.features_modifications.get_count > 0 then
-						eiffel_class.set_modified
-					end
+					eiffel_class.set_modified (type_modifications.features_modifications /= Void and then type_modifications.features_modifications.get_count > 0)
 					children := type_view_handler.children
 					assembly_view.set_children (eiffel_class, children)
 					create xml_generator.make_xmlcodegenerator
@@ -1319,7 +1317,7 @@ feature {NONE} -- Implementation
 			feature_name_width: INTEGER
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
-			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
+			an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE
 			argument_name: STRING
 			argument_type: STRING
 			argument_name_width: INTEGER
@@ -1405,8 +1403,8 @@ feature {NONE} -- Implementation
 				loop
 					an_argument ?= arguments.get_Item (i)
 					if an_argument /= Void then						
-						argument_name := an_argument.get_eiffel_name
-						argument_type := an_argument.get_type_eiffel_name
+						argument_name := an_argument.eiffel_name
+						argument_type := an_argument.type_eiffel_name
 					end
 					if a_feature.get_is_creation_routine then
 						create_label (argument_name, new_label_width, panel_height, dictionary.Feature_color, False)
@@ -1443,15 +1441,15 @@ feature {NONE} -- Implementation
 			end
 		
 				-- feature return type
-			if a_feature.get_Is_Method and then a_feature.get_Return_Type /= Void and then a_feature.get_return_type.get_type_eiffel_name /= Void and then a_feature.get_return_type.get_type_eiffel_name.get_length > 0 then
+			if a_feature.get_Is_Method and then a_feature.get_Return_Type /= Void and then a_feature.get_return_type.type_eiffel_name /= Void and then a_feature.get_return_type.type_eiffel_name.get_length > 0 then
 				create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width 
-				create_label (a_feature.get_return_type.get_type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
+				create_label (a_feature.get_return_type.type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
 			end
 			if a_feature.get_Is_Field and not a_feature.get_Eiffel_Name.Starts_With (eiffel_dictionary.Property_set_prefix) then
 				create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width
-				create_label (a_feature.get_return_type.get_type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
+				create_label (a_feature.get_return_type.type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
 			end
 			panel_height := panel_height + dictionary.Label_height
 		end	
@@ -1484,7 +1482,7 @@ feature {NONE} -- Implementation
 		local
 			an_array: ARRAY [ANY]
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
-			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE	
+			an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE	
 		do
 			if feature_names_boxes.contains_key (text_box) and feature_modifications /= Void and modified_feature /= Void then
 				if feature_modifications.old_feature_name /= Void and then not feature_modifications.old_feature_name.to_lower.equals_string (text_box.get_text.to_lower) then
@@ -1497,7 +1495,7 @@ feature {NONE} -- Implementation
 					a_feature ?= an_array.item (0)
 					an_argument ?= an_array.item (1)
 					if (a_feature /= Void and then a_feature = modified_feature) and an_argument /= Void then
-						if not an_argument.get_eiffel_name.to_lower.equals_string (text_box.get_text.to_lower) then
+						if not an_argument.eiffel_name.to_lower.equals_string (text_box.get_text.to_lower) then
 							feature_modifications.add_argument_modification (an_argument, text_box.get_text)
 							type_modifications.add_feature_modification (modified_feature, feature_modifications)
 						end
@@ -1649,7 +1647,7 @@ feature {NONE} -- Implementation
 			not_empty_error_message: Result.get_length > 0
 		end
 
-	message_from_argument_error (a_feature: ISE_REFLECTION_EIFFELFEATURE; an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE; an_error_message: STRING): STRING is
+	message_from_argument_error (a_feature: ISE_REFLECTION_EIFFELFEATURE; an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE; an_error_message: STRING): STRING is
 		indexing
 			description: "Error message from `a_feature' and `an_error_message'"
 			external_name: "MessageFromFeatureError"
@@ -1663,7 +1661,7 @@ feature {NONE} -- Implementation
 			Result := Result.concat_string_string_string_string (Result, dictionary.Space, dictionary.Opening_round_bracket, dictionary.Feature_string)
 			Result := Result.concat_string_string_string_string (Result, dictionary.Colon, dictionary.Space, a_feature.get_eiffel_name)
 			Result := Result.concat_string_string_string_string (Result, dictionary.Comma_separator, dictionary.Space, dictionary.Argument_string)
-			Result := Result.concat_string_string_string_string (Result, Dictionary.Colon, dictionary.Space, an_argument.get_eiffel_name)
+			Result := Result.concat_string_string_string_string (Result, Dictionary.Colon, dictionary.Space, an_argument.eiffel_name)
 			Result := Result.concat_string_string_string_string (Result, dictionary.Closing_round_bracket, dictionary.Colon, dictionary.Space)
 			Result := Result.concat_string_string (Result, an_error_message)
 		ensure
@@ -1739,7 +1737,7 @@ feature {NONE} -- Implementation
 			a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			an_array: ARRAY [ANY]
 			corresponding_feature: ISE_REFLECTION_EIFFELFEATURE
-			corresponding_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
+			corresponding_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE
 		do
 			enumerator := feature_arguments_boxes.get_keys.get_enumerator
 			from
@@ -1752,7 +1750,7 @@ feature {NONE} -- Implementation
 					if an_array /= Void then
 						corresponding_feature ?= an_array.item (0)
 						corresponding_argument ?= an_array.item (1)				
-						if (corresponding_feature /= Void and then corresponding_feature.get_eiffel_name.to_lower.equals_string (a_feature.get_eiffel_name.to_lower)) and (corresponding_argument /= Void and then corresponding_argument.get_eiffel_name.to_lower.equals_string (an_argument.get_eiffel_name.to_lower)) then
+						if (corresponding_feature /= Void and then corresponding_feature.get_eiffel_name.to_lower.equals_string (a_feature.get_eiffel_name.to_lower)) and (corresponding_argument /= Void and then corresponding_argument.eiffel_name.to_lower.equals_string (an_argument.eiffel_name.to_lower)) then
 							Result := a_text_box
 						end
 					end

@@ -6,42 +6,49 @@
 
 extern char ** shword(char *);
 extern shfree(char **);
-extern int main (int, char**, char **);
+extern int eif_wmain (int, char**, char **);
 
 HANDLE ghInstance;
+HINSTANCE eif_hInstance;
+HINSTANCE eif_hPrevInstance;
+LPSTR     eif_lpCmdLine;
+int       eif_nCmdShow;
 
-HANDLE eif_coninfile, eif_conoutfile;
+static char **argv = NULL, *t = NULL;
+
 
 APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, 
     LPSTR lpCmdLine, int nCmdShow)
 {
 	int ret = 0;
 
-	int argc;
-	char **argv, **environ, *t;
-	SECURITY_ATTRIBUTES sa;
-
-	FILE *fp;
+	int argc, tl;
+	char **environ;
 
 	ghInstance = hInstance;
-	fp = fopen ("C:\\patricek.log", "at");
-	fprintf (fp, "Set the instance to %d %d \n", ghInstance, hInstance);
-	fclose (fp);
+	eif_hInstance = hInstance;
+	eif_hPrevInstance = hPrevInstance;
+	eif_lpCmdLine = lpCmdLine;
+	eif_nCmdShow = nCmdShow;
 
-	eif_conoutfile = GetStdHandle (STD_OUTPUT_HANDLE);
-	eif_coninfile = GetStdHandle (STD_INPUT_HANDLE);
-	ret = AllocConsole ();
+	t = strdup (GetCommandLine());
 
-	t = GetCommandLine();
-	argv = shword (t);	
+	tl = strlen (t);
+	if ((tl > 16) && (t[tl-1] == '"') && (t[tl-2] == '?') &&
+		(t[tl-16] == '"') && (t[tl-15] == '?') && (t[tl-17] == ' '))
+		{
+		t[tl-17] = '\0';
+		eif_lpCmdLine = t;
+		}
+
+	argv = shword (t);
 	for (argc = 0; argv[argc] != (char *) 0; argc++)
-		;
+		;       
 	environ = GetEnvironmentStrings();
 
-	ret = main(argc, argv, environ);
+	main(argc, argv, environ);
     
 	FreeEnvironmentStrings (environ);
-	shfree (argv);
 
 	return ret;
 }
@@ -53,6 +60,11 @@ int eif_fn_count = 0;
 void eif_cleanup()
 {
 	int i;
+
+	if (argv != NULL)
+		shfree (argv);
+	if (t != NULL)
+		free (t);
 
 	for (i = 0; i < eif_fn_count; i ++)
 		if (eif_fn_table[i] != NULL)
@@ -67,38 +79,5 @@ void eif_register_cleanup(EIF_CLEANUP f)
 	eif_fn_table [eif_fn_count] = f;
 	eif_fn_count ++;
 }
-
-BOOL CtrlHandler(DWORD fdwCtrlType) {
-    switch (fdwCtrlType) {
-
-        /* Handle the CTRL+C signal. */
-
-        case CTRL_BREAK_EVENT:
-        case CTRL_C_EVENT:
-			eio();
-            return TRUE;
-
-        /* CTRL+CLOSE: confirm that the user wants to exit. */
-
-        case CTRL_CLOSE_EVENT:
-
-            return TRUE;
-
-        /* Pass other signals to the next handler. */
-
-
-        case CTRL_LOGOFF_EVENT:
-
-        case CTRL_SHUTDOWN_EVENT:
-
-        default:
-
-            return FALSE;
-
-    }
-
-}
-
-  
 
  

@@ -59,9 +59,7 @@ feature -- Basic Operations
 			non_void_folder: a_folder /= Void
 			valid_folder: not a_folder.is_empty
 		local
-			a_directory: DIRECTORY
 			a_local_folder: STRING
-			a_file_list: LIST [STRING]
 		do
 			a_local_folder := clone (Shared_wizard_environment.destination_folder)
 			a_local_folder.append (a_folder)
@@ -276,7 +274,10 @@ feature -- Basic Operations
 			a_local_folder.append (Eifgen)
 			a_local_folder.append_character (Directory_separator)
 			a_local_folder.append (W_code)
-			if a_folder.is_equal (Client) then
+			if 
+				a_folder.is_equal (Client) or
+				component_empty (a_folder)
+			then
 				a_local_folder.append_character (Directory_separator)
 				a_local_folder.append (Msc)
 			end

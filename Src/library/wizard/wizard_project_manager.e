@@ -22,7 +22,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	make_and_launch 
 
 feature {NONE} -- Initialization

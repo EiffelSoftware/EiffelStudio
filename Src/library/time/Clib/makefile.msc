@@ -3,7 +3,7 @@
 CC = cl
 
 # Finalized version
-CFLAGS = -nologo -c -Ox -W1 -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
+CFLAGS = -nologo -c -Ox -W1 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

@@ -267,7 +267,16 @@ feature -- Type check, byte code and dead code removal
 					if formal_type /= Void then
 						Result := last_constrained.generics.item (formal_type.position)
 					end
-				end
+ 				elseif last_type.is_like then
+ 					if Result.is_formal then
+ 						formal_type ?= Result
+ 					else
+ 						formal_type ?= Result.actual_type
+ 					end
+ 					if formal_type /= Void then
+ 						Result := last_type.actual_type.generics.item (formal_type.position)
+ 					end
+ 				end
 				Result := Result.conformance_type
 				context.pop (count)
 				Result := Result.instantiation_in (last_type, last_id).actual_type

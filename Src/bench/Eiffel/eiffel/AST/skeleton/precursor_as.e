@@ -210,6 +210,11 @@ feature -- Type check, byte code and dead code removal
 			last_id := last_class.id
 
 				-- Supplier dependances update
+				-- Create self-dependance
+			!! depend_unit.make (context.a_class.id, context.a_feature)
+			context.supplier_ids.extend (depend_unit)
+
+				-- Create dependance on precursor
 			!! depend_unit.make (last_id, a_feature)
 			context.supplier_ids.extend (depend_unit)
 			
@@ -287,6 +292,15 @@ feature -- Type check, byte code and dead code removal
 				if formal_type /= Void then
 					Result := last_constrained.generics.item (formal_type.position)
 				end
+			elseif last_type.is_like then
+ 				if Result.is_formal then
+ 					formal_type ?= Result
+ 				else
+ 					formal_type ?= Result.actual_type
+ 				end
+ 				if formal_type /= Void then
+ 					Result := last_type.actual_type.generics.item (formal_type.position)
+ 				end
 			end
 			Result := Result.conformance_type
 			context.pop (count)

@@ -40,7 +40,8 @@ feature {NONE} -- Initialization
 			eiffel_names.force ("STD_FONT_PROXY")
 			eiffel_names.force ("STD_PICTURE_PROXY")
 
-			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_component.make
+			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_client.make
+			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_server.make
 			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_common.make
 			create c_types.make (20)
 		ensure
@@ -49,7 +50,8 @@ feature {NONE} -- Initialization
 			non_void_interfaces: interfaces /= Void
 			non_void_coclasses: coclasses /= Void
 			non_void_eiffel_names: eiffel_names /= Void
-			non_void_visible_classes_component: visible_classes_component /= Void
+			non_void_visible_classes_client: visible_classes_client /= Void
+			non_void_visible_classes_server: visible_classes_server /= Void
 			non_void_visible_classes_common: visible_classes_common /= Void
 			non_void_c_types: c_types /= Void
 		end
@@ -93,8 +95,11 @@ feature -- Access
 	coclasses: LIST [WIZARD_COCLASS_DESCRIPTOR]
 			-- List of coclasses in system.
 
-	visible_classes_component: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
-			-- List of visible classes in system.
+	visible_classes_client: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
+			-- List of visible classes in client cluster.
+
+	visible_classes_server: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
+			-- List of visible classes in server cluster.
 
 	visible_classes_common: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
 			-- List of visible classes in system.
@@ -196,12 +201,20 @@ feature -- Basic operations
 			coclasses.force (a_coclass)
 		end
 
-	add_visible_class_component (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
-			-- Add `a_class' to `visible_classes_component'
+	add_visible_class_client (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
+			-- Add `a_class' to `visible_classes_client'
 		require
 			non_void_descriptor: a_class /= Void
 		do
-			visible_classes_component.force (a_class)
+			visible_classes_client.force (a_class)
+		end
+
+	add_visible_class_server (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
+			-- Add `a_class' to `visible_classes_server'
+		require
+			non_void_descriptor: a_class /= Void
+		do
+			visible_classes_server.force (a_class)
 		end
 
 	add_visible_class_common (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is

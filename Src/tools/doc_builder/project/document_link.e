@@ -98,7 +98,7 @@ feature -- Access
 							
 								-- If match is false here
 							if not l_match then
-								if l_file_name.count > l_url_arr.count then
+								if l_filename_arr.count > l_url_arr.count then
 									l_no_parents := l_filename_arr.count - (l_last_match_index)
 								else
 									l_no_parents := cnt - l_last_match_index
@@ -177,13 +177,9 @@ feature -- Access
 			l_filename: FILE_NAME
 		do
 			if relative_from_root then
-						-- Prepend `root_directory' to `url' to get absolute file name				
-				if (create {PLATFORM}).is_windows then		
-					create l_filename.make_from_string (root_directory)								
-					l_filename.extend (url.substring (2, url.count))	
-				else
-					create l_filename.make_from_string (url)
-				end
+						-- Prepend `root_directory' to `url' to get absolute file name			
+				create l_filename.make_from_string (root_directory)								
+				l_filename.extend (url.substring (2, url.count))	
    				Result := l_filename.string			  				
 			elseif relative_from_document then
 						-- Determine number of directory parents specified in relative url
@@ -380,9 +376,21 @@ feature {DOCUMENT_LINK} -- Query
 			-- Is `url' relative from project root?
 		local			
 			l_first_char: CHARACTER
+--			l_filename: FILE_NAME
+--			l_file: RAW_FILE
+--			l_url: STRING
 		do
 			l_first_char := url.item (1)				
-			Result := l_first_char = '\' or l_first_char = '/'				
+			Result := l_first_char = '\' or l_first_char = '/'
+--			if l_first_char = '\' or l_first_char = '/' then			
+--				l_url := url.substring (2, url.count)
+--			else
+--				l_url := url
+--			end
+--			create l_filename.make_from_string (root_directory)
+--			l_filename.extend (l_url)
+--			create l_file.make (l_filename)
+--			Result := l_file.exists
 		end		
 		
 feature {NONE} -- Implmentation

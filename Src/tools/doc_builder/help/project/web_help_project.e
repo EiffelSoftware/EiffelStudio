@@ -76,6 +76,9 @@ feature {NONE} -- File
 				create l_filename.make_from_string ("")
 				replace_token (l_text, filter_frame_size_token, filter_frame_height.out)
 			end
+			if shared_constants.help_constants.is_web_help and not shared_constants.help_constants.is_tree_web_help then
+				create l_filename.make_from_string ("sub_tocs/")
+			end
 			replace_token (l_text, html_default_toc_token, l_filename.string + l_util.short_name (default_toc_file_name))
 			replace_token (l_text, html_default_filter_token, l_filename.string + l_util.short_name (filter_template_file_name))
 			l_text_no_index := l_text.twin

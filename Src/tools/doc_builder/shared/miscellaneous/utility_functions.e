@@ -467,13 +467,17 @@ feature -- Document
 			create l_consts		
 			if l_consts.Shared_document_manager.has_stylesheet then
 				l_name := l_consts.Shared_document_manager.stylesheet.name
+				if (create {PLATFORM}).is_unix then							
+					Result := l_name
+				else					
 						-- Create a project relative link to the stylesheet file
-				create l_link.make (a_file, l_name)
-				if rel then
-					Result := l_link.relative_url
-				else
-					Result := l_link.absolute_url
-				end										
+					create l_link.make (a_file, l_name)
+					if rel then
+						Result := l_link.relative_url
+					else
+						Result := l_link.absolute_url
+					end				
+				end
 			end				
 		end	
 

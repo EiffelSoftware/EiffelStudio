@@ -102,8 +102,10 @@ char *c_parse(FILE *f, char *filename)
 	yylineno = 1;
 	yacc_file_name = filename;
 	yyin = f;
-	start_position = 0;
-	end_position = 0;
+	current_location = (struct location *) cmalloc (sizeof (struct location));
+	current_location->start_position = 0;
+	current_location->end_position = 0;
+	current_location->line_number = 0;
 
 	reset_eiffel_lex_parser();
 

@@ -63,7 +63,7 @@ char token_str[STRINGLENGTH];	/* Allocated buffer for strings read by
 								 * lexical analyzers.
 								 */
 int yacc_position;				/* Position recorded in AST */
-int yacc_line_number;				/* Position recorded in AST */
+int yacc_line_number;			/* Line number recorded in AST */
 
 /* 
  * Declarations for argument passing  between Eiffel and Yacc
@@ -79,9 +79,7 @@ char char_arg;				/* Character argument */
  * Id position managment
  */
 
-int start_position;
-int end_position;
-int line_number;
+struct location *current_location;
 
 /*
  * Building the interface

@@ -6,8 +6,7 @@
  * Id position managment
  */
  
-extern int start_position;
-extern int end_position;
+extern struct location *current_location;
 
 /*
  * Declarations for click_list managment
@@ -51,12 +50,11 @@ int click_list_push(void)
 
 	if (click_top >= click_size) {
 		click_size += STACK_CHUNK;
-		if ((	click_stack =
-				(char **) xrealloc((char *) click_stack, click_size * sizeof(char *), GC_OFF)) == 0)
+		if ((click_stack = (char **) xrealloc((char *) click_stack, click_size * sizeof(char *), GC_OFF)) == 0)
 			internal_error("Memory allocation failed\n");
 		}
-	int_arg[0]=start_position;
-	int_arg[1]=end_position;
+	int_arg[0]=current_location->start_position;
+	int_arg[1]=current_location->end_position;
 	local_click_indir = create_node(CLICK_ELEM_SD);
 	(*init_array[CLICK_ELEM_SD])(local_click_indir);
 	click_stack[click_top++] = local_click_indir;

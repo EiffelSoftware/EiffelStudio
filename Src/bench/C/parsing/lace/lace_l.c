@@ -597,6 +597,7 @@ char *xxtext_ptr;
 #include "eif_rtlimits.h"
 #include "eif_err_msg.h"
 #include <ctype.h>
+#include "yacc.h"
 
 /* private functions for lex */
 static int process();
@@ -605,7 +606,9 @@ static int get_string();
 static int eif_char();
 
 /* Global variables */
-extern int start_position, end_position;
+extern struct location *current_location;   /* Record the position of the first, and the 
+											 * last character in last token 
+											 * Record also the line number of the token */
 extern char token_str[];
 
 /* For gperf */
@@ -709,7 +712,7 @@ YY_DECL
 	register char *xx_cp, *xx_bp;
 	register int xx_act;
 
-# line 40 "lace_l.l"
+# line 43 "lace_l.l"
 
 
 	if ( xx_init )
@@ -809,62 +812,62 @@ do_action:	/* This label is used only to access EOF actions. */
 	{ /* beginning of action switch */
 case 1:
 YY_USER_ACTION
-# line 41 "lace_l.l"
-{	start_position = end_position;
-											end_position += xxleng;}
+# line 44 "lace_l.l"
+{	current_location->start_position = current_location->end_position;
+											current_location->end_position += xxleng;}
 	YY_BREAK
 case 2:
 YY_USER_ACTION
-# line 43 "lace_l.l"
+# line 46 "lace_l.l"
 return process(LAC_COLUMN);
 	YY_BREAK
 case 3:
 YY_USER_ACTION
-# line 44 "lace_l.l"
+# line 47 "lace_l.l"
 return process(LAC_COMMA);
 	YY_BREAK
 case 4:
 YY_USER_ACTION
-# line 45 "lace_l.l"
-{	start_position = end_position;
-											end_position += xxleng;}
+# line 48 "lace_l.l"
+{	current_location->start_position = current_location->end_position;
+											current_location->end_position += xxleng;}
 	YY_BREAK
 case 5:
 YY_USER_ACTION
-# line 47 "lace_l.l"
+# line 50 "lace_l.l"
 return process(LAC_LEFT_PARAM);
 	YY_BREAK
 case 6:
 YY_USER_ACTION
-# line 48 "lace_l.l"
+# line 51 "lace_l.l"
 return process(LAC_RIGHT_PARAM);
 	YY_BREAK
 case 7:
 YY_USER_ACTION
-# line 49 "lace_l.l"
+# line 52 "lace_l.l"
 return process(LAC_SEMICOLON);
 	YY_BREAK
 case 8:
 YY_USER_ACTION
-# line 50 "lace_l.l"
+# line 53 "lace_l.l"
 return get_string();
 	YY_BREAK
 case 9:
 YY_USER_ACTION
-# line 51 "lace_l.l"
+# line 54 "lace_l.l"
 return process_name(LAC_IDENTIFIER);
 	YY_BREAK
 case 10:
 YY_USER_ACTION
-# line 52 "lace_l.l"
+# line 55 "lace_l.l"
 {	/* Unknown character */
-											start_position = end_position;
-											end_position += xxleng;
+											current_location->start_position = current_location->end_position;
+											current_location->end_position += xxleng;
 											xxerror ((char *) 0);}
 	YY_BREAK
 case 11:
 YY_USER_ACTION
-# line 57 "lace_l.l"
+# line 60 "lace_l.l"
 ECHO;
 	YY_BREAK
 			case YY_STATE_EOF(INITIAL):
@@ -1559,7 +1562,7 @@ void *ptr;
 	{
 	free( ptr );
 	}
-# line 57 "lace_l.l"
+# line 60 "lace_l.l"
 
 
 static int process(token_code)
@@ -1568,8 +1571,8 @@ int token_code;
 	/* Process a token updating global variables `start_position' and
 	 * `end_position'.
 	 */
-	start_position = end_position;
-	end_position += xxleng;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position += xxleng;
 	return token_code;
 }
 
@@ -1624,16 +1627,16 @@ static int get_string()
 	int		extension, n=0, char_value;
 
 	s = token_str;			/* Statically allocated buffer */
-	start_position = end_position;
-	end_position++;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position++;
 
 	while ((c = input()) != 0 && c != (char) EOF && c != '"' && n < STRINGLENGTH) {
-		end_position++;
+		current_location->end_position++;
 		if (c == '%') {
 			extension = 0;
 			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
 				extension = 1;
-				end_position++;
+				current_location->end_position++;
 			}
 			if (0 == extension) {
 				/* It is not an extension: unput read character and try
@@ -1654,7 +1657,7 @@ static int get_string()
 					/* Bad extension */
 					return LAC_ERROR3;
 				else
-					end_position++;
+					current_location->end_position++;
 			}
 		} else {
 			*s++ = c; n++;
@@ -1671,7 +1674,7 @@ static int get_string()
 		if (s == token_str)
 			return LAC_ERROR6;
 		else
-			end_position++;
+			current_location->end_position++;
 			return LAC_STRING;
 	}
 }
@@ -1685,7 +1688,7 @@ char c;
 	if (c != '%')
 		return (isprint(c) ? (int) c : -1);
 	else {
-		c = input(); end_position++;
+		c = input(); current_location->end_position++;
 		switch (c) {
 		case 'A': return (int) '@';
 		case 'B': return (int) '\t';
@@ -1711,14 +1714,14 @@ char c;
 		case '\000': return -1;
 		case '/':
 			for (i=1; i<4; i++) {
-				c = input(); end_position++;
+				c = input(); current_location->end_position++;
 				if (c && (c >= '0' && c <= '9'))
 					dec_value += ((int) (c - '0')) *
 						(100 * (i == 1) + 10 * (i == 2) + (i == 3));
 				else
 					return -1;
 			}
-			c = input(); end_position++;
+			c = input(); current_location->end_position++;
 			return (((c == '/') && dec_value < 256) ? dec_value : -1);
 		default: return -1;
 		}

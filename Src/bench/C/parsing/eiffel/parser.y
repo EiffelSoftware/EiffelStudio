@@ -16,7 +16,7 @@
 #define NORMAL_LEVEL	0
 #define ASSERT_LEVEL	1
 #define INVARIANT_LEVEL	2
-#define SET_POS(x) yacc_position = x
+#define SET_POS(x) yacc_position = x->start_position; yacc_line_number = x->line_number
 
 #ifndef FALSE
 #define FALSE 0
@@ -39,7 +39,11 @@ extern char token_str[];
 
 %union {
 	char *node;
-	int32  value;
+
+	int32 value;
+
+	struct location *loc;
+
 	struct cr_struct {		/* Structure used for resolving conflicts on
 							 * feature declaration body 
 							 */
@@ -175,8 +179,10 @@ Call_on_feature_access Feature_access Class_invariant Free_operator
 Call_on_expression Inspect_default
 Call_on_precursor A_precursor 
 
-%type <value> Sign Pushing_id Infix_operator Prefix_operator New_feature Feature_name
-Infix Prefix New_feature_list Set_position
+%type <loc> Set_position
+
+%type <value> Sign Pushing_id Feature_name Infix_operator Prefix_operator Infix Prefix
+New_feature New_feature_list
 
 %type <cr_node> Feature_value Constant_or_routine
 
@@ -192,7 +198,7 @@ Class_declaration:
 	Formal_generics Obsolete Inheritance Creators Features Class_invariant TE_END
 		{
 			/* node is set at the Eiffel level for root class */
-			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,separate,$1,$6,$7,$8,$9,$10,$11,click_list_new(), start_position);
+			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,separate,$1,$6,$7,$8,$9,$10,$11,click_list_new(), current_location->start_position);
 		}
 	;
 
@@ -289,10 +295,10 @@ Feature_clause_list:
 	;
 
 Feature_clause:
-	TE_FEATURE {$<value>$ = start_position;} Clients {list_init();} Feature_declaration_list
+	TE_FEATURE {$<loc>$ = current_location;} Clients {list_init();} Feature_declaration_list
 		{
 		$$ = list_new(CONSTRUCT_LIST_AS);
-		$$ = ($$ == NULL)?NULL:create_fclause_as($3,$$,$<value>2);
+		$$ = ($$ == NULL)?NULL:create_fclause_as($3,$$,$<loc>2->start_position);
 		}
 	;
 
@@ -333,7 +339,7 @@ ASemi:	/* empty */
 Feature_declaration:
 	{list_init();} New_feature_list {$$ = list_new(CONSTRUCT_LIST_AS);} Declaration_body ASemi
 		{
-		$$ = create_feature_as($<node>3,$4,click_list_start($<value>2),start_position);
+		$$ = create_feature_as($<node>3,$4,click_list_start($<value>2),current_location->start_position);
 		click_list_set ($$, $<value>2);
 		}
 	;
@@ -632,10 +638,10 @@ Type_mark:					/* empty */
 	;
 
 
-Routine:					Obsolete {$<value>$ = start_position;} 
+Routine:					Obsolete {$<loc>$ = current_location;} 
 							Precondition Local_declarations 
 							Routine_body Postcondition Rescue TE_END
-								{$$ = create_routine_as($1,$<value>2,$3,$4,$5,$6,$7);}
+								{$$ = create_routine_as($1,$<loc>2->start_position,$3,$4,$5,$6,$7);}
 	;
 
 Routine_body: 				Internal
@@ -650,7 +656,7 @@ External:					TE_EXTERNAL External_language External_name
 								{$$ = create_node2(EXTERNAL_AS,$2,$3);}
 	;
 
-External_language:			{SET_POS(start_position);} Non_empty_string
+External_language:			{SET_POS(current_location);} Non_empty_string
 								{$$ = create_node1(EXTERNAL_LANG_AS, $2);}
 	;
 
@@ -878,8 +884,8 @@ Constraint:
  * Instructions
  */
 
-Conditional:				{$<value>$ = start_position;} TE_IF Expression TE_THEN {list_init();} Compound {$$ = list_new(CONSTRUCT_LIST_AS);} Elsif Else_part TE_END
-								{SET_POS($<value>1); $$ = create_node4(IF_AS,$3,$<node>7,$8,$9);}
+Conditional:				{$<loc>$ = current_location;} TE_IF Expression TE_THEN {list_init();} Compound {$$ = list_new(CONSTRUCT_LIST_AS);} Elsif Else_part TE_END
+								{SET_POS($<loc>1); $$ = create_node4(IF_AS,$3,$<node>7,$8,$9);}
 	;
 
 Elsif:						/* empty */
@@ -910,10 +916,10 @@ Else_part:					/* empty */
 								{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
 
-Multi_branch:				{$<value>$ = start_position;} TE_INSPECT
+Multi_branch:				{$<loc>$ = current_location;} TE_INSPECT
 							Expression {list_init();} When_part_list {$$ = list_new(CONSTRUCT_LIST_AS);}
 							Inspect_default TE_END
-								{SET_POS($<value>1); $$ = create_node3(INSPECT_AS,$3,$<node>6,$7);}
+								{SET_POS($<loc>1); $$ = create_node3(INSPECT_AS,$3,$<node>6,$7);}
 	;
 
 /*
@@ -961,8 +967,8 @@ Choice:						Integer_constant
 				{$$ = create_node2(INTERVAL_AS,$1,$3);}
 	;
 
-Loop:						{$<value>$ = start_position;} TE_FROM {list_init();} Compound {$$ = list_new(CONSTRUCT_LIST_AS);} Invariant Variant TE_UNTIL Expression TE_LOOP {list_init();} Compound TE_END
-								{SET_POS($<value>1); $$ = create_node5(LOOP_AS,$<node>5,$6,$7,$9,list_new(CONSTRUCT_LIST_AS));}
+Loop:						{$<loc>$ = current_location;} TE_FROM {list_init();} Compound {$$ = list_new(CONSTRUCT_LIST_AS);} Invariant Variant TE_UNTIL Expression TE_LOOP {list_init();} Compound TE_END
+								{SET_POS($<loc>1); $$ = create_node5(LOOP_AS,$<node>5,$6,$7,$9,list_new(CONSTRUCT_LIST_AS));}
 	;
 
 Invariant:					/* empty */
@@ -989,8 +995,8 @@ Variant:					/* empty */
 								{$$ = create_node2(VARIANT_AS,NULL,$2);}
 	;
 
-Debug:						{$<value>$ = start_position; } TE_DEBUG Debug_keys {list_init();} Compound TE_END 
-								{SET_POS($<value>1); $$ = create_node2(DEBUG_AS,$3,list_new(CONSTRUCT_LIST_AS));}
+Debug:						{$<loc>$ = current_location; } TE_DEBUG Debug_keys {list_init();} Compound TE_END 
+								{SET_POS($<loc>1); $$ = create_node2(DEBUG_AS,$3,list_new(CONSTRUCT_LIST_AS));}
 	;
 
 Debug_keys:					/* empty */
@@ -1107,8 +1113,8 @@ Call:						A_feature
 								{$$ = create_node1(INSTR_CALL_AS,$1);}
 	;
 
-Check:						{$<value>$ = start_position; } TE_CHECK Assertion TE_END
-								{SET_POS($<value>1); $$ = create_node1(CHECK_AS,$3);}
+Check:						{$<loc>$ = current_location; } TE_CHECK Assertion TE_END
+								{SET_POS($<loc>1); $$ = create_node1(CHECK_AS,$3);}
 	;
 
 /*
@@ -1389,7 +1395,7 @@ Manifest_array:			TE_LARRAY {list_init();} Manifest_expression_list TE_RARRAY
 							{$$ = create_node1(ARRAY_AS,list_new(CONSTRUCT_LIST_AS));}
 	;
 
-Set_position: 			{$$ = SET_POS(start_position);}
+Set_position: 			{SET_POS (current_location) ; $$ = current_location;}
 	;
 
 %%

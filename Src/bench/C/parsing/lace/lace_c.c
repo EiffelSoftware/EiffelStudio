@@ -78,10 +78,9 @@ char *filename;
 	extern FILE *xxin;			/* Yacc source file pointer */
 	extern int xxparse();		/* Yacc parsing */
 	extern int xxlineno;		/* Lex line number */
-	extern int start_position;	/* Position in text of the first character
-								 * in last token */
-	extern int end_position;	/* Position in text of the last character in
-								 * last token */
+	extern struct location *current_location;   /* Record the position of the first, and the 
+												 * last character in last token 
+												 * Record also the line number of the token */
 	extern void reset_lace_lex_parser();
 
 	extern char *yacc_file_name;
@@ -94,8 +93,10 @@ char *filename;
 
 	/* Initialization */
 	xxlineno = 1;
-	start_position = 0;
-	end_position = 0;
+	current_location = (struct location *) cmalloc (sizeof (struct location));
+	current_location->start_position = 0;
+	current_location->end_position = 0;
+	current_location->line_number = 0;
 	yacc_file_name = filename;
 	
 	/* Stack initialization */

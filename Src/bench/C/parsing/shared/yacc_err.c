@@ -54,14 +54,14 @@ long get_start_position(void)
 {
 	/* Return `start_position'. */
 
-	return (long) start_position;
+	return (long) current_location->start_position;
 }
 
 long get_end_position(void)
 {
 	/* Return `end_position'. */
 
-	return (long) end_position;
+	return (long) current_location->end_position;
 }
 
 char *get_yacc_file_name(void)

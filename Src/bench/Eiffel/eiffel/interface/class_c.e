@@ -1892,7 +1892,7 @@ feature
 		require
 			parents_exists: parents /= Void
 		local
-			des: like descendants
+			des: LINKED_LIST [CLASS_C]
 			parents_list: like parents
 			c: CLASS_C
 		do
@@ -2848,6 +2848,7 @@ feature -- Dead code removal
 		local
 			tbl: FEATURE_TABLE
 			a_feature: FEATURE_I
+			pos: INTEGER
 		do
 			from
 				tbl := feature_table
@@ -2856,9 +2857,11 @@ feature -- Dead code removal
 				tbl.after
 			loop
 				a_feature := tbl.item_for_iteration
+				pos := tbl.iteration_position
 				if a_feature.written_class = Current then
 					remover.record (a_feature, Current)
 				end
+				tbl.go (pos)
 				tbl.forth
 			end
 		end
@@ -3237,7 +3240,7 @@ feature -- Merging
 			other_not_void: other /= Void
 			same_class: id.is_equal (other.id)
 		local
-			classes: LINKED_LIST [CLASS_C]
+			classes, desc: LINKED_LIST [CLASS_C]
 			class_c: CLASS_C
 		do
 			is_used_as_expanded := is_used_as_expanded or other.is_used_as_expanded
@@ -3262,14 +3265,15 @@ feature -- Merging
 			from 
 				classes := other.descendants
 				classes.start 
-				descendants.finish
+				desc := descendants
+				desc.finish
 			until 
 				classes.after 
 			loop
 				class_c  := System.class_of_id (classes.item.id)
-				if not descendants.has (class_c) then
-					descendants.extend (class_c)
-					descendants.forth
+				if not desc.has (class_c) then
+					desc.extend (class_c)
+					desc.forth
 				end
 				classes.forth
 			end

@@ -23,6 +23,12 @@ inherit
 
 feature -- Status report
 
+	selected_item: EV_TREE_ITEM is
+			-- Currently selected item.
+		require
+		deferred
+		end
+
 	selected: BOOLEAN is
 			-- Is one item selected ?
 		require
@@ -57,6 +63,9 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/22 23:57:58  king
+--| Added selected_item
+--|
 --| Revision 1.16  2000/02/22 21:39:50  king
 --| Removed redundant command association features, inheriting from item_list
 --|

@@ -27,6 +27,12 @@ inherit
 
 feature -- Status report
 
+	selected_item: EV_TREE_ITEM is
+			-- Currently selected item.
+		do
+			Result := implementation.selected_item
+		end
+
 	selected: BOOLEAN is
 			-- Is one item selected ?
 		require
@@ -75,6 +81,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/22 23:58:44  king
+--| Added selected_item
+--|
 --| Revision 1.17  2000/02/22 21:41:12  king
 --| Tidied up interface, now inheriting from item_list
 --|

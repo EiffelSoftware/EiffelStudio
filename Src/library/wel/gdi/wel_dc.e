@@ -2370,15 +2370,12 @@ feature {NONE} -- Externals
 
 	retrieve_mask_blt_funcaddr is
 		local
-			a_string: STRING
-			module_name_ptr: ANY
-			function_name_ptr: ANY
+			module_name_ptr: WEL_STRING
+			function_name_ptr: WEL_STRING
 		do
-			a_string := "Gdi32.dll"
-			module_name_ptr := a_string.to_c
-			a_string := "MaskBlt"
-			function_name_ptr := a_string.to_c
-			internal_mask_blt_funcaddr := cwin_get_function_address($module_name_ptr, $function_name_ptr)
+			create module_name_ptr.make ("Gdi32.dll")
+			create function_name_ptr.make ("MaskBlt")
+			internal_mask_blt_funcaddr := cwin_get_function_address(module_name_ptr.item, function_name_ptr.item)
 		end
 
 invariant

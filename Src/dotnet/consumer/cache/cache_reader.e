@@ -42,6 +42,36 @@ feature -- Access
 			non_void_info: Result /= Void
 		end
 		
+	assembly_types_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
+			-- Assembly information from EAC for `ca'.
+		require
+			non_void_assembly: ca /= Void
+		local
+			des: EIFFEL_XML_DESERIALIZER
+		do
+			create des
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (ca) + Assembly_types_file_name)
+			Result ?= des.deserialized_object
+		ensure
+			non_void_info: Result /= Void
+		end
+		
+	consumed_type_from_dotnet_type_name (ca: CONSUMED_ASSEMBLY; type: STRING): CONSUMED_TYPE is
+			-- Type information from type `type' contained in `ca'
+		require
+			non_void_assembly: ca /= Void
+		local
+			des: EIFFEL_XML_DESERIALIZER
+			type_path: STRING
+		do
+			create des
+			type_path := absolute_assembly_path_from_consumed_assembly (ca) + Classes_path + type + ".xml"			
+			des.deserialize (type_path)
+			Result ?= des.deserialized_object
+		ensure
+			non_void_info: Result /= Void
+		end
+		
 	assembly_mapping (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_MAPPING is
 			-- Assembly information from EAC
 		require
@@ -52,6 +82,20 @@ feature -- Access
 		do
 			create des
 			des.deserialize (absolute_assembly_path (aname) + Assembly_mapping_file_name)
+			Result ?= des.deserialized_object
+		ensure
+			non_void_info: Result /= Void
+		end
+		
+	assembly_mapping_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING is
+			-- Assembly information from EAC for `ca'.
+		require
+			non_void_name: ca /= Void
+		local
+			des: EIFFEL_XML_DESERIALIZER
+		do
+			create des
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (ca) + Assembly_mapping_file_name)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void

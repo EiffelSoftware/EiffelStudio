@@ -69,7 +69,7 @@ feature -- Properties
 	source_class: CLASS_C is
 			-- Source class for current adaptation
 		do
-			if source_type /= void then
+			if source_type /= Void then
 				Result := source_type.associated_class;
 			end;
 		end;
@@ -77,7 +77,7 @@ feature -- Properties
 	target_class: CLASS_C is
 			-- Target class for current adaptation
 		do
-			if target_type /= void then
+			if target_type /= Void then
 				Result := target_type.associated_class;
 			end;
 		end;
@@ -87,7 +87,7 @@ feature -- Access
 	is_visible (c: CLASS_C): BOOLEAN is
 			-- Is the feature visible for class_c type clients
 		do
-			if c = void or target_feature = void or else 
+			if c = Void or target_feature = Void or else 
 				target_feature.feature_name.is_equal (Void_name) 
 			then
 				Result := true
@@ -103,7 +103,7 @@ feature -- Access
 			source_classc: CLASS_C;
 		do
 			source_classc := source_class;
-			if source_classc /= void then
+			if source_classc /= Void then
 				Result := source_classc.feature_named (name);
 			end
 		end;
@@ -294,7 +294,7 @@ debug ("LOCAL_FEAT_ADAPTATION")
 	io.error.putstring ("before adapting%N");
 	trace;
 end;
-			if source_feature = void or else 
+			if source_feature = Void or else 
 				source_type = Void or else target_type = Void 
 			then
 				clear
@@ -317,7 +317,7 @@ end;
 				if new_feat = Void then
 					clear
 				end;
-				if new_feat /= void then
+				if new_feat /= Void then
 					adapt_final_name
 				end;
 			end;
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 				if type /= Void and then f /= Void then
 					type := evaluate_type (type, f.type);
 					if type.is_formal then
-							-- If result is format then get the
+							-- If result is formal then get the
 							-- the constraint type from last_class.
 						formal_type ?= type;
 						enclosing_class := global_type.source_enclosing_class;
@@ -474,8 +474,14 @@ feature {NONE} -- Implementation
 				Inst_context.set_cluster (old_cluster);
 			end;
 			Result := Result.conformance_type;
+				-- Do not forget to call `actual_type' on `last_type' because
+				-- `last_type' is not enough by itself:
+				-- For example when `last_type' in an anchored type we
+				-- need to find out its real type in the current context,
+				-- which is done by applying `actual_type'.
+				-- Manus: 10/06/1999
 			Result := Result.instantiation_in 
-						(last_type, last_class.id).actual_type;
+						(last_type.actual_type, last_class.id).actual_type;
 		end
 
 feature -- Debug

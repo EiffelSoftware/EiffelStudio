@@ -40,7 +40,6 @@ feature
 			-- (i.e. hidden) editor. 
 		local
 			mp: MOUSE_PTR;
-			new_x, new_y: INTEGER
 		do
 			if
 				not free_list.empty
@@ -52,21 +51,7 @@ feature
 				!!mp;
 				mp.set_watch_shape;
 				!!Result.make (identifier, screen);
-				new_x := screen.x;
-				new_y := screen.y;
-				if new_x + Result.width > screen.width then
-					new_x := screen.width - Result.width
-				end;
-				if new_x < 0 then
-					new_x := 0
-				end;
-				if new_y + Result.height > screen.height then
-					new_y := screen.height - Result.height
-				end;
-				if new_y < 0 then
-					new_y := 0
-				end;
-				Result.set_x_y (new_x, new_y);
+				Result.set_x_y (screen.x, screen.y);
 				mp.restore;
 			end;
 			active_editors.extend (Result);

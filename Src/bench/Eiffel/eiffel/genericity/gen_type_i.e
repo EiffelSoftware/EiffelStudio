@@ -11,7 +11,8 @@ inherit
 			is_valid,
 			has_formal,
 			instantiation_in,
-			dump
+			dump,
+			append_clickable_signature
 		end;
 
 feature
@@ -113,6 +114,30 @@ feature
 				i := i + 1;
 			end;
 			file.putchar ('}');
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		local
+			i, count, meta_type: INTEGER;
+		do
+			from
+				if is_expanded then
+					a_clickable.put_string ("expanded ");
+				end;
+				base_class.append_clickable_name (a_clickable);
+				a_clickable.put_string (" [");
+				i := 1;
+				count := meta_generic.count;
+			until
+				i > count
+			loop
+				meta_generic.item (i).append_clickable_signature (a_clickable);
+				if i < count then
+					a_clickable.put_string (", ");
+				end;
+				i := i + 1;
+			end;
+			a_clickable.put_char (']');
 		end;
 
 end

@@ -29,6 +29,11 @@ feature
 	is_reference: BOOLEAN is True;
 			-- is the C type a reference type ?
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("REFERENCE");
+		end;
+
 	dump (file: UNIX_FILE) is
 			-- Debug purpose
 		do

@@ -111,6 +111,14 @@ feature
 			Result := Reference_c_type;
 		end;
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			if is_expanded then
+				a_clickable.put_string ("expanded ");
+			end;
+			base_class.append_clickable_signature (a_clickable)
+		end;
+
 	dump (file: UNIX_FILE) is
 		do
 			if is_expanded then

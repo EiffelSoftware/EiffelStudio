@@ -13,11 +13,12 @@ inherit
 		end
 
 create
-	make
+	make,
+	initialize
 
 feature  -- Initialization
 
-	make (is_cpp_macro: BOOLEAN) is
+	make (is_cpp_macro: like is_cpp) is
 			-- Create Current object
 			-- Set `is_cpp' to `is_cpp_macro'.
 		do
@@ -26,12 +27,13 @@ feature  -- Initialization
 			is_cpp_set: is_cpp = is_cpp_macro
 		end
 
-	initialize (sig: SIGNATURE_AS; use_list: USE_LIST_AS) is
+	initialize (is_cpp_macro: like is_cpp; sig: SIGNATURE_AS; use_list: USE_LIST_AS) is
 			-- Create MACRO_EXTENSION_AS node.
 		require
 			use_list_not_void: use_list /= Void
 			use_list_not_empty: not use_list.is_empty
 		do
+			is_cpp := is_cpp_macro
 			if sig /= Void then
 				argument_types := sig.arguments_id_array
 				if sig.return_type /= Void then
@@ -40,6 +42,7 @@ feature  -- Initialization
 			end
 			header_files := use_list.array_representation
 		ensure
+			is_cpp_set: is_cpp = is_cpp_macro
 			header_files_not_void: header_files /= Void
 			good_header_files_count: header_files.count >= 1
 		end

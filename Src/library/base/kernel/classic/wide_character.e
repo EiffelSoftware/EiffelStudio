@@ -7,9 +7,6 @@ indexing
 expanded class
 	WIDE_CHARACTER
 
-obsolete
-	"Class will be removed in future releases. Do not use it, instead use CHARACTER."
-
 inherit
 	WIDE_CHARACTER_REF
 

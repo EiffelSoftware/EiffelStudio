@@ -1,10 +1,11 @@
 indexing
-	description: "";
+	description: "Routine objects, with some arguments possibly still open";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class ROUTINE [TBASE, TOPEN -> TUPLE]
+deferred class
+	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE]
 
 inherit
 	MEMORY
@@ -12,57 +13,40 @@ inherit
 			dispose, is_equal, copy
 		end
 
-feature -- Calls
+feature -- Initialization
 
-	call (args: TOPEN) is
-			-- Call routine with arguments `args'.
+	adapt (other: ROUTINE [ANY, OPEN_ARGS]) is
+			-- Set current routine from `other'. Useful
+			-- in descendants.
 		require
-			valid_arguments: valid_arguments (args)
-			callable: callable
+			other_exists: other /= Void
+			conforming: conforms_to (other)
+		local
+			null_ptr: POINTER
 		do
-			arguments := args
-			apply
+			-- Free own C argument structure
+			if rout_cargs /= null_ptr then
+				rout_obj_free_args (rout_cargs)
+				rout_cargs := null_ptr
+			end
+
+			arguments := other.arguments
+			closed_arguments := other.closed_arguments
+			open_map := other.open_map
+			closed_map := other.closed_map
+			rout_disp := other.rout_disp
+			open_type_codes := other.open_type_codes
+			closed_type_codes := other.closed_type_codes
+		ensure
+			same_call_status: other.callable implies callable
 		end
 
-	apply is
-			-- Call routine with arguments `arguments'.
-		require
-			valid_arguments: valid_arguments (arguments)
-			callable: callable
-		deferred
-		end
+feature -- Access
 
-feature -- Arguments
-
-	arguments: TOPEN
+	arguments: OPEN_ARGS
 			-- Open arguments
 
-	set_arguments (args: TOPEN) is
-			-- Set `arguments' from `args'.
-		require
-			valid_arguments: valid_arguments (args)
-		do
-			arguments := args
-		end
-
-feature -- Queries
-
-	valid_arguments (args: TOPEN): BOOLEAN is
-			-- Are `args' valid arguments for this routine?
-		local
-			l_args: like arguments
-		do
-			if args = Void then
-				-- Void arguments are only allowed
-				-- if object has no open arguments.
-				Result := (open_map = Void)
-			else
-				-- FIXME
-				Result := True
---                l_args ?= args
---                Result := (largs /= Void)
-			end
-		end
+feature -- Status report
 
 	callable: BOOLEAN is
 			-- Can a routine call through Current be made?
@@ -85,6 +69,33 @@ feature -- Queries
 					  equal (closed_map, other.closed_map)
 							and then
 					  (rout_disp = other.rout_disp)
+		end
+
+	valid_arguments (args: OPEN_ARGS): BOOLEAN is
+			-- Are `args' valid arguments for this routine?
+		local
+			l_args: like arguments
+		do
+			if args = Void then
+				-- Void arguments are only allowed
+				-- if object has no open arguments.
+				Result := (open_map = Void)
+			else
+				-- TEMPORARY VERSION
+				Result := True
+--                l_args ?= args
+--                Result := (largs /= Void)
+			end
+		end
+
+feature -- Element change
+
+	set_arguments (args: OPEN_ARGS) is
+			-- Use `args' as arguments to next call.
+		require
+			valid_arguments: valid_arguments (args)
+		do
+			arguments := args
 		end
 
 feature -- Duplication
@@ -112,47 +123,44 @@ feature -- Duplication
 			same_call_status: other.callable implies callable
 		end
 
-feature -- Adaptation
 
-	adapt_from (other: ROUTINE [TBASE, TOPEN]) is
-			-- Adapt Current from `other'. Useful
-			-- in descendants.
+feature -- Basic operations
+
+	call (args: OPEN_ARGS) is
+			-- Call routine with arguments `args'.
+		require
+			valid_arguments: valid_arguments (args)
+			callable: callable
+		do
+			arguments := args
+			apply
+		end
+
+	apply is
+			-- Call routine with arguments `arguments'
+			-- as last set.
+		require
+			valid_arguments: valid_arguments (arguments)
+			callable: callable
+		deferred
+		end
+
+
+feature -- Obsolete
+
+	adapt_from (other: like Current) is
+			-- Adapt from `other'. Useful in descendants.
+		obsolete
+			"Please use `adapt' instead (it's also a creation procedure)"
 		require
 			other_exists: other /= Void
 			conforming: conforms_to (other)
-		local
-			null_ptr: POINTER
 		do
-			-- Free own C argument structure
-			if rout_cargs /= null_ptr then
-				rout_obj_free_args (rout_cargs)
-				rout_cargs := null_ptr
-			end
-
-			arguments := other.arguments
-			closed_arguments := other.closed_arguments
-			open_map := other.open_map
-			closed_map := other.closed_map
-			rout_disp := other.rout_disp
-
-			open_type_codes := other.open_type_codes
-			closed_type_codes := other.closed_type_codes
+			adapt (other)
 		ensure
 			same_call_status: other.callable implies callable
 		end
 
-feature {NONE} -- Garbage collection
-
-	dispose is
-			-- Free routine argument union structure
-		local
-			null_ptr: POINTER
-		do
-			if rout_cargs /= null_ptr then
-				rout_obj_free_args (rout_cargs)
-				rout_cargs := null_ptr
-			end
-		end
 
 feature {ROUTINE} -- Implementation
 
@@ -212,9 +220,22 @@ feature {ROUTINE} -- Implementation
 			func_init
 		end
 
-feature {NONE}  -- Routine C argument structure
+feature {NONE}  -- Implementation
+
+	dispose is
+			-- Free routine argument union structure
+		local
+			null_ptr: POINTER
+		do
+			if rout_cargs /= null_ptr then
+				rout_obj_free_args (rout_cargs)
+				rout_cargs := null_ptr
+			end
+		end
+
 
 	frozen rout_cargs: POINTER
+			-- Routine arguments
 
 	frozen rout_set_cargs is
 			-- Allocate and fill argument structure
@@ -268,7 +289,7 @@ feature {NONE}  -- Routine C argument structure
 			until
 				i > ocnt
 			loop
-				code := loc_open_type_codes.item (i+1) -- pos. 1 is code of TBASE!
+				code := loc_open_type_codes.item (i+1) -- pos. 1 is code of BASE_TYPE!
 
 				if code = 'f' then
 					-- Special treatment of reals
@@ -348,63 +369,59 @@ feature {NONE}  -- Routine C argument structure
 			end
 		end
 
-feature {NONE}  -- Function initialization
-
 	func_init is
-
+			-- Initialize routine.
 		do
-			-- Nothing
+			-- Nothing here
 		end
 
-feature {NONE}  -- Run-time
-
 	rout_obj_new_args (cnt: INTEGER): POINTER is
-
+			-- Initialize for new arguments.
 		external "C | %"eif_rout_obj.h%""
 		end
 
 	rout_obj_free_args (args: POINTER) is
-
+			-- Free `args'.
 		external "C | %"eif_rout_obj.h%""
 		end
 
 	rout_obj_putb (args: POINTER; idx: INTEGER; val: POINTER) is
-
+			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
 	rout_obj_putc (args: POINTER; idx: INTEGER; val: POINTER) is
-
+			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
 	rout_obj_putd (args: POINTER; idx: INTEGER; val: POINTER) is
-
+			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
 	rout_obj_puti (args: POINTER; idx: INTEGER; val: POINTER) is
-
+			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
 	rout_obj_putp (args: POINTER; idx: INTEGER; val: POINTER) is
-
+			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
 	rout_obj_putf (args: POINTER; idx: INTEGER; val: POINTER) is
-
+			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
 	rout_obj_putr (args: POINTER; idx: INTEGER; val: POINTER) is
-
+			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
 	eif_gen_create (obj: POINTER; pos: INTEGER): TUPLE is
-
+			-- Adapt `args' for `idx' and `val'.
 		external "C | %"eif_gen_conf.h%""
 		end
 
@@ -415,7 +432,7 @@ feature {NONE}  -- Run-time
 		end
 
 	eif_gen_typecode_str (obj: POINTER): STRING is
-
+			-- Code name for generic parameter `pos' in `obj'.
 		external "C | %"eif_gen_conf.h%""
 		end
 

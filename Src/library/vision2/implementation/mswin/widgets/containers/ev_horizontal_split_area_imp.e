@@ -15,9 +15,7 @@ inherit
 		
 	EV_SPLIT_AREA_IMP
 		redefine
-			child_minheight_changed,
-			child_minwidth_changed,
-			child_width_changed
+			child_minwidth_changed
 		end
 	
 creation
@@ -29,7 +27,7 @@ feature {NONE} -- Access
 	level: INTEGER is
 			-- Position of the splitter in the window
 		do
-			if child1 /= Void then
+			if child1 /= Void and then child1.child_cell /= Void then
 				Result := child1.child_cell.width
 			else
 				Result := 0
@@ -60,24 +58,24 @@ feature {NONE} -- Access
 
 feature -- Implementation
 
-	child_width_changed (new_width: INTEGER; the_child: EV_WIDGET_IMP) is
+--	child_width_changed (new_width: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Resize the window and redraw the split according to
 			-- the resize of a child.
-		local
-			temp_width: INTEGER
-		do
-			if the_child = child1 then
-				refresh
-			else
-				temp_width := size + child1.child_cell.width
-				if child2 /= Void then
-					child2.set_x (temp_width)
-					temp_width := temp_width + child2.child_cell.width
-					set_width (temp_width)
-				end
-				parent_imp.child_width_changed (width, Current)
-			end
-		end
+--		local
+--			temp_width: INTEGER
+--		do
+--			if the_child = child1 then
+--				refresh
+--			else
+--				temp_width := size + child1.child_cell.width
+--				if child2 /= Void then
+--					child2.set_x (temp_width)
+--					temp_width := temp_width + child2.child_cell.width
+--					set_width (temp_width)
+--				end
+--				parent_imp.child_width_changed (width, Current)
+--			end
+--		end
 
 	set_local_height (new_height: INTEGER) is
 			-- Make `new_height' the new `height' of the 
@@ -113,12 +111,6 @@ feature -- Implementation
 				local_width := local_width + child2.minimum_width
 			end
 			set_minimum_width (local_width + size)
-		end
-
-	child_minheight_changed (child_new_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the current minimum_height because onr of the children did.
-		do
-			set_minimum_height (child_new_minimum.max(minimum_height))
 		end
 
 feature {NONE} -- Implementation

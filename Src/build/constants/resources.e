@@ -66,7 +66,7 @@ feature {NONE} -- Color initialization
 			color_name: STRING
 		do
 			color_name :=  resource.get_string (resource_value, default_value);
-			if color_name /= Void then
+			if color_name /= Void and then not color_name.empty then
 				!! Result.make;
 				Result.set_name (color_name)
 			end
@@ -123,7 +123,7 @@ feature {NONE} -- Initialize font values
 			font_name: STRING
 		do
 			font_name :=  resource.get_string (resource_value, default_value);
-			if font_name /= Void then
+			if font_name /= Void and then not font_name.empty then
 				!! Result.make;
 				Result.set_name (font_name);
 			end
@@ -237,7 +237,7 @@ feature {NONE} -- Integer Values initialization
 			cont_ed_height := resource.get_pos_integer ("cont_ed_height", 575);
 
 			help_wnd_width := resource.get_pos_integer ("help_wnd_width", 450);
-			help_wnd_height := resource.get_pos_integer ("help_wnd_width", 500);
+			help_wnd_height := resource.get_pos_integer ("help_wnd_height", 500);
 
 			history_wnd_width := resource.get_pos_integer ("history_wnd_width", 200);
 

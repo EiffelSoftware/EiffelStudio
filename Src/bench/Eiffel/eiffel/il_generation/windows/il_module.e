@@ -684,10 +684,9 @@ feature -- Metadata description
 						if class_c.is_frozen then
 							l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
 						elseif not class_c.is_single then
-							create l_one_element_array.make (0, 1)
-							l_one_element_array.put (class_type_token (class_type.static_type_id),
-								0)
-							last_parents := l_one_element_array
+							last_parents := << class_type_token (class_type.static_type_id) >>
+						elseif last_parents = Void then
+							last_parents := << ise_eiffel_type_info_type_token >>
 						end
 						single_parent_mapping.put (single_inheritance_parent_id,
 							class_type.implementation_id)

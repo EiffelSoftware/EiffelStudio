@@ -194,19 +194,8 @@ feature -- Project Initialization
 			Eiffel_project.make (project_dir)
 			retrieve_project
 	
-			-- We print text in the project_tool text concerning the system.	
-			if eiffel_project.system /= Void then	
-				root_class_name:= clone(eiffel_system.root_class_name)
-				project_text ?= project_tool.text_window
-				project_text.put_string("%NSYSTEM       : ")
-				project_text.put_string(eiffel_system.name)
-				if root_class_name /= Void then
-					project_text.put_string("%NROOT CLASS   : ")
-					root_class_c := Eiffel_universe.compiled_classes_with_name (root_class_name).i_th(0).compiled_class
-					root_class_name.to_upper
-					project_text.put_class(root_class_c, root_class_name)
-				end
-			end
+			-- We print text in the project_tool text concerning the system.
+			project_tool.display_system_info	
 		end
 
 	retrieve_project is

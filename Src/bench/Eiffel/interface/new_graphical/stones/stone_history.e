@@ -29,7 +29,8 @@ feature -- Initialization
 			-- Initialze Current
 		do
 			{TWO_WAY_LIST} Precursor
-			Tool_resources.add_user (Current)
+			register
+			Object_comparison := True
 		end
 
 feature -- Access
@@ -38,6 +39,21 @@ feature -- Access
 			-- Update the stone history?	
 
 feature -- Resource Update
+
+	register is
+		do
+			register_to ("history_size")
+		end
+
+	update is
+		do
+			rearrange_history
+		end
+
+	unregister is
+		do
+			unregister_to ("history_size")
+		end
 
 --	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
 --			-- Update `old_res' with `new_res', if the value of
@@ -94,7 +110,7 @@ feature {NONE} -- Measurement
 	capacity: INTEGER is
 			-- Maximum number of items
 		do
-			Result := Tool_resources.history_size.actual_value
+			Result := editor_history_size
 			if Result < 1 or Result > 100 then
 					-- Just in case the user specified some weird values.
 				Result := 20
@@ -144,10 +160,11 @@ feature -- Synchronization
 			end
 			finish
 		end
-	
+
 invariant
 
 	positive_capacity: capacity > 0
 	bounded_count: count <= capacity
+	value_comparison: object_comparison = True
 
 end -- class STONE_HISTORY

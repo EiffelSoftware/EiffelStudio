@@ -24,7 +24,7 @@ feature -- Initialization
 		do
 			precursor (a_tool)
 			to_show_all_callers :=
-				Feature_resources.show_all_callers.actual_value
+				show_all_callers
 		end
 
 feature -- Properties

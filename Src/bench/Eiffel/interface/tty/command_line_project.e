@@ -19,6 +19,8 @@ inherit
 			class_name as except_class_name
 		end;
 
+	EB_CONSTANTS
+
 feature -- Properties
 
 	project_name: STRING;
@@ -57,52 +59,42 @@ feature -- Update
 			error_occurred := False;
 
 				-- Project directory
-			!! project_dir.make (project_name); 
+			!! project_dir.make (project_name);
 
-			if not project_dir.exists then
-				!! temp.make (0);
-				temp.append ("Directory: ");
-				temp.append (project_dir.name);
-				temp.append (" does not exist");
+			if not project_dir.base_exists then
+				temp := Warning_messages.w_Directory_not_exist (project_dir.name)
 				error_occurred := True;
-			else
-					-- Is the project new?
-				project_is_new := project_dir.is_new;
-				if project_is_new then
-					if
-						not project_dir.is_readable or else
-						not project_dir.is_writable or else
-						not project_dir.is_executable
-					then
-						!! temp.make (0);
-						temp.append ("Directory: ");
-						temp.append (project_dir.name);
-						temp.append (" does not have appropriate permissions.")
-
-						error_occurred := True;
-					else
-							-- Create a new project.
-						Eiffel_project.make (project_dir);
-					end
+			elseif project_dir.is_new then
+				project_is_new := True
+				if not project_dir.has_base_full_access then
+					temp := Warning_messages.w_Cannot_create_project_directory (project_dir.name)
+					error_occurred := True;
 				else
-					project_eif_file := project_dir.project_eif_file;
-					if not project_eif_file.is_readable then
-						!! temp.make (0);
-						temp.append (project_eif_file.name);
-						temp.append (" is not readable");
-						error_occurred := True
-					elseif not project_eif_file.is_plain then
-						!! temp.make (0);
-						temp.append (project_eif_file.name);
-						temp.append (" is not a file");
-						error_occurred := True
-					end;
-				end;
+						-- Create a new project.
+					Eiffel_project.make (project_dir);
+				end
+			elseif not project_dir.exists then
+				temp := Warning_messages.w_Project_directory_not_exist (project_dir.name)
+				error_occurred := True
+			else
+				project_eif_file := project_dir.project_eif_file;
+				if not project_eif_file.is_readable then
+					temp := Warning_messages.w_Not_readable (project_eif_file.name);
+					error_occurred := True
+				elseif not project_eif_file.is_plain then
+					temp := Warning_messages.w_Not_a_file (project_eif_file.name);
+					error_occurred := True
+				elseif project_dir.is_readable and then not project_dir.is_writable then
+					temp := "No write permissions on project"
+					error_occurred := True
+				end
 			end;
+
 			if error_occurred then
 				io.error.putstring (temp);
 				io.error.new_line;
 			end;
+
 			!! e_displayer.make (Error_window);
 			Eiffel_project.set_error_displayer (e_displayer)
 		end;
@@ -122,6 +114,7 @@ feature -- Update
 			project_dir: PROJECT_DIRECTORY;
 		do
 			!! project_dir.make (project_name);
+			print (project_dir.name)
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
 				!! temp.make (0);

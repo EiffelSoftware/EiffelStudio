@@ -13,7 +13,8 @@ inherit
 	EV_BUTTON 
 		redefine
 			initialize,
-			set_text
+			set_text,
+			make_for_test
 		end
 
 create
@@ -21,7 +22,7 @@ create
 	make_with_text,
 	make_for_test
 
-feature {EV_ANY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize is
 			-- Create `menu' and connect event handlers.
@@ -30,6 +31,18 @@ feature {EV_ANY} -- Initialization
 			create menu
 			select_actions.extend (menu~show)
 			menu.item_select_actions.extend (~on_item_select)
+		end
+
+	make_for_test is
+			-- Make interesting for EV_TEST.
+		local
+			i: INTEGER
+		do
+			Precursor
+			from i := 1 until i > 5 loop
+				menu.extend (create {EV_MENU_ITEM}.make_with_text ("Item " + i.out))
+				i := i + 1
+			end
 		end
 
 feature -- Access
@@ -121,6 +134,9 @@ end -- class EV_OPTION_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/19 18:41:47  brendel
+--| Added make_for_test.
+--|
 --| Revision 1.21  2000/03/23 01:05:43  brendel
 --| Replaced obsolete call.
 --|

@@ -29,7 +29,8 @@ inherit
 		redefine
 			implementation,
 			create_action_sequences,
-			is_in_default_state
+			is_in_default_state,
+			make_for_test
 		end
 
 create
@@ -91,6 +92,20 @@ feature {EV_ANY} -- Contract support
 				and then {EV_DRAWABLE} Precursor
 		end
 
+	make_for_test is
+		local
+			p: EV_PIXMAP
+			t: EV_TIMEOUT
+		do
+			default_create
+			create p
+			create t
+			p.set_with_named_file ("test_pixmap")
+			t.actions.extend (~draw_pixmap (10, 10, p))
+			t.set_interval (1000)
+			set_minimum_size (100, 100)
+		end
+
 feature {EV_DRAWING_AREA_I} -- Implementation
 
 	implementation: EV_DRAWING_AREA_I
@@ -137,6 +152,9 @@ end -- class EV_DRAWING_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/19 18:44:50  brendel
+--| Added make_for_test.
+--|
 --| Revision 1.19  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

@@ -422,22 +422,35 @@ feature -- Output
 			-- Put prefix feature in `text'.
 		local
 			item: BASIC_TEXT;
+			name: STRING
 		do
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			text.add_default_string (name_of_current_feature)
+			name := name_of_current_feature;
+			if name.item (1).is_alpha then
+				!KEYWORD_TEXT! item.make (name)
+			else
+				!SYMBOL_TEXT! item.make (name)
+			end
+			text.add (item)
 		end;
 
 	put_infix_feature is
 			-- Put infix feature in `text'.
 		local
 			arg: EXPR_AS;
-			item: BASIC_TEXT
+			item: BASIC_TEXT;
+			name: STRING
 		do
+			name := name_of_current_feature;
+			if name.item (1).is_alpha then
+				!KEYWORD_TEXT! item.make (name)
+			else
+				!SYMBOL_TEXT! item.make (name)
+			end
 			text.add_space;
-			text.add_default_string 
-					(operator_table.name (name_of_current_feature));
+			text.add (item);
 			text.add_space;
 			arg ?= arguments;
 			if arg /= void then

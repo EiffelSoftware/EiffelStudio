@@ -7,9 +7,22 @@ deferred class
 	VALUE_I 
 
 inherit
+	ANY
+
 	BYTE_CONST
+		export
+			{NONE} all
+		end
+
 	SHARED_ARRAY_BYTE
+		export
+			{NONE} all
+		end
+
 	SHARED_IL_CODE_GENERATOR
+		export
+			{NONE} all
+		end
 	
 feature -- Comparison
 

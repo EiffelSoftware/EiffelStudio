@@ -310,11 +310,19 @@ feature -- DYNAMIC_LIB Exports processing.
 								Result := False
 							elseif done = 1  then
 									-- We only found a routine name.
-								t_routine := lastline.substring(mark, alias_mark.min (call_type_mark) - 1)
+								if call_type_mark /= 0 then
+									t_routine := lastline.substring(mark, alias_mark.min (call_type_mark) - 1)
+								else
+									t_routine := lastline.substring(mark, alias_mark - 1)
+								end
 							elseif done = 3 then
 									-- We found a routine name and the `@' sign.
 								t_routine := lastline.substring (mark, index_mark - 1)
-								t_index := lastline.substring (index_mark + 1, alias_mark.min(call_type_mark) - 1)
+								if call_type_mark /= 0 then
+									t_index := lastline.substring (index_mark + 1, alias_mark.min(call_type_mark) - 1)
+								else
+									t_index := lastline.substring (index_mark + 1, alias_mark - 1)
+								end
 							end
 						else
 							Result := False
@@ -366,6 +374,7 @@ feature -- DYNAMIC_LIB Exports processing.
 				t_routine := Void
 				t_index := Void
 				t_alias := Void
+				t_call_type := Void
 
 			end -- loop on file
 			set_modified(False)

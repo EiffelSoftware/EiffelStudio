@@ -30,9 +30,17 @@ feature {NONE} -- Execution
 					new_operator := command_arguments.item (3);
 				else
 					if not not_first then
-						io.putstring ("--> Operator index followed by operator ('and' or 'or'): ");
-						command_line_io.get_name;
-						command_arguments := command_line_io.command_arguments;
+						from
+							io.putstring ("--> Operator index followed by operator ('and' or 'or'): ");
+							command_line_io.get_name;
+							command_arguments := command_line_io.command_arguments;
+						until
+							command_arguments.argument_count = 2
+						loop
+							io.putstring ("--> Operator index followed by operator ('and' or 'or'): ");
+							command_line_io.get_name;
+							command_arguments := command_line_io.command_arguments;
+						end;
 						index_str := command_arguments.item (1);
 						new_operator := command_arguments.item (2);
 					end;
@@ -47,7 +55,7 @@ feature {NONE} -- Execution
 				end;
 					-- Check operator
 				if not (new_operator.is_equal ("and") or new_operator.is_equal ("or")) then
-					io.putstring ("Operator nust be 'and' or 'or'.%N");
+					io.putstring ("Operator must be 'and' or 'or'.%N");
 					io.putstring ("--> New operator: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;

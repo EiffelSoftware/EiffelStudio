@@ -30,83 +30,100 @@
   <tr>
     <td>
     <H1> EiffelStore Wizards (Beta Version)</H1>
-<Br>These Wizards will help you to create an Eiffel Project using EiffelStore.<Br><Br>
+    <p><a href="eiffelstore.html">EiffelStore</a> is ISE's library for combining
+    the power of object technology with the convenience and ubiquity of
+    relational databases.
+    <p>The <b>EiffelStore Wizard</b> simplifies the job of the object-relational
+    programmer by providing an automatic mechanism to generate an Eiffel
+    application framework that encapsulates access to an existing database. The
+    Wizard analyzes the database for you and produces all the needed interface
+    classes, as well as the system's Ace file (Eiffel compilation control
+    files).</p>
+    <p>&nbsp;</p>
+    <h2>Overview</h2>
+    The EiffelStore Wizard will help you create an Eiffel Project using
+    EiffelStore.
+    <p>The steps are straightforward:</p>
 	<ul>
-		<li> First you will have to provide the information in order to connect to a Database.<Br>
-		<li> Then, the wizard will ask you the Tables you will need in your Project.<Br>
-		<li> Finally, it will generate an Eiffel Example and compile it.<Br>
-		<li> You can then modify the example to create your own Application.<Br><Br>
+		<p class=space><li> You provide the information necessary to connect to your database.
+		<p class=space><li> The Wizard asks you what tables you wish to use in your project.
+		<p class=space><li> Using this information, the Wizard will generate an Eiffel
+          application framework (classes and Ace file) and compile it through
+          EiffelBench.
 	</ul>
- For the moment, they have been compiled only for Windows using either Oracle or ODBC
-    as a back end database. You can download them from our
-    ftp site at:
+    <p>You can then adapt and extend the application framework to add your own
+    processing of the data as needed for your project.</p>
+    <p>&nbsp;</p>
+    <h2>Availability and download instructions</h2>
+    The EiffelStore Wizard is currently available for ODBC and Oracle on
+    Windows. You can download it from the ISE FTP site:
     <ul>
       <li> <a href="ftp://ftp.eiffel.com/pub/download/windows/4-5/store_wizard_oracle.zip">ftp://ftp.eiffel.com/pub/download/windows/4-5/store_wizard_oracle.zip</a>.</li>
-      <li> <a href="ftp://ftp.eiffel.com/pub/download/windows/4-5/store_wizard_odbc.zip">ftp://ftp.eiffel.com/pub/download/windows/4-5/store_wizard_odbc.zip</a>.<br>
+      <li> <a href="ftp://ftp.eiffel.com/pub/download/windows/4-5/store_wizard_odbc.zip">ftp://ftp.eiffel.com/pub/download/windows/4-5/store_wizard_odbc.zip</a>.
       </li>
     </ul>
-    <p>
-<br>
-
-    </p>
-<H2>Installation:</H2><br>
-Unzip the file EiffelStore_Wizard.zip. Be sure to use folder names when unzipping.
-    This will create a subdirectory 'Store_wizard_odbc'. In this directory there should be 3 other directories (bmp,exe,ressources).<br>
-<br>
-Then, execute launch.bat<br>
-<br>
-<i>However, you can directly run the exe file in the directory exe, with as parameter the&nbsp;path where you have unzipped the wizard.<br>
-<br>
-Example: store_wizard_odbc c:\store_wizard_odbc</i><br>
-<H2>Generated Files:</H2>
-    <p>The Wizard will generate an Eiffel example using your database and your
-    tables.</p>
-    The generated classes are:
+    <p>&nbsp;</p>
+<H2>Installation and use</H2>
+    <p>Once you have downloaded the appropriate Wizard version:
     <ul>
-      <p class=space><li>One class for each chosen table.&nbsp;</li>
+      <p class=space><li>Unzip the file EiffelStore_Wizard.zip. Be sure to use folder names
+        when unzipping.</li>
+      <p class=space><li>Unzipping creates a subdirectory <i>Store_wizard_odbc</i>, containing
+        three other directories: <i>bmp</i>, <i>exe</i>, <i>ressources</i>).</li>
+      <p class=space><li>To run the Wizard, execute <i>launch.bat</i>.</li>
     </ul>
-    <p>These classes will be use to retrieve the data from the database.<br>
-    There is a mapping from your RDBMS database to these Eiffel classes.<br>
-    Thus, each classes will have the same name as the tables in your database
-    and for each their attributes there will be an Eiffel attribute with the
-    same name and type.</p>
+    <p>You can also run the exe file in the directory exe, with as parameter the
+    path where you have unzipped the wizard; for example:
     <ul>
-      <p class=space><li>The class DATABASE_MANAGER which help you to do any queries on the database</li>
-      <li>The classes: DB_ACTION, DB_ACTION_DYN, REPOSITORIES and DB_SHARED which are
-        used by the DATABASE_MANAGER classes.</li>
+      <i>store_wizard_odbc c:\store_wizard_odbc</i>
     </ul>
-    <p>These are the core classes to access and modify the Database.</p>
+    &nbsp;
+<H2>Generated Files</H2>
+    <p>The Wizard will generate an Eiffel project containing all that's needed
+    to access and manipulate the tables that you have selected in your database.
+    <p>For each table, the Wizard generates one class, with the same name as the
+    table. For every attribute of the table, the class contains an Eiffel
+    attribute with the same name and the corresponding Eiffel type.
+    <p>In addition, the Wizard generates:
     <ul>
-      <p class=space><li>The classes ESTORE_EXAMPLE and ESTORE_ROOT</li>
+      <p class=space><li>An Ace file, with sufficient information to compile the project.</li>
+      <p class=space><li>The class <i>DATABASE_MANAGER</i>, which helps you to do any queries
+        on the database.</li>
+      <p class=space><li>The classes <i>DB_ACTION</i>, <i>DB_ACTION_DYN</i>, <i>REPOSITORIES </i>and
+        <i>DB_SHARED</i>, used by the <i>DATABASE_MANAGER</i> classes. These are
+        the core classes to access and modify the database.</li>
+      <p class=space><li>The classes <i>ESTORE_EXAMPLE</i> and <i>ESTORE_ROOT</i>. These are
+        the main classes of the generated application framework. You can modify
+        queries and add new ones by editing <i>ESTORE_EXAMPLE</i>.</li>
     </ul>
-    <p>These class are the main classes of the Example.<br>
-    You can modify and add any queries by editing ESTORE_EXAMPLE.</p>
+    <p>In the directory <i>resources</i> of the EiffelStore Wizard, you will
+    find the skeletons of the generated files. You can modify them to fit your
+    project.</p>
+    <p>&nbsp;</p>
+    <H2>Current limitations</H2>
+    The EiffelStore Wizard is a beta release. Please note the following
+    limitations.
     <ul>
-      <p class=space>
-    </ul>
-    <p>In the Directory <b>resources</b> of the EiffelStore Wizard, you can find
-    the skeletons of the Generated files.<br>
-    You can modify them to fit with your project.</p>
-<H2>Known Limitations:</H2>
-    <ul>
-      <p class=space><li>An Ace file in generated , and so the link to ODBC32.lib is: "$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib".
-        So you should copy this file in this previous directory to avoid any problems.
-        Or you can change the link in the generated ace file.</li>
-      <p class=space><li>You must choose at least one Table before doing the generation.</li>
-      <p class=space><li>For now there are not any differences in the generation when you choose to
-        generate a new project, or an existing project.</li>
-      <p class=space><li>The wizard has been developed using Vision2. However, there are still a few limitations with vision2 on EV_TEXT.
-        That's why the fonts are not so nice for now. Also if you are using the large fonts, you won't read all the comments
-        of the wizard.</li>
-      <p class=space><li>After the generation, the compilation and ebench are launched. However, if there was an other project in the directory, the compilation
-        can't be launched. So the Directory is deleted before the generation. If you don't have the permission to delete some files, the compilation won't
-        be launched.</li>
-      <p class=space><li>If you are using MS SQL Server you should choose the check box : <i>specific
-Tables/Views</i>. Indeed, you shouldn't try to generate the System tables as you won't be
-        able to make any request on some of these tables.</li>
-      <p class=space><li>If you have a $ in the name of your Table, for now EiffelStore doesn't support it.
-        So the compilation won't work as an Eiffel Class can't have a $ in its name.</li>
-      <p class=space><li>The chosen table must have at least one Column.</li>
+      <p class=space><li>You must choose at least one table before doing the generation.</li>
+      <p class=space><li>Any table that you select must have at least one Column.</li>
+      <p class=space><li>(ODBC) In the generated Ace file, the link to ODBC32.lib appears as:
+        &quot;<i>$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib</i>&quot;.
+        To have access to the library, you should either copy it to this
+        destination, or change the Ace file line to refer to the library's
+        location.</li>
+      <p class=space><li>The Wizard always regenerates the project from scratch. Any
+        modifications that you have made in a previous generation will be lost.</li>
+      <p class=space><li>Because of temporary limitations of the EiffelVision 2 library, the
+        Wizard's graphical appearance is not optimal, especially with fonts; if
+        you are using large fonts you won't be able to read all the comments.</li>
+      <p class=space><li>After generation, the wizard launches EiffelBench and a compilation.
+        If a project was already present, the compilation first needs to delete
+        it, but will fail if it doesn't have the proper permissions.</li>
+      <p class=space><li>If you are using Microsoft's SQL Server, you should check the box <i>Specific
+        Tables/Views</i>; do not try to generate the System tables as you
+        wouldn't be able to perform requests on some of these tables.</li>
+      <p class=space><li>The Wizard doesn't support tables with a dollar sign $ in their names,
+        as this is not a valid character in Eiffel identifiers.</li>
     </ul>
     </td>
   </tr>

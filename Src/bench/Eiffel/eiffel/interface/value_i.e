@@ -104,4 +104,9 @@ feature
 			io.error.putstring (dump)
 		end
 
+	set_real_value (t: TYPE_A) is
+			-- Used only by BIT_VALUE_I
+		do
+		end
+
 end

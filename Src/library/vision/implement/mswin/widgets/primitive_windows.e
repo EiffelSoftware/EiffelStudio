@@ -48,6 +48,20 @@ feature  -- Status setting
 			end
 		end
 
+	class_background: WEL_BRUSH is
+			-- Default background.
+		local
+			windows_color: WEL_COLOR_REF
+			windows_brush: WEL_BRUSH
+		do
+			if private_background_color = Void then
+				!WEL_LIGHT_GRAY_BRUSH! Result.make
+			else
+				windows_color ?= private_background_color.implementation
+				!! Result.make_solid (windows_color)
+			end	
+		end
+
 end -- class PRIMITIVE_WINDOWS
 
 --|----------------------------------------------------------------

@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 				interfaces := interfaces.subarray (1, count)
 			end
 
-			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_orassem then
+			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
 					-- Let's initialize `l_is_nested' correctly and if it is set to
 					-- true, update `parent_type' so that it contains the nested type
 					-- enclosing type.

@@ -40,6 +40,10 @@ feature -- Access
 		
 feature -- Flags		
 
+	none: STRING is "none"
+
+	none_desc: STRING is "Excluded"
+
 	unfiltered: STRING is "Unfiltered"
 		
 	studio_flag: STRING is "studio"

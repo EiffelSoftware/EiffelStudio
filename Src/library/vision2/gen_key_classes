@@ -178,7 +178,7 @@ feature -- Contract support
 	valid_wel_code (a_wel_code: INTEGER): BOOLEAN is
 			-- Is ``a_wel_code'' valid?
 		do
-			Result := wel_to_v2_array.has (a_wel_code)
+			Result := wel_to_v2_table.has (a_wel_code)
 		end
 
 feature {NONE} -- Implementation
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			create Result.make ($first, $last)
 $v2_to_wel_array		end
 
-	wel_to_v2_table: HASH_TABLE [INTEGER] is
+	wel_to_v2_table: HASH_TABLE [INTEGER, INTEGER] is
 			-- Vision2 keycodes indexed by WEL key code.
 		once
 			create Result.make (10)
@@ -297,6 +297,9 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.8  2000/03/21 01:56:43  brendel
+# Fixed HASH_TABLE.
+#
 # Revision 1.7  2000/03/18 00:27:38  brendel
 # Implemented valid_wel_code.
 #

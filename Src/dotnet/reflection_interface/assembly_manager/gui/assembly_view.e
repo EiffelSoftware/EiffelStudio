@@ -54,17 +54,6 @@ feature -- Access
 			external_name: "AssemblyDescriptor"
 		end
 
-	assembly_modifications: ASSEMBLY_MODIFICATIONS is
-			-- Assembly modifications descriptor
-		indexing
-			external_name: "AssemblyModifications"
-		once
-			create Result.make_from_info (assembly_descriptor)
-		ensure
-			assembly_modifications_created: Result /= Void
-			assembly_descriptor_set: Result.assembly_descriptor = assembly_descriptor
-		end
-	
 	assembly_descriptor_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Assembly descriptor label
 		indexing
@@ -102,92 +91,6 @@ feature -- Access
 			external_name: "CloseButton"
 		end
 		
-feature -- Constants
-	
-	Border_style: INTEGER is 3
-			-- Window border style: a fixed, single line border
-		indexing
-			external_name: "BorderStyle"
-		end
-	
-	List_view_border_style: INTEGER is 1
-			-- List view border style
-		indexing
-			external_name: "ListViewBorderStyle"
-		end
-		
-	Window_width: INTEGER is 800
-			-- Window width
-		indexing
-			external_name: "WindowWidth"
-		end
-
-	Window_height: INTEGER is 600
-			-- Window height
-		indexing
-			external_name: "WindowHeight"
-		end
-	
-	View: INTEGER is 3
-			-- View property for list view
-		indexing
-			external_name: "View"
-		end
-	
-	Alignment: INTEGER is 5
-			-- Alignment in list view
-		indexing
-			external_name: "Alignment"
-		end
-		
-	Margin: INTEGER is 10
-			-- Margin
-		indexing
-			external_name: "Margin"
-		end
-
-	Label_height: INTEGER is 20
-			-- Label height
-		indexing
-			external_name: "LabelHeight"
-		end
-		
-	Label_font_size: REAL is 10.0
-			-- Label font size
-		indexing
-			external_name: "LabelFontSize"
-		end
-
-	Font_size: REAL is 8.0
-			-- Font size
-		indexing
-			external_name: "FontSize"
-		end
-		
-	Bold_style: INTEGER is 1
-			-- Bold style
-		indexing
-			external_name: "BoldStyle"
-		end
-
-	Regular_style: INTEGER is 0
-			-- Regular style
-		indexing
-			external_name: "RegularStyle"
-		end
-		
-	Button_height: INTEGER is 23
-			-- Button height
-		indexing
-			external_name: "ButtonHeight"
-		end
-	
-	Button_width: INTEGER is 75
-			-- Button height
-		indexing
-			external_name: "ButtonWidth"
-		end
-	
 feature -- Basic Operations
 
 	initialize_gui is
@@ -209,51 +112,37 @@ feature -- Basic Operations
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-		--	set_borderstyle (dictionary.Border_style)
-		--	a_size.set_Width (dictionary.Window_width)
-		--	a_size.set_Height (dictionary.Window_height)
-			set_borderstyle (Border_style)
-			a_size.set_Width (Window_width)
-			a_size.set_Height (Window_height)
+			set_borderstyle (dictionary.Border_style)
+			a_size.set_Width (dictionary.Window_width)
+			a_size.set_Height (dictionary.Window_height)
 			set_minimumsize (a_size)	
 
 				-- `Selected assembly: '
 			create assembly_label.make_label
 			assembly_label.set_text (assembly_descriptor.name)
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (dictionary.Margin)
-			a_point.set_X (Margin)
-			a_point.set_Y (Margin)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)
-			--a_size.set_Height (dictionary.Label_height)
-			a_size.set_Height (Label_height)
+			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			--create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style) 
-			create label_font.make_font_10 (dictionary.Font_family_name, Label_font_size,  Bold_style) 
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style) 
 			assembly_label.set_font (label_font)
 
 			create assembly_descriptor_label.make_label
 			assembly_descriptor_label.set_text (dictionary.Assembly_description (assembly_descriptor))
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (dictionary.Margin + dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (Margin + Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
 			assembly_descriptor_label.set_location (a_point)			
-			--a_size.set_Width (Window_width - 2 * Left_margin)
-			--assembly_descriptor_label.set_size (a_size)
 			assembly_descriptor_label.set_autosize (True)
 			assembly_descriptor_label.set_font (label_font)
 
 				-- `Types: '
 			create types_label.make_label
 			types_label.set_text (dictionary.Types_label_text)
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (dictionary.Margin * 3 + 2 * Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (Margin * 3 + 2 * Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (dictionary.Margin * 3 + 2 * dictionary.Label_height)
 			types_label.set_location (a_point)
-			--a_size.set_Height (dictionary.Label_height)
-			a_size.set_Height (Label_height)
+			a_size.set_Height (dictionary.Label_height)
 			types_label.set_size (a_size)
 			types_label.set_font (label_font)
 			
@@ -262,10 +151,8 @@ feature -- Basic Operations
 			
 				-- Close button
 			create close_button.make_button
-			--a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Button_width //2))
-			--a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
-			a_point.set_X ((Window_width // 2) - (Button_width //2))
-			a_point.set_Y (Window_height - 4 * Margin - Button_height)
+			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Button_width //2))
+			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
 			close_button.set_location (a_point)
 			close_button.set_text (dictionary.Close_button_label)
 			type := type_factory.GetType_String (dictionary.System_event_handler_type)
@@ -403,31 +290,24 @@ feature {NONE} -- Implementation
 			on_item_event_handler_delegate: SYSTEM_EVENTHANDLER		
 		do
 			create type_list_view.make_listview
-			--type_list_view.set_borderstyle (dictionary.List_view_border_style)
-			type_list_view.set_borderstyle (List_view_border_style)
+			type_list_view.set_borderstyle (dictionary.List_view_border_style)
 			type_list_view.set_checkboxes (False)
 			type_list_view.set_fullrowselect (True)
 			type_list_view.set_gridlines (True)
 			type_list_view.set_multiselect (False)
 			type_list_view.set_sorting (0)
-			--type_list_view.set_view (dictionary.View)
-			type_list_view.set_view (View)
+			type_list_view.set_view (dictionary.View)
 			type_list_view.set_activation (0)
-			--type_list_view.set_alignment (dictionary.Alignment)
-			type_list_view.set_alignment (Alignment)
+			type_list_view.set_alignment (dictionary.Alignment)
 			type_list_view.set_scrollable (True)
 			type_list_view.set_tabindex (0)
 			
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (5 * dictionary.Margin + 3 * dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (5 * Margin + 3 * Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (5 * dictionary.Margin + 3 * dictionary.Label_height)
 			type_list_view.set_location (a_point)
 			
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			--a_size.set_height (dictionary.Window_height - 11 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)
-			a_size.set_width (Window_width - 2 * Margin)
-			a_size.set_height (Window_height - 11 * Margin - 3 * Label_height - Button_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			a_size.set_height (dictionary.Window_height - 11 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)
 			type_list_view.set_size (a_size)				
 			from
 			until

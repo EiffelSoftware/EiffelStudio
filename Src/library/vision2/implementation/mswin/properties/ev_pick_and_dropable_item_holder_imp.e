@@ -11,7 +11,7 @@ inherit
 
 	EV_PICK_AND_DROPABLE_IMP
 		undefine
-			set_pointer_style
+			set_pointer_style, enable_capture, disable_capture
 		redefine
 			pnd_press,
 			interface,

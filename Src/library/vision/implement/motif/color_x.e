@@ -48,7 +48,6 @@ feature {NONE}
 					end;
 				else  --  pixel color
 					Result := the_pixel;
-					is_real_allocated := true
 				end;
 			else  -- name color
 				ext_name := name.to_c;
@@ -59,7 +58,7 @@ feature {NONE}
 					end
 				end
 			end;
-			if not is_real_allocated then
+			if (Result /= the_pixel) and then not is_real_allocated then
 				if is_white_by_default then
 					Result := white_pixel (a_screen.screen_object)
 				else

@@ -33,8 +33,8 @@ external
 			"c:\work\wel\spec\windows\include",
 			"c:\work\vision2\spec\include"
         object:
-			"c:\work\wel\spec\$(ISE_COMPILER)\lib\wel.lib",
-			"c:\work\vision2\spec\$(ISE_COMPILER)\lib\libpng.lib",
-			"c:\work\vision2\spec\$(ISE_COMPILER)\lib\zlib.lib",
-			"c:\work\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib"
+			"c:\work\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+			"c:\work\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+			"c:\work\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+			"c:\work\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib"
 end

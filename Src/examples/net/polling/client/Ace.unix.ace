@@ -35,5 +35,5 @@ external
 	-- External EiffelNet library 
 	object:
 		"$(ISE_EIFFEL)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a"
---mswin		"$(ISE_EIFFEL)/library/net/spec/$(ISE_COMPILER)/lib/net.lib"
+--mswin		"$(ISE_EIFFEL)/library/net/spec/$(ISE_C_COMPILER)/lib/net.lib"
 end

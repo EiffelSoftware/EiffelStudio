@@ -52,9 +52,9 @@ external
 	include_path:		"$(ISE_EIFFEL)\library\vision2\spec\include",
 						"$(ISE_EIFFEL)\library\wel\spec\windows\include"
 
-	object: 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib",
-			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\libpng.lib",
-			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\zlib.lib",
-						"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+	object: 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+						"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- ev_list_example

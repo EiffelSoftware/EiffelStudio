@@ -3511,8 +3511,6 @@ feature -- Precompilation
 	save_precompilation_info is
 			-- Save usefull values for inclusion of
 			-- precompiled code.
-		local
-			i: INTEGER
 		do
 			server_controler.save_precompiled_id;
 			max_precompiled_id := class_counter.value;

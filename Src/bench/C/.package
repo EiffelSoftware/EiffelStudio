@@ -1,0 +1,19 @@
+: basic variables
+package=Eiffel-3.0
+baserev=1.1
+patchbranch=1
+developbranch=2
+mydiff=''
+maintname='Raphael Manfredi'
+maintloc='ram@york.eiffel.com'
+ftpsite=''
+orgname='/home/ram/etc/organization'
+newsgroups=''
+recipients=''
+ftpdir=''
+
+: derivative variables--do not change
+revbranch="$baserev.$patchbranch"
+devbranch="$baserev.$developbranch"
+devrev="$baserev.$developbranch.0"
+packver='3'

@@ -1,0 +1,353 @@
+%{
+/*
+
+ ######     #    ######  ######  ######  #               #
+ #          #    #       #       #       #               #
+ #####      #    #####   #####   #####   #               #
+ #          #    #       #       #       #        ###    #
+ #          #    #       #       #       #        ###    #
+ ######     #    #       #       ######  ######   ###    ######
+
+			Eiffel Lex analyzer description
+*/
+
+#include <ctype.h>
+
+#include "limits.h" 	
+#include "macros.h"
+#include "parser.h"
+
+#define MAX_CHAR	256			/* Ascii limit */
+
+/* 
+ * Public declarations
+ */
+
+int line_pos = 1;				/* Position in current line */
+int last_saved=0;				/* Position reached in previous line */
+
+/*
+ * Static declarations
+ */
+
+static int get_string();		/* Read a string (after a double quote) */
+static int get_char();			/* Read a char (after a single quote) */
+static int eif_char();			/* Eiffel character value */
+
+static int	process();			/* Update position marks */
+static int 	process_name();		/* Update position marks for ids */
+static int 	process_int();		/* Remove underscores from integer values */
+static int 	process_bit();		/* Process bit value */
+
+/*
+ * Extern declarations
+ */
+
+extern int inherit_context;		/* Flag for context sensitivity of
+								 * token TE_END */
+extern int 	start_position,
+			end_position;		/* Position marks */
+
+extern int string_input();		/* Input in string mode */
+extern void string_unput();		/* Unput in string mode */
+extern int string_mode;
+
+extern char token_str[];		/* Buffer for ids and strings */
+
+struct token {					/* For gperf */
+	char *name;					/* This is the keyword value */
+	int yaccval;				/* Value to be returned to yacc */
+};
+
+extern struct token *in_word_set();		/* Pointer to static data */
+
+/*
+ * Macros for lexical analyzer input 
+ */
+
+#undef input
+#define input()	(string_mode?string_input():(((yytchar=yysptr>yysbuf?U(*--yysptr):getc(yyin))==10?(yylineno++,yytchar):yytchar)==EOF?\
+						(inherit_context ? '\001': 0): \
+						yytchar))
+
+#undef unput
+#define unput(c) {yytchar=(c);if(!string_mode){if(yytchar=='\n')yylineno--;*yysptr++=yytchar;}else string_unput(yytchar) ;}
+
+%}
+
+D		[0-9]
+O		[0-7]	
+E		(e|E)[+-]?{D}+
+A		([a-z]|[A-Z])
+X		([a-z]|[A-Z]|[0-9]|_)
+W		[ \t\n]
+
+%%
+--.*						{	start_position = end_position;
+								end_position += yyleng;}
+[ \t\n]+					{	start_position = end_position;
+								end_position += yyleng;}
+{D}+/".."					{return process_name(TE_INTEGER);}
+\1							{return process(TE_END);}
+";"							{return process(TE_SEMICOLON);}
+":"							{return process(TE_COLON);}
+","							{return process(TE_COMMA);}
+".."						{return process(TE_DOTDOT);}
+"."							{return process(TE_DOT);}
+"$"							{return process(TE_ADDRESS);}
+":="						{return process(TE_ASSIGN);}
+"?="						{return process(TE_ACCEPT);}
+"="							{return process(TE_EQ);}
+"<"							{return process(TE_LT);}
+">"							{return process(TE_GT);}
+"<="						{return process(TE_LE);}
+">="						{return process(TE_GE);}
+"/="						{return process(TE_NE);}
+"--"						{return process(TE_COMM);}
+"("							{return process(TE_LPARAN);}
+")"							{return process(TE_RPARAN);}
+"{"							{return process(TE_LCURLY);}
+"}"							{return process(TE_RCURLY);}
+"["							{return process(TE_LSQURE);}
+"]"							{return process(TE_RSQURE);}
+"+"							{return process(TE_PLUS);}
+"-"							{return process(TE_MINUS);}
+"*"							{return process(TE_STAR);}
+"/"							{return process(TE_SLASH);}
+"^"							{return process(TE_POWER);}
+"->"  						{return process(TE_CONSTRAIN);}
+"!"							{return process(TE_BANG);}
+"<<"						{return process(TE_LARRAY);}
+">>"						{return process(TE_RARRAY);}
+(@|#|\||&)[0-9|a-z|A-Z|_|!|\"|#|\$|&|\'|\(|\)|\*|\+|\,|\-|\.|/|:|;|<|>|=|\?|\[|\\|\]|\^|\`|\{|\}|\||\~|%]*	{return process_name(TE_FREE);}
+"//"						{return process(TE_DIV);}
+"\\\\"						{return process(TE_MOD);}
+{A}{X}*						{return process_name(TE_ID);}
+[0-1]+[bB]					{return process_bit();}
+([0-9]|_[0-9][0-9][0-9])+	{return process_int();}
+({D}*\.{D}+({E})?)|({D}+\.{D}*({E})?) {return process_name(TE_REAL); }
+\"							{return get_string();}
+\'							{return get_char();}
+.							{	start_position = end_position;
+								end_position += yyleng;}
+%%
+
+/*
+ * Managing `start_position' and `end_position'
+ */
+
+static int process(token_code)
+int token_code;
+{
+	/* Process a token updating global variables `start_position' and
+	 * `end_position'.
+	 */
+	inherit_context = 0;
+	start_position = end_position;
+	end_position += yyleng;
+	return token_code;
+}
+
+static int process_name(token_code)
+int token_code;
+{
+	/* Process an identifier. */
+	
+	int i, length;
+	char c;
+	struct token *key;
+	
+	/* truncation of identifiers */
+	length= (yyleng<IDLENGTH) ? yyleng:IDLENGTH;
+
+	/* Copy into `token_str' */
+	strncpy(token_str,yytext,length);
+	token_str[length]= '\0';
+
+	/* Conversion into lower case characters */
+	for (i=0; i<=length; i++) {
+		c = token_str[i];
+		if (isupper(c))
+			token_str[i] = tolower(c);
+	}
+
+	/* Check for a keyword */
+	key = in_word_set(token_str, length);
+	if (key)
+		return process(key->yaccval);	/* Was a keyword */
+	else
+		return process(token_code);		/* Normal identifier */
+}
+	
+static int process_int()
+{
+	/* Process integer value */
+
+	int i;
+	char c;
+	char *s;
+
+	for(s = token_str, i=0; i<=yyleng; i++) {
+		c = yytext[i];
+		if (c != '_')
+			*s++ = c;
+	}
+	*s = '\0';
+
+	return process(TE_INTEGER);
+}
+			
+static int process_bit()
+{
+	/* Process bit value; get rid of the suffix */
+
+	strncpy(token_str,yytext,yyleng - 1);
+	token_str[yyleng-1] = '\0';
+
+	return process(TE_A_BIT);
+}
+
+/*
+ * Getting characters and strings
+ */
+
+static int get_char()
+{
+	/* Try to recognize an eiffel character */
+
+	char *s, c;
+	int	i, char_value;
+
+	s = token_str;		/* Statically allocated buffer */
+	inherit_context = 0;
+	start_position = end_position;
+
+	c = input(); end_position++;
+	if (!c)
+		/* Bad character: no more input */
+		return EIF_ERROR5;
+	else {
+		char_value = eif_char(c);
+		if (-1 == char_value)
+			/* Bad character: no more input or unvalid character */
+			return EIF_ERROR5;
+		else {
+			*s++ = (int) char_value;
+			c = input(); end_position++;
+			if (c == '\'') {
+				/* Recognition successfull */
+				*s = '\0';
+				return TE_CHAR;
+			} else
+				/* Bad character: no more input */
+				return EIF_ERROR5;
+		}
+	}
+}
+
+static int get_string()
+{
+	/* Return an Eiffel string in token_str. */
+
+	char	*s;
+	char	c, cc;
+	int		extension, n=0, char_value;
+
+	s = token_str;			/* Statically allocated buffer */
+	inherit_context = 0;
+	start_position = end_position;
+
+	while ((c = input()) != 0 && c != '"' && n < STRINGLENGTH) {
+		end_position++;
+		if (c == '%') {
+			extension = 0;
+			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n') {
+				extension = 1;
+				end_position++;
+			}
+			if (0 == extension) {
+				/* It is not an extension: unput read character and try
+				 * to recognize an Eiffel character. */
+				unput(cc);
+				char_value = eif_char(c);
+				if (-1 == char_value)
+					return EIF_ERROR3;
+				else {
+					/* Recognized one character */
+					*s++ = (char) char_value; n++;
+				}
+			} else {
+				/* It is a string extension: blanks, tabs and newlines are
+				 * already skipped. */
+				c = cc;
+				if (c != '%')
+					/* Bad extension */
+					return EIF_ERROR3;
+				else
+					end_position++;
+			}
+		} else {
+			*s++ = c; n++;
+		}
+	}
+	if (n >= STRINGLENGTH) {
+			/* String too long */
+		return EIF_ERROR2;
+	} else if (c != '"') {
+			/* No final double-quote */
+		return EIF_ERROR4;
+	} else {
+		*s= '\0';
+		return TE_STRING;
+	}
+}
+
+static int eif_char(c)
+char c;
+{
+	int i;
+	int dec_value = 0;
+
+	if (c != '%')
+		return (isprint(c) ? (int) c : -1);
+	else {
+		c = input(); end_position++;
+		switch (c) {
+		case 'A': return (int) '@';
+		case 'B': return (int) '\b';
+		case 'C': return (int) '^';
+		case 'D': return (int) '$';
+		case 'F': return (int) '\f';
+		case 'H': return (int) '\\';
+		case 'L': return (int) '~';
+		case 'N': return (int) '\n';
+		case 'Q': return (int) '`';
+		case 'R': return (int) '\r';
+		case 'S': return (int) '#';
+		case 'T': return (int) '\t';
+		case 'U': return (int) '\0';
+		case 'V': return (int) '|';
+		case '%': return (int) '%';
+		case '\'': return (int) '\'';
+		case '"': return (int) '"';
+		case '(': return (int) '[';
+		case ')': return (int) ']';
+		case '<': return (int) '{';
+		case '>': return (int) '}';
+		case '\000': return -1;
+		case '/':
+			for (i=1; i<4; i++) {
+				c = input(); end_position++;
+				if (c && (c >= '0' && c <= '9'))
+					dec_value += ((int) (c - '0')) *
+						(100 * (i == 1) + 10 * (i == 2) + (i == 3));
+				else
+					return -1;
+			}
+			c = input(); end_position++;
+			return (((c == '/') && dec_value < MAX_CHAR) ? dec_value : -1);
+		default: return -1;
+		}
+		/* NOTREACHED */
+	}
+}

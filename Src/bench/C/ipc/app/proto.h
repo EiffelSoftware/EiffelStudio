@@ -1,0 +1,22 @@
+/*
+
+ #####   #####    ####    #####   ####           #    #
+ #    #  #    #  #    #     #    #    #          #    #
+ #    #  #    #  #    #     #    #    #          ######
+ #####   #####   #    #     #    #    #   ###    #    #
+ #       #   #   #    #     #    #    #   ###    #    #
+ #       #    #   ####      #     ####    ###    #    #
+
+	Some structures and defines used to ensure protocol.
+*/
+
+#ifndef _proto_h_
+#define _proto_h_
+
+extern int rqstcnt;				/* Request count (number of requests sent) */
+
+extern void rqsthandle();		/* General request handler */
+extern void hello();			/* Hello to workbench */
+extern void stop_rqst();		/* Stop notification to workbench */
+
+#endif

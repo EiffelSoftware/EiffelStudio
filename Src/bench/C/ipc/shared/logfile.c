@@ -1,0 +1,236 @@
+/*
+
+ #        ####    ####   ######     #    #       ######           ####
+ #       #    #  #    #  #          #    #       #               #    #
+ #       #    #  #       #####      #    #       #####           #
+ #       #    #  #  ###  #          #    #       #        ###    #
+ #       #    #  #    #  #          #    #       #        ###    #    #
+ ######   ####    ####   #          #    ######  ######   ###     ####
+
+	Handles logging facilities.
+
+*/
+
+#include "config.h"
+#include "portable.h"
+#include <sys/types.h>
+
+#ifdef I_TIME
+# include <time.h>
+#endif
+#ifdef I_SYS_TIME
+# include <sys/time.h>
+#endif
+#ifdef I_SYS_TIME_KERNEL
+# define KERNEL
+# include <sys/time.h>
+# undef KERNEL
+#endif
+
+#ifdef I_FCNTL
+#include <fcntl.h>
+#endif
+#ifdef I_SYS_FILE
+#include <sys/file.h>
+#endif
+
+#ifdef I_STRING
+#include <string.h>					/* Try to find strerror() there */
+#else
+#include <strings.h>
+#endif
+
+#ifndef USE_ADD_LOG
+public char *progname = "ram";	/* Program name */
+public Pid_t progpid = 0;		/* Program PID */
+#else
+
+#define MAX_STRING	1024			/* Maximum length for logging string */
+
+private int logfile = -2;			/* File descriptor used for logging */
+private char *logname = (char *) 0;	/* Name of the logfile in use */
+private int loglvl = 20;			/* Logging level */
+private void expand();				/* Run the %m %e expansion on the string */
+private int add_error();			/* Prints description of error in errno */
+private int add_errcode();			/* Print the symbolic error name */
+
+public char *progname = "ram";	/* Program name */
+public Pid_t progpid = 0;		/* Program PID */
+
+extern Time_t time();			/* Time in seconds since the Epoch */
+extern int errno;				/* System error report variable */
+extern int file_lock();			/* Obtain a lock file with .lock extension */
+extern void release_lock();		/* Release previous lock */
+
+/* VARARGS2 */
+public void add_log(level, format, arg1, arg2, arg3, arg4, arg5)
+int level;
+char *format;
+int arg1, arg2, arg3, arg4, arg5;
+{
+	/* Add logging informations at specified level. Note that the arguments are
+	 * declared as 'int', but it should work fine, even when we give doubles,
+	 * because they will be pased "as is" to fprintf. Maybe I should use
+	 * vfprintf when it is available--RAM.
+	 * The only magic string substitution which occurs is the '%m', which is
+	 * replaced by the error message, as given by errno and '%e' which gives
+	 * the symbolic name of the error (if available, otherwise the number).
+	 * The log file must have been opened with open_log() before add_log calls.
+	 */
+
+	struct tm *ct;				/* Current time (pointer to static data) */
+	Time_t clock;				/* Number of seconds since the Epoch */
+	char buffer[MAX_STRING];	/* Buffer which holds the expanded %m string */
+	char message[MAX_STRING];	/* Where logging message is built */
+	int fd;						/* File descriptor to be used for message */
+
+	if (loglvl < level)			/* Logging level is not high enough */
+		return;
+
+	if (logfile == -2)			/* Logfile not opened for whatever reason */
+		fd = 2;					/* Use stderr if no logfile opened */
+	else
+		fd = logfile;			/* Thie is the normal log file */
+
+	clock = time((Time_t *) 0);	/* Number of seconds */
+	ct = localtime(&clock);		/* Get local time from amount of seconds */
+	expand(format, buffer);		/* Expansion of %m and %e into buffer */
+
+	sprintf(message, buffer, arg1, arg2, arg3, arg4, arg5);
+	sprintf(buffer, "%d/%.2d/%.2d %.2d:%.2d:%.2d %s[%d]: %s\n",
+		ct->tm_year, ct->tm_mon + 1, ct->tm_mday,
+		ct->tm_hour, ct->tm_min, ct->tm_sec,
+		progname, progpid, message);
+
+	(void) write(fd, buffer, strlen(buffer));
+}
+
+public int open_log(name)
+char *name;
+{
+	/* Open log file 'name' for logging. If a previous log file was opened,
+	 * it is closed before. The routine returns -1 in case of error.
+	 */
+	
+	if (logfile != -2)
+		close(logfile);
+	
+	logfile = open(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	logname = name;					/* Save file name */
+
+	if (logfile == -1) {
+		logfile = -2;
+		return -1;
+	}
+
+	add_log(12, "logfile opened on file #%d", logfile);
+
+	return 0;
+}
+
+public void close_log()
+{
+	/* Close log file */
+
+	if (logfile != -2)			/* File not closed */
+		close(logfile);
+
+	logfile = -2;				/* Mark file as closed */
+}
+
+public int reopen_log()
+{
+	/* Reopen logfile with same name as before (useful when child wants to start
+	 * with a fresh new file descriptor).
+	 */
+
+	if (logname != (char *) 0)
+		return open_log(logname);
+
+	return -1;						/* No previously opened logfile */
+}
+
+public void set_loglvl(level)
+int level;
+{
+	/* Set logging level to 'level' */
+
+	loglvl = level;
+}
+
+private void expand(from, to)
+char *from;
+char *to;
+{
+	/* The string held in 'from' is copied into 'to' and every '%m' is expanded
+	 * into the error message deduced from the value of errno.
+	 */
+
+	int len;							/* Length of substituted text */
+
+	while (*to++ = *from)
+		if (*from++ == '%')
+			switch (*from) {
+			case 'm':					/* %m is the English description */
+				len = add_error(to - 1);
+				to += len - 1;
+				from++;
+				break;
+			case 'e':					/* %e is the symbolic error code */
+				len = add_errcode(to - 1);
+				to += len - 1;
+				from++;
+				break;
+			}
+}
+
+private int add_error(where)
+char *where;
+{
+	/* Prints a description of the error code held in 'errno' into 'where' if
+	 * it is available, otherwise simply print the error code number.
+	 */
+
+#ifdef HAS_SYS_ERRLIST
+	extern int sys_nerr;					/* Size of sys_errlist[] */
+	extern char *sys_errlist[];				/* Maps error code to string */
+#endif
+
+#ifdef HAS_STRERROR
+	sprintf(where, "%s", strerror(errno));
+#else
+#ifdef HAS_SYS_ERRLIST
+	sprintf(where, "%s", strerror(errno));	/* Macro defined by Configure */
+#else
+	sprintf(where, "error #%d", errno);
+#endif
+#endif
+
+	return strlen(where);		/* FIXME */
+}
+
+private int add_errcode(where)
+char *where;
+{
+	/* Prints the symbolic description of the error code heldin in 'errno' into
+	 * 'where' if possible. Otherwise, prints the error number.
+	 */
+	
+#ifdef HAS_SYS_ERRNOLIST
+	extern int sys_nerrno;					/* Size of sys_errnolist[] */
+	extern char *sys_errnolist[];			/* Error code to symbolic name */
+#endif
+
+#ifdef HAS_SYS_ERRNOLIST
+	if (errno < 0 || errno >= sys_nerrno)
+		sprintf(where, "UNKNOWN");
+	else
+		sprintf(where, "%s", sys_errnolist[errno]);
+#else
+		sprintf(where, "%d", errno);
+#endif
+
+	return strlen(where);		/* FIXME */
+}
+
+#endif

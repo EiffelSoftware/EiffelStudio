@@ -1,0 +1,14 @@
+/*
+ * Jmakefile for compiler building.
+ */
+
+SUB = ipc run-time parsing clicking liman
+
+all::
+
+SetSubdirs($(SUB))
+DependSubdirs()
+LintSubdirs()
+
+/* This should be automatically taken care of by jmake */
+AddedByConfigure(mkdep cppstdin)

@@ -1,0 +1,34 @@
+/*
+ * Jmakefile for Lace C library
+ */
+
+RUN_TIME = ../../run-time
+SHARED_CLIB = ../shared
+DPFLAGS = -I$(TOP) -I$(SHARED_CLIB) -I$(RUN_TIME)
+CFLAGS = $(DPFLAGS)
+YFLAGS = -d
+
+
+SRCS = lace_l.l lace_y.y lace_c.c eif_l.l eif_c.c lac_err.c keyword.c
+
+OBJS = \
+|expand f!$(SRCS)!
+	!f:\.[cyl]=.o \
+-expand \\
+
+NormalLibraryTarget(lace,$(SRCS),$(OBJS))
+IdentifiedParserTarget(liblace.a,lace_l,lace_y,xx)
+IdentifiedLexTarget(liblace.a,eif_l,zz)
+DependTarget()
+
+keyword.c: lace.gperf
+	@if test -s keyword.c; then \
+		touch $@; \
+	else \
+		echo "	gperf -p -t -l -k 1,'$$',4 lace.gperf > $@"; \
+		gperf -p -t -l -k 1,'$$',4 lace.gperf > $@ ; \
+	fi
+
+keyword.o: lace_y.h
+lac_err.o: lace_y.h
+lace_l.o: lace_y.h

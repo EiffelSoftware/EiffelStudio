@@ -1,0 +1,429 @@
+/*
+
+  ####    #####    ##     ####   #    #           ####
+ #          #     #  #   #    #  #   #           #    #
+  ####      #    #    #  #       ####            #
+      #     #    ######  #       #  #     ###    #
+ #    #     #    #    #  #    #  #   #    ###    #    #
+  ####      #    #    #   ####   #    #   ###     ####
+
+	Sending various stack dumps...
+
+	Here are a set of routines used by the communication routines to send
+	the exception stacks. This package knows that the eif_trace stack must
+	be read backwards, and also needs to know whether the aplication stopped
+	because of an implicit exception or not.
+*/
+
+#include "config.h"
+#include "portable.h"
+#include "debug.h"
+#include "interp.h"
+#include "except.h"
+#include "garcol.h"
+#include "malloc.h"
+#include "stack.h"
+#include "com.h"
+#include "request.h"
+
+/* Record a stack context, while performing dumps, and restore it afterwards.
+ * We have a provision here for all the possible stack we may inspect.
+ */
+private struct xstack xstk_context;		/* Saved exception stack context */
+private struct dbstack dstk_context;	/* Saved calling stack context */
+private struct opstack istk_context;	/* Operational stack (interpreter) */
+private struct stack ostk_context;		/* Once stack */
+
+private int dump_mode;	/* Mode of the active dump we are currently using */
+private int is_first;	/* First item dumped? (matters for pending exception) */
+
+/* Every stack has its own way of being dumped. During the initialization
+ * process, this pointer is set to the correct function to be called. It may
+ * also be temporarily overwritten in some nested operation (like dumping the
+ * variables inside a routine, while in fact dumping the whole stack at a
+ * higher level).
+ */
+private struct dump *(*stk_next)();		/* Function used to perform dump */
+
+/* Routine declarations */
+private void send_dump();			/* Send XDR'ed dumped item to ewb */
+private void stk_start();			/* Initialize automaton */
+private void stk_end();				/* Reset saved stack contexts */
+private struct dump *pending();		/* List pending exceptions */
+private struct dump *execution();	/* List execution stack */
+private struct dcall *safe_dtop();	/* Perform a safe dtop() without panic */
+private void init_var_dump();		/* Initialize register context */
+private struct dump *variable();	/* Dump variables */
+private struct dump *local();		/* Return local by number */
+private struct dump *argument();	/* Return argument by number */
+private struct dump *once();		/* Dump once stack */
+
+public void send_stack(s, what)
+int s;			/* The connected socket */
+int what;		/* Which stack should be sent */
+{
+	/* This is the main routine. It send a whole stack dump to the remote
+	 * process through the connected socket and via XDR. The end of the dump
+	 * is indicated by a positive acknowledgment.
+	 */
+
+	struct dump *dp;			/* Pointer to static data where dump is */
+
+	stk_start(what);			/* Initialize processing */
+	while (dp = (stk_next)())	/* While still some data to send */
+		send_dump(s, dp);
+
+	send_ack(s, AK_OK);			/* End of list -- you got everything */
+}
+
+private void send_dump(s, dp)
+int s;				/* The connected socket */
+struct dump *dp;	/* Item to send */
+{
+	Request rqst;					/* What we send back */
+
+	rqst.rq_type = DUMPED;			/* A dumped stack item */
+	bcopy(dp, &rqst.rq_dump, sizeof(struct dump));
+	send_packet(s, &rqst);			/* Send to network */
+}
+
+/*
+ * Iterator initialization and final clean up.
+ */
+
+private void stk_start(what)
+int what;		/* Dumping status wanted */
+{
+	/* Initialize the dumping procedure. This whole package is nothing more
+	 * than a finite state automaton, though the transition tables are in
+	 * my mind, this program being only an implicit translation. Any typos
+	 * are mine :-) -- RAM
+	 */
+
+	dump_mode = what;	/* Save working mode */
+
+	/* Save the appropriate stack context, depending on the operations to
+	 * be performed...
+	 */
+	
+	switch (what) {
+	case ST_PENDING:
+		bcopy(&eif_trace, &xstk_context, sizeof(struct xstack));
+		is_first = 1;
+		stk_next = pending;
+		break;
+	case ST_CALL:
+	case ST_FULL:
+		bcopy(&eif_stack, &xstk_context, sizeof(struct xstack));
+		bcopy(&db_stack, &dstk_context, sizeof(struct dbstack));
+		bcopy(&op_stack, &istk_context, sizeof(struct opstack));
+		stk_next = execution;
+		break;
+	case ST_LOCAL:
+	case ST_ARG:
+	case ST_VAR:
+		bcopy(&op_stack, &istk_context, sizeof(struct opstack));
+		init_var_dump(d_cxt.pg_active);
+		stk_next = variable;
+		break;
+	case ST_ONCE:
+		bcopy(&once_set, &ostk_context, sizeof(struct stack));
+		stk_next = once;
+		break;
+	default:
+		panic("illegal dump request");
+	}
+}
+
+private void stk_end()
+{
+	/* Restore context of all the stack we had to modify/inspect */
+
+	switch (dump_mode) {
+	case ST_PENDING:
+		bcopy(&xstk_context, &eif_trace, sizeof(struct xstack));
+		break;
+	case ST_CALL:
+	case ST_FULL:
+		bcopy(&xstk_context, &eif_stack, sizeof(struct xstack));
+		bcopy(&dstk_context, &db_stack, sizeof(struct dbstack));
+		/* Fall through */
+	case ST_LOCAL:
+	case ST_ARG:
+	case ST_VAR:
+		bcopy(&istk_context, &op_stack, sizeof(struct opstack));
+		break;
+	case ST_ONCE:
+		bcopy(&ostk_context, &once_set, sizeof(struct stack));
+		break;
+	}
+}
+
+/*
+ * Dumping the pending exceptions.
+ */
+
+private struct dump *pending()
+{
+	/* Get the next pending exception record from the exception stack.
+	 * The stack is read from the bottom. A special case is made for the
+	 * very first item dumped, because an implict exception left the faulty
+	 * vector on top of the eif_stack execution stack.
+	 */
+
+	struct ex_vect *top;				/* Exception vector */
+	static struct dump dumped;			/* Item returned */
+
+	dumped.dmp_type = DMP_VECT;			/* Structure contains vector */
+
+	if (is_first) {							/* Very first item dumped */
+		is_first = 0;						/* Don't come here twice */
+		if (d_cxt.pg_status == PG_VIOL)	{	/* Implicitely raised exception */
+			top = extop(&eif_stack);		/* Faulty vector */
+			dumped.dmp_vect = top;
+			return &dumped;					/* Pointer to static data */
+		}
+	}
+
+	/* Normal case: get a new vector from bottom of the stack. The exnext()
+	 * function returns a null pointer when the top of the stack has been
+	 * reached. Note that absolutely no interpretation is done. It is up to
+	 * ewb to correctly reconstruct the missing information by parsing the
+	 * items it gets.
+	 */
+
+	top = exnext();						/* Fetch next vector */
+	if (top == (struct ex_vect *) 0)	/* Reached top of stack */
+		return (struct dump *) 0;		/* Signal end of stack */
+
+	dumped.dmp_vect = top;
+
+	return &dumped;			/* Pointer to static data */
+}
+
+/*
+ * Dumping of the execution stack.
+ */
+
+private struct dump *execution()
+{
+	/* Get the next execution vector from the top of eif_stack. Whenever a
+	 * vector associated with a melted routine is reached, we also send
+	 * the arguments (and possibly the locals in ST_FULL mode). This is why
+	 * we keep an internal state about the status of the last vector.
+	 */
+
+	struct ex_vect *top;				/* Exception vector */
+	struct dump *dp;					/* Partial dump pointer */
+	struct dcall *dc;					/* Debugger's calling context */
+	static struct dump dumped;			/* Item returned */
+	static int last_melted = 0;			/* True when last was melted */
+	static int arg_done = 0;			/* True when arguments processed */
+	static int argn = 0;				/* Argument number */
+	static int locn = 0;				/* Local number */
+	
+	/* When the last exception vector returned was melted, we want to send
+	 * the routine arguments (if any), and maybe the local variables.
+	 * So instead of sending another exception vector, we start returning
+	 * interpreter cells--RAM.
+	 */
+
+	if (last_melted) {					/* Last vector was melted */
+		if (!arg_done) {				/* There are still some arguments */
+			dp = argument(argn++);			/* Get next argument */
+			if (dp != (struct dump *) 0)	/* Got it */
+				return dp;					/* An argument dump */
+			arg_done = 1;					/* No more arguments */
+			argn = 0;						/* Reset number for next vector */
+		}
+		if (dump_mode == ST_FULL) {			/* But we need locals */
+			dp = local(locn++);				/* Get next local */
+			if (dp != (struct dump *) 0)	/* Got one */
+				return dp;					/* A local variable dump */
+			locn = 0;						/* Reset for next vector */
+		}
+		dpop();							/* Remove calling context now */
+		last_melted = 0;				/* A priori, next vector not melted */
+	}
+
+	/* We either finished dealing with previous melted vector, or it was simply
+	 * not associated with a melted feature. So go on and grab next one, unless
+	 * the end of the stack has been reached.
+	 */
+
+	if (eif_stack.st_cur->sk_arena == eif_stack.st_top)
+		return (struct dump *) 0;	/* Reached end of stack */
+
+	expop(&eif_stack);				/* Remove top vector logically */
+	top = extop(&eif_stack);		/* And get a pointer to it (ghost!) */
+
+	/* Now check whether by chance the vector associated with the callling
+	 * context on top of the debugger's stack is precisely the one we've just
+	 * popped. That would mean we reached a melted feature...
+	 */
+
+	dc = safe_dtop();				/* Returns null pointer if empty */
+	if (dc != (struct dcall *) 0)	/* Stack not empty */ 
+		if (dc->dc_exec == top) {	/* We've reached a melted feature */
+			last_melted = 1;		/* Calling context will be popped later */
+			init_var_dump(dc);		/* Make this feature "active" */
+		}
+
+	/* Finally, build up the dumped structure for the current vector. If this
+	 * vector is associated with a melted feature, the next call to this routine
+	 * will dump the arguments and possibluy the local variables.
+	 */
+
+	dumped.dmp_type = DMP_VECT;			/* Structure contains vector */
+	dumped.dmp_vect = top;
+
+	return &dumped;			/* Pointer to static data */
+}
+
+private struct dcall *safe_dtop()
+{
+	/* This is a wrapper to the dtop() feature, which tests whether the stack
+	 * is empty before calling it: the dtop() routine will raise a panic if
+	 * there is nothing on the stack. Here, we only return a null pointer.
+	 */
+
+	if (db_stack.st_top == db_stack.st_hd->sk_arena)
+		return (struct dcall *) 0;
+	
+	return dtop();		/* Stack is not empty */
+}
+
+/*
+ * Dumping arguments and/or locals.
+ */
+
+private void init_var_dump(call)
+struct dcall *call;		/* Calling context for "active" feature */
+{
+	/* Initializes the interpreter registers for dumping variables from feature
+	 * associated with calling context. This has to be done before ivalue()
+	 * can reliably be called to get local variables.
+	 */
+
+	if (call == (struct dcall *) 0)
+		return;
+
+	sync_registers(call->dc_cur, call->dc_top);
+}
+
+private struct dump *variable()
+{
+	/* Dump the variables from the current routine, according to the global
+	 * status flag. The interpreter registers are supposed to be correctly
+	 * synchronized.
+	 */
+
+	struct dump *dp;					/* Partial dump pointer */
+	static struct dump dumped;			/* Item returned */
+	static int arg_done = 0;			/* True when arguments processed */
+	static int argn = 0;				/* Argument number */
+	static int locn = 0;				/* Local number */
+	
+	if (d_cxt.pg_active == (struct dcall *) 0)
+		return (struct dump *) 0;		/* No active routine */
+
+	switch (dump_mode) {
+	case ST_LOCAL:						/* Dump locals only */
+		dp = local(locn++);				/* Fetch next local variable */
+		break;
+	case ST_ARG:						/* Dump arguments only */
+		dp = argument(argn++);			/* Fetch next argument variable */
+		break;
+	case ST_VAR:						/* Dump arguments and locals */
+		if (!arg_done) {				/* There are still some arguments */
+			dp = argument(argn++);		/* Get next argument */
+			if (dp != (struct dump *) 0)
+				break;
+			arg_done = 1;				/* No more arguments */
+		}
+		dp = local(locn++);				/* Get next local then */
+		break;
+	default:
+		panic("illegal variable request");
+	}
+
+	if (dp == (struct dump *) 0) {		/* Finished: reset static vars */
+		arg_done = 0;
+		argn = 0;
+		locn = 0;
+	}
+
+	return dp;			/* Pointer to static data or null */
+}
+
+private struct dump *local(n)
+int n;
+{
+	/* Return the nth local, or a void pointer if we reached the end of the
+	 * local variable. By convention, if the routine has n declared local
+	 * variable, then n+1 is the Result, provided the routine is not a
+	 * procedure.
+	 */
+	
+	struct item *ip;					/* Partial item pointer */
+	static struct dump dumped;			/* Item returned */
+
+	ip = ivalue(IV_LOCAL, n);
+	if (ip == (struct item *) 0)
+		return (struct dump *) 0;
+	
+	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
+	dumped.dmp_item = ip;
+
+	return &dumped;			/* Pointer to static data */
+}
+
+private struct dump *argument(n)
+int n;
+{
+	/* Return the nth argument, or a void pointer if we reached the end of the
+	 * argument list.
+	 */
+	
+	struct item *ip;					/* Partial item pointer */
+	static struct dump dumped;			/* Item returned */
+
+	ip = ivalue(IV_ARG, n);
+	if (ip == (struct item *) 0)
+		return (struct dump *) 0;
+	
+	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
+	dumped.dmp_item = ip;
+
+	return &dumped;			/* Pointer to static data */
+}
+
+/*
+ * Dumping of the once stack.
+ */
+
+private struct dump *once()
+{
+	/* Dumping of the once stack */
+
+	char *obj;							/* Object in once Result variable */
+	static struct dump dumped;			/* Item returned */
+
+	if (once_set.st_top == (char **) 0)	/* Stack not created yet */
+		return (struct dump *) 0;
+		
+	if (once_set.st_top == once_set.st_hd->sk_arena)
+		return (struct dump *) 0;			/* Stack is empty */
+	
+	epop(&once_set, 1);						/* Remove item logically */
+	obj = *once_set.st_top;					/* Get it through indirection */
+
+	dumped.dmp_type = DMP_OBJ;				/* We are dumping an object */
+	dumped.dmp_obj.obj_addr = obj;			/* Record object's address */
+	if (obj != (char *) 0)					/* Not void object */
+		dumped.dmp_obj.obj_type =			/* Get its dynamic type */
+			HEADER(obj)->ov_flags & EO_TYPE;
+
+	return &dumped;			/* Pointer to static data */
+}
+

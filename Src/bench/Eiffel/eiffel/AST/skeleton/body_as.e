@@ -253,8 +253,8 @@ feature -- New feature description
 					external_body ?= routine.routine_body
 					ext_lang := external_body.language_name
 					extension := ext_lang.extension_i
-					if external_body.alias_name /= Void then
-						extension.set_alias_name (external_body.alias_name.value)
+					if external_body.alias_name_id > 0 then
+						extension.set_alias_name_id (external_body.alias_name_id)
 					end
 
 					if System.il_generation then
@@ -280,9 +280,9 @@ feature -- New feature description
 					end
 					if
 						System.il_generation and then
-						external_body.alias_name /= Void
+						external_body.alias_name_id > 0
 					then
-						proc.set_external_name (external_body.alias_name.value)
+						proc.set_private_external_name_id (external_body.alias_name_id)
 					end
 				else
 					create {DYN_PROC_I} proc
@@ -318,8 +318,8 @@ feature -- New feature description
 					external_body ?= routine.routine_body
 					ext_lang := external_body.language_name
 					extension := ext_lang.extension_i
-					if external_body.alias_name /= Void then
-						extension.set_alias_name (external_body.alias_name.value)
+					if external_body.alias_name_id > 0 then
+						extension.set_alias_name_id (external_body.alias_name_id)
 					end
 
 					if System.il_generation then
@@ -353,8 +353,8 @@ feature -- New feature description
 						attr.set_empty_body (True)
 						attr.set_extension (il_ext)
 						Result := attr
-						if external_body.alias_name /= Void then
-							Result.set_external_name (external_body.alias_name.value)
+						if external_body.alias_name_id > 0 then
+							Result.set_private_external_name_id (external_body.alias_name_id)
 						end
 					else
 						check
@@ -364,8 +364,8 @@ feature -- New feature description
 						def_func.set_extension (il_ext)
 						def_func.set_type (type)
 						func := def_func
-						if external_body.alias_name /= Void then
-							func.set_external_name (external_body.alias_name.value)
+						if external_body.alias_name_id > 0 then
+							func.set_private_external_name_id (external_body.alias_name_id)
 						end
 					end
 				else

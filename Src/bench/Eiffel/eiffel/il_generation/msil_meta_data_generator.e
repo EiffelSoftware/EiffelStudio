@@ -110,7 +110,7 @@ feature {NONE} -- Feature generation
 								has_alias: il_ext /= Void
 							end
 							il_generator.generate_external_identification (feat.feature_name,
-									ext.alias_name, il_ext.type, feat.feature_id,
+									ext.alias_name_id, il_ext.type, feat.feature_id,
 									  feat.rout_id_set.first, in_current_class, type_id,
 									  il_ext.argument_types, il_ext.return_type)
 							generate_arguments (feat)
@@ -120,18 +120,18 @@ feature {NONE} -- Feature generation
 							if def /= Void then								
 								il_ext ?= def.extension
 								il_generator.generate_external_identification (feat.feature_name,
-										il_ext.alias_name, il_ext.type, feat.feature_id,
-										  feat.rout_id_set.first, in_current_class, type_id,
-										  il_ext.argument_types, il_ext.return_type)
+										il_ext.alias_name_id, il_ext.type, feat.feature_id,
+										feat.rout_id_set.first, in_current_class, type_id,
+										il_ext.argument_types, il_ext.return_type)
 								generate_arguments (feat)
 								generate_return_type (feat)
 							else
 								if attr /= Void then
 									il_ext ?= attr.extension
 									il_generator.generate_external_identification (feat.feature_name,
-											il_ext.alias_name, il_ext.type, feat.feature_id,
-											  feat.rout_id_set.first, in_current_class, type_id,
-											  il_ext.argument_types, il_ext.return_type)
+											il_ext.alias_name_id, il_ext.type, feat.feature_id,
+											feat.rout_id_set.first, in_current_class, type_id,
+											il_ext.argument_types, il_ext.return_type)
 									generate_return_type (feat)
 								else	
 									-- Special case of manually added function in class of basic types.

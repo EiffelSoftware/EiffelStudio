@@ -364,7 +364,7 @@ feature
 				buffer.putstring (";%N");
 				if gen_param.is_bit then
 						-- Initialize array of bits with default values
-					shared_include_queue.put ("%"eif_plug.h%"")
+					shared_include_queue.put (Names_heap.eif_plug_header_name_id)
 					bit_i ?= gen_param
 					buffer.putstring ("%T{%N%T%TEIF_INTEGER i;%N%
 								%%T%Tfor (i = 0; i < arg1; i++) {%N");

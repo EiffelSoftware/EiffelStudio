@@ -48,8 +48,12 @@ feature -- Get the C extension
 			Result.set_type (type)
 			Result.set_base_class (base_class)
 			if sig /= Void then
-				Result.set_argument_types (sig.arguments_array)
-				Result.set_return_type (sig.return_type_string)
+				Result.set_argument_types (sig.arguments_id_array)
+				if (sig.return_type_id = 0) then
+					Result.set_return_type (Names_heap.void_name_id)
+				else
+					Result.set_return_type (sig.return_type_id)
+				end
 			end
 		end
 

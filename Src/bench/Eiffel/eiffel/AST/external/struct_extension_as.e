@@ -35,20 +35,25 @@ feature  -- Initialization
 			a_field_name_not_void: a_field_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_field_name_not_empty: a_field_name.count > 0
+		local
+			id: INTEGER
 		do
+			Names_heap.put (a_name)
+			id := Names_heap.found_item
 			if type /= Void then
 					-- It is a `setter'
 				create argument_types.make (1, 2)
-				argument_types.put (a_name, 1)
-				argument_types.put (type.value, 2)
+				argument_types.put (id, 1)
+				argument_types.put (type.value_id, 2)
 			else
 				create argument_types.make (1, 1)
-				argument_types.put (a_name, 1)
+				argument_types.put (id, 1)
 			end
-			field_name := a_field_name
+			Names_heap.put (a_field_name)
+			field_name_id := Names_heap.found_item
 			header_files := use_list.array_representation
 		ensure
-			field_name_set: field_name = a_field_name
+			field_name_id_set: field_name_id > 0
 			arguments_set: argument_types /= Void
 			good_arguments_count: argument_types.count = 1 or argument_types.count = 2
 			valid_setting_1: return_type = Void implies argument_types.count = 1
@@ -65,7 +70,7 @@ feature -- Properties
 	is_cpp: BOOLEAN
 			-- Is Current struct a C++ one?
 
-	field_name: STRING
+	field_name_id: INTEGER
 			-- Name of struct.
 			--| Can be empty if parsed through the old syntax
 
@@ -76,7 +81,7 @@ feature -- Get the struct extension
 		do
 			create Result.make (is_cpp)
 			init_extension_i (Result)
-			Result.set_field_name (field_name)
+			Result.set_field_name_id (field_name_id)
 		end
 
 feature -- Type check
@@ -90,15 +95,13 @@ feature -- Type check
 			has_error: BOOLEAN
 			arg_type: TYPE_A
 		do
-			if field_name = Void then
-				if ext_as_b.alias_name /= Void then
-					field_name := ext_as_b.alias_name.value
-				end
+			if field_name_id = 0 then
+				field_name_id := ext_as_b.alias_name_id
 			else
 				has_new_syntax := True
 			end
 				
-			if field_name = Void or else field_name.is_empty then
+			if field_name_id = 0 then
 				has_error := True
 				create struct_error
 				struct_error.set_error_message ("The struct field name part should always be present.")
@@ -164,7 +167,7 @@ feature -- Byte code
 			create Result
 			init_byte_node (Result)
 			Result.set_is_cpp_code (is_cpp)
-			Result.set_field_name (field_name)
+			Result.set_field_name_id (field_name_id)
 		end
 
 feature {NONE} -- Implementation
@@ -199,7 +202,8 @@ feature {NONE} -- Implementation
 				else
 					header_files.force (header_files.item (header_files.lower), header_files.upper + 1)
 				end
-				header_files.put (special_file_name, header_files.lower)
+				Names_heap.put (special_file_name)
+				header_files.put (Names_heap.found_item, header_files.lower)
 			end
 		end
 

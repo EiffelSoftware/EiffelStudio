@@ -19,11 +19,11 @@ creation
 
 feature
 
-	old_externals: LINKED_LIST [STRING];
+	old_externals: LINKED_LIST [INTEGER];
 			-- Old externals written in a class
 			-- | Processed by feature `pass2_control' of FEATURE_TABLE
 
-	new_externals: LINKED_LIST [STRING];
+	new_externals: LINKED_LIST [INTEGER];
 			-- New externals written in a class
 			-- | Processed by feature `feature_unit' of INHERIT_TABLE 
 
@@ -43,7 +43,7 @@ feature
 			new_externals := l;
 		end;
 
-	remove_external (s: STRING) is
+	remove_external (s: INTEGER) is
 			-- Add `s' to `old_externals'.
 		do
 			old_externals.start;

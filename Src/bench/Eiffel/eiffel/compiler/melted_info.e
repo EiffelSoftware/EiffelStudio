@@ -111,9 +111,9 @@ feature {NONE} -- Implementation
 			if Result.is_external then
 				external_unit ?= Result
 				check
-					Externals.has (external_unit.external_name)
+					Externals.has (external_unit.external_name_id)
 				end
-				info := Externals.item (external_unit.external_name)
+				info := Externals.item (external_unit.external_name_id)
 				info.set_execution_unit (external_unit)
 			end
 		end

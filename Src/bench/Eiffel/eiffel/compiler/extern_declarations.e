@@ -7,6 +7,11 @@ inherit
 
 	SHARED_WORKBENCH
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -124,15 +129,17 @@ feature -- Settings
 			shared_include_queue_not_empty: not shared_include_queue.is_empty
 		local
 			queue: like shared_include_queue
+			l_names_heap: like Names_heap
 		do
 			queue := shared_include_queue
+			l_names_heap := Names_heap
 			from
 				queue.start
 			until
 				queue.after
 			loop
 				buffer.putstring ("#include ")
-				buffer.putstring (queue.item_for_iteration)
+				buffer.putstring (l_names_heap.item (queue.item_for_iteration))
 				buffer.new_line
 				queue.forth
 			end

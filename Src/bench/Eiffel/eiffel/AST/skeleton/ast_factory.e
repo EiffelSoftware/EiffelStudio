@@ -1034,7 +1034,7 @@ feature -- Access
 		ensure
 			external_as_not_void: Result /= Void
 			language_name_set: Result.language_name = l
-			alias_name_set: Result.alias_name = a
+			alias_name_set: a /= Void implies Result.alias_name_id > 0
 		end
 
 	new_external_lang_as (l: STRING_AS; s: INTEGER): EXTERNAL_LANG_AS is

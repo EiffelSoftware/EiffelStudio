@@ -9,6 +9,11 @@ class
 
 inherit
 	AST_EIFFEL
+	
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 
 feature {EXTERNAL_FACTORY} -- Initialization
 
@@ -18,6 +23,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			id_not_void: id /= Void
 		local
 			l: INTEGER
+			value: STRING
 		do
 			l := id.count
 			if is_struct then
@@ -40,12 +46,15 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			if is_byref then
 				value.append_character (byref_text)
 			end
+
+			Names_heap.put (value)
+			value_id := Names_heap.found_item
 		end
 
 feature -- Access
 
-	value: STRING
-			-- String value of EXTERNAL_TYPE_AS
+	value_id: INTEGER
+			-- String ID in NAMES_HEAP value of EXTERNAL_TYPE_AS
 
 feature {NONE} -- Constants
 

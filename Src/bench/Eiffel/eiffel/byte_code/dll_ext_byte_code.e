@@ -71,7 +71,7 @@ feature {NONE} -- Internal generation
 		do
 			buf := buffer
 
-			shared_include_queue.put (eif_misc_h)
+			shared_include_queue.put (Names_heap.eif_misc_header_name_id)
 
 			buf.putstring ("static char done = 0;")
 			buf.new_line
@@ -127,13 +127,13 @@ feature {NONE} -- Internal generation
 			buf.putchar ('(')
 			if is_win_32 then
 				if has_arg_list then
-					result_type.c_type.generate_function_cast_type (buf, stdcall, argument_types)
+					result_type.c_type.generate_function_cast_type (buf, stdcall, Names_heap.convert_to_string_array (argument_types))
 				else
 					result_type.c_type.generate_function_cast_type (buf, stdcall, <<"void">>)
 				end
 			else
 				if has_arg_list then
-					result_type.c_type.generate_function_cast (buf, argument_types)
+					result_type.c_type.generate_function_cast (buf, Names_heap.convert_to_string_array (argument_types))
 				else
 					result_type.c_type.generate_function_cast (buf, <<"void">>)
 				end

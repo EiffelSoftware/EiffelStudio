@@ -246,7 +246,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	add_header_files (include_list: ARRAY [STRING]) is
+	add_header_files (include_list: ARRAY [INTEGER]) is
 			-- Add `include_list' in header files of the `erout' files.
 		require
 			include_list_not_void: include_list /= Void

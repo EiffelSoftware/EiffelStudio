@@ -364,7 +364,7 @@ feature -- Features info
 			implementation.generate_feature_identification (name, feat_id, routine_ids, in_current_class, written_type_id)
 		end
 
-	generate_external_identification (name, il_name: STRING; ext_kind, feature_id, routine_id: INTEGER; in_current_class: BOOLEAN; written_type_id: INTEGER; signature: ARRAY [STRING]; return_type: STRING) is
+	generate_external_identification (name: STRING; il_name_id: INTEGER; ext_kind, feature_id, routine_id: INTEGER; in_current_class: BOOLEAN; written_type_id: INTEGER; signature: ARRAY [INTEGER]; return_type: INTEGER) is
 			-- Generate feature identification.
 		require
 			feature_description_generation_started: feature_description_generation_started
@@ -375,7 +375,11 @@ feature -- Features info
 			positive_routine_id: routine_id > 0
 			valid_external_type: valid_type (ext_kind)
 		do
-			implementation.generate_external_identification (name, il_name, ext_kind, feature_id, routine_id, in_current_class, written_type_id, signature, return_type)
+			implementation.generate_external_identification (
+					name, Names_heap.item (il_name_id), ext_kind, feature_id, routine_id,
+					in_current_class, written_type_id,
+					Names_heap.convert_to_string_array (signature),
+					Names_heap.item (return_type))
 		end
 
 	generate_deferred_external_identification (name: STRING; feature_id, routine_id, written_type_id: INTEGER) is
@@ -529,7 +533,7 @@ feature -- IL Generation
 		end
 
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
-				parameters_type: ARRAY [STRING]; return_type:STRING;
+				parameters_type: ARRAY [INTEGER]; return_type: INTEGER;
 				is_virtual: BOOLEAN; type_i: TYPE_I; feature_id: INTEGER) is
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
 		require
@@ -546,7 +550,9 @@ feature -- IL Generation
 			return_type_not_void: True
 		do
 			implementation.generate_external_call (base_name, name, ext_kind,
-					parameters_type, return_type, is_virtual, static_id_of (type_i), feature_id)
+					Names_heap.convert_to_string_array (parameters_type),
+					Names_heap.item (return_type), is_virtual,
+					static_id_of (type_i), feature_id)
 		end
 
 feature -- Local variable info generation

@@ -13,18 +13,25 @@ inherit
 
 	EXTERNAL_CONSTANTS
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 feature {AST_FACTORY} -- Initialization
 
-	initialize (l: like language_name; a: like alias_name) is
+	initialize (l: like language_name; a: STRING_AS) is
 			-- Create a new EXTERNAL AST node.
 		require
 			l_not_void: l /= Void
 		do
 			language_name := l
-			alias_name := a
+			if a /= Void then
+				Names_heap.put (a.value)
+				alias_name_id := Names_heap.found_item
+			end
 		ensure
 			language_name_set: language_name = l
-			alias_name_set: alias_name = a
 		end
 
 feature -- Attributes
@@ -33,8 +40,8 @@ feature -- Attributes
 			-- Language name
 			-- might be replaced by external_declaration or external_definition
 
-	alias_name: STRING_AS
-			-- Optional external name
+	alias_name_id: INTEGER
+			-- Alias name ID in NAMES_HEAP.
 
 feature -- Properties
 
@@ -44,8 +51,8 @@ feature -- Properties
 	external_name: STRING is
 			-- Alias name: Void if none
 		do
-			if alias_name /= Void then
-				Result := alias_name.value
+			if alias_name_id > 0 then
+				Result := Names_heap.item (alias_name_id)
 			end
 		end; -- external_name
 
@@ -54,7 +61,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (alias_name, other.alias_name) and then
+			Result := alias_name_id = other.alias_name_id and then
 				equivalent (language_name, other.language_name)
 		end
 
@@ -149,7 +156,7 @@ feature {AST_EIFFEL, FEATURE_I} -- Output
 				ctxt.put_text_item (ti_Alias_keyword)
 				ctxt.indent
 				ctxt.new_line
-				ctxt.format_ast (alias_name)
+				ctxt.put_quoted_string_item (Names_heap.item (alias_name_id))
 				ctxt.new_line
 				ctxt.exdent
 			end

@@ -27,9 +27,9 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			type := a_type
 
 			if a_sig /= Void then
-				argument_types := a_sig.arguments_array
+				argument_types := a_sig.arguments_id_array
 				if a_sig.return_type /= Void then
-					return_type := a_sig.return_type.value
+					return_type := a_sig.return_type.value_id
 				end
 			end
 			if use_list /= Void then
@@ -134,7 +134,7 @@ feature -- Type check
 					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
-				if a_feat.alias_name /= Void then
+				if a_feat.alias_name_id > 0 then
 					!! cpp_error
 					cpp_error.set_error_message ("The alias clause is not allowed")
 					context.init_error (cpp_error)
@@ -157,7 +157,7 @@ feature -- Type check
 					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
-				if a_feat.alias_name /= Void then
+				if a_feat.alias_name_id > 0 then
 					!! cpp_error
 					cpp_error.set_error_message ("The alias clause is not allowed")
 					context.init_error (cpp_error)
@@ -211,7 +211,7 @@ feature -- Type check
 
 				if not error then
 						-- Check for return type
-					if return_type = Void then
+					if return_type = 0 then
 						inspect
 							type
 						when new then
@@ -347,7 +347,8 @@ end
 			else
 				header_files.force (header_files.item (header_files.lower), header_files.upper + 1)
 			end
-			header_files.put (class_header_file, header_files.lower)
+			Names_heap.put (class_header_file)
+			header_files.put (Names_heap.found_item, header_files.lower)		
 		end
 
 	next_white_space (s: STRING; start: INTEGER): INTEGER is

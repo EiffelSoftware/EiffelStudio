@@ -17,11 +17,11 @@ inherit
 
 feature -- Properties
 
-	argument_types: ARRAY [STRING]
+	argument_types: ARRAY [INTEGER]
 
-	header_files: ARRAY [STRING]
+	header_files: ARRAY [INTEGER]
 
-	return_type: STRING
+	return_type: INTEGER
 
 feature -- Setting
 
@@ -54,7 +54,6 @@ feature -- Code generation
 	generate_include_files is
 		local
 			i, nb: INTEGER
-			include_file: STRING
 			queue: like shared_include_queue
 			buf: GENERATION_BUFFER
 		do
@@ -67,8 +66,7 @@ feature -- Code generation
 				until
 					i > nb
 				loop
-					include_file := header_files.item (i)
-					queue.put (include_file)
+					queue.put (header_files @ i)
 					i := i + 1
 				end
 			end
@@ -195,17 +193,19 @@ feature -- Basic routine
 		local
 			i,count: INTEGER;
 			buf: GENERATION_BUFFER
+			l_names_heap: like Names_heap
 		do
 			from
 				i := arguments.lower
 				count := arguments.count
+				l_names_heap := Names_heap
 				buf := buffer
 			until
 				i > count
 			loop
 				if has_arg_list then
 					buf.putchar ('(')
-					buf.putstring (argument_types.item (i))
+					buf.putstring (l_names_heap.item (argument_types.item (i)))
 					buf.putstring (") ")
 				end
 				buf.putstring ("arg")
@@ -230,7 +230,7 @@ feature -- Convenience
 
 	has_return_type: BOOLEAN is
 		do
-			Result := return_type /= Void
+			Result := return_type > 0
 		end
 
 	has_arg_list: BOOLEAN is

@@ -16,7 +16,7 @@ creation
 
 feature -- Access
 
-	include_list: ARRAY [STRING]
+	include_list: ARRAY [INTEGER]
 			-- List of header files used by Current external.
 
 feature -- Setting
@@ -36,7 +36,7 @@ feature -- Generation
 	generate_declaration (buffer: GENERATION_BUFFER) is
 		local
 			i, n: INTEGER
-			include_set: LINKED_SET[STRING]
+			include_set: LINKED_SET [INTEGER]
 		do
 				-- We don't have to generate the declaration
 				-- extern toto(); but we need to include all

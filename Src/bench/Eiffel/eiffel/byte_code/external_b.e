@@ -90,19 +90,14 @@ feature -- Routines for externals
 			written_in := f.written_in
 		end;
 
-	set_external_name (s: STRING) is
-			-- Assign `s' to `external_name'.
+	set_external_name_id (id: INTEGER) is
+			-- Assign `id' to `external_name_id'.
 		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-		local
-			l_names_heap: like Names_heap
+			valid_id: id > 0
 		do
-			l_names_heap := Names_heap
-			l_names_heap.put (s)
-			external_name_id := l_names_heap.found_item
+			external_name_id := id
 		ensure
-			external_name_set: equal (external_name, s)
+			external_name_id_set: external_name_id = id
 		end
 
 	set_encapsulated (b: BOOLEAN) is

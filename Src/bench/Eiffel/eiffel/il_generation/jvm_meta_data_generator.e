@@ -108,7 +108,7 @@ feature {NONE} -- Feature generation
 								has_alias: il_ext /= Void
 							end
 							il_generator.generate_external_identification (feat.feature_name,
-								ext.alias_name, il_ext.type, feat.feature_id,
+								ext.alias_name_id, il_ext.type, feat.feature_id,
 								feat.rout_id_set.first, in_current_class, type_id,
 								il_ext.argument_types, il_ext.return_type)
 						else
@@ -148,7 +148,7 @@ feature {NONE} -- Feature generation
 								has_alias: il_ext /= Void
 							end
 							il_generator.generate_external_identification (feat.feature_name,
-								ext.alias_name, il_ext.type, feat.feature_id,
+								ext.alias_name_id, il_ext.type, feat.feature_id,
 								feat.rout_id_set.first, in_current_class, type_id,
 								il_ext.argument_types, il_ext.return_type)
 						end

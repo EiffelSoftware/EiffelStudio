@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Transformation
 
-	arguments_array: ARRAY [STRING] is
+	arguments_id_array: ARRAY [INTEGER] is
 			-- Array representation of `arguments'
 		local
 			list: like arguments
@@ -44,19 +44,17 @@ feature -- Transformation
 				until
 					list.after
 				loop
-					Result.put (list.item.value, i)
+					Result.put (list.item.value_id, i)
 					i := i + 1
 					list.forth
 				end
 			end
 		end
 
-	return_type_string: STRING is
+	return_type_id: INTEGER is
 		do
 			if return_type /= Void then
-				Result := return_type.value
-			else
-				Result := "void"
+				Result := return_type.value_id
 			end
 		end
 

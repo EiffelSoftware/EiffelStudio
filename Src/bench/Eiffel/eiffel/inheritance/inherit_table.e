@@ -137,7 +137,7 @@ feature
             !!Result.make
         end;
 
-	new_externals: LINKED_LIST [STRING];
+	new_externals: LINKED_LIST [INTEGER];
 			-- New externals introduced into the class
 
 	make (n: INTEGER) is
@@ -900,7 +900,7 @@ end;
 					-- Track new externals introduced in the class
 				external_i ?= Result;
 				if not external_i.encapsulated then
-					new_externals.put_front (external_i.external_name);
+					new_externals.put_front (external_i.external_name_id);
 				end;
 			elseif
 				system.il_generation and then
@@ -909,7 +909,7 @@ end;
 					-- Get external name of a pure Eiffel feature if any.
 				l_ext_name := yacc_feature.external_name
 				if l_ext_name /= Void then
-					Result.set_external_name (l_ext_name)
+					Result.set_private_external_name (l_ext_name)
 				end
 			end
 

@@ -47,7 +47,7 @@ feature -- Type check
 			if context.a_feature.argument_count > 0 and argument_types = Void then
 				error := True
 			end
-			if context.a_feature.is_function = (return_type = Void) then
+			if context.a_feature.is_function = (return_type = 0) then
 				error := True
 			end
 			if error then

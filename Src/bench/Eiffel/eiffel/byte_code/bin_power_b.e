@@ -10,6 +10,14 @@ inherit
 		end
 
 	SHARED_INCLUDE
+		export
+			{NONE} all
+		end
+		
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 
 feature
 
@@ -53,7 +61,7 @@ feature
 			if not done then
 					-- No optimization could have been done, so we generate the
 					-- call to `pow'.
-				shared_include_queue.put (math_header_file)
+				shared_include_queue.put (Names_heap.math_header_name_id)
 				buf.putstring ("(EIF_DOUBLE) pow ((EIF_DOUBLE)");
 				left.print_register;
 				buf.putstring (",(EIF_DOUBLE)");
@@ -61,9 +69,5 @@ feature
 				buf.putchar (')');
 			end
 		end;
-
-feature {NONE} -- Implementation
-
-	math_header_file: STRING is "<math.h>"
 
 end

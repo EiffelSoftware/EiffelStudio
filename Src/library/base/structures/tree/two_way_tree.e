@@ -119,6 +119,16 @@ feature -- Access
 
 	last_child: like parent
 
+feature {RECURSIVE_CURSOR_TREE} -- Element change
+
+	set_child (n: like parent) is
+			-- Set the child of parent to `n'.
+		do
+			child := n
+		ensure then
+			child_set: child = n
+		end;
+
 feature -- Element change
 
 	put_child (n: like parent) is
@@ -206,14 +216,28 @@ feature -- Element change
 			loop
 				first_child := first_child.right_sibling
 			end;
-			if l_child = first_child then
-				first_child := first_child.right_sibling
-			elseif l_child = last_child then
-				last_child := last_child.left_sibling
-			elseif l_child /= void then
-				l_child.right_sibling.bl_put_left (l_child.left_sibling);
+			
+			if l_child /= Void then
+				if l_child = first_child then
+					first_child := first_child.right_sibling
+					child := first_child
+				elseif l_child = last_child then
+					last_child := last_child.left_sibling
+					child := last_child
+				else
+					l_child.right_sibling.bl_put_left (l_child.left_sibling);
+					child := l_child
+				end;
+
+				arity := arity - 1;
+
+				if is_leaf and not child_before then
+					first_child := Void
+					last_child := Void
+					child_after := true
+				end;
+				n.attach_to_parent (Void)
 			end;
-			n.attach_to_parent (Void)
 		end;
 
 feature {LINKED_TREE} -- Implementation

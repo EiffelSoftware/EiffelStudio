@@ -24,9 +24,17 @@ feature {NONE} -- Initialization
 			-- Set `assembly' with `an_assembly'.
 		require
 			non_void_an_assembly: an_assembly /= Void
+		local
+			l_name: STRING
+			l_index: INTEGER
 		do
 			assembly := an_assembly
-			assembly_prefix := config_assembly_prefix (assembly.location)
+			l_name := assembly.location
+			l_index := l_name.last_index_of ('\', l_name.count)
+			if l_index > 0 then
+				l_name.keep_tail (l_name.count - l_index)
+			end
+			assembly_prefix := config_assembly_prefix (l_name)
 		ensure
 			assembly_prefix_set: assembly_prefix /= Void
 			assembly_set: assembly = an_assembly

@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			non_void_name: a_name /= Void
 		do
 			name := a_name
+			create members_cache.make (8)
 		ensure
 			name_set: name = a_name
 		end
@@ -69,12 +70,12 @@ feature -- Access
 	name: STRING
 			-- .NET simple name
 	
-	namespace: STRING
+	namespace: STRING is
 			-- .NET namespace
+		do
+			Result := name.substring (1, name.last_index_of ('.', name.count) - 1)
+		end
 	
-	full_name: STRING
-			-- .NET full name
-
 	eiffel_name: STRING is
 			-- Eiffel name
 		local
@@ -94,8 +95,11 @@ feature -- Access
 					elseif dotnet_type /= Void then
 						-- Not a generated type
 						Result := Metadata_provider.type_eiffel_name (dotnet_type)
+						if Result = Void then
+							Result := Name_formatter.full_formatted_type_name (name)
+						end
 					else
-						Result := Name_formatter.full_formatted_type_name (full_name)
+						Result := Name_formatter.full_formatted_type_name (name)
 					end
 				end
 				internal_eiffel_name := Result
@@ -113,28 +117,33 @@ feature -- Access
 			non_generated_type: not Resolver.is_generated (Current)
 		do
 			if search_for_type then
-				Result := feature {TYPE}.get_type (full_name)
+				Result := feature {TYPE}.get_type (name)
 				if Result = Void then
 					from
 						referenced_assemblies.start
 					until
-						referenced_assemblies.after or internal_type /= Void
+						referenced_assemblies.after or Result /= Void
 					loop
-						Result := referenced_assemblies.item.assembly.get_type (full_name)
+						Result := referenced_assemblies.item.assembly.get_type (name)
 						referenced_assemblies.forth
 					end
 				end
 				if Result = Void then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [full_name])
-				else
-					internal_type := Result
+					if element_type /= Void then
+						-- Special case for arrays of generated types:
+						-- They are external types but cannot be retrieved through `get_type'.
+						Result := feature {TYPE}.get_type ("System.Object[]")
+					else
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [name])
+					end
 				end
+				internal_type := Result
 				search_for_type := False
 			else
 				Result := internal_type
 			end
 		ensure
-			valid_type: Result /= Void implies Result.full_name.equals (full_name.to_cil)
+			valid_type: Result /= Void implies Result.full_name.equals (name.to_cil)
 			search_done: search_for_type = False
 		end
 	
@@ -161,35 +170,6 @@ feature -- Access
 			search_done: search_for_element_type = False
 		end
 
-	member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE is
-			-- Reference to .NET member with .NET name `a_name'.
-		require
-			non_void_name: a_name /= void
-			external_type: not Resolver.is_generated (Current)
-		local
-			l_features: LIST [CODE_MEMBER_REFERENCE]
-		do
-			members_cache.search (a_name)
-			if members_cache.found then
-				if members_cache.found_item.count > 1 then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Ambiguous_match, [a_name, Current.eiffel_name + " (" + Current.full_name + ")"])
-				end
-				Result := members_cache.found_item.first
-			else
-				l_features := Metadata_provider.features (a_name, dotnet_type)
-				if l_features /= Void then
-					if l_features.count > 1 then
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Ambiguous_match, [a_name, Current.eiffel_name + " (" + Current.full_name + ")"])
-					end
-					Result := l_features.first
-					members_cache.put (l_features, a_name)
-				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [a_name, Current.eiffel_name + " (" + Current.full_name + ")"])
-					Result := Empty_member_reference
-				end
-			end
-		end
-
 	member_from_code (a_feature: CODE_FEATURE): CODE_MEMBER_REFERENCE is
 			-- Reference to generated member `a_feature'.
 		local
@@ -200,62 +180,129 @@ feature -- Access
 			if l_routine /= Void then
 				l_code_arguments := l_routine.arguments
 			end
-			Result := member (a_feature.name, l_code_arguments, a_feature.is_redefined)
+			Result := member (a_feature.name, l_code_arguments)
 		end
 		
-	member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]; a_is_redefined: BOOLEAN): CODE_MEMBER_REFERENCE is
+	member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): CODE_MEMBER_REFERENCE is
 			-- Reference to member with .NET name `a_name', arguments `a_arguments' and `is_redefined' with `a_is_redefined'.
 		require
 			non_void_name: a_name /= void
 		local
-			l_members, l_list: LIST [CODE_MEMBER_REFERENCE]
-			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
-			l_no_match: BOOLEAN
+			l_members: LIST [CODE_MEMBER_REFERENCE]
+			l_member, l_uninitialized_member: CODE_MEMBER_REFERENCE
+			l_parents: HASH_TABLE [CODE_PARENT, STRING]
 		do
-			members_cache.search (a_name)
-			if members_cache.found then
-				l_members := members_cache.found_item
-				if l_members.count = 1 then
-					Result := l_members.item
-				else
+			Resolver.search (Current)
+			if Resolver.found then
+				members_cache.search (a_name)
+				if members_cache.found then
+					l_members := members_cache.found_item
 					from
 						l_members.start
 					until
 						l_members.after or Result /= Void
 					loop
-						l_arguments := l_members.item.arguments
-						if l_arguments = Void and a_arguments = Void then
-							Result := l_members.item
-						else
-							if l_arguments /= Void and a_arguments /= Void and then l_arguments.count = a_arguments.count then
-								from
-									l_arguments.start
-									a_arguments.start
-								until
-									l_arguments.after or l_no_match
-								loop
-									l_no_match := not a_arguments.item.variable.type.is_equal (l_arguments.item.type)
-									a_arguments.forth
-									l_arguments.forth
-								end
-								if not l_no_match then
-									Result := l_members.item
-								end
+						l_member := l_members.item
+						if l_member.is_initialized then
+							if l_member.has_arguments (a_arguments) then
+								Result := l_member
 							end
+						else
+							l_uninitialized_member := l_member
 						end
 						l_members.forth
 					end
-					if Result = Void then
-	 					create Result.make (a_name, a_arguments, Current, a_is_redefined)
-	 					l_members.extend (Result)
+					-- We did not find an initialized member with the corresponding arguments so
+					-- if there is an uninitialized member then we initialize it with the arguments.
+					if Result = Void and l_uninitialized_member /= Void then
+						l_uninitialized_member.set_arguments (a_arguments)
+						l_uninitialized_member.set_initialized
+						Result := l_uninitialized_member
+					end
+				else
+					-- Look in parents
+					l_parents := Resolver.found_type.parents
+					from
+						l_parents.start
+					until
+						l_parents.after or Result /= Void
+					loop
+						Result := l_parents.item_for_iteration.type.member (a_name, a_arguments)
+						l_parents.forth
 					end
 				end
 			else
-				create Result.make (a_name, a_arguments, Current, a_is_redefined)
-				create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} l_list.make (1)
-				l_list.extend (Result)
-				members_cache.put (l_list, a_name)
+				Result := dotnet_member (a_name, a_arguments)
 			end
+		end
+
+	member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE is
+			-- Member with name `a_name'
+			-- Log warning if multiple matches found.
+		require
+			non_void_name: a_name /= Void
+		local
+			l_features: HASH_TABLE [LIST [CODE_FEATURE], STRING]
+			l_parents: HASH_TABLE [CODE_PARENT, STRING]
+		do
+			Resolver.search (Current)
+			if Resolver.found then
+				l_features := Resolver.found_type.dotnet_features
+				l_features.search (a_name)
+				if l_features.found then
+					if l_features.found_item.count > 1 then
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
+					end
+					Result := member_from_code (l_features.found_item.first)
+				else
+					l_parents := Resolver.found_type.parents
+					from
+						l_parents.start
+					until
+						l_parents.after or Result /= Void
+					loop
+						Result := l_parents.item_for_iteration.type.member_from_name (a_name)
+						l_parents.forth
+					end
+				end
+			else
+				Result := dotnet_member_from_name (a_name)
+			end
+		end
+		
+feature -- Status Report
+
+	initialized: BOOLEAN
+			-- Is instance initialized?
+			--| Useful for invariant coding
+
+	has_member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): BOOLEAN is
+			-- Does `members_cache' contain member with name `a_name' and arguments `a_arguments'?
+		local
+			l_features: LIST [CODE_MEMBER_REFERENCE]
+		do
+			members_cache.search (a_name)
+			if members_cache.found then
+				l_features := members_cache.found_item
+				from
+					l_features.start
+				until
+					l_features.after or Result
+				loop
+					Result := l_features.item.has_arguments (a_arguments)
+					l_features.forth
+				end
+			end
+		end
+
+feature -- Element Settings 
+
+	set_initialized (a_value: like initialized) is
+			-- Set `initialized' to `a_value'.
+		do
+			initialized := a_value
+		ensure
+			initialized_set: initialized = a_value
 		end
 
 feature -- Comparison
@@ -264,9 +311,9 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := full_name.is_equal (a_other.full_name)
+			Result := name.is_equal (a_other.name)
 		ensure then
-			definition: Result implies full_name.is_equal (a_other.full_name)
+			definition: Result implies name.is_equal (a_other.name)
 		end
 
 feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
@@ -317,6 +364,126 @@ feature {CODE_TYPE_REFERENCE_FACTORY} -- Elements Settings
 			search_for_element_type_set: search_for_element_type = a_search_for_element_type
 		end
 
+feature {CODE_TYPE_REFERENCE_FACTORY, CODE_STOCK_TYPE_REFERENCES} -- Elements Settings
+
+	add_member (a_member: CODE_MEMBER_REFERENCE) is
+			-- Add `a_member' to members cache.
+		require
+			non_void_member: a_member /= Void
+		local
+			l_list: ARRAYED_LIST [CODE_MEMBER_REFERENCE]
+		do
+			members_cache.search (a_member.name)
+			if members_cache.found then
+				members_cache.found_item.extend (a_member)
+			else
+				create l_list.make (1)
+				l_list.extend (a_member)
+				members_cache.put (l_list, a_member.name)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	dotnet_member (a_name: STRING; a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): CODE_MEMBER_REFERENCE is
+			-- Member with name `a_name' and arguments `a_arguments'
+		require
+			is_external: not Resolver.is_generated (Current)
+			non_void_name: a_name /= Void
+		local
+			l_native_arguments: NATIVE_ARRAY [TYPE]
+			l_list: LIST [CODE_MEMBER_REFERENCE]
+		do
+			members_cache.search (a_name)
+			if members_cache.found then
+				l_list := members_cache.found_item
+				from
+					l_list.start
+				until
+					l_list.after or Result /= Void
+				loop
+					if l_list.item.has_arguments (a_arguments) then
+						Result := l_list.item
+					end
+					l_list.forth
+				end
+			end
+			if Result = Void and dotnet_type /= Void then
+				if a_arguments /= Void then
+					from
+						create l_native_arguments.make (a_arguments.count)
+						a_arguments.start
+					until
+						a_arguments.after
+					loop
+						l_native_arguments.put (a_arguments.index - 1, a_arguments.item.variable.type.dotnet_type)
+						a_arguments.forth
+					end
+				end
+				Result := Metadata_provider.member (dotnet_type, a_name, l_native_arguments)
+				if members_cache.found then
+					l_list.extend (Result)
+				else
+					create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} l_list.make (1)
+					l_list.extend (Result)
+					members_cache.put (l_list, a_name)
+				end
+			end
+		end
+
+	dotnet_member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE is
+			-- Reference to .NET member with .NET name `a_name'
+		require
+			non_void_name: a_name /= void
+			external_type: not Resolver.is_generated (Current)
+		local
+			l_features: LIST [CODE_MEMBER_REFERENCE]
+		do
+			members_cache.search (a_name)
+			if members_cache.found then
+				if members_cache.found_item.count > 1 then
+					event_manager.raise_event (feature {CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
+				end
+				Result := members_cache.found_item.first
+			elseif dotnet_type /= Void then
+				l_features := Metadata_provider.features (a_name, dotnet_type)
+				if l_features /= Void and then l_features.count > 0 then
+					if l_features.count > 1 then
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Ambiguous_match, [a_name, name])
+					end
+					Result := l_features.first
+					members_cache.put (l_features, a_name)
+				end
+			end
+		end
+
+	overloaded_member_from_name (a_name: STRING): CODE_MEMBER_REFERENCE is
+			-- Reference to .NET member with .NET name `a_name'
+			-- Overloaded name if member is overloaded
+		require
+			non_void_name: a_name /= void
+			external_type: not Resolver.is_generated (Current)
+		local
+			l_features: LIST [CODE_MEMBER_REFERENCE]
+		do
+			members_cache.search (a_name)
+			if members_cache.found then
+				if members_cache.found_item.count > 1 then
+					event_manager.raise_event (feature {CODE_EVENTS_IDS}.ambiguous_match, [a_name, name])
+				end
+				Result := members_cache.found_item.first
+			elseif dotnet_type /= Void then
+				l_features := Metadata_provider.features (a_name, dotnet_type)
+				if l_features /= Void and then l_features.count > 0 then
+					if l_features.count > 1 then
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Ambiguous_match, [a_name, name])
+					end
+					Result := l_features.first
+					members_cache.put (l_features, a_name)
+				end
+			end
+		end
+
 feature {NONE} -- Private Access
 
 	search_for_type: BOOLEAN
@@ -334,24 +501,21 @@ feature {NONE} -- Private Access
 	internal_element_type: CODE_TYPE_REFERENCE
 			-- Cached element type
 
-	members_cache: HASH_TABLE [LIST [CODE_MEMBER_REFERENCE], STRING] is
+	members_cache: HASH_TABLE [LIST [CODE_MEMBER_REFERENCE], STRING]
 			-- Members cache
 			-- Key is member .NET name
 			-- Value is list of corresponding members
-		once
-			create Result.make (8)
-		end
-		
+	
 invariant
 	non_void_name: name /= Void
-	non_void_namespace: namespace /= Void
-	non_void_full_name: full_name /= Void
-	non_void_eiffel_name: eiffel_name /= Void
-	generated_if_not_external: dotnet_type = Void implies Resolver.is_generated (Current)
-	no_type_search_if_found: dotnet_type /= Void implies search_for_type = False
-	void_type_if_search_type: search_for_type implies dotnet_type = Void
-	no_element_type_search_if_found: element_type /= Void implies search_for_element_type = False
-	void_element_type_if_search_type: search_for_element_type implies element_type = Void	
+	non_void_namespace: initialized implies namespace /= Void
+	non_void_eiffel_name: initialized implies eiffel_name /= Void
+	non_void_members_cache: members_cache /= Void
+	generated_if_not_external: initialized implies (dotnet_type = Void implies Resolver.is_generated (Current))
+	no_type_search_if_found: initialized implies (dotnet_type /= Void implies search_for_type = False)
+	void_type_if_search_type: initialized implies (search_for_type implies dotnet_type = Void)
+	no_element_type_search_if_found: initialized implies (element_type /= Void implies search_for_element_type = False)
+	void_element_type_if_search_type: initialized implies (search_for_element_type implies element_type = Void)
 
 end -- class CODE_TYPE_REFERENCE
 

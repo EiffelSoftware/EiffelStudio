@@ -25,6 +25,7 @@ indexing
 						<compiler>
 							<default_root_class>ANY</default_root_class>
 							<precompile></precompile>
+							<metadata_cache></metadata_cache>
 						</compiler>
 					</configuration>
 					]"
@@ -49,6 +50,11 @@ inherit
 		end
 
 	CODE_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
+	CODE_DOM_PATH
 		export
 			{NONE} all
 		end
@@ -118,6 +124,12 @@ feature -- Access
 			Result := config_values.item ("precompile")
 		end
 
+	metadata_cache: STRING is
+			-- Path to EAC if any
+		do
+			Result := config_values.item ("metadata_cache")
+		end
+
 	default_root_class: STRING is
 			-- Default root class name
 		do
@@ -147,14 +159,14 @@ feature -- Access
 			-- Default prefixes that should not be modified
 		once
 			create Result.make (4)
-			Result.extend ("SYSTEM_DLL_", "System.dll")
-			Result.extend ("XML_", "System.Xml.dll")
-			Result.extend ("DRAWING_", "System.Drawing.dll")
-			Result.extend ("WINFORMS_", "System.Windows.Forms.dll")
-			Result.extend ("DATA_", "System.Data.dll")
-			Result.extend ("WEB_", "System.Web.dll")
-			Result.extend ("WEB_", "System.Web.RegularExpressions.dll")
-			Result.extend ("WEB_", "System.Web.Services.dll")
+			Result.extend ("SYSTEM_DLL_", "system.dll")
+			Result.extend ("XML_", "system.xml.dll")
+			Result.extend ("DRAWING_", "system.drawing.dll")
+			Result.extend ("WINFORMS_", "system.windows.forms.dll")
+			Result.extend ("DATA_", "system.data.dll")
+			Result.extend ("WEB_", "system.web.dll")
+			Result.extend ("WEB_", "system.web.regularexpressions.dll")
+			Result.extend ("WEB_", "system.web.services.dll")
 		end
 		
 feature -- Basic Operations
@@ -233,6 +245,9 @@ feature {NONE} -- Implementation
 			internal_config_values.extend ("System", "log_name")
 			internal_config_values.extend ("generated", "default_system_name")
 			internal_config_values.extend ("NONE", "default_root_class")
+			if Default_metadata_cache_path /= Void then
+				internal_config_values.extend (Default_metadata_cache_path, "metadata_cache")
+			end
 		end
 		
 	initialize_prefixes is
@@ -248,7 +263,10 @@ feature {NONE} -- Implementation
 				Default_prefixes.forth
 			end
 		end
-		
+	
+	Cache_folder_name: STRING is "assemblies"
+			-- Metadata Cache Folder name 
+
 	internal_config_values: HASH_TABLE [STRING, STRING]
 			-- Internal object for once per object implementation
 

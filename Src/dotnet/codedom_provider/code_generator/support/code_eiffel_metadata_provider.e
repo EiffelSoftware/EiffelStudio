@@ -7,6 +7,8 @@ class
 	CODE_EIFFEL_METADATA_PROVIDER
 
 inherit
+	CODE_SHARED_METADATA_ACCESS
+
 	CODE_SHARED_NAME_FORMATTER
 		export
 			{NONE} all
@@ -39,8 +41,13 @@ feature -- Access
 		require
 			non_void_type: a_type /= Void
 		do
+			check_eac_for_type (a_type)
 			Result := cache_reflection.type_name (a_type)
-			Result.prepend ((create {CODE_REFERENCED_ASSEMBLY}.make (a_type.assembly)).assembly_prefix)
+			if Result /= Void then
+				Result.prepend ((create {CODE_REFERENCED_ASSEMBLY}.make (a_type.assembly)).assembly_prefix)
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [a_type.name])
+			end
 		end
 
 	feature_eiffel_name (a_name: STRING; a_arguments: NATIVE_ARRAY [TYPE]; a_type: TYPE): STRING is
@@ -49,6 +56,7 @@ feature -- Access
 			non_void_name: a_name /= Void
 			non_void_type: a_type /= Void
 		do
+			check_eac_for_type (a_type)
 			Result := cache_reflection.feature_name (a_type, a_name, a_arguments)
 			if Result = Void and a_arguments /= Void then
 				Result := cache_reflection.feature_name (a_type, a_name, static_arguments_types (a_type, a_name, a_arguments))
@@ -56,6 +64,23 @@ feature -- Access
 			if Result = Void then
 				Result := Name_formatter.formatted_feature_name (a_name)
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
+			end
+		ensure
+			non_void_eiffel_name: Result /= Void
+		end
+
+	feature_overloaded_eiffel_name (a_name: STRING; a_type: TYPE): STRING is
+			-- Eiffel overloaded name of .NET routine `a_name' from `a_type'
+		require
+			non_void_name: a_name /= Void
+			non_void_type: a_type /= Void
+		local
+			l_entities: LIST [CONSUMED_ENTITY]
+		do
+			check_eac_for_type (a_type)
+			l_entities := cache_reflection.entities (a_type, a_name)
+			if l_entities /= Void then
+				Result := l_entities.first.dotnet_eiffel_name
 			end
 		ensure
 			non_void_eiffel_name: Result /= Void
@@ -71,6 +96,7 @@ feature -- Access
 			l_entity: CONSUMED_ENTITY
 			l_type: CONSUMED_REFERENCED_TYPE
 		do
+			check_eac_for_type (a_type)
 			l_entities := cache_reflection.entities (a_type, a_name)
 			if l_entities /= Void then
 				if l_entities.count > 1 then
@@ -86,7 +112,7 @@ feature -- Access
 						l_type := l_entities.first.return_type
 					end
 				elseif l_entities.count = 1 then
-					l_type := l_entity.return_type
+					l_type := l_entities.first.return_type
 				else
 					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [a_name, a_type.full_name])
 				end
@@ -107,49 +133,42 @@ feature -- Access
 			non_void_type: a_type /= Void
 		local
 			l_entities: LIST [CONSUMED_ENTITY]
-			l_type: CODE_TYPE_REFERENCE
-			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
-			l_entity: CONSUMED_ENTITY
-			l_entity_arguments: ARRAY [CONSUMED_ARGUMENT]
-			i, l_count: INTEGER
 		do
+			check_eac_for_type (a_type)
 			l_entities := cache_reflection.entities (a_type, a_name)
 			if l_entities /= Void then
-				l_type := Type_reference_factory.type_reference_from_type (a_type)
 				create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} Result.make (l_entities.count)
 				from
 					l_entities.start
 				until
 					l_entities.after
 				loop
-					l_entity := l_entities.item
-					l_entity_arguments := l_entity.arguments
-					from
-						l_count := l_entity_arguments.count
-						create {ARRAYED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]} l_arguments.make (l_count)
-						i := 1
-					until
-						i > l_count
-					loop
-						l_arguments.extend (create {CODE_PARAMETER_DECLARATION_EXPRESSION}.make (
-								create {CODE_VARIABLE_REFERENCE}.make (l_entity_arguments.item (i).dotnet_name,
-									Type_reference_factory.type_reference_from_name (l_entity_arguments.item (i).type.name),
-									Type_reference_factory.type_reference_from_type (a_type)), in_argument))
-						i := i + 1
-					end
-					Result.extend (l_type.member (l_entity.dotnet_name, l_arguments, l_entity.is_method and l_entity.is_virtual and not l_entity.is_new_slot))
+					Result.extend (member_from_entity (l_entities.item, a_type))
 					l_entities.forth
+				end
+			end
+		end
+
+	member (a_type: TYPE; a_name: STRING; a_arguments: NATIVE_ARRAY [TYPE]): CODE_MEMBER_REFERENCE is
+			-- Member with name `a_name' and arguments `a_arguments' from type `a_type'
+		require
+			non_void_type: a_type /= Void
+			non_void_name: a_name /= Void
+		local
+			l_entities: LIST [CONSUMED_ENTITY]
+			l_entity: CONSUMED_ENTITY
+		do
+			check_eac_for_type (a_type)
+			l_entities := cache_reflection.entities (a_type, a_name)
+			if l_entities /= Void then
+				l_entity := Cache_reflection.entity (l_entities, a_arguments)
+				if l_entity /= Void then
+					Result := member_from_entity (l_entity, a_type)
 				end
 			end
 		end
 		
 feature {NONE} -- Implementation
-
-	cache_reflection: CACHE_REFLECTION is
-			-- EAC access
-		once
-			create Result.make ((create {CODE_EXECUTION_ENVIRONMENT}).Clr_version)
-		end
 
 	static_arguments_types (a_caller_type: TYPE; a_dotnet_feature_name: STRING; a_arguments_types: NATIVE_ARRAY [TYPE]): NATIVE_ARRAY [TYPE] is
 			-- Static signature of `a_dotnet_feature_name' from `a_caller_type' with dynamic arguments `arguments_types'
@@ -239,27 +258,73 @@ feature {NONE} -- Implementation
 			valid_static_arguments_types: Result.length = a_arguments_types.count
 		end
 
-		are_conform (a_static_type, a_dynamic_type: TYPE): BOOLEAN is
-				-- Does `a_dynamic_type' conform to `a_static_type'?
-			local
-				l_static_name, l_dynamic_name: STRING
-			do
-				Result := a_static_type.is_assignable_from (a_dynamic_type)
-				if not Result then
-					create l_static_name.make_from_cil (a_static_type.full_name)
-					create l_dynamic_name.make_from_cil (a_dynamic_type.full_name)
-					Result := 
-								(l_dynamic_name.is_equal ("System.Byte") and then (l_static_name.is_equal ("System.Int16") or
-																				l_static_name.is_equal ("System.Int32") or
-																				l_static_name.is_equal ("System.Int64") or
-																				l_static_name.is_equal ("System.Real") or
-																				l_static_name.is_equal ("System.Double")))
-								or										
-								(l_dynamic_name.is_equal ("System.Real") and then l_static_name.is_equal ("System.Double"))
+	are_conform (a_static_type, a_dynamic_type: TYPE): BOOLEAN is
+			-- Does `a_dynamic_type' conform to `a_static_type'?
+		local
+			l_static_name, l_dynamic_name: STRING
+		do
+			Result := a_static_type.is_assignable_from (a_dynamic_type)
+			if not Result then
+				create l_static_name.make_from_cil (a_static_type.full_name)
+				create l_dynamic_name.make_from_cil (a_dynamic_type.full_name)
+				Result := 
+							(l_dynamic_name.is_equal ("System.Byte") and then (l_static_name.is_equal ("System.Int16") or
+																			l_static_name.is_equal ("System.Int32") or
+																			l_static_name.is_equal ("System.Int64") or
+																			l_static_name.is_equal ("System.Real") or
+																			l_static_name.is_equal ("System.Double")))
+							or										
+							(l_dynamic_name.is_equal ("System.Real") and then l_static_name.is_equal ("System.Double"))
 
-				end
 			end
-		
+		end
+	
+	check_eac_for_type (a_type: TYPE) is
+			-- Check that assembly containing `a_type' is in EAC.
+			-- Consume it if it's not.
+		require
+			non_void_type: a_type /= Void
+		local
+			l_path: STRING
+		do
+			l_path := a_type.assembly.location
+			if not cache_reflection.is_assembly_in_cache (l_path, True) then
+				cache_writer.add_assembly (l_path)
+			end
+		ensure
+			is_in_eac: cache_reflection.is_type_in_cache (a_type)
+		end
+
+	member_from_entity (a_entity: CONSUMED_ENTITY; a_type: TYPE): CODE_MEMBER_REFERENCE is
+			-- Map consumed entity `a_entity' into member reference from type `a_type'
+			-- Use overloaded Eiffel name if `a_overloaded'.
+		require
+			non_void_entity: a_entity /= Void
+			non_void_type: a_type /= Void
+		local
+			l_type: CODE_TYPE_REFERENCE
+			l_entity_arguments: ARRAY [CONSUMED_ARGUMENT]
+			i, l_count: INTEGER
+			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
+		do
+			l_entity_arguments := a_entity.arguments
+			l_type := Type_reference_factory.type_reference_from_type (a_type)
+			from
+				l_count := l_entity_arguments.count
+				create {ARRAYED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]} l_arguments.make (l_count)
+				i := 1
+			until
+				i > l_count
+			loop
+				l_arguments.extend (create {CODE_PARAMETER_DECLARATION_EXPRESSION}.make (
+						create {CODE_VARIABLE_REFERENCE}.make (l_entity_arguments.item (i).dotnet_name,
+							Type_reference_factory.type_reference_from_name (l_entity_arguments.item (i).type.name),
+							Type_reference_factory.type_reference_from_type (a_type)), in_argument))
+				i := i + 1
+			end
+			create Result.make_external (a_entity.dotnet_name, a_entity.eiffel_name, l_arguments, l_type)
+		end
+
 end -- class CODE_EIFFEL_METADATA_PROVIDER
 
 --+--------------------------------------------------------------------

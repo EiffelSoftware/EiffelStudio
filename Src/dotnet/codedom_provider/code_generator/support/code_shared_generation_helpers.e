@@ -17,14 +17,6 @@ feature -- Access
 		ensure
 			exists: Result /= Void
 		end
-
-	Feature_finder: CODE_FEATURE_FINDER is
-			-- Resolve .NET features from name, arguments and target type
-		once
-			create Result
-		ensure
-			exists: Result /= Void
-		end
 		
 end -- class CODE_SHARED_GENERATION_HELPERS
 

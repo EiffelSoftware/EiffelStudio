@@ -63,13 +63,6 @@ feature -- Basic Operations
 			"GenerateFeatureAssertions"
 		end
 
-	generate_inheritance_clauses (clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.EiffelCodeGenerator"
-		alias
-			"GenerateInheritanceClauses"
-		end
-
 	generate_eiffel_feature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 		external
 			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.EiffelCodeGenerator"
@@ -77,11 +70,11 @@ feature -- Basic Operations
 			"GenerateEiffelFeature"
 		end
 
-	feature_signature (a_feature: ISE_REFLECTION_EIFFELFEATURE): STRING is
+	make_eiffel_code_generator is
 		external
-			"IL signature (ISE.Reflection.EiffelFeature): System.String use ISE.Reflection.EiffelCodeGenerator"
+			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGenerator"
 		alias
-			"FeatureSignature"
+			"MakeEiffelCodeGenerator"
 		end
 
 	intern_generate_class_features (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
@@ -91,11 +84,11 @@ feature -- Basic Operations
 			"InternGenerateClassFeatures"
 		end
 
-	make_from_info (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
+	generate_inheritance_clauses (clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
-			"IL signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.EiffelCodeGenerator"
+			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.EiffelCodeGenerator"
 		alias
-			"MakeFromInfo"
+			"GenerateInheritanceClauses"
 		end
 
 	generate_inherit_clause is
@@ -112,11 +105,11 @@ feature -- Basic Operations
 			"InternGenerateEiffelClass"
 		end
 
-	make_eiffel_code_generator is
+	has_any_rename: BOOLEAN is
 		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGenerator"
+			"IL signature (): System.Boolean use ISE.Reflection.EiffelCodeGenerator"
 		alias
-			"MakeEiffelCodeGenerator"
+			"HasAnyRename"
 		end
 
 	has_any_undefine: BOOLEAN is
@@ -126,11 +119,11 @@ feature -- Basic Operations
 			"HasAnyUndefine"
 		end
 
-	has_any_rename: BOOLEAN is
+	make_from_info (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
 		external
-			"IL signature (): System.Boolean use ISE.Reflection.EiffelCodeGenerator"
+			"IL signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.EiffelCodeGenerator"
 		alias
-			"HasAnyRename"
+			"MakeFromInfo"
 		end
 
 	generate_eiffel_class_from_path (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS; a_path: STRING) is
@@ -138,6 +131,13 @@ feature -- Basic Operations
 			"IL signature (ISE.Reflection.EiffelClass, System.String): System.Void use ISE.Reflection.EiffelCodeGenerator"
 		alias
 			"GenerateEiffelClassFromPath"
+		end
+
+	feature_signature (a_feature: ISE_REFLECTION_EIFFELFEATURE): STRING is
+		external
+			"IL signature (ISE.Reflection.EiffelFeature): System.String use ISE.Reflection.EiffelCodeGenerator"
+		alias
+			"FeatureSignature"
 		end
 
 	is_special_class: BOOLEAN is

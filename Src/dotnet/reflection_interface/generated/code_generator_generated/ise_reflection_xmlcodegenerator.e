@@ -35,11 +35,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	end_assembly_generation is
+	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.XmlCodeGenerator"
+			"IL signature (ISE.Reflection.EiffelAssemblyFactory): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
-			"EndAssemblyGeneration"
+			"StartAssemblyGeneration"
 		end
 
 	make_xml_code_generator is
@@ -49,11 +49,11 @@ feature -- Basic Operations
 			"MakeXmlCodeGenerator"
 		end
 
-	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY) is
+	end_assembly_generation is
 		external
-			"IL signature (ISE.Reflection.EiffelAssemblyFactory): System.Void use ISE.Reflection.XmlCodeGenerator"
+			"IL signature (): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
-			"StartAssemblyGeneration"
+			"EndAssemblyGeneration"
 		end
 
 	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is

@@ -1,10 +1,8 @@
 class
 	OBJECT
 inherit 
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
+
 create
 	make
 feature	-- Initialization
@@ -32,20 +30,12 @@ feature	 -- Access
 	string: STRING
 			-- String identifier
 	
-feature	-- Dispose
-
-	dispose is
-		do 
-			notice_dispose
-		end
-
 feature	-- Externals
 
-	notice_dispose is
+	dispose is
 		external
 			"C | %"fext.h%""
 		end
-
 	
 end	
 

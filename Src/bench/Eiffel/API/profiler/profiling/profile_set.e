@@ -120,6 +120,10 @@ feature {PROFILE_FILTER} -- Adding
 			cyd: CYCLE_PROFILE_DATA;
 			cd: C_PROFILE_DATA;
 		do
+debug("PROFILE_CONVERT")
+	io.error.putstring ("`insert_unknown_profile_data' has been called.");
+	io.error.new_line
+end;
 			ed ?= data;
 			if ed /= Void then
 				insert_eiffel_profiling_data (ed);
@@ -140,18 +144,30 @@ feature {PROFILE_INFORMATION, PROFILE_FILTER} -- Adding
 
 	insert_eiffel_profiling_data (data: EIFFEL_PROFILE_DATA) is
 		do
+debug("PROFILE_CONVERT")
+	io.error.putstring ("`insert_eiffel_profile_data' has been called.");
+	io.error.new_line
+end;
 			eiffel_profiling_list.extend (data);
 			update_eiffel (data);
 		end;
 
 	insert_c_profiling_data (data: C_PROFILE_DATA) is
 		do
+debug("PROFILE_CONVERT")
+	io.error.putstring ("`insert_c_profile_data' has been called.");
+	io.error.new_line
+end;
 			c_profiling_list.extend (data);
 			update_c (data);
 		end;
 
 	insert_cycle_profiling_data (data: CYCLE_PROFILE_DATA) is
 		do
+debug("PROFILE_CONVERT")
+	io.error.putstring ("`insert_cycle_profile_data' has been called.");
+	io.error.new_line
+end;
 			cycle_profiling_list.extend (data);
 			update_cycle (data);
 		end;
@@ -547,5 +563,41 @@ feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
 	total_min_cycle,
 	total_max_cycle,
 	total_avg_cycle: REAL
+
+feature {PROFILE_INFORMATION} -- Spit Information (for debugging)
+
+	spit_info is
+			-- Spits all kinds of information.
+			--| For dbugging purposes only.
+			--| See also `spit_info' in `PROFILE_INFORMATION'.
+		do
+			from
+				io.error.putstring ("Contents of `eiffel_profiling_list':%N");
+				eiffel_profiling_list.start
+			until
+				eiffel_profiling_list.after
+			loop
+				eiffel_profiling_list.item.spit_info;
+				eiffel_profiling_list.forth
+			end;
+			from
+				io.error.putstring ("Contents of `c_profiling_list':%N");
+				c_profiling_list.start
+			until
+				c_profiling_list.after
+			loop
+				c_profiling_list.item.spit_info;
+				c_profiling_list.forth
+			end;
+			from
+				io.error.putstring ("Contents of `cycle_profiling_list':%N");
+				cycle_profiling_list.start
+			until
+				cycle_profiling_list.after
+			loop
+				cycle_profiling_list.item.spit_info;
+				cycle_profiling_list.forth
+			end
+		end;
 
 end -- class PROFILE_SET

@@ -125,4 +125,13 @@ feature {PROFILE_DATA} -- attributes
 	int_function: FUNCTION
 		-- The function where all is about.
 
+feature {PROFILE_SET} -- Spit Information (for debugging)
+
+    spit_info is
+            -- Spits all kinds of information about Current.
+        do
+			io.error.putstring (out);
+			io.error.new_line
+        end
+
 end -- class PROFILE_DATA

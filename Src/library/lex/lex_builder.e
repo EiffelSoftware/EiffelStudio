@@ -773,7 +773,7 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new_tool);
-			tool_name := clone (word);
+			tool_name := word.twin
 			tool_name.precede ('"');
 			tool_name.extend ('"');
 			tool_names.finish;
@@ -862,11 +862,9 @@ feature -- Element change
 			tool_list.item.add_keyword (s);
 			last_declared_keyword := last_declared_keyword + 1;
 			if not keywords_case_sensitive then
-				l := clone (s);
-				l.to_lower;
+				l := s.as_lower
 				tool_list.item.add_keyword (l);
-				u := clone (s);
-				u.to_upper;
+				u := s.as_upper
 				tool_list.item.add_keyword (u);
 				last_declared_keyword := last_declared_keyword + 2
 			end

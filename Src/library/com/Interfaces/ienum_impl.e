@@ -84,7 +84,7 @@ feature -- Basic Operations
 			implementation_copy: like implementation
 			cloned: like Current
 		do
-			implementation_copy := clone (implementation)
+			implementation_copy := implementation.twin
 			create cloned.make (implementation_copy)
 			ppenum.put (cloned)
 		end

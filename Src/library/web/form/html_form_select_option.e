@@ -24,7 +24,7 @@ feature -- Routines out
 
 	out: STRING is
 		do
-			Result := clone (Option_start)
+			Result := Option_start.twin
 			Result.append (attributes_out)
 			Result.append (Tag_end)
 			Result.append (NewLine)
@@ -52,7 +52,7 @@ feature -- Routines out
     attribute_out (an_attribute, its_value: STRING): STRING is
             -- String representation for the pair 'an_attribute' and 'its_value'
         do
-            Result := clone (an_attribute)
+            Result := an_attribute.twin
             Result.append ("%"")
             Result.append (its_value)
             Result.append ("%"")
@@ -77,7 +77,7 @@ feature -- Set attributes
 		require
 			s /= Void
 		do
-			value_value := clone(s)
+			value_value := s.twin
 		end
 
 	set_selected is
@@ -89,7 +89,7 @@ feature -- Set attributes
 		require
 			s /= Void
 		do
-			comment_value := clone(s)
+			comment_value := s.twin
 		end
 
 

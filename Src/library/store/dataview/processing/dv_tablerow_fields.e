@@ -161,7 +161,7 @@ feature {DV_COMPONENT} -- Basic operations
 			is_val: BOOLEAN
 			td: DB_TABLE_DESCRIPTION
 		do
-			new_tablerow := clone (default_tablerow)
+			new_tablerow := default_tablerow.twin
 			td := new_tablerow.table_description
 			from
 				is_val := True

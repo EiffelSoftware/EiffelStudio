@@ -35,8 +35,8 @@ feature -- Status setting
 			user_name_ok: db_spec.user_name_ok (uname)
 			password_ok: db_spec.password_ok (upasswd)
 		do
-			name := clone (uname)
-	      	passwd := clone (upasswd)
+			name := uname.twin
+	      	passwd := upasswd.twin
 		ensure
 			password_ensure: db_spec.password_ensure (name, passwd, uname, upasswd)
 		end
@@ -46,7 +46,7 @@ feature -- Status setting
 		require
 			argument_not_void: appname /= Void
 		do
-			application := clone (appname)
+			application := appname.twin
 		ensure
 			name_set: application.is_equal(appname)
 		end
@@ -55,7 +55,7 @@ feature -- Status setting
 		require
 			argument_not_void: uhostname /= Void
 		do
-			hostname := clone (uhostname)
+			hostname := uhostname.twin
 		ensure
 			name_set: hostname.is_equal(uhostname)
 		end
@@ -65,7 +65,7 @@ feature -- Status setting
 		require
 			argument_not_void: data_source /= Void
 		do
-			data_source := clone (udata_source)
+			data_source := udata_source.twin
 		ensure
 	--FIXME(worx without)		data_source_set: data_source.is_equal(udata_source)
 		end
@@ -75,9 +75,11 @@ feature -- Status setting
 		require
 			argument_not_void: uroleId /= Void
 		do
-			roleId := clone (uroleId)
-			if (rolePassWd /= Void) then
-				rolePassWd := clone(urolePassWd)
+			roleId := uroleId.twin
+			if (urolePassWd /= Void) then
+				rolePassWd := urolePassWd.twin
+			else
+				rolepasswd := Void
 			end
 		ensure
 			name_set: roleId.is_equal(uroleId)
@@ -87,7 +89,7 @@ feature -- Status setting
 		require
 			argument_not_void: ugroupId /= Void
 		do
-			groupId := clone (ugroupId)
+			groupId := ugroupId.twin
 		ensure
 			name_set: groupId.is_equal(ugroupId)
 		end

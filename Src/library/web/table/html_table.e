@@ -95,7 +95,7 @@ feature -- Routines out: provide STRING representations
 	out: STRING is
 			-- Provide a STRING representation for the current table
 		do
-			Result := clone(Table_start);
+			Result := Table_start.twin
 			Result.append(attributes_out);
 			Result.append(Tag_end);
 			Result.append(NewLine);
@@ -155,7 +155,7 @@ feature -- Routines out: provide STRING representations
 		do
 			cs := get_Colspan(row, col);
 			if cs > 1 then
-				Result := clone(Colspan);
+				Result := Colspan.twin
 				Result.append(cs.out);
 			else
 				Result := "";
@@ -178,7 +178,7 @@ feature -- Routines out: provide STRING representations
 			-- of the table
 		do
 			if border_value > 0 then
-				Result := clone(Border);
+				Result := Border.twin
 				Result.append(border_value.out);
 			else
 				Result := "";
@@ -200,7 +200,7 @@ feature -- Routines out: provide STRING representations
 			-- String representation for the caption
 		do
 			if (caption /= Void) and then (not caption.is_equal("")) then
-				Result := clone(Caption_start);
+				Result := Caption_start.twin
 				Result.append(caption_attributes_out);
 				Result.append(Tag_end);
 				Result.append(caption);
@@ -214,7 +214,7 @@ feature -- Routines out: provide STRING representations
 	attribute_out(an_attribute, its_value: STRING): STRING is
 			-- String representation for the pair 'an_attribute' and 'its_value'
 		do
-			Result := clone(an_attribute);
+			Result := an_attribute.twin
 			Result.append("%"");
 			Result.append(its_value);
 			Result.append("%"");

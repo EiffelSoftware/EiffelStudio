@@ -167,7 +167,7 @@ feature -- Status setting
 		require
 			new_name_not_void: new_name /= Void
 		do
-			name := clone (new_name)
+			name := new_name.twin
 			implementation.change_name (new_name)
 			loaded := False
 		ensure

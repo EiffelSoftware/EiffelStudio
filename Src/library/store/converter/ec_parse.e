@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			tmp_b ,tst: BOOLEAN
 		do
 			if  ecp_parsed then
-				token_string := clone (ecp_token.string_value);
+				token_string := ecp_token.string_value.twin
 				token_type := ecp_token.type;
 				if token_type = ecp_field.field_type then 
 					inspect 

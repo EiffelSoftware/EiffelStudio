@@ -44,9 +44,8 @@ feature {NONE} -- Implementation
 			mapped_item: STRING
 			table_name: STRING
 		do
-			table_name := clone (table_name_list.i_th (column_number).repository_name)
-			mapped_item := clone (template_block)
-			table_name.to_lower
+			table_name := table_name_list.i_th (column_number).repository_name.as_lower
+			mapped_item := template_block.twin
 			mapped_item.replace_substring_all (tags.Lower_class_name, table_name)
 			to_initcap (table_name)
 			mapped_item.replace_substring_all (tags.Initcap_class_name, table_name)

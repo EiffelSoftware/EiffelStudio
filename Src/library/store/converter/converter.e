@@ -64,7 +64,7 @@ feature -- Status setting
 				tmps.append ("Cannot open source file `");
 				tmps.append (f.name);
 				tmps.append ("' for reading.%N");
-				set_error (clone (tmps))
+				set_error (tmps.twin)
 			end
 		ensure
 			current_file = f
@@ -153,13 +153,13 @@ feature {NONE} -- Basic operations
 		do
 			lex.ecl_analyze (current_line);
 			if lex.ecl_error then
-				raise_error (clone (lex.ecl_message))
+				raise_error (lex.ecl_message.twin)
 			else
 				parse.ecp_parse (lex.ecl_token_array);
 				if parse.ecp_parsed then
 					store_object
 				else
-					raise_error (clone (parse.ecp_message))
+					raise_error (parse.ecp_message.twin)
 				end
 			end
 		end;
@@ -167,7 +167,7 @@ feature {NONE} -- Basic operations
 	store_object is
 			-- Store parsed object in the container.
 		do
-			container.force (clone(parse.ecp_reference),container_size+1);
+			container.force (parse.ecp_reference.twin, container_size+1);
 			container_size := container_size + 1
 		end;
 

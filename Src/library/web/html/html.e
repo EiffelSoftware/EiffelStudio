@@ -76,7 +76,11 @@ feature -- Set
 
 	set_title (s: STRING) is
 		do
-			title_value := clone (s)
+			if s /= Void then
+				title_value := s.twin
+			else
+				title_value := Void
+			end
 		end
 
 feature -- Add new options
@@ -85,7 +89,7 @@ feature -- Add new options
 		require
 			an_option /= Void
 		do
-			options.extend (clone (an_option))
+			options.extend (an_option.twin)
 		end
 
 feature {NONE}

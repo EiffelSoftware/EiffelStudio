@@ -63,7 +63,7 @@ feature -- Basic operations
 			attr_tag_index, attr_tag_end_index, tag_close_index: INTEGER
 			template_block: STRING
 		do
-			gfc := clone (template_content)
+			gfc := template_content.twin
 			gfc.replace_substring_all (tags.Attribute_count, description_count.out)
 			from
 				attr_tag_index := gfc.substring_index (tags.attribute_block, 1)

@@ -32,7 +32,9 @@ feature -- Out representation
 	out: STRING is
 			-- Provide a STRING representation for the HTML text
 		do
-			Result := clone (html_text)
+			if html_text /= Void then
+				Result := html_text.twin
+			end
 		end
 
 feature -- Add some new features

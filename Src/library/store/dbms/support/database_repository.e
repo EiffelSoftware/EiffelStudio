@@ -74,8 +74,7 @@ feature -- Basic operations
 			tmp_class_name: STRING
 			s,s1,s2,s3,s4: STRING
 		do
-			tmp_class_name := clone (repository_name)
-			tmp_class_name.to_upper
+			tmp_class_name := repository_name.as_upper
 			Create s.make(20)
 			
 			s.append("indexing%N")
@@ -98,8 +97,7 @@ feature -- Basic operations
 				table.off
 			loop
 				el := table.item
-				col_name := clone (el.column_name)
-				col_name.to_lower
+				col_name := el.column_name.as_lower
 				
 				s1.append("%Tset_"+col_name+" (a_"+col_name+": ")
 				s.append ("%T"+col_name+": ")
@@ -315,7 +313,7 @@ feature -- Status report
 			table.go_i_th (i)
 			Result := (table.item).column_name
 			if Result /= Void then
-				Result := clone (Result)
+				Result := Result.twin
 			end
 		end
 

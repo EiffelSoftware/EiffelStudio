@@ -58,7 +58,7 @@ feature -- Status setting
 			name_exists: n /= Void
 		do
 			field_type := type;
-			field_name := clone (n)
+			field_name := n.twin
 		ensure
 			field_type = type;
 			field_name.is_equal(n)

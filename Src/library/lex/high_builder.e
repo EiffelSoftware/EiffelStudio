@@ -34,7 +34,7 @@ feature -- Element change
 		require
 			source_long_enough: s.count > 0
 		do
-			description := clone (s);
+			description := s.twin
 			description.extend ('%/001/');
 			remove_separators;
 			cursor := 0;

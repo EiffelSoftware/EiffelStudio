@@ -101,7 +101,11 @@ feature -- Basic operations
 	set_attributes (a_list: ARRAYED_LIST [INTEGER]) is
 			-- Set `a_list' to the list of database table attributes to display.
 		do
-			attribute_list := clone (a_list)
+			if a_list /= Void then
+				attribute_list := a_list.twin
+			else
+				attribute_list := Void
+			end
 		end
 
 	build is

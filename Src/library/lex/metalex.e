@@ -109,17 +109,17 @@ feature {NONE} -- Implementation
 			from
 				id := 1;
 				token_file.read_word;
-				token_name := clone (token_file.last_string);
+				token_name := token_file.last_string.twin
 				token_file.read_line;
-				regular := clone (token_file.last_string);
+				regular := token_file.last_string.twin
 			until
 				token_name.is_equal ("--")
 			loop
 				put_expression (regular, id, token_name);
 				token_file.read_word;
-				token_name := clone (token_file.last_string);
+				token_name := token_file.last_string.twin
 				token_file.read_line;
-				regular := clone (token_file.last_string);
+				regular := token_file.last_string.twin
 				id := id + 1
 			end
 		end; 
@@ -136,13 +136,13 @@ feature {NONE} -- Implementation
 					-- corresponds to the last type recorded.
 				keyword_type := token_type_list.last;
 				token_file.read_word;
-				keyword_name := clone (token_file.last_string);
+				keyword_name := token_file.last_string.twin
 			until
 				token_file.end_of_file
 			loop
 				put_keyword (keyword_name, keyword_type);
 				token_file.read_word;
-				keyword_name := clone (token_file.last_string)
+				keyword_name := token_file.last_string.twin
 			end
 		end; 
 

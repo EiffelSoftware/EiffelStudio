@@ -185,7 +185,7 @@ feature {CGI_FORMS}-- Access
 			nb_pairs, c, sep_index, field_sep_index: INTEGER;
 			done: BOOLEAN
 		do
-			data := clone (Input_data)
+			data := Input_data.twin
 			if not data.is_empty then
 					-- Convert +'s to spaces
 				data.replace_substring_all ("+", " ")

@@ -220,8 +220,6 @@ feature -- Access (table row values)
 	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING] is
 			-- Feature list mapped with `action'.
 			-- This can be useful to create tags or parameter names.
-		local
-			tmp: STRING
 		do
 			create Result.make (Attribute_number)
 			from
@@ -229,8 +227,7 @@ feature -- Access (table row values)
 			until
 				description_list.after
 			loop
-				tmp := clone (description_list.item)
-				action.call ([tmp])
+				action.call ([description_list.item.twin])
 				Result.extend (action.last_result)
 				description_list.forth
 			end

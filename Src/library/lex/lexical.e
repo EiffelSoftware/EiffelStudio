@@ -69,8 +69,7 @@ feature -- Access
 					Result := -1
 				end
 			else
-				lower_word := clone (word);
-				lower_word.to_lower;
+				lower_word := word.as_lower
 				if keyword_h_table.has (lower_word) then
 					Result := lower_word.hash_code
 				else
@@ -583,8 +582,7 @@ feature {NONE} -- Implementation
 		do
 			Result := token_type = keyword_h_table.item (word);
 			if not Result and not keywords_case_sensitive then
-				lower_word := clone (word);
-				lower_word.to_lower;
+				lower_word := word.as_lower
 				Result := token_type = keyword_h_table.item (lower_word)
 			end
 		end;

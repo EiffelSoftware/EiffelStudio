@@ -206,17 +206,17 @@ feature -- Basic operations
 			coltype: INTEGER
 		do
 			attr := select_table_descr.description_list.i_th (column)
-			val := clone (value)
+			val := value.twin
 			coltype := select_table_descr.type_list.i_th (column)
 			if case_sens or else not database_handle_name.is_equal (Oracle_handle_name) then
-				q := clone (attr)
+				q := attr.twin
 			else
 				if coltype = select_table_descr.string_type or else
 						coltype = select_table_descr.character_type then
 					q := to_lower (attr)
 					val.to_lower
 				else
-					q := clone (attr)
+					q := attr.twin
 				end
 			end
 			if like_type (type) then
@@ -270,9 +270,10 @@ feature -- Basic operations
 			-- Add qualifier `value' to prepared select query.
 		require
 			select_query_prepared: select_query_prepared
+			value_not_void: value /= Void
 		do
 			if select_qualifiers = Void then
-				select_qualifiers := clone (value)
+				select_qualifiers := value.twin
 			else
 				select_qualifiers.append (Space + And_operator + Space + value)
 			end
@@ -643,8 +644,7 @@ feature {NONE} -- Creation implementation
 			if repository_table.item (code) /= Void then
 				Result := repository_table.item (code)
 			else
-				s_tmp := clone (tables.name_list.i_th (code))
-				s_tmp.to_upper
+				s_tmp := tables.name_list.i_th (code).as_upper
 				create Result.make (s_tmp)
 				Result.load
 				if not database_manager.has_error then

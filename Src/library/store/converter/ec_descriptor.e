@@ -267,9 +267,11 @@ feature {NONE} -- Status setting
 
 	set_ecd_error (s: STRING) is
 			-- Set error flag and error message with `s'.
+		require
+			s_not_void: s /= Void
 		do
 			ecd_error := True;
-			ecd_message := clone(s)
+			ecd_message := s.twin
 		end;
 
 	field_conforms (i: INTEGER; o: ANY; f: EC_FIELD): BOOLEAN is

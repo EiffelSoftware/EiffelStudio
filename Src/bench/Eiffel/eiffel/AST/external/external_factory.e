@@ -16,7 +16,9 @@ feature -- High level Factories
 			Result.initialize (sig, use_list)
 		end
 
-	new_cpp_extension_as (type: INTEGER; base_class: ID_AS; sig: SIGNATURE_AS; use_list: USE_LIST_AS): CPP_EXTENSION_AS is
+	new_cpp_extension_as (type: INTEGER; base_class: ID_AS;
+			sig: SIGNATURE_AS; use_list: USE_LIST_AS): CPP_EXTENSION_AS
+		is
 			-- New CPP_EXTENSION_AS node.
 		do
 			create Result
@@ -24,14 +26,17 @@ feature -- High level Factories
 		end
 
 	new_struct_extension_as (name, field_name: ID_AS; type: EXTERNAL_TYPE_AS;
-				use_list: USE_LIST_AS; is_cpp: BOOLEAN): STRUCT_EXTENSION_AS is
+			use_list: USE_LIST_AS; is_cpp: BOOLEAN): STRUCT_EXTENSION_AS
+		is
 			-- New STRUCT_EXTENSION_AS node.
 		do
 			create Result.make (is_cpp)
 			Result.initialize (name, field_name, type, use_list)
 		end
 
-	new_macro_extension_as (sig: SIGNATURE_AS; use_list: USE_LIST_AS; is_cpp: BOOLEAN): MACRO_EXTENSION_AS is
+	new_macro_extension_as (sig: SIGNATURE_AS; use_list: USE_LIST_AS;
+			is_cpp: BOOLEAN): MACRO_EXTENSION_AS
+		is
 			-- New MACRO_EXTENSION_AS node.
 		do
 			create Result.make (is_cpp)
@@ -42,7 +47,9 @@ feature -- High level Factories
 		do
 		end
 
-	new_il_extension_as (language_type, type: INTEGER; sig: SIGNATURE_AS; base_class: ID_AS): IL_EXTENSION_AS is
+	new_il_extension_as (language_type, type: INTEGER; sig: SIGNATURE_AS;
+			base_class: ID_AS): IL_EXTENSION_AS
+		is
 			-- New IL_EXTENSION_AS node.
 		do
 			create Result
@@ -51,7 +58,9 @@ feature -- High level Factories
 
 feature -- Low level factories
 
-	new_signature_as (args: EIFFEL_LIST [EXTERNAL_TYPE_AS]; return_type: EXTERNAL_TYPE_AS): SIGNATURE_AS is
+	new_signature_as (args: EIFFEL_LIST [EXTERNAL_TYPE_AS];
+			return_type: EXTERNAL_TYPE_AS): SIGNATURE_AS
+		is
 			-- New SIGNATURE_AS node.
 		do
 			create Result
@@ -74,13 +83,15 @@ feature -- Low level factories
 			Result_not_void: Result /= Void
 		end
 
-	new_external_type_as (id: ID_AS; is_struct, is_pointer, is_byref, is_enum: BOOLEAN): EXTERNAL_TYPE_AS is
+	new_external_type_as (id: ID_AS; is_struct: BOOLEAN; nb_pointer: INTEGER;
+			is_byref, is_enum: BOOLEAN): EXTERNAL_TYPE_AS
+		is
 			-- New EXTERNAL_TYPE_AS node.
 		require
 			id_not_void: id /= Void
 		do
 			create Result
-			Result.initialize (id, is_struct, is_pointer, is_byref, is_enum)
+			Result.initialize (id, is_struct, nb_pointer, is_byref, is_enum)
 		ensure
 			Result_not_void: Result /= Void
 		end

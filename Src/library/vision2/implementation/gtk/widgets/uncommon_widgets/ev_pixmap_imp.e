@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 
 feature -- Duplication
 
-	copy (other: EV_PIXMAP) is
+	copy_pixmap (other: EV_PIXMAP) is
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		do
@@ -274,6 +274,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/20 23:53:06  pichery
+--| Renammed `copy' to `copy_pixmap'.
+--|
 --| Revision 1.20  2000/03/20 23:43:50  pichery
 --| Moved implementation of `read_from_named_file' from interface
 --| to implementation cluster

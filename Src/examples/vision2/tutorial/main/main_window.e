@@ -105,11 +105,12 @@ feature -- Tree features
 
 	fill_tree is
 		local
-			kernel, properties, items, widgets: EV_TREE_ITEM
+			kernel, properties, items, figures, widgets: EV_TREE_ITEM
 			primitive, container, dialog, uncommon: EV_TREE_ITEM
-			demo: EV_TREE_ITEM	
+			demo: EV_TREE_ITEM
 		do
 			-- The main topics
+			!! figures.make_with_text (tree, "figures")
 			!! kernel.make_with_text (tree, "kernel")
 			!! properties.make_with_text (tree, "properties")
 			!! items.make_with_text (tree, "items")
@@ -122,6 +123,22 @@ feature -- Tree features
 			!! uncommon.make_with_text (widgets, "uncommon widgets")
 
 			-- The demo
+			!PIXEL_ITEM! demo.make (figures)
+			!SEGMENT_ITEM! demo.make (figures)
+			!STRAIGHT_LINE_ITEM! demo.make (figures)
+			!POLYLINE_ITEM! demo.make (figures)
+			!ARC_ITEM! demo.make (figures)
+			!ELLIPSE_ITEM! demo.make (figures)
+			!CIRCLE_ITEM! demo.make (figures)
+			!POLYGON_ITEM! demo.make (figures)
+			!REGULAR_POLYGON_ITEM! demo.make (figures)
+			!EQUILATERAL_TRIANGLE_ITEM! demo.make (figures)
+			!SQUARE_ITEM! demo.make (figures)
+			!RECTANGLE_ITEM! demo.make (figures)
+			!SLICE_ITEM! demo.make (figures)
+			!TEXT_FIGURE_ITEM! demo.make (figures)
+			!PICTURE_ITEM! demo.make (figures)
+
 			!BUTTON_ITEM! demo.make (primitive)
 			!OPTION_ITEM! demo.make (primitive)
 			!MULTI_COLUMN_LIST_ITEM! demo.make (primitive)

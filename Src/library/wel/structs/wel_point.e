@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- the current cursor position.
 		do
 			structure_make
-			get_cursor_position
+			set_cursor_position
 		end
 
 feature -- Access
@@ -93,14 +93,7 @@ feature -- Element change
 			y_set: y = a_y
 		end
 
-	set_cursor_position (a_x, a_y: INTEGER) is
-			-- set the current cursor position to
-			-- `a_x' and `a_y'.
-		do
-			cwin_set_cursor_position (a_x, a_y)
-		end
-
-	get_cursor_position is
+	set_cursor_position is
 			-- Set `x' and `y' to the current cursor position.
 		do
 			cwin_get_cursor_position (item)
@@ -221,14 +214,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (POINT *)"
 		alias
 			"GetCursorPos"
-		end
-
-	cwin_set_cursor_position (a_x, a_y: INTEGER) is
-			-- SDK SetCursorPos
-		external
-			"C [macro <wel.h>] (int, int)"
-		alias
-			"SetCursorPos"
 		end
 
 end -- class WEL_POINT

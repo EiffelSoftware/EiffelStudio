@@ -269,7 +269,7 @@ rt_public void wpexp(int32 origin, int32 offset, int dyn_type, char *object)
 	 * offset `offset'. Apply the function to `object'
 	 */
 
-	int16 body_index;
+	/* int16 body_index;*/ /* %%ss removed */
 	uint32 body_id;
 	char *OLD_IC;
 

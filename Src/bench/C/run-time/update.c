@@ -16,6 +16,7 @@
 #include "config.h"
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
+#include <direct.h>		/* %%ss added for chdir, getcwd */
 #include <windows.h>
 #endif
 
@@ -37,6 +38,10 @@
 
 #ifdef DEBUG
 #include "interp.h"					/* For idump() */
+#endif
+
+#ifdef EIF_WIN32
+extern char *win_eif_getenv (char *k, char *app); /* %%ss added. In extra/win32/ipc/shared/env.c */
 #endif
 
 rt_private void cecil_updt(void);			/* Cecil update */
@@ -64,11 +69,7 @@ rt_public void update(char ignore_updt)
 	char *meltpath = (char *) 0;			/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
-#ifdef EIF_WINDOWS
-	char *inipath;
-	char buf[128];
-#endif
-
+/* %%ss bloc moved below*/
 
 	if (ignore_updt != (char) 0) {
 		init_desc();
@@ -82,13 +83,17 @@ rt_public void update(char ignore_updt)
 #ifdef EIF_WIN_31
 #define UPDTLEN 10
 #define UPDT_NAME "\\melted.eif"
-
-	inipath = eif_getenv ("ES4INI");
-	GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
-	WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
-	if (strlen(buf))
-		meltpath = buf;
-
+	{
+#ifdef EIF_WINDOWS
+		char *inipath; /* %%ss moved from above*/
+		char buf[128]; /* %%ss moved from above*/
+#endif
+		inipath = eif_getenv ("ES4INI");
+		GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
+		WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
+		if (strlen(buf)) 
+			meltpath = buf;
+	}
 #elif defined EIF_WIN32
 
 #define UPDTLEN 10
@@ -341,18 +346,18 @@ rt_public void cnode_updt(void)
 	uint32 *types;			/* Attribute meta-type array */
 	short nbparents;		/* Parent count */
 	int *parents;			/* Parent dynmaic type array */
-	short parent_dtype;		/* Parent dynamic type */
+	/* short parent_dtype;*//* Parent dynamic type */ /* %%ss removed */
 	int32 *rout_ids;		/* Routine id array */
-	int32 rout_id;			/* Attribute routine id */
-	int32 *feat_ids;		/* Feature id array */
-	long feat_count;		/* Feature id array count */
-	struct htable *htbl;	/* Hash table for calls */
-	int32 call_size;		/* Hash table call size */
-	char is_attribute;
+	/* int32 rout_id;*/		/* Attribute routine id */ /* %%ss removed */
+	/* int32 *feat_ids;*/	/* Feature id array */ /* %%ss removed */
+	/* long feat_count;*/	/* Feature id array count */ /* %%ss removed */
+	/* struct htable *htbl;*//* Hash table for calls */ /* %%ss removed */
+	/* int32 call_size;*/	/* Hash table call size */ /* %%ss removed */
+	/* char is_attribute;*/ /* %%ss removed */
 	int i;
-	char c;
-	short level;			/* Attribute meta-type level */
-	int32 feature_id;		/* Key for access table */
+	/* char c;*/ /* %%ss removed */
+	/* short level;*/ /* Attribute meta-type level */ /* %%ss removed */
+	/* int32 feature_id;*/ /* Key for access table */ /* %%ss removed */
 
 		/* 1. Dynamic type */
 	dtype = wshort();
@@ -773,7 +778,7 @@ rt_public void desc_updt(void)
 {
 	
 	long count;
-	short desc_size;
+	/* short desc_size;*/ /* %%ss removed */
 	short org_count, rout_count;
 	short type_id, org_id;
 	struct desc_info *desc_ptr;

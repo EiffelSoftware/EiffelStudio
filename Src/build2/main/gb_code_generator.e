@@ -103,6 +103,13 @@ inherit
 			default_create
 		end
 		
+	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+		
 feature {NONE} -- Creation
 
 	default_create is
@@ -232,20 +239,12 @@ feature -- Basic operation
 									if current_name.is_equal (Internal_properties_string)  then
 										full_information := get_unique_full_info (window_element)
 										element_info := full_information @ (name_string)
-										directory_name := generated_path.twin
+										
+										if preferences.boolean_resource_value (Preferences.generate_empty_directories, False) then
+											create_directory_from_path (parent_directories)
+										end
+
 										parent_directories.extend (element_info.data)
-										from
-											parent_directories.start
-										until
-											parent_directories.off
-										loop
-											directory_name.extend (parent_directories.item)
-											parent_directories.forth
-										end
-										create directory.make (directory_name)
-										if not directory.exists then
-											directory.create_dir
-										end
 									end
 								end
 								current_element.forth
@@ -264,6 +263,11 @@ feature -- Basic operation
 								directory_name.extend (parent_directories.item)
 								parent_directories.forth
 							end
+								-- Only create the directory if it is not empty.
+							create directory.make (directory_name)
+							if not directory.exists then
+								directory.create_dir
+							end
 							reset_generation_constants_for_class
 							prepass_xml (current_element, document_info, 1)
 							window_file_name := generated_path.twin
@@ -274,6 +278,31 @@ feature -- Basic operation
 				
 				end				
 				an_element.forth
+			end
+		end
+		
+	create_directory_from_path (a_path: ARRAYED_LIST [STRING]) is
+			-- Create the directory corresponding to `a_path' from the root of the
+			-- current project, only if it does not already exist.
+		require
+			a_path_not_void: a_path /= Void
+		local
+			directory_name: FILE_NAME
+			directory: DIRECTORY
+		do
+			directory_name := generated_path.twin
+			from
+				a_path.start
+			until
+				a_path.off
+			loop
+				directory_name.extend (a_path.item)
+				a_path.forth
+			end
+				-- Only create the directory if it is not empty.
+			create directory.make (directory_name)
+			if not directory.exists then
+				directory.create_dir
 			end
 		end
 		

@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- System analyzis access
 
-	debug_list: EV_MULTI_COLUMN_LIST
+	debug_list: EV_CHECKABLE_LIST
 			-- Debug status for current system.
 
 	debug_check: EV_CHECK_BUTTON
@@ -126,7 +126,7 @@ feature -- Store/Retrieve
 		local
 			debug_tags: SEARCH_TABLE [STRING]
 			sorted_debug_tags: SORTED_TWO_WAY_LIST [STRING]
-			row: EV_MULTI_COLUMN_LIST_ROW
+			row: EV_LIST_ITEM
 			debug_name: STRING
 		do
 			create debug_table.make (1)
@@ -152,19 +152,17 @@ feature -- Store/Retrieve
 				until
 					sorted_debug_tags.after
 				loop
-					create row
 					debug_name := sorted_debug_tags.item
-					row.extend (debug_name)
+					create row.make_with_text (debug_name)
+					debug_list.extend (row)
 					if
 						debug_table.has (debug_name) and then
 						debug_table.item (debug_name)
 					then
-						row.extend (enabled_text)
+						debug_list.check_item (row)
 					else
-						row.extend (disabled_text)
+						debug_list.uncheck_item (row)
 					end
-					row.pointer_button_press_actions.extend (~context_menu (?,?,?,?,?,?,?,?,row))
-					debug_list.extend (row)
 					sorted_debug_tags.forth
 				end
 			end
@@ -235,7 +233,11 @@ feature {NONE} -- Filling GUI
 				end
 				if val.is_yes then
 					enable_select (debug_check)
-					update_debug_row (debug_sd.enabled, debug_list.i_th (1))
+					if debug_sd.enabled then
+						debug_list.check_item (debug_list.first)
+					else
+						debug_list.uncheck_item (debug_list.first)
+					end
 				elseif val.is_no then
 					disable_select (debug_check)
 				elseif val.is_name then
@@ -287,7 +289,7 @@ feature {NONE} -- Filling AST
 			debug_list_not_void: debug_list /= Void
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
-			row: EV_MULTI_COLUMN_LIST_ROW
+			row: EV_LIST_ITEM
 		do
 			defaults := root_ast.defaults
 
@@ -298,20 +300,14 @@ feature {NONE} -- Filling AST
 
 					-- Handle special case of all debug clauses
 				row := debug_list.item
-				defaults.extend (new_debug_option_sd (
-					row.i_th (2).is_equal (enabled_text), ""))
+				defaults.extend (new_debug_option_sd (debug_list.is_item_checked (row), ""))
 
 				debug_list.forth
 			until
 				debug_list.after
 			loop
 				row := debug_list.item
-				check
-					valid_row: row.count = debug_list_columns_count
-				end
-				defaults.extend (new_debug_option_sd (
-					row.i_th (2).is_equal (enabled_text),
-					row.i_th (1)))
+				defaults.extend (new_debug_option_sd (debug_list.is_item_checked (row), row.text))
 				debug_list.forth
 			end
 
@@ -471,69 +467,15 @@ feature {NONE} -- Graphical initialization
 		require
 			debug_list_not_void: debug_list /= Void
 		local
-			row: EV_MULTI_COLUMN_LIST_ROW
+			row: EV_LIST_ITEM
 		do
 			debug_list.wipe_out
-			debug_list.set_column_titles (<<"Tag","Status">>)
-			debug_list.set_column_width (Layout_constants.dialog_unit_to_pixels(200), 1)
-			create row
-			row.extend ("Unnamed debug clauses")
-			row.extend (disabled_text)
-			row.pointer_button_press_actions.extend (~context_menu (?,?,?,?,?,?,?,?,row))
+			create row.make_with_text ("Unnamed debug clauses")
 			debug_list.extend (row)
-		end
-
-feature {NONE} -- Action
-
-	context_menu (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; a_row: EV_MULTI_COLUMN_LIST_ROW) is
-			-- Action performed on right click on `a_row' from `debug_list' which
-			-- pops up a menu to prompt user to choose status of selected debug clause.
-		require
-			a_row_not_void: a_row /= Void
-			a_row_valid: a_row.count = debug_list_columns_count
-		local
-			menu: EV_MENU
-			menu_item: EV_MENU_ITEM
-			status: STRING
-			enable: BOOLEAN
-		do
-			if a_button = 3 then
-				status := a_row.i_th (2)
-				create menu
-				if status.is_equal (enabled_text) then
-					create menu_item.make_with_text ("Disable")
-				else
-					enable := True
-					create menu_item.make_with_text ("Enable")
-				end
-				menu_item.select_actions.extend (~update_debug_row (enable, a_row))
-				menu.extend (menu_item)
-				menu.show
-			end
-		end
-
-	update_debug_row (enabled: BOOLEAN; a_row: EV_MULTI_COLUMN_LIST_ROW) is
-		require
-			a_row_not_void: a_row /= Void
-			a_row_valid: a_row.count = debug_list_columns_count
-		do
-				-- Update text of second columns with choice made by user.
-			a_row.go_i_th (2)
-			if enabled then
-				a_row.replace (enabled_text)
-			else
-				a_row.replace (disabled_text)
-			end
+			debug_list.uncheck_item (row)
 		end
 
 feature {NONE} -- Constants
-
-	enabled_text: STRING is "enabled"
-	disabled_text: STRING is "disabled"
-			-- Text for status of debug statement.
-
-	debug_list_columns_count: INTEGER is 2
-			-- Number of columns in `debug_list'.
 
 	Default_item_padding: INTEGER is 2
 			-- Padding for items (label + textfield/combo)

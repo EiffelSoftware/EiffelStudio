@@ -1,3 +1,11 @@
+/*
+indexing
+	description: "Set of features needed by the Eiffel compiler and Eiffel libraries
+		to work properly"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+	
 using System;
 namespace ISE.Runtime {
 
@@ -9,6 +17,8 @@ namespace ISE.Runtime {
 		~ANY () {
 		}
 	}
+
+	public delegate int WEL_DISPATCHER_DELEGATE (IntPtr hwnd, int msg, int wparam, int lparam);
 
 	public class RUN_TIME
 	{

@@ -111,11 +111,11 @@ feature -- Status setting
 				(point_a.y_abs + point_c.y_abs) // 2)
 		end
 
-	ellipse_angle: EV_ANGLE is
+	ellipse_angle: REAL is
 			-- Calculate the angle between `center' and `point_b'.
 		do
-			create Result.make_radians (arc_tangent (
-				(center.x - point_b.x_abs) / (center.y - point_b.y_abs)))
+			Result := arc_tangent (
+				(center.x - point_b.x_abs) / (center.y - point_b.y_abs))
 		end
 
 feature -- Events

@@ -316,11 +316,11 @@ feature {EV_FIGURE_GROUP} -- Implementation
 
 feature -- Status report
 
-	orientation: EV_ANGLE is
+	orientation: REAL is
 			-- Get the orientation of this figure.
 			-- We always take the orientation of the first point for it.
 		do
-			create Result.make_radians (get_point_by_index (1).angle_abs)
+			Result := get_point_by_index (1).angle_abs
 		end
 
 feature -- Contract support
@@ -444,6 +444,9 @@ end -- class EV_FIGURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/18 23:46:25  oconnor
+--| removed EV_ANGLE
+--|
 --| Revision 1.6  2000/02/14 11:40:46  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -22,11 +22,6 @@ inherit
 			set_modified
 		end
 
-	EV_ANGLE_ROUTINES
-		export
-			{NONE} all
-		end
-
 	PART_COMPARABLE
 		redefine
 			infix ">"
@@ -224,17 +219,17 @@ feature -- Element change
 			updated_y: y = old y - other.y
 		end
 
-	xyrotate (a: EV_ANGLE; px,py: INTEGER) is
+	xyrotate (a: REAL; px,py: INTEGER) is
 			-- Rotate by `a' relative to (`px', `py').
 		local
 			xr, yr: INTEGER
 			cosinus, sinus: REAL
 		do
-			if a.radians  /= 0.0 then
+			if a  /= 0.0 then
 				xr := x - px
 				yr := y - py
-				cosinus := a.cosine
-				sinus := a.sine
+			--FIXME	cosinus := a.cosine
+			--FIXME	sinus := a.sine
 				x := px + ((xr * cosinus) + (yr * sinus)).truncated_to_integer
 				y := py + ((yr * cosinus) - (xr * sinus)).truncated_to_integer
 				set_modified
@@ -299,6 +294,9 @@ end -- class EV_POINT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/18 23:46:26  oconnor
+--| removed EV_ANGLE
+--|
 --| Revision 1.8  2000/02/14 11:40:46  oconnor
 --| merged changes from prerelease_20000214
 --|

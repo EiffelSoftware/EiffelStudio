@@ -166,7 +166,7 @@ feature -- Element change
 			unset_modified			
 		end
 
-	rotate (a: EV_ANGLE; p: like origin) is
+	rotate (a: REAL; p: like origin) is
 			-- Rotate figure by `a' relative to `p'.
 			-- Angle `a' is measured in radians.
 		require
@@ -184,7 +184,7 @@ feature -- Element change
 			xyscale (f, p.x, p.y)
 		end
 
-	self_rotate (a: EV_ANGLE) is
+	self_rotate (a: REAL) is
 			-- Rotate figure by `a' relative to `origin'.
 			-- Angle is measured in radians.
 		require
@@ -210,7 +210,7 @@ feature -- Element change
 			xytranslate (v.x, v.y)
 		end
 
-	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in radians.
 		deferred
@@ -267,6 +267,9 @@ end -- class EV_GEOMETRICAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/18 23:46:26  oconnor
+--| removed EV_ANGLE
+--|
 --| Revision 1.5  2000/02/14 11:40:46  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -7,9 +7,6 @@ indexing
 class
 	EV_STOCK_COLORS_IMP
 
-inherit
-	EV_C_UTIL
-
 feature -- Access
 
 	Color_dialog, Color_3d_face: EV_COLOR is

@@ -59,7 +59,11 @@ feature
 	reset_focus is
 			-- Erase focus string of Current.
 		do
-			focus_label.set_text ("");
+				-- Reseting of the focus label may be
+				-- called after the label is destroyed
+			if not focus_label.destroyed then
+				focus_label.set_text ("")
+			end
 		end;
 
 end

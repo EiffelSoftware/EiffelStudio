@@ -47,6 +47,32 @@ rt_public EIF_REFERENCE rout_obj_create (int16 dftype, EIF_POINTER rout_disp, EI
 	RTLE;
 	return result;
 }
+
+rt_public EIF_REFERENCE rout_obj_create2 (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap)
+{
+	EIF_GET_CONTEXT
+	EIF_REFERENCE result = NULL;
+	RTLD;
+
+		/* Protect address in case it moves */
+	RTLI(3);
+	RTLR (0, result);
+	RTLR (1, args);
+	RTLR (2, omap);
+
+		/* Create ROUTINE object */
+	result = emalloc(dftype);
+	nstcall = 0;
+		/* Call 'set_rout_disp' from ROUTINE */
+	(FUNCTION_CAST (void, (EIF_REFERENCE,
+						   EIF_POINTER,
+						   EIF_POINTER,
+						   EIF_REFERENCE,
+						   EIF_REFERENCE))egc_routdisp)(result, rout_disp, true_rout_disp, args, omap);
+
+	RTLE;
+	return result;
+}
 /*------------------------------------------------------------------*/
 /* Allocate argument structure for `count' arguments.               */
 /*------------------------------------------------------------------*/

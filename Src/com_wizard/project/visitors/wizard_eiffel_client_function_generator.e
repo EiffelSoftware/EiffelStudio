@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 						if visitor.is_basic_type then
 							Result.append (visitor.cecil_type)
 
-						elseif is_boolean (visitor.vt_type) then
+						elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
 							Result.append (Eif_boolean)
 
 						elseif visitor.is_enumeration then
@@ -166,8 +166,7 @@ feature {NONE} -- Implementation
 						elseif 
 							visitor.is_structure_pointer or 
 							visitor.is_interface_pointer or
-							visitor.is_coclass_pointer or
-							visitor.is_basic_type_ref 
+							visitor.is_coclass_pointer
 						then
 							Result.append (visitor.c_type)
 

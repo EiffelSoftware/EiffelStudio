@@ -107,6 +107,9 @@ feature {NONE} -- Implementation
 					then
 						Result.append (visitor.c_type)
 
+					elseif not visitor.is_pointed and is_boolean (visitor.vt_type) then
+						Result.append (Eif_boolean)
+
 					elseif visitor.is_interface or visitor.is_structure then
 						Result.append (visitor.c_type)
 						Result.append (Space)

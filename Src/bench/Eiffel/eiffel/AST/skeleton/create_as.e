@@ -75,7 +75,7 @@ feature -- formatter
 			last_was_printed: BOOLEAN
 		do
 			ctxt.begin
-			ctxt.put_text_item (ti_Creation_keyword)
+			ctxt.put_text_item (ti_Create_keyword)
 			ctxt.put_space
 			if clients = Void then
 				last_was_printed := true
@@ -137,7 +137,7 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_Creation_keyword)
+			ctxt.put_text_item (ti_Create_keyword)
 			ctxt.put_space
 			if clients /= Void then
 				clients.simple_format (ctxt)

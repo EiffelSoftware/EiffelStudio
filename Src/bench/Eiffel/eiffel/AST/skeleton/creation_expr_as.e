@@ -44,6 +44,7 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.put_breakable
 			ctxt.put_text_item (ti_Create_keyword)
+			ctxt.put_space
 			ctxt.put_text_item (ti_L_curly)
 			ctxt.set_type_creation (type)
 			ctxt.format_ast (type)

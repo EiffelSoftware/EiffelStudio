@@ -322,7 +322,7 @@ feature -- Output
 					from
 						creation_feature_list.start
 						st.add (ti_Space)
-						st.add (ti_Creation_keyword)
+						st.add (ti_Create_keyword)
 						st.add (ti_Space)
 						eiffel_name := creation_feature_list.item.internal_name
 						st.add_string (eiffel_name)
@@ -368,7 +368,7 @@ feature -- Output
 						from
 							creation_feature_list.start
 							ctxt.put_space
-							ctxt.put_text_item (ti_Creation_keyword)
+							ctxt.put_text_item (ti_Create_keyword)
 							ctxt.put_space
 							feature_name ?= creation_feature_list.item
 							ctxt.put_string (feature_name.feature_name)
@@ -411,7 +411,7 @@ feature {AST_EIFFEL} -- Output
 					from
 						creation_feature_list.start
 						ctxt.put_space
-						ctxt.put_text_item (ti_Creation_keyword)
+						ctxt.put_text_item (ti_Create_keyword)
 						ctxt.put_space
 						feature_name ?= creation_feature_list.item
 						ctxt.put_string (feature_name.feature_name)

@@ -173,6 +173,7 @@ feature -- Access
 		local
 			sel_rows: like selected_rows
 			sel_items: like selected_items
+			sel_columns: like selected_columns
 		do
 			if is_single_item_selection_enabled or else is_multiple_item_selection_enabled then
 					sel_items := internal_selected_items
@@ -193,6 +194,16 @@ feature -- Access
 			loop
 				sel_rows.item.implementation.disable_select_internal
 				sel_rows.remove
+			end
+
+			sel_columns := selected_columns
+			from
+				sel_columns.start
+			until
+				sel_columns.after
+			loop
+				sel_columns.item.disable_select
+				sel_columns.remove
 			end
 			redraw_client_area
 		ensure

@@ -1507,6 +1507,21 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CREATE\n");
 #endif
+		/* Special treatment of BIT types */
+
+		if (*IC == BC_BIT)
+		{
+			char  *new_obj;		/* New bit object created */
+			uint32 realcount;	/* Real bit count */
+
+			++IC;
+			last = iget();
+			realcount = get_uint32();
+			new_obj = RTLB(realcount);			/* Creation */
+			last->type = SK_BIT + realcount;
+			last->it_bit = new_obj;
+			break;
+		}
 		switch (*IC++) {
 		case BC_CTYPE:				/* Hardcoded creation type */
 			type = get_short();
@@ -2044,6 +2059,18 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		last = iget();
 		last->type = SK_DOUBLE;
 		last->it_double = get_double();
+		break;
+
+	/*
+	 * Pointer constant - always null.
+	 */
+	case BC_NULL_POINTER:
+#ifdef DEBUG
+		dprintf(2)("BC_NULL_POINTER\n");
+#endif
+		last = iget();
+		last->type = SK_POINTER;
+		last->it_ptr = (char *) 0;
 		break;
 
 	/*

@@ -378,18 +378,17 @@ feature -- Element change
 			exists: exists
 			buttons_not_void: buttons /= Void
 			buttons_not_empty: not buttons.empty
+			no_void_button: not buttons.has (Void)
 		local
-			i, j: INTEGER
+			i: INTEGER
 		do
 			from
-				i := 0 -- button_count
-				j := buttons.lower
+				i := buttons.lower
 			until
-				j > buttons.upper
+				i > buttons.upper
 			loop
-				insert_button (i, buttons.item (j))
+				insert_button (button_count, buttons.item (i))
 				i := i + 1
-				j := j + 1
 			end
 		ensure
 			count_increased: button_count = old button_count + buttons.count

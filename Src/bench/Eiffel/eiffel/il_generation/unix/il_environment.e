@@ -29,5 +29,22 @@ feature -- Access
 			-- Path to bin directory of .NET Framework SDK.
 		once
 		end
+		
+feature -- Query
+	
+	use_cordbg (a_string: STRING): BOOLEAN is
+			-- Should Current use cordbg.exe?
+		do
+		end
+		
+	use_dbgclr (a_string: STRING): BOOLEAN is
+			-- Should Current use DbgCLR.exe?
+		do
+		end
+	
+	Dotnet_debugger_path (a_debug: STRING): STRING is
+			-- The path to the .NET debugger associated with 'a_debug'.
+		do
+		end	
 	
 end -- class IL_ENVIRONMENT

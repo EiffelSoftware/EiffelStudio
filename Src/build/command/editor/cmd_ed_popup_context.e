@@ -37,15 +37,26 @@ feature {NONE}
 			
 feature {NONE}
 
+	edit_list: CMD_ED_CHOICE_WND;
+
 	execute (arg: ANY) is
 		local
 			list: LINKED_LIST [CONTEXT];
-			edit_list: CMD_ED_CHOICE_WND
 		do
 			if command_editor.current_command /= Void then
 				list := command_editor.current_command.contexts_with_instances;
 				!! edit_list.make (command_editor);	
-				edit_list.popup_with_list (list)
+				edit_list.popup_with_list (list);
+			end
+		end;
+
+feature
+
+	update_popup_position is
+		do
+			if edit_list /= Void and then not edit_list.destroyed then
+				edit_list.update_position (real_x, real_y);
+				edit_list.raise;
 			end
 		end;
 

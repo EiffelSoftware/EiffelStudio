@@ -16,7 +16,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW) is
+	make (par: EV_CONTAINER) is
 			-- Create a window with a parent.
 		do
 		end

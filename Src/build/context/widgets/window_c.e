@@ -423,13 +423,13 @@ feature -- Hack for motif
 			-- the top shell and the returned value is inner
 			-- coordinate.
 		once
-			Result := widget.x - old_x
+			Result := widget.real_x - old_x
 		end;
 
 	y_offset: INTEGER is	
 			-- See above comments
 		once
-			Result := widget.y - old_y
+			Result := widget.real_y - old_y
 		end;
 
 feature {NONE} -- Code generation

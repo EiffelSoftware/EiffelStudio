@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			loc_font: EV_FONT
 		once
 			loc_font := line_height_font
-			Result := loc_font.ascent - 1 + (line_height_font.height \\ 2)
+			Result := line_height - loc_font.descent
 		end
 
 end -- class EB_SHARED_EDITOR_FONT

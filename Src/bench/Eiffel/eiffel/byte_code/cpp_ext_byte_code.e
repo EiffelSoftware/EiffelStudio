@@ -51,16 +51,12 @@ feature -- Code generation
 	generate is
 		local
 			buf: GENERATION_BUFFER
+			queue: like shared_include_queue
 		do
 			generate_include_files
-			if not shared_include_queue.has (class_header_file) then
-				shared_include_queue.extend (class_header_file)
-				if not context.final_mode then
-					buf := header_generation_buffer
-					buf.putstring ("#include ")
-					buf.putstring (class_header_file)
-					buf.new_line
-				end
+			queue := shared_include_queue
+			if not queue.has (class_header_file) then
+				queue.extend (class_header_file)
 			end
 			generate_signature
 		end

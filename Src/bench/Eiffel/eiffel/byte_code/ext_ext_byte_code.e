@@ -70,11 +70,6 @@ feature -- Code generation
 					include_file := header_files.item (i)
 					if not queue.has (include_file) then
 						queue.extend (include_file)
-						if not context.final_mode then
-							buf.putstring ("#include ");
-							buf.putstring (include_file);
-							buf.new_line;
-						end
 					end
 					i := i + 1
 				end

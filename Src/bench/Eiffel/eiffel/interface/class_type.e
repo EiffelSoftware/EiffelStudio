@@ -301,7 +301,7 @@ feature -- Generation
 						header_buffer.putstring ("%N */%N%N")
 							-- Includes wanted
 						header_buffer.putstring ("#include %"eif_eiffel.h%"%N%N")
-						header_buffer := buffer
+						header_buffer.start_c_specific_code
 					end
 
 					if final_mode then
@@ -381,6 +381,9 @@ feature -- Generation
 						!! extern_decl_file.make_open_write (extern_declaration_filename)
 						extern_decl_file.put_string (header_buffer)
 						extern_decl_file.close
+					else
+						Extern_declarations.generate (header_buffer)
+						Extern_declarations.wipe_out
 					end
 					buffer.close_c
 

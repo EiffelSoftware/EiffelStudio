@@ -2,8 +2,8 @@ indexing
 	description: "[
 		Objects that provide information for a range of characters in an EV_RICH_TEXT.
 		Depending on the query applied to `Current', the values of all attributes are used in different
-		fashions, sometimes to indicate which fields of an EV_CHARACTER_FORMAT are valid, or have a paticular
-		property. The applicable features in EV_RICH_TEXT which use `Currrent' provide full descriptions.
+		fashions, sometimes to indicate which fields of an EV_CHARACTER_FORMAT are valid, or have a particular
+		property. The applicable features in EV_RICH_TEXT which use `Current' provide full descriptions.
 			]"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -311,18 +311,6 @@ end
 						end
 						has_same_type := old_feature_i.same_class_type (new_feature_i)
 					end
-				else
-					-- Does not exist any more.
-					-- Check whether it was in the address table
-					if
-						System.address_table.has (old_feature_i.written_in,
-							old_feature_i.feature_id)
-					then
-						-- Force a re-freeze in order
-						-- to get a correct 'ececil.c'
-						-- (no unresolved externals in this case)!
-						System.set_freeze
-					end
 				end
 					-- First condition, `other' must have the feature
 					-- name. Second condition, `old_feature_i' and

@@ -112,7 +112,7 @@ feature -- Savings
 		require
 			not_yet_written: not is_written
 			m_not_void: m /= Void
-			valid_pos: pos >= 0 and pos < m.size
+			valid_pos: pos >= 0 and pos < m.count
 		do
 			(m.item + pos).memory_copy (item.item, current_position)
 			is_written := True
@@ -393,10 +393,12 @@ feature {NONE} -- Opcode insertion helpers
 		require
 			not_yet_written: not is_written
 		local
-			l_int: INTEGER
+			l_pos: INTEGER
 		do
-			($l_int).memory_copy ($val, 4)
-			add_integer (l_int)
+			l_pos := current_position
+			allocate (l_pos + 4)
+			item.put_real (val, l_pos)
+			current_position := l_pos + 4
 		end
 
 	add_double (val: DOUBLE) is
@@ -404,10 +406,12 @@ feature {NONE} -- Opcode insertion helpers
 		require
 			not_yet_written: not is_written
 		local
-			l_int: INTEGER_64
-		do	
-			($l_int).memory_copy ($val, 8)
-			add_integer_64 (l_int)
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 8)
+			item.put_double (val, l_pos)
+			current_position := l_pos + 8
 		end
 
 	internal_put (val: INTEGER_8; pos: INTEGER) is
@@ -415,18 +419,26 @@ feature {NONE} -- Opcode insertion helpers
 		require
 			not_yet_written: not is_written
 			valid_pos: pos >= 0
-		local
-			l_capacity: INTEGER
 		do
-			l_capacity := item.count
-			if pos >= l_capacity then
-				item.resize (pos.max (l_capacity + Chunk_size))
-			end
+			allocate (pos + 1)
 			item.put_integer_8 (val, pos)
 		end
 
 feature {NONE} -- Stack depth management
 
+	allocate (new_size: INTEGER) is
+			-- Resize `item' if needed so that it can accomdate `new_size'.
+		local
+			l_capacity: INTEGER
+		do
+			l_capacity := item.count
+			if new_size > l_capacity then
+				item.resize (new_size.max (l_capacity + Chunk_size))
+			end
+		ensure
+			enough_size: item.count >= new_size
+		end
+		
 	update_stack_depth (delta: INTEGER) is
 			-- Update `max_stack' and `current_stack_depth' according to
 			-- new `delta' depth change.

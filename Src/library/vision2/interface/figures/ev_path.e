@@ -21,7 +21,7 @@ inherit
 			set_drawing_attributes
 		end
 
-creation
+create
 
 	make
 
@@ -30,11 +30,11 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a path
 		do
---			!! dash_pattern.make
+--			create dash_pattern.make
 --			dash_pattern.put_right (4)
 --			dash_pattern.put_right (4)
 			logical_function_mode := GXcopy
-			!! foreground_color.make
+			create foreground_color.make
 		end
 
 feature -- Status report 
@@ -108,19 +108,19 @@ feature {EV_FIGURE} -- Element change
 
 end -- class EV_PATH
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
 

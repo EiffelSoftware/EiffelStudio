@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make, make_from_closure
 
 feature {NONE} -- Initialization
@@ -29,9 +29,9 @@ feature {NONE} -- Initialization
 			-- Create a rectangle.
 		do
 			init_fig (Void)
-			!! upper_left.make
-			!! path.make 
-			!! interior.make 
+			create upper_left.make
+			create path.make 
+			create interior.make 
 			interior.set_no_op_mode
 			width := 1
 			height := 1
@@ -65,7 +65,7 @@ feature -- Access
 			v_sin := sin (orientation)
 			half_width := width // 2
 			half_height := height // 2
-			!! Result.set (upper_left.x + (half_width *
+			create Result.set (upper_left.x + (half_width *
 				v_cos + half_height * v_sin).truncated_to_integer,
 					 upper_left.y - (half_width *
 				v_sin - half_height * v_cos).truncated_to_integer)
@@ -265,19 +265,19 @@ invariant
 
 end -- class EV_RECTANGLE
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
 

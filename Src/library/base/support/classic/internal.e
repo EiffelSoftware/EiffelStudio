@@ -211,6 +211,28 @@ feature -- Access
 			Result := c_boolean_field (i - 1, $object)
 		end
 
+	integer_8_field (i: INTEGER; object: ANY): INTEGER_8 is
+			-- Integer value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_8_field: field_type (i, object) = Integer_8_type
+		do
+			Result := c_integer_8_field (i - 1, $object)
+		end
+
+	integer_16_field (i: INTEGER; object: ANY): INTEGER_16 is
+			-- Integer value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_16_field: field_type (i, object) = Integer_16_type
+		do
+			Result := c_integer_16_field (i - 1, $object)
+		end
+
 	integer_field (i: INTEGER; object: ANY): INTEGER is
 			-- Integer value of `i'-th field of `object'
 		require
@@ -220,6 +242,17 @@ feature -- Access
 			integer_field: field_type (i, object) = Integer_type
 		do
 			Result := c_integer_field (i - 1, $object)
+		end
+
+	integer_64_field (i: INTEGER; object: ANY): INTEGER_64 is
+			-- Integer value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_64_field: field_type (i, object) = Integer_64_type
+		do
+			Result := c_integer_64_field (i - 1, $object)
 		end
 
 	real_field (i: INTEGER; object: ANY): REAL is
@@ -319,6 +352,26 @@ feature -- Element change
 			c_set_boolean_field (i - 1, $object, value)
 		end
 
+	set_integer_8_field (i: INTEGER; object: ANY; value: INTEGER_8) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_field: field_type (i, object) = Integer_8_type
+		do
+			c_set_integer_8_field (i - 1, $object, value)
+		end
+
+	set_integer_16_field (i: INTEGER; object: ANY; value: INTEGER_16) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_field: field_type (i, object) = Integer_16_type
+		do
+			c_set_integer_16_field (i - 1, $object, value)
+		end
+
 	set_integer_field (i: INTEGER; object: ANY; value: INTEGER) is
 		require
 			object_not_void: object /= Void
@@ -327,6 +380,16 @@ feature -- Element change
 			integer_field: field_type (i, object) = Integer_type
 		do
 			c_set_integer_field (i - 1, $object, value)
+		end
+
+	set_integer_64_field (i: INTEGER; object: ANY; value: INTEGER_64) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			integer_field: field_type (i, object) = Integer_64_type
+		do
+			c_set_integer_64_field (i - 1, $object, value)
 		end
 
 	set_real_field (i: INTEGER; object: ANY; value: REAL) is
@@ -433,7 +496,7 @@ feature {NONE} -- Implementation
 	c_character_field (i: INTEGER; object: POINTER): CHARACTER is
 			-- Character value of `i'-th field of `object'
 		external
-			"C (long, EIF_REFERENCE): EIF_CHARACTER | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE): EIF_CHARACTER use %"eif_internal.h%""
 		alias
 			"ei_char_field"
 		end
@@ -441,23 +504,47 @@ feature {NONE} -- Implementation
 	c_boolean_field (i: INTEGER; object: POINTER): BOOLEAN is
 			-- Boolean value of `i'-th field of `object'
 		external
-			"C (long, EIF_REFERENCE): EIF_BOOLEAN | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE): EIF_BOOLEAN use %"eif_internal.h%""
 		alias
 			"ei_bool_field"
+		end
+
+	c_integer_8_field (i: INTEGER; object: POINTER): INTEGER_8 is
+			-- Integer value of `i'-th field of `object'
+		external
+			"C macro signature (long, EIF_REFERENCE): EIF_INTEGER_8 use %"eif_internal.h%""
+		alias
+			"ei_int_8_field"
+		end
+
+	c_integer_16_field (i: INTEGER; object: POINTER): INTEGER_16 is
+			-- Integer value of `i'-th field of `object'
+		external
+			"C macro signature (long, EIF_REFERENCE): EIF_INTEGER_16 use %"eif_internal.h%""
+		alias
+			"ei_int_16_field"
 		end
 
 	c_integer_field (i: INTEGER; object: POINTER): INTEGER is
 			-- Integer value of `i'-th field of `object'
 		external
-			"C (long, EIF_REFERENCE): EIF_INTEGER | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE): EIF_INTEGER use %"eif_internal.h%""
 		alias
 			"ei_int_field"
+		end
+
+	c_integer_64_field (i: INTEGER; object: POINTER): INTEGER_64 is
+			-- Integer value of `i'-th field of `object'
+		external
+			"C macro signature (long, EIF_REFERENCE): EIF_INTEGER_64 use %"eif_internal.h%""
+		alias
+			"ei_int_64_field"
 		end
 
 	c_real_field (i: INTEGER; object: POINTER): REAL is
 			-- Real value of `i'-th field of `object'
 		external
-			"C (long, EIF_REFERENCE): EIF_REAL | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE): EIF_REAL use %"eif_internal.h%""
 		alias
 			"ei_float_field"
 		end
@@ -465,7 +552,7 @@ feature {NONE} -- Implementation
 	c_pointer_field (i: INTEGER; object: POINTER): POINTER is
 			-- Pointer value of `i'-th field of `object'
 		external
-			"C (long, EIF_REFERENCE): EIF_POINTER | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE): EIF_POINTER use %"eif_internal.h%""
 		alias
 			"ei_ptr_field"
 		end
@@ -473,7 +560,7 @@ feature {NONE} -- Implementation
 	c_double_field (i: INTEGER; object: POINTER): DOUBLE is
 			-- Double precision value of `i'-th field of `object'
 		external
-			"C (long, EIF_REFERENCE): EIF_DOUBLE | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE): EIF_DOUBLE use %"eif_internal.h%""
 		alias
 			"ei_double_field"
 		end
@@ -489,7 +576,7 @@ feature {NONE} -- Implementation
 	c_field_offset (i: INTEGER; object: POINTER): INTEGER is
 			-- Offset of `i'-th field of `object'
 		external
-			"C (long, EIF_REFERENCE): EIF_INTEGER | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE): EIF_INTEGER use %"eif_internal.h%""
 		alias
 			"ei_offset"
 		end
@@ -512,49 +599,70 @@ feature {NONE} -- Implementation
 
 	c_set_reference_field (i: INTEGER; object: POINTER; value: POINTER) is
 		external
-			"C (long, EIF_REFERENCE, EIF_REFERENCE) | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE, EIF_REFERENCE) use %"eif_internal.h%""
 		alias
 			"ei_set_reference_field"
 		end
 
 	c_set_double_field (i: INTEGER; object: POINTER; value: DOUBLE) is
 		external
-			"C (long, EIF_REFERENCE, EIF_DOUBLE) | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE, EIF_DOUBLE) use %"eif_internal.h%""
 		alias
 			"ei_set_double_field"
 		end
 
 	c_set_character_field (i: INTEGER; object: POINTER; value: CHARACTER) is
 		external
-			"C (long, EIF_REFERENCE, EIF_CHARACTER) | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE, EIF_CHARACTER) use %"eif_internal.h%""
 		alias
 			"ei_set_char_field"
 		end
 
 	c_set_boolean_field (i: INTEGER; object: POINTER; value: BOOLEAN) is
 		external
-			"C (long, EIF_REFERENCE, EIF_BOOLEAN) | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE, EIF_BOOLEAN) use %"eif_internal.h%""
 		alias
 			"ei_set_boolean_field"
 		end
 
+	c_set_integer_8_field (i: INTEGER; object: POINTER; value: INTEGER_8) is
+		external
+			"C macro signature (long, EIF_REFERENCE, EIF_INTEGER_8) use %"eif_internal.h%""
+		alias
+			"ei_set_integer_8_field"
+		end
+
+	c_set_integer_16_field (i: INTEGER; object: POINTER; value: INTEGER_16) is
+		external
+			"C macro signature (long, EIF_REFERENCE, EIF_INTEGER_16) use %"eif_internal.h%""
+		alias
+			"ei_set_integer_16_field"
+		end
+
 	c_set_integer_field (i: INTEGER; object: POINTER; value: INTEGER) is
 		external
-			"C (long, EIF_REFERENCE, EIF_INTEGER) | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE, EIF_INTEGER) use %"eif_internal.h%""
 		alias
 			"ei_set_integer_field"
 		end
 
+	c_set_integer_64_field (i: INTEGER; object: POINTER; value: INTEGER_64) is
+		external
+			"C macro signature (long, EIF_REFERENCE, EIF_INTEGER_64) use %"eif_internal.h%""
+		alias
+			"ei_set_integer_64_field"
+		end
+
 	c_set_real_field (i: INTEGER; object: POINTER; value: REAL) is
 		external
-			"C (long, EIF_REFERENCE, EIF_REAL) | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE, EIF_REAL) use %"eif_internal.h%""
 		alias
 			"ei_set_float_field"
 		end
 
 	c_set_pointer_field (i: INTEGER; object: POINTER; value: POINTER) is
 		external
-			"C (long, EIF_REFERENCE, EIF_POINTER) | %"eif_internal.h%""
+			"C macro signature (long, EIF_REFERENCE, EIF_POINTER) use %"eif_internal.h%""
 		alias
 			"ei_set_pointer_field"
 		end

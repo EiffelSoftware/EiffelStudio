@@ -197,10 +197,28 @@ feature -- Status setting
 		local
 			an_index: INTEGER
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			reset_timer: EV_TIMEOUT
 		do
 			holder := holder_of_widget (a_widget)
 			holder.simulate_minimum_height (a_height)
-			holder.remove_simulated_height
+			if Platform_is_windows then
+				holder.remove_simulated_height
+			else
+				create reset_timer.make_with_interval (100)
+				reset_timer.actions.extend (agent remove_tool_minimum_height (holder, reset_timer))
+			end
+		end
+		
+	remove_tool_minimum_height (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; a_timeout: EV_TIMEOUT) is
+			-- Remove minimum height setting applied to `a_tool', and destroy `a_timeout'.
+		require
+			a_tool_not_void: a_tool /= Void
+			a_timeout_not_void: a_timeout /= Void
+		do
+			a_timeout.destroy
+			a_tool.remove_simulated_height
+		ensure
+			timeout_destroyed: a_timeout.is_destroyed	
 		end
 
 	set_maximize_pixmap (pixmap: EV_PIXMAP) is
@@ -498,24 +516,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 	rebuilding_locked: BOOLEAN
 		-- Will calls to `rebuild' have no effect?
-		
-	rebuild_without_holder (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
-			-- Rebuild `Current' without `a_holder'.
-		require
-			holder_not_void: a_holder /= Void
-			contained: all_holders.has (a_holder)
-		do
-			store_positions
-			stored_splitter_widths.go_i_th (all_holders.index_of (a_holder, 1))
-			stored_splitter_widths.remove
-
-			linear_representation.prune_all (linear_representation.i_th (all_holders.index_of (a_holder, 1)))
-			all_holders.prune_all (a_holder)
-			rebuild
-			restore_stored_positions
-		ensure
-			removed: not all_holders.has (a_holder)
-		end
 
 	rebuild is
 			-- Rebuild complete widget structure of `Current'.
@@ -785,12 +785,12 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		do
 			stored_splitter_widths.wipe_out
 			from
-				all_split_areas.start
+				linear_representation.start
 			until
-				all_split_areas.off
+				linear_representation.off
 			loop
-				stored_splitter_widths.extend (all_split_areas.item.split_position)
-				all_split_areas.forth
+				stored_splitter_widths.extend (holder_of_widget (linear_representation.item).height)
+				linear_representation.forth
 			end
 		end
 		
@@ -799,19 +799,31 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		local
 			split_area: EV_SPLIT_AREA
 		do
+			
+			if not platform_is_windows then
+				application.process_events
+			end
 			if top_widget_resizing then
-					-- We now reverse all of the split area positions which is necessary
-					-- when `top_widget_resizing'.
 				from
 					all_split_areas.start
 				until
 					all_split_areas.off
 				loop
-					split_area := all_split_areas.item
-					if split_area.full then
-						split_area.set_split_position ((split_area.maximum_split_position))
+					if all_split_areas.item.full then
+						all_split_areas.item.set_split_position (all_split_areas.item.maximum_split_position)	
 					end
 					all_split_areas.forth
+				end
+			else
+				from
+					all_split_areas.finish
+				until
+					all_split_areas.off
+				loop
+					if all_split_areas.item.full then
+						all_split_areas.item.set_split_position (all_split_areas.item.minimum_split_position)						
+					end
+					all_split_areas.back
 				end
 			end
 			from
@@ -819,14 +831,39 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				stored_splitter_widths.off
 			loop
-				split_area := all_split_areas.i_th (stored_splitter_widths.index)
-				if split_area /= Void and then split_area.full then
-						-- As `Current' may have been reduced smaller than it was when the tool was maximized,
-						-- we must restrict the resetting of the spit position to the maximum now allowed.
-					split_area.set_split_position ((stored_splitter_widths.item.min (split_area.maximum_split_position)).max (split_area.minimum_split_position))
+				if not is_item_minimized (linear_representation.i_th (stored_splitter_widths.index)) then
+					resize_widget_to (linear_representation.i_th (stored_splitter_widths.index), stored_splitter_widths.item)
 				end
 				stored_splitter_widths.forth
 			end
+--			if top_widget_resizing then
+--					-- We now reverse all of the split area positions which is necessary
+--					-- when `top_widget_resizing'.
+--				from
+--					all_split_areas.start
+--				until
+--					all_split_areas.off
+--				loop
+--					split_area := all_split_areas.item
+--					if split_area.full then
+--						split_area.set_split_position ((split_area.maximum_split_position))
+--					end
+--					all_split_areas.forth
+--				end
+--			end
+--			from
+--				stored_splitter_widths.start
+--			until
+--				stored_splitter_widths.off
+--			loop
+--				split_area := all_split_areas.i_th (stored_splitter_widths.index)
+--				if split_area /= Void and then split_area.full then
+--						-- As `Current' may have been reduced smaller than it was when the tool was maximized,
+--						-- we must restrict the resetting of the spit position to the maximum now allowed.
+--					split_area.set_split_position ((stored_splitter_widths.item.min (split_area.maximum_split_position)).max (split_area.minimum_split_position))
+--				end
+--				stored_splitter_widths.forth
+--			end
 			
 			 	-- Now remove all stored positions.
 			 stored_splitter_widths.wipe_out
@@ -889,11 +926,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			widgets: ARRAYED_LIST [EV_WIDGET]
 			maximum_insert_height, insert_height, tool_holder_height: INTEGER
-		do
-				-- Firstly show the widget of the tool, as it was
-				-- hidden when minimized.
-			a_tool.tool.show
-			
+		do	
 			original_parent ?= a_tool.parent
 			remove_tool_from_parent (a_tool)
 			index_of_tool := index_of_holder (a_tool)
@@ -917,6 +950,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			else
 				parent_split_area.set_second (a_tool)
 			end
+			update_expanded_state_of_all_split_areas
 			
 			update_all_minimize_buttons
 				-- Now must update any minimized tools that were parented in the
@@ -958,8 +992,11 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 			insert_height := a_tool.restore_height.min (maximum_insert_height)						
 			
-			a_tool.simulate_minimum_height (insert_height)
-			a_tool.remove_simulated_height
+			resize_widget_to (a_tool.tool, insert_height)
+			
+				-- Now show the widget of the tool, as it was
+				-- hidden when minimized.
+			a_tool.tool.show
 		ensure
 			not_minimized: not a_tool.is_minimized
 		end
@@ -1469,13 +1506,17 @@ feature {NONE} -- Implementation
 			maximum_insert_height: INTEGER
 			insert_height: INTEGER
 			tool_holder_height: INTEGER
+			total_restored: INTEGER
 		do
-			cursor := linear_representation.cursor
+			cursor := linear_representation.cursor;
 			
 				-- Firstly, reduce all split areas to their minimums. This permits us to call
 				-- `simulate_minimum_height' which will restore the widget back to its proper height.
 				-- If we did not make all split areas as small as possible, then the hieght simulation
 				-- would not be able to reduce the height of an item as necessary.
+			if not platform_is_windows then
+				application.process_events
+			end
 			if top_widget_resizing then
 				from
 					all_split_areas.start
@@ -1483,7 +1524,7 @@ feature {NONE} -- Implementation
 					all_split_areas.off
 				loop
 					if all_split_areas.item.full then
-						all_split_areas.item.set_split_position (all_split_areas.item.maximum_split_position)						
+						all_split_areas.item.set_split_position (all_split_areas.item.maximum_split_position)	
 					end
 					all_split_areas.forth
 				end
@@ -1582,18 +1623,23 @@ feature {NONE} -- Implementation
 					(linear_representation.index < 2 and holder_restored) or linear_representation.off
 				loop
 					if holder_of_widget (linear_representation.item) = holder then
-						holder.simulate_minimum_height (insert_height - tool_holder_height)
-						holder.remove_simulated_height
+						--holder.simulate_minimum_height (insert_height - tool_holder_height)
+						--holder.remove_simulated_height
+						resize_widget_to (holder.tool, insert_height - tool_holder_height)
+						total_restored :=  total_restored + insert_height - tool_holder_height
 						holder_restored := True
 					else
 						an_index := pre_insertion_holders.index_of (holder_of_widget (linear_representation.item), 1)
 						local_holder := pre_insertion_holders.i_th (an_index)
 						stored_height := pre_insertion_heights.i_th (an_index)
-						local_holder.simulate_minimum_height (stored_height)
-						local_holder.remove_simulated_height
+						resize_widget_to (local_holder.tool, stored_height)
+						total_restored := total_restored + stored_height
+						--local_holder.simulate_minimum_height (stored_height)
+						--local_holder.remove_simulated_height
 					end
 					linear_representation.back
 				end
+				resize_widget_to (linear_representation.first, height - total_restored)
 			else
 				from
 					linear_representation.start
@@ -1619,6 +1665,45 @@ feature {NONE} -- Implementation
 			index_not_changed: linear_representation.index = old linear_representation.index
 		end
 
+	update_expanded_state_of_all_split_areas is
+			-- Ensure that expanded state of all split areas is correct.
+		local
+			cursor: CURSOR
+			split_area: EV_SPLIT_AREA
+		do
+			if top_widget_resizing then
+				cursor := all_split_areas.cursor
+				from
+					all_split_areas.start
+				until
+					all_split_areas.off
+				loop
+					split_area := all_split_areas.item
+					if split_area.full then
+						split_area.enable_item_expand (split_area.first)
+						split_area.disable_item_expand (split_area.second)
+					end
+					all_split_areas.forth
+				end
+				all_split_areas.go_to (cursor)
+			end
+		ensure
+			index_not_changed: old all_split_areas.index = all_split_areas.index
+		end
+
+	platform_is_windows: BOOLEAN is
+			-- Is `Current' executing on Windows platform?
+		once
+			Result := (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO")
+		end
+		
+	application: EV_APPLICATION is
+			-- Application for `Current'. May not be a Once, as it is
+			-- possible to change the application.
+		do
+			Result := (create {EV_ENVIRONMENT}).application
+		end
+		
 invariant
 	linear_representation_not_void: linear_representation /= Void
 	all_holders_not_void: all_holders /= Void

@@ -259,10 +259,10 @@ feature -- Status setting
 		end
 	
 	set_port (port_no: INTEGER) is
-			-- Set port number.
+			-- Set port number to `port_no'.
 		require
 			closed: not is_open
-			positive_port_number: port_no > 0
+			non_negative_port_number: port_no >= 0
 		do
 			address.set_port (port_no)
 		ensure
@@ -270,21 +270,31 @@ feature -- Status setting
 		end
 
 	set_proxy (host: STRING; port_no: INTEGER) is
-			-- Set proxy information.
+			-- Set proxy host to `host' and port to `port_no'.
 		require
 			proxy_supported: is_proxy_supported
 			closed: not is_open
 			non_empty_host: host /= Void and then not host.is_empty
 			host_ok: address.proxy_host_ok (host)
-			positive_port: port_no > 0
+			non_negative_port: port_no >= 0
 		do
 			address.set_proxy (host, port_no)
 		ensure
 			proxy_set: address.is_proxy_used
 		end
 
+	set_proxy_information (pi: PROXY_INFORMATION) is
+			-- Set proxy information to `pi'.
+		require
+			proxy_supported: is_proxy_supported
+		do
+			address.set_proxy_information (pi)
+		ensure
+			proxy_set: address.is_proxy_used
+		end
+
 	set_username (un: STRING) is
-			-- Set username.
+			-- Set username to `un'.
 		require
 			username_accepted: address.has_username
 			non_empty_username: un /= Void and then not un.is_empty
@@ -293,7 +303,7 @@ feature -- Status setting
 		end
 
 	set_password (pw: STRING) is
-			-- Set password.
+			-- Set password to `pw'.
 		require
 			password_accepted: address.is_password_accepted
 			non_empty_password: pw /= Void and then not pw.is_empty

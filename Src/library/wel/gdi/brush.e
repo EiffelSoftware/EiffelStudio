@@ -14,6 +14,7 @@ creation
 	make_by_sys_color,
 	make_solid,
 	make_hatch,
+	make_by_pattern,
 	make_indirect,
 	make_by_pointer
 
@@ -22,6 +23,7 @@ feature {NONE} -- Initialization
 	make_by_sys_color (sys_color: INTEGER) is
 			-- Make a brush using the system color `sys_color'.
 			-- See class WEL_COLOR_CONSTANTS for `sys_color' value.
+			-- Use only this creation routine for a WNDCLASS brush.
 		do
 			item := cwel_integer_to_pointer (sys_color)
 			shared := True
@@ -32,6 +34,9 @@ feature {NONE} -- Initialization
 
 	make_solid (a_color: WEL_COLOR_REF) is
 			-- Make a brush that has the solid `a_color'
+		require
+			a_color_not_void: a_color /= Void
+			a_color_exists: a_color.exists
 		do
 			item := cwin_create_solid_brush (a_color.item)
 		ensure
@@ -42,13 +47,27 @@ feature {NONE} -- Initialization
 	make_hatch (a_hatch: INTEGER; a_color: WEL_COLOR_REF) is
 			-- Make a brush that has the
 			-- `hatch_style' pattern and `a_color'
-			-- See class WEL_HATCH_STYLE_CONSTANTS for `a_hatch'
+			-- See class WEL_HS_CONSTANTS for `a_hatch'
+		require
+			a_color_not_void: a_color /= Void
+			a_color_exists: a_color.exists
 		do
 			item := cwin_create_hatch_brush (a_hatch, a_color.item)
 		ensure
 			exist: exists
 			hatch_set: hatch = a_hatch
 			color_set: color.item = a_color.item
+		end
+
+	make_by_pattern (bitmap: WEL_BITMAP) is
+			-- Make a brush with the specified `bitmap' pattern.
+		require
+			bitmap_not_void: bitmap /= Void
+			bitmap_exists: bitmap.exists
+		do
+			item := cwin_create_pattern_brush (bitmap.item)
+		ensure
+			exist: exists
 		end
 
 	make_indirect (a_log_brush: WEL_LOG_BRUSH) is
@@ -127,6 +146,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (LOGBRUSH *): EIF_POINTER"
 		alias
 			"CreateBrushIndirect"
+		end
+
+	cwin_create_pattern_brush (a_bitmap: POINTER): POINTER is
+			-- SDK CreatePatternBrush
+		external
+			"C [macro <wel.h>] (HBITMAP): EIF_POINTER"
+		alias
+			"CreatePatternBrush"
 		end
 
 end -- class WEL_BRUSH

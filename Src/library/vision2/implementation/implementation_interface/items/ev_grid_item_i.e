@@ -98,17 +98,23 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			is_selected := True
-			parent_grid_i.redraw_client_area
-			fixme ("Perform a more optimal redraw when available")
+			if not is_selected then
+				is_selected := True
+				parent_row_i.increase_selected_item_count
+				parent_grid_i.redraw_client_area
+				fixme ("Perform a more optimal redraw when available")				
+			end
 		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
 		do
-			is_selected := True
-			parent_grid_i.redraw_client_area
-			fixme ("Perform a more optimal redraw when available")
+			if is_selected then
+				is_selected := False
+				parent_row_i.decrease_selected_item_count
+				parent_grid_i.redraw_client_area
+				fixme ("Perform a more optimal redraw when available")				
+			end
 		end
 
 feature -- Status report

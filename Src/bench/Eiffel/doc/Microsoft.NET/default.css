@@ -22,7 +22,7 @@ DL {
 	PADDING-LEFT: 1px; /* Prevents italic-letter descenders from being cut off */
 }
 
-PRE, CODE, .code {
+PRE, CODE {
 	FONT: 100% Courier New, Courier, mono; /* This is 100% of 70% */
 	MARGIN-TOP: .7em;
 	MARGIN-BOTTOM: .7em;
@@ -78,13 +78,19 @@ A {
 }
 
 A:hover {
-	COLOR:#006633;
+	COLOR:#555555;
 	TEXT-DECORATION:underline;
+	background-color: Yellow;
 }
 
 .eclass {
     COLOR:#0000AA;
 }
+
+P NESTEDELEMENT {
+    COLOR:#0000AA;
+}
+
 
 .neclass {
     COLOR:black;
@@ -223,3 +229,4 @@ A:hover {
 	BORDER-COLOR: #999999;
 	PADDING: 4px 8px;
 }
+

@@ -8,38 +8,38 @@ make='$compiler_path\bin\nmake'
 #
 #-- MT debug
 #-----------
-#ccflags='-nologo -Zi -MTd -DEIF_THREADS'
+#ccflags='-YX -nologo -Zi -MTd -DEIF_THREADS'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #
 #-- MT no debug
 #--------------
-#ccflags='-nologo -MT -DEIF_THREADS'
+#ccflags='-YX -nologo -MT -DEIF_THREADS'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
 #-- MT DLL debug
 #--------------
-#ccflags='-nologo -Zi -MDd -DEIF_THREADS'
+#ccflags='-YX -nologo -Zi -MDd -DEIF_THREADS'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #
 #-- MT DLL no debug
 #------------------
-#ccflags='-nologo -MD -DEIF_THREADS'
+#ccflags='-YX -nologo -MD -DEIF_THREADS'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
 #-- no MT debug
 #--------
-ccflags='-Zi -nologo'
+ccflags='-YX -Zi -nologo'
 link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH'
 link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH'
 link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS) -DEBUGTYPE:BOTH'
 #
 #-- no MT no debug
 #--------
-#ccflags='-nologo'
+#ccflags='-YX -nologo'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS)'

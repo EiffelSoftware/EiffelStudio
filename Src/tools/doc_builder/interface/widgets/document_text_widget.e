@@ -34,12 +34,12 @@ inherit
 
 create
 	make
-
+	
 feature -- Creation
 
 	make (a_document: DOCUMENT) is
 			-- Make Current with `text'
-		do			
+		do
 			document := a_document
 			document.attach (Current)
 			default_create
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialization
 		do	
-			Precursor {EV_TEXT}
+			Precursor {EV_TEXT}						
 			if document.text /= Void then				
 				append_text (document.text)
 			end
@@ -66,37 +66,9 @@ feature {NONE} -- Initialization
 			key_release_actions.force_extend (agent update_subject)
 			pointer_button_release_actions.force_extend (agent update_subject)
 			pointer_button_release_actions.force_extend (agent pointer_released)
-			pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))
-			initialize_accelerators			
+			pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))		
+			drop_actions.extend (agent pebble_dropped)
 		end
-
-	initialize_accelerators is
-			-- Initialize accelerators
-		local
-			key: EV_KEY
-			key_constants: EV_KEY_CONSTANTS
-			accelerator: EV_ACCELERATOR
-		do		
-			create key_constants
-			
-				-- Ctrl-B
-			create key.make_with_code (key_constants.Key_b)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent tag_selection ("bold"))
-			Application_window.accelerators.extend (accelerator)
-			
-				-- Ctrl-I
-			create key.make_with_code (key_constants.Key_i)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent tag_selection ("italic"))
-			Application_window.accelerators.extend (accelerator)	
-			
-				-- Ctrl-S
-			create key.make_with_code (key_constants.Key_s)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent save)
-			Application_window.accelerators.extend (accelerator)
-		end		
 
 feature -- Query
 			
@@ -296,7 +268,7 @@ feature -- Status Setting
 			if l_prev_text /= Void then
 				shared_document_editor.clipboard.set_text (l_prev_text)
 			end
-		end		
+		end
 
 	update_subject is
 			-- Update the observed subjects of changes so it can update
@@ -461,9 +433,9 @@ feature {NONE} -- Implementation
 			schema_element ?= shared_document_manager.schema.get_element_by_name (a_parent)
 			if schema_element /= void then
 				if not schema_element.children.is_empty then
-					children := clone (schema_element.children)
+					children := schema_element.children.twin
 				elseif not schema_element.type_children.is_empty then
-					children := clone (schema_element.type_children)
+					children := schema_element.type_children.twin
 				end
 				if children /= Void then
 					from
@@ -479,5 +451,26 @@ feature {NONE} -- Implementation
 				end					
 			end
 		end
+		
+	pebble_dropped (a_url: STRING) is
+			-- Pebble dropped on target
+		local
+			l_start_pos,
+			l_end_pos: INTEGER
+			l_link: DOCUMENT_LINK
+			l_url: STRING
+		do
+			set_focus
+			l_start_pos := caret_position
+			if document.is_persisted then				
+				create l_link.make (document.name, a_url)
+				l_url := l_link.relative_url
+			else
+				l_url := a_url
+			end
+			l_end_pos := l_start_pos + l_url.count
+			insert_text (l_url)
+			select_region (l_start_pos, l_end_pos)
+		end		
 
 end -- class DOCUMENT_TEXT_WIDGET

@@ -432,20 +432,6 @@ feature -- Setting
 			rout_id_set := set
 		end
 
-	set_private_external_name (n: like private_external_name) is
-			-- Assign `n' to `private_external_name'.
-		require
-			n_not_empty: n /= Void implies not n.is_empty
-		local
-			l_names_heap: like Names_heap
-		do
-			l_names_heap := Names_heap
-			l_names_heap.put (n)
-			private_external_name_id := l_names_heap.found_item
-		ensure
-			private_external_name_set: n /= Void implies equal (private_external_name, n)
-		end
-
 	set_private_external_name_id (n_id: like private_external_name_id) is
 			-- Assign `n_id' to `private_external_name_id'.
 		require

@@ -278,12 +278,6 @@ feature -- New feature description
 						def_proc.set_extension (il_ext)
 						proc := def_proc
 					end
-					if
-						System.il_generation and then
-						external_body.alias_name_id > 0
-					then
-						proc.set_private_external_name_id (external_body.alias_name_id)
-					end
 				else
 					create {DYN_PROC_I} proc
 				end

@@ -35,9 +35,9 @@ feature {NONE} -- Recording information for eiffelcase
 			valid_parents: parents /= Void
 		local
 			no_repeated_parents: LINKED_SET [INTEGER];
-			p_l: ARRAYED_LIST [S_RELATION_DATA];
-			inherit_data: S_RELATION_DATA;
-			parent_id: INTEGEr
+			p_l: ARRAYED_LIST [S_INHERIT_DATA];
+			inherit_data: S_INHERIT_DATA;
+			parent_id: INTEGER
 		do
 			if parents.count > 1 then
 					-- Skip inherit class any

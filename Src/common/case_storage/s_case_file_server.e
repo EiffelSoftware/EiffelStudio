@@ -123,13 +123,4 @@ feature -- Class information
 			valid_result: Result /= Void implies Result.is_valid
 		end
 
-feature 
-
-	set_saved_classes (classes: like saved_classes) is
-		require
-			valid_classes: classes /= Void
-		do
-			saved_classes := classes
-		end;
-
 end

@@ -3,6 +3,9 @@ class S_TEXT_DATA
 inherit
 
 	S_ELEMENT_DATA
+		redefine
+			is_equal
+		end
 
 creation
 
@@ -11,6 +14,11 @@ creation
 feature
 
 	text: STRING;
+
+	is_equal (other: like Current): BOOLEAN is
+		do
+			Result := text.is_equal (other.text)
+		end;
 
 feature {NONE} -- Setting values
 

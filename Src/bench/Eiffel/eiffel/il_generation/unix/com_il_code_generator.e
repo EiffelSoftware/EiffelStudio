@@ -93,8 +93,17 @@ feature -- Generation type
 
 feature -- Class info
 
-	generate_class_mappings (class_name: STRING; id, interface_id: INTEGER; filename, element_type_name: STRING) is
+	generate_class_mappings (dotnet_name, eiffel_name: STRING; id, interface_id: INTEGER; filename, element_type_name: STRING) is
 			-- Create a correspondance table between `id' and `class_name'.
+		do
+		end
+
+	generate_type_class_mapping,
+	generate_class_type_class_mapping,
+	generate_generic_type_class_mapping,
+	generate_basic_type_class_mapping,
+	generate_formal_type_class_mapping,
+	generate_anchored_type_class_mapping (type_id: INTEGER) is
 		do
 		end
 
@@ -345,7 +354,7 @@ feature -- IL Generation
 		do
 		end
 
-	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER; parameters_type: ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN; type_id: INTEGER; feature_id: INTEGER) is
+	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER; parameters_type: ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN) is
 			-- Generate call to `name' with signature `parameters_type'.
 		do
 		end
@@ -425,6 +434,14 @@ feature -- Variables access
 
 	generate_precursor_feature_access (type_id, feature_id: INTEGER) is
 			-- Generate access to feature of `feature_id' in `type_id'.
+		do
+		end
+
+	generate_formal_feature (feature_id: INTEGER) is
+		do
+		end
+
+	put_type_token (type_id: INTEGER) is
 		do
 		end
 
@@ -676,7 +693,7 @@ feature -- Constants generation
 		do
 		end
 
-	put_real_constant (r: REAL) is
+	put_real_constant (r: DOUBLE) is
 			-- put `r' on IL stack.
 		do
 		end

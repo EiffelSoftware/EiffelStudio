@@ -17,6 +17,7 @@ feature
 			!!Result;
 			Result.set_target (target.enlarged);
 			Result.set_source (source.enlarged);
+			Result.set_line_number (line_number)
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

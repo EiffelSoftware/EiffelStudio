@@ -88,6 +88,7 @@ feature
 		local
 			cl_type_i: CL_TYPE_I;
 		do
+			generate_line_info;
 				-- First pre-compute the source and put it in the register
 				-- so that we can use it inside macro (where the argument is
 				-- evaluated more than once).

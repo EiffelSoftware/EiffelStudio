@@ -37,6 +37,7 @@ feature
 	generate is
 			-- Generate the call
 		do
+			generate_line_info;
 			call.generate;
 		end;
 

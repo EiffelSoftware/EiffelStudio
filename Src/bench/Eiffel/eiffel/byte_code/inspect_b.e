@@ -75,6 +75,7 @@ feature
 	generate is
 			-- Generate C code in `generated_file'.
 		do
+			generate_line_info;
 			generated_file.new_line;
 			switch.generate;
 			generated_file.putstring ("switch (");

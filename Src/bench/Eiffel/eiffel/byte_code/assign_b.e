@@ -41,6 +41,7 @@ feature
 			!!Result;
 			Result.set_target (target.enlarged);
 			Result.set_source (source.enlarged);
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Byte code generation

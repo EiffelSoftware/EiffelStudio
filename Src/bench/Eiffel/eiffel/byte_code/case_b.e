@@ -9,9 +9,23 @@ inherit
 			analyze, generate, enlarge_tree, make_byte_code,
 			has_loop, assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
-			inlined_byte_code
+			inlined_byte_code, line_number, set_line_number
 		end;
-	
+
+feature -- Access
+
+	line_number : INTEGER;
+
+feature -- Line number setting
+
+	set_line_number (lnr : INTEGER) is
+
+		do
+			line_number := lnr
+		ensure then
+			line_number_set : line_number = lnr
+		end
+
 feature 
 
 	interval: BYTE_LIST [BYTE_NODE];
@@ -54,6 +68,7 @@ feature
 	generate is
 			-- Generate C code in `generated_file'.
 		do
+			generate_line_info;
 			interval.generate;
 			if compound /= Void then
 				generated_file.indent;

@@ -24,6 +24,34 @@ inherit
 	SHARED_GENERATION_CONSTANTS;
 	COMPILER_EXPORTER
 
+feature -- Eiffel source line information
+
+	line_number : INTEGER is     
+			-- Line number where construct
+			-- begins in the Eiffel source.
+		do
+			Result := -1;
+				-- Unknown by default.
+		end
+
+	set_line_number (lnr : INTEGER) is
+			-- Set `line_number' to `lnr'.
+		do
+			-- Nothing by default
+		end
+
+	generate_line_info is
+			-- Generate source line information.
+		do
+			-- Note: This should be made conditional
+			-- (i.e. a LACE option) later (MS).
+
+			if System.line_generation then
+				generated_file.putstring ("%N#line ")
+				generated_file.putint (line_number)
+				generated_file.new_line
+			end
+		end
 feature 
 
 	generated_file: INDENT_FILE is

@@ -65,6 +65,7 @@ feature
 	generate is
 			-- Generate C code in `generated_file'.
 		do
+			generate_line_info
 			generate_assertions
 			generate_loop_body
 		end;
@@ -116,11 +117,11 @@ feature
 				-- the end of the while body.
 				-- FIXME: maybe if the expression is too complex, we should
 				-- use the old mechanism (pre 3.2.5) with label and goto
-            generated_file.putstring ("while (!(");
-            stop.print_register;
-            generated_file.putstring (")) {");
-            generated_file.new_line;
-            generated_file.indent;
+			generated_file.putstring ("while (!(");
+			stop.print_register;
+			generated_file.putstring (")) {");
+			generated_file.new_line;
+			generated_file.indent;
 			if generate_invariant then
 				context.set_assertion_type (In_loop_invariant);
 				if workbench_mode then

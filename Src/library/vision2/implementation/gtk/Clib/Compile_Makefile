@@ -14,4 +14,9 @@ echo "Launching 'make'..."
 make
 
 echo "Moving generated file 'gtk_eiffel.o' to $EIFFEL4/library/vision2/implementation/gtk/spec/$PLATFORM/"
+[ ! -d $EIFFEL4/library/vision2/implementation/gtk/spec/$PLATFORM ] && \
+	echo "Note:	$EIFFEL4/library/vision2/implementation/gtk/spec/$PLATFORM/ does not exist..." && \
+	mkdir -p $EIFFEL4/library/vision2/implementation/gtk/spec/$PLATFORM && \
+	echo "	... created!"
+
 mv gtk_eiffel.o $EIFFEL4/library/vision2/implementation/gtk/spec/$PLATFORM/.

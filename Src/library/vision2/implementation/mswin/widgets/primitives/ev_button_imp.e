@@ -690,6 +690,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			-- higlighting on text.
 		local
 			old_text_color: WEL_COLOR_REF
+			color_imp: EV_COLOR_IMP
 		do
 			old_text_color := dc.text_color
 			if not is_sensitive then
@@ -699,8 +700,9 @@ feature {EV_ANY_I} -- Drawing implementation
 				dc.draw_text (text, r, text_format)
 				dc.set_text_color (color_gray_text)
 				r.offset (-1, -1)
-			else	
-				dc.set_text_color (Rtext_color)
+			else
+				color_imp ?= foreground_color.implementation
+				dc.set_text_color (color_imp)
 			end
 			dc.set_background_transparent
 			dc.draw_text (text, r, text_format)

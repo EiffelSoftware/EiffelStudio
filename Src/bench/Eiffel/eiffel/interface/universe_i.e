@@ -5,20 +5,36 @@ class UNIVERSE_I
 inherit
 
 	SHARED_ERROR_HANDLER
+		export
+			{COMPILER_EXPORTER} all
 		redefine
 			copy
 		end
-
 	SHARED_WORKBENCH
+		export
+			{COMPILER_EXPORTER} all
 		redefine
 			copy
-		end
+		end;
+	COMPILER_EXPORTER
+		redefine
+			copy
+		end;
 	
-creation
+creation {COMPILER_EXPORTER}
 
 	make
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	make is
+			-- Create the hash table.
+		do
+			!! clusters.make;
+			!! cluster_counter;
+		end;
+
+feature -- Properties
 
 	clusters: LINKED_LIST [CLUSTER_I];
 			-- Clusters of the universe
@@ -26,33 +42,86 @@ feature -- Attributes
 	last_class: CLASS_I;
 			-- Last class subject to a query
 
-feature
+feature -- Access
 
-	make is
-			-- Create the hash table.
+	class_stone (class_name: STRING): STONE is
+			-- Find first class stone with class name `class_name'.
+			-- (Void if none are found).	
+		local
+			class_i: CLASS_I
 		do
-			!!clusters.make;
+			class_i := class_with_name (class_name);
+			if class_i /= Void then
+				if class_i.compiled then
+					Result := class_i.compiled_eclass.stone
+				else
+					!CLASSI_STONE! Result.make (class_i)
+				end
+			end
 		end;
 
-	set_clusters (l: like clusters) is
-			-- Assign `l' to `clusters'.
+	class_with_name (class_name: STRING): CLASS_I is
+			-- Find class with name `class_name' in the Universe
+			-- (Void if not found).	
+		local
+			cur: CURSOR;
+			cname: STRING
 		do
-			clusters := l;
+			cname := clone (class_name);
+			cname.to_lower;
+			cur := clusters.cursor;
+			from
+				clusters.start
+			until
+				clusters.after or else Result /= Void
+			loop
+				Result := class_named (cname, clusters.item);
+				clusters.forth
+			end;
+			clusters.go_to (cur)
 		end;
 
-	set_last_class (c: CLASS_I) is
-			-- Assign `c' to `last_class'.
-		do
-			last_class := c;
-		end;
-
-	insert_cluster (c: CLUSTER_I) is
-			-- Insert `c' in `clusters'.
+	class_named (class_name: STRING; cluster: CLUSTER_I): CLASS_I is
+			-- Class named `class_name' in cluster `cluster'
 		require
-			good_argument: c /= Void;
-			consistency: not has_cluster_of_path (c.path);
+			good_argument: class_name /= Void;
+			good_cluster: cluster /= Void;
+		local
+			a_cluster: CLUSTER_I;
+			real_name: STRING;
+			rename_clause: RENAME_I;
+			renamings: HASH_TABLE [STRING, STRING];
+			ignore: LINKED_LIST [CLUSTER_I];
+			old_cursor: CURSOR
 		do
-			clusters.extend (c);
+				-- First look for a renamed class in `cluster'
+			Result := cluster.renamed_class (class_name);
+
+			if Result = Void then
+				from
+					old_cursor := clusters.cursor;
+					ignore := cluster.ignore;
+					clusters.start
+				until
+					clusters.after or else Result /= Void
+				loop
+					a_cluster := clusters.item;
+					if not ignore.has (a_cluster) then
+						real_name := class_name;
+						rename_clause := cluster.rename_clause_for (a_cluster);
+						if rename_clause /= Void then
+								-- Evaluation of the real name of the class
+							renamings := rename_clause.renamings;
+							if renamings.has (class_name) then
+								real_name := renamings.item (class_name);
+							end;
+						end;
+						Result := a_cluster.classes.item (real_name);
+					end;
+					clusters.forth
+				end;
+				clusters.go_to (old_cursor)
+			end;
 		end;
 
 	cluster_changed: BOOLEAN is
@@ -75,22 +144,105 @@ feature
 			end;
 		end;
 
-	reset_clusters is
-			-- Reset all the clusters
+	cluster_of_name (cluster_name: STRING): CLUSTER_I is
+			-- Cluster which name is `cluster_name' (Void if none)
+		require
+			good_argument: cluster_name /= Void;
 		local
-			a_cluster: CLUSTER_I;
+			stop: BOOLEAN;
+		do
+			from
+				clusters.start
+			until
+				clusters.after or else stop
+			loop
+				stop := cluster_name.is_equal (clusters.item.cluster_name);
+				if not stop then
+					clusters.forth
+				end;
+			end;
+			if stop then
+				Result := clusters.item
+			end;
+		end;
+
+	has_cluster_of_name (cluster_name: STRING): BOOLEAN is
+			-- Does `clusters' have a cluster which name is `cluster_name' ?
+		do
+			Result := cluster_of_name (cluster_name) /= Void;
+		end;
+
+	cluster_of_path (cluster_path: STRING): CLUSTER_I is
+			-- Cluster which path is `cluster_path' (Void if none)
+		require
+			good_argument: cluster_path /= Void;
+		local
+			stop: BOOLEAN;
+		do
+			from
+				clusters.start
+			until
+				clusters.after or else stop
+			loop
+				stop := clusters.item.path.is_equal (cluster_path);
+				if not stop then
+					clusters.forth
+				end;
+			end;
+			if stop then
+				Result := clusters.item
+			end;
+		end;
+
+	has_cluster_of_path (cluster_path: STRING): BOOLEAN is
+			-- Does `clusters' have a cluster which path is `cluster_path' ?
+		do
+			Result := cluster_of_path (cluster_path) /= Void;
+		end;
+
+feature -- Update
+
+	update_cluster_paths is
+			-- Update the paths of the clusters in the universe.
+			-- (Re-interpret environment variables)
+			-- FIXME shouldn't be exported to all
 		do
 			from
 				clusters.start
 			until
 				clusters.after
 			loop
-				a_cluster := clusters.item;
-				if not a_cluster.is_precompiled then
-					a_cluster.reset_cluster;
-				end;
+				clusters.item.update_path;
 				clusters.forth
-			end;
+			end
+		end;
+
+feature {COMPILER_EXPORTER} -- Implementation
+
+	cluster_counter: COUNTER;
+			-- Counter of clusters
+
+feature {COMPILER_EXPORTER} -- Implementation
+
+	set_clusters (l: like clusters) is
+			-- Assign `l' to `clusters'.
+		do
+			clusters := l;
+		end;
+
+	set_last_class (c: CLASS_I) is
+			-- Assign `c' to `last_class'.
+		do
+			last_class := c;
+		end;
+
+	insert_cluster (c: CLUSTER_I) is
+			-- Insert `c' in `clusters'.
+		require
+			good_argument: c /= Void;
+			consistency: not has_cluster_of_path (c.path);
+		do
+			clusters.extend (c);
 		end;
 
 	copy (other: like Current) is
@@ -106,20 +258,6 @@ feature
 				other.clusters.forth
 			end
 		end
-
-	update_cluster_paths is
-			-- Update the paths of the clusters in the universe.
-			-- (Re-interpret environment variables)
-		do
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				clusters.item.update_path;
-				clusters.forth
-			end
-		end;
 
 	check_universe is
 			-- Check universe
@@ -152,6 +290,24 @@ feature
 			end
 				-- Check sum error
 			Error_handler.checksum;
+		end;
+
+	reset_clusters is
+			-- Reset all the clusters
+		local
+			a_cluster: CLUSTER_I;
+		do
+			from
+				clusters.start
+			until
+				clusters.after
+			loop
+				a_cluster := clusters.item;
+				if not a_cluster.is_precompiled then
+					a_cluster.reset_cluster;
+				end;
+				clusters.forth
+			end;
 		end;
 
 	unique_class (class_name: STRING): CLASS_I is
@@ -192,62 +348,6 @@ feature
 			end;
 		end;
 				
-	cluster_of_path (cluster_path: STRING): CLUSTER_I is
-			-- Cluster which path is `cluster_path' (Void if none)
-		require
-			good_argument: cluster_path /= Void;
-		local
-			stop: BOOLEAN;
-		do
-			from
-				clusters.start
-			until
-				clusters.after or else stop
-			loop
-				stop := clusters.item.path.is_equal (cluster_path);
-				if not stop then
-					clusters.forth
-				end;
-			end;
-			if stop then
-				Result := clusters.item
-			end;
-		end;
-
-	has_cluster_of_path (cluster_path: STRING): BOOLEAN is
-			-- Does `clusters' have a cluster which path is `cluster_path' ?
-		do
-			Result := cluster_of_path (cluster_path) /= Void;
-		end;
-
-	cluster_of_name (cluster_name: STRING): CLUSTER_I is
-			-- Cluster which name is `cluster_name' (Void if none)
-		require
-			good_argument: cluster_name /= Void;
-		local
-			stop: BOOLEAN;
-		do
-			from
-				clusters.start
-			until
-				clusters.after or else stop
-			loop
-				stop := cluster_name.is_equal (clusters.item.cluster_name);
-				if not stop then
-					clusters.forth
-				end;
-			end;
-			if stop then
-				Result := clusters.item
-			end;
-		end;
-
-	has_cluster_of_name (cluster_name: STRING): BOOLEAN is
-			-- Does `clusters' have a cluster which name is `cluster_name' ?
-		do
-			Result := cluster_of_name (cluster_name) /= Void;
-		end;
-
 	duplicate: like Current is
 			-- Duplication of universe
 		local
@@ -316,73 +416,6 @@ feature
 			end;
 		end;
 
-	class_stone (class_name: STRING): STONE is
-			-- Find first class stone with class name `class_name'.
-			-- (Void if none are found).	
-		local
-			class_i: CLASS_I
-		do
-			from
-				clusters.start
-			until
-				clusters.after or else (Result /= Void)
-			loop
-				class_i :=  class_named (class_name, clusters.item);
-				if class_i /= Void then
-					if class_i.compiled then
-						Result := class_i.compiled_class.stone
-					else
-						!CLASSI_STONE!Result.make (class_i)
-					end
-				else
-					clusters.forth
-				end
-			end
-		end;
-
-	class_named (class_name: STRING; cluster: CLUSTER_I): CLASS_I is
-			-- Class named `class_name' in cluster `cluster'
-		require
-			good_argument: class_name /= Void;
-			good_cluster: cluster /= Void;
-		local
-			a_cluster: CLUSTER_I;
-			real_name: STRING;
-			rename_clause: RENAME_I;
-			renamings: HASH_TABLE [STRING, STRING];
-			ignore: LINKED_LIST [CLUSTER_I];
-			old_cursor: CURSOR
-		do
-				-- First look for a renamed class in `cluster'
-			Result := cluster.renamed_class (class_name);
-
-			if Result = Void then
-				from
-					old_cursor := clusters.cursor;
-					ignore := cluster.ignore;
-					clusters.start
-				until
-					clusters.after or else Result /= Void
-				loop
-					a_cluster := clusters.item;
-					if not ignore.has (a_cluster) then
-						real_name := class_name;
-						rename_clause := cluster.rename_clause_for (a_cluster);
-						if rename_clause /= Void then
-								-- Evaluation of the real name of the class
-							renamings := rename_clause.renamings;
-							if renamings.has (class_name) then
-								real_name := renamings.item (class_name);
-							end;
-						end;
-						Result := a_cluster.classes.item (real_name);
-					end;
-					clusters.forth
-				end;
-				clusters.go_to (old_cursor)
-			end;
-		end;
-
 	is_ambiguous_name (class_name: STRING): BOOLEAN is
 			-- Is the raw class name `class_name' ambiguous for the
 			-- universe ?
@@ -403,7 +436,7 @@ feature
 			end;
 		end;
 
-feature -- Precompilation
+feature {COMPILER_EXPORTER} -- Precompilation
 
 	mark_precompiled is
 			-- Mark all the clusters of the universe as being precompiled.
@@ -418,7 +451,7 @@ feature -- Precompilation
 			end;
 		end;
 
-feature -- DLE
+feature {COMPILER_EXPORTER} -- DLE Implementation
 
 	reset_dle_clusters is
 			-- Reset all the DC-set clusters.

@@ -20,6 +20,11 @@ inherit
 			parent_needed
 		end
 
+	EV_ITEM_HOLDER [EV_STATUS_BAR_ITEM]
+		redefine
+			implementation
+		end
+
 creation
 	make
 
@@ -42,18 +47,6 @@ feature -- Access
 			Result ?= {EV_PRIMITIVE} Precursor
 		end
 
-feature -- Status report
-
-	count: INTEGER is
-			-- Current number of parts
-		require
-			exists: not destroyed
-		do
-			Result := implementation.count
-		ensure
-			positive_result: Result > 0
-		end
-
 feature -- Element change
 
 	set_parent (par: EV_UNTITLED_WINDOW) is
@@ -74,6 +67,7 @@ feature -- Assertion
 feature -- Implementation
 
 	implementation: EV_STATUS_BAR_I
+			-- Platform dependent access.
 
 end -- class EV_STATUS_BAR
 

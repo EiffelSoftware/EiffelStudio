@@ -55,7 +55,7 @@ interface,,,,,,,
 ,1,Sort _DATA files to decrease their number,Xavier,INT0050
 ,2,"Display a real splash screen at start-up, both on Windows and Unix",Xavier,INT0051
 ,1,Let the user create a class outside existing clusters?,Julian,INT0052
-
+,3,Use `append' on Vision2 lists and trees instead of `extend' to help GTK optimize things,Ian,INT0053
 
 
 

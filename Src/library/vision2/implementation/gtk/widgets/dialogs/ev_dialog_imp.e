@@ -21,7 +21,8 @@ inherit
 		redefine
 			make,
 			interface,
-			call_close_request_actions
+			call_close_request_actions,
+			initialize
 		end
 		
 create
@@ -35,7 +36,12 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gtk_window_dialog_enum))
 			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 1) -- allow_shrink = False, allow_grow = False, auto_shrink = True
+		end
+		
+	initialize is
+			-- Initialize 'Current'
+		do
+			Precursor {EV_TITLED_WINDOW_IMP}
 			enable_closeable
 		end
 		

@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 	file_open (f_name: POINTER; how: INTEGER): POINTER is
 			-- File pointer for file `f_name', in mode `how'.
 		external
-			"C | %"eif_file.h%""
+			"C use %"eif_file.h%""
 		alias
 			"file_binary_open"
 		end
@@ -402,31 +402,31 @@ feature {NONE} -- Implementation
 	file_close (file: POINTER) is
 			-- Close `file'.
 		external
-			"C (FILE *) | %"eif_file.h%""
+			"C signature (FILE *) use %"eif_file.h%""
 		end
 
 	file_unlink (fname: POINTER) is
 			-- Delete file `fname'.
 		external
-			"C | %"eif_file.h%""
+			"C use %"eif_file.h%""
 		end
 
 	file_fd (file: POINTER): INTEGER is
 			-- Operating system's file descriptor
 		external
-			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
+			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
 		end
 
 	file_exists (f_name: POINTER): BOOLEAN is
 			-- Does `f_name' exist.
 		external
-			"C | %"eif_file.h%""
+			"C use %"eif_file.h%""
 		end
 
 	file_size (file: POINTER): INTEGER is
 			-- Size of `file'
 		external
-			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
+			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
 		end
 
 end -- class SERVER_FILE

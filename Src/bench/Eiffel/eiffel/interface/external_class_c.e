@@ -1235,26 +1235,69 @@ feature {NONE} -- Implementation
 			l_char_value: CHAR_VALUE_I
 			l_string_value: STRING_VALUE_I
 			l_int32: INTEGER
+			l_int64: INTEGER_64
 			l_double: DOUBLE
 			l_real: REAL
+			i: INTEGER
+			n: INTEGER
+			c: CHARACTER
+			h: INTEGER
 		do
-				-- FIXME: Manu 05/06/2002: Below code for reading double and float
-				-- does not work, but I did not check yet why.
 			if a_external_type.is_double then
-				create l_int.make_default
-				l_int.initialize_from_hexa (false, "0x" + a_value)
-				l_int32 := l_int.upper;
-				($l_double).memory_copy ($l_int32, 4)
-				l_int32 := l_int.lower;
-				($l_double + 4).memory_copy ($l_int32, 4)
-
+					-- Read hexadecimal representation in little-endian byte order
+				from
+					n := a_value.count.min (16)
+					i := 1
+				variant
+					n - i + 1
+				until
+					i > n
+				loop
+					c := a_value.item (i)
+						-- Save integer value of character `c' to `h'
+					if c < 'A' then
+							-- This is a digit
+						h := c.code - 48
+					elseif c >= 'a' then
+							-- This is a character 'a'..'f'
+						h := c.code - 87
+					else
+							-- This is a character 'A'..'F'
+						h := c.code - 55
+					end
+						-- Bytes are encoded in big-endian order
+					l_int64 := l_int64 + h.to_integer_64 |<< ((i + (i & 1) |<< 1 - 2) * 4)
+					i := i + 1
+				end
+				($l_double).memory_copy ($l_int64, 8)
 				create {REAL_VALUE_I} l_value.make_double (l_double)
 			elseif a_external_type.is_real then
-				create l_int.make_default
-				l_int.initialize_from_hexa (false, "0x" + a_value)
-				l_int32 := l_int.lower;
+					-- Read hexadecimal representation in little-endian byte order
+				from
+					n := a_value.count.min (8)
+					i := 1
+				variant
+					n - i + 1
+				until
+					i > n
+				loop
+					c := a_value.item (i)
+						-- Save integer value of character `c' to `h'
+					if c < 'A' then
+							-- This is a digit
+						h := c.code - 48
+					elseif c >= 'a' then
+							-- This is a character 'a'..'f'
+						h := c.code - 87
+					else
+							-- This is a character 'A'..'F'
+						h := c.code - 55
+					end
+						-- Bytes are encoded in big-endian order
+					l_int32 := l_int32 + h |<< ((i + (i & 1) |<< 1 - 2) * 4)
+					i := i + 1
+				end
 				($l_real).memory_copy ($l_int32, 4)
-
 				create {REAL_VALUE_I} l_value.make_real (l_real)
 			elseif a_external_type.is_integer then
 				if a_value.item (1) = '-' then

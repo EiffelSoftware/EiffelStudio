@@ -6,6 +6,7 @@
 directory_separator: "\"
 subcommand_separator: "%N%T"
 quick_compilation: True
+smart_checking: True
 
 -- include_path
 include_path: "$(INCLUDE_PATH)"

@@ -15,6 +15,7 @@ inherit
 feature -- Access
 
 	observer_manager: OBSERVER_MANAGEMENT is
+			-- Observer manager.
 		once
 			create Result.make
 		end

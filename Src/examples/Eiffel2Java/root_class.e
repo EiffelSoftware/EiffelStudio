@@ -6,7 +6,6 @@ class
 	ROOT_CLASS
 
 inherit
-
 	SHARED_JNI_ENVIRONMENT
 
 creation
@@ -49,8 +48,8 @@ feature -- Creation
 
 				-- Create the set of arguments for 'my_method'
 			create j_args.make(2)
-			j_args.push_int (2)
-			j_args.push_string("String test")
+			j_args.put_int (2, 1)
+			j_args.put_string ("String test", 2)
 
 			io.put_string ("Calling `my_method' with (2, %"String test%")%N")
 
@@ -62,8 +61,16 @@ feature -- Creation
 			value := instance_of_class_test.integer_attribute (fid)
 
 			io.put_string ("Value of `my_integer' after call to `my_method' is " + value.out + "%N")
-		end -- make
 
+				--| Access to a static attribute using directly the JAVA_CLASS
+			fid := class_test.field_id ("my_static_integer", "I")
+			value := class_test.integer_attribute (fid)
+
+			io.put_string ("Value of `my_static_integer' after call to `my_method' is " + value.out + "%N")
+			
+			jni.destroy_vm
+		end
+		
 end -- class ROOT_CLASS
 
 --|----------------------------------------------------------------

@@ -53,6 +53,7 @@ feature {NONE} -- Constants for unary expression
 	Il_not: INTEGER is 17
 	Il_uminus: INTEGER is 18
 	Il_old: INTEGER is 19
+	Il_bitwise_not: INTEGER is 22
 
 feature {NONE} -- Constants for variable kind
 
@@ -63,5 +64,6 @@ feature {NONE} -- Constants for variable kind
 	il_r4: INTEGER is 34
 	il_r8: INTEGER is 35
 	il_ref: INTEGER is 36
+	il_i: INTEGER is 37
 	
 end -- class IL_CONST

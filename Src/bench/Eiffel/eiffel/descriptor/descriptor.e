@@ -57,6 +57,7 @@ feature -- Generation
 			f := class_type.descriptor_file;
 			f.open_write;
 
+			f.putstring ("#include %"macros.h%"%N%N");
 			f.putstring (C_string);
 			f.putstring (init_string);
 
@@ -68,8 +69,7 @@ feature -- Generation
 			-- structure of Current descriptor
 		do
 			!! Result.make (0);
-			Result.append ("#include %"macros.h%"%N");
-			Result.append ("%Nstruct desc_info desc");
+			Result.append ("struct desc_info desc");
 			Result.append_integer (class_type.id.id);
 			Result.append ("[] = {%N");
 
@@ -99,20 +99,22 @@ feature -- Generation
 			-- descriptor
 		local
 			i: INTEGER
+			class_type_id: INTEGER
 		do
+			class_type_id := class_type.id.id;
 			!! Result.make (0);
 			Result.append ("%NInit");
-			Result.append_integer (class_type.id.id);
+			Result.append_integer (class_type_id);
 			Result.append ("()%N{%N");
 
 				-- Special descriptor unit (invariant)
 			Result.append ("%T");
 			Result.append (Init_macro);
 			Result.append ("(desc");
-			Result.append_integer (class_type.id.id);
+			Result.append_integer (class_type_id);
 			Result.append (", 0, RTUD(");
-			Result.append_integer (class_type.id.id);
-			Result.append ("-1));%N");	
+			Result.append_integer (class_type_id - 1);
+			Result.append ("));%N");	
 
 				-- Descriptor units for origin classes
 			from
@@ -124,19 +126,29 @@ feature -- Generation
 				Result.append ("%T");
 				Result.append (Init_macro);
 				Result.append ("(desc");
-				Result.append_integer (class_type.id.id);
+				Result.append_integer (class_type_id);
 				Result.append ("+");
 				Result.append_integer (i);
 				Result.append (",");
 				Result.append_integer (key_for_iteration);
 				Result.append (",RTUD(");
-				Result.append_integer (class_type.id.id);
-				Result.append ("-1));%N");
+				Result.append_integer (class_type_id - 1);
+				Result.append ("));%N");
 				i := i + item_for_iteration.count;
 				forth;
 			end;
 			Result.append ("}%N");
 		end;
+
+	table_size: INTEGER is
+			-- Number of entries in the descriptor table
+		do
+			Result := 1;
+			from start until after loop
+				Result := Result + item_for_iteration.count;
+				forth
+			end
+		end
 
 feature -- Melting
 

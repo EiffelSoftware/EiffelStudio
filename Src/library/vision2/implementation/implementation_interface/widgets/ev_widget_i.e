@@ -44,10 +44,6 @@ feature {EV_WIDGET} -- Initialization
 		deferred
 		end
 
-	expandable: BOOLEAN
-			-- Does the widget expand its cell to take the
-			-- size the parent would like to give to it.
-
 	background_color: EV_COLOR is
 			-- Color used for the background of the widget
 		require
@@ -179,7 +175,6 @@ feature -- Status setting
 		require
 			exists: not destroyed
 		do
-			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
 		end
@@ -203,16 +198,7 @@ feature -- Status setting
 			exists: not destroyed
 		deferred
 		end
-
-	set_expand (flag: BOOLEAN) is
-			-- Make `flag' the new expand option.
-		require
-			exists: not destroyed
-		deferred	
-		ensure
-			flag_set: expandable = flag
-		end
-
+	
 	set_horizontal_resize (flag: BOOLEAN) is
 			-- Make `flag' the new horizontal_resizable status.
 		require

@@ -134,6 +134,7 @@ editor,,,,
 ,2,When the text in the editor shrinks horizontally the scroll bar should reflect the change,Julian,EDT0009
 ,2,Add a reload command to discard all unsaved changes,Xavier,EDT0010
 ,2,Use a different highlight for found/picked words and for the selection,Xavier,EDT0011
+,3,Shift F3 should be able to search the selection backwards for symmetry with F3,Raphael,EDT0012
 
 
 

@@ -16,34 +16,11 @@ create
 	make_from_reference
 
 convert
-	make_from_reference ({reference INTEGER}),
-	to_reference: {reference INTEGER},
+	make_from_reference ({INTEGER_REF}),
+	to_reference: {INTEGER_REF, NUMERIC, COMPARABLE, PART_COMPARABLE, HASHABLE, ANY},
 	to_real: {REAL},
 	to_double: {DOUBLE},
 	to_integer_64: {INTEGER_64}
-
-feature {NONE} -- Initialization
-
-	make_from_reference (v: reference INTEGER) is
-			-- Initialize `Current' with `v.item'.
-		require
-			v_not_void: v /= Void
-		do
---			item := v.item
-		ensure
---			item_set: item = v.item	
-		end
-
-feature -- Conversion
-
-	to_reference: reference INTEGER is
-			-- Associated reference of Current
-		do
-			create Result
---			Result.set_item (item)
-		ensure
-			to_reference_not_void: Result /= Void
-		end
 
 indexing
 

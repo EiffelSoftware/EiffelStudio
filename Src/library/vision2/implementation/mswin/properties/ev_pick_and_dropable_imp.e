@@ -374,10 +374,15 @@ feature {EV_ANY_I} -- Implementation
 				target := pointed_target
 					-- Retrieve `target'.
 				if target /= Void then
-						target.drop_actions.call ([pebble])
-							-- If there is a target then execute the drop
-							-- actions for `target'.
+					target.drop_actions.call ([pebble])
+						-- If there is a target then execute the drop
+						-- actions for `target'.
+							
+					env.application.drop_actions.call ([pebble])
+						-- Execute drop_actions for the application.
 				end
+			else
+				env.application.cancel_actions.call ([pebble])
 			end
 			pick_and_dropable ?= target
 			check
@@ -394,8 +399,7 @@ feature {EV_ANY_I} -- Implementation
 			original_top_level_window_imp.allow_movement
 			original_top_level_window_imp := Void
 			
-			env.application.drop_actions.call ([pebble])
-				-- Execute drop_actions for the application.
+				-- Reset internal attributes.
 			is_dnd_in_transport := False
 			is_pnd_in_transport := False
 			last_pointed_target := Void

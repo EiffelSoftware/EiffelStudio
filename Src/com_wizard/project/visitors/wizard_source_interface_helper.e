@@ -57,7 +57,7 @@ feature -- Basic operations
 			Result.append (a_coclass_writer.name)
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 		
 	connection_point_attrubute_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR; 
@@ -71,7 +71,7 @@ feature -- Basic operations
 			Result.append ("p_" + connection_point_inner_class_name (an_interface, a_coclass_writer))
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 feature -- Obsolete

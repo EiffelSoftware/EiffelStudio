@@ -96,13 +96,13 @@ feature {NONE} -- Implementation
 			-- Name of "on_" hook feature.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			Result := clone (a_name)
 			Result.prepend ("on_")
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 	
 	on_hook_feature_arguments: STRING is
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			until
 				arguments.after
 			loop
-				if Result.empty then
+				if Result.is_empty then
 					Result.append (" (")
 				else
 					Result.append (", ")
@@ -129,13 +129,13 @@ feature {NONE} -- Implementation
 				Result.append (arguments.item.name)
 				arguments.forth
 			end
-			if not Result.empty then
+			if not Result.is_empty then
 				Result.append (")")
 			end
 		ensure
 			non_void_arguments: Result /= Void
-			valid_arguments: not func_desc.arguments.empty implies 
-				not Result.empty
+			valid_arguments: not func_desc.arguments.is_empty implies 
+				not Result.is_empty
 		end
 		
 end -- class WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR

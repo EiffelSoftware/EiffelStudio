@@ -66,7 +66,7 @@ feature -- Basic operations
 		require
 			non_void_visitor: visitor /= Void
 			non_void_name: a_variable_name /= Void
-			valid_name: not a_variable_name.empty
+			valid_name: not a_variable_name.is_empty
 		do
 			create Result.make (100)
 			if 
@@ -128,7 +128,7 @@ feature -- Basic operations
 			end
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 	check_failer  (is_arguments_empty: BOOLEAN; an_additional_string, a_return_code: STRING): STRING is
@@ -136,7 +136,7 @@ feature -- Basic operations
 		require
 			non_void_additional_string: an_additional_string /= Void
 			non_void_return_code: a_return_code /= Void
-			valid_return_code: not a_return_code.empty
+			valid_return_code: not a_return_code.is_empty
 		do
 			create Result.make (10000)
 			Result.append (If_keyword)
@@ -208,13 +208,13 @@ feature -- Basic operations
 			-- Get intergace pointer from Variant.
 		require
 			non_void_unknown_name: unknown_name /= Void
-			valid_unknown_name: not unknown_name.empty
+			valid_unknown_name: not unknown_name.is_empty
 			non_void_variable_name: a_variable_name /= Void
-			valid_variable_name: not a_variable_name.empty
+			valid_variable_name: not a_variable_name.is_empty
 			non_void_variant_name: a_variant_name /= Void
-			valid_variant_name: not a_variant_name.empty
+			valid_variant_name: not a_variant_name.is_empty
 			non_void_variant_field_name: variant_field_name /= Void
-			valid_variant_field_name: not variant_field_name.empty
+			valid_variant_field_name: not variant_field_name.is_empty
 		do
 				create Result.make (300)
 				
@@ -265,7 +265,7 @@ feature -- Basic operations
 				Result.append (Tab)
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 
 	get_interface_pointer_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING; 
@@ -273,13 +273,13 @@ feature -- Basic operations
 			-- Get intergace pointer from Variant.
 		require
 			non_void_unknown_name: unknown_name /= Void
-			valid_unknown_name: not unknown_name.empty
+			valid_unknown_name: not unknown_name.is_empty
 			non_void_variable_name: a_variable_name /= Void
-			valid_variable_name: not a_variable_name.empty
+			valid_variable_name: not a_variable_name.is_empty
 			non_void_variant_name: a_variant_name /= Void
-			valid_variant_name: not a_variant_name.empty
+			valid_variant_name: not a_variant_name.is_empty
 			non_void_variant_field_name: variant_field_name /= Void
-			valid_variant_field_name: not variant_field_name.empty
+			valid_variant_field_name: not variant_field_name.is_empty
 		do
 				create Result.make (300)
 				Result.append (New_line_tab_tab_tab)
@@ -339,7 +339,7 @@ feature -- Basic operations
 				
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 		
 	get_argument_from_variant (a_data_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
@@ -349,9 +349,9 @@ feature -- Basic operations
 		require
 			non_void_data_descriptor: a_data_descriptor /= Void
 			non_void_variable: a_variable_name /= Void
-			valid_variable: not a_variable_name.empty
+			valid_variable: not a_variable_name.is_empty
 			non_void_variant: a_variant_name /= Void
-			valid_variant: not a_variant_name.empty
+			valid_variant: not a_variant_name.is_empty
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
@@ -500,7 +500,7 @@ feature -- Basic operations
 			end
 		ensure
 			non_void_argumet: Result /= Void
-			valid_argument: not Result.empty
+			valid_argument: not Result.is_empty
 		end
 
 end -- class WIZARD_DISPATCH_INVOKE_GENERATOR_HELPER

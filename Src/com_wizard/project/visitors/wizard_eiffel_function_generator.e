@@ -130,12 +130,12 @@ feature {NONE} -- Implementation
 			else
 				a_comment := feature_writer.comment
 			end
-			if not a_comment.empty and a_visitor.is_enumeration then
+			if not a_comment.is_empty and a_visitor.is_enumeration then
 				a_comment.append ("%N%T%T%T-- ")
 			end
 
 			a_comment.append (enumeration_comment (a_name, a_type, 	a_visitor))
-			if not a_comment.empty then
+			if not a_comment.is_empty then
 				feature_writer.set_comment (a_comment)
 			end
 		end
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			loop
 
 				if not is_paramflag_fretval (arguments.item.flags) then
-					if not a_comment.empty then 
+					if not a_comment.is_empty then 
 						a_comment.append (New_line_tab_tab_tab)
 						a_comment.append (Double_dash)
 						a_comment.append (Space)
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 				end
 				arguments.forth
 			end
-			if not a_comment.empty then
+			if not a_comment.is_empty then
 				feature_writer.set_comment (a_comment)
 			end
 		end
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 					generate_precondition (arguments.item.name, arguments.item.type, 
 						is_paramflag_fin (arguments.item.flags),
 						is_paramflag_fout (arguments.item.flags))
-					if not assertions.empty then
+					if not assertions.is_empty then
 						from 
 							assertions.start
 						until
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 						generate_postcondition (arguments.item.name, arguments.item.type, 
 							is_paramflag_fretval  (arguments.item.flags))
 					end
-					if not assertions.empty then
+					if not assertions.is_empty then
 						from 
 							assertions.start
 						until

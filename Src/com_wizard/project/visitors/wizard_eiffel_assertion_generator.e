@@ -41,7 +41,7 @@ feature -- Basic operation
 		require
 			non_void_descriptor: type /= Void
 			non_void_string: a_name /= Void
-			valid_string: not a_name.empty
+			valid_string: not a_name.is_empty
 		local
 			tmp_tag, tmp_body: STRING
 			tmp_writer: WIZARD_WRITER_ASSERTION
@@ -87,7 +87,7 @@ feature -- Basic operation
 			-- User defined precondition.
 		require
 			non_void_name: a_feature_name /= Void
-			valid_name: not a_feature_name.empty
+			valid_name: not a_feature_name.is_empty
 		local
 			tmp_tag, tmp_body, a_precondition_name: STRING
 		do
@@ -106,9 +106,8 @@ feature -- Basic operation
 		require
 			non_void_descriptor: a_type /= Void
 			non_void_string: a_name /= Void
-			valid_string: not a_name.empty
+			valid_string: not a_name.is_empty
 		local
-			tmp_tag, tmp_body: STRING
 			tmp_writer: WIZARD_WRITER_ASSERTION
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
@@ -120,18 +119,6 @@ feature -- Basic operation
 				not is_boolean (visitor.vt_type) and 
 				not visitor.is_enumeration 
 			then
-				if ret_val then
-					create tmp_tag.make (100)
-					tmp_tag.append ("non_void_")
-					tmp_tag.append (a_name)
-					
-					create tmp_body.make (100)
-					tmp_body.append (Result_keyword)
-					tmp_body.append (" /= Void")
-					create tmp_writer.make (tmp_tag, tmp_body)
-					assertions.extend (tmp_writer)
-				end
-
 				tmp_writer := additional_postcondition (a_name, a_type, visitor, ret_val)
 				if tmp_writer /= Void then
 					assertions.extend (tmp_writer)				
@@ -150,7 +137,7 @@ feature {NONE}
 			-- A writer
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 			non_void_descriptor: type /= Void
 			non_void_visitor: visitor /= Void
 		local
@@ -201,7 +188,7 @@ feature {NONE}
 			-- A writer
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 			non_void_descriptor: type /= Void
 			non_void_visitor: visitor /= Void
 		local

@@ -18,7 +18,7 @@ feature -- Basic operations
 		require
 			non_void_component: a_component_descriptor /= Void
 			non_void_class_name: a_component_descriptor.name /= Void
-			valid_coclass_name: not a_component_descriptor.name.empty
+			valid_coclass_name: not a_component_descriptor.name.is_empty
 			non_void_descriptor: a_descriptor /= Void
 		deferred
 		ensure 

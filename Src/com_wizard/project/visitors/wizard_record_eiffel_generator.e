@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			-- Name of external feature, returning size of structure.
 		require
 			non_void_name: record_name /= Void
-			valid_name: not record_name.empty
+			valid_name: not record_name.is_empty
 		do
 			create Result.make (100)
 
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			Result.to_lower
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 	access_feature (a_macro_accesser_name: STRING; 
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			-- Access feature
 		require
 			non_void_accesser_name: a_macro_accesser_name /= Void
-			valid_accesser_name: not a_macro_accesser_name.empty
+			valid_accesser_name: not a_macro_accesser_name.is_empty
 			non_void_field_descriptor: a_field_descriptor /= Void
 		local
 			a_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			-- Set feature
 		require
 			non_void_setter_name: a_macro_setter_name /= Void
-			valid_setter_name: not a_macro_setter_name.empty
+			valid_setter_name: not a_macro_setter_name.is_empty
 			non_void_field_descriptor: a_field_descriptor /= Void
 		local
 			a_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
@@ -298,9 +298,9 @@ feature {NONE} -- Implementation
 			-- External access feature
 		require
 			non_void_macro_accesser_name: a_macro_accesser_name /= Void
-			valid_macro_accesser_name: not a_macro_accesser_name.empty
+			valid_macro_accesser_name: not a_macro_accesser_name.is_empty
 			non_void_header_file_name: a_header_file_name /= Void
-			valid_header_file_name: not a_header_file_name.empty
+			valid_header_file_name: not a_header_file_name.is_empty
 			non_void_field_descriptor: a_field_descriptor /= Void
 		local
 			body: STRING
@@ -354,9 +354,9 @@ feature {NONE} -- Implementation
 			-- External set feature
 		require
 			non_void_macro_setter_name: a_macro_setter_name /= Void
-			valid_macro_setter_name: not a_macro_setter_name.empty
+			valid_macro_setter_name: not a_macro_setter_name.is_empty
 			non_void_header_file_name: a_header_file_name /= Void
-			valid_header_file_name: not a_header_file_name.empty
+			valid_header_file_name: not a_header_file_name.is_empty
 			non_void_field_descriptor: a_field_descriptor /= Void
 		local
 			body: STRING
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 			-- Feature `structure-size'.
 		require
 			non_void_name: an_external_size_name /= Void
-			valid_name: not an_external_size_name.empty
+			valid_name: not an_external_size_name.is_empty
 		local
 			body: STRING
 		do
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 			-- External feature, describing structure size.
 		require
 			non_void_name: an_external_size_name /= Void
-			valid_name: not an_external_size_name.empty
+			valid_name: not an_external_size_name.is_empty
 			non_void_descriptor: a_descriptor /= Void
 		local
 			body: STRING

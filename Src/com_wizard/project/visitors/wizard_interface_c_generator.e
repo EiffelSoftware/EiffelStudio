@@ -38,13 +38,13 @@ feature -- Access
 						a_descriptor.inherited_interface.namespace, Public)
 				if 
 					a_descriptor.inherited_interface.c_header_file_name /= Void and then
-					not a_descriptor.inherited_interface.c_header_file_name.empty
+					not a_descriptor.inherited_interface.c_header_file_name.is_empty
 				then
 					cpp_class_writer.add_import (a_descriptor.inherited_interface.c_header_file_name)
 				end
 			end
 
-			if a_descriptor.vtable_functions /= Void and then not a_descriptor.vtable_functions.empty then
+			if a_descriptor.vtable_functions /= Void and then not a_descriptor.vtable_functions.is_empty then
 				a_descriptor.vtable_functions.sort
 				
 				from
@@ -66,7 +66,7 @@ feature -- Access
 				end
 			end
 
-			if a_descriptor.dispatch_functions /= Void and then not a_descriptor.dispatch_functions.empty then
+			if a_descriptor.dispatch_functions /= Void and then not a_descriptor.dispatch_functions.is_empty then
 				
 				from
 					a_descriptor.dispatch_functions.start
@@ -80,7 +80,7 @@ feature -- Access
 				end
 			end
 			
-			if a_descriptor.properties /= Void and then not a_descriptor.properties.empty then
+			if a_descriptor.properties /= Void and then not a_descriptor.properties.is_empty then
 			
 				from
 					a_descriptor.properties.start
@@ -90,7 +90,7 @@ feature -- Access
 					a_header_file := a_descriptor.properties.item.data_type.visitor.c_header_file
 					if 
 						a_header_file /= Void and then
-						not a_header_file.empty 
+						not a_header_file.is_empty 
 					then
 						add_include_file (a_header_file)
 					end
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			-- Definition of IID in source file.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			create Result.make (100)
 			Result.append (Const)
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_definition: Result /= Void
-			valid_definition: not Result.empty
+			valid_definition: not Result.is_empty
 		end
 
 	add_type_definitions_and_include_files (func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR) is
@@ -138,14 +138,14 @@ feature {NONE} -- Implementation
 		do
 			if 
 				func_generator.c_header_files /= Void and then 
-				not func_generator.c_header_files.empty
+				not func_generator.c_header_files.is_empty
 			then
 				from
 					func_generator.c_header_files.start
 				until
 					func_generator.c_header_files.off
 				loop
-					if func_generator.c_header_files.item /= Void and then not func_generator.c_header_files.item.empty then
+					if func_generator.c_header_files.item /= Void and then not func_generator.c_header_files.item.is_empty then
 						add_include_file (func_generator.c_header_files.item)
 					end
 					func_generator.c_header_files.forth
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 
 			if 
 				func_generator.forward_declarations /= Void and then 
-				not func_generator.forward_declarations.empty
+				not func_generator.forward_declarations.is_empty
 			then
 				from
 					func_generator.forward_declarations.start
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 				loop
 					if 
 						func_generator.forward_declarations.item /= Void and then 
-						not func_generator.forward_declarations.item.empty 
+						not func_generator.forward_declarations.item.is_empty 
 					then
 						if cpp_class_writer.others.occurrences (func_generator.forward_declarations.item) = 0 then
 							cpp_class_writer.add_other (func_generator.forward_declarations.item)
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			-- Add include file.
 		require
 			non_void_file: a_file /= Void
-			valid_file: not a_file.empty
+			valid_file: not a_file.is_empty
 		do
 			if cpp_class_writer.import_files.occurrences (a_file) = 0 then
 				cpp_class_writer.add_import (a_file)

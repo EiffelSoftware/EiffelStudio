@@ -19,7 +19,7 @@ feature -- Basic operations
 			-- Name of IID constant.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			create Result.make (100)
 			Result.append (Iid_type)
@@ -37,14 +37,14 @@ feature -- Basic operations
 			end
 		ensure
 			non_void_declaration: Result /= Void
-			valid_declaration: not Result.empty
+			valid_declaration: not Result.is_empty
 		end
 
 	iid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
 			-- Definition of IID in source file.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 			non_void_guid: a_guid /= Void
 		do
 			create Result.make (1000)
@@ -61,14 +61,14 @@ feature -- Basic operations
 			Result.append (Semicolon)
 		ensure
 			non_void_definition: Result /= Void
-			valid_definition: not Result.empty
+			valid_definition: not Result.is_empty
 		end
 
 	libid_name (name: STRING): STRING is
 			-- Name of library id
 		require
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("LIBID_")
@@ -80,7 +80,7 @@ feature -- Basic operations
 			-- Definition of CLSID in source file.
 		require
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 			non_void_guid: guid /= Void
 		do
 			create Result.make (1000)
@@ -97,14 +97,14 @@ feature -- Basic operations
 			Result.append (Semicolon)
 		ensure
 			non_void_definition: Result /= Void
-			valid_definition: not Result.empty
+			valid_definition: not Result.is_empty
 		end
 
 	libid_declaration (name: STRING): STRING is
 			-- Declaration of LIBID in header file
 		require
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		do
 			-- extern "C" IID LIBID_'name'
 
@@ -128,7 +128,7 @@ feature -- Basic operations
 			-- Name of CLSID constant.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			create Result.make (1000)
 			Result.append (Clsid_type)
@@ -137,14 +137,14 @@ feature -- Basic operations
 			Result.append ("_")
 		ensure
 			non_void_declaration: Result /= Void
-			valid_declaration: not Result.empty
+			valid_declaration: not Result.is_empty
 		end
 
 	clsid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
 			-- Definition of CLSID in source file.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 			non_void_guid: a_guid /= Void
 		do
 			create Result.make (1000)
@@ -161,14 +161,14 @@ feature -- Basic operations
 			Result.append (Semicolon)
 		ensure
 			non_void_definition: Result /= Void
-			valid_definition: not Result.empty
+			valid_definition: not Result.is_empty
 		end
 
 	clsid_declaration (a_name: STRING): STRING is
 			-- Declaration of CLSID in header file.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			-- extern "C" CLSID CLSID_`a_name';
 
@@ -187,7 +187,7 @@ feature -- Basic operations
 			Result.append (Semicolon)
 		ensure
 			non_void_declaration: Result /= Void
-			valid_declaration: not Result.empty
+			valid_declaration: not Result.is_empty
 		end
 
 end -- class WIZARD_GUID_GENERATOR

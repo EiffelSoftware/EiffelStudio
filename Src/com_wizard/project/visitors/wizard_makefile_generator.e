@@ -31,7 +31,7 @@ feature -- Miscellaneous
 			-- Makefile text.
 		require
 			non_void_obj_list: obj_list /= Void
-			valid_obj_list: not obj_list.empty
+			valid_obj_list: not obj_list.is_empty
 		do
 			create Result.make (1000)
 			Result.append ("# ecom.lib - Makefile for Microsoft C%N%N%
@@ -51,7 +51,7 @@ feature -- Miscellaneous
 			Result.append ("$<%N")
 		ensure
 			non_void_make_file: Result /= Void
-			valid_make_file: not Result.empty
+			valid_make_file: not Result.is_empty
 		end
 
 feature -- Basic operations
@@ -82,7 +82,7 @@ feature -- Basic operations
 				end
 				a_file_list.forth
 			end
-			if not obj_list.empty then
+			if not obj_list.is_empty then
 				save_file (make_file (c_compiler_flags (workbench_c_compiler_flags_addition), obj_list, a_library_name), "Makefile")
 				save_file (make_file (c_compiler_flags (finalize_c_compiler_flags_addition), obj_list, a_library_name), "Makefile_finalize")
 				save_file ("nmake /f Makefile_finalize", "make_finalize.bat")

@@ -60,7 +60,7 @@ feature -- Basic operations
 			external_feature_writer.set_external
 
 			create c_type.make (50)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				c_type.append (a_component_descriptor.namespace)
 				c_type.append ("::")
 			end
@@ -74,9 +74,9 @@ feature {NONE} -- Implementation
 			-- Coclass eiffel client external feature body
 		require
 			non_void_class_name: class_name /= Void
-			valid_class_name: not class_name.empty
+			valid_class_name: not class_name.is_empty
 			non_void_header_file_name: header_file_name /= Void
-			valid_header_file_name: not header_file_name.empty
+			valid_header_file_name: not header_file_name.is_empty
 		local
 			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			return_type: STRING
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			Result.append (Open_parenthesis)
 
 			arguments := func_desc.arguments
-			if arguments /= Void and then not arguments.empty then
+			if arguments /= Void and then not arguments.is_empty then
 				from
 					arguments.start
 				until
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			Result.append (Double_quote)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	set_external_feature_result_type_and_arguments is
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			-- Coclass client body
 		require
 			non_void_name: func_name /= Void
-			valid_name: not func_name.empty
+			valid_name: not func_name.is_empty
 		local
  			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			tmp_string, local_variable: STRING
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			tmp_string.append (Space_open_parenthesis)
 			tmp_string.append (Initializer_variable)
 
-			if arguments /= Void and then not arguments.empty then
+			if arguments /= Void and then not arguments.is_empty then
 				from
 					arguments.start
 				until
@@ -389,14 +389,14 @@ feature {NONE} -- Implementation
 			Result.append (tmp_string)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	check_interface_item (an_argument_name: STRING): STRING is
 			-- Check item of interface with `an_argument_name'.
 		require
 			non_void_name: an_argument_name /= Void
-			valid_name: not an_argument_name.empty
+			valid_name: not an_argument_name.is_empty
 		do
 			create Result.make (200)
 			Result.append ("if " + an_argument_name + " /= Void then")
@@ -437,21 +437,21 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab_tab_tab)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	argument_item_name (an_argument_name: STRING): STRING is
 			-- Argument item name.
 		require
 			non_void_name: an_argument_name /= Void
-			valid_name: not an_argument_name.empty
+			valid_name: not an_argument_name.is_empty
 		do
 			create Result.make (100)
 			Result.append (an_argument_name)
 			Result.append ("_item")
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 end -- class WIZARD_EIFFEL_CLIENT_FUNCTION_GENERATOR

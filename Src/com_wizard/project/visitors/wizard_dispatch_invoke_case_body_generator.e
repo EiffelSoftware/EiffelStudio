@@ -129,7 +129,7 @@ feature -- Basic operations
 			-- Code for release interface.
 		require
 			non_void_argument_name: an_argument_name /= Void
-			valid_argument_name: not an_argument_name.empty
+			valid_argument_name: not an_argument_name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("if (" + an_argument_name + " != NULL)")
@@ -140,14 +140,14 @@ feature -- Basic operations
 			Result.append (Tab)
 		ensure
 			non_void_code: Result /= Void
-			valid_code: not Result.empty
+			valid_code: not Result.is_empty
 		end
 
 	release_interface_pointer_pointer_code (an_argument_name: STRING): STRING is
 			-- Code for release interface.
 		require
 			non_void_argument_name: an_argument_name /= Void
-			valid_argument_name: not an_argument_name.empty
+			valid_argument_name: not an_argument_name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("if (" + an_argument_name + " != NULL)")
@@ -161,7 +161,7 @@ feature -- Basic operations
 			Result.append (Tab)
 		ensure
 			non_void_code: Result /= Void
-			valid_code: not Result.empty
+			valid_code: not Result.is_empty
 		end
 	
 	process_arguments is
@@ -602,7 +602,7 @@ feature -- Basic operations
 				body.append (check_failer (not has_arguments, excepinfo_setting, "DISP_E_EXCEPTION"))
 			end
 
-			if not local_buffer.empty then
+			if not local_buffer.is_empty then
 				body.append (Tab)
 				body.append (local_buffer)
 				body.append (New_line_tab_tab_tab)
@@ -726,7 +726,7 @@ feature -- Basic operations
 			Result := body
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 invariant

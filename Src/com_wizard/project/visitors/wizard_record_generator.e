@@ -16,7 +16,7 @@ feature {NONE} -- Implementation
 			-- Name of implementation header file.
 		require
 			non_void_header_file_name: a_header_file_name /= Void
-			non_empty_header_file_name: not a_header_file_name.empty
+			non_empty_header_file_name: not a_header_file_name.is_empty
 			valid_header_file_name: a_header_file_name.substring_index (".h", 1) = 
 								a_header_file_name.count - 1
 		do
@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 			Result.insert ("_impl", Result.count - 1)
 		ensure
 			non_void_header_file_name: Result /= Void
-			non_empty_header_file_name: not Result.empty
+			non_empty_header_file_name: not Result.is_empty
 			valid_header_file_name: Result.substring_index (".h", 1) = Result.count - 1
 		end
 
@@ -33,10 +33,10 @@ feature {NONE} -- Implementation
 			-- Name of accesser function.
 		require
 			non_void_record_name: record_name /= Void
-			valid_record_name: not record_name.empty
+			valid_record_name: not record_name.is_empty
 			non_void_field_descriptor: field_descriptor /= Void
 			non_void_field_name: field_descriptor.name /= Void
-			valid_field_name: not field_descriptor.name.empty
+			valid_field_name: not field_descriptor.name.is_empty
 		do
 			create Result.make (100)
 
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			Result.to_lower
 		ensure
 			non_void_accesser_name: Result /= Void
-			valid_accesser_name: not Result.empty
+			valid_accesser_name: not Result.is_empty
 		end
 
 	macro_setter_name (record_name: STRING; 
@@ -55,10 +55,10 @@ feature {NONE} -- Implementation
 			-- Name of setter function.
 		require
 			non_void_record_name: record_name /= Void
-			valid_record_name: not record_name.empty
+			valid_record_name: not record_name.is_empty
 			non_void_field_descriptor: field_descriptor /= Void
 			non_void_field_name: field_descriptor.name /= Void
-			valid_field_name: not field_descriptor.name.empty
+			valid_field_name: not field_descriptor.name.is_empty
 		do
 			create Result.make (100)
 
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			Result.to_lower
 		ensure
 			non_void_accesser_name: Result /= Void
-			valid_accesser_name: not Result.empty
+			valid_accesser_name: not Result.is_empty
 		end
 
 end -- class WIZARD_RECORD_GENERATOR

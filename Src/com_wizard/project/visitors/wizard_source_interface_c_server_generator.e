@@ -129,7 +129,7 @@ feature -- Access
 			Result := connection_point_inner_class_name (source_interface, coclass_writer)
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 	
 	inner_class_header_file: STRING is
@@ -140,7 +140,7 @@ feature -- Access
 			Result.append (".h")
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 	
 	attrubute_name: STRING is
@@ -149,7 +149,7 @@ feature -- Access
 			Result := connection_point_attrubute_name (source_interface, coclass_writer)
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 		
 	coclass_c_type: STRING is
@@ -157,19 +157,19 @@ feature -- Access
 		require
 			non_void_coclass_wrier: coclass_writer /= Void
 			non_void_coclass_name: coclass_writer.name /= Void
-			valid_coclass_name: not coclass_writer.name.empty
+			valid_coclass_name: not coclass_writer.name.is_empty
 		do
 			create Result.make (100)
 			if 
 				coclass_writer.namespace /= Void and then 
-				not coclass_writer.namespace.empty
+				not coclass_writer.namespace.is_empty
 			then
 				Result.append (coclass_writer.namespace + "::")
 			end
 			Result.append (coclass_writer.name)
 		ensure
 			non_void_type: Result /= Void
-			valid_type: not Result.empty
+			valid_type: not Result.is_empty
 		end
 		
 	inner_class_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR is
@@ -177,7 +177,7 @@ feature -- Access
 		require
 			non_void_coclass_wrier: coclass_writer /= Void
 			non_void_coclass_name: coclass_writer.name /= Void
-			valid_coclass_name: not coclass_writer.name.empty
+			valid_coclass_name: not coclass_writer.name.is_empty
 		local
 			signature: STRING
 			body: STRING
@@ -320,7 +320,7 @@ feature -- Access
 							%*pdwCookie = 0;%N%T") 
 			if
 				source_interface.namespace /= Void and then
-				not source_interface.namespace.empty
+				not source_interface.namespace.is_empty
 			then
 				body.append (source_interface.namespace + "::")
 			end

@@ -38,7 +38,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		local
 			a_precondition_body, a_body: STRING
 			an_argument: STRING
@@ -96,7 +96,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		local
 			a_postcondition_body, a_body: STRING
 			a_precondition, a_postcondition: WIZARD_WRITER_ASSERTION
@@ -137,7 +137,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make
 			Result.set_attribute
@@ -156,7 +156,7 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("call_bacl_on_")
@@ -164,7 +164,7 @@ feature -- Basic operations
 			Result.append ("_enabled")
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 	external_enable_feature (an_interface: WIZARD_INTERFACE_DESCRIPTOR; 
@@ -173,12 +173,12 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 			non_void_coclass: a_coclass /= Void
 			non_void_coclass_c_type_name: a_coclass.c_type_name /= Void
-			valid_coclass_c_type_name: not a_coclass.c_type_name.empty
+			valid_coclass_c_type_name: not a_coclass.c_type_name.is_empty
 			non_void_coclass_header_file_name: a_coclass.c_header_file_name /= Void
-			valid_coclass_header_file_name: not a_coclass.c_header_file_name.empty
+			valid_coclass_header_file_name: not a_coclass.c_header_file_name.is_empty
 		local
 			a_body: STRING
 		do
@@ -195,7 +195,7 @@ feature -- Basic operations
 			a_body.append (Tab_tab_tab)
 			a_body.append (Double_quote)
 			a_body.append (Cpp_clause)
-			if a_coclass.namespace /= Void and then not a_coclass.namespace.empty then
+			if a_coclass.namespace /= Void and then not a_coclass.namespace.is_empty then
 				a_body.append (a_coclass.namespace)
 				a_body.append ("::")
 			end
@@ -221,12 +221,12 @@ feature -- Basic operations
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.empty
+			valid_interface_name: not an_interface.name.is_empty
 			non_void_coclass: a_coclass /= Void
 			non_void_coclass_c_type_name: a_coclass.c_type_name /= Void
-			valid_coclass_c_type_name: not a_coclass.c_type_name.empty
+			valid_coclass_c_type_name: not a_coclass.c_type_name.is_empty
 			non_void_coclass_header_file_name: a_coclass.c_header_file_name /= Void
-			valid_coclass_header_file_name: not a_coclass.c_header_file_name.empty
+			valid_coclass_header_file_name: not a_coclass.c_header_file_name.is_empty
 		local
 			a_body: STRING
 		do
@@ -242,7 +242,7 @@ feature -- Basic operations
 			a_body.append (Tab_tab_tab)
 			a_body.append (Double_quote)
 			a_body.append (Cpp_clause)
-			if a_coclass.namespace /= Void and then not a_coclass.namespace.empty then
+			if a_coclass.namespace /= Void and then not a_coclass.namespace.is_empty then
 				a_body.append (a_coclass.namespace)
 				a_body.append ("::")
 			end

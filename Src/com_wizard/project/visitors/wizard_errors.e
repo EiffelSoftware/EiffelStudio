@@ -54,6 +54,9 @@ feature -- Error Codes
 	Destination_folder_cleanup_error: INTEGER is 15
 			-- Destination folder cleanup error
 
+	No_midl_compiler: INTEGER is 16
+			-- No MIDL compiler but using IDL
+
 feature -- Access
 
 	error_title (a_error: INTEGER): STRING is
@@ -79,7 +82,7 @@ feature {NONE} -- Implementation
 	Error_table: ARRAY [STRING] is
 			-- Error table
 		once
-			create Result.make (1, 15)
+			create Result.make (1, 16)
 			Result.put ("Could not find EiffelStudio installation", No_ise_eiffel)
 			Result.put ("Generation stopped by user", User_stop)
 			Result.put ("An exception was raised", Exception_raised)
@@ -95,6 +98,7 @@ feature {NONE} -- Implementation
 			Result.put ("IDL compilation failed", IDL_compilation_failed)
 			Result.put ("C link failed", Link_failed)
 			Result.put ("Could not cleanup destination folder, check for locked files", Destination_folder_cleanup_error)
+			Result.put ("Could not find MIDL compiler, do not use IDL file for COM definition", No_midl_compiler)
 		end
 		
 end -- class WIZARD_ERRORS

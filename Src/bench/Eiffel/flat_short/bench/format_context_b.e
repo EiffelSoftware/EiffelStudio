@@ -7,7 +7,6 @@ inherit
 	SHARED_INST_CONTEXT;
 	SHARED_RESCUE_STATUS;
 	SHARED_ERROR_HANDLER;
-	SHARED_FILTER
 
 creation
 
@@ -283,7 +282,7 @@ feature -- text construction
 		end;
 
 	put_special(s : STRING) is
-		-- append s to 'text', known as a comment
+		-- append s to 'text', known as a special character.
 		local
 			item: BASIC_TEXT;
 		do
@@ -322,24 +321,15 @@ feature -- text construction
 
 	put_separator is
 			-- append the separator
-		local
-			tmp_separator, separator: STRING;
-			tmp_count, old_count: INTEGER;
 		do
 			if format.new_line_before_separator then
 				next_line;
 			end;
-			if format.separator /= void then
-				if format.is_separator_special then
-					put_special (format.separator)
-				elseif format.is_separator_keyword then
-					put_keyword (format.separator)
-				else
-					put_string (format.separator)
-				end
+			if format.separator /= Void then
+				put_text_item (format.separator)
 			end;
 			if format.space_between_tokens then
-				put_string (" ")
+				put_space
 			elseif format.indent_between_tokens then
 				next_line
 			end;
@@ -354,226 +344,20 @@ feature -- text construction
 			text.add (item)
 		end;
 
-	put_before_class_declaration is
-			-- Mark the beginning of class declaration.
-		local
-			item: FILTER_ITEM
+	put_space is
+			-- Append a space character.
 		do
-			!!item.make (f_Class_declaration);
-			item.set_before;
-			text.add (item)
+			text.add (ti_Space)
 		end;
-			
-	put_after_class_declaration is
-			-- Mark the end of class declaration.
-		local
-			item: FILTER_ITEM
+
+	put_text_item (t: TEXT_ITEM) is
+			-- Append the text of `t'.
+		require
+			t_not_void: t /= Void
 		do
-			!!item.make (f_Class_declaration);
-			item.set_after;
-			text.add (item)
+			text.add (t)
 		end;
-			
-	put_before_class_header is
-			-- Mark the beginning of class header.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Class_header);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_class_header is
-			-- Mark the end of class header.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Class_header);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_generics is
-			-- Mark the beginning of formal generics.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Formal_generics);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_generics is
-			-- Mark the end of formal generics.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Formal_generics);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_obsolete is
-			-- Mark the beginning of obsolete.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Obsolete);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_obsolete is
-			-- Mark the end of obsolete.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Obsolete);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_inheritance is
-			-- Mark the beginning of inheritance.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Inheritance);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_inheritance is
-			-- Mark the end of inheritance.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Inheritance);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_creators is
-			-- Mark the beginning of creators.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Creators);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_creators is
-			-- Mark the end of creators.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Creators);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_features is
-			-- Mark the beginning of Features.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Features);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_features is
-			-- Mark the end of Features.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Features);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_invariant is
-			-- Mark the beginning of Invariant.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Invariant);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_invariant is
-			-- Mark the end of Invariant.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Invariant);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_class_end is
-			-- Mark the beginning of class end.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Class_end);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_class_end is
-			-- Mark the end of class end.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Class_end);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_feat_clause is
-			-- Mark the beginnig of feature clause.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Feature_clause);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_feat_clause is
-			-- Mark the end of feature clause.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Feature_clause);
-			item.set_after;
-			text.add (item)
-		end;
-			
-	put_before_feat_decl is
-			-- Mark the beginning of feature declaration.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Feature_declaration);
-			item.set_before;
-			text.add (item)
-		end;
-			
-	put_after_feat_decl is
-			-- Mark the end of feature declaration.
-		local
-			item: FILTER_ITEM
-		do
-			!!item.make (f_Feature_declaration);
-			item.set_after;
-			text.add (item)
-		end;
-			
+
 	prepare_class_text is
 			-- append standard text before class 
 		local
@@ -644,19 +428,9 @@ feature -- text construction
 
 feature -- local_control
 
-	set_separator (s: STRING) is
+	set_separator (s: TEXT_ITEM) is
 		do
-			format.set_separator(s);
-		end;
-
-	separator_is_special is
-		do
-			format.set_is_special(true);
-		end;
-
-	separator_is_normal is
-		do
-			format.set_is_special(false);
+			format.set_separator (s);
 		end;
 
 	abort_on_failure is
@@ -687,8 +461,7 @@ feature -- local_control
 			-- Neither new_line nor space between token.
 		do
 			format.set_must_indent (false);
-			format.set_space_between_tokens (false);
-			format.set_is_special (true);
+			format.set_space_between_tokens (false)
 		end;
 
 	indent_one_more is
@@ -829,8 +602,8 @@ end;
 	put_current_feature is
 		do
 			if priority < format.local_types.priority then
-				insert_special ("(");
-				put_special (")");
+				insert_text_item (ti_L_parenthesis);
+				put_text_item (ti_R_parenthesis)
 			end;
 			if format.local_types.is_normal then
 				put_normal_feature
@@ -875,14 +648,13 @@ end;
 				arg ?= arguments;
 				if arg /= void then
 					begin;
-					set_separator(",");
-					separator_is_special;
+					set_separator (ti_Comma);
 					space_between_tokens;
-					put_string (" ");
-					put_special ("(");
+					put_space;
+					put_text_item (ti_L_parenthesis);
 					abort_on_failure;
 					arguments.format (Current);
-					put_special (")");
+					put_text_item (ti_R_parenthesis);
 					if last_was_printed then
 						commit;
 						keep_types;
@@ -916,10 +688,10 @@ end;
 			f_name := format.local_types.final_name;
 			if print_fix_keyword then
 				if format.local_types.is_prefix then
-					put_keyword ("prefix");
+					put_text_item (ti_Prefix_keyword);
 					put_string (" ")
 				else
-					put_keyword ("infix"); 
+					put_text_item (ti_Infix_keyword); 
 					put_string (" ")
 				end
 			end;
@@ -939,29 +711,27 @@ end;
 			stone: FEATURE_STONE;
 			f_name: STRING;
 		do
+			f_name := format.local_types.final_name;
 			if illegal_operator then
-				put_special ("(");
-				put_keyword ("prefix");
-				put_string (" ");		
-				!!item.make (format.local_types.final_name);
-				if item.image.item (1) >= 'a' and item.image.item (1) <= 'z' then
-					item.set_is_keyword
-				end;
-				text.add (item);	
-				put_special ("%"");
-				put_special (")");
+				put_text_item (ti_L_parenthesis);
+				put_text_item (ti_Prefix_keyword);
+				put_space;
+				put_text_item (ti_Double_quote);
+				!!item.make (f_name);
+				put_text_item (item);	
+				put_text_item (ti_Double_quote);
+				put_text_item (ti_R_parenthesis)
 			else
 				feature_i := format.local_types.target_feature;
-				f_name := format.local_types.final_name;
-				insert (" ");
+				insert_text_item (ti_Space);
 				if feature_i /= Void and then in_bench_mode then
 					stone := feature_i.stone (old_types.target_class);
-					!CLICKABLE_TEXT!item.make (f_name, stone);
-					item.set_is_special;
-					text.insert (format.insertion_point, item);
+					!CLICKABLE_TEXT!item.make (f_name, stone)
 				else
-					insert_special (f_name);
+					!!item.make (f_name)
 				end;
+				insert_text_item (item);
+
 					-- careful: stone + keyword or special
 				if not dot_needed then
 					put_string ("Current");
@@ -969,6 +739,11 @@ end;
 				keep_types;
 				last_was_printed := true;
 			end;
+			if f_name.item (1) >= 'a' and f_name.item (1) <= 'z' then
+				item.set_is_keyword
+			else
+				item.set_is_special
+			end
 		end;
 
 	put_infix is
@@ -980,31 +755,31 @@ end;
 			f_name: STRING;
 			item: BASIC_TEXT
 		do
+			f_name := format.local_types.final_name;
 			if illegal_operator then
-				put_special ("(");
-				put_keyword ("infix");
-				put_string (" ");
-				put_string ("%"");
-				put_string (format.local_types.final_name);
-				put_special ("%"");
-				put_special (")");
-				last_was_printed := true;
+				put_text_item (ti_L_parenthesis);
+				put_text_item (ti_Infix_keyword);
+				put_space;
+				put_text_item (ti_Double_quote);
+				!!item.make (f_name);
+				put_text_item (item);
+				put_text_item (ti_Double_quote);
+				put_text_item (ti_R_parenthesis);
+				last_was_printed := true
 			else
 				feature_i := format.local_types.target_feature;
-				f_name := format.local_types.final_name;
 				if not dot_needed then
 					put_string ("Current");
 				end;
-				put_string(" ");
+				put_space;
 				if feature_i /= Void and then in_bench_mode then
 					stone := feature_i.stone (old_types.target_class);
-					!CLICKABLE_TEXT!item.make (f_name, stone);
-					item.set_is_special;
-					text.add (item);
+					!CLICKABLE_TEXT!item.make (f_name, stone)
 				else	
-					put_string (format.local_types.final_name);
+					!!item.make (f_name)
 				end;
-				put_string(" ");
+				put_text_item (item);
+				put_space;
 				old_priority := format.local_types.priority;
 				arg ?= arguments;
 				if arg /= void then
@@ -1017,11 +792,16 @@ end;
 						rollback;
 					end;
 					if format.local_types.priority < old_priority then
-						insert_special("(");
-						put_special(")");
-					end;
-				end;
-			end;		
+						insert_text_item (ti_L_parenthesis);
+						put_text_item (ti_R_parenthesis)
+					end
+				end
+			end	;
+			if f_name.item (1) >= 'a' and f_name.item (1) <= 'z' then
+				item.set_is_keyword
+			else
+				item.set_is_special
+			end
 		end;	
 	
 				
@@ -1074,6 +854,22 @@ end;
 
 feature -- infix and prefix control
 
+	put_fix_name (f_name: STRING) is
+			-- Append `f_name' (a infix or prefix operator) to the text.
+		require
+			f_name_not_void: f_name /= Void
+		local
+			item: BASIC_TEXT
+		do
+			!!item.make (f_name);
+			if f_name.item (1) >= 'a' and f_name.item (1) <= 'z' then
+				item.set_is_keyword
+			else
+				item.set_is_special
+			end;
+			text.add (item)
+		end;
+
 	set_insertion_point is
 			-- Remember text position for parantheses and prefix operator
 		do
@@ -1101,6 +897,13 @@ feature -- infix and prefix control
 		 	text.insert (format.insertion_point, item);	
 		end;
 	
+	insert_text_item (t: TEXT_ITEM) is
+		require
+			t_not_void: t /= Void
+		do
+		 	text.insert (format.insertion_point, t);
+		end;
+
 	need_dot is
 		do
 			format.set_dot_needed (true);
@@ -1113,9 +916,8 @@ feature -- infix and prefix control
 
 	put_dot is
 		do
-			put_special(".");
+			put_text_item (ti_Dot)
 		end;
-
 
 	priority: INTEGER is
 		do
@@ -1127,15 +929,15 @@ feature -- comments
 
 	put_comment (comment: EIFFEL_COMMENTS) is
 		local
-				i: INTEGER;
+			i: INTEGER;
 		do
 			begin;
 			if comment /= void then
 				if comment.count > 0 
 					and comment.text.item (1).item (1) /= '|'
 				then
-					put_string ("-- ");
-					put_string (comment.text.item (1));
+					put_text_item (ti_Dashdash);
+					put_comment_text (comment.text.item (1));
 					from
 						i := 2
 					until
@@ -1143,8 +945,8 @@ feature -- comments
 						or else comment.text.item (i).item (1) = '|'
 					loop
 						next_line;
-						put_string ("-- ");
-						put_string (comment.text.item (i));
+						put_text_item (ti_Dashdash);
+						put_comment_text (comment.text.item (i));
 						i := i + 1;
 					end;
 				end;
@@ -1164,12 +966,59 @@ feature -- comments
 				begin;
 				next_line;
 				!!s.make (50);
-				put_string ("--  (from ");
+				put_text_item (ti_Dashdash);
+				put_space;
+				put_comment_text ("(from ");
 				c := format.global_types.source_class;
 				put_class_name (c);
-				put_string (")");
+				put_comment_text (")");
 				commit;
 			end;
+		end;
+
+	put_comment_text (c: STRING) is
+			-- Interprete the ` and ' signs of the comment
+			-- and append it to the text.
+		require
+			c_not_void: c /= Void
+		local
+			item: BASIC_TEXT;
+			i, c_count: INTEGER;
+			between_quotes: BOOLEAN;
+			s: STRING
+		do
+			from
+				!!s.make (0);
+				c_count := c.count;
+				i := 1
+			until
+				i > c_count
+			loop
+				if between_quotes and c.item (i) = '%'' then
+					if not s.empty then
+						!!item.make (s);
+						put_text_item (item);
+						!!s.make (0)
+					end;
+					between_quotes := false
+				elseif not between_quotes and c.item (i) = '`' then
+					if not s.empty then
+						!!item.make (s);
+						item.set_is_comment;
+						put_text_item (item);
+						!!s.make (0)
+					end;
+					between_quotes := true
+				else
+					s.extend (c.item (i))
+				end;
+				i := i + 1
+			end;
+			if not s.empty then
+				!!item.make (s);
+				item.set_is_comment;
+				put_text_item (item)
+			end
 		end;
 
 	formal_name (pos: INTEGER): ID_AS is

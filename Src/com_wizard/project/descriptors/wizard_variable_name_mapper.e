@@ -13,16 +13,21 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 	ECOM_TYPE_KIND
 
 	WIZARD_SHARED_DATA
 
-feature -- Basic operations
+feature -- Access
 
 	registration_class_name: STRING is
 			-- Registration class name
 		do
-			Result := Ecom_prefix
+			Result := clone (Ecom_prefix)
 			Result.append (Shared_wizard_environment.project_name)
 			Result.append (Registration_suffix)
 			Result.to_upper

@@ -450,15 +450,18 @@ feature -- Basic operations
 	month_back is
 			-- Move to previous month.
 			-- Can move days backward if previous month has less days than the current month.
+		local
+			days_in_new_month: INTEGER
 		do
 			if month = 1 then
 				set_month (Months_in_year)
 				year_back
 			else
-				set_month (month - 1)
-				if day > days_in_month then
-					set_day (days_in_month)
+				days_in_new_month := days_in_i_th_month (month - 1, year)
+				if day > days_in_new_month then
+					set_day (days_in_new_month)
 				end
+				set_month (month - 1)
 			end
 		end;
 

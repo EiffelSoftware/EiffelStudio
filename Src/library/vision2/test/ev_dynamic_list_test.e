@@ -25,16 +25,23 @@ feature -- Initialization
 
 	do_tests is
 		local
-			hbox_test, vbox_test: EV_LIST_TEST [EV_WIDGET]
+			hbox_test, vbox_test, nb_test: EV_LIST_TEST [EV_WIDGET]
 			ex: EXCEPTIONS
 		do
 			create hbox_test.make ("EV_HORIZONTAL_BOX", ~hbox_list_generator, ~item_generator)
-			create vbox_test.make ("EV_HORIZONTAL_BOX", ~vbox_list_generator, ~item_generator)
+			create vbox_test.make ("EV_VERTICAL_BOX", ~vbox_list_generator, ~item_generator)
+			create nb_test.make ("EV_NOTEBOOK", ~notebook_list_generator, ~item_generator)
 			hbox_test.execute
 			vbox_test.execute
+			nb_test.execute
 			print (hbox_test.description)
 			print (vbox_test.description)
-			if hbox_test.test_successful and vbox_test.test_successful then
+			print (nb_test.description)
+			if
+				hbox_test.test_successful and
+				vbox_test.test_successful and
+				nb_test.test_successful
+			then
 				destroy
 			else
 				create ex
@@ -43,6 +50,11 @@ feature -- Initialization
 		end
 
 	item_generator: EV_BUTTON is
+		do
+			create Result
+		end
+
+	notebook_list_generator: EV_NOTEBOOK is
 		do
 			create Result
 		end

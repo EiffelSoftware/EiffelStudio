@@ -5,7 +5,7 @@
 #include "ecom_EiffelCompiler_COMPILER_PROXY.h"
 static const CLSID CLSID_COMPILER_PROXY_ = {0xe3895019,0xe9fd,0x345e,{0x8f,0x63,0x00,0xc6,0x68,0x3c,0x1d,0x1a}};
 
-static const IID IID_COMPILER_PROXY_I_ = {0x413ba215,0x207b,0x36a4,{0x89,0x6d,0xad,0x84,0xda,0xbb,0x95,0xe0}};
+static const IID IID_COMPILER_PROXY_I_ = {0xebac202d,0x6108,0x3e2f,{0x85,0xe4,0x17,0xbf,0xe1,0xa1,0xff,0x49}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -255,6 +255,38 @@ void ecom_EiffelCompiler::COMPILER_PROXY::ccom_set_cls_compliant(  /* [in] */ EI
 	tmp_v = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (v);
 	
 	hr = p_COMPILER_PROXY_I->set_cls_compliant(tmp_v);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::COMPILER_PROXY::ccom_set_any_type_id(  /* [in] */ EIF_INTEGER v )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_COMPILER_PROXY_I == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_COMPILER_PROXY_I_, (void **)&p_COMPILER_PROXY_I);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_v = 0;
+	tmp_v = (LONG)v;
+	
+	hr = p_COMPILER_PROXY_I->set_any_type_id(tmp_v);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -659,6 +691,38 @@ void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_basic_type_class_mapping
 	tmp_type_id = (LONG)type_id;
 	
 	hr = p_COMPILER_PROXY_I->generate_basic_type_class_mapping(tmp_type_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::COMPILER_PROXY::ccom_generate_eiffel_type_info_type_class_mapping(  /* [in] */ EIF_INTEGER type_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_COMPILER_PROXY_I == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_COMPILER_PROXY_I_, (void **)&p_COMPILER_PROXY_I);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	
+	hr = p_COMPILER_PROXY_I->generate_eiffel_type_info_type_class_mapping(tmp_type_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

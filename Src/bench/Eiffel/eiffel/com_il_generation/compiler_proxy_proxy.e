@@ -89,6 +89,13 @@ feature -- Basic Operations
 			ccom_set_cls_compliant (initializer, v)
 		end
 
+	set_any_type_id (v: INTEGER) is
+			-- No description available.
+			-- `v' [in].  
+		do
+			ccom_set_any_type_id (initializer, v)
+		end
+
 	start_assembly_generation (name: STRING; fname: STRING; location: STRING) is
 			-- No description available.
 			-- `name' [in].  
@@ -178,6 +185,13 @@ feature -- Basic Operations
 			-- `type_id' [in].  
 		do
 			ccom_generate_basic_type_class_mapping (initializer, type_id)
+		end
+
+	generate_eiffel_type_info_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		do
+			ccom_generate_eiffel_type_info_type_class_mapping (initializer, type_id)
 		end
 
 	generate_class_header (is_interface: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_expanded: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
@@ -1239,6 +1253,12 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_BOOLEAN)"
 		end
 
+	ccom_set_any_type_id (cpp_obj: POINTER; v: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
 	ccom_start_assembly_generation (cpp_obj: POINTER; name: STRING; fname: STRING; location: STRING) is
 			-- No description available.
 		external
@@ -1306,6 +1326,12 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_generate_basic_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_eiffel_type_info_type_class_mapping (cpp_obj: POINTER; type_id: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"

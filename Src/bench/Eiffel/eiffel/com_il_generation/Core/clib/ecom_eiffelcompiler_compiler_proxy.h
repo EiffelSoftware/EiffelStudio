@@ -78,6 +78,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	void ccom_set_any_type_id(  /* [in] */ EIF_INTEGER v );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	void ccom_start_assembly_generation(  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_OBJECT fname,  /* [in] */ EIF_OBJECT location );
 
 
@@ -145,6 +151,12 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	void ccom_generate_basic_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_generate_eiffel_type_info_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
 
 
 	/*-----------------------------------------------------------

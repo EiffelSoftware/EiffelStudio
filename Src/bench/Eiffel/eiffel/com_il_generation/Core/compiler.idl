@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(413BA215-207B-36A4-896D-AD84DABB95E0),
+      uuid(EBAC202D-6108-3E2F-85E4-17BFE1A1FF49),
       version(1.0),
       oleautomation
     ]
@@ -31,6 +31,7 @@ library EiffelCompiler
                         [in] long revision);
         HRESULT _stdcall set_verifiability([in] VARIANT_BOOL v);
         HRESULT _stdcall set_cls_compliant([in] VARIANT_BOOL v);
+        HRESULT _stdcall set_any_type_id([in] long v);
         HRESULT _stdcall StartAssemblyGeneration(
                         [in] BSTR Name, 
                         [in] BSTR FName, 
@@ -54,6 +55,7 @@ library EiffelCompiler
         HRESULT _stdcall generate_formal_type_class_mapping([in] long type_id);
         HRESULT _stdcall generate_none_type_class_mapping([in] long type_id);
         HRESULT _stdcall generate_basic_type_class_mapping([in] long type_id);
+        HRESULT _stdcall generate_eiffel_type_info_type_class_mapping([in] long type_id);
         HRESULT _stdcall GenerateClassHeader(
                         [in] VARIANT_BOOL IsInterface, 
                         [in] VARIANT_BOOL IsDeferred, 
@@ -290,4 +292,3 @@ library EiffelCompiler
         [default] interface COMPILER_PROXY_I;
     };
 };
-

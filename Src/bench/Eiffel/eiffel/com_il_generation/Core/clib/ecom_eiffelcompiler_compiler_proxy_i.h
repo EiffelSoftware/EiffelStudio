@@ -78,6 +78,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_any_type_id(  /* [in] */ LONG v ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	virtual STDMETHODIMP StartAssemblyGeneration(  /* [in] */ BSTR name, /* [in] */ BSTR fname, /* [in] */ BSTR location ) = 0;
 
 
@@ -145,6 +151,12 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP generate_basic_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_eiffel_type_info_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -16,7 +16,8 @@ inherit
 	EV_GAUGE_IMP
 		redefine
 			interface,
-			set_leap
+			set_leap,
+			internal_set_upper
 		end
 
 feature -- Element change
@@ -33,6 +34,17 @@ feature -- Element change
 			end
 		ensure then
 			range_same: value_range.is_equal (old value_range)
+		end
+
+feature {NONE} -- Implementation
+
+	internal_set_upper is
+			-- Sets the upper value of the adjustment struct to take 'leap' in to account
+		do
+			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
+				adjustment,
+				value_range.upper + leap
+			)			
 		end
 
 feature {EV_ANY_I} -- Implementation

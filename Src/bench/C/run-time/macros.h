@@ -146,23 +146,25 @@ extern int fcount;
 #define RTAI(cast,x,y) \
 	if (y) { \
 		RTAITYPE(x,y); \
-		CAT2(x,_area) = *(char**) ((y)+ (eif_area_table) [CAT2(x,_dtype)]); \
-		if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
-			CAT2(x,_freeze) = 1; \
-			HEADER(CAT2(x,_area))->ov_size |= B_C; \
+		if (CAT2(x,_area) = *(char**) ((y)+ (eif_area_table) [CAT2(x,_dtype)])) { \
+			if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
+				CAT2(x,_freeze) = 1; \
+				HEADER(CAT2(x,_area))->ov_size |= B_C; \
+				} \
+			CAT2(x,_area_minus_lower) = CAT2(x,_area)-(*(long*) ((y)+ (eif_lower_table) [CAT2(x,_dtype)]))*sizeof(cast); \
 			} \
-		CAT2(x,_area_minus_lower) = CAT2(x,_area)-(*(long*) ((y)+ (eif_lower_table) [CAT2(x,_dtype)]))*sizeof(cast); \
 	}
 
 #define RTAIOFF(cast,x,y) \
 	if (y) { \
 		RTAITYPE(x,y); \
-		CAT2(x,_area) = *(char**) ((y)+CAT2(x,_area_offset)); \
-		if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
-			CAT2(x,_freeze) = 1; \
-			HEADER(CAT2(x,_area))->ov_size |= B_C; \
+		if (CAT2(x,_area) = *(char**) ((y)+CAT2(x,_area_offset))) { \
+			if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
+				CAT2(x,_freeze) = 1; \
+				HEADER(CAT2(x,_area))->ov_size |= B_C; \
+				} \
+			CAT2(x,_area_minus_lower) = CAT2(x,_area)-(*(long*) ((y)+CAT2(x,_lower_offset)))*sizeof(cast); \
 			} \
-		CAT2(x,_area_minus_lower) = CAT2(x,_area)-(*(long*) ((y)+CAT2(x,_lower_offset)))*sizeof(cast); \
 	}
 
 #define RTAF(x, y) \
@@ -330,7 +332,7 @@ extern int fcount;
 	hec_stack.st_top = ht
 
 /* Other macros used to handle specific needs:
- *  RTMS(x,y) creates an Eiffel string from a C manifest string x, length y.
+ *  RTMS(s) creates an Eiffel string from a C manifest string s.
  *  RTST(c,d,i,n) creates an Eiffel ARRAY[ANY] (for strip).
  *  RTXA(x,y) copies 'x' into expanded 'y' with exception if 'x' is void.
  *  RTEQ(x,y) returns true if 'x' = 'y'

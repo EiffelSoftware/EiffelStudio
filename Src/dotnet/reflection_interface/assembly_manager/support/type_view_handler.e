@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 		local
 			support: SUPPORT
 		do
-			create support
+			create support.make
 			Result := support.exists (a_class, a_feature_name)
 			eiffel_feature := support.eiffel_feature
 		end

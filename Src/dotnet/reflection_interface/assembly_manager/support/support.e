@@ -5,7 +5,23 @@ indexing
 class
 	SUPPORT
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+		indexing
+			description: "Initialize `done'."
+			external_name: "Make"
+		do
+			create done.make
+		ensure
+			non_void_done: done /= Void
+		end
+			
 feature -- Access
+
 
 	dependancies_from_info (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME] is
 		indexing
@@ -14,23 +30,41 @@ feature -- Access
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
 		local
-			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			an_assembly: SYSTEM_REFLECTION_ASSEMBLY
 			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
+			an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
+			an_assembly: SYSTEM_REFLECTION_ASSEMBLY
+			dependencies: SYSTEM_COLLECTIONS_ARRAYLIST
+			i: INTEGER
+			a_dependency: SYSTEM_REFLECTION_ASSEMBLY
+			a_dependency_name: SYSTEM_REFLECTION_ASSEMBLYNAME
 			retried: BOOLEAN
 		do
 			if not retried then
 				create conversion_support.make_conversionsupport
-				assembly_name := conversion_support.assembly_name_from_descriptor (a_descriptor)
-				an_assembly := an_assembly.load (assembly_name)
-				Result := an_assembly.Get_Referenced_Assemblies
+				an_assembly_name := conversion_support.assembly_name_from_descriptor (a_descriptor)
+				an_assembly := an_assembly.load (an_assembly_name)
+				dependencies := intern_dependencies_from_info (an_assembly)
+				create Result.make (dependencies.get_count)
+				from
+				until
+					i = dependencies.get_count
+				loop
+					a_dependency ?= dependencies.get_item (i)
+					if a_dependency /= Void then
+						a_dependency_name := a_dependency.get_name
+						if a_dependency_name /= Void then
+							Result.put (i, a_dependency.get_name)
+						end
+					end
+					i := i + 1
+				end
 			else
-				Result := Void
+				create Result.make (0)
 			end
 		rescue
 			retried := True
 			retry
-		end
+		end				
 
 	dependancies_string (dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]): STRING is
 		indexing
@@ -127,4 +161,49 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	intern_dependencies_from_info (an_assembly: SYSTEM_REFLECTION_ASSEMBLY): SYSTEM_COLLECTIONS_ARRAYLIST is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [SYSTEM_REFLECTION_ASSEMBLY]
+		indexing
+			description: "Dependancies of the assembly corresponding to `a_descriptor'"
+			external_name: "InternDependenciesFromInfo"
+		require
+			non_void_assembly: an_assembly /= Void
+		local
+			assembly_names: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+			i: INTEGER
+			a_dependency: SYSTEM_REFLECTION_ASSEMBLYNAME
+			new_assembly: SYSTEM_REFLECTION_ASSEMBLY
+			retried: BOOLEAN
+			added: INTEGER
+		do
+			if not retried then
+				assembly_names := an_assembly.get_referenced_assemblies
+				create Result.make
+				from
+				until
+					i = assembly_names.count
+				loop
+					a_dependency := assembly_names.item (i)
+					if not done.contains (a_dependency.get_full_name) and not a_dependency.get_full_name.equals_string ("Microsoft.VisualC, Version=7.0.9249.59748, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" ) then
+						new_assembly := new_assembly.load (a_dependency)
+						added := done.add (a_dependency.get_full_name)
+						Result.add_range (intern_dependencies_from_info (new_assembly))
+						added := Result.add (new_assembly)
+					end
+					i := i + 1
+				end
+			else
+				Result := Void
+			end
+		rescue
+			retried := True
+			retry
+		end
+	
+	done: SYSTEM_COLLECTIONS_ARRAYLIST
+		indexing
+			description: "Loaded assemblies, used in `dependancies_from_info"
+			external_name: "Done"
+		end
+		
 end -- class SUPPORT

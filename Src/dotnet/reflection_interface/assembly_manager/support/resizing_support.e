@@ -363,7 +363,7 @@ feature -- Basic Operations
 			width: INTEGER
 		do
 			if not retried then
-				create support
+				create support.make
 				from
 				until
 					i = a_list.get_count
@@ -413,7 +413,7 @@ feature -- Basic Operations
 			width: INTEGER
 		do
 			if not retried then
-				create support
+				create support.make
 				from
 				until
 					i = a_list.get_count

@@ -308,6 +308,14 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 	
+	gtk_entry_select_region (e: POINTER; start_pos, end_pos: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_entry_set_position (e: POINTER; pos: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 	-- gtktext
 	gtk_text_new (hadj, vajd: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"

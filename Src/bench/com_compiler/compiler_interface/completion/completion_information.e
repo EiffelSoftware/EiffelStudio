@@ -238,7 +238,7 @@ feature -- Basic Operations
 		do
 			if not retried then
 				rename_sources := var_sources.string_array
-				rename_targets := var_sources.string_array
+				rename_targets := var_targets.string_array
 			end
 		rescue
 			retried := True

@@ -21,12 +21,12 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>/libraries/wel/content/stddlgs/index.html</url>
+				<url>/libraries/wel/content/stddlgs/index.xml</url>
 				<label>Standard dialogs</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/libraries/wel/content/stddlgs/wel_save_file_dialog.html</url>
+				<url>/libraries/wel/content/stddlgs/wel_save_file_dialog.xml</url>
 				<label>WEL_SAVE_FILE_DIALOG</label>
 			</link>
 		</seealso>

@@ -29,13 +29,13 @@
 					<paragraph>  You may browse as deeply within the Class View as is necessary, as there is no  limit to the depth of the nodes that may be opened. </paragraph>
 					<paragraph>  Right clicking on any node in the Class View will display a 
 						<link>
-							<url>context_menu.html</url>
+							<url>context_menu.xml</url>
 							<label> context menu</label>
 						</link> for the current node. 
 					</paragraph>
 					<paragraph>  For details of the hierarchy displayed in the Class View, click 
 						<link>
-							<url>hierarchy.html</url>
+							<url>hierarchy.xml</url>
 							<label> here</label>
 						</link>. 
 					</paragraph>

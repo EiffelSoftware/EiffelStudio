@@ -9,18 +9,18 @@
 	<paragraph>
 		<paragraph>  When you inherit 
 			<link>
-				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<url>/libraries/wel/reference/support/wel_application_chart.xml</url>
 				<label>WEL_APPLICATION</label>
 			</link>, you will need to implement the deferred feature  main_window as a once function.  This will be the main window of your application, and can be any descendent of WEL_COMPOSITE_WINDOW. 
 		</paragraph>
 		<note>
 			<bold>Note</bold>. See 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step2/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step2/index.xml</url>
 				<label>step2</label>
 			</link> in the 
 			<link>
-				<url>/libraries/wel/samples/tutorial/index.html</url>
+				<url>/libraries/wel/samples/tutorial/index.xml</url>
 				<label>tutorial</label>
 			</link> for a simple demonstration of how to do this.
 		</note>

@@ -37,19 +37,19 @@
 				<local_variable>your_dll.error_code</local_variable>
 			</code>, an integer, to those of  constant attributes defined in class 
 			<link>
-				<url>../../reference/desc/spec/win32/dll_32_chart.html</url>
+				<url>../../reference/desc/spec/win32/dll_32_chart.xml</url>
 				<label>DLL_32</label>
 			</link> and 
 			<link>
-				<url>../../reference/desc/spec/win32/dll_32_routine_chart.html</url>
+				<url>../../reference/desc/spec/win32/dll_32_routine_chart.xml</url>
 				<label>DLL_32_ROUTINE</label>
 			</link>  , supported by an auxiliary class 
 			<link>
-				<url>../../reference/desc/general/shared_library_constants_chart.html</url>
+				<url>../../reference/desc/general/shared_library_constants_chart.xml</url>
 				<label>  SHARED_LIBRARY_CONSTANTS</label>
 			</link>. As expressed by an invariant of class 
 			<link>
-				<url>../../reference/desc/spec/win32/dll_32_chart.html</url>
+				<url>../../reference/desc/spec/win32/dll_32_chart.xml</url>
 				<label>DLL_32</label>
 			</link>, the value of 
 			<code>

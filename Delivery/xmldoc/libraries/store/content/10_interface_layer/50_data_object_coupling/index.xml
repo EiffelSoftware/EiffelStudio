@@ -62,12 +62,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>../30_database_selection/index.html</url>
+				<url>../30_database_selection/index.xml</url>
 				<label>Performing a database selection.</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../../30_data_structures_generation/10_data_structures_use/index.html</url>
+				<url>../../30_data_structures_generation/10_data_structures_use/index.xml</url>
 				<label>Database-specific structures use.</label>
 			</link>
 			<line_break/>

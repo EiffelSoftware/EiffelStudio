@@ -19,7 +19,7 @@
 		<paragraph>The once functions are once per thread in Multithreaded mode. Hence, each once function is thread-specific and is initialized the first time it is called in a thread.</paragraph>
 		<paragraph>You can create a once per process by following 
 			<link>
-				<url>/technologies/threads/20_once_features.html</url>
+				<url>/technologies/threads/20_once_features.xml</url>
 				<label>these instructions</label>
 			</link>.
 		</paragraph>

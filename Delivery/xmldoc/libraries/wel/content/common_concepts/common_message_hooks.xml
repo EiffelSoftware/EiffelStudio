@@ -14,11 +14,11 @@
 			<note>
 				<bold>Note</bold>. See 
 				<link>
-					<url>/libraries/wel/samples/tutorial/step2/index.html</url>
+					<url>/libraries/wel/samples/tutorial/step2/index.xml</url>
 					<label>step2</label>
 				</link> in the 
 				<link>
-					<url>/libraries/wel/samples/tutorial/index.html</url>
+					<url>/libraries/wel/samples/tutorial/index.xml</url>
 					<label>tutorial</label>
 				</link> for a simple demonstration involving the re-definition of on_left_button_down.
 			</note>

@@ -8,7 +8,7 @@
 		<paragraph>The main advantage of database-specific structures is the static checking: you can determine at compile-time the type of information you are accessing or modifying.</paragraph>
 		<paragraph>However, it can be more flexible to determine the type of data you are dealing with at run-time. This can be particularly useful for GUI applications, take a look at the 
 			<link>
-				<url>../../40_dataview_cluster/index.html</url>
+				<url>../../40_dataview_cluster/index.xml</url>
 				<label>DataView cluster</label>
 			</link>.
 		</paragraph>
@@ -70,7 +70,7 @@
 		<paragraph>You can store table/view rows content into classes that have the table or view name: one database table/view row correspond to one Eiffel object. Each table attribute will correspond to a class attribute with the same name. 
 			<italic>set</italic> commands enable to change the object content to insert rows in the database or update rows. DB_SELECTION class can directly map database results into these objects, and you can directly create a table/view row from one object with the DB_STORE class. Take a look at the 
 			<link>
-				<url>../../10_interface_layer/50_data_object_coupling/index.html</url>
+				<url>../../10_interface_layer/50_data_object_coupling/index.xml</url>
 				<label>data-object coupling</label>
 			</link> section.
 		</paragraph>
@@ -267,7 +267,7 @@
 					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
 				</code> class which is non-specific to the database. This canbe used by non database-specific code (for instance the 
 				<link>
-					<url>../../40_dataview_cluster/index.html</url>
+					<url>../../40_dataview_cluster/index.xml</url>
 					<label>DataView cluster</label>
 				</link>) toaccess database tables.
 			</paragraph>

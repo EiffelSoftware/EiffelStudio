@@ -8,7 +8,7 @@
 		<paragraph>
 			<bold>Tip:</bold> We recommend that you read 
 			<link>
-				<url>../../../../../libraries/store/content/30_data_structures_generation/10_data_structures_use/index.html</url>
+				<url>../../../../../libraries/store/content/30_data_structures_generation/10_data_structures_use/index.xml</url>
 				<label>what are and how to use</label>
 			</link> these data structures before reading this section.
 		</paragraph>
@@ -530,7 +530,7 @@
 			<paragraph>
 				<bold>Note</bold>: the template content can be adjusted, for instance to add comments or change the indexing. However, the fundamental template structure should not be changed to use data structures as described in the 
 				<link>
-					<url>../../../../../libraries/store/content/30_data_structures_generation/10_data_structures_use/index.html</url>
+					<url>../../../../../libraries/store/content/30_data_structures_generation/10_data_structures_use/index.xml</url>
 					<label>corresponding section</label>
 				</link>.
 			</paragraph>

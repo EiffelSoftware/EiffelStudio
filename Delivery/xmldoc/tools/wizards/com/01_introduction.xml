@@ -40,12 +40,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>guided_tour/index.html</url>
+				<url>guided_tour/index.xml</url>
 				<label>Guided Tour</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>reference/index.html</url>
+				<url>reference/index.xml</url>
 				<label>EiffelCOM wizard reference</label>
 			</link>
 		</seealso>

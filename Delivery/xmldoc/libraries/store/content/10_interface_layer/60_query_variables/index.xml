@@ -36,12 +36,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>../30_database_selection/index.html</url>
+				<url>../30_database_selection/index.xml</url>
 				<label>Performing a database selection.</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../20_data_modification/index.html</url>
+				<url>../20_data_modification/index.xml</url>
 				<label>Modifying database content.</label>
 			</link>
 			<line_break/>

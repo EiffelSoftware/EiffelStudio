@@ -61,12 +61,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>../10_database_connection/index.html</url>
+				<url>../10_database_connection/index.xml</url>
 				<label>Database connection</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../../20_implementation_layer/index.html</url>
+				<url>../../20_implementation_layer/index.xml</url>
 				<label>Implementation</label>
 			</link>
 			<line_break/>

@@ -35,13 +35,13 @@
 				<code>
 					<class_name>
 						<label>INTEGER</label>
-						<url>/libraries/base/reference/kernel/integer.html</url>
+						<url>/libraries/base/reference/kernel/integer.xml</url>
 					</class_name>
 				</code>, 
 				<code>
 					<class_name>
 						<label>DOUBLE</label>
-						<url>/libraries/base/reference/kernel/double.html</url>
+						<url>/libraries/base/reference/kernel/double.xml</url>
 					</class_name>
 				</code>,...
 			</item>

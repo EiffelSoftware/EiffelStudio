@@ -9,7 +9,7 @@
 	<paragraph>
 		<paragraph>   The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called 
 			<link>
-				<url>/libraries/vision2/content/10_widgets/index.html</url>
+				<url>/libraries/vision2/content/10_widgets/index.xml</url>
 				<label>widgets</label>
 			</link> (buttons, windows, listviews) as well as truly graphical elements such as points, lines, arcs, polygons and the like -- to develop a modern, functional and good-looking graphical interactive application.  
 		</paragraph>
@@ -17,19 +17,19 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>content/index.html</url>
+					<url>content/index.xml</url>
 					<label>Content</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>samples/index.html</url>
+					<url>samples/index.xml</url>
 					<label>Samples</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>reference/index.html</url>
+					<url>reference/index.xml</url>
 					<label>Reference</label>
 				</link>
 			</item>
@@ -53,7 +53,7 @@
 		</list>
 		<paragraph>  The lower tier serves for the implementation of the upper tier, but can also be used independently. For example 
 			<link>
-				<url>/libraries/wel/00_introduction.html</url>
+				<url>/libraries/wel/00_introduction.xml</url>
 				<label>WEL</label>
 			</link> has had a resounding success with Windows developers who need an advanced mechanism for building Windows-specific graphical applications, taking advantage of every facility of the Windows API  (Application Programming Interface) and of the Eiffel approach, but do not need portability on the client side. The GEL library is a 
 			<bold>wrapper</bold> library, automatically generated from the entire GTK API by a tool named 
@@ -67,37 +67,37 @@
 			<item>Taking full advantage of the 
 				<bold>agent</bold> mechanism of Eiffel, 
 				<link>
-					<url>/libraries/vision2/content/30_events/index.html</url>
+					<url>/libraries/vision2/content/30_events/index.xml</url>
 					<label>events</label>
 				</link> are now triggered through 
 				<bold>action sequences</bold> (lists of actions) that will be executed in order. This system does not require separate classes to be written for each event, however the command pattern can still be used if desired.
 			</item>
 			<item>The 
 				<link>
-					<url>/libraries/vision2/content/40_properties/ev_pick_and_dropable.html</url>
+					<url>/libraries/vision2/content/40_properties/ev_pick_and_dropable.xml</url>
 					<label>pick-and-drop</label>
 				</link> mechanism now relies on the Eiffel type system. A 
 				<bold>stone</bold> (some transportable object) is now any Eiffel class and can always be dropped on a widget that accepts the type (or a more general type) of that stone.
 			</item>
 			<item>
 				<link>
-					<url>/libraries/vision2/content/10_widgets/10_containers/index.html</url>
+					<url>/libraries/vision2/content/10_widgets/10_containers/index.xml</url>
 					<label>containers</label>
 				</link> ( 
 				<link>
-					<url>/libraries/vision2/content/10_widgets/index.html</url>
+					<url>/libraries/vision2/content/10_widgets/index.xml</url>
 					<label>widgets</label>
 				</link> that contain other 
 				<link>
-					<url>/libraries/vision2/content/10_widgets/index.html</url>
+					<url>/libraries/vision2/content/10_widgets/index.xml</url>
 					<label>widgets</label>
 				</link>) are now derived from 
 				<link>
-					<url>/libraries/base/00_introduction.html</url>
+					<url>/libraries/base/00_introduction.xml</url>
 					<label>EiffelBase</label>
 				</link> classes. For example you can now insert 
 				<link>
-					<url>/libraries/vision2/content/10_widgets/index.html</url>
+					<url>/libraries/vision2/content/10_widgets/index.xml</url>
 					<label>widgets</label>
 				</link> in any position and iterate over them.
 			</item>
@@ -122,7 +122,7 @@
 		</heading>
 		<paragraph>  For flexibility, EiffelVision is built using the bridge pattern. This means that every platform-dependant component of the library consist of two classes, plus an implementation class for each platform (currently two). One is the 
 			<link>
-				<url>/libraries/vision2/reference/interface/index.html</url>
+				<url>/libraries/vision2/reference/interface/index.xml</url>
 				<label>interface</label>
 			</link>. All the features of interfaces do nothing except delegate the call to the implementation object which is coupled to it. This object has the static type of the implementation-interface with the name of the interface class, with _I appended to it. From this implementation-interface, implementation classes inherit to implement platform-specific features. 
 		</paragraph>

@@ -3,14 +3,14 @@
 	<paragraph>
 		<paragraph>Once you have 
 			<link>
-				<url>../30_database_selection/index.html</url>
+				<url>../30_database_selection/index.xml</url>
 				<label>selected data</label>
 			</link> from the database, it returns a set of rows containing queried columns values. Each row loaded with DB_SELECTION is stored in a DB_RESULT object. The easiest way to access the data is thus to refer to DB_RESULT objects themselves. 
 		</paragraph>
 		<note>
 			<bold>Note</bold>: Take a look at the 
 			<link>
-				<url>../50_data_object_coupling/index.html</url>
+				<url>../50_data_object_coupling/index.xml</url>
 				<label>Database/Eiffel objects Coupling</label>
 			</link> to learn advanced data handling features.
 		</note>
@@ -66,12 +66,12 @@
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
-					<url>../30_database_selection/index.html</url>
+					<url>../30_database_selection/index.xml</url>
 					<label>Performing a database selection.</label>
 				</link>
 				<line_break/>
 				<link>
-					<url>../50_data_object_coupling/index.html</url>
+					<url>../50_data_object_coupling/index.xml</url>
 					<label>Coupling database data and Eiffel objects.</label>
 				</link>
 				<line_break/>

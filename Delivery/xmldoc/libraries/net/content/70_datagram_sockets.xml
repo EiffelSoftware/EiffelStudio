@@ -10,11 +10,11 @@
 		</table>
 		<paragraph>Using datagram sockets implies a few differences from the preceding    schemes. You create a 
 			<link>
-				<url>../reference/network/socket/network_datagram_socket_chart.html</url>
+				<url>../reference/network/socket/network_datagram_socket_chart.xml</url>
 				<label>NETWORK_DATAGRAM_SOCKET</label>
 			</link>    or a 
 			<link>
-				<url>../reference/local/socket/unix_datagram_socket_chart.html</url>
+				<url>../reference/local/socket/unix_datagram_socket_chart.xml</url>
 				<label>UNIX_DATAGRAM_SOCKET</label>
 			</link>    as before. You do not need to call 
 			<italic>listen</italic>, 
@@ -28,28 +28,28 @@
 		<paragraph>The command 
 			<italic>send </italic>takes an argument of type 
 			<link>
-				<url>../reference/abstract/socket/datagram_packet_chart.html</url>
+				<url>../reference/abstract/socket/datagram_packet_chart.xml</url>
 				<label>DATAGRAM_PACKET</label>
 			</link>,    and the query 
 			<italic>received </italic>returns a result of this type. 
 			<link>
-				<url>../reference/abstract/socket/datagram_packet_chart.html</url>
+				<url>../reference/abstract/socket/datagram_packet_chart.xml</url>
 				<label>DATAGRAM_PACKET</label>
 			</link>    is an heir of class 
 			<link>
-				<url>../reference/abstract/socket/packet_chart.html</url>
+				<url>../reference/abstract/socket/packet_chart.xml</url>
 				<label>PACKET</label>
 			</link>,    itself an heir of 
 			<link>
-				<url>../../base/reference/kernel/array_chart.html</url>
+				<url>../../base/reference/kernel/array_chart.xml</url>
 				<label>ARRAY</label>
 			</link> [ 
 			<link>
-				<url>../../base/reference/kernel/character_chart.html</url>
+				<url>../../base/reference/kernel/character_chart.xml</url>
 				<label>CHARACTER</label>
 			</link>].    Class 
 			<link>
-				<url>../reference/abstract/socket/datagram_packet_chart.html</url>
+				<url>../reference/abstract/socket/datagram_packet_chart.xml</url>
 				<label>DATAGRAM_PACKET</label>
 			</link>    makes it possible, through the query 
 			<italic>number</italic> and the associated    command 

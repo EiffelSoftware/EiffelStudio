@@ -11,19 +11,19 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>content/index.html</url>
+					<url>content/index.xml</url>
 					<label>Content</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>samples/index.html</url>
+					<url>samples/index.xml</url>
 					<label>Samples</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>reference/index.html</url>
+					<url>reference/index.xml</url>
 					<label>Reference</label>
 				</link>
 			</item>
@@ -33,12 +33,12 @@
 		</heading>
 		<paragraph>  If you are new to WEL, then the best place to begin is the 
 			<link>
-				<url>/libraries/wel/samples/tutorial/index.html</url>
+				<url>/libraries/wel/samples/tutorial/index.xml</url>
 				<label>tutorial</label>
 			</link>  which is a series of samples demonstrating the development of a simple WEL system. 
 		</paragraph> Also take a look at 
 		<link>
-			<url>/libraries/wel/content/common_concepts/index.html</url>
+			<url>/libraries/wel/content/common_concepts/index.xml</url>
 			<label>WEL common concepts</label>
 		</link> for details of some common concepts used in WEL programming.
 	</paragraph></document>

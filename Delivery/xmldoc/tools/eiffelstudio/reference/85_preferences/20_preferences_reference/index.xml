@@ -3,16 +3,16 @@
 	<paragraph>
 		<list ordered="false">
 			<item>
-				<link><url>00_introduction.html</url><label>Introduction</label></link>
+				<link><url>00_introduction.xml</url><label>Introduction</label></link>
 			</item>
 			<item>
-				<link><url>10_global_preferences.html</url><label>Global preferences</label></link>
+				<link><url>10_global_preferences.xml</url><label>Global preferences</label></link>
 			</item>
 			<item>
-				<link><url>20_tools/index.html</url><label>Tools</label></link>
+				<link><url>20_tools/index.xml</url><label>Tools</label></link>
 			</item>
 			<item>
-				<link><url>30_graphical_elements/index.html</url><label>Graphical Elements</label></link>
+				<link><url>30_graphical_elements/index.xml</url><label>Graphical Elements</label></link>
 			</item>
 		</list>
 	</paragraph>

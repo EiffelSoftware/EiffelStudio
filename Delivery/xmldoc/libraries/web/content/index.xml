@@ -6,12 +6,12 @@
 			<bold>See Also</bold>
 			<line_break/> 
 			<link>
-				<url>introduction.html</url>
+				<url>introduction.xml</url>
 				<label>Introduction to EiffelWeb</label>
 			</link>
 			<line_break/> 
 			<link>
-				<url>processing.html</url>
+				<url>processing.xml</url>
 				<label>Processing forms with EiffelWeb</label>
 			</link>
 		</seealso>

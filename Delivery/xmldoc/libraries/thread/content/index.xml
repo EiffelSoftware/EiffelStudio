@@ -6,19 +6,19 @@
 			<list ordered="false">
 				<item>
 					<link>
-						<url>00_introduction.html</url>
+						<url>00_introduction.xml</url>
 						<label>Introduction</label>
 					</link>
 				</item>
 				<item>
 					<link>
-						<url>10_thread_library.html</url>
+						<url>10_thread_library.xml</url>
 						<label>Library description</label>
 					</link>
 				</item>
 				<item>
 					<link>
-						<url>20_faq.html</url>
+						<url>20_faq.xml</url>
 						<label>FAQ</label>
 					</link>
 				</item>

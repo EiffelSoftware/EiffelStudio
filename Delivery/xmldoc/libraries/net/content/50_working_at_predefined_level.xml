@@ -32,11 +32,11 @@
 			</paragraph>
 			<paragraph>There are four predefined classes, corresponding to the client and    server sides with, in each case, the choice between the "Unix"    (single-machine) and "network" (multi-machine) styles of    communication. Note that all these classes support stream communication;    for datagrams, see 
 				<link>
-					<url>70_datagram_sockets.html</url>
+					<url>70_datagram_sockets.xml</url>
 					<label>using datagram sockets</label>
 				</link>.    The server class should inherit from UNIX_SERVER    or 
 				<link>
-					<url>../reference/network/client_server/network_server_chart.html</url>
+					<url>../reference/network/client_server/network_server_chart.xml</url>
 					<label>NETWORK_SERVER</label>
 				</link>;    the client class should inherit from UNIX_CLIENT    or NETWORK_CLIENT.    The choice between UNIX_ and NETWORK_ classes must of course be the same    on both sides.
 			</paragraph>

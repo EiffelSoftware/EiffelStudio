@@ -114,7 +114,7 @@
 				<keyword>Flat</keyword>
 			</code>.  The flat view of a feature, similar in concept to the flat view of a class (page 
 			<link>
-				<url>index.html#FLAT FORM OF CLASS</url>
+				<url>index.xml#FLAT FORM OF CLASS</url>
 			</link> ), gives the full text of a feature, taking into account any inherited precondition or postcondition clauses.  Here the feature as declared in the class appears in the top Editing Tool, with no precondition and an 
 			<code>
 				<keyword>ensure then</keyword>

@@ -18,38 +18,38 @@
 		</paragraph>
 		<paragraph>The example uses the network mode of communication, based on the 
 			<link>
-				<url>../reference/network/client_server/network_client_chart.html</url>
+				<url>../reference/network/client_server/network_client_chart.xml</url>
 				<label>NETWORK_CLIENT</label>
 			</link>    and 
 			<link>
-				<url>../reference/network/client_server/network_server_chart.html</url>
+				<url>../reference/network/client_server/network_server_chart.xml</url>
 				<label>NETWORK_SERVER    </label>
 			</link>classes. It uses automatic polling through 
 			<link>
-				<url>../reference/polling/abstract/medium_poller_chart.html</url>
+				<url>../reference/polling/abstract/medium_poller_chart.xml</url>
 				<label>MEDIUM_POLLER</label>
 			</link>    as in the previous example; the relevant command is given by class    
 			<code>
 				<class_name>CONNECTION</class_name>
 			</code>, an heir of 
 			<link>
-				<url>../reference/polling/abstract/poll_command_chart.html</url>
+				<url>../reference/polling/abstract/poll_command_chart.xml</url>
 				<label>POLL_COMMAND</label>
 			</link>.    The information exchanged between the server and its clients is    described by class 
 			<code>
 				<class_name>MESSAGE</class_name>
 			</code>, an heir of 
 			<link>
-				<url>../../base/reference/structures/list/linked_list_chart.html</url>
+				<url>../../base/reference/structures/list/linked_list_chart.xml</url>
 				<label>LINKED_LIST</label>
 			</link>    [ 
 			<link>
-				<url>../../base/reference/kernel/string_chart.html</url>
+				<url>../../base/reference/kernel/string_chart.xml</url>
 				<label>STRING</label>
 			</link>]    similar to the earlier examples' OUR_MESSAGE
 			<italic/>(see 
 			<link>
-				<url>50_working_at_predefined_level.html</url>
+				<url>50_working_at_predefined_level.xml</url>
 				<label>see    "Object structures"</label>
 			</link>). Attributes include,    the name 
 			<italic>client_name</italic> of the client that has sent this message,    the boolean 
@@ -63,7 +63,7 @@
 		</paragraph>
 		<paragraph>Each client uses the 
 			<link>
-				<url>../reference/polling/abstract/medium_poller_chart.html</url>
+				<url>../reference/polling/abstract/medium_poller_chart.xml</url>
 				<label>MEDIUM_POLLER</label>
 			</link>    to check any message coming from the server and immediately displays any    such message. It also checks a special connection, created with 
 			<italic>io</italic>l 

@@ -313,7 +313,7 @@ inherit
 				<keyword>export</keyword>
 			</code>". This section allows you to change the export status of inherited features. Remember from 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.html </url>
+				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.xml </url>
 				<label>Adding Class Features</label>
 			</link> that features become available (or not) to clients by their export status. Export status of immediate features is controlled in the feature clause. But here we are dealing with inherited features, so we control their status in the export part of the class's inheritance section. Any feature not mentioned will have the same export status as it did in the parent class.
 		</paragraph>

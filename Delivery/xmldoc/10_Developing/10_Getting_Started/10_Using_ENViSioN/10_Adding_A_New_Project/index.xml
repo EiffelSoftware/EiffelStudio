@@ -32,25 +32,25 @@
 						<item>  Class Library - A project for creating classes to use in other applications  </item>
 						<item>
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/blank_project.html</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/blank_project.xml</url>
 								<label>  Empty Project</label>
 							</link>  - An empty project for creating a local application
 						</item>
 						<item>
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/index.html</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/index.xml</url>
 								<label>  Eiffel Graphical Application</label>
 							</link>  - A project for creating an application with a user interface using the  EiffelBuild wizard
 						</item>
 						<item>
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/advanced_graphics_project.html</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/advanced_graphics_project.xml</url>
 								<label>  Blank Eiffel Graphical Application</label>
 							</link>  - A project for creating an application with a user interface using the Eiffel  libraries
 						</item>
 						<item>
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/windows_only_project.html</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/windows_only_project.xml</url>
 								<label>  Windows Eiffel Application</label>
 							</link> - A project for creating an application with  a Windows user interface using the Eiffel libraries
 						</item>
@@ -71,7 +71,7 @@
 						</item>
 						<item>
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/html_report_wizard.htm</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project.xml_report_wizard.htm</url>
 								<label>  HTML Report</label>
 							</link> - HTML Documentation generated from an existing Eiffel  project
 						</item>

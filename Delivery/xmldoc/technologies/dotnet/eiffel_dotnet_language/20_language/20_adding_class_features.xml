@@ -558,7 +558,7 @@ end
 </code_block>
 		<paragraph>As we learned in 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.html </url>
+				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml </url>
 				<label>Eiffel Classes</label>
 			</link> a deferred routine has specification, but no implementation. We will investigate deferred classes and features further in 
 			<link>

@@ -70,13 +70,13 @@
 			</item>
 			<item>Call ` 
 				<link>
-					<url>/libraries/base/reference/support/profiling_setting.html#f_start_profiling</url>
+					<url>/libraries/base/reference/support/profiling_setting.xml#f_start_profiling</url>
 					<label/>
 				</link>' on this object to start the profiler.
 			</item>
 			<item>Call ` 
 				<link>
-					<url>/libraries/base/reference/support/profiling_setting.html#f_stop_profiling</url>
+					<url>/libraries/base/reference/support/profiling_setting.xml#f_stop_profiling</url>
 					<label/>
 				</link>' on this object to stop the profiler.
 			</item>

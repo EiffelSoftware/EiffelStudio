@@ -115,7 +115,7 @@
 				<item>If you need to make any modification to the classes, mark those modifications clearly in the class texts.</item>
 				<item>Ensure that the text remains valid Eiffel. Note that this license does not authorize you to distribute versions of the Library restated in other programming, analysis or design languages, except if mechanically translated from the source form by an Eiffel compiler, in which case they fall under "object form". For any non-mechanical adaptation to other languages you must obtain authorization from ISE. "Valid Eiffel" includes the language described in the latest edition or printing of the book
 					<link>
-						<url>http://www.eiffel.com/doc/page.html#etl</url>
+						<url>http://www.eiffel.com/doc/page.xml#etl</url>
 						<label>
 							<italic>Eiffel: The Language</italic>
 						</label>

@@ -25,7 +25,7 @@
 				<note>
 					<bold>Note</bold>: Take a look at the 
 					<link>
-						<url>../80_database_control/index.html</url>
+						<url>../80_database_control/index.xml</url>
 						<label>database control</label>
 					</link> part to see how to use DB_CONTROL capabilities.
 				</note>
@@ -35,12 +35,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>../80_database_control/index.html</url>
+				<url>../80_database_control/index.xml</url>
 				<label>Database control and error handling</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../../20_implementation_layer/index.html</url>
+				<url>../../20_implementation_layer/index.xml</url>
 				<label>Implementation</label>
 			</link>
 			<line_break/>

@@ -15,61 +15,61 @@
 		<list ordered="false">
 			<item>A 
 				<link>
-					<url>/libraries/wel/content/windows/index.html</url>
+					<url>/libraries/wel/content/windows/index.xml</url>
 					<label>Windows</label>
 				</link> cluster containing classes representing available windows types
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/content/controls/index.html</url>
+					<url>/libraries/wel/content/controls/index.xml</url>
 					<label>Controls</label>
 				</link> cluster containing classes representing available controls
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/content/stddlgs/index.html</url>
+					<url>/libraries/wel/content/stddlgs/index.xml</url>
 					<label>Stddlgs</label>
 				</link> cluster containing classes representing standard Win32 dialogs
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/reference/consts/index.html</url>
+					<url>/libraries/wel/reference/consts/index.xml</url>
 					<label>Consts</label>
 				</link> cluster which contains constants used by WEL
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/reference/gdi/index.html</url>
+					<url>/libraries/wel/reference/gdi/index.xml</url>
 					<label>Gdi</label>
 				</link> cluster which contains classes allowing access to WIN32 Graphics Device Interfaces
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/reference/gdistock/index.html</url>
+					<url>/libraries/wel/reference/gdistock/index.xml</url>
 					<label>Gdistock</label>
 				</link> cluster which contains standard Graphic Device Interfaces used by WEL
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/reference/messages/index.html</url>
+					<url>/libraries/wel/reference/messages/index.xml</url>
 					<label>Messages</label>
 				</link> cluster which contains classes encapsulating windows messages
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/reference/shared/index.html</url>
+					<url>/libraries/wel/reference/shared/index.xml</url>
 					<label>Shared</label>
 				</link> cluster which contains classes encapsulating system wide shared
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/reference/structs/index.html</url>
+					<url>/libraries/wel/reference/structs/index.xml</url>
 					<label>Structs</label>
 				</link> cluster which contains classes for data structures required by Win32
 			</item>
 			<item>A 
 				<link>
-					<url>/libraries/wel/reference/support/index.html</url>
+					<url>/libraries/wel/reference/support/index.xml</url>
 					<label>Support</label>
 				</link> cluster which contains many supporting classes
 			</item>

@@ -10,13 +10,13 @@
 	<paragraph>
 		<paragraph>An EiffelBuild 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link> is a representation of a Vision2 component and its properties.
 		</paragraph>
 		<paragraph>To create a new instance of an object, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>pick</label>
 			</link> a type from the 
 			<link>
@@ -24,11 +24,11 @@
 				<label>type selector</label>
 			</link> and 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>drop</label>
 			</link> onto an existing 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link> (Accessible from the 
 			<link>
@@ -40,18 +40,18 @@
 				<label>builder window</label>
 			</link>). You will only be able to complete the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>drop</label>
 			</link> if the targeted 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link> will accept a new object of the transported type.
 		</paragraph>
 		<note>
 			<bold>Note</bold>: Once an 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link> has been 
 			<link>
@@ -59,7 +59,7 @@
 				<label>created</label>
 			</link>, it will always be contained in a parent 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link> until 
 			<link>
@@ -71,17 +71,17 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/tools/eiffelbuild/reference/30_type_selector/index.html</url>
+				<url>/tools/eiffelbuild/reference/30_type_selector/index.xml</url>
 				<label>Type selector</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/tools/eiffelbuild/how_to_s/50_reparent_an_object/index.html</url>
+				<url>/tools/eiffelbuild/how_to_s/50_reparent_an_object/index.xml</url>
 				<label>Reparent an object</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/tools/eiffelbuild/how_to_s/30_delete_an_object/index.html</url>
+				<url>/tools/eiffelbuild/how_to_s/30_delete_an_object/index.xml</url>
 				<label>Delete an object</label>
 			</link>
 		</seealso>

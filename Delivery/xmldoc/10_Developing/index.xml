@@ -52,7 +52,7 @@
 						<paragraph>  But, to a large extent, you will find using Eiffel for .NET in Visual Studio  .NET very much like using C# or Visual Basic in Visual Studio.NET.</paragraph>
 						<paragraph>  If you have not already done so, it is recommended that you first read 
 							<link>
-								<url>/20_Language/index.html</url>
+								<url>/20_Language/index.xml</url>
 								<label>  Eiffel, The Language</label>
 							</link> which contains information regarding the Eiffel  language, including a section of pages devoted to the 
 							<link>
@@ -64,7 +64,7 @@
 							<bold>See Also</bold>
 							<line_break/>
 							<link>
-								<url>/20_Language/index.html</url>
+								<url>/20_Language/index.xml</url>
 								<label>Eiffel, The Language</label>
 							</link>
 							<line_break/>
@@ -74,7 +74,7 @@
 							</link>
 							<line_break/>
 							<link>
-								<url>/technologies/dotnet/samples/index.html</url>
+								<url>/technologies/dotnet/samples/index.xml</url>
 								<label>Samples</label>
 							</link>
 							<line_break/>

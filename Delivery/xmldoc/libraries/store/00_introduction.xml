@@ -8,13 +8,13 @@
 		<list ordered="false">
 			<item>The 
 				<link>
-					<url>content/10_interface_layer/index.html</url>
+					<url>content/10_interface_layer/index.xml</url>
 					<label>interface layer</label>
 				</link> provides a high-level, unique interface for every DBMS.
 			</item>
 			<item>The 
 				<link>
-					<url>content/20_implementation_layer/index.html</url>
+					<url>content/20_implementation_layer/index.xml</url>
 					<label>implementation layer</label>
 				</link> customizes high-level routines to various DBMS handles. 
 			</item>

@@ -8,14 +8,14 @@
 		<paragraph>For each interface referenced in a type    library, the EiffelCOM wizard generates a deferred class and two    effective classes: a proxy of an interface pointer, or a client side    class, and a stub of an interface pointer, or a server side class.     The deferred interface class inherits from 
 			<code>
 				<class_name>
-					<url>../reference/interfaces/ecom_interface.html</url>
+					<url>../reference/interfaces/ecom_interface.xml</url>
 					<label>ECOM_INTERFACE</label>
 				</class_name>
 			</code>    and has a deferred feature per each interface function.     Both effective classes, or implemented interfaces, inherit from    the deferred class and implement its functions. The functions of the    interface proxy call underlying C layer, which calls a COM component.    The functions of the interface stub implement the component    functionality.
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>../reference/interfaces/ecom_interface.html</url>
+				<url>../reference/interfaces/ecom_interface.xml</url>
 				<label>ECOM_INTERFACE</label>
 			</link>    holds a pointer to the underlining COM interface.
 		</paragraph>
@@ -28,7 +28,7 @@
 			</code>    function that allows a client to query the COM component for the    interfaces it exposes and receive a pointer to another interface.    Querying a component for an interface is similar to using an    assignment attempt in Eiffel. The    Eiffel implementation of the assignment attempt relies on the runtime    data. Since we could not change the Eiffel runtime and the    implementation of the assignment attempt, we have created a library    class 
 			<code>
 				<class_name>
-					<url>../reference/interfaces/ecom_queriable.html</url>
+					<url>../reference/interfaces/ecom_queriable.xml</url>
 					<label>ECOM_QUERIABLE</label>
 				</class_name>
 			</code>, which has a creation routine
@@ -39,7 +39,7 @@
 		<paragraph>that queries a COM component internally.        Every interface proxy class inherits from 
 			<code>
 				<class_name>
-					<url>../reference/interfaces/ecom_queriable.html</url>
+					<url>../reference/interfaces/ecom_queriable.xml</url>
 					<label>ECOM_QUERIABLE</label>
 				</class_name>.
 			</code>
@@ -49,16 +49,16 @@
 		</heading>
 		<paragraph>
 			<link>
-				<url>../reference/interfaces/ecom_stub.html</url>
+				<url>../reference/interfaces/ecom_stub.xml</url>
 				<label>ECOM_STUB</label>
 			</link>    inherits from 
 			<link>
-				<url>../reference/interfaces/ecom_interface.html</url>
+				<url>../reference/interfaces/ecom_interface.xml</url>
 				<label>ECOM_INTERFACE</label>
 			</link>,    and has feature 
 			<code>
 				<feature_name>
-					<url>../reference/interfaces/ecom_stub.html#f_create_item</url>
+					<url>../reference/interfaces/ecom_stub.xml#f_create_item</url>
 					<label>create_item</label>
 				</feature_name>
 			</code>,    which allows to create a COM object corresponding to an Eiffel object.

@@ -106,7 +106,7 @@
 		</heading>
 		<paragraph>  Here, given with its full implementation, is a typical Iteration library routine: the  procedure until_do from  
 			<link>
-				<url>../../reference/structures/iteration/linear_iterator_chart.html</url>
+				<url>../../reference/structures/iteration/linear_iterator_chart.xml</url>
 				<label>LINEAR_ITERATOR</label>
 			</link>, the class  defining iteration mechanisms on linear (sequential) structures.
 		</paragraph>
@@ -271,7 +271,7 @@
 		</list>
 		<paragraph>  As you will remember from the 
 			<link>
-				<url>/libraries/base/content/20_structures/10_taxonomy.html</url>
+				<url>/libraries/base/content/20_structures/10_taxonomy.xml</url>
 				<label>presentation</label>
 			</link> of the abstract overall taxonomy,  the traversal hierarchy describes how data structures can be traversed; its most general class  is TRAVERSABLE.
 			<line_break/>  Each one of the iterator classes is paired with a traversal class (ortwo in one case):

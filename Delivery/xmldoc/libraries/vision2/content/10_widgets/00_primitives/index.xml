@@ -12,15 +12,15 @@
 			<size>2</size>What is a primitive?
 		</heading> A primitive is a Vision2 widget that may not contain other widgets. Primitives may be placed in 
 		<link>
-			<url>../10_containers/index.html</url>
+			<url>../10_containers/index.xml</url>
 			<label>containers</label>
 		</link>, but a 
 		<link>
-			<url>../index.html</url>
+			<url>../index.xml</url>
 			<label>widget </label>
 		</link>may not contain any child widgets. Some examples of primitives are EV_BUTTON and EV_LABEL. A list of all the classes in the primitives cluster may be found 
 		<link>
-			<url>/libraries/vision2/reference/interface/widgets/primitives/index.html</url>
+			<url>/libraries/vision2/reference/interface/widgets/primitives/index.xml</url>
 			<label>here</label>
 		</link>. 
 		<heading>
@@ -32,15 +32,15 @@
 		</heading>
 		<paragraph>  Although no primitive can contain another widget, certain primitives may contain one or more  
 			<link>
-				<url>../../20_items/index.html</url>
+				<url>../../20_items/index.xml</url>
 				<label>items</label>
 			</link>.  One example of this is an 
 			<link>
-				<url>../../../reference/interface/widgets/primitives/ev_list_chart.html</url>
+				<url>../../../reference/interface/widgets/primitives/ev_list_chart.xml</url>
 				<label> EV_LIST</label>
 			</link> containing  
 			<link>
-				<url>../../../reference/interface/items/ev_list_item_chart.html</url>
+				<url>../../../reference/interface/items/ev_list_item_chart.xml</url>
 				<label>EV_LIST_ITEM</label>
 			</link>s. 
 		</paragraph>

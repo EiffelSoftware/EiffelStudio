@@ -13,25 +13,25 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>Eiffel53.html</url>
+					<url>Eiffel53.xml</url>
 					<label>ISE Eiffel 5.3</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>Eiffel52.html</url>
+					<url>Eiffel52.xml</url>
 					<label>ISE Eiffel 5.2</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>Eiffel51.html</url>
+					<url>Eiffel51.xml</url>
 					<label>ISE Eiffel 5.1</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>Eiffel50.html</url>
+					<url>Eiffel50.xml</url>
 					<label>ISE Eiffel 5.0</label>
 				</link>
 			</item>

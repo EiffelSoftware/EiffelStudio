@@ -9,15 +9,15 @@
 	<paragraph>
 		<paragraph>  The kernel cluster contains classes that provide functionality that  are common to most Windowed application. These classes are  considered the core, or kernel of any Vision2 application. The  most important of these classes is  EV_APPLICATION. This is used to  initialize the graphical toolkit and event loop of your Vision2  application. Kernel also includes classes such as 
 			<link>
-				<url>../../reference/interface/kernel/ev_timeout_chart.html</url>
+				<url>../../reference/interface/kernel/ev_timeout_chart.xml</url>
 				<label> EV_TIMEOUT</label>
 			</link> that  calls procedures (via agents) at a set interval, and 
 			<link>
-				<url>../../reference/interface/kernel/ev_color_chart.html</url>
+				<url>../../reference/interface/kernel/ev_color_chart.xml</url>
 				<label> EV_COLOR</label>
 			</link> which is used for  coloring widgets and items. For a complete list of the classes  contained in the Kernel cluster, click 
 			<link>
-				<url>/libraries/vision2/reference/interface/kernel/index.html</url>
+				<url>/libraries/vision2/reference/interface/kernel/index.xml</url>
 				<label>here</label>
 			</link>.  To start programming with Vision2, you first have to correctly  initialize  EV_APPLICATION.
 		</paragraph>
@@ -29,7 +29,7 @@
 			<bold>Note:</bold> It is 
 			<bold> not</bold> possible to create a  Vision2 component unless an application exists (query  
 			<link>
-				<url>/libraries/vision2/reference/interface/kernel/ev_environment_chart.html</url>
+				<url>/libraries/vision2/reference/interface/kernel/ev_environment_chart.xml</url>
 				<label>EV_ENVIRONMENT</label>
 			</link>).  
 		</note>  You may inherit EV_APPLICATION or use it as a client in order to create your vision2  application. A simple method of using EV_APPLICATION is as follows:  
@@ -43,7 +43,7 @@
 		<paragraph>This is the same Vision2 application but instead using 
 			<code>
 				<class_name>
-					<url>/libraries/vision2/reference/interface/kernel/ev_application_chart.html</url>
+					<url>/libraries/vision2/reference/interface/kernel/ev_application_chart.xml</url>
 					<label>EV_APPLICATION</label>
 				</class_name>
 			</code>  in a client/supplier relationship.
@@ -56,7 +56,7 @@
 			<note>
 				<bold>Note: </bold>A Vision2 system is event based. This means that you do not have control of the execution within a  Vision2 system, but must respond appropriately to 
 				<link>
-					<url>/libraries/vision2/content/30_events/index.html</url>
+					<url>/libraries/vision2/content/30_events/index.xml</url>
 					<label>events</label>
 				</link> as they occur. Therefore, if you call launch on  an EV_APPLICATION, the processing for the application will continue indefinitely unless you have provided a  way to exit the application. It is essential to initialize your components  correctly, so your application can be exited (call destroy on the application).  
 			</note>   
@@ -67,19 +67,19 @@
 			<list ordered="false">
 				<item>
 					<link>
-						<url>../10_widgets/index.html</url>
+						<url>../10_widgets/index.xml</url>
 						<label>Creating widgets and setting their properties.</label>
 					</link>
 				</item>
 				<item>
 					<link>
-						<url>../10_widgets/10_containers/index.html</url>
+						<url>../10_widgets/10_containers/index.xml</url>
 						<label>Adding containers to your  window(s), then place your created widgets  in those containers.</label>
 					</link>
 				</item>
 				<item>
 					<link>
-						<url>../30_events/index.html</url>
+						<url>../30_events/index.xml</url>
 						<label>Add code to respond to user actions with agents and action sequences.</label>
 					</link>
 				</item>

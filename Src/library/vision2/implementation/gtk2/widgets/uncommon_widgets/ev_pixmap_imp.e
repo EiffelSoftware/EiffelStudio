@@ -40,7 +40,8 @@ inherit
 			width,
 			height,
 			destroy,
-			dispose
+			dispose,
+			initialize
 		end
 
 	EV_PIXMAP_ACTION_SEQUENCES_IMP
@@ -59,24 +60,30 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
+		do
+			base_make (an_interface)
+			gtk_image := {EV_GTK_EXTERNALS}.gtk_image_new
+			set_c_object (gtk_image)
+		end
+
+	initialize is
+			-- Initialize `Current'
 		local
 			gdkpix, gdkmask: POINTER
 		do
-			base_make (an_interface)
-			
+			Precursor {EV_PRIMITIVE_IMP}
 			width := 1
 			height := 1
 			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, width, height, Default_color_depth)
-			gtk_image := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_new
-			set_c_object (gtk_image)
-			set_pixmap (gdkpix, gdkmask)
 
+			set_pixmap (gdkpix, gdkmask)
 				-- Initialize the Graphical Context
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
 			initialize_graphical_context
-			init_default_values
+			init_default_values			
 		end
+
+feature -- Drawing operations		
 		
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
 			-- 
@@ -99,13 +106,17 @@ feature {NONE} -- Initialization
 			Precursor {EV_DRAWABLE_IMP} (x, y)
 		end
 
-feature -- Drawing operations
-
 	flush is
 		do
 			if is_displayed then
-				{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (gtk_image)
+				{EV_GTK_EXTERNALS}.gtk_widget_draw (gtk_image, NULL)
 			end
+		end
+
+	update_if_needed is
+			-- Update `Current' if needed
+		do
+			flush
 		end
 
 feature -- Measurement
@@ -400,21 +411,18 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		require
 			a_stock_id_not_null: a_stock_id /= NULL
 		local
-			stock_pixbuf, scaled_pixbuf: POINTER
+			stock_pixbuf, a_theme: POINTER
+			a_error: POINTER
 		do
-			stock_pixbuf := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_render_icon (gtk_image, a_stock_id, gtk_icon_size_dialog, NULL)
-			scaled_pixbuf := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (stock_pixbuf, 48, 48, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_hyper)		
-			set_pixmap_from_pixbuf (scaled_pixbuf)
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (stock_pixbuf)
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (scaled_pixbuf)
+			a_theme := {EV_GTK_EXTERNALS}.gtk_icon_theme_get_default
+			if {EV_GTK_EXTERNALS}.gtk_icon_theme_has_icon (a_theme, a_stock_id) then
+				stock_pixbuf := {EV_GTK_EXTERNALS}.gtk_icon_theme_load_icon (a_theme, a_stock_id, 48, 0, $a_error)
+				if stock_pixbuf /= NULL then
+					set_pixmap_from_pixbuf (stock_pixbuf)
+					{EV_GTK_EXTERNALS}.object_unref (stock_pixbuf)
+				end
+			end
 		end
-
-	gtk_icon_size_dialog: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GTK_ICON_SIZE_DIALOG"
-		end		
 
 feature {NONE} -- Implementation
 
@@ -437,7 +445,7 @@ feature {NONE} -- Implementation
 				a_handle := a_filename.string
 				a_filetype := a_format.file_extension
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
-					a_gdkpixbuf := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
+					a_gdkpixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {EV_GTK_EXTERNALS}.gdk_interp_bilinear)
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $a_gerror)
 				if a_gerror /= default_pointer then

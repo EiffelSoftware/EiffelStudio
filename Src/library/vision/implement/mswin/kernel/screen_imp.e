@@ -118,7 +118,18 @@ feature -- Access
 		do
 			!! point.make (0, 0)
 			point.set_cursor_position 
-			Result := point.y		end
+			Result := point.y
+		end
+
+	visible_width: INTEGER is
+		once
+			Result := system_metrics.maximized_window_width
+		end
+
+	visible_height: INTEGER is
+		once
+			Result := system_metrics.maximized_window_height
+		end
 
 	width: INTEGER is
 			-- Horizontal resolution of the screen

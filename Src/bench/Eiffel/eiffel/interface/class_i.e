@@ -200,7 +200,7 @@ feature -- Status report
 			else
 				Result := "Name not yet set"
 			end
-		ensure
+		ensure then
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
 		end

@@ -15,9 +15,13 @@ inherit
 	OBJECT_CONTROL
 	OBJECT_OWNER
 
-feature -- Basic operations
+creation
+	make, put
 
-	put (obj: SHARED_OBJECT) is
+
+feature -- Initialization
+
+	frozen make, frozen put (obj: SHARED_OBJECT) is
 			-- Make proxy denote `obj'.
 		require
 			not_void: obj /= Void
@@ -27,6 +31,8 @@ feature -- Basic operations
 		ensure
 			attached: is_set
 		end
+
+feature	-- Access
 
 	item: SHARED_OBJECT is
 			-- Object attached to proxy.

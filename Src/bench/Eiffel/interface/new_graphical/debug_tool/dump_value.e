@@ -752,9 +752,9 @@ feature -- Action
 					send_string_value($value_string_c)
 				when Type_object, Type_expanded_object then
 					if value_address /= Void then
-						send_ref_value(hex_to_integer(value_address))
+						send_ref_value (Default_pointer + hex_to_integer (value_address))
 					else
-						send_ref_value(0)
+						send_ref_value (Default_pointer)
 					end
 				else
 					-- unexpected value, do nothing

@@ -273,15 +273,25 @@ feature -- Formats
 feature -- Grahpical Interface
 
 	build_widgets is
+		local
+			popup_cmd: TOOLBAR_CMD
 		do
 			if eb_shell /= Void then
 				set_default_size
 			end;
+
+			!! toolbar_parent.make (new_name, global_form, Current);
+			toolbar_parent.set_column_layout;
+			toolbar_parent.set_free_size;
+			!! popup_cmd.make (Current);
+			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
+
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (new_name, global_form);
+			!! edit_bar.make (l_Command_bar_name, toolbar_parent, Current);
 			build_bar;
-			!! format_bar.make (new_name, global_form);
+			!! toolbar_separator.make (new_name, toolbar_parent);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
 			build_format_bar;
 			build_command_bar;
 			fill_menus;
@@ -353,7 +363,7 @@ feature {NONE} -- Commands
 
 	open_cmd_holder: COMMAND_HOLDER;
 
-	save_cmd_holder: COMMAND_HOLDER;
+	save_cmd_holder: TWO_STATE_CMD_HOLDER;
 
 	save_as_cmd_holder: COMMAND_HOLDER;
 
@@ -480,8 +490,8 @@ feature {NONE} -- Implementation; Graphical Interface
 
 			edit_bar.attach_top (next_target_button, 0);
 			edit_bar.attach_top (previous_target_button, 0);
-			edit_bar.attach_right_widget (class_text_field, previous_target_button, 2);
-			edit_bar.attach_right_widget (previous_target_button, next_target_button, 0)
+			edit_bar.attach_right_widget (class_text_field, next_target_button, 2);
+			edit_bar.attach_right_widget (next_target_button, previous_target_button, 0)
 		end;
 
 	build_format_bar is

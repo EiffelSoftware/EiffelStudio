@@ -163,6 +163,14 @@ feature -- Status setting
 			shown: shown
 		end
 
+	set_focus is
+			-- Set focus to Current
+		require
+			exists: not destroyed
+		do
+			implementation.set_focus
+		end
+
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
 			-- `flag'. This means that any events with an

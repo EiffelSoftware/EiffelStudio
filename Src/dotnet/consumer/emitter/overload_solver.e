@@ -65,7 +65,11 @@ feature -- Basic Operations
 				end
 				from
 					method_list.forth
-					same_param_count := method_list.item.arguments.count = param_count
+					if method_list.after then
+						same_param_count := False
+					else
+						same_param_count := method_list.item.arguments.count = param_count
+					end
 				until
 					method_list.after
 				loop

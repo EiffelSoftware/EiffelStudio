@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			path_exists: (create {DIRECTORY}.make (apath)).exists
 		local
 			di: DIRECTORY_INFO
-			info_path: STRING
 		do
 			create di.make (apath.substring (1, apath.last_index_of ('\', apath.count)).to_cil)
 			di.create_

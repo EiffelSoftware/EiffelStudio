@@ -273,11 +273,8 @@ feature -- Access
 			procedures: ARRAY [CONSUMED_PROCEDURE]
 			functions: ARRAY [CONSUMED_FUNCTION]
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
-			properties: ARRAY [CONSUMED_PROPERTY]
-			events: ARRAY [CONSUMED_EVENT]
 			i: INTEGER
 			ca: CONSUMED_ASSEMBLY
-			local_cache_reader: LOCAL_CACHE_READER
 		do
 			create Result.make
 

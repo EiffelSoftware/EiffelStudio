@@ -34,8 +34,6 @@ feature -- Redefined
 
 	assembly_types (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_TYPES is
 			-- Assembly information from EAC
-		local
-			i: INTEGER
 		do
 			Assembly_types_cache.search (aname.full_name)
 			if Assembly_types_cache.found then
@@ -331,8 +329,6 @@ feature -- Access
 			procedures: ARRAY [CONSUMED_PROCEDURE]
 			functions: ARRAY [CONSUMED_FUNCTION]
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
-			properties: ARRAY [CONSUMED_PROPERTY]
-			events: ARRAY [CONSUMED_EVENT]
 			ca: CONSUMED_ASSEMBLY
 			i: INTEGER
 		do

@@ -172,7 +172,7 @@ feature -- Cecil
 			generate_macro ("RCECIL", cecil_rt_basket)
 
 				-- Cecil library prodcution rule
-			make_file.putstring ("STATIC_CECIL= ")
+			make_file.putstring ("STATIC_CECIL= lib")
 			make_file.putstring (system_name)
 			make_file.putstring (".a%N")
 
@@ -208,7 +208,7 @@ feature -- Cecil
 			make_file.new_line
 
 -- SHARED_CECIL
-			make_file.putstring ("SHARED_CECIL= c_")
+			make_file.putstring ("SHARED_CECIL= lib")
 			make_file.putstring (system_name)
 			make_file.putstring (".so %N")
 			make_file.putstring ("dynamic_cecil: $(SHARED_CECIL) %N")
@@ -817,7 +817,7 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("/emain.o Makefile%N%T$(RM) ") 
 			make_file.putstring (system_name)
 			make_file.new_line
-			make_file.putstring ("%T$(COMMAND_MAKEFILE)%N")
+			make_file.putstring ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
 			if System.externals.has_cpp_externals then
 				make_file.putstring ("%T$(CPP")
 			else

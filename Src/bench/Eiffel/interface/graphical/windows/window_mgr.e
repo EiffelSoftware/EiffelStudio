@@ -82,6 +82,14 @@ feature -- Properties
 			Result := explain_win_mgr.count
 		end;	
 
+	has_active_editor_tools: BOOLEAN is
+			-- Are there any active editor tools 
+			-- (routine and class) up?
+		do
+			Result := routine_windows_count /= 0 or else
+				class_windows_count /= 0
+		end
+				
 feature -- Graphical Interface
 
 	close (ed: TOOL_W) is

@@ -1,9 +1,5 @@
 class S_LINKABLE_DATA
 
-inherit
-
-	S_COORD_XY_DATA;
-
 feature
 
 	id: INTEGER;

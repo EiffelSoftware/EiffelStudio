@@ -6,7 +6,15 @@ feature
 			-- Directory number based on
 			-- `an_id'
 		do
-			Result := an_id // 100 + 1
+			Result := an_id // 150 + 1
 		end;
+
+	System_name: STRING is "system";
+
+	System_id_name: STRING is ".idfile";
+
+	EiffelCase_project_type: STRING is "ISE.EiffelCase.3.3";
+
+	EiffelBench_project_type: STRING is "ISE.EiffelCase.bench";
 
 end

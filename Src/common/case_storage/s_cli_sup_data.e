@@ -10,6 +10,13 @@ inherit
 
 feature
 
+	is_implementation: BOOLEAN;
+			-- Is this link a result of the implementation
+			-- and assertion
+			--| False implies that this relationship is derieved
+			--| from the result type and argument type of the
+			--| feature from the client class
+
 	is_aggregation: BOOLEAN;
 			-- Is this link an aggregation link ?
 
@@ -45,9 +52,10 @@ feature
 
 feature -- Setting values
 
-	set_booleans (is_agg, is_ref, is_ragg, is_rleft, is_rlink, is_rvert: BOOLEAN) is
+	set_booleans (is_imp, is_agg, is_ref, is_ragg, is_rleft, is_rlink, is_rvert: BOOLEAN) is
 			-- Set all the booleans for Current.
 		do
+			is_implementation := is_imp;
 			is_aggregation := is_agg;
 			is_reflexive := is_ref;
 			is_reverse_aggregation := is_ragg;
@@ -55,12 +63,21 @@ feature -- Setting values
 			is_reverse_link := is_rlink;
 			is_reverse_vertical_text := is_rvert
 		ensure
-			booleans_are_set: is_aggregation = is_agg and then
+			booleans_are_set: is_implementation = is_imp and then
+								is_aggregation = is_agg and then
 								is_reflexive = is_ref and then
 								is_reverse_aggregation = is_ragg and then
 								is_reverse_left_position = is_rleft and then
 								is_reverse_link = is_rlink and then
 								is_reverse_vertical_text = is_rvert
+		end;
+
+	set_implementation (b: BOOLEAN) is
+			-- Set is_implementation to `b'.
+		do
+			is_implementation := b
+		ensure
+			is_implementation_set: is_implementation = b
 		end;
 
 	set_is_reflexive is

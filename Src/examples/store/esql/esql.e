@@ -89,25 +89,17 @@ feature
 						base_selection.query (tmp_string)
 						if session_control.is_ok then
 							-- Iterate through resulting data,
-							-- and display them
+							-- and display them.
 							base_selection.load_result
+						else
+							manage_errors_and_warnings (session_control)
 						end
 						base_selection.terminate
 					elseif not tmp_string.is_equal ("exit") then
 						-- The user updates the database
 						base_update.modify (tmp_string)
 					end
-					if not session_control.is_ok then
-						-- There was an error!
-						session_control.raise_error
-						session_control.reset
-						io.new_line
-					else
-						if session_control.warning_message.count /= 0 then
-							io.putstring (session_control.warning_message)
-							io.new_line
-						end
-					end
+					manage_errors_and_warnings (session_control)
 				end
 				-- Terminate session
 				session_control.disconnect
@@ -115,6 +107,23 @@ feature
 		end
 
 feature {NONE}
+
+	manage_errors_and_warnings (session_control: DB_CONTROL) is
+			-- Manage errors and warnings that may have
+			-- occured during last operation.
+		do
+			if not session_control.is_ok then
+				-- There was an error!
+				session_control.raise_error
+				session_control.reset
+				io.new_line
+			else
+				if session_control.warning_message.count /= 0 then
+					io.putstring (session_control.warning_message)
+					io.new_line
+				end
+			end
+		end
 
 	read_order is
 			-- Get statement from standard input
@@ -167,7 +176,7 @@ feature {NONE}
 		end
 
 	execute is
-		-- This method is also  used by the class DB_SELECTION, and is executed after each
+		-- This method is also used by the class DB_SELECTION, and is executed after each
 		-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
 		-- display data resulting of a query.
 		-- In this example, it simply prompts column name on standard output.

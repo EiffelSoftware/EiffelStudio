@@ -42,7 +42,9 @@ inherit
 			remove_cluster,
 			cluster_properties,
 			add_assembly,
-			remove_assembly
+			remove_assembly,
+			update_project_ace_file,
+			synchronize_with_project_ace_file
 		end
 	
 	SHARED_EIFFEL_PROJECT
@@ -64,7 +66,7 @@ feature {NONE} -- Initialization
 			f: RAW_FILE
 			retried: BOOLEAN
 		do
-			create ace.make
+			create ace.make (Eiffel_ace.file_name)
 			if not retried then
 				if not is_valid then
 					if Eiffel_project.system_defined then
@@ -76,7 +78,7 @@ feature {NONE} -- Initialization
 					if f.exists and then f.is_writable then
 						f.putstring (blank_ace_file (sys_name))
 						f.close
-						create ace.make
+						create ace.make (Eiffel_ace.file_name)
 						check is_valid end
 					end
 				end
@@ -186,7 +188,7 @@ feature -- Access
 			i: INTEGER
 		do
 			if is_valid then
-				ace_res := ace.clusters
+				ace_res := ace.cluster_names
 				if ace_res /= Void and then not ace_res.is_empty then
 					create res.make (1, ace_res.count)
 					from
@@ -269,7 +271,7 @@ feature -- Access
 			ace_clusters: LINKED_LIST [STRING]
 		do
 			if is_valid then
-				ace_clusters := ace.clusters
+				ace_clusters := ace.cluster_names
 				ace_clusters.compare_objects
 				if ace_clusters.has (cluster_name) then
 					create {CLUSTER_PROPERTIES} Result.make (cluster_name, ace)
@@ -462,6 +464,28 @@ feature -- Basic operations
 			end
 		end
 
+	update_project_ace_file (project_ace_file_name: STRING) is
+			-- Update the project Ace file according to the current settings.
+			-- `project_ace_file_name' [in].  
+		local
+			project_ace: ACE_FILE_ACCESSER
+		do
+			create project_ace.make (project_ace_file_name)
+			update_ace (project_ace, ace)
+		end
+
+	synchronize_with_project_ace_file (project_ace_file_name: STRING) is
+			-- Synchronize the current settings with the project Ace file.
+			-- `project_ace_file_name' [in].  
+		local
+			project_ace: ACE_FILE_ACCESSER
+		do
+			create project_ace.make (project_ace_file_name)
+			if project_ace.is_valid then				
+				update_ace (ace, project_ace)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	ace: ACE_FILE_MODIFIER
@@ -471,7 +495,144 @@ feature {NONE} -- Implementation
 			-- Minimal ace file generated when a syntax error is detected.
 		do
 			Result := "system%N%T" + sys_name 
-				+ "%N%Nroot%N%Troot_class%N%Ndefault%N%Tmsil_generation(yes)%N%Tmsil_generation_type(%"exe%")%N%Ncluster%N%Nend"
+				+ "%N%Nroot%N%T" + 
+				"root_class%N%N" +
+				"default%N%T" +
+				"msil_generation(yes)%N%T" +
+				"msil_generation_type(%"exe%")%N%N" +
+				"cluster%N%Nend"
+		end
+	
+	is_same_cluster (target, other: CLUSTER_SD): BOOLEAN is
+			-- Is `target' same as `other'?
+		do
+			Result := (target = Void and then other = Void) 
+					or else ((target /= Void and other /= Void)  
+					and then target.cluster_name.same_as (other.cluster_name)
+					
+					and then ((target.parent_name = Void and then other.parent_name = Void) 
+					or else ((target.parent_name /= Void and other.parent_name /= Void) 
+					and then target.parent_name.same_type (other.parent_name)
+					and then target.parent_name.same_as (other.parent_name)))
+
+					and then target.directory_name.same_as (other.directory_name)
+					
+					and then target.is_recursive = other.is_recursive
+					and then target.is_library = other.is_library)
+		end
+	
+	update_ace (target_ace, original_ace: ACE_FILE_ACCESSER) is
+			-- Update `target_ace'.
+		require
+			non_void_target_ace: target_ace /= Void
+			non_void_original_ace: original_ace /= Void
+			valid_original_ace: original_ace.is_valid
+		do
+			if not original_ace.system_name.is_equal (target_ace.system_name) then
+				target_ace.set_system_name (original_ace.system_name)
+			end
+			if not original_ace.root_class_name.is_equal (target_ace.root_class_name) then
+				target_ace.set_root_class_name (original_ace.root_class_name)
+			end
+			if not original_ace.creation_routine_name.is_equal (target_ace.creation_routine_name) then
+				target_ace.set_creation_routine_name (original_ace.creation_routine_name)
+			end
+			
+			update_clusters (target_ace, original_ace)
+		end
+	
+	update_clusters (target_ace, original_ace: ACE_FILE_ACCESSER) is
+			-- Update clusters in `target_ace'.
+		require
+			non_void_target_ace: target_ace /= Void
+			valid_target_ace: target_ace.is_valid
+			non_void_original_ace: original_ace /= Void
+			valid_original_ace: original_ace.is_valid
+		local
+			target_clusters: HASH_TABLE [CLUSTER_SD, STRING]
+		do
+				-- Create hash table of clusters that are 
+				-- in target ace file.
+			create target_clusters.make (target_ace.root_ast.clusters.count)
+			target_clusters.compare_objects
+			from
+				target_ace.root_ast.clusters.start
+			until
+				target_ace.root_ast.clusters.after
+			loop
+				target_clusters.put (target_ace.root_ast.clusters.item, 
+									target_ace.root_ast.clusters.item.cluster_name)
+				target_ace.root_ast.clusters.forth
+			end
+			
+				-- Update clusters that are in both 
+				-- original ace file and in target ace file,
+				-- and remove them from hash table.
+				-- Add clusters that are not in target ace file.
+			from
+				original_ace.root_ast.clusters.start
+			until
+				original_ace.root_ast.clusters.after
+			loop
+				if 
+					target_clusters.has (original_ace.root_ast.clusters.item.cluster_name)
+				then
+					if 
+						not is_same_cluster (original_ace.root_ast.clusters.item,
+								target_clusters.item (original_ace.root_ast.clusters.item.cluster_name))
+					then
+						update_cluster (target_clusters.item (original_ace.root_ast.clusters.item.cluster_name),
+										original_ace.root_ast.clusters.item)
+					end
+					target_clusters.remove (original_ace.root_ast.clusters.item.cluster_name)
+				else
+					target_ace.root_ast.clusters.force (original_ace.root_ast.clusters.item)
+				end
+				
+				original_ace.root_ast.clusters.forth
+			end
+			
+				-- Remove clusters that are not in original ace file.
+			if not target_clusters.is_empty then
+				from
+					target_clusters.start
+				until
+					target_clusters.after
+				loop
+					target_ace.root_ast.clusters.prune (target_clusters.item_for_iteration)
+					target_clusters.forth
+				end
+			end
+		end
+	
+	update_cluster (target, origin: CLUSTER_SD) is
+			-- Synchronize `target' with `origin'.
+		require
+			non_void_target: target /= Void
+			non_void_origin: origin /= Void
+		do
+			if not target.cluster_name.same_as (origin.cluster_name) then
+				target.set_cluster_name (origin.cluster_name)
+			end
+--			if
+--				(target.parent_name = Void xor origin.parent_name = Void) 
+--				or else not target.parent_name.same_as (origin.parent_name)
+--			then
+--				target.set_parent_name (origin.parent_name)
+--			end
+			if not target.directory_name.same_as (origin.directory_name) then
+				target.set_directory_name (origin.directory_name)
+			end
+			if
+				target.is_recursive /= origin.is_recursive
+			then
+				target.set_is_recursive (origin.is_recursive)
+			end
+			if
+				target.is_library /= origin.is_library
+			then
+				target.set_is_library (origin.is_library)
+			end
 		end
 		
 end -- class PROJECT_PROPERTIES

@@ -61,7 +61,7 @@ feature -- Access
 			-- Full name of currently selected file including path.
 		do
 			if
-				selected_button /= Void and then selected_button.is_equal ("OK")
+				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
 				create Result.make (0)
 				Result.from_c (C.gtk_file_selection_get_filename (c_object))

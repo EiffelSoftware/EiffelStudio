@@ -48,6 +48,13 @@ feature -- Basic Operations
 			"BooleanClass"
 		end
 
+	closing_square_bracket: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"ClosingSquareBracket"
+		end
+
 	colon: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
@@ -174,6 +181,13 @@ feature -- Basic Operations
 			"SelectKeyword"
 		end
 
+	opening_square_bracket: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"OpeningSquareBracket"
+		end
+
 	character_class: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
@@ -221,6 +235,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"InitializationFeatureClause"
+		end
+
+	generic_types_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"GenericTypesKeyword"
 		end
 
 	use: STRING is
@@ -277,6 +298,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"DoKeyword"
+		end
+
+	binary_operators_feature_clause: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"BinaryOperatorsFeatureClause"
 		end
 
 	double_class: STRING is
@@ -377,6 +405,13 @@ feature -- Basic Operations
 			"Field"
 		end
 
+	constraints_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"ConstraintsKeyword"
+		end
+
 	require_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
@@ -389,13 +424,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"AliasKeyword"
-		end
-
-	external_keyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"ExternalKeyword"
 		end
 
 	il: STRING is
@@ -412,11 +440,11 @@ feature -- Basic Operations
 			"Dashes"
 		end
 
-	static_field: STRING is
+	external_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
-			"StaticField"
+			"ExternalKeyword"
 		end
 
 	static: STRING is
@@ -426,11 +454,11 @@ feature -- Basic Operations
 			"Static"
 		end
 
-	binary_operators_feature_clause: STRING is
+	static_field: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
-			"BinaryOperatorsFeatureClause"
+			"StaticField"
 		end
 
 	deferred_keyword: STRING is

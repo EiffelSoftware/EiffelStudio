@@ -861,7 +861,7 @@ feature {NONE} -- Implementation
 			non_void_feature: a_feature /= Void	
 		local
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
-			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
+			an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE
 			i: INTEGER
 		do
 			arguments := a_feature.get_arguments
@@ -870,8 +870,8 @@ feature {NONE} -- Implementation
 				i = arguments.get_count or Result
 			loop
 				an_argument ?= arguments.get_item (i)
-				if an_argument /= Void and then an_argument.get_eiffel_name /= Void then
-					Result := an_argument.get_eiffel_name.to_lower.equals_string (new_name.to_lower)
+				if an_argument /= Void and then an_argument.eiffel_name /= Void then
+					Result := an_argument.eiffel_name.to_lower.equals_string (new_name.to_lower)
 				end
 				i := i + 1
 			end

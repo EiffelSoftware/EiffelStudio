@@ -68,10 +68,22 @@ feature -- Access
 			external_name: "ClosingRoundBracket"
 		end
 		
+	Closing_square_bracket: STRING is "]"
+		indexing
+			description: "Closing square bracket as a string"
+			external_name: "ClosingSquareBracket"
+		end
+		
 	Colon: STRING is ":"
 		indexing
 			description: "Colon as a string"
 			external_name: "Colon"
+		end
+		
+	Constraints_keyword: STRING is "constraints"
+		indexing
+			description: "Constraints keyword in a generic class indexing clause"
+			external_name: "ConstraintsKeyword"
 		end
 		
 	Create_keyword: STRING is "create"
@@ -193,6 +205,12 @@ feature -- Access
 			description: "Generator name"
 			external_name: "GeneratorName"
 		end
+	
+	Generic_types_keyword: STRING is "generic_types"
+		indexing
+			description: "`generic_type' keyword in a generic class indexing clause"
+			external_name: "GenericTypesKeyword"
+		end
 		
 	IL: STRING is "IL"
 		indexing
@@ -288,6 +306,12 @@ feature -- Access
 		indexing
 			description: "Opening round bracket as a string"
 			external_name: "OpeningRoundBracket"
+		end
+	
+	Opening_square_bracket: STRING is "["
+		indexing
+			description: "Opening square bracket as a string"
+			external_name: "OpeningSquareBracket"
 		end
 		
 	Prefix_keyword: STRING is "prefix"

@@ -24,20 +24,6 @@ feature -- Access
 			"get_GenericTypes"
 		end
 
-	frozen a_internal_constraints: ARRAY [ANY] is
-		external
-			"IL field signature :System.Object[] use ISE.Reflection.GenericDerivation"
-		alias
-			"_internal_Constraints"
-		end
-
-	get_constraints: ARRAY [ANY] is
-		external
-			"IL signature (): System.Object[] use ISE.Reflection.GenericDerivation"
-		alias
-			"get_Constraints"
-		end
-
 	frozen a_internal_generic_types: ARRAY [ANY] is
 		external
 			"IL field signature :System.Object[] use ISE.Reflection.GenericDerivation"
@@ -47,9 +33,9 @@ feature -- Access
 
 feature -- Basic Operations
 
-	add_derivation_type (a_type: ISE_REFLECTION_SIGNATURETYPE; a_constraint: STRING) is
+	add_derivation_type (a_type: ISE_REFLECTION_SIGNATURETYPE) is
 		external
-			"IL signature (ISE.Reflection.SignatureType, System.String): System.Void use ISE.Reflection.GenericDerivation"
+			"IL signature (ISE.Reflection.SignatureType): System.Void use ISE.Reflection.GenericDerivation"
 		alias
 			"AddDerivationType"
 		end

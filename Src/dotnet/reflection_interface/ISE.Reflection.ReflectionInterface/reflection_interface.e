@@ -434,6 +434,11 @@ feature -- Retrieval
 			retried: BOOLEAN
 			dir: SYSTEM_IO_DIRECTORY
 			read_lock_filename: STRING
+			is_generic_type: BOOLEAN
+			custom_attributes: ARRAY [ANY]
+			generic_type_value: STRING
+			i: INTEGER
+--			a_custom_attribute: EIFFEL_GENERIC_CLASS_NAME_ATTRIBUTE
 		do
 			if not retried then
 				current_history.search_for_type (a_type)
@@ -470,7 +475,23 @@ feature -- Retrieval
 										last_read_successful := False
 									else
 										read_lock.Close
-										xml_type_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", formatter.Format_Type_Name (a_type.get_Full_Name).To_Lower, Xml_Extension)
+										custom_attributes := a_type.get_custom_attributes (False) 
+										from
+										until
+											i = custom_attributes.count or is_generic_type
+										loop
+										--	a_custom_attribute ?= custom_attributes.item (i)
+										--	if a_custom_attribute /= Void then
+										--		generic_type_value := a_custom_attribute.get_value
+										--		is_generic_type := True
+										--	end
+											i := i + 1
+										end
+										if is_generic_type then
+											xml_type_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", formatter.Format_Type_Name (generic_type_value).To_Lower, Xml_Extension)
+										else
+											xml_type_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", formatter.Format_Type_Name (a_type.get_Full_Name).To_Lower, Xml_Extension)
+										end
 										if file.exists (xml_type_filename) then
 											Result := eiffel_type (xml_type_filename)
 											if Result /= Void then

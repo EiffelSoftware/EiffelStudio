@@ -50,18 +50,18 @@ feature -- Access
 
 feature -- Basic Operations
 
-	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.XmlCodeGenerator"
-		alias
-			"ReplaceType"
-		end
-
 	make_xml_code_generator is
 		external
 			"IL signature (): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
 			"MakeXmlCodeGenerator"
+		end
+
+	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
+		external
+			"IL signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.XmlCodeGenerator"
+		alias
+			"StartAssemblyGeneration"
 		end
 
 	end_assembly_generation is
@@ -71,11 +71,11 @@ feature -- Basic Operations
 			"EndAssemblyGeneration"
 		end
 
-	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
+	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
 		external
-			"IL signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.XmlCodeGenerator"
+			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
-			"StartAssemblyGeneration"
+			"ReplaceType"
 		end
 
 	generate_type (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is

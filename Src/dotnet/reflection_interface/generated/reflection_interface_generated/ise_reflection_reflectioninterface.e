@@ -34,11 +34,11 @@ feature -- Access
 			"_internal_ErrorMessages"
 		end
 
-	get_last_error: ISE_REFLECTION_ERRORINFO is
+	get_last_read_successful: BOOLEAN is
 		external
-			"IL signature (): ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
+			"IL signature (): System.Boolean use ISE.Reflection.ReflectionInterface"
 		alias
-			"get_LastError"
+			"get_LastReadSuccessful"
 		end
 
 	frozen a_internal_last_read_successful: BOOLEAN is
@@ -83,11 +83,11 @@ feature -- Access
 			"_internal_SearchResult"
 		end
 
-	get_last_read_successful: BOOLEAN is
+	get_last_error: ISE_REFLECTION_ERRORINFO is
 		external
-			"IL signature (): System.Boolean use ISE.Reflection.ReflectionInterface"
+			"IL signature (): ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
 		alias
-			"get_LastReadSuccessful"
+			"get_LastError"
 		end
 
 feature -- Basic Operations

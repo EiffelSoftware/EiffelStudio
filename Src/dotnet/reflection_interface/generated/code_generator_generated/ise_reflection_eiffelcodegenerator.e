@@ -120,11 +120,25 @@ feature -- Basic Operations
 			"BuiltInComment"
 		end
 
+	generate_generic_clauses is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGenerator"
+		alias
+			"GenerateGenericClauses"
+		end
+
 	generate_inherit_clause is
 		external
 			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGenerator"
 		alias
 			"GenerateInheritClause"
+		end
+
+	generate_constraints is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGenerator"
+		alias
+			"GenerateConstraints"
 		end
 
 	intern_generate_eiffel_class (a_filename: STRING) is
@@ -202,6 +216,13 @@ feature -- Basic Operations
 			"IL signature (): System.Boolean use ISE.Reflection.EiffelCodeGenerator"
 		alias
 			"HasAnyRedefine"
+		end
+
+	generate_generic_types is
+		external
+			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGenerator"
+		alias
+			"GenerateGenericTypes"
 		end
 
 	generate_feature_assertions (assertions: SYSTEM_COLLECTIONS_ARRAYLIST; keyword: STRING) is

@@ -112,7 +112,7 @@ feature -- Basic Operations
 				reflection_support.Make
 				filename := reflection_support.Xml_Type_Filename (eiffel_class.get_assembly_descriptor, eiffel_class.get_full_external_name)
 				filename := filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
-				if overwrite or (not overwrite and not exists (filename)) then
+				if overwrite or (not overwrite and not exists (filename)) or eiffel_class.get_is_generic then
 					create text_writer.make_xmltextwriter_1 (filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 
 						-- Set generation options
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 				end
 				
 					-- <generic_derivations>
-				if eiffel_class.get_generic_derivations /= Void and then eiffel_class.get_generic_derivations.get_count > 0 then
+				if eiffel_class.get_generic_derivations /= Void and then eiffel_class.get_generic_derivations.count > 0 then
 					generate_generic_derivations
 				end
 					
@@ -332,9 +332,11 @@ feature {NONE} -- Implementation
 		require
 			is_generic: eiffel_class.get_is_generic
 			non_void_generic_derivations: eiffel_class.get_generic_derivations /= Void
-			not_empty_generic_derivations: eiffel_class.get_generic_derivations.get_count > 0
+			not_empty_generic_derivations: eiffel_class.get_generic_derivations.count > 0
+			non_void_constraints: eiffel_class.get_constraints /= Void
+			not_empty_constraints: eiffel_class.get_constraints.count > 0
 		local
-			generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST
+			generic_derivations: ARRAY [ANY]
 			a_generic_derivation: ISE_REFLECTION_GENERICDERIVATION
 			i: INTEGER
 			generic_types: ARRAY [ANY]
@@ -348,20 +350,18 @@ feature {NONE} -- Implementation
 				generic_derivations := eiffel_class.get_generic_derivations
 					-- <generic_derivations>
 				text_writer.write_start_element (Generic_derivations_element)
-				
 				from
 				until
-					i = generic_derivations.get_count
+					i = generic_derivations.count
 				loop
-					a_generic_derivation ?= generic_derivations.get_item (i)
+					a_generic_derivation ?= generic_derivations.item (i)
 					if a_generic_derivation /= Void then
 							-- <generic_derivation>
 						text_writer.write_start_element (Generic_derivation_element)
 						generic_types := a_generic_derivation.get_generic_types
-						constraints := a_generic_derivation.get_constraints
-						if generic_types /= Void and then constraints /= Void and then generic_types.count = constraints.count then
-								-- <derivation_count>
-							text_writer.write_element_string (Derivation_count_element, generic_types.count.to_string)
+						if generic_types /= Void then
+								-- <derivation_types_count>
+							text_writer.write_element_string (Derivation_types_count_element, generic_types.count.to_string)
 							from
 								j := 0
 							until
@@ -369,18 +369,13 @@ feature {NONE} -- Implementation
 							loop
 								a_generic_type ?= generic_types.item (j)
 								if a_generic_type /= Void then
-										-- <derivation>
-									text_writer.write_start_element (Derivation_element)
+										-- <generic_type>
+									text_writer.write_start_element (Generic_type_element)
 										-- <generic_type_eiffel_name>
 									text_writer.write_element_string (Generic_type_eiffel_name_element, a_generic_type.type_eiffel_name)
 										-- <generic_type_external_name>
-									text_writer.write_element_string (Generic_type_external_name_element, a_generic_type.type_full_external_name)
-										-- <constraint>
-									a_constraint ?= constraints.item (j)
-									if a_constraint /= Void then
-										text_writer.write_element_string (Constraint_element, a_constraint)
-									end								
-										-- </derivation>
+									text_writer.write_element_string (Generic_type_external_name_element, a_generic_type.type_full_external_name)		
+										-- </generic_type>
 									text_writer.write_end_element
 								end
 								j := j + 1
@@ -391,8 +386,25 @@ feature {NONE} -- Implementation
 					end
 					i := i + 1
 				end
-				
 					-- </generic_derivations>
+				text_writer.write_end_element
+				
+				constraints := eiffel_class.get_constraints
+					-- <constraints>
+				text_writer.write_start_element (Constraints_element)
+				from
+					i := 0
+				until				
+					i = constraints.count
+				loop
+					a_constraint ?= constraints.item (i)
+					if a_constraint /= Void then
+							-- <constraint>
+						text_writer.write_element_string (Constraint_element, a_constraint)
+					end
+					i := i + 1
+				end
+					-- </constraints>
 				text_writer.write_end_element
 			end
 		rescue		

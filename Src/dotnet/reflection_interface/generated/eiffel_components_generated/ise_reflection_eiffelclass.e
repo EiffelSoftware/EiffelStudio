@@ -45,6 +45,13 @@ feature -- Access
 			"_internal_Namespace"
 		end
 
+	get_generic_derivations: ARRAY [ANY] is
+		external
+			"IL signature (): System.Object[] use ISE.Reflection.EiffelClass"
+		alias
+			"get_GenericDerivations"
+		end
+
 	frozen a_internal_routine: ISE_REFLECTION_EIFFELFEATURE is
 		external
 			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
@@ -80,11 +87,11 @@ feature -- Access
 			"get_Invariants"
 		end
 
-	frozen a_internal_invariants: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen a_internal_constraints: ARRAY [ANY] is
 		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL field signature :System.Object[] use ISE.Reflection.EiffelClass"
 		alias
-			"_internal_Invariants"
+			"_internal_Constraints"
 		end
 
 	get_namespace: STRING is
@@ -192,13 +199,6 @@ feature -- Access
 			"get_UnaryOperatorsFeatures"
 		end
 
-	get_attribute: ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL signature (): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
-		alias
-			"get_Attribute"
-		end
-
 	frozen a_internal_element_change_features: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
@@ -218,6 +218,13 @@ feature -- Access
 			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
 		alias
 			"get_ElementChangeFeatures"
+		end
+
+	frozen a_internal_invariants: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"_internal_Invariants"
 		end
 
 	get_basic_operations: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -269,9 +276,9 @@ feature -- Access
 			"_internal_IsExpanded"
 		end
 
-	frozen a_internal_generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen a_internal_generic_derivations: ARRAY [ANY] is
 		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL field signature :System.Object[] use ISE.Reflection.EiffelClass"
 		alias
 			"_internal_GenericDerivations"
 		end
@@ -290,11 +297,11 @@ feature -- Access
 			"get_IsDeferred"
 		end
 
-	get_generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen a_internal_full_external_name: STRING is
 		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL field signature :System.String use ISE.Reflection.EiffelClass"
 		alias
-			"get_GenericDerivations"
+			"_internal_FullExternalName"
 		end
 
 	get_initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -318,6 +325,13 @@ feature -- Access
 			"get_CreateNone"
 		end
 
+	get_binary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+		alias
+			"get_BinaryOperatorsFeatures"
+		end
+
 	get_implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
@@ -332,11 +346,11 @@ feature -- Access
 			"get_IsGeneric"
 		end
 
-	frozen a_internal_full_external_name: STRING is
+	get_constraints: ARRAY [ANY] is
 		external
-			"IL field signature :System.String use ISE.Reflection.EiffelClass"
+			"IL signature (): System.Object[] use ISE.Reflection.EiffelClass"
 		alias
-			"_internal_FullExternalName"
+			"get_Constraints"
 		end
 
 	get_eiffel_name: STRING is
@@ -367,11 +381,11 @@ feature -- Access
 			"get_Parents"
 		end
 
-	get_binary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST is
+	get_attribute: ISE_REFLECTION_EIFFELFEATURE is
 		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelClass"
+			"IL signature (): ISE.Reflection.EiffelFeature use ISE.Reflection.EiffelClass"
 		alias
-			"get_BinaryOperatorsFeatures"
+			"get_Attribute"
 		end
 
 	get_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
@@ -425,6 +439,13 @@ feature -- Basic Operations
 			"SetGeneric"
 		end
 
+	set_constraints (constraints_table: ARRAY [ANY]) is
+		external
+			"IL signature (System.Object[]): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetConstraints"
+		end
+
 	has_attribute (info: SYSTEM_REFLECTION_MEMBERINFO; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
 		external
 			"IL signature (System.Reflection.MemberInfo, System.Collections.ArrayList): System.Boolean use ISE.Reflection.EiffelClass"
@@ -474,11 +495,11 @@ feature -- Basic Operations
 			"CreationRoutineFromInfo"
 		end
 
-	has_routine (info: SYSTEM_REFLECTION_METHODBASE; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
+	set_create_none (a_value: BOOLEAN) is
 		external
-			"IL signature (System.Reflection.MethodBase, System.Collections.ArrayList): System.Boolean use ISE.Reflection.EiffelClass"
+			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
 		alias
-			"HasRoutine"
+			"SetCreateNone"
 		end
 
 	add_element_change_feature (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
@@ -509,11 +530,11 @@ feature -- Basic Operations
 			"SetDeferred"
 		end
 
-	add_generic_derivation (a_derivation: ISE_REFLECTION_GENERICDERIVATION) is
+	has_routine (info: SYSTEM_REFLECTION_METHODBASE; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
 		external
-			"IL signature (ISE.Reflection.GenericDerivation): System.Void use ISE.Reflection.EiffelClass"
+			"IL signature (System.Reflection.MethodBase, System.Collections.ArrayList): System.Boolean use ISE.Reflection.EiffelClass"
 		alias
-			"AddGenericDerivation"
+			"HasRoutine"
 		end
 
 	set_modified (a_value: BOOLEAN) is
@@ -528,13 +549,6 @@ feature -- Basic Operations
 			"IL signature (ISE.Reflection.EiffelFeature, System.Reflection.MethodBase): System.Boolean use ISE.Reflection.EiffelClass"
 		alias
 			"InternHasRoutine"
-		end
-
-	set_create_none (a_value: BOOLEAN) is
-		external
-			"IL signature (System.Boolean): System.Void use ISE.Reflection.EiffelClass"
-		alias
-			"SetCreateNone"
 		end
 
 	routine_from_info (info: SYSTEM_REFLECTION_METHODINFO): ISE_REFLECTION_EIFFELFEATURE is
@@ -570,6 +584,13 @@ feature -- Basic Operations
 			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelClass"
 		alias
 			"AddInvariant"
+		end
+
+	set_generic_derivations (derivations_table: ARRAY [ANY]) is
+		external
+			"IL signature (System.Object[]): System.Void use ISE.Reflection.EiffelClass"
+		alias
+			"SetGenericDerivations"
 		end
 
 	set_external_name (a_name: STRING) is

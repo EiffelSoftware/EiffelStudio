@@ -1050,13 +1050,19 @@ feature -- Removal
 		require
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= count
-			meaningful_interval: start_index <= end_index + 1
+			meaningful_interval: start_index <= end_index
 		local
 			l_tail_count: INTEGER
+			i: INTEGER
 		do
-			l_tail_count := count - end_index
-			remove_head (start_index - 1)
-			remove_tail (l_tail_count)
+			from
+				i := 0
+			until
+				i > end_index - start_index
+			loop
+				remove (start_index)
+				i := i + 1
+			end
 		ensure
 			removed: is_equal (old substring (1, start_index - 1) +
 					old substring (end_index + 1, count))

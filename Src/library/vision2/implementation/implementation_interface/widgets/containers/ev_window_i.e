@@ -89,6 +89,59 @@ feature  -- Access
 		deferred
 		end 
 
+feature -- Measurement
+
+	maximum_width: INTEGER is
+			-- Maximum width that application wishes widget
+			-- instance to have
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			Result >= 0
+		end	
+	
+	maximum_height: INTEGER is
+			-- Maximum height that application wishes widget
+			-- instance to have
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			Result >= 0
+		end
+
+feature -- Status report
+
+        is_iconic_state: BOOLEAN is
+                        -- Does application start in iconic state?
+                deferred
+                end
+
+feature -- Status setting
+
+	set_iconic_state is
+			-- Set start state of the application to be iconic.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+        set_normal_state is
+			-- Set start state of the application to be normal.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	set_maximize_state is
+			-- Set start state of the application to be
+			-- maximized.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Element change
 
         set_icon_mask (mask: EV_PIXMAP) is
@@ -145,31 +198,33 @@ feature -- Element change
                 do
                         close_command := c
                 end	
-feature -- Status report
 
-        is_iconic_state: BOOLEAN is
-                        -- Does application start in iconic state?
-                deferred
-                end
-
-feature -- Status setting
-
-        set_iconic_state is
-                        -- Set start state of the application to be iconic.
-                deferred
-                end
-
-        set_normal_state is
-                        -- Set start state of the application to be normal.
-                deferred
-                end
-
-feature -- Element change
-
-        set_icon_name (new_name: STRING) is
+	set_icon_name (new_name: STRING) is
                         -- Set `icon_name' to `new__name'.
                 deferred
                 end
+
+feature -- Resizing
+
+	set_maximum_width (max_width: INTEGER) is
+			-- Set `maximum_width' to `max_width'.
+		require
+			exists: not destroyed
+			large_enough: max_width >= 0
+		deferred
+		ensure
+			max_width = max_width
+		end 
+
+	set_maximum_height (max_height: INTEGER) is
+			-- Set `maximum_height' to `max_height'.
+		require
+			exists: not destroyed
+			large_enough: max_height >= 0
+		deferred
+		ensure
+			max_height = max_height
+		end
 
 feature {EV_WINDOW, EV_APPLICATION} -- Implementation
 	

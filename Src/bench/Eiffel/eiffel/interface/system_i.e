@@ -1071,7 +1071,7 @@ end
 					internal_remove_class (removed_classes.item_for_iteration, 0)
 					removed_classes.forth
 				end
-				removed_classes.wipe_out
+				removed_classes := Void
 			end
 		end
 		

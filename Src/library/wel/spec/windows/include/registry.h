@@ -43,7 +43,7 @@ extern EIF_BOOLEAN cwin_reg_delete_key (EIF_INTEGER key, EIF_POINTER subkey);
 extern void cwin_reg_set_key_value (EIF_INTEGER key, EIF_POINTER keyname,
 									EIF_POINTER keyvalue);
 									
-extern void cwin_reg_close_key (EIF_INTEGER key);
+extern EIF_BOOLEAN cwin_reg_close_key (EIF_INTEGER key);
 
 
 extern EIF_POINTER cwin_reg_query_value (EIF_INTEGER key, EIF_POINTER value_name);

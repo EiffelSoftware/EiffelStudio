@@ -10,19 +10,20 @@ class
 
 feature -- Access
 
-	command_list: ARRAYED_LIST [GB_COMMAND] is
-			--
-		once
-			create result.make (0)
-		ensure
-			Result /= Void
-		end
-		
-	dialog: GB_HISTORY_DIALOG is
+	history_dialog: GB_HISTORY_DIALOG is
 			-- The history dialog of the application.
 			-- We must keep this updated when command list changes.
 		once
 			create result
+		ensure
+			Result /= Void
+		end
+
+	command_list: ARRAYED_LIST [GB_COMMAND] is
+			-- All commands currently referenced by
+			-- the history.
+		once
+			create result.make (0)
 		ensure
 			Result /= Void
 		end
@@ -41,7 +42,7 @@ feature -- Basic operation
 			command_not_void: a_command /= Void
 		do
 			command_list.force (a_command)
-			dialog.add_command_representation (a_command.textual_representation)
+			history_dialog.add_command_representation (a_command.textual_representation)
 			set_current_position (command_list.count)
 		ensure
 			command_added: command_list.has (a_command)
@@ -88,10 +89,10 @@ feature -- Basic operation
 			(command_list @ current_position).undo
 			set_current_position (current_position - 1)
 			if current_position = 0 then
-				dialog.remove_selection
+				history_dialog.remove_selection
 				set_current_position (-1)
 			else
-				dialog.select_item (current_position)
+				history_dialog.select_item (current_position)
 			end
 		end
 		
@@ -106,7 +107,7 @@ feature -- Basic operation
 			(command_list @ (current_position + 1)).execute
 			set_current_position (current_position + 1)
 				-- Update undo/redo buttons.
-			dialog.select_item (current_position)
+			history_dialog.select_item (current_position)
 		end
 		
 	cut_off_at_current_position is
@@ -117,7 +118,7 @@ feature -- Basic operation
 				-- of the history specially.
 			if current_position = -1 then
 				command_list.wipe_out
-				dialog.remove_all_items
+				history_dialog.remove_all_items
 			elseif current_position < command_list.count then
 				from
 					command_list.go_i_th (current_position + 1)
@@ -126,8 +127,8 @@ feature -- Basic operation
 				loop
 					command_list.remove
 				end
-					-- Update the display in the dialog also.
-				dialog.remove_items_from_position (current_position + 1)
+					-- Update the display in the history_dialog also.
+				history_dialog.remove_items_from_position (current_position + 1)
 			end
 		end
 		

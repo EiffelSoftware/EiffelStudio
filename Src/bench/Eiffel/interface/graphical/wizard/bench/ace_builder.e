@@ -556,7 +556,7 @@ feature {NONE} -- Implementation
 			root_class_line := clone (root_class_edit.text);
 			root_class_line.to_upper;
 			if not creation_procedure_edit.text.empty then
-				root_class_line.append (" (root_cluster): %"");
+				root_class_line.append (": %"");
 				root_class_line.append (creation_procedure_edit.text);
 				root_class_line.extend ('"');
 			end;

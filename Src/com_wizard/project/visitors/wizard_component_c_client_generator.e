@@ -1,0 +1,157 @@
+indexing
+	description: "Component C client generator"
+	status: "See notice at end of class";
+	date: "$Date$"
+	revision: "$Revision$"
+
+deferred class
+	WIZARD_COMPONENT_C_CLIENT_GENERATOR
+
+inherit
+	ECOM_FUNC_KIND
+		export
+			{NONE} all
+		end
+
+	WIZARD_CPP_WRITER_GENERATOR
+
+feature -- Basic operations
+
+	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Generate functions and properties of 'a_desc'
+			-- Process interface `a_desc'.
+		local
+			function_generator: WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
+			disp_func_generator: WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR
+			property_generator: WIZARD_CPP_CLIENT_PROPERTY_GENERATOR
+		do
+			if not a_desc.properties.empty then
+				from
+					a_desc.properties.start
+				until
+					a_desc.properties.off
+				loop
+					create property_generator
+
+					property_generator.generate (a_desc.name, a_desc.lcid, a_desc.properties.item)
+					cpp_class_writer.add_function (property_generator.c_access_feature, Public)
+					cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
+
+					a_desc.properties.forth
+				end
+			end
+
+			if not a_desc.functions.empty then
+				from
+					a_desc.functions.start
+				until
+					a_desc.functions.off
+				loop
+					if a_desc.functions.item.func_kind =  Func_dispatch then
+
+						create disp_func_generator
+						disp_func_generator.generate (a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
+						cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)
+
+					else
+						create function_generator
+						function_generator.generate (a_desc.name, a_desc.functions.item)
+						cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
+						from
+							function_generator.c_header_files.start
+						until
+							function_generator.c_header_files.after
+						loop
+							if not cpp_class_writer.import_files.has (function_generator.c_header_files.item) then
+								cpp_class_writer.add_import (function_generator.c_header_files.item)
+							end
+							function_generator.c_header_files.forth
+						end
+
+					end
+
+					a_desc.functions.forth
+				end
+			end
+
+			if a_desc.inherited_interface /= Void and then not
+					a_desc.inherited_interface.c_type_name.is_equal (Iunknown_type) and then
+					not a_desc.inherited_interface.c_type_name.is_equal (Idispatch_type) then
+				generate_functions_and_properties (a_desc.inherited_interface)
+			end		
+		end
+
+feature {NONE} -- Implementation
+
+	release_interface (a_name: STRING): STRING is
+			-- Code to release interface
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			-- if (`interface_variable_prepend'`a_name' == NULL )
+			--	`interface_vaiable_prepend'`a_name'`Release_function'
+
+			Result := clone (If_keyword)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Interface_variable_prepend)
+			Result.append (a_name)
+			Result.append (C_not_equal)
+			Result.append (Null)
+			Result.append (Close_parenthesis)
+			Result.append (New_line_tab_tab)
+			Result.append (Interface_variable_prepend)
+			Result.append (a_name)
+			Result.append (Release_function)
+			Result.append (New_line_tab)
+		ensure
+			non_void_release_interface: Result /= Void
+			valid_release_interface: not Result.empty
+		end
+
+
+	add_default_function is
+			-- Add default function.
+		require
+			non_void_cpp_class_writer: cpp_class_writer /= Void
+		local
+			function_writer: WIZARD_WRITER_C_FUNCTION
+			function_body: STRING
+		do
+			create function_writer.make
+			function_writer.set_name ("ccom_item")
+			function_writer.set_comment ("IUnknown interface")
+			function_writer.set_result_type (Eif_pointer)
+
+			create function_body.make (0)
+			function_body.append (tab)
+			function_body.append (Return)
+			function_body.append (Space)
+			function_body.append (Iunknown_variable_name)
+			function_body.append (Semicolon)
+
+			function_writer.set_body (function_body)
+
+			cpp_class_writer.add_function (function_writer, Public)
+
+		end
+
+
+end -- class WIZARD_COMPONENT_C_CLIENT_GENERATOR
+
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

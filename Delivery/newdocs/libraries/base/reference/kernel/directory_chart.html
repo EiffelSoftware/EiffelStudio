@@ -1,0 +1,98 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
+		
+<TITLE>DIRECTORY Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/directory_chart.html">DIRECTORY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../reference/kernel/index.html">base.kernel</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Directories, in the Unix sense, with creation and exploration features"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_make_open_read">make_open_read</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_has_entry">has_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">entry_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_closed' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_is_closed">is_closed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_empty' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_executable' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_is_executable">is_executable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_readable' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_is_readable">is_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_writable' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_is_writable">is_writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastentry' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_lastentry">lastentry</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`linear_representation' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`name' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`change_name' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_change_name">change_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`close' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_close">close</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`create_dir' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_create_dir">create_dir</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`delete' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_delete">delete</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`delete_content' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_delete_content">delete_content</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`delete_content_with_action' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_delete_content_with_action">delete_content_with_action</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">is_cancel_requested</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">file_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_dispose">dispose</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dn</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_open_read' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_make_open_read">make_open_read</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dn</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`open_read' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_open_read">open_read</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readentry' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_readentry">readentry</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`recursive_delete' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_recursive_delete">recursive_delete</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`recursive_delete_with_action' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_recursive_delete_with_action">recursive_delete_with_action</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">is_cancel_requested</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">file_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/directory.html#f_start">start</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+</BODY>
+
+</HTML>

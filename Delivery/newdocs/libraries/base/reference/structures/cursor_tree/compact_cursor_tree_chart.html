@@ -1,0 +1,186 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
+		
+<TITLE>COMPACT_CURSOR_TREE Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree_chart.html">COMPACT_CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../reference/structures/cursor_tree/index.html">base.structures.cursor_tree</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Compact trees as active structures that may be traversed using a cursor"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`above' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_above">above</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`after' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_after">after</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`arity' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_arity">arity</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`before' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_before">before</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`below' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_below">below</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`breadth' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_breadth">breadth</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`changeable_comparison_criterion' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../reference/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_item' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_child_item">child_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`child_tree' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_child_tree">child_tree</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree_chart.html">COMPACT_CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cursor' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_cursor">cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursors/cursor_chart.html">CURSOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`depth' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_depth">depth</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exhausted' was declared in LINEAR"><A CLASS="efeature" HREF="../../../reference/structures/traversing/linear.html#f_exhausted">exhausted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extendible' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`full' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_full">Full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`index_of' was declared in LINEAR"><A CLASS="efeature" HREF="../../../reference/structures/traversing/linear.html#f_index_of">index_of</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../reference/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_empty' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_leaf' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_is_leaf">is_leaf</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_root' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_is_root">is_root</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`isfirst' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_isfirst">isfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`islast' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_islast">islast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`level' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_level">level</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`linear_representation' was declared in LINEAR"><A CLASS="efeature" HREF="../../../reference/structures/traversing/linear.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/traversing/linear_chart.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`object_comparison' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../reference/structures/access/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`occurrences' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_occurrences">occurrences</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`off' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_off">off</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`parent_item' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_parent_item">parent_item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`parent_tree' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_parent_tree">parent_tree</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree_chart.html">COMPACT_CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`prunable' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readable' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`subtree' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_subtree">subtree</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree_chart.html">COMPACT_CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_cursor' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_valid_cursor">valid_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursors/cursor_chart.html">CURSOR</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_cursor_index' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_valid_cursor_index">valid_cursor_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`writable' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_writable">writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`back' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_back">back</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`breadth_forth' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_breadth_forth">breadth_forth</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`compare_objects' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../reference/structures/access/container.html#f_compare_objects">compare_objects</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`compare_references' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../reference/structures/access/container.html#f_compare_references">compare_references</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`container_fill' was declared in COLLECTION as `fill'"><A CLASS="efeature" HREF="../../../reference/structures/access/collection.html#f_fill">container_fill</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/access/container_chart.html">CONTAINER</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`down' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_down">down</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extend' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_fill">fill</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill_from_active' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_fill_from_active">fill_from_active</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`forth' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_forth">forth</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`go_last_child' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_go_last_child">go_last_child</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`go_to' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_go_to">go_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursors/cursor_chart.html">CURSOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`level_back' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_level_back">level_back</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`level_forth' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_level_forth">level_forth</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`merge_left' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_merge_left">merge_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`merge_right' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_merge_right">merge_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/structures/cursor_tree/cursor_tree_chart.html">CURSOR_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`postorder_forth' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_postorder_forth">postorder_forth</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`postorder_start' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_postorder_start">postorder_start</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`preorder_forth' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_preorder_forth">preorder_forth</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_front' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_put_front">put_front</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_left' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_parent' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_put_parent">put_parent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_right' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_put_right">put_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_remove">remove</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_node' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_remove_node">remove_node</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replace' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`search' was declared in LINEAR"><A CLASS="efeature" HREF="../../../reference/structures/traversing/linear.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../reference/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_start">start</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start_on_level' was declared in CURSOR_TREE"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/cursor_tree.html#f_start_on_level">start_on_level</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">l</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`up' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_up">up</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wipe_out' is declared in `Current'"><A CLASS="efeature" HREF="../../../reference/structures/cursor_tree/compact_cursor_tree.html#f_wipe_out">wipe_out</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+</BODY>
+
+</HTML>

@@ -38,7 +38,6 @@ feature {NONE} -- implementation
 			sep_imp: EV_MENU_SEPARATOR_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
 			chk_imp: EV_CHECK_MENU_ITEM_IMP
-			--rgroup: POINTER
 			radio_item_pointer: POINTER
 		do
 			an_item_imp ?= v.implementation
@@ -150,7 +149,6 @@ feature {NONE} -- implementation
 			item_imp: EV_ITEM_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
 			sep_imp: EV_MENU_SEPARATOR_IMP
-			--rpos: INTEGER
 			an_index: INTEGER
 			has_radio_item: BOOLEAN
 			temp_item_pointer: POINTER

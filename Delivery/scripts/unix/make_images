@@ -58,6 +58,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	cp cdrom/Eiffel52/INSTALL cdrom	
 	make_cd_image Eiffel52_free Eiffel52_free.iso cdrom
 	mv cdrom/Eiffel52 Eiffel52
+	tar -c Eiffel52 | gzip -c > Eiffel52_free.tgz
 fi
 
 if [ -f build_deliv.tgz ]; then
@@ -77,3 +78,4 @@ mv Eiffel52 cdrom
 cp cdrom/Eiffel52/INSTALL cdrom	
 make_cd_image Eiffel52_enterprise Eiffel52_enterprise.iso cdrom
 mv cdrom/Eiffel52 Eiffel52
+tar -c Eiffel52 | gzip -c > Eiffel52_enterprise.tgz

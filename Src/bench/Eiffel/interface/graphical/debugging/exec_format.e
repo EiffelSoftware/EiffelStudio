@@ -36,18 +36,21 @@ feature
 					license_window.set_exclusive_grab;
 					license_window.popup
 				end
+			elseif argument = update_symbol then
+				text_window.set_last_format (Current);
+				update_symbol.remove_action (Current, update_symbol)
 			else
 				format (Void);
 				if argument = Format_and_run then
 					text_window.tool.debug_run_command.execute (Void)
-				end;
-				text_window.set_last_format (Current)
+				end
 			end
 		end;
 
 	format (stone: STONE) is
 		do
-			Run_info.set_execution_mode (execution_mode)
+			Run_info.set_execution_mode (execution_mode);
+			update_symbol.add_action (Current, update_symbol)
 		end;
 
 	text_window: PROJECT_TEXT;
@@ -62,5 +65,16 @@ feature {NONE}
 			-- Useless here.
 
 	title_part: STRING is do Result := "" end;
+
+	update_symbol: TASK is
+			-- This task prevents the exec format buttons to disappear
+			-- and then reappear a few second later when one changes
+			-- the format. (This problem occurred when change_and_running
+			-- the step by step format because the X server was not able
+			-- to redraw the format buttons before it had displayed the
+			-- execution stack.)
+		once
+			!! Result.make
+		end;
 
 end -- class EXEC_FORMAT

@@ -151,7 +151,7 @@ feature
 				file.putint (gen_type.type_id - 1);
 			else
 				file.putstring ("RTUD(");
-				file.putint (gen_type.associated_class_type.id.id - 1);
+				file.putstring (gen_type.associated_class_type.id.generated_id);
 				file.putchar (')');
 			end;
 			if gen_param.is_reference or else gen_param.is_bit then

@@ -194,33 +194,65 @@ feature -- formatting
 			ctxt.commit;
 		end;
 
-feature -- Case storage 
+feature {CASE_CLUSTER_INFO} -- Case storage 
 
 	header_storage_info: S_CLASS_DATA is
 			-- Header storage information for Current
-			-- (such as index, class name, & generics)
+			-- (such as index and class name)
 		local
-			f_l: LINKED_LIST [S_FEATURE_DATA];
+			g_l: FIXED_LIST [S_GENERIC_DATA];
 			i_l: FIXED_LIST [S_TEXT_DATA];
 			s_chart: S_CLASS_CHART;
+			gen: FORMAL_DEC_AS;
+			gen_name: STRING;
+			gen_data: S_GENERIC_DATA;
+			key: S_CLASS_KEY;
+			type_info: S_TYPE_INFO;
+			name: STRING
 		do
-			!! Result.make (class_name.string_value);
-			--!! s_chart;
-			--if indexes /= Void then
-				--from
-					--!! i_l.make (indexes.count);
-					--i_l.start;
-					--indexes.start
-				--until
-					--indexes.after
-				--loop
-					--i_l.replace (indexes.item.storage_info);
-					--i_l.forth;
-					--indexes.forth
-				--end
-				--s_chart.set_indexes (i_l);
-			--end
-			--Result.set_chart (s_chart)
+			name := class_name.string_value;
+			name.to_upper;
+			!! Result.make (name);
+			if indexes /= Void then
+				!! s_chart;
+				from
+					!! i_l.make (indexes.count);
+					i_l.start;
+					indexes.start
+				until
+					indexes.after
+				loop
+					i_l.replace (indexes.item.storage_info);
+					i_l.forth;
+					indexes.forth
+				end
+				s_chart.set_indexes (i_l);
+				Result.set_chart (s_chart);
+			end;
+			if generics /= Void then
+				!! g_l.make (generics.count);
+				from
+					generics.start;
+					g_l.start
+				until
+					generics.after
+				loop
+					gen := generics.item;
+					!! gen_name.make (0);
+					gen_name.append (gen.formal_name);
+					if gen.constraint = Void then
+						!! gen_data.make (gen_name, Void)
+					else
+						key := gen.constraint_type.associated_class.case_class_key;
+						!! type_info.make (Void, key);
+						!! gen_data.make (gen_name, type_info)
+					end;
+					g_l.replace (gen_data);
+					g_l.forth;
+					generics.forth
+				end;
+				Result.set_generics (g_l);
+			end;
 		end;
 
 end

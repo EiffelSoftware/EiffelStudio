@@ -27,6 +27,9 @@ feature
 	postconditions: FIXED_LIST [S_ASSERTION_DATA];
 			-- Post-conditions
 
+	is_attribute: BOOLEAN;
+			-- Is Current feature an attribute?
+
 	is_deferred: BOOLEAN;
 			-- Is Current feature deferred?
 
@@ -55,23 +58,58 @@ feature -- Setting values
 			class_key_set: class_key = key;
 		end;
 
-	set_booleans (is_d, is_e, is_r: BOOLEAN) is
+	set_booleans (is_d, is_e, is_r, is_att: BOOLEAN) is
 			-- Set all booleans for Current.
 		do
 			is_deferred := is_d;
 			is_effective := is_e;
 			is_redefined := is_r;
+			is_attribute := is_att
 		ensure
 			booleans_are_set: is_deferred = is_d and then
 								is_effective = is_e and then
+								is_attribute = is_att and then
 								is_redefined = is_r
+		end;
+
+	set_is_deferred is
+			-- Set is_deferred to `True'.
+		do
+			is_deferred := True
+		ensure
+			is_deferred: is_deferred
+		end;
+
+	set_is_attribute is
+			-- Set is_attribute to `True'.
+		do
+			is_attribute := True
+		ensure
+			is_attribute: is_attribute
+		end;
+
+	set_is_redefined is
+			-- Set is_deferred to `True'.
+		do
+			is_redefined := True
+		ensure
+			is_redefined: is_redefined
+		end;
+
+	set_is_effective is
+			-- Set is_effective to `True'.
+		do
+			is_effective := True
+		ensure
+			is_effective: is_effective
 		end;
 
 	set_arguments (l: like arguments) is
 			-- Set arguments to `l'.
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
 		do
 			arguments := l
 		ensure
@@ -82,7 +120,8 @@ feature -- Setting values
 			-- Set commentss to `l'.
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
 		do
 			comments := l
 		ensure

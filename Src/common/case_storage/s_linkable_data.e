@@ -12,7 +12,7 @@ feature
 	chart: S_CHART;
 			-- Informal description of Current
 
-	client_links: FIXED_LIST [S_CLI_SUP_DATA];
+	client_links: LIST [S_CLI_SUP_DATA];
 			-- List of supplier relations for which current
 			-- is the client
 
@@ -45,7 +45,8 @@ feature -- Setting values
 			-- Set client_links to `l'.
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
 		do
 			client_links := l
 		ensure
@@ -56,7 +57,8 @@ feature -- Setting values
 			-- Set heir_links to `l'.
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
 		do
 			heir_links := l
 		ensure

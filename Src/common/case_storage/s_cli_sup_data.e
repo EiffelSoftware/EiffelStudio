@@ -63,6 +63,14 @@ feature -- Setting values
 								is_reverse_vertical_text = is_rvert
 		end;
 
+	set_is_reflexive is
+			-- Set is_reflexive to `True'.
+		do
+			is_reflexive := True
+		ensure
+			is_reflexive: is_reflexive
+		end;
+
 	set_reverse_label (l: STRING) is
 			-- Set label to `l'.
 		require

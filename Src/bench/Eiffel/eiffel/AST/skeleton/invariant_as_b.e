@@ -129,17 +129,23 @@ feature -- Formatter
 
 feature -- Case Storage
 
-    storage_info: FIXED_LIST [S_ASSERTION_DATA] is
-            -- Storage information for Current
-        do
+	storage_info (classc: CLASS_C): FIXED_LIST [S_ASSERTION_DATA] is
+			-- Storage information for Current in the
+			-- context class `classc'.
+		require
+			valid_assertions: assertion_list /= Void
+		local	
+			ctxt: FORMAT_CONTEXT;
+		do
 			!! Result.make (assertion_list.count);
+			!! ctxt.make_for_case (classc);
 			from
 				Result.start;
 				assertion_list.start
 			until
 				assertion_list.after
 			loop
-				Result.replace (assertion_list.item.storage_info);
+				Result.replace (assertion_list.item.storage_info (ctxt));
 				Result.forth;
 				assertion_list.forth
 			end

@@ -5,7 +5,8 @@ inherit
 	S_LINKABLE_DATA
 		redefine
 			chart
-		end
+		end;
+	STORABLE
 
 creation
 
@@ -72,7 +73,8 @@ feature
 			-- Set generics to `l'.
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
 		do
 			generics := l
 		ensure
@@ -81,9 +83,10 @@ feature
 
 	set_features (l: like features) is
 			-- Set features to `l'.
+			--| Allow empty features to be stored
+			--| to disk (because of bench).
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
 		do
 			features := l
 		ensure
@@ -94,11 +97,37 @@ feature
 			-- Set invariants to `l'.
 		require
 			valid_l: l /= Void;
-			l_not_empty: not l.empty
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
 		do
 			invariants := l
 		ensure
 			invariants_set: invariants = l
+		end;
+
+	set_feature_number (i: INTEGER) is
+			-- Set feature_number to `i'.
+		do
+			feature_number := i
+		end;
+
+feature -- Storage
+
+	store_to_disk (path: STRING) is
+			-- Store a class.
+		require
+			valid_path: path /= Void;
+		local
+			class_file_name: STRING;
+			class_file: RAW_FILE
+		do
+			!! class_file.make_open_write (path);
+			independent_store (class_file);
+			class_file.close;
+		rescue
+			if not class_file.is_closed then
+				class_file.close;
+			end;
 		end;
 
 end

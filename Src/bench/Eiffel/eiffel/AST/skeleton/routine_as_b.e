@@ -578,4 +578,19 @@ feature	{ROUTINE_AS, FEATURE_AS}  -- Replication and for flattening of a routine
 			obsolete_message := m
 		end;
 
+feature -- Case storage
+
+	store_information (classc: CLASS_C; f: S_FEATURE_DATA) is
+			-- Store pre and post information into `f'.
+		require
+			valid_f: f /= Void
+		do
+			if precondition /= Void and then precondition.assertions /= Void then
+				f.set_preconditions (precondition.storage_info (classc));
+			end;
+			if postcondition /= Void and then postcondition.assertions /= Void then
+				f.set_postconditions (postcondition.storage_info (classc));
+			end;
+		end;
+
 end

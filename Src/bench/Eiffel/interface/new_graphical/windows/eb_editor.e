@@ -527,7 +527,7 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 			set: text_window = ed
 		end
 
-feature {EV_FORMATTED_TEXT} -- Initialization
+feature {EB_FORMATTED_TEXT} -- Initialization
 
 	init_change_command (a_text_window: EB_CLICKABLE_RICH_TEXT) is
 			-- Initialization of the text window action.
@@ -539,6 +539,17 @@ feature {EV_FORMATTED_TEXT} -- Initialization
 		end
 
 	modify (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		do
+			if not text_window.changed then
+				text_window.set_changed (True)
+				update_save_symbol
+			end
+		end
+
+feature
+
+	save_text is
+			-- launches the save command, if any.
 		do
 		end
 

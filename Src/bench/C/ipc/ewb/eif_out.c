@@ -121,6 +121,28 @@ public EIF_BOOLEAN recv_ack ()
 	}
 }
 
+public EIF_BOOLEAN recv_dead ()
+{
+		/* Wait for a message saying that the application is dead */
+
+	Request pack;
+	STREAM *sp = stream_by_fd[EWBOUT];
+
+	Request_Clean (pack);
+	if (-1 == recv_packet(readfd(sp), &pack))
+		return (EIF_BOOLEAN) 0;
+
+#ifdef USE_ADD_LOG
+    add_log(100, "receiving request : %ld for es3", pack.rq_type);
+#endif
+
+	switch (pack.rq_type) {
+	case DEAD:
+		return (EIF_BOOLEAN) 1;
+	default:
+		return (EIF_BOOLEAN) 0;
+	}
+}
 
 public void c_send_str (s)
 char *s;

@@ -40,7 +40,7 @@ feature -- Status report
 		end;
 
 	is_plain_text: BOOLEAN is
-			-- Is this file plain ASCII text?
+			-- Is file reserved for text (character sequences)?
 		do
 		end
 

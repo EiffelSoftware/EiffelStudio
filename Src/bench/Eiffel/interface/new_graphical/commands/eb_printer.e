@@ -190,11 +190,9 @@ feature -- Basic operations
 		local
 			file_name: FILE_NAME
 			cmd: STRING
-			shell_request: COMMAND_EXECUTOR
 			sent_txt: STRING
 			file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
-			tmp_dir: STRING
 		do
 			if not retried then
 					-- Generate the output text.

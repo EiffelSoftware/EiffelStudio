@@ -76,11 +76,7 @@ feature -- Default event
 feature {NONE}
 
 	add_widget_callbacks is
-		local
-			mode_backup: INTEGER
 		do
-			mode_backup := executing_or_editing_mode
-			set_mode (editing_mode)
 			add_common_callbacks (widget);
 			add_common_callbacks (widget.scrolled_window);
 			widget.scrolled_window.add_pointer_motion_action (eb_selection_mgr, first_arg);
@@ -90,7 +86,6 @@ feature {NONE}
 				widget.add_enter_action (eb_selection_mgr, Current);
 				widget.scrolled_window.add_enter_action (eb_selection_mgr, Current);
 			end;
-			set_mode (mode_backup)
 		end;
 
 	initialize_transport is

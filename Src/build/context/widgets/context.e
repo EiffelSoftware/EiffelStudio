@@ -9,11 +9,7 @@ deferred class CONTEXT
 
 inherit
 	SHARED_EVENTS
-	SHARED_MODE
-		rename
-			current_mode as executing_or_editing_mode
-		end
-	MODE_CONSTANTS
+
 	EB_TREE [WIDGET]
 		rename
 			item as widget,
@@ -22,16 +18,22 @@ inherit
 			parent
 		end
 	TEXT_GENERATION
+
 	WINDOWS
+
 	CONSTANTS
+
 	COMMAND_ARGS
 		rename
 			First as first_arg,
 			Second as second_arg
 		end
 	CONTEXT_STONE
+
 	EB_HASHABLE
+
 	CALLBACK_GENE
+
 	HOLE
 		rename
 			target as widget
@@ -39,31 +41,21 @@ inherit
 			process_attribute, compatible, process_instance
 		end
 	REMOVABLE
+
 	NAMABLE
 		redefine
 			title_label
 		end
 	DEFERRED_CREATOR
+
 	EDITABLE
 		rename
 			label as title_label
 		end
 	DRAG_SOURCE
+
 	TYPE_DATA
-
 	
-feature -- Guillaume
-
-	set_insensitive is
-		do
-			widget.set_insensitive
-		end
-
-	set_sensitive is
-		do
-			widget.set_sensitive
-		end
-
 feature -- Editable
 
 	create_editor is

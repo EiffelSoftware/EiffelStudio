@@ -200,6 +200,7 @@ feature {NONE} -- Implementation
 			create constants_button
 			constants_button.set_tooltip (Select_constant_tooltip)
 			constants_button.select_actions.extend (agent switch_constants_mode)
+			constants_button.select_actions.extend (agent update_editors)
 			constants_button.set_pixmap (Icon_format_onces @ 1)
 		ensure
 			constants_button_not_void: constants_button /= Void

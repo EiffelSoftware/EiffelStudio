@@ -11,7 +11,8 @@ class
 inherit
 	EV_RICH_TEXT_I
 		redefine
-			interface
+			interface,
+			text_length
 		end
 	
 	EV_TEXT_IMP
@@ -50,7 +51,9 @@ inherit
 			selection_end,
 			on_erase_background,
 			line_number_from_position,
-			enable_redraw
+			enable_redraw,
+			on_en_change,
+			text_length
 		select
 			wel_line_index,
 			wel_current_line_number,
@@ -145,7 +148,8 @@ inherit
 			insert_rtf_stream_in,
 			rtf_stream_in,
 			on_erase_background,
-			enable_redraw
+			enable_redraw,
+			on_en_change
 		end
 		
 	WEL_CFM_CONSTANTS
@@ -397,6 +401,40 @@ feature -- Status report
 			end
 			enable_redraw
 		end
+		
+	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+		local
+			wel_character_format: WEL_CHARACTER_FORMAT2
+			mask: INTEGER
+		do
+			set_selection (start_index, end_index)
+			create wel_character_format.make
+			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
+			mask := wel_character_format.mask
+			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset)
+		end
+
+	initialize_for_saving is
+			-- Initialize `Current' for save operations, by performing
+			-- optimizations that prevent the control from slowing down due to
+			-- unecessary optimizations.
+		do
+			disable_redraw
+			if selection_change_actions_internal /= Void then
+				selection_change_actions_internal.block
+			end
+		end
+		
+	complete_saving is
+			-- Restore `Current' back to its default state before last call
+			-- to `initialize_for_saving'.
+		do
+			if selection_change_actions_internal /= Void then
+				selection_change_actions_internal.resume
+			end
+			enable_redraw
+		end
 
 	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
 			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
@@ -550,12 +588,8 @@ feature -- Status report
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
 			-- Index of character closest to position `x_position', `y_position'. 
-		local
-			new_lines_to_caret_position, position: INTEGER
 		do
-			position := character_index_from_position (an_x_position, a_y_position)
-			new_lines_to_caret_position := wel_text.substring (1, position).occurrences ('%R')
-			Result := position + 1 - new_lines_to_caret_position
+			Result := character_index_from_position (an_x_position, a_y_position) + 1
 		end
 		
 	position_from_index (an_index: INTEGER): EV_COORDINATE is
@@ -687,8 +721,7 @@ feature -- Status setting
 		do
 			format_paragraph_internal (start_line, end_line, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
 		end
-		
-		
+
 	format_paragraph_internal (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
 			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive, only
 			-- modifying attributes specified in `mask'.
@@ -818,8 +851,6 @@ feature -- Status setting
 			character: CHARACTER
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			screen_dc: WEL_SCREEN_DC
-			hashed_color, hashed_back_color: STRING
-			color, back_color: EV_COLOR
 		do
 			if not buffer_locked_in_append_mode then
 				start_formats.clear_all
@@ -839,6 +870,7 @@ feature -- Status setting
 				current_vertical_offset := 0
 				initialize_buffering_structures
 				color_text := "{\colortbl ;"
+				font_text := "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
 			end
 			hashed_character_format := format.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -848,6 +880,8 @@ feature -- Status setting
 				format_offsets.put (hashed_formats.count, hashed_character_format)
 			
 				build_color_from_format (format)
+				
+				build_font_from_format (format)
 			end
 
 			format_index := format_offsets.item (hashed_character_format)
@@ -901,7 +935,7 @@ feature -- Status setting
 			end
 			
 			temp_string.append ("\f")
-			temp_string.append (format_index.out)
+			temp_string.append (font_offset.i_th (format_index).out)
 			temp_string.append ("\fs")
 			temp_string.append (heights.i_th (format_index).out)
 			temp_string.append (" ")
@@ -949,6 +983,7 @@ feature -- Status setting
 				set_selection (start_position - 1, end_position)
 			end
 			generate_rtf_heading_for_buffered_append
+			text_up_to_date := False
 			create stream.make (internal_text)
 			insert_rtf_stream_in (stream)
 			stream.release_stream
@@ -968,6 +1003,11 @@ feature -- Status setting
 			create color_offset.make (20)
 			create back_color_offset.make (20)
 			
+			create hashed_fonts.make (20)
+			create font_offset.make (20)
+			
+			font_count := 0
+			
 				-- Reset the count of found colors back to 0.
 			color_count := 0
 		end
@@ -978,7 +1018,7 @@ feature -- Status setting
 		local
 			last_end_value, counter, format_index, original_position, vertical_offset: INTEGER
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
-			temp_string, font_text, default_font_format: STRING
+			temp_string, default_font_format: STRING
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			screen_dc: WEL_SCREEN_DC
 		do
@@ -1014,7 +1054,7 @@ feature -- Status setting
 				until
 					formats.off
 				loop
-					font_text.append (generate_font_heading (formats.item.font, formats.index))
+					build_font_from_format (formats.item)
 					formats.forth
 				end
 				font_text.append ("}")
@@ -1133,6 +1173,7 @@ feature -- Status setting
 			if has_selection then
 				unselect
 			end
+			text_up_to_date := False
 			set_caret_position (original_position)
 		end
 		
@@ -1142,24 +1183,12 @@ feature -- Status setting
 		require
 			buffer_locked_in_append_mode: buffer_locked_in_append_mode
 		local
-			a_color: EV_COLOR
-			font_text: STRING
 			internal_text_twin: STRING
 		do
-				-- Generate the representation of fonts used.
-			font_text := "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
-			
-				-- Add each font to `font_text' in order.
-			from
-				formats.start
-			until
-				formats.off
-			loop
-				font_text.append (generate_font_heading (formats.item.font, formats.index))
-				formats.forth
-			end
+				-- `font_text' contents is generated by each call to `buffered_append',
+				-- so simply close the tag.
 			font_text.append ("}")
-			
+
 				-- `color_text' contents is generated by each call to `buffered_append',
 				-- so simply close the tag.
 			color_text.append ("}")
@@ -1173,55 +1202,102 @@ feature -- Status setting
 			internal_text.append ("}")
 		end
 		
+	build_font_from_format (a_format: EV_CHARACTER_FORMAT) is
+			-- Update font text `font_text' for addition of a new format to the buffering.
+		local
+			a_font_imp: EV_FONT_IMP
+			log_font: WEL_LOG_FONT
+			current_family: INTEGER
+			family: STRING
+			temp_string: STRING
+			a_font: EV_FONT
+		do
+			a_font := a_format.font
+			a_font_imp ?= a_font.implementation
+			check
+				font_imp_not_void: a_font_imp /= Void
+			end
+			log_font := a_font_imp.wel_font.log_font
+			current_family := a_font_imp.family
+			inspect current_family
+			when family_screen then 
+				family := "ftech"
+			when family_roman then 
+				family := "froman"
+			when family_sans then 
+				family := "fswiss"
+			when family_typewriter then 
+				family := "fscript"
+			when family_modern then 
+				family := "fmodern"
+			else
+				family := "fnil"
+			end
+			temp_string := "\" + family + "\fcharset" + log_font.char_set.out + " " + a_font.name
+			hashed_fonts.search (temp_string)
+			if not hashed_fonts.found then
+				font_count := font_count + 1
+				hashed_fonts.put (font_count, temp_string)
+				font_offset.force (hashed_fonts.found_item)
+				font_text.append ("{\f")
+				font_text.append (font_count.out)
+				font_text.append (temp_string)
+				font_text.append ("}")
+			else
+				font_offset.force (hashed_fonts.item (temp_string))
+			end
+		end
+		
+		
 	build_color_from_format (a_format: EV_CHARACTER_FORMAT) is
-			-- 
+			-- Update color text `color_text' for addition of a new format to the buffering.
 		local
 			color, back_color: EV_COLOR
 			hashed_color, hashed_back_color: STRING
 		do
-					color := a_format.color
-					hashed_color := ("\red")
-					hashed_color.append (color.red_8_bit.out)
-					hashed_color.append ("\green")
-					hashed_color.append (color.green_8_bit.out)
-					hashed_color.append ("\blue")
-					hashed_color.append (color.blue_8_bit.out)
-					hashed_color.append (";")
+			color := a_format.color
+			hashed_color := ("\red")
+			hashed_color.append (color.red_8_bit.out)
+			hashed_color.append ("\green")
+			hashed_color.append (color.green_8_bit.out)
+			hashed_color.append ("\blue")
+			hashed_color.append (color.blue_8_bit.out)
+			hashed_color.append (";")
 
-					hashed_colors.search (hashed_color)
-						-- If the color does not already exist.
-					if not hashed_colors.found then
-							-- Add the color to `colors' for later retrieval.
-						color_count := color_count + 1
-						hashed_colors.put (color_count, hashed_color)
-							-- Store the offset from the character index to the new color index for retrieval.
-						color_offset.force (hashed_colors.found_item)
-						color_text.append (hashed_color)
-					else
-						color_offset.force (hashed_colors.item (hashed_color))
-					end
-					
-					back_color := a_format.background_color
-					hashed_back_color := ("\red")
-					hashed_back_color.append (back_color.red_8_bit.out)
-					hashed_back_color.append ("\green")
-					hashed_back_color.append (back_color.green_8_bit.out)
-					hashed_back_color.append ("\blue")
-					hashed_back_color.append (back_color.blue_8_bit.out)
-					hashed_back_color.append (";")
+			hashed_colors.search (hashed_color)
+				-- If the color does not already exist.
+			if not hashed_colors.found then
+					-- Add the color to `colors' for later retrieval.
+				color_count := color_count + 1
+				hashed_colors.put (color_count, hashed_color)
+					-- Store the offset from the character index to the new color index for retrieval.
+				color_offset.force (hashed_colors.found_item)
+				color_text.append (hashed_color)
+			else
+				color_offset.force (hashed_colors.item (hashed_color))
+			end
+			
+			back_color := a_format.background_color
+			hashed_back_color := ("\red")
+			hashed_back_color.append (back_color.red_8_bit.out)
+			hashed_back_color.append ("\green")
+			hashed_back_color.append (back_color.green_8_bit.out)
+			hashed_back_color.append ("\blue")
+			hashed_back_color.append (back_color.blue_8_bit.out)
+			hashed_back_color.append (";")
 
-					hashed_colors.search (hashed_back_color)
-						-- If the color does not already exist.
-					if not hashed_colors.found then
-						-- Add the color to `colors' for later retrieval.
-						color_count := color_count + 1
-						hashed_colors.put (color_count, hashed_back_color)
-							-- Store the offset from the character index to the new color index for retrieval.
-						back_color_offset.force (hashed_colors.found_item)
-						color_text.append (hashed_back_color)
-					else
-						back_color_offset.force (hashed_colors.item (hashed_back_color))
-					end
+			hashed_colors.search (hashed_back_color)
+				-- If the color does not already exist.
+			if not hashed_colors.found then
+				-- Add the color to `colors' for later retrieval.
+				color_count := color_count + 1
+				hashed_colors.put (color_count, hashed_back_color)
+					-- Store the offset from the character index to the new color index for retrieval.
+				back_color_offset.force (hashed_colors.found_item)
+				color_text.append (hashed_back_color)
+			else
+				back_color_offset.force (hashed_colors.item (hashed_back_color))
+			end
 		end
 		
 		
@@ -1557,12 +1633,6 @@ feature {NONE} -- Implementation
 			create Result.make (10)			
 		end
 		
-	hashed_fonts: HASH_TABLE [STRING, STRING] is
-			--
-		once
-			create Result.make (10)
-		end 
-
 	format_offsets: HASH_TABLE [INTEGER, STRING] is
 			-- The index of each format in `hashed_formats' within the RTF document that must be generated.
 			-- For each set of formatting that must be applied, a reference to the format in the document
@@ -1684,6 +1754,34 @@ feature {NONE} -- Implementation
 			invalidate_without_background
 		end
 		
+	on_en_change is
+			-- `Text' has been modified.
+			--| We call the change_actions.
+		do
+			Precursor {WEL_RICH_EDIT}
+			text_up_to_date := False
+		end
+		
+	internal_text_length: INTEGER
+		-- Internal length of `text' in `Current'. This is only recomputed when
+		-- `text_length' is called and `text_up_to_date' is False.
+		
+	text_up_to_date: BOOLEAN
+		-- Is `text' of `Current' up to date? Used to buffer calls to `text' and `text_length'.
+		
+	text_length: INTEGER is
+			-- Number of characters comprising `text'. This is an optimized
+			-- version, which only recomputes the length if not `text_up_to_date'.
+		do
+			if not text_up_to_date then
+				internal_text_length := text.count
+				Result := internal_text_length
+				text_up_to_date := True
+			else
+				Result := internal_text_length
+			end
+		end
+
 feature {NONE} -- Implementation
 
 			-- These attributes are used to stop multiple versions of the same color being
@@ -1711,6 +1809,26 @@ feature {NONE} -- Implementation
 	
 	color_text: STRING
 		-- The RTF string correponding to all colors in the document.
+		
+			-- These attributes are used to stop multiple versions of the same font being
+			-- generate in the RTF.
+			
+	hashed_fonts: HASH_TABLE [INTEGER, STRING]
+			-- All fonts currently stored for buffering, accessible via the
+			-- actual RTF output, in the form "\froman\fcharset0 System". The integer `item'
+			-- corresponds to the offset of the font in `fonts'.
+	
+	font_offset: ARRAYED_LIST [INTEGER]
+			-- All font indexes  in document,
+			-- indexed by their corresponding character format index.
+			-- So, for example, item 20 would correspond to the font offset to use from
+			-- the font table for the 20th character format.
+	
+	font_count: INTEGER
+		-- Number of fonts currently buffered.
+	
+	font_text:STRING
+		-- The RTF string corresponding to all fonts in the document.
 
 feature {EV_ANY_I} -- Implementation
 

@@ -113,6 +113,50 @@ feature -- Settings
 			current_position := l_pos + 8
 		end
 
+	put_natural_8 (n: NATURAL_8) is
+			-- Insert `n' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 1)
+			item.put_natural_8 (n, l_pos)
+			current_position := l_pos + 1
+		end
+
+	put_natural_16 (n: NATURAL_16) is
+			-- Insert `n' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 2)
+			item.put_natural_16 (n, l_pos)
+			current_position := l_pos + 2
+		end
+		
+	put_natural_32 (n: NATURAL_32) is
+			-- Insert `n' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 4)
+			item.put_natural_32 (n, l_pos)
+			current_position := l_pos + 4
+		end
+	
+	put_natural_64 (n: NATURAL_64) is
+			-- Insert `n' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 8)
+			item.put_natural_64 (n, l_pos)
+			current_position := l_pos + 8
+		end
+
 	put_string (s: STRING) is
 			-- Insert `s' at `current_position' using PackedLen encoding and
 			-- UTF-8.

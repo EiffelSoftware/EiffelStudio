@@ -108,7 +108,7 @@ feature -- Status setting
 			end
 			list_item.select_actions.extend (agent list_item_selected (list_item))
 			list_item.deselect_actions.extend (agent list_item_deselected (list_item))
-			constants_combo_box.extend (list_item)
+			add_to_list_alphabetically (constants_combo_box, list_item)
 		ensure
 			list_count_increased: constants_combo_box.count = old constants_combo_box.count + 1
 		end

@@ -804,6 +804,7 @@ feature {NONE} -- Implementation
 			l_generics: ARRAY [TYPE_A]
 			l_array_type: CONSUMED_ARRAY_TYPE
 			l_type_a: CL_TYPE_A
+			vtct: VTCT
 		do
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
@@ -827,16 +828,22 @@ feature {NONE} -- Implementation
 					l_result := Basic_type_mapping.item (c.name)
 				end
 				
-				check
-					l_result_not_void: l_result /= Void
-				end
-				
-				if force_compilation and then not l_result.is_compiled then
-					Workbench.add_class_to_recompile (l_result)
-				end
-				if l_result.is_compiled then
-					l_class := l_result.compiled_class
-					Result := l_class.actual_type
+				if l_result = Void then
+						-- Type could not be found. Something must be inconsistent in 
+						-- this assembly.
+					create vtct
+					vtct.set_class (Current)
+					vtct.set_dotnet_class_name (c.name)
+					Error_handler.insert_error (vtct)
+					Error_handler.raise_error
+				else
+					if force_compilation and then not l_result.is_compiled then
+						Workbench.add_class_to_recompile (l_result)
+					end
+					if l_result.is_compiled then
+						l_class := l_result.compiled_class
+						Result := l_class.actual_type
+					end
 				end
 			end
 		ensure

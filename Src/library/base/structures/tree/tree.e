@@ -101,7 +101,7 @@ feature -- Measurement
 		do
 			Result := arity
 		end
-	 
+
 	count: INTEGER is
 			-- Number of items
 		do
@@ -118,7 +118,7 @@ feature -- Comparison
 			if Current = other then
 				Result := True
 			else
-				Result := (is_empty = other.is_empty) and 
+				Result := (is_empty = other.is_empty) and
 						(object_comparison = other.object_comparison) and
 						(child_capacity = other.child_capacity)
 				if Result and not is_empty then
@@ -215,7 +215,7 @@ feature -- Status report
 		do
 			Result := (i >= 0) and (i <= child_capacity + 1)
 		ensure
-			valid_cursor_index_definition: Result = (i >= 0) and 
+			valid_cursor_index_definition: Result = (i >= 0) and
 				(i <= child_capacity + 1)
 		end
 
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 				create orgidx2_stack.make
 				orgidx1_stack.put (t1.child_index)
 				orgidx2_stack.put (t2.child_index)
-				from 
+				from
 					Result := True
 					i := 1
 					p1 := t1
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 				invariant
 					same_count: t1_stack.count = t2_stack.count and
 								t2_stack.count = idx_stack.count
-				until 
+				until
 					not Result or else
 						(i > p1.child_capacity and t1_stack.is_empty)
 				loop
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 					end
 					p1.child_go_i_th (i)
 					p2.child_go_i_th (i)
-					if p1.child_readable and p2.child_readable and 
+					if p1.child_readable and p2.child_readable and
 						p1.child_capacity = p2.child_capacity then
 						check
 							p1_consistent: p1.child.parent = p1
@@ -615,11 +615,11 @@ feature {NONE} -- Implementation
 						orgidx2_stack.remove
 					end
 					check
-						tree_stacks_empty: t1_stack.is_empty and 
+						tree_stacks_empty: t1_stack.is_empty and
 								t2_stack.is_empty
 							-- Because we removed all items.
 						at_root: p1 = t1 and p2 = t2
-							-- Because the root nodes where the last item we 
+							-- Because the root nodes where the last item we
 							-- removed.
 						p1_not_void: p1 /= Void
 						p2_not_void: p2 /= Void
@@ -630,15 +630,15 @@ feature {NONE} -- Implementation
 					orgidx1_stack.remove
 					orgidx2_stack.remove
 					check
-						index_stacks_empty: orgidx1_stack.is_empty and 
+						index_stacks_empty: orgidx1_stack.is_empty and
 									orgidx2_stack.is_empty
-							-- Because we also removed the roots from the index 
+							-- Because we also removed the roots from the index
 							-- stacks now.
 					end
 				end
 			end
 		end
- 
+
  	tree_copy (other, tmp_tree: like Current) is
 			-- Generic implementation of `copy'. `other' is copied onto
 			-- `Current'. `tmp_tree' is used as temporary storage during
@@ -742,24 +742,26 @@ feature {NONE} -- Implementation
 					-- Because we removed all items.
 				at_root: p1 = other and p2 = tmp_tree
 					-- Because the root nodes where the last item we removed.
+				copy_correct: equal (other, tmp_tree)
+					-- Because `other' has been copied to `tmp_tree'.
 			end
 			standard_copy (tmp_tree)
 			child_go_i_th (orgidx_stack.item)
 			orgidx_stack.remove
 			check
 				index_stack_empty: orgidx_stack.is_empty
-					-- Because we also removed the root from the index 
+					-- Because we also removed the root from the index
 					-- stack now.
 			end
 		end
-				
+
 invariant
 
 	leaf_definition: is_leaf = (arity = 0)
 	child_off_definition: child_off = child_before or child_after
 	child_before_definition: child_before = (child_index = 0)
 	child_isfirst_definition: child_isfirst = (not is_leaf and child_index = 1)
-	child_islast_definition: 
+	child_islast_definition:
 			child_islast = (not is_leaf and child_index = child_capacity)
 	child_after_definition: child_after = (child_index >= child_capacity + 1)
 	child_consistency: child_readable implies child.parent = Current

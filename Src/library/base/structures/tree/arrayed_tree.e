@@ -89,7 +89,7 @@ class ARRAYED_TREE [G] inherit
 				al_put_left, al_put_right,
 				al_merge_left, al_merge_right, al_object_comparison
 		undefine
-			is_equal, is_leaf, child_isfirst,
+			is_leaf, child_isfirst, is_equal,
 			child_islast, valid_cursor_index,
 			changeable_comparison_criterion,
 			compare_objects, compare_references,
@@ -160,7 +160,11 @@ feature -- Element change
 			else
 				n.compare_references
 			end
-			al_replace (n)
+			if child_off then
+				al_extend (n)
+			else
+				al_replace (n)
+			end
 			n.attach_to_parent (Current)
 		ensure then
 			child_replaced: n.parent = Current
@@ -330,15 +334,24 @@ feature -- Duplication
 			obj_comparison: BOOLEAN
 		do
 			obj_comparison := other.object_comparison
-			create tmp_tree.make (other.arity, other.item)
+			create tmp_tree.make (other.child_capacity, other.item)
 			if not other.is_leaf then tree_copy (other, tmp_tree) end
 			object_comparison := obj_comparison
+			check
+				equal_capacity: arity = other.arity
+					-- Because `other' has just been copied
+			end
 		end
 
 feature {NONE} -- Inapplicable
 
 	extend (v: G) is
 			-- Add `v' as new child.
+		do
+		end
+
+	set_child (n: like parent) is
+			-- Set child to `n'.
 		do
 		end
 
@@ -442,12 +455,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Not Applicable
-
-	set_child (n: like parent) is
-		do
-		end
-
 indexing
 
 	library: "[
@@ -481,6 +488,3 @@ indexing
 			]"
 
 end -- class ARRAYED_TREE
-
-
-

@@ -7,7 +7,8 @@ indexing
 class EXEC_FINALIZED
 
 inherit
-	PIXMAP_COMMAND
+
+	TOOL_COMMAND
 		rename
 			init as make
 		end;
@@ -16,16 +17,6 @@ inherit
 			{NONE} all
 		end;
 	SHARED_EIFFEL_PROJECT
-
-creation
-	make
-
-feature -- Properties
-
-	symbol: PIXMAP is
-			-- Symbol to represent Current.
-		do
-		end;
 
 feature {NONE} -- Execution
 

@@ -1,7 +1,7 @@
 indexing
 
 	description:	
-		"Command to serch for a string.";
+		"Command to search for a string.";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -99,8 +99,18 @@ feature -- Basic operations
 
 feature -- Status report
 
+	is_window (hwnd: POINTER): BOOLEAN is
+			-- Does `hwnd' point to a valid Window?
+		external
+			"C [macro <windows.h>] (HWND): EIF_BOOLEAN"
+		alias
+			"IsWindow"
+		end
+
 	window_of_item (hwnd: POINTER): WEL_WINDOW is
 			-- Retrieve Eiffel object associated with `hwnd' pointer.
+		require
+			is_window_pointer: is_window (hwnd)
 		local
 			object_id: INTEGER
 		do

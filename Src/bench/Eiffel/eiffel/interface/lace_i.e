@@ -532,7 +532,6 @@ feature {NONE} -- Implementation
 			-- Create a copy of Ace file on disk with missing assemblies added.
 		require
 			parsed_ast_not_void: parsed_ast /= Void
-			has_assemblies: parsed_ast.assemblies /= Void
 		local
 			st: GENERATION_BUFFER
 			ace_file: PLAIN_TEXT_FILE
@@ -548,6 +547,10 @@ feature {NONE} -- Implementation
 				
 				if l_missing /= Void then
 					ast := parsed_ast
+
+					check
+						has_assemblies: ast.assemblies /= Void
+					end
 					
 					from
 						l_missing.start

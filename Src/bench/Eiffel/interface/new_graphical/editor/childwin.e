@@ -83,9 +83,6 @@ feature -- Initialization
 
 				-- Setup the scroll bars.
 			set_vertical_range(1,vertical_range_max)
-
-				-- Create the cursor
-			create cursor.make_from_absolute_pos(0,1,Current)
 		end
 
 	read_and_analyse_file (a_name: STRING) is
@@ -196,60 +193,75 @@ feature -- Basic operations
 			end
 		end
 
+	invalidate_cursor_rect(redraw: BOOLEAN) is
+			-- Set the line where the cursor is situated to be redrawn
+			-- Redraw immediately if `redraw' is set.
+		local
+			wel_rect: WEL_RECT
+			cursor_up: INTEGER
+		do
+   				-- Invalidate old cursor location.
+   			cursor_up := (cursor.y_in_lines-first_line_displayed) * line_increment
+   			create wel_rect.make(0, cursor_up, width, cursor_up + line_increment)
+			invalidate_rect(wel_rect,true)
+			if redraw then
+				update
+			end
+		end
+
 	on_key_down(virtual_key: INTEGER; key_data: INTEGER) is
 			-- Process Wm_keydown message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
-			if virtual_key = Vk_left and then cursor /= Void then
-	   			io.putstring("go left%N")
+			if virtual_key = Vk_left then 
+				invalidate_cursor_rect(False)
 				cursor.go_left_char
-				invalidate
-				update
-			elseif  virtual_key = Vk_right and then cursor /= Void then
-	   			io.putstring("go right%N")
+				invalidate_cursor_rect(True)
+
+			elseif  virtual_key = Vk_right then
+				invalidate_cursor_rect(False)
 				cursor.go_right_char
-				invalidate
-				update
-			elseif  virtual_key = Vk_up and then cursor /= Void then
-	   			io.putstring("go up%N")
+				invalidate_cursor_rect(True)
+
+			elseif  virtual_key = Vk_up then
+				invalidate_cursor_rect(False)
 				cursor.go_up_line
-				invalidate
-				update
-			elseif  virtual_key = Vk_down and then cursor /= Void then
-	   			io.putstring("go down%N")
+				invalidate_cursor_rect(True)
+
+			elseif  virtual_key = Vk_down then
+				invalidate_cursor_rect(False)
 				cursor.go_down_line
-				invalidate
-				update
-			elseif  virtual_key = Vk_home and then cursor /= Void then
-	   			io.putstring("go home%N")
+				invalidate_cursor_rect(True)
+
+			elseif  virtual_key = Vk_home then
+				invalidate_cursor_rect(False)
 				cursor.go_start_line
-				invalidate
-				update
-			elseif  virtual_key = Vk_end and then cursor /= Void then
-	   			io.putstring("go end%N")
+				invalidate_cursor_rect(True)
+
+			elseif  virtual_key = Vk_end then
+				invalidate_cursor_rect(False)
 				cursor.go_end_line
-				invalidate
-				update
-			elseif  virtual_key = Vk_delete and then cursor /= Void then
-	   			io.putstring("delete%N")
+				invalidate_cursor_rect(True)
+
+			elseif  virtual_key = Vk_delete then
+				invalidate_cursor_rect(False)
 				cursor.delete_char
-				invalidate
-				update
-			elseif  virtual_key = Vk_Back and then cursor /= Void then
-	   			io.putstring("delete previous%N")
+				invalidate_cursor_rect(True)
+
+			elseif  virtual_key = Vk_Back then
+				invalidate_cursor_rect(False)
 				cursor.delete_previous
-				invalidate
-				update
+				invalidate_cursor_rect(True)
+
 			elseif  virtual_key = Vk_Insert then
-	   			io.putstring("toggle insertion mode%N")
 				insert_mode := not insert_mode
-				invalidate
-				update
-			elseif virtual_key = Vk_Return and then cursor /= Void then
-				io.put_string ("insert new line%N")
+				invalidate_cursor_rect(True)
+
+			elseif virtual_key = Vk_Return then
+				invalidate_cursor_rect(False)
 				cursor.insert_eol (insert_mode)
-				invalidate
-				update
+				invalidate_cursor_rect(True)
+
 			else
 				-- Key not handled, do nothing
 			end
@@ -259,19 +271,24 @@ feature -- Basic operations
    			-- Wm_char message
    			-- See class WEL_VK_CONSTANTS for `character_code' value.
 		local
-			c: CHARACTER
+			c		: CHARACTER
+			wel_rect: WEL_RECT
    		do
-			if (character_code /= Vk_Back) and then
-					(character_code /= Vk_return) and then (cursor /= Void) then
+
+			if (character_code /= Vk_Back) and then	(character_code /= Vk_return) then
 				c := character_code.ascii_char
+
+				invalidate_cursor_rect(False)
+
 				if insert_mode then
 					cursor.replace_char (c)
 				else
 					cursor.insert_char (c)
 				end
-				invalidate
-				update
+
+				invalidate_cursor_rect(True)
 			end
+
  		end
 
 feature {NONE} -- Display functions
@@ -413,7 +430,11 @@ feature {NONE} -- Implementation
 			create Result.make_indirect(log_font)
 		end
 
-	cursor: TEXT_CURSOR
+	cursor: TEXT_CURSOR is
+		once
+				-- Create the cursor
+			create Result.make_from_absolute_pos(0,1,Current)
+		end
 
 end -- class CHILD_WINDOW
 

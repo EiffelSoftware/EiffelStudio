@@ -26,6 +26,27 @@ inherit
 feature -- Initialization
 
 	make (project_dir: PROJECT_DIRECTORY) is
+			-- An Eiffel Project has already been created. 
+			-- We just create the basic structure to enable the retrieving.
+		require
+			not_initialized: not initialized
+			is_new: project_dir.is_new
+			is_readable: project_dir.is_base_readable
+			is_writable: project_dir.is_base_writable
+			is_executable: project_dir.is_base_executable
+			--is_creatable: project_dir.is_creatable
+			prev_read_write_error: not read_write_error
+		do
+			project_directory := project_dir
+			Workbench.make
+			Workbench.init
+			set_is_initialized
+ 			Execution_environment.change_working_directory (project_directory.name)
+		ensure
+			initialized: initialized
+		end
+
+	make_new (project_dir: PROJECT_DIRECTORY) is
 			-- Create an Eiffel Project. 
 			-- Also create the sub-directories (EIFGEN, W_code ...)
 			-- (If a read-write error occured you must exit from
@@ -40,7 +61,6 @@ feature -- Initialization
 			prev_read_write_error: not read_write_error
 		do
 			project_directory := project_dir
-			Project_directory_name.make_from_string (project_directory.name)
 			Create_compilation_directory
 			Create_generation_directory
 			Workbench.make
@@ -288,6 +308,14 @@ feature -- Error status
 		ensure
 			saved_implies: Result implies 
 						error_status = file_error_status 
+		end
+
+	incomplete_project: BOOLEAN is
+		do
+			Result := error_status = incomplete_project_status
+		ensure
+			saved_implies: Result implies 
+						error_status = incomplete_project_status 
 		end
 
 	save_error: BOOLEAN is
@@ -615,8 +643,14 @@ feature -- Output
 			file_name: FILE_NAME
 			project_name: STRING
 			project_file: RAW_FILE
+			c_init: INIT_SERVER
 		do
 			if not retried then
+					--| Reset the information in order to do a correct
+					--| store.
+				!! c_init
+				c_init.server_reset
+
 				error_status_mode.set_item (Ok_status)
 
 					--| Prepare informations to store
@@ -657,6 +691,9 @@ feature -- Output
 				project_file.go (project_file.count)
 				project_file.independent_store (Current)
 				project_file.close
+
+					--| Re-initialize the storing for the SERVERs
+				c_init.server_init
 			else
 				if project_file /= Void and then not project_file.is_closed then
 					project_file.close
@@ -739,7 +776,7 @@ feature {NONE} -- Implementation
 			status_ok: not error_occurred
 		do
 			if not project_directory.exists then
-				set_error_status (file_error_status)
+				set_error_status (Incomplete_project_status)
 			end
 		end
 
@@ -763,14 +800,15 @@ feature {NONE} -- Implementation
 	Write_status: INTEGER is 2
 	Read_only_status: INTEGER is 3
 	File_error_status: INTEGER is 4
+	Incomplete_project_status: INTEGER is 5
 
-	Corrupt_status: INTEGER is 5
-	Dle_error_status: INTEGER is 6
-	Retrieve_corrupt_error_status: INTEGER is 7
-	Retrieve_incompatible_error_status: INTEGER is 8
-	Retrieve_interrupt_error_status: INTEGER is 9
-	Save_error_status: INTEGER is 10
-	Precomp_save_error_status: INTEGER is 11
+	Corrupt_status: INTEGER is 6
+	Dle_error_status: INTEGER is 7
+	Retrieve_corrupt_error_status: INTEGER is 8
+	Retrieve_incompatible_error_status: INTEGER is 9
+	Retrieve_interrupt_error_status: INTEGER is 10
+	Save_error_status: INTEGER is 11
+	Precomp_save_error_status: INTEGER is 12
 	
 	error_status: INTEGER is
 			-- Give last error status.

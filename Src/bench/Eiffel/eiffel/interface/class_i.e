@@ -125,6 +125,13 @@ feature -- Properties
 				a_file.close;
 				Result := clone (a_file.laststring)
 			end
+		end;
+
+	hide_implementation: BOOLEAN is
+			-- Hide the implementation code of 
+			-- precompiled classes?
+		do
+			Result := cluster.hide_implementation
 		end
 
 feature -- Access
@@ -224,9 +231,6 @@ end;
 			visible_level := Visible_default;
 			dynamic_calls := No_dynamic;
 			c := compiled_class;
-			if c /= Void and then not c.is_precompiled then
-				private_document_file_name := Void
-			end
 			hidden := False
 		end;
 
@@ -456,41 +460,25 @@ feature -- Document processing
 			d_name: DIRECTORY_NAME;
 			i: INTEGER;
         do
-            tmp := private_document_file_name;
-            if tmp = Void then
-				d_name := cluster.document_path;
-				if d_name /= Void then
-					!! Result.make_from_string (d_name);
-					bname := clone (base_name);
-					i := bname.count;
-					if 
-						i > 2 and then
-						bname.item (i - 1) = Dot and then
-						eif_valid_class_file_extension (bname.item (i))
-					then
-						bname.head (i - 2);
-					end;
-					Result.set_file_name (bname)
-				end
-			elseif not tmp.is_equal (No_word) then
-				!! Result.make_from_string (tmp);
+			d_name := cluster.document_path;
+			if d_name /= Void then
+				!! Result.make_from_string (d_name);
+				bname := clone (base_name);
+				i := bname.count;
+				if 
+					i > 2 and then
+					bname.item (i - 1) = Dot and then
+					eif_valid_class_file_extension (bname.item (i))
+				then
+					bname.head (i - 2);
+				end;
+				Result.set_file_name (bname)
             end
         end
-
-    set_document_file_name (a_file_name: like document_file_name) is
-            -- Set `document_file_name' to `a_file_name'
-        do
-            private_document_file_name := a_file_name
-        ensure
-            set: document_file_name = a_file_name
-        end;
 
 feature {NONE} -- Document processing
 
 	No_word: STRING is "no";
-
-    private_document_file_name: STRING
-            -- File name specified in Ace for the document file
 
 feature {NONE} -- Externals
 

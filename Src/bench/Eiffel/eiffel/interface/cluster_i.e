@@ -70,6 +70,10 @@ feature -- Attributes
 	is_override_cluster: BOOLEAN;
 			-- Does this cluster override the other clusters?
 
+	hide_implementation: BOOLEAN;
+			-- Hide the implementation code of
+			-- precompiled classes?
+
 feature -- Access
 
 	has_base_name (b_name: STRING): BOOLEAN is
@@ -111,6 +115,14 @@ feature -- Element change
 		end;
 
 feature {COMPILER_EXPORTER} -- Conveniences
+
+	set_hide_implementation is
+			-- Set `hide_implementation' to True.
+		do
+			hide_implementation := True
+		ensure
+			hide_implementation: hide_implementation
+		end;
 
 	set_date (i: INTEGER) is
 			-- Assign `i' to `date'.
@@ -210,6 +222,7 @@ end;
 			precomp_id := old_cluster_i.precomp_id;
 			precomp_ids := old_cluster_i.precomp_ids;
 			is_dynamic := old_cluster_i.is_dynamic;
+			hide_implementation := old_cluster_i.hide_implementation;
 			set_date (old_cluster_i.date);
 			exclude_list := old_cluster_i.exclude_list;
 			include_list := old_cluster_i.include_list;
@@ -1155,6 +1168,11 @@ feature -- Document processing
 			-- Set `document_path' to `a_path'
 		do
 			private_document_path := a_path
+			debug ("DOCUMENT")
+				io.error.putstring ("Set document path to: ")
+				print (a_path);
+				io.error.new_line
+			end
 		ensure
 			set: document_path = a_path
 		end;

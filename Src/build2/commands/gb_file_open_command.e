@@ -59,6 +59,44 @@ feature -- Access
 		end
 
 feature -- Basic operations
+
+		execute_with_name (file_name: STRING) is
+				-- execute `Current' to load file `file_name'. This is used when
+				-- starting build by double clicking on a .bpr file.
+			local
+				project_settings: GB_PROJECT_SETTINGS
+				file_handler: GB_SIMPLE_XML_FILE_HANDLER
+				test_file: RAW_FILE
+			do
+				create project_settings
+				create file_handler
+				project_settings.load (file_name, file_handler)
+				if file_handler.last_load_successful then
+					if not project_settings.load_cancelled then
+							-- Do nothing if we cancelled the loading.
+						if project_settings.main_window_class_name = Void then
+								-- If the main window class name is Void, then it means that
+								-- the settings were not loaded (As they were not compatible),
+								-- so we fill in the location, and use the default_values.
+							create project_settings.make_stand_alone_with_default_values
+							
+							
+							--| FIXME need to remove the actual name.
+							project_settings.set_project_location (file_name)
+						end
+						system_status.set_current_project (project_settings)
+						create test_file.make (file_name)
+						if test_file.exists then
+							xml_handler.load
+							main_window.show_tools
+							command_handler.update
+								-- Compress all used ids.
+							id_compressor.compress_all_id
+						end
+					end
+				end
+			end
+			
 	
 		execute is
 				-- Execute `Current'.
@@ -101,9 +139,9 @@ feature -- Basic operations
 									-- Do nothing if we cancelled the loading.
 								if project_settings.main_window_class_name = Void then
 										-- If the main window class name is Void, then it means that
-										-- the settings were not loaded, so we fill in the location, 
-										-- and use the default_values
-									create project_settings.make_with_default_values
+										-- the settings were not loaded (As they were not compatible),
+										-- so we fill in the location, and use the default_values.
+									create project_settings.make_stand_alone_with_default_values
 									project_settings.set_project_location (dialog.file_path)
 								end
 								system_status.set_current_project (project_settings)

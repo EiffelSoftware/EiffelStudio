@@ -54,7 +54,11 @@ feature -- Status setting
 	set_parent (par: like parent) is
 			-- Make `par' the new parent of the widget.
 		do
-			parent_imp ?= par.implementation
+			if par /= Void then
+				parent_imp ?= par.implementation
+			else
+				parent_imp := Void
+			end
 		end
 
 	destroy is
@@ -219,6 +223,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/03 19:03:32  rogers
+--| Fixed set_parent by adding handling a Void argument.
+--|
 --| Revision 1.20  2000/03/03 00:19:50  rogers
 --| Implemented set_parent and split set_selected into enable_select and disable_select.
 --|

@@ -1,5 +1,31 @@
 indexing
 	description: "Node for integer constant. Version for Bench."
+	value: "[
+		Integer constant denotes a value with a possible type defined as follows
+		(i8 stands for INTEGER_8, n8 - for NATURAL_8 etc.):
+		      Value     |             Possible type            | Default type
+		----------------+--------------------------------------+--------------
+		 -2^63..-2^31-1 |               i64                    | i64
+		 -2^31..-2^15-1 |          i32, i64                    | i32
+		 -2^15..-2^07-1 |     i16, i32, i64                    | i32
+		 -2^07..-1      | i8, i16, i32, i64                    | i32
+		     0.. 2^07-1 | i8, i16, i32, i64, n8, n16, n32, n64 | i32
+		  2^07.. 2^08-1 |     i16, i32, i64, n8, n16, n32, n64 | i32
+		  2^08.. 2^15-1 |     i16, i32, i64,     n16, n32, n64 | i32
+		  2^15.. 2^16-1 |          i32, i64,     n16, n32, n64 | i32
+		  2^16.. 2^31-1 |          i32, i64,          n32, n64 | i32
+		  2^31.. 2^32-1 |               i64,          n32, n64 | i64
+		  2^32.. 2^63-1 |               i64,               n64 | i64
+		  2^63.. 2^64-1 |                                  n64 | n64
+		In addition the following possible types can be denoted by unsigned
+		hexadecimal numbers regardless of their value:
+		 Number of digits | Additional possible type
+		------------------+--------------------------
+		         2        | i8
+		         4        | i16
+		         8        | i32
+		        16        | i64
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,7 +43,7 @@ inherit
 
 	VALUE_I
 		redefine
-			generate, is_integer, is_natural, inspect_value,
+			generate, is_integer, inspect_value,
 			set_real_type, unary_minus
 		end
 
@@ -47,16 +73,21 @@ feature {NONE} -- Initialization
 	make_with_value (v: INTEGER) is
 			-- Create an integer constant of size 32.
 		do
-			size := 32
-			is_integer := True
-			compatibility_size := 32
 			is_initialized := True
 			constant_type := Void
-			lower := v
+			if v > 0 then
+				value := v.as_natural_64
+				has_minus := False
+			else
+				value := (- v.as_integer_64).as_natural_64
+				has_minus := True
+			end
+			default_type := integer_32_mask
+			types := integer_32_mask
 		ensure
-			size_set: size = 32
-			is_integer_set: is_integer
-			is_initialized_set: is_initialized
+			is_initialized: is_initialized
+			has_integer: has_integer (32)
+			default_type_set: default_type = integer_32_mask
 			integer_32_value_set: integer_32_value = v
 		end
 
@@ -71,17 +102,7 @@ feature {NONE} -- Initialization
 			s_not_void: s /= Void
 		do
 			constant_type := a_type
-			is_integer := a_type = Void or else a_type.is_integer
-			if is_integer then
-				read_integer_value (is_neg, s)
-			else
-				if not is_neg then
-					read_natural_value (s)
-				else
-						-- We are trying to read a negative natural, it does not make sense.
-					is_initialized := False
-				end
-			end
+			read_decimal_value (is_neg, s)
 		ensure
 			constant_type_set: constant_type = a_type
 		end
@@ -101,17 +122,7 @@ feature {NONE} -- Initialization
 			s_has_hexadecimal_suffix: -- for all i in [3..s.count] ("0123456789ABCDEFabcdef").has (s.item (i))
 		do
 			constant_type := a_type
-			is_integer := a_type = Void or else a_type.is_integer
-			if is_integer then
-				read_integer_hexa_value (sign, s)
-			else
-				if sign /= '-' then
-					read_natural_hexa_value (sign, s)
-				else
-						-- We are trying to read a negative natural, it does not make sense.
-					is_initialized := False
-				end
-			end
+			read_hexadecimal_value (sign, s)
 		ensure
 			constant_type_set: constant_type = a_type
 		end
@@ -126,27 +137,13 @@ feature -- Properties
 	is_initialized: BOOLEAN
 			-- Is constant initialized to allowed value?
 
-	is_integer: BOOLEAN
-			-- Is it an integer value ?
+	is_integer: BOOLEAN is True
+			-- Is it an integer value?
 
-	is_natural: BOOLEAN is
-			-- Is it an integer value ?
-		do
-			Result := not is_integer
-		end
-
-	is_negative: BOOLEAN is
-			-- Is current value a negative one?
-		do
-			if is_integer then
-				Result := (upper = 0 and then lower < 0) or (upper < 0)
-			end
-		end
-		
 	is_one: BOOLEAN is
 			-- Is constant equal to 1?
 		do
-			Result := lower = 1 and then upper = 0
+			Result := value = 1 and then not has_minus
 		end
 
 	is_simple_expr: BOOLEAN is True
@@ -165,141 +162,157 @@ feature -- Visitor
 
 feature -- Status report
 
-	natural_8_value: INTEGER_8 is
-			-- Integer value if `size' is 32 bits
+	natural_8_value: NATURAL_8 is
+			-- 8-bit natural value
 		require
-			valid_size: size = 8
-			is_natural: is_natural
+			has_natural: has_natural (8)
 		do
-			fixme ("Update to NATURAL_XX after bootstrap")
-			Result := lower.to_integer_8
+			Result := value.as_natural_8
 		end
 
-	natural_16_value: INTEGER_16 is
-			-- Integer value if `size' is 32 bits
+	natural_16_value: NATURAL_16 is
+			-- 16-bit natural value
 		require
-			valid_size: size <= 16
-			is_natural: is_natural
+			has_natural: has_natural (16)
 		do
-			fixme ("Update to NATURAL_XX after bootstrap")
-			Result := lower.to_integer_16
+			Result := value.as_natural_16
 		end
 
-	natural_32_value: INTEGER is
-			-- Integer value if `size' is 32 bits
+	natural_32_value: NATURAL_32 is
+			-- 32-bit natural value
 		require
-			valid_size: size <= 32
-			is_natural: is_natural
+			has_natural: has_natural (32)
 		do
-			fixme ("Update to NATURAL_XX after bootstrap")
-			Result := lower
+			Result := value.as_natural_32
 		end
 
-	natural_64_value: INTEGER_64 is
-			-- Extract information about `upper' and `lower' to
-			-- build an INTEGER_64.
+	natural_64_value: NATURAL_64 is
+			-- 64-bit natural value
 		require
-			valid_size: size <= 64
-			is_natural: is_natural
-		local
-			l_lower_64: INTEGER_64
-			l_lower: INTEGER
+			has_natural: has_natural (64)
 		do
-			fixme ("Update to NATURAL_XX after bootstrap")
-				-- Since we are converting `lower' to an INTEGER_64, we do not want the
-				-- sign bit to be reflected on the INTEGER_64 value. So first we need
-				-- to detect it and if it is there, we need to mask it with lower 32 bits.
-
-			l_lower := lower
-			
-			if l_lower < 0 then
-					-- Mask sign extension bits.
-				l_lower_64 := l_lower.to_integer_64 & 0x00000000FFFFFFFF
-			else
-					-- `lower' is not negative we can safely
-					-- convert it to an INTEGER_64.
-				l_lower_64 := l_lower.to_integer_64
-			end
-			
-			Result := (upper.to_integer_64 |<< 32) | l_lower_64
+			Result := value
 		end
 
 	integer_8_value: INTEGER_8 is
-			-- Integer value if `size' is 32 bits
+			-- 8-bit integer value
 		require
-			valid_size: size = 8
-			is_integer: is_integer
+			has_integer: has_integer (8)
 		do
-			Result := lower.to_integer_8
+			Result := value.as_integer_8
+			if has_minus then
+				Result := - Result
+			end
 		end
 
 	integer_16_value: INTEGER_16 is
-			-- Integer value if `size' is 32 bits
+			-- 16-bit integer value
 		require
-			valid_size: size <= 16
-			is_integer: is_integer
+			has_integer: has_integer (16)
 		do
-			Result := lower.to_integer_16
+			Result := value.as_integer_16
+			if has_minus then
+				Result := - Result
+			end
 		end
 
 	integer_32_value: INTEGER is
-			-- Integer value if `size' is 32 bits
+			-- 32-bit integer value
 		require
-			valid_size: size <= 32
-			is_integer: is_integer
+			has_integer: has_integer (32)
 		do
-			Result := lower
+			Result := value.as_integer_32
+			if has_minus then
+				Result := - Result
+			end
 		end
 
 	integer_64_value: INTEGER_64 is
-			-- Extract information about `upper' and `lower' to
-			-- build an INTEGER_64.
+			-- 64-bit integer value
 		require
-			valid_size: size <= 64
-			is_integer: is_integer
-		local
-			l_lower_64: INTEGER_64
-			l_lower: INTEGER
+			has_integer: has_integer (64)
 		do
-				-- Since we are converting `lower' to an INTEGER_64, we do not want the
-				-- sign bit to be reflected on the INTEGER_64 value. So first we need
-				-- to detect it and if it is there, we need to mask it with lower 32 bits.
-
-			l_lower := lower
-			
-			if l_lower < 0 then
-					-- Mask sign extension bits.
-				l_lower_64 := l_lower.to_integer_64 & 0x00000000FFFFFFFF
-			else
-					-- `lower' is not negative we can safely
-					-- convert it to an INTEGER_64.
-				l_lower_64 := l_lower.to_integer_64
+			Result := value.as_integer_64
+			if has_minus then
+				Result := - Result
 			end
-			
-			Result := (upper.to_integer_64 |<< 32) | l_lower_64
 		end
 
-	size: INTEGER_8
-			-- Current is stored on `size' bits.
-	
-	compatibility_size: INTEGER_8
-			-- Minimum integer size that can hold current.
-			-- Used for manifest integers that are of size `32' or `64'
-			-- by default, but their value might be able to fit
-			-- on an integer of size `8' or `16' as well.
+	has_integer (s: INTEGER_8): BOOLEAN is
+			-- Is there INTEGER_nn type among possible constant types, where nn is `s'?
+		require
+			valid_size: s = 8 or s = 16 or s = 32 or s = 64
+		do
+			Result := types & integer_mask (s) /= 0
+		ensure
+			definition: Result = (types & integer_mask (s) /= 0)
+		end
+
+	has_natural (s: INTEGER_8): BOOLEAN is
+			-- Is there NATURAL_nn type among possible constant types, where nn is `s'?
+		require
+			valid_size: s = 8 or s = 16 or s = 32 or s = 64
+		do
+			Result := types & natural_mask (s) /= 0
+		ensure
+			definition: Result = (types & natural_mask (s) /= 0)
+		end
 
 	type: TYPE_I is
 			-- Integer type
 		do
-			create {INTEGER_I} Result.make (size)
+			check
+				is_initialized: is_initialized
+			end
+			inspect default_type
+			when integer_8_mask then
+				create {INTEGER_I} Result.make (8)
+			when integer_16_mask then
+				create {INTEGER_I} Result.make (16)
+			when integer_32_mask then
+				create {INTEGER_I} Result.make (32)
+			when integer_64_mask then
+				create {INTEGER_I} Result.make (64)
+			when natural_8_mask then
+				create {NATURAL_I} Result.make (8)
+			when natural_16_mask then
+				create {NATURAL_I} Result.make (16)
+			when natural_32_mask then
+				create {NATURAL_I} Result.make (32)
+			when natural_64_mask then
+				create {NATURAL_I} Result.make (64)
+			end
 		end
-		
-	manifest_type: MANIFEST_INTEGER_A is
-			-- Associated manifest integer
+
+	manifest_type: TYPE_A is
+			-- Manifest integer type
 		require
-			is_integer: is_integer
+			is_initialized: is_initialized
+		local
+			compatibility_size: INTEGER_8
 		do
-			create Result.make_for_constant (size, compatibility_size, is_negative)
+			if constant_type /= Void then
+				Result := constant_type
+			else
+				if has_integer (8) then
+					compatibility_size := 8
+				elseif has_integer (16) then
+					compatibility_size := 16
+				elseif has_integer (32) then
+					compatibility_size := 32
+				else
+					compatibility_size := 64
+				end
+					-- Default can be only the following types: INTEGER_32, INTEGER_64, NATURAL_64
+				inspect default_type
+				when integer_32_mask then
+					create {MANIFEST_INTEGER_A} Result.make_for_constant (32, compatibility_size, has_minus)
+				when integer_64_mask then
+					create {MANIFEST_INTEGER_A} Result.make_for_constant (64, compatibility_size, has_minus)
+				when natural_64_mask then
+					create {MANIFEST_NATURAL_64_A} Result.make_for_constant (has_integer (64))
+				end
+			end
 		end
 
 feature -- Evaluation
@@ -324,42 +337,25 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := lower = other.lower and then upper = other.upper and then size = other.size
-				and then compatibility_size = other.compatibility_size
+			Result := value = other.value and then default_type = other.default_type and then types = other.types
 		end
 
 feature -- Type checking
 
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t'?
-		local
-			int_a: INTEGER_A
-			l_nat: NATURAL_A
 		do
-			if is_integer then
-				Result := t.is_integer
-				if Result then
-					int_a ?= t
-					Result := int_a.size >= compatibility_size
-				end
-			else
-				Result := t.is_natural
-				if Result then
-					l_nat ?= t
-					Result := l_nat.size = size
-				end
+			if t.is_integer or else t.is_natural then
+					-- Check if possible types include a given one
+				Result := (types & type_mask (t)) /= 0
 			end
 		end
 
 	type_check is
 			-- Type check an integer type
 		do
-			if constant_type /= Void then
-				ast_context.put (constant_type)
-			else
-					-- Put onto the type stack an integer actual type
-				ast_context.put (manifest_type)
-			end
+				-- Put onto the type stack an integer actual type
+			ast_context.put (manifest_type)
 		end
 
 	byte_node: INTEGER_CONSTANT is
@@ -372,15 +368,62 @@ feature -- Type checking
 			-- Inspect value of the given `value_type'
 		local
 			integer_a: INTEGER_A
+			natural_a: NATURAL_A
+			integer_value: INTEGER_64
+			natural_value: NATURAL_64
 		do
-			integer_a ?= value_type
-			if integer_a.size <= 32 then
-				create {INT_VAL_B} Result.make (integer_32_value)
+				-- Use default type to calculate constant value to take into account
+				-- that "{INTEGER_8} 0xFF" is equivalent to "{INTEGER_8} -1" and that
+				-- "{NATURAL_8} 0xFF" is equivalent to "{NATURAL_8} 255" that results
+				-- in inspect values "-1" and "255" respectively when type of inspect
+				-- expression is INTEGER.
+			inspect default_type
+			when integer_8_mask then
+				integer_value := integer_8_value
+				natural_value := integer_value.as_natural_64
+			when integer_16_mask then
+				integer_value := integer_16_value
+				natural_value := integer_value.as_natural_64
+			when integer_32_mask then
+				integer_value := integer_32_value
+				natural_value := integer_value.as_natural_64
+			when integer_64_mask then
+				integer_value := integer_64_value
+				natural_value := integer_value.as_natural_64
+			when natural_8_mask then
+				fixme ("Remove explicit conversion from NATURAL_8 to NATURAL_64 after bootstrap.")
+				natural_value := natural_8_value.as_natural_64
+				integer_value := natural_value.as_integer_64
+			when natural_16_mask then
+				fixme ("Remove explicit conversion from NATURAL_16 to NATURAL_64 after bootstrap.")
+				natural_value := natural_16_value.as_natural_64
+				integer_value := natural_value.as_integer_64
+			when natural_32_mask then
+				fixme ("Remove explicit conversion from NATURAL_32 to NATURAL_64 after bootstrap.")
+				natural_value := natural_32_value.as_natural_64
+				integer_value := natural_value.as_integer_64
+			when natural_64_mask then
+				fixme ("Remove explicit conversion from NATURAL_64 to NATURAL_64 after bootstrap.")
+				natural_value := natural_64_value.as_natural_64
+				integer_value := natural_value.as_integer_64
+			end
+			if value_type.is_integer then
+				integer_a ?= value_type
+				if integer_a.size = 64 then
+					create {INT64_VAL_B} Result.make (integer_value)
+				else
+					create {INT_VAL_B} Result.make (integer_value.as_integer_32)
+				end
 			else
 				check
-					integer_64: integer_a.size = 64
+					natural_type: value_type.is_natural
 				end
-				create {INT64_VAL_B} Result.make (integer_64_value)
+				natural_a ?= value_type
+				if natural_a.size = 64 then
+					create {NAT64_VAL_B} Result.make (natural_value)
+				else
+					create {NAT_VAL_B} Result.make (natural_value.as_natural_32)
+				end
 			end
 		end
 
@@ -401,55 +444,18 @@ feature -- Conveniences
 
 feature -- Settings
 
-	set_lower (i: INTEGER) is
-			-- Assign `i' to `lower'.
-		require
-			is_size_32: size = 32
-			is_compatibility_size_32: compatibility_size = 32
-		do
-			lower := i
-			if i > 0 then
-				upper := 0
-			else
-				upper := -1
-			end
-		ensure
-			lower_set: lower = i
-			upper_set: (i >= 0 implies upper = 0) and then (i < 0 implies upper = -1)
-		end
-
 	set_real_type (t: TYPE_A) is
 			-- Extract size information of `t' and assign it to Current.
 			-- It will discard existing information, because it might be
 			-- possible that we entered an INTEGER_8 constant value.
 		local
-			l_int: INTEGER_A
+			mask: like default_type
 		do
-			if is_integer then
-				l_int ?= t
-				check
-					is_integer: l_int /= Void
-					compatible: l_int.size >= compatibility_size
-				end
-				size := l_int.size
-				inspect	size
-				when 8 then
-					lower := lower.to_integer_8
-					if lower >= 0 then
-						upper := 0
-					else
-						upper := -1
-					end
-				when 16 then
-					lower := lower.to_integer_16
-					if lower >= 0 then
-						upper := 0
-					else
-						upper := -1
-					end
-				else
-				end
-			end
+			constant_type := t
+			adjust_type
+		ensure then
+			is_initialized: is_initialized
+			default_type_set: default_type = type_mask (constant_type)
 		end
 
 feature -- Output
@@ -457,20 +463,15 @@ feature -- Output
 	dump: STRING is
 			-- String representation of manifest constant.
 		do
-			if is_integer then
-				inspect size
-				when 8 then Result := integer_8_value.out
-				when 16 then Result := integer_16_value.out
-				when 32 then Result := integer_32_value.out
-				when 64 then Result := integer_64_value.out
-				end
-			else
-				inspect size
-				when 8 then Result := natural_8_value.out
-				when 16 then Result := natural_16_value.out
-				when 32 then Result := natural_32_value.out
-				when 64 then Result := natural_64_value.out
-				end
+			inspect default_type
+			when integer_8_mask then Result := integer_8_value.out
+			when integer_16_mask then Result := integer_16_value.out
+			when integer_32_mask then Result := integer_32_value.out
+			when integer_64_mask then Result := integer_64_value.out
+			when natural_8_mask then Result := natural_8_value.out
+			when natural_16_mask then Result := natural_16_value.out
+			when natural_32_mask then Result := natural_32_value.out
+			when natural_64_mask then Result := natural_64_value.out
 			end
 		end	
 
@@ -496,7 +497,7 @@ feature -- Generation
 			--| ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
 			generate (buffer)
-		end;
+		end
 
 	generate (buf: GENERATION_BUFFER) is
 			-- Generate value in `buf'.
@@ -505,177 +506,264 @@ feature -- Generation
 		local
 			l_int: like integer_32_value
 		do
-			if is_integer then
-				buf.put_character ('(')
-				if size = 64 then
-					buf.put_string (integer_64_cast)
-					buf.put_string ("RTI64C(")
-					buf.put_string (integer_64_value.out)
-					buf.put_character (')')
+			buf.put_character ('(')
+			inspect default_type
+			when integer_8_mask then
+				buf.put_string (integer_8_cast)
+				buf.put_integer (integer_8_value)
+				buf.put_character ('L')
+			when integer_16_mask then
+				buf.put_string (integer_16_cast)
+				buf.put_integer (integer_16_value)				
+				buf.put_character ('L')
+			when integer_32_mask then
+					-- Special treatment of `min_value' so that the C compiler
+					-- does not complain as -2147483648 is treated as -(2147483648)
+					-- as it is therefore an unsigned value we are trying to negate
+					-- and the C compiler warns it is still unsigned, although at
+					-- the end it is ok with the cast.
+				buf.put_string (integer_32_cast)
+				l_int := integer_32_value
+				if l_int = {INTEGER}.min_value then
+					buf.put_string ("0x")
+					buf.put_string (l_int.to_hex_string)
 				else
-					inspect size
-					when 8 then buf.put_string (integer_8_cast) buf.put_integer (integer_8_value)
-					when 16 then buf.put_string (integer_16_cast) buf.put_integer (integer_16_value)
-					when 32 then
-							-- Special treatment of `min_value' so that the C compiler
-							-- does not complain as -2147483648 is treated as -(2147483648)
-							-- as it is therefore an unsigned value we are trying to negate
-							-- and the C compiler warns it is still unsigned, although at
-							-- the end it is ok with the cast.
-						buf.put_string (integer_32_cast)
-						l_int := integer_32_value
-						if l_int = {INTEGER}.min_value then
-							buf.put_string ("0x")
-							buf.put_string (l_int.to_hex_string)
-						else
-							buf.put_integer (integer_32_value)
-						end
-					end
-					buf.put_character ('L')
+					buf.put_integer (integer_32_value)
 				end
+				buf.put_character ('L')
+			when integer_64_mask then
+				buf.put_string (integer_64_cast)
+				buf.put_string ("RTI64C(")
+				buf.put_string (integer_64_value.out)
 				buf.put_character (')')
-			else
-				fixme ("No need to treat the negative value after bootstrapping the compiler")
-				buf.put_character ('(')
-				if size = 64 then
-					buf.put_string (natural_64_cast)
-					buf.put_string ("RTU64C(")
-					if natural_64_value < 0 then
-						buf.put_string ("0x")
-						buf.put_string (natural_64_value.to_hex_string)
-					else
-						buf.put_string (natural_64_value.out)
-					end
-					buf.put_character (')')
-				else
-					inspect size
-					when 8 then
-						buf.put_string (natural_8_cast)
-						if natural_8_value < 0 then
-							buf.put_string ("0x")
-							buf.put_string (natural_8_value.to_hex_string)
-						else
-							buf.put_integer (natural_8_value)
-						end
-					when 16 then
-						buf.put_string (natural_16_cast)
-						if natural_16_value < 0 then
-							buf.put_string ("0x")
-							buf.put_string (natural_16_value.to_hex_string)
-						else
-							buf.put_integer (natural_16_value)
-						end
-					when 32 then
-						buf.put_string (natural_32_cast)
-						if natural_32_value < 0 then
-							buf.put_string ("0x")
-							buf.put_string (natural_32_value.to_hex_string)
-						else
-							buf.put_integer (natural_32_value)
-						end
-					end
-					buf.put_character ('U')
-				end
+			when natural_8_mask then
+				buf.put_string (natural_8_cast)
+				buf.put_string (natural_8_value.out)
+				buf.put_character ('U')
+			when natural_16_mask then
+				buf.put_string (natural_16_cast)
+				buf.put_string (natural_16_value.out)
+				buf.put_character ('U')
+			when natural_32_mask then
+				buf.put_string (natural_32_cast)
+				buf.put_string (natural_32_value.out)
+				buf.put_character ('U')
+			when natural_64_mask then
+				buf.put_string (natural_64_cast)
+				buf.put_string ("RTU64C(")
+				buf.put_string (natural_64_value.out)
 				buf.put_character (')')
 			end
+			buf.put_character (')')
 		end
 
 	is_fast_as_local: BOOLEAN is True
 			-- Is expression calculation as fast as loading a local?
 
+	il_element_type: INTEGER_8 is
+			-- Default IL element type matching this constant type
+		do
+			inspect default_type
+			when integer_8_mask then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_i1
+			when integer_16_mask then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_i2
+			when integer_32_mask then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_i4
+			when integer_64_mask then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_i8
+			when natural_8_mask then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_u1
+			when natural_16_mask then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_u2
+			when natural_32_mask then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_u4
+			when natural_64_mask then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_u8
+			end
+		end
+
 	generate_il is
 			-- Generate IL code for integer constant value.
 		do
-			if is_integer then
-				inspect size
-				when 8 then
-					il_generator.put_integer_8_constant (integer_8_value)
-				when 16 then
-					il_generator.put_integer_16_constant (integer_16_value)
-				when 32 then
-					il_generator.put_integer_32_constant (integer_32_value)
-				when 64 then
-					il_generator.put_integer_64_constant (integer_64_value)
-				end
-			else
-				inspect size
-				when 8 then
-					il_generator.put_natural_8_constant (natural_8_value)
-				when 16 then
-					il_generator.put_natural_16_constant (natural_16_value)
-				when 32 then
-					il_generator.put_natural_32_constant (natural_32_value)
-				when 64 then
-					il_generator.put_natural_64_constant (natural_64_value)
-				end
+			inspect default_type
+			when integer_8_mask then
+				il_generator.put_integer_8_constant (integer_8_value)
+			when integer_16_mask then
+				il_generator.put_integer_16_constant (integer_16_value)
+			when integer_32_mask then
+				il_generator.put_integer_32_constant (integer_32_value)
+			when integer_64_mask then
+				il_generator.put_integer_64_constant (integer_64_value)
+			when natural_8_mask then
+				il_generator.put_natural_8_constant (natural_8_value)
+			when natural_16_mask then
+				il_generator.put_natural_16_constant (natural_16_value)
+			when natural_32_mask then
+				il_generator.put_natural_32_constant (natural_32_value)
+			when natural_64_mask then
+				il_generator.put_natural_64_constant (natural_64_value)
 			end
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an integer constant value.
 		do
-			if is_integer then
-				inspect size
-				when 8 then
-					ba.append (Bc_int8)
-					ba.append_integer_8 (integer_8_value)
-				when 16 then
-					ba.append (Bc_int16)
-					ba.append_integer_16 (integer_16_value)
-				when 32 then
-					ba.append (Bc_int32)
-					ba.append_integer (integer_32_value)
-				when 64 then
-					ba.append (Bc_int64)
-					ba.append_integer_64 (integer_64_value)
-				end
-			else
-				inspect size
-				when 8 then
-					ba.append (Bc_uint8)
-					ba.append_natural_8 (natural_8_value)
-				when 16 then
-					ba.append (Bc_uint16)
-					ba.append_natural_16 (natural_16_value)
-				when 32 then
-					ba.append (Bc_uint32)
-					ba.append_natural_32 (natural_32_value)
-				when 64 then
-					ba.append (Bc_uint64)
-					ba.append_natural_64 (natural_64_value)
-				end
+			inspect default_type
+			when integer_8_mask then
+				ba.append (Bc_int8)
+				ba.append_integer_8 (integer_8_value)
+			when integer_16_mask then
+				ba.append (Bc_int16)
+				ba.append_integer_16 (integer_16_value)
+			when integer_32_mask then
+				ba.append (Bc_int32)
+				ba.append_integer (integer_32_value)
+			when integer_64_mask then
+				ba.append (Bc_int64)
+				ba.append_integer_64 (integer_64_value)
+			when natural_8_mask then
+				ba.append (Bc_uint8)
+				ba.append_natural_8 (natural_8_value)
+			when natural_16_mask then
+				ba.append (Bc_uint16)
+				ba.append_natural_16 (natural_16_value)
+			when natural_32_mask then
+				ba.append (Bc_uint32)
+				ba.append_natural_32 (natural_32_value)
+			when natural_64_mask then
+				ba.append (Bc_uint64)
+				ba.append_natural_64 (natural_64_value)
 			end
 		end
 
 feature {INTEGER_CONSTANT} -- Storage
 
-	lower, upper: INTEGER
-			-- Representation of integers
-	
+	value: NATURAL_64
+			-- Constant value without sign
+
+	has_minus: BOOLEAN
+			-- Has constant a minus sign?
+
 feature {INTEGER_CONSTANT} -- Operations
 
 	negate is
 			-- Perform negation of current value.
-		local
-			i: INTEGER_64
 		do
-			if size <= 32 then
-					-- Positive number will get minus sign in `upper'
-				if lower = 0 or else upper < 0 then
-					upper := 0
-				else
-					upper := -1
-				end
-				lower := -lower
-			else
-				i := -integer_64_value
-				lower := (i & 0x00000000FFFFFFFF).to_integer
-				upper := ((i |>> 32) & 0x00000000FFFFFFFF).to_integer
-			end
-				-- Size might be changed.
-			compute_size
+			has_minus := not has_minus
+				-- Size might be changed
+			compute_type
 		end
 	
+feature {INTEGER_CONSTANT} -- Types
+
+	default_type: INTEGER
+			-- Default type of integer constant
+
+	types: like default_type
+			-- Possible types of integer constant
+			-- (Combination of bit masks `integer_..._mask' and `natural_..._mask')
+
+feature {NONE} -- Types
+
+	integer_8_mask:  INTEGER is 0x01
+			-- Bit mask for INTEGER_8
+
+	integer_16_mask: INTEGER is 0x02
+			-- Bit mask for INTEGER_16
+
+	integer_32_mask: INTEGER is 0x04
+			-- Bit mask for INTEGER_32
+
+	integer_64_mask: INTEGER is 0x08
+			-- Bit mask for INTEGER_64
+
+	natural_8_mask:  INTEGER is 0x10
+			-- Bit mask for NATURAL_8
+
+	natural_16_mask: INTEGER is 0x20
+			-- Bit mask for NATURAL_16
+
+	natural_32_mask: INTEGER is 0x40
+			-- Bit mask for NATURAL_32
+
+	natural_64_mask: INTEGER is 0x80
+			-- Bit mask for NATURAL_64
+
+	is_one_mask (mask: like default_type): BOOLEAN is
+			-- Does `mask' represent one type mask?
+		do
+			if
+				mask = integer_8_mask or mask = integer_16_mask or mask = integer_32_mask or mask = integer_64_mask or
+				mask = natural_8_mask or mask = natural_16_mask or mask = natural_32_mask or mask = natural_64_mask
+			then
+				Result := true
+			end
+		ensure
+			definition: Result =
+				(mask = integer_8_mask or mask = integer_16_mask or mask = integer_32_mask or mask = integer_64_mask or
+				mask = natural_8_mask or mask = natural_16_mask or mask = natural_32_mask or mask = natural_64_mask)
+		end
+
+	type_mask (t: TYPE_A): like default_type is
+			-- Bit mask for the given type `t'
+		require
+			valid_type: t.is_integer or t.is_natural
+		local
+			integer_a: INTEGER_A
+			natural_a: NATURAL_A
+		do
+			if t.is_integer then
+				integer_a ?= t
+				Result := integer_mask (integer_a.size)
+			else
+				natural_a ?= t
+				Result := natural_mask (natural_a.size)
+			end
+		ensure
+			valid_mask: is_one_mask (Result)
+		end
+
+	integer_mask (s: INTEGER_8): like default_type is
+			-- Bit mask for integer type of size `s'
+		require
+			valid_size: s = 8 or s = 16 or s = 32 or s = 64
+		do
+			inspect s
+			when 8 then Result := integer_8_mask
+			when 16 then Result := integer_16_mask
+			when 32 then Result := integer_32_mask
+			when 64 then Result := integer_64_mask
+			end
+		ensure
+			one_mask: is_one_mask (Result)
+			definition:
+				(s = 8 implies Result = integer_8_mask) and
+				(s = 16 implies Result = integer_16_mask) and
+				(s = 32 implies Result = integer_32_mask) and
+				(s = 64 implies Result = integer_64_mask)
+		end
+
+	natural_mask (s: INTEGER_8): like default_type is
+			-- Bit mask for natural type of size `s'
+		require
+			valid_size: s = 8 or s = 16 or s = 32 or s = 64
+		do
+			inspect s
+			when 8 then Result := natural_8_mask
+			when 16 then Result := natural_16_mask
+			when 32 then Result := natural_32_mask
+			when 64 then Result := natural_64_mask
+			end
+		ensure
+			one_mask: is_one_mask (Result)
+			definition:
+				(s = 8 implies Result = natural_8_mask) and
+				(s = 16 implies Result = natural_16_mask) and
+				(s = 32 implies Result = natural_32_mask) and
+				(s = 64 implies Result = natural_64_mask)
+		end
+
 feature {NONE} -- Code generation string constants
 
 	natural_8_cast: STRING is "(EIF_NATURAL_8) "
@@ -690,109 +778,19 @@ feature {NONE} -- Code generation string constants
 
 feature {NONE} -- Translation
 
-	read_natural_hexa_value (sign: CHARACTER; s: STRING) is
-			-- Convert `s' hexadecimal value into an integer representation.
-		require
-			valid_sign: ("%U+-").has (sign)
-			s_not_void: s /= Void
-			s_large_enough: s.count > 2
-			constant_type_not_void: constant_type /= Void
-			constant_type_is_natural: constant_type.is_natural
-		local
-			i, j: INTEGER
-			last_integer: INTEGER
-			area: SPECIAL [CHARACTER]
-			val: CHARACTER
-			l_natural: NATURAL_A
-		do
-			l_natural ?= constant_type
-			size := l_natural.size
-			j := s.count - 1
-
-				-- Compute leading zeros:
-			from
-				i := 3
-			until
-				i > j or else s.item (i) /= '0'
-			loop
-				i := i + 1
-			end
-				-- Set `i' to number of meanigful digits
-			i := j - i + 2
-
-				-- Ensures that manifest constant fits for `constant_type'
-			is_initialized := (i // 2) <= (size // 8)
-
-			if is_initialized then
-				from
-					area := s.area
-				until
-					(j - i) < 2 or i = 8
-				loop
-					val := area.item (j - i).lower
-					if val >= 'a' then
-						last_integer := last_integer | ((val.code - 87) |<< (i * 4))
-					else
-						last_integer := last_integer | ((val.code - 48) |<< (i * 4))
-					end
-					i := i + 1
-				end
-				
-				lower := last_integer
-
-				if j > 9 then
-					from
-						last_integer := 0
-					until
-						(j - i) < 2 or i = 16
-					loop
-						val := area.item (j - i).lower
-						if val >= 'a' then
-							last_integer := last_integer | ((val.code - 87) |<< (i * 4))
-						else
-							last_integer := last_integer | ((val.code - 48) |<< (i * 4))
-						end
-						i := i + 1
-					end
-					upper := last_integer
-				else
-					upper := 0
-				end
-
-				if i <= 2 then
-						-- Value in 0x00 .. 0xFF
-					compatibility_size := 8
-				elseif i <= 4 then
-						-- Value in 0x0000 .. 0xFFFF
-					compatibility_size := 16
-				elseif i <= 8 then
-						-- Value in 0x00000000 .. 0xFFFFFFFF
-					compatibility_size := 32
-				elseif i <= 16 then
-						-- Value in 0x0000000000000000 .. 0xFFFFFFFFFFFFFFFF
-					compatibility_size := 64
-				else
-					check
-							-- Out of range values should have been checked above when computing
-							-- value for `is_initialized'.
-						False
-					end
-				end
-			end
-		end
-
-	read_integer_hexa_value (sign: CHARACTER; s: STRING) is
-			-- Convert `s' hexadecimal value into an integer representation.
+	read_hexadecimal_value (sign: CHARACTER; s: STRING) is
+			-- Convert hexadecimal representation `s' with sign `sign' into an integer or natural value.
 		require
 			valid_sign: ("%U+-").has (sign)
 			s_not_void: s /= Void
 			s_large_enough: s.count > 2
 		local
 			i, j: INTEGER
-			last_integer: INTEGER
 			area: SPECIAL [CHARACTER]
 			val: CHARACTER
-			l_integer: INTEGER_A
+			last_nat_64: NATURAL_64
+			type_a: TYPE_A
+			mask: like default_type
 		do
 			is_initialized := True
 			j := s.count - 1
@@ -800,45 +798,17 @@ feature {NONE} -- Translation
 
 			from
 			until
-				(j - i) < 2 or i = 8
+				(j - i) < 2 or else i = 16
 			loop
 				val := area.item (j - i).lower
 				if val >= 'a' then
-					last_integer := last_integer | ((val.code - 87) |<< (i * 4))
+					last_nat_64 := last_nat_64 | ((val.code - 87).as_natural_64 |<< (i * 4))
 				else
-					last_integer := last_integer | ((val.code - 48) |<< (i * 4))
+					last_nat_64 := last_nat_64 | ((val.code - 48).as_natural_64 |<< (i * 4))
 				end
 				i := i + 1
 			end
 			
-			lower := last_integer
-
-			if j > 9 then
-				from
-					last_integer := 0
-				until
-					(j - i) < 2 or i = 16
-				loop
-					val := area.item (j - i).lower
-					if val >= 'a' then
-						last_integer := last_integer | ((val.code - 87) |<< (i * 4))
-					else
-						last_integer := last_integer | ((val.code - 48) |<< (i * 4))
-					end
-					i := i + 1
-				end
-				upper := last_integer
-			else
-				upper := 0
-			end
-
-				-- Force size of integer constant depending on number of hexadecimal characters in string
-				-- or on integer value:
-				--   (s in 0x0         .. 0xFF)       or (value in -0x80       .. 0x7F)       => size = 8
-				--   (s in 0x100       .. 0xFFFF)     or (value in -0x8000     .. 0x7FFF)     => size = 16
-				--   (s in 0x10000     .. 0xFFFFFFFF) or (value in -0x80000000 .. 0x7FFFFFFF) => size = 32
-				--   (s in 0x100000000 .. 0xFFFFFFFFFFFFFFFF) or (value in ...)               => size = 64
-
 				-- Count leading zeroes
 			from
 				i := 3
@@ -849,168 +819,46 @@ feature {NONE} -- Translation
 			end
 				-- Set `i' to number of meanigful digits
 			i := j - i + 2
-			if i <= 2 and then (lower <= 0x7F or else sign = '-' and then lower = 0x80) then
-					-- Value in -0x80 .. 0x7F
-				compatibility_size := 8
-				size := 8
-			elseif sign = '%U' and then j <= 3 then
-					-- Value in 0x80 .. 0xFF
-				compatibility_size := 8
-				size := 16
-			elseif i <= 4 and then (lower <= 0x7FFF or else sign = '-' and then lower = 0x8000) then
-					-- Value in -0x8000 .. 0x7FFF
-				compatibility_size := 16
-				size := 16
-			elseif sign = '%U' and then j <= 5 then
-					-- Value in 0x8000 .. 0xFFFF
-				compatibility_size := 16
-				size := 32
-			elseif i <= 8 and then (lower >= 0 or else sign = '-' and then lower = 0x80000000) then
-					-- Value in -0x80000000 .. 0x7FFFFFFF
-				compatibility_size := 32
-				size := 32
-			elseif sign = '%U' and then j <= 9 then
-					-- Value in 0x80000000 .. 0xFFFFFFFF
-				compatibility_size := 32
-				size := 64
-			elseif i < 16 or else i = 16 and then (s.item (j - i + 2) <= '7' or else sign = '-' and then lower = 0 and then upper = 0x80000000) then
-					-- Value in -0x8000000000000000 .. 0x7FFFFFFFFFFFFFFF
-				compatibility_size := 64
-				size := 64
-			elseif sign = '%U' and then j <= 17 then
-					-- Value in 0x8000000000000000 .. 0xFFFFFFFFFFFFFFFF
-				compatibility_size := 64
-				size := 64
-			else
-					-- Value is out of range
-				compatibility_size := 64
-				size := 64
+			if i > 16 then
+					-- Number is too large
 				is_initialized := False
-			end
-				-- Set `size'
-			if size < 32 then
-				size := 32
-			end
-			if sign = '-' then
-				negate
-				check is_initialized implies (upper < 0 or else (upper = 0 and then lower = 0)) end
-			end
-			if is_initialized then
-					-- Check that we have a constant that matches `constant_type'.
-				l_integer ?= constant_type
-				if l_integer /= Void then
-					is_initialized := compatibility_size <= size
-					size := l_integer.size
+			else
+				has_minus := sign = '-'
+				value := last_nat_64
+				compute_type
+				if sign = '%U' then
+						-- Allow for integers to be specified using a hexadecimal representation regardless 
+						-- of their value provided that number of digits matches integer length.
+					inspect i
+					when 2 then types := types | integer_8_mask
+					when 4 then types := types | integer_16_mask
+					when 8 then types := types | integer_32_mask
+					when 16 then types := types | integer_64_mask
+					else
+						-- Do not change `types'.
+					end
 				end
 			end
+			if is_initialized and then constant_type /= Void then
+					-- Adjust type to match `constant_type'.
+				adjust_type
+			end
 		end
-
-	largest_integer_32: STRING is "2147483648"
-			-- Largest string representation of 2^31
-
-	largest_integer_64: STRING is "9223372036854775808"
-			-- Largest string representation of 2^63
-
-	largest_natural_32: STRING is "4294967295"
-			-- Largest string representation of 2^32 - 1
 
 	largest_natural_64: STRING is "18446744073709551615"
 			-- Largest string representation of 2^64 - 1
 
-	read_natural_value (s: STRING) is
-			-- Read natural expressed in decimal representation.
+	read_decimal_value (is_neg: BOOLEAN; s: STRING) is
+			-- Read integer or natural expressed in decimal representation.
 		require
 			s_not_void: s /= Void
-			constant_type_not_void: constant_type /= Void
-			constant_type_is_natural: constant_type.is_natural
+			-- valid_decimal: for i in 1..s.count ("0123456789").has (s.item (i))
 		local
-			last_int_64: INTEGER_64
 			area: SPECIAL [CHARACTER]
 			i, nb: INTEGER
-			l_natural: NATURAL_A
-		do
-				-- Find wich type of constant we are trying to read.
-			l_natural ?= constant_type
-			size := l_natural.size
-
-				-- Count leading zeroes
-			from
-				nb := s.count
-				i := 1
-			until
-				i >= nb or else s.item (i) /= '0'
-			loop
-				i := i + 1
-			end
-				-- Remove leading zeroes
-			i := i - 1
-			s.remove_head (i)
-			nb := nb - i
-
-			area := s.area
-	
-			if size = 64 and then s > largest_natural_64 then
-				compatibility_size := 64
-				is_initialized := False
-			else
-				if nb < 10 or else (nb = 10 and then s <= largest_natural_32) then
-					from
-						i := 0
-					until
-						i >= nb
-					loop
-						last_int_64 := (last_int_64 * 10) + area.item (i).code - 48
-						i := i + 1
-					end
-					check
-						last_int_64_non_negative: last_int_64 >= 0
-					end
-
-					if last_int_64 <= 255 then
-						compatibility_size := 8
-					elseif last_int_64 <= 65535 then
-						compatibility_size := 16
-					elseif last_int_64 <= 4294967295 then
-						compatibility_size := 32
-					else
-						check False end
-					end
-
-					lower := last_int_64.to_integer_32
-						-- Ensure that the requested size matches what we computed.
-					is_initialized := compatibility_size <= size
-				elseif nb < 20 or else (nb = 20 and then s <= largest_natural_64) then
-					from
-						i := 0
-					until
-						i >= nb
-					loop
-						last_int_64 := (last_int_64 * 10) + area.item (i).code - 48
-						i := i + 1
-					end
-
-					compatibility_size := 64
-					lower := (last_int_64 & 0x00000000FFFFFFFF).to_integer_32
-					upper := ((last_int_64 |>> 32) & 0x00000000FFFFFFFF).to_integer_32
-					is_initialized := compatibility_size <= size
-				else
-					compatibility_size := 64
-					is_initialized := False
-				end
-			end
-		end
-
-	read_integer_value (is_neg: BOOLEAN; s: STRING) is
-			-- Read integer expressed in decimal representation.
-		require
-			s_not_void: s /= Void
-		local
-			last_integer: INTEGER
-			last_int_64: INTEGER_64
-			area: SPECIAL [CHARACTER]
-			i, nb: INTEGER
-			is_32bits, done: BOOLEAN
-			l_integer: INTEGER_A
+			last_nat_64: NATURAL_64
+			type_a: TYPE_A
+			mask: like default_type
 		do
 			is_initialized := True
 
@@ -1027,103 +875,146 @@ feature {NONE} -- Translation
 			i := i - 1
 			s.remove_head (i)
 			nb := nb - i
-
-			area := s.area
-	
-			is_32bits := nb < 10
-			if nb = 10 then
-				is_32bits := s < largest_integer_32
-				if not is_32bits and then is_neg and then s.is_equal (largest_integer_32) then
-					done := True
-					compatibility_size := 32
-					lower := 0x80000000
-					upper := -1
+			
+			if nb > 20 or else nb = 20 and then s > largest_natural_64 then
+					-- Number is too large
+				types := 0
+				default_type := 0
+				is_initialized := False
+			else
+				from
+					area := s.area
+					i := 0
+				until
+					i >= nb
+				loop
+					last_nat_64 := (last_nat_64 * 10) + (area.item (i).code - 48).as_natural_64
+					i := i + 1
 				end
+				value := last_nat_64
+				has_minus := is_neg
+				compute_type
 			end
 
-			if not done then
-				if is_32bits then
-					from
-						i := 0
-					until
-						i >= nb
-					loop
-						last_integer := (last_integer * 10) + area.item (i).code - 48
-						i := i + 1
-					end
-					if is_neg and then last_integer > 0 then
-						last_integer := -last_integer
-						upper := -1
-					else
-						upper := 0
-					end
-					lower := last_integer
-
-					if -128 <= lower and lower <= 127 then
-						compatibility_size := 8
-					elseif -32768 <= lower and lower <= 32767 then
-						compatibility_size := 16
-					elseif -2147483648 <= lower and lower <= 2147483647 then
-						compatibility_size := 32
-					else
-						check False end
-					end
-				elseif nb < 19 or else nb = 19 and then (s < largest_integer_64 or else is_neg and then s.is_equal (largest_integer_64)) then
-					from
-						i := 0
-					until
-						i >= nb
-					loop
-						last_int_64 := (last_int_64 * 10) + area.item (i).code - 48
-						i := i + 1
-					end
-
-					if is_neg then
-						last_int_64 := -last_int_64
-					end
-
-					compatibility_size := 64
-					lower := (last_int_64 & 0x00000000FFFFFFFF).to_integer
-					upper := ((last_int_64 |>> 32) & 0x00000000FFFFFFFF).to_integer
-				else
-						-- Value is out of range
-					compatibility_size := 64
-					is_initialized := False
-				end
-			end
-			if is_initialized then
-					-- Check that we have a constant that matches `constant_type'.
-				l_integer ?= constant_type
-				if l_integer /= Void then
-					size := l_integer.size
-					is_initialized := compatibility_size <= size
-				else
-					if compatibility_size = 64 then
-						size := 64
-					else
-						size := 32
-					end
-				end
+			if is_initialized and then constant_type /= Void then
+					-- Adjust type to match `constant_type'.
+				adjust_type
 			end
 		end
 
-	compute_size is
-			-- Compute `size' and `compatibility_size' from the value of the constant.
+	compute_type is
+			-- Compute `types' and `default_type' from the value of the constant.
+		local
+			v: like value
 		do
-			size := 32
-			if upper /= lower |>> 31 then
-					-- Value does not fit 32 bits
-				size := 64
-				compatibility_size := 64
-			elseif -128 <= lower and then lower <= 127 then
-				compatibility_size := 8
-			elseif -32768 <= lower and then lower <= 32767 then
-				compatibility_size := 16
+			v := value
+			if has_minus and then v /= 0 then
+					-- This is not a natural number
+				if v <= 0x80 then
+						-- -0x80..-1
+					types := integer_8_mask | integer_16_mask | integer_32_mask | integer_64_mask
+				elseif v <= 0x8000 then
+						-- -0x8000..-0x81
+					types := integer_16_mask | integer_32_mask | integer_64_mask
+				elseif v <= (0x40000000).as_natural_64 * 2 then
+					fixme ("Replace above with `v <= {NATURAL_64} 0x80000000' after bootstrap.")
+						-- -0x80000000..-0x8001
+					types := integer_32_mask | integer_64_mask
+				elseif v <= (0x40000000).as_natural_64 * (0x40000000).as_natural_64 * 8 then
+					fixme ("Replace above with `v <= {NATURAL_64} 0x8000000000000000' after bootstrap.")
+						-- -0x8000000000000000..-0x80000001
+					types := integer_64_mask
+				else
+						-- Number is too small
+					types := 0
+				end
 			else
-				compatibility_size := 32
+					-- This is either integer or natural number
+				if v <= 0x7F then
+						-- 0..0x7F
+					types :=
+						integer_8_mask | integer_16_mask | integer_32_mask | integer_64_mask |
+						natural_8_mask | natural_16_mask | natural_32_mask | natural_64_mask
+				elseif v <= 0xFF then
+						-- 0x80..0xFF
+					types :=
+						integer_16_mask | integer_32_mask | integer_64_mask |
+						natural_8_mask | natural_16_mask | natural_32_mask | natural_64_mask
+				elseif v <= 0x7FFF then
+						-- 0x100..0x7FFF
+					types :=
+						integer_16_mask | integer_32_mask | integer_64_mask |
+						natural_16_mask | natural_32_mask | natural_64_mask
+				elseif v <= 0xFFFF then
+						-- 0x8000..0xFFFF
+					types :=
+						integer_32_mask | integer_64_mask |
+						natural_16_mask | natural_32_mask | natural_64_mask
+				elseif v <= 0x7FFFFFFF then
+						-- 0x10000..0x7FFFFFFF
+					types := integer_32_mask | integer_64_mask | natural_32_mask | natural_64_mask
+				elseif v <= (0xFFFFFFF).as_natural_64 * 0x10 + 0xF then
+					fixme ("Replace above with `v <= {NATURAL_64} 0xFFFFFFFF' after bootstrap.")
+						-- 0x80000000..0xFFFFFFFF
+					types := integer_64_mask | natural_32_mask | natural_64_mask
+				elseif v <= 0x7FFFFFFFFFFFFFFF then
+						-- 0x100000000..0x7FFFFFFFFFFFFFFF
+					types := integer_64_mask | natural_64_mask
+				else
+						-- 0x8000000000000000..0xFFFFFFFFFFFFFFFF
+					check
+						v <= ((0xFFFFFFF).as_natural_64 * 0x10000000 + 0xFFFFFFF) * 0x100 + 0xFF
+					end
+					fixme ("Replace above with `v <= {NATURAL_64} 0xFFFFFFFFFFFFFFFF' after bootstrap.")
+					types := natural_64_mask
+				end
 			end
+			if types & integer_32_mask /= 0 then
+				default_type := integer_32_mask
+			elseif types & integer_64_mask /= 0 then
+				default_type := integer_64_mask
+			elseif types & natural_64_mask /= 0 then
+				default_type := natural_64_mask
+			else
+				default_type := 0
+				is_initialized := False
+			end
+		end
+
+	adjust_type is
+			-- Make sure that this constant matches `constant_type' if possible.
+			-- Set `is_initialized' to `False' otherwise.
+		require
+			is_initialized: is_initialized
+			constant_type_not_void: constant_type /= Void
+		local
+			mask: like default_type
+		do
+			mask := type_mask (constant_type)
+			if types & mask = 0 then
+				is_initialized := False
+			else
+				default_type := mask
+			end
+		ensure
+			default_type_set: is_initialized implies default_type = type_mask (constant_type)
 		end
 
 invariant
+
 	constant_type_valid: constant_type /= Void implies (constant_type.is_integer or constant_type.is_natural)
+	is_initialized: is_initialized implies (default_type /= 0 and types /= 0)
+	one_default_type: default_type /= 0 implies is_one_mask (default_type)
+	default_type_from_types: default_type /= 0 implies types & default_type /= 0
+	valid_types:
+		types & (
+			integer_8_mask | integer_16_mask | integer_32_mask | integer_64_mask |
+			natural_8_mask | natural_16_mask | natural_32_mask | natural_64_mask
+		).bit_not = 0
+	integer_priority: 
+		(has_integer (8) or has_integer (16) or has_integer (32) or has_integer (64)) implies
+		(default_type = integer_mask (8) or default_type = integer_mask (16) or
+		default_type = integer_mask (32) or default_type = integer_mask (64))
+	non_negative_natural: (has_natural (8) or has_natural (16) or has_natural (32) or has_natural (64)) implies not has_minus
+
 end

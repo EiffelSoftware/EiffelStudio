@@ -137,7 +137,7 @@ class ecom_variant
 		void ccom_set_bstr_reference (EIF_OBJECT a_value);
 
 		// VARIANT
-		EIF_REFERENCE ccom_variant ();
+		EIF_POINTER ccom_variant ();
 
 		void ccom_set_variant (VARIANT *a_value);
 

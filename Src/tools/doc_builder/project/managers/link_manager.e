@@ -1,16 +1,10 @@
 indexing
-	description: "URL Manager functions.  Will perform url checking and conversion%
-		%functions on alist of documents."
+	description: "URL Manager functions."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	LINK_MANAGER
-
-inherit	
-	UTILITY_FUNCTIONS
-	
-	SHARED_OBJECTS
 
 create
 	make_with_documents
@@ -29,38 +23,88 @@ feature -- Creation
 
 feature -- Commands
 
-	run (a_old, a_new: DOCUMENT_LINK; a_rel, a_abs: BOOLEAN) is
-			-- Run link manager based on argument options.
-			-- Options: 	a_old, a_new: old and new link values.
-			--				a_rel: make all links in `documents' relative
-			--				a_abs: make all links in `documents' absolute
-		require
-			old_link_not_void_implies_new_link_not_void: a_old /= Void implies a_new /= void
-			new_link_not_void_implies_old_link_not_void: a_new /= Void implies a_old /= void
-			exclusive_rel_or_abs: a_rel implies not a_abs and a_abs implies not a_rel
+	check_links is
+			-- Check links in `documents'.  Put invalid links into `invalid_links'.
+		local
+			l_link: DOCUMENT_LINK
+			l_links: like document_links
 		do
-			if a_old /= Void then
-				old_link := a_old
-				new_link := a_new
-				update := True
-			else
-				update := False
-			end
-			if a_rel or a_abs then
-				convert_relative := a_rel
-				convert_absolute := a_abs
-			end
-			progress_generator.set_title ("Link Processing")
-			progress_generator.set_procedure (agent generate)
-			progress_generator.set_upper_range (documents.count)
-			progress_generator.generate
+			invalid_links.wipe_out
+			from
+				documents.start
+			until
+				documents.after
+			loop
+				if documents.item.is_valid_xml then					
+					l_links := document_links (documents.item)
+					if not l_links.is_empty then
+						from
+							l_links.start
+						until
+							l_links.after
+						loop							
+							l_link := l_links.item
+							if not l_link.exists then
+								invalid_links.extend (l_link)
+							end
+							l_links.forth
+						end
+					end	
+				end
+				documents.forth
+			end			
 		end		
 
-	check_links is
-			-- Check all links in `documents'
+	update_links (a_old, a_new: DOCUMENT_LINK) is
+			-- Update `documents' so that all references to `a_old' are updated to `a_new'
+		require
+			old_not_void: a_old /= Void
+			new_not_void: a_new /= Void
+		local
+			l_doc: DOCUMENT
 		do
-			do_check := True
-			generate
+			from
+				documents.start
+			until
+				documents.after
+			loop
+				l_doc := documents.item	
+				documents.forth
+			end		
+		end
+
+	set_links_relative is
+			-- Set links in `documents' to relative links
+		local
+			l_doc: DOCUMENT
+			l_doc_links: ARRAYED_LIST [DOCUMENT_LINK]
+		do
+			from
+				documents.start
+			until
+				documents.after
+			loop
+				l_doc := documents.item
+				l_doc_links := document_links (l_doc)
+				documents.forth
+			end
+		end
+		
+	set_links_absolute is
+			-- Set links in `documents' to absolute links
+		local
+			l_doc: DOCUMENT
+			l_doc_links: ARRAYED_LIST [DOCUMENT_LINK]
+		do
+			from
+				documents.start
+			until
+				documents.after
+			loop
+				l_doc := documents.item
+				l_doc_links := document_links (l_doc)
+				documents.forth
+			end
 		end		
 
 feature -- Access
@@ -68,66 +112,41 @@ feature -- Access
 	documents: ARRAYED_LIST [DOCUMENT]
 			-- Documents
 
-feature {NONE} -- Implementation
-
-	old_link: DOCUMENT_LINK
-			-- Old Link
-			
-	new_link: DOCUMENT_LINK
-			-- New Link
-
-	update: BOOLEAN
-			-- Update links?
-			
-	do_check: BOOLEAN
-			-- Check document links to see if they exist?
-	
-	convert_relative: BOOLEAN
-			-- Convert links to relative?
-	
-	convert_absolute: BOOLEAN
-			-- Convert links to absolute?
-
-	generate is
-			-- Generation
+	invalid_links: ARRAYED_LIST [DOCUMENT_LINK] is
+			-- Invalid links, determined by last call to `check_links'
+		once
+			create Result.make (1)
+		end
+		
+	document_links (a_doc: DOCUMENT): ARRAYED_LIST [DOCUMENT_LINK] is
+			-- Retrieved links from `a_doc', if any
+		require
+			document_not_void: a_doc /= Void
+			document_valid: a_doc.is_valid_xml
 		local
-			l_doc: DOCUMENT
+			l_formatter: XM_DOCUMENT_FORMATTER
 		do
-					-- Prepare error report for any errors
-			if error_report /= Void then
-				error_report.clear
-			else
-				create error_report.make ("Invalid Links")
-			end
-					-- Traverse `documents' and perform necessary commands
-			from
-				documents.start
-			until
-				documents.after
-			loop
-				l_doc := documents.item
-				progress_generator.set_status_text (l_doc.name)				
-				if update then
-					l_doc.update_link (old_link, new_link)
-				end
-				if convert_relative then
-					l_doc.set_links_relative
-				elseif convert_absolute then
-					l_doc.set_links_absolute
-				end
-				if do_check then
-					l_doc.check_links
-					if not l_doc.invalid_links.is_empty then
-						error_report.show
-					end
-				end
-				documents.forth
-				progress_generator.update_progress_report
-			end
-		end		
+			create l_formatter.make_with_document (a_doc)
+			l_formatter.process_document (a_doc.xml)
+			Result := l_formatter.links
+		ensure
+			has_result: Result /= Void
+		end
 
-	error_report: ERROR_REPORT
-			-- Error Report
+	document_images (a_doc: DOCUMENT): ARRAYED_LIST [DOCUMENT_LINK] is
+			-- Retrieved images from `a_doc', if any
+		require
+			document_not_void: a_doc /= Void
+			document_valid: a_doc.is_valid_xml
+		local
+			l_formatter: XM_DOCUMENT_FORMATTER
+		do
+			create l_formatter.make_with_document (a_doc)
+			l_formatter.process_document (a_doc.xml)
+			Result := l_formatter.images
+		ensure
+			has_result: Result /= Void
+		end
 
 invariant
 	has_documents: documents /= Void

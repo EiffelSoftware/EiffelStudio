@@ -251,15 +251,6 @@ feature -- Status setting
 			-- XX Not yet implemented.
 		end
 
-feature -- Element change
-
---	clear_items is
---			-- Clear all the items of the list.
---		do
---			clear_ev_children
---			gtk_list_clear_items (list_widget, 0, rows)
---		end
-
 feature -- Basic operation
 
 	select_all is

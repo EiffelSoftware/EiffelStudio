@@ -21,9 +21,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-	SHARED_RESOURCES
-		rename
-			initialized as resources_initialized
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -686,20 +684,20 @@ feature {NONE} -- Implementation: Graphical interface
 	initial_width: INTEGER is
 			-- Initial width for the dialog.
 		do
-			Result := integer_resource_value ("dyn_lib_window_width", 400)
+			Result := preferences.misc_data.dyn_lib_window_width
 		end
 
 	initial_height: INTEGER is
 			-- Initial width for the dialog.
 		do
-			Result := integer_resource_value ("dyn_lib_window_height", 200)
+			Result := preferences.misc_data.dyn_lib_window_height
 		end
 
 	save_width_and_height is
 			-- Save current width and height to the preferences.
 		do
-			set_integer_resource ("dyn_lib_window_width", window.width)
-			set_integer_resource ("dyn_lib_window_height", window.height)
+			preferences.misc_data.dyn_lib_window_width_preference.set_value (window.width)
+			preferences.misc_data.dyn_lib_window_height_preference.set_value (window.height)
 		ensure
 			size_saved: initial_width = window.width and 
 						initial_height = window.height

@@ -8,7 +8,7 @@ indexing
 class EWB_EDIT
 
 inherit
-	TTY_CONSTANTS;
+	EB_SHARED_PREFERENCES
 
 feature -- Element change
 
@@ -21,7 +21,7 @@ feature -- Element change
 			cmd: STRING;
 			cmd_exec: COMMAND_EXECUTOR
 		do
-			editor := shell_editor
+			editor := preferences.misc_data.shell_editor
 			if editor /= Void then
 				create cmd.make (0);
 				cmd.append (editor);

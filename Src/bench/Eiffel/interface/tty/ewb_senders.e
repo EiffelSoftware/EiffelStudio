@@ -8,7 +8,6 @@ indexing
 class EWB_SENDERS 
 
 inherit
-
 	EWB_FEATURE
 		rename
 			name as callers_cmd_name,
@@ -17,7 +16,8 @@ inherit
 		redefine
 			loop_action
 		end
-	TTY_CONSTANTS
+	
+	EB_SHARED_PREFERENCES
 
 create
 
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			feature_name := command_line_io.last_input
 			command_line_io.get_filter_name
 			filter_name := command_line_io.last_input
-			command_line_io.get_option_value ("All senders", show_all_callers)
+			command_line_io.get_option_value ("All senders", preferences.feature_tool_data.show_all_callers)
 			to_show_all_callers := command_line_io.last_input.to_boolean
 			check_arguments_and_execute
 		end

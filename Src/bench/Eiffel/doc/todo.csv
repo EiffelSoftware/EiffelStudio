@@ -42,7 +42,7 @@ interface,,,,,,,
 ,4,"Save all backed up files in a file, and propose to reopen these back-ups at next start-up",Julian,INT0037,,
 ,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,INT0038,,
 ,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,,
-
+,2,Give a way to choose among the last 'star-list' in the address (such as not closing the choice dialog when ctrl is pressed at selection time),Julian,INT0040,,
 
 
 Formats,,,,,,

@@ -66,7 +66,7 @@ feature -- Parsing
 			-- Make result available in `root_node'.
 			-- An exception is raised if a syntax error is found.
 		do
-			position := a_pos
+			file_position := a_pos
 			root_node := Void
 			external_syntax_error := Void
 			input_buffer := create {YY_BUFFER}.make (a_string)
@@ -86,7 +86,7 @@ feature -- Access
 	root_node: EXTERNAL_EXTENSION_AS
 			-- Result of parsing
 
-	position: INTEGER
+	file_position: INTEGER
 			-- Current position of parsing in class text `filename'.
 
 	external_syntax_error: SYNTAX_ERROR
@@ -125,8 +125,8 @@ feature {NONE} -- Error handling
 	report_error (a_message: STRING) is
 			-- A syntax error has been detected.
 		do
-			create external_syntax_error.make (position + current_position.start_position,
-				 position + current_position.end_position, filename, 0, "", False)
+			create external_syntax_error.make (file_position + current_position.start_position,
+				 file_position + current_position.end_position, filename, 0, "", False)
 		ensure then
 			has_error: has_error
 		end

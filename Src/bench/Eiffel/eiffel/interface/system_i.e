@@ -1014,6 +1014,15 @@ end
 					print ("%N")
 					create d1.make_now
 				end
+			elseif
+				System.creation_name = Void and then
+				not Compilation_modes.is_precompiling and then
+				not Lace.compile_all_classes
+			then
+					-- We may need to update `System.creation_name'
+					-- when it is not set explicitly and defaults to
+					-- a redeclaration of "ANY.default_create"
+				root_class.compiled_class.check_root_class_creators
 			end
 
 			if System.il_generation then

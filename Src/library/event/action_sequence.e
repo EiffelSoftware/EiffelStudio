@@ -223,7 +223,7 @@ feature  -- Element Change
 			if kamikazes = Void then
 				create kamikazes.make
 			end
-			kamikazes.extend (~prune (an_action))
+			kamikazes.extend (~prune_all (an_action))
 		end
 
 	merge_left (other: like Current) is
@@ -384,6 +384,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.21  2000/09/18 22:23:19  oconnor
+--| fixed kamikazes
+--|
 --| Revision 1.20  2000/09/04 22:18:32  oconnor
 --| added prune_when_called
 --|

@@ -98,6 +98,7 @@ feature -- File name data From compiler world
 			--| we use CLASS_TYPE for the precompiled case .
 		require
 			class_type_not_void: a_class_type /= Void
+			a_class_type_is_not_external: not a_class_type.is_external
 		local
 			l_location_path: STRING
 			l_output: FILE_NAME
@@ -105,7 +106,6 @@ feature -- File name data From compiler world
 		do
 				--| Please make sure this computing is similar to 
 				--| the one inside IL_CODE_GENERATOR.il_module
-
 			if a_class_type.is_precompiled then
 				l_output := precompilation_module_filename (a_class_type.assembly_info.assembly_name)
 			else
@@ -114,7 +114,6 @@ feature -- File name data From compiler world
 				l_module_filename := module_name_for_class (a_class_type)
 				l_output.set_file_name (l_module_filename)
 			end
-
 			Result := l_output
 		end
 		

@@ -12,7 +12,6 @@ inherit
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
 		export
-			{NONE} set_expand
 			{NONE} set_parent
 		undefine
 			set_width,

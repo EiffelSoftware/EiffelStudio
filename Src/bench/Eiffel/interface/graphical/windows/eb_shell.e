@@ -1,8 +1,6 @@
 indexing
-
-	description:
-		"Abstract notion of a shell for EBench.";
-	date: "$Date$";
+	description: "Abstract notion of a shell for EiffelBench."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class EB_SHELL
@@ -17,23 +15,23 @@ feature -- Setting
 		deferred
 		ensure
 			realized: realized
-		end;
+		end
 
 	set_icon_pixmap (a_pixmap: PIXMAP) is
 		deferred
-		end;
+		end
 
 	set_icon_name (a_name: STRING) is
 		deferred
-		end;
+		end
 
 	set_delete_command (c: COMMAND) is
 		deferred
-		end;
+		end
 
 	set_title (s: STRING) is
 		deferred
-		end;
+		end
 
 	set_iconic_state is
 			-- Iconify Current.
@@ -50,21 +48,21 @@ feature -- Properties
 	associated_form: FORM is
 			-- Associated form used to attach objects to
 		deferred
-		end;
+		end
 
 	title: STRING is
 			-- Title of Current
 		deferred
-		end;
+		end
 
 	icon_name: STRING is
 			-- Icon name of Current
 		deferred
-		end;
+		end
 
 	is_iconic_state: BOOLEAN is
 			-- Is Current iconified?
 		deferred
-		end;
+		end
 
 end -- class EB_SHELL

@@ -1,30 +1,17 @@
 indexing
-
-	description:	
-		"Window manager for routine tools.";
-	date: "$Date$";
+	description: "Window manager for routine tools."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class ROUTINE_WIN_MGR 
 
 inherit
-
-	EDITOR_MGR
-		rename
-			make as mgr_make
-		redefine
-			editor_type
-		end;
 	EDITOR_MGR
 		redefine
 			editor_type, make
-		select
-			make
-		end;
-	EB_CONSTANTS
+		end
 
 creation
-
 	make
 
 feature -- Initialization
@@ -32,7 +19,7 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		do
-			mgr_make (a_screen);
+			{EDITOR_MGR} precursor (a_screen)
 			Feature_resources.add_user (Current)
 		end
 
@@ -48,12 +35,12 @@ feature -- Update
 			until
 				active_editors.after
 			loop
-				active_editors.item.resynchronize_debugger (feat);
+				active_editors.item.resynchronize_debugger (feat)
 				active_editors.forth
 			end
-		end;
+		end
 
-	show_stoppoint (routine: E_FEATURE; index: INTEGER) is
+	show_stoppoint (routine: E_FEATURE index: INTEGER) is
 			-- Show the `index'-th breakable point of `routine' in
 			-- routine tools containing the related routine and
 			-- set with the `show_breakpoints' format.
@@ -68,14 +55,20 @@ feature -- Update
 				until
 					active_editors.after
 				loop
-					active_editors.item.show_stoppoint (routine, index);
+					active_editors.item.show_stoppoint (routine, index)
 					active_editors.forth
 				end
 			end
-		end;
+		end
 
 feature {NONE} -- Properties
 
-	editor_type: ROUTINE_W;
+	editor_type: ROUTINE_W
+
+	create_editor: ROUTINE_W is
+			-- Create an object tool
+		do
+			!! Result.make (screen)
+		end
 
 end -- class ROUTINE_WIN_MGR

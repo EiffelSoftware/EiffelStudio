@@ -141,6 +141,7 @@ feature -- IL code generation
 				check
 					parameters_not_void: parameters /= Void
 					valid_count: parameters.count = 1
+					valid_type: type.is_integer or type.is_natural
 				end
 				il_generator.put_numeric_integer_constant (type, 1)
 				parameters.i_th (1).generate_il

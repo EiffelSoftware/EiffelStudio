@@ -59,7 +59,7 @@ rt_public int substr_search (char *text, char *pattern, int start, int size_of_t
 	r = (char *) strstr (t, p);
 	
 	if (r != NULL)
-		return ((int)(r - t + 1 + start));
+		return ((int)(r - t + start));
 	else
 		return 0;
 	

@@ -877,7 +877,6 @@ feature {NONE} -- Implementation
 				tool_bar_item: EV_TOOL_BAR_ITEM
 				source: EV_DOCKABLE_SOURCE
 				insert_index, original_index: INTEGER
-				moved_within_same_parent: BOOLEAN
 			do
 				tool_bar ?= insert_sep.parent
 				check
@@ -892,14 +891,12 @@ feature {NONE} -- Implementation
 					source_not_void: source /= Void
 				end
 				insert_index := tool_bar.index_of (insert_sep, 1)
-			--	original_index := tool_bar_item.parent.index_of (tool_bar_item, 1)
-			--	moved_within_same_parent := tool_bar_item.parent = tool_bar
 				tool_bar.put_i_th (tool_bar_item, tool_bar.index_of (insert_sep, 1))
 				
 					-- We must now provide provisions for updating the state of the tool bar buttons.
 					-- In some cases, the state is affected by the transport. We provide a platform
 					-- specific implementation, as any work required will depend on the exact behaviour.
-				if original_index = insert_index + 2then
+				if original_index = insert_index + 2 then
 					update_buttons (tool_bar, original_index, insert_index)	
 				end
 				

@@ -85,8 +85,6 @@ feature {NONE} -- Initialization
 				append_column (a_column)
 				i := i + 1
 			end
-			is_multiple_selection := True
-			has_headers := True
 		end
 
 feature -- Access
@@ -126,13 +124,19 @@ feature -- Status report
 			Result := selected_count >= 1
 		end
 
-	is_multiple_selection: BOOLEAN
+	is_multiple_selection: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
+		do
+			Result := not flag_set (style, Lvs_singlesel)
+		end
 
-	has_headers: BOOLEAN
+	has_headers: BOOLEAN is
 			-- True if there is a header line to give titles
 			-- to columns
+		do
+			Result := not flag_set (style, Lvs_nocolumnheader)
+		end
 
 feature -- Status setting
 
@@ -146,7 +150,6 @@ feature -- Status setting
 				else
 					set_style (default_style + Lvs_nocolumnheader)
 				end
-				is_multiple_selection := True
 			end
 		end
 
@@ -160,7 +163,6 @@ feature -- Status setting
 				else
 					set_style (default_style + Lvs_singlesel +Lvs_nocolumnheader)
 				end
-				is_multiple_selection := False
 			end
 		end
 
@@ -173,7 +175,6 @@ feature -- Status setting
 				else
 					set_style (default_style + Lvs_singlesel)
 				end
-				has_headers := True
 			end
 		end
 
@@ -186,7 +187,6 @@ feature -- Status setting
 				else
 					set_style (default_style + Lvs_singlesel + Lvs_nocolumnheader)
 				end
-				has_headers := False
 			end
 		end
 

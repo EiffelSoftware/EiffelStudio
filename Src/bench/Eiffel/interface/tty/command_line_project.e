@@ -12,7 +12,7 @@ inherit
 
 	SHARED_ERROR_BEHAVIOR;
 	SHARED_EIFFEL_PROJECT;
-	PROJECT_CONTEXT
+	PROJECT_CONTEXT;
 	WINDOWS;
 	SHARED_LICENSE
 		rename
@@ -125,9 +125,32 @@ feature -- Update
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
 				!! temp.make (0);
-				temp.append ("Project in: ");
-				temp.append (Project_directory);
-				temp.append (" is corrupted. Cannot continue");
+				if Eiffel_project.is_corrupted then
+					temp.append ("Project in: ");
+					temp.append (Project_directory);
+					temp.append ("%Nis corrupted. ");
+				elseif Eiffel_project.retrieval_interrupted then
+					temp.append ("Retrieving project in: ");
+					temp.append (Project_directory);
+					temp.append ("%Nwas interrupted. ");
+				else 
+					if Eiffel_project.incompatible_version_number.empty then
+						temp.append
+							("File `project.txt' does not exist in project directory:%N"
+)
+						temp.append (Project_directory);
+						temp.append ("%NThis file must exist. ");
+					else
+						temp.append ("Incompatible_version for project: ")
+						temp.append (Project_directory);
+						temp.append ("%NEiffelBench version is: ");
+						temp.append (version_number);
+						temp.append ("%NProject was compiled with version: ");
+						temp.append (Eiffel_project.incompatible_version_number)
+						temp.append ("%N")
+					end
+				end
+				temp.append ("Cannot continue");
 				io.error.putstring (temp);
 				io.error.new_line;
 				error_occurred := True
@@ -163,8 +186,8 @@ feature -- Update
 		do
 			if is_loop then
 				if Ace_name /= Void then
-                    check_ace_file (Ace_name);
-                end; 
+					check_ace_file (Ace_name);
+				end; 
 			elseif Ace_name = Void then
 				!!file.make ("Ace.ace")
 				if file.exists then
@@ -181,35 +204,6 @@ feature -- Update
 			end;
 			Eiffel_ace.set_file_name (Ace_name);
 		end
-
-feature -- Output
-
-	save_project is
-			-- Clear the servers and save the system structures
-			-- to disk.
-		local
-			finished: BOOLEAN;
-			temp: STRING
-		do
-			from
-			until
-				finished
-			loop
-				Eiffel_project.save_project;
-				if Eiffel_project.save_error then
-					!! temp.make (0);
-					temp.append ("Error: could not write to ");
-					temp.append (Project_file_name);
-					temp.append ("%NPlease check permissions and disk space");
-					io.error.putstring (temp);
-					io.error.new_line;
-					finished := stop_on_error or else termination_requested;
-					if not finished then
-						lic_die (-1)
-					end
-				end
-			end
-		end;
 
 feature -- Input/output
 

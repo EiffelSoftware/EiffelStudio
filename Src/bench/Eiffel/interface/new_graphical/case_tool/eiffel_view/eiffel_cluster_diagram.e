@@ -303,13 +303,15 @@ feature {NONE} -- Implementation
 			es_cluster: ES_CLUSTER
 			cluster_fig: EG_CLUSTER_FIGURE
 		do
-			class_cluster := a_class.cluster
-			if class_cluster /= Void then
-				es_cluster := model.cluster_from_interface (class_cluster)
-				if es_cluster /= Void then
-					cluster_fig ?= figure_from_model (es_cluster)
-					if cluster_fig /= Void then
-						add_to_diagram (a_class, cluster_fig.port_x, cluster_fig.port_y)
+			if not is_dropped_on_diagram then
+				class_cluster := a_class.cluster
+				if class_cluster /= Void then
+					es_cluster := model.cluster_from_interface (class_cluster)
+					if es_cluster /= Void then
+						cluster_fig ?= figure_from_model (es_cluster)
+						if cluster_fig /= Void then
+							add_to_diagram (a_class, cluster_fig.port_x, cluster_fig.port_y)
+						end
 					end
 				end
 			end
@@ -563,7 +565,7 @@ feature {NONE} -- Implementation
 		do
 			drop_x := context_editor.pointer_position.x
 			drop_y := context_editor.pointer_position.y
-
+			is_dropped_on_diagram := True
 			clf := top_cluster_at (Current, drop_x, drop_y)
 			create dial.make_default (context_editor.development_window)
 			if clf /= Void then
@@ -571,7 +573,11 @@ feature {NONE} -- Implementation
 			end
 			dial.call_default
 			include_new_dropped_class (dial, drop_x, drop_y)
+			is_dropped_on_diagram := False
 		end
+		
+	is_dropped_on_diagram: BOOLEAN
+			-- Is a class added to a cluster dropped on diagram by user?
 		
 	include_new_dropped_class (a_create_class_dialog: EB_CREATE_CLASS_DIALOG; a_x, a_y: INTEGER) is
 			-- Add `a_class' to the diagram if not already present.

@@ -643,7 +643,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-		
 	build_string_from_color (color: EV_COLOR): STRING is
 			-- `Result' is string representation of `color'.
 		require
@@ -679,11 +678,11 @@ feature {NONE} -- Implementation
 			internal_string: STRING
 		do
 			internal_string := a_string.twin
-			
-			create Result.make_with_values (get_next_part_of_multi_part_string (a_string).to_integer,
-				get_next_part_of_multi_part_string (a_string).to_integer,
-				get_next_part_of_multi_part_string (a_string).to_integer,
-				get_next_part_of_multi_part_string (a_string).to_integer)
+			create Result
+			Result.set_family (get_next_part_of_multi_part_string (a_string).to_integer)
+			Result.set_weight (get_next_part_of_multi_part_string (a_string).to_integer)
+			Result.set_shape (get_next_part_of_multi_part_string (a_string).to_integer)
+			Result.set_height_in_points (get_next_part_of_multi_part_string (a_string).to_integer)
 			Result.preferred_families.extend (a_string)
 		ensure
 			Result_not_void: Result /= Void
@@ -706,7 +705,6 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			counts_consistent: old a_string.count = a_string.count + Result.count + 1
 		end
-		
 		
 	add_leading_zeros (original_string: STRING count: INTEGER): STRING is
 			-- `Result' is `a_string' with leading zeros added so that it it `count' characters long.

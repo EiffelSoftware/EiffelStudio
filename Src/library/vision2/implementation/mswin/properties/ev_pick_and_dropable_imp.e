@@ -90,6 +90,15 @@ feature -- Status setting
 			end
 		end
 
+	check_drag_and_drop_release (a_x, a_y: INTEGER) is
+			-- If in drag and drop then end transport.
+		do
+			if mode_is_drag_and_drop and press_action =
+				Ev_pnd_end_transport then
+				end_transport (a_x, a_y, 1)
+			end
+		end
+
 	pnd_motion (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 		do
 			inspect
@@ -502,6 +511,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/27 16:33:47  rogers
+--| Added check_drag_and_drop_release to end drag and drop if necessary.
+--|
 --| Revision 1.26  2000/04/14 23:27:10  rogers
 --| start transport sets capture type to Capture_heavy.
 --|

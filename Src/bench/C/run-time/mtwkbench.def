@@ -133,22 +133,14 @@ EXPORTS
 	bointdiv
 	c_check_assert
 	c_generator
-		c_outb
-		c_outc
-		c_outd
-		c_outi
-		c_outp
-		c_outr
-		c_tagged_out
-	chcode
-	chconv
-	chis_alpha
-	chis_digit
-	chis_lower
-	chis_upper
+	c_outb
+	c_outc
+	c_outd
+	c_outi
+	c_outp
+	c_outr
+	c_tagged_out
 	chkinv
-	chlower
-	chupper
 	cmalloc
 	collect
 	console_def
@@ -169,10 +161,6 @@ EXPORTS
 	console_readword
 	console_separator
 	console_tnwl
-	conv_di
-	conv_dr
-	conv_pi
-	conv_ri
 	dcount
 	dir_close
 	dir_current
@@ -274,9 +262,7 @@ EXPORTS
 	eremb
 	erembq
 	eretrieve
-	eschar_size
 	esdie
-	esdouble_size
 	esigcatch
 	esigdefined
 	esigignore
@@ -286,8 +272,6 @@ EXPORTS
 	esignum
 	esigresall
 	esigresdef
-	esint_size
-	esreal_size
 	estore
 	ewean
 	exset

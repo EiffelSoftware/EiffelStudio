@@ -168,19 +168,14 @@ safe_md %INSTALL_DIR\studio\spec
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
-remtrace com_il_generation
-cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\Core
+remtrace CLI writer
+cd %EIFFEL_SRC\Eiffel\library\cli_writer\Clib
 call nmake
 
 remtrace Copying .NET components
-copy EiffelCompiler.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-copy run-time\ise_runtime.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-
-remtrace Clib of com_il_generation
-cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\Core\clib
-default_make
-cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\eac\clib
-default_make
+cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
+call nmake
+copy ise_runtime.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
 iff defined BUILD_ENTERPRISE_ONLY then
 	remtrace Recompile EiffelStudio

@@ -12,11 +12,6 @@ inherit
 			is_in_default_state
 		end
 		
-	GB_WIDGET_UTILITIES
-		undefine
-			default_create, copy, is_equal
-		end
-		
 	COMMON_TEST
 		undefine
 			default_create, copy, is_equal

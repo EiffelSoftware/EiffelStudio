@@ -52,6 +52,12 @@ feature -- Access
 		do
 			Result := cwel_tv_item_get_mask (item)
 		end
+		
+	state_mask: INTEGER is
+			-- State mask flag.
+		do
+			Result := cwel_tv_item_get_statemask (item)
+		end
 
 	text: STRING is
 			-- Item text

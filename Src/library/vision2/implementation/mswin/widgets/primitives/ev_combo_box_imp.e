@@ -322,7 +322,6 @@ feature {NONE} -- Wel implementation
 			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
 			if virtual_key = Vk_return then
 				execute_command (Cmd_activate, Void)
-				set_caret_position (0)
 			end
 		end
 

@@ -28,6 +28,11 @@ inherit
 			widget_make
 		end
 
+	WEL_SB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	widget_make (an_interface: EV_WIDGET) is
@@ -89,7 +94,7 @@ feature -- Element change
 				par_imp.add_child (Current)
 			elseif parent_imp /= Void then
 				parent_imp.remove_child (Current)
-				wel_set_parent (default_parent.item)
+				wel_set_parent (default_parent)
 			end
 		end
 
@@ -176,6 +181,65 @@ feature {NONE} -- WEL Implementation
  			end
  		end
 
+	on_wm_vscroll (wparam, lparam: INTEGER) is
+ 			-- Wm_vscroll message.
+ 			-- Should be implementated in EV_CONTAINER_IMP,
+			-- But as we can't implement a deferred feature
+ 			-- with an external, it is not possible.
+ 		local
+ 			gauge: EV_GAUGE_IMP
+ 			p: POINTER
+ 		do
+			-- To avoid the commands to be call two times, we check that
+			-- it is not a call for a end of scroll
+			if cwin_lo_word (wparam) /= Sb_endscroll then
+	 			p := get_wm_vscroll_hwnd (wparam, lparam)
+	 			if p /= default_pointer then
+	 				-- The message comes from a gauge,
+ 					gauge ?= windows.item (p)
+						if gauge /= Void then
+	 						check
+ 							gauge_exists: gauge.exists
+ 						end
+						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam), get_wm_vscroll_pos (wparam, lparam))
+ 						gauge.execute_command (Cmd_gauge, Void)
+ 					end
+ 				else
+ 					-- The message comes from a window scroll bar
+ 					on_vertical_scroll (get_wm_vscroll_code (wparam, lparam),
+ 						get_wm_vscroll_pos (wparam, lparam))
+ 				end
+			end
+ 		end
+ 
+ 	on_wm_hscroll (wparam, lparam: INTEGER) is
+ 			-- Wm_hscroll message.
+ 		local
+ 			gauge: EV_GAUGE_IMP
+ 			p: POINTER
+ 		do
+			-- To avoid the commands to be call two times, we check that
+			-- it is not a call for a end of scroll
+			if cwin_lo_word (wparam) /= Sb_endscroll then
+	 			p := get_wm_hscroll_hwnd (wparam, lparam)
+	 			if p /= default_pointer then
+	 				-- The message comes from a gauge
+	 				gauge ?= windows.item (p)
+	 				if gauge /= Void then
+	 					check
+	 						gauge_exists: gauge.exists
+	 					end
+						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam), get_wm_vscroll_pos (wparam, lparam))
+	 					gauge.execute_command (Cmd_gauge, Void)
+	 				end
+				else
+ 					-- The message comes from a window scroll bar
+ 					on_horizontal_scroll (get_wm_hscroll_code (wparam, lparam),
+						get_wm_hscroll_pos (wparam, lparam))
+ 				end
+			end
+ 		end
+
 feature {NONE} -- Implementation : deferred features
 
 	client_rect: WEL_RECT is
@@ -187,6 +251,50 @@ feature {NONE} -- Implementation : deferred features
 		end
 
 	set_message_return_value (v: INTEGER) is
+		deferred
+		end
+
+	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
+		deferred
+		end
+
+	on_vertical_scroll (scroll_code, position: INTEGER) is
+		deferred
+		end
+
+	on_horizontal_scroll (scroll_code, position: INTEGER) is
+		deferred
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals
+
+	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_code.
+		deferred
+		end
+
+	get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
+		deferred
+		end
+
+	get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_hscroll_pos
+		deferred
+		end
+
+	get_wm_vscroll_code (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_code.
+		deferred
+		end
+
+	get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
+		deferred
+		end
+
+	get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
+			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		deferred
 		end
 

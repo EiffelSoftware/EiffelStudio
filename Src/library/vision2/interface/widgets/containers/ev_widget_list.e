@@ -14,6 +14,7 @@ inherit
 		undefine
 			prune_all
 		redefine
+			extend,
 			implementation,
 			make_for_test
 		end
@@ -166,6 +167,15 @@ feature -- Cursor movement
 		end
 
 feature -- Element change
+
+	extend (v: like item) is
+			-- Ensure that structure includes `v'.
+			-- Do not move cursor.
+		do
+			implementation.extend (v)
+		ensure then
+			item_is_old_item: item = old item
+		end
 
 	put_front (v: like item) is
 			-- If `v' not already in list add to beginning.
@@ -331,6 +341,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/20 19:41:36  king
+--| Redefined extend from container to add item_is_old_item post cond
+--|
 --| Revision 1.17  2000/03/18 00:52:23  oconnor
 --| formatting, layout and comment tweaks
 --|

@@ -42,6 +42,7 @@ inherit
 			make as form_make,
 			wel_make as make_child
 		undefine
+			x,
 			realize_current,
 			default_style,
 			default_ex_style,

@@ -24,7 +24,6 @@ feature {NONE}-- Initialization
 		do
 			<PRECURSOR>
 			<CREATE>
-			create internal_font
 			create internal_pixmap
 			<BUILD>
 			<SET>

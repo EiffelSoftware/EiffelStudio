@@ -48,7 +48,6 @@ feature -- Status setting
 			-- Change the pattern to `new_pattern'.
 		require
 			new_pattern_non_void: new_pattern /= Void;
-			not_new_pattern_empty: not new_pattern.empty
 		deferred
 		ensure
 			pattern_is_new_pattern: pattern = new_pattern
@@ -60,7 +59,6 @@ feature -- Status setting
 			-- of the text.
 		require
 			new_text_non_void: new_text /= Void;
-			not_new_text_empty: not new_text.empty
 		do
 			text := new_text;
 			index := 0

@@ -769,7 +769,9 @@ feature -- IL code generation
 						-- using no debug information.
 					debug_generation := False
 				end
-			else
+			end
+			
+			if not debug_generation then
 					-- Generation of local variable without debug information
 				from
 					local_list.start
@@ -896,7 +898,7 @@ feature -- Byte code generation
 									context.current_type.generated_id (False)
 																  )
 						gen_type.make_gen_type_byte_code (
-												Temp_byte_code_array, true
+												Temp_byte_code_array, True
 														 )
 					end
 					Temp_byte_code_array.append_short_integer(-1)
@@ -930,7 +932,7 @@ feature -- Byte code generation
 							if gen_type /= Void then
 								Temp_byte_code_array.append_short_integer (context.current_type.generated_id (False))
 								gen_type.make_gen_type_byte_code 
-										(Temp_byte_code_array, true)
+										(Temp_byte_code_array, True)
 							end
 							Temp_byte_code_array.append_short_integer(-1)
 						end
@@ -949,7 +951,7 @@ feature -- Byte code generation
 
 				if gen_type /= Void then
 					Temp_byte_code_array.append_short_integer (context.current_type.generated_id (False))
-					gen_type.make_gen_type_byte_code (Temp_byte_code_array, true)
+					gen_type.make_gen_type_byte_code (Temp_byte_code_array, True)
 				end
 				Temp_byte_code_array.append_short_integer(-1)
 			end
@@ -975,6 +977,9 @@ end
 		local
 			nb, i, position: INTEGER
 			item: UN_OLD_B
+			l_old_expressions: like old_expressions
+			l_type: TYPE_I
+			l_il_generation: BOOLEAN
 		do
 			from
 				position := 1
@@ -987,19 +992,26 @@ end
 						(context.real_type (locals.item (position)))
 				position := position + 1
 			end
-			if old_expressions /= Void then
+			l_old_expressions := old_expressions
+			l_il_generation := System.il_generation
+			if
+				(not l_il_generation and then l_old_expressions /= Void) or else
+				(l_il_generation and then l_old_expressions /= Void and then
+				context.class_type.associated_class.assertion_level.check_postcond)
+			then
 				from
-					nb := old_expressions.count
-					old_expressions.start
+					nb := l_old_expressions.count
+					l_old_expressions.start
 					i := 1
 				until
 					i > nb
 				loop
-					item := old_expressions.item
-					Context.add_local (context.real_type (item.type))
+					item := l_old_expressions.item
+					l_type := context.real_type (item.type)
+					Context.add_local (l_type)
 					item.set_position (position)
 					position := position + 1
-					old_expressions.forth
+					l_old_expressions.forth
 					i := i + 1
 				end
 			end

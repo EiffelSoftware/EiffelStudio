@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	MOTIF  
+	TOOLKIT_IMP  
 
 inherit
 
@@ -135,7 +135,7 @@ invariant
 
 	non_void_application: application_context /= Void
 
-end -- class MOTIF
+end -- class TOOLKIT_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

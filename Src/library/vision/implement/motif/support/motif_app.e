@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 		do
 		end;
 
-	init_toolkit: MOTIF; 
+	init_toolkit: TOOLKIT_IMP; 
 			-- Toolkit of the application
 
 	set_toolkit  is

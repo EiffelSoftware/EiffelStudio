@@ -10,7 +10,8 @@ feature
 			format: FORMAT_CASE_STORAGE
 		do
 			!! format.make (output_w, rev_w, True)
-			format.execute
+				-- FIXME: manus 11/24/1999
+			format.execute ("")
 		end;
 
 end -- class PERM_WIND1

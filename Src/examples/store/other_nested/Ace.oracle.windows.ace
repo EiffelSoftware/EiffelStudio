@@ -16,12 +16,19 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base");
+--	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base");
 
 
 cluster
 	
 	root_cluster: "$ISE_EIFFEL\examples\store\other_nested";
+
+-- EiffelBase
+
+	all base:			"$ISE_EIFFEL/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
 
 	thread:						"$ISE_EIFFEL\library\thread"
 
@@ -40,7 +47,8 @@ cluster
 external
 	include_path:		
 						"$(ISE_EIFFEL)\library\store\dbms\rdbms\oracle\Clib",
-						"$(ORACLE_HOME)\OCI\include"
+						"$(ORACLE_HOME)\OCI\include",
+				"$ISE_EIFFEL\library\time\Clib"
 
 	object: 			"$(ISE_EIFFEL)\library\store\spec\$(ISE_COMPILER)\lib\support.lib",
 						"$(ISE_EIFFEL)\library\time\spec\$(ISE_COMPILER)\lib\datetime.lib",

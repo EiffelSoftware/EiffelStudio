@@ -219,11 +219,13 @@ feature -- Events
 	do_once_idle_actions is
 			-- Call `once_idle_actions' then wipe it out.
 			-- Remove `do_once_idle_actions_agent' from `internal_idle_actions'.
+		local
+			snapshot: like once_idle_actions
 		do
-
-			once_idle_actions.call ([])
+			snapshot := clone (once_idle_actions)
 			once_idle_actions.wipe_out
 			internal_idle_actions.prune_all (do_once_idle_actions_agent)
+			snapshot.call ([])
 		end
 
 	do_once_idle_actions_agent: PROCEDURE [EV_APPLICATION_I, TUPLE []]

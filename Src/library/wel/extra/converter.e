@@ -104,9 +104,11 @@ feature {NONE} -- Implementation
 				a_file.read_word
 				id := clone (a_file.last_string)
 				a_file.read_word
-				if a_file.last_string.is_integer then
-					insert_id_in_file (id, a_file.last_string,
-						class_file)
+				if
+					a_file.last_string.is_integer or
+					a_file.last_string.substring_index ("0x", 1) = 1
+				then
+					insert_id_in_file (id, a_file.last_string, class_file)
 				else
 					scan_to_previous_white_space (a_file)
 				end
@@ -177,7 +179,6 @@ feature {NONE} -- Implementation
 		end
 
 end -- class CONVERTER
-
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

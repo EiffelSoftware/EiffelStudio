@@ -24,6 +24,34 @@ feature {NONE} -- Initialization
 			!EV_FONT_DIALOG_IMP! implementation.make (par)
 		end
 
+feature -- Access
+		
+	font: EV_FONT is
+			-- Current selected font.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.font
+		end
+
+	character_format: EV_CHARACTER_FORMAT is
+			-- Current selected format.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.character_format
+		end
+
+feature -- Element change
+
+	select_font (a_font: EV_FONT) is
+			-- Select `a_font'.
+		require
+			exists: not destroyed
+		do
+			implementation.select_font (a_font)
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: EV_FONT_DIALOG_I

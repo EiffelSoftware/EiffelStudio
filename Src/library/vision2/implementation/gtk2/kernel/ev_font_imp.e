@@ -70,6 +70,9 @@ feature -- Access
 	height: INTEGER
 			-- Preferred font height measured in screen pixels.
 
+	height_in_points: INTEGER
+			-- Preferred font height measured in points.
+
 feature -- Element change
 
 	set_family (a_family: INTEGER) is
@@ -107,7 +110,16 @@ feature -- Element change
 			-- Set `a_height' as preferred font size in screen pixels
 		do
 			height := a_height
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, pango_height)
+			height_in_points := app_implementation.point_value_from_pixel_value (height)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, height_in_points * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+		end
+
+	set_height_in_points (a_height: INTEGER) is
+			-- Set `a_height' as preferred font size in screen pixels
+		do
+			height_in_points := a_height
+			height := app_implementation.pixel_value_from_point_value (height_in_points)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, height_in_points * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
 		end
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
@@ -140,13 +152,9 @@ feature -- Status report
 		do
 			create a_cs.make ("A")
 			pango_layout := app_implementation.pango_layout
-			--pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
-			--pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
 			pango_iter := app_implementation.pango_iter
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
-			--feature {EV_GTK_EXTERNALS}.g_free (pango_layout)
-			--feature {EV_GTK_EXTERNALS}.g_free (pango_iter)
 		end
 
 	descent: INTEGER is
@@ -158,16 +166,12 @@ feature -- Status report
 			a_width, a_height: INTEGER
 		do
 			create a_cs.make ("A")
-			--pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
 			pango_layout := app_implementation.pango_layout
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
-			--pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
 			pango_iter := app_implementation.pango_iter
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (pango_layout, $a_width, $a_height)
 			Result := a_height - Result
-			--feature {EV_GTK_EXTERNALS}.g_free (pango_layout)
-			--feature {EV_GTK_EXTERNALS}.g_free (pango_iter)
 		end
 
 	width: INTEGER is
@@ -305,12 +309,6 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 					end
 				end
 			end
-		end
-
-	pango_height: INTEGER is
-			-- Font height in Pango Units
-		do
-			Result := app_implementation.point_value_from_pixel_value (height) * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 		end
 
 	pango_style: INTEGER is

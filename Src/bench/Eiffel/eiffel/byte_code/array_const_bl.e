@@ -146,7 +146,7 @@ feature {NONE} -- C code generation
 			generated_file.putstring ("RTLN(typres);");
 --            if workbench_mode then
 --                generated_file.putstring ("RTUD(");
---                generated_file.putstring (real_ty.associated_class_type.id.generated_id);
+--                real_ty.associated_class_type.id.generated_id (generated_file);
 --                generated_file.putchar (')');
 --            else
 --                generated_file.putint (real_ty.type_id - 1);
@@ -296,7 +296,7 @@ feature {NONE} -- C code generation
 				generated_file.putstring ("RTWPF(");
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				generated_file.putstring (rout_info.origin.generated_id);
+				rout_info.origin.generated_id (generated_file);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (rout_info.offset);
 			else

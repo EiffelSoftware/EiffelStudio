@@ -91,7 +91,7 @@ feature
 				r_id := typ.base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				f.putstring (rout_info.origin.generated_id);
+				rout_info.origin.generated_id (f);
 				f.putstring (gc_comma);
 				f.putint (rout_info.offset);
 			else

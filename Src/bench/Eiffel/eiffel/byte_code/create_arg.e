@@ -8,7 +8,7 @@ inherit
 		redefine
 			generate_cid, make_gen_type_byte_code
 		end
-	SHARED_GENERATION_CONSTANTS
+	SHARED_GENERATION
 
 feature 
 

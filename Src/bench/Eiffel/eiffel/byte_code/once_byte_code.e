@@ -87,7 +87,7 @@ feature
 					-- (losing in that case their memory (already called and
 					-- result)) and to allow result inspection.
 				f.putstring ("RTWO(");
-				f.putstring (real_body_id.generated_id);
+				real_body_id.generated_id (f)
 				f.putstring (gc_rparan_comma);
 				f.new_line
 			end;

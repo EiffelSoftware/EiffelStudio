@@ -78,7 +78,7 @@ feature
 			f := generated_file
 			if context.workbench_mode then
 				f.putstring ("(EIF_POINTER) RTWPP(");
-				f.putstring (context.current_type.associated_class_type.id.generated_id);
+				context.current_type.associated_class_type.id.generated_id (f)
 				f.putstring (gc_comma);
 				f.putint (feature_id);
 				f.putchar (')');

@@ -220,17 +220,15 @@ feature
 			end
 		end
 
-	feature_origin: STRING is
+	feature_origin (f: INDENT_FILE) is
 			-- Value of the dynamic type where the feature is written
 		do
 			if Context.workbench_mode then
-				!! Result.make (15)
-				Result.append ("RTUD(")
-				Result.append (context.class_type.id.generated_id)
-				Result.extend (')')
+				f.putstring ("RTUD(")
+				context.class_type.id.generated_id (f)
+				f.putchar (')')
 			else
-				!! Result.make (5)
-				Result.append_integer (context.class_type.type_id - 1)
+				f.putint (context.class_type.type_id - 1)
 			end
 		end
 

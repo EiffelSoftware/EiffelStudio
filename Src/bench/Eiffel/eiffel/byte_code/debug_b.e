@@ -85,7 +85,7 @@ feature
 				else
 						-- Generation of the debug compound in workbench
 						-- mode
-					static_type := context.current_type.associated_class_type.id.generated_id;
+					static_type := context.current_type.associated_class_type.id.generated_id_string;
 					generated_file.putstring (gc_if_l_paran);
 					generated_file.new_line;
 					generated_file.indent;

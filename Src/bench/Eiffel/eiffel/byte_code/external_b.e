@@ -366,9 +366,6 @@ feature -- Byte code generation
 
 	make_static_call_byte_code (ba: BYTE_ARRAY) is
 			-- Add dynamic type of parent.
-		local
-			gen_type_i: GEN_TYPE_I
-			cl_type_i: CL_TYPE_I
 		do
 			if is_static_call then
 				ba.append_short_integer (static_class_type.associated_class_type.static_type_id - 1)

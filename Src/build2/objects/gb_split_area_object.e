@@ -12,7 +12,6 @@ inherit
 		redefine
 			object,
 			add_child_object,
-			build_drop_action_for_new_object,
 			display_object
 		end
 
@@ -85,25 +84,6 @@ feature -- Basic operation
 					layout_item.put_left (an_object.layout_item)
 				end
 			end	
-		end
-		
-feature {NONE} -- Implementation
-
-	build_drop_action_for_new_object is
-			-- Set up drop actions to accept `an_object' if permissible.
-		do
-			display_object.drop_actions.wipe_out
-			layout_item.drop_actions.wipe_out
-			if object.count < 2 then
-				display_object.drop_actions.extend (agent add_new_object (?))
-				display_object.drop_actions.extend (agent add_new_component (?))
-				layout_item.drop_actions.extend (agent add_new_object (?))
-				layout_item.drop_actions.extend (agent add_new_component (?))
-					-- We must add a veto pebble function which stops us dropping
-					-- an object on one of its children.
-				display_object.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))
-				layout_item.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))
-			end
 		end
 
 end -- class GB_SPLIT_AREA_OBJECT

@@ -313,7 +313,7 @@ feature -- Inlining
 						-- Is it a polymorphic call ?
 					entry := Eiffel_table.poly_table (rout_id);
 					if entry /= Void and then not entry.is_polymorphic (cl_type.type_id) then
-						inliner := System.inliner;
+						inliner := System.remover.inliner;
 						inline := inliner.inline (f)
 					end;
 				end;

@@ -50,11 +50,14 @@ feature
 		end
 
 	enlarged: INLINED_FEAT_B is
+		local
+			local_inliner: INLINER
 		do
 			Result := Current
 			enlarge_parameters;
 
-			inliner.set_inlined_feature (Current);
+			local_inliner := inliner
+			local_inliner.set_inlined_feature (Current);
 
 			compound := byte_code.compound;
 			if compound /= Void then
@@ -62,7 +65,7 @@ feature
 			end;
 			saved_compound := deep_clone (compound);
 
-			inliner.set_inlined_feature (Void);
+			local_inliner.set_inlined_feature (Void);
 		end
 
 
@@ -89,6 +92,7 @@ feature
 			local_is_current_temporary: BOOLEAN;
 			a: ATTRIBUTE_BL;
 			access: ACCESS_EXPR_B
+			local_inliner: INLINER
 		do
 				-- First, standard analysis of the call
 			feat_bl_analyze_on (reg);
@@ -97,7 +101,8 @@ feature
 
 				-- Instantiation of the result type (used by INLINED_RESULT_B)
 			type := real_type (type);
-			inliner.set_inlined_feature (Current);
+			local_inliner := inliner
+			local_inliner.set_inlined_feature (Current);
 
 			old_current_type := Context.current_type;
 			Context.set_current_type (current_type);
@@ -167,7 +172,7 @@ feature
 				current_reg.free_register
 			end;
 
-			inliner.set_inlined_feature (Void);
+			local_inliner.set_inlined_feature (Void);
 
 			Context.set_current_type (old_current_type);
 			Context.set_inlined_current_register (Void);
@@ -187,10 +192,12 @@ feature -- Generation
 			expr: EXPR_B;
 			current_t: CL_TYPE_I
 			f: INDENT_FILE
+			local_inliner: INLINER
 		do
 			feat_bl_generate_parameters (gen_reg)
 
-			inliner.set_inlined_feature (Current);
+			local_inliner := inliner
+			local_inliner.set_inlined_feature (Current);
 
 			f := generated_file
 			f.putchar ('{');
@@ -299,7 +306,7 @@ feature -- Generation
 			Context.set_current_type (caller_type);
 			caller_type := Void;
 
-			inliner.set_inlined_feature (Void);
+			local_inliner.set_inlined_feature (Void);
 		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
@@ -338,7 +345,7 @@ feature {NONE}
 
 	inliner: INLINER is
 		do
-			Result := System.inliner
+			Result := System.remover.inliner
 		end
 
 feature {NONE} -- Registers

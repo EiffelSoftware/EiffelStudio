@@ -58,7 +58,7 @@ feature -- Register and code generation
 				-- generate the argument as, if no temporary register
 				-- is needed, calling `print_register' may have to
 				-- evaluate types.
-			inlined_feature := System.inliner.inlined_feature
+			inlined_feature := System.remover.inliner.inlined_feature
 
 			current_type := Context.current_type
 			current_reg := Context.inlined_current_register
@@ -76,7 +76,7 @@ feature
 
 	type: TYPE_I is
 		do
-			Result := System.inliner.inlined_feature.argument_type (position)
+			Result := System.remover.inliner.inlined_feature.argument_type (position)
 		end
 
 end

@@ -19,6 +19,10 @@ feature {NONE} -- Initialization
 	make_with_tool (a_tool: EV_WIDGET; a_display_name: STRING; a_parent: MULTIPLE_SPLIT_AREA) is
 			-- Create `Current', and initalize with
 			-- tool `a_tool'. Use `display_name' for title of `a_tool'.
+		require
+			tool_not_void: a_tool /= Void
+			display_name_not_void: a_display_name /= Void
+			parent_not_void: a_parent /= Void
 		local
 			vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
@@ -87,12 +91,13 @@ feature {NONE} -- Initialization
 			label.set_real_source (main_box)
 			label.dock_ended_actions.extend (agent docking_ended)
 			label.dock_started_actions.extend (agent docking_started)
+		ensure
+			parent_area_set: parent_area = a_parent
 		end
 		
 	docking_started is
 			-- Respond to dock starting on `Current'.
 		do
-			--parent_window (parent_area).lock_update
 			parent_area.initialize_docking_areas (Current)
 			original_height := height
 			original_width := width
@@ -123,7 +128,9 @@ feature {NONE} -- Initialization
 				dialog.set_height (original_height)
 				minimize_button.disable_sensitive
 				maximize_button.disable_sensitive
-			--	parent_area.rebuild
+				parent_area.store_positions
+				parent_area.rebuild
+				parent_area.restore_stored_positions
 			end
 			if parent /= Void then
 				parent.prune (Current)
@@ -174,8 +181,12 @@ feature -- Basic operation
 feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	
 	lower_box, upper_box: EV_VERTICAL_BOX
+		-- Lower and upper boxes for `Current' which may hold widgets when required.
+		-- For example, when widgets are minimized, they are inserted into the relevent box
+		-- as determined by the current positions of all holders.
 	
 	main_box: EV_VERTICAL_BOX
+		-- Main box, directly parented in `Current'.
 	
 	is_external: BOOLEAN is
 			-- Is `Current' external to `parent_area' and
@@ -263,15 +274,11 @@ feature {MULTIPLE_SPLIT_AREA}-- Access
 		end
 		
 	remove_maximized_restore is
-			-- 
+			-- Ensure that `maximize_button' displays the maximize pixmap.
 		do
 			maximize_button.set_pixmap (parent_area.maximize_pixmap)
 		end
 
-feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
-
-	top_insert_cell, bottom_insert_cell: EV_CELL
-		
 feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 
 	parent_area: MULTIPLE_SPLIT_AREA
@@ -281,21 +288,34 @@ feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 		-- Height to restore to `Current'.
 		
 	set_restore_height (a_height: INTEGER) is
-			--
+			-- Assign `a_height' to `restore_height'.
+		require
+			a_height_positive: a_height > 0
 		do
 			restore_height := a_height
+		ensure
+			restore_height_set: restore_height = a_height
 		end
 		
 	simulate_minimum_height (a_height: INTEGER) is
-			--
+			-- Force `Current' to be displayed at least `a_height', as
+			-- if a minimum size had been set. `Current' will not be reduced if
+			-- larger. We cannot directly assign a minimum_height as
+			-- this changes the behaviour of containers.
+		require
+			a_height_positive: a_height >= 0
 		do
 			minimum_size_cell.set_minimum_height (a_height)
+		ensure
+			minimum_height_simulated: minimum_size_cell.minimum_height = a_height
 		end
 		
 	remove_simulated_height is
-			--
+			-- Remove any "minimum" height set through `simulate_minimum_height'.
 		do
 			minimum_size_cell.set_minimum_height (0)
+		ensure
+			minimum_size_removed: minimum_size_cell.minimum_height = 0
 		end
 		
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
@@ -308,20 +328,13 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		local
 			tool_height: INTEGER
 		do
-			tool_height := tool.height
+			tool_height := main_box.height
 			tool.parent.prune_all (tool)
 			parent_area.all_holders.prune_all (Current)
 			dialog.destroy
 			parent_window (parent_area).lock_update
 			parent_area.external_representation.prune_all (tool)
-			parent_area.insert_widget (tool, display_name, (position_docked_from.min (parent_area.count + 1)).max (1))
-			
-				-- Now restore the height of `tool' within `parent_area'.
-				-- FIXME we should traverse through the items in `parent' area, resizing them
-				-- accordingly, so that they keep their current size, and the only item that
-				-- changes size is the item that may be resized.
-			parent_area.resize_widget_to (tool, calculate_restore_height (tool_height))
-
+			parent_area.insert_widget (tool, display_name, (position_docked_from.min (parent_area.count + 1)).max (1), tool_height)
 			parent_window (parent_area).unlock_update
 		ensure
 			put_back_in_split_area: parent_area.linear_representation.has (tool)
@@ -332,6 +345,8 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 	parent_dockable_dialog (widget: EV_WIDGET): EV_DOCKABLE_DIALOG is
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
+		require
+			widget_not_void: widget /= Void
 		local
 			dialog: EV_DOCKABLE_DIALOG
 		do
@@ -350,6 +365,8 @@ feature {NONE} -- Implementation
 	parent_window (widget: EV_WIDGET): EV_WINDOW is
 			-- `Result' is window parent of `widget'.
 			-- `Void' if none.
+		require
+			widget_not_void: widget /= Void
 		local
 			window: EV_WINDOW
 		do
@@ -427,21 +444,27 @@ feature {NONE} -- Implementation
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
 	silent_set_minimized is
-			--
+			-- Ensure `is_minimized' is `True' with no side effects.
 		do
 			is_minimized := True
+		ensure
+			maximized: is_maximized = True
 		end
 		
 	silent_remove_minimized is
-			--
+			-- Ensure `is_minimized' is `False' with no side effects.
 		do
 			is_minimized := False
+		ensure
+			not_minimized: is_minimized = False
 		end
 		
 	silent_remove_maximized is
-			--
+			-- Ensure `is_maximized' is `True' with no side effects.
 		do
 			is_maximized := False
+		ensure
+			not_maximized: is_maximized = False
 		end
 		
 
@@ -457,13 +480,23 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} -- Implementation
 			-- Label used to display name of tool.
 		
 	tool_bar: EV_TOOL_BAR
+		-- Tool bar used to display minimize, maximize and close buttons.
 		
 	minimize_tooltip: STRING is "Minimize"
+		-- String displayed as tooltip on minimize button
 	
 	maximize_tooltip: STRING is "Maximize"
+		-- String displayed as tooltip on maximize button
 	
 	close_tooltip: STRING is "Close"
+		-- String displayed as tooltip on close button.
 	
 	minimum_size_cell: EV_CELL
+		-- A cell contained in `Current' which permits a minimum size to be simulated
+		-- without altering the resizing behaviour of `Current'. Has no screen space,
+		-- but force `height' of current to be adjusted as necessary.
+	
+invariant
+	minimum_size_cell_empty: minimum_size_cell.is_empty
 
 end -- class MULTIPLE_SPLIT_AREA_TOOL_HOLDER

@@ -23,22 +23,6 @@ feature -- Status setting
 		deferred
 		end
 
-feature -- Measurement
-
-	width: INTEGER is
-			-- Horizontal size in pixels.
-		deferred
-		ensure
-			positive: Result > 0
-		end
-
-	height: INTEGER is
-			-- Vertical size in pixels.
-		deferred
-		ensure
-			positive: Result > 0
-		end
-
 feature -- Status setting
 
 	start_document is

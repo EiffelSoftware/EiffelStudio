@@ -83,6 +83,11 @@ inherit
 			{NONE} all
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 create
 	make
 	
@@ -2052,6 +2057,18 @@ feature -- Class initialization
 				end
 					-- We need to reset its `types' so that they are recomputed.
 				remove_types
+
+					-- We need to get rid of content of `filters' since it may contain
+					-- incorrect data using Formals that are not there anymore.
+				filters.make
+
+				fixme ("[
+					Manu: 01/12/2004:
+					This is not complete. We also need to type check and regenerate
+					the byte code for all the routines of descendants classes as even
+					though they haven't changed their code may refer to the former
+					generic type.
+					]")
 			end
 
 			if changed_frozen then

@@ -11,8 +11,7 @@ inherit
 	HASH_TABLE [BREAKPOINT, BREAKPOINT]
 		rename
 			make as ht_make,
-			extend as ht_extend,
-			clear_all as wipe_out
+			extend as ht_extend
 		end
 
 creation

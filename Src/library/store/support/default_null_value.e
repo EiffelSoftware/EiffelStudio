@@ -1,5 +1,6 @@
 indexing
-	description: "Supplier of the application unique default_null_value."
+	description: "Object that defines the numeric value that codes a database%
+			%NULL value."
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -99,28 +99,36 @@ feature {GB_CODE_GENERATOR} -- Output
 			create Result.make (5)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (font_family_string)
+				-- As we are maining backwards compatibility, we check both entries.
+			if element_info = Void then
+				element_info := full_information @ (font_string)
+			end
 			if element_info /= Void then
-				info.enable_fonts_set
-				Result.extend ("create internal_font")
-				Result.extend ("internal_font.set_family (" + element_info.data + ")")
-
-				element_info := full_information @ (font_weight_string)
-				if element_info /= Void then
-					Result.extend ("internal_font.set_weight (" + element_info.data + ")")
+				if element_info.is_constant then
+					Result.extend (info.name + ".set_font (" + element_info.data + ")")
+				else
+					info.enable_fonts_set
+					Result.extend ("create internal_font")
+					Result.extend ("internal_font.set_family (" + element_info.data + ")")
+	
+					element_info := full_information @ (font_weight_string)
+					if element_info /= Void then
+						Result.extend ("internal_font.set_weight (" + element_info.data + ")")
+					end
+					element_info := full_information @ (font_shape_string)
+					if element_info /= Void then
+						Result.extend ("internal_font.set_shape (" + element_info.data + ")")
+					end
+					element_info := full_information @ (font_height_points_string)
+					if element_info /= Void then
+						Result.extend ("internal_font.set_height_in_points (" + element_info.data + ")")
+					end
+					element_info := full_information @ (font_preferred_family_string)
+					if element_info /= Void then
+						Result.extend ("internal_font.preferred_families.extend (%"" + element_info.data + "%")")
+					end
+					Result.extend (info.name + ".set_font (internal_font)")
 				end
-				element_info := full_information @ (font_shape_string)
-				if element_info /= Void then
-					Result.extend ("internal_font.set_shape (" + element_info.data + ")")
-				end
-				element_info := full_information @ (font_height_points_string)
-				if element_info /= Void then
-					Result.extend ("internal_font.set_height_in_points (" + element_info.data + ")")
-				end
-				element_info := full_information @ (font_preferred_family_string)
-				if element_info /= Void then
-					Result.extend ("internal_font.preferred_families.extend (%"" + element_info.data + "%")")
-				end
-				Result.extend (info.name + ".set_font (internal_font)")
 			end
 		end
 

@@ -467,15 +467,6 @@ feature -- Access
 			value_set: Result.value = b
 		end
 
-	new_boolean_type_as: BOOL_TYPE_AS is
-			-- New type AST node for "BOOLEAN"
-		do
-			create Result
-			Result.initialize
-		ensure
-			type_as_not_void: Result /= Void
-		end
-
 	new_case_as (i: EIFFEL_LIST [INTERVAL_AS];
 		c: EIFFEL_LIST [INSTRUCTION_AS]; l: TOKEN_LOCATION): CASE_AS is
 			-- New WHEN AST node
@@ -500,15 +491,6 @@ feature -- Access
 		ensure
 			character_as_not_void: Result /= Void
 			value_set: Result.value = c
-		end
-
-	new_character_type_as (is_wide: BOOLEAN): CHAR_TYPE_AS is
-			-- New type AST node for "CHARACTER"
-		do
-			create Result.make (is_wide)
-			Result.initialize
-		ensure
-			type_as_not_void: Result /= Void
 		end
 
 	new_check_as (c: EIFFEL_LIST [TAGGED_AS]; l, e: TOKEN_LOCATION): CHECK_AS is
@@ -721,15 +703,6 @@ feature -- Access
 		ensure
 			do_as_not_void: Result /= Void
 			compound_set: Result.compound = c
-		end
-
-	new_double_type_as: DOUBLE_TYPE_AS is
-			-- New type AST node for "DOUBLE"
-		do
-			create Result
-			Result.initialize
-		ensure
-			type_as_not_void: Result /= Void
 		end
 
 	new_eiffel_list_atomic_as (n: INTEGER): EIFFEL_LIST [ATOMIC_AS] is
@@ -1271,17 +1244,6 @@ feature -- Access
 			-- correctly into correct integer value.
 		end
 
-	new_integer_type_as (n: INTEGER): INT_TYPE_AS is
-			-- New type AST node for "INTEGER" with `n' bits
-		require
-			valid_n: n = 8 or n = 16 or n = 32 or n = 64
-		do
-			create Result.make (n)
-			Result.initialize
-		ensure
-			type_as_not_void: Result /= Void
-		end
-
 	new_interval_as (l, u: ATOMIC_AS): INTERVAL_AS is
 			-- New INTERVAL AST node
 		require
@@ -1451,15 +1413,6 @@ feature -- Access
 			selecting_set: Result.selecting = s
 		end
 
-	new_pointer_type_as: POINTER_TYPE_AS is
-			-- New type AST node for "POINTER"
-		do
-			create Result
-			Result.initialize
-		ensure
-			type_as_not_void: Result /= Void
-		end
-
 	new_precursor_as (n: ID_AS; p: EIFFEL_LIST [EXPR_AS]): PRECURSOR_AS is
 			-- New PRECURSOR AST node
 		do
@@ -1481,7 +1434,6 @@ feature -- Access
 			feature_name_set: Result.feature_name = f
 			parameters_set: Result.parameters = p
 		end
-
 
 	new_prefix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is
 			-- New PREFIX AST node
@@ -1507,15 +1459,6 @@ feature -- Access
 		ensure
 			real_as_not_void: Result /= Void
 			value_set: Result.value = r
-		end
-
-	new_real_type_as: REAL_TYPE_AS is
-			-- New type AST node for "REAL"
-		do
-			create Result
-			Result.initialize
-		ensure
-			type_as_not_void: Result /= Void
 		end
 
 	new_rename_as (o, n: FEATURE_NAME): RENAME_AS is

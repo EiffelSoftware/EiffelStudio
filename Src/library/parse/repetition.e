@@ -110,7 +110,10 @@ feature {NONE} -- Implementation
 		local
 			n: CONSTRUCT
 		do
-			n := clone (production.first);
+			n := production.first
+			if n /= Void then
+				n := n.twin
+			end
 			field (n)
 		end; 
 

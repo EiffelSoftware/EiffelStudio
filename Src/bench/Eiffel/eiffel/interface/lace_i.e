@@ -11,7 +11,7 @@ inherit
 	COMPILER_EXPORTER;
 	SHARED_EIFFEL_PROJECT
 
-feature
+feature -- Access
 
 	file_name: STRING;
 			-- Path to the universe/system description
@@ -27,6 +27,18 @@ feature
 	old_universe: UNIVERSE_I;
 			-- Universe of the previous compilation
 			-- usefull for checking  the removed clusters
+
+    date_has_changed: BOOLEAN is
+        local
+            str: ANY;
+            new_date: INTEGER
+        do
+            str := file_name.to_c;
+            new_date := eif_date ($str);
+            Result := new_date /= date;
+        end;
+
+feature -- Status setting
 
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.

@@ -153,8 +153,11 @@ feature {NONE} -- Implementation
 			messages := er_w.text;
 			!! saved_msg.make (messages.count);
 			saved_msg.append (messages);
-			Window_manager.class_win_mgr.synchronize;
-			Window_manager.routine_win_mgr.synchronize;
+			if Window_manager.has_active_editor_tools then
+				Degree_output.put_string (l_Resynchronizing_tools);
+				Window_manager.class_win_mgr.synchronize;
+				Window_manager.routine_win_mgr.synchronize;
+			end;
 			if system_tool.realized and then system_tool.shown then
 				system_tool.set_default_format;
 				system_tool.synchronize
@@ -364,23 +367,23 @@ feature {NONE} -- Implementation; Execution
 								work (Current)
 							elseif f.exists and then not f.is_plain then
 								warner (popup_parent).custom_call (Current,
-								w_Not_a_file_retry (fn), " OK ", Void, "Cancel")
+								w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel)
 							else
 								warner (popup_parent).custom_call
 									(Current, w_Cannot_read_file_retry (fn),
-									" OK ", Void, "Cancel");
+									l_Ok, Void, l_Cancel);
 							end
 						else
 							warner (popup_parent).custom_call (Current,
-								w_Not_a_file_retry (fn), " OK ", Void, "Cancel")
+								w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel)
 						end
 					else
 						warner (popup_parent).custom_call (Current,
-							l_Specify_ace, l_Browse, l_Build, "Cancel");
+							l_Specify_ace, l_Browse, l_Build, l_Cancel);
 					end;
 				else
 					warner (popup_parent).custom_call (Void,
-						w_Melt_only, " OK ", Void, Void);
+						w_Melt_only, l_Ok, Void, Void);
 				end
 			end;
 		end;

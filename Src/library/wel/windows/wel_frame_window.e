@@ -175,8 +175,6 @@ feature {NONE} -- Implementation
 			-- `class_icon', `class_cursor', `class_background', and
 			-- `class_menu_name' are called before the registration
 			-- to set all the window class information.
-		local
-			wnd_class: WEL_WND_CLASS
 		do
 			create wnd_class.make (class_name)
 			if not wnd_class.registered then
@@ -197,6 +195,9 @@ feature {NONE} -- Implementation
 				wnd_class.register
 			end
 		end
+
+	wnd_class: WEL_WND_CLASS
+			-- Associated windows class of current window.
 
 end -- class FRAME_WINDOW
 

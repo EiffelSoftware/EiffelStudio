@@ -179,7 +179,8 @@ feature -- Basic operation
 	apply_bitmap is
 			-- Copy the bitmap-dc to the screen-dc.
 		do
-			if False then --| FIXME if on_screen then ...
+			if False then
+				--| FIXME if on_screen then ...
 				screen_dc.copy_dc (bitmap_dc, create {WEL_RECT}.make_window (screen_dc.window))
 			end
 		end
@@ -405,6 +406,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/19 06:57:54  manus
+--| fixed broken fixme
+--|
 --| Revision 1.16  2000/02/19 05:45:01  oconnor
 --| released
 --|

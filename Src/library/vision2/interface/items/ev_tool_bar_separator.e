@@ -20,18 +20,18 @@ inherit
 create
 	default_create
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_TOOL_BAR_SEPARATOR_I
-			-- Responsible for interaction with the native graphics toolkit.
-
-feature {NONE}
+feature {NONE} -- Initialization
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TOOL_BAR_SEPARATOR_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TOOL_BAR_SEPARATOR_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_TOOL_BAR_SEPARATOR
 
@@ -56,6 +56,9 @@ end -- class EV_TOOL_BAR_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/12 17:53:50  brendel
+--| Cosmetics.
+--|
 --| Revision 1.10  2000/04/07 22:15:41  brendel
 --| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
 --|

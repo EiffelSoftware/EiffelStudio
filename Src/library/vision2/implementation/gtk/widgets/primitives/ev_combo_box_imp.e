@@ -28,7 +28,6 @@ inherit
 			interface,
 			set_foreground_color,
 			foreground_color_pointer,
-			visual_widget,
 			set_text,
 			has_focus,
 			destroy,
@@ -54,7 +53,6 @@ inherit
 			interface,
 			set_foreground_color,
 			foreground_color_pointer,
-			visual_widget,
 			has_focus,
 			destroy,
 			on_item_clicked,
@@ -115,7 +113,7 @@ feature {NONE} -- Initialization
 			on_key_pressed_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_key_pressed_intermediary (c_object, ?, ?, ?)
 			on_item_clicked_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_item_clicked_intermediary (c_object)
 		end
-
+		
 	initialize is
 			-- Connect action sequences to signals.
 		do
@@ -317,11 +315,6 @@ feature {NONE} -- Implementation
 					avoid_callback := False
 				end
 			end
-		end
-
-	visual_widget: POINTER is
-		do
-			Result := c_object
 		end
 		
 	button_pressed: BOOLEAN

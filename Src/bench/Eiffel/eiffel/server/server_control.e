@@ -261,4 +261,23 @@ feature -- SERVER_FILE sizes
 			chunk_size := s
 		end
 
+feature -- Debug
+
+	trace is
+		local
+			file: SERVER_FILE
+		do
+			from
+				files.start
+			until
+				files.after
+			loop
+				file := files.item_for_iteration;
+				if file /= Void then
+					file.trace
+				end;
+				files.forth
+			end
+		end;
+
 end -- class SERVER_CONTROL

@@ -19,6 +19,6 @@ feature
 			!!Result.make;
 		end;
 
-	Size_limit: INTEGER is 500000;
+	Size_limit: INTEGER is 10;
 
 end

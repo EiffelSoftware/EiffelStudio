@@ -18,6 +18,6 @@ feature
 			!!Result.make
 		end;
 
-	Size_limit: INTEGER is 1000000;
+	Size_limit: INTEGER is 20;
 
 end

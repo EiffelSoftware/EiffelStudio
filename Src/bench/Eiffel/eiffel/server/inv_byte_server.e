@@ -63,6 +63,6 @@ feature
 			Result := server_has (an_id) or else Tmp_inv_byte_server.has (an_id);
 		end;
 
-	Size_limit: INTEGER is 50000;
+	Size_limit: INTEGER is 1;
 
 end

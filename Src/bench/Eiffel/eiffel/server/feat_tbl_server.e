@@ -51,6 +51,6 @@ feature
 			end; 
 		end;
 
-	Size_limit: INTEGER is 2000000;
+	Size_limit: INTEGER is 40;
 
 end

@@ -64,6 +64,6 @@ feature
 			Result := server_has (an_id) or else Tmp_rep_server.has (an_id);
 		end;
 
-	Size_limit: INTEGER is 750000;
+	Size_limit: INTEGER is 15;
 
 end

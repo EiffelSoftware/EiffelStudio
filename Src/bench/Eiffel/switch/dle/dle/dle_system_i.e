@@ -810,17 +810,17 @@ feature -- Generation
 				Cecil_file.putstring ("struct ctable *cecil_tab;")
 				Cecil_file.new_line
 				Cecil_file.new_line
-				Cecil_file.putstring ("ce_rname = (struct ctable *)cmalloc(")
+				Cecil_file.putstring ("egc_ce_rname = (struct ctable *)cmalloc(")
 				Cecil_file.putint (Type_id_counter.value)
 				Cecil_file.putstring (" * sizeof(struct ctable));")
 				Cecil_file.new_line
-				Cecil_file.putstring ("if (ce_rname == (struct ctable *) 0)")
+				Cecil_file.putstring ("if (egc_ce_rname == (struct ctable *) 0)")
 				Cecil_file.new_line
 				Cecil_file.indent
 				Cecil_file.putstring ("enomem();")
 				Cecil_file.new_line
 				Cecil_file.exdent
-				Cecil_file.putstring ("bcopy(fce_rname, ce_rname, ")
+				Cecil_file.putstring ("bcopy(fce_rname, egc_ce_rname, ")
 				Cecil_file.putint (min_type_id - 1)
 				Cecil_file.putstring (" * sizeof(struct ctable));")
 				Cecil_file.new_line
@@ -856,9 +856,9 @@ end
 				Cecil_file.putchar ('{')
 				Cecil_file.new_line
 				Cecil_file.indent
-				Cecil_file.putstring ("xfree(ce_rname);")
+				Cecil_file.putstring ("xfree(egc_ce_rname);")
 				Cecil_file.new_line
-				Cecil_file.putstring ("ce_rname = fce_rname;")
+				Cecil_file.putstring ("egc_ce_rname = fce_rname;")
 				Cecil_file.new_line
 			end
 			Cecil_file.exdent
@@ -1146,7 +1146,7 @@ end
 				file.indent
 				file.putstring ("enomem();%N")
 				file.exdent
-				file.putstring ("bcopy(fsize, esize, ")
+				file.putstring ("bcopy(egc_fsize, esize, ")
 				file.putint (min_type_id - 1)
 				file.putstring (" * sizeof(long));%N")
 			until
@@ -1175,7 +1175,7 @@ end
 			file.indent
 			file.putstring ("xfree(esize);")
 			file.new_line
-			file.putstring ("esize = fsize;")
+			file.putstring ("esize = egc_fsize;")
 			file.new_line
 			file.exdent
 			file.putchar ('}')
@@ -1213,7 +1213,7 @@ end
 				Reference_file.putstring ("enomem();")
 				Reference_file.new_line
 				Reference_file.exdent
-				Reference_file.putstring ("bcopy(fnbref, nbref, ")
+				Reference_file.putstring ("bcopy(egc_fnbref, nbref, ")
 				Reference_file.putint (min_type_id - 1)
 				Reference_file.putstring (" * sizeof(long));")
 				Reference_file.new_line
@@ -1247,7 +1247,7 @@ end
 			Reference_file.indent
 			Reference_file.putstring ("xfree(nbref);")
 			Reference_file.new_line
-			Reference_file.putstring ("nbref = fnbref;")
+			Reference_file.putstring ("nbref = egc_fnbref;")
 			Reference_file.new_line
 			Reference_file.exdent
 			Reference_file.putchar ('}')
@@ -1292,12 +1292,12 @@ end
 				Plug_file.new_line
 				Plug_file.indent
 					-- Initialization routines
-				Plug_file.putstring ("ecreate = ")
+				Plug_file.putstring ("egc_ecreate = ")
 				Plug_file.putstring (init_name)
 				Plug_file.putchar (';')
 				Plug_file.new_line
 					-- Dispose routines
-				Plug_file.putstring ("edispose = (void (**)()) ")
+				Plug_file.putstring ("egc_edispose = (void (**)()) ")
 				Plug_file.putstring (dispose_name)
 				Plug_file.putchar (';')
 				Plug_file.new_line

@@ -416,6 +416,16 @@ feature {NONE} -- GTK C functions for list
 			"C | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_list_insert_item (list, item: POINTER; position: INTEGER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_list_remove_item (list, item: POINTER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 	gtk_list_child_position (list: POINTER; child: POINTER): INTEGER is
 		external
 			"C | %"gtk_eiffel.h%""
@@ -533,6 +543,18 @@ feature {NONE} -- GTK C functions for pixmaps
         end
 
 	c_gtk_pixmap_height (pixmap: POINTER): INTEGER is
+        external "C | %"gtk_eiffel.h%""
+        end
+
+	c_gtk_pixmap_gdk_unref (pixmap: POINTER) is
+        external "C | %"gtk_eiffel.h%""
+        end
+
+	c_gtk_pixmap_create_empty (parent: POINTER): POINTER is
+		external "C | %"gtk_eiffel.h%""
+        end
+
+	c_gtk_pixmap_set_from_pixmap (pixmapDest, pixmapSource: POINTER) is
         external "C | %"gtk_eiffel.h%""
         end
 

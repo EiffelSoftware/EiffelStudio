@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	PROJECT_WIZARD_SHARED
+	WIZARD_PROJECT_SHARED
 
 feature -- Shared variables
 	

@@ -721,7 +721,7 @@ feature {NONE} -- Implementation
 				standard_path.extend (last_path)
 			end
 			create fd
-			set_dialog_filters_and_add_all (fd, <<text_files_description>>)
+			set_dialog_filters_and_add_all (fd, <<Text_files_filter>>)
 			fd.set_start_directory (standard_path)
 				--| We try to find a file_name that does not exist.
 			create fn.make

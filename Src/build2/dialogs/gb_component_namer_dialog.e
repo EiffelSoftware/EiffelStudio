@@ -9,39 +9,53 @@ class
 
 inherit
 	EV_DIALOG
+		export
+			{NONE} all
+			{ANY} show_modal_to_window
 		redefine
 			initialize
 		end
 		
 	EV_LAYOUT_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 		
 	GB_NAMING_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 
 create
 	default_create,
-	make_with_names
+	make_with_names_and_prompts
 
 feature -- Initialization
-
-	make_with_names (names: ARRAYED_LIST [STRING]) is
-			-- Create `Current' and assign `names' to `all_exisiting_names'.
+		
+	make_with_names_and_prompts (names: ARRAYED_LIST [STRING]; an_initial_text, a_title, an_invalid_message: STRING) is
+			-- Create `Current' and assign `names' to `all_existing_names' which will be non permitted values for entry.
+			-- Display `a_title' as title of `Current', use `an_intial_text' as initial text in text field. `an_invalid_message'
+			-- will be displayed when the entry is not permitted.
 		do
 			default_create
 			all_existing_names := names
 			all_existing_names.compare_objects
-			name_field.set_text (unique_name (names, "Component"))
+			name_field.set_text (unique_name (names, an_initial_text))
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
+			set_title (a_title)
+			initial_text := an_initial_text
+			invalid_message := an_invalid_message
 		end
-	
-
+		
 	initialize is
 			-- Initialize `Current'.
 		local
@@ -50,7 +64,6 @@ feature -- Initialization
 			accept_button, cancel_button: EV_BUTTON
 		do
 			Precursor {EV_DIALOG}
-			set_title ("New component namer")
 			create name_field
 			create accept_button.make_with_text ("OK")
 			create cancel_button.make_with_text ("Cancel")
@@ -81,10 +94,15 @@ feature -- Initialization
 		end
 		
 	name: STRING
-		-- The name currently  
+		-- The name currently represented by `Current'.
 		
 feature {NONE} -- Implementation
-	
+
+	initial_text: STRING
+		-- Text displayed at start.
+		
+	invalid_message: STRING
+		-- Message displayed if `text' not valid.
 	
 	hide_and_set is
 			-- Hide `Current' and set `name'.
@@ -98,14 +116,14 @@ feature {NONE} -- Implementation
 				temp_string := name_field.text
 				temp_string.to_lower
 				if all_existing_names.has (temp_string) then
-					create warning.make_with_text ("'" + name_field.text + "'" + Component_identical_name_warning)
+					create warning.make_with_text ("'" + name_field.text + "'" + invalid_message)--Component_identical_name_warning)
 					warning.show_modal_to_window (Current)
 				else
 					hide
 					name := name_field.text
 				end
 			else
-				create warning.make_with_text ("'" + name_field.text + "'" + Component_invalid_name_warning)
+				create warning.make_with_text ("'" + name_field.text + "'" + invalid_message)--Component_invalid_name_warning)
 				warning.show_modal_to_window (Current)
 			end
 		end

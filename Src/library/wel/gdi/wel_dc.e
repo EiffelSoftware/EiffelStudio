@@ -414,8 +414,6 @@ feature -- Status report
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
-		
 
 	device_caps (capability: INTEGER): INTEGER is
 			-- Give device-specific information about
@@ -2385,13 +2383,6 @@ feature {NONE} -- Externals
 		alias
 			"GetDIBits"
 		end
-		
-	cwel_get_char_abc_widths (hdc: POINTER; first, last: INTEGER; array: POINTER) is
-		external
-			"C [macro <wingdi.h>] (HDC, UINT, UINT, LPABC)"
-		alias
-			"GetCharABCWidths"
-		end
 
 	Opaque: INTEGER is
 		external
@@ -2460,6 +2451,13 @@ feature {WEL_FONT} -- Externals
 			"C [macro <windows.h>] (HDC, LPCSTR, int, LPRECT, UINT): int"
 		alias
 			"DrawText"
+		end
+		
+	cwel_get_char_abc_widths (hdc: POINTER; first, last: INTEGER; array: POINTER) is
+		external
+			"C [macro <wingdi.h>] (HDC, UINT, UINT, LPABC)"
+		alias
+			"GetCharABCWidths"
 		end
 
 invariant

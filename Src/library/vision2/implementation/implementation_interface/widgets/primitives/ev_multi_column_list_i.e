@@ -1,9 +1,8 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision multi-column-list, implementation interface."
+		"Eiffel Vision multi column list. Implementation interface."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +24,6 @@ feature -- Access
 
 	columns: INTEGER is
 			-- Number of columns in the list.
-		require
 		deferred
 		end
 
@@ -43,7 +41,11 @@ feature -- Access
 			-- element which is `selected_item'. Therefore, one
 			-- should use `selected_item' rather than 
 			-- `selected_items' for a single selection list
-		require
+		deferred
+		end
+
+	row_height: INTEGER is
+			-- Height in pixels of each row.
 		deferred
 		end
 
@@ -51,21 +53,18 @@ feature -- Status report
 
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
-		require
 		deferred
 		end
 
 	multiple_selection_enabled: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
-		require
 		deferred
 		end
 
 	title_shown: BOOLEAN is
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
-		require
 		deferred
 		end
 
@@ -112,32 +111,26 @@ feature -- Status setting
 
 	clear_selection is
 			-- Clear the selection of the list.
-		require
 		deferred
 		end
 
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
-
-		require
 		deferred	
 		end
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
-		require
 		deferred
 		end
 
 	show_title_row is
 			-- Show the row of the titles.
-		require
 		deferred
 		end
 
 	hide_title_row is
 			-- Hide the row of the titles.
-		require
 		deferred
 		end
 
@@ -214,7 +207,6 @@ feature -- Element change
 
 	set_rows_height (value: INTEGER) is
 			-- Make`value' the new height of all the rows.
-		require
 		deferred
 		end
 
@@ -250,6 +242,10 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/24 01:36:21  brendel
+--| Added row_height.
+--| Formatting.
+--|
 --| Revision 1.32  2000/03/03 21:20:02  king
 --| Added valid_width precond to set_column_width
 --|

@@ -26,7 +26,7 @@ feature -- Initialization
 			v1: EV_VERTICAL_BOX
 		do
 				default_create
---				disable_user_resize
+				disable_user_resize
 				set_size (500,386)
 				Create wizard_page
 				Create v1

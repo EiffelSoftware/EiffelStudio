@@ -894,7 +894,6 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 		local
 			env: EV_ENVIRONMENT
 			local_parent_object: GB_OBJECT
---			a_component: GB_COMPONENT
 			new_short_type, new_type: STRING
 			funct_result: BOOLEAN
 			color_stone: GB_COLOR_STONE
@@ -979,7 +978,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 					Result := False
 				end
 				if Result then
-					status_bar_label.remove_text
+					clear_status_bar
 				end
 			end
 		end

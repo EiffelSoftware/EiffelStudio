@@ -38,7 +38,7 @@ default
 cluster
 	all build2:		"$EIFFEL_SRC/build2"
 		exclude
-			"object_editor"; "EIFGEN"; "templates"; "Windows"; "WEL"; "hact"; "se"; "ve"; "base"; "test"; "CVS"
+			"object_editor"; "EIFGEN"; "templates"; "Windows"; "WEL"; "hact"; "se"; "ve"; "base"; "test"; "CVS"; "demo_version";
 		end
 
 	all gel:		"$EIFFEL_SRC/library/gel"

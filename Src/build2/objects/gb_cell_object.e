@@ -10,7 +10,7 @@ class
 inherit
 	GB_OBJECT
 		redefine
-			object, display_object, is_full
+			object, display_object, is_full, build_display_object
 		end
 		
 	GB_PARENT_OBJECT

@@ -48,6 +48,8 @@ feature -- Access
 
 	insert_item (item_imp: ev_item_imp; pos: INTEGER) is
 		deferred
+		ensure
+			item_on_pos_is_item_imp: ev_children.i_th (pos).is_equal (item_imp)
 		end
 
 	remove_item (item_imp: ev_item_imp) is
@@ -233,6 +235,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/22 20:15:37  brendel
+--| Added postcondition for insert_item.
+--|
 --| Revision 1.18  2000/02/19 06:59:04  manus
 --| released
 --|

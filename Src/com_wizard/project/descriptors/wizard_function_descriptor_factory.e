@@ -53,6 +53,7 @@ feature -- Basic operations
 			tmp_guid: ECOM_GUID
 			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			a_count: INTEGER
+			tmp_string: STRING
 		do
 			member_id := a_func_desc.member_id
 			description := a_type_info.documentation (member_id).doc_string
@@ -77,7 +78,9 @@ feature -- Basic operations
 				name.append ("_")
 				name.append_integer (member_id)
 			end
-			if eiffel_key_words.has (name) then
+			tmp_string := clone (name)
+			tmp_string.to_lower
+			if eiffel_key_words.has (tmp_string) then
 				name.append (One)
 			end
 			eiffel_name := name_for_feature (name)

@@ -9,6 +9,22 @@
 	<BODY>
 		<H1>What's new in EiffelStudio 5.3</H1>
 		<h2>Graphical environment</h2>
+		<h3>Changes</h3>
+		<ul>
+          <li>In project settings, we now accept a root class without creation 
+          procedure.</li>
+        </ul>
+		<h3>Bug fixes</h3>
+		<ul>
+          <li>Fixed issue with setting of arguments. After restarting 
+          EiffelStudio the command line argument contains an extra `]' 
+          character.</li>
+          <li>Fixed issue with working directories where only the first one ever 
+          set was used even if new ones have been set afterwards.</li>
+          <li>Fixed issue where generating documentation for all/library cluster 
+          would stop during generation without completing.</li>
+          <li>Fixed resource leak on Windows 98 and Windows Me.</li>
+        </ul>
 		<h2>Compiler</h2>
         <ul>
           <li>Click
@@ -24,7 +40,45 @@
           <span class="efeature">type_name</span> and <span class="efeature">type_name_of_type</span>.<li>
           Added <span class="efeature">truncated_to_integer_64</span> in <span class="eclass">REAL</span> and <span class="eclass">DOUBLE</span>.
           <li>Added 
-          <span class="efeature">to_integer_64</span> in <span class="eclass">STRING</span>.<li>&nbsp;</ul>
+          <span class="efeature">to_integer_64</span> in <span class="eclass">STRING</span>.<li>
+          Added new classes <span class="eclass">MEMORY_STRUCTURE</span>, <span class="eclass">MANAGED_POINTER</span> and
+          <span class="eclass">C_STRING</span> to better manage access to C and 
+          C++ memory structure.<li>
+          Fixed incorrect implementation of <span class="efeature">area</span> and <span class="efeature">substring</span> for 
+          <span class="eclass">STRING</span> in dotnet mode.<li>
+          Fixed bug in <span class="efeature">copy</span> from <span class="eclass">STRING</span> where following code was violating `valid_count' 
+          invariant from <span class="eclass">STRING</span>:
+          <pre><span class="ekeyword">local</span>
+	s, t: <span class="eclass">STRING</span>
+<span class="ekeyword">do</span>
+	<span class="ekeyword">create</span> s.<span class="efeature">make</span> (9)
+	<span class="ekeyword">create</span> t.<span class="efeature">make</span> (10)
+	t.<span class="efeature">append</span> (&quot;1234567890&quot;)
+	s.<span class="efeature">copy</span> (t)
+<span class="ekeyword">end</span></pre>
+          <li>
+          &nbsp;</ul>
+        <h3>Eiffel2Java</h3>
+        <ul>
+          <li>Update library so that it works both in classic and dotnet mode.</li>
+        </ul>
+        <h3>EiffelNet</h3>
+        <ul>
+          <li>Fixed assertion violation of call to <span class="efeature">to_integer</span> in feature <span class="efeature">get_content_length</span> from <span class="eclass">HTTP_PROTOCOL</span> 
+          if assertions are enabled on EiffelBase.</li>
+        </ul>
+        <h3>EiffelVision2</h3>
+        <ul>
+          <li>
+          <a href="../../../../libraries/vision2/content/0-_revisions/index.html">
+          Click here to see list of update and modification to EiffelVision2</a>.</li>
+        </ul>
+        <h3>WEL</h3>
+        <ul>
+          <li>Removed inheritance to <span class="eclass">WEL_STRUCTURE</span> in <span class="eclass">WEL_STRING</span>, it now 
+          inherits from new <span class="eclass">C_STRING</span> class.</li>
+        </ul>
+        <p>&nbsp;</p>
         <p><a href="Eiffel52.html">Click here to check out what was new in 
         Eiffel 5.2</a></p>
         <p><a href="Eiffel51.html">Click here to check out what was new in 

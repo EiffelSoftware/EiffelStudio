@@ -426,6 +426,7 @@ feature -- Output
 		do
 			if drawing.is_drawable then
 				create lint.make
+				lint.get_drawing_attributes (drawing)
 				set_drawing_attributes (drawing)
 --				drawing.set_drawing_font (font)
 				drawing.draw_text (base_left,text) 

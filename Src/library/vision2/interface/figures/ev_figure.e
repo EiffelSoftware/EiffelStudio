@@ -106,7 +106,7 @@ feature -- Status setting
 			set_value_modified (False)
 		end
 
-feature-- Element change
+feature -- Element change
 
 	set_figure (f: EV_FIGURE) is
 		do
@@ -115,7 +115,7 @@ feature-- Element change
 			end
 		end
 
-	attach_drawing (a_drawing: EV_DRAWABLE) is
+	attach_drawing (a_drawing: like drawing) is
 			-- Attach a drawing to the figure
 		do
 			drawing := a_drawing

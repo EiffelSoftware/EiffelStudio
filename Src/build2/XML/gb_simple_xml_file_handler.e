@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that can generate/retrieve simple xml files%
-		%i.e. one level deep."
+		%i.e. one level deep. The format must be a valid build format."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ inherit
 	GB_XML_UTILITIES
 	
 	TOE_TREE_FACTORY
+	
+	GB_ACCESSIBLE_SYSTEM_STATUS
 	
 feature -- Basic operations
 
@@ -66,12 +68,35 @@ feature -- Basic operations
 		end
 		
 	load_file (file_name: STRING): ARRAYED_LIST [TUPLE [STRING, STRING]] is
-			-- Load file `file_name. `Resut' contains the 
+			-- Load file `file_name. `Result' contains the 
 			-- information contained in the file.
+		local
+			file: RAW_FILE
+			buffer: STRING
 		do
-			parser := create_tree_parser
-			Result := load_and_parse_xml_file (file_name)
+				-- We now load the first 54 characters from the file, and
+				-- check if they are what we expect a valid build file to hold.
+				-- If not, then raise an error.
+				-- 54 is completely arbitary, but enough to validate.
+			create file.make_open_read (file_name)
+			create buffer.make (file.count) 
+			file.start
+			file.read_stream (file.count)
+			file.close
+			buffer := file.last_string
+			if buffer.count < 54 or (buffer.substring (1, 54).is_equal (xml_format + "<Project_setting")) then
+				parser := create_tree_parser
+				Result := load_and_parse_xml_file (file_name)
+					-- Assign `True' to `last_load_successful' so it can be queried
+					-- externally.
+				last_load_successful := True
+			else
+				show_warning_dialog
+			end
 		end
+		
+	last_load_successful: BOOLEAN
+		-- Was the last call to `load file' successful?
 		
 feature {NONE} -- Implementation
 
@@ -138,6 +163,17 @@ feature {NONE} -- Implementation
 			parser.parse_from_string (buffer)
 			parser.set_end_of_document
 		end
-
+		
+	show_warning_dialog is
+			-- Show a warning with notification that the file
+			-- was not a valid build file.
+		local
+			dialog: EV_WARNING_DIALOG
+		do
+			last_load_successful := False
+			create dialog.make_with_text (Invalid_project_warning)
+			dialog.show_modal_to_window (system_status.main_window)
+		end
+		
 
 end -- class GB_SIMPLE_XML_FILE_HANDLER

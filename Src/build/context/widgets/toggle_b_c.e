@@ -10,13 +10,14 @@ inherit
 			set_size as old_set_size
 		redefine
 			stored_node, widget, is_able_to_be_grouped, 
-			add_to_option_list, is_valid_parent
+			add_to_option_list, is_valid_parent,
+			update_visual_name_in_editor
 		end
 	BUTTON_C
 		redefine
 			stored_node, widget, is_able_to_be_grouped, 
 			add_to_option_list, context_initialization,
-			is_valid_parent, set_size
+			is_valid_parent, set_size, update_visual_name_in_editor
 		select
 			context_initialization, set_size
 		end
@@ -55,6 +56,17 @@ feature
 						Context_const.Geometry_format_nbr);
 			opt_list.put (Context_const.toggle_att_form_nbr,
 						Context_const.Attribute_format_nbr);
+		end;
+
+	update_visual_name_in_editor is
+		local
+			editor: CONTEXT_EDITOR
+		do
+			editor := context_catalog.editor (Current,
+					Context_const.toggle_att_form_nbr);
+			if editor /= Void then
+				editor.reset_current_form
+			end;
 		end;
 
 	is_valid_parent (parent_context: COMPOSITE_C): BOOLEAN is
@@ -103,9 +115,12 @@ feature
 			group_comp: GROUP_COMPOSITE_C
 		do
 			old_set_size (new_w, new_h)
-			group_comp ?= parent
-			if group_comp /= Void then
-				group_comp.update_form_for_all_children (Context_const.geometry_form_nbr)
+				-- Not while retrieving
+			if retrieved_node = Void then
+				group_comp ?= parent
+				if group_comp /= Void then
+					group_comp.update_form_for_all_children (Context_const.geometry_form_nbr)
+				end
 			end
 		end;
 

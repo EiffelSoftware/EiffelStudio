@@ -54,12 +54,12 @@ feature {NONE} -- initalization
 			l_culture_sd: ID_SD
 			l_public_key_token_sd: ID_SD
 		do
-			l_cluster_name_sd := new_id_sd(a_cluster_name, false)
-			l_name_sd := new_id_sd(a_name, true)
+			l_cluster_name_sd := new_id_sd(a_cluster_name, True)
+			l_name_sd := new_id_sd(a_name, True)
 			
-			l_version_sd := new_id_sd(a_version, true)
-			l_culture_sd := new_id_sd(a_culture, true)	
-			l_public_key_token_sd := new_id_sd(a_public_key_token, true)	
+			l_version_sd := new_id_sd(a_version, True)
+			l_culture_sd := new_id_sd(a_culture, True)	
+			l_public_key_token_sd := new_id_sd(a_public_key_token, True)	
 		
 			create assembly_sd.initialize (l_cluster_name_sd, l_name_sd, Void, l_version_sd, l_culture_sd, l_public_key_token_sd)
 			is_local := False

@@ -123,5 +123,12 @@ feature {NONE}
 	Bc_end_eval_old:	CHARACTER is '%/115/';
 	Bc_start_eval_old:	CHARACTER is '%/116/';
 	Bc_object_addr:		CHARACTER is '%/117/';
+	Bc_pfeature:		CHARACTER is '%/118/';
+	Bc_pfeature_inv:	CHARACTER is '%/119/';
+	Bc_pextern:			CHARACTER is '%/120/';
+	Bc_pextern_inv:		CHARACTER is '%/121/';
+	Bc_parray:			CHARACTER is '%/122/';
+	Bc_pattribute:		CHARACTER is '%/123/';
+	Bc_pattribute_inv:	CHARACTER is '%/124/';
 
 end

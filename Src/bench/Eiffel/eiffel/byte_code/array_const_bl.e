@@ -277,16 +277,30 @@ feature {NONE} -- C code generation
 		local
 			f_table: FEATURE_TABLE;
 			feat_i: FEATURE_I;
-			feat_id: INTEGER;
+			r_id: INTEGER;
+			rout_info: ROUT_INFO;
+			base_class: CLASS_C
 		do
-			f_table := real_ty.base_class.feature_table;
+			base_class := real_ty.base_class;
+			f_table := base_class.feature_table;
 			feat_i := f_table.item ("make");
-			feat_id := feat_i.feature_id;
 			generated_file.putstring ("((void (*)())");
-			generated_file.putstring (" RTWF(");
-			generated_file.putint (real_ty.associated_class_type.id - 1);
-			generated_file.putstring (gc_comma);
-			generated_file.putint (feat_id);
+			if 
+				Compilation_modes.is_precompiling or
+				base_class.is_precompiled
+			then
+				generated_file.putstring ("RTWPF(");
+				r_id := feat_i.rout_id_set.first;
+				rout_info := System.rout_info_table.item (r_id);
+				generated_file.putint (rout_info.origin);
+				generated_file.putstring (gc_comma);
+				generated_file.putint (rout_info.offset);
+			else
+				generated_file.putstring (" RTWF(");
+				generated_file.putint (real_ty.associated_class_type.id - 1);
+				generated_file.putstring (gc_comma);
+				generated_file.putint (feat_i.feature_id);
+			end;
 			generated_file.putstring (gc_comma);
 			generated_file.putstring (gc_upper_dtype_lparan);
 			print_register;

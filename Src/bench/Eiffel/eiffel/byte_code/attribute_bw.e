@@ -37,7 +37,10 @@ feature
 		local
 			is_nested: BOOLEAN;
 			type_i: TYPE_i;
-			type_c: TYPE_C
+			type_c: TYPE_C;
+			r_id: INTEGER;
+			rout_info: ROUT_INFO;
+			base_class: CLASS_C
 		do
 			is_nested := not is_first;
 			type_i := real_type (type);
@@ -57,14 +60,32 @@ feature
 				generated_file.new_line;
 				generated_file.indent;
 			end;
-			if is_nested then
-				generated_file.putstring ("RTVA(");
+			base_class := typ.base_class;
+			if
+				Compilation_modes.is_precompiling or
+				base_class.is_precompiled
+			then
+				if is_nested then
+					generated_file.putstring ("RTVPA(");
+				else
+					generated_file.putstring ("RTWPA(");
+				end;
+				r_id := -base_class.feature_table.item
+					(attribute_name).rout_id_set.first;
+				rout_info := System.rout_info_table.item (r_id);
+				generated_file.putint (rout_info.origin);
+				generated_file.putstring (gc_comma);
+				generated_file.putint (rout_info.offset)
 			else
-				generated_file.putstring ("RTWA(");
+				if is_nested then
+					generated_file.putstring ("RTVA(");
+				else
+					generated_file.putstring ("RTWA(");
+				end;
+				generated_file.putint (typ.associated_class_type.id - 1);
+				generated_file.putstring (gc_comma);
+				generated_file.putint (real_feature_id);
 			end;
-			generated_file.putint (typ.associated_class_type.id - 1);
-			generated_file.putstring (gc_comma);
-			generated_file.putint (real_feature_id);
 			generated_file.putstring (gc_comma);
 			if is_nested then
 				generated_file.putchar ('"');

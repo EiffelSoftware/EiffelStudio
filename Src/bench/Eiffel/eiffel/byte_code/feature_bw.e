@@ -70,19 +70,40 @@ feature
 			-- Generate feature call in a `typ' context
 		local
 			is_nested: BOOLEAN;
+			r_id: INTEGER;
+			rout_info: ROUT_INFO;
+			base_class: CLASS_C
 		do
 			is_nested := not is_first;
 
 			generated_file.putchar ('(');
 			real_type (type).c_type.generate_function_cast (generated_file);
-			if is_nested and need_invariant then
-				generated_file.putstring ("RTVF(");
+			base_class := typ.base_class;
+			if 
+				Compilation_modes.is_precompiling or
+				base_class.is_precompiled
+			then
+				if is_nested and need_invariant then
+					generated_file.putstring ("RTVPF(");
+				else
+					generated_file.putstring ("RTWPF(");
+				end;
+				r_id := base_class.feature_table.item
+					(feature_name).rout_id_set.first;
+				rout_info := System.rout_info_table.item (r_id);
+				generated_file.putint (rout_info.origin);
+				generated_file.putstring (gc_comma);
+				generated_file.putint (rout_info.offset);
 			else
-				generated_file.putstring ("RTWF(");
+				if is_nested and need_invariant then
+					generated_file.putstring ("RTVF(");
+				else
+					generated_file.putstring ("RTWF(");
+				end;
+				generated_file.putint (typ.associated_class_type.id - 1);
+				generated_file.putstring (gc_comma);
+				generated_file.putint (real_feature_id);
 			end;
-			generated_file.putint (typ.associated_class_type.id - 1);
-			generated_file.putstring (gc_comma);
-			generated_file.putint (real_feature_id);
 			generated_file.putstring (gc_comma);
 			if not is_nested then
 				context.generate_current_dtype;

@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 			id := an_id
 			create scroll_info_struct.make
 			set_line (Default_line_value)
-			set_page (Default_page_value)
 		ensure
 			parent_set: parent = a_parent
 			exists: exists
@@ -64,7 +63,6 @@ feature {NONE} -- Initialization
 			create scroll_info_struct.make
 			is_horizontal := True
 			set_line (Default_line_value)
-			set_page (Default_page_value)
 		ensure
 			parent_set: parent = a_parent
 			exists: exists
@@ -174,31 +172,36 @@ feature -- Basic operations
 		require
 			exists: exists
 		local
-			new_pos: INTEGER
+			old_pos, new_pos: INTEGER
+			min, max, p: INTEGER
 		do
-			new_pos := position
+			old_pos := position
+			p := page
+			min := minimum
+			max := maximum
 			if scroll_code = Sb_pagedown then
-				new_pos := new_pos + page
+				new_pos := old_pos + page
 			elseif scroll_code = Sb_pageup then
-				new_pos := new_pos - page
+				new_pos := old_pos - page
 			elseif scroll_code = Sb_linedown then
-				new_pos := new_pos + line
+				new_pos := old_pos + line
 			elseif scroll_code = Sb_lineup then
-				new_pos := new_pos - line
+				new_pos := old_pos - line
 			elseif scroll_code = Sb_thumbposition then
 				new_pos := pos
 			elseif scroll_code = Sb_thumbtrack then
 				new_pos := pos
 			elseif scroll_code = Sb_top then
-				new_pos := minimum
+				new_pos := min
 			elseif scroll_code = Sb_bottom then
-				new_pos := maximum
+				new_pos := max - p + 1
 			end
-			if new_pos > maximum then
-				new_pos := maximum
-			elseif new_pos < minimum then
-				new_pos := minimum
+			if new_pos > max - p + 1 then
+				new_pos := max - p + 1
+			elseif new_pos < min then
+				new_pos := min
 			end
+
 			set_position (new_pos)
 		end
 
@@ -221,9 +224,6 @@ feature {NONE} -- Implementation
 
 	Default_line_value: INTEGER is 1
 			-- Default scroll units per line
-
-	Default_page_value: INTEGER is 20
-			-- Default scroll units per page
 
 	class_name: STRING is
 			-- Window class name to create

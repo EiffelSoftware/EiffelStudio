@@ -21,32 +21,44 @@ creation
 
 feature -- Initialization
 
-	make_flat (f_name: like filter_name) is
+	make_flat (f_name: like filter_name; a_window: like generate_window) is
 			-- Initialize document generation to flat.
+		require
+			valid_window: a_window /= Void
 		do
 			format_type := flat_type;
 			filter_name := f_name;
+			generate_window := a_window
 		end;
 
-	make_flat_short (f_name: like filter_name) is
+	make_flat_short (f_name: like filter_name; a_window: like generate_window) is
 			-- Initialize document generation to flat_short.
+		require
+			valid_window: a_window /= Void
 		do
 			format_type := flat_short_type;
-			filter_name := f_name
+			filter_name := f_name;
+			generate_window := a_window
 		end;
 
-	make_text (f_name: like filter_name) is
+	make_text (f_name: like filter_name; a_window: like generate_window) is
 			-- Initialize document generation to text.
+		require
+			valid_window: a_window /= Void
 		do
 			format_type := text_type;
-			filter_name := f_name
+			filter_name := f_name;
+			generate_window := a_window
 		end;
 
-	make_short (f_name: like filter_name) is
+	make_short (f_name: like filter_name; a_window: like generate_window) is
 			-- Initialize document generation to text.
+		require
+			valid_window: a_window /= Void
 		do
 			format_type := short_type;
-			filter_name := f_name
+			filter_name := f_name;
+			generate_window := a_window
 		end;
 
 feature -- Status report
@@ -56,6 +68,9 @@ feature -- Status report
 
 	feature_clause_order: ARRAY [STRING]
 			-- Array of orderd feature clause comments
+
+	generate_window: DEGREE_OUTPUT
+			-- Generate window
 
 feature -- Status setting
 
@@ -186,7 +201,7 @@ feature -- Execution
 					type := "short"
 				end
 				if not list.empty then
-					d_output := Degree_output;
+					d_output := generate_window;
 					d_output.put_start_documentation (list.count, type);
 					from 
 						list.start 

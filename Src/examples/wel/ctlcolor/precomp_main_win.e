@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 
 	background_brush: WEL_BRUSH is
 			-- background color
-		once
+		do
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 

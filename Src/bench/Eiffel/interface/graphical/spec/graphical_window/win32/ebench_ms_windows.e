@@ -9,13 +9,26 @@ class
 inherit
 	MS_WINDOWS
 		redefine
-			message_loop
+			message_loop, make
 		end
 
 creation
 	make
 
-feature
+feature -- Initialization
+
+	make (application_class: STRING) is
+			-- We create the toolkit and get the list of all the windows.
+		local
+			wel_window_manager: WEL_WINDOW_MANAGER
+		do
+			{MS_WINDOWS} precursor (application_class)
+
+			!! wel_window_manager
+			windows := wel_window_manager.windows
+		end
+
+feature -- Process message event
 
 	message_loop is
 			-- Windows message loop
@@ -24,7 +37,6 @@ feature
 			accel: WEL_ACCELERATORS
 			main_w: WEL_WINDOW
 			current_window: WEL_WINDOW
-			wel_window_manager: WEL_WINDOW_MANAGER
 			done: BOOLEAN
 			dlg: POINTER
 			hwnd: POINTER
@@ -33,7 +45,6 @@ feature
 				accel := accelerators
 				main_w := application_main_window
 				!! msg.make
-				!! wel_window_manager
 			until
 				done
 			loop
@@ -42,13 +53,8 @@ feature
 					if msg.quit then
 						done := True
 					else
-						hwnd := msg.hwnd
-						current_window := wel_window_manager.windows.item (hwnd)
-						if current_window /= Void then
-							hwnd := find_top_parent (current_window).item
-						else
-							hwnd := main_window.wel_item
-						end
+						current_window := find_current_window (msg.hwnd, main_w) 
+						hwnd := current_window.item
 						dlg := cwin_get_last_active_popup (hwnd)
 						if dlg /= hwnd or is_dialog then
 							msg.process_dialog_message (dlg)
@@ -58,18 +64,9 @@ feature
 							end
 						else
 							if accel.exists then
-								hwnd := msg.hwnd
-								current_window := wel_window_manager.windows.item (hwnd)
-								if current_window /= Void then
-									msg.translate_accelerator (find_top_parent (current_window), accel)
-								else
-									msg.translate_accelerator (main_w, accel)
-								end
+								msg.translate_accelerator (current_window, accel)
 							end
-							if
-								not msg.last_boolean_result or else
-								not accel.exists
-							then
+							if not msg.last_boolean_result or else not accel.exists then
 								msg.translate
 								msg.dispatch
 							end
@@ -85,9 +82,20 @@ feature
 			end
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
+
+	find_current_window (hwnd: POINTER; main_w: WEL_WINDOW): WEL_WINDOW is
+		do
+			Result := windows.item (hwnd)
+			if Result  /= Void then
+				Result := find_top_parent (Result)
+			else
+				Result := main_w
+			end
+		end
 
 	find_top_parent (a_window: WEL_WINDOW): WEL_WINDOW is
+			-- Give the TOP_SHELL_WINDOW corresponding to `a_window'.
 		require
 			a_window_not_void: a_window /= Void
 		local
@@ -105,6 +113,11 @@ feature {NONE}
 				end
 			end
 		end
+
+feature {NONE} -- Access
+
+	windows: HASH_TABLE [WEL_WINDOW, POINTER]
+			-- List all the windows in your application.
 
 end -- class EBENCH_MS_WINDOWS
 

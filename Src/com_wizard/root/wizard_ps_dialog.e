@@ -67,6 +67,7 @@ feature -- Behavior
 			else
 				standard_radio.set_checked
 				proxy_stub_file_edit.enable
+				browse_button.enable
 			end
 			if shared_wizard_environment.proxy_stub_file_name /= Void then
 				proxy_stub_file_edit.set_text (shared_wizard_environment.proxy_stub_file_name)

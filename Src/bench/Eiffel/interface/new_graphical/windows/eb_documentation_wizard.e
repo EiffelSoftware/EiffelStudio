@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			-- We assume that new added clusters go into the "include" part.
 		local
 			li: EV_LIST_ITEM
-			cl: LINKED_LIST [CLUSTER_I]
+			cl: ARRAYED_LIST [CLUSTER_I]
 			cl_name: STRING
 			old_exclude: LINKED_LIST [STRING]
 		do
@@ -580,7 +580,7 @@ feature {NONE} -- Implementation
 			-- Except the ones in `exclude_indexing_items'.
 		local
 			li: EV_LIST_ITEM
-			cl: LINKED_LIST [CLUSTER_I]
+			cl: ARRAYED_LIST [CLUSTER_I]
 			classes: HASH_TABLE [CLASS_I, STRING]
 			all_tags: LINKED_LIST [STRING]
 			old_exclude: LINKED_LIST [STRING]

@@ -936,7 +936,7 @@ feature {NONE} -- open new class
 			-- Process the user entry in `cluster_address' to generate `current_cluster'.
 		local
 			fname: STRING
-			cl: LINKED_LIST [CLUSTER_I]
+			cl: ARRAYED_LIST [CLUSTER_I]
 			matcher: KMP_WILD
 			matching: SORTED_TWO_WAY_LIST [CLUSTER_I]
 		do
@@ -989,7 +989,7 @@ feature {NONE} -- open new class
 			-- process the user entry
 		local
 			cname: STRING
-			clusters: LINKED_LIST [CLUSTER_I]
+			clusters: ARRAYED_LIST [CLUSTER_I]
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I]
 			at_pos: INTEGER
 			cluster: CLUSTER_I
@@ -1546,7 +1546,7 @@ feature {NONE} -- open new class
 			str: STRING
 			nb, minc: INTEGER
 			j: INTEGER
-			list: LINKED_LIST [CLUSTER_I]
+			list: ARRAYED_LIST [CLUSTER_I]
 			current_found: STRING
 			cname: STRING
 			do_not_complete: BOOLEAN

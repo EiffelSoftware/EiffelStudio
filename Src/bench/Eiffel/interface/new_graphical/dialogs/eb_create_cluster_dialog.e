@@ -194,7 +194,7 @@ feature -- Basic operations
 			valid_args: cluster_n /= Void 
 		local
 			str: STRING
-			clus_list: LINKED_LIST [CLUSTER_I]
+			clus_list: ARRAYED_LIST [CLUSTER_I]
 			clus: CLUSTER_I
 			i: EV_LIST_ITEM
 			was_sensitive: BOOLEAN

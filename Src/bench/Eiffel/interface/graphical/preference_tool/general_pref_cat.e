@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 	update_resources is
 			-- Update `resources'.
 		do
+			!! acrobat_reader.make (associated_category.acrobat_reader);
 			!! tab_step.make (associated_category.tab_step);
 			!! editor.make (associated_category.editor);
 			!! filter_path.make (associated_category.filter_path);
@@ -41,6 +42,7 @@ feature {NONE} -- Initialization
 			!! window_free_list_number.make (associated_category.window_free_list_number);
 			!! color_list.make (associated_category.color_list);
 
+			resources.extend (acrobat_reader);
 			resources.extend (tab_step);
 			resources.extend (editor);
 			resources.extend (filter_path);
@@ -93,7 +95,7 @@ feature -- Properties
 feature {NONE} -- Resources
 
 	tab_step: INTEGER_PREF_RES;
-	editor, filter_path, profile_path, tmp_path: STRING_PREF_RES;
+	acrobat_reader, editor, filter_path, profile_path, tmp_path: STRING_PREF_RES;
 	shell_command: STRING_PREF_RES;
 	filter_name: STRING_PREF_RES;
 	filter_command: STRING_PREF_RES;

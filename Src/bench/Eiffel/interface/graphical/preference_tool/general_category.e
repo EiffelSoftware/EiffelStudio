@@ -34,6 +34,7 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all resources valid for Current.
 		do
+			!! acrobat_reader.make ("acrobat_reader", rt, "acrobat");
 			!! tab_step.make ("tab_step", rt, 4);
 			!! editor.make ("editor", rt, "vi");
 			!! filter_path.make ("filter_directory", rt, env_filter_path);
@@ -62,6 +63,7 @@ feature -- Validation
 
 feature -- Resources
 
+	acrobat_reader: STRING_RESOURCE;
 	tab_step: INTEGER_RESOURCE;
 	editor: STRING_RESOURCE;
 	filter_path: STRING_RESOURCE;

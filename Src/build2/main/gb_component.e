@@ -139,7 +139,7 @@ feature -- Access
 					counter := 1
 				until
 					not object_handler.string_is_feature_name (temp_name, an_object) and
-					not object_handler.string_is_object_name (temp_name, an_object)
+					not object_handler.string_is_object_name (temp_name, an_object, False)
 				loop
 					temp_name := original_name + counter.out
 					counter := counter + 1

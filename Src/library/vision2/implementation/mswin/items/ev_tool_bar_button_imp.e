@@ -25,8 +25,6 @@ inherit
 
 	EV_PND_SOURCE_IMP
 
-	EV_PND_TARGET_IMP
-
 creation
 	make
 
@@ -235,7 +233,7 @@ feature {NONE} -- Implementation, pick and drop
 	widget_source: EV_WIDGET_IMP is
 			-- Widget drag source used for transport
 		do
-			Result := parent_imp--.top_level_window_imp
+			Result := parent_imp
 		end
 
 end -- class EV_TOOL_BAR_BUTTON_IMP

@@ -22,8 +22,6 @@ inherit
 
 	EV_PND_SOURCE_IMP
 
-	EV_PND_TARGET_IMP
-
 	WEL_TREE_VIEW_ITEM
 		rename
 			text as wel_text,

@@ -18,8 +18,6 @@ inherit
 			set_cell_text
 		end
 
-	EV_PND_TARGET_IMP
-
 	EV_PND_SOURCE_IMP
 
 creation

@@ -85,7 +85,7 @@ feature
 				from
 					dep.start
 				until
-					dep.offright
+					dep.after
 				loop
 					fdep := dep.item_for_iteration;
 					cfeat := dep.key_for_iteration;

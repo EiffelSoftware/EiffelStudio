@@ -34,9 +34,13 @@ feature -- Access
 
 	Case_13: STRING is "Class SPECIAL must have a feature `put (Generic #1, INTEGER)'"
 
-	Case_14: STRING is "Non-expanded classes for basic types may not have generic parameters"
+	Case_14: STRING is "Classes for basic types may not have generic parameters"
 
-	Case_15: STRING is "Non-expanded classes for basic types must have only one attribute with a good associated type"
+	Case_15: STRING is "Classes for basic types must have only one attribute with a good associated type"
+
+	Case_15_bis: STRING is "Classes for basic types must have one attribute of name `item'"
+
+	Case_15_ter: STRING is "Classes for basic types must have one procedure `set_item'"
 
 	Case_16: STRING is "Non-expanded classes for basic types may not have creation procedure"
 	
@@ -58,5 +62,9 @@ feature -- Access
 	Case_24: STRING is "Class NATIVE_ARRAY must have a feature `put (INTEGER, Generic #1)'"
 
 	Case_25: STRING is "Class NATIVE_ARRAY must have a feature `count: INTEGER'"
+
+	Case_26: STRING is "Class TYPED_POINTER must have one formal generic parameter"
+
+	Case_27: STRING is "Class TYPED_POINTER must have one attribute of type POINTER"
 
 end -- class SPECIAL_CONST

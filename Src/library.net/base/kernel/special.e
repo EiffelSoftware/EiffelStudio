@@ -9,7 +9,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen class
+class
 	SPECIAL [T]
 
 create

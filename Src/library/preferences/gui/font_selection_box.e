@@ -61,11 +61,11 @@ feature {NONE} -- Commands
 		local
 			string_size: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 		do
-			example.clear
 			example.set_font (a_font)
 			string_size := a_font.string_size("Example")
 			example.set_minimum_size (string_size.integer_32_item (1), string_size.integer_32_item (2))
 			example.set_size (string_size.integer_32_item (1), string_size.integer_32_item (2))
+			example.clear
 			example.draw_text_top_left (0, 0, "Example")
 			change_item_widget.set_minimum_height (string_size.integer_32_item (2).max (change_b.minimum_height))
 		end

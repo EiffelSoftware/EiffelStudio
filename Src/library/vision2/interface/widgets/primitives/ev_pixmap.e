@@ -44,10 +44,12 @@ feature -- Comparison
 			-- Does `other' have the same appearance as `Current'.
 			--| FIXME this should be more exact :-) - sam
 		do
-			Result := (
-				width = other.width and
-				height = other.height
-			)
+			if other /= Void then
+				Result := (
+					width = other.width and
+					height = other.height
+				)
+			end
 		end
 
 feature -- Status setting
@@ -163,6 +165,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/03 01:44:30  oconnor
+--| fixed call on void problem in is_equal
+--|
 --| Revision 1.22  2000/03/01 22:45:32  brendel
 --| a_width -> a_height
 --|

@@ -386,13 +386,11 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 
 	for (;objectCount > 0; objectCount--) {
 		/* Read object address */
-
 		buffer_read((char *)(&oldadd), (sizeof(char *)));
 
 #if DEBUG & 2
 		printf ("\n  %lx", oldadd);
 #endif
-
 
 		/* Read object flags (dynamic type) */
 		buffer_read((char *)(&flags), (sizeof(uint32)));
@@ -401,7 +399,6 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 #if DEBUG & 2
 		printf (" %x", flags);
 #endif
-
 
 		/* Read a possible size */
 		if (flags & EO_SPEC) {
@@ -728,7 +725,6 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 		printf ("\n  %lx", oldadd);
 #endif
 
-
 		/* Read object flags (dynamic type) */
 		ridr_norm_int (&flags);
 		rt_id_read_cid (&fflags, flags);
@@ -736,7 +732,6 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 #if DEBUG & 1
 		printf (" %x", flags);
 #endif
-
 
 		/* Read a possible size */
 		if (flags & EO_SPEC) {

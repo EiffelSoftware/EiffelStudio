@@ -189,9 +189,10 @@ feature -- Window sizes
 	cmd_inst_ed_height: INTEGER;
 
 		-- Command Type Editor
-	cmd_type_ed_width: INTEGER;
-	cmd_type_ed_height: INTEGER;
-
+	-- cmd_type_ed_width: INTEGER;
+	-- cmd_type_ed_height: INTEGER;
+	cmd_ed_height: INTEGER
+	
 		-- Context Catalog
 	cont_cat_width: INTEGER;
 	cont_cat_height: INTEGER;
@@ -254,8 +255,9 @@ feature {NONE} -- Integer Values initialization
 			cmd_inst_ed_width := resource.get_pos_integer ("cmd_inst_ed_width", 300);
 			cmd_inst_ed_height := resource.get_pos_integer ("cmd_inst_ed_height", 167);
 
-			cmd_type_ed_width := resource.get_pos_integer ("cmd_type_ed_width", 500);
-			cmd_type_ed_height := resource.get_pos_integer ("cmd_type_ed_height", 650);
+			-- cmd_type_ed_width := resource.get_pos_integer ("cmd_type_ed_width", 500);
+			-- cmd_type_ed_height := resource.get_pos_integer ("cmd_type_ed_height", 650);
+			cmd_ed_height := resource.get_pos_integer ("cmd_ed_height", 400);
 
 			cont_cat_width := resource.get_pos_integer ("cont_cat_width", 320);
 			cont_cat_height := resource.get_pos_integer ("cont_cat_height", 270);

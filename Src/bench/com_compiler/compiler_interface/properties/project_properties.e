@@ -489,12 +489,10 @@ feature -- Basic operations
     apply is
             -- Apply changes.
         do
-            if ace.is_valid then
-            	clusters.store
-            	externals.store
-            	assemblies.store
-                ace.apply
-            end
+           	clusters.store
+           	externals.store
+           	assemblies.store
+			ace.apply
         end
 
 feature {NONE} -- Implementation

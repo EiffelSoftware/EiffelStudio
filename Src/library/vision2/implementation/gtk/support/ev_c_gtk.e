@@ -15,7 +15,7 @@ feature -- Externals
 			"C | %"ev_menu_imp.h%""
 		end
 
-	c_match_font_name (pattern: POINTER): POINTER is
+	c_match_font_name (pattern: POINTER): STRING is
 			-- Match to first in list or return NULL.
 			-- `pattern' and `Result': char *
 		external

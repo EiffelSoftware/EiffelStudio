@@ -220,13 +220,8 @@ feature -- Basic operation
 			internal_set_caret_position (end_pos.max (start_pos) + 1)
 			select_region_internal (start_pos, end_pos)
 				-- Hack to ensure text field is selected 
-			internal_timeout ?= (create {EV_TIMEOUT}).implementation
-			internal_timeout.interface.actions.extend (agent select_region_internal (start_pos, end_pos))
-			internal_timeout.set_interval_kamikaze (0)
+			app_implementation.do_once_on_idle (agent select_region_internal (start_pos, end_pos))
 		end	
-
-	internal_timeout: EV_TIMEOUT_IMP
-		-- Internal timeout used for select_region hack to ensure text is selected during change actions
 
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region

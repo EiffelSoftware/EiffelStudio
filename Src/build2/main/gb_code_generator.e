@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 
 				if project_settings.attributes_local then
 					add_generated_string (class_text, local_string, local_tag)
-					class_text.replace_substring_all (attribute_tag + "%R%N", "")
+					class_text.replace_substring_all (attribute_tag + "%N", "")
 				else
 					add_generated_string (class_text, local_string, attribute_tag)
 				end
@@ -836,7 +836,7 @@ feature {NONE} -- Implementation
 						search_counter := search_counter - 1
 					end
 					if not found_correctly then
-						local_string.insert_string (indent_string, index_of_type)--"%R%N", index_of_type)
+						local_string.insert_string (indent_string, index_of_type)
 					end
 				else
 					temp_string := indent_string + name + ": " + local_type

@@ -1,5 +1,5 @@
 indexing
-	description: "Tests IEIFFEL_SYSTEM_CLUSTERS_INTERFACE members"
+	description: "Tests IEIFFEL_SYSTEM_CLUSTERS_INTERFACE"
 	date: "$Date$"
 	revision: "$Revision$"
 

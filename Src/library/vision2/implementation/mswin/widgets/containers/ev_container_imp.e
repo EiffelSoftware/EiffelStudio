@@ -44,9 +44,10 @@ feature {NONE} -- Initialization
 			create radio_group.make
 			create new_item_actions.make ("new_item", <<"widget">>)
 			new_item_actions.extend (~add_radio_button)
-			new_item_actions.extend (~widget_contained)
+			new_item_actions.extend (~widget_parented)
 			create remove_item_actions.make ("remove_item", <<"widget">>)
 			remove_item_actions.extend (~remove_radio_button)
+			remove_item_actions.extend (~widget_orphaned)
 			{EV_WIDGET_IMP} Precursor
 		end
 
@@ -340,7 +341,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	widget_contained (w: EV_WIDGET) is
+	widget_parented (w: EV_WIDGET) is
 			-- Called every time a widget is added to the container.
 		require
 			w_not_void: w /= Void
@@ -348,7 +349,18 @@ feature {EV_ANY_I} -- Implementation
 			w_imp: EV_WIDGET_IMP
 		do
 			w_imp ?= w.implementation
-			w_imp.on_contained
+			w_imp.on_parented
+		end
+
+	widget_orphaned (w: EV_WIDGET) is
+			-- Called every time a widget is removed from the container.
+		require
+			w_not_void: w /= Void
+		local
+			w_imp: EV_WIDGET_IMP
+		do
+			w_imp ?= w.implementation
+			w_imp.on_orphaned
 		end
 
 feature {EV_CONTAINER_IMP} -- Implementation
@@ -469,6 +481,10 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/23 23:22:52  brendel
+--| Renamed widget_contained to widget_parented.
+--| Added widget_orphaned.
+--|
 --| Revision 1.46  2000/03/21 20:13:21  brendel
 --| Removed inheritance of obsolete class EV_MENU_ITEM_HANDLER.
 --|

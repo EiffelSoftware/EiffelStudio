@@ -39,14 +39,15 @@ feature {NONE} -- Implementation
 				)
 		end
 
-	final_message: STRING is
-		do
-			Result := "Fuck !"
-		end
+	final_message: STRING is "Bye"
 
 feature -- Access
 
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-			-- Icon for the Eiffel Wizard
-
+	pixmap_icon_location: FILE_NAME is
+			-- Icon for the Eiffel Precompile Wizard.
+		once
+			create Result.make_from_string ("eiffel_wizard_icon")
+			Result.add_extension (pixmap_extension)
+		end
+	
 end -- class WIZARD_CHOOSE_ONE_ERROR_STATE

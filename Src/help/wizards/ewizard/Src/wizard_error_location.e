@@ -31,6 +31,11 @@ feature -- basic Operations
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-
+	pixmap_icon_location: FILE_NAME is
+			-- Icon for the Eiffel Store Wizard
+		once
+			create Result.make_from_string ("eiffel_wizard_icon")
+			Result.add_extension (pixmap_extension)
+		end
+	
 end -- class WIZARD_ERROR_LOCATION

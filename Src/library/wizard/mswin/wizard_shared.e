@@ -70,7 +70,7 @@ feature -- Access
 	pixmap_extension: STRING is
 			-- Extension used for pixmaps.
 		once
-			Result := ".png"
+			Result := "png"
 		end
 
 	platform_is_unix: BOOLEAN is False

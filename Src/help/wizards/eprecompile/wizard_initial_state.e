@@ -43,7 +43,11 @@ feature -- basic Operations
 				%To continue, click Next.")
 		end
 
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-			-- Icon for the Eiffel Store Wizard
-
+	pixmap_icon_location: FILE_NAME is
+			-- Icon for the Eiffel Precompile Wizard
+		once
+			create Result.make_from_string ("eiffel_wizard_icon")
+			Result.add_extension (pixmap_extension)
+		end
+	
 end -- class WIZARD_INITIAL_STATE

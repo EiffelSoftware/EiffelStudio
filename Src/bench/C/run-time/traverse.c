@@ -34,6 +34,7 @@
 #include "eif_hector.h"
 #include "eif_traverse.h"
 #include "eif_memory.h"
+#include "x2c.h"		/* For LNGPAD macros... */
 
 /*
  * Declarations
@@ -156,7 +157,7 @@ rt_shared void traversal(char *object, int p_accounting)
 		}
 
 		/* Evaluation of the number of items in the special object */
-		object_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+		object_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		count = *(long *) object_ref;
 
         if (!(flags & EO_COMP))
@@ -355,7 +356,7 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 			return object_count;
 
 		/* Evaluation of the number of items in the special object */
-		object_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+		object_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		count = *(long *) object_ref;
 
         if (!(flags & EO_COMP))

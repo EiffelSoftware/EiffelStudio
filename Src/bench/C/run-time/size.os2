@@ -36,23 +36,6 @@
 #define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
 #define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
 
-/* Macros used to compute padded size for fields in the object */
-#define REMAINDER(x)		(((x) % ALIGN)?(ALIGN-((x)%ALIGN)):0)
-#define PADD(x,y)			(REMAINDER(x)%(y))
-#define CHROFF(x) \
-	((x)*REFSIZ+PADD((x)*REFSIZ,CHRSIZ))
-#define LNGOFF(x,y) \
-	(CHROFF(x)+(y)*CHRSIZ+PADD(CHROFF(x)+(y)*CHRSIZ,LNGSIZ))
-#define FLTOFF(x,y,z) \
-	(LNGOFF(x,y)+(z)*LNGSIZ+PADD(LNGOFF(x,y)+(z)*LNGSIZ,FLTSIZ))
-#define PTROFF(w,x,y,z) \
-	(FLTOFF(w,x,y)+(z)*FLTSIZ+PADD(FLTOFF(w,x,y)+(z)*FLTSIZ,PTRSIZ))
-#define DBLOFF(v,w,x,y,z) \
-	(PTROFF(v,w,x,y)+(z)*PTRSIZ+PADD(PTROFF(v,w,x,y)+(z)*PTRSIZ,DBLSIZ))
-#define OBJSIZ(u,v,w,x,y,z) \
-	(DBLOFF(u,v,w,x,y)+(z)*DBLSIZ+REMAINDER(DBLOFF(u,v,w,x,y)+(z)*DBLSIZ))
-#define BITOFF(n) (((BITACS(n)/ALIGN)+((BITACS(n)%ALIGN)?1:0))*ALIGN)
-
 #define REFPAD(n) (((((n)*REFSIZ)/ALIGN)+((((n)*REFSIZ)%ALIGN)?1:0))*ALIGN)
 #define CHRPAD(n) (((((n)*CHRSIZ)/ALIGN)+((((n)*CHRSIZ)%ALIGN)?1:0))*ALIGN)
 #define LNGPAD(n) (((((n)*LNGSIZ)/ALIGN)+((((n)*LNGSIZ)%ALIGN)?1:0))*ALIGN)
@@ -60,12 +43,6 @@
 #define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
 #define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
 
-/* Macros used to access fields in the object */
-#define REFACS(n) ((n)*REFSIZ)
-#define CHRACS(n) ((n)*CHRSIZ)
-#define LNGACS(n) ((n)*LNGSIZ)
-#define FLTACS(n) ((n)*FLTSIZ)
-#define DBLACS(n) ((n)*DBLSIZ)
-#define PTRACS(n) ((n)*PTRSIZ)
+#define LNGPAD_2	8	/* Computed version of LNGPAD (2) on Windows */
 
 #endif

@@ -11,9 +11,9 @@
 */
 
 #include "eif_config.h"
-#include "eif_size.h"
+#include "x2c.h"
 #ifdef EIF_WINDOWS
-#define print_err_msg fprintf		/* %%zs modified - was 'printf' before... (incorrect because trying print_err_msg(stderr,"..."); line 96 and others ! */
+#define print_err_msg fprintf
 #else
 #include "eif_err_msg.h"
 #endif
@@ -27,12 +27,37 @@
 #include <strings.h>
 #endif
 
+#define NON_RECURSIVE	'0'
+#define RECURSIVE		'1'
 
-long chroff(void), lngoff(void), fltoff(void), ptroff(void), dbloff(void), remainder(long int x), padding(long int x, long int y);
-long objsiz(void), nextarg(void);
-void getarg(int n, char *name);
+extern long chroff(char recursive_call);
+extern long lngoff(char recursive_call);
+extern long fltoff(char recursive_call);
+extern long ptroff(char recursive_call);
+extern long dbloff(char recursive_call);
+extern long objsiz(char recursive_call);
+
+extern long refacs (char recursive_call);
+extern long chracs (char recursive_call);
+extern long lngacs (char recursive_call);
+extern long fltacs (char recursive_call);
+extern long dblacs (char recursive_call);
+extern long ptracs (char recursive_call);
+
+extern long remainder(long int x);
+extern long padding(long int x, long int y);
+
+extern long nextarg(void);
+extern void getarg(int n, char *name);
 
 long a[6];		/* Parameters array */
+
+#define first_argument	a[0]
+#define second_argument	a[1]
+#define third_argument	a[2]
+#define fourth_argument	a[3]
+#define fifth_argument	a[4]
+#define sixth_argument	a[5]
 
 #define nb_ref	a[0]
 #define nb_char	a[1]
@@ -46,13 +71,19 @@ long a[6];		/* Parameters array */
 struct parse {
 	char *c_macro;		/* Macro name */
 	int c_args;			/* Number of arguments */
-	long (*c_off)();	/* Function to compute value */
+	long (*c_off)(char);	/* Function to compute value */
 } parser[] = {
-	{ "CHROFF", 1, chroff },
-	{ "LNGOFF", 2, lngoff },
-	{ "FLTOFF", 3, fltoff },
-	{ "PTROFF", 4, ptroff },
-	{ "DBLOFF", 5, dbloff },
+	{ "CHROFF", 2, chroff },
+	{ "REFACS", 1, refacs },
+	{ "CHRACS", 1, chracs },
+	{ "LNGACS", 1, lngacs },
+	{ "FLTACS", 1, fltacs },
+	{ "PTRACS", 1, ptracs },
+	{ "DBLACS", 1, dblacs },
+	{ "LNGOFF", 3, lngoff },
+	{ "FLTOFF", 4, fltoff },
+	{ "PTROFF", 5, ptroff },
+	{ "DBLOFF", 6, dbloff },
 	{ "OBJSIZ", 6, objsiz },
 };
 
@@ -190,7 +221,7 @@ int main(int argc, char **argv)	/* DEC C will complain if declared as type void 
 					continue;
 				}
 				getarg(ps->c_args, buf);
-				fprintf(output_file, "%d", (ps->c_off)());
+				fprintf(output_file, "%d", (ps->c_off)(NON_RECURSIVE));
 				continue;
 			}
 			buf[pos++] = c;
@@ -294,40 +325,85 @@ long nextarg(void)
  * Offset-calculation routines (take their arguments from a[] arary).
  */
 
-long chroff(void)
+long chroff(char recursive_call)
 {
 	long to_add = nb_ref * REFSIZ;
-	return to_add + padding(to_add, (long) CHRSIZ);
+	if (recursive_call == RECURSIVE)
+		return to_add + padding(to_add, (long) CHRSIZ);
+	else
+		return to_add + padding(to_add, (long) CHRSIZ) + CHRACS(second_argument);
 }
 
-long lngoff(void)
+long lngoff(char recursive_call)
 {
-	long to_add = chroff() + nb_char *CHRSIZ;
-	return to_add + padding(to_add,(long)  LNGSIZ);
+	long to_add = chroff(RECURSIVE) + nb_char *CHRSIZ;
+	if (recursive_call == RECURSIVE)
+		return to_add + padding(to_add,(long)  LNGSIZ);
+	else
+		return to_add + padding(to_add,(long)  LNGSIZ) + LNGACS(third_argument);
 }
 
-long fltoff(void)
+long fltoff(char recursive_call)
 {
-	long to_add = lngoff() + nb_int * LNGSIZ;
-	return to_add + padding(to_add, (long) FLTSIZ);
+	long to_add = lngoff(RECURSIVE) + nb_int * LNGSIZ;
+	if (recursive_call == RECURSIVE)
+		return to_add + padding(to_add, (long) FLTSIZ);
+	else
+		return to_add + padding(to_add, (long) FLTSIZ) + FLTACS(fourth_argument);
 }
 
-long ptroff(void)
+long ptroff(char recursive_call)
 {
-	long to_add = fltoff() + nb_flt * FLTSIZ;
-	return to_add + padding(to_add, (long) PTRSIZ);
+	long to_add = fltoff(RECURSIVE) + nb_flt * FLTSIZ;
+	if (recursive_call == RECURSIVE)
+		return to_add + padding(to_add, (long) PTRSIZ);
+	else
+		return to_add + padding(to_add, (long) PTRSIZ) + PTRACS(fifth_argument);
 }
 
-long dbloff(void)
+long dbloff(char recursive_call)
 {
-	long to_add = ptroff() + nb_ptr * PTRSIZ;
-	return to_add + padding(to_add, (long) DBLSIZ);
+	long to_add = ptroff(RECURSIVE) + nb_ptr * PTRSIZ;
+	if (recursive_call == RECURSIVE)
+		return to_add + padding(to_add, (long) DBLSIZ);
+	else
+		return to_add + padding(to_add, (long) DBLSIZ) + DBLACS(sixth_argument);
 }
 
-long objsiz(void)
+long objsiz(char recursive_call)
 {
-	long to_add = dbloff() + nb_dbl * DBLSIZ;
+	long to_add = dbloff(RECURSIVE) + nb_dbl * DBLSIZ;
 	return to_add + remainder(to_add);
+}
+
+long refacs (char recursive_call) 
+{
+	return REFACS(first_argument);
+}
+
+long chracs (char recursive_call)
+{
+	return CHRACS(first_argument);
+}
+
+long lngacs (char recursive_call)
+{
+	return LNGACS(first_argument);
+}
+
+long fltacs (char recursive_call)
+{
+	return FLTACS(first_argument);
+}
+
+long dblacs (char recursive_call)
+{
+	return DBLACS(first_argument);
+}
+
+long ptracs (char recursive_call)
+{
+	return PTRACS(first_argument);
 }
 
 /*

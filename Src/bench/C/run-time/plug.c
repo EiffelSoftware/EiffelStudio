@@ -26,6 +26,7 @@
 #include "eif_hashin.h"
 #endif
 #include "eif_bits.h"
+#include "x2c.h"		/* For macro LNGPAD */
 
 
 #ifndef lint
@@ -290,7 +291,7 @@ rt_public long sp_count(char *spobject)
 {
 	/* Return the count of a special object */
 
-	char *ref = spobject + (HEADER(spobject)->ov_size & B_SIZE) - LNGPAD(2);
+	char *ref = spobject + (HEADER(spobject)->ov_size & B_SIZE) - LNGPAD_2;
 
 	return *(long *)ref;
 }

@@ -36,7 +36,7 @@
 #include "eif_garcol.h"			/* For Eiffel flags and function declarations */
 #include "eif_except.h"			/* For exception raising */
 #include "eif_plug.h"
-#include "eif_macros.h"			/* For macro LNGPAD */
+#include "x2c.h"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "eif_sig.h"
 #ifndef TEST
@@ -401,7 +401,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	 */
 
 	zone = HEADER(ptr);
-	ref = ptr + (zone->ov_size & B_SIZE) - LNGPAD(2);
+	ref = ptr + (zone->ov_size & B_SIZE) - LNGPAD_2;
 	count = *(long *) ref;
 	elem_size = *(long *) (ref + sizeof(long));
 
@@ -425,7 +425,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	 */
 
 	epush(&loc_stack, (char *)(&ptr));	/* Object may move if GC called */
-	object = xrealloc(ptr, (unsigned int)(elem_size * nbitems + LNGPAD(2)), GC_ON | GC_FREE);
+	object = xrealloc(ptr, (unsigned int)(elem_size * nbitems + LNGPAD_2), GC_ON | GC_FREE);
 	if ((char *) 0 == object) {
 		eraise("special reallocation", EN_MEM);
 		return (char *) 0;
@@ -448,7 +448,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 
 	/* Update special attributes count and element size at the end */
 	zone = HEADER(object);
-	ref = object + (zone->ov_size & B_SIZE) - LNGPAD(2);
+	ref = object + (zone->ov_size & B_SIZE) - LNGPAD_2;
 	*(long *) ref = nbitems;						/* New count */
 	*(long *) (ref + sizeof(long)) = elem_size; 	/* New item size */
 
@@ -1779,7 +1779,7 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 	dprintf(16)("realloc: reallocing block 0x%lx to be %d bytes\n",
 		zone, nbytes);
 	if (zone->ov_flags & EO_SPEC) {
-		long *pointer = (long *) (ptr + (zone->ov_size & B_SIZE) - LNGPAD(2));
+		long *pointer = (long *) (ptr + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		dprintf(16)("eif_realloc: special has count = %d, elemsize = %d\n",
 			*pointer, *(pointer + 1));
 		if (zone->ov_flags & EO_REF)
@@ -1856,7 +1856,7 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 	/* If the garbage collector is on and the object has some references, then
 	 * adter attempting a coalescing we must update the count and copy the old
 	 * elemsize, since they are fetched by the garbage collector by first going
-	 * to the end of the object and then back by LNGPAD(2). Of course, this
+	 * to the end of the object and then back by LNGPAD_2. Of course, this
 	 * matters only if coalescing has been done, which is indicated by a
 	 * non-zero return value from coalesc.
 	 */
@@ -1866,7 +1866,7 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 		long *old;				/* Pointer to the old count/elemsize */
 		long *pointer;			/* Pointer to new start of count/elemsize */
 
-		pointer = (long *) (ptr + (zone->ov_size & B_SIZE) - LNGPAD(2));
+		pointer = (long *) (ptr + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		old = (long *) ((char *) pointer - size_gain);
 		*pointer++ = *old++;	/* Copy old count to new location */
 		*pointer = *old;		/* And also propagate element size */
@@ -2974,7 +2974,7 @@ rt_private void check_ref(char *object)
 	if (flags & EO_SPEC) {
 		if (!(flags & EO_REF))
 			return;
-		size = (zone->ov_size & B_SIZE) - LNGPAD(2);
+		size = (zone->ov_size & B_SIZE) - LNGPAD_2;
 		refs = *(long *) (object + size);
 		if (flags & EO_COMP)
 			size = *(long *) (object + size + sizeof(long)) + OVERHEAD;

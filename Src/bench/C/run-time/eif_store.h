@@ -77,6 +77,10 @@ extern void rt_init_store(
 	int accounting_type,
 	int buf_size);
 extern void rt_reset_store(void);
+extern void make_header(void);				/* Make header */
+extern void imake_header(void);				/* Make header */
+extern void ist_write(char *object);
+extern void gst_write(char *object);
 
 extern long get_offset(uint32 o_type, uint32 attrib_num);          /* get offset of attrib in object*/
 

@@ -172,7 +172,7 @@ feature -- Removal
 feature -- Basic operations
 
 	transfer is
-			-- Transfer file.
+			-- Execute all transactions.
 		require
 			not_empty: not is_empty
 			flags_reset: not (transfer_finished and transactions_succeeded)

@@ -202,7 +202,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := to_cil.get_hash_code
+			Result := to_cil.get_hash_code.hash_code
 		end
 
 	False_constant: STRING is "false"

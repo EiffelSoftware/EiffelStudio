@@ -25,7 +25,7 @@ class ARRAY [G] inherit
 		export
 			{ARRAY} set_area
 		redefine
-			copy, is_equal
+			copy, is_equal, put, item, infix "@", valid_index
 		end
 
 create

@@ -57,18 +57,18 @@ feature {NONE} -- Initialization
 				-- Now build the interface which will display the
 				-- applicable action sequences.
 			from
-				action_sequences.start
+				action_sequences_list.start
 			until
-				action_sequences.off
+				action_sequences_list.off
 			loop
-				if type_conforms_to (dynamic_type_from_string (object.type), dynamic_type_from_string (action_sequences.item)) then
-					action_sequence ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequences.item))
+				if type_conforms_to (dynamic_type_from_string (object.type), dynamic_type_from_string (action_sequences_list.item)) then
+					action_sequence ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequences_list.item))
 					check
 						action_sequence_not_void: action_sequence /= Void
 					end
 					build_events_for_an_action_sequence (action_sequence)
 				end
-				action_sequences.forth
+				action_sequences_list.forth
 			end
 			
 				-- Now add a cell which will expand.
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 				main_vertical_box.disable_item_expand (vertical_box1)
 				
 				
-				create info.make_with_details (an_action_sequence.names @ counter, action_sequences.item, an_action_sequence.types @ counter, temp_event_string)
+				create info.make_with_details (an_action_sequence.names @ counter, action_sequences_list.item, an_action_sequence.types @ counter, temp_event_string)
 				feature_name := feature_name_of_object_event (info)
 				if feature_name = Void then
 						-- Build empty interface.
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 				all_names.extend (an_action_sequence.names @ counter)
 				all_comments.extend (an_action_sequence.comments @ counter)
 				all_types.extend (an_action_sequence.types @ counter)
-				all_class_names.extend (action_sequences.item)
+				all_class_names.extend (action_sequences_list.item)
 	
 				counter := counter + 1
 			end

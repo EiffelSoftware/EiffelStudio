@@ -34,7 +34,7 @@ inherit
 	WEL_RADIO_BUTTON
 		rename
 			make as wel_radio_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -159,6 +159,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/05/01 17:04:44  manus
+--| Use of `wel_parent' directly without the hack of renaming into `wel_window_parent'.
+--|
 --| Revision 1.30  2000/04/29 03:35:58  pichery
 --| Cosmetics
 --|

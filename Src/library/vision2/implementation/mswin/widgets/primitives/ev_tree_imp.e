@@ -158,7 +158,7 @@ feature {NONE} -- WEL Implementation
 			-- A drag-and-drop operation involving the right mouse
 			-- button is being initiated.
 		do
-			(ev_children @ info.new_item.h_item).execute_command (Cmd_item_right_selection, Void)
+--			(ev_children @ info.new_item.h_item).execute_command (Cmd_item_right_selection, Void)
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

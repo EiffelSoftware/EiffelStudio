@@ -41,7 +41,7 @@ feature -- Status report
 			-- Minimum amount of bytes to be allocated before
 			-- starting an automatic garbage collection.
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_tget"
 		end;
@@ -49,7 +49,7 @@ feature -- Status report
 	collection_period: INTEGER is
 			-- Period of full collection.
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_pget"
 		end;
@@ -57,7 +57,7 @@ feature -- Status report
 	collecting: BOOLEAN is
 			-- Is garbage collection enabled?
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"gc_ison"
 		end;
@@ -66,7 +66,7 @@ feature -- Status report
 			-- Size of largest coalesced block since last call to
 			-- `largest_coalesced'; 0 if none.
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_largest"
 		end;
@@ -76,7 +76,7 @@ feature -- Status setting
 	collection_off is
 			-- Disable garbage collection.
 		external
-			"C"
+			"C | <garcol.h>"
 		alias
 			"gc_stop"
 		end;
@@ -84,7 +84,7 @@ feature -- Status setting
 	collection_on is
 			-- Enable garbage collection.
 		external
-			"C"
+			"C | <garcol.h>"
 		alias
 			"gc_run"
 		end;
@@ -93,7 +93,7 @@ feature -- Status setting
 			-- Enter ``speed'' mode: will optimize speed of memory
 			-- allocation rather than memory usage.
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_speed"
 		end;
@@ -102,7 +102,7 @@ feature -- Status setting
 			-- Enter ``memory'' mode: will try to compact memory
 			-- before requesting more from the operating system.
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_slow"
 		end;
@@ -111,7 +111,7 @@ feature -- Status setting
 			-- Enter ``tiny'' mode: will enter ``memory'' mode
 			-- after having freed as much memory as possible.
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_tiny"
 		end;
@@ -133,7 +133,7 @@ feature -- Status setting
 		require
 			positive_value: value > 0;
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_tset"
 		end;
@@ -143,7 +143,7 @@ feature -- Status setting
 		require
 			positive_value: value > 0;
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_pset"
 		end;
@@ -173,14 +173,14 @@ feature -- Removal
 			-- Free memory of object at `addr'.
 			-- (Preferred interface is `free'.)
 		external
-			"C"
+			"C | <memory.h>"
 		end;
 
 	full_coalesce is
 			-- Coalesce the whole memory: merge adjacent free
 			-- blocks to reduce fragmentation.
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"mem_coalesc"
 		end;
@@ -196,7 +196,7 @@ feature -- Removal
 			-- Force a full collection cycle if garbage
 			-- collection is enabled; do nothing otherwise.
 		external
-			"C"
+			"C | <garcol.h>"
 		alias
 			"plsc"
 		end;
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 	gc_monitoring (flag: BOOLEAN) is
 			-- Set up GC monitoring according to `flag'
 		external
-			"C"
+			"C | <memory.h>"
 		alias
 			"gc_mon"
 		end;

@@ -308,14 +308,14 @@ feature {NONE} -- Implementation
 	c_outr (r: REAL): STRING is
 			-- Printable representation of real value
 		external
-			"C"
+			"C | <out.h>"
 		end;
 
 	c_truncated_to_integer (r: REAL): INTEGER is
 			-- Integer part of `r' (same sign, largest absolute
 			-- value no greater than `r''s)
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"conv_ri"
 		end;
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 	c_ceiling (r: REAL): REAL is
 			-- Smallest integral value no smaller than `r'
 		external
-			"C"
+			"C | <eiffel.h>"
 		alias
 			"math_rceil"
 		end;
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 	c_floor (r: REAL): REAL is
 			-- Greatest integral value no greater than `r'
 		external
-			"C"
+			"C | <eiffel.h>"
 		alias
 			"math_rfloor"
 		end;

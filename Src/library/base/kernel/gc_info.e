@@ -127,19 +127,19 @@ feature {NONE} -- Implementation
 			-- Initialize run-time buffer used by gc_info to retrieve the
 			-- statistics frozen at the time of this call.
 		external
-			"C"
+			"C | <memory.h>"
 		end;
 
 	gc_info (field: INTEGER): INTEGER is
 			-- Read GC accounting structure, field by field.
 		external
-			"C"
+			"C | <memory.h>"
 		end;
 
 	gc_infod (field: INTEGER): DOUBLE is
 			-- Read GC accounting structure, field by field.
 		external
-			"C"
+			"C | <memory.h>"
 		end
 
 end -- class GC_INFO

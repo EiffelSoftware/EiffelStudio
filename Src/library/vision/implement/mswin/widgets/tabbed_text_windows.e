@@ -20,6 +20,12 @@ creation
 	make
 
 feature -- Initialization
+
+	make (a_scrolled_text: TABBED_TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
+		do
+			make_text (a_scrolled_text, man, oui_parent);
+			tab_length := 8
+		end
 		
 	realize is
 			-- Realize current widget

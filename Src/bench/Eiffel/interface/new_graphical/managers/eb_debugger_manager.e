@@ -38,12 +38,10 @@ feature {NONE} -- Initialization
 		local
 			cmd: E_CMD
 		do
-			create {EB_AFTER_LAUNCH_CMD} cmd.make (Current)
-			Application.set_launched_command (cmd)
-			create {EB_APPLICATION_STOPPED_CMD} cmd.make (Current)
-			Application.set_after_stopped_command (cmd)
-			create {EB_APPLICATION_QUIT_CMD} cmd.make (Current)
-			Application.set_termination_command (cmd)
+			Application_notification_controller.on_launched_actions.extend (agent on_application_launched)
+			Application_notification_controller.on_before_stopped_actions.extend (agent on_application_before_stopped)
+			Application_notification_controller.on_after_stopped_actions.extend (agent on_application_just_stopped)
+			Application_notification_controller.on_terminated_actions.extend (agent on_application_quit)
 
 			create debug_run_cmd.make
 			can_debug := True
@@ -274,15 +272,8 @@ feature -- Status setting
 	on_compile_stop is
 			-- A compilation is over. Make all run* commands sensitive.
 		do
-				-- Since we can be called even before system is compiled 
-				-- we need to check if we can call `Eiffel_system' or not.
-			if
-				not (Eiffel_project.initialized and then eiffel_project.system_defined) or else
-				not Eiffel_system.System.il_generation
-			then
-				step_cmd.enable_sensitive
-				into_cmd.enable_sensitive
-			end
+			step_cmd.enable_sensitive
+			into_cmd.enable_sensitive
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
 			enable_debug
@@ -494,7 +485,7 @@ feature -- Status setting
 			if raised then
 				cst ?= st
 				if cst /= Void then
-					Application.set_current_execution_stack (cst.level_number)
+					Application.set_current_execution_stack_number (cst.level_number)
 				end
 				call_stack_tool.set_stone (st)
 				object_tool.set_stone (st)
@@ -560,10 +551,37 @@ feature -- Debugging events
 			end
 		end
 
-	on_application_will_stop is
-			-- Application is going to stop soon.
+	on_application_before_stopped is
+			-- Execute command after application is
+			-- stopped in a breakpoint or an exception
+			-- occurred
+		local
+			status: APPLICATION_STATUS
+			call_stack_elem	: CALL_STACK_ELEMENT
 		do
-		end
+			debug("DEBUGGER") io.put_string("APPLICATION_EXECUTION: on_application_before_stopped %N"); end
+			status := Application.status
+			if status /= Void and then Application.is_stopped then
+					-- Application has stopped 
+					-- after receiving and updating stack info
+--				Window_manager.object_win_mgr.synchronize
+	
+					-- Display the callstack, the current object & the current stop point.
+				Application.set_current_execution_stack_number (1)	-- go on top of stack
+				call_stack_elem := status.current_stack_element
+--				if call_stack_elem /= Void then
+----					Project_tool.show_current_stoppoint
+----					Project_tool.show_current_object
+----					Project_tool.display_exception_stack
+--				end
+
+					-- Display the callstack arrow in all opened feature tools.
+--				Window_manager.routine_win_mgr.synchronize_with_callstack
+
+			else
+					-- Before receiving and updating stack info
+			end
+		end		
 
 	on_application_just_stopped is
 			-- Application was just stopped (by a breakpoint, ...).
@@ -573,7 +591,7 @@ feature -- Debugging events
 			cd: EV_CONFIRMATION_DIALOG
 		do
 			Window_manager.display_message (Interface_names.E_paused)
-			Application.set_current_execution_stack (1)
+			Application.set_current_execution_stack_number (1)
 			stop_cmd.disable_sensitive
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
@@ -659,31 +677,33 @@ feature -- Debugging events
 	on_application_quit is
 			-- Application just quit.
 		do
-			Window_manager.display_message (Interface_names.E_not_running)
-				-- Make all debugging tools disappear.
-			unraise
-				-- Make related buttons insensitive.
-			stop_cmd.disable_sensitive
-			quit_cmd.disable_sensitive
-			no_stop_cmd.enable_sensitive
-			debug_cmd.enable_sensitive
-			step_cmd.enable_sensitive
-			into_cmd.enable_sensitive
-			out_cmd.disable_sensitive
-			set_critical_stack_depth_cmd.enable_sensitive
-				-- Modify the debugging window display.
-			window_manager.quick_refresh_all
-			debugging_window := Void
-			output_manager.display_system_info
-			kept_objects.wipe_out
-			
-			from
-				observers.start
-			until
-				observers.after
-			loop
-				observers.item.on_application_killed
-				observers.forth
+			if Application /= Void and then Application.is_running then
+				Window_manager.display_message (Interface_names.E_not_running)
+					-- Make all debugging tools disappear.
+				unraise
+					-- Make related buttons insensitive.
+				stop_cmd.disable_sensitive
+				quit_cmd.disable_sensitive
+				no_stop_cmd.enable_sensitive
+				debug_cmd.enable_sensitive
+				step_cmd.enable_sensitive
+				into_cmd.enable_sensitive
+				out_cmd.disable_sensitive
+				set_critical_stack_depth_cmd.enable_sensitive
+					-- Modify the debugging window display.
+				window_manager.quick_refresh_all
+				debugging_window := Void
+				output_manager.display_system_info
+				kept_objects.wipe_out
+				
+				from
+					observers.start
+				until
+					observers.after
+				loop
+					observers.item.on_application_killed
+					observers.forth
+				end
 			end
 		end
 
@@ -879,24 +899,15 @@ feature {NONE} -- Implementation
 				Eiffel_system.System.il_generation
 			then
 				eac_browser_cmd.enable_sensitive
-				enable_bkpt.disable_sensitive
-				clear_bkpt.disable_sensitive
-				disable_bkpt.disable_sensitive
-				bkpt_info_cmd.disable_sensitive
-				
-				step_cmd.disable_sensitive
-				out_cmd.disable_sensitive
-				into_cmd.disable_sensitive
-			else
-				clear_bkpt.enable_sensitive
-				enable_bkpt.enable_sensitive
-				disable_bkpt.enable_sensitive
-				bkpt_info_cmd.enable_sensitive
-				debug_cmd.enable_sensitive
-				no_stop_cmd.enable_sensitive
-				step_cmd.enable_sensitive
-				into_cmd.enable_sensitive
 			end
+			clear_bkpt.enable_sensitive
+			enable_bkpt.enable_sensitive
+			disable_bkpt.enable_sensitive
+			bkpt_info_cmd.enable_sensitive
+			
+			step_cmd.enable_sensitive
+			out_cmd.disable_sensitive				
+			into_cmd.enable_sensitive
 		end
 
 	disable_commands_on_project_unloaded is

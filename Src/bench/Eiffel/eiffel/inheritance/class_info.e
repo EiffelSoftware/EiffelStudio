@@ -26,9 +26,9 @@ inherit
 
 feature -- Access
 
-	parents: PARENT_LIST;
-			-- Compiled parent clause
-
+	parents: EIFFEL_LIST [PARENT_AS];
+			-- Parents
+			
 	index: HASH_TABLE [READ_INFO, INTEGER];
 			-- Indexes left by the server `Tmp_ast_server' during
 			-- execution of feature `pass1' of CLASS_C. Useful
@@ -65,7 +65,7 @@ feature -- Access
 		local
 			feature_name: STRING;
 			a_class: CLASS_C;
-			a_feature: FEATURE_I;
+			a_feature, l_def_create: FEATURE_I;
 			feature_list: EIFFEL_LIST [FEATURE_NAME];
 			clients: CLIENT_AS;
 			c_reation: CREATE_AS;
@@ -75,10 +75,12 @@ feature -- Access
 			vgcp21: VGCP21;
 			vgcp3: VGCP3;
 			vgcp4: VGCP4;
+			has_default_create: BOOLEAN
 		do
 			a_class := feat_table.associated_class;
 			if creators = Void then
 				-- Do nothing
+				has_default_create := True
 			elseif a_class.is_deferred then
 				create vgcp1;
 				vgcp1.set_class (a_class);
@@ -87,6 +89,9 @@ feature -- Access
 				from
 					create Result.make (creators.count);
 					creators.start;
+					if a_class.is_expanded then
+						l_def_create := feat_table.feature_of_rout_id (System.default_create_id)
+					end
 				until
 					creators.after
 				loop
@@ -118,6 +123,7 @@ feature -- Access
 									vgcp3.set_feature_name (feature_name);
 									Error_handler.insert_error (vgcp3);
 								else
+									has_default_create := has_default_create or a_feature = l_def_create
 									Result.put (export_status, feature_name);
 								end;
 								if not a_feature.type.is_void then
@@ -126,20 +132,6 @@ feature -- Access
 									vgcp21.set_feature_name (feature_name);
 									Error_handler.insert_error (vgcp21);
 								end;
-								if a_class.is_expanded 
-									and then
-									(
-										Result.count > 1
-										or else
-										a_feature.argument_count > 0
-									)
-								then
-									create vgcp4;
-									vgcp4.set_class (a_class);
-									vgcp4.set_feature_name (feature_name);
-									Error_handler.insert_error (vgcp4);
-									Error_handler.checksum
-								end;
 							end;
 							feature_list.forth;
 						end;
@@ -147,6 +139,13 @@ feature -- Access
 					creators.forth;
 				end;
 			end;
+			if a_class.is_expanded and not has_default_create then
+				create vgcp4;
+				vgcp4.set_class (a_class);
+				vgcp4.set_feature_name ("default_create")
+				Error_handler.insert_error (vgcp4);
+				Error_handler.checksum
+			end
 		end;
 
 feature -- Settings

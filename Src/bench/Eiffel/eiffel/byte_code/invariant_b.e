@@ -16,8 +16,8 @@ inherit
 feature 
 
 	id: INTEGER;
-            -- Id of the class to which the current invariant byte code
-            -- belongs to
+			-- Id of the class to which the current invariant byte code
+			-- belongs to
 
 	byte_list: BYTE_LIST [BYTE_NODE];
 			-- Invariant byte code list
@@ -25,10 +25,10 @@ feature
 feature 
 
 	set_id (i: INTEGER) is
-            -- Assign `i' to `id'.
-        do
-            id := i;
-        end;
+			-- Assign `i' to `id'.
+		do
+			id := i;
+		end;
 
 	associated_class: CLASS_C is
 			-- Associated class
@@ -130,6 +130,8 @@ feature -- Byte code geenration
 		local
 			local_list: LINKED_LIST [TYPE_I];
 		do
+			local_list := context.local_list;
+			local_list.wipe_out;
 			Temp_byte_code_array.clear;
 				-- Default precond- and postcondition offsets
 			--Temp_byte_code_array.append_integer (0);
@@ -152,29 +154,25 @@ feature -- Byte code geenration
 			ba.append (Bc_inv_null);
 
 			from
-                local_list := context.local_list;
-                Temp_byte_code_array.append_short_integer (local_list.count);
-                local_list.start
-            until
-                local_list.after
-            loop
-                Temp_byte_code_array.append_integer (local_list.item.sk_value);
-                local_list.forth;
-            end;
+				Temp_byte_code_array.append_short_integer (local_list.count);
+				local_list.start
+			until
+				local_list.after
+			loop
+				Temp_byte_code_array.append_integer (local_list.item.sk_value);
+				local_list.forth;
+			end;
 
 			Temp_byte_code_array.append (Bc_no_clone_arg);
 
 			context.byte_prepend (ba, Temp_byte_code_array);
-
-				-- Clean the context
-			local_list.wipe_out;
 		end;
 
 	
 	Temp_byte_code_array: BYTE_ARRAY is
-            -- Temporary byte code array
-        once
-            !!Result.make;
-        end;
+			-- Temporary byte code array
+		once
+			!!Result.make;
+		end;
 
 end

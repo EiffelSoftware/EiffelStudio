@@ -89,6 +89,8 @@ feature
 			bpts: LINKED_LIST [BREAKPOINT];
 			bp: BREAKPOINT;
 		do
+			Debug_info.remove_stepped_routine;
+			Debug_info.add_step_breakpoints;
 			bpts := debug_info.new_breakpoints;
 			from
 				bpts.start

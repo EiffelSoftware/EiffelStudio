@@ -87,6 +87,10 @@ feature
 				run_info.dump_stack;
 		--	end;
 
+			Debug_info.remove_step_breakpoints;
+			if Run_info.feature_i /= Void then
+				Debug_info.add_stepped_routine (Run_info.feature_i, Run_info.break_index)
+			end;		
 			show_stopped_mark;
 			display_status;
 		end;
@@ -151,28 +155,32 @@ feature -- Display
 
 	show_stopped_mark is
 			-- Show where the execution has stopped in the routine tools
-			-- containing the related routine and set with the `show_breakpoints'
-			-- format.
+			-- containing the related routine and set with the 
+			-- `show_breakpoints' format.
 		local
-			 rout_wnds: LINKED_LIST [ROUTINE_W];
-			 rout_text: ROUTINE_TEXT
+			rout_wnds: LINKED_LIST [ROUTINE_W];
+			rout_text: ROUTINE_TEXT;
+			routine: FEATURE_I
 		do
-			from
-				rout_wnds := window_manager.routine_win_mgr.active_editors;
-				rout_wnds.start
-			until
-				rout_wnds.after
-			loop
-				rout_text := rout_wnds.item.text_window;
-				if
-					rout_text.root_stone.feature_i.body_id = Run_info.feature_i.body_id
-					and rout_text.in_debug_format
-				then
-					rout_text.redisplay_breakable_mark (Run_info.break_index, True)
-				end;
-				rout_wnds.forth
+			routine := Run_info.feature_i;
+			if routine /= Void then
+				from
+					rout_wnds := window_manager.routine_win_mgr.active_editors;
+					rout_wnds.start
+				until
+					rout_wnds.after
+				loop
+					rout_text := rout_wnds.item.text_window;
+					if
+						rout_text.root_stone.feature_i.body_id = routine.body_id
+						and rout_text.in_debug_format
+					then
+						rout_text.redisplay_breakable_mark (Run_info.break_index, True)
+					end;
+					rout_wnds.forth
+				end
 			end
-		end; -- show_stopped_mark
+		end;
 
 	display_status is
 		local

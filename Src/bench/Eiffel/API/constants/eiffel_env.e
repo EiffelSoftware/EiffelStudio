@@ -80,6 +80,11 @@ feature {NONE}
 			Result := pixmap_file_content ("debug_run.bm");
 		end;
 
+	bm_Debug_step: PIXMAP is
+		do
+			Result := pixmap_file_content ("debug_step.bm");
+		end;
+
 	bm_Explain: PIXMAP is
 		do
 			Result := pixmap_file_content ("explain.bm");

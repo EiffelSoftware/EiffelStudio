@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class 
+deferred class 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
 
 inherit
@@ -55,12 +55,24 @@ feature -- Initialize
 			end
 			bitmap_data := a_cursor_imp.bitmap_array
 			a_cur_data := bitmap_data.to_c
-			cur_pix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_data (NULL, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
+			cur_pix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_data (default_pointer, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
 
 			--| FIXME IEK If a_cursor_imp has no mask then routine seg faults.
 			a_cursor_ptr := feature {EV_GTK_EXTERNALS}.gdk_cursor_new_from_pixmap (cur_pix, a_cursor_imp.mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
 			Result := a_cursor_ptr
 		end
+		
+	fg_color: POINTER is
+				-- 
+		deferred
+		end
+
+	bg_color: POINTER is
+			-- 
+		deferred
+		end
+		
+			
 
 end -- class EV_GTK_DEPENDENT_APPLICATION_IMP
 

@@ -1,14 +1,16 @@
-echo off
+@echo off
 
+if not exist es_to_envision.exe call compile_es_to_envision.bat
+if exist samples rd /q /s samples
 mkdir samples
 cd samples
-copy ..\eiffel_stud_to_envision.exe
+copy ..\es_to_envision.exe
 copy ..\eiffel_project.eifp
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\calculator\ace.ace" "$ISE_EIFFEL\..\samples\ado"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\calculator\ace.ace" "$EIFFEL_SRC\..\samples\ado"
 mkdir ado
 cd ado
-copy %ISE_EIFFEL%\examples\dotnet\ado\ado3\*.e 
+copy %EIFFEL_SRC%\examples\dotnet\ado\ado3\*.e 
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -17,10 +19,10 @@ copy ..\\eiffel_project.eifp .\\ado.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\calculator\ace.ace" "$ISE_EIFFEL\..\samples\calculator"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\calculator\ace.ace" "$EIFFEL_SRC\..\samples\calculator"
 mkdir calculator
 cd calculator
-copy %ISE_EIFFEL%\examples\base\calculator\*.e
+copy %EIFFEL_SRC%\examples\base\calculator\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -29,10 +31,10 @@ copy ..\\eiffel_project.eifp .\\calculator.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\threading\monitor\ace.ace" "$ISE_EIFFEL\..\samples\monitor"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\threading\monitor\ace.ace" "$EIFFEL_SRC\..\samples\monitor"
 mkdir monitor
 cd monitor
-copy %ISE_EIFFEL%\examples\dotnet\threading\monitor\*.e
+copy %EIFFEL_SRC%\examples\dotnet\threading\monitor\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -41,10 +43,10 @@ copy ..\\eiffel_project.eifp .\\monitor.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\threading\pools\ace.ace" "$ISE_EIFFEL\..\samples\pools"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\threading\pools\ace.ace" "$EIFFEL_SRC\..\samples\pools"
 mkdir pools
 cd pools
-copy %ISE_EIFFEL%\examples\dotnet\threading\pools\*.e
+copy %EIFFEL_SRC%\examples\dotnet\threading\pools\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -53,10 +55,10 @@ copy ..\\eiffel_project.eifp .\\pools.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\threading\timers\ace.ace" "$ISE_EIFFEL\..\samples\timers"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\threading\timers\ace.ace" "$EIFFEL_SRC\..\samples\timers"
 mkdir timers
 cd timers
-copy %ISE_EIFFEL%\examples\dotnet\threading\timers\*.e
+copy %EIFFEL_SRC%\examples\dotnet\threading\timers\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -65,10 +67,10 @@ copy ..\\eiffel_project.eifp .\\timers.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\data\grid\ace.ace" "$ISE_EIFFEL\..\samples\data"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\data\grid\ace.ace" "$EIFFEL_SRC\..\samples\data"
 mkdir data
 cd data
-copy %ISE_EIFFEL%\examples\dotnet\winforms\data\grid\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\data\grid\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -77,10 +79,10 @@ copy ..\\eiffel_project.eifp .\\data.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\basic\ace.ace" "$ISE_EIFFEL\..\samples\simple_window"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\basic\ace.ace" "$EIFFEL_SRC\..\samples\simple_window"
 mkdir simple_window
 cd simple_window
-copy %ISE_EIFFEL%\examples\dotnet\winforms\basic\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\basic\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -89,10 +91,10 @@ copy ..\\eiffel_project.eifp .\\simple_window.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\hello_world\ace.ace" "$ISE_EIFFEL\..\samples\hello_world_window"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\hello_world\ace.ace" "$EIFFEL_SRC\..\samples\hello_world_window"
 mkdir hello_world_window
 cd hello_world_window
-copy %ISE_EIFFEL%\examples\dotnet\winforms\hello_world*.e"
+copy %EIFFEL_SRC%\examples\dotnet\winforms\hello_world*.e"
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -101,10 +103,10 @@ copy ..\\eiffel_project.eifp .\\hello_world_window.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\hello_world_dlg\ace.ace" "$ISE_EIFFEL\..\samples\hello_world_dialog"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\hello_world_dlg\ace.ace" "$EIFFEL_SRC\..\samples\hello_world_dialog"
 mkdir hello_world_dialog
 cd hello_world_dialog
-copy %ISE_EIFFEL%\examples\dotnet\winforms\hello_world_dlg\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\hello_world_dlg\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -113,10 +115,10 @@ copy ..\\eiffel_project.eifp .\\hello_world_dialog.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\control_reference\date_time_picker_ctl\ace.ace" "$ISE_EIFFEL\..\samples\date_time_picker"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\control_reference\date_time_picker_ctl\ace.ace" "$EIFFEL_SRC\..\samples\date_time_picker"
 mkdir date_time_picker
 cd date_time_picker
-copy %ISE_EIFFEL%\examples\dotnet\winforms\control_reference\date_time_picker_ctl\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\control_reference\date_time_picker_ctl\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -125,10 +127,10 @@ copy ..\\eiffel_project.eifp .\\date_time_picker.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\control_reference\progress_bar_ctl\ace.ace" "$ISE_EIFFEL\..\samples\progress_bar"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\control_reference\progress_bar_ctl\ace.ace" "$EIFFEL_SRC\..\samples\progress_bar"
 mkdir progress_bar
 cd progress_bar
-copy %ISE_EIFFEL%\examples\dotnet\winforms\control_reference\progress_bar_ctl\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\control_reference\progress_bar_ctl\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -137,10 +139,10 @@ copy ..\\eiffel_project.eifp .\\progress_bar.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\control_reference\tree_view_ctl\ace.ace" "$ISE_EIFFEL\..\samples\tree_view"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\control_reference\tree_view_ctl\ace.ace" "$EIFFEL_SRC\..\samples\tree_view"
 mkdir tree_view
 cd tree_view
-copy %ISE_EIFFEL%\examples\dotnet\winforms\control_reference\tree_view_ctl\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\control_reference\tree_view_ctl\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -149,10 +151,10 @@ copy ..\\eiffel_project.eifp .\\tree_view.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\menu\ace.ace" "$ISE_EIFFEL\..\samples\menu"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\menu\ace.ace" "$EIFFEL_SRC\..\samples\menu"
 mkdir menu
 cd menu
-copy %ISE_EIFFEL%\examples\dotnet\winforms\menu\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\menu\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -161,10 +163,10 @@ copy ..\\eiffel_project.eifp .\\menu.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\mdi\ace.ace" "$ISE_EIFFEL\..\samples\mdi"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\mdi\ace.ace" "$EIFFEL_SRC\..\samples\mdi"
 mkdir mdi
 cd mdi
-copy %ISE_EIFFEL%\examples\dotnet\winforms\mdi\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\mdi\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -173,10 +175,10 @@ copy ..\\eiffel_project.eifp .\\mdi.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc\ace.ace" "$ISE_EIFFEL\..\samples\window_calculator"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\applications\world_calc\ace.ace" "$EIFFEL_SRC\..\samples\window_calculator"
 mkdir window_calculator
 cd window_calculator
-copy %ISE_EIFFEL%\examples\dotnet\winforms\applications\world_calc\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\applications\world_calc\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -185,10 +187,10 @@ copy ..\\eiffel_project.eifp .\\window_calculator.eifp
 cd ..
 del envision.ace
 
-call eiffel_stud_to_envision.exe "ISE_EIFFEL\examples\dotnet\winforms\gdi_plus\text\ace.ace" "$ISE_EIFFEL\..\samples\gdi"
+call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\gdi_plus\text\ace.ace" "$EIFFEL_SRC\..\samples\gdi"
 mkdir gdi
 cd gdi
-copy %ISE_EIFFEL%\examples\dotnet\winforms\gdi_plus\text\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\gdi_plus\text\*.e
 mkdir debug
 mkdir release
 copy ..\\envision.ace .\\debug\\ace.ace
@@ -197,5 +199,5 @@ copy ..\\eiffel_project.eifp .\\gdi.eifp
 cd ..
 del envision.ace
 
-del eiffel_stud_to_envision.exe
+del es_to_envision.exe
 del eiffel_project.eifp

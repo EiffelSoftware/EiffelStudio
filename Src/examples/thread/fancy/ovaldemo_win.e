@@ -11,7 +11,7 @@ feature -- deferred
 	
 	launch_demo is
 		do
-			!! oval_demo_cmd.make_in ( px_window)
+			create oval_demo_cmd.make_in ( ptr_window)
 			oval_demo_cmd.launch
 		end
 

@@ -34,6 +34,7 @@ inherit
 		end
 	
 	THREAD_CONTROL
+	EXIT_CONTROL
 
 creation
 
@@ -51,7 +52,7 @@ feature {NONE} -- Initialization
 			set_menu (main_menu)
 
 				-- Create Status.
-			!! status_window.make (Current, status_window_id)
+			create status_window.make (Current, status_window_id)
 			status_window.set_parts (<<-1>>)
 
 				-- Initialization.
@@ -69,24 +70,20 @@ feature -- Initialization
 			-- Initialization of the different clients.
 		do
 				-- Create client_windows for each thread.
-			!! client_window_oval.make (Current, "Client Window_Oval")
-			!! client_window_rect.make (Current, "Client Window_Rect")
-			
-			!! p_client_window_oval.put (client_window_oval)
-			!! p_client_window_rect.put (client_window_rect)
+			create client_window_oval.make (Current, "Client Window_Oval")
+			create client_window_rect.make (Current, "Client Window_Rect")
 
 				-- Create threads (without launching them).
-			!! oval_area.make_in (p_client_window_oval)
-			!! rect_area.make_in (p_client_window_rect)
+			create oval_area.make_in (client_window_oval.item)
+			create rect_area.make_in (client_window_rect.item)
+			
+	
 		end
 
 feature -- Thread
 
 	oval_area: OVAL_DEMO_CMD
 	rect_area: RECTANGLE_DEMO_CMD
-
-	p_client_window_oval: PROXY [like client_window_oval]
-	p_client_window_rect: PROXY [like client_window_rect]
 
 feature -- Access
 
@@ -96,7 +93,7 @@ feature -- Access
 	main_menu: WEL_MENU is
 			-- The `main_menu' of the Resource Bench application.
 		once
-			!! Result.make_by_id (Idr_menu)
+			create Result.make_by_id (Idr_menu)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -114,7 +111,7 @@ feature -- Access
 	class_background: WEL_LIGHT_GRAY_BRUSH is
 			-- Standard window background color
 		once
-			!! Result.make
+			create Result.make
 		end
 
 feature -- Behavior
@@ -149,11 +146,9 @@ feature -- Behavior
 				a_menu_id
 
 			when Cmd_win_rect then
-				!! rect_demo.make
-
+				create rect_demo.make 
 			when Cmd_win_oval then
-				!! oval_demo.make
-
+				create oval_demo.make 
 			when Cmd_help_about then
 				about_box.activate
 
@@ -204,13 +199,24 @@ feature -- Behavior
 feature -- Implementation
 	
 
-	wait_for_threads is
+	stop_all_threads is
 			-- Tell the threads to stop, and wait for their end.
 		do
+			exit_mutex.lock
+			from 
+				demos_list.start
+			until
+				demos_list.after
+			loop
+				demos_list.item.stop_demo
+				demos_list.item.join_demo
+				demos_list.remove
+			end
 			oval_area.stop
 			rect_area.stop
 			oval_area.join
 			rect_area.join
+			exit_mutex.unlock
 		end
 
 	closeable: BOOLEAN is
@@ -218,7 +224,7 @@ feature -- Implementation
 		do
 			msg_box.question_message_box (Current, "Do you want to exit?", "Exit") 			
 			if (msg_box.message_box_result = Idyes) then
-				wait_for_threads
+				stop_all_threads
 				Result := True
 			else
 				Result := False
@@ -227,7 +233,7 @@ feature -- Implementation
 
 	msg_box: WEL_MSG_BOX is
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -235,7 +241,7 @@ feature -- Implementation
 	about_box: WEL_MODAL_DIALOG is
 			-- About dialog box
 		once
-			!! Result.make_by_id (Current, Idr_about)
+			create Result.make_by_id (Current, Idr_about)
 		ensure
 			Result_not_void: Result /= Void
 		end

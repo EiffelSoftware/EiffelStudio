@@ -11,7 +11,7 @@ feature -- deferred
 	
 	launch_demo is
 		do
-			!! rect_demo_cmd.make_in ( px_window)
+			create rect_demo_cmd.make_in ( ptr_window)
 			rect_demo_cmd.launch
 		end
 

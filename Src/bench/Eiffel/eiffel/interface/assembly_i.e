@@ -32,9 +32,11 @@ inherit
 
 create
 	make_from_ast,
-	make_from_consumed_assembly,
 	make_from_precompiled_cluster
-	
+
+create {ASSEMBLY_I}
+	make_from_consumed_assembly
+
 feature {NONE} -- Initialization
 
 	make_from_ast (a: ASSEMBLY_SD) is
@@ -50,6 +52,7 @@ feature {NONE} -- Initialization
 			cluster_name := a.cluster_name
 			assembly_info_make (a.assembly_name)
 			if a.version /= Void and a.culture /= Void and a.public_key_token /= Void then
+				has_gac_specification := True
 				set_version (a.version)
 				set_culture (a.culture)
 				set_public_key_token (a.public_key_token)
@@ -59,10 +62,11 @@ feature {NONE} -- Initialization
 					if consumed_folder_name = Void then
 						create l_vd61.make (Current)
 						Error_handler.insert_error (l_vd61)
+					else
+						is_in_gac := True
 					end
 				end
 			else
-				is_local := True
 				initialize_from_assembly_path (a.assembly_name)
 			end
 
@@ -92,10 +96,10 @@ feature {NONE} -- Initialization
 			create overriden_classes.make (0)
 		ensure
 			cluster_name_set: cluster_name = a.cluster_name
-			assembly_name_set: not is_local implies (assembly_name = a.assembly_name)
-			version_set: not is_local implies version = a.version
-			culture: not is_local implies culture = a.culture
-			public_key_token: not is_local implies public_key_token = a.public_key_token
+			assembly_name_set: has_gac_specification implies (assembly_name = a.assembly_name)
+			version_set: has_gac_specification implies version = a.version
+			culture: has_gac_specification implies culture = a.culture
+			public_key_token: has_gac_specification implies public_key_token = a.public_key_token
 		end
 
 	make_from_consumed_assembly (l_ass: CONSUMED_ASSEMBLY) is
@@ -114,7 +118,7 @@ feature {NONE} -- Initialization
 			
 			assembly_info_make (l_ass.location)
 			
-			is_local := True
+			is_in_gac := l_ass.is_in_gac
 			initialize_from_assembly_path (l_ass.location)
 
 			prefix_name := l_ass.name + "_"
@@ -140,6 +144,7 @@ feature {NONE} -- Initialization
 			create overriden_classes.make (0)
 		ensure
 			cluster_name_set: cluster_name /= Void
+			not_has_gac_specification: not has_gac_specification
 		end
 		
 feature -- Comparison
@@ -174,8 +179,12 @@ feature -- Access
 			-- List of referenced assemblies in Current assembly. 
 			-- Indexed by assembly ID.
 
-	is_local: BOOLEAN
-			-- Is current assembly a local assembly.
+	has_gac_specification: BOOLEAN
+			-- Is current assembly referenced through an assembly fully qualified name?
+			-- By opposition to just a path.
+			
+	is_in_gac: BOOLEAN
+			-- Is current assembly located in GAC?
 			
 	assembly_path: STRING
 			-- Path of current assembly if it is a local assembly.
@@ -200,7 +209,8 @@ feature -- Copy
 			public_key_token := old_assembly.public_key_token
 			dotnet_classes := old_assembly.dotnet_classes
 			referenced_assemblies := old_assembly.referenced_assemblies
-			is_local := old_assembly.is_local
+			is_in_gac := old_assembly.is_in_gac
+			has_gac_specification := old_assembly.has_gac_specification
 			assembly_path := old_assembly.assembly_path
 			consumed_folder_name := old_assembly.consumed_folder_name
 		end
@@ -242,7 +252,7 @@ feature -- Initialization
 			if l_types = Void or l_referenced_assemblies = Void then
 					-- Raise an error and stop processing as we cannot continue
 					-- with missing information.
-				if is_local then
+				if not has_gac_specification then
 					Error_handler.insert_error (create {VD61}.make (Current))	
 					Error_handler.raise_error
 				else
@@ -324,21 +334,17 @@ feature -- Initialization
 	consume_assemblies (l_assemblies: ARRAYED_LIST [ASSEMBLY_I]) is
 			-- Consume current local assembly along with local assemblies `l_assemblies'.
 		require
-			is_local: is_local
+			is_local: not has_gac_specification
 			assembly_path_not_void: assembly_path /= Void
---			are_locals: l_assemblies.for_all (agent is_local)
+-- FIXME: Manu 06/28/2004: agent on attribute is not yet supported
+--			are_locals: not l_assemblies.there_exists (agent has_gac_specification)
 		local
 			l_emitter: IL_EMITTER
-			l_dir: DIRECTORY
 			l_names: STRING
 		do
 			l_emitter := il_emitter
 			if l_emitter /= Void then			
 					-- And call emitter to generate XML file if needed.
-				create l_dir.make (Local_assembly_path)
-				if not l_dir.exists then
-					l_dir.create_dir
-				end
 				from
 					l_assemblies.start
 					l_names := assembly_path.twin
@@ -362,7 +368,7 @@ feature {NONE} -- Implementation
 	initialize_from_assembly is
 			-- Try to generate associated XML file of current assembly.
 		require
-			not_is_local: not is_local
+			has_gac_specification: has_gac_specification
 		local
 			l_emitter: IL_EMITTER
 		do
@@ -373,11 +379,11 @@ feature {NONE} -- Implementation
 		end
 		
 	initialize_from_assembly_path (an_assembly: STRING) is
-			-- Given a local assembly `an_assembly' initializes Current with info
+			-- Given an assembly given by its path `an_assembly' initializes Current with info
 			-- we can retrieved from assembly file.
 		require
 			an_assembly_not_void: an_assembly /= Void
-			is_local: is_local
+			not_has_gac_specification: not has_gac_specification
 		local
 			l_file: RAW_FILE
 			l_vd63: VD63
@@ -412,9 +418,12 @@ feature {NONE} -- Implementation
 							public_key_token := Void
 						end
 						consumed_folder_name := l_emitter.consumed_folder_name
+						is_in_gac := l_emitter.is_in_gac
 					end
 				end
 			end
+		ensure
+			not_has_gac_specification: not has_gac_specification
 		end
 
 feature {NONE} -- Constants

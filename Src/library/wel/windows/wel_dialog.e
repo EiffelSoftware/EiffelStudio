@@ -10,6 +10,8 @@ deferred class
 
 inherit
 	WEL_COMPOSITE_WINDOW
+		export
+			{NONE} register_window, register_current_window
 		redefine
 			on_wm_control_id_command,
 			on_wm_menu_command,
@@ -164,6 +166,14 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	register_dialog is
+			-- Register `dialog' in window manager.
+		do
+			new_dialog_cell.put (Current)
+		ensure
+			registered: new_dialog = Current
+		end
 
 	resource_name: STRING
 			-- Name of the dialog in the resource.

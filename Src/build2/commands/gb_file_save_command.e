@@ -41,7 +41,7 @@ feature -- Access
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
 		do
-			Result := system_status.project_open
+			Result := system_status.project_open and system_status.project_modified
 		end
 
 feature -- Basic operations
@@ -51,6 +51,8 @@ feature -- Basic operations
 			do
 				system_status.current_project_settings.save
 				xml_handler.save
+					-- Notify the system that the saved version is now up to date.
+				system_status.disable_project_modified
 				command_handler.update
 			end
 

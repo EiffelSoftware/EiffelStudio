@@ -274,16 +274,22 @@ feature
 		local
 			i, count: INTEGER
 			a: like argument_names
+			f: INDENT_FILE
 		do
 			from
 				a := argument_names
 				i := 1
 				count := a.count
+				f := generated_file
+				if i <= count then
+					f.putstring (a @ i)
+					i := i + 1
+				end
 			until
 				i > count
 			loop
-				if (i /= 1) then generated_file.putstring (gc_comma) end
-				generated_file.putstring (a @ i)
+				f.putstring (gc_comma)
+				f.putstring (a @ i)
 				i := i + 1
 			end
 		end
@@ -334,20 +340,29 @@ feature
 			i, count: INTEGER
 			a_types: like argument_types
 			a_names: like argument_names
+			f: INDENT_FILE
 		do
 			from
 				a_types := argument_types
 				a_names := argument_names
 				i := 1
 				count := argument_names.count
+				f := generated_file
+				if i <= count then
+					f.putstring (argument_types @ i)
+					f.putchar (' ')
+					f.putstring (argument_names @ i)
+					f.putchar (';')
+					i := i + 1
+				end
 			until
 				i > count
 			loop
-				if (i /= 1) then generated_file.putstring (gc_comma) end
-				generated_file.putstring (argument_types @ i)
-				generated_file.putchar (' ')
-				generated_file.putstring (argument_names @ i)
-				generated_file.putchar (';')
+				f.putstring (gc_comma)
+				f.putstring (argument_types @ i)
+				f.putchar (' ')
+				f.putstring (argument_names @ i)
+				f.putchar (';')
 				i := i + 1
 			end
 		end
@@ -386,30 +401,31 @@ feature
 	generate_old_variables is
 			-- Generate value for old variables
 		local
-			workbench_mode: BOOLEAN
 			list_old_expr: LINKED_LIST [like old_expressions]
 			old_expr: like old_expressions
 			temp_type: CL_TYPE_I
 			temp_class_type: CLASS_TYPE
 			inh_assert: INHERITED_ASSERTION
 			item: UN_OLD_BL
+			f: INDENT_FILE
 		do
-			workbench_mode:= Context.workbench_mode
 			inh_assert := Context.inherited_assertion
-			if Context.has_postcondition and then (old_expressions /= Void
+			if
+				Context.has_postcondition and then (old_expressions /= Void
 				or else inh_assert.has_old_expression)
 			then
-				if workbench_mode then
-					generated_file.putstring ("if (RTAL & CK_ENSURE) {")
-					generated_file.new_line
-					generated_file.indent
+				f := generated_file
+				if Context.workbench_mode then
+					f.putstring ("if (RTAL & CK_ENSURE) {")
+					f.new_line
+					f.indent
 				else
-					generated_file.putstring ("if (~in_assertion) {");					
-					generated_file.new_line
-					generated_file.indent
+					f.putstring ("if (~in_assertion) {");					
+					f.new_line
+					f.indent
 				end
-				generated_file.putstring ("in_assertion = ~0;")
-				generated_file.new_line
+				f.putstring ("in_assertion = ~0;")
+				f.new_line
 				if old_expressions /= Void then
 					from
 						old_expressions.start
@@ -426,12 +442,12 @@ feature
 					inh_assert.generate_old_variables
 				end
 
-				generated_file.putstring ("in_assertion = 0;")
-				generated_file.new_line
+				f.putstring ("in_assertion = 0;")
+				f.new_line
 				
-				generated_file.exdent
-				generated_file.putchar ('}')
-				generated_file.new_line
+				f.exdent
+				f.putchar ('}')
+				f.new_line
 			end
 		end
 

@@ -122,11 +122,13 @@ end
 			One_parameter: parameters.count = 1
 		local
 			expr: EXPR_B
+			f: INDENT_FILE
 		do
 			reg.print_register
-			generated_file.putchar (' ')
-			generated_file.putstring (special_routines.c_operation)
-			generated_file.putchar (' ')
+			f := generated_file
+			f.putchar (' ')
+			f.putstring (special_routines.c_operation)
+			f.putchar (' ')
 			expr := parameters.first; -- Cannot fail
 			expr.print_register
 		end
@@ -200,40 +202,41 @@ end
 			entry: POLY_TABLE [ENTRY]
 			rout_table: ROUT_TABLE
 			type_c: TYPE_C
+			f: INDENT_FILE
 		do
 			entry := Eiffel_table.poly_table (rout_id)
+			f := generated_file
 			if entry = Void then
 					-- Call to a deferred feature without implementation
-				generated_file.putchar ('(')
-				real_type (type).c_type.generate_function_cast (generated_file, <<>>)
-				generated_file.putstring (" RTNR)")
+				f.putchar ('(')
+				real_type (type).c_type.generate_function_cast (f, <<>>)
+				f.putstring (" RTNR)")
 			elseif entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
 				table_name := rout_id.table_name
-				generated_file.putchar ('(')
-				real_type (type).c_type.generate_function_cast (generated_file, argument_types)
-				generated_file.putchar ('(')
-				generated_file.putstring (table_name)
-				generated_file.putchar ('-')
-				generated_file.putint (entry.min_used - 1)
-				generated_file.putchar (')')
-				generated_file.putchar ('[')
+				f.putchar ('(')
+				real_type (type).c_type.generate_function_cast (f, argument_types)
+				f.putchar ('(')
+				f.putstring (table_name)
+				f.putchar ('-')
+				f.putint (entry.min_used - 1)
+				f.putstring (")[")
 				if reg.is_current then
 					if precursor_type /= Void then
 						-- Use dynamic type of parent instead 
 						-- of dynamic type of Current.
-						generated_file.putint (precursor_type.type_id - 1)
+						f.putint (precursor_type.type_id - 1)
 					else
 						context.generate_current_dtype
 					end
 				else
-					generated_file.putstring (gc_upper_dtype_lparan)
+					f.putstring (gc_upper_dtype_lparan)
 					reg.print_register
-					generated_file.putchar (')')
+					f.putchar (')')
 				end
-				generated_file.putstring ("])")
+				f.putstring ("])")
 					-- Mark routine id used
 				Eiffel_table.mark_used (rout_id)
 					-- Remember extern declaration
@@ -258,15 +261,15 @@ end
 								(type_c, internal_name)
 					end
 
-					generated_file.putchar ('(')
-					type_c.generate_function_cast (generated_file, argument_types)
-					generated_file.putstring (internal_name)
-					generated_file.putchar (')')
+					f.putchar ('(')
+					type_c.generate_function_cast (f, argument_types)
+					f.putstring (internal_name)
+					f.putchar (')')
 				else
 						-- Call to a deferred feature without implementation
-					generated_file.putchar ('(')
-					real_type (type).c_type.generate_function_cast (generated_file, <<>>)
-					generated_file.putstring (" RTNR)")
+					f.putchar ('(')
+					real_type (type).c_type.generate_function_cast (f, <<>>)
+					f.putstring (" RTNR)")
 				end
 			end
 		end
@@ -278,8 +281,10 @@ end
 			para: PARAMETER_B
 			para_type: TYPE_I
 			loc_idx: INTEGER
+			f: INDENT_FILE
 		do
 			if parameters /= Void then
+				f := generated_file
 				if system.has_separate then
 					from
 						parameters.start
@@ -288,14 +293,14 @@ end
 					loop
 						expr := parameters.item;	-- Cannot fail
 						para ?= expr
-						generated_file.putstring (gc_comma)
+						f.putstring (gc_comma)
 						if para /= Void and then para.stored_register.register_name /= Void then
 							loc_idx := context.local_index (para.stored_register.register_name)
 							para_type := real_type(para.attachment_type)
 							if para_type /= Void and then para_type.is_separate then
-								generated_file.putstring ("l[")
-								generated_file.putint (context.ref_var_used + loc_idx)
-								generated_file.putstring ("]")
+								f.putstring ("l[")
+								f.putint (context.ref_var_used + loc_idx)
+								f.putstring ("]")
 							else
 								expr.print_register
 							end
@@ -311,7 +316,7 @@ end
 						parameters.after
 					loop
 						expr := parameters.item;	-- Cannot fail
-						generated_file.putstring (gc_comma)
+						f.putstring (gc_comma)
 						expr.print_register
 						parameters.forth
 					end
@@ -360,8 +365,10 @@ feature -- Concurrent Eiffel
 			para_type: TYPE_I
 			i: INTEGER
 			loc_idx: INTEGER
+			f: INDENT_FILE
 		do
 			if parameters /= Void then
+				f := generated_file
 				from
 					parameters.start
 					i := 0
@@ -371,56 +378,56 @@ feature -- Concurrent Eiffel
 					expr ?= parameters.item;    -- Cannot fail
 					para_type := real_type(expr.attachment_type)
 					if para_type.is_boolean then
-						generated_file.putstring ("CURPB(")
+						f.putstring ("CURPB(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_long then
-						generated_file.putstring ("CURPI(")
+						f.putstring ("CURPI(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_feature_pointer then
-						generated_file.putstring ("CURPP(")
+						f.putstring ("CURPP(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_char then
-						generated_file.putstring ("CURPC(")
+						f.putstring ("CURPC(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_double then
-						generated_file.putstring ("CURPD(")
+						f.putstring ("CURPD(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_float then
-						generated_file.putstring ("CURPR(")
+						f.putstring ("CURPR(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_reference and not para_type.is_separate then
-						generated_file.putstring ("CURPO(")
+						f.putstring ("CURPO(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_separate then
-						generated_file.putstring ("CURPSO(")
+						f.putstring ("CURPSO(")
 --                    expr.print_register
 						if expr.stored_register.register_name /= Void then
 							loc_idx := context.local_index (expr.stored_register.register_name)
@@ -428,17 +435,17 @@ feature -- Concurrent Eiffel
 							loc_idx := -1
 						end
 						if loc_idx /= -1 then
-							generated_file.putstring ("l[")
-							generated_file.putint (context.ref_var_used + loc_idx)
-							generated_file.putstring ("]")
+							f.putstring ("l[")
+							f.putint (context.ref_var_used + loc_idx)
+							f.putstring ("]")
 						else
 							-- It'll be the case when the value is "Void"
 							expr.print_register
 						end
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					end
 					i := i + 1
 					parameters.forth

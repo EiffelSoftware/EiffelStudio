@@ -28,31 +28,33 @@ feature
 			-- Generate test at the head of once routines
 		local
 			type_i: TYPE_I;
+			f: INDENT_FILE
 		do
+			f := generated_file
 			type_i := real_type (result_type);
-			generated_file.putstring ("if (MTOG((");
-			type_i.c_type.generate (generated_file);
-			generated_file.putstring ("*),*(EIF_once_values + EIF_oidx_off + ");
-			generated_file.putint (context.once_index);
-			generated_file.putstring ("),PResult))");
-			generated_file.new_line;
-			generated_file.indent;
+			f.putstring ("if (MTOG((");
+			type_i.c_type.generate (f);
+			f.putstring ("*),*(EIF_once_values + EIF_oidx_off + ");
+			f.putint (context.once_index);
+			f.putstring ("),PResult))");
+			f.new_line;
+			f.indent;
 				-- Full generation for a once function, but a single
 				-- return for procedures.
-			generated_file.putstring ("return");
+			f.putstring ("return");
 			if result_type /= Void and then not result_type.is_void then
-				generated_file.putchar (' ');
+				f.putchar (' ');
 				if context.result_used then
-					generated_file.putstring ("*PResult");
+					f.putstring ("*PResult");
 				else
-					type_i.c_type.generate_cast (generated_file);
-					generated_file.putchar ('0');
+					type_i.c_type.generate_cast (f);
+					f.putchar ('0');
 				end;
 			end;
-			generated_file.putstring (";%N");
-			generated_file.exdent;
+			f.putstring (";%N");
+			f.exdent;
 				-- Detach this block
-			generated_file.new_line;
+			f.new_line;
 			if context.result_used then
 				if real_type(result_type).c_type.is_pointer then
 						-- Record once by allocating room in once_set stack.
@@ -60,38 +62,38 @@ feature
 						-- only if it is a reference. This will raise an
 						-- exception if the address cannot be recorded and
 						-- 'PResult' won't be set via the key.
-					generated_file.putstring ("PResult = (");
-					type_i.c_type.generate (generated_file);
-					generated_file.putstring ("*) RTOC(0);");
+					f.putstring ("PResult = (");
+					type_i.c_type.generate (f);
+					f.putstring ("*) RTOC(0);");
 				else
 					-- If not a reference, we need to allocate some place
 					-- where to store the Result (We can't store Result
 					-- directly, since it might be 0...)
-					generated_file.putstring ("PResult = (");
-					type_i.c_type.generate (generated_file);
-					generated_file.putstring ("*) cmalloc(sizeof(");
-					type_i.c_type.generate (generated_file);
-					generated_file.putstring ("*));");
+					f.putstring ("PResult = (");
+					type_i.c_type.generate (f);
+					f.putstring ("*) cmalloc(sizeof(");
+					type_i.c_type.generate (f);
+					f.putstring ("*));");
 				end;
 			else
-				generated_file.putstring ("PResult = (");
-				type_i.c_type.generate (generated_file);
-				generated_file.putstring ("*) 1;");
+				f.putstring ("PResult = (");
+				type_i.c_type.generate (f);
+				f.putstring ("*) 1;");
 			end;
-			generated_file.new_line;
-			generated_file.putstring ("MTOS(*(EIF_once_values + EIF_oidx_off + ");
-			generated_file.putint (context.once_index);
-			generated_file.putstring ("),PResult);");
-			generated_file.new_line;
+			f.new_line;
+			f.putstring ("MTOS(*(EIF_once_values + EIF_oidx_off + ");
+			f.putint (context.once_index);
+			f.putstring ("),PResult);");
+			f.new_line;
 			if context.workbench_mode then
 					-- Real body id to be stored in the id list of already
 					-- called once routines to prevent supermelting them
 					-- (losing in that case their memory (already called and
 					-- result)) and to allow result inspection.
-				generated_file.putstring ("RTWO(");
-				generated_file.putstring (real_body_id.generated_id);
-				generated_file.putstring (gc_rparan_comma);
-				generated_file.new_line
+				f.putstring ("RTWO(");
+				f.putstring (real_body_id.generated_id);
+				f.putstring (gc_rparan_comma);
+				f.new_line
 			end;
 			init_dtype;
 		end;

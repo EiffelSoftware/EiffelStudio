@@ -67,20 +67,23 @@ feature
 
 	generate is
 			-- Generate C code in `generated_file'.
+		local
+			f: INDENT_FILE
 		do
 			generate_line_info;
 			interval.generate;
+			f := generated_file
 			if compound /= Void then
-				generated_file.indent;
+				f.indent;
 				compound.generate;
-				generated_file.putstring ("break;");
-				generated_file.new_line;
-				generated_file.exdent;
+				f.putstring ("break;");
+				f.new_line;
+				f.exdent;
 			else
-				generated_file.indent;
-				generated_file.putstring ("break;");
-				generated_file.new_line;
-				generated_file.exdent;
+				f.indent;
+				f.putstring ("break;");
+				f.new_line;
+				f.exdent;
 			end;
 		end;
 

@@ -184,7 +184,9 @@ end
 			offset_class_type: CLASS_TYPE
 			type_c: TYPE_C
 			type_i: TYPE_I
+			f: INDENT_FILE
 		do
+			f := generated_file
 			type_i := real_type (type)
 			type_c := type_i.c_type
 			entry := Eiffel_table.poly_table (rout_id)
@@ -192,37 +194,37 @@ end
 				-- or if it is a bit.
 			if not type_i.is_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
-				generated_file.putchar ('*')
+				f.putchar ('*')
 					-- ...followed by the appropriate access cast
-				type_c.generate_access_cast (generated_file)
+				type_c.generate_access_cast (f)
 			end
-			generated_file.putchar ('(')
+			f.putchar ('(')
 			reg.print_register
 --			if reg.is_predefined or reg.register /= No_register then
-				generated_file.putstring (gc_plus)
+				f.putstring (gc_plus)
 --			else
---				generated_file.putstring (" +")
---				generated_file.new_line
---				generated_file.indent
+--				f.putstring (" +")
+--				f.new_line
+--				f.indent
 --			end
 			if entry.is_polymorphic (typ.type_id) then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
 				table_name := rout_id.table_name
-				generated_file.putchar ('(')
-				generated_file.putstring (table_name)
-				generated_file.putchar ('-')
-				generated_file.putint (entry.min_type_id - 1)
-				generated_file.putchar (')')
-				generated_file.putchar ('[')
+				f.putchar ('(')
+				f.putstring (table_name)
+				f.putchar ('-')
+				f.putint (entry.min_type_id - 1)
+				f.putchar (')')
+				f.putchar ('[')
 				if reg.is_current then
 					context.generate_current_dtype
 				else
-					generated_file.putstring (gc_upper_dtype_lparan)
+					f.putstring (gc_upper_dtype_lparan)
 					reg.print_register
-					generated_file.putchar (')')
+					f.putchar (')')
 				end
-				generated_file.putchar (']')
+				f.putchar (']')
 					-- Mark attribute offset table used.
 				Eiffel_table.mark_used (rout_id)
 					-- Remember external attribute offset declaration
@@ -231,11 +233,11 @@ end
 					-- Hardwire the offset
 				offset_class_type := system.class_type_of_id (typ.type_id)
 				offset_class_type.skeleton.generate_offset
-					(generated_file, attribute_id)
+					(f, attribute_id)
 			end
-			generated_file.putchar (')')
+			f.putchar (')')
 --			if not (reg.is_predefined or reg.register /= No_register) then
---				generated_file.exdent
+--				f.exdent
 --			end
 		end
 

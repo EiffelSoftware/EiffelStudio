@@ -81,12 +81,14 @@ feature
 		local
 			target_type, source_type: TYPE_I;
 			loc_idx: INTEGER;
+			f: INDENT_FILE
 		do
+			f := generated_file
 			target_type := real_type (attachment_type);
 			source_type := real_type (expression.type);
 			if source_type.is_none and target_type.is_basic then
-				generated_file.putstring ("RTEC(EN_VEXP);");
-				generated_file.new_line;
+				f.putstring ("RTEC(EN_VEXP);");
+				f.new_line;
 			else
 				expression.generate;
 				if need_metamorphosis then
@@ -100,18 +102,18 @@ feature
 							loc_idx := -1;
 						end;
 						if loc_idx /= -1 then
-							generated_file.putstring ("l[");
-							generated_file.putint (context.ref_var_used + loc_idx);
-							generated_file.putstring ("] = ");
+							f.putstring ("l[");
+							f.putint (context.ref_var_used + loc_idx);
+							f.putstring ("] = ");
 							if not real_type(expression.type).is_separate then
-								generated_file.putstring (" CURLTS(");
+								f.putstring (" CURLTS(");
 								expression.stored_register.print_register_by_name;
-								generated_file.putstring ("); ");
+								f.putstring ("); ");
 							else
 								expression.stored_register.print_register_by_name;
-								generated_file.putstring (";");
+								f.putstring (";");
 							end;
-							generated_file.new_line;
+							f.new_line;
 						end;
 					end;
 				end;
@@ -123,23 +125,25 @@ feature
 		local
 			source_type: TYPE_I;
 			basic_i: BASIC_I;
+			f: INDENT_FILE
 		do
+			f := generated_file
 			source_type := real_type (expression.type);
 			if source_type.is_expanded then
 					-- Expanded objects are cloned
 				register.print_register;
-				generated_file.putstring (" = ");
-				generated_file.putstring ("RTCL(");
+				f.putstring (" = ");
+				f.putstring ("RTCL(");
 				expression.print_register;
-				generated_file.putchar(')');
+				f.putchar(')');
 			else
 					-- Simple type objects are metamorphosed
 				basic_i ?= source_type;		-- Cannot fail
 				basic_i.metamorphose
-					(register, expression, generated_file, context.workbench_mode);
+					(register, expression, f, context.workbench_mode);
 			end;
-			generated_file.putchar(';');
-			generated_file.new_line;
+			f.putchar(';');
+			f.new_line;
 		end;
 			
 	print_register is
@@ -148,11 +152,13 @@ feature
 			target_type, source_type: TYPE_I;
 			target_ctype, source_ctype: TYPE_C;
 			cast_generated: BOOLEAN;
+			f: INDENT_FILE
 		do
+			f := generated_file
 			target_type := real_type (attachment_type);
 			source_type := real_type (expression.type);
 			if target_type.is_none then
-				generated_file.putstring ("(char *) 0");
+				f.putstring ("(char *) 0");
 			elseif target_type.is_expanded then
 					-- The callee is responsible for cloning the reference.
 				expression.print_register;
@@ -163,12 +169,12 @@ feature
 				source_ctype := source_type.c_type;
 				if source_ctype.level /= target_ctype.level then
 					cast_generated := True;
-					target_ctype.generate_cast (generated_file);
-					generated_file.putchar('(');
+					target_ctype.generate_cast (f);
+					f.putchar('(');
 				end;
 				expression.print_register;
 				if cast_generated then
-					generated_file.putchar(')');
+					f.putchar(')');
 				end;
 			else
 					-- In that case, we have been careful not to propagate any

@@ -56,50 +56,59 @@ feature
 	
 	generate is
 			-- Generate assertion
+		local
+			f: INDENT_FILE
 		do
+			f := generated_file
 				-- Generate the recording of the assertion
 			if tag /= Void then
-				generated_file.putstring ("RTCT(");
-				generated_file.putchar ('"');
-				generated_file.putstring (tag);
-				generated_file.putchar ('"');
-				generated_file.putstring (gc_comma);
+				f.putstring ("RTCT(");
+				f.putchar ('"');
+				f.putstring (tag);
+				f.putchar ('"');
+				f.putstring (gc_comma);
 			else
-				generated_file.putstring ("RTCS(");
+				f.putstring ("RTCS(");
 			end;
 			generate_assertion_code (context.assertion_type);
-			generated_file.putstring (gc_rparan_comma);
-			generated_file.new_line;
+			f.putstring (gc_rparan_comma);
+			f.new_line;
 				-- Now evaluate the expression
 			expr.generate;
-			generated_file.putstring (gc_if_l_paran);
+			f.putstring (gc_if_l_paran);
 			expr.print_register;
-			generated_file.putstring (") {");
+			f.putstring (") {");
 			generate_sucess;
-			generated_file.putstring (gc_lacc_else_r_acc);
+			f.putstring (gc_lacc_else_r_acc);
 			generate_failure;
-			generated_file.putchar ('}');
-			generated_file.new_line;
+			f.putchar ('}');
+			f.new_line;
 		end;
 
 	generate_sucess is
 			-- Generate a success in assertion
+		local
+			f: INDENT_FILE
 		do
-			generated_file.new_line;
-			generated_file.indent;
-			generated_file.putstring ("RTCK;");
-			generated_file.new_line;
-			generated_file.exdent;
+			f := generated_file
+			f.new_line;
+			f.indent;
+			f.putstring ("RTCK;");
+			f.new_line;
+			f.exdent;
 		end;
 
 	generate_failure is
 			-- Generate a failure in assertion
+		local
+			f: INDENT_FILE
 		do
-			generated_file.new_line;
-			generated_file.indent;
-			generated_file.putstring ("RTCF;");
-			generated_file.new_line;
-			generated_file.exdent;
+			f := generated_file
+			f.new_line;
+			f.indent;
+			f.putstring ("RTCF;");
+			f.new_line;
+			f.exdent;
 		end;
 
 	

@@ -12,7 +12,7 @@ inherit
 			generate_parameters_list, generate_access_on_type
 		redefine
 			parent, is_feature_special, generate_end,
-			analyze
+			generate_metamorphose_end, analyze
 		end;
 
 	FEATURE_BL
@@ -20,7 +20,7 @@ inherit
 			enlarged, inlined_byte_code
 		redefine
 			fill_from, parent, check_dt_current, is_feature_special,
-			generate_end, analyze
+			generate_end, generate_metamorphose_end, analyze
 		end
 
 feature
@@ -88,7 +88,7 @@ feature -- Code generation
 			Result := System.remover.array_optimizer.array_item_type (id);
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
 		local
 			expr: EXPR_B
 			id: INTEGER;
@@ -128,4 +128,10 @@ feature -- Code generation
 			generated_file.put_character (')');
 		end
 
+	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
+		basic_type: BASIC_I; file: INDENT_FILE) is
+			-- Generate final portion of C code.
+		do
+			generate_end (gen_reg, class_type, class_type.is_separate)
+		end
 end

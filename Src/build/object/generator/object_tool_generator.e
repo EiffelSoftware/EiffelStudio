@@ -34,7 +34,9 @@ feature -- Creation
 			-- Create the object tool generator.
 		do
 			{EB_TOP_SHELL} Precursor (a_name, a_screen)
-			!! top_form.make ("", Current)
+			!! split_window.make_horizontal ("", Current)
+			!! top_form.make ("", split_window)
+			!! bottom_form.make ("", split_window)
 			!! arrow_form.make ("", top_form)
 			!! include_label.make ("Include", arrow_form)
 			!! include_all_label.make ("Include all", arrow_form)
@@ -46,15 +48,16 @@ feature -- Creation
 			!! exclude_all_button.make ("", arrow_form)
 			!! excluded_label.make ("Excluded queries", top_form)
 			!! included_label.make ("Included queries", top_form)
-			!! default_label.make ("Default:", arrow_form)
-			!! select_radio_box.make ("", arrow_form)	
-			!! precondition_test.make("Test preconditions", select_radio_box)
-			!! no_precondition_test.make ("No preconditions test", select_radio_box)
-			!! scrolled_w.make ("", top_form)
-			!! properties_rc.make ("", scrolled_w)
-			!! generate_button.make ("Generate", top_form)
 			!! included_list.make ("", top_form)
 			!! excluded_list.make ("", top_form)
+--			!! default_label.make ("Default:", arrow_form)
+--			!! select_radio_box.make ("", arrow_form)	
+--			!! precondition_test.make("Test preconditions", select_radio_box)
+--			!! no_precondition_test.make ("No preconditions test", select_radio_box)
+			!! scrolled_w.make ("", bottom_form)
+			!! separator.make ("", bottom_form)
+			!! properties_rc.make ("", scrolled_w)
+			!! generate_button.make ("Generate", bottom_form)
 			set_values
 			attach_all
 			set_callbacks
@@ -69,15 +72,15 @@ feature -- Creation
 		do
 			set_title ("Object tool generator: ")
 			set_size (resources.object_tool_generator_width, resources.object_tool_generator_height)
-			included_label.set_left_alignment
-			excluded_label.set_left_alignment
+			set_x_y (resources.object_tool_generator_x, resources.object_tool_generator_y)
+			split_window.set_proportion (20)
 			include_button.set_down
 			include_all_button.set_down
 			exclude_button.set_up
 			exclude_all_button.set_up
 			included_list.set_multiple_selection
 			excluded_list.set_multiple_selection
-			precondition_test.arm
+--			precondition_test.arm
 			scrolled_w.set_working_area (properties_rc)
 			!! set_colors
 			set_colors.execute (Current)
@@ -86,58 +89,63 @@ feature -- Creation
 	attach_all is
 			-- Perform attachments.
 		do
-			arrow_form.set_fraction_base (100)
-			arrow_form.attach_top (include_button, 0)
-			arrow_form.attach_top (include_label, 3)
-			arrow_form.attach_top (include_all_button, 0)
-			arrow_form.attach_top (include_all_label, 3)
+			arrow_form.attach_top (include_button, 15)
+			arrow_form.attach_top (include_label, 18)
+			arrow_form.attach_left (include_button, 2)
+			arrow_form.attach_left_widget (include_button, include_label, 3)
+			arrow_form.attach_right (include_label, 2)
 
 			arrow_form.attach_top_widget (include_button, exclude_button, 5)
-			arrow_form.attach_top_widget (include_button, exclude_label, 5)
 			arrow_form.attach_top_widget (include_label, exclude_label, 13)
-			arrow_form.attach_top_widget (include_all_button, exclude_all_button, 5)
-			arrow_form.attach_top_widget (include_all_button, exclude_all_label, 5)
-			arrow_form.attach_top_widget (include_all_label, exclude_all_label, 13)
+			arrow_form.attach_left (exclude_button, 2)
+			arrow_form.attach_left_widget (exclude_button, exclude_label, 3)
+			arrow_form.attach_right (exclude_label, 2)
 
-			arrow_form.attach_bottom (exclude_button, 0)
-			arrow_form.attach_bottom (exclude_label, 0)
+			arrow_form.attach_top_widget (exclude_button, include_all_button, 10)
+			arrow_form.attach_top_widget (exclude_label, include_all_label, 18)
+			arrow_form.attach_left (include_all_button, 2)
+			arrow_form.attach_left_widget (include_all_button, include_all_label, 3)
+			arrow_form.attach_right (include_all_label, 2)
+
+			arrow_form.attach_top_widget (include_all_button, exclude_all_button, 5)
+			arrow_form.attach_top_widget (include_all_label, exclude_all_label, 13)
+			arrow_form.attach_left (exclude_all_button, 2)
+			arrow_form.attach_left_widget (exclude_all_button, exclude_all_label, 3)
+			arrow_form.attach_right (exclude_all_label, 2)
+
 			arrow_form.attach_bottom (exclude_all_button, 0)
 			arrow_form.attach_bottom (exclude_all_label, 0)
 
-			arrow_form.attach_top (default_label, 5)
-			arrow_form.attach_top (select_radio_box, 3)
-			arrow_form.attach_right_widget (select_radio_box, default_label, 10)
-			arrow_form.attach_right (select_radio_box, 10)
-			arrow_form.attach_left (include_button, 10)
-			arrow_form.attach_left (exclude_button, 10)
-			arrow_form.attach_left_widget (include_button, include_label, 3)
-			arrow_form.attach_left_widget (exclude_button, exclude_label, 3)
-
-			arrow_form.attach_left_widget (include_label, include_all_button, 13)
-			arrow_form.attach_left_widget (exclude_label, exclude_all_button, 10)
-			arrow_form.attach_left_widget (include_all_button, include_all_label, 3) 
-			arrow_form.attach_left_widget (exclude_all_button, exclude_all_label, 3)
+			top_form.set_fraction_base (5)
 			top_form.attach_top (excluded_label, 0)
+			top_form.attach_top (arrow_form, 0)
+			top_form.attach_top (included_label, 0)
 			top_form.attach_left (excluded_label, 0)
-			top_form.attach_right (excluded_label, 0)
+			top_form.attach_right_position (excluded_label, 2)
+			top_form.attach_left_position (arrow_form, 2)
+			top_form.attach_right_position (arrow_form, 3)
+			top_form.attach_left_position (included_label, 3)
+			top_form.attach_right (included_label, 0)
+
 			top_form.attach_top_widget (excluded_label, excluded_list, 5)
-			top_form.attach_left (excluded_list, 5)
-			top_form.attach_right (excluded_list, 5)
-			top_form.attach_top_widget (excluded_list, arrow_form, 5)
-			top_form.attach_left (arrow_form, 0)
-			top_form.attach_right (arrow_form, 0)
-			top_form.attach_top_widget (arrow_form, included_label, 10)
-			top_form.attach_left (included_label, 0)
-			top_form.attach_right (included_label, 5)
+			top_form.attach_left (excluded_list, 3)
+			top_form.attach_right_position (excluded_list, 2)
+			top_form.attach_bottom (excluded_list, 0)
+
 			top_form.attach_top_widget (included_label, included_list, 5)
-			top_form.attach_left (included_list, 5)
-			top_form.attach_right (included_list, 5)
-			top_form.attach_top_widget (included_list, scrolled_w, 5)
-			top_form.attach_left (scrolled_w, 5)
-			top_form.attach_right (scrolled_w, 5)
-			top_form.attach_bottom (generate_button, 0)
-			top_form.attach_left (generate_button, 5)
-			top_form.attach_bottom_widget (generate_button, scrolled_w, 5)
+			top_form.attach_left_position (included_list, 3)
+			top_form.attach_right (included_list, 3)
+			top_form.attach_bottom (included_list, 0)
+
+			bottom_form.attach_top (scrolled_w, 0)
+			bottom_form.attach_left (scrolled_w, 3)
+			bottom_form.attach_right (scrolled_w, 3)
+			bottom_form.attach_bottom_widget (separator, scrolled_w, 0)
+			bottom_form.attach_left (separator, 0)
+			bottom_form.attach_right (separator, 0)
+			bottom_form.attach_bottom_widget (generate_button, separator, 0)
+			bottom_form.attach_bottom (generate_button, 0)
+			bottom_form.attach_right (generate_button, 3)
 		end
 
 	set_callbacks is
@@ -160,8 +168,14 @@ feature -- Creation
 
 feature {NONE} -- GUI attributes
 
-	top_form,
+	split_window: SPLIT_WINDOW	
 			-- Form of the top shell itself
+
+	top_form,
+			-- Top form of the split window
+
+	bottom_form: SPLIT_WINDOW_CHILD
+			-- Bottom form of the split window
 
 	arrow_form: FORM
 			-- Form containing the arrows
@@ -181,10 +195,10 @@ feature {NONE} -- GUI attributes
 	exclude_label,
 			-- Exclude button label
 
-	exclude_all_label,
+	exclude_all_label: LABEL
 			-- Exclude all button label
 
-	default_label: LABEL
+--	default_label: LABEL
 			-- default label	
 
 	include_button,
@@ -199,7 +213,7 @@ feature {NONE} -- GUI attributes
 	exclude_all_button: ARROW_B
 			-- Exclude all button
 
-	select_radio_box: RADIO_BOX
+--	select_radio_box: RADIO_BOX
 			-- Radio box used to select the preconditions test by default
 
 	scrolled_w: SCROLLED_W
@@ -218,12 +232,15 @@ feature {NONE} -- GUI attributes
 	excluded_list: SCROLLABLE_LIST
 			-- List of excluded queries
 	
-feature {QUERY_EDITOR_FORM}
+	separator: THREE_D_SEPARATOR
+			-- Separators between the `scrolled_w' and the `generate_button' 
 
-	no_precondition_test,
+-- feature {QUERY_EDITOR_FORM}
+
+--	no_precondition_test,
 			-- No preconditions test by default field
 
-	precondition_test: TOGGLE_B
+--	precondition_test: TOGGLE_B
 			-- Preconditions test by default field
 
 

@@ -40,6 +40,14 @@ feature -- Status report
 			Result := implementation.selected
 		end
 
+feature -- Event handling
+
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when a tree item is selected.
+
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when a tree item is deselected.
+
 feature -- Implementation
 	
 	implementation: EV_TREE_I	
@@ -56,6 +64,8 @@ feature -- Implementation
 		do
 			{EV_PRIMITIVE} Precursor
 			{EV_ITEM_LIST} Precursor
+			create select_actions
+			create deselect_actions
 		end
 
 end -- class EV_TREE
@@ -81,6 +91,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/24 01:51:10  king
+--| Added appropriate action sequences
+--|
 --| Revision 1.18  2000/02/22 23:58:44  king
 --| Added selected_item
 --|

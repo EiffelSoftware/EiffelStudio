@@ -1,5 +1,10 @@
--- Table of inherited features sorted by name: feature `pass2' is the
--- second pass of the compiler.
+indexing
+	description: "[
+		Table of inherited features indexed by name ID: feature `pass2' is
+		second pass of compiler.
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	INHERIT_TABLE 
@@ -899,7 +904,6 @@ end;
 
 			Result := yacc_feature.new_feature;
 			Result.set_feature_name_id (feature_name_id);
-			Result.set_original_name_id (feature_name_id);
 			Result.set_written_in (a_class.class_id);
 			Result.set_is_frozen (feat.is_frozen);
 			Result.set_is_infix (feat.is_infix);
@@ -1196,7 +1200,7 @@ end;
 			loop
 				inherit_feat := item_for_iteration;
 				inherited_info := inherit_feat.inherited_info;
-				if	inherited_info = Void then
+				if inherited_info = Void then
 					if inherit_feat.nb_features > 0 then
 							-- Cannot find a redefinition
 						!!vdrs4;
@@ -1214,7 +1218,7 @@ end;
 						inherited_feature := deferred_info.a_feature;
 						inherited_feature.set_feature_name_id (feature_name_id);
 							-- Initialization of an inherited feature
-						init_inherited_feature (inherited_feature,inherit_feat);
+						init_inherited_feature (inherited_feature, inherit_feat);
 							-- Insertion in the origin table
 						inherited_info := clone (deferred_info);
 						inherited_info.set_a_feature (inherited_feature);

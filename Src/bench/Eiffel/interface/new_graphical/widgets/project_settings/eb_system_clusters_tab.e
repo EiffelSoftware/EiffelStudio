@@ -545,6 +545,8 @@ feature {NONE} -- Cluster display and saving
 				end
 
 				fill_list (l_include, include_list.list, agent new_file_name_sd (?), True)
+			else
+				prop.set_include_option (Void)
 			end
 
 			if not exclude_list.is_empty then
@@ -555,6 +557,8 @@ feature {NONE} -- Cluster display and saving
 				end
 
 				fill_list (l_exclude, exclude_list.list, agent new_file_name_sd (?), True)
+			else
+				prop.set_exclude_option (Void)
 			end
 
 			if visible_list.is_sensitive and then not visible_list.is_empty then
@@ -566,6 +570,8 @@ feature {NONE} -- Cluster display and saving
 
 				fill_list (l_visible, visible_list.list,
 					agent new_clas_visi_sd (?, Void, Void, Void, Void), False)
+			else
+				prop.set_visible_option (Void)
 			end
 
 			if default_options = Void then

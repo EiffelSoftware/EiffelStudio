@@ -118,23 +118,30 @@ feature -- Basic operation
 			-- Place tools in `Current'.
 		require
 			has_item: item /= Void
-			item_is_filler: item = filler
 			not_in_wizard_mode: not system_status.is_wizard_system
+		local
+			vertical_box: EV_VERTICAL_BOX
 		do
 			lock_update
 				-- Remove the filler.
-			wipe_out
-				-- Add the tools.	
-			extend (tool_holder)
-			
-				-- Position split areas.
-			initialize_split_areas
-			
+			vertical_box ?= item
+			check
+				item_was_vertical_box: vertical_box /= Void
+			end
+			vertical_box.go_i_th (1)
+			vertical_box.remove
+			vertical_box.put_left (tool_holder)
 			build_menu
+				-- This causes a postcondition to fail in EV_SPLIT_AREA.
+				-- However, it needs to be executed here so that it is not
+				-- visible. The problem is, that while the window is still
+				-- locked, the re-sizing is not completely calculated, hence
+				-- the postcondition violation.
+			initialize_split_areas
+
 			unlock_update
 		ensure
 			has_item: item /= Void
-			item_is_tool_holder: item = tool_holder
 		end
 		
 	hide_all_floating_tools is
@@ -152,14 +159,18 @@ feature -- Basic operation
 			-- Remove tools from `Current'.
 		require
 			has_item: item /= Void
-			item_is_tool_holder: item = tool_holder
 			not_in_wizard_mode: not system_status.is_wizard_system
+		local
+			vertical_box: EV_VERTICAL_BOX
 		do
 			lock_update
 				-- Remove the tools
-			wipe_out
-				-- Add the filler
-			extend (filler)
+			vertical_box ?= item
+			check
+				item_is_vertical_box: vertical_box /= Void
+			end
+			vertical_box.go_i_th (1)
+			vertical_box.replace (filler)
 				-- We build the menus here, as the only time they
 				-- change at the moment is in conjunction with the
 				-- tools being displayed. This may have to change later.
@@ -167,7 +178,6 @@ feature -- Basic operation
 			unlock_update
 		ensure
 			has_item: item /= Void
-			item_is_filler: item = filler
 		end
 
 feature {NONE} -- Implementation
@@ -267,8 +277,7 @@ feature {NONE} -- Implementation
 			separator: EV_HORIZONTAL_SEPARATOR
 			horizontal_box: EV_HORIZONTAL_BOX
 			the_tool_holder: EV_VERTICAL_BOX
-			frame: EV_FRAME
-			padding_box: EV_HORIZONTAL_BOX
+			vertical_box: EV_VERTICAL_BOX
 		do
 			if a_tool_holder /= Void then
 				the_tool_holder := a_tool_holder
@@ -292,25 +301,40 @@ feature {NONE} -- Implementation
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)
 			
-				-- Now build the status bar
+			if not system_status.is_wizard_system then
+				create vertical_box
+				extend (vertical_box)
+				create filler
+				vertical_box.extend (filler)
+				vertical_box.extend (status_bar)
+				vertical_box.disable_item_expand (status_bar)
+			end
+		end
+		
+	status_bar: EV_VERTICAL_BOX is
+			-- `Result' is status bar displayed in `Current'.
+		local
+			padding_box: EV_HORIZONTAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
+			frame: EV_FRAME
+		once
+			create Result
 			create horizontal_box
 			create frame
 			horizontal_box.extend (frame)
 			frame.set_style (1)
 			create padding_box
 			padding_box.set_minimum_height (2)
-			the_tool_holder.extend (padding_box)
-			the_tool_holder.disable_item_expand (padding_box)
-			the_tool_holder.extend (horizontal_box)
-			the_tool_holder.disable_item_expand (horizontal_box)
+			Result.extend (padding_box)
+			Result.disable_item_expand (padding_box)
+			Result.extend (horizontal_box)
+			Result.disable_item_expand (horizontal_box)
 			frame.extend (status_bar_label)
 			frame.set_minimum_height (frame.minimum_height + 3)
-			
-			if not system_status.is_wizard_system then
-				create filler
-				extend (filler)
-			end
-		end		
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 
 	tool_bar: EV_TOOL_BAR is
 			-- Tool bar of `Current'

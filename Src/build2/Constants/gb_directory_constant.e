@@ -87,7 +87,7 @@ feature -- Status setting
 		do
 			cross_referers.extend (cross_referer)
 		ensure
-			has_cross_referer: not cross_referers.has (cross_referer)
+			has_cross_referer: cross_referers.has (cross_referer)
 		end
 	
 	remove_cross_referer (cross_referer: GB_CONSTANT) is
@@ -105,9 +105,6 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 	modify_value (new_value: STRING) is
 			-- Modify `value' to `new_value' and update all referers.
 		local
-			constant_context: GB_CONSTANT_CONTEXT
-			gb_ev_any: GB_EV_ANY
-			execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do

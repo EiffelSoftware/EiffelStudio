@@ -69,18 +69,18 @@ feature -- Primitives
 		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_FEATURE is
-			-- Calculated type in function of the feauure `f' which has
+			-- Calculated type in function of the feature `f' which has
 			-- the type Current and the feautre table `feat_table
 		local
 			origin_table: HASH_TABLE [FEATURE_I, INTEGER];
 			anchor_feature, orig_feat: FEATURE_I;
 			anchor_type: TYPE_B;
 		do
-			origin_table := feat_table.origin_table;
 			if System.current_class.id /= class_id then
 debug
 	io.error.putstring ("LIKE_FEATURE solved_type origin_table%N");
 end;
+				origin_table := feat_table.origin_table;
 				orig_feat := System.class_of_id (class_id).feature_table
 								.item (feature_name);
 				if orig_feat = Void then

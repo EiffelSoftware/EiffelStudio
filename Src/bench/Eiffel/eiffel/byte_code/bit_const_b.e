@@ -29,6 +29,7 @@ feature
 			-- Generate byte code for a bit constant
 		do
 			ba.append (Bc_bit);
+			ba.append_integer (value.count)
 			ba.append_bit (value)
 		end;
 

@@ -241,16 +241,6 @@ cluster
 				end
 		end
 
-	liman:		"$EIFFEL_SRC\Eiffel\limand"
-
-	liman_bench (liman):		"$\bench"
-
-	liman_bench_graphical (liman):		"$\bench_graphical"
-
-	liman_abstract (liman):		"$\abstract"
-
-	liman_graphical (liman):		"$\graphical"
-
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
 
 	all compiler_support:		"$EIFFEL_SRC\Eiffel\support"
@@ -357,7 +347,10 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
-	activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation\enterprise"
+	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation\enterprise"
+		exclude
+			"free";"command_line";"CVS"
+		end
 
 	all keygen: 			"$EIFFEL_SRC\library\keygen"
 		exclude

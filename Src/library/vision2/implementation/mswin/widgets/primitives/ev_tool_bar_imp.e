@@ -17,17 +17,18 @@ inherit
 	EV_PRIMITIVE_IMP
 		undefine
 			minimum_width,
+			on_right_button_down,
+			on_left_button_down,
+			on_middle_button_down,
 			minimum_height,
-			integrate_changes
+			integrate_changes,
+			pnd_press
 		redefine
 			parent_imp,
 			wel_move_and_resize,
 			on_left_button_up,
-			on_left_button_down,
-			on_right_button_down,
 			on_right_button_up,
 			on_middle_button_up,
-			on_middle_button_down,
 			on_mouse_move,
 			on_key_down,
 			destroy,
@@ -51,6 +52,11 @@ inherit
 		redefine
 			interface,
 			initialize
+		end
+
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface
 		end
 	
 	WEL_FLAT_TOOL_BAR
@@ -126,7 +132,6 @@ feature {NONE} -- Initialization
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_HASH_TABLE_ITEM_HOLDER_IMP} Precursor
 			create ev_children.make (2)
-			--create children.make (1)
 		end
 
 feature -- Access
@@ -332,6 +337,29 @@ feature -- Basic operation
 			end
 		end
 
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos', `y_pos' and `button' to the
+			-- appropriate event item.
+		local
+			it: EV_TOOL_BAR_BUTTON_IMP
+			pt: WEL_POINT
+		do
+			it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+				if it /= Void and it.is_transport_enabled and
+				not parent_is_pnd_source then
+					it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				elseif pnd_item_source /= Void then
+					pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				end
+			if it /= Void then
+				it.interface.pointer_button_press_actions.call
+				([x_pos - child_x (it.interface),
+				child_y_absolute (it.interface) - y_pos, button, 0.0, 0.0, 0.0,
+				pt.x, pt.y])
+			end
+		end
+
 --	internal_propagate_event (
 --		event_id: INTEGER;
 --		x_pos: INTEGER;
@@ -497,49 +525,6 @@ feature {NONE} -- WEL Implementation
 
 			dc.quick_release
 			disable_default_processing
-		end
-
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_lbuttondown message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (1, keys, x_pos, y_pos)
---			if has_command (Cmd_button_one_press) then
---				execute_command (Cmd_button_one_press, ev_data)
---			end
---			internal_propagate_event (
---				Cmd_button_one_press, x_pos, y_pos, ev_data)
-		end
-
-	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_mbuttondown message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_two_press) then
---				execute_command (Cmd_button_two_press, ev_data)
---			end
---			internal_propagate_event (
---				Cmd_button_two_press, x_pos, y_pos, ev_data)
-		end
-
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_rbuttondown message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_three_press) then
---				execute_command (Cmd_button_three_press, ev_data)
---			end
---			internal_propagate_event (
---				Cmd_button_three_press, x_pos, y_pos, ev_data)
---			disable_default_processing
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -708,6 +693,10 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/31 17:46:06  rogers
+--| Now inherits EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP. Removed
+--| on_*****_button_down. Added internal_propagate_pointer_press.
+--|
 --| Revision 1.35  2000/03/29 06:58:06  pichery
 --| Modification of the add of a pixmap in a button.
 --|

@@ -8,6 +8,9 @@ class
 
 inherit
 	SYSTEM_DLL_ICODE_COMPILER
+		redefine
+			default_rescue
+		end
 
 	CODE_DOM_PATH
 		redefine
@@ -64,6 +67,9 @@ feature -- Access
 	last_compilation_results: SYSTEM_DLL_COMPILER_RESULTS
 			-- Last compilation results
 
+	is_initialized: BOOLEAN
+			-- Is compiler correctly initialized?
+
 feature -- Basic Operations
 
 	compile_assembly_from_source (a_options: SYSTEM_DLL_COMPILER_PARAMETERS; a_source: SYSTEM_STRING): SYSTEM_DLL_COMPILER_RESULTS is
@@ -71,13 +77,20 @@ feature -- Basic Operations
 		require else
 			non_void_options: a_options /= Void
 			non_void_source: a_source /= Void
+		local
+			l_res: SYSTEM_OBJECT
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSource"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			initialize (a_options)
-			source_generator.generate (a_source)
-			compile
-			Result := last_compilation_results;
+			if is_initialized then
+				source_generator.generate (a_source)
+				compile
+				Result := last_compilation_results
+			else
+				create Result.make (a_options.temp_files)
+				l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed"))
+			end
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSource"])
 		ensure then
 			non_void_results: Result /= Void
@@ -90,20 +103,26 @@ feature -- Basic Operations
 			non_void_sources: a_sources /= Void
 		local
 			i, l_count: INTEGER
+			l_res: SYSTEM_OBJECT
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromSourceBatch"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			initialize (a_options)
-			from
-				l_count := a_sources.count
-			until
-				i = l_count				
-			loop
-				source_generator.generate (a_sources.item (i))
-				i := i + 1
+			if is_initialized then
+				from
+					l_count := a_sources.count
+				until
+					i = l_count				
+				loop
+					source_generator.generate (a_sources.item (i))
+					i := i + 1
+				end
+				compile
+				Result := last_compilation_results
+			else
+				create Result.make (a_options.temp_files)
+				l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed"))
 			end
-			compile
-			Result := last_compilation_results;
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromSourceBatch"])
 		ensure then
 			non_void_results: Result /= Void
@@ -116,6 +135,7 @@ feature -- Basic Operations
 			non_void_file_name: a_file_name /= Void
 		local
 			l_file: PLAIN_TEXT_FILE
+			l_res: SYSTEM_OBJECT
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFile"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
@@ -126,6 +146,8 @@ feature -- Basic Operations
 				l_file.close
 				Result := compile_assembly_from_source (a_options, l_file.last_string)
 			else
+				create Result.make (a_options.temp_files)
+				l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Source file is missing"))
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_source_file, [a_file_name])
 			end
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFile"])
@@ -141,28 +163,34 @@ feature -- Basic Operations
 		local
 			i, l_count: INTEGER
 			l_file: PLAIN_TEXT_FILE
+			l_res: SYSTEM_OBJECT
 		do
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFileBatch"])
 			(create {SECURITY_PERMISSION}.make (feature {SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
 			initialize (a_options)
-			from
-				l_count := a_file_names.count
-			until
-				i = l_count
-			loop
-				create l_file.make (a_file_names.item (i))
-				if l_file.exists then
-					l_file.open_read
-					l_file.read_stream (l_file.count)
-					l_file.close
-					source_generator.generate (l_file.last_string)
-				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_source_file, [a_file_names.item (i)])
+			if is_initialized then
+				from
+					l_count := a_file_names.count
+				until
+					i = l_count
+				loop
+					create l_file.make (a_file_names.item (i))
+					if l_file.exists then
+						l_file.open_read
+						l_file.read_stream (l_file.count)
+						l_file.close
+						source_generator.generate (l_file.last_string)
+					else
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_source_file, [a_file_names.item (i)])
+					end
+					i := i + 1
 				end
-				i := i + 1
+	 			compile
+				Result := last_compilation_results;
+			else
+				create Result.make (a_options.temp_files)
+				l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Compiler initialization failed"))
 			end
- 			compile
-			Result := last_compilation_results;
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeCompiler.CompileAssemblyFromFileBatch"])
 		ensure then
 			non_void_results: Result /= Void
@@ -235,6 +263,21 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
+	project_class: CEIFFEL_PROJECT_CLASS is
+			-- Eiffel compiler interface
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				create Result.make
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_compiler, [])
+			end
+		rescue
+			l_retried := True
+			retry
+		end
+		
 	initialize (a_options: SYSTEM_DLL_COMPILER_PARAMETERS) is
 			-- Initialize compilation settings from `a_options'.
 		require
@@ -248,8 +291,9 @@ feature {NONE} -- Implementation
 			l_sep_char: CHARACTER
 		do
 			-- First create temporary directory if needed
-			if a_options.temp_files = Void then
+			if a_options.temp_files = Void or else a_options.temp_files.temp_dir = Void or else a_options.temp_files.temp_dir.length = 0 then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_temporary_files, [])
+				set_temp_files (create {SYSTEM_DLL_TEMP_FILE_COLLECTION}.make_from_temp_dir (feature {PATH}.get_temp_path))
 			else
 				set_temp_files (a_options.temp_files)
 			end
@@ -263,70 +307,81 @@ feature {NONE} -- Implementation
 			create source_generator.make (compilation_directory)
 			
 			-- Finally initialize compiler
-			create l_project.make
-			l_project.create_in_memory_eiffel_project (compilation_directory)
-			l_properties := l_project.project_properties
-			
-			system_path := a_options.output_assembly
-			if system_path = Void or else system_path.is_empty then
-				if a_options.generate_executable then
-					system_path := temp_files.add_extension (".exe")
-				else
-					system_path := temp_files.add_extension (".dll")
+			l_project := project_class
+			if l_project /= Void then
+				l_project.create_in_memory_eiffel_project (compilation_directory)
+				l_properties := l_project.project_properties
+				
+				system_path := a_options.output_assembly
+				if system_path = Void or else system_path.is_empty then
+					if a_options.generate_executable then
+						system_path := temp_files.add_extension (".exe")
+					else
+						system_path := temp_files.add_extension (".dll")
+					end
 				end
-			end
-			l_sep_char := (create {OPERATING_ENVIRONMENT}).Directory_separator
-			l_system_name := system_path.substring (system_path.last_index_of (l_sep_char, system_path.count) + 1, system_path.count)
-			if l_system_name.substring_index (".dll", 1) = l_system_name.count - 3 or l_system_name.substring_index (".exe", 1) = l_system_name.count - 3 then
-				l_system_name.keep_head (l_system_name.count - 4)
-			end
-			l_properties.set_system_name (l_system_name)
-			
-			l_root_class := Compilation_context.root_class_name
-			if l_root_class = Void or else l_root_class.is_empty then
-				l_root_class := a_options.main_class
+				l_sep_char := (create {OPERATING_ENVIRONMENT}).Directory_separator
+				l_system_name := system_path.substring (system_path.last_index_of (l_sep_char, system_path.count) + 1, system_path.count)
+				if l_system_name.substring_index (".dll", 1) = l_system_name.count - 3 or l_system_name.substring_index (".exe", 1) = l_system_name.count - 3 then
+					l_system_name.keep_head (l_system_name.count - 4)
+				end
+				l_properties.set_system_name (l_system_name)
+				
+				l_root_class := Compilation_context.root_class_name
 				if l_root_class = Void or else l_root_class.is_empty then
-					l_root_class := default_root_class
+					l_root_class := a_options.main_class
+					if l_root_class = Void or else l_root_class.is_empty then
+						l_root_class := default_root_class
+					end
 				end
-			end
-			l_properties.set_root_class_name (l_root_class)
-
-			if not l_root_class.is_equal ("ANY") and not l_root_class.is_equal ("NONE") then
-				if Compilation_context.root_creation_routine_name /= Void then
-					l_properties.set_creation_routine (Compilation_context.root_creation_routine_name)
-				else
-					l_properties.set_creation_routine ("make")
+				l_properties.set_root_class_name (l_root_class)
+	
+				if not l_root_class.is_equal ("ANY") and not l_root_class.is_equal ("NONE") then
+					if Compilation_context.root_creation_routine_name /= Void then
+						l_properties.set_creation_routine (Compilation_context.root_creation_routine_name)
+					else
+						l_properties.set_creation_routine ("make")
+					end
 				end
-			end
-
-			if a_options.generate_executable then
-				l_properties.set_project_type (feature {EIF_PROJECT_TYPES}.eif_project_types_console_application)
-			else			
-				l_properties.set_project_type (feature {EIF_PROJECT_TYPES}.eif_project_types_class_library)
-			end
-
-			l_properties.set_target_clr_version (Clr_version)
-			l_properties.clusters.add_cluster ("root_cluster", "", compilation_directory)
-			
-			if a_options.win_32_resource /= Void then
-				l_resource_file := compilation_directory + l_sep_char.out + l_system_name + ".rc"
-				copy_file (a_options.win_32_resource, l_resource_file)
-				if last_copy_successful then
-					temp_files.add_file (l_resource_file, False)
+	
+				if a_options.generate_executable then
+					l_properties.set_project_type (feature {EIF_PROJECT_TYPES}.eif_project_types_console_application)
+				else			
+					l_properties.set_project_type (feature {EIF_PROJECT_TYPES}.eif_project_types_class_library)
 				end
+	
+				l_properties.set_target_clr_version (Clr_version)
+				l_properties.clusters.add_cluster ("root_cluster", "", compilation_directory)
+				
+				if a_options.win_32_resource /= Void then
+					l_resource_file := compilation_directory + l_sep_char.out + l_system_name + ".rc"
+					copy_file (a_options.win_32_resource, l_resource_file)
+					if last_copy_successful then
+						temp_files.add_file (l_resource_file, False)
+					end
+				end
+				
+				if precompile /= Void then
+					l_properties.set_precompiled_library (precompile)
+				end
+	
+				if metadata_cache /= Void then
+					l_properties.set_metadata_cache_path (metadata_cache)
+				end
+	
+				l_properties.set_generate_debug_info (a_options.include_debug_information)
+				load_result_in_memory := a_options.generate_in_memory
+				evidence := a_options.evidence
+				compiler := l_project.compiler
+				is_initialized := True
 			end
-			
-			l_properties.set_generate_debug_info (a_options.include_debug_information)
-			load_result_in_memory := a_options.generate_in_memory
-			evidence := a_options.evidence
-			compiler := l_project.compiler			
 		ensure
-			non_void_temp_files: temp_files /= Void
-			valid_compilation_directory: compilation_directory /= Void and then (create {DIRECTORY}.make (compilation_directory)).exists
-			non_void_source_generator: source_generator /= Void
-			non_void_compiler: compiler /= Void
-			non_void_system_path: system_path /= Void
-			valid_system_path: not system_path.is_empty
+			non_void_temp_files: is_initialized implies temp_files /= Void
+			valid_compilation_directory: is_initialized implies compilation_directory /= Void and then (create {DIRECTORY}.make (compilation_directory)).exists
+			non_void_source_generator: is_initialized implies source_generator /= Void
+			non_void_compiler: is_initialized implies compiler /= Void
+			non_void_system_path: is_initialized implies system_path /= Void
+			valid_system_path: is_initialized implies not system_path.is_empty
 		end
 	
 	compile is

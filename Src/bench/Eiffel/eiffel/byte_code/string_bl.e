@@ -10,7 +10,10 @@ inherit
 			propagate, print_register,
 			unanalyze
 		end
-	
+
+create
+	make
+
 feature 
 
 	register: REGISTRABLE

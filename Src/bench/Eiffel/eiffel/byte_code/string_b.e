@@ -11,19 +11,26 @@ inherit
 			enlarged, make_byte_code, generate_il,
 			is_simple_expr, allocates_memory
 		end
-	
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (v: STRING) is
+			-- Assign `v' to `value'.
+		require
+			v_not_void: v /= Void
+		do
+			value := v
+		ensure
+			value_set: value = v
+		end
+
 feature -- Access
 
 	value: STRING
 			-- Character value
-
-feature -- Setting
-
-	set_value (v: STRING) is
-			-- Assign `v' to `value'.
-		do
-			value := v
-		end
 
 feature -- Properties
 
@@ -36,8 +43,7 @@ feature -- Properties
 	enlarged: STRING_BL is
 			-- Enlarge node
 		do
-			create Result
-			Result.set_value (value)
+			create Result.make (value)
 		end
 
 	used (r: REGISTRABLE): BOOLEAN is
@@ -68,5 +74,8 @@ feature -- Byte code generation
 			ba.append_integer (value.count)
 			ba.append_raw_string (value)
 		end
+
+invariant
+	value_not_void: value /= Void
 
 end -- class STRING_B

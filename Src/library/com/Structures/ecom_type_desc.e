@@ -33,7 +33,7 @@ feature -- Access
 		require 
 			is_ptr (var_type) or is_safearray (var_type)
 		do
-			!!Result.make_by_pointer (ccom_typedesc_typedesc (item))
+			!! Result.make_by_pointer (ccom_typedesc_typedesc (item))
 		end
 
 	array_desc: ECOM_ARRAY_DESC is
@@ -41,7 +41,7 @@ feature -- Access
 		require
 			is_carray (var_type)
 		do
-			!!Result.make_by_pointer (ccom_typedesc_arraydesc (item))
+			!! Result.make_by_pointer (ccom_typedesc_arraydesc (item))
 		end
 
 	href_type: INTEGER is

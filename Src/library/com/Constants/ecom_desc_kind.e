@@ -1,7 +1,6 @@
 indexing
 	description: "COM DESCKIND constants"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 

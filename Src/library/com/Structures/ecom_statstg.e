@@ -37,7 +37,7 @@ feature -- Access
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!!wide_string.make_from_pointer (ccom_name (initializer))
+			!! wide_string.make_from_pointer (ccom_name (initializer))
 			Result := wide_string.to_string
 		end
 
@@ -47,7 +47,7 @@ feature -- Access
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!!wide_string.make_from_string(other_name);
+			!! wide_string.make_from_string(other_name);
 			if (ccom_is_same_name (initializer, wide_string.item) = 1) then
 				Result := true;
 			end
@@ -66,7 +66,7 @@ feature -- Access
 	size: ECOM_ULARGE_INTEGER is
 			-- Size in bytes of stream or byte array. 
 		do
-			!!Result.make_by_pointer (ccom_size(initializer))
+			!! Result.make_by_pointer (ccom_size(initializer))
 		ensure
 			Result /= Void and Result.item /= Default_pointer
 		end
@@ -74,7 +74,7 @@ feature -- Access
 	modification_time: WEL_FILE_TIME is
 			-- Last modification time 
 		do
-			!!Result.make_by_pointer (ccom_modification_t (initializer))
+			!! Result.make_by_pointer (ccom_modification_t (initializer))
 		ensure
 			Result /= Void
 		end
@@ -82,7 +82,7 @@ feature -- Access
 	creation_time: WEL_FILE_TIME is
 			-- Creation time  
 		do
-			!!Result.make_by_pointer (ccom_creation_t (initializer))
+			!! Result.make_by_pointer (ccom_creation_t (initializer))
 		ensure
 			Result /= Void
 		end
@@ -90,7 +90,7 @@ feature -- Access
 	access_time: WEL_FILE_TIME is
 			-- Last access time 
 		do
-			!!Result.make_by_pointer (ccom_access_t (initializer))
+			!! Result.make_by_pointer (ccom_access_t (initializer))
 		ensure
 			Result /= Void
 		end

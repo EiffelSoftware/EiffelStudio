@@ -1,7 +1,6 @@
 indexing
 	description: "Encapsulation of EXEPTINFO structure"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,8 +14,6 @@ creation
 	make,
 	make_by_pointer
 
-feature -- Access
-
 feature -- Measurement
 
 	structure_size: INTEGER is
@@ -24,15 +21,6 @@ feature -- Measurement
 		do
 			Result := c_size_of_excep_info
 		end
-
-
-feature -- Conversion
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 

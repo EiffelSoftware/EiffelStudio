@@ -1,7 +1,6 @@
 indexing
 	description: "Description or specification of an entry point for a function in a DLL"
 	status: "See notice at end of class"
-	author: "Marina Nudelman";
 	date: "$Date$";
 	revision: "$Revision$"
 

@@ -150,7 +150,7 @@ feature -- Access
 			if 
 				binary_and (variable_type, Vt_byref) = Vt_byref 
 			then				
-				!!Result.make_by_pointer (ccom_variant_variant (item))
+				!! Result.make_by_pointer (ccom_variant_variant (item))
 			end
 		ensure
 			Result /= Void

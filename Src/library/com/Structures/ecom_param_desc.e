@@ -22,7 +22,7 @@ feature -- Access
 		require
 			has_fopt_and_fhasdefault (flags)
 		do
-			!!Result.make_by_pointer (ccom_paramdesc_default (item))
+			!! Result.make_by_pointer (ccom_paramdesc_default (item))
 		end
 
 	flags: INTEGER is

@@ -163,8 +163,8 @@ feature -- Status report
 			-- Are `some_element_counts' valid element counts?
 		require
 			valid_element_counts: some_element_counts /= Void and then 
-					some_element_counts.lower = 1 and
-					some_element_counts.count > 0
+					(some_element_counts.lower = 1 and
+					some_element_counts.count > 0)
 		local
 			i: INTEGER
 		do
@@ -197,7 +197,7 @@ feature -- Status report
 				variant
 					dimension_count - i + 1
 				until
-					i > dimension_count 
+					i > dimension_count or not Result
 				loop
 					if some_indeces.item (i) < lower_indeces.item (i) or
 							some_indeces.item (i) > upper_indeces.item (i) then
@@ -222,7 +222,7 @@ feature -- Status report
 				variant
 					dimension_count - i + 1
 				until
-					i > dimension_count 
+					i > dimension_count or not Result
 				loop
 					if some_indeces.item (i) < lower_indeces.item (i) then
 						Result := False
@@ -267,10 +267,9 @@ feature -- Status report
 			variant
 				dimension_count - i + 1
 			until
-				i > dimension_count
+				i > dimension_count or not Result
 			loop
-				Result := Result and 
-					upper_indeces.item (i) - lower_indeces.item (i) + 1 = element_counts.item (i)
+				Result := upper_indeces.item (i) - lower_indeces.item (i) + 1 = element_counts.item (i)
 				i := i + 1
 			end
 		end

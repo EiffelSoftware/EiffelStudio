@@ -1,7 +1,6 @@
 indexing
 	description: "Result structure of ECOM_TYPE_COMP.bind";
 	status: "See notice at end of class"
-	author: "Marina Nudelman";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -14,8 +13,7 @@ inherit
 feature -- Access
 
 	type_info: ECOM_TYPE_INFO is
-			-- if `desc_kind' is Var_desc or Func_desc,
-			-- pointer to type description that contains 
+			-- Pointer to type description that contains 
 			-- item to which it is bound
 		require
 			valid_desc_kind: desc_kind = Desckind_vardesc or

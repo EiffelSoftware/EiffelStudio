@@ -22,7 +22,7 @@ feature -- Access
 	guid: ECOM_GUID is
 			-- Unique ID of the library
 		do
-			!!Result.make_by_pointer (ccom_tlibattr_guid (item))
+			!! Result.make_by_pointer (ccom_tlibattr_guid (item))
 		end
 
 	lcid: INTEGER is

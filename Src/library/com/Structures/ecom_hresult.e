@@ -3,8 +3,10 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
+
 class
 	ECOM_HRESULT
+
 creation
 	make,
 	make_from_integer
@@ -12,13 +14,13 @@ creation
 feature -- Initialization
 
 	make is
-			-- Set 'severity_bit' to 1
+			-- Set 'severity_bit' to 1.
 		do
 			severity_bit := 1
 		end
 
 	make_from_integer (an_integer: INTEGER) is
-			-- Initialize hresult according to 'an_integer'
+			-- Initialize hresult according to 'an_integer'.
 		do
 			set_item (an_integer)
 		end
@@ -136,6 +138,7 @@ feature {NONE} -- Implementation
 	
 invariant
 	valid_severity_value: severity_bit = 0 or severity_bit = 1		
+
 end
 
 --|----------------------------------------------------------------

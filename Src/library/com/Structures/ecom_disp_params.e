@@ -1,7 +1,6 @@
 indexing
 	description: "Encapsulation of DISPPARAMS structure"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,6 @@
 indexing
 	description: "COM ELEMDESC structure"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,19 +18,19 @@ feature -- Access
 	type_desc: ECOM_TYPE_DESC is
 			-- TYPEDESC structure
 		do
-			!!Result.make_by_pointer (ccom_elemdesc_typedesc (item))
+			!! Result.make_by_pointer (ccom_elemdesc_typedesc (item))
 		end
 
 	idl_desc: ECOM_IDL_DESC is
 			-- IDLDESC structure
 		do
-			!!Result.make_by_pointer (ccom_elemdesc_idldesc (item))
+			!! Result.make_by_pointer (ccom_elemdesc_idldesc (item))
 		end
 
 	param_desc: ECOM_PARAM_DESC is
 			-- PARAMDESC structure
 		do
-			!!Result.make_by_pointer (ccom_elemdesc_paramdesc (item))
+			!! Result.make_by_pointer (ccom_elemdesc_paramdesc (item))
 		end
 
 feature -- Measurement

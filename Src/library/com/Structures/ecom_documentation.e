@@ -1,7 +1,6 @@
 indexing
 	description: "Type Library Documentation"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,6 @@
 indexing
 	description: "BINDPTR structure"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,19 +20,19 @@ feature -- Access
 	func_desc: ECOM_FUNC_DESC is
 			-- FUNCDESC structure
 		do
-			!!Result.make_by_pointer (ccom_bindptr_funcdesc (item))
+			!! Result.make_by_pointer (ccom_bindptr_funcdesc (item))
 		end
 
 	var_desc: ECOM_VAR_DESC is
 			-- VARDESC structure
 		do
-			!!Result.make_by_pointer (ccom_bindptr_vardesc (item))
+			!! Result.make_by_pointer (ccom_bindptr_vardesc (item))
 		end
 
 	type_comp: ECOM_TYPE_COMP is
 			-- ITypeComp interface
 		do
-			!!Result.make_from_pointer (ccom_bindptr_itypecomp (item))
+			!! Result.make_from_pointer (ccom_bindptr_itypecomp (item))
 		end
 
 feature -- Measurement
@@ -67,7 +66,6 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"E_bindptr.h%"](EIF_POINTER): EIF_POINTER"
 		end
-
 
 end -- class ECOM_BIND_PTR
 

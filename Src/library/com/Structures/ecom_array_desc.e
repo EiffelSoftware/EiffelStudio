@@ -2,7 +2,6 @@ indexing
 	description: "ARRAYDESC structure, contained within TYPEDESC structure %
 				% describes type of array's elements and array dimensions"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,7 +22,7 @@ feature -- Access
 	type_desc: ECOM_TYPE_DESC is
 			-- Array elements type
 		do
-			!!Result.make_by_pointer (ccom_arraydesc_typedesc (item))
+			!! Result.make_by_pointer (ccom_arraydesc_typedesc (item))
 		end
 
 	count_dimension: INTEGER is

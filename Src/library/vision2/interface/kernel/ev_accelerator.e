@@ -174,7 +174,7 @@ feature -- Status report
 			Result.append (key.out)
 		end
 
-feature {EV_TITLED_WINDOW_IMP} -- Implementation
+feature {EV_WINDOW_IMP} -- Implementation
 
 	implementation: EV_ACCELERATOR_I
 			-- Responsible for interaction with the native graphics toolkit.
@@ -222,6 +222,9 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/20 16:27:01  brendel
+--| Export status updated to EV_WINDOW_IMP.
+--|
 --| Revision 1.12  2000/03/21 20:12:19  brendel
 --| Improved postcodition on `key'.
 --|

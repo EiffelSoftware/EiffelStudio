@@ -1,0 +1,28 @@
+<document output="studio" title="Standard_dialogs Sample">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>standard_dialogs.png</url>
+			<alt_text>Standard_dialogs</alt_text>
+			<width>300</width>
+			<height>300</height>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph> After launching the application, you will see a window displayed with a similar appearance to the one above. If you select an item from the "Standard Dialog" menu, a dialog of that type will be displayed. Selecting "Exit" from the "File" menu will exit the application. </paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>This sample contains the following class: 
+			<list ordered="false">
+				<item>STANDARD_DIALOGS</item>
+			</list>
+		</paragraph>		
+	</paragraph></document>

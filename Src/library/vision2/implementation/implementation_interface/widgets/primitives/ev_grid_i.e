@@ -370,7 +370,7 @@ feature -- Element change
 				enlarge_row (a_row, a_column)
 			end
 			
-			row_list.item (a_row - 1).put (a_item, a_row)
+			row_list.item (a_row - 1).put (a_item, a_grid_col.implementation.physical_index)
 			
 		ensure
 			inserted: column (a_column).item (a_row) = a_item

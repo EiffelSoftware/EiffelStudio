@@ -9,6 +9,8 @@
 #	include <redit.h>
 #endif
 
+#include "eif_eiffel.h"
+
 #define cwel_editstream_set_dwcookie(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwCookie = (DWORD) (_value_))
 #define cwel_editstream_set_dwerror(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwError = (DWORD) (_value_))
 #define cwel_editstream_set_pfncallback(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->pfnCallback = (EDITSTREAMCALLBACK) (_value_))
@@ -43,7 +45,7 @@ extern EIF_BOOLEAN wel_editstream_in;
 #define cwel_set_editstream_procedure_address(_value_) (wel_editstream_procedure = (EIF_EDITSTREAM_PROCEDURE) _value_)
 /* Set `wel_editstream_procedure' with `value' */
 
-#define cwel_set_editstream_object(_value_) (wel_editstream_object = (EIF_OBJ) _value_)
+#define cwel_set_editstream_object(_value_) (wel_editstream_object = (EIF_OBJ) eif_adopt (_value_))
 /* Set `wel_editstream_object' with `value' */
 
 #define cwel_set_editstream_buffer(_value_) (wel_editstream_buffer = (EIF_POINTER) _value_)

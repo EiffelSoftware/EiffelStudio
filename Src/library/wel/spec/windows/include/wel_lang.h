@@ -58,7 +58,6 @@
 
 #define LANG_ARABIC                      0x01
 #define LANG_FARSI                       0x29
-toto
 #define LANG_HEBREW                      0x0d
 
 #define SUBLANG_ARABIC_SAUDI_ARABIA      0x01    /* Arabic (Saudi Arabia) */

@@ -1,398 +1,277 @@
 <html>
+	<head>
+		<meta http-equiv="Content-Language" content="en-us">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>Eiffel to Java Interface</title>
+		<link rel="stylesheet" href="../../../default.css" type="text/css">
+	</head>
+	<body>
+		<h1>Introduction</h1>
+		<p>The Java interface allows you to call Java routines or attributes from your Eiffel
+			code. It uses the Java Native Interface (JNI) provided by the Java Development Kit
+			(JDK) 1.1.4. You can get more information about the JNI at:
 
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<title>Eiffel to Java Interface</title>
-<link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="../styles/tech.css" type="text/css">
-<meta name="Microsoft Border" content="t, default">
-</head>
-
-<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr>
-    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
-      Software Engineering</font></b></td>
-    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Eiffel to Java Interface</font></b></td>
-  </tr>
-  <tr>
-    <td colspan="2" valign="top" width="100%">
-<p align="center">[<a href="http://eiffel.com">ISE Home</a>] <nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
-<hr>
-
-    </td>
-  </tr>
-</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="5" cellspacing="0" border="0">
-<tr><td>
-<h1>
-Introduction</h1>
-
-<p>
-	The Java interface allows you to call Java routines or attributes from your Eiffel
-code. It uses the Java Native Interface (JNI) provided by the Java Development Kit
-(JDK) 1.1.4. You can get more information about the JNI at:
-
-</p>
-
-<blockquote>
-<p>
-<a href="http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html">http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html</a>
-
-</p>
-
-</blockquote>
-<h2>
-Requirements</h2>
-
-    <ul>
-      <li>JDK 1.1.4 correctly set (download it at <a href="http://java.sun.com/products/jdk/1.1/index.html">http://java.sun.com/products/jdk/1.1/index.html</a>)</li>
-      <li>the Java classes you want to use must be in the environment variable CLASSPATH</li>
-    </ul>
-<h2> Limitations</h2>
-    <ul>
-      <li>In this version, you can only use one JNI environment.</li>
-      <li>Only one thread can interact with the Java Virtual Machine (JVM).</li>
-      <li>It is not possible to call Eiffel features from Java program.</li>
-      <li>The Eiffel side cannot deal with 'long' integer (64 bits)</li>
-      <li>The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;Interface that is not fully implemented in jdk 1.1.4.
-    This function, called&nbsp;DestroyJavaVM, always returns -1 in jdk 1.1.4. For further information, go on the&nbsp;JNI pages at the address
-    above.&nbsp;</li>
-    </ul>
-<p>&nbsp;</p>
-<h1>Interface classes</h1>
-<h3>
-	JNI_ENVIRONMENT</h3>
-<blockquote>
-  <p>Holds information about JNI environment. Potentially many JNI environments can exists at once, but more than one was never tested. This class provide the facilities to interact with the JVM:</p>
-  <ul>
-    <li>creation of instances of Java Classes</li>
-    <li>exceptions mechanism</li>
-    <li>destruction of the JVM</li>
-  </ul>
-</blockquote>
-<h3>
-	SHARED_JNI_ENVIRONMENT</h3>
-<blockquote>
-<p>
-    Shared JNI environment. Since one JNI is needed per thread we limit&nbsp; Eiffel to having one thread that deals with Java.
-    The class that calls Java routines or attributes must inherit from this class.&nbsp;
-</p>
-</blockquote>
-<h3>
-	JAVA_VM</h3>
-<blockquote>
-<p>
-    This class is used to initially load the JVM into the running program. This
-    is the Eiffel representation of the JVM.
-</p>
-</blockquote>
-<h3>
-	JAVA_CLASS</h3>
-<blockquote>
-<p>
-    Access to Java classes. Static methods and attributes are accessed&nbsp;via this class.This
-    is the Eiffel representation of a Java Class.
-</p>
-</blockquote>
-<h3>
-	JAVA_OBJECT</h3>
-<blockquote>
-
-<p>
-    This class gives Eiffel access to Java objects. You can use it&nbsp;directly or inherit from to and create a more convienient Eiffel&nbsp;class that makes the Java object look like an Eiffel object. The Eiffel representation of a Java Object.&nbsp;
-
-</p>
-
-<p>
-    Warning: to access the static fields or routines of a Java Class, you have to use the features of a JAVA_CLASS instance!!
-
-</p>
-
-</blockquote>
-
-<h3>
-	JAVA_EXTERNALS</h3>
-
-<blockquote>
-
-<p>JNI external declarations. Don't use this class directly.
-
-</p>
-
-</blockquote>
-
-<h3>
-	JAVA_***_ARRAY</h3>
-
-<blockquote>
-
-<p>Access to Java array of "***". "***" can be all the usual types of Java (byte, short,
-int, float, double, char, boolean) or object if it is an array of Java Object (a String is considered as an object)
-
-</p>
-
-</blockquote>
-<h3>
-	JAVA_ARGS</h3>
-
-<blockquote>
-  <p>Class representing the arguments that can be passed to a Java method. See below about the signature of the methods
-
-</p>
-
-</blockquote>
-<h3>
-	JAVA_OBJECT_TABLE</h3>
-
-<blockquote>
-  <p>This class provides a mapping between Java and Eiffel objects
-  <p><b>
-  Mapping the Eiffel classes and the Java types:</b>
-
-  <blockquote>
-
-  <p>
-	The following table describes the mapping of Java primitive types and classes&nbsp;to Eiffel classes.&nbsp;
-
-<center>
-    <table border="1" width="300">
-    <tr>
-      <td width="50%" bgcolor="#FFFFCC"><b>Java type/class</b></td>
-      <td width="50%" bgcolor="#FFFFCC"><b>Eiffel class</b></td>
-    </tr>
-    <tr>
-      <td width="50%">boolean</td>
-      <td width="50%">BOOLEAN</td>
-    </tr>
-    <tr>
-      <td width="50%">char, byte</td>
-      <td width="50%">CHARACTER</td>
-    </tr>
-    <tr>
-      <td width="50%">short, int, long</td>
-      <td width="50%">INTEGER</td>
-    </tr>
-    <tr>
-      <td width="50%">float</td>
-      <td width="50%">REAL</td>
-    </tr>
-    <tr>
-      <td width="50%">double</td>
-      <td width="50%">DOUBLE</td>
-    </tr>
-    <tr>
-      <td width="50%">String</td>
-      <td width="50%">STRING</td>
-    </tr>
-    <tr>
-      <td width="50%">void</td>
-      <td width="50%">Void</td>
-    </tr>
-  </table>
-  </center>
-  <p>
-	The interface does the mapping automatically. For example, if you call a Java&nbsp;method that returns a 'float', by using float_method you will get a 'REAL'.
-
-</p>
-
-  <p>
-&nbsp;
-
-</p>
-
-  </blockquote>
-
-  <p><b>The signature of Java methods and attributes:</b>
-
-</p>
-
-  <blockquote>
-
-  <p>
-	When you want to call a Java method or access a field, you need to specify its signature.&nbsp;The Eiffel to Java
-    interface follows the JNI specifications.&nbsp;The table below summarizes the encoding for the Java type signatures:&nbsp;
-
-</p>
-
-<center>
-  <table border="1" width="300">
-    <tr>
-      <td width="50%" bgcolor="#FFFFCC"><b>Signature</b></td>
-      <td width="50%" bgcolor="#FFFFCC"><b>Java Type</b></td>
-    </tr>
-    <tr>
-      <td width="50%">Z</td>
-      <td width="50%">boolean</td>
-    </tr>
-    <tr>
-      <td width="50%">B</td>
-      <td width="50%">byte</td>
-    </tr>
-    <tr>
-      <td width="50%">C</td>
-      <td width="50%">char</td>
-    </tr>
-    <tr>
-      <td width="50%">S</td>
-      <td width="50%">short</td>
-    </tr>
-    <tr>
-      <td width="50%">I</td>
-      <td width="50%">int</td>
-    </tr>
-    <tr>
-      <td width="50%">J</td>
-      <td width="50%">long</td>
-    </tr>
-    <tr>
-      <td width="50%">F</td>
-      <td width="50%">float</td>
-    </tr>
-    <tr>
-      <td width="50%">D</td>
-      <td width="50%">double</td>
-    </tr>
-    <tr>
-      <td width="50%">V</td>
-      <td width="50%">void</td>
-    </tr>
-    <tr>
-      <td width="50%">[type</td>
-      <td width="50%">type []</td>
-    </tr>
-  </table>
-  </center>
-  <p>
-
-	The signature for a Java class has the following form:
-
-</p>
-
-  <blockquote>
-  <p>
-		L fully-qualified-class ;
-
-</p>
-
-  <p>
-		For example, class String: 	Ljava/lang/String;
-
-</p>
-
-  <p>
-&nbsp;
-
-</p>
-
-  </blockquote>
-  <p>
-	The signature for a method has the following form:
-
-</p>
-
-  <blockquote>
-  <p>
-( arguments-types ) returned-types
-
-</p>
-
-  <p>
-		For example, the signature of a method that takes&nbsp;as arguments an integer and a string and return void is:
-
-</p>
-
-  <p>
+		</p>
+		<p>
+			<a href="http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html">http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html</a>
+		</p>
+		<h2>Requirements</h2>
+		<ul>
+		  <li>JDK 1.1.4 correctly set (download it at <a href="http://java.sun.com/products/jdk/1.1/index.html">http://java.sun.com/products/jdk/1.1/index.html</a>)</li>
+		  <li>the Java classes you want to use must be in the environment variable CLASSPATH</li>
+		</ul>
+		<h2> Limitations</h2>
+		<ul>
+		  <li>In this version, you can only use one JNI environment.</li>
+		  <li>Only one thread can interact with the Java Virtual Machine (JVM).</li>
+		  <li>It is not possible to call Eiffel features from Java program.</li>
+		  <li>The Eiffel side cannot deal with 'long' integer (64 bits)</li>
+		  <li>The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;Interface that is not fully implemented in jdk 1.1.4.
+		    This function, called&nbsp;DestroyJavaVM, always returns -1 in jdk 1.1.4. For further information, go on the&nbsp;JNI pages at the address
+		    above.&nbsp;</li>
+	    </ul>
+		<h1>Interface classes</h1>
+		<h3>JNI_ENVIRONMENT</h3>
+		  <p>Holds information about JNI environment. Potentially many JNI environments can exists at once, but more than one was never tested. This class provide the facilities to interact with the JVM:</p>
+		  <ul>
+			<li>creation of instances of Java Classes</li>
+			<li>exceptions mechanism</li>
+			<li>destruction of the JVM</li>
+		  </ul>
+		<h3>SHARED_JNI_ENVIRONMENT</h3>
+		<p>
+			Shared JNI environment. Since one JNI is needed per thread we limit&nbsp; Eiffel to having one thread that deals with Java.
+			The class that calls Java routines or attributes must inherit from this class.&nbsp;
+		</p>
+		<h3>JAVA_VM</h3>
+		<p>
+			This class is used to initially load the JVM into the running program. This
+			is the Eiffel representation of the JVM.
+		</p>
+		<h3>JAVA_CLASS</h3>
+		<p>
+			Access to Java classes. Static methods and attributes are accessed&nbsp;via this class.This
+			is the Eiffel representation of a Java Class.
+		</p>
+		<h3>JAVA_OBJECT</h3>
+		<p>
+			This class gives Eiffel access to Java objects. You can use it&nbsp;directly or inherit from to and create a more convienient Eiffel&nbsp;class that makes the Java object look like an Eiffel object. The Eiffel representation of a Java Object.&nbsp;
+		</p>
+		<p class="warning">
+    		<b>Warning:</b> to access the static fields or routines of a Java Class, you have to use the features of a JAVA_CLASS instance!!
+		</p>
+		<h3>JAVA_EXTERNALS</h3>
+		<p>
+			JNI external declarations. Don't use this class directly.
+		</p>
+		<h3>JAVA_***_ARRAY</h3>
+		<p>
+			Access to Java array of "***". "***" can be all the usual types of Java (byte, short,
+			int, float, double, char, boolean) or object if it is an array of Java Object (a String is considered as an object)
+		</p>
+		<h3>JAVA_ARGS</h3>
+		<p>
+			Class representing the arguments that can be passed to a Java method. See below about the signature of the methods
+		</p>
+		<h3>JAVA_OBJECT_TABLE</h3>
+		<p>
+			This class provides a mapping between Java and Eiffel objects
+  		<p>
+  		<b>Mapping the Eiffel classes and the Java types:</b>
+		<p>
+			The following table describes the mapping of Java primitive types and classes to Eiffel classes.
+			<center>
+				<table border="1" width="300">
+				<tr>
+				  <td width="50%" bgcolor="#FFFFCC"><b>Java type/class</b></td>
+				  <td width="50%" bgcolor="#FFFFCC"><b>Eiffel class</b></td>
+				</tr>
+				<tr>
+				  <td width="50%">boolean</td>
+				  <td width="50%">BOOLEAN</td>
+				</tr>
+				<tr>
+				  <td width="50%">char, byte</td>
+				  <td width="50%">CHARACTER</td>
+				</tr>
+				<tr>
+				  <td width="50%">short, int, long</td>
+				  <td width="50%">INTEGER</td>
+				</tr>
+				<tr>
+				  <td width="50%">float</td>
+				  <td width="50%">REAL</td>
+				</tr>
+				<tr>
+				  <td width="50%">double</td>
+				  <td width="50%">DOUBLE</td>
+				</tr>
+				<tr>
+				  <td width="50%">String</td>
+				  <td width="50%">STRING</td>
+				</tr>
+				<tr>
+				  <td width="50%">void</td>
+				  <td width="50%">Void</td>
+				</tr>
+			  </table>
+			  </center>
+		<p>
+			The interface does the mapping automatically. For example, if you call a Java method that returns a 'float', by using float_method you will get a
+			<A CLASS="eclass" HREF="/libraries/base/reference/kernel/real.html">REAL</A>.
+		</p>
+		<p>
+			<b>The signature of Java methods and attributes:</b>
+		</p>
+		<p>
+			When you want to call a Java method or access a field, you need to specify its signature.&nbsp;The Eiffel to Java
+		    interface follows the JNI specifications.&nbsp;The table below summarizes the encoding for the Java type signatures:&nbsp;
+		</p>
+		<center>
+		  <table border="1" width="300">
+			<tr>
+			  <td width="50%" bgcolor="#FFFFCC"><b>Signature</b></td>
+			  <td width="50%" bgcolor="#FFFFCC"><b>Java Type</b></td>
+			</tr>
+			<tr>
+			  <td width="50%">Z</td>
+			  <td width="50%">boolean</td>
+			</tr>
+			<tr>
+			  <td width="50%">B</td>
+			  <td width="50%">byte</td>
+			</tr>
+			<tr>
+			  <td width="50%">C</td>
+			  <td width="50%">char</td>
+			</tr>
+			<tr>
+			  <td width="50%">S</td>
+			  <td width="50%">short</td>
+			</tr>
+			<tr>
+			  <td width="50%">I</td>
+			  <td width="50%">int</td>
+			</tr>
+			<tr>
+			  <td width="50%">J</td>
+			  <td width="50%">long</td>
+			</tr>
+			<tr>
+			  <td width="50%">F</td>
+			  <td width="50%">float</td>
+			</tr>
+			<tr>
+			  <td width="50%">D</td>
+			  <td width="50%">double</td>
+			</tr>
+			<tr>
+			  <td width="50%">V</td>
+			  <td width="50%">void</td>
+			</tr>
+			<tr>
+			  <td width="50%">[type</td>
+			  <td width="50%">type []</td>
+			</tr>
+		  </table>
+	  </center>
+		<p>
+			The signature for a Java class has the following form:
+		</p>
+		<p>
+			<code>L fully-qualified-class ;</code>
+		</p>
+		<p>
+			For example, class String:<br>
+			<code>Ljava/lang/String;</code><br>
+		</p>
+		<p>
+			The signature for a method has the following form:
+		</p>
+		<p><code>
+			( arguments-types ) returned-types
+		</code>
+		</p>
+		<p>
+			For example, the signature of a method that takes as arguments an integer and a string and return void is:<br>
+		<code>
 			(ILjava/lang/String;)V
-
-</p>
-
-  </blockquote>
-
-  </blockquote>
-
-</blockquote>
-<p>&nbsp;
-
-</p>
-
-<h1>An example</h1>
-    <pre>
-			## the Java Class ##
-class test {
-	test () {}
-	public int my_integer;
-	public static in my_static_integer;
-	public void my_method (int arg_int, String arg_string) {
-		...
-	}
-	...
-}
-
-			## the Eiffel Side ##
-class 
-	EIFFEL_TO_JAVA
-		
-inherit
-	SHARED_JNI_ENVIRONMENT
-
-creation
-	make
-
-feature -- Creation
-
-	make is
-		local
-			class_test: JAVA_CLASS
-			instance_of_class_test: JAVA_OBJECT
-			fid: POINTER
-			value: INTEGER
-			j_args: JAVA_ARGS
-		do
-			--| Creation of the Java object
-
-			class_test := jni.find_class (&quot;test&quot;)
-			!! instance_of_class_test.create_instance (class_test, &quot;()V&quot;, Void)
-				
-			--| Access to a public attribute
-
-			fid := instance_of_class_test.field_id (&quot;my_integer&quot;, &quot;I&quot;)
-				-- 'fid' contains the id of the field 'my_integer'
-
-			value := instance_of_class_test.integer_attribute (fid)
-				-- 'value' contains the value of the field referenced
-				-- by 'fid'
-			...
-
-			--| Access to a static attribute using directly the JAVA_CLASS
-
-			fid := class_test.field_id (&quot;my_static_integer&quot;, &quot;I&quot;)
-			value := class_test.integer_attribute (fid)
-			...
-
-			--| Access to a static attribute using the attribute 'jclass'
-
-			fid := instance_of_class_test.jclass.field_id (&quot;my_static_integer&quot;, &quot;I&quot;)
-			value := instance_of_class_test.jclass.integer_attribute (fid)
-			...
-
-			--| Access to the method 'my_method'
-			fid := instance_of_class_test.method_id (&quot;my_method&quot;, &quot;(ILjava/lang/String;)V&quot;)
-				-- Get the id of 'my_method'
-
-			!! j_args.make(2)
-			j_args.push_int (2)
-			j_args.push_string(&quot;String test&quot;)
-				-- Create the set of arguments for 'my_method'
-
-			instance_of_class_test.void_method (fid, j_args)
-				-- Call to the void method referenced by 'fid'
-			...
-			
-		end -- make
-
-end -- class EIFFEL_TO_JAVA
-</pre></td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
-
+		</code><br>
+		</p>
+		<h1>An example</h1>
+	    <code>
+			## Java ##<br>
+		<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="eclass">test</SPAN> <SPAN CLASS="esymbol">{</SPAN><br>
+		&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">test</SPAN> <SPAN CLASS="esymbol">() {}</SPAN><br>
+		&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">public</SPAN> <SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">my_integer</SPAN><SPAN CLASS="esymbol">;</SPAN><br>
+		&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">public static</SPAN> <SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">my_static_integer</SPAN><SPAN CLASS="esymbol">;</SPAN><br>
+		&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">public</SPAN> <SPAN CLASS="eclass">void</SPAN> <SPAN CLASS="efeature">my_method</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="eclass">int</SPAN> <SPAN CLASS="elocal">arg_int</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="eclass">String</SPAN> <SPAN CLASS="elocal">arg_string</SPAN><SPAN CLASS="esymbol">) {</SPAN><br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
+	&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">}</SPAN><br>
+	&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
+	<SPAN CLASS="esymbol">}</SPAN><br>
+<br>
+			## Eiffel ##<br>
+<SPAN CLASS="ekeyword">class</SPAN><br>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">EIFFEL_TO_JAVA</SPAN><br>
+<br>
+<SPAN CLASS="ekeyword">inherit</SPAN><br>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">SHARED_JNI_ENVIRONMENT</SPAN><br>
+<br>
+<SPAN CLASS="ekeyword">creation</SPAN><br>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">make</SPAN><br>
+<br>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Creation</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">is</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">local</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_CLASS</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_OBJECT</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">POINTER</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">value</sPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">INTEGER</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">j_args</sPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">JAVA_ARGS</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Creation of the Java object</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">class_test</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">jni</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">find_class</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;test&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">instance_of_class_test.create_instance</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;()V&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="eclass">Void</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Access to a public attribute</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- 'fid' contains the id of the field 'my_integer'</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- 'value' contains the value of the field referenced</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- by 'fid'</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Access to a static attribute using directly the JAVA_CLASS</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="ekeyword">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_static_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Access to a static attribute using the attribute 'jclass'</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">jclass</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">field_id</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">&quot;my_static_integer&quot;</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">&quot;I&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">value</SPAN> <SPAN CLASS="estring">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</sPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">jclass</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">integer_attribute</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--| Access to the method 'my_method'</sPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">fid</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">method_id</SPAN> <SPAN CLASS="esymbol">(</sPAN><SPAN CLASS="estring">&quot;my_method&quot;</sPAN><SPAN CLASS="ekeyword">,</SPAN> <SPAN CLASS="estring">&quot;(ILjava/lang/String;)V&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Get the id of 'my_method'</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">make</sPAN><SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">2</sPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">push_int</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">2</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">j_args</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">push_string</SPAN><SPAN CLASS="esymbol">(</SPaN><SPAN CLASS="estring">&quot;String test&quot;</SPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Create the set of arguments for 'my_method'</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">instance_of_class_test</SPAN><SPAN CLASS="esymbol">.<SPAN><SPAN CLASS="efeature">void_method</SPAN> <SPAN CLASS="esymbol">(</sPAN><SPAN CLASS="elocal">fid</SPAN><SPAN CLASS="esymbol">,</sPAN> <SPAN CLASS="elocal">j_args</sPAN><SPAN CLASS="esymbol">)</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Call to the void method referenced by 'fid'</SPAN><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="esymbol">...</SPAN><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN> <SPAN CLASS="ecomment">-- make</SPAN><br>
+<br>
+<SPAN CLASS="ekeyword">end</SPAN> <SPAN CLASS="ecomment">-- class EIFFEL_TO_JAVA</sPAN><br>
 </html>

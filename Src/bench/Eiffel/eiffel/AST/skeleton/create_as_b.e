@@ -8,8 +8,6 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
 		redefine
 			format
 		end
@@ -35,18 +33,20 @@ feature -- formatter
 			if clients = void then
 				last_was_printed := true
 			else
-				clients.format(ctxt);
+				clients.format (ctxt);
 				last_was_printed := ctxt.last_was_printed;
 			end;
 			if not last_was_printed then 
 				ctxt.rollback; -- check whether must retain if short
 			else
 				if feature_list /= Void then
-					ctxt.indent_one_more;
-					ctxt.next_line;
+					ctxt.indent;
+					ctxt.new_line;
 					ctxt.set_separator (ti_Comma);
-					ctxt.new_line_between_tokens;
+					ctxt.set_new_line_between_tokens;
+					ctxt.set_classes (ctxt.class_c, ctxt.class_c);
 					feature_list.format (ctxt);
+					ctxt.new_line;
 				end;
 				ctxt.commit
 			end

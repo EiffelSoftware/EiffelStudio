@@ -8,8 +8,6 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
 		redefine
 			format
 		end;
@@ -56,7 +54,7 @@ feature -- Initialization
 			ctxt.begin;
 			ctxt.put_text_item (ti_L_curly);
 			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
+			ctxt.set_space_between_tokens;
 			if 	
 				ctxt.client = Void or else 
 				export_status.valid_for (ctxt.client)
@@ -81,11 +79,11 @@ feature -- Initialization
 					end
 					clients.forth;
 					if not clients.after then
-						ctxt.put_text_item (ti_Comma);
+						ctxt.put_text_item_without_tabs (ti_Comma);
 						ctxt.put_space
 					end
 				end;
-				ctxt.put_text_item (ti_R_curly);
+				ctxt.put_text_item_without_tabs (ti_R_curly);
 				ctxt.commit
 			else
 				ctxt.rollback;

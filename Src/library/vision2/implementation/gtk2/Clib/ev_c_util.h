@@ -11,8 +11,6 @@
 #define _EV_C_UTIL_H_INCLUDED_
 #include <gtk/gtk.h>
 
-EIF_REAL double_array_i_th (double* double_array, int index);
-GValue* gtk_args_array_i_th (GValue** value_array, int index);
 
 void enable_ev_gtk_log (int a_mode);
 
@@ -62,6 +60,9 @@ char **wait_cursor_xpm (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.3  2004/02/06 00:31:56  king
+// Removed externals that are now written in Eiffel using inline
+//
 // Revision 1.2  2003/04/15 01:32:31  king
 // Now new marshal proxy is correctly executed, updated arg function to gtk2
 //

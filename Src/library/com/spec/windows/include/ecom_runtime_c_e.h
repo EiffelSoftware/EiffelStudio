@@ -17,6 +17,7 @@
 #include <string.h>
 #include <assert.h>
 #include "eif_eiffel.h"
+#include "eif_globals.h"
 #include "E_bstr.h"
 #include "eif_except.h"
 
@@ -38,7 +39,7 @@ public:
 
 	int ccom_element_number (EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	int ccom_safearray_next_index (EIF_INTEGER dim_count,
-					EIF_INTEGER * lower_indeces, EIF_INTEGER * upper_indeces, EIF_INTEGER * index);
+					EIF_INTEGER * lower_indices, EIF_INTEGER * upper_indices, EIF_INTEGER * index);
 
 	// Automation types
 

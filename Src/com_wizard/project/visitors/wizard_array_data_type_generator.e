@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+			-- EIF_OBJECT result, intermediate_array, eif_lower_indices, eif_element_count;
 
 			Result.append (Eif_object)
 			Result.append (Space)
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			Result.append (Zero)
 			Result.append (Comma)
 			Result.append (Space)
-			Result.append ("eif_lower_indeces")
+			Result.append ("eif_lower_indices")
 			Result.append (Space_equal_space)
 			Result.append (Zero)
 			Result.append (Comma)
@@ -392,13 +392,13 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_INTEGER * lower_indeces;
+			-- EIF_INTEGER * lower_indices;
 
 			Result.append (Eif_integer)
 			Result.append (Space)
 			Result.append (Asterisk)
 			Result.append (Space)
-			Result.append ("lower_indeces")
+			Result.append ("lower_indices")
 			Result.append (Space_equal_space)
 			Result.append (Zero)
 			Result.append (Semicolon)
@@ -815,7 +815,7 @@ feature {NONE} -- Implementation
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab)
 
-				Result.append ("eif_lower_indeces")				
+				Result.append ("eif_lower_indices")				
 				Result.append (Space)
 				Result.append (Equal_sign)
 				Result.append (Space)
@@ -833,7 +833,7 @@ feature {NONE} -- Implementation
 				Result.append (Eif_access)
 				Result.append (Space)
 				Result.append (Open_parenthesis)
-				Result.append ("eif_lower_indeces")
+				Result.append ("eif_lower_indices")
 				Result.append (Close_parenthesis)
 				Result.append (Comma)
 				Result.append (Space)
@@ -847,7 +847,7 @@ feature {NONE} -- Implementation
 
 				Result.append (New_line_tab_tab)
 
-				Result.append ("lower_indeces")
+				Result.append ("lower_indices")
 				Result.append (Space)
 				Result.append (Equal_sign)
 				Result.append (Space)
@@ -895,7 +895,7 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (New_line_tab_tab_tab)
 
-				Result.append ("lower_indeces")
+				Result.append ("lower_indices")
 				Result.append (Space)
 				Result.append (Open_bracket)
 				Result.append ("i")
@@ -913,11 +913,11 @@ feature {NONE} -- Implementation
 				Result.append (Eif_access)
 				Result.append (Space)
 				Result.append (Open_parenthesis)
-				Result.append ("eif_lower_indeces")
+				Result.append ("eif_lower_indices")
 				Result.append (Close_parenthesis)
 				Result.append (Comma)
 				Result.append (Space)
-				Result.append ("lower_indeces")
+				Result.append ("lower_indices")
 				Result.append (Comma)
 				Result.append (Space)
 				Result.append_integer (dim_count)
@@ -931,7 +931,7 @@ feature {NONE} -- Implementation
 				Result.append (Free)
 				Result.append (Space)
 				Result.append (Open_parenthesis)
-				Result.append ("lower_indeces")
+				Result.append ("lower_indices")
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab)
@@ -1055,7 +1055,7 @@ feature {NONE} -- Implementation
 				Result.append (Space)
 				Result.append (Eif_access)
 				Result.append (Open_parenthesis)
-				Result.append ("eif_lower_indeces")
+				Result.append ("eif_lower_indices")
 				Result.append (Close_parenthesis)
 				Result.append (Comma)
 				Result.append (Space)

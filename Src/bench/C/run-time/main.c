@@ -373,15 +373,13 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	eorg_table = egc_forg_table;
 	pattern = egc_fpattern;
 
+	dbreak_create_table();		/* create the structure used to store breakpoints information */
+
 	/* In workbench mode, we have a slight problem: when we link ewb in
 	 * workbench mode, since ewb is a child from ised, the run-time will
 	 * assume, wrongly, that the executable is started in debug mode. Therefore,
 	 * we need a special run-time, with no debugging hooks involved.
 	 */
-
-#ifdef WORKBENCH
-	dbreak_create_table();		/* create the structure used to store breakpoints information */
-#endif
 #ifndef NOHOOK
 	winit();					/* Did we start under ewb control? */
 #endif

@@ -76,10 +76,10 @@ feature -- Transport
 			end
 			x1 := x0
 			y1 := y0
+			if dt_src.data_type.cursor /= Void then
+				dt_src.widget_source.set_cursor (dt_src.data_type.cursor)
+			end
 			dt_src.widget_source.set_capture
---			if dt_src.data_type.cursor /= Void then
---				set_cursor (dt_src.data_type.cursor)
---			end
 			dropped.set_item (False)
 		end
 
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 				if toolbar /= Void then
 					wel_point.screen_to_client (toolbar)
 					tbutton := toolbar.find_item_at_position (wel_point.x, wel_point.y)
-					if not tbutton.is_insensitive then
+					if tbutton /= Void and then not tbutton.is_insensitive then
 						tg := tbutton
 					end
 				else
@@ -155,6 +155,8 @@ feature {NONE} -- Implementation
 		local
 			target: EV_PND_TARGET_IMP
 			wel_point: WEL_POINT
+			curs_code: EV_CURSOR_CODE
+			curs: EV_CURSOR
 		do
 			inspect args.first
 			when 1 then -- Drag the data.
@@ -165,19 +167,32 @@ feature {NONE} -- Implementation
 					x1 := wel_point.x
 					y1 := wel_point.y
 					draw_segment (x0, y0, x1, y1)
---					target := pointed_target
---					if target ?= Void and then target.accept (args.second.data_type) then
---						set "allowed" cursor
---					else
---						set "forbiden" cursor
---					end
+					target := pointed_target
+					if target /= Void and then target.accept (args.second.data_type) then
+						-- set "authorized" cursor
+						if args.second.data_type.cursor /= Void then
+							args.second.widget_source.set_cursor (args.second.data_type.cursor)
+						else -- set the standard cursor
+							create curs_code.make
+							create curs.make_by_code (curs_code.standard)
+							args.second.widget_source.set_cursor (curs)
+						end
+					else
+						-- set "forbiden" cursor
+						create curs_code.make
+						create curs.make_by_code (curs_code.no)
+						args.second.widget_source.set_cursor (curs)
+					end
 				end
 			when 2 then -- Drop the data in a target.
 				dropped.set_item (True)
 				target := pointed_target
 				args.second.terminate_transport (Current, default_command)
 				args.second.widget_source.release_capture
---				unset_cursor
+				-- Reset the cursor
+				create curs_code.make
+				create curs.make_by_code (curs_code.standard)
+				args.second.widget_source.set_cursor (curs)
 				draw_segment (x0, y0, x1, y1)
 				if target /= Void then
 					target.receive (args.second.data_type, args.second.transported_data, data)
@@ -186,7 +201,10 @@ feature {NONE} -- Implementation
 				dropped.set_item (True)
 				args.second.terminate_transport (Current, default_command)
 				args.second.widget_source.release_capture
---				unset cursor
+				-- Reset the cursor
+				create curs_code.make
+				create curs.make_by_code (curs_code.standard)
+				args.second.widget_source.set_cursor (curs)
 				draw_segment (x0, y0, x1, y1)
 			end
 		end

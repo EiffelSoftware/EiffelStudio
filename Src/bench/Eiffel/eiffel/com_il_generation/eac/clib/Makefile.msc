@@ -3,7 +3,7 @@
 MV = copy
 CC = cl
 OUTPUT_CMD = -Fo
-CFLAGS = -W0 -Zi -D_WIN32_DCOM -c -I. -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+CFLAGS = -W0 -Ox -D_WIN32_DCOM -c -I. -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
 
 OBJ = ecom_gce_ise_c.obj \
 ecom_gec_ise_c.obj \
@@ -93,23 +93,17 @@ wecom_ise_reflection_eiffelcomponents__signaturetype_impl_proxy.obj \
 wecom_ise_reflection_eiffelcomponents__undefineclause_impl_proxy.obj \
 
 
-all:: ecom.lib ecom_final.lib
+all:: wecom.lib ecom.lib
 
-ecom.lib: $(WOBJ)
+wecom.lib: $(WOBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(WOBJ)
 	del *.obj
-	if not exist msc mkdir msc
-	$(MV) $@ msc
-	del $@
 
-ecom_final.lib: $(OBJ)
+ecom.lib: $(OBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(OBJ)
 	del *.obj
-	if not exist msc mkdir msc
-	$(MV) $@ msc
-	del $@
 
 .cpp.obj:
 	$(CC) $(CFLAGS) $<

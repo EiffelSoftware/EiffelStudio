@@ -270,6 +270,7 @@ feature {NONE} -- Implementation: access
 			put ("%"eif_helpers.h%"") check found_item = eif_helpers_header_name_id end
 			put ("native_array") check found_item = native_array_name_id end
 			put ("to_string") check found_item = to_string_name_id end
+			put ("to_cil") check found_item = to_cil_name_id end
 		end
 		
 invariant

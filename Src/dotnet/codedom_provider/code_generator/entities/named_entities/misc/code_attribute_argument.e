@@ -12,8 +12,6 @@ inherit
 	CODE_SHARED_NAME_FORMATTER
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 create
@@ -53,7 +51,7 @@ feature -- Access
 			-- | Result := "["`name'", `value']"
 		do
 			create Result.make (120)
-			if name = Void then
+			if name = Void or else name.is_empty then
 				Result.append (value.code)
 			else
 				Result.append ("[")

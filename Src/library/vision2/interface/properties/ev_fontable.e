@@ -38,7 +38,7 @@ feature -- Element change
 		do
 			implementation.set_font (a_font)
 		ensure
-			font_assigned: font.is_equal (a_font)
+			font_assigned: font.is_equal (a_font) and font /= a_font
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -64,8 +64,6 @@ feature
 							(project_dir, sys.compilation_id);
 						Workbench.set_precompiled_driver
 							(project_dir.precompiled_driver);
-						Workbench.set_precompiled_descobj
-							(project_dir.precompiled_descobj);
 						set_precomp_dir;
 						sys.init_counters;
 						if merge_project_names /= Void then
@@ -96,26 +94,24 @@ feature
 				Error_handler.raise_error
 			end
 		rescue
-			if Rescue_status.is_unexpected_exception and then
-				not resources.get_boolean (r_Fail_on_rescue, False)
+			if
+				Rescue_status.is_unexpected_exception and then
+				not Resources.get_boolean (r_Fail_on_rescue, False)
 			then
 				retried := True;
 				retry
-			end;
+			end
 		end;
 
 	set_precomp_dir is
 			-- Update precompilation related once functions.
 		require
 			driver_not_void: Workbench.precompiled_driver /= Void
-			descobj_not_void: Workbench.precompiled_descobj /= Void
 		local
 			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 		do
 			Precompilation_driver.make_from_string
 				(Workbench.precompiled_driver);
-			Precompilation_descobj.make_from_string
-				(Workbench.precompiled_descobj);
 			precomp_dirs := Workbench.precompiled_directories;
 			from precomp_dirs.start until precomp_dirs.after loop
 				precomp_dirs.item_for_iteration.update_path;
@@ -140,9 +136,14 @@ feature {NONE} -- Implementation
 			project_name: STRING;
 			project_eif: RAW_FILE;
 			vd41: VD41;
-			nb: INTEGER
+			vd45: VD45;
+			nb, size: INTEGER;
+			precomp_ids: HASH_TABLE [INTEGER, STRING];
+			dir_name: STRING;
+			id: INTEGER
 		do
 			if not retried then
+				!! precomp_ids.make (15);
 				from project_names.start until project_names.after loop
 					!! project_dir.make (project_names.item)
 	
@@ -154,8 +155,43 @@ feature {NONE} -- Implementation
 						info ?= Eiffel_project.retrieved (project_eif);
 						project_eif.close;
 						if info /= Void then
-							if Result = Void or info.count > nb then
+							from info.start until info.after loop
+								dir_name := info.key_for_iteration;
+								id := info.item_for_iteration;
+								if precomp_ids.has (dir_name) then
+										-- Check compatibility between
+										-- precompiled libraries.
+									if id /= precomp_ids.item (dir_name) then
+										!! vd45;	
+										vd45.set_path (dir_name);
+										Error_handler.insert_error (vd45);
+										Error_handler.raise_error
+									end
+								else
+									precomp_ids.put (id, dir_name)
+								end;
+								info.forth
+							end;
+							dir_name := project_names.item;
+							id := info.compilation_id;
+							if precomp_ids.has (dir_name) then
+									-- Check compatibility between
+									-- precompiled libraries.
+								if id /= precomp_ids.item (dir_name) then
+									!! vd45;	
+									vd45.set_path (dir_name);
+									Error_handler.insert_error (vd45);
+									Error_handler.raise_error
+								end
+							else
+								precomp_ids.put (id, dir_name)
+							end;
+							if
+								info.count > nb or (info.count = nb and
+								info.compilation_size > size)
+							then
 								nb := info.count;
+								size := info.compilation_size;
 								precomp_info := info;
 								Result := project_dir
 							end
@@ -171,11 +207,10 @@ feature {NONE} -- Implementation
 				!! merge_project_names.make;
 				from project_names.start until project_names.after loop
 					project_name := project_names.item;
-					if
-						not project_name.is_equal (Result.dollar_name) and
-						not precomp_info.has (project_name)
-					then
-						merge_project_names.extend (project_name)
+					if not project_name.is_equal (Result.dollar_name) then
+						if not precomp_info.has (project_name) then
+							merge_project_names.extend (project_name)
+						end
 					end;
 					project_names.forth
 				end;
@@ -199,8 +234,9 @@ feature {NONE} -- Implementation
 		ensure
 			valid_project: Result /= Void implies Result.is_valid
 		rescue
-			if Rescue_status.is_unexpected_exception and then
-				not resources.get_boolean (r_Fail_on_rescue, False) 
+			if
+				Rescue_status.is_unexpected_exception and then
+				not Resources.get_boolean (r_Fail_on_rescue, False)
 			then
 				retried := True;
 				retry
@@ -268,8 +304,9 @@ feature {NONE} -- Implementation
 				Error_handler.raise_error
 			end
 		rescue
-			if Rescue_status.is_unexpected_exception and then
-				not resources.get_boolean (r_Fail_on_rescue, False) 
+			if
+				Rescue_status.is_unexpected_exception and then
+				not Resources.get_boolean (r_Fail_on_rescue, False)
 			then
 				retried := True;
 				retry

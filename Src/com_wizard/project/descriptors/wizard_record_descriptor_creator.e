@@ -33,7 +33,8 @@ feature -- Basic operations
 			-- Initialize `fields'
 			-- and `eiffel_class_name'
 		require
-			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_record
+			non_void_type_info: a_type_info /= Void  
+			valid_type_info: a_type_info.type_attr.type_kind = Tkind_record or a_type_info.type_attr.type_kind = Tkind_union
 			valid_documentation: a_documentation /= Void
 		local
 			tmp_type_lib: ECOM_TYPE_LIB
@@ -43,6 +44,7 @@ feature -- Basic operations
 			description := clone (a_documentation.doc_string)
 			type_kind := a_type_info.type_attr.type_kind
 
+			is_union := (type_kind = Tkind_union)
 			create guid.make_from_guid (a_type_info.type_attr.guid)
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid
@@ -124,6 +126,7 @@ feature -- Basic operations
 					a_descriptor.set_description (No_description_available)
 				end
 				a_descriptor.set_type_library (type_library_descriptor)
+				a_descriptor.set_is_union (is_union)
 			end
 
 feature {NONE} -- Implementation
@@ -136,6 +139,9 @@ feature {NONE} -- Implementation
 
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Type library descriptor
+
+	is_union: BOOLEAN
+			-- Is union?
 
 end -- class WIZARD_RECORD_DESCRIPTOR_CREATOR
 

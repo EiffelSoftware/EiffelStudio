@@ -42,6 +42,9 @@ feature -- Access
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Type library descriptor
 
+	is_union: BOOLEAN
+			-- Is union?
+
 	creation_message: STRING is
 			-- Creation message used for wizard output
 		do
@@ -72,7 +75,7 @@ feature -- Access
 feature -- Basic operations
 
 	set_fields (some_fields: SORTED_TWO_WAY_LIST[WIZARD_RECORD_FIELD_DESCRIPTOR]) is
-			--
+			-- Set `fields' with `some_fields'.
 		require
 			valid_fields: some_fields /= Void
 		do
@@ -82,7 +85,7 @@ feature -- Basic operations
 		end
 
 	set_size (a_size: INTEGER) is
-			--
+			-- Set `size_of_instance' with `a_size'.
 		do
 			size_of_instance := a_size
 		ensure
@@ -97,6 +100,14 @@ feature -- Basic operations
 			type_library_descriptor := a_descriptor
 		ensure
 			valid_type_library: type_library_descriptor = a_descriptor
+		end
+
+	set_is_union (a_boolean: BOOLEAN) is
+			-- Set `is_union' with `a_boolean'.
+		do
+			is_union := a_boolean
+		ensure
+			valid_is_union: is_union = a_boolean
 		end
 
 	visit (a_visitor: WIZARD_TYPE_VISITOR) is

@@ -30,8 +30,8 @@ feature -- Initialization
 			set_managed (True)
 			private_attributes.set_x (default_x)
 			private_attributes.set_y (default_y)
-			private_attributes.set_width (0)
-			private_attributes.set_height (0)
+			private_attributes.set_width (minimal_width)
+			private_attributes.set_height (minimal_height)
 			shell_width :=  2 * window_frame_width
 			shell_height := title_bar_height + window_border_height + 2 * window_frame_height
 			oui_top := a_top_shell

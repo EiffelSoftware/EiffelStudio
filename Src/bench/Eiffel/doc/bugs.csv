@@ -77,11 +77,11 @@ Metrics,,,,,,,,,,
 
 
 Diagram,,,,,,,,,,
-,5,2,"Edit a class, rename it in its diagram in the same window, crash",Julian,,,,DGM0001,11/27/2001,
-,2,4,"If you add a link while they are hidden, they become visible but the tooltip is invalid",Raphael,,,,DGM0002,11/29/2001,
+,5,2,"Edit a class, rename it in its diagram in the same window, crash",,Julian,,,,DGM0001,11/27/2001
+,2,4,"If you add a link while they are hidden, they become visible but the tooltip is invalid",,Raphael,Xavier,1,closed,DGM0002,11/29/2001
 
 
 
 Wizards,,,,,,,,,,
-,5,3,"Using a clickable editor in the profiler is very bad: Ctrl F crashes, pick and drop makes the profiler disappear, no way to sort the lines",,Julian,,,,WIZ0001,11/16/2001
+,5,3,"Using a clickable editor in the profiler is very bad: Ctrl F crashes, pick and drop makes the profiler disappear, no way to sort the lines",,Julian,Xavier,1,test,WIZ0001,11/16/2001
 ,3,3,"In the documentation generation, make sure there are no unwanted """,,Xavier,,,,WIZ0002,11/16/2001

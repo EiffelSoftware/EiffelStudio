@@ -78,20 +78,22 @@ extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c 
 	if ( \
 			DEBUG & (n) && MARK_DEBUG & (p) \
 	) printf
-rt_private struct stack path_stack = {	/* Keeps track of explored nodes */
+#ifndef EIF_THREADS
+rt_private struct stack path_stack = {	/* Keeps track of explored nodes */ /* %%zmt */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */
+rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */ /* %%zmt */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
+#endif /* EIF_THREADS */
 #endif	/* ITERATIVE_MARKING */
 
 /*#define DEBUG 63				/* Debugging level */
@@ -101,6 +103,7 @@ rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */
  * collection process and help the auto-adaptative algorithm in its
  * decisions (heuristics).
  */
+#ifndef EIF_THREADS
 rt_shared struct gacinfo g_data = {			/* Global status */	/* %%zmt */
 	0L,			/* nb_full */
 	0L,			/* nb_partial */
@@ -108,7 +111,7 @@ rt_shared struct gacinfo g_data = {			/* Global status */	/* %%zmt */
 	0,			/* gc_to */
 	(char) 0,	/* status */
 };
-rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
+rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */ /* %%zmt */
 	{
 		0L,		/* mem_collect */		 0L,		/* mem_avg */
 		0L,		/* real_avg */			 0L,		/* real_time */
@@ -185,6 +188,7 @@ rt_public double last_gc_time = 0; 		/* The time spent on the last collect, swee
 rt_public int gc_ran = 0;				/* Has the GC been running */ /* %%zmt */
 
 #if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
+#else	/* %%ss added */
 rt_public int r_fides;	/* moved here from retrieve.c */ /* %%zmt */
 rt_public char r_fstoretype;	/* moved here from retrieve.c */ /* %%zmt %/
 	/* Was getting a link warning that it couldn't find this symbol.
@@ -208,6 +212,8 @@ rt_shared struct chunk *last_from =
 rt_public long th_alloc = TH_ALLOC;	/* Allocation threshold before calling GC */ /* %%zmt */
 rt_public int gc_monitor = 0;			/* Disable GC time-monitoring by default */ /* %%zmt */
 rt_public char *root_obj = (char *) 0;	/* Address of the 'root' object */ /* %%zmt */
+
+#endif /* EIF_THREADS */
 
 /* Automatic invokations of GC */
 rt_public int acollect(void);				/* Collection based on threshold */
@@ -1199,6 +1205,7 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 char *(*marker) (char *), re
 	 * mark all the references found.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 struct item *last;	/* For looping over subsidiary roots */
 	register2 int roots;			/* Number of roots in each chunk */
 	register3 struct stochunk *s;	/* To walk through each stack's chunk */
@@ -1339,6 +1346,7 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 char *(*marker) (char *), re
 #endif
 
 	}
+	EIF_END_GET_CONTEXT
 }
 #endif
 /* End of workbench-specific marking functions */

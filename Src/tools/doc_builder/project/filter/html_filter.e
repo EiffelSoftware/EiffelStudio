@@ -8,6 +8,8 @@ class
 	
 inherit
 	DOCUMENT_FILTER
+		rename
+			make as make_filter
 		redefine			
 			on_start_tag,
 			on_end_tag,
@@ -17,7 +19,26 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_filter
+
+feature -- Creation
+
+	make (a_xml_file: STRING; a_id: INTEGER) is
+			-- Make from `a_xml_file'
+		require
+			file_not_void: a_xml_file /= Void
+		local
+			l_temp_dir: DIRECTORY
+			l_util: UTILITY_FUNCTIONS
+			l_filename: STRING
+		do
+			make_filter (a_id)
+			create l_util
+			xml_file := a_xml_file
+			file := l_util.temporary_html_location (a_xml_file, True)
+			create temporary_directory.make (l_util.directory_no_file_name (file))
+		end		
 
 feature -- Status Setting
 
@@ -36,12 +57,7 @@ feature -- Tag
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of tag.
-		do
-			 	-- Debugging
-			if a_local_part.is_equal ("character") then
-				io.putstring (a_local_part)
-			end 	
-			 
+		do			 
 			can_write_content := True
 			if Complex_element_mappings.has (a_local_part) then
 				process_complex_element (a_local_part, True)
@@ -110,11 +126,25 @@ feature -- Tag
 				end
 				if in_attribute then
 					output_string.insert_string ("%"" + l_content + "%"", content_write_position)
+					if is_image_url then
+						copy_image_to_temporary_directory (l_content)
+						is_image_url := False
+					end
 				else
 					output_string.insert_string (l_content, content_write_position)
 				end
 			end			
 		end
+
+feature -- Status Setting
+
+	set_temp_dir (a_dir: DIRECTORY) is
+			-- Set temporary direction location for storage of temporary files
+		require
+			dir_not_void: a_dir /= Void
+		do
+			temporary_directory := a_dir	
+		end		
 
 feature {NONE} -- Processing
 
@@ -124,7 +154,8 @@ feature {NONE} -- Processing
 			e_not_void: e/= Void
 		local
 			l_previous,
-			l_name: STRING
+			l_name,
+			l_style: STRING
 		do
 			l_previous := Previous_elements.item
 					
@@ -141,11 +172,27 @@ feature {NONE} -- Processing
 					end
 						-- Url
 				elseif e.is_equal ("url") then
-					Attribute_stack.extend (e)					
-					if l_previous.is_equal ("image") then
+					Attribute_stack.extend (e)									
+					if 
+						l_previous.is_equal ("class_name") or 
+						l_previous.is_equal ("feature_name") or 
+						l_previous.is_equal ("cluster_name") 
+					then
+						in_code_link := True
+					end
+					
+					if l_previous.is_equal ("image") then	
+						is_image_url := True
 						write_attribute ("image_url", False)
 					else
 						write_attribute (e, False)
+					end					
+				elseif e.is_equal ("meta_data") then
+							-- Write stylesheet into HTML
+					write_element (e, is_start, True)
+					l_style := (create {SHARED_OBJECTS}).Shared_project.preferences.stylesheet_file
+					if l_style /= Void then
+						output_string.append ("<link rel=%"stylesheet%" href=%"" + l_style + "%" type=%"text/css%">")
 					end
 				else
 					write_element (e, is_start, True)
@@ -207,7 +254,7 @@ feature {NONE} -- Processing
 			-- Process class attribute element `e'
 		require
 			e_not_void: e /= Void
-		do						
+		do	
 			write_attribute (e, True)
 		end
 
@@ -251,12 +298,19 @@ feature {NONE} -- Query
 
 feature {NONE} -- Access
 
+	file: STRING
+			-- Full name of HTML file being written to
+
+	xml_file: STRING
+			-- Full name of XML file from which content is read
+
 	description: STRING is
 			-- Textual description of filter
 		do
 			Result := "Web"	
 		end		
 
+	element_write_position,
 	attribute_write_position,
 	attribute_value_write_position: INTEGER
 			-- Position to write attribute and attribute value
@@ -273,6 +327,9 @@ feature {NONE} -- Access
 				Result := output_string.count + 1
 			end
 		end
+
+	temporary_directory: DIRECTORY
+			-- Temporary directory
 
 feature {NONE} -- Output
 
@@ -304,6 +361,7 @@ feature {NONE} -- Output
 					-- Write value to output
 			if not l_name.is_empty then
 				output_string.append (l_start_tag + l_name + ">")
+				element_write_position := output_string.count - (l_name.count)
 			end
 			
 					-- Set attribute write position if applicable
@@ -327,8 +385,12 @@ feature {NONE} -- Output
 			else
 				l_att := " " + Element_attribute_mappings.item (e) + "="
 				attribute_value_write_position := attribute_write_position + Element_attribute_mappings.item (e).count + 2
+				if in_code_link then
+					output_string.remove_substring (element_write_position, element_write_position + 3)
+					output_string.insert_string ("a", element_write_position)
+				end
 			end
-			output_string.insert_string (l_att, attribute_write_position)
+			output_string.insert_string (l_att, attribute_write_position)		
 		end
 
 feature {NONE} -- Mapping Tables
@@ -339,7 +401,6 @@ feature {NONE} -- Mapping Tables
 			create Result.make (15)
 			Result.compare_objects
 			Result.extend ("html", "document")
-			Result.extend ("head", "meta_data")
 			Result.extend ("table", "table")
 			Result.extend ("tr", "row")
 			Result.extend ("td", "cell")
@@ -361,7 +422,8 @@ feature {NONE} -- Mapping Tables
 		once
 			create Result.make (5)
 			Result.compare_objects
-			Result.extend ("body", "document_paragraph")
+			Result.extend ("body", "document_paragraph")			
+			Result.extend ("head", "meta_data")
 			Result.extend ("p", "paragraph")
 			Result.extend ("p", "paragraph_end")
 			Result.extend ("", "url")
@@ -393,10 +455,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("alt_text", "alt_text")
 			Result.extend ("usemap", "usemap")
 			Result.extend ("shape", "shape")
-			Result.extend ("co-ordinates", "co-ordinates")		
---			Result.extend ("class_name", "class_name")
---			Result.extend ("string", "string")
---			Result.extend ("keywords", "keywords")
+			Result.extend ("co-ordinates", "co-ordinates")
 --			Result.extend ("tab_index", "tab_index")
 --			Result.extend ("hover_color", "hover_color")
 --			Result.extend ("disambiguator", "disambiguator")
@@ -444,6 +503,7 @@ feature {NONE} -- Mapping Tables
 			Result.extend ("content")
 			Result.extend ("code")
 			Result.extend ("character")
+			Result.extend ("output")
 		end
 
 	attributable_elements: ARRAYED_LIST [STRING] is
@@ -531,5 +591,41 @@ feature {NONE} -- Implementation
 				Result ?= previous_attribute.item (2)
 			end			
 		end
+
+feature {NONE} -- Image
+
+	is_image_url: BOOLEAN
+			-- Is current an image url?
+			
+	in_code_link: BOOLEAN
+			-- In code link tag?
+			
+	copy_image_to_temporary_directory (a_image_url: STRING) is
+			-- Copy image found at `a_image_url'
+		local
+			l_image_file,
+			l_target_image_file: RAW_FILE
+			l_target_location: FILE_NAME
+			l_util: UTILITY_FUNCTIONS
+			l_temp_dir: DIRECTORY
+			l_link: DOCUMENT_LINK
+		do
+				-- Create a file from the url passed in
+			create l_link.make (xml_file, a_image_url)
+			create l_image_file.make (l_link.absolute_url)
+			if l_image_file.exists then
+					-- As we know the file exists build a temporary location directory for the copied version
+				create l_target_location.make_from_string (l_link.temporary_html_location (l_image_file.name, False))
+				create l_temp_dir.make (l_link.directory_no_file_name (l_target_location.string))
+				if not l_temp_dir.exists then
+					l_temp_dir.create_dir
+				end
+					-- Create new target file in temporary location and copy
+				l_target_location.extend (l_link.short_name (a_image_url))
+				create l_target_image_file.make_create_read_write (l_target_location)
+				l_target_image_file.close
+				l_link.copy_file (l_image_file, l_target_image_file)
+			end
+		end		
 
 end -- class HTML_FILTER

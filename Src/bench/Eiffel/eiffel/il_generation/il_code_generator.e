@@ -795,7 +795,7 @@ feature -- IL Generation
 						feat := current_select_tbl.item (rout_id)
 							-- Generate code for current class only.
 						if not feat.is_deferred then
-							if feat.written_in = l_class_id or inh_feat.is_attribute then
+							if feat.written_in = l_class_id or feat.is_attribute then
 								generate_local_feature (feat, inh_feat, class_type, False)
 								mark_as_treated (feat)
 							else

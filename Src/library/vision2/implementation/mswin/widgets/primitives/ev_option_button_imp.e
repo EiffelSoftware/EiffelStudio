@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_OPTION_BUTTON_I
+		select
+			set_text
+		end
 
 	EV_MENU_HOLDER_IMP
 		undefine
@@ -17,6 +20,13 @@ inherit
 		end
 
 	EV_BUTTON_IMP
+		rename
+			set_text as internal_set_text
+		undefine
+			add_click_command,
+			set_right_alignment,
+			set_left_alignment,
+			set_center_alignment
 		redefine
 			make,
 			on_bn_clicked,
@@ -56,7 +66,7 @@ feature -- Event association
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
 			-- `sitem' has been selected'
 		do
-			set_text (sitem.text)
+			internal_set_text (sitem.text)
 			pixmap_imp := sitem.pixmap_imp
 		end
 
@@ -135,14 +145,14 @@ feature {NONE} -- Implementation
 			-- Add `a_menu' into container.
 		do
 			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
-			set_text (menu_imp.text)
+			internal_set_text (menu_imp.text)
 		end 
 
 	remove_menu (menu_imp: EV_MENU_IMP) is
 			-- Remove the menu from the option button.
 		do
 			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
-			set_text ("")
+			internal_set_text ("")
 		end
 
 feature {NONE} -- WEL implementation

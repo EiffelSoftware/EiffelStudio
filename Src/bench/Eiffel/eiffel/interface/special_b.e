@@ -1,4 +1,7 @@
---- Compiled class SPECIAL
+indexing
+	description: "Compiled class SPECIAL"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SPECIAL_B
 
@@ -13,7 +16,7 @@ inherit
 creation
 	make
 	
-feature
+feature -- Validity
 
 	check_validity is
 			-- Check validity of class SPECIAL
@@ -24,7 +27,7 @@ feature
 		do
 				-- First, check if class has one formal generic parameter
 			if generics = Void or else generics.count /= 1 then
-				!!special_error.make (Case_11, Current)
+				create special_error.make (Case_11, Current)
 				Error_handler.insert_error (special_error)
 			end
 
@@ -35,7 +38,7 @@ feature
 				or else not (item_feature.written_in = class_id)
 				or else not item_feature.same_signature (Item_signature)
 			then
-				!!special_error.make (Case_12, Current)
+				create special_error.make (Case_12, Current)
 				Error_handler.insert_error (special_error)
 			end
 			
@@ -45,52 +48,26 @@ feature
 				or else not (put_feature.written_in = class_id)
 				or else not put_feature.same_signature (Put_signature)
 			then
-				!!special_error.make (Case_13, Current)
+				create special_error.make (Case_13, Current)
 				Error_handler.insert_error (special_error)
 			end
 		end
 
-	Item_signature: DYN_FUNC_I is
-			-- Required signature for feature `item' of class SPECIAL
-		local
-			args: FEAT_ARG
-			f: FORMAL_A
-		once
-			!!args.make (1)
-			args.put_i_th (Integer_type, 1)
-			!!Result
-			Result.set_arguments (args)
-			!!f
-			f.set_position (1)
-			Result.set_type (f)
-			Result.set_feature_name_id (Names_heap.item_name_id)
-		end
+feature -- Typing
 
-	Put_signature: DYN_PROC_I is
-			-- Required signature for feature `put' of class SPECIAL
-		local
-			args: FEAT_ARG
-			f: FORMAL_A
-		once
-			!!f
-			f.set_position (1)
-			!!args.make (2)
-			args.put_i_th (f, 1)
-			args.put_i_th (Integer_type, 2)
-			!!Result
-			Result.set_arguments (args)
-			Result.set_feature_name_id (Names_heap.put_name_id)
-		end
-		
 	new_type (data: CL_TYPE_I): SPECIAL_CLASS_TYPE is
 			-- New class type for class SPECIAL
 		do
 			create Result.make (data)
 		end
 
+feature -- Status report
+
 	is_special, is_special_array: BOOLEAN is True
 			-- Is class SPECIAL?
 	
+feature -- Code generation
+
 	generate_dynamic_types (buffer: GENERATION_BUFFER) is
 			-- Generate dynamic types of type classes available in the system
 		local
@@ -102,7 +79,7 @@ feature
 			dtype, char_dtype, int8_dtype, int16_dtype,
 			int32_dtype, int64_dtype, wchar_dtype,
 			float_dtype, double_dtype,
-			pointer_dtype, boolean_dtype: INTEGER
+			pointer_dtype, boolean_dtype, ref_dtype: INTEGER
 		do
 			from
 				char_dtype := -1
@@ -115,6 +92,7 @@ feature
 				double_dtype := -1
 				boolean_dtype := -1
 				pointer_dtype := -1
+				ref_dtype := -1
 				types.start
 			until
 				types.after
@@ -146,30 +124,72 @@ feature
 					boolean_dtype := dtype
 				elseif gen_param.is_feature_pointer then
 					pointer_dtype := dtype
+				else
+					ref_dtype := dtype
 				end
 				types.forth
 			end
-			buffer.putstring ("%N%Tegc_sp_char = ")
+			buffer.putstring ("%N%Tegc_sp_char = (uint32)")
 			buffer.putint (char_dtype)
-			buffer.putstring (";%N%Tegc_sp_wchar = ")
+			buffer.putstring (";%N%Tegc_sp_wchar = (uint32)")
 			buffer.putint (wchar_dtype)
-			buffer.putstring (";%N%Tegc_sp_bool = ")
+			buffer.putstring (";%N%Tegc_sp_bool = (uint32)")
 			buffer.putint (boolean_dtype)
-			buffer.putstring (";%N%Tegc_sp_int8 = ")
+			buffer.putstring (";%N%Tegc_sp_int8 = (uint32)")
 			buffer.putint (int8_dtype)
-			buffer.putstring (";%N%Tegc_sp_int16 = ")
+			buffer.putstring (";%N%Tegc_sp_int16 = (uint32)")
 			buffer.putint (int16_dtype)
-			buffer.putstring (";%N%Tegc_sp_int32 = ")
+			buffer.putstring (";%N%Tegc_sp_int32 = (uint32)")
 			buffer.putint (int32_dtype)
-			buffer.putstring (";%N%Tegc_sp_int64 = ")
+			buffer.putstring (";%N%Tegc_sp_int64 = (uint32)")
 			buffer.putint (int64_dtype)
-			buffer.putstring (";%N%Tegc_sp_real = ")
+			buffer.putstring (";%N%Tegc_sp_real = (uint32)")
 			buffer.putint (float_dtype)
-			buffer.putstring (";%N%Tegc_sp_double = ")
+			buffer.putstring (";%N%Tegc_sp_double = (uint32)")
 			buffer.putint (double_dtype)
-			buffer.putstring (";%N%Tegc_sp_pointer = ")
+			buffer.putstring (";%N%Tegc_sp_pointer = (uint32)")
 			buffer.putint (pointer_dtype)
+			buffer.putstring (";%N%Tegc_sp_ref = (uint32)")
+			buffer.putint (ref_dtype)
 			buffer.putstring (";%N")
+		end
+
+feature {NONE} -- Implementation
+
+	Item_signature: DYN_FUNC_I is
+			-- Required signature for feature `item' of class SPECIAL
+		local
+			args: FEAT_ARG
+			f: FORMAL_A
+		once
+			create args.make (1)
+			args.put_i_th (Integer_type, 1)
+			create Result
+			Result.set_arguments (args)
+			create f
+			f.set_position (1)
+			Result.set_type (f)
+			Result.set_feature_name_id (Names_heap.item_name_id)
+		ensure
+			item_signature_not_void: Result /= Void
+		end
+
+	Put_signature: DYN_PROC_I is
+			-- Required signature for feature `put' of class SPECIAL
+		local
+			args: FEAT_ARG
+			f: FORMAL_A
+		once
+			create f
+			f.set_position (1)
+			create args.make (2)
+			args.put_i_th (f, 1)
+			args.put_i_th (Integer_type, 2)
+			create Result
+			Result.set_arguments (args)
+			Result.set_feature_name_id (Names_heap.put_name_id)
+		ensure
+			put_signature_not_void: Result /= Void
 		end
 
 end

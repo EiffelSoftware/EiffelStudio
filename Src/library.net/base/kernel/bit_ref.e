@@ -14,8 +14,6 @@ class BIT_REF inherit
 	ANY
 		redefine
 			out,
-			generator,
-			conforms_to,
 			is_equal
 		end
 
@@ -54,21 +52,6 @@ feature -- Access
 			index_small_enough: i <= count
 		do
 			Result := (values.item (i |>> 5)).bit_test (i & 31)
-		end
-
-	generator: STRING is
-			-- Name of the current object's generating class.
-		do
-			create Result.make (10)
-			Result.append ("BIT ")
-			Result.append_integer (count)
-		end
-
-	conforms_to (other: BIT_REF): BOOLEAN is
-			-- Is dynamic type of current object a descendant of
-			-- dynamic type of `other'?
-		do
-			Result := count <= other.count
 		end
 
 	is_equal (other: like Current): BOOLEAN is

@@ -180,7 +180,13 @@ if not initialized.item then
 				end
 				!!init_work.make (workb);
 				Workbench.init;
-				Workbench.lace.set_file_name (Ace_name);
+
+					-- Set the ace file ONLY if -ace is used
+				if Ace_name /= Void then
+					check_ace_file (Ace_name);
+					Workbench.lace.set_file_name (Ace_name);
+				end;
+
 				if System.uses_precompiled then
 					!!precomp_r;
 					precomp_r.set_precomp_dir;
@@ -229,6 +235,10 @@ if not initialized.item then
 			!!workb;
 			!!init_work.make (workb);
 			workb.make;
+			if Ace_name = Void then
+				Ace_name := "Ace"
+			end;
+			check_ace_file (Ace_name);
 			Workbench.lace.set_file_name (Ace_name);
 
 	-- The project is now initialized
@@ -472,29 +482,37 @@ feature -- Input/Output
 			io.error.putstring ("System recompiled.%N")
 		end;
 
-feature -- Execution
+feature {NONE} -- Check Ace file
 
-	work (pn, an: STRING) is
+	check_ace_file (fn: STRING) is
+			-- Check that the Ace file exists and is readable and plain
 		local
 			f: UNIX_FILE
 		do
-			!! f.make (an);
+			!! f.make (fn);
 			if
 				f.exists and then f.is_readable and then f.is_plain
 			then
-				project_name := pn;
-				Ace_name := an;
-				execute;
 			else
-				io.error.putstring ("File: ");
-				io.error.putstring (an);
+				io.error.putstring ("Ace file `");
+				io.error.putstring (fn);
 				if f.exists then
-					io.error.putstring (" cannot be read%N");
+					io.error.putstring ("' cannot be read%N");
 				else
-					io.error.putstring (" does not exist%N");
+					io.error.putstring ("' does not exist%N");
 				end;
 				lic_die (-1)
 			end
+		end;
+
+			
+feature -- Execution
+
+	work (pn, an: STRING) is
+		do
+			project_name := pn;
+			Ace_name := an;
+			execute;
 		end;
 
 	execute is

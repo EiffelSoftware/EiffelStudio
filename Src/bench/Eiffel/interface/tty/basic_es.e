@@ -190,9 +190,7 @@ feature -- Command line options
 		local
 			i: INTEGER
 		do
-				-- Default Ace and Project
-				-- Options
-			Ace_name := "Ace";
+					-- Default Project Options
 			Project_name := ".";
 
 			from
@@ -396,7 +394,7 @@ feature -- Command line options
 			elseif option.is_equal ("-ace") then
 				if current_option < (argument_count - 1) then
 					current_option := current_option + 1;
-					Ace_name := argument (current_option)
+					Ace_name := argument (current_option);
 				else
 					option_error := True
 				end;

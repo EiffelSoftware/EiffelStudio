@@ -57,24 +57,6 @@ feature
 
 feature -- Compilation
 
-	check_ace_file is
-		local
-			f: UNIX_FILE
-		do
-			!!f.make (Lace.file_name);
-			if f.exists and then f.is_readable and then f.is_plain then
-			else
-				io.error.putstring ("File: ");
-				io.error.putstring (Lace.file_name);
-				if f.exists then
-					io.error.putstring (" cannot be read%N")
-				else
-					io.error.putstring (" does not exist%N")
-				end;
-				lic_die (-1);
-			end;
-		end;
-
 	select_ace_file is
 		local
 			file_name, cmd: STRING;
@@ -86,7 +68,7 @@ feature -- Compilation
 			!!file.make (file_name);
 			if file.exists then
 				Lace.set_file_name (file_name);
-				check_ace_file;
+				check_ace_file (file_name);
 			end;
 			from
 			until
@@ -122,7 +104,7 @@ feature -- Compilation
 					else
 						Lace.set_file_name ("Ace");
 					end;
-					check_ace_file
+					check_ace_file (Lace.file_name);
 				when 't' then
 					io.putstring ("File name: ");
 					io.readline;
@@ -156,6 +138,8 @@ feature -- Compilation
 			str: STRING
 		do
 			from
+					-- Is the Ace file still there?
+				check_ace_file (Lace.file_name)
 			until
 				exit
 			loop

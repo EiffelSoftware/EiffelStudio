@@ -87,6 +87,15 @@ feature -- IL code generation
 			end
 		end
 
+	generate_il_type is
+			-- Generate IL code to load type.
+		local
+			cl_type_i: CL_TYPE_I
+		do
+			cl_type_i ?= context.creation_type (type)		
+			cl_type_i.generate_gen_type_il (il_generator, True)
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is

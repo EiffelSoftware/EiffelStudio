@@ -42,6 +42,11 @@ feature -- IL code generation
 		deferred
 		end
 
+	generate_il_type is
+			-- Generate byte code to load creation type.
+		deferred
+		end
+		
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is

@@ -107,6 +107,39 @@ feature -- IL code generation
 			il_generator.mark_label (end_label)			
 		end
 
+	generate_il_type is
+			-- Generate IL code to load type of argument creation type.
+			-- Take the dynamic type of the argument if possible,
+			-- otherwise take its static type.
+		local
+			cl_type: CL_TYPE_I
+			creation_label, end_label: IL_LABEL
+		do
+			cl_type := type_to_create
+			creation_label := Il_label_factory.new_label
+			end_label := Il_label_factory.new_label
+			
+			il_generator.generate_argument (position)
+			il_generator.put_default_value (cl_type)
+			il_generator.generate_binary_operator (feature {IL_CONST}.il_eq)
+			il_generator.branch_on_false (creation_label)
+			
+				-- Object is null, we are therefore creating an object of
+				-- the declared type.
+			(create {CREATE_TYPE}.make (cl_type)).generate_il_type
+			il_generator.branch_to (end_label)
+			
+			il_generator.mark_label (creation_label)
+			
+				-- Object is not null, so we put it on top of stack and call
+				-- the runtime feature that knows how to create an object
+				-- of the same type as another object.
+			il_generator.generate_argument (position)
+			il_generator.load_type
+
+			il_generator.mark_label (end_label)	
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is

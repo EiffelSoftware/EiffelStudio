@@ -18,9 +18,11 @@ inherit
 
 	FORM_M
 		rename
-			xt_parent as f_xt_parent
+			xt_parent as f_xt_parent,
+			x_lower_window as wx_lower_window,
+			x_raise_window as wx_raise_window
 		undefine
-			make
+			make, lower, raise, action_target
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			set_x, set_y, set_x_y, is_stackable
@@ -58,7 +60,8 @@ feature -- Creation
 			screen_object := create_form_d ($ext_name,
 					a_form_dialog.parent.implementation.screen_object);
 			a_form_dialog.set_dialog_imp (Current);
-			forbid_resize
+			forbid_resize;
+			action_target := screen_object;
 		end;
 
 	is_stackable: BOOLEAN is do end;

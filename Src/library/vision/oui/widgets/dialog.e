@@ -110,6 +110,20 @@ feature -- Windowing
 			is_no_grab
 		end
 
+feature
+
+	dialog_command_target is
+			-- set the command target to be the dialog shell
+		do
+			implementation.dialog_command_target;
+		end;
+
+	widget_command_target is
+			-- set the command target to be the widget
+		do
+			implementation.widget_command_target;
+		end
+
 feature {DIALOG_I}
 
 	set_dialog_imp (a_dialog_imp: DIALOG_I) is

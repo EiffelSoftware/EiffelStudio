@@ -99,6 +99,27 @@ feature
 			is_no_grab
 		end -- set_no_grab
 
+feature
+
+	dialog_command_target is
+			-- set the command target to the dialog_shell
+		deferred
+		end;
+
+	widget_command_target is
+			-- set the command target to the widget
+		deferred
+		end;
+
+	screen_object: POINTER is
+		deferred
+		end
+
+	action_target: POINTER is
+		deferred
+		end
+
+
 end -- class DIALOG_I
 
 

@@ -34,11 +34,13 @@ inherit
 
 	BULLETIN_M
 		rename
-			xt_parent as b_xt_parent
+			xt_parent as b_xt_parent,
+			x_lower_window as wx_lower_window,
+			x_raise_window as wx_raise_window
 		export
 			{NONE} all
 		undefine
-			make
+			make, lower, raise, action_target
 		redefine
            	 	define_cursor_if_shell, undefine_cursor_if_shell,
 			is_stackable
@@ -59,7 +61,8 @@ feature -- Creation
             screen_object := create_bulletin_d
 			($ext_name_bull, a_bulletin_d.parent.implementation.screen_object);
             a_bulletin_d.set_dialog_imp (Current);
-            forbid_resize
+			forbid_resize
+			action_target := screen_object;
         end;
 
 	is_stackable: BOOLEAN is do end;

@@ -67,31 +67,6 @@ feature
 			set_xt_boolean (screen_object, False, MallowShellResize)
 		end;
 
-	lower is
-			-- Lower the shell in the stacking order.
-		local
-            window, display_pointer, void_pointer: POINTER
-		do
-			window := xt_window (screen_object);
-			if window /= void_pointer then
-				display_pointer := xt_display (screen_object);
-				x_lower_window (display_pointer, window)
-			end
-		end;
-
-	raise is
-			-- Raise the shell to the top of the stacking order.
-		
-		local
-            window, display_pointer, void_pointer: POINTER
-		do
-			window := xt_window (screen_object);
-			if window /= void_pointer then
-				display_pointer := xt_display (screen_object);
-				x_raise_window (display_pointer, window)
-			end
-		end;
-
 	real_x: INTEGER is
 			-- Vertical position relative to root window
 		local
@@ -137,16 +112,6 @@ feature {ALL_CURS_X}
 feature {NONE} -- External features
 
 	x_undefine_cursor (dspl_pointer, wndw: POINTER) is
-		external
-			"C"
-		end;
-
-	x_raise_window (dspl_pointer, wndw: POINTER) is
-		external
-			"C"
-		end;
-
-	x_lower_window (dspl_pointer, wndw: POINTER) is
 		external
 			"C"
 		end;

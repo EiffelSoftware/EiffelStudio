@@ -13,6 +13,8 @@ inherit
 	FONT_BOX
 		rename
 			make as font_box_make
+		undefine
+			raise, lower
 		redefine
 			implementation
 		end;

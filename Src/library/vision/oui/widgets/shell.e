@@ -37,18 +37,6 @@ feature -- Windowing
 			implementation.forbid_resize
 		end;
 
-	lower is
-			-- Lower the shell in the stacking order.
-		do
-			implementation.lower
-		end;
-
-	raise is
-			-- Raise the shell to the top of the stacking order.
-		do
-			implementation.raise
-		end;
-
 	is_popup_shell: BOOLEAN is
 		do
 		end;

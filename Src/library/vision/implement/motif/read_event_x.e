@@ -288,13 +288,15 @@ feature {NONE}
 		
 		local
 			clip: CLIP;
-			coord: COORD_XY
+			coord: COORD_XY;
+			count: INTEGER;
 		do
 			!!coord;
 			coord.set (c_event_clip_x, c_event_clip_y);
 			!!clip;
 			clip.set (coord, c_event_clip_width, c_event_clip_height);
-			!!Result.make (widget_oui, clip)
+			count := c_event_expose_count;
+			!!Result.make (widget_oui, clip, count);
 		end;
 
 	focus_in_data (widget_oui: WIDGET): FOCUSIN_DATA is
@@ -547,6 +549,11 @@ feature {NONE} -- External features
 		external
 			"C"
 		end; 
+
+	c_event_expose_count: INTEGER is
+		external
+			"C"
+		end;
 
 end
 

@@ -38,16 +38,6 @@ feature
 		deferred
 		end; -- forbid_resize
 
-	lower is
-			-- Lower the shell in the stacking order.
-		deferred
-		end; -- lower
-
-	raise is
-			-- Raise the shell to the top of the stacking order.
-		deferred
-		end -- raise
-
 end -- class SHELL_I
 
 

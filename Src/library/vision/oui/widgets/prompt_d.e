@@ -11,6 +11,8 @@ inherit
 	PROMPT
 		rename
 			make as prompt_make
+		undefine
+			raise, lower
 		redefine
 			implementation
 		end;

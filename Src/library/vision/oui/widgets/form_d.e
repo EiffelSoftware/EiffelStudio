@@ -13,6 +13,8 @@ class FORM_D
 inherit
 
 	FORM
+		undefine
+			raise, lower
 		redefine
 			implementation, make
 		end;

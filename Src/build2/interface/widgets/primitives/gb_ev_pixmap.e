@@ -82,13 +82,10 @@ feature {GB_XML_STORE} -- Output
 				else
 				
 					create new_pixmap
-					data := element_info.data
-					data := data.substring (data.last_index_of (Directory_seperator, data.count), data.count)
-					data := constant_by_name ("pixmap_location") + data
 					create a_file_name.make_from_string (element_info.data)
 					create file.make (a_file_name)	
 					if file.exists then
-						new_pixmap.set_with_named_file (data)
+						new_pixmap.set_with_named_file (element_info.data)
 						for_all_objects (agent {EV_PIXMAP}.set_with_named_file (a_file_name))
 						for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
 					else
@@ -117,10 +114,7 @@ feature {GB_CODE_GENERATOR} -- Output
 				if element_info.is_constant then
 					Result := info.name + ".copy (" + element_info.data + ")"
 				else
-					data := element_info.data
-					data := data.substring (data.last_index_of (Directory_seperator, data.count), data.count)
-					data := "constant_by_name (%"pixmap_location%") + %"" + data
-					Result := info.name + ".set_with_named_file (" + data + "%")"
+					Result := info.name + ".set_with_named_file (%"" + element_info.data + "%")"
 				end
 			end
 			Result := strip_leading_indent (Result)

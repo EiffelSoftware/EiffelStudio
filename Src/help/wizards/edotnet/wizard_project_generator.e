@@ -116,6 +116,9 @@ feature {NONE} -- Implementation
 			dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			a_dependency: ASSEMBLY_INFORMATION
 			a_dependency_name: STRING
+			local_assemblies: HASH_TABLE [STRING, STRING]
+			i: INTEGER
+			a_local_assembly: STRING
 		do
 			create Result.make (1024)
 			Result.append ("%N%T%T-- .NET System%N")
@@ -144,7 +147,21 @@ feature {NONE} -- Implementation
 				a_dependency_name.to_lower
 				Result.append ("%Tall " + a_dependency_name + "_generated: %"" + a_dependency.eiffel_cluster_path + "%"%N%N")
 				dependencies.forth
-			end			
+			end		
+			local_assemblies := wizard_information.local_assemblies
+			from
+				local_assemblies.start
+				i := 1
+			until
+				local_assemblies.off
+			loop
+				a_local_assembly := clone (local_assemblies.item_for_iteration)
+				if a_local_assembly /= Void and then not a_local_assembly.is_empty then
+					Result.append ("%Tall local_assembly_" + i.out + "_generated: %"" + a_local_assembly + "%"%N%N")
+				end
+				i := i + 1
+				local_assemblies.forth
+			end
 		ensure
 			non_void_text: Result /= Void
 			not_empty_text: not Result.is_empty
@@ -160,6 +177,8 @@ feature {NONE} -- Implementation
 			an_assembly: ASSEMBLY_INFORMATION
 			dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			a_dependency: ASSEMBLY_INFORMATION
+			local_assemblies: HASH_TABLE [STRING, STRING]
+			a_local_assembly: STRING
 		do
 			create Result.make (1024)
 			Result.append ("external%N%Tassembly:%N")
@@ -183,6 +202,19 @@ feature {NONE} -- Implementation
 				a_dependency := dependencies.item
 				Result.append ("%T%T%T%"" + assembly_location (a_dependency) + "%",%N")
 				dependencies.forth
+			end
+
+			local_assemblies := wizard_information.local_assemblies
+			from
+				local_assemblies.start
+			until
+				local_assemblies.off
+			loop
+				a_local_assembly := clone (local_assemblies.key_for_iteration)
+				if a_local_assembly /= Void and then not a_local_assembly.is_empty then
+					Result.append ("%T%T%T%"" + a_local_assembly + "%",%N")
+				end
+				local_assemblies.forth
 			end
 			
 			Result.right_adjust

@@ -88,11 +88,11 @@ feature -- Access
 			if not wizard_information.selected_assemblies.is_empty then
 				if not wizard_information.dependencies.is_empty then
 					message_text_field.set_text (Common_message +
-						"External assemblies: %N" + assemblies_string (wizard_information.selected_assemblies) + "%N%	
+						"External assemblies: %N" + assemblies_string (wizard_information.selected_assemblies) + "%N" + local_assemblies_string + "%N%	
 						%Dependencies: %N" + assemblies_string (wizard_information.dependencies))
 				else
 					message_text_field.set_text (Common_message +
-						"External assemblies: %N" + assemblies_string (wizard_information.selected_assemblies))				
+						"External assemblies: %N" + assemblies_string (wizard_information.selected_assemblies) + "%N" + local_assemblies_string)				
 				end
 			else
 				message_text_field.set_text (Common_message)			
@@ -147,11 +147,43 @@ feature {NONE} -- Implementation
 				Result.append ("%T" + an_assembly.name + ", " + an_assembly.version + "%N")
 				a_list.forth
 			end
+			Result.right_adjust
 		ensure
 			non_void_text: Result /= Void
 			not_empty_text: not Result.is_empty
 		end
 
+	local_assemblies_string: STRING is
+			-- String from `wizard_information.local_assemblies'
+		require
+			non_void_local_assemblies: wizard_information.local_assemblies /= Void 
+		local
+			local_assemblies: HASH_TABLE [STRING, STRING]
+			a_local_assembly: STRING
+			last_backslash_index: INTEGER
+		do
+			local_assemblies := wizard_information.local_assemblies
+			from
+				create Result.make (1024)
+				local_assemblies.start
+			until
+				local_assemblies.off
+			loop
+				a_local_assembly := clone (local_assemblies.key_for_iteration)
+				if a_local_assembly /= Void and then not a_local_assembly.is_empty then
+					last_backslash_index := a_local_assembly.last_index_of ('\', a_local_assembly.count)
+					if last_backslash_index > 1 then
+						a_local_assembly := a_local_assembly.substring (last_backslash_index + 1, a_local_assembly.count)
+					end
+					Result.append ("%T" + a_local_assembly + "%N")
+				end
+				local_assemblies.forth
+			end
+			Result.right_adjust
+		ensure
+			non_void_text: Result /= Void
+		end
+			
 	is_incremental_compilation_possible: BOOLEAN is
 			-- Is an incremental compilation possible?
 		local

@@ -13,6 +13,10 @@
 	executable.
 */
 
+#ifdef USE_BSD_SIGNALS
+#define _BSD_SIGNALS /* For sgi */
+#endif
+
 #include <signal.h>
 #include "eif_config.h"
 #ifdef I_STRING

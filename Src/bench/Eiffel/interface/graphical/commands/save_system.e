@@ -70,6 +70,7 @@ feature {NONE}
 					--| (and not the show_clusters file name).
 					Lace.set_file_name (file_name);
 				end;
+				text_window.clear_clickable;
 				text_window.set_changed (false)
 			end
 		end;

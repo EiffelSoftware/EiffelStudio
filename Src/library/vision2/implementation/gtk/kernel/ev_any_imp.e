@@ -26,10 +26,6 @@ inherit
 			dispose
 		end
 
-	EV_C_UTIL
-
-	INTERNAL
-
 feature {EV_ANY_I} -- Access
 
 	c_object: POINTER
@@ -71,9 +67,6 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			widget_imp: EV_WIDGET_IMP
 		do
 			if not is_destroyed then
-				debug ("EV_GTK_DESTROY")
-					safe_print (generator + ".destroy")
-				end
 				item_imp ?= Current
 				if item_imp /= Void and then item_imp.parent_imp /= Void then
 						item_imp.parent_imp.interface.prune_all (item_imp.interface)
@@ -187,10 +180,6 @@ feature {NONE} -- Implementation
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
 		do
-			-- FIXME this may not be safe!
-			debug ("EV_GTK_DISPOSE")
-				safe_print (generator + ".dispose")
-			end
 			if c_object /= NULL and then not is_in_final_collect and then not App_implementation.gtk_marshal.is_destroyed then
 				-- Destroy has not been explicitly called.
 				is_destroyed := True
@@ -212,9 +201,6 @@ feature {NONE} -- Implementation
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
 		do
-			debug ("EV_GTK_C_OBJECT_DISPOSE")
-				safe_print (generator + ".c_object_dispose")
-			end
 			c_object := NULL
 			is_destroyed := True
 		ensure
@@ -240,6 +226,28 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			check
 				Result_not_void: Result /= Void
 			end
+		end
+
+feature -- Conversion
+
+	pointer_to_integer (pointer: POINTER): INTEGER is
+			-- int pointer_to_integer (void* pointer) {
+			--     return (int) pointer;
+			-- }
+			-- Hack used for Result = ((EIF_INTEGER)(pointer)), blank alias avoids parser rules.
+		external
+			"C [macro <stdio.h>] (EIF_POINTER): EIF_INTEGER"
+		alias
+			" "
+		end
+		
+feature -- Measurement
+
+	NULL: POINTER is
+		external
+			"C [macro <stdio.h>]"
+		alias
+			"NULL"
 		end
 
 invariant

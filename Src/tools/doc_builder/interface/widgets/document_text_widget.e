@@ -56,14 +56,18 @@ feature {NONE} -- Initialization
 			end
 			should_update := True
 			create schema_validator
+			set_font (shared_document_editor.preferences.font)
+			if not shared_document_editor.preferences.word_wrap_on then
+				disable_word_wrapping
+			end
+			
+				-- Agents
 			change_actions.extend (agent update_subject)
 			key_release_actions.force_extend (agent update_subject)
 			pointer_button_release_actions.force_extend (agent update_subject)
 			pointer_button_release_actions.force_extend (agent pointer_released)
 			pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))
-			initialize_accelerators
-			enable_word_wrapping			
-			
+			initialize_accelerators			
 		end
 
 	initialize_accelerators is
@@ -73,6 +77,8 @@ feature {NONE} -- Initialization
 			key_constants: EV_KEY_CONSTANTS
 			accelerator: EV_ACCELERATOR
 		do		
+			create key_constants
+			
 				-- Ctrl-B
 			create key.make_with_code (key_constants.Key_b)
 			create accelerator.make_with_key_combination (key, True, False, False)
@@ -100,7 +106,8 @@ feature -- Query
 			if not text.is_empty then					
 				Result := is_valid_xml_text (text)
 				if not Result then
-					create error_report.make_from_gobo_error (error_description)
+					create error_report.make ("Invalid XML")
+					error_report.append_error (create {ERROR}.make (error_description))
 				end
 			end
 		end		
@@ -152,109 +159,41 @@ feature -- Query
 			end
 		end
 
-feature -- Status report
-
-	highlight_substring (a_string: STRING) is
-			-- Highlight first occurence of `a_string' from `caret_position'.
-			-- If can't be found from there then start from the beginning
-		require
-			a_string_not_void: a_string /= Void
-			has_string: text.has_substring (a_string)
-		local
-			l_text: STRING
-			cnt: INTEGER
-			done: BOOLEAN
-		do
-			l_text := text.substring (caret_position, text.count)
-			if l_text.has_substring (a_string) then
-				set_focus
-				select_region (caret_position + l_text.substring_index (a_string, 1) - 1, caret_position + l_text.substring_index (a_string, 1) + a_string.count - 2)
-				from
-					cnt := 1
-				until
-					cnt = line_count or done
-				loop
-					if 
-						caret_position > first_position_from_line_number (cnt) and then
-						caret_position < first_position_from_line_number (cnt + 1)
-					then
-						scroll_to_line (cnt - 5)
-						done := True
-					end
-					cnt := cnt + 1
-				end
-			end
-			if not has_selection then
-				set_caret_position (1)
-				highlight_substring (a_string)
-			end	
-		end		
+feature -- Status report	
 
 	highlight_error is
 			-- Highlight error.		
 		do			
 		end	
 
-	highlight_error_pos (l_no, l_pos: INTEGER) is
-			-- Highlight line at `l_no' and position `l_pos'.  Since `l_no' denoted a file
-			-- line number this must be converted to the relevant poistion in Current.
-		local
-			found: BOOLEAN
-			line_cnt, new_line_cnt,
-			start_pos, end_pos: INTEGER
-			l_curr_line: STRING
-		do
-			set_focus
-			from
-				line_cnt := 1
-				found := (line_count = 1)
-			until
-				found or line_cnt > line_count or l_no = 1
-			loop
-				l_curr_line := line (line_cnt)
-				if l_curr_line.item (l_curr_line.count) = '%N' then
-					new_line_cnt := new_line_cnt + 1
-					if new_line_cnt = (l_no - 1) then
-						found := True
-					end
-				end
-				if not found then
-					line_cnt := line_cnt + 1	
-				end
+	highlight_error_pos (a_no, a_pos: INTEGER) is
+			-- Highlight line at `a_no' and position `a_pos'.  Since `l_no' denoted a file
+			-- line number this must be converted to the relevant position in Current.
+		local			
+			l_has_wrap: BOOLEAN
+			l_start_pos, l_end_pos: INTEGER
+		do			
+			l_has_wrap := has_word_wrapping
+			if l_has_wrap then
+				disable_word_wrapping
 			end
-			start_pos := first_position_from_line_number (line_cnt) + l_pos
-			end_pos := first_position_from_line_number (line_cnt) + l_pos + 1
-			select_region (start_pos, end_pos)
-			scroll_to_line (l_no)
-		end		
-
-	highlight_xml_error is
-			-- Highlight XML parsing or validation error in text
-		local
-			line_no: INTEGER
-		do
-			if line_no > 0 then
-				select_lines (line_no, line_no + 1)
-				scroll_to_line (line_no)
+	
+			l_start_pos := first_position_from_line_number (a_no) + a_pos - 1
+			l_end_pos := l_start_pos + line (a_no).count - a_pos - 2	
+			
+			if l_has_wrap then
+				enable_word_wrapping
 			end			
-		end
-		
-	highlight_schema_error is
-			-- Highlight Schema parsing or validation error in text
-		local
-			line_no: INTEGER
-		do
-			line_no := schema_validator.error_report.line_number
-			if line_no > 0 then
-				select_lines (line_no, line_no + 1)
-				scroll_to_line (line_no)
-			end
-		end	
+			
+			select_region (l_start_pos, l_end_pos)
+			scroll_to_line (a_no)
+			set_focus
+		end		
 
 	update_line_display is
 			-- Update line display to reflect caret position
 		do
-			Application_window.update_status_line (current_line_number)	
+			Application_window.update_status_line (current_line_number, caret_position)	
 		end	
 
 feature -- Status Setting
@@ -264,58 +203,6 @@ feature -- Status Setting
 		do
 			document.save
 		end	
-		
---	insert_xml (a_xml: STRING) is
---			-- Insert 'xml' into Current text
---		require
---			xml_validator.is_valid_xml_text (a_xml)
---		do
---			insert_text (a_xml)
---			select_region (caret_position, caret_position + a_xml.count - 1)
---		end
-		
---	insert_xml_formatted (a_xml: STRING) is
---			-- Insert 'xml' into Current text, pretty formatted
---		require
---			Xml_validator.is_valid_xml_text (a_xml)
---		local
---			new_xml, tag: STRING
---			char_cursor, tab_count, init_caret: INTEGER
---			curr_char: CHARACTER
---			start: BOOLEAN
---		do
---			if can_insert (a_xml) then
---				create new_xml.make_empty
---				a_xml.prune_all ('%N')
---				a_xml.prune_all ('%T')
---				from
---					init_caret := caret_position
---					char_cursor := 1
---					start := True
---				until
---					char_cursor > xml.count
---				loop
---					curr_char := a_xml.item (char_cursor)
---					if curr_char = '<' and then not start then
---						if a_xml.substring (char_cursor, char_cursor + 1).is_equal ("</") then
---							new_xml.extend ('%N')
---							new_xml := add_tabs_to_text (new_xml, tab_count)
---							tab_count := tab_count - 1
---						else
---							new_xml.extend ('%N')
---							tab_count := tab_count + 1
---							new_xml := add_tabs_to_text (new_xml, tab_count)
---						end
---					else
---						start := False
---					end
---					new_xml.extend (curr_char)
---					char_cursor := char_cursor + 1
---				end
---				insert_text (new_xml)
---				select_region (init_caret, init_caret + new_xml.count - 1)
---			end
---		end		
 
 	insert_xml_formatted (a_xml: STRING) is
 			-- Insert 'xml' into Current text, pretty formatted
@@ -451,9 +338,6 @@ feature {NONE} -- Implementation
 
 	internal_xml: like xml
 			-- XML
-
-	editor: DOCUMENT_EDITOR
-			-- The parent editor
 
 	schema_validator: SCHEMA_VALIDATOR
 			-- Schema Validator	

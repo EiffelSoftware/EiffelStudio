@@ -276,8 +276,8 @@ feature {NONE} -- Implementation
 	Remove_string: STRING is "Remove"
 		-- String on `modify_button' when able to remove pixmap.
 		
-	Select_string: STRING is "Select"
-		-- String on `modify_button' ahen able to select pixmap.
+	Select_string: STRING is "Select..."
+		-- String on `modify_button' when able to select pixmap.
 		
 	Remove_tooltip: STRING is "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.

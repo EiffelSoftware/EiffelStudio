@@ -58,11 +58,49 @@ feature -- Basic operations
 			end
 		end
 		
+	restore_file (directory: FILE_NAME; a_file_name, contents: STRING) is
+			--
+		local
+			file_name: FILE_NAME
+			file: PLAIN_TEXT_FILE
+		do
+			create file_name.make_from_string (directory)
+			file_name.extend (a_file_name)
+			create file.make (file_name)
+			file.open_write
+			file.start
+			file.putstring (contents)
+			file.close
+		end
+		
+		
+	delete_directory (directory: DIRECTORY) is
+			-- Remove `directory'.
+		require
+			directory_exists: directory.exists
+			directory_empty: directory.is_empty
+		do	
+			directory.delete
+		end
+		
+	create_directory (directory: DIRECTORY) is
+			-- Create `directory'.
+		require
+			directory_not_exists: not directory.exists
+		do
+			directory.create_dir
+		ensure
+			directory_exists: directory.exists
+		end
+		
+		
 	delete_directory_and_content (directory: DIRECTORY) is
 			-- Removed `directory' and all content from disk.
 		do
-			directory.delete_content
-			directory.delete
+			if directory.exists then
+				directory.delete_content
+				directory.delete
+			end
 		end
 
 end -- class GB_FILE_UTILITIES

@@ -123,14 +123,24 @@ feature
 		local
 			fname: FILE_NAME;
 			fsuffix: STRING;
-			class_stone: CLASSC_STONE
+			class_stone: CLASSC_STONE;
+			temp_name: STRING
 		do
 			class_stone ?= stone;
 			if class_stone /= Void then
 				!!fname.make_from_string (tmp_directory);
-				fname.set_file_name (class_stone.class_c.class_name);
+				temp_name := clone (class_stone.class_c.class_name);
+				if not fname.is_file_name_valid (temp_name) then
+						-- Truncate the class name to 8 characters
+						-- under Windows.
+					temp_name.head (8)
+				end;
+				fname.set_file_name (temp_name);
 				if file_suffix /= Void then
-					if not file_suffix.empty then
+					if 
+						not file_suffix.empty and then
+						fname.is_extension_valid (file_suffix)
+					then
 						fname.add_extension (file_suffix)
 					end
 				else
@@ -143,7 +153,7 @@ feature
 				end;
 				Result := fname
 			else
-				!! Result.make (0);
+				!! Result.make (0)
 			end
 		end;
 

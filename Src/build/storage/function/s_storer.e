@@ -80,18 +80,4 @@ feature
 			end
 		end
 
-feature {STORER} -- Interface commands
-
-	update_interface is
-			-- Add commands to the interface.
-		do
-			from
-				retrieved_data.start
-			until
-				retrieved_data.after
-			loop
-				retrieved_data.item.update_interface_from_storage
-				retrieved_data.forth
-			end
-		end
 end

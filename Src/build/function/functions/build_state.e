@@ -318,23 +318,4 @@ feature
 			Result := Current
 		end;
 
-feature {S_STORER} -- Interface commands
-
-	update_interface_from_storage is
-			-- Add all the commands for this state on the interface
-			-- according to the pairs context/behavior.
-		require
-			equal_count: input_list.count = output_list.count
-		do
-			from
-				input_list.start
-				output_list.start
-			until
-				input_list.after or output_list.after
-			loop
-				output_list.item.add_interface_command_from_storage (input_list.item, Current)
-				input_list.forth
-				output_list.forth
-			end
-		end
 end -- class BUILD_STATE

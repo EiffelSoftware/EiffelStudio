@@ -239,7 +239,7 @@ feature -- Generation structure
 	// Generate info about current feature.
 	void generate_type_feature (int feature_id);
 	void GenerateFeatureIL (int FeatureID, int TypeID, int CodeFeatureID);
-	void GenerateFeatureInternalClone (int FeatureID);
+	void generate_feature_internal_duplicate (int FeatureID);
 	void GenerateImplementationFeatureIL (int FeatureID);
 
 	// Generate a MethodImpl from `ParentTypeID::ParentFeatureID' into 

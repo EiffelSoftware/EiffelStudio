@@ -384,7 +384,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_feature_internal_clone(  /* [in] */ EIF_INTEGER feature_id );
+	void ccom_generate_feature_internal_duplicate(  /* [in] */ EIF_INTEGER feature_id );
 
 
 	/*-----------------------------------------------------------

@@ -365,8 +365,8 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.GenerateMethodImpl (FeatureID, ParentTypeID, ParentFeatureID);
 	}
 
-	public void GenerateFeatureInternalClone (int FeatureID) {
-		core.GenerateFeatureInternalClone (FeatureID);
+	public void generate_feature_internal_duplicate (int FeatureID) {
+		core.generate_feature_internal_duplicate (FeatureID);
 	}
 
 	public void GenerateCreationFeatureIL (int FeatureID) {

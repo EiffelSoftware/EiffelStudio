@@ -335,34 +335,35 @@ feature {NONE} -- Externals
 			"C [macro <lvcolumn.h>]"
 		end
 
---|---------------------------------------------------------------
---| Not defined in Borland C++ 4.5
---|---------------------------------------------------------------
---|	cwel_lv_column_set_iimage (ptr: POINTER; value: INTEGER) is
---|		external
---|			"C [macro <lvcolumn.h>]"
---|		end
---|
---|	cwel_lv_column_get_iimage (ptr: POINTER): INTEGER is
---|		external
---|			"C [macro <lvcolumn.h>]"
---|		end
---|---------------------------------------------------------------
+-----------------------------------------------------------------
+-- Not defined in Borland C++ 4.5
+-----------------------------------------------------------------
+--	cwel_lv_column_set_iimage (ptr: POINTER; value: INTEGER) is
+--		external
+--			"C [macro <lvcolumn.h>]"
+--		end
+--
+--	cwel_lv_column_get_iimage (ptr: POINTER): INTEGER is
+--		external
+--			"C [macro <lvcolumn.h>]"
+--		end
+-----------------------------------------------------------------
 
 end -- class WEL_LIST_VIEW_COLUMN
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+

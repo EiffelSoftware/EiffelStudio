@@ -22,8 +22,10 @@
 <A NAME="pgfId=374738">
 </A>
 <H1>Getting Started</H1>
-<A NAME="pgfId=375636"></A>
-The following step by step tutorials will help you create your first EiffelCOM projects. An EiffelCOM project can consist either in accessing an existing COM component from Eiffel or in creating a new COM component.
+<blockquote>
+<A NAME="pgfId=375636"></A>This chapter explains how to use the EiffelCOM wizard
+  to create COM components and to access existing components.
+</blockquote>
 <DIV>
 <H6 CLASS="dd-sec2">
 <A NAME="pgfId=375637">
@@ -31,18 +33,17 @@ The following step by step tutorials will help you create your first EiffelCOM p
 <A NAME="29789">
  </A>
 Creating a new COM component</H6>
-<OL>
-<LI CLASS="nn-first">
+<blockquote>
 <A NAME="pgfId=375659">
- </A>
-This first tutorial describes the steps involved in creating a COM component in Eiffel. These components can be either DLLs (in-process) or EXEs (out-of-process). This tutorial will focus on creating an in-process component. This component, called StringManipulator, will expose one interface IString that include the functions ReplaceSubstring and PruneAll corresponding respectively to the features <EM CLASS="ee-text">
-replace_substring</EM>
- and <EM CLASS="ee-text">
-prune_all</EM>
- of the EiffelBase <EM CLASS="ee-text">
-STRING</EM>
- class. IString also includes the property String that represents the string being manipulated. This property can be set or read. Other languages will then be able to access these features using this component.</LI>
-</OL>
+</A>The first tutorial describes creating a COM component from a COM definition
+file that is either an IDL file or a Type Library. The tutorial focuses on
+creating an in-process (DLL) component, called <i>StringManipulator</i>. The
+component exposes one interface <i>IString</i> that includes the functions <i>ReplaceSubstring</i>
+and <i>PruneAll</i> corresponding respectively to the features <em>replace_substring</em>
+and <em>prune_all</em> of the EiffelBase <em>STRING</em> and the property <i>String</i>
+that represents the manipulated string. The property can be set or read. Other
+languages will be able to access these features.
+</blockquote>
 <DIV>
 <H6 CLASS="dd-sec3">
 <A NAME="pgfId=375830">
@@ -55,48 +56,43 @@ Step by step instructions</H6>
 Launch the EiffelCOM Wizard (from the Start menu, open Programs then EiffelXX and click EiffelCOM Wizard)</LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375695">
- </A>
-Choose Create a new project</LI>
+</A>Choose <i>Create a new project from a COM definition</i>.</LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375699">
- </A>
-Click Next</LI>
+</A>Click <i>Next</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375701">
- </A>
-Choose Server code for a new component</LI>
+</A>Choose <i>Server code for a new component</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375703">
- </A>
-Click Next</LI>
+</A>Click <i>Next</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375704">
- </A>
-Click the top Browse button and open the file $EIFFEL4\examples\com\wizard\string_manipulator\string_manipulator.idl where $EIFFEL4 represents the path to your EIFFEL45 directory.</LI>
+</A>Click the top <i>Browse</i> button and open the file <i>$EIFFEL4\examples\com\wizard\string_manipulator\string_manipulator.idl</i>
+where <i>$EIFFEL4</i> represents the path to your EIFFEL45 directory.</LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375705">
- </A>
-Click the bottom Browse button and select the directory where you want to create the project (later referenced as destination folder). Choose $EIFFEL4\examples\com\wizard\string_manipulator\generated where $EIFFEL4 represents the path to your EIFFEL45 directory.</LI>
+</A>Click the bottom <i>Browse</i> button and select the directory where you
+want to create the project (later referenced as destination folder). Choose <i>$EIFFEL4\examples\com\wizard\string_manipulator\generated</i>
+where <i>$EIFFEL4</i> represents the path to your EIFFEL45 directory. If you
+work on a Windows9x machine, please choose a directory with a shorter path, for
+example c:\string_manipulator because Windows9x are unable to handle long path
+names.</LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375706">
- </A>
-Click Next</LI>
+</A>Click <i>Next</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375707">
- </A>
-Choose Virtual Table, Standard Marshalling</LI>
+</A>Choose <i>Virtual Table, Standard Marshalling</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375708">
- </A>
-Click Next</LI>
+</A>Click <i>Next</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375716">
- </A>
-Click Finish</LI>
+</A>Click <i>Finish</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375717">
- </A>
-Wait until the wizard is done.</LI>
+</A>Wait until the wizard is done.</LI>
 </UL>
 </DIV>
 <DIV>
@@ -104,33 +100,38 @@ Wait until the wizard is done.</LI>
 <A NAME="pgfId=375741">
  </A>
 First look at the generated code</H6>
-<OL>
-<LI CLASS="nn-first">
-<A NAME="pgfId=375748">
- </A>
-The first interesting file you might want to look at is the file generated.txt in the destination folder. It includes a list of all the files that the wizard generated. When done, the wizard automatically launches EiffelBench with the generated project, you can use EiffelBench to browse the system and get an idea of the class hierarchy. The most interesting classes are the ones in relation with the generated coclass <EM CLASS="ee-text">
-STRING_MANIPULATOR_COCLASS</EM>
-. This class inherits from <EM CLASS="ee-text">
-ISTRING_INTERFACE</EM>
- corresponding to the IString interface. The coclass is deferred since we are creating a project for a server. It has one descendant <EM CLASS="ee-text">
-STRING_MANIPULATOR_COCLASS_IMP</EM>
- that implements the deferred features of the interface. The default implementation returns the error E_notimpl to the client. This error means that the function is not implemented on that server.</LI>
-</OL>
+<blockquote>
+<font face="Arial">
+<p align="justify"><a name="pgfId_375748"></a>At the end of the processing the
+wizard automatically launches EiffelBench with the generated project to help you
+navigate created Eiffel classes. You might want to look at the file <i>generated.txt</i>
+in the destination folder, which contains a list of files generated by the
+wizard. The file <i>string_manipulator.log</i> holds summary of the processing
+and error and warning messages.</p>
+<p align="justify">The deferred class <em>STRING_MANIPULATOR_COCLASS represents
+component functionality</em>. It inherits from <em>ISTRING_INTERFACE</em> that
+corresponds to the <i>IString</i> interface. It has one descendant <em>STRING_MANIPULATOR_COCLASS_IMP</em>
+that implements the deferred features. The default implementation returns the
+error <i>E_notimpl</i> to the client. The error means that the server does not
+implement the function.</p>
+</font>
+</blockquote>
 </DIV>
 <DIV>
 <H6 CLASS="dd-sec3">
 <A NAME="pgfId=375810">
  </A>
 implementing the component</H6>
-<OL>
-<LI CLASS="nn-first">
-<A NAME="pgfId=375894">
- </A>
-We want to do something more interesting than just returning an error to our client an are going to edit the implementation of the features in <EM CLASS="ee-text">
-STRING_MANIPULATOR_COCLASS_IMP</EM>
-. This class will not be overwritten by future executions of the wizard. There is an implementation of the coclass in $EIFFEL4\examples\com\wizard\string_manipulator\server\. Just copy this file over to $EIFFEL4\examples\com\wizard\string_manipulator\generated\server\component and
-freeze your project. Voila!, you have your first EiffelCOM component up and running.</LI>
-</OL>
+<blockquote>
+<A NAME="pgfId=375894"></A>
+ To do something more interesting than merely return an error to a client edit
+ the implementation of the <I>STRING_MANIPULATOR_COCLASS_IMP class</I>. The
+ wizard would not overwrite this class in future executions. There is an
+ implementation of the class in <i>$EIFFEL4\examples\com\wizard\string_manipulator\server</i>\.
+ Copy this file over to <i>$EIFFEL4\examples\com\wizard\string_manipulator\generated\server\component</i>
+ and freeze the project. Voila!, you have your first EiffelCOM component up and
+ running.
+</blockquote>
 </DIV>
 <DIV>
 <H6 CLASS="dd-sec3">
@@ -139,18 +140,128 @@ freeze your project. Voila!, you have your first EiffelCOM component up and runn
 Tips</H6>
 <UL>
 <LI CLASS="mm-bull">
-<A NAME="pgfId=375928">
- </A>
-If you are to develop an EiffelCOM component, you will most probably need to set the registry entry MELT_PATH. This value needs to be setup in the case the system is not launched from the directory containing the byte code (by default EIFGEN\W_code). The EiffelCOM component client will launch the server from its current location and will cause the server to crash if the MELT_PATH key is not setup properly. To put this value in your registry, create a key under HKEY_CURRENT_USER\SOFTWARE\ISE\Eiffel45 with the same name as the name of your project (e.g. string_manipulator) and add the string value named MELT_PATH containing the path to the byte code (.melted file). You will find an example of such entry in the file melted_path.reg in $EIFFEL4\wizard\config. You can edit this file as needed (replace string_manipulator with the name of your system and change the path to point on the correct location using `\\' as directory separator) and double click it to enter the information in your registry.</LI>
+<A NAME="pgfId=375928"></A>
+To develop an EiffelCOM component you need to set the
+ registry entry MELT_PATH because the system is not launched from the directory
+ containing the byte code (by default EIFGEN\W_code). The EiffelCOM component
+ client launches the server from its current location and causes the server to
+ crash if the MELT_PATH key does not setup properly. To put this value in your
+ registry, create a key under HKEY_CURRENT_USER\SOFTWARE\ISE\Eiffel45 with the
+ same name as the name of your project (e.g. <i>string_manipulator</i>) and add
+ the string value named MELT_PATH containing the path to the byte code (.melted
+ file). You will find an example of such entry in the file <i>melted_path.reg</i>
+ in $EIFFEL4\wizard\config. Edit this file as needed (replace <i>string_manipulator</i>
+ with the name of your system and change the path to point on the correct
+ location using `\\' as directory separator) and then double click on it to
+ enter the information into the registry.</LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375977">
- </A>
-To test your component, you need first to register it. If the component is in-process then it is registered via the regsvr32 utility using the following syntax: regsvr32 system_name.dll where system_name is the name of the dll (e.g. string_manipulator). If the component is out-of-process then it is register using the following syntax: system_name.exe -Regserver where system_name is the name of the component executable file.</LI>
+</A>To test the component, you need to register it first. Register an in-process
+component via the <i>regsvr32</i> utility using the following syntax: <i>regsvr32
+system_name.dll</i> where <i>system_name</i> is the name of the dll (e.g.
+string_manipulator). Register an out-of-process component using the following
+syntax: <i>system_name.exe -Regserver</i> where <i>system_name</i> is the name
+of the component executable file.</LI>
 <LI CLASS="nn-normal">
 <A NAME="pgfId=375983">
- </A>
-For the purpose of this tutorial you will need to register the component with the following command (run from a dos console): regsvr32 string_manipulator.dll and to enter the information in $EIFFEL4\wizard\config\melted_path.reg. You will have to change the content of this file if you did not install Eiffel under C:\.</LI>
+</A>To complete this tutorial you need to register the component with the
+following command (run from a dos console): <i>regsvr32 string_manipulator.dll</i>
+and to enter the information in <i>$EIFFEL4\wizard\config\melted_path.reg</i>.
+You have to change the content of this file if you have not installed Eiffel
+under C:\ and/or have used a different destination directory.</LI>
 </UL>
+
+<DIV>
+<H6 CLASS="dd-sec2">
+<A NAME="pgfId=375637">
+ </A>
+<A NAME="29789">
+ </A>
+Creating a new component from an Eiffel project</H6>
+<blockquote>
+
+<p>The second tutorial describes creating a COM component from
+an Eiffel system. The tutorial example <i>String </i>is almost identical to <i>StringManipulator</i>
+of the previous tutorial. In the <i>StringManipulator</i> example the wizard
+starts from IDL file and builds an Eiffel System; in contrast, the <i>String</i>
+example takes an Eiffel system and generates an IDL file and the required
+plumbing code to make the Eiffel project accessible to COM runtime. You do not
+need to modify any Eiffel or C code.</p>
+
+</blockquote>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=375831">
+ </A>
+ Step by step instructions</H6>
+
+<blockquote>
+
+<DIV>
+
+<ul>
+<li>Create a new Eiffel project in the directory <i>$EIFFEL4\examples\com\wizard\e2idl\eproject</i>
+  where $EIFFEL4 represents the path to your EIFFEL45 directory.
+<li>Select Ace file from the same directory and compile.
+<li>Launch the EiffelCOM Wizard (from the Start menu, open Programs then
+  EiffelXX and click EiffelCOM Wizard)
+<li>Choose <i>Create a new project from an existing Eiffel project</i>.
+<li>Click <i>Next</i>
+<li>Click <i>Next</i> again
+<li>Click the top Browse button and open the file <i>$EIFFEL4\examples\com\wizard\e2idl\eproject\string.epr</i>
+  where $EIFFEL4 represents the path to your EIFFEL45 directory.
+<li>Click the second Browse button and open the file <i>$EIFFEL4\examples\com\wizard\e2idl\
+  eproject\Ace.ace</i> where $EIFFEL4 represents the path to your EIFFEL45
+  directory.
+<li>In the third entry field enter <i>string_manipulator</i>.
+<li>In the forth entry field enter <i>root_cluster</i>.
+<li>Click <i>Next</i>.
+<li>Click the Browse button and select the directory where you want to create
+  the project (the destination folder). Choose <i>$EIFFEL4\examples\com\wizard\e2idl\generated</i>
+  where $EIFFEL4 represents the path to your EIFFEL45 directory. If you work on
+  a Windows 9x machine, please choose a directory with a shorter path, for
+  example c:\e2idl.
+<li>Click <i>Next</i>
+<li>Choose Automation
+<li>Click <i>Next</i>
+<li>Click <i>Finish</i>
+<li>Wait until the wizard is done.</li>
+</ul>
+
+</div>
+</blockquote>
+
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=375832">
+ </A>
+ First look at the generated code</H6>
+
+<blockquote>
+
+<DIV>
+
+The only generated Eiffel class is COM_&lt;Name_of_system&gt;_REGISTRATION.
+    You do not need to modify or implement any classes. The wizard produces a
+    ready-to-use component.
+
+
+</div>
+</blockquote>
+
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=375832">
+ </A>
+ Tips</H6>
+
+<ul>
+  <li>In most Eiffel systems functionality is spread out throughout the system. No
+  single class exposes the full functionality of the system and can serve as a
+  Facade to the outside world. Running the wizard on any such class would not be
+  practical. Before starting the wizard write an Eiffel class that acts as a
+  Facade and forwards client calls to the appropriate sybsystems. Enter the
+  Facade class name into &quot;Enter Eiffel class name&quot; field of the third
+  dialog (Eiffel Project File Dialog). The wizard generates an IDL file from
+  this class.</li>
+</ul>
 </DIV>
 </DIV>
 <DIV>
@@ -158,12 +269,11 @@ For the purpose of this tutorial you will need to register the component with th
 <A NAME="pgfId=375751">
  </A>
 Accessing a component</H6>
-<OL>
-<LI CLASS="nn-first">
+<blockquote>
 <A NAME="pgfId=375755">
- </A>
-Now that we have build a component, we are going to reuse it from another Eiffel project. The same exact steps should be followed for components written in any language.	</LI>
-</OL>
+</A>The third tutorial describes how to access a COM component and build
+reusable library.
+</blockquote>
 <DIV>
 <H6 CLASS="dd-sec3">
 <A NAME="pgfId=375836">
@@ -177,29 +287,31 @@ Launch the wizard</LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375760">
  </A>
-Choose Create a new project and click Next</LI>
+Choose <i> Create a new project from a COM definition</i> and click <i> Next</i></LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375764">
  </A>
-Click Next again</LI>
+Click <i> Next</i> again</LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375768">
  </A>
-Click the top Browse button and open the file $EIFFEL4\examples\com\wizard\string_manipulator\string_manipulator.idl where $EIFFEL4 represents the path to your EIFFEL45 directory. You could also choose to open the type library (.tlb) that was generated by the wizard when <A HREF="getting_started.html#29789" CLASS="XRef">
-See Creating a new COM component.</A>
+Click the top <i> Browse</i> button and open the file <i> $EIFFEL4\examples\com\wizard\string_manipulator\string_manipulator.idl
+</i> where <i> $EIFFEL4</i> represents the path to your EIFFEL45 directory. You could also choose to open the type library (.tlb) that was generated by the wizard when
+<A HREF="getting_started.html#29789" CLASS="XRef">Creating a new COM component.</A>
  in the destination folder of that first project.</LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375783">
  </A>
-Click the bottom Browse button and select the directory where you want to create the project (later referenced as destination folder). Choose $EIFFEL4\examples\com\wizard\string_manipulator\generated where $EIFFEL4 represents the path to your EIFFEL45 directory.</LI>
+Click the bottom <i> Browse</i> button and select the directory where you want to create the project (later referenced as destination folder). Choose
+<i> $EIFFEL4\examples\com\wizard\string_manipulator\generated</i> where <i> $EIFFEL4</i> represents the path to your EIFFEL45 directory.</LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375791">
  </A>
-Click Next</LI>
+Click <i> Next</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375800">
  </A>
-Click Finish</LI>
+Click <i> Finish</i></LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375795">
  </A>
@@ -211,42 +323,50 @@ Wait until the wizard is done.</LI>
 <A NAME="pgfId=375840">
  </A>
 First look at the generated code</H6>
-<OL>
-<LI CLASS="nn-first">
-<A NAME="pgfId=375844">
- </A>
-In the case of a client the wizard will precompile the generated code and open EiffelBench on the precompilation project. Note: a precompilation project is read-only, you will need to start another EiffelBench to reuse the generated classes. The interesting classes are all related to the coclass proxy STRING_MANIPULATOR_PROXY. The proxy is the Eiffel class that gives access to the component. Each feature on the proxy calls the corresponding interface function on the component. You can use the EiffelBench opened by the wizard to browse through the generated classes and get an idea of the class hierarchy.</LI>
-</OL>
+<blockquote>
+  <font face="Arial"><a name="pgfId_375844"></a>At the and of the generation the
+  wizard precompiles the generated code and open EiffelBench on the
+  precompilation project. Note: a precompilation project is read-only, you need
+  to start another EiffelBench to reuse the generated classes. The interesting
+  classes are all related to the coclass proxy STRING_MANIPULATOR_PROXY. The
+  proxy is the Eiffel class that gives access to the component. Each feature on
+  the proxy calls the corresponding interface function on the component. You can
+  use the EiffelBench opened by the wizard to browse through the generated
+  classes and study the class hierarchy.
+  </blockquote>
+  <p align="justify">&nbsp;</font>
 </DIV>
 <DIV>
 <H6 CLASS="dd-sec3">
 <A NAME="pgfId=375854">
  </A>
-Implementing a client</H6>
-<OL>
-<LI CLASS="nn-first">
-<A NAME="pgfId=375858">
- </A>
-We are now going to implement a client of the StringManipulator component. Open a new EiffelBench that will be used to create the client project. Create the project in $EIFFEL4\examples\com\wizard\string_manipulator\client using the ace file found in that directory.
-Freeze and run the project. You are now accessing the previously built component and calling functions on its interfaces!. The interesting class is <EM CLASS="ee-text">
-MY_STRING_MANIPULATOR</EM>
- which inherits from the generated<EM CLASS="ee-text">
- STRING_MANIPULATOR_PROXY</EM>
- and redefine the feature replace_substring_user_precondition. The generated interfaces will include contracts for each exposed function. You can redefine the user_precondition features to implement your own preconditions.</LI>
-</OL>
+ Implementing a client</H6>
+<blockquote>
+<A NAME="pgfId=375858"></A>
+ To implement a client of the StringManipulator component open a new
+ EiffelBench. Create the project in <i>$EIFFEL4\examples\com\wizard\string_manipulator\client</i>
+ using the ace file found in that directory. Freeze and run the project. You are
+ now accessing the previously built component and calling functions on its
+ interfaces!. The class <em>MY_STRING_MANIPULATOR</em> inherits from the
+ generated<em> STRING_MANIPULATOR_PROXY</em> and redefines the feature <i>replace_substring_user_precondition</i>.
+ The generated interfaces include contracts for each exposed function. You can
+ redefine the <i>user_precondition</i> features to implement your own
+ preconditions.
+</blockquote>
 </DIV>
 <DIV>
 <H6 CLASS="dd-sec3">
 <A NAME="pgfId=375995">
  </A>
 Contracts</H6>
-<OL>
-<LI CLASS="nn-first">
+<blockquote>
 <A NAME="pgfId=375999">
  </A>
 Contracts can be broken directly on the proxy in which case you will get a standard contract violation or in the server. If contracts are broken on the server then the exception will be forwarded by the EiffelCOM runtime to the client. The feature replace_substring_user_precondition in <EM CLASS="ee-text">
 MY_STRING_MANIPULATOR </EM>
-includes the following commented line:</LI>
+includes the following commented line:
+</blockquote>
+<OL>
 <TABLE>
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
@@ -259,37 +379,33 @@ includes the following commented line:</LI>
 </TD>
 </TR>
 </TABLE>
-<LI CLASS="nn-normal">
+</OL>
+<blockquote>
 <A NAME="pgfId=376009">
  </A>
 Un-comment this line by removing the preceding `<EM CLASS="ee.text">
 --</EM>
 ' and comment out the rest of the feature. Now the contract of the <EM CLASS="ee-text">
 replace_substring</EM>
- feature is wrong and erroneous calls can be made. Quick melt the changes and run the client. Enter some invalid numbers in the fields used to call this feature. After you click Replace you will see an error message box warning you that a precondition was violated on the server side. This is how you can use contracts `over the wire'. The preconditions was violated in the server, this exception was caught by the EiffelCOM runtime and sent back to the client.</LI>
-</OL>
+ feature is wrong and erroneous calls can be made. Quick melt the changes and run the client. Enter some invalid numbers in the fields used to call this feature. After you click Replace you will see an error message box warning you that a precondition was violated on the server side. This is how you can use contracts `over the wire'. The preconditions was violated in the server, this exception was caught by the EiffelCOM runtime and sent back to the client.
+</blockquote>
 </DIV>
 <DIV>
 <H6 CLASS="dd-sec3">
 <A NAME="pgfId=376013">
  </A>
 Summary</H6>
-<OL>
-<LI CLASS="nn-first">
+<blockquote>
 <A NAME="pgfId=376017">
  </A>
-You now have the basic knowledge needed to run the EiffelCOM wizard and produce or access COM components. The benefits of using the wizard are numerous including a fast and easy generation of &quot;plumbing&quot; code as well as enhanced debugging capabilities through the use of contracts. The wizard is also very generic, it can generate or wrap any kind of components. We hope you enjoy using it as much as we enjoyed developing it,</LI>
-<LI CLASS="nn-normal">
-<A NAME="pgfId=376018">
- </A>
-&nbsp;
-</LI>
-<LI CLASS="nn-normal">
+You now have the basic knowledge needed to run the EiffelCOM wizard and produce or access COM components. The benefits of using the wizard are numerous including a fast and easy generation of &quot;plumbing&quot; code as well as enhanced debugging capabilities through the use of contracts. The wizard is also very generic, it can generate or wrap any kind of components. We hope you enjoy using it as much as we enjoyed developing it,
+</blockquote>
+<blockquote>
 <A NAME="pgfId=376019">
- </A>
-The EiffelCOM team.</LI>
-</OL>
+</A>
+The EiffelCOM team.
+</blockquote>
 </DIV>
 </DIV>
-&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
 </HTML>

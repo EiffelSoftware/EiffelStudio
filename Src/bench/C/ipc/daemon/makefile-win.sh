@@ -6,11 +6,11 @@ RM = del
 
 # Where shared archive is located (path and name)
 LIBDIR = ..\shared
-LIBNAME = ipc.lib
+LIBNAME = ipc.$lib
 LIBARCH = $(LIBDIR)\$(LIBNAME)
 LIBRUN = $(TOP)\run-time
 LIBIDR = $(TOP)\idrs
-LIBIDRNAME = idr.lib
+LIBIDRNAME = idr.$lib
 LIBIDRARCH = $(LIBIDR)\$(LIBIDRNAME)
 LIBS = $(LIBIDRARCH) $(LIBARCH)
 

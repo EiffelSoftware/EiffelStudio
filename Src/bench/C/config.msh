@@ -8,6 +8,7 @@ make='$compiler_path\bin\nmake'
 link32= '$compiler_path\bin\link'
 #
 obj='obj'
+lib='lib'
 #
 #-- MT debug
 #-----------

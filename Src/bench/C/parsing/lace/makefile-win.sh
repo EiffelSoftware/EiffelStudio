@@ -14,9 +14,9 @@ OBJECTS = lace_y.$obj keyword.$obj lac_err.$obj lace_c.$obj lace_l.$obj eif_l.$o
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: lace.lib
+all:: lace.$lib
 
-lace.lib: $(OBJECTS)
+lace.$lib: $(OBJECTS)
 	$link_line
 
 lace_y.c: lace_y.cwn

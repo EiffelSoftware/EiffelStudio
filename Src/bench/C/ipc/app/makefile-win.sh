@@ -21,14 +21,14 @@ OBJECTS = \
 LIBDIR = ..\shared
 LIBRUN = $(TOP)\run-time
 LIBIDR = $(TOP)\idrs
-LIBIDRNAME = idr.lib
-LIBNAME = ipc.lib
+LIBIDRNAME = idr.$lib
+LIBNAME = ipc.$lib
 LIBARCH = $(LIBDIR)\$(LIBNAME)
 LIBIDRARCH = $(LIBIDR)\$(LIBIDRNAME)
 CFLAGS = -I$(TOP) -I..\shared -I$(LIBRUN) -I$(LIBIDR)
 
-all: network.lib
+all: network.$lib
 
-network.lib: $(OBJECTS) $(LIBDIR)\$(LIBNAME)
+network.$lib: $(OBJECTS) $(LIBDIR)\$(LIBNAME)
 	$link_line
 

@@ -39,7 +39,7 @@ OBJECTS = \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: idr.lib
+all:: idr.$lib
 
-idr.lib: $(OBJECTS)
+idr.$lib: $(OBJECTS)
 	$link_line

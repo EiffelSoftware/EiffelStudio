@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
-: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
+: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
 
 case $CONFIG in
 '')
-	if test -f config.sh; then TOP=.;
-	elif test -f ../config.sh; then TOP=..;
-	elif test -f ../../config.sh; then TOP=../..;
-	elif test -f ../../../config.sh; then TOP=../../..;
-	elif test -f ../../../../config.sh; then TOP=../../../..;
-	else
-		echo "Can't find config.sh."; exit 1
-	fi
-	. $TOP/config.sh
-	;;
+	       if test -f config.sh; then TOP=.;
+	       elif test -f ../config.sh; then TOP=..;
+	       elif test -f ../../config.sh; then TOP=../..;
+	       elif test -f ../../../config.sh; then TOP=../../..;
+	       elif test -f ../../../../config.sh; then TOP=../../../..;
+	       else
+	               echo "Can't find config.sh."; exit 1
+	       fi
+	       . $TOP/config.sh
+	       ;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -39,8 +39,9 @@ DIR = $DIR
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
-JLDFLAGS = \$(LDFLAGS) $optimize $warning_level $ldflags
+JLDFLAGS = \$(LDFLAGS) $optimize $ldflags
 LIBS = $libs
+LINT = lint
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
@@ -50,6 +51,7 @@ SED = $sed
 ########################################################################
 # Automatically generated parameters -- do not edit
 
+USRINC = $usrinc
 SOURCES =  \$(SRC)
 OBJECTS =  \$(OBJ)
 
@@ -63,8 +65,7 @@ OBJECTS =  \$(OBJ)
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
-
+# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -74,38 +75,36 @@ all:: .FORCE_DEPEND
 
 ########################################################################
 # Start of Jmakefile
-
 # Files used to build the daemon
 SRC = child.c listen.c main.c proto.c
 
 # Derived object file names
 OBJ = \
-	child.o \
-	listen.o \
-	main.o \
-	proto.o 
+	       child.o \
+	       listen.o \
+	       main.o \
+	       proto.o 
 
 # Where shared archive is located (path and name)
-LIBDIR = ../shared
-LIBNAME = libipc.a
-LIBARCH = $(LIBDIR)/$(LIBNAME)
-LIBRUN = ../../run-time -I../../run-time/include
-LIBIDR = ../../idrs
+LIBIPC = $(TOP)/ipc/shared
+LIBIPCNAME = libipc.a
+LIBIPCARCH = $(LIBIPC)/$(LIBIPCNAME)
+LIBIDR = $(TOP)/idrs
 LIBIDRNAME = libidr.a
 LIBIDRARCH = $(LIBIDR)/$(LIBIDRNAME)
 
-DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
+DPFLAGS = -I$(TOP) -I$(LIBIDR) -I$(LIBIPC) -I$(TOP)/run-time -I$(TOP)/run-time/include
 CFLAGS = $(DPFLAGS)
-LDFLAGS = $(LIBARCH) $(LIBIDRARCH)
+LDFLAGS = $(LIBIPCARCH) $(LIBIDRARCH)
 
 .FORCE:
 
-$(LIBDIR)/$(LIBNAME): .FORCE
-	@echo "Checking "$(LIBNAME)" in "$(LIBDIR)"..."
-	cd $(LIBDIR); $(MAKE) $(LIBNAME)
+$(LIBIPC)/$(LIBIPCNAME): .FORCE
+	@echo "Checking "$(LIBIPCNAME)" in "$(LIBIPC)"..."
+	cd $(LIBIPC); $(MAKE) $(LIBIPCNAME)
 	@echo "Continuing in $(CURRENT)..."
 
-estudio: $(LIBDIR)/$(LIBNAME)
+estudio: $(LIBIPC)/$(LIBIPCNAME)
 
 $(LIBIDR)/$(LIBIDRNAME): .FORCE
 	@echo "Checking "$(LIBIDRNAME)" in "$(LIBIDR)"..."
@@ -113,20 +112,6 @@ $(LIBIDR)/$(LIBIDRNAME): .FORCE
 	@echo "Continuing in $(CURRENT)..."
 
 estudio: $(LIBIDR)/$(LIBIDRNAME)
-
-depend:: ../../mkdep
-
-../../mkdep:
-	@echo "You have to run Configure in $(TOP) first."; exit 1
-
-depend::
-	($(SED) '/^# DO NOT DELETE/q' Makefile && \
-	$(MKDEP) $(SOURCES) | \
-	$(SED) -e 's/: \.\//: /; s/\/usr\/include[^ ]*//g' -e '/: *$$/d' \
-	) > Makefile.new
-	cp Makefile Makefile.bak
-	cp Makefile.new Makefile
-	$(RM) Makefile.new
 
 all:: estudio
 
@@ -137,6 +122,25 @@ estudio: $(OBJ)
 	$(RM) $@
 	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
 	$(CC) -o $@ $(OBJ) $(JLDFLAGS) $(LIBS)
+
+depend:: ../../mkdep
+
+../../mkdep:
+	@echo "You have to run Configure in $(TOP) first."; exit 1
+
+depend::
+	($(SED) '/^# DO NOT DELETE/q' Makefile && \
+	$(MKDEP) $(SOURCES) | \
+	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
+	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
+	) > Makefile.new
+	cp Makefile Makefile.bak
+	cp Makefile.new Makefile
+	$(RM) Makefile.new
+
+lint:
+	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit
@@ -179,16 +183,16 @@ local_clobber::
 # Empty rules for directories with no sub-directories -- do not edit
 
 install::
-	@echo "install in $(CURRENT) done."
+	       @echo "install in $(CURRENT) done."
 
 deinstall::
-	@echo "deinstall in $(CURRENT) done."
+	       @echo "deinstall in $(CURRENT) done."
 
 install.man::
-	@echo "install.man in $(CURRENT) done."
+	       @echo "install.man in $(CURRENT) done."
 
 deinstall.man::
-	@echo "deinstall.man in $(CURRENT) done."
+	       @echo "deinstall.man in $(CURRENT) done."
 
 Makefiles::
 
@@ -204,4 +208,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

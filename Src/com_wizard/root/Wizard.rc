@@ -34,7 +34,7 @@ BEGIN
     DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,22,247,50,14
     GROUPBOX        "Location",Location_Static,115,85,65,65
-    CONTROL         "",Wizard_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+    CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,10,100,145
     EDITTEXT        Definition_File_Edit,5,185,175,15,ES_AUTOHSCROLL
     LTEXT           "Definition File",IDL_Static,5,175,100,10
@@ -63,7 +63,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
     PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
-    CONTROL         "",Wizard_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+    CONTROL         115,Wizard2_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,10,100,145
     PUSHBUTTON      "Help",Help_Button,130,10,50,14
     GROUPBOX        "Marshaling",Marshaling2_Static,102,170,78,49,WS_GROUP
@@ -86,7 +86,7 @@ BEGIN
     DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
     PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
     GROUPBOX        "Marshaling",Marshaling_Static,115,109,65,47
-    CONTROL         "",Wizard_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+    CONTROL         116,Wizard3_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,10,100,145
     EDITTEXT        Proxy_Stub_File_Edit,5,185,175,15,ES_AUTOHSCROLL | 
                     WS_DISABLED
@@ -107,7 +107,7 @@ BEGIN
     DEFPUSHBUTTON   "Generate",IDOK,115,247,50,14
     PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
     GROUPBOX        "Output Level",Output_level_Static,115,99,65,57
-    CONTROL         "",Wizard_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+    CONTROL         117,Wizard4_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,10,100,145
     PUSHBUTTON      "Help",Help_Button,130,10,50,14
     CONTROL         "Maximum",Maximum_Radio,"Button",BS_AUTORADIOBUTTON,119,
@@ -197,6 +197,10 @@ END
 //
 
 Toolbar_Bitmap          BITMAP  DISCARDABLE     "toolbar.bmp"
+Wizard1_Bitmap          BITMAP  DISCARDABLE     "Wizard1.bmp"
+Wizard2_Bitmap          BITMAP  DISCARDABLE     "Wizard2.bmp"
+Wizard3_Bitmap          BITMAP  DISCARDABLE     "Wizard3.bmp"
+Wizard4_Bitmap          BITMAP  DISCARDABLE     "Wizard4.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////

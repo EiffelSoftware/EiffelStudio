@@ -159,13 +159,15 @@ feature {NONE} -- Implementation
 					until
 						i > system_descriptor.library_descriptor_for_iteration.descriptors.count
 					loop
-						if shared_wizard_environment.client then
-							c_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-							eiffel_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-						end
-						if shared_wizard_environment.server then
-							c_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-							eiffel_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+						if system_descriptor.library_descriptor_for_iteration.descriptors.item (i) /= Void then
+							if shared_wizard_environment.client then
+								c_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+								eiffel_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+							end
+							if shared_wizard_environment.server then
+								c_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+								eiffel_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+							end
 						end
 						i := i + 1
 					end	

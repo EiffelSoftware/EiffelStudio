@@ -42,6 +42,10 @@ feature -- Access
 	Output_Progress_constant: INTEGER is 1031
 	Output_Static_constant: INTEGER is 1032
 	Toolbar_bitmap_constant: INTEGER is 113
+	Wizard1_bitmap_constant: INTEGER is 114
+	Wizard2_bitmap_constant: INTEGER is 115
+	Wizard3_bitmap_constant: INTEGER is 116
+	Wizard4_bitmap_constant: INTEGER is 117
 	New_id: INTEGER is 1
 	Open_id:INTEGER is 2
 	Save_id:INTEGER is 3

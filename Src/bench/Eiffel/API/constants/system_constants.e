@@ -47,6 +47,8 @@ feature {NONE}
 
 	Dot_c: STRING is ".c"
 
+	Dot_cpp: STRING is ".cpp"
+
 	Dot_e: STRING is
 		once
 			Result := Platform_constants.Dot_e
@@ -62,6 +64,8 @@ feature {NONE}
 	Dot_workbench: STRING is "project.eif"
 
 	Dot_x: STRING is ".x"
+
+	Dot_xpp: STRING is ".xpp"
 
 	Dot_profile_information: STRING is ".pfi"
 

@@ -95,6 +95,7 @@ feature -- Basic operation
 		end
 
 	empty_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+			-- Empty `list' and perform the tests.
 		do
 			list.wipe_out
 			similar_list.wipe_out
@@ -701,8 +702,8 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.15  2000/03/02 19:50:55  brendel
---| Fixed error in tests.
+--| Revision 1.16  2000/03/02 19:54:31  brendel
+--| Added 1 comment.
 --|
 --| Revision 1.14  2000/03/02 18:05:12  brendel
 --| Fixed precondition on `make'.

@@ -1,0 +1,40 @@
+-- Generated Ace file
+
+system
+	<FL_PROJECT_NAME>
+
+root 
+	ROOT_CLASS (root_cluster): "make"
+
+default
+	assertion (all)
+	multithreaded (no)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+
+
+cluster 
+	root_cluster:	"<FL_LOCATION>"
+
+		-- WEL
+	all wel: 		"$EIFFEL4\library\wel"
+
+		-- EiffelBase
+	all base: 		"$EIFFEL4\library\base"
+		exclude
+			"table_eiffel3"
+			"desc"
+		end
+
+external
+	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include"
+	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+
+end

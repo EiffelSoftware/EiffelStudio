@@ -202,11 +202,7 @@ feature -- Access
 	title: STRING is
 			-- Window text to be displayed by the application manager.
 		do
-			if text.count /= 0 then
-				Result := text
-			else
-				Result := Void
-			end
+			Result := text
        	end
 
 	top_level_window_imp: like Current is
@@ -344,7 +340,7 @@ feature -- Element change
 	set_title (txt: STRING) is
 			-- Make `txt' the title of `Current'.            
 		do
-			set_text (txt)
+			set_text (clone (txt))
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is

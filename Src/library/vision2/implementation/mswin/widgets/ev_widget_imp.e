@@ -59,27 +59,7 @@ inherit
 			{NONE} all
 		end
 
-	WEL_WM_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_WS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_MK_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_VK_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_SW_CONSTANTS
+	EV_WEL_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -285,7 +265,7 @@ feature -- Status report
 	is_show_requested: BOOLEAN is
 			-- Is the widget shown in its parent?
 		do
-			Result := flag_set (style, Ws_visible)
+			Result := flag_set (style, Wel_ws_constants.Ws_visible)
 		end
 
 	managed: BOOLEAN is true
@@ -309,7 +289,7 @@ feature -- Status setting
 			-- Show the window
 			-- Need to notify the parent.
 		do
-			show_window (wel_item, Sw_show)
+			show_window (wel_item, Wel_sw_constants.Sw_show)
 			if parent_imp /= Void then
 				parent_imp.notify_change (1 + 2)
 			end
@@ -318,7 +298,7 @@ feature -- Status setting
 	hide is
 			-- Hide the window
 		do
-			show_window (wel_item, Sw_hide)
+			show_window (wel_item, Wel_sw_constants.Sw_hide)
 			if parent_imp /= Void then
 				parent_imp.notify_change (1 + 2)
 			end
@@ -629,7 +609,9 @@ feature {NONE} -- Implementation, focus event
 					until
 						counter = notebooks.count + 1
 					loop
-						notebooks.item (counter).set_ex_style (Ws_ex_controlparent)
+						notebooks.item (counter).set_ex_style (
+							Wel_ws_constants.Ws_ex_controlparent
+							)
 						counter := counter + 1
 					end
 				end
@@ -677,72 +659,72 @@ feature {WEL_DISPATCHER} -- Message dispatcher
 		require
 			exists: exists
 		do
-			if msg = Wm_mousemove then
+			if msg = wel_wm_constants.Wm_mousemove then
 				on_mouse_move (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_setcursor then
+			elseif msg = wel_wm_constants.Wm_setcursor then
 				on_set_cursor (cwin_lo_word (lparam))
-			elseif msg = Wm_size then
+			elseif msg = wel_wm_constants.Wm_size then
 				on_size (wparam,
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
-			elseif msg = Wm_move then
+			elseif msg = wel_wm_constants.Wm_move then
 				on_move (cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
-			elseif msg = Wm_lbuttondown then
+			elseif msg = wel_wm_constants.Wm_lbuttondown then
 				on_left_button_down (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = wm_lbuttonup then
+			elseif msg = wel_wm_constants.wm_lbuttonup then
 				on_left_button_up (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_lbuttondblclk then
+			elseif msg = wel_wm_constants.Wm_lbuttondblclk then
 				on_left_button_double_click (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_mbuttondown then
+			elseif msg = wel_wm_constants.Wm_mbuttondown then
 				on_middle_button_down (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_mbuttonup then
+			elseif msg = wel_wm_constants.Wm_mbuttonup then
 				on_middle_button_up (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_mbuttondblclk then
+			elseif msg = wel_wm_constants.Wm_mbuttondblclk then
 				on_middle_button_double_click (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_rbuttondown then
+			elseif msg = wel_wm_constants.Wm_rbuttondown then
 				on_right_button_down (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_rbuttonup then
+			elseif msg = wel_wm_constants.Wm_rbuttonup then
 				on_right_button_up (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_rbuttondblclk then
+			elseif msg = wel_wm_constants.Wm_rbuttondblclk then
 				on_right_button_double_click (wparam,
 					mouse_message_x (lparam),
 					mouse_message_y (lparam))
-			elseif msg = Wm_timer then
-				on_timer (wparam)
-			elseif msg = Wm_setfocus then
-				on_set_focus
-			elseif msg = Wm_killfocus then
-				on_kill_focus
-			elseif msg = Wm_keydown then
-				on_key_down (wparam, lparam)
-			elseif msg = Wm_keyup then
-				on_key_up (wparam, lparam)
-			elseif msg = Wm_char then
-				on_key_string (wparam, lparam)
-			elseif msg = Wm_showwindow then
-				on_wm_show_window (wparam, lparam)
-			elseif msg = Wm_notify then
+			elseif msg = wel_wm_constants.Wm_notify then
 				on_wm_notify (wparam, lparam)
-			elseif msg = Wm_destroy then
+			elseif msg = wel_wm_constants.Wm_timer then
+				on_timer (wparam)
+			elseif msg = wel_wm_constants.Wm_setfocus then
+				on_set_focus
+			elseif msg = wel_wm_constants.Wm_killfocus then
+				on_kill_focus
+			elseif msg = wel_wm_constants.Wm_keydown then
+				on_key_down (wparam, lparam)
+			elseif msg = wel_wm_constants.Wm_keyup then
+				on_key_up (wparam, lparam)
+			elseif msg = wel_wm_constants.Wm_char then
+				on_key_string (wparam, lparam)
+			elseif msg = wel_wm_constants.Wm_showwindow then
+				on_wm_show_window (wparam, lparam)
+			elseif msg = wel_wm_constants.Wm_destroy then
 				on_wm_destroy
 			else
 				default_process_message (msg, wparam, lparam)
@@ -919,6 +901,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2000/04/29 03:21:26  pichery
+--| Removed Constants from inheritance
+--|
 --| Revision 1.68  2000/04/27 16:33:08  rogers
 --| On_left_button_up now calls check_drag_and_drop_release which
 --| will end current drag and drop if underway.

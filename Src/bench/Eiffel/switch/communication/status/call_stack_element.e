@@ -28,6 +28,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 creation {EIFFEL_CALL_STACK}
 	make
 
@@ -363,7 +368,7 @@ feature {NONE} -- Implementation
 			not_initialized: not initialized
 		local
 			local_decl_grps	: EIFFEL_LIST [TYPE_DEC_AS]
-			id_list			: EIFFEL_LIST [ID_AS]
+			id_list			: ARRAYED_LIST [INTEGER]
 			l_count			: INTEGER
 			value			: ABSTRACT_DEBUG_VALUE
 			unprocessed_l	: like unprocessed_values
@@ -372,6 +377,7 @@ feature {NONE} -- Implementation
 			arg_names		: LIST [STRING]
 			rout			: like routine
 			counter			: INTEGER
+			l_names_heap: like Names_heap
 		do
 				debug ("DEBUGGER_TRACE"); io.putstring ("Initializing stack (CALL_STACK_ELEMENT): "+routine_name+" from: "+dynamic_class.name+"%N"); end
 			if not is_exhausted then
@@ -408,6 +414,7 @@ feature {NONE} -- Implementation
 					from
 						l_count := 0
 						local_decl_grps.start
+						l_names_heap := Names_heap
 					until
 						local_decl_grps.after or
 						l_count >= retrieved_locals_count
@@ -420,7 +427,7 @@ feature {NONE} -- Implementation
 							l_count >= retrieved_locals_count
 						loop
 							value := unprocessed_l.item
-							value.set_name (id_list.item)
+							value.set_name (l_names_heap.item (id_list.item))
 							locals_list.extend (value)
 							id_list.forth
 							unprocessed_l.forth

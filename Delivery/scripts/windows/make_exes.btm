@@ -9,14 +9,12 @@ remtrace Compile C code of the libraries
 remtrace "A tout seigneur tout honneur", let's start with the run-time
 md %INSTALL_DIR\releases
 md %INSTALL_DIR\releases\enterprise
-md %INSTALL_DIR\releases\professional
-md %INSTALL_DIR\releases\home
-md %INSTALL_DIR\releases\student
+md %INSTALL_DIR\releases\free_version
 md %INSTALL_DIR\releases\evaluation
 
-mkdir %INSTALL_DIR\releases\home\lib
-mkdir %INSTALL_DIR\releases\home\lib\bcb
-mkdir %INSTALL_DIR\releases\home\lib\msc
+mkdir %INSTALL_DIR\releases\free_version\lib
+mkdir %INSTALL_DIR\releases\free_version\lib\bcb
+mkdir %INSTALL_DIR\releases\free_version\lib\msc
 mkdir %INSTALL_DIR\releases\enterprise\lib
 mkdir %INSTALL_DIR\releases\enterprise\lib\bcb
 mkdir %INSTALL_DIR\releases\enterprise\lib\msc
@@ -34,8 +32,8 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 	call configure win32 b >>& %INSTALL_LOG
 	unalias pause
 	cd %EIFFEL_SRC
-	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\home\lib\bcb
-	fullrf %INSTALL_DIR\releases\home\lib\bcb\ebench.lib
+	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
+	fullrf %INSTALL_DIR\releases\free_version\lib\bcb\ebench.lib
 
 	remtrace Compile a dynamic run-time
 	fullrd C
@@ -54,9 +52,9 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 	call configure win32 m >>& %INSTALL_LOG
 	unalias pause
 	cd %EIFFEL_SRC
-	copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\home\lib\msc
-	fullrf %INSTALL_DIR\releases\home\lib\msc\*.exp
-	fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
+	copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\free_version\lib\msc
+	fullrf %INSTALL_DIR\releases\free_version\lib\msc\*.exp
+	fullrf %INSTALL_DIR\releases\free_version\lib\msc\ebench.lib
 	cd %EIFFEL_SRC
 
 	remtrace Compile a run-time for Microsoft
@@ -72,10 +70,10 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 	call configure win32 m >>& %INSTALL_LOG
 	unalias pause
 	cd %EIFFEL_SRC
-	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\home\lib\msc
-	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\home\lib\msc
-	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\home\lib\msc
-	fullrf %INSTALL_DIR\releases\home\lib\msc\ebench.lib
+	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
+	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\free_version\lib\msc
+	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\free_version\lib\msc
+	fullrf %INSTALL_DIR\releases\free_version\lib\msc\ebench.lib
 
 	remtrace Copying header to new delivery
 	copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
@@ -201,7 +199,7 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	move ec.exe %INSTALL_DIR\releases\enterprise
 else
 	iff not defined NO_NEW_EC then
-		remtrace Recompile EiffelStudio
+		remtrace compiling EiffelStudio
 		cdd %FINALIZATION_DIR
 		copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin.ace finalizedbench.ace
 		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
@@ -221,20 +219,26 @@ else
 		endiff
 		move ec.exe %INSTALL_DIR\releases\enterprise
 
-		remtrace Student edition
+		remtrace Free edition
 		cdd %EIFFEL_SRC\Eiffel\API\constants
+		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"Free\ Edition\"/g" system_constants.e >> new_system_constants.e
+		move new_system_constants.e system_constants.e
+		sed -e "s/\	has_case:\ BOOLEAN\ is\ True/\	has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
 		sed -e "s/\	has_metrics:\ BOOLEAN\ is\ True/\	has_metrics:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 		move new_eiffel_env.e eiffel_env.e
-		sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ True/\	has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
 		sed -e "s/\	has_profiler:\ BOOLEAN\ is\ True/\	has_profiler:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ True/\	has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 		move new_eiffel_env.e eiffel_env.e
 		sed -e "s/\	has_xmi_generation:\ BOOLEAN\ is\ True/\	has_xmi_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 		move new_eiffel_env.e eiffel_env.e
 		sed -e "s/\	has_dll_generation:\ BOOLEAN\ is\ True/\	has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 		move new_eiffel_env.e eiffel_env.e
+		sed -e "s/\	has_signable_generation:\ BOOLEAN\ is\ True/\	has_signable_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+		move new_eiffel_env.e eiffel_env.e
 		cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
-		sed -e "s/studio_enterprise_key_51/studio_student_key_51/g" bench_licence.e >> new_bench_license.e
+		sed -e "s/Is_free_version:\ BOOLEAN\ is\ False/\Is_free_version:\ BOOLEAN\ is\ True/g" bench_licence.e >> new_bench_license.e
 		move new_bench_license.e bench_licence.e
 		cdd %FINALIZATION_DIR
 		clean_project
@@ -242,48 +246,10 @@ else
 		fff
 		cleanup_eiffel ec.exe
 		iff not exist ec.exe then
-			echo Could not finalize a new "student" EiffelStudio
+			echo Could not finalize a new "Free Edition" EiffelStudio
 			CANCEL
 		endiff
-		move ec.exe %INSTALL_DIR\releases\student
-
-		remtrace Home edition
-		cdd %EIFFEL_SRC\Eiffel\API\constants
-		sed -e "s/\	has_case:\ BOOLEAN\ is\ True/\	has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
-		sed -e "s/studio_student_key_51/studio_home_key_51/g" bench_licence.e >> new_bench_license.e
-		move new_bench_license.e bench_licence.e
-		cdd %FINALIZATION_DIR
-		clean_project
-		finalize finalizedbench.ace
-		fff
-		cleanup_eiffel ec.exe
-		iff not exist ec.exe then
-			echo Could not finalize a new "Home" EiffelStudio
-			CANCEL
-		endiff
-		move ec.exe %INSTALL_DIR\releases\home
-
-		remtrace Professional edition
-		cdd %EIFFEL_SRC\Eiffel\API\constants
-		sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ False/\	has_documentation_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		sed -e "s/\	has_dll_generation:\ BOOLEAN\ is\ False/\	has_dll_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		cdd %EIFFEL_SRC\Eiffel\switch\license\time_lock
-		sed -e "s/studio_home_key_51/studio_professional_key_51/g" bench_licence.e >> new_bench_license.e
-		move new_bench_license.e bench_licence.e
-		cdd %FINALIZATION_DIR
-		clean_project
-		finalize finalizedbench.ace
-		fff
-		cleanup_eiffel ec.exe
-		iff not exist ec.exe then
-			echo Could not finalize a new "professional" EiffelStudio
-			CANCEL
-		endiff
-		move ec.exe %INSTALL_DIR\releases\professional
+		move ec.exe %INSTALL_DIR\releases\free_version
 
 		cdd %INSTALL_DIR\releases
 		copy enterprise\ec.exe evaluation

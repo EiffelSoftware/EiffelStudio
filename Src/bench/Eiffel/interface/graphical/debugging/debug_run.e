@@ -111,8 +111,9 @@ feature -- Execution
 				end
 				argument_window.call
 			elseif 
-				not tool.initialized or else 
-				Eiffel_System.name = Void 
+				not tool.initialized or else
+				(system_defined and then
+				Eiffel_System.name = Void)
 			then
 				debug_window.clear_window;
 				debug_window.put_string ("System not compiled");

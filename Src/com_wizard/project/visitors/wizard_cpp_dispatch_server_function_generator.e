@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 						Result.append ("tmp_value;")
 					else
 						if visitor.need_generate_ec then
-							Result.append (Generated_ec_mapper)
+							Result.append (visitor.ec_mapper.variable_name)
 						else
 							Result.append ("rt_ec")
 						end

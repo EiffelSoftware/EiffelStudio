@@ -49,24 +49,46 @@ feature -- Basic Operations
 			Precursor {WIZARD_DATA_VISITOR} (a_descriptor)
 			if not is_interface and not is_coclass then
 				if need_generate_ce and not visited then
-					Generated_ce_mapper_writer.add_function (ce_function_writer, Public)
+					if ce_mapper = Void then
+						ce_mapper := current_ce_mapper
+					end
+					ce_mapper.add_function (ce_function_writer, Public)
 					if c_definition_header_file_name /= Void and then not c_definition_header_file_name.is_empty then
-						Generated_ce_mapper_writer.add_import (c_definition_header_file_name)
+						ce_mapper.add_import (c_definition_header_file_name)
+					end
+					if ce_mapper.functions_count >= Max_mapper_functions then
+						create_ce_mapper
 					end
 				end
 				if need_generate_ec and not visited then
-					Generated_ec_mapper_writer.add_function (ec_function_writer, Public)
+					ec_mapper := current_ec_mapper
+					ec_mapper.add_function (ec_function_writer, Public)
 					if c_definition_header_file_name /= Void and then not c_definition_header_file_name.is_empty then
-						Generated_ec_mapper_writer.add_import (c_definition_header_file_name)
+						ec_mapper.add_import (c_definition_header_file_name)
+					end
+					if ec_mapper.functions_count >= Max_mapper_functions then
+						create_ec_mapper
 					end
 				end
 				if need_generate_free_memory and not visited then
-					Generated_ce_mapper_writer.add_function (free_memory_function_writer, Public)
+					if ce_mapper = Void then
+						ce_mapper := current_ce_mapper
+					end
+					ce_mapper.add_function (free_memory_function_writer, Public)
+					if ce_mapper.functions_count >= Max_mapper_functions then
+						create_ce_mapper
+					end
 				end
 			end
 		end
 
 feature -- Access
+
+	ec_mapper: WIZARD_WRITER_MAPPER_CLASS
+			-- Writer for generated Eiffel to C mappers class.
+
+	ce_mapper: WIZARD_WRITER_MAPPER_CLASS
+			-- Writer for generated Eiffel to C mappers class.
 
 	free_memory_function_writer: WIZARD_WRITER_C_FUNCTION is
 			-- Writer for generated function to free memory.
@@ -656,6 +678,75 @@ feature -- Processing
 			a_generator.process (a_pointed_descriptor, Current)
 		end
 
+feature -- Implementation
+
+	current_ec_mapper: like ec_mapper is
+			-- Current shared ec mapper type name
+			-- New one is created each `Max_mapper_functions' functions are added to it.
+			-- All instances are stored in `Generated_ec_mappers'.
+		do
+			Result := Current_ec_mapper_cell.item
+		ensure
+			non_void_mapper: Result /= Void
+		end
+
+	current_ce_mapper: like ce_mapper is
+			-- Current shared ce mapper type name
+			-- New one is created each `Max_mapper_functions' functions are added to it.
+			-- All instances are stored in `Generated_ec_mappers'.
+		do
+			Result := Current_ce_mapper_cell.item
+		ensure
+			non_void_mapper: Result /= Void
+		end
+
+	Current_ec_mapper_cell: CELL [WIZARD_WRITER_MAPPER_CLASS] is
+			-- Cell for `current_ec_mapper'
+		once
+			create Result.put (new_ec_mapper)
+		end
+		
+	Current_ce_mapper_cell: CELL [WIZARD_WRITER_MAPPER_CLASS] is
+			-- Cell for `current_ce_mapper'
+		once
+			create Result.put (new_ce_mapper)
+		end
+		
+	new_ec_mapper: WIZARD_WRITER_MAPPER_CLASS is
+			-- Instantiate new `current_ec_mapper'.
+		do
+			create Result.make_ec
+			Generated_ec_mappers.extend (Result)
+		ensure
+			non_void_mapper: Result /= Void
+			valid_mapper: Result.is_ec
+		end
+	
+	new_ce_mapper: WIZARD_WRITER_MAPPER_CLASS is
+			-- Instantiate new `current_ce_mapper'.
+		do
+			create Result.make_ce
+			Generated_ce_mappers.extend (Result)
+		ensure
+			non_void_mapper: Result /= Void
+			valid_mapper: not Result.is_ec
+		end
+	
+	create_ec_mapper is
+			-- Instantiate new `current_ec_mapper'.
+		do
+			Current_ec_mapper_cell.replace (new_ec_mapper)
+		end
+	
+	create_ce_mapper is
+			-- Instantiate new `current_ec_mapper'.
+		do
+			Current_ce_mapper_cell.replace (new_ce_mapper)
+		end
+	
+	Max_mapper_functions: INTEGER is 100
+			-- Maximum number of functions in mapper classes
+
 invariant
 
 	basic_type: is_basic_type implies (not is_array_basic_type and not is_interface and not is_interface_pointer
@@ -704,6 +795,10 @@ invariant
 							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
 							not is_coclass_pointer_pointer and 
 							not is_structure and not is_structure_pointer and not is_interface and not is_interface_pointer)
+
+	valid_ec_mapper: ec_mapper /= Void implies ec_mapper.is_ec
+
+	valid_ce_mapper: ce_mapper /= Void implies not ec_mapper.is_ec
 
 end -- class WIZARD_DATA_TYPE_VISITOR
 

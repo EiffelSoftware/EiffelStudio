@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 				Result.append (")tmp_value")
 			else
 				if l_visitor.need_generate_ec then
-					Result.append (Generated_ec_mapper)
+					Result.append (l_visitor.ec_mapper.variable_name)
 				else
 					Result.append ("rt_ec")
 				end
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 				Result.append ("EIF_OBJECT tmp_value;%N%T")
 				Result.append ("tmp_value = eif_protect (")
 				if l_visitor.need_generate_ce then
-					Result.append (Generated_ce_mapper)
+					Result.append (l_visitor.ce_mapper.variable_name)
 				else
 					Result.append ("rt_ce")
 				end

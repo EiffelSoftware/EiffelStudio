@@ -31,126 +31,16 @@ feature -- Access
 			Result.append (".h")
 		end
 
-	Generated_ec_mapper: STRING is 
-			-- C++ class holding generated Eiffel to C mappers
+	Generated_ec_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS] is 
+			-- C++ classes holding generated Eiffel to C mappers
 		once
-			Result := "grt_ec_" + environment.project_name
-			if environment.is_client then
-				Result.append ("_c")
-			end
+			create {ARRAYED_LIST [WIZARD_WRITER_MAPPER_CLASS]} Result.make (5)
 		end
 
-	Generated_ce_mapper: STRING is 
-			-- C++ class holding generated C to Eiffel mappers, object name.
+	Generated_ce_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS] is 
+			-- C++ classes holding generated C to Eiffel mappers
 		once
-			Result := "grt_ce_" + environment.project_name
-			if environment.is_client then
-				Result.append ("_c")
-			end
-		end
-
-	Generated_ec_class_name: STRING is 
-			-- C++ class name for generated mapper functions Eiffel to C.
-		once
-			Result := "ecom_gec_" + environment.project_name
-			if environment.is_client then
-				Result.append ("_c")
-			end
-		end
-		
-	Generated_ce_class_name: STRING is 
-			-- C++ class name for generated mapper functions C to Eiffel.
-		once
-			Result := "ecom_gce_" + environment.project_name
-			if environment.is_client then
-				Result.append ("_c")
-			end
-		end
-
-	Generated_ce_mapper_writer: WIZARD_WRITER_CPP_CLASS is
-			-- Writer for generated C to Eiffel mappers class.
-		do
-			Result := Generated_ce_mapper_writer_cell.item
-		end
-
-	set_generated_ce_mapper (a_mapper: WIZARD_WRITER_CPP_CLASS) is
-			-- Set generated CE mapper.
-		do
-			Generated_ce_mapper_writer_cell.put (a_mapper)
-		end
-
-	create_generated_ce_mapper is
-			-- Create generated CE mapper.
-		local
-			a_header_file_name: STRING
-			a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
-			empty_string: STRING
-			an_other_source: STRING
-			mapper: WIZARD_WRITER_CPP_CLASS
-		do
-			create mapper.make
-			mapper.set_header ("Writer for generated C to Eiffel mappers class")
-			a_header_file_name := Generated_ce_class_name.twin
-			mapper.set_name (a_header_file_name.twin)
-			a_header_file_name.append (Header_file_extension)
-			mapper.set_definition_header_file_name (a_header_file_name)
-			create a_constructor.make
-			create empty_string.make (0)
-			a_constructor.set_signature (empty_string)
-			a_constructor.set_body (empty_string)
-			mapper.add_constructor (a_constructor)
-			mapper.add_import ("ecom_rt_globals.h")
-			mapper.add_import_after (Ecom_generated_rt_globals_header_file_name)
-			create an_other_source.make (100)
-			an_other_source.append (Generated_ce_class_name)
-			an_other_source.append (Space)
-			an_other_source.append (Generated_ce_mapper)
-			an_other_source.append (Semicolon)
-			mapper.add_other_source (an_other_source)
-			set_generated_ce_mapper (mapper)
-		end
-
-	Generated_ec_mapper_writer: WIZARD_WRITER_CPP_CLASS is
-			-- Writer for generated Eiffel to C mappers class.
-		do
-			Result := Generated_ec_mapper_writer_cell.item
-		end
-
-	set_generated_ec_mapper (a_mapper: WIZARD_WRITER_CPP_CLASS) is
-			-- Set generated Eiffel to C mapper.
-		do
-			Generated_ec_mapper_writer_cell.put (a_mapper)
-		end
-
-	create_generated_ec_mapper is
-			-- Writer for generated Eiffel to C mappers class
-		local
-			a_header_file_name: STRING
-			a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
-			empty_string: STRING
-			an_other_source: STRING
-			mapper: WIZARD_WRITER_CPP_CLASS
-		do
-			create mapper.make
-			mapper.set_header ("Writer for generated Eiffel to C mappers class")
-			a_header_file_name := Generated_ec_class_name.twin
-			mapper.set_name (a_header_file_name.twin)
-			a_header_file_name.append (Header_file_extension)
-			mapper.set_definition_header_file_name (a_header_file_name)
-			create a_constructor.make
-			create empty_string.make (0)
-			a_constructor.set_signature (empty_string)
-			a_constructor.set_body (empty_string)
-			mapper.add_constructor (a_constructor)
-			mapper.add_import ("ecom_rt_globals.h")
-			mapper.add_import_after (Ecom_generated_rt_globals_header_file_name)
-			create an_other_source.make (100)
-			an_other_source.append (Generated_ec_class_name)
-			an_other_source.append (Space)
-			an_other_source.append (Generated_ec_mapper)
-			an_other_source.append (Semicolon)
-			mapper.add_other_source (an_other_source)
-			set_generated_ec_mapper (mapper)
+			create {ARRAYED_LIST [WIZARD_WRITER_MAPPER_CLASS]} Result.make (5)
 		end
 
 	Alias_c_writer: WIZARD_WRITER_C_FILE is
@@ -177,18 +67,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-
-	Generated_ce_mapper_writer_cell: CELL [WIZARD_WRITER_CPP_CLASS] is
-			-- Generated CE mapper shell.
-		once
-			create Result.put (Void)
-		end
-
-	Generated_ec_mapper_writer_cell: CELL [WIZARD_WRITER_CPP_CLASS] is
-			-- Generated EC mapper shell.
-		once
-			create Result.put (Void)
-		end
 
 	Alias_c_writer_cell: CELL [WIZARD_WRITER_C_FILE] is
 			-- C writer of Alias.

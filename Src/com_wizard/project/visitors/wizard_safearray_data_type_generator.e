@@ -423,7 +423,7 @@ feature -- Basic operations
 			Result.append ("an_element = ")
 
 			if l_visitor.need_generate_ec then
-				Result.append (Generated_ec_mapper)
+				Result.append (l_visitor.ec_mapper.variable_name)
 			else
 				Result.append ("rt_ec")
 			end
@@ -485,9 +485,12 @@ feature -- Basic operations
 			minor_ver_number := an_interface_descriptor.library_descriptor.minor_version_number
 			a_lcid := an_interface_descriptor.library_descriptor.lcid
 			create tmp_element_ec_function.make (100)
-			if not l_visitor.need_generate_ce then
-				tmp_element_ec_function.append ("rt_ce.")
+			if l_visitor.need_generate_ce then
+				tmp_element_ec_function.append (l_visitor.ec_mapper.variable_name)
+			else
+				tmp_element_ec_function.append ("rt_ce")
 			end
+			tmp_element_ec_function.append_character ('.')
 			tmp_element_ec_function.append (l_visitor.ec_function_name)
 
 
@@ -694,7 +697,11 @@ feature -- Basic operations
 			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T")
 			Result.append ("%>%N%T%T%T")
 			Result.append ("eif_array_element = eif_protect (")
-			Result.append (Generated_ce_mapper)
+			if l_visitor.need_generate_ce then
+				Result.append (l_visitor.ce_mapper.variable_name)
+			else
+				Result.append ("rt_ce")
+			end
 			Result.append (".")
 			Result.append (l_element_ce_function)
 			Result.append ("(sa_element));%N%T%T%T")
@@ -724,7 +731,7 @@ feature -- Basic operations
 		require
 			non_void_record_descriptor: a_record_descriptor /= Void
 		local
-			l_element_c_type, l_element_eiffel_type, l_element_ce_function: STRING
+			l_element_c_type, l_element_eiffel_type: STRING
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			l_visitor := a_record_descriptor.visitor
@@ -733,7 +740,6 @@ feature -- Basic operations
 			end
 			l_element_c_type := l_visitor.c_type
 			l_element_eiffel_type := l_visitor.eiffel_type
-			l_element_ce_function := l_visitor.ce_function_name
 
 			create Result.make (2048)
 			Result.append ("%TEIF_INTEGER dim_count = 0;%N%T")
@@ -952,7 +958,7 @@ feature -- Basic operations
 			Result.append ("%>%N%T%T%T")
 			Result.append ("eif_array_element = eif_protect (")
 			if l_visitor.need_generate_ce then
-				Result.append (Generated_ce_mapper)
+				Result.append (l_visitor.ce_mapper.variable_name)
 			else
 				Result.append ("rt_ce")
 			end

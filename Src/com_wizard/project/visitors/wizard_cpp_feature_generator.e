@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			else
 				Result.append ("EIF_REFERENCE result = ")
 				if visitor.need_generate_ce then
-					Result.append (Generated_ce_mapper)
+					Result.append (visitor.ce_mapper.variable_name)
 				else
 					Result.append ("rt_ce")
 				end

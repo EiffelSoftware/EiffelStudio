@@ -88,6 +88,8 @@ feature {NONE} -- Implementation
 	
 	body: STRING is
 			-- Feature body
+		local
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make (10000)
 			if is_return_hresult then
@@ -129,8 +131,9 @@ feature {NONE} -- Implementation
 				if func_desc.return_type.visitor.is_basic_type or func_desc.return_type.visitor.is_enumeration then
 					Result.append ("tmp_value;")
 				else
-					if func_desc.return_type.visitor.need_generate_ec then
-						Result.append (Generated_ec_mapper)
+					l_visitor := func_desc.return_type.visitor
+					if l_visitor.need_generate_ec then
+						Result.append (l_visitor.ec_mapper.variable_name)
 					else
 						Result.append ("rt_ec")
 					end
@@ -308,7 +311,7 @@ feature {NONE} -- Implementation
 				Result.append (" = eif_protect (")
 
 				if visitor.need_generate_ce then
-					Result.append (Generated_ce_mapper)
+					Result.append (visitor.ce_mapper.variable_name)
 				else
 					Result.append ("rt_ce")
 				end
@@ -376,7 +379,7 @@ feature {NONE} -- Implementation
 						if pointed_visitor.need_free_memory then
 							Result.append ("%N%Tif (*" + arg_name + " != NULL)%N%T%T")
 							if pointed_visitor.need_generate_free_memory then
-								Result.append (Generated_ce_mapper + ".")
+								Result.append (pointed_visitor.ce_mapper.variable_name + ".")
 							end
 							Result.append (pointed_visitor.free_memory_function_name)
 							Result.append (" (*" + arg_name + ");%N%T")
@@ -386,7 +389,7 @@ feature {NONE} -- Implementation
 				l_generate_ec := visitor.is_pointed or visitor.is_array_type
 				if l_generate_ec then
 					if visitor.need_generate_ec then
-						Result.append (Generated_ec_mapper)
+						Result.append (visitor.ec_mapper.variable_name)
 					else
 						Result.append ("rt_ec")
 					end
@@ -456,20 +459,20 @@ feature {NONE} -- Implementation
 				Result.append (Space_equal_space)
 
 				if visitor.is_basic_type or visitor.is_enumeration then
-					Result.append (Open_parenthesis)
+					Result.append_character ('(')
 					Result.append (visitor.c_type)
 					Result.append (Close_parenthesis)
 					Result.append (Tmp_variable_name)
 					Result.append (Semicolon)
 				else
 					if visitor.need_generate_ec then
-						Result.append (Generated_ec_mapper)
+						Result.append (visitor.ec_mapper.variable_name)
 					else
 						Result.append ("rt_ec")
 					end
-					Result.append (Dot)
+					Result.append_character ('.')
 					Result.append (visitor.ec_function_name)
-					Result.append (Space_open_parenthesis)
+					Result.append (" (")
 
 					if visitor.vt_type /= Vt_bool then
 						Result.append ("eif_access (tmp_object)")

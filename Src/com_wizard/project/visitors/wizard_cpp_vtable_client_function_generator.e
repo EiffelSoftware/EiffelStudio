@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			out_value, signature, free_memory, variables, return_value: STRING
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-			visitor, l_pointed_visitor: WIZARD_DATA_TYPE_VISITOR
+			visitor: WIZARD_DATA_TYPE_VISITOR
 			tmp_name, l_header_file: STRING
 		do
 			Result := check_interface_pointer (interface_name)
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (1000)
 			if a_visitor.need_generate_free_memory then
-				Result.append (Generated_ce_mapper)
+				Result.append (a_visitor.ce_mapper.variable_name)
 				Result.append (".")
 			end
 			Result.append (a_visitor.free_memory_function_name)
@@ -301,11 +301,11 @@ feature {NONE} -- Implementation
 				end
 				Result.append (Close_parenthesis)
 				if a_visitor.need_generate_ce then
-					Result.append (Generated_ce_mapper)
+					Result.append (a_visitor.ce_mapper.variable_name)
 				else
 					Result.append ("rt_ce")
 				end
-				Result.append (Dot)
+				Result.append_character ('.')
 				Result.append (a_visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (a_name)
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			if a_visitor.need_free_memory then
 				Result.append (New_line_tab)
 				if a_visitor.need_generate_free_memory then
-					Result.append (Generated_ce_mapper)
+					Result.append (a_visitor.ce_mapper.variable_name)
 					Result.append (".")
 				end
 				Result.append (a_visitor.free_memory_function_name) 
@@ -386,19 +386,13 @@ feature {NONE} -- Implementation
 			elseif (visitor.vt_type = Vt_bool) then
 				Result.append (Tmp_clause)
 				Result.append (name)
-
-				Result.append (Space_equal_space)
-
-				Result.append (Open_parenthesis)
+				Result.append (" = (")
 				Result.append (visitor.c_type)
-				Result.append (Close_parenthesis)
-				Result.append ("rt_ec")
-				Result.append (Dot)
+				Result.append (")rt_ec.")
 				Result.append (visitor.ec_function_name)
-				Result.append (Space_open_parenthesis)
+				Result.append (" (")
 				Result.append (name)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
+				Result.append (");")
 
 			elseif 
 				visitor.is_structure_pointer or 
@@ -409,33 +403,26 @@ feature {NONE} -- Implementation
 
 				Result.append (Tmp_clause)
 				Result.append (name)
-
-				Result.append (Space_equal_space)
-
-				Result.append (Open_parenthesis)
+				Result.append (" = (")
 				Result.append (visitor.c_type)
-				Result.append (Close_parenthesis)
+				Result.append_character (')')
 
 				if visitor.need_generate_ec then
-					Result.append (Generated_ec_mapper)
+					Result.append (visitor.ec_mapper.variable_name)
 				else
 					Result.append ("rt_ec")
 				end
-				Result.append (Dot)
+				Result.append_character ('.')
 				Result.append (visitor.ec_function_name)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space_open_parenthesis)
+				Result.append (" (eif_access (")
 				Result.append (name)
-				Result.append (Close_parenthesis)
+				Result.append_character (')')
 
 				if visitor.writable then
-					Result.append (Comma_space)
-					Result.append (Null)
+					Result.append (", NULL")
 				end
 
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
+				Result.append (");")
 			end
 		ensure
 			non_void_inout_parameter: Result /= Void
@@ -460,11 +447,11 @@ feature {NONE} -- Implementation
 				visitor.vt_type /= Vt_bool
 			then
 				if visitor.need_generate_ce then
-					Result.append (Generated_ce_mapper)
+					Result.append (visitor.ce_mapper.variable_name)
 				else
 					Result.append ("rt_ce")
 				end
-				Result.append (Dot)
+				Result.append_character ('.')
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (Open_parenthesis)

@@ -304,7 +304,6 @@ EOBJ = \
 	option.o \
 	update.o \
 	wbench.o \
-	wrun_idr.o\
 	wrun_idr.o
 
 all:: size.h

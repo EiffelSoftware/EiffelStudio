@@ -516,24 +516,24 @@ feature -- Output
 		// New string containing terse printable representation
 		// of current object
 	{
-		string Result = null;
-		if (Current == null) {
-			generate_call_on_void_target_exception ();
-		} else {
-			Result = generating_type (Current);
-		}
-		return Result;
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("Not an Eiffel object", !(Current is EIFFEL_TYPE_INFO));
+		#endif
+		return tagged_out(Current);
 	}
 
 	public static string tagged_out (object Current)
 		// New string containing terse printable representation
 		// of current object
 	{
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("Not an Eiffel object", !(Current is EIFFEL_TYPE_INFO));
+		#endif
 		string Result = null;
 		if (Current == null) {
 			generate_call_on_void_target_exception ();
 		} else {
-			Result = generating_type (Current);
+			Result = Current.ToString ();
 		}
 		return Result;
 	}

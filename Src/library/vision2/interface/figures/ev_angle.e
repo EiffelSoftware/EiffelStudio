@@ -57,7 +57,7 @@ feature -- Operations
 		require
 			other_not_void: other /= Void
 		do
-			create Result.make_radians (other.radians - radians)
+			create Result.make_radians (other.radians + radians)
 		ensure
 			sum_computed: Result.radians = radians + other.radians
 		end

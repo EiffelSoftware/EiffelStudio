@@ -70,6 +70,11 @@ feature -- test features
 			item := chapter.item (i)
 		end
 
+	last_line: EDITOR_LINE is
+		do
+			Result := chapter.last_line
+		end
+
 feature -- Element Change
 
 	prepend_line (tl: like first_displayed_line) is

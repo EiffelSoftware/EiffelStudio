@@ -16,47 +16,45 @@ feature {NONE} -- Implementation
 	pointed_target: EV_PND_TARGET_I is
 			-- Hole at mouse position
 		local
-			toolbar: EV_TOOL_BAR_IMP
-			tbutton: EV_TOOL_BAR_BUTTON_IMP
-			mc_list: EV_MULTI_COLUMN_LIST_IMP
-			tree: EV_TREE_IMP
 			tg: EV_PND_TARGET_I
 			widget_pointed: EV_WIDGET_IMP
-		do
-
-		--	widget_pointed ?= Widget that is currently pointed on by mouse
-
-
-			if widget_pointed /= Void then
-				toolbar ?= widget_pointed
-				if toolbar /= Void then
-		--			wel_point.screen_to_client (toolbar)
-		--			tbutton := toolbar.find_item_at_position (wel_point.x, wel_point.y)
-					if tbutton /= Void and then not tbutton.is_insensitive then
-						tg := tbutton
-					end
-				else
-					mc_list ?= widget_pointed
-					if mc_list /= Void then
-		--				wel_point.screen_to_client (mc_list)
-		--				tg := mc_list.find_item_at_position (wel_point.x, wel_point.y)
-					else
-						tree ?= widget_pointed
-						if tree /= Void then
-		--					wel_point.screen_to_client (tree)
-		--					tg := tree.find_item_at_position (wel_point.x, wel_point.y)
-						end
-					end
-				end
-				if tg = Void then
-					tg := widget_pointed
-				end
+			x, y: INTEGER
+			--| FIXME IEK This routine is only a temporary measure as it  may
+			--| not return the correct target if widgets overlap (Z ordering of windows needed)
+		do	
+			from
 				targets.start
-				targets.search (tg)
-				if not targets.exhausted then
+			until
+				targets.off
+			loop
+				tg := targets.item
+				widget_pointed ?= tg
+				gtk_widget_get_pointer (widget_pointed.widget, $x, $y)
+				
+				if x >= 0 and y >= 0 and x <= widget_pointed.width and y <= widget_pointed.height then
 					Result := targets.item
 				end
+				targets.forth
 			end
+		end
+
+	drop_command (args: EV_ARGUMENT2 [EV_PND_SOURCE_I, EV_INTERNAL_COMMAND]; ev_data: EV_PND_EVENT_DATA) is
+			-- Drop the data in a target.
+		local
+			target: EV_PND_TARGET_I
+		do
+			target := pointed_target
+
+			cancel_command (args, Void)
+
+			if target /= Void then
+				target.receive (args.first.data_type, args.first.transported_data, ev_data)
+			end
+		end
+
+	gtk_widget_get_pointer (widg, x, y: POINTER) is
+		external
+			"C (GtkWidget *, gint *, gint *) | <gtk/gtk.h>"
 		end
 
 end -- class EV_PND_TRANSPORTER_IMP

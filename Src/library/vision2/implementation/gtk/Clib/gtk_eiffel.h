@@ -43,6 +43,8 @@ void c_gtk_events_process_events_queue ();
  Data passed back to event handlers
 ------------------------------------------------------------------------------*/
 
+void c_gtk_window_set_icon (GtkWidget *window, GtkWidget *gdkwin, GdkPixmap *pix, GdkBitmap *mask);
+
 typedef  struct callback_data {
     EIF_PROC rtn;
     EIF_OBJ obj;
@@ -540,8 +542,6 @@ void c_gtk_box_set_child_expandable (GtkWidget *box, GtkWidget *child, gint flag
 /* Give the position of a window. */
 EIF_INTEGER c_gtk_window_x (GtkWidget *w);
 EIF_INTEGER c_gtk_window_y (GtkWidget *w);
-EIF_INTEGER c_gtk_absolute_x (GtkWidget *w);
-EIF_INTEGER c_gtk_absolute_y (GtkWidget *w);
 
 /* Information about the window. */
 typedef struct {
@@ -562,6 +562,9 @@ void c_gtk_window_set_modal(GtkWindow* window, gboolean modal);
 
 /* Title of the window */
 char* c_gtk_window_title(GtkWindow* window);
+
+/* Sets the icon name of the window*/
+void c_gtk_window_set_icon_name (GtkWindow *wind, gchar *name);
 
 /*==============================================================================
  gtk_frame functions

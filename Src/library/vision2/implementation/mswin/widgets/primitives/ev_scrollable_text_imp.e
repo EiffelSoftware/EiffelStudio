@@ -11,19 +11,17 @@ class
 inherit	
 
 	EV_SCROLLABLE_TEXT_I
-		rename
-			make_with_text as text_make_with_text,
-			make as text_make
-		end
-		
+				
 	EV_TEXT_IMP
 		rename
-			make_with_text as text_make_with_text,
-			make as text_make
+			make as text_make,
+			make_with_text as text_make_with_text
+		export
+			{none} text_make, text_make_with_text
 		redefine
 			default_style
 		end
-				
+					
 creation
 	make,
 	make_with_text
@@ -32,14 +30,16 @@ feature -- Initialization
 
 	make (hscroll, vscroll: BOOLEAN) is
 			-- Create an empty text area.
-			-- The area will be scrollable
+			-- If `hscroll' then horizontally scrollable.
+			-- If `vscroll' then vertically scrollable.
 		do
 			make_with_text ("", hscroll, vscroll)
 		end
 
 	make_with_text (txt: STRING; hscroll, vscroll: BOOLEAN) is
-			-- Create a text area with `text' as label.
-			-- The area will be scrollable.
+			-- Create a text area with `text' as text.
+				-- If `hscroll' then horizontally scrollable.
+			-- If `vscroll' then vertically scrollable.
 		do
 			has_horizontal_scrolling := hscroll
 			has_vertical_scrolling := vscroll

@@ -1028,45 +1028,6 @@ EIF_INTEGER c_gtk_window_y (GtkWidget *w)
 		return (-1);
 }
 
-EIF_INTEGER c_gtk_absolute_x (GtkWidget *w)
-{
-	gint x;
-	GtkWidget *window;
-
-	window = (GtkWidget *) c_gtk_widget_top_window (w);
-
-
-	if GTK_WIDGET_VISIBLE(w)
-	{
-	gdk_window_get_position (window->window, &x, NULL);
-		
-		return x;
-	}
-	else
-		return (-1);
-}
-
-EIF_INTEGER c_gtk_absolute_y (GtkWidget *w)
-{
-	gint y;
-	GtkWidget *window;
-
-	window = (GtkWidget *) c_gtk_widget_top_window (w);
-
-
-	if GTK_WIDGET_VISIBLE(w)
-	{
-	gdk_window_get_position (window->window, NULL, &y);
-		
-		return y;
-	}
-	else
-		return (-1);
-}
-
-
-
-
 
 void c_gtk_window_set_modal (GtkWindow* window, gboolean modal)
 {
@@ -1103,6 +1064,16 @@ EIF_INTEGER c_gtk_window_maximum_width (GtkWidget *w)
 gchar* c_gtk_window_title (GtkWindow *w)
 {
 	return w->title;
+}
+
+void c_gtk_window_set_icon (GtkWidget *window, GtkWidget *gdkwin, GdkPixmap *pix, GdkBitmap *mask)
+{
+		gdk_window_set_icon (window->window, gdkwin->window, pix, mask);
+}
+
+void c_gtk_window_set_icon_name (GtkWindow *wind, gchar *name)
+{
+		gdk_window_set_icon_name (GTK_WIDGET (wind)->window, name);
 }
 
 /*********************************

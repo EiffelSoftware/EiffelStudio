@@ -1,0 +1,23 @@
+#===============================================================================
+# Action sequence definitions for EiffelVision2
+# $Date$
+# $Revision$
+# NOTE: This is not supported: x, y: INTEGER
+#       Do this instead: x: INTEGER; y: INTEGER
+#===============================================================================
+
+ev_notify: for general notify events with no parameters;
+
+ev_pointer_button: for mouse button up/down events; x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
+
+ev_pointer_motion: for mouse movement events; x: INTEGER; y: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
+
+ev_proximity: for proximity in/out events; x: INTEGER; y: INTEGER
+
+ev_accelerator: for accelerator events;
+
+ev_key: for keyboard events; keycode: INTEGER
+
+ev_expose: for expose events; clip_region: EV_CLIP
+
+ev_pnd: for pick and drop events; data: ANY; data_type: EV_PND_TYPE

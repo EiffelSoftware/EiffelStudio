@@ -30,6 +30,15 @@ class EV_GDK_EXTERNALS
 --			"C [macro %"gdk_eiffel.h%"]"
 --		end
 
+feature {NONE} -- GTK macro for data member access
+
+	c_gdk_window_from_gtk_widget (widg: POINTER): POINTER is
+		external
+			"C [struct %"gtk_eiffel.h%"] (GtkWidget): EIF_POINTER"
+		alias
+			"window"
+		end
+
 feature {NONE} -- GTK macros for casting types
 	
 	-- Events
@@ -50,8 +59,18 @@ feature {NONE} -- GTK macros for casting types
 	c_gdk_event_y (p: POINTER): INTEGER is
 		external 
 			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
+		end
+
+	c_gdk_event_absolute_x (p: POINTER): INTEGER is	
+		external 
+			"C [macro %"gdk_eiffel.h%"]"
+		end
+
+	c_gdk_event_absolute_y (p: POINTER): INTEGER is	
+		external 
+			"C [macro %"gdk_eiffel.h%"]"
+		end
+
 	c_gdk_event_state (p: POINTER): INTEGER is
 		external 
 			"C [macro %"gdk_eiffel.h%"]"

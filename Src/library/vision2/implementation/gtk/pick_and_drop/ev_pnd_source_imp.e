@@ -21,21 +21,12 @@ feature -- Implementation
 			arg: EV_ARGUMENT2 [like Current, EV_INTERNAL_COMMAND]
 			arg1: EV_ARGUMENT1 [like Current]
 			widg: EV_WIDGET_IMP
-		do
-			widg ?= Current
-			io.putstring ("PND INITIALISED%N")
-			widg.set_capture
-			io.putint (widg.x)
-			io.new_line
-			io.putint (widg.y)
-			io.new_line
-	
-			io.putstring ("%N" + "X = " + widg.absolute_x.out + "%N" + "Y = " + widg.absolute_y.out + "%N")
-	
+		do	
 			if not ev_data.first_button_pressed
 			and then not ev_data.second_button_pressed
 			and then not ev_data.shift_key_pressed
 			and then not ev_data.control_key_pressed
+			and not avoid_callback
 			then
 				if args.first /= Void then
 					args.first.execute (ev_data)
@@ -49,57 +40,99 @@ feature -- Implementation
 						transporter.start_from (Current, 10, 10)
 					end
 						-- We add the commands
-					--remove_button_press_command (3, args.second)
-					create drop_cmd.make (transporter~drop_command)
+
+					
+					remove_single_command (widget_source.widget, 3, initialized_command)
+					
 					create cancel_cmd.make (transporter~cancel_command)
 					create arg.make (Current, args.first)
-					--widget_source.add_button_press_command (3, drop_cmd, arg)
-					--widget_source.add_button_press_command (1, cancel_cmd, arg)
-					--widget_source.add_button_press_command (2, cancel_cmd, arg)
+
+					create dummy_drop.make (~drop_callback)
+					create drop_cmd.make (transporter~drop_command)
+					widget_source.add_button_press_command (3, dummy_drop, arg)
+					just_initialized := True
+
+					widget_source.add_button_press_command (1, cancel_cmd, arg)
+
+					widget_source.add_button_press_command (2, cancel_cmd, arg)
+
+
 						-- We set a command that draw the line
 					create arg1.make (Current)
-					widget_source.add_motion_notify_command (transporter, arg1)
+					--widget_source.add_motion_notify_command (transporter, arg1)
 				end
+			else
+				avoid_callback := False
 			end
 		end
 
-	terminate_transport (cmd: EV_INTERNAL_COMMAND) is
+	just_initialized, avoid_callback: BOOLEAN
+			-- Booleans used to prevent unneeded execution of callbacks.
+
+	drop_callback (args: EV_ARGUMENT2 [EV_PND_SOURCE_I, EV_INTERNAL_COMMAND]; ev_data: EV_PND_EVENT_DATA) is
+		local
+			data_imp: EV_BUTTON_EVENT_DATA_IMP
+			widg: EV_WIDGET
+		do
+			if not just_initialized then
+				data_imp ?= ev_data.implementation
+				widg ?= widget_source.interface
+				data_imp.set_widget (widg)
+				drop_cmd.execute (args, ev_data)
+			else
+				just_initialized := False
+			end
+			
+		end
+		
+
+	terminate_transport (cmd: EV_INTERNAL_COMMAND; flag: BOOLEAN) is
 			-- Terminate the pick and drop mechanism.
 		local
-			com: EV_ROUTINE_COMMAND
 			arg: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]
 		do
 			remove_pick_and_drop
-			create com.make (~initialize_transport)
-			create arg.make (cmd, com)
-			--add_command (Cmd_button_three_press, com, arg)
+			create initialized_command.make (~initialize_transport)
+			create arg.make (cmd, initialized_command)
+		
+			if flag then
+				avoid_callback := True
+			else
+				avoid_callback := False
+			end
+		
+			add_button_press_command (3, initialized_command, arg)
+			
 		end
 
 
 feature {NONE} -- Implementation
 
 	remove_pick_and_drop is
-			-- Desactivate the pick and drop mechanism.
+			-- Deactivate the pick and drop mechanism.
 			-- We remove the commands for the pick and drop.
+			-- (1, 2 & 3 = Left, Middle & Right mouse buttons).
 		do
 			if drop_cmd /= Void then
-			--	widget_source.remove_single_command (Cmd_button_three_press, drop_cmd)
+				remove_single_command (widget_source.widget, 3, dummy_drop)
 				drop_cmd := Void
 			end
 			if cancel_cmd /= Void then
-			--	widget_source.remove_single_command (Cmd_button_one_press, cancel_cmd)
-			--	widget_source.remove_single_command (Cmd_button_two_press, cancel_cmd)
+				remove_single_command (widget_source.widget, 1, cancel_cmd)
+				remove_single_command (widget_source.widget, 2, cancel_cmd)
 				cancel_cmd := Void
 			end
 			if transporter /= Void then
-			--	widget_source.remove_single_command (Cmd_motion_notify, transporter)
+				--remove_motion_notify_commands (widget_source.widget, Cmd_motion_notify, transporter)
+				widget_source.remove_motion_notify_commands
+				--| FIXME IEK We only need to remove the transporter from the motion events queue
 				transporter := Void
 			end
 		end
 
 	transporter: EV_PND_TRANSPORTER_IMP
 
-	drop_cmd, cancel_cmd: EV_ROUTINE_COMMAND
+	dummy_drop, drop_cmd, cancel_cmd: EV_ROUTINE_COMMAND
 			-- Pick and Drop commands
 
 

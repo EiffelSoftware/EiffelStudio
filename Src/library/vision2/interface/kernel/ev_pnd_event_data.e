@@ -11,6 +11,8 @@ class
 
 inherit
 	EV_BUTTON_EVENT_DATA
+		rename
+			widget as source
 		redefine
 			make,
 			implementation
@@ -26,7 +28,13 @@ feature {NONE} -- Initialization
 			!EV_PND_EVENT_DATA_IMP! implementation
 		end
 
-feature -- Access	
+feature -- Access
+
+	target: EV_WIDGET is
+			-- Target of the Pick and Drop.
+		do
+			Result := implementation.target
+		end
 	
 	data: ANY is
 			-- Transported data
@@ -52,7 +60,8 @@ feature {EV_PND_TARGET_I} -- Element change
 			implementation.set_data_type (new_type)
 		end
 
-feature {EV_PND_TARGET_I} -- Implementation
+
+feature {EV_PND_TARGET_I, EV_PND_SOURCE_I, EV_PND_TRANSPORTER_I} -- Implementation
 	
 	implementation: EV_PND_EVENT_DATA_I
 

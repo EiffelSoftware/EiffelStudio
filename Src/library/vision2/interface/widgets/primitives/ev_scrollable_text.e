@@ -14,6 +14,8 @@ inherit
 		rename
 			make as old_make,
 			make_with_text as old_make_with_text
+		export
+			{None} old_make, old_make_with_text
 		redefine
 			implementation
 		end

@@ -9,6 +9,32 @@ deferred class
 
 inherit
 	EV_SCROLLABLE_TEXT_I
+		rename
+			make as scrollable_make,
+			make_with_text as scrollable_make_with_text
+		export
+			{NONE}
+				scrollable_make,
+				scrollable_make_with_text,
+				show_vertical_scroll_bar,
+				hide_vertical_scroll_bar,
+				show_horizontal_scroll_bar,
+				hide_horizontal_scroll_bar
+		end
+
+feature -- Initialization
+
+	make (hscroll: BOOLEAN) is
+			-- Create an empty rich text area with `par' as
+			-- parent. If `hscroll' then horizontally scrollable.
+		deferred
+		end
+
+	make_with_text (txt: STRING; hscroll: BOOLEAN) is
+			-- Create a rich text area with `par' as parent and
+			-- `txt' as text. If `hscroll' then horizontally scrollable.
+		deferred
+		end
 
 feature -- Access
 

@@ -4,6 +4,8 @@ DATE:	[YYYYMMDD]
 WHO:	[LOGINNAME]
 [NOTES HERE]
 ==========================================================================
-CLASS:	
-DATE:	
-WHO:	
+CLASS:	ev_key_event_data_i
+DATE:	19990827
+WHO:	king
+repeat
+state

@@ -37,9 +37,12 @@ feature {EV_FONTABLE_IMP} -- Initialization
 			-- Create the font corresponding to the given system
 			-- name.
 			-- The font is directly readed on a file.
+		require
+			valid_arguments_count: str.occurrences (',') = 12
+			valid_name: str /= Void and not str.empty
 		do
-			make
-			set_name (str)
+				make
+				parse_font_string (str)
 		end
 
 	make_by_wel (a_wel_font: WEL_FONT) is
@@ -255,9 +258,20 @@ feature -- Status setting
 feature -- Element change
 
 	set_name (str: STRING) is
-			-- parses the `str' and calls the other set routines
+			-- determines the correct font setup procedure to use
+			-- based on the format of the string passed
 		require else
-			valid_name: str /= Void
+			valid_name: str /= Void and not str.empty and str.occurrences (',') = 0
+		do
+			make
+			wel_log_font.set_face_name (str)
+		end
+
+	parse_font_string (str: STRING) is
+			-- parses the `str' and calls the other set routines
+		require
+			valid_name: str /= Void and not str.empty
+			valid_arguments_count: str.occurrences (',') = 12
 		local
 			pos, new_pos: INTEGER
 			number: INTEGER
@@ -277,7 +291,7 @@ feature -- Element change
 				new_pos := 1
 				number := 1
 			variant
-				str.count - pos
+				str.count - pos + 1
 			until
 				(pos > str.count) or (number = 13) or (new_pos = 0)
 			loop

@@ -1,6 +1,5 @@
 indexing
-
-	description: 
+	description:
 		"EiffelVision application, mswindows implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
@@ -26,7 +25,7 @@ creation
 feature {NONE} -- Implemenation dlls
 
 	common_control_dll: WEL_COMMON_CONTROLS_DLL
-			-- Needed for the tab controls
+			-- Needed for the tab controls (notebook)
 
 feature {NONE} -- Implementation
 
@@ -45,13 +44,16 @@ feature {NONE} -- Implementation
 	iterate is
             -- Loop the application.
         do
+			check
+				not_called: False
+			end
         end
 
 	exit is
 			-- Exit
 		do
 			check
-				not_yet_implemented: False
+				not_called: False
 			end
 		end
 

@@ -46,7 +46,7 @@ feature {CAT_EV_IS}
 
 	exists_in_application: BOOLEAN is
 		local
-			s: STATE;
+			s: BUILD_STATE;
 			b: BEHAVIOR;
 		do
 			from

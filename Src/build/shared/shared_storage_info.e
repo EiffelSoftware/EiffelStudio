@@ -37,7 +37,7 @@ feature {NONE}
 			!!Result.make (50)
 		end;
 
-	state_table: INT_H_TABLE [STATE] is
+	state_table: INT_H_TABLE [BUILD_STATE] is
 		once
 			!!Result.make (50);
 		end;

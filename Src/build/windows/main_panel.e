@@ -912,10 +912,10 @@ feature {NONE} -- Size attributes
 
 feature -- Current state
 
-	current_state: STATE
+	current_state: BUILD_STATE
 			-- Current state
 
-	set_current_state (s: STATE) is
+	set_current_state (s: BUILD_STATE) is
 			-- Set `current_state' to `s'.
 		do
 			current_state := s

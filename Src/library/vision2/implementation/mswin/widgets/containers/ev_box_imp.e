@@ -23,8 +23,6 @@ inherit
 		redefine
 			set_width,
 			set_height,
-			set_minimum_width,
-			set_minimum_height,
 			parent_ask_resize,
 			child_add_successful,
 			on_first_display
@@ -56,11 +54,10 @@ feature -- Access
 			-- Space between the objects in the box
 
 	total_spacing: INTEGER is
-			-- Total space occupied by spacing.
-			-- There is (spacing//2) on the left and on on the
-			-- right of the box.
+			-- Total space occupied by spacing. One spacing
+			-- between two consecutives children.
 		do
-			Result := spacing * children.count
+			Result := spacing * ( children.count - 1 )
 		end
 
 	already_displayed: BOOLEAN
@@ -91,45 +88,15 @@ feature -- Resizing
 
 	set_width (value: INTEGER) is
 		do
-			set_local_width (value.max (minimum_width))
-			if width > child_cell.width then
-				child_cell.set_width (width)
-				parent_imp.child_width_changed (width, Current)
-			end
+			child_cell.set_width (value.max (minimum_width))
+			set_local_width (child_cell.width)
 		end
 
 	set_height (value: INTEGER) is
 		do
-			set_local_height (value.max (minimum_width))
-			if height > child_cell.height then
-				child_cell.set_height (height)
-				parent_imp.child_height_changed (height, Current)
-			end
+			child_cell.set_height (value.max (minimum_height))
+			set_local_height (child_cell.height)
 		end
-
-  	set_minimum_width (value: INTEGER) is
-   			-- Make `value' the new `minimum_width' and
-   			-- notify the parent of the change. If this new minimum is
-   			-- bigger than the Current `width', the widget is resized.
-   		do
- 			minimum_width := value
-			parent_imp.child_minwidth_changed (value, Current)
- 			if value > width and shown then
- 				set_width (value)
- 			end
-   		end
-
-  	set_minimum_height (value: INTEGER) is
-   			-- Make `value' the new `minimum__height' and
-   			-- notify the parent of the change. If this new minimum is
-   			-- bigger than the Current `height', the widget is resized.
-   		do
- 			minimum_height := value
- 			parent_imp.child_minheight_changed (value, Current)
- 			if value > height and shown then
- 				set_height (value)
- 			end
-   		end
 
 feature {NONE} -- Basic operation
 

@@ -1,6 +1,6 @@
 indexing
-	description: "Stone based on exported feature name.";
-	date: "$Date$";
+	description: "Stone based on exported feature name."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 	make (f_name: STRING; ec: CLASS_C; real_name: STRING) is
 		require
-			valid_f_name: f_name /= Void;
+			valid_f_name: f_name /= Void
 		do
 			feature_make (f_name, ec)
 			alias_name := real_name

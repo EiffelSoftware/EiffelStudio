@@ -1,14 +1,13 @@
 indexing
-
 	description: 
-		"Stone based on feature name.";
-	date: "$Date$";
+		"Stone based on feature name."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class FEATURE_NAME_STONE
+class
+	FEATURE_NAME_STONE
 
 inherit
-
 	FEATURE_STONE
 		rename
 			make as old_make
@@ -16,35 +15,34 @@ inherit
 			check_validity, history_name, feature_name
 		end 
 
-creation 
-		
+creation 		
 	make
 
 feature {NONE} -- Initialization
 
 	make (f_name: STRING; ec: CLASS_C) is
 		require
-			valid_f_name: f_name /= Void;
+			valid_f_name: f_name /= Void
 		do
-			e_class := ec;
-			feature_name := f_name;
-			start_position := -1;
-			end_position := -1;
-		end;
+			e_class := ec
+			feature_name := f_name
+			start_position := -1
+			end_position := -1
+		end
 
 feature -- Properties
 
-	feature_name: STRING;
+	feature_name: STRING
 			-- Feature name
 
 	history_name: STRING is
 			-- Name used in the history list
 		do
-			!! Result.make (0);
-			Result.append (feature_name);
-			Result.append (" from ");
+			create Result.make (0)
+			Result.append (feature_name)
+			Result.append (" from ")
 			Result.append (e_class.name_in_upper)
-		end;
+		end
 
 feature -- Update
 
@@ -61,9 +59,9 @@ feature -- Update
 					if e_class.feature_table /= Void then
 							-- System has been completely compiled and has all its
 							-- feature tables.
-						feat := e_class.feature_with_name (feature_name);
+						feat := e_class.feature_with_name (feature_name)
 						if feat /= Void then
-							e_feature := feat;
+							e_feature := feat
 							if start_position = -1 then
 									-- calculate positions
 								{FEATURE_STONE} Precursor	
@@ -72,6 +70,6 @@ feature -- Update
 					end
 				end
 			end
-		end;
+		end
 
 end -- class FEATURE_NAME_STONE

@@ -1,15 +1,14 @@
 indexing
-
 	description: 
-		"Stone that can be hashed.";
-	date: "$Date$";
+		"Stone that can be hashed."
+	date: "$Date$"
 	revision: "$Revision $"
 
-deferred class HASHABLE_STONE
+deferred class
+	HASHABLE_STONE
 
 inherit
-
-	HASHABLE;
+	HASHABLE
 	STONE
 
 end -- class HASHABLE_STONE	

@@ -1,14 +1,13 @@
 indexing
-
 	description: 
-		"Class syntax stone.";
-	date: "$Date$";
+		"Class syntax stone."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class CL_SYNTAX_STONE
+class
+	CL_SYNTAX_STONE
 
 inherit
-
 	SYNTAX_STONE
 		rename
 			make as old_make
@@ -19,20 +18,19 @@ inherit
 		end
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_syntax_errori: SYNTAX_ERROR; c: CLASS_C) is
 		do
-			syntax_error_i := a_syntax_errori;
+			syntax_error_i := a_syntax_errori
 			associated_class := c
-		end;
+		end
 
 feature -- Properties
 
-	associated_class: CLASS_C;
+	associated_class: CLASS_C
 		-- Associated class for error
 
 feature -- Access
@@ -40,26 +38,26 @@ feature -- Access
 	stone_type: INTEGER is 
 		do 
 			Result := Class_type 
-		end;
+		end
 
 	stone_name: STRING is 
 		do 
 			Result := Interface_names.s_Class_stone
-		end;
+		end
 
 --	stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 --		do
 --			Result := Cursors.cur_Class
---		end;
+--		end
 
 --	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 --		do
 --			Result := Cursors.cur_X_class
---		end;
+--		end
 
 feature -- Update
 
@@ -67,6 +65,6 @@ feature -- Update
 --			-- Process Current stone dropped in hole `hole'.
 --		do
 --			hole.process_class_syntax (Current)
---		end;
+--		end
 
 end -- class CL_SYNTAX_STONE

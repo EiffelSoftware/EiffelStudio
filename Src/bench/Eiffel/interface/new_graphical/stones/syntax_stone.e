@@ -1,15 +1,14 @@
 indexing
-
 	description: 
-		"Stone representing a syntax error.";
-	date: "$Date$";
+		"Stone representing a syntax error."
+	date: "$Date$"
 	revision: "$Revision $"
 
 
-class SYNTAX_STONE
+class
+	SYNTAX_STONE
 
 inherit
-
 	ERROR_STONE
 		rename
 			make as make_simple_error
@@ -18,7 +17,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
@@ -26,11 +24,11 @@ feature {NONE} -- Initialization
 	make (a_syntax_errori: SYNTAX_ERROR) is
  		do
 			syntax_error_i := a_syntax_errori
-		end;
+		end
 
 feature -- Properties
  
-	syntax_error_i: SYNTAX_ERROR;
+	syntax_error_i: SYNTAX_ERROR
 
 feature -- Access
 
@@ -38,22 +36,22 @@ feature -- Access
 			-- The one from SYNTAX_ERROR: where it happened
 		do
 			Result := syntax_error_i.file_name
-		end;
+		end
 
 	help_text: LINKED_LIST [STRING] is
 		do
-			!! Result.make;
+			create Result.make
 			Result.put_front (Interface_names.h_No_help_available)
-		end;
+		end
 
-	start_position: INTEGER is do Result := syntax_error_i.start_position end;
+	start_position: INTEGER is do Result := syntax_error_i.start_position end
 			-- Stating position of the token involved in the syntax error
 
-	end_position: INTEGER is do Result := syntax_error_i.end_position end;
+	end_position: INTEGER is do Result := syntax_error_i.end_position end
 			-- Ending position of the of the token involved in the syntax
 			-- error
 
-	code: STRING is "Syntax error";
+	code: STRING is "Syntax error"
 			-- Error code
 
 end -- class SYNTAX_STONE

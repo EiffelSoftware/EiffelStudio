@@ -4,6 +4,54 @@ DATE:	[YYYYMMDD]
 WHO:	[LOGINNAME]
 [NOTES HERE]
 ==========================================================================
-CLASS:	
-DATE:	
-WHO:	
+CLASS:	ev_menu_item_container_imp
+DATE:	19990827
+WHO:	king
+Clear_items
+find_item_by_data
+==========================================================================
+CLASS:	ev_widget_imp
+DATE:	19990827
+WHO:	king
+set_capture
+release_capture
+==========================================================================
+CLASS:	ev_split_area_imp
+DATE:	19990827
+WHO:	king
+minimum_position
+maximum_position
+is_first_area_shrinkable
+is_second_area_shrinkable
+set_first_area_shrinkable
+set_second_area_shrinkable
+==========================================================================
+CLASS:	ev_window_imp
+DATE:	19990827
+WHO:	king
+set_maximise_state
+raise
+lower
+minimise
+maximise
+restore
+==========================================================================
+CLASS:	ev_rich_text_imp
+DATE:	19990827
+WHO:	king
+format_region
+==========================================================================
+CLASS:	ev_text_area_imp
+DATE:	19990827
+WHO:	king
+current_line_number
+has_system_frozen_widget
+freeze
+thaw
+==========================================================================
+CLASS:	ev_status_bar_imp
+DATE:	19990827
+WHO:	king
+font
+clear_items
+find_item_by_data

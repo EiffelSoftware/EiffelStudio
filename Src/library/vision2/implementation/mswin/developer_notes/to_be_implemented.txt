@@ -4,6 +4,16 @@ DATE:	[YYYYMMDD]
 WHO:	[LOGINNAME]
 [NOTES HERE]
 ==========================================================================
-CLASS:	
-DATE:	
-WHO:	
+CLASS:	ev_multi_column_list_imp
+DATE:	19990827
+WHO:	king
+add_select_command
+add_unselect_command
+remove_select_commands
+remove_unselect_commands
+==========================================================================
+CLASS:	ev_composite_command
+DATE:	19990827
+WHO:	king
+history
+failed

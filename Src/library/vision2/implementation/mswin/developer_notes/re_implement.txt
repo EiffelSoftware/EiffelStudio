@@ -4,6 +4,15 @@ DATE:	[YYYYMMDD]
 WHO:	[LOGINNAME]
 [NOTES HERE]
 ==========================================================================
-CLASS:	
-DATE:	
-WHO:	
+CLASS:	ev_font_imp
+DATE:	19990827
+WHO:	king
+character_set
+family
+foundry
+slant
+==========================================================================
+CLASS:	ev_tool_bar_imp
+DATE:	19990827
+WHO:	king
+internal_reset_button

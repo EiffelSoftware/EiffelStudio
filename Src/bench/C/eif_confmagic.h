@@ -31,12 +31,20 @@
 #ifndef bcopy
 #define bcopy(s,d,l) memcpy((d),(s),(l))
 #endif
+#else
+#ifdef EIF_ALPHA
+#define bcopy(s,d,l) bcopy ((const char *) s, (char *) d, l) 
+#endif /* EIF_ALPHA */
 #endif
 
 #ifndef HAS_BZERO
 #ifndef bzero
 #define bzero(s,l) memset((s),0,(l))
 #endif
+#else
+#ifdef EIF_ALPHA
+#define bzero(s,l) bzero ((char *) s, l)
+#endif /* EIF_ALPHA */
 #endif
 
 #ifndef HAS_INDEX

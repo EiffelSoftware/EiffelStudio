@@ -179,6 +179,19 @@ feature -- Generation constants
 			Result := "<PROJECT_LOCATION>"
 		end
 		
+	event_connection_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for the event connection declarations.
+		once
+			Result := "<EVENT_CONNECTION>"
+		end
+		
+	event_declaration_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for the event declarations.
+		once
+			Result := "<EVENT_DECLARATION>"
+		end
 		
 		
 	indent: STRING is

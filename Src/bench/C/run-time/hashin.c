@@ -153,6 +153,26 @@ register1 unsigned long key;
 	return (char *) 0;		  /* Item was not found */
 }
 
+void ht_force(ht, key, val)
+struct htable *ht;
+register1 unsigned long key;
+char *val;
+{
+	/* Tries to put value held at 'val' tagged with key 'key' in H table
+	 * 'ht'. If the first put fails, the H table 'ht' is extended and
+	 * we try another put. If that fails we raise an exception.
+	 * When everything is alright, we return to the callee.
+	 */
+
+	if (!(ht_put(ht, key, val))) {		/* Insertion failed => H table full */
+		if (ht_xtend(ht))		/* Extend the H table */
+			eraise("Hashtable extension failure", EN_FATAL);
+				/* Something (...) was wrotten, don't know what */
+		if (!(ht_put(ht, key, val))) 	/* Insertion failed again => Bailing out */
+			eraise("Hash table insertion failure", EN_FATAL);
+	}
+}
+
 public char *ht_put(ht, key, val)
 struct htable *ht;
 register1 unsigned long key;
@@ -192,6 +212,44 @@ char *val;
 	}
 
 	return (char *) 0;		/* We were unable to insert item */
+}
+
+public void ht_remove(ht, key)
+struct htable *ht;
+register1 unsigned long key;
+{
+	/* Remove item and key 'key' from H table 'ht'.
+	 * If 'key' does not exist, nothing will be done.
+	 * If 'key' does exist, both the 'h_keys' and the 'h_values' will be zero-d at the appropriate place.
+	 * NOTE: If one has a pointer in the structure, he/she is responsible for free-ing that
+	 *	 part of memory, by first using 'ht_value' and free the memory and thereafter 'ht_remove' the item from the
+	 *	 H table.
+	 *	 This means too that if 'ht_value' can not find the value, you will not have to call 'ht_remove' (he he).
+	 *	 -- GLJ
+	 */
+
+	register2 long pos;		/* Position in H table */
+	register3 int32 hsize;		/* Size of H table */
+	register4 unsigned long *hkeys;		/* Array of keys */
+	register5 int32 try = 0;	/* Records number of attempts */
+	register6 long inc;		/* Loop increment */
+
+	/* Initializations */
+	hsize = ht->h_size;
+	hkeys = ht->h_keys;
+
+	/* Jump from one hashed position to another until we find a free entry or
+	 * we reached the end of the table.
+	 */
+	inc = 1 + (key % (hsize - 1));
+	for (pos = key % hsize; try < hsize; try++, pos = (pos + inc) % hsize) {
+		if (hkeys[pos] == key) {
+			hkeys[pos] = 0L;
+			bzero(ht->h_values + (pos * ht->h_sval), ht->h_sval);
+		} else
+			if (hkeys[pos] == 0L)
+				break;
+	}
 }
 
 public int ht_xtend(ht)

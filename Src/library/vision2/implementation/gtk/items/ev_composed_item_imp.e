@@ -15,11 +15,6 @@ inherit
 			interface
 		end
 
-	--EV_ITEM_IMP
-	--	redefine
-	--		interface
-	--	end
-
 feature -- Access
 
 	cell_text (column: INTEGER): STRING is
@@ -124,6 +119,9 @@ end -- class EV_COMPOSED_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/09 01:13:03  king
+--| Removed inheritance from ev_item_imp
+--|
 --| Revision 1.7  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

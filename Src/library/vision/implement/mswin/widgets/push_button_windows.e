@@ -9,11 +9,23 @@ class
 
 inherit
 	BUTTON_WINDOWS
+		rename
+			set_managed as widget_set_managed
 		redefine
 			realize,
 			realized,
 			unrealize
 		end;
+
+	BUTTON_WINDOWS
+		redefine
+			realize,
+			realized,
+			unrealize,
+			set_managed
+		select
+			set_managed
+		end
 
 	PUSH_B_I
 
@@ -44,6 +56,8 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font
 		undefine
+			on_hide,
+			on_show,
 			on_size,
 			on_move,
 			on_right_button_up, on_left_button_down,
@@ -53,7 +67,7 @@ inherit
 			on_key_down
 		end
 
-creation 
+creation
 	make
 
 feature {NONE} -- Initialization
@@ -69,11 +83,53 @@ feature {NONE} -- Initialization
 			set_center_alignment
 		end
 
-
 feature -- Access
 
 	realized: BOOLEAN
 			-- Is this widget realized?
+
+	set_managed (flag: BOOLEAN) is
+			-- Enable geometry managment on screen widget implementation,
+			-- by window manager of parent widget if `flag', disable it
+			-- otherwise.
+		local
+			mp: MENU_PULL_WINDOWS
+			op: OPTION_PULL_WINDOWS
+		do
+			if in_menu then
+				if realized then
+					if parent /= Void and parent.realized and then parent.exists then
+						if not managed and then flag then
+							managed := flag
+							if is_parent_menu_pull then
+								mp ?= parent
+								mp.manage_item (Current)
+							elseif is_parent_option_pull then
+								managed := flag
+								op ?= parent
+								op.manage_item (Current)
+							end
+						elseif managed and then not flag then
+							if is_parent_menu_pull then
+								managed := flag
+								mp ?= parent
+								mp.unmanage_item (Current)
+							elseif is_parent_option_pull then
+								managed := flag
+								op ?= parent
+								op.unmanage_item (Current)
+							end
+						end
+					end
+				else
+					managed := flag
+					realize
+				end
+				managed := flag
+			else
+				widget_set_managed (flag)
+			end
+		end
 
 feature -- Status setting
 
@@ -91,10 +147,21 @@ feature -- Status setting
 		local
 			menu: MENU_WINDOWS
 			wc: WEL_COMPOSITE_WINDOW
+			mp: MENU_PULL_WINDOWS
+			op: OPTION_PULL_WINDOWS
 		do
 			if not realized then
+				realized := true
 				if is_parent_menu_pull then
+					mp ?= parent
+					if mp.realized then
+						mp.add_a_child (Current)
+					end
 				elseif is_parent_option_pull then
+					op ?= parent
+					if op.realized then
+						op.add_a_child (Current)
+					end
 				else
 					resize_for_shell
 					wc ?= parent
@@ -109,7 +176,6 @@ feature -- Status setting
 						set_insensitive (true)
 					end
 				end
-				realized := true
 			end
 		end
 

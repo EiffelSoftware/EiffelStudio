@@ -88,17 +88,8 @@ feature -- Conversion
 			-- (order is same as original order of insertion)
 		local
 			i: INTEGER;
-			default_value: G;
 		do
-			from
-				!!Result.make (count);
-				i := 1
-			until
-				i > count
-			loop
-				Result.extend (default_value);
-				i := i + 1	
-			end;
+			!!Result.make_filled (count);
 			from
 				start;
 				Result.finish;

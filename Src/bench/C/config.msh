@@ -5,6 +5,7 @@ microsoft-=''
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\nmake'
+del='del'
 #
 output_cmd='-Fo'
 input_cmd='-Fd$(INDIR)\\'

@@ -5,6 +5,7 @@ borland-=''
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\make -l'
+del='del'
 #
 output_cmd='-o'
 input_cmd=''

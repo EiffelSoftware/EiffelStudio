@@ -1,5 +1,9 @@
 class S_CLASS_CONTENT
 
+inherit
+
+	STORABLE
+
 feature -- Specification
 
 	features: ARRAYED_LIST [S_FEATURE_DATA];

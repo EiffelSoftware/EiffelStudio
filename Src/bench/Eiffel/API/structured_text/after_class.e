@@ -22,10 +22,10 @@ feature -- Properties
 
 	image: STRING is
 			-- Text representing Current text
-		do
+		do	
 			!! Result.make (0);
 			Result.append (" -- class ");
-			Result.append (class_name);
+			Result.append (e_class.name_in_upper);
 		end;
 
 feature {TEXT_FORMATTER} -- Implementation

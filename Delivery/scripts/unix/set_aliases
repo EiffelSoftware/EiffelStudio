@@ -6,16 +6,16 @@ INSTALL_LOG=`pwd`/install.log
 # File in which the status of the installation compilation is logged
 COMPILE_LOG=`pwd`/compile.log
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=`pwd`/Eiffel51
+INSTALL_DIR=`pwd`/Eiffel52
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=`pwd`/Eiffel51
+FINAL_INSTALL_DIR=`pwd`/Eiffel52
 # Where all.tar.gz files should be stored
 EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
 DEFAULT_CVS_TAG=HEAD
 
 # Used only when making PorterPackage to checkout the sources
-NEW_EIFFEL_SRC=`pwd`/tmp51dev
+NEW_EIFFEL_SRC=`pwd`/tmp52dev
 # The following directory is going to be used to compile the compiler
 FINALIZATION_DIR=`pwd`/finalized
 

@@ -233,9 +233,6 @@ feature -- Element change
 		
 	set_height_in_points (a_height: INTEGER) is
 			-- Set `height_in_points' based on `a_height' in points.
-		local
-			logical_pixels: INTEGER
-			screen_dc: WEL_SCREEN_DC
 		do
 			add_mask (Cfm_size)
 			cwel_charformat_set_yheight (item, a_height)

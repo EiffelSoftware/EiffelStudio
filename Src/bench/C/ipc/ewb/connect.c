@@ -15,16 +15,20 @@
 #include "err_msg.h"
 #include "shared.h"
 #include <sys/types.h>
+
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
 #endif
+
 #ifdef I_NETINET_IN
 #include <netinet/in.h>
 #endif
+
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
+
 #include <ctype.h>			/* For isdigit() */
 #include <stdio.h>			/* For error report */
 
@@ -64,15 +68,13 @@ rt_public int econnect(char *host)
 	 */
 	if (isdigit(*host)) {	/* Starts with number: Internet address */
 		if (-1 == (peer_addr.sin_addr.s_addr = inet_addr(host))) {
-			print_err_msg(stderr, "%s: %s is not a valid internet address\n",
-					name, host);
+			print_err_msg(stderr, "%s: %s is not a valid internet address\n", name, host);
 			return -1;
 		}
 	} else {				/* Full name (alias) */
 		hp = gethostbyname(host);
 		if (hp == (struct hostent *) 0) {
-			print_err_msg(stderr, "%s: %s not found in /etc/hosts\n",
-					name, host);
+			print_err_msg(stderr, "%s: %s not found in /etc/hosts\n", name, host);
 			return -1;
 		}
 		peer_addr.sin_addr.s_addr = ((struct in_addr *)(hp->h_addr))->s_addr;
@@ -82,8 +84,7 @@ rt_public int econnect(char *host)
 	if (sp == (struct servent *) 0) {	/* Do that only once */
 		sp = getservbyname(SERVICE, "tcp");
 		if (sp == (struct servent *) 0) {
-			print_err_msg(stderr, "%s: %s not found in /etc/services\n",
-					name, SERVICE);
+			print_err_msg(stderr, "%s: %s not found in /etc/services\n", name, SERVICE);
 			return -1;
 		}
 	}
@@ -100,7 +101,7 @@ rt_public int econnect(char *host)
 	/* Now, try to connect to the daemon, identified by the
 	 * address which was just built in peer_addr...
 	 */
-	
+
 	if (connect(cs, &peer_addr, sizeof(struct sockaddr_in)) == -1) {
 		/* This is the most expected error */
 		print_err_msg(stderr, "%s: unable to connect to %s\n", name, host);
@@ -141,11 +142,10 @@ rt_public int deconnect(int cs)
        			/* The connected socket */
 {
 	/* Close the daemon connection. Returns -1 if error, 0 otherwise */
-	
+
 	if (close(cs) == -1) {	/* Close connected socket */
 		perror(name);
-		print_err_msg(stderr, "%s: unable to close a socket (fd = %d)\n",
-			name, cs);
+		print_err_msg(stderr, "%s: unable to close a socket (fd = %d)\n", name, cs);
 		return -1;
 	}
 

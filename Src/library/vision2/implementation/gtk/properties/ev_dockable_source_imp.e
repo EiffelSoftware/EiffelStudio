@@ -222,9 +222,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DOCKABLE_SOURCE
 
-invariant
-	invariant_clause: True -- Your invariant here
-
 end -- class EV_DOCKABLE_IMP
 
 --|----------------------------------------------------------------

@@ -77,9 +77,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST
 	
-invariant
-	invariant_clause: True -- Your invariant here
-
 end -- class EV_CHECKABLE_LIST_IMP
 
 --|----------------------------------------------------------------

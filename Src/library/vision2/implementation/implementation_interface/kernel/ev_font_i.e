@@ -41,14 +41,14 @@ feature -- Access
 		deferred
 		end
 
-	preferred_faces: ACTIVE_LIST [STRING]
+	preferred_familys: ACTIVE_LIST [STRING]
 			-- Preferred user fonts.
 			-- `family' will be ignored when not Void.
 
 feature -- Element change
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
-		a_preferred_faces: like preferred_faces) is
+		a_preferred_familys: like preferred_familys) is
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_faces' at the same time for speed.
 		require
@@ -56,9 +56,9 @@ feature -- Element change
 			a_weight_valid: valid_weight (a_weight)
 			a_shape_valid: valid_shape (a_shape)
 			a_height_bigger_than_zero: a_height > 0
-			a_preferred_faces_not_void: a_preferred_faces /= Void
+			a_preferred_familys_not_void: a_preferred_familys /= Void
 		do
-			preferred_faces := a_preferred_faces
+			preferred_familys := a_preferred_familys
 			update_font_face
 			set_family (a_family)
 			set_weight (a_weight)
@@ -236,6 +236,9 @@ end -- class EV_FONT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2001/06/14 17:25:09  rogers
+--| Renamed preferred_faces to preferred_familys.
+--|
 --| Revision 1.15  2001/06/07 23:08:08  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

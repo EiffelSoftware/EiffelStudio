@@ -66,6 +66,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	is_prefix_read_only_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_prefix_read_only'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	assembly_name: STRING is
@@ -129,6 +136,14 @@ feature -- Basic Operations
 			-- `return_value' [in].  
 		require
 			set_assembly_prefix_user_precondition: set_assembly_prefix_user_precondition (return_value)
+		deferred
+
+		end
+
+	is_prefix_read_only: BOOLEAN is
+			-- Is assembly prefix read only.
+		require
+			is_prefix_read_only_user_precondition: is_prefix_read_only_user_precondition
 		deferred
 
 		end

@@ -399,34 +399,34 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when a row has been selected.
-		local
-			i: INTEGER
-		do
-			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
-			i := 0
-			--add_command (list_widget, "select_row", cmd, arg, C.c_gtk_integer_to_pointer (i))
-		end
+--|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when a row has been selected.
+--|FIXME		local
+--|FIXME			i: INTEGER
+--|FIXME		do
+--|FIXME			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
+--|FIXME			i := 0
+--|FIXME			--add_command (list_widget, "select_row", cmd, arg, C.c_gtk_integer_to_pointer (i))
+--|FIXME		end
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when a row has been unselected.
-		local
-			i: INTEGER
-		do
-			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
-			i := 0
-			--add_command (list_widget, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (i))
-		end
+--|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when a row has been unselected.
+--|FIXME		local
+--|FIXME			i: INTEGER
+--|FIXME		do
+--|FIXME			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
+--|FIXME			i := 0
+--|FIXME			--add_command (list_widget, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (i))
+--|FIXME		end
 
-	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when a column is clicked.
-		do
-			--add_command (list_widget, "click_column", cmd, arg, default_pointer)
-		end
+--|FIXME	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when a column is clicked.
+--|FIXME		do
+--|FIXME			--add_command (list_widget, "click_column", cmd, arg, default_pointer)
+--|FIXME		end
 
 feature {NONE} -- Implementation
 
@@ -531,6 +531,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/19 00:02:50  oconnor
+--| c-ed out old command stuff
+--|
 --| Revision 1.27  2000/02/18 23:54:11  oconnor
 --| released
 --|

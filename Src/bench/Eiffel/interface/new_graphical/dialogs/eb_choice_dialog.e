@@ -56,9 +56,7 @@ feature -- Initialization
 			set_default_push_button (exit_b)
 			set_default_cancel_button (exit_b)
 
-			exit_b.focus_out_actions.extend (~one_lost_focus)
-			list.focus_out_actions.extend (~one_lost_focus)
-			focus_out_actions.extend (~one_lost_focus)
+			show_actions.extend (~on_shown)
 		end
 
 feature
@@ -139,6 +137,22 @@ feature
 			end
 		end
 
+	on_shown is
+			-- The dialog is being displayed.
+			-- Give the focus to the list.
+		do
+			if not list.is_empty then
+				list.first.enable_select
+			end
+			list.set_focus
+			exit_b.focus_out_actions.wipe_out
+			exit_b.focus_out_actions.extend (~one_lost_focus)
+			list.focus_out_actions.wipe_out
+			list.focus_out_actions.extend (~one_lost_focus)
+			focus_out_actions.wipe_out
+			focus_out_actions.extend (~one_lost_focus)
+		end
+
 feature {NONE} -- Properties
 
 feature {NONE} -- Properties
@@ -190,7 +204,9 @@ feature {NONE} -- Implementation
 	on_select (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- The user clicked on a list item.
 		do
-			execute (list.selected_item)
+			if list.selected_item /= Void then
+				execute (list.selected_item)
+			end
 		end
 
 --	display is

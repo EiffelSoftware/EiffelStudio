@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 			drawing_area.resize_actions.force_extend (agent draw_widgets)
 			create projector.make_with_buffer (world, pixmap, drawing_area)
 
-			create ok_button.make_with_text ("Close")
+			create ok_button.make_with_text ("Done")
 			ok_button.select_actions.extend (agent Result.destroy)			
 			create scrollable_area
 			scrollable_area.set_minimum_size (200, 200)

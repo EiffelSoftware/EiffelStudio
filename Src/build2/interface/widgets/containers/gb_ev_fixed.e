@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			
 			create scrollable_area
 			scrollable_area.set_minimum_size (200, 200)
-			create ok_button.make_with_text ("Close")
+			create ok_button.make_with_text ("Done")
 			ok_button.select_actions.extend (agent Result.destroy)
 			create h1
 			create cell

@@ -40,18 +40,18 @@ class ecom_runtime_ec
 		VARIANT ccom_ec_variant (EIF_REFERENCE a_ref);
 
 		//Pointed
-		char * ccom_ec_pointed_character (EIF_REFERENCE a_ref);
-		short * ccom_ec_pointed_short (EIF_REFERENCE a_ref);
-		long * ccom_ec_pointed_long (EIF_REFERENCE a_ref);
-		float * ccom_ec_pointed_real (EIF_REFERENCE a_ref);
-		double * ccom_ec_pointed_double (EIF_REFERENCE a_ref);
-		VARIANT_BOOL * ccom_ec_pointed_boolean (EIF_REFERENCE a_ref);
-		CURRENCY * ccom_ec_pointed_currency (EIF_REFERENCE a_ref);
-		VARIANT * ccom_ec_pointed_variant (EIF_REFERENCE a_ref);
-		DECIMAL * ccom_ec_pointed_decimal (EIF_REFERENCE a_ref);
-		LARGE_INTEGER * ccom_ec_pointed_long_long (EIF_REFERENCE a_ref);
-		ULARGE_INTEGER * ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref);
-		void ** ccom_ec_pointed_pointer (EIF_REFERENCE a_pointer);
+		char * ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * old);
+		short * ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old);
+		long * ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * ild);
+		float * ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old);
+		double * ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * old);
+		VARIANT_BOOL * ccom_ec_pointed_boolean (EIF_REFERENCE a_ref, VARIANT_BOOL * old);
+		CURRENCY * ccom_ec_pointed_currency (EIF_REFERENCE a_ref, CURRENCY * old);
+		VARIANT * ccom_ec_pointed_variant (EIF_REFERENCE a_ref, VARIANT * old);
+		DECIMAL * ccom_ec_pointed_decimal (EIF_REFERENCE a_ref, DECIMAL * old);
+		LARGE_INTEGER * ccom_ec_pointed_long_long (EIF_REFERENCE a_ref, LARGE_INTEGER * old);
+		ULARGE_INTEGER * ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, ULARGE_INTEGER * old);
+		void ** ccom_ec_pointed_pointer (EIF_REFERENCE a_pointer, void ** old);
 
 		// ARRAY
 		DATE * ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension);

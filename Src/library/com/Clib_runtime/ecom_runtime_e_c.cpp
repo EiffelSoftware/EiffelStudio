@@ -116,7 +116,7 @@ LARGE_INTEGER ecom_runtime_ec::ccom_ec_long_long (EIF_REFERENCE a_ref)
 };
 //--------------------------------------------------------------------------------
 
-LARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_long_long (EIF_REFERENCE a_ref)
+LARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_long_long (EIF_REFERENCE a_ref, LARGE_INTEGER * old)
 
 // Create LARGE_INTEGER from Eiffel ECOM_LARGE_INTEGER
 {
@@ -133,7 +133,13 @@ LARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_long_long (EIF_REFERENCE a_ref)
 	c_large_integer = (LARGE_INTEGER *)(f_item)(eif_access(an_int));
 	eif_wean (an_int);
 
-	return c_large_integer;
+	if (old != NULL)
+	{
+		memcpy (old, c_large_integer, sizeof (LARGE_INTEGER));
+		return NULL;
+	}
+	else
+		return c_large_integer;
 };
 //--------------------------------------------------------------------------------
 
@@ -158,7 +164,7 @@ ULARGE_INTEGER ecom_runtime_ec::ccom_ec_ulong_long (EIF_REFERENCE a_ref)
 };
 //----------------------------------------------------------------------------
 
-ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref)
+ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, ULARGE_INTEGER *old)
 
 // Create ULARGE_INTEGER from Eiffel ECOM_ULARGE_INTEGER
 {
@@ -175,7 +181,13 @@ ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_ulong_long (EIF_REFERENCE a_re
 	c_ularge_integer = (ULARGE_INTEGER *)(f_item)(eif_access(an_int));
 	eif_wean (an_int);
 
-	return c_ularge_integer;
+	if (old != NULL)
+	{
+		memcpy (old, c_ularge_integer, sizeof (ULARGE_INTEGER));
+		return NULL;
+	}
+	else
+		return c_ularge_integer;
 };
 //----------------------------------------------------------------------------
 
@@ -241,7 +253,7 @@ DECIMAL ecom_runtime_ec::ccom_ec_decimal (EIF_REFERENCE a_ref)
 };
 //----------------------------------------------------------------------------
 
-DECIMAL * ecom_runtime_ec::ccom_ec_pointed_decimal (EIF_REFERENCE a_ref)
+DECIMAL * ecom_runtime_ec::ccom_ec_pointed_decimal (EIF_REFERENCE a_ref, DECIMAL * old)
 
 // Create DECIMAL from EIF_REFERENCE
 {
@@ -257,7 +269,13 @@ DECIMAL * ecom_runtime_ec::ccom_ec_pointed_decimal (EIF_REFERENCE a_ref)
 	c_decimal = (DECIMAL *)(f_item)(eif_access(a_decimal));
 	eif_wean (a_decimal);
 
-	return c_decimal;
+	if (old != NULL)
+	{
+		memcpy (old, c_decimal, sizeof (DECIMAL));
+		return NULL;
+	}
+	else
+		return c_decimal;
 };
 //----------------------------------------------------------------------------
 
@@ -281,7 +299,7 @@ CURRENCY ecom_runtime_ec::ccom_ec_currency (EIF_REFERENCE a_ref)
 };
 //----------------------------------------------------------------------------
 
-char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref)
+char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * old)
 
 // Create char * from EIF_REFERENCE (CELL [CHARACTER])
 {
@@ -298,11 +316,17 @@ char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref)
 	* result = (char) item (eif_access (eif_object));
 
 	eif_wean (eif_object);
-	return result;
+	if (old != NULL)
+	{
+		*old = *result;
+		return NULL;
+	}
+	else
+		return result;
 };
 //----------------------------------------------------------------------------
 
-short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref)
+short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old)
 
 // Create short * from EIF_REFERENCE (CELL [INTEGER])
 {
@@ -319,11 +343,17 @@ short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref)
 	* result = (short) item (eif_access (eif_object));
 
 	eif_wean (eif_object);
-	return result;
+	if (old != NULL)
+	{
+		*old = *result;
+		return NULL;
+	}
+	else
+		return result;
 };
 //---------------------------------------------------------------------------
 
-long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref)
+long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old)
 
 // Create long * from EIF_REFERENCE (CELL [INTEGER])
 {
@@ -340,11 +370,18 @@ long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref)
 	* result = (long) item (eif_access (eif_object));
 
 	eif_wean (eif_object);
-	return result;
+	eif_wean (eif_object);
+	if (old != NULL)
+	{
+		*old = *result;
+		return NULL;
+	}
+	else
+		return result;
 };
 //---------------------------------------------------------------------------
 
-float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref)
+float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old)
 
 // Create float * from EIF_REFERENCE (CELL [REAL])
 {
@@ -361,11 +398,18 @@ float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref)
 	* result = (float) item (eif_access (eif_object));
 
 	eif_wean (eif_object);
-	return result;
+	eif_wean (eif_object);
+	if (old != NULL)
+	{
+		*old = *result;
+		return NULL;
+	}
+	else
+		return result;
 };
 //---------------------------------------------------------------------------
 
-double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref)
+double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * old)
 
 // Create double * from EIF_REFERENCE (CELL [DOUBLE])
 {
@@ -382,11 +426,18 @@ double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref)
 	* result = (double) item (eif_access (eif_object));
 
 	eif_wean (eif_object);
-	return result;
+	eif_wean (eif_object);
+	if (old != NULL)
+	{
+		*old = *result;
+		return NULL;
+	}
+	else
+		return result;
 };
 //---------------------------------------------------------------------------
 
-CURRENCY * ecom_runtime_ec::ccom_ec_pointed_currency (EIF_REFERENCE a_ref)
+CURRENCY * ecom_runtime_ec::ccom_ec_pointed_currency (EIF_REFERENCE a_ref, CURRENCY * old)
 
 // Create (CURRENCY *) from EIF_REFERENCE
 {
@@ -402,7 +453,13 @@ CURRENCY * ecom_runtime_ec::ccom_ec_pointed_currency (EIF_REFERENCE a_ref)
 	c_currency = (CURRENCY *)(f_item)(eif_access (a_currency));
 	eif_wean (a_currency);
 
-	return c_currency;
+	if (old != NULL)
+	{
+		memcpy (old, c_currency, sizeof (CURRENCY));
+		return NULL;
+	}
+	else
+		return c_currency;
 };
 //----------------------------------------------------------------------------
 
@@ -500,7 +557,7 @@ VARIANT ecom_runtime_ec::ccom_ec_variant (EIF_REFERENCE a_ref)
 };
 //----------------------------------------------------------------------------
 
-VARIANT * ecom_runtime_ec::ccom_ec_pointed_variant (EIF_REFERENCE a_ref)
+VARIANT * ecom_runtime_ec::ccom_ec_pointed_variant (EIF_REFERENCE a_ref, VARIANT * old)
 
 // Create VARIANT from EIF_REFERENCE
 {
@@ -515,8 +572,13 @@ VARIANT * ecom_runtime_ec::ccom_ec_pointed_variant (EIF_REFERENCE a_ref)
 
 	c_variant = (VARIANT *)(f_item)(eif_access(a_variant));
 	eif_wean (a_variant);
-
-	return c_variant;
+	if (old != NULL)
+	{
+		memcpy (old, c_variant, sizeof (VARIANT));
+		return NULL;
+	}
+	else
+		return c_variant;
 };
 //----------------------------------------------------------------------------
 
@@ -690,7 +752,7 @@ CURRENCY * ecom_runtime_ec::ccom_ec_array_currency (EIF_REFERENCE a_ref, int dim
 
 	for (int i=0; i < capacity; i++)
 	{
-		p_currency = ccom_ec_pointed_currency ((f_item)(eif_access(e_currency_array), ((EIF_INTEGER)(i+1))));
+		p_currency = ccom_ec_pointed_currency ((f_item)(eif_access(e_currency_array), ((EIF_INTEGER)(i+1))), NULL);
 		memcpy (((CURRENCY *)currency_array + i), p_currency, sizeof (CURRENCY));
 	}
 
@@ -735,7 +797,7 @@ VARIANT * ecom_runtime_ec::ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimen
 
 	for (i = 0; i < capacity; i++)
 	{
-		p_var = ccom_ec_pointed_variant ((f_item)(eif_access(e_variant_array), ((EIF_INTEGER)(i+1))));
+		p_var = ccom_ec_pointed_variant ((f_item)(eif_access(e_variant_array), ((EIF_INTEGER)(i+1))), NULL);
 		memcpy (((VARIANT *) variant_array + i), p_var, sizeof (VARIANT));
 	}
 
@@ -780,7 +842,7 @@ DECIMAL * ecom_runtime_ec::ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimen
 
 	for (i = 0; i < capacity; i++)
 	{
-		p_decimal = ccom_ec_pointed_decimal ((f_item)(eif_access(e_decimal_array), ((EIF_INTEGER)(i+1))));
+		p_decimal = ccom_ec_pointed_decimal ((f_item)(eif_access(e_decimal_array), ((EIF_INTEGER)(i+1))), NULL);
 		memcpy (((DECIMAL *) decimal_array + i),p_decimal, sizeof (DECIMAL));
 	}
 
@@ -871,7 +933,7 @@ LARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, i
 
 	for (i = 0; i < capacity; i++)
 	{
-		p_int = ccom_ec_pointed_long_long ((f_item)(eif_access(e_large_integer_array), ((EIF_INTEGER)(i+1))));
+		p_int = ccom_ec_pointed_long_long ((f_item)(eif_access(e_large_integer_array), ((EIF_INTEGER)(i+1))), NULL);
 		memcpy ((LARGE_INTEGER *) int_array, p_int, sizeof (LARGE_INTEGER));
 	}
 
@@ -915,7 +977,7 @@ ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_ulong_long (EIF_REFERENCE a_ref,
 
 	for (i = 0; i < capacity; i++)
 	{
-		p_int = ccom_ec_pointed_ulong_long ((f_item)(eif_access(e_ularge_integer_array), ((EIF_INTEGER)(i+1))));
+		p_int = ccom_ec_pointed_ulong_long ((f_item)(eif_access(e_ularge_integer_array), ((EIF_INTEGER)(i+1))), NULL);
 		memcpy ((ULARGE_INTEGER *)int_array, p_int, sizeof (ULARGE_INTEGER));
 	}
 	eif_wean (e_ularge_integer_array);
@@ -2132,7 +2194,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 		{
 			c_index[i] = (long) tmp_index [dimensions - i - 1];
 		}
-		an_element = ccom_ec_pointed_variant (f_array_item(eif_access (eif_safe_array), eif_access (eif_index)));
+		an_element = ccom_ec_pointed_variant (f_array_item(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
 		hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
 		if (FAILED (hr))
 		{
@@ -2244,7 +2306,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 		{
 			c_index[i] = (long) tmp_index [dimensions - i - 1];
 		}
-		an_element = ccom_ec_pointed_currency (f_array_item(eif_access (eif_safe_array), eif_access (eif_index)));
+		an_element = ccom_ec_pointed_currency (f_array_item(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
 		hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
 		if (FAILED (hr))
 		{
@@ -2356,7 +2418,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 		{
 			c_index[i] = (long) tmp_index [dimensions - i - 1];
 		}
-		an_element = ccom_ec_pointed_decimal (f_array_item(eif_access (eif_safe_array), eif_access (eif_index)));
+		an_element = ccom_ec_pointed_decimal (f_array_item(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
 		hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
 		if (FAILED (hr))
 		{
@@ -2716,7 +2778,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 };
 //-----------------------------------------------------------------------------------
 
-void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref)
+void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref, void ** old)
 
 // Create pointed pointer from CELL [POINTER].
 {
@@ -2732,6 +2794,12 @@ void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref)
 	result = (void **) CoTaskMemAlloc (sizeof (void *));
 	* result = (void *)item (eif_access (eif_object));
 	eif_wean (eif_object);
-	return result;
+	if (old != NULL)
+	{
+		*old = *result;
+		return NULL;
+	}
+	else
+		return result;
 };
 //-----------------------------------------------------------------------------------

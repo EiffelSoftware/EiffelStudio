@@ -22,7 +22,8 @@ inherit
 
 	KMP_MATCHER
 		rename
-			search_for_pattern as kmp_search
+			search_for_pattern as kmp_search,
+			make as kmp_make
 		redefine
 			found_at,
 			set_pattern
@@ -31,7 +32,7 @@ inherit
 		end
 
 creation
-	make
+	make, make_empty
 
 feature -- Initialization
 

@@ -461,12 +461,12 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- a_pointer =  (`a_c_type') eif_field (eif_access (eif_object), "item", EIF_POINTER);
+			-- a_pointer =  (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 
 			Result.append (A_pointer)
 			Result.append (Space_equal_space)
 			Result.append (Open_parenthesis)
-			Result.append (a_c_type)
+			Result.append (Eif_pointer)
 			Result.append (Close_parenthesis)
 			Result.append (Space)
 			Result.append (Eif_field)

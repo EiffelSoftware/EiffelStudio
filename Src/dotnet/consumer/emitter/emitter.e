@@ -16,6 +16,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	CACHE_PATH
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -29,11 +34,14 @@ feature -- Initialization
 							Help_spelled_switch, No_logo_switch, List_assemblies_switch,
 							List_assemblies_short, Init_switch, No_output_switch,
 							No_output_short, Eac_switch, Eac_short, Remove_switch,
-							Remove_short, Nice_switch>>)
+							Remove_short, Nice_switch, Force_switch, Force_short, No_references_switch>>)
 			parse
+			
 			if not successful then
 				process_error (error_message)
 			else
+				create consumed_assemblies.make
+				consumed_assemblies.compare_objects
 				start
 			end
 		end
@@ -83,6 +91,15 @@ feature -- Access
 			-- Shortcut equivaleent of `Eac_switch'
 
 	Nice_switch: STRING is "nice"
+			
+	Force_switch: STRING is "force"
+			-- Force GAC dependancies from local assembliesto be consumed into the local destination
+			
+	Force_short: STRING is "f"
+			-- Shortcut force GAC dependancies from local assembliesto be consumed into the local destination
+			
+	No_references_switch: STRING is "noref"
+			-- Stop the emitter from generating a local assembly's references?
 
 feature -- Status report
 
@@ -106,7 +123,13 @@ feature -- Status report
 	
 	remove: BOOLEAN
 			-- Should assembly be removed from EAC?
-
+			
+	force_local_generation: BOOLEAN
+			-- Should a local assembly's GAC dependancies be forced into the EAC?
+			
+	no_dependancies: BOOLEAN
+			-- Should no dependancies be generated?
+			
 feature {NONE} -- Implementation
 
 	start is
@@ -161,7 +184,7 @@ feature {NONE} -- Implementation
 				display_error
 			else
 				create cr
-				ass := feature {ASSEMBLY}.load_from (target_path.to_cil)
+				ass := load_assembly (target_path)
 				if not cr.is_initialized then
 					set_error (Eac_not_initialized, Void)
 				elseif ass = Void then
@@ -175,7 +198,7 @@ feature {NONE} -- Implementation
 					elseif remove then
 						remove_from_eac (ass)
 					else
-						assembly_consumer.consume (ass)
+						consume_into_path (ass)
 					end
 				else
 					process_error (error_message)
@@ -208,12 +231,18 @@ feature {NONE} -- Implementation
 				remove := True
 			elseif switch.is_equal (Nice_switch) then
 				has_indented_output.set_item (True)
+			elseif switch.is_equal (Force_switch) or switch.is_equal (Force_short) then
+				force_local_generation := True
+			elseif switch.is_equal (No_references_switch) then
+				no_dependancies := True
 			end
 		end
 
 	process_non_switch (non_switch_value: STRING) is
+		local
+			assembly: ASSEMBLY
 		do
-			if (create {RAW_FILE}.make (non_switch_value)).exists then
+			if load_assembly (non_switch_value) /= Void then
 				target_path := non_switch_value
 			else
 				set_error (Invalid_target_path, non_switch_value)
@@ -229,6 +258,8 @@ feature {NONE} -- Implementation
 				set_error (No_destination_if_put_in_eac, Void)
 			elseif not (list_assemblies or init or usage_display) and destination_path = Void then
 				destination_path := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			elseif put_in_eac and force_local_generation then
+				set_error (Cannot_force_local_and_eac, Void)
 			end
 		end
 
@@ -246,7 +277,7 @@ feature {NONE} -- Implementation
 		do
 			io.put_string ("Usage: ")
 			io.put_string (System_name)
-			io.put_string (" <assembly>.dll|.exe [/d:destination | /a | /r] [/n] [/nologo] [/nice]%N")
+			io.put_string (" <assembly> [/d:destination | /a | /r] [/n] [/nologo] [/nice]%N")
 			io.put_string ("       " + System_name)
 			io.put_string (" /l [/nologo]%N")
 			io.put_string ("       " + System_name)
@@ -260,8 +291,13 @@ feature {NONE} -- Implementation
 			io.put_string ("/init%N   Initialize Eiffel Assembly Cache (can only be run once).%N%N")
 			io.put_string ("/list%N   List assemblies in EAC. Short form is '/l'.%N%N")
 			io.put_string ("/nice%N   XML output is indented.%N%N")
+			io.put_string ("/force%N   Consume a local assembly's GAC dependancies into same location (exclusive with /add). Short form '/f'.%N%N")
+			io.put_string ("/noref%N   Do not generated assembly dependancies (exclusive with /add).%N%N")
+			io.put_string ("/nice%N   XML output is indented.%N%N")
 			io.put_string (" - Arguments -%N%N")
-			io.put_string ("<assembly>%N   Name of assembly containing types to generate XML for.%N%N")
+			io.put_string ("<assembly>%N   Name of assembly containing types to generate XML for. <assembly> can%N")
+			io.put_string ("   be either a path to a local assembly or an assembly's fully quantified name.%N")
+			io.put_string ("   e.g. - %"System.Xml, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089%".%N%N")
 		end
 	
 	display_status (s: STRING) is
@@ -296,6 +332,62 @@ feature {NONE} -- Implementation
 				writer.add_assembly (ass.get_name)
 			end
 		end
+		
+	consume_into_path (ass: ASSEMBLY) is
+			-- Consume 'ass' and place in the destination path specified in the command line
+		require
+			non_void_assembly: ass /= Void
+			non_void_destination: destination_path /= Void
+			non_void_consumed_assemblies: consumed_assemblies /= Void
+		local
+			output_destination_path: STRING
+			references: NATIVE_ARRAY [ASSEMBLY_NAME]
+			n: INTEGER
+			name: ASSEMBLY_NAME
+			assembly: ASSEMBLY
+		do
+			output_destination_path := destination_path.clone (destination_path)
+			if output_destination_path.item (output_destination_path.count) /= '\' then
+				output_destination_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+			end
+			
+			output_destination_path.append (relative_assembly_path (ass.get_name))
+			
+			-- only consume the assembly if it has not already been consumed
+			if not (create {DIRECTORY}.make (output_destination_path)).exists then
+				assembly_consumer.set_destination_path (output_destination_path)				
+				assembly_consumer.consume (ass)
+				consumed_assemblies.extend (create {STRING}.make_from_cil (ass.get_full_name))
+				
+				if not no_dependancies then
+					references := ass.get_referenced_assemblies			
+					if references /= Void then
+						from 
+							n := references.lower
+						until
+							n > references.upper
+						loop
+							name := references.item (n)
+							-- do not consume mscore
+							if not name.get_name.equals (("mscorlib").to_cil) then
+								assembly := feature {ASSEMBLY}.load_assembly_name (name)
+								if assembly /= Void then
+									if not consumed_assemblies.has (create {STRING}.make_from_cil (assembly.get_full_name)) then
+										if assembly.get_global_assembly_cache and not force_local_generation then
+											consume_in_eac (assembly)
+										else
+											consume_into_path (assembly)
+										end
+									end
+								end
+							end
+							n := n + 1
+						end	
+					end
+				end
+			end
+		end
+		
 	
 	remove_from_eac (ass: ASSEMBLY) is
 			-- Remove `ass' from EAC
@@ -352,6 +444,34 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	load_assembly (s: STRING): ASSEMBLY is
+			-- load an assembly either from the GAC or a local path
+		require
+			non_void_s: s /= Void
+			non_empty_s: not s.is_empty
+		local
+			is_local: BOOLEAN
+			retried: BOOLEAN
+		do
+			if not retried then
+				if not is_local then
+					Result := feature {ASSEMBLY}.load_string (s.to_cil)
+				else
+					Result := feature {ASSEMBLY}.load_from (s.to_cil)
+				end				
+			end
+		rescue
+			if not is_local then
+				is_local := true
+			else
+				retried := true				
+			end
+			
+			retry
+		end
+		
+		
 	dummy: CACHE_REFLECTION
+	consumed_assemblies: LINKED_LIST [STRING]
 	
 end -- class EMITTER

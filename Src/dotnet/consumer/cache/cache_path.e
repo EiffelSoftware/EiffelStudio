@@ -21,20 +21,30 @@ feature {CACHE_READER} -- Access
 			-- Always return a value even if `name' in not in EAC
 		require
 			non_void_assembly: name /= Void
-			valid_assembly: name.get_public_key_token /= Void
+			--valid_assembly: name.get_public_key_token /= Void
 		local
 			key: STRING
 		do
+			if name.get_public_key_token /= Void then
+				key := encoded_key (name.get_public_key_token)				
+				create Result.make (name.get_name.get_length + name.get_version.to_string.get_length + name.get_culture_info.get_name.get_length + key.count + 4)
+			else
+				create Result.make (name.get_name.get_length + name.get_version.to_string.get_length + name.get_culture_info.get_name.get_length + 4)
+			end
 			--| FIXME IEK Refactor code so that both assembly_path functions call the same abstracted function.
-			key := encoded_key (name.get_public_key_token)
-			create Result.make (name.get_name.get_length + name.get_version.to_string.get_length + name.get_culture_info.get_name.get_length + key.count + 4)
+	
 			Result.append (create {STRING}.make_from_cil (name.get_name))
 			Result.append ("-")
 			Result.append (create {STRING}.make_from_cil (name.get_version.to_string.replace_character ('.', '_')))
 			Result.append ("-")
 			Result.append (create {STRING}.make_from_cil (name.get_culture_info.get_name))
-			Result.append ("-")
-			Result.append (key)
+			
+			-- local unsigned assemblies will not have this attribute, and so we must test to see if it is null or not
+			if name.get_public_key_token /= Void then
+		
+				Result.append ("-")
+				Result.append (key)
+			end
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 		ensure
 			non_void_path: Result /= Void

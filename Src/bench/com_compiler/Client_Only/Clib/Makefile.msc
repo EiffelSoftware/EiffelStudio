@@ -3,7 +3,7 @@
 MV = copy
 CC = cl
 OUTPUT_CMD = -Fo
-CFLAGS = -W0 -Zi -Ox -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include 
+CFLAGS = -W0 -Ox -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include 
 
 OBJ = ecom_eiffel_compiler_ceiffelcompiler.obj \
 ecom_eiffel_compiler_ceiffelcompletioninfo.obj \

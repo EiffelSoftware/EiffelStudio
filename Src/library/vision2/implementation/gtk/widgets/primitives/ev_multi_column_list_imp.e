@@ -44,10 +44,6 @@ inherit
 			count,
 			insert_i_th,
 			remove_i_th,
-			reorder_child,
-			add_to_container,
-			destroy,
-			list_widget,
 			interface,
 			wipe_out,
 			append,
@@ -1170,7 +1166,6 @@ feature {NONE} -- Implementation
 			p: POINTER
 			dummy: INTEGER
 		do
-			-- add_to_container (v, v_imp)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 
@@ -1222,30 +1217,6 @@ feature {NONE} -- Implementation
 			child_array.go_i_th (a_position)
 			child_array.remove
 			update_pnd_status
-		end
-		
-	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW; v_imp: EV_ITEM_IMP) is
-			-- Add `v' to the list.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-		do
-			check
-				do_not_call: False
-			end
 		end
 
 	row_height: INTEGER is

@@ -37,21 +37,15 @@ inherit
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
-		undefine
-			destroy
 		redefine
 			interface,
 			insert_i_th,
 			remove_i_th,
-			reorder_child,
 			i_th,
-			add_to_container,
-			list_widget,
 			count,
 			wipe_out,
 			append,
-			initialize,
-			visual_widget
+			initialize
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
@@ -729,28 +723,6 @@ feature {NONE} -- Implementation
 			child_array.remove
 
 			update_pnd_status
-		end
-		
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
-			-- Add `v' to tree.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-		do
-			check  do_not_call: False end
 		end
 
 feature {EV_TREE_NODE_IMP} -- Implementation

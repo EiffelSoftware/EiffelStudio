@@ -24,12 +24,8 @@ inherit
 		end
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
-		undefine
-			destroy
 		redefine
 			interface,
-			list_widget,
-			add_to_container,
 			remove_i_th,
 			wipe_out,
 			initialize
@@ -146,13 +142,13 @@ feature -- Status setting
 	select_item (an_index: INTEGER) is
 			-- Select item at one based index, `an_index'.
 		do
-			check do_not_call: False  end
+			check do_not_call: False end
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Deselect item at one based index, `an_index'.
 		do
-			check do_not_call: False  end
+			check do_not_call: False end
 		end
 
 	clear_selection is
@@ -187,6 +183,21 @@ feature -- Removal
 		end
 		
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
+
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
+		local
+			item_imp: EV_LIST_ITEM_IMP
+		do
+			item_imp ?= v.implementation
+			item_imp.set_item_parent_imp (Current)
+			
+			child_array.go_i_th (i)
+			child_array.put_left (v)	
+
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, item_imp.c_object)
+			gtk_reorder_child (list_widget, item_imp.c_object, i - 1)
+		end
 
 	previous_selected_item_imp: EV_LIST_ITEM_IMP
 			-- Item that was selected previously.
@@ -284,17 +295,19 @@ feature {NONE} -- Implementation
 						item_imp ?= i_th (index - 1).implementation
 					end
 					item_imp.set_focus
-					Precursor (an_index)
 				else
-					Precursor (an_index)
 					set_focus
 				end
 				list_has_been_clicked := False
-			else
-				Precursor (an_index)
 			end
+			item_imp ?= child_array.i_th (an_index).implementation
+			item_imp.set_item_parent_imp (Void)
+			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_imp.c_object)
+				-- Remove the row from the `ev_children'
+			child_array.go_i_th (child_array.index_of (item_imp.interface, 1))
+			child_array.remove	
 		end
-		
+
 	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to end of list.
 			-- (from EV_ITEM_LIST_IMP)

@@ -22,14 +22,10 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
 		undefine
-			item_by_data,
-			destroy
+			item_by_data
 		redefine
 			interface,
-			add_to_container,
-			list_widget,
-			initialize,
-			visual_widget
+			initialize
 		end
 
 create
@@ -112,12 +108,41 @@ feature -- Implementation
 			end
 		end
 
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
+		local
+			v_imp: EV_ITEM_IMP
+		do
+			v_imp ?= v.implementation
+			v_imp.set_item_parent_imp (Current)
+			add_to_container (v, v_imp)
+			gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
+			add_radio_button (v)
+			child_array.go_i_th (i)
+			child_array.put_left (v)
+		end
+
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
+		local
+			imp: EV_ITEM_IMP
+			item_ptr: POINTER
+		do
+			child_array.go_i_th (i)
+			imp ?= child_array.i_th (i).implementation
+			item_ptr := imp.c_object
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_ptr)
+			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
+			child_array.remove
+			imp.set_item_parent_imp (Void)
+		end
+
 	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to tool bar, set to non-expandable.
 		local
 			old_expand, fill, pad, pack_type: INTEGER
 		do
-			Precursor (v, v_imp)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			feature {EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
 				list_widget,
 				v_imp.c_object,

@@ -16,18 +16,26 @@ feature {NONE} -- Execute
 			argument: STRING;
 		do
 			command_arguments := command_line_io.command_arguments;
-			if command_arguments.argument_count > 1 then
+			if command_arguments.argument_count >= 4 then
 				!! subquery.make (command_arguments.item (2), command_arguments.item (3), command_arguments.item (4));
 			else
 				extra_help;
-				io.putstring ("--> Expression: ");
-				command_line_io.get_name;
-				command_arguments := command_line_io.command_arguments;
+				from
+					io.putstring ("--> Subquery: ");
+					command_line_io.get_name;
+					command_arguments := command_line_io.command_arguments;
+				until
+					command_arguments.argument_count = 3
+				loop
+					io.putstring ("--> Subquery: ");
+					command_line_io.get_name;
+					command_arguments := command_line_io.command_arguments;
+				end;
 				!! subquery.make (command_arguments.item (1), command_arguments.item (2), command_arguments.item (3));
 			end;
 			execute;
 		end;
-		
+
 	execute is
 		local
 			sq_op: EWB_SUBQUERY_OPERATOR
@@ -82,7 +90,7 @@ feature {NONE} -- Implementation
 	extra_help is
 			-- Prints some extra help on this command.
 		do
-			io.putstring ("An expression has the following form: ");
+			io.putstring ("A subquery has the following form: ");
 			io.putstring ("attribute operator value%N%N");
 			io.putstring ("attribute is one of: featurename, calls, total, self, descendents, percentage%N");
 			io.putstring ("operator is one of: < > <= >= = /= in%N");

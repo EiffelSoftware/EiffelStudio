@@ -142,10 +142,6 @@ feature -- Byte code generation
 			feat: FEATURE_B
 			cl_type: CL_TYPE_I
 		do
-			debug
-				info.trace
-			end
-
 			target_type := Context.real_type (target.type)
 			generate_melted_debugger_hook (ba)
 			if target_type.is_separate then

@@ -12,11 +12,9 @@ deferred class
 	INTERACTIVE_LIST [G]
 
 inherit
-	LINKED_LIST [G]
+	ARRAYED_LIST [G]
 		redefine
 			default_create,
-			new_cell,
-			cleanup_after_remove,
 			merge_left,
 			merge_right,
 			wipe_out,
@@ -34,13 +32,14 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Initialize linked list.
 		do
-			make
+			make (4)
 		end
 
 feature -- Miscellaneous
 
 	on_item_added (an_item: G) is
 			-- `an_item' has just been added.
+		obsolete "Use `on_item_added_at_instead'."
 		require
 			an_item_not_void: an_item /= Void
 		do
@@ -48,9 +47,28 @@ feature -- Miscellaneous
 
 	on_item_removed (an_item: G) is
 			-- `an_item' has been removed.
+		obsolete "Use `on_item_remove_at_instead'."
 		require
 			an_item_not_void: an_item /= Void
 		do
+		end
+		
+	on_item_added_at (an_item: G; item_index: INTEGER) is
+			-- `an_item' has just been added at index `item_index'.
+		require
+			an_item_not_void: an_item /= Void
+			item_index_valid: (1 <= item_index) and (item_index <= count)
+		do
+			on_item_added (an_item)
+		end
+		
+	on_item_removed_at (an_item: G; item_index: INTEGER) is
+			-- `an_item' has just been removed from index `item_index'.
+		require
+			an_item_not_void: an_item /= Void
+			item_index_valid: (1 <= item_index) and (item_index <= count + 1)
+		do
+			on_item_removed (an_item)
 		end
 
 feature -- Element Change
@@ -60,10 +78,10 @@ feature -- Element Change
 			-- Do not move cursor.
 		do
 			in_operation := True
-			Precursor {LINKED_LIST} (v)
+			Precursor {ARRAYED_LIST} (v)
 			in_operation := False
 
-			added_item (v)
+			added_item (v, 1)
 		end
 
 	extend (v: like item) is
@@ -71,10 +89,9 @@ feature -- Element Change
 			-- Do not move cursor.
 		do
 			in_operation := True
-			Precursor {LINKED_LIST} (v)
+			Precursor {ARRAYED_LIST} (v)
 			in_operation := False
-
-			added_item (v)
+			added_item (v, count)
 		end
 
 	put_left (v: like item) is
@@ -82,10 +99,10 @@ feature -- Element Change
 			-- Do not move cursor.
 		do
 			in_operation := True
-			Precursor {LINKED_LIST} (v)
+			Precursor {ARRAYED_LIST} (v)
 			in_operation := False
 
-			added_item (v)
+			added_item (v, index - 1)
 		end
 
 	put_right (v: like item) is
@@ -93,25 +110,26 @@ feature -- Element Change
 			-- Do not move cursor.
 		do
 			in_operation := True
-			Precursor {LINKED_LIST} (v)
+			Precursor {ARRAYED_LIST} (v)
 			in_operation := False
 
-			added_item (v)
+			added_item (v, index + 1)
 		end
 
 	replace (v: like item) is
 			-- Replace current item by `v'.
 		local
-			active_item: like item
+			original_index: INTEGER
+			original_item: G
 		do
-			active_item := active.item
-
+			original_index := index
+			original_item := item
 			in_operation := True
-			Precursor {LINKED_LIST} (v)
+			Precursor {ARRAYED_LIST} (v)
 			in_operation := False
 
-			removed_item (active_item)
-			added_item (v)
+			removed_item (original_item, original_index)
+			added_item (v, original_index)
 		end
 
 	remove is
@@ -119,15 +137,17 @@ feature -- Element Change
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
 		local
-			active_item: like item
+			original_index: INTEGER
+			original_item: G
 		do
-			active_item := active.item
+			original_index := index
+			original_item := item
 
 			in_operation := True
-			Precursor {LINKED_LIST}
+			Precursor {ARRAYED_LIST}
 			in_operation := False
 
-			removed_item (active_item)
+			removed_item (original_item, original_index)
 		end
 
 	remove_right is
@@ -136,39 +156,62 @@ feature -- Element Change
 		local
 			item_removed: like item
 		do
-			if before then
-				item_removed := first_element.item
-			else
-				item_removed := active.right.item
-			end
-
+			item_removed := i_th (index + 1)
 			in_operation := True
-			Precursor {LINKED_LIST}
+			Precursor {ARRAYED_LIST}
 			in_operation := False
 
-			removed_item (item_removed)
+			removed_item (item_removed, index + 1)
 		end
 
 	merge_left (other: like Current) is
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'
+		local
+			original_index: INTEGER
+			new_item_count: INTEGER
+			original_other_count: INTEGER
 		do
-			in_operation := True
-			Precursor {LINKED_LIST} (other)
-			in_operation := False
-
-			add_all (other)
+			original_index := index
+			original_other_count := other.count
+			index := index - 1
+			merge_right (other)
+			index := original_index + original_other_count
 		end
 
 	merge_right (other: like Current) is
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'
+		local
+			original_index: INTEGER
+			new_item_count: INTEGER
 		do
+			original_index := index
+			new_item_count := other.count
 			in_operation := True
-			Precursor {LINKED_LIST} (other)
+			Precursor {ARRAYED_LIST} (other)
 			in_operation := False
+			
+			update_for_added (original_index + 1)
+			go_i_th (original_index)
 
-			add_all (other)
+		end
+		
+	update_for_added (start_index: INTEGER) is
+			-- Call `added_item' for all items from index `start_index' to `count'
+		local
+			a_cursor: CURSOR
+		do
+			a_cursor := cursor
+			from
+				go_i_th (start_index)
+			until
+				index > count
+			loop
+				added_item (item, index)
+				forth
+			end
+			go_to (cursor)
 		end
 
 feature -- Removal
@@ -179,98 +222,59 @@ feature -- Removal
 			l: like Current
 		do
 			l := standard_clone (Current)
-
-			Precursor {LINKED_LIST}
-
+			Precursor {ARRAYED_LIST}
 			from
 				l.start
 			until
 				l.after
 			loop
-				consistency_count := consistency_count - 1
 				on_item_removed (l.item)
 				l.forth
 			end
 		end
 
-feature {LINKED_LIST} -- Implementation
-
-	new_cell (v: like item): like first_element is
-			-- Create new cell with `v'.
-		do
-			consistency_count := consistency_count + 1
-			create Result
-			Result.put (v)
-		end
-
-	cleanup_after_remove (v: like first_element) is
-			-- Clean-up a just removed cell.
-		do
-			consistency_count := consistency_count - 1
-		end
-
 feature {NONE} -- Implementation
 
-	add_all (other: like Current) is
+	add_all (other: like Current; start_index: INTEGER) is
 			-- Call `on_item_added' for all elements in `other'.
 		local
 			cur: CURSOR
+			current_index: INTEGER
 		do
+			current_index := start_index
 			cur := other.cursor
 			from
 				other.start
 			until
 				other.after
 			loop
-				consistency_count := consistency_count + 1
-				added_item (other.item)
+				added_item (other.item, current_index)
 				other.forth
+				current_index := current_index + 1
 			end
 			other.go_to (cur)
 		end
 
-	remove_all (other: like Current) is
-			-- Call `on_item_removed' for all elements in `other'.
-		do
-			from
-				other.start
-			until
-				other.after
-			loop
-				consistency_count := consistency_count - 1
-				removed_item (other.item)
-				other.forth
-			end
-		end
-
 feature {NONE} -- Implementation
 
-	added_item (an_item: G) is
+	in_operation: BOOLEAN
+			-- Are we executing an operation from ARRAYED_LIST?
+
+	added_item (an_item: G; item_index: INTEGER) is
 			-- `an_item' is has been added.
 		do
 			if not in_operation then
-				on_item_added (an_item)
+				on_item_added_at (an_item, item_index)
 			end
 		end
 
-	removed_item (an_item: G) is
+	removed_item (an_item: G; item_index: INTEGER) is
 			-- `an_item' has been removed.
 		do
 			if not in_operation then
-				on_item_removed (an_item)
+				on_item_removed_at (an_item, item_index)
 			end
 		end
-
-	in_operation: BOOLEAN
-			-- Are we executing an operation from LINKED_LIST?
-
-feature {NONE} -- Contract support
-
-	consistency_count: INTEGER
-			-- Number of items in the list.
-
-invariant
-	consistency_count_equal_to_count: consistency_count = count
 
 indexing
 

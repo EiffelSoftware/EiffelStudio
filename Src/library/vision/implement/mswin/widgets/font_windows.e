@@ -342,7 +342,7 @@ feature -- Status report
 
 	vertical_resolution: INTEGER
 			-- Vertical resolution of screen for which the font is designed
-	
+
 	weight: STRING is
 			-- Weight of font (Bold, Medium...)
 		do

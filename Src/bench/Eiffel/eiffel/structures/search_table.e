@@ -307,16 +307,17 @@ feature -- Iteration
 		local
 			stop: BOOLEAN;
 			local_content: SPECIAL [H]
-			pos_for_iter: INTEGER
+			pos_for_iter, table_size: INTEGER
 		do
 			from
 				local_content := content
 				pos_for_iter := iteration_position
+				table_size := capacity - 1
 			until
 				stop
 			loop
 				pos_for_iter := pos_for_iter + 1;
-				stop := after or else valid_key (local_content.item (pos_for_iter));
+				stop := pos_for_iter > table_size or else valid_key (local_content.item (pos_for_iter));
 			end
 			iteration_position := pos_for_iter
 		end;

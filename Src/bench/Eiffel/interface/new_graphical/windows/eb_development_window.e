@@ -2642,14 +2642,14 @@ feature {NONE} -- Implementation
 			begin_index, offset: INTEGER
 			tmp_text: STRING
 		do
-			if not feat_as.is_external and feat_as.ast /= Void then
+			if not feat_as.is_il_external then
 				begin_index := feat_as.ast.start_position
 				if platform_constants.is_windows then
 					tmp_text := displayed_class.text.substring (1, begin_index)
 					offset := tmp_text.occurrences('%R')
 				end
 				editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
-			elseif feat_as.is_external then
+			else
 					-- .NET formatted feature.
 				begin_index := feature_positions.item (feat_as)
 				if platform_constants.is_windows then

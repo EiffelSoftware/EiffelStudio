@@ -410,18 +410,8 @@ feature {NONE} -- Implementation
 					end
 
 					tree_item.set_text (feature_name (ef))
+					set_tree_item_pixmap (tree_item, ef)
 					
-					if ef.is_deferred then
-						tree_item.set_pixmap (Pixmaps.Icon_deferred_feature)
-					elseif ef.is_once or ef.is_constant then
-						tree_item.set_pixmap (Pixmaps.Icon_once_objects)
-					elseif ef.is_attribute then
-						tree_item.set_pixmap (Pixmaps.Icon_attributes)
-					elseif ef.is_external then
-						tree_item.set_pixmap (Pixmaps.Icon_external_feature)
-					else
-						tree_item.set_pixmap (Pixmaps.Icon_feature @ 1)
-					end
 					create st.make (ef)
 					tree_item.set_pebble (st)
 					tree_item.set_accept_cursor (st.stone_cursor)
@@ -488,17 +478,8 @@ feature {NONE} -- Implementation
 					tree_item.set_text (feature_name (ef))
 				end
 				
-				if ef.is_deferred then
-					tree_item.set_pixmap (Pixmaps.Icon_deferred_feature)
-				elseif ef.is_once or ef.is_constant then
-					tree_item.set_pixmap (Pixmaps.Icon_once_objects)
-				elseif ef.is_attribute then
-					tree_item.set_pixmap (Pixmaps.Icon_attributes)
-				elseif ef.is_external then
-					tree_item.set_pixmap (Pixmaps.Icon_external_feature)
-				else
-					tree_item.set_pixmap (Pixmaps.Icon_feature @ 1)
-				end
+				set_tree_item_pixmap (tree_item, ef)
+				
 				create st.make (ef)
 				tree_item.set_pebble (st)
 				tree_item.set_accept_cursor (st.stone_cursor)
@@ -506,6 +487,59 @@ feature {NONE} -- Implementation
 				Result.extend (tree_item)
 				fl.forth
 			end			
+		end
+		
+	set_tree_item_pixmap (a_item: EV_TREE_ITEM; a_feature: E_FEATURE) is
+			-- Sets `a_item' pixmap base on `a_feature'
+		require
+			a_item_not_void: a_item /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_pixmap: EV_PIXMAP
+		do
+			if a_feature.is_deferred then
+				if a_feature.is_obsolete then
+					l_pixmap := Pixmaps.Icon_deferred_obsolete_feature
+				else
+					l_pixmap := Pixmaps.Icon_deferred_feature
+				end
+			elseif a_feature.is_once or a_feature.is_constant then
+				if a_feature.is_obsolete then
+					l_pixmap := Pixmaps.Icon_once_obsolete_objects
+				elseif a_feature.is_frozen then
+					l_pixmap := Pixmaps.Icon_once_frozen_objects
+				else
+					l_pixmap := Pixmaps.Icon_once_objects
+				end
+			elseif a_feature.is_attribute then
+				if a_feature.is_obsolete then
+					l_pixmap := Pixmaps.Icon_obsolete_attribute
+				elseif a_feature.is_frozen then
+					l_pixmap := Pixmaps.Icon_frozen_attribute
+				else
+					l_pixmap := Pixmaps.Icon_attributes
+				end
+			elseif a_feature.is_external then
+				if a_feature.is_obsolete then
+					l_pixmap := Pixmaps.Icon_external_obsolete_feature
+				elseif a_feature.is_frozen then
+					l_pixmap := Pixmaps.Icon_external_frozen_feature
+				else
+					l_pixmap := Pixmaps.Icon_external_feature
+				end
+			else
+				if a_feature.is_obsolete then
+					l_pixmap := Pixmaps.Icon_obsolete_feature
+				elseif a_feature.is_frozen then
+					l_pixmap := Pixmaps.Icon_frozen_feature
+				else
+					l_pixmap := Pixmaps.Icon_feature @ 1
+				end
+			end
+			check
+				l_pixmap_not_void: l_pixmap /= Void
+			end
+			a_item.set_pixmap (l_pixmap)
 		end
 
 end -- class EB_FEATURES_TREE

@@ -648,8 +648,8 @@ External:					TE_EXTERNAL External_language External_name
 								{$$ = create_node2(EXTERNAL_AS,$2,$3);}
 	;
 
-External_language:			Non_empty_string
-								{$$ = create_node1(EXTERNAL_LANG_AS, $1);}
+External_language:			{SET_POS(start_position);} Non_empty_string
+								{$$ = create_node1(EXTERNAL_LANG_AS, $2);}
 	;
 
 External_name:				/* empty */

@@ -370,8 +370,8 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		do
 			left.simple_format (ctxt)
-			ctxt.prepare_for_infix (operator_name, right)
-			ctxt.put_infix_feature
+			ctxt.case_prepare_for_infix (operator_name, right)
+			ctxt.case_put_infix_feature
 		end
 
 feature {BINARY_AS}	-- Replication

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	WEL_ANY
+		redefine
+			copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -28,6 +31,28 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Basic operations
+
+	copy (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		local
+			pointer, a_default_pointer: POINTER
+		do
+			item := item.memory_calloc (1, structure_size)
+			if item = a_default_pointer then
+					-- Memory allocation problem
+				(create {EXCEPTIONS}).raise ("No more memory")
+			end
+			memory_copy (other.item, structure_size)
+			shared := False
+		end
+		
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := item.memory_compare (other.item, structure_size)
+		end
 
 	memory_copy (source_pointer: POINTER; length: INTEGER) is
 			-- Copy `length' bytes from `source_pointer' to `item'.

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	gslist: POINTER is
+	radio_group: POINTER is
 		do
 			Result := C.gtk_radio_button_group (c_object)
 		end
@@ -70,6 +70,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/25 18:51:35  king
+--| gslist->radio_group
+--|
 --| Revision 1.18  2000/02/29 02:21:41  brendel
 --| Revised.
 --|

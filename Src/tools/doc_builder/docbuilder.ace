@@ -64,6 +64,8 @@ cluster
 
 	project (root_cluster):		"$\project"
 
+	document (project):		"$\document"
+
 	managers (project):		"$\managers"
 	
 	filters (project):		"$\filter"

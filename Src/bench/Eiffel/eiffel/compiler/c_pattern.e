@@ -21,7 +21,7 @@ inherit
 creation
 
 	make
-	
+
 feature 
 
 	result_type: TYPE_C;
@@ -72,8 +72,6 @@ feature
 			end;
 		end;
 
--- Hash code
-
 	hash_code: INTEGER is
 			-- Hash code for pattern
 		local
@@ -101,7 +99,7 @@ feature
 			end;
 		end;
 
--- Pattern generation
+feature -- Pattern generation
 
 	generate_hooks (file: INDENT_FILE) is
 			-- Generate garbage collector hooks
@@ -178,7 +176,7 @@ feature
 		ensure
 			Result > 0
 		end;
-		
+
 	generate_argument_names (file: INDENT_FILE) is
 			-- Generate argument name list
 		local
@@ -223,7 +221,6 @@ feature
 				file.new_line;
 				i := i + 1;
 			end;
-			
 		end;
 
 	generate_arguments_in_call (file: INDENT_FILE) is
@@ -257,15 +254,46 @@ feature
 		do
 				-- Generate pattern from C code to interpreter
 			generate_toi_compound (id, file);
-				
+
 				-- Compound pattern from interpreter to C code
 			generate_toc_compound (id, file);
+		end;
 
+	generate_separate_pattern (id: INTEGER; file: INDENT_FILE) is
+		do
+			file.putstring ("static void sepcall");
+			file.putint (id);
+			file.putstring ("%
+				%(ptr, is_extern)%N%
+				%fnptr ptr;%N%
+				%int is_extern;%N%
+				%{%N");
+			file.putstring ("%Tchar *Current;%N");
+			if not result_type.is_void then
+				file.putchar ('%T');
+				result_type.generate (file);
+				file.putstring ("result;%N%Tstruct item *it;%N");
+			end;
+			generate_argument_declaration (1, file);
+			generate_toc_pop (file);
+			file.putstring ("%Tif (is_extern)%N%T%T");
+			generate_routine_call (True, file);
+			file.putstring ("%Telse%N%T%T");
+			generate_routine_call (False, file);
+			if not result_type.is_void then
+				file.putstring ("%Tit = iget();%N");
+				file.putstring ("%Tit->type = ");
+				result_type.generate_sk_value (file);
+				file.putstring (";%N%Tit->");
+				result_type.generate_union (file);
+				file.putstring (" = result;%N");
+			end;
+			file.putstring ("}%N%N");
 		end;
 
 	generate_toc_compound (id: INTEGER; file: INDENT_FILE) is
 			-- Generate compound pattern from interpreter to C code
-		do	
+		do
 			file.putstring ("static void toc");
 			file.putint (id);
 			file.putstring ("%
@@ -431,7 +459,7 @@ feature
 			result_type.trace;
 			io.error.putstring ("|");
 		end;
-			
+
 invariant
 
 	result_type_exists: result_type /= Void

@@ -545,7 +545,6 @@ void ora_terminate_order (int no_des)
 int ora_next_row (int no_des)
 {
 	Cda_Def *dap = cda[no_des];
-	int col;
 	//ncol = describe_define (dap);
 
 //	for (;;)

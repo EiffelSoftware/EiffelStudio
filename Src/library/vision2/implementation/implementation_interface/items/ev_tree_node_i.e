@@ -15,7 +15,8 @@ inherit
 		export {NONE}
 			old_parent
 		redefine
-			interface
+			interface,
+			pixmap_equal_to
 		select
 			interface
 		end
@@ -93,6 +94,22 @@ feature -- Status setting
 		deferred
 		ensure
 			state_set: is_expanded = flag
+		end
+		
+feature {NONE} -- Contract support
+
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+			-- Is `a_pixmap' equal to `pixmap'?
+		local
+			scaled_pixmap: EV_PIXMAP
+		do
+			if parent_tree /= Void then
+				scaled_pixmap := clone (a_pixmap)
+				scaled_pixmap.stretch (parent_tree.pixmaps_width, parent_tree.pixmaps_height)
+			else
+				scaled_pixmap := a_pixmap
+			end
+			Result := scaled_pixmap.is_equal (pixmap)
 		end
 
 feature {EV_ANY_I} -- Implementation

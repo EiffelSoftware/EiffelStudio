@@ -78,15 +78,21 @@ feature -- Initialization
 			count := s.count
 		ensure
 			shared_implementation: shared_with (s)
-		end;
+		end
 
-	adapt (s: STRING): like Current is
-			-- Object of a type conforming to the type of `s',
-			-- initialized with attributes from `s'
+	make_from_external (c_string: POINTER) is
+			-- Initialize from contents of `c_string',
+			-- a string created by some external C function
+		require
+			c_string_exists: c_string /= default_pointer
+		local
+			length: INTEGER
 		do
-			!! Result.make (0);
-			Result.share (s)
-		end;
+			length := str_len (c_string);
+			make_area (length)
+			str_cpy ($area, c_string, length)
+			count := length
+		end
 
 	from_c (c_string: POINTER) is
 			-- Reset contents of string from contents of `c_string',
@@ -97,7 +103,9 @@ feature -- Initialization
 			length: INTEGER
 		do
 			length := str_len (c_string);
-			make_area (length);
+			if length >= capacity then
+				make_area (length)
+			end
 			str_cpy ($area, c_string, length);
 			count := length
 		end;
@@ -112,12 +120,22 @@ feature -- Initialization
 		local
 			length: INTEGER
 		do
-			length := end_pos - start_pos + 1;
-			make_area (length);
+			length := end_pos - start_pos + 1
+			if length >= capacity then
+				make_area (length)
+			end
 			str_take (c_string, $area, start_pos, end_pos);
 			count := length
 		ensure
 			valid_count: count = end_pos - start_pos + 1
+		end
+
+	adapt (s: STRING): like Current is
+			-- Object of a type conforming to the type of `s',
+			-- initialized with attributes from `s'
+		do
+			!! Result.make (0);
+			Result.share (s)
 		end
 
 feature -- Access

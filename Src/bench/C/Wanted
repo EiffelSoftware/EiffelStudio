@@ -9,6 +9,9 @@
 >DIRNAMLEN
 >EOFPIPE
 >F_OK
+>HAS_BCMP
+>HAS_BCOPY
+>HAS_BZERO
 >HAS_DUP2
 >HAS_FCNTL
 >HAS_FTIME
@@ -17,6 +20,7 @@
 >HAS_GETOPT
 >HAS_GETRUSAGE
 >HAS_GETTIMEOFDAY
+>HAS_INDEX
 >HAS_LSTAT
 >HAS_MKDIR
 >HAS_READDIR
@@ -26,6 +30,7 @@
 >HAS_SIGVEC
 >HAS_SIGVECTOR
 >HAS_SOCKET
+>HAS_STRDUP
 >HAS_STRERROR
 >HAS_SYS_ERRLIST
 >HAS_SYS_ERRNOLIST
@@ -95,6 +100,7 @@
 >strerror
 >timezone
 >va_dcl
+>void
 Id
 Log
 abortsig
@@ -128,6 +134,7 @@ d_gethid
 d_gethname
 d_getopt
 d_gettimeod
+d_index
 d_keepalive
 d_keepsig
 d_lstat
@@ -147,6 +154,7 @@ d_sigvectr
 d_socket
 d_strchr
 d_strctcpy
+d_strdup
 d_strerrm
 d_strerror
 d_sysernlst
@@ -217,5 +225,6 @@ startsh
 test
 timetype
 uidtype
+voidflags
 yacc
 yaccflags

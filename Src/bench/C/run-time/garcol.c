@@ -212,9 +212,9 @@ shared void st_wipe_out();			/* Remove unneeded chunk from stack */
 private int st_extend();			/* Extends size of stack */
 private int reset();				/* Reset stack to its initial state */
 
-extern struct mallinfo m_data;		/* Accounting info from malloc */
-extern struct mallinfo c_data;		/* Accounting info from malloc for C */
-extern struct mallinfo e_data;		/* Accounting info from malloc for Eiffel */
+extern struct emallinfo m_data;		/* Accounting info from malloc */
+extern struct emallinfo c_data;		/* Accounting info from malloc for C */
+extern struct emallinfo e_data;		/* Accounting info from malloc for Eiffel */
 extern struct ck_list cklst;		/* Head and tail of chunck list */
 
 extern int split_block();			/* Block spliting */

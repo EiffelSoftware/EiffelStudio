@@ -25,6 +25,8 @@
 #include <signal.h>
 #include <stdlib.h>
 
+#include "confmagic.h"
+
 #define OTHER(x)	\
 	((x) == readfd(d_data.d_cs) ? d_data.d_as : d_data.d_cs)
 

@@ -165,7 +165,7 @@ long value;
  * Memory usage.
  */
 
-private struct mallinfo mem_stats;
+private struct emallinfo mem_stats;
 
 public void mem_stat(type)
 long type;
@@ -177,15 +177,15 @@ long type;
 	 * suddenly be changed by a call to the GC)--RAM.
 	 */
 	
-	struct mallinfo *sm = meminfo(type);	/* Get structure by type */
+	struct emallinfo *sm = meminfo(type);	/* Get structure by type */
 
-	bcopy(sm, &mem_stats, sizeof(struct mallinfo));
+	bcopy(sm, &mem_stats, sizeof(struct emallinfo));
 }
 
 public long mem_info(field)
 long field;
 {
-	/* Extracts values from the mallinfo structure */
+	/* Extracts values from the emallinfo structure */
 
 	switch (field) {
 	case 0:

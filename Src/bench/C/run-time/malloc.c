@@ -66,7 +66,7 @@
 /* This structure records some general information about the memory, the number
  * of chunck, etc... These informations are available via the meminfo() routine.
  */
-shared struct mallinfo m_data = {
+shared struct emallinfo m_data = {
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -77,13 +77,13 @@ shared struct mallinfo m_data = {
  * enables us to pilot the garbage collector correctly or to call coalescing
  * over the memory only if it is has a chance to succeed.
  */
-shared struct mallinfo c_data = {		/* Informations on C memory */
+shared struct emallinfo c_data = {		/* Informations on C memory */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
 	0,		/* ml_over */
 };	
-shared struct mallinfo e_data = {		/* Informations on Eiffel memory */
+shared struct emallinfo e_data = {		/* Informations on Eiffel memory */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -1545,7 +1545,7 @@ int gc_flag;
 	return (char *) zone;		/* Pointer to new arena or 0 if failed */
 }
 
-public struct mallinfo *meminfo(type)
+public struct emallinfo *meminfo(type)
 int type;
 {
 	/* Return the pointer to the static data held in m_data.

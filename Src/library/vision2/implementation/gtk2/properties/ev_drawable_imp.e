@@ -407,31 +407,19 @@ feature -- Drawing operations
 			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- Angles are measured in radians.
-		local
-			corrected_start, corrected_aperture: REAL
-			pi_nb: INTEGER
 		do
 			if drawable /= default_pointer then
-				if a_height /= 0 then
-					pi_nb := ((a_start_angle + Pi / 2) / Pi).floor
-					corrected_start := a_start_angle - pi_nb * Pi
-					if (math.modulo (a_start_angle, Pi)) /= Pi/2 then
-						corrected_start := arc_tangent ((a_width * tangent (corrected_start))/a_height)
-					end
-					corrected_start := corrected_start + pi_nb * Pi
-					corrected_aperture := an_aperture + a_start_angle
-					pi_nb := ((corrected_aperture + Pi / 2) / Pi).floor
-					corrected_aperture := corrected_aperture - pi_nb * Pi
-					if (math.modulo (corrected_aperture, Pi)) /= Pi/2 then
-						corrected_aperture := arc_tangent ((a_width * tangent (corrected_aperture))/a_height)
-					end
-					corrected_aperture := corrected_aperture - corrected_start + pi_nb * Pi
-				end
-
-				feature {EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 0, x,
-					y, a_width,
-					a_height, (radians_to_gdk_angle * corrected_start).truncated_to_integer,
-					(radians_to_gdk_angle * corrected_aperture).truncated_to_integer)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_arc (
+					drawable,
+					gc,
+					0,
+					x,
+					y,
+					a_width,
+					a_height,
+					(a_start_angle * radians_to_gdk_angle).truncated_to_integer ,
+					(radians_to_gdk_angle * an_aperture).truncated_to_integer
+				)
 				flush
 			end
 		end
@@ -629,33 +617,22 @@ feature -- filling operations
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
-		local
-			corrected_start, corrected_aperture: REAL
-			pi_nb: INTEGER
 		do
 			if drawable /= default_pointer then
-				if height /= 0 then
-					pi_nb := ((a_start_angle + Pi / 2) / Pi).floor
-					corrected_start := a_start_angle - pi_nb * Pi
-					if (math.modulo (a_start_angle, Pi)) /= Pi/2 then
-						corrected_start := arc_tangent ((a_width * tangent (corrected_start))/a_height)
-					end
-					corrected_start := corrected_start + pi_nb * Pi
-					corrected_aperture := an_aperture + a_start_angle
-					pi_nb := ((corrected_aperture + Pi / 2) / Pi).floor
-					corrected_aperture := corrected_aperture - pi_nb * Pi
-					if (math.modulo (corrected_aperture, Pi)) /= Pi/2 then
-						corrected_aperture := arc_tangent ((a_width * tangent (corrected_aperture))/a_height)
-					end
-					corrected_aperture := corrected_aperture - corrected_start + pi_nb * Pi
-				end
 				if tile /= Void then
 					feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
 				end
-				feature {EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 1, x,
-					y, a_width,
-					a_height, (corrected_start * radians_to_gdk_angle).rounded,
-					(corrected_aperture * radians_to_gdk_angle).rounded)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_arc (
+					drawable,
+					gc,
+					1,
+					x,
+					y,
+					a_width,
+					a_height,
+					(a_start_angle * radians_to_gdk_angle).truncated_to_integer ,
+					(an_aperture * radians_to_gdk_angle).truncated_to_integer
+				)
 				feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_solid_enum)
 				flush
 			end

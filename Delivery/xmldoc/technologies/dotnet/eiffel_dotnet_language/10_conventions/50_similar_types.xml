@@ -23,11 +23,7 @@
 		<heading>
 			<size>3</size>The Case of Strings
 		</heading>
-		<paragraph>The example of these similar types which will almost certainly get in your face is the string types. You may remember that we looked briefly at the case of the string types in 
-			<link>
-				<url/>
-				<label>Naming Conventions and Name Handling</label>
-			</link>.
+		<paragraph>The example of these similar types which will almost certainly get in your face is the string types. You may remember that we looked briefly at the case of the string types in Naming Conventions and Name Handling.
 		</paragraph>
 		<paragraph>The Eiffel Base Library contains class 
 			<code>
@@ -64,19 +60,7 @@
 				<class_name>System.String</class_name>
 			</code>.
 		</paragraph>
-		<paragraph>Many classes in the delivered Eiffel libraries have features involving strings, that is 
-			<link>
-				<url/>
-				<label>attributes</label>
-			</link> which are strings or 
-			<link>
-				<url/>
-				<label>routines</label>
-			</link> which return or take strings as 
-			<link>
-				<url/>
-				<label>arguments</label>
-			</link>.  In all these cases, the strings are instances of 
+		<paragraph>Many classes in the delivered Eiffel libraries have features involving strings, that is attributes which are strings or routines which return or take strings as arguments.  In all these cases, the strings are instances of 
 			<code>
 				<class_name>STRING</class_name>
 			</code> (except for those designed for .NET compliance).
@@ -96,11 +80,7 @@
 			</code>. In Eiffel terminology, 
 			<code>
 				<string>"Hello World!"</string>
-			</code> appearing in source code is a 
-			<link>
-				<url/>
-				<label>manifest string</label>
-			</link>.
+			</code> appearing in source code is a manifest string.
 		</paragraph>
 		<paragraph>What all this means to you is that you cannot use an instance of 
 			<code>

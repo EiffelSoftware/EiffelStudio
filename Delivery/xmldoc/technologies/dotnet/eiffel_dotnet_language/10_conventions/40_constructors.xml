@@ -13,15 +13,7 @@
 		<heading>
 			<size>2</size>Eiffel Creation Procedures
 		</heading>
-		<paragraph>Eiffel 
-			<link>
-				<url/>
-				<label>creation procedures</label>
-			</link> are features of a class which can be used to initialize instances. Classes can have more than one creation procedure available. However, each creation procedure must ensure that the 
-			<link>
-				<url/>
-				<label>class invariant</label>
-			</link> holds when the procedure completes execution. In other words, the creation procedure is there to initialize a newly created instance, and the class invariant guarantees that a newly initialized instance is actually valid.
+		<paragraph>Eiffel creation procedures are features of a class which can be used to initialize instances. Classes can have more than one creation procedure available. However, each creation procedure must ensure that the class invariant holds when the procedure completes execution. In other words, the creation procedure is there to initialize a newly created instance, and the class invariant guarantees that a newly initialized instance is actually valid.
 		</paragraph>
 		<paragraph>There is nothing special about creation procedures themselves, they are just ordinary procedures (although by convention their names usually begin with the word " 
 			<code>
@@ -97,7 +89,7 @@
 				<class_name>Create</class_name>
 			</code> in the assembly. These functions return an initialized instance. In the section 
 			<link>
-				<url/>
+				<url>30_type_organization.xml</url>
 				<label>Type Organization</label>
 			</link> there is more information about the organization of the types in assemblies built with Eiffel for .NET, along with an example of using types from such an assembly.
 		</paragraph>

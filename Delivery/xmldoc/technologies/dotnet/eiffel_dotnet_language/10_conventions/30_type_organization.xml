@@ -9,24 +9,12 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>In any comprehensive object-oriented system, the act of programming results in creation of new 
-			<link>
-				<url/>
-				<label>data types</label>
-			</link>. There must be a way of organizing these types and/or their static representation as 
-			<link>
-				<url/>
-				<label>classes</label>
-			</link>. This section tells you how classes are organized in Eiffel and in .NET, and how these organization methods are used together.
+		<paragraph>In any comprehensive object-oriented system, the act of programming results in creation of new data types. There must be a way of organizing these types and/or their static representation as classes. This section tells you how classes are organized in Eiffel and in .NET, and how these organization methods are used together.
 		</paragraph>
 		<heading>
 			<size>2</size>Eiffel Clusters
 		</heading>
-		<paragraph>Eiffel classes are grouped in 
-			<link>
-				<url/>
-				<label>clusters</label>
-			</link>. These clusters of classes ordinarily share some commonality of functionality or purpose. In other words,the classes in a particular cluster may provide the same sorts of capabilities or relate to a single software model. In the Eiffel Base Library there is a cluster called 
+		<paragraph>Eiffel classes are grouped in clusters. These clusters of classes ordinarily share some commonality of functionality or purpose. In other words,the classes in a particular cluster may provide the same sorts of capabilities or relate to a single software model. In the Eiffel Base Library there is a cluster called 
 			<code>
 				<cluster_name>list</cluster_name>
 			</code> which contains classes which implement different types of lists, for example, 
@@ -87,24 +75,12 @@
 		<heading>
 			<size>3</size>.NET Assemblies Available to Eiffel
 		</heading>When types from .NET assemblies are made available to Eiffel programmers, each assembly is mapped to a cluster. So all the types in an assembly appear as if they were Eiffel classes in a cluster which corresponds to the .NET assembly.
-		<paragraph>To summarize, as you learned in 
-			<link>
-				<url/>
-				<label>Naming Conventions and Name Handling</label>
-			</link>, unambiguous Eiffel-style names are made available for the.NET types in an assembly. The assembly is represented to Eiffel for .NET programmers as a cluster of classes. The process of name derivation is based upon a portion of the .NET type name, possibly augmented with a prefix to ensure uniqueness.
+		<paragraph>To summarize, as you learned in Naming Conventions and Name Handling, unambiguous Eiffel-style names are made available for the.NET types in an assembly. The assembly is represented to Eiffel for .NET programmers as a cluster of classes. The process of name derivation is based upon a portion of the .NET type name, possibly augmented with a prefix to ensure uniqueness.
 		</paragraph>
 		<heading>
 			<size>3</size>Assemblies Built with Eiffel
 		</heading>
-		<paragraph>The object model for which Eiffel was designed differs in some ways from the .NET object model. Importantly, Eiffel supports the facilties of full, controllable multiple 
-			<link>
-				<url/>
-				<label>inheritance</label>
-			</link>, and 
-			<link>
-				<url/>
-				<label>genericity</label>
-			</link>, among other things, that the inherent .NET object model does not. That does not mean that these things cannot work in .NET. Indeed they can, and they make Eiffel for .NET very powerful. But, they do make things look a little different.
+		<paragraph>The object model for which Eiffel was designed differs in some ways from the .NET object model. Importantly, Eiffel supports the facilties of full, controllable multiple inheritance, and genericity, among other things, that the inherent .NET object model does not. That does not mean that these things cannot work in .NET. Indeed they can, and they make Eiffel for .NET very powerful. But, they do make things look a little different.
 		</paragraph>
 		<paragraph>When you compile Eiffel for .NET, the result is a .NET assembly; either an executable system, or a library of potentially reusable data types. Because the object model for Eiffel is different from that of .NET, the assembly resulting from a compile is different in some ways. </paragraph>
 		<paragraph>First an assembly built using Eiffel for .NET will likely contain lots of types and interfaces. This is because as you use a class from the Eiffel libraries, say class 
@@ -116,15 +92,7 @@
 			</code> depends ( 
 			<code>
 				<class_name>STRING</class_name>
-			</code>'s 
-			<link>
-				<url/>
-				<label>suppliers</label>
-			</link> and 
-			<link>
-				<url/>
-				<label>ancestors</label>
-			</link>) must also be included in the assembly. That's because the Eiffel libraries, unlike the Microsoft .NET libraries like 
+			</code>'s suppliers and ancestors) must also be included in the assembly. That's because the Eiffel libraries, unlike the Microsoft .NET libraries like 
 			<code>
 				<cluster_name>mscorlib</cluster_name>
 			</code> and 
@@ -175,11 +143,7 @@
 	<feature_name>aGuardDog.RollOver</feature_name>();	<comment>// Apply a feature</comment>
 }
 </code_block>
-		<paragraph>This object creation model accounts for some of the differences between constructors in .NET and creation procedures in Eiffel. These differences will be discussed in more detail in 
-			<link>
-				<url/>
-				<label>Constructors and Creation Procedures</label>
-			</link>.
+		<paragraph>This object creation model accounts for some of the differences between constructors in .NET and creation procedures in Eiffel. These differences will be discussed in more detail in Constructors and Creation Procedures.
 		</paragraph>
 		<paragraph>Another advantage is that it provides a syntax that is similar to that used to create objects in Eiffel. An Eiffel for .NET client to the class 
 			<code>

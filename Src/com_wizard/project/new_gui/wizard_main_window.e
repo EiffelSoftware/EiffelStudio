@@ -56,8 +56,6 @@ feature {NONE} -- Initialization
 			initialize_checker
 			close_request_actions.extend (agent on_exit)
 			com_project_box.hide
-			settings_bottom_box.setup (agent notebook.select_item (generation_options_outter_box), "Next  >>")
-			general_options_bottom_box.setup (agent on_generate, "Generate")
 			destination_folder_box.setup ("Generate files into:", "destination_key", "Browse for destination folder", agent is_valid_destination_folder)
 			set_validator (agent initialize_generate_button)
 			eiffel_project_box.set_validator (agent initialize_generate_button)
@@ -67,8 +65,9 @@ feature {NONE} -- Initialization
 			-- Setup project box last so that profile change actions are registered
 			project_box.set_max_count (10000)
 			project_box.exclude_from_profile
-			project_box.set_default_text ("default")
-			project_box.setup ("Current project:", Profile_manager.Profiles_key, agent on_project_change, agent on_project_enter)
+			project_box.set_default_text (Profile_manager.Default_profile)
+			project_box.set_save_on_return (False)
+			project_box.setup ("Current project:", Profile_manager.Profiles_key, agent on_project_change, agent on_project_enter, agent on_project_select)
 			Profile_manager.active_profile_save_actions.extend (agent project_type_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent component_type_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent compile_target_profile_item)
@@ -119,36 +118,69 @@ feature {NONE} -- Implementation
 			non_void_project_name: a_project_name /= Void
 		do
 			Result := is_valid_project_name (a_project_name)
-			if project_box.is_default_selected then
-				project_delete_button.disable_sensitive
+			if Result then
+				project_button.enable_sensitive
 			else
-				project_delete_button.enable_sensitive
+				project_button.disable_sensitive
 			end
+			if Profile_manager.available_profiles.has (a_project_name) then
+				project_button.set_text ("Load")
+			else
+				project_button.set_text ("New")
+			end
+			first_generate_button.disable_default_push_button
+			project_button.enable_default_push_button
+			in_delete_mode := False
+			project_selected := False
 		end
 
+	on_project_select is
+			-- Project was selected from list or `return' was pressed.
+			-- If return was pressed
+		do
+			Profile_manager.set_active_profile (project_box.value)
+			update_environment
+			project_button.set_text ("Delete")
+			if project_box.is_default_selected then
+				project_button.disable_sensitive
+			else
+				project_button.enable_sensitive
+			end
+			project_box.save_combo_text
+			first_generate_button.enable_default_push_button
+			project_button.disable_default_push_button
+			in_delete_mode := True
+			project_selected := True
+		end
+		
 	on_project_enter is
-			-- Save project if name is valid
+			-- Save project if name is valid and different.
+			-- Start generation if name is valid and same as selected.
 		local
-			l_project_name: STRING
+			l_project_name, l_active_profile: STRING
 		do
 			l_project_name := project_box.value
 			if is_valid_project_name (l_project_name) then
-				profile_manager.set_active_profile (l_project_name)
-				update_environment
-				if project_box.is_default_selected then
-					project_delete_button.disable_sensitive
+				l_active_profile := Profile_manager.active_profile
+				if l_active_profile /= Void and then l_active_profile.is_equal (l_project_name) and not project_selected and first_generate_button.is_sensitive then
+					on_generate
 				else
-					project_delete_button.enable_sensitive
+					on_project_select
 				end
 			end
+			project_selected := False
 		end
 		
-	on_delete_project is
-			-- Called by `select_actions' of `project_delete_button'.
-			-- (export status {NONE})
+	on_project_button_select is
+			-- Called by `select_actions' of `project_button'.
+			-- Remove selected profile, load or create profile depending on mode.
 		do
-			profile_manager.remove_active_profile
-			project_box.remove_active_item
+			if in_delete_mode then
+				profile_manager.remove_active_profile
+				project_box.remove_active_item
+			else
+				on_project_enter
+			end
 		end
 	
 	on_select_eiffel_project is
@@ -257,10 +289,11 @@ feature {NONE} -- Implementation
 		end
 
 	on_generate is
-			-- Check that all required info is there and start generation.
-		require
-			is_valid: is_valid
+			-- Save all information and start generation.
 		do
+			check
+				is_valid: is_valid
+			end
 			output_box.set_destination_folder (destination_folder_box.value)
 			notebook.select_item (output_box)
 			if eiffel_project_box.is_show_requested then
@@ -270,6 +303,18 @@ feature {NONE} -- Implementation
 			start_generation
 		end
 
+	on_previous is
+			-- Select first notebook page
+		do
+			notebook.select_item (settings_box)
+		end
+		
+	on_next is
+			-- Select second notebook page
+		do
+			notebook.select_item (generation_options_outter_box)
+		end
+		
 feature {NONE} -- Implementation
 
 	start_generation is
@@ -280,7 +325,8 @@ feature {NONE} -- Implementation
 			environment.set_no_abort
 			create l_worker_thread.make
 			is_running := True
-			general_options_bottom_box.enable_button (False)
+			first_generate_button.disable_sensitive
+			second_generate_button.disable_sensitive
 			l_worker_thread.do_work (agent run, agent output_box.process_event)
 			is_running := False
 			initialize_generate_button
@@ -337,9 +383,15 @@ feature {NONE} -- Implementation
 	initialize_generate_button is
 			-- Add and remove dummy error to trigger initialization of Generate button sensitivity state.
 		do
-			general_options_bottom_box.enable_button (not is_running and is_valid and
-				(not eiffel_project_box.is_show_requested or eiffel_project_box.is_valid) and
-				(not com_project_box.is_show_requested or com_project_box.is_valid))
+			if (not is_running and is_valid and
+					(not eiffel_project_box.is_show_requested or eiffel_project_box.is_valid) and
+					(not com_project_box.is_show_requested or com_project_box.is_valid)) then
+				first_generate_button.enable_sensitive
+				second_generate_button.enable_sensitive
+			else
+				first_generate_button.disable_sensitive
+				second_generate_button.disable_sensitive
+			end
 		end
 	
 	project_type_profile_item: WIZARD_PROFILE_ITEM is
@@ -417,7 +469,7 @@ feature {NONE} -- Implementation
 					com_client_project_radio_button.enable_select
 				end
 			else
-				eiffel_project_radio_button.enable_select
+				com_client_project_radio_button.enable_select
 			end
 			Profile_manager.search_active_profile (Component_type_key)
 			if Profile_manager.found then
@@ -461,6 +513,12 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Private Access
+
+	project_selected: BOOLEAN
+			-- Was project selected from profiles list?
+
+	in_delete_mode: BOOLEAN
+			-- Is project button in delete mode?
 
 	Eiffel_project_code: STRING is "Eiffel"
 			-- String encoding for Eiffel project

@@ -3,14 +3,15 @@ class NONE_I
 inherit
 	TYPE_I
 		redefine
-			dump, is_none, is_void, is_bit, is_basic, same_as,
+			dump, is_none, is_void, is_bit, is_basic, 
+			is_reference, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
 			cecil_value, append_signature, generated_id
 		end
 
 	TYPE_C
 		redefine
-			is_void, is_bit
+			is_void, is_bit, is_pointer
 		end
 
 	SHARED_C_LEVEL
@@ -20,20 +21,26 @@ feature
 	level: INTEGER is
 			-- Level for generated C code
 		do
-			Result := C_void
+			Result := C_ref
 		end
 
 	is_none: BOOLEAN is True
 			-- Is the type a none type ?
 
-	is_void: BOOLEAN is True
-			-- Is the type a C void type ?
+	is_void: BOOLEAN is False
+			-- A NONE type is not a void C type.
 
 	is_basic: BOOLEAN is False
 			-- A NONE type is not a basic type.
 
 	is_bit: BOOLEAN is False
 			-- A NONE type is not a bit.
+
+	is_reference: BOOLEAN is True
+			-- A NONE type is a reference
+
+	is_pointer: BOOLEAN is True
+			-- A NONE type is a pointer
 
 	append_signature (st: STRUCTURED_TEXT) is
 		do
@@ -142,7 +149,7 @@ feature
 	c_type: TYPE_C is
 			-- C type
 		do
-			Result ?= Current
+			Result := Current
 		end
 
 feature -- Generic conformance
@@ -153,4 +160,5 @@ feature -- Generic conformance
 			Result := -9        -- Code for NONE
 		end
 
-end
+end -- class NONE_I
+

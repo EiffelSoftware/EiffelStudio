@@ -15,4 +15,6 @@ feature
 
 	EiffelCase_project_type: STRING is "ISE.EiffelCase.3.3";
 
+	Tmp_file_name_ext: STRING is ".TMP";
+
 end

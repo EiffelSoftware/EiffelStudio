@@ -10,6 +10,7 @@ inherit
 	SHARED_RESCUE_STATUS
 	SPECIAL_AST;
 	S_CASE_INFO;
+	SHARED_CASE_INFO;
 	STORABLE
 
 feature
@@ -52,6 +53,7 @@ feature
 				rescued := False
 			end
 		rescue
+			flat_ctxt.clear;
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
 				rescued := True;
@@ -63,9 +65,6 @@ feature
 
 feature {NONE}
 
-	view_id_info: VIEW_ID_INFO;
-			-- View id information
-
 	convert_to_case_format is	
 			-- Convert all the Eiffelbench structures into
 			-- Eiffelcase structures.
@@ -73,51 +72,43 @@ feature {NONE}
 			valid_cluster_info: cluster_info /= Void
 		local
 			root_cluster: S_CLUSTER_DATA;
-			system_data: S_SYSTEM_DATA;
+			s_system_data: S_SYSTEM_DATA;
 			view_id: INTEGER
 		do
-			root_cluster := cluster_info.storage_info (view_id_info);
+			Case_file_server.init (Case_storage_path);
+			root_cluster := cluster_info.storage_info;
 			if view_id_info.root_cluster_name.is_equal (root_cluster.name) then
-                view_id := view_id_info.root_cluster_view_id
+                view_id := View_id_info.root_cluster_view_id
             else
-                view_id_info.decrement_cluster_view_number;
-                view_id := view_id_info.cluster_view_number;
+                View_id_info.decrement_cluster_view_number;
+                view_id := View_id_info.cluster_view_number;
             end;
 			root_cluster.set_view_id (view_id);
-			!! system_data;
-			system_data.set_root_cluster (root_cluster);
-			system_data.set_was_generated_from_bench;
-			system_data.set_class_view_number (view_id_info.class_view_number);
-			system_data.set_class_id_number (System.class_counter.value);
-			system_data.set_cluster_view_number (view_id_info.cluster_view_number);
-			store_project_to_disk (system_data);
+			!! s_system_data;
+			s_system_data.set_root_cluster (root_cluster);
+			s_system_data.set_was_generated_from_bench;
+			s_system_data.set_class_view_number (View_id_info.class_view_number);
+			s_system_data.set_class_id_number (System.class_counter.value);
+			s_system_data.set_cluster_view_number (View_id_info.cluster_view_number);
+			Case_file_server.tmp_save_system (s_system_data);
+			Case_file_server.save_eiffelcase_format;
+			Case_file_server.clear;
 		rescue
-			if Rescue_status.is_unexpected_exception then
-				if cluster_info /= Void and then
-					cluster_info.had_io_problems 
-				then
-					Rescue_status.set_is_error_exception (True);
-					error_window.put_string ("Cannot store EiffelCase format to disk.%N");
-				end
-			end
-		end;
-
-	store_project_to_disk (system_data: S_SYSTEM_DATA) is	
-			-- Store project `system_data' to disk.
-		do
-			io.error.putstring ("Storing information to disk ...%N");
-			system_data.store_to_disk (clone (Case_storage_path));
-			error_window.put_string ("Storing EiffelCase format finished%N")
-		rescue
-			Rescue_status.set_is_error_exception (True);
-			error_window.put_string ("Error: Cannot store EiffelCase format to disk.%N");
+			if Case_file_server.had_io_problems then
+				Rescue_status.set_is_error_exception (True);
+				error_window.put_string ("Cannot store EiffelCase format to disk.%N");
+			elseif Case_file_server.is_saving then
+				Rescue_status.set_is_error_exception (True);
+				error_window.put_string ("EiffelCase format maybe corrupted.%N");
+			end;
+			Case_file_server.clear;
 		end;
 
 	remove_old_classes is
 			-- Remove class information from disk which have been
 			-- removed since last reverse engineering.
 		do
-			view_id_info.remove_old_classes;
+			View_id_info.remove_old_classes;
 		rescue
 			Rescue_status.set_is_error_exception (True);
 			error_window.put_string ("Error: Could not remove old classes from disk.%N");
@@ -144,16 +135,13 @@ feature {NONE}
 						check
 							valid_s_system_data: s_system_data /= Void
 						end;
-						!! view_id_info.make (s_system_data);
-						view_id_info.initialize (s_system_data.root_cluster);
+						View_id_info.initialize (s_system_data);
+						View_id_info.fill (s_system_data.root_cluster);
 						old_system_file.close;
 					else
 						Rescue_status.set_is_error_exception (True);
 						raise ("Case error")
 					end
-				end
-				if view_id_info = Void then
-					!! view_id_info.make_nothing
 				end
 			end
 		end;

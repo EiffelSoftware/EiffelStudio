@@ -10,8 +10,8 @@ feature {NONE}
 			-- Set id to `s' and set
 			-- class_id to `id'.
 		require
-			both_not_void: s = Void implies id > 0 and then
-						id = 0 implies s /= Void
+			valid_s: s = Void implies id > 0; 
+			valid_id: id = 0 implies s /= void; 
 		do
 			name := s;
 			class_id := id
@@ -24,6 +24,20 @@ feature
 
 	class_id: INTEGER;
 
-	name: STRING
+	name: STRING;
+
+    is_valid: BOOLEAN is
+            -- Is Current valid?
+        do
+            if name = Void then
+                Result := class_id > 0
+            else
+                Result := class_id = 0
+            end
+        end
+
+invariant
+
+	is_valid: is_valid
 
 end

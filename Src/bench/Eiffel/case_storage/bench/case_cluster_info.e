@@ -8,7 +8,8 @@ inherit
 	SHARED_SERVER;
 	PROJECT_CONTEXT;
 	SHARED_RESCUE_STATUS;
-	S_CASE_INFO
+	S_CASE_INFO;
+	SHARED_CASE_INFO
 
 creation
 
@@ -93,7 +94,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			end
 		end;
 
-	storage_info (view_id_info: VIEW_ID_INFO): S_CLUSTER_DATA is
+	storage_info: S_CLUSTER_DATA is
 		local
 			clust_l: FIXED_LIST [S_CLUSTER_DATA];
 			classes_i: EXTEND_TABLE [CLASS_I, STRING];
@@ -131,7 +132,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 io.error.putstring ("Analyzing cluster: ");
 io.error.putstring (name);
 io.error.new_line;
-					Result.set_classes (class_storage_information (classes, view_id_info))
+					Result.set_classes (class_storage_information (classes))
 				end;
 				classes := Void;
 			end
@@ -144,13 +145,13 @@ io.error.new_line;
 				until
 					clusters.after
 				loop
-					s_cluster_data := clusters.item.storage_info (view_id_info);
-					view_id := view_id_info.old_cluster_view_id (s_cluster_data.name);
+					s_cluster_data := clusters.item.storage_info;
+					view_id := View_id_info.old_cluster_view_id (s_cluster_data.name);
 					if view_id = 0 then
 							-- Cluster never existed so give it a
 							-- new id count
-						view_id_info.decrement_cluster_view_number;
-						view_id := view_id_info.cluster_view_number;
+						View_id_info.decrement_cluster_view_number;
+						view_id := View_id_info.cluster_view_number;
 					end
 					s_cluster_data.set_view_id (view_id);
 					clust_l.replace (s_cluster_data);
@@ -270,11 +271,9 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO} -- Debug
 
 feature {NONE} -- Class information
 
-	class_storage_information (classes: LINKED_LIST [CLASS_C];
-				view_id_info: VIEW_ID_INFO): FIXED_LIST [S_CLASS_DATA] is
+	class_storage_information (classes: LINKED_LIST [CLASS_C]): FIXED_LIST [S_CLASS_DATA] is
 			-- Storage information for `classes'
 		require
-			valid_view: view_id_info /= Void
 			valid_classes: classes /= Void and then not classes.empty;
 		local
 			classc: CLASS_C;
@@ -287,7 +286,7 @@ feature {NONE} -- Class information
 			class_info: CASE_CLASS_INFO;
 			view_id: INTEGER
 		do
-			old_classes := view_id_info.old_classes_with_cluster_name (name);
+			old_classes := View_id_info.old_classes_with_cluster_name (name);
 			!! Result.make (classes.count);
 			!! flat_struct.initialize;
 			from
@@ -305,23 +304,23 @@ feature {NONE} -- Class information
 				class_info.formulate_class_data (flat_struct);
 				flat_struct.wipe_out;
 				s_class_data := class_info.s_class_data;
-				if old_classes /= Void then
+				if old_classes = Void then
+					View_id_info.increment_class_view_number;
+					view_id := View_id_info.class_view_number;
+				else
 					view_id := old_classes.item (s_class_data.name);
 					if view_id = 0 then
 							-- Class never existed so give it a
 							-- new view_id count
-						view_id_info.increment_class_view_number;
-						view_id := view_id_info.class_view_number;
+						View_id_info.increment_class_view_number;
+						view_id := View_id_info.class_view_number;
 					else
-						 old_classes.remove (s_class_data.name)
+						old_classes.remove (s_class_data.name)
 					end
-				else
-					view_id_info.increment_class_view_number;
-					view_id := view_id_info.class_view_number;
 				end;
 				s_class_data.set_view_id (view_id);
 					-- Record parent cluster
-				store_class_to_disk (s_class_data);
+				Case_file_server.tmp_save_class (s_class_data);
 debug ("CASE_ID")
 	io.error.putstring ("id: ");
 	io.error.putint (s_class_data.id);
@@ -337,25 +336,6 @@ end
 		ensure
 			valid_result: result /= Void;
 			same_count_as_classes: classes.count = Result.count
-		end;
-
-	store_class_to_disk (s_class_data: S_CLASS_DATA) is
-			-- Store `class_data' to disk.
-		require
-			valid_class_info: s_class_data /= Void;
-		local
-			path: STRING;
-			dir: DIRECTORY;
-		do
-			if not had_io_problems then
-				path := clone (Case_storage_path);
-				path.extend (Directory_separator);
-				s_class_data.store_to_disk (Case_storage_path);
-			end
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				had_io_problems := True;
-			end
 		end;
 
 end

@@ -56,7 +56,6 @@ feature
 			go_to (old_cursor);
 		end;
 
-
 	trace is
 			-- Debug purpose
 		do

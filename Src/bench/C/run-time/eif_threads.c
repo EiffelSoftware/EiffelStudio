@@ -14,6 +14,7 @@
 #include "eiffel.h"
 #include "eif_threads.h"
 #include "eif_globals.h"
+#include "err_msg.h"
 
 #ifdef EIF_THREADS
 
@@ -30,6 +31,7 @@ rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public void eif_thr_create(EIF_OBJ current_obj, EIF_PROC init_func);
+rt_public void eif_thr_exit(void);
 
 rt_private void eif_init_context(eif_global_context_t *eif_globals);
 rt_private void eif_thr_entry(start_routine_ctxt_t *routine_ctxt);
@@ -41,7 +43,7 @@ rt_private eif_global_context_t globals_buffer;
 
 rt_public void eif_thr_panic(char *msg) {
 	printf("eif_thr_panic!\n");
-	fprintf(stderr,"%s\n",msg);
+	print_err_msg(stderr,"%s\n",msg);
 	exit(0);
 }
 

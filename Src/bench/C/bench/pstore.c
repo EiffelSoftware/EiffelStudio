@@ -53,10 +53,9 @@ long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 
 	/* Initialization */
 
-	rt_init_store(partial_store_write, 0);
+	rt_init_store(partial_store_write, char_write, 0);
 
 	fides = (int)f_desc;				/* For use of `st_write' */
-	fstoretype = 'F';
 	result = lseek (fides, 0, SEEK_CUR);
 	if (result==-1) esys();
 

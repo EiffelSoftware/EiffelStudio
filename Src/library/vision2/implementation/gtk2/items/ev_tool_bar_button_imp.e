@@ -27,7 +27,8 @@ inherit
 			pointer_double_press_actions_internal,
 			pointer_button_press_actions_internal,
 			pointer_motion_actions_internal,
-			event_widget
+			event_widget,
+			set_pixmap
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -100,7 +101,19 @@ feature -- Element change
 		do
 			Precursor {EV_TEXTABLE_IMP} (a_text)
 			a_parent_imp ?= parent_imp
-			if a_parent_imp /= Void then
+			if a_parent_imp /= Void and then a_parent_imp.parent_imp /= Void then
+				a_parent_imp.update_toolbar_style
+			end
+		end
+
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Assign `a_pixmap' to `pixmap'.
+		local
+			a_parent_imp: EV_TOOL_BAR_IMP
+		do
+			Precursor {EV_ITEM_IMP} (a_pixmap)
+			a_parent_imp ?= parent_imp
+			if a_parent_imp /= Void and then a_parent_imp.parent_imp /= Void then
 				a_parent_imp.update_toolbar_style
 			end
 		end

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EOLE_AUTOMATION_SERVER
+	EOLE_LOCAL_AUTOMATION_SERVER
 	
 inherit
 	ARGUMENTS
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			-- hidden if server has been called with switch
 			-- 'Embedding', shown otherwise.
 			
-end -- class EOLE_AUTOMATION_SERVER
+end -- class EOLE_LOCAL_AUTOMATION_SERVER
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

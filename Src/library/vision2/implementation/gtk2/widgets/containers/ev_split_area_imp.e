@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			Precursor
+			Precursor {EV_CONTAINER_IMP}
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			second_expandable := True
 			user_split_position := -1

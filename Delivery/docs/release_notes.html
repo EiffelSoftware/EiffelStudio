@@ -34,41 +34,50 @@
 Copyright (c) Interactive Software Engineering Inc., 1994-2000<br>
 Use subject to restrictions of customer license.<br>
 Duplication prohibited except under terms of customer license.
-<h2>New functionalities:</h2>
+<h2>New products</h2>
     <ul>
-      <li> New EiffelCOM library (see <a href="pdf/eiffelcom.pdf">EiffelCOM
-    documentation in PDF</a> or see <a href="http://www.eiffel.com/products/com">http://www.eiffel.com/products/com</a> for more details).</li>
-      <li> Faster C compilation on all platforms. The gain is about 5 to 10 times faster than it used to be in previous version of ISE EiffelBench. The
-improvement varies from the C compiler you are using.</li>
-      <li> New `<a href="papers/command_line_tools.html">finish_freezing.exe</a>' on Windows:
+      <li> Brand new <span class=emphasis>EiffelCOM</span> library. Supports the client side
+(accessing COM components from Eiffel) and the server side (producing COM components
+from Eiffel). Built-in <span class=emphasis>wizard</span> takes care of all tedious tasks.
+For details see <a href="pdf/eiffelcom.pdf">EiffelCOM documentation in PDF</a>
+or <a href="http://www.eiffel.com/products/com">http://www.eiffel.com/products/com</a>.</li>
+
+      <li> New <span class=emphasis>EiffelStore library</span> handles ODBC v.3.0, Oracle 8.0.4 and 8i.</li>
+
+      <li> New Support Web Pages with a new knowledge base where you can find a lot of useful information about ISE's products (Click <a href="http://support.eiffel.com">here</a> to go to the support web pages.)</li>
+
+</ul><h2>Performance</h2><ul>
+      <li> <span class=emphasis>Faster C compilation</span> on all platforms. The compilation is 5 to 10 times faster than it used to be in previous versions of ISE EiffelBench! The
+exact improvement varies with the C compiler you are using.</li>
+      <li> Improved <span class=emphasis>ANSI C and C++</span> code generation.</li>
+      <li> Finalizing when using a precompiled library does not cost any speed
+  performance to the finalized application, just a small memory overhead
+  due to larger static data.</li>
+      <li> Improved runtime performance when inserting Eiffel objects in large
+		<li><a name="stringperf"></a>Improved <span class=eiffelid>STRING</span> performance: reduced memory allocation request for calls to <span class=eiffelid>make (0)</span>.</li>
+  arrays.</li>
+
+</ul><h2>New ISE EiffelBench functionalities</h2><ul>
+
+      <li> <span class=emphasis>Recursive cluster specification</span> through a new Lace keyword. Just add <span class=eiffelid>all</span> next to a cluster name, and all the subdirectories will be included!
+Simplifies the writing of Ace files and their readability. For an
+example look at
+    $EIFFEL4\precomp\spec\$PLATFORM\base for an example of its use. To know more,
+    see <a href="papers/lace.html">here</a>.)</li>
+      <li> More powerful <span class=emphasis>shared library</span> mechanism: new Lace option <span class=eiffelid>shared_library_definition</span> simplifies the generation process of a system into a shared library. No user intervention
+    required. (To know more see <a href="papers/lace.html">here</a>.)</li>
+      <li> The parser is now completely written in Eiffel, permitting <span class=emphasis>removal of all length limitations</span>:
     <ol>
-      <li class=small> it is now offering a silent mode, so that you can launch it in a batch file without any user intervention. To use it simply add
-`-silent' as a command line argument.</li>
-      <li class=small> it is offering the following command line option `-location' which will let you launch
-        `<a href="papers/command_line_tools.html">finish_freezing.exe</a>' on a specific directory,
-for example: `finish_freezing -silent -location $MY_PROJECT\F_code'.</li>
+      <li class=small> Number of generic parameters</li>
+      <li class=small> Length of identifiers</li>
+      <li class=small> Length of manifest strings</li>
     </ol>
       </li>
-      <li> New lace option `shared_library_definition' and simplified the generation process of a system into a shared library, no more user intervention is
-    required (To know more click <a href="papers/lace.html">here</a>).</li>
-      <li> New lace keyword `all' to build `Recursive clusters' which simplifies the writting and improves the readability of an Ace file: Just add `all' in
-front of the cluster name and all subdirectories will be compiled. Look at
-    $EIFFEL4\precomp\spec\$PLATFORM\base for an example of its use (To know more
-    click <a href="papers/lace.html">here</a>).</li>
-      <li> New improved C and C++ ANSI code generation.</li>
-      <li> New Eiffel parser completely rewritten in Eiffel: no more length
-    limitations:
+      <li> New way to look at <span class=eiffelid>STRING</span> objects in the debugger:
     <ol>
-      <li class=small> number of generic parameters</li>
-      <li class=small> length of identifiers</li>
-      <li class=small> length of manifest string</li>
-    </ol>
-      </li>
-      <li> New way to look at <b> STRING</b> objects in the debugger:
-    <ol>
-      <li> When the size of the <b> STRING</b> object is bigger than 50 characters, three dots will appear at the end.</li>
-      <li> The following Eiffel <b> STRING</b> object &quot;Hello,%N%THow are
-        you?%N%TRegards,%N%TManu&quot;&nbsp;<br>
+      <li> When the size of the <span class=eiffelid>STRING</span> object is bigger than 50 characters, three dots will appear at the end.</li>
+      <li> The following Eiffel <span class=eiffelid>STRING</span> object &quot;Hello,%N%THow are
+        you?%N%TRegards,%N%TJill&quot;&nbsp;<br>
      will appear now appear like:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;Hello,<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; How
@@ -76,77 +85,71 @@ front of the cluster name and all subdirectories will be compiled. Look at
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         Regards<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        Manu&quot;<br>
-     This makes it easier for those  manipulating large SQL queries command with EiffelStore.</li>
+        Jill&quot;<br>
+     This makes it easier for those  manipulating long strings, such as large SQL queries in EiffelStore, through the debugger.</li>
     </ol>
       </li>
-      <li> New behavior on Windows when executing your program from ISE EiffelBench:
-  if your application produces some output, the message `Press Return to finish
-  execution...' will appear, so that you can see the output. However, when
+      <li> New <span class=emphasis>output behavior</span> on Windows when executing your program from ISE EiffelBench:
+  if your application produces some output, the message <span class=eiffelid>Press Return to finish
+  execution...</span> will appear, so that you can see the output. However, when
   launched outside of ISE EiffelBench this message won't appear.</li>
-      <li> New C/C++ macro encapsulation: you can now use the following
+      <li> New <a href="papers/command_line_tools.html">finish_freezing.exe</a> on Windows:
+    <ol>
+      <li class=small>finish_freezing now offers a silent mode, so that you can launch it in a batch file without any user intervention. To use it simply add
+<span class=eiffelid>-silent</span> as a command line argument.</li>
+      <li class=small> Another new command-line option to <a href="papers/command_line_tools.html">finish_freezing.exe</a> is <span class=eiffelid>-location</span>, which will let you launch
+        <span class=eiffelid>finish_freezing.exe</span> on a specific directory.
+For example: <span class=emphasis>finish_freezing -silent -location $MY_PROJECT\F_code</span>.</li>
+      <li> New <span class=eiffelkeyword>dll32</span> and <span class=eiffelkeyword>dllwin32</span> implementation for Windows. Now, <span class=eiffelkeyword>dll32</span> is used to call C functions exported in a DLL, whereas <span class=eiffelkeyword>dllwin32</span> is used to call C functions exported in a DLL with the <span class=eiffelid>__stdcall</span> mechanism, mostly used by the Win32 API&nbsp; (To know more click <a href="papers/externals.html">here</a>).</li>
+    </ol>
+      </li>
+      <li> <span class=emphasis>DLL facilities</span>: <span class=eiffelkeyword>dll16</span> as a recognized sublanguage name; if you were using this,
+   you	will have to switch to <span class=eiffelkeyword>dll32</span> (To know more click <a href="papers/externals.html">here</a>.)</li>
+</ul><h2>C/C++ interface</h2><ul>
+      <li> New <span class=emphasis>C/C++ macro encapsulation</span>: you can now use the following
   "C [macro &lt;fd.h>]" to generate a macro defined in a C++ header
   which requires to be compiled with the C++ flags. Therefore,
   you can now write "C++ [macro &lt;fd.h>]" and it will be correctly
   handled by the Eiffel compiler (To know more click <a href="papers/externals.html">here</a>).</li>
-      <li> New C/C++ struct encapsulation: you can now encapsulate struct
-  without having to write a line of C/C++ code in a header file
-  as it was done before (To know more click <a href="papers/externals.html">here</a>).</li>
-      <li> New `dll32' and `dllwin32' implementation for Windows. Now, `dll32' is used to call C functions exported in a DLL, whereas `dllwin32' is used
-    to call C functions exported in a DLL with the `__stdcall' mechanism, mostly used by the Win32
-    API&nbsp; (To know more click <a href="papers/externals.html">here</a>).</li>
-      <li> Removed `dll16' as a recognized sublanguage name, user will have to switch
-    to `dll32' (To know more click <a href="papers/externals.html">here</a>).</li>
-      <li> Removed `consistent' and `setup' from <b> GENERAL</b> in order to increase the
-  compatibility of ISE libraries with the ELKS 95 standard.</li>
-      <li> Added a new class <b> PROFILING_SETTING</b> in EiffelBase to help you to
-    configure the Eiffel profiler and to get the best out of it (To know more
-    click <a href="papers/profiler.html">here</a>).</li>
-      <li> Added a new class <b> INTEGER_INTERVAL</b> in EiffelBase to represent contiguous
-  integer intervals.</li>
-      <li> Added in <b> INDEXABLE</b> a new feature `index_set: <b>INTEGER_INTERVAL</b>'. This can
-  produce some incompatibility with your existing code if you are using the
-  name `index_set' or if you have some repeated inheritance where `index_set'
-  from <b> INDEXABLE</b> has been redefined in two different ways. If you have such
-  problems, please use the old version of the EiffelBase library which does
-  not contain this feature in `$EIFFEL4|library|compatible_base'.</li>
-      <li> Revisited STRING class:
+      <li> New <span class=emphasis>C/C++ struct encapsulation</span>: you can now encapsulate a C struct without having to write any C/C++ code in a header file.
+  (To know more see <a href="papers/externals.html">here</a>.)</li>
+      <li> New CECIL features make CECIL (the library for calling Eiffel from C and other languages) easier to use for novice and non-novice CECIL programmers. To know more about CECIL see <a href="papers/cecil.html">here</a>.)</li>
+</ul><h2>EiffelBase developments</h2><ul>
+      <li> <span class=emphasis>Simplifications</span>: removed <span class=eiffelid>consistent</span> and <span class=eiffelid>setup</span> from <span class=eiffelid>GENERAL</span> for compatibility
+  with the ELKS 95 standard.</li>
+      <li> <span class=emphasis>Profiler control</span>: new EiffelBase class <span class=eiffelid>PROFILING_SETTING</span> helps you
+    configure the Eiffel profiler and to the best out of it. (Details
+    <a href="papers/profiler.html">here</a>.)</li>
+      <li> New class to describe contiguous <span class=emphasis>integer intervals</span>: class <span class=eiffelid>INTEGER_INTERVAL</span>. Features include <span class=eiffeltext>for_all</span> and other iterators, useful to express advanced <span class=emphasis>contracts</span>.</li>
+      <li> New feature in <span class=eiffelid>INDEXABLE</span> and descendants: <span class=eiffelid>index_set: <span class=eiffelid>INTEGER_INTERVAL</span></span>. (This may result in
+  incompatibilities with existing code if you are using the
+  name <span class=eiffelid>index_set</span> or if you have some repeated inheritance where <span class=eiffelid>index_set</span>
+  from <span class=eiffelid>INDEXABLE</span> has been redefined in two different ways. If you have such
+  problems, please use the old version of the EiffelBase library
+  in <span class=eiffelid>$EIFFEL4|library|compatible_base</span>, which does not contain this feature.)</li>
+      <li> Improved <span class=emphasis>STRING</span> class:
     <ol>
-      <li class=small> Added `infix "+"' in class <b> STRING</b> to concatenate two Eiffel strings.</li>
-      <li class=small> Now, STRING can have more than once creation routine and we provide
-     two new ones `make_from_string' and `make_from_c'.</li>
-      <li class=small> `set_count' is now exported to the new added class <b>STRING_HANDLER</b>,
-     so that people who needs to have access to this feature can simply
-	 inherits from it (To be used with caution).</li>
-      <li class=small> Improved performance of class STRING to reduce memory allocation
-     request when calling `make (0)'.</li>
+      <li class=small> New <span class=eiffelid>infix "+"</span> function in class <span class=eiffelid>STRING</span> to concatenate two strings.</li>
+      <li class=small> STRING may now have more than once creation procedure.
+	   Two new ones are provided: <span class=eiffelid>make_from_string</span> and <span class=eiffelid>make_from_c</span>.</li>
+      <li class=small> <span class=eiffelid>set_count</span> is now exported to the new added class <span class=eiffelid>STRING_HANDLER</span>,
+     so that classes who need access to this feature can simply
+	 inherits from the new class. (This gives you internal access, so use with caution.)</li>
+      <li class=small> Improved performance (see <a href="#stringperf">above</a>).
     </ol>
       </li>
-      <li> Added in class <b> POINTER</b> the new following features:
+      <li> <span class=emphasis>Pointer class extensions</span>: two new features in class <span class=eiffelid>POINTER</span>:
     <ol>
-      <li class=small> `infix "+" (offset: <b>INTEGER</b>): <b>POINTER</b>' which returns the current
-      pointer moved by an offset of `offset' bytes.</li>
-      <li class=small>`memory_copy' and `memory_move' which corresponds to the C ANSI
-      functions `memcpy' and `memmove'.</li>
+      <li class=small> <span class=eiffelid>infix "+" (offset: <span class=eiffelid>INTEGER</span>): <span class=eiffelid>POINTER</span></span> which returns the current
+      pointer moved by an offset of <span class=eiffelid>offset</span> bytes.</li>
+      <li class=small><span class=eiffelid>memory_copy</span> and <span class=eiffelid>memory_move</span> which corresponds to the C ANSI
+      functions <span class=eiffelid>memcpy</span> and <span class=eiffelid>memmove</span>.</li>
     </ol>
       </li>
-      <li> Finalizing when using a precompiled library does not cost any speed
-  performance to the finalized application, just a small memory overhead
-  due to larger static data.</li>
-      <li> Improved runtime performance when inserting Eiffel objects in large
-  arrays.</li>
-      <li> New CECIL features to make CECIL easier to use for novice and non-novice
-  CECIL programmers (To know more about CECIL click <a href="papers/cecil.html">here</a>).</li>
-      <li> New EiffelStore library which can handle ODBC v.3.0, Oracle 8.0.4 and
-        8i.</li>
-      <li> New Support Web Pages with a new knowledge base where you can find a lot
-    of useful information about ISE's products (Click <a href="http://support.eiffel.com">here</a>
-    to go to the support web pages).</li>
     </ul>
 <p>
 &nbsp;
-<h2>
-Bug fixes from 4.4:</h2>
+<h2>Bug fixes from 4.4:</h2>
 
     <ul>
       <li>Fixed a very old appearance bug on Windows 95 and 98: when creating a new project all directory names were shown in their DOS format and not in their<br>
@@ -157,30 +160,30 @@ Bug fixes from 4.4:</h2>
     was not part of your system.</li>
       <li>ISE EiffelBench runs smoothly on the Windows 2000 Release Candidate 2.</li>
       <li>Fixed a bug which was making ISE EiffelBench to reject the following code:
-    When redefining in class B a feature `f: like Current' from class A as `Result := Precursor', ISE EiffelBench will generate a validity error
+    When redefining in class B a feature <span class=eiffelid>f: like Current</span> from class A as <span class=eiffelid>Result := Precursor</span>, ISE EiffelBench will generate a validity error
     because it thinks that the source and the target do not have the same type where it should be valid.</li>
       <li>Changing the assertion level will not freeze your system anymore.</li>
       <li>Assertion checkings are now threaded-safe.</li>
       <li>Fixed a problem with once functions which were not initialized correctly if their return type was a basic type.</li>
-      <li>Fixed a bug in the implementation of `conforms_to' in class GENERAL.</li>
+      <li>Fixed a bug in the implementation of <span class=eiffelid>conforms_to</span> in class <span class=eiffelid>GENERAL</span>.</li>
       <li>Fixed some memory corruption due to the use of Agents.</li>
       <li>Reallocating an array, a string or a special object with a size bigger than 2^26 would crash the run-time, now you it won't but
     there is still a limitation to a size of "(2^27) - 1" for Eiffel objects. When we try to allocate more than "(2^27) -1" it will
     raise an out-of-memory exception.</li>
-      <li>Fixed a wrong implementation in class UNIX_FILE_INFO of the following features:
+      <li>Fixed a wrong implementation in class <span class=eiffelid>UNIX_FILE_INFO</span> of the following features:
     <ol>
-      <li class=small>`is_access_readable'</li>
-      <li class=small>`is_access_writable'</li>
-      <li class=small>`is_access_executable'</li>
+      <li class=small><span class=eiffelid>is_access_readable</span></li>
+      <li class=small><span class=eiffelid>is_access_writable</span></li>
+      <li class=small><span class=eiffelid>is_access_executable</span></li>
     </ol>
       </li>
-      <li>Calling `generator' or `generating_type' on basic types will now returns the correct value, i.e. the basic type class and not its counterpart
-    reference class (for example, INTEGER instead of INTEGER_REF).</li>
-      <li>Fixed a bug where calling `default' from GENERAL on a basic type was causing a crash of your application if the code was melted.</li>
-      <li>Fixed the implementation of WEL_RICH_EDIT with the incorrect use of the WEL_RICH_EDIT_STREAM. This was making some of the ISE applications to
+      <li>Calling <span class=eiffelid>generator</span> or <span class=eiffelid>generating_type</span> on basic types will now returns the correct value, i.e. the basic type class and not its counterpart
+    reference class (for example, <span class=eiffelid>INTEGER</span> instead of <span class=eiffelid>INTEGER_REF</span>.)</li>
+      <li>Fixed a bug where calling <span class=eiffelid>default</span> from <span class=eiffelid>GENERAL</span> on a basic type was causing a crash of your application if the code was melted.</li>
+      <li>Fixed the implementation of WEL_RICH_EDIT with the incorrect use of the <span class=eiffelid>WEL_RICH_EDIT_STREAM</span>. This was making some of the ISE applications to
     crash when opening a window containing a Rich-Edit control.</li>
-      <li>Fixed in WEL: the features `move' and `move_absolute' from WEL_COMPOSITE_WINDOW has been changed to fix a bug where
-    `move_absolute' was not doing what we expect to do. Therefore, programs that are using them have to make sure to update accordingly.
+      <li>Fixed in WEL: the features <span class=eiffelid>move</span> and <span class=eiffelid>move_absolute</span> from <span class=eiffelid>WEL_COMPOSITE_WINDOW</span> has been changed to fix a bug where
+    <span class=eiffelid>move_absolute</span> was not doing what we expect to do. Therefore, programs that are using them have to make sure to update accordingly.
     We have updated the EiffelVision library.</li>
       <li>Fixed runtime memory leaks for Embedded Eiffel.</li>
     </ul>

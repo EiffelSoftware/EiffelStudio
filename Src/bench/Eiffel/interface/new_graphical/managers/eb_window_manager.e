@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			minimize_all_cmd.set_pixmaps (Pixmaps.Icon_minimize_all)
 			minimize_all_cmd.set_tooltip (Interface_names.e_Minimize_all)
 			minimize_all_cmd.set_menu_name (Interface_names.m_Minimize_all)
+			minimize_all_cmd.set_tooltext (Interface_names.b_Minimize_all)
 			minimize_all_cmd.set_name ("Minimize_all")
 			minimize_all_cmd.add_agent (agent minimize_all)
 			minimize_all_cmd.enable_sensitive
@@ -71,6 +72,7 @@ feature {NONE} -- Initialization
 			raise_all_cmd.set_pixmaps (Pixmaps.Icon_raise_all)
 			raise_all_cmd.set_tooltip (Interface_names.e_Raise_all)
 			raise_all_cmd.set_menu_name (Interface_names.m_Raise_all)
+			raise_all_cmd.set_tooltext (Interface_names.b_Raise_all)
 			raise_all_cmd.set_name ("Raise_all")
 			raise_all_cmd.add_agent (agent raise_all)
 			raise_all_cmd.enable_sensitive

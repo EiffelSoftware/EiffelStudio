@@ -23,6 +23,7 @@ feature -- Attributes
 
 	id: INTEGER;
 			-- Unique identifier of the cluster
+			--| not used => remove
 
 	date: INTEGER;
 			-- Date for time stamp
@@ -999,9 +1000,8 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 	backup_subdirectory: STRING is
 			-- Translation of the `cluster_name' in something machine independent
 		do
-			if False then
-				Result := cluster_name.substring (1, (5).min (cluster_name.count))
-				Result.append_integer (id)
+			if Platform_constants.is_windows_3_1 then
+				Result := cluster_name.substring (1, (8).min (cluster_name.count))
 			else
 				Result := cluster_name
 			end

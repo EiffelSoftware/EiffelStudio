@@ -22,5 +22,10 @@ IF EXIST ..\build_studio\EiffelSoftware.CodeDom\ace.ace COPY /Y ..\build_studio\
 IF EXIST ..\build_studio\EiffelSoftware.CodeDom\ace.ace GOTO END
 ECHO Could not find ..\build_studio\EiffelSoftware.CodeDom\ace.ace !!
 
+:MANAGER
+IF EXIST ..\build_studio\ecd_manager\ace.ace COPY /Y ..\build_studio\ecd_manager\ace.ace manager.ace
+IF EXIST ..\build_studio\ecd_manager\ace.ace GOTO END
+ECHO Could not find ..\build_studio\ecd_manager\ace.ace !!
+
 :END
 ECHO Done copying Eiffel CodeDom Provider ace files.

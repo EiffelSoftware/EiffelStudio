@@ -22,24 +22,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	initialize_button (a_parent: MENU) is
+	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initializes the button part.
 		do
 			button_make (menu_entry_name, a_parent);
-			set_text (entry_text);
-			add_activate_action (associated_command, associated_command.text_window)
+			set_text (a_cmd.name);
+			add_activate_action (a_cmd, a_cmd.text_window)
 		end;
 
 feature -- Properties
 
-    associated_command: ICONED_COMMAND;
+    associated_command: TOOL_COMMAND is
             -- The associated_command
-
-    entry_text: STRING is
-            -- Text as displayed on the button
-        do
-            Result := associated_command.name
-        end
+		do	
+		end;
 
 feature -- Status setting
 

@@ -184,7 +184,7 @@ MKeyListCmp * MKeyListCmp_create(MtKey new_key, MOpType operation)
       fprintf(stderr, "out of memory !\n");
       exit(-1);
    }
-  key_list->prev_key = NULL;
+  key_list->prev_key = (MtKey) 0;
   key_list->next = NULL;
   key_list->key = new_key;
   key_list->op_type = operation;
@@ -200,8 +200,8 @@ void MKeyListCmp_initialise(MKeyListCmp * self,
   MKeyListCmp *dest_top = NULL;
   MKeyListCmp *dest_current = NULL;
 
-  self->prev_key = NULL;
-  self->key = NULL;
+  self->prev_key = (MtKey) 0;
+  self->key = (MtKey) 0;
   self->next = NULL;
 
   /*

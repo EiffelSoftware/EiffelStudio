@@ -631,13 +631,9 @@ feature {NONE} -- Implementation
 		require
 			info_not_void: info /= Void
 		local
-			tool_name: STRING
-			info_string: STRING
-			index: INTEGER
-			a_width, a_height: INTEGER
-			an_x, a_y: INTEGER
+			tool_name, info_string: STRING
+			index, an_x, a_y, a_width, a_height, counter, a_position: INTEGER
 			tool: EV_WIDGET
-			counter: INTEGER
 			storable_tool: GB_STORABLE_TOOL
 		do
 			from
@@ -664,8 +660,10 @@ feature {NONE} -- Implementation
 				info_string := info_string.substring (index + 1, info_string.count)
 				
 				index := info_string.index_of ('_', 1)
-				a_height :=  info_string.to_integer
+				a_height :=  info_string.substring (1, index - 1).to_integer
 				info_string := info_string.substring (index + 1, info_string.count)
+				
+				a_position := info_string.to_integer
 
 				tool := tool_by_name (tool_name).as_widget
 				storable_tool := tool_by_name (tool_name)
@@ -675,7 +673,7 @@ feature {NONE} -- Implementation
 				end
 					-- Add `tool' as an enternal tool, that is one that apepars if it has been docked out of
 					-- `multiple_split_area'.
-				multiple_split_area.add_external (tool, Current, storable_tool.name, 1, an_x, a_y, a_width, a_height)
+				multiple_split_area.add_external (tool, Current, storable_tool.name, a_position, an_x, a_y, a_width, a_height)
 				multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)
 				counter := counter + 1
 			end
@@ -688,7 +686,7 @@ feature {NONE} -- Implementation
 			info: ARRAY [STRING]
 			linear_rep: ARRAYED_LIST [EV_WIDGET]
 			output: STRING
-			a_dialog: EV_DIALOG
+			a_dialog: EV_DOCKABLE_DIALOG
 			storable_tool: GB_STORABLE_TOOL
 		do
 			output := ""
@@ -730,7 +728,7 @@ feature {NONE} -- Implementation
 					widget_was_storable_tool: storable_tool /= Void
 				end
 				output := storable_name_by_tool (storable_tool)
-				a_dialog := parent_dialog (linear_rep.item)
+				a_dialog ?= parent_dialog (linear_rep.item)
 				check
 					dialog_not_void: a_dialog /= Void
 				end
@@ -739,6 +737,7 @@ feature {NONE} -- Implementation
 				output := output + "_" + a_dialog.y_position.out
 				output := output + "_" + a_dialog.width.out
 				output := output + "_" + a_dialog.height.out
+				output := output + "_" + Multiple_split_area.original_index_of_external_item (linear_rep.item).out
 				info.put (output, linear_rep.index)
 				linear_rep.forth
 			end

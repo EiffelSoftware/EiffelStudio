@@ -358,6 +358,7 @@ rt_private void interpret(int flag, int where)
 	register3 long volatile offset;			/* Offset for jumps and al */
 	unsigned char * volatile string;		/* Strings for assertions tag */
 	int volatile type;						/* Often used to hold type values */
+	int volatile saved_assertion;
 	unsigned char * volatile rescue;		/* Location of rescue clause */
 	jmp_buf exenv;							/* In case we have to setjmp() */
 	RTEX;									/* Routine's execution vector and debugger
@@ -399,6 +400,7 @@ rt_private void interpret(int flag, int where)
 #endif
 #endif
 
+	saved_assertion = in_assertion;
 	is_once = 0;
 
 	if (*IC++)
@@ -750,10 +752,12 @@ rt_private void interpret(int flag, int where)
 #endif
 		trace_call_level = current_trace_level;
 		prof_stack_rewind(saved_prof_top);
-		in_assertion = 0;
-		offset = get_long();					/* Get the retry offset */
+		in_assertion = saved_assertion;		/* restore saved assertion checking because
+											 * we might have reached this code from
+											 * an assertion checking code. */
+		offset = get_long();				/* Get the retry offset */
 		IC += offset;
-		exvect = exret(MTC exvect);					/* Retries a routine */
+		exvect = exret(MTC exvect);			/* Retries a routine */
 		break;
 
 	/*

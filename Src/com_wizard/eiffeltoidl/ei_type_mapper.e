@@ -141,7 +141,7 @@ feature -- Basic operations
 				create l_text.make (l_type.count + 42)
 				l_text.append (l_type)
 				l_text.append (" cannot be converted into a valid COM type")
-				message_output.add_warning (Current, l_text)
+				message_output.add_warning (l_text)
 			end
 		end
 

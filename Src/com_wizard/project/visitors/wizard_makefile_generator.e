@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_ERRORS
+		export
+			{NONE} all
+		end
+
 feature -- Miscellaneous
 
 	makefile_macros_msc: STRING is
@@ -195,7 +200,7 @@ feature -- Basic operations
 				a_file.put_string (content)
 				a_file.close
 			else
-				message_output.add_error (Current, "Could not write makefile")
+				environment.set_abort (Makefile_write_error)
 			end
 		rescue
 			if not failed_on_rescue then

@@ -68,7 +68,7 @@ feature -- Basic operations
 				-- do nothing
 			end
 			if Result /= Void then
-				message_output.add_message (Current, Result.creation_message)
+				message_output.add_message (Result.creation_message)
 			end
 		end	
 

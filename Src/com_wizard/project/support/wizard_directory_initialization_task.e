@@ -104,8 +104,8 @@ feature {NONE} -- Implementation
 					if environment.backup then
 						l_string := "File already exists: "
 						l_string.append (a_path)
-						message_output.add_warning (Current, l_string)
-						message_output.add_message (Current, "File backed up with extension %".bac%"")
+						message_output.add_warning (l_string)
+						message_output.add_message ("File backed up with extension %".bac%"")
 						l_string := a_path.twin
 						l_string.append (".bac")
 						file_copy (a_path, l_string)

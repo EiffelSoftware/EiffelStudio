@@ -278,7 +278,7 @@ feature -- Access
 				else
 					tmp_string := a_visitor.c_type.twin
 					tmp_string.append (" Variable type is not Variant")
-					message_output.add_warning (Current, tmp_string)
+					message_output.add_warning (tmp_string)
 					create Result.make (0)
 				end
 			end

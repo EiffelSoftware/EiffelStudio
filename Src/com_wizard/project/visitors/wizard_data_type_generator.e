@@ -25,6 +25,8 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_VARIABLE_NAME_MAPPER
+	
 feature -- Access
 
 	ce_function_name: STRING

@@ -41,9 +41,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM)
 			entry_widget := gtk_text_new (NULL, NULL)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, entry_widget)
@@ -292,6 +289,9 @@ feature -- Basic operation
 			-- Set 'has_word_wrapping' to True.
 		do
 			has_word_wrapping := True
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
+				feature {EV_GTK_EXTERNALS}.GTK_POLICY_NEVER_ENUM,
+				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
 			gtk_text_set_line_wrap (entry_widget, 1)
 			gtk_text_set_word_wrap (entry_widget, 1)
 		end
@@ -300,6 +300,9 @@ feature -- Basic operation
 			-- Set 'has_word_wrapping' to False.
 		do
 			has_word_wrapping := False
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
+				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
+				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
 			gtk_text_set_line_wrap (entry_widget, 0)
 		end
 		

@@ -16,7 +16,7 @@ feature -- Access
 			create Result.make
 		end
 
-	selected, pressed, released: BOOLAN
+	selected, pressed, released: BOOLEAN
 
 	on_select is do selected := True end
 	on_press is do pressed := True end

@@ -148,8 +148,8 @@ feature -- Basic operation
 			multiple_split_area.customizeable_area_of_widget (type_selector).extend (type_selector.tool_bar)
 			multiple_split_area.extend (component_selector, component_selector.name)
 			multiple_split_area.customizeable_area_of_widget (component_selector).extend (component_selector.tool_bar)			
-			multiple_split_area.extend (window_selector, window_selector.name)
-			multiple_split_area.customizeable_area_of_widget (window_selector).extend (window_selector.tool_bar)
+			multiple_split_area.extend (window_selector.widget, window_selector.name)
+			multiple_split_area.customizeable_area_of_widget (window_selector.widget).extend (window_selector.tool_bar)
 			
 			initialize_split_areas
 			command_handler.update
@@ -807,7 +807,7 @@ feature {NONE} -- Implementation
 				
 				
 				storable_tool := tool_by_name (tool_name)
-				tool ?= storable_tool
+				tool ?= storable_tool.as_widget
 				check
 					tool_was_widget: tool /= Void
 				end
@@ -856,7 +856,7 @@ feature {NONE} -- Implementation
 			tool_name, info_string: STRING
 			index, an_x, a_y, a_width, a_height, counter, a_position: INTEGER
 			tool: EV_WIDGET
-			storable_tool: GB_STORABLE_TOOL
+			storable_tool: GB_STORABLE_TOOL		
 		do
 			from
 				counter := 1
@@ -929,7 +929,7 @@ feature {NONE} -- Implementation
 			until
 				linear_rep.off
 			loop
-				storable_tool ?= linear_rep.item
+				storable_tool := tool_by_widget (linear_rep.item)
 				check
 					widget_was_storable_tool: storable_tool /= Void
 				end
@@ -955,7 +955,7 @@ feature {NONE} -- Implementation
 			until
 				linear_rep.off
 			loop
-				storable_tool ?= linear_rep.item
+				storable_tool ?= tool_by_widget (linear_rep.item)
 				check
 					widget_was_storable_tool: storable_tool /= Void
 				end

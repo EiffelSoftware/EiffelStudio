@@ -9,16 +9,43 @@
 <body>
 
 <h1>Installation instructions</h1>
-<p>Before installing the .NET components for Eiffel.NET you need the .NET Beta
-2 Framework SDK installed on your computer. In the case you don't have it, the
-installation of the .NET components will fail during the installation of
-EiffelStudio.</p>
+<p>Before installing the .NET components for Eiffel for .NET you need to install the Visual 
+Studio .NET Release Candidate and do the proper 
+configuration of these tools to be run from the command line, otherwise the
+installation of the .NET components will fail.</p>
 
-<p>You can download the latest SDK from Microsoft by <a href="http://msdn.microsoft.com/downloads/default.asp?url=/downloads/sample.asp?url=/msdn-files/027/000/976/msdncompositedoc.xml&amp;frame=true">clicking
-here</a>.</p>
+<p>&nbsp;</p>
 
-<p class="note"><b>Note</b>: It is not necessary nor is it sufficient to install Visual Studio.NET 
-Beta 2. You need the Framework SDK in order to use Eiffel.NET.</p>
+<h2>Configuring your .NET installation</h2>
+
+<p>After installing Visual Studio .NET, you should have the following 
+directories:</p>
+<pre>C:\Program Files\Microsoft Visual Studio .NET\FrameworkSDK\bin
+C:\WINNT\Microsoft.NET\Framework\v1.0.3328</pre>
+
+<p>Depending on your version of the Visual Studio .NET Release Candidate you 
+installed, the last element of the second directory might change. Check your 
+installation for the appropriate name.</p>
+<p>&nbsp;</p>
+<p>In order to work properly, EiffelStudio for .NET needs the two above 
+directories to be in your PATH environment variable. Check your Windows 
+documentation on how to do that.</p>
+<p>&nbsp;</p>
+<p>Once it is done, open a DOS console a ensure that the following tools are 
+available:</p>
+<ul>
+  <li>gacutil.exe</li>
+  <li>sn.exe</li>
+  <li>regasm.exe</li>
+</ul>
+<h2>Configuring Eiffel for .NET after a failed installation</h2>
+<p>In the event, you installed EiffelStudio without having the proper .NET 
+configuration (as described above) you can still configure the .NET components 
+for Eiffel for .NET without redoing a reinstallation of EiffelStudio. To do so, 
+go to the $ISE_EIFFEL directory (the install directory of ISE EiffelStudio) and 
+in this directory from a DOS prompt type the following command:</p>
+<pre>dotnet_install.bat</pre>
+<p>After doing this, you will be able to use Eiffel for .NET from EiffelStudio.</p>
 
 </body>
 

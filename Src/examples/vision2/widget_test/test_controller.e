@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			current_file_name:  STRING
 		do
 			application.idle_actions.prune (application.idle_actions.first)
-			create directory_name.make_from_string (location)
+			create directory_name.make_from_string (installation_location)
 			directory_name.extend ("tests")
 			directory_string := a_type.substring (4, a_type.count)
 			directory_string.to_lower

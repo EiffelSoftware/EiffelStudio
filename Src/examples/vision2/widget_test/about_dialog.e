@@ -56,8 +56,8 @@ feature -- Initialization
 			disable_user_resize
 
 				-- Create controls.
-			if location /= Void then
-				create file_name.make_from_string (location)
+			if installation_location /= Void then
+				create file_name.make_from_string (installation_location)
 				file_name.extend ("bitmaps")
 				file_name.extend ("png")
 				file_name.extend ("bm_about.png")

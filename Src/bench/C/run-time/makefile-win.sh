@@ -192,14 +192,17 @@ EOBJECTS = \
 all:: eif_size.h
 
 
-all:: finalized.$lib
+all:: $(OUTDIR)\finalized.$lib
 
-finalized.$lib: $(OBJECTS)
+
+$(OUTDIR)\finalized.$lib: $(OBJECTS)
+	$(RM) $(OUTDIR)\finalized.$lib
 	$link_line
 
-all:: wkbench.$lib
+all:: $(OUTDIR)\wkbench.$lib
 
-wkbench.$lib: $(WOBJECTS)
+$(OUTDIR)\wkbench.$lib: $(WOBJECTS)
+	$(RM) $(OUTDIR)\wkbench.$lib
 	$link_wline
 
 mtdll:: mtwkbench.dll
@@ -269,14 +272,15 @@ finalized.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
 	$(MAKE)
 	cd ..\run-time
 
-all:: ebench.$lib
+all:: $(OUTDIR)\ebench.$lib
 
 ..\ipc\app\network.$lib: ..\ipc\app\proto.c
 	cd ..\ipc\app
 	$(MAKE)
 	cd ..\..\run-time
 
-ebench.$lib: $(EOBJECTS)
+$(OUTDIR)\ebench.$lib: $(EOBJECTS)
+	$(RM) $(OUTDIR)\ebench.$lib
 	$link_eline
 
 all:: x2c.exe

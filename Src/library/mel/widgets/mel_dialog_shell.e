@@ -1,7 +1,7 @@
 indexing
 
 	description:
-			"MEL_SHELL parent for dialog boxes.";
+			"Dialog shell.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -17,9 +17,10 @@ inherit
 		end
 
 creation
-	make, make_from_existing
+	make, 
+	make_from_existing
 
-feature {NONE} -- Initilization
+feature -- Initilization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create a motif dialog shell.
@@ -33,7 +34,7 @@ feature {NONE} -- Initilization
 			end;
 			screen_object := xm_create_dialog_shell 
 					(a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add_popup_shell (Current);
 			set_default
 		end;
 

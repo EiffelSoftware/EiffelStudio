@@ -406,7 +406,7 @@ feature {NONE} -- Implementation
 			loop
 				l_name := field_name_of_type (i, dtype)
 				if l_name.item (1) /= '_' then
-					internal_serialize (l_name, field_of_type (i, obj, dtype), tab_count + 1, f)
+					internal_serialize (l_name, field (i, obj), tab_count + 1, f)
 				end
 				i := i + 1
 			end

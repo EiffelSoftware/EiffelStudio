@@ -8,23 +8,34 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_pointer, type_i, associated_class, same_as
+			is_pointer, type_i, associated_class, same_as,
+			associated_eclass
 		end;
 	BASIC_A
 		redefine
 			is_pointer, type_i, associated_class, same_as,
-			internal_conform_to
+			internal_conform_to, associated_eclass
 		select
 			internal_conform_to
 		end
 
-feature
+feature -- Properties
 
 	is_pointer: BOOLEAN is
 			-- Is the current type a pointer type ?
 		do
 			Result := True;
 		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated eiffel class
+		once
+			Result := associated_class.e_class;
+				--- **** TO BE FIXED System should not
+				-- have COMPILED class but E_CLASS
+		end;
+
+feature
 
 	type_i: POINTER_I is
 			-- Pointer C type

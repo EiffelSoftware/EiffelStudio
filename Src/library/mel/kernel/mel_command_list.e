@@ -10,7 +10,10 @@ class
     MEL_COMMAND_LIST
 
 inherit
-    MEL_COMMAND;
+    MEL_COMMAND
+		undefine
+			copy, is_equal
+		end
 
     LINKED_LIST [MEL_COMMAND_EXEC]
 

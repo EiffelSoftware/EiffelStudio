@@ -81,7 +81,7 @@ feature
 	analyze_on (reg: REGISTRABLE) is
 		local
 			result_type: TYPE_I;
-			old_current_type: CL_TYPE_I;
+			old_current_class_type: CLASS_TYPE;
 			reg_type: TYPE_C;
 			local_is_current_temporary: BOOLEAN;
 			a: ATTRIBUTE_BL;
@@ -98,8 +98,8 @@ feature
 			local_inliner := inliner
 			local_inliner.set_inlined_feature (Current);
 
-			old_current_type := Context.current_type;
-			Context.set_current_type (current_type);
+			old_current_class_type := Context.class_type;
+			Context.set_class_type (current_class_type);
 
 			-- current_reg := get_current_register (reg_type);
 			local_is_current_temporary := reg.is_temporary or reg.is_predefined;
@@ -170,7 +170,7 @@ feature
 
 			local_inliner.set_inlined_feature (Void);
 
-			Context.set_current_type (old_current_type);
+			Context.set_class_type (old_current_class_type);
 			Context.set_inlined_current_register (Void);
 		end
 
@@ -185,7 +185,7 @@ feature -- Generation
 	generate_parameters (gen_reg: REGISTRABLE) is
 		local
 			expr: EXPR_B;
-			current_t: CL_TYPE_I
+			current_t: CLASS_TYPE
 			buf: GENERATION_BUFFER
 			local_inliner: INLINER
 			p: like parameters
@@ -247,10 +247,10 @@ feature -- Generation
 				reset_register_value (byte_code.result_type, result_reg)
 			end;
 				
-			caller_type := Context.current_type;
-			current_t := current_type;
+			caller_type := Context.class_type;
+			current_t := current_class_type;
 
-			Context.set_current_type (current_t);
+			Context.set_class_type (current_t);
 			Context.set_inlined_current_register (current_reg);
 
 			if not is_current_temporary then
@@ -261,7 +261,7 @@ feature -- Generation
 				-- `print_register' on `gen_reg' must be generated
 				-- with the old context
 				
-				Context.set_current_type (caller_type);
+				Context.set_class_type (caller_type);
 				Context.set_inlined_current_register (Void);
 				
 				gen_reg.print_register;
@@ -270,7 +270,7 @@ feature -- Generation
 				
 				buf.put_new_line
 				
-				Context.set_current_type (current_t);
+				Context.set_class_type (current_t);
 				Context.set_inlined_current_register (current_reg);
 
 			end;
@@ -319,7 +319,7 @@ feature -- Generation
 			buf.put_character ('}');
 			buf.put_new_line;
 
-			Context.set_current_type (caller_type);
+			Context.set_class_type (caller_type);
 			caller_type := Void;
 
 			local_inliner.set_inlined_feature (Void);
@@ -354,7 +354,7 @@ feature -- Registers
 
 feature -- Type information
 
-	caller_type: CL_TYPE_I
+	caller_type: CLASS_TYPE
 		-- Caller type
 
 feature {NONE}

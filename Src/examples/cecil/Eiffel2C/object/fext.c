@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include "eif_eiffel.h"	/* for CECIL features */
 #include "fext.h"
-#ifdef VERSION
-#if VERSION < 43	/* For versions compatibility */
-#include "version.h"
-#endif
-#endif
+
 EIF_OBJECT eiffel_object = (EIF_OBJECT) 0;	/* Eiffel object given to C */
 
 EIF_REFERENCE reference_from_c () {

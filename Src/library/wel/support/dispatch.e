@@ -51,7 +51,6 @@ feature {NONE} -- Implementation
 			debug ("win_dispatcher")
 				if window /= Void then
 					io.print ("in win_proc ")
-					io.print (' ')
 					io.print (hwnd)
 					io.print (' ')
 					io.print (msg)
@@ -171,7 +170,7 @@ feature {NONE} -- Externals
 			lparam: INTEGER): INTEGER is
 			-- SDK DefWindowProc
 		external
-			"C [macro <wel.h>] (HWND, UINT, WPARAM,%
+			"C [macro <wel.h>] (HWND, UINT, WPARAM, %
 				%LPARAM): EIF_INTEGER"
 		alias
 			"DefWindowProc"

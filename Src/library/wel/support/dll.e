@@ -86,7 +86,7 @@ feature {NONE} -- Externals
 			length: INTEGER): INTEGER is
 			-- SDK GetModuleFileName
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPSTR,%
+			"C [macro <wel.h>] (HINSTANCE, LPSTR, %
 				%int): EIF_INTEGER"
 		alias
 			"GetModuleFileName"

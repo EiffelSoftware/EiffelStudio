@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			-- Set up `on_event' callback for `object' when an event occurs
 			-- on medium referenced by `handle'.
 		external
-			"C (EIF_OBJECT, gint): guint | %"event.h%""
+			"C (EIF_OBJECT, gint): guint | %"io_watcher.h%""
 		alias
 			"c_io_watcher_add_watch_callback"
 		end
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 	c_initialize_callback (on_event_address: POINTER) is
 			-- Pass `on_event_address' to C side to enable callbacks.
 		external
-			"C (gpointer) | %"event.h%""
+			"C (gpointer) | %"io_watcher.h%""
 		alias
 			"c_io_watcher_initialize_callback"
 		end
@@ -199,6 +199,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.3  2000/08/10 17:35:31  etienne
+--| Changed `event.h' into `io_watcher.h'
+--|
 --| Revision 1.2  2000/07/25 17:13:32  rogers
 --| Removed arguments from calls to make from the action sequences.
 --|

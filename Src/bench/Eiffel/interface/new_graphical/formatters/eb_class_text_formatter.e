@@ -40,9 +40,6 @@ feature -- Access
 			Result := False
 		end
 
-	is_dotnet_mode: BOOLEAN
-			-- Is Current class a .NET class? 		
-
 feature -- Status setting
 
 	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
@@ -56,16 +53,6 @@ feature -- Status setting
 --			editor.drop_actions.extend (~on_class_drop)
 		end
 
-	set_dotnet_mode (a_flag: BOOLEAN) is
-			-- Set whether formatting in .NET mode to 'a_flag'
-		require
-			flag_not_void: a_flag /= Void
-		do
-			is_dotnet_mode := a_flag
-		ensure
-			mode_is_flag: is_dotnet_mode = a_flag
-		end
-
 feature -- Formatting
 
 	format is
@@ -73,8 +60,8 @@ feature -- Formatting
 		do
 			if
 				selected and then
-				displayed and then
-				class_cmd /= Void
+				displayed--and then
+--				class_cmd /= Void
 			then
 				if must_format then
 					display_temp_header

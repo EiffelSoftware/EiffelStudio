@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+class 
 	EV_ERROR_DIALOG_I
 
 inherit
@@ -12,47 +12,99 @@ inherit
 
 feature -- Status settings
 
+	add_abort_button is
+			-- Add a `Abort' button in the dialog
+		do
+			if abort_button = Void then
+				!!abort_button.make_with_text (action_area, "Abort")
+				abort_button.set_expand(True)
+			end
+		end
+
+	add_retry_button is
+			-- Add a `Retry' button in the dialog
+		do
+			if retry_button = Void then
+				!!retry_button.make_with_text (action_area, "Retry")
+				retry_button.set_expand(True)
+			end
+		end
+
+	add_ignore_button is
+			-- Add a `Ignore' button in the dialog
+		do
+			if ignore_button = Void then
+				!!ignore_button.make_with_text (action_area, "Ignore")
+				ignore_button.set_expand(True)
+			end
+		end
+
+
 	add_abortretryignore_buttons is
 			-- Add three buttons Abort, Retry and Ignore.
-		deferred
+		do
+			add_abort_button
+			add_retry_button
+			add_ignore_button
 		end
 
 	add_retrycancel_buttons is
 			-- Add two buttons Retry and Cancel.
-		deferred
+		do
+			add_retry_button
+			add_cancel_button
 		end
 
 feature -- Event - command association
 
-	add_abort_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_abort_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- the Abort button is pressed.
 			-- If there is no Abort button, the event never occurs.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
-		deferred
+		do
+			abort_button.add_click_command(cmd, args)
 		end
 
-	add_retry_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_retry_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- the Retry button is pressed.
 			-- If there is no Retry button, the event never occurs.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
-		deferred
+		do
+			retry_button.add_click_command(cmd, args)
 		end
 
-	add_ignore_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_ignore_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- the Ignore button is pressed.
 			-- If there is no Ignore button, the event never occurs.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
-		deferred
+		do
+			ignore_button.add_click_command(cmd, args)
 		end
+
+feature {NONE} -- Implementation		
+
+	icon_build (par: EV_CONTAINER) is
+			-- Load the icon
+		local
+			icon: EV_PIXMAP
+		do
+			--!!icon.make (par)
+		end
+
+	abort_button: EV_BUTTON
+
+	retry_button: EV_BUTTON
+
+	ignore_button: EV_BUTTON
 
 end -- class EV_ERROR_DIALOG_I
 

@@ -41,6 +41,9 @@ feature -- Access
 
 	finalized: BOOLEAN		
 			-- Is this a finalized compilation?
+			
+	concurrent: BOOLEAN
+			-- Does the application use concurrent Eiffel?
 	
 	precompile: BOOLEAN		
 			-- Is this a precompilation?
@@ -773,7 +776,7 @@ feature {NONE} -- Translation
 				end
 			end
 
-			precompile_libs := get_precomp_libs (lastline)
+			precompile_libs := get_libs (lastline)
 			
 			-- precompile or make application?
 			if precompile then
@@ -839,8 +842,8 @@ feature {NONE} -- Translation
 			end
 
 			lastline := clone (makefile_sh.laststring)
-			
-			precompile_libs := get_precomp_libs (lastline)
+
+			precompile_libs := get_libs (lastline)
 
 			if options.has ("cecil_make") then
 				lastline := clone (options.get_string ("cecil_make", Void))
@@ -912,6 +915,7 @@ feature {NONE}	-- substitutions
 			-- Replace all occurrences of library name in `line'
 		local
 			library_name: STRING
+			default_net_lib: STRING
 		do
 			debug ("subst")
 				io.putstring("%Tsubst_library%N")
@@ -927,10 +931,37 @@ feature {NONE}	-- substitutions
 			library_name.append_character (operating_environment.directory_separator)
 			library_name.append ("lib")
 			library_name.append_character (operating_environment.directory_separator)
+
 			if finalized then
-				library_name.append ("runtime.lib")
+				if not concurrent then
+					library_name.append ("runtime.lib")
+				else
+					library_name.append ("cruntime.lib")
+				end
 			else
-				library_name.append ("wkbench.lib")
+				if not concurrent then
+					library_name.append ("wkbench.lib")
+				else
+					library_name.append ("cwkbench.lib")
+				end
+			end
+
+			if concurrent then
+				library_name.append_character (' ')
+				default_net_lib := clone (eiffel4)
+				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append ("library")
+				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append ("net")
+				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append ("spec")
+				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append (options.get_string ("platform", Void))
+				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append ("lib")
+				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append ("net.lib")
+				library_name.append (options.get_string ("eiffelnet_lib", default_net_lib))
 			end
 
 			line.replace_substring_all ("$library", library_name)
@@ -1168,17 +1199,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_precomp_libs (line_to_search: STRING): STRING is
-			-- look for precompiled libraries
+	get_libs (line_to_search: STRING): STRING is
+			-- look for precompiled libraries, also checks if application uses concurrent Eiffel
 		local
 			line: STRING
 			next_precomp_lib: STRING
 			precomp_lib_start: INTEGER
-		do
+		once
 			Result := ""
 			
 			debug ("implementation")
-				io.putstring ("%Tget_precomp_libs%N")
+				io.putstring ("%Tget_libs%N")
 			end
 			
 			line := clone (line_to_search)
@@ -1213,6 +1244,17 @@ feature {NONE} -- Implementation
 						io.putstring ("IN: ")
 						io.putstring (line)
 						io.new_line
+					end
+				end
+				
+				-- set concurrent if application uses concurrent Eiffel
+				if finalized then
+					if line.substring_index ("libcruntime.a", 1) > 0 then
+						concurrent := true
+					end
+				else
+					if line.substring_index ("libcwkbench.a", 1) > 0 then
+						concurrent := true
 					end
 				end
 
@@ -1310,7 +1352,7 @@ feature {NONE} -- Implementation
 		local
 			platform: STRING
 			temp_result: STRING
-		do
+		once
 			debug ("implementation")
 				io.putstring("%Tconfig_eif_fn%N")
 			end

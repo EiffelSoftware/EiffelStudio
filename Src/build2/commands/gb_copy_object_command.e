@@ -68,14 +68,22 @@ feature -- Basic operations
 				-- Execute `Current'.
 			local
 				layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+				selector_item: GB_WINDOW_SELECTOR_ITEM
 				cut_object: GB_OBJECT
 				global_status: GB_GLOBAL_STATUS
 			do
 				create global_status
 				global_status.block
-					--|FIXME handle window selector
-				layout_item ?= layout_constructor.selected_item
-				cut_object := layout_item.object
+				if layout_constructor.has_focus then
+					layout_item ?= layout_constructor.selected_item
+					cut_object := layout_item.object
+				else
+					selector_item ?= window_selector.selected_window
+					check
+						selected_item_was_object: selector_item /= Void
+					end
+					cut_object := selector_item.object
+				end
 				clipboard.set_object (cut_object)
 				global_status.resume
 				command_handler.update

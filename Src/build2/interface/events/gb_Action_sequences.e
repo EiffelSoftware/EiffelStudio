@@ -6,6 +6,9 @@ indexing
 
 deferred class
 	GB_EV_ACTION_SEQUENCES
+	
+inherit
+	internal
 
 feature -- Access
 
@@ -30,6 +33,13 @@ feature -- Access
 			-- All comments of action sequences contained in `Current'.
 		deferred
 		end
+		
+	display_agents: HASH_TABLE [PROCEDURE [EV_ANY, TUPLE], STRING] is
+			-- 
+		do
+			
+		end
+		
 		
 invariant
 	-- Cannot be executed as the invariant will not execute the once.

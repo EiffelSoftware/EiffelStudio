@@ -64,15 +64,8 @@ feature -- Access
 				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
 				token /= 0
 		do
+			set_type (element_type, token)
 			state := Parameters_state
-			internal_put (element_type, current_position)
-			current_position := current_position + 1
-			if
-				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_class or
-				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype
-			then
-				compress_type_token (token)
-			end
 		ensure
 			state_set: state = Parameters_state
 		end

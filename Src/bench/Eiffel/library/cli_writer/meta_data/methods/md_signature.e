@@ -57,7 +57,26 @@ feature -- Saving
 		ensure
 			is_written: is_written
 		end
-		
+
+feature -- Settings
+
+	set_type (element_type: INTEGER_8; token: INTEGER) is
+			-- Set type in current signature.
+		require
+			token_valid: (element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_class or
+				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
+				token /= 0
+		do
+			internal_put (element_type, current_position)
+			current_position := current_position + 1
+			if
+				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_class or
+				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype
+			then
+				compress_type_token (token)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	compress_data (i: INTEGER) is

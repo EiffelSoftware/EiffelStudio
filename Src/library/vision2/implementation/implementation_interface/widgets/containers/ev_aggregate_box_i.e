@@ -18,9 +18,6 @@ inherit
 			screen_y
 		end
 
---create
---	make
-	
 feature -- Access
 
 	parent: EV_CONTAINER is
@@ -34,7 +31,7 @@ feature -- Access
 			Result := x_position + real_parent.screen_x
 		end
 
-		screen_y: INTEGER is
+	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
 		do
 			Result := y_position + real_parent.screen_y
@@ -42,17 +39,9 @@ feature -- Access
 
 	real_parent: EV_AGGREGATE_WIDGET_IMP is
 			-- Contains `Current'.
-		--local
-		--	c_parent: POINTER
-		--do
-		--	c_parent := C.gtk_widget_struct_parent (c_object)
-		--	check
-		--		c_parent_not_void: c_parent /= Void
-		--	end
-		--	Result ?= eif_object_from_c (c_parent)
-		--ensure
-		--	not_void: Result /= Void
 		deferred
+		ensure
+			not_void: Result /= Void
 		end
 
 invariant
@@ -81,6 +70,9 @@ end -- class EV_AGGREGATE_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/15 19:43:19  oconnor
+--| added PC to real_parent
+--|
 --| Revision 1.3  2000/02/15 19:23:18  rogers
 --| Now deferred, inherits EV_HORIZONTAL_BOX_I, made parent deferred. Removed creation.
 --|

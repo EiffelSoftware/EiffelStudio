@@ -23,7 +23,14 @@ Setting the Environment Variables
 
 Set environment variable ISE_EIFFEL to the Eiffel5x directory you want to run Eiffel from. This directory can be on your hard disk (for example /usr/local/Eiffel5x) or on CD-ROM.
 
-Set your ISE_PLATFORM environment variable to specify your platform. For example for Linux computers, the value should be `linux-glibc2.1'.
+Set your ISE_PLATFORM environment variable to specify your platform. For example for Linux computers, the value should be `linux-glibc2.1'. Here is the list of supported platforms and their corresponding ISE_PLATFORM environment variable value:
+- Solaris 8 and above: solaris-2.5+
+- SGI IRIX: sgi
+- HP/UX v11: hpux-11
+- Tru64: alpha
+- Linux: linux-glibc2.1
+- LinuxPPC: linuxppc
+- FreeBSD: freebsd
 
 Add the following directory to your path: $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin.
 

@@ -45,6 +45,10 @@ feature {TTY_RESOURCES} -- Initialization
 			!! raise_on_error.make ("raise_on_error", rt, True);
 			!! graphical_output_disabled.make ("graphical_output_disabled", 
 					rt, False);
+				-- True or False to have the selector at the beginning
+			!! selector_window.make ("Selector_window", rt, False) 
+--			!! selector_window.make ("Selector_window", rt, True) 
+
 		end
 
 feature -- Validation
@@ -69,6 +73,7 @@ feature -- Resources
 	interrupt_every_n_instructions: INTEGER_RESOURCE;
 	command_bar: BOOLEAN_RESOURCE;
 	format_bar: BOOLEAN_RESOURCE;
+	selector_window: BOOLEAN_RESOURCE;
 	raise_on_error: BOOLEAN_RESOURCE;
 	graphical_output_disabled: BOOLEAN_RESOURCE;
 

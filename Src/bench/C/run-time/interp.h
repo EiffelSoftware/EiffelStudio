@@ -23,7 +23,7 @@ extern "C" {
 #include "struct.h"
 
 
-/* %% ss moved to eif_types.h : struct item */ 
+/* %%ss moved to eif_types.h : struct item */ 
 
 /* Macros for easy reference */
 #define it_char		itu.itu_char

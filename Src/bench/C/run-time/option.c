@@ -34,6 +34,7 @@
 #include "eif_macros.h"
 #include "eif_except.h"
 #include "eif_timer.h"
+#include "eif_misc.h"
 #include "eif_tools.h"		/* For hashcode() */
 
 rt_public int trace_call_level = 0;	/* call level for E-TRACE

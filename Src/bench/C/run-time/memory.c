@@ -358,3 +358,25 @@ rt_public void eif_set_chunk_size (EIF_INTEGER sz)
 	if (size > 0) eif_chunk_size = size;
 	EIF_END_GET_CONTEXT
 }
+
+rt_public EIF_INTEGER eif_get_max_mem (void)
+{
+	/*
+	 * Return the maximum amount of memory the run-time can allocate.
+	 */
+
+	EIF_GET_CONTEXT
+	return (EIF_INTEGER) eif_max_mem;
+	EIF_END_GET_CONTEXT
+}
+
+rt_public EIF_INTEGER eif_get_chunk_size (void)
+{
+	/*
+	 * Return chunk size.
+	 */
+
+	EIF_GET_CONTEXT
+	return (EIF_INTEGER) eif_chunk_size;
+	EIF_END_GET_CONTEXT
+}

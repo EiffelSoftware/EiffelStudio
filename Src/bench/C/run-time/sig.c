@@ -399,10 +399,11 @@ rt_shared void initsig(void)
 
 	for (sig = 1; sig < NSIG; sig++) {
 #if defined EIF_LINUXTHREADS
-	  if ((sig != SIGUSR1) && (sig != SIGUSR2))	/* Used by LinuxThreads implementation */
-#endif
-#if defined EIF_PCTHREADS
+	  if ((sig != SIGUSR1) && (sig != SIGUSR2))	/* Used by LinuxThreads */
+#elif defined EIF_PCTHREADS
 	  if (sig != SIGVTALRM)				/* Used by PCThread implementation */
+/* #elif defined VXWORKS */
+/* 	  if (sig == 34528) */
 #endif
 		old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 		if (old == SIG_IGN)

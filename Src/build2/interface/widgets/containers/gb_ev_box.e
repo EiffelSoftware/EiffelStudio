@@ -167,6 +167,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			second: like ev_type
 			temp_string: STRING
 			box_parent1, box_parent2: EV_BOX
+			child_object: GB_OBJECT
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Is_item_expanded_string)
@@ -192,6 +193,8 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					else
 						box_parent1.disable_item_expand (first.item)
 						box_parent2.disable_item_expand (second.item)
+						child_object := Object_handler.object_from_display_widget (first.item)
+						child_object.disable_expanded_in_box
 					end
 					first.forth
 					second.forth

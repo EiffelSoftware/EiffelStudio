@@ -85,11 +85,7 @@ feature {AST_YACC} -- Implementation
 		local
 			l_member: SYSTEM_DLL_CODE_TYPE_MEMBER
 			l_type_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION
-			l_members_mapping: ECDP_MEMBERS_MAPPING
 		do
-			create l_members_mapping
-			l_members_mapping.add_feature_clause (l_as.line_number)
-
 			from
 				l_as.features.start
 			until
@@ -100,7 +96,7 @@ feature {AST_YACC} -- Implementation
 				check
 					non_void_l_member: l_member /= Void
 				end
-				--l_member.set_private
+
 				l_type_declaration ?= current_element
 				check
 					non_void_l_type_declaration: l_type_declaration /= Void
@@ -352,12 +348,10 @@ feature {NONE} -- CodeDom object initialization
 			non_void_a_class: a_class /= Void
 			non_void_a_type_declaration: a_type_declaration /= Void
 		local
-			l_parent_type_name, l_parent_clauses: STRING
-			l_attributes: SYSTEM_DLL_MEMBER_ATTRIBUTES
+			l_parent_type_name: STRING
 			l_custom_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION
 			l_comment: SYSTEM_DLL_CODE_COMMENT_STATEMENT
 			l_ca: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
-			l_members_mapping: ECDP_MEMBERS_MAPPING
 		do
 				-- Add key `From_eiffel_code' into user_data
 				-- for futur generation code.
@@ -413,7 +407,6 @@ feature {NONE} -- CodeDom object initialization
 			end
 
 				-- Add features to type if any.
-			(create {ECDP_MEMBERS_MAPPING}).reset_feature_clauses
 			if a_class.features /= Void then
 				from
 					a_class.features.start
@@ -445,10 +438,6 @@ feature {NONE} -- CodeDom object initialization
 			a_type_declaration.set_is_class (True)
 			a_type_declaration.set_is_enum (False)
 			a_type_declaration.set_is_interface (a_class.is_deferred)
-			
-				-- Set members mapping for futur code generation.
-			create l_members_mapping
-			l_members_mapping.set_members (a_type_declaration.members)
 		end
 
 	initialize_parent_clauses (a_parent: PARENT_AS): STRING is
@@ -487,7 +476,6 @@ feature {NONE} -- CodeDom object initialization
 			l_type_ref: SYSTEM_DLL_CODE_TYPE_REFERENCE
 			l_custom_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION
 			l_expression: SYSTEM_DLL_CODE_EXPRESSION
-			l_const: CONSTANT_AS
 			l_ca: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			create Result.make
@@ -538,7 +526,6 @@ feature {NONE} -- CodeDom object initialization
 		local
 			l_type_ref: SYSTEM_DLL_CODE_TYPE_REFERENCE
 			l_custom_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION
-			l_parameter: SYSTEM_DLL_CODE_PARAMETER_DECLARATION_EXPRESSION
 			l_ca: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			l_returned_type: STRING
 		do

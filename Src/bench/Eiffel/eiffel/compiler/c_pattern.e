@@ -375,12 +375,18 @@ feature
 			-- Generate C routine call
 		local
 			i, nb: INTEGER;
+			generate_test_macro: BOOLEAN;
 		do
 			if not result_type.is_void then
 				file.putstring ("result = ");
 			end;
-			file.putchar ('(');
-			result_type.generate_function_cast (file);
+			if is_extern and then result_type.is_boolean then
+				generate_test_macro := True;
+				file.putstring ("EIF_TEST((");
+			else
+				file.putchar ('(');
+				result_type.generate_function_cast (file);
+			end;
 			file.putstring ("ptr)(");
 			nb := argument_count;
 			if not is_extern then
@@ -400,6 +406,9 @@ feature
 					file.putchar (',');
 				end;
 				i := i + 1;
+			end;
+			if generate_test_macro then
+				file.putchar (')');
 			end;
 			file.putstring (");%N");
 		end;

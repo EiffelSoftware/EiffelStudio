@@ -223,25 +223,30 @@ feature -- Contract support
 	all_radio_buttons_connected: BOOLEAN is
 			-- Are all radio buttons in this container connected?
 		local
-			l: LINEAR [EV_WIDGET]
+			cur: CURSOR
+			l: DYNAMIC_LIST [EV_WIDGET]
 			peer: EV_RADIO_BUTTON
 			peers: LINKED_LIST [EV_RADIO_PEER]
 		do
-			l := linear_representation
-			from
-				l.start
-			until
-				l.off or else not Result
-			loop
-				peer ?= item
-				if peer /= Void then
-					if peers = Void then
-						peers := peer.peers
-					else
-						Result := peers.has (peer)
+			l ?= linear_representation
+			if l /= Void then
+				from
+					cur := l.cursor
+					l.start
+				until
+					l.off or else not Result
+				loop
+					peer ?= item
+					if peer /= Void then
+						if peers = Void then
+							peers := peer.peers
+						else
+							Result := peers.has (peer)
+						end
 					end
-				end
 				l.forth
+				end
+				l.go_to (cur)
 			end
 			if peers = Void then
 				Result := True
@@ -288,6 +293,10 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/01 00:09:59  brendel
+--| Fixed bug in `all_radio_buttons_connected' feature, where before it
+--| assumed that linear_representation returned a copy of a list.
+--|
 --| Revision 1.20  2000/02/29 20:02:07  brendel
 --| Contract support feature now searches only for radio-button instead of
 --| radio-peers.

@@ -19,6 +19,7 @@
 #include "eif_globals.h"
 #include "rt_retrieve.h"
 #include "minilzo.h"
+#include <string.h>
 
 #ifdef EIF_WIN32
 #include <io.h>

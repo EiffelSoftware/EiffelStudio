@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 	set is
 			-- Yacc initialization
 		do
-			-- Do nothing
+			line_number := yacc_line_number
 		end;
 
 feature -- Comparison

@@ -17,7 +17,8 @@ feature {NONE} -- Initialization
 			-- Yacc initialization
 		do
 			call ?= yacc_arg (0);
-			start_position := yacc_position
+			start_position := yacc_position;
+			line_number    := yacc_line_number
 		ensure then
 			call_exists: call /= Void;
 		end;

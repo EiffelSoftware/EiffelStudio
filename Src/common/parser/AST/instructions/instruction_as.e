@@ -11,10 +11,12 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			number_of_stop_points
+			number_of_stop_points, line_number
 		end
 
 feature -- Access
+
+	line_number : INTEGER;
 
 	start_position: INTEGER;
 			-- Start position of AST

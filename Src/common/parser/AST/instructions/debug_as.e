@@ -33,7 +33,8 @@ feature {NONE} -- Initialization
 					keys.forth
 				end;
 			end;
-			start_position := yacc_position
+			start_position := yacc_position;
+			line_number    := yacc_line_number
 		end;
 
 feature -- Properties

@@ -11,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			number_of_stop_points, is_equivalent
+			number_of_stop_points, is_equivalent, line_number
 		end
 
 feature {NONE} -- Initialization
@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			expr ?= yacc_arg (0);
 			compound ?= yacc_arg (1);
+			line_number := yacc_line_number
 		ensure then
 			expr_exists: expr /= Void
 		end;
@@ -43,6 +44,8 @@ feature -- Comparison
 		end
 
 feature -- Access
+
+	line_number : INTEGER;
 
 	number_of_stop_points: INTEGER is
 			-- Number of stop points for AST

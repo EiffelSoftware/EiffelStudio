@@ -18,7 +18,8 @@ feature {NONE} -- Initialization
 		do
 			target ?= yacc_arg (0);
 			source ?= yacc_arg (1);
-			start_position := yacc_position
+			start_position := yacc_position;
+			line_number    := yacc_line_number
 		ensure then
 			target_exists: target /= Void;
 			source_exists: source /= Void;

@@ -22,7 +22,8 @@ feature {NONE} -- Initialization
 			switch ?= yacc_arg (0);
 			case_list ?= yacc_arg (1);
 			else_part ?= yacc_arg (2);
-			start_position := yacc_position
+			start_position := yacc_position;
+			line_number    := yacc_line_number
 		ensure then
 			switch_exists: switch /= Void
 		end;
@@ -40,18 +41,18 @@ feature -- Properties
 
 feature -- Access
 
-    number_of_stop_points: INTEGER is
-            -- Number of stop points for AST
-        do
-            Result := 1;
-            if case_list /= Void then
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+			Result := 1;
+			if case_list /= Void then
 				Result := Result + case_list.number_of_stop_points
-            end;
-            if else_part /= Void then
+			end;
+			if else_part /= Void then
 				Result := Result + else_part.number_of_stop_points
-            	Result := Result + 1;
-            end;
-        end
+				Result := Result + 1;
+			end;
+		end
 
 feature -- Comparison
 

@@ -72,4 +72,11 @@ feature {SERVER} -- Identity
 				-- treated as unknown
 		end;
 
+	line_number : INTEGER is
+			-- line of the item in the source text
+		do
+			Result := -1;
+				-- treated as unknown
+		end;
+
 end -- class AST_EIFFEL

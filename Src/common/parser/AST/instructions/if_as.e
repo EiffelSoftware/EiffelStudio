@@ -23,7 +23,8 @@ feature {NONE} -- Initialization
 			compound ?= yacc_arg (1);
 			elsif_list ?= yacc_arg (2);
 			else_part ?= yacc_arg (3);
-			start_position := yacc_position
+			start_position := yacc_position;
+			line_number    := yacc_line_number
 		ensure then
 			condition_exists: condition /= Void;
 		end;

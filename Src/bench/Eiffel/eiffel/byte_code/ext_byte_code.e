@@ -49,9 +49,6 @@ feature -- Attributes for externals
 	include_list: ARRAY[STRING];
 			-- List of include files
 
-	dll_arg: STRING;
-			-- Extra arg for dll (Windows)
-
 feature -- Routines for externals
 
 	is_special: BOOLEAN is
@@ -100,12 +97,6 @@ feature -- Routines for externals
 			-- Assign `i' to `special_id'
 		do
 			special_id := i;
-		end;
-
-	set_dll_arg (s: STRING) is
-			-- set `dll_arg' to s
-		do
-			dll_arg := s;
 		end;
 
 	set_special_file_name (s: STRING) is
@@ -321,10 +312,19 @@ feature -- Byte code generation
 			generated_file.putstring ("if (a_result < 32) eraise (%"Can not load library%",EN_PROG);");
 			generated_file.new_line;
 			generated_file.putstring ("fp = GetProcAddress (a_result, ");
-			generated_file.putstring (dll_arg);
+			if external_name.is_integer then
+				generated_file.putstring ("MAKEINTRESOURCE (MAKELONG (");
+				generated_file.putstring (external_name);
+				generated_file.putstring (", 0))");
+			else
+				generated_file.putchar ('"');
+				generated_file.putstring (external_name);
+				generated_file.putchar ('"');
+			end
 			generated_file.putstring (");");
 			generated_file.new_line;
-			generated_file.putstring ("if (fp == NULL) eraise (%"Can not find function%",EN_PROG);");
+			generated_file.putstring ("if (fp == NULL) %
+						%{FreeLibrary (a_result); eraise (%"Can not find function%",EN_PROG);}");
 			generated_file.new_line;
 			generated_file.putstring ("handle = GetIndirectFunctionHandle (fp");
 			if arguments /= Void then
@@ -333,18 +333,23 @@ feature -- Byte code generation
 			end;
 			generated_file.putstring (", INDIR_ENDLIST);");
 			generated_file.new_line;
-			generated_file.putstring ("if (handle == NULL) eraise (%"Can not allocate function handle%",EN_PROG);");
+			generated_file.putstring ("if (handle == NULL) %
+						%{FreeLibrary (a_result); eraise (%"Can not allocate function handle%",EN_PROG);}");
+			generated_file.new_line;
+
+			if not result_type.is_void then
+				generated_file.putstring ("Result = ");
+			end;
+			generated_file.putstring ("InvokeIndirectFunction (handle");
+			if arguments /= Void then
+				generated_file.putchar (',');
+				generate_arguments;
+			end;
+			generated_file.putstring (");");
+			generated_file.new_line;
+			generated_file.putstring ("FreeLibrary (a_result);");
 			generated_file.new_line;
 			if not result_type.is_void then
-				generated_file.putstring ("Result = InvokeIndirectFunction (handle");
-				if arguments /= Void then
-					generated_file.putchar (',');
-					generate_arguments_with_cast;
-				end;
-				generated_file.putstring (");");
-				generated_file.new_line;
-				generated_file.putstring ("FreeLibrary (a_result);");
-				generated_file.new_line;
 				generated_file.putstring ("return ");
 				if has_return_type then
 					generated_file.putchar ('(');
@@ -354,17 +359,7 @@ feature -- Byte code generation
 				end;
 				generated_file.putstring ("Result;");
 				generated_file.new_line;
-			else
-				generated_file.putstring ("InvokeIndirectFunction (handle");
-				if arguments /= Void then
-					generated_file.putchar (',');
-					generate_arguments_with_cast;
-				end;
-				generated_file.putstring (");");
-				generated_file.new_line;
-				generated_file.putstring ("FreeLibrary (a_result);");
-				generated_file.new_line;
-			end;
+			end
 		end;
 
 	generate_dll32_body is
@@ -392,7 +387,7 @@ feature -- Byte code generation
 			generated_file.new_line;
 			generated_file.putstring ("fp = GetProcAddress (a_result,%"Win386LibEntry%");");
 			generated_file.new_line;
-			generated_file.putstring ("if (fp == NULL) eraise (%"Can not find entry point%",EN_PROG);");
+			generated_file.putstring ("if (fp == NULL) {FreeLibrary (a_result); eraise (%"Can not find entry point%",EN_PROG);}");
 			generated_file.new_line;
 			generated_file.putstring ("hindir1 = GetIndirectFunctionHandle (fp");
 			if arguments /= Void then
@@ -401,7 +396,8 @@ feature -- Byte code generation
 			end;
 			generated_file.putstring (", INDIR_WORD, INDIR_ENDLIST);");
 			generated_file.new_line;
-			generated_file.putstring ("if (hindir1 == NULL) eraise (%"Can not allocate function handle%",EN_PROG);");
+			generated_file.putstring ("if (hindir1 == NULL) %
+											%{FreeLibrary (a_result); eraise (%"Can not allocate function handle%",EN_PROG);}");
 			generated_file.new_line;
 			if not result_type.is_void then
 				generated_file.putstring ("Result = ");
@@ -409,10 +405,10 @@ feature -- Byte code generation
 			generated_file.putstring ("InvokeIndirectFunction (hindir1");
 			if arguments /= Void then
 				generated_file.putchar (',');
-				generate_arguments_with_cast;
+				generate_arguments;
 			end;
 			generated_file.putchar (',');
-			generated_file.putstring (dll_arg);
+			generated_file.putstring (external_name);
 			generated_file.putstring (");");
 			generated_file.new_line;
 			generated_file.putstring ("FreeLibrary (a_result);");

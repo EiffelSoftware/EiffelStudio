@@ -31,7 +31,7 @@ class CONSOLE inherit
 			readword, putint, putbool, putreal, putdouble, putstring, putchar
 		end
 
-creation
+creation {STD_FILES}
 	make_open_stdin, make_open_stdout, make_open_stderr
 
 feature -- Initialization
@@ -98,7 +98,7 @@ feature -- Input
 			last_double := console_readdouble (file_pointer)
 		end;
 
-  read_line, readline is
+	read_line, readline is
 			-- Read a string until new line or end of file.
 			-- Make result available in `last_string'.
 			-- New line will be consumed but not part of `last_string'.
@@ -148,8 +148,7 @@ feature -- Input
 		do
 			last_string.resize (nb_char)
 			str_area := last_string.to_c
-			new_count := console_readstream (file_pointer, $str_area,
-nb_char)
+			new_count := console_readstream (file_pointer, $str_area, nb_char)
 			last_string.set_count (new_count)
 		end;
 
@@ -342,8 +341,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 	
-	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER):
-INTEGER is
+	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
 			-- Read a string excluding white space and stripping
 			-- leading white space from `file' into `a_string'.
 			-- White space characters are: blank, new_line,
@@ -379,7 +377,7 @@ INTEGER is
 		alias
 			"console_file_close"
 		end
-	
+
 end -- class CONSOLE
 
 

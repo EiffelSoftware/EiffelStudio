@@ -30,7 +30,7 @@ class CONSOLE inherit
 			put_new_line, new_line, end_of_file, file_close,
 			readint, readreal, readdouble, readchar, readline, readstream,
 			readword, putint, putbool, putreal, putdouble, putstring, putchar,
-			dispose
+			dispose, read_to_string
 		end
 
 create {STD_FILES}
@@ -286,6 +286,17 @@ feature {NONE} -- Inapplicable
 			--| `empty' is false not to invalidate invariant clauses.
 
 feature {NONE} -- Implementation
+
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		local
+			str_area: ANY
+		do
+			str_area := a_string.area
+			Result := console_readstream (file_pointer, $str_area + (pos - 1), nb)
+		end
 
 	console_def (number: INTEGER): POINTER is
 			-- Convert `number' to the corresponding

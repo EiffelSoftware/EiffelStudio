@@ -93,6 +93,17 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		local
+			str_area: ANY
+		do
+			str_area := a_string.area
+			Result := file_gss (file_pointer, $str_area + (pos - 1), nb)
+		end
+
 	file_gi (file: POINTER): INTEGER is
 			-- Get an integer from `file'
 		external

@@ -17,7 +17,4 @@ cluster
 		exclude
 			"table_eiffel3";"desc"
 		end
-
-	thread:				"$ISE_EIFFEL/library/thread"
-
 end

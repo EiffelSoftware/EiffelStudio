@@ -57,12 +57,11 @@ feature -- Access
 		local
 			l_abs, l_url_name, l_file_name: STRING
 			l_url_arr, 
-			l_filename_arr,
-			l_det_arr: ARRAY [STRING]
+			l_filename_arr: ARRAY [STRING]
 			cnt,
 			l_no_parents,
 			l_last_match_index: INTEGER
-			l_match, l_parent: BOOLEAN
+			l_match: BOOLEAN
 			l_filename: FILE_NAME
 		do
 			if not external_link then				
@@ -80,24 +79,23 @@ feature -- Access
 						if l_url_arr /= Void and l_filename_arr /= Void then
 							
 									-- Compare array directory until there is no match
-									-- of the filename array is exhausted
+									-- or the filename array is exhausted
 							from
 								cnt := 1
 								l_match := True
 							until
 								cnt > l_filename_arr.count or not l_match
 							loop
-								l_match := l_url_arr.item (cnt).is_equal (l_filename_arr.item (cnt))
-								if l_match then									
-									l_last_match_index := cnt	
-								end
+								if cnt <= l_url_arr.count then									
+									l_match := l_url_arr.item (cnt).is_equal (l_filename_arr.item (cnt))
+									if l_match then									
+										l_last_match_index := cnt	
+									end
+								end							
 								cnt := cnt + 1
 							end
 							
-								-- If match is true here we are dealing with the same directory or
-								-- sub-directory, since the filename array must have been exhausted,
-								-- implying the url array is the same size or longer, so now we work out the
-								-- number of parents from this
+								-- If match is false here the filename array must have been exhausted
 							if not l_match then
 								from
 									l_no_parents := cnt - l_last_match_index
@@ -108,6 +106,18 @@ feature -- Access
 									l_no_parents := l_no_parents - 1
 								end									
 							end							
+							
+								-- If match is true here we must have exhausted the url array	
+							if l_match then
+								from
+									l_no_parents := l_filename_arr.count - l_last_match_index
+								until
+									l_no_parents = 0
+								loop				
+									l_filename.extend ("..")	
+									l_no_parents := l_no_parents - 1
+								end									
+							end		
 								
 								-- Now add the remaining url directory names
 							from

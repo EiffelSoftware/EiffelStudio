@@ -93,6 +93,7 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
 rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
 
+rt_private void internal_find_all_instances (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
 rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
 rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
 
@@ -511,6 +512,26 @@ rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_t
 }
 
 /*
+doc:	<routine name="find_all_instances" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>Find all objects in system and return a SPECIAL object containing them all.</summary>
+doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL[ANY].</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_eo_store_mutex'.</synchronization>
+doc:	</routine>
+*/
+
+rt_public EIF_REFERENCE find_all_instances (EIF_INTEGER result_type)
+{
+	RT_GET_CONTEXT
+	EIF_REFERENCE result = NULL;
+	EIF_EO_STORE_LOCK;
+	result = matching (internal_find_all_instances, result_type);
+	EIF_EO_STORE_UNLOCK;
+	return result;
+}
+
+
+/*
 doc:	<attribute name="found_collection" return_type="struct obj_array *" export="private">
 doc:		<summary>Collects all matching objects found in `find_instance_of' or `find_referers'.</summary>
 doc:		<access>Read/Write</access>
@@ -569,6 +590,23 @@ rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENC
 		((EIF_INTEGER) ((HEADER(enclosing)->ov_flags) & EO_TYPE) == instance_type ? 1 : 0) &&
 		(!((HEADER(enclosing)->ov_flags) & EO_STORE)))
 	{
+		obj_array_extend (enclosing, found_collection);
+	}
+}
+
+/*
+doc:	<routine name="internal_find_all_instances" export="private">
+doc:		<summary>Add `enclosing' to `found_collection' if not yet processed, as we try to find all objects in universe.</summary>
+doc:		<param name="enclosing" type="EIF_REFERENCE">Object we possibly want to add to `found_collection'.</param>
+doc:		<param name="compare_to" type="EIF_REFERENCE">Only for signature purposes. We only do something if `enclosing' references the same object as `compare_to'.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
+rt_private void internal_find_all_instances (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to)
+{
+	if ((enclosing == compare_to) && (!((HEADER(enclosing)->ov_flags) & EO_STORE))) {
 		obj_array_extend (enclosing, found_collection);
 	}
 }

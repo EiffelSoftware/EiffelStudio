@@ -14,14 +14,7 @@ inherit
 			interface
 		end
 
-	EV_MENU_HOLDER_IMP
-		undefine
-			add_menu_ok,
-			set_foreground_color,
-			set_background_color
-		redefine
-			interface
-		end
+	EV_MENU_ITEM_LIST_IMP
 
 	EV_BUTTON_IMP
 		rename
@@ -311,6 +304,9 @@ end -- class EV_OPTION_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/19 01:08:26  oconnor
+--| removed refs to old EV_MENU_HOLDER class
+--|
 --| Revision 1.15  2000/02/14 11:40:32  oconnor
 --| merged changes from prerelease_20000214
 --|

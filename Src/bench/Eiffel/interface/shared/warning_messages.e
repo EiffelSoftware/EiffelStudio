@@ -35,10 +35,6 @@ feature -- Project file/directory warnings
 			Result.append ("%NYou may try again after fixing the permissions.")
 		end
 
-	w_Cannot_retrieve_info: STRING is 
-		"Cannot read class/feature information.%N%
-		%Check permissions in EIFGEN and subdirectories."
-
 	w_Project_directory_not_exist (file_name, dir_name: STRING): STRING is
 			-- Error message when something is missing in the Project directory.
 		require
@@ -52,17 +48,6 @@ feature -- Project file/directory warnings
 			Result.append ("'.")
 		end
 
-	w_Cannot_retrieve_project (dir_name: STRING): STRING is
-		require
-			dir_name_not_void: dir_name /= Void
-		do
-			create Result.make (30)
-			Result.append ("Project in: ")
-			Result.append (dir_name)
-			Result.append ("%NCannot be retrieved. Check permissions")
-			Result.append ("%Nand please try again.")
-		end
-
 	w_Cannot_compile: STRING is "Read-only project: cannot compile."
 
 	w_Project_exists (dir_name: STRING): STRING is
@@ -74,18 +59,6 @@ feature -- Project file/directory warnings
 			Result.append (dir_name)
 			Result.append ("' an Eiffel project already exists.%N")
 			Result.append ("Do you wish to overwrite it?")
-		end
-
-	w_Project_could_not_deleted (dir_name: STRING): STRING is
-		require
-			dir_name_not_void: dir_name /= Void
-		do
-			create Result.make (128)
-			Result.append ("Could not delete project in`")
-			Result.append (dir_name)
-			Result.append ("'.%N")
-			Result.append ("Please select another directory or make sure%N")
-			Result.append ("that no programs are using a file from this project.")
 		end
 
 	w_Project_corrupted (dir_name: STRING): STRING is
@@ -153,12 +126,6 @@ feature -- Project file/directory warnings
 			Result.append ("%Nwas interrupted. Cannot continue.")
 		end
 		
-	w_Project_may_be_corrupted: STRING is "Some files were made unwritable.%N%
-				%Cannot continue the compilation. Please try again."
-
-	w_Read_only_project: STRING is "No write permissions on project.%N%
-				%Open in read-only mode?"
-
 	w_None_system: STRING is "A system whose root class is NONE is not runnable."
 
 feature -- File warnings
@@ -183,16 +150,6 @@ feature -- File warnings
 			Result.append (".")
 		end
 
-	w_Cannot_read_directory (dir_name: STRING): STRING is
-		require
-			dir_name_not_void: dir_name /= Void
-		do
-			create Result.make (128)
-			Result.append ("Directory: ")
-			Result.append (dir_name)
-			Result.append ("%Ncannot be read.")
-		end
-
 	w_Cannot_read_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -211,27 +168,6 @@ feature -- File warnings
 			Result.append (". Try again?")
 		end
 
-	w_Cannot_read_filter (file_name: STRING): STRING is
-		require
-			file_name_not_void: file_name /= Void
-		do
-			create Result.make (file_name.count + 25)
-			Result.append ("Cannot read filter '")
-			Result.append (file_name)
-			Result.append ("'.")
-		end
-
-	w_Default_ace_file_not_exist (f_name: STRING): STRING is
-			-- Error message when the Ace file `f_name' does not exist.
-		require
-			f_name_not_void: f_name /= Void
-		do
-			create Result.make (128)
-			Result.append ("Default ace file: ")
-			Result.append (f_name)
-			Result.append ("%Ndoes not exist.")
-		end
-
 	w_file_not_exist (f_name: STRING): STRING is
 			-- Error message when `f_name' does not exist.
 		require
@@ -245,7 +181,6 @@ feature -- File warnings
 
 	w_File_does_not_exist_execution_impossible: STRING is " does not exist.%NExecution impossible.%N"
 
-	
 	w_Directory_not_exist (dir_name: STRING): STRING is
 			-- Error message when a directory does not exist.
 		require
@@ -257,28 +192,6 @@ feature -- File warnings
 			Result.append ("%Ndoes not exist.")
 		end
 			
-	w_Directory_already_exists (dir_name: STRING): STRING is
-			-- Error message when a directory already exists.
-		require
-			dir_name_not_void: dir_name /= Void
-		do
-			create Result.make (128)
-			Result.append ("Directory ")
-			Result.append (dir_name)
-			Result.append ("%Nalready exists.")
-		end
-			
-	w_Directory_wrong_permissions (dir_name: STRING): STRING is
-		require
-			dir_name_not_void: dir_name /= Void
-		do
-			create Result.make (30)
-			Result.append ("Directory: ")
-			Result.append (dir_name)
-			Result.append ("%Ndoes not have read-write-execute permissions.")
-			Result.append ("%NYou may try again after fixing the permissions.")
-		end
-
 	w_Not_a_plain_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -296,15 +209,6 @@ feature -- File warnings
 			Result.append ("File: ")
 			Result.append (file_name)
 			Result.append (" cannot be created.%NPlease check permissions.")
-		end
-
-	w_Not_readable (file_name: STRING): STRING is
-		require
-			file_name_not_void: file_name /= Void
-		do
-			create Result.make (30)
-			Result.append (file_name)
-			Result.append ("%Nis not readable.")
 		end
 
 	w_Not_writable (file_name: STRING): STRING is
@@ -383,27 +287,6 @@ feature -- Debug warnings
 	w_Cannot_debug: STRING is "Current version of system has not been successfully compiled.%N%
 						%Cannot use debugging facilities."
 
-	w_Cannot_debug_attributes: STRING is
-			"This format is not applicable to attributes."
-
-	w_Cannot_debug_constants: STRING is
-			"This format is not applicable to constant attributes."
-
-	w_Cannot_debug_deferreds: STRING is
-			"This format is not applicable to deferred features."
-
-	w_Cannot_debug_dynamics: STRING is
-			"This format is not applicable to dynamic features."
-
-	w_Cannot_debug_externals: STRING is
-			"This format is not applicable to external features."
-
-	w_Cannot_debug_feature: STRING is
-			"This format is not applicable to this feature."
-
-	w_Cannot_debug_uniques: STRING is
-			"This format is not applicable to unique attributes."
-
 	w_Debug_not_compiled: STRING is
 			-- The user tries to launch an application that is not fully compiled.
 		"The last compilation was not complete.%N%
@@ -415,8 +298,6 @@ feature -- Debug warnings
 		"Classes were manually removed since last compilation.%N%
 		%Running the last compiled application in these conditions%N%
 		%may lead to inconsistent information, or to an unexpected behavior."
-
-	w_Disable_breakpoints: STRING is "Do you wish to disable all breakpoints?"
 
 	w_Invalid_working_directory (wd: STRING): STRING is
 			-- Message when working directory is incorrect.
@@ -522,19 +403,6 @@ feature -- Cluster tree warnings
 			Result.append (".")
 		end
 
-	w_Cannot_find_feature (feat_name, class_name: STRING): STRING is
-		require
-			feat_name_not_void: feat_name /= Void
-			class_name_not_void: class_name /= Void
-		do
-			create Result.make (30)
-			Result.append ("Cannot find feature ")
-			Result.append (feat_name)
-			Result.append (" for class ")
-			Result.append (class_name.as_upper)
-			Result.append (".")
-		end
-
 	w_Choose_class_or_cluster: STRING is
 			-- No class/cluster stone was selected in the development window.
 		"Please first select in the editor the class or cluster%Nthat you want to locate."
@@ -611,19 +479,6 @@ feature -- Cluster tree warnings
 						%Please select a different feature name.")
 		end
 
-	w_Class_modified (class_name: STRING): STRING is
-		require
-			class_name_not_void: class_name /= Void
-		do
-			create Result.make (30)
-			Result.append ("Class ")
-			Result.append (class_name.as_upper)
-			Result.append (" has been modified since last compilation.%N")
-			Result.append ("The text will not be clickable.")
-		end
-
-	w_Class_not_in_universe: STRING is "Class is not in the universe."
-
 	w_Clear_breakpoints: STRING is "Forget all breakpoints?"
 
 	w_Cluster_path_already_exists (path: STRING): STRING is
@@ -670,10 +525,6 @@ feature -- Cluster tree warnings
 						%removed from the system.%N%N%
 						%Are you sure this is what you want?"
 		end
-
-	w_Compiling: STRING is "Command cannot be executed while the project is%N%
-							%being compiled.%N%
-							%Please wait until compilation finishes."
 	
 	w_Could_not_locate (cl_name: STRING): STRING is
 			-- Class/cluster could not be found in the cluster tree.
@@ -690,10 +541,6 @@ feature -- Cluster tree warnings
 			Result := "Command cannot be executed unless compilation%N%
 						%goes through degree " + degree.out + "."
 		end
-
-	w_Unsuccessful_compilation: STRING is "Command cannot be executed because last compilation%N%
-											%was not successful.%N%
-											%Please compile the project before calling this command."
 
 	w_Project_not_compiled: STRING is 
 			"Command cannot be executed because the project%N%
@@ -732,18 +579,6 @@ feature -- Cluster tree warnings
 
 feature -- Backup warnings
 
-	w_cannot_backup_project (base_name: STRING): STRING is
-			-- To backup the project
-		require
-			base_name_not_void: base_name /= Void
-		do
-			create Result.make (128)
-			Result.append ("Cannot make a backup of your old project in %N")
-			Result.append (base_name)
-			Result.append (".%NMake sure that no backup directory is already there%N")
-			Result.append ("and that you have write permissions to this directory.")
-		end	
-
 	w_Crashed: STRING is 
 		once
 			Result := "An unexpected error occurred.%N"+
@@ -779,11 +614,6 @@ feature -- Backup warnings
 	w_Save_backup: STRING is "You are about to overwrite the original file with%N%
 					%the backup file. Previous content will be lost%N%
 					%and the backup file deleted."
-
-	w_Edited_backup: STRING is "You edited a backup version of the file.%N%
-							%Do you want to save your modifications to the backed up version%N%
-							%or erase the backup file and save your modifications%N%
-							%to the normal file?"
 
 feature -- Dynamic library warnings
 
@@ -893,15 +723,6 @@ feature -- Dynamic library warnings
 	w_Unsaved_changes: STRING is
 			-- The user tries to exit the dialog although some modifications were not saved.
 		"This will discard the modifications."
-		
-
-feature -- Preferences warnings
-
-	w_Preferences_delayed_resources: STRING is
-		once
-			Result := "The changes you have made to the following resources%N%
-				%will be effective when you restart " + Workbench_name + ".%N%N"
-		end
 
 feature -- Ace/Project settings warnings
 
@@ -910,10 +731,6 @@ feature -- Ace/Project settings warnings
 	
 	w_Incorrect_ace_configuration: STRING is "Some values are invalid, %
 									%please correct the corresponding entries"
-
-	w_Root_cluster_cannot_be_deleted: STRING is "Cannot delete root node of cluster tree."
-
-	w_Specify_ace: STRING is "Project requires an Ace file (control file)."
 
 feature -- Profiler messages
 
@@ -977,8 +794,6 @@ feature -- Warning messages
 		%Are you sure you want to keep the assertions in your%N%
 		%finalized executable?"
 
-	w_Beginning_of_history: STRING is "Beginning of history"
-
 	w_Backup_file_not_editable: STRING is "Backup file cannot be modified.%NTo edit it, save it first."
 	
 	w_Cannot_move_favorite_to_a_child: STRING is 
@@ -990,12 +805,6 @@ feature -- Warning messages
 	w_Could_not_save_all: STRING is "Some files could not be saved.%N%
 									%Exit was cancelled."
 
-	w_Continue: STRING is "%N%NDo you want to continue anyway?"
-
-	w_Unknown_error: STRING is "This command failed."
-
-	w_End_of_history: STRING is "End of history"
-	
 	w_cannot_save_png_file (a_file_name: STRING): STRING is 
 		do
 			if a_file_name /= Void then
@@ -1009,21 +818,7 @@ feature -- Warning messages
 	
 	w_does_not_have_enclosing_cluster: STRING is "This cluster does not have an enclosing cluster."
 	
-	w_No_internet_browser_selected: STRING is "No browser was given in the preferences"
-	
-	w_No_url_to_replace: STRING is "There is no $url part in the browser preference.%N%
-									%Please fix your preferences."
-	
-	w_No_ise_eiffel: STRING is "Environment variable ISE_EIFFEL is not defined."
-
-	w_Page_not_exist: STRING is "The requested page does not exist.%N%
-								%Please check your ISE Eiffel installation."
-	
 	w_Environment_not_initialized: STRING is "$ISE_EIFFEL is not initialized. Execution impossible%N"
-
-	w_Feature_not_compiled: STRING is "Feature is not compiled."
-
-	w_Features_not_compiled: STRING is "Features not yet compiled."
 
 	w_Freeze_warning: STRING is 
 		"Freezing implies some C compilation and linking.%N%
@@ -1039,10 +834,6 @@ feature -- Warning messages
 		% - Click Cancel to abort%N%
 		%%N"
 
-	w_License_lost: STRING is "You have lost your license!%N%
-								%(You can still save your changes%N%
-								%and exit the project.)"
-
 	w_Load_configuration: STRING is	"An error occurred while loading the %
 									%configuration for your profiler.%N%
 									%Please check with your system %
@@ -1055,31 +846,11 @@ feature -- Warning messages
 
 	w_Invalid_folder_name: STRING is "Invalid folder name"
 
-	w_Invalid_creation_name (a_name: STRING): STRING is 
-		do
-			Result := "Invalid creation procedure name: "
-			Result.append (a_name)
-		end
-
-	w_Invalid_root_class_name (a_name: STRING): STRING is 
-		do
-			Result := "Invalid root class name: "
-			Result.append (a_name)
-		end
-
-	w_Invalid_system_name (a_name: STRING): STRING is 
-		do
-			Result := "Invalid system name: "
-			Result.append (a_name)
-		end
-
 	w_Invalid_cluster: STRING is
 			-- One of the clusters involved in a move operation was invalid.
 		"One of the clusters is invalid.%N%N%
 		%Please check that none is precompiled or a library,%N%
 		%and that the corresponding directories have sufficient rights."
-
-	w_Include_parents: STRING is "Do you wish to include parents?"
 
 	w_Makefile_more_recent (make_file: STRING): STRING is
 		require
@@ -1103,14 +874,9 @@ feature -- Warning messages
 
 	w_MakefileSH_more_recent: STRING is "The Makefile.SH is more recent than the system."
 
-	w_Melt_only: STRING is "This feature is not available in the personal version.%N%
-			%Please upgrade to the professional version of ISE Eiffel 4."
-
 	w_Must_compile_first: STRING is "You must compile a project first."
 
 	w_Must_finalize_first: STRING is "You must finalize your project first."
-
-	w_No_associated_file: STRING is "There is no associated file for pebble dropped."
 	
 	w_No_class_matches: STRING is "No class in any cluster matches this name."
 
@@ -1120,8 +886,6 @@ feature -- Warning messages
 
 	w_No_feature_to_display: STRING is "No feature in this file"
 
-	w_No_filter_selected: STRING is "No filter selected"
-
 	w_No_such_feature_in_this_class (feature_name, class_name: STRING): STRING is
 		do
 			Result := "No feature named " + feature_name + " could be found in class " + class_name + "."
@@ -1130,32 +894,15 @@ feature -- Warning messages
 	w_No_system_generated: STRING is "No system was generated.%N%
 						%Please make sure the C compilation ended correctly."
 
-	w_No_dotnet_system_generated: STRING is "No system was generated.%N%
-						%Please make sure the Eiffel compilation ended successfully."
-
 	w_No_system: STRING is "No system was defined.%NCannot launch the application."
-
-	w_Not_a_filterable_format: STRING is "The selected format is not filterable."
 
 	w_Not_an_integer: STRING is "Please enter an integer value."
 
-
-	w_Object_not_inspectable: STRING is "Object may not be inspected."
-
-	w_Pebble_not_valid: STRING is "Pebble is not valid."
-
-	w_Precompile_warning: STRING is "Precompiling implies some C compilation%N%
-									%and linking. Do you want to do it now?"
-									
 	w_Select_class_cluster_to_remove: STRING is "Please select a class or a cluster %N%
 										%before calling this command.%N%
 										%It will then be removed."
 
 	w_Specify_a_class: STRING is "Please specify a compiled class (or * for all classes)."
-
-	w_Specify_a_feature: STRING is "Please specify a feature."
-
-	w_Stop_compilation: STRING is "This command will stop the compilation."
 
 	w_Exiting_stops_compilation: STRING is "It is not possible to exit EiffelStudio%N%
 											%while the project is being compiled."
@@ -1169,17 +916,7 @@ feature -- Warning messages
 
 	w_Closing_stops_debugger: STRING is "Closing the window will stop the debugger."
 
-	w_System_not_running: STRING is "System is not running."
-
-	w_System_not_stopped: STRING is "System is not stopped."
-
 	w_Unexisting_system: STRING is "System doesn't exist."
-
-	w_Unknown_class: STRING is "Unknown class"
-
-	w_Unknown_feature: STRING is "Unknown feature"
-
-	w_Unknown_object: STRING is "Unknown object"
 
 	w_File_changed (class_name: STRING): STRING is
 		do
@@ -1191,10 +928,6 @@ feature -- Warning messages
 		end
 
 	w_Syntax_error: STRING is "Class has syntax error.%NText will not be clickable.%NSee highlighted area."
-
-	w_Search_error_includes_null_char: STRING is "The expression you entered includes the null character.%NThe search is not possible."
-
-	w_Search_error_not_regular_expression: STRING is "The expression you entered is not a regular expression."
 
 	w_Select_object_to_remove: STRING is "Please select a top-level item%N%
 										%different from the current object%N%
@@ -1262,15 +995,6 @@ feature -- Warning messages
 									%It cannot be executed."
 
 	w_Command_needs_file: STRING is "This command requires a file name.%N%
-									%It cannot be executed."
-
-	w_Command_needs_directory: STRING is "This command requires a directory name.%N%
-									%It cannot be executed."
-
-	w_Command_needs_feature: STRING is "This command requires a feature name.%N%
-									%It cannot be executed."
-
-	w_Command_needs_cluster: STRING is "This command requires a cluster name.%N%
 									%It cannot be executed."
 									
 	w_Finalize_precompile: STRING is    ".NET precompiled libraries can be finalized to create%N%

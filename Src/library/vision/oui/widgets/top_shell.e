@@ -20,20 +20,18 @@ creation
 
 	make
 	
-feature -- Creation
+feature {NONE} -- Creation
 
 	make  (a_name: STRING; a_screen: SCREEN) is
 			-- Create a top_shell with `a_name' as identifier,
 			-- only if `a_name' not void otherwise identifier
 			-- will be defined as application name or the name
 			-- precised with -name option and call `set_default'.
-		local
-			nothing: WIDGET
 		do
 			depth := 0;
 			screen := a_screen;
 			identifier := clone (a_name);
-			widget_manager.new (Current, nothing);
+			widget_manager.new (Current, Void);
 			implementation := toolkit.top_shell (Current);
 			set_default
 		end;

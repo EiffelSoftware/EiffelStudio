@@ -17,6 +17,8 @@ inherit
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 

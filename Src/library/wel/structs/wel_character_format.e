@@ -17,21 +17,29 @@ inherit
 	WEL_CFM_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_CFE_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 		
 	WEL_UNIT_CONVERSION
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 		
 create

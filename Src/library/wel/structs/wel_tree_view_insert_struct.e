@@ -16,6 +16,8 @@ inherit
 	WEL_TVI_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create

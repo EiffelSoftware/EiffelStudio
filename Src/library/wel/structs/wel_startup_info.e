@@ -14,10 +14,19 @@ inherit
 		end
 
 	WEL_STARTUP_CONSTANTS
+		undefine
+			copy, is_equal
+		end
 
 	WEL_BIT_OPERATIONS
+		undefine
+			copy, is_equal
+		end
 
 	WEL_FILL_ATTRIBUTES_CONSTANTS
+		undefine
+			copy, is_equal
+		end
 
 create
 	make

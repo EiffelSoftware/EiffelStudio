@@ -11,17 +11,27 @@ inherit
 	WEL_STRUCTURE
 	
 	WEL_BIT_OPERATIONS
+		undefine
+			copy, is_equal
+		end
 
 	WEL_LVFI_CONSTANTS
+		undefine
+			copy, is_equal
+		end
 
 	WEL_VK_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_LVFI_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create

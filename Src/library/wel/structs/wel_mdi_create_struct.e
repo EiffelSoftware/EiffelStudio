@@ -17,6 +17,8 @@ inherit
 	WEL_WS_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create

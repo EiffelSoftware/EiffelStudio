@@ -18,6 +18,9 @@ inherit
 		end
 	
 	WEL_NETWORKING_CONSTANTS
+		undefine
+			copy, is_equal
+		end
 
 create
 	make,

@@ -50,6 +50,11 @@ feature -- Initialization
 
 			-- Pointer to the gtk_box and gtk_label of the status bar.
 			set_label_widget (c_gtk_statusbar_item_label (widget))
+
+			-- The interface does not call `widget_make' so we need 
+			-- to connect `destroy_signal_callback'
+			-- to `destroy' event.
+			initialize_object_handling
 		end
 
 	make_with_text (txt: STRING) is

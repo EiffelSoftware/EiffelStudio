@@ -30,6 +30,11 @@ feature -- Initialisation
 			check
 				To_be_implemented: False
 			end
+
+			-- The interface does not call `widget_make' so we need 
+			-- to connect `destroy_signal_callback'
+			-- to `destroy' event.
+			initialize_object_handling
 		end
 
 feature -- Access

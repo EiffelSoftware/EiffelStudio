@@ -46,6 +46,11 @@ feature -- Initialization
 		do
 			widget := gtk_vseparator_new
 			gtk_object_ref (widget)
+
+			-- The interface does not call `widget_make' so we need 
+			-- to connect `destroy_signal_callback'
+			-- to `destroy' event.
+			initialize_object_handling
 		end
 
 end -- class EV_TOOL_BAR_SEPARATOR_I

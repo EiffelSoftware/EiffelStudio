@@ -91,6 +91,18 @@ EIF_BOOLEAN c_gtk_widget_realized (GtkWidget *w);
 EIF_BOOLEAN c_gtk_widget_sensitive (GtkWidget *w); 
 
 /*  
+    the x coordinate of widget
+    Author: leila
+*/
+EIF_INTEGER c_gtk_widget_x (GtkWidget *w);
+
+/*  
+    the y coordinate of widget
+    Author: leila
+*/
+EIF_INTEGER c_gtk_widget_y (GtkWidget *w);
+
+/*  
     the width of widget
     Author: samik
 */

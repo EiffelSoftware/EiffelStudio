@@ -499,7 +499,7 @@ feature
 						generate_block_open
 						generate_gen_type_conversion (gen_type)
 					end
-					context.result_var.print_register_by_name
+					context.result_register.print_register_by_name
 					if context.workbench_mode then
 							-- RTLX is a macro used to create
 							-- expanded types
@@ -541,7 +541,7 @@ feature
 					buf.new_line
 				elseif type_i.is_bit then
 					bit_i ?= type_i; -- Cannot fail
-					context.result_var.print_register_by_name
+					context.result_register.print_register_by_name
 					buf.putstring (" = RTLB(")
 					buf.putint (bit_i.size)
 					buf.putstring (gc_rparan_comma)

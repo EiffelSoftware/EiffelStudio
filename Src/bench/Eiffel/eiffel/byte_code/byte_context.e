@@ -754,14 +754,6 @@ feature
 			!!Result
 		end
 
-	Result_var: RESULT_B is
-			-- Instance used to generate Result variable name
-			-- (In case GC hooks are needed, we might need to refer to the
-			-- variable via the local l[] array.)
-		once
-			!!Result
-		end
-
 	Arg_var: ARGUMENT_B is
 			-- Instance used to generate Result variable name
 			-- (In case GC hooks are needed, we might need to refer to the

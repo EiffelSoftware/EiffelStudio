@@ -20,23 +20,20 @@ feature {NONE} -- Initialization
 		local
 			vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
-			small_pixmap: EV_PIXMAP
 			label: EV_LABEL
 		do
+			build_images
 			create vertical_box
 			create viewport
-			viewport.extend (pixmap_image)
+			viewport.extend (large_image)
 			vertical_box.extend (viewport)
 			viewport.set_minimum_size (image_width // 3, image_height // 3)
 			create horizontal_box
-			small_pixmap := clone (pixmap_image)
-			small_pixmap.set_minimum_size (small_image_width, small_image_height)
-			small_pixmap.stretch (small_image_width, small_image_height)
-			small_pixmap.pointer_motion_actions.force_extend (agent modify_offset)
-			horizontal_box.extend (small_pixmap)
+			small_image.pointer_motion_actions.force_extend (agent modify_offset)
+			horizontal_box.extend (small_image)
 			create label.make_with_text ("Set viewport position%NBy moving over small image.")
 			horizontal_box.extend (label)
-			horizontal_box.disable_item_expand (small_pixmap)
+			horizontal_box.disable_item_expand (small_image)
 			vertical_box.extend (horizontal_box)
 			vertical_box.disable_item_expand (horizontal_box)
 			
@@ -83,7 +80,7 @@ feature {NONE} -- Implementation
 			Result := 600 // 6
 		end
 	
-	pixmap_image: EV_PIXMAP is
+	build_images is
 			-- `Result' is image used for test. The way
 			-- in which this is generated is not important, but the
 			-- fact that it generates an interesting image is.
@@ -92,11 +89,16 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			temp_int: INTEGER
 		do
-			create Result
-			Result.set_minimum_size (900, 600)
-			Result.set_size (900, 600)
-			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (120, 140, 200))
-			Result.clear
+			create large_image
+			create small_image
+			large_image.set_minimum_size (image_width, image_height)
+			large_image.set_size (image_width, image_height)
+			small_image.set_minimum_size (small_image_width, small_image_height)
+			small_image.set_size (small_image_width, small_image_height)
+			large_image.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (120, 140, 200))
+			small_image.set_background_color (large_image.background_color)
+			large_image.clear
+			small_image.clear
 			colors := (create {EV_STOCK_COLORS}).all_colors
 				-- Draw dots on background.
 			from
@@ -105,8 +107,10 @@ feature {NONE} -- Implementation
 			until
 				counter > 80
 			loop
-				Result.set_foreground_color (colors.item)
-				Result.fill_ellipse ((counter \\ 9) * 100, (counter // 9) * 100, 40, 40)
+				large_image.set_foreground_color (colors.item)
+				small_image.set_foreground_color (colors.item)
+				large_image.fill_ellipse ((counter \\ 9) * 100, (counter // 9) * 100, 40, 40)
+				small_image.fill_ellipse ((counter \\ 9) * 17, (counter // 9) * 17, 6, 6)
 				counter := counter + 1
 				colors.forth
 				if colors.off then
@@ -119,9 +123,11 @@ feature {NONE} -- Implementation
 			until
 				counter = 1
 			loop
-				Result.set_foreground_color (colors.item)
+				large_image.set_foreground_color (colors.item)
+				small_image.set_foreground_color (colors.item)
 				temp_int := counter * 10
-				Result.fill_ellipse (temp_int, temp_int, temp_int, temp_int)
+				large_image.fill_ellipse (temp_int, temp_int, temp_int, temp_int)
+				small_image.fill_ellipse (temp_int // 6, temp_int // 6, temp_int // 6, temp_int // 6)
 				colors.forth
 				if colors.off then
 					colors.start
@@ -129,5 +135,8 @@ feature {NONE} -- Implementation
 				counter := counter - 1
 			end
 		end
+		
+	small_image, large_image: EV_PIXMAP
+		-- Images for test.
 
 end -- class VIEWPORT_ADVANCED_OFFSET_TEST

@@ -57,8 +57,8 @@ feature {NONE} -- Implementation
 			end;
 
 			if aok then
-				new_file.open_write;
 				to_write := text_window.text;
+				new_file.open_write;
 				if not to_write.empty then
 					to_write.prune_all ('%R')
 					if general_resources.text_mode.value.is_equal ("UNIX") then

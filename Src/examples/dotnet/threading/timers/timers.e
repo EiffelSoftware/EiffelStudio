@@ -1,5 +1,7 @@
 indexing
 	description: "Launch a timer that executes a feature every 2 seconds until user press enter to finish the program execution."
+	date: "$Date$"
+	revision: "$Revision$"
 	
 class
 	TIMERS
@@ -10,9 +12,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point.	%
-						% launch the timer and wait for the user to press enter to finish the execution."
+			-- Launch the timer and wait for the user to press enter to finish the execution."
 		local
 			 my_timer: TIMER
 		do

@@ -1,7 +1,9 @@
 indexing
-	description: "	launch an asynchrone thread %
-				%	keep performing its own operations while the thread is also performing operations %
-				%	wait that the thread has finished its operations to finish the program execution."
+	description: "Launch an asynchrone thread %
+		%keep performing its own operations while the thread is also performing operations %
+		%wait that the thread has finished its operations to finish the program execution."
+	date: "$Date$"
+	revision: "$Revision: "
 
 class
 	POOLS
@@ -12,11 +14,10 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point.	%
-						% launch an asynchrone thread %
-						% keep performing its own operations while the thread is also performing operations %
-						% wait that the thread has finished its operations to finish the program execution."
+			-- Entry point.
+			-- Launch an asynchrone thread %
+			-- keep performing its own operations while the thread is also performing operations %
+			-- wait that the thread has finished its operations to finish the program execution."
 		local
 			l_async_operation_done: AUTO_RESET_EVENT
 			dummy: BOOLEAN

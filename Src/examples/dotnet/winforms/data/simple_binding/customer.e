@@ -1,5 +1,7 @@
 indexing
 	description:"Representation of a customer."
+	date: "$Date$"
+	revision: "$Revision$"
 	
 class
 	CUSTOMER
@@ -11,8 +13,6 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description:"Entry point."
 		do
 			create id.make_empty
 			create title.make_empty

@@ -296,11 +296,6 @@ feature -- Input
 
 feature {NONE} -- Inapplicable
 
-	marked: CURSOR is
-			-- Retained position (for possible later return)
-		do
-		end;
-
 	go_to (r: CURSOR) is
 			-- Move to position marked `r'.
 		do

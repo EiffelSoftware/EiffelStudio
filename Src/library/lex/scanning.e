@@ -94,6 +94,8 @@ feature -- Output
 		do
 			type := read_token.type;
 			if read_token.keyword_code /= -1 then
+				io.putstring ("Code: ");
+				io.putint (read_token.keyword_code);
 				io.putstring ("Keyword:  ");
 				io.putstring (read_token.string_value);
 				io.new_line

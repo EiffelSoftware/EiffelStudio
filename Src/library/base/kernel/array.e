@@ -158,9 +158,6 @@ feature -- Measurement
 			end;
 		end;
 
-feature -- Element change
-
-
 feature -- Comparison
 
 	is_equal (array: like Current): BOOLEAN is

@@ -14,7 +14,7 @@ class
 feature -- Access
 
 	meaning (sig: INTEGER): STRING is
-			-- A message in English describing what `sig' is  
+			--  Text describing `sig'   
 		do
 			if is_defined (sig) then
 				!! Result.make (0);
@@ -37,13 +37,13 @@ feature -- Access
 			Result := not is_caught (sig)
 		end;
 
-	Sighup: INTEGER is
+	sighup: INTEGER is
 			-- Code for ``Hangup'' signal
 		do
 			Result := c_signal_map (1)
 		end;
 
-	Sigint: INTEGER is
+	sigint: INTEGER is
 			-- Code for ``Interrupt'' signal
 		do
 			Result := c_signal_map (2)
@@ -286,6 +286,8 @@ feature -- Status setting
 			-- Make sure that future occurrences of `sig'
 			-- will be treated as exceptions.
 			-- (This is the default for all signals.)
+		require
+			is_defined (sig)
 		external
 			"C"
 		alias
@@ -295,21 +297,32 @@ feature -- Status setting
 	ignore (sig: INTEGER) is
 			-- Make sure that future occurrences of `sig'
 			-- will be ignored.  (This is not the default.)
+		require
+			is_defined (sig)
 		external
 			"C"
 		alias
 			"esigignore"
 		end;
+
 	reset_all_default is
 			-- Make sure that all exceptions will lead to their
 			-- default handling.
-		do
+		external
+			"C"
+		alias
+			"esigresall"
 		end
 
 	reset_default (sig: INTEGER) is
 			-- Make sure that exception of code code will lead
 			-- to its default action.
-		do
+		require
+			is_defined (sig)
+		external
+			"C"
+		alias
+			"esigresdef"
 		end
 
 feature {NONE} -- Implementation
@@ -350,3 +363,4 @@ end -- class UNIX_SIGNALS
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <eiffel@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -20,7 +20,7 @@ deferred class SET [G] inherit
 
 feature -- Measurement
 
-	count:INTEGER is
+	count: INTEGER is
 		-- Number of elements
 		deferred
 		end

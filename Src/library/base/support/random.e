@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Pseudo random number properties based on linear congruential method";
+		"Pseudo-random number sequence, linear congruential method";
 
 	copyright: "See notice at end of class";
 	names: random;
@@ -10,7 +10,10 @@ indexing
 
 class RANDOM inherit
 
-	COUNTABLE [INTEGER];
+	COUNTABLE_SEQUENCE [INTEGER]
+		redefine
+			has
+		end;
 
 	BASIC_ROUTINES
 		export
@@ -29,49 +32,58 @@ feature -- Initialization
 
 	make is
 		do
-			set_seed (123_457)
+			set_seed (default_seed)
+		ensure
+			seed_set: seed = default_seed
 		end
 
-	set_seed (s : INTEGER) is
-			-- Set `seed' to `s'
+	set_seed (s: INTEGER) is
+			-- Choose `s' as the `seed'.
 		require
 			non_negative: s >= 0
 		do
 			seed := s
 			last_result := seed
 			last_item := 0
+		ensure
+			seed_set: seed = s
 		end
 
 feature -- Access
 
-	modulus : INTEGER is
-			-- Default value 2^31 -1 = 2,147,483,647
-			-- May be redefined for a new generator	
+	default_seed: INTEGER is
+			-- Default value 123,457;
+			-- may be redefined for a new generator.	
+		once
+			Result := 123_457
+		end
+
+	modulus: INTEGER is
+			-- Default value 2^31 -1 = 2,147,483,647;
+			-- may be redefined for a new generator.	
 		once
 			Result := 2_147_483_647
 		end
 
-	multiplier : INTEGER is 
-			-- Default value 7^5 = 16,807
-			-- May be redefined for a new generator	
+	multiplier: INTEGER is 
+			-- Default value 7^5 = 16,807;
+			-- may be redefined for a new generator.	
 		once
 			Result := 16_807
 		end
 
-	increment : INTEGER is 
-			-- Default value 0
-			-- May be redefined for a new generator	
+	increment: INTEGER is 
+			-- Default value 0;
+			-- may be redefined for a new generator.	
 		once
 			Result :=  0
 		end
 
-	seed : INTEGER
-			-- Default value 123,457
-			-- May be redefined for a new generator.	
-			--| change the value in `make' 
-
+	seed: INTEGER
+			-- Seed for sequence.
+			
 	next_random (n: INTEGER): INTEGER is
-			-- Next random number after n
+			-- Next random number after `n'
 			-- in pseudo-random order
 		require
 			in_range: (n < modulus) and (n >= 0)
@@ -81,15 +93,15 @@ feature -- Access
 			in_range: (Result < modulus) and (Result >= 0)
 		end;
 
-	has (n: INTEGER) : BOOLEAN is
-			-- Will `n' be a random number?
+	has (n: INTEGER): BOOLEAN is
+			-- Will `n' be part of the random number sequence?
 		do
 			Result := (n < modulus) and (n >= 0)
 		ensure then
 			only_: Result = (n < modulus and n >= 0)
 		end
 
-	item (i: INTEGER): INTEGER is
+	i_th (i: INTEGER): INTEGER is
 			-- The `i'-th random number
 		local
 			count: INTEGER
@@ -115,45 +127,68 @@ feature -- Access
 			in_range: (Result < modulus) and (Result >= 0)
 		end;
 
-feature {NONE} -- Inapplicable
-
-	linear_representation: LINEAR [INTEGER] is
+	real_item: REAL is
+			-- The current random number as a real between 0 and  1
+		local
+			r1, r2: REAL
 		do
-		end;
+			r1 := item 
+			r2 := modulus
+			Result := r1 / r2
+		end
+
+	double_item: DOUBLE is
+			-- The current random number as a double between 0 and 1
+		local
+			d: DOUBLE
+		do
+			d := item 
+			Result := d / dmod
+		end
+
+	real_i_th (i: INTEGER): REAL is
+			-- The `i'-th random number as a real between 0 and  1
+		local
+			r1, r2: REAL
+		do
+			r1 := i_th (i)
+			r2 := modulus
+			Result := r1 / r2
+		end
+
+	double_i_th (i: INTEGER): DOUBLE is
+			-- The `i'-th random number as a double between 0 and 1
+		local
+			d: DOUBLE
+		do
+			d := i_th (i)
+			Result := d / dmod
+		end
 
 feature {NONE} -- Implementation
 
-	randomize (xn : INTEGER) : INTEGER is
-			-- Give Xn+1 given Xn
+	randomize (xn: INTEGER): INTEGER is
+			-- Next item
 		local
 			x: DOUBLE
 		do
 			x := double_mod (dmul * xn + dinc, dmod)
-			debug
-				io.putstring ("Randomize: ")
-				io.putdouble (x)
-				io.putstring (" returns: ")
-			end
 			Result := double_to_integer (x)
-			debug
-				io.putint (Result)
-				io.new_line
-			end
 		end
 
-	double_mod (x,m :DOUBLE) : DOUBLE is
-			-- mod function for doubles
+	double_mod (x,m: DOUBLE): DOUBLE is
+			-- `x' modulo `m'
 		do
 			Result := x - (floor (x / m) * m)
 		end
 
-	last_item : INTEGER 
-			-- last `item' requested 
+	last_item: INTEGER 
+			-- Last `item' requested 
 			--| this can be used for optimising 
 			--| calls to item.
 
 	last_result: INTEGER
-			-- value from last call to `item'
+			-- Value from last call to `item'
 
 	dmod: DOUBLE is
 			-- Double value for modulus 
@@ -172,7 +207,7 @@ feature {NONE} -- Implementation
 		once	
 			Result := increment
 		end
-
+		
 invariant
 	non_negative_seed: seed >= 0
 	non_negative_increment: increment >= 0

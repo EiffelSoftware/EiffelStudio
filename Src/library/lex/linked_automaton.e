@@ -19,7 +19,7 @@ creation
 feature -- Status setting
 
 	set_final (state, f: INTEGER) is
-			-- Make `state' a final state of regualr expression `f'.
+			-- Make `state' a final state for regular expression `f'.
 		require
 			is_in_automaton: state <= count and state >= 1
 		local

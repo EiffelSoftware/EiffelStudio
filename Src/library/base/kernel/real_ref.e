@@ -37,7 +37,7 @@ feature -- Comparison
 feature -- Element change
 
 	set_item (r: REAL) is
-			-- Assign `r' to item'.
+			-- Make `r' the value of `item'.
 		do
 			item := r
 		end;

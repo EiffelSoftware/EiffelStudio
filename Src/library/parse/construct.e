@@ -123,7 +123,7 @@ feature -- Transformation
 
 	semantics is
 			-- Apply semantic actions in order:
-			-- `pre_action, in_action, post_action'.
+			-- `pre_action', `in_action', `post_action'.
 		do
 			pre_action;
 			in_action;

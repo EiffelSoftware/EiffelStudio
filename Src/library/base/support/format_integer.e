@@ -1,5 +1,14 @@
+indexing
+
+	description:
+		"Formatter for integral numbers";
+
+	copyright: "See notice at end of class";
+	names: format_integer;
+	date: "$Date$";
+	revision: "$Revision$"
+
 class FORMAT_INTEGER
-	-- Given an integer and a series of details produce formatted strings.
 
 creation
 	make
@@ -200,6 +209,14 @@ feature -- Status setting
 			separator = ','
 		end
 
+	dot_separate is
+			-- Set separator to period.
+		do
+			separator := '.'
+		ensure
+			separator = '.'
+		end
+
 	remove_separator is
 			-- Remove the separator.
 		do
@@ -323,9 +340,19 @@ feature -- Status setting
 	sign_floating_dollar is
 			-- Set sign for floating dollar.
 		do
-			sign_string := "-$ $ $"
+			sign_string := "$$$"
+			sign_leading
 		ensure
-			sign_string.is_equal ("-$ $ $")
+			sign_string.is_equal ("$$$")
+		end
+
+	sign_floating_dollar_signed is
+			-- Set sign for floating dollar include sign.
+		do
+			sign_string := "-$ $+$"
+			sign_leading
+		ensure
+			sign_string.is_equal ("-$ $+$")
 		end
 
 	set_sign (s : STRING) is
@@ -378,7 +405,7 @@ feature -- Conversion
 			else
 				Result := clone (unsigned.out)
 			end
-			if not ignore_sign then 
+			if not ignore_sign or bracketted_negative then 
 				Result := process_sign (Result, sign)
 			 end
 			if justification /= No_justification and then Result.count < width then	
@@ -535,3 +562,17 @@ invariant
 	no_justification <= justification and justification <= right_justification
 
 end -- class FORMAT_INTEGER
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------
+

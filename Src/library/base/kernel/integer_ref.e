@@ -35,7 +35,7 @@ feature -- Access
 			if item > 0 then
 				Result := item
 			else
-				Result := -item + 1
+				Result := -item 
 			end
 		end;
 
@@ -53,7 +53,7 @@ feature -- Element change
 
 
 	set_item (i: INTEGER) is
-			-- Assign `i' to `item'.
+			-- Make `i' the `item' value.
 		do
 			item := i
 		end;

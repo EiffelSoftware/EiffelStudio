@@ -10,9 +10,11 @@ indexing
 
 class PRIMES inherit
 
-	COUNTABLE [INTEGER]
+	COUNTABLE_SEQUENCE [INTEGER]
 		rename
 			has as is_prime
+		redefine
+			is_prime, i_th
 		end
 
 feature -- Access
@@ -21,17 +23,18 @@ feature -- Access
 
 	Smallest_odd_prime: INTEGER is 3;
 
-
 	higher_prime (n: INTEGER): INTEGER is
 			-- Lowest prime greater than or equal to `n'
 		do
 			if n <= Smallest_prime then
 				Result := Smallest_prime
 			else
-					-- `n' > Smallest_prime
+					check
+						n > Smallest_prime
+					end
 				from
 					if n \\ Smallest_prime = 0 then
-							-- make sure that `Result' is odd
+							-- Make sure that `Result' is odd
 						Result := n + 1
 					else
 						Result := n
@@ -132,7 +135,7 @@ feature -- Access
 			end
 		end;
 
-	item (i: INTEGER): INTEGER is
+	i_th (i: INTEGER): INTEGER is
 			-- The `i'-th prime number
 		local
 			candidates: ARRAY [BOOLEAN];
@@ -173,12 +176,6 @@ feature -- Obsolete
 			obsolete "Use `is_prime' instead"
 		do
 			Result := is_prime (n)
-		end;
-
-feature {NONE} -- Inapplicable
-
-	linear_representation: LINEAR [INTEGER] is
-		do
 		end;
 
 end -- class PRIMES

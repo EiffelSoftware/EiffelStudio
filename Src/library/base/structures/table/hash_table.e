@@ -189,8 +189,14 @@ feature -- Status report
 
 	valid_key (k: H): BOOLEAN is
 			-- Is `k' a valid key?
+			-- Answer: yes if and only if `k' is not the default
+			-- value of type `H'.
+		local
+			dead_key: H;
 		do
-			Result := k /= Void and then k.hash_code > 0
+			Result := (k /= dead_key)
+		ensure then
+			Result = (k /= Void) and then k.is_hashable
 		end;
 
  

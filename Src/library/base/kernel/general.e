@@ -206,7 +206,12 @@ feature -- Output
 			end
 		end; 
 
-feature -- Miscellaneous
+feature -- Basic operations
+
+	frozen default: like Current is
+			-- Default value of current type.
+		once
+		end;
 
 	frozen do_nothing is
 			-- Execute a null action.

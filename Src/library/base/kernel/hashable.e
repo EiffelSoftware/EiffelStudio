@@ -14,10 +14,24 @@ feature -- Access
 
 	hash_code: INTEGER is
 			-- Hash code value
+		require
+			is_hashable
 		deferred
 		ensure
-			valid_hash_value: Result > 0
+			valid_hash_value: Result >= 0
 		end;
+
+feature -- Status report
+
+	is_hashable: BOOLEAN is
+			-- May current object be hashed?
+			-- (Answer: if and only if it is not the default value of
+			-- its type)
+		do
+			Result := (Current /= default)
+		ensure
+			Result = (Current /= default)
+		end
 
 end -- class HASHABLE
 

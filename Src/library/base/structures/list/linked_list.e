@@ -532,13 +532,6 @@ feature -- Removal
 			count := 0
 		end;
 
-feature {NONE} -- Inapplicable
-
-	marked: CURSOR is
-			-- Retained position (for later return)
-		do
-		end;
-
 feature {LINKED_LIST} -- Implementation
 
 	new_chain: like Current is

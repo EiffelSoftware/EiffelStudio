@@ -84,8 +84,8 @@ feature -- Transformation
 			--| Since it is impossible to know what the length of
 			--| the DFA will be, this routine builds a linked DFA,
 			--| then copy it in a fixed DFA (array), and then set
-			--| the attributes final of the DFA in harmony with
-			--| those of Current.
+			--| the attributes `final' of the DFA to be consistent
+			--| with those of Current.
 		require
 			start_number_designated: start_number > 0
 		local
@@ -95,14 +95,14 @@ feature -- Transformation
 			input_doc, old_index: INTEGER
 		do
 			build_closures;
-			!!sets_list.make;
-			!!set_tree.make (nb_states, 0);
+			!! sets_list.make;
+			!! set_tree.make (nb_states, 0);
 			e_set := closure (start_number);
 			search_in_tree (e_set);
 			sets_list.put_right (e_set);
-			!!old_move.make (nb_states);
+			!! old_move.make (nb_states);
 			from
-				!!dstates.make (greatest_input);
+				!! dstates.make (greatest_input);
 				dstates.set_state
 			until
 				dstates.after or dstates.empty
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 		local
 			index, last_index: INTEGER
 		do
-			!!Result.make (initial_set.count);
+			!! Result.make (initial_set.count);
 			last_index := initial_set.count;
 			from
 				index := initial_set.smallest
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 		local
 			index: INTEGER
 		do
-			!!closures.make (1, nb_states);
+			!! closures.make (1, nb_states);
 			from
 				index := 0
 			until
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 				end
 				current_tree.child_go_i_th (index);
 				if current_tree.child = Void then
-					!!new_tree.make (nb_states, 0);
+					!! new_tree.make (nb_states, 0);
 					current_tree.put_child (new_tree)
 				end;
 				current_tree := current_tree.child;
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 
 	initial_final_designation is
 			-- Set the final and initial attributes of dfa,
-			-- in harmony with those of Current.
+			-- consistent with those of the current automaton.
 		require
 			dfa_exists: dfa /= Void
 		deferred

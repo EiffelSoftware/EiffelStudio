@@ -141,7 +141,7 @@ feature -- Element change
 		end;
 		
 	replace_child (n: like parent) is
-			-- Assign `n' to child.
+			-- Make `n' the node's current child.
 		do
 			al_replace (n);
 			n.attach_to_parent (Current)

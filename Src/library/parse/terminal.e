@@ -53,7 +53,8 @@ feature {NONE} -- Implementation
 	parse_body is
 			-- Parse a terminal construct.
 		do
-			if token_correct or is_optional then
+			-- From Kim Walden if token_correct or is_optional then
+			if token_correct then
 				token := document.token;
 				document.get_token;
 				complete := true

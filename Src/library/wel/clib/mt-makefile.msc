@@ -1,10 +1,10 @@
 # mtwel.lib - Makefile for Microsoft C
 
-EIFFEL_SRC2="d:\Eiffel43f"
-EIFFEL_SRC="d:\Eiffel43f"
+EIFFEL_SRC="E:\43dev"
+EIFFEL_SRC2="F:\Eiffel43f"
 CC = cl
 CFLAGS = -c -MT -Ox -DEIF_THREADS -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
-#CFLAGS = -Zi -c -DEIF_THREADS -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
+#CFLAGS = -Zi -c -MT -DEIF_THREADS -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

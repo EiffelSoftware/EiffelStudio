@@ -46,6 +46,10 @@ public:
 	EIF_BOOLEAN ccom_ce_boolean (VARIANT_BOOL a_bool);
 	EIF_REFERENCE ccom_ce_lpstr (LPSTR a_string);
 	EIF_REFERENCE ccom_ce_lpwstr (LPWSTR a_wstring);
+	EIF_REFERENCE ccom_ce_currency (CURRENCY a_currency);
+	EIF_REFERENCE ccom_ce_decimal (DECIMAL a_decimal);
+	EIF_REFERENCE ccom_ce_variant (VARIANT a_variant);
+	EIF_REFERENCE ccom_ce_record (void * a_record_pointer, char * a_class_name, int a_size);
 
 	// Pointed
 

@@ -19,10 +19,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
 
 // Create Eiffel object ECOM_CURRENCY from C
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_currency_id;
-	EIF_PROCEDURE make;
-	EIF_POINTER an_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_currency_id = -1;
+	EIF_PROCEDURE make  = 0;
+	EIF_POINTER an_item = 0;
 
 	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
 	make = eif_procedure ("make", eif_currency_id);
@@ -38,13 +38,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
 
 // Create ECOM_DECIMAL from C
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_decimal_id;
-	EIF_PROC make;
-	EIF_POINTER an_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_decimal_id = -1;
+	EIF_PROCEDURE make = 0;
+	EIF_POINTER an_item = 0;
 
 	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
-	make = eif_proc ("make", eif_decimal_id);
+	make = eif_procedure ("make", eif_decimal_id);
 	result = eif_create (eif_decimal_id);
 	make (eif_access (result));
 	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
@@ -57,10 +57,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_variant (VARIANT a_variant)
 
 // Create ECOM_VARIANT from C
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_variant_id;
-	EIF_PROCEDURE make;
-	EIF_POINTER an_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_variant_id = -1;
+	EIF_PROCEDURE make = 0;
+	EIF_POINTER an_item = 0;
 
 	eif_variant_id = eif_type_id ("ECOM_VARIANT");
 	make = eif_procedure ("make", eif_variant_id);
@@ -77,10 +77,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_record (void * a_record_pointer, char * a
 
 // Create Eiffel object from C structure
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROCEDURE make;
-	EIF_POINTER an_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE make = 0;
+	EIF_POINTER an_item = 0;
 
 	type_id = eif_type_id (a_class_name);
 	make = eif_procedure ("make", type_id);
@@ -97,9 +97,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_date (DATE a_date)
 //  Create an Eiffel DATE_TIME object with 'a_date'.
 {
 	SYSTEMTIME a_sys_time;
-	EIF_TYPE_ID date_tid;
-	EIF_PROCEDURE date_make;
-	EIF_OBJECT date_object;
+	EIF_TYPE_ID date_tid = -1;
+	EIF_PROCEDURE date_make = 0;
+	EIF_OBJECT date_object = 0;
 
 	date_tid = eif_type_id ("DATE_TIME");
 
@@ -125,9 +125,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_hresult (HRESULT a_hresult)
 
 // Create Eiffel object ECOM_HRESULT from C HRESULT.
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROCEDURE make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE make = 0;
 
 	type_id = eif_type_id ("ECOM_HRESULT");
 	make = eif_procedure ("make_from_integer", type_id);
@@ -165,9 +165,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string)
 
 // Create Eiffel STRING from LPSTR
 {
-	EIF_OBJ name;
-	EIF_TYPE_ID eif_string_id;
-	EIF_PROC string_make;
+	EIF_OBJECT name = 0;
+	EIF_TYPE_ID eif_string_id = -1;
+	EIF_PROCEDURE string_make = 0;
 
 	if (a_string != NULL)
 	{
@@ -176,7 +176,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string)
 	else
 	{
 		eif_string_id = eif_type_id ("STRING");
-		string_make = eif_proc ("make", eif_string_id);
+		string_make = eif_procedure ("make", eif_string_id);
 		name = eif_create (eif_string_id);
 		string_make (eif_access (name), 0);
 	}
@@ -188,9 +188,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpwstr (LPWSTR a_string)
 
 // Create Eiffel String from LPWSTR
 {
-	EIF_OBJ local_obj;
-	char * string;
-	size_t size, size_wide;
+	EIF_OBJECT local_obj = 0;
+	char * string = 0;
+	size_t size = 0, size_wide = 0;
 
 	size_wide = wcslen(a_string);
 	size = wcstombs (NULL, a_string, size_wide + 1);
@@ -207,9 +207,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_variant (VARIANT * a_variant)
 
 // Create Eiffel ECOM_VARIANT from C
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_variant_id;
-	EIF_PROCEDURE make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_variant_id = -1;
+	EIF_PROCEDURE make = 0;
 
 	eif_variant_id = eif_type_id ("ECOM_VARIANT");
 	make = eif_procedure ("make_from_pointer", eif_variant_id);
@@ -223,12 +223,12 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unknown (IUnknown * a_unknown)
 
 // Create Eiffel ECOM_UNKNOWN_INTERFACE from C
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_id;
-	EIF_PROCEDURE make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_id = -1;
+	EIF_PROCEDURE make = 0;
 
 	eif_id = eif_type_id ("ECOM_UNKNOWN_INTERFACE");
-	make = eif_proc ("make_from_pointer", eif_id);
+	make = eif_procedure ("make_from_pointer", eif_id);
 	result = eif_create (eif_id);
 	make (eif_access (result), (EIF_POINTER)a_unknown);
 	return eif_wean (result);
@@ -239,12 +239,12 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_dispatch (IDispatch * a_dispatch)
 
 // Create Eiffel ECOM_AUTOMATION_INTERFACE from C
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_id;
-	EIF_PROCEDURE make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_id = -1;
+	EIF_PROCEDURE make = 0;
 
 	eif_id = eif_type_id ("ECOM_AUTOMATION_INTERFACE");
-	make = eif_proc ("make_from_pointer", eif_id);
+	make = eif_procedure ("make_from_pointer", eif_id);
 	result = eif_create (eif_id);
 	make (eif_access (result), (EIF_POINTER)a_dispatch);
 	return eif_wean (result);
@@ -255,9 +255,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_short (short * an_integer, EIF_OB
 
 // Create INTEGER_REF from integer
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROC set_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
 
 	type_id = eif_type_id ("INTEGER_REF");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -265,7 +265,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_short (short * an_integer, EIF_OB
 	else
 		result = an_object;
 
-	set_item = eif_proc ("set_item", type_id);
+	set_item = eif_procedure ("set_item", type_id);
 	set_item (eif_access (result), (EIF_INTEGER)*an_integer);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -279,9 +279,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF
 
 // Create ECOM_HRESULT from HRESULT *
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROC set_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
 
 	type_id = eif_type_id ("ECOM_HRESULT");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -289,7 +289,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF
 	else
 		result = an_object;
 
-	set_item = eif_proc ("set_item", type_id);
+	set_item = eif_procedure ("set_item", type_id);
 	set_item (eif_access (result), (EIF_INTEGER)*a_hresult);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -304,9 +304,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer, EIF_OBJE
 
 // Create INTEGER_REF from integer
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROCEDURE set_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
 
 	type_id = eif_type_id ("INTEGER_REF");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -329,9 +329,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_integer (int * an_integer, EIF_OB
 
 // Create INTEGER_REF from integer
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROC set_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item;
 
 	type_id = eif_type_id ("INTEGER_REF");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -339,7 +339,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_integer (int * an_integer, EIF_OB
 	else
 		result = an_object;
 
-	set_item = eif_proc ("set_item", type_id);
+	set_item = eif_procedure ("set_item", type_id);
 	set_item (eif_access (result), (EIF_INTEGER)*an_integer);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -353,9 +353,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_real (EIF_REAL * a_real, EIF_OBJE
 
 // Create REAL_REF from real
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_SET_REAL_ITEM set_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_SET_REAL_ITEM set_item = 0;
 
 	type_id = eif_type_id ("REAL_REF");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -378,9 +378,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_double (EIF_DOUBLE * a_double, EI
 
 // Create DOUBLE_REF from double
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROC set_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
 
 	type_id = eif_type_id ("DOUBLE_REF");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -388,7 +388,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_double (EIF_DOUBLE * a_double, EI
 	else
 		result = an_object;
 
-	set_item = eif_proc ("set_item", type_id);
+	set_item = eif_procedure ("set_item", type_id);
 	set_item (eif_access (result), *a_double);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -402,9 +402,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (char * a_character, EI
 
 // Create CHARACTER_REF from character
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROC set_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id= -1;
+	EIF_PROCEDURE set_item = 0;
 
 	type_id = eif_type_id ("CHARACTER_REF");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -412,7 +412,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (char * a_character, EI
 	else
 		result = an_object;
 
-	set_item = eif_proc ("set_item", type_id);
+	set_item = eif_procedure ("set_item", type_id);
 	set_item (eif_access (result), (EIF_INTEGER)*a_character);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -426,9 +426,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool, E
 
 // Create BOOLEAN_REF from pointer to VARIANT_BOOL
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROC set_item;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
 
 	type_id = eif_type_id ("BOOLEAN_REF");
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -436,7 +436,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool, E
 	else
 		result = an_object;
 
-	set_item = eif_proc ("set_item", type_id);
+	set_item = eif_procedure ("set_item", type_id);
 	set_item (eif_access (result), ccom_ce_boolean (*a_bool));
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -450,9 +450,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_currency (CURRENCY * a_currency)
 
 // Create Eiffel object ECOM_CURRENCY from C
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_currency_id;
-	EIF_PROCEDURE currency_make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_currency_id = -1;
+	EIF_PROCEDURE currency_make = 0;
 
 	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
 	currency_make = eif_procedure ("make_by_pointer", eif_currency_id);
@@ -466,9 +466,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_decimal (DECIMAL * a_decimal)
 
 // Create ECOM_DECIMAL from C
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_decimal_id;
-	EIF_PROCEDURE make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_decimal_id = -1;
+	EIF_PROCEDURE make = 0;
 
 	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
 	make = eif_procedure ("make_by_pointer", eif_decimal_id);
@@ -482,12 +482,12 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_record (void * a_record_pointer, 
 
 // Create Eiffel object from C structure
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROC make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE make = 0;
 
 	type_id = eif_type_id (a_class_name);
-	make = eif_proc ("make_by_pointer", type_id);
+	make = eif_procedure ("make_by_pointer", type_id);
 	result = eif_create (type_id);
 	make (eif_access (result), (EIF_POINTER)a_record_pointer);
 	return eif_wean (result);
@@ -498,12 +498,12 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_interface (void * a_interface_poi
 
 // Create Eiffel object from COM interface.
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID type_id;
-	EIF_PROC make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE make = 0;
 
 	type_id = eif_type_id (a_class_name);
-	make = eif_proc ("make_from_pointer", type_id);
+	make = eif_procedure ("make_from_pointer", type_id);
 	result = eif_create (type_id);
 	make (eif_access (result), (EIF_POINTER)a_interface_pointer);
 	return eif_wean (result);
@@ -514,12 +514,12 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long_long (LARGE_INTEGER * a_larg
 
 // Create Eiffel object ECOM_LARGE_INTEGER
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_large_integer_id;
-	EIF_PROC large_integer_make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_large_integer_id = -1;
+	EIF_PROCEDURE large_integer_make = 0;
 
 	eif_large_integer_id = eif_type_id ("ECOM_LARGE_INTEGER");
-	large_integer_make = eif_proc ("make_by_pointer", eif_large_integer_id);
+	large_integer_make = eif_procedure ("make_by_pointer", eif_large_integer_id);
 	result = eif_create (eif_large_integer_id);
 	large_integer_make (eif_access (result), (EIF_POINTER)a_large_integer);
 	return eif_wean (result);
@@ -530,12 +530,12 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_ulong_long (ULARGE_INTEGER * an_u
 
 // Create Eiffel object ECOM_ULARGE_INTEGER
 {
-	EIF_OBJECT result;
-	EIF_TYPE_ID eif_ularge_integer_id;
-	EIF_PROC ularge_integer_make;
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID eif_ularge_integer_id = -1;
+	EIF_PROCEDURE ularge_integer_make = 0;
 
 	eif_ularge_integer_id = eif_type_id ("ECOM_ULARGE_INTEGER");
-	ularge_integer_make = eif_proc ("make_by_pointer", eif_ularge_integer_id);
+	ularge_integer_make = eif_procedure ("make_by_pointer", eif_ularge_integer_id);
 	result = eif_create (eif_ularge_integer_id);
 	ularge_integer_make (eif_access (result), (EIF_POINTER)an_ularge_integer);
 	return eif_wean (result);
@@ -547,9 +547,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_short
 
 // Create Eiffel ARRAY from C array of short.
 {
-	int i, element_number;
-	EIF_INTEGER * c_array;
-	EIF_OBJECT result;
+	int i = 0, element_number = 0;
+	EIF_INTEGER * c_array = 0;
+	EIF_OBJECT result = 0;
 
 	// Conver array of short into array of EIF_INTEGER
 	element_number = ccom_element_number (dim_count, element_count);
@@ -580,8 +580,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long
 
 // Create Eiffel ARRAY from C array of long.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0;
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
@@ -604,8 +604,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_float
 
 // Create Eiffel ARRAY from C array of float.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0;
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
@@ -628,8 +628,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_double
 
 // Create Eiffel ARRAY from C array of double.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0;
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
@@ -652,8 +652,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_character
 
 // Create Eiffel ARRAY from C array of char.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0;
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
@@ -675,14 +675,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency
 
 // Create Eiffel ARRAY from C array of CURRENCY.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	CURRENCY * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	CURRENCY * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [ECOM_CURRENCY]");
 	make = eif_procedure ("make", type_id);
@@ -757,13 +757,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr
 
 // Create Eiffel ARRAY from C array of BSTR.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
 	BSTR an_array_element;
 
 	type_id = eif_type_id ("ARRAY [STRING]");
@@ -839,14 +839,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal
 
 // Create Eiffel ARRAY from C array of DECIMAL.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	DECIMAL * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	DECIMAL * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [ECOM_DECIMAL]");
 	make = eif_procedure ("make", type_id);
@@ -921,14 +921,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean
 
 // Create Eiffel ARRAY from C array of VARIANT_BOOL.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	VARIANT_BOOL * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id= -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	VARIANT_BOOL * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [BOOLEAN]");
 	make = eif_procedure ("make", type_id);
@@ -998,14 +998,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date
 
 // Create Eiffel ARRAY from C array of DATE.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	DATE * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id= -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	DATE * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [DATE_TIME]");
 	make = eif_procedure ("make", type_id);
@@ -1079,14 +1079,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant
 
 // Create Eiffel ARRAY from C array of VARIANT.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	VARIANT * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	VARIANT * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [ECOM_VARIANT]");
 	make = eif_procedure ("make", type_id);
@@ -1160,14 +1160,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult
 
 // Create Eiffel ARRAY from C array of HRESULT.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	HRESULT * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	HRESULT * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [ECOM_HRESULT]");
 	make = eif_procedure ("make", type_id);
@@ -1240,14 +1240,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr
 
 // Create Eiffel Array from C array of LPSTR
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	LPSTR an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	LPSTR an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [STRING]");
 	make = eif_procedure ("make", type_id);
@@ -1320,14 +1320,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr
 
 // Create Eiffel Array from C array of LPWSTR
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	LPWSTR an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	LPWSTR an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [STRING]");
 	make = eif_procedure ("make", type_id);
@@ -1401,14 +1401,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long
 
 // Create Eiffel Array from C array of LARGE_INTEGER
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	LARGE_INTEGER * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	LARGE_INTEGER * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [ECOM_LARGE_INTEGER]");
 	make = eif_procedure ("make", type_id);
@@ -1481,14 +1481,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long
 
 // Create Eiffel Array from C array of ULARGE_INTEGER
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	ULARGE_INTEGER * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	ULARGE_INTEGER * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [ECOM_ULARGE_INTEGER]");
 	make = eif_procedure ("make", type_id);
@@ -1561,14 +1561,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown
 
 // Create Eiffel ARRAY from C array of IUnknown *.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	IUnknown * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	IUnknown * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [ECOM_UNKNOWN_INTERFACE]");
 	make = eif_procedure ("make", type_id);
@@ -1642,14 +1642,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch
 
 // Create Eiffel ARRAY from C array of IDispatch *.
 {
-	EIF_INTEGER element_number;
-	EIF_OBJECT result, intermediate_array, eif_lower_indeces, eif_element_count;
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indeces = 0, eif_element_count = 0;
 
-	EIF_TYPE_ID type_id, int_array_id;
-	EIF_PROCEDURE make, put;
-	int i;
-	EIF_INTEGER * lower_indeces;
-	IDispatch * an_array_element;
+	EIF_TYPE_ID type_id = -1, int_array_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	int i = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	IDispatch * an_array_element = 0;
 
 	type_id = eif_type_id ("ARRAY [ECOM_AUTOMATION_INTERFACE]");
 	make = eif_procedure ("make", type_id);
@@ -1720,19 +1720,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
 
 // Create ECOM_ARRAY from SAFEARRAY of short
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	short sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	short sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -1832,19 +1832,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 
 // Create ECOM_ARRAY from SAFEARRAY of long
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	long sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	long sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -1965,9 +1965,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_short (SAFEARRAY ** a_s
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_short (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[INTEGER]]");
 	result = eif_create (tid);
@@ -1982,9 +1982,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_long (SAFEARRAY ** a_sa
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_long (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[INTEGER]]");
 	result = eif_create (tid);
@@ -1999,9 +1999,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_float (SAFEARRAY ** a_s
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_float (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[REAL]]");
 	result = eif_create (tid);
@@ -2016,9 +2016,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_double (SAFEARRAY ** a_
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_double (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[DOUBLE]]");
 	result = eif_create (tid);
@@ -2033,9 +2033,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_currency (SAFEARRAY ** 
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_currency (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_CURRENCY]]");
 	result = eif_create (tid);
@@ -2050,9 +2050,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_date (SAFEARRAY ** a_sa
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_date (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[DATE_TIME]]");
 	result = eif_create (tid);
@@ -2067,9 +2067,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_bstr (SAFEARRAY ** a_sa
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_bstr (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[STRING]]");
 	result = eif_create (tid);
@@ -2084,9 +2084,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_hresult (SAFEARRAY ** a
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_hresult (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_HRESULT]]");
 	result = eif_create (tid);
@@ -2101,9 +2101,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_boolean (SAFEARRAY ** a
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_boolean (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[BOOLEAN]]");
 	result = eif_create (tid);
@@ -2118,9 +2118,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_variant (SAFEARRAY ** a
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_variant (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_VARIANT]]");
 	result = eif_create (tid);
@@ -2135,9 +2135,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_decimal (SAFEARRAY ** a
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_decimal (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_DECIMAL]]");
 	result = eif_create (tid);
@@ -2152,9 +2152,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_char (SAFEARRAY ** a_sa
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_char (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[CHARACTER]]");
 	result = eif_create (tid);
@@ -2169,9 +2169,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_dispatch (SAFEARRAY ** 
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_dispatch (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]]");
 	result = eif_create (tid);
@@ -2186,9 +2186,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_unknown (SAFEARRAY ** a
 {
 	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_unknown (*a_safearray));
 
-	EIF_TYPE_ID tid;
-	EIF_OBJECT result;
-	EIF_PROCEDURE put_proc;
+	EIF_TYPE_ID tid = -1;
+	EIF_OBJECT result = 0;
+	EIF_PROCEDURE put_proc = 0;
 
 	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE]]");
 	result = eif_create (tid);
@@ -2205,19 +2205,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
 
 // Create ECOM_ARRAY from SAFEARRAY of float
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	float sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	float sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -2317,19 +2317,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
 
 // Create ECOM_ARRAY from SAFEARRAY of double
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	double sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	double sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -2429,19 +2429,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
 
 // Create ECOM_ARRAY from SAFEARRAY of char
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	char sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	char sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -2541,20 +2541,20 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
 
 // Create ECOM_ARRAY from SAFEARRAY of boolean
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	VARIANT_BOOL sa_element;
-	EIF_BOOLEAN eif_array_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	VARIANT_BOOL sa_element = 0;
+	EIF_BOOLEAN eif_array_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -2655,19 +2655,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 
 // Create ECOM_ARRAY from SAFEARRAY of CURRENCY
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index, eif_array_element;
-	EIF_TYPE_ID int_array_id, type_id, currency_id;
-	EIF_PROCEDURE make, put;
-	CURRENCY * sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0, eif_array_element = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1, currency_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	CURRENCY * sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -2775,19 +2775,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
 
 // Create ECOM_ARRAY from SAFEARRAY of DATE
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	DATE sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	DATE sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -2887,19 +2887,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 
 // Create ECOM_ARRAY from SAFEARRAY of DECIMAL
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index, eif_array_element;
-	EIF_TYPE_ID int_array_id, type_id, decimal_id;
-	EIF_PROCEDURE make, put;
-	DECIMAL * sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0, eif_array_element = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1, decimal_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	DECIMAL * sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -3007,18 +3007,18 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 
 // Create ECOM_ARRAY from SAFEARRAY of BSTR
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
 	BSTR sa_element;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
@@ -3119,19 +3119,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 
 // Create ECOM_ARRAY from SAFEARRAY of VARIANT
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index, eif_array_element;
-	EIF_TYPE_ID int_array_id, type_id, variant_id;
-	EIF_PROCEDURE make, put;
-	VARIANT * sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0, eif_array_element = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1, variant_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	VARIANT * sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -3239,19 +3239,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 
 // Create ECOM_ARRAY from SAFEARRAY of HRESULT
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	HRESULT sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	HRESULT sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -3351,19 +3351,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 
 // Create ECOM_ARRAY from SAFEARRAY of IUnknown *.
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	IUnknown * sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	IUnknown * sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -3464,19 +3464,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 
 // Create ECOM_ARRAY from SAFEARRAY of IDispatch *.
 {
-	EIF_INTEGER dim_count;
-	EIF_INTEGER * lower_indeces;
-	EIF_INTEGER * upper_indeces;
-	EIF_INTEGER * element_counts;
-	EIF_INTEGER * index;
-	long * sa_indeces;
-	int i;
-	long tmp_long;
-	HRESULT hr;
-	EIF_OBJECT result, eif_lower_indeces, eif_element_counts, eif_index;
-	EIF_TYPE_ID int_array_id, type_id;
-	EIF_PROCEDURE make, put;
-	IDispatch * sa_element;
+	EIF_INTEGER dim_count = 0;
+	EIF_INTEGER * lower_indeces = 0;
+	EIF_INTEGER * upper_indeces = 0;
+	EIF_INTEGER * element_counts = 0;
+	EIF_INTEGER * index = 0;
+	long * sa_indeces = 0;
+	int i = 0;
+	long tmp_long = 0;
+	HRESULT hr = 0;
+	EIF_OBJECT result = 0, eif_lower_indeces = 0, eif_element_counts = 0, eif_index = 0;
+	EIF_TYPE_ID int_array_id = -1, type_id = -1;
+	EIF_PROCEDURE make = 0, put = 0;
+	IDispatch * sa_element = 0;
 
 	dim_count = (EIF_INTEGER)SafeArrayGetDim (a_safearray);
 
@@ -3577,9 +3577,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointer (void ** a_pointer, EIF_O
 
 // Create CELL [POINTER] from void **.
 {
-	EIF_TYPE_ID type_id;
-	EIF_PROCEDURE set_item;
-	EIF_OBJECT result;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE set_item = 0;
+	EIF_OBJECT result = 0;
 
 	type_id = eif_type_id ("CELL [POINTER]");
 	set_item = eif_procedure ("set_item", type_id);

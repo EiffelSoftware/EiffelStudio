@@ -120,6 +120,7 @@ feature {NONE} -- Implementation
 					error_window.clear_window;
 					!! mp.set_watch_cursor;
 					perform_compilation (argument);
+
 					if Eiffel_project.successful then
 							-- If a freezing already occured (due to a new external
 							-- or new derivation of SPECIAL), no need to freeze again.
@@ -144,19 +145,24 @@ feature {NONE} -- Implementation
 							if not finalization_error then
 								launch_c_compilation (argument)
 							end
-						end;
-					end;
-				end;
+						end
+					end
+
+					error_window.display
+					tool_resynchronization (argument)
+					Degree_output.finish_degree_output
+					mp.restore
+				end
 			else
 					-- The project may be corrupted => the project
 					-- becomes read-only.
 				warner (popup_parent).gotcha_call (Warning_messages.w_Project_may_be_corrupted);
+
+				error_window.display
+				tool_resynchronization (argument)
+				Degree_output.finish_degree_output
 			end
 
-			error_window.display
-			tool_resynchronization (argument)
-			Degree_output.finish_degree_output
-			mp.restore
 		rescue
 			if not fail_on_rescue then
 				if original_exception = Io_exception then
@@ -329,12 +335,6 @@ feature {NONE} -- Attributes
 	retried: BOOLEAN;
 			-- Is this already tried?
 
-	compilation_allowed: BOOLEAN is
-			-- Is a compilation allowed?
-		do
-			Result := True
-		end
-
 	c_code_directory: STRING is
 			-- Directory where the C code is stored.
 		do
@@ -406,10 +406,8 @@ feature {NONE} -- Implementation; Execution
 			elseif tool.initialized then
 				if not_saved and arg = tool then
 					end_run_confirmed := false;
-					confirmer (popup_parent).call (Current,
-						"Some files have not been saved.%N%
-						%Start compilation anyway?", "Compile")
-				elseif compilation_allowed then
+					confirmer (popup_parent).call (Current, "Some files have not been saved.%NStart compilation anyway?", "Compile")
+				else
 					if Eiffel_ace.file_name /= Void then
 						confirm_and_compile (arg);
 						if Project_resources.raise_on_error.actual_value then
@@ -446,9 +444,6 @@ feature {NONE} -- Implementation; Execution
 						warner (popup_parent).custom_call (Current,
 							Interface_names.t_Specify_ace, Interface_names.b_Browse, Interface_names.b_Build, Interface_names.b_Cancel);
 					end;
-				else
-					warner (popup_parent).custom_call (Void,
-						Warning_messages.w_Melt_only, Interface_names.b_Ok, Void, Void);
 				end
 			end;
 		end;

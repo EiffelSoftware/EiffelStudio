@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "EiffelBench Debugger."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,10 +7,9 @@ class
 	EB_DEBUG_TOOL
 
 inherit
-	EB_EDITOR
+	EB_TEXT_TOOL
 		redefine
 			build_edit_menu,
-			build_special_menu,
 			init_commands
 		end
 
@@ -25,44 +24,58 @@ create
 
 feature {NONE} -- Initialization
 
-	build_edit_bar (a_toolbar: EV_BOX) is
+	build_toolbar (a_toolbar: EV_BOX) is
+			-- Build editing buttons in `a_toolbar'
 		local
-			b: EV_BUTTON
+			tb: EV_TOOL_BAR
+			b: EV_TOOL_BAR_BUTTON
+			sep: EV_TOOL_BAR_SEPARATOR
 		do
-			create b.make (a_toolbar)
+			create tb.make (a_toolbar)
+			a_toolbar.set_child_expandable (tb, False)
+
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Up_stack)
 			b.add_click_command (display_exception_cmd, display_exception_cmd.go_up)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Down_stack)
 			b.add_click_command (display_exception_cmd, display_exception_cmd.go_down)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Debug_status)
 			b.add_click_command (debug_status_cmd, Void)
 
-			create b.make (a_toolbar)
+			create sep.make (tb)
+
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Debug_quit)
 			b.add_click_command (debug_quit_cmd, debug_quit_cmd.kill_it)
 
-			create b.make (a_toolbar)
+			create sep.make (tb)
+
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Exec_step)
 			b.add_click_command (step_cmd, Void)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Exec_last)
 			b.add_click_command (step_out_cmd, Void)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Exec_nostop)
 			b.add_click_command (nostop_cmd, Void)
 
-			create b.make (a_toolbar)
+			create sep.make (tb)
+
+			create tb.make_with_size (a_toolbar, 58, 22)
+
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Debug_run)
 			b.add_click_command (debug_run_cmd, Void)
 		end
 
---	build_edit_bar is
+--	build_toolbar is
 --			-- Build formatting buttons in `format_bar'.
 --		local
 --			step_out_cmd: EXEC_LAST
@@ -94,57 +107,58 @@ feature {NONE} -- Initialization
 --			display_exception_menu_entry: EB_MENU_ENTRY
 --			do_nothing_cmd: DO_NOTHING_CMD
 --		do
---			!! debug_run_cmd.make (Current)
---			!! debug_run_button.make (debug_run_cmd, format_bar)
---			!! debug_run_menu_entry.make (debug_run_cmd, menus @ debug_menu)
---			!! debug_run_cmd_holder.make (debug_run_cmd, debug_run_button, debug_run_menu_entry)
+--			create debug_run_cmd.make (Current)
+--			create debug_run_button.make (debug_run_cmd, format_bar)
+--			create debug_run_menu_entry.make (debug_run_cmd, menus @ debug_menu)
+--			create debug_run_cmd_holder.make (debug_run_cmd, debug_run_button, debug_run_menu_entry)
 --			debug_run_button.add_third_button_action
 --			debug_run_button.set_action ("Ctrl<Btn1Down>", debug_run_cmd, debug_run_cmd.melt_and_run)
 --
 --
---			!! debug_status_cmd.make (Current)
---			!! debug_status_button.make (debug_status_cmd, format_bar)
---			!! debug_status_menu_entry.make (debug_status_cmd, menus @ debug_menu)
---			!! debug_status_cmd_holder.make (debug_status_cmd, debug_status_button, debug_status_menu_entry)
+--			create debug_status_cmd.make (Current)
+--			create debug_status_button.make (debug_status_cmd, format_bar)
+--			create debug_status_menu_entry.make (debug_status_cmd, menus @ debug_menu)
+--			create debug_status_cmd_holder.make (debug_status_cmd, debug_status_button, debug_status_menu_entry)
 --
---			!! display_exception_cmd.make (True, Current)
---			!! up_exception_stack_button.make (display_exception_cmd, format_bar)
---			!! display_exception_menu_entry.make (display_exception_cmd, menus @ debug_menu)
---			!! up_exception_stack_holder.make (display_exception_cmd,
+--			create display_exception_cmd.make (True, Current)
+--			create up_exception_stack_button.make (display_exception_cmd, format_bar)
+--			create display_exception_menu_entry.make (display_exception_cmd, menus @ debug_menu)
+--			create up_exception_stack_holder.make (display_exception_cmd,
 --						up_exception_stack_button, display_exception_menu_entry)
 --
---			!! display_exception_cmd.make (False, Current)
---			!! down_exception_stack_button.make (display_exception_cmd, format_bar)
---			!! display_exception_menu_entry.make (display_exception_cmd, menus @ debug_menu)
---			!! down_exception_stack_holder.make (display_exception_cmd,
+--			create display_exception_cmd.make (False, Current)
+--			create down_exception_stack_button.make (display_exception_cmd, format_bar)
+--			create display_exception_menu_entry.make (display_exception_cmd, menus @ debug_menu)
+--			create down_exception_stack_holder.make (display_exception_cmd,
 --						down_exception_stack_button, display_exception_menu_entry)
 --
---			!! debug_quit_cmd.make (Current)
---			!! debug_quit_button.make (debug_quit_cmd, format_bar)
---			!! debug_quit_menu_entry.make_button_only (debug_quit_cmd, menus @ debug_menu)
---			!! debug_quit_cmd_holder.make (debug_quit_cmd, debug_quit_button, debug_quit_menu_entry)
+--			create debug_quit_cmd.make (Current)
+--			create debug_quit_button.make (debug_quit_cmd, format_bar)
+--			create debug_quit_menu_entry.make_button_only (debug_quit_cmd, menus @ debug_menu)
+--			create debug_quit_cmd_holder.make (debug_quit_cmd, debug_quit_button, debug_quit_menu_entry)
 --			debug_quit_menu_entry.add_activate_action (debug_quit_cmd, debug_quit_cmd.kill_it)
 --			debug_quit_button.set_action ("c<Btn1Down>", debug_quit_cmd, debug_quit_cmd.kill_it)
 --
---			!! sep.make (new_name, menus @ debug_menu)
+--			create sep.make (new_name, menus @ debug_menu)
 --
---			!! step_cmd.make (Current)
---			!! step_button.make (step_cmd, format_bar)
---			!! step_menu_entry.make (step_cmd, menus @ debug_menu)
---			!! exec_step_frmt_holder.make (step_cmd, step_button, step_menu_entry)
+--			create step_cmd.make (Current)
+--			create step_button.make (step_cmd, format_bar)
+--			create step_menu_entry.make (step_cmd, menus @ debug_menu)
+--			create exec_step_frmt_holder.make (step_cmd, step_button, step_menu_entry)
 --
---			!! step_out_cmd.make (Current)
---			!! step_out_button.make (step_out_cmd, format_bar)
---			!! step_out_menu_entry.make (step_out_cmd, menus @ debug_menu)
---			!! exec_last_frmt_holder.make (step_out_cmd, step_out_button, step_out_menu_entry)
+--			create step_out_cmd.make (Current)
+--			create step_out_button.make (step_out_cmd, format_bar)
+--			create step_out_menu_entry.make (step_out_cmd, menus @ debug_menu)
+--			create exec_last_frmt_holder.make (step_out_cmd, step_out_button, step_out_menu_entry)
 --
---			!! nostop_cmd. make (Current)
---			!! nostop_button.make (nostop_cmd, format_bar)
---			!! nostop_menu_entry.make (nostop_cmd, menus @ debug_menu)
---			!! exec_nostop_frmt_holder.make (nostop_cmd, nostop_button, nostop_menu_entry)
+--			create nostop_cmd. make (Current)
+--			create nostop_button.make (nostop_cmd, format_bar)
+--			create nostop_menu_entry.make (nostop_cmd, menus @ debug_menu)
+--			create exec_nostop_frmt_holder.make (nostop_cmd, nostop_button, nostop_menu_entry)
 --		end
 
 	init_commands is
+			-- Initialize commands.
 		do
 			Precursor
 			create clear_bp_cmd.make (Current)
@@ -163,40 +177,50 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	empty_tool_name: STRING is "Debug Tool"
+	default_name: STRING is "Debug Tool"
+--| FIXME
+--| Christophe, 19 oct 1999
+--| This manifest constant should go in class INTERFACE_NAMES
 
 feature -- Resource Update
 
 	register is
+			-- Ask the resource manager to notify Current (i.e. to call `update') each
+			-- time one of the resources he needs has changed.
+			-- Is called by `make'.
 		do
 			register_to ("debug_tool_bar")
 		end
 
 	update is
+			-- Update Current with the registred resources.
 		do
 			if debug_tool_bar then
-				edit_bar.show
+				toolbar.show
 			else
-				edit_bar.hide
+				toolbar.hide
 			end
-			if edit_bar_menu_item /= Void then
-				edit_bar_menu_item.set_selected (debug_tool_bar)
+			if toolbar_menu_item /= Void then
+				toolbar_menu_item.set_selected (debug_tool_bar)
 			end
 		end
 
 	unregister is
+			-- Ask the resource manager not to notify Current anymore
+			-- when a resource has changed.
+			-- Is called by `destroy'.
 		do
 			unregister_to ("debug_tool_bar")
 		end
 
-	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
+--	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
 --		local
 --			rout_cli_cmd: SHOW_ROUTCLIENTS
 --			display_routine_cmd: DISPLAY_ROUTINE_PORTION
 --			display_object_cmd: DISPLAY_OBJECT_PORTION
 --			stop_cmd: SHOW_BREAKPOINTS
 --			pr: like resources
-		do
+--		do
 --			pr := resources
 --			if old_res = pr.command_bar then
 --				if new_res.actual_value then
@@ -222,12 +246,12 @@ feature -- Resource Update
 --					stop_cmd.set_format_mode (new_res.actual_value)
 --				end
 --			end
-		end
+--		end
 
-	update_integer_resource (old_res, new: EB_INTEGER_RESOURCE) is
-		local
+--	update_integer_resource (old_res, new: EB_INTEGER_RESOURCE) is
+--		local
 --			pr: like resources
-		do
+--		do
 --			pr := resources
 --			if new.actual_value >= 0 then
 --				if old_res = pr.debugger_feature_height then
@@ -236,20 +260,14 @@ feature -- Resource Update
 --					Application.set_interrupt_number (new.actual_value)
 --				end
 --			end
-		end
+--		end
 
 feature -- Access
 
 	kept_objects: LINKED_SET [STRING] is
 			-- Hector addresses of displayed clickable objects
 		do
-			Result := text_window.kept_objects
-		end
-
-	tool_name: STRING is
-			-- Name of the tool.
-		do
-			Result := "Debugger"
+			Result := text_area.kept_objects
 		end
 
 	feature_displayer: EB_FEATURE_TOOL
@@ -382,25 +400,25 @@ feature
 		end
 
 	display_exception_stack is
-			-- Display the exception stack in the text window.
+			-- Display the exception stack in the text area.
 		local
 			st: STRUCTURED_TEXT
 		do
 			create st.make
 			Application.status.display_status (st)
-			text_window.clear_window
-			text_window.freeze
-			text_window.process_text (st)
+			text_area.clear_window
+			text_area.freeze
+			text_area.process_text (st)
 			if saved_cursor /= Void then
-				text_window.go_to (saved_cursor)
+				text_area.go_to (saved_cursor)
 			end
-			text_window.thaw
+			text_area.thaw
 		end
 
 	save_current_cursor_position is
 			-- Save the current cursor position.
 		do
-			saved_cursor := text_window.position
+			saved_cursor := text_area.position
 		end
 
 	clear_cursor_position is
@@ -410,41 +428,46 @@ feature
 		end
 
 	saved_cursor: INTEGER
-		-- was previously supposed to be a CURSOR
+		--| FIXME
+		--| Christophe, 26 oct 1999
+		--| Was previously supposed to be a CURSOR
 
 feature -- Information
 
 	display_system_info is
+			-- Print information about the current project.
 		local
 			st: STRUCTURED_TEXT
 		do
 			st := structured_system_info
 			if st /= Void then
-				text_window.clear_window
-				text_window.process_text (st)
---				text_window.set_top_character_position (0)
-				text_window.show
+				text_area.clear_window
+				text_area.process_text (st)
+--				text_area.set_top_character_position (0)
+				text_area.show
 			end
 		end
 
 	display_string (s: STRING) is
+			-- Print `s' on the text area
 		do
-			text_window.clear_window
-			text_window.put_string (s)
---			text_window.set_top_character_position (0)
-			text_window.show
+			text_area.clear_window
+			text_area.put_string (s)
+--			text_area.set_top_character_position (0)
+			text_area.show
 		end
 
 	display_welcome_info is
+			-- Display information on how to launch EiffelBench.
 		do
-			text_window.clear_window
-			text_window.process_text (welcome_info)
---			text_window.set_top_character_position (0)
-			text_window.show
+			text_area.clear_window
+			text_area.process_text (welcome_info)
+--			text_area.set_top_character_position (0)
+			text_area.show
 		end
 
 	welcome_info: STRUCTURED_TEXT is
-			-- Display information on how to launch EiffelBench.
+			-- Information text on how to launch EiffelBench.
 		local
 		do
 			create Result.make
@@ -460,6 +483,7 @@ feature -- Information
 		end
 
 	structured_system_info: STRUCTURED_TEXT is
+			-- Information text about current project.
 		local
 			root_class_name: STRING
 			root_class_c: CLASS_C
@@ -515,11 +539,15 @@ feature -- Information
 			end
 		end
 
-close_windows is do end
+	close_windows is
+			-- Not used; for compatibility only.
+		do
+		end
 
 feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 	build_edit_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+			-- Build standard edit menu entries in `a_menu'
 		local
 			i: EV_MENU_ITEM
 		do
@@ -536,7 +564,8 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 			i.add_select_command (stop_points_status_cmd, stop_points_status_cmd.disable_it)
 		end	
 
-	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+	build_debug_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+			-- build debug entries in the debug tool
 		local
 			i: EV_MENU_ITEM
 		do

@@ -89,6 +89,7 @@ feature -- Access
 			-- Parent implementation
 
 	text: STRING
+			-- Item text.
 
 
 	top_parent_imp: EV_TREE_IMP is
@@ -110,11 +111,6 @@ feature -- Status report
 	count: INTEGER is
 			-- Number of direct children of the holder.
 		do
-			--if top_parent_imp = Void then
-			--	Result := internal_children.count
-			--else
-			--	Result := top_parent_imp.get_children_count (Current)
-			--end
 			Result := ev_children.count
 		end
 
@@ -348,16 +344,6 @@ feature {EV_TREE_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_item (item_imp: EV_TREE_ITEM_IMP) is
-			-- Add `item_imp' to the list
-		do
-			if top_parent_imp /= Void then
-				top_parent_imp.general_insert_item (item_imp, h_item, Tvi_last, index)
-			else
-				internal_children.extend (item_imp)
-			end
-		end
-
 	insert_item (item_imp: EV_TREE_ITEM_IMP; pos: INTEGER) is
 			-- Insert `item_imp' at the `index' position.
 		do
@@ -416,6 +402,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/09 20:24:51  rogers
+--| Added text coment, removed add_item and removed commented lines from count.
+--|
 --| Revision 1.33  2000/03/09 17:28:33  rogers
 --| Removed redundent commented code. Insert item now uses pos - 1 correctly, instead of index when the insertion position is not one.
 --|

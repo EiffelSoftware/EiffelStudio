@@ -139,6 +139,15 @@ feature -- Access: file name
 			Result.extend_from_array (<<short_studio_name, "help", "defaults", Eiffel_platform>>)
 		end
 
+	Generation_templates_path: FILE_NAME is
+			-- Location of templates used in code generation.
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<short_studio_name, "config", Eiffel_platform, "templates">>)
+		ensure
+			generation_templates_path_not_void: Result /= Void and not Result.is_empty
+		end
+		
 	Assemblies_path: FILE_NAME is
 			-- Location of Eiffel Assembly Cache.
 		once
@@ -287,7 +296,7 @@ feature -- Access: file name
 			Result.set_directory ("tmp")
 		end
 		
-	ISE_eac_browser_name: FILE_NAME is
+	Ise_eac_browser_name: FILE_NAME is
 			-- Filename of EAC Browser application
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)

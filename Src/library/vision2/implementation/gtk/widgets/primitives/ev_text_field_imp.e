@@ -58,7 +58,17 @@ feature -- Status setting
 			a := txt.to_c
 			gtk_entry_set_text (widget, $a)
 		end
-	
+
+	insert_text (txt: STRING) is
+			-- Insert `txt' at the current position
+		local
+			str: STRING
+		do
+			str := text
+			str.insert (txt, position)
+			set_text (str)
+		end
+
 	append_text (txt: STRING) is
 		local
 			a: ANY

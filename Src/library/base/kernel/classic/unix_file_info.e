@@ -282,25 +282,25 @@ feature {NONE} -- Implementation
 	file_eaccess (stat_buf: POINTER; which: INTEGER): BOOLEAN is
 			-- Perform access tests using effective ID.
 		external
-			"C (struct stat *, EIF_INTEGER): EIF_BOOLEAN | %"eif_file.h%""
+			"C (struct stat *, int): EIF_BOOLEAN | %"eif_file.h%""
 		end
 
 	file_info (stat_buf: POINTER; which: INTEGER): INTEGER is
 			-- Extract information `which' from information buffer
 		external
-			"C (struct stat *, EIF_INTEGER): EIF_INTEGER | %"eif_file.h%""
+			"C (struct stat *, int): EIF_INTEGER | %"eif_file.h%""
 		end
 
 	file_owner (uid: INTEGER): STRING is
 			-- Convert UID to login name if possible
 		external
-			"C | %"eif_file.h%""
+			"C signature (int): EIF_REFERENCE use %"eif_file.h%""
 		end
 
 	file_group (gid: INTEGER): STRING is
 			-- Convert GID to group name if possible
 		external
-			"C | %"eif_file.h%""
+			"C signature (int): EIF_REFERENCE use %"eif_file.h%""
 		end
 
 indexing

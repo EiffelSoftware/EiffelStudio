@@ -73,6 +73,14 @@ feature -- Access
 			Result := cwel_tv_item_get_state (item)
 		end
 
+	children: INTEGER is
+			-- Information about the children of the item
+		require
+			valid_member: children_is_valid
+		do
+			Result := cwel_tv_item_get_cchildren (item)
+		end
+
 feature -- Status report
 
 	text_is_valid: BOOLEAN is
@@ -85,6 +93,12 @@ feature -- Status report
 			-- Is the structure member `state' valid?
 		do
 			Result := flag_set (mask, Tvif_state)
+		end
+
+	children_is_valid: BOOLEAN is
+			-- Is the structure member `children' valid?
+		do
+			Result := flag_set (mask, Tvif_children)
 		end
 
 feature -- Element change

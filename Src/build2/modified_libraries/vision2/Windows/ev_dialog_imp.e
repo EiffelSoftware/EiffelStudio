@@ -209,8 +209,8 @@ feature -- Basic operations
 				update_style
 				if parent_window /= Void and then apply_center_dialog then
 					center_dialog
-					apply_center_dialog := False
 				end
+				apply_center_dialog := False
 				
 					-- Set the focus to the `default_push_button' if any
 				if default_push_button /= Void and then 

@@ -8,10 +8,18 @@ class
 
 inherit
 	DB_CHANGE
+		undefine
+			set_map_name,
+			unset_map_name,
+			is_mapped,
+			mapped_value,
+			clear_all
 		redefine
 			implementation,
 			make
 		end
+
+	PARAMETER_HDL
 
 creation
 	make
@@ -24,43 +32,41 @@ feature -- Initialization
 			implementation := handle.database.db_dyn_change
 			!! ht.make (name_table_size)
 			implementation.set_ht (ht)
+			init
+			implementation.init_implementation (parameters_value, parameter_name_to_position)
 		end
 
 feature -- Element change
 
 	prepare (s: STRING) is
 			-- Parse of the sql statement `s'
+		require
+			not_void: s /= Void
+			meaning_full_sql: s.count > 0
 		do
 			implementation.prepare (s)
+			set_prepared (TRUE)
+		ensure
+			prepared_statement: is_prepared
 		end
 
 	bind_parameter is
 			-- Bind of the prarameters of the sql statement 
+		require
+			prepared_statement: is_prepared
 		do
 			implementation.bind_parameter
 		end
 
 	execute is
 			-- Execute the sql statement
+		require
+			prepare_statement: is_prepared
 		do
 			if is_ok then
 				implementation.execute
 			end
-	
 		end
-
-	set_value (v: ANY) is
-			-- Set the values of the parameters
-		do
-			implementation.set_value (v)
-		end
-
---	put (table: ARRAY [ANY]) is
---			-- Execute the sql statement with `table' as 
---			-- the array of values for the parameters
---		do
---			implementation.put (table)
---		end
 
 feature {NONE} -- Implementation
 

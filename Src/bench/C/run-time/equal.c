@@ -537,22 +537,24 @@ uint32 s_flags;
 			if (*(fnptr *) t_ref != *(fnptr *) s_ref)
 				return FALSE;
 			break;
-		default:
-			if ((target_type & SK_HEAD) == SK_BIT) {
+		case SK_BIT:
 				/* BITS attribute */
 				/* All we have to do here is call the routine for bit comparison
 				 * as we have the references for the source and the target
 				 * -- Fabrice */
-				if (!b_equal(s_ref, t_ref))
-					return FALSE;
-			} else if ((target_type & SK_HEAD) == SK_EXP) {
+			if (!b_equal(s_ref, t_ref))
+				return FALSE;
+			break;
+		case SK_EXP:
 				/* Source and target attribute are expanded of the same type.
 				 * Block comparison if the attribute type is not composite
 				 * itself else field-by-field comparison.
 				 */
-				if (!eequal(t_ref, s_ref))
-					return FALSE;
-			} else if (*(char **)t_ref != *(char **)s_ref)
+			if (!eequal(t_ref, s_ref))
+				return FALSE;
+			break
+		default:
+			if (*(char **)t_ref != *(char **)s_ref)
 				/* Check equality of references */
 				return FALSE;
 		}

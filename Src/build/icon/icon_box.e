@@ -177,6 +177,26 @@ feature
 			end;
 		end; -- add
 
+	refresh_display is
+		require
+			positions_same: icons_index = index
+		local
+			icon: ICON_STONE
+		do
+			from
+			until
+				after 
+			loop
+				icon := icons.item;
+				icon.set_data (item);
+					--if not icon.managed then
+						--icon.set_managed (True);
+					--end;
+				icons.forth;
+				forth;	
+			end;
+		end; 
+
 feature {NONE}
 
 	update_number_of_icons is

@@ -220,6 +220,9 @@ feature {NONE} -- Implementation
 				str := clone (headers.item)
 				pos := str.index_of (' ', 1)
 				str.remove_head (pos)
+					-- Remove trailing and heading white spaces.
+				str.right_adjust
+				str.left_adjust
 				content_length := str.to_integer
 				is_count_valid := True
 			else

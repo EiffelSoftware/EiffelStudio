@@ -9,6 +9,10 @@ deferred class
 
 inherit
 	EV_SIMPLE_ITEM_I
+		redefine
+			parent_imp,
+			top_parent_imp
+		end
 
 	EV_TREE_ITEM_HOLDER_I
 
@@ -16,69 +20,17 @@ inherit
 
 	EV_PND_TARGET_I
 
-feature {NONE} -- Initialization
-
-	make_with_index (par: EV_TREE_ITEM_HOLDER; value: INTEGER) is
-			-- Create an item with `par' as parent and `value'
-			-- as index.
-		require
-			valid_parent: par /= Void
---			valid_index: (value > 0) and (value <= par.count + 1)
-		deferred
-		end
-
-	make_with_all (par: EV_TREE_ITEM_HOLDER; txt: STRING; value: INTEGER) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `value' as index.
-		require
-			valid_parent: par /= Void
---			valid_index: (value > 0) and (value <= par.count + 1)
-		deferred
-		end
-
 feature -- Access
 
-	parent_imp: EV_TREE_ITEM_HOLDER_IMP
+	parent_imp: EV_TREE_ITEM_HOLDER_IMP is
 			-- Parent implementation
-
-	index: INTEGER is
-			-- Index of the current item.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
 		deferred
 		end
 
-feature -- Status setting
-
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
-		deferred
-		ensure
-			is_selected: flag implies is_selected
-		end
-
-	toggle is
-			-- Change the state of selection of the item.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
+	top_parent_imp: EV_TREE_IMP is
+			-- Top item holder containing the current item.
 		do
-			set_selected (not is_selected)
-		end
-
-	set_expand (flag: BOOLEAN) is
-			-- Expand the item if `flag', collapse it otherwise.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
-			is_parent: is_parent
-		deferred
-		ensure
-			is_expanded: flag implies is_expanded
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
 
 feature -- Status report
@@ -87,7 +39,7 @@ feature -- Status report
 			-- Is the item selected?
 		require
 			exists: not destroyed
-			has_parent: parent_imp /= Void
+			in_widget: top_parent_imp /= Void
 		deferred
 		end
 
@@ -95,6 +47,7 @@ feature -- Status report
 			-- is the item expanded ?
 		require
 			exists: not destroyed
+			in_widget: top_parent_imp /= Void
 		deferred
 		end
 
@@ -105,22 +58,36 @@ feature -- Status report
 		deferred
 		end
 
-feature -- Element change
+feature -- Status setting
 
-	set_parent (par: EV_TREE_ITEM_HOLDER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		deferred
-		end
-
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item in the
-			-- list.
+	set_selected (flag: BOOLEAN) is
+			-- Select the item if `flag', unselect it otherwise.
 		require
 			exists: not destroyed
-			has_parent: parent_imp /= Void
---			valid_index: (value > 0) and (value <= par.count + 1)
+			in_widget: top_parent_imp /= Void
 		deferred
+		ensure
+ 			state_set: is_selected = flag
+		end
+
+	toggle is
+			-- Change the state of selection of the item.
+		require
+			exists: not destroyed
+			in_widget: top_parent_imp /= Void
+		do
+			set_selected (not is_selected)
+		end
+
+	set_expand (flag: BOOLEAN) is
+			-- Expand the item if `flag', collapse it otherwise.
+		require
+			exists: not destroyed
+			in_widget: top_parent_imp /= Void
+			is_parent: is_parent
+		deferred
+		ensure
+			state_set: is_expanded = flag
 		end
 
 feature -- Event : command association
@@ -181,7 +148,7 @@ feature -- Event -- removing command association
 end -- class EV_TREE_ITEM_I
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

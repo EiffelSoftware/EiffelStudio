@@ -11,7 +11,32 @@ deferred class
 
 inherit
 	EV_MENU_ITEM_I
-	
+		redefine
+			is_selected,
+			set_selected
+		end
+
+feature -- Status report
+
+	is_selected: BOOLEAN is
+			-- True if the current item is selected.
+			-- False otherwise.
+			-- we use it only when the grand parent is an option button.
+  		require else
+			exists: not destroyed
+		deferred
+		end
+
+feature -- Status setting
+
+	set_selected (flag: BOOLEAN) is
+   			-- Set current item as the selected one.
+			-- we use it only when the grand parent is an option button.
+   		require else
+			exists: not destroyed
+   		deferred
+		end
+
 feature -- Event : command association
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

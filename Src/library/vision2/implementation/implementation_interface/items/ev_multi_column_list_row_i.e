@@ -12,52 +12,25 @@ inherit
 		rename
 			count as columns,
 			set_count as set_columns
+		redefine
+			top_parent_imp
 		end
 
 	EV_PND_SOURCE_I
 
 	EV_PND_TARGET_I
 
-feature -- Initialization
-
-	make is
-			-- Create an empty row with `par' as parent.
-		deferred
-		end
-
-	make_with_text (txt: ARRAY [STRING]) is
-			-- Create a row with text in it.
-		deferred
-		end
-
-	make_with_index (par:EV_MULTI_COLUMN_LIST; value: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		require
-			valid_parent: par /= Void
-		deferred
-		end
-
-	make_with_all (par:EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]; value: INTEGER) is
-			-- Create a row with `txt' as text at the given
-			-- `value' index in the list.
-		require
-			valid_parent: par /= Void
-		deferred
-		end
-
 feature -- Access
 
-	parent: EV_MULTI_COLUMN_LIST is
-			-- List that container this row
+	parent_imp: EV_MULTI_COLUMN_LIST_IMP is
+			-- List implementation that contain this row
 		deferred
 		end
 
-	index: INTEGER is
-			-- Index of the row in the list
-		require
-			exist: not destroyed
-			has_parent: parent_imp /= Void
-		deferred
+	top_parent_imp: EV_MULTI_COLUMN_LIST_IMP is
+			-- Top item holder containing the current item.
+		do
+			Result ?= {EV_COMPOSED_ITEM_I} Precursor
 		end
 
 feature -- Status report
@@ -72,22 +45,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
-		deferred
-		ensure
-			index_set: index = value
-		end
-
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		require
 			exists: not destroyed
 			has_parent: parent_imp /= Void
 		deferred
+		ensure
+			state_set: is_selected = flag
 		end
 
 	toggle is

@@ -11,6 +11,7 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
+			top_parent_imp,
 			pixmap_size_ok
 		end
 
@@ -20,12 +21,15 @@ inherit
 
 feature -- Access
 
-	index: INTEGER is
-			-- Index of the button in the tool-bar.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
+	parent_imp: EV_TOOL_BAR_IMP is
+			-- Parent implementation
 		deferred
+		end
+
+	top_parent_imp: EV_TOOL_BAR_IMP is
+			-- Top item holder containing the current item.
+		do
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
 
 feature -- Status report
@@ -47,19 +51,8 @@ feature -- Status setting
 			exists: not destroyed
 			has_parent: parent_imp /= Void
 		deferred
-		end
-
-feature -- Element change
-
-	set_parent_with_index (par: EV_TOOL_BAR; value: INTEGER) is
-			-- Make `par' the new parent of the widget and set
-			-- the current button at `value'.
-		require
-			exists: not destroyed
-			valid_index: value >= 1
-		deferred
 		ensure
-			index_set: index = value
+			state_set: is_insensitive = flag
 		end
 
 feature -- Assertions

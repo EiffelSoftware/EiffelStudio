@@ -15,18 +15,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create an row with one empty column.
-		deferred
-		end
-
 	make_with_text (txt: ARRAY [STRING]) is
 			-- Create a row with text in it.
 		require
 			valid_text: txt /= Void
-			no_void_text: not txt.has (Void)
 		deferred
- 		end
+		ensure
+			text_set: text_set (txt)
+		end
 
 feature -- Access
 
@@ -35,14 +31,18 @@ feature -- Access
 		require
 			exists: not destroyed
 		deferred
+		ensure
+			positive_result: result >= 0
 		end
 
-	cell_text (index: INTEGER): STRING is
-			-- Return the text of the cell number `index' 
+	cell_text (value: INTEGER): STRING is
+			-- Return the text of the cell number `value' 
 		require
 			exists: not destroyed
-			valid_index: index >= 1 and index <= count
+			valid_index: value >= 1 and value <= count
 		deferred
+		ensure
+			valid_result: Result /= Void
 		end
 
 	text: LINKED_LIST [STRING] is
@@ -50,12 +50,15 @@ feature -- Access
 		require
 			exists: not destroyed
 		deferred
+		ensure
+			valid_result: Result /= Void
+			valid_texts: not Result.has (Void)
 		end
 
-	cell_pixmap (index: INTEGER): EV_PIXMAP is
+	cell_pixmap (value: INTEGER): EV_PIXMAP is
 			-- Return the pixmap of the cell number
-			-- `index'. On windows platform, 
-			-- if index > 1, the result is void.
+			-- `value'. On windows platform, 
+			-- if value > 1, the result is void.
 		require
 			exists: not destroyed
 		deferred
@@ -80,16 +83,20 @@ feature -- Element change
 			no_parent: parent_imp = Void
 			valid_value: value > 0
 		deferred
+		ensure
+			count_set: count = value
 		end
 
-	set_cell_text (index: INTEGER; txt: STRING) is
-			-- Make `txt' the new label of the `index'-th
+	set_cell_text (value: INTEGER; txt: STRING) is
+			-- Make `txt' the new label of the `value'-th
 			-- cell of the item.
 		require
 			exists: not destroyed
-			valid_index: index >= 1 and index <= count
+			valid_index: value >= 1 and value <= count
 			valid_text: txt /= Void
 		deferred
+		ensure
+			text_set: (cell_text (value)).is_equal (txt)
 		end
 
 	set_text (txt: ARRAY [STRING]) is
@@ -111,27 +118,30 @@ feature -- Element change
 				i := i + 1
 				list_i := list_i + 1
 			end
+		ensure
+			text_set: text_set (txt)
 		end
 
-	set_cell_pixmap (index: INTEGER; pix: EV_PIXMAP) is
+	set_cell_pixmap (value: INTEGER; pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of the 
-			-- `index'-th cell of the item.
+			-- `value'-th cell of the item.
 		require
 			exists: not destroyed
-			valid_index: index >= 1 and index <= count
-			valid_pixmap: is_valid (pix)
-			valid_size: pixmap_size_ok (pix)
+			valid_index: value >= 1 and value <= count
+			valid_size: (pix /= Void) implies pixmap_size_ok (pix)
 		deferred
+		ensure
+			pixmap_set: (cell_pixmap (value)).is_equal (pix)
 		end
 
-	unset_cell_pixmap (index: INTEGER) is
-			-- Remove the pixmap of the 
-			-- `index'-th cell of the item.
-		require
-			valid_index: index >= 1 and index <= count
-			has_pixmap: (pixmap @ index) /= Void
-		deferred
-		end
+--	unset_cell_pixmap (value: INTEGER) is
+--			-- Remove the pixmap of the 
+--			-- `value'-th cell of the item.
+--		require
+--			valid_index: value >= 1 and value <= count
+--			has_pixmap: (pixmap @ value) /= Void
+--		deferred
+--		end
 
 	set_pixmap (pix: ARRAY [EV_PIXMAP]) is
 			-- Make `pix' the new pixmaps of the item.
@@ -153,9 +163,49 @@ feature -- Element change
 				i := i + 1
 				list_i := list_i + 1
 			end
+		ensure
+			pixmap_set: pixmap_set (pix)
 		end
 
 feature -- Assertion features
+
+	text_set (txt: ARRAY [STRING]): BOOLEAN is
+			-- Check if `txt' is equivalent to text.
+		local
+			list: LINKED_LIST [STRING]
+		do
+			from
+				Result := True
+				list := text
+				list.start
+			until
+				list.after or not Result
+			loop
+				if not list.item.is_equal (txt.item (list.index)) then
+					Result := False
+				end
+				list.forth
+			end
+		end
+
+	pixmap_set (pix: ARRAY [EV_PIXMAP]): BOOLEAN is
+			-- Check if `pix' is equivalent to pixmap.
+		local
+			list: LINKED_LIST [EV_PIXMAP]
+		do
+			from
+				Result := True
+				list := pixmap
+				list.start
+			until
+				list.after or not Result
+			loop
+				if not list.item.is_equal (pix.item (list.index)) then
+					Result := False
+				end
+				list.forth
+			end
+		end
 
 	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
 			-- Check if the size of the pixmap is ok for

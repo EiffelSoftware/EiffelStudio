@@ -10,6 +10,22 @@ deferred class
 
 inherit
 	EV_SEPARATOR_ITEM_I
+		redefine
+			top_parent_imp
+		end
+
+feature -- Access
+
+	parent_imp: EV_TOOL_BAR_IMP is
+			-- Parent implementation
+		deferred
+		end
+
+	top_parent_imp: EV_TOOL_BAR_IMP is
+			-- Top item holder containing the current item.
+		do
+			Result ?= {EV_SEPARATOR_ITEM_I} Precursor
+		end
 
 end -- class EV_TOOL_BAR_SEPARATOR_I
 

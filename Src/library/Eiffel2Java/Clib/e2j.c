@@ -4,14 +4,13 @@
 #define jprintf
 #define DEVELOPER_EXCEPTION 24
 
-char * my_thread_id () {
+char *my_thread_id (void) {
 	char *name= (char*) malloc (8*sizeof(char));		
 #ifdef EIF_THREADS
 		sprintf(name,"%x", eif_thr_thread_id());
 #else
 		sprintf(name,"00");
 #endif
-
 	return (name);
 }
 	
@@ -186,6 +185,7 @@ EIF_OBJ c_call_static_string_method (JNIEnv *env, jclass cls, jmethodID methodID
 		c_check_for_exceptions (env);
 		return (result);
 	}
+	return NULL;
 }
 
 jobject	c_call_static_object_method (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args) {
@@ -215,7 +215,7 @@ jmethodID c_get_method_id (JNIEnv *env, jclass cls, const char *name, const char
 
 EIF_OBJ c_call_string_method (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args) {
 	jstring js;
-char *id = my_thread_id ();
+	char *id = my_thread_id ();
 	js = (*env)->CallObjectMethodA (env, cls, methodID, args);
 	c_check_for_exceptions (env);
 	if (js != NULL) {
@@ -225,6 +225,7 @@ char *id = my_thread_id ();
 		(*env)->ReleaseStringUTFChars (env, js, str);
 		return (result);
 	}
+	return NULL;
 }
 
 EIF_BOOLEAN c_call_boolean_method (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args)
@@ -246,7 +247,7 @@ EIF_BOOLEAN c_call_boolean_method (JNIEnv *env, jclass cls, jmethodID methodID, 
 EIF_CHARACTER c_call_byte_method (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args)
 {
 	jbyte b;
-char *id = my_thread_id ();
+	char *id = my_thread_id ();
 	b = (*env)->CallByteMethodA (env, cls, methodID, args);
 	c_check_for_exceptions (env);
 	return (EIF_CHARACTER) b;
@@ -255,7 +256,7 @@ char *id = my_thread_id ();
 EIF_CHARACTER c_call_char_method  (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args)
 {
 	jchar c;
-char *id = my_thread_id ();
+	char *id = my_thread_id ();
 	c = (*env)->CallCharMethodA (env, cls, methodID, args);
 	c_check_for_exceptions (env);
 	return (EIF_CHARACTER) c;
@@ -275,7 +276,7 @@ EIF_INTEGER c_call_int_method (JNIEnv *env, jclass cls, jmethodID methodID, jval
 EIF_INTEGER c_call_short_method  (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args)
 {
 	jshort s;
-char *id = my_thread_id ();
+	char *id = my_thread_id ();
 	s = (*env)->CallShortMethodA (env, cls, methodID, args);
 	c_check_for_exceptions (env);
 	return (EIF_INTEGER) s;
@@ -284,7 +285,7 @@ char *id = my_thread_id ();
 EIF_REAL c_call_float_method  (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args)
 {
 	jfloat f;
-char *id = my_thread_id ();
+	char *id = my_thread_id ();
 	f = (*env)->CallFloatMethodA (env, cls, methodID, args);
 	c_check_for_exceptions (env);
 	return (EIF_REAL) f;

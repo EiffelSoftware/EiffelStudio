@@ -407,8 +407,6 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_breakable
-		
 			if target = Void then
 					-- A open operand for target.
 				ctxt.put_text_item (Ti_question)

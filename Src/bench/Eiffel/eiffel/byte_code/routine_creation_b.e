@@ -169,8 +169,6 @@ feature -- Byte code generation
 			cl_type_i: CL_TYPE_I
 			gen_type : GEN_TYPE_I
 		do
-			make_breakable (ba)
-
 				-- Arguments
 			if arguments /= Void then
 				arguments.make_byte_code (ba)

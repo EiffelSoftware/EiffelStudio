@@ -100,6 +100,7 @@ feature
 				vqmc.set_feature_name (feature_name)
 				vqmc.set_constant_type (value)
 				vqmc.set_expected_type (actual_type)
+				vqmc.set_location (body.start_location)
 				Error_handler.insert_error (vqmc)
 			end
 		end

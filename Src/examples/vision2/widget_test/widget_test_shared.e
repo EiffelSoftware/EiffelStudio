@@ -90,5 +90,14 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EV_ENVIRONMENT}).application
 		end
+		
+	missing_files: ARRAYED_LIST [STRING] is
+			-- All files found to be missing by `pixmap_by_name'.
+			-- These are buffered, so that they may be detailled together,
+			-- after `Current' is displayed.
+		once
+			Create Result.make (1)
+		end
+		
 
 end -- class WIDGET_TEST_SHARED

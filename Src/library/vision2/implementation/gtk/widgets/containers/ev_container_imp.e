@@ -26,6 +26,8 @@ inherit
 		end
 	
 	EV_CONTAINER_ACTION_SEQUENCES_IMP
+	
+	PLATFORM
 
 feature {NONE} -- Initialization
 
@@ -318,8 +320,8 @@ feature -- Status setting
 				i = 5
 			loop
 				-- 4 = size of pointer in bytes.
-				mem_ptr := bg_pixmap (a_style) + (i * 4)
-				mem_ptr.memory_copy ($pix_ptr, 4)
+				mem_ptr := bg_pixmap (a_style) + (i * pointer_bytes)
+				mem_ptr.memory_copy ($pix_ptr, pointer_bytes)
 				i := i + 1
 			end
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_style (visual_widget, a_style)

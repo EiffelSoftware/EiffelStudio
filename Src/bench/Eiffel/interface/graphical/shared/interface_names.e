@@ -112,7 +112,7 @@ feature -- Accelerator, focus label and menu name
 	m_Windows_cut: STRING is			"&Cut%TCtrl+X";
 	m_Unix_cut: STRING is				"&Cut%TShift+Delete";
 	a_Debug_quit: STRING is				"Ctrl<Key>e";
-	f_Debug_quit: STRING is				"End run";
+	f_Debug_quit: STRING is				"Interrupt";
 	m_Debug_quit: STRING is				"E&nd run%TCtrl+E";
 	a_Debug_run: STRING is				"Ctrl<Key>r";
 	f_Debug_run: STRING is				"Run";

@@ -81,7 +81,7 @@ void do_init()
  */
 EIF_INTEGER mask_size ()
 {
-	return (EIF_INTEGER) (sizeof (struct fd_mask));
+	return (EIF_INTEGER) (sizeof (fd_set));
 }
 
 
@@ -89,7 +89,7 @@ void c_mask_clear (mask, pos)
 EIF_OBJ mask;
 EIF_INTEGER pos;
 {
-	FD_CLR((int) pos, (struct fd_mask *) mask);
+	FD_CLR((int) pos, (fd_set *) mask);
 }
 
 
@@ -97,20 +97,20 @@ void c_set_bit (mask, pos)
 EIF_OBJ mask;
 EIF_INTEGER pos;
 {
-	FD_SET((int) pos, (struct fd_mask *) mask);
+	FD_SET((int) pos, (fd_set *) mask);
 }
 
 EIF_BOOLEAN c_is_bit_set (mask, pos)
 EIF_OBJ mask;
 EIF_INTEGER pos;
 {
-	return (EIF_BOOLEAN) ((FD_ISSET((int) pos, (struct fd_mask *) mask)) != 0);
+	return (EIF_BOOLEAN) ((FD_ISSET((int) pos, (fd_set *) mask)) != 0);
 }
 
 void c_zero_mask (mask)
 EIF_OBJ mask;
 {
-	FD_ZERO ((struct fd_mask *) mask);
+	FD_ZERO ((fd_set *) mask);
 }
 
 EIF_INTEGER address_size ()
@@ -563,6 +563,11 @@ void c_put_float (fd, f)
 EIF_INTEGER fd;
 EIF_REAL f;
 {
+		/* If no prototype is used for the declaration of c_put_float() in the caller,
+		 * an automatic conversion from float to double will occur. We need to explicitly
+		 * convert the argument to a float before safely sending it on the socket. Xavier
+		 */
+
 	float tf;
 	tf = f;
 #ifndef EIF_WIN32
@@ -570,7 +575,7 @@ EIF_REAL f;
 		if (errno != EWOULDBLOCK)
 			eio();
 #else
-	if (send (fd, (char *) &f, sizeof(f), 0) == SOCKET_ERROR)
+	if (send (fd, (char *) &tf, sizeof(tf), 0) == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
 			eio();
 #endif

@@ -1041,16 +1041,21 @@ feature {NONE} -- Implementation
 			-- Src drawing mode from current `wel_drawing_mode'
 			-- Used for bit blits.
 		do
-			if wel_drawing_mode = R2_copypen then
+			inspect wel_drawing_mode
+			when R2_copypen then
 				Result := Srccopy
-			elseif wel_drawing_mode = R2_xorpen then
+			when R2_xorpen then
 				Result := Srcerase
-			elseif wel_drawing_mode = R2_not then
+			when R2_not then
 				Result := Srcinvert
-			elseif wel_drawing_mode = R2_maskpen then
+			when R2_maskpen then
 				Result := Srcand
-			elseif wel_drawing_mode = R2_mergepen then
+			when R2_mergepen then
 				Result := Srcpaint
+			else
+				check
+					invalid_mode: False
+				end
 			end
 		end
 

@@ -133,9 +133,11 @@ feature -- Access
 			l_ca: CONSUMED_ASSEMBLY
 		do
 			l_ca := consumed_assembly_from_path (a_type.assembly.location)
-			create l_des
-			l_des.deserialize (absolute_type_path (l_ca, a_type))
-			Result ?= l_des.deserialized_object
+			if l_ca /= Void then
+				create l_des
+				l_des.deserialize (absolute_type_path (l_ca, a_type))
+				Result ?= l_des.deserialized_object
+			end
 		ensure
 			non_void_consumed_type: Result /= Void
 		end
@@ -195,10 +197,12 @@ feature -- Status Report
 			l_type_path: STRING
 		do
 			l_ca := consumed_assembly_from_path (a_type.assembly.location)
-			l_type_path := absolute_type_path (l_ca, a_type)
-			if l_type_path /= Void and not l_type_path.is_empty then
-				Result := (create {RAW_FILE}.make (l_type_path)).exists	
-			end		
+			if l_ca /= Void then
+				l_type_path := absolute_type_path (l_ca, a_type)
+				if l_type_path /= Void and not l_type_path.is_empty then
+					Result := (create {RAW_FILE}.make (l_type_path)).exists	
+				end
+			end
 		end
 		
 feature {CACHE_WRITER} -- Implementation

@@ -291,6 +291,7 @@ feature -- Conversion
  
 end -- class DATE_TIME_DURATION
 
+
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
@@ -306,4 +307,5 @@ end -- class DATE_TIME_DURATION
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
 

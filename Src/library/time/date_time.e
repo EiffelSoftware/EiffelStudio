@@ -29,7 +29,8 @@ creation
 	make_fine,
 	make_by_date_time,
 	make_by_date,
-	make_now
+	make_now,
+	make_from_string
 
 feature -- Initialization 
 
@@ -116,6 +117,17 @@ feature -- Initialization
 			!! date.make_now; 
 			!! time.make_now
 		end; 
+
+	make_from_string(s: STRING) is
+			-- initialise from a "standard" string of form
+			-- "dd/mm/yyyy hh:mm:ss.sss".	
+		require
+			s_exists: s /= Void;
+			delim1_exist: 
+		do
+			!! date.make_from_string(s)
+			!! time.make_from_string(s)
+		end;
 
 feature -- Access
 			
@@ -321,4 +333,5 @@ end -- class DATE_TIME
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
 

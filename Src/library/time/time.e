@@ -26,7 +26,8 @@ creation
 	make_fine,
 	make_now,
 	make_by_seconds,
-	make_by_fine_seconds
+	make_by_fine_seconds,
+	make_from_string
 
 feature -- Initialization
 
@@ -106,6 +107,48 @@ feature -- Initialization
 			fine_second := fine_second - (minute * seconds_in_minute)
 		end;
 
+	make_from_string(s:STRING) is
+			-- initialise from a "standard" string of form
+			-- "dd/mm/yyyy hh:mm:ss.sss".
+		require 
+			s_exits: s /= Void;
+			time_valid: time_valid(s);
+		local
+			 t:STRING
+			 pos1, pos2, pos3:INTEGER
+		do
+			 t := s.substring(s.index_of(Std_date_time_delim,1)+1, s.count)
+			 pos1 := t.index_of(Std_time_delim,1) 
+			 pos2 := t.index_of(Std_time_delim,pos1+1) 
+			 pos3 := t.count+1
+
+			 make_fine(t.substring(1,pos1-1).to_integer, 
+						t.substring(pos1+1,pos2-1).to_integer, 
+						t.substring(pos2+1,pos3-1).to_real) 
+		ensure
+			
+	       end
+		   
+feature -- conditions
+
+	time_valid(s: STRING): BOOLEAN is
+			-- Has the substring the format "hh:mm:ss.sss"?
+		local
+			pos1, pos2, pos3, pos4: INTEGER
+			substrg1, substrg2, substrg3: STRING
+		do
+			pos1:=s.index_of(Std_date_time_delim,1)
+			pos2:=s.index_of(Std_time_delim,1)
+			pos3:=s.index_of(Std_time_delim,pos2+1)
+			pos4:=s.count+1
+			substrg1:=s.substring(pos1+1, pos2-1)
+			substrg2:=s.substring(pos2+1, pos3-1)
+			substrg3:=s.substring(pos3+1, pos4-1)
+			
+			Result:=s.item(pos1+3)=Std_time_delim and s.item(pos2+3)=Std_time_delim and substrg1.is_integer and substrg2.is_integer and substrg3.is_real; 
+		end
+		
+			
 feature -- Access
 
 	origin: TIME is

@@ -75,4 +75,3 @@ end -- class DATE_LOCALIZER
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

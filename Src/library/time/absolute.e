@@ -79,3 +79,4 @@ end -- class ABSOLUTE
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

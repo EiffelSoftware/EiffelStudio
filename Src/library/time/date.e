@@ -26,7 +26,8 @@ creation
 	make_month_day_year,
 	make_day_month_year,
 	make_now,
-	make_by_days
+	make_by_days,
+	make_from_string
 
 feature -- Initialization
 
@@ -103,6 +104,50 @@ feature -- Initialization
 			days_set: days = d
 		end;
 
+	make_from_string(s:STRING) is
+			-- initialise from a "standard" string of form
+			-- "dd/mm/yyyy hh:mm:ss.sss".
+		require
+			s_exits: s /= Void;
+			date_valid: date_valid(s)
+		local
+			 pos1, pos2, pos3, pos4:INTEGER
+			 substrg1, substrg2, substrg3: STRING
+	    do
+			pos1 := s.index_of(Std_date_delim,1) 
+			pos2 := s.index_of(Std_date_delim,pos1+1) 
+			pos3 := s.index_of(Std_date_time_delim,1)
+			pos4 := s.count+1
+			substrg1:=s.substring(1, pos1-1)
+			substrg2:=s.substring(pos1+1, pos2-1)
+			if pos3/=0 then
+				substrg3:=s.substring(pos2+1, pos3-1)
+			else
+				substrg3:=s.substring(pos2+1, pos4-1)
+			end -- if
+			make_day_month_year(substrg1.to_integer, substrg2.to_integer, substrg3.to_integer) 
+	   end
+		   
+feature -- conditions
+	date_valid(s: STRING): BOOLEAN is
+			-- Has the substring the format "dd/mm/yyyy"?
+		local
+			pos1, pos2, pos3, pos4: INTEGER
+			substrg1, substrg2, substrg3: STRING
+		do
+			pos1:=s.index_of(Std_date_delim,1)
+			pos2:=s.index_of(Std_date_delim,pos1+1)
+			pos3:=s.index_of(Std_date_time_delim,1)
+			pos4:=s.count+1
+			substrg1:=s.substring(1, pos1-1)
+			substrg2:=s.substring(pos1+1, pos2-1)
+			if pos3/=0 then
+				substrg3:=s.substring(pos2+1, pos3-1)
+			else
+				substrg3:=s.substring(pos2+1, pos4-1)
+			end
+			Result:=s.item(pos1)=Std_date_delim and s.item(pos1+3)=Std_date_delim and substrg1.is_integer and substrg2.is_integer and substrg3.is_integer; 
+		end
 feature -- Access
 
 	origin: DATE is
@@ -504,4 +549,5 @@ end -- class DATE
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
 

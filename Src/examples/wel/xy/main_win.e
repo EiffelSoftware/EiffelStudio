@@ -1,0 +1,83 @@
+class
+	MAIN_WINDOW
+
+inherit
+	WEL_FRAME_WINDOW
+		redefine
+			class_background,
+			class_icon,
+			on_control_command,
+			on_left_button_down
+		end
+
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Make the main window and a button
+		do
+			make_top ("WEL xy")
+			!! clear_button.make (Current, "Clear",
+				1, 1, 70, 40, 1)
+		end
+
+feature {NONE} -- Behaviors
+
+	on_control_command (control: WEL_CONTROL) is
+			-- Clear the window
+		do
+			if control = clear_button then
+				invalidate
+			end
+		end
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Write `x_pos' and `y_pos'
+		local
+			dc: WEL_CLIENT_DC
+			position: STRING
+		do
+			!! position.make (20)
+			position.extend ('(')
+			position.append_integer (x_pos)
+			position.append (", ")
+			position.append_integer (y_pos)
+			position.extend (')')
+			!! dc.make (Current)
+			dc.get
+			dc.text_out (x_pos, y_pos, position)
+			dc.release
+		end
+
+feature {NONE} -- Implementation
+
+	clear_button: WEL_PUSH_BUTTON
+			-- Clear button
+
+	class_background: WEL_WHITE_BRUSH is
+			-- White background
+		once
+			!! Result.make
+		end
+
+	class_icon: WEL_ICON is
+			-- Window's icon
+		once
+			!! Result.make_by_id (1)
+		end
+
+end -- class MAIN_WINDOW
+
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

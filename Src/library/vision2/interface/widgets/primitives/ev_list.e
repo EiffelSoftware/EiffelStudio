@@ -48,7 +48,7 @@ feature -- Access
 			-- `index'.
 		require
 			exists: not destroyed
-			item_exists: index <= count
+			item_exists: (index <= count) and (index >= 0)
 		do
 			Result := implementation.get_item(index)
 		end

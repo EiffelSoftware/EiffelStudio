@@ -168,9 +168,15 @@ feature -- Element change
 
 	set_foreground_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `foreground_color'
+		local
+			a_color_imp: EV_COLOR_IMP
+			foreground_color_imp: EV_COLOR_IMP
 		do
-			if not a_color.is_equal(foreground_color) then
-				foreground_color.copy (a_color)
+			a_color_imp ?= a_color.implementation
+			foreground_color_imp ?= foreground_color.implementation
+			if a_color_imp.item /= foreground_color_imp.item then
+--				foreground_color.copy (a_color)
+				foreground_color := a_color
 			
 					-- update current pen & brush (lazzy evaluation)
 				internal_initialized_brush := False
@@ -390,6 +396,7 @@ feature -- Drawing operations
 			display_mask_dc		: WEL_MEMORY_DC
 			display_bitmap_dc	: WEL_MEMORY_DC
 			pixmap_imp			: EV_PIXMAP_IMP_STATE
+			pixmap_imp_drawable	: EV_PIXMAP_IMP_DRAWABLE
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			pixmap_height := pixmap_imp.height
@@ -452,9 +459,14 @@ feature -- Drawing operations
 
 			else -- Display a not masked pixmap.
 
-				create display_bitmap.make_by_bitmap(pixmap_imp.bitmap)
-				create display_bitmap_dc.make_by_dc(s_dc)
-				display_bitmap_dc.select_bitmap(display_bitmap)
+				pixmap_imp_drawable ?= pixmap_imp
+				if pixmap_imp_drawable = Void then
+					create display_bitmap.make_by_bitmap(pixmap_imp.bitmap)
+					create display_bitmap_dc.make_by_dc(s_dc)
+					display_bitmap_dc.select_bitmap(display_bitmap)
+				else
+					display_bitmap_dc := pixmap_imp_drawable.dc
+				end
 
 				dc.bit_blt (
 					x, 
@@ -879,6 +891,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/21 23:58:14  pichery
+--| Speed optimization with Manus.
+--|
 --| Revision 1.27  2000/04/13 23:39:21  pichery
 --| Fixed a small bug. The brush and the pen were not correctly
 --| initialized after a `get_dc' or a `release_dc' in

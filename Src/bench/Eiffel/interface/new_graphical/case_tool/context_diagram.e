@@ -28,8 +28,6 @@ inherit
 		end
 
 	SHARED_XML_ROUTINES
-		export {ANY}
-			error_window
 		undefine
 			default_create
 		end
@@ -865,50 +863,34 @@ feature -- View management
 			ptf_is_readable: ptf.is_open_read
 			a_name_exists: a_name /= Void
 		local
-			diagram_output, node: XM_ELEMENT
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			diagram_output: XM_DOCUMENT
+			node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
-			create l_parser.make
-			create l_file.make (ptf.name)
-			l_file.open_read
-			if l_file.is_open_read then
-				create l_tree_pipe.make
-				create l_xm_concatenator.make_null
-				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-				l_parser.parse_from_stream (l_file)
+			diagram_output := deserialize_document (ptf.name)
+			if diagram_output /= Void then
 				check
-					ok_parsing: l_parser.is_correct
+					valid_xml: diagram_output.root_element.name.is_equal ("CONTEXT_DIAGRAM")
 				end
-				l_file.close
-
-				if l_tree_pipe.document.root_element.name.is_equal ("CONTEXT_DIAGRAM") then
-					diagram_output := l_tree_pipe.document.root_element
-					a_cursor := diagram_output.new_cursor
-					from
-						a_cursor.start
-					until
-						a_cursor.after
-					loop
-						node ?= a_cursor.item
-						if node /= Void then
-							if node.name.is_equal ("VIEW") then
-								if node.attribute_by_name ("NAME").value.is_equal (a_name) then
-									diagram_output.remove_at_cursor (a_cursor)
-								end
+				a_cursor := diagram_output.root_element.new_cursor
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
+					node ?= a_cursor.item
+					if node /= Void then
+						if node.name.is_equal ("VIEW") then
+							if node.attribute_by_name ("NAME").value.is_equal (a_name) then
+								diagram_output.remove_at_cursor (a_cursor)
 							end
 						end
-						if not a_cursor.after then
-							a_cursor.forth
-						end
+					end
+					if not a_cursor.after then
+						a_cursor.forth
 					end
 				end
-				ptf.close
-				ptf.open_write
-				ptf.put_string (diagram_output.out)
+				save_xml_document (ptf, diagram_output)
 			end
 		end
 		
@@ -1643,75 +1625,43 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 		local
 			diagram_output: XM_DOCUMENT
 			view_output, node: XM_ELEMENT
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			l_namespace: XM_NAMESPACE
-			rescued: BOOLEAN
 		do
-			if not rescued then
-				if ptf.is_open_read then
-						-- Remove any previous save of `current_view'.
-					create l_parser.make
-					create l_file.make (ptf.name)
-					l_file.open_read
-					if l_file.is_open_read then
-						create l_tree_pipe.make
-						create l_xm_concatenator.make_null
-						l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-						l_parser.parse_from_stream (l_file)
-						l_file.close
-						if l_parser.is_correct then
-							check
-								valid_doc: l_tree_pipe.document.root_element.name.is_equal ("CONTEXT_DIAGRAM")
-							end
-							diagram_output := l_tree_pipe.document
-							a_cursor := diagram_output.root_element.new_cursor
-							from
-								a_cursor.start
-							until
-								a_cursor.after
-							loop
-								node ?= a_cursor.item
-								if node /= Void then
-									if node.name.is_equal ("VIEW") then
-										check
-											valid_xml: node.attributes.item (1).value.is_equal (current_view)
-										end
-										diagram_output.root_element.remove_at_cursor (a_cursor)
-									end
+			if ptf.is_open_read then
+				diagram_output := deserialize_document (ptf.name)
+				if diagram_output /= Void then
+					a_cursor := diagram_output.root_element.new_cursor
+					from
+						a_cursor.start
+					until
+						a_cursor.after
+					loop
+						node ?= a_cursor.item
+						if node /= Void then
+							if node.name.is_equal ("VIEW") then
+								check
+									valid_xml: node.attributes.item (1).value.is_equal (current_view)
 								end
-								if not a_cursor.after then
-									a_cursor.forth
-								end
-							end
-							view_output := xml_element
-							view_output.set_parent (diagram_output)
-							diagram_output.root_element.force_first (view_output)
-							save_xml_document (ptf, diagram_output)
-						else
-							check
-								not_ok_parsing: l_parser.is_correct
+								diagram_output.root_element.remove_at_cursor (a_cursor)
 							end
 						end
+						if not a_cursor.after then
+							a_cursor.forth
+						end
 					end
-				else
-					create l_namespace.make ("", "")
-					create node.make_root ("CONTEXT_DIAGRAM", l_namespace)
-					create diagram_output.make
-					diagram_output.force_first (node)
+					view_output := xml_element
+					view_output.set_parent (diagram_output)
+					diagram_output.root_element.force_first (view_output)
 					save_xml_document (ptf, diagram_output)
 				end
+			else
+				create l_namespace.make ("", "")
+				create node.make_root ("CONTEXT_DIAGRAM", l_namespace)
+				create diagram_output.make
+				diagram_output.force_first (node)
+				save_xml_document (ptf, diagram_output)
 			end
-		rescue
-			rescued := True
-			Error_handler.error_list.wipe_out
-			create error_window
-			error_window.set_text ("File " + center_class.name + ".ead is corrupted.")
-			error_window.show
-			retry
 		end
 
 	load_from_file (f: RAW_FILE) is
@@ -1769,88 +1719,65 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 			file_not_void: f /= Void
 			file_exists: f.exists
 		local
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			diagram_input, view_input, node: XM_ELEMENT
+			diagram_input: XM_DOCUMENT
+			view_input, node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
 			rescued: BOOLEAN
 		do
 			if not cancelled then
 				if not rescued then
-					create l_parser.make
-					create l_file.make (f.name)
-					l_file.open_read
-					if l_file.is_open_read then
-						create l_tree_pipe.make
-						create l_xm_concatenator.make_null
-						l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-						l_parser.parse_from_stream (l_file)
+					diagram_input := deserialize_document (f.name)
+					if diagram_input /= Void then
 						check
-							ok_parsing: l_parser.is_correct
+							valid_xml: diagram_input.root_element.name.is_equal ("CONTEXT_DIAGRAM")
 						end
-						l_file.close
-						diagram_input := l_tree_pipe.document.root_element
-						if diagram_input.name.is_equal ("CONTEXT_DIAGRAM") then
-							available_views.wipe_out
-							a_cursor := diagram_input.new_cursor
-							from
-								a_cursor.start
-							until
-								a_cursor.after
-							loop
-								node ?= a_cursor.item
-								if node /= Void then
-									if node.name.is_equal ("VIEW") then
-										check
-											attribute_name_exist: node.has_attribute_by_name ("NAME")
-										end
-										available_views.extend (node.attribute_by_name ("NAME").value)
-										if node.attribute_by_name ("NAME").value.is_equal (current_view) then
-											view_input := node
-										end
+						available_views.wipe_out
+						a_cursor := diagram_input.root_element.new_cursor
+						from
+							a_cursor.start
+						until
+							a_cursor.after
+						loop
+							node ?= a_cursor.item
+							if node /= Void then
+								if node.name.is_equal ("VIEW") then
+									check
+										attribute_name_exist: node.has_attribute_by_name ("NAME")
+									end
+									available_views.extend (node.attribute_by_name ("NAME").value)
+									if node.attribute_by_name ("NAME").value.is_equal (current_view) then
+										view_input := node
 									end
 								end
-								a_cursor.forth
 							end
-							if view_input /= Void then
-								set_with_xml_element (view_input)
-								context_editor.update_toggles (Current)
-								context_editor.update_bounds (Current)
-							else
-								reset_colors
-								reset_links
-								included_figures.wipe_out
-								excluded_figures.wipe_out
-								point.set_position (0, 0)
-								context_editor.reset_toggles (Current)
-								set_ancestor_depth (1)
-								set_descendant_depth (1)
-								set_client_depth (0)
-								set_supplier_depth (0)
-								set_include_all_classes_of_cluster (False) 
-								set_include_only_classes_of_cluster (False) 
-								synchronize (True, Void)
-							end
-						else
-							create error_window
-							error_window.set_text ("Incorrect File:" + center_class.name + ".ead")
-							error_window.show
+							a_cursor.forth
 						end
-					else
-						create error_window
-						error_window.set_text ("Incorrect File:" + center_class.name + ".ead")
-						error_window.show
+						if view_input /= Void then
+							set_with_xml_element (view_input)
+							context_editor.update_toggles (Current)
+							context_editor.update_bounds (Current)
+						else
+							reset_colors
+							reset_links
+							included_figures.wipe_out
+							excluded_figures.wipe_out
+							point.set_position (0, 0)
+							context_editor.reset_toggles (Current)
+							set_ancestor_depth (1)
+							set_descendant_depth (1)
+							set_client_depth (0)
+							set_supplier_depth (0)
+							set_include_all_classes_of_cluster (False) 
+							set_include_only_classes_of_cluster (False) 
+							synchronize (True, Void)
+						end
 					end
 				end
 			end
 		rescue
 			rescued := True
 			Error_handler.error_list.wipe_out
-			create error_window
-			error_window.set_text ("Unable to read file:" + center_class.name + ".ead")
-			error_window.show_relative_to_window (context_editor.development_window.window)
+			display_error_message ("Unable to read file:" + center_class.name + ".ead")
 			retry
 		end
 
@@ -1869,7 +1796,7 @@ feature {NONE} -- XML
 		do
 			create l_namespace.make ("", "")
 			create Result.make_root ("VIEW", l_namespace)
-			Result.add_attribute ("NAME", l_namespace, current_view)
+			add_attribute ("NAME", l_namespace, current_view, Result)
 			Result.put_last (xml_node (Result, "ANCESTOR_DEPTH", ancestor_depth.out))
 			Result.put_last (xml_node (Result, "DESCENDANT_DEPTH", descendant_depth.out))
 			Result.put_last (xml_node (Result, "CLIENT_DEPTH", client_depth.out))
@@ -1890,7 +1817,7 @@ feature {NONE} -- XML
 				cf ?= included_figures.item
 				if cf /= Void then
 					create include_xe.make_child (include_element, "CLASS", l_namespace)
-					include_xe.add_attribute ("NAME", l_namespace, cf.name)
+					add_attribute ("NAME", l_namespace, cf.name, include_xe)
 				end
 				include_element.put_last (include_xe)
 				included_figures.forth
@@ -1905,7 +1832,7 @@ feature {NONE} -- XML
 				cf ?= excluded_figures.item
 				if cf /= Void then
 					create  exclude_xe.make_child (exclude_element, "CLASS", l_namespace)
-					exclude_xe.add_attribute ("NAME", l_namespace, cf.name)
+					add_attribute ("NAME", l_namespace, cf.name, exclude_xe)
 				end
 				exclude_element.put_last (exclude_xe)
 				excluded_figures.forth
@@ -2007,17 +1934,15 @@ feature {NONE} -- XML
 				node ?= a_cursor.item
 				if node /= Void then
 					if node.name.is_equal ("CLASS_FIGURE") then
-						if not node.attributes.is_empty then
-							class_name := clone (node.attributes.first.value)
+						if node.has_attribute_by_name ("NAME") then
+							class_name := clone (node.attribute_by_name ("NAME").value)
 							class_name.to_upper
 							cf := class_figure_by_class_name (class_name)
 							if cf /= Void then
 								cf.set_with_xml_element (node)
 							end
 						else
-							create error_window
-							error_window.set_text ("File " + center_class.name + ".ead: Class name expected")
-							error_window.show
+							display_warning_message ("File " + center_class.name + ".ead: Class name expected")
 						end
 					elseif node.name.is_equal ("INHERITANCE_FIGURE") then
 						if 
@@ -2035,9 +1960,7 @@ feature {NONE} -- XML
 								hf.set_with_xml_element (node)
 							end
 						else
-							create error_window
-							error_window.set_text ("File " + center_class.name + ".ead: Class name expected")
-							error_window.show
+							display_warning_message ("File " + center_class.name + ".ead: Class name expected")
 						end	
 					elseif node.name.is_equal ("CLIENT_SUPPLIER_FIGURE") then
 						if 
@@ -2055,9 +1978,7 @@ feature {NONE} -- XML
 								csf.set_with_xml_element (node)
 							end
 						else
-							create error_window
-							error_window.set_text ("File " + center_class.name + ".ead: Class name expected")
-							error_window.show
+							display_warning_message ("File " + center_class.name + ".ead: Class name expected")
 						end			
 					elseif node.name.is_equal ("INCLUDED_FIGURES") then
 						include_cursor := node.new_cursor
@@ -2083,20 +2004,14 @@ feature {NONE} -- XML
 													--| FIXME: What to do if classes_found.count > 1?
 												include_class (classes_found.first) 
 											else
-												create error_window
-												error_window.set_text ("Class " + class_name + " not in the system")
-												error_window.show
+												display_warning_message ("Class " + class_name + " not in the system")
 											end 
 										end
 									else
-										create error_window
-										error_window.set_text ("File " + center_class.name + ".ead: Class name expected")
-										error_window.show
+										display_warning_message ("File " + center_class.name + ".ead: Class name expected")
 									end
 								else
-									create error_window
-									error_window.set_text ("File " + center_class.name + ".ead: Tag " + node.name + " unknown")
-									error_window.show
+									display_warning_message ("File " + center_class.name + ".ead: Tag " + node.name + " unknown")
 								end
 							end
 							include_cursor.forth
@@ -2119,14 +2034,10 @@ feature {NONE} -- XML
 											cf.remove_from_diagram (True)
 										end
 									else
-										create error_window
-										error_window.set_text ("File " + center_class.name + ".ead: Class name expected")
-										error_window.show
+										display_warning_message ("File " + center_class.name + ".ead: Class name expected")
 									end
 								else
-									create error_window
-									error_window.set_text ("File " + center_class.name + ".ead: Tag " + node.name + " unknown")
-									error_window.show
+									display_warning_message ("File " + center_class.name + ".ead: Tag " + node.name + " unknown")
 								end
 							end
 							exclude_cursor.forth
@@ -2146,9 +2057,7 @@ feature {NONE} -- XML
 								node.name.is_equal ("X_POS") and then
 								node.name.is_equal ("Y_POS")
 							then
-								create error_window
-								error_window.set_text ("File " + center_class.name + ".ead: Tag " + node.name + " unknown")
-								error_window.show
+								display_warning_message ("File " + center_class.name + ".ead: Tag " + node.name + " unknown")
 							end
 						end
 					end

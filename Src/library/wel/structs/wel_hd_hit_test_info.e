@@ -47,7 +47,7 @@ feature -- Access
 		do
 			Result := cwel_hd_hit_test_info_get_i_item (item)
 		ensure
-			positive_result: Result >= 0
+			positive_result: Result >= -1
 		end
 		
 feature -- Element change

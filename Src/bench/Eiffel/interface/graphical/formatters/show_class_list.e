@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Exploring and sorting classes...")
+			tool.set_title ("Exploring and sorting classes...")
 		end;
 
 end -- class SHOW_CLASS_LIST

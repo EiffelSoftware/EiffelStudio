@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Searching system for ancestor versions...")
+			tool.set_title ("Searching system for ancestor versions...")
 		end;
 
 end -- class SHOW_PAST

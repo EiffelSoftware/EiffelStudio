@@ -24,7 +24,7 @@ creation
 	
 feature -- Initialization
 
-	make (a_text_window: CLASS_TEXT) is
+	make (a_text_window: TEXT_WINDOW) is
 		do
 			init (a_text_window);
 			indent := 4
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Exploring ancestors to produce flat form...")
+			tool.set_title ("Exploring ancestors to produce flat form...")
 		end;
 
 end -- class SHOW_FLAT

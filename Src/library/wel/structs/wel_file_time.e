@@ -100,7 +100,7 @@ feature -- Conversion
 			-- local FILETIME in universal FILETIME form
 			-- `Current' must be in local time form
 		do
-			createResult.make
+			create Result.make
 			cwel_local_file_time_to_file_time (item, Result.item)
 		end
 

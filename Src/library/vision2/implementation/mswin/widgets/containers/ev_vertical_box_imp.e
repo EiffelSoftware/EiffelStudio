@@ -260,6 +260,8 @@ feature {NONE} -- Basic operation
 			initialize_length_at_minimum
 			if old_height >= minimum_height and shown then
 				set_local_height (old_height)
+			else
+				set_height (minimum_height)
 			end
 		end
 

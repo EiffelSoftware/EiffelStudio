@@ -251,14 +251,10 @@ feature {NONE} -- Status report
 		end
 
 	next_index (k: INTEGER): INTEGER is
-			-- Set result to be `k'
+			-- Get next index position in formalized way through index `k'.
 			-- (May be redefined in descendant class).
 		do
 			Result := k
--- FIXME: Jacques, comments removed according matisse library			
-		ensure
-			Result = k
---			
 		end
 
 feature {NONE} -- Status setting

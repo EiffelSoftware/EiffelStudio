@@ -1,7 +1,5 @@
 <document title="Indent and un indent  selection" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Indent and un indent selection
@@ -10,14 +8,14 @@
 		<list ordered="false">
 			<item>
 				<paragraph>The "Indent" command corresponds to the 
-					<bold>Indent selection</bold>entry in the 
+					<bold>Indent selection</bold> entry in the 
 					<bold>Advanced</bold> submenu of the 
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
 						<label>
 							<bold>Edit</bold>
 						</label>
-					</link>
+					</link> 
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
 						<label>Menu</label>
@@ -37,7 +35,7 @@
 						<label>
 							<bold>Edit</bold>
 						</label>
-					</link>
+					</link> 
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
 						<label>Menu</label>
@@ -45,7 +43,7 @@
 					<link>
 						<url>../20_selection.xml</url>
 						<label>selected</label>
-					</link> line if there is such acharacter.
+					</link> line if there is such a character.
 					<line_break></line_break>
 				</paragraph>
 			</item>

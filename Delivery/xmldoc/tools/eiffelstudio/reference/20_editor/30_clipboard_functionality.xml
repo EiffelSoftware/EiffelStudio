@@ -1,7 +1,5 @@
 <document title="Clipboard functionality" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Clipboard functionality
@@ -38,7 +36,7 @@
 				<paragraph>To paste text from the clipboard, either press "Ctrl+V" (or"Ctrl+Ins"), click on the paste icon 
 					<image>
 						<url>/images/eiffelstudio/icons/icon_past_color.gif</url>
-					</image> or choose
+					</image> or choose 
 					<bold>Paste</bold> in the 
 					<bold>Edit</bold> menu.
 				</paragraph>

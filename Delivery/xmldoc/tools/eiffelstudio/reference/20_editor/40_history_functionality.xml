@@ -1,7 +1,5 @@
 <document title="History functionality" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>History functionality
@@ -12,7 +10,7 @@
 				<paragraph>To undo last change, press the key combination "Ctrl+Z", click on the undo icon 
 					<image>
 						<url>/images/eiffelstudio/icons/icon_undo_color.gif</url>
-					</image> or choose
+					</image> or choose 
 					<bold>Undo</bold> in the 
 					<bold>Edit</bold> menu. If you repeat this operation, the editor will undo the last change and so on until there are no more changes to undo.
 				</paragraph>
@@ -21,7 +19,7 @@
 				<paragraph>To redo last undone change, press the key combination "Ctrl+Y", click on the redo icon 
 					<image>
 						<url>/images/eiffelstudio/icons/icon_redo_color.gif</url>
-					</image> or choose
+					</image> or choose 
 					<bold>Redo</bold> in the 
 					<bold>Edit</bold> menu. If you repeat this operation, the editor will redo the last undone change and so on until there are no undone changes left.
 				</paragraph>

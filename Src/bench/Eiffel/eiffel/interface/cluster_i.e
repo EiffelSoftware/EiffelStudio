@@ -46,10 +46,10 @@ feature -- Attributes
 			-- It won't be removed even if it is no more
 			-- in the local Ace file
 
-	exclude_list: FIXED_LIST [STRING];
+	exclude_list: ARRAYED_LIST [STRING];
 			-- List of files to exclude
 
-	include_list: FIXED_LIST [STRING];
+	include_list: ARRAYED_LIST [STRING];
 			-- List of files to include
 
 feature -- Conveniences
@@ -171,7 +171,7 @@ end;
 			if rename_clause = Void then
 				!!rename_clause.make;
 				rename_clause.set_cluster (cl);
-				renamings.add_front (rename_clause);
+				renamings.put_front (rename_clause);
 			end;
 			rename_clause.renamings.put (new_name, old_name);
 		end;
@@ -295,7 +295,7 @@ end;				-- Check if the path is valid
 					file_name := Environ.interpret (ex_l.i_th (i).file__name);
 					!!class_path.make (path.count + file_name.count + 1);
 					class_path.append (path);
-					class_path.append_character (Directory_separator);
+					class_path.extend (Directory_separator);
 					class_path.append (file_name);
 					!!class_file.make (class_path)
 					if not class_file.exists then
@@ -319,7 +319,7 @@ end;				-- Check if the path is valid
 					file_name := Environ.interpret (inc_l.i_th (i).file__name);
 					!!class_path.make (path.count + file_name.count + 1);
 					class_path.append (path);
-					class_path.append_character (Directory_separator);
+					class_path.extend (Directory_separator);
 					class_path.append (file_name);
 					!!class_file.make (class_path)
 					if not class_file.exists then
@@ -422,7 +422,7 @@ end;				-- Check if the path is valid
 		do
 			!!class_path.make (path.count + file_name.count + 1);
 			class_path.append (path);
-			class_path.append_character (Directory_separator);
+			class_path.extend (Directory_separator);
 			class_path.append (file_name);
 			class_name := read_class_name_in_file (class_path);
 			if class_name /= Void then
@@ -752,7 +752,7 @@ end;
 		require
 			good_argument: c /= Void;
 		do
-			ignore.add_front (c);
+			ignore.put_front (c);
 		end;
 
 	compute_last_class (class_name: STRING) is
@@ -875,7 +875,8 @@ end;
 							i > inc_l.count or else result
 						loop
 							include_list.start;
-							include_list.search_same (inc_l.i_th (i).file__name);
+							include_list.compare_references
+							include_list.search (inc_l.i_th (i).file__name);
 							Result := include_list.after
 							i := i + 1;
 						end
@@ -894,10 +895,11 @@ end;
 						until
 							i > ex_l.count or else result
 						loop
-							exclude_list.start;
-							exclude_list.search_same (ex_l.i_th (i).file__name);
+							exclude_list.start
+							exclude_list.compare_references
+							exclude_list.search (ex_l.i_th (i).file__name)
 							Result := exclude_list.after
-							i := i + 1;
+							i := i + 1
 						end
 					end;
 				end;

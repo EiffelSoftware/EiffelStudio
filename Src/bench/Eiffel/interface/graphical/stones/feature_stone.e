@@ -41,7 +41,7 @@ feature -- making
 			!!Result.make (0);
 			Result.append (feature_i.feature_name);
 			Result.append (" (");
-			temp := class_c.class_name.duplicate;
+			temp := clone (class_c.class_name)
 			temp.to_upper;
 			Result.append (temp);
 			Result.append (")");
@@ -77,7 +77,7 @@ feature -- dragging
 				Result := Result.substring (start_position, end_position);
 				!! temp.make (0);
 				temp.append ("-- Version from class: ");
-					cn := feature_i.written_class.class_name.duplicate;
+					cn := clone (feature_i.written_class.class_name)
 					cn.to_upper;
 				temp.append (cn);
 				temp.append ("%N%N");

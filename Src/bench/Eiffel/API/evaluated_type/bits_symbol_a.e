@@ -84,7 +84,7 @@ feature
 			if rout_id < 0 then
 				rout_id := - rout_id
 			end;
-			Result := twin;
+			Result := clone (Current);
 		end;
 
 	is_deep_equal (other: TYPE): BOOLEAN is

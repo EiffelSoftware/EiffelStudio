@@ -2,22 +2,22 @@ class FEATURE_DEPENDANCE
 
 inherit
 
-	SORTED_SET [DEPEND_UNIT]
+	TWO_WAY_SORTED_SET [DEPEND_UNIT]
 		rename
 			make as sorted_set_make,
 			wipe_out as sorted_set_wipe_out,
-			twin as basic_twin
-		end;
-	SORTED_SET [DEPEND_UNIT]
+			copy as basic_copy
+		end
+	TWO_WAY_SORTED_SET [DEPEND_UNIT]
 		redefine
-			make, wipe_out, twin
+			make, wipe_out, copy
 		select
-			make, wipe_out, twin
-		end;
+			make, wipe_out, copy
+		end
 	SHARED_WORKBENCH
 		undefine
-			twin
-		end;
+			copy
+		end
 
 creation
 
@@ -25,7 +25,7 @@ creation
 
 feature
 
-	suppliers: SORTED_SET [INTEGER];
+	suppliers: TWO_WAY_SORTED_SET [INTEGER]
 			-- Set of all the syntactical suppliers of the feature
 
 	add_supplier (a_class: CLASS_C) is
@@ -33,26 +33,26 @@ feature
 		require
 			good_argument: a_class /= Void
 		do
-			suppliers.add (a_class.id)
+			suppliers.extend (a_class.id)
 		end;
 
 	make is 
 		do
-			sorted_set_make;
-			!!suppliers.make;
+			sorted_set_make
+			!!suppliers.make
 		end;
 
 	wipe_out is 
 		do
-			sorted_set_wipe_out;
-			suppliers.wipe_out;
+			sorted_set_wipe_out
+			suppliers.wipe_out
 		end;
 
-	twin: like Current is
+	copy (other: like Current) is
 		do
-			Result := basic_twin;
-			Result.set_suppliers (suppliers.twin);
-		end;
+			basic_copy (other)
+			set_suppliers (clone (suppliers))
+		end
 
 	set_suppliers (new_suppliers: like suppliers) is
 		do

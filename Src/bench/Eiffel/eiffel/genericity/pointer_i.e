@@ -21,7 +21,7 @@ feature
 	is_feature_pointer: BOOLEAN is True;
 			-- Is the type a feature pointer type ?
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 			-- Debug purpose
 		do
 			file.putstring ("POINTER");

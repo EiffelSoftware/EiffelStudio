@@ -125,7 +125,7 @@ end;
 					-- Update anchored type controler
 				Like_control.put (rout_id);
 					-- Re-processing of the anchored type
-				Result := twin;
+				Result := clone (Current);
 				Result.set_actual_type
 				(anchor_type.solved_type (feat_table, anchor_feature).actual_type);
 				check
@@ -138,7 +138,7 @@ end;
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_actual_type
 							(actual_type.instantiation_in (type, written_id));
 		end;
@@ -148,7 +148,7 @@ end;
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_actual_type (actual_type.instantiated_in (class_type));
 		end;
 

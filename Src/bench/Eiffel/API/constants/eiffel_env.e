@@ -21,15 +21,15 @@ feature {NONE}
 		once
 			c := Directory_separator;
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("bench");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("spec");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("$PLATFORM");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("bin");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append (Finish_freezing_script);
 		end;
 
@@ -39,22 +39,22 @@ feature {NONE}
 		once
 			c := Directory_separator;
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("bench");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("spec");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("$PLATFORM");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("bin");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append (Prelink_script);
 		end;
 
 	Default_ace_name: STRING is
 		once
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append_character (Directory_separator);
+			Result.extend (Directory_separator);
 			Result.append (Default_ace_file);
 		end;
 
@@ -64,13 +64,13 @@ feature {NONE}
 		once
 			c := Directory_separator;
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("bench");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("help");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("errors");
-			Result.append_character (c);
+			Result.extend (c);
 		end;
 
 	bm_Breakpoint: PIXMAP is
@@ -404,12 +404,12 @@ feature {NONE}
 			c: CHARACTER
 		do
 			c := Directory_separator;
-			full_path := Eiffel3_dir_name.duplicate;
-			full_path.append_character (c);
+			full_path := clone (Eiffel3_dir_name)
+			full_path.extend (c);
 			full_path.append ("bench");
-			full_path.append_character (c);
+			full_path.extend (c);
 			full_path.append ("bitmaps");
-			full_path.append_character (c);
+			full_path.extend (c);
 			full_path.append (fn);
 			!!Result.make;
 			Result.read_from_file (full_path);

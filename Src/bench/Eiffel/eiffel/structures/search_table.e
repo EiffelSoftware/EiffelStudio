@@ -12,8 +12,7 @@ inherit
 			clear_all as array_clear_all,
 			force as array_force,
 			has as array_has,
-			count as array_count,
-			twin as array_twin
+			count as array_count
 		export
 			{SEARCH_TABLE} area, lower, upper
 		redefine
@@ -30,9 +29,9 @@ inherit
 		export
 			{SEARCH_TABLE} area, lower, upper
 		redefine
-			clear_all, sequential_representation, twin
+			clear_all, sequential_representation
 		select
-			clear_all, twin
+			clear_all
 		end
 
 creation
@@ -50,7 +49,7 @@ feature -- Creation
 			table_size: INTEGER
 		do
 			!!clever;
-			table_size := clever.next_prime (n);
+			table_size := clever.higher_prime (n);
 			if table_size < 5 then
 				table_size := 5
 			end;
@@ -179,7 +178,7 @@ feature -- Insertion, deletion
 
 feature -- Transformation
 
-	sequential_representation: ARRAY_SEQUENCE [H] is
+	sequential_representation: ARRAYED_LIST [H] is
 				-- Sequential representation of `Current'.
 				-- This feature enables you to manipulate each
 				-- item of `Current' regardless of its
@@ -196,7 +195,7 @@ feature -- Transformation
 			loop
 				key := array_item (i);
 				if valid_key (key) then
-					Result.add (key);
+					Result.extend (key);
 				end;
 				i := i + 1
 			end;
@@ -356,13 +355,6 @@ feature {SEARCH_TABLE}
 		end;
 
 feature -- Iteration
-
-	twin: like Current is
-			-- Twin object
-		do
-			Result := array_twin;
-			Result.set_deleted_marks (deleted_marks.twin);
-		end;
 
 	start is
 			-- Iteration initialization

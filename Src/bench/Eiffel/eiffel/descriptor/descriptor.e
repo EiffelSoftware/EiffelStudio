@@ -15,7 +15,7 @@ inherit
 		end;
 	SHARED_WORKBENCH
 		undefine
-			twin
+			copy, is_equal
 		end
 
 creation

@@ -105,7 +105,7 @@ end;
 					else
 						!!application_name.make (50);
 						application_name.append (Workbench_generation_path);
-						application_name.append_character (Directory_separator);
+						application_name.extend (Directory_separator);
 
 						!!makefile_sh_name.make (50);
 						makefile_sh_name.append (application_name);
@@ -125,7 +125,7 @@ end;
 												%Do you want to compile the generated C code?");
 								warner.custom_call (Current, message, " OK ", Void, "Cancel");
 							else
-								application_name.append_character (' ');
+								application_name.extend (' ');
 								application_name.append (argument_window.argument_list);
 								run_request.set_application_name (application_name);
 								run_request.send

@@ -339,7 +339,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
-			Result := twin;
+			Result := clone (Current);
 			if arguments /= void then
 				Result.set_arguments (
 				arguments.replicate (ctxt))

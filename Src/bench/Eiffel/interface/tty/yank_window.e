@@ -58,13 +58,13 @@ feature
 	put_char (c: CHARACTER) is
 		do
 			error_window.put_char (c)
-			stored_output.append_character (c)
+			stored_output.extend (c)
 		end;
 
 	new_line is
 		do
 			error_window.new_line;;
-			stored_output.append_character ('%N')
+			stored_output.extend ('%N')
 		end;
 
 end

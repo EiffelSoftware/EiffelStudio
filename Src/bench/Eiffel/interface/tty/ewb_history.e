@@ -18,7 +18,7 @@ feature
 
 	display (feature_i: FEATURE_I; class_c: CLASS_C) is
 		local
-			classes: SORTED_SET [CLASS_C];
+			classes: PART_SORTED_SET [CLASS_C];
 			rout_id_set: ROUT_ID_SET;
 			rout_id: INTEGER;
 			i: INTEGER;
@@ -31,7 +31,7 @@ feature
 		do
 			!! classes.make;
 			written_cl := feature_i.written_class;
-			classes.add (feature_i.written_class);
+			classes.extend (feature_i.written_class);
 			record_ancestors (classes, feature_i);
 			record_descendants (classes, class_c, feature_i.rout_id_set.first);
 
@@ -84,7 +84,7 @@ feature
 			end;
 		end;
 
-	record_ancestors (ss: SORTED_SET [CLASS_C]; f: FEATURE_I) is
+	record_ancestors (ss: PART_SORTED_SET [CLASS_C]; f: FEATURE_I) is
 		local
 			assert_id_set: ASSERT_ID_SET;
 			i, nb: INTEGER;
@@ -104,14 +104,14 @@ feature
 					if class_c /= Void then
 						--| On the off chance that this information
 						--| is not upto date hence the check with void
-						ss.add (class_c)
+						ss.extend (class_c)
 					end;
 					i := i + 1
 				end
 			end;
 		end;
 
-	record_descendants (ss: SORTED_SET [CLASS_C]; 
+	record_descendants (ss: PART_SORTED_SET [CLASS_C]; 
 						class_c: CLASS_C; rout_id: INTEGER) is
 		local
 			descendants: LINKED_LIST [CLASS_C];
@@ -125,7 +125,7 @@ feature
 			loop
 				desc_c := descendants.item;
 				if not ss.has (desc_c) then
-					ss.add (desc_c)
+					ss.extend (desc_c)
 				end;
 				record_descendants (ss, desc_c, rout_id);
 				descendants.forth;

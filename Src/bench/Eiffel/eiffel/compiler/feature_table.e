@@ -11,37 +11,40 @@ inherit
 			id as feat_tbl_id,
 			set_id as set_feat_tbl_id
 		undefine
-			twin
+			copy, is_equal
 		end;
-	EXTEND_TABLE [FEATURE_I, STRING];
+	EXTEND_TABLE [FEATURE_I, STRING]
+		export {CLASS_C}
+			pos_for_iter
+		end
 	SHARED_WORKBENCH
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_TABLE
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_ERROR_HANDLER
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_BODY_ID
 		undefine
-			twin
-		end;
+			copy, is_equal
+		end
 	SH_DEBUG
 		undefine
-			twin
-		end;
+			copy, is_equal
+		end
 	SHARED_ARRAY_BYTE
 		undefine
-			twin
-		end;
+			copy, is_equal
+		end
 	SHARED_SERVER
 		undefine
-			twin
-		end;
+			copy, is_equal
+		end
 
 creation
 
@@ -117,7 +120,7 @@ debug ("ACTIVITY")
 end;
 						Result := False;
 						!!depend_unit.make (feat_tbl_id, f2.feature_id);;
-						pass2_ctrl.propagators.add (depend_unit)
+						pass2_ctrl.propagators.extend (depend_unit)
 					else
 						f1.set_code_id (f2.code_id)			
 					end;
@@ -150,7 +153,7 @@ end;
 		local
 			old_feature_i, new_feature_i: FEATURE_I;
 			feature_name: STRING;
-			propagators, melted_propagators: SORTED_SET [DEPEND_UNIT];
+			propagators, melted_propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT];
 			removed_features: SEARCH_TABLE [FEATURE_I];
 			depend_unit: DEPEND_UNIT;
 			external_i: EXTERNAL_I;
@@ -357,7 +360,7 @@ end;
 			until
 				after
 			loop
-				pos := position_for_iteration;
+				pos := pos_for_iter
 				feature_i := item_for_iteration;
 				if feature_i.is_deferred then
 					deferred_found := True;
@@ -428,7 +431,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := position_for_iteration;
+			pos := pos_for_iter
 			from
 				start
 			until
@@ -449,7 +452,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := position_for_iteration;
+			pos := pos_for_iter
 			from
 				start
 			until
@@ -470,7 +473,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := position_for_iteration;
+			pos := pos_for_iter
 			from
 				start
 			until
@@ -542,7 +545,7 @@ end;
 						desc.set_feature_id (feature_i.feature_id);
 						desc.set_attribute_name (feature_i.feature_name);
 						desc.set_rout_id (-(feature_i.rout_id_set.first));
-						Result.add (desc);
+						Result.extend (desc);
 					end;
 				end;
 				forth

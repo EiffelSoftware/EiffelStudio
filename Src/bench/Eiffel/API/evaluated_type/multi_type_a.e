@@ -8,7 +8,7 @@ inherit
 		rename
 			duplicate as twin
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		redefine
 			is_multi_type
 		end;

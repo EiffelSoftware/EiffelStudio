@@ -76,9 +76,9 @@ feature
 				!!previous.make;
 				!!text.make;
 				!!first_format.make(class_c.actual_type);
-				upper_name := class_c.class_name.duplicate;
+				upper_name := clone (class_c.class_name)
 				upper_name.to_upper;
-				previous.add (first_format);
+				previous.extend (first_format);
 				if is_short then
 					client := system.any_class.compiled_class;
 				end;
@@ -135,10 +135,10 @@ feature
 			new_format: LOCAL_FORMAT;
 			i: INTEGER
 		do
-			new_format := format.twin;
+			new_format := clone (format);
 			text.finish;
 			new_format.set_position(text.cursor);
-			previous.add(new_format);
+			previous.extend (new_format);
 debug ("FS_RBRF")
 			io.error.putstring ("beginning format... %N");
 			i := text.index;
@@ -265,7 +265,7 @@ feature -- text construction
 			item: CLICKABLE_TEXT
 		do
 			!!p.make(c);
-			s := c.class_name.duplicate;
+			s := clone (c.class_name)
 			s.to_upper;
 			!!item.make (s, p);
 			text.add (item);
@@ -279,7 +279,7 @@ feature -- text construction
 			item: CLICKABLE_TEXT
 		do
 			!!p.make(c);
-			s := c.class_name.duplicate;
+			s := clone (c.class_name)
 			s.to_upper;
 			!!item.make (s, p);
 			text.add (item);
@@ -343,7 +343,7 @@ feature -- text construction
 		do
 			if troff_format then
 				old_types := format.local_types;
-				temp := feature_name.duplicate;
+				temp := clone (feature_name)
 				if is_infix then
 					if temp.substring (1, 7).is_equal ("_infix_") then
 						temp.tail (feature_name.count - 7);
@@ -904,7 +904,7 @@ feature -- comments
 			pos > 0;
 			pos <= class_c.generics.count
 		do
-			Result := class_c.generics.i_th (pos).formal_name.duplicate;
+			Result := clone (class_c.generics.i_th (pos).formal_name)
 			Result.to_upper;
 		end;
 

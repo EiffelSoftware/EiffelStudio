@@ -155,13 +155,13 @@ end;
 					old_name := old_feat.feature_name;
 					new_name := new_feat.feature_name;
 					!!depend_unit.make (written_in, new_name,
-										new_feat.rout_id_set.twin);
+										clone (new_feat.rout_id_set));
 					feat_dependence := dependencies.item (old_name);
 					if feat_dependence = Void then
 						!!feat_dependence.make;
 						dependencies.put (feat_dependence, old_name);
 					end;
-					feat_dependence.add_front (depend_unit);
+					feat_dependence.put_front (depend_unit);
 				end;
 				forth
 			end;

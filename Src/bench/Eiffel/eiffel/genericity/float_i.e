@@ -45,7 +45,7 @@ feature
 			Result := other.is_float;
 		end;
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 			-- Debug purpose
 		do
 			file.putstring ("FLOAT");

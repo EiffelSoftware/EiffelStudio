@@ -129,6 +129,8 @@ feature
 			pos: INTEGER;
 			c1, c2: CURSOR;
 		do
+			!!other_set.make
+			other_set.compare_objects
 			other_set ?= other;
 			if other_set /= Void and then count = other_set.count then
 				c1 := cursor;
@@ -141,7 +143,7 @@ feature
 				loop
 					one_client := item;
 					other_set.start;
-					other_set.search_equal (one_client);
+					other_set.search (one_client);
 					Result := 	(not other_set.after)
 								and then
 								one_client.same_as (other_set.item);

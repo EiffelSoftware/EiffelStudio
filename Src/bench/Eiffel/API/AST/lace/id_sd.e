@@ -6,7 +6,7 @@ inherit
 
 	ATOMIC_SD
 		undefine
-			copy, out, is_equal, twin
+			copy, out, is_equal, setup, consistent
 		redefine
 			set,
 			pass_address

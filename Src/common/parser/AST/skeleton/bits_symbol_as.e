@@ -78,7 +78,7 @@ feature -- Initialization
 			Result.set_base_type (bits_value);
 			if System.in_pass3 then
 				!!depend_unit.make (context.a_class.id, constant.feature_id);
-				context.supplier_ids.add (depend_unit);
+				context.supplier_ids.extend (depend_unit);
 			end;
 		end; -- solved_type
 

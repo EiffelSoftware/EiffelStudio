@@ -23,7 +23,7 @@ feature
 			if associated_class.has_features_to_melt then
 					-- Verbose
 				io.error.putstring ("Degree 2: class ");
-					temp := associated_class.class_name.duplicate;
+					temp := clone (associated_class.class_name)
 					temp.to_upper;
 				io.error.putstring (temp);
 				io.error.new_line;
@@ -41,7 +41,7 @@ feature
 			if associated_class.has_features_to_melt then
 					-- Verbose
 				io.error.putstring ("Degree 2: class ");
-					temp := associated_class.class_name.duplicate;
+					temp := clone (associated_class.class_name)
 					temp.to_upper;
 				io.error.putstring (temp);
 				io.error.new_line;

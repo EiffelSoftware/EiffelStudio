@@ -10,7 +10,7 @@ inherit
 		end;
 	SHARED_CODE_FILES
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end
 
 

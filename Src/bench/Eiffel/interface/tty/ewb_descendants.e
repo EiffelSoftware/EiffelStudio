@@ -65,7 +65,7 @@ feature
 						output_window.new_line;
 					else	
 						output_window.new_line;
-						displayed.add (descendant_class);
+						displayed.extend (descendant_class);
 						rec_display (i+1, descendant_class);
 					end;			
 					descendants.forth

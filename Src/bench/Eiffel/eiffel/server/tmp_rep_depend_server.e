@@ -35,7 +35,7 @@ feature
 			from 
 				table.start
 			until
-				table.offright
+				table.after
 			loop
 				put (table.item_for_iteration);
 				table.forth

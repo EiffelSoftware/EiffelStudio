@@ -6,7 +6,7 @@ inherit
 
 	AST_YACC
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		redefine
 			pass_address
 		end;
@@ -38,21 +38,21 @@ feature
 			-- (According to the discrimination rule used by `search')
 			-- 0 if none.
 		local
-			occurrences, pos: INTEGER
+			a_occurrences, pos: INTEGER
 		do
 			start;
 			pos := 1;
 			from
 			until
-				off or else (occurrences = i)
+				off or else (a_occurrences = i)
 			loop
 				if equal (item, v) then
-					occurrences := occurrences + 1;
+					a_occurrences := a_occurrences + 1;
 				end;
 				forth;
 				pos := pos + 1
 			end;
-			if occurrences = i then
+			if a_occurrences = i then
 				Result := pos - 1
 			end
 		end;

@@ -98,7 +98,7 @@ feature
 		do
 			!!Result.make (result_type);
 			if argument_count > 0 then
-				Result.set_argument_types (argument_types.twin);
+				Result.set_argument_types (clone (argument_types));
 			end;
 		end;
 

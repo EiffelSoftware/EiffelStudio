@@ -39,7 +39,7 @@ feature
 			!!text.make;
 			!!first_format.make (class_c.actual_type);
 			last_was_printed := True;
-			previous.add (first_format);
+			previous.extend (first_format);
 			System.set_current_class (class_c);
 			Inst_context.set_cluster (class_c.cluster);
 			begin;

@@ -34,7 +34,7 @@ feature
 	make_duplication is
 			-- Make duplication of Current object
 		do
-			duplication := twin;
+			duplication := clone (Current);
 		end;
 
 	equiv: BOOLEAN is

@@ -209,12 +209,12 @@ feature
 								---- Give a new body id to the replication
 							--replication := next.a_feature.replicated;
 						--else
-							--replication := next.a_feature.twin;
+							--replication := clone (next.a_feature);
 						--end;
 					--else
-						--replication := next.a_feature.twin;
+						--replication := clone (next.a_feature);
 					--end;
-					replication := next.a_feature.twin;
+					replication := clone (next.a_feature);
 						-- Mark it as processed
 					next.set_renaming_processed;
 						-- Move the inherit feature information under 

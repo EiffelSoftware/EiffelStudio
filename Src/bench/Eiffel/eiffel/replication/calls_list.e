@@ -9,7 +9,6 @@ inherit
 	LINKED_LIST [STRING]
 		rename
 			make as set_make,
-			add as set_add,
 			wipe_out as set_wipe_out
 		end;
 
@@ -31,7 +30,7 @@ feature
 			-- Add `v' to Current
 		do
 			if is_new then
-				add_front (v);
+				put_front (v);
 				is_new := false;
 			end;
 		end;

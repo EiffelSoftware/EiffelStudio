@@ -8,7 +8,7 @@ inherit
 		export 
 			{NONE} all
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	BYTE_CONST
 

@@ -51,7 +51,7 @@ feature -- Type check, byte code, dead code removal and formatter
 				i := i - 1;
 			end;
 				-- Update type stack
-			context.change_item (multi_type);
+			context.replace (multi_type);
 				-- Update the multi type stack
 			multi_line.insert (multi_type);
 		end;
@@ -100,7 +100,7 @@ feature	-- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_expressions (expressions.replicate (ctxt));
 		end;
 

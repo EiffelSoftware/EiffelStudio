@@ -72,7 +72,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
-			Result := twin;
+			Result := clone (Current);
 			if check_list /= void then
 				Result.set_check_list(
 					check_list.replicate (ctxt));

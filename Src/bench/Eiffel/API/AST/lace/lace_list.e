@@ -6,7 +6,7 @@ inherit
 
 	AST_LACE
 		undefine 
-			pass_address, twin
+			pass_address, copy, setup, consistent, is_equal
 		redefine
 			adapt
 		end;

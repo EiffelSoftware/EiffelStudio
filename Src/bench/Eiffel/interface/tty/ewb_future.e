@@ -18,7 +18,7 @@ feature
 
 	display (feature_i: FEATURE_I; class_c: CLASS_C) is
 		local
-			classes: SORTED_SET [CLASS_C];
+			classes: PART_SORTED_SET [CLASS_C];
 			rout_id_set: ROUT_ID_SET;
 			i: INTEGER;
 			feature_table: FEATURE_TABLE;
@@ -65,13 +65,13 @@ feature
 			end;
 		end;
 
-	rec_add_descendants (ss: SORTED_SET [CLASS_C]; class_c: CLASS_C) is
+	rec_add_descendants (ss: PART_SORTED_SET [CLASS_C]; class_c: CLASS_C) is
 		local
 			descendants: LINKED_LIST [CLASS_C];
 			desc_c: CLASS_C
 		do
 			descendants := class_c.descendants;
-			ss.add (class_c);
+			ss.extend (class_c);
 			from
 				descendants.start
 			until

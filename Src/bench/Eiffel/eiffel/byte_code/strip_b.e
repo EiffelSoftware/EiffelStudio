@@ -60,7 +60,7 @@ feature
               	skeleton.search_feature_id (feature_ids.item);
                	attr := skeleton.item;
                	--! Should always be found
-				Result.add_right (attr.attribute_name);
+				Result.put_right (attr.attribute_name);
 				Result.forth;
                	feature_ids.forth;
             end;

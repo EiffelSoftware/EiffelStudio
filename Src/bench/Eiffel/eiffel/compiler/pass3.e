@@ -14,7 +14,7 @@ creation
 
 feature
 
-	changed_classes: SORTED_TWO_WAY_LIST [PASS3_C];
+	changed_classes: PART_SORTED_TWO_WAY_LIST [PASS3_C];
 
 	new_controler (a_class: CLASS_C): PASS3_C is
 		do

@@ -96,8 +96,8 @@ end;
 				end;
 				not_first_parsing := True;
 
-				old_universe := Universe.twin;
-				old_system := System.twin;
+				old_universe := clone (Universe);
+				old_system := clone (System);
 
 				Universe.clusters.wipe_out;
 

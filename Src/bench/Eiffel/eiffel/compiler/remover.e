@@ -49,7 +49,7 @@ feature {NONE}
 		do
 			from
 				!!traversal_unit.make (feat, a_class);
-				control.add (traversal_unit)
+				control.extend (traversal_unit)
 			until
 				control.empty
 			loop
@@ -78,7 +78,6 @@ feature {NONE}
 			table: ROUT_UNIT_TABLE;
 			body_table: BODY_INDEX_TABLE;
 			unit: ROUT_UNIT;
-			c: BI_LINKABLE [ROUT_UNIT];
 			redef_unit: TRAVERSAL_UNIT;
 --			assert_id_set: ASSERT_ID_SET;
 			inh_assert: INH_ASSERT_INFO;
@@ -135,11 +134,11 @@ feature {NONE}
 				end;
 				from
 					body_table := System.body_index_table;
-					c := table.first_element;
+					table.start
 				until
-					c = Void
+					table.after
 				loop
-					unit := c.item;
+					unit := table.item;
 					if System.class_of_id (unit.id).conform_to (written_class) then
 						other_body_id := body_table.item (unit.body_index);
 						if not bid_rid_is_marked (other_body_id, rout_id_val) then
@@ -160,7 +159,7 @@ feature {NONE}
 							end;
 						end;
 					end;
-					c := c.right;
+					table.forth
 				end;
 			end;
 		end;
@@ -230,7 +229,7 @@ debug ("DEAD_CODE_REMOVAL")
 	io.error.new_line;
 end;
 								!!unit_to_traverse.make (depend_feature, static_class);
-								control.add (unit_to_traverse);
+								control.extend (unit_to_traverse);
 							end;
 						end;
 						depend_list.forth
@@ -262,7 +261,7 @@ debug ("DEAD_CODE_REMOVAL")
 			io.error.putstring ("%TMarking ");
 			io.error.putstring (feat.feature_name);
 			io.error.putstring (" from ");
-			class_name := feat.written_class.class_name.duplicate;
+			class_name := clone (feat.written_class.class_name)
 			class_name.to_upper;
 			io.error.putstring (class_name);
 			io.error.new_line;

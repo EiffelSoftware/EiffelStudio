@@ -223,7 +223,7 @@ end;
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := Encoder.table_name (rout_id).twin;
+				table_name := clone (Encoder.table_name (rout_id));
 				generated_file.putchar ('(');
 				real_type (type).c_type.generate_function_cast (generated_file);
 				generated_file.putchar ('(');
@@ -258,7 +258,7 @@ end;
 -- deferred routine => feature_name ?????
 
 				rout_table ?= entry;
-				internal_name := rout_table.feature_name (typ.type_id).twin;
+				internal_name := clone (rout_table.feature_name (typ.type_id));
 				generated_file.putstring (internal_name);
 					-- Remember extern routine declaration
 				Extern_declarations.add_routine
@@ -298,7 +298,7 @@ end;
 				until
 					parameters.after
 				loop
-					parameters.put (parameters.item.enlarged);
+					parameters.replace (parameters.item.enlarged);
 					parameters.forth;
 				end;
 			end;

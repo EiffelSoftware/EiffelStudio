@@ -38,7 +38,7 @@ feature
 				loop
 					obj_stone ?= click_list.item (i).node;
 					if obj_stone /= Void then
-						Result.add (obj_stone.object_address)
+						Result.extend (obj_stone.object_address)
 					end;
 					i := i + 1
 				end;

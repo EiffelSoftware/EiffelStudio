@@ -12,11 +12,11 @@ inherit
 		export
 			{ANY} all
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_SCONTROL
 		undefine
-			twin
+			copy, is_equal
 		end;
 	EXTEND_TABLE [READ_INFO, INTEGER]
 		rename

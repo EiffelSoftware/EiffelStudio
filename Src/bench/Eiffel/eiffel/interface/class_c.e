@@ -141,7 +141,7 @@ feature
 	creation_feature: FEATURE_I;
 			-- Creation feature for expanded types
 
-	melted_set: SORTED_SET [MELTED_INFO];
+	melted_set: TWO_WAY_SORTED_SET [MELTED_INFO];
 			-- Melting information list
 			-- [Processed by the third pass.]
 
@@ -271,7 +271,7 @@ feature
 				-- are avaible in the universe.
 				-- Empty syntactical supplier list from compilation
 				-- to another one after duplicating it.
-			old_syntactical_suppliers := syntactical_suppliers.twin;
+			old_syntactical_suppliers := clone (syntactical_suppliers)
 			syntactical_suppliers.wipe_out;
 			supplier_list := ast.suppliers.supplier_ids;
 			if not supplier_list.empty then
@@ -316,7 +316,7 @@ feature
 
 				-- Save index left by the temporary ast server into the
 				-- class information.
-			class_info.set_index (Tmp_ast_server.index.twin);
+			class_info.set_index (clone (Tmp_ast_server.index));
 			invariant_info := Tmp_ast_server.invariant_info;
 			if invariant_info /= Void then
 				class_info.set_invariant_info (Tmp_ast_server.invariant_info);
@@ -381,7 +381,9 @@ feature -- Building conformance table
 					parents.after
 				loop
 					a_parent := parents.item.associated_class;
-					a_parent.build_conformance_table_of (cl);
+					if a_parent /= Void then
+						a_parent.build_conformance_table_of (cl);
+					end
 					parents.forth;
 				end;
 			end;
@@ -469,7 +471,7 @@ feature -- Third pass: byte code production and type check
 		do
 				-- Verbose
 			io.error.putstring ("Degree 3: class ");
-				temp := class_name.duplicate;
+				temp := clone (class_name)
 				temp.to_upper;
 			io.error.putstring (temp);
 			io.error.new_line;
@@ -503,7 +505,7 @@ feature -- Third pass: byte code production and type check
 				ast_context.set_a_class (Current);
 
 				!!melt_set.make;
-
+				melt_set.compare_objects
 				feat_table.start;
 			until
 				feat_table.after
@@ -628,7 +630,7 @@ end;
 								if not feature_i.is_code_replicated then
 										-- Dependances update: add new
 										-- dependances for `feature_name'.
-									f_suppliers := ast_context.supplier_ids.twin;
+									f_suppliers := clone (ast_context.supplier_ids);
 									dependances.put (f_suppliers, feature_name);
 									if new_suppliers = Void then
 										new_suppliers := suppliers.same_suppliers;
@@ -769,7 +771,7 @@ end;
 							new_suppliers.remove_occurence (f_suppliers);
 							dependances.remove ("_inv_");
 						end;
-						f_suppliers := ast_context.supplier_ids.twin;
+						f_suppliers := clone (ast_context.supplier_ids);
 						dependances.put (f_suppliers, "_inv_");
 						if new_suppliers = Void then
 							new_suppliers := suppliers.same_suppliers;
@@ -1032,7 +1034,7 @@ end;
 --							new_suppliers.remove_occurence (f_suppliers);
 --							dependances.remove ("_inv_");
 --						end;
---						f_suppliers := ast_context.supplier_ids.twin;
+--						f_suppliers := clone (ast_context.supplier_ids);
 --						dependances.put (f_suppliers, "_inv_");
 --						new_suppliers.add_occurence (f_suppliers);
 --
@@ -1063,29 +1065,29 @@ end;
 		local
 			supplier: CLASS_C;
 			supplier_clients: like clients;
-			local_cursor: LINKABLE [SUPPLIER_INFO];
 		do
 			from
-				local_cursor := suppliers.first_element
+				suppliers.start
 			until
-				local_cursor = Void
+				suppliers.after
 			loop
-				supplier := local_cursor.item.supplier;
+				supplier := suppliers.item.supplier;
 				supplier_clients := supplier.clients;
 				supplier_clients.start;
+				supplier_clients.compare_references
 				supplier_clients.search (Current);
 				supplier_clients.remove;
-				local_cursor := local_cursor.right
+				suppliers.forth
 			end;
 			from
-				local_cursor := new_suppliers.first_element
+				new_suppliers.start
 			until
-				local_cursor = Void
+				new_suppliers.after
 			loop
-				supplier := local_cursor.item.supplier;
+				supplier := new_suppliers.item.supplier;
 				supplier_clients := supplier.clients;
-				supplier_clients.add_front (Current);
-				local_cursor := local_cursor.right
+				supplier_clients.put_front (Current);
+				new_suppliers.forth
 			end;
 			suppliers := new_suppliers;
 		end;
@@ -1094,20 +1096,19 @@ feature -- Generation
 
 	update_valid_body_ids is
 		local
-			local_cursor: LINKABLE [CLASS_TYPE];
 			ct: CLASS_TYPE
 		do
 			Inst_context.set_cluster (cluster);
 			from
-				local_cursor := types.first_element
+				types.start
 			until
-				local_cursor = Void
+				types.after
 			loop
-				ct := local_cursor.item;
+				ct := types.item;
 				if not ct.is_precompiled then
 					ct.update_valid_body_ids;
 				end;
-				local_cursor := local_cursor.right
+				types.forth
 			end;
 		end;
 
@@ -1115,16 +1116,18 @@ feature -- Generation
 			-- Generation of C files for each type associated to the current
 			-- class
 		local
-			local_cursor: LINKABLE [CLASS_TYPE]
+			temp_index:INTEGER
 		do
 			Inst_context.set_cluster (cluster);
 			from
-				local_cursor := types.first_element
+				types.start
 			until
-				local_cursor = Void
+				types.after
 			loop
-				local_cursor.item.pass4;
-				local_cursor := local_cursor.right
+				temp_index := types.index
+				types.item.pass4;
+				types.go_i_th (temp_index)
+				types.forth
 			end;
 		end;
 
@@ -1152,19 +1155,17 @@ feature -- Melting
 			-- Melt changed features.
 		require
 			good_context: has_features_to_melt
-		local
-			local_cursor: LINKABLE [CLASS_TYPE]
 		do
 			Inst_context.set_cluster (cluster);
 			from
-				local_cursor := types.first_element
+				types.start
 			until
-				local_cursor = Void
+				types.after
 			loop
-				if not local_cursor.item.is_precompiled then
-					local_cursor.item.melt;			
+				if not types.item.is_precompiled then
+					types.item.melt;			
 				end;
-				local_cursor := local_cursor.right
+				types.forth
 			end;
 
 				-- Forget melted list
@@ -1175,19 +1176,17 @@ feature -- Melting
 			-- Update dispatch table.
 		require
 			good_context: has_features_to_melt
-		local
-			local_cursor: LINKABLE [CLASS_TYPE]
 		do
 			Inst_context.set_cluster (cluster);
 			from
-				local_cursor := types.first_element
+				types.start
 			until
-				local_cursor = Void
+				types.after
 			loop
-				if not local_cursor.item.is_precompiled then
-					local_cursor.item.update_dispatch_table;			
+				if not types.item.is_precompiled then
+					types.item.update_dispatch_table;			
 				end;
-				local_cursor := local_cursor.right
+				types.forth
 			end;
 	
 				-- Forget melted list
@@ -1214,6 +1213,7 @@ feature -- Melting
 			Inst_context.set_cluster (cluster);
 			if melted_set = Void then
 				!!melted_set.make;
+				melted_set.compare_objects
 			end;
 
 				-- Melt feature written in the class
@@ -1260,20 +1260,18 @@ feature -- Melting
 			-- Melt feature table
 		require
 			good_context: System.melted_set.has (id);
-		local
-			local_cursor: LINKABLE [CLASS_TYPE]
 		do
 			if not types.empty then
 				from
 					Inst_context.set_cluster (cluster);
-					local_cursor := types.first_element
+					types.start
 				until
-					local_cursor = Void
+					types.after
 				loop
-					if not local_cursor.item.is_precompiled then
-						local_cursor.item.melt_feature_table;
+					if not types.item.is_precompiled then
+						types.item.melt_feature_table;
 					end;
-					local_cursor := local_cursor.right
+					types.forth
 				end;
 			end;
 		end;
@@ -1361,7 +1359,6 @@ feature -- Skeleton processing
 			class_type: CLASS_TYPE;
 			type_i: CL_TYPE_I;
 			new_skeleton, old_skeleton: SKELETON;
-			local_cursor: LINKABLE [CLASS_TYPE]
 		do
 debug ("SKELETON")
 io.error.putstring ("Class: ");
@@ -1370,11 +1367,11 @@ io.error.putstring (" process_skeleton%N");
 end;
 			from
 				feature_table_changed := changed2;
-				local_cursor := types.first_element
+				types.start
 			until
-				local_cursor = Void
+				types.after
 			loop
-				class_type := local_cursor.item;
+				class_type := types.item;
 				if 	feature_table_changed
 					or else
 					(changed4 and then class_type.is_changed)
@@ -1409,7 +1406,7 @@ debug ("SKELETON")
 io.error.putstring ("Nothing is done%N");
 end;
 				end;
-				local_cursor := local_cursor.right
+				types.forth
 			end;
 changed2 := False;
 changed4 := False;
@@ -1802,39 +1799,39 @@ feature
 			-- Remove syntactical client/supplier relations ans take
 			-- care of possible removed classes
 		local
-			local_cursor: LINKABLE [SUPPLIER_CLASS];
 			a_class: CLASS_C;
 			supplier_clients: like syntactical_clients;
 		do
 				-- Remove old syntactical supplier/client relations
 			from
-				local_cursor := old_syntactical_suppliers.first_element
+				old_syntactical_suppliers.start
 			until
-				local_cursor = Void
+				old_syntactical_suppliers.off
 			loop
-				a_class := local_cursor.item.supplier;
+				a_class := old_syntactical_suppliers.item.supplier;
 				if a_class /= Current then
 					supplier_clients := a_class.syntactical_clients;
 					supplier_clients.start;
+					supplier_clients.compare_references
 					supplier_clients.search (Current);
 					if not supplier_clients.after then
 						supplier_clients.remove;	
 					end;
 				end;
-				local_cursor := local_cursor.right
+				old_syntactical_suppliers.forth
 			end;
 				-- Add new syntactical supplier/client relations
 			from
-				local_cursor := syntactical_suppliers.first_element
+				syntactical_suppliers.start
 			until
-				local_cursor = Void
+				syntactical_suppliers.off
 			loop
-				a_class := local_cursor.item.supplier;
+				a_class := syntactical_suppliers.item.supplier;
 				if a_class /= Current then
 					supplier_clients := a_class.syntactical_clients;
-					supplier_clients.add_front (Current);
+					supplier_clients.put_front (Current);
 				end;
-				local_cursor := local_cursor.right
+				syntactical_suppliers.forth
 			end;
 		end;
 
@@ -1845,21 +1842,21 @@ feature
 			parents_exists: parents /= Void;
 		local
 			cl: like clients;
-			local_cursor: LINKABLE [SUPPLIER_INFO]
 		do
 			remove_parent_relations;
 			from
-				local_cursor := suppliers.first_element
+				suppliers.start
 			until
-				local_cursor = Void
+				suppliers.after
 			loop
-				cl := local_cursor.item.supplier.clients;
+				cl := suppliers.item.supplier.clients;
 				cl.start;
-				cl.search_same (Current);
+				cl.compare_references
+				cl.search (Current);
 				if not cl.after then
 					cl.remove
 				end;
-				local_cursor := local_cursor.right
+				suppliers.forth
 			end;
 			suppliers.wipe_out;
 		end;
@@ -1881,6 +1878,7 @@ feature
 				if c /= Void then
 					des := c.descendants;
 					des.start;
+					des.compare_references
 					des.search (Current);
 					if not des.after then
 						des.remove;
@@ -2094,17 +2092,16 @@ feature -- Supplier checking
 				(supplier_list = Void or else supplier_list.empty);
 		local
 			cl_name: STRING;
-			local_cursor: LINKABLE [ID_AS];
 		do
 			from
-				local_cursor := supplier_list.first_element
+				supplier_list.start
 			until
-				local_cursor = Void
+				supplier_list.off
 			loop
-				cl_name := local_cursor.item;
+				cl_name := supplier_list.item;
 					-- Check supplier `cl_name' of the class
 				check_one_supplier (cl_name);
-				local_cursor := local_cursor.right
+				supplier_list.forth
 			end;
 		end;
 
@@ -2161,9 +2158,10 @@ feature -- Supplier checking
 				if comp_class /= Current then
 					!!supplier.make (comp_class, cl_name);
 					syntactical_suppliers.start;
-					syntactical_suppliers.search_equal (supplier);
+					syntactical_suppliers.compare_objects
+					syntactical_suppliers.search (supplier);
 					if syntactical_suppliers.after then
-						syntactical_suppliers.add_front (supplier);
+						syntactical_suppliers.put_front (supplier);
 					end;
 				end;
 			else
@@ -2291,17 +2289,15 @@ feature -- Order relation for inheritance and topological sort
 
 	nb_heirs: INTEGER is
 			-- Number of heirs
-		local
-			local_cursor: LINKABLE [CLASS_C]
 		do
 			from
 				Result := descendants.count;
-				local_cursor := descendants.first_element
+				descendants.start
 			until
-				local_cursor = Void
+				descendants.off
 			loop
-				Result := Result + local_cursor.item.nb_heirs;
-				local_cursor := local_cursor.right
+				Result := Result + descendants.item.nb_heirs;
+				descendants.forth
 			end;
 		end;
 
@@ -2407,7 +2403,7 @@ feature -- Convenience features
 			good_argument: c /= Void;
 		do
 			if not descendants.has (c) then
-				descendants.add_front (c);	
+				descendants.put_front (c);	
 			end;
 		end;
 
@@ -2580,7 +2576,7 @@ end;
 			!!type_i;
 			type_i.set_base_id (id);
 			class_type := new_type (type_i);
-			types.add_front (class_type);
+			types.put_front (class_type);
 			System.insert_class_type (class_type);
 		end;
 
@@ -2594,7 +2590,6 @@ end;
 			filter: GEN_TYPE_I;
 			new_class_type: CLASS_TYPE;
 			base_c: CLASS_C;
-			local_cursor: LINKABLE [GEN_TYPE_I];
 			melt_exp: MELT_EXP;
 		do
 			if not derivations.has_derivation (id, data) then
@@ -2630,7 +2625,7 @@ end;
 				changed4 := True;
 				pass4_controler.insert_new_class (Current);
 					-- Insertion of the new class type
-				types.add_front (new_class_type);
+				types.put_front (new_class_type);
 				System.insert_class_type (new_class_type);
 				if already_compiled then
 						-- Melt all the code written in the associated class of
@@ -2643,12 +2638,12 @@ end;
 				-- if the base class has been remove from the system
 			filters.clean;
 			from
-				local_cursor := filters.first_element
+				filters.start
 			until
-				local_cursor = Void
+				filters.after
 			loop
 					-- Instantiation of the filter with `data'
-				filter := local_cursor.item.instantiation_in (data);
+				filter := filters.item.instantiation_in (data);
 				base_c := filter.base_class;
 debug ("GENERICITY")
 	io.error.putstring ("Propagation of ");
@@ -2658,7 +2653,7 @@ debug ("GENERICITY")
 	io.error.new_line;
 end;
 				base_c.update_types (filter);
-				local_cursor := local_cursor.right
+				filters.forth
 			end;
 			end;
 		end;
@@ -2782,7 +2777,7 @@ feature -- Dead code removal
 				tbl.after
 			loop
 				a_feature := tbl.item_for_iteration;
-				pos := tbl.position_for_iteration;
+				pos := tbl.pos_for_iter
 				if a_feature.written_class = Current then
 					remover.record (a_feature, Current)
 				end;
@@ -2855,19 +2850,17 @@ feature -- Cecil
 			-- Is `other' a heir of Current ?
 		require
 			good_argument: other /= Void;
-		local
-			local_cursor: LINKABLE [CLASS_C];
 		do
 			if other = Current then
 				Result := True;
 			elseif other.conform_to (Current) then
 				from
-					local_cursor := descendants.first_element
+					descendants.start
 				until
-					local_cursor = Void or else Result
+					descendants.off or else Result
 				loop
-					Result := local_cursor.item.is_ancestor (other);
-					local_cursor := local_cursor.right
+					Result := descendants.item.is_ancestor (other);
+					descendants.forth
 				end;
 			end;
 		end;
@@ -2888,27 +2881,24 @@ feature -- Conformance table generation
 			-- Make final conformance table
 		require
 			good_argument: t /= Void;
-		local
-			local_cursor: LINKABLE [CLASS_C];
-			type_cursor: LINKABLE [CLASS_TYPE];
 		do
 				-- Mark conformance table `t' first.
 			from
-				type_cursor := types.first_element
+				types.start
 			until
-				type_cursor = Void
+				types.off
 			loop
-				t.mark (type_cursor.item.type_id);
-				type_cursor := type_cursor.right
+				t.mark (types.item.type_id);
+				types.forth
 			end;
 				-- Recursion on descendants
 			from
-				local_cursor := descendants.first_element
+				descendants.start
 			until
-				local_cursor = Void
+				descendants.after
 			loop
-				local_cursor.item.make_conformance_table (t);
-				local_cursor := local_cursor.right
+				descendants.item.make_conformance_table (t);
+				descendants.forth
 			end;
 		end;
 
@@ -3029,7 +3019,7 @@ feature -- PS
 						generics.after
 					loop
 						formal_dec := generics.item;
-						c_name := formal_dec.formal_name.duplicate;
+						c_name := clone (formal_dec.formal_name);
 						c_name.to_upper;
 						a_clickable.put_string (c_name);
 						constraint_type := formal_dec.constraint;
@@ -3062,7 +3052,7 @@ feature -- PS
 		local
 			c_name: STRING;
 		do
-			c_name := class_name.duplicate;
+			c_name := clone (class_name)
 			c_name.to_upper;
 			a_clickable.put_clickable_string (stone, c_name);
 		end;
@@ -3296,7 +3286,7 @@ end;
 				!!rep_body_table.make (rep_table.count);
 				rep_table.start
 			until
-				rep_table.offright
+				rep_table.after
 			loop
 				feature_as := rep_table.item_for_iteration;
 				read_info := index.item (feature_as.id);
@@ -3321,6 +3311,7 @@ feature -- Dino stuff
 			a_feature.change_body_id;
 			if melted_set = Void then
 				!!melted_set.make;
+				melted_set.compare_objects
 			end;
 			!!melted_info.make (a_feature);
 			melted_set.put (melted_info);

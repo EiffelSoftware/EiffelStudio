@@ -87,7 +87,7 @@ feature
 				if found then
 					clauses.item.merge (item);
 				else
-					clauses.add (item)
+					clauses.extend (item)
 				end;
 				other_clauses.forth
 			end
@@ -118,7 +118,7 @@ feature
 				else
 					!!new_clause.make (names_adapter.ast, names.feature_i);
 					clauses.finish;
-					clauses.add_right (new_clause)
+					clauses.put_right (new_clause)
 				end
 			end;
 		end;
@@ -135,7 +135,7 @@ feature
 			if clauses.empty then
 				!!new_clause.make (names_adapter.ast, names.feature_i);
 				clauses.finish;
-				clauses.add_right (new_clause)
+				clauses.put_right (new_clause)
 			else
 				clauses.finish;
 				clauses.item.add (names_adapter.ast);

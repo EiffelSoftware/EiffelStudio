@@ -6,29 +6,32 @@ inherit
 
 	SHARED_WORKBENCH
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_CONSTRAINT_ERROR
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_EVALUATOR
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	EIFFEL_LIST [TYPE]
 		rename
 			make as basic_make,
-			twin as old_twin
-		end;
+			copy as basic_copy
+		end
+
 	EIFFEL_LIST [TYPE]
 		rename
 			make as basic_make
 		redefine
-			twin
+			copy
 		select
-			twin
+			copy
 		end
+
+	
 creation
 
 	make
@@ -46,11 +49,11 @@ feature
 			!!argument_names.make (n);
 		end;
 
-	twin: like Current is
+	copy (other: like Current) is
 			-- Clone
 		do
-			Result := old_twin;
-			Result.set_argument_names (argument_names.twin);
+			basic_copy (other)
+			set_argument_names (clone (argument_names));
 		end;
 
 	set_argument_names (n: like argument_names) is
@@ -124,7 +127,7 @@ feature
 					-- type of the class associated to `feat_table'.
 					-- Don't forget that the arguments are written where
 					-- the feature is written.
-				put (solved_type);
+				replace (solved_type);
 
 				solved_type.check_for_obsolete_class (associated_class);
 
@@ -202,7 +205,7 @@ feature
 			until
 				after
 			loop
-				put (Arg_evaluator.evaluated_type (item, feat_tbl, f));
+				replace (Arg_evaluator.evaluated_type (item, feat_tbl, f));
 				forth
 			end;
 		end;

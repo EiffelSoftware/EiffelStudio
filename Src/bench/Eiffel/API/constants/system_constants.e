@@ -17,13 +17,13 @@ feature {NONE}
 		once
 			c := Directory_separator;
 			!!Result.make (0);
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("bench");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("help");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("defaults");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append (Platform_constants.Default_ace_name);
 		end;
 
@@ -34,13 +34,13 @@ feature {NONE}
 			c := Directory_separator;
 			!!Result.make (0);
 			Result.append ("$EIFFEL3");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append (Platform_constants.precompiled_directory);
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("spec");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("$PLATFORM");
-			Result.append_character (c);
+			Result.extend (c);
 			Result.append ("base");
 		end;
 

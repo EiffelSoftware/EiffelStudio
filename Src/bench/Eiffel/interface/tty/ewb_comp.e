@@ -100,7 +100,7 @@ feature -- Compilation
 					io.readline;
 					file_name := io.laststring;
 					if not file_name.empty then
-						Lace.set_file_name (file_name.duplicate);
+						Lace.set_file_name (clone(file_name));
 					else
 						Lace.set_file_name ("Ace");
 					end;
@@ -114,12 +114,12 @@ feature -- Compilation
 					else
 						!!cmd.make (0);
 						cmd.append (Copy_cmd);
-						cmd.append_character (' ');
+						cmd.extend (' ');
 						cmd.append (Default_ace_file);
-						cmd.append_character (' ');
+						cmd.extend (' ');
 						cmd.append (file_name);
 						Execution_environment.system (cmd);
-						Lace.set_file_name (file_name.duplicate);
+						Lace.set_file_name (clone(file_name));
 						edit (Lace.file_name);
 					end;
 --				when 'd', '%N' then
@@ -203,9 +203,9 @@ feature -- Compilation
 						-- Request
 					!!cmd_string.make (200);
 					cmd_string.append (Prelink_command_name);
-					cmd_string.append_character (' ');
+					cmd_string.extend (' ');
 					cmd_string.append (Precompilation_driver);
-					cmd_string.append_character (' ');
+					cmd_string.extend (' ');
 					cmd_string.append (arg2);
 					Execution_environment.system (cmd_string);
 				end;

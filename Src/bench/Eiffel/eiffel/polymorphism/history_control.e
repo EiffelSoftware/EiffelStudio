@@ -40,7 +40,7 @@ feature
 				new_units.put (poly_table, rout_id);
 			end;
 			old_count := poly_table.count;
-			poly_table.add (u);
+			poly_table.extend (u);
 			if poly_table.count > old_count then
 				count := count + 1
 			end;

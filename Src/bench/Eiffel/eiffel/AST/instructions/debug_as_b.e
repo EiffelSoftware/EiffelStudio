@@ -53,21 +53,20 @@ feature -- Type check, byte code and dead code removal
 	byte_node: DEBUG_B is
 			-- Associated byte code
 		local
-			node_keys: FIXED_LIST [STRING];
+			node_keys: ARRAYED_LIST [STRING];
 		do
 			!!Result;
 			if compound /= Void then
 				Result.set_compound (compound.byte_node);
 				if keys /= Void then
 					from
-						!!node_keys.make (keys.count);
+						!!node_keys.make (0);
 						node_keys.start;
 						keys.start
 					until
 						keys.after
 					loop
-						node_keys.put (keys.item.value);
-						node_keys.forth;
+						node_keys.extend (keys.item.value);
 						keys.forth;
 					end;
 					Result.set_keys (node_keys);
@@ -132,7 +131,7 @@ feature -- Replication
 			-- Adapt to replictation.
 		do
 			if compound /= void then
-				Result := twin;
+				Result := clone (Current);
 				Result.set_compound (
 					compound.replicate (ctxt));
 			end

@@ -6,14 +6,13 @@ inherit
 
 	EXTEND_STACK [TYPE_A]
 		rename
-			make as extend_stack_make,
-			pop as extend_stack_pop
+			make as extend_stack_make
 		export
 			{ACCESS_FEAT_AS} i_th
-		end;
+		end
 	SHARED_SERVER
 		undefine
-			twin
+			copy, setup
 		end;
 
 
@@ -23,7 +22,7 @@ creation
 	
 feature 
 
-	a_class: CLASS_C;
+	a_class: CLASS_C
 			-- Current analyzed a_class
 
 	actual_class_type: CL_TYPE_A;

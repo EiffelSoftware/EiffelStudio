@@ -49,10 +49,10 @@ feature
 				Result := parent_selection (parents);
 
 				if Result /= Void then
-					selected_rout_id_set := Result.rout_id_set.twin;
+					selected_rout_id_set := clone (Result.rout_id_set);
 
 						-- Keep track of the selection
-					Selected.add_front (Result.feature_name);
+					Selected.put_front (Result.feature_name);
 					from
 						start;
 						feat_table := Origin_table.computed;
@@ -372,7 +372,7 @@ end;
 										curr_feat.feature_name);
 					else
 						!!parents.make;
-						parents.add_front (inh_info.parent);
+						parents.put_front (inh_info.parent);
 					end;
 					from
 						parents.start
@@ -383,7 +383,7 @@ end;
 						!!rep_name;
 						rep_name.set_rep_feature (replication);
 						rep_name_list := rep_list_item (parent);
-						rep_name_list.add_front (rep_name);
+						rep_name_list.put_front (rep_name);
 						parents.forth
 					end;
 				end;
@@ -413,7 +413,7 @@ end;
 			end;
 			if (Result = Void) then
 				!!Result.make (p);
-				list.add_front (Result);
+				list.put_front (Result);
 			end;
 		end;
 
@@ -433,7 +433,7 @@ end;
 			loop
 				parent_c := parent_list.item;
 				if parent_c.has_renamed (name) then
-					Result.add_front (parent_c);
+					Result.put_front (parent_c);
 				end;	
 				parent_list.forth
 			end;
@@ -452,7 +452,7 @@ end;
 						not parent_c.is_renaming (name) and then 
 						f_table.has (name) 
 					then
-						Result.add_front (parent_c);
+						Result.put_front (parent_c);
 					end;
 					parent_list.forth
 				end;

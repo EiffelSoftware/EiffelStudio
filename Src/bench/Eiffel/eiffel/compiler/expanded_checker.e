@@ -16,7 +16,7 @@ feature
 	current_type: CLASS_TYPE;
 			-- Current class type to check
 
-	id_set: SORTED_SET [INTEGER];
+	id_set: TWO_WAY_SORTED_SET [INTEGER];
 			-- Set of class id
 
 	make is

@@ -26,7 +26,7 @@ feature
 		do
 				-- Change dir to the c_code_directory
 			current_dir := Execution_environment.current_working_directory
-			Execution_environment.change_current_working_directory (c_code_directory);
+			Execution_environment.change_working_directory (c_code_directory);
 
 				-- Check to see if Finish_freezing_script is there
 				-- copy if not
@@ -34,7 +34,7 @@ feature
 			if not d.has_entry (Finish_freezing_script) then
 				!!cp_cmd.make (50);
 				cp_cmd.append (Copy_cmd);
-				cp_cmd.append_character (' ');
+				cp_cmd.extend (' ');
 				cp_cmd.append (freeze_command_name);
 				cp_cmd.append (" .");
 				Execution_environment.system (cp_cmd);
@@ -44,7 +44,7 @@ feature
 			Execution_environment.system (Finish_freezing_script);
 
 				-- Change dir back to original
-			Execution_environment.change_current_working_directory (current_dir);
+			Execution_environment.change_working_directory (current_dir);
 		end;
 
 end

@@ -256,7 +256,7 @@ feature {NONE} -- I/O
 			io.error.putstring ("%N%
 				%Press <Return> to resume compilation or <Q> to quit%N");
 			wait_for_return;
-			str := io.laststring.duplicate;
+			str := clone (io.laststring)
 			str.to_lower;
 			Result := ((str.count >= 1) and then (str.item (1) = 'q'))
 		end;
@@ -336,7 +336,7 @@ feature {NONE} -- I/O
 						!!arg.make (count -i);
 					end;
 				else
-					arg.append_character (item)
+					arg.extend (item)
 				end;
 				i := i + 1
 			end;
@@ -543,7 +543,7 @@ feature
 			if editor /= Void then
 				!!cmd.make (0);
 				cmd.append (editor);
-				cmd.append_character (' ');
+				cmd.extend (' ');
 				cmd.append (a_file);
 				Execution_environment.system (cmd);
 			else

@@ -33,7 +33,7 @@ feature
 	is_numeric: BOOLEAN is True;
 			-- Is the type a numeric one ?
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 			-- Debug purpose
 		do
 			file.putstring ("LONG");

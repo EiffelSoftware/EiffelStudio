@@ -10,7 +10,7 @@ inherit
 	EXTEND_TABLE [FEATURE_I, INTEGER];
 	SHARED_HISTORY_CONTROL
 		undefine
-			twin
+			copy, is_equal
 		end
 
 creation
@@ -91,7 +91,7 @@ feature -- Generation
 			from
 				start
 			until
-				offright
+				after
 			loop
 				Result.put (key_for_iteration, item_for_iteration);
 				forth

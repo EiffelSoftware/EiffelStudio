@@ -132,7 +132,7 @@ feature -- Type check, byte code and dead code removal
 
 				-- Suppliers update
 			!!depend_unit.make (left_id, infix_function.feature_id);
-			context.supplier_ids.add (depend_unit);
+			context.supplier_ids.extend (depend_unit);
 
 				-- Then type check the right operand
 			right.type_check;
@@ -328,7 +328,7 @@ feature -- Replication
 			new_left := left.replicate (ctxt);
 			ctxt.adapt_name (infix_function_name);
 			if infix_function_name.is_equal (ctxt.adapted_name) then
-				Result := twin;
+				Result := clone (Current);
 			else
 				!!b;
 				b.set_infix_function_name (ctxt.adapted_name);

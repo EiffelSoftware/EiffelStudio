@@ -225,7 +225,7 @@ end;
 			if entry.is_polymorphic (typ.type_id) then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
-				table_name := Encoder.table_name (rout_id).twin;
+				table_name := clone (Encoder.table_name (rout_id));
 				generated_file.putchar ('(');
 				generated_file.putstring (table_name);
 				generated_file.putchar ('-');

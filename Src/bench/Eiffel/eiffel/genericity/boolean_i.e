@@ -30,7 +30,7 @@ feature
 			!!Result
 		end;
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 			-- Debug purpose
 		do
 			file.putstring ("BOOLEAN");

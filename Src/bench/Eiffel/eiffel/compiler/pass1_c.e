@@ -26,7 +26,7 @@ feature
 		do
 				-- Verbose
 			io.error.putstring ("Degree 5: class ");
-				temp := associated_class.class_name.duplicate;
+				temp := clone (associated_class.class_name)
 				temp.to_upper;
 			io.error.putstring (temp);
 			io.error.new_line;

@@ -104,7 +104,7 @@ feature -- Implementation of inherited deferred features
 							-- There is a dependance between `f' and the `anchor_feature'
 							-- Record it for the propagation of the recompilations
 						!!depend_unit.make (context.a_class.id, like_feature.feature_id);
-						context.supplier_ids.add (depend_unit);
+						context.supplier_ids.extend (depend_unit);
 					end;
 				end;
 			else
@@ -164,7 +164,7 @@ feature -- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_anchor (anchor.replicate (ctxt))
 		end;
 

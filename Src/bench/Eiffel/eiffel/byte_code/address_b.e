@@ -77,7 +77,7 @@ feature
 					generated_file.putstring ("(char *(*)()) 0");
 --				elseif entry.is_polymorphic (context.current_type.type_id) then
 				elseif True then
-					table_name := Encoder.table_name (rout_id).twin;
+					table_name := clone (Encoder.table_name (rout_id));
 					generated_file.putchar ('(');
                     generated_file.putstring (table_name);
                     generated_file.putchar ('-');

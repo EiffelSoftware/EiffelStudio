@@ -141,7 +141,7 @@ feature {NONE} -- Relative paths
 		do
 			!!Result.make (0);
 			Result.append (path);
-			Result.append_character (Directory_separator);
+			Result.extend (Directory_separator);
 			Result.append (base_name);
 		end;
 

@@ -339,7 +339,8 @@ feature
 				selecting.after
 			loop
 				Selected.start;
-				Selected.search_equal (selecting.item_for_iteration);
+				Selected.compare_objects
+				Selected.search (selecting.item_for_iteration);
 				if Selected.after then
 					!!vmss2;
 					vmss2.set_class (System.current_class);

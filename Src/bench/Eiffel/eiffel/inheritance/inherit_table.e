@@ -14,37 +14,37 @@ inherit
 		export
 			{ANY} all
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_SELECTED
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_ERROR_HANDLER
 		export
 			{ANY} error_handler
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_INST_CONTEXT
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_ORIGIN_TABLE
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_ID_TABLES
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_PASS
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_RESCUE_STATUS
 		undefine
-			twin
+			copy, is_equal
 		end
 
 creation
@@ -229,7 +229,7 @@ feature
 				-- of possible joins between deferred features
 			check_validity2;
 				-- Computes a good size for the feature table
-			resulting_table := inherited_features.twin;
+			resulting_table := clone (inherited_features);
 				-- Check redeclarations into an attribute
 			check_redeclarations (resulting_table);
 				-- Check sum
@@ -318,10 +318,10 @@ debug ("ACTIVITY")
 end;
 					if a_class.is_used_as_expanded then
 						!!depend_unit.make (a_class.id, -2);
-						pass2_control.propagators.add (depend_unit)
+						pass2_control.propagators.extend (depend_unit)
 					end;
 					!!depend_unit.make (a_class.id, -1);
-					pass2_control.propagators.add (depend_unit)
+					pass2_control.propagators.extend (depend_unit)
 				end;
 			else
 				from
@@ -347,7 +347,7 @@ debug ("ACTIVITY")
 	io.error.putstring (" inserted in pass2_control.propagators%N");
 end;
 							!!depend_unit.make (a_class.id, resulting_table.item (creation_name).feature_id);
-							pass2_control.propagators.add (depend_unit);
+							pass2_control.propagators.extend (depend_unit);
 						end;
 					end;
 					old_creators.forth
@@ -356,7 +356,7 @@ end;
 					(new_creators  = Void or else new_creators.count > 1)
 				then
 					!!depend_unit.make (a_class.id, -2);
-					pass2_control.propagators.add (depend_unit)
+					pass2_control.propagators.extend (depend_unit)
 				end;
 				old_creators := Void
 			end;
@@ -613,7 +613,7 @@ end;
 							-- features by an inherited non-deferred feature
 						!!def.make (inherit_feat, feature_i);
 							-- Reset assertions of `feature_i'
-						adaptations.add_front (def);
+						adaptations.put_front (def);
 					else
 						 Origin_table.insert (inherited_info);
 					end;
@@ -776,7 +776,7 @@ end;
 				inherited_info := inherit_feat.inherited_info;
 				if inherited_info = Void then
 						-- Implicit or explicit redefinition
-					new_rout_id_set := inherit_feat.rout_id_set.twin;
+					new_rout_id_set := clone (inherit_feat.rout_id_set);
 						-- This is not an origin
 					feature_i.set_is_origin (False);
 						-- Routine id set for the redefinition
@@ -786,7 +786,7 @@ end;
 					inherit_feat.set_inherited_info (info);
 						-- Store the redefintion for later
 					!!redef.make (inherit_feat, feature_i);
-					adaptations.add_front (redef);
+					adaptations.put_front (redef);
 				elseif inherited_info.parent = Void then
 						-- The feature has two implementations in the class
 					!!vmfn;
@@ -847,7 +847,7 @@ end
 			end;
 				-- Keep track of the origin features for pattern
 				-- processing
-			origins.add_front (feature_i.feature_name);
+			origins.put_front (feature_i.feature_name);
 		end;
 
 	feature_unit (yacc_feature: FEATURE_AS; feat: FEATURE_NAME): FEATURE_I is
@@ -904,7 +904,7 @@ end;
 			elseif Result.is_external then
 					-- Track new externals introduced in the class
 				external_i ?= Result;
-				new_externals.add_front (external_i.external_name);
+				new_externals.put_front (external_i.external_name);
 			end;
 
 			read_info := class_info.index.item (yacc_feature.id);
@@ -939,7 +939,7 @@ end;
 					if not is_the_same then
 							-- assertions have changed
 						!!assert_prop_list.make;
-						assert_prop_list.add (feature_i.rout_id_set.first)
+						assert_prop_list.extend (feature_i.rout_id_set.first)
 					else
 						is_the_same := old_description.is_body_equiv (yacc_feature)
 							-- Same interface does NOT work: the types must be resolved first
@@ -965,7 +965,7 @@ end;
 						-- keep the fact the old feature from a previous
 						-- is an origin or not.
 					Result.set_is_origin (feature_i.is_origin);
-					Result.set_rout_id_set (feature_i.rout_id_set.twin);
+					Result.set_rout_id_set (clone (feature_i.rout_id_set));
 					Result.set_is_selected (feature_i.is_selected);
 				end;
 				if not is_the_same or else
@@ -1012,7 +1012,7 @@ debug ("ACTIVITY")
 	io.error.putint (new_body_id);
 	io.error.new_line;
 end;
-					changed_features.add_front (feature_name);
+					changed_features.put_front (feature_name);
 				else
 						-- Keep the type
 					Result.set_type (feature_i.type);
@@ -1043,7 +1043,7 @@ debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features (new body id)%N");
 end;
-				changed_features.add_front (feature_name);
+				changed_features.put_front (feature_name);
 			end;
 				-- Check incompatibily between `frozen' and `deferred'
 			if Result.is_frozen and then Result.is_deferred then
@@ -1224,7 +1224,7 @@ end;
 							-- Initialization of an inherited feature
 						init_inherited_feature (inherited_feature,inherit_feat);
 							-- Insertion in the origin table
-						inherited_info := deferred_info.twin;
+						inherited_info := clone (deferred_info);
 						inherited_info.set_a_feature (inherited_feature);
 						Origin_table.insert (inherited_info);
 						if inherit_feat.nb_deferred > 1 then
@@ -1232,7 +1232,7 @@ end;
 								-- The deferred features must have the same
 								-- signature
 							!!join.make (inherit_feat, inherited_feature);
-							adaptations.add_front (join);
+							adaptations.put_front (join);
 debug ("ACTIVITY")
 	io.putstring ("joining feature: ");
 	io.putstring (inherited_feature.feature_name);
@@ -1261,7 +1261,7 @@ end;
 			f.set_is_origin (False);
 				--  Check the routine table ids
 			rout_ids := inherit_feat.rout_id_set;
-			f.set_rout_id_set (rout_ids.twin);
+			f.set_rout_id_set (clone (rout_ids));
 				-- Process feature id
 			feature_name := f.feature_name;
 			old_feature := feature_table.item (feature_name);
@@ -1520,7 +1520,7 @@ end;
 					if needs_replication then
 						if not rep_class_info.has_list (s_rep_name_list) then
 							s_rep_name_list.update (rep_name_list);
-							rep_class_info.add_front (s_rep_name_list);
+							rep_class_info.put_front (s_rep_name_list);
 						end;
 						!!s_rep_name;
 						s_rep_name.set_old_feature (rep_name.old_feature);
@@ -1577,7 +1577,7 @@ end;
 				-- A new body id has been computed for `feature_i'.
 			Body_index_table.force (new_body_id, feature_i.body_index);
 			new_body_id := 0;
-			Origins.add_front (feature_i.feature_name);
+			Origins.put_front (feature_i.feature_name);
 		end;
 
 	replicate_feature (feat: FEATURE_I) is
@@ -1653,7 +1653,7 @@ debug ("REPLICATION")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features%N");
 end;
-					changed_features.add_front (feature_name);
+					changed_features.put_front (feature_name);
 				end
 			else
 					-- New body id
@@ -1662,7 +1662,7 @@ debug ("REPLICATION")
 	io.error.putstring (feature_name);
 	io.error.putstring (" inserted in changed_features%N");
 end;
-				changed_features.add_front (feature_name);
+				changed_features.put_front (feature_name);
 			end;
 		end;
 

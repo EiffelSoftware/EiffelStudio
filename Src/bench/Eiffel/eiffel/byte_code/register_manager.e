@@ -49,7 +49,7 @@ feature
 			-- Duplicate of current instance
 		do
 			!!Result.make (false);
-			Result.set_registers (registers.twin);
+			Result.set_registers (clone (registers))
 			Result.set_needed_registers (needed_registers);
 		end;
 			

@@ -7,7 +7,10 @@ inherit
 	WINDOWS;
 	EIFFEL_ENV;
 	ISED_X_SLAVE;
-	ARGUMENTS;
+	ARGUMENTS
+		rename
+			command_line as arguments_line
+		end
 	LIC_EXITER
 		rename
 			build_dir as Eiffel3_dir_name
@@ -49,6 +52,7 @@ feature
 			temp: STRING
 		do
 			if not retried then
+rescue_status.set_fail_on_rescue (True)
 					-- Check that environment variables
 					-- are properly set.
 				temp := env_variable ("EIFFEL3");
@@ -63,7 +67,7 @@ feature
 						("ISE Eiffel3: the environment variable $PLATFORM is not set%N");
 					die (-1)
 				end;
-				if argument_count = 2 and then
+				if argument_count = 1 and then
 					argument (1).is_equal ("-bench")
 				then
 					set_batch_mode (False);

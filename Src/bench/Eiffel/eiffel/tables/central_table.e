@@ -68,7 +68,7 @@ end;
 	mark_melted (t: T) is
 			-- Insert `t' in `melted_list'.
 		do
-			melted_list.add_front (t);
+			melted_list.put_front (t);
 		end;
 
 	freeze is
@@ -120,7 +120,7 @@ end;
 					not u.is_valid
 				then
 					remove (u);
-					useless_ids.add (unit_index);
+					useless_ids.extend (unit_index);
 				end;
 				forth
 			end;
@@ -149,8 +149,8 @@ debug ("REFREEZING")
 	io.error.putint (new_index);
 	io.error.new_line;
 end;
-					useless_ids.remove_all_occurrences (new_index);
-					useless_ids.add (unit_index);
+					useless_ids.prune_all (new_index);
+					useless_ids.extend (unit_index);
 					u.set_index (new_index);
 					if new_index > max_index then
 						max_index := new_index
@@ -192,7 +192,7 @@ end;
 
 feature {NONE} -- Keep track of the holes in the table
 
-	useless_ids: SORTED_SET [INTEGER];
+	useless_ids: TWO_WAY_SORTED_SET [INTEGER];
 			-- Id corresponding to unvalid units
 
 	display_useless_ids is

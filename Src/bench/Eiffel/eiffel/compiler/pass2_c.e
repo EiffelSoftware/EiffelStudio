@@ -60,7 +60,7 @@ feature
 		do
 				-- Verbose
 			io.error.putstring ("Degree 4: class ");
-				temp := associated_class.class_name.duplicate;
+				temp := clone (associated_class.class_name)
 				temp.to_upper;
 			io.error.putstring (temp);
 			io.error.new_line;
@@ -193,7 +193,6 @@ feature -- Propagation of second pass
 			-- tables of the direct descendants must be recalculated.
 		local
 			descendant: CLASS_C;
-			local_cursor: LINKABLE [CLASS_C];
 			types: LINKED_LIST [CLASS_TYPE];
 		do
 debug ("ACTIVITY")
@@ -203,11 +202,11 @@ debug ("ACTIVITY")
 end;
 			from
 				associated_class.set_changed2 (True);
-				local_cursor := associated_class.descendants.first_element;
+				associated_class.descendants.start
 			until
-				local_cursor = Void
+				associated_class.descendants.off
 			loop
-				descendant := local_cursor.item;
+				descendant := associated_class.descendants.item
 					-- Insert the descendant in the changed classes list
 					-- of the system if not present.
 debug ("ACTIVITY")
@@ -243,7 +242,7 @@ end;
 					-- the descendants are updated
 				pass4_controler.insert_new_class (descendant);
 
-				local_cursor := local_cursor.right
+				associated_class.descendants.forth
 			end;
 		end;
 
@@ -257,17 +256,16 @@ feature -- Propagation of third pass
 			good_context: pass2_control.propagate_pass3;
 		local
 			client: CLASS_C;
-			local_cursor: LINKABLE [CLASS_C];
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Propagate pass3%N");
 end;
 			from
-				local_cursor := associated_class.clients.first_element
+				associated_class.clients.start
 			until
-				local_cursor = Void
+				associated_class.clients.off
 			loop
-				client := local_cursor.item;
+				client := associated_class.clients.item;
 					-- Remember the cause for type checking `client'.
 debug ("ACTIVITY")
 	io.error.putstring ("Propagating pass3 to: ");
@@ -283,7 +281,7 @@ end;
 				pass3_controler.insert_new_class (client);
 				pass4_controler.insert_new_class (client);
 
-				local_cursor := local_cursor.right
+				associated_class.clients.forth
 			end;
 		end;
 

@@ -31,14 +31,14 @@ feature -- dragging
 	signature: STRING is
 			-- Name and indication that the class is not compiled
 		do
-			Result := class_i.class_name.duplicate;
+			Result := clone (class_i.class_name)
 			Result.to_upper;
 --			Result.append (" (not in system)")
 		end;
 
 	icon_name: STRING is
 		do
-			Result := class_i.class_name.duplicate;
+			Result := clone (class_i.class_name)
 			Result.to_upper
 		end;
 

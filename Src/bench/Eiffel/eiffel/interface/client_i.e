@@ -98,7 +98,8 @@ feature -- Incrementality
 			loop
 				other_cur := other_clients.cursor;
 				other_clients.start;
-				other_clients.search_equal (clients.item);
+				other_clients.compare_objects
+				other_clients.search (clients.item);
 				Result := not other_clients.after;
 				other_clients.go_to (other_cur);
 				clients.forth;
@@ -126,7 +127,8 @@ feature -- Incrementality
 					i > c or else not Result
 				loop
 					other_clients.start;
-					other_clients.search_equal (clients.i_th (i));
+					other_clients.compare_objects
+					other_clients.search (clients.i_th (i));
 					Result := not other_clients.after;
 					i := i + 1;
 				end;
@@ -190,7 +192,7 @@ feature -- formatter
 			until
 				clients.after
 			loop
-				temp := clients.item.duplicate;
+				temp := clone (clients.item)
 				client_classi := Universe.class_named (temp, cluster);
 				if client_classi /= Void then
 					client_classc := client_classi.compiled_class;

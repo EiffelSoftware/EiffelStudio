@@ -157,7 +157,7 @@ feature
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := Encoder.table_name (rout_id).twin;
+				table_name := clone (Encoder.table_name (rout_id));
 				generated_file.putchar ('(');
 				real_type (type).c_type.generate_function_cast (generated_file);
 				generated_file.putchar ('(');
@@ -188,7 +188,7 @@ feature
 					-- so the name can be hardwired.
 				if encapsulated then
 					rout_table ?= entry;
-					internal_name := rout_table.feature_name (typ.type_id).twin;
+					internal_name := clone (rout_table.feature_name (typ.type_id));
 				else
 					internal_name := external_name;
 				end;
@@ -278,11 +278,11 @@ feature
 					if expr_b.is_hector or not
 						 real_type (expr_b.type).c_type.is_pointer
 					then
-						parameters.put (expr_b.enlarged);
+						parameters.replace (expr_b.enlarged);
 					else
 						!!protect_b;
 						protect_b.set_expr (expr_b.enlarged);
-						parameters.put (protect_b);
+						parameters.replace (protect_b);
 					end;
 					parameters.forth;
 				end;

@@ -4,7 +4,7 @@ class EXTEND_QUEUE [T]
 
 inherit
 
-	FIXED_QUEUE [T]
+	ARRAYED_QUEUE [T]
 
 creation
 
@@ -20,7 +20,7 @@ feature
 		local
 			size: INTEGER;
 		do
-			size := array_seq_capacity;
+			size := capacity;
 			put_i_th (t, (in_index + size - 1) \\ size)
 		end;
 

@@ -54,9 +54,10 @@ feature
 			-- Add `s' to `old_externals'.
 		do
 			old_externals.start;
-			old_externals.search_equal (s);
+			old_externals.compare_objects
+			old_externals.search (s);
 			if old_externals.after then
-				old_externals.add_front (s);
+				old_externals.put_front (s);
 			end;
 		end;
 

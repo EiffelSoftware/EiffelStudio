@@ -68,7 +68,7 @@ feature
 							output_window.put_string ("...%N")
 						else	
 							output_window.new_line;
-							displayed.add (parents.item);
+							displayed.extend (parents.item);
 							rec_display (i+1, parent_class);
 						end;			
 						parents.forth

@@ -79,7 +79,7 @@ feature
 				good_string_to_append: to_append /= Void;
 			end;
 			temp_name.append (to_append);
-			Result := temp_name.twin;
+			Result := clone (temp_name);
 			Result.to_lower;
 		end;
 

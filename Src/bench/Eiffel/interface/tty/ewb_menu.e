@@ -2,21 +2,26 @@ class EWB_MENU
 
 inherit
 
-	ARRAY [EWB_CMD];
+	ARRAY [EWB_CMD]
 	SHARED_EWB_HELP
-		undefine twin end;
+		undefine
+			consistent, copy, setup, is_equal
+		end
 	SHARED_EWB_CMD_NAMES
-		undefine twin end;
+		undefine
+			consistent, copy, setup, is_equal
+		end
 	SHARED_EWB_ABBREV
-		undefine twin end;
-
+		undefine
+			consistent, copy, setup, is_equal
+		end
 creation
 
 	make
 
 feature
 
-	is_main: BOOLEAN;
+	is_main: BOOLEAN
 
 	add_entry (cmd: EWB_CMD) is
 		local
@@ -117,7 +122,7 @@ feature
 			s: STRING;
 		do
 				-- First letter in upper case
-			s := opt.duplicate;
+			s := clone (opt)
 			s.put (s.item (1).upper, 1);
 
 			io.putstring ("%T(");

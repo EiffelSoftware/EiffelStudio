@@ -101,9 +101,9 @@ feature -- Lace compilation
 				path := Environ.interpret (use_name);
 				!!use_file_path.make (cluster.path.count + use_name.count + 1);
 				use_file_path.append (cluster.path);
-				use_file_path.append_character (Directory_separator);
+				use_file_path.extend (Directory_separator);
 				use_file_path.append (path);
-				!!use_file.make (use_file_path);
+				!!use_file.make_open_read (use_file_path);
 				if 
 					(not use_file.exists) or else
 					use_file.is_directory

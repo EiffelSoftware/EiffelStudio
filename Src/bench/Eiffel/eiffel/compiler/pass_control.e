@@ -16,11 +16,11 @@ feature
 			-- [Useful for updating dependances for incremental type
 			-- check.]
 
-	propagators: SORTED_SET [DEPEND_UNIT];
+	propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT];
 			-- List of all the dependance units responsible for
 			-- the propagation of the third pass on the class
 
-	melted_propagators: SORTED_SET [DEPEND_UNIT];
+	melted_propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT];
 			-- List of all the features which are changed from
 			-- an attribute (a function resp.) into a function (an attribute
 			-- resp.) beetween two recompilations. All the features
@@ -31,7 +31,9 @@ feature
 		do
 			!!removed_features.make (5);
 			!!propagators.make;
+			propagators.compare_objects
 			!!melted_propagators.make;
+			melted_propagators.compare_objects
 		end;
 
 	wipe_out is

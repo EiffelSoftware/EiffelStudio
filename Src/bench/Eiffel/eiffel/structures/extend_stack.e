@@ -2,13 +2,13 @@ class EXTEND_STACK [T]
 
 inherit
 
-	FIXED_STACK [T]
+	ARRAYED_STACK [T]
 		rename
 			make as basic_make,
 			put as fixed_stack_put
 		end;
 
-	FIXED_STACK [T]
+	ARRAYED_STACK [T]
 		rename
 			make as basic_make
 		redefine
@@ -25,7 +25,7 @@ feature
 
 	make is
 		do
-			basic_make (Chunk)
+			array_make (1, Chunk)
 		end;
 
 	put (v: like item) is
@@ -33,7 +33,7 @@ feature
 		require else
 			True
 		do
-			if count >= max_size then
+			if count >= capacity then
 				resize (lower, upper + Chunk)
 			end;
 			fixed_stack_put (v)

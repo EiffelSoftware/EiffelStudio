@@ -101,7 +101,7 @@ feature
 			-- Do a clone of the arguments (for replication)
 		do
 			if arguments /= Void then
-				arguments := arguments.twin
+				arguments := clone (arguments)
 			end;
 		end;
 
@@ -119,12 +119,12 @@ feature
 	duplicate: like Current is
 			-- Duplicate feature
 		do
-			Result := twin;
+			Result := clone (Current);
 			if arguments /= Void then
-				Result.set_arguments (arguments.twin);
+				Result.set_arguments (clone (arguments));
 			end;
 			if type /= Void then
-				Result.set_type (type.twin);
+				Result.set_type (clone (type));
 			end;
 		end;
 

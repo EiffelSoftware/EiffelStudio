@@ -514,7 +514,7 @@ dummy_choice.set_text ("GAGAGAG");
 --			user_format.set_bitmap (bitmap_bitmap.pixmap);
 			na_me := text_window.text;
 			if na_me /= Void and then na_me.count > 0 then
-				user_format.set_name (text_window.text.twin)
+				user_format.set_name (clone (text_window.text))
 			else
 				user_format.set_name ("Unamed")
 			end;

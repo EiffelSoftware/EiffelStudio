@@ -49,7 +49,7 @@ feature {NONE}
 	prime_size (i: INTEGER): INTEGER is
 			-- Prime number greater than 5 * i / 4
 		do
-			Result := primes.next_prime ((5 * i) // 4);
+			Result := primes.higher_prime ((5 * i) // 4);
 		end;
 
 	cecil_file: UNIX_FILE is

@@ -12,15 +12,15 @@ inherit
 		end;
 	SHARED_CODE_FILES
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_WORKBENCH
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_ENCODER
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 
 creation
@@ -35,7 +35,7 @@ feature
 	init (hash_size: INTEGER) is
 			-- Table creation
 		require
-			primes.test_prime (hash_size);
+			primes.is_prime (hash_size);
 		local
 			i: INTEGER;
 		do
@@ -53,7 +53,9 @@ feature
 	wipe_out is
 			-- Empty the table
 		do
-			array_wipe_out;
+			lower := 0
+			upper := -1
+			make_area (0)
 			values := Void;
 		end;
 

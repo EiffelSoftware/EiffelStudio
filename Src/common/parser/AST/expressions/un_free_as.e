@@ -64,7 +64,7 @@ feature {UNARY_AS}	-- Replication
 	set_prefix_feature_name (p: like prefix_feature_name) is
 		do
 			!!op_name.make (p.count);
-			op_name.append (p.duplicate);
+			op_name.append (clone (p));
 			op_name.tail (op_name.count - 8)
 				-- 8 is "_prefix_".count
 		end;

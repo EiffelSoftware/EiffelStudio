@@ -4,7 +4,7 @@ inherit
 
 	LINKED_LIST [GEN_TYPE_I]
 		redefine
-			search_equal
+			search
 		end
 
 creation
@@ -13,7 +13,7 @@ creation
 
 feature
 
-	search_equal (t: GEN_TYPE_I) is
+	search (t: GEN_TYPE_I) is
 			-- Patch
 		local
 			stop: BOOLEAN;

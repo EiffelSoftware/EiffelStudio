@@ -272,7 +272,7 @@ feature -- Initialization
 		do
 			last_request_cmd := Void
 			if req.has ('.') then
-				dot_place := req.search_character ('.', 1)
+				dot_place := req.index_of ('.', 1)
 				debug
 					io.putstring ("Req :")
 					io.putstring (req)

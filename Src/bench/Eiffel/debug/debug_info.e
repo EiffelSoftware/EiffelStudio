@@ -115,7 +115,7 @@ feature -- Debuggables (Byte code,...)
 				else
 					new_debuggables.put (f.debuggables, f.body_id)
 				end;
-				debugged_routines.add (f)
+				debugged_routines.extend (f)
 			end
 		end; -- add_feature
 
@@ -402,15 +402,15 @@ feature -- Step by step debugging
 				if stepped_routines.empty then 
 						-- No other routines currently in step-by-step 
 						-- debugging process.
-					stepped_routines.add (f)
+					stepped_routines.extend (f)
 				elseif stepped_routines.item.body_id /= f.body_id then				
 						-- We just stop in a routine which was not
 						-- step-by-step debugged the step before.
-					stepped_routines.add (f)
+					stepped_routines.extend (f)
 				elseif is_first_breakpoint (i, f) then   
 						-- We just renter in the routine we were debugging
 						-- step-by-step (Recursive call).
-					stepped_routines.add (f)
+					stepped_routines.extend (f)
 				-- else
 						-- We are already debugging `f' step-by-step.
 				end;

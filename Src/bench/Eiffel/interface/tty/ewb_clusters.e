@@ -79,7 +79,7 @@ feature
 			until
 				classes.after
 			loop
-				sorted_class_names.add (classes.key_for_iteration);
+				sorted_class_names.extend (classes.key_for_iteration);
 				classes.forth
 			end;
 			from

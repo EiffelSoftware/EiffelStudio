@@ -164,7 +164,7 @@ feature {NONE} -- Clickable features
 
 	put_char (c: CHARACTER) is
 		do
-			error_message.append_character (c);
+			error_message.extend (c);
 		end;
 
 end

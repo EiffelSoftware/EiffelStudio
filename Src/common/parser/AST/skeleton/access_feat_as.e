@@ -130,7 +130,7 @@ feature -- Type check, byte code and dead code removal
 			if a_feature /= Void then
 					-- Supplier dependances update
 				!!depend_unit.make (last_id, a_feature.feature_id);
-				context.supplier_ids.add (depend_unit);
+				context.supplier_ids.extend (depend_unit);
 				
 					-- Attachments type check
 				count := parameter_count;
@@ -425,7 +425,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
-			Result := twin;
+			Result := clone (Current);
 debug ("REPLICATION")
 	io.error.putstring ("feature name before: ");
 	io.error.putstring (feature_name);

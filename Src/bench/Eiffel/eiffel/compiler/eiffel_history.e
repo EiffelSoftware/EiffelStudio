@@ -19,7 +19,7 @@ inherit
 		end;
 	SHARED_SERVER
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 
 creation

@@ -13,7 +13,7 @@ creation
 
 feature 
 
-	remove_occurence (l: SORTED_SET [DEPEND_UNIT]) is
+	remove_occurence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
 			-- Remove one occurence for each supplier of id
 			-- included in `l'.
 		require
@@ -22,7 +22,7 @@ feature
 		local
 			suppl_info: SUPPLIER_INFO;
 			id: INTEGER;
-			s: SORTED_SET [INTEGER]
+			s: TWO_WAY_SORTED_SET [INTEGER]
 		do
 			s := suppliers (l);
 			from
@@ -45,7 +45,7 @@ feature
 			end;
 		end;
 
-	add_occurence (l: SORTED_SET [DEPEND_UNIT]) is
+	add_occurence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
 			-- Add one occurence for each supplier of id
 			-- included in `l'.
 		require
@@ -53,7 +53,7 @@ feature
 		local
 			suppl_info: SUPPLIER_INFO;
 			id: INTEGER;
-			s: SORTED_SET [INTEGER]
+			s: TWO_WAY_SORTED_SET [INTEGER]
 		do
 			s := suppliers (l);
 			from
@@ -70,7 +70,7 @@ end;
 				suppl_info := info (id);
 				if suppl_info = Void then
 					!!suppl_info.make (System.class_of_id (id));
-					add_front (suppl_info);
+					put_front (suppl_info);
 				else
 					suppl_info.add_occurence;
 				end;
@@ -90,7 +90,7 @@ end;
 			until
 				after
 			loop
-				Result.add_right (item.twin);
+				Result.put_right (clone (item));
 				Result.forth;
 				forth
 			end
@@ -98,7 +98,7 @@ end;
 
 feature {NONE}
 
-	suppliers (l: SORTED_SET [DEPEND_UNIT]): SORTED_SET [INTEGER] is
+	suppliers (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): TWO_WAY_SORTED_SET [INTEGER] is
 		local
 			id: INTEGER
 		do
@@ -117,7 +117,7 @@ debug ("ACTIVITY")
 	io.error.putint (id);
 	io.error.new_line;
 end;
-					Result.add (id);
+					Result.extend (id);
 				end;
 				l.forth
 			end;
@@ -162,14 +162,14 @@ end;
 
 feature
 
-	is_ok (l: SORTED_SET [DEPEND_UNIT]): BOOLEAN is
+	is_ok (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): BOOLEAN is
 			-- Is the supplier list consistant regarding to `l'.
 		require
 			good_argument: l /= Void
 		local
 			suppl_info: SUPPLIER_INFO;
 			id: INTEGER;
-			s: SORTED_SET [INTEGER];
+			s: TWO_WAY_SORTED_SET [INTEGER];
 		do
 debug ("ACTIVITY")
 	trace;

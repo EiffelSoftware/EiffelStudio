@@ -6,13 +6,14 @@ inherit
 
 	SHARED_ERROR_HANDLER
 		redefine
-			twin
-		end;
+			copy
+		end
+
 	SHARED_WORKBENCH
 		redefine
-			twin
-		end;
-
+			copy
+		end
+	
 creation
 
 	make
@@ -51,7 +52,7 @@ feature
 			good_argument: c /= Void;
 			consistency: not has_cluster_of_path (c.path);
 		do
-			clusters.add (c);
+			clusters.extend (c);
 		end;
 
 	cluster_changed: BOOLEAN is
@@ -60,18 +61,17 @@ feature
 			a_cluster: CLUSTER_I;
 			new_date: INTEGER;
 			ptr: ANY;
-			local_cursor: LINKABLE [CLUSTER_I];
 		do
 			from
-				local_cursor := clusters.first_element;
+				clusters.start
 			until
-				local_cursor = Void or else Result
+				clusters.after or else Result
 			loop
-				a_cluster := local_cursor.item;
+				a_cluster := clusters.item;
 				ptr := a_cluster.path.to_c;
 				new_date := eif_date ($ptr);
 				Result := a_cluster.date /= new_date;
-				local_cursor := local_cursor.right;
+				clusters.forth
 			end;
 		end;
 
@@ -79,50 +79,45 @@ feature
 			-- Reset all the clusters
 		local
 			a_cluster: CLUSTER_I;
-			local_cursor: LINKABLE [CLUSTER_I];
 		do
 			from
-				local_cursor := clusters.first_element;
+				clusters.start
 			until
-				local_cursor = Void
+				clusters.after
 			loop
-				a_cluster := local_cursor.item;
+				a_cluster := clusters.item;
 				if not a_cluster.is_precompiled then
 					a_cluster.reset_cluster;
 				end;
-				local_cursor := local_cursor.right;
+				clusters.forth
 			end;
 		end;
 
-	twin: like Current is
-			-- Twin universe
-		local
-			local_cursor: LINKABLE [CLUSTER_I]
+	copy (other: like Current) is
+			-- Clone universe
 		do
-			!!Result.make;
+			make;
 			from
-				local_cursor := clusters.first_element
+				other.clusters.start
 			until
-				local_cursor = Void
+				other.clusters.after
 			loop
-				Result.insert_cluster (local_cursor.item);
-				local_cursor := local_cursor.right
+				insert_cluster (other.clusters.item)
+				other.clusters.forth
 			end
-		end;
+		end
 
 	update_cluster_paths is
 			-- Update the paths of the clusters in the universe.
 			-- (Re-interpret environment variables)
-		local
-			local_cursor: LINKABLE [CLUSTER_I]
 		do
 			from
-				local_cursor := clusters.first_element
+				clusters.start
 			until
-				local_cursor = Void
+				clusters.after
 			loop
-				local_cursor.item.update_path;
-				local_cursor := local_cursor.right
+				clusters.item.update_path;
+				clusters.forth
 			end
 		end;
 
@@ -162,14 +157,15 @@ feature
 			cluster: CLUSTER_I;
 			vd23: VD23;
 			vd24: VD24;
-			local_cursor: LINKABLE [CLUSTER_I];
+			i:INTEGER
 		do
 			from
-				local_cursor := clusters.first_element;
+				clusters.start
 			until
-				local_cursor = Void
+				clusters.after
 			loop
-				cluster := local_cursor.item;
+				cluster := clusters.item;
+				i := clusters.index
 				compute_last_class (class_name, cluster);
 				if last_class = Void then
 					!!vd23;
@@ -186,8 +182,8 @@ feature
 					Error_handler.insert_error (vd24);
 				end;
 				Result := last_class;
-
-				local_cursor := local_cursor.right;
+				clusters.go_i_th (i)
+				clusters.forth
 			end;
 		end;
 				
@@ -197,20 +193,19 @@ feature
 			good_argument: cluster_path /= Void;
 		local
 			stop: BOOLEAN;
-			local_cursor: LINKABLE [CLUSTER_I];
 		do
 			from
-				local_cursor := clusters.first_element;
+				clusters.start
 			until
-				local_cursor = Void or else stop
+				clusters.after or else stop
 			loop
-				stop := local_cursor.item.path.is_equal (cluster_path);
+				stop := clusters.item.path.is_equal (cluster_path);
 				if not stop then
-					local_cursor := local_cursor.right
+					clusters.forth
 				end;
 			end;
 			if stop then
-				Result := local_cursor.item
+				Result := clusters.item
 			end;
 		end;
 
@@ -225,21 +220,20 @@ feature
 		require
 			good_argument: cluster_name /= Void;
 		local
-			local_cursor: LINKABLE [CLUSTER_I];
 			stop: BOOLEAN;
 		do
 			from
-				local_cursor := clusters.first_element
+				clusters.start
 			until
-				local_cursor = Void or else stop
+				clusters.after or else stop
 			loop
-				stop := cluster_name.is_equal (local_cursor.item.cluster_name);
+				stop := cluster_name.is_equal (clusters.item.cluster_name);
 				if not stop then
-					local_cursor := local_cursor.right;
+					clusters.forth
 				end;
 			end;
 			if stop then
-				Result := local_cursor.item
+				Result := clusters.item
 			end;
 		end;
 
@@ -276,7 +270,6 @@ feature
 			renamings: HASH_TABLE [STRING, STRING];
 			ignore: LINKED_LIST [CLUSTER_I];
 			vscn: VSCN;
-			local_cursor: LINKABLE [CLUSTER_I];
 		do
 			last_class := Void;
 
@@ -285,11 +278,11 @@ feature
 
 			from
 				ignore := cluster.ignore;
-				local_cursor := clusters.first_element;
+				clusters.start
 			until
-				local_cursor = Void
+				clusters.after
 			loop
-				a_cluster := local_cursor.item;
+				a_cluster := clusters.item;
 				if not ignore.has (a_cluster) then
 					real_name := class_name;
 					rename_clause := cluster.rename_clause_for (a_cluster);
@@ -314,7 +307,7 @@ feature
 						end;
 					end;	
 				end;
-				local_cursor := local_cursor.right;
+				clusters.forth
 			end;
 		end;
 
@@ -322,15 +315,14 @@ feature
 			-- Find first class stone with class name `class_name'.
 			-- (Void if none are found).	
 		local
-			local_cursor: LINKABLE [CLUSTER_I];
 			class_i: CLASS_I
 		do
 			from
-				local_cursor := clusters.first_element
+				clusters.start
 			until
-				local_cursor = Void or else (Result /= Void)
+				clusters.after or else (Result /= Void)
 			loop
-				class_i :=  class_named (class_name, local_cursor.item);
+				class_i :=  class_named (class_name, clusters.item);
 				if class_i /= Void then
 					if class_i.compiled then
 						Result := class_i.compiled_class.stone;
@@ -338,7 +330,7 @@ feature
 						!CLASSI_STONE!Result.make (class_i)
 					end;
 				else
-					local_cursor := local_cursor.right
+					clusters.forth
 				end;	
 			end
 		end;
@@ -354,7 +346,6 @@ feature
 			rename_clause: RENAME_I;
 			renamings: HASH_TABLE [STRING, STRING];
 			ignore: LINKED_LIST [CLUSTER_I];
-			local_cursor: LINKABLE [CLUSTER_I];
 		do
 				-- First look for a renamed class in `cluster'
 			Result := cluster.renamed_class (class_name);
@@ -362,11 +353,11 @@ feature
 			if Result = Void then
 				from
 					ignore := cluster.ignore;
-					local_cursor := clusters.first_element;
+					clusters.start
 				until
-					local_cursor = Void or else Result /= Void
+					clusters.after or else Result /= Void
 				loop
-					a_cluster := local_cursor.item;
+					a_cluster := clusters.item;
 					if not ignore.has (a_cluster) then
 						real_name := class_name;
 						rename_clause := cluster.rename_clause_for (a_cluster);
@@ -379,7 +370,7 @@ feature
 						end;
 						Result := a_cluster.classes.item (real_name);
 					end;
-					local_cursor := local_cursor.right;
+					clusters.forth
 				end;
 			end;
 		end;
@@ -391,17 +382,16 @@ feature
 			good_argument: class_name /= Void;
 		local
 			found, one_found: BOOLEAN;
-			local_cursor: LINKABLE [CLUSTER_I];
 		do
 			from
-				local_cursor := clusters.first_element;
+				clusters.start
 			until
-				local_cursor = Void or else Result
+				clusters.after or else Result
 			loop
-				found := local_cursor.item.classes.has (class_name);
+				found := clusters.item.classes.has (class_name);
 				Result := found and then one_found;
 				one_found := one_found or else found;
-				local_cursor := local_cursor.right;
+				clusters.forth
 			end;
 		end;
 

@@ -175,7 +175,7 @@ feature	-- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_condition (condition.replicate (ctxt));
 			if compound /= void then
 				Result.set_compound (

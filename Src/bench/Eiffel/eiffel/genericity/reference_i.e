@@ -34,7 +34,7 @@ feature
 			a_clickable.put_string ("REFERENCE");
 		end;
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 			-- Debug purpose
 		do
 			file.putstring ("REFERENCE");

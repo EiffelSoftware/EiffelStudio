@@ -38,7 +38,7 @@ feature
 				elseif value.is_all then
 					v := Yes_debug;
 				elseif value.is_name then
-					tag_value := value.value.duplicate;
+					tag_value := clone (value.value)
 					tag_value.to_lower;
 					!!debug_tag.make;
 					debug_tag.tags.put (tag_value);
@@ -65,7 +65,7 @@ feature
 					until
 						list.after
 					loop
-						class_name := list.item.duplicate;
+						class_name := clone (list.item)
 						class_name.to_lower;
 						classes.item (class_name).set_debug_level (v);
 						list.forth;

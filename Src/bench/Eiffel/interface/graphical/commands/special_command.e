@@ -44,7 +44,7 @@ feature
 		once
 			Result := "ISE Eiffel 3 (v";
 			Result.append (Version_number);
-			Result.append_character (')');
+			Result.extend (')');
 		end;
 
 end

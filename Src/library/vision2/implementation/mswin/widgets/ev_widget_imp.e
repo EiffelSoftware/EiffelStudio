@@ -26,6 +26,10 @@ inherit
 
 	EV_SIZEABLE_IMP
 
+	EV_EVENT_HANDLER_IMP
+
+	EV_WIDGET_EVENTS_CONSTANTS_IMP
+
 	EV_ACCELERATOR_HANDLER_IMP
 
 	EV_PND_SOURCE_IMP
@@ -109,11 +113,8 @@ feature -- Access
 
 	top_level_window: EV_WINDOW is
 			-- Top level window that contains the current widget.
-		local
-			ev_imp: EV_WINDOW_IMP
 		do
-			ev_imp ?= top_level_window_imp
-			Result ?= ev_imp.interface
+			Result ?= top_level_window_imp.interface
 		end
 
 	default_parent: CELL [WEL_FRAME_WINDOW] is
@@ -796,14 +797,37 @@ feature {NONE} -- Implementation, cursor of the widget
 			end
 		end
 
+feature {NONE} -- Implementation, pick and drop
+
+	widget_source: EV_WIDGET_IMP is
+			-- Widget drag source used for transport
+		do
+			Result := Current
+		end
+
 feature -- Deferred features
 
-	top_level_window_imp: WEL_WINDOW is
+	set_capture is
+			-- Set the mouse capture to the `Current' window.
+			-- Once the window has captured the mouse, all
+			-- mouse input is directed to this window, regardless
+			-- of whether the cursor is over that window. Only
+			-- one window can have the mouse capture at a time.
+		deferred
+		end
+
+	release_capture is
+			-- Release the mouse capture after a call
+			-- to `set_capture'.
+		deferred
+		end
+
+	top_level_window_imp: EV_WINDOW_IMP is
 			-- Top level window that contains the current widget.
 		deferred
 		end
 
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		deferred

@@ -3,9 +3,9 @@ echo -----------------------------------------------------------------
 echo ----------------- Preparing Temporary directory -----------------
 echo -----------------------------------------------------------------
 pushd
-mkdir %DELIVERY%\bench\wizards\new_projects\wizard\spec
-mkdir %DELIVERY%\bench\wizards\new_projects\wizard\spec\windows
-mkdir %DELIVERY%\bench\wizards\new_projects\wizard\spec\windows\bin
+mkdir %DELIVERY%\studio\wizards\new_projects\wizard\spec
+mkdir %DELIVERY%\studio\wizards\new_projects\wizard\spec\windows
+mkdir %DELIVERY%\studio\wizards\new_projects\wizard\spec\windows\bin
 echo Y > y.txt
 rd /S %TEMP%\wizard_wizard < y.txt
 del y.txt
@@ -18,12 +18,12 @@ call cvs up -Pd
 echo -----------------------------------------------------------------
 echo ----------------- Compilation -----------------------------------
 echo -----------------------------------------------------------------
-%ISE_EIFFEL%\bench\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\wizard_wizard.ace -project_path %TEMP%\wizard_wizard
+%ISE_EIFFEL%\studio\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\wizard_wizard.ace -project_path %TEMP%\wizard_wizard
 cdd %TEMP%\wizard_wizard
 copy %EIFFEL_SRC%\help\wizards\wizard.ico .
 copy %EIFFEL_SRC%\help\wizards\wizard.rc .
 cdd %TEMP%\wizard_wizard\EIFGEN\F_Code
-%ISE_EIFFEL%\bench\spec\windows\bin\finish_freezing -silent
+%ISE_EIFFEL%\studio\spec\windows\bin\finish_freezing -silent
 echo -----------------------------------------------------------------
 echo ------- Compress generated executable file ----------------------
 echo -----------------------------------------------------------------
@@ -31,7 +31,7 @@ upx wizard.exe
 echo -----------------------------------------------------------------
 echo ------- Copying generated executable file into Delivery ---------
 echo -----------------------------------------------------------------
-copy wizard.exe %DELIVERY%\bench\wizards\new_projects\wizard\spec\windows
+copy wizard.exe %DELIVERY%\studio\wizards\new_projects\wizard\spec\windows
 popd
 echo -----------------------------------------------------------------
 echo ------- Deleting temporary files --------------------------------

@@ -355,7 +355,7 @@ interface IEiffelCompletionInfo: IDispatch
 	HRESULT FlushCompletionFeatures ([in] BSTR bstrFileName);
 
 	[id (DISPID_EiffelComCompiler_InitializeFeature), helpstring ("Initialize a feature for completion without compiltation")]
-	HRESULT InitializeFeature ([in] BSTR bstrName, [in] VARIANT varArguments, [in] VARIANT varArgumentTypes, [in] BSTR bstrReturnType, [in] ULONG ulFeatureType, [in] BSTR bstrFileName);
+	HRESULT InitializeFeature ([in] BSTR bstrName, [in] VARIANT varArguments, [in] VARIANT varArgumentTypes, [in] BSTR bstrReturnType, [in] ULONG ulFeatureType, [in] BSTR bstrFileName, [in] ULONG ulRow);
 
 	[id (DISPID_EiffelComCompiler_SetupRenameTables), helpstring ("Initialize the tables used to resolve renaming for completion of inherited features in inheritance clause.")]
 	HRESULT SetupRenameTable ([in] VARIANT varSources, [in] VARIANT varTargets);

@@ -43,10 +43,6 @@ feature -- Access
 
 feature {EB_TOOL} -- Tool management
 
-	-- the call with `t' is mandatory because these features
-	-- may be called during `tool''s creation, before we can
-	-- use the `tool' attribute.
-
 	destroy_tool (t: like tool) is
 			-- destroy associated tool
 			-- implies Current destruction
@@ -59,7 +55,7 @@ feature {EB_TOOL} -- Tool management
 		end
 
 	show_tool (t: like tool) is
-			-- shows the tool.
+			-- shows `t'.
 			-- it implies showing Current
 		do
 			t.show_imp
@@ -93,16 +89,19 @@ feature {EB_TOOL} -- Tool management
 feature -- Resize
 
 	set_tool_size (t: like tool; new_width, new_height: INTEGER) is
+			-- set window size.
 		do
 			set_size (new_width, new_height)
 		end
 
 	set_tool_width (t: like tool; new_width: INTEGER) is
+			-- set window width.
 		do
 			set_width (new_width)
 		end
 
 	set_tool_height (t: like tool; new_height: INTEGER) is
+			-- set window height.
 		do
 			set_height (new_height)
 		end
@@ -141,8 +140,7 @@ feature {NONE} -- Implementation
 			-- Builds the standart windows items in `a_menu'
 		require
 			a_menu_exists: is_valid (a_menu)
-				-- If `a_menu' is Void, no error occurs, but
-				-- we require to put our items somewhere, for
+				-- We require to put our items somewhere, for
 				-- else they would be lost.
 		local
 			i: EV_MENU_ITEM

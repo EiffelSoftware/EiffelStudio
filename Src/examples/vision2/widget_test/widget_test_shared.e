@@ -9,10 +9,19 @@ class
 	
 inherit
 	INTERNAL
+		export
+			{NONE} all
+		end
 	
 	INSTALLATION_LOCATOR
+		export
+			{NONE} all
+		end
 	
 	EV_ANY_HANDLER
+		export
+			{NONE} all
+		end
 
 feature -- Access
 		

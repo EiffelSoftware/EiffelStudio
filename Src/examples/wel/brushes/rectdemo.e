@@ -39,7 +39,6 @@ feature -- Basic operations
 			!! brush.make_solid (color)
 			dc.select_brush (brush)
 			dc.rectangle (r_left, r_top, r_right, r_bottom)
-			dc.unselect_all
 			dc.release
 		end
 

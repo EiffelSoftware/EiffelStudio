@@ -140,7 +140,6 @@ feature {NONE} -- Implementation
 						z_min, z_max, ang, rap)
 				dec := dec + 1
 			end
-			win_dc.unselect_all
 			win_dc.release
 			ready := True
 		end

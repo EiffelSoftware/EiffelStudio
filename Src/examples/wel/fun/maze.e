@@ -72,7 +72,6 @@ feature {NONE} -- implementation
 					end
 				end
 			end
-			dc.unselect_pen
 			dc.release
 			destroy
 	end

@@ -1,0 +1,73 @@
+indexing
+	description:
+		"Information about proxies"
+
+	status:	"See notice at end of class"
+	author: "Patrick Schoenbach"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class 
+	PROXY_INFORMATION
+
+create
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (h: STRING; p: INTEGER) is
+			-- Create proxy information for host `h' and port `p'.
+		require
+			host_name_not_empty: h /= Void and then not h.is_empty
+			port_number_non_negative: p >= 0
+		do
+			host_name := h
+			port := p
+		ensure
+			host_name_set: host = h
+			port_set: port = p
+		end
+
+feature -- Access
+
+	host_name: STRING
+			-- Name of proxy host
+
+	port: INTEGER
+			-- Port of proxy
+
+feature -- Status setting
+
+	set_host (h: STRING) is
+			-- Set host name to `h'.
+		require
+			host_name_not_empty: h /= Void and then not h.is_empty
+		do
+			host_name := h
+		ensure
+			host_name_set: host_name = h
+		end
+			
+invariant
+
+	host_name_not_empty: host_name /= Void and then not host_name.is_empty
+	port_non_negative: port >= 0
+
+end -- class PROXY_INFORMATION
+
+--|----------------------------------------------------------------
+--| EiffelNet: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

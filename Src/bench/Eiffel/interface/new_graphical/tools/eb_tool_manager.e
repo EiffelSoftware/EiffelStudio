@@ -67,6 +67,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			new_split_position: INTEGER
 			max_split_position: INTEGER
 			min_split_position: INTEGER
+			stb: EV_STATUS_BAR
 		do
 			-- Build widgets -------------------------------------------
 
@@ -95,18 +96,17 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			panel.enable_flat_separator
 			left_panel.widget.resize_actions.extend (~on_size)
 
+				-- Create the status bar.
+			create status_bar.make
+			add_recyclable (status_bar)
+
 				-- Build all tools that can take place in this window.
 			init_tools_list
 			build_tools
 
 			-- Build the layout -------------------------------------------
 
-				-- Add an empty cell for space.
-			create cell
-			cell.set_minimum_height (1)
-			container.extend (cell)
-			container.disable_item_expand (cell)
-				-- And finally the content of the window (left bar + right cell).
+				-- Add the content of the window (left bar + right cell).
 			container.extend (panel)
 
 			new_split_position := window_preferences.left_panel_width
@@ -114,6 +114,17 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			max_split_position := panel.maximum_split_position
 			splitter_position := new_split_position
 --			panel.set_split_position (splitter_position.max (min_split_position).min (max_split_position))
+
+				-- Add a cell for spacing (we cannot use padding: there are toolbars coming).
+			create cell
+			cell.set_minimum_height (2)
+			container.extend (cell)
+			container.disable_item_expand (cell)
+
+				-- And the status bar.
+			stb := status_bar.widget
+			container.extend (stb)
+			container.disable_item_expand (stb)
 		end
 
 feature {NONE} -- Initialization
@@ -321,6 +332,9 @@ feature -- Access
 			-- Tools under management that can be put on the right, below
 			-- the editor.
 			
+	status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
+			-- Status bar.
+
 feature -- Status setting
 
 	left_tools_are_visible: BOOLEAN is

@@ -391,31 +391,40 @@ feature {NONE} -- Implementation
 			debugger_manager.launch_stone (st)
 		end
 
-	element_to_row (elem: CALL_STACK_ELEMENT; level: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
+	element_to_row (elem: CALL_STACK_ELEMENT; level: INTEGER): EB_MULTI_COLUMN_LIST_ROW is
 			-- Display information about associated routine.
 		local
 			c: CLASS_C
 			dc, oc: CLASS_C
+			l_tooltip: STRING
 		do
 			create Result
 			c := elem.dynamic_class
 				-- Print object address
 			if c /= Void then
+				create l_tooltip.make (10)
 				if elem.is_melted then
 					Result.extend (elem.routine_name + "*")
+					l_tooltip.append_string ("." + elem.routine_name + "*")
 				else
 					Result.extend (elem.routine_name)
+					l_tooltip.append_string (elem.routine_name)
 				end
 				dc := elem.dynamic_class
+				l_tooltip.prepend_string ("{" + dc.name_in_upper + "}")
 				Result.extend (dc.name_in_upper)
 --				Result.extend (elem.break_index.out)
 --				Result.extend (elem.object_address)
 				oc := elem.origin_class
 				if not oc.is_equal (dc) then
+					l_tooltip.prepend_string (" (from " + oc.name_in_upper + ")")
 					Result.extend (oc.name_in_upper)
 				else
 					Result.extend (Interface_names.l_Same_class_name)
 				end
+
+				Result.set_tooltip (elem.level_in_stack.out + ": " + l_tooltip)
+
 				Result.set_pebble_function (agent pebble_from_x_y (?, ?, level))
 				Result.set_accept_cursor (Cursors.cur_Setstop)
 				Result.set_data (level)

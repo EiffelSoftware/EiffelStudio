@@ -11,6 +11,7 @@ default
     line_generation (no)
     profile (no)
     trace (no)
+	override_cluster ("override")
     il_verifiable (yes)
     cls_compliant (yes)
     dotnet_naming_convention (no)
@@ -24,6 +25,8 @@ default
 
 
 cluster
+	override:		"$EIFFEL_SRC\Eiffel\override"
+
     all compiler_tests:     "$EIFFEL_SRC\com_compiler\compiler_tests"
         exclude
             "CVS"; 

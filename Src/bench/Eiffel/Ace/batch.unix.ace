@@ -15,8 +15,10 @@ default
 	dead_code_removal (yes)
 	inlining (yes)
 	inlining_size ("0")
+	override_cluster ("override")
 
 cluster
+	override:		"$EIFFEL_SRC\Eiffel\override"
 
 	all base:		"$EIFFEL_SRC/library/base"
 		exclude

@@ -62,6 +62,7 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
+	override_cluster ("override")
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
@@ -76,6 +77,8 @@ default
 
 
 cluster
+	override:		"$EIFFEL_SRC\Eiffel\override"
+
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "CVS"; 

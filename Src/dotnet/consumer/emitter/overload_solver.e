@@ -109,7 +109,7 @@ feature -- Basic Operations
 					method := method_list.item
 					same_param_count := same_param_count and method.arguments.count = param_count
 					l_dotnet_name := method.dotnet_name
-					if l_dotnet_name.substring_index ("get_", 1) = 1 then
+					if method.is_get_property and then l_dotnet_name.substring_index ("get_", 1) = 1 then
 						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
 					end
 					from
@@ -130,7 +130,7 @@ feature -- Basic Operations
 				end
 				if same_param_count then
 					l_dotnet_name := method.dotnet_name
-					if l_dotnet_name.substring_index ("get_", 1) = 1 then
+					if method.is_get_property and then l_dotnet_name.substring_index ("get_", 1) = 1 then
 						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
 					end
 					from
@@ -147,7 +147,7 @@ feature -- Basic Operations
 					first_method.set_eiffel_name (unique_feature_name (name))
 				else
 					l_dotnet_name := first_method.dotnet_name
-					if l_dotnet_name.substring_index ("get_", 1) = 1 then
+					if first_method.is_get_property and then l_dotnet_name.substring_index ("get_", 1) = 1 then
 						l_dotnet_name.keep_tail (l_dotnet_name.count - 4)
 					end
 					first_method.set_eiffel_name (unique_feature_name (l_dotnet_name))

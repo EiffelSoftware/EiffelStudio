@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 					some_element_counts.count = a_dimension_count and
 					(a_dimension_count > 0 implies some_element_counts.lower = 1) and then
 					are_element_counts_valid (some_element_counts)
-			valid_array_size: a.count = total_count (some_element_counts)
+			valid_array_size: a.count >= total_count (some_element_counts)
 		do
 			make (a_dimension_count, some_lower_indices, some_element_counts)
 			area := a.area

@@ -231,7 +231,7 @@ feature {NONE} -- implementation
 				if a_has_focus then
 					rad_but ?= Current
 					if rad_but = Void then
-						-- We do want radio buttons to affect current push button behavior
+						-- We do not want radio buttons to affect current push button behavior
 						top_level_dialog_imp.set_current_push_button (interface)
 					end
 				elseif top_level_dialog_imp.internal_current_push_button = interface  then

@@ -3977,8 +3977,7 @@ feature -- Access
 	name_in_upper: STRING is
 			-- Class name in upper case
 		do
-			Result := clone (name)
-			Result.to_upper
+			Result := name.as_upper
 		ensure
 			name_in_upper_not_void: Result /= Void
 		end

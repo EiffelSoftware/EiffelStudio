@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 				local_all_editors.forth
 			end
 		end
-		
+
 	update_editors_for_name_change (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR) is
 			-- For all editors referencing `vision2_object', update `name'.
 			-- If you wish to update all editors, pass `Void' as `calling_object_editor'.
@@ -79,9 +79,30 @@ feature {NONE} -- Implementation
 				end
 				local_all_editors.forth
 			end
-		end	
+		end
 		
-		
+	force_name_change_completion_on_all_editors is
+			-- Force all object editors that are editing an object
+			-- to update their object to use either the newly enterd name
+			-- if valid, or to revert to their old name if not valid.
+			-- We need this, so that when save is clicked, during an
+			-- renaming, we can take into account the current name.
+		local
+			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+		do
+			local_all_editors := all_editors
+			from
+				local_all_editors.start
+			until
+				local_all_editors.off
+			loop
+				if local_all_editors.item.has_object then
+					local_all_editors.item.end_name_change_on_object
+				end
+				local_all_editors.forth
+			end
+		end
+
 	new_object_editor_empty is
 			-- Generate a new empty object editor.
 		local

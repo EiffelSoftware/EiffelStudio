@@ -32,16 +32,15 @@ feature {NONE} -- implementation
 	insert_i_th (v: like item; pos: INTEGER) is
 		local
 			an_item_imp: EV_ITEM_IMP
-			a_curs: CURSOR
+			an_index: INTEGER
 			sep_imp: EV_MENU_SEPARATOR_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
-			menu_imp: EV_MENU_IMP
 			chk_imp: EV_CHECK_MENU_ITEM_IMP
 			rgroup: POINTER
 			radio_item_pointer: POINTER
 		do
 			an_item_imp ?= v.implementation
-			a_curs := interface.cursor
+			an_index := index
 			interface.go_i_th (pos)
 			insert_menu_item (an_item_imp, pos)
 			sep_imp ?= an_item_imp
@@ -60,15 +59,17 @@ feature {NONE} -- implementation
 							if rgroup /= Default_pointer then
 								C.set_gtk_radio_menu_item_struct_group (radio_imp.c_object, Default_pointer)
 								rgroup := C.g_slist_remove (rgroup, radio_imp.c_object)
+								rgroup := Default_pointer
 							end
 							rgroup := C.g_slist_prepend (rgroup,  radio_imp.c_object)
 							C.gtk_radio_menu_item_set_group (radio_imp.c_object, rgroup)
+							sep_imp.set_radio_group (radio_imp.radio_group)
 						else
 							-- Disable select of item
 							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 							-- Prevent action sequence from being fired
 						end
-						radio_imp.set_radio_group (rgroup)
+						--radio_imp.set_radio_group (rgroup)
 						-- Set radio group for radio menu item
 					end
 					interface.forth
@@ -78,53 +79,33 @@ feature {NONE} -- implementation
 					sep_imp.set_radio_group (rgroup)
 				end
 			else
-				menu_imp ?= an_item_imp
-				if menu_imp /= Void then
-				-- If sub menu then add sub menu
-					--insert_menu_item (an_item_imp, pos)
-				else
-				-- Add menu item
-					--insert_menu_item (an_item_imp, pos)
-
-					radio_imp ?= an_item_imp
-					if radio_imp /= Void then
-						-- Attach it to a radio group
-						sep_imp := separator_imp_by_index (pos)
-						if sep_imp /= Void then
-							-- It follows a separator.
-							if sep_imp.radio_group = Default_pointer then
-								-- Create radio group for separator
-								-- Created from radio menu item
-								sep_imp.set_radio_group (radio_imp.radio_group)
-								radio_imp.enable_select
-							else
-								rgroup := C.g_slist_prepend (sep_imp.radio_group,  radio_imp.c_object)
-								C.set_gtk_radio_menu_item_struct_group (radio_imp.c_object, rgroup)
-								from
-									rgroup := sep_imp.radio_group
-								until
-									rgroup = Default_pointer
-								loop
-									radio_item_pointer := C.gslist_struct_data (rgroup)
-									C.set_gtk_radio_menu_item_struct_group (
-										radio_item_pointer,
-										radio_imp.radio_group
-									)
-									rgroup := C.gslist_struct_next (rgroup)
-								end
-								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
-								sep_imp.set_radio_group (radio_imp.radio_group)
-							end
+				radio_imp ?= an_item_imp
+				if radio_imp /= Void then
+					-- Attach it to a radio group
+					sep_imp := separator_imp_by_index (pos)
+					if sep_imp /= Void then
+						-- It follows a separator.
+						if sep_imp.radio_group = Default_pointer then
+							-- Create radio group for separator
+							-- Created from radio menu item
+							sep_imp.set_radio_group (radio_imp.radio_group)
+							radio_imp.enable_select
 						else
+							rgroup := C.g_slist_prepend (sep_imp.radio_group,  radio_imp.c_object)
+							C.set_gtk_radio_menu_item_struct_group (radio_imp.c_object, rgroup)
+							set_gslist_group (sep_imp.radio_group, rgroup)
+							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+							sep_imp.set_radio_group (radio_imp.radio_group)
+						end
+					else
 							-- It is above any separator.
-							if radio_group = Default_pointer then
-								-- create a radio_group pointer for current
-								-- First item inserted in group is selected.
-								radio_group := radio_imp.radio_group
-							else
-								radio_imp.set_radio_group (radio_group)
-								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
-							end
+						if radio_group = Default_pointer then
+							-- create a radio_group pointer for current
+							-- First item inserted in group is selected.
+							radio_group := radio_imp.radio_group
+						else
+							radio_imp.set_radio_group (radio_group)
+							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 					end
 				end
@@ -141,8 +122,25 @@ feature {NONE} -- implementation
 					end
 				end
 			end
+			interface.go_i_th (an_index)
+		end
 
-			interface.go_to (a_curs)
+	set_gslist_group (a_gslist, a_group: POINTER) is
+			-- Set the radio group of all elements in `a_gslist' to `a_group'.
+		local
+			item_pointer, rgroup: POINTER
+		do
+			from
+				rgroup := a_gslist
+			until
+				rgroup = Default_pointer
+			loop
+				item_pointer := C.gslist_struct_data (rgroup)
+				C.set_gtk_radio_menu_item_struct_group (
+					item_pointer, a_group
+				)
+				rgroup := C.gslist_struct_next (rgroup)
+			end
 		end
 
 	insert_menu_item (an_item_imp: EV_ITEM_IMP; pos: INTEGER) is
@@ -234,6 +232,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/27 17:14:33  king
+--| Abstracted gslist set data routine, corrected resetting of interface index
+--|
 --| Revision 1.15  2000/04/26 23:47:22  king
 --| Implemented radio_grouping after separator
 --|

@@ -66,6 +66,7 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+				set_control_options
 				enable_standard_notifications
 				if private_background_color /= Void then
 					set_background_color (private_background_color)
@@ -186,15 +187,24 @@ feature {NONE} -- Inapplicable
 
 feature {NONE} -- Implementation
 
+	set_control_options is
+			-- Set options to control.
+		local
+			options: INTEGER
+		do
+			options := Eco_autowordselection + Eco_autovscroll +
+				Eco_nohidesel + Eco_selectionbar + eco_savesel
+			if is_word_wrap_mode then
+				options := options + Eco_autohscroll
+			end
+			set_options (Ecoop_set, options)
+		end
+
 	default_style: INTEGER is
 			-- Default style for creation.
 		do
-			Result := Ws_child + Ws_visible + Ws_border
-				   + Es_nohidesel + Es_left + Es_disablenoscroll +
-				   + Es_multiline + Es_autovscroll + Es_savesel
-			if not is_word_wrap_mode then
-				Result := Result + Es_autohscroll
-			end
+			Result := Ws_child + Ws_visible + Ws_border +
+				Es_disablenoscroll + Es_multiline + Es_left
 			if is_read_only then
 				Result := Result + Es_readonly
 			end

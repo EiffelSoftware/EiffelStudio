@@ -526,24 +526,116 @@ feature -- Easy access
 		end
 		
 feature -- Function Evaluation
-
-	Internal_string_builder_name: STRING is "internal_string_builder"
-
-	Internal_make_from_cil_name: STRING is "make_from_cil";
+			
+	icd_class (ct: CLASS_TYPE): ICOR_DEBUG_CLASS is
+			-- ICorDebugClass for class type `ct'
+		local
+			l_mod_name: STRING
+			l_token: INTEGER
+			l_icd_module: ICOR_DEBUG_MODULE
+		do
+			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)					
+			l_token := il_debug_info_recorder.class_token (l_mod_name, ct)
+			l_icd_module := icor_debug_module (l_mod_name)
+			Result := l_icd_module.get_class_from_token (l_token)
+		end
+		
+	icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION is
+			-- ICorDebugClass for `a_class_c'.`a_f_name'
+		local
+			l_mod_name: STRING
+			l_icd_module: ICOR_DEBUG_MODULE
+			l_feat_ctor : FEATURE_I
+			l_feat_ctor_tok: INTEGER
+			l_class_c: CLASS_C			
+		do
+			l_class_c := ct.associated_class
+			l_feat_ctor := l_class_c.feature_named (a_f_name)
+			l_feat_ctor_tok := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_ctor)
+			
+			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)
+			l_icd_module := icor_debug_module (l_mod_name)
+			Result := l_icd_module.get_function_from_token (l_feat_ctor_tok)
+		end		
 	
 	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for STRING
 		local
 			ct: CLASS_TYPE
-			l_mod_name: STRING
-			l_token: INTEGER
-			l_icd_module: ICOR_DEBUG_MODULE
 		do
 			ct := Eiffel_system.String_class.compiled_class.types.first
-			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)					
-			l_token := il_debug_info_recorder.class_token (l_mod_name, ct)
-			l_icd_module := icor_debug_module (l_mod_name)
-			Result := l_icd_module.get_class_from_token (l_token)
+			Result := icd_class (ct)
+		end
+		
+	integer_32_ref_icd_class: ICOR_DEBUG_CLASS is
+			-- ICorDebugClass for INTEGER_REF
+		local
+			ct: CLASS_TYPE
+		do
+			ct := Eiffel_system.system.integer_32_ref_class.compiled_class.types.first
+			Result := icd_class (ct)
+		end	
+		
+	integer_32_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for INTEGER_REF.set_item
+		local
+			l_class : CLASS_C
+		do
+			l_class := Eiffel_system.system.integer_32_ref_class.compiled_class
+			Result := icd_function_by_name (l_class.types.first, "set_item")
+		ensure
+			Result /= Void
+		end	
+
+	boolean_ref_icd_class: ICOR_DEBUG_CLASS is
+			-- ICorDebugClass for BOOLEAN_REF
+		local
+			ct: CLASS_TYPE
+		do
+			ct := Eiffel_system.system.boolean_ref_class.compiled_class.types.first
+			Result := icd_class (ct)
+		end	
+		
+	boolean_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for BOOLEAN_REF.set_item
+		local
+			l_class : CLASS_C
+		do
+			l_class := Eiffel_system.system.boolean_ref_class.compiled_class
+			Result := icd_function_by_name (l_class.types.first, "set_item")
+		ensure
+			Result /= Void
+		end	
+		
+	character_ref_icd_class: ICOR_DEBUG_CLASS is
+			-- ICorDebugClass for character_ref
+		local
+			ct: CLASS_TYPE
+		do
+			ct := Eiffel_system.system.character_ref_class.compiled_class.types.first
+			Result := icd_class (ct)
+		end	
+		
+	character_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for character_ref.set_item
+		local
+			l_class : CLASS_C
+		do
+			l_class := Eiffel_system.system.character_ref_class.compiled_class
+			Result := icd_function_by_name (l_class.types.first, "set_item")
+		ensure
+			Result /= Void
+		end			
+		
+	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for STRING.make_from_cil
+		local
+			l_class : CLASS_C
+		do
+			l_class := Eiffel_system.String_class.compiled_class
+			Result := icd_function_by_name (l_class.types.first, "make_from_cil")		
+		ensure
+			Result /= Void
 		end
 		
 --| FIXME: JFIAT : we do not need to call the default .ctor ()
@@ -564,30 +656,8 @@ feature -- Function Evaluation
 --			Result := l_icd_module.get_function_from_token (l_feat_ctor_tok)
 --		ensure
 --			Result /= Void
---		end		
+--		end	
 
-	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for STRING.make_from_cil
-		local
-			l_string_class : CLASS_C
-			l_mod_name: STRING
-			l_icd_module: ICOR_DEBUG_MODULE
-			l_feat_ctor : FEATURE_I
-			l_feat_ctor_tok: INTEGER
-
-		do
-			l_string_class := Eiffel_system.String_class.compiled_class
-			
-			l_feat_ctor := l_string_class.feature_named (Internal_make_from_cil_name)
-			l_feat_ctor_tok := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_ctor)
-			
-			l_mod_name := il_debug_info_recorder.module_file_name_for_class (l_string_class.types.first)
-			l_icd_module := icor_debug_module (l_mod_name)
-			Result := l_icd_module.get_function_from_token (l_feat_ctor_tok)
-		ensure
-			Result /= Void
-		end		
-	
 	string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): STRING is
 		local
 			l_icd_value: ICOR_DEBUG_VALUE
@@ -602,7 +672,7 @@ feature -- Function Evaluation
 					--| Get STRING info from compilo
 				l_string_class := Eiffel_system.String_class.compiled_class
 					--| Get token to access `internal_string_builder'
-				l_feat_internal_string_builder := l_string_class.feature_named (Internal_string_builder_name)
+				l_feat_internal_string_builder := l_string_class.feature_named ("internal_string_builder")
 				l_feat_internal_string_builder_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_internal_string_builder)
 					--| Get `internal_string_builder' from `STRING' instance Value
 				l_icd_value := icd_string_instance.get_field_value (icd_string_instance.get_class, l_feat_internal_string_builder_token)

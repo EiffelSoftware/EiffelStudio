@@ -43,6 +43,8 @@ feature {NONE} -- Initialization
 			Result := eifnet_debugger.active_frame
 		end
 
+	error_occured: BOOLEAN
+
 feature -- Access
 
 	dotnet_evaluate_once_function (f: E_FEATURE): DUMP_VALUE is
@@ -86,8 +88,8 @@ feature -- Access
 			l_param_i: INTEGER
 			l_ctype: CLASS_TYPE
 			
-			error_occured: BOOLEAN
 		do
+			error_occured := False
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f)
 			
@@ -102,58 +104,97 @@ feature -- Access
 				l_icdv_obj := l_d_value.icd_referenced_value
 			else
 				l_icdv_obj := dvalue.value_dotnet
-			end
-			l_icd_frame := l_icdv_obj.associated_frame
-			if l_icd_frame = Void then
-					-- In case `associated_frame' is not set
-				l_icd_frame := icd_frame
-			end
-
-				--| Build the arguments for dotnet
-			if a_params /= Void then
-				create l_icdv_args.make (1, a_params.count + 1)
-				from
-					l_param_i := a_params.lower
-				until
-					l_param_i > a_params.upper or error_occured
-				loop
-					l_dumpvalue_param := a_params @ l_param_i
-					l_icdv_param := l_dumpvalue_param.value_dotnet
-					if l_icdv_param = Void then
-							--| This means this value has been created by eStudioDbg
-							--| We need to build the corresponding ICorDebugValue object.
-						if l_dumpvalue_param.is_type_integer then
-							l_icdv_param := eifnet_evaluator.new_i4_evaluation (icd_frame, l_dumpvalue_param.value_integer)
-						elseif l_dumpvalue_param.is_type_boolean then
-							l_icdv_param := eifnet_evaluator.new_boolean_evaluation (icd_frame, l_dumpvalue_param.value_boolean )
-						elseif l_dumpvalue_param.is_type_character then
-							l_icdv_param := eifnet_evaluator.new_char_evaluation (icd_frame, l_dumpvalue_param.value_character )
-						elseif l_dumpvalue_param.is_type_string then
-							l_icdv_param := eifnet_evaluator.new_eiffel_string_evaluation (icd_frame, l_dumpvalue_param.value_object )
-						end
-						error_occured := (eifnet_evaluator.last_call_success /= 0)
-					end
-					l_icdv_args.put (l_icdv_param, l_param_i + 1)
-						-- we'll set the first arg later
-					l_param_i := l_param_i + 1
+				if l_icdv_obj = Void then
+					l_icdv_obj := dump_value_to_icdv_ref (dvalue)
 				end
-			else
-				create l_icdv_args.make (1, 1)				
 			end
-			if not error_occured then
-				l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
+			if l_icdv_obj /= Void then
+				l_icd_frame := l_icdv_obj.associated_frame
+				if l_icd_frame = Void then
+						-- In case `associated_frame' is not set
+					l_icd_frame := icd_frame
+				end
 
-				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_function, l_icdv_args)
-				error_occured := (eifnet_evaluator.last_call_success /= 0)
-				
+					--| Build the arguments for dotnet
+				if a_params /= Void then
+					create l_icdv_args.make (1, a_params.count + 1)
+					from
+						l_param_i := a_params.lower
+					until
+						l_param_i > a_params.upper or error_occured
+					loop
+						l_dumpvalue_param := a_params @ l_param_i
+						l_icdv_param := l_dumpvalue_param.value_dotnet
+						if l_icdv_param = Void then
+								--| This means this value has been created by eStudioDbg
+								--| We need to build the corresponding ICorDebugValue object.
+							l_icdv_param := dump_value_to_icdv (l_dumpvalue_param)
+							error_occured := (eifnet_evaluator.last_call_success /= 0)
+						end
+						l_icdv_args.put (l_icdv_param, l_param_i + 1)
+							-- we'll set the first arg later
+						l_param_i := l_param_i + 1
+					end
+				else
+					create l_icdv_args.make (1, 1)				
+				end
 				if not error_occured then
-					l_adv := debug_value_from_icdv (l_result)
-					Result := l_adv.dump_value	
-				end			
+					l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
+
+					l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_function, l_icdv_args)
+					error_occured := (eifnet_evaluator.last_call_success /= 0)
+					
+					if not error_occured then
+						l_adv := debug_value_from_icdv (l_result)
+						Result := l_adv.dump_value	
+					end			
+				end
 			end
 		end
 
 feature {NONE} -- Implementation
+
+	dump_value_to_icdv (dmv: DUMP_VALUE): ICOR_DEBUG_VALUE is
+			-- DUMP_VALUE converted into ICOR_DEBUG_VALUE.
+		local
+		do
+			Result := dmv.value_dotnet
+			if Result = Void then
+					--| This means this value has been created by eStudioDbg
+					--| We need to build the corresponding ICorDebugValue object.
+				if dmv.is_type_integer then
+					Result := eifnet_evaluator.new_i4_evaluation (icd_frame, dmv.value_integer)
+				elseif dmv.is_type_boolean then
+					Result := eifnet_evaluator.new_boolean_evaluation (icd_frame, dmv.value_boolean )
+				elseif dmv.is_type_character then
+					Result := eifnet_evaluator.new_char_evaluation (icd_frame, dmv.value_character )
+				elseif dmv.is_type_string then
+					Result := eifnet_evaluator.new_eiffel_string_evaluation (icd_frame, dmv.value_object )
+				end
+				error_occured := (eifnet_evaluator.last_call_success /= 0)
+			end
+		end
+		
+	dump_value_to_icdv_ref (dmv: DUMP_VALUE): ICOR_DEBUG_VALUE is
+			-- DUMP_VALUE converted into ICOR_DEBUG_VALUE.
+		local
+		do
+			Result := dmv.value_dotnet
+			if Result = Void then
+					--| This means this value has been created by eStudioDbg
+					--| We need to build the corresponding ICorDebugValue object.
+				if dmv.is_type_integer then
+					Result := eifnet_evaluator.new_i4_ref_evaluation (icd_frame, dmv.value_integer)
+				elseif dmv.is_type_boolean then
+					Result := eifnet_evaluator.new_boolean_ref_evaluation (icd_frame, dmv.value_boolean )
+				elseif dmv.is_type_character then
+					Result := eifnet_evaluator.new_character_ref_evaluation (icd_frame, dmv.value_character )
+				elseif dmv.is_type_string then
+					Result := eifnet_evaluator.new_eiffel_string_evaluation (icd_frame, dmv.value_object )
+				end
+				error_occured := (eifnet_evaluator.last_call_success /= 0)
+			end
+		end	
 
 	adapted_class_type (ctype: CLASS_TYPE; f: FEATURE_I): CLASS_TYPE is
 			-- Adapated class_type receiving the call of `f'.

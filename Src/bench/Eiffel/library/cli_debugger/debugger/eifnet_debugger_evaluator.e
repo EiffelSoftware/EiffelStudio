@@ -59,15 +59,15 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 			Result := complete_function_evaluation
 		end
 
-	methode_evaluation (a_frame: ICOR_DEBUG_FRAME; a_meth: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
-			-- Methode evaluation result for `a_func' on `a_icd'
+	method_evaluation (a_frame: ICOR_DEBUG_FRAME; a_meth: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
+			-- Method evaluation result for `a_func' on `a_icd'
 		require
 			args_not_void: a_args /= Void
 			meth_not_void: a_meth /= Void
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.call_function (a_meth, a_args)
-			complete_methode_evaluation
+			complete_method_evaluation
 		end		
 		
 	new_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_string: STRING): ICOR_DEBUG_VALUE is
@@ -141,8 +141,8 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 				Result := l_gen_obj
 			end
 			end_evaluation
-		end	
-		
+		end
+
 	new_char_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with Character
 		require
@@ -173,7 +173,7 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 			end_evaluation
 		end	
 		
-feature {EIFNET_EXPORTER} -- String facilities
+feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 
 	new_eiffel_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: STRING): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with String
@@ -182,15 +182,89 @@ feature {EIFNET_EXPORTER} -- String facilities
 			l_str_icdv: ICOR_DEBUG_VALUE
 		do
 			l_str_icdv := new_string_evaluation (a_frame, a_val)
-			prepare_evaluation (a_frame)
-			last_icor_debug_eval.new_object_no_constructor (eiffel_string_icd_class)
---			last_icor_debug_eval.new_object (eiffel_string_ctor, <<>>)			
-			Result := complete_function_evaluation
-			
-			methode_evaluation (a_frame, eiffel_string_make_from_cil_constructor, <<Result, l_str_icdv>>)			
+			Result := icdv_string_from_icdv_system_string (a_frame, l_str_icdv)
+		end
+		
+		
+	new_i4_ref_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with i4 _REF
+		do
+			Result := new_i4_evaluation (a_frame, a_val)
+			Result := icdv_integer_ref_from_icdv_integer (a_frame, Result)
 		end	
 
+	new_boolean_ref_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with boolean _REF
+		do
+			Result := new_boolean_evaluation (a_frame, a_val)
+			Result := icdv_boolean_ref_from_icdv_boolean (a_frame, Result)
+		end	
 
+	new_character_ref_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with char _REF
+		do
+			Result := new_char_evaluation (a_frame, a_val)
+			Result := icdv_character_ref_from_icdv_character (a_frame, Result)
+		end			
+		
+feature {NONE} -- Class construction facilities
+
+	icdv_string_from_icdv_system_string (a_frame: ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object_no_constructor (eiffel_string_icd_class)
+			Result := complete_function_evaluation
+			
+			method_evaluation (a_frame, eiffel_string_make_from_cil_constructor, <<Result, a_sys_string>>)
+			Result.set_associated_frame (a_frame)
+		end	
+		
+	icdv_integer_ref_from_icdv_integer (a_frame: ICOR_DEBUG_FRAME; a_icdv_integer: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object_no_constructor (integer_32_ref_icd_class)
+			Result := complete_function_evaluation		
+			method_evaluation (a_frame, integer_32_ref_set_item_method, <<Result, a_icdv_integer>>)
+			Result.set_associated_frame (a_frame)
+		end	
+		
+	icdv_boolean_ref_from_icdv_boolean (a_frame: ICOR_DEBUG_FRAME; a_icdv_boolean: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object_no_constructor (boolean_ref_icd_class)
+			Result := complete_function_evaluation		
+			method_evaluation (a_frame, boolean_ref_set_item_method, <<Result, a_icdv_boolean>>)
+			Result.set_associated_frame (a_frame)
+		end		
+
+	icdv_character_ref_from_icdv_character (a_frame: ICOR_DEBUG_FRAME; a_icdv_character: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object_no_constructor (character_ref_icd_class)
+			Result := complete_function_evaluation		
+			method_evaluation (a_frame, character_ref_set_item_method, <<Result, a_icdv_character>>)
+			Result.set_associated_frame (a_frame)
+		end				
+
+	integer_32_ref_icd_class: ICOR_DEBUG_CLASS is
+		once
+			Result := eifnet_debugger.integer_32_ref_icd_class
+		ensure
+			Result /= Void
+		end
+	boolean_ref_icd_class: ICOR_DEBUG_CLASS is
+		once
+			Result := eifnet_debugger.boolean_ref_icd_class
+		ensure
+			Result /= Void
+		end
+	character_ref_icd_class: ICOR_DEBUG_CLASS is
+		once
+			Result := eifnet_debugger.character_ref_icd_class
+		ensure
+			Result /= Void
+		end
+						
 	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
 		once
 			Result := eifnet_debugger.eiffel_string_icd_class
@@ -198,12 +272,26 @@ feature {EIFNET_EXPORTER} -- String facilities
 			Result /= Void
 		end
 		
---	eiffel_string_ctor: ICOR_DEBUG_FUNCTION is
---		once
---			Result := eifnet_debugger.eiffel_string_ctor
---		ensure
---			Result /= Void
---		end
+	integer_32_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+		once
+			Result := eifnet_debugger.integer_32_ref_set_item_method
+		ensure
+			Result /= Void
+		end		
+		
+	boolean_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+		once
+			Result := eifnet_debugger.boolean_ref_set_item_method
+		ensure
+			Result /= Void
+		end	
+				
+	character_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+		once
+			Result := eifnet_debugger.character_ref_set_item_method
+		ensure
+			Result /= Void
+		end	
 		
 	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
 		once
@@ -211,7 +299,14 @@ feature {EIFNET_EXPORTER} -- String facilities
 		ensure
 			Result /= Void
 		end		
-		
+
+--	eiffel_string_ctor: ICOR_DEBUG_FUNCTION is
+--		once
+--			Result := eifnet_debugger.eiffel_string_ctor
+--		ensure
+--			Result /= Void
+--		end
+
 feature {NONE} -- Backup state
 
 	saved_last_managed_callback: INTEGER
@@ -275,7 +370,7 @@ feature {NONE}
 			restore_state_info			
 		end
 
-	complete_methode_evaluation is
+	complete_method_evaluation is
 		require
 			last_icor_debug_eval /= Void
 			last_app_status /= Void

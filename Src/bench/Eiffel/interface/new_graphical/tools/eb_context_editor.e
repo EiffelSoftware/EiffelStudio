@@ -378,7 +378,9 @@ feature -- Status setting
 	on_select is
 			-- Current became selected in notebook.
 		do
-			if area = Void then
+			if 
+				area = Void 
+			then
 				horizontal_box.wipe_out
 				update_excluded_class_figures
 				development_window.window.set_pointer_style (Default_pixmaps.Wait_cursor)
@@ -388,6 +390,10 @@ feature -- Status setting
 					create_cluster_view (cluster_stone.cluster_i)
 				end
 				development_window.window.set_pointer_style (Default_pixmaps.Standard_cursor)
+			elseif class_view /= Void and then class_view.cancelled then
+				set_stone (class_stone)
+			elseif cluster_view /= Void and then cluster_view.cancelled then
+				set_stone (cluster_stone)
 			end
 		end
 
@@ -897,7 +903,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Commands with global accelerators
 
 	undo_cmd: EB_UNDO_DIAGRAM_COMMAND
 	redo_cmd: EB_REDO_DIAGRAM_COMMAND
-
 
 feature {NONE} -- Implementation
 

@@ -26,7 +26,13 @@ feature -- Basic operations
 			dial: EB_CONTEXT_DEPTH_DIALOG
 			cancelled: BOOLEAN
 		do
-			if not cancelled then
+			if cancelled then
+				if d /= Void then
+					d.cancel
+				elseif cd /= Void then
+					cd.cancel
+				end
+			else
 				d ?= tool.class_view
 				if d = Void then
 					cd ?= tool.cluster_view

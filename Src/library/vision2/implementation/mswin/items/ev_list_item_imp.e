@@ -87,13 +87,6 @@ feature -- Status report
 
 	text: STRING
 
-	--destroyed: BOOLEAN is
-			-- Is current object destroyed ?
-			-- Yes if the item doesn't exist in the parent.
-	--	do
-	--		Result := False
-	--	end
-
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
@@ -140,6 +133,22 @@ feature -- Element change
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current.interface, clone (txt))
 			end
+		end
+
+feature {EV_LIST_IMP} -- Implementation.
+
+	relative_y: INTEGER is
+			-- `Result' is relative y coordinate in pixels to parent.
+		require
+			parent_not_void: parent_imp /= Void
+		local
+			list_imp: EV_LIST_IMP
+		do
+			list_imp ?= parent_imp
+			check
+				Parent_is_a_list_imp : list_imp /= Void
+			end
+			Result := (index - list_imp.top_index - 1) * list_imp.item_height
 		end
 
 feature -- Event : command association
@@ -215,6 +224,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/15 16:51:53  rogers
+--| Removed commented out destroyed;. Added relative_y which returns the relative coordinate of the item to its parent.
+--|
 --| Revision 1.31  2000/03/10 00:32:00  rogers
 --| Added set_capture and release_capture with a fixme and a check False so they compile. They need to be fixed.
 --|

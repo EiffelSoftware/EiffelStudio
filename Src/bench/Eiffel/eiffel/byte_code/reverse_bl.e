@@ -100,7 +100,6 @@ feature
 			-- Generate assignment
 		local
 			gen_type: GEN_TYPE_I
-			cr_info: CREATE_INFO
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -111,9 +110,7 @@ feature
 			source.generate;
 			generate_special (how);
 
-			cr_info := info
-
-			gen_type  ?= cr_info.type_to_create
+			gen_type  ?= info.type_to_create
 
 			if gen_type /= Void then
 				-- We need a new C block with new locals.
@@ -148,7 +145,7 @@ feature
 				buf.putstring ("RTRV(");
 
 				if gen_type = Void then
-					cr_info.generate_reverse (buf, context.final_mode)
+					info.generate_reverse (buf, context.final_mode)
 				else
 					buf.putstring ("typres");
 				end;

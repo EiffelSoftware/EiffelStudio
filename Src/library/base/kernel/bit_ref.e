@@ -134,7 +134,7 @@ feature -- Output
 	out: STRING is
 			-- Tagged printable representation.
 		do
-			Result := c_out($Current);
+			Result := c_out ($Current);
 		end;
 
 feature {NONE} -- Implementation

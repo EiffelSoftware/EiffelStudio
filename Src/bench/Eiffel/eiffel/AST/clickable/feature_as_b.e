@@ -23,17 +23,17 @@ inherit
 			type_check, byte_node, find_breakable, 
 			format, fill_calls_list, replicate
 		end;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
 	IDABLE
 		rename
 			id as body_id,
 			set_id as set_body_id
-		end;
-	COMPARABLE
-		undefine
-			is_equal
 		end
 
-feature -- Attributes
+feature -- Access
 
 	feature_names: EIFFEL_LIST_B [FEATURE_NAME_B];
 			-- Names of feature
@@ -42,6 +42,12 @@ feature -- Attributes
 			-- Feature body: this attribute will be compared during
 			-- second pass of the compiler in order to see if a feature
 			-- has change of body.
+
+	body_id: BODY_ID;
+			-- Body id
+
+	id: FEATURE_AS_ID
+			-- Id of the current instance used by the temporary AST server
 
 feature -- Initialization
  
@@ -52,7 +58,7 @@ feature -- Initialization
 			body ?= yacc_arg (1);
 			start_position := yacc_int_arg (0);
 			end_position := yacc_int_arg (1);
-			id := System.feature_counter.next;
+			id := System.feature_as_counter.next_id;
 			if body.is_unique then
 				set_unique_values
 			end;
@@ -85,6 +91,18 @@ feature -- Initialization
 									feature_names.item.internal_name)
 				feature_names.forth
 			end
+		end;
+
+	set_body_id (i: BODY_ID) is
+			-- Set `body_id' to `i'.
+		do
+			body_id := i
+		end;
+
+	set_id (i: like id) is
+			-- Set `id' to `i'.
+		do
+			id := i
 		end;
 
 feature -- Type check, byte code and dead code removal
@@ -208,7 +226,7 @@ feature -- Replication
 			new_feature_names: like feature_names;
 		do
 			Result := clone (Current);
-			Result.set_id (System.feature_counter.next);
+			Result.set_id (System.feature_as_counter.next_id);
 			!!new_feature_names.make (1);
 			new_feature_names.go_i_th (1);
 			new_feature_names.replace (ctxt.replicated_name);

@@ -187,7 +187,6 @@ feature
 		do
 				-- Generate the header "int foo(Current, args)"
 			type_i := real_type (result_type);
-			type_i.c_type.generate (generated_file);
 
 				-- Function's name
 			internal_name := body_id.feature_name
@@ -196,18 +195,18 @@ feature
 				-- Add entry in the log file
 			add_in_log (internal_name);
 
-				-- Generate function name
-			generated_file.putstring (internal_name);
-			generated_file.putchar ('(');
-			generate_arguments;
-			generated_file.putchar (')');
-			generated_file.new_line;
-				-- Now generate C declarations for arguments
-			generate_arg_declarations;
+				-- Generate function signature
+			generated_file.generate_function_signature
+				(type_i.c_type.c_string, internal_name, "",
+				 Context.extern_declaration_file, argument_names, argument_types)
+
 				-- Starting body of C routine
 			generated_file.putchar ('{');
 			generated_file.new_line;
 			generated_file.indent;
+
+			process_expanded;
+
 				-- Declaration of all the local entities, such as
 				-- Eiffel local variables, Result, temporary registers...
 			generate_execution_declarations;
@@ -918,7 +917,6 @@ feature
 					generated_file.new_line;
 				end;
 				rescue_clause.generate;
-				generate_rescue_cleanup;
 				generate_profile_stop;
 				generated_file.putstring ("/* NOTREACHED */");
 				generated_file.new_line;
@@ -1071,7 +1069,6 @@ feature
 			generate_trace_stop;
 
 				-- Generate profile macro (stop)
-			generate_rescue_cleanup;
 			generate_profile_stop;
 
 			if rescue_clause /= Void then
@@ -1079,23 +1076,6 @@ feature
 				generated_file.new_line;
 			end;
 		end;
-
-	generate_rescue_cleanup is
-			-- Clean up the trace and profiling stacks
-		do
-			if rescue_clause /= Void then
-				if context.workbench_mode or else Context.associated_class.trace_level.is_yes then
-						-- Trace clean-up
-					generated_file.putstring ("RTTS;");
-					generated_file.new_line;
-				end
-				if context.workbench_mode or else Context.associated_class.profile_level.is_yes then
-						-- Profiling clean-up
-					generated_file.putstring ("RTPS;");
-					generated_file.new_line;
-				end
-			end
-		end
 
 feature -- Byte code generation
 

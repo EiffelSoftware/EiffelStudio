@@ -225,6 +225,8 @@
 	<table name="AppSearch">
 		<col key="yes" def="s72">Property</col>
 		<col key="yes" def="s72">Signature_</col>
+		<row><td>IISROOTFOLDER</td><td>_IISROOTFOLDER</td></row>
+		<row><td>IIS_VERSION</td><td>_IIS_VERSION</td></row>
 	</table>
 
 	<table name="BBControl">
@@ -271,6 +273,7 @@
 		<row><td>NewBinary8</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\RemoveIco.ibd</td></row>
 		<row><td>NewBinary9</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\SetupIcon.ibd</td></row>
 		<row><td>SetAllUsers.dll</td><td/><td>&lt;ISProductFolder&gt;\redist\language independent\i386\SetAllUsers.dll</td></row>
+		<row><td>binIISHelper</td><td/><td>&lt;ISProductFolder&gt;\Support\IISHelper.dll</td></row>
 	</table>
 
 	<table name="BindImage">
@@ -339,6 +342,7 @@
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>ConfigFiles</td><td>{2ED01BD1-6839-4710-897F-1B10A9186D5F}</td><td>MSC</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>DummyComponent</td><td>{6B8C8ED1-F847-4CCC-A0B6-325621BA1028}</td><td>ASSEMBLIES1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>{89475541-DA56-46E9-9FE5-96A7B238985A}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.cachebrowser.</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td>{BF9CFB91-7B6E-4534-A568-E4CC867B2F98}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.codedom.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>{915427C4-92D6-4FF4-89FE-D2AAF2C0F81E}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.codedombase.d</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -347,21 +351,21 @@
 		<row><td>EiffelSoftware.Runtime.dll</td><td>{1CD0F554-593E-4D52-9876-F400E9DECADE}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.runtime.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.Runtime.dll2</td><td>{9014F087-9095-425A-8030-EE195C9E05B9}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.runtime.dll2</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ErrorsFiles</td><td>{0544EEE8-5304-42A2-BA27-1FE2C3CFF31D}</td><td>ERRORS</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>GACFiles</td><td>{0672F841-6B16-4D50-A204-72E08E98C32B}</td><td>INSTALLDIR</td><td>8</td><td/><td>eiffelsoftware.codedom.dll2</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISRegistryComponent</td><td>{8A20532F-1042-4189-8B27-EDE5A6C4F7BB}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Library</td><td>{2FF83337-CFBB-42AD-A02B-4EB5F9ADAF82}</td><td>LIBRARY</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Library.net</td><td>{57ADB5FB-4DEA-4930-874C-F5F9B0527840}</td><td>LIBRARY.NET</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ManagerIcons</td><td>{EC8CD219-472B-46A1-AE55-85501EDEAF1A}</td><td>ICONS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>SampleFiles</td><td>{47F190D1-FEBF-4AC5-9D39-7A3C5FE878F0}</td><td>SAMPLES</td><td>8</td><td/><td>default.aspx</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>SetupFiles</td><td>{AC557193-8CBA-4E68-89CB-5EB957A8CF73}</td><td>BIN</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ShortErrorsFiles</td><td>{2CEA6C37-BAF4-4075-B575-27D52BD0B13F}</td><td>SHORT</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>TemplatesFiles</td><td>{42D015D3-2E1E-4692-AF37-18B691E4EDD1}</td><td>TEMPLATES</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>VirtualDirComponent</td><td>{22F69C02-49EC-4DEB-A84E-BDC3BD72B5DD}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>XCACLS.vbs</td><td>{D2F55519-4FB0-4938-AC86-18A687878309}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>default.ecd</td><td>{3A2B6E74-0779-4285-9872-A12B0CDD1320}</td><td>CONFIGS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ecdpc.exe</td><td>{F3059586-0CEC-4F2C-87B8-3C454D8FF1BA}</td><td>BIN</td><td>8</td><td/><td>ecdpc.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ecdpman.exe</td><td>{EB06874D-5035-4268-8D9D-BA444A431128}</td><td>BIN1</td><td>8</td><td/><td>ecdpman.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>libEiffelSoftware.CodeDomBase.dll</td><td>{43CBC6C3-B5C4-48F1-A226-046F81FBC49A}</td><td>SystemFolder</td><td>8</td><td/><td>libeiffelsoftware.codedombas</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>libEiffelSoftware.CodeDomVision2.dll</td><td>{99C56C2A-8044-4BD0-B2D8-D11B9020F465}</td><td>SystemFolder</td><td>8</td><td/><td>libeiffelsoftware.codedomvis</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>silent_launcher.exe</td><td>{CB948C46-AA93-4179-98CE-EA2DC4E328E4}</td><td>BIN</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1017,8 +1021,10 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>BIN</td><td>silent_launcher.exe</td></row>
+		<row><td>ASSEMBLIES1</td><td>DummyComponent</td></row>
+		<row><td>BIN</td><td>SetupFiles</td></row>
 		<row><td>INSTALLDIR</td><td>ISRegistryComponent</td></row>
+		<row><td>INSTALLDIR</td><td>VirtualDirComponent</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1038,6 +1044,11 @@
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/></row>
 		<row><td>Uninstall</td><td>1090</td><td>Installer</td><td>-u "[INSTALLDIR]</td><td/></row>
+		<row><td>caCreateVRoots</td><td>1025</td><td>binIISHelper</td><td>CreateIISVRoots</td><td/></row>
+		<row><td>caExtractIISSuppFiles</td><td>1</td><td>binIISHelper</td><td>ExtractIISTables</td><td/></row>
+		<row><td>caIISCleanup</td><td>1</td><td>binIISHelper</td><td>CleanupVRoots</td><td/></row>
+		<row><td>caRemoveVRoots</td><td>1025</td><td>binIISHelper</td><td>RemoveIISVRoots</td><td/></row>
+		<row><td>caRlbackVRoots</td><td>1281</td><td>binIISHelper</td><td>RlBackRemoveIISVRoots</td><td/></row>
 		<row><td>setAllUsersProfile2K</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%ALLUSERSPROFILE]</td><td/></row>
 		<row><td>setUserProfileNT</td><td>51</td><td>USERPROFILE</td><td>[%USERPROFILE]</td><td/></row>
 	</table>
@@ -1098,9 +1109,9 @@
 		<col def="I4">ISAttributes</col>
 		<col def="S255">ISFolderName</col>
 		<row><td>ALLUSERSPROFILE</td><td>TARGETDIR</td><td>.:ALLUSE~1|All Users</td><td/><td>0</td><td/></row>
-		<row><td>ASP.NET_ENABLER</td><td>EIFFEL_SOFTWARE</td><td>ASP_NE~1|ASP.NET Enabler 2.0</td><td/><td>0</td><td/></row>
 		<row><td>ASP.NET_ENABLER_2.0</td><td>ProgramFilesFolder</td><td>ASP_NE~1|ASP.NET Enabler 2.0</td><td/><td>0</td><td/></row>
 		<row><td>ASSEMBLIES</td><td>INSTALLDIR</td><td>ASSEMB~1|Assemblies</td><td/><td>0</td><td/></row>
+		<row><td>ASSEMBLIES1</td><td>INSTALLDIR</td><td>ASSEMB~1|Assemblies</td><td/><td>0</td><td/></row>
 		<row><td>AdminToolsFolder</td><td>TARGETDIR</td><td>.:Admint~1|AdminTools</td><td/><td>0</td><td/></row>
 		<row><td>AppDataFolder</td><td>TARGETDIR</td><td>.:APPLIC~1|Application Data</td><td/><td>0</td><td/></row>
 		<row><td>BIN</td><td>WINDOWS1</td><td>bin</td><td/><td>0</td><td/></row>
@@ -1113,29 +1124,29 @@
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
-		<row><td>EIFFEL_SOFTWARE</td><td>ProgramFilesFolder</td><td>EIFFEL~1|Eiffel Software</td><td/><td>0</td><td/></row>
 		<row><td>ERRORS</td><td>HELP</td><td>errors</td><td/><td>0</td><td/></row>
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
 		<row><td>GlobalAssemblyCache</td><td>TARGETDIR</td><td>.:Global~1|GlobalAssemblyCache</td><td/><td>0</td><td/></row>
 		<row><td>HELP</td><td>STUDIO</td><td>help</td><td/><td>0</td><td/></row>
 		<row><td>ICONS</td><td>BIN1</td><td>icons</td><td/><td>0</td><td/></row>
+		<row><td>IISROOTFOLDER</td><td>TARGETDIR</td><td>.:IISRoo~1|IISRootFolder</td><td/><td>0</td><td/></row>
 		<row><td>INSTALLDIR</td><td>ASP.NET_ENABLER_2.0</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>ISCommonFilesFolder</td><td>CommonFilesFolder</td><td>Instal~1|InstallShield</td><td/><td>0</td><td/></row>
-		<row><td>ISMyCompanyDir</td><td>ProgramFilesFolder</td><td>MYCOMP~1|My Company Name</td><td/><td>0</td><td/></row>
-		<row><td>ISMyProductDir</td><td>ISMyCompanyDir</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>ISUpdateServiceFolder</td><td>ISCommonFilesFolder</td><td>UPDATE~1|UpdateService</td><td/><td>0</td><td/></row>
 		<row><td>LIBRARY</td><td>COMPILER</td><td>library</td><td/><td>0</td><td/></row>
 		<row><td>LIBRARY.NET</td><td>COMPILER</td><td>LIBRAR~1|library.net</td><td/><td>0</td><td/></row>
 		<row><td>LocalAppDataFolder</td><td>TARGETDIR</td><td>.:LocalA~1|LocalAppData</td><td/><td>0</td><td/></row>
 		<row><td>MSC</td><td>WINDOWS</td><td>msc</td><td/><td>0</td><td/></row>
-		<row><td>MY_PRODUCT_NAME</td><td>EIFFEL_SOFTWARE</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
+		<row><td>NEW_DIRECTORY1</td><td>TARGETDIR</td><td>NEW_DIRECTORY1</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFiles64Folder</td><td>TARGETDIR</td><td>.:Prog64~1|Program Files 64</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFilesFolder</td><td>TARGETDIR</td><td>.:PROGRA~1|program files</td><td/><td>0</td><td/></row>
 		<row><td>ProgramMenuFolder</td><td>TARGETDIR</td><td>.:Programs</td><td/><td>3</td><td/></row>
+		<row><td>SAMPLE</td><td>INSTALLDIR</td><td>Sample</td><td/><td>0</td><td/></row>
+		<row><td>SAMPLES</td><td>INSTALLDIR</td><td>Samples</td><td/><td>0</td><td/></row>
 		<row><td>SHORT</td><td>ERRORS</td><td>short</td><td/><td>0</td><td/></row>
 		<row><td>SPEC</td><td>STUDIO</td><td>spec</td><td/><td>0</td><td/></row>
 		<row><td>STUDIO</td><td>COMPILER</td><td>studio</td><td/><td>0</td><td/></row>
@@ -1154,8 +1165,8 @@
 		<row><td>WINDOWS1</td><td>SPEC</td><td>windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
-		<row><td>asp_1.net_asp.net_enabler</td><td>eiffel_2_eiffel_software</td><td>ASPNET~1.0|ASP.NET Enabler 2.0</td><td/><td>1</td><td/></row>
-		<row><td>eiffel_2_eiffel_software</td><td>ProgramMenuFolder</td><td>EIFFEL~2|Eiffel Software</td><td/><td>1</td><td/></row>
+		<row><td>_INSTALLDIR_</td><td>TARGETDIR</td><td>_INSTALLDIR_</td><td/><td>0</td><td/></row>
+		<row><td>_ProgramFilesFolder_</td><td>TARGETDIR</td><td>_ProgramFilesFolder_</td><td/><td>0</td><td/></row>
 	</table>
 
 	<table name="DrLocator">
@@ -1385,6 +1396,7 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
 		<row><td>NewFeature1</td><td>ConfigFiles</td></row>
+		<row><td>NewFeature1</td><td>DummyComponent</td></row>
 		<row><td>NewFeature1</td><td>EiffelSoftware.CacheBrowser.dll</td></row>
 		<row><td>NewFeature1</td><td>EiffelSoftware.CodeDom.dll</td></row>
 		<row><td>NewFeature1</td><td>EiffelSoftware.CodeDomBase.dll</td></row>
@@ -1393,21 +1405,21 @@
 		<row><td>NewFeature1</td><td>EiffelSoftware.Runtime.dll</td></row>
 		<row><td>NewFeature1</td><td>EiffelSoftware.Runtime.dll2</td></row>
 		<row><td>NewFeature1</td><td>ErrorsFiles</td></row>
-		<row><td>NewFeature1</td><td>GACFiles</td></row>
 		<row><td>NewFeature1</td><td>ISRegistryComponent</td></row>
 		<row><td>NewFeature1</td><td>Library</td></row>
 		<row><td>NewFeature1</td><td>Library.net</td></row>
 		<row><td>NewFeature1</td><td>ManagerIcons</td></row>
+		<row><td>NewFeature1</td><td>SampleFiles</td></row>
 		<row><td>NewFeature1</td><td>SetupFiles</td></row>
 		<row><td>NewFeature1</td><td>ShortErrorsFiles</td></row>
 		<row><td>NewFeature1</td><td>TemplatesFiles</td></row>
+		<row><td>NewFeature1</td><td>VirtualDirComponent</td></row>
 		<row><td>NewFeature1</td><td>XCACLS.vbs</td></row>
 		<row><td>NewFeature1</td><td>default.ecd</td></row>
 		<row><td>NewFeature1</td><td>ecdpc.exe</td></row>
 		<row><td>NewFeature1</td><td>ecdpman.exe</td></row>
 		<row><td>NewFeature1</td><td>libEiffelSoftware.CodeDomBase.dll</td></row>
 		<row><td>NewFeature1</td><td>libEiffelSoftware.CodeDomVision2.dll</td></row>
-		<row><td>NewFeature1</td><td>silent_launcher.exe</td></row>
 	</table>
 
 	<table name="File">
@@ -1428,21 +1440,19 @@
 		<row><td>comp_int</td><td>ErrorsFiles</td><td>COMP_INT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\COMP_INT</td><td>1</td><td/></row>
 		<row><td>comp_int1</td><td>ShortErrorsFiles</td><td>COMP_INT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\COMP_INT</td><td>1</td><td/></row>
 		<row><td>config.eif</td><td>ConfigFiles</td><td>config.eif</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\msc\config.eif</td><td>1</td><td/></row>
+		<row><td>default.aspx</td><td>SampleFiles</td><td>DEFAUL~1.ASP|default.aspx</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\default.aspx</td><td>1</td><td/></row>
+		<row><td>default.css1</td><td>SampleFiles</td><td>default.css</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\default.css</td><td>1</td><td/></row>
 		<row><td>default.ecd</td><td>default.ecd</td><td>default.ecd</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CONFIGS_FILES&gt;\default.ecd</td><td>1</td><td/></row>
 		<row><td>ecdpc.exe</td><td>ecdpc.exe</td><td>ecdpc.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\ecdpc.exe</td><td>1</td><td/></row>
 		<row><td>ecdpman.exe</td><td>ecdpman.exe</td><td>ecdpman.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\ecdpman.exe</td><td>1</td><td/></row>
 		<row><td>egc_dynlib.template</td><td>TemplatesFiles</td><td>EGC_DY~1.TEM|egc_dynlib.template</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\egc_dynlib.template</td><td>1</td><td/></row>
 		<row><td>eiffel.rc</td><td>ConfigFiles</td><td>eiffel.rc</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\msc\eiffel.rc</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.cachebrowser.</td><td>EiffelSoftware.CacheBrowser.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CacheBrowser.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CacheBrowser.dll</td><td>1</td><td/></row>
-		<row><td>eiffelsoftware.cachebrowser.1</td><td>GACFiles</td><td>EIFFEL~1.DLL|EiffelSoftware.CacheBrowser.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CacheBrowser.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedom.dll</td><td>EiffelSoftware.CodeDom.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDom.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDom.dll</td><td>1</td><td/></row>
-		<row><td>eiffelsoftware.codedom.dll2</td><td>GACFiles</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDom.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDom.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedombase.d</td><td>EiffelSoftware.CodeDomBase.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
-		<row><td>eiffelsoftware.codedombase.d2</td><td>GACFiles</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedomvision</td><td>EiffelSoftware.CodeDomVision2.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomVision2.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomVision2.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.metadataconsu</td><td>EiffelSoftware.MetadataConsumer.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.MetadataConsumer.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\EiffelSoftware.MetadataConsumer.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.runtime.dll</td><td>EiffelSoftware.Runtime.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
-		<row><td>eiffelsoftware.runtime.dll1</td><td>GACFiles</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.runtime.dll2</td><td>EiffelSoftware.Runtime.dll2</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
 		<row><td>emain.separate_template</td><td>TemplatesFiles</td><td>EMAIN~1.SEP|emain.separate_template</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\emain.separate_template</td><td>1</td><td/></row>
 		<row><td>emain.template</td><td>TemplatesFiles</td><td>EMAIN~1.TEM|emain.template</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\emain.template</td><td>1</td><td/></row>
@@ -1466,8 +1476,6 @@
 		<row><td>obsolete_call</td><td>ShortErrorsFiles</td><td>OBSOLE~1|Obsolete_call</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\Obsolete_call</td><td>1</td><td/></row>
 		<row><td>re_int</td><td>ErrorsFiles</td><td>RE_INT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\RE_INT</td><td>1</td><td/></row>
 		<row><td>re_int1</td><td>ShortErrorsFiles</td><td>RE_INT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\RE_INT</td><td>1</td><td/></row>
-		<row><td>setup.ace</td><td>SetupFiles</td><td>setup.ace</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\setup.ace</td><td>1</td><td/></row>
-		<row><td>setup.e</td><td>SetupFiles</td><td>setup.e</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\setup.e</td><td>1</td><td/></row>
 		<row><td>tuple_warning</td><td>ShortErrorsFiles</td><td>TUPLE_~1|TUPLE_WARNING</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\TUPLE_WARNING</td><td>1</td><td/></row>
 		<row><td>unused_local_warning</td><td>ShortErrorsFiles</td><td>UNUSED~1|Unused_local_warning</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\Unused_local_warning</td><td>1</td><td/></row>
 		<row><td>v9cd</td><td>ShortErrorsFiles</td><td>V9CD</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9CD</td><td>1</td><td/></row>
@@ -1953,6 +1961,7 @@
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
 		<row><td>ConfigFiles</td><td/><td/><td>_CBB31C0A_8842_4216_A91A_52081B052465_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>DummyComponent</td><td/><td/><td>_B23E1747_042E_4A49_B1C0_7D305B41CDD3_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.CacheBrowser.dll</td><td/><td/><td>_593C42B2_0C3C_428F_8ADD_FF1CF472A4A4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td/><td/><td>_37E40E34_1BB8_401A_A005_A6EBD9E3D36C_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td/><td/><td>_A99CDE54_573B_4691_9C5C_EC20A45C1120_FILTER</td><td/><td/><td/><td/></row>
@@ -1961,21 +1970,21 @@
 		<row><td>EiffelSoftware.Runtime.dll</td><td/><td/><td>_373BA514_E0C1_420A_8B2B_059EFB2A0E28_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.Runtime.dll2</td><td/><td/><td>_56841C77_E732_4D02_8A10_CB010D1FB6D0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ErrorsFiles</td><td/><td/><td>_5B89FD1D_4327_4452_BC52_D6B67DF31AF2_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>GACFiles</td><td/><td/><td>_78A2A066_4F4E_44C7_A69D_2D66AF9BC251_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISRegistryComponent</td><td/><td/><td>_6A2F246E_A0FE_4DAA_8C6F_5F73D3BE7814_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Library</td><td/><td/><td>_48605897_74D3_427B_A56C_853F29E3ED8D_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Library.net</td><td/><td/><td>_987910B4_2155_4C29_BF0C_A9F860C8429A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ManagerIcons</td><td/><td/><td>_79901BC4_ECAD_4566_AB5D_09B4BF87DDC6_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>SampleFiles</td><td/><td/><td>_84F17BC6_3FB8_43AF_971A_B4429CAD54EC_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>SetupFiles</td><td/><td/><td>_3487A26F_1278_4DC3_8A5B_97DB297443FE_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ShortErrorsFiles</td><td/><td/><td>_70F0C68F_6781_405F_AC32_5AF134637CC4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>TemplatesFiles</td><td/><td/><td>_E62DDDB2_D7B5_496B_B0D0_84391E575532_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>VirtualDirComponent</td><td/><td/><td>_65646C1D_7DB6_4ABE_9F78_79CC8445FA24_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>XCACLS.vbs</td><td/><td/><td>_CB6E6C16_ACC9_4CB6_A039_470F713624C9_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>default.ecd</td><td/><td/><td>_399F27E3_BA6C_4588_9E4F_F09FCC1B7889_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ecdpc.exe</td><td/><td/><td>_B8BF0CC0_F203_4990_B27D_2557A6ADCBFA_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ecdpman.exe</td><td/><td/><td>_E1C8A6AE_4246_4705_A09F_C2E204A91C9F_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>libEiffelSoftware.CodeDomBase.dll</td><td/><td/><td>_B641AF3E_543C_4F0D_AB76_97D604C281CB_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>libEiffelSoftware.CodeDomVision2.dll</td><td/><td/><td>_C6D55D8A_1F42_45AB_817C_B0557C2EED67_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>silent_launcher.exe</td><td/><td/><td>_6468CFDC_E684_4AD1_8A76_7F6E03365FF7_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISDLLWrapper">
@@ -2018,6 +2027,7 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s255">ISMergeModule_</col>
 		<col key="yes" def="i2">Language_</col>
+		<row><td>NewFeature1</td><td>dotnet.298AA83F_2BD4_43D0_9EDB_25F84FE39367</td><td>0</td></row>
 	</table>
 
 	<table name="ISIISCommon">
@@ -2034,6 +2044,8 @@
 		<col def="S0">CustomErrors</col>
 		<col def="L255">AppName</col>
 		<col def="S50">SSLCert</col>
+		<row><td>ISIISCommonVRoot</td><td>ISIISCommonWebsite1</td><td>##ID_STRING12##</td><td>SAMPLES</td><td>28113</td><td>##ID_STRING13##</td><td>20</td><td>90</td><td/><td/><td/><td>##ID_STRING14##</td><td/></row>
+		<row><td>ISIISCommonWebsite1</td><td/><td>DefaultWebSite</td><td>IISROOTFOLDER</td><td>28113</td><td/><td>20</td><td>90</td><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISIISMetaData">
@@ -2127,6 +2139,7 @@
 		<col def="s255">Name</col>
 		<col def="S255">Destination</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>dotnet.298AA83F_2BD4_43D0_9EDB_25F84FE39367</td><td>0</td><td>ASP.NET Enabler 2.0</td><td>[BIN]</td><td/></row>
 	</table>
 
 	<table name="ISMergeModuleCfgValues">
@@ -3017,6 +3030,11 @@
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>ID_STRING1</td><td>1033</td><td>http://www.eiffel.com</td><td>0</td><td/><td>1830329835</td></row>
+		<row><td>ID_STRING10</td><td>1033</td><td>DisplayName1</td><td>0</td><td/><td>2098731886</td></row>
+		<row><td>ID_STRING11</td><td>1033</td><td>DisplayName2</td><td>0</td><td/><td>2098781038</td></row>
+		<row><td>ID_STRING12</td><td>1033</td><td>EiffelSample</td><td>0</td><td/><td>2098748398</td></row>
+		<row><td>ID_STRING13</td><td>1033</td><td>Default.aspx</td><td>0</td><td/><td>2098777070</td></row>
+		<row><td>ID_STRING14</td><td>1033</td><td>EiffelSample</td><td>0</td><td/><td>2098779118</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>ASP.NET Enabler</td><td>0</td><td/><td>1830310476</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>ASP.NET Enabler</td><td>0</td><td/><td>1830322764</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>ASP.NET Enabler 2.0</td><td>0</td><td/><td>1830319567</td></row>
@@ -3063,6 +3081,7 @@
 		<col def="S255">AnonyUserName</col>
 		<col def="S255">AnonyPasswrd</col>
 		<col def="s72">Component_</col>
+		<row><td>ISIISCommonVRoot</td><td>Obsolete</td><td>Obsolete</td><td>0</td><td/><td/><td/><td/><td/><td/><td/><td>VirtualDirComponent</td></row>
 	</table>
 
 	<table name="ISVRootAppMaps">
@@ -3080,6 +3099,7 @@
 		<col def="S50">IP</col>
 		<col def="s50">SiteNumber</col>
 		<col def="I4">WebSiteProps</col>
+		<row><td>ISIISCommonWebsite1</td><td>80</td><td/><td>0</td><td>0</td></row>
 	</table>
 
 	<table name="Icon">
@@ -3131,7 +3151,7 @@
 		<row><td>FindRelatedProducts</td><td>NOT ISSETUPDRIVEN</td><td>420</td><td>FindRelatedProducts</td><td/></row>
 		<row><td>ISSelfRegisterCosting</td><td/><td>2201</td><td/><td/></row>
 		<row><td>ISSelfRegisterFiles</td><td/><td>5601</td><td/><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td/><td>6601</td><td/><td/></row>
+		<row><td>ISSelfRegisterFinalize</td><td/><td>6602</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
 		<row><td>Install</td><td>Not Installed</td><td>5950</td><td/><td/></row>
 		<row><td>InstallFiles</td><td/><td>4000</td><td>InstallFiles</td><td/></row>
@@ -3191,6 +3211,11 @@
 		<row><td>WriteEnvironmentStrings</td><td/><td>5200</td><td>WriteEnvironmentStrings</td><td/></row>
 		<row><td>WriteIniValues</td><td/><td>5100</td><td>WriteIniValues</td><td/></row>
 		<row><td>WriteRegistryValues</td><td/><td>5000</td><td>WriteRegistryValues</td><td/></row>
+		<row><td>caCreateVRoots</td><td/><td>4001</td><td/><td/></row>
+		<row><td>caExtractIISSuppFiles</td><td/><td>1500</td><td/><td/></row>
+		<row><td>caIISCleanup</td><td/><td>6603</td><td/><td/></row>
+		<row><td>caRemoveVRoots</td><td/><td>3502</td><td/><td/></row>
+		<row><td>caRlbackVRoots</td><td/><td>3501</td><td/><td/></row>
 	</table>
 
 	<table name="InstallShield">
@@ -3325,22 +3350,12 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<col def="S72">File_Manifest</col>
 		<col def="S72">File_Application</col>
 		<col def="I2">Attributes</col>
-		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>NewFeature1</td><td>eiffelsoftware.cachebrowser.</td><td>eiffelsoftware.cachebrowser.</td><td>0</td></row>
-		<row><td>EiffelSoftware.CodeDom.dll</td><td>NewFeature1</td><td>eiffelsoftware.codedom.dll</td><td>eiffelsoftware.codedom.dll</td><td>0</td></row>
 	</table>
 
 	<table name="MsiAssemblyName">
 		<col key="yes" def="s72">Component_</col>
 		<col key="yes" def="s255">Name</col>
 		<col def="s255">Value</col>
-		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Culture</td><td>neutral</td></row>
-		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Name</td><td>EiffelSoftware.CacheBrowser</td></row>
-		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
-		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Version</td><td>5.6.121.0</td></row>
-		<row><td>EiffelSoftware.CodeDom.dll</td><td>Culture</td><td>neutral</td></row>
-		<row><td>EiffelSoftware.CodeDom.dll</td><td>Name</td><td>EiffelSoftware.CodeDom</td></row>
-		<row><td>EiffelSoftware.CodeDom.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
-		<row><td>EiffelSoftware.CodeDom.dll</td><td>Version</td><td>2.0.0.0</td></row>
 	</table>
 
 	<table name="MsiDigitalCertificate">
@@ -3489,10 +3504,10 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<row><td>PROGMSG_IIS_REMOVEVROOT</td><td>##IDS_PROGMSG_IIS_REMOVEVROOT##</td><td/></row>
 		<row><td>PROGMSG_IIS_REMOVEVROOTS</td><td>##IDS_PROGMSG_IIS_REMOVEVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
-		<row><td>ProductCode</td><td>{F315C2B4-6BAC-4733-BB61-19B67242E163}</td><td/></row>
+		<row><td>ProductCode</td><td>{DA853AC8-C165-46A5-91AB-F41E52944A05}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
-		<row><td>ProductName</td><td>ASP.NET Enabler 2.0</td><td/></row>
+		<row><td>ProductName</td><td>enabler</td><td/></row>
 		<row><td>ProductVersion</td><td>2.00.1313</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
@@ -3545,6 +3560,8 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<col def="s255">Key</col>
 		<col def="S255">Name</col>
 		<col def="I2">Type</col>
+		<row><td>_IISROOTFOLDER</td><td>2</td><td>Software\Microsoft\InetStp</td><td>PathWWWRoot</td><td>0</td></row>
+		<row><td>_IIS_VERSION</td><td>2</td><td>SYSTEM\CurrentControlSet\Services\W3SVC\Parameters</td><td>MajorVersion</td><td>2</td></row>
 	</table>
 
 	<table name="Registry">
@@ -3568,8 +3585,6 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>FileKey1</td><td>ecdpc.exe</td><td/><td>eiffel_2_eiffel_software</td><td>2</td></row>
-		<row><td>FileKey2</td><td>ecdpc.exe</td><td/><td>asp_1.net_asp.net_enabler</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">

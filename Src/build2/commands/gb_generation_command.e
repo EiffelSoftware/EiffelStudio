@@ -77,8 +77,21 @@ feature -- Access
 
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
+		local
+			objects: ARRAYED_LIST [GB_OBJECT]
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			Result := system_status.project_open and not window_selector.objects.is_empty
+			objects ?= window_selector.objects
+			from
+				objects.start
+			until
+				objects.off or titled_window_object /= Void
+			loop
+				titled_window_object ?= objects.item
+				objects.forth
+			end
+				-- Only executable if there is at least on window within the system.
+			Result := system_status.project_open and titled_window_object /= Void
 		end
 
 feature -- Basic operations

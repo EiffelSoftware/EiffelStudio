@@ -85,18 +85,18 @@ feature {GB_XML_LOAD} -- Implementation
 			end
 		end
 
-feature {GB_XML_LOAD} -- Implementation
+feature -- Implementation
 
 	add_selector_item (an_item: GB_WINDOW_SELECTOR_ITEM) is
 			-- Add `an_item' to `Current' by first removing it from
 			-- its current `parent'.
 		require
 			an_item_not_void: an_item /= Void
+		local
+			command_move_window: GB_COMMAND_MOVE_WINDOW
 		do
-			unparent_tree_node (an_item)
-			extend (an_item)
-				-- Ensure that `Current' is expanded
-			expand
+			create command_move_window.make (an_item.object, Current)
+			command_move_window.execute
 				-- Update the system
 			system_status.enable_project_modified
 			command_handler.update	
@@ -104,7 +104,7 @@ feature {GB_XML_LOAD} -- Implementation
 			item_contained: has (an_item)
 		end
 		
-feature {NONE} -- Implementation
+feature -- Implementation
 	
 	add_window_object (an_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Add representation of `an_object' to `Current'.
@@ -113,7 +113,6 @@ feature {NONE} -- Implementation
 		local
 			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
-			
 			if an_object.window_selector_item /= Void then
 				directory ?= an_object.window_selector_item.parent
 					-- Note that directory may well be Void if the window is currently not in a directory.

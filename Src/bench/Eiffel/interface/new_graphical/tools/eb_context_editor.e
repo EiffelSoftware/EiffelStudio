@@ -334,7 +334,7 @@ feature {NONE} -- Initialization
 --			create menu_item.make_with_text_and_action ("Name view", agent name_view)
 --			view_menu.extend (menu_item)
 			view_menu.extend (delete_view_cmd.new_menu_item)
-			if world.current_view.is_equal (world.default_view_name) then
+			if world.current_view.has_substring ("DEFAULT") then
 				delete_view_cmd.disable_sensitive
 			end
 			view_menu.extend (create {EV_MENU_SEPARATOR})

@@ -43,20 +43,23 @@ feature {NONE} -- Execution
 			if arg = Void then
 					--| Run the query
 				clear_values;
-				tool.fill_values (Current);
-				!! profiler_query;
-				profiler_query.set_subqueries (subqueries);
-				profiler_query.set_subquery_operators (subquery_operators);
+				if tool.fill_values (Current) then
+					!! profiler_query;
+					profiler_query.set_subqueries (subqueries);
+					profiler_query.set_subquery_operators (subquery_operators);
 
-				!! profiler_options;
-				profiler_options.set_output_names (clone (output_names));
-				profiler_options.set_filenames (clone (filenames));
-				profiler_options.set_language_names (clone (language_names));
-
-				!! st.make;
-				!! executer.make (st, profiler_query, profiler_options);
-				executer.execute;
-				tool.show_new_window (st, profiler_query, profiler_options, executer.last_output)
+					!! profiler_options;
+					profiler_options.set_output_names (clone (output_names));
+					profiler_options.set_filenames (clone (filenames));
+					profiler_options.set_language_names (clone (language_names));
+	
+					!! st.make;
+					!! executer.make (st, profiler_query, profiler_options);
+					executer.execute;
+					tool.show_new_window (st, profiler_query, profiler_options, executer.last_output)
+				else
+					--| Display a message
+				end
 			end
 		end
 

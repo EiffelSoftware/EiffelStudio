@@ -234,6 +234,11 @@ feature {NONE} -- Implementation
 				class_text.replace_substring_all (event_connection_tag, "")
 				class_text.insert_string (event_connection_string, temp_index)
 				
+				temp_index := class_text.substring_index (event_declaration_tag, 1)				
+				class_text.replace_substring_all (event_declaration_tag, "")
+				class_text.insert_string (event_declaration_string, temp_index)
+
+				
 					-- Need to add pixmap initialization if `class_text' contains
 					-- `pixmap'. If it does, this means that some pixmaps have been set,
 					-- and we must add a pixmap to `class_text'. This really is somewhat of a hack. Julian.
@@ -448,6 +453,7 @@ feature {NONE} -- Implementation
 			action_sequence_info: GB_ACTION_SEQUENCE_INFO
 			action_sequence: GB_EV_ACTION_SEQUENCE
 			local_name: STRING
+			comment_object_name: STRING
 		do
 			if element.has_attribute_by_name (type_string) then
 				stored_current_type := element.attribute_by_name (type_string).value.to_utf8
@@ -504,6 +510,20 @@ feature {NONE} -- Implementation
 									else
 										add_event_connection (local_name + action_sequence_info.name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))") --current_iterative_name)
 									end
+									
+										-- Use `Current' in comment if the event is connected to the window.
+									if stored_current_type.is_equal (Ev_titled_window_string) then
+										comment_object_name := "Current"
+									else
+										comment_object_name := last_name
+									end
+									
+										-- Now we must generate the event declarations.
+									add_event_declaration (action_sequence_info.feature_name + " is" +
+									indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+									indent_less_one + "do" + indent_less_one + "end" + indent_less_two)
+									
+									
 								end
 								another_element.forth
 							end
@@ -644,6 +664,16 @@ feature {NONE} -- Implementation
 			event_connection_string := event_connection_string + indent + event
 		end
 		
+	add_event_declaration (event: STRING) is
+			--
+		do
+			if event_declaration_string = Void then
+				event_declaration_string := ""
+			end
+			event_declaration_string := event_declaration_string + indent_less_two + event
+		end
+		
+		
 	add_set (set: STRING) is
 			-- Add a setting represention, `set' to
 			-- `set_string'.
@@ -759,6 +789,10 @@ feature {NONE} -- Implementation
 		
 	event_connection_string: STRING
 		-- String representation of all event connection statements built by
+		-- `Current'. This is inserted into the template when completed.
+		
+	event_declaration_string: STRING
+		-- String representation of all event declaration statements built by
 		-- `Current'. This is inserted into the template when completed.
 		
 	progress_bar: EV_PROGRESS_BAR

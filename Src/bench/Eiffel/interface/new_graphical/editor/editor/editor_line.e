@@ -28,7 +28,7 @@ feature {NONE} -- Initialisation
 		do
 			create t_eol.make
 			first_token := t_eol
-			end_token := t_eol
+			eol_token := t_eol
 		end
 
 feature -- Initialisation
@@ -53,7 +53,7 @@ feature -- Initialisation
 					-- He has not produced any token.
 				first_token := t_eol
 			end
-			end_token := t_eol
+			eol_token := t_eol
 		end
 
 feature -- Transformation
@@ -114,7 +114,7 @@ feature -- Access
 	first_token: EDITOR_TOKEN
 		-- First token in the
 	
-	end_token: EDITOR_TOKEN_EOL
+	eol_token: EDITOR_TOKEN_EOL
 		-- Last token of the line.
 
 feature -- Status Report
@@ -157,7 +157,7 @@ feature -- Transformation
 			t_before : EDITOR_TOKEN
 			s: STRING
 		do
-			t_before := end_token.previous
+			t_before := eol_token.previous
 			if t_before /= Void then
 				s := clone (t_before.image)
 				t_before := t_before.previous
@@ -167,9 +167,9 @@ feature -- Transformation
 			end
 			lexer.execute (s)
 			if t_before = Void then
-				replace_beginning_from_lexer (lexer, end_token)
+				replace_beginning_from_lexer (lexer, eol_token)
 			else
-				replace_from_lexer (lexer, t_before, end_token)
+				replace_from_lexer (lexer, t_before, eol_token)
 			end
 			next.delete
 		end
@@ -185,7 +185,7 @@ feature -- Status Report
 			from
 				t := first_token
 			until
-				t = end_token
+				t = eol_token
 			loop
 				Result.append (t.image)
 				t := t.next

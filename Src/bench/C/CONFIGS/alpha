@@ -6,8 +6,8 @@
 # instead choose to run each of the .SH files by yourself, or "Configure -S".
 #
 
-# Configuration time: Mon Jun  9 15:27:52 EDT 1997
-# Configured by: eiffel
+# Configuration time: April 99
+# Configured by: manuelt 
 # Target system: osf1 area51.gmu.edu v4.0 564 alpha 
 
 lngpad_2=16 
@@ -131,6 +131,7 @@ mtldflags=''
 ldsharedflags='-shared'
 mtldsharedflags='-shared'
 shared_suffix='.so'
+shared_prefix='lib'
 
 lkflags=''
 optimize='-O'
@@ -281,9 +282,9 @@ libpth='/lib /usr/lib /usr/ccs/lib /usr/local/lib'
 plibpth=''
 xlibpth='/usr/lib/386 /lib/386'
 libs='-lm -ldnet_stub -lSM -lICE'
-mtlibs='-lpthread -lm -ldnet_stub -lSM -lICE'
+mtlibs='-lpthread -lexc -lrt -lm -ldnet_stub -lSM -lICE'
 sharedlibs='-lm -ldnet_stub -lSM -lICE'
-mtsharedlibs='-lpthread -lm -ldnet_stub -lSM -lICE'
+mtsharedlibs='-lpthread -lexc -lrt -lm -ldnet_stub -lSM -lICE'
 
 lns='/usr/bin/ln -s'
 longsize='8'

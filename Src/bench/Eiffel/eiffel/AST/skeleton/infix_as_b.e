@@ -12,7 +12,7 @@ inherit
 
 	INFIX_AS
 		undefine
-			temp_name
+			temp_name, associated_feature_name
 		redefine
 			fix_operator, infix "<", internal_name
 		end;

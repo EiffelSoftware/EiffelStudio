@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_TEXT_ALIGNABLE_CONSTANTS
+	EV_TEXT_ALIGNMENT_CONSTANTS
 
 feature -- Constants
 
@@ -28,4 +28,4 @@ feature -- Contract support
 				an_alignment = Ev_text_alignment_right	
 		end
 
-end -- class EV_TEXT_ALIGNABLE_CONSTANTS
+end -- class EV_TEXT_ALIGNMENT_CONSTANTS

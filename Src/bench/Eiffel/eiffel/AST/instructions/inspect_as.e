@@ -211,7 +211,7 @@ feature {AST_EIFFEL} -- Output
 				ctxt.new_line
 				ctxt.set_separator (ti_Semi_colon)
 				ctxt.set_new_line_between_tokens
-				ctxt.reversed_format_list (else_part)
+				ctxt.format_ast (else_part)
 				ctxt.new_line
 				ctxt.exdent
 				ctxt.put_breakable

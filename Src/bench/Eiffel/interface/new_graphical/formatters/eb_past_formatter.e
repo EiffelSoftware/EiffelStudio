@@ -18,10 +18,10 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showaversions 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showaversions 
+		end
  
 feature {NONE} -- Properties
 
@@ -45,6 +45,8 @@ feature {NONE} -- Properties
 		do
 			Result := Interface_names.t_Past
 		end
+
+	post_fix: STRING is "pas"
 
 	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is
 			-- Display history of `f'.

@@ -104,22 +104,22 @@ feature -- Initialization
 			!EWB_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 			
+			!EWB_CLASS_LIST! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+
 			!EWB_CLUSTERS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
-			!EWB_CLASS_LIST! ewb_cmd;
+			!EWB_EDIT_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
 			!EWB_INDEXING! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
-			!EWB_STATISTICS! ewb_cmd;
-			Result.add_entry (ewb_cmd)
-
 			!EWB_MODIFIED! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
-			!EWB_EDIT_ACE! ewb_cmd;
+			!EWB_STATISTICS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
 			!EWB_CASE_STORAGE! ewb_cmd;
@@ -150,6 +150,9 @@ feature -- Initialization
 			!EWB_EDIT_CLASS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
+			!EWB_EXPORTED! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
+
 			!EWB_EXTERNALS! ewb_cmd.null;
 			Result.add_entry (ewb_cmd)
 
@@ -163,9 +166,6 @@ feature -- Initialization
 			Result.add_entry (ewb_cmd)
 
 			!EWB_ROUTINES! ewb_cmd.null;
-			Result.add_entry (ewb_cmd)
-
-			!EWB_EXPORTED! ewb_cmd.null;
 			Result.add_entry (ewb_cmd)
 
 			!EWB_SHORT! ewb_cmd.null;
@@ -196,10 +196,10 @@ feature -- Initialization
 			!EWB_R_FLAT! ewb_cmd.null;
 			Result.add_entry (ewb_cmd);
 
-			!EWB_HISTORY! ewb_cmd.null;
+			!EWB_HOMONYMS! ewb_cmd.null;
 			Result.add_entry (ewb_cmd);
 
-			!EWB_HOMONYMS! ewb_cmd.null;
+			!EWB_HISTORY! ewb_cmd.null;
 			Result.add_entry (ewb_cmd);
 
 			!EWB_R_TEXT! ewb_cmd.null;

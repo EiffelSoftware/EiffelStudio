@@ -159,6 +159,18 @@ feature {NONE}
 			Result := profile_tool_cell.item
 		end;
 
+	Generate_window: DEGREE_OUTPUT is
+			-- The generate window
+		do
+			Result := generate_window_cell.item
+		end;
+
+	Reverse_engineering_window: DEGREE_OUTPUT is
+			-- The reverse engineering window
+		do
+			Result := reverse_engineering_window_cell.item
+		end;
+
 feature {NONE} -- Implementation
 
 	last_warner_cell: CELL [WARNER_W] is
@@ -212,6 +224,24 @@ feature {NONE} -- Implementation
 			!! Result.put (Void)
 		end;
 
+	generate_window_cell: CELL [DEGREE_OUTPUT] is
+			-- Cell for the generate window
+		local
+			dg: DEGREE_OUTPUT
+		once
+			!! dg;
+			!! Result.put (dg)
+		end;
+
+	reverse_engineering_window_cell: CELL [DEGREE_OUTPUT] is
+			-- Cell for the reverse engineering window
+		local
+			dg: DEGREE_OUTPUT
+		once
+			!! dg;
+			!! Result.put (dg)
+		end;
+
 feature {NONE} -- Implementation
 
 	init_windowing is
@@ -221,7 +251,8 @@ feature {NONE} -- Implementation
 			display_name: STRING;
 			exc: EXCEPTIONS;
 			exec_env: EXECUTION_ENVIRONMENT;
-			eb_display: SCREEN
+			eb_display: SCREEN;
+			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
 		do
 			!! eb_display.make ("");
 			if not eb_display.is_valid then
@@ -250,6 +281,12 @@ feature {NONE} -- Implementation
 			!! new_resources.initialize;
 			project_tool.make (eb_display);
 			project_tool.popup_file_selection;
+			if not new_resources.is_graphical_output_disabled then
+				!! g_degree_output;
+				reverse_engineering_window_cell.put (g_degree_output);
+				!! g_degree_output;
+				generate_window_cell.put (g_degree_output);
+			end
 		end
 
 end -- class WINDOWS

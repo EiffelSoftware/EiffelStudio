@@ -128,13 +128,13 @@ feature -- Execution
 			inspect 
 				format_type
 			when flat_type then
-				!! cmd.make_flat (filter_name)
+				!! cmd.make_flat (filter_name, Generate_window)
 			when flat_short_type then
-				!! cmd.make_flat_short (filter_name)
+				!! cmd.make_flat_short (filter_name, Generate_window)
 			when text_type then
-				!! cmd.make_text (filter_name)
+				!! cmd.make_text (filter_name, Generate_window)
 			when short_type then
-				!! cmd.make_short (filter_name)
+				!! cmd.make_short (filter_name, Generate_window)
 			end
 			if do_parents then
 				cmd.set_do_parents

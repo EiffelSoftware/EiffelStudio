@@ -48,10 +48,17 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font
 		undefine
-			on_right_button_up, on_left_button_down,
-			on_left_button_up, on_right_button_down,
-			on_mouse_move, on_destroy, on_set_cursor,
-			on_key_up, on_key_down
+			on_right_button_up,
+			on_left_button_down,
+			on_left_button_up,
+			on_right_button_down,
+			on_mouse_move,
+			on_destroy,
+			on_set_cursor,
+			on_size,
+			on_move,
+			on_key_up,
+			on_key_down
 		redefine
 			default_style,
 			on_bn_clicked
@@ -325,12 +332,25 @@ feature {BOX_WINDOWS} -- Status setting
 
 feature {NONE} -- Implementation
 
+--	on_left_button_up (keys, a_x, a_y: INTEGER) is
+--		do
+--			widget_on_left_button_up (keys, a_x, a_y)
+--			release_actions.execute (Current, Void)
+--		end
+
 	private_state: BOOLEAN;
 
 	on_bn_clicked is
-			-- Called when the button is clicked
+			-- Called when the button is clicked.
+		local
+			a_parent: RADIO_BOX_WINDOWS
 		do
+			a_parent ?= parent
+			if a_parent /= Void then
+				a_parent.set_index_on_checked_toggle (Current)
+			end
 			toggle_value_changed_actions.execute (Current, Void)
+			release_actions.execute (Current, Void)
 		end
 
 	in_a_box: BOOLEAN is

@@ -12,6 +12,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Standard_call, Agent_call, Static_call, Creation_call, Precursor_call: INTEGER is unique
@@ -33,34 +38,39 @@ feature -- Basic operations
 			fi: FEATURE_I
 			overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
 			temp_list: ARRAYED_LIST [INTEGER]
-			overloaded_name, feature_name: STRING
+			feature_name: STRING
 			descriptors: HASH_TABLE [FEATURE_DESCRIPTOR, STRING]
 			descriptor: FEATURE_DESCRIPTOR
+			id_table: HASH_TABLE [INTEGER, INTEGER]
 		do
 			ci := table.associated_class.lace_class
 			if ci /= Void then
+				
+				-- Build `id_table' which is a reverse lookup table of `overloaded_names'
 				overloaded_names := table.overloaded_names
 				if overloaded_names /= Void and use_overloading then
+					create id_table.make (20)
 					from
 						overloaded_names.start
 					until
 						overloaded_names.after
 					loop
 						temp_list := overloaded_names.item_for_iteration
-						overloaded_name := table.item_id (overloaded_names.key_for_iteration).feature_name
 						from
 							temp_list.start
 						until
 							temp_list.after
 						loop
-							table.item_id (temp_list.item).set_feature_name (overloaded_name)
+							id_table.put (overloaded_names.key_for_iteration, temp_list.item)
 							temp_list.forth
 						end
 						overloaded_names.forth
 					end
 				end
+				
+				-- Now create descriptors table, use `id_table' to replace resolved names
+				-- with overloaded ones if necessary.
 				i := table.count
-				create Result.make (1, i)
 				create descriptors.make (i)
 				from
 					table.start
@@ -69,17 +79,28 @@ feature -- Basic operations
 				loop
 					fi := table.item_for_iteration
 					if is_listed (fi, class_i, ci) then
-						feature_name := fi.feature_name
+						if use_overloading and id_table /= Void then
+							id_table.search (table.key_for_iteration)
+							if id_table.found then
+								feature_name := Names_heap.item (id_table.found_item)
+							else
+								feature_name := fi.feature_name
+							end	
+						end
 						descriptors.search (feature_name)
 						if descriptors.found then
 							descriptors.found_item.increase_overload_count
 						else
 							create descriptor.make_with_class_i_and_feature_i (ci, fi)
+							descriptor.set_name (feature_name)
 							descriptors.put (descriptor, feature_name)
 						end
 					end
 					table.forth
 				end
+				
+				-- Now create result from descriptors table
+				create Result.make (1, i)
 				from
 					i := 1
 					descriptors.start

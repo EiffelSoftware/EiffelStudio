@@ -28,7 +28,7 @@ feature
 
 	type: TYPE_I;
 			-- Type of the call
-	
+
 	body_id: BODY_ID
 			-- Body Id of the feature.
 
@@ -342,10 +342,13 @@ feature -- Inlining
 			-- type corresponding to the written in class)
 		local
 			written_class: CLASS_C
+			tuple_class: TUPLE_CLASS_B
 			original_feature: FEATURE_I
 			gen_type_i: GEN_TYPE_I
+			tuple_type_i: TUPLE_TYPE_I
 			m: META_GENERIC
 			true_gen : ARRAY [TYPE_I]
+			actual_gen: ARRAY [TYPE_A]
 			real_target_type, actual_type: TYPE_A
 			constraint: TYPE_A
 			formal_a: FORMAL_A
@@ -355,11 +358,10 @@ feature -- Inlining
 			original_feature := context_type.type_a.associated_class.
 									feature_table.origin_table.item (routine_id);
 			written_class := original_feature.written_class;
+
 			if written_class.generics = Void then
 				Result := written_class.types.first.type
 			else
-				!!gen_type_i;
-				gen_type_i.set_base_id (written_class.id)
 
 				real_target_type := context_type.type_a;
 					-- LINKED_LIST [STRING] is recorded as LINKED_LIST [REFERENCE_I]
@@ -370,12 +372,14 @@ feature -- Inlining
 					nb_generics := written_class.generics.count;
 					!!m.make (nb_generics)
 					!!true_gen.make (1, nb_generics)
+					!!actual_gen.make (1, nb_generics)
 				until
 					i > nb_generics
 				loop
 					!!formal_a;
 					formal_a.set_position (i);
 					actual_type := formal_a.instantiation_in (real_target_type, written_class.id)
+					actual_gen.put (actual_type, i)
 					if actual_type.is_basic then
 						m.put (actual_type.type_i, i)
 					else
@@ -386,9 +390,20 @@ feature -- Inlining
 					i := i + 1
 				end
 
-				gen_type_i.set_meta_generic (m)
-				gen_type_i.set_true_generics (true_gen)
-				Result := gen_type_i
+				tuple_class ?= written_class
+				if tuple_class = Void then
+					!!gen_type_i;
+					gen_type_i.set_base_id (written_class.id)
+					gen_type_i.set_meta_generic (m)
+					gen_type_i.set_true_generics (true_gen)
+					Result := gen_type_i
+				else
+					!!tuple_type_i;
+					tuple_type_i.set_base_id (written_class.id)
+					tuple_type_i.set_meta_generic (m)
+					tuple_type_i.set_true_generics (true_gen)
+					Result := tuple_type_i
+				end
 			end
 		end
 

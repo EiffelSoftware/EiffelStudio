@@ -376,6 +376,9 @@ feature -- Properties
 			local_workbench.change_class (pointer_class)
 			local_workbench.change_class (string_class)
 			local_workbench.change_class (tuple_class)
+			local_workbench.change_class (routine_class)
+			local_workbench.change_class (procedure_class)
+			local_workbench.change_class (function_class)
 			protected_classes := False
 				-- The root class is not protected 
 				-- Godammit.
@@ -420,7 +423,7 @@ feature -- Properties
 			-- Useful for remove_useless_classes
 			-- Protected classes are GENERAL, ANY, DOUBLE, REAL,
 			-- INTEGER, BOOLEAN, CHARACTER, ARRAY, BIT, POINTER, STRING,
-			-- TUPLE
+			-- TUPLE, ROUTINE, PROCEDURE, FUNCTION
 
 	insert_new_class (a_class: CLASS_C) is
 			-- Add new class `c' to the system.
@@ -1047,6 +1050,9 @@ end
 			bit_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
 			tuple_class.compiled_class.mark_class (marked_classes)
+			routine_class.compiled_class.mark_class (marked_classes)
+			procedure_class.compiled_class.mark_class (marked_classes)
+			function_class.compiled_class.mark_class (marked_classes)
 
 				-- Now mark all classes reachable from visible classes.
 
@@ -2255,11 +2261,10 @@ feature -- Final mode generation
 		end
 
 	degree_minus_4 is
-
 			-- Process Degree -4.
 		local
 			a_class: CLASS_C
-			i, j, k, nb: INTEGER
+			i, j, nb: INTEGER
 			deg_output: DEGREE_OUTPUT
 			class_array: ARRAY [CLASS_C]
 			local_classes: CLASS_C_SERVER
@@ -2375,7 +2380,7 @@ feature -- Dead code removal
 				root_feat := a_class.feature_table.item (creation_name)
 				remover.record (root_feat, a_class)
 			end
-			
+
 			remover.mark_dispose
 			from
 				local_classes := classes
@@ -2420,6 +2425,11 @@ feature -- Dead code removal
 
 				-- Protection of feature `make' of class TUPLE
 			tuple_class.compiled_class.mark_all_used (remover)
+
+				-- Protection of features in ROUTINE classes
+			routine_class.compiled_class.mark_all_used (remover)
+			procedure_class.compiled_class.mark_all_used (remover)
+			function_class.compiled_class.mark_all_used (remover)
 debug ("DEAD_CODE")
 			remover.dump_alive
 			remover.dump_marked
@@ -2468,14 +2478,14 @@ feature -- Generation
 			deg_output.display_degree_output (degree_message, 6, 10)
 			generate_cecil
 
---				-- Generation of the conformance table
---			deg_output.display_degree_output (degree_message, 5, 10)
---			t.generate_conformance_table
+-- 				-- Generation of the conformance table
+-- 			deg_output.display_degree_output (degree_message, 5, 10)
+-- 			t.generate_conformance_table
 
 				-- Generation of the parent table
 			deg_output.display_degree_output (degree_message, 5, 10)
 			generate_parent_tables
-
+	
 				-- Generate plug with run-time.
 				-- Has to be done before `generate_routine_table' because
 				-- this is were we mark `used' the attribute table of `lower' and
@@ -3244,7 +3254,7 @@ feature -- Dispose routine
 				descendants.forth
 			end
 		end
- 
+
 	generate_dispose_table is
 			-- Generate dispose table
 		local
@@ -3264,7 +3274,7 @@ feature -- Dispose routine
 				-- call on `dispose'.
 			entry.generate_dispose_table (routine_id_counter.dispose_rout_id,
 											header_generation_buffer)
-		end
+		end 
 
 feature -- Dispatch and execution tables generation
 

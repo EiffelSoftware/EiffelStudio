@@ -18,13 +18,6 @@ feature
 
 	type: TUPLE_TYPE_I;
 
-	need_metamorphosis (source_type: TYPE_I): BOOLEAN is
-			-- Do we need to issue a metamorphosis on the `source_type'?
-			-- Answer is True iff source_type is basic.
-		do
-			Result := source_type.is_basic
-		end;
-
 	set_expressions (e: like expressions) is
 			-- Assign `e' to `expressions'.
 		do
@@ -67,11 +60,9 @@ feature
 			feat_i: FEATURE_I;
 			feat_id: INTEGER;
 			expr: EXPR_B;
-			target_type: TYPE_I;
 			base_class: CLASS_C;
 			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
-			idx : INTEGER
 		do
 			real_ty ?= context.real_type (type);
 			base_class := real_ty.base_class;
@@ -82,37 +73,18 @@ feature
 				-- to be inserted into the area correctly
 			from
 				expressions.finish;
-				idx := real_ty.meta_generic.count
 			until
 				expressions.before
 			loop
 				expr ?= expressions.item;
-				target_type := real_ty.meta_generic.item (idx);
 				actual_type ?= context.real_type (expr.type);
 				expr.make_byte_code (ba);
 
-				if not actual_type.same_as (target_type) then
-						-- A conversion integer => real, integer => double
-						-- or real => double is needed
-					if target_type.is_double then
-						if actual_type.is_long or else
-							actual_type.is_float
-						then
-							ba.append (Bc_cast_double)
-						end
-					elseif target_type.is_float and then
-						(actual_type.is_long or else actual_type.is_double)
-					then
-						ba.append (Bc_cast_float)
-					end
-				end;
-
-				if need_metamorphosis (actual_type) then
+				if actual_type.is_basic then 
 						-- Simple type objects are metamorphosed
 					ba.append (Bc_metamorphose);
 				end;
 				expressions.back;
-				idx := idx - 1
 			end;
 			if base_class.is_precompiled then
 				ba.append (Bc_parray);
@@ -121,12 +93,15 @@ feature
 				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset);	
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
+				ba.append_short_integer (context.class_type.id.id-1)
 				real_ty.make_gen_type_byte_code (ba, true)
 				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_array);
 				ba.append_short_integer (real_ty.associated_class_type.id.id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
+				ba.append_short_integer
+					(context.current_type.associated_class_type.id.id - 1)
 				real_ty.make_gen_type_byte_code (ba, true)
 				ba.append_short_integer (-1);
 				feat_id := feat_i.feature_id;

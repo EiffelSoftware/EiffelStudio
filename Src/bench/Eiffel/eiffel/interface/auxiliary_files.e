@@ -422,13 +422,14 @@ feature -- Plug and Makefile file
 	generate_plug is
 			-- Generate plug with run-time
 		local
-			string_cl, bit_cl, array_cl, tuple_cl: CLASS_C
-			arr_type_id, str_type_id, tup_type_id, type_id: INTEGER
+			string_cl, bit_cl, array_cl, rout_cl: CLASS_C
+			arr_type_id, str_type_id, type_id: INTEGER
 			id: TYPE_ID
 			to_c_feat, set_count_feat, creation_feature: FEATURE_I
+			set_rout_disp_feat: FEATURE_I
 			creators: EXTEND_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, init_name, set_count_name, to_c_name: STRING
-			arr_make_name, tup_make_name: STRING
+			arr_make_name, set_rout_disp_name: STRING
 			special_cl: SPECIAL_B
 			cl_type: CLASS_TYPE
 			final_mode: BOOLEAN
@@ -501,28 +502,19 @@ feature -- Plug and Makefile file
 			buffer.putstring (arr_make_name)
 			buffer.putstring ("();%N")
 
-				--| make tuple declaration
-				--| Potentially same problems as above!
-			if (system.tuple_make_name = Void) or not System.uses_precompiled or final_mode then
-				tuple_cl := System.class_of_id (System.tuple_id)
-				cl_type := System.Instantiator.Tuple_type.associated_class_type; 
-				id := cl_type.id
-				tup_type_id := cl_type.type_id
-				creators := tuple_cl.creators
-				creators.start
-				creation_feature := tuple_cl.feature_table.item (creators.key_for_iteration)
-				tup_make_name := creation_feature.body_id.feature_name (id)
--- FIXME
-	--			array_make_name := clone (arr_make_name)
-			else
-				cl_type := System.Instantiator.Tuple_type.associated_class_type; 
-				tup_type_id := cl_type.type_id
-				tup_make_name := system.tuple_make_name
-			end
+				-- Make routine declaration
+			rout_cl := system.class_of_id (system.routine_class_id)
 
-			buffer.putstring ("extern void ")
-			buffer.putstring (tup_make_name)
-			buffer.putstring ("();%N")
+			if rout_cl.types /= Void and then not rout_cl.types.empty then
+				cl_type := rout_cl.types.first
+				id := cl_type.id
+				set_rout_disp_feat := rout_cl.feature_table.item ("set_rout_disp")
+				set_rout_disp_name := set_rout_disp_feat.body_id.feature_name (id)
+
+				buffer.putstring ("extern void ")
+				buffer.putstring (set_rout_disp_name)
+				buffer.putstring ("();%N")
+			end
 
 			if final_mode and then System.array_optimization_on then
 				System.remover.array_optimizer.generate_plug_declarations (buffer)
@@ -581,15 +573,17 @@ feature -- Plug and Makefile file
 			buffer.putstring (arr_make_name)
 			buffer.putstring (";%N")
 
-				-- Pointer on creation feature of class TUPLE
-			buffer.putstring ("%Tegc_tupmake = (void (*)(EIF_REFERENCE)) ")
-			buffer.putstring (tup_make_name)
-			buffer.putstring (";%N")
-
 				--Pointer on `set_count' of class STRING
 			buffer.putstring ("%Tegc_strset = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
 			buffer.putstring (set_count_name)
 			buffer.putstring (";%N")
+
+				--Pointer on `set_rout_disp' of class ROUTINE
+			if set_rout_disp_name /= Void then
+				buffer.putstring ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER)) ")
+				buffer.putstring (set_rout_disp_name)
+				buffer.putstring (";%N")
+			end
 
 				-- Dynamic type of class STRING
 			buffer.putstring ("%N%Tegc_str_dtype = ")
@@ -599,11 +593,6 @@ feature -- Plug and Makefile file
 				-- Dynamic type of class ARRAY[ANY]
 			buffer.putstring ("%Tegc_arr_dtype = ")
 			buffer.putint (arr_type_id - 1)
-			buffer.putstring (";%N")
-
-				-- Dynamic type of class TUPLE
-			buffer.putstring ("%Tegc_tup_dtype = ")
-			buffer.putint (tup_type_id - 1)
 			buffer.putstring (";%N")
 
 				-- Dispose routine id from class MEMORY (if compiled) 
@@ -669,15 +658,14 @@ feature -- Plug and Makefile file
 				buffer.putstring ("%Tegc_ce_rname = egc_ce_rname_init;%N")
 				buffer.putstring ("%Tegc_fnbref = egc_fnbref_init;%N")
 				buffer.putstring ("%Tegc_fsize = egc_fsize_init;%N")
-
 			end
-
+ 
 			buffer.putstring ("%N%Tegc_system_name = %"")
 			buffer.putstring (System.system_name)
 			buffer.putstring ("%";%N%Tegc_compiler_tag = ")
 			buffer.putstring (System.version_tag);
 			buffer.putstring (";%N}%N")
-			buffer.close_c
+  			buffer.close_c
 
 			!! plug_file.make_open_write (gen_file_name (final_mode, Eplug));
 			plug_file.put_string (buffer)

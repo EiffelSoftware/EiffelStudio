@@ -36,26 +36,30 @@ feature
 			-- Analyze expression
 		local
 			real_ty: TUPLE_TYPE_I
+			expr_type: TYPE_I
 			expr: EXPR_B
-			require_meta: BOOLEAN
 			i: INTEGER
 			reg : REGISTER
 			ref_i: REFERENCE_I
+			require_meta: BOOLEAN
 		do
 			-- We need 'Current'
 			context.mark_current_used
 
 			real_ty ?= context.real_type (type)
+
 			get_register
 			!!array_area_reg.make (ref_type.c_type)
 			from
-				expressions.start
 				i := 0
+				expressions.start
 			until
 				expressions.after 
 			loop
 				expr ?= expressions.item
-				if need_metamorphosis (context.real_type (expr.type)) then
+				expr_type := context.real_type (expr.type)
+
+				if expr_type.is_basic then 
 					require_meta := True
 				end
 				expr.analyze
@@ -73,7 +77,9 @@ feature
 					expressions.after 
 				loop
 					expr ?= expressions.item
-					if need_metamorphosis (context.real_type (expr.type)) then
+					expr_type := context.real_type (expr.type)
+
+					if expr_type.is_basic then 
 						!!reg.make (ref_i.c_type)
 						metamorphose_regs.put (reg, i)
 					end
@@ -166,13 +172,16 @@ feature {NONE} -- C code generation
 	generate_tuple_creation (real_ty: TUPLE_TYPE_I; workbench_mode: BOOLEAN) is
 			-- Generate the object creation of 
 			-- manifest tuple.
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			generate_block_open
 			generate_gen_type_conversion (real_ty)
 			print_register
-			generated_file.putstring (" = ")
-			generated_file.putstring ("RTLN(typres);")
-			generated_file.new_line
+			buf.putstring (" = ")
+			buf.putstring ("RTLN(typres);")
+			buf.new_line
 			generate_block_close
 		end
 
@@ -187,7 +196,9 @@ feature {NONE} -- C code generation
 			metamorphosed: BOOLEAN
 			is_expanded: BOOLEAN
 			i, position: INTEGER
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			from
 				i := target_types.count
 			until
@@ -197,26 +208,26 @@ feature {NONE} -- C code generation
 				i := i - 1
 			end
 
+			!!target_type
 			array_area_reg.print_register
-			generated_file.putstring (" = * (char **) ")
+			buf.putstring (" = * (char **) ")
 			print_register
-			generated_file.putchar (';')
-			generated_file.new_line
+			buf.putchar (';')
+			buf.new_line
 			if (is_expanded and then expressions.count > 0) then
-				generated_file.putchar ('{')
-				generated_file.new_line
-				generated_file.indent
-				generated_file.putstring ("long elem_size;")
-				generated_file.new_line
-				generated_file.putstring ("elem_size = *(long *) (")
+				buf.putchar ('{')
+				buf.new_line
+				buf.indent
+				buf.putstring ("long elem_size;")
+				buf.new_line
+				buf.putstring ("elem_size = *(long *) (")
 				array_area_reg.print_register
-				generated_file.putstring (" + (HEADER(")
+				buf.putstring (" + (HEADER(")
 				array_area_reg.print_register
-				generated_file.putstring (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));")
-				generated_file.new_line
+				buf.putstring (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));")
+				buf.new_line
 			end
 			from
-				!!target_type   -- Always reference
 				expressions.start
 				i := 1
 				position := 0
@@ -226,65 +237,64 @@ feature {NONE} -- C code generation
 				metamorphosed := False
 				expr ?= expressions.item
 				actual_type := context.real_type (expr.type)
-				if need_metamorphosis (actual_type) then
+				if actual_type.is_basic then
 					basic_i ?= actual_type
 					expr.generate
 					basic_i.metamorphose 
-						(metamorphose_regs.item (i), expr, generated_file, context.workbench_mode)
-					generated_file.putchar (';')
-					generated_file.new_line
+						(metamorphose_regs.item (i), expr, buf, context.workbench_mode)
+					buf.putchar (';')
+					buf.new_line
 					metamorphosed := True
 				else
 					expr.generate
 				end
 				if is_expanded then
-					generated_file.putstring ("ecopy(")
+					buf.putstring ("ecopy(")
 					expr.print_register
-					generated_file.putstring (gc_comma)
+					buf.putstring (gc_comma)
 					array_area_reg.print_register
-					generated_file.putstring (" + OVERHEAD + elem_size * ")
-					generated_file.putint (position)
-					generated_file.putchar (')')
+					buf.putstring (" + OVERHEAD + elem_size * ")
+					buf.putint (position)
+					buf.putchar (')')
 				else
-						-- Generation of the RTAS protection if the array contains references
-					if target_type.is_reference then
-						generated_file.putstring ("RTAS(")
-						if metamorphosed then
-							metamorphose_regs.item (i).print_register
-						else
-							expr.print_register
-						end
-						generated_file.putstring (", ")
-						array_area_reg.print_register
-						generated_file.putstring (");")
-						generated_file.new_line
+					-- Generation of the RTAS protection
+					-- since the array contains references
+					buf.putstring ("RTAS(")
+					if metamorphosed then
+						metamorphose_regs.item (i).print_register
+					else
+						expr.print_register
 					end
-					generated_file.putchar ('*')
-					target_type.c_type.generate_access_cast (generated_file)
-					generated_file.putchar ('(')
+					buf.putstring (", ")
 					array_area_reg.print_register
-					generated_file.putstring (gc_plus)
-					generated_file.putint (position)
-					generated_file.putstring (gc_star)
-					target_type.c_type.generate_size (generated_file)
-					generated_file.putchar (')')
-					generated_file.putstring (" = ")
+					buf.putstring (");")
+					buf.new_line
+					buf.putchar ('*')
+					target_type.c_type.generate_access_cast (buf)
+					buf.putchar ('(')
+					array_area_reg.print_register
+					buf.putstring (gc_plus)
+					buf.putint (position)
+					buf.putstring (gc_star)
+					target_type.c_type.generate_size (buf)
+					buf.putchar (')')
+					buf.putstring (" = ")
 					if metamorphosed then
 						metamorphose_regs.item (i).print_register
 					else
 						expr.print_register
 					end
 				end
-				generated_file.putchar (';')
-				generated_file.new_line
+				buf.putchar (';')
+				buf.new_line
 				expressions.forth
 				position := position + 1
 				i := i + 1
 			end
 			if (is_expanded and expressions.count > 0) then
-				generated_file.exdent
-				generated_file.putchar ('}')
-				generated_file.new_line
+				buf.exdent
+				buf.putchar ('}')
+				buf.new_line
 			end
 		end
 
@@ -296,12 +306,14 @@ feature {NONE} -- C code generation
 			rout_table: ROUT_TABLE
 			internal_name, table_name: STRING
 			rout_id: ROUTINE_ID
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			rout_id := real_ty.base_class.feature_table.item ("make").rout_id_set.first
 			entry := Eiffel_table.poly_table (rout_id)
 			rout_table ?= entry
 			internal_name := clone (rout_table.feature_name (real_ty.type_id))
-			generated_file.putstring (internal_name)
+			buf.putstring (internal_name)
 			generate_tuple_make_arguments
 				-- Remember extern routine declaration
 			Extern_declarations.add_routine (real_ty.c_type, internal_name)
@@ -316,40 +328,45 @@ feature {NONE} -- C code generation
 			r_id: ROUTINE_ID
 			rout_info: ROUT_INFO
 			base_class: CLASS_C
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			base_class := real_ty.base_class
 			f_table := base_class.feature_table
 			feat_i := f_table.item ("make")
-			generated_file.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE))")
+			buf.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE))")
 			if 
 				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
 			then
-				generated_file.putstring ("RTWPF(")
+				buf.putstring ("RTWPF(")
 				r_id := feat_i.rout_id_set.first
 				rout_info := System.rout_info_table.item (r_id)
-				generated_file.putstring (rout_info.origin.generated_id)
-				generated_file.putstring (gc_comma)
-				generated_file.putint (rout_info.offset)
+				rout_info.origin.generated_id (buf)
+				buf.putstring (gc_comma)
+				buf.putint (rout_info.offset)
 			else
-				generated_file.putstring (" RTWF(")
-				generated_file.putint (real_ty.associated_class_type.id.id - 1)
-				generated_file.putstring (gc_comma)
-				generated_file.putint (feat_i.feature_id)
+				buf.putstring (" RTWF(")
+				buf.putint (real_ty.associated_class_type.id.id - 1)
+				buf.putstring (gc_comma)
+				buf.putint (feat_i.feature_id)
 			end
-			generated_file.putstring (gc_comma)
-			generated_file.putstring (gc_upper_dtype_lparan)
+			buf.putstring (gc_comma)
+			buf.putstring (gc_upper_dtype_lparan)
 			print_register
-			generated_file.putstring (")))")
+			buf.putstring (")))")
 			generate_tuple_make_arguments
 		end
 
 	generate_tuple_make_arguments is
 			-- Generate the arguments for the tuple creation.
+		local
+			buf: GENERATION_BUFFER
 		do
-			generated_file.putchar ('(')
+			buf := buffer
+			buf.putchar ('(')
 			print_register
-			generated_file.putstring (");")
-			generated_file.new_line
+			buf.putstring (");")
+			buf.new_line
 		end
 end

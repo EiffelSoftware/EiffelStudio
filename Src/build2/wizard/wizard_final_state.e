@@ -32,6 +32,9 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_PREFERENCES
+	
 
 creation
 	make
@@ -152,10 +155,14 @@ feature {NONE} -- Implementation
 					object_handler.add_default_names (objects)
 				end
 			end
+				-- Only complete wizard if all window objects are named.
+				-- If a user selected "cancel" from the confirmation dialog,
+				-- then the wizard will not exit.
 			if object_handler.objects_all_named (objects) then
+				preferences.save_resources
 				build_finish
 				process_info
-				Precursor
+				Precursor {WIZARD_FINAL_STATE_WINDOW}
 			end
 		end
 		

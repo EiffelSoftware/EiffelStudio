@@ -29,6 +29,8 @@ inherit
 	GB_SHARED_XML_HANDLER
 	
 	GB_SHARED_OBJECT_HANDLER
+	
+	GB_SHARED_PREFERENCES
 
 create
 	make
@@ -95,6 +97,7 @@ feature -- Basic Operation
 				code_generator.set_progress_bar (progress)
 				code_generator.generate
 				system_status.current_project_settings.save
+				Preferences.save_resources
 				xml_handler.save
 				first_window.destroy
 				entries_changed := False

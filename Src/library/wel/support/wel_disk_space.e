@@ -158,6 +158,8 @@ feature {NONE} -- Implementation
 		local
 			integer_part: INTEGER
 			fractional_part: INTEGER -- 1 or 2 digits fractional part
+			fractional_part_first_digit: INTEGER
+			fractional_part_second_digit: INTEGER
 		do
 			create Result.make(8) -- Average maximum size
 			integer_part := value // divisor
@@ -167,14 +169,22 @@ feature {NONE} -- Implementation
 					-- We display the fractional part
 				if integer_part < 10 then
 						-- 2 digit fractional part
-					fractional_part := ((value \\ divisor) * 100 ) // divisor
+					fractional_part_first_digit := (((value \\ divisor) * 100 ) // divisor) // 10
+					fractional_part_second_digit := (((value \\ divisor) * 100 ) // divisor) \\ 10
+					if fractional_part_first_digit /= 0 or fractional_part_second_digit /= 0 then
+						Result.append_character('.')
+						Result.append(fractional_part_first_digit.out)
+						if fractional_part_second_digit /= 0 then
+							Result.append(fractional_part_second_digit.out)
+						end
+					end
 				else
 						-- 1 digit fractional part
-					fractional_part := (((value \\ divisor) * 100 ) // divisor) // 10
-				end
-				if fractional_part /= 0 then
-					Result.append_character('.')
-					Result.append(fractional_part.out)
+					fractional_part_first_digit := (((value \\ divisor) * 100 ) // divisor) // 10
+					if fractional_part_first_digit /= 0 then
+						Result.append_character('.')
+						Result.append(fractional_part_first_digit.out)
+					end
 				end
 			end
 			Result.append_character(' ')

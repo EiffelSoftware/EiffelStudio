@@ -13,26 +13,23 @@ inherit
 	EV_ITEM_CONTAINER_IMP
 		export {EV_MENU_ITEM_IMP}
 			set_name
-		redefine
-			ev_children
 		end
 
-feature {EV_MENU_IMP} -- Access
+feature -- Access
 
 	menu_container: WEL_MENU is
 			-- Actual WEL container
 		deferred
 		end
 
-	ev_children: LINKED_LIST [EV_MENU_ITEM_IMP]
+	ev_children: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
 			-- List of all the children
 
-feature -- Event -- command association
+feature -- Event association
 
-	on_menu_command (menu_id: INTEGER) is
-			-- The `menu_id' has been choosen from the menu.
+	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
+			-- `sitem' has been selected'
 		do
-			ev_children.i_th(menu_id).on_activate
 		end
 
 feature {EV_MENU_CONTAINER} -- Implementation
@@ -48,6 +45,7 @@ feature {EV_MENU_CONTAINER} -- Implementation
 			end
 			menu_container.append_popup (menu_imp, menu_imp.text)
 			menu_imp.set_position (menu_container.count)
+			menu_imp.set_parent_container (Current)
 		end
 
 end -- class EV_MENU_CONTAINER_IMP

@@ -1462,6 +1462,7 @@ feature {NONE} -- Implementation
 					string_two.append (Space)
 					string_two.append ("Class")
 
+					Result.append (New_line_tab)
 					Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
 					Result.append (Comma)
 					Result.append (New_line_tab)
@@ -1542,6 +1543,7 @@ feature {NONE} -- Implementation
 					string_two.append (One)
 
 					Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
+					Result.append (Comma)
 
 				--	if shared_wizard_environment.use_universal_marshaller then
 				--		Result.append (universal_marshaling_registration_code)
@@ -1551,6 +1553,8 @@ feature {NONE} -- Implementation
 				end
 				system_descriptor.coclasses.forth
 			end
+
+			Result.remove (Result.count)
 			Result.append (New_line)
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)

@@ -1692,6 +1692,9 @@ feature -- Features info
 				if not is_override_or_c_external and (not is_static or else l_is_attribute) then
 					create l_ca_factory
 					l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
+					if l_is_attribute then
+						l_ca_factory.set_feature_custom_attributes (feat, l_setter_token)
+					end
 				end
 			end
 		end

@@ -9,15 +9,12 @@ class
 
 feature -- Access
 
-	Sb_getrect: INTEGER is 1034
-			--| This constant is not defined in `commctrl.h' file
-			--| shipped with Microsoft Visual C++ 2.0 and
-			--| Borland C++ 4.50.
-		--external
-		--	"C [macro <cctrl.h>]"
-		--alias
-		--	"SB_GETRECT"
-		--end
+	Sb_getrect: INTEGER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"SB_GETRECT"
+		end
 
 	Sb_setminheight: INTEGER is
 		external

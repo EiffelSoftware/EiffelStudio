@@ -875,6 +875,7 @@ feature {NONE} -- Implementation
 			bkpt_info_cmd.set_pixmaps (Pixmaps.Icon_bkpt_info)
 			bkpt_info_cmd.set_tooltip (Interface_names.e_Bkpt_info)
 			bkpt_info_cmd.set_menu_name (Interface_names.m_Bkpt_info)
+			bkpt_info_cmd.set_tooltext (Interface_names.b_Bkpt_info)
 			bkpt_info_cmd.set_name ("Bkpt_info")
 			bkpt_info_cmd.add_agent (agent display_breakpoints)
 			bkpt_info_cmd.enable_sensitive
@@ -891,6 +892,7 @@ feature {NONE} -- Implementation
 			system_info_cmd.set_tooltip (Interface_names.e_Display_system_info)
 			system_info_cmd.set_menu_name (Interface_names.m_Display_system_info)
 			system_info_cmd.set_name ("System_info")
+			system_info_cmd.set_tooltext (Interface_names.b_System_info)
 			system_info_cmd.add_agent (agent output_manager.display_system_info)
 			toolbarable_commands.extend (system_info_cmd)
 

@@ -71,6 +71,7 @@ feature {NONE} -- Implementation
 			a_frame: EV_FRAME
 		do
 			create h2
+			h2.set_padding (3)
 			
 			create change_b.make_with_text_and_action ("Change ...", agent change)
 			change_b.set_minimum_height (change_b.height)

@@ -51,6 +51,30 @@ feature -- Access bytes size
 			Result := 2
 		end
 
+	natural_8_bytes: INTEGER is
+			-- Number of bytes in a value of type `NATURAL_8'
+		do
+			Result := feature {MARSHAL}.size_of_object ((8).to_natural_8)
+		end
+		
+	natural_16_bytes: INTEGER is
+			-- Number of bytes in a value of type `NATURAL_16'
+		do
+			Result := feature {MARSHAL}.size_of_object ((16).to_natural_16)
+		end
+
+	natural_32_bytes: INTEGER is
+			-- Number of bytes in a value of type `NATURAL_32'
+		do
+			Result := feature {MARSHAL}.size_of_object ((32).to_natural_32)
+		end
+
+	natural_64_bytes: INTEGER is
+			-- Number of bytes in a value of type `NATURAL_64'
+		do
+			Result := feature {MARSHAL}.size_of_object ((64).to_natural_64)
+		end
+
 	Integer_8_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_8'
 		do
@@ -64,7 +88,7 @@ feature -- Access bytes size
 		end
 
 	Integer_bytes, Integer_32_bytes: INTEGER is
-			-- Number of bytes in a value of type `INTEGER'
+			-- Number of bytes in a value of type `INTEGER_32'
 		do
 			Result := feature {MARSHAL}.size_of_object (32)
 		end
@@ -107,26 +131,50 @@ feature -- Access bits size
 			Result := Character_bytes * 8
 		end
 
+	natural_8_bits: INTEGER is
+			-- Number of bits in a value of type `NATURAL_8'
+		do
+			Result := natural_8_bytes * 8
+		end
+
+	natural_16_bits: INTEGER is
+			-- Number of bits in a value of type `NATURAL_16'
+		do
+			Result := natural_16_bytes * 8
+		end
+
+	natural_32_bits: INTEGER is
+			-- Number of bits in a value of type `NATURAL_32'
+		do
+			Result := natural_32_bytes * 8
+		end
+
+	natural_64_bits: INTEGER is
+			-- Number of bits in a value of type `NATURAL_64'
+		do
+			Result := natural_64_bytes * 8
+		end
+
 	Integer_8_bits: INTEGER is
-			-- Number of bits in a value of type `INTEGER'
+			-- Number of bits in a value of type `INTEGER_8'
 		do
 			Result := Integer_8_bytes * 8
 		end
 
 	Integer_16_bits: INTEGER is
-			-- Number of bits in a value of type `INTEGER'
+			-- Number of bits in a value of type `INTEGER_16'
 		do
 			Result := Integer_16_bytes * 8
 		end
 
 	Integer_32_bits, Integer_bits: INTEGER is
-			-- Number of bits in a value of type `INTEGER'
+			-- Number of bits in a value of type `INTEGER_32'
 		do
-			Result := Integer_bytes * 8
+			Result := Integer_32_bytes * 8
 		end
 
 	Integer_64_bits: INTEGER is
-			-- Number of bits in a value of type `INTEGER'
+			-- Number of bits in a value of type `INTEGER_64'
 		do
 			Result := Integer_64_bytes * 8
 		end

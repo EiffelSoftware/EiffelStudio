@@ -1,6 +1,5 @@
 indexing
-	description: "DATABASE Manager"
-	author: "Davids"
+	description: "Object that enable basic database management."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,52 +9,56 @@ class
 feature -- Connection
 
 	set_connection_information (a_name, a_psswd, data_source: STRING) is
-			-- Try to connect the database
+			-- Set information required to connect to the database.
 		require
 			not_void: a_name /= Void and a_psswd /= Void
 		local
 			rescued: BOOLEAN
 		do
-			if not has_error then
+			if not rescued then
 				create database_appl.login (a_name, a_psswd)
 				database_appl.set_data_source (data_source)
+			else
+				has_error := True
+				error_message := unexpected_error (Connection_info_name)
 			end
 		rescue
-			has_error := True
+			rescued := True
 			retry
 		end
 
 	establish_connection is
-			-- Establish Connection
+			-- Establish connection.
+		require
+			information_set: database_handle_created
+			not_connected: not is_connected
 		local
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				-- Initialization of the Relational Database:
-				-- This will set various informations to perform a correct
-				-- connection to the Relational database
-				database_appl.set_base
+					-- Initialization of the Relational Database:
+					-- This will set various informations to perform a correct
+					-- connection to the Relational database.
+					-- This will update the handle to link EiffelStore interface
+					-- to the RDBMS represented by this class.
+				database_appl.set_base	
 	
-				-- create useful classes
-				-- 'session_control' provides informations control access and 
-				-- the status of the database.
+					-- Start session
 				create session_control.make
-	
-	
-				-- Start session
 				session_control.connect
 				has_error := not session_control.is_ok
 				error_message := session_control.error_message
+			else
+				has_error := True
+				error_message := unexpected_error (Establish_connection_name)
 			end
-		ensure
-			not_void: session_control /= Void
 		rescue
 			rescued := True
-			has_error := True
 			retry
 		end
 
 	disconnect is
+			-- Disconnect from database.
 		require
 			is_connected: is_connected
 		do
@@ -77,24 +80,29 @@ feature -- Status report
 			Result := session_control /= Void and then session_control.is_connected
 		end
 
+	database_handle_created: BOOLEAN is
+			-- Has the database handle been created?
+		do
+			Result := database_appl /= Void
+		end
+
 feature -- Queries
 
-	load_integer_with_select (s: STRING): ANY is
-			-- Load directly an integer value from the database.
+	load_data_with_select (s: STRING): ANY is
+			-- Load directly a single data from the database.
+			--| This can be used for instance to retrieve a table rows count or
+			--| a minimum value.
 		require
 			meaningful_select: s /= Void
 		local
---			int_sel: DB_INTEGER_SELECTION
 			rescued: BOOLEAN
 			tuple: DB_TUPLE
 		do
---			create int_sel.make
---			int_sel.set_query (s)
---			int_sel.execute_query
---			Result := int_sel.load_result
 			if not rescued then
 				has_error := False
-				create db_selection.make
+				session_control.reset
+				db_selection.no_object_convert
+				db_selection.unset_action
 				db_selection.set_query (s)
 				db_selection.execute_query
 				db_selection.load_result
@@ -104,13 +112,11 @@ feature -- Queries
 					Result := tuple.item (1)
 				else
 					has_error := True
-					error_message := db_selection.error_m
+					error_message := session_control.error_message
 				end
 			else
 				has_error := True
-				error_message := "An error occured while reading the database.%NQuery was: '" + s
-		--FIXME				+ "'.%N Database error message is: " +
-						+ "%NPlease keep this dialog open and contact your DBA."
+				error_message := unexpected_error (data_select_name)
 			end
 		rescue
 			rescued := TRUE
@@ -120,7 +126,6 @@ feature -- Queries
 	load_list_with_select (s: STRING; an_obj: ANY): ARRAYED_LIST [like an_obj] is
 			-- Load list of objects whose type are the same as `an_obj',
 			-- following the SQL query `s'.
-			-- `Result' can be Void.
 		require
 			not_void: an_obj /= Void
 			meaningful_select: s /= Void
@@ -130,7 +135,7 @@ feature -- Queries
 		do
 			if not rescued then
 				has_error := False
-				create db_selection.make
+				session_control.reset
 				db_selection.object_convert (an_obj)
 				db_selection.set_query (s)
 				create db_actions.make (db_selection, an_obj)
@@ -142,14 +147,14 @@ feature -- Queries
 					Result := db_actions.list
 				else
 					has_error := True
-					error_message := db_selection.error_m
+					error_message := session_control.error_message
 				end
 			else
 				has_error := True
-				error_message := "An error occured while reading the database.%NQuery was: '" + s
-		--FIXME				+ "'.%N Database error message is: " +
-						+ "%NPlease keep this dialog open and contact your DBA."
+				error_message := unexpected_error (list_select_name)
 			end
+		ensure
+			result_not_void: Result /= Void
 		rescue
 			rescued := TRUE
 			retry
@@ -161,62 +166,27 @@ feature -- Queries without result to load.
 			-- Execute `a_query' and commit changes.
 		require
 			not_void: a_query /= Void
-		local
-			s: STRING
-			rescued: BOOLEAN
 		do
-			if not rescued then
-				has_error := False
-				session_control.begin
-				create db_change.make
-				db_change.set_query (a_query)
-				db_change.execute_query
-				updater_build := True
-				commit
-			else
-				has_error := True
-				error_message := "Database query execution failure : " + s
-			end
-		rescue
-			rescued := TRUE
-			retry
+			execute_query_without_commit (a_query)
+			commit
 		end
 
-	build_updater is
-			-- Build an updater to execute many update queries
-		local
-			rescued: BOOLEAN
-		do
-			if not rescued then
-				session_control.begin
-				create db_change.make
-				updater_build := True
-			else
-				has_error := True
-				error_message := "Failure preparing an update."
-			end
-		rescue
-			rescued := TRUE
-			retry
-		end
-
-	execute_query_from_updater (a_query: STRING) is
+	execute_query_without_commit (a_query: STRING) is
 				-- Execute `a_query' in the database.
 				-- Warning: query executed is not committed.
 		require
 			not_void: a_query /= Void
-			updater_build: updater_build
 		local
-			s: STRING
 			rescued: BOOLEAN
 		do
 			if not rescued then
 				has_error := False
+				session_control.reset
 				db_change.set_query (a_query)
 				db_change.execute_query				
 			else
 				has_error := True
-				error_message := "Database query execution failure : " + s
+				error_message := unexpected_error (Execute_query_name)
 			end
 		rescue
 			rescued := TRUE
@@ -224,7 +194,7 @@ feature -- Queries without result to load.
 		end
 
 	commit is
-			-- Commit updates in the database
+			-- Commit updates in the database.
 		local
 			rescued: BOOLEAN
 		do
@@ -237,58 +207,85 @@ feature -- Queries without result to load.
 				end
 			else
 				has_error := True
-				error_message := "Database commit failure."
+				error_message := unexpected_error (Commit_name)
 			end
 		rescue
 			rescued := True
 			retry
 		end
 
-	insert_into_database (an_obj: ANY; tablename: STRING) is
-			--	Store in the database object `an_obj'.
+	insert_with_repository (an_obj: ANY; rep: DB_REPOSITORY) is
+			--	Store in the database object `an_obj' with `db_repository'.
+		require
+			repository_loaded: rep.loaded
 		local
 			rescued: BOOLEAN
 			store_objects: DB_STORE
-			rep: DB_REPOSITORY
 		do
 			if not rescued then
 				has_error := False
+				session_control.reset
 				create store_objects.make
-				create rep.make (tablename)
-				rep.load
 				store_objects.set_repository (rep)
 				store_objects.put (an_obj)
 				commit
 			else
 				has_error := True
-				error_message := "An error occured while creating a table row in the database.%NTable%
-						% name is " + tablename + ".%N"
+				error_message := unexpected_error (Insert_name)
 			end
 		rescue
-			rescued := TRUE
+			rescued := True
 			retry
 		end
 
-feature -- Status report
-
-	updater_build: BOOLEAN
-		-- Is an update query prepared?
-
-feature -- Fixme: exported?!
+feature -- Access
 
 	session_control: DB_CONTROL
-		-- Session Control
+			-- Session control.
 
 feature {NONE} -- Implementation
 
 	database_appl: DATABASE_APPL [G]
-		-- Database application.
+			-- Database application.
 
-	db_selection: DB_SELECTION
-		-- Performs a selection in the database (i.e. a query).
+	db_selection: DB_SELECTION is
+			-- Performs a selection in the database (i.e. a query).
+		once
+			create Result.make
+		end
 
-	db_change: DB_CHANGE
-		-- Performs a change in the database (i.e. a command).
+	db_change: DB_CHANGE is
+			-- Performs a change in the database (i.e. a command).
+		once
+			create Result.make
+		end
+
+	unexpected_error (action: STRING): STRING is
+			-- Unexpected error message.
+		do
+			Result := "Unexpected error in " + action
+		end
+
+	Connection_info_name: STRING is "set_connection_information"
+			-- `set_connection_information' feature name.
+
+	Establish_connection_name: STRING is "establish_connection"
+			-- `establish_connection' feature name.
+
+	Data_select_name: STRING is "load_data_with_select"
+			-- `load_data_with_select' feature name.
+
+	List_select_name: STRING is "load_list_with_select"
+			-- `load_list_with_select' feature name.
+
+	Execute_query_name: STRING is "execute_query_without_commit"
+			-- `execute_query_without_commit' feature name.
+
+	Commit_name: STRING is "commit"
+			-- `commit' feature name.
+
+	Insert_name: STRING is "insert_with_repository"
+			-- `insert_with_repository' feature name.
 
 end -- class DATABASE_MANAGER
 

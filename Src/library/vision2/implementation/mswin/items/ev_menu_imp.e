@@ -39,7 +39,10 @@ feature {NONE} -- Initialization
 		end	
 
 feature -- Status report
-	
+
+	text: STRING
+		-- Label of the current menu
+
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?  
 		do
@@ -48,17 +51,13 @@ feature -- Status report
 			end
 		end
 
-	container: EV_MENU_CONTAINER_IMP
-
-	text: STRING
+feature -- Status setting
 
 	set_text (str:STRING) is
 			-- Set `text' to `str'
 		do
 			text := str
 		end
-
-feature -- Status setting
 
 	destroy is
 			-- Destroy actual object.
@@ -69,6 +68,9 @@ feature -- Status setting
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
+
+	container: EV_MENU_CONTAINER_IMP
+		-- Actual container of the menu
 
 	add_item (an_item: EV_MENU_ITEM) is
 			-- Add `an_item' into container.

@@ -71,6 +71,15 @@ feature -- Access
 		ensure
 			item_not_void: Result /= Void
 		end
+
+	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
+			-- All columns selected in `Current'.
+		do
+			create Result.make (0)
+			to_implement ("EV_GRID_I:selected_columns")
+		ensure
+			result_not_void: Result /= Void
+		end
 		
 	selected_rows: ARRAYED_LIST [EV_GRID_ROW] is
 			-- All rows selected in `Current'.
@@ -1719,7 +1728,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 	update_row_selection_status (a_row_i: EV_GRID_ROW_I) is
 			-- Update the selection status for `a_row' in `Current'
 		do
-			if single_row_selection_enabled or multiple_row_selection_enabled then
+			if single_row_selection_enabled or (multiple_row_selection_enabled and then not (create {EV_ENVIRONMENT}).application.ctrl_pressed) then
 					-- Deselect existing rows and then remove from list
 				remove_selection			
 			end

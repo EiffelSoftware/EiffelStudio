@@ -10,18 +10,30 @@
 
 #include "file.h"
 
+#ifdef __WINDOWS_386__
 extern void eif_console_putint (long);
 extern void eif_console_putreal (double);
 extern void eif_console_putdouble (double);
 extern void eif_console_putchar (char);
 extern void eif_console_pustring (char *, int);
+extern long eif_console_readline (char *, int, int);
+extern long eif_console_readword (char *, int, int);
+extern long eif_console_readstream (char *, int);
+#else
+extern void eif_console_putint ();
+extern void eif_console_putreal ();
+extern void eif_console_putdouble ();
+extern void eif_console_putchar ();
+extern void eif_console_pustring ();
+extern long eif_console_readline ();
+extern long eif_console_readword ();
+extern long eif_console_readstream ();
+#endif
+
 extern long eif_console_readint ();
 extern char eif_console_readchar ();
 extern double eif_console_readdouble ();
 extern float eif_console_readreal ();
-extern long eif_console_readline (char *, int, int);
-extern long eif_console_readword (char *, int, int);
-extern long eif_console_readstream (char *, int);
 
 public EIF_POINTER file_def(file)
 int file;

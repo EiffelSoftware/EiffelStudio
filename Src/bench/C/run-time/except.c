@@ -132,8 +132,9 @@ rt_private struct exprint eif_except;		/* Where exception has been raised */
 rt_public void enomem(EIF_CONTEXT_NOARG);			/* A critical "No more memory" exception */
 rt_public struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
 rt_public void exinv(EIF_CONTEXT register2 char *tag, register3 char *object);			/* Invariant record */
-rt_public void exasrt(EIF_CONTEXT char *tag, int type);			/* Assertion record */
-rt_public void eraise(EIF_CONTEXT char *tag, long num);			/* Raises an Eiffel exception */
+rt_public void exasrt(EIF_CONTEXT char *tag, int type);		/* Assertion record */
+rt_public void eraise(EIF_CONTEXT char *tag, long num);		/* Raises an Eiffel exception */
+rt_public void com_eraise(EIF_CONTEXT char *tag, long num);	/* Raises an EiffelCOM exception */
 rt_public void eviol(EIF_CONTEXT_NOARG);			/* Signals assertion violation */
 rt_public void exfail(EIF_CONTEXT_NOARG);			/* Signals: reached end of a rescue clause */
 rt_public void eif_panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
@@ -792,6 +793,138 @@ rt_public void xraise(EIF_CONTEXT int code)
 }
 
 rt_public void eraise(EIF_CONTEXT char *tag, long num)
+			/* May be called from Eiffel, and INTEGER is long */
+{
+	/* Raises the exception whose number is 'num'. The execution code is set,
+	 * then the stack is unwound up to the first non-null jum_buf pointer.
+	 * The 'tag' is used to record the exception tag. This does not work for
+	 * all the exceptions (e.g. it has no meaning for an operating system
+	 * signal).
+	 */
+	EIF_GET_CONTEXT
+	struct ex_vect *trace;		/* The stack trace entry */
+	struct ex_vect *vector;     /* The stack trace entry */
+	char *tg, *obj;
+	int type;
+
+	if (echmem & MEM_PANIC)		/* In panic mode, do nothing */
+		return;
+
+	if (echmem & MEM_FATAL)		/* In fatal error mode, panic! */
+		eif_panic(MTC "exception in fatal mode");
+
+	/* Excepted for EN_OMEM, check whether the user wants to ignore the
+	 * exception or not. If so, return immediately.
+	 */
+	if (num != EN_OMEM && num < EN_NEX && ex_ign[num])
+		return;			/* Exception is ignored */
+
+	SIGBLOCK;			/* Critical section, protected against signals */
+	echval = (unsigned char) num;		/* Set exception number */
+
+	/* Save the exception on the exception trace stack, if possible. If that
+	 * stack is full, raise the EN_OMEM memory exception if not currently done.
+	 */
+	if (!(echmem & MEM_FSTK)) {		/* If stack is not full */
+		trace = exget(&eif_trace);
+		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
+			echmem |= MEM_FULL;					/* Signal it */
+			if (num != EN_OMEM)					/* If not already there */
+				enomem(MTC_NOARG);						/* Raise an out of memory */
+		} else {
+			trace->ex_type = (unsigned char) num;		/* Exception code */
+			switch (num) {
+			case EN_SIG:				/* Received a signal */
+				trace->ex_sig = echsig;	/* Record its number */
+				break;
+			case EN_SYS:				/* Operating system error */
+			case EN_IO:					/* I/O error */
+				trace->ex_errno = errno;
+				break;
+			default:
+				trace->ex_name = tag;	/* Record its tag */
+				trace->ex_where = 0;	/* Unknown location (yet) */
+			}
+		}
+	}
+
+	/* Set up 'echtg' to be the tag of the current exception, if one can be
+	 * computed, otherwise it is a null pointer. This will be used by the
+	 * debugger in its stop notification request.
+	 */
+
+	switch (num) {
+	case EN_SIG:			/* Signal received */
+		echtg = signame(trace->ex_sig);
+		break;
+	case EN_SYS:			/* Operating system error */
+	case EN_IO:				/* I/O error */
+		echtg = error_tag(trace->ex_errno);
+		break;
+	default:
+		echtg = tag;
+	}
+
+	vector = extop(&eif_stack);	 /* Vector at top of stack */
+	if (vector == (struct ex_vect *) 0) {
+		echrt = (char *) 0;	 /* Null routine name */
+		echclass = 0;		  /* Null class name */
+	} else {
+		if (in_assertion) {
+			tg = vector->ex_name;
+			type = vector->ex_type;
+			if (type == EX_CINV)
+				obj = vector->ex_oid;
+			expop(&eif_stack);
+			vector = extop(&eif_stack);
+			if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
+				echrt = (char *) 0;	 /* Null routine name */
+				echclass = 0;		  /* Null class name */
+			} else {
+				echrt = vector->ex_rout;	/* Record routine name */
+				echclass = vector->ex_orig; /* Record class name */
+				vector = exget(&eif_stack);
+				if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
+					echmem |= MEM_FULL;				 /* Signal it */
+					if (num != EN_OMEM)				 /* If not already there */
+						enomem(MTC_NOARG);					   /* Raise an out of memory */
+				} else {
+					vector->ex_type = type;	 /* Restore type */
+					vector->ex_name = tg;	   /* Restore tag */
+					if (type == EX_CINV)
+						vector->ex_oid = obj;   /* Restore object id if in invariant */
+				}
+			}
+		} else {
+			echrt = vector->ex_rout;	/* Record routine name */
+			echclass = vector->ex_orig; /* Record class name */
+		}
+	}
+
+	trace->ex_where = echrt;		/* Save routine in trace for exorig */
+	trace->ex_from = echclass;			/* Save class in trace for exorig */
+
+/* Maintain the notion of original exception at this level, despite any
+	 * extra explicit raises, by recomputing the code each time. Due to the
+	 * way exorig() works, we have to fake the entry in a new exception level
+	 * prior to the call.
+	 */
+	echlvl++;			/* Have to fake a nesting level */
+	exorig(MTC_NOARG);			/* Recompute original exception code */
+	echlvl--;			/* Restore nesting level */
+
+	SIGRESUME;			/* End of critical section, dispatch queued signals */
+
+#ifndef NOHOOK
+	exception(MTC PG_RAISE);	/* Debugger hook -- explicitly raised exception */
+#endif
+	ereturn(MTC_NOARG);				/* Go back to last recorded rescue entry */
+
+	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
+}
+
+rt_public void com_eraise(EIF_CONTEXT char *tag, long num)
 			/* May be called from Eiffel, and INTEGER is long */
 {
 	/* Raises the exception whose number is 'num'. The execution code is set,

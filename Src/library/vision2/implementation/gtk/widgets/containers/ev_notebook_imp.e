@@ -67,8 +67,28 @@ feature -- Access
 
 	pointed_tab_index: INTEGER is
 			-- index of tab currently under mouse pointer, or 0 if none.
+		local
+			i: INTEGER
+			gdkwin, mouse_ptr_wid, tab_label: POINTER
+			a_wid: EV_WIDGET_IMP
 		do
-			--| FIXME IEK Implement this
+			from
+				i := 1
+				gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer (default_pointer, default_pointer)
+				if gdkwin /= default_pointer then
+					feature {EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $mouse_ptr_wid)
+					a_wid ?= eif_object_from_c (mouse_ptr_wid)
+				end
+			until
+				Result > 0 or else i > count or else mouse_ptr_wid = default_pointer
+			loop
+				a_wid ?= i_th (i).implementation
+				tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, a_wid.c_object)
+				if mouse_ptr_wid = tab_label or else mouse_ptr_wid =  feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (mouse_ptr_wid) then
+					Result := i
+				end
+				i := i + 1
+			end
 		end
 
 	pixmaps_size_changed is
@@ -88,11 +108,14 @@ feature -- Access
 			-- Label of `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
-			a_list, a_label: POINTER
+			a_tab_label, a_hbox, a_list, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
+			a_tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			
+			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
 
-			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object))
+			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
 			if feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 1 then
 				-- We only have a label stored
 				a_label := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
@@ -111,10 +134,11 @@ feature -- Access
 			-- 
 		local
 			item_imp: EV_WIDGET_IMP
-			a_tab_label, a_list: POINTER
+			a_tab_label, a_hbox, a_list: POINTER
 		do
 			item_imp ?= an_item.implementation
 			a_tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
 			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_tab_label)
 			if feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
 				-- Our pixmap is set
@@ -122,7 +146,6 @@ feature -- Access
 			end
 			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
-		
 
 feature -- Status report
 
@@ -245,28 +268,32 @@ feature -- Element change
 		local
 			item_imp: EV_WIDGET_IMP
 			a_cs: EV_GTK_C_STRING
-			a_hbox, a_label: POINTER
+			a_event_box, a_hbox, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
 			create a_cs.make (a_text)
 			
+			a_event_box := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
 			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)
 			a_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_label)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, item_imp.c_object, a_hbox)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, item_imp.c_object, a_event_box)
 		end
 
 	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP) is
-			-- 
+			-- Assign `a_pixmap' to the tab for `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
-			a_hbox, a_list, a_pix: POINTER
+			a_event_box, a_hbox, a_list, a_pix: POINTER
 			a_pix_imp: EV_PIXMAP_IMP
 		do
 			item_imp ?= an_item.implementation
-			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_event_box := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
 			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
 			if  feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
 				-- We already have a pixmap present so we remove it

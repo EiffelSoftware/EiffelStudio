@@ -33,6 +33,8 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
+		require
+			exists: not destroyed
 		deferred
 		end
 
@@ -40,12 +42,16 @@ feature -- Status setting
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
+		require
+			exists: not destroyed
 		deferred
 		end
 
 	toggle is
 			-- Change the state of the toggle button to
 			-- opposit status.
+		require
+			exists: not destroyed
 		deferred
 		end
 

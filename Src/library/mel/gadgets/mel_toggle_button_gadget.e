@@ -93,8 +93,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixel (Current, XmNselectColor)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	select_insensitive_pixmap: MEL_PIXMAP is
@@ -104,8 +105,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixmap (Current, XmNselectInsensitivePixmap)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	select_pixmap: MEL_PIXMAP is
@@ -115,8 +117,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixmap (Current, XmNselectPixmap)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	spacing: INTEGER is

@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 		local
 			tt: STRING
 		do
-			if display_text and has_text then
+			if display_text and then has_text then
 				a_item.set_text (tooltext)
 			end
 			a_item.set_pixmap (pixmap @ 1)

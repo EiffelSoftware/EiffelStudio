@@ -22,6 +22,11 @@ inherit
 		undefine
 			copy, default_create, is_equal
 		end
+		
+	INSTALLATION_LOCATOR
+		undefine
+			copy, default_create, is_equal
+		end
 	
 feature {NONE} -- Initialization
 
@@ -75,8 +80,6 @@ feature -- Status setting
 				
 				-- Build tests corresponding to `test_widget_type'.
 			retrieve_texts (test_widget_type)
-			
-			
 		end
 		
 feature -- Access
@@ -245,7 +248,7 @@ feature {NONE} -- Implementation
 			current_file_name:  STRING
 		do
 			application.idle_actions.prune (application.idle_actions.first)
-			create directory_name.make_from_string (".")
+			create directory_name.make_from_string (location)
 			directory_name.extend ("tests")
 			directory_string := a_type.substring (4, a_type.count)
 			directory_string.to_lower

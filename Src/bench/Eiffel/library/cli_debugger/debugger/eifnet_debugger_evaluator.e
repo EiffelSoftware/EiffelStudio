@@ -58,7 +58,10 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 				print ("Start : " + generator + ".function_evaluation ... %N")
 			end
 			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.call_function (a_func, a_args)
+			
+			if last_icor_debug_eval /= Void then
+				last_icor_debug_eval.call_function (a_func, a_args)
+			end
 			Result := complete_function_evaluation
 			debug ("debugger_trace_eval")
 				print ("End : " + generator + ".function_evaluation ... %N")
@@ -352,7 +355,9 @@ feature {NONE}
 			debug ("debugger_trace_eval")
 				print ("<start> " + generator + ".prepare_evaluation %N")
 				eifnet_debugger.notify_debugger ("preparing evaluation")
-			end			
+			end
+			
+			last_call_success := 0
 			last_eval_is_exception := False
 			save_state_info
 
@@ -464,10 +469,15 @@ feature {NONE}
 			l_icd_eval: ICOR_DEBUG_EVAL
 		do
 			l_icd_eval := last_icor_debug_eval
-			last_call_success := l_icd_eval.last_call_success
-			if not last_call_succeed (last_call_success) then
-				print (generator + ".complete_function_evaluation %N")
-				print ("  => last call success of Eval = " + last_call_success.to_hex_string + "%N")
+			if l_icd_eval /= Void then
+				last_call_success := l_icd_eval.last_call_success
+			end
+			if l_icd_eval = Void or else not last_call_succeed (last_call_success) then
+			
+				debug ("DEBUGGER_TRACE_EVAL")
+					print (generator + "complete_function_evaluation %N")
+					print ("  => last call success of Eval = " + last_call_success.to_hex_string + "%N")
+				end
 			else
 					--| And we wait for all callback to be finished
 				eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)

@@ -14,7 +14,8 @@ inherit
 	COMPILER_EXPORTER;
 	SHARED_COUNTER;
 	SHARED_EIFFEL_PROJECT;
-	SHARED_INST_CONTEXT
+	SHARED_INST_CONTEXT;
+	SHARED_EXEC_ENVIRONMENT
 
 creation
 
@@ -51,7 +52,6 @@ feature -- Execution
 				prev_cluster := Inst_context.cluster;
 				output_window.clear_window;
 				if workbench.successfull then
-					Error_handler.wipe_out;
 					Create_case_storage_directory;
 					!! d.make (Case_storage_path);
 					if not d.exists or else not d.is_readable then
@@ -114,14 +114,14 @@ feature {NONE} -- Implementation
 			-- Convert all the Eiffelbench structures into
 			-- Eiffelcase structures.
 		require
-			valid_cluster_info: cluster_info /= Void
+			valid_cluster_info: root_cluster_info /= Void
 		local
 			root_cluster: S_CLUSTER_DATA;
 			s_system_data: S_SYSTEM_DATA;
 			view_id: INTEGER
 		do
 			Case_file_server.init (Case_storage_path);
-			root_cluster := cluster_info.storage_info;
+			root_cluster := root_cluster_info.storage_info;
 			!! s_system_data;
 			s_system_data.set_root_cluster (root_cluster);
 			s_system_data.set_class_view_number (Old_case_info.class_view_number);
@@ -191,78 +191,61 @@ feature {NONE} -- Implementation
 		local
 			list: SORTED_TWO_WAY_LIST [CLUSTER_I];
 			cluster_names_list: LINKED_LIST [STRING];
-			other_cluster_info: like cluster_info;
-			parent_cluster_info: like cluster_info;
+			other_cluster_info: like root_cluster_info;
+			parent_cluster_info: like root_cluster_info;
 			s_name: STRING;
 			root_file_name, file_name: STRING;
 			full_path: DIRECTORY_NAME
 		do
 			Degree_output.put_case_message ("Reverse engineering project.");
-			!! cluster_info.make;
+			!! root_cluster_info.make;
 				-- Need to covert to a string since
 				-- the dynamic type of cluster name
 				-- in cluster_i is ID_SD.
 			!! s_name.make (0);
 			s_name.append (System.system_name);
 			s_name.to_upper;
-			cluster_info.set_name (s_name);
+			root_cluster_info.set_name (s_name);
 			!! root_file_name.make (s_name.count);
 			root_file_name.append (s_name);
 			root_file_name.to_lower;
-			cluster_info.set_file_name (root_file_name);
-			cluster_info.set_full_path_name (root_file_name);
-			!! list.make;
-			list.merge (Universe.clusters);
+			root_cluster_info.set_file_name (root_file_name);
+
+			create_cluster_hierarchy (root_cluster_info, Eiffel_system.sub_clusters);	
+		end;
+
+	create_cluster_hierarchy (a_parent_info: CASE_CLUSTER_INFO;
+				sub_clusters: ARRAYED_LIST [CLUSTER_i]) is
+			-- Create the cluster hierarchy for processing EiffelCase
+			-- structures.
+		local
+			other_cluster_info: CASE_CLUSTER_INFO;
+			cluster_i: CLUSTER_I;
+			paths: LINKED_LIST [STRING]
+		do
 			from
-				list.start
+				sub_clusters.start
 			until
-				list.after
+				sub_clusters.after
 			loop
-				parent_cluster_info := Void;
-				cluster_names_list := extract_clusters (list.item.path);
-				from
-					cluster_names_list.start;
-					!! full_path.make_from_string (root_file_name);
-				until
-					cluster_names_list.after
-				loop
-					file_name := cluster_names_list.item;
-					full_path.extend (file_name);
-					if parent_cluster_info = Void then
-						other_cluster_info := 
-							cluster_info.cluster_item (full_path);
-					else
-						other_cluster_info := 
-							parent_cluster_info.cluster_item (full_path);
-					end
-					if other_cluster_info = Void then
-						!! other_cluster_info.make;
-						other_cluster_info.set_file_name (file_name);
-						other_cluster_info.set_full_path_name (clone (full_path));
-						if parent_cluster_info = Void then
-							cluster_info.add_cluster (other_cluster_info);
-						else
-							parent_cluster_info.add_cluster (other_cluster_info);
-						end
-					end;
-					parent_cluster_info := other_cluster_info;
-					cluster_names_list.forth
-				end;
-				check
-					valid_parent_info: parent_cluster_info /= Void
-				end;
-				parent_cluster_info.set_cluster_i (list.item);
-				list.forth
+				cluster_i := sub_clusters.item;
+				paths := extract_directories (cluster_i.path);
+				!! other_cluster_info.make;
+				other_cluster_info.set_file_name (paths.last);
+				other_cluster_info.set_cluster_i (cluster_i);
+				a_parent_info.add_cluster (other_cluster_info);
+				create_cluster_hierarchy (other_cluster_info, 
+					cluster_i.sub_clusters);
+				sub_clusters.forth
 			end;
-			cluster_info := cluster_info.useful_clusters;
-			check_cluster_names;
 		end;
 
 feature {NONE} -- Implementation
 
-	cluster_info: CASE_CLUSTER_INFO;
-	
-	extract_clusters (path: STRING): LINKED_LIST [STRING] is
+	root_cluster_info: CASE_CLUSTER_INFO;
+			-- Case cluster info for root cluster of system
+
+	extract_directories (path: STRING): LINKED_LIST [STRING] is
 		require
 			valid_path: path /= Void and then not path.empty
 		local
@@ -290,60 +273,8 @@ feature {NONE} -- Implementation
 					stop := True
 				end
 			end
-		end;
-
-	check_cluster_names is
-			-- Need to check if there are cluster name
-			-- clashes. 
-		require
-			valid_cluster_info: cluster_info /= Void
-		local
-			clusters: LINKED_LIST [CASE_CLUSTER_INFO];
-			cursor: CURSOR;
-			has_name_clash: BOOLEAN;
-			cluster_name: STRING;
-			cluster1, cluster2: CASE_CLUSTER_INFO
-		do
-				-- WE KNOW that clusters with classes 
-				-- in them have unique names (since the compiler
-				-- checks for this). However, for clusters
-				-- that were derived from directories may
-				-- have the same directory names.
-			!! clusters.make;
-			cluster_info.clusters_without_cluster_i (clusters);
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				cluster1 := clusters.item;
-				cursor := clusters.cursor;
-				cluster_name := clone (cluster1.name);
-				from
-					clusters.start
-				until
-					clusters.after 
-				loop
-					cluster2 := clusters.item;
-					if cluster1 /= cluster2 then
-						if cluster_name.is_equal (cluster2.name) then
-								-- Give new name to cluster1.
-								-- Each conflict results in "_X"
-								-- begin appended
-							cluster_name.append ("_X");
-							cluster1.set_name (cluster_name);
-							clusters.start;
-								-- Check again
-						else
-							clusters.forth
-						end
-					else
-						clusters.forth
-					end;
-				end;
-				clusters.go_to (cursor);
-				clusters.forth
-			end
+		ensure
+			valid_result: Result /= Void and then not Result.empty
 		end;
 
 	need_to_reverse_engineer: BOOLEAN is

@@ -344,7 +344,8 @@ feature -- Element change
 	synchronize is
 			-- Synchronize with `class_i' and `class_c' properties, build_queries, put into right cluster.
 		local
-			c, st, c_tmp: like class_c
+			c, st: like class_c
+			l_class: CLASS_I
 			i: EIFFEL_LIST [INDEX_AS]
 			s: STRING
 			f: LIST [E_FEATURE]
@@ -465,8 +466,9 @@ feature -- Element change
 								until
 									b or l.after
 								loop
-									c_tmp := l.item.associated_class (c)
-									b := (c_tmp /= Void and then c_tmp.is_deferred) or else l.item.is_effecting
+									l_class := l.item.associated_class (c.lace_class)
+									b := (l_class /= Void and then l_class.is_compiled and then
+										l_class.compiled_class.is_deferred) or else l.item.is_effecting
 									l.forth
 								end
 							end
@@ -545,7 +547,7 @@ feature {NONE} -- Implementation
 			if not suppliers.is_empty then
 				suppliers.wipe_out
 			end
-			if class_i.compiled then
+			if class_i.compiled and class_i.compiled_class.has_feature_table then
 				f := class_i.compiled_class.written_in_features
 				from
 					f.start

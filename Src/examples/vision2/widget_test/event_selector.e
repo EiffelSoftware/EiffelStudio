@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_list (a_list: EV_CHECKABLE_LIST; an_output: EV_TEXTABLE) is
+	make_with_list (a_list: EV_CHECKABLE_LIST; an_output: EV_TEXT) is
 			-- Create `Current' with `a_list' into which all action sequence items
 			-- will be inserted, and `an_output', into which all output will be displayed.
 		require
@@ -27,10 +27,9 @@ feature {NONE} -- Initialization
 			list := a_list
 			list.check_actions.extend (agent item_checked)
 			list.uncheck_actions.extend (agent item_unchecked)
-			output := an_output
+			create string_handler.make_with_textable (an_output)
 		ensure
 			list_set: list = a_list
-			output_set: output = an_output
 		end
 
 feature -- Status setting
@@ -67,9 +66,9 @@ feature -- Status setting
 								names.off
 							loop
 								create list_item.make_with_text (names.item)
-								list_item.set_accept (agent action_sequences.connect_event_output_agent (widget, names.item, True, output))
-								list_item.set_deny (agent action_sequences.connect_event_output_agent (widget, names.item, False, output))
-								action_sequences.connect_event_output_agent (widget, names.item, True, output)
+								list_item.set_accept (agent action_sequences.connect_event_output_agent (widget, names.item, True, string_handler))
+								list_item.set_deny (agent action_sequences.connect_event_output_agent (widget, names.item, False, string_handler))
+								action_sequences.connect_event_output_agent (widget, names.item, True, string_handler)
 								list.extend (list_item)
 								names.forth
 							end
@@ -114,12 +113,10 @@ feature {NONE} -- Implementation
 	list: EV_CHECKABLE_LIST
 		-- An EV_CHECKABLE_LIST which will contain item corresponding to
 		-- each action sequence of the widget currently being tested.
-	
-	output: EV_TEXTABLE
-		-- An EV_TEXTABLE into which all action sequence output will be recorded.
+		
+	string_handler: ORDERED_STRING_HANDLER
 
 invariant
 	list_not_void: list /= Void
-	output_not_void: output /= Void
-
+	
 end -- class EVENT_SELECTOR

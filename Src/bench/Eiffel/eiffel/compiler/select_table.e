@@ -11,6 +11,10 @@ inherit
 	SHARED_HISTORY_CONTROL
 		undefine
 			copy, is_equal
+		end;
+	SHARED_GENERATOR
+		undefine
+			copy, is_equal
 		end
 
 creation
@@ -103,6 +107,7 @@ feature -- Generation
 			-- types associated with class `c'.
 		local
 			desc_list: DESC_LIST
+			desc: DESCRIPTOR
 		do
 			desc_list := descriptors (c);
 			from
@@ -110,9 +115,29 @@ feature -- Generation
 			until
 				desc_list.after
 			loop
-				if desc_list.item.class_type.is_modifiable then
-					desc_list.item.generate;
+				desc := desc_list.item;
+				if desc.class_type.is_modifiable then
+					desc.generate
 				end;
+				desc_list.forth
+			end;
+		end;
+
+	generate_precomp (c: CLASS_C) is
+			-- Generate precompiled descriptor C tables of class 
+			-- types associated with class `c'.
+		local
+			desc_list: DESC_LIST;
+			desc_gen: DESC_GENERATOR
+		do
+			desc_gen := Desc_generator;
+			desc_list := descriptors (c);
+			from
+				desc_list.start
+			until
+				desc_list.after
+			loop
+				desc_gen.generate (desc_list.item);
 				desc_list.forth
 			end;
 		end;

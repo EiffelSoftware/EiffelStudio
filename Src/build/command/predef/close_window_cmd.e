@@ -18,7 +18,7 @@ feature
 
 	eiffel_type: STRING is "Build_close_cmd";
 
-	label: STRING is "Close";
+	label: STRING is "Close window";
 
 	identifier: INTEGER is
 		do

@@ -17,8 +17,8 @@ inherit
 
 feature -- Status setting and report
 
-	connect: INTEGER is
-			-- Connection status from database handle
+	connect is
+			-- Connection from database
 		require
 			not_already_connected: not is_connected
 		local
@@ -33,32 +33,31 @@ feature -- Status setting and report
 			temp7 := database_handle.login.rolePassWd
 			temp8 := database_handle.login.groupId
 
-			Result := db_spec.connect (temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8)
-
+			db_spec.connect (temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8)
 		end
 
-	disconnect: INTEGER is
-			-- Disconnection status from database handle
+	disconnect is
+			-- Disconnection from database 
 		require
 			connection_exists: is_connected
 		do
-			Result := db_spec.disconnect
+			db_spec.disconnect
 		end
 
-	commit: INTEGER is
+	commit is
 			-- Commit status from database handle
 		require
 			connection_exists: is_connected
 		do
-			Result := db_spec.commit
+			db_spec.commit
 		end
 
-	rollback: INTEGER is
+	rollback is
 			-- Rollback status from database handle
 		require
 			connection_exists: is_connected
 		do
-			Result := db_spec.rollback
+			db_spec.rollback
 		end
 
 	transaction_count: INTEGER is

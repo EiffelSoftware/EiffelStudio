@@ -33,6 +33,7 @@ call configure win32 m >>& %INSTALL_LOG
 unalias pause
 cd %EIFFEL_SRC
 copy C\run-time\LIB\*dll* %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
+fullrf %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc\*.exp
 fullrf %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc\ebench.lib
 cd %EIFFEL_SRC
 remtrace Compile a run-time for Microsoft
@@ -46,6 +47,8 @@ call configure win32 m >>& %INSTALL_LOG
 unalias pause
 cd %EIFFEL_SRC
 copy C\run-time\LIB\*.lib %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
+copy C\desc\ise_desc.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
+copy C\desc\ise_desc.lib %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
 fullrf %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc\ebench.lib
 copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC

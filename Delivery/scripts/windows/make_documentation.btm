@@ -18,7 +18,7 @@ endiff
 
 remtrace Retrieve the documentation
 cdd %DOCUMENT_DIR
-if isdir newdocs then fullrd newdocs
+if isdir newdocs fullrd newdocs
 if exist newdocs fullrf newdocs
 exprt -r %DEFAULT_CVS_TAG -d newdocs Delivery/newdocs
 remtrace Setup files
@@ -37,8 +37,8 @@ document /g >>& %INSTALL_LOG
 copy ..\default.css .
 remtrace Compile the documentation (eiffel.chm)
 hhc eiffel.hhp
-iff %? != 0 .or. not exist eiffel.chm then
-	echo Could not generate the help file
+iff not exist eiffel.chm then
+	echo Could not generate the EiffelStudio help file
 	CANCEL
 endiff
 move eiffel.chm %INSTALL_DIR\docs
@@ -57,3 +57,5 @@ iff not exist resource_bench.chm then
 	CANCEL
 endiff
 move resource_bench.chm %INSTALL_DIR\rb\bin
+
+

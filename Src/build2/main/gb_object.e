@@ -448,7 +448,6 @@ feature -- Basic operations
 				insert_position := insert_position - 1
 			end
 			create command_add.make (parent_object, an_object, insert_position)
-			history.cut_off_at_current_position
 			command_add.execute
 		end
 		
@@ -475,7 +474,6 @@ feature -- Basic operations
 			else
 				create command_add.make (Current, an_object, layout_item.count + 1)
 			end
-			history.cut_off_at_current_position
 			command_add.execute
 				-- Now we expand the layout item.
 			if not layout_item.is_expanded then

@@ -4,10 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	DATE_TIME_MEASUREMENT
-
-inherit
+deferred class DATE_TIME_MEASUREMENT inherit
 	
 	DATE_CONSTANTS
 				
@@ -16,7 +13,7 @@ inherit
 feature -- Access
 
 	date: DATE_MEASUREMENT is deferred end
-		-- Date corresponding to current object.
+		-- Date corresponding to current object
 
 	time: TIME_MEASUREMENT is deferred end
 		-- Time corresponding to current object
@@ -78,6 +75,7 @@ feature -- Access
 		end
 		
 invariant
+
 	date_exists: date /= Void
 	time_exists: time /= Void
 

@@ -8,7 +8,7 @@ inherit
 			popup as old_popup
 		export
 			{NONE} all;
-			{ANY} popdown, is_popped_up
+			{ANY} popdown, is_popped_up, destroyed, raise
 		end;
 	WINDOWS;
 	COMMAND;
@@ -33,15 +33,19 @@ feature
 			-- and pop it up at the pointer position.
 		do
 			fill (l);
-			set_y (eb_screen.y);
-			if eb_screen.x + width > eb_screen.width then
-				set_x (eb_screen.width - width);
-			else
-				set_x (eb_screen.x);
-			end
-			set_x_y (eb_screen.x, eb_screen.y);
+			update_position (eb_screen.x, eb_screen.y);
 			old_popup;
 		end;
+
+    update_position (x1, y1: INTEGER) is
+        do
+            set_y (y1);
+            if x1 + width > eb_screen.width then
+                set_x (eb_screen.width - width);
+            else
+                set_x (x1)
+            end;
+        end;
 
 feature {NONE}
 

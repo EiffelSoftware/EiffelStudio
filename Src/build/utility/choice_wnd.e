@@ -78,11 +78,15 @@ feature -- EiffelVision
 
 	make (a_parent: COMPOSITE) is
 			-- Create choice window.
+		local
+			set_win_att: SET_WINDOW_ATTRIBUTES_COM
 		do
 			dialog_create (Widget_names.base, a_parent);
 			!!list.make (Widget_names.list, Current);
 			allow_resize;
 			list.add_selection_action (Current, Void);
+			!! set_win_att;
+			set_win_att.execute (Current);
 			set_exclusive_grab
 		end;
 

@@ -4,14 +4,15 @@ class HISTORY_WND
 inherit
 
 	HISTORY;
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as shell_make,
 			show as shell_show,
 			hide as shell_hide
+		redefine
+			set_geometry
 		end;
 	COMMAND;
-	CONSTANTS;
 	COMMAND_ARGS
 	WINDOWS;
 	CLOSEABLE
@@ -19,6 +20,13 @@ inherit
 creation
 
 	make
+
+feature -- Geometry
+
+	set_geometry is
+		do
+			set_width (Resources.history_wnd_width)
+		end;
 	
 feature 
 
@@ -319,6 +327,7 @@ feature -- Interface
 			!! del_com.make (Current);
 			set_delete_command (del_com);
 			set_initial_position;
+			initialize_window_attributes;
 		end;
 
 	set_initial_position is	

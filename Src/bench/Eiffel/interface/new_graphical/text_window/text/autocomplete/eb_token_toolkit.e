@@ -103,7 +103,7 @@ feature -- basic operations
 	is_beginning_of_expression (token: EDITOR_TOKEN): BOOLEAN is
 			-- is `token' the beginning of an expression ?
 		do
-			Result := 	token = Void 
+			Result := token = Void 
 						or else
 					not token.is_text 
 						or else
@@ -112,6 +112,14 @@ feature -- basic operations
 					token_image_is_in_array (token, binary_operators)
 						or else
 					token_image_is_in_array (token, unary_operators)
+		end
+
+	can_attempt_auto_complete_from_token (token: EDITOR_TOKEN): BOOLEAN is
+			-- Is `token' of the correct type that we can attempt to build a feature or class
+			-- autocompletion list?
+		do
+			Result := token /= Void	and not	is_comment (token) and not is_string (token)
+				-- TODO: neilc.  I do not see why we should not allow complete in comments or strings, for user convenience.
 		end
 
 feature {NONE} -- Constants

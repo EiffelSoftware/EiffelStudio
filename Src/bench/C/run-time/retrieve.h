@@ -19,6 +19,7 @@ extern "C" {
 #endif
  
 #include <stdio.h>
+#include "eif_globals.h"
 #include "hashin.h"
 #include "cecil.h"
 
@@ -58,8 +59,8 @@ extern char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type);	
 /*
  * Utilities
  */
-extern int r_fides; 	        /* File descriptor use for retrieve */
-extern char r_fstoretype;	/* File storage type use for retrieve */
+/* extern int r_fides; 	        /* File descriptor use for retrieve */ /* %%zs removed and inluded eif_globals.h */
+/* extern char r_fstoretype;	/* File storage type use for retrieve */
 extern char *rt_make(void);			/* Retrieve object graph */
 extern char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
 extern struct htable *rt_table;	/* Table used for solving references */

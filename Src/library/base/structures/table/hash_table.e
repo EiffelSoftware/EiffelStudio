@@ -151,6 +151,14 @@ feature -- Access
 			Result := keys.item (pos_for_iter)
 		end;
 
+	cursor: CURSOR is
+			-- Current cursor position
+		do
+			!HASH_TABLE_CURSOR! Result.make (pos_for_iter)
+		ensure
+			cursor_not_void: Result /= Void
+		end;
+
 feature -- Measurement
 
 	count: INTEGER;
@@ -235,6 +243,25 @@ feature -- Status report
 			Result := pos_for_iter > keys.upper
 		end;
 
+	valid_cursor (c: CURSOR): BOOLEAN is
+			-- Can cursor be moved to position `c'?
+		require
+			c_not_void: c /= Void;
+		local
+			ht_cursor: HASH_TABLE_CURSOR
+			cursor_position: INTEGER
+		do
+			ht_cursor ?= c;
+			if ht_cursor /= Void then
+				cursor_position := ht_cursor.position;
+				if cursor_position > keys.upper then
+					Result := True
+				elseif cursor_position >= keys.lower then
+					Result := valid_key (keys.item (cursor_position))
+				end
+			end
+		end
+
 feature -- Cursor movement
 
 	start is
@@ -259,6 +286,20 @@ feature -- Cursor movement
 				stop := off or else valid_key (keys.item (pos_for_iter))
 			end
 		end;
+
+	go_to (c: CURSOR) is
+			-- Move to position `p'.
+		require
+			c_not_void: c /= Void;
+			valid_cursor: valid_cursor (c)
+		local
+			ht_cursor: HASH_TABLE_CURSOR
+		do
+			ht_cursor ?= c;
+			if ht_cursor /= Void then
+				pos_for_iter := ht_cursor.position
+			end
+		end
 
 feature -- Element change
 

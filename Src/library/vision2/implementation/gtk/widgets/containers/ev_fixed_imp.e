@@ -56,12 +56,7 @@ feature -- Status setting
 			w_imp: EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
-			if internal_minimum_width = -1 then
-				internal_minimum_width := minimum_width
-			end
-			if internal_minimum_height = -1 then
-				internal_minimum_height := minimum_height
-			end
+			w_imp.store_minimum_size
 			C.gtk_widget_set_usize (w_imp.c_object, a_width, a_height)
 			update_request_size
 		end

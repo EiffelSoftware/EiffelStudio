@@ -383,18 +383,12 @@ feature -- Status setting
 			-- Request that `Current' not be displayed even when its parent is.
 		do
 			C.gtk_widget_hide (c_object)
-			if parent_imp /= Void then
-				C.gtk_widget_queue_resize (parent_imp.container_widget)
-			end
 		end
 	
 	show is
 			-- Request that `Current' be displayed when its parent is.
 		do
 			C.gtk_widget_show (c_object)
-			if parent_imp /= Void then
-				C.gtk_widget_queue_resize (parent_imp.container_widget)
-			end
 		end
 
 	set_focus is
@@ -476,13 +470,13 @@ feature -- Element change
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
-			internal_set_minimum_size (a_minimum_width, -1)--minimum_height)
+			internal_set_minimum_size (a_minimum_width, internal_minimum_height)
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			internal_set_minimum_size (minimum_width, a_minimum_height)
+			internal_set_minimum_size (internal_minimum_width, a_minimum_height)
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
@@ -599,7 +593,14 @@ feature {NONE} -- Implementation
 	cursor_signal_tag: INTEGER
 			-- Tag returned from Gtk used to disconnect `enter-notify' signal
 			
-feature {EV_WIDGET_IMP} -- Implementation
+feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
+
+	store_minimum_size is
+			-- Called when size is explicitly set, ie: from fixed or viewport
+		do
+			internal_minimum_width := minimum_width
+			internal_minimum_height := minimum_height		
+		end
 
 	internal_minimum_width: INTEGER	
 			-- Minimum width for the widget.

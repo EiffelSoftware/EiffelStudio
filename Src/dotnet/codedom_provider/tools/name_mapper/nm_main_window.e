@@ -261,14 +261,16 @@ feature {NONE} -- Implementation
 		do
 			assembly_added := False
 			if not l_retried then
-				l_asm := feature {ASSEMBLY}.load_from (a_assembly_path)
-				if l_asm /= Void then
-					add_referenced_assembly (a_assembly_path)
-					if assembly_added then
-						create l_row
-						l_row.extend (l_asm.get_name.full_name)
-						l_row.extend (a_assembly_path)
-						assemblies_list.extend (l_row)
+				if not has_file (a_assembly_path) then
+					l_asm := feature {ASSEMBLY}.load_from (a_assembly_path)
+					if l_asm /= Void then
+						add_file (a_assembly_path)
+						if assembly_added then
+							create l_row
+							l_row.extend (l_asm.get_name.full_name)
+							l_row.extend (a_assembly_path)
+							assemblies_list.extend (l_row)
+						end
 					end
 				end
 			end

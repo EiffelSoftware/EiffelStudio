@@ -41,12 +41,12 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			l_referenced_assemblies := a_source.referenced_assemblies
 			from
 				l_count := l_referenced_assemblies.count
-				reset_referenced_assemblies
+				reset
 			until
 				i = l_count
 			loop
 				if not has_file (l_referenced_assemblies.item (i)) then
-					add_referenced_assembly (l_referenced_assemblies.item (i))
+					add_file (l_referenced_assemblies.item (i))
 					if not assembly_added then
 						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
 					end

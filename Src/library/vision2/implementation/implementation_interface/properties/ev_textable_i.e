@@ -31,6 +31,7 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
+			no_carriage_returns: not a_text.has ('%R')
 		deferred
 		ensure
 			text_cloned: text.is_equal (a_text) and then text /= a_text

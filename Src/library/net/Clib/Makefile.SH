@@ -19,26 +19,27 @@ AR = ar rc
 CC = $cc
 CTAGS = ctags
 CFLAGS = $optimize $ccflags $large -I\$(EIFFEL4)/bench/spec/\$(PLATFORM)/include
+MTCFLAGS = $optimize $mtccflags $large -I\$(EIFFEL4)/bench/spec/\$(PLATFORM)/include
+SHAREDLINK = $sharedlink
+LDSHAREDFLAGS = $ldsharedflags
 LN = $ln
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 RANLIB = $ranlib
 RM = $rm -f
-
 ########################################################################
 # Automatically generated parameters -- do not edit
 
 SOURCES =  \$(LSRCS)
-OBJECTS =  \$(OBJS) \$(WOBJS)
 
+NET_LIBS = libnet.a libmtnet.a libnet.so libmtnet.so
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
-all:: libnet.a
 
 .c.o:
 	\$(CC) -c \$(CFLAGS) \$<
-
+all: \$(NET_LIBS)
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
@@ -46,7 +47,15 @@ SMODE = local.c network.c network_r.c storable.c
 
 LSRCS = $(SMODE)
 
-OBJS = \
+MT_OBJECTS = \
+	MTlocal.o \
+	MTnetwork.o \
+	MTnetwork_r.o \
+	MThostname.o \
+	MTsyncpoll.o \
+	MTstorable.o
+
+OBJECTS = \
 	local.o \
 	network.o \
 	network_r.o \
@@ -54,14 +63,45 @@ OBJS = \
 	syncpoll.o \
 	storable.o
 
-local_realclean::
-	$(RM) libnet.a
+ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
+MTlocal.o: local.c
+	$(CC) -c $(MTCFLAGS) $< -o $@
 
-libnet.a: $(OBJS)
+MTnetwork.o: network.c
+	$(CC) -c $(MTCFLAGS) $< -o $@
+
+MTnetwork_r.o: network_r.c
+	$(CC) -c $(MTCFLAGS) $< -o $@
+
+MTsyncpoll.o: syncpoll.c
+	$(CC) -c $(MTCFLAGS) $< -o $@
+
+MThostname.o: hostname.c
+	$(CC) -c $(MTCFLAGS) $< -o $@
+
+MTstorable.o: storable.c
+	$(CC) -c $(MTCFLAGS) $< -o $@
+
+libmtnet.a: $(MT_OBJECTS)
 	$(RM) $@
-	$(AR) $@ $(OBJS)
+	$(AR) $@ $(MT_OBJECTS)
 	$(RANLIB) $@
 
+libmtnet.so: $(MT_OBJECTS)
+	$(RM) $@
+	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(MT_OBJECTS)
+
+libnet.a: $(OBJECTS)
+	$(RM) $@
+	$(AR) $@ $(OBJECTS)
+	$(RANLIB) $@
+
+libnet.so: $(OBJECTS)
+	$(RM) $@
+	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(OBJECTS)
+
+local_realclean::
+	$(RM) $(NET_LIBS) $(ALL_OBJECTS)
 ########################################################################
 # Common rules for all Makefiles -- do not edit
 

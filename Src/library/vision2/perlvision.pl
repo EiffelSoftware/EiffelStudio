@@ -1,0 +1,69 @@
+#!/usr/local/bin/perl
+#Script to update Vision2 copyright notice
+#Use find . -name "*.e" -print | xargs perl testscript.ps  (from vision root)
+#or perl testscript class_name.e
+
+$num_files = $#ARGV;
+$files_processed = 0;
+
+print ("\nEiffelVision2 Library Cleanser\n");
+$temp = $num_files + 1;
+print $temp;
+print (" files will be cleansed");
+
+for ($x = 0; $x <= $num_files; $x++)
+{
+if (-T $ARGV[$x] )
+{
+	$files_processed++;
+	print ("\nProcessing ");
+	print $ARGV[$x];
+	print ("\nCleansing ");
+
+	open(DATA, $ARGV[$x]);
+	@file_lines = <DATA>;
+	$file_length = $#file_lines;
+	close(DATA);
+
+	open(NEWF, ">$ARGV[$x]");
+
+
+for ($y = 0; $y <= $file_length ; $y++)
+{
+	$updated_line = update_string($file_lines[$y]);
+	print NEWF $updated_line;
+	print (".");
+}
+	print (" = ");
+	print $y;
+	print (" lines");
+	close(NEWF);
+}
+
+else
+{
+	print ("\n");
+	print $ARGV[$x];
+	print(" is not a text file (processing aborted)");
+}
+	print ("\n");
+}
+
+sub update_string
+{
+	local ($a);
+	$a = $_[0];
+	$a =~ s/EiffelVision:/EiffelVision2:/;
+	$a =~ s/1986-1998/1986-1999/;
+	$a =~ s/--\|/--!/;
+	$a =~ s/!!/create /;
+	$a =~ s/create  /create /;
+	$a =~ s/Windows Eiffel Library/EiffelVision2/;
+	$a =~ s/creation/create/;
+	$a =~ s/Creation/create/;
+	$a =~ s/--! fix_me/--\| FIXME /;
+	$a;
+}
+print("\nNumber of classes processed: ");
+print $files_processed;
+print ("\n");

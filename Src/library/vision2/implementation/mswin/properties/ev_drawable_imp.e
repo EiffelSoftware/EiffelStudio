@@ -326,33 +326,18 @@ feature -- Drawing operations
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
-		local
-			internal_x1, internal_x2, internal_y1, internal_y2: INTEGER
 		do
 			if not internal_initialized_pen then
 				reset_pen
 			end
 			get_dc
-			internal_x1 := x1
-			internal_y1 := y1
-					--| area.
-			if x2 > internal_x1 then
-				internal_x2 := x2 + 1
-			elseif x2 < internal_x1 then
-				internal_x2 := x2 - 1
-			else
-				internal_x2 := x2
-			end
-			if y2 > internal_y1 then
-				internal_y2 := y2 + 1
-			elseif y2 < internal_y1 then
-				internal_y2 := y2 - 1
-			else
-				internal_y2 := y2
-			end
-			dc.move_to (internal_x1, internal_y1)
+			dc.move_to (x1, y1)
 			
-			dc.line_to (internal_x2, internal_y2)
+			dc.line_to (x2, y2)
+				-- As `line_to' does not actually draw the final
+				-- pixel, we need to draw this ourselved, so ensure
+				-- that the line really does include `x2', `y2'.
+			dc.set_pixel (x2, y2, wel_fg_color)
 			release_dc
 		end
 

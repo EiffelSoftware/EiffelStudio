@@ -9,14 +9,6 @@ indexing
 class
 	EV_MENU_CONTAINER
 
-feature -- Element change
-
-	add_menu (menu: EV_MENU) is
-			-- Add a sub-menu in the container.
-		do
-			implementation.add_menu (menu)
-		end
-
 feature -- Implementation
 
 	implementation: EV_MENU_CONTAINER_I

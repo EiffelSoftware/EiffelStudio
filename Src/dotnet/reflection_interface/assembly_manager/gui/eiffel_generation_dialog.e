@@ -91,7 +91,7 @@ feature -- Basic Operations
 
 			create support.make_codegenerationsupport
 			support.make
-			if not support.valid_path (eiffel_path) then
+			if not support.is_valid_directory_path (eiffel_path) then
 				support.create_folder (eiffel_path)
 			end
 			destination_path_text_box.set_text (eiffel_path)

@@ -234,15 +234,13 @@ feature -- Queries
 			ct: CLASS_TYPE
 			an: STRING -- assembly name
 			ci: CLASS_I
-			ctok: INTEGER -- class token
 			cn: STRING  -- class name
 		do
 			ct := value_class_type
 			if ct /= Void then
 				Result := ct.associated_class
 			else
-				ctok := value_class_token
-				cn := value_icd_module.interface_md_import.get_typedef_props (ctok)
+				cn := value_class_name
 				an := value_icd_module.get_assembly.get_name
 				an := only_file_name_without_extension (an)
 					--| FIXME jfiat 2004/04/02 : maybe having 

@@ -215,7 +215,6 @@ liman/licence/mkey/parser.y
 liman/licence/mkey/symtab.c
 liman/licence/mkey/symtab.h
 liman/lm
-liman/lm/RCS
 liman/lm/Jmakefile
 liman/lm/Makefile.SH
 liman/lm/check.c

@@ -52,6 +52,7 @@ feature -- Update
 			project_eif_file: RAW_FILE;
 			temp: STRING;
 			fn: FILE_NAME;
+			e_displayer: DEFAULT_ERROR_DISPLAYER
 		do
 			error_occurred := False;
 
@@ -101,7 +102,9 @@ feature -- Update
 			if error_occurred then
 				io.error.putstring (temp);
 				io.error.new_line;
-			end
+			end;
+			!! e_displayer.make (Error_window);
+			Eiffel_project.set_error_displayer (e_displayer)
 		end;
 
 	retrieve_project is

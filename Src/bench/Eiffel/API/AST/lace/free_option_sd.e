@@ -382,7 +382,7 @@ feature {COMPILER_EXPORTER}
 						universe.has_override_cluster
 					end
 					if universe.has_cluster_of_name (value.value) then
-						universe.set_override_cluster_name (value.value)
+						universe.add_override_cluster_name (value.value)
 					else
 						error_found := True
 					end

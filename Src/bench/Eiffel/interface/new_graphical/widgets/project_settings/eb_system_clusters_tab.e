@@ -56,14 +56,17 @@ feature -- Access
 
 feature -- Override cluster access
 
-	has_override_cluster: BOOLEAN
-			-- Has a cluster been selected to be the override cluster.
+	has_override_cluster: BOOLEAN is
+			-- Has a cluster been selected to be the override cluster
+		do
+			Result := not override_cluster_names.is_empty
+		end
 	
 	override_cluster_check: EV_CHECK_BUTTON
 			-- Override cluster option.
 	
-	override_cluster_name: STRING
-			-- Name of override cluster if any.
+	override_cluster_names: SEARCH_TABLE [STRING]
+			-- Name of override clusters if any.
 			-- Void otherwise
 	
 feature -- Location access
@@ -187,8 +190,16 @@ feature -- Store/Retrieve
 
 				-- Mark override cluster if set.
 			if has_override_cluster then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.override_cluster,
-					override_cluster_name, False))
+				from
+					override_cluster_names.start
+				until
+					override_cluster_names.after
+				loop
+					defaults.extend (new_special_option_sd (
+						feature {FREE_OPTION_SD}.override_cluster,
+						override_cluster_names.item_for_iteration, False))
+					override_cluster_names.forth
+				end
 			end
 		end
 
@@ -298,8 +309,7 @@ feature {NONE} -- Filling
 			if opt.is_free_option then
 				free_option ?= opt
 				if free_option.code = feature {FREE_OPTION_SD}.override_cluster then
-					has_override_cluster := True
-					override_cluster_name := val.value
+					override_cluster_names.force (val.value.string)
 					is_item_removable := True
 				end
 			end
@@ -332,12 +342,8 @@ feature {NONE} -- Cluster display and saving
 			cluster_path.set_text (cl.directory_name)
 
 			is_in_select_action := True
-			if has_override_cluster then
-				set_selected (override_cluster_check, 
-					override_cluster_name.is_equal (cl_name))
-			else
-				disable_select (override_cluster_check)
-			end
+			set_selected (override_cluster_check,
+				has_override_cluster and then override_cluster_names.has (cl_name))
 		
 			set_selected (all_check, cl.is_recursive)
 			set_selected (library_check, cl.is_library)
@@ -673,16 +679,15 @@ feature -- Initialization
 			Precursor {EB_SYSTEM_TAB}
 			cluster_tree.wipe_out
 			clusters.wipe_out
-			has_override_cluster := False
 			is_in_select_action := True
 			reset_cluster_info
-			override_cluster_name := Void
+			create override_cluster_names.make (5)
 			disable_select (override_cluster_check)
 			is_in_select_action := False
 		ensure then
 			clusters_empty: clusters.is_empty
 			cluster_tree_is_empty: cluster_tree.is_empty
-			no_more_override_cluster: not has_override_cluster and override_cluster_name = Void
+			no_more_override_cluster: not has_override_cluster and override_cluster_names.is_empty
 			override_cluster_check_not_selected: not override_cluster_check.is_selected
 			library_check_not_selected: not library_check.is_selected
 			all_check_not_selected: not all_check.is_selected
@@ -758,6 +763,7 @@ feature {NONE} -- Initialization
 		do
 			system_window := top
 			create clusters.make (10)
+			create override_cluster_names.make (5)
 
 			tab_make
 			default_create
@@ -1085,25 +1091,14 @@ feature {NONE} -- Actions
 		require
 			override_cluster_check_not_void: override_cluster_check /= Void
 		local
-			ck: like override_cluster_check
+			l_name: STRING
 		do
 			if not is_in_select_action then
-				ck := override_cluster_check	
-				if ck.is_selected then
-					if not has_override_cluster then
-						has_override_cluster := True
-						override_cluster_name := cluster_name.text
-					else
-							--| FIXME: We are changing the override cluster, we need
-							--| to display a warning.
-						override_cluster_name := cluster_name.text
-					end
-					if override_cluster_name.is_empty then
-						override_cluster_name := Void
-					end
+				l_name := cluster_name.text
+				if override_cluster_check.is_selected then
+					override_cluster_names.force (l_name)
 				else
-					has_override_cluster := False
-					override_cluster_name := Void
+					override_cluster_names.remove (l_name)
 				end
 			end
 		end

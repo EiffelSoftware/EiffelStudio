@@ -321,7 +321,7 @@ feature -- Commands
 			forbid_degree_6 := True
 			if universe.has_override_cluster then
 					-- We also process classes being changed outside EiffelStudio here.
-				universe.override_cluster.rebuild_override
+				universe.rebuild_override_fast
 			end
 			recompile
 			forbid_degree_6 := False

@@ -293,7 +293,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			adapt_use;
 
 				-- Process override cluster first.
-			Universe.process_override_cluster
+			Universe.process_override_clusters
 
 				-- Update content of clusters.
 			update_clusters;
@@ -529,7 +529,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- build clusters.
 		local
 			clus: CLUSTER_SD
-			override_name: STRING
 			clus_name: STRING
 		do
 			if clusters /= Void then
@@ -547,7 +546,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				Degree_output.put_start_degree_6 (clusters_count);
 				from
 					clusters.start
-					override_name := Universe.override_cluster_name
 				until
 					clusters.after
 				loop
@@ -555,7 +553,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					clus_name := clus.cluster_name
 					if
 						clus.is_recursive and then
-						(override_name = Void or else not clus_name.is_equal (override_name))
+						not Universe.has_override_cluster_of_name (clus_name)
 					then
 						clus.expand_recursive_clusters (clusters)
 					end
@@ -761,7 +759,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			free_option_sd: FREE_OPTION_SD
 			l_val: OPT_VAL_SD
 		do
-			Universe.set_override_cluster_name (Void)
+			Universe.reset_override_clusters
 			if defaults /= Void then
 				from
 					defaults.start
@@ -773,11 +771,11 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 						l_val := defaults.item.value
 						if
 							not l_val.is_name or Compilation_modes.is_precompiling or
-							Universe.has_override_cluster
+							Universe.has_override_cluster_of_name (l_val.value)
 						then
 							free_option_sd.error (l_val)
 						else
-							Universe.set_override_cluster_name (l_val.value)
+							Universe.add_override_cluster_name (l_val.value)
 						end
 					end
 					defaults.forth

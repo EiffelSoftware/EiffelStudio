@@ -114,19 +114,17 @@ end;
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER
 		do
-			if not System.il_generation then
-					-- Check array class
-				check_array_class
+				-- Check array class
+			check_array_class
 
-					-- Check tuple class
-				check_tuple_class
+				-- Check tuple class
+			check_tuple_class
 
-					-- Check function class
-				check_function_class
+				-- Check function class
+			check_function_class
 
-					-- Check procedure class
-				check_procedure_class
-			end
+				-- Check procedure class
+			check_procedure_class
 
 				-- Remove the obsolete types
 			clean;

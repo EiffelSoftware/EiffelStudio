@@ -136,10 +136,10 @@ feature -- Basic Operation
 			end
 			if directory_item = Void then
 				-- Now simply add as root.
-				Window_selector.extend (object.window_selector_item)
+				window_selector.add_alphabetically (object.window_selector_item)
 			else
 				-- Restore window into original directory.
-				directory_item.extend (object.window_selector_item)
+				directory_item.add_alphabetically (object.window_selector_item)
 				directory_item.expand
 			end
 			

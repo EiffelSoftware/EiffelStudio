@@ -252,7 +252,7 @@ end -- class EV_GAUGE
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -271,6 +271,9 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/19 20:24:42  brendel
+--| Updated copyright to 1986-2000.
+--|
 --| Revision 1.9  2000/02/15 16:33:52  brendel
 --| Added `is_in_default_state'.
 --|

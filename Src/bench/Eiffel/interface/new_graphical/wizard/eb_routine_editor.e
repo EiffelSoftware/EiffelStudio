@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			create fake_vb
 			create name_hb
 			create feature_name_field.make_with_text ("new_feature")
-			feature_name_field.set_minimum_width (70)
 			name_hb.extend (new_tab (1))
 			name_hb.disable_item_expand (name_hb.last)
 			name_hb.extend (feature_name_field)
@@ -60,24 +59,22 @@ feature {NONE} -- Initialization
 			extend (hb)
 			disable_item_expand (hb)
 
+			create local_field
+			create require_field
+			build_body_type_box
+			create body_field
+			create ensure_field
+
 			add_comment_field
 			add_label ("require", 2)
-			create require_field
-			add_indented (require_field, 3)
+			add_indented (require_field, 3, True)
 			add_label ("local", 2)
-			create local_field
-			add_indented (local_field, 3)
-
-			build_body_type_box
+			add_indented (local_field, 3, True)
 			extend (body_type_box)
 			disable_item_expand (body_type_box)
-
-			create body_field
-			add_indented (body_field, 3)
-
+			add_indented (body_field, 3, True)
 			add_label ("ensure", 2)
-			create ensure_field
-			add_indented (ensure_field, 3)
+			add_indented (ensure_field, 3, True)
 			add_label ("end", 2)
 		end
 
@@ -226,8 +223,12 @@ feature {NONE} -- Implementation
 	body_code: STRING is
 			-- Code for routine body.
 		do
-			if body_field.line_count = 0 then
-				Result := "%T%T" + body_type_label.text + "%N"
+			if body_field.text.is_empty then
+				create Result.make (8)
+				Result.append_character ('%T')
+				Result.append_character ('%T')
+				Result.append (body_type_label.text)
+				Result.append_character ('%N')
 			else
 				Result := code_for_field (body_field, body_type_label.text)
 			end
@@ -239,22 +240,27 @@ feature {NONE} -- Implementation
 			Result := code_for_field (ensure_field, "ensure")
 		end
 
-	code_for_field (f: EB_FEATURE_LINE_EDIT; kw: STRING): STRING is
+	code_for_field (f: EV_TEXT_FIELD; kw: STRING): STRING is
 			-- Code for routine part `f' with keyword `kw'.
 		local
-			n: INTEGER
+			l_text: STRING
 		do
-			create Result.make (10)
-			if f.line_count > 0 then
-				Result.append ("%T%T" + kw + "%N")
-				from
-					n := 1
-				until
-					n > f.line_count
-				loop
-					Result.append ("%T%T%T" + f.line (n) + "%N")
-					n := n + 1
-				end
+			l_text := f.text
+			if not l_text.is_empty then
+					-- Insert header `kw'
+				create Result.make (20)
+				Result.append_character ('%T')
+				Result.append_character ('%T')
+				Result.append (kw)
+				Result.append_character ('%N')
+
+				Result.append_character ('%T')
+				Result.append_character ('%T')
+				Result.append_character ('%T')
+				Result.append (l_text)
+				Result.append_character ('%N')
+			else
+				create Result.make_empty
 			end
 		end
 
@@ -263,10 +269,6 @@ feature {NONE} -- Implementation
 		local
 			asc: EB_ARGUMENT_SELECTOR
 		do
-			once_button.disable_sensitive
-			if once_button.is_selected then
-				do_button.enable_select
-			end
 			if not argument_list.is_empty then
 				asc ?= argument_list.last
 				asc.add_semicolon
@@ -275,6 +277,8 @@ feature {NONE} -- Implementation
 			asc.set_remove_procedure (agent on_argument_removed (asc))
 			argument_list.extend (asc)
 			asc.set_name ("arg" + argument_list.count.out)
+			asc.name_field.select_all
+			asc.name_field.set_focus
 		end
 
 	on_argument_removed (arg: EB_ARGUMENT_SELECTOR) is
@@ -288,9 +292,8 @@ feature {NONE} -- Implementation
 			if not argument_list.is_empty then
 				asc ?= argument_list.last
 				asc.remove_semicolon
-			else
-				once_button.enable_sensitive
 			end
+			add_argument_button.set_focus
 		ensure
 			argument_removed: not argument_list.has (arg)
 		end
@@ -299,14 +302,14 @@ feature {NONE} -- Implementation
 			-- User selected different routine body type.
 		do
 			if new_body.is_equal ("deferred") then
-				body_field.disable
-				local_field.disable
+				body_field.disable_sensitive
+				local_field.disable_sensitive
 			elseif new_body.is_equal ("external") then
-				body_field.enable
-				local_field.disable
+				body_field.enable_sensitive
+				local_field.disable_sensitive
 			else
-				body_field.enable
-				local_field.enable
+				body_field.enable_sensitive
+				local_field.enable_sensitive
 			end
 			body_type_label.set_text (new_body)
 		end
@@ -316,11 +319,11 @@ feature {EB_FEATURE_EDITOR} -- Access
 	add_argument_button: EV_BUTTON
 	argument_list: EV_VERTICAL_BOX
 
-	require_field: EB_FEATURE_LINE_EDIT
-	local_field: EB_FEATURE_LINE_EDIT
+	require_field: EV_TEXT_FIELD
+	local_field: EV_TEXT_FIELD
 	body_type_label: EV_LABEL
 	body_type_box: EV_HORIZONTAL_BOX
-	body_field: EB_FEATURE_LINE_EDIT
-	ensure_field: EB_FEATURE_LINE_EDIT
+	body_field: EV_TEXT_FIELD
+	ensure_field: EV_TEXT_FIELD
 
 end -- class EB_ROUTINE_EDITOR

@@ -153,7 +153,7 @@ feature -- Removal
 			imp: EV_WIDGET_IMP
 		do
 			imp ?= v.implementation
-			remove_from_container (imp.c_object)
+			C.gtk_container_remove (list_widget, imp.c_object)
 		end
 
 	remove is
@@ -161,24 +161,14 @@ feature -- Removal
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
 		do
-			remove_from_container (
-				C.g_list_nth_data (
-					C.gtk_container_children (list_widget),
-					index - 1
-				)
-			)
+			remove_item_from_position (index)
 		end
 
 	remove_left is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
-			remove_from_container (
-				C.g_list_nth_data (
-					C.gtk_container_children (list_widget),
-					index - 2
-				)
-			)
+			remove_item_from_position (index - 1)
 			index := index - 1
 		end
 
@@ -187,12 +177,7 @@ feature -- Removal
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
-			remove_from_container (
-				C.g_list_nth_data (
-					C.gtk_container_children (list_widget),
-					index
-				)
-			)
+			remove_item_from_position (index + 1)
 		end
 
 feature -- Implementation
@@ -206,11 +191,17 @@ feature -- Implementation
 			C.gtk_container_add (list_widget, imp.c_object)
 		end
 
-	remove_from_container (a_c_object: POINTER) is
-			-- Remove `a_c_object' from container.
-			--| Redefined in EV_MENU_IMP.
+	remove_item_from_position (a_position: INTEGER) is
+			-- Remove item at `a_position'
+		
 		do	
-			C.gtk_container_remove (list_widget, a_c_object)
+			C.gtk_container_remove (
+				list_widget,
+				C.g_list_nth_data (
+					C.gtk_container_children (list_widget),
+					a_position - 1
+				)
+			)
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -260,6 +251,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/16 20:25:05  king
+--| Abstracted a remove_item_from_position to avoid a lot of redefinition in mclist
+--|
 --| Revision 1.9  2000/02/14 11:40:30  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -225,6 +225,23 @@ feature -- Access
 			Result := clone (cluster_name);
 			Result.to_upper
 		end;
+		
+	top_of_recursive_cluster: CLUSTER_I is
+			-- Top most cluster when Current is a subcluster that belongs
+			-- to a recursive cluster. Otherwise `Current'.
+		do
+			if parent_cluster = Void then
+				Result := Current
+			else
+				if parent_cluster.belongs_to_all then
+					Result := parent_cluster.top_of_recursive_cluster
+				else
+					Result := parent_cluster
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 
 feature -- Element change
 

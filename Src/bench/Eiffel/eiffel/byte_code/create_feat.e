@@ -253,8 +253,6 @@ feature -- Genericity
 			rout_info: ROUT_INFO
 			gen_type: GEN_TYPE_I
 		do
-			buffer.putint (Like_pfeature_type)
-			buffer.putstring (", ")
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 
@@ -273,8 +271,6 @@ feature -- Genericity
 						gen_type ?= table.first.type
 
 						if gen_type /= Void then
-							buffer.putint (Internal_type)
-							buffer.putchar (',')
 							gen_type.generate_cid (buffer, final_mode, True)
 						else
 							buffer.putint (table.first.feature_type_id - 1)
@@ -335,12 +331,8 @@ feature -- Genericity
 		local
 			dummy : INTEGER
 			table: POLY_TABLE [ENTRY]
-			table_name: STRING
 			gen_type: GEN_TYPE_I
 		do
-			buffer.putint (Like_pfeature_type)
-			buffer.putstring (", ")
-			dummy := idx_cnt.next
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 
@@ -361,9 +353,6 @@ feature -- Genericity
 						gen_type ?= table.first.type
 
 						if gen_type /= Void then
-							buffer.putint (Internal_type)
-							buffer.putchar (',')
-							dummy := idx_cnt.next
 							gen_type.generate_cid_array (buffer, 
 													final_mode, True, idx_cnt)
 						else
@@ -372,18 +361,8 @@ feature -- Genericity
 							dummy := idx_cnt.next
 						end
 					else
-							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (routine_id)
-
 						buffer.putstring ("0, ")
 						dummy := idx_cnt.next
-
-							-- Side effect. This is not nice but
-							-- unavoidable.
-							-- Mark routine id used
-						Eiffel_table.mark_used (routine_id)
-							-- Remember extern declaration
-						Extern_declarations.add_type_table (table_name)
 					end
 				end
 			else
@@ -401,7 +380,6 @@ feature -- Genericity
 			rout_info: ROUT_INFO
 			gen_type: GEN_TYPE_I
 		do
-			dummy := idx_cnt.next
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 
@@ -418,7 +396,6 @@ feature -- Genericity
 						gen_type ?= table.first.type
 
 						if gen_type /= Void then
-							dummy := idx_cnt.next
 							gen_type.generate_cid_init (buffer, final_mode, True, idx_cnt)
 						else
 							dummy := idx_cnt.next
@@ -443,6 +420,13 @@ feature -- Genericity
 						buffer.putstring (");")
 						buffer.new_line
 						dummy := idx_cnt.next
+						
+							-- Side effect. This is not nice but
+							-- unavoidable.
+							-- Mark routine id used
+						Eiffel_table.mark_used (routine_id)
+							-- Remember extern declaration
+						Extern_declarations.add_type_table (table_name)
 					end
 				end
 			else
@@ -452,7 +436,7 @@ feature -- Genericity
 				then
 					buffer.putstring ("typarr[")
 					buffer.putint (idx_cnt.value)
-					buffer.putstring ("] = RTWPCT(")
+					buffer.putstring ("] = RTID(RTWPCT(")
 					buffer.generate_type_id (context.class_type.static_type_id)
 					buffer.putstring (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
@@ -462,7 +446,7 @@ feature -- Genericity
 				else
 					buffer.putstring ("typarr[")
 					buffer.putint (idx_cnt.value)
-					buffer.putstring ("] = RTWCT(")
+					buffer.putstring ("] = RTID(RTWCT(")
 					buffer.putint (context.current_type.associated_class_type.static_type_id - 1)
 					buffer.putstring (gc_comma)
 					buffer.putint (feature_id)
@@ -470,7 +454,7 @@ feature -- Genericity
 
 				buffer.putstring (gc_comma)
 				context.Current_register.print_register
-				buffer.putstring (");")
+				buffer.putstring ("));")
 				buffer.new_line
 				dummy := idx_cnt.next
 			end

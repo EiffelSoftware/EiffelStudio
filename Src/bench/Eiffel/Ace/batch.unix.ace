@@ -126,7 +126,10 @@ cluster
 			"eiffel_envision_10"; "windows"; "CVS"; "EIFGEN"; 
 		end
 
-	preferences:	"$EIFFEL_SRC/library/preferences"
+	all preferences:	"$EIFFEL_SRC\library\preferences"
+		exclude
+			"registry_implementation"; "graphical"; "interface";
+		end		
 
 external
 

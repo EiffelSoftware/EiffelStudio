@@ -1,21 +1,21 @@
 
-deferred class DELAY_SERVER [T -> IDABLE]
+deferred class DELAY_SERVER [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
 
-	SERVER [T]
+	COMPILER_SERVER [T, H]
 		redefine
-			put , flush, item, has, remove,
+			put, flush, item, has, remove,
 			change_id
 		end
 
 feature
 
-	change_id (new_value, old_value: INTEGER) is
+	change_id (new_value, old_value: H) is
 		local
 			sf: SERVER_INFO;
 			temp: T;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (old_value);
 
@@ -36,7 +36,7 @@ feature
 			end;
 		end;
  
-	delayed: SEARCH_TABLE [INTEGER] is
+	delayed: SEARCH_TABLE [H] is
 			-- Table of delayed ids
 		deferred
 		end;
@@ -45,28 +45,28 @@ feature
 			-- Append object `t' in file `file'.
 		local
 			old_item, to_remove: T;
-			id, id_to_remove: INTEGER;
+			an_id, id_to_remove: H;
 		do
 debug ("SERVER")
 	io.putstring ("Putting element of id: ");
-	io.putint (t.id);
+	io.putstring (t.id.dump);
 	io.putstring ("(");
-	io.putint (updated_id (t.id));
+	io.putstring (updated_id (id (t)).dump);
 	io.putstring (") into");
 	io.putstring (generator);
 	io.new_line;
 end;
 
-			t.set_id (updated_id(t.id));
+			t.set_id (updated_id (id (t)));
 
-			id := t.id;
+			an_id := id (t);
 				-- Put `t' in cache if not full
-			old_item := cache.item_id (id);
+			old_item := cache.item_id (an_id);
 			if old_item = Void then
 					-- No previous item of id `t.id'
 				if cache.full then
 					to_remove := cache.item;
-					id_to_remove := to_remove.id;
+					id_to_remove := id (to_remove);
 					if delayed.has (id_to_remove) then
 						write (to_remove);
 						delayed.remove (id_to_remove);
@@ -79,17 +79,17 @@ end;
 					-- reorganized the cache
 				cache.change_last_item (t);
 			end;
-			delayed.force (id);
+			delayed.force (an_id);
 		end;
 
-	item (an_id: INTEGER): T is
+	item (an_id: H): T is
 			-- Object of id `an_id'.
 		local
 			info: SERVER_INFO;
 			server_file: SERVER_FILE;
-			id_to_remove: INTEGER;
+			id_to_remove: H;
 			to_remove: T;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (an_id);
 			Result := cache.item_id (real_id);
@@ -106,7 +106,7 @@ end;
 				if cache.full then
 						-- If cache is full, oldest is removed
 					to_remove := cache.item;
-					id_to_remove := to_remove.id;
+					id_to_remove := id (to_remove);
 					if delayed.has (id_to_remove) then
 						write (to_remove);
 						delayed.remove (id_to_remove);
@@ -118,14 +118,14 @@ end;
 			end;
 		end;
 
-	remove (an_id: INTEGER) is
+	remove (an_id: H) is
 			-- Remove information of id `an_id'.
 			-- NO precondition, the feature will check if the
 			-- server has the element to remove.
 		local
 			old_info: SERVER_INFO;
 			old_server_file: SERVER_FILE;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (an_id);
 
@@ -147,7 +147,8 @@ end;
 	flush is
 			-- Flush server
 		local
-			nb_iter, nb, id_to_remove: INTEGER;
+			nb_iter, nb: INTEGER;
+			id_to_remove: H;
 			to_remove: T;
 		do
 			from
@@ -157,7 +158,7 @@ end;
 				nb_iter > nb
 			loop
 				to_remove := cache.item;
-				id_to_remove := to_remove.id;
+				id_to_remove := id (to_remove);
 				cache.remove;
 				if delayed.has (id_to_remove) then
 					write (to_remove);
@@ -168,13 +169,13 @@ end;
 			end;
 		end;
 
-	has (id: INTEGER): BOOLEAN is
-			-- Has the server an item of id `id' ?
+	has (an_id: H): BOOLEAN is
+			-- Has the server an item of id `an_id' ?
 		local
-			real_id: INTEGER
+			real_id: H
 		do
-			real_id := updated_id (id);
+			real_id := updated_id (an_id);
 			Result := cache.has_id (real_id) or else tbl_has (real_id)
 		end;
 
-end
+end -- class DELAY_SERVER

@@ -20,7 +20,6 @@ inherit
 		undefine
 			parent
 		redefine
-			set_text,
 			parent_imp,
 			interface
 		end
@@ -39,7 +38,6 @@ feature {NONE} -- Initialization
 			-- Create the widget with `par' as parent.
 		do
 			base_make (an_interface)
-		--	set_text ("")
 		end
 
 	initialize is
@@ -69,6 +67,8 @@ feature -- Access
               end
 
 feature -- Status report
+
+	text: STRING
 
 	--destroyed: BOOLEAN is
 			-- Is current object destroyed ?
@@ -119,7 +119,7 @@ feature -- Element change
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
+			text := txt
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current.interface, txt)
 			end
@@ -198,6 +198,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/25 17:44:27  rogers
+--| Removed call to precursor in set_text, and replaced with text := txt as text is now an attribute of this class directly.
+--|
 --| Revision 1.27  2000/02/19 06:23:05  oconnor
 --| removed command stuff
 --|

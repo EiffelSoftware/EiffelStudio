@@ -1144,8 +1144,8 @@ rt_public char eif_gen_is_uniform (EIF_REFERENCE obj, char code)
 	if (gdp->size == 0)
 		return EIF_TRUE;
 
-	if (codemap [code])
-		utype = codemap [code];
+	if (codemap [(int) code])
+		utype = codemap [(int) code];
 	else
 		utype = gdp->typearr [0];
 

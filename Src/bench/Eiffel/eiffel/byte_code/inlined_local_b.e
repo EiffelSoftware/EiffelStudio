@@ -59,8 +59,7 @@ feature -- Register and code generation
 
 	print_register is
 		do
-			System.remover.inliner.inlined_feature
-				.local_regs.item (position).print_register
+			System.inliner.inlined_feature.local_regs.item (position).print_register
 		end;
 
 end

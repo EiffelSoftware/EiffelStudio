@@ -98,75 +98,79 @@ feature -- Settings
 			l_value := condition.evaluate
 			if l_value.is_boolean then
 				if l_value.boolean_value then
-					compound.enlarge_tree
-					create {INSTR_LIST_B} Result.make (compound)
-				else
-					if elsif_list = Void and else_part = Void then
+					if compound = Void then
 						create {INSTR_LIST_B} Result.make (null_byte_node)
-					elseif elsif_list = Void then
+					else
+						compound.enlarge_tree
+						create {INSTR_LIST_B} Result.make (compound)
+					end
+				elseif elsif_list = Void then
+					if else_part = Void then
+						create {INSTR_LIST_B} Result.make (null_byte_node)
+					else
 							-- Here we are guaranteed that `else_part' is not Void.
 						else_part.enlarge_tree
 						create {INSTR_LIST_B} Result.make (else_part)
-					else
-						check
-							not_elsif_list_empty: not elsif_list.is_empty
-						end
-						
-							-- Now remove useless `elseif' statements.
-						from
-							elsif_list.start
-						until
-							elsif_list.after
-						loop
-							l_elseif_b ?= elsif_list.item
-							l_expr := l_elseif_b.expr.enlarged
-							l_value := l_expr.evaluate
-							if l_value.is_boolean then
-								if l_value.boolean_value then
-										-- Code will always be executed, get rid of remaining items.
-									l_elseif_b.enlarge_tree
-									elsif_list.forth
-									from
-									until
-										elsif_list.after
-									loop
-										elsif_list.remove
-									end
-									else_part := Void
-								else
-										-- Code will never be executed, get rid of it.
-									elsif_list.remove
-								end
-							else
+					end
+				else
+					check
+						not_elsif_list_empty: not elsif_list.is_empty
+					end
+					
+						-- Now remove useless `elseif' statements.
+					from
+						elsif_list.start
+					until
+						elsif_list.after
+					loop
+						l_elseif_b ?= elsif_list.item
+						l_expr := l_elseif_b.expr.enlarged
+						l_value := l_expr.evaluate
+						if l_value.is_boolean then
+							if l_value.boolean_value then
+									-- Code will always be executed, get rid of remaining items.
 								l_elseif_b.enlarge_tree
 								elsif_list.forth
-							end
-						end
-						
-							-- Create new node.
-						if not elsif_list.is_empty then
-							create l_if_b
-							l_elseif_b ?= elsif_list.first
-							l_if_b.set_condition (l_elseif_b.expr)
-							l_if_b.set_compound (l_elseif_b.compound)
-							elsif_list.start
-							elsif_list.remove
-							if not elsif_list.is_empty then
-								l_if_b.set_elsif_list (elsif_list)
-							end
-							if else_part /= Void then
-									-- Can be Void. Check eweasel test term125.
-								else_part.enlarge_tree
-							end
-							l_if_b.set_else_part (else_part)
-							Result := l_if_b
-						else
-							if else_part = Void then
-								create {INSTR_LIST_B} Result.make (null_byte_node)
+								from
+								until
+									elsif_list.after
+								loop
+									elsif_list.remove
+								end
+								else_part := Void
 							else
-								else_part.enlarge_tree
-								create {INSTR_LIST_B} Result.make (else_part)
+									-- Code will never be executed, get rid of it.
+								elsif_list.remove
 							end
+						else
+							l_elseif_b.enlarge_tree
+							elsif_list.forth
+						end
+					end
+					
+						-- Create new node.
+					if not elsif_list.is_empty then
+						create l_if_b
+						l_elseif_b ?= elsif_list.first
+						l_if_b.set_condition (l_elseif_b.expr)
+						l_if_b.set_compound (l_elseif_b.compound)
+						elsif_list.start
+						elsif_list.remove
+						if not elsif_list.is_empty then
+							l_if_b.set_elsif_list (elsif_list)
+						end
+						if else_part /= Void then
+								-- Can be Void. Check eweasel test term125.
+							else_part.enlarge_tree
+						end
+						l_if_b.set_else_part (else_part)
+						Result := l_if_b
+					else
+						if else_part = Void then
+							create {INSTR_LIST_B} Result.make (null_byte_node)
+						else
+							else_part.enlarge_tree
+							create {INSTR_LIST_B} Result.make (else_part)
 						end
 					end
 				end

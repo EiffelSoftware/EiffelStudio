@@ -25,7 +25,7 @@ cluster
 		end
 
 		-- EiffelBase.NET
-	all base: "$ISE_EIFFEL\library.net\base"
+	all base_net: "$ISE_EIFFEL\library.net\base"
 
 assembly
 	mscorlib:   "mscorlib",   "1.0.<FL_ASSEMBLY_VERSION>.0", "neutral", "b77a5c561934e089"
@@ -74,6 +74,6 @@ assembly
 	Microsoft_visualC:	"Microsoft.VisualC",	"7.0.<FL_ASSEMBLY_VERSION>.0",	"neutral",	"b03f5f7f11d50a3a"
 	system_DirectoryServices:	"System.DirectoryServices",	"1.0.<FL_ASSEMBLY_VERSION>.0",	"neutral",	"b03f5f7f11d50a3a"
 	system_Runtime_Remoting:	"System.Runtime.Remoting",	"1.0.<FL_ASSEMBLY_VERSION>.0",	"neutral",	"b77a5c561934e089"
-	cscompmgd:	"cscompmgd",	"1.0.<FL_ASSEMBLY_VERSION>.0",	"neutral",	"b03f5f7f11d50a3a"
+	cscompmgd:	"cscompmgd",	"7.0.<FL_ASSEMBLY_VERSION>.0",	"neutral",	"b03f5f7f11d50a3a"
 
 end

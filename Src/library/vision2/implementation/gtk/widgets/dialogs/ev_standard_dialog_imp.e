@@ -33,7 +33,9 @@ inherit
 		redefine
 			on_key_event,
 			initialize_client_area,
-			call_close_request_actions
+			call_close_request_actions,
+			initialize,
+			has_wm_decorations
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
@@ -45,10 +47,18 @@ inherit
 	
 feature -- Initialization
 
-	initialize_client_area is
-			-- Implementation not needed as this is already done by toolkit
+	initialize is
+			-- Initialize 'Current'
 		do
-			-- Do nothing
+			Precursor {EV_WINDOW_IMP}
+			disable_user_resize
+				-- We do not want standard dialogs to be resized by the user
+		end
+
+	initialize_client_area is
+			-- Initialize client area of Current
+		do
+			-- Do nothing as this is performed by Gtk
 		end
 
 feature -- Access
@@ -172,13 +182,20 @@ feature {NONE} -- Implementation
 		do
 			on_cancel
 		end
+
 		
 	user_clicked_ok: BOOLEAN
 		-- Has the user explicitly cancelled the dialog.
 
 	interface: EV_STANDARD_DIALOG
+	
+	has_wm_decorations: BOOLEAN is
+			-- Does 'Current' have Window Manager decorations?
+		do
+			Result := True
+		end
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Implmentation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_ok is
 			-- Close window and call action sequence.

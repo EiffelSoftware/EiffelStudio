@@ -13,8 +13,8 @@ echo "Extracting "."/Makefile (with variable substitutions)"
 $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
-CFLAGS = $optimize $ccflags $large -I\$(EIFFEL4)/bench/spec/\$(PLATFORM)/include
-MTCFLAGS = $optimize $mtccflags $large -I\$(EIFFEL4)/bench/spec/\$(PLATFORM)/include
+CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/include
+MTCFLAGS = $optimize $mtccflags $large -I\$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/include
 LDFLAGS = $ldflags
 DEFINES= 
 LIBS = $libs

@@ -25,6 +25,6 @@ you must follow these steps:
    initialization from MOTIF to OBSOLETE_MOTIF (for windows, change 
    the declaration from MS_WINDOWS to OBSOLETE_MS_WINDOWS)
 2. Include the following clusters into your Ace file:
-   obsolete_oui:    "$EIFFEL4/library/vision/obsolete/oui";
-   obsolete_toolkit:"$EIFFEL4/library/vision/obsolete/toolkit";
-   obsolete_motif:  "$EIFFEL4/library/vision/obsolete/motif";
+   obsolete_oui:    "$ISE_EIFFEL/library/vision/obsolete/oui";
+   obsolete_toolkit:"$ISE_EIFFEL/library/vision/obsolete/toolkit";
+   obsolete_motif:  "$ISE_EIFFEL/library/vision/obsolete/motif";

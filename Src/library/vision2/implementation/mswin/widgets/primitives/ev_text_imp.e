@@ -28,7 +28,9 @@ inherit
 			interface,
 			initialize,
 			selection_start,
-			selection_end
+			selection_end,
+			set_caret_position,
+			caret_position
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -166,6 +168,21 @@ feature -- Access
 			end
 			wel_set_text (exp)
 		end
+		
+	line_count: INTEGER is
+			-- Number of lines of text in `Current'.
+		do
+			Result := wel_line_count
+		end
+		
+	caret_position: INTEGER is
+			-- Current position of caret.
+		local
+			new_lines_to_caret_position: INTEGER
+		do
+			new_lines_to_caret_position := wel_text.substring (1, internal_caret_position).occurrences ('%R')
+			Result := internal_caret_position + 1 - new_lines_to_caret_position
+		end
 
 feature -- Status Report
 
@@ -178,8 +195,12 @@ feature -- Status Report
 
 	first_position_from_line_number (a_line: INTEGER): INTEGER is	
 			-- Position of the first character on the `i'-th line.
+		local
+			new_lines_to_first_position: INTEGER
 		do
-			Result := wel_line_index (a_line - 1) + 1
+			new_lines_to_first_position := wel_text.substring (1, wel_line_index (a_line - 1)).occurrences ('%R')
+				-- We must not include the %R as the Vision2 interface does not include them.
+			Result := wel_line_index (a_line - 1) + 1 - new_lines_to_first_position
 		end
 
 	last_position_from_line_number (a_line: INTEGER): INTEGER is
@@ -228,6 +249,37 @@ feature -- Status Settings
 			convert_string (a_string)
 			replace_selection (a_string)
 			internal_set_caret_position (previous_caret_position)
+		end
+		
+	set_caret_position (pos: INTEGER) is
+			-- set current caret position.
+			--| This position is used for insertions.
+		local
+			new_lines: INTEGER
+			a: SPECIAL [CHARACTER]
+			counter: INTEGER
+			nb: INTEGER
+		do
+				-- We cannot simply call `occurrances' on `wel_text' to determine how
+				-- many new line characters there are before `pos' as each time one is
+				-- found, we must increase `pos' by one. This is because from the interface,
+				-- new lines are "%N" but on Windows they are "%R%N".
+			a := wel_text.area
+			from
+				counter := 0
+				nb := pos - 1
+			until
+				counter > nb
+			loop
+				if a.item (counter) = '%R' then
+					new_lines := new_lines + 1
+					nb := nb + 1
+				end
+				counter := counter + 1
+			end
+				-- We store `pos' so caret position can be restored
+				-- after operations that should not move caret, but do.
+			internal_set_caret_position (pos - 1 + new_lines)
 		end
 
 feature -- Basic operation

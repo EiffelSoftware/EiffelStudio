@@ -10,42 +10,47 @@ deferred class
 inherit
 	SHARED_WORKBENCH
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	SHARED_TMP_SERVER
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	SHARED_INST_CONTEXT
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	SHARED_EVALUATOR
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	PREFIX_INFIX_NAMES
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	SHARED_RESCUE_STATUS
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	SHARED_ERROR_HANDLER
 		export
-			{NONE} All
+			{NONE} all
 		end
 	
 	EB_TOKEN_TOOLKIT
 		export
-			{NONE} All
+			{NONE} all
+		end
+
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
 		end
 
 feature -- Access
@@ -1066,9 +1071,9 @@ feature {NONE}-- Implementation
 			current_feature: E_FEATURE
 			current_feature_i: FEATURE_I
 			locals_list: EIFFEL_LIST [TYPE_DEC_AS]
-			id_list: EIFFEL_LIST [ID_AS]
+			id_list: ARRAYED_LIST [INTEGER]
 			stop: BOOLEAN
-			index, count: INTEGER
+			index, count, name_id: INTEGER
 			retried: BOOLEAN
 			ent_list: LINKED_LIST [STRING]
 			tst, lower_name: STRING
@@ -1085,27 +1090,32 @@ feature {NONE}-- Implementation
 					if current_feature /= Void then
 						if current_feature.locals /= Void then
 							locals_list := current_feature.locals
-							from
-								locals_list.start
-							until
-								locals_list.after or stop
-							loop
-								id_list := locals_list.item.id_list
+							name_id := Names_heap.id_of (name)
+							if name_id > 0 then
+									-- There is a `name_id' corresponding to `name' so let's
+									-- look further.
 								from
-									id_list.start
+									locals_list.start
 								until
-									id_list.after or stop
+									locals_list.after or stop
 								loop
-									if name.is_equal (id_list.item) then
-										stop := True
-											-- Compute actual type for local
-										Local_evaluator.set_local_name (id_list.item)
-										current_feature_i := current_class_c.feature_named (current_feature_as.feature_name)
-										Result := Local_evaluator.evaluated_type (locals_list.item.type, current_class_c.feature_table, current_feature_i)
+									from
+										id_list := locals_list.item.id_list
+										id_list.start
+									until
+										id_list.after or stop
+									loop
+										if name_id = id_list.item then
+											stop := True
+												-- Compute actual type for local
+											Local_evaluator.set_local_name (name_id)
+											current_feature_i := current_class_c.feature_named (current_feature_as.feature_name)
+											Result := Local_evaluator.evaluated_type (locals_list.item.type, current_class_c.feature_table, current_feature_i)
+										end
+										id_list.forth
 									end
-									id_list.forth
+									locals_list.forth
 								end
-								locals_list.forth
 							end
 						end
 						if Result = Void then

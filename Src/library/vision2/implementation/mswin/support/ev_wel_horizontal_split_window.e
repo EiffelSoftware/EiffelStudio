@@ -50,7 +50,7 @@ feature -- Event handling
 				!! rectangle.make (0, 0, split_imp.level, height)
 				dc.fill_rect (rectangle, class_background)
 			end
-			if split_imp.child2 = Void then
+			if split_imp.child2 = Void and width > split_imp.level + size then
 				!! rectangle.make (split_imp.level + size, 0, width, height)
 				dc.fill_rect (rectangle, class_background)
 			end

@@ -10,7 +10,6 @@ deferred class
 inherit
 	EB_TOOL
 		redefine
-			widget,
 			make
 		end
 

@@ -18,13 +18,14 @@ creation
 
 feature -- Initialization
 
-	make (d_c:CLASS_C; d_r:E_FEATURE; d_i:INTEGER; d_a: STRING) is
+	make (d_cl: CLASS_C; d_r: E_FEATURE; d_i: INTEGER; d_a, d_c: STRING) is
 		do
 --			init (Project_tool)
-			d_class := d_c
+			d_class := d_cl
 			d_routine := d_r
 			d_index := d_i
 			d_alias := d_a
+			d_call_type := d_c
 		end
 
 feature -- Properties
@@ -49,7 +50,7 @@ feature -- Properties
 	d_class: CLASS_C
 	d_routine: E_FEATURE
 	d_index: INTEGER
-	d_alias: STRING
+	d_alias, d_call_type: STRING
 
 feature -- Interface
 
@@ -83,7 +84,7 @@ feature {NONE} -- Execution
 						end
 						list.forth
 					end
-					dynamic_lib_tool.process (d_class, d_creation, d_routine, d_index, d_alias)
+					dynamic_lib_tool.process (d_class, d_creation, d_routine, d_index, d_alias, d_call_type)
 				end
 				dynamic_lib_tool.synchronize
 			end
@@ -136,11 +137,11 @@ feature {NONE} -- Implementation
 			list := valid_creation (d_class)
 
 			if list = Void then				
-				dynamic_lib_tool.process (d_class, d_routine, d_routine, d_index, d_alias)
+				dynamic_lib_tool.process (d_class, d_routine, d_routine, d_index, d_alias, d_call_type)
 			elseif list.empty then
 --				create wd.make_default (dynamic_lib_tool.parent, "Warning", "There is no valid creation for this feature.%N(ie: with no argument)")
 			elseif list.count =1 then
-				dynamic_lib_tool.process (d_class, list.first, d_routine, d_index, d_alias)
+				dynamic_lib_tool.process (d_class, list.first, d_routine, d_index, d_alias, d_call_type)
 			elseif list /= Void and then not list.empty then
 				!! a_list.make
 				from 

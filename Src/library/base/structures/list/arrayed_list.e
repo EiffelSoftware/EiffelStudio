@@ -516,7 +516,7 @@ feature -- Duplication
 		local
 			c: like cursor;
 		do
-			count := 0;
+			wipe_out;
 			c := other.cursor;
 			from
 				other.start

@@ -275,8 +275,6 @@ feature {NONE} -- Filling
 				end
 				
 				cluster_tree.i_th (1).enable_select
-				
-				tree_table := Void
 			end
 		end
 

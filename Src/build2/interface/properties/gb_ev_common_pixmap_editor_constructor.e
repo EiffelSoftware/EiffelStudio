@@ -50,33 +50,37 @@ feature -- Access
 			frame_box: EV_VERTICAL_BOX
 		do
 			create Result
-			initialize_attribute_editor (Result)
-			create horizontal_box
-			create frame_box
-			create modify_button.make_with_text (Set_with_named_file_text)
-			modify_button.select_actions.extend (agent modify_pixmap)
-			modify_button.select_actions.extend (agent update_editors)
-			horizontal_box.extend (modify_button)
-			create filler_label
-			horizontal_box.extend (filler_label)
-			create constants_combo_box
-			horizontal_box.extend (constants_combo_box)
-			constants_combo_box.hide
-			create constants_button
-			constants_button.set_pixmap (Icon_format_onces @ 1)
-			constants_button.select_actions.extend (agent switch_constants_mode)
-			horizontal_box.extend (constants_button)
-			horizontal_box.disable_item_expand (modify_button)
-			horizontal_box.disable_item_expand (constants_button)
-			frame_box.extend (horizontal_box)
-			create pixmap_container
-			frame_box.extend (pixmap_container)
-			create frame.make_with_text (gb_ev_pixmapable_pixmap)
-			frame.extend (frame_box)
-			Result.extend (frame)
-			populate_constants
-			parent_editor.add_pixmap_input_field (Current)
-			update_attribute_editor
+				-- Tool bar and menu separators do inherit from EV_PIXMAPABLE,
+				-- however, the facilities are not exported.
+			if not (object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") or object.type.is_equal ("EV_MENU_SEPARATOR")) then
+				initialize_attribute_editor (Result)
+				create horizontal_box
+				create frame_box
+				create modify_button.make_with_text (Set_with_named_file_text)
+				modify_button.select_actions.extend (agent modify_pixmap)
+				modify_button.select_actions.extend (agent update_editors)
+				horizontal_box.extend (modify_button)
+				create filler_label
+				horizontal_box.extend (filler_label)
+				create constants_combo_box
+				horizontal_box.extend (constants_combo_box)
+				constants_combo_box.hide
+				create constants_button
+				constants_button.set_pixmap (Icon_format_onces @ 1)
+				constants_button.select_actions.extend (agent switch_constants_mode)
+				horizontal_box.extend (constants_button)
+				horizontal_box.disable_item_expand (modify_button)
+				horizontal_box.disable_item_expand (constants_button)
+				frame_box.extend (horizontal_box)
+				create pixmap_container
+				frame_box.extend (pixmap_container)
+				create frame.make_with_text (gb_ev_pixmapable_pixmap)
+				frame.extend (frame_box)
+				Result.extend (frame)
+				populate_constants
+				parent_editor.add_pixmap_input_field (Current)
+				update_attribute_editor
+			end
 		end
 
 feature {GB_OBJECT_EDITOR} -- Implementation

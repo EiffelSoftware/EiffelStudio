@@ -93,6 +93,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
+
 	item_count: INTEGER is
 			-- Retrieves the number of items that are in the header control
 		require
@@ -123,6 +124,18 @@ feature -- Status report
 			create hit_test_info.make
 			hit_test_info.set_point (a_point)
 			cwin_send_message (item, Hdm_hit_test, to_wparam (0), hit_test_info.item)
+		end
+		
+	get_image_list: WEL_IMAGE_LIST is
+			-- Get the image list associated with `Current'
+			-- or `Void' if none.
+		local 
+       		handle: POINTER
+       	do
+       		handle := cwin_send_message_result (item, hdm_get_image_list, to_wparam (0), to_lparam (0))
+       		if handle /= default_pointer then
+       			create Result.make_by_pointer(handle)
+       		end
 		end
 
 feature -- Status setting
@@ -239,6 +252,18 @@ feature -- Element change
 										last_retrieved_window_pos.x, last_retrieved_window_pos.y,
 										last_retrieved_window_pos.width, last_retrieved_window_pos.height,
 										a_window_style)
+		end
+		
+	set_image_list (image_list: WEL_IMAGE_LIST) is
+			-- Associate `image_list' with `Current'.
+			-- If `image_list' is `Void', removes the currently associated
+			-- image list (if any).
+		do
+			if image_list = Void then
+				cwin_send_message (item, hdm_set_image_list, to_wparam (0), to_lparam (0))
+			else
+				cwin_send_message (item, hdm_set_image_list, to_wparam (0), image_list.item)
+			end
 		end
 
 feature -- Notifications

@@ -141,32 +141,39 @@ feature {NONE} -- Implementation
 			loop
 				temp := feature {ISE_RUNTIME}.check_assert (False)
 				common_test ?= new_instance_of (dynamic_type_from_string (class_names.item.as_upper))
-				common_test.default_create
-				temp := feature {ISE_RUNTIME}.check_assert (True)
-				check
-					common_test_not_void: common_test /= Void
+					-- Although the files we put in there should never cause `common_test' to be Void,
+					-- we must protect it, as if anybody else was to put a file in one of these directories,
+					-- then it would crash the system.
+				if common_test /= Void then
+					common_test.default_create
+					temp := feature {ISE_RUNTIME}.check_assert (True)
+					check
+						common_test_not_void: common_test /= Void
+					end
+					create test_scrollable_area
+					test_scrollable_area.set_minimum_size (330, 330)
+					test_scrollable_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
+	
+						-- We need to provide a small border between the widget and the scrollable area,
+						-- so that when the widget is bigger than the scrollable area, there is still a small visible
+						-- border.
+					create temp_h_box
+					temp_h_box.set_border_width (5)
+					test_scrollable_area.extend (temp_h_box)
+					test_scrollable_area.propagate_background_color
+					temp_h_box.extend (common_test.widget)
+	
+					create temp_h_box
+					create temp_frame
+					temp_h_box.extend (temp_frame)
+					temp_frame.extend (test_scrollable_area)
+					test_notebook.extend (temp_h_box)
+					
+					test_notebook.set_item_text (temp_h_box, test_name_from_class (class_names.item))
+					class_names.forth
+				else
+					class_names.remove
 				end
-				create test_scrollable_area
-				test_scrollable_area.set_minimum_size (330, 330)
-				test_scrollable_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-
-					-- We need to provide a small border between the widget and the scrollable area,
-					-- so that when the widget is bigger than the scrollable area, there is still a small visible
-					-- border.
-				create temp_h_box
-				temp_h_box.set_border_width (5)
-				test_scrollable_area.extend (temp_h_box)
-				test_scrollable_area.propagate_background_color
-				temp_h_box.extend (common_test.widget)
-
-				create temp_h_box
-				create temp_frame
-				temp_h_box.extend (temp_frame)
-				temp_frame.extend (test_scrollable_area)
-				test_notebook.extend (temp_h_box)
-				
-				test_notebook.set_item_text (temp_h_box, test_name_from_class (class_names.item))
-				class_names.forth
 			end
 		ensure
 			notebook_count_correct: test_notebook.count = class_names.count

@@ -50,6 +50,7 @@ feature -- Initialization
 			!! private_attributes
 			a_file_sel_dialog.set_dialog_imp (Current)
 			title := clone (a_file_sel_dialog.identifier)
+			!! directory.make (0)
 		end
 
 	realize is

@@ -23,9 +23,11 @@ inherit
 		end
 
 creation
-	make, make_detailed
+	make, 
+	make_detailed,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create Current with `a_name' as `widget_name' and `a_parent' as `parent'.
@@ -35,7 +37,7 @@ feature {NONE} -- Initialization
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_main_window (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
@@ -47,8 +49,8 @@ feature {NONE} -- Initialization
 			-- located below or above the workspace and with or without
 			-- automatic scrolling.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
@@ -59,10 +61,12 @@ feature {NONE} -- Initialization
 			if do_manage then
 				manage
 			end
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default
-		ensure
-			exists: not is_destroyed
+        ensure
+            exists: not is_destroyed;
+            parent_set: parent = a_parent;
+            name_set: name.is_equal (a_name)
 		end;
 
 feature -- Status report

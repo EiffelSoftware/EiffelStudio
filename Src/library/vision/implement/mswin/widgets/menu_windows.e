@@ -298,7 +298,7 @@ feature -- Element change
 						mp.put_children_in_menu
 						m ?= w.parent
 						m.insert_popup (mp, index_of (mp) -
-								unmanaged_count (mp) - 1, mp.menu_button.text)
+							unmanaged_count (mp) - 1, mp.menu_button.text)
 					end
 				end
 			end

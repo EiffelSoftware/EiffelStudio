@@ -27,13 +27,10 @@ private void partial_store_write();
 
 #undef DEBUG
 
-long st_counter = 0;
-
 void c_sv_init(f_desc)
 EIF_INTEGER f_desc;
 {
 	/* Position file `f' at the end. */
-
     lseek((int)f_desc,0,SEEK_END);
 }
 
@@ -131,7 +128,6 @@ long object_count;
 	zone->ov_flags &= ~EO_STORE;	/* Unmark it */
 
 #ifdef DEBUG
-	if (st_counter == 1248)
 		printf("object 0x%lx [%s %lx]\n", object, System(flags & EO_TYPE).cn_generator,
 zone->ov_flags);
 #endif
@@ -152,7 +148,7 @@ zone->ov_flags);
 						object_count = pst_store(o_ref,object_count);
 				}
 			} else {						/* Special of composites */
-				elem_size = *(long *) (o_ref + sizeof(long));
+				elem_size = *(long *) (o_ptr + sizeof(long));
 				for (ref = object + OVERHEAD; count > 0;
 					count --, ref += elem_size) {
 					object_count = pst_store(ref,object_count);

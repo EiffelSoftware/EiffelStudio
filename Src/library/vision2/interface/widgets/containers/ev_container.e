@@ -37,6 +37,8 @@ feature -- Access
 
 	item: EV_WIDGET is
 			-- Current item
+		require
+			readable: readable
 		do
 			Result := implementation.item
 		ensure
@@ -89,6 +91,11 @@ feature -- Status report
 
 	writable: BOOLEAN is
 			-- Is there a current item that may be modified?
+		deferred
+		end
+
+	readable: BOOLEAN is
+			-- Is there a current item that may be accessed?
 		deferred
 		end
 
@@ -294,6 +301,10 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/01 18:56:01  brendel
+--| Added deferred feature `readable'.
+--| Added precndition `readable' on `item'.
+--|
 --| Revision 1.22  2000/03/01 02:22:26  brendel
 --| Improved comment comment of `extend'.
 --|

@@ -15,6 +15,7 @@ inherit
 			child_has_resized,
 			unrealize,
 			realized,
+			realize,
 			on_size
 		end
 
@@ -97,13 +98,6 @@ feature {NONE} -- Initialization
 			private_attributes.set_height (100)
 		end
 
-feature -- Access
-
-	working_area: WIDGET
-			-- Working area of window which will be moved using scrollbars
-
-feature -- Status setting
-
 	realize_current is
 			-- Realize current widget.
 		local
@@ -117,16 +111,26 @@ feature -- Status setting
 					granularity, granularity * 10,
 					granularity, granularity * 10)
 				realized := True
-				set_scroll_range
-				set_scroll_position
-				if scroller /= Void then
-					scroller.set_horizontal_line (client_rect.width // 4)
-					scroller.set_horizontal_page (client_rect.width)
-					scroller.set_vertical_line (client_rect.height // 4)
-					scroller.set_vertical_page (client_rect.height)
-				end
 			end
 		end
+
+feature -- Initialization
+
+	realize is
+			-- Realize current widget and children.
+		do
+			if not realized then
+				realize_current
+				realize_children
+				shown := true
+				resize_for_working_area
+			end
+		end
+
+feature -- Access
+
+	working_area: WIDGET
+			-- Working area of window which will be moved using scrollbars
 
 feature -- Status report
 
@@ -167,14 +171,7 @@ feature -- Element change
 			end
 			if exists then
 				working_area.set_x_y (0, 0)
-				set_scroll_range
-				set_scroll_position
-				if scroller /= Void then
-					scroller.set_horizontal_line (client_rect.width // 4)
-					scroller.set_horizontal_page (client_rect.width)
-					scroller.set_vertical_line (client_rect.height // 4)
-					scroller.set_vertical_page (client_rect.height)
-				end
+				update_scrolling
 			end
 		end
 
@@ -207,17 +204,34 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
+	update_scrolling is
+			-- Initialize working_area
+		do
+				set_scroll_range
+				set_scroll_position
+				if scroller /= Void then
+					scroller.set_horizontal_line (client_rect.width // 4)
+					scroller.set_horizontal_page (client_rect.width)
+					scroller.set_vertical_line (client_rect.height // 4)
+					scroller.set_vertical_page (client_rect.height)
+				end
+		end
+
+	resize_for_working_area is
+			-- Set size to workign area
+		do
+			if working_area.realized then
+				if exists then
+					set_form_width (working_area.width)
+					set_form_height (working_area.height)
+				end
+			end
+		end
+
 	on_size (hit_code, a_width, a_height: INTEGER) is
 			-- Respond to a size message.
 		do
-			set_scroll_range
-			set_scroll_position
-			if scroller /= Void then
-				scroller.set_horizontal_line (client_rect.width // 4)
-				scroller.set_horizontal_page (client_rect.width)
-				scroller.set_vertical_line (client_rect.height // 4)
-				scroller.set_vertical_page (client_rect.height)
-			end
+			update_scrolling
 			resize_actions.execute (Current, Void)
 		end
 

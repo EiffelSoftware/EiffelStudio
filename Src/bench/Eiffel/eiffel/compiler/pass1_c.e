@@ -22,7 +22,8 @@ feature
 		local
 			ast: CLASS_AS_B;
 			class_id: INTEGER;
-			temp: STRING
+			temp: STRING;
+			comment_reg: COMMENT_REGISTRATION
 		do
 				-- Verbose
 			io.error.putstring ("Degree 5: class ");
@@ -33,7 +34,13 @@ feature
 
 			class_id := associated_class.id;
 			if new_compilation then
-				ast := associated_class.build_ast
+				ast := associated_class.build_ast;
+				if System.is_precompiling then
+						-- Register the comments for precompiled
+						-- associated_class.
+					!! comment_reg.make (ast, associated_class);
+					comment_reg.register
+				end
 			elseif Tmp_ast_server.has (class_id) then
 				ast := Tmp_ast_server.item (class_id)
 			else

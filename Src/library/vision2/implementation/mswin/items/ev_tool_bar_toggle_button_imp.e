@@ -22,7 +22,6 @@ inherit
 			interface as ev_tool_bar_button_imp_interface
 		redefine
 			type,
-			on_activate,
 			parent_imp
 		end
 
@@ -78,11 +77,8 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.13  2000/04/05 18:15:36  rogers
---| Removed checked, now uses is_checked directly. Removed
---| on_Activate as it is redundent. Disable select and on_parented
---| are removed as they are now inherited from
---| EV_TOOL_BAR_SELECT_BUTTON_IMP.
+--| Revision 1.14  2000/04/05 18:22:57  rogers
+--| Removed redefinition of on_activate from EV_TOOL_BAR_SELECT_BUTTON_IMP.
 --|
 --| Revision 1.12  2000/04/05 17:26:43  rogers
 --| renamed set_checked -> enable_select.

@@ -143,10 +143,16 @@ feature -- Access
 
 feature -- Status setting
 
-	ensure_i_th_visible (an_index: INTEGER) is
-			-- Ensure item `an_index' is visible in `Current'.
+	ensure_item_visible (an_item: EV_LIST_ITEM) is
+			-- Ensure `an_item' is visible in `Current'.
+		local
+			item_imp: EV_LIST_ITEM_IMP
 		do
-			ensure_visible (an_index - 1)
+			item_imp ?= an_item.implementation
+			check
+				item_imp_not_void: item_imp /= Void
+			end
+			ensure_visible (internal_get_index (item_imp) - 1)
 		end
 
 	select_item (an_index: INTEGER) is
@@ -862,6 +868,10 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.84  2001/06/25 19:05:09  rogers
+--| Replaced `ensure_i_th_visible' with `ensure_item_visible' and
+--| re implemented.
+--|
 --| Revision 1.83  2001/06/14 00:09:12  rogers
 --| Undefined the version of escape_pnd inherited from EV_PRIMITIVE_IMP.
 --|

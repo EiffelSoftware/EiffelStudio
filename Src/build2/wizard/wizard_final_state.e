@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 		local
 			h1: EV_HORIZONTAL_BOX
 		do
-			graphically_replace_window (first_window, main_window)
+			graphically_replace_window (first_window, main_window)	
 			choice_box.wipe_out
 			choice_box.set_border_width (10)
 			create progress 
@@ -50,7 +50,19 @@ feature {NONE} -- Implementation
 
 	process_info is
 			-- Process the wizard information
+		local
+			code_generator: GB_CODE_GENERATOR
 		do
+				-- The wizard generated code seems to leave the
+				-- window locked, so we unlock it. We check first,
+				-- so that if somebody fixes this, then our code
+				-- will not fail.
+			if (create {EV_ENVIRONMENT}).application.locked_window = first_window then
+				first_window.unlock_update
+			end
+			create code_generator
+			code_generator.set_progress_bar (progress)
+			code_generator.generate
 			--| Add here the action of your wizard.
 			--|
 			--| Update `progress' and `progress_text' to give a
@@ -76,10 +88,7 @@ feature {NONE} -- Implementation
 	final_message: STRING is
 		do
 		end
-		
---	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-			-- Icon for the Eiffel Store Wizard
-			
+
 	pixmap_icon_location: FILE_NAME is
 			--
 		once

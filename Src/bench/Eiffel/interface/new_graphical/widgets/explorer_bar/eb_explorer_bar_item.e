@@ -296,9 +296,15 @@ feature -- Status Setting
 								a_widget := a_widget.parent
 							end
 						end
+						if parent.linear_representation.has (parent.item_list.item.widget) and parent.item_list.item.is_closeable then
+								-- Determine the position of the previous item contained in the bar which `Current'
+								-- must replace. We use this index to insert `Current' at the correct index when in explorer style mode.
+							insert_pos := parent.linear_representation.index_of (parent.item_list.item.widget, 1)
+						end
 						parent.item_list.forth
 					end
 				end
+				
 				if must_add_as_external then
 					parent.add_external (widget, parent.explorer_bar_manager.window, title, insert_pos.min (parent.count + 1), external_window.x_position, external_window.y_position, external_window.width, external_window.height)
 				else

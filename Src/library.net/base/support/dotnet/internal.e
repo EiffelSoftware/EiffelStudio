@@ -64,8 +64,20 @@ feature -- Creation
 			l_class_type: SYSTEM_STRING
 		do
 			l_class_type := class_type.to_cil
-			t := feature {TYPE}.get_type_string (l_class_type)
-			Result := get_type_index (t)
+			load_assemblies
+			eiffel_type_mapping.search (class_type)
+			if eiffel_type_mapping.found then
+					-- It is an Eiffel type which was recorded in `load_assemblies'.
+				t := eiffel_type_mapping.found_item.item
+			else
+					-- Could not find it, let's try the .NET name.
+				t := feature {TYPE}.get_type_string (l_class_type)
+			end
+			if t /= Void then
+				Result := get_type_index (t)
+			else
+				Result := -1
+			end
 		ensure
 			dynamic_type_from_string_valid: Result = -1 or else Result >= 0
 		end
@@ -763,6 +775,8 @@ feature {NONE} -- Implementation
 	get_type_index (t: TYPE): INTEGER is
 			-- If type is a known type, return its index,
 			-- otherwise add it to the known types and return its index.
+		require
+			t_not_void: t /= Void
 		local
 			cell: CLI_CELL [TYPE]
 			l_types: like known_types_id
@@ -781,6 +795,81 @@ feature {NONE} -- Implementation
 			else	
 				Result ?= l_id_object
 			end
+		end
+
+	load_assemblies is
+			-- Analyzes current loaded assembly in current AppDomain. Assemblies
+			-- loaded after are loaded by hooking `load_eiffel_types_from_assembly'
+			-- to the `add_assembly_load' event.
+		local
+			l_assemblies: NATIVE_ARRAY [ASSEMBLY]
+			i, nb: INTEGER
+			l_handler: ASSEMBLY_LOAD_EVENT_HANDLER
+		once
+			l_assemblies := feature {APP_DOMAIN}.current_domain.get_assemblies
+			create l_handler.make (Current, $assembly_load_event)
+			feature {APP_DOMAIN}.current_domain.add_assembly_load (l_handler)
+			from
+				i := 0
+				nb := l_assemblies.count - 1
+			until
+				i > nb
+			loop
+				load_eiffel_types_from_assembly (l_assemblies.item (i))
+				i := i + 1
+			end
+		end
+
+	assembly_load_event (sender: SYSTEM_OBJECT; args: ASSEMBLY_LOAD_EVENT_ARGS) is
+			-- Action executed when a new assembly is loaded.
+		do
+			if args /= Void then
+				check
+					has_loaded_assembly: args.loaded_assembly /= Void
+				end
+				load_eiffel_types_from_assembly (args.loaded_assembly)
+			end
+		end
+		
+	load_eiffel_types_from_assembly (an_assembly: ASSEMBLY) is
+			-- Load all Eiffel types from `an_assembly'.
+		require
+			an_assembly_not_void: an_assembly /= Void
+		local
+			l_types: NATIVE_ARRAY [TYPE]
+			l_name: EIFFEL_CLASS_NAME_ATTRIBUTE
+			l_ca_type: TYPE
+			l_cas: NATIVE_ARRAY [SYSTEM_OBJECT]
+			i, nb: INTEGER
+		do
+			l_types := an_assembly.get_types
+				-- Get actual type of EIFFEL_CLASS_NAME_ATTRIBUTE while
+				-- waiting for `typeof' operator.
+			create l_name.make ("Test")
+			l_ca_type := l_name.get_type
+			from
+				i := 0
+				nb := l_types.count - 1
+			until
+				i > nb
+			loop
+				l_cas := l_types.item (i).get_custom_attributes_type (l_ca_type, False)
+				if l_cas /= Void and then l_cas.count > 0 then
+					l_name ?= l_cas.item (0)
+					check
+						l_name_not_void: l_name /= Void
+					end
+					eiffel_type_mapping.force (create {CLI_CELL [TYPE]}.put (l_types.item (i)),
+						l_name.class_name)
+				end
+				i := i + 1
+			end
+		end
+
+	eiffel_type_mapping: HASH_TABLE [CLI_CELL [TYPE], STRING] is
+			-- Mapping between Eiffel class names and .NET types.
+		once
+			create Result.make (50)
 		end
 
 	known_types: HASH_TABLE [CLI_CELL [TYPE], INTEGER] is

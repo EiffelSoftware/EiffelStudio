@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 			-- as index.
 		require
 			valid_parent: par /= Void
+			valid_index: (value > 0) and (value <= par.count + 1)
 		deferred
 		end
 
@@ -26,6 +27,7 @@ feature {NONE} -- Initialization
 			-- and `value' as index.
 		require
 			valid_parent: par /= Void
+			valid_index: (value > 0) and (value <= par.count + 1)
 		deferred
 		end
 
@@ -98,6 +100,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 			has_parent: parent_imp /= Void
+--			valid_index: (value > 0) and (value <= parent.count + 1)
 		deferred
 		end
 

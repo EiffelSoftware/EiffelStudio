@@ -523,7 +523,7 @@ void c_gtk_widget_set_size (GtkWidget *widget, int width, int height)
  *
  * Function : `c_gtk_container_nb_children' (1)
  *  		  `c_gtk_container_ith_child'   (2)
- *  		  `c_gtk_container_ha_child'	(3)
+ *  		  `c_gtk_container_has_child'	(3)
  *  		            
  * Note (1) : Return the number of children of a container.
  * 		(2)	: Return the i-th child of the container.
@@ -536,7 +536,7 @@ void c_gtk_widget_set_size (GtkWidget *widget, int width, int height)
 gint c_gtk_container_nb_children (GtkWidget *widget)
 {
 	GList* children;
-	
+
 	children = gtk_container_children (GTK_CONTAINER(widget));
 	return (g_list_length (children));
 }

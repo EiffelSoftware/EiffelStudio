@@ -117,7 +117,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				include_option.adapt;
 			end;
 				-- Second exclude classes
-			if exclude_option /= void then
+			if exclude_option /= Void then
                 exclude_option.adapt;
             end;
 			
@@ -152,8 +152,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			if use_name /= Void then
 					-- A cluster properties description has been parsed
 					-- previously when building universe
-				clust_prop := Use_properties.item
-												(context.current_cluster.path);
+				clust_prop := Use_properties.item (context.current_cluster.path);
 				default_prop := clust_prop.default_option;
 				if default_prop /= Void then
 						-- Process default options in use file

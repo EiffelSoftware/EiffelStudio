@@ -3834,20 +3834,6 @@ feature -- Conveniences
 			object_directory := Void
 		end
 
-	reset_system_level_options is
-		do
-			remover_off := False
-			array_optimization_on := False
-			inlining_on := False
-			inlining_size := 4
-			code_replication_off := True
-			exception_stack_managed := False; 
-			server_controler.set_block_size (1024)
-
-			do_not_check_vape := False
-			address_expression_allowed := False
-		end
-
 	set_update_sort (b: BOOLEAN) is
 			-- Assign `b' to `update_sort'.
 		do

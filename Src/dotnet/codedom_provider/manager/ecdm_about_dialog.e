@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			version_label.set_text ("2.0.1.1327")
 		end
 
 feature {NONE} -- Implementation

@@ -319,6 +319,7 @@ feature -- Update
 			i: INTEGER
 		do
 					-- Default Project Options
+			project_path_name := clone (Execution_environment.current_working_directory)
 			from
 				current_option := 1
 			until

@@ -146,8 +146,8 @@ feature -- Cookies
 					j:= s.index_of (';', i)
 					if j > i then
 						Result.put (s.substring (1, i-1), s.substring (i+1, j-1))
-						if j < s.count-1 then
-							s.tail (s.count-j-1)
+						if j < s.count - 1 then
+							s.remove_head (j + 1)
 						else
 							i := 0
 						end

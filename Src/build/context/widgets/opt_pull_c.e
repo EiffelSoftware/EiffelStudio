@@ -10,18 +10,18 @@ inherit
 		redefine
 			stored_node, real_y, real_x,  
 			set_size, set_x_y, height, width, y, x, widget, 
-			add_widget_callbacks, remove_widget_callbacks,
 			is_resizable
-		end;
+		end
+
 	PULLDOWN_C
 		redefine
 			stored_node, real_y, real_x, context_initialization,
 			set_size, set_x_y, height, width, y, x, widget, 
-			add_widget_callbacks, remove_widget_callbacks,
 			is_resizable
 		select
 			context_initialization
-		end;
+		end
+
 -- samik	G_ANY
 
 feature 
@@ -36,35 +36,6 @@ feature
 			Result := Pixmaps.opt_pull_pixmap
 		end;
 
-	add_widget_callbacks is
-		local
-			ms_win: STRING
-			mode_backup: INTEGER
-		do
-			mode_backup := executing_or_editing_mode
-			set_mode (editing_mode)
-			add_common_callbacks (widget.button);
-			initialize_transport;
-			if (parent = Void) or else not parent.is_group_composite then
-				widget.button.add_enter_action (eb_selection_mgr, Current);
-			end
-			set_mode (mode_backup)
-		end;
-
-	remove_widget_callbacks is
-			-- Remove callbacks.
-			-- (Need to only remove callbacks part of a list
-			-- since set_action will overwrite previous callbacks).
-		local
-			ms_win: STRING
-		do
-			ms_win := "MS_WINDOWS";
-			if not ms_win.is_equal (toolkit.name) then
-				widget.button.remove_pointer_motion_action 
-					(Eb_selection_mgr, first_arg)
-				widget.button.remove_enter_action (Eb_selection_mgr, Current);
-			end
-		end;
 
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do

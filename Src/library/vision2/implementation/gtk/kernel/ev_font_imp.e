@@ -292,30 +292,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	match_list (pattern: STRING): LINKED_LIST [STRING] is
-			-- Return list of all matched fonts. (max 100)
-			--| Not used at the moment.
-			--| Can be used to get all matching fonts for a
-			--| specific pattern. Apply an algorithm on the list
-			--| to get the best match.
-		local
-			actual_size, i: INTEGER
-			array_pointer, char_pointer: POINTER
-			s: STRING
-		do
-			array_pointer := C.x_list_fonts (C.gdk_display,
-				eiffel_to_c (pattern), 100, $actual_size)
-			create Result.make
-			from i := 0 until i >= actual_size loop
-				char_pointer := pointer_array_i_th (array_pointer, i)
-				create s.make (0)
-				s.from_c (char_pointer)
-				Result.extend (s)
-				i := i + 1
-			end
-			C.x_free_font_names (array_pointer)
-		end
-
 feature {EV_FONT_DIALOG_IMP} -- Implementation
 
 	--| Routine for extracting items from a X-font.

@@ -19,14 +19,14 @@ feature
 			-- Content of the file named `file_name';
 			-- Void if not possible
 		local
-			a_file: UNIX_FILE
+			a_file: RAW_FILE
 		do
 			if 
 				(file_name /= Void)
 			then
 				!!a_file.make (file_name);
 				if a_file.exists and then a_file.is_readable then
-					a_file.open_binary_read;
+					a_file.open_read;
 					a_file.readstream (a_file.count);
 					a_file.close;
 					Result :=  a_file.laststring

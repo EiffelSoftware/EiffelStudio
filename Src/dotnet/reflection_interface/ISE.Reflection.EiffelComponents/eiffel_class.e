@@ -295,6 +295,12 @@ feature -- Status Report
 			description: "Does class have `create{NONE}' creation declaration?"
 			external_name: "CreateNone"
 		end
+	
+	modified: BOOLEAN
+		indexing
+			description: "Has current class been modified (i.e. have features been renamed)?"
+			external_name: "Modified"
+		end
 		
 feature -- Status Setting
 
@@ -338,6 +344,16 @@ feature -- Status Setting
 			create_none_set: create_none = a_value
 		end
 	
+	set_modified is
+		indexing
+			description: "Set `modified' with `True'."
+			external_name: "SetModified"
+		do
+			modified := True
+		ensure
+			modified: modified
+		end
+		
 	set_eiffel_name (a_name: like eiffel_name) is
 		indexing
 			description: "Set `eiffel_name' with `a_name'."

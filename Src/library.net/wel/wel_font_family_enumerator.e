@@ -140,7 +140,7 @@ feature {NONE} -- Externals
 	cwin_enum_font_families (hdc, family, enum_proc, data: POINTER) is
 			-- SDK EnumFontFamilies
 		external
-			"C [macro %"windows.h%"] (HDC, LPCSTR, FONTENUMPROC, LPARAM)"
+			"C [macro %"windows.h%"] (HDC, LPCTSTR, FONTENUMPROC, LPARAM)"
 		alias
 			"EnumFontFamilies"
 		end

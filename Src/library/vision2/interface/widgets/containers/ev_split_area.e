@@ -106,6 +106,8 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.split_position
+		ensure
+			bridge_ok: Result = implementation.split_position
 		end
 
 	minimum_split_position: INTEGER is
@@ -115,6 +117,7 @@ feature -- Status report
 		do
 			Result := implementation.minimum_split_position
 		ensure
+			bridge_ok: Result = implementation.minimum_split_position
 			non_negative: Result >= 0
 		end
 
@@ -125,6 +128,7 @@ feature -- Status report
 		do
 			Result := implementation.maximum_split_position
 		ensure
+			bridge_ok: Result = implementation.maximum_split_position
 			non_negative: Result >= 0
 		end
 
@@ -136,6 +140,8 @@ feature -- Status report
 			has_an_item: has (an_item)
 		do
 			Result := implementation.is_item_expanded (an_item)
+		ensure
+			bridge_ok: Result = implementation.is_item_expanded (an_item)
 		end
 
 feature -- Element change

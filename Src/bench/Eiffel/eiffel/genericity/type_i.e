@@ -15,6 +15,48 @@ inherit
 	COMPILER_EXPORTER
 	SHARED_GEN_CONF_LEVEL
 
+feature -- Access
+
+	static_type_id: INTEGER is
+			-- Static Type id of `Current'.
+		require
+			il_generation: System.il_generation
+		local
+			cl_type: CL_TYPE_I
+		do
+			cl_type ?= Current
+			if cl_type /= Void then
+				Result := cl_type.associated_class_type.static_type_id
+			else
+				check
+					is_reference_at_least: is_reference
+				end
+				Result := System.any_class.compiled_class.types.first.static_type_id
+			end
+		ensure
+			valid_result: Result > 0
+		end
+
+	implementation_id: INTEGER is
+			-- Return implementation id of `Current'.
+		require
+			il_generation: System.il_generation
+		local
+			cl_type: CL_TYPE_I
+		do
+			cl_type ?= Current
+			if cl_type /= Void then
+				Result := cl_type.associated_class_type.implementation_id
+			else
+				check
+					is_reference_at_least: is_reference
+				end
+				Result := System.any_class.compiled_class.types.first.implementation_id
+			end
+		ensure
+			valid_result: Result > 0
+		end
+		
 feature -- Status report
 
 	instantiation_in (other: GEN_TYPE_I): TYPE_I is
@@ -66,6 +108,12 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
+	element_type: INTEGER_8 is
+			-- Type of current element. See MD_SIGNATURE_CONSTANTS for
+			-- all possible values.
+		deferred
+		end
+		
 	description: ATTR_DESC is
 			-- Descritpion of type for skeletons
 		deferred

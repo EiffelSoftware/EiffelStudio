@@ -364,7 +364,7 @@ feature {NONE} -- Private Status
 	overwrite_mode: BOOLEAN
 			-- Do inserted characters overwrite existing ones?
 
-feature {EB_SEARCH_PERFORMER}
+feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW}
 
 	text_displayed: EDITABLE_TEXT
 			-- Text displayed in the editor.

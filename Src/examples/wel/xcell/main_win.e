@@ -345,43 +345,45 @@ feature {NONE} -- Implementation
 			relative_x_position: INTEGER
 			relative_y_position: INTEGER
 		do
-			if started then
-				if flag_set (keys, Mk_lbutton) then
-					if game_manager.source_selected then
-						relative_x_position := x_pos - active_card.offset_x + active_card.x_position
-						relative_y_position := y_pos - active_card.offset_y + active_card.y_position
-						if relative_x_position > active_card.x_position then
-							repaint_height := active_card.height
-							repaint_width := relative_x_position - active_card.x_position
-							repaint_x := active_card.x_position
-							repaint_y := active_card.y_position	
-							client_dc.bit_blt (repaint_x,repaint_y,repaint_width, repaint_height, virtual_dc,repaint_x,repaint_y, srccopy)	
-						elseif relative_x_position < active_card.x_position then
-							repaint_height := active_card.height
-							repaint_width := active_card.x_position - relative_x_position
-							repaint_x := relative_x_position + active_card.width
-							repaint_y := active_card.y_position
-							client_dc.bit_blt (repaint_x,repaint_y,repaint_width, repaint_height, virtual_dc,repaint_x,repaint_y, srccopy)
-						end
-						if relative_y_position > active_card.y_position then
-							repaint_height :=  relative_y_position - active_card.y_position
-							repaint_width := active_card.width
-							repaint_x := active_card.x_position
-							repaint_y := active_card.y_position
-							client_dc.bit_blt (repaint_x,repaint_y,repaint_width, repaint_height, virtual_dc,repaint_x,repaint_y, srccopy)
-						elseif relative_y_position < active_card.y_position then
-							repaint_height :=  active_card.y_position - relative_y_position
-							repaint_width := active_card.width
-							repaint_x := active_card.x_position
-							repaint_y := relative_y_position + active_card.height
-							client_dc.bit_blt (repaint_x,repaint_y,repaint_width, repaint_height, virtual_dc,repaint_x,repaint_y, srccopy)
-						end
-						active_card.set_x (active_card.x_position + x_pos - active_card.offset_x)
-						active_card.set_y (active_card.y_position + y_pos - active_card.offset_y)
-						active_card.set_offset_x (x_pos)
-						active_card.set_offset_y (y_pos)
-						draw_card (active_card, client_dc)
+			if started and then flag_set (keys, Mk_lbutton) and then
+				game_manager.source_selected then
+				if x_pos < screen_width and then y_pos < screen_height then
+					relative_x_position := x_pos - active_card.offset_x + active_card.x_position
+					relative_y_position := y_pos - active_card.offset_y + active_card.y_position
+					if relative_x_position > active_card.x_position then
+						repaint_height := active_card.height
+						repaint_width := relative_x_position - active_card.x_position
+						repaint_x := active_card.x_position
+						repaint_y := active_card.y_position
+						client_dc.bit_blt (repaint_x,repaint_y,repaint_width, repaint_height, virtual_dc,repaint_x,repaint_y, srccopy)
+					elseif relative_x_position < active_card.x_position then
+						repaint_height := active_card.height
+						repaint_width := active_card.x_position - relative_x_position
+						repaint_x := relative_x_position + active_card.width
+						repaint_y := active_card.y_position
+						client_dc.bit_blt (repaint_x,repaint_y,repaint_width, repaint_height, virtual_dc,repaint_x,repaint_y, srccopy)
 					end
+					if relative_y_position > active_card.y_position then
+						repaint_height :=  relative_y_position - active_card.y_position
+						repaint_width := active_card.width
+						repaint_x := active_card.x_position
+						repaint_y := active_card.y_position
+						client_dc.bit_blt (repaint_x,repaint_y,repaint_width, repaint_height, virtual_dc,repaint_x,repaint_y, srccopy)
+					elseif relative_y_position < active_card.y_position then
+						repaint_height :=  active_card.y_position - relative_y_position
+						repaint_width := active_card.width
+						repaint_x := active_card.x_position
+						repaint_y := relative_y_position + active_card.height
+						client_dc.bit_blt (repaint_x,repaint_y,repaint_width, repaint_height, virtual_dc,repaint_x,repaint_y, srccopy)
+					end
+					active_card.set_x (active_card.x_position + x_pos - active_card.offset_x)
+					active_card.set_y (active_card.y_position + y_pos - active_card.offset_y)
+					active_card.set_offset_x (x_pos)
+					active_card.set_offset_y (y_pos)
+					draw_card (active_card, client_dc)
+				else
+					copy_card_area (client_dc, virtual_dc,
+						active_card)
 				end
 			end
 		end

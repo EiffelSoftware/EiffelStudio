@@ -124,14 +124,14 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_pointer_style (a_cursor: like pointer_style) is
-			-- Assign `a_cursor' to `pointer_style'.
-		require
-			a_cursor_not_void: a_cursor /= Void
-		deferred
-		ensure
-			pointer_style_assigned: pointer_style.is_equal (a_cursor)
-		end
+--	set_pointer_style (a_cursor: like pointer_style) is
+--			-- Assign `a_cursor' to `pointer_style'.
+--		require
+--			a_cursor_not_void: a_cursor /= Void
+--		deferred
+--		ensure
+--			pointer_style_assigned: pointer_style.is_equal (a_cursor)
+--		end
 
 	set_background_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `background_color'.
@@ -396,6 +396,9 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/03/17 23:06:32  rogers
+--| Set pointer style has been made deferred. Inherited from EV_PICK_AND_DROPABLE_IMP now.
+--|
 --| Revision 1.60  2000/03/17 18:17:26  rogers
 --| screen_x and screen_y are now implemented platform dependendently and have been made deferred.
 --|

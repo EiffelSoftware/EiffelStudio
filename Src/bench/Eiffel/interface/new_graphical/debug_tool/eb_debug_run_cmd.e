@@ -241,7 +241,7 @@ feature -- Execution
 					execute
 						-- Put back the status of the modified breakpoint.
 					Application.set_breakpoint_status (f, index, old_bp_status)
-					if old_bp_status /= 0 then
+					if old_bp_status /= 0 and cond /= Void then
 						Application.set_condition (f, index, cond)
 					end
 				end

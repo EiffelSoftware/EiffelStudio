@@ -646,8 +646,8 @@ rt_public DIR* eif_vms_opendir (const char *dirname)
 	    res->dirp = DECC$OPENDIR (dirname);
 	} 
 	if (!res->dirp) { 
-	    free (res->prev);
-	    free (res);
+	    eif_free (res->prev);
+	    eif_free (res);
 	    res = NULL;
 	} 
     } 
@@ -665,8 +665,8 @@ rt_public int eif_vms_closedir (DIR* notadirp)
     int res = 0;
     if (evdp) {
 	if (evdp->dirp) res = DECC$CLOSEDIR (evdp->dirp);
-	free (evdp->prev);
-	free (evdp);
+	eif_free (evdp->prev);
+	eif_free (evdp);
     } else {
 	/* is closedir (NULL) harmless? */
     }

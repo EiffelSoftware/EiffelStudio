@@ -19,6 +19,11 @@ inherit
 		end
 		
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_I
+	
+	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -52,6 +57,19 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	internal_accept: STRING is
+			-- The text of the "ok" type button of `Current'.
+			-- e.g. not the cancel button.
+			-- Normally "OK", but redefined in some descendents
+			-- such as EV_PRINT_DIALOG where the text is "Print"
+			-- This allows us to do this redefinition in a platform
+			-- independent way, and to always set `selected_button'
+			-- to `internal_select' without having to redfine the
+			-- feature in which this setting takes place.
+		do
+			Result := ev_ok
+		end
 
 	interface: EV_STANDARD_DIALOG
 

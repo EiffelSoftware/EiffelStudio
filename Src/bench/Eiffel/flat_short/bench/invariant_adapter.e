@@ -8,7 +8,7 @@ indexing
 
 class INVARIANT_ADAPTER
 
-feature
+feature -- Update
 
 	register (invariant_ast: like ast; format_reg: FORMAT_REGISTRATION) is
 			-- Initialize and register Current with invariant ast
@@ -19,19 +19,21 @@ feature
 		do
 			ast := invariant_ast;
 			source_class := format_reg.current_class;
-			format_reg.register_invariant (Current)
+			format_reg.record_invariant (Current)
 		ensure
 			ast = invariant_ast;
 			source_class = format_reg.current_class
 		end;
 
-feature
+feature -- Properties
 
 	ast: INVARIANT_AS_B
 			-- Associated invariant AST
 	
 	source_class: CLASS_C;
 			-- Where invariant was defined
+
+feature -- Output
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Format invariant.

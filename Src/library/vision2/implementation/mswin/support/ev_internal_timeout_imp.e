@@ -55,7 +55,7 @@ feature -- Removal
 			-- be executed.
 		do
 			kill_timer (id)
-			if not (timeouts = Void) then
+			if timeouts /= Void then
 				timeouts.remove (id)
 				if timeouts.is_empty then
 					timeouts := Void
@@ -74,14 +74,7 @@ feature {NONE} -- Implementation
 			if timeout /= Void then
 				timeout.on_timeout
 			else
-				if timeouts /= Void then
-						-- Object has been collected, remove it from
-						-- `timeouts'.
-					timeouts.remove (id)
-				else
-					--| FIXME: it should not be Void?
-					--| but sometimes is.
-				end
+				remove_timeout (id)
 			end
 		end
 

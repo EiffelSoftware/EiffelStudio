@@ -133,7 +133,7 @@ feature -- Formatter
 			if case_list /= void then
 				ctxt.set_separator (Void);
 				ctxt.new_line_between_tokens;
-				case_list.format (ctxt);
+				case_list.reversed_format (ctxt);
 				ctxt.next_line;
 			end;
 			if else_part /= void then

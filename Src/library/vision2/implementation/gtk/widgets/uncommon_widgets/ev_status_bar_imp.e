@@ -64,6 +64,14 @@ feature -- Element change
 	add_status_bar_item (stat_bar: EV_STATUS_BAR_ITEM_IMP) is
 		do
 			gtk_box_pack_start ( widget, stat_bar.widget, False, False, 0)
+			stat_bar.set_width (-1)
+				-- Tell the item to expand.
+			if (ev_children.count > 0) then
+				-- if there were already items in the status
+				-- bar, tell the last item not to expand
+				-- anylonger.
+				ev_children.last.set_width (120)
+			end
 			ev_children.extend (stat_bar)
 		end
 
@@ -71,7 +79,15 @@ feature -- Element change
 		do
 			gtk_container_remove ( widget, stat_bar.widget)
 			ev_children.search (stat_bar)
-			ev_children.remove
+			if (ev_children.index = count) then
+				-- See if it is the last status item.
+				-- If so, set the width of the new last
+				-- status item to expand.
+				ev_children.remove
+				ev_children.last.set_width (-1)
+			else
+				ev_children.remove
+			end
 		end
 
 end -- class EV_STATUS_BAR_IMP

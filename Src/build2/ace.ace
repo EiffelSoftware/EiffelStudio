@@ -2,26 +2,15 @@ system
 	"build"
 
 root
-	GB: execute
+	gb: execute
 
 default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
 	arguments (" ")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects\new%" Project1 531448")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects\new%" Project1 1648202")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 1648202")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 10158256")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 3540722")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 4525148")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 1900906")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 466758")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 262274")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 524510")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 524832")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 200998")
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 3211650")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %%%"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects\new%%%" Project1 458978")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %%%"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%%%" Project1 3211650")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("vision2_windows")
@@ -38,6 +27,8 @@ default
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
+	msil_culture ("n/a")
+	msil_assembly_compatibility ("None")
 	check_vape (no)
 	console_application (no)
 	array_optimization (yes)
@@ -51,14 +42,14 @@ default
 -- Same for EV_PIXMAPABLE.
 
 cluster
-	all build2:		"D:\work\build2"
+	all build2:				"D:\work\build2"
 		exclude
-			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; 
+			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se";  "ve"
 		end
 
 	dev:		"D:\work\library"
 
-	all wel (dev):		"$\wel"
+	all wel (dev):			"$\wel"
 		exclude
 			"wel_dialog.e"; "wel_modeless_dialog.e"; 
 		end
@@ -67,65 +58,32 @@ cluster
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; "ev_sensitive.e"; "ev_sensitive_i.e";
+			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; "ev_sensitive.e"; "ev_sensitive_i.e"; 
 		end
 
-	all base:		"d:\work\library\base"
+	all base:				"d:\work\library\base"
 		exclude
 			"table_eiffel3"; 
 		end
 
-	exml_interface:		"D:\work\library\exml_02_cvs_anon\exml\exml\lib\interface"
+--	all exml_interface:		"D:\work\build2\modified_libraries\exml\lib\interface"
+--		exclude
+--			"hact";
+--		end
 
-	exml_general_interface (exml_interface):		"$/general"
+--	all exml_implementation:	"D:\work\build2\modified_libraries\exml\lib\implementation"
+--		exclude
+--			"hact"; "se";
+--		end
 
-	exml_event_interface (exml_interface):		"$/event"
+--	all ucstring_library:		"D:\work\build2\modified_libraries\ucstring"
+--		exclude
+--			"se"; "ve";
+--		end
 
-	exml_tree_interface (exml_interface):		"$/tree"
+	--all_ucstring_spec:		"D:\work\library\exml_02_cvs_anon\ucstring\spec\ise"
 
-	exml_factory_interface (exml_interface):		"$/factory"
-
-	exml_formater_interface (exml_interface):		"$\formater"
-
-	exml_position_interface (exml_interface):		"$\position"
-
-	exml_source_interface (exml_interface):		"$\source"
-
-	exml_implementation:		"D:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation"
-
-	exml_implementation_interface (exml_implementation):		"$\implementation_interface"
-
-	exml_general_implementatin_interface (exml_implementation_interface):		"$\general"
-
-	exml_event_implementation_interface (exml_implementation_interface):		"$\event"
-
-	exml_tree_implementation_interface (exml_implementation_interface):		"$\tree"
-
-	exml_expat_implementation (exml_implementation):		"$\expat"
-
-	exml_expat_general_implementation (exml_expat_implementation):		"$\general"
-
-	exml_expat_event_implementation (exml_expat_implementation):		"$\event"
-
-	exml_expat_ise_implementation (exml_expat_implementation):		"$\compiler_specific\ise"
-
-	exml_expat_factory_implementation (exml_expat_implementation):		"$\factory"
-
-	exml_expat_position_implementation (exml_expat_implementation):		"$\position"
-
-	exml_expat_source_implementation (exml_expat_implementation):		"$\source"
-
-	exml_tree_on_event_implementation (exml_implementation):		"$\tree_on_event"
-
-	exml_tree_on_event_tree_implementation (exml_tree_on_event_implementation):		"$\tree"
-
-	exml_tree_on_event_factory_implementation (exml_tree_on_event_implementation):		"$\factory"
-
-	all ucstring_library:		"D:\work\library\exml_02_cvs_anon\ucstring\lib"
-
-	all_ucstring_spec:		"D:\work\library\exml_02_cvs_anon\ucstring\spec\ise"
-
-	all gobo:		"D:\work\library\gobo_16\library"
+	all gobo:				"D:\work\library\gobo_16\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "test"; 
 		end
@@ -142,7 +100,7 @@ external
 		"d:\work\library\wel\spec\windows\include",
 		"d:\work\library\vision2\spec\include",
 		"d:\work\library\gobo_16\library\kernel\include",
-		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib",
+		"d:\work\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib",
 		"d:\work\library\wizard\help\clib"
 
 	object:
@@ -150,7 +108,7 @@ external
 		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
-		"d:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation\expat\compiler_specific\ise\clib\msc\exml.lib",
+		"d:\work\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib\msc\exml.lib",
 		"d:\work\library\expat\lib\xmlparse.lib",
 		"d:\work\library\wizard\help\clib\htmlhelp.lib"
 

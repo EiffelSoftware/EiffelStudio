@@ -399,7 +399,7 @@ feature -- Status setting
 			-- `content_requested_actions'. Contents are requested each time they
 			-- are displayed even if already contained in `Current'.
 		do
-			to_implement ("EV_GRID_I.enable_complete_dynamic_content")
+			is_content_completely_dynamic := True
 		ensure
 			content_completely_dynamic: is_content_completely_dynamic
 		end
@@ -409,7 +409,7 @@ feature -- Status setting
 			-- `content_requested_actions' only if the item is not already set
 			-- in `Current'.
 		do
-			to_implement ("EV_GRID_I.enable_partial_dynamic_content")
+			is_content_partially_dynamic := True
 		ensure
 			content_partially_dynamic: is_content_partially_dynamic
 		end
@@ -417,7 +417,8 @@ feature -- Status setting
 	disable_dynamic_content is
 			-- Ensure contents of `Current' are not dynamic and are no longer retrieved as such.
 		do
-			to_implement ("EV_GRID_I.disable_dynamic_content")
+			is_content_partially_dynamic := False
+			is_content_completely_dynamic := False
 		ensure
 			content_not_dynamic: not is_content_completely_dynamic and not is_content_partially_dynamic
 		end
@@ -446,7 +447,8 @@ feature -- Status setting
 			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
 			a_column_count_positive: a_column_count >= 1
 		do
-			to_implement ("EV_GRID_I.set_column_count_to")
+			grid_columns.resize (a_column_count)
+			recompute_horizontal_scroll_bar
 		ensure
 			column_count_set: column_count = a_column_count
 		end
@@ -457,7 +459,8 @@ feature -- Status setting
 			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
 			a_row_count_positive: a_row_count >= 1
 		do
-			to_implement ("EV_GRID_I.set_row_count_to")
+			enlarge_row_list (a_row_count)
+			recompute_vertical_scroll_bar
 		ensure
 			row_count_set: row_count = a_row_count
 		end
@@ -711,7 +714,7 @@ feature -- Measurements
 	row_count: INTEGER is
 			-- Number of rows in Current
 		do
-			if	internal_row_data /= Void then
+			if internal_row_data /= Void then
 				Result := internal_row_data.count
 			end
 		end
@@ -1137,7 +1140,7 @@ feature {NONE} -- Drawing implementation
 			previous_scroll_bar_value: INTEGER
 		do
 				-- Retrieve the final row offset as this is the virtual height required for all rows.
-			if row_offsets = Void then
+			if row_offsets = Void and not is_row_height_fixed then
 				fixme ("Ensure that `row_offsets' does not need special `Void' handling.")
 				l_total_row_height := 0
 			else

@@ -1156,14 +1156,14 @@ feature -- Output
 		require
 			valid_st: st /= Void
 		local
-			c: E_CLASS
+			c: E_CLASS;
+			list: SORTED_TWO_WAY_LIST [CLASS_I]
 		do
 			st.add (ti_Before_cluster_declaration);
-			st.add (ti_Before_cluster_header);
 			st.add_cluster (Current, name_in_upper);
-			st.add (ti_After_cluster_header);
 			st.add_new_line
 			st.add_new_line;
+			!! list.make;
 			from
 				classes.start
 			until
@@ -1171,12 +1171,22 @@ feature -- Output
 			loop
 				c := classes.item_for_iteration.compiled_eclass;
 				if c /= Void then
-					st.add_indent;
-					st.add_classi (c.lace_class, c.name_in_upper);
-					st.add_new_line
+					list.put_front (c.lace_class)
 				end;
 				classes.forth
 			end
+			list.sort;
+			from
+				list.start
+			until
+				list.after
+			loop
+				c := list.item.compiled_eclass;
+				st.add_indent;
+				st.add_classi (c.lace_class, c.name_in_upper);
+				st.add_new_line
+				list.forth
+			end;
 			st.add (ti_after_cluster_declaration);
 		end;
 

@@ -28,7 +28,7 @@ feature -- Access
 
 	item_by_data (some_data: ANY): like item is
 			-- First item with `some_data'.
-		obsolete "Use `retrieve_item_by_data' instead."
+		obsolete "Use `retrieve_item_by_data' instead.%NIt has two arguments: some_data: ANY; should_compare_objects: BOOLEAN."
 		require
 			not_destroyed: not is_destroyed
 			data_not_void: some_data /= Void

@@ -22,6 +22,10 @@ feature -- Status report
 	is_underlined: BOOLEAN
 			-- Is the character underlined?
 			
+	vertical_offset: INTEGER
+			-- Vertical offset of character from base line in pixels.
+			-- A positive value indicates a superscript, negative indicating a subscript.
+
 feature -- Status setting
 
 	enable_striked_out is
@@ -54,6 +58,14 @@ feature -- Status setting
 			is_underlined := False
 		ensure
 			not_underlined: not is_underlined
+		end
+		
+	set_vertical_offset (an_offset: INTEGER) is
+			-- Assign `an_offset' to `vertical_offset'.
+		do
+			vertical_offset := an_offset
+		ensure
+			vertical_offset_set: vertical_offset = an_offset
 		end
 		
 	is_equal (other: like Current): BOOLEAN is

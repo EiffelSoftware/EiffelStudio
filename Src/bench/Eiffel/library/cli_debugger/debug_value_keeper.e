@@ -71,7 +71,9 @@ feature -- Access
 	know_about (l_k: STRING): BOOLEAN is
 			-- Has a Debug Value object address by `l_k'
 		do
-			Result := debug_value_kept.has (l_k)
+			if debug_value_kept.valid_key (l_k) then
+				Result := debug_value_kept.has (l_k)				
+			end
 		end
 
 	item (l_k: STRING): ABSTRACT_DEBUG_VALUE is

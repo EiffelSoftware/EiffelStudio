@@ -663,6 +663,7 @@ feature -- JIT Thread
 	display_loaded_managed_threads is
 			-- Debug purpose only
 		local
+			l_id: INTEGER
 		do
 			debug ("_jfiat")
 				from
@@ -671,7 +672,14 @@ feature -- JIT Thread
 				until
 					loaded_managed_threads.after
 				loop
-					print (" - Thread : 0x" + loaded_managed_threads.key_for_iteration.to_hex_string + " (" + loaded_managed_threads.key_for_iteration.out + ")" + "%N")
+					l_id := loaded_managed_threads.key_for_iteration
+					if l_id = last_icd_thread_id then
+						print (">- Thread :")
+					else
+						print (" - Thread :")						
+					end
+					
+					print (" 0x" + l_id.to_hex_string + " (" + l_id.out + ")" + "%N")
 					loaded_managed_threads.forth
 				end
 			end
@@ -684,6 +692,13 @@ feature -- JIT Thread
 			-- Managed Thread info related to `id'.
 		do
 			Result := loaded_managed_threads.item (id)
+		end
+
+	default_managed_thread: EIFNET_DEBUGGER_THREAD_INFO is
+			-- Default Managed Thread info
+		do
+			loaded_managed_threads.start
+			Result := loaded_managed_threads.item_for_iteration
 		end
 		
 	add_managed_thread_by_pointer (p: POINTER) is 
@@ -699,7 +714,10 @@ feature -- JIT Thread
 				set_last_icd_thread_id (edti.thread_id)				
 			end
 			
-			io.error.put_string (generator + ".add_managed_thread (" + p.out + ") -> ID=0x" + edti.thread_id.to_hex_string + "%N")
+			debug ("eifnet_debugger")
+				io.error.put_string (generator + ".add_managed_thread (" 
+						+ p.out + ") -> ID=0x" + edti.thread_id.to_hex_string + "%N")
+			end
 		end	
 		
 	remove_managed_thread_by_pointer (p: POINTER) is 
@@ -711,12 +729,16 @@ feature -- JIT Thread
 			n := feature {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
 			if loaded_managed_threads.has (tid) then
 				loaded_managed_threads.remove (tid)
---				if last_icd_thread_id = tid and then not loaded_managed_threads.is_empty then
---					loaded_managed_threads.start
---					set_last_icd_thread_id (loaded_managed_threads.item_for_iteration.thread_id)
---				end				
+					-- FIXME jfiat: maybe find a better way for that .. a kind of history of selected thread ?
+				if last_icd_thread_id = tid and then not loaded_managed_threads.is_empty then
+					loaded_managed_threads.start
+					set_last_icd_thread_id (loaded_managed_threads.item_for_iteration.thread_id)
+				end				
 			end
-			io.error.put_string (generator + ".remove_managed_thread_by_pointer (" + p.out + ") -> ID=0x" + tid.to_hex_string + "%N")
+			debug ("eifnet_debugger")
+				io.error.put_string (generator + ".remove_managed_thread_by_pointer (" 
+						+ p.out + ") -> ID=0x" + tid.to_hex_string + "%N")
+			end
 		end
 		
 	set_last_icd_thread (p: POINTER) is 
@@ -745,6 +767,10 @@ feature -- JIT Thread
 			edti: EIFNET_DEBUGGER_THREAD_INFO
 		do
 			edti := managed_thread (last_icd_thread_id)
+			if edti = Void then
+					--| If current selected thread is not existing any more ...
+				edti := default_managed_thread
+			end
 			Result := edti.icd_thread
 		end
 		

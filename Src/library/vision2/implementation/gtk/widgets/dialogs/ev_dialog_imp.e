@@ -128,11 +128,11 @@ feature {NONE} -- Implementation
 			close_fct: INTEGER
 		do
 			if new_status then
-				close_fct := C.GDK_FUNC_MOVE_ENUM
+				close_fct := C.GDK_FUNC_CLOSE_ENUM
 			end
 			C.gdk_window_set_functions (
 				C.gtk_widget_struct_window (c_object),
-				C.GDK_FUNC_MOVE_ENUM + close_fct
+				C.GDK_FUNC_MOVE_ENUM.bit_or (close_fct)
 			)
 			is_dialog_closeable := new_status
 		end

@@ -173,6 +173,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Is class part of a library?
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
 	Decrement reference count
 	-----------------------------------------------------------*/
 	STDMETHODIMP_(ULONG) Release();

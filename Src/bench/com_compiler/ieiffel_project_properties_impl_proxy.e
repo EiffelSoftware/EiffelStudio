@@ -98,10 +98,22 @@ feature -- Access
 			Result := ccom_clusters (initializer)
 		end
 
-	assemblies: ECOM_ARRAY [STRING] is
+	assemblies: IENUM_IMPORTED_ASSEMBLIES_INTERFACE is
 			-- Imported assemblies.
 		do
 			Result := ccom_assemblies (initializer)
+		end
+
+	include_paths: IENUM_INCLUDE_PATHS_INTERFACE is
+			-- Included Paths.
+		do
+			Result := ccom_include_paths (initializer)
+		end
+
+	object_files: IENUM_OBJECT_FILES_INTERFACE is
+			-- Object Files.
+		do
+			Result := ccom_object_files (initializer)
 		end
 
 feature -- Status Report
@@ -221,6 +233,34 @@ feature -- Basic Operations
 			-- `assembly_path' [in].  
 		do
 			ccom_remove_assembly (initializer, assembly_path)
+		end
+
+	add_include_path (include_path: STRING) is
+			-- Add an include path to the project.
+			-- `include_path' [in].  
+		do
+			ccom_add_include_path (initializer, include_path)
+		end
+
+	remove_include_path (include_path: STRING) is
+			-- Remove an include path from the project.
+			-- `include_path' [in].  
+		do
+			ccom_remove_include_path (initializer, include_path)
+		end
+
+	add_object_file (object_file: STRING) is
+			-- Add an object file to the project.
+			-- `object_file' [in].  
+		do
+			ccom_add_object_file (initializer, object_file)
+		end
+
+	remove_object_file (object_file: STRING) is
+			-- Remove an object file from the project.
+			-- `object_file' [in].  
+		do
+			ccom_remove_object_file (initializer, object_file)
 		end
 
 	update_project_ace_file (project_ace_file_name: STRING) is
@@ -391,7 +431,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_assemblies (cpp_obj: POINTER): ECOM_ARRAY [STRING] is
+	ccom_assemblies (cpp_obj: POINTER): IENUM_IMPORTED_ASSEMBLIES_INTERFACE is
 			-- Imported assemblies.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -405,6 +445,42 @@ feature {NONE}  -- Externals
 
 	ccom_remove_assembly (cpp_obj: POINTER; assembly_path: STRING) is
 			-- Remove an assembly from the project.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_include_paths (cpp_obj: POINTER): IENUM_INCLUDE_PATHS_INTERFACE is
+			-- Included Paths.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_add_include_path (cpp_obj: POINTER; include_path: STRING) is
+			-- Add an include path to the project.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_remove_include_path (cpp_obj: POINTER; include_path: STRING) is
+			-- Remove an include path from the project.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_object_files (cpp_obj: POINTER): IENUM_OBJECT_FILES_INTERFACE is
+			-- Object Files.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_add_object_file (cpp_obj: POINTER; object_file: STRING) is
+			-- Add an object file to the project.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_remove_object_file (cpp_obj: POINTER; object_file: STRING) is
+			-- Remove an object file from the project.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end

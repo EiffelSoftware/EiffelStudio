@@ -72,7 +72,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	clients: IENUM_CLASS_INTERFACE is
+	clients: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class clients.
 		do
 			-- Put Implementation here.
@@ -84,7 +84,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	suppliers: IENUM_CLASS_INTERFACE is
+	suppliers: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class suppliers.
 		do
 			-- Put Implementation here.
@@ -96,7 +96,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	ancestors: IENUM_CLASS_INTERFACE is
+	ancestors: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct ancestors of class.
 		do
 			-- Put Implementation here.
@@ -108,7 +108,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	descendants: IENUM_CLASS_INTERFACE is
+	descendants: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct descendants of class.
 		do
 			-- Put Implementation here.
@@ -140,6 +140,12 @@ feature -- Access
 
 	is_generic: BOOLEAN is
 			-- Is class generic?
+		do
+			-- Put Implementation here.
+		end
+
+	is_library: BOOLEAN is
+			-- Is class part of a library?
 		do
 			-- Put Implementation here.
 		end

@@ -85,7 +85,7 @@ feature -- Access
 			Result := ccom_flat_feature_count (initializer)
 		end
 
-	clients: IENUM_CLASS_INTERFACE is
+	clients: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class clients.
 		do
 			Result := ccom_clients (initializer)
@@ -97,7 +97,7 @@ feature -- Access
 			Result := ccom_client_count (initializer)
 		end
 
-	suppliers: IENUM_CLASS_INTERFACE is
+	suppliers: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class suppliers.
 		do
 			Result := ccom_suppliers (initializer)
@@ -109,7 +109,7 @@ feature -- Access
 			Result := ccom_supplier_count (initializer)
 		end
 
-	ancestors: IENUM_CLASS_INTERFACE is
+	ancestors: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct ancestors of class.
 		do
 			Result := ccom_ancestors (initializer)
@@ -121,7 +121,7 @@ feature -- Access
 			Result := ccom_ancestor_count (initializer)
 		end
 
-	descendants: IENUM_CLASS_INTERFACE is
+	descendants: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct descendants of class.
 		do
 			Result := ccom_descendants (initializer)
@@ -155,6 +155,12 @@ feature -- Access
 			-- Is class generic?
 		do
 			Result := ccom_is_generic (initializer)
+		end
+
+	is_library: BOOLEAN is
+			-- Is class part of a library?
+		do
+			Result := ccom_is_library (initializer)
 		end
 
 feature {NONE}  -- Implementation
@@ -227,7 +233,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_clients (cpp_obj: POINTER): IENUM_CLASS_INTERFACE is
+	ccom_clients (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class clients.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -239,7 +245,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_suppliers (cpp_obj: POINTER): IENUM_CLASS_INTERFACE is
+	ccom_suppliers (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class suppliers.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -251,7 +257,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_ancestors (cpp_obj: POINTER): IENUM_CLASS_INTERFACE is
+	ccom_ancestors (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct ancestors of class.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -263,7 +269,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_descendants (cpp_obj: POINTER): IENUM_CLASS_INTERFACE is
+	ccom_descendants (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct descendants of class.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
@@ -295,6 +301,12 @@ feature {NONE}  -- Externals
 
 	ccom_is_generic (cpp_obj: POINTER): BOOLEAN is
 			-- Is class generic?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_is_library (cpp_obj: POINTER): BOOLEAN is
+			-- Is class part of a library?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end

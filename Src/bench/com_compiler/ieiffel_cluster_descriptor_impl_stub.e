@@ -30,7 +30,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	classes: IENUM_CLASS_INTERFACE is
+	classes: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		do
 			-- Put Implementation here.

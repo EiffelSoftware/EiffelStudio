@@ -222,7 +222,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::features(  
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_Eif_compiler.ccom_ec_pointed_interface_36 (eif_access (tmp_object));
+		*some_features = grt_ec_Eif_compiler.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -275,7 +275,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_featur
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_Eif_compiler.ccom_ec_pointed_interface_36 (eif_access (tmp_object));
+		*some_features = grt_ec_Eif_compiler.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -328,7 +328,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clients = grt_ec_Eif_compiler.ccom_ec_pointed_interface_19 (eif_access (tmp_object));
+		*some_clients = grt_ec_Eif_compiler.ccom_ec_pointed_interface_22 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -381,7 +381,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::suppliers( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_suppliers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_19 (eif_access (tmp_object));
+		*some_suppliers = grt_ec_Eif_compiler.ccom_ec_pointed_interface_22 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -434,7 +434,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestors( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_ancestors = grt_ec_Eif_compiler.ccom_ec_pointed_interface_19 (eif_access (tmp_object));
+		*some_ancestors = grt_ec_Eif_compiler.ccom_ec_pointed_interface_22 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -487,7 +487,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendants
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_descendants = grt_ec_Eif_compiler.ccom_ec_pointed_interface_19 (eif_access (tmp_object));
+		*some_descendants = grt_ec_Eif_compiler.ccom_ec_pointed_interface_22 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -613,6 +613,29 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::is_generic(
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_generic", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::is_library(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Is class part of a library?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("is_library", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "is_library", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;

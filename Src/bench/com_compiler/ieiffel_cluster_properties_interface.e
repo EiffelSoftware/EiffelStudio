@@ -17,13 +17,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_name_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_name'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	cluster_path_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `cluster_path'.
 			-- Redefine in descendants if needed.
@@ -209,15 +202,6 @@ feature -- Basic Operations
 
 		end
 
-	set_name (return_value: STRING) is
-			-- Cluster name.
-			-- `return_value' [in].  
-		require
-			set_name_user_precondition: set_name_user_precondition (return_value)
-		deferred
-
-		end
-
 	cluster_path: STRING is
 			-- Full path to cluster.
 		require
@@ -356,7 +340,7 @@ feature -- Basic Operations
 
 		end
 
-	excluded: ECOM_ARRAY [STRING] is
+	excluded: IENUM_CLUSTER_EXCLUDES_INTERFACE is
 			-- List of excluded directories.
 		require
 			excluded_user_precondition: excluded_user_precondition

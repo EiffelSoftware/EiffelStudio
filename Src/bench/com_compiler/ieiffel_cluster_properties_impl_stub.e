@@ -78,7 +78,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	excluded: ECOM_ARRAY [STRING] is
+	excluded: IENUM_CLUSTER_EXCLUDES_INTERFACE is
 			-- List of excluded directories.
 		do
 			-- Put Implementation here.
@@ -115,13 +115,6 @@ feature -- Access
 		end
 
 feature -- Basic Operations
-
-	set_name (return_value: STRING) is
-			-- Cluster name.
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
 
 	set_cluster_path (path: STRING) is
 			-- Full path to cluster.

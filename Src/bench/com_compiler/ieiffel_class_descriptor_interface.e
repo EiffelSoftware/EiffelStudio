@@ -164,6 +164,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	is_library_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_library'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	name: STRING is
@@ -246,7 +253,7 @@ feature -- Basic Operations
 
 		end
 
-	clients: IENUM_CLASS_INTERFACE is
+	clients: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class clients.
 		require
 			clients_user_precondition: clients_user_precondition
@@ -262,7 +269,7 @@ feature -- Basic Operations
 
 		end
 
-	suppliers: IENUM_CLASS_INTERFACE is
+	suppliers: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class suppliers.
 		require
 			suppliers_user_precondition: suppliers_user_precondition
@@ -278,7 +285,7 @@ feature -- Basic Operations
 
 		end
 
-	ancestors: IENUM_CLASS_INTERFACE is
+	ancestors: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct ancestors of class.
 		require
 			ancestors_user_precondition: ancestors_user_precondition
@@ -294,7 +301,7 @@ feature -- Basic Operations
 
 		end
 
-	descendants: IENUM_CLASS_INTERFACE is
+	descendants: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct descendants of class.
 		require
 			descendants_user_precondition: descendants_user_precondition
@@ -338,6 +345,14 @@ feature -- Basic Operations
 			-- Is class generic?
 		require
 			is_generic_user_precondition: is_generic_user_precondition
+		deferred
+
+		end
+
+	is_library: BOOLEAN is
+			-- Is class part of a library?
+		require
+			is_library_user_precondition: is_library_user_precondition
 		deferred
 
 		end

@@ -54,7 +54,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_tree
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_124 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_128 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -172,7 +172,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_prop
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_127 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_131 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -205,7 +205,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_prop
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_127 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_131 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

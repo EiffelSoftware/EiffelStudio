@@ -31,10 +31,28 @@ feature -- Access
 			Result := ccom_is_successful (initializer)
 		end
 
+	freezing_occurred: BOOLEAN is
+			-- Did last compile warrant a call to finish_freezing?
+		do
+			Result := ccom_freezing_occurred (initializer)
+		end
+
 	compiler_version: STRING is
 			-- Compiler version.
 		do
 			Result := ccom_compiler_version (initializer)
+		end
+
+	freeze_command_name: STRING is
+			-- Eiffel Freeze command name
+		do
+			Result := ccom_freeze_command_name (initializer)
+		end
+
+	freeze_command_arguments: STRING is
+			-- Eiffel Freeze command arguments
+		do
+			Result := ccom_freeze_command_arguments (initializer)
 		end
 
 feature -- Basic Operations
@@ -43,6 +61,12 @@ feature -- Basic Operations
 			-- Compile.
 		do
 			ccom_compile (initializer)
+		end
+
+	finalize is
+			-- Finalize.
+		do
+			ccom_finalize (initializer)
 		end
 
 feature {NONE}  -- Implementation
@@ -61,14 +85,38 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"]()"
 		end
 
+	ccom_finalize (cpp_obj: POINTER) is
+			-- Finalize.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"]()"
+		end
+
 	ccom_is_successful (cpp_obj: POINTER): BOOLEAN is
 			-- Was last compilation successful?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
+	ccom_freezing_occurred (cpp_obj: POINTER): BOOLEAN is
+			-- Did last compile warrant a call to finish_freezing?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
 	ccom_compiler_version (cpp_obj: POINTER): STRING is
 			-- Compiler version.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_freeze_command_name (cpp_obj: POINTER): STRING is
+			-- Eiffel Freeze command name
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_freeze_command_arguments (cpp_obj: POINTER): STRING is
+			-- Eiffel Freeze command arguments
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

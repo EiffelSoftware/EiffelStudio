@@ -46,15 +46,39 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Finalize.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP finalize( void ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Was last compilation successful?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
+	Did last compile warrant a call to finish_freezing?
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP freezing_occurred(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Compiler version.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP compiler_version(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Eiffel Freeze command name
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP freeze_command_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Eiffel Freeze command arguments
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP freeze_command_arguments(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 

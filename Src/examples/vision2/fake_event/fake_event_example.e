@@ -23,7 +23,7 @@ feature -- Initialization
 			create ev_screen
 			create timer
 			timer.actions.extend (~on_timer)
-			timer.set_interval (1000)
+			timer.set_interval (200)
 		end
 
 	first_window: EV_TITLED_WINDOW is
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	on_timer is
 			-- Wm_timer message.
 		do
-			inspect state
+			inspect led_state
 			when 0 then -- Numlock activated
 					-- Deactivate numlock				
 				ev_screen.fake_key_press (Key_num_lock)

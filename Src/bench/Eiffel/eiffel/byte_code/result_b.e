@@ -10,7 +10,8 @@ inherit
 			register_name,
 			make_byte_code, creation_access,
 			assign_code, expanded_assign_code, reverse_code,
-			assigns_to, pre_inlined_code, is_separate, generate_il_call_access
+			assigns_to, pre_inlined_code, is_separate, generate_il_call_access,
+			generate_il_address
 		end
 
 feature 
@@ -71,7 +72,13 @@ feature -- IL code generation
 				il_generator.generate_result
 			end
 		end
-
+		
+	generate_il_address is
+			-- Generate address of Result.
+		do
+			il_generator.generate_result_address
+		end
+		
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is

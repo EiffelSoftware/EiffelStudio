@@ -7,7 +7,7 @@ inherit
 	ACCESS_B
 		redefine
 			enlarged, is_current, make_byte_code, generate_il_call_access,
-			register_name, pre_inlined_code, print_register
+			register_name, pre_inlined_code, print_register, generate_il_address
 		end;
 	
 feature 
@@ -63,6 +63,12 @@ feature -- IL code generation
 			else
 				il_generator.generate_current
 			end
+		end
+		
+	generate_il_address is
+			-- Generate address of Current.
+		do
+			il_generator.generate_current_address
 		end
 
 feature -- Byte code generation

@@ -16,7 +16,8 @@ inherit
 			assign_code, expanded_assign_code, reverse_code,
 			make_end_assignment, make_end_reverse_assignment,
 			bit_assign_code, assigns_to, array_descriptor,
-			pre_inlined_code, is_separate, generate_il_call_access
+			pre_inlined_code, is_separate, generate_il_call_access,
+			generate_il_address
 		end
 	
 feature 
@@ -97,6 +98,13 @@ feature -- IL code generation
 				il_generator.generate_local (position)
 			end
 		end
+		
+	generate_il_address is
+			-- Generate address of current local.
+		do
+			il_generator.generate_local_address (position)
+		end
+		
 
 feature -- Byte code generation
 

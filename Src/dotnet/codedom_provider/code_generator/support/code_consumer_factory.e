@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-feature {CODE_GENERATOR, CODE_FACTORY} -- Basic Operations
+feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operations
 
 	generate_compile_unit_from_dom (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT) is
 			-- Call `generate_code_dom_compile_unit'.

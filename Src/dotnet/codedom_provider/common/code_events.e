@@ -133,6 +133,8 @@ feature {NONE} -- Implementation
 						Missing_current_process_file_name)
 			Result.extend (["Cannot Load Type", "general", "Could not load type `{1}' from assembly `{2}'", Error],
 						Cannot_load_type)
+			Result.extend (["Corrupt Installation", "general", "Installation of Codedom Provider is corrupt, please reinstall", Error],
+						Corrupt_installation)
 
 			-- General Warning
 			Result.extend (["Incorrect Result", "general", "The operation returned an incorrect value: {1}", Warning],
@@ -199,6 +201,8 @@ feature {NONE} -- Implementation
 						Missing_argument_type)
 			Result.extend (["Missing Argument", "consumer", "Argument with name `{1}' is missing in `{2}'", Error],
 						Missing_argument)
+			Result.extend (["Missing Type Name", "consumer", "Type in namespace `{1}' is missing name", Error],
+						Missing_type_name)
 
 			-- Consumer Warnings
 			Result.extend (["Missing Array Size", "consumer", "Array creation expression is missing size information", Warning],
@@ -259,11 +263,13 @@ feature {NONE} -- Implementation
 						Ambiguous_match)
 			Result.extend (["Missing Parent", "consumer", "Parent of feature `{1}' is missing", Warning],
 						Missing_parent)
+			Result.extend (["Duplicated Type", "consumer", "Type with name `{1}' already found, ignoring second instance", Warning],
+						Duplicated_type)
 
 			-- Consumer Information
 			Result.extend (["Void Argument", "consumer", "Arguments list of feature `{1}' contain a Void reference", Information],
 						Void_argument)
-			
+
 			-- Producer Errors
 			
 			-- Producer Warnings
@@ -272,12 +278,17 @@ feature {NONE} -- Implementation
 			
 			-- Compiler Errors
 
+			Result.extend (["Missing Compiler", "compiler", "Compiler could not be instantiated, check registration data", Error],
+						Missing_compiler)
+			Result.extend (["Missing Source File", "compiler", "Source file `{1}' is missing", Error],
+						Missing_source_file)
+
 			-- Compilation directory is missing
 
 			-- Compiler Warnings
 			Result.extend (["File Already Exists", "compiler", "File `{1}' is being overwritten", Warning],
 						File_exists)
-			Result.extend (["Missing Temporary Files", "compiler", "Missing temporary files in compiler parameters", Warning],
+			Result.extend (["Missing Temporary Files", "compiler", "Missing temporary files in compiler parameters or Missing temporary directory in temporary files", Warning],
 						Missing_temporary_files)
 			Result.extend (["Missing File", "general", "File {1} is missing", Warning],
 						Missing_file)

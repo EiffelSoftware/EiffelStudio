@@ -11,16 +11,14 @@ inherit
 	CODE_SHARED_GENERATION_HELPERS
 		export
 			{NONE} all
-		redefine
-			is_equal
 		end
 
 	CODE_SHARED_NAME_FORMATTER
 		export
 			{NONE} all
-		redefine
-			is_equal
 		end
+
+	CODE_SHARED_GENERATION_CONTEXT
 
 create
 	make
@@ -57,6 +55,8 @@ feature -- Access
 	
 	eiffel_name: STRING is
 			-- Eiffel name
+		require
+			in_code_generation: current_state = Code_generation
 		local
 			l_gen_type: CODE_GENERATED_TYPE
 			i: INTEGER
@@ -65,8 +65,8 @@ feature -- Access
 			if internal_eiffel_name = Void then
 				internal_eiffel_name := Name_formatter.formatted_variable_name (name)
 				Resolver.search (declaring_type)
-				if Resolver.found_generated then
-					l_gen_type := Resolver.found_generated_type
+				if Resolver.found then
+					l_gen_type := Resolver.found_type
 					from
 						l_features := l_gen_type.features
 						l_features.search (internal_eiffel_name)
@@ -89,15 +89,6 @@ feature -- Access
 			Result := internal_eiffel_name
 		ensure then
 			non_void_eiffel_name: Result /= Void
-		end
-
-feature -- Comparison
-
-	is_equal (a_other: CODE_VARIABLE_REFERENCE): BOOLEAN is
-			-- Does `a_other' refer to same variable?
-		do
-			Result := name.is_equal (a_other.name) and declaring_type.is_equal (a_other.declaring_type) and
-				type.is_equal (a_other.type)
 		end
 
 feature {NONE} -- Implementation

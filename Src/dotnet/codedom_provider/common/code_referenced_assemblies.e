@@ -23,7 +23,6 @@ feature -- Access
 			-- Linked list of assemblies used by the codeDOM.
 		once
 			create {ARRAYED_LIST [CODE_REFERENCED_ASSEMBLY]} Result.make (16)
-			add_referenced_assembly ("mscorlib.dll")
 		ensure
 			non_void_result: Result /= Void
 		end		
@@ -42,17 +41,19 @@ feature -- Status Report
 		local
 			l_location: STRING
 			l_index: INTEGER
+			l_file_name: STRING
 		do
+			l_file_name := a_file_name.as_lower
 			l_location := a_assembly.assembly.location
-			Result := a_file_name.is_equal (l_location)
+			Result := l_file_name.is_equal (l_location)
 			if not Result then
 				l_index := l_location.last_index_of (Directory_separator, l_location.count)
 				if l_index > 1 then
 					l_location.keep_tail (l_location.count - l_index)
-					Result := a_file_name.is_equal (l_location)
+					Result := l_file_name.is_equal (l_location)
 					if not Result then
 						l_location.keep_head ((l_location.last_index_of ('.', l_location.count) - 1).max (1))
-						Result := a_file_name.is_equal (l_location)
+						Result := l_file_name.is_equal (l_location)
 					end
 				end
 			end
@@ -77,7 +78,6 @@ feature -- Status Setting
 					l_assembly := feature {ASSEMBLY}.load_from (a_file_name)
 				else
 					l_path := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
-					l_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 					l_path.append (a_file_name)
 					if feature {SYSTEM_FILE}.exists (l_path) then
 						l_assembly := feature {ASSEMBLY}.load_from (l_path)
@@ -90,13 +90,20 @@ feature -- Status Setting
 				end
 			end
 		ensure
-			added: referenced_assemblies.there_exists (agent has_file_name (?, a_file_name))
+			added: assembly_added implies referenced_assemblies.there_exists (agent has_file_name (?, a_file_name))
 		rescue
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [(create {EXCEPTIONS}).exception_trace])
 			l_retried := True
 			retry
 		end
 
+	reset_referenced_assemblies is
+			-- Reset content of `Referenced_assemblies'.
+		do
+			Referenced_assemblies.wipe_out
+			add_referenced_assembly ("mscorlib.dll")
+		end
+		
 feature {NONE} -- Implementation
 
 	Directory_separator: CHARACTER is

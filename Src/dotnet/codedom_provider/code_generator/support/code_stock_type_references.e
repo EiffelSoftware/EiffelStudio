@@ -20,6 +20,12 @@ feature -- Access
 			Result := Type_reference_factory.type_reference_from_type (feature {TYPE}.get_type ("System.Void"))
 		end
 
+	Object_type_reference: CODE_TYPE_REFERENCE is
+			-- Reference to NONE
+		once
+			Result := Type_reference_factory.type_reference_from_type (feature {TYPE}.get_type ("System.Object"))
+		end
+
 	Boolean_type_reference: CODE_TYPE_REFERENCE is
 			-- Reference to BOOLEAN
 		once

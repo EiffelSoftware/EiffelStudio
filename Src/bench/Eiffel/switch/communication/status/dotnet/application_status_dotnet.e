@@ -157,7 +157,7 @@ feature -- Call stack creation
 			set_call_stack (current_thread_id, ecs)
 		end
 
-feature -- Values
+feature {NONE} -- Values Impl
 
 	call_stack (tid: INTEGER): EIFFEL_CALL_STACK_DOTNET is
 			-- Eiffel call stack for `tid'
@@ -175,6 +175,8 @@ feature -- Values
 				Result := ccs.i_th (Application.current_execution_stack_number)				
 			end
 		end
+
+feature -- Values
 
 	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
 			-- Current call stack element being displayed

@@ -63,8 +63,8 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
 				-- Create and setup the preferred font face mechanism
 			create preferred_families
-			preferred_families.add_actions.extend (~update_preferred_faces)
-			preferred_families.remove_actions.extend (~update_preferred_faces)
+			preferred_families.add_actions.extend (agent update_preferred_faces)
+			preferred_families.remove_actions.extend (agent update_preferred_faces)
 
 				-- Retrieve shape, weight and family from
 				-- the default font returned by Windows.

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			create value_range.make (0, 100)
-			value_range.change_actions.extend (~set_range)
+			value_range.change_actions.extend (agent set_range)
 			wel_set_range (0, 100)
 			wel_set_step (1)
 			wel_set_leap (10)

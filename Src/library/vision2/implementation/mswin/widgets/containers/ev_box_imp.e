@@ -59,8 +59,8 @@ feature {NONE} -- Initialization
 			
 		do
 			Precursor
-			remove_item_actions.extend (~removed_so_update_non_expandable_children (?))
-			new_item_actions.extend (~added_so_update_non_expandable_children (?))
+			remove_item_actions.extend (agent removed_so_update_non_expandable_children (?))
+			new_item_actions.extend (agent added_so_update_non_expandable_children (?))
 			is_initialized := True
 		end
 feature -- Access

@@ -613,7 +613,7 @@ feature {NONE} -- Private Implementation
 		do
 			parented := True
 			if paint_bitmap_agent = Void then
-				paint_bitmap_agent := ~paint_bitmap
+				paint_bitmap_agent := agent paint_bitmap
 			end
 			interface.expose_actions.extend (paint_bitmap_agent)
 		end

@@ -72,16 +72,28 @@ feature -- Open file dialog constants
 
 feature -- Toolbar icons filename
 
-	Open_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_open_file_color.ico"
+	Open_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on open toolbar button"
 			external_name: "ShowOpenIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result,Open_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0			
 		end
 		
-	Import_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_assembly_color.ico"
+	Import_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on import toolbar button"
 			external_name: "ImportIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0			
 		end
 
 feature -- Other constants
@@ -106,6 +118,20 @@ feature -- Other constants
 		indexing
 			description: "Filename of icon appearing in import tool header"
 			external_name: "ImportToolIconFilename"
+		end
+
+feature {NONE} -- Implementation
+
+	Open_icon_relative_filename: STRING is "icon_open_file_color.ico"
+		indexing
+			description: "Filename of icon on open toolbar button"
+			external_name: "ShowOpenIconRelativeFilename"
+		end
+		
+	Import_icon_relative_filename: STRING is "icon_import_assembly_color.ico"
+		indexing
+			description: "Filename of icon on import toolbar button"
+			external_name: "ImportIconRelativeFilename"
 		end
 		
 end -- class IMPORT_TOOL_DICTIONARY	

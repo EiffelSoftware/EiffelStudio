@@ -10,13 +10,13 @@ inherit
 	
 feature -- Access
 	
-	Assembly_and_dependancies_importation_message: STRING is "The assembly manager will now import the selected assembly and its dependencies. This may take a few minutes. Please be patient."
+	Assembly_and_dependancies_importation_message: STRING is "Importing assembly and dependencies..."
 			-- Message to let the user know selected assembly and its dependancies will be imported to the Eiffel repository.
 		indexing
 			external_name: "AssemblyAndDependanciesImportationMessage"
 		end
 
-	Assembly_importation_message: STRING is "The assembly manager will now import the selected assembly without any dependencies. This may take a few minutes. Please be patient."
+	Assembly_importation_message: STRING is "Importing assembly..."
 			-- Message to let the user know selected assembly will be imported to the Eiffel repository.
 		indexing
 			external_name: "AssemblyImportationMessage"

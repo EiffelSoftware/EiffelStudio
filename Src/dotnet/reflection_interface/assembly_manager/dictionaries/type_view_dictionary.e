@@ -52,9 +52,9 @@ feature -- Access
 			external_name: "CancelButtonLabel"
 		end
 	
-	Check_validity_message: STRING is "ISE Assembly Manager will now check the validity of your changes. Please wait."
+	Check_validity_message: STRING is "Checking changes validity..."
 		indexing
-			description: "Message to the user before starting verification of the class"
+			description: "Message to the user while verifying validity of the class"
 			external_name: "CheckValidityMessage"
 		end
 	
@@ -106,10 +106,10 @@ feature -- Access
 			Result := Result.Ivory
 		end
 	
-	Eiffel_generation_question: STRING is "Your changes have been saved in the Eiffel assembly cache. Would you like to regenerate Eiffel sources too?"
+	Eiffel_generation: STRING is "Regenerating Eiffel class..."
 		indexing
-			description: "Question to the user after saving changes in the XML files"
-			external_name: "EiffelGenerationQuestion"
+			description: "Message to the user during Eiffel regeneration (after changes in type view and XML generation)"
+			external_name: "EiffelGeneration"
 		end
 		
 	Element_change_comment: STRING is "-- Element Change"

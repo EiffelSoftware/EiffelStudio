@@ -615,11 +615,9 @@ feature {NONE} -- Implementation
 			
 			signal_connect_true ("delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			initialize_client_area
-			
-			if not has_wm_decorations then
+
 					-- If our window doesn't have WM decorations then unset them.
-				feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
-			end	
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), has_wm_decorations.to_integer)	
 			enable_user_resize
 			default_height := -1
 			default_width := -1
@@ -670,7 +668,7 @@ feature {EV_INTERMEDIARY_ROUTINES}
 			-- Call the close request actions.
 		do
 			if close_request_actions_internal /= Void then
-				close_request_actions_internal.call ([])
+				close_request_actions_internal.call (Void)
 			end
 		end
 

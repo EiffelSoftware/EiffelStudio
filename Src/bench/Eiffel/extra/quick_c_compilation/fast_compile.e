@@ -11,6 +11,7 @@ creation
 	make
 
 feature 
+
 	make (a_arguments: ARRAY[STRING]) is
 		do
 			if a_arguments.count > 1 then

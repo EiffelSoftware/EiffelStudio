@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_INFORMATION_DIALOG_IMP! implementation.make (par)
 			implementation.set_interface (Current)
-			implementation.build
+--			implementation.build
 		end
 
 	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_INFORMATION_DIALOG_IMP! implementation.make_with_text (par, a_title, a_msg)
 			implementation.set_interface (Current)
-			implementation.build
+--			implementation.build
 		end
 
 	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_INFORMATION_DIALOG_IMP! implementation.make_default (par, a_title, a_msg)
 			implementation.set_interface (Current)
-			implementation.build
+--			implementation.build
 			implementation.set_default (a_msg, a_title)
 		end
 

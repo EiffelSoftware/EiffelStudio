@@ -22,7 +22,8 @@ inherit
 			set_read_only_text_window, realized,
 			update_boolean_resource,
 			update_integer_resource,
-			update_array_resource
+			update_array_resource,
+			set_default_size
 		end;
 	EB_CONSTANTS;
 
@@ -149,6 +150,13 @@ feature -- Status setting
 			read_only_text_window := ed
 		end;
 
+	set_default_size is
+			-- Set the size of Current to its default.
+		do
+			eb_shell.set_size (System_tool_resources.tool_width.actual_value,
+				System_tool_resources.tool_height.actual_value)
+		end;
+
 feature -- Update
 
 	process_system (s: SYSTEM_STONE) is
@@ -242,7 +250,7 @@ feature -- Graphical Interface
 		do
 			if not realized then
 				!! mp.set_watch_cursor
-				!! ts.make ("", project_tool.screen);
+				!! ts.make (project_tool.screen);
 				make_shell (ts);
 				ts.set_title (tool_name);
 				mp.restore

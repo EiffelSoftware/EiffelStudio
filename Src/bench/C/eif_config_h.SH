@@ -15,7 +15,7 @@ case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
 echo "Extracting eif_config.h (with variable substitutions)"
-sed <<!GROK!THIS! >eif_config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
+sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -e 's!^#un-def!#undef!'
 /*
  * This file was produced by running the config_h.SH script, which
  * gets its values from config.sh, which is generally produced by

@@ -817,7 +817,9 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("/emain.o Makefile%N%T$(RM) ") 
 			make_file.putstring (system_name)
 			make_file.new_line
-			make_file.putstring ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
+			if System.makefile_names /= Void then
+				make_file.putstring ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
+			end
 			if System.externals.has_cpp_externals then
 				make_file.putstring ("%T$(CPP")
 			else

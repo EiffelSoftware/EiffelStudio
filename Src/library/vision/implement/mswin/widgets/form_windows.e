@@ -485,7 +485,7 @@ feature -- Implementation
 	updating : BOOLEAN
 		-- Are we currently updating this form?
 
-	feature {NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	class_name: STRING is
 		once

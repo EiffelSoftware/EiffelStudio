@@ -116,9 +116,7 @@ feature -- Text
 			exists: not destroyed;
 			not_a_text_void: a_text /= Void
 		do
-			unmanage;
 			implementation.set_text (a_text);
-			manage;
 		ensure
 			text.is_equal (a_text)
 		end;

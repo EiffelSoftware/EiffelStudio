@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
@@ -150,13 +155,9 @@ feature {NONE} -- Implementations
 			tmp_body.append (Space)
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append (Double_quote)
-			if shared_wizard_environment.new_eiffel_project then
-				tmp_body.append (shared_wizard_environment.eiffel_class_name)
-			else
-				tmp_body.append (coclass_descriptor.eiffel_class_name)
-				tmp_body.append (Underscore)
-				tmp_body.append ("IMP")
-			end
+			
+			tmp_body.append (implemented_coclass_name (coclass_descriptor.eiffel_class_name))
+			
 			tmp_body.append (Double_quote)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Semicolon)

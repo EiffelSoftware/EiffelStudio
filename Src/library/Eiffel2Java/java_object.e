@@ -1,20 +1,21 @@
 indexing
-
 	description: "This class gives Eiffel access to Java objects. You %
                  %can use it directly or inherit from to and create a %
                  %more convienient Eiffel class that makes the Java %
                  %object look like an Eiffel object"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_OBJECT
+class
+	JAVA_OBJECT
 
 inherit
-
 	SHARED_JNI_ENVIRONMENT
 	JAVA_EXTERNALS
 
-creation
-
-	create_instance, make_from_pointer
+create
+	create_instance,
+	make_from_pointer
 
 feature -- creation
 
@@ -79,6 +80,14 @@ feature -- creation
 			created: java_object_id /= default_pointer	
 		end
 
+feature -- Status report
+
+	exists: BOOLEAN is
+			-- Is Current java object alive?
+		do
+			Result := java_object_id /= default_pointer
+		end
+		
 feature -- method id's
 
 	method_id (method_name: STRING; signature: STRING): POINTER is

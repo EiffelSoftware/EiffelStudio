@@ -40,7 +40,7 @@ feature {NONE} -- Basic operation
 		do
 			create cmd.make (~execute)
 			create arg.make (Current)
-			add_command (p, "clicked", cmd, arg)
+			add_command (p, "clicked", cmd, arg, default_pointer)
 		end
 
 feature -- Event - command association
@@ -57,19 +57,19 @@ feature -- Event - command association
 		local
 			cancel_close_command: EV_COMMAND
 		do
-			-- We have to remove the close command and put it back
-			-- to have it executed after all commands.
+--			-- We have to remove the close command and put it back
+--			-- to have it executed after all commands.
 
-			-- Remove the close command.
-			(event_command_array @ cancel_clicked_id).finish
-			cancel_close_command := (event_command_array @ cancel_clicked_id).command_list.item
-			remove_single_command (cancel_widget, cancel_clicked_id, cancel_close_command)
+--			-- Remove the close command.
+--			(event_command_array @ cancel_clicked_id).finish
+--			cancel_close_command := (event_command_array @ cancel_clicked_id).command_list.item
+--			remove_single_command (cancel_widget, cancel_clicked_id, cancel_close_command)
 
 			-- Add the command.
-			add_command (cancel_widget, "clicked", cmd, arg)
+			add_command (cancel_widget, "clicked", cmd, arg, default_pointer)
 
-			-- re-add a new close command.
-			add_dialog_close_command (cancel_widget)
+--			-- re-add a new close command.
+--			add_dialog_close_command (cancel_widget)
 		end
 
 

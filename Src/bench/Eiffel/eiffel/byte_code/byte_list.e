@@ -15,6 +15,9 @@ inherit
 		end
 
 	FIXED_LIST [T]
+		export
+			{ANY} area
+		end
 
 creation
 	make, make_filled
@@ -23,160 +26,210 @@ feature
 
 	analyze is
 			-- Loop over `list' and analyze each item
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start;
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				item.analyze;
-				forth;
-			end;
-		end;
+				l_area.item (i).analyze
+				i := i + 1
+			end
+		end
 
 	generate is
 			-- Loop over `list' and generate each item
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start;
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				item.generate;
-				forth;
-			end;
-		end;
+				l_area.item (i).generate
+				i := i + 1
+			end
+		end
 
 	enlarge_tree is
 			-- Loop ovet `list' and enlarges each item
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
+			l_item: T
 		do
 			from
-				start;
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				if item.need_enlarging then
-					replace (item.enlarged);
+				l_item := l_area.item (i)
+				if l_item.need_enlarging then
+					l_area.put (l_item.enlarged, i)
 				else
-					item.enlarge_tree;
-				end;
-				forth;
-			end;
-		end;
+					l_item.enlarge_tree
+				end
+				i := i + 1
+			end
+		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generates byte code for element in the list
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				item.make_byte_code (ba);
-				forth;
-			end;
-		end;
+				l_area.item (i).make_byte_code (ba)
+				i := i + 1
+			end
+		end
 
 feature -- Array optimization
 
 	has_loop: BOOLEAN is
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				Result or else after
+				Result or else i = nb
 			loop
-				Result := item.has_loop;
-				forth;
-			end;
-		end;
+				Result := l_area.item (i).has_loop
+				i := i + 1
+			end
+		end
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (n: INTEGER): BOOLEAN is
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				Result or else after
+				Result or else i = nb
 			loop
-				Result := item.assigns_to (i);
-				forth;
-			end;
+				Result := l_area.item (i).assigns_to (n)
+				i := i + 1
+			end
 		end
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				Result or else after
+				Result or else i = nb
 			loop
-				Result := item.calls_special_features (array_desc)
-				forth
+				Result := l_area.item (i).calls_special_features (array_desc)
+				i := i + 1
 			end
 		end
 
 	is_unsafe: BOOLEAN is
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				Result or else after
+				Result or else i = nb
 			loop
-				Result := item.is_unsafe
-				forth;
-			end;
+				Result := l_area.item (i).is_unsafe
+				i := i + 1
+			end
 		end
 
 	optimized_byte_node: like Current is
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			Result := Current
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				replace (item.optimized_byte_node)
-				forth
+				l_area.put (l_area.item (i).optimized_byte_node, i)
+				i := i + 1
 			end
 		end
 
 feature -- Inlining
 
 	size: INTEGER is
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				Result := Result + item.size
-				forth
+				Result := Result + l_area.item (i).size
+				i := i + 1
 			end
 		end
 
 	pre_inlined_code: like Current is
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			Result := Current
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				replace (item.pre_inlined_code)
-				forth
+				l_area.put (l_area.item (i).pre_inlined_code, i)
+				i := i + 1
 			end
 		end
 
 	inlined_byte_code: like Current is
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			Result := Current
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				replace (item.inlined_byte_code)
-				forth
+				l_area.put (l_area.item (i).inlined_byte_code, i)
+				i := i + 1
 			end
 		end
 
@@ -184,56 +237,66 @@ feature -- Convenience
 
 	remove_voids: like Current is
 		local
-			nbr_void: INTEGER;
+			nbr_void: INTEGER
+			l_area, r_area: SPECIAL [T]
+			i, j, nb: INTEGER
+			l_item: T
 		do
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				if (item = Void) then
+				if (l_area.item (i) = Void) then
 					nbr_void := nbr_void + 1
-				end;
-				forth
-			end;
+				end
+				i := i + 1
+			end
+
 			if (nbr_void < count) then
 				--| Not all elements are void
 				if nbr_void > 0 then
 					--| Remove the void elements
 					from
-						!! Result.make_filled (count - nbr_void);
-						Result.start;
-						start;
+						!! Result.make_filled (count - nbr_void)
+						r_area := Result.area
+						i := 0
 					until
-						after
+						i = nb
 					loop
-						if (item /= Void) then
-							Result.replace (item);
-							Result.forth;
-						end;
-						forth
-					end;
+						l_item := l_area.item (i)
+						if (l_item /= Void) then
+							r_area.put (l_item, j)
+							j := j + 1
+						end
+						i := i + 1
+					end
 				else
 					--| There are no void elements
 					Result := Current
-				end;
+				end
 			end
-		end;
+		end
 
 feature -- Concurrent Eiffel
 
 	has_separate_call: Boolean is
 			-- Loop over `list' and determine is there is a separate
 			-- call
+		local
+			l_area: SPECIAL [T]
+			i, nb: INTEGER
 		do
 			from
-				start;
+				l_area := area
+				nb := count
 			until
-				Result or after
+				Result or i = nb
 			loop
-				Result := item.has_separate_call;
-				forth;
-			end;
-		end;
+				Result := l_area.item (i).has_separate_call
+				i := i + 1
+			end
+		end
 
 end

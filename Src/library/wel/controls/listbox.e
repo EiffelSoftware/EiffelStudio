@@ -135,6 +135,21 @@ feature -- Element change
 			count_decreased: count = old count - 1
 		end
 
+	add_files (attribut: INTEGER; files: STRING) is
+			-- Add `files' to the list box. `files' may contain
+			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
+			-- `attribut' values.
+		require
+			exists: exists
+			files_not_void: files /= Void
+		local
+			a: ANY
+		do
+			a := files.to_c
+			cwin_send_message (item, Lb_dir, attribut,
+				cwel_pointer_to_integer ($a))
+		end
+
 	reset_content is
 			-- Reset the content of the list.
 		require
@@ -160,7 +175,38 @@ feature -- Status setting
 			top_index_set: top_index = index
 		end
 
+	select_item (index: INTEGER) is
+			-- Select item at the zero-based `index'.
+		require
+			exists: exists
+			index_small_enough: index < count
+			index_large_enough: index >= 0
+		deferred
+		ensure
+			is_selected: is_selected (index)
+		end
+
+	set_horizontal_extent (a_width: INTEGER) is
+			-- Set the width, in pixels, by which a list box can
+			-- be scrolled horizontally.
+		require
+			exists: exists
+			positive_width: width >= 0
+		do
+			cwin_send_message (item, Lb_sethorizontalextent,
+				a_width, 0)
+		ensure
+			horizontal_extent_set: horizontal_extent = a_width
+		end
+
 feature -- Status report
+
+	selected: BOOLEAN is
+			-- Is an item selected?
+		require
+			exists: exists
+		deferred
+		end
 
 	strings: ARRAY [STRING] is
 			-- Strings contained in the list box
@@ -201,6 +247,36 @@ feature -- Status report
 		do
 			Result := cwin_send_message_result (item, Lb_getsel,
 				index, 0) > 0
+		end
+
+	item_height: INTEGER is
+			-- Height of an item
+		require
+			exists: exists
+		local
+			dc: WEL_CLIENT_DC
+			tm: WEL_TEXT_METRIC
+		do
+			!! dc.make (Current)
+			dc.get
+			!! tm.make (dc)
+			dc.release
+			Result := tm.height
+		ensure
+			positive_result: Result >= 0
+		end
+
+	horizontal_extent: INTEGER is
+			-- Width, in pixels, by which the list box can be
+			-- scrolled horizontally
+		require
+			exists: exists
+			has_horizontal_scroll_bar: has_horizontal_scroll_bar
+		do
+			Result := cwin_send_message_result (item,
+				Lb_gethorizontalextent, 0, 0)
+		ensure
+			positive_result: Result >= 0
 		end
 
 feature -- Basic operations
@@ -326,6 +402,9 @@ feature {NONE} -- Implementation
 		once
 			Result := "LISTBOX"
 		end
+
+invariant
+	consistent_selection: exists and then selected implies count > 0
 
 end -- class WEL_LIST_BOX
 

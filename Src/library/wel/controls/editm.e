@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_EDIT
+		redefine
+			scroll
+		end
 
 	WEL_ES_CONSTANTS
 		export
@@ -26,11 +29,52 @@ feature -- Basic operations
 			-- `horizontal' is the number of characters to
 			-- scroll horizontally, `vertical' is the number
 			-- of lines to scroll vertically.
-		require
-			exists: exists
 		do
 			cwin_send_message (item, Em_linescroll, horizontal,
 				vertical)
+		end
+
+feature -- Status setting
+
+	set_formatting_rect (rect: WEL_RECT) is
+			-- Set `formatting_rect' with `rect'.
+		require
+			exists: exists
+			rect_not_void: rect /= Void
+			rect_exists: rect.exists
+		do
+			cwin_send_message (item, Em_setrect, 0, rect.to_integer)
+		end
+
+	set_tab_stops (tab: INTEGER) is
+			-- Set tab stops at every `tab' dialog box units.
+		require
+			exists: exists
+			positive_tab: tab > 0
+		do
+			cwin_send_message (item, Em_settabstops, 1, 0)
+		end
+
+	set_tab_stops_array (tab: ARRAY [INTEGER]) is
+			-- Set tab stops using the values of `tab'.
+		require
+			exists: exists
+			tab_not_void: tab /= Void
+			tab_large_enough: tab.count > 1
+		local
+			a: ANY
+		do
+			a := tab.to_c
+			cwin_send_message (item, Em_settabstops, tab.count,
+				cwel_pointer_to_integer ($a))
+		end
+
+	set_default_tab_stops is
+			-- Set tab stops at every 32 dialog box units.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Em_settabstops, 0, 0)
 		end
 
 feature -- Status report
@@ -55,6 +99,18 @@ feature -- Status report
 				-1, 0)
 		ensure
 			positive_result: Result >= 0
+		end
+
+	first_visible_line: INTEGER is
+			-- Upper most visible line
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item,
+				Em_getfirstvisibleline, 0, 0)
+		ensure
+			positive_result: Result >= 0
+			result_small_enough: Result < line_count
 		end
 
 	current_line_number: INTEGER is

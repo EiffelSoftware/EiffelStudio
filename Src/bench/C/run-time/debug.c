@@ -1543,10 +1543,10 @@ rt_public void drecord_bc(BODY_INDEX old_body_id, BODY_INDEX body_id, unsigned c
 		write_long ((char *) (addr + 1), EIF_once_count);
 		EIF_once_count++;	/* Increment dynamically the number of onces */
 			/* Allocate room for once values */
-		EIF_once_values = (char **) eif_realloc ((void *) EIF_once_values, EIF_once_count * sizeof (char *));
+		EIF_once_values = (EIF_once_value_t *) eif_realloc ((void *) EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
 			/* needs eif_malloc: it crashes otherwise 
 			 * on some pure C-ansi compiler (SGI)*/
-		if (EIF_once_values == (char **) 0) /* Out of memory */
+		if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
 			enomem(); /* Raise an out-of memory exceptions */
 	}
 }

@@ -292,7 +292,7 @@ doc:	</attribute>
 rt_public int in_assertion = 0;
 
 /*
-doc:	<attribute name="EIF_once_values" return_type="EIF_REFERENCE *" export="public">
+doc:	<attribute name="EIF_once_values" return_type="EIF_once_value_t *" export="public">
 doc:		<summary>Array to save value of each computed once. It is used to store once per thread values.</summary>
 doc:		<access>Read/Write</access>
 doc:		<indexing>By once key.</indexing>
@@ -300,7 +300,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public EIF_REFERENCE *EIF_once_values = NULL;
+rt_public EIF_once_value_t *EIF_once_values = NULL;
 
 /*
 doc:	<attribute name="EIF_oms" return_type="EIF_REFERENCE **" export="public">
@@ -365,12 +365,12 @@ rt_public void once_init (void)
 
 	/* Allocate room for once values */
 
-	EIF_once_values = (EIF_REFERENCE *) eif_realloc (EIF_once_values, EIF_once_count * REFSIZ);
+	EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-	if (EIF_once_values == (EIF_REFERENCE *) 0) /* Out of memory */
+	if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
 		enomem();
 
-	memset (EIF_once_values, 0, EIF_once_count * sizeof (char *));
+	memset (EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
 
 }
 

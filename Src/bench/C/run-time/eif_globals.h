@@ -77,7 +77,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 							 * trigger an invariant check in generated C routines  */
 
 		/* main.c */
-	EIF_REFERENCE *EIF_once_values_cx;	/* Once values for a thread */
+	EIF_once_value_t *EIF_once_values_cx;	/* Once values for a thread */
 	EIF_REFERENCE **EIF_oms_cx;		/* Once manifest strings for a thread */
 	int in_assertion_cx ;    /* Is an assertion evaluated? */
 

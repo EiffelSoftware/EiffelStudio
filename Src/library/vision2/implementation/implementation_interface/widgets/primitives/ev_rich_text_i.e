@@ -193,6 +193,7 @@ feature -- Status setting
 			format_not_void: format /= Void
 		deferred
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -221,6 +222,7 @@ feature -- Status setting
 			format_not_void: format /= Void
 		deferred
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -330,6 +332,7 @@ feature -- Status setting
 		deferred
 		ensure
 			tab_width_set: tab_width = a_width
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -440,6 +443,7 @@ feature -- Status setting
 			text_file.put_string (buffer.internal_text)
 			text_file.close
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end

@@ -94,8 +94,7 @@ feature {NONE}
 			window_commands: WINDOW_CMDS
 			command_templates: TEMPL_CMDS
 		do
-			!! generated_commands.make (1, Current)
-			!! user_defined_commands1.make (2, Current)
+			!! generated_commands.make (Current)
 			!! command_templates.make (Current)
 			!! window_commands.make (Current)
 			!! file_commands.make (Current)
@@ -104,12 +103,11 @@ feature {NONE}
 			add_page (reset_commands)
 			add_page (file_commands)
 			add_page (command_templates)
-			add_page (user_defined_commands1)
 			add_page (generated_commands)
 			set_initial_page (window_commands)
 		end
 
-feature {CMD_CAT_BUTTON} -- Attributes
+feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, CMD_CAT_BUTTON} -- Attributes
 
 	current_page: COMMAND_PAGE
 			-- Current page in the command catalog
@@ -126,10 +124,8 @@ feature {NONE} -- Attributes
 	command_catalog_label: LABEL
 			-- Label displaying "Command catalog"
 
-feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, 
-			GENERATE_OBJECT_TOOL_CMD, GENERATE_OBJECT_COMMAND_CMD}
+feature {GENERATE_OBJECT_TOOL_CMD, GENERATE_OBJECT_COMMAND_CMD}
 
-	user_defined_commands1: USER_DEF_CMDS
 	generated_commands: GENERATED_CMDS
 
 feature -- Implementation

@@ -26,6 +26,7 @@
 #include "run_idr.h"
 #include "error.h"
 #include "main.h"
+#include "compress.h"
 
 #ifdef EIF_OS2
 #include <io.h>
@@ -43,13 +44,20 @@
 
 /*#define DEBUG_GENERAL_STORE	/**/
 
-/*#define DEBUG 1    /**/
+/*#define DEBUG 1	/**/
+
+/* compression */
+#define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
+#define EIF_BUFFER_ALLOCATED_SIZE EIF_DCMPS_OUT_SIZE
+#define EIF_CMPS_BUFFER_ALLOCATED_SIZE EIF_CMPS_OUT_SIZE
+
+rt_public char* cmps_general_buffer = (char *) 0;
 
 rt_public int fides;
 rt_public char fstoretype;
 rt_public char *general_buffer = (char *) 0;
 rt_public int current_position = 0;
-rt_public int buffer_size = 1024;
+rt_public int buffer_size = EIF_BUFFER_SIZE;
 rt_public int end_of_buffer = 0;
 rt_private char *s_buffer = (char *) 0;
 
@@ -92,6 +100,29 @@ void (*make_header_func)() = make_header;
 void (*st_write_func)() = st_write;
 void (*flush_buffer_func)() = flush_st_buffer;
 void (*store_write_func)() = store_write;
+
+/*
+ * Convenience functions
+ */
+
+/* Initialize store function pointers and globals */
+/* reset buffer size if argument is non null */
+rt_public void rt_init_store(store_function, buf_size)
+void (*store_function)();
+int buf_size;
+{
+	store_write_func = store_function;
+	if (buf_size)
+		buffer_size = buf_size;
+}
+
+/* Reset store function pointers and globals to their default values */
+
+rt_public void rt_reset_store(){
+	store_write_func = store_write;
+	buffer_size = EIF_BUFFER_SIZE;
+}
+
 
 /*
  * Functions definitions
@@ -137,8 +168,8 @@ EIF_CHARACTER file_storage_type;
 {
 	/* Use file decscriptor so sockets and files can be used for storage
 	 * Store object hierarchy of root `object' and produce a header
-     * so it can be retrieved by other systems.
-     */
+	 * so it can be retrieved by other systems.
+	 */
 
 	fides = (int) fd;
 	fstoretype = file_storage_type;
@@ -165,8 +196,15 @@ rt_public void allocate_gen_buffer ()
 
 		g_data.status |= GC_STOP;
 		general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
+/* FIXME: hubert => EIF_BUFFER_ALLOCATED_SIZE instead of buffer_size ???*/
 		if (general_buffer == (char *) 0)
 			eraise ("out of memory", EN_PROG);
+
+		/* compression */
+		cmps_general_buffer = (char *) xmalloc (EIF_CMPS_BUFFER_ALLOCATED_SIZE * sizeof (char), C_T, GC_OFF);
+		if (cmps_general_buffer == (char *) 0)
+			eraise ("out of memory", EN_PROG);
+
 		g_data.status = g_status;
 	}
 	current_position = 0;
@@ -188,9 +226,9 @@ char *object;
 			xraise(EN_MEM);
 		bzero(account, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT)
-			c = INDEPENDENT_STORE_3_2;
+			c = INDEPENDENT_STORE_4_0;
 		else {
-			c = GENERAL_STORE_3_3;
+			c = GENERAL_STORE_4_0;
 
 				/* Allocate the array to store the sorted attributes */
 			sorted_attributes = (unsigned int **) xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
@@ -204,7 +242,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 			bzero(sorted_attributes, scount * sizeof(unsigned int *));
 		}
 	} else
-		c = BASIC_STORE_3_2;
+		c = BASIC_STORE_4_0;
 
 	/* Write the kind of store */
 #ifdef EIF_WIN32
@@ -216,7 +254,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 #endif
 		if (accounting) {
 			xfree(account);
-			if (c==GENERAL_STORE_3_3)
+			if (c==GENERAL_STORE_4_0)
 					/* sorted_attributes is empty so a basic free is enough */
 				xfree(sorted_attributes);
 				sorted_attributes = (unsigned int **) 0;
@@ -251,7 +289,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	st_store(object);			/* Write objects to be stored in `fides' */
 
 						/* flush the buffer */
-        flush_buffer_func ();
+		flush_buffer_func ();
 #if DEBUG & 3
 		printf ("\n");
 #endif
@@ -469,12 +507,12 @@ uint32 o_type, attrib_num;
 #ifndef WORKBENCH
 	return ((System(o_type).cn_offsets[attrib_num])[o_type]);
 #else
-    int32 rout_id;                  /* Attribute routine id */
-    long offset;
+	int32 rout_id;				/* Attribute routine id */
+	long offset;
 
-    rout_id = System(o_type).cn_attr[attrib_num];
-    CAttrOffs(offset,rout_id,o_type);
-    return offset;
+	rout_id = System(o_type).cn_attr[attrib_num];
+	CAttrOffs(offset,rout_id,o_type);
+	return offset;
 #endif
 }
 
@@ -484,7 +522,7 @@ uint32 o_type, attrib_num;
 	/* Get the offset for attribute number `attrib_num' (after alphabetical sort) */
 
 #ifdef WORKBENCH
-	int32 rout_id;                  /* Attribute routine id */
+	int32 rout_id;				/* Attribute routine id */
 	long offset;
 #endif
 	uint32 alpha_attrib_num;
@@ -576,7 +614,7 @@ char * object;
 			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
-			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 				int16 *gt_type = info->gt_type;
 				int32 *gt_gen;
@@ -625,7 +663,7 @@ char * object;
 						buffer_write(object, count*sizeof(EIF_POINTER));
 						break;
 					default:
-   	   	          		eio();
+						eio();
 						break;
 				}
 			} else {
@@ -740,7 +778,7 @@ char * object;
 			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
-			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 				int16 *gt_type = info->gt_type;
 				int32 *gt_gen;
@@ -840,7 +878,7 @@ char * object;
 						break;
 
 					default:
-   	   	          		eio();
+						eio();
 						break;
 				}
 			} else {
@@ -922,7 +960,7 @@ rt_private void make_header()
 		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
 		if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
-			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 			int16 *gt_type = info->gt_type;
 			int32 *gt_gen;
@@ -956,7 +994,7 @@ rt_private void make_header()
 			}
 		} else {
 			/* Non-generic type, write in file:
-			 *    "dtype visible_name size 0"
+			 *	"dtype visible_name size 0"
 			 */
 			if (0 > sprintf(s_buffer, "%d %s %ld 0", i, vis_name, Size(i))) {
 				eio();
@@ -1094,7 +1132,7 @@ rt_private void imake_header()
 		info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
 		if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
-			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 			int16 *gt_type = info->gt_type;
 			int32 *gt_gen;
@@ -1128,7 +1166,7 @@ rt_private void imake_header()
 			}
 		} else {
 			/* Non-generic type, write in file:
-			 *    "dtype visible_name size 0"
+			 *	"dtype visible_name size 0"
 			 */
 			if (0 > sprintf(s_buffer, "%d %s 0", i, vis_name)) {
 				eio();
@@ -1233,25 +1271,28 @@ rt_public void flush_st_buffer ()
 
 void store_write()
 {
-	register char * ptr = general_buffer;
-	register int number_left = current_position;
-	short send_size = (short) current_position;
+	char* cmps_in_ptr = (char *)0;
+	char* cmps_out_ptr = (char *)0;
+	int cmps_in_size = 0;
+	int cmps_out_size = 0;
+	register char * ptr = (char *)0;
+	register int number_left = 0;
+	int send_size = 0;
+	int number_writen = 0;
 
-	int number_writen;
-
-#ifdef EIF_WIN32
-	if (fstoretype == 'F')
-		{
-		if ((write (fides, &send_size, sizeof (short))) < sizeof (short))
-			eio();
-		}
-	else
-		if ((send (fides, &send_size, sizeof (short), 0)) < sizeof (short))
-			eio();
-#else
-	if ((write (fides, &send_size, sizeof (short))) < sizeof (short))
-		eio();
-#endif
+	cmps_in_ptr = general_buffer;
+	cmps_in_size = current_position;
+	cmps_out_ptr = cmps_general_buffer;
+ 
+	eif_compress ((unsigned char*)cmps_in_ptr,
+					(unsigned long)cmps_in_size,
+					(unsigned char*)cmps_out_ptr,
+					(unsigned long*)&cmps_out_size);
+ 
+	ptr = cmps_general_buffer;
+	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
+	send_size = cmps_out_size + EIF_CMPS_HEAD_SIZE;
+ 
 	while (number_left > 0) {
 #ifdef EIF_WIN32
 		if (fstoretype == 'F')
@@ -1266,7 +1307,8 @@ void store_write()
 		number_left -= number_writen;
 		ptr += number_writen;
 	}
-	if (ptr - general_buffer == current_position)
+
+	if (ptr - cmps_general_buffer == cmps_out_size + EIF_CMPS_HEAD_SIZE)
 		current_position = 0;
 	else
 		eio();

@@ -50,6 +50,7 @@ feature -- Basic operations
 		do
 			fixme ("Handle hidden columns and columns that have had their position moved.")
 			fixme ("Use a binary search to find the positions if possible.")
+			fixme ("Handle dynamic items in per item scrolling mode")
 			create Result.make (20)
 			
 			visible_physical_column_indexes := grid.visible_physical_column_indexes
@@ -106,52 +107,33 @@ feature -- Basic operations
 			-- For a virtual position starting at `a_y' with a height of `a_height',
 			-- return all of the row indexes which intersect this width.
 		local
-			internal_client_x, internal_client_y: INTEGER
+			internal_client_y: INTEGER
 			vertical_buffer_offset: INTEGER
-			horizontal_buffer_offset: INTEGER
-			column_widths: ARRAYED_LIST [INTEGER]
-			
-			current_row_list: SPECIAL [EV_GRID_ITEM_I]
 			current_row: EV_GRID_ROW_I
-			
-			visible_physical_column_indexes: SPECIAL [INTEGER]
-			first_column_index, first_row_index: INTEGER
-			last_column_index, last_row_index: INTEGER
-			first_column_index_set, last_column_index_set, first_row_index_set, last_row_index_set: BOOLEAN
-			grid_item: EV_GRID_ITEM_I
-			grid_item_interface: EV_GRID_ITEM
-			current_index_in_row, current_index_in_column: INTEGER
-			column_counter, row_counter: INTEGER
-			bool: BOOLEAN
-			column_offsets, row_offsets: ARRAYED_LIST [INTEGER]
-			invalid_x_start, invalid_x_end, invalid_y_start, invalid_y_end: INTEGER
-			current_column_width, current_row_height: INTEGER
-			rectangle_width, rectangle_height: INTEGER
+			visible_physical_row_indexes: SPECIAL [INTEGER]
+			first_row_index: INTEGER
+			last_row_index: INTEGER
+			first_row_index_set, last_row_index_set: BOOLEAN
+			row_counter: INTEGER
+			row_offsets: ARRAYED_LIST [INTEGER]
+			invalid_y_start, invalid_y_end: INTEGER
 			i: INTEGER
-			grid_item_exists: BOOLEAN
-			current_item_y_position, current_item_x_position: INTEGER
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
-			internal_client_width, internal_client_height: INTEGER
-			current_tree_indent: INTEGER
+			internal_client_height: INTEGER
 			skipped_rows: INTEGER
-			row_height: INTEGER
 			current_height: INTEGER
 		do
+			fixme ("Implement the dynamic mode for items when in per item scrolling")
 			dynamic_content_function := grid.dynamic_content_function
 			create Result.make (20)
-			create column_widths.make (8)
-			column_widths.extend (0)
 			
-			visible_physical_column_indexes := grid.visible_physical_column_indexes
-			
-			internal_client_x := grid.internal_client_x
+			--visible_physical_column_indexes := grid.visible_physical_column_indexes
+			row_offsets := grid.row_offsets
+
 			internal_client_y := grid.internal_client_y
-			internal_client_width := grid.internal_client_width
 			internal_client_height := grid.internal_client_height
 			
 			vertical_buffer_offset := grid.viewport.y_offset
-			horizontal_buffer_offset := grid.viewport.x_offset
-			
 			
 			if not grid.header.is_empty then
 				

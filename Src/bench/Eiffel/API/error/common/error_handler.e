@@ -40,6 +40,19 @@ feature -- Properties
 	new_error: BOOLEAN;
 			-- Boolean for testing if new error since last `mark'
 
+feature {E_PROJECT} -- Element change
+
+	insert_interrupt_error is
+			-- Insert an `interrup_error' so that the compilation
+			-- can be stopped.
+		local
+			interrupt_error: INTERRUPT_ERROR
+		do
+			!! interrupt_error;
+			insert_error (interrupt_error);
+			raise_error
+		end;
+
 feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 
 	trace is

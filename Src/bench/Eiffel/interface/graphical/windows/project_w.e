@@ -1046,8 +1046,8 @@ feature -- Update
 			new_tool: CLASS_W
 		do
 			new_tool := window_manager.class_window;
-			new_tool.process_classi (a_stone);
-			new_tool.display
+			new_tool.display;
+			new_tool.process_classi (a_stone)
 		end;
  
 	process_class (a_stone: CLASSC_STONE) is
@@ -1056,8 +1056,8 @@ feature -- Update
 			new_tool: CLASS_W
 		do
 			new_tool := window_manager.class_window;
+			new_tool.display;
 			new_tool.process_class (a_stone);
-			new_tool.display
 		end;
  
 	process_feature (a_stone: FEATURE_STONE) is
@@ -1066,8 +1066,8 @@ feature -- Update
 			new_tool: ROUTINE_W
 		do
 			new_tool := window_manager.routine_window;
-			new_tool.process_feature (a_stone);
-			new_tool.display
+			new_tool.display;
+			new_tool.process_feature (a_stone)
 		end;
  
 	process_breakable (a_stone: BREAKABLE_STONE) is
@@ -1085,8 +1085,8 @@ feature -- Update
 			new_tool: OBJECT_W
 		do
 			new_tool := window_manager.dialog_object_window;
-			new_tool.process_object (a_stone);
-			new_tool.display
+			new_tool.display;
+			new_tool.process_object (a_stone)
 		end;
  
 	process_error (a_stone: ERROR_STONE) is
@@ -1094,9 +1094,9 @@ feature -- Update
 		local
 			new_tool: EXPLAIN_W
 		do
-			new_tool := window_manager.explain_window
+			new_tool := window_manager.explain_window;
+			new_tool.display;
 			new_tool.process_any (a_stone)
-			new_tool.display
 		end;
  
 	process_system (a_stone: SYSTEM_STONE) is

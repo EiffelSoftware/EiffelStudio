@@ -229,11 +229,15 @@ feature {NONE} -- Implementation
 				if has_menu then
 					mh := mh + menu_bar_height
 				end
-				if status_bar /= Void then
-					mh := mh + status_bar.minimum_height
+				if not interface.upper_bar.empty then
+					mh := mh + interface.upper_bar.minimum_height + 1
 				end
-
-				-- Finaly, we set the value
+				if item_imp /= Void then
+					mh := mh + item_imp.minimum_height
+				end
+				if not interface.lower_bar.empty then
+					mh := mh + interface.lower_bar.minimum_height + 1
+				end
 				internal_set_minimum_height (mh)
 			end
 		end
@@ -244,14 +248,9 @@ feature {NONE} -- Implementation
 			mw, mh: INTEGER
 		do
 			if exists then
-				-- We calculate the values first
 				mw := 2 * window_frame_width
-				mh := title_bar_height + window_border_height +
-					2 * window_frame_height
-
 				if item_imp /= Void then
 					mw := mw + item_imp.minimum_width
-					mh := mh + item_imp.minimum_height
 				end
 				mw := mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width)
 
@@ -259,13 +258,18 @@ feature {NONE} -- Implementation
 				if has_menu then
 					mh := mh + menu_bar_height
 				end
-				if status_bar /= Void then
-					mh := mh + status_bar.minimum_height
-					mw := mw.max (status_bar.minimum_width)
+				if not interface.upper_bar.empty then
+					mh := mh + interface.upper_bar.minimum_height + 1
 				end
-
-				-- Finaly, we set the value
-				internal_set_minimum_size (mw, mh)
+				if item_imp /= Void then
+					mh := mh + item_imp.minimum_height
+				end
+				if not interface.lower_bar.empty then
+					mh := mh + interface.lower_bar.minimum_height + 1
+				end
+				internal_set_minimum_size (
+					mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width),
+					mh)
 			end
 		end
 
@@ -303,7 +307,7 @@ feature {NONE} -- WEL Implementation
 			else
 				-- The width to give to the window
 				if bit_set (internal_changes, 64) then
-					w := width
+					w := wel_width
 					internal_changes := set_bit (internal_changes, 64, False)
 				else
 					w := 0
@@ -311,14 +315,16 @@ feature {NONE} -- WEL Implementation
 	
 				-- The height to give to the window
 				if bit_set (internal_changes, 128) then
-					h := height
+					h := wel_height
 					internal_changes := set_bit (internal_changes, 128, False)
 				else
 					h := 0
 				end
 	
-				wel_resize (w.max (minimum_width).min (maximum_width),
-					h.max (minimum_height).min (maximum_height))
+				wel_resize (
+					w.max (minimum_width).min (maximum_width),
+					h.max (minimum_height).min (maximum_height)
+					)
 			end
 		end
 
@@ -348,10 +354,6 @@ feature {NONE} -- Constants
 			create Result
 		end
 
-feature {NONE} -- External
-
-	
-
 end -- class EV_TITLED_WINDOW_IMP
 
 --!-----------------------------------------------------------------------------
@@ -375,8 +377,8 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.71  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.72  2000/06/09 01:02:52  manus
+--| Merge code of DEVEL branch version 1.49.4.7  to TRUNC
 --|
 --| Revision 1.49.4.7  2000/05/30 16:10:40  rogers
 --| Removed unreferenced variables.

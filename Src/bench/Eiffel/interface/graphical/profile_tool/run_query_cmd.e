@@ -32,16 +32,19 @@ feature -- Command Execution
 			profiler_query: PROFILER_QUERY;
 			st: STRUCTURED_TEXT;
 			executer: E_SHOW_PROFILE_QUERY
+			mp: MOUSE_PTR
 		do
 			tool.update_profiler_query
 			!! profiler_query
 			profiler_query.merge (tool.profiler_query)
 			if profiler_query.subqueries.count > 0 then
+				!! mp.set_watch_cursor
 				!! st.make;
 				!! executer.make (st, profiler_query, tool.profiler_options);
 				executer.set_last_output (tool.profinfo);
 				executer.execute;
 				tool.update_window (st, profiler_query, tool.profiler_options, executer.last_output)
+				mp.restore
 			end
 		end
 

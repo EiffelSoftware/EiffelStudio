@@ -13,12 +13,14 @@ inherit
 			is_equal as ext_is_equal,
 			generate_header_files as old_generate_header_files
 		redefine
-			is_cpp, has_standard_prototype, generate_external_name
+			is_cpp, has_standard_prototype, generate_external_name,
+			generate_parameter_list
 		end
 	EXTERNAL_EXT_I
 		redefine
 			is_equal, is_cpp, generate_header_files,
-			has_standard_prototype, generate_external_name
+			has_standard_prototype, generate_external_name,
+			generate_parameter_list
 		select
 			is_equal, generate_header_files
 		end
@@ -133,6 +135,29 @@ feature -- Code generation
 			end
  
 			generated_file.putchar (')')
+		end
+
+	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]) is
+			-- Generate parameters for C++ extension
+		local
+			generated_file: INDENT_FILE
+		do
+			if parameters /= Void then
+				generated_file := Context.generated_file
+
+					-- Cast will be done in encapsulation
+				from
+					parameters.start;
+				until
+					parameters.after
+				loop
+					parameters.item.print_register;
+					if not parameters.islast then
+						generated_file.putstring (", ");
+					end;
+					parameters.forth;
+				end;
+			end;
 		end
 
 feature {NONE} -- Code generation

@@ -210,7 +210,7 @@ feature {NONE} -- Tools
 					if not (current_lib.is_equal (".") or current_lib.is_equal ("..")) then
 						create current_precomp.make_from_string (eiffel_directory.name)
 						current_precomp.extend (current_lib)
-						it:= fill_ev_list_items (current_precomp, "ace.ace")
+						it:= fill_ev_list_items (current_precomp, "Ace.ace")
 						if it /= Void then
 							precompilable_libraries.extend (it)
 						end

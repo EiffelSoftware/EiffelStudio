@@ -85,7 +85,7 @@ default
 
 
 cluster
-	override:		"$EIFFEL_SRC\Eiffel\override"
+	override:		"$EIFFEL_SRC/Eiffel/override"
 
 	all base:		"$EIFFEL_SRC/library/base"
 		exclude

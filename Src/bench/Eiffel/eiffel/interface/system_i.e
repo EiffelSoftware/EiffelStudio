@@ -1860,12 +1860,15 @@ feature -- Final mode generation
 			temp: STRING;
 			old_remover_off: BOOLEAN;
 			old_exception_stack_managed: BOOLEAN;
+			old_inlining_on, old_array_optimization_on: BOOLEAN
 		do
 
 				-- Save the value of `remover_off'
 				-- and `exception_stack_managed'
 			old_remover_off := remover_off;
 			old_exception_stack_managed := exception_stack_managed
+			old_inlining_on := inlining_on
+			old_array_optimization_on := array_optimization_on
 
 				-- Should dead code be removed?
 			if not remover_off then
@@ -1876,6 +1879,9 @@ feature -- Final mode generation
 				exception_stack_managed := 
 					keep_assert and then Lace.has_assertions;
 			end;
+
+			inlining_on := inlining_on and not remover_off
+			array_optimization_on := array_optimization_on and not remover_off
 
 				-- Set the generation mode in final mode
 			byte_context.set_final_mode;
@@ -1976,6 +1982,8 @@ end;
 			remover := Void;
 			remover_off := old_remover_off;
 			exception_stack_managed := old_exception_stack_managed
+			inlining_on := old_inlining_on	
+			array_optimization_on := old_array_optimization_on
 		rescue
 				-- Clean the servers if the finalization is aborted
 			Tmp_poly_server.flush;
@@ -2317,7 +2325,6 @@ end;
 			a_class: CLASS_C;
 			has_attribute, final_mode: BOOLEAN;
 			types: TYPE_LIST;
-			type_cursor: LINKABLE [CLASS_TYPE];
 			temp: STRING;
 				-- cltype_array is indexed by `id' not by `type_id'
 				-- as `class_types'
@@ -2392,16 +2399,13 @@ end;
 						if not a_class.skeleton.empty then
 							from
 								types := a_class.types;
-						--		type_cursor := types.first_element;
 								types.start
 							until
-						--		type_cursor = Void
 								types.off
 							loop
 								Skeleton_file.putstring ("extern uint32 types");
 								Skeleton_file.putint (types.item.type_id);
 								Skeleton_file.putstring ("[];%N");
-						--		type_cursor := type_cursor.right;
 								types.forth
 							end;
 						end;
@@ -2466,6 +2470,10 @@ end;
 				from
 					i := 1
 				until
+						-- FIXME: `nb' should be replaced by `static_type_id_counter.value'
+						--| It's working because the two counters have the same value
+						--| but once the FIXMEs (Void class types) will be removed, it won't
+						--| work anymore.
 					i > nb
 				loop
 					cl_type := cltype_array.item (i);
@@ -2810,6 +2818,15 @@ if class_type /= Void then
 	-- FIXME
 				feature_i := class_type.dispose_feature;
 				if feature_i /= Void then
+						-- FIXME: extra check to see if it's the one from MEMORY:
+						-- no need to add an empty routine
+						-- Ooops, maybe we need to do it if the Eiffel code
+						-- includes a call obj.dispose (you never know what users
+						-- or Dave Hollenberg are going to do)
+						-- But this call may generate a new table of its own (check)
+						-- Yes it does (check done) so we can optimize the `dispose'
+						-- table
+						-- Xavier
 					!!rout_entry;
 					rout_entry.set_type_id (i);
 					written_class := class_of_id (feature_i.written_in);
@@ -2899,6 +2916,17 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("();%N");
 
 			if final_mode then
+
+					-- Do we need to protect the exception stack?
+				Plug_file.putstring ("EIF_BOOLEAN exception_stack_managed = (EIF_BOOLEAN) ");
+				if exception_stack_managed then
+					Plug_file.putint (1)
+				else
+					Plug_file.putint (0)
+				end
+				Plug_file.putchar (';');
+				Plug_file.new_line
+
 				init_name :=
 						clone (Encoder.table_name (Initialization_id))
 				dispose_name := 

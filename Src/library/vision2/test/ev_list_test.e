@@ -8,7 +8,7 @@ class
 	EV_LIST_TEST [G]
 
 inherit
-	EV_TEST
+	EV_TEST2
 
 	EXCEPTIONS
 		undefine
@@ -698,6 +698,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/09 17:25:13  brendel
+--| Now inherits from renamed EV_TEST2.
+--|
 --| Revision 1.19  2000/03/09 01:45:17  brendel
 --| Uncommented all tests except the test for prune, which is known to fail,
 --| but is actually correct: the test is wrong, because it is compared to

@@ -111,6 +111,7 @@ feature -- Generation
 					full_name := System.system_name + "." + class_c.cluster.cluster_name
 					full_name := namespace_casing (full_name)
 					full_name.append_character ('.')
+					full_name := ""
 				end
 
 				if class_c.is_external then
@@ -167,6 +168,7 @@ feature -- Generation
 					class_c.is_deferred, class_c.is_frozen, class_c.is_expanded,
 					True, -- Class is external
 					class_type.static_type_id)
+				generate_interface_ancestors (class_c, class_type, class_c.is_external, False)
 			else
 				is_frozen := class_c.is_frozen
 
@@ -179,7 +181,7 @@ feature -- Generation
 						False, -- is_expanded,
 						False, -- Class is not external,
 						class_type.static_type_id)
-					generate_interface_ancestors (class_c, class_type, False)
+					generate_interface_ancestors (class_c, class_type, class_c.is_external, False)
 				end
 
 					-- Define implementation
@@ -194,7 +196,7 @@ feature -- Generation
 				if not is_frozen then
 					generate_implementation_ancestors (class_c, class_type)
 				else
-					generate_interface_ancestors (class_c, class_type, True)
+					generate_interface_ancestors (class_c, class_type, class_c.is_external, True)
 				end
 			end
 		end
@@ -258,8 +260,6 @@ feature -- Generation
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
-			l_formals: HASH_TABLE [FORMAL_ATTRIBUTE_I, INTEGER]
-			l_formal: FORMAL_ATTRIBUTE_I
 		do
 			from
 				select_tbl := class_c.feature_table.origin_table
@@ -274,19 +274,14 @@ feature -- Generation
 				features.forth
 			end
 
+				-- Generate type features for formal generic parameters.
 			if class_c.generic_features /= Void then
-				l_formals := class_c.generic_features
-				from
-					l_formals.start
-				until
-					l_formals.after
-				loop
-					l_formal := l_formals.item_for_iteration
-					if l_formal.origin_class_id = class_c.class_id then
-						generate_interface_feature (l_formal)					
-					end
-					l_formals.forth
-				end
+				generate_type_features (class_c.generic_features, class_c.class_id)
+			end
+
+				-- Generate type features for feature used as anchor.
+			if class_c.anchored_features /= Void then
+				generate_type_features (class_c.anchored_features, class_c.class_id)
 			end
 
 			il_generator.end_features_list
@@ -370,7 +365,7 @@ feature {IL_CODE_GENERATOR} -- Feature generation
 						name := encoder.feature_name (current_class_type.static_type_id, feat.body_index)
 					else
 						if feat.is_attribute then
-							name := camel_casing (feat.feature_name)
+							name := "$$" + camel_casing (feat.feature_name)
 						else
 							name := "$$" + pascal_casing (feat.feature_name, lower_case)
 						end
@@ -401,7 +396,7 @@ feature {IL_CODE_GENERATOR} -- Feature generation
 			class_c_not_void: class_c /= Void
 		local
 			a: ARRAY [INTEGER]
-			creators: EXTEND_TABLE [EXPORT_I, STRING]
+			creators: HASH_TABLE [EXPORT_I, STRING]
 			feat_tbl: FEATURE_TABLE
 			i: INTEGER
 		do
@@ -526,7 +521,7 @@ feature {NONE} -- Feature generation
 
 feature {NONE} -- Implementation: ancestors description
 
-	generate_interface_ancestors (class_c: CLASS_C; class_type: CLASS_TYPE; is_implementation_class: BOOLEAN) is
+	generate_interface_ancestors (class_c: CLASS_C; class_type: CLASS_TYPE; is_external, is_implementation_class: BOOLEAN) is
 			-- Generate ancestors map of `class_c'.
 		require
 			class_c_not_void: class_c /= Void
@@ -546,7 +541,9 @@ feature {NONE} -- Implementation: ancestors description
 			create pars.make (parents.count)
 			from
 				byte_context.set_class_type (class_type)
-				il_generator.start_parents_list
+				if not is_external then
+					il_generator.start_parents_list
+				end
 				create l_list.make (parents.count)
 				parents.start
 			until
@@ -554,27 +551,30 @@ feature {NONE} -- Implementation: ancestors description
 			loop
 				parent_type ?= byte_context.real_type (parents.item.type_i)
 				cl_type := parent_type.associated_class_type
-				if not cl_type.associated_class.is_external then
-					id := cl_type.static_type_id
-					if not l_list.has (id) then
-							-- We only insert once a parent, for .NET it is useless to
-							-- do it twice.
-						l_list.force (id)
+				id := cl_type.static_type_id
+				if not l_list.has (id) then
+						-- We only insert once a parent, for .NET it is useless to
+						-- do it twice.
+					l_list.force (id)
+					if not is_external then
 						il_generator.add_to_parents_list (id)
-						pars.force (parent_type.associated_class_type.class_interface)
 					end
+					pars.force (parent_type.associated_class_type.class_interface)
 				end
 				parents.forth
 			end
 			class_interface.set_parents (pars)
 			class_type.set_class_interface (class_interface)
-			if is_implementation_class then
-				if class_c.is_generic then
-					nb_generics := class_c.generics.count
+
+			if not is_external then
+				if is_implementation_class then
+					if class_c.is_generic then
+						nb_generics := class_c.generics.count
+					end
+					il_generator.set_implementation_class
 				end
-				il_generator.add_eiffel_interface (nb_generics)
+				il_generator.end_parents_list
 			end
-			il_generator.end_parents_list
 		end
 
 	generate_implementation_ancestors (class_c: CLASS_C; class_type: CLASS_TYPE) is
@@ -583,27 +583,46 @@ feature {NONE} -- Implementation: ancestors description
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
 		local
-			nb_generics: INTEGER
---			parents: FIXED_LIST [CL_TYPE_A]
---			parent_type: CL_TYPE_I
---			cl_type: CLASS_TYPE
+			parents: FIXED_LIST [CL_TYPE_A]
+			parent_type: CL_TYPE_I
+			cl_type: CLASS_TYPE
 --			pars: SEARCH_TABLE [CLASS_INTERFACE]
 --			class_interface: CLASS_INTERFACE
 		do
-			if class_c.is_generic then
-				nb_generics := class_c.generics.count
-			end
 -- FIXME: following code to use when we are able to do single inheritance
 -- to avoid code duplication of stubs.
--- 			parents := class_c.parents
+ 			parents := class_c.parents
 -- 			byte_context.set_class_type (class_type)
--- 			il_generator.start_parents_list
--- 			parent_type ?= byte_context.real_type (parents.first.type_i)
--- 			cl_type := parent_type.associated_class_type
--- 			il_generator.add_to_parents_list (cl_type.implementation_id)
-			il_generator.add_eiffel_interface (nb_generics)
+ 			il_generator.start_parents_list
+ 			parent_type ?= byte_context.real_type (parents.first.type_i)
+ 			cl_type := parent_type.associated_class_type
+			if cl_type.associated_class.is_external then
+ 				il_generator.add_to_parents_list (cl_type.implementation_id)
+			end
+			il_generator.set_implementation_class
 			il_generator.add_interface (class_type.static_type_id)
 			il_generator.end_parents_list
+		end
+
+	generate_type_features (feats: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; class_id: INTEGER) is
+			-- Generate all TYPE_FEATURE_I that must be generated in
+			-- interface corresponding to class ID `class_id'.
+		require
+			feats_not_void: feats /= Void
+		local
+			l_type_feature: TYPE_FEATURE_I
+		do
+			from
+				feats.start
+			until
+				feats.after
+			loop
+				l_type_feature := feats.item_for_iteration
+				if l_type_feature.origin_class_id = class_id then
+					generate_interface_feature (l_type_feature)					
+				end
+				feats.forth
+			end
 		end
 
 feature {NONE} -- Implementation: naming convention

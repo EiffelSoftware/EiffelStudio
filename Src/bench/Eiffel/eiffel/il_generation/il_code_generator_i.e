@@ -121,10 +121,10 @@ feature -- Class info
 	generate_basic_type_class_mapping,
 	generate_generic_type_class_mapping,
 	generate_formal_type_class_mapping,
-	generate_anchored_type_class_mapping (type_id: INTEGER) is
+	generate_none_type_class_mapping (type_id: INTEGER) is
 			-- Create correspondance between `type_id' and ISE.Runtime.TYPE,
 			-- ISE.Runtime.CLASS_TYPE, ISE.Runtime.GENERIC_TYPE,
-			-- ISE.Runtime.FORMAL_TYPE and ISE.Runtime.ANCHORED_TYPE.
+			-- ISE.Runtime.FORMAL_TYPE and ISE.Runtime.NONE_TYPE.
 		require
 			type_id_set: type_id > 0
 		deferred
@@ -172,10 +172,8 @@ feature -- Class info
 		deferred
 		end
 
-	add_eiffel_interface (type_id: INTEGER) is
-			-- Add interface of `type_id' into list of parents of current type.
-		require
-			positive_type_id: type_id >= 0
+	set_implementation_class is
+			-- Make current generated class an implementation one.
 		deferred
 		end
 
@@ -319,7 +317,7 @@ feature -- IL Generation
 		deferred
 		end
 
-	generate_formal_feature (feature_id: INTEGER) is
+	generate_type_feature (feature_id: INTEGER) is
 			-- Specifies for which feature of `feature_id' written in class of `type_id'
 			-- IL code will be generated.
 		require

@@ -285,6 +285,7 @@ feature {NONE} -- Implementation
 					create figure_rectangle.make_with_points (relative_pointa, relative_pointb)
 					figure_rectangle.remove_background_color
 					figure_rectangle.set_foreground_color (selected_item_color)
+					figure_rectangle.set_line_width (highlighted_width)
 					world.extend (figure_rectangle)
 			end
 			projector.project
@@ -910,6 +911,9 @@ feature {NONE} -- Attributes
 		
 	grid_size: INTEGER is 20
 		-- Size of grid representing the table.
+		
+	highlighted_width: INTEGER is 3
+		-- Width of line used to draw highlighted item.
 		
 	selected_item: EV_WIDGET
 		-- Item that is currently selected for movement.

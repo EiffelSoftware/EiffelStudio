@@ -288,6 +288,7 @@ feature {NONE} -- Implementation
 				create figure_rectangle.make_with_points (relative_pointa, relative_pointb)
 				figure_rectangle.remove_background_color
 				figure_rectangle.set_foreground_color (red)
+				figure_rectangle.set_line_width (Highlighted_width)
 				world.extend (figure_rectangle)
 			end
 					
@@ -983,6 +984,9 @@ feature {NONE} -- Attributes
 		do
 			create Result.make_with_8_bit_rgb (196, 244, 204)
 		end
+		
+	highlighted_width: INTEGER is 3
+		-- Width of line used to draw highlighted item.
 	
 	accuracy_value: INTEGER is 3
 			-- Value which determines how close pointer must be

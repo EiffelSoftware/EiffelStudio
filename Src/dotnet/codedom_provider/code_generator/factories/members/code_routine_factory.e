@@ -263,7 +263,6 @@ feature {NONE} -- Routine Initialization
 					initialize_comments (a_source.comments)
 				end
 
-				initialize_locals (a_source.get_statements)
 				current_feature.set_result_type (Type_reference_factory.type_reference_from_reference (a_source.type))
 
 				if a_source.attributes /= Void then
@@ -279,7 +278,6 @@ feature {NONE} -- Routine Initialization
 				end
 
 				if a_source.get_statements /= Void then
-					initialize_locals (a_source.get_statements)
 					initialize_statements (a_source.get_statements)
 				end
 			end
@@ -300,7 +298,6 @@ feature {NONE} -- Routine Initialization
 					initialize_comments (a_source.comments)
 				end
 
-				initialize_locals (a_source.get_statements)
 				current_feature.set_result_type (None_type_reference)
 
 				if a_source.attributes /= Void then
@@ -316,7 +313,6 @@ feature {NONE} -- Routine Initialization
 				end
 
 				if a_source.set_statements /= Void then
-					initialize_locals (a_source.set_statements)
 					initialize_statements (a_source.set_statements)
 				end
 			end
@@ -363,37 +359,72 @@ feature {NONE} -- Routine Initialization
 			end
 
 			if a_source.statements /= Void then
-				initialize_locals (a_source.statements)
 				initialize_statements (a_source.statements)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	initialize_locals (a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION) is
+	initialize_statements (a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION) is
+			-- | Call in loop `generate_statement_from_dom'.
+			-- Generate feature statements from `a_source'.
+			-- Take into account local variables.
+		require
+			non_void_routine: current_routine /= Void
+			non_void_statements: a_statements /= Void
+		local
+			i, l_count: INTEGER
+			l_var_decl_statement: SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT
+			l_statement: SYSTEM_DLL_CODE_STATEMENT
+			l_var_decl_statements: ARRAYED_LIST [SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT]
+		do
+			from
+				l_count := a_statements.count
+				create l_var_decl_statements.make (l_count)
+			until
+				i = l_count
+			loop
+				l_statement := a_statements.item (i)
+				l_var_decl_statement ?= l_statement
+				if l_var_decl_statement /= Void then
+					l_var_decl_statements.extend (l_var_decl_statement)
+				end
+				i := i + 1
+			end
+			-- We have to initialize locals first, otherwise local references
+			-- won't be resolvable.
+			initialize_locals (l_var_decl_statements)
+			from
+				i := 0
+			until
+				i = l_count
+			loop
+				code_dom_generator.generate_statement_from_dom (a_statements.item (i))
+				if last_statement /= Void then
+					current_routine.add_statement (last_statement)
+				end
+				i := i + 1
+			end
+		end
+
+	initialize_locals (a_statements: LIST [SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT]) is
 			-- Add local variables declared in code
 		require
 			non_void_statements: a_statements /= Void
 			non_void_routine: current_routine /= Void
-		local
-			i, l_count: INTEGER
-			l_statement: SYSTEM_DLL_CODE_VARIABLE_DECLARATION_STATEMENT
-			l_declaration_variable_statement: CODE_VARIABLE_DECLARATION_STATEMENT
 		do
 			from
-				l_count := a_statements.count
+				a_statements.start
 			until
-				i = l_count				
+				a_statements.after		
 			loop
-				l_statement ?= a_statements.item (i)
-				if l_statement /= Void then
-					code_dom_generator.generate_statement_from_dom (l_statement)
-					l_declaration_variable_statement ?= last_statement
-					if l_declaration_variable_statement /= Void then
-						current_routine.add_local (l_declaration_variable_statement)
-					end
+				if a_statements.item.name /= Void and a_statements.item.type /= Void then
+					current_routine.add_local (create {CODE_VARIABLE}.make (create {CODE_VARIABLE_REFERENCE}.make (
+						a_statements.item.name,
+						Type_reference_factory.type_reference_from_reference (a_statements.item.type),
+						Type_reference_factory.type_reference_from_code (current_type))))
 				end
-				i := i + 1
+				a_statements.forth		
 			end
 		end
 

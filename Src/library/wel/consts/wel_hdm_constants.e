@@ -10,96 +10,27 @@ class
 feature -- Access
  
  
-	frozen Hdm_delete_item: INTEGER is
-			-- Deletes an item from a header control
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_DELETEITEM"
-		end
+	Hdm_delete_item: INTEGER is 4610
 
-	frozen Hdm_get_item: INTEGER is
-			-- Retrieves information about an item in a header control
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_GETITEM"
-		end
+	Hdm_get_item: INTEGER is 4611
 
-	frozen Hdm_get_item_count: INTEGER is
-			-- Retrieves number of items in a header control
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_GETITEMCOUNT"
-		end
+	Hdm_get_item_count: INTEGER is 4608
 
-	frozen Hdm_hit_test: INTEGER is
-			-- Tests a point to determine which header item, if any, is at the specified point.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_HITTEST"
-		end
-
-	frozen Hdm_insert_item: INTEGER is
-			-- Inserts a new item into a header control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_INSERTITEM"
-		end
-
-	frozen Hdm_layout: INTEGER is
-			-- Retrieves the size and position of a header control within a given rectangle.
-			-- This message is used to determine the appropriate dimensions for a new header 
-			-- control that is to occupy the given rectangle.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_LAYOUT"
-		end
-
-	frozen Hdm_set_item: INTEGER is
-			-- Sets the attributes of the specified item in a header control
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_SETITEM"
-		end
+	Hdm_hit_test: INTEGER is 4614
+	
+	Hdm_insert_item: INTEGER is 4609
+	
+	Hdm_layout: INTEGER is 4613
+	
+	Hdm_set_item: INTEGER is 4612
 		
-	frozen Hdm_set_image_list: INTEGER is
-			-- Assigns an image list to an existing header control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_SETIMAGELIST"
-		end
+	Hdm_set_image_list: INTEGER is 4616
 		
-	frozen Hdm_get_image_list: INTEGER is
-			-- Retrieves the handle to the image list that has been set for an existing header control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_GETIMAGELIST"
-		end
+	Hdm_get_image_list: INTEGER is 4617
 		
-	frozen Hdm_get_item_rect: INTEGER is
-			-- Retrieves the bounding rectangle for a given item in a header control.
-		
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_GETITEMRECT"
-		end
-		
-	frozen Hdm_get_bitmap_margin: INTEGER is
-			-- Retrieves the width of the bitmap margin for a header control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"HDM_GETBITMAPMARGIN"
-		end
+	Hdm_get_item_rect: INTEGER is 4615
+	
+	Hdm_get_bitmap_margin: INTEGER is 4629
 
 end -- class WEL_HDM_CONSTANTS
 

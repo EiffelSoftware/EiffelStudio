@@ -260,10 +260,10 @@ feature -- Element change
 
 feature -- Event handling
 
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions: EV_ITEM_SELECT_ACTION_SEQUENCE
 		-- Actions performed when a row is selected.
 
-	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
+	deselect_actions: EV_ITEM_SELECT_ACTION_SEQUENCE
 		-- Actions performed when a row is deselected.
 
 	column_click_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -322,6 +322,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/06 18:05:14  rogers
+--| Changed types, select actions and deselect actions from EV_NOTIFY_ACTION_SEQUENCE -> EV_ITEM_SELECT_ACTION_SEQUENCE.
+--|
 --| Revision 1.37  2000/03/03 21:26:24  king
 --| Added valid_width precond to set_column_width
 --|

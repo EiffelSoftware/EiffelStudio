@@ -52,13 +52,12 @@ inherit
 		
 	EV_DOCKABLE_SOURCE_IMP
 		redefine
-			interface,
-			enable_drag
+			interface
 		end
 
 feature {NONE} -- Initialization
 		
-	internal_enable_drag is
+	internal_enable_dockable is
 			-- Activate drag mechanism.
  		do
 --			check
@@ -74,12 +73,11 @@ feature {NONE} -- Initialization
 				default_translate
 			)
 			--button_press_connection_id := last_signal_connection_id
-			is_dragable := True
 		ensure then
 			press_connection_successful: button_press_connection_id > 0
 		end
 		
-	internal_disable_drag is
+	internal_disable_dockable is
 			-- 
 		do
 			

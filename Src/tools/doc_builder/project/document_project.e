@@ -132,12 +132,6 @@ feature -- Commands
 			end		
 		end		
 
-	close is
-			-- Close open project
-		do
-			Shared_document_editor.close_documents
-		end
-
 	load_documents is
 			-- Load all documents under root
 		do
@@ -152,8 +146,10 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 		do
 			invalid_files.wipe_out
 			validate_against_xml			
-			build_error_report
-			show_error_report
+			if not invalid_files.is_empty then
+				build_error_report
+				shared_error_reporter.show
+			end
 		end
 
 	validate_files is
@@ -163,7 +159,7 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 			invalid_files.wipe_out		
 			validate_against_schema	
 			build_error_report
-			show_error_report
+			shared_error_reporter.show
 		end
 
 	spell_check is
@@ -330,7 +326,7 @@ feature {NONE} -- Implementation
 			loop
 				l_document := l_documents.item
 				progress_generator.set_status_text (l_document.name)
-				if not l_document.is_valid_xml then
+				if not l_document.is_valid_xml (l_document.text) then
 					if not invalid_files.has (l_document.name) then
 						add_invalid_file (l_document.name)
 					end
@@ -345,33 +341,21 @@ feature {NONE} -- Implementation
 		local
 			l_error: ERROR
 		do
-			if error_report = Void or files_changed then
-				if error_report = Void then					
-					create error_report.make ((create {MESSAGE_CONSTANTS}).invalid_files_title)
-				else
-					error_report.clear
-				end
+			if shared_error_reporter = Void or files_changed then
+				shared_error_reporter.clear				
 				from
 					invalid_files.start				
 				until
 					invalid_files.after
 				loop
 					create l_error.make (invalid_files.item)
-					l_error.set_action (agent (error_report.actions).load_file_in_editor (invalid_files.item))
-					error_report.append_error (l_error)
+					l_error.set_action (agent (shared_error_reporter.actions).load_file_in_editor (invalid_files.item))
+					shared_error_reporter.set_error (l_error)
 					invalid_files.forth
 				end
 			end
 		ensure
-			has_report: error_report /= Void
-		end
-
-	show_error_report is
-			-- Show report of errors
-		require
-			has_report: error_report /= Void
-		do
-			error_report.show
+			has_report: shared_error_reporter /= Void
 		end
 
 	can_build_toc: BOOLEAN is
@@ -403,9 +387,6 @@ feature {NONE} -- Implementation
 	
 	invalid_files: ARRAYED_LIST [STRING]
 			-- List of filenames for known invalid files in Current
-
-	error_report: ERROR_REPORT
-			-- Error report
 
 feature {NONE} -- Document Retrieval
 

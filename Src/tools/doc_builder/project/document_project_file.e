@@ -12,6 +12,8 @@ inherit
 	XML_ROUTINES
 
 	UTILITY_FUNCTIONS
+	
+	SHARED_OBJECTS
 
 create
 	make
@@ -57,8 +59,6 @@ feature -- Basic operations
 
 	read is
 			-- Read preferences from file
-		local
-			l_error_report: ERROR_REPORT
 		do
 			document := deserialize_document (create {FILE_NAME}.make_from_string (project.file.name))
 			if document /= Void then
@@ -66,10 +66,8 @@ feature -- Basic operations
 			end
 				
 			if not is_valid then
-				create l_error_report.make ("Could not load project.")
-				error_description := "The project file is invalid."
-				l_error_report.append_error (create {ERROR}.make (error_description))
-				l_error_report.show
+				shared_error_reporter.set_error (create {ERROR}.make ("The project file is invalid."))
+				shared_error_reporter.show
 			end			
 		end
 		

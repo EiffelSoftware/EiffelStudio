@@ -1,0 +1,46 @@
+system tst
+ 
+root
+ 
+    main (root_cluster): "make"
+
+default
+
+	assertion (require);
+	-- On windows, with ISE Compiler v4.3 : uncomment the next line
+	-- console_application (yes); 
+	-- Comment the next line, if you do not want to use 
+	-- a precompiled Eiffel Base library.
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+ 
+cluster
+
+		root_cluster: 			"."
+			default
+				assertion(no)
+			visible
+				MAIN 
+			end
+		end;      
+		kernel:             "$EIFFEL4/library/base/kernel"
+			visible
+				STRING 
+			end
+		end;
+        support:            "$EIFFEL4/library/base/support";
+        access:             "$EIFFEL4/library/base/structures/access";
+        cursors:            "$EIFFEL4/library/base/structures/cursors";
+        dispenser:          "$EIFFEL4/library/base/structures/dispenser";
+        list:               "$EIFFEL4/library/base/structures/list"
+			visible
+				LINKED_LIST 
+			end
+		end;
+        set:                "$EIFFEL4/library/base/structures/set";
+        sort:               "$EIFFEL4/library/base/structures/sort";
+        storage:            "$EIFFEL4/library/base/structures/storage";
+        table:              "$EIFFEL4/library/base/structures/table";
+        traversing:         "$EIFFEL4/library/base/structures/traversing";
+        tree:               "$EIFFEL4/library/base/structures/tree";
+
+end

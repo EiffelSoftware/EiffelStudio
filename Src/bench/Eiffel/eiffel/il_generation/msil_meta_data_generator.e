@@ -24,6 +24,7 @@ create
 feature -- Initialization
 
 	make is
+			-- Initialize metadata generator.
 		do
 		end
 
@@ -42,7 +43,7 @@ feature -- Generation
 			if not is_class_external then
 					-- Generate ancestors for non-external classes
 					--| We do not need to do it for external classes
-					--| because the IL run-time already know about them.
+					--| because the .NET run-time already knows about them.
 				generate_ancestors (class_c, class_type)
 			end
 		end

@@ -6,21 +6,21 @@
 				<cell>
 					<paragraph>  A selection of wizards have been provided which enable you to quicky and easily  start new Eiffel for .NET projects.</paragraph>
 					<paragraph>Each wizard is composed of a series of `pages' from which you can modify the  settings for the new project. Upon completion of the wizard, a new Eiffel  System will be created for you.</paragraph>
-					<paragraph>To access the wizards, select 
-						<bold>New</bold>, 
-						<bold>Project</bold> from the 
-						<bold>File</bold> menu,  or right click on a solution in the 
+					<paragraph>To access the wizards, select
+						<bold>New</bold>,
+						<bold>Project</bold> from the
+						<bold>File</bold> menu,  or right click on a solution in the
 						<link>
 							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 							<label>  Solution Explorer</label>
-						</link>, and select 
-						<bold>Add</bold>, 
+						</link>, and select
+						<bold>Add</bold>,
 						<bold>New Project</bold> from the  context menu. The following dialog will be displayed:
 					</paragraph>
 					<paragraph>
-						<image> 
-							<alt_text>projects</alt_text> 
-							<url>projects.PNG</url>
+						<image>
+							<alt_text>projects</alt_text>
+							<url>projects.png</url>
 						</image>
 					</paragraph>
 					<paragraph>  To start a new Eiffel Project, browse to Eiffel Projects in the project types  browser, and select the desired wizard. Be sure to select the correct name and  location for your new project before you click OK, as this cannot be changed  once a wizard is launched. </paragraph>

@@ -10,11 +10,11 @@
 						<item>intialize - Redefined from  EV_DIALOG, this feature performs the initialization of the dialog, and  any custom initialization required for your dialog, can be added here.  intialize is executed as a result of calling default_create  on the dialog. </item>
 						<item>is_in_default_state - Is the dialog in the correct  default state after initialization? If you wish to check the default state of  your dialog, add code to perform this here. </item>
 					</list>
-					<paragraph>For more information regarding the use of 
+					<paragraph>For more information regarding the use of
 						<link>
 							<url>/libraries/vision2/index.xml</url>
 							<label>Vision2</label>
-						</link>,  click 
+						</link>,  click
 						<link>
 							<url>/libraries/vision2/index.xml</url>
 							<label>here</label>
@@ -22,9 +22,9 @@
 					</paragraph>
 					<paragraph>Appearence of an  EV_DIALOG displayed modally to an  EV_TITLED_WINDOW:</paragraph>
 					<paragraph>
-						<image> 
-							<alt_text>dialog</alt_text> 
-							<url>dialog.PNG</url>
+						<image>
+							<alt_text>dialog</alt_text>
+							<url>dialog.png</url>
 						</image>
 					</paragraph>
 					<seealso>

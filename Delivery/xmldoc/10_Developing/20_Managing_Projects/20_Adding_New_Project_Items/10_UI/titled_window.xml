@@ -11,11 +11,11 @@
 						<item>is_in_default_state - Is the window in the correct  default state after initialization? If you wish to check the default state of  your window, add code to perform this here. </item>
 						<item>close_requested - Destroys the window. Connected to the  close_request_actions of the window during intialize.  The close_request_actions are fired when a user  attempts to close the window, and if you wish to override the default  behaviour, add your code to this feature. </item>
 					</list>
-					<paragraph>For more information regarding the use of 
+					<paragraph>For more information regarding the use of
 						<link>
 							<url>/libraries/vision2/index.xml</url>
 							<label>Vision2</label>
-						</link>,  click 
+						</link>,  click
 						<link>
 							<url>/libraries/vision2/index.xml</url>
 							<label>here</label>
@@ -23,9 +23,9 @@
 					</paragraph>
 					<paragraph>Appearence of an  EV_TITLED_WINDOW:</paragraph>
 					<paragraph>
-						<image> 
-							<alt_text>titled window</alt_text> 
-							<url>titled_window.PNG</url>
+						<image>
+							<alt_text>titled window</alt_text>
+							<url>titled_window.png</url>
 						</image>
 					</paragraph>
 					<seealso>

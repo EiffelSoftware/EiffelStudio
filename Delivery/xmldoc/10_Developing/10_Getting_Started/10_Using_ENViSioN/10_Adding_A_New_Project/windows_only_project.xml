@@ -10,7 +10,7 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>  This wizard enables you to create a Windows Eiffel Library ( 
+					<paragraph>  This wizard enables you to create a Windows Eiffel Library (
 						<link>
 							<url>/libraries/WEL/index.xml</url>
 							<label>WEL</label>
@@ -20,10 +20,10 @@
 						<size>2</size>Navigation
 					</heading>
 					<paragraph>To navigate to the desired page, select the page name which is displayed to the  left hand side of the window.</paragraph>
-					<paragraph>To cancel the wizard at any point, select the 
+					<paragraph>To cancel the wizard at any point, select the
 						<bold>Cancel</bold> button
 					</paragraph>
-					<paragraph>To complete the wizard, using the current settings, select the 
+					<paragraph>To complete the wizard, using the current settings, select the
 						<bold>Finish</bold> button
 					</paragraph>
 					<heading>
@@ -33,7 +33,7 @@
 					<paragraph>
 						<bold>Overview</bold>
 					</paragraph>
-					<paragraph>This page displays the current settings that will be used when 
+					<paragraph>This page displays the current settings that will be used when
 						<bold>Finish</bold> is pressed.
 						<paragraph>
 							<bold>SystemSettings</bold>
@@ -41,7 +41,7 @@
 						<paragraph>
 							<image>
 								<alt_text>windows_only_wizard</alt_text>
-								<url>windows_only_wizard.PNG</url>
+								<url>windows_only_wizard.png</url>
 							</image>
 						</paragraph>
 						<paragraph>This page allows you to modify the type of application that the wizard will  generate upon completion. You may select one of the following two options:</paragraph>

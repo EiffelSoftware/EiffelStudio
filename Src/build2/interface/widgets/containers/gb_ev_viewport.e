@@ -96,6 +96,16 @@ feature {GB_CODE_GENERATOR} -- Output
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
+						
+			element_info := full_information @ item_width_string
+			if element_info /= Void and then element_info.data.to_integer >= 0 then
+				Result := Result + indent + info.name + ".set_item_width (" + element_info.data + ")"
+			end
+			
+			element_info := full_information @ item_height_string
+			if element_info /= Void and then element_info.data.to_integer >= 0 then
+				Result := Result + indent + info.name + ".set_item_height (" + element_info.data + ")"
+			end
 			
 			element_info := full_information @ X_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
@@ -105,16 +115,6 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ Y_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
 				Result := Result + indent + info.name + ".set_y_offset (" + element_info.data + ")"
-			end
-			
-			element_info := full_information @ item_width_string
-			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result := Result + indent + info.name + ".set_item_width (" + element_info.data + ")"
-			end
-			
-			element_info := full_information @ item_height_string
-			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result := Result + indent + info.name + ".set_item_height (" + element_info.data + ")"
 			end
 		end
 

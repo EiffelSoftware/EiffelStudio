@@ -335,7 +335,11 @@ feature {IL_CODE_GENERATOR} -- Feature generation
 						name := "$$" + feat.external_name
 					end
 				else
-					name := feat.external_name
+					if feat.is_c_external then
+						name := feat.feature_name
+					else
+						name := feat.external_name
+					end
 				end
 
 				il_generator.generate_feature_identification (name, feat.feature_id,
@@ -467,8 +471,13 @@ feature {NONE} -- Feature generation
 					il_generator.start_feature_description (0)
 				end
 
-				il_generator.generate_interface_feature_identification (feat.external_name,
-					feat.feature_id, feat.is_attribute)
+				if feat.is_c_external then
+					il_generator.generate_interface_feature_identification (feat.feature_name,
+						feat.feature_id, feat.is_attribute)
+				else
+					il_generator.generate_interface_feature_identification (feat.external_name,
+						feat.feature_id, feat.is_attribute)
+				end
 
 				generate_arguments (feat)
 				generate_return_type (feat)
@@ -503,7 +512,11 @@ feature {NONE} -- Feature generation
 				is_frozen := feat.is_frozen
 				is_static := False
 				
-				name := feat.external_name
+				if feat.is_c_external then
+					name := feat.feature_name
+				else
+					name := feat.external_name
+				end
 
 				il_generator.generate_feature_identification (name, feat_id,
 					is_redefined, is_deferred, is_frozen, feat.is_attribute,

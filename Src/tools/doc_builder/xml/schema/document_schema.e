@@ -27,11 +27,11 @@ feature -- Initialization
 		local
 			reader: XML_XML_TEXT_READER
 			event_handler: XML_VALIDATION_EVENT_HANDLER
+			retried: BOOLEAN
 		do
-			create validator			
-			name := a_filename
---			document := deserialize_document (name)
---			if is_valid_xml then
+			if not retried then
+				create validator			
+				name := a_filename
 				create reader.make_from_url (name)
 				create event_handler.make (Current, $validation_callback)
 				internal_schema := internal_schema.read_xml_reader_validation_event_handler (reader, event_handler)
@@ -40,13 +40,16 @@ feature -- Initialization
 					create elements.make
 					create types.make
 					initialize
-				end
-				Shared_document_manager.set_schema (Current)
---			end
+					Shared_document_manager.set_schema (Current)				
+				end			
+			end
 		ensure
 			internal_schema_set: is_valid_xml implies internal_schema /= Void
 			elements_set: validator.is_valid implies elements /= Void
 			types_set: validator.is_valid implies types /= Void
+		rescue
+			retried := True
+			retry
 		end			
 		
 	initialize is

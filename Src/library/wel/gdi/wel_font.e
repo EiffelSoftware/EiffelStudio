@@ -10,7 +10,7 @@ class
 inherit
 	WEL_GDI_ANY
 
-	WEL_CAPABILITIES_CONSTANTS
+	WEL_UNIT_CONVERSION
 		export
 			{NONE} all
 		end
@@ -193,80 +193,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	point_to_pixel (hdc: WEL_DC; pt, divisor: INTEGER): INTEGER is
-			-- Convert a size `pt/divisor' expressed in point into pixel.
-		do
-			Result :=  mul_div (
-				get_device_caps (hdc.item, logical_pixels_y), pt, 72 * divisor)
-		end
-
-	pixel_to_point (hdc: WEL_DC; pi: INTEGER): INTEGER is
-			-- Convert a size `pi' expressed in pixel into point.
-		do
-			Result :=  mul_div (pi, 72,
-				get_device_caps (hdc.item, logical_pixels_y))
-		end
-
-	point_to_logical (hdc: WEL_DC; pt, divisor: INTEGER): INTEGER is
-			-- Convert a size `pt/divisor' expressed in point into logical units.
-		do
-			Result := pixel_to_logical (hdc, point_to_pixel (hdc, pt, divisor))
-		end
-
-	logical_to_point (hdc: WEL_DC; lo: INTEGER): INTEGER is
-			-- Convert a size `lo' expressed in logical unit into point.
-		do
-			Result := pixel_to_point (hdc, logical_to_pixel (hdc, lo))
-		end
-
-	pixel_to_logical (hdc: WEL_DC; pi: INTEGER): INTEGER is
-			-- Convert `pi' expressed in pixel unit into logical unit.
-		local
-			arr: WEL_ARRAY [WEL_POINT]
-			p1, p2: WEL_POINT
-		do
-			create arr.make (2, (create {WEL_POINT}.make (0, 0)).structure_size)
-			arr.put (create {WEL_POINT}.make (0, 0), 0)
-			arr.put (create {WEL_POINT}.make (0, pi), 1)
-
-			cwin_dp_to_lp (hdc.item, arr.item, 2)
-
-			create p1.make_by_pointer (arr.i_th_item (0))
-			create p2.make_by_pointer (arr.i_th_item (1))
-
-			Result := (p2.y - p1.y).abs
-		end
-
-	logical_to_pixel (hdc: WEL_DC; lo: INTEGER): INTEGER is
-			-- Convert `lo' expressed in logical unit into pixel unit.
-		local
-			arr: WEL_ARRAY [WEL_POINT]
-			p1, p2: WEL_POINT
-		do
-			create arr.make (2, (create {WEL_POINT}.make (0, 0)).structure_size)
-			arr.put (create {WEL_POINT}.make (0, 0), 0)
-			arr.put (create {WEL_POINT}.make (0, lo), 1)
-
-			cwin_lp_to_dp (hdc.item, arr.item, 2);
-			create p1.make_by_pointer (arr.i_th_item (0))
-			create p2.make_by_pointer (arr.i_th_item (1))
-
-			Result := (p2.y - p1.y).abs
-		end
-
-	cwin_dp_to_lp (dc, p: POINTER; i: INTEGER) is
-		external
-			"C [macro <windows.h>] (HDC, LPPOINT, int)"
-		alias
-			"DPtoLP"
-		end
-
-	cwin_lp_to_dp (dc, p: POINTER; i: INTEGER) is
-		external
-			"C [macro <windows.h>] (HDC, LPPOINT, int)"
-		alias
-			"LPtoDP"
-		end
 
 	cwin_create_font (a_height, a_width, escapement, orientation, weight,
 			italic, underline, strike_out,
@@ -288,23 +214,6 @@ feature {NONE} -- Implementation
 			"C [macro <wel.h>] (LOGFONT *): EIF_POINTER"
 		alias
 			"CreateFontIndirect"
-		end
-
-	mul_div (i,j,k: INTEGER): INTEGER is
-			-- Does `i * j / k' but in a safe manner where the 64 bits integer
-			-- obtained by `i * j' is not truncated.
-		external
-			"C [macro <windows.h>] (int, int, int): EIF_INTEGER"
-		alias
-			"MulDiv"
-		end
-
-	get_device_caps (p: POINTER; i: INTEGER): INTEGER is
-			-- Retrieves device-specific information about a specified device.
-		external
-			"C [macro <windows.h>] (HDC, int): EIF_INTEGER"
-		alias
-			"GetDeviceCaps"
 		end
 
 end -- class WEL_FONT

@@ -635,6 +635,29 @@ feature -- Conveniences
 			Result := True
 		end
 
+	has_static_access: BOOLEAN is
+			-- Can Current be access in a static manner?
+		local
+			ext: EXTERNAL_I
+			att: ATTRIBUTE_I
+			extension: IL_EXTENSION_I
+		do
+			if System.il_generation then
+				ext ?= Current
+				if ext /= Void then
+					extension ?= ext.extension
+				else
+					att ?= Current
+					if att /= Void then
+						extension ?= att.extension
+					end
+				end
+				Result := extension /= Void and then not extension.need_current (extension.type)
+			else
+				Result := is_external
+			end			
+		end
+		
 	has_precondition: BOOLEAN is
 			-- Is the feature declaring some preconditions ?
 		do

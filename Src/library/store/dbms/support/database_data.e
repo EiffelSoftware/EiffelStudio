@@ -65,7 +65,7 @@ feature -- Element change
 			if map_table = Void then
 				create map_table.make (1, count)
 			elseif map_table.count < count then
-				map_table.resize (1, count)
+				map_table.conservative_resize (1, count)
 			end
 			from
 				ind := 1
@@ -117,11 +117,11 @@ feature -- Element change
 				
 					-- `metadata_to_update' is True at the beginning of every new selection.
 			elseif metadata_to_update then
-				value.resize (1, count)
-				value_size.resize (1, count)
-				value_max_size.resize (1, count)
-				value_type.resize (1, count)
-				select_name.resize (1, count)
+				value.conservative_resize (1, count)
+				value_size.conservative_resize (1, count)
+				value_max_size.conservative_resize (1, count)
+				value_type.conservative_resize (1, count)
+				select_name.conservative_resize (1, count)
 				get_metadata := True --PGC
 				metadata_to_update := False
 			end

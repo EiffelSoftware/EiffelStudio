@@ -111,7 +111,7 @@ feature -- Element Change
 		do
 			i := count + 1	
 			set_count (count + s.count)
-			resize (lower, lower + count)
+			conservative_resize (lower, lower + count)
 			from
 				s.start
 			until

@@ -577,9 +577,9 @@ feature -- Removal
 	wipe_out is
 			-- Remove all items.
 		do
-			item_table.resize (1, Block_threshold + 1)
-			next_sibling_table.resize (1, Block_threshold + 1)
-			first_child_table.resize (1, Block_threshold + 1)
+			item_table.conservative_resize (1, Block_threshold + 1)
+			next_sibling_table.conservative_resize (1, Block_threshold + 1)
+			first_child_table.conservative_resize (1, Block_threshold + 1)
 			item_table.clear_all
 			next_sibling_table.clear_all
 			first_child_table.clear_all

@@ -398,7 +398,7 @@ feature -- Element change
 			-- Merge `other' into current structure after cursor.
 		do
 			if not other.is_empty then
-				resize (1, count + other.count)
+				conservative_resize (1, count + other.count)
 				if index < count then
 					subcopy (Current, index + 1, count, 
 						index + other.count + 1) 
@@ -419,7 +419,7 @@ feature -- Element change
 			if al /= Void then -- Optimization for arrayed lists
 				c := al.count
 				new_count := count + c
-				resize (1, new_count)
+				conservative_resize (1, new_count)
 				subcopy (al, 1, c, count + 1)
 				set_count (new_count)
 			else

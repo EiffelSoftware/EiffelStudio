@@ -28,7 +28,7 @@ feature -- Status Setting
 		require
 			array_exist: ptr /= Void
 		do
-			ptr.resize(1, size)
+			ptr.conservative_resize(1, size)
 			count := size
 		end	
 

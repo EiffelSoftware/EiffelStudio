@@ -39,6 +39,8 @@ creation
 	
 feature 
 
+-- FIXME: redefine is_equivalent
+
 	argument_names: EIFFEL_LIST_B [ID_AS_B];
 			-- Argument names
 

@@ -11,18 +11,23 @@ inherit
 	EV_VERTICAL_PROGRESS_BAR_I
 
 	EV_PROGRESS_BAR_IMP
+		undefine
+			set_default_options
+		redefine
+			make
+		end
 
 creation
-	make
+	make,
+	make_with_range
 
 feature {NONE} -- Initialization
 
 	make is
 			-- Create a horizontal progress bar.
 		do
-			widget := gtk_progress_bar_new
+			{EV_PROGRESS_BAR_IMP} Precursor
 			gtk_progress_bar_set_orientation (widget, GTK_PROGRESS_BOTTOM_TO_TOP)
-			gtk_object_ref (widget)
 		end
 
 end -- class EV_VERTICAL_PROGRESS_BAR_IMP

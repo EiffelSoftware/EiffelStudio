@@ -71,6 +71,18 @@ feature -- Access
 			end
 			
 		end
+		
+	is_item_external (a_widget: EV_WIDGET): BOOLEAN is
+			-- Is `a_widget' currently external to `Current'?
+			-- i.e. has been docked out.
+		require
+			widget_not_void: a_widget /= Void
+		do
+			Result := external_representation.has (a_widget)
+		ensure
+			
+		end
+		
 
 	top_widget_resizing: BOOLEAN
 		-- Does the top widget displayed in `Current' resize vertically as `Current' is resized?
@@ -589,7 +601,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 	
 	maximize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
-			--
+			-- Maximize `a_tool'.
 		do
 			if maximized_tool /= Void then
 				maximized_tool.silent_set_minimized
@@ -612,7 +624,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 					else
 						minimized_states.extend (False)
 					end
-					if all_holders.item /= a_tool then
+					if all_holders.item /= a_tool and not external_representation.has (all_holders.item.tool) then
+							-- Do not minimize if external.
 						all_holders.item.silent_set_minimized
 						all_holders.item.disable_minimize_button
 					else
@@ -677,8 +690,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				until
 					all_split_areas.off
 				loop
-					if all_split_areas.item.full then
-						all_split_areas.item.set_split_position (all_split_areas.item.maximum_split_position)
+					split_area := all_split_areas.item
+					if split_area.full then
+						split_area.set_split_position ((split_area.maximum_split_position))
 					end
 					all_split_areas.forth
 				end
@@ -692,7 +706,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				if split_area.full then
 						-- As `Current' may have been reduced smaller than it was when the tool was maximized,
 						-- we must restrict the resetting of the spit position to the maximum now allowed.
-					split_area.set_split_position (stored_splitter_widths.item.min (split_area.maximum_split_position))
+					split_area.set_split_position ((stored_splitter_widths.item.min (split_area.maximum_split_position)).max (split_area.minimum_split_position))
 				end
 				stored_splitter_widths.forth
 			end

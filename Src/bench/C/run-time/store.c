@@ -1968,23 +1968,8 @@ rt_private void widr_type (int16 dtype)
 	printf ("Type %d %s", dtype, class_name);
 #endif
 	/* Write type information: "name_length name flags dynamic_type" */
-
-		/* Add `expanded' or `reference' when needed. */
-	if (EIF_NEEDS_EXPANDED_KEYWORD(System (dtype))) {
-		name_length = name_length + 9;
-		widr_multi_int16 (&name_length, 1);
-		widr_multi_char ((EIF_CHARACTER *) "expanded ", 9);
-		widr_multi_char ((EIF_CHARACTER *) class_name, strlen(class_name));
-	} else if (EIF_NEEDS_REFERENCE_KEYWORD(System (dtype))) {
-		name_length = name_length + 10;
-		widr_multi_int16 (&name_length, 1);
-		widr_multi_char ((EIF_CHARACTER *) "reference ", 10);
-		widr_multi_char ((EIF_CHARACTER *) class_name, strlen(class_name));
-	} else {
-		widr_multi_int16 (&name_length, 1);
-		widr_multi_char ((EIF_CHARACTER *) class_name, strlen(class_name));
-	}
-
+	widr_multi_int16 (&name_length, 1);
+	widr_multi_char ((EIF_CHARACTER *) class_name, strlen(class_name));
 	widr_multi_int32 (&flags, 1);
 	widr_multi_int16 (&dtype, 1);
 

@@ -4700,11 +4700,20 @@ rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
 			result = (struct cecil_info *) ct_value (&egc_ce_type, name);
 		}
 	} else {
-			/* Heuristic for old storable. We search for a reference type, and if
-			 * not found, for an expanded one. */
+			/* Heuristic for old storable. We look in the non-expanded classes first. */
 		result = (struct cecil_info *) ct_value (&egc_ce_type, name);
 		if (result == NULL) {
+				/* Not found in non-expanded classes table,
+				 * hopefully it is in the expanded table. */
 			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
+		} else {
+				/* We found it in the non-expanded classes table. Let's check that indeed
+				 * it is not declared as an expanded class in the retrieval system. Because
+				 * if it is we assume that we are retrieving the expanded class and not
+				 * the reference. */
+			if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_type))) {
+				result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
+			}
 		}
 	}
 

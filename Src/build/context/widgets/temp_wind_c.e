@@ -1,5 +1,6 @@
 indexing
-	description: "Context representing a temporary window TEMP_WIND."
+	description: "Context representing a temporary window.%
+				% Window created with a parent window."
 	Id: "$Id$"
 	Date: "$Date$"
 	Revision: "$Revision$"
@@ -7,101 +8,104 @@ indexing
 class TEMP_WIND_C 
 
 inherit
-
 	WINDOW_C
 		redefine
-			stored_node, widget, 
 			copy_attributes, context_initialization, 
-			create_context, position_initialization,
-			shown, hide, show, update_visual_name_in_editor,
+			position_initialization,
+			update_visual_name_in_editor,
 			description_text, creation_procedure_text
 		end
 
-feature 
+feature -- Type data
 
-	symbol: PIXMAP is
-	   do
-		  Result := Pixmaps.dialog_shell_pixmap
-	   end
+	symbol: EV_PIXMAP is
+		do
+			create Result.make_with_size (0, 0)
+		end
 
 	type: CONTEXT_TYPE is
 		do
-			Result := context_catalog.temp_wind_type
+			Result := context_catalog.container_page.temp_wind_type
 		end
 
-	create_oui_widget (a_parent: COMPOSITE) is
+feature -- GUI object creation
+
+	create_gui_object (a_parent: like gui_object) is
 		local
 			x1, y1: INTEGER
 		do
-			!! widget.make (entity_name, a_parent)
-			title := entity_name
-			widget.set_default_position (False)
-			widget.allow_resize
-			widget.realize
-			widget_set_title (entity_name)
-			if retrieved_node = Void then
+			create gui_object.make (a_parent)
+			gui_object.set_title (entity_name)
+--			if retrieved_node = Void then
+					-- Not retrieving widget from project
 				set_size (300, 300)
 				default_position := True
-				x1 := a_parent.real_x + a_parent.width // 2 
-							- widget.width //2
-				y1 := a_parent.real_y + a_parent.height // 2 
-							- widget.height //2
+				x1 := a_parent.x + a_parent.width // 2 - gui_object.width // 2
+				y1 := a_parent.y + a_parent.height // 2 - gui_object.height //2
 				set_x_y (x1, y1)
-				if toolkit.name.is_equal ("MS_WINDOWS") then
-					configure_count := 0
-					-- Setting x, y under MS Windows does not cause
-					-- a configure event before realization.
-				end
-				set_start_hidden (True)
-			end
-			add_window_geometry_action
+--				set_start_hidden (True)
+--			end
 			add_to_window_list
+			gui_object.show
 		end
 
-	widget: TEMP_WIND
+feature {NONE} -- Internal namer
 
-	popup is
-		do
-			update_label (True)
-			widget.popup
+-- 	find_parent (parent_name: STRING): COMPOSITE_C is
+-- 		local
+-- 			cursor: CURSOR
+-- 			found_parent: CONTEXT
+-- 			e_name: STRING
+-- 		do
+-- 			cursor := Shared_window_list.cursor
+-- 			from
+-- 				Shared_window_list.start
+-- 			until
+-- 				Shared_window_list.after or
+-- 				Result /= Void
+-- 			loop
+-- 				e_name := Shared_window_list.item.entity_name
+-- 				if e_name.is_equal (parent_name) then
+-- 					Result := Shared_window_list.item
+-- 				end
+-- 				Shared_window_list.forth
+-- 			end
+-- 			Shared_window_list.go_to (cursor)
+-- 		end
+
+	Window_seed: STRING is "Temp_wind"
+
+	Window_seed_to_lower: STRING is "temp_wind"
+
+	namer: NAMER is
+		once
+			create Result.make (Window_seed)
 		end
 
-	popdown is
-		do
-			update_label (False)
-			widget.popdown
-		end
+	-- ***********************
+	-- * specific attributes *
+	-- ***********************
 
-	add_window_geometry_action is
-		do
-			widget.set_parent_action ("<Configure>", Current, Void)
-		end
+-- 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+-- 		do
+-- 			opt_list.put (Context_const.geometry_form_nbr,
+-- 						Context_const.Geometry_format_nbr)
+-- 			opt_list.put (Context_const.temp_wind_att_form_nbr,
+-- 						Context_const.attribute_format_nbr)
+-- 		end
 
-	remove_window_geometry_action is
-		do
-			widget.remove_parent_action ("<Configure>")
-		end
-
-	create_context (a_parent: COMPOSITE_C): like Current is
-			-- Create a context of the same type
+	update_visual_name_in_editor is
 		local
-			void_parent: COMPOSITE
-			create_command: CONTEXT_CREATE_CMD
+--			editor: CONTEXT_EDITOR
 		do
-			Result := New
-			Result.set_parent (a_parent)
-			Result.generate_internal_name
-			Result.oui_create (a_parent.widget)
-				-- Void widget if context created for context catalog
-			if widget /= Void then
-				Result.set_size (width, height)
-				copy_attributes (Result)
-			end
-			!!create_command
-			create_command.execute (Result)
+-- 			editor := context_catalog.editor (Current, 
+-- 					Context_const.temp_wind_att_form_nbr)
+-- 			if editor /= Void then
+-- 				editor.reset_current_form
+-- 			end
 		end
 
-feature -- File name
+feature -- Code generation
 
 	base_file_name_without_dot_e: FILE_NAME is
 		local
@@ -114,97 +118,24 @@ feature -- File name
 			!! Result.make_from_string (tmp)
 		end
 
-feature {NONE}
-
-	find_parent (parent_name: STRING): COMPOSITE_C is
-		local
-			cursor: CURSOR
-			found_parent: CONTEXT
-			e_name: STRING
-		do
-			cursor := Shared_window_list.cursor
-			from
-				Shared_window_list.start
-			until
-				Shared_window_list.after or
-				Result /= Void
-			loop
-				e_name := Shared_window_list.item.entity_name
-				if e_name.is_equal (parent_name) then
-					Result := Shared_window_list.item
-				end
-				Shared_window_list.forth
-			end
-			Shared_window_list.go_to (cursor)
-		end
-
-	Window_seed: STRING is "Temp_wind"
-
-	Window_seed_to_lower: STRING is "temp_wind"
-
-	namer: NAMER is
-		once
-			!!Result.make (Window_seed)
-		end
-
-	widget_set_title (new_title: STRING) is
-			-- Set`title' to `new_title'
-		do
-			title := new_title
-			widget.set_title (new_title)
-		end
-
-	widget_forbid_resize is
-		do
-			widget.forbid_resize
-		end
-
-	widget_allow_resize is
-		do
-			widget.allow_resize
-		end 
-
-	add_to_option_list (opt_list: ARRAY [INTEGER]) is
-		do
-			opt_list.put (Context_const.geometry_form_nbr,
-						Context_const.Geometry_format_nbr)
-			opt_list.put (Context_const.temp_wind_att_form_nbr,
-						Context_const.attribute_format_nbr)
-		end
-
-	update_visual_name_in_editor is
-		local
-			editor: CONTEXT_EDITOR
-		do
-			editor := context_catalog.editor (Current, 
-					Context_const.temp_wind_att_form_nbr)
-			if editor /= Void then
-				editor.reset_current_form
-			end
-		end
-
-feature 
-
 	eiffel_type: STRING is "TEMP_WIND"
 
 	full_type_name: STRING is "Temporary window"
 
-	hide is
+feature {CONTEXT}
+
+	context_initialization (context_name: STRING): STRING is
 		do
-			popdown
+			!!Result.make (0)
+			if title_modified then
+				function_string_to_string (Result, context_name, "set_title", title)
+			end
+			if resize_policy_modified then
+				cond_f_to_string (Result, resize_policy_disabled, context_name, "forbid_resize", "allow_resize")
+			end
 		end
 
-	show is
-		do
-			popup
-		end
-
-	shown: BOOLEAN is
-		do
-			Result := widget.is_popped_up
-		end
-
-feature {NONE}
+feature {NONE} -- Code generation
 
 	copy_attributes (other_context: like Current) is
 		do
@@ -215,7 +146,8 @@ feature {NONE}
 				other_context.disable_resize_policy (resize_policy_disabled)
 			end
 			Precursor (other_context)
-			other_context.set_start_hidden (start_hidden)
+--			other_context.set_start_hidden (start_hidden)
+			other_context.set_size (width, height)
 		end
 
 	description_text: STRING is
@@ -235,19 +167,6 @@ feature {NONE}
 			!! Result.make (100)
 			Result.append ("%N%Tmake (a_name: STRING; a_parent: COMPOSITE) is%N%T%Tdo%N")
 			Result.append ("%T%T%TPrecursor (a_name, a_parent)%N")
-		end
-
-feature {CONTEXT}
-
-	context_initialization (context_name: STRING): STRING is
-		do
-			!!Result.make (0)
-			if title_modified then
-				function_string_to_string (Result, context_name, "set_title", title)
-			end
-			if resize_policy_modified then
-				cond_f_to_string (Result, resize_policy_disabled, context_name, "forbid_resize", "allow_resize")
-			end
 		end
 
 feature {NONE}
@@ -271,12 +190,12 @@ feature {NONE}
 -- Storage features
 -- ****************
 
-	
 feature 
 
-	stored_node: S_TEMP_WIND_R1 is
-		do
-			!!Result.make (Current)
-		end
+-- 	stored_node: S_TEMP_WIND_R1 is
+-- 		do
+-- 			!!Result.make (Current)
+-- 		end
 
-end
+end -- class TEMP_WIND_C
+

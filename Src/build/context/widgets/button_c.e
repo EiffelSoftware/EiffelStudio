@@ -1,87 +1,59 @@
+indexing
+	description: "Context that represents a button (EV_BUTTON)."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class BUTTON_C 
+class
+	BUTTON_C
 
 inherit
-
-	LABEL_TEXT_C
-		rename
-			create_context as old_create_context
+	PRIMITIVE_C
 		redefine
-			widget, default_commands_list
-		end;
-
-	LABEL_TEXT_C
-		redefine
-			create_context, widget, default_commands_list
-		select
-			create_context
+			gui_object
 		end
 
-feature 
+feature -- Type data
 
-	widget: BUTTON;
-
-	create_context (a_parent: COMPOSITE_C): like Current is
-		local
-			a_bar: BAR_C
+	symbol: EV_PIXMAP is
 		do
-			a_bar ?= a_parent;
-			if (a_bar = Void) then
-				Result := old_create_context (a_parent)
-			end;
-		end;
-
-	text: STRING is
-		do
-			Result := widget.text
-		end;
-
-	default_commands_list: LINKED_LIST [CMD] is
-		local
-			predefined_cmds: SHARED_PREDEF_COMS
-		do
-			Result := Precursor
-			!! predefined_cmds
-			Result.extend (predefined_cmds.new_cmd)
-			Result.extend (predefined_cmds.open_cmd)
-			Result.extend (predefined_cmds.save_cmd)
-			Result.extend (predefined_cmds.popup_cmd)
-			Result.extend (predefined_cmds.popdown_cmd)
-			Result.extend (predefined_cmds.open_window_cmd)
-			Result.extend (predefined_cmds.close_window_cmd)
-			Result.extend (predefined_cmds.minimize_window_cmd)
-			Result.extend (predefined_cmds.maximize_window_cmd)
-			Result.extend (predefined_cmds.restore_window_cmd)
-			Result.extend (predefined_cmds.reset_to_empty_cmd)
-			Result.extend (predefined_cmds.reset_to_zero_cmd)
-			Result.extend (predefined_cmds.clear_cmd)
+			create Result.make_with_size (0, 0)
 		end
 
-feature {NONE}
-
-	forbid_recompute_size is
+	type: CONTEXT_TYPE is
 		do
-			widget.forbid_recompute_size
-		end;
+			Result := context_catalog.primitive_page.button_type
+		end
 
-	allow_recompute_size is
-		do
-			widget.allow_recompute_size
-		end;
+feature -- GUI object creation
 
-	widget_set_text (s: STRING) is
+	create_gui_object (a_parent: EV_CONTAINER) is
 		do
-			widget.set_text (s);
-		end;
+			create gui_object.make (a_parent)
+		end
 
-	widget_set_center_alignment is
-		do
-			widget.set_center_alignment
-		end;
- 
-	widget_set_left_alignment is
-		do
-			widget.set_left_alignment
-		end;
+feature {NONE} -- Internal namer
 
-end
+	namer: NAMER is
+		once
+			create Result.make ("Button")
+		end
+
+feature -- Code generation
+
+	eiffel_type: STRING is
+		do
+			Result := "EV_BUTTON"
+		end
+
+	full_type_name: STRING is
+		do
+			Result := "Button"
+		end
+
+feature -- Implementation
+
+	gui_object: EV_BUTTON
+
+end -- class BUTTON_C
+

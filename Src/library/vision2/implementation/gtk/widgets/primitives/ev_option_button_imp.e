@@ -10,11 +10,7 @@ class
 inherit
 	EV_OPTION_BUTTON_I
 
-	EV_MENU_ITEM_CONTAINER_IMP
-		redefine
-			add_menu,
-			add_menu_item
-		end
+	EV_MENU_CONTAINER_IMP
 
 	EV_BUTTON_IMP
 		redefine
@@ -33,7 +29,7 @@ feature {NONE} -- Initialization
 			-- than a menu in a window. A menu is an option of a
 			-- window
 		do
-			widget := gtk_option_menu_new
+			widget := gtk_option_menu_new ()
 		end	
 
 feature {EV_MENU_ITEM_CONTAINER} -- Element change	
@@ -47,24 +43,10 @@ feature {EV_MENU_ITEM_CONTAINER} -- Element change
 			check
 				correct_imp: menu_imp /= void
 			end
-			gtk_option_menu_set_menu (widget, menu_imp.widget) 
+			gtk_option_menu_set_menu (widget, menu_imp.widget)
+			gtk_widget_show (menu_imp.widget)
 		end
-
-	add_menu_item (a_child: EV_MENU_ITEM) is
-			-- Add menu item into container
-		do
-			check
-				function_not_allowed_for_option_button: False
-			end
-		end			
 	
-feature {NONE} -- Implementation
-
-	add_menu_item_pointer (item_p: POINTER) is
-			-- Need to be implemented, but do nothing
-		do
-		end
-
 end -- class EV_OPTION_BUTTON_IMP
 
 --|----------------------------------------------------------------

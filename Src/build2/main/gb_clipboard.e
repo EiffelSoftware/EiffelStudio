@@ -48,6 +48,8 @@ feature {NONE} --Initialization
 			-- Create `Current'.
 		do
 			create content_change_actions
+			history.change_actions.extend (agent history_changed)
+			object_stone_dirty := True
 		end
 
 feature -- Access
@@ -83,54 +85,86 @@ feature -- Access
 				until
 					a_list.off
 				loop
-					if a_list.item.associated_top_level_object_on_loading > 0 then
+					if a_list.item.associated_top_level_object_on_loading > 0 and not object_handler.deleted_objects.has (a_list.item.associated_top_level_object_on_loading) then
 						a_list.item.update_object_as_instance_representation
 					end
 					a_list.forth
 				end
+				
 			end
 		end
-		
+
 	object_stone: GB_CLIPBOARD_OBJECT_STONE is
 				-- Execute `Current'.
 			local
-				contents: XM_ELEMENT
+				contents, temp_element: XM_ELEMENT
 				element_info: ELEMENT_INFORMATION
 				full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 				all_instances: ARRAYED_LIST [XM_ELEMENT]
 				data: XM_CHARACTER_DATA
+				temp_object_id: INTEGER
+				parent_element: XM_ELEMENT
 			do
-				check
-					clipboard_not_empty: contents_cell.item /= Void
-				end
-				create Result
-				
-					-- Now determine if the top level object is an instance of another
-					-- object and if so, set the associated object for `Result'.
-				contents ?= contents_cell.item.first
-				contents ?= child_element_by_name (contents, internal_properties_string)
-				full_information := get_unique_full_info (contents)
-				element_info := full_information @ (reference_id_string)
-				if element_info /= Void then
-					Result.set_associated_top_level_object (element_info.data.to_integer)
-				end
-				
-					-- Now return `all_contained_instances' of `Result' so that we can
-					-- correctly determine if a drop is permitted.
-				contents ?= contents_cell.item.first
-				all_instances := all_elements_by_name (contents, reference_id_string)
-				from
-					all_instances.start
-				until
-					all_instances.off
-				loop
-					data ?= all_instances.item.first
-					if data /= Void then
-						Result.all_contained_instances.put (data.content.to_integer, data.content.to_integer)
+				if object_stone_dirty then
+						-- Only generate a new up to date version of the object stone if
+						-- it is possible that the structure of the contents has changed.
+					check
+						clipboard_not_empty: contents_cell.item /= Void
 					end
-					all_instances.forth
+					create Result
+					parent_element := contents_cell.item.deep_twin
+					contents ?= parent_element.first
+					replace_all_instances_with_up_to_date_xml (contents)
+					contents ?= parent_element.first
+					remove_nodes_recursive (contents, root_window_string)
+					
+						-- Now determine if the top level object is an instance of another
+						-- object and if so, set the associated object for `Result'.
+					contents ?= parent_element.first
+					temp_element ?= child_element_by_name (contents, internal_properties_string)
+					full_information := get_unique_full_info (temp_element)
+					element_info := full_information @ (reference_id_string)
+					if element_info /= Void then
+						check
+							data_is_integer:element_info.data.is_integer
+						end
+						temp_object_id := element_info.data.to_integer
+						if object_handler.objects.has (temp_object_id) then
+							Result.set_associated_top_level_object (temp_object_id)
+						end
+					end
+					
+						-- Now return `all_contained_instances' of `Result' so that we can
+						-- correctly determine if a drop is permitted.
+						-- Must perform special handling if the instance is a top level object
+						-- that has been deleted.
+						-- How do we check this?
+					temp_element ?= parent_element.first
+					all_instances := all_elements_by_name (temp_element, reference_id_string)
+					from
+						all_instances.start
+					until
+						all_instances.off
+					loop
+						data ?= all_instances.item.first
+						if data /= Void then
+							check
+								data_is_integer:data.content.is_integer
+							end
+							temp_object_id := data.content.to_integer
+							if object_handler.objects.has (temp_object_id) then
+								Result.all_contained_instances.put (temp_object_id, temp_object_id)
+							end
+						end
+						all_instances.forth
+					end
+					object_stone_internal := Result
+					object_stone_dirty := False
+				else
+						-- Simply return the previously computed value.
+					Result := object_stone_internal
 				end
-			end
+			end			
 
 	object_type: STRING
 			-- Type of `object' or Void if `is_empty'.
@@ -150,19 +184,22 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 			-- `Result' is a new object representing clipboard contents.
 			-- This is a minimal representation and does not have it's id's updated, referers connected etc etc.
 			-- Used when you simply need a copy of the clipboard's contents for viewing.
+		local
+			contents: XM_ELEMENT
 		do
 			if contents_cell.item /= Void then
-				(create {GB_GLOBAL_STATUS}).block	
+				contents := contents_cell.item.deep_twin
+				;(create {GB_GLOBAL_STATUS}).block	
 				if system_status.is_in_debug_mode then
-					show_element (contents_cell.item, main_window)
+					show_element (contents, main_window)
 				end				
-				replace_all_instances_with_up_to_date_xml (contents_cell.item)
-				remove_nodes_recursive (contents_cell.item, root_window_string)
+				replace_all_instances_with_up_to_date_xml (contents)
+				remove_nodes_recursive (contents, root_window_string)
 				if system_status.is_in_debug_mode then
-					show_element (contents_cell.item, main_window)
+					show_element (contents, main_window)
 				end				
 
-				Result := new_object (contents_cell.item, True)
+				Result := new_object (contents, True)
 					-- Modify id of `Result' so that it is not the same as that of `Current'.
 				(create {GB_GLOBAL_STATUS}).resume
 			end
@@ -198,6 +235,7 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND, GB
 			if not content_change_actions.is_empty then
 				content_change_actions.call (Void)
 			end
+			object_stone_dirty := True
 		ensure
 			contents_cell_not_empty: contents_cell.item /= Void
 		end
@@ -208,6 +246,27 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND, GB
 		once
 			create Result	
 		end
+		
+feature {NONE} -- Implementation
+
+		object_stone_internal: GB_CLIPBOARD_OBJECT_STONE
+			-- `Result' is the last generated obejct stone from a call to
+			-- `object_stone'. This should only be used by `object_stone' and
+			-- permits optimization when calling `object_stone' if we know the
+			-- structures have not changed.
+		
+		object_stone_dirty: BOOLEAN
+			-- Should `object_stone_internal' be recomputed?
+			
+		history_changed is
+				-- Index of history has changed, so flag `object_stone_internal'
+				-- for recomputation. If the history position changes, it is possible
+				-- that the structure of the object references kept within the clipboard have changed.
+			do
+				object_stone_dirty := True
+			ensure
+				object_stone_dirty: object_stone_dirty = True
+			end
 		
 invariant
 	content_change_actions_not_void: content_change_actions /= Void

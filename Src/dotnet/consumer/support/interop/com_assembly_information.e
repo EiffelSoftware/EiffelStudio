@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 	interface_attribute:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
-		create {GUID_ATTRIBUTE}.make (("710EE4B6-5067-499a-9A25-E6DDA9076E77").to_cil) end
+		create {GUID_ATTRIBUTE}.make (("E1FFE1B6-5067-499a-9A25-E6DDA9076E77").to_cil) end
 
 class
 	COM_ASSEMBLY_INFORMATION

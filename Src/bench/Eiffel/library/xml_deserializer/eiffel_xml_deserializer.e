@@ -145,14 +145,12 @@ feature {NONE} -- Object retrieval from node.
 			a_xml_element_valid_count: a_xml_element.count >= 2
 			valid_array_element: a_xml_element.name.is_equal (Reference_node)
 		local
-			name: STRING
 			dt: INTEGER
 			l_xml_attribute: like xml_attribute
 		do
 			l_xml_attribute ?= a_xml_element.item (2)
-			name := l_xml_attribute.value.out
 
-			dt := dynamic_type_from_id (name.to_integer)
+			dt := dynamic_type_from_id (l_xml_attribute.value.to_integer)
 			if dt = -1 then
 			else
 				Result := new_instance_of (dt)
@@ -170,7 +168,6 @@ feature {NONE} -- Object retrieval from node.
 			valid_array_element: a_xml_element.name.is_equal (Array_node)
 		local
 			l_lower, l_count: INTEGER
-			l_element_type_name: STRING
 			l_attr: like xml_attribute
 		do
 			a_xml_element.start
@@ -191,9 +188,8 @@ feature {NONE} -- Object retrieval from node.
 				-- we get `type'.
 			l_attr ?= a_xml_element.item_for_iteration
 			a_xml_element.forth
-			l_element_type_name := l_attr.value.out
 
-			inspect abstract_types (l_element_type_name)
+			inspect abstract_types (l_attr.value)
 			when Boolean_type then
 				Result := boolean_array_from_xml (a_xml_element, l_lower, l_lower + l_count - 1)
 			when Character_type then
@@ -220,7 +216,7 @@ feature {NONE} -- Object retrieval from node.
 			l_string_content: STRING
 			i, l_field_type: INTEGER
 			dtype: INTEGER
-			l_node_name, l_field_name: STRING
+			l_node_name: STRING
 		do
 			from
 					-- We know it is a reference node, so we can skip
@@ -243,11 +239,10 @@ feature {NONE} -- Object retrieval from node.
 				if not a_xml_element.after then
 					l_field_element.start
 					l_attr ?= l_field_element.item_for_iteration
-					l_field_name := l_attr.value
 					l_field_element.forth
 
 						-- Lookup to see that field belongs to `obj'.
-					l_field_table.search (l_field_name.out)
+					l_field_table.search (l_attr.value)
 					if l_field_table.found then
 						i := l_field_table.found_item
 						l_field_type := field_type_of_type (i, dtype)

@@ -39,6 +39,7 @@ inherit
 	WEL_BRUSH_STYLE_CONSTANTS		export {NONE} all end
 	WEL_RASTER_OPERATIONS_CONSTANTS export {NONE} all end
 	WEL_HS_CONSTANTS 				export {NONE} all end
+	WEL_DT_CONSTANTS				export {NONE} all end
 
 feature {NONE} -- Initialization
 
@@ -321,7 +322,8 @@ feature -- Drawing operations
 				dc.select_font (wel_font)
 				internal_initialized_font := True
 			end
-			dc.text_out (x, y, a_text)
+				-- Note that the size of the rectange does not matter as we use the `dt_noclip' flag.
+			dc.draw_text (a_text, create {WEL_RECT}.make (x, y, 10, 10), Dt_expandtabs | dt_noclip | Dt_noprefix)
 			release_dc
 		end
 

@@ -898,8 +898,6 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 			funct_result: BOOLEAN
 			color_stone: GB_COLOR_STONE
 			colorizeable: EV_COLORIZABLE
-			all_dependents: HASH_TABLE [GB_OBJECT, INTEGER]
-			actual_object: GB_OBJECT
 			an_object_stone: GB_OBJECT_STONE
 			standard_object_stone: GB_STANDARD_OBJECT_STONE
 		do
@@ -925,36 +923,14 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 					Result := False
 					set_status_text ("Cannot parent object in locked instance of " + object_handler.deep_object_from_id (local_parent_object.associated_top_level_object).name)
 				end
-				
-					-- Now restrict the dropping of top level structures into other top level structures
-					-- that would cause a cyclic inheritance hierarchy.
-				if Result then
-					standard_object_stone ?= an_object_stone
-					if standard_object_stone /= Void and then standard_object_stone.object.window_selector_item /= Void then
-							create all_dependents.make (4)
-						all_dependents_recursive (standard_object_stone.object, all_dependents)
-						all_dependents.extend (standard_object_stone.object, standard_object_stone.object.id)
-						Result := not all_dependents.has (Current.id)
-						if not Result then
-							set_status_text (cyclic_inheritance_error)
-						end
-					end
-				end
-				if Result and an_object_stone /= Void and then an_object_stone.is_instance_of_top_level_object then
-					create all_dependents.make (4)
-					actual_object := object_handler.deep_object_from_id (an_object_stone.associated_top_level_object)
-					all_dependents_recursive (actual_object, all_dependents)
-					all_dependents.extend (actual_object, actual_object.id)
-					Result := not all_dependents.has (Current.id)
+
+				if Result and an_object_stone /= Void then
+					Result := has_clashing_dependencies (an_object_stone)
 					if not Result then
 						set_status_text (cyclic_inheritance_error)
-					else
-						Result := actual_object /= Current
-						if not Result then
-							set_status_text (cyclic_inheritance_error)
-						end
 					end
 				end
+
 					-- If we are at the top level and shift is pressed, there is no parent.
 				if Result and local_parent_object /= Void then
 					Result := not local_parent_object.is_full
@@ -983,6 +959,41 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 			end
 		end
 		
+	has_clashing_dependencies (an_object_stone: GB_OBJECT_STONE): BOOLEAN is
+			-- Does `an_object_stone' represent an object that has nested dependencies so
+			-- that if it were inserted within `Current' it would cause a cyclic inheritance
+			-- hierarchy?
+		require
+			an_object_stone_not_void: an_object_stone /= Void
+		local
+			all_dependents: HASH_TABLE [GB_OBJECT, INTEGER]
+			actual_object: GB_OBJECT
+			instance_objects: HASH_TABLE [INTEGER, INTEGER]
+		do
+			Result := True
+			create all_dependents.make (4)
+			instance_objects := an_object_stone.all_contained_instances
+			from
+				instance_objects.start
+			until
+				instance_objects.off
+			loop
+				actual_object := object_handler.deep_object_from_id (instance_objects.item_for_iteration)
+				all_dependents.clear_all
+				all_dependents_recursive (actual_object, all_dependents)
+				all_dependents.extend (actual_object, actual_object.id)
+				from
+					all_dependents.start
+				until
+					all_dependents.off
+				loop
+					all_dependents.forth
+				end
+				Result := Result and not all_dependents.has (Current.id)
+				instance_objects.forth
+			end
+		end
+
 	all_dependents_recursive (an_object: GB_OBJECT; dependents: HASH_TABLE [GB_OBJECT, INTEGER]) is
 			-- Add all top level objects which `an_object' is dependent on to `dependents'. Does not
 			-- include `an_object' itself.

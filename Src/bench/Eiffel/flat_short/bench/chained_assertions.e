@@ -1,21 +1,17 @@
 indexing
-
 	description: 
-		"List of routine assertions defined in precursor%
-		%features.";
+		"List of routine assertions defined in precursor features.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class CHAINED_ASSERTIONS
 
 inherit
-
-	SHARED_TEXT_ITEMS;
-	SHARED_FORMAT_INFO;
-	LINKED_LIST [ROUTINE_ASSERTIONS];
+	SHARED_TEXT_ITEMS
+	SHARED_FORMAT_INFO
+	LINKED_LIST [ROUTINE_ASSERTIONS]
 
 creation
-
 	make
 
 feature -- Output
@@ -60,6 +56,7 @@ feature -- Output
 					ctxt.set_first_assertion (False)
 				end
 			end;
+
 			from
 			until
 				after

@@ -96,8 +96,7 @@ feature -- Execution
 					if Class_comments_server.has 
 							(written_in_class.id) 
 					then
-						c_comments := 
-							Class_comments_server.disk_item 
+						c_comments := Class_comments_server.disk_item 
 									(written_in_class.id);
 						feature_comments := c_comments.item (start_pos)
 					end
@@ -105,11 +104,9 @@ feature -- Execution
 					!! file.make (written_in_class.file_name);
 					if file.exists and then rout_as /= Void then
 						end_pos := rout_as.body_start_position;
-						!! eiffel_file.make_with_positions (file.name,
-							start_pos, end_pos);
+						!! eiffel_file.make_with_positions (file.name, start_pos, end_pos);
 						eiffel_file.set_current_feature (f_ast);
-						feature_comments := 
-								eiffel_file.current_feature_comments;
+						feature_comments := eiffel_file.current_feature_comments;
 					end;
 				end;
 				!! assert_server.make_for_feature (target_feat, f_ast);

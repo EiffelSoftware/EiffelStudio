@@ -285,7 +285,7 @@ FILE *fp;
 	struct stat buf;
 
 	errno = 0;
-	if (0 != fflush (fp)   /* Without a flush the information */
+	if (0 != fflush (fp))   /* Without a flush the information */
 		esys();						/* is not up to date */
 
 	if (fstat (fileno (fp), &buf) == -1)

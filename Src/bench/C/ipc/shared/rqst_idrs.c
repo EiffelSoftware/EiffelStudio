@@ -13,9 +13,9 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "request.h"
-#include "idrs.h"
 #include "rqst_idrs.h"
 #include <string.h>
+#include "rt_assert.h"
 
 /* We have to declare private routines before the declaration of the union
  * discriminent. Let's declare public routines as well...
@@ -30,9 +30,14 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext);
 rt_private bool_t idr_Stop(IDR *idrs, void *ext);
 rt_private bool_t idr_Dumped(IDR *idrs, void *ext);
 rt_private bool_t idr_Item (IDR *idrs, struct item *ext);
+rt_private bool_t idr_void(IDR *idrs, void *ext);
 
-/* Main encoding/decoding routine */
-rt_public bool_t idr_Request(IDR *idrs, Request *ext);
+struct idr_discrim {	/* Discrimination array for unions encoding */
+	int id_value;		/* Value of union discriminent */
+	bool_t (*id_fn)(IDR *, void *);	/* Function to call to serialize the union */
+};
+
+rt_private bool_t idr_union(IDR *idrs, int *type, char *unp, struct idr_discrim *arms);
 
 /* This arrray records each serialization routine depending on the type of
  * the union request (field rq_type). The default arm routine is idr_void,
@@ -40,108 +45,152 @@ rt_public bool_t idr_Request(IDR *idrs, Request *ext);
  * listed hereafter.
  */
 rt_private struct idr_discrim u_Request[] = {
+	{ 0, idr_void},
 	{ EIF_OPAQUE, idr_Opaque },
 	{ ACKNLGE, idr_Acknlge },
 	{ TRANSFER, idr_Opaque },
+	{ HELLO, idr_void},
 	{ STOPPED, idr_Stop },
+	{ INSPECT, idr_Opaque },
+	{ DUMP, idr_Opaque },
+	{ DUMPED, idr_Dumped },
 	{ MOVE, idr_Opaque },
 	{ BREAK, idr_Opaque },
+	{ RESUME, idr_Opaque },
+	{ QUIT, idr_void },
+	{ CMD, idr_void },
+	{ APPLICATION, idr_void },
+	{ KPALIVE, idr_void },
+	{ ASYNCMD, idr_void },
+	{ ASYNACK, idr_void },
+	{ DEAD, idr_void },
 	{ LOAD, idr_Opaque },
 	{ BYTECODE, idr_Opaque },
-	{ RESUME, idr_Opaque },
-	{ DUMPED, idr_Dumped },
-	{ DUMP, idr_Opaque },
-	{ INSPECT, idr_Opaque },
+	{ KILL, idr_void },
 	{ ADOPT, idr_Opaque },
 	{ ACCESS, idr_Opaque },
 	{ WEAN, idr_Opaque },
 	{ ONCE, idr_Opaque },
+	{ EWB_INTERRUPT, idr_void },
+	{ APP_INTERRUPT, idr_void },
+	{ INTERRUPT_OK, idr_void },
+	{ INTERRUPT_NO, idr_void },
 	{ SP_LOWER, idr_Opaque },
 	{ METAMORPHOSE, idr_Opaque },
+	{ APP_INTERRUPT_FLAG, idr_void },
+	{ EWB_NEWBREAKPOINT, idr_void },
 	{ MODIFY_LOCAL, idr_Opaque },
 	{ MODIFY_ATTR, idr_Opaque },
 	{ DYNAMIC_EVAL, idr_Opaque },
 	{ DUMP_VARIABLES, idr_Opaque },
+	{ APPLICATION_CWD, idr_void },
 	{ OVERFLOW_DETECT, idr_Opaque },
-	{ __dontcare__, idr_void },
 };
 
 /*
  * Public (de)serializing routine.
  */
 
+rt_public bool_t idr_void(IDR *idrs, void *ext)
+{
+	return TRUE;
+}
+
 rt_public bool_t idr_Request(IDR *idrs, Request *ext)
-	{
-	return idr_union(idrs, &ext->rq_type, (char *) (&ext->rqu), u_Request, idr_void);
-	}
+{
+	return idr_union(idrs, &ext->rq_type, (char *) (&ext->rqu), u_Request);
+}
 
 /*
  * Private encoding routines (one for each structure).
  */
 
 rt_private bool_t idr_Opaque(IDR *idrs, void *ext)
-	{
+{
 	Opaque *opa = (Opaque *) ext;
 	return idr_int(idrs, &opa->op_type) &&
 			idr_int(idrs, &opa->op_cmd) &&
-			idr_u_long(idrs, (long unsigned int *) (&opa->op_size));
-	}
+			idr_rt_uint_ptr(idrs, &opa->op_size);
+}
 
 rt_private bool_t idr_Acknlge(IDR *idrs, void *ext)
-	{
+{
 	return idr_int(idrs, &((Acknlge *)ext)->ak_type);
-	}
+}
 
 rt_private bool_t idr_Where(IDR *idrs, void *ext)
-	{
+{
 	/* Arnaud: I've replaced MAX_STRLEN with MAX_FEATURE_NAME to avoid a bug
 	 * in the debugger with feature with a 'long' name (>MAX_STRLEN chars)
 	 */
 	Where *whe = (Where *) ext;
-	return idr_string(idrs, &whe->wh_name, -MAX_FEATURE_LEN) &&
-			idr_u_long(idrs, (long unsigned int *)(&whe->wh_obj)) &&
-			idr_int(idrs, &whe->wh_origin) &&
-			idr_int(idrs, &whe->wh_type) &&
-			idr_u_long(idrs, (long unsigned int *)(&whe->wh_offset));
+	bool_t result;
+	static char buf[MAX_FEATURE_LEN + 1];
+
+	if (idrs->i_op == IDR_DECODE) {
+		buf[0]='\0';
+		whe->wh_name = buf;
 	}
+	result = idr_string(idrs, &whe->wh_name, -MAX_FEATURE_LEN);
+	result = result && idr_rt_uint_ptr(idrs, &whe->wh_obj);
+	result = result && idr_int(idrs, &whe->wh_origin);
+	result = result && idr_int(idrs, &whe->wh_type);
+	result = result && idr_int(idrs, &whe->wh_offset);
+
+	return result;
+}
 
 rt_private bool_t idr_Stop(IDR *idrs, void *ext)
-	{
+{
 	Stop *sto = (Stop *) ext;
-	return idr_Where(idrs, &sto->st_where) &&
-			idr_int(idrs, &sto->st_why) &&
-			idr_int(idrs, &sto->st_code) &&
-			idr_string(idrs, &sto->st_tag, -MAX_STRLEN);
+	static char buf[MAX_STRLEN + 1];
+	bool_t result;
+	if (idrs->i_op == IDR_DECODE) {
+		buf[0]='\0';
+		sto->st_tag = buf;
 	}
+	result = idr_Where(idrs, &sto->st_where);
+	result = result && idr_int(idrs, &sto->st_why);
+	result = result && idr_int(idrs, &sto->st_code);
+	result = result && idr_string(idrs, &sto->st_tag, -MAX_STRLEN);
+
+	return result;
+}
 
 rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 {
-	Dump					*dum	= (Dump *)ext;
-	struct debug_ex_vect	*exv;
-	struct item				*exi;
+	Dump *dum = (Dump *)ext;
+	static struct debug_ex_vect *last_exv;
+	static struct item *last_exi;
+	struct debug_ex_vect *exv;
+	struct item *exi;
 
 	if (!idr_int (idrs, &dum->dmp_type))
-		return 0;
+		return FALSE;
 	switch (dum -> dmp_type) {
 	case DMP_VECT:
 	case DMP_MELTED:
 		exv = dum -> dmpu.dmpu_vect;
-		if (exv == 0){
+		if ((exv != last_exv) && (last_exv)) {
+			free(last_exv);
+		}
+		if (!exv){
 			exv = (struct debug_ex_vect *) malloc (sizeof (struct debug_ex_vect));
+			last_exv = exv;
 			memset  (exv, 0, sizeof (struct debug_ex_vect));
 			dum -> dmpu.dmpu_vect = exv;
 		}
-		if (exv == 0)
-			return 0;		/* lack of memory. Abort */
-		if (! (idr_char (idrs, (char *) (&exv->ex_type))
-			&& idr_char (idrs, (char *) (&exv->ex_retry))
-			&& idr_char (idrs, (char *) (&exv->ex_rescue))))
-			return 0;
+		if ((!exv) ||
+			(! (idr_unsigned_char (idrs, &exv->ex_type)
+			&& idr_unsigned_char (idrs, &exv->ex_retry)
+			&& idr_unsigned_char (idrs, &exv->ex_rescue)))) {
+			return FALSE;
+		}
 		switch (exv->ex_type) {
 		case EX_RESC:
 		case EX_RETY:
 		case EX_CALL:
-			return idr_u_long (idrs, (long unsigned int *) (&exv->exu.exur.exur_id))
+			return idr_eif_reference (idrs, &exv->exu.exur.exur_id)
 				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_FEATURE_LEN)
 				&& idr_int (idrs, &exv -> exu.exur.exur_orig)
 				&& idr_int (idrs, &exv->dex_linenum);
@@ -149,17 +198,22 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
 				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)
 				&& idr_int (idrs, &exv->exu.exua.exua_from)
-				&& idr_u_long (idrs, (long unsigned int *) (&exv->exu.exua.exua_oid));
+				&& idr_eif_reference (idrs, &exv->exu.exua.exua_oid);
 		}
 	case DMP_ITEM:
 		exi = dum -> dmpu.dmpu_item;
-		if (exi == 0){
+		if ((exi != last_exi) && (last_exi)) {
+			free(last_exi);
+		}
+		if (!exi){
 			exi = (struct item *) malloc (sizeof (struct item));
+			last_exi = exi;
 			memset (exi, 0, sizeof (struct item));
 			dum -> dmpu.dmpu_item = exi;
 		}
-		if (exi == 0)
-			return 0; /* lack of memory. Abort */
+		if (!exi) {
+			return FALSE; /* lack of memory. Abort */
+		}
 		return idr_Item (idrs, exi);
 	case DMP_OBJ:
 		return 1;
@@ -231,11 +285,11 @@ rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
 			idrs->i_ptr += sizeof(EIF_POINTER);
 			return TRUE;
 		case SK_BIT:
-			return idr_u_long (idrs, (long unsigned int *) (&ext->it_bit));
+			return idr_eif_reference (idrs, (&ext->it_bit));
 		case SK_STRING:
 			return idr_string (idrs, &ext->it_ref, 0); /* 0 = no limit */
 		default:
-			return idr_u_long (idrs, (long unsigned int *) (&ext->it_ref));
+			return idr_eif_reference (idrs, &ext->it_ref);
 		}
 	} else {
 		memcpy (&ext->type, idrs->i_ptr, sizeof(EIF_INTEGER_32));
@@ -280,13 +334,42 @@ rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
 			idrs->i_ptr += sizeof(EIF_POINTER);
 			return TRUE;
 		case SK_BIT:
-			return idr_u_long (idrs, (long unsigned int *) (&ext->it_bit));
+			return idr_eif_reference (idrs, &ext->it_bit);
 		case SK_STRING:
 			return idr_string (idrs, &ext->it_ref, 0); /* 0 = no limit */
 		default:
-			return idr_u_long (idrs, (long unsigned int *) (&ext->it_ref));
+			return idr_eif_reference (idrs, &ext->it_ref);
 		}
 	}
 }
 
 
+rt_private bool_t idr_union(IDR *idrs, int *type, char *unp, struct idr_discrim *arms)
+          					/* The serializing stream */
+          					/* Union discriminent, serialized in the process */
+          					/* Pointer to the start of the union */
+                         	/* Null terminated array to deal with union arms */
+{
+	/* Serialization of an union, based on the contents of the union's type
+	 * which is an integer. Depending on the value of this disciminent, the
+	 * correct basic serialization routine is called to serialize the right
+	 * component. If the type is not found in the arms array, then the default
+	 * arm routine is called if not nulled (otherwise this makes the routine
+	 * fail immediately).
+	 */
+
+	register int l_type;
+
+	if (!idr_int(idrs, type)) {
+		return FALSE;
+	}
+
+	l_type = *type;
+
+	if ((l_type >= 1) && (l_type <= MAX_REQUEST_TYPE)) {
+		CHECK("Valid type", arms[l_type].id_value == l_type);
+		return (arms[l_type].id_fn)(idrs, unp);
+	} else {
+		return TRUE;
+	}
+}

@@ -94,13 +94,13 @@ feature {EV_ANY_I} -- Implementation
 			-- Responsible for interaction with native graphics toolkit.
 
 invariant
-	peers_not_void: peers /= Void
-	selected_peer_not_void: selected_peer /= Void
-	peers_returns_new_copy_of_list: peers /= peers
-	peers_has_current: peers.has (Current)
+	peers_not_void: is_usable implies (peers /= Void)
+	selected_peer_not_void: is_usable implies (selected_peer /= Void)
+	peers_returns_new_copy_of_list: is_usable implies (peers /= peers)
+	peers_has_current: is_usable implies (peers.has (Current))
 	is_selected_equals_selected_peer_is_current:
-		is_selected = (selected_peer = Current)
-	one_radio_item_selected: selected_count = 1
+		is_usable implies (is_selected = (selected_peer = Current))
+	one_radio_item_selected: is_usable implies (selected_count = 1)
 
 end -- class EV_RADIO_PEER
 

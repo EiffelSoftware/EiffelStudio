@@ -17,7 +17,7 @@ class EC_LEX inherit
 			make as metalex_make
 		end
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 
@@ -26,7 +26,7 @@ feature -- Initialization
 	make is
 			-- Make object.
 		do
-			!! ecl_message.make(5)
+			create ecl_message.make(5)
 			array_make (1, 0)
 		end;
 
@@ -77,7 +77,7 @@ feature -- Status setting
 			loop
 				analyzer.get_any_token;
 				if not analyzer.end_of_text and then not ecl_error then
-					!!t;
+					create t;
 					t.copy(analyzer.last_token);
 					if not t.string_value.is_equal(analyzer.last_string_read) then
 						ecl_error := True;
@@ -105,7 +105,7 @@ feature -- Status setting
 			descriptor_exists: descriptor /= Void;
 			descriptor_is_ok: not descriptor.ecd_error
 		once
-			!! Result.make(1,descriptor.ecd_index)
+			create Result.make(1,descriptor.ecd_index)
 		end;
 
 	ecl_build (s: STRING) is
@@ -125,15 +125,15 @@ feature -- Status setting
 			if analyzer = Void then 
 	 			metalex_make
 			end;
-			!!tmpsl.make(0);
-			!!tmpsr.make(0);
-			!!tmpss.make(0);
-			!!file_name.make(0);
+			create tmpsl.make(0);
+			create tmpsr.make(0);
+			create tmpss.make(0);
+			create file_name.make(0);
 		--	file_name.append("/tmp/ec_");
 			file_name.append(s);
 			file_name.append(".lex");
 			file_name.to_lower;
-			!!tmp_file.make(file_name);
+			create tmp_file.make(file_name);
 			if tmp_file.exists then
 				retrieve_analyzer (file_name)
 			else
@@ -194,7 +194,7 @@ feature {NONE} -- Conversion
 	char2string (c: CHARACTER): STRING is
 			-- Returns the string "'c'"
 		do
-			!! Result.make(3);
+			create Result.make(3);
 			Result.append ("'");
 			Result.append (c.out);
 			Result.append ("'")

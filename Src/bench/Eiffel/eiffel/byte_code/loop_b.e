@@ -66,7 +66,7 @@ feature -- Access
 			variant_part := v
 		end
 
-	need_enlarging: BOOLEAN is true
+	need_enlarging: BOOLEAN is True
 			-- This node needs enlarging
 
 	enlarged: LOOP_BL is
@@ -85,21 +85,28 @@ feature -- IL code generation
 			test_label, end_label: IL_LABEL
 			local_list: LINKED_LIST [TYPE_I]
 			variant_local_number: INTEGER
+			check_assertion: BOOLEAN
 		do
+			check_assertion := Context.class_type.associated_class.assertion_level.check_loop
+				-- FIXME: invariant and variants are not correctly generated
+			check_assertion := False
+			
 			generate_il_line_info
+
 			if from_part /= Void then
 					-- Generate IL code for the from part
 				from_part.generate_il
 			end
 
-			if variant_part /= Void then
+			if check_assertion and then variant_part /= Void then
 					-- Initialization of the variant control variable
 				local_list := context.local_list
 				context.add_local (Long_c_type)
 				variant_local_number := local_list.count
+				il_generator.put_dummy_local_info (variant_part.type, variant_local_number)
 			end
 
-			if invariant_part /= Void or else variant_part /= Void then
+			if check_assertion and then (invariant_part /= Void or else variant_part /= Void) then
 					-- Set the assertion type
 				context.set_assertion_type (In_loop_invariant)
 
@@ -110,7 +117,8 @@ feature -- IL code generation
 					-- Variant loop byte code
 				if variant_part /= Void then
 					context.set_assertion_type (In_loop_variant)
-					variant_part.generate_il -- variant_local_number
+					variant_part.generate_il
+					il_generator.generate_local_assignment (variant_local_number)
 				end
 			end
 
@@ -131,7 +139,7 @@ feature -- IL code generation
 
 			il_generator.branch_to (test_label)
 
-			if invariant_part /= Void or else variant_part /= Void then
+			if check_assertion and then (invariant_part /= Void or else variant_part /= Void) then
 					-- Set the assertion type
 				context.set_assertion_type (In_loop_invariant)
 

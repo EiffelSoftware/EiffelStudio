@@ -176,7 +176,7 @@ feature -- Status report
 		do
 			Result := xm_text_get_insertion_position (screen_object)
 		ensure
-			cursor_position_large_enough: Result > 0;
+			cursor_position_large_enough: Result  >= 0;
 			cursor_position_small_enough: Result <= count
 		end;
 
@@ -302,6 +302,9 @@ feature -- Status setting
 
 	set_string, set_value (a_string: STRING) is
 			-- Set `string' and `value' to `a_string'.
+		require
+			exists: not is_destroyed;
+			string_not_void: a_string /= Void
 		local
 			ext_name: ANY
 		do
@@ -544,9 +547,35 @@ feature -- Element change
 			count_incremented: count = old count + a_text.count;
 		end;
 
+	cut_text (a_time: INTEGER) is
+			-- Copy the primary selected text to the clipboard
+			-- and then remove the selection.
+		require
+			exists: not is_destroyed
+		do
+			xm_text_cut (screen_object, a_time)
+		end;
+
+	copy_text (a_time: INTEGER) is
+			-- Copy the primary selected text into the clipboard.
+		require
+			exists: not is_destroyed
+		do
+			xm_text_copy (screen_object, a_time)
+		end;
+
+	paste_text  is
+			-- Insert the clipboard selection text at the current cursor position.
+		require
+			exists: not is_destroyed
+		do
+			xm_text_paste (screen_object)
+		end;
+
 	insert (a_position: INTEGER; a_text: STRING) is
 			-- Insert `a_text' at `a_position'.
 		require 
+			exists: not is_destroyed;
 			non_void_text: a_text /= Void
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= count
@@ -567,6 +596,7 @@ feature -- Element change
 			-- string starting from 0. `to_position' indicates the
 			-- last character position to replace.
 		require
+			exists: not is_destroyed;
 			not_text_void: a_text /= Void;
 			from_position_smaller_than_to_position: from_position <= to_position;
 			from_position_large_enough: from_position >= 0;
@@ -748,6 +778,31 @@ feature {NONE} -- Implementation
 			"C [macro <Xm/Text.h>] (Widget): EIF_POINTER"
 		alias
 			"XmTextGetString"
+		end;
+
+	xm_text_cut (w: POINTER; a_time: INTEGER) is
+			-- Copy the primary selection to the clipboard
+			-- and remove the selected text.
+		external
+			"C [macro <Xm/Text.h>] (Widget, Time)"
+		alias
+			"XmTextCut"
+		end;
+
+	xm_text_copy (w: POINTER; a_time: INTEGER) is
+			-- Copy the primary selection to the clipboard.
+		external
+			"C [macro <Xm/Text.h>] (Widget, Time)"
+		alias
+			"XmTextCopy"
+		end;
+
+	xm_text_paste (w: POINTER) is
+			-- Insert the clipboard selection.
+		external
+			"C [macro <Xm/Text.h>] (Widget)"
+		alias
+			"XmTextPaste"
 		end;
 
 	xm_text_insert (w: POINTER; a_pos: INTEGER; a_text: POINTER) is

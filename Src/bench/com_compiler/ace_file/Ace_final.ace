@@ -195,6 +195,10 @@ cluster
 				end
 			variable_descriptor
 				end
+			parameter_enumerator
+				end
+			parameter_descriptor
+				end
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"

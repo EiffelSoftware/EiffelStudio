@@ -1,7 +1,7 @@
 indexing
 	description: "absolute time"
 	status: "See notice at end of class";
-	date: "$Date: "
+	date: "$Date$"
 	revision: "$Revision$"
 	access: date, time
 
@@ -9,7 +9,6 @@ class
 	TIME
 
 inherit
-
 	ABSOLUTE
 		undefine
 			out
@@ -22,6 +21,11 @@ inherit
 			is_equal
 		redefine
 			out
+		end
+
+	TIME_VALIDITY_CHECKER
+		undefine
+			is_equal, out
 		end
 
 creation
@@ -39,12 +43,7 @@ feature -- Initialization
 	make (h, m, s: INTEGER) is
 			-- Set `hour, `minute' and `second' to `h', `m', `s' respectively.
 		require
-			h_large_enough: h >= 0;
-			h_small_enough: h < Hours_in_day;
-			m_large_enough: m >= 0;
-			m_small_enough: m < Minutes_in_hour;
-			s_large_enough: s >= 0;
-			s_small_enough: s < Seconds_in_minute	
+			correct_time: is_correct_time (h, m, s)
 		do
 			compact_time := c_make_time (h, m, s)
 		ensure
@@ -58,12 +57,7 @@ feature -- Initialization
 			-- integer part of `s' respectively.
 			-- Set `fractional_second' to the fractional part of `s'.
 		require
-			h_large_enough: h >= 0;
-			h_small_enough: h < Hours_in_day;
-			m_large_enough: m >= 0;
-			m_small_enough: m < Minutes_in_hour;
-			s_large_enough: s >= 0;
-			s_small_enough: s < Seconds_in_minute;
+			correct_time: is_correct_time (h, m, s)
 		local
 			s_tmp: INTEGER
 		do
@@ -157,46 +151,6 @@ feature -- Initialization
 			compact_time := c_t
 		ensure
 			compact_time_set: compact_time = c_t;
-		end
-
-feature -- Preconditions
-
-	time_valid (s: STRING; code_string: STRING): BOOLEAN is
-			-- Is the code_string enough precise
-			-- To create an instance of type TIME
-			-- And does the string `s' correspond to `code_string'?
-		require
-			s_exists: s /= Void
-			code_exists: code_string /= Void
-		local
-			code: DATE_TIME_CODE_STRING
-		do
-			!! code.make (code_string)
-			Result := code.precise_time and code.correspond (s)
-		end
-
-	time_valid_default (s: STRING): BOOLEAN is
-			-- Is the code_string enough precise
-			-- To create an instance of type TIME
-			-- And does the string `s' correspond to `default_format_string'?
-		require
-			s_exists: s /= Void
-		do
-			Result := time_valid (s, default_format_string)
-		end
-			
-	compact_time_valid (c_t: INTEGER): BOOLEAN is
-		require
-			c_t_not_void: c_t /= Void
-		local
-			h, m, s: INTEGER
-		do
-			h := c_hour (c_t)
-			m := c_minute (c_t)
-			s := c_second (c_t)
-			Result := (h >= 0 and h < Hours_in_day and
-			m >= 0 and m < Minutes_in_hour and
-			s >= 0 and s < Seconds_in_minute)	
 		end
 
 feature -- Access

@@ -71,7 +71,6 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 			progress_bar.set_proportion (1)
 			label.set_text ("Generation completed")
 			create temp_file_name.make_from_string (system_status.current_project_settings.project_location)
-			temp_file_name.extend (generation_directory)
 			create temp_label.make_with_text ("Files generated in : " + temp_file_name)		
 			widget_holder.extend (temp_label)
 			create ok_button.make_with_text ((create {EV_DIALOG_CONSTANTS}).ev_ok)

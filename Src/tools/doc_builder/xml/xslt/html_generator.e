@@ -234,18 +234,18 @@ feature {NONE} -- Implementation
 			l_question_dialog: EV_MESSAGE_DIALOG
 		do
 			Result := True
-			if shared_constants.application_constants.is_gui_mode and then Shared_project.has_invalid_files then
-				create l_question_dialog.make_with_text ((create {MESSAGE_CONSTANTS}).invalid_project_files_warning)
-				l_question_dialog.set_title ((create {MESSAGE_CONSTANTS}).report_title)
-				l_question_dialog.set_buttons (<<"Continue", (create {EV_DIALOG_CONSTANTS}).ev_cancel>>)
-				l_question_dialog.show_modal_to_window (Application_window)
-				if l_question_dialog.selected_button.is_equal ("Continue") then
-					l_question_dialog.destroy
-				else
-					l_question_dialog.destroy
-					Result := False
-				end				
-			end
+--			if shared_constants.application_constants.is_gui_mode and then Shared_project.has_invalid_files then
+--				create l_question_dialog.make_with_text ((create {MESSAGE_CONSTANTS}).invalid_project_files_warning)
+--				l_question_dialog.set_title ((create {MESSAGE_CONSTANTS}).report_title)
+--				l_question_dialog.set_buttons (<<"Continue", (create {EV_DIALOG_CONSTANTS}).ev_cancel>>)
+--				l_question_dialog.show_modal_to_window (Application_window)
+--				if l_question_dialog.selected_button.is_equal ("Continue") then
+--					l_question_dialog.destroy
+--				else
+--					l_question_dialog.destroy
+--					Result := False
+--				end				
+--			end
 		end
 
 	dir_counter: INTEGER

@@ -52,7 +52,6 @@ feature -- Execution
 				builder_window.hide
 			end
 			set_selected (not is_selected)
-			command_handler.update
 		end
 
 end -- class GB_SHOW_HIDE_BUILDER_WINDOW_COMMAND

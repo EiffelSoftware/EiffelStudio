@@ -52,7 +52,6 @@ feature -- Execution
 				component_viewer.hide
 			end
 			set_selected (not is_selected)
-			command_handler.update
 		end
 
 end -- class GB_SHOW_HIDE_COMPONENT_VIEWER_COMMAND

@@ -18,7 +18,7 @@ inherit
 			is_in_default_state
 		end
 
-	EV_TEXTABLE
+	EV_TEXT_ALIGNABLE
 		redefine
 			implementation,
 			is_in_default_state
@@ -40,9 +40,8 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and 
-				Precursor {EV_TEXTABLE} and
-				Precursor {EV_FONTABLE} and
-				alignment.is_center_aligned
+				Precursor {EV_TEXT_ALIGNABLE} and
+				Precursor {EV_FONTABLE} and is_center_aligned
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -40,8 +40,10 @@ feature {NONE} -- Basic Operations
 			create c
 			h1.extend (c)
 			c.set_background_color (white_color)
+			c.set_minimum_width (50)
 			h1.extend (title)
 			create c
+			c.set_minimum_width (480-h1.width)
 			h1.extend (c)
 			c.set_background_color (white_color)
 			cont := pixmap.parent

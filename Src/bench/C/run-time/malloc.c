@@ -2856,6 +2856,7 @@ rt_private void check_ref(char *);
 rt_private void check_free_list(register1 union overhead *next)
 {
 	/* Make sure free block is in the free list */
+	EIF_GET_CONTEXT
 			
 	register2 uint32 i;					/* Hashing list */
 	register3 union overhead *p;		/* To walk along free list */
@@ -2913,11 +2914,13 @@ rt_private void check_free_list(register1 union overhead *next)
 		else
 			mefree += (r & B_SIZE) + OVERHEAD;
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void check_ref(char *object)
 {
 	/* Make sure the references held in the object are valid */
+	EIF_GET_CONTEXT
 
 	union overhead *zone;
 	uint32 flags;
@@ -2974,6 +2977,7 @@ rt_private void check_ref(char *object)
 			mempanic;
 		}
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void check_flags(char *object, char *from)
@@ -2982,6 +2986,7 @@ rt_private void check_flags(char *object, char *from)
 	 * that means the checking is currently being done by exploring the
 	 * references from this object.
 	 */
+	EIF_GET_CONTEXT
 
 	int dtype;
 	uint32 flags;
@@ -3064,6 +3069,7 @@ rt_private void check_flags(char *object, char *from)
 			Dtype(from));
 		mempanic;
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void memck(unsigned int max_dt)
@@ -3074,6 +3080,7 @@ rt_public void memck(unsigned int max_dt)
 	 * may help discover any discrepancy. If not specified (i.e. 0 is given)
 	 * then the maximum possible value is used.
 	 */
+	EIF_GET_CONTEXT
 
 	struct chunk *chunk;		/* Current chunk */
 	char *arena;				/* Arena in chunk */
@@ -3122,6 +3129,7 @@ rt_public void memck(unsigned int max_dt)
 
 	printf("memck: checking done.\n", max_dtype);
 	fflush(stdout);				/* Make sure we always see messages */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void check_chunk(register5 char *chunk, register6 char *arena, int type)
@@ -3130,7 +3138,7 @@ rt_private void check_chunk(register5 char *chunk, register6 char *arena, int ty
 		/* Type is either CHUNK_T or ZONE_T */
 {
 	/* Consistency checks on the chunk's contents */
-
+	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Malloc info zone */
 	register2 uint32 size;				/* Object's size in bytes */
 	register3 char *end;				/* First address beyond chunk */
@@ -3233,10 +3241,12 @@ rt_private void check_chunk(register5 char *chunk, register6 char *arena, int ty
 		check_flags(arena, (char *) 0);	/* Check flags consistency */
 		check_ref(arena);				/* Make sure references are valid */
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void output_free_list(FILE *f)
 {
+	EIF_GET_CONTEXT
 	int ncblocks[NBLOCKS];		/* Number of C blocks in free list */
 	int ncsize[NBLOCKS];		/* Size of C free list (with overhead) */
 	int neblocks[NBLOCKS];		/* Number of Eiffel blocks in free list */
@@ -3276,10 +3286,12 @@ rt_private void output_free_list(FILE *f)
 	fprintf(f, "memck: summary of free list:\n");
 	fprintf(f, "\tTOTAL: Eiffel %d blocks (%d bytes), C %d blocks (%d bytes)\n",
 			teblocks, tesize, tcblocks, tcsize);
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void output_table(FILE *f)
 {
+	EIF_GET_CONTEXT
 	int i;
 	int use;
 	int usage;
@@ -3321,10 +3333,12 @@ rt_private void output_table(FILE *f)
 		c_data.ml_total - c_data.ml_used - c_data.ml_over);
 
 	fflush(f);
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared void mem_diagnose(int sig)
 {
+	EIF_GET_CONTEXT
 	printf("diagnosing memory...\n");
 	fflush(stdout);
 	if (sig == SIGUSR1) {
@@ -3335,10 +3349,12 @@ rt_shared void mem_diagnose(int sig)
 	printf("\tscanning...\n");
 	memck(0);
 	output_table(stdout);
+	EIF_END_GET_CONTEXT
 }
 
 rt_public eif_mem_info(EIF_BOOLEAN flag)
 {
+	EIF_GET_CONTEXT
 	printf("diagnosing memory...\n");
 	if (flag){
 		printf("\tcollecting...\n");
@@ -3348,6 +3364,7 @@ rt_public eif_mem_info(EIF_BOOLEAN flag)
 	printf("\tscanning...\n");
 	memck(0);
 	output_table(stdout);
+	EIF_END_GET_CONTEXT
 }
 
 #endif /* MEMCHK */

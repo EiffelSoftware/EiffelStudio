@@ -88,7 +88,6 @@ feature -- Comparison
 			l_multi_type: like Current
 			other_gen_type: GEN_TYPE_A
 			i, nb: INTEGER
-			other_generics: like generics
 		do
 			l_multi_type ?= other
 			if l_multi_type /= Void then

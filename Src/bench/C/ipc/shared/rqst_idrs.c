@@ -38,7 +38,7 @@ public bool_t idr_Request();
  * listed hereafter.
  */
  private struct idr_discrim u_Request[] = {
-	{ OPAQUE, idr_Opaque },
+	{ EIF_OPAQUE, idr_Opaque },
 	{ ACKNLGE, idr_Acknlge },
 	{ TRANSFER, idr_Opaque },
 	{ STOPPED, idr_Stop },

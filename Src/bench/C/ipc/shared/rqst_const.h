@@ -14,7 +14,7 @@
 #define _rqst_const_h_
 
 /* Request types */
-#define OPAQUE			1		/* Opaque data request */
+#define EIF_OPAQUE		1		/* Opaque data request */
 #define ACKNLGE			2		/* Acknowledgment (positive/negative) */
 #define TRANSFER		3		/* Data transfer via daemon */
 #define HELLO			4		/* Application's handshake with ewb */

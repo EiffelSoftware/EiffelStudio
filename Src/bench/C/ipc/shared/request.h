@@ -58,7 +58,7 @@ typedef struct dump Dump;	/* Structure returned by dumps */
  */
 
 /* Request types with specific information carried in structure:
- *	OPAQUE		1		Opaque data request
+ *	EIF_OPAQUE	1		Opaque data request
  *	ACKNLGE		2		Acknowledgment (positive/negative)
  *	TRANSFER	3		Data transfer via daemon
  *	HELLO		4		Application's handshake with ewb

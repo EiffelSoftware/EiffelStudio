@@ -86,7 +86,7 @@ char *buffer;	/* Where the string is held */
 
 	Request_Clean (pack);
 	size = strlen(buffer);			/* Length of string */
-	pack.rq_type = OPAQUE;
+	pack.rq_type = EIF_OPAQUE;
 	pack.rq_opaque.op_size = size;	/* Send length without final null */
 
 
@@ -188,8 +188,8 @@ Request *rqst;
 	char buf[MAX_STRING];
 
 	switch (rqst->rq_type) {
-	case OPAQUE:
-		sprintf(buf, "OPAQUE [%d, %d, %d]",
+	case EIF_OPAQUE:
+		sprintf(buf, "EIF_OPAQUE [%d, %d, %d]",
 			rqst->rq_opaque.op_type,
 			rqst->rq_opaque.op_cmd,
 			rqst->rq_opaque.op_size);

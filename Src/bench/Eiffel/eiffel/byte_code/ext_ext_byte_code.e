@@ -112,9 +112,9 @@ if is_special or has_signature then
 				-- Generate execution trace information
 			--generate_execution_trace;
 				-- Generate the saving of the workbench mode assertion level
-			if context.workbench_mode then
+			--if context.workbench_mode then
 				--generate_save_assertion_level;
-			end;
+			--end;
 				-- Generate local expanded variable creations
 			generate_expanded_variables;
 				-- Now we want the body

@@ -10,7 +10,7 @@ class REAL_A
 inherit
 	BASIC_A
 		redefine
-			is_real, associated_class, same_as, is_numeric, weight,
+			is_real, associated_class, same_as, is_numeric, heaviest,
 			internal_conform_to
 		end
 
@@ -42,9 +42,15 @@ feature {COMPILER_EXPORTER}
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
 
-	weight: INTEGER is 8
-			-- Weight of Current.
-			-- Used to evaluate type of an expression with balancing rule.
+	heaviest (t: TYPE_A): TYPE_A is
+			-- Heaviest numeric type for balancing rule.
+		do
+			if t.is_double then
+				Result := t
+			else
+				Result := Current
+			end
+		end
 
 	type_i: FLOAT_I is
 			-- C type

@@ -11,7 +11,7 @@ inherit
 			make as cl_make
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
-			weight, same_as, ext_append_to,
+			heaviest, same_as, ext_append_to,
 			check_conformance, format, is_equivalent
 		end
 
@@ -118,11 +118,17 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	weight: INTEGER is
-			-- Weight of Current.
-			-- Used to evaluate type of an expression with balancing rule.
+	heaviest (t: TYPE_A): TYPE_A is
+			-- Heaviest numeric type for balancing rule.
+		local
+			l_bits: BITS_A
 		do
-			Result := bit_count
+			l_bits ?= t
+			if bit_count > l_bits.bit_count  then
+				Result := Current
+			else
+				Result := t
+			end
 		end
 
 	type_i: BIT_I is

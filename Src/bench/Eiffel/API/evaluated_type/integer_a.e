@@ -12,7 +12,7 @@ inherit
 			make as cl_make
 		redefine
 			is_integer, associated_class,
-			same_as, is_numeric, weight, internal_conform_to
+			same_as, is_numeric, heaviest, internal_conform_to
 		end
 
 create
@@ -110,16 +110,27 @@ feature {COMPILER_EXPORTER}
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
 
-	weight: INTEGER is
-			-- Weight of Current.
-			-- Used to evaluate type of an expression with balancing rule.
+	heaviest (t: TYPE_A): TYPE_A is
+			-- Heaviest numeric type for balancing rule.
+		local
+			l_int: INTEGER_A
 		do
-			inspect
-				size
-			when 8 then Result := 1
-			when 16 then Result := 2
-			when 32 then Result := 3
-			when 64 then Result := 4
+			if t.is_real or t.is_double then
+				Result := t
+			else
+				check
+					is_integer: t.is_integer
+				end
+				l_int ?= t
+				if size > l_int.size then
+					Result := Current
+				else
+					if compatibility_size > l_int.compatibility_size then
+						Result := Current
+					else
+						Result := t
+					end
+				end
 			end
 		end
 

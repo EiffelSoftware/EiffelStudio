@@ -200,8 +200,8 @@ feature -- Access
 			wind ?= Current
 			if wind /= Void then
 				Result := x_position + wind.frame_width + wind.border_width - 1
-			elseif parent /= Void
-				then Result := x_position + parent.screen_x
+			elseif parent_imp /= Void
+				then Result := x_position + parent_imp.screen_x
 			end
 		end
 
@@ -216,8 +216,8 @@ feature -- Access
 				if wind.has_menu then
 					Result := Result + wind.menu_bar_height
 				end
-			elseif parent /= Void then
-				Result := y_position + parent.screen_y
+			elseif parent_imp /= Void then
+				Result := y_position + parent_imp.screen_y
 			end
 		end
 

@@ -1,0 +1,43 @@
+CC = cl
+MAKE = nmake
+INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\windows\include
+DELDIR = rd /q /S
+LN = copy 
+RM = del
+CP = copy
+FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
+EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
+EIFLIB = EIFGEN\W_code\libcecil.lib 
+CFLAGS = -DEIF_WIN32
+LIBS = 
+OBJECT = main.obj
+
+all: main.obj compile_eiffel compile_c cecil.exe
+
+compile_eiffel:
+	$(EC) -freeze
+
+compile_c:
+	cd EIFGEN\W_code
+	$(FINISH_FREEZING)
+	$(MAKE) cecil
+	cd ..\..
+
+main.obj: main.c
+	$(CC) -I$(INCLUDE_PATH) -c main.c 
+
+cecil.exe: main.obj EIFGEN\W_code\libcecil.lib
+	$(LN) EIFGEN\W_code\cecil.melted cecil.melted
+	link -SUBSYSTEM:CONSOLE -out:$@ main.obj EIFGEN\W_code\libcecil.lib \
+		USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.lib SHELL32.lib\
+		COMDLG32.lib UUID.lib OLE32.lib OLEAUT32.lib COMCTL32.lib MPR.LIB
+
+clean:
+	$(RM) main.obj 
+	$(RM) core 
+	$(RM) cecil.epr
+	$(RM) cecil.rc
+	$(RM) cecil.melted
+	$(RM) cecil.exe
+	$(DELDIR) EIFGEN
+	

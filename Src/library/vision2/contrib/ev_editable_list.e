@@ -88,16 +88,12 @@ feature -- Status setting
 
 	set_unique_column_values (a_flag: BOOLEAN) is
 			-- Set column value uniqueness to 'a_flag'.
-		require
-			valid_flag: a_flag /= Void
 		do
 			unique_column_values := a_flag
 		end
 		
 	set_non_empty_column_values (a_flag: BOOLEAN) is
 			-- Set so edited column values are not allowed to be empty.
-		require
-			valid_flag: a_flag /= Void
 		do
 			empty_column_values := a_flag
 		end

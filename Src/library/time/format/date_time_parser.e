@@ -104,8 +104,7 @@ feature -- Status report
 			-- Has parser been set up completely?
 		do
 			Result := (days /= Void) and (months /= Void) and 
-				(base_century /= Void) and (source_string /= Void and then
-				not source_string.is_empty)
+				(source_string /= Void and then not source_string.is_empty)
 		end
 		
 	is_date: BOOLEAN is

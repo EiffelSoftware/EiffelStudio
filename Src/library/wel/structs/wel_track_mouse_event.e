@@ -40,8 +40,6 @@ feature -- Access
 				-- Requested tracking service.
 		do
 			Result := cwel_trackmouseevent_get_dwflags (item)
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 	hwndtrack: POINTER is
@@ -49,15 +47,13 @@ feature -- Access
 		do
 			Result := cwel_trackmouseevent_get_hwndtrack (item)
 		ensure
-			Result_not_void: Result /= Void
+			Result_not_null: Result /= default_pointer
 		end
 
 	dwhovertime: INTEGER is
 			-- Hover time-out.
 		do
 			Result := cwel_trackmouseevent_get_dwhovertime (item)
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 	structure_size: INTEGER is

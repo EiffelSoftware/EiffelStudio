@@ -39,8 +39,6 @@ feature -- Preconditions
 
 	compact_time_valid (c_t: INTEGER): BOOLEAN is
 			-- Is compact time `c_t' valid?
-		require
-			c_t_not_void: c_t /= Void
 		local
 			h, m, s: INTEGER
 			l_c_t: like compact_time

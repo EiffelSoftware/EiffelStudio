@@ -709,19 +709,19 @@ feature {EV_ANY_I} -- Drawing implementation
 				create wel_bitmap.make_compatible (dc, a_bitmap.width, a_bitmap.height)
 				buffer_dc.select_bitmap (wel_bitmap)
 				if buffer_dc.mask_blt_supported then
-					-- If Windows platform supports mask_blt then we can draw the image the
-					-- simple way.
-					
-					-- As there is a mask, we must draw the image to a buffer, and then
-					-- blit it onto `dc'. This is because `draw_state_bitmap' does not allow
-					-- you to use a mask. We then use `mask_blt' to copy the buffered image back.
-					
-					--	Draw the state bitmap on `buffer_dc' with style `draw_state_flags'.
-				buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
-					-- Copy the image from `buffer_dc' to `dc'.
-				dc.mask_blt (actual_x, actual_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, mask_bitmap, 0 , 0,
-					buffer_dc.make_rop4 (feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy))
-					-- Clean up GDI.
+						-- If Windows platform supports mask_blt then we can draw the image the
+						-- simple way.
+						
+						-- As there is a mask, we must draw the image to a buffer, and then
+						-- blit it onto `dc'. This is because `draw_state_bitmap' does not allow
+						-- you to use a mask. We then use `mask_blt' to copy the buffered image back.
+						
+						--	Draw the state bitmap on `buffer_dc' with style `draw_state_flags'.
+					buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
+						-- Copy the image from `buffer_dc' to `dc'.
+					dc.mask_blt (actual_x, actual_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, mask_bitmap, 0 , 0,
+						buffer_dc.make_rop4 (feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy))
+						-- Clean up GDI.
 				else
 						-- Windows platform does not support mask_blt, so we must simulate this ourselves with `bit_blt'.
 						

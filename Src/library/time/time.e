@@ -153,7 +153,6 @@ feature -- Initialization
 	make_by_compact_time (c_t: INTEGER) is
 			-- Initialize from `compact_time'.
 		require
-			c_t_not_void: c_t /= Void
 			c_t_valid: compact_time_valid (c_t)
 		do
 			compact_time := c_t

@@ -124,8 +124,7 @@ feature {NONE} -- Commands
 	show_as_message_dialog is
 			-- Show error in message dialog with OK button
 		do			
-			shared_dialogs.error_dialog.set_error_list (errors)
-			shared_dialogs.error_dialog.set_title (title)			
+			shared_dialogs.error_dialog.set_error_list (errors, title)
 			shared_dialogs.error_dialog.show_relative_to_window (window)
 		end
 

@@ -91,6 +91,10 @@ cluster
 	help_toc (help):		"$\toc"
 
 	facade (root_cluster):		"$\facade"
+		exclude
+			"help_manager.e";
+			"help_setting_constants.e";
+		end
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude

@@ -18,17 +18,15 @@ inherit
 			has_formal,
 			has_true_formal,
 			instantiation_in,
-			creation_instantiation_in,
-			complete_instantiation_in,
-			dump,
 			il_type_name,
-			append_signature,
 			type_a,
+			generic_derivation,
 			generate_cid,
 			make_gen_type_byte_code,
 			generate_cid_array,
 			generate_cid_init,
-			generate_gen_type_il
+			generate_gen_type_il,
+			name
 		end
 
 create
@@ -106,37 +104,6 @@ feature -- Access
 			end
 		end
 
-	complete_instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
-			-- Instantiation of Current in context of `other'
-		do
-			Result := instantiation_in (other)
-		end
-
-	creation_instantiation_in (other: like Current): like Current is
-			-- Instantiation of Current in context of `other'
-		local
-			i		: INTEGER
-			count	: INTEGER
-			l_meta, meta_gen: like meta_generic
-			l_true, true_gen: like true_generics
-		do
-			from
-				Result := duplicate
-				l_meta := meta_generic
-				l_true := true_generics
-				meta_gen := Result.meta_generic
-				true_gen := Result.true_generics
-				i := 1
-				count := l_meta.count
-			until
-				i > count
-			loop
-				meta_gen.put (l_meta.item (i).instantiation_in (other), i)
-				true_gen.put (l_true.item (i).creation_instantiation_in (other), i)
-				i := i + 1
-			end
-		end
-
 	is_explicit: BOOLEAN is
 			-- Is Current type fixed at compile time?
 		local
@@ -196,35 +163,32 @@ feature -- Access
 			end
 		end
 
-	dump (buffer: GENERATION_BUFFER) is
+	name: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
 		local
-			i, count: INTEGER
-			s: STRING
-			l_meta: like meta_generic
+			i, nb: INTEGER
+			l_true: like true_generics
 		do
-			if is_true_expanded then
-				buffer.putstring ("expanded ")
-			end
-			s := base_class.name_in_upper
-			buffer.putstring (s)
-			l_meta := meta_generic
-			count := l_meta.count
-
-			if count > 0 then
-				from
-					buffer.putstring (" [")
-					i := 1
-				until
-					i > count
-				loop
-					l_meta.item (i).dump (buffer)
-
-					if i < count then
-						buffer.putstring (", ")
-					end
-					i := i + 1
+			Result := Precursor {CL_TYPE_I}
+			from
+				i := 1
+				l_true := true_generics
+				nb := l_true.count
+				if nb > 0 then
+					Result.append_string (" [")
 				end
-				buffer.putchar (']')
+			until
+				i > nb
+			loop
+				Result.append (l_true.item (i).name)
+				if i < nb then
+					Result.append_character (',')
+					Result.append_character (' ')
+				end
+				i := i + 1
+			end
+			if nb > 0 then
+				Result.append_character (']')
 			end
 		end
 
@@ -264,7 +228,6 @@ feature -- Access
 						Result.append (sep)
 						tmp := l_meta.item (i).il_type_name (a_prefix).twin
 						tmp.remove_head (tmp.last_index_of ('.', tmp.count))
-						tmp.to_lower
 						Result.append (tmp)
 						i := i + 1
 					end
@@ -274,36 +237,37 @@ feature -- Access
 			end
 		end
 
-	append_signature (st: STRUCTURED_TEXT) is
+	generic_derivation: like Current is
+			-- Precise generic derivation of current type.
 		local
 			i, count: INTEGER
-			l_meta: like meta_generic
+			l_meta, meta_gen: like meta_generic
+			l_true, true_gen: like true_generics
+			l_type: TYPE_I
 		do
-			l_meta := meta_generic
-
-			if is_true_expanded then
-				st.add_string ("expanded ")
-			end
-			base_class.append_name (st)
-			count := l_meta.count
-
-			if count > 0 then
-				from
-					st.add_string (" [")
-					i := 1
-				until
-					i > count
-				loop
-					l_meta.item (i).append_signature (st)
-					if i < count then
-						st.add_string (", ")
-					end
-					i := i + 1
+			from
+				Result := duplicate
+				l_meta := meta_generic
+				l_true := true_generics
+				meta_gen := Result.meta_generic
+				true_gen := Result.true_generics
+				i := 1
+				count := l_meta.count
+			until
+				i > count
+			loop
+				l_type := l_meta.item (i)
+				if l_type.is_reference then
+					meta_gen.put (l_type, i)
+					true_gen.put (create {FORMAL_I}.make (i), i)
+				else
+					meta_gen.put (l_type.generic_derivation, i)
+					true_gen.put (true_gen.item (i).generic_derivation, i)
 				end
-				st.add_char (']')
+				i := i + 1
 			end
 		end
-
+		
 	type_a: GEN_TYPE_A is
 		local
 			i: INTEGER
@@ -321,7 +285,7 @@ feature -- Access
 				i := i - 1
 			end
 			create Result.make (class_id, array)
-			Result.set_is_true_expanded (is_true_expanded)
+			Result.set_is_expanded (is_expanded)
 		end
 
 feature -- Generic conformance
@@ -483,7 +447,7 @@ feature -- Comparison
 			-- equal to current object?
 		do
 			Result := class_id = other.class_id
-					and then is_true_expanded = other.is_true_expanded
+					and then is_expanded = other.is_expanded
 					and then is_separate = other.is_separate
 					and then meta_generic.same_as (other.meta_generic)
 		end
@@ -500,7 +464,7 @@ feature -- Comparison
 			gen_type_i ?= other
 			if gen_type_i /= Void then
 				Result := class_id = gen_type_i.class_id
-						and then is_true_expanded = gen_type_i.is_true_expanded
+						and then is_expanded = gen_type_i.is_expanded
 						and then is_separate = gen_type_i.is_separate
 						and then meta_generic.same_as (gen_type_i.meta_generic)
 				from
@@ -526,7 +490,7 @@ feature -- Comparison
 			gen_type_i ?= other
 			if gen_type_i /= Void then
 				Result := class_id = gen_type_i.class_id
-						and then is_true_expanded = gen_type_i.is_true_expanded
+						and then is_expanded = gen_type_i.is_expanded
 						and then is_separate = gen_type_i.is_separate
 						and then meta_generic.same_as (gen_type_i.meta_generic)
 			end

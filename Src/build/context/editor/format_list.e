@@ -22,6 +22,8 @@ feature {NONE}
 			fb: FORMAT_BUTTON
 		do
 			make_filled (Context_const.number_of_formats);
+			!BEHAVIOUR_BUTTON!fb.make (a_parent, ed)
+			put_i_th (fb, Context_const.Behaviour_format_nbr);
 			!GEOMETRY_BUTTON!fb.make (a_parent, ed)
 			put_i_th (fb, Context_const.Geometry_format_nbr);
 			!ATTRIBUTE_BUTTON!fb.make (a_parent, ed)
@@ -38,8 +40,6 @@ feature {NONE}
 			put_i_th (fb, Context_const.color_format_nbr);
 			!FONT_BUTTON!fb.make (a_parent, ed)
 			put_i_th (fb, Context_const.Font_format_nbr);
-			!BEHAVIOUR_BUTTON!fb.make (a_parent, ed)
-			put_i_th (fb, Context_const.Behaviour_format_nbr);
 		ensure
 			Current_content_not_void: not has (Void)
 		end

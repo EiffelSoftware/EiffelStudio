@@ -639,6 +639,8 @@ feature
 		do
 			!! Result.make (1, Context_const.number_of_formats)
 			add_to_option_list (Result)
+			Result.put (Context_const.behavior_form_nbr, 
+				Context_const.behaviour_format_nbr)
 			if is_bulletin then
 				Result.put (Context_const.alignment_form_nbr, 
 					Context_const.align_format_nbr)
@@ -655,8 +657,6 @@ feature
 				Result.put (Context_const.font_form_nbr, 
 					Context_const.font_format_nbr)
 			end
-			Result.put (Context_const.behavior_form_nbr, 
-				Context_const.behaviour_format_nbr)
 		ensure
 			valid_result: Result /= Void
 			result_not_empty: not Result.empty

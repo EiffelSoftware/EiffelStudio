@@ -1,0 +1,92 @@
+system
+	example
+
+root
+
+	example (ROOT_CLUSTER): "make"
+
+default
+
+--	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision");
+
+-- If you are not using the precompiled version of EiffelVision, 
+-- uncomment the `external' clause below. 
+
+	assertion (all);
+
+cluster
+
+	ROOT_CLUSTER: 		"../main";
+	
+
+-- EiffelBase:
+
+        base:                           "$EIFFEL4/library/base";
+        structures(base):               "$/structures";
+
+        kernel(base):                   "$/kernel";
+        support(base):                  "$/support";
+
+        access(structures):             "$/access";
+        cursors(structures):            "$/cursors";
+        cursor_tree(structures):        "$/cursor_tree";
+        dispenser(structures):          "$/dispenser";
+        iteration(structures):          "$/iteration";
+        list(structures):               "$/list";
+        set(structures):                "$/set";
+        sort(structures):               "$/sort";
+        storage(structures):            "$/storage";
+        table(structures):              "$/table";
+        traversing(structures):         "$/traversing";
+        tree(structures):               "$/tree";
+
+                        
+-- EiffelVision
+
+	-- Interface
+        -- Vision:                 	"$EIFFEL4/library/vision";
+        vision:                 	"/boston/samik/src/vision_new";
+	vision_support (vision):        "$/interface/support";
+	vision_widgets (vision):        "$/interface/widgets";
+	vision_primitives (vision_widgets):        "$/primitives";
+	vision_containers (vision_widgets):        "$/containers";
+
+--	vision_context_data (vision):	"$/oui/context_data";
+--	vision_figures (vision):	"$/figures";
+--	vision_tools (vision):		"$/tools";
+
+
+	-- Implementation
+	vision_imp (vision):		"$/implementation/";
+
+	-- Implementation Interface
+	vision_ii (vision_imp):		"$/implementation_interface";
+--	vision_ii_kernel (vision_ii):	"$/kernel";
+	vision_ii_support (vision_ii):	"$/support";
+	vision_ii_widgets (vision_ii):	"$/widgets";
+	vision_ii_primitives (vision_ii_widgets):	"$/primitives";
+	vision_ii_containers (vision_ii_widgets):	"$/containers";
+
+
+	-- Implementation clusters for x/GTK
+	vision_gtk (vision_imp):          	"$/gtk";
+--	vision_gtk_kernel (vision_gtk):         "$/kernel";
+	vision_gtk_support (vision_gtk):        "$/support";
+	vision_gtk_widgets (vision_gtk):        "$/widgets";
+	vision_gtk_primitives (vision_gtk_widgets):	"$/primitives";
+	vision_gtk_containers (vision_gtk_widgets):	"$/containers";
+
+
+external
+
+        include_path:
+                " `gtk-config --cflags`",		
+ 		"/boston/samik/src/vision_new/implementation/gtk/Clib";
+-- 		"$(EIFFEL4)/library/vision_new/implementation/gtk/Clib";
+
+        object:
+ 		"/boston/samik/src/vision_new/implementation/gtk/Clib/gtk_eiffel.o",
+--		"$(EIFFEL4)/library/vision/implementation/gtk/Clib/gtk_eiffel.o",
+               "`gtk-config --libs`"
+
+end

@@ -1,0 +1,7 @@
+class EV_COLOR_SELECTION_DIALOG
+
+inherit
+
+	DIALOG
+
+end -- class EV_COLOR_SELECTION_DIALOG

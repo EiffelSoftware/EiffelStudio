@@ -50,6 +50,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_IL_CASING
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -191,6 +196,38 @@ feature -- Settings
 
 feature -- Conveniences
 
+	full_il_type_name: STRING is
+			-- Full type name of Current as used in IL code generation with
+			-- namespace specification.
+		require
+			System.il_generation
+		local
+			l_class: like associated_class
+		do
+			Result := type.il_type_name
+			l_class := associated_class
+			if not l_class.is_external then
+				Result := il_casing.namespace_casing (l_class.lace_class.namespace) + "." + 
+					il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
+			end
+		end
+		
+	full_il_implementation_type_name: STRING is
+			-- Full type name of implementation of Current in IL code generation
+			-- with namespace specification.
+		require
+			System.il_generation
+		local
+			l_class: like associated_class
+		do
+			Result := type.il_type_name
+			l_class := associated_class
+			if not l_class.is_external then
+				Result := il_casing.namespace_casing (l_class.lace_class.namespace) + ".Impl." + 
+					il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
+			end
+		end
+		
 	associated_class: CLASS_C is
 			-- Associated class
 		require

@@ -20,24 +20,6 @@ inherit
 create
 	make
 
-feature -- Access
-
-	flag: INTEGER
-			-- Parameter flag
-			-- See ECOM_PARAM_FLAGS
-
-feature -- Element change
-
-	set_flag (l_flag: INTEGER) is
-			-- Set 'flag' to 'l_flag'.
-		require
-			valid_flag: is_valid_paramflag (l_flag)
-		do
-			flag := l_flag
-		ensure
-			flag_set: flag = l_flag
-		end
-
 feature -- Output
 
 	code: STRING is

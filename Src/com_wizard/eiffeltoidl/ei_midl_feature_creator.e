@@ -48,10 +48,10 @@ feature -- Basic operations
 			com_type: STRING
 		do
 			l_succeed := True
-			create type_mapper.make
 
 			create midl_feature.make (l_feature.name)
 
+			create type_mapper.make
 			midl_feature.set_comment (l_feature.comment)
 
 			if not l_feature.result_type.empty then
@@ -73,12 +73,12 @@ feature -- Basic operations
 
 						if com_type /= Void then
 							create midl_parameter.make (l_feature.parameters.item.name, com_type )
-							midl_feature.add_parameter (midl_parameter)
 							if type_mapper.inout_type then
-								midl_feature.set_flag (Paramflag_fout)
+								midl_parameter.set_flag (Paramflag_fout)
 							else
-								midl_feature.set_flag (Paramflag_fin)
+								midl_parameter.set_flag (Paramflag_fin)
 							end
+							midl_feature.add_parameter (midl_parameter)
 						end
 					else
 						l_succeed := False

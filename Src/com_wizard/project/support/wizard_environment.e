@@ -49,6 +49,12 @@ feature -- Access
 	eiffel_project_name: STRING
 			-- Eiffel project name
 
+	ace_file_name: STRING
+			-- Eiffel Ace file
+
+	cluster_names: STRING
+			-- Eiffel clusters
+
 	in_process_server: BOOLEAN
 			-- Should in process server code be generated?
 			
@@ -107,6 +113,15 @@ feature -- Access
 			-- Should wizard stop on compilation error?
 
 feature -- Element Change
+
+	set_ace_file_name (ace_file: STRING) is
+			-- Set 'ace_file_name' to 'ace_file'.
+		require
+			non_void_file: ace_file /= Void
+			valid_ace_file: not ace_file.empty
+		do
+			ace_file_name := clone (ace_file)
+		end
 
 	set_in_process_server (a_boolean: BOOLEAN) is
 			-- Set `in_process_server' with `a_boolean'.

@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 				if index > 0 then
 					l_buffer := input.substring (1, index - 1)
 					parse_parameter (l_buffer)
-					input.tail (input.count - l_buffer.count - 1)
+					input.tail (input.count - index)
 					input.left_adjust
 				else
 					input.right_adjust

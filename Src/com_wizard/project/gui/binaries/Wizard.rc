@@ -148,7 +148,7 @@ BEGIN
                     SS_SUNKEN,5,5,100,145
     CONTROL         "In-process (.dll)",In_Process_Check,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,135,70,140,10
-    CONTROL         "Out-of-process (.exe)",Out_Of_Proces_Check2,"Button",
+    CONTROL         "Out-of-process (.exe)",Out_Of_Process_Check,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,135,85,145,10
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
     PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
@@ -209,7 +209,7 @@ BEGIN
                     BS_AUTORADIOBUTTON | WS_TABSTOP,125,76,145,10
 END
 
-Splash_screen_dialog DIALOGEX 0, 0, 215, 133
+wizard_splash_dialog DIALOGEX 0, 0, 215, 133
 STYLE DS_CENTER | WS_POPUP
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
@@ -222,11 +222,11 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Eiffel Project File"
 FONT 8, "MS Sans Serif"
 BEGIN
-    EDITTEXT        Project_File_Edit,115,36,170,15,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",Project_File_Browse_Button,290,37,50,14
-    EDITTEXT        Eiffel_Class_Edit,115,74,170,15,ES_AUTOHSCROLL
-    EDITTEXT        Destination_Folder_Edit,115,125,170,15,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",Destination_Folder_Browse_Button,290,125,50,14
+    EDITTEXT        Project_File_Edit,115,31,170,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",Project_File_Browse_Button,290,31,50,13
+    EDITTEXT        Eiffel_Class_Edit,115,90,170,12,ES_AUTOHSCROLL
+    EDITTEXT        Destination_Folder_Edit,114,138,170,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",Destination_Folder_Browse_Button,290,138,50,12
     PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
@@ -234,15 +234,19 @@ BEGIN
     CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     LTEXT           "Enter the Eiffel project:",Definition_File_Input_Static,
-                    115,24,100,10
+                    116,20,100,10
     LTEXT           "Enter the destination folder:",
-                    Destination_Folder_Input_Static,115,115,100,10
+                    Destination_Folder_Input_Static,114,128,100,8
     LTEXT           "The destination folder is the folder where the wizard will place all generated files.",
-                    Destination_Folder_Static,115,95,184,17
+                    Destination_Folder_Static,114,108,175,18
     LTEXT           "A project file contains information about an Eiffel project.",
-                    Definition_File_Static,115,10,220,13
+                    Definition_File_Static,115,10,195,10
     LTEXT           "Enter Eiffel class name:",Definition_File_Static2,115,
-                    62,210,11
+                    79,120,9
+    EDITTEXT        Ace_File_Edit,115,61,170,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",Ace_File_Browse_Button,290,61,50,12
+    LTEXT           "Enter the project Ace file:",
+                    Definition_File_Input_Static2,115,51,100,10
 END
 
 
@@ -310,7 +314,7 @@ BEGIN
         BOTTOMMARGIN, 174
     END
 
-    Splash_screen_dialog, DIALOG
+    wizard_splash_dialog, DIALOG
     BEGIN
         LEFTMARGIN, 7
         TOPMARGIN, 7
@@ -431,7 +435,7 @@ BEGIN
     New_String              "New Project"
     Open_String             "Open Project"
     Save_String             "Save Project"
-    Clear_Output_String     "Clear Output"
+    Exit_String             "Clear Output"
     Launch_String           "Launch Wizard"
     Generate_String         "Generate Code (no wizard)"
 END

@@ -155,13 +155,11 @@ feature -- Update
 				io.error.new_line;
 				error_occurred := True
 			elseif Eiffel_project.read_write_error then
-				io.error.put_string (
-					"Project is not readable; check permissions.%N");
+				io.error.put_string ("Project is not readable; check permissions.%N");
 				error_occurred := true
 			elseif Eiffel_project.is_read_only then
-				io.error.put_string (
-					"No write permissions on project.%N%
-					%Project opened in read-only mode.%N")
+				io.error.put_string ("No write permissions on project.%N%
+							%Project opened in read-only mode.%N")
 			end
 			if Ace_name /= Void then
 				if Eiffel_project.ace.valid_file_name (Ace_name) then

@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		"";
+	description: "";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -9,12 +7,13 @@ indexing
 class EWB_CLEAN
 
 inherit
-
 	EWB_CMD
 
 feature
 
-	loop_action is do end;
+	loop_action is
+		do
+		end
 
 	execute is
 		do

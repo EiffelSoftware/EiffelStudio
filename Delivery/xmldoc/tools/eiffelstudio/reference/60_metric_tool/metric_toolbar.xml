@@ -21,28 +21,16 @@
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<link>
-					<url/>
-					<label>name</label>
-				</link>: to enter a name when saving a measure.
+				<code><class_name>name</class_name></code>: to enter a name when saving a measure.
 			</item>
 			<item>
-				<link>
-					<url/>
-					<label>scope</label>
-				</link>: a combo box to select a scope type.
+				<code><class_name>scope</class_name></code>: a combo box to select a scope type.
 			</item>
 			<item>
-				<link>
-					<url/>
-					<label>metric</label>
-				</link>: a menu containing all available metrics.
+				<code><class_name>metric</class_name></code>: a menu containing all available metrics.
 			</item>
 			<item>
-				<link>
-					<url/>
-					<label>unit</label>
-				</link>: displays the selected metric's unit.
+				<code><class_name>unit</class_name></code>: displays the selected metric's unit.
 			</item>
 		</list>
 		<paragraph>And the following buttons:</paragraph>
@@ -54,10 +42,7 @@
 					<url>/images/eiffelstudio/icons/icon_new_measure_color.gif</url>
 					<border>0</border>
 				</image>
-				<link>
-					<url/>
-					<label>calculate</label>
-				</link>: evaluate a metric over ascope.
+				<code><class_name>calculate</class_name></code>: evaluate a metric over ascope.
 			</item>
 			<item>
 				<image>
@@ -66,10 +51,7 @@
 					<url>/images/eiffelstudio/icons/icon_save_measure_color.gif</url>
 					<border>0</border>
 				</image>
-				<link>
-					<url/>
-					<label>add</label>
-				</link>: add a measure to the multi-column list and save it.
+				<code><class_name>add</class_name></code>: add a measure to the multi-column list and save it.
 			</item>
 			<item>
 				<image>
@@ -78,16 +60,16 @@
 					<url>/images/eiffelstudio/icons/icon_delete_measure_color.gif</url>
 					<border>0</border>
 				</image>
-				<link>
-					<url/>
-					<label>delete</label>
-				</link>: delete a set of measures from the multi-column list.
+				<code><class_name>delete</class_name></code>: delete a set of measures from the multi-column list.
 			</item>
 			<item>
-				<link>
-					<url/>
-					<label>management</label>
-				</link>: reorder, delete or edit metrics.
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
+					<border>0</border>
+				</image>
+				<code><class_name>management</class_name></code>: reorder, delete or edit metrics.
 			</item>
 			<item>
 				<image>
@@ -96,10 +78,7 @@
 					<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
 					<border>0</border>
 				</image>
-				<link>
-					<url/>
-					<label>new metric</label>
-				</link>: create a new composite metric.
+				<code><class_name>new metric</class_name></code>: create a new composite metric.
 			</item>
 			<item>
 				<image>
@@ -108,10 +87,7 @@
 					<url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url>
 					<border>0</border>
 				</image> show 
-				<link>
-					<url/>
-					<label>details</label>
-				</link>: show details of a measure.
+				<code><class_name>details</class_name></code>: show details of a measure.
 			</item>
 			<item>
 				<image>
@@ -119,13 +95,10 @@
 					<width>16</width>
 					<url>/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url>
 					<border>0</border>
-				</image> hide details: hide details of ameasure.
+				</image> <code><class_name>hide details</class_name></code>: hide details of ameasure.
 			</item>
 			<item>
-				<link>
-					<url/>
-					<label>archive</label>
-				</link>: create, update or compare archive files.
+				<code><class_name>archive</class_name></code>: create, update or compare archive files.
 			</item>
 		</list>
 	</paragraph></document>

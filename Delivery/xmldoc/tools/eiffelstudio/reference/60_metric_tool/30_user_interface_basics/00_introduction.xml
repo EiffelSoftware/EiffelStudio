@@ -8,7 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>ISE Eiffel 5 environment includes a Metric tool based on the previously defined metric theory. This tool provides many facilities like computing measures over a project, including smaller scopes, defining new metrics according to users' needs and handling archives to compare projects</paragraph>
+		<paragraph>Eiffel Software Eiffel 5.x environment includes a Metric tool based on the previously defined metric theory. This tool provides many facilities like computing measures over a project, including smaller scopes, defining new metrics according to users' needs and handling archives to compare projects</paragraph>
 		<list ordered="false">
 			<item>
 				<link>

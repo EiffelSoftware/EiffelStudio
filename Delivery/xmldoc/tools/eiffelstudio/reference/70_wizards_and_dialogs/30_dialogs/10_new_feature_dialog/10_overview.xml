@@ -7,13 +7,12 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>There are two parts in the window. The upper part allows you to choose what type of feature you want to create, a procedure, a function or an attribute.
-		<div>
+	<paragraph>
+	<paragraph>There are two parts in the window. The upper part allows you to choose what type of feature you want to create, a procedure, a function or an attribute.</paragraph>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard.png</url>
 			</image>
-		</div>
-		<paragraph>The rest of the window is used to set the characteristics of the new feature. Information you will be asked depends on the type you chose. For more information, click on one of the links below :</paragraph>
+		<paragraph>The rest of the window is used to set the characteristics of the new feature. Information you will be asked depends on the type you chose. For more information, click on one of the links below:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>

@@ -2,74 +2,74 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>The environment should make it possible, for any project, to apply the elementary metrics in the following table, each with an associated unit and a one-identifier name. Each of the major divisions of the table starts with a raw metric, for example Classes, and, when appropriate, continues with selection criteria that yield derived metrics based on that raw metric, for example Deferred_classes.</paragraph>
-		<paragraph>The last column specifies the basic scope types of the metric; this notion, discussed in more detail in a later section, denotes the set of scope types on which the metric will need to get its information directly from the software product (rather than being simply computed by adding the corresponding values on a scope''s constituents).</paragraph>
+		<paragraph>The last column specifies the <link><url>70_scopes_scope_types.html</url><label>"basic scope types"</label></link> of the metric; this notion, discussed in more detail in a later section, denotes the set of scope types on which the metric will need to get its information directly from the software product (rather than being simply computed by adding the corresponding values on a scope''s constituents).</paragraph>
 		<table>
 			<row>
-				<cell>Basic              Count</cell>
+				<cell>Basic Count</cell>
 				<cell>Criterion</cell>
-				<cell>What              to count</cell>
+				<cell>What to count</cell>
 				<cell>Unit</cell>
-				<cell>Basic              scope types</cell>
+				<cell>Basic scope types</cell>
 			</row>
 			<row>
-				<cell>Classes</cell>
+				<cell rowspan="4">Classes</cell>
 				<cell/>
-				<cell>Classes of              a cluster or system</cell>
-				<cell>CLASS</cell>
-				<cell>Cluster</cell>
+				<cell>Classes of a cluster or system</cell>
+				<cell rowspan="4">CLASS</cell>
+				<cell rowspan="4">Cluster</cell>
 			</row>
 			<row>
 				<cell>Deferred</cell>
-				<cell>Deferred              classes (not completely implemented, as opposed to              "effective", completely implemented).</cell>
+				<cell>Deferred classes (not completely implemented, as opposed to "effective", completely implemented).</cell>
 			</row>
 			<row>
 				<cell>Invariant equipped</cell>
-				<cell>Classes              having an invariant</cell>
+				<cell>Classes having an invariant</cell>
 			</row>
 			<row>
 				<cell>Obsolete</cell>
-				<cell>Classes              marked as superseded by newer alternatives</cell>
+				<cell>Classes marked as superseded by newer alternatives</cell>
 			</row>
 			<row>
 				<cell>Clusters</cell>
 				<cell/>
-				<cell>Clusters              of a system or sub-clusters of a cluster</cell>
+				<cell>Clusters of a system or sub-clusters of a cluster</cell>
 				<cell>CLUSTER</cell>
 				<cell>Cluster</cell>
 			</row>
 			<row>
 				<cell>Compilations</cell>
 				<cell/>
-				<cell>Compilations              since start of project</cell>
+				<cell>Compilations since start of project</cell>
 				<cell>COMPILATION</cell>
 				<cell>System</cell>
 			</row>
 			<row>
-				<cell>Dependents</cell>
+				<cell rowspan="10">Dependents</cell>
 				<cell/>
-				<cell>Classes on              which a class depends, directly or indirectly</cell>
-				<cell>CLASS</cell>
-				<cell>Class</cell>
+				<cell>Classes on which a class depends, directly or indirectly</cell>
+				<cell rowspan="10">CLASS</cell>
+				<cell rowspan="10">Class</cell>
 			</row>
 			<row>
 				<cell>Clients</cell>
-				<cell>Direct              clients</cell>
+				<cell>Direct clients</cell>
 			</row>
 			<row>
 				<cell>Heirs</cell>
-				<cell>Direct              heirs in inheritance structure</cell>
+				<cell>Direct heirs in inheritance structure</cell>
 			</row>
 			<row>
 				<cell>Parents</cell>
-				<cell>Direct              parents in inheritance structure</cell>
+				<cell>Direct parents in inheritance structure</cell>
 			</row>
 			<row>
 				<cell>Suppliers</cell>
-				<cell>Direct              suppliers</cell>
+				<cell>Direct suppliers</cell>
 			</row>
 			<row>
 				<cell>Indirect clients</cell>
-				<cell>Indirect              clients</cell>
+				<cell>Indirect clients</cell>
 			</row>
 			<row>
 				<cell>Indirect heirs</cell>
@@ -85,162 +85,162 @@
 			</row>
 			<row>
 				<cell>Self</cell>
-				<cell>The class              itself (value always 1)</cell>
+				<cell>The class itself (value always 1)</cell>
 			</row>
 			<row>
-				<cell>All              features</cell>
+				<cell rowspan="9">All features</cell>
 				<cell/>
-				<cell>Inherited              and immediate features of a class</cell>
-				<cell>FEATURE</cell>
-				<cell>Class</cell>
+				<cell>Inherited and immediate features of a class</cell>
+				<cell rowspan="9">FEATURE</cell>
+				<cell rowspan="9">Class</cell>
 			</row>
 			<row>
 				<cell>Attributes</cell>
-				<cell>Attributes              (features represented by fields in instances of the class, as              opposed to routines, represented by algorithms)</cell>
+				<cell>Attributes (features represented by fields in instances of the class, as opposed to routines, represented by algorithms)</cell>
 			</row>
 			<row>
 				<cell>Deferred</cell>
-				<cell>Deferred              routines (not implemented, as opposed to effective features, which              are implemented)</cell>
+				<cell>Deferred outines (not implemented, as opposed to effective features, which are implemented)</cell>
 			</row>
 			<row>
 				<cell>Exported</cell>
-				<cell>Features              available to all clients</cell>
+				<cell>Features available to all clients</cell>
 			</row>
 			<row>
 				<cell>Functions</cell>
-				<cell>Value-returning              routines</cell>
+				<cell>Value-returning routines</cell>
 			</row>
 			<row>
 				<cell>Postcondition equipped</cell>
-				<cell>Routines              having a postcondition</cell>
+				<cell>Routines having a postcondition</cell>
 			</row>
 			<row>
 				<cell>Precondition equipped</cell>
-				<cell>Routines              having a precondition</cell>
+				<cell>Routines having a precondition</cell>
 			</row>
 			<row>
 				<cell>Queries</cell>
-				<cell>Value-returning              features, including both attributes and functions (routines returning a              result, as opposed to procedures)</cell>
+				<cell>Value-returning features, including both attributes and functions (routines returning a result, as opposed to procedures)</cell>
 			</row>
 			<row>
 				<cell>Inherited</cell>
-				<cell>Features              obtained from a parent (possibly in a different form)</cell>
+				<cell>Features obtained from a parent (possibly in a different form)</cell>
 			</row>
 			<row>
-				<cell>Immediate              features</cell>
+				<cell rowspan="8">Immediate features</cell>
 				<cell/>
-				<cell>Immediate              features of a class</cell>
-				<cell>FEATURE</cell>
-				<cell>Class</cell>
+				<cell>Immediate features of a class</cell>
+				<cell rowspan="8">FEATURE</cell>
+				<cell rowspan="8">Class</cell>
 			</row>
 			<row>
 				<cell>Attributes</cell>
-				<cell>Attributes              (features represented by fields in instances of the class, as              opposed to routines, represented by algorithms)</cell>
+				<cell>Attributes (features represented by fields in instances of the class, as opposed to routines, represented by algorithms)</cell>
 			</row>
 			<row>
 				<cell>Deferred</cell>
-				<cell>Deferred              routines (not implemented, as opposed to effective features, which              are implemented)</cell>
+				<cell>Deferred routines (not implemented, as opposed to effective features, which are implemented)</cell>
 			</row>
 			<row>
 				<cell>Exported</cell>
-				<cell>Features              available to all clients</cell>
+				<cell>Features available to all clients</cell>
 			</row>
 			<row>
 				<cell>Functions</cell>
-				<cell>Value-returning              routines</cell>
+				<cell>Value-returning routines</cell>
 			</row>
 			<row>
 				<cell>Postcondition equipped</cell>
-				<cell>Routines              having a postcondition</cell>
+				<cell>Routines having a postcondition</cell>
 			</row>
 			<row>
 				<cell>Precondition equipped</cell>
-				<cell>Routines              having a precondition</cell>
+				<cell>Routines having a precondition</cell>
 			</row>
 			<row>
 				<cell>Queries</cell>
-				<cell>Value-returning              features, including both attributes and functions (routines returning a              result, as opposed to procedures)</cell>
+				<cell>Value-returning features, including both attributes and functions (routines returning a              result, as opposed to procedures)</cell>
 			</row>
 			<row>
-				<cell>All              feature assertions</cell>
+				<cell rowspan="3">All feature assertions</cell>
 				<cell/>
-				<cell>Clauses in              routine's assertion, whether inherited or not</cell>
-				<cell>CONTRACT              CLAUSE</cell>
-				<cell>Feature</cell>
+				<cell>Clauses in routine's assertion, whether inherited or not</cell>
+				<cell rowspan="3">CONTRACT CLAUSE</cell>
+				<cell rowspan="3">Feature</cell>
 			</row>
 			<row>
 				<cell>Postcondition clauses</cell>
-				<cell>Clauses in              postcondition</cell>
+				<cell>Clauses in  postcondition</cell>
 			</row>
 			<row>
 				<cell>Precondition clauses</cell>
-				<cell>Clauses in              precondition</cell>
+				<cell>Clauses in precondition</cell>
 			</row>
 			<row>
-				<cell>Immediate              feature assertions</cell>
+				<cell rowspan="3">Immediate feature assertions</cell>
 				<cell/>
-				<cell>Clauses in              routine's assertion, not inherited</cell>
-				<cell>CONTRACT              CLAUSE</cell>
-				<cell>Feature</cell>
+				<cell>Clauses in routine's assertion, not inherited</cell>
+				<cell rowspan="3">CONTRACT CLAUSE</cell>
+				<cell rowspan="3">Feature</cell>
 			</row>
 			<row>
 				<cell>Postcondition clauses</cell>
-				<cell>Clauses in              postcondition</cell>
+				<cell>Clauses in postcondition</cell>
 			</row>
 			<row>
 				<cell>Precondition clauses</cell>
-				<cell>Clauses in              precondition</cell>
+				<cell>Clauses in precondition</cell>
 			</row>
 			<row>
-				<cell>Formal              generics</cell>
+				<cell rowspan="2">Formal generics</cell>
 				<cell/>
-				<cell>Formal              generic parameters of a class</cell>
-				<cell>CLASS</cell>
-				<cell>Class</cell>
+				<cell>Formal generic parameters of a class</cell>
+				<cell rowspan="2">CLASS</cell>
+				<cell rowspan="2">Class</cell>
 			</row>
 			<row>
 				<cell>Constrained</cell>
-				<cell>Formal              parameters constrained by a type other than ANY</cell>
+				<cell>Formal parameters constrained by a type other than ANY</cell>
 			</row>
 			<row>
-				<cell>All              formals</cell>
+				<cell>All formals</cell>
 				<cell/>
-				<cell>Formal              argument of a routine whether inherited or not</cell>
+				<cell>Formal argument of a routine whether inherited or not</cell>
 				<cell>LOCAL</cell>
 				<cell>Feature</cell>
 			</row>
 			<row>
-				<cell>Immediate              formals</cell>
+				<cell>Immediate formals</cell>
 				<cell/>
-				<cell>Formal              argument of a routine.</cell>
+				<cell>Formal argument of a routine.</cell>
 				<cell>LOCAL</cell>
 				<cell>Feature</cell>
 			</row>
 			<row>
-				<cell>Invariant              clauses</cell>
+				<cell>Invariant clauses</cell>
 				<cell/>
-				<cell>Clauses in              invariant</cell>
-				<cell>CONTRACT              CLAUSE</cell>
+				<cell>Clauses in invariant</cell>
+				<cell>CONTRACT CLAUSE</cell>
 				<cell>Class</cell>
 			</row>
 			<row>
 				<cell>Lines</cell>
 				<cell/>
-				<cell>Source              lines</cell>
+				<cell>Source lines</cell>
 				<cell>LINE</cell>
-				<cell>Feature,              Class</cell>
+				<cell>Feature, Class</cell>
 			</row>
 			<row>
-				<cell>All              locals</cell>
+				<cell>All locals</cell>
 				<cell/>
-				<cell>Local              entities of feature whether inherited or not (excluding Result)</cell>
+				<cell>Local entities of feature whether inherited or not (excluding Result)</cell>
 				<cell>LOCAL</cell>
 				<cell>Feature</cell>
 			</row>
 			<row>
-				<cell>Immediate              locals</cell>
+				<cell>Immediate locals</cell>
 				<cell/>
-				<cell>Local              entities of feature (excluding Result)</cell>
+				<cell>Local entities of feature (excluding Result)</cell>
 				<cell>LOCAL</cell>
 				<cell>Feature</cell>
 			</row>
@@ -253,6 +253,6 @@
 			<item>Two more cases of dependency: Redeclared and Renamed can only be satisfied for features that are inherited. A feature that is not inherited, but introduced fresh in the enclosing class, is called immediate. </item>
 			<item>The Redeclared attribute has three values: a feature is redefined it was effective in the parent, or it was deferred in the parent and the new class keeps it deferred with a different signature or contract; it is effected if it was deferred and the class makes it effective; or it may be neither of these.</item>
 		</list>
-		<paragraph>All metrics listed are product metrics with one exception: Compilations, the only process metric, counting the number of compilations of the project (in ISE Eiffel 5, this is based on ISE's Melting Ice technology). There is room for more process metrics, such as cost estimates; this requires standard formats letting project managers enter the appropriate information, a point that future versions of the metrics policy described here may develop further.</paragraph>
+		<paragraph>All metrics listed are product metrics with one exception: Compilations, the only process metric, counting the number of compilations of the project (in ISE Eiffel 5, this is based on Eiffel Software's Melting Ice technology). There is room for more process metrics, such as cost estimates; this requires standard formats letting project managers enter the appropriate information, a point that future versions of the metrics policy described here may develop further.</paragraph>
 		<paragraph>There is also room for elementary product metrics other than those in the preceding table. In fact, every syntactic construct is a candidate for an elementary metric that simply counts the number of its occurrences; but we should limit ourselves to those that we judge interesting. The metrics literature also suggests elementary metrics assessing complexity of the control structure through properties of the control graph (McCabe), or routine coherence through such properties as the number of attributes accessed by a routine; we should only add them if we can find convincing arguments for their theoretical soundness.</paragraph>
 	</paragraph></document>

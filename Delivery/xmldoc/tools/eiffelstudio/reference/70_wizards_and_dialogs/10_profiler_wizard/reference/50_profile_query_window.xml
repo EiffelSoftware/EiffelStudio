@@ -32,7 +32,7 @@
 			<bold>Save</bold> button to save the currently displayed results in a text file.
 		</paragraph>
 		<tip>
-			<bold>Tip</bold>: To visualize the result in Microsoft Excel or any other spreadsheet, select the entire text (except the first three lines where the Execution Profile file is specified),copy it and then paste it into Excel.
+			<bold>Tip</bold>: To visualize the result in Microsoft Excel or any other spreadsheet, select the entire text (except the first three lines where the Execution Profile file is specified), copy it and then paste it into Excel.
 		</tip>
 		<line_break/>
 		<image>

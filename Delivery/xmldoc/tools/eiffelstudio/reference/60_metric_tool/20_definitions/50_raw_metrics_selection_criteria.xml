@@ -15,13 +15,13 @@
 		<paragraph>Elementary metrics measure patterns whose occurrences (in a product or process) can be counted. We need to decompose this notion further to avoid an explosion of the number of elementary metrics. For example the features of a class can be classified along several lines:</paragraph>
 		<list ordered="false">
 			<item>
-				<paragraph>Some are attributes (object fields), others are routines(algorithms).</paragraph>
+				Some are attributes (object fields), others are routines (algorithms).
 			</item>
 			<item>
-				<paragraph>Some are inherited from a parent, others immediate (defined in the class).</paragraph>
+				Some are inherited from a parent, others immediate (defined in the class).
 			</item>
 			<item>
-				<paragraph>Some are exported, others secret</paragraph>
+				Some are exported, others secret
 			</item>
 		</list>
 		<paragraph>and so on. Many combinations of these properties may be worth counting on their own: you may ask for the number of secret attributes, of exported inherited features and so on. But if we define all of these metrics independently, we will soon have too many elementary metrics, while still failing to satisfy user needs if we have omitted a particular combination.</paragraph>
@@ -54,10 +54,10 @@
 		<paragraph>To define a derived metric, we start from a raw metric, for example "number of features", and combine some of the associated selection criteria. The combination may be:</paragraph>
 		<list ordered="false">
 			<item>
-				<paragraph>An "or": for example, count all the features that are attributes or exported (or both).</paragraph>
+				An "or": for example, count all the features that are attributes or exported (or both).
 			</item>
 			<item>
-				<paragraph>An "and": count all the features that are both attributes and exported.</paragraph>
+				An "and": count all the features that are both attributes and exported.
 			</item>
 		</list>
 		<paragraph>Our metric framework does not provide more general Boolean combinations, although they would be easy to add if necessary. Here is the interface provided to 
@@ -77,16 +77,16 @@
 		<paragraph>As a general guideline, we will try to keep the selection criteria for a given raw metric independent. For example, to distinguish the classes that inherit a given class we will use the following selection criteria:</paragraph>
 		<list ordered="false">
 			<item>
-				<paragraph>Heirs: count the number of direct heirs of a class.</paragraph>
+				Heirs: count the number of direct heirs of a class.
 			</item>
 			<item>
-				<paragraph>Indirect_heirs: count the number of indirect heirs.</paragraph>
+				Indirect_heirs: count the number of indirect heirs.
 			</item>
 			<item>
-				<paragraph>Self: count only the class itself.</paragraph>
+				Self: count only the class itself.
 			</item>
 		</list>
-		<paragraph>Other interesting notions are "proper descendant", covering direct and indirect heirs, and "descendant", covering proper descendants and descendants. We do not introduce these as separate criteria, since this would result in a non-independent set of criteria: every proper descendant is a descendant, every heir(direct or indirect) is a proper descendant.</paragraph>
+		<paragraph>Other interesting notions are "proper descendant", covering direct and indirect heirs, and "descendant", covering proper descendants and descendants. We do not introduce these as separate criteria, since this would result in a non-independent set of criteria: every proper descendant is a descendant, every heir (direct or indirect) is a proper descendant.</paragraph>
 		<paragraph>Instead we limit ourselves to the three criteria listed above. If you need a finer decomposition, it is easy, with the techniques discussed below, to define Proper_descendants and Descendants as composite metrics expressed in terms of the elementary metricsHeirs, Indirect_heirs and Self.</paragraph>This criterion independence principle is not absolute, however, and in some cases we may find it clearer to define a new criterion even though its value is entirely determined by certain values of another. For example one criterion on features determines whether it is an attribute or a routine, another whether it is deferred or effective. An attribute is always effective, so the two criteria are not independent. Even though we could remove the dependency by using a single criterion with three values (attribute, effective routine, deferred routine), it is more convenient to keep two criteria. Of course the underlying counting mechanisms must make sure never to count an element twice even in an "or" query, as when a user asks for the number of features that are attributes or effective.
 		<paragraph>A metric is either elementary or composite. An elementary metric is either a raw metric, such as "number of features", or a derived metric obtained from slicing a raw metric by selection criteria. Composite metrics are obtained from existing metrics (elementary, or previously defined composite metrics) by applying some mathematical formula. The three kinds of composite metrics shown on the figure will be explained shortly.</paragraph>
 		<paragraph> </paragraph>

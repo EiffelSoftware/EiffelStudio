@@ -13,9 +13,9 @@
 		<paragraph>Semantics: division</paragraph>
 		<paragraph>Resulting unit: RATIO</paragraph>
 		<paragraph>Note that the presence of both linear combinations and ratios make it possible to define any metric of the form</paragraph>
-		<paragraph>k.m  / l.n</paragraph>
+		<paragraph>E k<sub_script>i</sub_script>.m<sub_script>i</sub_script>  / E l<sub_script>i</sub_script>.n<sub_script>i</sub_script></paragraph>
 		<span/>
-		<paragraph>in terms of elementary metrics m, n 
+		<paragraph>in terms of elementary metrics m<sub_script>i</sub_script>, n<sub_script>i</sub_script> 
 			<span>. If necessary, the interface can provide a shortcut to define such a formula in one step, without first defining the numerator and denominator as linear combinations.</span>
 		</paragraph>
 		<paragraph>The metric tool provides a command for defining linear metrics. Button

@@ -1,10 +1,11 @@
 <document title="Feature clauses" output="studio">
 	<meta_data/>
-	<paragraph>The feature you create will be inserted in the feature clause you specified. If the feature clause was not already in your class, or not in the right place, EiffelStudio adds the feature clause to the class text based on the feature clause order specified in the 
+	<paragraph>
+		The feature you create will be inserted in the feature clause you specified. If the feature clause was not already in your class, or not in the right place, EiffelStudio adds the feature clause to the class text based on the feature clause order specified in the 
 		<link>
 			<url>../../../../85_preferences/20_preferences_reference/20_tools/20_context_tools.xml</url>
 			<label>preferences</label>
-		</link>. By default, this is the order used by the ISE libraries, such as EiffelBase. 
+		</link>. By default, this is the order used by the Eiffel Software libraries, such as EiffelBase. 
 		<heading>
 			<size>2</size>Export status
 		</heading>The export status is the class the feature is accessible for. Usually, this is 
@@ -14,13 +15,11 @@
 		<code>
 			<class_name>NONE</class_name>
 		</code> for implementation features, but you can specify any class here. 
-		<div>
-			<image>
+		<paragraph>	<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-export.png</url>
-			</image>
-		</div>
+			</image></paragraph>
 		<note>
-			<bold>Note</bold>: in the class text, you can export a feature to more than one class but (for simplicity) not with this dialog.
+			<bold>Note</bold>: In the class text, you can export a feature to more than one class but (for simplicity) not with this dialog.
 		</note>
 		<heading>
 			<size>2</size>Feature clause names
@@ -29,34 +28,18 @@
 			<url>../../../../85_preferences/20_preferences_reference/20_tools/20_context_tools.xml</url>
 			<label>preferences</label>
 		</link> and it will also appear in this dialog. 
-		<div>
+		<paragraph>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-clausenames.png</url>
-			</image>
-		</div>
+			</image></paragraph>
 		<heading>
 			<size>2</size>Generated code
 		</heading>The code that is inserted in your class as a result of the selections made for the feature clause, is of the form: 
-		<line_break/>
-		<code>feature 
-			<class_name>{EXPORT}</class_name>
-			<comment> -- Clause name</comment>
-		</code>
-		<line_break/>except if you specified 
-		<code>
-			<class_name>ANY</class_name>
-		</code> as export status, which is similar to having no export status. 
-		<line_break/>
-		<code>feature 
-			<comment> --Clause name</comment>
-		</code>
+		<code_block>feature <class_name>{EXPORT}</class_name><comment> -- Clause name</comment></code_block>
+		except if you specified <code><class_name>ANY</class_name></code> 
+		as export status, which is similar to having no export status. 
+		<code_block>feature <comment> --Clause name</comment></code_block>
 		<line_break/>For example, if you specified a the "Initialization" feature clause name, and specified 
-		<code>
-			<class_name>NONE</class_name>
-		</code> as export status, you get: 
-		<line_break/>
-		<code>feature 
-			<class_name>{NONE}</class_name>
-			<comment> --Initialization</comment>
-		</code>
+		<code><class_name>NONE</class_name></code> as export status, you get: 
+		<code_block>feature <class_name>{NONE}</class_name><comment> -- Initialization</comment></code_block>
 	</paragraph></document>

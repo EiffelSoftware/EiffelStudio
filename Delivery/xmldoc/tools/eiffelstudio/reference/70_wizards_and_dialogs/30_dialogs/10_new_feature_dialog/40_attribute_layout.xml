@@ -63,5 +63,28 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-attribute-example.png</url>
 			</image>
 		</div>
-		<code_block>class    PRODUCTfeature {NONE} -- Access    price: DOUBLE            -- Cost in dollars.feature -- Element change    set_price (a_price: DOUBLE) is            -- Assign `a_price' to `price'.        require            a_price_non_negative: a_price &amp;gt;= 0.0        do            price := a_price        ensure            price_assigned: price = a_price        endinvariant    price_non_negative: price &amp;gt;= 0.0end -- class PRODUCT</code_block>
+		<code_block><keyword>class</keyword>
+	<class_name>PRODUCT</class_name>
+
+<keyword>feature</keyword> <symbol>{</symbol>NONE<symbol>}</symbol> <comment>-- Access</comment>
+
+	<feature_name>price</feature_name><symbol>:</symbol> <class_name>DOUBLE</class_name>
+		<comment>-- Cost in dollars.</comment>
+
+<keyword>feature</keyword><comment> -- Element change</comment>
+
+	<feature_name>set_price</feature_name> <symbol>(</symbol>a_price<symbol>:</symbol> <class_name>DOUBLE</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Assign `a_price' to `price'.</comment>
+		<keyword>require</keyword>
+			<indexing_tag>a_price_non_negative</indexing_tag><symbol>:</symbol> a_price ><symbol>=</symbol> <feature_name>0</feature_name>.<feature_name>0</feature_name>
+		<keyword>do</keyword>
+			<feature_name>price</feature_name> <symbol>:</symbol><symbol>=</symbol> a_price
+		<keyword>ensure</keyword>
+			<indexing_tag>price_assigned</indexing_tag><symbol>:</symbol> <feature_name>price</feature_name> <symbol>=</symbol> a_price
+		<keyword>end</keyword>
+
+<keyword>invariant</keyword>
+	<indexing_tag>price_non_negative</indexing_tag><symbol>:</symbol> price ><symbol>=</symbol> <feature_name>0</feature_name>.<feature_name>0</feature_name>
+
+<keyword>end</keyword> -- <keyword>class</keyword> <class_name>PRODUCT</class_name></code_block>
 	</paragraph></document>

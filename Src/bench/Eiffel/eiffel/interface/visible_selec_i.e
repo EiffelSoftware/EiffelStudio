@@ -120,9 +120,14 @@ feature
 				visible_features.after
 			loop
 				a_feature := feat_table.item (visible_features.item_for_iteration);
-				if not (a_feature.is_deferred or else a_feature.is_attribute) then
-					Cecil1.put (a_feature, real_name (a_feature));
-				end;
+
+				if a_feature = Void then
+					-- FIXME: Illegal feature specified
+				else
+					if not (a_feature.is_deferred or else a_feature.is_attribute) then
+						Cecil1.put (a_feature, real_name (a_feature));
+					end;
+				end
 				visible_features.forth;
 			end;
 		end;

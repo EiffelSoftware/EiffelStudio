@@ -170,6 +170,9 @@ feature
 			Result := e_class.is_separate
 		end
 
+	is_used_as_separate: BOOLEAN;
+			-- Is the class used as a separate class ?
+
 	has_expanded: BOOLEAN;
 			-- Does the class use expanded ?
 
@@ -360,6 +363,8 @@ feature
 			end;
 			parent_list := ast.parents;
 			if parent_list /= Void then
+
+-- FIXME add incrementality check  Type check error d.add (Current) of type B not conform to A ...
 				check_parent_classes (parent_list);
 			end;
 
@@ -2516,6 +2521,11 @@ feature -- Convenience features
 			is_used_as_expanded := True
 		end;
 
+	set_is_used_as_separate is
+		do
+			is_used_as_separate := True
+		end;
+
 	set_id (i: like id) is
 			-- Assign `i' to `id'.
 		do
@@ -3592,6 +3602,8 @@ feature -- Merging
 		do
 			is_used_as_expanded :=
 				is_used_as_expanded or other.is_used_as_expanded;
+			is_used_as_separate :=
+				is_used_as_separate or other.is_used_as_separate;
 			filters.append (other.filters);
 			e_class.merge (other.e_class)
 				--| `syntactical_clients' is used when removing classes.

@@ -33,8 +33,9 @@ feature -- Initialization
 		end;
 
 	make (ast: CLASS_AS; file_name: STRING) is
-			-- Initialize current for simple
-			-- format with file_name `file_name'.
+			-- Initialize current for simple format with 
+			-- file_name `file_name' and then format AST
+			-- placing the result into `text'.
 		require
 			valid_ast: ast /= Void;
 		local
@@ -42,7 +43,8 @@ feature -- Initialization
 		do
 			make_for_case;
 			!! eiffel_file.make (file_name, ast.end_position);
-			class_ast := ast
+			class_ast := ast;
+			ast.simple_format (Current)
 		ensure
 			set: class_ast = ast
 		end;
@@ -325,16 +327,6 @@ feature -- Output
 			end;
 			!! item.make (s);
 			text.add (item);
-		end;
-
-	put_special (s: STRING) is
-			-- Append `s' to `text', known as a special character.
-		local
-			item: BASIC_TEXT;
-		do
-			!! item.make (s);
-			item.set_is_special;
-			text.add (item);	
 		end;
 
 	put_space is

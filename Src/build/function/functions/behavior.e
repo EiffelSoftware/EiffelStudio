@@ -160,4 +160,63 @@ feature -- Datum features
 			Result := Current
 		end;
 
+feature {FUNC_DROP, FUNC_CUT} -- Adding and removing commands on the interface.
+
+	interface_command: INTERNAL_META_COMMAND is
+			-- Return an instanciated command corresponding
+			-- to `ouput_data'.
+		require
+			editor_not_void: func_editor /= Void
+			command_not_void: output_data /= Void
+		do
+			if corresponding_internal_meta_command = Void then
+				!! Result.make 
+				Result.add_command (func_editor.current_state, output_data.instantiated_command)
+				corresponding_internal_meta_command := Result
+			else
+				Result := corresponding_internal_meta_command
+			end
+		end
+
+	add_interface_command (a_command: COMMAND) is
+			-- Add `a_command' to `context' on interface.
+		require
+			event_not_void: input_data /= Void
+			editor_not_void: func_editor /= Void
+		do
+			input_data.add_interface_command (context, a_command)
+		end
+
+	remove_interface_command (a_command: COMMAND) is
+			-- Remove command corresponding to `output_data' on
+			-- the context `context' on the interface.
+		require
+			context_not_void: context /= Void
+			event_not_void: input_data /= Void
+		do
+			input_data.remove_interface_command (context, a_command)
+		end
+
+feature {NONE} -- Attribute
+
+	corresponding_internal_meta_command: INTERNAL_META_COMMAND
+			-- Internal meta command added to the interface
+
+feature {STATE} -- Interface command
+
+	add_interface_command_from_storage (a_context: CONTEXT; a_state: STATE) is
+			-- Add the command corresponding to `output_data'
+			-- on the widget corresponding to `a_context'.
+		require
+			event_list_not_empty: not input_list.empty
+			command_instance_list_not_empty: not output_list.empty
+		local
+			a_command: INTERNAL_META_COMMAND
+		do
+			!! a_command.make 
+			a_command.add_command (a_state, output_list.first.instantiated_command)
+			corresponding_internal_meta_command := a_command
+			input_list.first.add_interface_command (context, a_command)
+		end
+
 end

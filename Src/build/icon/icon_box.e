@@ -47,10 +47,9 @@ feature
 			if not after then
 				if count = icons.count then
 					update_number_of_icons
-				end;
-				list_put_right (elt);
-				forth;
-				icons.go_i_th (index);
+				end
+				list_put_right (elt)
+				icons.go_i_th (index)
 				update_display
 			end	
 		end; -- put_right
@@ -65,13 +64,13 @@ feature
 			list_extend (elt);
 			finish;
 			if is_visible then
-				if count > icons.count then
-					update_number_of_icons;
-				end;
-				icons.go_i_th (index);
+ 				if count > icons.count then
+ 					update_number_of_icons;
+ 				end;
+ 				icons.go_i_th (index);
 				icon := icons.item;
-				icon.set_data (elt);
-				icon.set_managed (True);
+ 				icon.set_data (elt);
+ 				icon.set_managed (True);
 			end;
 		ensure then
 			current_item_equal_last: item = last
@@ -156,11 +155,22 @@ feature
 		end;
 
 	update_display is
+			-- Update display and then set the cursor to
+			-- the original position.
 		require
 			positions_same: icons_index = index
 		local
 			icon: ICON_STONE
+			p: LINKED_LIST_CURSOR [T]
 		do
+			p ?= cursor
+			if before then
+				go_i_th (1)
+				icons.go_i_th (index)
+			end
+			check
+				position_not_void: p /= Void
+			end
 			from
 			until
 				after 
@@ -175,6 +185,7 @@ feature
 				icons.forth;
 				forth;	
 			end;
+			go_to (p)
 		end; -- add
 
 	refresh_display is

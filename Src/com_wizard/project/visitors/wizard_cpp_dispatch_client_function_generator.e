@@ -324,9 +324,8 @@ feature {NONE} -- Implementation
 			type := visitor.vt_type
 			create Result.make (0)
 
-			if not visitor.is_array_basic_type and not visitor.is_structure_pointer and not
-						visitor.is_interface_pointer then
-				Result.append (New_line_tab)
+			Result.append (New_line_tab)
+			if not visitor.is_basic_type and not visitor.is_enumeration then
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
@@ -334,34 +333,16 @@ feature {NONE} -- Implementation
 				end
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
-				Result.append (Space_open_parenthesis)
-
-				if visitor.is_basic_type or not is_byref (type) then
-					add_warning (Current, Not_pointer_type)
-				elseif visitor.is_enumeration then
-					add_warning (Current, Invalid_use_of_enumeration)
-				else
-					if visitor.is_basic_type_ref then
-						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
-						Result.append (Comma_space)
-						Result.append (name)
-						Result.append (Close_parenthesis)
-						Result.append (Semicolon)
-					elseif is_boolean (type) then
-						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
-						Result.append (Comma_space)
-						Result.append (name)
-						Result.append (Close_parenthesis)
-						Result.append (Semicolon)
-					else
-						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
-						Result.append (Comma_space)
-						Result.append (name)
-						Result.append (Close_parenthesis)
-						Result.append (Semicolon)
-					end	
-				end
 			end
+			Result.append (Space_open_parenthesis)
+
+
+			Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
+			Result.append (Space_open_parenthesis)
+			Result.append (name)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
 		end
 
 	out_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is

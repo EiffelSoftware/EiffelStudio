@@ -124,6 +124,7 @@ feature {NONE} -- Initialization
 			variant_field_names.put (Variant_ppdispval, binary_or (Vt_byref, Vt_dispatch))
 			variant_field_names.put (Variant_pparray, binary_or (Vt_byref, Vt_array))
 			variant_field_names.put (Variant_pvarval, binary_or (Vt_byref, Vt_variant))
+			variant_field_names.put (Variant_pvarval,  Vt_variant)
 			variant_field_names.put (Variant_cval, Vt_i1)
 			variant_field_names.put (Variant_uival, Vt_ui2)
 			variant_field_names.put (Variant_ulval, Vt_ui4)
@@ -202,9 +203,9 @@ feature -- Access
 			Result := clone (variant_field_names.item (a_type))
 
 			if (Result = Void or else Result.empty) then
-				if a_visitor.is_interface_pointer then
+				if a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer then
 					Result := clone (Variant_punkval)
-				elseif  a_visitor.is_interface_pointer_pointer then
+				elseif  a_visitor.is_interface_pointer_pointer or a_visitor.is_coclass_pointer_pointer then
 					Result := clone (Variant_ppunkval)
 				else
 					tmp_string := clone (a_visitor.c_type)

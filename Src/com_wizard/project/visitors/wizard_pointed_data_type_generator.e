@@ -216,6 +216,10 @@ feature -- Basic operations
 					is_interface_pointer_pointer := True
 				end
 
+				if pointed_visitor.is_coclass_pointer then
+					is_coclass_pointer_pointer := True
+				end
+
 				create eiffel_type.make (0)
 				eiffel_type.append ("CELL")
 				eiffel_type.append (Space)

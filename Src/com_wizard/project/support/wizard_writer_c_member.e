@@ -79,7 +79,7 @@ feature -- Element Change
 			non_void_result_type: a_result_type /= Void
 			valid_result_type: not a_result_type.empty
 		do
-			result_type := a_result_type
+			result_type := clone (a_result_type)
 		ensure
 			result_type_set: result_type.is_equal (a_result_type)
 		end

@@ -247,6 +247,21 @@ feature -- Access
 			tmp_string := clone (Unique_keyword)
 			tmp_string.to_lower
 			Result.force (tmp_string)
+
+			Result.force (Make_word)
+			Result.force (Make_from_other)
+			Result.force (Make_from_pointer)
+			Result.force (Item_clause)
+			Result.force (Ccom_item_function_name)
+			Result.force (Last_error_code)
+			Result.force (Last_error_description)
+			Result.force (Last_error_help_file)
+			Result.force (Last_source_of_exception)
+			Result.force (Ccom_last_error_code)
+			Result.force (Ccom_last_error_description)
+			Result.force (Ccom_last_error_help_file)
+			Result.force (Ccom_last_source_of_exception)
+
 		end
 
 feature {WIZARD_MANAGER} -- Element Change

@@ -558,15 +558,6 @@ feature -- Plug and Makefile file
 			end
 
 			if final_mode then
-
-					-- Do we need to protect the exception stack?
-				buffer.putstring ("EIF_BOOLEAN exception_stack_managed = (EIF_BOOLEAN) ")
-				if System.exception_stack_managed then
-					buffer.putstring ("1;%N")
-				else
-					buffer.putstring ("0;%N")
-				end
-
 				init_name := system.routine_id_counter.initialization_rout_id.table_name
 				dispose_name := system.routine_id_counter.dispose_rout_id.table_name
 
@@ -677,6 +668,14 @@ feature -- Plug and Makefile file
 				buffer.putstring ("%Tegc_fdtypes = egc_fdtypes_init;%N")
 
 			else
+					-- Do we need to protect the exception stack?
+				buffer.putstring ("%Texception_stack_managed = (EIF_BOOLEAN) ")
+				if System.exception_stack_managed then
+					buffer.putstring ("1;%N")
+				else
+					buffer.putstring ("0;%N")
+				end
+
 					-- Initialization routines
 				buffer.putstring ("%Tegc_ecreate = ")
 				buffer.putstring ("(char *(**)(void)) ")

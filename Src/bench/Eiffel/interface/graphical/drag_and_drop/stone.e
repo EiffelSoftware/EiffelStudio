@@ -30,8 +30,16 @@ feature -- Properties
 		end;
 
 	stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with
-			-- Current stone during transport.
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
+		deferred
+		ensure
+			non_void: Result /= Void
+		end;
+
+	x_stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
 		deferred
 		ensure
 			non_void: Result /= Void

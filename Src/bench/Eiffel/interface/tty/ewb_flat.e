@@ -14,7 +14,8 @@ inherit
 			make as compiled_class_make
 		redefine
 			name, help_message, abbreviation
-		end
+		end;
+	EB_CONSTANTS
 
 creation
 
@@ -57,7 +58,8 @@ feature {NONE} -- Execution
 	associated_cmd: E_SHOW_FLAT is
 		do
 			!! Result.do_nothing;
-			Result.set_feature_clause_order (Void)
+			Result.set_feature_clause_order 
+				(Class_tool_resources.feature_clause_order.actual_value)
 		end;
 
 end -- class EWB_FLAT

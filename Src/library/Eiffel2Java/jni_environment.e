@@ -1155,14 +1155,15 @@ feature -- Convenience
 			a_str_not_null: a_str /= default_pointer
 		local
 			l_str: C_STRING
-			null: POINTER
+			l_str_ptr, null: POINTER
 		do
-			create l_str.make_by_pointer (c_get_string_utf_chars (jvm.envp, a_str, null))
+			l_str_ptr := c_get_string_utf_chars (jvm.envp, a_str, null)
+			create l_str.make_by_pointer (l_str_ptr)
 			debug ("jni")
 				check_for_exceptions
 			end
 			Result := l_str.string
-			c_release_string_utf_chars (jvm.envp, a_str, l_str.item)
+			c_release_string_utf_chars (jvm.envp, a_str, l_str_ptr)
 			debug ("jni")
 				check_for_exceptions
 			end

@@ -149,7 +149,7 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,135,20,149,10
     CONTROL         "Server code for a new component?",Server_Check,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,135,35,130,10
-    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14,WS_DISABLED
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
     LTEXT           "Do you want to generate:",Code_Type_Static,120,5,95,10
     LTEXT           "(You may generate both for a new component)",
                     Code_Type_Info_Static,135,50,155,10

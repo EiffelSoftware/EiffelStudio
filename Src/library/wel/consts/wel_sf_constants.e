@@ -9,45 +9,20 @@ class
 
 feature -- Access
 
-	Sf_text: INTEGER is
+	Sf_text: INTEGER is 1
 			-- Text with spaces in place of OLE objects.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"SF_TEXT"
-		end
 
-	Sf_rtf: INTEGER is
+	Sf_rtf: INTEGER is 2
 			-- Rich-text format (RTF).
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"SF_RTF"
-		end
 
-	Sf_rtfnoobjs: INTEGER is
+	Sf_rtfnoobjs: INTEGER is 3
 			-- RTF with spaces in place of OLE object.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"SF_RTFNOOBJS"
-		end
 
-	Sf_textized: INTEGER is
+	Sf_textized: INTEGER is 4
 			-- Text with a text representation of OLE objects.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"SF_TEXTIZED"
-		end
 
-	Sff_selection: INTEGER is
+	Sff_selection: INTEGER is 32768
 			-- Selection only.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"SFF_SELECTION"
-		end
 
 end -- class WEL_SF_CONSTANTS
 

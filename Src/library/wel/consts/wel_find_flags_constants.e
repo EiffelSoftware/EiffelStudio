@@ -9,21 +9,11 @@ class
 
 feature -- Access
 
-	Fr_matchcase: INTEGER is
-			-- Case sensitive search
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FR_MATCHCASE"
-		end
-
-	Fr_wholeword: INTEGER is
+	Fr_wholeword: INTEGER is 2
 			-- Whole word search
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FR_WHOLEWORD"
-		end
+
+	Fr_matchcase: INTEGER is 4
+			-- Case sensitive search
 
 end -- class WEL_FIND_FLAGS_CONSTANTS
 

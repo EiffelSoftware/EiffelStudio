@@ -170,20 +170,6 @@ feature -- Access
 			"EM_SETWORDBREAKPROCEX"
 		end
 
-	Em_getthumb: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETTHUMB"
-		end
-
-	Em_scroll: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SCROLL"
-		end
-
 	Em_canpaste: INTEGER is
 		external
 			"C [macro %"redit.h%"]"

@@ -9,166 +9,51 @@ class
 
 feature -- Access
 
-	Ofn_readonly: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_READONLY"
-		end
+	Ofn_readonly: INTEGER is 1
 
-	Ofn_overwriteprompt: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_OVERWRITEPROMPT"
-		end
+	Ofn_overwriteprompt: INTEGER is 2
 
-	Ofn_hidereadonly: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_HIDEREADONLY"
-		end
+	Ofn_hidereadonly: INTEGER is 4
 
-	Ofn_nochangedir: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_NOCHANGEDIR"
-		end
+	Ofn_nochangedir: INTEGER is 8
 
-	Ofn_showhelp: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_SHOWHELP"
-		end
+	Ofn_showhelp: INTEGER is 16
 
-	Ofn_enablehook: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_ENABLEHOOK"
-		end
+	Ofn_enablehook: INTEGER is 32
 
-	Ofn_enabletemplate: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_ENABLETEMPLATE"
-		end
+	Ofn_enabletemplate: INTEGER is 64
 
-	Ofn_enabletemplatehandle: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_ENABLETEMPLATEHANDLE"
-		end
+	Ofn_enabletemplatehandle: INTEGER is 128
 
-	Ofn_novalidate: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_NOVALIDATE"
-		end
+	Ofn_novalidate: INTEGER is 256
 
-	Ofn_allowmultiselect: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_ALLOWMULTISELECT"
-		end
+	Ofn_allowmultiselect: INTEGER is 512
 
-	Ofn_extensiondifferent: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_EXTENSIONDIFFERENT"
-		end
+	Ofn_extensiondifferent: INTEGER is 1024
 
-	Ofn_pathmustexist: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_PATHMUSTEXIST"
-		end
+	Ofn_pathmustexist: INTEGER is 2048
 
-	Ofn_filemustexist: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_FILEMUSTEXIST"
-		end
+	Ofn_filemustexist: INTEGER is 4096
 
-	Ofn_createprompt: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_CREATEPROMPT"
-		end
+	Ofn_createprompt: INTEGER is 8192
 
-	Ofn_shareaware: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_SHAREAWARE"
-		end
+	Ofn_shareaware: INTEGER is 16384
 
-	Ofn_noreadonlyreturn: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_NOREADONLYRETURN"
-		end
+	Ofn_noreadonlyreturn: INTEGER is 32768
 
-	Ofn_notestfilecreate: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_NOTESTFILECREATE"
-		end
+	Ofn_notestfilecreate: INTEGER is 65536
 
-	Ofn_nonetworkbutton: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_NONETWORKBUTTON"
-		end
+	Ofn_nonetworkbutton: INTEGER is 131072
 
-	Ofn_nolongnames: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_NOLONGNAMES"
-		end
+	Ofn_nolongnames: INTEGER is 262144
 
-	Ofn_sharefallthrough: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_SHAREFALLTHROUGH"
-		end
+	Ofn_sharefallthrough: INTEGER is 2
 
-	Ofn_sharenowarn: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_SHARENOWARN"
-		end
+	Ofn_sharenowarn: INTEGER is 1
 
-	Ofn_sharewarn: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_SHAREWARN"
-		end
+	Ofn_sharewarn: INTEGER is 0
 
-	Ofn_explorer: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"OFN_EXPLORER"
-		end
+	Ofn_explorer: INTEGER is 524288
 
 end -- class WEL_OFN_CONSTANTS
 

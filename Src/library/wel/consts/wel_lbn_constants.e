@@ -9,47 +9,17 @@ class
 
 feature -- Access
 
-	Lbn_errspace: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBN_ERRSPACE"
-		end
+	Lbn_errspace: INTEGER is -2
 
-	Lbn_selchange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBN_SELCHANGE"
-		end
+	Lbn_selchange: INTEGER is 1
 
-	Lbn_dblclk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBN_DBLCLK"
-		end
+	Lbn_dblclk: INTEGER is 2
 
-	Lbn_selcancel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBN_SELCANCEL"
-		end
+	Lbn_selcancel: INTEGER is 3
 
-	Lbn_setfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBN_SETFOCUS"
-		end
+	Lbn_setfocus: INTEGER is 4
 
-	Lbn_killfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBN_KILLFOCUS"
-		end
+	Lbn_killfocus: INTEGER is 5
 
 end -- class WEL_LBN_CONSTANTS
 

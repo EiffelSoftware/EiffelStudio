@@ -9,117 +9,37 @@ class
 
 feature -- Access
 
-	R2_black: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_BLACK"
-		end
+	R2_black: INTEGER is 1
 
-	R2_notmergepen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_NOTMERGEPEN"
-		end
+	R2_notmergepen: INTEGER is 2
 
-	R2_masknotpen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_MASKNOTPEN"
-		end
+	R2_masknotpen: INTEGER is 3
 
-	R2_notcopypen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_NOTCOPYPEN"
-		end
+	R2_notcopypen: INTEGER is 4
 
-	R2_maskpennot: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_MASKPENNOT"
-		end
+	R2_maskpennot: INTEGER is 5
 
-	R2_not: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_NOT"
-		end
+	R2_not: INTEGER is 6
 
-	R2_xorpen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_XORPEN"
-		end
+	R2_xorpen: INTEGER is 7
 
-	R2_notmaskpen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_NOTMASKPEN"
-		end
+	R2_notmaskpen: INTEGER is 8
 
-	R2_maskpen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_MASKPEN"
-		end
+	R2_maskpen: INTEGER is 9
 
-	R2_notxorpen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_NOTXORPEN"
-		end
+	R2_notxorpen: INTEGER is 10
 
-	R2_nop: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_NOP"
-		end
+	R2_nop: INTEGER is 11
 
-	R2_mergenotpen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_MERGENOTPEN"
-		end
+	R2_mergenotpen: INTEGER is 12
 
-	R2_copypen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_COPYPEN"
-		end
+	R2_copypen: INTEGER is 13
 
-	R2_mergepennot: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_MERGEPENNOT"
-		end
+	R2_mergepennot: INTEGER is 14
 
-	R2_mergepen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_MERGEPEN"
-		end
+	R2_mergepen: INTEGER is 15
 
-	R2_white: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"R2_WHITE"
-		end
+	R2_white: INTEGER is 16
 
 feature -- Status report
 

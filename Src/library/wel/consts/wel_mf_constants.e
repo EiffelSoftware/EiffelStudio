@@ -9,187 +9,57 @@ class
 
 feature -- Access
 
-	Mf_insert: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_INSERT"
-		end
+	Mf_insert: INTEGER is 0
 
-	Mf_change: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_CHANGE"
-		end
+	Mf_change: INTEGER is 128
 
-	Mf_append: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_APPEND"
-		end
+	Mf_append: INTEGER is 256
 
-	Mf_delete: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_DELETE"
-		end
+	Mf_delete: INTEGER is 512
 
-	Mf_remove: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_REMOVE"
-		end
+	Mf_remove: INTEGER is 4096
 
-	Mf_bycommand: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_BYCOMMAND"
-		end
+	Mf_bycommand: INTEGER is 0
 
-	Mf_byposition: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_BYPOSITION"
-		end
+	Mf_byposition: INTEGER is 1024
 
-	Mf_separator: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_SEPARATOR"
-		end
+	Mf_separator: INTEGER is 2048
 
-	Mf_enabled: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_ENABLED"
-		end
+	Mf_enabled: INTEGER is 0
 
-	Mf_grayed: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_GRAYED"
-		end
+	Mf_grayed: INTEGER is 1
 
-	Mf_disabled: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_DISABLED"
-		end
+	Mf_disabled: INTEGER is 2
 
-	Mf_unchecked: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_UNCHECKED"
-		end
+	Mf_unchecked: INTEGER is 0
 
-	Mf_checked: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_CHECKED"
-		end
+	Mf_checked: INTEGER is 8
 
-	Mf_usecheckbitmaps: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_USECHECKBITMAPS"
-		end
+	Mf_usecheckbitmaps: INTEGER is 512
 
-	Mf_string: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_STRING"
-		end
+	Mf_string: INTEGER is 0
 
-	Mf_bitmap: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_BITMAP"
-		end
+	Mf_bitmap: INTEGER is 4
 
-	Mf_ownerdraw: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_OWNERDRAW"
-		end
+	Mf_ownerdraw: INTEGER is 256
 
-	Mf_popup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_POPUP"
-		end
+	Mf_popup: INTEGER is 16
 
-	Mf_menubarbreak: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_MENUBARBREAK"
-		end
+	Mf_menubarbreak: INTEGER is 32
 
-	Mf_menubreak: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_MENUBREAK"
-		end
+	Mf_menubreak: INTEGER is 64
 
-	Mf_unhilite: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_UNHILITE"
-		end
+	Mf_unhilite: INTEGER is 0
 
-	Mf_hilite: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_HILITE"
-		end
+	Mf_hilite: INTEGER is 128
 
-	Mf_sysmenu: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_SYSMENU"
-		end
+	Mf_sysmenu: INTEGER is 8192
 
-	Mf_help: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_HELP"
-		end
+	Mf_help: INTEGER is 16384
 
-	Mf_mouseselect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_MOUSESELECT"
-		end
+	Mf_mouseselect: INTEGER is 32768
 
-	Mf_end: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MF_END"
-		end
+	Mf_end: INTEGER is 128
 
 end -- class WEL_MF_CONSTANTS
 

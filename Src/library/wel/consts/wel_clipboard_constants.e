@@ -9,12 +9,33 @@ class
 
 feature -- Access
 
-	Cf_text: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CF_TEXT"
-		end
+	Cf_text: INTEGER is 1
+
+	Cf_bitmap: INTEGER is 2
+
+	Cf_metafile_picture: INTEGER is 3
+
+	Cf_sylk: INTEGER is 4
+
+	Cf_dif: INTEGER is 5
+
+	Cf_tiff: INTEGER is 6
+	
+	Cf_oemtext: INTEGER is 7
+	
+	Cf_dib: INTEGER is 8
+	
+	Cf_palette: INTEGER is 9
+	
+	Cf_pendata: INTEGER is 10
+	
+	Cf_riff: INTEGER is 11
+	
+	Cf_wave: INTEGER is 12
+	
+	Cf_unicodetext: INTEGER is 13
+	
+	Cf_enhmetafile: INTEGER is 14
 
 end -- class WEL_CLIPBOARD_CONSTANTS
 

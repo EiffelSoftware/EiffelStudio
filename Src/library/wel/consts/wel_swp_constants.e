@@ -9,89 +9,35 @@ class
 
 feature -- Access
 
-	Swp_nosize: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_NOSIZE"
-		end
+	Swp_nosize: INTEGER is 1
 
-	Swp_nomove: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_NOMOVE"
-		end
+	Swp_nomove: INTEGER is 2
 
-	Swp_nozorder: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_NOZORDER"
-		end
+	Swp_nozorder: INTEGER is 4
 
-	Swp_noredraw: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_NOREDRAW"
-		end
+	Swp_noredraw: INTEGER is 8
 
-	Swp_noactivate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_NOACTIVATE"
-		end
+	Swp_noactivate: INTEGER is 16
 
-	Swp_framechanged: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_FRAMECHANGED"
-		end
+	Swp_framechanged: INTEGER is 32
+			-- Frame changed: send WM_NCCALCSIZE.
 
-	Swp_showwindow: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_SHOWWINDOW"
-		end
+	Swp_showwindow: INTEGER is 64
 
-	Swp_hidewindow: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_HIDEWINDOW"
-		end
+	Swp_hidewindow: INTEGER is 128
 
-	Swp_nocopybits: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_NOCOPYBITS"
-		end
+	Swp_nocopybits: INTEGER is 256
 
-	Swp_noownerzorder: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_NOOWNERZORDER"
-		end
+	Swp_noownerzorder: INTEGER is 512
 
-	Swp_drawframe: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_DRAWFRAME"
-		end
+	Swp_drawframe: INTEGER is 32
+			-- Same as `Swp_drawframe'.
 
-	Swp_noreposition: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SWP_NOREPOSITION"
-		end
+	Swp_nosendchanging: INTEGER is 1024
+			-- Don't send WM_WINDOWPOSCHANGING.
+
+	Swp_noreposition: INTEGER is 512
+			-- Same as `Swp_noownerzborder'.
 
 end -- class WEL_SWP_CONSTANTS
 

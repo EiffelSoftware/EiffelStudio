@@ -9,137 +9,48 @@ class
 
 feature -- Brushes
 
-	White_brush: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WHITE_BRUSH"
-		end
+	White_brush: INTEGER is 0
 
-	Ltgray_brush: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LTGRAY_BRUSH"
-		end
+	Ltgray_brush: INTEGER is 1
 
-	Gray_brush: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"GRAY_BRUSH"
-		end
+	Gray_brush: INTEGER is 2
 
-	Dkgray_brush: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DKGRAY_BRUSH"
-		end
+	Dkgray_brush: INTEGER is 3
 
-	Black_brush: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BLACK_BRUSH"
-		end
+	Black_brush: INTEGER is 4
 
-	Null_brush: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"NULL_BRUSH"
-		end
+	Null_brush: INTEGER is 5
 
-	Hollow_brush: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HOLLOW_BRUSH"
-		end
+	Hollow_brush: INTEGER is 5
+			-- Same as `Null_brush'.
 
 feature -- Pens
 
-	White_pen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"WHITE_PEN"
-		end
+	White_pen: INTEGER is 6
 
-	Black_pen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BLACK_PEN"
-		end
+	Black_pen: INTEGER is 7
 
-	Null_pen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"NULL_PEN"
-		end
+	Null_pen: INTEGER is 8
 
 feature -- Fonts
 
-	Oem_fixed_font: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OEM_FIXED_FONT"
-		end
+	Oem_fixed_font: INTEGER is 10
 
-	Ansi_fixed_font: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ANSI_FIXED_FONT"
-		end
+	Ansi_fixed_font: INTEGER is 11
 
-	Ansi_var_font: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ANSI_VAR_FONT"
-		end
+	Ansi_var_font: INTEGER is 12
 
-	System_font: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SYSTEM_FONT"
-		end
+	System_font: INTEGER is 13
 
-	Default_gui_font: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DEFAULT_GUI_FONT"
-		end
+	Device_default_font: INTEGER is 14
 
-	Device_default_font: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DEVICE_DEFAULT_FONT"
-		end
+	System_fixed_font: INTEGER is 16
 
-	System_fixed_font: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SYSTEM_FIXED_FONT"
-		end
+	Default_gui_font: INTEGER is 17
 
 feature -- Palette
 
-	Default_palette: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DEFAULT_PALETTE"
-		end
+	Default_palette: INTEGER is 15
 
 end -- class WEL_STOCK_CONSTANTS
 

@@ -9,83 +9,43 @@ class
 
 feature -- Access
 
-	Bif_browseforcomputer: INTEGER is
+	Bif_browseforcomputer: INTEGER is 4096
 			-- Only return computers. If the user selects
 			-- anything other than a computer, the OK button is grayed.
-		external
-			"C [macro %"shlobj.h%"]"
-		alias
-			"BIF_BROWSEFORCOMPUTER"
-		end
 
-	Bif_browseforprinter: INTEGER is
+	Bif_browseforprinter: INTEGER is 8192
 			-- Only return printers. If the user selects
 			-- anything other than a printer, the OK button is grayed.
-		external
-			"C [macro %"shlobj.h%"]"
-		alias
-			"BIF_BROWSEFORPRINTER"
-		end
 
-	Bif_browseincludefiles: INTEGER is
+	Bif_browseincludefiles: INTEGER is 16384
 			-- Requires MVC Version 4.71 or greater. The browse dialog
 			-- will display files as well as folders.
-		external
-			"C [macro %"shlobj.h%"]"
-		alias
-			"BIF_BROWSEINCLUDEFILES"
-		end
 
-	Bif_dontgobelowdomain: INTEGER is
+	Bif_dontgobelowdomain: INTEGER is 2
 			-- Do not include network folders below the domain level
 			-- in the tree view control.
-		external
-			"C [macro %"shlobj.h%"]"
-		alias
-			"BIF_DONTGOBELOWDOMAIN"
-		end
 
-	Bif_editbox: INTEGER is
+	Bif_editbox: INTEGER is 16
 			-- Requires MVC Version 4.71 or greater. The browse dialog
 			-- includes an edit control in which the user can type
 			-- the name of an item
-		external
-			"C[macro %"shlobj.h%"]"
-		alias
-			"BIF_EDITBOX"
-		end
 
-	Bif_returnfsancestors: INTEGER is
+	Bif_returnfsancestors: INTEGER is 8
 			-- Only return file system ancestors. If the user selects
 			-- anything other than a file system ancestor, the OK button
 			-- is grayed.
-		external
-			"C [macro %"shlobj.h%"]"
-		alias
-			"BIF_RETURNFSANCESTORS"
-		end
 
-	Bif_returnonlyfsdirs: INTEGER is
+	Bif_returnonlyfsdirs: INTEGER is 1
 			-- Only return file system directories. If the user selects
 			-- folders that are not part of the file system, the OK button
 			-- is grayed.
-		external
-			"C [macro %"shlobj.h%"]"
-		alias
-			"BIF_RETURNONLYFSDIRS"
-		end
 
-	Bif_statustext: INTEGER is
+	Bif_statustext: INTEGER is 4
 			-- Include a status area in the dialog box. The callback
 			-- function can set the status text by sending messages to the
 			-- dialog box.
-		external
-			"C [macro %"shlobj.h%"]"
-		alias
-			"BIF_STATUSTEXT"
-		end
 
- 	Bif_usenewui: INTEGER is 64
+ 	Bif_usenewui: INTEGER is 80
 			-- Use the new user-interface. Setting this flag provides the
 			-- user with a larger dialog box that can be resized. It has
 			-- several new capabilities including: drag and drop capability
@@ -97,17 +57,12 @@ feature -- Access
 			-- See class WEL_WINDOWS_VERSION. Is not defined as external
 			-- because it is not yet included in latest versions of "shlobj.h".
 
-	Bif_validate: INTEGER is
+	Bif_validate: INTEGER is 32
 			-- Requires Shell32.dll Version 4.71 or greater. If the user types an
 			-- invalid name into the edit box, the browse dialog will call
 			-- the application's BrowseCallbackProc with the
 			-- BFFM_VALIDATEFAILED message. This flag is ignored if
 			-- BIF_EDITBOX is not specified.
-		external
-			"C[macro %"shlobj.h%"]"
-		alias
-			"BIF_VALIDATE"
-		end
 
 end -- class WEL_BIF_CONSTANTS
 

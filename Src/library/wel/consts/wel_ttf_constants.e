@@ -9,33 +9,13 @@ class
 
 feature -- Access
 
-	Ttf_idishwnd: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TTF_IDISHWND"
-		end
+	Ttf_idishwnd: INTEGER is 1
 
-	Ttf_centertip: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TTF_CENTERTIP"
-		end
+	Ttf_centertip: INTEGER is 2
 
-	Ttf_rtlreading: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TTF_RTLREADING"
-		end
+	Ttf_rtlreading: INTEGER is 4
 
-	Ttf_subclass: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TTF_SUBCLASS"
-		end
+	Ttf_subclass: INTEGER is 16
 
 end -- class WEL_TTF_CONSTANTS
 

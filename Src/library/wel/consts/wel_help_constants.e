@@ -9,139 +9,45 @@ class
 
 feature -- Access
 
-	Help_context: INTEGER is
-			-- Display topic identified by specified context identifier defined in [MAP] section of .hpj file
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_CONTEXT"
-		end
+	Help_context: INTEGER is 1
+			-- Display topic identified by specified context identifier
+			-- defined in [MAP] section of .hpj file
 
-	Help_quit: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_QUIT"
-		end
+	Help_quit: INTEGER is 2
 
-	Help_index: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_INDEX"
-		end
+	Help_index: INTEGER is 3
 
-	Help_contents: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_CONTENTS"
-		end
+	Help_contents: INTEGER is 3
 
-	Help_helponhelp: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_HELPONHELP"
-		end
+	Help_helponhelp: INTEGER is 4
 
-	Help_setindex: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_SETINDEX"
-		end
+	Help_setindex: INTEGER is 5
 
-	Help_setcontents: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_SETCONTENTS"
-		end
+	Help_setcontents: INTEGER is 5
 
-	Help_contextpopup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_CONTEXTPOPUP"
-		end
+	Help_contextpopup: INTEGER is 8
 
-	Help_forcefile: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_FORCEFILE"
-		end
+	Help_forcefile: INTEGER is 9
 
-	Help_key: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_KEY"
-		end
+	Help_key: INTEGER is 257
 
-	Help_command: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_COMMAND"
-		end
+	Help_command: INTEGER is 258
 
-	Help_contextmenu: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_CONTEXTMENU"
-		end
+	Help_contextmenu: INTEGER is 10
 
-	Help_partialkey: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_PARTIALKEY"
-		end
+	Help_partialkey: INTEGER is 261
 
-	Help_multikey: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_MULTIKEY"
-		end
+	Help_multikey: INTEGER is 513
 
-	Help_setwinpos: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_SETWINPOS"
-		end
+	Help_setwinpos: INTEGER is 515
 
-	Help_finder: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_FINDER"
-		end
+	Help_finder: INTEGER is 11
 
-	Help_setpopup_pos: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_SETPOPUP_POS"
-		end
+	Help_setpopup_pos: INTEGER is 13
 
-	Help_tcard: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_TCARD"
-		end
+	Help_tcard: INTEGER is 32768
 
-	Help_wm_help: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HELP_WM_HELP"
-		end
+	Help_wm_help: INTEGER is 12
 
 end -- class WEL_HELP_CONSTANTS
 

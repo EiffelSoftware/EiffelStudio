@@ -10,90 +10,40 @@ class
 
 feature -- Access
 
-	Cfm_bold: INTEGER is
+	Cfm_bold: INTEGER is 1
 			-- The CFE_BOLD value of the dwEffects member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_BOLD"
-		end
 
-	Cfm_color: INTEGER is
-			-- The crTextColor member and the CFE_AUTOCOLOR value
-			-- of the dwEffects member are valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_COLOR"
-		end
-
-	Cfm_face: INTEGER is
-			-- The szFaceName member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_FACE"
-		end
-
-	Cfm_italic: INTEGER is
+	Cfm_italic: INTEGER is 2
 			-- The CFE_ITALIC value of the dwEffects member is
 			-- valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_ITALIC"
-		end
 
-	Cfm_offset: INTEGER is
-			-- The yOffset member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_OFFSET"
-		end
-
-	Cfm_protected: INTEGER is
-			-- The CFE_PROTECTED value of the dwEffects member is
-			-- valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_PROTECTED"
-		end
-
-	Cfm_size: INTEGER is
-			-- The yHeight member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_SIZE"
-		end
-
-	Cfm_strikeout: INTEGER is
-			-- The CFE_STRIKEOUT value of the dwEffects member is
-			-- valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_STRIKEOUT"
-		end
-
-	Cfm_underline: INTEGER is
+	Cfm_underline: INTEGER is 4
 			-- The CFE_UNDERLINE value of the dwEffects member is
 			-- valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_UNDERLINE"
-		end
 
-	Cfm_charset: INTEGER is
+	Cfm_strikeout: INTEGER is 8
+			-- The CFE_STRIKEOUT value of the dwEffects member is
+			-- valid.
+
+	Cfm_protected: INTEGER is 16
+			-- The CFE_PROTECTED value of the dwEffects member is
+			-- valid.
+
+	Cfm_color: INTEGER is 1073741824
+			-- The crTextColor member and the CFE_AUTOCOLOR value
+			-- of the dwEffects member are valid.
+
+	Cfm_face: INTEGER is 536870912
+			-- The szFaceName member is valid.
+
+	Cfm_offset: INTEGER is 268435456
+			-- The yOffset member is valid.
+
+	Cfm_size: INTEGER is 2147483648
+			-- The yHeight member is valid.
+
+	Cfm_charset: INTEGER is 134217728
 			-- The bCharSet member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFM_CHARSET"
-		end
 
 end -- class WEL_CFM_CONSTANTS
 

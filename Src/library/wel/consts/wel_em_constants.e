@@ -9,215 +9,69 @@ class
 
 feature -- Access
 
-	Em_getsel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETSEL"
-		end
+	Em_getsel: INTEGER is 176
 
-	Em_setsel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETSEL"
-		end
+	Em_setsel: INTEGER is 177
 
-	Em_getrect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETRECT"
-		end
+	Em_getrect: INTEGER is 178
 
-	Em_setrect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETRECT"
-		end
+	Em_setrect: INTEGER is 179
 
-	Em_setrectnp: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETRECTNP"
-		end
+	Em_setrectnp: INTEGER is 180
 
-	Em_linescroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_LINESCROLL"
-		end
+	Em_scroll: INTEGER is 181
 
-	Em_getmodify: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETMODIFY"
-		end
+	Em_linescroll: INTEGER is 182
 
-	Em_setmodify: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETMODIFY"
-		end
+	Em_scrollcaret: INTEGER is 183
 
-	Em_getlinecount: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETLINECOUNT"
-		end
+	Em_getmodify: INTEGER is 184
 
-	Em_lineindex: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_LINEINDEX"
-		end
+	Em_setmodify: INTEGER is 185
 
-	Em_sethandle: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETHANDLE"
-		end
+	Em_getlinecount: INTEGER is 186
 
-	Em_gethandle: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETHANDLE"
-		end
+	Em_lineindex: INTEGER is 187
 
-	Em_linelength: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_LINELENGTH"
-		end
+	Em_sethandle: INTEGER is 188
 
-	Em_replacesel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_REPLACESEL"
-		end
+	Em_gethandle: INTEGER is 189
 
-	Em_getline: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETLINE"
-		end
+	Em_getthumb: INTEGER is 190
 
-	Em_getlimittext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETLIMITTEXT"
-		end
+	Em_linelength: INTEGER is 193
 
-	Em_limittext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_LIMITTEXT"
-		end
+	Em_replacesel: INTEGER is 194
 
-	Em_canundo: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_CANUNDO"
-		end
+	Em_getline: INTEGER is 196
 
-	Em_undo: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_UNDO"
-		end
+	Em_limittext: INTEGER is 197
 
-	Em_fmtlines: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_FMTLINES"
-		end
+	Em_canundo: INTEGER is 198
 
-	Em_linefromchar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_LINEFROMCHAR"
-		end
+	Em_undo: INTEGER is 199
 
-	Em_settabstops: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETTABSTOPS"
-		end
+	Em_fmtlines: INTEGER is 200
 
-	Em_setpasswordchar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETPASSWORDCHAR"
-		end
+	Em_linefromchar: INTEGER is 201
 
-	Em_emptyundobuffer: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_EMPTYUNDOBUFFER"
-		end
+	Em_settabstops: INTEGER is 203
 
-	Em_getfirstvisibleline: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETFIRSTVISIBLELINE"
-		end
+	Em_setpasswordchar: INTEGER is 204
 
-	Em_setreadonly: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETREADONLY"
-		end
+	Em_emptyundobuffer: INTEGER is 205
 
-	Em_setwordbreakproc: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SETWORDBREAKPROC"
-		end
+	Em_getfirstvisibleline: INTEGER is 206
 
-	Em_getwordbreakproc: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETWORDBREAKPROC"
-		end
+	Em_setreadonly: INTEGER is 207
 
-	Em_getpasswordchar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_GETPASSWORDCHAR"
-		end
+	Em_setwordbreakproc: INTEGER is 208
 
-	Em_scrollcaret: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EM_SCROLLCARET"
-		end
+	Em_getwordbreakproc: INTEGER is 209
+
+	Em_getpasswordchar: INTEGER is 210
+
+	Em_getlimittext: INTEGER is 213
 
 end -- class WEL_EM_CONSTANTS
 

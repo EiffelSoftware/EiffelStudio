@@ -9,250 +9,83 @@ class
 
 feature -- Access
 
-	Lb_addstring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_ADDSTRING"
-		end
+	Lb_addstring: INTEGER is 384
 
-	Lb_insertstring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_INSERTSTRING"
-		end
+	Lb_insertstring: INTEGER is 385
 
-	Lb_deletestring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_DELETESTRING"
-		end
+	Lb_deletestring: INTEGER is 386
 
-	Lb_resetcontent: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_RESETCONTENT"
-		end
+	Lb_selitemrangeex: INTEGER is 387
 
-	Lb_setsel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETSEL"
-		end
+	Lb_resetcontent: INTEGER is 388
 
-	Lb_setcursel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETCURSEL"
-		end
+	Lb_setsel: INTEGER is 389
 
-	Lb_getsel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETSEL"
-		end
+	Lb_setcursel: INTEGER is 390
 
-	Lb_getcursel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETCURSEL"
-		end
+	Lb_getsel: INTEGER is 391
 
-	Lb_gettext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETTEXT"
-		end
+	Lb_getcursel: INTEGER is 392
 
-	Lb_gettextlen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETTEXTLEN"
-		end
+	Lb_gettext: INTEGER is 393
 
-	Lb_getcount: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETCOUNT"
-		end
+	Lb_gettextlen: INTEGER is 394
 
-	Lb_selectstring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SELECTSTRING"
-		end
+	Lb_getcount: INTEGER is 395
 
-	Lb_dir: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_DIR"
-		end
+	Lb_selectstring: INTEGER is 396
 
-	Lb_gettopindex: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETTOPINDEX"
-		end
+	Lb_dir: INTEGER is 397
 
-	Lb_findstring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_FINDSTRING"
-		end
+	Lb_gettopindex: INTEGER is 398
 
-	Lb_getselcount: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETSELCOUNT"
-		end
+	Lb_findstring: INTEGER is 399
 
-	Lb_getselitems: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETSELITEMS"
-		end
+	Lb_getselcount: INTEGER is 400
 
-	Lb_settabstops: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETTABSTOPS"
-		end
+	Lb_getselitems: INTEGER is 401
 
-	Lb_gethorizontalextent: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETHORIZONTALEXTENT"
-		end
+	Lb_settabstops: INTEGER is 402
 
-	Lb_sethorizontalextent: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETHORIZONTALEXTENT"
-		end
+	Lb_gethorizontalextent: INTEGER is 403
 
-	Lb_setcolumnwidth: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETCOLUMNWIDTH"
-		end
+	Lb_sethorizontalextent: INTEGER is 404
 
-	Lb_settopindex: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETTOPINDEX"
-		end
+	Lb_setcolumnwidth: INTEGER is 405
 
-	Lb_getitemrect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETITEMRECT"
-		end
+	Lb_addfile: INTEGER is 406
 
-	Lb_getitemdata: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETITEMDATA"
-		end
+	Lb_settopindex: INTEGER is 407
 
-	Lb_setitemdata: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETITEMDATA"
-		end
+	Lb_getitemrect: INTEGER is 408
 
-	Lb_selitemrange: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SELITEMRANGE"
-		end
+	Lb_getitemdata: INTEGER is 409
 
-	Lb_setcaretindex: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETCARETINDEX"
-		end
+	Lb_setitemdata: INTEGER is 410
 
-	Lb_getcaretindex: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETCARETINDEX"
-		end
+	Lb_selitemrange: INTEGER is 411
 
-	Lb_setitemheight: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_SETITEMHEIGHT"
-		end
+	Lb_setanchorindex: INTEGER is 412
 
-	Lb_getitemheight: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_GETITEMHEIGHT"
-		end
+	Lb_getanchorindex: INTEGER is 413
 
-	Lb_findstringexact: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_FINDSTRINGEXACT"
-		end
+	Lb_setcaretindex: INTEGER is 414
 
-	Lb_okay: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_OKAY"
-		end
+	Lb_getcaretindex: INTEGER is 415
 
-	Lb_err: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_ERR"
-		end
+	Lb_setitemheight: INTEGER is 416
 
-	Lb_errspace: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_ERRSPACE"
-		end
+	Lb_getitemheight: INTEGER is 417
 
-	Lb_ctlcode: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LB_CTLCODE"
-		end
+	Lb_findstringexact: INTEGER is 418
+
+	Lb_okay: INTEGER is 0
+
+	Lb_err: INTEGER is -1
+
+	Lb_errspace: INTEGER is -2
+
+	Lb_ctlcode: INTEGER is 0
 
 end -- class WEL_LB_CONSTANTS
 

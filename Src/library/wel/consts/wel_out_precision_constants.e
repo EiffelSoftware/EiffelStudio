@@ -9,61 +9,21 @@ class
 
 feature -- Access
 
-	Out_default_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OUT_DEFAULT_PRECIS"
-		end
+	Out_default_precis: INTEGER is 0
 
-	Out_string_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OUT_STRING_PRECIS"
-		end
+	Out_string_precis: INTEGER is 1
 
-	Out_character_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OUT_CHARACTER_PRECIS"
-		end
+	Out_character_precis: INTEGER is 2
 
-	Out_stroke_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OUT_STROKE_PRECIS"
-		end
+	Out_stroke_precis: INTEGER is 3
 
-	Out_tt_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OUT_TT_PRECIS"
-		end
+	Out_tt_precis: INTEGER is 4
 
-	Out_device_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OUT_DEVICE_PRECIS"
-		end
+	Out_device_precis: INTEGER is 5
 
-	Out_raster_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OUT_RASTER_PRECIS"
-		end
+	Out_raster_precis: INTEGER is 6
 
-	Out_tt_only_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OUT_TT_ONLY_PRECIS"
-		end
+	Out_tt_only_precis: INTEGER is 7
 
 end -- class WEL_OUT_PRECISION_CONSTANTS
 

@@ -9,152 +9,47 @@ class
 
 feature -- Access
 
-	Color_scrollbar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_SCROLLBAR"
-		end
+	Color_scrollbar: INTEGER is 0
 
-	Color_background: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_BACKGROUND"
-		end
+	Color_background: INTEGER is 1
 
-	Color_activecaption: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_ACTIVECAPTION"
-		end
+	Color_activecaption: INTEGER is 2
 
-	Color_inactivecaption: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_INACTIVECAPTION"
-		end
+	Color_inactivecaption: INTEGER is 3
 
-	Color_menu: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_MENU"
-		end
+	Color_menu: INTEGER is 4
 
-	Color_window: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_WINDOW"
-		end
+	Color_window: INTEGER is 5
 
-	Color_windowframe: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_WINDOWFRAME"
-		end
+	Color_windowframe: INTEGER is 6
 
-	Color_menutext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_MENUTEXT"
-		end
+	Color_menutext: INTEGER is 7
 
-	Color_windowtext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_WINDOWTEXT"
-		end
+	Color_windowtext: INTEGER is 8
 
-	Color_captiontext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_CAPTIONTEXT"
-		end
+	Color_captiontext: INTEGER is 9
 
-	Color_activeborder: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_ACTIVEBORDER"
-		end
+	Color_activeborder: INTEGER is 10
 
-	Color_inactiveborder: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_INACTIVEBORDER"
-		end
+	Color_inactiveborder: INTEGER is 11
 
-	Color_appworkspace: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_APPWORKSPACE"
-		end
+	Color_appworkspace: INTEGER is 12
 
-	Color_highlight: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_HIGHLIGHT"
-		end
+	Color_highlight: INTEGER is 13
 
-	Color_highlighttext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_HIGHLIGHTTEXT"
-		end
+	Color_highlighttext: INTEGER is 14
 
-	Color_btnface: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_BTNFACE"
-		end
+	Color_btnface: INTEGER is 15
 
-	Color_btnshadow: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_BTNSHADOW"
-		end
+	Color_btnshadow: INTEGER is 16
 
-	Color_graytext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_GRAYTEXT"
-		end
+	Color_graytext: INTEGER is 17
 
-	Color_btntext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_BTNTEXT"
-		end
+	Color_btntext: INTEGER is 18
 
-	Color_inactivecaptiontext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_INACTIVECAPTIONTEXT"
-		end
+	Color_inactivecaptiontext: INTEGER is 19
 
-	Color_btnhighlight: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLOR_BTNHIGHLIGHT"
-		end
+	Color_btnhighlight: INTEGER is 20
 
 feature -- Status report
 

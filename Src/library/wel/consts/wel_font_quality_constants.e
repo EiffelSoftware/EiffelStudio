@@ -9,37 +9,22 @@ class
 
 feature -- Access
 
-	Default_quality: INTEGER is
+	Default_quality: INTEGER is 0
 			-- Appearance of the font does not matter.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DEFAULT_QUALITY"
-		end
 
-	Draft_quality: INTEGER is
+	Draft_quality: INTEGER is 1
 			-- Appearance of the font is less important than when
 			-- the `Proof_quality' value is used. For GDI raster
 			-- fonts, scaling is enabled. Bold, italic, underline,
 			-- and strikeout fonts are synthesized if necessary.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DRAFT_QUALITY"
-		end
 
-	Proof_quality: INTEGER is
+	Proof_quality: INTEGER is 2
 			-- Character quality of the font is more important
 			-- than exact matching of the logical-font attributes.
 			-- For GDI raster fonts, scaling is disabled and the
 			-- font closest in size is chosen. Bold, italic,
 			-- underline, and strikeout fonts are synthesized
 			-- if necessary.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PROOF_QUALITY"
-		end
 
 end -- class WEL_FONT_QUALITY_CONSTANTS
 

@@ -9,235 +9,95 @@ class
 
 feature -- Access
 
-	driver_version: INTEGER is
+	driver_version: INTEGER is 1
 			-- Version number of the device driver
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DRIVERVERSION"
-		end
 
-	technology: INTEGER is
+	technology: INTEGER is 2
 			-- Device technology.
 			-- See class WEL_DEVICE_TECHNOLOGY_CONSTANTS
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"TECHNOLOGY"
-		end
 
-	horizontal_size: INTEGER is
+	horizontal_size: INTEGER is 4
 			-- Width of the physical display in millimeters
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HORZSIZE"
-		end
 
-	vertical_size: INTEGER is
+	vertical_size: INTEGER is 6
 			-- Height of the physical display in millimeters
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VERTSIZE"
-		end
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER is 8
 			-- Width of the display, in pixels
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HORZRES"
-		end
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER is 10
 			-- Height of the display, in raster lines
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"VERTRES"
-		end
 
-	logical_pixels_x: INTEGER is
+	logical_pixels_x: INTEGER is 88
 			-- Number of pixels per logical inch along
 			-- the display width
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LOGPIXELSX"
-		end
 
-	logical_pixels_y: INTEGER is
+	logical_pixels_y: INTEGER is 90
 			-- Number of pixels per logical inch along
 			-- the display height
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LOGPIXELSY"
-		end
 
-	bits_pixel: INTEGER is
+	bits_pixel: INTEGER is 12
 			-- Number of adjacent color bits for each pixel
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BITSPIXEL"
-		end
 
-	planes: INTEGER is
+	planes: INTEGER is 14
 			-- Number of color planes
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PLANES"
-		end
 
-	num_brushes: INTEGER is
+	num_brushes: INTEGER is 16
 			-- Number of device-specific brushes
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"NUMBRUSHES"
-		end
 
-	num_pens: INTEGER is
+	num_pens: INTEGER is 18
 			-- Number of device-specific pens
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"NUMPENS"
-		end
 
-	num_markers: INTEGER is
+	num_markers: INTEGER is 20
 			-- Number of device-specific markers
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"NUMMARKERS"
-		end
 
-	num_fonts: INTEGER is
+	num_fonts: INTEGER is 22
 			-- Number of device-specific fonts
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"NUMFONTS"
-		end
 
-	num_colors: INTEGER is
+	num_colors: INTEGER is 24
 			-- Number of entries in the device's color table
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"NUMCOLORS"
-		end
 
-	aspect_x: INTEGER is
+	aspect_x: INTEGER is 40
 			-- Relative width of a device pixel
 			-- used for line drawing
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ASPECTX"
-		end
 
-	aspect_y: INTEGER is
+	aspect_y: INTEGER is 42
 			-- Relative height of a device pixel
 			-- used for line drawing
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ASPECTY"
-		end
 
-	aspect_x_y: INTEGER is
+	aspect_x_y: INTEGER is 44
 			-- Diagonal width of a device pixel
 			-- used for line drawing
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ASPECTXY"
-		end
 
-	pdevice_size: INTEGER is
+	pdevice_size: INTEGER is 26
 			-- Size of the PDEVICE internal structure, in bytes
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PDEVICESIZE"
-		end
 
-	clip_caps: INTEGER is
+	clip_caps: INTEGER is 36
 			-- See class WEL_CLIPPING_CAPABILITIES_CONSTANTS
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CLIPCAPS"
-		end
 
-	size_palette: INTEGER is
+	size_palette: INTEGER is 104
 			-- Number of entries in the system palette
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SIZEPALETTE"
-		end
 
-	num_reserved: INTEGER is
+	num_reserved: INTEGER is 106
 			-- Number of reserved entries in the system palette
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"NUMRESERVED"
-		end
 
-	color_resolution: INTEGER is
+	color_resolution: INTEGER is 108
 			-- Color resolution of the device in bits
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"COLORRES"
-		end
 
-	raster_caps: INTEGER is
+	raster_caps: INTEGER is 38
 			-- See class WEL_RASTER_CAPABILITIES_CONSTANTS
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"RASTERCAPS"
-		end
 
-	curve_caps: INTEGER is
+	curve_caps: INTEGER is 28
 			-- See class WEL_CURVE_CAPABILITIES_CONSTANTS
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CURVECAPS"
-		end
 
-	line_caps: INTEGER is
+	line_caps: INTEGER is 30
 			-- See class WEL_LINE_CAPABILITIES_CONSTANTS
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LINECAPS"
-		end
 
-	polygonal_caps: INTEGER is
+	polygonal_caps: INTEGER is 32
 			-- See class WEL_POLYGONAL_CAPABILITIES_CONSTANTS
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"POLYGONALCAPS"
-		end
 
-	text_caps: INTEGER is
+	text_caps: INTEGER is 34
 			-- See class WEL_TEXT_CAPABILITIES_CONSTANTS
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"TEXTCAPS"
-		end
 
 end -- class WEL_CAPABILITIES_CONSTANTS
 

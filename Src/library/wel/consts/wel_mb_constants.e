@@ -9,224 +9,71 @@ class
 
 feature -- Access
 
-	Mb_ok: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_OK"
-		end
+	Mb_ok: INTEGER is 0
 
-	Mb_okcancel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_OKCANCEL"
-		end
+	Mb_okcancel: INTEGER is 1
 
-	Mb_abortretryignore: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_ABORTRETRYIGNORE"
-		end
+	Mb_abortretryignore: INTEGER is 2
 
-	Mb_yesnocancel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_YESNOCANCEL"
-		end
+	Mb_yesnocancel: INTEGER is 3
 
-	Mb_yesno: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_YESNO"
-		end
+	Mb_yesno: INTEGER is 4
 
-	Mb_retrycancel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_RETRYCANCEL"
-		end
+	Mb_retrycancel: INTEGER is 5
 
-	Mb_typemask: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_TYPEMASK"
-		end
+	Mb_typemask: INTEGER is 15
 
-	Mb_iconhand: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_ICONHAND"
-		end
+	Mb_iconhand: INTEGER is 16
 
-	Mb_iconerror: INTEGER is
-			external
-				"C [macro %"wel.h%"]"
-			alias
-				"MB_ICONERROR"
-		end
+	Mb_iconerror: INTEGER is 16
+			-- Same as `Mb_iconhand'.
 
-	Mb_iconstop: INTEGER is
-			external
-				"C [macro %"wel.h%"]"
-			alias
-				"MB_ICONSTOP"
-		end
+	Mb_iconstop: INTEGER is 16
+			-- Same as `Mb_iconhand'.
 
-	Mb_iconquestion: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_ICONQUESTION"
-		end
+	Mb_iconquestion: INTEGER is 32
 
-	Mb_iconexclamation: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_ICONEXCLAMATION"
-		end
+	Mb_iconexclamation: INTEGER is 48
 
-	Mb_iconwarning: INTEGER is
-		external
-   			"C [macro %"wel.h%"]"
-   		alias
-   			"MB_ICONWARNING"
-		end
+	Mb_iconwarning: INTEGER is 48
+			-- Same as `Mb_iconexclamation'.
 
+	Mb_iconasterisk: INTEGER is 64
 
-	Mb_iconasterisk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_ICONASTERISK"
-		end
+	Mb_iconmask: INTEGER is 240
 
-	Mb_iconmask: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_ICONMASK"
-		end
+	Mb_iconinformation: INTEGER is 64
+			-- Same as `Mb_iconasterisk'.
 
-	Mb_iconinformation: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_ICONINFORMATION"
-		end
+	Mb_defbutton1: INTEGER is 0
 
-	Mb_defbutton1: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_DEFBUTTON1"
-		end
+	Mb_defbutton2: INTEGER is 256
 
-	Mb_defbutton2: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_DEFBUTTON2"
-		end
+	Mb_defbutton3: INTEGER is 512
 
-	Mb_defbutton3: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_DEFBUTTON3"
-		end
+	Mb_defmask: INTEGER is 3840
 
-	Mb_defmask: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_DEFMASK"
-		end
+	Mb_applmodal: INTEGER is 0
 
-	Mb_applmodal: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_APPLMODAL"
-		end
+	Mb_systemmodal: INTEGER is 4096
 
-	Mb_systemmodal: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_SYSTEMMODAL"
-		end
+	Mb_taskmodal: INTEGER is 8192
 
-	Mb_taskmodal: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_TASKMODAL"
-		end
+	Mb_default_desktop_only: INTEGER is 131072
 
-	Mb_default_desktop_only: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_DEFAULT_DESKTOP_ONLY"
-		end
+	Mb_help: INTEGER is 16384
 
-	Mb_help: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_HELP"
-		end
+	Mb_right: INTEGER is 524288
 
-	Mb_right: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_RIGHT"
-		end
+	Mb_rtlreading: INTEGER is 1048576
 
-	Mb_rtlreading: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_RTLREADING"
-		end
+	Mb_setforeground: INTEGER is 65536
 
-	Mb_setforeground: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_SETFOREGROUND"
-		end
-
-	Mb_topmost: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_TOPMOST"
-		end
-
+	Mb_topmost: INTEGER is 262144
 	
-	Mb_nofocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_NOFOCUS"
-		end
+	Mb_nofocus: INTEGER is 32768
 
-	Mb_usericon: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MB_USERICON"
-		end
+	Mb_usericon: INTEGER is 128
 
 end -- class WEL_MB_CONSTANTS
 

@@ -9,55 +9,20 @@ class
 
 feature -- Access 
 
-	Ansi_charset: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ANSI_CHARSET"
-		end
+	Ansi_charset: INTEGER is 0
 
-	Default_charset: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DEFAULT_CHARSET"
-		end
+	Default_charset: INTEGER is 1
 
-	Symbol_charset: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SYMBOL_CHARSET"
-		end
+	Symbol_charset: INTEGER is 2
 
-	Shiftjis_charset: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SHIFTJIS_CHARSET"
-		end
+	Shiftjis_charset: INTEGER is 128
 
-	Hangeul_charset: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HANGEUL_CHARSET"
-		end
+	Hangeul_charset: INTEGER is 129
 
-	Chinesebig5_charset: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CHINESEBIG5_CHARSET"
-		end
+	Chinesebig5_charset: INTEGER is 136
 
-	Oem_charset: INTEGER is
+	Oem_charset: INTEGER is 255
 			-- (is operating-system dependent)
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"OEM_CHARSET"
-		end
 
 	Unicode_charset: INTEGER is 1
 			--| Not defined in windows.h

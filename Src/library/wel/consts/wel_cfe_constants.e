@@ -10,55 +10,25 @@ class
 
 feature -- Access
 
-	Cfe_autocolor: INTEGER is
-			-- The text color is the return value of
-			-- GetSysColor (COLOR_WINDOWTEXT).
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFE_AUTOCOLOR"
-		end
-
-	Cfe_bold: INTEGER is
+	Cfe_bold: INTEGER is 1
 			-- Characters are bold.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFE_BOLD"
-		end
 
-	Cfe_italic: INTEGER is
+	Cfe_italic: INTEGER is 2
 			-- Characters are italic.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFE_ITALIC"
-		end
 
-	Cfe_strikeout: INTEGER is
-			-- Characters are struck out.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFE_STRIKEOUT"
-		end
-
-	Cfe_underline: INTEGER is
+	Cfe_underline: INTEGER is 4
 			-- Characters are underlined.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFE_UNDERLINE"
-		end
 
-	Cfe_protected: INTEGER is
+	Cfe_strikeout: INTEGER is 8
+			-- Characters are struck out.
+
+	Cfe_protected: INTEGER is 16
 			-- Characters are protected; an attempt to modify them
 			-- will cause an EN_PROTECTED notification message.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"CFE_PROTECTED"
-		end
+
+	Cfe_autocolor: INTEGER is 1073741824
+			-- The text color is the return value of
+			-- GetSysColor (COLOR_WINDOWTEXT).
 
 end -- class WEL_CFE_CONSTANTS
 

@@ -9,103 +9,34 @@ class
 
 feature -- Access
 
-	Lbs_notify: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_NOTIFY"
-		end
+	Lbs_notify: INTEGER is 1
 
-	Lbs_sort: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_SORT"
-		end
+	Lbs_sort: INTEGER is 2
 
-	Lbs_noredraw: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_NOREDRAW"
-		end
+	Lbs_noredraw: INTEGER is 4
 
-	Lbs_multiplesel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_MULTIPLESEL"
-		end
+	Lbs_multiplesel: INTEGER is 8
 
-	Lbs_ownerdrawfixed: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_OWNERDRAWFIXED"
-		end
+	Lbs_ownerdrawfixed: INTEGER is 16
 
-	Lbs_ownerdrawvariable: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_OWNERDRAWVARIABLE"
-		end
+	Lbs_ownerdrawvariable: INTEGER is 32
 
-	Lbs_hasstrings: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_HASSTRINGS"
-		end
+	Lbs_hasstrings: INTEGER is 64
 
-	Lbs_usetabstops: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_USETABSTOPS"
-		end
+	Lbs_usetabstops: INTEGER is 128
 
-	Lbs_nointegralheight: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_NOINTEGRALHEIGHT"
-		end
+	Lbs_nointegralheight: INTEGER is 256
 
-	Lbs_multicolumn: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_MULTICOLUMN"
-		end
+	Lbs_multicolumn: INTEGER is 512
 
-	Lbs_wantkeyboardinput: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_WANTKEYBOARDINPUT"
-		end
+	Lbs_wantkeyboardinput: INTEGER is 1024
 
-	Lbs_extendedsel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_EXTENDEDSEL"
-		end
+	Lbs_extendedsel: INTEGER is 2048
 
-	Lbs_disablenoscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_DISABLENOSCROLL"
-		end
+	Lbs_disablenoscroll: INTEGER is 4096
 
-	Lbs_standard: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LBS_STANDARD"
-		end
+	Lbs_standard: INTEGER is 10485763
+			-- `Lbs_notify' | `Lbs_sort' | `Ws_vscroll' | `Ws_border'.
 
 end -- class WEL_LBS_CONSTANTS
 

@@ -68,7 +68,7 @@ feature -- Events
 		do
 			once_idle_actions.extend (an_action)
 			if not internal_idle_actions.has (do_once_idle_actions_agent) then
-					internal_idle_actions.extend (do_once_idle_actions_agent)
+				internal_idle_actions.extend (do_once_idle_actions_agent)
 			end
 		end
 
@@ -76,6 +76,7 @@ feature -- Events
 			-- Call `once_idle_actions' then wipe it out.
 			-- Remove `do_once_idle_actions_agent' from `internal_idle_actions'.
 		do
+
 			once_idle_actions.call ([])
 			once_idle_actions.wipe_out
 			internal_idle_actions.prune_all (do_once_idle_actions_agent)
@@ -182,6 +183,9 @@ end -- class EV_APPLICATION_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/23 19:18:32  brendel
+--| Formatting.
+--|
 --| Revision 1.14  2000/03/23 19:04:31  brendel
 --| Fixed compiler errors.
 --|

@@ -11,6 +11,7 @@
 
 */
 
+#include "eif_globals.h"
 #include "config.h"
 #include "portable.h"
 #include <ctype.h>

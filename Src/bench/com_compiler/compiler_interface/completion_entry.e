@@ -6,6 +6,17 @@ indexing
 deferred class
 	COMPLETION_ENTRY
 
+inherit
+	IEIFFEL_COMPLETION_ENTRY_IMPL_STUB
+		undefine
+			name,
+			signature,
+			is_feature,
+			is_equal
+		end
+
+	COMPARABLE
+
 feature -- Access
 
 	name: STRING is
@@ -21,6 +32,14 @@ feature -- Access
 	is_feature (return_value: BOOLEAN_REF) is
 			-- Is entry a feature? (could be a variable)
 		deferred
+		end
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Compare names
+		do
+			Result := name < other.name
 		end
 
 end -- class COMPLETION_ENTRY

@@ -1,8 +1,9 @@
 indexing
-	description: "EiffelVision dialog. A dialog is a window with%
-				% predefine containers and widgets : a vertical%
-				% box inside and a panel of button in the%
-				% action-area (horizontal_box)."
+	description:
+		 "EiffelVision dialog. A dialog is a window with%
+		% predefine containers and widgets : a vertical%
+		% box inside and a panel of button in the%
+		% action-area (horizontal_box)."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -50,6 +51,14 @@ feature {NONE} -- Implementation
 
 	implementation: EV_DIALOG_I
 			-- Implementation of the dialog
+
+feature {EV_MESSAGE_DIALOG_IMP} -- Implementation
+
+	set_implementation (imp: EV_DIALOG_IMP) is
+			-- Set `imp' as the current implementation.
+		do
+			implementation := imp
+		end
 
 end -- class EV_DIALOG
 

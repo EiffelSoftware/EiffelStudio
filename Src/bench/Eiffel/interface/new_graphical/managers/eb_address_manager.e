@@ -38,6 +38,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	EB_SHARED_EDITOR_DATA
 		
 	EV_UTILITIES
 		export
@@ -443,7 +445,19 @@ feature -- Updating
 			-- Update the text in the widgets according to parent's stone.
 		do
 			update_combos
+			update_colors
 		end
+
+	update_colors is
+			-- Update the colors for the address manager labels
+		do
+			if mode then
+				cluster_label.set_foreground_color (editor_preferences.cluster_text_color)
+				class_label.set_foreground_color (editor_preferences.class_text_color)
+				feature_label.set_foreground_color (editor_preferences.feature_text_color)		
+			end
+		end
+		
 
 	on_project_created is
 			-- A new project has been loaded. Enable all controls.
@@ -1865,12 +1879,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			create def_col
 			create hb
 
-			cluster_label.set_foreground_color (def_col.Dark_red)
-				-- This should be brown.
-			class_label.set_foreground_color (def_col.Blue)
-				-- This should be blue.
-			feature_label.set_foreground_color (def_col.Dark_green)
-				-- This should be green.
+			update_colors
 
 			cluster_label.pointer_enter_actions.extend (agent highlight_label (cluster_label))
 			cluster_label.pointer_leave_actions.extend (agent unhighlight_label (cluster_label))

@@ -344,9 +344,7 @@ feature -- Basic operation
 			titled_window ?= display_win
 			titled_window.set_size (Default_window_dimension, Default_window_dimension)
 			window_object.set_object (titled_window)
-			create builder_win
-			builder_win.set_size (Default_window_dimension, Default_window_dimension)
-			window_object.set_display_object (builder_win)
+			window_object.build_display_object
 		end
 
 	remove_object (an_object: GB_OBJECT) is

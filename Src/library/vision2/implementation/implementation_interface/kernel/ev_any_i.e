@@ -14,10 +14,10 @@ feature -- Status report
 		deferred
 		end
 
-	is_valid: BOOLEAN is
+	is_valid (object: EV_ANY): BOOLEAN is
 			-- Is Current object valid?
 		do
-			Result := Current /= Void and then not Current.destroyed
+			Result := object /= Void and then not object.destroyed
 		end
 
 feature -- Status setting

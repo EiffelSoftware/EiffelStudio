@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Create a widget with `par' as parent and `txt'
 			-- as text.
 		require
-			valid_parent: par.is_valid
+			valid_parent: is_valid (par)
 			valid_string: txt /= Void
 		deferred
         end	

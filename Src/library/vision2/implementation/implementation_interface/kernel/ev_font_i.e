@@ -16,7 +16,7 @@ feature -- Access
 			-- Ascent value in pixel of the font loaded 
 		require
 			font_specified: is_specified
-			valid_font: is_valid 
+			exists: not destroyed
 		deferred
 		ensure
 			non_negative_result: Result >= 0
@@ -26,7 +26,7 @@ feature -- Access
 			-- Descent value in pixel of the font loaded for `a_widget'.
 		require
 			font_specified: is_specified
-			valid_font: is_valid 
+			exists: not destroyed
 		deferred
 		ensure
 			non_negative_result: Result >= 0
@@ -37,7 +37,7 @@ feature -- Access
 		require
 			a_text_exists: a_text /= Void
 			font_specified: is_specified
-			valid_font: is_valid 
+			exists: not destroyed
 		deferred
 		ensure
 			non_negative_result: Result >= 0

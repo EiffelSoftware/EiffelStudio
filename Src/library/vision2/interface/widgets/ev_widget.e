@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
 		require
-			valid_parent: par.is_valid
+			valid_parent: is_valid (par)
 		deferred
 		end
 		
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- widgets and has to be called by all the 
 			-- widgets with parents.
 		require
-			valid_parent: par.is_valid
+			valid_parent: is_valid (par)
 		do
 			managed := par.manager
 			implementation.set_interface (Current)
@@ -212,7 +212,7 @@ feature -- Status setting
 			-- Make `color' the new `background_color'
 		require
 			exists: not destroyed
-			valid_color: color.is_valid
+			valid_color: is_valid (color)
 		do
 			implementation.set_background_color (color)
 		ensure
@@ -223,7 +223,7 @@ feature -- Status setting
 			-- Make `color' the new `foreground_color'
 		require
 			exists: not destroyed
-			valid_color: color.is_valid
+			valid_color: is_valid (color)
 		do
 			implementation.set_foreground_color (color)
 		ensure

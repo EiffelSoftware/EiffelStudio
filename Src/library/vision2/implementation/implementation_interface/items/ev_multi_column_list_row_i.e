@@ -15,7 +15,7 @@ feature -- Initialization
 	make (par: EV_MULTI_COLUMN_LIST) is
 		-- Create an empty row.
 		require
-			valid_parent: par.is_valid
+			valid_parent: is_valid (par)
 		deferred
 		end
 

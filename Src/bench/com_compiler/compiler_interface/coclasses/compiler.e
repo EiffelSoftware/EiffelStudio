@@ -22,6 +22,7 @@ inherit
 			expand_path,
 			can_run,
 			set_display_warnings,
+			set_discard_assertions,
 			was_compilation_successful
 		end
 
@@ -166,6 +167,7 @@ feature -- Access
 	shrink_path (a_path: STRING): STRING is
 			-- Shrink the given path to use the common know Eiffel env vars
 		do
+			Result := clone (a_path)
 		end
 	
 	has_signable_generation: BOOLEAN is
@@ -173,7 +175,7 @@ feature -- Access
 		do
 			Result := feature {EIFFEL_ENV}.has_signable_generation
 		end
-		
+
 feature -- Basic Operations
 
 	can_run: BOOLEAN is
@@ -209,7 +211,7 @@ feature -- Basic Operations
 					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_workbench then
 						Eiffel_project.melt
 					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_finalize then
-						Eiffel_project.finalize (False)
+						Eiffel_project.finalize (discard_assertions)
 					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_precompile then
 						Eiffel_project.precompile (True)
 					else
@@ -294,7 +296,7 @@ feature -- Basic Operations
 	Freeze_command_arguments: STRING is
 			-- Retrieve command-line arguments needed by Freeze command.
 		once
-			Result := Freeze_command_name + " -silent -vs"
+			Result := Freeze_command_name + " -vs"
 		end
 
 	Freeze_command_relative_path: STRING is "\Studio\spec\windows\bin\"
@@ -329,6 +331,13 @@ feature -- Element Change
 			display_warnings_set: display_warnings = display
 		end
 		
+	set_discard_assertions (discard: BOOLEAN) is
+			-- set `discard_assertions' to `discard'
+		do
+			discard_assertions := discard
+		ensure then
+			discard_assertions_set: discard_assertions = discard
+		end		
 		
 feature {PROJECT_MANAGER, COMPILER_TESTER} -- Element Change
 
@@ -404,6 +413,9 @@ feature {NONE} -- Implementation
 			-- pipe to send output to
 			
 	display_warnings: BOOLEAN
-			-- should warnings be displayed?		
+			-- should warnings be displayed?
+	
+	discard_assertions: BOOLEAN
+			-- should assertions be discard when finalize?
 				
 end -- class COMPILER

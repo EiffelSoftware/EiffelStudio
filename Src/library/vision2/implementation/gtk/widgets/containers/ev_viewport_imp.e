@@ -64,6 +64,13 @@ feature -- Element change
 		do
 			C.gtk_adjustment_set_value (vertical_adjustment, a_y)
 		end
+		
+	set_item_size (a_width, a_height: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+			-- Set `a_widget.height' to `a_height'.
+		do
+			--| FIXME IEK Implement me please
+		end
 
 feature {NONE} -- Implementation
 

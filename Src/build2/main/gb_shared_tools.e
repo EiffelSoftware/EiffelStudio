@@ -73,5 +73,25 @@ feature -- Access
 		once
 			create Result
 		end
+		
+	history_dialog: GB_HISTORY_DIALOG is
+			--
+		once
+			Result := (create {GB_SHARED_HISTORY}).history.history_dialog
+		end
+		
+		
+	all_floating_tools: ARRAYED_LIST [EV_DIALOG] is
+			-- `Result' is all tools that are independent of the main window.
+			-- The `tools_always_on_top' command applies to these windows only.
+		once
+			create Result.make (4)
+			Result.extend (builder_window)
+			Result.extend (display_window)
+			Result.extend (component_viewer)
+			Result.extend (history_dialog)
+		end
+		
+		
 
 end -- class GB_ACCESSIBLE

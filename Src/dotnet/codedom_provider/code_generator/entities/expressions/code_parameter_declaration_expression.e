@@ -10,9 +10,6 @@ inherit
 	CODE_EXPRESSION
 
 	CODE_DIRECTIONS
-		undefine
-			is_equal
-		end
 
 create
 	make

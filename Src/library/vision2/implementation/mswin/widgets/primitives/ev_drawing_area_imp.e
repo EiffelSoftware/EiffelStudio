@@ -33,7 +33,7 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			shown as is_displayed,
 			destroy as wel_destroy,
@@ -48,7 +48,6 @@ inherit
 			set_width,
 			set_height,
 			remove_command,
-			background_brush,
 			on_left_button_down,
 			on_mouse_move,
 			on_left_button_up,
@@ -68,7 +67,6 @@ inherit
 			on_paint,
 			on_erase_background,
 			class_background,
-			background_brush,
 			default_style
 		end
 
@@ -116,6 +114,20 @@ feature -- Access
 	screen_dc: WEL_CLIENT_DC
 			-- dc we use when painting outside a WM_PAINT message
 
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOALATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--| for WEL_CONTROL_WINDOW.
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
+
 feature {NONE} -- Implementation
 
 	class_background: WEL_BRUSH is
@@ -131,7 +143,7 @@ feature {NONE} -- Implementation
 		do
 			if to_be_cleared then
 				to_be_cleared := False
-				paint_dc.fill_rect(invalid_rect, background_brush)
+				paint_dc.fill_rect(invalid_rect, our_background_brush)
 			end
 
 				-- Disable the default windows processing.
@@ -279,6 +291,12 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/02/20 20:29:27  pichery
+--| created a factory that build WEL objects (pens & brushes). This factory
+--| keeps created objects into an hashtable in order to avoid multiple object
+--| creation for the same pen or brush.
+--| factory is here used to retrieve pens and brushes in drawing areas
+--|
 --| Revision 1.29  2000/02/19 05:45:01  oconnor
 --| released
 --|

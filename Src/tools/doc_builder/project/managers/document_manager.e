@@ -163,7 +163,7 @@ feature -- Document Manipulation
 			end				
 		end
 
-feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS} -- Document Manipulation
+feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR} -- Document Manipulation
 
 	add_document (a_doc: DOCUMENT) is
 			-- Add a document
@@ -175,6 +175,16 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS} -- Document Manipulation
 --				a_doc.attach (Current)
 			end			
 		end
+
+	remove_document (a_doc: DOCUMENT) is
+			-- Remove document
+		require
+			a_doc_not_void: a_doc /= Void
+		do
+			if documents.has (a_doc.name) then
+				documents.remove (a_doc.name)
+			end
+		end		
 	
 feature -- Access
 

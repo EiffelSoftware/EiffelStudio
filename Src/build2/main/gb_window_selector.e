@@ -73,13 +73,6 @@ inherit
 			default_create
 		end
 		
-	GB_COMMAND_HANDLER
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-		
 	GB_CONSTANTS
 		export
 			{NONE} all
@@ -161,7 +154,7 @@ feature {NONE} -- Implementation
 			widget.drop_actions.set_veto_pebble_function (agent veto_drop)
 			widget.drop_actions.extend (agent add_new_object)			
 			widget.key_press_actions.extend (agent check_for_object_delete)
-			widget.select_actions.extend (agent update_select_root_window_command)
+			widget.select_actions.extend (agent tool_bar.update_select_root_window_command)
 		end
 
 feature -- Access
@@ -202,66 +195,10 @@ feature -- Access
 			position_not_changed: widget.index = old widget.index
 		end
 		
-	tool_bar: EV_TOOL_BAR is
+	tool_bar: GB_WINDOW_SELECTOR_TOOL_BAR is
 			-- A tool bar containing all buttons associated with `Current'.
 		once
-			create Result
-			Result.extend (new_directory_button)
-			Result.extend (expand_all_button)
-			Result.extend (set_root_window_command.new_toolbar_item (True, False))
-			Result.extend (include_directory_button)
-			Result.extend (show_hide_empty_directories_button)
-				-- If the children in `Result' is modified, must also update
-				-- code for `update_select_root_window_command'.
-		end
-		
-	include_directory_button: EV_TOOL_BAR_BUTTON is
-			-- A button which is used to add all directories within the current
-			-- directory structure to the current project.
-		once
-			create Result
-			Result.set_pixmap (pixmap_by_name ("directory_search_small"))
-			Result.select_actions.extend (agent include_all_directories)
-			Result.set_tooltip ("Include all sub-directories")
-		ensure
-			result_not_void: result /= Void
-		end
-		
-	show_hide_empty_directories_button: EV_TOOL_BAR_TOGGLE_BUTTON is
-			-- A button used to show/hide all empty directories within `Current'.
-		once
-			create Result
-			
-			Result.set_pixmap (pixmap_by_name ("icon_show_hide_directory_color"))
-			Result.select_actions.extend (agent show_hide_all_empty_directories)
-			Result.set_tooltip ("Show/Hide all empty directories")
-		end
-		
-		
-	include_all_directories is
-			-- Include all dirs reachable from the project location, to the current project
-		do
-			internal_include_all_directories (create {DIRECTORY}.make (system_status.current_project_settings.project_location), create {ARRAYED_LIST [STRING]}.make (5))			
-		end
-
-	update_select_root_window_command is
-			-- Update status of root window button based on the currently selected window.
-		local
-			root_window_button: EV_TOOL_BAR_BUTTON
-		do
-			if not system_status.loading_project then
-				root_window_button ?= tool_bar.i_th (3)
-				check
-					root_window_button_not_void: root_window_button /= Void
-				end
-				if selected_directory = Void and (selected_window /= Void and then
-					(selected_window.object.type.is_equal (ev_titled_window_string) or
-					selected_window.object.type.is_equal (ev_dialog_string)) and object_handler.root_window_object /= selected_window.object) then
-					root_window_button.enable_sensitive
-				else
-					root_window_button.disable_sensitive
-				end
-			end
+			create Result.make_with_window_selector (Current)
 		end
 
 	name: STRING is "Window Selector"
@@ -571,6 +508,7 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 
 	update_class_files_location (window_item: GB_WINDOW_SELECTOR_ITEM; an_original_directory, a_new_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
 			-- Update generated classes of object associated with `window_item' for a move from `an_original_directory' to `new_directory'.
+			--| FIXME should probably be within the code of `window_item' as the implementation does not really rely on `Current'.
 		require
 			window_item_not_void: window_item /= Void
 			-- `an_original_directory' and `a_new_directory' area allowed be Void if moving to/from the root.
@@ -995,20 +933,6 @@ feature {NONE} -- Implementation
 				window_item.tree_item.set_text (name_and_type_from_object (window_item.object))
 			end
 		end
-		
-feature {GB_OBJECT_HANDLER} -- Implementation
-
-	set_item_for_prebuilt_window (window_object: GB_OBJECT) is
-			-- Add an associated window item for `window_object' in `Current'.
-			-- `window_object' must be a completely built object.
-		require
-			window_object_not_void: window_object /= Void
-			is_completely_built: window_object.layout_item /= Void
-		local
-			selector_item: GB_WINDOW_SELECTOR_ITEM
-		do
-			create selector_item.make_with_object (window_object)
-		end
 
 feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 	
@@ -1091,96 +1015,6 @@ feature {GB_SET_ROOT_WINDOW_COMMAND}
 		end
 
 feature {NONE} -- Implementation
-
-	new_directory_button: EV_TOOL_BAR_BUTTON is
-			-- `Result' is a tool bar button that
-			-- calls `add_new_directory'.
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			create Result
-			Result.select_actions.extend (agent add_new_directory)
-				-- Assign the appropriate pixmap.
-			create pixmaps
-			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_new_cluster_small_color"))
-			Result.set_tooltip ("New directory")
-		ensure
-			result_not_void: Result /= Void
-		end
-		
-	expand_all_button: EV_TOOL_BAR_BUTTON is
-			-- `Result' is a tool bar button that expands contents of `Current'
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			create Result
-			Result.select_actions.extend (agent expand_tree_recursive (widget))
-				-- Assign the appropriate pixmap.
-			create pixmaps
-			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
-			Result.set_tooltip ("Expand all")
-			Result.drop_actions.extend (agent expand_subtree)
-		ensure
-			result_not_void: Result /= Void
-		end
-		
-	expand_subtree (window_selector_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
-			--
-		do
-			window_selector_common_item.tree_item.expand
-			expand_tree_recursive (window_selector_common_item.tree_item)
-		end
-		
-
-	add_new_directory is
-			-- Display a dialog for inputting a new name, that is only valid if
-			-- not contained in `directory_names'. Create a new dialog
-			-- from the name as entered by the user.
-		local
-			dialog: GB_NAMING_DIALOG
-			command_add_directory: GB_COMMAND_ADD_DIRECTORY
-			last_dialog_name: STRING
-			retried: BOOLEAN
-			l_selected_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			l_directory_names: ARRAYED_LIST [STRING]
-		do
-			if retried then
-					-- We do not rebuild the dialog, as using the previous one
-					-- retains its position on screen.
-				dialog.show_actions.wipe_out
-				dialog.show_actions.extend (agent show_invalid_directory_warning (dialog, last_dialog_name))
-			else
-				l_selected_directory := selected_directory
-				if l_selected_directory = Void then
-					-- We are adding to the root of `Current'
-					l_directory_names := directory_names
-				else
-					l_directory_names := l_selected_directory.directory_names
-				end
-				create dialog.make_with_values (unique_name_from_array (l_directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name (?, selected_directory))
-				dialog.set_icon_pixmap (Icon_build_window @ 1)
-			end
-			
-			dialog.show_modal_to_window (parent_window (widget))
-			
-			if not dialog.cancelled then
-				last_dialog_name := dialog.name
-				if selected_directory /= Void then
-					create command_add_directory.make (selected_directory, last_dialog_name)
-				else
-					create command_add_directory.make (Void, last_dialog_name)
-				end
-				command_add_directory.create_new_directory
-				if command_add_directory.directory_added_succesfully then
-					command_add_directory.execute
-					system_status.enable_project_modified
-					command_handler.update	
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
 		
 	show_invalid_directory_warning (a_dialog: EV_DIALOG; last_dialog_name: STRING) is
 			-- Show a warning dialog modal to `a_dialog', indicating that `last_dialog_name'
@@ -1421,6 +1255,8 @@ feature {NONE} -- Implementation
 			position_not_changed: widget.index = old widget.index
 		end
 		
+feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
+		
 	internal_include_all_directories (directory: DIRECTORY; represented_path: ARRAYED_LIST [STRING]) is
 			-- Include all dirs reachable from the project location, to the current project
 		require
@@ -1457,7 +1293,7 @@ feature {NONE} -- Implementation
 								do_nothing
 							end
 								-- Retrieve the directory_item matching `parent_path' within `window_selector'.
-							directory_item := window_selector.directory_object_from_name (parent_path)--directory_item ?= tree_item_matching_path (window_selector, parent_path)
+							directory_item := window_selector.directory_object_from_name (parent_path)
 						end
 						create command_add_directory.make (directory_item, items.item)
 						command_add_directory.supress_warnings
@@ -1478,51 +1314,54 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	show_hide_all_empty_directories is
-			-- Show/hide all empty directories in project based on state of `show_hide_empty_directories_button'.
+	add_new_directory is
+			-- Display a dialog for inputting a new name, that is only valid if
+			-- not contained in `directory_names'. Create a new dialog
+			-- from the name as entered by the user.
+		local
+			dialog: GB_NAMING_DIALOG
+			command_add_directory: GB_COMMAND_ADD_DIRECTORY
+			last_dialog_name: STRING
+			retried: BOOLEAN
+			l_selected_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			l_directory_names: ARRAYED_LIST [STRING]
 		do
-			if show_hide_empty_directories_button.is_selected then
-				recursive_do_all (agent internal_hide_directory)
+			if retried then
+					-- We do not rebuild the dialog, as using the previous one
+					-- retains its position on screen.
+				dialog.show_actions.wipe_out
+				dialog.show_actions.extend (agent show_invalid_directory_warning (dialog, last_dialog_name))
 			else
-				recursive_do_all (agent internal_show_directory)
+				l_selected_directory := selected_directory
+				if l_selected_directory = Void then
+					-- We are adding to the root of `Current'
+					l_directory_names := directory_names
+				else
+					l_directory_names := l_selected_directory.directory_names
+				end
+				create dialog.make_with_values (unique_name_from_array (l_directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name (?, selected_directory))
+				dialog.set_icon_pixmap (Icon_build_window @ 1)
 			end
-		end
-		
-	internal_hide_directory (selector_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
-			-- Ensure that `selector_item' is hidden in `Current'.
-		require
-			selector_item_not_void: selector_item /= Void
-		local
-			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-		do
-			directory ?= selector_item
-			if directory /= Void then
-				if directory.is_grayed_out and directory.tree_item.parent /= Void then
-					directory.tree_item.parent.prune_all (directory.tree_item)
+			
+			dialog.show_modal_to_window (parent_window (widget))
+			
+			if not dialog.cancelled then
+				last_dialog_name := dialog.name
+				if selected_directory /= Void then
+					create command_add_directory.make (selected_directory, last_dialog_name)
+				else
+					create command_add_directory.make (Void, last_dialog_name)
+				end
+				command_add_directory.create_new_directory
+				if command_add_directory.directory_added_succesfully then
+					command_add_directory.execute
+					system_status.enable_project_modified
+					command_handler.update	
 				end
 			end
-		end
-		
-	internal_show_directory (selector_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
-			-- Ensure that `selector_item' is visible in `Current'.
-		require
-			selector_item_not_void: selector_item /= Void
-		local
-			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-		do
-			directory ?= selector_item
-			if directory /= Void then
-				if directory.tree_item.parent = Void then
-					if directory.parent.tree_item /= Void then
-						add_to_tree_node_alphabetically (directory.parent.tree_item, directory.tree_item)
-					else
-						check
-							parent_is_window_selector: directory.parent = window_selector
-						end
-						add_to_tree_node_alphabetically (window_selector.widget, directory.tree_item)
-					end
-				end
-			end
+		rescue
+			retried := True
+			retry
 		end
 		
 end -- class GB_WINDOW_SELECTOR

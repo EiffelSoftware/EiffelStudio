@@ -120,7 +120,7 @@ char *source;
 
 #ifdef DEBUG
 	xobjs = nomark(source);
-	printf("Source has %d objects\n", xobjs);
+	printf("Source has %x %d objects\n", source, xobjs);
 #endif
 
 	/* Set up an exception trap. If any exception occurs, control will be
@@ -145,7 +145,7 @@ char *source;
 	map_start();					/* Restart at bottom of FIFO stack */
 
 #ifdef DEBUG
-	printf("Computed %d objects\n", obj_nb);
+	printf("Computed %x %d objects\n\n", source, obj_nb);
 #endif
 
 	/* Throughout the deep cloning process, we need to maintain the notion of
@@ -678,9 +678,9 @@ int shallow_or_deep;
 			 * pointer, i.e. does not refer to a malloc'ed C object which
 			 * happens to have been attached to an Eiffel reference.
 			 */
-
-			if (!(flags & EO_C))
+			if (!(flags & EO_C)) {
 				rdeepclone(t_reference, t_enclosing, t_offset);
+			}
 		}
 	}
 }

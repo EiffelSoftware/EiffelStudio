@@ -327,25 +327,19 @@ feature {NONE} -- WEL Implementation
 					-- Paint under the text
 				r.set_rect (text_pos, text_height, text_pos + text_width, text_height)
 				paint_dc.fill_rect (r, bk_brush)
-
-	
-				if item = Void then
-					r.set_rect (1, half + 1, cur_width - 1, cur_height - 1)
-					paint_dc.fill_rect (r, bk_brush)
-				end
-			else
-				if item /= Void then
-						-- If the item does not cover all of the background area then
-						-- Note the 4 is due to the frame border.
-					if cur_height - item.height > 4 then
-						r.set_rect (1, item.height - 2, cur_width - 1, cur_height - 1)
-						paint_dc.fill_rect (r, bk_brush)
-					end
-				else
-						-- If there is no item, then we must always fill in the background.
-					r.set_rect (1, half + 1, cur_width - 1, cur_height - 1)
-					paint_dc.fill_rect (r, bk_brush)
-				end
+			end
+			
+				-- Fill background.
+			if item = Void then
+					-- If there is no item, then we must always fill in the background.
+				r.set_rect (1, half + 1, cur_width - 1, cur_height - 1)
+				paint_dc.fill_rect (r, bk_brush)
+			elseif cur_height - item.height > 4 then
+				-- If the item does not cover all of the background area then
+				-- we must draw the remaining background ourselves.
+				-- Note the 4 is due to the frame border.			
+				r.set_rect (1, item.height - 2, cur_width - 1, cur_height - 1)
+				paint_dc.fill_rect (r, bk_brush)
 			end
 
 			r.set_rect (0, text_height // 2, cur_width, cur_height)

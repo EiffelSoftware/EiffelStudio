@@ -112,11 +112,11 @@ feature
 						Extern_declarations.add_routine
 							(entry.type.c_type, clone (routine_name));
 					else
-						file.putstring ("(fnptr) 0,%N");
+						file.putstring ("(char *(*)()) 0,%N");
 					end;
 					forth;
 				else
-					file.putstring ("(fnptr) 0,%N");
+					file.putstring ("(char *(*)()) 0,%N");
 				end;
 				i := i + 1;
 			end;

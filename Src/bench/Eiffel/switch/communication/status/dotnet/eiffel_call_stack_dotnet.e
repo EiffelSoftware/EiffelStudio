@@ -58,6 +58,14 @@ create {EIFFEL_CALL_STACK_DOTNET}
 
 feature -- Properties
 
+	stack_depth: INTEGER is
+			-- 
+		do
+			-- FIXME jfiat: this is count for now ... but fix this !
+			Result := count
+		end
+		
+
 	error_occurred: BOOLEAN;
 			-- Did an error occurred when retrieving the eiffel stack?
 
@@ -159,7 +167,7 @@ feature {NONE} -- Initialization
 			l_hexaddress: STRING
 		do
 			debug ("DEBUGGER_TRACE_CALLBACK")
-				io.error.put_string ("  @-> EIFFEL_CALL_STACK: Creating Eiffel Stack%N")
+				io.error.put_string ("  @-> " + generator + ".make : starting%N")
 			end
 			error_occurred := False
 			list_make
@@ -305,6 +313,9 @@ feature {NONE} -- Initialization
 					end
 					l_enum_chain.clean_on_dispose
 				end
+			end
+			debug ("DEBUGGER_TRACE_CALLBACK")
+				io.error.put_string ("  @-> " + generator + ".make : finished%N")
 			end
 		end
 

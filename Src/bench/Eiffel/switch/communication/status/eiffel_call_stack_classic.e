@@ -30,9 +30,15 @@ create {RUN_INFO, APPLICATION_STATUS_CLASSIC}
 	make, dummy_make
 
 create {EIFFEL_CALL_STACK_CLASSIC}
-	list_make, make_sublist
+	list_make --, make_sublist
 
 feature -- Properties
+
+	stack_depth: INTEGER is
+			-- FIXME jfiat: this is count for now .. but fix this !!
+		do
+			Result := count
+		end		
 
 	error_occurred: BOOLEAN;
 			-- Did an error occurred when retrieving the eiffel stack?

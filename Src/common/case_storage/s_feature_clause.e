@@ -16,31 +16,32 @@ creation
 
 feature {NONE} -- Initialize
 
-	make (feats: like features; exp: like export_i) is
-			-- Set features to `feats' and export_i to `exp'.
+	make (feats: like features; exp: like export_i; com: like comment) is
+			-- Set `features' to `feats', `export_i' to `exp and
+			-- `comment' to `com'.
 		require
-			valid_exp: exp /= Void;
-			valid_feats: feats /= Void;
+			exp_exists: exp /= Void
+			feats_exists: feats /= Void
+			com_exists: com /= Void
 		do
-			features := feats;
+			features := feats
 			export_i := exp
+			comment := com
 		ensure
-			features_set: features = feats;
+			features_set: features = feats
 			export_i_set: export_i = exp
-		end;
+			comment_set: comment = com
+		end
 
 feature -- Properties
 
-	export_i: S_EXPORT_I;
+	export_i: S_EXPORT_I
 			-- Export status
 
 	comment: S_FREE_TEXT_DATA
-			-- Future purposes when we want comments for
-			-- the feature clause
-			-- (For the first release of ecase only public
-			-- and private clauses are recorded)
+			-- Feature clause comment
 
-	features: ARRAYED_LIST [S_FEATURE_DATA];
+	features: ARRAYED_LIST [S_FEATURE_DATA]
 			-- Features for Current feature clause
 
 feature -- Comparison
@@ -55,7 +56,8 @@ feature -- Comparison
 
 invariant
 		
-	valid_features: features /= Void;
+	valid_features: features /= Void
 	valid_export: export_i /= Void
-			
+	valid_comment: comment /= Void
+
 end -- class S_FEATURE_CLAUSE

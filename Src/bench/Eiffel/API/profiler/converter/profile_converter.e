@@ -266,7 +266,7 @@ end;
 			space, number: INTEGER;
 			num_str: STRING;
 			class_n, feature_n, cluster_n: STRING;
-			class_id: INTEGER
+			class_id, temp_int: INTEGER
 		do
 			if config.get_function_name_column = column_nr then
 				if token_string.item (1) = '<' then
@@ -297,8 +297,15 @@ debug("PROFILE_CONVERT")
 	io.error.new_line
 end;
 						class_id := function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count).to_integer;
-						if Eiffel_system.valid_dynamic_id (class_id + 1) then
+						if
+							project_initialized and then
+							system_defined and then
+							Eiffel_system.valid_dynamic_id (class_id + 1)
+						then
 							class_n := Eiffel_system.class_of_dynamic_id (class_id + 1).name_in_upper
+						else
+							temp_int := class_id + 1;
+							class_n := temp_int.out
 						end
 debug("PROFILE_CONVERT")
 	io.error.putstring ("Class id: ");

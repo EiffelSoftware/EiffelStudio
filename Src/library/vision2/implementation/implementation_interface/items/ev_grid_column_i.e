@@ -259,8 +259,22 @@ feature {EV_GRID_I} -- Implementation
 
 	disable_select is
 			-- Deselect `Current' from `parent_i'
+		local
+			i: INTEGER
+			a_item: EV_GRID_ITEM_I
 		do
-			to_implement ("EV_GRID_COLUMN_I.disable_select")
+			from
+				i := 1
+			until
+				i > count
+			loop
+				a_item := parent_i.item_internal (index, i, False)
+				if a_item /= Void and then a_item.internal_is_selected then
+					a_item.disable_select_internal
+				end
+				i := i + 1
+			end
+			selected_item_count := 0
 		end
 
 	destroy is

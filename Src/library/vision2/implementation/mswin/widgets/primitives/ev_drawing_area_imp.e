@@ -51,6 +51,7 @@ inherit
 			destroy as wel_destroy,
 			destroy_item as wel_destroy_item
 		undefine
+			window_process_message,
 			set_width,
 			set_height,
 			remove_command,

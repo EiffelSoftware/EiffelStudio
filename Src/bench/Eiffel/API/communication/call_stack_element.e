@@ -236,7 +236,7 @@ feature -- Output
 				-- Print object address (14 characters)
 			st.add_string ("[");
 			if c /= Void then
-				st.add_address (object_address, c)
+				st.add_address (object_address, routine_name, c)
 				last_pos := object_address.count + 2;
 			else
 				st.add_string ("0x0");

@@ -36,6 +36,30 @@ Feature -- Status report
 		ensure
 			index_not_changed: old interface.index = interface.index
 		end
+		
+	has_recursively (an_item: like item): BOOLEAN is
+			-- Does `Current' contain `an_item' at any level?
+		local
+			temp_cursor: CURSOR
+		do
+			from
+				interface.start
+				temp_cursor := cursor
+			until
+				interface.after or Result = True
+			loop
+				if equal (an_item, item) then
+					Result := True
+				else
+					Result := item.has_recursively (an_item)
+				end
+				interface.forth
+			end
+			go_to (temp_cursor)
+		ensure
+			index_not_changed: old interface.index = interface.index
+		end
+		
 
 end -- class EV_TREE_ITEM_NDOE_I
 
@@ -60,6 +84,9 @@ end -- class EV_TREE_ITEM_NDOE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/25 16:55:31  rogers
+--| Added `has_recursively'.
+--|
 --| Revision 1.2  2001/06/07 23:08:09  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

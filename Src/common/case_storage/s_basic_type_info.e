@@ -33,13 +33,18 @@ feature {NONE} -- Initialization
 			free_text_name_set: free_text_name = a_name
 		end;
 
-feature -- Property
+feature -- Access
+
+	is_basic: BOOLEAN is
+			-- Is Current a basic type?
+			--| Yes, it is.
+		do
+			Result := True
+		end;
 
 	is_not_actual_class_type: BOOLEAN is True
 			-- Is Current a basic formal or like feature or
 			-- like argument or like_current type?
-
-feature -- Access
 
 	is_valid: BOOLEAN is
 			-- Is Current valid?

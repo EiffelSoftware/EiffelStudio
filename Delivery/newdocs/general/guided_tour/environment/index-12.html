@@ -6,24 +6,6 @@
 <LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
 <TITLE> 11  RECOMPILING AND EDITING</TITLE>
 </HEAD>
-<!--------------------------------------------------->
-<SCRIPT LANGUAGE="Javascript">
-	// Default values
-	var oNewWindow = 0;
-
-	function ImageClick( oImage )
-	{
-		if( oNewWindow == 0 || oNewWindow.closed )
-		{
-			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
-		}
-		else
-		{
-			oNewWindow.location = oImage.src;
-		}
-	}
-</SCRIPT>
-<!--------------------------------------------------->
 <body bgcolor="#faf0e6">
 <DIV>
 <p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>

@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\menus\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\menus\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -33,11 +33,11 @@
 		</heading> After launching the program, you will see a window displayed with a similar appearance to the one displayed above. If you right click in the client area of the window, a menu will pop up at the cursor position. The same menu is also accessible from the "File" menu. Selecting any of the menu options will display a notification of which option was selected. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading> A WEL_MENU is used for the menu's in this sample. The feature show_track is used to display the menu at the cursor position and a WEL_MSG_BOX is used to display the notification when a menu selection has occured. 
+		</heading> A <link><url>../../reference/support/WEL_MENU_chart.html</url><label>WEL_MENU</label></link> is used for the menu's in this sample. The feature show_track is used to display the menu at the cursor position and a <link><url>../../reference/support/WEL_MSG_BOX_chart.html</url><label>WEL_MSG_BOX</label></link> is used to display the notification when a menu selection has occurred. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>MAIN_WINDOW</item>
-				<item>MENUS_DEMO</item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>MENUS_DEMO</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

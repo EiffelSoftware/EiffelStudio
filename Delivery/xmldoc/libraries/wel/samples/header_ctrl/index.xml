@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\header_ctrl\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\header_ctrl\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -31,17 +31,17 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the program, a window will be displayed as shown above. By manipulating the header control, you will see notification of the events that occur displayed in the WEL_LIST_VIEW situated below. </paragraph>
+		<paragraph>After launching the program, a window will be displayed as shown above. By manipulating the header control, you will see notification of the events that occur displayed in the <link><url>../../reference/controls/WEL_LIST_VIEW_chart.html</url><label>WEL_LIST_VIEW</label></link> situated below. </paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>HEADER_CONTROL inherits WEL_HEADER_CONTROL and redefines many of the `on_' notification features to display the output. </paragraph>
+		<paragraph><code><class_name>HEADER_CONTROL</class_name></code> inherits <link><url>../../reference/controls/WEL_HEADER_CONTROL_chart.html</url><label>WEL_HEADER_CONTROL</label></link> and redefines many of the `on_'  notification features to display the output. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>APPLICATION_IDS</item>
-				<item>HEADER_CONTROL</item>
-				<item>HEADER_CONTROL_DEMO</item>
-				<item>MAIN_WINDOW</item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>HEADER_CONTROL</class_name></code></item>
+				<item><code><class_name>HEADER_CONTROL_DEMO</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

@@ -11,7 +11,7 @@
 			<link>
 				<url>/libraries/wel/samples/tutorial/step5/index.html</url>
 				<label>step 5</label>
-			</link> by preventing the loss of the drawing when Windows re-draws the client area of the WEL_FRAME_WINDOW. The output is shown below: 
+			</link> by preventing the loss of the drawing when Windows re-draws the client area of the <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link>. The output is shown below: 
 		</paragraph>
 		<image> 
 			<url>step6.png</url> 
@@ -26,19 +26,19 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the sample, you will see a WEL_FRAME_WINDOW displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button, a WEL_MODAL_DIALOG will pop up which allows you to enter the thickness of the line that is drawn. If you re-size the window, then the drawing will be re-drawn.</paragraph>
+		<paragraph>After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button, a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link> will pop up which allows you to enter the thickness of the line that is drawn. If you re-size the window, then the drawing will be re-drawn.</paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This system uses a redefined on_paint to re-draw the contents of the window. A LINKED_LIST of LINES is used to store all the lines that have been drawn and during on_paint, this list is traversed in order to re-draw each line. 
+		<paragraph>This system uses a redefined on_paint to re-draw the contents of the window. A <code><class_name>LINKED_LIST</class_name></code> of <code><class_name>LINES</class_name></code> is used to store all the lines that have been drawn and during <code><feature_name>on_paint</feature_name></code>, this list is traversed in order to re-draw each line. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item>TUTORIAL_STEP6</item>
-					<item>MAIN_WINDOW</item>
-					<item>LINE_THICKNESS_DIALOG_CHART</item>
-					<item>APPLICATION_IDS</item>
-					<item>POINT</item>
-					<item>LINE</item>
+					<item><code><class_name>TUTORIAL_STEP6</class_name></code></item>
+					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+					<item><code><class_name>LINE_THICKNESS_DIALOG_CHART</class_name></code></item>
+					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+					<item><code><class_name>POINT</class_name></code></item>
+					<item><code><class_name>LINE</class_name></code></item>
 				</list>
 			</paragraph>
 		</paragraph>

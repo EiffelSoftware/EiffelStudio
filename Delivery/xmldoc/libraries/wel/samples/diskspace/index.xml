@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\diskspace\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\diskspace\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -31,14 +31,14 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the application, you will see text ouput showing the size and amount of free space available on each of your local drives. </paragraph>
+		<paragraph>After launching the application, you will see text output showing the size and amount of free space available on each of your local drives. </paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>DISCSPACE_DEMO contains a once feature, diskspace which returns an instance of WEL_DISK_SPACE, used to query the local drives.</paragraph>
+		<paragraph><code><class_name>DISCSPACE_DEMO</class_name></code> contains a once feature, diskspace which returns an instance of <link><url>../../reference/support/WEL_DISK_SPACE_chart.html</url><label>WEL_DISK_SPACE</label></link>, used to query the local drives.</paragraph>
 		<paragraph>This sample contains only one class: 
 			<list ordered="false">
-				<item>DISKSPACE_DEMO</item>
+				<item><code><class_name>DISKSPACE_DEMO</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

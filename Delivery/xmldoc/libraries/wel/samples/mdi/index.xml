@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\mdi\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\mdi\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -33,12 +33,12 @@
 		</heading> After launching the program, a window will be displayed as illustrated above. Selecting "New" from the "File" menu will create a new child window, while selecting "Close" will close the currently selected child window. The options available on the "Window" menu allow positioning of the child windows. Selecting "Exit" from the "File" menu or closing the window manually will exit the program. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading>MAIN_WINDOW inherits WEL_MDI_FRAME_WINDOW to provide the multiple document interface behaviour while each child window is of type WEL_MDI_CHILD_WINDOW. When "Close" is selected from the "File" menu, the feature active_window from WEL_MDI_FRAME_WINDOW is used to select the window that must be closed. 
+		</heading><code><class_name>MAIN_WINDOW</class_name></code> inherits <link><url>../../reference/windows/WEL_MDI_FRAME_WINDOW_chart.html</url><label>WEL_MDI_FRAME_WINDOW</label></link> to provide the multiple document interface behavior while each child window is of type <link><url>../../reference/windows/WEL_MDI_CHILD_WINDOW_chart.html</url><label>WEL_MDI_CHILD_WINDOW</label></link>. When "Close" is selected from the "File" menu, the feature <code><feature_name>active_window</feature_name></code> from <link><url>../../reference/windows/WEL_MDI_FRAME_WINDOW_chart.html</url><label>WEL_MDI_FRAME_WINDOW</label></link> is used to select the window that must be closed. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>APPLICATION_IDS</item>
-				<item>MAIN_WINDOW</item>
-				<item>MDI_DEMO</item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>MDI_DEMO</class_name></code></item>
 			</list>
 			<seealso>
 				<bold>See Also</bold>

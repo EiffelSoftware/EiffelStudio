@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\fun\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\fun\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -33,15 +33,15 @@
 		</heading> After launching the program, a window will be displayed as illustrated above. Clicking the push button marked "Maze" will open a new window and draw a maze within this window. Clicking the push button marked "Artist" will open a new window, and display output dependent on the movement of the mouse pointer within the client area of that window. Clicking the push button marked "Fun" will open a new window which contains a fake error message and a close push button which moves when you try to move the mouse pointer over it. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading> Both FUN_DIALOG and ARTIST redefine `on_mouse_move' to track the actions of the mouse pointer and respond accordingly. 
+		</heading> Both <code><class_name>FUN_DIALOG</class_name></code> and <code><class_name>ARTIST</class_name></code> redefine <code><feature_name>on_mouse_move</feature_name></code> to track the actions of the mouse pointer and respond accordingly. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>APPLICATION_IDS</item>
-				<item>ARTIST</item>
-				<item>FUN_DEMO</item>
-				<item>FUN_DIALOG</item>
-				<item>MAIN_WINDOW</item>
-				<item>MAZE</item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>ARTIST</class_name></code></item>
+				<item><code><class_name>FUN_DEMO</class_name></code></item>
+				<item><code><class_name>FUN_DIALOG</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>MAZE</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

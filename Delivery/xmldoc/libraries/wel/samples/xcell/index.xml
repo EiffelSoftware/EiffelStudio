@@ -25,16 +25,16 @@
 		</heading>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>APP_CONSTANTS</item>
-				<item>CARD</item>
-				<item>COLUMN</item>
-				<item>GAME</item>
-				<item>GAME_CONSTANTS</item>
-				<item>GAME_MANAGER</item>
-				<item>MAIN_WINDOW</item>
-				<item>SELECT_GAME_NUMBER_DIALOG</item>
-				<item>SELECT_NUMBER_OF_CARDS_DIALOG</item>
-				<item>XCELL_DEMO</item>
+				<item><code><class_name>APP_CONSTANTS</class_name></code></item>
+				<item><code><class_name>CARD</class_name></code></item>
+				<item><code><class_name>COLUMN</class_name></code></item>
+				<item><code><class_name>GAME</class_name></code></item>
+				<item><code><class_name>GAME_CONSTANTS</class_name></code></item>
+				<item><code><class_name>GAME_MANAGER</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>SELECT_GAME_NUMBER_DIALOG</class_name></code></item>
+				<item><code><class_name>SELECT_NUMBER_OF_CARDS_DIALOG</class_name></code></item>
+				<item><code><class_name>XCELL_DEMO</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

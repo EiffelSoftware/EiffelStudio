@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\xy\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\xy\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -30,7 +30,7 @@
 		</list>
 		<heading>
 			<size>2</size>Running
-		</heading> After launching the sample, you should see a WEL_FRAME_WINDOW displayed. If you click the left mouse button in the client area of the window, the coordinates of the click (Relative to the top left of the client area), will be displayed. Clicking the 
+		</heading> After launching the sample, you should see a <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> displayed. If you click the left mouse button in the client area of the window, the coordinates of the click (Relative to the top left of the client area), will be displayed. Clicking the 
 		<link>
 			<url>/libraries/wel/reference/controls/wel_push_button_chart.html</url>
 			<label>WEL_PUSH_BUTTON</label>
@@ -38,11 +38,11 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>A WEL_CLIENT_DC is used to display output in the client area of the window during the execution of on_left_button_down which has been redefined in MAIN_WINDOW.</paragraph>
+		<paragraph>A <link><url>../../reference/gdi/WEL_CLIENT_DC_chart.html</url><label>WEL_CLIENT_DC</label></link> is used to display output in the client area of the window during the execution of <code><feature_name>on_left_button_down</feature_name></code> which has been redefined in <code><class_name>MAIN_WINDOW</class_name></code>.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>XY_DEMO</item>
-				<item>MAIN_WINDOW</item>
+				<item><code><class_name>XY_DEMO</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
 			</list>
 		</paragraph>
 		<seealso>

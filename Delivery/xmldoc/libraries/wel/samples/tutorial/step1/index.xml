@@ -55,7 +55,7 @@
 			<link>
 				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
 				<label>WEL_APPLICATION</label>
-			</link> and redefines main_window
+			</link> and redefines <code><feature_name>main_window</feature_name></code>
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>

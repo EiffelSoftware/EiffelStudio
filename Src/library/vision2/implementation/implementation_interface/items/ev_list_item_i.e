@@ -12,7 +12,8 @@ inherit
 	EV_ITEM_I
 		redefine
 			interface,
-			parent		
+			parent,
+			pixmap_equal_to
 		end
 
 	EV_TEXTABLE_I
@@ -51,6 +52,34 @@ feature -- Access
 			-- List containing `interface'.
 		do
 			Result ?= Precursor
+		end
+		
+feature {NONE} -- Contract support
+
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+			-- Is `a_pixmap' equal to `pixmap'?
+		local
+			scaled_pixmap: EV_PIXMAP
+			list_parent: EV_LIST
+			combo_parent: EV_COMBO_BOX
+		do
+			if parent /= Void then
+				scaled_pixmap := clone (a_pixmap)
+				list_parent ?= parent
+				if list_parent /= Void then
+					scaled_pixmap.stretch (list_parent.pixmaps_width, list_parent.pixmaps_height)
+				else
+					combo_parent ?= parent
+					check
+						has_combo_parent: combo_parent /= Void
+					end
+					scaled_pixmap.stretch (combo_parent.pixmaps_width, combo_parent.pixmaps_height)
+				end
+				
+			else
+				scaled_pixmap := a_pixmap	
+			end
+			Result := scaled_pixmap.is_equal (pixmap)
 		end
 
 feature {EV_LIST_ITEM_I} -- Implementation

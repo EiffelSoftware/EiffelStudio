@@ -267,23 +267,24 @@ feature {NONE} -- Constants
 			--root_class_external_name: STRING
 			creation_routine_name: STRING
 			--creation_routine_external_name: STRING
-		once
-			Result := "You have specified the following settings:" + New_line + New_line +
+		do
+			create Result.make (3000)
+			Result.append ("You have specified the following settings:" + New_line + New_line +
 					"Project name: " + Tab + wizard_information.project_name + New_line +
-					"Location: " + Tab + wizard_information.project_location + New_line + New_line +
-					"Root class name: " + Tab + wizard_information.root_class_name + New_line 
---			root_class_external_name := wizard_information.root_class_external_name
---			if root_class_external_name /= Void and then not root_class_external_name.is_empty and then not root_class_external_name.is_equal (Unrelevant_data) then
---				Result.append ("Root class external name: " + Tab + root_class_external_name + New_line)
---			end
+					"Location: " + Tab + wizard_information.project_location + New_line +
+					"Application type: " + Tab)
+			if wizard_information.generate_dll then
+				Result.append ("Library (.dll)")
+			else
+				Result.append ("Application (.exe)")
+			end
+			
+			Result.append (New_line + New_line)
+			Result.append ("Root class name: " + Tab + wizard_information.root_class_name + New_line)
 			creation_routine_name := wizard_information.creation_routine_name
 			if creation_routine_name /= Void and then not creation_routine_name.is_empty and then not creation_routine_name.is_equal (Unrelevant_data) then
 				Result.append ("Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line)
 			end
---			creation_routine_external_name := wizard_information.creation_routine_external_name
---			if creation_routine_external_name /= Void and then not creation_routine_external_name.is_empty and then not creation_routine_external_name.is_equal (Unrelevant_data) then
---				Result.append ("Creation routine external name: " + Tab + wizard_information.creation_routine_external_name + New_line)
---			end
 			Result.append (New_line)
 		ensure
 			non_void_message: Result /= Void

@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	read_config_file(prof: STRING) is
+	read_config_file (prof: STRING) is
 			-- Reads the values from the configuration file
 		local
 			file_name: FILE_NAME;

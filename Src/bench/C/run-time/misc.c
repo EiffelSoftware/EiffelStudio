@@ -28,6 +28,9 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef EIF_SGI
+#include <strings.h>
+#endif
 #include "rt_assert.h"
 #include "eif_misc.h"
 #include "eif_malloc.h"

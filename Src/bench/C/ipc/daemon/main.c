@@ -24,9 +24,8 @@
 #include "proto.h"
 #include "listen.h"
 
-#ifdef I_STRING
 #include <string.h>
-#else
+#ifdef EIF_SGI
 #include <strings.h>
 #endif
 

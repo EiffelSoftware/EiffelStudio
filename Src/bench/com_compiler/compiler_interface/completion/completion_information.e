@@ -16,9 +16,8 @@ inherit
         	target_classes,
             target_features,
             target_feature,
-            parse_source_for_expr,
-            find_definition,
-            find_inherited_definition,
+            find_class_definition,
+            find_feature_definition,
             add_local,
             add_argument,
             flush_locals,
@@ -224,166 +223,43 @@ feature -- Access
 			l_retried := True
 			retry
  		end
-
-    parse_source_for_expr (source_text: STRING; source_row, source_col: INTEGER; expr, feat: CELL [STRING]; is_class_expr: BOOLEAN_REF) is
-            -- Parse `source_text' where caret is at `source_row', `source_col' and find the complete expression text.
-        require else
-            non_void_source_text: source_text /= Void
-            valid_source_text: not source_text.is_empty
-            valid_source_row: source_row > 0
-            valid_source_col: source_col > 0
-            non_void_expr: expr /= Void
-            expr_is_empty: expr.item.is_empty
-            non_void_feat: feat /= Void
-            feat_is_empty: feat.item.is_empty
-            non_void_is_class_expr: is_class_expr /= Void
---        local
---            def_parser: DEFINITION_PARSER
-        do
---            create def_parser.make
---            def_parser.parse (source_text, source_row, source_col)
---            if def_parser.parse_successful then
---                is_class_expr.set_item (def_parser.is_class)
---                expr.put (def_parser.parsed_result)
---                feat.put (def_parser.parsed_result_feature)
---            end
-        end
-
-    find_definition (class_text, target_file_name: STRING; target_row, target_col: INTEGER): IEIFFEL_DEFINITION_RESULT_INTERFACE is
-            -- Find `target' file name and location
-        require else
-            non_void_class_text: class_text /= Void
-            valid_class_text: not class_text.is_empty
-            non_void_target_file_name: target_file_name /= Void
-            valid_target_file_name: not target_file_name.is_empty
-            target_row_big_enough: target_row >= 1
-            target_col_big_enough: target_col >= 1
-        local
-            def_parser: DEFINITION_PARSER
-            def_parsed_result: DEFINITION_PARSED_RESULT
- 			cf: COMPLETION_FEATURE
-            ecom_var: ECOM_VARIANT
-            class_file_name: FILE_NAME
-            class_i: CLASS_I
-            feature_i: FEATURE_I
-        do
-            create def_parser
-            def_parsed_result := def_parser.parse (class_text, target_row, target_col)
-            if def_parsed_result /= Void and then def_parsed_result.parse_successful then
-            	if def_parsed_result.parsed_result_is_class then
-            		class_file_name := class_from_name (def_parsed_result.parsed_result_string).file_name
-            		if class_file_name /= Void then
-						class_i := Eiffel_universe.class_with_file_name (class_file_name);
-						if class_i /= Void then
-							create {DEFINITION_SEARCH_RESULT} Result.make (class_i)
-						end
-            		end
-            	else
-                    create ecom_var.make
-                    ecom_var.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                    initialize_feature (def_parsed_result.parsed_result_containing_feature, ecom_var, ecom_var, def_parsed_result.parsed_result_containing_feature_return_type, feature {ECOM_EIF_FEATURE_TYPES_ENUM}.eif_feature_types_function, target_file_name, def_parsed_result.parsed_result_containing_feature_row)
-                    cf := internal_target_feature (def_parsed_result.parsed_result_string, def_parsed_result.parsed_result_containing_feature, target_file_name, False, False)
-                    if cf /= Void then
-                    	create class_file_name.make_from_string (cf.file_name)
-						class_i := eiffel_universe.class_with_file_name (class_file_name)
-						if class_i /= Void and then class_i.compiled_class /= Void then
-							feature_i := class_i.compiled_class.feature_named (cf.feature_name)
-							if feature_i /= Void then
-								create {DEFINITION_SEARCH_RESULT_FEATURE} Result.make (class_i, feature_i)
-							end
-						end
-                    end
+        
+	find_class_definition (bstr_target: STRING): IEIFFEL_DEFINITION_RESULT_INTERFACE is
+			-- Find class definition.
+		local
+			l_class: CLASS_I
+		do
+			l_class := find_class_i (bstr_target)
+			if l_class /= Void then
+				create {DEFINITION_SEARCH_RESULT}Result.make (l_class)	
+			end
+		end
+		
+	find_feature_definition (bstr_target, bstr_class, bstr_feature: STRING): IEIFFEL_DEFINITION_FEATURE_RESULT_INTERFACE is
+			-- Find feature definition
+		local
+			l_class: CLASS_I
+			l_feature: FEATURE_I
+			l_cf: COMPLETION_FEATURE
+		do
+			l_class := find_class_i (bstr_class)
+			if l_class /= Void then
+				l_cf := internal_target_feature (bstr_target, bstr_feature, l_class.file_name, True, True)
+				if l_cf = Void then
+					l_cf := internal_target_feature (bstr_target, bstr_feature, l_class.file_name, False, True)	
 				end
-            end
-        end
-        
-    find_inherited_definition (class_text, a_class_name: STRING; target_row, target_col: INTEGER): IEIFFEL_DEFINITION_RESULT_INTERFACE is
-            -- find definition for feature in inheritance clause
-        require else
-            non_void_class_text: class_text /= Void
-            valid_class_text: not class_text.is_empty
-            non_void_class_name: a_class_name /= Void
-            valid_class_name: not a_class_name.is_empty
-            target_row_big_enough: target_row >= 1
-            target_col_big_enough: target_col >= 1
-        local
-			retried: BOOLEAN
-			classes: LIST [CLASS_I]
-			class_i: CLASS_I
-			feature_i: FEATURE_I
-			class_file_name: FILE_NAME
-			cf: COMPLETION_FEATURE
-			def_parser: DEFINITION_PARSER
-			def_parsed_result: DEFINITION_PARSED_RESULT
-			local_name: STRING
-			feature_call: STRING
-        do
-            if not retried then
-                classes := eiffel_universe.classes_with_name (a_class_name)
-                if classes /= Void then
-                    from 
-                        classes.start
-                    until
-                        classes.after or class_i /= Void
-                    loop
-                        if classes.item.is_compiled then
-                            class_i := classes.item
-                        end
-                        classes.forth
-                    end
-                    -- If inherited class is uncompiled then we can take first uncompiled class
-                    if classes.count = 1 and then class_i = Void then
-                        class_i := classes.first
-                    end
-                    if class_i /= Void then
-                        create def_parser
-                        def_parsed_result := def_parser.extract_feature_name_from_text (class_text, target_row, target_col)
-                        if def_parsed_result /= Void and then def_parsed_result.parse_successful then
-                        	if def_parsed_result.parsed_result_is_class then
-                        		class_i := class_from_name (def_parsed_result.parsed_result_string)
-                        		if class_i /= Void then
-				            		class_file_name := class_i.file_name
-				            		if class_file_name /= Void then
-										class_i := Eiffel_universe.class_with_file_name (class_file_name);
-										if class_i /= Void then
-											create {DEFINITION_SEARCH_RESULT} Result.make (class_i)
-										end
-				            		end                        			
-                        		end
-							else
-								-- with inherited features we have to trick compiler into believing that it is a feature call
-								local_name := "local"
-								add_local (local_name, class_i.name_in_upper)
-								create feature_call.make (256)
-								feature_call.append (local_name)
-								feature_call.append_character ('.')
-								feature_call.append (def_parsed_result.parsed_result_string)
+				if l_cf /= Void then
+					l_class := eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (l_cf.file_name))
+					if l_class /= Void and l_class.is_compiled then
+						l_feature := l_class.compiled_class.feature_named (l_cf.feature_name)
+						if l_feature /= Void then
+							create {DEFINITION_SEARCH_RESULT_FEATURE}Result.make (l_class, l_feature)		
+						end
+					end
+				end
+			end
+		end
 
-								classes := eiffel_universe.classes_with_name ("ANY")
-								if classes /= Void and classes.count >= 1 then
-									class_i := classes @ (1)
-									cf := internal_target_feature (feature_call, "default_create", class_i.file_name, False, True)
-									if cf /= Void then
-				                    	create class_file_name.make_from_string (cf.file_name)
-										class_i := eiffel_universe.class_with_file_name (class_file_name)
-										if class_i /= Void and then class_i.compiled_class /= Void then
-											feature_i := class_i.compiled_class.feature_named (cf.feature_name)
-											if feature_i /= Void then
-												create {DEFINITION_SEARCH_RESULT_FEATURE} Result.make (class_i, feature_i)
-											end
-										end									
-									end	
-								end
-                        	end
-                        end
-                    end
-                end
-            end
-        rescue
-            retried := True
-            retry
-        end
-        
 feature -- Basic Operations
 
     setup_rename_table (var_sources: ECOM_VARIANT; var_targets: ECOM_VARIANT) is
@@ -517,6 +393,34 @@ feature -- Basic Operations
         end 
 
 feature {NONE} -- Implementation
+
+	find_class_i (a_class_name: STRING): CLASS_I is
+			-- Find class definition.
+		require
+			a_class_name_not_void: a_class_name /= Void
+			not_a_class_name_is_empty: not a_class_name.is_empty
+		local
+			l_classes: LIST [CLASS_I]
+			l_class: CLASS_I
+		do
+			l_classes := eiffel_universe.classes_with_name (a_class_name)
+			if l_classes /= Void and then not l_classes.is_empty then
+					-- Attempt to locate a compiled class first
+				from
+					l_classes.start
+				until
+					l_classes.after or Result /= Void
+				loop
+					if l_classes.item.is_compiled then
+						Result := l_classes.item
+					end
+					l_classes.forth
+				end
+				if Result = Void then
+					Result := l_classes.first	
+				end
+			end
+		end
 
     rename_sources: ARRAY [STRING]
             -- Renamed features

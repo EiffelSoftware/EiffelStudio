@@ -135,7 +135,7 @@ feature -- Access
 					l_cl_type := associated_class_type
 					l_is_precompiled := l_cl_type.is_precompiled
 					if l_is_precompiled then
-						Result := associated_class_type.il_type_name (a_prefix)
+						Result := l_cl_type.il_type_name (a_prefix)
 					end
 				end
 				if not l_is_precompiled then

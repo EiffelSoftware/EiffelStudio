@@ -1,20 +1,11 @@
-
-
 class BITS_DESC 
 
 inherit
-
-	ATTR_DESC
-		redefine
-			is_bits, same_as
-		select
-			same_as
-		end;
 	ATTR_DESC
 		rename
-			same_as as basic_same_as
+			Bits_level as level
 		redefine
-			is_bits
+			is_bits, same_as
 		end;
 	
 feature 
@@ -31,12 +22,6 @@ feature
 	is_bits: BOOLEAN is True;
 			-- Is the attribute a bits one ?
 
-	level: INTEGER is
-			-- Level comparasion
-		once
-			Result := Bits_level;
-		end;
-
 	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
 			-- `buffer'.
@@ -50,7 +35,7 @@ feature
 		local
 			other_bits: BITS_DESC;
 		do
-			if basic_same_as (other) then
+			if {ATTR_DESC} Precursor (other) then
 				other_bits ?= other;
 				Result := other_bits.value = value
 			end;

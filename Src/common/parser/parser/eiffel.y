@@ -1121,7 +1121,19 @@ Formal_generic_list: Formal_generic
 
 Formal_generic:
 		TE_ID
-			{ formal_parameters.extend (create {ID_AS}.initialize (token_buffer)) }
+			{
+				if None_classname.is_equal (token_buffer) then
+						-- Trigger an error when constraint is NONE.
+						-- Needs to be done manually since current test for
+						-- checking that `token_buffer' is not a class name
+						-- will fail for NONE, whereas before there were some
+						-- syntactic conflict since `NONE' was a keyword and
+						-- therefore not part of `TE_ID'.
+					raise_error
+				else
+					formal_parameters.extend (create {ID_AS}.initialize (token_buffer))
+				end
+			}
 		Constraint
 			{
 				check formal_exists: not formal_parameters.is_empty end

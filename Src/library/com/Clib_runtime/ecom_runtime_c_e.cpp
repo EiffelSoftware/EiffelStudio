@@ -2126,6 +2126,16 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr
   else
     return NULL;
 };
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_record
+    (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
+
+// Create Eiffel Array from C array of LPSTR
+// NOT IMPLEMENTED YET!!
+{
+    return NULL;
+};
 //----------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr

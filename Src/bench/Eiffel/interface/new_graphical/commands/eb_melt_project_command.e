@@ -128,7 +128,7 @@ feature {NONE} -- Compilation implementation
 							st.add_new_line
 							output_manager.process_text (st)
 						else
-							if not finalization_error and not System.il_generation then
+							if not finalization_error then
 								launch_c_compilation
 							end
 						end

@@ -55,7 +55,8 @@ void c_signal_callback (GtkObject *w, gpointer data)
     pcbd = (callback_data_t *)data;
     
     /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
-    (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
+    /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
 /*********************************
@@ -77,7 +78,7 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
     {
 	/* Call Eiffel routine 'set_event_data' to transfer the event data
 	   to Eiffel */
-	(pcbd->set_event_data)(eif_access(pcbd->ev_data), ev); 
+	(pcbd->set_event_data)(eif_access(pcbd->ev_data_imp), ev); 
     }
 
     /* In case of button event we have to check that the right button
@@ -92,7 +93,8 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
 	/* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument'
 
 	   (routine execute of EV_COMMAND object with EV_ARGUMENTS */
-	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
+	/*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
     }
 
     /* Another test to make a difference between a move event and a size
@@ -100,11 +102,32 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
        a size_event : pcbd->mouse_button = 2.
     */
     
-    if (c_gdk_event_type (ev) == GDK_CONFIGURE)
-      {
-	if ((pcbd->mouse_button == 1 && ((c_gdk_event_configure_width(ev) == c_gtk_widget_width (GTK_WIDGET(w))) && (c_gdk_event_configure_height(ev) == c_gtk_widget_height (GTK_WIDGET(w))))) || (pcbd->mouse_button == 2 && ((c_gdk_event_configure_width(ev) != c_gtk_widget_width (GTK_WIDGET(w))) || (c_gdk_event_configure_height(ev) != c_gtk_widget_height (GTK_WIDGET(w)))))) 
-	  (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
-      }
+    if (
+		c_gdk_event_type (ev) == GDK_CONFIGURE
+		&&
+        (
+			(
+				pcbd->mouse_button == 1
+				&&
+				c_gdk_event_configure_width(ev) == c_gtk_widget_width (GTK_WIDGET(w))
+				&&
+				c_gdk_event_configure_height(ev) == c_gtk_widget_height (GTK_WIDGET(w))
+			)
+			||
+			(
+			   	pcbd->mouse_button == 2
+				&&
+				(
+					c_gdk_event_configure_width(ev) != c_gtk_widget_width (GTK_WIDGET(w))
+					||
+					c_gdk_event_configure_height(ev) != c_gtk_widget_height (GTK_WIDGET(w))
+				)
+			)
+		) 
+	) {
+	/*	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+		(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
+    }
 }
 
 
@@ -157,18 +180,21 @@ void c_gtk_signal_destroy_data (gpointer data)
  *
  *********************************/
 
-gint c_gtk_signal_connect (GtkObject *widget, 
+gint c_gtk_signal_connect_general (GtkObject *widget, 
 			   gchar *name, 
 			   EIF_PROC execute_func,
 			   EIF_POINTER object,
 			   EIF_POINTER argument,
 			   EIF_POINTER ev_data,
+			   EIF_POINTER ev_data_imp,
 			   EIF_PROC event_data_rtn,
 			   char mouse_button,
-			   char double_click)
+			   char double_click,
+			   int after)
 {
     callback_data_t *pcbd;
     int name_len;
+	int event = 0;
 
     /* Deallocation of this block is done when the */
     /* the signal is destroyed (see c_gtk_signal_destroy_data) */
@@ -181,6 +207,7 @@ gint c_gtk_signal_connect (GtkObject *widget,
     pcbd->obj = henter (object);
     pcbd->argument = henter (argument);
     pcbd->ev_data = henter (ev_data);
+    pcbd->ev_data_imp = henter (ev_data_imp);
     pcbd->set_event_data = event_data_rtn;
     pcbd->mouse_button = mouse_button;
     pcbd->double_click = double_click;  
@@ -191,17 +218,61 @@ gint c_gtk_signal_connect (GtkObject *widget,
 
     /* Look at the signal name to check whether it ends with "*_event" */
     name_len = strlen (name);
-    if (name_len > 6)
-    {
-	if (strcmp (&name [name_len - 6], "_event") == 0)
-	    return (gtk_signal_connect (widget, name, 
-					GTK_SIGNAL_FUNC(c_event_callback), 
-					(gpointer)pcbd));		
-    }
-    return (gtk_signal_connect (widget, name, 
+    if (name_len > 6 && strcmp (&name [name_len - 6], "_event") == 0) {
+        event = 1;
+	}
+		
+	if(after) {
+		if (event) {
+			return (gtk_signal_connect_after (widget, name, 
+				GTK_SIGNAL_FUNC(c_event_callback), 
+				(gpointer)pcbd));		
+		} else {
+			return (gtk_signal_connect_after (widget, name, 
 				GTK_SIGNAL_FUNC(c_signal_callback), 
 				(gpointer)pcbd));
+		}
+	} else {
+		if (event) {
+			return (gtk_signal_connect (widget, name, 
+				GTK_SIGNAL_FUNC(c_event_callback), 
+				(gpointer)pcbd));		
+		} else {
+			return (gtk_signal_connect (widget, name, 
+				GTK_SIGNAL_FUNC(c_signal_callback), 
+				(gpointer)pcbd));
+		}
+	}
 }
+
+gint c_gtk_signal_connect (GtkObject *widget, 
+			   gchar *name, 
+			   EIF_PROC execute_func,
+			   EIF_POINTER object,
+			   EIF_POINTER argument,
+			   EIF_POINTER ev_data,
+			   EIF_POINTER ev_data_imp,
+			   EIF_PROC event_data_rtn,
+			   char mouse_button,
+			   char double_click)
+{
+	return c_gtk_signal_connect_general (widget, name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 0);
+}
+			
+gint c_gtk_signal_connect_after (GtkObject *widget, 
+			   gchar *name, 
+			   EIF_PROC execute_func,
+			   EIF_POINTER object,
+			   EIF_POINTER argument,
+			   EIF_POINTER ev_data,
+			   EIF_POINTER ev_data_imp,
+			   EIF_PROC event_data_rtn,
+			   char mouse_button,
+			   char double_click)
+{
+	return c_gtk_signal_connect_general (widget, name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 1);
+}
+
 
  /*********************************
  *
@@ -302,108 +373,107 @@ EIF_BOOLEAN c_gtk_widget_sensitive (GtkWidget *w)
 
 /*********************************
  *
- * Function `c_gtk_widget_x'
- *          `c_gtk_widget_y'
- *          `c_gtk_window_x'
+ * Function `c_gtk_widget_foreground'
+ *
+ * Note : 
+ *
+ * Author : 
+ *
+ *********************************/
+/*
+EIF_BOOLEAN c_gtk_widget_forground (GtkWidget *w) 
+{
+	GdkColor* color;
+	color = GTK_WIDGET(w)->style->fg;
+}
+*/
+
+/*********************************
+ *
+ * Function `c_gtk_window_x'
  *          `c_gtk_window_y'
  *
- * Note : Return the x and y coordinates of a widget and a window
- * 
+ * Note : Return the x and y coordinates of a window
+ * 		  And the postcondition function for x. 
+ *      
  * Author : Leila
  *
  *********************************/
 
-EIF_INTEGER c_gtk_widget_x (GtkWidget *w) 
+EIF_INTEGER c_gtk_window_x (GtkWidget *w)
 {
-  if (!GTK_WIDGET_VISIBLE (w))
-    gtk_widget_size_allocate (w, &w->allocation);
-  return (GTK_WIDGET(w)->allocation.x);
+	gint x;
+
+	if GTK_WIDGET_VISIBLE(w)
+	{
+		gdk_window_get_position (w->window, &x, NULL);
+		return x;
+	}
+	else
+		return (-1);
 }
 
-EIF_INTEGER c_gtk_widget_y (GtkWidget *w) 
+EIF_INTEGER c_gtk_window_y (GtkWidget *w)
 {
-  if (GTK_IS_WIDGET(w) && !GTK_WIDGET_VISIBLE (w))
-    gtk_widget_size_allocate (w, &w->allocation);
-  return (GTK_WIDGET(w)->allocation.y);
-
-}
-
-EIF_INTEGER c_gtk_window_x (GtkWidget *w) 
-{
-  gint x;
-
-  gdk_window_get_position (w->window, &x, NULL);
-  return (x);
-}
-
-EIF_INTEGER c_gtk_window_y (GtkWidget *w) 
-{
-  gint y;
-
-  gdk_window_get_position (w->window, NULL, &y);
-  return (y);
+	gint y;
+	
+	if GTK_WIDGET_VISIBLE(w)
+	{
+		gdk_window_get_position (w->window, NULL, &y);
+		return y;
+	}
+	else
+		return (-1);
 }
 
 /*********************************
  *
- * Function `c_gtk_widget_width'
- *          `c_gtk_widget_height'
+ * Function `c_gtk_widget_position_set'
+ * 			`c_gtk_widget_minimum_size_set'
  *
- * Note : Return the width and the height of a widget
+ * Note : Return a boolean that say if gtk have
+ * 		  memorize a changement of size or position
+ * 		  asked by the user. 
+ *      
+ * Author : Leila
  *
- * Author : Samik
- *
- *********************************/
+ **********************************/
 
-EIF_INTEGER c_gtk_widget_width (GtkWidget *w) 
+EIF_BOOLEAN c_gtk_widget_position_set (GtkWidget *w, gint x, gint y) 
 {
-  /*  GtkRequisition r;
-     gtk_widget_size_request (w, &r);
-     return r.width;
-     return (GTK_WIDGET(w)->requisition.width); */
-/*  if (!GTK_WIDGET_VISIBLE (w))
-    gtk_widget_queue_resize (w);*/
-
-  return (GTK_WIDGET(w)->allocation.width);
+	GtkWidgetAuxInfo *aux_info;
+	
+	aux_info = gtk_object_get_data (GTK_OBJECT(w), "gtk-aux-info");
+	if (x != -1)
+	{
+		if (y != -1)
+		{
+			return ((x == aux_info->x) && (y == aux_info->y));
+		}
+		else
+			return (x == aux_info->x);
+	}
+	else
+		return (y = aux_info-> y);
 }
 
-EIF_INTEGER c_gtk_widget_height (GtkWidget *w) 
+EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint height) 
 {
-  /*   GtkRequisition r;
-   gtk_widget_size_request (w, &r);
-   return r.height;
-   return (GTK_WIDGET(w)->requisition.height); */
-  /*  if (!GTK_WIDGET_VISIBLE (w))
-      gtk_widget_queue_resize (w);*/
+	GtkWidgetAuxInfo *aux_info;
 
-   return (GTK_WIDGET(w)->allocation.height);
-}
+	aux_info = gtk_object_get_data (GTK_OBJECT(w), "gtk-aux-info");
 
-/*********************************
- *
- * Function `c_gtk_widget_minimum_width'
- *          `c_gtk_widget_minimum_height'
- *
- * Note : Return the minimum width and height of a widget
- *
- * Author : Samik
- *
- *********************************/
-
-EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *w) 
-{
-  /*    GtkRequisition r;
-	gtk_widget_size_request (w, &r);*/
-
-    return (GTK_WIDGET(w)->requisition.width);
-}
-
-EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w) 
-{
-  /*   GtkRequisition r;
-       gtk_widget_size_request (w, &r);*/
-
-    return (GTK_WIDGET(w)->requisition.height);
+	if (width != -1)
+	{
+		if (height != -1)
+		{
+			return ((width == aux_info->width) && (height == aux_info->height));
+		}
+		else
+			return (width == aux_info->width);
+	}
+	else
+		return (height == aux_info->height);
 }
 
 /*********************************
@@ -416,22 +486,16 @@ EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w)
  *
  *********************************/
 
-void c_gtk_widget_set_size (GtkWidget *w, int width, int height) 
+void c_gtk_widget_set_size (GtkWidget *widget, int width, int height) 
 {
-  /*      GtkAllocation a */
-  GtkRequisition a;
+  GtkAllocation allocation;
 
-  /*  a = (GTK_WIDGET(w) -> requisition);
-    gtk_widget_set_usize (w, width, height);
-    gtk_widget_size_request (w, &a); */
+  allocation.x = widget->allocation.x;
+  allocation.y = widget->allocation.y;
+  allocation.width = width;
+  allocation.height = height;
 
-  a.width = width;
-  a.height = height;
-  gtk_widget_size_request (w, &a);
-  gtk_widget_queue_resize (w);
-
-  /*        gtk_widget_size_allocate (w, &a); 
-	    gtk_widget_set_usize (w, width, height); */
+  gtk_widget_size_allocate (widget, &allocation);
 }
 
 /*********************************
@@ -604,7 +668,7 @@ void c_gtk_widget_show_children (GtkWidget *widget)
 {
     g_return_if_fail (widget != NULL);
  
-    if (GTK_IS_CONTAINER (widget))
+    if (GTK_IS_CONTAINER (widget) && !GTK_IS_TREE (widget))
 	  gtk_container_foreach (GTK_CONTAINER (widget),
     			         c_gtk_widget_show_children_recurse,
 				 NULL);
@@ -647,9 +711,34 @@ EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button)
  *********************************/
 
 static char * xpm_data[] = {
+	"16 16 3 1",
+       "       c None",
+       ".      c #000000000000",
+       "X      c #FFFFFFFFFFFF",
+       "                ",
+       "   ......       ",
+       "   .XXX.X.      ",
+       "   .XXX.XX.     ",
+       "   .XXX.XXX.    ",
+       "   .XXX.....    ",
+       "   .XXXXXXX.    ",
+       "   .XXXXXXX.    ",
+       "   .XXXXXXX.    ",
+       "   .XXXXXXX.    ",
+       "   .XXXXXXX.    ",
+       "   .XXXXXXX.    ",
+       "   .XXXXXXX.    ",
+       "   .........    ",
+       "                ",
+       "                "};
+
+
+
+	/*
       "1 1 1 1",
       "       c None",
       " "};
+	  */
 
 /*********************************
  *
@@ -665,8 +754,9 @@ GtkWidget* c_gtk_pixmap_create_empty  (GtkWidget *widget)
     GdkPixmap *pixmap;
   
     /* Widget must be realized before we can attach a pixmap to it */
-    if (widget->window == NULL)
-	gtk_widget_realize (widget);
+	if (!GTK_WIDGET_REALIZED(widget)) {
+		gtk_widget_realize (widget);
+	}
     pixmap = gdk_pixmap_create_from_xpm_d (widget->window,
 					 &mask, 
 					 &widget->style->bg[GTK_STATE_NORMAL],
@@ -689,8 +779,9 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname)
     GdkPixmap *pixmap;
   
     /* Widget must be realized before we can attach a pixmap to it */
-    if (widget->window == NULL)
-	gtk_widget_realize (widget);
+	if (!GTK_WIDGET_REALIZED(widget)) {
+		gtk_widget_realize (widget);
+	}
     pixmap = gdk_pixmap_create_from_xpm (widget->window,
 					 &mask, 
 					 &widget->style->bg[GTK_STATE_NORMAL],
@@ -715,6 +806,9 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
     GdkBitmap *mask;
     GtkStyle *style;
 
+	if (!GTK_WIDGET_REALIZED(pixmap_parent)) {
+		gtk_widget_realize (pixmap_parent);
+	}
     style = gtk_widget_get_style (pixmap_parent);
     gdk_pixmap = gdk_pixmap_create_from_xpm (pixmap_parent->window,
 					     &mask,
@@ -726,11 +820,20 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 
 /*********************************
  *
- * Function : `c_gtk_add_list_item'
- *
- * Note : Add a listItem in a list. The item is first added in a Glist,
- *        then the Glist is added to the list.
- *
+ * Function : `c_gtk_add_list_item'      (1)
+ * 			  `c_gtk_list_item_select'   (2)
+ *            `c_gtk_list_item_unselect' (3)
+ *            `c_gtk_list_rows           (4)
+ *            `c_gtk_list_selection_mode (5)
+ *            `c_gtk_list_selected_item  (6)
+ *            
+ * Note (1)   : Add a listItem in a list. The item is first added in a Glist,
+ *              then the Glist is added to the list.
+ * Note (2,3) : Two routines to select or unselect an item, because the gtk
+ *              functions seems to have a bug.
+ * Note (4)   : Give the number of rows of a list.
+ * Note (6)   : Index of the most recently selected item. (-1 if none selected)
+ * 
  * Author : Leila
  *
  *********************************/
@@ -745,18 +848,6 @@ void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item)
 	/*	gtk_widget_show(item);*/
 }
 
-/*********************************
- *
- * Function : `c_gtk_list_item_select'
- *            `c_gtk_list_item_unselect'
- *
- * Note : Two routines to select or unselect an item, because the gtk
- *        functions seems to have a bug.
- *
- * Author : Leila
- *
- *********************************/
-
 void c_gtk_list_item_select (GtkWidget *item)
 {  
   if (GTK_WIDGET (item)->parent && GTK_IS_LIST (GTK_WIDGET (item)->parent))
@@ -770,6 +861,66 @@ void c_gtk_list_item_unselect (GtkWidget *item)
   if (GTK_IS_LIST (GTK_WIDGET (item)->parent))
     gtk_list_unselect_child (GTK_LIST (GTK_WIDGET (item)->parent),
                            GTK_WIDGET (item));
+}
+
+guint c_gtk_list_rows (GtkWidget *list)
+{
+	return (g_list_length (GTK_LIST(list)->children));	
+}
+
+gint c_gtk_list_selection_mode (GtkWidget *list)
+{
+	return GTK_LIST(list)->selection_mode;
+}
+
+guint c_gtk_list_selected (GtkWidget *list)
+{
+	return (g_list_length (GTK_LIST(list)->selection));	
+}
+
+gint c_gtk_list_selected_item (GtkWidget *list)
+{
+	return gtk_list_child_position (GTK_LIST(list), GTK_LIST(list)->selection->data);
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_clist_append_row' (1)
+ *  		  `c_gtk_clist_selected'   (2)
+ *  		  `c_gtk_clist_ith_selected_item (3)
+ *  		            
+ * Note (1) : Add an empty row in the given multi-column list.
+ * 		(2)	: Return an integer telling if an element is selected or not. 
+ * 			  This integer can be interpreted as a boolean.
+ * 		(3) : Return the i-th element of the selected-items list.
+ * 
+ * Author : Leila
+ *
+ **********************************/
+
+gint c_gtk_clist_append_row (GtkWidget* list)
+{
+	char *text[GTK_CLIST(list)->columns];
+	gint i;
+
+	for (i = 0; i < GTK_CLIST(list)->columns; i++)
+		text[i] = "";
+	return (gtk_clist_append (GTK_CLIST(list), text));
+}
+
+guint c_gtk_clist_selected (GtkWidget* list)
+{
+	return (g_list_length (GTK_CLIST(list)->selection));
+}
+
+gint c_gtk_clist_ith_selected_item (GtkWidget* list, guint i)
+{
+	return (GPOINTER_TO_INT (g_list_nth_data (GTK_CLIST(list)->selection, i)));
+}
+
+guint c_gtk_clist_selection_length (GtkWidget* list)
+{
+	return (g_list_length (GTK_CLIST(list)->selection));
 }
 
 /*********************************

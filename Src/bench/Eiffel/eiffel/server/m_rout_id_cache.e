@@ -1,3 +1,5 @@
+-- Cache for melted routine IDs
+
 class M_ROUT_ID_CACHE
 
 inherit

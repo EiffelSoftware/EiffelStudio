@@ -538,7 +538,8 @@ feature {NONE} -- Initialization
 		do
 			lock_update
 				-- Build the features tool
-			create features_tool.make (Current, left_panel)
+			create features_tool.make (Current)
+			features_tool.attach_to_explorer_bar (left_panel)
 			left_tools.extend (features_tool.explorer_bar_item)
 			create show_cmd.make (Current, features_tool.explorer_bar_item)
 			show_tool_commands.extend (show_cmd)
@@ -546,7 +547,8 @@ feature {NONE} -- Initialization
 			add_recyclable (features_tool)
 
 				-- Build the cluster tool
-			create cluster_tool.make (Current, left_panel, Current)
+			create cluster_tool.make (Current, Current)
+			cluster_tool.attach_to_explorer_bar (left_panel)
 			left_tools.extend (cluster_tool.explorer_bar_item)
 			create show_cmd.make (Current, cluster_tool.explorer_bar_item)
 			show_tool_commands.extend (show_cmd)
@@ -554,7 +556,8 @@ feature {NONE} -- Initialization
 			add_recyclable (cluster_tool)
 
 				-- Build the favorites tool
-			create favorites_tool.make (Current, left_panel, favorites_manager)
+			create favorites_tool.make (Current, favorites_manager)
+			favorites_tool.attach_to_explorer_bar (left_panel)
 			left_tools.extend (favorites_tool.explorer_bar_item)
 			create show_cmd.make (Current, favorites_tool.explorer_bar_item)
 			show_tool_commands.extend (show_cmd)
@@ -562,7 +565,8 @@ feature {NONE} -- Initialization
 			add_recyclable (favorites_tool)
 
 				-- Build the windows tool (formerly known as Selector tool)
-			create windows_tool.make (Current, left_panel)
+			create windows_tool.make (Current)
+			windows_tool.attach_to_explorer_bar (left_panel)
 			left_tools.extend (windows_tool.explorer_bar_item)
 			create show_cmd.make (Current, windows_tool.explorer_bar_item)
 			show_tool_commands.extend (show_cmd)
@@ -570,7 +574,8 @@ feature {NONE} -- Initialization
 			add_recyclable (windows_tool)
 
 				-- Build the search tool
-			create search_tool.make (Current, left_panel)
+			create search_tool.make (Current)
+			search_tool.attach_to_explorer_bar (left_panel)
 			left_tools.extend (search_tool.explorer_bar_item)
 			create show_cmd.make (Current, search_tool.explorer_bar_item)
 			show_tool_commands.extend (show_cmd)
@@ -578,7 +583,8 @@ feature {NONE} -- Initialization
 			add_recyclable (search_tool)
 
 				-- Build the editor tool
-			create editor_tool.make (Current, right_panel)
+			create editor_tool.make (Current)
+			editor_tool.attach_to_explorer_bar (right_panel)
 			bottom_tools.extend (editor_tool.explorer_bar_item)
 			editor_tool.text_area.add_edition_observer(save_cmd)
 			editor_tool.text_area.add_edition_observer(save_as_cmd)
@@ -594,7 +600,8 @@ feature {NONE} -- Initialization
 			add_recyclable (editor_tool)
 
 				-- Build the context tool
-			create context_tool.make (Current, right_panel)
+			create context_tool.make (Current)
+			context_tool.attach_to_explorer_bar (right_panel)
 			bottom_tools.extend (context_tool.explorer_bar_item)
 			create show_cmd.make (Current, context_tool.explorer_bar_item)
 			show_tool_commands.extend (show_cmd)

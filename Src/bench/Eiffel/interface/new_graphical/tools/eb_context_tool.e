@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 			output_view.set_parent_notebook (notebook)
 		end
 
-	build_explorer_bar is
+		build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		local
@@ -352,7 +352,9 @@ feature -- Memory management
 			if has_metrics then
 				metrics.recycle
 			end
-			explorer_bar_item.recycle
+			if explorer_bar_item /= Void then
+				explorer_bar_item.recycle
+			end
 			notebook.selection_actions.block
 			notebook.destroy
 			notebook := Void

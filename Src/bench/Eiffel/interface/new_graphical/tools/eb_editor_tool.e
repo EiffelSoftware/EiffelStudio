@@ -10,8 +10,6 @@ inherit
 	EB_TEXTABLE_TOOL
 		redefine
 			text_area,
-			explorer_bar,
-			explorer_bar_item,
 			menu_name,
 			refresh,
 			build_text_area
@@ -28,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	build_explorer_bar is
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		do
@@ -37,12 +35,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	explorer_bar: EB_EXPLORER_BAR
-			-- Associated explorer bar.
-
-	explorer_bar_item: EB_EXPLORER_BAR_ITEM
-			-- Associated explorer bar item.
 
 	title: STRING is
 			-- Title of the tool
@@ -119,7 +111,9 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			explorer_bar_item.recycle
+			if explorer_bar_item /= Void then
+				explorer_bar_item.recycle
+			end
 			text_area.recycle
 			text_area := Void
 			manager := Void

@@ -10,11 +10,10 @@ class
 
 inherit
 	EB_TOOL
-		rename
-			make as old_make
 		export
 			{NONE} show
 		redefine
+			make,
 			menu_name,
 			pixmap,
 			manager
@@ -45,11 +44,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; an_explorer_bar: like explorer_bar) is
-		require
-			manager_is_not_void: a_manager /= Void
+	make (a_manager: EB_DEVELOPMENT_WINDOW) is
 		do
-			old_make (a_manager, an_explorer_bar)
+			Precursor {EB_TOOL} (a_manager)
 			create search_performer.make
 		end
 
@@ -125,7 +122,7 @@ feature {NONE} -- Initialization
 			widget := frame
 		end
 
-	build_explorer_bar is
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		do
@@ -320,7 +317,9 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			explorer_bar_item.recycle
+			if explorer_bar_item /= Void then
+				explorer_bar_item.recycle
+			end
 			widget := Void
 			manager := Void
 		end

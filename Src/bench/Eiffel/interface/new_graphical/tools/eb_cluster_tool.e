@@ -25,14 +25,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar; a_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_manager: EB_TOOL_MANAGER; a_window: EB_DEVELOPMENT_WINDOW) is
 			-- Make a new cluster tool.
 		require
 			a_manager_exists: a_manager /= Void
-			an_explorer_bar_exists: an_explorer_bar /= Void
+			a_window_exists: a_window /= Void
 		do
 			window := a_window
-			tool_make (a_manager, an_explorer_bar)
+			tool_make (a_manager)
 		end
 
 	build_interface is
@@ -42,9 +42,8 @@ feature {NONE} -- Initialization
 			widget.associate_with_window (window)
 		end
 
-	build_explorer_bar is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'.
+	build_mini_toolbar is
+			-- Build associated tool bar
 		local
 			sep: EV_TOOL_BAR_SEPARATOR
 			but: EV_TOOL_BAR_BUTTON
@@ -76,8 +75,19 @@ feature {NONE} -- Initialization
 			else
 				show_current_class_cluster_cmd.disable_sensitive
 			end
+		ensure
+			toolbar_exists: mini_toolbar /= Void
+		end
 
-			create explorer_bar_item.make_with_mini_toolbar (
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
+			-- Build the associated explorer bar item and
+			-- Add it to `explorer_bar'.
+		do
+			if mini_toolbar = Void then
+				build_mini_toolbar
+			end
+
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (
 				explorer_bar, widget, title, True, mini_toolbar
 			)
 			explorer_bar_item.set_menu_name (menu_name)
@@ -164,7 +174,9 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			explorer_bar_item.recycle
+			if explorer_bar_item /= Void then
+				explorer_bar_item.recycle
+			end
 			widget.recycle
 			widget := Void
 			window := Void

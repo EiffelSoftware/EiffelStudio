@@ -431,7 +431,7 @@ feature -- Status Setting
 			is_maximizable := True
 		end
 
-feature {EB_TOOL} -- Status setting
+feature {EB_EXPLORER_BAR_ATTACHABLE} -- Status setting
 
 	set_parent (new_parent: EB_EXPLORER_BAR) is
 			-- Define a new explorer bar as the parent.

@@ -19,13 +19,10 @@ inherit
 
 feature -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; an_explorer_bar: like explorer_bar) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW) is
 			-- Create a new tool with `a_manager' as manager.
-		require else
-			a_manager_exists: a_manager /= Void
-			an_explorer_bar_exists: an_explorer_bar /= Void
 		do
-			Precursor (a_manager, an_explorer_bar)
+			Precursor (a_manager)
 			text_area.drop_actions.extend (agent a_manager.set_stone)
 		end
 

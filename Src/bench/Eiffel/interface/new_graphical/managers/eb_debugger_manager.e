@@ -345,9 +345,10 @@ feature -- Status setting
 
 				--| Call Stack Tool
 			if call_stack_tool = Void then
-				create call_stack_tool.make (debugging_window, debugging_window.left_panel)
+				create call_stack_tool.make (debugging_window)
+				call_stack_tool.attach_to_explorer_bar (debugging_window.left_panel)
 			else
-				call_stack_tool.change_manager (debugging_window, debugging_window.left_panel)
+				call_stack_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
 			end
 			call_stack_tool.update
 			debug ("DEBUGGER_INTERFACE")
@@ -356,9 +357,10 @@ feature -- Status setting
 
 				--| Object Tool
 			if object_tool = Void then
-				create object_tool.make (debugging_window, debugging_window.right_panel)
+				create object_tool.make (debugging_window)
+				object_tool.attach_to_explorer_bar (debugging_window.right_panel)
 			else
-				object_tool.change_manager (debugging_window, debugging_window.right_panel)
+				object_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.right_panel)
 			end
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
@@ -373,9 +375,10 @@ feature -- Status setting
 				--| Expression Evaluator Tool
 			
 			if evaluator_tool = Void then
-				create evaluator_tool.make (debugging_window, debugging_window.left_panel)
+				create evaluator_tool.make (debugging_window)
+				evaluator_tool.attach_to_explorer_bar (debugging_window.left_panel)
 			else
-				evaluator_tool.change_manager (debugging_window, debugging_window.left_panel)
+				evaluator_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
 			end
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
@@ -408,7 +411,6 @@ feature -- Status setting
 					debugging_window.editor_tool.explorer_bar_item.minimize
 				end
 			else
-				
 				debugging_window.left_panel.load_from_resource (debug_left_layout)
 				debugging_window.right_panel.load_from_resource (debug_right_layout)
 			end

@@ -1682,7 +1682,7 @@ end;
 			io.error.putstring ("Pass 5 on system%N");
 
 				-- Dead code removal
-			remove_dead_code;
+--			remove_dead_code;
 
 			!FINAL_MAKER!makefile_generator.make;
 
@@ -1787,9 +1787,10 @@ feature -- Dead code removal
 			-- Is feature `f' used in the system ?
 		require
 			good_argument: f /= Void;
-			remover_exists: remover /= Void;
+--			remover_exists: remover /= Void;
 		do
-			Result := remover.is_alive (f)
+--			Result := remover.is_alive (f)
+			Result := True;
 		end;
 
 feature -- Generation

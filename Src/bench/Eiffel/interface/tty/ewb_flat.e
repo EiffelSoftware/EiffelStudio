@@ -8,14 +8,14 @@ indexing
 class EWB_FLAT 
 
 inherit
-
 	EWB_COMPILED_CLASS
 		rename
 			make as compiled_class_make
 		redefine
 			name, help_message, abbreviation
 		end
-	TTY_CONSTANTS
+	
+	EB_SHARED_PREFERENCES
 
 create
 
@@ -58,7 +58,7 @@ feature {NONE} -- Execution
 	associated_cmd: E_SHOW_FLAT is
 		do
 			create Result.do_nothing
-			Result.set_feature_clause_order (feature_clause_order)
+			Result.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
 		end
 
 end -- class EWB_FLAT

@@ -50,6 +50,13 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 feature {EV_ANY} -- Initialization
 
@@ -105,9 +112,7 @@ feature {NONE} -- Implementation
 			list_area.extend (filter_combo_box)
 			create cluster_include
 			create indexing_include
-			indexing_include.exclude_list.set_strings (
-				(create {EB_FLAT_SHORT_DATA}).excluded_indexing_items
-			)
+			indexing_include.exclude_list.set_strings (preferences.flat_short_data.excluded_indexing_items)
 			create option_page
 			fill_option_box (option_page)
 			create view_page

@@ -29,12 +29,10 @@ inherit
 			{NONE} all
 		end
 		
-	EB_DEBUG_TOOL_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
-		
-	EB_SHARED_DEBUG_TOOLS
 		
 create {SHARED_APPLICATION_EXECUTION}
 	make
@@ -45,11 +43,11 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			create debug_info.make
-			displayed_string_size := default_displayed_string_size
+			displayed_string_size := preferences.debug_tool_data.default_displayed_string_size
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
 		ensure
-			displayed_string_size: displayed_string_size = default_displayed_string_size
+			displayed_string_size: displayed_string_size = preferences.debug_tool_data.default_displayed_string_size
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
 		end
 		

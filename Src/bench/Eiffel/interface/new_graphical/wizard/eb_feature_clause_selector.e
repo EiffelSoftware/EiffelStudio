@@ -19,7 +19,7 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	EB_FORMATTER_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
@@ -98,7 +98,7 @@ feature {EB_FEATURE_COMPOSITION_WIZARD} -- Implementation
 			s: STRING
 			li: EV_LIST_ITEM
 		do
-			fco := feature_clause_order
+			fco := preferences.flat_short_data.feature_clause_order
 			from
 				i := fco.lower
 			until

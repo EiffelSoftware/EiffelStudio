@@ -13,6 +13,10 @@ inherit
 	SHARED_CONFIGURE_RESOURCES
 
 	SHARED_EIFFEL_PROJECT
+	
+	EIFFEL_ENV
+	
+	EB_SHARED_PREFERENCES
 
 create 
 	initialize
@@ -46,9 +50,9 @@ feature {NONE} -- Initialization
 			resource_files_parser.parse_files (Configure_resources)
 
 				-- Initialize directories in Eiffel Project
-			Eiffel_project.set_filter_path (General_resources.filter_path.value)
-			Eiffel_project.set_profile_path (General_resources.profile_path.value)
-			Eiffel_project.set_tmp_directory (General_resources.tmp_path.value)
+			Eiffel_project.set_filter_path (preferences.misc_data.general_filter_path)
+			Eiffel_project.set_profile_path (preferences.misc_data.general_profile_path)
+			Eiffel_project.set_tmp_directory (preferences.misc_data.general_tmp_path)
 		end
 
 feature -- Status report
@@ -61,9 +65,9 @@ feature {NONE} -- Initialization of resource categories
 	initialize_resources (a_table: RESOURCE_TABLE) is
 			-- Initialize all resources valid for the tty interface.
 		do
-			General_resources.initialize (a_table)
-			Class_resources.initialize (a_table)
-			Feature_resources.initialize (a_table)
+--			General_resources.initialize (a_table)
+--			Class_resources.initialize (a_table)
+--			Feature_resources.initialize (a_table)
 		end
 
 end -- class TTY_RESOURCES

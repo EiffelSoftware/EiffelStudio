@@ -14,9 +14,7 @@ inherit
 			window_displayed
 		end
 
-	EB_GENERAL_DATA
-		rename
-			initialized as resources_initialized
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -133,7 +131,7 @@ feature -- Actions
 			cmd_exec: COMMAND_EXECUTOR	
 			cmd_string: STRING
 		do
-			cmd_string := general_shell_command.twin
+			cmd_string := preferences.misc_data.general_shell_command.twin
 			if not cmd_string.is_empty then
 				cmd_string.replace_substring_all ("$target", Eiffel_ace.Lace.file_name)
 				cmd_string.replace_substring_all ("$line", "1")

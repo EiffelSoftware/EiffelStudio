@@ -8,10 +8,11 @@ indexing
 class TTY_RESOURCES
 
 inherit
-	TTY_CONSTANTS
+	EB_SHARED_PREFERENCES
 	SHARED_CONFIGURE_RESOURCES
 	SHARED_EIFFEL_PROJECT
 	EB_CONSTANTS
+	EIFFEL_ENV
 
 create 
 	initialize
@@ -51,9 +52,9 @@ feature {NONE} -- Initialization
 						resource_files_parser.parse_files (Configure_resources)
 		
 							-- Initialize directories in Eiffel Project
-						Eiffel_project.set_filter_path (general_filter_path)
-						Eiffel_project.set_profile_path (general_profile_path)
-						Eiffel_project.set_tmp_directory (general_tmp_path)
+						Eiffel_project.set_filter_path (preferences.misc_data.general_filter_path)
+						Eiffel_project.set_profile_path (preferences.misc_data.general_profile_path)
+						Eiffel_project.set_tmp_directory (preferences.misc_data.general_tmp_path)
 					else
 						error_occurred := True
 						error_msg := system_general.twin

@@ -63,10 +63,10 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
 			end
 			real_signal_connect (
-				visual_widget,
+				event_widget,
 				"button-press-event",
 				agent (App_implementation.gtk_marshal).start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 				App_implementation.default_translate
@@ -91,11 +91,11 @@ feature -- Implementation
 	disable_transport_signals is
 		do
 			if button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
 				button_press_connection_id := 0
 			end
 			if button_release_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_release_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_release_connection_id)
 				button_release_connection_id := 0
 			end
 		end
@@ -170,7 +170,7 @@ feature -- Implementation
 		do
 			if not has_focus and then (a_button = 1 or a_button = 3) then
 					-- We explicitly set the focus for both left and right mouse buttons if not set already
-				feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (event_widget)
 			end
 			call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			if able_to_transport (a_button) or else ready_for_pnd_menu (a_button) then
@@ -193,7 +193,7 @@ feature -- Implementation
 					interface.pointer_motion_actions.block
 					pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
 					real_signal_connect (
-						visual_widget,
+						event_widget,
 						"motion-notify-event",
 						agent (App_implementation.gtk_marshal).add_grab_cb_intermediary (c_object),
 						App_implementation.default_translate
@@ -218,9 +218,9 @@ feature -- Implementation
 						end
 					end
 
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
 					real_signal_connect (
-						visual_widget,
+						event_widget,
 						"button-press-event",
 						agent (App_implementation.gtk_marshal).end_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 						App_implementation.default_translate
@@ -231,7 +231,7 @@ feature -- Implementation
 							release_not_connected: button_release_connection_id = 0
 						end
 						real_signal_connect (
-							visual_widget,
+							event_widget,
 							"button-release-event",
 							agent (App_implementation.gtk_marshal).end_transport_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
 							App_implementation.default_translate
@@ -240,23 +240,23 @@ feature -- Implementation
 					end
 
 					real_signal_connect (
-						visual_widget,
+						event_widget,
 						"motion-notify-event",
 						agent (App_implementation.gtk_marshal).temp_execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
 						App_implementation.default_translate
 					)
 					motion_notify_connection_id := last_signal_connection_id
 					real_signal_connect (
-						visual_widget,
+						event_widget,
 						"enter_notify_event",
-						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, visual_widget, "enter_notify_event"),
+						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, event_widget, "enter_notify_event"),
 						App_implementation.default_translate
 					)
 					enter_notify_connection_id := last_signal_connection_id
 					real_signal_connect (
-						visual_widget,
+						event_widget,
 						"leave_notify_event",
-						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, visual_widget, "leave_notify_event"),
+						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, event_widget, "leave_notify_event"),
 						App_implementation.default_translate
 					)
 					leave_notify_connection_id := last_signal_connection_id
@@ -268,7 +268,7 @@ feature -- Implementation
 							mode_is_drag_and_drop implies
 							button_release_connection_id > 0
 					end
-					(App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, visual_widget, "button-press-event")
+					(App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, event_widget, "button-press-event")
 
 				elseif ready_for_pnd_menu (a_button) then
 					app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
@@ -318,23 +318,23 @@ feature -- Implementation
 			erase_rubber_band
 			disable_capture
 			if button_release_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_release_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_release_connection_id)
 				button_release_connection_id := 0
 			end
 			if motion_notify_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, motion_notify_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, motion_notify_connection_id)
 				motion_notify_connection_id := 0
 			end
 			if enter_notify_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, enter_notify_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, enter_notify_connection_id)
 				enter_notify_connection_id := 0
 			end
 			if leave_notify_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, leave_notify_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, leave_notify_connection_id)
 				leave_notify_connection_id := 0
 			end
 			if grab_callback_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, grab_callback_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
 				grab_callback_connection_id := 0
 			end
 			if not is_destroyed then
@@ -343,10 +343,10 @@ feature -- Implementation
 				else
 					-- Reset the cursors.
 					feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL)
-					feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget), NULL)
+					feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), NULL)
 				end
 				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (c_object, NULL)
-				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (visual_widget, NULL)				
+				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (event_widget, NULL)				
 			end
 			
 				-- Call appropriate action sequences
@@ -373,8 +373,10 @@ feature -- Implementation
 				interface.pointer_motion_actions.resume				
 			end
 
-			post_drop_steps
-			call_press_actions (target, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)			
+			post_drop_steps (a_button)
+			if a_button > 0 then
+				call_press_actions (target, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			end
 			check
 				motion_notify_not_connected: motion_notify_connection_id = 0
 				enter_notify_not_connected: enter_notify_connection_id = 0
@@ -409,11 +411,11 @@ feature -- Implementation
 			end
 		end
 
-	post_drop_steps is
+	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if mode_is_pick_and_drop and not is_destroyed then
-				signal_emit_stop (visual_widget, "button-press-event")
+			if a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
+				signal_emit_stop (event_widget, "button-press-event")
 			end
 			App_implementation.on_drop (pebble)
 			x_origin := 0
@@ -430,7 +432,7 @@ feature -- Implementation
 			check
 				grab_callback_connected: grab_callback_connection_id > 0
 			end
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, grab_callback_connection_id)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
 			grab_callback_connection_id := 0
 			enable_capture
 		end
@@ -548,6 +550,19 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -
 		end
 	
 feature {NONE} -- Implementation
+
+	event_widget: POINTER is
+			-- Pointer to the widget handling the widget events
+		local
+			a_visual_widget: POINTER
+		do
+			a_visual_widget := visual_widget
+			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (a_visual_widget) then
+				Result := a_visual_widget
+			else
+				Result := c_object
+			end
+		end
 
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
 			-- Widget implementation at current mouse pointer position (if any)

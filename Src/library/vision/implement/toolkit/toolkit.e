@@ -73,6 +73,11 @@ feature
 		deferred
 		end; -- iterate
 
+	name: STRING is
+			-- Toolkit implementation name
+		deferred
+		end
+
 	override_s (an_override_shell: OVERRIDE_S): OVERRIDE_S_I is
 			-- Toolkit implementation of `an_override_shell'
 		deferred

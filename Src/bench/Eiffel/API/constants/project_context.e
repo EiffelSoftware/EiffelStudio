@@ -54,6 +54,12 @@ feature {NONE} -- Eiffel Project Directories
 			Result.extend (Casegen);
 		end;
 
+	Documentation_path: DIRECTORY_NAME is
+		once
+			!! Result.make_from_string (Project_directory);
+			Result.extend (Documentation);
+		end;
+
 	Eiffel_gen_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Project_directory);

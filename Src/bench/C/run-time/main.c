@@ -453,7 +453,23 @@ rt_public void failure(void)
 	/* A fatal Eiffel exception has occurred. The stack of exceptions is dumped
 	 * and the memory is cleaned up, if possible.
 	 */
-	
+
+  	GTCX
+  		/* When we arrive at this location, the Eiffel call stack is theoratically
+		 * empty, but `loc_set' still points to the location where the last Eiffel
+		 * call has been made. Since now `loc_set' records address of C local variable
+		 * which are usually located on the C call stack. Any addition to the C call
+		 * stack (like the call to `trapsig' below) will corrupt the information
+		 * stored in `loc_set' since it will replace a location by another.
+		 *
+		 * To prevent this, we have to manually empty `loc_set'. It does not matter
+		 * at this point that the GC forgets about all objects referenced through
+		 * a local variable since all Eiffel calls have been executed.
+		 * Doing so, enables a safe `reclaim' that will not traverse `loc_set'
+		 * objects.
+		 */
+	st_reset (&loc_set);
+
 	trapsig(emergency);					/* Weird signals are trapped */
 	esfail(MTC_NOARG);							/* Dump the execution stack trace */
 

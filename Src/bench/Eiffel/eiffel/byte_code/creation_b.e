@@ -123,7 +123,7 @@ feature -- IL code generation
 					info.generate_il
 					target.generate_il_assignment (target_type)
 					if call /= Void then
-						call.generate_il
+						call.generate_il_creation
 					end
 				end
 			else
@@ -132,7 +132,7 @@ feature -- IL code generation
 				target.generate_il_start_assignment
 				target.generate_il_assignment (target_type)
 				if call /= Void then
-					call.message.generate_il	
+					call.message.generate_il
 				end
 			end
 		end

@@ -272,8 +272,14 @@ feature -- IL code generation
 			end
 
 			if invariant_checked then
-					-- Need a copy of top to perform invariant checking.
-				il_generator.duplicate_top
+					-- Need two copies of current object in stack
+					-- to perform invariant check before and after
+					-- feature call.
+ 				il_generator.duplicate_top
+				if inv_checked then
+					il_generator.duplicate_top
+					il_generator.generate_invariant_checking (cl_type)
+				end
 			end
 
 			if parameters /= Void then

@@ -185,7 +185,7 @@ feature -- IL code generation
 						il_generator.duplicate_top
 						call.set_info (info)
 						call.set_parent (create {NESTED_B})
-						call.generate_il
+						call.generate_il_call (False)
 						call.set_parent (Void)
 					end
 				end
@@ -194,7 +194,7 @@ feature -- IL code generation
 				if call /= Void then
 					il_generator.duplicate_top
 					call.set_info (info)
-					call.generate_il
+					call.generate_il_call (False)
 				end
 			end
 		end

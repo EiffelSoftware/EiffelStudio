@@ -103,9 +103,27 @@ feature -- IL code generation
 		
 	generate_il is
 			-- Generate IL code for a nested call.
+		do
+			generate_il_call (True)
+		end
+	
+	generate_il_creation is
+			-- Generate IL code for a nested call of a creation expression,
+			-- i.e. no invariant check will be called before calling creation
+			-- procedure
+		do
+			generate_il_call (False)
+		end
+		
+feature {NONE} -- IL code generation
+
+	generate_il_call (inv_checked: BOOLEAN) is
+			-- Generate IL code for a nested call with invariant
+			-- checked before calling the feature if `inv_checked'.
 		local
 			can_discard_target: BOOLEAN
 			is_target_generated: BOOLEAN
+			l_call_access: CALL_ACCESS_B
 		do
 			can_discard_target := not message.need_target
 
@@ -136,7 +154,12 @@ feature -- IL code generation
 			end
 
 				-- Generate call
-			message.generate_il
+			l_call_access ?= message
+			if l_call_access /= Void then
+				l_call_access.generate_il_call (inv_checked)
+			else
+				message.generate_il
+			end
 		end
 
 feature -- Byte code generation

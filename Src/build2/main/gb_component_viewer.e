@@ -17,6 +17,11 @@ inherit
 		undefine
 			copy, default_create
 		end
+		
+	GB_ACCESSIBLE_OBJECT_HANDLER
+		undefine
+			copy, default_create
+		end
 
 feature {NONE} -- Implementation
 
@@ -75,6 +80,9 @@ feature -- Basic operation
 		
 	set_component (a_component: GB_COMPONENT) is
 			-- Assign `a_component' to `Current'
+		local
+			new_object: GB_OBJECT
+			widget: EV_WIDGET
 		do
 				-- Rest our previous widgets, as `component'
 				-- has now changed.
@@ -88,19 +96,58 @@ feature -- Basic operation
 				-- Remove any exisiting displayed component.
 			component_holder.wipe_out
 			if display_view then
-				component_holder.extend (component.object)
+				new_object := component.object
+				object_handler.recursive_do_all (new_object, agent force_object_to_component)
+				widget ?= new_object.object
+				check
+					widget_not_void: widget /= Void
+				end
+				component_holder.extend (widget)
 				display_widget := component_holder.item
 			else
-				component_holder.extend (component.display_object)
+				new_object := component.object
+				object_handler.recursive_do_all (new_object, agent force_object_to_component)
+				widget ?= new_object.display_object
+				check
+					widget_not_void: widget /= Void
+				end
+				component_holder.extend (widget)
 				builder_widget := component_holder.item
 			end
 			unlock_update
+		end
+		
+	force_object_to_component (an_object: GB_OBJECT) is
+			-- Remove `an_object' from the object list,
+			-- and remove the pebbles from current
+			-- representations.
+			--| FIXME, in the next release, we should not do this
+			--| a component should be built as a component
+			--| from the start. The current method is most
+			--| certainly a hack of sorts.
+		local
+			display_object: GB_DISPLAY_OBJECT
+			pick_and_dropable: EV_PICK_AND_DROPABLE
+			widget: EV_WIDGET
+		do
+			object_handler.objects.prune_all (an_object)
+			display_object ?= an_object.display_object
+	
+			if display_object /= Void then
+				pick_and_dropable ?= display_object.child
+				pick_and_dropable.remove_pebble
+			end
+			pick_and_dropable ?= an_object.display_object
+			pick_and_dropable.remove_pebble
+			widget ?= an_object.display_object
 		end
 	
 feature {NONE} -- Implementation
 
 	set_display_view is
 			-- Set `display_view' to `True' and reflect in `Current'.
+		local
+			widget: EV_WIDGET
 		do
 			if not display_view then
 				display_view := True
@@ -108,7 +155,11 @@ feature {NONE} -- Implementation
 					lock_update
 					component_holder.wipe_out
 					if display_widget = Void then
-						component_holder.extend (component.object)
+						widget ?= component.object.object
+						check
+							widget_not_void: widget /= Void
+						end
+						component_holder.extend (widget)
 						display_widget := component_holder.item
 					else
 						component_holder.extend (display_widget)
@@ -122,6 +173,9 @@ feature {NONE} -- Implementation
 		
 	set_build_view is
 			-- Set `display_view' to `False' and reflect in `Current'.
+		local
+			widget: EV_WIDGET
+			new_object: GB_OBJECT
 		do
 			if display_view then
 				display_view := False
@@ -129,7 +183,13 @@ feature {NONE} -- Implementation
 					lock_update
 					component_holder.wipe_out
 					if builder_widget = Void then
-						component_holder.extend (component.display_object)
+							new_object := component.object
+							object_handler.recursive_do_all (new_object, agent force_object_to_component)
+							widget ?= new_object.display_object
+						check
+							widget_not_void: widget /= Void
+						end
+						component_holder.extend (widget)
 						builder_widget := component_holder.item
 					else
 						component_holder.extend (builder_widget)

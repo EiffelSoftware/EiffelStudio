@@ -8,10 +8,11 @@ inherit
 	SHARED_WORKBENCH;
 	SHARED_TYPE_I;
 	SK_CONST;
+	COMPILER_EXPORTER
 
 feature
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_signature (a_clickable: OUTPUT_WINDOW) is
 		deferred
 		end;
 

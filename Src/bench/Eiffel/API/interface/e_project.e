@@ -584,7 +584,7 @@ feature {PRECOMP_R} -- Implementation
 			system := s
 		end;
 
-feature {NONE, E_PROJECT, PRECOMP_R} -- Implementation
+feature {NONE, E_PROJECT, PRECOMP_R, EXTENDIBLE_R} -- Implementation
 
 	saved_workbench: WORKBENCH_I;
 

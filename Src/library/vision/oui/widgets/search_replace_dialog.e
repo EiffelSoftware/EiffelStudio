@@ -11,10 +11,11 @@ class SEARCH_REPLACE_DIALOG
 inherit
 
     TERMINAL_OUI
+		rename
+			make as terminal_make
 		undefine
 			lower, raise
         redefine
-            make, 
             implementation
         end
 
@@ -32,24 +33,35 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a question dialog with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
+        require
+            valid_name: a_name /= Void;
+            valid_parent: a_parent /= Void
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
 			implementation:= toolkit.search_replace_dialog (Current, a_parent);
 			set_default
+		ensure 
+            parent_set: parent = a_parent;
+            identifier_set: identifier.is_equal (a_name);
+			in_replace_mode: replace_mode
 		end;
 
 feature -- Status report
 
 	case_sensitive: BOOLEAN is
 			-- Is search and replace to be case sensitive?	
+		require
+			exists: not destroyed
 		do
 			Result := implementation.case_sensitive
 		end
 
 	replace_mode: BOOLEAN is
 			-- Is this dialog to do a replace?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.replace_mode
 		end
@@ -57,6 +69,7 @@ feature -- Status report
 	replace_text: STRING is
 			-- Text to replace `search_text' with.
 		require
+			exists: not destroyed;
 			replace_mode: replace_mode
 		do
 			Result := implementation.replace_text
@@ -64,12 +77,16 @@ feature -- Status report
 
 	search_text: STRING is 
 			-- Text to search for
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.search_text
 		end
 
 	search_upwards: BOOLEAN is
 			-- Do this search from the bottom up?
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.search_upwards
 		end
@@ -79,6 +96,7 @@ feature -- Status setting
 	show_direction_request is
 			-- Show the direction requestor
 		require
+			exists: not destroyed;
 			not_popped_up: not is_popped_up
 		do
 			implementation.show_direction_request
@@ -87,6 +105,7 @@ feature -- Status setting
 	hide_direction_request is
 			-- Hide the direction requestor.
 		require
+			exists: not destroyed;
 			not_popped_up: not is_popped_up
 		do
 			implementation.hide_direction_request
@@ -95,6 +114,7 @@ feature -- Status setting
 	enable_direction_request is
 			-- Enable the direction requestor
 		require
+			exists: not destroyed;
 			not_popped_up: not is_popped_up
 		do
 			implementation.enable_direction_request
@@ -103,6 +123,7 @@ feature -- Status setting
 	disable_direction_request is
 			-- Disable the direction requestor
 		require
+			exists: not destroyed;
 			not_popped_up: not is_popped_up
 		do
 			implementation.disable_direction_request
@@ -111,6 +132,7 @@ feature -- Status setting
 	show_match_case is
 			-- Show match case requestor
 		require
+			exists: not destroyed;
 			not_popped_up: not is_popped_up
 		do
 			implementation.show_match_case
@@ -119,6 +141,7 @@ feature -- Status setting
 	hide_match_case is
 			-- Hide match case requestor
 		require
+			exists: not destroyed;
 			not_popped_up: not is_popped_up
 		do
 			implementation.hide_match_case
@@ -127,6 +150,7 @@ feature -- Status setting
 	enable_match_case is
 			-- Enable match case requestor
 		require
+			exists: not destroyed;
 			not_popped_up: not is_popped_up
 		do
 			implementation.enable_match_case
@@ -135,6 +159,7 @@ feature -- Status setting
 	disable_match_case is
 			-- Disable match case requestor
 		require
+			exists: not destroyed;
 			not_popped_up: not is_popped_up
 		do
 			implementation.disable_match_case
@@ -142,6 +167,8 @@ feature -- Status setting
 
 	set_replace is
 			-- Set dialog to search and replace.
+		require
+			exists: not destroyed
 		do
 			implementation.set_replace
 		ensure
@@ -151,13 +178,15 @@ feature -- Status setting
 	set_replace_text (a_text: STRING)  is
 			-- Set `replace_text' to `a_text'
 		require
-			replace_mode: replace_mode
+			exists: not destroyed
 		do
 			implementation.set_replace_text (a_text)
 		end
 
 	set_search is
 			-- Set dialog to search.
+		require
+			exists: not destroyed;
 		do
 			implementation.set_search
 		ensure
@@ -166,6 +195,9 @@ feature -- Status setting
 
 	set_search_text (a_text: STRING) is
 			-- Set `search_text' to `a_text'
+		require
+			exists: not destroyed;
+			valid_text: a_text /= Void
 		do
 			implementation.set_search_text (a_text)
 		end
@@ -184,7 +216,7 @@ feature
 			-- invoked as a callback.
 		require
 			exists: not destroyed;
-			Valid_command: a_command /= Void
+			valid_command: a_command /= Void
 		do
 			implementation.add_find_action (a_command, argument)
 		end;

@@ -92,7 +92,7 @@ char *name;
 	uint32 body_id;
 
 	if (object == (char *) 0)			/* Void reference check */
-			/* Raise an exception for a feature named `fname' applied
+			/* Raise an exception for a feature named `name' applied
 			 * to a void reference. */
 		eraise(name, EN_VOID);
 

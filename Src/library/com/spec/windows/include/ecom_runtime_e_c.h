@@ -44,7 +44,7 @@ class ecom_runtime_ec
 		CURRENCY ccom_ec_currency (EIF_REFERENCE a_ref);
 		BSTR ccom_ec_bstr (EIF_REFERENCE a_ref);
 		LPSTR ccom_ec_lpstr (EIF_REFERENCE a_ref, LPSTR old);
-		LPWSTR ccom_ec_lpwstr (EIF_REFERENCE a_ref);
+		LPWSTR ccom_ec_lpwstr (EIF_REFERENCE a_ref, LPWSTR old);
 		VARIANT ccom_ec_variant (EIF_REFERENCE a_ref);
 		IEnumVARIANT * ccom_ec_pointed_enum_variant( EIF_REFERENCE eif_ref );
 		IFont * ccom_ec_pointed_ifont( EIF_REFERENCE eif_ref );

@@ -51,7 +51,7 @@ public:
 	EIF_REFERENCE ccom_ce_hresult (HRESULT a_hresult);
 	EIF_BOOLEAN ccom_ce_boolean (VARIANT_BOOL a_bool);
 	EIF_REFERENCE ccom_ce_lpstr (LPSTR a_string, EIF_OBJECT an_object);
-	EIF_REFERENCE ccom_ce_lpwstr (LPWSTR a_wstring);
+	EIF_REFERENCE ccom_ce_lpwstr (LPWSTR a_wstring, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_currency (CURRENCY a_currency);
 	EIF_REFERENCE ccom_ce_decimal (DECIMAL a_decimal);
 	EIF_REFERENCE ccom_ce_variant (VARIANT a_variant);

@@ -933,7 +933,6 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (Quick_melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)
 			toolbarable_commands.extend (Finalize_project_cmd)
-			toolbarable_commands.extend (Wizard_precompile_cmd)
 			run_finalized_cmd.enable_sensitive
 			toolbarable_commands.extend (run_finalized_cmd)
 

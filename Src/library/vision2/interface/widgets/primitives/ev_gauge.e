@@ -14,7 +14,8 @@ inherit
 	EV_PRIMITIVE
 		redefine
 			implementation,
-			create_action_sequences
+			create_action_sequences,
+			is_in_default_state
 		end
 
 feature {NONE} -- Initialization
@@ -219,6 +220,19 @@ feature {NONE} -- Implementation
 			create change_actions
 		end
 
+feature {EV_ANY} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
+		do
+			Result := Precursor and then
+				maximum = 100 and then
+				minimum = 1 and then
+				value = 1 and then
+				step = 1 and then
+				leap = 10
+		end
+
 invariant
 	range_not_void: is_useable implies range /= Void
 	maximum_greater_than_or_equal_to_minimum: is_useable implies maximum >= minimum
@@ -257,6 +271,9 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/15 16:33:52  brendel
+--| Added `is_in_default_state'.
+--|
 --| Revision 1.8  2000/02/15 02:15:39  brendel
 --| Put back invariant in commented out form with message that it only works
 --| in freezed code.

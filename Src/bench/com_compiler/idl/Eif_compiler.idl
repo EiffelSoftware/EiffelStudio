@@ -372,8 +372,8 @@ interface IEiffelFeatureDescriptor: IUnknown
   [helpstring ("Number of descendant versions.")]
   HRESULT descendant_version_count ([out, retval] ULONG * return_value);
   
-  [helpstring ("List of classes, to which feature is exported.")]
-  HRESULT exported_to ([out, retval] SAFEARRAY (BSTR) * names);
+  [helpstring ("Is feature exported to all classes?")]
+  HRESULT exported_to_all ([out, retval] VARIANT_BOOL * names);
   
   [helpstring ("Is once feature?")]
   HRESULT is_once ([out, retval] VARIANT_BOOL * return_value);

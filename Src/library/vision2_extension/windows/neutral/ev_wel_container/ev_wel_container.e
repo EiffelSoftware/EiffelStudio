@@ -19,7 +19,6 @@ inherit
 			extend as cell_extend,
 			linear_representation as cell_linear_representation
 		export {NONE}
-			cell_wipe_out,
 			cell_replace,
 			cell_put, cell_has,
 			cell_prune,
@@ -132,7 +131,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 	
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_WEL_CONTAINER_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -32,6 +32,18 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
+feature -- Access
+
+	get_item (index: INTEGER): EV_LIST_ITEM is
+			-- Give the item of the list at the zero-base
+			-- `index'.
+		require
+			exists: not destroyed
+			item_exists: index <= count
+		do
+			Result := implementation.get_item(index)
+		end
+
 feature -- Status report
 
 	count: INTEGER is

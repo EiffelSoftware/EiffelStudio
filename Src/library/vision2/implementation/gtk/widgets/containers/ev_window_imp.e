@@ -318,7 +318,7 @@ feature -- Element change
 			-- Make sure the gtk window has a corresponding gdk window
 			if not has_struct_flag (c_object, C.GTK_REALIZED_ENUM) then
 				C.gtk_widget_realize (c_object)
-			end	
+			end
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is

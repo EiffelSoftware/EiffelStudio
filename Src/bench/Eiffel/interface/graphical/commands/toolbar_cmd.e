@@ -33,7 +33,7 @@ feature -- Execution
 			a_bar: TOOLBAR;
 			arg: ANY;
 			bars: ARRAYED_LIST [WIDGET];
-			sep: SEPARATOR;
+			sep: THREE_D_SEPARATOR;
 			screen: SCREEN
 		do
 			popup := tool.popup_cell.item;

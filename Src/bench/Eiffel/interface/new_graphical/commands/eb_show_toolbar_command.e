@@ -96,12 +96,16 @@ feature -- Basic operations
 
 	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is
 			-- Create a new menu entry for this command.
-		local
-			mname: STRING
 		do
 				-- Create the menu item
 			create Result.make (Current)
 			initialize_menu_item (Result)
+			Result.enable_sensitive
+			if is_visible then
+				Result.enable_select
+			else
+				Result.disable_select
+			end
 			Result.select_actions.extend (agent execute)
 		end
 

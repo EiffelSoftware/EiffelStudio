@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 				"DOUBLE",
 				"FUNCTION",
 				"INTEGER",
-				"LINKED_LIST",
+				"LIST",
 				"PROCEDURE",
 				"REAL",
 				"STRING",

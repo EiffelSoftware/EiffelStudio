@@ -385,20 +385,21 @@ feature -- Generation constants
 			-- String used to generate inheritance from window in implementation class.
 		once
 			Result := "inherit" + Indent_less_two + Ev_titled_window_string + Indent_less_one + "redefine" + indent +
-			"initialize, is_in_default_state" + Indent_less_one + "end"
+			"initialize, is_in_default_state" + Indent_less_one + "end" + indent + indent_less_two + "CONSTANTS" +
+			Indent_less_one + "undefine" + indent + "is_equal, default_create, copy" + Indent_less_one + "end"
 		end
 		
 	window_access: STRING is
 			-- String used to define window when we are a client of window.
 		once
-			Result := "feature -- Access%N" + indent_less_two + "window: " + Ev_titled_window_string + indent_less_one +
-			"-- `Result' is window with which `Current' is implemented"
+			Result := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two +
+			"window: " + Ev_titled_window_string + indent_less_one + "-- `Result' is window with which `Current' is implemented"
 		end
 		
 	window_access_as_dialog: STRING is
 			-- String used to define window when we are a client of window.
 		once
-			Result := "feature -- Access%N" + indent_less_two + "window: " + Ev_titled_window_string + indent_less_one +
+			Result := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two + "window: " + Ev_titled_window_string + indent_less_one +
 			"-- `Result' is dialog with which `Current' is implemented"
 		end
 		

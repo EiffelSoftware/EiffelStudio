@@ -314,19 +314,19 @@ feature {EV_ANY_IMP} -- Implementation
 feature -- Implementation
 
 	is_in_docking: BOOLEAN
+		-- Is application currently in docking?
 	
 	enable_is_in_docking is
-			-- 
+			-- Set is_in_docking to True.
 		do
 			is_in_docking := True
 		end
 		
 	disable_is_in_docking is
-			-- 
+			-- Set is_in_docking to False.
 		do
 			is_in_docking := False
 		end
-		
 
 	is_in_gtk_main: BOOLEAN
 			-- Is execution currently in gtk_main?

@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			-- Create an empty label.
 		do
 			base_make (an_interface)
-			wel_make (default_parent, "", 0, 0, 0, 0, 0)
+			wel_make (default_parent, " ", 0, 0, 0, 0, 0)
 		end
 
 	
@@ -246,6 +246,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/02/22 01:12:58  rogers
+--| Changed wel_make to take a space instead of an empty string in make.
+--|
 --| Revision 1.30  2000/02/19 05:45:01  oconnor
 --| released
 --|

@@ -304,12 +304,13 @@ rt_public int acollect()
 	int allocated;					/* Memory used since last full collect */
 	int started_here = 0;			/* Was this the original entry point? */
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (!gc_running) {
-			double dummy;
+			double utime, stime;
 
 			gc_running = 1;
-			getcputime(&dummy,&last_gc_time);
+			getcputime(&utime,&stime);
+			last_gc_time = utime + stime;
 			started_here = 1;
 			gc_ran = 1;
 		}
@@ -360,12 +361,12 @@ rt_public int acollect()
 
 	nb_calls++;			/* Records the call */
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
-			double dummy, new_time;
+			double utime, stime;
 
-			getcputime(&dummy, &new_time);
-			last_gc_time = new_time - last_gc_time;
+			getcputime(&utime, &stime);
+			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
 
@@ -395,12 +396,13 @@ int i;					/* Index in g_stat array where statistics are kept */
 	int nbstat;							/* Current number of statistics */
 	int started_here = 0;
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (!gc_running) {
-			double dummy;
+			double utime, stime;
 
 			gc_running = 1;
-			getcputime(&dummy,&last_gc_time);
+			getcputime(&utime,&stime);
+			last_gc_time = utime + stime;
 			started_here = 1;
 			gc_ran = 1;
 		}
@@ -543,12 +545,12 @@ int i;					/* Index in g_stat array where statistics are kept */
 	dprintf(1)("scollect: Avg interval sys time: %lf\n", gstat->sys_iavg);
 #endif
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
-			double dummy, new_time;
+			double utime, stime; 
 
-			getcputime(&dummy, &new_time);
-			last_gc_time = new_time - last_gc_time;
+			getcputime(&utime, &stime);
+			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
 
@@ -599,12 +601,13 @@ rt_public void mksp()
 
 	int started_here = 0;
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (!gc_running) {
-			double dummy;
+			double utime, stime;
 
 			gc_running = 1;
-			getcputime(&dummy,&last_gc_time);
+			getcputime(&utime,&stime);
+			last_gc_time = utime + stime;
 			started_here = 1;
 			gc_ran = 1;
 		}
@@ -614,12 +617,12 @@ rt_public void mksp()
 
 	(void) scollect(mark_and_sweep, GST_PART);
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
-			double dummy, new_time;
+			double utime, stime;
 
-			getcputime(&dummy, &new_time);
-			last_gc_time = new_time - last_gc_time;
+			getcputime(&utime, &stime);
+			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
 }
@@ -698,7 +701,7 @@ rt_public void reclaim()
 
 	dle_reclaim();			/* Reclaim resources introduced by DLE */
 
-	if (eif_profiler_on)
+	if (prof_enabled)
 		exitprf();			/* Store profile information */
 
 #ifdef DEBUG
@@ -1638,12 +1641,13 @@ rt_public void plsc()
 
 	int started_here = 0;
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (!gc_running) {
-			double dummy;
+			double utime, stime;
 
 			gc_running = 1;
-			getcputime(&dummy,&last_gc_time);
+			getcputime(&utime,&stime);
+			last_gc_time = utime + stime;
 			started_here = 1;
 			gc_ran = 1;
 		}
@@ -1653,12 +1657,12 @@ rt_public void plsc()
 
 	(void) scollect(partial_scavenging, GST_PART);
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
-			double dummy, new_time;
+			double utime, stime;
 
-			getcputime(&dummy, &new_time);
-			last_gc_time = new_time - last_gc_time;
+			getcputime(&utime, &stime);
+			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
 }
@@ -1703,12 +1707,13 @@ char **object;
 
 	int started_here = 0;
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (!gc_running) {
-			double dummy;
+			double utime, stime;
 
 			gc_running = 1;
-			getcputime(&dummy,&last_gc_time);
+			getcputime(&utime,&stime);
+			last_gc_time = utime + stime;
 			started_here = 1;
 			gc_ran = 1;
 		}
@@ -1727,12 +1732,12 @@ char **object;
 
 	run_plsc();				/* Normal sequence */
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
-			double dummy, new_time;
+			double utime, stime;
 
-			getcputime(&dummy, &new_time);
-			last_gc_time = new_time - last_gc_time;
+			getcputime(&utime, &stime);
+			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
 }
@@ -2560,24 +2565,25 @@ rt_public int collect()
 	int result;
 	int started_here = 0;
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (!gc_running) {
-			double dummy;
+			double utime, stime;
 
 			gc_running = 1;
-			getcputime(&dummy,&last_gc_time);
+			getcputime(&utime,&stime);
+			last_gc_time = utime + stime;
 			started_here = 1;
 			gc_ran = 1;
 		}
 
 	result = scollect(generational_collect, GST_GEN);
 
-	if (eif_profiler_on)
+	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
-			double dummy, new_time;
+			double utime, stime;
 
-			getcputime(&dummy, &new_time);
-			last_gc_time = new_time - last_gc_time;
+			getcputime(&utime, &stime);
+			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
 

@@ -205,7 +205,7 @@ feature -- Processing
 		local
 			impl_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 		do
-			create impl_interface.make_from_interface (interface_descriptor)
+			impl_interface := interface_descriptor.implemented_interface
 			c_type := clone (interface_descriptor.c_type_name)
 			create c_post_type.make (0)
 			is_interface := True

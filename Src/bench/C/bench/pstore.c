@@ -194,11 +194,6 @@ zone->ov_flags);
 	return object_count;
 }
 
-long fpos1()
-{
-	return (long) lseek(fides, 0, SEEK_CUR) + current_position;
-}
-
 long fpos2(file_desc)
 EIF_INTEGER file_desc;
 {

@@ -144,7 +144,7 @@ int length, capacity;
 	register5 int offset;
 
 	/* Set the right hand end to spaces */
-	str_ljustify (length, capacity);
+	str_ljustify (str, length, capacity);
 	/* Find first non space on right */
 	for (r = str + capacity -1, i = capacity; i > 0; i --, r--)
 		if (!isspace (*r))

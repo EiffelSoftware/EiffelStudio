@@ -190,7 +190,7 @@ public char console_separator(f)
 FILE *f;
 {
 #ifdef __WATCOMC__
-	return ' '
+	return ' ';
 #else
 	return file_lh (f);
 #endif

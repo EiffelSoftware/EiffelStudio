@@ -189,12 +189,16 @@ feature -- Removal
 			-- Remove `v' if present.
 		local
 			imp: EV_WIDGET_IMP
+			pos: INTEGER
 		do
-			remove_item_actions.call ([v])
-			imp ?= v.implementation
-			C.gtk_container_remove (c_object, imp.c_object)
-			if index > count + 1 then
-				index := count + 1
+			pos := interface.index_of (v, 1)
+			if pos > 0 then
+				remove_item_actions.call ([v])
+				imp ?= v.implementation
+				C.gtk_container_remove (c_object, imp.c_object)
+				if index > pos then
+					index := index - 1
+				end
 			end
 		end
 
@@ -273,6 +277,11 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/02 01:34:52  brendel
+--| Instead of the interface, now this version of `prune' checks whether the
+--| item is present. Cursor does not move, unless it was on the removed item,
+--| then it is moved to the right neighbour, if any, or after.
+--|
 --| Revision 1.8  2000/03/01 23:39:30  brendel
 --| Improved previous fix of `extend'.
 --| Fixed bug in `put_front'.

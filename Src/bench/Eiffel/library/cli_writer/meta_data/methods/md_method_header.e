@@ -8,7 +8,7 @@ deferred class
 
 feature -- Access
 
-	size: INTEGER is
+	count: INTEGER is
 			-- Size of structure once emitted.
 		deferred
 		end
@@ -20,7 +20,7 @@ feature -- Saving
 		require
 			m_not_void: m /= Void
 			valid_pos: pos >=0 and pos < m.count
-			enough_space: m.count >= pos + size
+			enough_space: m.count >= pos + count
 		deferred
 		end
 		

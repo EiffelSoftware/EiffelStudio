@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Access
 
-	size: INTEGER is 1
+	count: INTEGER is 1
 			-- Size of structure once emitted.
 		
 feature -- Saving

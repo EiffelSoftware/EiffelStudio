@@ -833,11 +833,6 @@ end
 					reset_melted_conformance_table
 				end
 
-				if il_generation then
-						-- Ensure unicity of names
-					check_full_class_name_unicity
-				end
-
 					-- Inheritance analysis: `Degree_4' is sorted by class 
 					-- topological ids so the parent come first the heirs after.
 				process_degree_4
@@ -888,11 +883,13 @@ debug ("VERBOSE")
 	io.error.putstring ("Saving melted.eif%N")
 end
 				end
-			else
-				if System.il_generation then
-					check_full_class_name_unicity
-				end
 			end
+
+			if System.il_generation then
+					-- Ensure unicity of names
+				check_full_class_name_unicity
+			end
+
 			if not il_generation and then freeze then
 				Degree_output.put_freezing_message
 				freeze_system

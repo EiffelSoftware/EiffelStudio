@@ -379,12 +379,14 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_OBJECT result;
+			-- EIF_OBJECT result, tmp_object;
 			--
 
 			Result.append (Eif_object)
 			Result.append (Space)
-			Result.append ("result")
+			Result.append (C_result)
+			Result.append (Comma_space)
+			Result.append ("tmp_object")
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
@@ -497,20 +499,15 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- set_item (eif_access (result), cpp_object_name.element_ce_function (*(a_c_type) a_pointer));
-			--                              value of ^     value of ^             value of ^
+			-- tmp_object = eif_protect ( cpp_object_name.element_ce_function (*(a_c_type) a_pointer));
+			--                 			       value of ^               value of ^             value of ^
 
-			Result.append ("set_item")
+
+			Result.append ("tmp_object")
+			Result.append (Space_equal_space)
+			Result.append (Eif_protect)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("result")
-			Result.append (Close_parenthesis)
-			Result.append (Comma)
-			Result.append (Space)
-
 			if not need_generate_ce_element then
 				Result.append (Ce_mapper)
 				Result.append (Dot)
@@ -533,6 +530,35 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
+			-- set_item (eif_access (result), eif_access (tmp_object));
+
+			Result.append ("set_item")
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Eif_access)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (C_result)
+			Result.append (Close_parenthesis)
+			Result.append (Comma)
+			Result.append (Space)
+			Result.append (Eif_access)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append ("tmp_object")
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			-- eif_wean (tmp_object);
+
+			Result.append (Eif_wean)
+			Result.append (Space_open_parenthesis)
+			Result.append ("tmp_object")
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
 			-- CoTaskMemFree (a_pointer);
 			--   ^   Only called if can_free_element is True
 
@@ -545,6 +571,7 @@ feature {NONE} -- Implementation
 				Result.append (Semicolon)
 				Result.append (New_line_tab)
 			end
+
 
 			-- if ((an_object == NULL) || (eif_access (an_object) == NULL))
 

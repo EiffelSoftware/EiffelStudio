@@ -154,7 +154,6 @@ feature -- Implementation
 feature {NONE} -- Externals
 
 	cwin_message_box_indirect (a_msgboxparams: POINTER): INTEGER is
-			-- SDK MessageBox
 		external
 			"C [macro <wel.h>] (LPMSGBOXPARAMS): EIF_INTEGER"
 		alias

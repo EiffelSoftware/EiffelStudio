@@ -1,6 +1,6 @@
 indexing
 	description: "Fixed character array for WEL_STRUCTURE. Used internally by WEL. %
-				 % usefull to protect character arrays within an external call"
+				 % useful to protect character arrays within an external call"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

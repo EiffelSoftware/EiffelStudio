@@ -36,7 +36,7 @@ feature -- Access
 				Result := "%%%""
 			else
 				code := char.code;
-				if code < First_printable or code > Last_printable then
+				if code < First_printable then
 					!! Result.make (6);
 					Result.append ("%%/");
 					Result.append_integer (code);

@@ -78,6 +78,30 @@ feature -- Event : command association
 		deferred
 		end	
 
+	add_button_press_command (mouse_button: INTEGER; 
+		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is pressed.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		deferred
+		end
+
+	add_button_release_command (mouse_button: INTEGER;
+		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when button number 'mouse_button' is released.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
+		deferred
+		end
+
 feature -- Event -- removing command association
 
 	remove_select_commands is
@@ -87,6 +111,22 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		deferred			
 		end	
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		require
+			exists: not destroyed
+		deferred
+		end
 
 end -- class EV_TOOL_BAR_BUTTON_I
 

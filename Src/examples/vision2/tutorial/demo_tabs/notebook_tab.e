@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects.
 		local
 			cmd1, cmd2: EV_ROUTINE_COMMAND
+			h1: EV_HORIZONTAL_SEPARATOR
 		do
 			{ANY_TAB} Precursor (Void)
 		
@@ -33,15 +34,19 @@ feature -- Initialization
 
 			create cmd2.make (~get_count)
 			create f2.make (Current, 1, 0, "Pages", cmd1, cmd2)
+			create h1.make (Current)
+			set_child_position (h1, 2, 0, 3, 3)
 
 			create b1.make_with_text(Current,"Add New Page")
 			create cmd1.make (~add_page)
 			b1.add_click_command(cmd1, Void)
-			b1.set_vertical_resize(False)	
+			b1.set_vertical_resize(False)
+			set_child_position (b1, 3, 0, 4, 1)	
 			create b2.make_with_text(Current,"Move Tabs")
 			create cmd1.make (~move_tabs)
 			b2.add_click_command(cmd1, Void)
 			b2.set_vertical_resize(False)
+			set_child_position (b2, 3, 1, 4, 2)
 			f2.disable_text
 			set_parent(par)
 		end
@@ -101,15 +106,12 @@ feature -- Execution feature
 	move_tabs (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Moves the position of the notebooks tabs
 		do
-			if (current_widget.tab_position = current_widget.Tab_right) then
-				current_widget.set_tab_right
-			elseif (current_widget.tab_position = current_widget.Tab_bottom) then
-				current_widget.set_tab_bottom
-			elseif (current_widget.tab_position = current_widget.Tab_left) then
-				current_widget.set_tab_left
-			elseif (current_widget.tab_position = current_widget.Tab_top) then
-				current_widget.set_tab_top
-			end
+			inspect current_widget.tab_position
+			when 1 then current_widget.set_tab_right
+			when 2 then current_widget.set_tab_bottom
+			when 3 then current_widget.set_tab_left
+			when 4 then current_widget.set_tab_top
+		end
 		end
 
 end -- class NOTEBOOK_TAB

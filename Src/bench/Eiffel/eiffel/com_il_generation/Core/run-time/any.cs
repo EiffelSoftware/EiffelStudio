@@ -459,7 +459,7 @@ feature -- Duplication
 
 				// Add `Current' and associates it with `Result' to
 				// resolve future references to `Current' into `Result'.
-			traversed_objects.Add (Result, Current);
+			traversed_objects.Add (Current, Result);
 
 				// Performs deep traversal.
 			internal_deep_twin (Result, Current, traversed_objects);

@@ -12,6 +12,11 @@ inherit
 		undefine
 			dispose
 		end
+		
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
 
 	WEL_REFERENCE_TRACKABLE
 
@@ -45,7 +50,7 @@ inherit
 	WEL_TA_CONSTANTS
 		export
 			{NONE} all
-			{ANY} valid_text_alignement_constant
+			{ANY} valid_text_alignment_constant
 		end
 
 	WEL_MM_CONSTANTS
@@ -79,22 +84,22 @@ inherit
 feature -- Access
 
 	pen: WEL_PEN
-			-- Current pen selected
+			-- Current pen selected.
 
 	brush: WEL_BRUSH
-			-- Current brush selected
+			-- Current brush selected.
 
 	palette: WEL_PALETTE
-			-- Current palette selected
+			-- Current palette selected.
 
 	region: WEL_REGION
-			-- Current region selected
+			-- Current region selected.
 
 	font: WEL_FONT
-			-- Current font selected
+			-- Current font selected.
 
 	bitmap: WEL_BITMAP
-			-- Current bitmap selected
+			-- Current bitmap selected.
 
 feature -- Basic operations
 
@@ -163,7 +168,7 @@ feature -- Status report
 		end
 
 	background_color: WEL_COLOR_REF is
-			-- Current color of the background
+			-- Current color of the background.
 		require
 			exists: exists
 		do
@@ -173,7 +178,7 @@ feature -- Status report
 		end
 
 	text_color: WEL_COLOR_REF is
-			-- Current color of the text
+			-- Current color of the text.
 		require
 			exists: exists
 		do
@@ -183,7 +188,7 @@ feature -- Status report
 		end
 
 	rop2: INTEGER is
-			-- Current drawing mode
+			-- Current drawing mode.
 		require
 			exists: exists
 		do
@@ -193,7 +198,7 @@ feature -- Status report
 		end
 
 	text_alignment: INTEGER is
-			-- Current text alignement flags
+			-- Current text alignment flags.
 		require
 			exists: exists
 		do
@@ -201,7 +206,7 @@ feature -- Status report
 		end
 
 	pixel_color (x, y: INTEGER): WEL_COLOR_REF is
-			-- Color located at `x', `y' position
+			-- Color located at `x', `y' position.
 		require
 			exists: exists
 		do
@@ -211,7 +216,7 @@ feature -- Status report
 		end
 
 	viewport_origin: WEL_POINT is
-			-- Viewport origin for the dc
+			-- Viewport origin for the dc.
 		require
 			exists: exists
 		do
@@ -233,7 +238,7 @@ feature -- Status report
 		end
 
 	window_origin: WEL_POINT is
-			-- Window origin for the dc
+			-- Window origin for the dc.
 		require
 			exists: exists
 		do
@@ -255,7 +260,7 @@ feature -- Status report
 		end
 
 	position: WEL_POINT is
-			-- Current position in logical coordinates
+			-- Current position in logical coordinates.
 		require
 			exists: exists
 		do
@@ -266,7 +271,7 @@ feature -- Status report
 		end
 
 	string_size (s: STRING): WEL_SIZE is
-			-- Size of the string `s' using the selected font
+			-- Size of the string `s' using the selected font.
 		require
 			exists: exists
 			s_exists: s /= Void
@@ -284,7 +289,7 @@ feature -- Status report
 		end
 
 	string_width (s: STRING): INTEGER is
-			-- Width of the string `s' using the selected font
+			-- Width of the string `s' using the selected font.
 		require
 			exists: exists
 			s_exists: s /= Void
@@ -295,7 +300,7 @@ feature -- Status report
 		end
 
 	string_height (s: STRING): INTEGER is
-			-- Height of the string `s' using the selected font
+			-- Height of the string `s' using the selected font.
 		require
 			exists: exists
 			s_exists: s /= Void
@@ -306,7 +311,7 @@ feature -- Status report
 		end
 
 	tabbed_text_size (text: STRING): WEL_SIZE is
-			-- Size of a tabbed `text'
+			-- Size of a tabbed `text'.
 		require
 			exists: exists
 			text_not_void: text /= Void
@@ -325,7 +330,7 @@ feature -- Status report
 		end
 
 	tabbed_text_width (text: STRING): INTEGER is
-			-- Width of a tabbed `text'
+			-- Width of a tabbed `text'.
 		require
 			exists: exists
 			text_not_void: text /= Void
@@ -336,7 +341,7 @@ feature -- Status report
 		end
 
 	tabbed_text_height (text: STRING): INTEGER is
-			-- Height of a tabbed `text'
+			-- Height of a tabbed `text'.
 		require
 			exists: exists
 			text_not_void: text /= Void
@@ -427,7 +432,7 @@ feature -- Status report
 		end
 
 	text_face: STRING is
-			-- Typeface name of the font that is currently selected
+			-- Typeface name of the font that is currently selected.
 		require
 			exists: exists
 		local
@@ -446,7 +451,7 @@ feature -- Status report
 		end
 
 	width: INTEGER is
-			-- Width of the screen (in pixels)
+			-- Width of the screen (in pixels).
 		require
 			exists: exists
 		do
@@ -454,7 +459,7 @@ feature -- Status report
 		end
 
 	height: INTEGER is
-			-- Height of screen (in raster lines)
+			-- Height of screen (in raster lines).
 		require
 			exists: exists
 		do
@@ -472,16 +477,35 @@ feature -- Status report
 feature -- Status setting
 
 	set_text_alignment (an_alignment: INTEGER) is
-			-- Set the text alignment with `an_alignement'.
-			-- See class WEL_TA_CONSTANTS for `an_alignement'.
+			-- Set the text alignment with `an_alignment'.
+			-- See class WEL_TA_CONSTANTS for `an_alignment'.
 		require
 			exists: exists
-			valid_alignement: valid_text_alignement_constant (an_alignment)
+			valid_alignment: valid_text_alignment_constant (an_alignment)
 		do
 			cwin_set_text_align (item, an_alignment)
 		ensure
-			text_alignment_set: text_alignment = an_alignment
+			text_alignment_set: flag_set (text_alignment, an_alignment)
 		end
+		
+	 set_hv_text_alignment (h, v: INTEGER) is
+               -- Set the text alignment using the horizontal and
+               -- vertical components in `h' and `v'.
+              -- See class WEL_TA_CONSTANTS for valid alignments.
+          require
+               exists: exists
+               valid_horizontal_alignment: valid_htext_alignment_constant (h)
+               valid_vertical_alignment: valid_vtext_alignment_constant (v)
+          local
+               an_alignment: INTEGER
+          do
+               an_alignment := set_flag (an_alignment, h)
+               an_alignment := set_flag (an_alignment, v)
+               cwin_set_text_align (item, an_alignment)
+          ensure
+          		text_alignments_set: flag_set (text_alignment, h) and
+          			flag_set (text_alignment, v)
+          end
 
 	set_map_mode (mode: INTEGER) is
 			-- Set the mapping mode `mode' of the device context.
@@ -512,7 +536,7 @@ feature -- Status setting
 
 	set_window_extent (x_extent, y_extent: INTEGER) is
 			-- Set the `x_extent' and `y_extent' of the window
-			-- associated with the device context
+			-- associated with the device context.
 		require
 			exists: exists
 			valid_current_map_mode: valid_extent_map_mode (map_mode)
@@ -539,7 +563,7 @@ feature -- Status setting
 
 	set_viewport_extent (x_extent, y_extent: INTEGER) is
 			-- Set the `x_extent' and `y_extent' of the viewport
-			-- associated with the device context
+			-- associated with the device context.
 		require
 			exists: exists
 			valid_current_map_mode: valid_extent_map_mode (map_mode)
@@ -553,7 +577,7 @@ feature -- Status setting
 
 	set_viewport_origin (x_origin, y_origin: INTEGER) is
 			-- Set the `x_origin' and `y_origin' of the viewport
-			-- associated with the device context
+			-- associated with the device context.
 		require
 			exists: exists
 		do
@@ -565,7 +589,7 @@ feature -- Status setting
 		end
 
 	set_background_color (color: WEL_COLOR_REF) is
-			-- Set the `background_color' to `color'
+			-- Set the `background_color' to `color'.
 		require
 			exists: exists
 			color_not_void: color /= Void
@@ -587,7 +611,7 @@ feature -- Status setting
 		end
 
 	set_background_opaque is
-			-- Set the background mode to opaque
+			-- Set the background mode to opaque.
 		require
 			exists: exists
 		do
@@ -597,7 +621,7 @@ feature -- Status setting
 		end
 
 	set_background_transparent is
-			-- Set the background mode to transparent
+			-- Set the background mode to transparent.
 		require
 			exists: exists
 		do
@@ -767,7 +791,7 @@ feature -- Status setting
 		end
 
 	unselect_pen is
-			-- Deselect the pen and restore the old one
+			-- Deselect the pen and restore the old one.
 		require
 			exists: exists
 			pen_selected: pen_selected
@@ -783,7 +807,7 @@ feature -- Status setting
 		end
 
 	unselect_brush is
-			-- Deselect the brush and restore the old one
+			-- Deselect the brush and restore the old one.
 		require
 			exists: exists
 			brush_selected: brush_selected
@@ -799,7 +823,7 @@ feature -- Status setting
 		end
 
 	unselect_region is
-			-- Deselect the region and restore the old one
+			-- Deselect the region and restore the old one.
 		require
 			exists: exists
 			region_selected: region_selected
@@ -815,7 +839,7 @@ feature -- Status setting
 		end
 
 	unselect_palette is
-			-- Deselect the palette and restore the old one
+			-- Deselect the palette and restore the old one.
 		require
 			exists: exists
 			palette_selected: palette_selected
@@ -831,7 +855,7 @@ feature -- Status setting
 		end
 
 	unselect_font is
-			-- Deselect the font and restore the old one
+			-- Deselect the font and restore the old one.
 		require
 			exists: exists
 			font_selected: font_selected
@@ -847,7 +871,7 @@ feature -- Status setting
 		end
 
 	unselect_bitmap is
-			-- Deselect the bitmap and restore the old one
+			-- Deselect the bitmap and restore the old one.
 		require
 			exists: exists
 			bitmap_selected: bitmap_selected
@@ -863,7 +887,7 @@ feature -- Status setting
 		end
 
 	unselect_all is
-			-- Deselect all objects and restore the old ones
+			-- Deselect all objects and restore the old ones.
 		require
 			exists: exists
 		do
@@ -898,7 +922,7 @@ feature -- Basic operations
 
 	realize_palette is
 			-- Map palette entries from the current logical
-			-- palette on the system palette
+			-- palette on the system palette.
 		require
 			exists: exists
 			palette_selected: palette_selected
@@ -907,7 +931,7 @@ feature -- Basic operations
 		end
 
 	select_clip_region (a_region: WEL_REGION) is
-			-- Select `a_region' as the current clipping region
+			-- Select `a_region' as the current clipping region.
 		require
 			exists: exists
 			a_region_not_void: a_region /= Void
@@ -917,7 +941,7 @@ feature -- Basic operations
 		end
 
 	remove_clip_region is
-			-- Remove the current clipping region
+			-- Remove the current clipping region.
 		require
 			exists: exists
 		do
@@ -925,7 +949,7 @@ feature -- Basic operations
 		end
 
 	text_out (x, y: INTEGER; string: STRING) is
-			-- Write `string' on `x' and `y' position
+			-- Write `string' on `x' and `y' position.
 		require
 			exists: exists
 			string_not_void: string /= Void
@@ -960,7 +984,7 @@ feature -- Basic operations
 	draw_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
 			-- Draw the text `string' inside 
 			-- the `rect' using `format'
-			-- See class WEL_DT_CONSTANTS for `format' value
+			-- See class WEL_DT_CONSTANTS for `format' value.
 		require
 			exists: exists
 			string_not_void: string /= Void
@@ -974,7 +998,7 @@ feature -- Basic operations
 	draw_text_with_result (string: STRING; rect: WEL_RECT; format: INTEGER): INTEGER is
 			-- Draw the text `string' inside the `rect' using `format'.
 			-- Return the height of the text drawn.
-			-- See class WEL_DT_CONSTANTS for `format' value
+			-- See class WEL_DT_CONSTANTS for `format' value.
 		require
 			exists: exists
 			string_not_void: string /= Void
@@ -990,7 +1014,7 @@ feature -- Basic operations
 	draw_disabled_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
 			-- Draw the text `string' in disabled mode inside 
 			-- the `rect' using `format'
-			-- See class WEL_DT_CONSTANTS for `format' value
+			-- See class WEL_DT_CONSTANTS for `format' value.
 		require
 			exists: exists
 			string_not_void: string /= Void
@@ -1075,7 +1099,7 @@ feature -- Basic operations
 		end
 
 	set_pixel (x, y: INTEGER; color: WEL_COLOR_REF) is
-			-- Set the pixel at `x', `y' position
+			-- Set the pixel at `x', `y' position.
 			-- with the `color' color.
 		require
 			exists: exists
@@ -1085,7 +1109,7 @@ feature -- Basic operations
 		end
 
 	line (x1, y1, x2, y2: INTEGER) is
-			-- Draw a line from `x1', `y1' to `x2', `y2'
+			-- Draw a line from `x1', `y1' to `x2', `y2'.
 		require
 			exists: exists
 		do
@@ -1109,7 +1133,7 @@ feature -- Basic operations
 
 	line_to (x, y: INTEGER) is
 			-- Draw a line from the current position
-			-- to `x', `y' position
+			-- to `x', `y' position.
 		require
 			exists: exists
 		do
@@ -1117,7 +1141,7 @@ feature -- Basic operations
 		end
 
 	move_to (x, y: INTEGER) is
-			-- Set the current position to `x', `y' position
+			-- Set the current position to `x', `y' position.
 		require
 			exists: exists
 		do
@@ -1134,7 +1158,7 @@ feature -- Basic operations
 		end
 
 	fill_rect (a_rect: WEL_RECT; a_brush: WEL_BRUSH) is
-			-- Fill a `a_rect' by using `a_brush' to fill it.
+			-- Fill a `a_rect' using `a_brush'.
 		require
 			exists: exists
 			a_rect_not_void: a_rect /= Void
@@ -1145,7 +1169,7 @@ feature -- Basic operations
 		end
 
 	fill_region (a_region: WEL_REGION; a_brush: WEL_BRUSH) is
-			-- Fill `a_region' by using `a_brush' to fill it
+			-- Fill `a_region' using `a_brush'.
 		require
 			exists: exists
 			a_region_not_void: a_region /= Void
@@ -1214,7 +1238,7 @@ feature -- Basic operations
 
 	ellipse (left, top, right, bottom: INTEGER) is
 			-- Draw an ellipse into a rectangle specified by
-			-- `left', `top' and `right', `bottom'
+			-- `left', `top' and `right', `bottom'.
 		require
 			exists: exists
 		do
@@ -1226,7 +1250,7 @@ feature -- Basic operations
 			-- Draw an elliptical arc into a rectangle specified
 			-- by `left', `top' and `right', `bottom', starting
 			-- at `x_start_arc', `y_start_arc' and ending at
-			-- `x_end_arc', `y_end_arc'
+			-- `x_end_arc', `y_end_arc'.
 		require
 			exists: exists
 		do
@@ -1239,7 +1263,7 @@ feature -- Basic operations
 			-- Draw a chord into a rectangle specified
 			-- by `left', `top' and `right', `bottom', starting
 			-- at `x_start_line', `y_start_line' and ending at
-			-- `x_end_line', `y_end_line'
+			-- `x_end_line', `y_end_line'.
 		require
 			exists: exists
 		do
@@ -1254,7 +1278,7 @@ feature -- Basic operations
 			-- by lines. The pie is drawn into a rectangle
 			-- specified by `left', `top' and `right', `bottom',
 			-- starting at `x_start_point', `y_start_point'
-			-- and ending at `x_end_point', `y_end_point'
+			-- and ending at `x_end_point', `y_end_point'.
 		require
 			exists: exists
 		do
@@ -1267,7 +1291,7 @@ feature -- Basic operations
 			-- Draw a rectangle from `left', `top' to
 			-- `right', `bottom' with rounded corners.
 			-- The rounded corners are specified by the
-			-- `ellipse_width' and `ellipse_height'
+			-- `ellipse_width' and `ellipse_height'.
 		require
 			exists: exists
 		do
@@ -1553,25 +1577,25 @@ feature {NONE} -- Removal
 feature {NONE} -- Implementation
 
 	old_hpen: POINTER
-		-- Old hpen selected
+		-- Old hpen selected.
 
 	old_hbrush: POINTER
-		-- Old hbrush selected
+		-- Old hbrush selected.
 
 	old_hregion: POINTER
-		-- Old hregion selected
+		-- Old hregion selected.
 
 	old_hpalette: POINTER
-		-- Old hpalette selected
+		-- Old hpalette selected.
 
 	old_hfont: POINTER
-		-- Old hfont selected
+		-- Old hfont selected.
 
 	old_hbitmap: POINTER
-		-- Old hbitmap selected
+		-- Old hbitmap selected.
 
 	Max_text_face: INTEGER is 255
-		-- Maximum text face name for `text_face'
+		-- Maximum text face name for `text_face'.
 
 feature -- Obsolete
 
@@ -1715,7 +1739,7 @@ feature {NONE} -- Externals
 			"FillRect"
 		end
 
-	-- Fill region to implement in order to avoid the falshing of the windows
+	-- Fill region to implement in order to avoid the flashing of the windows
 
 	cwin_fill_region (hdc, hrgn, hbrush: POINTER) is
 			-- SDK fillRgn

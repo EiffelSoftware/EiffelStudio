@@ -23,7 +23,8 @@ inherit
 		redefine
 			text_window
 		end;
-	SHARED_APPLICATION_EXECUTION
+	SHARED_APPLICATION_EXECUTION;
+	WARNER_CALLBACKS
 
 creation
 
@@ -41,6 +42,17 @@ feature -- Initialization
 			!!argument_window.make (c, Current);
 			add_button_click_action (3, Current, specify_args);
 			set_action ("!c<Btn1Down>", Current, melt_and_run)
+		end;
+
+feature -- Callbacks
+
+	execute_warner_help is
+		do
+		end;
+
+	execute_warner_ok (argument: ANY) is
+		do
+			Eiffel_project.call_finish_freezing (True)
 		end;
 
 feature -- Properties
@@ -90,8 +102,6 @@ feature -- Execution
 				update_command.set_run_after_melt (false)
 			elseif argument = specify_args then
 				argument_window.call
-			elseif last_warner /= Void and argument = last_warner then
-				Eiffel_project.call_finish_freezing (True)
 			elseif 
 				not project_tool.initialized or else 
 				Eiffel_System.name = Void 

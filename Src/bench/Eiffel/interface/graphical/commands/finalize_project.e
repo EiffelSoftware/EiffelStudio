@@ -10,10 +10,25 @@ class FINALIZE_PROJECT
 inherit
 
 	UPDATE_PROJECT
+		rename
+			choose_template as update_project_choose_template,
+			warner_ok as update_project_warner_ok
 		redefine
 			c_code_directory, launch_c_compilation,
 			confirm_and_compile, command_name, symbol, 
 			compilation_allowed, finalization_error, perform_compilation
+		end;
+	UPDATE_PROJECT
+		rename
+			choose_template as discard_assertions,
+			warner_ok as keep_assertions
+		redefine
+			c_code_directory, launch_c_compilation,
+			confirm_and_compile, command_name, symbol,
+			compilation_allowed, finalization_error, perform_compilation,
+			discard_assertions, keep_assertions
+		select
+			discard_assertions, keep_assertions
 		end;
 	SHARED_ERROR_HANDLER;
 	SHARED_MELT_ONLY
@@ -21,6 +36,48 @@ inherit
 creation
 
 	make
+
+feature -- Callbacks
+
+	discard_assertions is
+			-- Question to keep assertions is answered with discard.
+			-- This is handled by keep_assertions.
+		do
+			if Eiffel_project.lace_file_name = Void then
+				update_project_choose_template
+			else
+				keep_assertions (Void)
+			end
+		end;
+
+	keep_assertions (argument: ANY) is
+			-- Question to keep assertions is answered with keep.
+			-- If the question is answered with discard, it will come to here aswell.
+		do
+			if Eiffel_project.lace_file_name = Void then
+				update_project_warner_ok (argument)
+			elseif not assert_confirmed then
+				assert_confirmed := True;
+				warner (text_window).custom_call (Current, 
+					w_Assertion_warning, "Keep assertions", 
+					"Discard assertions", "Cancel"); 
+			elseif 
+				not Application.is_running or else
+				(argument /= Void and 
+				argument = last_confirmer and end_run_confirmed)
+			then
+					-- Do not call the once function `System' directly
+					-- since it's value may be replaced during the first
+					-- compilation (as soon as we figured out whether the
+					-- system describes a Dynamic Class Set or not).
+				compile (argument)
+			else
+				end_run_confirmed := true;
+				confirmer (text_window).call (Current,
+						"Recompiling project will end current run.%N%
+						%Start compilation anyway?", "Compile")
+			end
+		end;
  
 feature -- Properties
 
@@ -74,32 +131,10 @@ feature {NONE} -- Implementation
 				warner (text_window).custom_call (Current, w_Finalize_warning,
 					"Finalize now", Void, "Cancel");
 			elseif 
-				(argument = last_warner) or else
 				(argument = Current) or else
-				(argument = last_confirmer) or else
-				(argument = Void)
+				(argument = last_confirmer)
 			then
-				if not assert_confirmed then
-					assert_confirmed := True;
-					warner (text_window).custom_call (Current, 
-						w_Assertion_warning, "Keep assertions", 
-						"Discard assertions", "Cancel"); 
-				elseif 
-					not Application.is_running or else
-					(argument /= Void and 
-					argument = last_confirmer and end_run_confirmed)
-				then
-						-- Do not call the once function `System' directly
-						-- since it's value may be replaced during the first
-						-- compilation (as soon as we figured out whether the
-						-- system describes a Dynamic Class Set or not).
-					compile (argument);
-				else
-					end_run_confirmed := true;
-					confirmer (text_window).call (Current,
-							"Recompiling project will end current run.%N%
-							%Start compilation anyway?", "Compile")
-				end;
+				keep_assertions (argument)
 			end;
 		end;
 
@@ -107,31 +142,12 @@ feature {NONE} -- Implementation
 			-- The real compilation work.
 		local
 			temp: STRING;
-			rescued: BOOLEAN
 		do
-			if not rescued then
-				-- If the argument is `warner' the user 
-				-- pressed on "Keep assertions"
-				Eiffel_project.finalize (last_warner /= Void and 
-									argument = last_warner);
-				if Eiffel_project.save_error then
-					!! temp.make (0);
-					temp.append ("Could not write to ");
-					temp.append (Project_file_name);
-					temp.append ("%NPlease check permissions and disk space%
-						%%NThen press ");
-					temp.append (command_name);
-					temp.append (" again%N");
-					error_window.put_string (temp)
-				end;
-				finalization_error := false
-			else
-				rescued := False
-			end
-		rescue
-			rescued := true;
-			finalization_error := true;
-			retry
+			-- If the argument is `warner' the user 
+			-- pressed on "Keep assertions"
+			Eiffel_project.finalize (last_warner /= Void and 
+								argument = last_warner);
+			finalization_error := not Eiffel_project.successful;
 		end;
 
 	launch_c_compilation (argument: ANY) is

@@ -9,7 +9,11 @@ class QUIT_FILE
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_ok as loose_changes
+		end
 
 creation
 
@@ -21,6 +25,18 @@ feature -- Initialization
 			-- Initialize the command.
 		do
 			init (c, a_text_window)
+		end;
+
+feature -- Callbacks
+
+	execute_warner_help is
+		do
+		end;
+
+	loose_changes (argument: ANY) is
+			-- The user has been warned that he will lose his stuff
+		do
+			window_manager.close (text_window.tool);
 		end;
 
 feature -- Properties
@@ -37,8 +53,6 @@ feature {NONE} -- Implementation
 			-- Quit cautiously a file.
 		do
 			if last_warner /= Void and argument = last_warner then
-				-- The user has been warned that he will lose his stuff
-				window_manager.close (text_window.tool);
 			else
 				-- First click on open
 				if text_window.changed then

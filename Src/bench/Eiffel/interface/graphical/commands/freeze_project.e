@@ -10,17 +10,47 @@ class FREEZE_PROJECT
 inherit
  
 	UPDATE_PROJECT
+		rename
+			warner_ok as update_project_warner_ok
 		redefine
 			launch_c_compilation, 
 			confirm_and_compile,
 			command_name, symbol,
 			compilation_allowed, perform_compilation
 		end;
+	UPDATE_PROJECT
+		rename
+			warner_ok as freeze_now
+		redefine
+			launch_c_compilation,
+			confirm_and_compile,
+			command_name, symbol,
+			compilation_allowed, perform_compilation,
+			freeze_now
+		select
+			freeze_now
+		end;
 	SHARED_MELT_ONLY
  
 creation
 
 	make
+
+feature -- Callbacks
+
+	freeze_now (argument: ANY) is
+		do
+			if Eiffel_project.lace_file_name = Void then
+				update_project_warner_ok (argument)
+			elseif Application.is_running then
+				end_run_confirmed := true;
+				confirmer (text_window).call (Current,
+						"Recompiling project will end current run.%N%
+						%Start compilation anyway?", "Compile")
+			else
+				compile (argument)
+			end
+		end;
 
 feature -- Properties
 
@@ -43,14 +73,7 @@ feature {NONE} -- Implementation
 				warner (text_window).custom_call (Current, w_Freeze_warning,
 							"Freeze now", Void, "Cancel");
 			elseif (argument /= Void and then argument = last_warner) then
-				if Application.is_running then
-					end_run_confirmed := true;
-					confirmer (text_window).call (Current,
-							"Recompiling project will end current run.%N%
-							%Start compilation anyway?", "Compile")
-				else
-					compile (argument)
-				end
+					freeze_now (argument)
 			elseif 
 				argument /= Void and 
 				argument = last_confirmer and end_run_confirmed 

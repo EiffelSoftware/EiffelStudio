@@ -10,7 +10,11 @@ class OPEN_FILE
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_ok as loose_changes
+		end
 
 creation
 
@@ -22,6 +26,21 @@ feature -- Initialization
 			-- Initialization of the command.
 		do
 			init (c, a_text_window)
+		end;
+
+feature -- Callbacks
+
+	execute_warner_help is
+			-- Useless here
+		do
+			-- Do Nothing
+		end;
+
+	loose_changes (argument: ANY) is
+			-- The user has eventually been warned that he will lose his stuff
+		do
+			name_chooser.set_window (text_window);
+			name_chooser.call (Current) 
 		end;
 	
 feature -- Properties
@@ -41,11 +60,7 @@ feature {NONE} -- Implementation
 			f: RAW_FILE;
 			temp: STRING
 		do
-			if last_warner /= Void and argument = last_warner then
-				-- The user has eventually been warned that he will lose his stuff
-				name_chooser.set_window (text_window);
-				name_chooser.call (Current) 
-			elseif argument = name_chooser then
+			if argument = name_chooser then
 				fn := clone (name_chooser.selected_file);
 				if not fn.empty then
 					!! f.make (fn);

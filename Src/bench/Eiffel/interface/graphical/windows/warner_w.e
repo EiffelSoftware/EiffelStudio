@@ -41,7 +41,6 @@ feature -- Initialization
 		do
 			warning_create (l_Warning, a_parent);
 			set_title (l_Warning);
-			hide_help_button;
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
 			add_help_action (Current, help_it);
@@ -84,28 +83,9 @@ feature -- Graphical Interface
 			warning_popup
 		end;
 
-	call (a_command: COMMAND_W; a_message: STRING) is
-			-- Record calling command `a_command' and popup current with
-			-- the message `a_message'.
-		do
-			hide_help_button;
-			show_cancel_button;
-			show_ok_button;
-			set_ok_label (" OK ");
-			set_cancel_label ("Cancel");
-			set_help_label ("Help");
-			last_caller := a_command;
-			set_message (a_message);
-			set_exclusive_grab;
-			remove_button_click_action (1, Current, popdown_action);
-			popup
-		ensure
-			last_caller_recorded: last_caller = a_command
-		end;
-
 feature -- Window Settings
 
-	set_last_caller (cmd: COMMAND_W) is
+	set_last_caller (cmd: WARNER_CALLBACKS) is
 		do
 			last_caller := cmd
 		end;
@@ -117,6 +97,24 @@ feature -- Window Settings
 
 feature -- Access
 
+	call (a_command: WARNER_CALLBACKS; a_message: STRING) is
+			-- Record calling command `a_command' and popup current with
+			-- the message `a_message'.
+		do
+			hide_help_button;
+			show_cancel_button;
+			show_ok_button;
+			set_ok_label (" OK ");
+			set_cancel_label ("Cancel");
+			last_caller := a_command;
+			set_message (a_message);
+			set_exclusive_grab;
+			remove_button_click_action (1, Current, popdown_action);
+			popup
+		ensure
+			last_caller_recorded: last_caller = a_command
+		end;
+
 	gotcha_call (a_message: STRING) is
 		do
 			set_no_grab;
@@ -124,24 +122,19 @@ feature -- Access
 			custom_call (Void, a_message, Void, Void, Void);
 		end;
 
-	custom_call (a_command: COMMAND_W; a_message: STRING;
+	custom_call (a_command: WARNER_CALLBACKS; a_message: STRING;
 		ok_text, help_text, cancel_text: STRING) is
 			-- A gotcha custom call is when a popup has one (or more) button
 			-- in which the callback only pops the window down. 
 			-- (a void a_command implies a gotcha warner)
 		do
-			hide_help_button;
-			show_cancel_button;
-			show_ok_button;
-			set_ok_label (" OK ");
-			set_cancel_label ("Cancel");
-			set_help_label ("Help");
 			last_caller := a_command;
 			set_message (a_message);
 			if ok_text = void then
 				hide_ok_button
 			else
-				set_ok_label (ok_text)
+				set_ok_label (ok_text);
+				show_ok_button
 			end;
 			if help_Text = void then
 				hide_help_button
@@ -152,7 +145,8 @@ feature -- Access
 			if cancel_Text = void then
 				hide_cancel_button
 			else
-				set_cancel_label (cancel_text)
+				set_cancel_label (cancel_text);
+				show_cancel_button
 			end;
 
 			if (a_command /= Void) then
@@ -175,7 +169,7 @@ feature {NONE} -- Properties
 			!!Result
 		end;
 
-	last_caller: COMMAND_W
+	last_caller: WARNER_CALLBACKS
 			-- Last command which popped up current
 
 	window: WIDGET;
@@ -185,21 +179,13 @@ feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 		do
-			if argument = popdown_action then
-				popdown
-			else
-				popdown;
-				hide_help_button;
-				show_cancel_button;
-				show_ok_button;
-				set_ok_label (" OK ");
-				set_cancel_label ("Cancel");
-				set_help_label ("Help");
+			popdown;
+			if argument /= popdown_action then
 				if last_caller /= void then
 					if argument = help_it then
-						last_caller.execute (Void)
+						last_caller.execute_warner_help -- (Void)
 					elseif argument = Current then
-						last_caller.execute (Current)
+						last_caller.execute_warner_ok (Current)
 					end
 				end
 			end

@@ -13,7 +13,7 @@ inherit
 	OPEN_FILE
 		redefine
 			make, work
-		end
+		end;
 
 creation
 
@@ -36,11 +36,7 @@ feature {NONE} -- Implementation
 			f: RAW_FILE;
 			temp: STRING
 		do
-			if last_warner /= Void and argument = last_warner then
-				-- The user has been warned that he will lose his stuff
-				name_chooser.set_window (text_window);
-				name_chooser.call (Current) 
-			elseif argument = name_chooser then
+			if argument = name_chooser then
 				fn := clone (name_chooser.selected_file);
 				if not fn.empty then
 					!! f.make (fn);

@@ -11,7 +11,7 @@ inherit
 
 	QUIT_FILE
 		redefine 
-			work, make, text_window
+			work, make, text_window, loose_changes
 		end
 
 creation
@@ -26,6 +26,16 @@ feature -- Initialization
 			init (c, a_text_window)
 		end;
 
+feature -- Callbacks
+
+	loose_changes (argument: ANY) is
+			-- The user has been warned that he will lose his stuff
+		do
+			text_window.clean;
+			text_window.tool.hide;
+			text_window.set_in_use (false)
+		end;
+
 feature -- Properties
 
 	text_window: SYSTEM_TEXT;
@@ -37,10 +47,6 @@ feature {NONE} -- Implementation
 			-- Quit cautiously an ace file. Don't actually destroy the window.
 		do
 			if last_warner /= Void and argument = last_warner then
-				-- The user has been warned that he will lose his stuff
-				text_window.clean;
-				text_window.tool.hide;
-				text_window.set_in_use (false)
 			else
 				-- First click on open
 				if text_window.changed then

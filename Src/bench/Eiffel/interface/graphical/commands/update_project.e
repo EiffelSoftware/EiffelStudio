@@ -18,7 +18,12 @@ inherit
 		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_TABLES;
-	SHARED_BENCH_RESOURCES
+	SHARED_BENCH_RESOURCES;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_help as choose_template,
+			execute_warner_ok as warner_ok
+		end
 
 creation
 
@@ -31,6 +36,20 @@ feature -- Initialization
 		do
 			init (c, a_text_window);
 			set_action ("!c<Btn1Down>", Current, generate_code_only)
+		end;
+
+feature -- Callbacks
+
+	choose_template is
+		do
+			system_tool.display;
+			load_default_ace;
+		end;
+
+	warner_ok (argument: ANY) is
+		do
+			name_chooser.set_window (text_window);
+			name_chooser.call (Current)
 		end;
 
 feature -- Properties
@@ -303,11 +322,9 @@ feature {NONE} -- Implementation; Execution
 							project_tool.raise
 						end
 					elseif arg = Void then
-						system_tool.display;
-						load_default_ace;
+						choose_template
 					elseif arg = last_warner then
-						name_chooser.set_window (text_window);
-						name_chooser.call (Current)
+						warner_ok (arg);
 					elseif arg = name_chooser then
 						fn := clone (name_chooser.selected_file);
 						if not fn.empty then

@@ -116,7 +116,7 @@ feature -- Access
 			history_list.forth
 			create a_row.make_with_text (list, <<cmd.name, cmd.comment>>)
 			create arg.make (3)
-			a_row.add_activate_command (Current, arg)
+			a_row.add_select_command (Current, arg)
 			set_unsaved
 			select_item (list.rows)
 		end
@@ -191,15 +191,15 @@ feature {NONE} -- Command
 	execute (argument: EV_ARGUMENT1 [INTEGER]; data: EV_EVENT_DATA) is
 		do
 			if argument.first = 1 then
-				back
+				undo
 			elseif argument.first = 2 then
-				forth
+				redo
 			elseif argument.first = 3 then
 				play
 			end
 		end
 
-	forth is
+	redo is
 			-- Move forward in history list.
 		do
 			if not history_list.empty and then not history_list.islast then
@@ -214,7 +214,7 @@ feature {NONE} -- Command
 			end
 		end
 
-	back is
+	undo is
 			-- Move back in history list
 			-- and select current item.
 		do
@@ -249,8 +249,8 @@ feature {NONE} -- Command
 				until
 					i <= 0
 				loop
-						forth
-						i := i - 1
+					redo
+					i := i - 1
 				end
 			else
 				from
@@ -258,8 +258,8 @@ feature {NONE} -- Command
 				until
 					i >= 0
 				loop
-						back
-						i := i + 1
+					undo
+					i := i + 1
 				end
 			end
 		end
@@ -310,11 +310,23 @@ feature {NONE} -- Implementation
 			main_window.set_unsaved_symbol
 		end
 
+	can_undo: BOOLEAN is
+		do
+			Result := list.rows > 0 and not history_list. empty
+									and then not history_list.before
+		end
+		
+	can_redo: BOOLEAN is
+		do
+			Result := list.rows > 0 and not history_list. empty
+									and then not history_list.islast
+		end
+
 feature -- Interface
 
 	close (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		do
-			main_window.menu_bar.history_window_entry.set_state (False)
+			main_window.menu_bar.history_window_entry.set_selected (False)
 			hide
 		end
 

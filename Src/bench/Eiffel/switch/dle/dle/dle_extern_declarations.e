@@ -86,7 +86,7 @@ feature -- Generation
 			!!f.make (file_name);
 			f.open_append;
 
-			f.putstring ("#include %"portable.h%"%N%N");
+			f.putstring ("#include %"eif_portable.h%"%N%N");
 
 				-- now generate the include files required by externals
 			generate_header_files (f)

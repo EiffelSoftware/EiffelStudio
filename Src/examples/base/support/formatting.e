@@ -1,6 +1,9 @@
 class FORMATTING
 
-creation
+inherit
+	STD_FILES
+
+create
 	make
 
 feature -- Initialization
@@ -22,7 +25,7 @@ feature -- Initialization
 			io.putstring ("Unformatted             : ")
 			io.putint (i)
 			io.new_line
-			!!fi.make (10)
+			create fi.make (10)
 			io.putstring ("Default                 : ")
 			io.putstring (fi.formatted (i))
 			io.new_line
@@ -134,7 +137,7 @@ feature -- Initialization
 			io.putstring ("Unformatted                : ")
 			io.putdouble (d)
 			io.new_line
-			!!fd.make (13,4)
+			create fd.make (13,4)
 			io.putstring ("Default                    : ")
 			io.putstring (fd.formatted (d))
 			io.new_line
@@ -186,13 +189,14 @@ feature -- Input
 	get_number is
 		do
 			io.putstring ("Enter a number between 1 and 100: ")
+			
 			from
-				io.readint
+				io.read_integer
 			until
 				1 <= io.lastint and io.lastint <= 100
 			loop
 				io.putstring ("That number is not between 1 and 100%N")
-				io.readint
+				io.read_integer
 			end
 			item := io.lastint
 		end
@@ -201,7 +205,7 @@ feature -- Implementation
 
 	random : RANDOM is
 		once
-			!!Result.make
+			create Result.make
 		end
 
 	item: INTEGER

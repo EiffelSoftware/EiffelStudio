@@ -7,7 +7,7 @@ indexing
 
 class COUNTABLES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,7 +24,7 @@ feature -- Initialization
 	prime_demo is
 		do
 			io.putstring ("%NPrime Demo%N")
-			!PRIMES!c
+			create {PRIMES} c
 			display_first_ten
 			has_test
 		end
@@ -34,10 +34,10 @@ feature -- Initialization
 			r: RANDOM
 		do 
 			io.putstring ("%NRandom Demo%N")
-			!RANDOM!c.make
+			create {RANDOM} c.make
 			display_first_ten
 			io.putstring ("Change seed to 1%N")
-			!!r.set_seed (1)
+			create r.set_seed (1)
 			c := r
 			display_first_ten
 			io.putstring ("Change seed to 2%N")
@@ -50,7 +50,7 @@ feature -- Initialization
 	fibonacci_demo is
 		do
 			io.putstring ("%NFibonacci Demo%N")
-			!FIBONACCI!c
+			create {FIBONACCI} c
 			display_first_ten
 			has_test
 		end

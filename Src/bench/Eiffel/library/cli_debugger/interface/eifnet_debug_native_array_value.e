@@ -11,60 +11,42 @@ inherit
 
 	ABSTRACT_SPECIAL_VALUE
 
+	EIFNET_ABSTRACT_DEBUG_VALUE
+		undefine
+			address, append_to
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			is_equal
 		end
-
-	ICOR_EXPORTER
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end		
-
-	DEBUG_VALUE_EXPORTER
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end				
-
-	SHARED_EIFNET_DEBUG_VALUE_FACTORY
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end		
 
 create {CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make --, make_attribute
 	
 feature {NONE} -- Initialization
 
-	make (v: like value; f: like icd_frame) is
-			-- 	Set `value' to `v'.
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
+			-- 	Set `value' to `a_prepared_value'.
 		require
-			v_not_void: v /= Void
+			a_prepared_value_not_void: a_prepared_value /= Void
 		do
 			set_default_name
-			value := v
-			icd_frame := f
+			
+			init_dotnet_data (a_referenced_value, a_prepared_value, f)
 
-			create value_info.make (value)
-
-			is_null := value_info.is_null
+			is_null := icd_value_info.is_null
 			if not is_null then
-				address := value_info.address_as_hex_string
+				address := icd_value_info.address_as_hex_string
 			end
 
-			array_value := value_info.interface_debug_array_value
+			array_value := icd_value_info.interface_debug_array_value
 			if array_value /= Void then
 				capacity := array_value.get_count
 			end
 --			create items.make
 		ensure
-			value_set: value = v
+			value_set: icd_value = a_prepared_value
 		end
 
 --	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
@@ -85,15 +67,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	icd_frame: ICOR_DEBUG_FRAME
-
-	value: ICOR_DEBUG_VALUE
-			-- Value of object.
+--	icd_frame: ICOR_DEBUG_FRAME
+--
+--	value: ICOR_DEBUG_VALUE
+--			-- Value of object.
 
 	array_value: ICOR_DEBUG_ARRAY_VALUE
 
-	value_info: EIFNET_DEBUG_VALUE_INFO
-			-- Value info of object.
+--	value_info: EIFNET_DEBUG_VALUE_INFO
+--			-- Value info of object.
 
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
@@ -177,7 +159,7 @@ feature -- Output
 					loop
 						l_elt := array_value.get_element_at_position (i)
 						if l_elt /= Void then
-							l_att_debug_value := Eifnet_debug_value_factory.debug_value_from (l_elt, icd_frame)
+							l_att_debug_value := debug_value_from_icdv (l_elt)
 							l_att_debug_value.set_name (i.out)
 							items.extend (l_att_debug_value)
 						end

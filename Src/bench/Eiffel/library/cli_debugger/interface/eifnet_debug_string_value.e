@@ -8,11 +8,15 @@ class
 	EIFNET_DEBUG_STRING_VALUE
 
 inherit
---	ABSTRACT_DEBUG_VALUE
---		redefine
---			address
---		end
+
 	ABSTRACT_REFERENCE_VALUE
+		redefine
+			output_value, kind, expandable
+		end
+
+	EIFNET_ABSTRACT_DEBUG_VALUE		
+		undefine
+			address
 		redefine
 			output_value, kind, expandable
 		end		
@@ -21,53 +25,31 @@ inherit
 		undefine
 			is_equal
 		end
-
-	ICOR_EXPORTER
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end		
-
-	DEBUG_VALUE_EXPORTER
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end				
-
-	SHARED_EIFNET_DEBUG_VALUE_FACTORY
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end		
 	
 create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make --, make_attribute
 	
 feature {NONE} -- Initialization
 
-	make (a_prepared_value: like value; f: like icd_frame) is
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
 			-- 	Set `value' to `v'.
 		require
 			a_prepared_value_not_void: a_prepared_value /= Void
-			a_frame_not_void: f /= Void
+--			a_frame_not_void: f /= Void
 		do
 			set_default_name
-			value := a_prepared_value
-			icd_frame := f
 
-			create value_info.make (value)
+			init_dotnet_data (a_referenced_value, a_prepared_value, f)
+
 			is_external_type := True
-			string_value := value_info.value_to_string
+			string_value := icd_value_info.value_to_string
 
 			is_null := (string_value = Void)
 			if not is_null then
-				address := value_info.address_as_hex_string
+				address := icd_value_info.address_as_hex_string
 			end
 		ensure
-			value_set: value = a_prepared_value
+			value_set: icd_value = a_prepared_value
 		end
 
 --	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
@@ -87,17 +69,9 @@ feature {NONE} -- Initialization
 --		end
 
 feature -- Access
-
-	icd_frame: ICOR_DEBUG_FRAME
-
-	value: ICOR_DEBUG_VALUE
-			-- Value of object.
-			
-	icd_string: ICOR_DEBUG_STRING_VALUE
+		
+--	icd_string: ICOR_DEBUG_STRING_VALUE
 			-- String value
-
-	value_info: EIFNET_DEBUG_VALUE_INFO
-			-- Value info of object.
 	
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
@@ -110,15 +84,7 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
-			create Result.make_string_for_dotnet (
-					icd_frame, 
-					value, 
-					icd_string, 
-					address, 
-					string_value, 
-					dynamic_class, 
-					is_null
-				)
+			create Result.make_string_for_dotnet (Current)
 		end
 
 feature {NONE} -- Output

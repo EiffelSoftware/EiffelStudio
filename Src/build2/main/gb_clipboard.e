@@ -10,26 +10,44 @@ inherit
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	GB_COMMAND_ADD_OBJECT
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	GB_SHARED_TOOLS
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	GB_XML_OBJECT_BUILDER
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	GB_SHARED_ID
 		export
 			{NONE} all
+		undefine
+			default_create
+		end
+		
+feature {NONE} --Initialization
+	
+	default_create is
+			-- Create `Current'.
+		do
+			create content_change_actions
 		end
 
 feature -- Access
@@ -82,6 +100,9 @@ feature -- Access
 			Result := contents_cell.item = Void
 		end
 		
+	content_change_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Action sequence executed when contents of clipboard change.
+
 feature {GB_CLIPBOARD_COMMAND} -- Implementation
 
 	internal_object: GB_OBJECT is
@@ -105,7 +126,7 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 			end
 		end
 
-feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND} -- Implementation
+feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND, GB_PASTE_OBJECT_COMMAND} -- Implementation
 
 	set_object (an_object: GB_OBJECT) is
 			-- Assign a copy of `an_object' to `Current'.
@@ -132,6 +153,9 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND} --
 			end
 			
 			contents_cell.put (xm_element)
+			if not content_change_actions.is_empty then
+				content_change_actions.call (Void)
+			end
 		ensure
 			contents_cell_not_empty: contents_cell.item /= Void
 		end
@@ -142,5 +166,8 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND} --
 		once
 			create Result	
 		end
+		
+invariant
+	content_change_actions_not_void: content_change_actions /= Void
 
 end -- class GB_CLIPBOARD

@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_DISPLAY_DC
+		undefine
+			destroy_item
+		end
 
 creation
 	make

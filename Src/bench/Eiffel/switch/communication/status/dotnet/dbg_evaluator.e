@@ -249,15 +249,18 @@ feature {NONE} -- Implementation
 			if Result = Void then
 					--| This means this value has been created by eStudioDbg
 					--| We need to build the corresponding ICorDebugValue object.
-				if dmv.is_type_integer then
+				inspect dmv.type 
+				when feature {DUMP_VALUE_CONSTANTS}.type_integer then
 					Result := eifnet_evaluator.new_i4_evaluation (icd_frame, dmv.value_integer)
-				elseif dmv.is_type_boolean then
+				when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
 					Result := eifnet_evaluator.new_boolean_evaluation (icd_frame, dmv.value_boolean )
-				elseif dmv.is_type_character then
+				when feature {DUMP_VALUE_CONSTANTS}.type_character then
 					Result := eifnet_evaluator.new_char_evaluation (icd_frame, dmv.value_character )
-				elseif dmv.is_type_string then
-					Result := eifnet_evaluator.new_eiffel_string_evaluation (icd_frame, dmv.value_object )
+				when feature {DUMP_VALUE_CONSTANTS}.type_string then
+					Result := eifnet_evaluator.new_eiffel_string_evaluation (icd_frame, dmv.value_string )				
+				else					
 				end
+
 				error_occured := (eifnet_evaluator.last_call_success /= 0)
 			end
 		end
@@ -272,28 +275,32 @@ feature {NONE} -- Implementation
 						--| we have a basic type as dotnet value
 						
 						--| typically result of previous expression
-					if dmv.is_type_integer then
+					inspect dmv.type 
+					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
 						Result := eifnet_evaluator.icdv_integer_ref_from_icdv_integer (icd_frame, Result)
-					elseif dmv.is_type_boolean then
+					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
 						Result := eifnet_evaluator.icdv_boolean_ref_from_icdv_boolean (icd_frame, Result)
-					elseif dmv.is_type_character then
+					when feature {DUMP_VALUE_CONSTANTS}.type_character then
 						Result := eifnet_evaluator.icdv_character_ref_from_icdv_character (icd_frame, Result)
-					elseif dmv.is_type_string then
+					when feature {DUMP_VALUE_CONSTANTS}.type_string then
 						Result := eifnet_evaluator.icdv_string_from_icdv_system_string (icd_frame, Result)
+					else					
 					end
 				else
 						--| we have manifest value
 						
 						--| This means this value has been created by eStudioDbg
-						--| We need to build the corresponding ICorDebugValue object.						
-					if dmv.is_type_integer then
+						--| We need to build the corresponding ICorDebugValue object.
+					inspect dmv.type 
+					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
 						Result := eifnet_evaluator.new_i4_ref_evaluation (icd_frame, dmv.value_integer)
-					elseif dmv.is_type_boolean then
+					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
 						Result := eifnet_evaluator.new_boolean_ref_evaluation (icd_frame, dmv.value_boolean )
-					elseif dmv.is_type_character then
+					when feature {DUMP_VALUE_CONSTANTS}.type_character then
 						Result := eifnet_evaluator.new_character_ref_evaluation (icd_frame, dmv.value_character )
-					elseif dmv.is_type_string then
-						Result := eifnet_evaluator.new_eiffel_string_evaluation (icd_frame, dmv.value_object )
+					when feature {DUMP_VALUE_CONSTANTS}.type_string then
+						Result := eifnet_evaluator.new_eiffel_string_evaluation (icd_frame, dmv.value_string )
+					else					
 					end
 				end
 				error_occured := (eifnet_evaluator.last_call_success /= 0)				

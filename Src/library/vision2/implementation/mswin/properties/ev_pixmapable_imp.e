@@ -44,7 +44,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Current pixmap
 		do
-			Result := pixmap_imp.interface
+			Result ?= pixmap_imp.interface
 		end
 
 	pixmap_imp: EV_PIXMAP_IMP
@@ -68,10 +68,6 @@ feature {EV_PIXMAP_IMP} -- Implementation
 
 	wel_window: WEL_WINDOW is
 			-- Window used to create the pixmap.
-		deferred
-		end
-
-	interface: EV_ANY is
 		deferred
 		end
 

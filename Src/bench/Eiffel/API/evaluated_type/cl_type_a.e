@@ -350,7 +350,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	format (ctxt: FORMAT_CONTEXT_B) is
 			--
 		do
-			ctxt.put_class_name (associated_class);
+			ctxt.put_classi (associated_class.lace_class);
 		end;
 
 feature {COMPILER_EXPORTER} -- Storage information for EiffelCase

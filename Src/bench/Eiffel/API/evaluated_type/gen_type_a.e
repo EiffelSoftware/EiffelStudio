@@ -609,7 +609,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		local
 			i, count: INTEGER;
 		do
-			ctxt.put_class_name (associated_class);
+			ctxt.put_classi (associated_class.lace_class);
 			ctxt.put_space;
 			ctxt.put_text_item (ti_L_bracket);
 			from

@@ -197,7 +197,7 @@ feature -- Output
 				st.add_string ("Feature: ");
 				if e_feature /= Void then
 					oc := origin_class;
-					e_feature.append_name (st, oc)
+					e_feature.append_name (st);
 					if oc /= c then
 						st.add_string (" (From ");
 						oc.append_name (st)

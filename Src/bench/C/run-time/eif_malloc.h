@@ -99,8 +99,10 @@ extern "C" {
 #ifdef VXWORKS
 #define	GS_SZ_MIN	2*PAGESIZE_VALUE
 #else
-#define GS_SZ_MIN		300000	/* Minimum size for generational 
-								 * scavenge zone. */
+#define GS_SZ_MIN	8192	/* Minimum size for generational 
+							 * scavenge zone. */
+#endif	/* VXWORKS */
+
 #endif	/* VXWORKS */
 #ifdef VXWORKS
 #define GS_ZONE_SZ_DEFAULT	2*PAGESIZE_VALUE

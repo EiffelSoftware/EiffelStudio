@@ -44,11 +44,9 @@ feature
 feature {NONE}
 
 	work (argument: ANY) is
-		local
-			void_text: TEXT_WINDOW
 		do
 			if argument = transporter_arg then
-				tool.transport (Current, void_text, screen.x, screen.y)
+				tool.transport (Current, void, screen.x, screen.y)
 			else
 				if tool /= project_tool then
 					tool.synchronize

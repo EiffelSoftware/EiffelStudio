@@ -52,9 +52,7 @@ feature -- Type check, byte code, dead code removal and formatter
 				assertions.format (ctxt);
 				if ctxt.last_was_printed then
 					ctxt.commit;
-					io.putstring("written%N");
 				else
-					io.putstring ("failed%N");
 					ctxt.rollback;
 				end;
 			else

@@ -21,6 +21,9 @@
 #include "idrf.h"
 #include "rqst_idrs.h"
 #include <stdio.h>		/* For BUFSIZ */
+#include <string.h>
+#include <signal.h>
+#include <stdlib.h>
 
 #define OTHER(x)	\
 	((x) == readfd(d_data.d_cs) ? d_data.d_as : d_data.d_cs)
@@ -268,11 +271,42 @@ int s;
 	char *cmd;			/* Command to be run */
 	int status;			/* Command status, as returned by system() */
 	STREAM *sp;			/* Stream to be used for communications */
+    char *meltpath, *appname, *envstring;   /* set MELT_PATH */
 	
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 	cmd = recv_str(sp, (int *) 0);		/* Get command */
-	printf("Command is %s\n", cmd);
+    meltpath = strdup (cmd);
+    if (meltpath == (char *)0){
+#ifdef USE_ADD_LOG
+ 	    add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+#endif
+  	   dexit (1);
+     }
+     appname = strrchr (meltpath, '/');
+     if (appname = strrchr (meltpath, '/')) *appname = 0;
+     else strcpy (meltpath, ".");
+     envstring = (char *)malloc (strlen (meltpath)
+   		 + strlen ("MELT_PATH=") + 1);
+     if (!envstring){
+#ifdef USE_ADD_LOG
+   		 add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+#endif
+    	 dexit (1);
+	 } 
+     sprintf (envstring, "MELT_PATH=%s", meltpath);
+     putenv (envstring);
+#ifdef BSD
+	signal (SIGCHLD, SIG_DFL);
+#else
+	signal (SIGCLD, SIG_DFL);
+#endif
 	status = system(cmd);				/* Run command via /bin/sh */
+#ifdef BSD 
+    signal (SIGCHLD, SIG_IGN);
+#else
+    signal (SIGCLD, SIG_IGN);
+#endif
+
 	if (status == 0)
 		send_ack(writefd(sp), AK_OK);		/* Command completed sucessfully */
 	else
@@ -296,10 +330,11 @@ Request *rqst;
 	int jobnum;			/* Job number assigned to comamnd */
 	STREAM *sp;			/* Stream to be used for communications */
 	Request dans;		/* Answer (status of comamnd) */
+    char *meltpath, *appname, *envstring;   /* set MELT_PATH */
+
 	
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 	cmd = recv_str(sp, (int *) 0);		/* Get command */
-	printf("Async command is %s\n", cmd);
 
 	dans.rq_type = ASYNACK;				/* Initialize the answer type */
 	jobnum = rqst->rq_opaque.op_first;	/* Job number assigned by client */
@@ -325,6 +360,32 @@ Request *rqst;
 		return;				/* Parent returns immediately */
 	}
 
+/* child */
+    meltpath = strdup (cmd);
+    if (meltpath == (char *)0){
+#ifdef USE_ADD_LOG
+            add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+#endif
+           dexit (1);
+     }
+     appname = strrchr (meltpath, '/');
+     if (appname = strrchr (meltpath, '/')) *appname = 0;
+     else strcpy (meltpath, ".");
+     envstring = (char *)malloc (strlen (meltpath)
+                 + strlen ("MELT_PATH=") + 1);
+     if (!envstring){
+#ifdef USE_ADD_LOG
+                 add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+#endif
+         dexit (1);
+         } 
+     sprintf (envstring, "MELT_PATH=%s", meltpath);
+     putenv (envstring);
+#ifdef BSD 
+        signal (SIGCHLD, SIG_DFL);
+#else
+        signal (SIGCLD, SIG_DFL);
+#endif
 	status = system(cmd);				/* Run command via /bin/sh */
 	if (status == 0)
 		dans.rq_opaque.op_second = AK_OK;	/* Command completed sucessfully */

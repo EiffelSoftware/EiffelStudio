@@ -142,7 +142,8 @@ printf ("bug in metamorphosis for double in final mode\n");
 				panic("unknown attribute type");
 				/* NOTREACHED */
 			}
-		*((char **) sp) ++ = new_obj;
+		*((char **) sp) = new_obj;
+		sp += sizeof (char *);
 		}
 	}
 	epop(&loc_stack, 1);		/* Remove protection for area */

@@ -129,6 +129,11 @@ private void set_signal()
 #ifdef SIGTERM
 	signal(SIGTERM, handler);
 #endif
+#ifdef BSD 
+	signal (SIGCHLD, SIG_IGN);
+#else
+	signal (SIGCLD, SIG_IGN);
+#endif
 }
 
 private Signal_t handler(sig)

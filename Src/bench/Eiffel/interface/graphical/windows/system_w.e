@@ -12,10 +12,11 @@ class SYSTEM_W
 inherit
 
 	SHARED_WORKBENCH;
+	PROJECT_CONTEXT;
 	BAR_AND_TEXT
 		redefine
 			hole, build_format_bar,
-			open_command, save_as_command, quit_command,
+			open_command, save_as_command, quit_command, save_command,
 			text_window
 		end
 
@@ -30,6 +31,11 @@ feature {NONE}
 feature 
 
 	text_window: SYSTEM_TEXT;
+
+	set_quit_command (c: COMMAND; arg: ANY) is
+		do
+			quit_command.set_quit_command (c, arg);
+		end;
 
 	
 feature {NONE}
@@ -49,6 +55,7 @@ feature {NONE}
 			-- Hole caraterizing current
 
 	open_command: OPEN_SYSTEM;
+	save_command: SAVE_SYSTEM;
 	save_as_command: SAVE_AS_SYSTEM;
 --	check_command: CHECK_SYSTEM;
 	quit_command: QUIT_SYSTEM;

@@ -19,6 +19,9 @@
 #include "ewbio.h"
 #include <signal.h>
 #include <setjmp.h>
+#include <string.h>
+#include <errno.h>
+#include <stdio.h>
 
 #ifdef I_SYS_FILE
 #include <sys/file.h>
@@ -57,6 +60,8 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 	Pid_t pid;					/* Pid of the child */
 	STREAM *sp;					/* Stream used for communications with ewb */
 	char **argv;				/* Argument vector for exec() */
+
+	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
 	 * opened, one for downwards communications (ised -> ewb) and one for
@@ -136,7 +141,29 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 		/* Now exec command. A successful launch should not return */
 		argv = shword(cmd);					/* Split command into words */
 		if (argv != (char **) 0) {
+			meltpath = strdup (argv [0]);
+			if (meltpath == (char *)0){
+#ifdef USE_ADD_LOG
+				add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+#endif
+				dexit (1);
+			}
+			appname = strrchr (meltpath, '/');
+			if (appname = strrchr (meltpath, '/')) *appname = 0;
+			else strcpy (meltpath, ".");
+			envstring = (char *)malloc (strlen (meltpath)
+				+ strlen ("MELT_PATH=") + 1);
+			if (!envstring){
+#ifdef USE_ADD_LOG
+                add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+#endif
+                dexit (1);
+            }
+			sprintf (envstring, "MELT_PATH=%s", meltpath);
+			putenv (envstring); 
+
 			execvp(argv[0], argv);
+			fprintf (stderr,"errno = %i\n", errno);
 #ifdef USE_ADD_LOG
 			reopen_log();
 			add_log(1, "SYSERR: exec: %m (%e)");

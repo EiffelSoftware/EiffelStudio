@@ -31,16 +31,28 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Popup and let the user choose what he wants.
 		local
-			project_dir: PROJECT_DIR
+			project_dir: PROJECT_DIR;
+			help_window: EXPLAIN_W;
+			help_file_name: STRING;
 		do
+
 			if not project_tool.initialized then
+
 				if argument = name_chooser then
 					!!project_dir.make (name_chooser.selected_file);
 					if project_dir.valid then
 						make_project (project_dir)
 					else
-						warner.call (Current, l_Invalid_directory);
-					end;
+						warner.custom_call (Current, l_Invalid_directory,
+							"OK", "Help", "Cancel");
+					end
+				elseif argument = void then
+                	!!help_window.make(project_tool.screen);
+                    !!help_file_name.make (50);
+                    help_file_name.append (Eiffel3_dir_name);
+                    help_file_name.append ("/bin/open_project.explain");
+                    help_window.text_window.show_file (help_file_name);
+                    help_window.show;
 				else
 					name_chooser.call (Current)
 				end
@@ -62,7 +74,9 @@ feature
 		do
 			init_project_directory := project_dir;
 			if not project_dir.exists then
-				project_dir.create;
+				project_dir.create;	
+			end;
+			if project_dir.count < 3 then
 				if project_dir /= Project_directory then end;
 				if Compilation_directory /= Compilation_directory then end;
 				if Generation_directory /= Generation_directory then end;

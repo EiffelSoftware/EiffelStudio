@@ -12,6 +12,7 @@
 */
 /* TEMPORARY */
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "macros.h"
 #include "struct.h"
@@ -19,6 +20,7 @@
 #include "except.h"
 #include "update.h"
 #include "cecil.h"
+
 
 private void cnode_updt();			/* Update a cnode structure */
 private void routid_updt();			/* Update routine id array */
@@ -54,12 +56,28 @@ public void update()
 	long bsize;								/* Last byte code size */
 	long new_count;							/* New system size */
 	char c;
+	char *meltpath;							/* directory of .UPDT */
+	char *filename;							/* .UPDT complet path */
 
 /* TEMPORARY */
-if ((fil = fopen(".UPDT", "r")) == (FILE *) 0) {
+meltpath = getenv ("MELT_PATH");
+if (meltpath) 
+	filename = (char *)malloc (strlen (meltpath) + 7);
+else
+	filename = (char *)malloc (8);
+if (filename == (char *)0){
+	printf ("out of memory\n");
+	exit (0);	
+}
+if (meltpath) strcpy (filename, meltpath);
+else strcpy (filename, ".");
+strcat(filename, "/.UPDT");
+
+if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	printf("Error while opening\n");
 	exit(0);
 }
+	free (filename);
 	wread(&c, 1);				/* Is there something to update ? */
 	if (c == '\0')
 		return;

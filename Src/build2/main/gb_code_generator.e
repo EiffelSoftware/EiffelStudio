@@ -188,7 +188,6 @@ feature {NONE} -- Implementation
 				store: GB_XML_STORE
 				window_template_file, window_output_file: RAW_FILE
 				window_file_name, window_template: FILE_NAME
-				local_tag_index, create_tag_index: INTEGER
 			do
 				set_progress (0.3)
 				create store

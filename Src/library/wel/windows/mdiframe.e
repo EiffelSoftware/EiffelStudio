@@ -78,6 +78,22 @@ feature -- Status report
 
 feature -- Basic operations
 
+	tile_children_horizontal is
+			-- Horizontally tile the child windows.
+		require
+			exists: exists
+		do
+			client_window.tile_children_horizontal
+		end
+
+	tile_children_vertical is
+			-- Vertically tile the child windows.
+		require
+			exists: exists
+		do
+			client_window.tile_children_vertical
+		end
+
 	arrange_icons is
 			-- Arrange iconized child windows.
 		require
@@ -94,12 +110,14 @@ feature -- Basic operations
 			client_window.cascade_children
 		end
 
-	tile_children is
+feature -- Obsolete
+
+	tile_children is obsolete "Use ``tile_children_vertical''"
 			-- Tile the child windows.
 		require
 			exists: exists
 		do
-			client_window.tile_children
+			tile_children_vertical
 		end
 
 feature {NONE} -- Implementation
@@ -133,7 +151,7 @@ feature {NONE} -- Externals
 			lparam: INTEGER): INTEGER is
 			-- SDK DefFrameProc
 		external
-			"C [macro <wel.h>] (HWND, HWND, UINT, WPARAM,%
+			"C [macro <wel.h>] (HWND, HWND, UINT, WPARAM, %
 				%LPARAM): EIF_INTEGER"
 		alias
 			"DefFrameProc"

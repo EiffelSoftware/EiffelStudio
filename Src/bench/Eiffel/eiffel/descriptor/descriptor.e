@@ -60,10 +60,14 @@ feature -- Generation
 		local
 			descriptor_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
+			class_id_string: STRING
 		do
 				-- Retrieve the buffer and clear it
 			buffer := generation_buffer
 			buffer.clear_all
+
+			class_id_string := class_type.id.id.out
+			class_id_string.prepend ("_")
 
 			buffer.append ("#include %"eif_macros.h%"%N%N");
 			Class_counter.generate_extern_offsets (buffer);
@@ -71,26 +75,26 @@ feature -- Generation
 			if Compilation_modes.is_precompiling then
 				Real_body_index_counter.generate_extern_offsets (buffer);
 				buffer.new_line
-				buffer.generate_static_declaration ("void", "build_desc", <<"void">>);
+				buffer.generate_static_declaration ("void", "build_desc" + class_id_string, <<"void">>);
 				buffer.new_line
-				descriptor_generate_generic (buffer)
+				descriptor_generate_generic (buffer, class_id_string)
 				buffer.new_line
-				descriptor_generate_precomp (buffer)
+				descriptor_generate_precomp (buffer, class_id_string)
 			else
 				buffer.new_line
-				descriptor_generate_generic (buffer)
+				descriptor_generate_generic (buffer, class_id_string)
 				buffer.new_line
-				descriptor_generate (buffer)
+				descriptor_generate (buffer, class_id_string)
 			end;
 
-			generate_init_function (buffer)
+			generate_init_function (buffer, class_id_string)
 
 			descriptor_file := class_type.open_descriptor_file
 			descriptor_file.put_string (buffer)
 			descriptor_file.close
 		end;
 
-	descriptor_generate (buffer: GENERATION_BUFFER) is
+	descriptor_generate (buffer: GENERATION_BUFFER; id_string: STRING) is
 			-- C code of corresponding to run-time
 			-- structure of Current descriptor
 		require
@@ -98,7 +102,9 @@ feature -- Generation
 		local
 			cnt : COUNTER
 		do
-			buffer.putstring ("static struct desc_info desc[] = {%N");
+			buffer.putstring ("static struct desc_info desc")
+			buffer.putstring (id_string)
+			buffer.putstring ("[] = {%N");
 
 			if (invariant_entry = Void) then
 				buffer.putstring ("%T{(uint16) ");
@@ -116,14 +122,14 @@ feature -- Generation
 			until
 				after
 			loop
-				item_for_iteration.generate (buffer, cnt)
+				item_for_iteration.generate (buffer, cnt, id_string)
 				forth
 			end
 
 			buffer.putstring ("%N};%N")
 		end;
 
-	descriptor_generate_generic (buffer : GENERATION_BUFFER) is
+	descriptor_generate_generic (buffer : GENERATION_BUFFER; id_string: STRING) is
 			-- C code for generic type arrays.
 		require
 			buffer_not_void: buffer /= Void
@@ -136,13 +142,13 @@ feature -- Generation
 			until
 				after
 			loop
-				item_for_iteration.generate_generic (buffer, cnt);
+				item_for_iteration.generate_generic (buffer, cnt, id_string);
 				forth
 			end;
 			buffer.putstring ("%N")
 		end;
 
-	descriptor_generate_precomp (buffer: GENERATION_BUFFER) is
+	descriptor_generate_precomp (buffer: GENERATION_BUFFER; id_string: STRING) is
 			-- C code of corresponding to run-time
 			-- structure of Current precompiled descriptor
 		require
@@ -150,23 +156,35 @@ feature -- Generation
 		local
 			i: INTEGER
 			cnt: COUNTER
+			entry_name: STRING
 		do
-			buffer.putstring ("static struct desc_info desc");
+			entry_name := "desc" + id_string
+			buffer.putstring ("static struct desc_info ")
+			buffer.putstring (entry_name);
 			buffer.putstring ("[")
 			buffer.putint (table_size)
-			buffer.putstring ("];%N%Nstatic void build_desc (void) {%N")
+			buffer.putstring ("];%N%Nstatic void build_")
+			buffer.putstring (entry_name)
+			buffer.putstring ("(void) {%N%T")
 
 			if (invariant_entry = Void) then
-				buffer.putstring ("%Tdesc[0].info = (uint16) ")
+				buffer.putstring (entry_name)
+				buffer.putstring ("[0].info = (uint16) ")
 				buffer.putint (Invalid_index)
-				buffer.putstring (";%N")
-				buffer.putstring ("%Tdesc[0].type = (int16) -1;%N")
-				buffer.putstring ("%Tdesc[0].gen_type = (int16 *) 0;%N")
+				buffer.putstring (";%N%T")
+				buffer.putstring (entry_name)
+				buffer.putstring ("[0].type = (int16) -1;%N%T")
+				buffer.putstring (entry_name)
+				buffer.putstring ("[0].gen_type = (int16 *) 0;%N")
 			else
-				buffer.putstring ("%Tdesc[0].info = (uint16) (")
+				buffer.putstring (entry_name)
+				buffer.putstring ("[0].info = (uint16) (")
 				invariant_entry.real_body_index.generated_id (buffer)
-				buffer.putstring (");%N%Tdesc[0].type = (int16) -1;%N")
-				buffer.putstring ("%Tdesc[0].gen_type = (int16 *) 0;%N")
+				buffer.putstring (");%N%T")
+				buffer.putstring (entry_name)
+				buffer.putstring ("[0].type = (int16) -1;%N%T")
+				buffer.putstring (entry_name)
+				buffer.putstring ("[0].gen_type = (int16 *) 0;%N")
 			end;
 
 			from
@@ -176,25 +194,25 @@ feature -- Generation
 			until
 				after
 			loop
-				item_for_iteration.generate_precomp (buffer,i,cnt)
+				item_for_iteration.generate_precomp (buffer,i,cnt, id_string)
 				i := i + item_for_iteration.count
 				forth
 			end;
 			buffer.putstring ("}%N");
 		end;
 
-	generate_init_function (buffer: GENERATION_BUFFER) is
+	generate_init_function (buffer: GENERATION_BUFFER; id_string: STRING) is
 			-- C code of initialization function of Current
 			-- descriptor
 		local
 			i: INTEGER
 			class_type_id: TYPE_ID
 			init_name: STRING
-			desc, rtud, init_macro, sep: STRING
+			desc, rtud, init_macro, sep, plus: STRING
 		do
 			class_type_id := class_type.id;
 			init_name := class_type_id.init_name;
-			init_macro := "%TIDSC"
+			init_macro := "%TIDSC("
 			rtud := ", RTUD("
 			rtud.append (class_type_id.generated_id_string)
 			rtud.append ("));%N")
@@ -207,18 +225,23 @@ feature -- Generation
 			buffer.putstring ("(void)%N{%N");
 			if Compilation_modes.is_precompiling then
 				buffer.putstring ("%Textern char desc_fill;%N%
-								%%Tif (desc_fill != 0)%N%T%Tbuild_desc();%N")
+								%%Tif (desc_fill != 0)%N%T%Tbuild_desc")
+				buffer.putstring (id_string)
+				buffer.putstring ("();%N")
 			end;
+
+			desc := "desc" + id_string;
 
 				-- Special descriptor unit (invariant)
 			buffer.putstring (init_macro);
-			buffer.putstring ("(desc, 0")
+			buffer.putstring (desc)
+			buffer.putstring (", 0")
 			buffer.putstring (rtud)
 
 				-- Descriptor units for origin classes
 			from
-				desc := "(desc + "
 				sep := ", "
+				plus := " + "
 				start
 				i := 1
 			until
@@ -226,6 +249,7 @@ feature -- Generation
 			loop
 				buffer.putstring (init_macro);
 				buffer.putstring (desc);
+				buffer.putstring (plus);
 				buffer.putint (i);
 				buffer.putstring (sep);
 				key_for_iteration.generated_id (buffer);

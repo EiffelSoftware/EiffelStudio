@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
 <R N="ROOT" T="CONSUMED_TYPE">
+<A N="interfaces" L="1" C="0" T="NONE">
+</A>
+<A N="properties" L="1" C="0" T="NONE">
+</A>
+<A N="events" L="1" C="0" T="NONE">
+</A>
+<I N="internal_flags">0</I>
 <S N="dotnet_name">System.Object</S>
 <NONE N="parent"></NONE>
 <S N="eiffel_name">SYSTEM_OBJECT</S>
@@ -11,8 +18,8 @@
 <R N="1" T="CONSUMED_PROCEDURE">
 <A N="arguments" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">0</I>
 <S N="dotnet_name">Finalize</S>
+<I N="internal_flags">0</I>
 <S N="eiffel_name">finalize</S>
 <R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
 <S N="name">System.Object</S>
@@ -46,8 +53,8 @@
 <B N="is_out">False</B>
 </R>
 </A>
-<I N="internal_flags">34</I>
 <S N="dotnet_name">ReferenceEquals</S>
+<I N="internal_flags">34</I>
 <S N="eiffel_name">reference_equals</S>
 <R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
 <S N="name">System.Object</S>
@@ -61,8 +68,8 @@
 </R>
 <A N="arguments" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">0</I>
 <S N="dotnet_name">MemberwiseClone</S>
+<I N="internal_flags">0</I>
 <S N="eiffel_name">memberwise_clone</S>
 <R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
 <S N="name">System.Object</S>
@@ -76,8 +83,8 @@
 </R>
 <A N="arguments" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">32</I>
 <S N="dotnet_name">ToString</S>
+<I N="internal_flags">32</I>
 <S N="eiffel_name">to_string</S>
 <R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
 <S N="name">System.Object</S>
@@ -100,8 +107,8 @@
 <B N="is_out">False</B>
 </R>
 </A>
-<I N="internal_flags">32</I>
 <S N="dotnet_name">Equals</S>
+<I N="internal_flags">32</I>
 <S N="eiffel_name">equals</S>
 <R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
 <S N="name">System.Object</S>
@@ -133,8 +140,8 @@
 <B N="is_out">False</B>
 </R>
 </A>
-<I N="internal_flags">34</I>
 <S N="dotnet_name">Equals</S>
+<I N="internal_flags">34</I>
 <S N="eiffel_name">equals_object_object</S>
 <R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
 <S N="name">System.Object</S>
@@ -148,8 +155,8 @@
 </R>
 <A N="arguments" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">32</I>
 <S N="dotnet_name">GetType</S>
+<I N="internal_flags">32</I>
 <S N="eiffel_name">get_type</S>
 <R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
 <S N="name">System.Object</S>
@@ -163,8 +170,8 @@
 </R>
 <A N="arguments" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">32</I>
 <S N="dotnet_name">GetHashCode</S>
+<I N="internal_flags">32</I>
 <S N="eiffel_name">get_hash_code</S>
 <R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
 <S N="name">System.Object</S>
@@ -172,7 +179,4 @@
 </R>
 </R>
 </A>
-<A N="interfaces" L="1" C="0" T="NONE">
-</A>
-<I N="internal_flags">0</I>
 </R>

@@ -37,7 +37,7 @@ feature -- Access
 
 	fine_second: DOUBLE is
 			-- Representation of second with decimals 
- 		do
+		do
 			Result := second + fractional_second
 		end
 
@@ -53,16 +53,16 @@ feature -- Access
 			Result := (fractional_second * 1_000_000).truncated_to_integer
 			Result := Result \\ 1000
 		end; 
- 
+
 	nano_second: INTEGER is 
 			-- Nanosecond of the current time
 		do 
 			Result := (fractional_second * 1_000_000_000).truncated_to_integer
 			Result := Result \\ 1000
 		end 
- 
+
 feature -- Element change 
- 
+
 	set_second (s: INTEGER) is 
 			-- Set `second' to `s'.
 		do 
@@ -116,22 +116,20 @@ feature {NONE} -- Externals
 
 	c_set_hour (h: INTEGER; c_t: POINTER) is
 		external
-			"C"
+			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
 		end
 
 	c_set_minute (h: INTEGER; c_t: POINTER) is
 		external
-			"C"
+			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
 		end
 
 	c_set_second (h: INTEGER;c_t: POINTER) is
 		external
-			"C"
+			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
 		end
 
 end -- class TIME_VALUE
-
-
 
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.
@@ -148,4 +146,3 @@ end -- class TIME_VALUE
 --| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

@@ -73,24 +73,22 @@ feature {NONE} -- External
 	c_set_day (d: INTEGER; c_d: POINTER) is
 			-- Initialize the day in `compact_date'.
 		external
-			"C"
+			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
 		end
 
 	c_set_month (m: INTEGER; c_d: POINTER) is
 			-- Initialize the month in `compact_date'.
 		external
-			"C"
+			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
 		end
 
 	c_set_year (y: INTEGER; c_d: POINTER) is
 			-- Initialize the year in `compact_date'.
 		external
-			"C"
+			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
 		end
 
 end -- class DATE_VALUE
-
-
 
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.
@@ -107,4 +105,3 @@ end -- class DATE_VALUE
 --| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

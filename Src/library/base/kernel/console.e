@@ -251,9 +251,9 @@ feature -- Output
 			-- Write `b' at end of default output.
 		do
 			if b then
-				put_string ("true")
+				put_string ("True")
 			else
-				put_string ("false")
+				put_string ("False")
 			end
 		end;
 

@@ -1,8 +1,8 @@
-class CASE_W
+class CASE_INTERFACE
 
 inherit
 
-    	EB_TOP_SHELL
+  	EB_TOP_SHELL
 		rename 
 			make as super_make
 		end

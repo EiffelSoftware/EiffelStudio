@@ -10,12 +10,12 @@ inherit
 	COMMAND
 
 feature
-	make ( w : CASE_W ) is
+	make ( w : CASE_INTERFACE ) is
 	do
 		case_window := w
 	end
 
-	case_window : CASE_W
+	case_window : CASE_INTERFACE
 
 
 end -- class CASE_COMMAND2

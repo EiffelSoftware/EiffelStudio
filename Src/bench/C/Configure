@@ -4183,12 +4183,6 @@ set d_keepalive
 eval $setvar
 $rm -f socket socket.c
 
-if echo `uname -a` | grep -i 'linux' >/dev/null; then
-    echo "Skipping signal handlers test for Linux ..."
-val="$undef"
-set d_keepsig
-eval $setvar
-else
 : see if signals are kept
 val="$undef";
 echo " "
@@ -4224,7 +4218,6 @@ fi
 set d_keepsig
 eval $setvar
 $rm -f try*
-fi
 
 : see if link exists
 set link d_link

@@ -1,7 +1,5 @@
 indexing
-
-	description:
-		"Encapsulation of a C++ external.";
+	description: "Encapsulation of a C++ external.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +8,10 @@ class CPP_EXT_BYTE_CODE
 inherit
 	EXT_EXT_BYTE_CODE
 		redefine
-			is_special, generate, generate_body, generate_arguments_with_cast
+			is_special,
+			generate,
+			generate_body,
+			generate_basic_arguments_with_cast
 		end
 	SHARED_CPP_CONSTANTS
 
@@ -121,9 +122,7 @@ feature -- Code generation
 			when delete, data_member, static_data_member then
 					-- Nothing to generate
 			when standard, static, new then
-				generated_file.putchar ('(')
 				generate_arguments_with_cast
-				generated_file.putchar (')')
 			end
 
 			generated_file.putchar (')');
@@ -131,38 +130,36 @@ feature -- Code generation
 			generated_file.new_line;
 		end
 
-	generate_arguments_with_cast is
+	generate_basic_arguments_with_cast is
 			-- Generate C arguments, if any, with casts if there's a signature
 		local
 			i, j, count: INTEGER;
 		do
-			if arguments /= Void then
-				from
-					j := 1
-					count := arguments.count
-					if type = standard then
-							-- First argument is the pointer to the C++ object
-						i := 2
-					else
-							-- constructor or call to static routine
-						i := 1
-					end
-				until
-					i > count
-				loop
-					if j > 1 then
-						generated_file.putstring (gc_comma);
-					end
-					if has_arg_list then
-						generated_file.putchar ('(');
-						generated_file.putstring (argument_types.item (j));
-						generated_file.putstring (") ");
-					end;
-					generated_file.putstring ("arg");
-					generated_file.putint (i);
-					i := i + 1;
-					j := j + 1
+			from
+				j := 1
+				count := arguments.count
+				if type = standard then
+						-- First argument is the pointer to the C++ object
+					i := 2
+				else
+						-- constructor or call to static routine
+					i := 1
+				end
+			until
+				i > count
+			loop
+				if j > 1 then
+					generated_file.putstring (gc_comma);
+				end
+				if has_arg_list then
+					generated_file.putchar ('(');
+					generated_file.putstring (argument_types.item (j));
+					generated_file.putstring (") ");
 				end;
+				generated_file.putstring ("arg");
+				generated_file.putint (i);
+				i := i + 1;
+				j := j + 1
 			end;
 		end;
 

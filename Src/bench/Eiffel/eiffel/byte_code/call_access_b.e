@@ -7,43 +7,43 @@ inherit
 	ACCESS_B
 		redefine
 			make_byte_code, make_creation_byte_code
-		end;
+		end
 
 feature
 
 	feature_id: INTEGER is
 			-- Feature id of the called feature
 		deferred
-		end;
+		end
 
 	feature_name: STRING is
 			-- Feature name called
 		deferred
-		end;
+		end
 
 	rout_id: ROUTINE_ID is
 			-- Routine ID for the access (used in final mode generation)
 		local
-			class_type: CL_TYPE_I;
+			class_type: CL_TYPE_I
 		do
-			class_type ?= context_type;
+			class_type ?= context_type
 			Result := class_type.base_class.feature_table.item
 				(feature_name).rout_id_set.first
 		ensure
 			routine_id_not_void: Result /= Void
-		end;
+		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a feature call
 		do
-			make_code (ba, False);
-		end;
+			make_code (ba, False)
+		end
 
 	make_creation_byte_code (ba: BYTE_ARRAY) is
 			-- Generate call as a creation procedure
 		do
-			make_code (ba, True);
-		end;
+			make_code (ba, True)
+		end
 
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for a feature call. 
@@ -51,7 +51,7 @@ feature
 			-- an invariant check before the call.
 			-- Doesn't process the parameters
 		deferred
-		end;
+		end
 
 	standard_make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for a feature call. If not `flag', generate
@@ -59,107 +59,107 @@ feature
 			-- if `meta', metamorphose the feature call.
 			-- Doesn't process the parameters
 		local
-			basic_type: BASIC_I;
-			cl_type: CL_TYPE_I;
-			static_type: INTEGER;
-			real_feat_id: INTEGER;
-			associated_class: CLASS_C;
-			feat_tbl: FEATURE_TABLE;
-			inst_cont_type: TYPE_I;
-			metamorphosed: BOOLEAN;
-			origin, offset: INTEGER;
-			r_id: ROUTINE_ID;
+			basic_type: BASIC_I
+			cl_type: CL_TYPE_I
+			static_type: INTEGER
+			real_feat_id: INTEGER
+			associated_class: CLASS_C
+			feat_tbl: FEATURE_TABLE
+			inst_cont_type: TYPE_I
+			metamorphosed: BOOLEAN
+			origin, offset: INTEGER
+			r_id: ROUTINE_ID
 			rout_info: ROUT_INFO
 		do
-			inst_cont_type := context_type;
+			inst_cont_type := context_type
 			metamorphosed := inst_cont_type.is_basic 
-							and then not inst_cont_type.is_bit;
+							and then not inst_cont_type.is_bit
 			if metamorphosed then
 				if is_feature_special then
 					make_special_byte_code (ba)
 				else
-					basic_type ?= inst_cont_type;
+					basic_type ?= inst_cont_type
 						-- Process the feature id of `feature_name' in the
 						-- associated reference type
 					associated_class :=
-								basic_type.associated_reference.associated_class;
-					feat_tbl := associated_class.feature_table;
-debug ("BYTE_CODE");
-io.error.putstring ("Associated class: ");
-io.error.putstring (associated_class.name);
-io.error.putstring (", feature name: ");
-io.error.putstring (feature_name);
-io.error.putstring ("%NFEATURE_TABLE: ");
-feat_tbl.trace;
-io.error.new_line;
-end;
+								basic_type.associated_reference.associated_class
+					feat_tbl := associated_class.feature_table
+debug ("BYTE_CODE")
+io.error.putstring ("Associated class: ")
+io.error.putstring (associated_class.name)
+io.error.putstring (", feature name: ")
+io.error.putstring (feature_name)
+io.error.putstring ("%NFEATURE_TABLE: ")
+feat_tbl.trace
+io.error.new_line
+end
 					if parameters /= Void then
-						ba.append (Bc_rotate);
-						ba.append_short_integer (parameters.count + 1);
-					end;
-					ba.append (Bc_metamorphose);
+						ba.append (Bc_rotate)
+						ba.append_short_integer (parameters.count + 1)
+					end
+					ba.append (Bc_metamorphose)
 					if associated_class.is_precompiled then
-						r_id := feat_tbl.item (feature_name).rout_id_set.first;
-						rout_info := System.rout_info_table.item (r_id);
-						origin := rout_info.origin.id;
-						offset := rout_info.offset;
+						r_id := feat_tbl.item (feature_name).rout_id_set.first
+						rout_info := System.rout_info_table.item (r_id)
+						origin := rout_info.origin.id
+						offset := rout_info.offset
 						make_end_precomp_byte_code (ba, flag, origin, offset)
 					else
-						real_feat_id := feat_tbl.item (feature_name).feature_id;
-						static_type := basic_type.associated_reference.id.id - 1;
+						real_feat_id := feat_tbl.item (feature_name).feature_id
+						static_type := basic_type.associated_reference.id.id - 1
 						make_end_byte_code (ba, flag, real_feat_id, static_type)
 					end
-				end;
+				end
 			else
-				cl_type ?= inst_cont_type;
+				cl_type ?= inst_cont_type
 				if cl_type.is_expanded then
 						-- Feature `type_id' of CL_TYPE_I needs the
 						-- the attribute `expanded' to be False
-					cl_type := clone (cl_type);
-					cl_type.set_is_expanded (False);
-				end;
+					cl_type := clone (cl_type)
+					cl_type.set_is_expanded (False)
+				end
 				if is_first then 
 						--! Cannot melt basic calls hence is_first
 						--! is not used in the above if meta statement.
-					ba.append (Bc_current);
+					ba.append (Bc_current)
 				else
 					if parameters /= Void then
-						ba.append (Bc_rotate);
-						ba.append_short_integer (parameters.count + 1);
-					end;
-				end;
-				associated_class := cl_type.base_class;
+						ba.append (Bc_rotate)
+						ba.append_short_integer (parameters.count + 1)
+					end
+				end
+				associated_class := cl_type.base_class
 				if associated_class.is_precompiled then
 					r_id := associated_class.feature_table.item
-						(feature_name).rout_id_set.first;
-					rout_info := System.rout_info_table.item (r_id);
-					origin := rout_info.origin.id;
-					offset := rout_info.offset;
+						(feature_name).rout_id_set.first
+					rout_info := System.rout_info_table.item (r_id)
+					origin := rout_info.origin.id
+					offset := rout_info.offset
 					make_end_precomp_byte_code (ba, flag, origin, offset)
 				else
-					static_type := cl_type.associated_class_type.id.id - 1;
-					real_feat_id := feature_id;
-					make_end_byte_code (ba, flag, real_feat_id, static_type);
+					static_type := cl_type.associated_class_type.id.id - 1
+					real_feat_id := feature_id
+					make_end_byte_code (ba, flag, real_feat_id, static_type)
 				end
 			end
-		end;
+		end
 
 	make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
 					real_feat_id: INTEGER; static_type: INTEGER) is
 			-- Make final portion of the standard byte code.
 		do
 			if 	is_first or flag then
-				ba.append (code_first);
+				ba.append (code_first)
 			else
-				ba.append (code_next);
+				ba.append (code_next)
 					-- Generate feature name for test of void reference
-				ba.append_raw_string (feature_name);
-			end;
+				ba.append_raw_string (feature_name)
+			end
 				-- Generate feature id
-			ba.append_integer (real_feat_id);
-			ba.append_short_integer (static_type);
-			make_precursor_byte_code (ba);
-		end;
+			ba.append_integer (real_feat_id)
+			ba.append_short_integer (static_type)
+			make_precursor_byte_code (ba)
+		end
 
 	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
 					origin: INTEGER; offset: INTEGER) is
@@ -167,16 +167,16 @@ end;
 			-- for a precompiled call.
 		do
 			if 	is_first or flag then
-				ba.append (precomp_code_first);
+				ba.append (precomp_code_first)
 			else
-				ba.append (precomp_code_next);
+				ba.append (precomp_code_next)
 					-- Generate feature name for test of void reference
-				ba.append_raw_string (feature_name);
-			end;
-			ba.append_integer (origin);
-			ba.append_integer (offset);
-			make_precursor_byte_code (ba);
-		end;
+				ba.append_raw_string (feature_name)
+			end
+			ba.append_integer (origin)
+			ba.append_integer (offset)
+			make_precursor_byte_code (ba)
+		end
 
 	make_precursor_byte_code (ba: BYTE_ARRAY) is
 			-- Add dynamic type of parent, if necessary.
@@ -189,7 +189,7 @@ end;
 			-- (To be redefined in FEATURE_B).
 		do
 			-- Do nothing
-		end;
+		end
 
 	make_java_typecode (ba: BYTE_ARRAY) is
 			-- Add the sk_value of the type of this
@@ -220,7 +220,7 @@ end;
 					--	   debugging purposes only)
 
 					ba.append_raw_string (feature_name)
-					ba.append_uint32_integer (res_type_i.sk_value);
+					ba.append_uint32_integer (res_type_i.sk_value)
 
 					if res_type_a /= Void and then
 								res_type_a.has_associated_class then
@@ -240,174 +240,174 @@ end;
 			else
 				-- Nothing: we're not generating Java byte-code.
 			end
-		end;
+		end
 
 	real_feature_id: INTEGER is
 			-- The feature ID in INTEGER is not necessarily the same as
 			-- in the INTEGER_REF class. And likewise for other simple types.
 		local
-			associated_class: CLASS_C;
-			feat_tbl: FEATURE_TABLE;
-			instant_context_type: TYPE_I;
-			basic_type: BASIC_I;
-			static_type: INTEGER;
+			associated_class: CLASS_C
+			feat_tbl: FEATURE_TABLE
+			instant_context_type: TYPE_I
+			basic_type: BASIC_I
+			static_type: INTEGER
 		do
-			Result := feature_id;
-			instant_context_type := context_type;
+			Result := feature_id
+			instant_context_type := context_type
 			if 	instant_context_type.is_basic
 				and then
 				not instant_context_type.is_bit
 			then
-				basic_type ?= instant_context_type;
-				static_type := basic_type.associated_dtype;
+				basic_type ?= instant_context_type
+				static_type := basic_type.associated_dtype
 					-- Process the feature id of `feature_name' in the
 					-- associated reference type
 				associated_class :=
-							basic_type.associated_reference.associated_class;
-				feat_tbl := associated_class.feature_table;
-				Result := feat_tbl.item (feature_name).feature_id;
-			end;
-		end;
+							basic_type.associated_reference.associated_class
+				feat_tbl := associated_class.feature_table
+				Result := feat_tbl.item (feature_name).feature_id
+			end
+		end
 
 	code_first: CHARACTER is
 			-- Byte code when call is first (no invariant)
 		deferred
-		end;
+		end
 
 	code_next: CHARACTER is
 			-- Byte code when call is nested (invariant)
 		deferred
-		end;
+		end
 
 	precomp_code_first: CHARACTER is
 			-- Byte code when precompiled call is first (no invariant)
 		deferred
-		end;
+		end
 
 	precomp_code_next: CHARACTER is
 			-- Byte code when precompiled call is nested (invariant)
 		deferred
-		end;
+		end
 
 	basic_register: REGISTRABLE is
 			-- Register used to store the metamorphosed simple type
 		do
-		end;
+		end
 
 	is_feature_call: BOOLEAN is
 			-- Is access a feature call?
 		do
-		end;
+		end
 
 	generate_metamorphose (reg: REGISTRABLE) is
 			-- Generate the metamorphosis of simple type as a statement if
 			-- needed.
 		local
-			basic_type: BASIC_I;
-			type_i: TYPE_I;
+			basic_type: BASIC_I
+			type_i: TYPE_I
 		do
-			type_i := context_type;
+			type_i := context_type
 			if type_i.is_basic then
-				basic_type ?= type_i;
+				basic_type ?= type_i
 				basic_type.metamorphose
-					(basic_register, reg, generated_file, context.workbench_mode);
-				generated_file.putchar (';');
-				generated_file.new_line;
-			end;
-		end;
+					(basic_register, reg, generated_file, context.workbench_mode)
+				generated_file.putchar (';')
+				generated_file.new_line
+			end
+		end
 
 	release_hector_protection is
 			-- Only for externals
 		do
-		end;
+		end
 
 	generate_parameters_list is
 			-- Only for routines and externals
 		do
-		end;
+		end
 
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate access on `reg' in a `typ' context
 		do
-		end;
+		end
 
 	generate_special_feature (reg: REGISTRABLE) is
 			-- Generate code for special routines (is_equal, copy ...).
-			-- (Only for feature calls);
+			-- (Only for feature calls)
 		do
-		end;
+		end
 
 	is_feature_special: BOOLEAN is
 			-- Is feature a special routine 
-			-- (Only for feature calls);
+			-- (Only for feature calls)
 		do
-		end;
+		end
 
 	do_generate (reg: REGISTRABLE) is
 			-- Generate call of feature on `reg'
 		require
 			valid_register: reg /= Void
 		local
-			type_i: TYPE_I;
-			class_type: CL_TYPE_I;
-			basic_type: BASIC_I;
+			type_i: TYPE_I
+			class_type: CL_TYPE_I
+			basic_type: BASIC_I
 		do
-			type_i := context_type;
+			type_i := context_type
 				-- Special provision is made for calls on basic types
 				-- (they have to be themselves known by the compiler).
 			if type_i.is_basic then
 				if is_feature_special and not type_i.is_bit then
-					generate_special_feature (reg);
+					generate_special_feature (reg)
 				else
 					-- Generation of metamorphosis is enclosed between (), and
 					-- the expressions are separated with ',' which means the C
 					-- keeps only the last expression, i.e. the function call.
 					-- That way, statements like "s := i.out" are correctly
 					-- generated with a minimum of temporaries.
-					basic_type ?= type_i;
-					class_type := basic_type.associated_reference.type;
+					basic_type ?= type_i
+					class_type := basic_type.associated_reference.type
 						-- If an invariant is to be checked however, the
 						-- metamorphosis was already made by the invariant
 						-- checking routine.
-					generated_file.putchar ('(');
+					generated_file.putchar ('(')
 					basic_type.metamorphose
-						(basic_register, reg, generated_file, context.workbench_mode);
-					generated_file.putchar (',');
-					generated_file.new_line;
-					generated_file.putchar ('%T');
-					generate_end (basic_register, class_type, True);
+						(basic_register, reg, generated_file, context.workbench_mode)
+					generated_file.putchar (',')
+					generated_file.new_line
+					generated_file.putchar ('%T')
+					generate_end (basic_register, class_type, True)
 				end
 			else
 				class_type ?= type_i;	-- Cannot fail
-				generate_end (reg, class_type, False);
-			end;
-		end;
+				generate_end (reg, class_type, False)
+			end
+		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
 			-- Generate final portion of C code.
 		do
-			generate_access_on_type (gen_reg, class_type);
+			generate_access_on_type (gen_reg, class_type)
 				-- Now generate the parameters of the call, if needed.
 			if class_type.is_separate then
 			else
 				if not is_attribute then
-					generated_file.putchar ('(');
-				end;
+					generated_file.putchar ('(')
+				end
 				if is_feature_call then
-					gen_reg.print_register;
-				end;
+					gen_reg.print_register
+				end
 				if parameters /= Void then
-					generate_parameters_list;
-				end;
+					generate_parameters_list
+				end
 				if not is_attribute then
-					generated_file.putchar (')');
-				end;
+					generated_file.putchar (')')
+				end
 				if meta then
 						-- Close parenthesis opened by metamorphosis code
-					generated_file.putchar (')');
-				end;
-			end;
-			release_hector_protection;
-		end;
+					generated_file.putchar (')')
+				end
+			end
+			release_hector_protection
+		end
 
 end

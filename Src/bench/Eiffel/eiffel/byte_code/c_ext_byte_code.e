@@ -1,7 +1,5 @@
 indexing
-
-	description:
-		"Encapsulation of a C extension.";
+	description: "Encapsulation of a C extension.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +8,17 @@ class C_EXT_BYTE_CODE
 inherit
 	EXT_EXT_BYTE_CODE
 		redefine
-			is_special
+			generate_signature, generate_body
+		end
+
+feature -- Generation
+
+	generate_signature is
+		do
+		end
+
+	generate_body is
+		do
 		end
 
 feature -- Properties
@@ -24,13 +32,6 @@ feature -- Initialization
 			-- Assign `f' to `special_file_name'.
 		do
 			special_file_name := f
-		end
-
-feature -- Convenience
-
-	is_special: BOOLEAN is
-		do
-			Result := special_file_name /=  Void
 		end
 
 end -- class C_EXT_BYTE_CODE

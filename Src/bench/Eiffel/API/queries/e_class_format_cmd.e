@@ -74,7 +74,7 @@ feature -- Execution
 					e_class := e_feature.written_class;
 					id := e_class.id;
 					if table.has (id) then
-						list := table.item (id);
+						list := table.found_item
 					else
 						!! list.make;
 						table.put (list, id);

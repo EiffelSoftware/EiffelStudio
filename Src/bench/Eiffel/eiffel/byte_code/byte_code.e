@@ -573,10 +573,14 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL byte code
 		do
+				-- Put a breakable point on feature name.
+			il_generator.put_line_info (start_line_number)
+			il_generator.flush_sequence_points (context.class_type)
+
 			generate_il_body
-			if system.line_generation then
-				il_generator.put_debug_info (end_location)
-			end
+
+			il_generator.put_debug_info (end_location)
+
 			generate_il_return (not context.real_type(result_type).is_void)
 		end
 
@@ -623,10 +627,6 @@ feature -- IL code generation
 			if not local_list.is_empty then
 				generate_il_local_info (local_list)
 			end
-
-				-- Put a breakable point on feature name.
-			Il_generator.put_line_info (start_line_number)
-			Il_generator.flush_sequence_points (context.class_type)
 
 			if rescue_clause /= Void then
 					-- Generate local variable to save assertions level.

@@ -42,6 +42,10 @@ feature -- IL code generation
 			il_label_compute: IL_LABEL
 			r_type: TYPE_I
 		do
+				-- Put a breakable point on feature name.
+			il_generator.put_line_info (start_line_number)
+			il_generator.flush_sequence_points (context.class_type)
+
 			r_type := context.real_type(result_type)
 			has_result := not r_type.is_void
 
@@ -55,6 +59,7 @@ feature -- IL code generation
 			il_label_compute := il_label_factory.new_label
 			il_generator.generate_once_test
 			il_generator.branch_on_false (il_label_compute)
+
 			if has_result then
 				il_generator.generate_once_result
 			end
@@ -65,6 +70,9 @@ feature -- IL code generation
 				-- Mark once as being computed from now on.
 			il_generator.generate_once_computed
 			generate_il_body
+
+			il_generator.put_debug_info (end_location)
+
 			if has_result then
 				il_generator.generate_result
 			end

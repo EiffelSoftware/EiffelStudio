@@ -95,6 +95,7 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
+			buffer.putstring ("RTLN(")
 
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -167,6 +168,7 @@ feature -- C code generation
 				context.Current_register.print_register
 				buffer.putchar (')')
 			end
+			buffer.putchar (')')
 		end
 
 feature -- IL code generation

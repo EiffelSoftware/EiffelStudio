@@ -280,26 +280,10 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		
 	enable_select is
 			-- Select the object.
-		local
-			i, a_count: INTEGER
-			a_item: EV_GRID_ITEM_I
 		do
-			from
-				i := 1
-				a_count := count
-			until
-				i = a_count
-			loop
-				a_item := parent_grid_i.item_internal (index, i, False)
-					-- We query the grid without forcing a creation of items
-				if a_item /= Void then
-					a_item.enable_select
-						-- Enabling the item will enable increase the selected_item_count for `Current'
-				else
-					increase_selected_item_count
-				end
-				i := i + 1
-			end
+			selected_item_count := count
+			parent_grid_i.redraw_client_area
+			fixme ("EV_GRID_ROW_I:enable_select - Perform a more optimal redraw when available")	
 		end
 
 	destroy is

@@ -129,7 +129,7 @@ feature -- Basic operation
 			main_window.smart_enable_sensitive;
 			((create {EV_ENVIRONMENT}).application).process_events
 			if initial_selection /= Void then
-				initial_selection.enable_select
+				initial_selection.tree_item.enable_select
 			end
 			
 			system_status.disable_loading_project
@@ -145,26 +145,27 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 		
-	build_window (window: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
+	build_window (window: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
 			-- Build a new window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
 			-- window selector.
 		require
 			window_not_void: window /= Void
-			parent_node_list_not_void: parent_node_list /= Void
+			parent_common_item_not_void: parent_common_item /= Void
 		do
-			internal_build_window (window, parent_node_list)
+			internal_build_window (window, parent_common_item)
 		end
 
-	internal_build_window (window: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
+	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
 			-- Build a window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
 			-- window selector.
 		require
 			window_not_void: window /= Void
-			parent_node_list_not_void: parent_node_list /= Void
+			parent_common_item_not_void: parent_common_item /= Void
+			--parent_node_list_not_void: parent_node_list /= Void
 		local
 			current_element, root_window_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
@@ -172,15 +173,11 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			an_object: GB_OBJECT
 			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			a_display_object: GB_DISPLAY_OBJECT
-			tree_node: EV_TREE_NODE
 		do
 			an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
-			unparent_tree_node (an_object.window_selector_item)
-			parent_node_list.extend (an_object.window_selector_item)
-			tree_node ?= parent_node_list
-			if tree_node /= Void then
-				tree_node.expand
-			end
+			an_object.window_selector_item.unparent
+			parent_common_item.add_alphabetically (an_object.window_selector_item)
+			parent_common_item.expand
 			from
 				window.start
 			until
@@ -629,20 +626,19 @@ feature {NONE} -- Implementation
 			constants.build_deferred_elements
 		end
 		
-	build_window_structure (an_element: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
-			-- Create thw directory and window structure represented by `an_element' into `parent_node_list'.
+	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+			-- Create the directory and window structure represented by `an_element' into `parent_node_list'.
 		require
 			an_element_not_void: an_element /= Void
-			parent_node_list_not_void: parent_node_list /= Void
+			parent_common_item_not_void: parent_common_item /= Void
 		local
 			current_element, constant_item_element: XM_ELEMENT
 			current_name, current_type: STRING
 			window_element: XM_ELEMENT
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			temp_directory, directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			tree_node_path: ARRAYED_LIST [STRING]
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			tree_node: EV_TREE_NODE
 		do
 			from
 				an_element.start
@@ -669,9 +665,9 @@ feature {NONE} -- Implementation
 										check
 											element_info_not_void: element_info /= Void
 										end
-										tree_node ?= parent_node_list
-										if tree_node /= Void then
-											tree_node_path := path_of_tree_node (tree_node)
+										temp_directory ?= parent_common_item
+										if temp_directory /= Void then
+											tree_node_path := temp_directory.path
 										else
 											create tree_node_path.make (1)
 										end
@@ -679,11 +675,11 @@ feature {NONE} -- Implementation
 											-- We now retrieve an existing directory item matching the path of the
 											-- new directory. This ensures that if we are importing a project that has
 											-- the same directory structure, these directories are used.
-										directory_item ?= tree_item_matching_path (window_selector, tree_node_path)
+										directory_item := window_selector.directory_object_from_name (tree_node_path)
 										if directory_item = Void then
 											create directory_item.make_with_name ("")
 											directory_item.modify_from_xml (window_element)
-											parent_node_list.extend (directory_item)	
+											parent_common_item.add_alphabetically (directory_item)
 										end
 									end
 								end
@@ -703,7 +699,7 @@ feature {NONE} -- Implementation
 								current_element.forth
 							end
 						else
-							build_window (current_element, parent_node_list)							
+							build_window (current_element, parent_common_item)							
 						end
 					end
 				end
@@ -732,7 +728,11 @@ feature {NONE} -- Implementation
 				if current_element /= Void then
 					current_name := current_element.name
 						cursor := current_element.new_cursor
-						full_information := get_unique_full_info (current_element)
+						if child_element_by_name (current_element, constant_string) /= Void then
+								-- Only process if there is a child named `constant_string'. Prevents us
+								-- from executing `full_information' each time. Also prevents `full_information'
+								-- from crashing if we attempt to process an object that has two or more events set.
+							full_information := get_unique_full_info (current_element)
 							element_info := full_information @ (Constant_string)
 							if element_info /= Void then
 								
@@ -744,6 +744,7 @@ feature {NONE} -- Implementation
 									add_element_containing_string (current_element, Constant_string, renamed_constants.item (element_info.data))
 								end
 							end
+						end
 						current_element.go_to (cursor)
 						
 						-- perform recursion, as every element in the structure must be visited.

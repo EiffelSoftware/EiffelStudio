@@ -31,13 +31,11 @@ feature
 	set_state (a_state: BOOLEAN) is
 		do
 			if a_state /= state then
-				remove_release_action (eb_cmd, eb_ed);
 				if a_state then
-					arm
+					set_toggle_on
 				else
-					disarm
-				end;
-				add_release_action (eb_cmd, eb_ed);
+					set_toggle_off
+				end
 			end
 		end;
 

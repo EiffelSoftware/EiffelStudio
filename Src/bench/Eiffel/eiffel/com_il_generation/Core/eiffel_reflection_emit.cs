@@ -1731,7 +1731,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Generate `n' to enable to find corresponding
 	// Eiffel class file in IL code.
 	public void PutLineInfo (int n) {
-		MethodIL.MarkSequencePoint (Classes [CurrentTypeID].Document, n, 0, n, 1);
+		MethodIL.MarkSequencePoint (Classes [CurrentTypeID].Document, n, 0, n, 1000);
 	}
 
 /* Labels creation */

@@ -109,15 +109,21 @@ feature {NONE} -- Implementation
 					if is_paramflag_fretval (arguments.item.flags) then
 						return_type.append (Colon)
 						return_type.append (Space)
-						if visitor.is_basic_type then
-							Result.append (visitor.cecil_type)
-						elseif visitor.is_enumeration then
+						if 
+							visitor.is_basic_type or
+							visitor.is_enumeration or 
+							(visitor.vt_type = Vt_bool)
+						then
 							Result.append (visitor.cecil_type)
 						else
 							pointed_descriptor ?= arguments.item.type
 							if pointed_descriptor /= Void then
 								visitor := pointed_descriptor.pointed_data_type_descriptor.visitor 
-								if visitor.is_basic_type then
+								if 
+									visitor.is_basic_type or
+									visitor.is_enumeration or
+									(visitor.vt_type = Vt_bool)
+								then
 									return_type.append (visitor.cecil_type)
 								else
 									return_type.append (Eif_reference)
@@ -125,13 +131,21 @@ feature {NONE} -- Implementation
 							else
 								return_type.append (Eif_reference)
 							end
-						end		
-					elseif is_paramflag_fout (arguments.item.flags) then
-						if visitor.is_basic_type then
+						end	
+					else 
+						if 
+							visitor.is_basic_type or
+							visitor.is_enumeration or
+							(visitor.vt_type = Vt_bool)
+						then
 							Result.append (visitor.cecil_type)
-						elseif visitor.is_enumeration then
-							Result.append (visitor.cecil_type)
-						elseif visitor.is_structure or visitor.is_interface or visitor.is_array_basic_type then
+
+
+						elseif 
+							visitor.is_structure or 
+							visitor.is_interface or 
+							visitor.is_array_basic_type 
+						then
 							Result.append (visitor.c_type)
 							Result.append (Space)
 							Result.append (Asterisk)
@@ -142,38 +156,7 @@ feature {NONE} -- Implementation
 							visitor.is_coclass_pointer
 						then
 							Result.append (visitor.c_type)
-						else
-							Result.append (Eif_object)
-						end
-						Result.append (Comma)
-
-					else --if is_paramflag_fin (arguments.item.flags) then
-						if visitor.is_basic_type then
-							Result.append (visitor.cecil_type)
-
-						elseif (visitor.vt_type = Vt_bool) then
-							Result.append (Eif_boolean)
-
-						elseif visitor.is_enumeration then
-							Result.append (Eif_integer)
-
-						elseif visitor.is_structure or visitor.is_interface or 
-								visitor.is_array_basic_type then
-							Result.append (visitor.c_type)
-							Result.append (Space)
-							Result.append (Asterisk)
-
-						elseif 
-							visitor.is_structure_pointer or 
-							visitor.is_interface_pointer or
-							visitor.is_coclass_pointer
-						then
-							Result.append (visitor.c_type)
-
-						elseif visitor.is_enumeration then
-							Result.append (Eif_integer)
-						elseif is_hresult (visitor.vt_type) or is_error (visitor.vt_type) then
-							Result.append (visitor.c_type)
+						
 						else
 							Result.append (Eif_object)
 						end
@@ -189,22 +172,25 @@ feature {NONE} -- Implementation
 
 			visitor := func_desc.return_type.visitor 
 
-			if not is_void (visitor.vt_type) and not is_hresult (visitor.vt_type) and
-					not is_error (visitor.vt_type) then
+			if 
+				not is_void (visitor.vt_type) and 
+				not is_hresult (visitor.vt_type) and
+				not is_error (visitor.vt_type) 
+			then
 				return_type.append (Colon)
 				return_type.append (Space)
 
-				pointed_descriptor ?= func_desc.return_type
-				if pointed_descriptor /= Void then
-					visitor := pointed_descriptor.pointed_data_type_descriptor.visitor 
-					if visitor.is_basic_type then
-						return_type.append (visitor.cecil_type)
-					else
-						return_type.append (Eif_reference)
-					end
+				
+				if 
+					visitor.is_basic_type or
+					visitor.is_enumeration or
+					(visitor.vt_type = Vt_bool)
+				then
+					return_type.append (visitor.cecil_type)
 				else
 					return_type.append (Eif_reference)
 				end
+				
 			end
 			Result.append (Close_parenthesis)
 			Result.append (return_type)
@@ -253,11 +239,6 @@ feature {NONE} -- Implementation
 					then
 						tmp_string.append (Pointer_type)
 					elseif visitor.is_enumeration then
-						tmp_string.append (Integer_type)
-					elseif is_paramflag_fin (arguments.item.flags) and
-							not is_paramflag_fout (arguments.item.flags) and
-							(is_hresult (visitor.vt_type) or is_error (visitor.vt_type))
-					then
 						tmp_string.append (Integer_type)
 					else
 						tmp_string.append (visitor.eiffel_type)
@@ -356,13 +337,6 @@ feature {NONE} -- Implementation
 						elseif
 							visitor.is_structure_pointer or
 							visitor.is_structure 
-						then
-							tmp_string.append (arguments.item.name)
-							tmp_string.append (Item_function)
-						elseif
-							is_paramflag_fin (arguments.item.flags) and
-							not is_paramflag_fout (arguments.item.flags) and
-							(is_hresult (visitor.vt_type) or is_error (visitor.vt_type))
 						then
 							tmp_string.append (arguments.item.name)
 							tmp_string.append (Item_function)

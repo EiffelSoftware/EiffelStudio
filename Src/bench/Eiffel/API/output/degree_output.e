@@ -226,7 +226,7 @@ feature -- Output on per class
 
 	put_degree_minus_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree minus two with `nbr_to_go' 
+			-- compiled during degree minus four with `nbr_to_go' 
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void;
@@ -238,7 +238,7 @@ feature -- Output on per class
 
 	put_degree_minus_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree minus three with `nbr_to_go' 
+			-- compiled during degree minus five with `nbr_to_go' 
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void;
@@ -246,30 +246,6 @@ feature -- Output on per class
 			in_degree_minus_3: current_degree = -3
 		do
 			display_degree (degree_minus_3_message, nbr_to_go, a_class.name_in_upper)
-		end;
-
-	put_degree_minus_4 (a_class: CLASS_C; nbr_to_go: INTEGER) is
-			-- Put message to indicate that `a_class' is being
-			-- compiled during degree minus four with `nbr_to_go' 
-			-- classes to go.
-		require
-			class_not_void: a_class /= Void;
-			positive_nbr_to_go: nbr_to_go >= 0;
-			in_degree_minus_4: current_degree = -4
-		do
-			display_degree (degree_minus_4_message, nbr_to_go, a_class.name_in_upper)
-		end;
-
-	put_degree_minus_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
-			-- Put message to indicate that `a_class' is being
-			-- compiled during degree minus five with `nbr_to_go' 
-			-- classes to go.
-		require
-			class_not_void: a_class /= Void;
-			positive_nbr_to_go: nbr_to_go >= 0;
-			in_degree_minus_5: current_degree = -5
-		do
-			display_degree (degree_minus_5_message, nbr_to_go, a_class.name_in_upper)
 		end;
 
 	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER) is
@@ -404,8 +380,6 @@ feature {NONE} -- Constants
 	degree_minus_1_message: STRING is "Degree -1 class ";
 	degree_minus_2_message: STRING is "Degree -2 class ";
 	degree_minus_3_message: STRING is "Degree -3 class ";
-	degree_minus_4_message: STRING is "Degree -4 class ";
-	degree_minus_5_message: STRING is "Degree -5 class ";
 
 	melting_changes_message: STRING is "Melting changes";
 	freezing_system_message: STRING is "Freezing system";

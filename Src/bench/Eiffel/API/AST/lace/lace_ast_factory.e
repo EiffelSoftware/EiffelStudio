@@ -486,7 +486,7 @@ feature -- Access
 			language_name_set: Result.language_name = ln
 		end
 
-	new_name_sd (v: ID_SD): YES_SD is
+	new_name_sd (v: ID_SD): NAME_SD is
 			-- New NAME AST node
 		require
 			v_not_void: v /= Void

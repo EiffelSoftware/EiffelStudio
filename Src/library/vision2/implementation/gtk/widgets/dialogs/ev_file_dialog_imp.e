@@ -174,7 +174,9 @@ feature {NONE} -- Implementation
 	valid_file_name, valid_file_title (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid file_name on the current platform?
 		do
-			Result := True
+			if a_name /= Void then
+				Result := not a_name.has ('*')
+			end
 		end
 
 	interface: EV_FILE_DIALOG

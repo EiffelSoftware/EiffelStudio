@@ -123,6 +123,7 @@ feature -- Basic Operations
 				else
 					xml_file_path := path_to_assembly (assembly_type_name)
 					member_parser := Member_parser_table.item (assembly_type_name)
+					initialized := True
 				end
 				if initialized then
 					Result := find_member (a_full_dotnet_type, a_member_signature)
@@ -247,7 +248,7 @@ feature {NONE} -- Implementation
 				
 				f.go (member_parser.Xml_members.item (l_key_member).pos_in_file)
 				f.read_stream (member_parser.Xml_members.item (l_key_member).number_of_char)
-				if f.last_string /= Void	then
+				if f.last_string /= Void then
 					l_last_str := f.last_string
 					l_last_str.prepend ("<THE_MEMBER>")
 					l_last_str.append ("</THE_MEMBER>")
@@ -255,20 +256,11 @@ feature {NONE} -- Implementation
 					create l_feature_parser.make
 					l_feature_parser.parse_string (l_last_str)
 					l_feature_parser.set_end_of_file
-					if not l_feature_parser.is_correct then
-						--print (l_feature_parser.last_error_extended_description)
-					else
-						--print ("%NNo errors detected%N")
-												
+					if l_feature_parser.is_correct then
 						if l_feature_parser.A_member.name.is_equal (l_key_member) then
-							--print ("%N%N************** Member found!!! **************%N%N")
 							Result := l_feature_parser.A_member
-						else
-							--print ("%N%N************** Member not found!!! **************%N%N")
 						end
 					end
-				else
-					--print ("File has no content%N")
 				end
 			end
 		end

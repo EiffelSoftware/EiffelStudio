@@ -12,12 +12,23 @@ external C library
 #include "eif_eiffel.h"
 #include "eif_argv.h"
 
+/* GDK events */
+#define GDK_EVENT_TYPE(p) (((GdkEvent*)p)->type)
+
+#define GDK_EVENT_GET_X(p) (((GdkEventButton*)p)->x)
+#define GDK_EVENT_GET_Y(p) (((GdkEventButton*)p)->y)
+#define GDK_EVENT_GET_STATE(p) (((GdkEventMotion*)p)->state)
+				/* EventButton, integer */
+#define GDK_EVENT_GET_BUTTON(p) (((GdkEventButton*)p)->button)
+				/* EventKey, integer */
+#define GDK_EVENT_GET_KEYVAL(p) (((GdkEventKey*)p)->keyval)
 
 
 typedef  struct callback_data {
     EIF_PROC rtn;
     EIF_OBJ obj;
     EIF_OBJ argument;
+    EIF_PROC set_event_data;
 } callback_data_t;
 
 
@@ -48,7 +59,8 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   gchar *name, 
 			   EIF_PROC func,
 			   EIF_POINTER object,
-			   EIF_POINTER argument);
+			   EIF_POINTER argument,
+			   EIF_PROC event_data_rtn);
 
 /* Disconnect a call back of a widget/event pair */
 void c_gtk_signal_disconnect (GtkObject *widget, 

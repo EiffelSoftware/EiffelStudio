@@ -24,6 +24,7 @@ feature -- Basic operations
 			function_generator: WIZARD_EIFFEL_CLIENT_FUNCTION_GENERATOR
 			property_generator: WIZARD_EIFFEL_CLIENT_PROPERTY_GENERATOR
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
+			tmp_original_name, tmp_changed_name: STRING
 		do
 			create inherit_clause.make
 			inherit_clause.set_name (a_interface_desc.eiffel_class_name)
@@ -69,6 +70,9 @@ feature -- Basic operations
 
 					if function_generator.function_renamed then
 						inherit_clause.add_rename (function_generator.original_name, function_generator.changed_name)
+						tmp_original_name := vartype_namer.user_precondition_name (function_generator.original_name)
+						tmp_changed_name := vartype_namer.user_precondition_name (function_generator.changed_name)
+						inherit_clause.add_rename (tmp_original_name, tmp_changed_name)
 					end
 
 					if (function_generator.feature_writer.result_type /= Void and then 
@@ -76,8 +80,10 @@ feature -- Basic operations
 						(function_generator.feature_writer.arguments = Void or else function_generator.feature_writer.arguments.empty)
 					then
 						an_eiffel_writer.add_feature (function_generator.feature_writer, Access)
+						an_eiffel_writer.add_feature (function_generator.external_feature_writer, Access)
 					else
 						an_eiffel_writer.add_feature (function_generator.feature_writer, Basic_operations)
+						an_eiffel_writer.add_feature (function_generator.external_feature_writer, Basic_operations)
 					end
 
 					a_interface_desc.functions.forth
@@ -166,8 +172,6 @@ feature {NONE} -- Implementation
 			feature_body.append (Open_parenthesis)
 			feature_body.append (Iunknown_pointer)
 			feature_body.append (Close_parenthesis)
-			feature_body.append (Colon)
-			feature_body.append (Eif_pointer)
 			feature_body.append (Double_quote)
 
 			Result.set_body (feature_body)

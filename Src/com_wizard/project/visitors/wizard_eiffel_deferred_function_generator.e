@@ -24,6 +24,9 @@ feature -- Basic operation
 			-- Generate deferred function
 		require
 			non_void_descriptor: a_descriptor /= Void
+		local
+			precondition_writer: WIZARD_WRITER_ASSERTION
+			tmp_arguments: STRING
 		do
 			func_desc := a_descriptor
 
@@ -39,7 +42,32 @@ feature -- Basic operation
 				set_feature_result_type_and_arguments
 				set_feature_assertions
 			end
-			feature_writer.add_precondition (user_defined_precondition (func_desc.interface_eiffel_name))
+			precondition_writer := user_defined_precondition (func_desc.interface_eiffel_name)
+
+			if func_desc.arguments /= Void and not func_desc.arguments.empty then
+				func_desc.arguments.start
+
+				if not is_paramflag_fretval (func_desc.arguments.item.flags) then
+					tmp_arguments := clone (Space_open_parenthesis)
+					tmp_arguments.append (func_desc.arguments.item.name)
+
+					from
+						func_desc.arguments.forth
+					until
+						func_desc.arguments.after
+					loop
+						if not is_paramflag_fretval (func_desc.arguments.item.flags) then
+							tmp_arguments.append (Comma_space)
+							tmp_arguments.append (func_desc.arguments.item.name)
+						end
+						func_desc.arguments.forth
+					end
+					tmp_arguments.append (Close_parenthesis)
+					precondition_writer.body.append (tmp_arguments)
+				end
+			end
+
+			feature_writer.add_precondition (precondition_writer)
 			-- Set description, function body
 
 			feature_writer.set_deferred

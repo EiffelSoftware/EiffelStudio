@@ -48,6 +48,9 @@ feature -- Basic operations
 			external_feature_writer.set_name (ccom_func_name)
 
 			-- Set arguments and precondition for eiffel code
+
+			external_feature_writer.add_argument (default_pointer_argument)
+
 			if func_desc.argument_count > 0 then
 				set_feature_result_type_and_arguments
 
@@ -208,9 +211,6 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			arguments := func_desc.arguments
-
-			external_feature_writer.add_argument (default_pointer_argument)
-
 			from
 				arguments.start
 			until
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 							tmp_string.append (Dollar)
 							tmp_string.append (Tmp_clause)
 							tmp_string.append (arguments.item.name)
-						elseif visitor.is_interface or visitor.is_structure or visitor.is_structure_pointer 
+						elseif visitor.is_interface or visitor.is_interface_pointer or visitor.is_structure_pointer 
 								or visitor.is_structure then
 							tmp_string.append (arguments.item.name)
 							tmp_string.append (Item_function)

@@ -22,6 +22,14 @@ feature -- Status report
 						accelerator_list.empty
 		end
 
+feature -- Status setting
+
+	destroy is
+			-- Destroy the actual table.
+		do
+			cwin_destroy_accelerator_table (item)
+		end
+
 feature -- Element change
 
 	add (acc: EV_ACCELERATOR) is
@@ -107,18 +115,18 @@ feature {NONE} -- Implementation
  			list := accelerator_list
 
 			if list.empty then
-	 				cwin_destroy_accelerator_table (item)
-					accelerator_list := Void
+ 				cwin_destroy_accelerator_table (item)
+				accelerator_list := Void
 			else
 				-- We create a WEL array to send it to the system
 	 			!! wel.make (list.count, list.first.structure_size)
 	 			from
 	 				list.start
-	 			until
-	 				list.after
-	 			loop
-	 				wel.put (list.item, list.index - 1)
-	 				list.forth
+				until
+					list.after
+				loop
+					wel.put (list.item, list.index - 1)
+					list.forth
 	 			end
 	 			if item /= default_pointer then
 	 				cwin_destroy_accelerator_table (item)

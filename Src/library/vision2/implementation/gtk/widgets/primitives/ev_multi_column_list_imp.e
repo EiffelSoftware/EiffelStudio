@@ -69,18 +69,17 @@ feature {NONE} -- Initialization
 			-- Create the clist with `a_columns' columns.
 		local
 			i: INTEGER
-			temp_c_object: POINTER
 		do
+			if list_widget /= Default_pointer then
+				C.gtk_container_remove (c_object, list_widget)
+			end
+
 			list_widget := C.gtk_clist_new (a_columns)
 		
-			temp_c_object := c_object
-			c_object := list_widget
-			signal_connect ("select_row", ~select_callback)
-			signal_connect ("unselect_row", ~deselect_callback)
-
-			signal_connect ("click_column", ~column_click_callback)
-			c_object := temp_c_object
-
+			real_signal_connect (list_widget, "select_row", ~select_callback)
+			real_signal_connect (list_widget, "unselect_row", ~deselect_callback)
+			real_signal_connect (list_widget, "click_column", ~column_click_callback)
+			
 			if rows_height > 0 then
 				C.gtk_clist_set_row_height (
 					list_widget,
@@ -89,6 +88,7 @@ feature {NONE} -- Initialization
 			end
 
 			C.gtk_widget_show (list_widget)
+
 			C.gtk_container_add (c_object, list_widget)
 
 			-- We need to specify a width for the columns
@@ -265,10 +265,16 @@ feature -- Status report
 			end
 		end
 
-	get_column_width (a_column: INTEGER): INTEGER is
+	column_width (a_column: INTEGER): INTEGER is
 			-- Width of column `column' in pixel.
 		do
 			Result := C.c_gtk_clist_column_width (list_widget, a_column - 1)
+		end
+
+	column_title (a_column: INTEGER): STRING is
+			-- Title of column `a_column'.
+		do
+			check to_be_implemented: False end
 		end
 
 feature -- Status setting
@@ -341,6 +347,14 @@ feature -- Status setting
 		end
 
 feature -- Element change
+
+	set_columns (i: INTEGER) is
+			-- Assign `i' to `columns'
+		do
+			-- Ask gtk needs the number of columns on tree creation,
+			-- We have to discard old mclist and create new one.
+			create_list (i)					
+		end
 
 	set_column_title (txt: STRING; column: INTEGER) is
 			-- Make `txt' the title of the column number
@@ -458,7 +472,7 @@ feature {NONE} -- Implementation
 			until
 				column_i > columns
 			loop
-				item_imp.set_cell_text ( column_i, item_imp.internal_text.item)
+				item_imp.set_cell_text (column_i, item_imp.internal_text.item)
 				item_imp.internal_text.forth
 				column_i := column_i + 1
 			end
@@ -535,6 +549,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/03 18:18:49  king
+--| Implemented set_columns
+--|
 --| Revision 1.33  2000/03/03 00:14:20  king
 --| Changed references to set_selected to enable_select
 --|

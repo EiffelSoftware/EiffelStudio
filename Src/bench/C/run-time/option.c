@@ -80,12 +80,11 @@ struct htable *class_table;		/* The H table that contains all info */
 /* INTERNAL PROFILE FUNCTIONS */
 
 void update_class_table();			/* Updates the H table */
-void p_push();					/* Pushes item on the profile staack */
-void p_free();					/* Frees the memory allocated for the profile stack */
-void p_init();					/* Initializes the profile stack */
-struct profile_information* p_top();		/* Returns the top of the stack */
-void p_pop();					/* Pops the top item of the profile stack */
-char* get_class_and_feature();			/* Returns the class and feature name concatened */
+void prof_stack_push();					/* Pushes item on the profile staack */
+void prof_stack_free();					/* Frees the memory allocated for the profile stack */
+void prof_stack_init();					/* Initializes the profile stack */
+struct profile_information* prof_stack_top();		/* Returns the top of the stack */
+void prof_stack_pop();					/* Pops the top item of the profile stack */
 
 /* We do debug only in WORKBENCH mode
  * We also need check_options and check_options_stop in WORKBENCH mode
@@ -199,7 +198,7 @@ void initprf()
 	else
 		eraise("Hashtable creation failure", EN_FATAL);
 
-	p_init();
+	prof_stack_init();
 }
 
 void exitprf()
@@ -216,7 +215,6 @@ void exitprf()
 	if (prof_output == (FILE *) 0)
 		eraise("Unable to open to output file for profile", EN_FATAL);
 
-	fprintf(prof_output, "Profile information:\n====================\n");
 	keys = class_table->h_keys;
 	f_values = (struct feat_table *) class_table->h_values;
 	index = 1;
@@ -242,7 +240,7 @@ void exitprf()
 
 	fclose(prof_output);
 	ht_free(class_table);
-	p_free();
+	prof_stack_free();
 }
 
 void start_profile(name, origin, dtype)
@@ -271,11 +269,7 @@ int dtype;				/* The class in which the routine is defined */
 	new_p_i->descendent_time = 0.;				/* Initialize to zero, so we can always add values */
 	new_p_i->is_running = 1;				/* Mark that the function is running */
 
-	if (strcmp(name,"build_tool") == 0) {
-		printf("START: build_tool a:%.2f t:%.2f d:%.2f\n", new_p_i->all_total_time, new_p_i->this_total_time, new_p_i->descendent_time);
-	}
-
-	p_push(new_p_i);
+	prof_stack_push(new_p_i);
 }
 
 void stop_profile()
@@ -287,17 +281,15 @@ void stop_profile()
 	struct profile_information *p_i;	/* The information to change */
 	double dummy, new_value;
 
-
-	if ((p_i = p_top()) == (struct profile_information *) 0)
+	if ((p_i = prof_stack_top()) == (struct profile_information *) 0)
 		eraise("Profile stack error...", EN_FATAL);		/* Stack is empty ==> Bailing out... */
 
 	getcputime(&dummy, &new_value);					/* Get the new time */
-	p_i->all_total_time += new_value - p_i->this_total_time;	/* Compute the difference */
+	p_i->all_total_time = new_value - p_i->this_total_time;		/* Compute the difference */
 	p_i->is_running = 0;						/* Mark that the function isn't running anymore */
 
 	if (gc_ran) {
 		p_i->all_total_time -= last_gc_time;
-		printf("GC ran for: %.2f\n", last_gc_time);
 		gc_ran = 0;
 	}
 
@@ -305,19 +297,12 @@ void stop_profile()
 		struct profile_information *stk_item;
 
 		stk_item = prof_stack->top->link->link->info;
-		if (strcmp(stk_item->featurename,"build_tool") == 0) {
-			printf("STOP: %s a:%.2f t:%.2f d:%.2f\n", p_i->featurename, p_i->all_total_time, p_i->this_total_time, p_i->descendent_time);
-		}
-		stk_item->all_total_time = 0. - p_i->all_total_time;
+		stk_item->all_total_time -= p_i->all_total_time;
 		stk_item->descendent_time += p_i->all_total_time;
 	}
 
-	if (strcmp(p_i->featurename,"build_tool") == 0) {
-		printf("STOP: build_tool a:%.2f t:%.2f d:%.2f\n", p_i->all_total_time, p_i->this_total_time, p_i->descendent_time);
-	}
-
 	update_class_table(p_i);					/* Record times in the table */
-	p_pop();							/* Pop feature from the stack */
+	prof_stack_pop();							/* Pop feature from the stack */
 }
 
 void start_trace(name, origin, dtype)
@@ -378,40 +363,7 @@ int dtype;				/* The class in which the routine is defined */
 		fprintf(stderr, " (%s)", Classname(origin));
 }
 
-char* get_class_and_feature(name, origin, dtype)
-char *name;				/* The routine name */
-int origin;				/* The ancestor of 'dtype' where 'name' is written */
-int dtype;				/* The class in which the routine is defined */
-{
-	/* Concatenates the classname and the featurename in the dot notation (i.e. "GENERAL.io").
-	 * The class where the feature is decalred is used as classname. */
-
-	char *result;
-	char *object_name = 0;			/* The name of the object */
-	int length;				/* strlen(object_name) + strlen(name) + 2 */
-	int i;					/* Counter for several loops */
-
-	if (dtype == origin)
-		object_name = Classname(dtype);			/* Get classname */
-	else
-		object_name = Classname(origin);		/* Get classname from origin */
-
-	length = strlen(object_name) + strlen(name) + 2;
-	result = cmalloc(length * sizeof(char));			/* Allocate memory */
-	if (result == (char *) 0)
-		enomem();
-
-	for (i = 0; i < strlen(object_name); i++)
-		result[i] = object_name[i];				/* Copy object_name */
-	result[i] = '.';
-	for (i++; i < length - 1; i++)
-		result[i] = name[i - strlen(object_name) - 1];		/* Copy featurename */
-	result[i] = '\0';
-
-	return result;
-}
-
-void p_pop()
+void prof_stack_pop()
 {
 	/* Pops an item of the 'prof_stack'. */
 
@@ -424,7 +376,7 @@ void p_pop()
 
 }
 
-struct profile_information* p_top()
+struct profile_information* prof_stack_top()
 {
 	/* Returns a NULL pointer if the stack is empty, otherwise the information structure.
 	 * The stack is empty if and only if the previous item of the top is the bottom item, i.e. top->link == 0.
@@ -433,7 +385,7 @@ struct profile_information* p_top()
 	return (prof_stack->top->link == (struct prof_item *) 0 ? (struct profile_information *) 0 : prof_stack->top->link->info);
 }
 
-void p_init()
+void prof_stack_init()
 {
 	/* Initializes the 'prof_stack' by allocating memory for the stack-structure and the top-item
 	 * of the stack. The bottom item of the stack is simply a NULL pointer.
@@ -468,7 +420,7 @@ void p_init()
 	prof_stack->top->info = (struct profile_information *) 0;					/* Allocate new item */
 }
 
-void p_free()
+void prof_stack_free()
 {
 	/* Frees the memory allocated for the 'prof_stack'. */
 
@@ -476,7 +428,7 @@ void p_free()
 	xfree(prof_stack);		/* Free the memory used by the stack structure */
 }
 
-void p_push(new_info)
+void prof_stack_push(new_info)
 struct profile_information *new_info;
 {
 	/* Pushes a new item on the 'prof_stack'. */
@@ -501,7 +453,7 @@ struct profile_information *item;
 	 * It is possible to concatenate the class id and feature name to produce a unique hash key.
 	 * However, we would have to deal with a humongous H table in the end. This means that it becomes 
 	 * obvious that insertion will have to do several searches empty slots. That would slow down the 
-	 * system... (See above at p_init)
+	 * system... (See above at prof_stack_init)
 	 *
 	 * OK: The way it is done: first we check whether the class id has been inserted already, and hence we know
 	 * if there is a H table for the features of that class.  If we cannot find an entry matching the class id, 
@@ -515,10 +467,6 @@ struct profile_information *item;
 	char 				*class_name;	/* The name of the class */
 	unsigned long 			class_hcode;	/* The hashcode for the classname */
 	unsigned long 			f_hcode;	/* The hashcode for the feature name */
-
-	if (strcmp(item->featurename,"build_tool") == 0) {
-		printf("MEANWHILE: build_tool a:%.2f t:%.2f d:%.2f\n", item->all_total_time, item->this_total_time, item->descendent_time);
-	}
 
 	if (item->dtype == item->origin)
 		class_name = Classname(item->dtype);		/* The class is the origin */
@@ -566,9 +514,6 @@ struct profile_information *item;
 		p_i->all_total_time += item->all_total_time;
 		p_i->descendent_time += item->descendent_time;
 
-		if (strcmp(p_i->featurename,"build_tool") == 0) {
-			printf("HASHTABLE: build_tool a:%.2f t:%.2f d:%.2f\n", p_i->all_total_time, p_i->this_total_time, p_i->descendent_time);
-		}
 		if (prof_stack->top->link->link != prof_stack->bot) {
 			for (stk_p_i = prof_stack->top->link->link;
 				    (!(stk_p_i->info->dtype == item->dtype && stk_p_i->info->origin == item->origin && stk_p_i->info->pi_hcode == f_hcode));
@@ -580,21 +525,18 @@ struct profile_information *item;
 			}
 			if (stk_p_i->link != prof_stack->bot) {
 				stk_p_i->info->this_total_time += p_i->all_total_time;
-				if (strcmp(p_i->featurename,"build_tool") == 0) {
-					printf("STACK: %s a:%.2f t:%.2f d:%.2f\n", stk_p_i->info->featurename, stk_p_i->info->all_total_time, stk_p_i->info->this_total_time, stk_p_i->info->descendent_time);
-				}
 			}
 		}
 	}
 }
 
-void p_rewind()
+void prof_stack_rewind()
 {
 	/* Rewinds the 'prof_stack' and thus updates all features in that stack and puts data in the profile table.
 	 *
 	 * This function is useful when the system is interrupted by an exception which is "rescued" and then
 	 * the feature is "retried". We can simple rewind the current profile stack and restore the saved profile stack.
-	 * Thus we must declare a profile_stack structure, store 'prof_stack' in it, and create a new 'prof_stack' (via p_init)
+	 * Thus we must declare a profile_stack structure, store 'prof_stack' in it, and create a new 'prof_stack' (via prof_stack_init)
 	 * every time a feature has a rescue-clause. Then we must rewind the new profile stack and restore the saved
 	 * profile stack into 'prof_stack', which can bo done with a simple C-assignment.
 	 * This guarantees that all information, so far, will be kept EVEN if the system has a caught exception.

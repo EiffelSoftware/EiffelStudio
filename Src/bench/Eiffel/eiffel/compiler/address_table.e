@@ -13,10 +13,6 @@ inherit
 		undefine
 			is_equal, copy
 		end
-	SHARED_ENCODER
-		undefine
-			is_equal, copy
-		end
 	SHARED_TABLE
 		undefine
 			is_equal, copy

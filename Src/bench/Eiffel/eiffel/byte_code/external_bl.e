@@ -25,7 +25,6 @@ inherit
 		select
 			free_register
 		end;
-	SHARED_ENCODER;
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
 	EXTERNAL_CONSTANTS;

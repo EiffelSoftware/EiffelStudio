@@ -193,7 +193,7 @@ feature -- Status report
 				captured_window = Current
 		end
 
-	has_heavy_capture: BOOLEAN
+--	has_heavy_capture: BOOLEAN
 			-- Does this window have an heavy mouse capture?
 
 	has_vertical_scroll_bar: BOOLEAN is
@@ -572,7 +572,7 @@ feature -- Status setting
 		require
 			exists: exists
 			has_not_capture: not has_capture
-			has_not_heavy_capture: not has_heavy_capture
+--			has_not_heavy_capture: not has_heavy_capture
 		do
 			cwin_set_capture (item)
 		ensure
@@ -590,11 +590,16 @@ feature -- Status setting
 		require
 			exists: exists
 			has_not_capture: not has_capture
-			has_not_heavy_capture: not has_heavy_capture
+--			has_not_heavy_capture: not has_heavy_capture
+		local
+			has_heavy_capture: BOOLEAN
 		do
 			has_heavy_capture := cwel_hook_mouse (item)
-		ensure
-			has_heavy_capture: has_heavy_capture
+			check
+				capture_initialized: has_heavy_capture
+			end
+--		ensure
+--			has_heavy_capture: has_heavy_capture
 		end
 
 	release_capture is
@@ -614,11 +619,16 @@ feature -- Status setting
 			-- to `set_heavy_capture'.
 		require
 			exists: exists
-			has_heavy_capture: has_heavy_capture
+--			has_heavy_capture: has_heavy_capture
+		local
+			has_heavy_capture: BOOLEAN
 		do
 			has_heavy_capture := not cwel_unhook_mouse
-		ensure
-			not_has_heavy_capture: not has_heavy_capture
+			check
+				capture_stopped: not has_heavy_capture
+			end
+--		ensure
+--			not_has_heavy_capture: not has_heavy_capture
 		end
 
 	set_style (a_style: INTEGER) is

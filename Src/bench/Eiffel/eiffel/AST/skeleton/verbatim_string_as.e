@@ -17,7 +17,7 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (s, marker: STRING) is
+	initialize (s, marker: STRING; indentable: BOOLEAN) is
 			-- Create a new Verbatim string AST node.
 		require
 			s_not_void: s /= Void
@@ -25,9 +25,11 @@ feature {AST_FACTORY} -- Initialization
 		do
 			string_initialize (s)
 			verbatim_marker := marker
+			is_indentable := indentable
 		ensure
 			value_set: value = s
 			verbatim_marker_set: verbatim_marker = marker
+			is_indentable_set: is_indentable = indentable
 		end
 
 feature -- Visitor
@@ -45,6 +47,12 @@ feature -- Properties
 			-- verbatim string.
 			-- If `empty', no marker was used.
 
+	is_indentable: BOOLEAN
+			-- Is verbatim string indentable, i.e. can all lines be prepended
+			-- by the same white space without changing string value?
+			-- Normally, indentable verbatim string is enclosed in '[' and ']'.
+			-- Non-indentable verbatim string is enclosed in '{' and '}'.
+
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
@@ -54,54 +62,71 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_text_item (ti_once_keyword)
 				ctxt.put_space
 			end
-			ctxt.put_string_item ("%"" + verbatim_marker + "[")
-			append_format_multilined (value.twin, ctxt.text, ctxt.in_indexing_clause)
+			ctxt.put_string_item ("%"" + verbatim_marker)
+			if is_indentable then
+				ctxt.text.add_char ('[')
+			else
+				ctxt.text.add_char ('{')
+			end
 			ctxt.put_new_line
-			ctxt.put_string_item ("]" + verbatim_marker + "%"")
+			if not value.is_empty then
+				append_format_multilined (value.twin, is_indentable, ctxt)
+			end
+			if is_indentable then
+				ctxt.put_string_item ("]")
+			else
+				ctxt.put_string_item ("}")
+			end
+			ctxt.text.add_string (verbatim_marker + "%"")
 		end
 
 feature {NONE} -- Implementation
 
-	append_format_multilined (s: STRING; st: STRUCTURED_TEXT; in_index: BOOLEAN) is
+	append_format_multilined (s: STRING; indentable: BOOLEAN; ctxt: FORMAT_CONTEXT) is
 			-- Format on a new line, breaking at every newline.
-			-- Do not indent.
+			-- Do not indent if `indentable' is false.
 			-- If `in_index', try to find meaningful substrings (URLs, ...).
 			-- Display %N... characters as they were typed.
 		require
-			valid_string: s /= Void
-			valid_text: st /= Void
+			string_not_void: s /= Void
+			string_not_empty: not s.is_empty
+			context_not_void: ctxt /= Void
 		local
+			st: STRUCTURED_TEXT
+			in_index: BOOLEAN
 			sb: STRING
+			l: INTEGER
 			n: INTEGER
+			m: INTEGER
 		do
-				-- Forget differences between platforms.
-			s.prune_all ('%R')
-			from
-				n := s.index_of (carriage_return_char, 1)
-				if not s.is_empty then
-					st.add_new_line
-				end
-			until
-				n = 0
-			loop
-				sb := s.substring (1, n - 1)
-				s.remove_head (n)
-				if not sb.is_empty then
-					if in_index then
-						st.add_indexing_string (sb)
-					else
-						st.add_string (sb)
-					end
-				end
-				st.add_new_line
-				n := s.index_of (carriage_return_char, 1)
+			st := ctxt.text
+			in_index := ctxt.in_indexing_clause
+			if indentable then
+				ctxt.indent
 			end
-			if not s.is_empty then
-				if in_index then
-					st.add_indexing_string (s)
-				else
-					st.add_string (s)
+			from
+				l := s.count + 1
+				n := 1
+			until
+				n > l
+			loop
+				m := s.index_of (carriage_return_char, n)
+				if m = 0 then
+					m := l
 				end
+				sb := s.substring (n, m - 1)
+				if indentable then
+					ctxt.put_string_item (sb)
+				elseif in_index then
+					st.add_indexing_string (sb)
+				else
+					st.add_string (sb)
+				end
+				ctxt.put_new_line
+				n := m + 1
+			end
+			if indentable then
+				ctxt.exdent
 			end
 		end
 

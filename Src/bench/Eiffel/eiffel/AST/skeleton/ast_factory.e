@@ -1606,18 +1606,19 @@ feature -- Access
 			value_set: Result.value = s
 		end
 
-	new_verbatim_string_as (s, marker: STRING): VERBATIM_STRING_AS is
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN): VERBATIM_STRING_AS is
 			-- New VERBATIM_STRING AST node
 		require
 			s_not_void: s /= Void
 			marker_not_void: marker /= Void
 		do
 			create Result
-			Result.initialize (s, marker)
+			Result.initialize (s, marker, is_indentable)
 		ensure
 			verbatim_string_as_not_void: Result /= Void
 			value_set: Result.value = s
 			marker_set: Result.verbatim_marker = marker
+			is_indentable_set: Result.is_indentable = is_indentable
 		end
 
 	new_tagged_as (t: ID_AS; e: EXPR_AS; l: TOKEN_LOCATION): TAGGED_AS is

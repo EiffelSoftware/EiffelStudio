@@ -67,6 +67,13 @@ feature -- Element change
 		ensure
 			assigned: start_directory.is_equal (a_path)
 		end
+		
+feature {EV_FILE_DIALOG} -- Contract support
+
+	valid_file_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid file_name on the current platform?
+		deferred
+		end
 
 end -- class EV_FILE_DIALOG_I
 

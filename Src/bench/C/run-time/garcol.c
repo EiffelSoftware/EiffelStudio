@@ -426,7 +426,7 @@ rt_shared EIF_REFERENCE to_chunk(void);			/* Address of the chunk holding 'to' *
 rt_shared void gfree(register union overhead *zone);				/* Free object, eventually call dispose */
 
 /* Stack handling routines */
-rt_shared int epush(register struct stack *stk, register EIF_REFERENCE value);				/* Push value on stack */
+rt_shared int epush(register struct stack *stk, register void *value);				/* Push value on stack */
 rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);		/* Creates an empty stack */
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
@@ -6327,7 +6327,7 @@ rt_public void globalonceset(EIF_REFERENCE address)
  * structure 'stack' describes the whole data structure completely.
  */
 
-rt_shared int epush(register struct stack *stk, register EIF_REFERENCE value)
+rt_shared int epush(register struct stack *stk, register void *value)
 									/* The stack */
 									/* Value to be pushed */
 {

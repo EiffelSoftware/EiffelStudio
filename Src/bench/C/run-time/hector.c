@@ -171,7 +171,7 @@ rt_public EIF_REFERENCE ewean(EIF_OBJECT object)
 	 * cannot reference the object through its EIF_OBJECT handle any more.
 	 */
 	EIF_GET_CONTEXT
-	EIF_OBJECT ret;
+	EIF_REFERENCE ret;
 
 	if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
 #ifdef ISE_GC
@@ -266,10 +266,10 @@ rt_public EIF_OBJECT hrecord(EIF_REFERENCE object)
 			eraise("hector recording", EN_MEM);	/* No more memory */
 #endif
 	}
-	address = (EIF_REFERENCE) (hec_stack.st_top - 1);	/* Was allocated here */
+	address = (EIF_OBJECT) (hec_stack.st_top - 1);	/* Was allocated here */
 	eif_access(address) = object;		/* Record object's physical address */
 
-	return (EIF_OBJECT) address;			/* Address in hector stack */
+	return address;			/* Address in hector stack */
 }
 
 /*

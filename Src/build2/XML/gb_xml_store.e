@@ -65,6 +65,8 @@ feature {GB_XML_HANDLER} -- Implementation
 			new_widget_element: XML_ELEMENT
 			gb_menu_bar_object: GB_MENU_BAR_OBJECT
 			gb_menu_object: GB_MENU_OBJECT
+			gb_tree_item_object: GB_TREE_ITEM_OBJECT
+			
 		do
 			output_attributes (an_object, element, add_names)
 				gb_titled_window_object ?= an_object
@@ -110,6 +112,11 @@ feature {GB_XML_HANDLER} -- Implementation
 					gb_menu_object ?= an_object
 					if gb_menu_object /= Void then
 						layout_item ?= gb_menu_object.layout_item
+					end
+					
+					gb_tree_item_object ?= an_object
+					if gb_tree_item_object /= Void then
+						layout_item ?= gb_tree_item_object.layout_item
 					end
 
 					if layout_item /= Void and then not layout_item.is_empty then

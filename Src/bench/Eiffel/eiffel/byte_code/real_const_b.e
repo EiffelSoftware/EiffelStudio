@@ -76,7 +76,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for double constant.
 		do
-			il_generator.put_double_constant (value.to_double)
+			il_generator.put_real_64_constant (value.to_double)
 		end
 
 feature -- Byte code generation

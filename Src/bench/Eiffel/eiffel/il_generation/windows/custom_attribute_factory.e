@@ -264,7 +264,7 @@ feature {NONE} -- Generation
 					else
 						real ?= e
 						if real /= Void then
-							a_ca_blob.put_double (real.value.to_real)
+							a_ca_blob.put_real_64 (real.value.to_double)
 						else
 							char ?= e
 							if char /= Void then

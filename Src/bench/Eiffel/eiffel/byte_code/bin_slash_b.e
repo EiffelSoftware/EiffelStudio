@@ -26,9 +26,9 @@ feature -- IL code generation
 			-- Generate standard IL code for binary expression.
 		do
 			left.generate_il
-			il_generator.convert_to_double
+			il_generator.convert_to_real_64
 			right.generate_il
-			il_generator.convert_to_double
+			il_generator.convert_to_real_64
 			il_generator.generate_binary_operator (il_operator_constant)
 		end
 

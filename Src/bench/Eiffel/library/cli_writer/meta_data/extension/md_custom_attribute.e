@@ -47,25 +47,25 @@ feature -- Settings
 			put_integer_16 (c.code.to_integer_16)
 		end
 
-	put_real (r: REAL) is
+	put_real_32 (r: REAL) is
 			-- Insert `r' at `current_position'.
 		local
 			l_pos: INTEGER
 		do
 			l_pos := current_position
 			allocate (l_pos + 4)
-			item.put_real (r, l_pos)
+			item.put_real_32 (r, l_pos)
 			current_position := l_pos + 4
 		end
 
-	put_double (d: DOUBLE) is
+	put_real_64 (d: DOUBLE) is
 			-- Insert `d' at `current_position'.
 		local
 			l_pos: INTEGER
 		do
 			l_pos := current_position
 			allocate (l_pos + 8)
-			item.put_double (d, l_pos)
+			item.put_real_64 (d, l_pos)
 			current_position := l_pos + 8
 		end
 		

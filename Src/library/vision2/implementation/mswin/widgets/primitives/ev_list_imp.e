@@ -39,6 +39,7 @@ inherit
 			set_font as wel_set_font,
 			select_item as wel_select_item
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
@@ -162,14 +163,19 @@ feature -- Status setting
 			-- by clicking on several choices.
 		local
 			wel_imp: WEL_WINDOW
+			a, b, c, d: INTEGER
 		do
 			if not is_multiple_selection then
 				last_selected_item := Void
 				wel_imp ?= parent_imp
+				a := x
+				b := y
+				c := width
+				d := height
 				wel_destroy
 				internal_window_make (wel_imp, Void,
 					default_style + Lbs_multiplesel,
-				   	0, 0, 0, 0, 0, default_pointer)
+				   	a, b, c, d, 0, default_pointer)
 				id := 0
 				internal_copy_list
 			end
@@ -180,12 +186,17 @@ feature -- Status setting
 			-- default status of the list
 		local
 			wel_imp: WEL_WINDOW
+			a, b, c, d: INTEGER
 		do
 			if is_multiple_selection then
 				wel_imp ?= parent_imp
+				a := x
+				b := y
+				c := width
+				d := height
 				wel_destroy
 				internal_window_make (wel_imp, Void,
-					default_style, 0, 0, 0, 0, 0,
+					default_style, a, b, c, d, 0,
 				    default_pointer)
 				id := 0
 				internal_copy_list

@@ -34,7 +34,6 @@ feature {CATALOG}
 		do
 			box_make_visible (Widget_names.row_column, a_parent)
 			set_column_layout
-			set_preferred_count (5)
 		end
 
 	make_unmanaged (a_parent: COMPOSITE) is
@@ -42,7 +41,6 @@ feature {CATALOG}
 			after := False
 			box_make_unman (Widget_names.row_column, a_parent)
 			set_column_layout
-			set_preferred_count (5)
 		end
 
 feature {NONE} -- Focus label	

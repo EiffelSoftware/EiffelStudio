@@ -113,9 +113,9 @@ feature -- Implementation
 			s1 := s
 			s1.to_lower
 			if s1.is_equal ("i") or s1.is_equal ("italic") then
-				shape := Ev_font_shape_italic
+				shape := shape_italic
 			elseif s1.is_equal ("r") or s1.is_equal ("regular") then
-				shape := Ev_font_shape_regular
+				shape := shape_regular
 			end
 		end
 
@@ -129,13 +129,13 @@ feature -- Implementation
 			s1 := s
 			s1.to_lower
 			if s1.is_equal ("thin") then
-				weight := Ev_font_weight_thin
+				weight := weight_thin
 			elseif s1.is_equal ("regular") then
-				weight := Ev_font_weight_regular
+				weight := weight_regular
 			elseif s1.is_equal ("bold") then
-				weight := Ev_font_weight_bold
+				weight := weight_bold
 			elseif s1.is_equal ("black") then
-				weight := Ev_font_weight_black
+				weight := weight_black
 			end
 		end
 
@@ -149,15 +149,15 @@ feature -- Implementation
 			s1 := s
 			s1.to_lower
 			if s1.is_equal ("screen") then
-				family := Ev_font_family_screen
+				family := family_screen
 			elseif s1.is_equal ("roman") then
-				family := Ev_font_family_roman
+				family := family_roman
 			elseif s1.is_equal ("sans") then
-				family := Ev_font_family_sans
+				family := family_sans
 			elseif s1.is_equal ("typewriter") then
-				family := Ev_font_family_typewriter
+				family := family_typewriter
 			elseif s1.is_equal ("modern") then
-				family := Ev_font_family_modern
+				family := family_modern
 			end
 		end
 

@@ -3445,7 +3445,7 @@ feature -- Pattern table generation
 						%%T%T%Tif (egc_rcarg)%N%
 						%%T%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc-1, root_argv));%N%
 						%%T%T%Telse%N%
-						%%T%T%T%T(FUNCTION_CAST(void, (EIf_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
+						%%T%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
 				else
 					buffer.putstring ("%Tif (egc_rcorigin != -1)%N%
 						%%T%Tif (egc_rcarg)%N%
@@ -3491,7 +3491,7 @@ feature -- Pattern table generation
 				loop
 					cl_type := class_types.item (i)
 					if cl_type /= Void then
-						buffer.generate_extern_declaration ("void", Encoder.init_name (cl_type.static_type_id), <<"void">>)
+						buffer.generate_extern_declaration ("void", Encoder.init_name (cl_type.static_type_id), <<>>)
 					end
 					i := i + 1
 				end
@@ -3518,7 +3518,7 @@ feature -- Pattern table generation
 				end
 				buffer.putstring ("}%N%N")
 
-				buffer.generate_function_signature ("void", "egc_einit_init", True, buffer, <<"">>, <<"void">>)
+				buffer.generate_function_signature ("void", "egc_einit_init", True, buffer, <<>>, <<>>)
 
 					-- Set C variable `ccount'.
 				buffer.putstring ("%Tccount = ")
@@ -3549,7 +3549,7 @@ feature -- Pattern table generation
 						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
 					then
 						buffer.generate_extern_declaration (
-									"void", Encoder.module_init_name (cl_type.static_type_id), <<"void">>)
+									"void", Encoder.module_init_name (cl_type.static_type_id), <<>>)
 					end
 				end
 				i := i + 1
@@ -3559,7 +3559,7 @@ feature -- Pattern table generation
 
 			-- Module initialization
 			buffer.generate_function_signature (
-				"void", "egc_system_mod_init_init", True, buffer, <<"">>, <<"void">>)
+				"void", "egc_system_mod_init_init", True, buffer, <<>>, <<>>)
 
 			if license.is_evaluating then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1

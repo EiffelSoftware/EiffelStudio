@@ -280,51 +280,6 @@ feature -- Element change
 			append (s)
 		end
 
-feature {GENERATION_BUFFER} -- prototype code generation
-
-	generate_function_declaration (type: STRING; f_name: STRING;
-			extern: BOOLEAN; arg_types: ARRAY [STRING]) is
-				-- Generate funtion declaration using macros
-		require
-			type_not_void: type /= Void
-			f_name_not_void: f_name /= Void
-			arg_types_not_void: arg_types /= Void
-		local
-			i, nb: INTEGER
-		do
-			if extern then
-				if is_il_generation then
-					append ("RT_IL ")
-				else
-					append ("extern ")
-				end
-			else
-				append ("static ")
-			end
-
-			append (type)
-			if is_il_generation then
-				append (" __stdcall ")
-			else
-				append_character (' ')
-			end
-			append (f_name)
-			append_character ('(')
-			from
-				i := 1
-				nb := arg_types.count
-			until
-				i > nb
-			loop
-				if i /= 1 then
-					append (", ")
-				end
-				append (arg_types @ i)
-				i := i + 1
-			end
-			append (");%N")
-		end
-
 feature -- prototype code generation
 
 	generate_extern_declaration (type: STRING; f_name: STRING;
@@ -376,19 +331,23 @@ feature -- prototype code generation
 			append (f_name)
 			append (" (")
 
-			from
-				i := 1
-				nb := arg_names.count
-			until
-				i > nb
-			loop
-				append (arg_types @ i)
-				append_character (' ')
-				append (arg_names @ i)
-				if i /= nb then
-					append (", ")
+			nb := arg_names.count
+			if nb = 0 then
+				append ("void")
+			else
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					append (arg_types @ i)
+					append_character (' ')
+					append (arg_names @ i)
+					if i /= nb then
+						append (", ")
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 
 			append_character (')')
@@ -399,6 +358,56 @@ feature -- prototype code generation
 			putstring ("GTCX")
 			exdent
 			new_line
+		end
+
+feature {GENERATION_BUFFER} -- prototype code generation
+
+	generate_function_declaration (type: STRING; f_name: STRING;
+			extern: BOOLEAN; arg_types: ARRAY [STRING]) is
+				-- Generate funtion declaration using macros
+		require
+			type_not_void: type /= Void
+			f_name_not_void: f_name /= Void
+			arg_types_not_void: arg_types /= Void
+		local
+			i, nb: INTEGER
+		do
+			if extern then
+				if is_il_generation then
+					append ("RT_IL ")
+				else
+					append ("extern ")
+				end
+			else
+				append ("static ")
+			end
+
+			append (type)
+			if is_il_generation then
+				append (" __stdcall ")
+			else
+				append_character (' ')
+			end
+			append (f_name)
+			append_character ('(')
+			nb := arg_types.count
+			
+			if nb = 0 then
+				append ("void")
+			else
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					if i /= 1 then
+						append (", ")
+					end
+					append (arg_types @ i)
+					i := i + 1
+				end
+			end
+			append (");%N")
 		end
 
 end -- class GENERATION_BUFFER

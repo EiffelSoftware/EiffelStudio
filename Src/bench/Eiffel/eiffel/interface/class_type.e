@@ -522,7 +522,7 @@ feature -- Generation
 
 						-- Create module initialization procedure
 					buffer.generate_function_signature ("void", Encoder.module_init_name
-						(static_type_id), True, header_buffer, <<"">>, <<"void">>)
+						(static_type_id), True, header_buffer, <<>>, <<>>)
 	
 					if once_count > 0 then
 						buffer.putstring ("%TEIF_oidx_off")

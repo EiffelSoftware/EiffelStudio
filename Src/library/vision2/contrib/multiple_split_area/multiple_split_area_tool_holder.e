@@ -37,9 +37,6 @@ feature {NONE} -- Initialization
 			create minimum_size_cell
 			extend (minimum_size_cell)
 			disable_item_expand (minimum_size_cell)
-			create upper_box
-			main_box.extend (upper_box)
-			main_box.disable_item_expand (upper_box)
 			create label_box
 			create frame
 			frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
@@ -82,11 +79,6 @@ feature {NONE} -- Initialization
 			vertical_box.disable_item_expand (frame)
 			parent_area.set_holder_tool_height (main_box.height)
 			vertical_box.extend (a_tool)
-			create lower_box
-			main_box.extend (lower_box)
-			main_box.disable_item_expand (lower_box)
-			
-			
 			
 				-- Set up docking for `Current'.
 			label.enable_dockable
@@ -98,12 +90,43 @@ feature {NONE} -- Initialization
 		end
 		
 feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
-	
-	lower_box, upper_box: EV_VERTICAL_BOX
-		-- Lower and upper boxes for `Current' which may hold widgets when required.
-		-- For example, when widgets are minimized, they are inserted into the relevent box
-		-- as determined by the current positions of all holders.
-	
+
+	lower_box: EV_VERTICAL_BOX is
+			-- `Result' is lower box associated with `Current'. Minimized tools
+			-- below `Current' in `parent_area' are inserted within here.
+		require
+			parent_area_not_void: parent_area /= Void
+			not_external: not is_external
+		local
+			l_parent: EV_VERTICAL_BOX
+		do
+			l_parent ?= parent
+			check
+				l_parent_not_void: l_parent /= Void
+			end
+			Result ?= l_parent.i_th (3)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	upper_box: EV_VERTICAL_BOX is
+			-- `Result' is upper box associated with `Current'. Minimized tools
+			-- above `Current' in `parent_area' are inserted within here.
+		require
+			parent_area_not_void: parent_area /= Void
+			not_external: not is_external
+		local
+			l_parent: EV_VERTICAL_BOX
+		do
+			l_parent ?= parent
+			check
+				l_parent_not_void: l_parent /= Void
+			end
+			Result ?= l_parent.i_th (1)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	main_box: EV_VERTICAL_BOX
 		-- Main box, directly parented in `Current'.
 	
@@ -219,7 +242,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			maximize_button.set_pixmap (parent_area.maximize_pixmap)
 		end
 
-feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
+feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implemnetation
 
 	parent_area: MULTIPLE_SPLIT_AREA
 		-- Parent of `Current'.
@@ -385,6 +408,7 @@ feature {NONE} -- Implementation
 
 			dialog := parent_dockable_dialog (tool)
 			if dialog /= Void then
+				parent_area.remove_docking_areas
 				parent_area.store_positions
 				check
 					parent_area_not_void: parent_area /= Void
@@ -510,7 +534,6 @@ feature {NONE} -- Implementation
 				end			
 				parent_area.docked_in_actions.call ([tool])
 			end
-			parent_area.remove_docking_areas
 			if original_parent_window /= Void then
 				original_parent_window.unlock_update	
 			end

@@ -10,6 +10,26 @@ deferred class
 
 inherit
 	DIALOG_WINDOWS
+		rename
+			wel_move as wel_move_relative
+		redefine
+			default_style,
+			default_ex_style,
+			popup,
+			on_kill_focus,
+			on_paint,
+			on_set_focus,
+			on_size,
+			realize_current,
+			realize,	
+			set_x_y,
+			set_x,
+			set_y,
+			x,
+			y
+		end
+
+	DIALOG_WINDOWS
 		redefine
 			default_style,
 			default_ex_style,
@@ -25,6 +45,8 @@ inherit
 			set_y,
 			x,
 			y,
+			wel_move
+		select
 			wel_move
 		end
 
@@ -131,7 +153,7 @@ feature -- Status setting
 			private_attributes.set_y (new_y)
 			private_attributes.set_x (new_x)
 			if exists then
-				wel_move (new_x - parent.absolute_x, new_y - parent.absolute_y)
+				wel_move_relative (new_x - parent.absolute_x, new_y - parent.absolute_y)
 			end
 		end
 
@@ -702,7 +724,7 @@ feature {NONE} -- Implementation
 		do
 			if default_position then
 				if parent /= Void and then parent.exists then
-					wel_move (((parent.wel_width - wel_width) // 2),
+					wel_move_relative (((parent.wel_width - wel_width) // 2),
 						(parent.wel_height - wel_height) // 2)
 				else
 					wel_move (((full_screen_client_area_width - wel_width) // 2),

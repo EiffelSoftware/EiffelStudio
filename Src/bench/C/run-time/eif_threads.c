@@ -548,14 +548,6 @@ rt_public void eif_thr_exit(void)
 	EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 	EIF_REFERENCE thread_object = NULL;
 
-	EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
-		/* Decrement the number of child threads of the parent */
-	*l_addr_n_children -= 1;
-#ifndef EIF_NO_CONDVAR
-	EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
-#endif
-	EIF_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
-
 	exitprf();
 
 	RT_GC_PROTECT(thread_object);
@@ -564,14 +556,21 @@ rt_public void eif_thr_exit(void)
 	offset = eifaddr_offset (thread_object, "terminated", &ret);
 	CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
-#ifdef ISE_GC
-	gc_thread_status = EIF_THREAD_BLOCKED;
-#endif
 		/* Set the `terminated' field of the twin thread object to True so that
 		 * it knows the thread is terminated */
 	*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
 	RT_GC_WEAN(thread_object);
 
+		/* Prevent other threads to wait for current thread in case 
+		 * one of the following calls is blocking. */
+	EIF_ENTER_C;
+	EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
+		/* Decrement the number of child threads of the parent */
+	*l_addr_n_children -= 1;
+#ifndef EIF_NO_CONDVAR
+	EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
+#endif
+	EIF_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
 
 	/* 
 	 * Every thread that has created a child thread with eif_thr_create() or
@@ -597,6 +596,7 @@ rt_public void eif_thr_exit(void)
 	  eif_children_cond = NULL;
 #endif
 	}
+	EIF_EXIT_C;
 
 		/* Clean GC of non-used data that were used to hold objects */
 		/* gen_conf.c */

@@ -71,42 +71,32 @@ feature -- User interface
 			selector_parent.unmanage
 		end
 
-	add_class_entry(c_w:CLASS_W) is
+	add_tool_entry(t_w:TOOL_W) is
 		local
 			tmp: SCROLLABLE_LIST_SELECTOR_ELEMENT
 		do
-			!! tmp.make (c_w)
+			!! tmp.make (t_w)
 			extend(tmp)
 		end
 
-	change_class_entry (c_w: CLASS_W) is
+	change_tool_entry (t_w: TOOL_W) is
 		local
 			tmp: SCROLLABLE_LIST_SELECTOR_ELEMENT
-			c: CLASSC_STONE
-			ci: CLASSI_STONE
-			cl_name:STRING
+  			t_name:STRING
 		do
-			c ?= c_w.stone
-			ci ?= c_w.stone
-			if c /= Void then
-				cl_name := clone (c.e_class.name)
-				cl_name.to_upper
-			elseif ci /= Void then
-				cl_name := clone (ci.class_i.name)
+			t_name := clone (t_w.eb_shell.icon_name)
+			!! tmp.make (t_w)
+
+   			if t_name /= Void and then is_tool_opened (t_name,t_w)
+  			then
+-- FIXME JOC: still need to decide what to do.
+--				tmp.set_read_only
 			end
-
-			!! tmp.make (c_w)
-
- 			if cl_name /= Void and then is_class_opened (cl_name,c_w)
- 			then
-				tmp.set_read_only
-				c_w.set_read_only 
- 			end
 
 			from
 				start
 			until
-				after or else c_w = item.tool
+				after or else t_w = item.tool
 			loop
 				forth
 			end
@@ -116,12 +106,12 @@ feature -- User interface
 			end
 		end
 
-	remove_class_entry (c_w: CLASS_W) is
+	remove_tool_entry (t_w: TOOL_W) is
 		do
 			from
 				start
 			until
-				after or else c_w = item.tool
+				after or else t_w = item.tool
 			loop
 				forth
 			end
@@ -132,42 +122,38 @@ feature -- User interface
 		end
 
 
-	update is
-		local
-			tmp: SCROLLABLE_LIST_SELECTOR_ELEMENT
-			local_tool:CLASS_W
-			active_class_editors: LINKED_LIST[CLASS_W]
-			t:STRING
-		do
-			wipe_out
-
-			active_class_editors := window_manager.class_win_mgr.active_editors
-			from 
-				active_class_editors.start
-			until
-				active_class_editors.after
-			loop
-				local_tool := active_class_editors.item
-				t:= local_tool.class_text_field.text
-				if
-					local_tool.realized 
---  				and then local_tool.shown 
-					and then not local_tool.class_text_field.text.empty 
-				then
-					!!tmp.make(local_tool)
--- 					io.put_string (local_tool.class_text_field.text)
--- 					io.put_string ("%N")
-					extend(tmp)
-				end
-				active_class_editors.forth
-			end
-		end
+-- 	update is
+-- 		local
+-- 			tmp: SCROLLABLE_LIST_SELECTOR_ELEMENT
+-- 			local_tool:TOOL_W
+-- 			active_tool_editors: LINKED_LIST[TOOL_W]
+-- 			t:STRING
+-- 		do
+-- 			io.put_string ("update")
+-- 			wipe_out
+-- 			active_tool_editors := window_manager.class_win_mgr.active_editors
+-- 			from 
+-- 				active_tool_editors.start
+-- 			until
+-- 				active_tool_editors.after
+-- 			loop
+-- 				local_tool := active_tool_editors.item
+-- 				t:= local_tool.eb_shell.icon_name
+-- 				if
+-- 					local_tool.realized 
+-- 					and then not local_tool.eb_shell.icon_name.empty 
+-- 				then
+-- 					!!tmp.make(local_tool)
+-- 					extend(tmp)
+-- 				end
+-- 				active_tool_editors.forth
+-- 			end
+-- 		end
 
 feature -- Basic operations
 
-	is_class_opened(cl_name:STRING; c_w:CLASS_W):BOOLEAN is
+	is_tool_opened(tool_name:STRING; t_w:TOOL_W):BOOLEAN is
 		local
-			active_class_editors: LINKED_LIST[CLASS_W]
 			tmp:STRING
 		do
 			Result := False
@@ -176,10 +162,10 @@ feature -- Basic operations
 			until
 				after or Result
 			loop
-				if item.tool /= c_w then
+				if item.tool /= t_w then
 					tmp := clone(item.value)
 					tmp.to_upper
-					if tmp /= Void and then tmp.is_equal(cl_name) then
+					if tmp /= Void and then tmp.is_equal(tool_name) then
 						Result := True
 					end
 				end
@@ -196,7 +182,7 @@ feature -- Basic operations
 			arg_string: STRING
 			local_name:STRING
 			local_tool_w:TOOL_W
-			active_class_editors: LINKED_LIST[CLASS_W]
+			active_tool_editors: LINKED_LIST[TOOL_W]
 			selection: SCROLLABLE_LIST_SELECTOR_ELEMENT
 		do
 			arg_string ?= argument
@@ -208,7 +194,6 @@ feature -- Basic operations
 					if local_tool_w /= Void and then local_tool_w.realized then
 						local_tool_w.force_raise
 					end
-
 				end
 			else
 				if associated_toggle.state then
@@ -216,7 +201,6 @@ feature -- Basic operations
 				else
 					hide_selector
 				end
-
 			end
 		end
 

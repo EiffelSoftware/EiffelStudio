@@ -80,16 +80,26 @@ feature {NONE} -- Initialization
 		end
 
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
-			-- 
+			-- Return sub pixmap of `Current' defined by `area'
 		local
 			pix_imp: EV_PIXMAP_IMP
-			a_src_pixbuf, a_dest_pixbuf: POINTER
+			a_src, a_mask: POINTER
+			maskgc: POINTER
 		do
 			create Result.make_with_size (area.width, area.height)
 			Result.set_background_color ((create {EV_STOCK_COLORS}).white)
 			Result.clear
 			pix_imp ?= Result.implementation
 			Result.draw_sub_pixmap (0, 0, interface, area)
+			
+			if mask /= default_pointer then
+				a_mask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (null, area.width, area.height, monochrome_color_depth)
+				maskgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (a_mask, maskgc, mask, 0, 0, area.x, area.y, area.width, area.height)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
+				a_src := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
+				pix_imp.set_pixmap (a_src, a_mask)
+			end
 		end
 
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
@@ -455,7 +465,7 @@ feature {EV_ANY_I} -- Implementation
 	gtk_pixmap: POINTER
 			-- Pointer to the gtk pixmap widget.
 
-feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP} -- Implementation
+feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP} -- Implementation
 
 	set_pixmap (gdkpix, gdkmask: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.

@@ -2120,6 +2120,7 @@ feature -- Final mode generation
 						-- Generation of C files associated to the classes of
 						-- the system.
 					Eiffel_table.start_degree_minus_3 (History_control.max_rout_id)
+					byte_context.clear_system_data
 					process_degree_minus_3
 					Eiffel_table.finish_degree_minus_3
 		
@@ -2131,9 +2132,10 @@ feature -- Final mode generation
 					end
 
 					generate_main_finalized_eiffel_files
-		
-						-- Clean Eiffel table
+
+						-- Clean Eiffel table and other system-wide tables
 					Eiffel_table.wipe_out
+					byte_context.clear_system_data
 					Tmp_poly_server.clear
 					Tmp_opt_byte_server.clear
 
@@ -3788,9 +3790,11 @@ feature -- Pattern table generation
 					-- Set C variable `ccount'.
 				buffer.put_string ("%Tccount = ")
 				buffer.put_integer (class_counter.count)
+				
 					-- Set maximum routine body index
 				buffer.put_string (";%N%Teif_nb_org_routines = ")
 				buffer.put_integer (body_index_counter.count)
+
 					-- Set the frozen level
 				buffer.put_string (";%N%Teif_nb_features = ")
 				buffer.put_integer (nb_frozen_features)
@@ -3837,7 +3841,7 @@ feature -- Pattern table generation
 				buffer.put_string ("%N%Tegc_type_of_gc = 123174;%N")
 			end
 
-			if final_mode then
+			if final_mode and then not byte_context.is_static_system_data_safe then
 					-- Set maximum routine body index
 				buffer.put_string ("%Teif_nb_org_routines = ")
 				buffer.put_integer (body_index_counter.count)
@@ -3867,6 +3871,8 @@ feature -- Pattern table generation
 			end
 
 			buffer.put_string ("%N}%N%N")
+
+			byte_context.generate_once_manifest_string_declaration (buffer)
 
 			buffer.end_c_specific_code
 

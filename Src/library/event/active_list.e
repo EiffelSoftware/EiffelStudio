@@ -3,7 +3,7 @@ indexing
 		"Sequential, one-way linked lists that call an action %N%
 		%sequence when an item is removed or added."
 	status: "See notice at end of class"
-	keywords: "event, action"
+	keywords: "event, action, linked, list"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -93,6 +93,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Contract support
+
 	consistency_count: INTEGER
 			-- Number of items in the list.
 
@@ -124,13 +126,15 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.3  2000/01/25 18:19:29  oconnor
+--| added keywords and Contract support feature heading
+--|
 --| Revision 1.2  2000/01/25 16:55:08  brendel
 --| Minor bug fixes.
 --|
 --| Revision 1.1  2000/01/25 16:27:40  brendel
 --| Initial.
 --|
---| 
 --|-----------------------------------------------------------------------------
 --| End of CVS log
 --|-----------------------------------------------------------------------------

@@ -507,6 +507,8 @@ feature {NONE} -- Implementation
 					end
 					current_format.set_underlined (False)
 				end
+			elseif tag.is_equal (rtf_underline_none_string) then
+				current_format.set_underlined (False)
 			elseif tag.is_equal (rtf_vertical_offset) then
 				check
 					tag_not_empty: not tag.is_empty

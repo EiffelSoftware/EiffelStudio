@@ -17,6 +17,7 @@ inherit
 feature -- Implementation
 
 	implementation: EV_TREE_ITEM_HOLDER_I
+			-- Platform dependent access.
 
 end -- class EV_TREE_ITEM_HOLDER
 

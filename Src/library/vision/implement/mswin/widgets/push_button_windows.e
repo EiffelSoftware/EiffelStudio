@@ -121,6 +121,7 @@ feature -- Access
 							end
 						end
 					end
+					managed := flag
 				else
 					managed := flag
 					realize

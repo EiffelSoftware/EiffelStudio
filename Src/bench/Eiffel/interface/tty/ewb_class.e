@@ -53,7 +53,8 @@ feature {NONE} -- Execution
 			-- Execute Current command.
 		local
 			class_i: CLASS_I;
-			e_class: E_CLASS
+			e_class: E_CLASS;
+			id: IDENTIFIER
 		do
 			class_i := Eiffel_universe.class_with_name (class_name);
 			if class_i /= Void then
@@ -70,7 +71,13 @@ feature {NONE} -- Execution
 				end
 			else
 				io.error.putstring (class_name);
-				io.error.putstring (" is not in the universe%N");
+				!! id.make (0);
+				id.append (class_name);
+				if id.is_valid then
+					io.error.putstring (" is not in the universe%N")
+				else
+					io.error.putstring (" is not a valid class name%N")
+				end
 			end;
 			class_name := Void;
 		ensure then

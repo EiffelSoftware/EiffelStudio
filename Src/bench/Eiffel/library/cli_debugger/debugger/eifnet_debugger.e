@@ -52,6 +52,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -563,61 +568,43 @@ feature -- Function Evaluation
 		end
 		
 	integer_32_ref_icd_class: ICOR_DEBUG_CLASS is
-			-- ICorDebugClass for INTEGER_REF
-		local
-			ct: CLASS_TYPE
+			-- ICorDebugClass for `reference INTEGER'
 		do
-			ct := Eiffel_system.system.integer_32_ref_class.compiled_class.types.first
-			Result := icd_class (ct)
+			Result := icd_class (int32_c_type.associated_reference_class_type)
 		end	
 		
 	integer_32_ref_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for INTEGER_REF.set_item
-		local
-			l_class : CLASS_C
+			-- ICorDebugFunction for `reference INTEGER'.set_item
 		do
-			l_class := Eiffel_system.system.integer_32_ref_class.compiled_class
-			Result := icd_function_by_name (l_class.types.first, "set_item")
+			Result := icd_function_by_name (int32_c_type.associated_reference_class_type, "set_item")
 		ensure
 			Result /= Void
 		end	
 
 	boolean_ref_icd_class: ICOR_DEBUG_CLASS is
-			-- ICorDebugClass for BOOLEAN_REF
-		local
-			ct: CLASS_TYPE
+			-- ICorDebugClass for `reference BOOLEAN'
 		do
-			ct := Eiffel_system.system.boolean_ref_class.compiled_class.types.first
-			Result := icd_class (ct)
+			Result := icd_class (boolean_c_type.associated_reference_class_type)
 		end	
 		
 	boolean_ref_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for BOOLEAN_REF.set_item
-		local
-			l_class : CLASS_C
+			-- ICorDebugFunction for `reference BOOLEAN'.set_item
 		do
-			l_class := Eiffel_system.system.boolean_ref_class.compiled_class
-			Result := icd_function_by_name (l_class.types.first, "set_item")
+			Result := icd_function_by_name (boolean_c_type.associated_reference_class_type, "set_item")
 		ensure
 			Result /= Void
 		end	
 		
 	character_ref_icd_class: ICOR_DEBUG_CLASS is
-			-- ICorDebugClass for character_ref
-		local
-			ct: CLASS_TYPE
+			-- ICorDebugClass for `reference CHARACTER'
 		do
-			ct := Eiffel_system.system.character_ref_class.compiled_class.types.first
-			Result := icd_class (ct)
+			Result := icd_class (char_c_type.associated_reference_class_type)
 		end	
 		
 	character_ref_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for character_ref.set_item
-		local
-			l_class : CLASS_C
+			-- ICorDebugFunction for `reference CHARACTER'.set_item
 		do
-			l_class := Eiffel_system.system.character_ref_class.compiled_class
-			Result := icd_function_by_name (l_class.types.first, "set_item")
+			Result := icd_function_by_name (char_c_type.associated_reference_class_type, "set_item")
 		ensure
 			Result /= Void
 		end			
@@ -632,7 +619,6 @@ feature -- Function Evaluation
 		ensure
 			Result /= Void
 		end
-		
 
 	icd_string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
 			-- ICorDebugStringValue for `icd_string_instance' (STRING object)

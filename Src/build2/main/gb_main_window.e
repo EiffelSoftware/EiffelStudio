@@ -15,6 +15,8 @@ inherit
 			{ANY} is_empty, is_show_requested, show, hide
 		undefine
 			is_in_default_state
+		redefine
+			initialize
 		end
 		
 	GB_CONSTANTS
@@ -70,7 +72,17 @@ inherit
 			copy, default_create
 		end
 create
-	default_create	
+	default_create
+	
+feature {NONE} -- Initialization
+
+	initialize is
+			--
+		do
+			Precursor {EV_TITLED_WINDOW}
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).icon_build_window @ 1)
+		end
+		
 
 feature -- Basic operation
 
@@ -78,7 +90,6 @@ feature -- Basic operation
 			-- Create user interface in `Current'.
 		do
 			set_title (Product_name)
-			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 				-- Initialize the menu bar for `Current'.
 			create a_menu_bar
 			set_menu_bar (a_menu_bar)

@@ -42,7 +42,13 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
 		redefine
-			interface, initialize, on_left_button_double_click
+			interface, initialize
+		end
+		
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface,
+			on_left_button_double_click
 		end
 	
 	WEL_IMAGELIST_TOOL_BAR
@@ -826,7 +832,7 @@ feature {NONE} -- WEL Implementation
 			if it /= Void then 
 				disable_default_processing
 			end
-			Precursor {EV_ITEM_LIST_IMP} (keys, x_pos, y_pos)
+			Precursor {EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP} (keys, x_pos, y_pos)
 		end
 
 	default_style: INTEGER is

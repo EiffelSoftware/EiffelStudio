@@ -20,6 +20,11 @@ inherit
 			initialize
 		end
 		
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface
+		end
+		
 	EV_FONTABLE_IMP
 		redefine
 			interface

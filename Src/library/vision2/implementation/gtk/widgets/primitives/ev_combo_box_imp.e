@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 			-- Focus for `Current' has changed'.
 		do
 			Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
-			if a_has_focus and is_editable then
+			if a_has_focus and is_editable and not text.is_empty then
 				select_all
 			end
 		end

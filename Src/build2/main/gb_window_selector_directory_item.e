@@ -8,39 +8,27 @@ class
 	GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 	
 inherit
-	EV_TREE_ITEM
-		redefine
-			extend,
-			prune_all,
-			put_right
-		end
-	
+
+	GB_WINDOW_SELECTOR_COMMON_ITEM
+
 	GB_XML_UTILITIES
 		export
 			{NONE} all
-		undefine
-			default_create, copy, is_equal
 		end
 		
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
-		undefine
-			default_create, copy, is_equal
 		end
 		
 	GB_SHARED_SYSTEM_STATUS
 		export
 			{NONE} all
-		undefine
-			default_create, copy, is_equal
 		end
 		
 	GB_SHARED_TOOLS
 		export
 			{NONE} all
-		undefine
-			default_create, copy, is_equal
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
@@ -51,8 +39,6 @@ inherit
 	GB_SHARED_OBJECT_HANDLER	
 		export
 			{NONE} all
-		undefine
-			default_create, copy, is_equal
 		end
 		
 create
@@ -62,17 +48,20 @@ feature {NONE} -- Initialization
 
 	make_with_name (a_name: STRING) is
 			-- Create current with name `a_name' displayed as `text'.
+		require
+			a_name_not_void: a_name /= Void
 		do
 			default_create
-			set_text (a_name)
-			set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
-			drop_actions.extend (agent add_object)
-			drop_actions.set_veto_pebble_function (agent restrict_drop_to_valid_types)
-			set_pebble (Current)
+			common_make
+			set_name (a_name)
+			tree_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
+			tree_item.drop_actions.extend (agent add_object)
+			tree_item.drop_actions.set_veto_pebble_function (agent restrict_drop_to_valid_types)
+			tree_item.set_pebble (Current)
 			is_grayed_out := True
 		ensure
-			name_set: a_name.is_equal (text)
-		end	
+			name_set: name.is_equal (a_name)
+		end
 
 feature {GB_XML_STORE} -- Implementation
 
@@ -81,7 +70,7 @@ feature {GB_XML_STORE} -- Implementation
 		require
 			element_not_void: element /= Void
 		do
-			add_element_containing_string (element, "name", text)		
+			add_element_containing_string (element, "name", name)		
 		end
 
 feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
@@ -98,7 +87,7 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 			
 			element_info := full_information @ (name_string)
 			if element_info /= Void then
-				set_text (element_info.data)
+				set_name (element_info.data)
 			end
 		end
 		
@@ -111,7 +100,7 @@ feature {GB_WINDOW_SELECTOR} -- Implementation
 			-- Ensure `Current' is represented in color.
 		do
 			if is_grayed_out then
-				set_pixmap (((create {GB_SHARED_PIXMAPS}).icon_directory) @ 1)
+				tree_item.set_pixmap (((create {GB_SHARED_PIXMAPS}).icon_directory) @ 1)
 				is_grayed_out := False
 			end
 		ensure
@@ -122,53 +111,11 @@ feature {GB_WINDOW_SELECTOR} -- Implementation
 			-- Ensure `Current' is represented in gray.
 		do
 			if not is_grayed_out then
-				set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
+				tree_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
 				is_grayed_out := True
 			end
 		ensure
 			is_grayed_out: is_grayed_out
-		end
-
-feature -- Implementation
-
-	add_selector_item (an_item: GB_WINDOW_SELECTOR_ITEM) is
-			-- Add `an_item' to `Current' by first removing it from
-			-- its current `parent'.
-		require
-			an_item_not_void: an_item /= Void
-		local
-			command_move_window: GB_COMMAND_MOVE_WINDOW
-		do
-			create command_move_window.make (an_item.object, Current)
-			command_move_window.execute
-				-- Ensure that `Current' is expanded
-			expand
-				-- Update the system
-			system_status.enable_project_modified
-			command_handler.update	
-		ensure
-			item_contained: has (an_item)
-		end
-		
-	extend (v: like item) is
-			-- Add `v' to end. Do not move cursor.
-		do
-			Precursor {EV_TREE_ITEM} (v)
-			window_selector.item_added_to_directory (Current, v)
-		end
-		
-	prune_all (v: like item) is
-			-- Remove all occurrences of `v'.
-		do
-			Precursor {EV_TREE_ITEM} (v)
-			window_selector.item_removed_from_directory (Current, v)
-		end
-
-	put_right (v: like item) is
-			-- Add `v' to right of cursor position. Do not move cursor.
-		do
-			Precursor {EV_TREE_ITEM} (v)
-			window_selector.item_added_to_directory (Current, v)
 		end
 
 feature -- Implementation
@@ -209,14 +156,61 @@ feature -- Implementation
 	path: ARRAYED_LIST [STRING] is
 			-- `Result' is list of directories `Current' is contained in, from the
 			-- top level down.
+		local
+			current_node: GB_WINDOW_SELECTOR_COMMON_ITEM
+			temp_result: ARRAYED_LIST [STRING]
 		do
-			Result := path_of_tree_node (Current)
+			create temp_result.make (4)
+			from
+				current_node := Current
+			until
+				current_node.parent = Void
+			loop
+				temp_result.extend (current_node.name)
+				current_node ?= current_node.parent
+			end
+			create Result.make (temp_result.count)
+			from
+				temp_result.go_i_th (temp_result.count)
+			until
+				temp_result.off
+			loop
+				Result.extend (temp_result.item)
+				temp_result.back
+			end
+			check
+				results_consistent: temp_result.count = Result.count
+			end
 		ensure
 			Result_not_void: Result /= Void
-			is_empty_implies_parent_is_window_selector: Result.is_empty implies parent = window_selector
+			is_empty_implies_parent_is_window_selector: Result.is_empty and parent /= Void implies parent = window_selector
+		end
+		
+feature {NONE} -- Implementation
+
+	add_selector_item (an_item: GB_WINDOW_SELECTOR_ITEM) is
+			-- Add `an_item' to `Current' by first removing it from
+			-- its current `parent'.
+		require
+			an_item_not_void: an_item /= Void
+		local
+			command_move_window: GB_COMMAND_MOVE_WINDOW
+		do
+			if an_item.object.window_selector_item.parent /= Void then
+				create command_move_window.make (an_item.object, Current)
+				command_move_window.execute
+			
+					-- Ensure that `Current' is expanded
+				expand
+					-- Update the system
+				system_status.enable_project_modified
+				command_handler.update	
+			end
+		ensure
+			item_contained: children.has (an_item)
 		end
 		
 invariant
-	contents_alphabetical: tree_node_contents_alphabetical (Current)
+	contents_alphabetical: tree_node_contents_alphabetical (tree_item)
 
 end -- class GB_WINDOW_SELECTOR_DIRECTORY_ITEM

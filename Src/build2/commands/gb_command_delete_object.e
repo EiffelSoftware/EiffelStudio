@@ -65,12 +65,12 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		do
-				-- Calling `add_object' on the obejct handler, will automatically
-				-- update any parent representations in the object editor.
-			object_handler.add_object (parent_layout_item.object, child_layout_item.object, position)
 				-- We now need to ensure that the object is no longer marked as
 				-- deleted.
 			object_handler.mark_existing (child_layout_item.object)
+				-- Calling `add_object' on the obejct handler, will automatically
+				-- update any parent representations in the object editor.
+			object_handler.add_object (parent_layout_item.object, child_layout_item.object, position)
 			command_handler.update
 		end
 		

@@ -36,13 +36,15 @@ feature
 			-- Finish generation of `current_file'.
 		local
 			temp: STRING
+			header_file: INDENT_FILE
 		do
 			temp := clone (Infix_file_name);
 			temp.append_integer (file_counter);
 
-			Extern_declarations.generate_header (final_file_name (temp, Dot_h));
-
-			Extern_declarations.generate (final_file_name (temp, Dot_h));
+			!! header_file.make_open_write (final_file_name (temp, Dot_h))
+			Extern_declarations.generate_header (header_file);
+			Extern_declarations.generate (header_file);
+			header_file.close
 			Extern_declarations.wipe_out;
 		end;
 

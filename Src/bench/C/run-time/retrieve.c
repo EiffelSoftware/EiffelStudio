@@ -1344,7 +1344,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 		temp_buf = r_buffer;
 
 		if (3 != sscanf(r_buffer, "%d %s %d",&dtype,vis_name,&nb_gen))
-			eise_io("Indenpendent retrieve: unable to read type description.");
+			eise_io("Independent retrieve: unable to read type description.");
 
 		for (k = 1 ; k <= 3 ; k++)
 			temp_buf = next_item (temp_buf);

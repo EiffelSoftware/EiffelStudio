@@ -50,7 +50,7 @@ void free_parameter_array(ary, size)
 PARAMETER *ary;
 EIF_INTEGER size;
 {
-/* not only eif_free the space occured by the array, but also 
+/* not only eif_free the space occurred by the array, but also 
  * the space allocated to each cell to store string data.
 */
 	EIF_INTEGER i;

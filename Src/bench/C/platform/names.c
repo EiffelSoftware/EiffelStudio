@@ -19,7 +19,7 @@ rt_public EIF_REFERENCE eif_timeout_msg (void)
 
 	char s[512];
 
-	strcpy(s, "Could not launch system in alloted time.\n");
+	strcpy(s, "Could not launch system in allotted time.\n");
 	strcat(s, "Try restarting estudio after setting ");
 #ifdef EIF_VMS
 	strcat(s, "the logical name \n");

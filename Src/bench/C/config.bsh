@@ -9,7 +9,7 @@ del='del'
 #
 output_cmd='-o'
 input_cmd=''
-resource_compiler='brc32'
+resource_compiler='$compiler_path\bin\brc32'
 #
 obj='obj'
 lib='lib'
@@ -34,6 +34,6 @@ debug=''
 #debug='-v'
 #
 cc='$compiler_path\bin\bcc32'
-compiler_path='f:\Eiffel50\BCC55'
+compiler_path='d:\Eiffel50\BCC55'
 all_dependency=''
 #

@@ -2337,7 +2337,7 @@ rt_shared int split_block(register union overhead *selected, register uint32 nby
 	 * At the end, 'selected' will hold only 'nbytes'.
 	 * From the accounting point's of vue, only the overhead is
 	 * incremented (the split block is assumed to be already free).
-	 * The function returns -1 if no split occured, or the length of
+	 * The function returns -1 if no split occurred, or the length of
 	 * the split block otherwise (which means it must fit in a signed
 	 * int, argh!!--RAM).
 	 * Caller is responsible for issuing a SIGBLOCK before any call to
@@ -2676,7 +2676,7 @@ rt_shared int chunk_coalesc(struct chunk *c)
 		}
 		flags = zone->ov_size;			/* Possible coalesced block */
 
-		/* Check whether coalescing occured. If so, we have to remove
+		/* Check whether coalescing occurred. If so, we have to remove
 		 * 'zone' from list #i and then put it back to a possible
 		 * different list. Also update the size of the biggest coalesced
 		 * block. This value should help malloc in its decisions--RAM.

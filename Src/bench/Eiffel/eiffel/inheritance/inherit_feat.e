@@ -162,7 +162,8 @@ feature
 				next := feat.item;
 				feature_name := next.a_feature.feature_name;
 				parent := next.parent;
-				if not next.renaming_processed and then
+				if
+					not next.renaming_processed and then
 					parent.is_renaming (feature_name) 
 				then
 					feature_name_id := next.a_feature.feature_name_id;

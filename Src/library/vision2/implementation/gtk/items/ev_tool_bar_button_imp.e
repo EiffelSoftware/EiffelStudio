@@ -70,18 +70,47 @@ feature {NONE} -- Initialization
 			is_initialized := True
 		end
 
+feature {EV_TOOL_BAR_IMP} -- Implementation
+
 	initialize_button_box is
 			-- Create the box for pixmap and label and connect action sequence.
 		local
 			box: POINTER
+			par_imp: EV_TOOL_BAR_IMP
+			a_box: POINTER
 		do
-			box := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			a_box := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (visual_widget)
+			if a_box /= default_pointer then
+				feature {EV_GTK_EXTERNALS}.object_ref (text_label)
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_box, text_label)
+				
+				feature {EV_GTK_EXTERNALS}.object_ref (pixmap_box)
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_box, pixmap_box)
+				
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (visual_widget, a_box)
+			end
+			
+			if parent_imp /= Void then
+				par_imp ?= parent_imp
+			end
+			if par_imp /= Void and then not par_imp.has_vertical_button_style  then
+				box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			else
+				box := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			end
+			
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
+			
+			if text.is_equal ("") then
+				feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
+			end
+			
+			if pixmap = Void then
+				feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
+			end
 		end
 
 feature -- Access

@@ -136,6 +136,7 @@ feature -- Basic Operations
 			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			checked_changed_delegate: SYSTEM_EVENTHANDLER
 		do	
 			initialize
 			set_text (dictionary.Title)
@@ -148,6 +149,30 @@ feature -- Basic Operations
 				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 			end						
 			destination_path_text_box.set_text (dictionary.Default_generation_path)
+
+			create other_explanation_label.make_label
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (4 * dictionary.Margin + 7 * dictionary.Label_height)
+			other_explanation_label.set_location (a_point)
+			other_explanation_label.set_auto_size (True)
+			other_explanation_label.set_text (dictionary.Explanation_text)
+			get_controls.add (other_explanation_label)
+
+				-- Default path check box
+			create default_path_check_box.make_checkbox
+			default_path_check_box.set_text (dictionary.Default_path_check_box_text)
+			default_path_check_box.set_font (a_font)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (4 * dictionary.Margin + 8 * dictionary.Label_height)
+			default_path_check_box.set_location (a_point)
+			a_size.set_height (dictionary.Label_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			default_path_check_box.set_size (a_size)
+			default_path_check_box.set_checked (True)
+			default_path_check_box.set_auto_check (True)
+			get_controls.add (default_path_check_box)
+			create checked_changed_delegate.make_eventhandler (Current, $on_check)
+			default_path_check_box.add_checked_changed (checked_changed_delegate)
 
 				-- Eiffel names check box
 			create eiffel_names_check_box.make_checkbox

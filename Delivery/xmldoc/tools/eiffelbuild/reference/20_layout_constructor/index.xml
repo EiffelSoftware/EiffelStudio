@@ -28,7 +28,8 @@
 				<url>/libraries/vision2/00_introduction</url>
 				<label>EiffelVision2</label>
 			</link> interface definition - An EV_TITLED_WINDOW containing one child, of type EV_VERTICAL_BOX. Within the vertical box there is an EV_HORIZONTAL_BOX and an EV_LIST. The list is empty, but the horizontal box contains three different objects of type EV_BUTTON.
-		</paragraph>
+		</paragraph><note><bold>Note</bold>: The window or dialog displayed as the root of the Layout Constructor is the currently selected object in the <link><url>../64_window_selector/index.xml</url><label>Window Selector</label></link>. To edit the contents of a different window, select the window you wish to manipulate from the <link><url>../64_window_selector/index.xml</url><label>window selector</label></link>.
+</note>
 		<paragraph>The information displayed, only shows you the structure of the 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
@@ -77,7 +78,12 @@
 				<bold>Collapse layout tree</bold> from the 
 				<bold>View</bold> menu.
 			</paragraph>
-			<seealso>
+		</paragraph>
+		<paragraph><heading>
+				<size>2</size>Highlighting an Object</heading>An <link><url>../02_notation.xml</url><label>object</label></link> contained in a system may be highlighted in the Layout constructor by <link><url>../02_notation.xml</url><label>picking</label></link> it, and <link><url>../02_notation.xml</url><label>dropping</label></link> on the  button displayed at the top of the Layout Constructor. Clicking this button with the mouse has no effect. The ability to highlight an object in this fashion proves to be particularly useful when building directly into the <link><url>../60_builder_window/index.xml</url><label>builder window</label></link>, as a particular object may be quickly highlighted, and its properties edited.
+
+</paragraph>
+<seealso>
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
@@ -95,5 +101,4 @@
 					<label>Layout window</label>
 				</link>
 			</seealso>
-		</paragraph>
 	</paragraph></document>

@@ -134,6 +134,7 @@ feature -- IL code generation
 			create_type: CREATE_TYPE
 			is_external_class: BOOLEAN
 			cl_type: CL_TYPE_I
+			ext_call: CREATION_EXTERNAL_B
 		do
 			generate_il_line_info
 			create_type ?= info	
@@ -150,17 +151,22 @@ feature -- IL code generation
 
 				if is_external_class then
 						-- Creation call on external class.
+
 					check
 						call_not_void: call /= Void
 					end
 						-- An external class has always a feature call
 						-- as `default_create' can't be called on them.
-					context.set_il_external_creation (True)
 					call.set_parent (create {NESTED_B})
 					call.set_info (info)
-					call.generate_il
+
+					ext_call ?= call
+					if ext_call /= Void then
+						ext_call.generate_il_creation
+					else
+						call.generate_il
+					end
 					call.set_parent (Void)
-					context.set_il_external_creation (False)
 				else
 						-- Standard creation call
 					info.generate_il

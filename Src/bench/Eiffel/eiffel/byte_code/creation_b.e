@@ -83,6 +83,7 @@ feature -- IL code generation
 			create_type: CREATE_TYPE
 			is_external: BOOLEAN
 			cl_type: CL_TYPE_I
+			l_ext: EXTERNAL_B
 		do
 			generate_il_line_info
 			target_type := Context.real_type (target.type)
@@ -104,14 +105,18 @@ feature -- IL code generation
 
 				if is_external then
 						-- Creation call on an external class.
-					context.set_il_external_creation (True)
 					check
 						call_not_void: call /= Void
 					end
 						-- An external class has always a feature call
 						-- as `default_create' can't be called on them.
-					call.message.generate_il
-					context.set_il_external_creation (False)
+						
+					l_ext ?= call.message
+					if l_ext /= Void then
+						l_ext.generate_il_creation
+					else
+						call.message.generate_il
+					end
 					target.generate_il_assignment (target_type)
 				else
 						-- Standard creation call for a normal Eiffel class.

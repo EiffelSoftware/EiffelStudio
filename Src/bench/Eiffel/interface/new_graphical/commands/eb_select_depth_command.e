@@ -73,7 +73,7 @@ feature -- Basic operations
 								tool.view_selector.set_strings (sel.strings)
 								tool.view_selector.select_actions.resume
 								tool.view_selector.set_text (sel.selected_item.text)
-								tool.view_selector.return_actions.call ([])
+								tool.view_selector.return_actions.call (Void)
 							end	
 						end
 						tool.progress_dialog.set_title ("Synchronizing progress")
@@ -126,7 +126,7 @@ feature -- Basic operations
 								tool.view_selector.set_strings (sel.strings)
 								tool.view_selector.select_actions.resume
 								tool.view_selector.set_text (sel.selected_item.text)
-								tool.view_selector.return_actions.call ([])
+								tool.view_selector.return_actions.call (Void)
 							end	
 						end
 						tool.progress_dialog.set_title ("Synchronizing progress")

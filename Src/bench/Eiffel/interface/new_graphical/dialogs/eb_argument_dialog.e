@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			if arg /= Void then
 				if arg = Apply_and_run_it then
 					arguments_control.store_arguments (Void)
-					run.call ([])
+					run.call (Void)
 				end
 			end
 		end
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			if arg /= Void then
 				if arg = Apply_and_run_it then
 					arguments_control.store_arguments (Void)
-					run.call ([])
+					run.call (Void)
 					hide
 				end
 			end

@@ -653,7 +653,7 @@ feature {NONE} -- Text Loading
 			until
 				after_reading_text_actions.after
 			loop
-				after_reading_text_actions.item.call([])
+				after_reading_text_actions.item.call(Void)
 				after_reading_text_actions.forth
 			end
 			after_reading_text_actions.wipe_out

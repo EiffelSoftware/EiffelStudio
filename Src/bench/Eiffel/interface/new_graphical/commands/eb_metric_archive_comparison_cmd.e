@@ -305,7 +305,7 @@ feature -- Action
 		require
 			correct_directory: current_directory /= Void
 		local
-			array: ARRAY [PROCEDURE [ANY, TUPLE []]]
+			array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			create array.make (1, 2)
 			array.put (~on_new_archive (current_directory), 1)
@@ -376,7 +376,7 @@ feature -- Action
 		require
 			correct_directory: current_directory /= Void
 		local
-			array: ARRAY [PROCEDURE [ANY, TUPLE []]]
+			array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			create array.make (1, 2)
 			array.put (~on_update_archive (current_directory), 1)
@@ -794,7 +794,7 @@ feature -- Overwritting
 	confirm_dialog: EV_CONFIRMATION_DIALOG
 			-- Dialog to confirm file overwritting.
 
-	actions_array: ARRAY [PROCEDURE [ANY, TUPLE []]] is
+	actions_array: ARRAY [PROCEDURE [ANY, TUPLE]] is
 			-- Actions to be performed for `confirm_dialog'.
 		do
 			create Result.make (1, 2)
@@ -820,7 +820,7 @@ feature -- Overwritting
 			-- On CR, call `a_button' associated action.
 		do
 			if a_key.code = Key_enter then
-				a_button.select_actions.call ([])
+				a_button.select_actions.call (Void)
 			end
 		end
 
@@ -843,7 +843,7 @@ feature -- Metric importation
 			import := False
 		end
 
-	import_actions_array: ARRAY [PROCEDURE [ANY, TUPLE []]] is
+	import_actions_array: ARRAY [PROCEDURE [ANY, TUPLE]] is
 			-- Actions to be performed for `confirm_dialog'.
 		do
 			create Result.make (1, 2)

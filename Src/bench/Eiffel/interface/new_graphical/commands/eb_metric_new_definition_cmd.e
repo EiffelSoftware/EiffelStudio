@@ -362,7 +362,7 @@ feature -- Action
 			-- On CR, call `a_button' associated action.
 		do
 			if a_key.code = Key_enter then
-				a_button.select_actions.call ([])
+				a_button.select_actions.call (Void)
 			end
 		end
 	

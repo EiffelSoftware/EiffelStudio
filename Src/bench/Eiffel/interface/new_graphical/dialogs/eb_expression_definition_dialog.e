@@ -380,7 +380,7 @@ feature {NONE} -- Event handling
 			if new_expression /= Void and then not new_expression.syntax_error then
 				destroy
 				if callback /= Void then
-					callback.call ([])
+					callback.call (Void)
 				end
 			end
 		end

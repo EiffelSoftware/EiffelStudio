@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 					text_displayed.enable_selection
 				end
 				old_line := cursor.y_in_lines
-				action.call ([])
+				action.call (Void)
 				if text_displayed.selection_cursor.is_equal (cursor) then
 						-- If nothing is selected, we forget the selection.
 					text_displayed.disable_selection
@@ -419,14 +419,14 @@ feature {NONE} -- Implementation
 			elseif text_displayed.has_selection then
 					-- There was a selection, but we destroy it.
 				old_line := cursor.y_in_lines
-				action.call ([])
+				action.call (Void)
 				text_displayed.disable_selection
 				invalidate_line (old_line, False)
 				invalidate_block (text_displayed.selection_start.y_in_lines, text_displayed.selection_end.y_in_lines)
 			else
 					-- There is no selection. Normal move.
 				old_line := cursor.y_in_lines
-				action.call ([])
+				action.call (Void)
 				new_line := cursor.y_in_lines
 				if old_line /= new_line then
 						-- redraw old cursor position 

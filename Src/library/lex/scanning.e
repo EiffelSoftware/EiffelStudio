@@ -96,7 +96,7 @@ feature -- Output
 			if read_token.keyword_code /= -1 then
 				io.put_string ("Keyword:  ");
 				io.put_string (read_token.string_value);
-				io.put_string ("Code: ");
+				io.put_string (" Code: ");
 				io.put_integer (read_token.keyword_code);
 				io.new_line
 			elseif type /= 0 then

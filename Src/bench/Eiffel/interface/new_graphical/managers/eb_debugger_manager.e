@@ -674,7 +674,9 @@ feature -- Debugging events
 			if Application /= Void and then Application.is_running then
 				Window_manager.display_message (Interface_names.E_not_running)
 					-- Make all debugging tools disappear.
-				unraise
+				if not debugging_window.destroyed then
+					unraise
+				end
 					-- Make related buttons insensitive.
 				stop_cmd.disable_sensitive
 				quit_cmd.disable_sensitive

@@ -13,7 +13,7 @@
 	<process_html_stylesheet>True</process_html_stylesheet>
 	<include_navigation_links>True</include_navigation_links>
 	<generate_dhtml_filter>True</generate_dhtml_filter>
-	<generate_feature_nodes>False</generate_feature_nodes>
+	<generate_feature_nodes>True</generate_feature_nodes>
 	<filter>
 		<filter_description>EiffelStudio for Mac OS X</filter_description>
 		<filter_highlight_color_red>0.87451</filter_highlight_color_red>

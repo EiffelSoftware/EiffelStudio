@@ -477,7 +477,7 @@ public class EiffelClassGenerator: Globals
 		GeneratedEiffelClass.SetExternalNames( ClassFactory.TypeName );
 		if( ClassFactory.UnderlyingType.IsEnum )
 			GeneratedEiffelClass.SetEnumType( NameFormatter.FormatArgumentTypeName( Enum.GetUnderlyingType( ClassFactory.UnderlyingType) ) );
-		
+			
 			// Add parents
 		if( ClassFactory.Parents.Count > 1 || ClassFactory.Renames.HasClause( "ANY" ) || ClassFactory.Redefines.HasClause( "ANY" ) || ClassFactory.Undefines.HasClause( "ANY") || (( ClassFactory.Parents.Count == 1 )&&( !(( EiffelClassFactory )ClassTable [ClassFactory.Parents [0]]).Name.Equals( "ANY" ))))
 		{
@@ -682,9 +682,10 @@ public class EiffelClassGenerator: Globals
 			if( FieldDescriptor.DeclaringType.AssemblyQualifiedName.ToLower().Equals( ClassFactory.UnderlyingType.AssemblyQualifiedName.ToLower() ) )
 				GeneratedEiffelFeature.SetNewSlot();
 			GeneratedEiffelFeature.SetStatic( FieldDescriptor.IsStatic );
-			ReturnType = new SignatureType();
-			ReturnType.SetTypeFullExternalName( NameFormatter.FormatStrongName( FieldDescriptor.FieldType.FullName ) );
-			GeneratedEiffelFeature.SetReturnType( ReturnType );
+			
+			//ReturnType = new SignatureType();
+			//ReturnType.SetTypeFullExternalName( NameFormatter.FormatStrongName( FieldDescriptor.FieldType.FullName ) );
+			//GeneratedEiffelFeature.SetReturnType( ReturnType );
 		}
 		if( !IsMethod && !IsField )
 		{
@@ -788,6 +789,18 @@ public class EiffelClassGenerator: Globals
 				GeneratedEiffelFeature.AddArgument( Argument );
 			}
 		}
+		else
+		{
+			if( IsUnaryOperator &&( Arguments.Length > 0 ) )
+			{
+				for( i = 0; i < Arguments.Length; i++ )
+				{	
+					Argument = new NamedSignatureType();
+					Argument.SetTypeFullExternalName( NameFormatter.FormatStrongName( Arguments [i].ParameterType.FullName ) );
+					GeneratedEiffelFeature.AddArgument( Argument );
+				}
+			}			
+		}
 
 		if( IsMethod )
 		{
@@ -807,8 +820,8 @@ public class EiffelClassGenerator: Globals
 				GeneratedEiffelFeature.SetReturnType( ReturnType );
 			}
 		}
-		
-		if( IsField&& !FeatureName.StartsWith( EiffelClassFactory.PropertySetPrefix ))
+
+		if( IsField&& !FieldDescriptor.Name.StartsWith( EiffelClassFactory.PropertySetPrefix ))
 		{
 			ReturnType = new SignatureType();
 			ReturnType.SetTypeEiffelName( NameFormatter.FormatArgumentTypeName( FieldDescriptor.FieldType ) );

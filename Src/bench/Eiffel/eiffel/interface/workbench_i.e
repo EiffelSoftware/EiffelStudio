@@ -8,6 +8,11 @@ inherit
 	SHARED_RESCUE_STATUS;
 	SHARED_PASS;
 	STORABLE;
+	SHARED_RESOURCES;
+	PROJECT_CONTEXT
+		redefine
+			lace, universe, system
+		end
 
 feature -- Attributes
 
@@ -22,6 +27,9 @@ feature -- Attributes
 
 	precompiled_directory_name: STRING;
 			-- Name of the precompiled directory
+
+	compilation_counter: INTEGER;
+			-- Number of recompilations
 
 feature -- Conveniences
 
@@ -85,6 +93,7 @@ feature -- Creation feature
 				-- Error handler initialization
 			Error_handler.send_yacc_information;
 
+			new_session := True
 		end;
 
 feature -- Commands
@@ -98,16 +107,29 @@ feature -- Commands
 		do
 			if not retried then
 
+				compilation_counter := compilation_counter + 1
+
+				if automatic_backup then
+					create_backup_directory
+				end
 					-- Clear error handler
 				Error_handler.wipe_out;
 
 				Lace.recompile;
 
 				System.recompile;
-
 			else
 				retried := False
 			end;
+
+				-- Store the System info even after an error
+				-- (the next compilation will be stored in a different
+				-- directroy)
+			if automatic_backup then
+				save_backup_info
+			end
+		ensure
+			increment_compilation_counter: compilation_counter = old compilation_counter + 1
 		rescue
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
@@ -288,6 +310,89 @@ feature -- DLE
 				Universe.clusters.forth
 			end;
 		end;
+
+feature -- Automatic backup
+
+	automatic_backup: BOOLEAN is
+			-- Is the automatic backup on?
+		Once
+			Result := resources.get_boolean (r_AutomaticBackup, False)
+		end
+
+	create_backup_directory is
+			-- Create the subdirectory for backup `compilation_counter'
+		local
+			d: DIRECTORY
+		do
+				-- Create the EIFGEN/BACKUP directory
+			!!d.make (Backup_path);
+			if not d.exists then
+				d.create
+			end;
+
+				-- Create the EIFGEN/BACKUP/COMP<n> directory
+			!!d.make (backup_subdirectory);
+			if not d.exists then
+				d.create
+			end;
+		end
+
+	backup_subdirectory: DIRECTORY_NAME is
+			-- Current backup subdirectory
+		local
+			temp: STRING
+		do
+			!! Result.make_from_string (Backup_path)
+			!! temp.make (9);
+			temp.append (Comp);
+			temp.append_integer (compilation_counter);
+			Result.extend (temp)
+		end
+
+	backup_info_file_name: FILE_NAME is
+			-- File where info about the compilation is saved
+		do
+			!! Result.make_from_string (backup_subdirectory);
+			Result.set_file_name (Backup_info)
+		end
+
+	save_backup_info is
+			-- Save the information about this recompilation
+		local
+			file: PLAIN_TEXT_FILE
+			l: LINKED_LIST [CLUSTER_I]
+			c: CLUSTER_I
+		do
+			!! file.make_open_write (backup_info_file_name)
+			file.putstring ("new session: ")
+			file.putbool (new_session)
+			file.new_line
+			file.putstring ("Cluster table:")
+			file.new_line
+
+			from
+				l := Universe.clusters
+				l.start
+			until
+				l.after
+			loop
+				c := l.item
+				file.putstring (c.cluster_name)
+				file.put_character ('%T')
+				file.putstring (c.backup_subdirectory)
+				file.new_line
+				l.forth
+			end
+
+			file.close
+
+			new_session := False
+		end
+
+feature {NONE} -- Automatic Backup
+
+	new_session: BOOLEAN
+		-- Is it the first compilation in the session?
 
 feature {NONE} -- Externals
 

@@ -95,11 +95,13 @@ feature {NONE} -- Implementation
 			envir: EV_ENVIRONMENT
 			app_imp: EV_APPLICATION_IMP
 		do
-				-- Remove `internal_tooltip' from `all_tooltips' in
-				-- EV_APPLICATION_IMP.
-			create envir
-			app_imp ?= envir.application.implementation
-			app_imp.all_tooltips.prune (internal_tooltip.item)
+			if internal_tooltip /= Void then
+					-- Remove `internal_tooltip' from `all_tooltips' in
+					-- EV_APPLICATION_IMP.
+				create envir
+				app_imp ?= envir.application.implementation
+				app_imp.all_tooltips.prune (internal_tooltip.item)
+			end
 			is_destroyed := True
 		end
 		

@@ -378,7 +378,7 @@ rt_private long i64off(char recursive_call)
 
 rt_private long dbloff(char recursive_call)
 {
-	long to_add = i64off(RECURSIVE) + nb_i64 * PTRSIZ;
+	long to_add = i64off(RECURSIVE) + nb_i64 * I64SIZ;
 	if (recursive_call == RECURSIVE)
 		return to_add + padding(to_add, (long) DBLSIZ);
 	else

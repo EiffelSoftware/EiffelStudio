@@ -33,11 +33,6 @@ inherit
 			initialize
 		end
 
-	EV_ITEM_EVENTS_CONSTANTS_IMP
-		rename
-			command_count as item_command_count
-		end
-
 	WEL_LIST_VIEW
 		rename
 			make as wel_make,
@@ -61,8 +56,7 @@ inherit
 			x as x_position,
 			y as y_position,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize,
-			column_count as wel_column_count
+			move_and_resize as wel_move_and_resize
 		undefine
 			remove_command,
 			set_width,
@@ -119,12 +113,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	column_count: INTEGER is
-			-- Number of columns.
-		do
-			Result := wel_column_count
-		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Currently selected item.
@@ -282,6 +270,14 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+			-- Set row `a_row' pixmap to `a_pixmap'.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
 
 	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING) is
 			-- Set the label of the cell with coordinates `a_x', `a_y'
@@ -859,6 +855,10 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.72  2000/03/29 02:19:00  brendel
+--| Removed silly column_count.
+--| Added set_row_pixmap from _I.
+--|
 --| Revision 1.71  2000/03/29 01:17:39  brendel
 --| Fixed bug in column_(width|title)_changed. Redefined column count
 --| for no apparent reason.

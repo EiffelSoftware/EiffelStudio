@@ -14,11 +14,18 @@ inherit
 			proceed_with_current_info,
 			build
 		end
+
 		
-	ISE_DIRECTORY_UTILITIES
+	DIRECTORY
+		rename
+			make as old_make
 		export
 			{NONE} all
 		end
+--	ISE_DIRECTORY_UTILITIES
+--		export
+--			{NONE} all
+--		end
 		
 	BENCH_WIZARD_CONSTANTS
 		export
@@ -72,6 +79,7 @@ feature -- Basic Operation
 			next_window: WIZARD_STATE_WINDOW
 			rescued: BOOLEAN
 			a_project_location: DIRECTORY_NAME
+			a_directory: DIRECTORY
 		do
 			if not rescued then
 				if not is_project_name_valid (project_name.text) then
@@ -83,10 +91,17 @@ feature -- Basic Operation
 						create {WIZARD_ERROR_LOCATION} next_window.make (wizard_information)
 					else
 							-- create the directory
-						recursive_create_directory (a_project_location)
+						create a_directory.make (a_project_location)
+						if not a_directory.exists then
+							a_directory.create_dir
+						end
+						if a_directory.has_entry ("EIFGEN") then
+							create {WIZARD_WARNING_PROJECT_EXIST} next_window.make (wizard_information)
+						else
+							Precursor
+							create {WIZARD_SECOND_STATE} next_window.make (wizard_information)
+						end
 		
-						Precursor
-						create {WIZARD_SECOND_STATE} next_window.make (wizard_information)
 					end
 				end
 			else
@@ -144,10 +159,10 @@ feature {NONE} -- Implementation
 		do
 			if a_directory /= Void then
 				create a_directory_name.make_from_string (a_directory)
-				a_directory_name := validate_directory_name (a_directory_name)
-				if a_directory_name /= Void then
+--				a_directory_name := validate_directory_name (a_directory_name)
+--				if a_directory_name /= Void then
 					Result := a_directory_name
-				end
+--				end
 			end
 			if Result = Void then
 				create Result.make_from_string("")

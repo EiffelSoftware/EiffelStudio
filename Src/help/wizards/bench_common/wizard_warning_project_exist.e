@@ -5,10 +5,13 @@ indexing
 	revision	: "$Revision$"
 
 class
-	WIZARD_ERROR_LOCATION
+	WIZARD_WARNING_PROJECT_EXIST
 
 inherit
-	BENCH_WIZARD_ERROR_STATE_WINDOW
+	WIZARD_INITIAL_STATE_WINDOW
+		redefine
+			proceed_with_current_info
+		end
 
 	BENCH_WIZARD_CONSTANTS
 		export
@@ -17,15 +20,22 @@ inherit
 
 create
 	make
-	
+
 feature -- basic Operations
 
 	display_state_text is
 			-- Display message text relative to current state.
 		do
-			title.set_text (Bench_interface_names.t_Location_state)
-			message.set_text (Bench_interface_names.m_Location_state)
+			title.set_text (Bench_interface_names.t_Project_allready_exist)
+			message.set_text (Bench_interface_names.m_Project_allready_exist)
 		end
+
+	proceed_with_current_info is
+		do
+			Precursor
+			proceed_with_new_state(create {WIZARD_SECOND_STATE}.make (wizard_information))
+		end
+		
 
 	final_message: STRING is
 		do
@@ -40,5 +50,5 @@ feature {WIZARD_STATE_WINDOW}
 			Result.add_extension (pixmap_extension)
 		end
 	
-end -- class WIZARD_ERROR_LOCATION
+end -- class WIZARD_WARNING_PROJECT_EXIST
 

@@ -7,13 +7,12 @@ indexing
 class 
 	EB_SHARED_PREFERENCES
 
-create
-	make_preferences
+inherit
+	EIFFEL_ENV
 
-feature {NONE} -- Initialization
+feature {EB_KERNEL} -- Initialization
 
-	make_preferences (a_preferences: PREFERENCES) is
-			-- Create
+	initialize_preferences (a_preferences: PREFERENCES) is
 		require
 			preferences_not_void: a_preferences /= Void
 			not_initialized: not preferences_initialized

@@ -8,8 +8,36 @@ class
 
 feature -- Access
 
+	is_dotnet_installed: BOOLEAN is
+			-- Is dotnet installed?
+		local
+			retried: BOOLEAN
+			n: INTEGER
+			p: POINTER
+		once
+			if not retried then
+				n := 1024
+					-- We allocate 2 * n bytes, as `p' will hold a unicode string.
+				p := p.memory_alloc (2 * n)
+				n := get_core_system_directory (p, n, $n)
+				p.memory_free
+				Result := True
+			else
+				if p /= default_pointer then
+					p.memory_free
+				end
+			end
+		rescue
+				-- Looks like we could not load `mscoree.dll', most likely
+				-- .NET is not installed.
+			retried := True
+			retry
+		end
+
 	dotnet_framework_path: STRING is
 			-- Path to .NET Framework.
+		require
+			is_dotnet_installed: is_dotnet_installed
 		local
 			p: POINTER
 			path: WEL_STRING
@@ -23,6 +51,7 @@ feature -- Access
 				n := wcstombs (path.item, p, len)
 				Result := path.string
 			end
+			p.memory_free
 		end
 		
 	dotnet_framework_sdk_path: STRING is
@@ -38,14 +67,19 @@ feature -- Access
 			if p /= default_pointer then
 				key := reg.key_value (p, "sdkInstallRoot")
 				reg.close_key (p)		
+				Result := key.string_value
 			end
-			Result := key.string_value
 		end
 		
 	Dotnet_framework_sdk_bin_path: STRING is
 			-- Path to bin directory of .NET Framework SDK.
+		local
+			l_path: STRING
 		once
-			Result := Dotnet_framework_sdk_path + "bin\"
+			l_path := Dotnet_framework_sdk_path
+			if l_path /= Void then
+				Result := Dotnet_framework_sdk_path + "bin\"
+			end
 		end
 	
 feature {NONE} -- Implementation

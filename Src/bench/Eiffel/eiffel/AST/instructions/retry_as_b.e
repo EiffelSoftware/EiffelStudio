@@ -1,22 +1,24 @@
--- Abstract description of retry instruction
+indexing
 
-class RETRY_AS
+	description:
+			"Abstract description of an Eiffel loop instruction. %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class RETRY_AS_B
 
 inherit
 
-	INSTRUCTION_AS
+	RETRY_AS;
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node,
 			format
 		end
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end;
 
 feature -- Type check and byte code
 
@@ -40,9 +42,8 @@ feature -- Type check and byte code
 		end;
 
 feature -- Debugger
- 
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_breakable;
@@ -50,4 +51,4 @@ feature -- Debugger
 			ctxt.always_succeed;
 		end;
 
-end
+end -- class RETRY_AS_B

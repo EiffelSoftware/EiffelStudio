@@ -1,8 +1,15 @@
-class ARRAY_AS
+class ARRAY_AS_B
 
 inherit
 
-	ATOMIC_AS
+	ARRAY_AS
+		redefine
+			expressions
+		end;
+
+	ATOMIC_AS_B
+		undefine
+			simple_format, string_value
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate, string_value
@@ -10,22 +17,8 @@ inherit
 
 feature -- Attributes
 
-	expressions: EIFFEL_LIST [EXPR_AS];
+	expressions: EIFFEL_LIST_B [EXPR_AS_B];
 			-- Expression list symbolizing the manifest array
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			expressions ?= yacc_arg (0);
-			if expressions = Void then
-				-- Create empty list
-				!!expressions.make (0)
-			end
-		ensure then
-			expressions_exists: expressions /= Void;
-		end;
 
 feature -- Type check, byte code, dead code removal and formatter
 
@@ -73,7 +66,7 @@ feature -- Type check, byte code, dead code removal and formatter
 		end;
 
 
-	format(ctxt : FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -99,20 +92,4 @@ feature	-- Replication
 			Result.set_expressions (expressions.replicate (ctxt));
 		end;
 
-feature {ARRAY_AS}	-- Replication
-
-	set_expressions (e: like expressions) is
-		require
-			valid_arg: e /= Void
-		do
-			expressions := e
-		end;
-
-feature -- Case storage
-
-	string_value: STRING is
-		do
-			Result := "<< >>"
-		end;
-
-end
+end -- class ARRAY_AS_B

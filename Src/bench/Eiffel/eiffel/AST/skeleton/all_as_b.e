@@ -1,24 +1,20 @@
-class ALL_AS
+class ALL_AS_B
 
 inherit
 
-	FEATURE_SET_AS
+	ALL_AS;
+
+	FEATURE_SET_AS_B
+		undefine
+			simple_format
 		redefine
 			format
 		end
 
 feature -- Initialization
 
-	set is
-			-- Yacc initialization
-		do
-		end;
-
-	update
-		(   export_adapt: EXPORT_ADAPTATION;
-			export_status: EXPORT_I;
-			parent: PARENT_C)
-		is
+	update (export_adapt: EXPORT_ADAPTATION; export_status: EXPORT_I;
+														parent: PARENT_C) is
 			-- Update `export_adapt' with `export_status'.
 		local
 			vlel1: VLEL1;
@@ -33,11 +29,11 @@ feature -- Initialization
 			end;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_All_keyword);
 			ctxt.always_succeed;
 		end;
 
-end
+end -- class ALL_AS_B

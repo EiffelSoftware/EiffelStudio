@@ -1,10 +1,23 @@
--- Abstract description of a call as an instruction
+indexing
 
-class INSTR_CALL_AS
+	description:
+			"Abstract description of a call as an instruction, %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class INSTR_CALL_AS_B
 
 inherit
 
-	INSTRUCTION_AS
+	INSTR_CALL_AS
+		redefine
+			call
+		end;
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -12,18 +25,8 @@ inherit
 
 feature -- Attributes
 
-	call: CALL_AS;
+	call: CALL_AS_B;
 			-- Call instruction
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			call ?= yacc_arg (0);
-		ensure then
-			call_exists: call /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -54,7 +57,7 @@ feature -- Type check, byte code and dead code removal
 		end;
 
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_breakable;
@@ -76,13 +79,4 @@ feature	-- Replication
 			Result.set_call (call.replicate (ctxt));
 		end;
 
-feature {INSTR_CALL_AS} -- Replication
-
-	set_call (c: like call) is
-		require
-			valid_arg: c /= Void
-		do
-			call := c;
-		end;
-
-end
+end -- class INSTR_CALL_AS_B

@@ -1,47 +1,48 @@
--- Abstract description of an Eiffel loop instruction
+indexing
 
-class LOOP_AS
+	description:
+			"Abstract description of an Eiffel loop instruction. %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class LOOP_AS_B
 
 inherit
 
-	SHARED_OPTIMIZATION_TABLES;
-	INSTRUCTION_AS
+	LOOP_AS
+		redefine
+			from_part, compound, stop,
+			variant_part, invariant_part
+		end;
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node,
 			find_breakable, format,
 			fill_calls_list, replicate
-		end
+		end;
+	
+	SHARED_OPTIMIZATION_TABLES
 
 feature -- Attributes
 
-	from_part: EIFFEL_LIST [INSTRUCTION_AS];
+	from_part: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- from compound
 
-	invariant_part: EIFFEL_LIST [TAGGED_AS];
+	invariant_part: EIFFEL_LIST_B [TAGGED_AS_B];
 			-- invariant list
 
-	variant_part: VARIANT_AS;
+	variant_part: VARIANT_AS_B;
 			-- Variant list
 
-	stop: EXPR_AS;
+	stop: EXPR_AS_B;
 			-- Stop test
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
+	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Loop compound
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			from_part ?= yacc_arg (0);
-			invariant_part ?= yacc_arg (1);
-			variant_part ?= yacc_arg (2);
-			stop ?= yacc_arg (3);
-			compound ?= yacc_arg (4);
-		ensure then
-			stop_exists: stop /= Void
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -138,10 +139,9 @@ feature -- Debugger
 		end;
 
 
-
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -239,34 +239,4 @@ feature -- Replication
 			end;
 		end;
 			
-
-feature {LOOP_AS} -- Replication
-
-	set_from_part (f: like from_part) is
-		do
-			from_part := f
-		end;
-
-	set_invariant_part (i: like invariant_part) is
-		do
-			invariant_part := i
-		end;
-
-	set_variant_part (v: like variant_part) is
-		do
-			variant_part := v
-		end;
-
-	set_stop (s: like stop) is
-		require
-			valid_s: s /= Void
-		do
-			stop := s
-		end;
-
-	set_compound (c: like compound) is
-		do
-			compound := c
-		end;
-			
-end
+end -- class LOOP_AS_B

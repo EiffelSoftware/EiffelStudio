@@ -1,11 +1,24 @@
--- Abstract description of an access to an Eiffel feature (note that this
--- access can not be the first call of a nested expression).
+indexing
 
-class ACCESS_FEAT_AS
+	description:
+		"Abstract description of an access to an Eiffel feature (note %
+		%that this access can not be the first call of a nested %
+		%expression). Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ACCESS_FEAT_AS_B
 
 inherit
 
-	ACCESS_AS
+	ACCESS_FEAT_AS
+		redefine
+			feature_name, parameters
+		end;
+
+	ACCESS_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -13,30 +26,11 @@ inherit
 
 feature -- Attributes
 
-	feature_name: ID_AS;
+	feature_name: ID_AS_B;
 			-- Name of the feature called
 
-	parameters: EIFFEL_LIST [EXPR_AS];
+	parameters: EIFFEL_LIST_B [EXPR_AS_B];
 			-- List of parameters
-
-	parameter_count: INTEGER is
-			-- Count of parameters
-		do
-			if parameters /= Void then
-				Result := parameters.count;
-			end;
-		end;
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			feature_name ?= yacc_arg (0);
-			parameters ?= yacc_arg (1);
-		ensure then
-			feature_name_exists: feature_name /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -389,9 +383,8 @@ end; -- System.do_not_check_vape
 		once
 			Result := Context.parameters;
 		end;
-	
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -402,11 +395,6 @@ end; -- System.do_not_check_vape
 			else
 				ctxt.rollback
 			end;
-		end;
-
-	access_name: STRING is
-		do
-			Result := feature_name
 		end;
 
 feature -- Replication
@@ -448,18 +436,4 @@ end;
 			end
 		end;
 
-feature -- Replication {ACCESS_FEAT_AS}
-
-	set_feature_name (name: like feature_name) is
-		require
-			valid_arg: name /= Void
-		do
-			feature_name := name;
-		end;
-
-	set_parameters (p: like parameters) is
-		do
-			parameters := p
-		end;
-
-end
+end -- class ACCESS_FEAT_AS_B

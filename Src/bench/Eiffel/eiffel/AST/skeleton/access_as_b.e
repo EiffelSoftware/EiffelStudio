@@ -1,23 +1,27 @@
--- Abstract description of a non-nested call
+indexing
 
-deferred class ACCESS_AS
+	description:
+		"Abstract description of a non-nested call. %
+		%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class ACCESS_AS_B
 
 inherit
 
-	CALL_AS
+	ACCESS_AS;
+
+	CALL_AS_B
 		redefine
 			byte_node
 		end
 
 feature
 
-	access_name: STRING is
-		deferred
-		end;
-
 	byte_node: ACCESS_B is
 			-- Associated byte code
 		deferred
 		end
 
-end
+end -- class ACCESS_AS_B

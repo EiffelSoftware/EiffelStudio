@@ -1,30 +1,28 @@
--- Abstract node produce by yacc
+indexing
 
-deferred class AST_EIFFEL
+	description: "Abstract node produce by yacc. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class AST_EIFFEL_B
 
 inherit
 
+	AST_EIFFEL;
+
 	AST_YACC;
+
 	SHARED_WORKBENCH;
+
 	SHARED_TYPES;
+
 	SHARED_ERROR_HANDLER;
+
 	SHARED_ARG_TYPES;
+
 	SHARED_AST_CONTEXT;
+
 	SHARED_TEXT_ITEMS
-
-feature {SERVER} -- Identity
-
-	is_feature_obj: BOOLEAN is
-			-- Is the current object an instance of FEATURE_AS ?
-		do
-			-- Do nothing
-		end;
-
-	is_invariant_obj: BOOLEAN is
-			-- Is the current object an instance of INVARIANT_AS ?
-		do
-			-- Do nothing
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -54,9 +52,9 @@ feature -- Debugger
 			context.instruction_line.insert (Current);
 		end
 
-feature -- formatter
+feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconsitute text according to context.
 		do
 			-- Do nothing
@@ -65,13 +63,6 @@ feature -- formatter
 			ctxt.put_string (generator);
 		end;
 		
-	position: INTEGER is
-			-- position of the item in text
-		do
-			Result := -1;
-				-- treated as unknown
-		end;
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -86,4 +77,4 @@ feature -- Replication
 			Result := clone (Current)
 		end;
 		
-end
+end -- class AST_YACC_B

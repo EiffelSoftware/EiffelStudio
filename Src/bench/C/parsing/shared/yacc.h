@@ -108,7 +108,7 @@ extern fnptr syntax6;				/* Routine for empty string */
 extern fnptr syntax7;				/* Routine for identifier too long */
 extern fnptr syntax8;				/* Routine for generic basic type */
 extern fnptr syntax9;				/* Routine for too many generic parameters */
-extern int yacc_error_code; /* JOCE */
+extern int yacc_error_code;
 
 /*
  * Id position managment

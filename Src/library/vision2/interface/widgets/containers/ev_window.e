@@ -10,7 +10,6 @@ class
 	EV_WINDOW
 
 inherit
-	
 	EV_CONTAINER
 		redefine
 			implementation,
@@ -18,8 +17,8 @@ inherit
 		end
 
 creation
-	
-	make, make_top_level
+	make,
+	make_top_level
 	
 feature {NONE} -- Initialization
 
@@ -263,13 +262,13 @@ feature -- Element change
 
 feature -- Event - command association
 
-	set_close_command (cmd: EV_COMMAND) is
+	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
 			-- Make `cmd' the executed command when the window is closed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.set_close_command (cmd)
+			implementation.add_close_command (cmd, arg)
 		end
 
 	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is

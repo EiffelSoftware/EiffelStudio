@@ -185,9 +185,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Has this widget the flag `a_flag' in struct_flags?
 			-- (export status {NONE})
 		do
-			if a_gtk_object /= null then
-				Result := (((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_gtk_object) // a_flag) \\ 2)) = 1
-			end
+			Result := feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_gtk_object) & (a_flag) /= 0
 		end
 
 	gtk_widget_has_focus (a_c_object: POINTER): BOOLEAN is

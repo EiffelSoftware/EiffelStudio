@@ -125,13 +125,16 @@ feature -- Status setting
 			str.extend (' ')
 			str.append (Http_version)
 			str.append (Http_end_of_command)
-			main_socket.put_string (str)
-				debug
-					Io.error.put_string (str)
-				end
-			get_headers
-			transfer_initiated := True
-			is_packet_pending := True
+			check_socket (main_socket, Write_only)
+			if not error then
+				main_socket.put_string (str)
+					debug
+						Io.error.put_string (str)
+					end
+				get_headers
+				transfer_initiated := True
+				is_packet_pending := True
+			end
 		rescue
 			error_code := Transfer_failed
 		end
@@ -173,15 +176,18 @@ feature {NONE} -- Implementation
 			headers.wipe_out
 			from
 			until
-				str /= Void and str.is_equal ("%R")
+				error or else (str /= Void and str.is_equal ("%R"))
 			loop
-				main_socket.read_line
-				str := clone (main_socket.last_string)
-					debug
-						Io.error.put_string (str)
-						Io.error.put_new_line
-					end
-				if not str.is_empty then headers.extend (str) end
+				check_socket (main_socket, Read_only)
+				if not error then
+					main_socket.read_line
+					str := clone (main_socket.last_string)
+						debug
+							Io.error.put_string (str)
+							Io.error.put_new_line
+						end
+					if not str.is_empty then headers.extend (str) end
+				end
 			end
 			check_error
 			if not error then get_content_length end

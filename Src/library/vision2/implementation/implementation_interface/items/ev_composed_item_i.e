@@ -120,6 +120,7 @@ feature -- Element change
 			exists: not destroyed
 			valid_index: index >= 1 and index <= count
 			valid_pixmap: is_valid (pix)
+			valid_size: pixmap_size_ok (pix)
 		deferred
 		end
 
@@ -137,6 +138,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_pixmaps: pix /= Void
+			valid_size: pixmaps_size_ok (pix)
 		local
 			i: INTEGER
 			list_i: INTEGER
@@ -150,6 +152,36 @@ feature -- Element change
 				set_cell_pixmap (list_i, pix @ i)
 				i := i + 1
 				list_i := list_i + 1
+			end
+		end
+
+feature -- Assertion features
+
+	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
+			-- Check if the size of the pixmap is ok for
+			-- the container.
+		do
+			Result := (pix.width <= 16) and (pix.height <= 16)
+		end
+
+	pixmaps_size_ok (pix_array: ARRAY[EV_PIXMAP]): BOOLEAN is
+			-- Check if the size of the pixmaps is ok for
+			-- the container.
+		local
+			pixmaps: ARRAY [EV_PIXMAP]
+			i: INTEGER
+			pix: EV_PIXMAP
+		do
+			from
+				pixmaps := pix_array
+				i := 1
+				Result := True
+			until
+				(Result = False) or (i > pixmaps.upper)	
+			loop
+				pix := pixmaps @ i
+				Result := (pix.width <= 16) and (pix.height <= 16)
+				i := i + 1
 			end
 		end
 

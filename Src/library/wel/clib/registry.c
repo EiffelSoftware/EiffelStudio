@@ -377,18 +377,6 @@ EIF_POINTER cwin_reg_def_query_value(
 		RV->length = charCount;
 		return (EIF_POINTER) RV;	
 	}
-	
-/*	FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,    NULL,
-			result, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-			(LPTSTR) &lpMsgBuf,    0,    NULL );// Display the string.
-
-	MessageBox( NULL, lpMsgBuf, "GetLastError", MB_OK|MB_ICONINFORMATION );
-
-	// Free the buffer.
-
-	LocalFree( lpMsgBuf );*/
-
-	return NULL;
 }
 
 EIF_INTEGER cwin_reg_subkey_number(

@@ -1,12 +1,9 @@
 <document title="Getting started with Eiffel" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>
-			<content>Getting started with Eiffel:
-				<line_break></line_break> Language and Environment
+			<content>Getting started with Eiffel: Language and Environment
 			</content>
 		</heading>
 		<paragraph>This introductory documentation will let you become familiar with the essentials of the Eiffel language and method, and the EiffelStudio environment.  </paragraph>
@@ -53,8 +50,7 @@
 				<string>$ISE_EIFFEL</string>
 			</code>
 			<code>
-				<keyword>/library/base/structures/list</keyword>
-			</code>.  
+				<keyword>/library/base/structures/list</keyword></code>.  
 		</paragraph>
 		<paragraph>To become truly proficient in the method, read the book 
 			<link>

@@ -26,8 +26,6 @@ feature	-- Initialization
 			check 
 				False
 			end
-		ensure
-			assemblies_not_void: exists implies assemblies /= Void
 		end
 
 feature -- Access

@@ -8,8 +8,12 @@ default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
-	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 3211650")
 	arguments (" ")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 262274")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 524510")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 524832")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 200998")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 3211650")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("vision2_windows")
@@ -19,7 +23,7 @@ default
 	disabled_debug ("wel_gdi_references")
 	disabled_debug ("win_dispatcher")
 	debug (no)
-	line_generation (no)
+	line_generation (yes)
 	profile (no)
 	trace (no)
 	il_verifiable (yes)
@@ -41,20 +45,21 @@ default
 cluster
 	all build2:		"D:\work\build2"
 		exclude
-			"object_editor"; "eifgen"; "EIFGEN"; "templates" "Gtk"; 
+			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; 
 		end
 
 	dev:		"D:\work\library"
 
 	all wel (dev):		"$\wel"
+		exclude
+			"wel_dialog.e"; "wel_modeless_dialog.e"; 
+		end
 
 	all vision2 (dev):		"$\vision2"
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e";
-			"ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e";
-			"ev_dialog_imp_modeless.e";
+			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; 
 		end
 
 	all base:		"d:\work\library\base"
@@ -119,7 +124,7 @@ cluster
 
 	all wizard_library:		"D:\work\library\wizard"
 		exclude
-			"unix"; 
+			"unix"; "wizard_window.e"; "wizard_project_manager.e"; 
 		end
 
 external

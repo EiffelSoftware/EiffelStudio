@@ -44,7 +44,7 @@ feature -- Access
 			-- Type of the constraint in the original generic class.
 
 	context_class: CLASS_C
-			-- Class where the occurence of `gen_type_a' appears
+			-- Class where the occurrence of `gen_type_a' appears
 			
 	to_check: TYPE_A
 			-- Type of the declaration of the `i'-th elements of `gen_type_a'.

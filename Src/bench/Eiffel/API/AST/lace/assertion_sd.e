@@ -46,7 +46,7 @@ feature {COMPILER_EXPORTER}
 					else
 						error (value);
 					end;
-						-- If an error occured, the assertion level
+						-- If an error occurred, the assertion level
 						-- will be reset later on.
 					Lace.ace_options.set_has_assertion (True)
 				end

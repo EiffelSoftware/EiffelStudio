@@ -3,7 +3,7 @@ indexing
 	description: 
 			"Error for unvalid anchored type (an anchored type cannot be evaluated). %
 				%1. cycle in like features %
-				%2. like feture wich is defined in terms of like argument %
+				%2. like feature wich is defined in terms of like argument %
 				%3. unvalid feature name for anchor %
 				%4. anchor is a procedure %
 				%5. cycle involving like arguments";
@@ -36,7 +36,7 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `st'.
 		do
-			st.add_string ("Anchor type: ");
+			st.add_string ("Anchored type: ");
 			type.append_to (st);
 			st.add_new_line;
 		end;

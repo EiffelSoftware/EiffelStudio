@@ -76,7 +76,7 @@ feature -- Access
 		end;
 
 	error: BOOLEAN is
-			-- Did an error occured during the retrieval?
+			-- Did an error occurred during the retrieval?
 		do
 			Result := error_value /= ok_value
 		end;

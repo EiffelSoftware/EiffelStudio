@@ -92,7 +92,7 @@ feature -- Output
 feature {COMPILER_EXPORTER} -- Primitives
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_ARGUMENT is
-			-- Check if the anchor type is still a non like type and
+			-- Check if the anchored type is still a non like type and
 			-- update `actual_type'.
 		local
 			argument_type: TYPE

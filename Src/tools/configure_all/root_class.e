@@ -13,19 +13,11 @@ feature {NONE} -- Initialization
 	make (args: ARRAY [STRING]) is
 			-- Creation procedure.
 		require
-			valid_count: args.count >= 5
+			--valid_count: args.count >= 5
 			--valid_separators: merged_string (args).occurrences (separator) = 6
 		do
 			create exec_env
 			parse_arguments (args)
-			update_registry
-			initialize_borland
-			create_project_directory
-			shell_name := exec_env.get ("COMSPEC")
-			exec_env.change_working_directory (short_path)
-			precompile_libraries
-			exec_env.change_working_directory (short_path)
-			update_registry
 		ensure
 			initialized: initialized
 		end
@@ -34,16 +26,56 @@ feature {NONE} -- Initialization
 			-- Parse the arguments of the command line.
 		do
 			create precompilation_params.make (10)
-			precompilation_params.append (args @ 1)
-			precompilation_params.append_character (' ')
-			precompilation_params.append (args @ 2)
-			c_compiler := args @ 3
-			install_dir := args @ 4
-			project_directory := args @ 5
+			if args.count = 3 then
+				check
+					remove_argument: args.item (1).is_equal ("remove")
+				end
+				remove_files (args.item (2))
+			elseif args.count >= 5 then
+				precompilation_params.append (args @ 1)
+				precompilation_params.append_character (' ')
+				precompilation_params.append (args @ 2)
+				c_compiler := args @ 3
+				install_dir := args @ 4
+				project_directory := args @ 5
+
+				execute_configure_all
+			end
 		ensure
 			initialized: initialized
 		end
 
+	execute_configure_all is
+			-- performs operations, after argument parsing.
+		do
+			update_registry
+			initialize_borland
+			create_project_directory
+			shell_name := exec_env.get ("COMSPEC")
+			exec_env.change_working_directory (short_path)
+			precompile_libraries
+			exec_env.change_working_directory (short_path)
+			update_registry
+		end
+
+	remove_files (a_directory_path: STRING) is
+			-- delete recursively directory located in `a_directory_path'.
+		require
+			valid_dirctory_path: a_directory_path /= Void and not a_directory_path.is_empty
+		local
+			l_eiffel_dir: DIRECTORY
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_eiffel_dir.make (a_directory_path)
+				l_eiffel_dir.delete_content
+				l_eiffel_dir.delete
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 feature -- Actions
 
 	initialize_borland is

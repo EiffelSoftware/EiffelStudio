@@ -24,11 +24,7 @@ feature -- Initialization
 	vanishing: EV_MENU_SEPARATOR
 	rmi: EV_RADIO_MENU_ITEM
 
-	hsa: EV_VERTICAL_BOX
-
 	pix: EV_PIXMAP
-
-	rb: EV_RADIO_BUTTON
 
 	prepare is
 		do
@@ -110,10 +106,26 @@ feature -- Initialization
 --			i4.set_pixmap (pix)
 			i3.extend (i4)
 
+			create sd
+			sd.ok_actions.extend (~on_ok)
+			create si
+			si.set_text ("Dialog inside dialog.")
+
+			io.put_string (test_radio_grouping.out + "%N")
+		end
+
+	test_radio_grouping: BOOLEAN is
+			-- Is radio grouping working correctly?
+		local
+			hb: EV_HORIZONTAL_BOX
+			hsa, hsb, hsc: EV_VERTICAL_BOX
+			rb: EV_RADIO_BUTTON
+		do
+			create hb
+			first_window.extend (hb)
+
 			create hsa
-			first_window.extend (hsa)
-			hsa.extend (create {EV_TOGGLE_BUTTON}.make_with_text ("toggle"))
-			hsa.extend (create {EV_CHECK_BUTTON}.make_with_text ("check"))
+			hb.extend (hsa)
 			create rb.make_with_text ("radio1")
 			rb.press_actions.extend (~on_radio_test (rb))
 			hsa.extend (rb)
@@ -123,6 +135,41 @@ feature -- Initialization
 			create rb.make_with_text ("radio3")
 			rb.press_actions.extend (~on_radio_test (rb))
 			hsa.extend (rb)
+
+			create hsb
+			hb.extend (hsb)
+			create rb.make_with_text ("TV1")
+			rb.press_actions.extend (~on_radio_test (rb))
+			hsb.extend (rb)
+			create rb.make_with_text ("TV2")
+			rb.press_actions.extend (~on_radio_test (rb))
+			hsb.extend (rb)
+			create rb.make_with_text ("TV3")
+			rb.press_actions.extend (~on_radio_test (rb))
+			hsb.extend (rb)
+
+			create hsc
+			hb.extend (hsc)
+			create rb.make_with_text ("a1")
+			rb.press_actions.extend (~on_radio_test (rb))
+			hsc.extend (rb)
+			create rb.make_with_text ("a2")
+			rb.press_actions.extend (~on_radio_test (rb))
+			hsc.extend (rb)
+
+			hsb.merge_radio_button_groups (hsa)
+			hsb.merge_radio_button_groups (hsc)
+			hsb.merge_radio_button_groups (hsc)
+
+			Result := rb.peers.count = 8		
+		end
+
+	sd: EV_FILE_OPEN_DIALOG
+	si: EV_INFORMATION_DIALOG
+
+	on_ok is
+		do
+			si.show_modal
 		end
 
 	on_exit is
@@ -145,8 +192,7 @@ feature -- Initialization
 
 	annoy is
 		do
-			help_menu.go_i_th (4)
-			help_menu.remove
+			sd.show_modal
 		end
 
 	first_window: EV_TITLED_WINDOW is

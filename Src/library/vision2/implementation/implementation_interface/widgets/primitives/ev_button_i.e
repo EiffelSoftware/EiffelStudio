@@ -35,8 +35,12 @@ feature {NONE} -- Initialization
 
 feature -- Event - command association
 	
-	add_click_command ( command: EV_COMMAND; 
-			    arguments: EV_ARGUMENTS) is	
+	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Make 'cmd' the executed command when the button
+			-- is pressed.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 	

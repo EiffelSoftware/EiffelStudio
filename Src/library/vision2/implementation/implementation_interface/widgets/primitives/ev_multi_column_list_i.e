@@ -38,17 +38,18 @@ feature -- Access
 		end
 
 	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
-			-- Give the item of the list at the zero-base
+			-- Give the item of the list at the one-base
 			-- `index'.
 		require
 			exists: not destroyed
 			item_exists: index <= rows
-		deferred
+		do
+			Result := ev_children @ index
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
+			-- selection, it gives the last selected item.
 		require
 			exists: not destroyed
 			item_selected: selected
@@ -118,21 +119,20 @@ feature -- Status setting
 
 	set_column_alignment (type: INTEGER; column: INTEGER) is
 			-- Align the text of the column.
+			-- Not allowed for the first column
 			-- 0: Left, 
 			-- 1: Right,
 			-- 2: Center,
-			-- 3: Fill (temp)
 		require
 			exists: not destroyed
-			column_exists: column >= 1 and column <= columns
+			column_exists: column > 1 and column <= columns
 		deferred
 		end
 
 feature -- Element change
 
 	set_column_title (txt: STRING; column: INTEGER) is
-			-- Make `txt' the title of the column number
-			-- `number'.
+			-- Make `txt' the title of the one-based column.
 		require
 			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
@@ -140,8 +140,7 @@ feature -- Element change
 		end
 
 	set_column_width (value: INTEGER; column: INTEGER) is
-			-- Make `value' the new width of the column number
-			-- `column'.
+			-- Make `value' the new width of the one-based column.
 		require
 			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
@@ -155,32 +154,45 @@ feature -- Element change
 		deferred
 		end
 
-feature -- Event : command association
-
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
-			-- Make `command' executed when an item is
-			-- selected.
+	clear_items is
+			-- Clear all the items of the list.
 		require
 			exists: not destroyed
-			command_not_void: a_command /= Void
 		deferred
 		end
 
-	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Make `command' executed when an item is
-			-- selected by double clicked.
+feature -- Event : command association
+
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Make `cmd' the executed command when the selection
+			-- has changed.
 		require
 			exists: not destroyed
-			command_not_void: a_command /= Void
+			valid_command: cmd /= Void
+		deferred
+		end
+
+	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when a column is clicked.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
-	add_item (item: EV_MULTI_COLUMN_LIST_ROW) is
+	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			-- We have to store the children because
+			-- neither gtk nor windows does it.
+
+	add_item (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Add `item' to the list
 		deferred
 		end
+
+invariant
+	ev_children_not_void: ev_children /= Void
 
 end -- class EV_MULTI_COLUMN_LIST_I
 

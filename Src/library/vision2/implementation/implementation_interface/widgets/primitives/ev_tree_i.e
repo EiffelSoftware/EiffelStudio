@@ -12,6 +12,11 @@ inherit
 	
 	EV_TREE_ITEM_CONTAINER_I
 
+feature {NONE} -- Implementation
+
+	ev_children: ARRAYED_LIST [EV_TREE_ITEM]
+			-- We need to store the children.
+	
 end -- class EV_TREE_I
 
 --|----------------------------------------------------------------

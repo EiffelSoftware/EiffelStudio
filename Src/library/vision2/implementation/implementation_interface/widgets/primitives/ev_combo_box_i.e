@@ -72,11 +72,12 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
-			-- Make `command' executed when an item is
-			-- selected.
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Make `cmd' the executed command when the
+			-- selection has changed.
 		require
 			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 

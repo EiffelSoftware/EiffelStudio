@@ -51,9 +51,13 @@ feature -- Initialization
 			ctxt.set_separator(", ");
 			ctxt.separator_is_special;
 			ctxt.no_new_line_between_tokens;
-			clients.format(ctxt);
-			ctxt.put_special("}");
-			ctxt.commit
+			if export_status.valid_for (ctxt.definition.client) then
+				clients.format(ctxt);
+				ctxt.put_special("}");
+				ctxt.commit
+			else
+				ctxt.rollback;
+			end;
 		end;
 
 end

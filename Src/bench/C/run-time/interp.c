@@ -844,11 +844,18 @@ end:
 		dprintf(2)("BC_CLONE\n");
 #endif
 		{	char *ref;
+			unsigned long stagval;
 	
+			stagval = tagval;
 			last = otop();
 			ref = last->it_ref;
 			last->it_ref = eclone(ref);	/* Empty clone */
-			ecopy(ref, last->it_ref);	/* Copy for completing the clone */
+			if (tagval != stagval)		/* eclone calls malloc which may
+										 * call the interpreter for creation
+										 * routines of expanded objects.
+										 */
+				sync_registers(scur, stop);
+			ecopy(ref, last->it_ref);	/* Copy to complete the clone */
 		}
 		break;
 	
@@ -1102,11 +1109,19 @@ end:
 		 */
 		{
 			char *new_obj;						/* New object */
+			unsigned long stagval;
 
+			stagval = tagval;
 			new_obj = RTLN(type);		/* Create new object */
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;	
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
+			if (tagval != stagval)		/* If type is expanded we may
+										 * need to sync the registers if it
+										 * called the interpreter for the
+										 * creation routine.
+										 */
+				sync_registers(scur, stop);
 		}
 		break;
 
@@ -2196,6 +2211,9 @@ int code;
 	 * Equality operation.
 	 */
 	case BC_EQ:
+#ifdef DEBUG
+		dprintf(2)("BC_EQ\n");
+#endif
 		switch(first->type & SK_HEAD) {
 		case SK_BOOL:
 		case SK_CHAR: first->it_char = first->it_char == second->it_char; break;

@@ -324,11 +324,11 @@ int offset;				/* Offset within enclosing where attachment is made */
 		} else {					/* Special filled with expanded objects */
 			elem_size = *(long *) (c_ref + sizeof(long));
 			for (offset = OVERHEAD; count > 0; count--, offset += elem_size)
-				expanded_update(clone + offset, DEEP);
+				expanded_update(source, clone + offset, DEEP);
 		}
 
 	} else
-		expanded_update(clone, DEEP);		/* Update intra expanded refs */
+		expanded_update(source, clone, DEEP);		/* Update intra expanded refs */
 }
 
 public void xcopy(source, target)
@@ -371,9 +371,9 @@ register1 char *target;
 	
 	/* Precompute the enclosing target object */
 	enclosing = target;					/* By default */
-	if (t_flags & EO_EXP) {
+	if ((t_flags & EO_EXP) || (s_flags & EO_EXP)) {
 		enclosing -= t_zone->ov_size & B_SIZE;
-		size = t_zone->ov_size & B_SIZE;
+		size = Size(t_flags & EO_TYPE);
 		}
 	else
 		size = s_zone->ov_size & B_SIZE;
@@ -403,7 +403,7 @@ register1 char *target;
 			/* Case of composite object: updating of references on expanded
 			 * objects and duplication of special objects.
 			 */
-			expanded_update(target, SHALLOW);
+			expanded_update(source, target, SHALLOW);
 		}
 	} else {
 
@@ -573,34 +573,57 @@ char *enclosing;		/* Enclosing target object (may differ from target) */
 	}	
 }
 
-private void expanded_update(target, shallow_or_deep)
-char *target;
+private void expanded_update(source, target, shallow_or_deep)
+char *source, *target;
 int shallow_or_deep;
 {
 	/*
-	 * Update recursively expanded references for target `target'.
+	 * Update recursively:
+	 *		1. expanded references for target `target'.
+	 *		2. offsets within subobjects since `source' and `target' may
+	 *	come from different containers.
+	 * (This is done since copying the source to the target caused the
+	 * target's subobjects to have the same offsets and reference points to
+	 * its subobjects as the `source').
 	 * It assumes that `target' is not a special object and that it
 	 * is a composite object.
 	 */
 
-	register4 union overhead *zone;			/* Object header */
+	register4 union overhead *zone;			/* Target Object header */
 	register2 long nb_ref;					/* Number of references */
 	register3 uint32 flags;					/* Target flags */
-	register1 char *reference;				/* Current reference */
-	char *enclosing;						/* Enclosing object */
-	int offset = 0;							/* Offset within target */
-	char *expanded;
+	register1 char *t_reference;			/* Target reference */
+	register5 char *s_reference;			/* Source reference */
+	char *t_enclosing;						/* Enclosing object */
+	char *s_enclosing;						/* Enclosing object */
+	int t_offset = 0;						/* Offset within target */
+	int s_offset = 0;						/* Offset within target */
+	int temp_offset = 0;					/* Offset within target */
+	int s_sub_offset = 0;					/* Subobject offset */
+	int offset1 = 0;						/* Offset within target */
+	int offset2 = 0;						/* Offset within target */
+	char *t_expanded;
+	char *s_expanded;
 
 	/* Compute the enclosing object (i.e. the object which contains the target).
 	 * Normally this is the object itself, unless the target is expanded.
 	 */
 
-	enclosing = target;					/* Default enclosing object is itself */
-	zone = HEADER(target);				/* Malloc info zone */
-	flags = zone->ov_flags;				/* Eiffel object flags */
+	t_enclosing = target;					/* Default enclosing object is itself */
+	s_enclosing = source;					/* Default enclosing object is itself */
+	zone = HEADER(target);					/* Malloc info zone */
+	flags = zone->ov_flags;					/* Eiffel object flags */
 	if (flags & EO_EXP) {
-		offset = zone->ov_size & B_SIZE;	/* Expanded offset within object */
-		enclosing = target - offset;		/* Address of enclosing object */
+		offset2 = zone->ov_size & B_SIZE;
+		t_offset = zone->ov_size & B_SIZE;	/* Target expanded offset within object */
+		t_enclosing = target - t_offset;	/* Address of target enclosing object */
+	}
+	zone = HEADER(source);
+	flags = zone->ov_flags;					/* Source eiffel object flags */
+	if (flags & EO_EXP) {
+		offset1 = zone->ov_size & B_SIZE;
+		s_offset = zone->ov_size & B_SIZE;	/* Expanded offset within object */
+		s_enclosing = source - s_offset;		/* Address of enclosing object */
 	}
 
 	nb_ref = References(flags & EO_TYPE);		/* References in target */
@@ -609,13 +632,13 @@ int shallow_or_deep;
 	for (
 		/* empty */;
 		nb_ref > 0;
-		nb_ref--, offset += sizeof(char *)
+		nb_ref--, t_offset += sizeof(char *), s_offset += sizeof(char *)
 	) {
-		reference = *(char **) (enclosing + offset);
-		if (0 == reference)
+		t_reference = *(char **) (t_enclosing + t_offset);
+		if (0 == t_reference)
 			continue;		/* Void reference */
 
-		zone = HEADER(reference);
+		zone = HEADER(t_reference);
 		flags = zone->ov_flags;
 
 		if (flags & EO_EXP) {		/* Object is expanded */
@@ -628,15 +651,27 @@ int shallow_or_deep;
 			 * expanded object within its enclosing father.
 			 */
 
-			expanded = enclosing + (zone->ov_size & B_SIZE);
-			*(char **) (enclosing + offset) = expanded;
+			s_reference = *(char **) (s_enclosing + s_offset);
+			s_sub_offset = HEADER(s_reference)->ov_size & B_SIZE;
+									/* Get offset from source expanded */
+			temp_offset = s_sub_offset - offset1;
 
+									/* Corresponding expanded in target object */
+			t_expanded = t_enclosing + offset2 + temp_offset;
+								 	/* Update reference point to sub-object */ 
+			*(char **) (t_enclosing + t_offset) = t_expanded;
+			t_reference = *(char **) (t_enclosing + t_offset);
+									/* Update offset in header */ 
+			zone = HEADER(t_reference);
+			zone->ov_size = offset2 + temp_offset;
+
+			s_expanded = s_enclosing + s_sub_offset;
 			/* Recursive updating is needed if we are in a DEEP clone or if
 			 * the object is composite, i.e. contains expanded objects.
 			 */
 
 			if (flags & EO_COMP || shallow_or_deep == DEEP)
-				expanded_update(expanded, shallow_or_deep);
+				expanded_update(s_expanded, t_expanded, shallow_or_deep);
 
 		} else if (shallow_or_deep == DEEP) {	/* Not expanded */
 
@@ -646,7 +681,7 @@ int shallow_or_deep;
 			 */
 
 			if (!(flags & EO_C))
-				rdeepclone(reference, enclosing, offset);
+				rdeepclone(t_reference, t_enclosing, t_offset);
 		}
 	}
 }

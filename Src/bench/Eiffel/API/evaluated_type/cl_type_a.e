@@ -13,7 +13,8 @@ inherit
 			meta_type,
 			same_as,
 			good_generics,
-			has_expanded
+			has_expanded,
+			format
 		end
 
 feature -- Attributes
@@ -277,6 +278,12 @@ feature
 		do
 			!!Result;
 			Result.set_type (type_i);
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			--
+		do
+			ctxt.put_string (associated_class.signature);
 		end;
 
 end

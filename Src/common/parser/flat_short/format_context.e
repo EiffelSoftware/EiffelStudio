@@ -15,23 +15,32 @@ feature -- commit / rollback system
 		local
 			first_format: LOCAL_FORMAT;
 			ast: CLASS_AS;
+			name: STRING;
 		do
+			io.putstring ("FORMATTING A CLASS %N");
+			class_c := c;
 			!!previous.make;
 			!!text.make;
 			!!first_format.make(c.actual_type);
+			upper_name := c.class_name.duplicate;
+			upper_name.to_upper;
 			previous.add (first_format);
 			if is_short then
-				!FLAT_SHORT_DEF!definition.make;
+				!FLAT_SHORT_TROFF_DEF!definition.make;
 			else
 				!FLAT_DEF!definition.make;
 			end;
 			!!flat_struct.make (c, definition.client);
 			flat_struct.fill;
 			if flat_struct.ast /= void then
+				prepare_class_text (upper_name);
 				flat_struct.ast.format (Current);
 			end;
-		end;
+	end;
 
+	class_c: CLASS_C;
+	
+	upper_name: STRING; 
 
 	previous: LINKED_STACK[LOCAL_FORMAT];
 		-- previous  format (push at begin, pop at commit and rollback)
@@ -68,6 +77,7 @@ feature -- commit / rollback system
 			text.head(format.position_in_text);
 		end;
 
+
 	rollback is
 		-- go back to previous format.Discard text modifications 
 		do
@@ -75,6 +85,7 @@ feature -- commit / rollback system
 			previous.remove;
 			last_was_printed := false;
 		end;
+
 
 	always_succeed is
 		-- do as if begin and commit had been done. quicker, but can't rollback
@@ -414,6 +425,29 @@ feature -- type control
 				last_was_printed := false;
 			end;
 		end;
+
+	index_feature is
+		local
+			name: STRING;
+		do
+			!!name.make (50);
+			if format.local_types.is_prefix then
+				name.append (definition.before_keyword);
+				name.append ("prefix");
+				name.append (definition.after_keyword);
+				name.append (" ");
+			elseif format.local_types.is_infix then
+				name.append (definition.before_keyword);
+				name.append ("prefix");
+				name.append (definition.after_keyword);
+				name.append (" ");
+			end;
+			name.append (format.local_types.final_name);
+			prepare_feature (upper_name, name);
+		end;
+			
+
+			
 			
 	
 	put_normal_feature is
@@ -649,7 +683,8 @@ feature -- comments
 			begin;
 			if comment /= void then
 				if comment.count > 0 then
-					put_special ("-- ");
+					put_string (definition.before_comment);
+					put_string ("-- ");
 					put_string (comment.text.item (0));
 				end;
 				if comment.count > 1 then
@@ -657,14 +692,16 @@ feature -- comments
 						i := 1
 					until
 						i >= comment.count
+						or else comment.text.item (i).item (1) = '|'
 					loop
 						next_line;
-						put_special ("-- ");
+						put_string ("-- ");
 						put_string (comment.text.item (i));
 						i := i + 1;
 					end;
 				end;
 			end;
+			put_string (definition.after_comment);
 			commit;
 		end;
 			
@@ -692,23 +729,39 @@ feature -- comments
 		end;
 	
 	put_origin_comment is
+		local
+			s: STRING;
+			origin_comment: EIFFEL_COMMENTS;
+			class_name: STRING;
 		do
 			if 
 				format.global_types.source_class 
 				/= format.global_types.target_class
 			then
 				begin;
-				indent_one_more;
 				next_line;
-				-- writefrom source_class.class_name
+				!!s.make (50);
+				s.append (" (from ");
+				class_name := format.global_types.
+					source_class.class_name.duplicate;
+				class_name.to_upper;
+				s.append (class_name);
+				s.append (")");
+				!!origin_comment.make (-1);
+				origin_comment.add (s);
+				put_comment (origin_comment);
 				commit;
 			end;
 		end;
 
-
-	register_feature_clause (f: FEATURE_CLAUSE_AS) is
+	formal_name (pos: INTEGER): ID_AS is
+		require
+			pos > 0;
+			pos <= class_c.generics.count
 		do
+			Result := class_c.generics.i_th (pos).formal_name.duplicate;
+			Result.to_upper;
 		end;
-				
-			
+	
+
 end	

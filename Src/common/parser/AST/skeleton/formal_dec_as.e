@@ -60,20 +60,17 @@ feature -- Initialization
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
-
-			--| formal name are changed to G H I...
-			--| to ensure compatibilite with FORMAL_AS
 		local
-			s: string;
+			s: STRING;
 		do
-			!!s.make (1);
-			s.append_character (charconv (charcode ('F') + position));
-			ctxt.put_string(s);
+			s := formal_name.duplicate;
+			s.to_upper;
+			ctxt.put_string (s);
 			if constraint /= void then
 				ctxt.put_special(" -> ");
 				constraint.format (ctxt);
-				ctxt.always_succeed;
 			end;
+			ctxt.always_succeed;
 		end;
 		
 end

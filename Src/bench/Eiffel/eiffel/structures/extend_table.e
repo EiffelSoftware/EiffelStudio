@@ -13,14 +13,14 @@ feature -- Iterartion
 	start is
 			-- Iteration initialization
 		do
-			pos_for_iter := keys.lower - 1;
+			position_for_iteration := keys.lower - 1;
 			forth
 		end;
 
 	offright: BOOLEAN is
 			-- Is the cursor at the end ?
 		do
-			Result := pos_for_iter > keys.upper
+			Result := position_for_iteration > keys.upper
 		end;
 
 	forth is
@@ -34,8 +34,9 @@ feature -- Iterartion
 			until
 				stop
 			loop
-				pos_for_iter := pos_for_iter + 1;
-				stop := offright or else valid_key (keys.item (pos_for_iter))
+				position_for_iteration := position_for_iteration + 1;
+				stop := offright 
+					or else valid_key (keys.item (position_for_iteration))
 			end
 		end;
 
@@ -44,7 +45,7 @@ feature -- Iterartion
 		require
 			not_offright: not offright
 		do
-			Result := content.item (pos_for_iter)
+			Result := content.item (position_for_iteration)
 		end;
 
 	key_for_iteration: U is
@@ -52,8 +53,10 @@ feature -- Iterartion
 		require
 			not_offright: not offright
 		do
-			Result := keys.item (pos_for_iter)
+			Result := keys.item (position_for_iteration)
 		end;
+
+			
 
 feature -- Merging
 
@@ -72,9 +75,18 @@ feature -- Merging
 			end
 		end;
 
-feature {NONE} -- Cursor for iteration
+feature -- Cursor for iteration
 
-	pos_for_iter: INTEGER;
+	position_for_iteration : INTEGER;
 			-- Cursor for iteration primitives
+
+	go (p: INTEGER) is
+			-- set position_for_iteration to p
+		do
+			position_for_iteration := p;
+			if p < keys.lower then
+				position_for_iteration := keys.lower - 1	
+			end;
+		end;
 
 end

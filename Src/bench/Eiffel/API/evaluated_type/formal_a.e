@@ -13,7 +13,8 @@ inherit
 			instantiation_in,
 			has_formal_generic,
 			instantiated_in,
-			same_as
+			same_as,
+			format
 		end;
 
 feature
@@ -109,5 +110,12 @@ feature
 		ensure then
 			False
 		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- reconstitute text
+		do
+			ctxt.put_string (ctxt.formal_name (base_type));
+		end;
+		
 
 end

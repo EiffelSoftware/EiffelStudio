@@ -569,6 +569,7 @@ feature {EV_ANY_I} -- Implementation
 				+ Lvs_report
 				+ Lvs_singlesel
 				+ Lvs_shareimagelists
+				+ Ws_clipchildren
 		end
 
 	default_ex_style: INTEGER is

@@ -422,8 +422,9 @@ feature -- Implementation
 				a_x, a_y, a_button,
 				a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y)
+			else
+				call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			end
-			call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
 	pnd_row_imp: EV_TREE_NODE_IMP

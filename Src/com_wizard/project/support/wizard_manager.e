@@ -101,6 +101,7 @@ feature -- Basic Operations
 				progress_report.start
 
 				if 
+					Shared_wizard_environment.client or
 					shared_wizard_environment.use_universal_marshaller or
 					shared_wizard_environment.automation or
 					shared_wizard_environment.new_eiffel_project
@@ -117,36 +118,34 @@ feature -- Basic Operations
 
 				-- Create Proxy/Stub
 				if 
+					Shared_wizard_environment.server and 
 					not shared_wizard_environment.use_universal_marshaller and 
 					not shared_wizard_environment.automation and
 					not shared_wizard_environment.new_eiffel_project and
-					Shared_wizard_environment.server and 
 					not shared_wizard_environment.abort
 				then
-					-- Compile c iid file
+					check
+						not_client: not Shared_wizard_environment.client
+					end
 					message_output.add_title (Current, Iid_compilation_title)
 					compiler.compile_iid
 					if not shared_wizard_environment.abort then
 						progress_report.step
-						-- Compile c dlldata file
 						message_output.add_title (Current, Data_compilation_title)
 						compiler.compile_data
 					end
 					if not shared_wizard_environment.abort then
 						progress_report.step
-						-- Compile c proxy/stub file
 						message_output.add_title (Current, Ps_compilation_title)
 						compiler.compile_ps
 					end
 					if not shared_wizard_environment.abort then
 						progress_report.step
-						-- Final link
 						message_output.add_title (Current, Link_title)
 						compiler.link
 					end
 					if not shared_wizard_environment.abort then
 						progress_report.step
-						-- Registration
 						message_output.add_title (Current, Ps_registration_title)
 						compiler.register_ps
 					end

@@ -12,9 +12,38 @@ feature -- Access
 	Eiffel4_location: STRING is
 			-- Location of Eiffel compiler.
 		once
-			Result := execution_environment.get (Eiffel4)
+			Result := execution_environment.get (Eiffel5)
+			if Result = Void then
+				Result := execution_environment.get (Eiffel4)
+				Eiffel4_defined := True
+			end
+		ensure
+			non_void_location: Result /= Void
 		end
 
+	eiffel_compiler: STRING is
+			-- Name of Eiffel compiler executable.
+		require
+			non_void_eiffel_location: Eiffel4_location /= Void
+			valid_location: not Eiffel4_location.empty
+		local
+			directory: DIRECTORY
+		once
+			create directory.make (Eiffel4_location + "\bench\spec\windows\bin")
+			if directory.exists then
+				if directory.has_entry ("ec.exe") then
+					Result := "ec"
+				elseif directory.has_entry ("es4.exe")then
+					Result := "es4"
+				end
+			end
+		ensure
+			non_void_compiler: Result /= Void
+		end
+	
+	Eiffel4_defined: BOOLEAN
+			-- Is EIFFEL4 environment variable defined?
+			
 feature {NONE} -- Implementation
 
 	execution_environment: EXECUTION_ENVIRONMENT is
@@ -25,6 +54,9 @@ feature {NONE} -- Implementation
 
 	Eiffel4: STRING is "EIFFEL4"
 			-- Eiffel4 environmnent variable
+
+	Eiffel5: STRING is "EIFFEL5"
+			-- Eiffel5 environmnent variable
 
 end -- class WIZARD_EXECUTION_ENVIRONMENT
 

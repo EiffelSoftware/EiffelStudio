@@ -1,6 +1,5 @@
 indexing
 	description: "Type names"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

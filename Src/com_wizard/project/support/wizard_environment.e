@@ -287,20 +287,17 @@ feature -- Element Change
 			idl_set: idl = a_boolean
 		end
 	
-	set_server (a_boolean: BOOLEAN) is
-			-- Set `server' with `a_boolean'.
+	set_client_server (a_client, a_server: BOOLEAN) is
+			-- Set `client' with `a_client'.
+			-- Set `server' with `a_server'.
+		require
+			server_or_client: a_client xor a_server
 		do
-			server := a_boolean
+			client := a_client
+			server := a_server
 		ensure
-			server_set: server = a_boolean
-		end
-
-	set_client (a_boolean: BOOLEAN) is
-			-- Set `client' with `a_boolean'.
-		do
-			client := a_boolean
-		ensure
-			client_set: client = a_boolean
+			client_set: client = a_client
+			server_set: server = a_server
 		end
 
 	set_use_universal_marshaller (a_boolean: BOOLEAN) is
@@ -395,7 +392,7 @@ feature -- Element Change
 		end
 		
 invariant
-
+	server_or_client: server xor client
 	valid_output_level: output_level = Output_warnings or output_level = Output_all or output_level = Output_none
 	valid_destination_folder: destination_folder /= Void implies (destination_folder.item (destination_folder.count) = Directory_separator)
 	valid_eiffel_compilation_choice: compile_eiffel implies compile_c

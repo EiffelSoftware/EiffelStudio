@@ -112,10 +112,12 @@ feature -- Basic Operations
 			a_string.append (Space)
 			a_string.append (Idl_compiler_command_line)
 			message_output.add_message (Current, a_string)
+
 			a_string := clone (Shared_wizard_environment.destination_folder)
-			a_string.append (clone (shared_wizard_environment.project_name))
+			a_string.append (shared_wizard_environment.project_name)
 			a_string.append (".tlb")
 			shared_wizard_environment.set_type_library_file_name (a_string)
+
 			execution_environment.change_working_directory (Shared_wizard_environment.destination_folder)
 			generate_command_line_file (Idl_compiler_command_line, Temporary_input_file_name)
 			a_string := clone (Idl_compiler)
@@ -380,14 +382,18 @@ feature {NONE} -- Implementation
 	precompile_command: STRING is
 			-- Eiffel compiler command line to precompile
 		do
-			Result := "es4 -precompile -batch -ace "
+			create Result.make (100)
+			Result.append (eiffel_compiler)
+			Result.append (" -precompile -batch -ace ")
 			Result.append (Ace_file_name)
 		end
 
 	eiffel_compile_command: STRING is
 			-- Eiffel compiler command line to freeze
 		do
-			Result := "es4 -batch -ace "
+			create Result.make (100)
+			Result.append (eiffel_compiler)
+			Result.append (" -batch -ace ")
 			Result.append (Ace_file_name)
 		end
 

@@ -95,12 +95,13 @@ feature {NONE} -- Implementation
 				if raw_data.item.index_of (':', 1) > 0 and 
 							raw_data.item.index_of ('%"', 1) > raw_data.item.index_of (':', 1) then
 					str_buffer.left_adjust
+					str_buffer.right_adjust
 					if not str_buffer.empty and not is_common_path (str_buffer) then
 						clusters.extend (str_buffer)
 					end
 					str_buffer := clone (raw_data.item)
 					str_buffer.append ("%N")
-				elseif raw_data.item.substring_index ("--", 1) < 1 then
+				elseif raw_data.item.substring_index ("--", 1) = 0 then
 					str_buffer.append (raw_data.item)
 					str_buffer.append ("%N")
 				end

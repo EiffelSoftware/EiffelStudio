@@ -50,7 +50,9 @@ feature -- Basic operations
 				folder.create_dir
 			end
 
-			command := "es4 -flatshort -filter com "
+			create command.make (100)
+			command.append (eiffel_compiler)
+			command.append (" -flatshort -filter com ")
 			command.append (shared_wizard_environment.eiffel_class_name)
 			command.append (" -project ")
 			command.append (shared_wizard_environment.eiffel_project_name)
@@ -68,17 +70,17 @@ feature -- Basic operations
 			else
 				if not shared_wizard_environment.abort then
 					message_output.add_message (Current, "Generating IDL file")
+					
+					create midl_library.make (shared_wizard_environment.eiffel_class_name)
+					create midl_coclass_creator.make
+					midl_coclass_creator.create_from_eiffel_class (input_data.eiffel_class)
+					midl_library.set_coclass (midl_coclass_creator.midl_coclass)
+
+					create idl_file.make_open_write (shared_wizard_environment.idl_file_name)
+					idl_file.put_string (midl_library.code)
+					idl_file.flush
+					idl_file.close
 				end
-
-				create midl_library.make (shared_wizard_environment.eiffel_class_name)
-				create midl_coclass_creator.make
-				midl_coclass_creator.create_from_eiffel_class (input_data.eiffel_class)
-				midl_library.set_coclass (midl_coclass_creator.midl_coclass)
-
-				create idl_file.make_open_write (shared_wizard_environment.idl_file_name)
-				idl_file.put_string (midl_library.code)
-				idl_file.flush
-				idl_file.close
 			end
 		rescue
 			message_output.add_message (Current, "Error: Class not in project")
@@ -122,9 +124,7 @@ feature {NONE} -- Basic operations
 			a_output.replace_substring_all ("%R%N", "%N")
 
 			create output_file.make_open_write (raw_file_name)
-
 			output_file.put_string (a_output)
-
 			output_file.close
 
 			if not Shared_wizard_environment.abort then

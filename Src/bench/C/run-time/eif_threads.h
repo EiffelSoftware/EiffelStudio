@@ -473,7 +473,7 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 
 
 /* tid */
-#define EIF_THR_TYPE GetCurrentThread ()
+#define EIF_THR_SELF GetCurrentThread ()
 
 #elif defined SOLARIS_THREADS
 

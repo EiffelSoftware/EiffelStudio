@@ -10,6 +10,11 @@ class
 inherit
 	WEL_GDI_ANY
 
+	WEL_CAPABILITIES_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation 
 	make,
 	make_indirect,
@@ -42,6 +47,16 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_create_font_indirect (a_log_font.item)
 			gdi_make
+		end
+
+feature -- Setting
+
+	set_height (a_height: INTEGER) is
+			-- Set `pixel_height' with  `a_height'.
+		require
+			a_height_bigger_than_zero: a_height > 0
+		do
+			log_font.set_height (-a_height)
 		end
 
 feature -- Re-initialisation
@@ -94,13 +109,27 @@ feature -- Access
 		end
 
 	height: INTEGER is
-			-- Preferred font height measured in screen pixels.
-			-- NOTE: this function may return 0, which means that
-			--       the font has been created without any particular
-			--       height restriction - Windows use the best value
-			--       and we can't know what height it is. Too bad !
+			-- Size of font measured in logical unit.
 		do
-			Result := log_font.height.abs
+			check
+				height_negative: log_font.height < 0
+			end
+			Result := -log_font.height
+		ensure
+			Result_bigger_than_zero: Result > 0
+		end
+
+	point: INTEGER is
+			-- Size of font in points (1 point = 1/72 of an inch)
+		local
+			screen_dc: WEL_SCREEN_DC
+		do
+			Result := -log_font.height
+			create screen_dc
+			screen_dc.get
+			Result := mul_div (Result, 72,
+								get_device_caps (screen_dc.item, logical_pixels_y))
+			screen_dc.release
 		end
 
 	string_width (a_string: STRING): INTEGER is
@@ -132,17 +161,11 @@ feature -- Access
 				n > a_string.count
 			loop
 				index := a_string.index_of ('%N', n)
-				if index > 0 then
-					extent := screen_dc.string_size (
-						a_string.substring (n, index - 1)
-					)
-					n := index + 1
-				else
-					extent := screen_dc.string_size (
-						a_string.substring (n, a_string.count)
-					)
-					n := a_string.count + 1
+				if index <= 0 then
+					index := a_string.count + 1
 				end
+				extent := screen_dc.string_size (a_string.substring (n, index - 1))
+				n := index + 1
 				cur_width := cur_width.max (extent.width)
 				cur_height := cur_height + extent.height
 			end
@@ -173,6 +196,23 @@ feature {NONE} -- Implementation
 			"C [macro <wel.h>] (LOGFONT *): EIF_POINTER"
 		alias
 			"CreateFontIndirect"
+		end
+
+	mul_div (i,j,k: INTEGER): INTEGER is
+			-- Does `i * j / k' but in a safe manner where the 64 bits integer
+			-- obtained by `i * j' is not truncated.
+		external
+			"C [macro <windows.h>] (int, int, int): EIF_INTEGER"
+		alias
+			"MulDiv"
+		end
+
+	get_device_caps (p: POINTER; i: INTEGER): INTEGER is
+			-- Retrieves device-specific information about a specified device.
+		external
+			"C [macro <windows.h>] (HDC, int): EIF_INTEGER"
+		alias
+			"GetDeviceCaps"
 		end
 
 end -- class WEL_FONT

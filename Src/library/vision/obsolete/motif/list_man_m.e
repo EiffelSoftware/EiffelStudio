@@ -106,22 +106,14 @@ feature -- Access
 
 	item: STRING is
 			-- Item at cursor position
-		local
-			ms: MEL_STRING
 		do
-			ms := items.item (index);
-			Result := ms.to_eiffel_string;
-			ms.free
+			Result := items.item (index).to_eiffel_string
 		end;
 
 	last: STRING is
 			-- Item at last position
-		local
-			ms: MEL_STRING
 		do
-			ms := items.item (count);
-			Result := ms.to_eiffel_string;
-			ms.free
+			Result := items.item (count).to_eiffel_string
 		end;
 
 feature -- Status report
@@ -148,13 +140,11 @@ feature -- Status report
 			-- Selected item if single or browse selection mode is selected
 			-- Void if nothing is selected
 		local
-			ms: MEL_STRING;
 			mel_table: MEL_STRING_TABLE 
 		do
 			if selected_count = 1 then
 				mel_table := mel_selected_items;
-				ms := mel_table.item (1)
-				Result := ms.to_eiffel_string;
+				Result := mel_table.item (1).to_eiffel_string
 			end
 		end;
 
@@ -346,8 +336,8 @@ feature -- Element change
 			mel_table: like items;
 		do
 			mel_table := items;
-			f := mel_table.item (index);
-			s := mel_table.item (i);
+			f := mel_table.item (index).duplicate;
+			s := mel_table.item (i).duplicate;
 			replace_item_pos (f, i);
 			replace_item_pos (s, index);
 			f.free;

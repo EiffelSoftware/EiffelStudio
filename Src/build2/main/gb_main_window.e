@@ -242,13 +242,9 @@ feature {NONE} -- Implementation
 			Result.extend (command_handler.object_editor_command.new_toolbar_item (True, False))
 			create separator
 			Result.extend (separator)
-			create undo_button
-			undo_button.disable_sensitive
-			Result.extend (undo_button)
+			Result.extend (command_handler.undo_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.show_history_command.new_toolbar_item (True, False))
-			create redo_button
-			Result.extend (redo_button)
-			redo_button.disable_sensitive
+			Result.extend (command_handler.redo_command.new_toolbar_item (True, False))
 			create separator
 			Result.extend (separator)
 			create generation_button

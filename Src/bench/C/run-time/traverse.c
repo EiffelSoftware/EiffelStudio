@@ -33,6 +33,9 @@
 #include <string.h>				/* For memset() */
 #include "rt_assert.h"
 
+#define ACCOUNT_TYPE        0x01	/* accounted for type as seen */
+#define ACCOUNT_ATTRIBUTES  0x04	/* accounted for types of attributes */
+
 /*
  * Declarations
  */
@@ -79,6 +82,61 @@ rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERE
 
 rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
 rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
+
+/* Account for types of attributes of dynamic type `dtype'. */
+rt_private void account_attributes (int16 dtype)
+{
+	long num_attrib = System (dtype).cn_nbattr;
+	long i, k;
+	for (i=0; i<num_attrib; i++) {
+		int16 *gtypes = System (dtype).cn_gtypes[i] + 1;
+		for (k=0; gtypes[k] != TERMINATOR; k++) {
+			int gtype = gtypes[k];
+			if (gtype <= EXPANDED_LEVEL)
+				gtype = RTUD (EXPANDED_LEVEL - gtype);
+			else if (gtype >= 0)
+				gtype = RTUD (gtype);
+			if (gtype >= 0)
+				account[gtype] |= ACCOUNT_TYPE;
+		}
+	}
+}
+
+/* Account for type of object found */
+rt_private void account_type (uint32 dftype, int p_accounting)
+{
+	int16  *cidarr, dtype, i;
+
+	dtype = Deif_bid(dftype);
+	account[dtype] |= ACCOUNT_TYPE;	/* This type is present */
+
+	/* Account for declared types of the attributes of the type. This
+	 * is important because the declared type of an attribute may be
+	 * different from the object which is attached to it (through
+	 * conformance).
+	 */
+	if (p_accounting & TR_ACCOUNT_ATTR)
+		if ((account[dtype] & ACCOUNT_ATTRIBUTES) == 0) {
+			account_attributes (dtype);
+			account[dtype] |= ACCOUNT_ATTRIBUTES;
+		}
+
+	/* Now insert generics */
+
+	cidarr = eif_gen_cid ((int16) dftype);
+	i = *(cidarr++); /* count */
+
+	while (i--)
+	{
+		dtype = *(cidarr++);
+
+		if (dtype <= EXPANDED_LEVEL)
+			dtype = (int16) (EXPANDED_LEVEL - dtype); /* expanded parameter */
+
+		if (dtype >= 0)
+			account [dtype] |= ACCOUNT_TYPE;
+	}
+}
 
 rt_shared void traversal(char *object, int p_accounting)
 {
@@ -132,34 +190,19 @@ rt_shared void traversal(char *object, int p_accounting)
 		flags |= EO_STORE;			/* Object marked as traversed */
 		obj_nb++; 					/* Count the number of objects traversed */
 	}
+
 #if !defined CUSTOM || defined NEED_STORE_H
-	if (p_accounting & TR_ACCOUNT)	/* Possible accounting */
-	{
-		int16  *cidarr, dtype, i;
-		uint32 dftype;
-
-		dftype = flags & EO_TYPE;   /* Full type info */
-		account[Deif_bid(dftype)] = (char) 1;	/* This type is present */
-
-		/* Now insert generics */
-
-		cidarr = eif_gen_cid ((int16) dftype);
-		i = *(cidarr++); /* count */
-
-		while (i--)
-		{
-			dtype = *(cidarr++);
-
-			if (dtype <= EXPANDED_LEVEL)
-				dtype = (int16) (EXPANDED_LEVEL - dtype); /* expanded parameter */
-
-			if (dtype >= 0)
-			{
-				account [dtype] = (char) 1;
-			}
-		}
+	if (p_accounting & TR_ACCOUNT) {	/* Possible accounting */
+		account_type (flags & EO_TYPE, p_accounting);
+# ifdef RECOVERABLE_DEBUG
+		if (flags & EO_EXP)
+			printf ("      expanded %s [%p]\n", eif_typename (flags & EO_TYPE), object);
+		else
+			printf ("%2ld: %s [%p]\n", obj_nb, eif_typename (flags & EO_TYPE), object);
+# endif
 	}
 #endif
+
 	zone->ov_flags = flags;			/* Mark the object */
 
 	/* Evaluation of the number of references of the object. It is really

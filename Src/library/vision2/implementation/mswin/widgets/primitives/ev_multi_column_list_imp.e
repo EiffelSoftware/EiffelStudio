@@ -256,26 +256,34 @@ feature -- Status setting
 			end
 		end
 
-	align_text_left (a_column: INTEGER) is
-			-- Display text of `a_column' left aligned.
-			-- First column is always left aligned.
+column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+			-- Set alignment of `a_column' to corresponding `alignment_code'.
 		do
-			set_column_format (a_column - 1, Lvcfmt_left)
+
 		end
 
-	align_text_center (a_column: INTEGER) is
+--	align_text_left (a_column: INTEGER) is
+			-- Display text of `a_column' left aligned.
+			-- First column is always left aligned.
+--		do
+--			set_column_format (a_column - 1, Lvcfmt_left)
+--		end
+--
+--	align_text_center (a_column: INTEGER) is
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
-		do
-			set_column_format (a_column - 1, Lvcfmt_center)
-		end
-	
-	align_text_right (a_column: INTEGER) is
+--		do
+--			set_column_format (a_column - 1, Lvcfmt_center)
+--		end
+
+--	align_text_right (a_column: INTEGER) is
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
-		do
-			set_column_format (a_column - 1, Lvcfmt_right)
-		end
+--		do
+--			set_column_format (a_column - 1, Lvcfmt_right)
+--		end
+
+
 
 feature -- Element change
 
@@ -760,6 +768,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.84  2000/04/20 21:57:53  king
+--| Made compilable with new alignment features
+--|
 --| Revision 1.83  2000/04/20 18:51:19  rogers
 --| Removed redundent ev_children update's from insert_item
 --| and remove_item.

@@ -198,8 +198,7 @@ feature -- Access
 			--	not substring (x, x+other.count -1).is_equal (other)
 		end;
 
-	fuzzy_index (other: STRING; start: INTEGER; fuzz : INTEGER): INTEGER
-is
+	fuzzy_index (other: STRING; start: INTEGER; fuzz : INTEGER): INTEGER is
 			-- Position of first occurrence of `other' at or after `start'
 			-- with 0..`fuzz' mismatches between the string and `other'.
 			-- 0 if there are no fuzzy matches

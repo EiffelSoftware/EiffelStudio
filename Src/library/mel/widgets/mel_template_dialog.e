@@ -11,9 +11,7 @@ class
 
 inherit
 
-	MEL_MESSAGE_BOX
-		rename
-			make as message_make
+	MEL_MESSAGE_DIALOG
 		export
 			{NONE} is_error_dialog, is_information_dialog, is_message_dialog,
 			is_question_dialog, is_template_dialog, is_warning_dialog,
@@ -22,40 +20,27 @@ inherit
 			set_question_dialog, set_template_dialog, set_warning_dialog,
 			set_working_dialog
 		redefine
-			clean_up
+			create_widget
 		end;
 
 creation
-	make
+	make,
+	make_no_auto_unmanage
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
-			-- Create a motif template dialog.
-		local
-			widget_name: ANY
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+			-- Create error dialog with `auto_manage_flag'.
 		do
-			parent := a_parent;
-			widget_name := a_name.to_c;
-			screen_object := xm_create_template_dialog (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
-			!! dialog_shell.make_from_existing (xt_parent (screen_object));
-			create_message_children;
-			set_template_dialog
-		end;
-
-feature -- Access
-
-	dialog_shell: MEL_DIALOG_SHELL;
-			-- The dialog shell of the template dialog
-
-feature -- Removal
-
-	clean_up is
-			-- Destroy the widget.
-		do
-			object_clean_up;
-			dialog_shell.object_clean_up
+			if auto_manage_flag then
+				screen_object :=
+					xm_create_template_dialog (p_so,
+						$w_name, default_pointer, 0)
+			else
+				screen_object :=
+					xm_create_template_dialog (p_so,
+						$w_name, auto_unmanage_arg, 1)
+			end;
 		end;
 
 feature {NONE} -- Implementation

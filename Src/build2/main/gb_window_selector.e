@@ -191,7 +191,7 @@ feature -- Access
 			create Result
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_titled_window_main_small_color"))
-			Result.select_actions.extend (agent change_main_window)
+			Result.select_actions.extend (agent change_root_window)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -429,7 +429,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	change_main_window is
+	change_root_window is
 			-- Ensure that window currently displayed in the layout constructor is the main
 			-- window.
 		local
@@ -442,6 +442,9 @@ feature {NONE} -- Implementation
 				root_object_was_window: titled_window_object /= Void
 			end
 			titled_window_object.set_as_root_window
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
 		end
 		
 		

@@ -109,7 +109,6 @@ feature -- dotnet properties
 			-- Set `icor_breakpoint' to `a_val'.
 		do
 			icor_breakpoint := a_val
-			icor_breakpoint.add_ref
 		end	
 	
 feature -- status

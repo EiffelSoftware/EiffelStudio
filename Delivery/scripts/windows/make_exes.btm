@@ -80,7 +80,6 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 	remtrace Copying header to new delivery
 	copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 	copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-	copy %EIFFEL_SRC\C\console\eif_econsole.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 	cd %EIFFEL_SRC
 endiff
 
@@ -131,8 +130,6 @@ fullrf %INSTALL_DIR\releases\enterprise\lib\msc\ebench.lib
 remtrace Copy the header files
 copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-copy %EIFFEL_SRC\C\console\eif_econsole.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-copy %EIFFEL_SRC\C\platform\eif_commands.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
 
 remtrace We need to copy finalized.lib to ISE_EIFFEL so that the new run-time is used to compile the exe's.

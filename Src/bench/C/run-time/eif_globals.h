@@ -85,8 +85,6 @@ extern "C" {
 
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
-		/* cecil.c */
-	unsigned char ign_invisible_cx;	/* Raise exception when class not visible? */
 
 #ifdef WORKBENCH
 		/* debug.c */
@@ -248,9 +246,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
  *	Macros definitions.
  *
  */
-
-	/* cecil.c */
-#define eif_ignore_invisible (eif_globals->ign_invisible_cx)
 
 #ifdef WORKBENCH
 

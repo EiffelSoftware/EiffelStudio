@@ -40,7 +40,7 @@ feature -- File names
 				!!fn.make_from_string (Eiffel3);
 				fn.extend_from_array (<<"defaults.eif", application_name>>);
 				fn.set_file_name ("general");
-				Result := fn.path
+				Result := fn
 			end
 		end;
 
@@ -54,7 +54,7 @@ feature -- File names
 				!!fn.make_from_string (Eiffel3);
 				fn.extend_from_array (<<"defaults.eif", application_name, "spec">>);
 				fn.set_file_name (Platform);
-				Result := fn.path
+				Result := fn
 			end
 		end;
 
@@ -74,7 +74,7 @@ feature -- File names
 			if fn /= Void then
 				fn.extend (application_name);
 				fn.set_file_name ("general");
-				Result := fn.path
+				Result := fn
 			end
 		end;
 
@@ -95,7 +95,7 @@ feature -- File names
 				fn.extend (application_name);
 				fn.extend ("spec");
 				fn.set_file_name (Platform);
-				Result := fn.path
+				Result := fn
 			end
 		end;
 

@@ -102,24 +102,24 @@ feature -- Lace compilation
 				path := Environ.interpret (use_name);
 				!!use_file_path.make_from_string (cluster.path);
 				use_file_path.set_file_name (path);
-				!!use_file.make_open_read (use_file_path.path);
+				!!use_file.make_open_read (use_file_path);
 				if 
 					(not use_file.exists) or else
 					use_file.is_directory
 				then
 					!!vd02;
 					vd02.set_cluster (cluster);
-					vd02.set_use_name (use_file_path.path);
+					vd02.set_use_name (use_file_path);
 					Error_handler.insert_error (vd02);
 					Error_handler.raise_error;
 				elseif not use_file.readable then
 					!!vd21;
-					vd21.set_file_name (use_file_path.path);
+					vd21.set_file_name (use_file_path);
 					vd21.set_cluster (cluster);
 					Error_handler.insert_error (vd21);
 				else
 						-- Parse local ace file
-					Parser.parse_file (use_file_path.path);
+					Parser.parse_file (use_file_path);
 					cluster_prop ?= Parser.ast;
 					if cluster_prop /= Void then	
 							-- Local ace cannot have a use clause

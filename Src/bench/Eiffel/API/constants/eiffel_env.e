@@ -23,7 +23,7 @@ feature {NONE}
 			!!file_name.make_from_string (Eiffel3_dir_name);
 			file_name.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM") , "bin">>);
 			file_name.set_file_name (Finish_freezing_script);
-			Result := file_name.path
+			Result := file_name
 		end
 
 	Prelink_command_name: STRING is
@@ -33,7 +33,7 @@ feature {NONE}
 			!!file_name.make_from_string (Eiffel3_dir_name);
 			file_name.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM") , "bin">>);
 			file_name.set_file_name (Prelink_script);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 	Default_ace_name: STRING is
@@ -43,7 +43,7 @@ feature {NONE}
 			!!file_name.make_from_string (Eiffel3_dir_name);
 			file_name.extend_from_array (<<"bench", "help", "defaults">>);
 			file_name.set_file_name (Default_Ace_file);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 	help_path: STRING is
@@ -52,7 +52,7 @@ feature {NONE}
 		once
 			!!file_name.make_from_string (Eiffel3_dir_name);
 			file_name.extend_from_array (<<"bench", "help", "errors">>);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 	Default_precompiled_location: STRING is

@@ -607,10 +607,10 @@ feature {NONE}
 			full_path.extend_from_array (<<"bench", "bitmaps">>);
 			full_path.set_file_name (fn);
 			!!Result.make;
-			Result.read_from_file (full_path.path);
+			Result.read_from_file (full_path);
 			if not Result.last_operation_correct then
 				io.error.putstring ("Warning: cannot read pixmap file ");
-				io.error.putstring (full_path.path);
+				io.error.putstring (full_path);
 				io.error.new_line;
 			end;
 		end;

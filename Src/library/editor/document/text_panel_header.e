@@ -33,7 +33,8 @@ inherit
 			is_equal,
 			copy
 		redefine
-			on_text_loaded		
+			on_text_loaded,
+			on_text_fully_loaded
 		end
 
 create
@@ -50,6 +51,8 @@ feature -- Creation
 			panel := a_text_panel
 			create open_linked_list.make
 			create selection_actions
+			create before_selection_actions
+			create close_actions
 			open_linked_list.compare_objects
 			build_header_area
 			a_text_panel.text_displayed.add_edition_observer (Current)
@@ -65,7 +68,7 @@ feature -- Basic Operations
 			l_type: STRING
 			l_text: TEXT
 		do			
-			compare_objects
+			compare_objects			
 			
 				-- Update structure
 			if not has (a_doc) then
@@ -76,7 +79,7 @@ feature -- Basic Operations
 				go_i_th (index_of (a_doc, 1))
 			end
 			update_list_order (item)
-			update_items	
+			update_items
 			
 			l_type := a_doc.document_type
 			if l_type /= Void and then panel.known_document_type (l_type) then
@@ -84,7 +87,7 @@ feature -- Basic Operations
 			end
 			
 				-- Update editor panel				
-			if item.data /= Void then				
+			if item.data /= Void then
 				panel.set_text (item.data)	
 				if item.cursor_line > 0 then
 					panel.setup_editor (item.cursor_line)										
@@ -92,19 +95,22 @@ feature -- Basic Operations
 					panel.setup_editor (1)
 				end
 			else
+				close_button.disable_sensitive
 				l_text := panel.new_text_displayed
+				l_text.add_edition_observer (Current)
 				panel.set_text (l_text)
-				panel.load_file (item.name)				
+				panel.load_file (item.name)
 				item.set_data (l_text)
 			end		
 			on_text_loaded
 			update_buffered_screen
-			update_display
-			panel.refresh_now
+			update_display			
+			panel.refresh_now			
 			if panel.editor_area.is_sensitive then
 				panel.set_focus
 			end
 
+			index := index_of (item, 1)
 			selection_actions.call ([Current])
 		end
 
@@ -128,10 +134,19 @@ feature -- Access
 	container: EV_HORIZONTAL_BOX
 			-- Top level widget container
 
+	previous_selected_index: INTEGER
+			-- Index of previously selected item
+
 feature -- Actions
 
 	selection_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when selected item changes.
+			
+	before_selection_actions: ACTION_SEQUENCE [TUPLE]
+			-- Actions to be performed just before selected item changes.
+			
+	close_actions: ACTION_SEQUENCE [TUPLE]
+			-- Actions to be performed when document is closed.		
 			
 feature {NONE} -- Initialization
 
@@ -193,7 +208,7 @@ feature {NONE} -- Display functions
 	on_focus is
 			-- 
 		do
-		--	print ("Focus in %N")
+			--	print ("Focus in %N")
 		end		
 
 	on_repaint (x, y, a_width, a_height: INTEGER) is
@@ -299,11 +314,6 @@ feature {NONE} -- Display functions
 			else
 				left_scroll_button.disable_sensitive
 			end
-			if count > 0 then
-				close_button.enable_sensitive
-			else
-				close_button.disable_sensitive
-			end
 		end
 
 	update_items is
@@ -357,19 +367,12 @@ feature {NONE} -- Events
 			found: BOOLEAN
 			l_keyboard_panel: KEYBOARD_SELECTABLE_TEXT_PANEL
 		do
-			if button = 1 and then panel.text_is_fully_loaded then
-				if item /= Void then
-						-- Store item information for when we change back
-					item.set_data (panel.text_displayed)
-					l_keyboard_panel ?= panel
-					if l_keyboard_panel/= Void then
-						item.set_cursor_line (l_keyboard_panel.text_displayed.cursor.y_in_lines)
-						item.set_cursor_char (l_keyboard_panel.text_displayed.cursor.x_in_characters)
-					end
-					item.set_first_line_displayed (panel.first_line_displayed)
-				end
+			if button = 1 and then panel.text_is_fully_loaded then				
 				
+					-- Store current index
 				l_index := index
+				
+					-- Get the newly selected item
 				from
 					start
 				until
@@ -382,13 +385,25 @@ feature {NONE} -- Events
 					end
 					forth
 				end
-				index := index_of (l_item, 1)
+				index := l_index
 				
-				if l_index = index then					
-					print ("same item%N")
-				else
-					open_document (l_item)			
-				end
+				if l_index /= index_of (l_item, 1) then
+						-- It is not the same item
+					before_selection_actions.call ([Current])
+					if item /= Void then
+							-- Store item information for when we change back
+						item.set_data (panel.text_displayed)
+						l_keyboard_panel ?= panel
+						if l_keyboard_panel/= Void then
+							item.set_cursor_line (l_keyboard_panel.text_displayed.cursor.y_in_lines)
+							item.set_cursor_char (l_keyboard_panel.text_displayed.cursor.x_in_characters)
+						end
+						item.set_first_line_displayed (panel.first_line_displayed)
+					end					
+					index := index_of (l_item, 1)
+					previous_selected_index := l_index
+					open_document (l_item)								
+				end				
 			end
 		end		
 
@@ -414,7 +429,8 @@ feature {NONE} -- Events
 		
 	close_document is
 			-- 
-		do			
+		do				
+			close_actions.call ([Current])
 			remove_document
 			if is_empty then
 				panel.clear_window
@@ -422,7 +438,7 @@ feature {NONE} -- Events
 				update_display
 			else
 				open_document (open_linked_list.item)
-			end		
+			end			
 		end
 		
 	on_text_loaded is
@@ -431,7 +447,7 @@ feature {NONE} -- Events
 			l_keyboard_panel: KEYBOARD_SELECTABLE_TEXT_PANEL
 		do
 			l_keyboard_panel ?= panel
-			if l_keyboard_panel /= Void and item /= Void then
+			if l_keyboard_panel /= Void and then not is_empty and then item /= Void then
 				if item.first_line_displayed > 0 then
 					l_keyboard_panel.set_first_line_displayed (item.first_line_displayed, False)
 				end	
@@ -441,6 +457,17 @@ feature {NONE} -- Events
 				if item.cursor_char > 0 then
 					l_keyboard_panel.text_displayed.cursor.set_x_in_characters (item.cursor_char)
 				end			
+			end				
+		end
+	
+	on_text_fully_loaded is
+			-- Update `Current' when the text has been completely loaded.
+		local
+			l_keyboard_panel: KEYBOARD_SELECTABLE_TEXT_PANEL
+		do
+			l_keyboard_panel ?= panel
+			if l_keyboard_panel /= Void and then not is_empty and then item /= Void then				
+				close_button.enable_sensitive
 			end				
 		end
 

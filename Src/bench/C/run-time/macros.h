@@ -295,18 +295,25 @@ extern int fcount;
 #define RTEX struct ex_vect *exvect
 #define RTED jmp_buf exenv
 #define RTES if (setjmp(exenv)) goto rescue
-#define RTEJ my_t_call_level = trace_call_level; old_p_stk = prof_stack; start: exvect->ex_jbuf = (char *) exenv; RTES
+#define RTEJ current_call_level = trace_call_level; \
+	old_p_stk = prof_stack; \
+	prof_stack_init(); \
+	start: exvect->ex_jbuf = (char *) exenv; RTES
 #define RTEA(x,y,z) exvect = exset(x, y, z)
 #define RTEV exvect = exft()
 #define RTET(t,x) eraise(t,x)
 #define RTEC(x) RTET((char *) 0,x)
 #define RTSO check_options_stop()
 #ifdef WORKBENCH
-#define RTEE RTSO; expop(&eif_stack)	/* This way is only needed for WORKBENCH-mode (slower) */
+#define RTEE RTSO; expop(&eif_stack)
 #else
-#define RTEE expop(&eif_stack)		/* This way is the optimized way for FINALIZED */
+#define RTEE expop(&eif_stack)
 #endif
-#define RTER trace_call_level = my_t_call_level; p_rewind(); prof_stack = old_p_stk; in_assertion = 0; exvect = exret(exvect); goto start
+#define RTER trace_call_level = current_call_level; \
+	prof_stack_rewind(); \
+	prof_stack_free(); prof_stack = old_p_stk; \
+	in_assertion = 0; \
+	exvect = exret(exvect); goto start
 #define RTEU exresc(exvect)
 #define RTEF exfail()
 #define RTXS(x) RTXE; RTHS; RTXI(x)
@@ -393,18 +400,11 @@ extern int fcount;
 
 /* Macros to cache assertion level in generated C routine.
  *  RTDA declares integer used to save the assertion level
- *
- * 	IMPORTANT NOTE (GLJ)
- *      Wouldn't it be better to save the whole structure and not only
- *      the assertion level, because for trace as well as for profile we
- * 	need to do something similar.
- *      Other question: Why is it that debug uses static types rather than
- *      		the dynamic types just like the other options do?
- *
  *  RTSA(x) saves assertion level for dynamic type 'x'
  *  RTAL is the access to the saved assertion level variable
  */
-#define RTDA struct eif_opt opt; int my_t_call_level; struct profile_stack *old_p_stk
+#define RTDA struct eif_opt opt; int current_call_level;\
+	struct profile_stack *old_p_stk
 #define RTSA(x) opt = eoption[x]; check_options(opt, x)
 #define RTAL (~in_assertion & opt.assert_level)
 
@@ -458,15 +458,15 @@ extern int fcount;
  * We have also two macros for E-PROFILE in final mode, called RTPR (start profile) and RTXP (stop profile).
  * All macros need to have 'x' = featurename, 'y' = origin, 'z' = dtype, except RTXP.
  *
- * Plus, we need to declare 'my_t_call_level' whenever a finalized feature has a rescue-clause.
+ * Plus, we need to declare 'current_call_level' whenever a finalized feature has a rescue-clause.
  * This is done by RTLT
  *
  */
 #define RTTR(x,y,z)	start_trace(x,y,z)		/* Print message "entering..." */
 #define RTXT(x,y,z)	stop_trace(x,y,z)		/* Print message "leaving..." */
-#define RTPR(x,y,z)	start_profile(x,y,z)		/* Start measurement of feature */
+#define RTPR(x,y,z)	start_profile(x,y,z)	/* Start measurement of feature */
 #define RTXP		stop_profile()			/* Stop measurement of feature */
-#define RTLT		int my_t_call_level; struct profile_stack *old_p_stk		/* Declare C-local variable */
+#define RTLT		int current_call_level; struct profile_stack *old_p_stk		/* Declare C-local variable */
 #endif
 
 #endif

@@ -3445,7 +3445,7 @@ end
 			-- New class type for current class
 		do
 			create Result.make (data)
-			if True then -- has_externals then
+			if has_externals then
 					-- When a new generic derivation of a class that
 					-- has some externals in its text is needed, we
 					-- need to freeze the code to properly generate

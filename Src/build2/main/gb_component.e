@@ -39,7 +39,7 @@ feature -- Access
 		end
 		
 	root_element_type: STRING is
-			--
+			-- `Result' is type of root element.
 		do
 			Result := ((create {GB_SHARED_XML_HANDLER}).xml_handler.component_root_element_type (name))
 		end

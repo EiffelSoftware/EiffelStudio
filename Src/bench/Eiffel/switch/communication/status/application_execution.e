@@ -233,7 +233,7 @@ feature -- Properties
 
 feature -- Access
 
-	eiffel_error_dotnet_initialization_message: STRING is "An error occurred during initialization of the ICorDebug Debugger (.NET)"
+	eiffel_error_dotnet_initialization_message: STRING is "An error occurred during initialization of the ICorDebug Debugger or the Process creation (.NET) "
 			-- Message displayed when estudio is unable to launch
 			-- the system because unable to iniatialize the dotnet debugger
 

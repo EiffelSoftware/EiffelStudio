@@ -323,6 +323,18 @@ feature -- Status report
 			Result := file_access ($external_name, 0)
 		end
 
+	path_exists: BOOLEAN is
+			-- Does physical file `name' exist without resolving
+			-- symbolic links?
+		local
+			external_name: ANY
+		do
+			external_name := name.to_c
+			Result := file_path_exists ($external_name)
+		ensure then
+			unchanged_mode: mode = old mode
+		end
+
 	is_readable: BOOLEAN is
 			-- Is file readable?
 			-- (Checks permission for effective UID.)
@@ -1607,6 +1619,12 @@ feature {NONE} -- Implementation
 		end
 
 	file_exists (f_name: POINTER): BOOLEAN is
+			-- Does `f_name' exist.
+		external
+			"C | %"eif_file.h%""
+		end
+
+	file_path_exists (f_name: POINTER): BOOLEAN is
 			-- Does `f_name' exist.
 		external
 			"C | %"eif_file.h%""

@@ -36,14 +36,13 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			create pixmap_box
 			hb.extend (pixmap_box)
-			hb.disable_item_expand (pixmap_box)
+	--		hb.disable_item_expand (pixmap_box)
 			create label
 			label.align_text_center
 			hb.extend (label)
 			hb.set_border_width (20)
 			create button_box
 			vb.extend (button_box)
-			button_box.extend (create {EV_CELL})
 			vb.disable_item_expand (button_box)
 			button_box.set_padding (5)
 			button_box.set_border_width (10)
@@ -107,12 +106,7 @@ feature -- Status setting
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set icon associated with dialog.
 		do
-			if pixmap_box.full then
-				pixmap_box.wipe_out
-			end
-			if a_pixmap /= Void then
-				pixmap_box.extend (a_pixmap)
-			end
+			pixmap_box.put (a_pixmap)
 		end
 
 	set_text (a_text: STRING) is
@@ -229,6 +223,9 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/19 00:45:05  brendel
+--| Minor changes.
+--|
 --| Revision 1.21  2000/03/27 18:29:54  brendel
 --| Replaced obsolete call.
 --|

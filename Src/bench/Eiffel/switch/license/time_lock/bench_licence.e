@@ -121,7 +121,7 @@ feature -- Info
 			create encoder.make_with_key (non_commercial_key)
 
 				-- Get the stored expiration date
-			date_name := clone (environment.get ("BENCH_TRIAL_51"))
+			date_name := clone (environment.get ("BENCH_TRIAL_52"))
 
 			if date_name /= Void and then date_name.count > 0 then
 				check
@@ -142,7 +142,7 @@ feature -- Info
 					Result := time + Max_days_in_seconds
 					date_name := encoder.encrypt (Result.out)
 				end
-				environment.put (date_name, "BENCH_TRIAL_51")
+				environment.put (date_name, "BENCH_TRIAL_52")
 			end
 			encoder.terminate
 		end

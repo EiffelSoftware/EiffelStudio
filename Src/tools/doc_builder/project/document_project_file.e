@@ -172,7 +172,83 @@ feature -- Basic operations
 			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, generate_feature_nodes.out))
 			l_root.put_last (l_element)
 			
+			write_filters (l_root)
+			write_shortcuts (l_root)
+			
 			save_xml_document (document, project.file.name)
+		end
+		
+	write_filters (root: XM_ELEMENT) is
+			-- Write filter preferences to disk
+		local
+			l_element,
+			l_child: XM_ELEMENT
+			l_ns: XM_NAMESPACE
+			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
+			l_filter: OUTPUT_FILTER
+		do			
+			create l_ns.make_default
+			l_filters := project.filter_manager.filters
+			from
+				l_filters.start
+			until
+				l_filters.after
+			loop
+				l_filter ?= l_filters.item_for_iteration
+				if l_filter /= Void and not l_filter.description.is_equal (project.filter_manager.unfiltered) then
+						-- Write '<filter>'
+					create l_element.make (root, output_filter_tag, l_ns)
+					root.put_last (l_element)
+						-- Write '<filter_description>'
+					create l_child.make (l_element, output_filter_description_tag, l_ns)
+					l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_filter.description))
+					l_element.put_last (l_child)
+					from
+						l_filter.output_flags.start
+					until
+						l_filter.output_flags.after
+					loop
+							-- Write '<tag>'
+						create l_child.make (l_element, output_filter_tag_tag, l_ns)
+						l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_filter.output_flags.item))
+						l_element.put_last (l_child)
+						l_filter.output_flags.forth
+					end
+				end
+				l_filters.forth
+			end
+		end
+		
+	write_shortcuts (root: XM_ELEMENT) is
+			-- Write shortcut preferences to disk
+		local
+			l_element,
+			l_child: XM_ELEMENT
+			l_ns: XM_NAMESPACE
+			l_accelerators: HASH_TABLE [STRING, INTEGER]
+		do
+			create l_ns.make_default
+			l_accelerators := project.shared_document_editor.tag_accelerators
+			from
+				l_accelerators.start
+			until
+				l_accelerators.after
+			loop
+				if not l_accelerators.item_for_iteration.is_empty then
+						-- Write '<shortcut>'
+					create l_element.make (root, shortcut_tag, l_ns)
+					root.put_last (l_element)
+						-- Write '<shortcut_key>'
+					create l_child.make (l_element, shortcut_key_tag, l_ns)
+					l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_accelerators.key_for_iteration.out))
+					l_element.put_last (l_child)
+						-- Write '<shortcut_value>'
+					create l_child.make (l_element, shortcut_value_tag, l_ns)
+					l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_accelerators.item_for_iteration.out))
+					l_element.put_last (l_child)
+				end
+				l_accelerators.forth
+			end
 		end
 	
 feature -- Access
@@ -355,8 +431,10 @@ feature {NONE} -- Implementation
 		local
 			l_elements: DS_LIST [XM_ELEMENT]
 			l_value: STRING
-		do
-			l_value := e.text
+		do			
+			if e.text /= Void then				
+				l_value :=  unescaped_string (e.text)	
+			end
 			
 				-- Name
 			if e.name.is_equal (project_name_tag) then
@@ -447,7 +525,30 @@ feature {NONE} -- Implementation
 			
 			if e.name.is_equal (generate_feature_nodes_tag) then
 				generate_feature_nodes := l_value.is_equal ("True")
+			end				
+				
+				-- Filters		
+			if e.name.is_equal (output_filter_description_tag) then
+				create filter.make (l_value)
+				project.filter_manager.add_filter (filter)
 			end
+			
+			if e.name.is_equal (output_filter_tag_tag) then
+				filter.add_output_flag (l_value)
+			end
+			
+				-- Shortcuts
+			if e.name.is_equal (shortcut_tag) then
+				create tag_shortcut.make_with_key_combination ((create {EV_KEY}), True, False, False)
+			end
+			
+			if e.name.is_equal (shortcut_key_tag) then
+				tag_shortcut.set_key (create {EV_KEY}.make_with_code (l_value.to_integer))
+			end	
+			
+			if e.name.is_equal (shortcut_value_tag) then
+				project.shared_document_editor.add_tag_accelerator (tag_shortcut, l_value)
+			end				
 			
 				-- Process sub_elements
 			l_elements := e.elements
@@ -475,6 +576,18 @@ feature {NONE} -- Implementation
 
 	old_root: STRING
 			-- Old root directory
+			
+	tag_shortcut: EV_ACCELERATOR
+			-- Tag shortcut
+			
+	filter: OUTPUT_FILTER
+			-- Filter
+			
+	filter_name: STRING
+			-- Name of last read filter from file
+	
+	filter_flag: STRING
+			-- Last read flag for filter from file	
 
 	prompt_for_new_location (a_old_loc, context: STRING; is_file: BOOLEAN): STRING  is
 			-- Prompt for new location
@@ -505,6 +618,16 @@ feature {NONE} -- Implementation
 				Result.replace_substring_all ("\", "/")
 			end
 		end	
+
+	unescaped_string (a_string: STRING): STRING is
+			-- Un-escape string.
+		do
+			a_string.replace_substring_all ("&lt;", "<")
+			a_string.replace_substring_all ("&gt;", ">")
+			a_string.replace_substring_all ("&amp", "&")
+			a_string.replace_substring_all ("&quot;", "%"")
+			Result := a_string
+		end
 
 invariant
 	has_project: project /= Void

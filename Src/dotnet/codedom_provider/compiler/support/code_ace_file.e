@@ -67,6 +67,11 @@ feature -- Access
 			else
 				Result.append ("no")
 			end
+			if precompile /= Void then
+				Result.append (")%N%Tprecompiled (%"")
+				Result.append (precompile)
+				Result.append ("%")%N%Tmsil_use_optimized_precompile (yes")
+			end
 			Result.append (")%N%Ncluster%N%T")
 			from
 				clusters.start
@@ -125,6 +130,9 @@ feature -- Access
 
 	generate_debug_info: BOOLEAN
 			-- Should debug information be generated for system?
+
+	precompile: STRING
+			-- Path to precompiled library if any
 
 feature -- Status Report
 
@@ -221,7 +229,15 @@ feature -- Element Settings
 		ensure
 			generate_debug_info_set: generate_debug_info = a_bool
 		end
-		
+	
+	set_precompile (a_precompile: STRING) is
+			-- Set `precompile' with `a_precompile'.
+		do
+			precompile := a_precompile
+		ensure
+			precompile_set: precompile = a_precompile
+		end
+
 feature -- Basic Operations
 
 	write (a_file_name: STRING) is

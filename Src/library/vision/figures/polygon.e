@@ -61,7 +61,7 @@ feature -- Access
 	center: COORD_XY_FIG is
 			-- Center of the polygon.
 		require else
-			polygon_not_empty: not empty;
+			polygon_not_empty: not is_empty;
 		local
 			x, y: INTEGER;
 			keep_cursor: CURSOR;
@@ -181,7 +181,7 @@ feature -- Output
 				end;
 				if path /= Void then
 					path.set_drawing_attributes (drawing);
-					drawing.draw_polyline (Current, true)
+					drawing.draw_polyline (Current, True)
 				end
 			end
 		end;
@@ -196,18 +196,18 @@ feature -- Status report
 			keep_cursor: CURSOR;
 			other_keep_cursor: CURSOR;
 		do
-			if empty and other.empty then
-				Result := true
-				elseif (not empty) and (not other.empty) then
+			if is_empty and other.is_empty then
+				Result := True
+				elseif (not is_empty) and (not other.is_empty) then
 				keep_cursor := cursor;
 				other_keep_cursor := cursor;
 				start;
 				other.start;
-				Result := compare (other, false);
+				Result := compare (other, False);
 				if not Result then
 					start;
 					other.finish;
-					Result := compare (other, true)
+					Result := compare (other, True)
 				end;
 				other.go_to (other_keep_cursor);
 				go_to (keep_cursor);
@@ -270,7 +270,7 @@ feature {NONE} -- Status report
 					forth
 				end;
 				if off and other.off then
-					Result := true
+					Result := True
 					elseif (not off) and (not other.off) then
 					Result := compare (other, direction)
 				end

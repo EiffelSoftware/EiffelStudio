@@ -209,7 +209,7 @@ feature -- Basic operations
 
 	output_to_printer (a_name: STRING) is
 		require
-			a_name_valid: a_name /= Void and not a_name.empty
+			a_name_valid: a_name /= Void and not a_name.is_empty
 		local
 			old_dc: WEL_DC
 			printer_dc: WEL_DEFAULT_PRINTER_DC
@@ -250,7 +250,7 @@ feature -- Basic operations
 	output_to_printer_dc (a_printer_dc: WEL_PRINTER_DC; a_name: STRING) is
 			-- Output to `a_printer_dc'.
 		require
-			a_name_valid: a_name /= Void and not a_name.empty
+			a_name_valid: a_name /= Void and not a_name.is_empty
 			a_printer_dc_not_void: a_printer_dc /= Void
 			a_printer_dc_exists: a_printer_dc.exists
 		local
@@ -283,7 +283,7 @@ feature -- Basic operations
 
 	output_to_file (a_file_name: FILE_NAME) is
 		require
-			a_file_name_valid: a_file_name /= Void and not a_file_name.empty
+			a_file_name_valid: a_file_name /= Void and not a_file_name.is_empty
 		local
 			old_dc: WEL_DC
 			virtual_dc: WEL_MEMORY_DC

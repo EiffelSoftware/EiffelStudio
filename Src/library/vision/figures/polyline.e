@@ -90,7 +90,7 @@ feature -- Initialization
 			linked_list_make;
 			!! origin;
 		ensure
-			empty
+			is_empty
 		end;
 
 feature -- Access
